@@ -8,12 +8,18 @@ function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props) {
   return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />
 }
 
-function ContextMenuPortal({ ...props }: ContextMenuPrimitive.Portal.Props) {
-  return (
-    <ContextMenuPrimitive.Portal data-slot="context-menu-portal" {...props} />
-  )
-}
-
+/**
+ * A área que responde ao gesto.
+ *
+ * `tabIndex={0}` não é enfeite (mesma nota do stack Angular, que já a carregava):
+ *
+ *   1. a tecla Menu e Shift+F10 disparam `contextmenu` no elemento FOCADO — sem
+ *      foco possível, quem não usa mouse nunca abre o menu, e o conteúdo
+ *      compartilhado documenta esse caminho em `accessibility.keyboard`;
+ *   2. ao fechar, a lib devolve o foco ao gatilho. Numa `<div>` sem `tabindex`
+ *      esse `focus()` é no-op e o foco cai no `<body>` — medido em sonda antes
+ *      desta correção, contra o que `testes.functional.item2` promete.
+ */
 function ContextMenuTrigger({
   className,
   ...props
@@ -22,6 +28,7 @@ function ContextMenuTrigger({
     <ContextMenuPrimitive.Trigger
       data-slot="context-menu-trigger"
       className={cn("nds-context-menu-trigger", className)}
+      tabIndex={0}
       {...props}
     />
   )
@@ -254,7 +261,10 @@ export {
   ContextMenuSeparator,
   ContextMenuShortcut,
   ContextMenuGroup,
-  ContextMenuPortal,
+  // `ContextMenuPortal` saiu daqui: o `ContextMenuContent` já portaliza por
+  // dentro, então o wrapper exportado só existia para ser importado em dupla e
+  // portalizar duas vezes. Nenhuma outra stack o expõe, e a anatomia do
+  // conteúdo compartilhado não lista peça de portal. Era resíduo do scaffold.
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,

@@ -297,10 +297,10 @@ interface ContextMenuRadioGroupProps {
     <div class="nds-cluster nds-w-full nds-p-8" data-align="center" data-justify="center">
       <ContextMenu.Root onOpenChange={(o: boolean) => { if (o) track('menu_open', { component: 'context_menu', menu: 'demo', location: 'docs_demo' }); }}>
         <ContextMenu.Trigger
-          class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+          class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
           data-align="center"
           data-justify="center"
-          style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+         
         >
           {$tStore('demonstration.labels.triggerLabel')}
         </ContextMenu.Trigger>
@@ -442,7 +442,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet doPair2()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
         Right-click aqui
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -454,7 +454,7 @@ interface ContextMenuRadioGroupProps {
   {/snippet}
   {#snippet dontPair2()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
         Right-click aqui
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -476,7 +476,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet doPair3()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
         Right-click aqui
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -545,7 +545,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantDefault()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -561,7 +561,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantDestructive()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -577,7 +577,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantLabel()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -592,7 +592,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantWithCheckbox()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -617,7 +617,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantWithRadio()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -635,7 +635,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantWithSubmenu()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>
@@ -654,7 +654,7 @@ interface ContextMenuRadioGroupProps {
 
   {#snippet variantWithShortcuts()}
     <ContextMenu.Root>
-      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center" style="height: 120px; max-width: 300px; border-style: dashed; user-select: none">
+      <ContextMenu.Trigger class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default" data-align="center" data-justify="center">
         {$tStore('demonstration.labels.triggerLabel')}
       </ContextMenu.Trigger>
       <ContextMenu.Content>

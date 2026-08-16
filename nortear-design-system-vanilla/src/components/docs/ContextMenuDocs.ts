@@ -6,6 +6,7 @@ import { createContextMenu } from '@/components/ui/context-menu';
 import uiTranslations from '@/i18n/ui.json';
 import contextMenuTranslations from '@shared/content/context-menu/translations.json';
 import { toPlainText } from '@/lib/strip-html';
+import { AREA_CLICK_DIREITO } from '@shared/primitives/context-menu-area';
 
 import {
   createDocsHeader,
@@ -53,16 +54,22 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
+/**
+ * A moldura tracejada é o único sinal de "clique com o botão direito aqui", e a
+ * mesma classe vale nas stories e nas cinco docs pages. `nds-border-default` traz
+ * largura e cor; `nds-border-dashed` só troca `border-style` — as duas juntas, ou
+ * a moldura sai sólida.
+ *
+ * O que era `style` inline (altura de 120px, largura máxima e `border-style`)
+ * virou classe: altura cravada num bloco de texto não cresce com a fonte do
+ * navegador (WCAG 1.4.4), e o `nds-p-8` entrega o mesmo quadro sem cravá-la.
+ * `user-select: none` já vem de `.nds-context-menu-trigger`, que a factory aplica.
+ */
 function makeTriggerArea(label: string): HTMLElement {
   const el = document.createElement('div');
-  el.className =
-    'nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default';
+  el.className = AREA_CLICK_DIREITO;
   el.dataset.align = 'center';
   el.dataset.justify = 'center';
-  el.style.height = '120px';
-  el.style.maxWidth = '300px';
-  el.style.borderStyle = 'dashed';
-  el.style.userSelect = 'none';
   el.textContent = label;
   return el;
 }

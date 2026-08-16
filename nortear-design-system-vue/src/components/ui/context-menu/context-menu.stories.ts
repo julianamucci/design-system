@@ -1,7 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, expect } from 'storybook/test';
+import { within, userEvent, expect, waitFor, fn } from 'storybook/test';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import ContextMenuDocs from '@/components/docs/ContextMenuDocs.vue';
+import { REGRA_GUARDA_DE_FOCO, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import {
+  AREA_CLICK_DIREITO,
+  abrirPorGesto,
+  clicarFora,
+  fecharMenu,
+} from '@shared/testing/context-menu-area';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -12,33 +19,56 @@ import {
   ContextMenuShortcut,
 } from '@/components/ui/context-menu';
 
-const meta = {
+type ContextMenuArgs = {
+  triggerLabel: string;
+  modal: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+const meta: Meta<ContextMenuArgs> = {
   title: 'UI/ContextMenu',
   component: ContextMenu,
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
-    docs: {
-      page: withAutoDocsTab(ContextMenuDocs),
-    },
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    docs: { page: withAutoDocsTab(ContextMenuDocs) },
   },
   argTypes: {
+    triggerLabel: {
+      control: 'text',
+      description: 'Texto da área que responde ao gesto.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: 'Clique com o botão direito aqui' } },
+    },
     modal: {
       control: 'boolean',
-      description: 'Quando true, interações fora do menu são bloqueadas enquanto ele está aberto.',
+      description: 'Quando ligado, interações fora do menu ficam bloqueadas enquanto ele está aberto.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
+    },
+    onOpenChange: {
+      control: false,
+      description: 'Callback disparado ao abrir e ao fechar o menu.',
+      table: { type: { summary: '(open: boolean) => void' } },
     },
   },
   args: {
+    triggerLabel: 'Clique com o botão direito aqui',
     modal: true,
+    onOpenChange: fn(),
   },
-} satisfies Meta<typeof ContextMenu>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ContextMenuArgs>;
 
 export const Playground: Story = {
-  args: {
-    modal: true,
+  parameters: {
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
+      'accessibility.item7', 'accessibility.item8',
+      'visual.item1',
+    ],
   },
   render: (args) => ({
     components: {
@@ -54,22 +84,17 @@ export const Playground: Story = {
       return { args };
     },
     template: `
-      <ContextMenu v-bind="args">
-        <ContextMenuTrigger class="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: var(--height-default); width: 16rem"  data-align="center" data-justify="center" >
-          Clique com o botão direito aqui
+      <ContextMenu :modal="args.modal" @update:open="args.onOpenChange">
+        <ContextMenuTrigger class="${AREA_CLICK_DIREITO}" data-align="center" data-justify="center" data-testid="area">
+          {{ args.triggerLabel }}
         </ContextMenuTrigger>
-        <ContextMenuContent class="" style="width: 13rem">
+        <ContextMenuContent>
           <ContextMenuGroup>
             <ContextMenuItem>
               Editar
               <ContextMenuShortcut>⌘E</ContextMenuShortcut>
             </ContextMenuItem>
-            <ContextMenuItem>
-              Duplicar
-            </ContextMenuItem>
-            <ContextMenuItem>
-              Compartilhar
-            </ContextMenuItem>
+            <ContextMenuItem>Duplicar</ContextMenuItem>
           </ContextMenuGroup>
           <ContextMenuSeparator />
           <ContextMenuItem variant="destructive">
@@ -80,94 +105,82 @@ export const Playground: Story = {
       </ContextMenu>
     `,
   }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
+  play: async ({ canvasElement, step, args }) => {
+    const area = () => within(canvasElement).getByTestId('area');
 
-    await step('trigger renderizado corretamente', async () => {
-      const trigger = canvas.getByText('Clique com o botão direito aqui');
-      await expect(trigger).toBeInTheDocument();
+    await step('O menu do navegador não aparece por cima do nosso', async () => {
+      // `defaultPrevented` é a única prova possível aqui: o menu nativo não
+      // existe no DOM. Sem esta chamada barrada, os dois menus se sobrepõem.
+      await fecharMenu();
+      const evento = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
+      area().dispatchEvent(evento);
+      await waitFor(() => expect(evento.defaultPrevented).toBe(true));
     });
 
-    await step('right-click abre o menu', async () => {
-      const trigger = canvas.getByText('Clique com o botão direito aqui');
-      await userEvent.pointer({ target: trigger, keys: '[MouseRight]' });
-    });
-  },
-};
-
-export const ItemDefault: Story = {
-  render: () => ({
-    components: {
-      ContextMenu,
-      ContextMenuTrigger,
-      ContextMenuContent,
-      ContextMenuItem,
-      ContextMenuShortcut,
-    },
-    setup() {},
-    template: `
-      <ContextMenu>
-        <ContextMenuTrigger class="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: var(--height-default); width: 16rem"  data-align="center" data-justify="center" >
-          Clique com o botão direito aqui
-        </ContextMenuTrigger>
-        <ContextMenuContent class="" style="width: 13rem">
-          <ContextMenuItem>
-            Editar
-            <ContextMenuShortcut>⌘E</ContextMenuShortcut>
-          </ContextMenuItem>
-          <ContextMenuItem>Duplicar</ContextMenuItem>
-          <ContextMenuItem>Compartilhar</ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
-    `,
-  }),
-  play: async ({ canvasElement }) => {
-    await expect(canvasElement.firstElementChild).toBeTruthy();
-  },
-};
-
-export const ItemDestructive: Story = {
-  render: () => ({
-    components: {
-      ContextMenu,
-      ContextMenuTrigger,
-      ContextMenuContent,
-      ContextMenuItem,
-      ContextMenuSeparator,
-      ContextMenuShortcut,
-    },
-    setup() {},
-    template: `
-      <ContextMenu>
-        <ContextMenuTrigger class="nds-cluster nds-rounded-lg nds-border-default border-dashed nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: var(--height-default); width: 16rem"  data-align="center" data-justify="center" >
-          Clique com o botão direito aqui
-        </ContextMenuTrigger>
-        <ContextMenuContent class="" style="width: 13rem">
-          <ContextMenuItem>
-            Editar
-            <ContextMenuShortcut>⌘E</ContextMenuShortcut>
-          </ContextMenuItem>
-          <ContextMenuItem>Duplicar</ContextMenuItem>
-          <ContextMenuSeparator />
-          <ContextMenuItem variant="destructive">
-            Excluir
-            <ContextMenuShortcut>⌫</ContextMenuShortcut>
-          </ContextMenuItem>
-        </ContextMenuContent>
-      </ContextMenu>
-    `,
-  }),
-  play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-
-    await step('trigger renderizado', async () => {
-      const trigger = canvas.getByText('Clique com o botão direito aqui');
-      await expect(trigger).toBeInTheDocument();
+    await step('O botão direito abre o menu ONDE o ponteiro estava', async () => {
+      // O popup não é ancorado no gatilho: ele nasce no ponto do gesto. É a
+      // única diferença real em relação ao DropdownMenu.
+      const menu = await abrirPorGesto(area());
+      const caixaArea = area().getBoundingClientRect();
+      const caixaMenu = menu.getBoundingClientRect();
+      await expect(
+        Math.abs(caixaMenu.left - (caixaArea.left + caixaArea.width / 2)),
+      ).toBeLessThan(24);
+      await expect(
+        Math.abs(caixaMenu.top - (caixaArea.top + caixaArea.height / 2)),
+      ).toBeLessThan(24);
+      await expect(args.onOpenChange).toHaveBeenCalled();
     });
 
-    await step('right-click abre o menu com item destrutivo', async () => {
-      const trigger = canvas.getByText('Clique com o botão direito aqui');
-      await userEvent.pointer({ target: trigger, keys: '[MouseRight]' });
+    await step('Os itens são itens de menu de verdade', async () => {
+      const menu = await waitForPortal('menu');
+      const itens = [...menu.querySelectorAll('[data-slot="context-menu-item"]')];
+      await expect(itens.length).toBe(3);
+      for (const item of itens) await expect(item.getAttribute('role')).toBe('menuitem');
+      await expect(
+        menu.querySelector('[data-slot="context-menu-separator"]')?.getAttribute('role'),
+      ).toBe('separator');
+    });
+
+    await step('O atalho é lido junto do item, não escondido', async () => {
+      // "Excluir, ⌫" é o nome útil. Com `aria-hidden` no atalho a pessoa ouviria
+      // só "Excluir" e o atalho não ensinaria nada.
+      const menu = await waitForPortal('menu');
+      const atalho = menu.querySelector<HTMLElement>('[data-slot="context-menu-shortcut"]')!;
+      await expect(atalho.hasAttribute('aria-hidden')).toBe(false);
+      await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
+    });
+
+    await step('As setas percorrem os itens na ordem em que aparecem', async () => {
+      // O foco parte de um item conhecido: assim o passo vale igual na primeira
+      // rodada e no replay, e não depende de onde a abertura deixou o foco.
+      const menu = await waitForPortal('menu');
+      const itens = [...menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')];
+      itens[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await waitFor(() => expect(document.activeElement).toBe(itens[1]));
+      await userEvent.keyboard('{ArrowUp}');
+      await waitFor(() => expect(document.activeElement).toBe(itens[0]));
+    });
+
+    await step('Escape fecha e devolve o foco à área', async () => {
+      await abrirPorGesto(area());
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('menu');
+      await waitFor(() => expect(document.activeElement).toBe(area()));
+    });
+
+    await step('Clique fora fecha', async () => {
+      await abrirPorGesto(area());
+      await clicarFora();
+      await waitForPortalGone('menu');
+    });
+
+    await step('A story termina com o menu ABERTO', async () => {
+      // É o estado que o Chromatic fotografa e o axe varre — `visual.item1`
+      // descreve o menu aberto, não a área vazia.
+      const menu = await abrirPorGesto(area());
+      await expect(menu).toBeVisible();
     });
   },
 };

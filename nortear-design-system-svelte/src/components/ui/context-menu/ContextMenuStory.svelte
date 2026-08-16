@@ -5,12 +5,12 @@
   // é idêntica com interpolação de texto, e some a superfície de ataque
   // (guideline 09: se não precisa de HTML, não use HTML).
   import * as ContextMenu from '@/components/ui/context-menu';
+  import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 
   let {
     triggerLabel = 'Clique com o botão direito aqui',
     editLabel = 'Editar',
     duplicateLabel = 'Duplicar',
-    shareLabel = 'Compartilhar',
     deleteLabel = 'Excluir',
     editShortcut = '⌘E',
     deleteShortcut = '⌫',
@@ -20,7 +20,6 @@
     triggerLabel?: string;
     editLabel?: string;
     duplicateLabel?: string;
-    shareLabel?: string;
     deleteLabel?: string;
     editShortcut?: string;
     deleteShortcut?: string;
@@ -31,19 +30,23 @@
 
 <ContextMenu.Root>
   <ContextMenu.Trigger
-    class="nds-cluster nds-rounded-lg border-2 nds-border-dashed nds-bg-muted-30 nds-text-body nds-text-muted-foreground cursor-default" style="user-select: none; height: 8rem; width: 16rem" data-align="center" data-justify="center" 
+    class={AREA_CLICK_DIREITO}
+    data-align="center"
+    data-justify="center"
+    data-testid="area"
   >
     {triggerLabel}
   </ContextMenu.Trigger>
   <ContextMenu.Content>
-    <ContextMenu.Item>
-      {editLabel}
-      {#if showShortcuts}
-        <ContextMenu.Shortcut>{editShortcut}</ContextMenu.Shortcut>
-      {/if}
-    </ContextMenu.Item>
-    <ContextMenu.Item>{duplicateLabel}</ContextMenu.Item>
-    <ContextMenu.Item>{shareLabel}</ContextMenu.Item>
+    <ContextMenu.Group>
+      <ContextMenu.Item>
+        {editLabel}
+        {#if showShortcuts}
+          <ContextMenu.Shortcut>{editShortcut}</ContextMenu.Shortcut>
+        {/if}
+      </ContextMenu.Item>
+      <ContextMenu.Item>{duplicateLabel}</ContextMenu.Item>
+    </ContextMenu.Group>
     {#if showDestructive}
       <ContextMenu.Separator />
       <ContextMenu.Item variant="destructive">

@@ -3,6 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
 import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 
 // Sem argTypes, então o painel Controls é desligado — do contrário abriria vazio.
 
@@ -12,6 +13,7 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     controls: { disable: true },
+    actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
   },
 };
@@ -39,9 +41,16 @@ export const WithSubmenu: Story = {
     },
   },
   render: () => ({
+    props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
       <div ndsContextMenu>
-        <div ndsContextMenuTrigger data-testid="area">Clique com o botão direito aqui</div>
+        <div
+            ndsContextMenuTrigger
+            [class]="areaClasse"
+            data-align="center"
+            data-justify="center"
+            data-testid="area"
+          >Clique com o botão direito aqui</div>
 
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem>Editar</div>
@@ -98,6 +107,16 @@ export const WithSubmenu: Story = {
       await waitFor(() => expect(subGatilho().getAttribute('aria-expanded')).toBe('false'));
       await expect(document.activeElement).toBe(subGatilho());
     });
+
+    await step('A story termina com o submenu ABERTO', async () => {
+      // `visual.item3` descreve o SUBMENU ABERTO. Até esta passada a play
+      // terminava no Escape, ou seja, com ele fechado: o Chromatic fotografava
+      // exatamente o estado que o item do contrato não descreve.
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() =>
+        expect(document.querySelector('[data-slot="context-menu-sub-content"]')).not.toBeNull(),
+      );
+    });
   },
 };
 
@@ -110,10 +129,16 @@ export const WithSelection: Story = {
     ],
   },
   render: () => ({
-    props: { grade: false, canal: 'email' },
+    props: { grade: false, canal: 'email', areaClasse: AREA_CLICK_DIREITO },
     template: `
       <div ndsContextMenu>
-        <div ndsContextMenuTrigger data-testid="area">Clique com o botão direito aqui</div>
+        <div
+            ndsContextMenuTrigger
+            [class]="areaClasse"
+            data-align="center"
+            data-justify="center"
+            data-testid="area"
+          >Clique com o botão direito aqui</div>
 
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuCheckboxItem [(checked)]="grade" data-testid="check">
@@ -141,39 +166,59 @@ export const WithSelection: Story = {
     });
 
     await step('O estado marcado é anunciado, não só desenhado', async () => {
-      await expect(alvo('check').getAttribute('aria-checked')).toBe('false');
+      // Lê o estado ANTES de clicar. A versão anterior exigia `false` na entrada
+      // e só valia na montagem: o painel Interactions reexecuta a play no MESMO
+      // DOM, então na segunda rodada o item já vinha marcado e a asserção
+      // reprovava um componente correto.
+      const antes = alvo('check').getAttribute('aria-checked');
+      const esperado = antes === 'true' ? 'false' : 'true';
       await userEvent.click(alvo('check'));
-      await waitFor(() => expect(alvo('check').getAttribute('aria-checked')).toBe('true'));
+      await waitFor(() => expect(alvo('check').getAttribute('aria-checked')).toBe(esperado));
       // O menu NÃO fecha: quem marca uma opção costuma querer marcar a próxima.
       await expect(document.querySelector('[data-slot="context-menu-content"]')).not.toBeNull();
     });
 
     await step('A escolha única limpa a anterior', async () => {
-      await expect(alvo('radio-email').getAttribute('aria-checked')).toBe('true');
-      await userEvent.click(alvo('radio-link'));
-      await waitFor(() => expect(alvo('radio-link').getAttribute('aria-checked')).toBe('true'));
-      await expect(alvo('radio-email').getAttribute('aria-checked')).toBe('false');
+      // Mesmo motivo: alterna entre os dois valores a partir do estado corrente
+      // e afirma o PAR, em vez de assumir de onde a rodada parte.
+      const partiuDoEmail = alvo('radio-email').getAttribute('aria-checked') === 'true';
+      const clicar = partiuDoEmail ? 'radio-link' : 'radio-email';
+      const outro = partiuDoEmail ? 'radio-email' : 'radio-link';
+      await userEvent.click(alvo(clicar));
+      await waitFor(() => expect(alvo(clicar).getAttribute('aria-checked')).toBe('true'));
+      await expect(alvo(outro).getAttribute('aria-checked')).toBe('false');
     });
   },
 };
 
 export const WithDisabledItems: Story = {
   parameters: {
-    covers: ['functional.item10', 'accessibility.item6', 'visual.item5'],
-    // `functional.item9` promete que o item desabilitado NÃO recebe foco por
-    // teclado. O primitivo mantém `aria-disabled` focável de propósito — é o
-    // que a WAI-ARIA APG permite explicitamente, para o item não sumir de quem
-    // navega às cegas. Cobrir o critério exigiria contrariar o primitivo; o que
-    // dá para garantir, e está afirmado abaixo, é que ele não ativa.
-    coversNotApplicable: {
-      'functional.item9':
-        'o primitivo mantém item aria-disabled focável (permitido pela APG, para não sumir de quem navega por teclado); a story afirma que ele não ativa',
-    },
+    // `functional.item9` deixou de ser dispensa e passou a ser cobertura.
+    //
+    // O texto compartilhado prometia que o item desabilitado "não recebe foco
+    // via teclado", e essa promessa era idiomática de lib, não do design system:
+    // duas das cinco stacks pulam o item na roda de foco e três o mantêm — o que
+    // a WAI-ARIA APG permite de propósito, para a opção não sumir de quem navega
+    // às cegas. Com o item reescrito para o que vale nas cinco (anunciado por
+    // `aria-disabled`, não ativa por clique nem por Enter, menu segue aberto), a
+    // dispensa perdeu razão de existir.
+    covers: [
+      'functional.item9', 'functional.item10',
+      'accessibility.item6',
+      'visual.item2', 'visual.item5',
+    ],
   },
   render: () => ({
+    props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
       <div ndsContextMenu>
-        <div ndsContextMenuTrigger data-testid="area">Clique com o botão direito aqui</div>
+        <div
+            ndsContextMenuTrigger
+            [class]="areaClasse"
+            data-align="center"
+            data-justify="center"
+            data-testid="area"
+          >Clique com o botão direito aqui</div>
 
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem data-testid="primeiro">Editar</div>
@@ -194,6 +239,19 @@ export const WithDisabledItems: Story = {
     await step('O item desabilitado é anunciado como tal', async () => {
       await abrirPorGesto(area());
       await expect(alvo('off').getAttribute('aria-disabled')).toBe('true');
+    });
+
+    await step('Ele está atenuado, e não só marcado', async () => {
+      // A cor sozinha não chega a quem não a distingue; a opacidade é o sinal
+      // que sobra quando o contraste falha.
+      await expect(Number(getComputedStyle(alvo('off')).opacity)).toBeLessThan(1);
+    });
+
+    await step('O ponteiro também não o alcança', async () => {
+      // Aqui a asserção é a folha de estilo, e não um clique: `userEvent` se
+      // recusa a clicar em elemento com `pointer-events: none` e derruba a play
+      // com erro em vez de falha — o que provaria o mesmo, mas sem dizer o quê.
+      await expect(getComputedStyle(alvo('off')).pointerEvents).toBe('none');
     });
 
     await step('Ele recebe foco, mas não ativa', async () => {
@@ -226,9 +284,16 @@ export const DarkPalette: Story = {
     themes: { themeOverride: 'dark' },
   },
   render: () => ({
+    props: { areaClasse: AREA_CLICK_DIREITO },
     template: `
       <div ndsContextMenu>
-        <div ndsContextMenuTrigger data-testid="area">Clique com o botão direito aqui</div>
+        <div
+            ndsContextMenuTrigger
+            [class]="areaClasse"
+            data-align="center"
+            data-justify="center"
+            data-testid="area"
+          >Clique com o botão direito aqui</div>
 
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem>Editar</div>

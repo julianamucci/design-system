@@ -1,29 +1,108 @@
 // ─── ContextMenu — Vanilla factory standalone ───────────────────────────────
 // Visual: reusa classes .nds-dropdown-menu-* (idêntico ao DropdownMenu).
 // Trigger via evento contextmenu (botão direito) com coordenadas livres.
+//
+// Esta factory é a REFERÊNCIA cross-stack de markup: o que ela emite é o que as
+// outras quatro precisam emitir. Por isso ela cobre a composição inteira que o
+// conteúdo compartilhado documenta — item, atalho, recuo, variante destrutiva,
+// marcação, escolha única e submenu — e não só o item simples. Antes desta
+// passada as stories desenhavam essas peças à mão, com classes de uma lib que
+// saiu do projeto: renderizavam sem estilo nenhum e não provavam nada.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
 
 export type ContextMenuItemDef = {
-  type?: 'item' | 'separator' | 'label';
+  /** `item` é o padrão. `submenu` exige `items`; `radio` exige `value`. */
+  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio' | 'submenu';
   value?: string;
   label?: string;
   disabled?: boolean;
+  /** Recuo para alinhar com itens que têm indicador à esquerda. */
+  inset?: boolean;
+  /** `destructive` pinta o item com a cor de alerta. Só vale em `item`. */
+  variant?: 'default' | 'destructive';
+  /** Atalho exibido à direita do rótulo. Anunciado junto do item, não escondido. */
+  shortcut?: string;
+  /** Estado inicial de um item `checkbox`. */
+  checked?: boolean;
+  /** Itens do submenu, quando `type: 'submenu'`. */
+  items?: ContextMenuItemDef[];
   onClick?: () => void;
+  /** Disparado por `checkbox` a cada alternância. */
+  onCheckedChange?: (checked: boolean) => void;
 };
 
 export type ContextMenuOptions = {
   trigger: HTMLElement;
   items: ContextMenuItemDef[];
   onOpenChange?: (open: boolean) => void;
+  /** Grupo de escolha única: o valor corrente entre os itens `radio`. */
+  radioValue?: string;
+  onRadioChange?: (value: string) => void;
   class?: string;
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 let _contextMenuCounter = 0;
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+/** Indicador de marcação (check). Construído por DOM — nada de innerHTML. */
+function createCheckIcon(): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+  const path = document.createElementNS(SVG_NS, 'path');
+  path.setAttribute('d', 'M20 6 9 17l-5-5');
+  svg.appendChild(path);
+  return svg;
+}
+
+/** Seta do sub-gatilho. */
+function createChevronIcon(): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.classList.add('nds-dropdown-menu-sub-trigger-chevron');
+  const path = document.createElementNS(SVG_NS, 'path');
+  path.setAttribute('d', 'm9 18 6-6-6-6');
+  svg.appendChild(path);
+  return svg;
+}
+
+/**
+ * Rótulo + atalho dentro de um item.
+ *
+ * O atalho NÃO leva `aria-hidden`. "Excluir, Del" é o nome útil do item; com o
+ * atalho escondido a pessoa ouve só "Excluir" e o atalho não ensina nada. As
+ * outras quatro stacks também o deixam legível — conferido em sonda.
+ */
+function fillItemContent(li: HTMLElement, item: ContextMenuItemDef): void {
+  const label = document.createElement('span');
+  label.textContent = item.label ?? '';
+  li.appendChild(label);
+
+  if (item.shortcut) {
+    const atalho = document.createElement('span');
+    atalho.dataset.slot = 'context-menu-shortcut';
+    atalho.className = 'nds-dropdown-menu-shortcut';
+    atalho.textContent = item.shortcut;
+    li.appendChild(atalho);
+  }
+}
 
 // ─── createContextMenu ────────────────────────────────────────────────────────
 
@@ -34,97 +113,270 @@ export function createContextMenu(options: ContextMenuOptions): HTMLElement {
   const menuId = `context-menu-${id}`;
 
   let panelEl: HTMLElement | null = null;
+  let subPanelEl: HTMLElement | null = null;
+  let subTriggerEl: HTMLElement | null = null;
   let isOpen = false;
+  let radioValue = options.radioValue;
+  let observadorDeSaida: MutationObserver | null = null;
+
+  /** Definição por sub-gatilho — procurar pelo texto do rótulo quebra na tradução. */
+  const defPorSubGatilho = new WeakMap<HTMLElement, ContextMenuItemDef>();
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'context-menu';
   wrapper.style.display = 'contents';
+
+  trigger.dataset.slot = 'context-menu-trigger';
+  trigger.classList.add('nds-context-menu-trigger');
+  // A tecla Menu (e Shift+F10) dispara `contextmenu` no elemento FOCADO: sem
+  // parada de tabulação, quem não usa mouse nunca abre este menu. É também para
+  // onde o foco volta no fechamento — numa div sem tabindex o `focus()` é no-op
+  // e o foco cai no `<body>`.
+  if (!trigger.hasAttribute('tabindex')) trigger.setAttribute('tabindex', '0');
   wrapper.appendChild(trigger);
 
-  function buildMenu(): HTMLElement {
-    const menu = document.createElement('ul');
-    menu.id = menuId;
-    menu.setAttribute('role', 'menu');
-    menu.className = cn('nds-dropdown-menu-content', options.class);
-    menu.dataset.slot = 'context-menu-content';
+  function buildItem(item: ContextMenuItemDef, menu: HTMLElement): void {
+    const type = item.type ?? 'item';
 
-    items.forEach((item) => {
-      const type = item.type ?? 'item';
+    if (type === 'separator') {
+      const sep = document.createElement('li');
+      sep.setAttribute('role', 'separator');
+      sep.dataset.slot = 'context-menu-separator';
+      sep.className = 'nds-dropdown-menu-separator';
+      menu.appendChild(sep);
+      return;
+    }
 
-      if (type === 'separator') {
-        const sep = document.createElement('li');
-        sep.setAttribute('role', 'separator');
-        sep.className = 'nds-dropdown-menu-separator';
-        menu.appendChild(sep);
-        return;
-      }
+    if (type === 'label') {
+      const lbl = document.createElement('li');
+      lbl.setAttribute('role', 'presentation');
+      lbl.dataset.slot = 'context-menu-label';
+      if (item.inset) lbl.dataset.inset = 'true';
+      lbl.className = 'nds-dropdown-menu-label';
+      lbl.textContent = item.label ?? '';
+      menu.appendChild(lbl);
+      return;
+    }
 
-      if (type === 'label') {
-        const lbl = document.createElement('li');
-        lbl.setAttribute('role', 'presentation');
-        lbl.className = 'nds-dropdown-menu-label';
-        lbl.textContent = item.label ?? '';
-        menu.appendChild(lbl);
-        return;
-      }
+    if (type === 'checkbox' || type === 'radio') {
+      const marcado =
+        type === 'checkbox' ? item.checked === true : radioValue === item.value;
 
       const li = document.createElement('li');
-      li.setAttribute('role', 'menuitem');
-      li.className = 'nds-dropdown-menu-item';
-      if (item.disabled) li.setAttribute('aria-disabled', 'true');
-      if (!item.disabled) li.setAttribute('tabindex', '-1');
+      li.setAttribute('role', type === 'checkbox' ? 'menuitemcheckbox' : 'menuitemradio');
+      li.setAttribute('aria-checked', String(marcado));
+      li.setAttribute('tabindex', '-1');
+      li.dataset.slot = type === 'checkbox' ? 'context-menu-checkbox-item' : 'context-menu-radio-item';
+      li.className =
+        type === 'checkbox' ? 'nds-dropdown-menu-checkbox-item' : 'nds-dropdown-menu-radio-item';
       if (item.value) li.dataset.value = item.value;
-      li.textContent = item.label ?? '';
+      if (item.disabled) {
+        li.setAttribute('aria-disabled', 'true');
+        li.dataset.disabled = '';
+      }
+
+      const indicador = document.createElement('span');
+      indicador.dataset.slot = 'context-menu-item-indicator';
+      indicador.className = 'nds-dropdown-menu-item-indicator';
+      if (marcado) indicador.appendChild(createCheckIcon());
+      li.appendChild(indicador);
+
+      fillItemContent(li, item);
 
       if (!item.disabled) {
-        li.addEventListener('click', () => {
+        const alternar = () => {
+          if (type === 'checkbox') {
+            const novo = li.getAttribute('aria-checked') !== 'true';
+            li.setAttribute('aria-checked', String(novo));
+            indicador.replaceChildren();
+            if (novo) indicador.appendChild(createCheckIcon());
+            item.onCheckedChange?.(novo);
+          } else if (item.value) {
+            radioValue = item.value;
+            sincronizarRadios(li.closest('[data-slot="context-menu-content"]') as HTMLElement);
+            options.onRadioChange?.(item.value);
+          }
           item.onClick?.();
-          close();
-        });
+          // Marcar uma opção não fecha o menu: quem marca uma costuma querer
+          // marcar a próxima. Só o item de AÇÃO fecha.
+        };
+        li.addEventListener('click', alternar);
         li.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            item.onClick?.();
-            close();
+            alternar();
           }
         });
       }
 
       menu.appendChild(li);
-    });
+      return;
+    }
 
+    if (type === 'submenu') {
+      const li = document.createElement('li');
+      li.setAttribute('role', 'menuitem');
+      li.setAttribute('aria-haspopup', 'menu');
+      li.setAttribute('aria-expanded', 'false');
+      li.setAttribute('tabindex', '-1');
+      li.dataset.slot = 'context-menu-sub-trigger';
+      li.className = 'nds-dropdown-menu-sub-trigger';
+      if (item.inset) li.dataset.inset = 'true';
+      fillItemContent(li, item);
+      li.appendChild(createChevronIcon());
+      defPorSubGatilho.set(li, item);
+
+      li.addEventListener('mouseenter', () => abrirSubmenu(li, item));
+      li.addEventListener('click', (e) => {
+        e.stopPropagation();
+        abrirSubmenu(li, item);
+      });
+
+      menu.appendChild(li);
+      return;
+    }
+
+    const li = document.createElement('li');
+    li.setAttribute('role', 'menuitem');
+    li.setAttribute('tabindex', '-1');
+    li.dataset.slot = 'context-menu-item';
+    li.dataset.variant = item.variant ?? 'default';
+    if (item.inset) li.dataset.inset = 'true';
+    li.className = 'nds-dropdown-menu-item';
+    if (item.value) li.dataset.value = item.value;
+    if (item.disabled) {
+      li.setAttribute('aria-disabled', 'true');
+      li.dataset.disabled = '';
+    }
+
+    fillItemContent(li, item);
+
+    if (!item.disabled) {
+      li.addEventListener('click', () => {
+        item.onClick?.();
+        close();
+      });
+      li.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          item.onClick?.();
+          close();
+        }
+      });
+    }
+
+    menu.appendChild(li);
+  }
+
+  /** Reflete a escolha única em todos os irmãos do grupo. */
+  function sincronizarRadios(menu: HTMLElement | null): void {
+    if (!menu) return;
+    for (const li of menu.querySelectorAll<HTMLElement>('[role="menuitemradio"]')) {
+      const marcado = li.dataset.value === radioValue;
+      li.setAttribute('aria-checked', String(marcado));
+      const indicador = li.querySelector<HTMLElement>('.nds-dropdown-menu-item-indicator');
+      indicador?.replaceChildren();
+      if (marcado && indicador) indicador.appendChild(createCheckIcon());
+    }
+  }
+
+  function buildMenu(defs: ContextMenuItemDef[], slot: string): HTMLElement {
+    const menu = document.createElement('ul');
+    if (slot === 'context-menu-content') menu.id = menuId;
+    menu.setAttribute('role', 'menu');
+    menu.className = cn('nds-dropdown-menu-content', slot === 'context-menu-content' ? options.class : undefined);
+    menu.dataset.slot = slot;
+    menu.dataset.state = 'open';
+    defs.forEach((def) => buildItem(def, menu));
     return menu;
   }
 
+  function abrirSubmenu(gatilho: HTMLElement, def: ContextMenuItemDef): void {
+    if (subTriggerEl === gatilho && subPanelEl) return;
+    fecharSubmenu();
+
+    subPanelEl = buildMenu(def.items ?? [], 'context-menu-sub-content');
+    subPanelEl.style.position = 'absolute';
+    document.body.appendChild(subPanelEl);
+
+    const caixa = gatilho.getBoundingClientRect();
+    subPanelEl.style.top = `${caixa.top + window.scrollY}px`;
+    subPanelEl.style.left = `${caixa.right + window.scrollX}px`;
+
+    gatilho.setAttribute('aria-expanded', 'true');
+    subTriggerEl = gatilho;
+  }
+
+  function fecharSubmenu(): void {
+    subPanelEl?.remove();
+    subPanelEl = null;
+    subTriggerEl?.setAttribute('aria-expanded', 'false');
+    subTriggerEl = null;
+  }
+
+  /**
+   * Itens que o teclado percorre.
+   *
+   * O item desabilitado FICA na roda: escondê-lo da navegação esconde da pessoa
+   * que a opção existe e está indisponível — é o que a WAI-ARIA APG recomenda, e
+   * é o que as outras quatro stacks fazem. O que ele não faz é ativar.
+   */
   function getMenuItems(menu: HTMLElement): HTMLElement[] {
-    return Array.from(menu.querySelectorAll<HTMLElement>('[role="menuitem"]:not([aria-disabled="true"])'));
+    return Array.from(
+      menu.querySelectorAll<HTMLElement>(
+        '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+      ),
+    );
   }
 
   function open(x: number, y: number): void {
-    panelEl = buildMenu();
+    panelEl = buildMenu(items, 'context-menu-content');
+    panelEl.style.position = 'absolute';
     panelEl.style.top = `${y + window.scrollY}px`;
     panelEl.style.left = `${x + window.scrollX}px`;
     document.body.appendChild(panelEl);
+    sincronizarRadios(panelEl);
 
     isOpen = true;
 
-    // Focus first item
     const menuItems = getMenuItems(panelEl);
     menuItems[0]?.focus();
 
     document.addEventListener('keydown', handleKeydown);
     setTimeout(() => document.addEventListener('click', handleOutsideClick), 0);
 
+    // O painel vive no `<body>`, fora da árvore de quem montou o componente.
+    // Quem troca de tela remove o gatilho e o painel FICA — nas stories isso
+    // significa o menu de uma sobrando por cima da seguinte, e a foto do
+    // Chromatic saindo com dois. Nas outras stacks quem desmonta é o framework;
+    // aqui é este observador.
+    observadorDeSaida = new MutationObserver(() => {
+      if (!trigger.isConnected) close(false);
+    });
+    observadorDeSaida.observe(document.body, { childList: true, subtree: true });
+
     onOpenChange?.(true);
   }
 
-  function close(): void {
+  /**
+   * `devolverFoco` distingue quem fechou. Escape e escolha de item devolvem o
+   * foco à área — sem isso ele cai no `<body>` e quem navega por teclado perde o
+   * lugar (`testes.functional.item2`). Clique fora e Tab NÃO devolvem: ali a
+   * pessoa já está indo para outro lugar, e roubar o foco de volta desfaria o
+   * gesto.
+   */
+  function close(devolverFoco = true): void {
+    fecharSubmenu();
     panelEl?.remove();
     panelEl = null;
     isOpen = false;
 
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
+    observadorDeSaida?.disconnect();
+    observadorDeSaida = null;
+
+    if (devolverFoco && trigger.isConnected) trigger.focus();
 
     onOpenChange?.(false);
   }
@@ -134,12 +386,40 @@ export function createContextMenu(options: ContextMenuOptions): HTMLElement {
 
     if (e.key === 'Escape') {
       e.preventDefault();
+      if (subPanelEl) {
+        const gatilho = subTriggerEl;
+        fecharSubmenu();
+        gatilho?.focus();
+        return;
+      }
       close();
       return;
     }
 
-    const menuItems = getMenuItems(panelEl);
-    const currentIdx = menuItems.indexOf(document.activeElement as HTMLElement);
+    const ativo = document.activeElement as HTMLElement | null;
+
+    if (e.key === 'ArrowRight') {
+      const gatilho = ativo?.closest<HTMLElement>('[data-slot="context-menu-sub-trigger"]');
+      const def = gatilho ? defPorSubGatilho.get(gatilho) : undefined;
+      if (gatilho && def) {
+        e.preventDefault();
+        abrirSubmenu(gatilho, def);
+        if (subPanelEl) getMenuItems(subPanelEl)[0]?.focus();
+        return;
+      }
+    }
+
+    if (e.key === 'ArrowLeft' && subPanelEl?.contains(ativo)) {
+      e.preventDefault();
+      const gatilho = subTriggerEl;
+      fecharSubmenu();
+      gatilho?.focus();
+      return;
+    }
+
+    const escopo = subPanelEl?.contains(ativo) ? subPanelEl : panelEl;
+    const menuItems = getMenuItems(escopo);
+    const currentIdx = menuItems.indexOf(ativo as HTMLElement);
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -156,20 +436,24 @@ export function createContextMenu(options: ContextMenuOptions): HTMLElement {
       e.preventDefault();
       menuItems[menuItems.length - 1]?.focus();
     } else if (e.key === 'Tab') {
-      close();
+      close(false);
     }
   }
 
   function handleOutsideClick(e: MouseEvent): void {
     const target = e.target as Node;
-    if (!panelEl?.contains(target) && !trigger.contains(target)) {
-      close();
+    if (
+      !panelEl?.contains(target) &&
+      !subPanelEl?.contains(target) &&
+      !trigger.contains(target)
+    ) {
+      close(false);
     }
   }
 
   trigger.addEventListener('contextmenu', (e) => {
     e.preventDefault();
-    if (isOpen) close();
+    if (isOpen) close(false);
     open(e.clientX, e.clientY);
   });
 

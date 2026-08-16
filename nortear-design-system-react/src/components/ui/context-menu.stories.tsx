@@ -1,7 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { fn, userEvent, within, expect } from "storybook/test";
+import { fn, userEvent, within, expect, waitFor } from "storybook/test";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { ContextMenuDocs } from "@/components/docs/ContextMenuDocs";
+import { REGRA_GUARDA_DE_FOCO, waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
+import {
+  AREA_CLICK_DIREITO,
+  abrirPorGesto,
+  clicarFora,
+  fecharMenu,
+} from "@shared/testing/context-menu-area";
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -14,41 +21,78 @@ import {
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
-const meta = {
+// `onOpenChange` é REDECLARADO com um argumento só. A lib entrega
+// `(open, eventDetails)`, e o `eventDetails` carrega o evento nativo — a aba
+// Actions estoura `SecurityError` ao serializar o `Window` do iframe, e o erro
+// aparece como falha da play. O `render` encaminha só o booleano, e o tipo
+// registra essa decisão em vez de deixá-la implícita.
+type ContextMenuArgs = Omit<React.ComponentProps<typeof ContextMenu>, "onOpenChange"> & {
+  triggerLabel: string;
+  onOpenChange: (open: boolean) => void;
+};
+
+// `component` fica de fora de propósito: com ele o `satisfies` estreita os args
+// para as props da raiz e o `triggerLabel` — que é arg da STORY, não prop do
+// componente — passa a não existir para o TypeScript. A aba API Reference sai
+// dos `argTypes` escritos aqui, então nada se perde.
+const meta: Meta<ContextMenuArgs> = {
   title: "UI/ContextMenu",
-  component: ContextMenu,
   tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
       description: {
         component:
-          "Menu contextual ativado por right-click. Suporta itens, checkboxes, radio groups, submenus e shortcuts.",
+          "Menu contextual ativado pelo botão direito. Suporta itens, marcação, escolha única, submenus e atalhos.",
       },
       page: withAutoDocsTab(ContextMenuDocs),
     },
   },
   argTypes: {
+    triggerLabel: {
+      control: "text",
+      description: "Texto da área que responde ao gesto.",
+      table: { type: { summary: "string" }, defaultValue: { summary: "Clique com o botão direito aqui" } },
+    },
     onOpenChange: {
       control: false,
-      description: "Callback disparado ao abrir/fechar o menu.",
+      description: "Callback disparado ao abrir e ao fechar o menu.",
+      table: { type: { summary: "(open: boolean) => void" } },
     },
   },
   args: {
+    triggerLabel: "Clique com o botão direito aqui",
     onOpenChange: fn(),
   },
-} satisfies Meta<typeof ContextMenu>;
+};
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ContextMenuArgs>;
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
-  render: (args) => (
-    <ContextMenu {...args}>
-      <ContextMenuTrigger className="nds-cluster nds-rounded-lg nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground" style={{userSelect: "none", paddingInline: "2.5rem", paddingBlock: "1.5rem" }} data-align="center" data-justify="center" >
-        Clique com o botão direito aqui
+  parameters: {
+    covers: [
+      "functional.item1", "functional.item2", "functional.item3", "functional.item4",
+      "accessibility.item1", "accessibility.item2", "accessibility.item3",
+      "accessibility.item7", "accessibility.item8",
+      "visual.item1",
+    ],
+  },
+  // O spy recebe só o booleano: o segundo argumento da lib carrega o evento
+  // nativo, e a aba Actions estoura `SecurityError` ao serializar o `Window` do
+  // iframe — o erro aparece como falha da play e contamina o resultado.
+  render: ({ triggerLabel, onOpenChange, ...args }) => (
+    <ContextMenu {...args} onOpenChange={(open) => onOpenChange?.(open)}>
+      <ContextMenuTrigger
+        className={AREA_CLICK_DIREITO}
+        data-align="center"
+        data-justify="center"
+        data-testid="area"
+      >
+        {triggerLabel}
       </ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
@@ -67,23 +111,81 @@ export const Playground: Story = {
     </ContextMenu>
   ),
   play: async ({ canvasElement, step, args }) => {
-    const canvas = within(canvasElement);
-    const trigger = canvas.getByText("Clique com o botão direito aqui");
+    const area = () => within(canvasElement).getByTestId("area");
 
-    await step("right-click abre o menu e dispara onOpenChange", async () => {
-      // userEvent.pointer com [MouseRight] pode não disparar contextmenu nativo.
-      // Disparamos o evento contextmenu diretamente para confirmar o callback.
-      trigger.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
-      // base-ui passa (open, eventDetails) — usamos expect.objectContaining para ignorar o 2º arg
-      await expect(args.onOpenChange).toHaveBeenCalled();
-      const calls = (args.onOpenChange as ReturnType<typeof fn>).mock.calls;
-      await expect(calls.some((call) => call[0] === true)).toBe(true);
+    await step("O menu do navegador não aparece por cima do nosso", async () => {
+      // `defaultPrevented` é a única prova possível aqui: o menu nativo não
+      // existe no DOM. Sem esta chamada barrada, os dois menus se sobrepõem.
+      await fecharMenu();
+      const evento = new MouseEvent("contextmenu", { bubbles: true, cancelable: true });
+      area().dispatchEvent(evento);
+      await waitFor(() => expect(evento.defaultPrevented).toBe(true));
     });
 
-    await step("Escape fecha o menu e dispara onOpenChange(false)", async () => {
+    await step("O botão direito abre o menu ONDE o ponteiro estava", async () => {
+      // O popup não é ancorado no gatilho: ele nasce no ponto do gesto. É a
+      // única diferença real em relação ao DropdownMenu.
+      const menu = await abrirPorGesto(area());
+      const caixaArea = area().getBoundingClientRect();
+      const caixaMenu = menu.getBoundingClientRect();
+      await expect(
+        Math.abs(caixaMenu.left - (caixaArea.left + caixaArea.width / 2)),
+      ).toBeLessThan(24);
+      await expect(
+        Math.abs(caixaMenu.top - (caixaArea.top + caixaArea.height / 2)),
+      ).toBeLessThan(24);
+      await expect(args.onOpenChange).toHaveBeenCalled();
+    });
+
+    await step("Os itens são itens de menu de verdade", async () => {
+      const menu = await waitForPortal("menu");
+      const itens = [...menu.querySelectorAll('[data-slot="context-menu-item"]')];
+      await expect(itens.length).toBe(3);
+      for (const item of itens) await expect(item.getAttribute("role")).toBe("menuitem");
+      await expect(
+        menu.querySelector('[data-slot="context-menu-separator"]')?.getAttribute("role"),
+      ).toBe("separator");
+    });
+
+    await step("O atalho é lido junto do item, não escondido", async () => {
+      // "Excluir, ⌫" é o nome útil. Com `aria-hidden` no atalho a pessoa ouviria
+      // só "Excluir" e o atalho não ensinaria nada.
+      const menu = await waitForPortal("menu");
+      const atalho = menu.querySelector<HTMLElement>('[data-slot="context-menu-shortcut"]')!;
+      await expect(atalho.hasAttribute("aria-hidden")).toBe(false);
+      await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
+    });
+
+    await step("As setas percorrem os itens na ordem em que aparecem", async () => {
+      // O foco parte de um item conhecido: assim o passo vale igual na primeira
+      // rodada e no replay, e não depende de onde a abertura deixou o foco.
+      const menu = await waitForPortal("menu");
+      const itens = [...menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')];
+      itens[0].focus();
+      await userEvent.keyboard("{ArrowDown}");
+      await waitFor(() => expect(document.activeElement).toBe(itens[1]));
+      await userEvent.keyboard("{ArrowUp}");
+      await waitFor(() => expect(document.activeElement).toBe(itens[0]));
+    });
+
+    await step("Escape fecha e devolve o foco à área", async () => {
+      await abrirPorGesto(area());
       await userEvent.keyboard("{Escape}");
-      const calls = (args.onOpenChange as ReturnType<typeof fn>).mock.calls;
-      await expect(calls.some((call) => call[0] === false)).toBe(true);
+      await waitForPortalGone("menu");
+      await waitFor(() => expect(document.activeElement).toBe(area()));
+    });
+
+    await step("Clique fora fecha", async () => {
+      await abrirPorGesto(area());
+      await clicarFora();
+      await waitForPortalGone("menu");
+    });
+
+    await step("A story termina com o menu ABERTO", async () => {
+      // É o estado que o Chromatic fotografa e o axe varre — `visual.item1`
+      // descreve o menu aberto, não a área vazia.
+      const menu = await abrirPorGesto(area());
+      await expect(menu).toBeVisible();
     });
   },
 };

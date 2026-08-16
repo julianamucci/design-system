@@ -572,10 +572,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       >
         <ContextMenu @update:open="handleDemoMenuOpenChange">
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -669,10 +669,10 @@ const codeCompositionShortcuts = `<ContextMenu>
         >
           <ContextMenu>
             <ContextMenuTrigger
-              class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+              class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
               data-align="center"
               data-justify="center"
-              style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+             
             >
               Área com menu
             </ContextMenuTrigger>
@@ -689,10 +689,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #dont-preview-0>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             Área (sem botão)
           </ContextMenuTrigger>
@@ -708,10 +708,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #do-preview-1>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             Clique com direito
           </ContextMenuTrigger>
@@ -727,10 +727,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #dont-preview-1>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             Clique com direito
           </ContextMenuTrigger>
@@ -754,10 +754,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #do-preview-2>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             Clique com direito
           </ContextMenuTrigger>
@@ -802,10 +802,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-0>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -824,10 +824,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-1>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -846,10 +846,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-2>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -871,10 +871,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-3>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -904,10 +904,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-4>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -939,10 +939,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-5>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>
@@ -964,10 +964,10 @@ const codeCompositionShortcuts = `<ContextMenu>
       <template #variant-preview-6>
         <ContextMenu>
           <ContextMenuTrigger
-            class="nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default"
+            class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
             data-align="center"
             data-justify="center"
-            style="height: 120px; max-width: 300px; border-style: dashed; user-select: none"
+           
           >
             {{ tContent('demonstration.labels.triggerLabel') }}
           </ContextMenuTrigger>

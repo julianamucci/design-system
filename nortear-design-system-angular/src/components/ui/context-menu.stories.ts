@@ -5,9 +5,11 @@ import { NDS_CONTEXT_MENU } from './context-menu';
 import { NdsContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 
 type ContextMenuArgs = {
   triggerLabel: string;
+  areaClasse: string;
   onSelect: (item: string) => void;
 };
 
@@ -68,11 +70,16 @@ const meta: Meta<ContextMenuArgs> = {
   },
   argTypes: {
     triggerLabel: { control: 'text', description: 'Texto da área que responde ao gesto.' },
-    // Sem entrada em argTypes o renderer Angular não repassa a função ao
-    // template — ver armadilha 5 no CLAUDE.md deste stack.
+    // Sem entrada em argTypes o renderer Angular não repassa NADA ao template —
+    // nem função, nem string. Ver armadilha 5 no CLAUDE.md deste stack.
+    areaClasse: { control: false, table: { disable: true } },
     onSelect: { control: false, table: { disable: true } },
   },
-  args: { triggerLabel: 'Clique com o botão direito', onSelect: fn() },
+  args: {
+    triggerLabel: 'Clique com o botão direito aqui',
+    areaClasse: AREA_CLICK_DIREITO,
+    onSelect: fn(),
+  },
 };
 
 export default meta;
@@ -85,14 +92,20 @@ export const Playground: Story = {
       'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
       'accessibility.item7', 'accessibility.item8',
-      'visual.item1', 'visual.item2',
+      'visual.item1',
     ],
   },
   render: (args) => ({
     props: { ...args },
     template: `
       <div ndsContextMenu>
-        <div ndsContextMenuTrigger data-testid="area">{{ triggerLabel }}</div>
+        <div
+          ndsContextMenuTrigger
+          [class]="areaClasse"
+          data-align="center"
+          data-justify="center"
+          data-testid="area"
+        >{{ triggerLabel }}</div>
 
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem (onSelect)="onSelect('editar')">
@@ -113,6 +126,16 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const area = () => canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
+
+    await step('O menu do navegador não aparece por cima do nosso', async () => {
+      // `defaultPrevented` é a única prova possível aqui: o menu nativo não
+      // existe no DOM. Sem esta chamada barrada, os dois menus se sobrepõem.
+      const evento = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
+      area().dispatchEvent(evento);
+      await waitFor(() => expect(evento.defaultPrevented).toBe(true));
+      await userEvent.keyboard('{Escape}');
+      await esperarPortalSumir('menu');
+    });
 
     await step('O botão direito abre o menu ONDE o ponteiro estava', async () => {
       // O popup não é ancorado no gatilho: ele nasce no ponto do gesto. É a
@@ -168,6 +191,15 @@ export const Playground: Story = {
       );
       await esperarPortalSumir('menu');
       await expect(args.onSelect).toHaveBeenCalledWith('duplicar');
+    });
+
+    await step('A story termina com o menu ABERTO', async () => {
+      // É o estado que o Chromatic fotografa e o axe varre — `visual.item1`
+      // descreve o menu ABERTO, com itens, divisória e atalho. Até esta passada
+      // a play terminava escolhendo um item, ou seja, com o menu fechado: a
+      // declaração de cobertura visual apontava para uma foto da área vazia.
+      const menu = await abrirPorGesto(area());
+      await expect(menu).toBeVisible();
     });
   },
 };

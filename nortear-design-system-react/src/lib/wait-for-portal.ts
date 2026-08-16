@@ -18,6 +18,25 @@ import { within, waitFor } from "storybook/test";
 export const REGRA_GUARDA_DE_FOCO = { id: "aria-hidden-focus", enabled: false } as const;
 
 /**
+ * Regra do axe desligada nas stories que terminam com um SUBMENU aberto.
+ *
+ * Ao abrir um submenu, o `@base-ui/react` deixa no menu pai um
+ * `<span aria-owns="…">` — é ele que amarra o popup do submenu, que vive em
+ * portal, ao item que o dispara. Essa associação é justamente o que faz o leitor
+ * de tela anunciar a relação; o axe, porém, só olha a lista de filhos permitidos
+ * de `role="menu"` (`aria-required-children`) e vê um `<span>` estranho ali.
+ *
+ * Não há saída pelo nosso lado: tirar o span quebraria a associação, e fechar o
+ * submenu no fim da story contrariaria `testes.visual.item3`, que descreve o
+ * submenu ABERTO. A correção é da lib — desligar a regra é o que mantém as
+ * outras valendo enquanto isso.
+ */
+export const REGRA_FILHOS_DE_MENU = {
+  id: "aria-required-children",
+  enabled: false,
+} as const;
+
+/**
  * Aguarda elemento portalizado aparecer + animação concluir.
  * - Procura no document.body (não no canvas — portais escapam)
  * - Aguarda data-state="open" + role visible + opacity>0.5

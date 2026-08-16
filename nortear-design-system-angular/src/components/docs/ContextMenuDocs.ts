@@ -18,6 +18,7 @@ import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NDS_CONTEXT_MENU } from '@/components/ui/context-menu';
 import uiTranslations from '@/i18n/ui.json';
 import contextMenuTranslations from '@shared/content/context-menu/translations.json';
+import { AREA_CLICK_DIREITO } from '@shared/primitives/context-menu-area';
 
 import {
   NdsDocsPageLayout,
@@ -151,7 +152,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
     <ng-template #tplDoDont1Do>
       <div class="nds-cluster nds-w-full" data-spacing="sm">
         <div ndsContextMenu>
-          <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+          <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
           <ng-template ndsContextMenuContent>
             <div ndsContextMenuItem>{{ t('demonstration.labels.edit') }}</div>
           </ng-template>
@@ -164,7 +165,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
 
     <ng-template #tplDoDont1Dont>
       <div ndsContextMenu class="nds-w-full">
-        <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+        <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem>{{ t('demonstration.labels.edit') }}</div>
         </ng-template>
@@ -173,7 +174,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
 
     <ng-template #tplDoDont2Do>
       <div ndsContextMenu class="nds-w-full">
-        <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+        <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem>{{ t('demonstration.labels.edit') }}</div>
           <div ndsContextMenuItem>{{ t('demonstration.labels.duplicate') }}</div>
@@ -187,7 +188,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
 
     <ng-template #tplDoDont2Dont>
       <div ndsContextMenu class="nds-w-full">
-        <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+        <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem variant="destructive">
             {{ t('demonstration.labels.delete') }}
@@ -200,7 +201,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
 
     <ng-template #tplDoDont3Do>
       <div ndsContextMenu class="nds-w-full">
-        <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+        <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem>
             {{ t('demonstration.labels.edit') }}
@@ -212,7 +213,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
 
     <ng-template #tplDoDont3Dont>
       <div ndsContextMenu class="nds-w-full">
-        <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+        <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem>{{ t('demonstration.labels.edit') }}</div>
         </ng-template>
@@ -221,7 +222,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
 
     <ng-template #tplVarDefault>
       <div ndsContextMenu class="nds-w-full">
-        <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+        <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem>{{ t('demonstration.labels.edit') }}</div>
           <div ndsContextMenuItem>{{ t('demonstration.labels.duplicate') }}</div>
@@ -231,7 +232,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
 
     <ng-template #tplVarDestructive>
       <div ndsContextMenu class="nds-w-full">
-        <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+        <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem>{{ t('demonstration.labels.edit') }}</div>
           <div ndsContextMenuSeparator></div>
@@ -244,7 +245,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
 
     <ng-template #tplVarSubmenu>
       <div ndsContextMenu class="nds-w-full">
-        <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+        <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuItem>{{ t('demonstration.labels.edit') }}</div>
           <div ndsContextMenuSub>
@@ -260,7 +261,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
 
     <ng-template #tplVarSelecao>
       <div ndsContextMenu class="nds-w-full">
-        <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+        <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
         <ng-template ndsContextMenuContent>
           <div ndsContextMenuCheckboxItem [checked]="true">
             {{ t('demonstration.labels.duplicate') }}
@@ -296,7 +297,7 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
         <nds-docs-demonstration [title]="t('demonstration.title')">
           <div class="nds-stack nds-w-full" data-spacing="md">
             <div ndsContextMenu>
-              <div ndsContextMenuTrigger>{{ t('demonstration.labels.triggerLabel') }}</div>
+              <div ndsContextMenuTrigger [class]="areaClasse" data-align="center" data-justify="center">{{ t('demonstration.labels.triggerLabel') }}</div>
 
               <ng-template ndsContextMenuContent>
                 <div ndsContextMenuItem (onSelect)="registrarEscolha('edit')">
@@ -438,6 +439,13 @@ const CUSTOMIZATION_CODE = `/* O menu lê os tokens do tema — personalizar é
 export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
+  /**
+   * A moldura tracejada é o único sinal de "clique com o botão direito aqui".
+   * Este stack era o único cujas docs pages não a desenhavam: o gatilho saía sem
+   * borda nenhuma, e a pessoa não tinha onde mirar. A classe vem do módulo
+   * compartilhado, que é o mesmo das stories e das outras quatro stacks.
+   */
+  protected readonly areaClasse = AREA_CLICK_DIREITO;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly anatomyCode = ANATOMY_CODE;
   protected readonly customizationCode = CUSTOMIZATION_CODE;

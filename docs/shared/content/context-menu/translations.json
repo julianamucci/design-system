@@ -36,7 +36,7 @@
       "item8": "<strong>ContextMenuRadioGroup</strong> + <strong>ContextMenuRadioItem</strong> — seleção exclusiva entre opções.",
       "item9": "<strong>ContextMenuSub</strong> — raiz do submenu; contém <code>SubTrigger</code> e <code>SubContent</code>.",
       "item10": "<strong>ContextMenuSeparator</strong> — linha divisória horizontal entre grupos.",
-      "item11": "<strong>ContextMenuShortcut</strong> — span visual de atalho de teclado; apenas decorativo.",
+      "item11": "<strong>ContextMenuShortcut</strong> — atalho de teclado exibido à direita do rótulo; é lido junto do item, e a tecla em si precisa de um listener próprio.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
@@ -139,7 +139,7 @@
         },
         "withShortcuts": {
           "name": "Itens com atalhos",
-          "description": "Itens combinando label + <code>Shortcut</code> alinhado à direita. O <code>Shortcut</code> é puramente visual (<code>aria-hidden</code>) — o atalho real precisa ser registrado por um listener global.",
+          "description": "Itens combinando rótulo + <code>Shortcut</code> alinhado à direita. O <code>Shortcut</code> é lido junto do item pelo leitor de tela; a tecla real precisa ser registrada por um listener global.",
           "use": "Ações que já possuem atalho global na aplicação (⌘E, ⌘D, ⌫). Mantém paridade entre menu contextual e teclado e ensina o atalho ao usuário."
         },
         "label": "Rótulo de grupo não interativo. Prop <code>inset</code> adiciona padding-left para alinhar com itens com ícone."
@@ -160,7 +160,7 @@
       "open": {
         "label": "Aberto",
         "trigger": "Right-click na área do trigger",
-        "behavior": "Popup posicionado na coordenada do cursor; animação fade-in + zoom-in-95"
+        "behavior": "Popup posicionado na coordenada do cursor; transição de entrada"
       },
       "focused": {
         "label": "Focado",
@@ -170,7 +170,7 @@
       "disabled": {
         "label": "Desabilitado",
         "trigger": "Prop <code>disabled</code> no item",
-        "behavior": "Opacidade 50%; pointer-events desativados; não recebe foco"
+        "behavior": "Atenuado e anunciado como indisponível; não ativa"
       },
       "checked": {
         "label": "Marcado",
@@ -234,13 +234,13 @@
         "border": "Linha separadora",
         "shadow": "Sombra do popup",
         "radius": "Border radius do popup e dos itens",
-        "zIndex": "Camada de empilhamento (<code>z-50</code>)"
+        "zIndex": "Camada de empilhamento do popup"
       },
       "customizationTitle": "Como personalizar via tema:"
     },
     "accessibility": {
       "title": "Acessibilidade",
-      "summary": "Context Menu implementa <code>role=\"menu\"</code> e <code>role=\"menuitem\"</code> automaticamente via Base UI. Atenção: right-click é inacessível em touch e não descobrível por teclado — toda ação deve ter alternativa acessível. Cumpre WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "summary": "Context Menu implementa <code>role=\"menu\"</code> e <code>role=\"menuitem\"</code> automaticamente. Atenção: right-click é inacessível em touch e não descobrível por teclado — toda ação deve ter alternativa acessível. Cumpre WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
       "warning": "Aviso crítico: toda ação disponível no Context Menu deve ter uma alternativa acessível — botão visível, ícone de ação na linha ou DropdownMenu.",
       "keyboard": {
         "rightClick": "Clique direito (ou menu key) abre o menu na posição do cursor.",
@@ -251,7 +251,7 @@
         "enter": "Ativa o item focado.",
         "space": "Ativa o item focado (CheckboxItem alterna estado).",
         "escape": "Fecha o menu e retorna o foco ao trigger.",
-        "tab": "Fecha o menu (o menu não aprisionaa foco como Dialog)."
+        "tab": "Fecha o menu (o menu não aprisiona o foco como Dialog)."
       },
       "aria": {
         "roleMenu": "<code>role=\"menu\"</code> — aplicado automaticamente no <code>ContextMenuContent</code>.",
@@ -267,7 +267,7 @@
         "onOpen": "Ao abrir: leitor anuncia o menu e o primeiro item focado.",
         "onNavigate": "Ao navegar: leitor anuncia o label do item e seu estado (checked, disabled).",
         "onSelect": "Ao selecionar: leitor anuncia a ação realizada.",
-        "shortcuts": "ContextMenuShortcut tem aria-hidden implícito pelo Base UI — não anunciado pelo leitor.",
+        "shortcuts": "O atalho é lido junto do item: \"Excluir, Del\" é o nome útil. Escondê-lo deixaria a pessoa sem saber que o atalho existe.",
         "alternative": "Alternativa acessível obrigatória: o usuário de leitor de tela pode não descobrir o Context Menu."
       }
     },
@@ -320,7 +320,7 @@
         "description": "O que deve acontecer em cada interação com o Context Menu.",
         "item1": {
           "action": "Right-click na área do trigger",
-          "result": "Menu abre na posição do cursor com animação fade-in + zoom-in-95",
+          "result": "Menu abre na coordenada onde o ponteiro estava, com transição de entrada",
           "priority": "high"
         },
         "item2": {
@@ -335,7 +335,7 @@
         },
         "item4": {
           "action": "Navegar com Arrow Down/Up",
-          "result": "Foco move entre itens; itens disabled são ignorados",
+          "result": "Foco percorre os itens do menu na ordem em que aparecem",
           "priority": "high"
         },
         "item5": {
@@ -350,22 +350,22 @@
         },
         "item7": {
           "action": "Selecionar CheckboxItem",
-          "result": "Estado checked alterna; CheckIcon aparece/desaparece",
+          "result": "Estado marcado alterna e é anunciado por aria-checked; o indicador de marcação aparece e some",
           "priority": "medium"
         },
         "item8": {
           "action": "Selecionar RadioItem dentro de RadioGroup",
-          "result": "RadioItem selecionado exibe CheckIcon; seleção anterior é limpa",
+          "result": "A opção escolhida passa a marcada e a anterior é desmarcada — só uma fica ativa",
           "priority": "medium"
         },
         "item9": {
-          "action": "Item com disabled=true",
-          "result": "Opacidade 50%; pointer-events-none; não recebe foco via teclado",
+          "action": "Item desabilitado no menu",
+          "result": "Anunciado por aria-disabled e atenuado; não ativa por clique nem por Enter, e o menu segue aberto",
           "priority": "medium"
         },
         "item10": {
           "action": "Renderizar item com variant destructive",
-          "result": "Texto text-destructive; foco bg-destructive/10 text-destructive",
+          "result": "Item marcado como destrutivo pelo atributo de variante; cor de alerta no texto e no realce de foco",
           "priority": "high"
         }
       },
@@ -470,7 +470,7 @@
       "item8": "<strong>ContextMenuRadioGroup</strong> + <strong>ContextMenuRadioItem</strong> — exclusive selection among options.",
       "item9": "<strong>ContextMenuSub</strong> — submenu root; contains <code>SubTrigger</code> and <code>SubContent</code>.",
       "item10": "<strong>ContextMenuSeparator</strong> — horizontal divider line between groups.",
-      "item11": "<strong>ContextMenuShortcut</strong> — visual keyboard shortcut span; decorative only.",
+      "item11": "<strong>ContextMenuShortcut</strong> — keyboard shortcut shown to the right of the label; it is read together with the item, and the key itself needs its own listener.",
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
@@ -573,7 +573,7 @@
         },
         "withShortcuts": {
           "name": "Items with shortcuts",
-          "description": "Items combining label + <code>Shortcut</code> aligned to the right. <code>Shortcut</code> is purely visual (<code>aria-hidden</code>) — the actual shortcut must be wired via a global listener.",
+          "description": "Items combining label + <code>Shortcut</code> aligned to the right. <code>Shortcut</code> is read together with the item by the screen reader; the actual key must be wired via a global listener.",
           "use": "Actions that already have a global app shortcut (⌘E, ⌘D, ⌫). Keeps parity between context menu and keyboard and teaches the shortcut to the user."
         },
         "label": "Non-interactive group label. The <code>inset</code> prop adds padding-left to align with icon items."
@@ -594,7 +594,7 @@
       "open": {
         "label": "Open",
         "trigger": "Right-click on trigger area",
-        "behavior": "Popup positioned at cursor coordinates; fade-in + zoom-in-95 animation"
+        "behavior": "Popup positioned at cursor coordinates; entrance transition"
       },
       "focused": {
         "label": "Focused",
@@ -604,7 +604,7 @@
       "disabled": {
         "label": "Disabled",
         "trigger": "<code>disabled</code> prop on item",
-        "behavior": "50% opacity; pointer-events disabled; does not receive focus"
+        "behavior": "Dimmed and announced as unavailable; does not activate"
       },
       "checked": {
         "label": "Checked",
@@ -668,13 +668,13 @@
         "border": "Separator line",
         "shadow": "Popup shadow",
         "radius": "Popup and item border radius",
-        "zIndex": "Stacking layer (<code>z-50</code>)"
+        "zIndex": "Popup stacking layer"
       },
       "customizationTitle": "How to customize via theme:"
     },
     "accessibility": {
       "title": "Accessibility",
-      "summary": "Context Menu implements <code>role=\"menu\"</code> and <code>role=\"menuitem\"</code> automatically via Base UI. Note: right-click is inaccessible on touch and not keyboard-discoverable — every action must have an accessible alternative. Meets WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "summary": "Context Menu implements <code>role=\"menu\"</code> and <code>role=\"menuitem\"</code> automatically. Note: right-click is inaccessible on touch and not keyboard-discoverable — every action must have an accessible alternative. Meets WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
       "warning": "Critical warning: every action in the Context Menu must have an accessible alternative — visible button, inline action icon, or DropdownMenu.",
       "keyboard": {
         "rightClick": "Right-click (or menu key) opens the menu at cursor position.",
@@ -701,7 +701,7 @@
         "onOpen": "On open: reader announces the menu and the first focused item.",
         "onNavigate": "On navigation: reader announces the item label and its state (checked, disabled).",
         "onSelect": "On select: reader announces the action taken.",
-        "shortcuts": "ContextMenuShortcut has implicit aria-hidden via Base UI — not announced by the reader.",
+        "shortcuts": "The shortcut is read together with the item: \"Delete, Del\" is the useful name. Hiding it would leave the person unaware that the shortcut exists.",
         "alternative": "Accessible alternative required: screen reader users may not discover the Context Menu."
       }
     },
@@ -754,7 +754,7 @@
         "description": "What should happen for each Context Menu interaction.",
         "item1": {
           "action": "Right-click on trigger area",
-          "result": "Menu opens at cursor position with fade-in + zoom-in-95 animation",
+          "result": "Menu opens at the coordinate where the pointer was, with an entrance transition",
           "priority": "high"
         },
         "item2": {
@@ -769,7 +769,7 @@
         },
         "item4": {
           "action": "Navigate with Arrow Down/Up",
-          "result": "Focus moves between items; disabled items are skipped",
+          "result": "Focus moves through the menu items in the order they appear",
           "priority": "high"
         },
         "item5": {
@@ -784,22 +784,22 @@
         },
         "item7": {
           "action": "Select CheckboxItem",
-          "result": "Checked state toggles; CheckIcon appears/disappears",
+          "result": "Checked state toggles and is announced through aria-checked; the check indicator appears and disappears",
           "priority": "medium"
         },
         "item8": {
           "action": "Select RadioItem inside RadioGroup",
-          "result": "Selected RadioItem shows CheckIcon; previous selection is cleared",
+          "result": "The chosen option becomes checked and the previous one is cleared — only one stays active",
           "priority": "medium"
         },
         "item9": {
-          "action": "Item with disabled=true",
-          "result": "50% opacity; pointer-events-none; not reachable via keyboard",
+          "action": "Disabled item in the menu",
+          "result": "Announced through aria-disabled and dimmed; it does not activate by click or Enter, and the menu stays open",
           "priority": "medium"
         },
         "item10": {
           "action": "Render item with destructive variant",
-          "result": "Text text-destructive; focus bg-destructive/10 text-destructive",
+          "result": "Item marked as destructive through the variant attribute; alert colour on the text and on the focus highlight",
           "priority": "high"
         }
       },
@@ -904,7 +904,7 @@
       "item8": "<strong>ContextMenuRadioGroup</strong> + <strong>ContextMenuRadioItem</strong> — selección exclusiva entre opciones.",
       "item9": "<strong>ContextMenuSub</strong> — raíz del submenú; contiene <code>SubTrigger</code> y <code>SubContent</code>.",
       "item10": "<strong>ContextMenuSeparator</strong> — línea divisoria horizontal entre grupos.",
-      "item11": "<strong>ContextMenuShortcut</strong> — span visual de atajo de teclado; solo decorativo.",
+      "item11": "<strong>ContextMenuShortcut</strong> — atajo de teclado mostrado a la derecha de la etiqueta; se lee junto con el ítem, y la tecla en sí necesita su propio listener.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<ContextMenu>\n  <ContextMenuTrigger />\n  <ContextMenuContent>\n    <ContextMenuGroup>\n      <ContextMenuLabel />\n      <ContextMenuItem />\n      <ContextMenuCheckboxItem />\n    </ContextMenuGroup>\n    <ContextMenuSeparator />\n    <ContextMenuRadioGroup>\n      <ContextMenuRadioItem />\n    </ContextMenuRadioGroup>\n    <ContextMenuSub>\n      <ContextMenuSubTrigger />\n      <ContextMenuSubContent>\n        <ContextMenuItem />\n      </ContextMenuSubContent>\n    </ContextMenuSub>\n  </ContextMenuContent>\n</ContextMenu>",
@@ -1007,7 +1007,7 @@
         },
         "withShortcuts": {
           "name": "Ítems con atajos",
-          "description": "Ítems que combinan label + <code>Shortcut</code> alineado a la derecha. <code>Shortcut</code> es puramente visual (<code>aria-hidden</code>) — el atajo real debe registrarse mediante un listener global.",
+          "description": "Ítems que combinan etiqueta + <code>Shortcut</code> alineado a la derecha. El <code>Shortcut</code> se lee junto con el ítem por el lector de pantalla; la tecla real debe registrarse mediante un listener global.",
           "use": "Acciones que ya tienen atajo global en la aplicación (⌘E, ⌘D, ⌫). Mantiene paridad entre menú contextual y teclado y enseña el atajo al usuario."
         },
         "label": "Etiqueta de grupo no interactiva. La prop <code>inset</code> agrega padding-left para alinear con ítems con ícono."
@@ -1028,7 +1028,7 @@
       "open": {
         "label": "Abierto",
         "trigger": "Clic derecho en el área del trigger",
-        "behavior": "Popup posicionado en las coordenadas del cursor; animación fade-in + zoom-in-95"
+        "behavior": "Popup posicionado en las coordenadas del cursor; transición de entrada"
       },
       "focused": {
         "label": "Enfocado",
@@ -1038,7 +1038,7 @@
       "disabled": {
         "label": "Deshabilitado",
         "trigger": "Prop <code>disabled</code> en el ítem",
-        "behavior": "Opacidad 50%; pointer-events desactivados; no recibe foco"
+        "behavior": "Atenuado y anunciado como no disponible; no se activa"
       },
       "checked": {
         "label": "Marcado",
@@ -1102,13 +1102,13 @@
         "border": "Línea separadora",
         "shadow": "Sombra del popup",
         "radius": "Border radius del popup e ítems",
-        "zIndex": "Capa de apilamiento (<code>z-50</code>)"
+        "zIndex": "Capa de apilamiento del popup"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
     },
     "accessibility": {
       "title": "Accesibilidad",
-      "summary": "Context Menu implementa <code>role=\"menu\"</code> y <code>role=\"menuitem\"</code> automáticamente vía Base UI. Atención: el clic derecho es inaccesible en touch y no es descubrible por teclado — toda acción debe tener una alternativa accesible. Cumple WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
+      "summary": "Context Menu implementa <code>role=\"menu\"</code> y <code>role=\"menuitem\"</code> automáticamente. Atención: el clic derecho es inaccesible en touch y no descubrible por teclado — toda acción debe tener alternativa accesible. Cumple WCAG 2.2 AA: 1.4.1, 2.1.1, 4.1.2.",
       "warning": "Aviso crítico: toda acción disponible en el Context Menu debe tener una alternativa accesible — botón visible, ícono de acción en la fila o DropdownMenu.",
       "keyboard": {
         "rightClick": "Clic derecho (o tecla de menú) abre el menú en la posición del cursor.",
@@ -1135,7 +1135,7 @@
         "onOpen": "Al abrir: el lector anuncia el menú y el primer ítem enfocado.",
         "onNavigate": "Al navegar: el lector anuncia la etiqueta del ítem y su estado (checked, disabled).",
         "onSelect": "Al seleccionar: el lector anuncia la acción realizada.",
-        "shortcuts": "ContextMenuShortcut tiene aria-hidden implícito vía Base UI — no es anunciado por el lector.",
+        "shortcuts": "El atajo se lee junto con el ítem: \"Eliminar, Supr\" es el nombre útil. Ocultarlo dejaría a la persona sin saber que el atajo existe.",
         "alternative": "Alternativa accesible obligatoria: el usuario de lector de pantalla puede no descubrir el Context Menu."
       }
     },
@@ -1188,7 +1188,7 @@
         "description": "Lo que debe ocurrir en cada interacción con el Context Menu.",
         "item1": {
           "action": "Clic derecho en el área del trigger",
-          "result": "Menú abre en la posición del cursor con animación fade-in + zoom-in-95",
+          "result": "El menú abre en la coordenada donde estaba el puntero, con transición de entrada",
           "priority": "high"
         },
         "item2": {
@@ -1203,7 +1203,7 @@
         },
         "item4": {
           "action": "Navegar con Arrow Down/Up",
-          "result": "Foco se mueve entre ítems; ítems disabled son omitidos",
+          "result": "El foco recorre los ítems del menú en el orden en que aparecen",
           "priority": "high"
         },
         "item5": {
@@ -1218,22 +1218,22 @@
         },
         "item7": {
           "action": "Seleccionar CheckboxItem",
-          "result": "Estado checked alterna; CheckIcon aparece/desaparece",
+          "result": "El estado marcado alterna y se anuncia con aria-checked; el indicador de marca aparece y desaparece",
           "priority": "medium"
         },
         "item8": {
           "action": "Seleccionar RadioItem dentro de RadioGroup",
-          "result": "RadioItem seleccionado muestra CheckIcon; selección anterior se limpia",
+          "result": "La opción elegida pasa a marcada y la anterior se desmarca — solo una queda activa",
           "priority": "medium"
         },
         "item9": {
-          "action": "Ítem con disabled=true",
-          "result": "Opacidad 50%; pointer-events-none; no se alcanza vía teclado",
+          "action": "Ítem deshabilitado en el menú",
+          "result": "Anunciado con aria-disabled y atenuado; no se activa con clic ni con Enter, y el menú sigue abierto",
           "priority": "medium"
         },
         "item10": {
           "action": "Renderizar ítem con variante destructive",
-          "result": "Texto text-destructive; foco bg-destructive/10 text-destructive",
+          "result": "Ítem marcado como destructivo por el atributo de variante; color de alerta en el texto y en el resalte de foco",
           "priority": "high"
         }
       },

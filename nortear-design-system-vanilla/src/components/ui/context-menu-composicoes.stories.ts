@@ -1,5 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, fn } from 'storybook/test';
+import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
+import { createContextMenu } from './context-menu';
+import {
+  abrirPorGesto,
+  criarAreaDeClique,
+  menuAberto,
+} from '@shared/testing/context-menu-area';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -13,7 +19,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Composicoes avançadas do ContextMenu: com checkbox simulado, radio group simulado, submenu inline e atalhos visuais.',
+          'Composições do ContextMenu: atalhos, marcação, escolha única, submenu e o menu completo.',
       },
     },
   },
@@ -22,527 +28,237 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+const item = (valor: string) =>
+  document.querySelector<HTMLElement>(`[data-value="${valor}"]`)!;
 
-function makeTrigger(label: string): HTMLElement {
-  const el = document.createElement('div');
-  el.className =
-    'nds-cluster nds-rounded-md nds-text-body nds-text-muted-foreground nds-cursor-default';
-  el.dataset.justify = 'center';
-  el.style.width = '300px';
-  el.style.height = '150px';
-  el.style.border = '1px dashed hsl(var(--border))';
-  el.style.userSelect = 'none';
-  el.textContent = label;
-  return el;
-}
+// ─── Com atalhos ──────────────────────────────────────────────────────────────
 
-/** Cria SVG de check via DOM (sem innerHTML). */
-function createCheckSvg(): SVGSVGElement {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('width', '14');
-  svg.setAttribute('height', '14');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '2');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('d', 'M20 6 9 17l-5-5');
-  svg.appendChild(path);
-  return svg;
-}
+export const WithShortcut: Story = {
+  render: () =>
+    createContextMenu({
+      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      items: [
+        { type: 'item', label: 'Editar', value: 'editar', shortcut: '⌘E', onClick: fn() },
+        { type: 'item', label: 'Desfazer', value: 'undo', shortcut: '⌘Z', onClick: fn() },
+        { type: 'separator' },
+        { type: 'item', label: 'Excluir', value: 'delete', shortcut: '⌫', variant: 'destructive' },
+      ],
+    }),
+  play: async ({ canvasElement, step }) => {
+    const area = () => within(canvasElement).getByTestId('area');
 
-/** Cria SVG de ponto de radio via DOM (sem innerHTML). */
-function createRadioDotSvg(): SVGSVGElement {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('width', '8');
-  svg.setAttribute('height', '8');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'currentColor');
-  const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-  circle.setAttribute('cx', '12');
-  circle.setAttribute('cy', '12');
-  circle.setAttribute('r', '8');
-  svg.appendChild(circle);
-  return svg;
-}
+    await step('O atalho vive dentro do item e é lido junto dele', async () => {
+      const menu = await abrirPorGesto(area());
+      const atalhos = menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-shortcut"]');
+      await expect(atalhos.length).toBe(3);
+      for (const atalho of atalhos) {
+        await expect(atalho.hasAttribute('aria-hidden')).toBe(false);
+        await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
+      }
+    });
 
-/** Cria SVG de chevron-right via DOM (sem innerHTML). */
-function createChevronSvg(): SVGSVGElement {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('width', '14');
-  svg.setAttribute('height', '14');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '2');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  path.setAttribute('d', 'm9 18 6-6-6-6');
-  svg.appendChild(path);
-  return svg;
-}
+    await step('O atalho fica encostado à direita do rótulo', async () => {
+      // É o alinhamento que faz a coluna de atalhos existir; sem ele o texto
+      // sai colado no rótulo e a leitura visual se perde.
+      const caixaItem = item('editar').getBoundingClientRect();
+      const caixaAtalho = item('editar')
+        .querySelector<HTMLElement>('[data-slot="context-menu-shortcut"]')!
+        .getBoundingClientRect();
+      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(16);
+    });
+  },
+};
 
-// ─── ComCheckbox ──────────────────────────────────────────────────────────────
+// ─── Com marcação ─────────────────────────────────────────────────────────────
 
 export const WithCheckbox: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Itens com indicador de marcação (CheckboxItem). Usa `role="menuitemcheckbox"` e `aria-checked`. SVG de check criado via DOM.',
-      },
-    },
-  },
-  render: () => {
-    let showStatusBar = true;
-    let showPanel = false;
-
-    const wrapper = document.createElement('div');
-    wrapper.style.display = 'contents';
-
-    const t = makeTrigger('Clique com o botão direito — Checkbox');
-
-    const menu = document.createElement('ul');
-    menu.setAttribute('role', 'menu');
-    menu.className =
-      'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md';
-    menu.dataset.slot = 'context-menu-content';
-    menu.style.position = 'absolute';
-    menu.style.display = 'none';
-
-    function makeCheckboxItem(label: string, checked: boolean, onToggle: () => void): HTMLLIElement {
-      const li = document.createElement('li');
-      li.setAttribute('role', 'menuitemcheckbox');
-      li.setAttribute('aria-checked', String(checked));
-      li.className =
-        'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
-      li.setAttribute('tabindex', '-1');
-
-      const indicator = document.createElement('span');
-      indicator.className = 'nds-inline-center nds-icon-sm';
-      if (checked) indicator.appendChild(createCheckSvg());
-
-      const labelSpan = document.createElement('span');
-      labelSpan.textContent = label;
-
-      li.append(indicator, labelSpan);
-      li.addEventListener('click', () => {
-        checked = !checked;
-        onToggle();
-        li.setAttribute('aria-checked', String(checked));
-        indicator.replaceChildren();
-        if (checked) indicator.appendChild(createCheckSvg());
-      });
-
-      return li;
-    }
-
-    const sep1 = document.createElement('li');
-    sep1.setAttribute('role', 'separator');
-    sep1.className = 'nds-dropdown-menu-separator';
-
-    const lbl = document.createElement('li');
-    lbl.setAttribute('role', 'presentation');
-    lbl.className = 'nds-dropdown-menu-label';
-    lbl.textContent = 'Aparência';
-
-    menu.append(
-      makeCheckboxItem('Barra de Status', showStatusBar, () => { showStatusBar = !showStatusBar; }),
-      makeCheckboxItem('Painel Lateral',  showPanel,     () => { showPanel = !showPanel; }),
-      sep1,
-      lbl,
-    );
-
-    document.body.appendChild(menu);
-
-    let isOpen = false;
-
-    function closeMenu() {
-      menu.style.display = 'none';
-      isOpen = false;
-      document.removeEventListener('click', onOutside);
-    }
-
-    function onOutside(e: MouseEvent) {
-      if (!menu.contains(e.target as Node) && !t.contains(e.target as Node)) closeMenu();
-    }
-
-    t.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      if (isOpen) closeMenu();
-      menu.style.top  = `${e.clientY + window.scrollY}px`;
-      menu.style.left = `${e.clientX + window.scrollX}px`;
-      menu.style.display = 'block';
-      isOpen = true;
-      setTimeout(() => document.addEventListener('click', onOutside), 0);
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isOpen) closeMenu();
-    });
-
-    wrapper.appendChild(t);
-    return wrapper;
-  },
+  parameters: { covers: ['functional.item7', 'accessibility.item4'] },
+  render: () =>
+    createContextMenu({
+      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      items: [
+        { type: 'label', label: 'Visualização' },
+        { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: false },
+        { type: 'checkbox', label: 'Mostrar réguas', value: 'reguas', checked: true },
+      ],
+    }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Trigger presente', async () => {
-      const trigger = canvas.getByText(/Clique com o botão direito — Checkbox/i);
-      await expect(trigger).toBeInTheDocument();
+    const area = () => within(canvasElement).getByTestId('area');
+
+    await step('O papel diz que tipo de escolha o item é', async () => {
+      await abrirPorGesto(area());
+      await expect(item('grade').getAttribute('role')).toBe('menuitemcheckbox');
+      await expect(item('reguas').getAttribute('aria-checked')).toBe('true');
+    });
+
+    await step('Marcar alterna o estado anunciado e o indicador', async () => {
+      // Lê o estado ANTES de clicar: no replay a story parte do que a rodada
+      // anterior deixou, e um valor esperado fixo inverteria o resultado.
+      const antes = item('grade').getAttribute('aria-checked');
+      const esperado = antes === 'true' ? 'false' : 'true';
+      await userEvent.click(item('grade'));
+      await waitFor(() => expect(item('grade').getAttribute('aria-checked')).toBe(esperado));
+      await expect(!!item('grade').querySelector('svg')).toBe(esperado === 'true');
     });
   },
 };
 
-// ─── ComRadio ─────────────────────────────────────────────────────────────────
+// ─── Com escolha única ────────────────────────────────────────────────────────
 
 export const WithRadio: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'RadioGroup simulado: seleção exclusiva entre opções de visualização. Usa `role="menuitemradio"` e `aria-checked`. SVG criado via DOM.',
-      },
-    },
-  },
-  render: () => {
-    let selected = 'compact';
-
-    const wrapper = document.createElement('div');
-    wrapper.style.display = 'contents';
-
-    const t = makeTrigger('Clique com o botão direito — Radio');
-
-    const menu = document.createElement('ul');
-    menu.setAttribute('role', 'menu');
-    menu.className =
-      'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md';
-    menu.dataset.slot = 'context-menu-content';
-    menu.style.position = 'absolute';
-    menu.style.display = 'none';
-
-    const options = [
-      { value: 'compact',     label: 'Compacto'    },
-      { value: 'comfortable', label: 'Confortável' },
-      { value: 'spacious',    label: 'Espaçoso'    },
-    ];
-
-    function buildItems() {
-      menu.replaceChildren();
-      const lbl = document.createElement('li');
-      lbl.setAttribute('role', 'presentation');
-      lbl.className = 'nds-dropdown-menu-label';
-      lbl.textContent = 'Modo de exibição';
-      menu.appendChild(lbl);
-
-      options.forEach((opt) => {
-        const li = document.createElement('li');
-        li.setAttribute('role', 'menuitemradio');
-        li.setAttribute('aria-checked', String(opt.value === selected));
-        li.className =
-          'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
-        li.setAttribute('tabindex', '-1');
-
-        const indicator = document.createElement('span');
-        indicator.className = 'nds-inline-center nds-icon-sm';
-        if (opt.value === selected) indicator.appendChild(createRadioDotSvg());
-
-        const labelSpan = document.createElement('span');
-        labelSpan.textContent = opt.label;
-
-        li.append(indicator, labelSpan);
-        li.addEventListener('click', () => {
-          selected = opt.value;
-          buildItems();
-          closeMenu();
-        });
-        menu.appendChild(li);
-      });
-    }
-
-    buildItems();
-    document.body.appendChild(menu);
-
-    let isOpen = false;
-
-    function closeMenu() {
-      menu.style.display = 'none';
-      isOpen = false;
-      document.removeEventListener('click', onOutside);
-    }
-
-    function onOutside(e: MouseEvent) {
-      if (!menu.contains(e.target as Node) && !t.contains(e.target as Node)) closeMenu();
-    }
-
-    t.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      if (isOpen) closeMenu();
-      buildItems();
-      menu.style.top  = `${e.clientY + window.scrollY}px`;
-      menu.style.left = `${e.clientX + window.scrollX}px`;
-      menu.style.display = 'block';
-      isOpen = true;
-      setTimeout(() => document.addEventListener('click', onOutside), 0);
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isOpen) closeMenu();
-    });
-
-    wrapper.appendChild(t);
-    return wrapper;
-  },
+  parameters: { covers: ['functional.item8', 'accessibility.item5'] },
+  render: () =>
+    createContextMenu({
+      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      radioValue: 'grid',
+      items: [
+        { type: 'label', label: 'Layout' },
+        { type: 'radio', label: 'Grade', value: 'grid' },
+        { type: 'radio', label: 'Lista', value: 'list' },
+        { type: 'radio', label: 'Colunas', value: 'columns' },
+      ],
+    }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Trigger presente', async () => {
-      const trigger = canvas.getByText(/Clique com o botão direito — Radio/i);
-      await expect(trigger).toBeInTheDocument();
+    const area = () => within(canvasElement).getByTestId('area');
+
+    await step('O papel diz que a escolha é única', async () => {
+      await abrirPorGesto(area());
+      await expect(item('grid').getAttribute('role')).toBe('menuitemradio');
+      await expect(item('list').getAttribute('role')).toBe('menuitemradio');
+    });
+
+    await step('Escolher uma opção limpa a anterior', async () => {
+      // Alterna entre dois valores conhecidos e afirma o PAR: assim o passo vale
+      // igual em qualquer rodada, não importa de onde parta.
+      const partiuDeGrid = item('grid').getAttribute('aria-checked') === 'true';
+      const clicar = partiuDeGrid ? 'columns' : 'grid';
+      const outro = partiuDeGrid ? 'grid' : 'columns';
+      await userEvent.click(item(clicar));
+      await waitFor(() => expect(item(clicar).getAttribute('aria-checked')).toBe('true'));
+      await expect(item(outro).getAttribute('aria-checked')).toBe('false');
     });
   },
 };
 
-// ─── ComSubmenu ───────────────────────────────────────────────────────────────
+// ─── Com submenu ──────────────────────────────────────────────────────────────
 
 export const WithSubmenu: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Submenu inline: item "Compartilhar" exibe sub-opções ao ser focado/clicado. SubTrigger com ChevronRight via DOM; SubContent posicionado à direita.',
-      },
-    },
-  },
-  render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.style.display = 'contents';
-
-    const t = makeTrigger('Clique com o botão direito — Submenu');
-
-    const menu = document.createElement('ul');
-    menu.setAttribute('role', 'menu');
-    menu.className =
-      'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md';
-    menu.style.position = 'absolute';
-    menu.style.display = 'none';
-
-    function makeItem(label: string, onClick?: () => void): HTMLLIElement {
-      const li = document.createElement('li');
-      li.setAttribute('role', 'menuitem');
-      li.className =
-        'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
-      li.setAttribute('tabindex', '-1');
-      li.textContent = label;
-      if (onClick) li.addEventListener('click', onClick);
-      return li;
-    }
-
-    // SubTrigger
-    const subTrigger = document.createElement('li');
-    subTrigger.setAttribute('role', 'menuitem');
-    subTrigger.setAttribute('aria-haspopup', 'menu');
-    subTrigger.setAttribute('aria-expanded', 'false');
-    subTrigger.className =
-      'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
-    subTrigger.setAttribute('tabindex', '-1');
-
-    const subLabel = document.createElement('span');
-    subLabel.className = 'flex-1';
-    subLabel.textContent = 'Compartilhar';
-
-    const chevronWrapper = document.createElement('span');
-    chevronWrapper.appendChild(createChevronSvg());
-
-    subTrigger.append(subLabel, chevronWrapper);
-
-    // SubContent
-    const subContent = document.createElement('ul');
-    subContent.setAttribute('role', 'menu');
-    subContent.className =
-      'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md';
-    subContent.style.position = 'absolute';
-    subContent.style.display = 'none';
-    subContent.append(
-      makeItem('Por e-mail', fn()),
-      makeItem('Por link',   fn()),
-    );
-    document.body.appendChild(subContent);
-
-    function openSub() {
-      const rect = subTrigger.getBoundingClientRect();
-      subContent.style.top  = `${rect.top  + window.scrollY}px`;
-      subContent.style.left = `${rect.right + window.scrollX + 4}px`;
-      subContent.style.display = 'block';
-      subTrigger.setAttribute('aria-expanded', 'true');
-    }
-
-    function closeSub() {
-      subContent.style.display = 'none';
-      subTrigger.setAttribute('aria-expanded', 'false');
-    }
-
-    subTrigger.addEventListener('mouseenter', openSub);
-    subTrigger.addEventListener('click', openSub);
-    subTrigger.addEventListener('mouseleave', (e) => {
-      if (!subContent.contains(e.relatedTarget as Node)) closeSub();
-    });
-    subContent.addEventListener('mouseleave', (e) => {
-      if (!subTrigger.contains(e.relatedTarget as Node)) closeSub();
-    });
-
-    const sep = document.createElement('li');
-    sep.setAttribute('role', 'separator');
-    sep.className = 'nds-dropdown-menu-separator';
-
-    menu.append(
-      makeItem('Editar',   fn()),
-      makeItem('Duplicar', fn()),
-      subTrigger,
-      sep,
-      makeItem('Excluir',  fn()),
-    );
-    document.body.appendChild(menu);
-
-    let isOpen = false;
-
-    function closeMenu() {
-      menu.style.display = 'none';
-      closeSub();
-      isOpen = false;
-      document.removeEventListener('click', onOutside);
-    }
-
-    function onOutside(e: MouseEvent) {
-      if (
-        !menu.contains(e.target as Node) &&
-        !t.contains(e.target as Node) &&
-        !subContent.contains(e.target as Node)
-      ) {
-        closeMenu();
-      }
-    }
-
-    t.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      if (isOpen) closeMenu();
-      menu.style.top  = `${e.clientY + window.scrollY}px`;
-      menu.style.left = `${e.clientX + window.scrollX}px`;
-      menu.style.display = 'block';
-      isOpen = true;
-      setTimeout(() => document.addEventListener('click', onOutside), 0);
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isOpen) closeMenu();
-    });
-
-    wrapper.appendChild(t);
-    return wrapper;
-  },
+  parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item3'] },
+  render: () =>
+    createContextMenu({
+      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      items: [
+        { type: 'item', label: 'Editar', value: 'edit', onClick: fn() },
+        { type: 'item', label: 'Duplicar', value: 'duplicate', onClick: fn() },
+        {
+          type: 'submenu',
+          label: 'Compartilhar',
+          value: 'sub',
+          items: [
+            { type: 'item', label: 'Por e-mail', value: 'por-email', onClick: fn() },
+            { type: 'item', label: 'Por link', value: 'por-link', onClick: fn() },
+          ],
+        },
+      ],
+    }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Trigger do submenu presente', async () => {
-      const trigger = canvas.getByText(/Clique com o botão direito — Submenu/i);
-      await expect(trigger).toBeInTheDocument();
+    const area = () => within(canvasElement).getByTestId('area');
+    const subGatilho = () =>
+      document.querySelector<HTMLElement>('[data-slot="context-menu-sub-trigger"]')!;
+    const submenu = () =>
+      document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]');
+
+    await step('O sub-gatilho diz que abre um menu', async () => {
+      await abrirPorGesto(area());
+      await expect(subGatilho().getAttribute('aria-haspopup')).toBe('menu');
+      await expect(subGatilho().getAttribute('aria-expanded')).toBe('false');
+    });
+
+    await step('Seta direita abre o submenu ao lado do item que o dispara', async () => {
+      subGatilho().focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(subGatilho().getAttribute('aria-expanded')).toBe('true'));
+      await expect(
+        submenu()!.querySelectorAll('[data-slot="context-menu-item"]').length,
+      ).toBe(2);
+
+      // "À direita" é medida, não atributo: é o que o conteúdo promete e o que
+      // uma posição errada quebraria sem nenhum aviso.
+      await waitFor(() =>
+        expect(submenu()!.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+          subGatilho().getBoundingClientRect().left,
+        ),
+      );
+    });
+
+    await step('Seta esquerda fecha o submenu e devolve o foco ao sub-gatilho', async () => {
+      await userEvent.keyboard('{ArrowLeft}');
+      await waitFor(() => expect(subGatilho().getAttribute('aria-expanded')).toBe('false'));
+      await expect(document.activeElement).toBe(subGatilho());
+    });
+
+    await step('A story termina com o submenu ABERTO', async () => {
+      // `visual.item3` descreve o submenu aberto — é o que o Chromatic precisa
+      // fotografar.
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(submenu()).not.toBeNull());
     });
   },
 };
 
-// ─── ComShortcuts ─────────────────────────────────────────────────────────────
+// ─── Composição completa ──────────────────────────────────────────────────────
 
-export const WithShortcuts: Story = {
-  parameters: {
-    docs: {
-      description: {
-        story:
-          'Atalhos visuais (ContextMenuShortcut). São decorativos — `aria-hidden="true"`. Para funcionar, implemente os listeners separadamente.',
-      },
-    },
-  },
-  render: () => {
-    const wrapper = document.createElement('div');
-    wrapper.style.display = 'contents';
-
-    const t = makeTrigger('Clique com o botão direito — Shortcuts');
-
-    const menu = document.createElement('ul');
-    menu.setAttribute('role', 'menu');
-    menu.className =
-      'z-50 min-w-[8rem] overflow-hidden rounded-md border bg-popover p-1 text-popover-foreground shadow-md';
-    menu.style.position = 'absolute';
-    menu.style.display = 'none';
-
-    function makeItemWithShortcut(label: string, shortcut: string, onClick?: () => void): HTMLLIElement {
-      const li = document.createElement('li');
-      li.setAttribute('role', 'menuitem');
-      li.className =
-        'relative flex cursor-default select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground';
-      li.setAttribute('tabindex', '-1');
-
-      const labelSpan = document.createElement('span');
-      labelSpan.className = 'flex-1';
-      labelSpan.textContent = label;
-
-      const sc = document.createElement('span');
-      sc.className = 'nds-dropdown-menu-shortcut';
-      sc.setAttribute('aria-hidden', 'true');
-      sc.textContent = shortcut;
-
-      li.append(labelSpan, sc);
-      if (onClick) li.addEventListener('click', onClick);
-      return li;
-    }
-
-    const sep = document.createElement('li');
-    sep.setAttribute('role', 'separator');
-    sep.className = 'nds-dropdown-menu-separator';
-
-    menu.append(
-      makeItemWithShortcut('Editar',       '⌘E', fn()),
-      makeItemWithShortcut('Duplicar',     '⌘D', fn()),
-      makeItemWithShortcut('Compartilhar', '⌘S', fn()),
-      sep,
-      makeItemWithShortcut('Excluir',      '⌫',  fn()),
-    );
-    document.body.appendChild(menu);
-
-    let isOpen = false;
-
-    function closeMenu() {
-      menu.style.display = 'none';
-      isOpen = false;
-      document.removeEventListener('click', onOutside);
-    }
-
-    function onOutside(e: MouseEvent) {
-      if (!menu.contains(e.target as Node) && !t.contains(e.target as Node)) closeMenu();
-    }
-
-    t.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      if (isOpen) closeMenu();
-      menu.style.top  = `${e.clientY + window.scrollY}px`;
-      menu.style.left = `${e.clientX + window.scrollX}px`;
-      menu.style.display = 'block';
-      isOpen = true;
-      setTimeout(() => document.addEventListener('click', onOutside), 0);
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isOpen) closeMenu();
-    });
-
-    wrapper.appendChild(t);
-    return wrapper;
-  },
+export const CompleteComposition: Story = {
+  parameters: { covers: ['visual.item4'] },
+  render: () =>
+    createContextMenu({
+      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      radioValue: 'grid',
+      items: [
+        { type: 'label', label: 'Ações' },
+        { type: 'item', label: 'Editar', value: 'edit', shortcut: '⌘E', onClick: fn() },
+        {
+          type: 'submenu',
+          label: 'Compartilhar',
+          value: 'sub',
+          items: [
+            { type: 'item', label: 'Por e-mail', value: 'por-email', onClick: fn() },
+            { type: 'item', label: 'Por link', value: 'por-link', onClick: fn() },
+          ],
+        },
+        { type: 'separator' },
+        { type: 'label', label: 'Visualização' },
+        { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: true },
+        { type: 'separator' },
+        { type: 'label', label: 'Layout' },
+        { type: 'radio', label: 'Grade', value: 'grid' },
+        { type: 'radio', label: 'Lista', value: 'list' },
+        { type: 'separator' },
+        { type: 'item', label: 'Excluir', value: 'delete', shortcut: '⌫', variant: 'destructive' },
+      ],
+    }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    await step('Trigger presente', async () => {
-      const trigger = canvas.getByText(/Clique com o botão direito — Shortcuts/i);
-      await expect(trigger).toBeInTheDocument();
+    const area = () => within(canvasElement).getByTestId('area');
+
+    await step('Marcação e escolha única convivem no mesmo menu', async () => {
+      // `visual.item4` descreve exatamente esta convivência — é o que precisa
+      // estar na tela quando o Chromatic fotografa.
+      const menu = await abrirPorGesto(area());
+      await expect(item('grade').getAttribute('role')).toBe('menuitemcheckbox');
+      await expect(item('grid').getAttribute('role')).toBe('menuitemradio');
+      await expect(
+        menu.querySelectorAll('[data-slot="context-menu-separator"]').length,
+      ).toBe(3);
+    });
+
+    await step('Os rótulos de grupo não são itens escolhíveis', async () => {
+      const rotulos = menuAberto()!.querySelectorAll<HTMLElement>(
+        '[data-slot="context-menu-label"]',
+      );
+      await expect(rotulos.length).toBe(3);
+      for (const rotulo of rotulos) {
+        await expect(rotulo.getAttribute('role')).not.toBe('menuitem');
+      }
     });
   },
 };

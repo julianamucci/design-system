@@ -21,6 +21,7 @@ import { track } from "@/lib/analytics";
 import { useActiveSection } from "@/lib/use-active-section";
 import uiTranslations from "@/i18n/ui.json";
 import contextMenuTranslations from "@shared/content/context-menu/translations.json";
+import { AREA_CLICK_DIREITO } from "@shared/primitives/context-menu-area";
 
 import { DocsHeader }        from "@/components/docs/shared/sections/DocsHeader";
 import { DocsPageLayout }    from "@/components/docs/shared/sections/DocsPageLayout";
@@ -48,15 +49,16 @@ const priorityKeyMap: Record<string, string> = {
   low: "common.low",
 };
 
-// Espelho de makeTriggerArea() do stack vanilla (ContextMenuDocs.ts)
-const triggerAreaClass =
-  "nds-cluster nds-w-full nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-cursor-default";
-const triggerAreaStyle = {
-  height: "120px",
-  maxWidth: "300px",
-  borderStyle: "dashed",
-  userSelect: "none",
-} as const;
+// A moldura tracejada é o único sinal de "clique com o botão direito aqui", e a
+// mesma classe vale nas stories e nas cinco docs pages. `nds-border-default` traz
+// largura e cor; `nds-border-dashed` só troca `border-style` — as duas juntas, ou
+// a moldura sai sólida.
+//
+// O que era `style` inline (altura de 120px, largura máxima e `border-style`)
+// virou classe: altura cravada num bloco de texto não cresce com a fonte do
+// navegador (WCAG 1.4.4), e o `nds-p-8` entrega o mesmo quadro sem cravá-la.
+// `user-select: none` já vem de `.nds-context-menu-trigger`.
+const triggerAreaClass = AREA_CLICK_DIREITO;
 
 // ─── Nav ──────────────────────────────────────────────────────────────────────
 
@@ -118,7 +120,7 @@ function DemonstracaoPreview({ tContent }: { tContent: (key: string) => string }
         })
       }
     >
-      <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+      <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
         {tContent("demonstration.labels.triggerLabel")}
       </ContextMenuTrigger>
       <ContextMenuContent style={{ minWidth: "12rem" }}>
@@ -158,7 +160,7 @@ function CheckboxDemo({ tContent }: { tContent: (key: string) => string }) {
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+      <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
         {tContent("demonstration.labels.triggerLabel")}
       </ContextMenuTrigger>
       <ContextMenuContent>
@@ -181,7 +183,7 @@ function RadioDemo({ tContent }: { tContent: (key: string) => string }) {
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+      <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
         {tContent("demonstration.labels.triggerLabel")}
       </ContextMenuTrigger>
       <ContextMenuContent>
@@ -431,7 +433,7 @@ interface ContextMenuCheckboxItemProps
             dontLabel: tNav("common.dont"),
             doPreview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
                   Área com menu + botão alternativo
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -443,7 +445,7 @@ interface ContextMenuCheckboxItemProps
             ),
             dontPreview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
                   Área sem alternativa visível
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -461,7 +463,7 @@ interface ContextMenuCheckboxItemProps
             dontLabel: tNav("common.dont"),
             doPreview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
                   Item destrutivo separado
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -473,7 +475,7 @@ interface ContextMenuCheckboxItemProps
             ),
             dontPreview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
                   Submenus aninhados
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -499,7 +501,7 @@ interface ContextMenuCheckboxItemProps
             dontLabel: tNav("common.dont"),
             doPreview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
                   Shortcut visual + listener separado
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -549,7 +551,7 @@ interface ContextMenuCheckboxItemProps
             code: codeVariantDefault,
             preview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
                   Right-click aqui
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -565,7 +567,7 @@ interface ContextMenuCheckboxItemProps
             code: codeVariantDestructive,
             preview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
                   Right-click aqui
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -582,7 +584,7 @@ interface ContextMenuCheckboxItemProps
             code: codeVariantLabel,
             preview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
                   Right-click aqui
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -659,7 +661,7 @@ const [showRulers, setShowRulers] = useState(false);
 </ContextMenu>`,
             preview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
                   Right-click aqui
                 </ContextMenuTrigger>
                 <ContextMenuContent>
@@ -700,7 +702,7 @@ const [showRulers, setShowRulers] = useState(false);
 </ContextMenu>`,
             preview: (
               <ContextMenu>
-                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center" style={triggerAreaStyle}>
+                <ContextMenuTrigger className={triggerAreaClass} data-align="center" data-justify="center">
                   Right-click aqui
                 </ContextMenuTrigger>
                 <ContextMenuContent>

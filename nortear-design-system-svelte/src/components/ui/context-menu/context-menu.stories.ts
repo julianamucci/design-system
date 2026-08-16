@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { within, expect } from 'storybook/test';
+import { within, userEvent, expect, waitFor } from 'storybook/test';
 import ContextMenuStory from './ContextMenuStory.svelte';
 import ContextMenuDocs from '@/components/docs/ContextMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { REGRA_GUARDA_DE_FOCO, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { abrirPorGesto, clicarFora, fecharMenu } from '@shared/testing/context-menu-area';
 
 const meta: Meta = {
   title: 'UI/ContextMenu',
@@ -11,20 +13,24 @@ const meta: Meta = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: { page: withAutoDocsTab(ContextMenuDocs) },
   },
   argTypes: {
     triggerLabel: {
       control: 'text',
-      description: 'Texto exibido na área de trigger do menu',
+      description: 'Texto da área que responde ao gesto.',
+      table: { type: { summary: 'string' }, defaultValue: { summary: 'Clique com o botão direito aqui' } },
     },
     showDestructive: {
       control: 'boolean',
-      description: 'Exibe item destrutivo (Excluir)',
+      description: 'Exibe o item destrutivo (Excluir).',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
     showShortcuts: {
       control: 'boolean',
-      description: 'Exibe atalhos de teclado visuais nos itens',
+      description: 'Exibe os atalhos de teclado ao lado dos rótulos.',
+      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
     },
   },
   args: {
@@ -38,6 +44,14 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
+  parameters: {
+    covers: [
+      'functional.item1', 'functional.item2', 'functional.item3', 'functional.item4',
+      'accessibility.item1', 'accessibility.item2', 'accessibility.item3',
+      'accessibility.item7', 'accessibility.item8',
+      'visual.item1',
+    ],
+  },
   render: (args) => ({
     Component: ContextMenuStory,
     props: {
@@ -47,20 +61,80 @@ export const Playground: Story = {
     },
   }),
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
+    const area = () => within(canvasElement).getByTestId('area');
 
-    await step('Trigger do Context Menu está presente', async () => {
-      const trigger = canvasElement.querySelector('[data-slot="context-menu-trigger"]');
-      await expect(trigger).toBeInTheDocument();
+    await step('O menu do navegador não aparece por cima do nosso', async () => {
+      // `defaultPrevented` é a única prova possível aqui: o menu nativo não
+      // existe no DOM. Sem esta chamada barrada, os dois menus se sobrepõem.
+      await fecharMenu();
+      const evento = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
+      area().dispatchEvent(evento);
+      await waitFor(() => expect(evento.defaultPrevented).toBe(true));
     });
 
-    await step('Trigger está visível', async () => {
-      const trigger = canvasElement.querySelector('[data-slot="context-menu-trigger"]');
-      await expect(trigger).toBeVisible();
+    await step('O botão direito abre o menu ONDE o ponteiro estava', async () => {
+      // O popup não é ancorado no gatilho: ele nasce no ponto do gesto. É a
+      // única diferença real em relação ao DropdownMenu.
+      const menu = await abrirPorGesto(area());
+      const caixaArea = area().getBoundingClientRect();
+      const caixaMenu = menu.getBoundingClientRect();
+      await expect(
+        Math.abs(caixaMenu.left - (caixaArea.left + caixaArea.width / 2)),
+      ).toBeLessThan(24);
+      await expect(
+        Math.abs(caixaMenu.top - (caixaArea.top + caixaArea.height / 2)),
+      ).toBeLessThan(24);
     });
 
-    await step('Texto do trigger é renderizado', async () => {
-      await expect(canvas.getByText(/clique com o bot/i)).toBeVisible();
+    await step('Os itens são itens de menu de verdade', async () => {
+      const menu = await waitForPortal('menu');
+      const itens = [...menu.querySelectorAll('[data-slot="context-menu-item"]')];
+      await expect(itens.length).toBe(3);
+      for (const item of itens) await expect(item.getAttribute('role')).toBe('menuitem');
+      await expect(
+        menu.querySelector('[data-slot="context-menu-separator"]')?.getAttribute('role'),
+      ).toBe('separator');
+    });
+
+    await step('O atalho é lido junto do item, não escondido', async () => {
+      // "Excluir, ⌫" é o nome útil. Com `aria-hidden` no atalho a pessoa ouviria
+      // só "Excluir" e o atalho não ensinaria nada.
+      const menu = await waitForPortal('menu');
+      const atalho = menu.querySelector<HTMLElement>('[data-slot="context-menu-shortcut"]')!;
+      await expect(atalho.hasAttribute('aria-hidden')).toBe(false);
+      await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
+    });
+
+    await step('As setas percorrem os itens na ordem em que aparecem', async () => {
+      // O foco parte de um item conhecido: assim o passo vale igual na primeira
+      // rodada e no replay, e não depende de onde a abertura deixou o foco.
+      const menu = await waitForPortal('menu');
+      const itens = [...menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]')];
+      itens[0].focus();
+      await userEvent.keyboard('{ArrowDown}');
+      await waitFor(() => expect(document.activeElement).toBe(itens[1]));
+      await userEvent.keyboard('{ArrowUp}');
+      await waitFor(() => expect(document.activeElement).toBe(itens[0]));
+    });
+
+    await step('Escape fecha e devolve o foco à área', async () => {
+      await abrirPorGesto(area());
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('menu');
+      await waitFor(() => expect(document.activeElement).toBe(area()));
+    });
+
+    await step('Clique fora fecha', async () => {
+      await abrirPorGesto(area());
+      await clicarFora();
+      await waitForPortalGone('menu');
+    });
+
+    await step('A story termina com o menu ABERTO', async () => {
+      // É o estado que o Chromatic fotografa e o axe varre — `visual.item1`
+      // descreve o menu aberto, não a área vazia.
+      const menu = await abrirPorGesto(area());
+      await expect(menu).toBeVisible();
     });
   },
 };
