@@ -78,14 +78,18 @@ function cenario(): HTMLElement {
   const area = createTextarea({ placeholder: 'Área de texto' });
   area.setAttribute('aria-label', 'Área de texto');
 
+  // O campo de escolha é composto (gatilho + lista em portal), então a moldura
+  // medida é a do GATILHO — a lista só existe aberta, e não é ela que diz onde o
+  // campo começa. O nome acessível vai por opção: `role="combobox"` não aceita
+  // nome vindo do próprio conteúdo.
   const escolha = createSelect({
     items: [
       { value: 'a', label: 'Opção A' },
       { value: 'b', label: 'Opção B' },
     ],
     defaultValue: 'a',
+    'aria-label': 'Escolha',
   });
-  escolha.setAttribute('aria-label', 'Escolha');
 
   const marca = createCheckbox({ id: 'borda-de-campo-checkbox', 'aria-label': 'Caixa de seleção' });
   const chave = createSwitch({ checked: false, 'aria-label': 'Chave liga-desliga' });
@@ -109,7 +113,7 @@ function cenario(): HTMLElement {
 const ALVOS: AlvoDeCor[] = [
   { nome: 'input', seletor: 'input.nds-input:not(.nds-input-group-control)' },
   { nome: 'textarea', seletor: '.nds-textarea' },
-  { nome: 'select', seletor: '.nds-select' },
+  { nome: 'select (gatilho)', seletor: '.nds-select-trigger' },
   { nome: 'checkbox', seletor: '.nds-checkbox' },
   { nome: 'input-group', seletor: '.nds-input-group' },
   { nome: 'switch (trilho desligado)', seletor: '.nds-switch', lado: 'preenchimento' },

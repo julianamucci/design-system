@@ -3,7 +3,8 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createSelect } from '@/components/ui/select';
+import { createSelect, type SelectItem } from '@/components/ui/select';
+import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import selectTranslations from '@shared/content/select/translations.json';
 
@@ -56,14 +57,61 @@ function priorityLabel(raw: string): string {
 }
 
 /**
- * Constrói um <select> nativo (factory custom Nortear = wrapper de <select>)
- * com label associado via `for/id`. Usa createElement + textContent — sem XSS.
+ * Traçados de ícone usados pela variante com ícone (lucide `mail`, `phone`,
+ * `message-circle`). O envelope são dois traçados: reduzi-lo a um daria um
+ * desenho diferente do que as outras stacks mostram.
+ */
+const ICONES = {
+  email: [
+    'm22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7',
+    'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
+  ],
+  telefone:
+    'M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384',
+  chat: 'M7.9 20A9 9 0 1 0 4 16.1L2 22Z',
+};
+
+/**
+ * Canais de contato da variante com ícone.
+ *
+ * Os rótulos moram no código, e não no conteúdo compartilhado, porque é lá que as
+ * outras stacks também os mantêm — o `translations.json` do select não declara
+ * este exemplo. Trocar isso é decisão de conteúdo, e vale para as cinco de uma
+ * vez, não só para esta.
+ */
+function canaisDeContato(): SelectItem[] {
+  const locale = getLocale();
+  const telefone = locale === 'en' ? 'Phone' : locale === 'es' ? 'Teléfono' : 'Telefone';
+  return [
+    { value: 'email', label: 'E-mail', icon: ICONES.email },
+    { value: 'phone', label: telefone, icon: ICONES.telefone },
+    { value: 'chat', label: 'Chat', icon: ICONES.chat },
+  ];
+}
+
+/** Nome acessível do campo de canal — não há rótulo visível neste exemplo. */
+function rotuloDeCanal(): string {
+  const locale = getLocale();
+  if (locale === 'en') return 'Select contact channel';
+  if (locale === 'es') return 'Selecciona canal de contacto';
+  return 'Selecionar canal de contato';
+}
+
+/**
+ * Campo com rótulo externo associado por `for`/`id`.
+ *
+ * O nome acessível vem do `aria-label`, e não do `<label>`: o gatilho é um
+ * `role="combobox"`, que não aceita nome vindo do próprio conteúdo — e o
+ * conteúdo dele é justamente o valor exibido.
+ *
+ * Monta tudo por `createElement` + `textContent`, sem `innerHTML`: não há
+ * caminho de injeção pelos rótulos.
  */
 function buildLabeledSelect(opts: {
   id: string;
   labelText: string;
   name: string;
-  items: { value: string; label: string; disabled?: boolean }[];
+  items: SelectItem[];
   placeholder: string;
   defaultValue?: string;
   disabled?: boolean;
@@ -80,74 +128,41 @@ function buildLabeledSelect(opts: {
   label.textContent = opts.labelText;
 
   const select = createSelect({
+    id: opts.id,
+    name: opts.name,
     items: opts.items,
     placeholder: opts.placeholder,
     defaultValue: opts.defaultValue,
     disabled: opts.disabled,
+    'aria-label': opts.labelText,
+    // A borda e o anel do estado inválido vêm da folha compartilhada. A docs page
+    // não pinta nada por fora: se ela pintasse, a regra do CSS poderia sumir sem
+    // que a página mudasse de aparência.
+    'aria-invalid': opts.ariaInvalid,
     onValueChange: opts.onValueChange,
   });
-  select.id = opts.id;
-  select.name = opts.name;
-  if (opts.ariaInvalid) {
-    select.setAttribute('aria-invalid', 'true');
-    select.classList.add('nds-border-destructive');
-    select.style.boxShadow = '0 0 0 3px rgb(from var(--destructive) r g b / 0.2)';
-  }
 
   wrap.append(label, select);
   return wrap;
 }
 
-/**
- * Variante com <optgroup> — usa o <select> nativo subjacente.
- * Como createSelect só aceita items planos, criamos um <select> diretamente aqui,
- * reaproveitando classes/dataset equivalentes do factory.
- */
+/** Mesmo campo, com as opções reunidas em grupos nomeados por um cabeçalho. */
 function buildLabeledSelectWithGroups(opts: {
   id: string;
   labelText: string;
   name: string;
   placeholder: string;
   groups: { label: string; items: { value: string; label: string }[] }[];
+  onValueChange?: (value: string) => void;
 }): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-stack';
-  wrap.dataset.spacing = 'xs';
-
-  const label = document.createElement('label');
-  label.htmlFor = opts.id;
-  label.className = 'nds-text-body nds-font-semibold';
-  label.textContent = opts.labelText;
-
-  const select = document.createElement('select');
-  select.className = 'select';
-  select.dataset.slot = 'select';
-  select.id = opts.id;
-  select.name = opts.name;
-
-  // Placeholder: option vazia, disabled+selected+hidden
-  const ph = document.createElement('option');
-  ph.value = '';
-  ph.textContent = opts.placeholder;
-  ph.disabled = true;
-  ph.selected = true;
-  ph.hidden = true;
-  select.appendChild(ph);
-
-  opts.groups.forEach((g) => {
-    const og = document.createElement('optgroup');
-    og.label = g.label;
-    g.items.forEach((it) => {
-      const opt = document.createElement('option');
-      opt.value = it.value;
-      opt.textContent = it.label;
-      og.appendChild(opt);
-    });
-    select.appendChild(og);
+  return buildLabeledSelect({
+    id: opts.id,
+    labelText: opts.labelText,
+    name: opts.name,
+    placeholder: opts.placeholder,
+    onValueChange: opts.onValueChange,
+    items: opts.groups.map((g) => ({ type: 'group', label: g.label, items: g.items })),
   });
-
-  wrap.append(label, select);
-  return wrap;
 }
 
 // ─── createSelectDocs ─────────────────────────────────────────────────────────
@@ -289,11 +304,33 @@ export function createSelectDocs(): HTMLElement {
             });
             wrap.appendChild(stateField);
 
+            // O rótulo do payload sai deste mapa, e não do texto renderizado: o
+            // evento tem de carregar valor estável, senão a mesma escolha vira
+            // três eventos diferentes no GA4, um por idioma.
+            const regionLabels: Record<string, string> = {
+              sp: t('demonstration.labels.sp'),
+              rj: t('demonstration.labels.rj'),
+              mg: t('demonstration.labels.mg'),
+              es: t('demonstration.labels.es'),
+              rs: t('demonstration.labels.rs'),
+              sc: t('demonstration.labels.sc'),
+              pr: t('demonstration.labels.pr'),
+            };
+
             const regionField = buildLabeledSelectWithGroups({
               id: 'demo-region',
               labelText: t('demonstration.labels.regionLabel'),
               name: 'region',
               placeholder: t('demonstration.labels.placeholder'),
+              onValueChange: (value) => {
+                track('option_select', {
+                  component: 'select',
+                  field_name: 'region',
+                  value,
+                  label: regionLabels[value],
+                  location: 'docs_demo',
+                });
+              },
               groups: [
                 {
                   label: t('demonstration.labels.groupSoutheast'),
@@ -313,17 +350,6 @@ export function createSelectDocs(): HTMLElement {
                   ],
                 },
               ],
-            });
-            const regionSelect = regionField.querySelector('select');
-            regionSelect?.addEventListener('change', () => {
-              const selected = regionSelect.selectedOptions[0];
-              track('option_select', {
-                component: 'select',
-                field_name: 'region',
-                value: regionSelect.value,
-                label: selected?.textContent ?? undefined,
-                location: 'docs_demo',
-              });
             });
             wrap.appendChild(regionField);
 
@@ -487,22 +513,29 @@ export function createSelectDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: 'Importação do factory custom (Nortear):',
+          description: 'Importação da fábrica:',
           code: `import { createSelect, type SelectOptions, type SelectItem } from '@/components/ui/select';`,
           secondaryDescription: 'Uso básico:',
-          secondaryCode: `const select = createSelect({
+          secondaryCode: `const campo = createSelect({
+  id: 'state',
+  name: 'state',
   placeholder: 'Selecione...',
+  // O nome acessível vem daqui: o gatilho é um combobox, e combobox não
+  // aceita nome vindo do próprio conteúdo.
+  'aria-label': 'Estado',
   items: [
     { value: 'sp', label: 'São Paulo' },
     { value: 'rj', label: 'Rio de Janeiro' },
     { value: 'mg', label: 'Minas Gerais' },
   ],
-  onValueChange: (value) => console.log('selected:', value),
+  onValueChange: (value) => console.log('escolhido:', value),
 });
 
-// Associe a um <label> externo via id
-select.id = 'state';
-select.name = 'state';`,
+document.querySelector('#campo')?.append(campo);
+
+// Ao desmontar a tela, solte os ouvintes de documento e o painel em portal.
+// Chamar duas vezes não faz nada na segunda, e sair do documento já dispara.
+campo.destroy();`,
         });
 
       case 'variantes': {
@@ -514,7 +547,7 @@ select.name = 'state';`,
             {
               name: stripHtml(t('variants.items.default')),
               description: stripHtml(t('variants.styles.default')),
-              code: `createSelect({ placeholder: 'Selecione...', items });`,
+              code: `createSelect({ placeholder: 'Selecione...', 'aria-label': 'Estado', items });`,
               previewFactory: () =>
                 buildLabeledSelect({
                   id: 'v-default',
@@ -531,7 +564,7 @@ select.name = 'state';`,
             {
               name: stripHtml(t('variants.items.withGroups')),
               description: stripHtml(t('variants.styles.withGroups')),
-              code: `// O factory createSelect só aceita items planos.\n// Para grupos, monte o <select> + <optgroup> diretamente.\nconst select = document.createElement('select');\nselect.className = 'select';\n// ...preencha com <optgroup label="..."> + <option>`,
+              code: `createSelect({\n  placeholder: 'Selecione...',\n  'aria-label': 'Região',\n  items: [\n    { type: 'group', label: 'Sudeste', items: [\n      { value: 'sp', label: 'São Paulo' },\n      { value: 'rj', label: 'Rio de Janeiro' },\n    ] },\n    { type: 'separator' },\n    { type: 'group', label: 'Sul', items: [\n      { value: 'rs', label: 'Rio Grande do Sul' },\n      { value: 'sc', label: 'Santa Catarina' },\n    ] },\n  ],\n});`,
               previewFactory: () =>
                 buildLabeledSelectWithGroups({
                   id: 'v-groups',
@@ -558,20 +591,19 @@ select.name = 'state';`,
             },
             {
               name: stripHtml(t('variants.items.withIcon')),
-              description:
-                stripHtml(t('variants.styles.withIcon')) +
-                ' NOTA: o factory `createSelect` (Nortear) é um wrapper do `&lt;select&gt;` nativo — o HTML não permite ícones inline em `&lt;option&gt;`. Para essa variante, recomendamos `Combobox` ou um componente custom.',
-              code: `// Indisponível com <select> nativo — use Combobox ou implementação custom.`,
+              description: stripHtml(t('variants.styles.withIcon')),
+              code: `createSelect({\n  placeholder: 'Selecione...',\n  'aria-label': 'Canal de contato',\n  items: [\n    // Um ou mais traçados 24×24. O desenho é decorativo: entra aria-hidden,\n    // e o nome acessível da opção continua sendo só o rótulo.\n    { value: 'email', label: 'E-mail', icon: ['m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7', 'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z'] },\n    { value: 'chat', label: 'Chat', icon: 'M7.9 20A9 9 0 1 0 4 16.1L2 22Z' },\n  ],\n});`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack';
                 wrap.dataset.spacing = 'xs';
-                wrap.style.width = '20rem';
-                const note = document.createElement('p');
-                note.className = 'nds-text-body nds-italic';
-                note.textContent =
-                  'Limitação do HTML <select> nativo — ícones inline em <option> não são suportados pelo navegador. Para essa necessidade, use Combobox.';
-                wrap.appendChild(note);
+                wrap.appendChild(
+                  createSelect({
+                    placeholder: t('demonstration.labels.placeholder'),
+                    'aria-label': rotuloDeCanal(),
+                    items: canaisDeContato(),
+                  }),
+                );
                 return wrap;
               },
             },
@@ -603,7 +635,11 @@ label.htmlFor = 'form-state';
 label.className = 'nds-text-body nds-font-semibold';
 label.textContent = 'Estado';
 
-const select = createSelect({
+const campo = createSelect({
+  id: 'form-state',
+  name: 'state',
+  required: true,
+  'aria-label': 'Estado',
   placeholder: 'Selecione...',
   items: [
     { value: 'sp', label: 'São Paulo' },
@@ -611,21 +647,19 @@ const select = createSelect({
     { value: 'mg', label: 'Minas Gerais' },
   ],
 });
-select.id = 'form-state';
-select.name = 'state';
-select.required = true;
 
-field.append(label, select);
+field.append(label, campo);
 form.appendChild(field);
 
-const submit = document.createElement('button');
-submit.type = 'submit';
-submit.className = 'btn btn-primary self-end';
-submit.textContent = 'Continuar';
+// A fábrica do design system, e não classes montadas à mão: fora dela o botão
+// sai sem estilo e o contraste do texto fica entregue ao acaso do tema.
+const submit = createButton({ type: 'submit', label: 'Continuar' });
+submit.style.alignSelf = 'flex-end';
 form.appendChild(submit);
 
 form.addEventListener('submit', (e) => {
   e.preventDefault();
+  // O campo escondido da fábrica carrega o valor: a serialização é nativa.
   const data = new FormData(form);
   console.log('Estado:', data.get('state'));
 });`,
@@ -646,6 +680,10 @@ form.addEventListener('submit', (e) => {
                 label.textContent = t('demonstration.labels.stateLabel');
 
                 const select = createSelect({
+                  id: 'comp-form-state',
+                  name: 'state',
+                  required: true,
+                  'aria-label': t('demonstration.labels.stateLabel'),
                   placeholder: t('demonstration.labels.placeholder'),
                   items: [
                     { value: 'sp', label: t('demonstration.labels.sp') },
@@ -653,17 +691,12 @@ form.addEventListener('submit', (e) => {
                     { value: 'mg', label: t('demonstration.labels.mg') },
                   ],
                 });
-                select.id = 'comp-form-state';
-                select.name = 'state';
 
                 field.append(label, select);
                 form.appendChild(field);
 
-                const submit = document.createElement('button');
-                submit.type = 'submit';
-                submit.className = 'nds-rounded-md nds-bg-primary nds-text-primary-foreground nds-text-body nds-font-medium';
-                submit.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;align-self:flex-end;padding:0.375rem 0.75rem;';
-                submit.textContent = 'Continuar';
+                const submit = createButton({ type: 'submit', label: 'Continuar' });
+                submit.style.alignSelf = 'flex-end';
                 form.appendChild(submit);
 
                 form.addEventListener('submit', (e) => {
@@ -696,11 +729,14 @@ form.addEventListener('submit', (e) => {
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createSelect(options)
+        const interfaceCode = `// createSelect(options) → raiz com destroy()
 export type SelectItem = {
-  value: string;
-  label: string;
+  type?: 'item' | 'group' | 'separator';
+  value?: string;
+  label?: string;
   disabled?: boolean;
+  icon?: string | string[];
+  items?: SelectItem[];   // só em 'group'
 };
 
 export type SelectOptions = {
@@ -708,7 +744,17 @@ export type SelectOptions = {
   placeholder?: string;
   defaultValue?: string;
   disabled?: boolean;
+  size?: 'default' | 'sm';
+  name?: string;
+  id?: string;
+  required?: boolean;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+  'aria-describedby'?: string;
+  'aria-invalid'?: boolean;
+  listLabel?: string;
   onValueChange?: (value: string) => void;
+  onOpenChange?: (open: boolean) => void;
   class?: string;
 };`;
 
@@ -724,22 +770,30 @@ export type SelectOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: 'createSelect(options) — Nortear',
+              title: 'createSelect(options)',
               cols: propsCols,
               items: [
-                { name: 'items',         type: 'SelectItem[]',                  defaultValue: '—',          required: 'Sim', description: 'Lista plana de opções. Cada item: { value, label, disabled? }.' },
-                { name: 'placeholder',   type: 'string',                        defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.placeholder.description')) + ' Renderizado como `<option>` disabled+hidden no topo.' },
-                { name: 'defaultValue',  type: 'string',                        defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.defaultValue.description')) + ' Não há prop `value` controlada — o factory é não-controlado.' },
-                { name: 'disabled',      type: 'boolean',                       defaultValue: 'false',      required: 'Não', description: toPlainText(t('props.table.disabled.description')) },
-                { name: 'onValueChange', type: '(value: string) => void',       defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) },
-                { name: 'class',         type: 'string',                        defaultValue: '—',          required: 'Não', description: 'Classes .nds-* adicionais no `<select>` raiz.' },
+                { name: 'items',         type: 'SelectItem[]',            defaultValue: '—',           required: 'Sim', description: 'Opções da lista. Cada entrada é uma opção, um grupo com cabeçalho (`type: "group"`) ou uma linha separadora (`type: "separator"`).' },
+                { name: 'placeholder',   type: 'string',                  defaultValue: '—',           required: 'Não', description: toPlainText(t('props.table.placeholder.description')) },
+                { name: 'defaultValue',  type: 'string',                  defaultValue: '—',           required: 'Não', description: toPlainText(t('props.table.defaultValue.description')) + ' A fábrica é não-controlada: acompanhe a escolha pelo callback de mudança.' },
+                { name: 'disabled',      type: 'boolean',                 defaultValue: 'false',       required: 'Não', description: toPlainText(t('props.table.disabled.description')) },
+                { name: 'size',          type: '"default" | "sm"',        defaultValue: '"default"',   required: 'Não', description: toPlainText(t('props.table.size.description')) },
+                { name: 'name',          type: 'string',                  defaultValue: '—',           required: 'Não', description: toPlainText(t('props.table.name.description')) + ' O valor viaja por um campo escondido dentro da raiz, que a serialização nativa enxerga.' },
+                { name: 'id',            type: 'string',                  defaultValue: '—',           required: 'Não', description: 'Identificador do gatilho — é o alvo do `for` de um rótulo externo.' },
+                { name: 'required',      type: 'boolean',                 defaultValue: 'false',       required: 'Não', description: 'Anuncia o campo como obrigatório. A exigência fica no gatilho, que é o elemento que o leitor de tela alcança.' },
+                { name: 'aria-label',    type: 'string',                  defaultValue: '—',           required: 'Não', description: 'Nome acessível do campo. Obrigatório na prática: o papel de combobox não aceita nome vindo do próprio conteúdo, e o conteúdo do gatilho é o valor exibido.' },
+                { name: 'aria-invalid',  type: 'boolean',                 defaultValue: 'false',       required: 'Não', description: 'Marca o campo como inválido. A borda e o anel vêm da folha compartilhada.' },
+                { name: 'listLabel',     type: 'string',                  defaultValue: '"Opções"',    required: 'Não', description: 'Nome acessível da lista aberta.' },
+                { name: 'onValueChange', type: '(value: string) => void', defaultValue: '—',           required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) },
+                { name: 'onOpenChange',  type: '(open: boolean) => void', defaultValue: '—',           required: 'Não', description: 'Avisado a cada abertura e fechamento da lista.' },
+                { name: 'class',         type: 'string',                  defaultValue: '—',           required: 'Não', description: 'Classes .nds-* adicionais no gatilho — é ele que carrega a moldura do campo.' },
               ],
             },
           ],
           interfaceCode,
-          extensibilityTitle: 'Divergências da factory custom (Nortear)',
+          extensibilityTitle: 'Extensibilidade e limpeza',
           extensibilityNotes:
-            'O factory custom é um **wrapper fino do `&lt;select&gt;` HTML nativo** — diverge das libs upstream em vários pontos: (1) é estritamente não-controlado (sem prop `value`); use `defaultValue` + `onValueChange`. (2) Não suporta agrupamento via API — para grupos, monte `&lt;select&gt;` + `&lt;optgroup&gt;` manualmente. (3) Não suporta ícones em `&lt;option&gt;` (limitação do HTML nativo). (4) Não há prop `name` no factory — atribua via `select.name = "..."` no DOM retornado. (5) Não há prop `size` (default/sm) — aplique via `class` do tema. (6) O dropdown é o nativo do navegador: role/aria-expanded/listbox/option são gerenciados automaticamente, **não** documentados via atributos manuais. (7) Sem portal, sem type-ahead customizado (o navegador já oferece) e sem Check icon de seleção (use o highlight nativo do `&lt;option&gt;`).',
+            'A fábrica devolve a **raiz** do campo, e não o gatilho: dentro dela ficam o gatilho e o campo escondido que serializa o valor. Dois pontos que a plataforma exige e nenhuma lib resolve por aqui: (1) a raiz aceita `destroy()`, **idempotente**, que solta o ouvinte de clique-fora registrado em `document` e remove o painel que vive em portal no fim do documento — ele também dispara sozinho quando a raiz sai do documento, então esquecer de chamá-lo não vaza; (2) a fábrica é **não-controlada** — passe `defaultValue` e acompanhe a escolha pelo callback de mudança. Para filtrar a lista por texto digitado, o caminho é `Combobox`, não este campo.',
         });
       }
 
@@ -809,8 +863,8 @@ export type SelectOptions = {
           title: t('notes.title'),
           items: [
             { title: '', content: DOMPurify.sanitize(t('notes.item1')) },
-            { title: '', content: DOMPurify.sanitize(t('notes.item2') + ' <strong>Nortear</strong>: o factory é um wrapper de <code>&lt;select&gt;</code> nativo — não há portal customizado; o dropdown é o popup nativo do navegador.') },
-            { title: '', content: DOMPurify.sanitize(t('notes.item3') + ' <strong>Nortear</strong>: type-ahead é gerenciado pelo próprio <code>&lt;select&gt;</code> do navegador.') },
+            { title: '', content: DOMPurify.sanitize(t('notes.item2') + ' A raiz aceita <code>destroy()</code>, e ele também dispara sozinho quando a raiz sai do documento — sem isso o painel em portal sobreviveria por cima da tela seguinte, junto com o ouvinte de clique-fora.') },
+            { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
           ],
         });

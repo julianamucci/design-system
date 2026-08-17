@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
-import { createSelect } from './select';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { createSelect, type SelectItem } from './select';
 
 const meta: Meta = {
   tags: ['form'],
@@ -12,7 +13,7 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Variantes do Select: lista plana e lista agrupada por categoria (`<optgroup>`). A variante com ícone não existe aqui: o campo é o `<select>` do navegador, e `<option>` não aceita elemento filho — para listas com ícone, use `Combobox`.',
+          'Variantes do Select: Default (lista plana), WithGroups (cabeçalho por categoria) e WithIcon (ícone inline antes do rótulo).',
       },
     },
   },
@@ -21,9 +22,40 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+// ─── Dados ────────────────────────────────────────────────────────────────────
+
+/** Rótulos das regiões — a asserção deriva daqui em vez de contar à mão. */
+const REGIOES = {
+  Sudeste: [
+    { value: 'sp', label: 'São Paulo' },
+    { value: 'rj', label: 'Rio de Janeiro' },
+    { value: 'mg', label: 'Minas Gerais' },
+  ],
+  Sul: [
+    { value: 'rs', label: 'Rio Grande do Sul' },
+    { value: 'sc', label: 'Santa Catarina' },
+    { value: 'pr', label: 'Paraná' },
+  ],
+} as const;
+
+/** Traçados de ícone (lucide `mail`, `phone`, `message-circle`). */
+const ICONES = {
+  email: [
+    'm22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7',
+    'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
+  ],
+  telefone:
+    'M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384',
+  chat: 'M7.9 20A9 9 0 1 0 4 16.1L2 22Z',
+} as const;
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function withLabel(select: HTMLSelectElement, labelText: string, id: string): HTMLElement {
+function comRotulo(
+  id: string,
+  rotulo: string,
+  opcoes: Parameters<typeof createSelect>[0],
+): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-stack';
   wrap.dataset.spacing = 'sm';
@@ -32,49 +64,78 @@ function withLabel(select: HTMLSelectElement, labelText: string, id: string): HT
   const label = document.createElement('label');
   label.htmlFor = id;
   label.className = 'nds-text-body nds-font-semibold';
-  label.textContent = labelText;
+  label.textContent = rotulo;
 
-  select.id = id;
-  wrap.append(label, select);
+  wrap.append(label, createSelect({ ...opcoes, id, 'aria-label': rotulo }));
   return wrap;
+}
+
+/**
+ * Abre a lista partindo sempre de fechada.
+ *
+ * Fechar antes de clicar garante um clique REAL nesta rodada — o painel
+ * Interactions reexecuta a play no mesmo DOM, e um clique cego alternaria o
+ * estado em vez de estabelecê-lo.
+ */
+function abridor(gatilho: HTMLElement) {
+  return async () => {
+    if (gatilho.getAttribute('aria-expanded') === 'true') {
+      await userEvent.keyboard('{Escape}');
+      await waitForPortalGone('listbox');
+    }
+    await userEvent.click(gatilho);
+    return await waitForPortal('listbox');
+  };
 }
 
 // ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
   render: () =>
-    withLabel(
-      createSelect({
-        placeholder: 'Selecione...',
-        items: [
-          { value: 'sp', label: 'São Paulo' },
-          { value: 'rj', label: 'Rio de Janeiro' },
-          { value: 'mg', label: 'Minas Gerais' },
-          { value: 'rs', label: 'Rio Grande do Sul' },
-        ],
-      }),
-      'Estado',
-      'v-default-select',
-    ),
+    comRotulo('v-default-select', 'Estado', {
+      placeholder: 'Selecione...',
+      items: [
+        { value: 'sp', label: 'São Paulo' },
+        { value: 'rj', label: 'Rio de Janeiro' },
+        { value: 'mg', label: 'Minas Gerais' },
+        { value: 'rs', label: 'Rio Grande do Sul' },
+      ],
+    }),
   parameters: {
     docs: {
       description: {
-        story: 'Lista simples — apenas itens planos via API `createSelect({ items })`. Placeholder "Selecione..." é renderizado como `<option>` disabled+hidden no topo.',
+        story:
+          'Lista simples — só opções, sem cabeçalho. O placeholder fica à mostra até a pessoa escolher.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Lista plana: quatro opções e nenhum agrupamento', async () => {
-      const select = canvas.getByRole('combobox') as HTMLSelectElement;
-      const opcoes = Array.from(select.querySelectorAll('option')).filter((o) => !o.hidden);
-      await expect(opcoes).toHaveLength(4);
-      await expect(opcoes[0].textContent).toBe('São Paulo');
-      await expect(select.querySelectorAll('optgroup')).toHaveLength(0);
+    const gatilho = canvas.getByRole('combobox');
+    const abrir = abridor(gatilho);
+
+    await step('O campo é nomeado pelo rótulo externo', async () => {
+      await expect(gatilho).toHaveAccessibleName('Estado');
     });
-    await step('Nenhum valor pré-escolhido', async () => {
-      const select = canvas.getByRole('combobox') as HTMLSelectElement;
-      await expect(select.value).toBe('');
+
+    await step('Abrir mostra uma lista plana, sem cabeçalho de grupo', async () => {
+      const listbox = await abrir();
+      const opcoes = within(listbox).getAllByRole('option');
+      await expect(opcoes).toHaveLength(4);
+      await expect(opcoes[0]).toHaveAccessibleName('São Paulo');
+      // Lista plana não inventa grupo: um grupo de um só existe para o olho e
+      // mente para o leitor de tela.
+      await expect(within(listbox).queryAllByRole('group')).toHaveLength(0);
+    });
+
+    await step('Clicar numa opção escolhe e fecha', async () => {
+      const listbox = await abrir();
+      await userEvent.click(within(listbox).getByRole('option', { name: 'Minas Gerais' }));
+      await waitForPortalGone('listbox');
+      await expect(gatilho).toHaveTextContent('Minas Gerais');
+      // Escolher pelo ponteiro devolve o foco ao campo: sem isso o `mousedown` na
+      // opção levaria o foco ao `<body>` e o teclado ficaria sem dono.
+      await expect(gatilho).toHaveFocus();
     });
   },
 };
@@ -82,86 +143,104 @@ export const Default: Story = {
 // ─── WithGroups ───────────────────────────────────────────────────────────────
 
 export const WithGroups: Story = {
-  render: () => {
-    // O factory createSelect só aceita items planos.
-    // Para agrupar, montamos o <select> + <optgroup> diretamente,
-    // reaproveitando as classes do tema Vanilla.
-    const select = document.createElement('select');
-    // A classe leva o prefixo do design system. Antes era "select", sem
-    // prefixo — classe que não existe em folha nenhuma, e o campo montado à
-    // mão saía SEM estilo, ao lado de outros idênticos que tinham estilo.
-    select.className = 'nds-select';
-    select.dataset.slot = 'select';
-
-    const ph = document.createElement('option');
-    ph.value = '';
-    ph.textContent = 'Selecione...';
-    ph.disabled = true;
-    ph.selected = true;
-    ph.hidden = true;
-    select.appendChild(ph);
-
-    const groups: { label: string; items: { value: string; label: string }[] }[] = [
-      {
-        label: 'Sudeste',
-        items: [
-          { value: 'sp', label: 'São Paulo' },
-          { value: 'rj', label: 'Rio de Janeiro' },
-          { value: 'mg', label: 'Minas Gerais' },
-          { value: 'es', label: 'Espírito Santo' },
-        ],
-      },
-      {
-        label: 'Sul',
-        items: [
-          { value: 'rs', label: 'Rio Grande do Sul' },
-          { value: 'sc', label: 'Santa Catarina' },
-          { value: 'pr', label: 'Paraná' },
-        ],
-      },
-    ];
-
-    groups.forEach((g) => {
-      const og = document.createElement('optgroup');
-      og.label = g.label;
-      g.items.forEach((it) => {
-        const opt = document.createElement('option');
-        opt.value = it.value;
-        opt.textContent = it.label;
-        og.appendChild(opt);
-      });
-      select.appendChild(og);
-    });
-
-    return withLabel(select, 'Selecione a região', 'v-groups-select');
-  },
+  render: () =>
+    comRotulo('v-groups-select', 'Selecione a região', {
+      placeholder: 'Selecione...',
+      items: [
+        { type: 'group', label: 'Sudeste', items: [...REGIOES.Sudeste] },
+        { type: 'separator' },
+        { type: 'group', label: 'Sul', items: [...REGIOES.Sul] },
+      ] as SelectItem[],
+    }),
   parameters: {
     docs: {
       description: {
         story:
-          'Opções agrupadas por categoria com `<optgroup>`. NOTA: o factory `createSelect` (Vanilla) só aceita uma lista plana — para grupos, monte o `<select>` + `<optgroup>` manualmente como mostrado no código.',
+          'Opções agrupadas por categoria, com cabeçalho nomeando cada grupo. Use quando houver duas ou mais categorias claras com pelo menos duas opções cada.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    await step('Cada categoria vira um grupo nomeado', async () => {
-      const select = canvas.getByRole('combobox') as HTMLSelectElement;
-      const grupos = Array.from(select.querySelectorAll('optgroup'));
-      await expect(grupos).toHaveLength(2);
-      await expect(grupos.map((g) => g.label)).toEqual(['Sudeste', 'Sul']);
+    const gatilho = canvas.getByRole('combobox');
+    const abrir = abridor(gatilho);
+
+    await step('Escolher item de um grupo atualiza o campo', async () => {
+      const listbox = await abrir();
+      await userEvent.click(within(listbox).getByRole('option', { name: 'Santa Catarina' }));
+      await waitForPortalGone('listbox');
+      await waitFor(async () => {
+        await expect(gatilho).toHaveTextContent('Santa Catarina');
+      });
     });
-    await step('As opções continuam todas no mesmo campo', async () => {
-      const select = canvas.getByRole('combobox') as HTMLSelectElement;
-      const opcoes = Array.from(select.querySelectorAll('option')).filter((o) => !o.hidden);
-      await expect(opcoes).toHaveLength(7);
+
+    // Os passos abaixo reabrem a lista e a story TERMINA aberta: é a lista que
+    // muda entre as variantes, não o campo fechado, e é ela que a regressão visual
+    // precisa fotografar.
+    await step('Cada categoria vira um grupo nomeado pelo cabeçalho', async () => {
+      const listbox = await abrir();
+      const grupos = within(listbox).getAllByRole('group');
+      await expect(grupos).toHaveLength(Object.keys(REGIOES).length);
+      for (const [i, nome] of Object.keys(REGIOES).entries()) {
+        await expect(grupos[i]).toHaveAccessibleName(nome);
+      }
+    });
+
+    await step('As opções continuam todas na mesma lista', async () => {
+      const listbox = await waitForPortal('listbox');
+      const total = Object.values(REGIOES).reduce((soma, g) => soma + g.length, 0);
+      await expect(within(listbox).getAllByRole('option')).toHaveLength(total);
+      // Linha para o olho, silêncio para o leitor de tela — quem separa
+      // semanticamente é o grupo, e um `separator` dentro de `listbox` seria filho
+      // não permitido.
+      const linhas = listbox.querySelectorAll('[data-slot="select-separator"]');
+      await expect(linhas).toHaveLength(Object.keys(REGIOES).length - 1);
+      await expect(linhas[0]).toHaveAttribute('aria-hidden', 'true');
     });
   },
 };
 
-// A variante com ícone não tem story aqui: o campo desta stack é o `<select>`
-// do navegador, e `<option>` não aceita elemento filho — a limitação é do HTML,
-// não do design system. A story anterior renderizava um cartão de aviso, com uma
-// asserção que não podia falhar: documentação disfarçada de demonstração. O
-// aviso vive na descrição do arquivo, que é onde o leitor o procura; para listas
-// com ícone, o caminho é o Combobox.
+// ─── WithIcon ─────────────────────────────────────────────────────────────────
+
+export const WithIcon: Story = {
+  render: () =>
+    comRotulo('v-icon-select', 'Canal de contato', {
+      placeholder: 'Selecione...',
+      items: [
+        { value: 'email', label: 'E-mail', icon: [...ICONES.email] },
+        { value: 'phone', label: 'Telefone', icon: ICONES.telefone },
+        { value: 'chat', label: 'Chat', icon: ICONES.chat },
+      ],
+    }),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Ícone inline antes do rótulo. Ele é decorativo: fica fora do nome acessível da opção e é dimensionado pela folha do componente, não pelo tamanho intrínseco do desenho.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('combobox');
+    const abrir = abridor(gatilho);
+
+    await step('O ícone entra na opção e fica fora do nome acessível', async () => {
+      const listbox = await abrir();
+      const opcoes = within(listbox).getAllByRole('option');
+      await expect(opcoes).toHaveLength(3);
+      await expect(opcoes[0].querySelector('svg')).toBeTruthy();
+      // Decorativo: o nome acessível continua sendo só o rótulo, sem eco.
+      await expect(opcoes[0]).toHaveAccessibleName('E-mail');
+      await expect(opcoes[0].querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('O ícone é dimensionado pela folha do componente', async () => {
+      // A regra que dá 1rem ao SVG sem classe de tamanho; sem ela o desenho viria
+      // no tamanho intrínseco e estouraria a linha.
+      const listbox = await waitForPortal('listbox');
+      const icone = within(listbox).getAllByRole('option')[0].querySelector('svg') as SVGElement;
+      await expect(getComputedStyle(icone).width).toBe('16px');
+    });
+  },
+};
