@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { resolverCor } from '@shared/testing/cor';
+import { contrastesNosDoisModos } from '@shared/testing/form-probe';
 import { NDS_FORM } from './form';
 import { NdsInput } from './input';
 
@@ -23,7 +25,15 @@ type Story = StoryObj;
  */
 export const Invalid: Story = {
   parameters: {
-    covers: ['functional.item4', 'accessibility.item3', 'visual.item3'],
+    covers: [
+      'functional.item4',
+      'accessibility.item3',
+      // Veio do Playground, que não tem mensagem de erro na tela e apoiava o
+      // item no axe — que só mede o tema claro. Aqui as três peças do item
+      // (rótulo, apoio e erro) existem, e a razão é calculada nos dois modos.
+      'accessibility.item5',
+      'visual.item3',
+    ],
   },
   render: () => {
     const form = new FormGroup({
@@ -50,8 +60,27 @@ export const Invalid: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const campo = canvasElement.querySelector<HTMLElement>('[data-slot="field"]')!;
     const controle = canvas.getByLabelText('Senha') as HTMLInputElement;
     const rotulo = canvasElement.querySelector<HTMLLabelElement>('label')!;
+
+    /**
+     * Restabelece o estado inválido — a precondição desta play.
+     *
+     * O painel Interactions reexecuta a play no MESMO DOM, sem remontar. O
+     * último passo daqui corrige o valor, então na segunda rodada o campo
+     * chegaria válido, o `@if` teria removido a mensagem do DOM e o primeiro
+     * passo estouraria em `null`. O vitest remonta a cada teste e por isso a
+     * suíte ficava verde escondendo isso.
+     */
+    const invalidar = async () => {
+      await userEvent.clear(controle);
+      await userEvent.type(controle, '123');
+      await waitFor(() =>
+        expect(canvasElement.querySelector('[data-slot="field-error"]')).not.toBeNull(),
+      );
+    };
+    await invalidar();
 
     await step('A mensagem é anunciada sem roubar o foco', async () => {
       // `polite` e não `assertive`: em validação a cada tecla, interromper a
@@ -59,6 +88,20 @@ export const Invalid: Story = {
       const mensagem = canvasElement.querySelector<HTMLElement>('[data-slot="field-error"]')!;
       await expect(mensagem).toHaveAttribute('aria-live', 'polite');
       await expect(controle.getAttribute('aria-describedby')).toContain(mensagem.id);
+      // O alvo tem que existir de fato: id citado e elemento ausente passa em
+      // asserção de atributo e não anuncia nada.
+      await expect(document.getElementById(mensagem.id)).toBe(mensagem);
+    });
+
+    await step('A mensagem está em --destructive, e não numa cor qualquer', async () => {
+      // A metade do item que ninguém verificava: o contrato diz "parágrafo em
+      // --destructive com aria-live", e só o aria-live tinha asserção. Comparar
+      // com o token RESOLVIDO pelo navegador, e não com um rgb literal, mantém a
+      // asserção válida nos três temas de marca.
+      const mensagem = canvasElement.querySelector<HTMLElement>('[data-slot="field-error"]')!;
+      await expect(getComputedStyle(mensagem).color).toBe(
+        resolverCor(campo, 'hsl(var(--destructive))'),
+      );
     });
 
     await step('O erro chega ao controle e ao rótulo, não só à cor da mensagem', async () => {
@@ -66,6 +109,19 @@ export const Invalid: Story = {
       // que o leitor anuncia junto com o nome do campo.
       await expect(controle).toHaveAttribute('aria-invalid', 'true');
       await expect(rotulo).toHaveAttribute('data-error', 'true');
+    });
+
+    await step('Rótulo, apoio e erro passam de 4.5:1 no claro E no escuro', async () => {
+      // O axe do test-runner mede só o que está na tela, e a tela está sempre no
+      // tema claro — metade do produto ficava fora enquanto o contrato afirmava
+      // "em todos os temas". A classe `.dark` sai no `finally` do colhedor.
+      const medidas = contrastesNosDoisModos(campo);
+      await expect(medidas).toHaveLength(2);
+      for (const m of medidas) {
+        await expect(m.rotulo).toBeGreaterThanOrEqual(4.5);
+        await expect(m.apoio).toBeGreaterThanOrEqual(4.5);
+        await expect(m.erro).toBeGreaterThanOrEqual(4.5);
+      }
     });
 
     await step('Corrigir o valor apaga o estado inválido', async () => {
@@ -76,6 +132,14 @@ export const Invalid: Story = {
         await expect(controle.hasAttribute('aria-invalid')).toBe(false);
       });
       await expect(rotulo.hasAttribute('data-error')).toBe(false);
+    });
+
+    await step('E a story volta ao estado que ela documenta', async () => {
+      // `visual.item3` é "Com erro — aria-invalid + mensagem", e o Chromatic
+      // fotografa o FIM da play: terminar no campo corrigido guardaria a foto
+      // errada, com a regressão visual do erro protegendo outra coisa.
+      await invalidar();
+      await expect(controle).toHaveAttribute('aria-invalid', 'true');
     });
   },
 };

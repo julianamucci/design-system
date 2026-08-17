@@ -1,11 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, userEvent } from 'storybook/test';
-import { createFormField } from './form';
-import { createInput } from './input';
-import { createFormDocs } from '@/components/docs/FormDocs';
-import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-// ─── Meta ─────────────────────────────────────────────────────────────────────
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
+import { expect, userEvent, within } from 'storybook/test';
+import FormFieldStory from './FormFieldStory.svelte';
 
 type FormArgs = {
   label: string;
@@ -18,39 +13,38 @@ type FormArgs = {
 
 const meta: Meta<FormArgs> = {
   title: 'UI/Form',
+  component: FormFieldStory,
   tags: ['autodocs', 'form'],
-  parameters: {
-    docs: { page: withAutoDocsTab(createFormDocs) },
-  },
+  parameters: { layout: 'padded' },
   argTypes: {
     label: {
       control: 'text',
-      description: 'Texto do rótulo associado ao controle.',
+      description: 'Texto do rótulo. O campo o associa ao controle.',
       table: { type: { summary: 'string' }, defaultValue: { summary: 'Email' } },
     },
     placeholder: {
       control: 'text',
-      description: 'Placeholder do input — exemplo do formato esperado.',
+      description: 'Exemplo do formato esperado. Nunca substitui o rótulo.',
       table: { type: { summary: 'string' }, defaultValue: { summary: 'ex: joao@empresa.com' } },
     },
     description: {
       control: 'text',
-      description: 'Texto de apoio exibido abaixo do controle. Vazio = ausente.',
+      description: 'Texto de apoio abaixo do controle. Vazio = ausente.',
       table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
     },
     error: {
       control: 'text',
-      description: 'Mensagem de erro (aria-live="polite"). Vazio = sem erro.',
+      description: 'Mensagem de erro anunciada por aria-live. Vazio = sem erro.',
       table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
     },
     ariaInvalid: {
       control: 'boolean',
-      description: 'Aplica aria-invalid="true" no controle.',
+      description: 'Aplica aria-invalid no controle.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
     disabled: {
       control: 'boolean',
-      description: 'Desabilita o controle.',
+      description: 'Desabilita o controle interno.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
   },
@@ -67,8 +61,6 @@ const meta: Meta<FormArgs> = {
 export default meta;
 type Story = StoryObj<FormArgs>;
 
-// ─── Playground ───────────────────────────────────────────────────────────────
-
 /**
  * Nem o rótulo tem `for` nem o controle tem `id` — é o campo que fecha a
  * associação. É disso que o resto do componente depende, e por isso é o que a
@@ -83,23 +75,7 @@ export const Playground: Story = {
       'accessibility.item2',
     ],
   },
-  render: (args) => {
-    const input = createInput({
-      type: 'email',
-      placeholder: args.placeholder,
-      disabled: args.disabled,
-    });
-    if (args.ariaInvalid || args.error) {
-      input.setAttribute('aria-invalid', 'true');
-    }
-    return createFormField({
-      label: args.label,
-      input,
-      description: args.description || undefined,
-      error: args.error || undefined,
-      class: 'nds-max-w-sm',
-    });
-  },
+  render: (args) => ({ Component: FormFieldStory, props: { ...args } }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const campo = canvasElement.querySelector<HTMLElement>('[data-slot="field"]')!;
@@ -121,9 +97,9 @@ export const Playground: Story = {
 
     await step('A descrição é LIDA junto com o campo, não só exibida', async () => {
       const descricao = campo.querySelector<HTMLElement>('[data-slot="field-description"]')!;
-      // O id tem que existir E o alvo tem que ser este elemento: um
-      // `aria-describedby` apontando para o nada passa em asserção de atributo
-      // e não anuncia nada.
+      // O alvo tem que EXISTIR, não só estar citado: um `aria-describedby`
+      // apontando para id inexistente passa em asserção de atributo e o leitor
+      // de tela não anuncia nada.
       await expect(descricao.id).not.toBe('');
       await expect(controle.getAttribute('aria-describedby')).toContain(descricao.id);
       await expect(document.getElementById(descricao.id)).toBe(descricao);

@@ -301,7 +301,7 @@
         },
         "item5": {
           "action": "Fieldset com legend e children",
-          "result": "<fieldset> com <legend> no topo e filhos espaçados em 16px",
+          "result": "&lt;fieldset&gt; com &lt;legend&gt; no topo e filhos espaçados em 16px",
           "priority": "high"
         },
         "item6": {
@@ -657,7 +657,7 @@
         },
         "item5": {
           "action": "Fieldset with legend and children",
-          "result": "<fieldset> with <legend> on top and children spaced by 16px",
+          "result": "&lt;fieldset&gt; with &lt;legend&gt; on top and children spaced by 16px",
           "priority": "high"
         },
         "item6": {
@@ -1013,7 +1013,7 @@
         },
         "item5": {
           "action": "Fieldset con legend e hijos",
-          "result": "<fieldset> con <legend> arriba e hijos espaciados en 16px",
+          "result": "&lt;fieldset&gt; con &lt;legend&gt; arriba e hijos espaciados en 16px",
           "priority": "high"
         },
         "item6": {

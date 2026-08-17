@@ -54,6 +54,15 @@ export const Fieldset: Story = {
       await expect(grupo.querySelector('legend')).toHaveTextContent('Endereço de entrega');
     });
 
+    await step('A legenda é o PRIMEIRO filho — é o que a rotula como do grupo', async () => {
+      // `accessibility.item4` afirma que o leitor anuncia a legenda ANTES dos
+      // campos, e isso depende da posição: `<legend>` fora da primeira posição
+      // deixa de rotular o `<fieldset>`, o texto continua na tela e o grupo
+      // passa a ser anônimo. Só o texto estava sob asserção.
+      const grupo = canvasElement.querySelector<HTMLFieldSetElement>('[data-slot="fieldset"]')!;
+      await expect(grupo.firstElementChild).toBe(grupo.querySelector('legend'));
+    });
+
     await step('Os campos do grupo ficam a 16px um do outro', async () => {
       const grupo = canvasElement.querySelector<HTMLFieldSetElement>('[data-slot="fieldset"]')!;
       await expect(Math.round(parseFloat(getComputedStyle(grupo).rowGap))).toBe(16);

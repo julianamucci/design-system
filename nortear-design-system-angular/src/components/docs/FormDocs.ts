@@ -14,7 +14,7 @@ import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { stripHtml, toPlainText } from '@/lib/strip-html';
+import { toPlainText } from '@/lib/strip-html';
 import { NDS_FORM } from '@/components/ui/form';
 import { NdsInput } from '@/components/ui/input';
 import { NdsTextarea } from '@/components/ui/textarea';
@@ -737,9 +737,11 @@ export class NdsFormDocs implements AfterViewInit, OnDestroy {
       },
       items: itemsFromDict(d, 'testes.functional', ['action', 'result', 'priority']).map((r) => ({
         action: toPlainText(r.action),
-        // `<fieldset>` e `<legend>` chegam escapados no item5; sem o par
-        // stripHtml+toPlainText a tag apareceria literal na célula.
-        result: stripHtml(toPlainText(r.result)),
+        // Só `toPlainText`: a célula é textNode e o item5 traz
+        // `&lt;fieldset&gt;`. O `stripHtml` que vinha por fora decodificava e
+        // então removia o resultado — a célula lia " com  no topo e filhos
+        // espaçados em 16px", sem as duas palavras que são o assunto do item.
+        result: toPlainText(r.result),
         priority: priorityLabel(r.priority),
       })),
     };

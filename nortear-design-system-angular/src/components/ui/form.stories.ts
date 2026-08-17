@@ -109,15 +109,22 @@ type Story = StoryObj<FormArgs>;
 export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
-    // `accessibility.item5` é contraste, medido pelo axe em toda story — o
-    // audit só o enxerga se alguma story o declarar.
+    // Saíram daqui duas declarações que esta story não cumpria:
+    //
+    //  · `accessibility.item5` dizia "contraste 4.5:1 em label, descrição E erro
+    //    em TODOS os temas", apoiado no axe. O axe mede o que está na tela, e a
+    //    tela está sempre no tema claro; além disso o Playground nasce SEM
+    //    mensagem de erro, então o terceiro alvo do item nem existe aqui. O item
+    //    passou para `States > Invalid`, onde as três peças existem e a razão é
+    //    calculada nos dois modos;
+    //  · `visual.item1` é "Padrão — label + input", e o Playground nasce com
+    //    descrição nos args: a foto do Chromatic tem três peças, não duas. O
+    //    item passou para `Variants > LabelAndControl`, que é a foto certa.
     covers: [
       'functional.item1',
       'functional.item2',
       'accessibility.item1',
       'accessibility.item2',
-      'accessibility.item5',
-      'visual.item1',
     ],
   },
   render: (args) => ({
@@ -154,9 +161,15 @@ export const Playground: Story = {
       await expect(canvas.getByLabelText(args.label)).toBe(controle);
     });
 
-    await step('A descrição é lida junto com o campo', async () => {
+    await step('A descrição é LIDA junto com o campo, não só exibida', async () => {
       const descricao = campo.querySelector<HTMLElement>('[data-slot="field-description"]')!;
+      // O alvo tem que EXISTIR, não só estar citado: um `aria-describedby`
+      // apontando para id inexistente passa em asserção de atributo e o leitor
+      // de tela não anuncia nada. Foi assim que a rodada do textarea ficou verde
+      // com o campo mudo.
+      await expect(descricao.id).not.toBe('');
       await expect(controle.getAttribute('aria-describedby')).toContain(descricao.id);
+      await expect(document.getElementById(descricao.id)).toBe(descricao);
     });
 
     await step('Clicar no rótulo leva o foco ao controle', async () => {

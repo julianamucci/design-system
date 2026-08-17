@@ -1,8 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/angular-vite';
-import { moduleMetadata } from '@storybook/angular-vite';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
-import { NDS_FORM } from './form';
-import { NdsInput } from './input';
+import { createFormField } from './form';
+import { createInput } from './input';
 
 // O Form não tem variante por prop — o que muda é quais peças opcionais entram
 // no campo. As duas stories abaixo são exatamente as duas combinações que o
@@ -10,8 +9,11 @@ import { NdsInput } from './input';
 
 const meta: Meta = {
   title: 'UI/Form/Variants',
-  decorators: [moduleMetadata({ imports: [...NDS_FORM, NdsInput] })],
-  parameters: { layout: 'padded', controls: { disable: true } },
+  parameters: {
+    layout: 'padded',
+    controls: { disable: true },
+    actions: { disable: true },
+  },
 };
 
 export default meta;
@@ -21,16 +23,14 @@ type Story = StoryObj;
 export const LabelAndControl: Story = {
   // `visual.item1` é "Padrão — label + input", e é ESTA a foto: o Playground
   // nasce com descrição nos args, então o que o Chromatic captura lá tem três
-  // peças, não duas. A story vizinha declarava o item e não o cumpria.
+  // peças, não duas.
   parameters: { covers: ['visual.item1'] },
-  render: () => ({
-    template: `
-      <div ndsFormField class="nds-max-w-sm">
-        <label ndsFormLabel>Nome completo</label>
-        <input ndsInput type="text" placeholder="ex: João da Silva" />
-      </div>
-    `,
-  }),
+  render: () =>
+    createFormField({
+      label: 'Nome completo',
+      input: createInput({ type: 'text', placeholder: 'ex: João da Silva' }),
+      class: 'nds-max-w-sm',
+    }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -51,15 +51,13 @@ export const LabelAndControl: Story = {
 /** Rótulo, controle e um parágrafo de apoio que o leitor de tela também lê. */
 export const WithDescription: Story = {
   parameters: { covers: ['functional.item3', 'visual.item2'] },
-  render: () => ({
-    template: `
-      <div ndsFormField class="nds-max-w-sm">
-        <label ndsFormLabel>Senha</label>
-        <input ndsInput type="password" autocomplete="new-password" />
-        <p ndsFormDescription>Use pelo menos 8 caracteres, com letras e números.</p>
-      </div>
-    `,
-  }),
+  render: () =>
+    createFormField({
+      label: 'Senha',
+      input: createInput({ type: 'password' }),
+      description: 'Use pelo menos 8 caracteres, com letras e números.',
+      class: 'nds-max-w-sm',
+    }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const controle = canvas.getByLabelText('Senha');
@@ -78,8 +76,9 @@ export const WithDescription: Story = {
       );
     });
 
-    await step('O texto de apoio entra no aria-describedby do controle', async () => {
+    await step('O texto de apoio entra no aria-describedby, e o alvo existe', async () => {
       await expect(controle.getAttribute('aria-describedby')).toContain(descricao.id);
+      await expect(document.getElementById(descricao.id)).toBe(descricao);
     });
   },
 };

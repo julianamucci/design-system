@@ -1,15 +1,25 @@
-<script lang="ts" generics="T extends Record<string, unknown>, U extends FormPath<T>">
-	import * as FormPrimitive from "formsnap";
-	import type { FormPath } from "sveltekit-superforms";
-	import { cn, type WithoutChild } from "@/lib/utils.js";
+<script lang="ts">
+	import type { Snippet } from "svelte";
+	import type { HTMLAttributes } from "svelte/elements";
+	import { cn } from "@/lib/utils.js";
 
 	let {
-		ref = $bindable(null),
+		legend,
 		class: className,
-		form,
-		name,
+		children,
 		...restProps
-	}: WithoutChild<FormPrimitive.FieldsetProps<T, U>> = $props();
+	}: HTMLAttributes<HTMLFieldSetElement> & {
+		/** Texto da legenda. Leitores de tela a anunciam antes de cada campo. */
+		legend?: string;
+		children: Snippet;
+	} = $props();
 </script>
 
-<FormPrimitive.Fieldset bind:ref {form} {name} class={cn("nds-form-fieldset", className)} {...restProps} />
+<fieldset data-slot="fieldset" class={cn("nds-form-fieldset", className)} {...restProps}>
+	<!-- A legenda é o PRIMEIRO filho: fora da primeira posição ela deixa de
+	     rotular o <fieldset>, o texto continua na tela e o grupo fica anônimo. -->
+	{#if legend}
+		<legend data-slot="fieldset-legend" class="nds-form-legend">{legend}</legend>
+	{/if}
+	{@render children()}
+</fieldset>

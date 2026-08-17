@@ -626,9 +626,11 @@ export type FieldsetOptions = {
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
+            // `DocsTestes` escreve textNode: `&lt;fieldset&gt;` do item5 sairia
+            // literal na célula sem `toPlainText`, que decodifica a entidade.
             items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({
-              action: t(`testes.functional.item${i}.action`),
-              result: t(`testes.functional.item${i}.result`),
+              action: toPlainText(t(`testes.functional.item${i}.action`)),
+              result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
             })),
           },
