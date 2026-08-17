@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect } from 'storybook/test';
 import { NdsButton, type ButtonVariant } from './button';
+import { falhasDeContrasteDeTexto } from '@shared/testing/button-probe';
 
 const VARIANTES: { variant: ButtonVariant; label: string }[] = [
   { variant: 'default',     label: 'Default'     },
@@ -48,6 +49,16 @@ export const Variants: Story = {
         const btn = canvas.getByRole('button', { name: label });
         await expect(btn).toHaveClass(`nds-button nds-button-${variant}`);
       }
+    });
+
+    await step('Toda variante alcança 4.5:1 nos três temas e nos dois modos', async () => {
+      // accessibility.item2 — contraste mínimo 4.5:1 em TODAS as variantes.
+      // O campo `how` do item dizia "axe-core / Lighthouse", e nenhum dos dois
+      // olhava esta matriz: o axe do test-runner mede o que está na tela, e a
+      // tela está sempre no tema claro padrão — cinco sextos das combinações
+      // nunca foram verificados. A sonda varre os três temas nos dois modos e
+      // compõe o alfa do fundo antes de dividir.
+      await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
     });
 
     await step('Classe do consumidor convive com a classe da variante', async () => {

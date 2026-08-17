@@ -79,16 +79,33 @@
 }
 
 /* ── Estados ───────────────────────────────────────────────────────────────── */
+/* O anel é OPACO. Medido com `hsl(var(--ring) / 0.5)`, a banda colorida — que é
+ * a única informação visual do estado de foco — compunha 1.87:1 a 2.42:1 contra
+ * a superfície do app, nos três temas e nos dois modos. WCAG 1.4.11 (Non-text
+ * Contrast, AA) pede 3:1 para indicador de estado, e a meia opacidade sozinha
+ * respondia por toda a perda: `--ring` cheio dá 3.7:1 a 5.6:1 nas mesmas seis
+ * combinações, sem tocar em token nenhum.
+ *
+ * Ninguém via porque o anel EXISTE e é bem visível para quem enxerga bem — o
+ * defeito é de razão, não de presença, e as asserções da época mediam presença
+ * (`matches(':focus-visible')`, `boxShadow !== 'none'`). O `input` e o
+ * `checkbox` já seguiam a forma certa: indicador opaco (`border-color:
+ * hsl(var(--ring))`) mais um halo translúcido. O botão só tinha o halo.
+ *
+ * A geometria não muda: 2px de vão em `--background` e 3px de banda. */
 .nds-button:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--ring));
 }
 .nds-button:disabled,
 .nds-button[aria-disabled="true"] {
   pointer-events: none;
   opacity: 0.5;
 }
+/* Mesma conta do anel de foco, e aqui pesa mais: o anel de inválido é
+ * PERMANENTE. Em `/ 0.4` ele marcava 1.86:1 a 2.08:1 — um estado de erro que a
+ * pessoa precisa notar sem depender de foco. */
 .nds-button[aria-invalid="true"] {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive));
 }
 /* O anel de estado inválido é PERMANENTE — não some quando o elemento perde o
  * foco — e era declarado depois do `:focus-visible` com a mesma
@@ -99,7 +116,7 @@
  * Os dois anéis convivem: o destrutivo por dentro, o de foco por fora. Mesmo
  * remédio já aplicado no `toggle`, onde o defeito foi medido primeiro. */
 .nds-button[aria-invalid="true"]:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4), 0 0 0 7px hsl(var(--ring) / 0.5);
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive)), 0 0 0 7px hsl(var(--ring));
 }
 
 
@@ -131,11 +148,18 @@
   padding-inline: var(--spacing-4);
 }
 /* xs — menor que sm: mesma fonte 12px, padding-block mínimo (2px, divisor de 8).
- * Mantém a regra WCAG 1.4.4: altura resultante de padding + line-height. */
+ * Mantém a regra WCAG 1.4.4: altura resultante de padding + line-height.
+ *
+ * `--spacing-0-5` e não `0.125rem`: o literal valia exatamente 2px, então nada
+ * mudou na densidade padrão — e era por isso que ninguém via. O `xs` era o
+ * ÚNICO tamanho do botão que não respondia à densidade: medido, dava 19px de
+ * altura em condensado, padrão e confortável, enquanto todos os outros
+ * andavam. Mesma família de defeito do 168a61bb (166 fallbacks literais), que
+ * varreu os `var(--x, literal)` e não alcançou o literal puro. */
 .nds-button-xs {
   gap: var(--spacing-1);
   padding-inline: var(--spacing-2);
-  padding-block: 0.125rem;                      /* 2px */
+  padding-block: var(--spacing-0-5);            /* 2px na densidade padrão */
   font-size: var(--text-control-sm);                           /* 12px */
 }
 .nds-button-xs:has(> svg) {
@@ -274,7 +298,7 @@
   background-color: hsl(var(--destructive) / 0.15);
 }
 .nds-button-destructive:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive) / 0.4);
+  box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 5px hsl(var(--destructive));
 }
 .dark .nds-button-destructive {
   background-color: hsl(var(--destructive) / 0.15);

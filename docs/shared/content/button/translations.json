@@ -213,7 +213,7 @@
       "focusVisible": {
         "label": "Focus visible",
         "trigger": "Foco via teclado (Tab)",
-        "behavior": "Ring de 3px no token <code>--ring</code> com borda na mesma cor. Indica foco acessível"
+        "behavior": "Anel opaco de 3px no token <code>--ring</code>, separado do botão por um vão na cor do fundo. Indica foco acessível"
       },
       "disabled": {
         "label": "Disabled",
@@ -228,7 +228,7 @@
       "invalid": {
         "label": "Invalid",
         "trigger": "<code>aria-invalid=\"true\"</code>",
-        "behavior": "Ring suave e borda no token <code>--destructive</code>. Usado em integração com formulários"
+        "behavior": "Anel opaco de 3px no token <code>--destructive</code>, permanente enquanto durar o estado. Usado em integração com formulários"
       }
     },
     "props": {
@@ -661,7 +661,7 @@
       "focusVisible": {
         "label": "Focus visible",
         "trigger": "Keyboard focus (Tab)",
-        "behavior": "3px ring in the <code>--ring</code> token with a matching border. Indicates accessible focus"
+        "behavior": "Opaque 3px ring in the <code>--ring</code> token, set off from the button by a gap in the background colour. Indicates accessible focus"
       },
       "disabled": {
         "label": "Disabled",
@@ -676,7 +676,7 @@
       "invalid": {
         "label": "Invalid",
         "trigger": "<code>aria-invalid=\"true\"</code>",
-        "behavior": "Soft ring and border in the <code>--destructive</code> token. Used in form integration"
+        "behavior": "Opaque 3px ring in the <code>--destructive</code> token, persistent while the state lasts. Used in form integration"
       }
     },
     "props": {
@@ -1109,7 +1109,7 @@
       "focusVisible": {
         "label": "Focus visible",
         "trigger": "Foco vía teclado (Tab)",
-        "behavior": "Ring de 3px en el token <code>--ring</code> con borde del mismo color. Indica foco accesible"
+        "behavior": "Anillo opaco de 3px en el token <code>--ring</code>, separado del botón por un hueco del color del fondo. Indica foco accesible"
       },
       "disabled": {
         "label": "Disabled",
@@ -1124,7 +1124,7 @@
       "invalid": {
         "label": "Invalid",
         "trigger": "<code>aria-invalid=\"true\"</code>",
-        "behavior": "Ring suave y borde en el token <code>--destructive</code>. Usado en integración con formularios"
+        "behavior": "Anillo opaco de 3px en el token <code>--destructive</code>, permanente mientras dure el estado. Usado en integración con formularios"
       }
     },
     "props": {

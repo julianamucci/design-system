@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, fn, userEvent, expect } from 'storybook/test';
 import { Loader2 } from 'lucide-vue-next';
 import { Button } from './index';
+import { falhasDeAnel } from '@shared/testing/button-probe';
 
 const meta: Meta<any> = {
   title: 'UI/Button/States',
@@ -100,6 +101,12 @@ export const FocusVisible: Story = {
       // accessibility.item3 — o item promete anel VISÍVEL ao navegar por
       // teclado; toHaveFocus sozinho não distingue foco de mouse.
       await expect(button.matches(':focus-visible')).toBe(true);
+      // E o anel tem de ser PERCEPTÍVEL, não só existir. Medido antes desta
+      // rodada, a banda colorida compunha 1.87:1 a 2.42:1 contra a superfície
+      // do app nos seis pares tema×modo — a meia opacidade de `--ring` comia
+      // o indicador inteiro. WCAG 1.4.11 (Non-text Contrast, AA) pede 3:1.
+      // `matches(:focus-visible)` sozinho passava com o anel invisível.
+      await expect(falhasDeAnel(canvasElement, 3)).toEqual([]);
     });
   },
 };

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
 import { NdsButton, NdsButtonIcon } from './button';
 
 const meta: Meta = {
@@ -87,6 +87,18 @@ export const AsLink: Story = {
       const link = canvas.getByRole('link', { name: 'Ver relatórios' });
       const btn = canvas.getByRole('button', { name: 'Gerar agora' });
       await expect(getComputedStyle(link).borderRadius).toBe(getComputedStyle(btn).borderRadius);
+    });
+
+    await step('O link entra na ordem de tabulação', async () => {
+      // O <a> com aparência de botão precisa ser ALCANÇÁVEL por teclado, e
+      // isso nenhuma das cinco stacks verificava: as asserções paravam em
+      // papel e destino. Um tabindex negativo herdado, ou a perda do
+      // atributo de destino, deixariam papel e destino intactos e a ação
+      // inalcançável por teclado.
+      const link = canvas.getByRole('link', { name: 'Ver relatórios' });
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(link).toHaveFocus();
     });
   },
 };

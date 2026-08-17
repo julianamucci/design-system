@@ -1,6 +1,6 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
+import { userEvent, within, expect } from 'storybook/test';
 import { createButton, createButtonIcon, btnClass } from './button';
 
 const meta: Meta = {
@@ -138,6 +138,18 @@ export const AsLink: Story = {
       const link = canvas.getByRole('link', { name: 'Ver documentação' });
       await expect(link).toBeInTheDocument();
       await expect(link).toHaveAttribute('href', '#docs');
+    });
+
+    await step('O link entra na ordem de tabulação', async () => {
+      // O <a> com aparência de botão precisa ser ALCANÇÁVEL por teclado, e
+      // isso nenhuma das cinco stacks verificava: as asserções paravam em
+      // papel e destino. Um tabindex negativo herdado, ou a perda do
+      // atributo de destino, deixariam papel e destino intactos e a ação
+      // inalcançável por teclado.
+      const link = canvas.getByRole('link', { name: 'Ver documentação' });
+      (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
+      await userEvent.tab();
+      await expect(link).toHaveFocus();
     });
   },
 };

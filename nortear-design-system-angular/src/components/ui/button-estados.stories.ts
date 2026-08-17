@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
 import { NdsButton, NdsButtonIcon } from './button';
+import { falhasDeAnel } from '@shared/testing/button-probe';
 
 const meta: Meta<ButtonEstadosArgs> = {
   title: 'UI/Button/States',
@@ -84,8 +85,18 @@ export const Keyboard: Story = {
     });
 
     await step('O foco por teclado deixa anel visível', async () => {
-      const estilo = getComputedStyle(btn);
-      await expect(estilo.outlineStyle !== 'none' || estilo.boxShadow !== 'none').toBe(true);
+      // `boxShadow !== 'none'` era satisfeito pela sombra de ELEVAÇÃO da
+      // própria variante — a asserção passava com o botão sem foco nenhum.
+      // Mesmo defeito que o `toggle` já registra na folha dele.
+      await expect(btn.matches(':focus-visible')).toBe(true);
+    });
+
+    await step('O anel de foco alcança 3:1 nos três temas e nos dois modos', async () => {
+      // E o anel tem de ser PERCEPTÍVEL, não só existir. Medido antes desta
+      // rodada, a banda colorida compunha 1.87:1 a 2.42:1 contra a superfície
+      // do app nos seis pares tema×modo — a meia opacidade de `--ring` comia
+      // o indicador inteiro. WCAG 1.4.11 (Non-text Contrast, AA) pede 3:1.
+      await expect(falhasDeAnel(canvasElement, 3)).toEqual([]);
     });
   },
 };

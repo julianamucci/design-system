@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, within } from 'storybook/test';
 import { Button } from './index';
+import { falhasDeContrasteDeTexto } from '@shared/testing/button-probe';
 
 const meta: Meta<any> = {
   title: 'UI/Button/Variants',
@@ -29,6 +30,14 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /salvar/i });
     await expect(btn).toHaveClass('nds-button-default');
+
+    // accessibility.item2 — contraste minimo 4.5:1 em TODAS as variantes.
+    // O campo how do item dizia "axe-core / Lighthouse", e nenhum dos dois
+    // olhava esta matriz: o axe do test-runner mede o que esta na tela, e a
+    // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
+    // nunca foram verificados. A sonda varre os tres temas nos dois modos e
+    // compoe o alfa do fundo antes de dividir.
+    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
   },
 };
 
@@ -43,6 +52,14 @@ export const Destructive: Story = {
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /excluir conta/i });
     await expect(btn).toHaveClass('nds-button-destructive');
+
+    // accessibility.item2 — contraste minimo 4.5:1 em TODAS as variantes.
+    // O campo how do item dizia "axe-core / Lighthouse", e nenhum dos dois
+    // olhava esta matriz: o axe do test-runner mede o que esta na tela, e a
+    // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
+    // nunca foram verificados. A sonda varre os tres temas nos dois modos e
+    // compoe o alfa do fundo antes de dividir.
+    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
   },
 };
 
@@ -57,6 +74,14 @@ export const Outline: Story = {
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /cancelar/i });
     await expect(btn).toHaveClass('nds-button-outline');
+
+    // accessibility.item2 — contraste minimo 4.5:1 em TODAS as variantes.
+    // O campo how do item dizia "axe-core / Lighthouse", e nenhum dos dois
+    // olhava esta matriz: o axe do test-runner mede o que esta na tela, e a
+    // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
+    // nunca foram verificados. A sonda varre os tres temas nos dois modos e
+    // compoe o alfa do fundo antes de dividir.
+    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
   },
 };
 
@@ -71,6 +96,14 @@ export const Secondary: Story = {
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /ver detalhes/i });
     await expect(btn).toHaveClass('nds-button-secondary');
+
+    // accessibility.item2 — contraste minimo 4.5:1 em TODAS as variantes.
+    // O campo how do item dizia "axe-core / Lighthouse", e nenhum dos dois
+    // olhava esta matriz: o axe do test-runner mede o que esta na tela, e a
+    // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
+    // nunca foram verificados. A sonda varre os tres temas nos dois modos e
+    // compoe o alfa do fundo antes de dividir.
+    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
   },
 };
 
@@ -85,6 +118,14 @@ export const Ghost: Story = {
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /fechar/i });
     await expect(btn).toHaveClass('nds-button-ghost');
+
+    // accessibility.item2 — contraste minimo 4.5:1 em TODAS as variantes.
+    // O campo how do item dizia "axe-core / Lighthouse", e nenhum dos dois
+    // olhava esta matriz: o axe do test-runner mede o que esta na tela, e a
+    // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
+    // nunca foram verificados. A sonda varre os tres temas nos dois modos e
+    // compoe o alfa do fundo antes de dividir.
+    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
   },
 };
 
@@ -99,5 +140,13 @@ export const Link: Story = {
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /saiba mais/i });
     await expect(btn).toHaveClass('nds-button-link');
+
+    // accessibility.item2 — contraste minimo 4.5:1 em TODAS as variantes.
+    // O campo how do item dizia "axe-core / Lighthouse", e nenhum dos dois
+    // olhava esta matriz: o axe do test-runner mede o que esta na tela, e a
+    // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
+    // nunca foram verificados. A sonda varre os tres temas nos dois modos e
+    // compoe o alfa do fundo antes de dividir.
+    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
   },
 };

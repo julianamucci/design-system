@@ -11,8 +11,16 @@
  */
 
 import { contraste, ligarTemaEscuro, superficieDoApp } from './alert-probe';
+import {
+  porTema, razao, resolverCor, fundoEfetivo, declaracaoDaRegra, semTransicao,
+} from './cor';
+import { porDensidade, type Densidade } from './espacamento';
 
 const VARIANTES = ['default', 'secondary', 'destructive', 'outline', 'ghost', 'link'] as const;
+
+const TAMANHOS = [
+  'xs', 'sm', 'lg', 'icon-xs', 'icon-sm', 'icon-lg', 'icon',
+] as const;
 
 /**
  * O botão ou pinta o próprio fundo, ou é transparente sobre a superfície do app.
@@ -95,5 +103,502 @@ export function reportarBotoes(stack: string, raiz: HTMLElement) {
       variantes: medirBotoes(raiz),
       contraste: contrasteDosBotoes(raiz),
     })}`,
+  );
+}
+
+// ─── Chave por TAMANHO ────────────────────────────────────────────────────────
+
+/**
+ * Nome do tamanho a partir da classe. `default` não tem modificador — o
+ * dimensionamento base mora em `.nds-button`, e essa ausência é o contrato.
+ */
+export function tamanhoDe(el: HTMLElement): string {
+  for (const t of TAMANHOS) {
+    if (el.classList.contains(`nds-button-${t}`)) return t;
+  }
+  return 'default';
+}
+
+/** `true` para os quatro quadrados sem texto — a única exceção à 1.4.4. */
+export function ehIconOnly(el: HTMLElement): boolean {
+  return tamanhoDe(el).startsWith('icon');
+}
+
+/** Todos os botões da tela, chaveados por TAMANHO (um por tamanho). */
+function porTamanho(raiz: HTMLElement): Map<string, HTMLElement> {
+  const mapa = new Map<string, HTMLElement>();
+  for (const el of raiz.querySelectorAll<HTMLElement>('.nds-button')) {
+    const t = tamanhoDe(el);
+    if (!mapa.has(t)) mapa.set(t, el);
+  }
+  return mapa;
+}
+
+// ─── WCAG 1.4.4 — a altura tem de crescer com a fonte ─────────────────────────
+
+export interface MedidaDeCrescimento {
+  tamanho: string;
+  iconOnly: boolean;
+  /** Altura em px com a fonte da raiz no valor normal. */
+  base: number;
+  /** Altura em px com a fonte da raiz DOBRADA. */
+  dobrada: number;
+  /** `dobrada / base`. 1.0 é altura cravada; ~2.0 é altura resultante. */
+  fator: number;
+}
+
+/**
+ * Mede a altura de cada tamanho com a fonte da raiz normal e DOBRADA.
+ *
+ * Ler `height` no CSS não prova nada: a altura pode estar cravada por
+ * `padding-block` em px, por `min-height`, por um `--size-*` em rem que não
+ * responde à fonte do usuário, ou por um ancestral. Medir duas vezes com a
+ * fonte diferente é a única leitura que responde à pergunta da WCAG 1.4.4 —
+ * "o bloco cresce junto com o texto?".
+ *
+ * A fonte é dobrada no `<html>` porque é ele que `rem` referencia e é ele que a
+ * configuração do navegador mexe. Volta no `finally`: fonte vazada envenena a
+ * story seguinte e a foto do Chromatic.
+ */
+export function medirCrescimentoComFonte(raiz: HTMLElement): MedidaDeCrescimento[] {
+  const html = raiz.ownerDocument.documentElement;
+  const fonteOriginal = html.style.fontSize;
+  const alvos = porTamanho(raiz);
+
+  const alturas = (): Map<string, number> => {
+    void raiz.offsetHeight;
+    return new Map([...alvos].map(([t, el]) => [t, el.getBoundingClientRect().height]));
+  };
+
+  try {
+    const base = alturas();
+    const emPx = parseFloat(getComputedStyle(html).fontSize) || 16;
+    html.style.fontSize = `${emPx * 2}px`;
+    const dobrada = alturas();
+    return [...alvos].map(([tamanho, el]) => {
+      const b = base.get(tamanho)!;
+      const d = dobrada.get(tamanho)!;
+      return {
+        tamanho,
+        iconOnly: ehIconOnly(el),
+        base: Math.round(b * 100) / 100,
+        dobrada: Math.round(d * 100) / 100,
+        fator: b > 0 ? Math.round((d / b) * 100) / 100 : 0,
+      };
+    });
+  } finally {
+    if (fonteOriginal) html.style.fontSize = fonteOriginal;
+    else html.style.removeProperty('font-size');
+    void raiz.offsetHeight;
+  }
+}
+
+// ─── WCAG 2.5.8 — alvo de toque nas três densidades ───────────────────────────
+
+export interface MedidaDeAlvo {
+  tamanho: string;
+  densidade: Densidade;
+  largura: number;
+  altura: number;
+  /** O menor lado — é ele que a 2.5.8 compara com 24. */
+  menorLado: number;
+}
+
+/**
+ * Caixa de cada tamanho de botão nas três densidades.
+ *
+ * A densidade entra no `<html>` (ver `porDensidade`): `--spacing-*` é resolvido
+ * em `:root`, então redeclarar a base num contêiner do meio da árvore não move
+ * nada. O botão de ícone lê `--size-*`, que a densidade também redeclara.
+ */
+export function medirAlvoDeToque(raiz: HTMLElement): MedidaDeAlvo[] {
+  const alvos = porTamanho(raiz);
+  return porDensidade(raiz, (densidade) =>
+    [...alvos].map(([tamanho, el]): MedidaDeAlvo => {
+      const r = el.getBoundingClientRect();
+      const largura = Math.round(r.width * 100) / 100;
+      const altura = Math.round(r.height * 100) / 100;
+      return { tamanho, densidade, largura, altura, menorLado: Math.min(largura, altura) };
+    }),
+  ).flat();
+}
+
+// ─── Contraste por tema, modo, variante — texto E borda ───────────────────────
+
+export interface MedidaDeVariante {
+  tema: string;
+  modo: 'claro' | 'escuro';
+  variante: string;
+  /** `false` quando a variante não está na tela — isso É o achado. */
+  presente: boolean;
+  texto: number | null;
+  /** `null` quando a variante não desenha borda (largura 0). */
+  borda: number | null;
+  fundo: string | null;
+}
+
+/**
+ * Contraste de texto e de borda de CADA variante, nos três temas e nos dois
+ * modos.
+ *
+ * O fundo é o efetivo — `--destructive / 0.1` e `--muted / 0.3` têm alfa, e ler
+ * `backgroundColor` devolveria uma cor que ninguém vê. A borda é medida contra
+ * o mesmo fundo do botão: é a superfície com que ela faz limite por dentro, e
+ * nos três temas `--background` responde pelo lado de fora.
+ */
+export function medirVariantesPorTema(raiz: HTMLElement): MedidaDeVariante[] {
+  const alvos = new Map<string, HTMLElement>();
+  for (const el of raiz.querySelectorAll<HTMLElement>('.nds-button')) {
+    const v = varianteDe(el);
+    if (!alvos.has(v)) alvos.set(v, el);
+  }
+
+  // As transições morrem ANTES da troca de tema: `background-color` e `color`
+  // estão no lote de transição do botão, e medir logo após trocar a classe
+  // devolveria a cor do tema anterior — o "contraste ~1.0" do CLAUDE.md.
+  const originais = [...alvos.values()].map((el) => el.style.transition);
+  alvos.forEach((el) => { el.style.transition = 'none'; });
+  const fundoOriginal = raiz.style.backgroundColor;
+
+  try {
+    return porTema(raiz, (tema, modo) => {
+      // A raiz da sonda PINTA a superfície do app antes de medir.
+      //
+      // Sem isto o escuro é medido contra o branco do `<body>`, que o harness do
+      // Storybook não repinta: `fundoEfetivo` sobe a árvore procurando o
+      // primeiro opaco, atravessa a raiz (transparente) e chega ao body claro.
+      // Toda variante de fundo translúcido — outline, ghost, link, destructive —
+      // acusava então ~1.05:1 no escuro, um defeito que não existe. É a mesma
+      // armadilha que o `alert-probe` documenta, aqui pelo lado do CONTÊINER: lá
+      // a saída foi resolver `--background`, e é ela que se aplica na raiz.
+      raiz.style.backgroundColor = superficieDoApp(raiz);
+      void raiz.offsetHeight;
+      const superficie = raiz.style.backgroundColor;
+
+      return [...VARIANTES].map((variante): MedidaDeVariante => {
+        const el = alvos.get(variante);
+        if (!el) {
+          return { tema, modo, variante, presente: false, texto: null, borda: null, fundo: null };
+        }
+        const cs = getComputedStyle(el);
+        const fundo = fundoEfetivo(el) ?? superficie;
+        const larguraDaBorda = parseFloat(cs.borderTopWidth) || 0;
+        return {
+          tema,
+          modo,
+          variante,
+          presente: true,
+          texto: razao(cs.color, fundo)?.razao ?? null,
+          // A borda é vista contra a PÁGINA, não contra o interior do botão: é o
+          // limite externo do controle, e é dele que a 1.4.11 fala.
+          borda:
+            larguraDaBorda > 0
+              ? (razao(cs.borderTopColor, superficie)?.razao ?? null)
+              : null,
+          fundo,
+        };
+      });
+    }).flat();
+  } finally {
+    [...alvos.values()].forEach((el, i) => {
+      if (originais[i]) el.style.transition = originais[i];
+      else el.style.removeProperty('transition');
+    });
+    if (fundoOriginal) raiz.style.backgroundColor = fundoOriginal;
+    else raiz.style.removeProperty('background-color');
+  }
+}
+
+/**
+ * Contraste do ANEL DE FOCO de cada variante, nos três temas e nos dois modos.
+ *
+ * Separado de `medirVariantesPorTema` porque a pergunta é outra: ali o limite é
+ * 4.5:1 de texto, aqui é 3:1 de elemento não-textual (WCAG 1.4.11). E porque a
+ * cor do anel não sai do elemento — sai da DECLARAÇÃO da folha, resolvida
+ * dentro da árvore que carrega o tema.
+ */
+export function medirAnelPorTema(raiz: HTMLElement) {
+  const regras: [string, string][] = [
+    ['foco', '.nds-button:focus-visible'],
+    ['foco-destructive', '.nds-button-destructive:focus-visible'],
+    ['invalido', '.nds-button[aria-invalid="true"]'],
+  ];
+
+  const declaradas = regras.map(([nome, seletor]) => [
+    nome,
+    declaracaoDaRegra(raiz.ownerDocument, (s) => s.includes(seletor), 'box-shadow') ?? '',
+  ] as const);
+
+  return porTema(raiz, (tema, modo) => {
+    const superficie = superficieDoApp(raiz);
+    const saida: Record<string, number | null> = {};
+    for (const [nome, declarada] of declaradas) {
+      // Última camada de cor da sombra: é a banda visível do anel — as
+      // anteriores são o vão em `--background` e a elevação.
+      const cores = declarada.match(/hsl\(var\(--[a-z-]+\)(?:\s*\/\s*[\d.]+)?\s*\)/g) ?? [];
+      const banda = cores.at(-1);
+      const bruta = banda ? resolverCor(raiz, banda) : null;
+      saida[nome] = bruta ? (razao(bruta, superficie)?.razao ?? null) : null;
+    }
+    return { tema, modo, ...saida };
+  });
+}
+
+// ─── Anel de foco ─────────────────────────────────────────────────────────────
+
+export interface MedidaDeAnel {
+  /** `box-shadow` computado sem foco. */
+  repouso: string;
+  /** `box-shadow` computado com `:focus-visible` casando. */
+  foco: string;
+  /** `true` quando o navegador realmente acendeu a pseudo-classe. */
+  focoVisivel: boolean;
+  /** Cor do anel já composta sobre o fundo que ele cobre. */
+  corDoAnel: string | null;
+  /** Anel × superfície do app — WCAG 1.4.11, limite 3:1. */
+  contra0Fundo: number | null;
+  /** Anel × borda de repouso do botão. `null` quando o botão não tem borda. */
+  contraBordaDeRepouso: number | null;
+}
+
+/**
+ * Mede o anel de foco de UM botão já focado pela story.
+ *
+ * O foco é da story de propósito: `:focus-visible` é heurística do navegador —
+ * `el.focus()` programático nem sempre a acende, e uma sonda que forçasse a
+ * classe mediria uma regra que o usuário talvez nunca veja. `focoVisivel`
+ * registra se a pseudo-classe casou de fato; `false` é o achado.
+ *
+ * `repouso` tem de ser colhido ANTES do foco — daí ser parâmetro.
+ */
+export function medirAnelDeFoco(el: HTMLElement, repouso: string): MedidaDeAnel {
+  // `box-shadow` está no lote de transição do botão. Lida logo após o Tab, a
+  // sombra volta no PRIMEIRO QUADRO — camada externa com 0px de espalhamento e
+  // alfa quase zero — e um anel perfeitamente pintado é relatado como
+  // inexistente. Medido: `rgba(0,0,0,0) 0px 0px 0px 0px` no ghost e no link.
+  // Desligar a transição faz o computado saltar para o valor final.
+  const foco = semTransicao(el, () => getComputedStyle(el).boxShadow);
+  const cs = getComputedStyle(el);
+  const raiz = el.parentElement ?? el;
+  const superficie = superficieDoApp(el);
+
+  // A cor do anel sai da DECLARAÇÃO da folha, não da string do box-shadow
+  // computado: o navegador devolve as camadas concatenadas, e separar a cor da
+  // camada externa por regex quebra em `rgba(...)` com vírgulas. Resolvendo o
+  // valor declarado o próprio navegador expande o `var` e compõe o alfa.
+  const declarado = declaracaoDaRegra(
+    el.ownerDocument,
+    (s) => s.includes('.nds-button:focus-visible'),
+    'box-shadow',
+  );
+  const tokenDoAnel = declarado?.match(/hsl\(var\(--ring\)[^)]*\)\s*\)?/)?.[0] ?? 'hsl(var(--ring) / 0.5)';
+  const bruta = resolverCor(raiz, tokenDoAnel);
+  const composto = bruta ? razao(bruta, superficie) : null;
+
+  const bordaDeRepouso = parseFloat(cs.borderTopWidth) > 0 ? cs.borderTopColor : null;
+
+  return {
+    repouso,
+    foco,
+    focoVisivel: el.matches(':focus-visible'),
+    corDoAnel: composto?.frente ?? bruta,
+    contra0Fundo: composto?.razao ?? null,
+    contraBordaDeRepouso:
+      bordaDeRepouso && composto ? (razao(composto.frente, bordaDeRepouso)?.razao ?? null) : null,
+  };
+}
+
+// ─── Desabilitado ─────────────────────────────────────────────────────────────
+
+export interface MedidaDeDesabilitado {
+  /** `nativo`, `aria`, `ambos` ou `nenhum` — `nenhum` é o achado. */
+  mecanismo: string;
+  /** `none` impede o clique de ponteiro; qualquer outro valor o deixa passar. */
+  ponteiro: string;
+  /** Foco retido depois de `focus()`. Nativo bloqueia; `aria-disabled` não. */
+  retemFoco: boolean;
+  /** `true` quando `elementFromPoint` no centro devolve o próprio botão. */
+  alcancavelPeloPonteiro: boolean;
+  opacidade: number;
+}
+
+export function medirDesabilitado(el: HTMLElement): MedidaDeDesabilitado {
+  const cs = getComputedStyle(el);
+  const nativo = el.hasAttribute('disabled');
+  const aria = el.getAttribute('aria-disabled') === 'true';
+  const r = el.getBoundingClientRect();
+  const alvo = el.ownerDocument.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+
+  const antes = el.ownerDocument.activeElement;
+  el.focus();
+  const retemFoco = el.ownerDocument.activeElement === el;
+  if (!retemFoco && antes instanceof HTMLElement) antes.focus();
+
+  return {
+    mecanismo: nativo && aria ? 'ambos' : nativo ? 'nativo' : aria ? 'aria' : 'nenhum',
+    ponteiro: cs.pointerEvents,
+    retemFoco,
+    alcancavelPeloPonteiro: alvo === el || el.contains(alvo),
+    opacidade: Number(cs.opacity),
+  };
+}
+
+// ─── Botão como link ──────────────────────────────────────────────────────────
+
+export interface MedidaDeLink {
+  tag: string;
+  /** `null` sem `href` — âncora sem destino não é link para o leitor de tela. */
+  href: string | null;
+  /** `role` explícito. `button` num `<a href>` é perda de semântica. */
+  papel: string | null;
+  /** Índice de tabulação efetivo. `<a href>` é focável sem declarar nada. */
+  tabIndex: number;
+  focavel: boolean;
+  nomeAcessivel: string;
+  temClasseDeBotao: boolean;
+}
+
+export function medirLink(el: HTMLElement): MedidaDeLink {
+  const antes = el.ownerDocument.activeElement;
+  el.focus();
+  const focavel = el.ownerDocument.activeElement === el;
+  if (antes instanceof HTMLElement) antes.focus();
+
+  return {
+    tag: el.tagName.toLowerCase(),
+    href: el.getAttribute('href'),
+    papel: el.getAttribute('role'),
+    tabIndex: el.tabIndex,
+    focavel,
+    nomeAcessivel: (el.getAttribute('aria-label') ?? el.textContent ?? '').trim(),
+    temClasseDeBotao: el.classList.contains('nds-button'),
+  };
+}
+
+// ─── Ícone ────────────────────────────────────────────────────────────────────
+
+export interface MedidaDeIcone {
+  /** `null` quando o SVG não se esconde do leitor — o achado. */
+  ariaHidden: string | null;
+  /** `<title>` dentro do SVG entra no nome acessível e o polui. */
+  temTitulo: boolean;
+  lado: number;
+  /** Texto que o leitor de tela anuncia para o botão inteiro. */
+  nomeAcessivel: string;
+  /** `true` quando o nome vem do `aria-label` (obrigatório em icon-only). */
+  nomeVemDoRotulo: boolean;
+}
+
+export function medirIcone(botao: HTMLElement): MedidaDeIcone | null {
+  const svg = botao.querySelector<SVGSVGElement>('svg');
+  if (!svg) return null;
+  const rotulo = botao.getAttribute('aria-label');
+  return {
+    ariaHidden: svg.getAttribute('aria-hidden'),
+    temTitulo: !!svg.querySelector('title'),
+    lado: Math.round(svg.getBoundingClientRect().width),
+    nomeAcessivel: (rotulo ?? botao.textContent ?? '').trim(),
+    nomeVemDoRotulo: !!rotulo,
+  };
+}
+
+// ─── Portões: o que as stories asseveram ──────────────────────────────────────
+
+/**
+ * Variantes cujo TEXTO fica abaixo de `minimo` em algum tema ou modo.
+ *
+ * Devolve linha legível por falha, e `[]` quando tudo passa — de modo que a
+ * story escreva `expect(falhas).toEqual([])` e a mensagem de erro já diga qual
+ * tema, qual modo, qual variante e qual razão.
+ *
+ * Isto é o que `testes.accessibility.item2` prometia. O item dizia "axe-core /
+ * Lighthouse" no campo `how`, e nenhuma das duas coisas rodava: o axe do
+ * test-runner mede o que está na tela, e a tela está sempre no tema claro
+ * padrão. Cinco sextos da matriz nunca foram olhados por ninguém.
+ */
+export function falhasDeContrasteDeTexto(raiz: HTMLElement, minimo: number): string[] {
+  return medirVariantesPorTema(raiz)
+    .filter((m) => m.presente && m.texto !== null && m.texto < minimo)
+    .map((m) => `${m.tema}/${m.modo} · ${m.variante}: texto ${m.texto}:1 (mínimo ${minimo})`);
+}
+
+/**
+ * Temas/modos em que a banda colorida do anel fica abaixo de `minimo`.
+ *
+ * `minimo` é 3 — WCAG 1.4.11 trata o anel como informação não-textual. Cobre as
+ * três regras de anel do botão (foco, foco destrutivo e inválido permanente).
+ */
+export function falhasDeAnel(raiz: HTMLElement, minimo: number): string[] {
+  const saida: string[] = [];
+  for (const linha of medirAnelPorTema(raiz)) {
+    for (const [nome, valor] of Object.entries(linha)) {
+      if (nome === 'tema' || nome === 'modo') continue;
+      const r = valor as number | null;
+      // `null` quer dizer que a REGRA sumiu da folha — achado, não aprovação.
+      if (r === null) saida.push(`${linha.tema}/${linha.modo} · ${nome}: regra ausente na folha`);
+      else if (r < minimo) saida.push(`${linha.tema}/${linha.modo} · ${nome}: ${r}:1 (mínimo ${minimo})`);
+    }
+  }
+  return saida;
+}
+
+// ─── Colheita completa ────────────────────────────────────────────────────────
+
+/**
+ * Roda a bateria inteira sobre a mesma tela e lança o resultado.
+ *
+ * Mora aqui, e não em cada story, porque a comparação entre stacks só vale se as
+ * cinco medirem a MESMA coisa na mesma ordem — cinco cópias divergiriam na
+ * primeira correção. As stories ficam com o que é irredutivelmente de stack: o
+ * markup dos cenários.
+ *
+ * `tab` é injetado porque o `userEvent` é do pacote de teste, não do colhedor —
+ * e porque o foco tem de vir de TECLADO: `:focus-visible` é heurística do
+ * navegador, e `el.focus()` programático mede uma regra que a pessoa talvez
+ * nunca veja.
+ */
+export async function colherTudo(
+  stack: string,
+  raiz: HTMLElement,
+  tab: () => Promise<void>,
+): Promise<never> {
+  const doc = raiz.ownerDocument;
+  const botoes = [...raiz.querySelectorAll<HTMLElement>('.nds-button')];
+  const repouso = new Map(botoes.map((b) => [b, getComputedStyle(b).boxShadow]));
+
+  const crescimento = medirCrescimentoComFonte(raiz);
+  const alvo = medirAlvoDeToque(raiz);
+  const temas = medirVariantesPorTema(raiz);
+
+  const focos: Record<string, MedidaDeAnel> = {};
+  (doc.activeElement as HTMLElement | null)?.blur();
+  for (let i = 0; i < botoes.length + 4; i++) {
+    await tab();
+    const ativo = doc.activeElement as HTMLElement | null;
+    if (!ativo?.classList?.contains('nds-button')) continue;
+    const chave = varianteDe(ativo);
+    if (!focos[chave]) focos[chave] = medirAnelDeFoco(ativo, repouso.get(ativo) ?? '');
+  }
+
+  const achar = (sel: string) => raiz.querySelector<HTMLElement>(sel);
+  const desab = achar('[data-sonda="desabilitado"]');
+  const link = achar('[data-sonda="link"]');
+  const comIcone = achar('[data-sonda="com-icone"]');
+  const iconOnly = achar('.nds-button-icon-sm');
+
+  throw new Error(
+    `SONDA::${stack}::` +
+      JSON.stringify({
+        matriz: medirBotoes(raiz),
+        crescimento,
+        alvo,
+        temas,
+        anelPorTema: medirAnelPorTema(raiz),
+        focos,
+        desabilitado: desab ? medirDesabilitado(desab) : null,
+        link: link ? medirLink(link) : null,
+        iconeComTexto: comIcone ? medirIcone(comIcone) : null,
+        iconeSozinho: iconOnly ? medirIcone(iconOnly) : null,
+      }),
   );
 }
