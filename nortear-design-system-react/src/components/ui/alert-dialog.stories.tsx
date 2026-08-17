@@ -255,13 +255,16 @@ export const Playground: Story = {
       await expect(description).toHaveTextContent(/removidos permanentemente/i);
     });
 
-    await step("Foco entra no diálogo ao abrir", async () => {
+    await step("Foco inicial em Cancelar, não na ação destrutiva", async () => {
+      // accessibility.item3 e functional.item1 prometem a saída SEGURA como
+      // foco inicial: o Enter apertado por reflexo num diálogo de destruição
+      // não pode cair no botão que destrói. As cinco stacks entregam — medido
+      // pela sonda, era o Svelte que caía no painel.
       const dialog = await waitForPortal("alertdialog");
-      await waitFor(() => {
-        if (!dialog.contains(document.activeElement)) {
-          throw new Error("foco não entrou no diálogo");
-        }
-      });
+      const cancel = within(dialog).getByRole("button", { name: /^Cancelar$/i });
+      const action = within(dialog).getByRole("button", { name: /^Excluir$/i });
+      await waitFor(() => expect(cancel).toHaveFocus());
+      await expect(action).not.toHaveFocus();
     });
 
     await step("Tab e Shift+Tab circulam entre Cancel e Action sem sair do diálogo", async () => {
@@ -269,10 +272,9 @@ export const Playground: Story = {
       const cancel = within(dialog).getByRole("button", { name: /^Cancelar$/i });
       const action = within(dialog).getByRole("button", { name: /^Excluir$/i });
       const focused = new Set<Element>();
-      // A ordem começa em quem já tem o foco: dependendo da lib o foco inicial
-      // cai no popup (e o primeiro Tab escolhe o controle) ou direto no Cancel.
-      // Os dois caminhos satisfazem functional.item1; o que não pode é o
-      // primeiro controle alcançado ser a ação destrutiva.
+      // Parte do estado que este passo garante, e não do que o anterior deixou:
+      // o replay do painel Interactions reexecuta no mesmo DOM.
+      cancel.focus();
       const ordem: Element[] = [document.activeElement!];
 
       // 4 tabulações: com focus trap ativo o foco só pode alternar entre os

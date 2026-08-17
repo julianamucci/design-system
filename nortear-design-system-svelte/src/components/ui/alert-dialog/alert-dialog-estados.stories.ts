@@ -164,10 +164,12 @@ export const Confirmed: Story = {
       await waitForInteractive(trigger);
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
-      // O foco inicial é assíncrono (vai para o painel); só depois dele o Tab
-      // percorre Cancelar → ação na ordem documentada.
-      await waitFor(() => expect(dialog).toHaveFocus());
-      await userEvent.tab();
+      // O foco inicial pousa no Cancelar — a saída segura, como o conteúdo
+      // compartilhado promete. A asserção anterior esperava o PAINEL focado e
+      // dava dois Tabs: era o defeito do FocusScope virando contrato (ver
+      // alert-dialog-content.svelte). Um Tab basta a partir do Cancelar.
+      const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
+      await waitFor(() => expect(cancel).toHaveFocus());
       await userEvent.tab();
       const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
       await expect(action).toHaveFocus();
@@ -220,12 +222,11 @@ export const Cancelled: Story = {
       await waitForInteractive(trigger);
       await userEvent.click(trigger);
       const dialog = await body.findByRole('alertdialog');
-      // O foco inicial é assíncrono (vai para o painel); o primeiro Tab leva ao
-      // Cancelar, conforme a ordem documentada.
-      await waitFor(() => expect(dialog).toHaveFocus());
-      await userEvent.tab();
+      // O foco inicial JÁ pousa no Cancelar — não é preciso Tab nenhum. A
+      // asserção anterior esperava o painel focado e dava um Tab: era o defeito
+      // do FocusScope virando contrato (ver alert-dialog-content.svelte).
       const cancel = within(dialog).getByRole('button', { name: /Cancelar/i });
-      await expect(cancel).toHaveFocus();
+      await waitFor(() => expect(cancel).toHaveFocus());
       await userEvent.keyboard(' ');
       await waitFor(() => expect(onCancelSpy).toHaveBeenCalledTimes(2));
       await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument());

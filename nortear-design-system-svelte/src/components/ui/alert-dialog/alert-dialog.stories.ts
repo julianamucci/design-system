@@ -250,16 +250,26 @@ export const Playground: Story = {
       await expect(media!.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     });
 
-    await step('Foco inicial fica no painel do diálogo', async () => {
-      const dialog = await body.findByRole('alertdialog');
-      await waitFor(() => expect(dialog).toHaveFocus());
-    });
-
-    await step('Tab percorre Cancelar e depois a ação de confirmação', async () => {
+    await step('Foco inicial em Cancelar, não na ação destrutiva', async () => {
+      // O conteúdo compartilhado promete isto em accessibility.item3 e
+      // functional.item1. A asserção anterior dizia "o foco fica no painel" —
+      // era o defeito virando contrato: o FocusScope do bits procurava o
+      // primeiro tabbable antes de o rodapé existir, desistia e focava o
+      // container. Ver alert-dialog-content.svelte.
       const dialog = await body.findByRole('alertdialog');
       const scope = within(dialog);
-      await userEvent.tab();
-      await expect(scope.getByRole('button', { name: /Cancelar/i })).toHaveFocus();
+      await waitFor(() =>
+        expect(scope.getByRole('button', { name: /Cancelar/i })).toHaveFocus(),
+      );
+      await expect(scope.getByRole('button', { name: /^Excluir$/i })).not.toHaveFocus();
+    });
+
+    await step('Tab leva do Cancelar à ação de confirmação', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const scope = within(dialog);
+      // Estabelece a própria precondição: o replay reexecuta no mesmo DOM, onde
+      // o foco pode ter parado em qualquer um dos dois.
+      scope.getByRole('button', { name: /Cancelar/i }).focus();
       await userEvent.tab();
       await expect(scope.getByRole('button', { name: /^Excluir$/i })).toHaveFocus();
     });

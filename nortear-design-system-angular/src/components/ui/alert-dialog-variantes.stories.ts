@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsButton } from './button';
-import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 // Variantes e formas do painel. Sem argTypes, então o painel Controls é
 // desligado — do contrário apareceria vazio.
@@ -47,12 +47,25 @@ export const Neutral: Story = {
     `,
   }),
   play: async ({ step }) => {
+    await step('O painel abre com o nome acessível da confirmação neutra', async () => {
+      const painel = await esperarPortal('alertdialog');
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAccessibleName(/Sair da conta/i);
+    });
+
     await step('A confirmação neutra não usa a cor de perigo', async () => {
       // Vermelho reservado ao irreversível: usá-lo em "sair da conta" gasta o
       // sinal, e quando a exclusão real aparecer ele não vai mais alarmar.
-      await esperarPortal('alertdialog');
       const acao = document.querySelector<HTMLElement>('[data-testid="acao"]')!;
-      await expect(acao.classList.contains('nds-button-destructive')).toBe(false);
+      await expect(acao).toHaveClass('nds-button-default');
+      await expect(acao).not.toHaveClass('nds-button-destructive');
+    });
+
+    await step('O Cancel fica na hierarquia secundária', async () => {
+      const cancelar = document.querySelector<HTMLElement>(
+        '[data-slot="alert-dialog-cancel"]',
+      )!;
+      await expect(cancelar).toHaveClass('nds-button-outline');
     });
   },
 };
@@ -242,7 +255,26 @@ export const Controlled: Story = {
       // Abrir por um botão que não é o gatilho prova que `open` manda.
       await expect(document.querySelector('[data-slot="alert-dialog-content"]')).toBeNull();
       await userEvent.click(canvas.getByTestId('abrir'));
-      await esperarPortal('alertdialog');
+      const painel = await esperarPortal('alertdialog');
+      await expect(painel).toBeVisible();
+      await expect(painel).toHaveAccessibleName(/Excluir conta/i);
+    });
+
+    await step('O Escape devolve o estado ao pai, que fecha o diálogo', async () => {
+      // O ciclo do modo controlado só fecha quando a saída volta pelo binding:
+      // se `openChange` não propagasse, o painel continuaria na tela com o pai
+      // achando que está fechado.
+      await userEvent.keyboard('{Escape}');
+      await esperarPortalSumir('alertdialog');
+      await expect(document.querySelector('[data-slot="alert-dialog-content"]')).toBeNull();
+    });
+
+    await step('O gatilho interno volta a abrir pelo mesmo caminho controlado', async () => {
+      // Estabelece a própria precondição: o passo anterior deixou fechado, e é
+      // desse estado que este parte — o replay do painel Interactions reexecuta
+      // no mesmo DOM.
+      await userEvent.click(canvas.getByRole('button', { name: 'Excluir conta' }));
+      await expect(await esperarPortal('alertdialog')).toBeVisible();
     });
   },
 };
