@@ -124,6 +124,18 @@ export const Disabled: Story = {
       await userEvent.click(canvas.getByRole('button', { name: /14 de abril de 2026/i }));
       await expect(valoresCom(canvasElement, '[data-selected]')).toEqual(['2026-04-14']);
     });
+
+    await step('Dia bloqueado fica fora da tabulação', async () => {
+      // accessibility.item2 — nas outras stacks o dia bloqueado sai da ordem do
+      // Tab. Aqui a lib não devolvia atributo NENHUM para ele, e `<button>` sem
+      // tabindex é tabulável: eram quinze paradas antes de chegar ao primeiro dia
+      // escolhível.
+      const bloqueados = Array.from(
+        canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-day-btn[data-disabled]'),
+      );
+      await expect(bloqueados.length).toBeGreaterThan(0);
+      await expect(bloqueados.filter((b) => b.tabIndex >= 0)).toEqual([]);
+    });
   },
 };
 

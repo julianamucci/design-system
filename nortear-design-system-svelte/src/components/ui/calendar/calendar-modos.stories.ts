@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
+import {
+  ESTADOS_COM_TEXTO_LEGIVEL,
+  descreverContraste,
+  medirContrasteDoCalendario,
+} from '@shared/testing/calendar-probe';
 import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
 
@@ -153,6 +158,19 @@ export const Range: Story = {
       await expect(parseFloat(fim.borderTopRightRadius)).toBeGreaterThan(0);
       await expect(parseFloat(fim.borderTopLeftRadius)).toBe(0);
       await expect(parseFloat(miolo.borderTopLeftRadius)).toBe(0);
+    });
+
+    await step('As pontas do intervalo passam em contraste nos três temas e nos dois modos', async () => {
+      // accessibility.item6 — o item prometia 4.5:1 e a verificação declarada era
+      // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
+      // sexto do produto. Medido no escuro, as pontas do intervalo de uma stack
+      // marcavam 1.18:1 e o número do dia sumia. Aritmética, não olhômetro.
+      const medidas = medirContrasteDoCalendario(canvasElement).filter(
+        (m) => m.presente && (ESTADOS_COM_TEXTO_LEGIVEL as readonly string[]).includes(m.estado),
+      );
+      await expect(medidas.length).toBeGreaterThan(0);
+      const reprovadas = medidas.filter((m) => (m.razao ?? 0) < 4.5).map(descreverContraste);
+      await expect(reprovadas).toEqual([]);
     });
 
     await step('Escolher duas datas redesenha o período', async () => {

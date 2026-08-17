@@ -15,6 +15,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 <template>
   <RangeCalendarHeadCell
     data-slot="range-calendar-head-cell"
+    scope="col"
     :class="cn('nds-calendar-weekday', props.class)"
     v-bind="forwardedProps"
   >

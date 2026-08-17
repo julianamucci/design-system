@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect, fn } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
+import {
+  ESTADOS_COM_TEXTO_LEGIVEL,
+  descreverContraste,
+  medirContrasteDoCalendario,
+} from "@shared/testing/calendar-probe";
 import { Calendar } from "./calendar";
 
 const meta = {
@@ -182,6 +187,33 @@ export const Range: Story = {
       const fim = canvasElement.querySelector('[role=gridcell][data-day="2026-04-18"] button')!;
       await expect(inicio).toHaveAttribute("data-range-start", "true");
       await expect(fim).toHaveAttribute("data-range-end", "true");
+    });
+
+    await step("A faixa do miolo é pintada pela célula, não pelo botão", async () => {
+      // O botão é mais estreito que a célula, então pintá-lo deixava falha entre
+      // as colunas — e usava outro par de tokens (`--muted`/`--foreground`) do
+      // que as demais stacks (`--accent`/`--accent-foreground`). No tema default
+      // os dois valores coincidem e ninguém via; no warm e no cold, não.
+      const meio = canvasElement.querySelector<HTMLElement>(
+        '[role=gridcell][data-day="2026-04-14"] button',
+      )!;
+      const celula = meio.closest<HTMLElement>("[role=gridcell]")!;
+      await expect(getComputedStyle(meio).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+      await expect(getComputedStyle(celula).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+    });
+
+    await step("As pontas do intervalo passam em contraste nos três temas e nos dois modos", async () => {
+      // accessibility.item6 — o item prometia 4.5:1 e a verificação declarada era
+      // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
+      // sexto do produto. Medido no escuro, as pontas do intervalo de uma stack
+      // marcavam 1.18:1, porque uma regra de botão mais específica vencia o fundo
+      // `--primary` — o número do dia sumia. Aritmética, não olhômetro.
+      const medidas = medirContrasteDoCalendario(canvasElement).filter(
+        (m) => m.presente && ESTADOS_COM_TEXTO_LEGIVEL.includes(m.estado as never),
+      );
+      await expect(medidas.length).toBeGreaterThan(0);
+      const reprovadas = medidas.filter((m) => (m.razao ?? 0) < 4.5).map(descreverContraste);
+      await expect(reprovadas).toEqual([]);
     });
   },
 };

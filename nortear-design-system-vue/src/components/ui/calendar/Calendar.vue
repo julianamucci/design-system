@@ -2,13 +2,14 @@
 import type { CalendarRootEmits, CalendarRootProps, DateValue } from 'reka-ui'
 import type { HTMLAttributes, Ref } from 'vue'
 import type { LayoutTypes } from './index'
-import { getLocalTimeZone, today } from '@internationalized/date'
+import { getLocalTimeZone, parseDate, today } from '@internationalized/date'
 import { createReusableTemplate, reactiveOmit, useVModel } from '@vueuse/core'
 import { CalendarRoot, useDateFormatter, useForwardPropsEmits } from 'reka-ui'
 import { createYear, createYearRange, toDate } from 'reka-ui/date'
-import { computed } from 'vue'
+import { computed, nextTick } from 'vue'
 import { cn } from '@/lib/utils'
 import { rotulosDoCalendario } from '@shared/primitives/calendar-labels'
+import { destinoDaTecla, diaNaGrade, isoDoElemento } from '@shared/primitives/calendar-teclado'
 import { CalendarCell, CalendarCellTrigger, CalendarGrid, CalendarGridBody, CalendarGridHead, CalendarGridRow, CalendarHeadCell, CalendarHeader, CalendarHeading, CalendarNextButton, CalendarPrevButton } from './index'
 
 const props = withDefaults(defineProps<CalendarRootProps & { class?: HTMLAttributes['class'], layout?: LayoutTypes, yearRange?: DateValue[] }>(), {
@@ -66,6 +67,30 @@ const yearRange = computed(() => {
   })
 })
 
+/**
+ * O resto do teclado da grade.
+ *
+ * A lib trata seta, Enter e Espaço; `Home`, `End`, `PageUp` e `PageDown` não
+ * chegavam a lugar nenhum — o conteúdo compartilhado promete as quatro desde
+ * sempre, e aqui elas simplesmente não faziam nada (medido: o foco ficava
+ * parado no mesmo dia nas quatro teclas).
+ *
+ * A data de partida vem do elemento em FOCO, e não do `placeholder`: a
+ * navegação por setas da lib move o foco sem mexer na visão, então o
+ * placeholder está atrasado em relação ao que a pessoa vê em foco.
+ *
+ * O foco é devolvido depois do `nextTick` porque mudar o mês recria a grade: o
+ * botão de destino ainda não existe no instante da tecla.
+ */
+function aoTeclarNaGrade(evento: KeyboardEvent) {
+  const raiz = evento.currentTarget as HTMLElement | null
+  const destino = destinoDaTecla(isoDoElemento(evento.target as Element | null), evento)
+  if (!destino || !raiz) return
+  evento.preventDefault()
+  placeholder.value = parseDate(destino)
+  void nextTick(() => diaNaGrade(raiz, destino)?.focus())
+}
+
 const [DefineMonthTemplate, ReuseMonthTemplate] = createReusableTemplate<{ date: DateValue }>()
 const [DefineYearTemplate, ReuseYearTemplate] = createReusableTemplate<{ date: DateValue }>()
 
@@ -94,7 +119,11 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         :value="month.month"
         :selected="date.month === month.month"
       >
-        {{ formatter.custom(toDate(month), { month: 'short' }) }}
+        <!-- Mês por EXTENSO, como no Vanilla, que é a referência: a forma curta
+             em pt-BR sai com ponto ("jan."), e o ponto numa opção de uma palavra
+             só é ruído — o mesmo motivo pelo qual ele já era removido do
+             cabeçalho da semana. -->
+        {{ formatter.custom(toDate(month), { month: 'long' }) }}
       </option>
     </select>
   </DefineMonthTemplate>
@@ -126,11 +155,16 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-model:placeholder="placeholder"
     data-slot="calendar"
     :class="cn('nds-calendar-root', props.class)"
+    @keydown="aoTeclarNaGrade"
   >
-    <!-- `pt-0` saiu: era utilitário de uma lib que não existe mais no projeto,
-         então já não aplicava nada. O espaçamento do cabeçalho vem do
-         .nds-calendar-caption, igual nas outras stacks. -->
-    <CalendarHeader>
+    <!-- Mesma árvore do Vanilla, que é a referência de markup: a faixa de
+         navegação é IRMÃ dos meses e fica por cima deles, e CADA mês traz a
+         própria legenda no meio.
+         Antes o cabeçalho era único e ficava fora do laço: com dois meses lado a
+         lado apareciam duas grades e UMA legenda só, então a segunda tabela não
+         dizia de que mês era. E o bloco `.nds-calendar-month`, que as outras
+         quatro stacks têm, não existia aqui. -->
+    <div class="nds-calendar-months">
       <!-- div (não <nav>): paginação de mês não é landmark de navegação — o
            <nav> sem rótulo repetia um landmark por calendário (landmark-unique);
            a referência cross-stack (vanilla) também usa div. -->
@@ -143,65 +177,74 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
         </CalendarNextButton>
       </div>
 
-      <slot
-        name="calendar-heading"
-        :date="date"
-        :month="ReuseMonthTemplate"
-        :year="ReuseYearTemplate"
-      >
-        <template v-if="layout === 'month-and-year'">
-          <div class="nds-calendar-caption-dropdown">
-            <ReuseMonthTemplate :date="date" />
-            <ReuseYearTemplate :date="date" />
-          </div>
-        </template>
-        <template v-else>
-          <!-- Mês e ano formatados SEPARADAMENTE e juntados por espaço, e não num
-               formato só: em pt-BR e es o Intl com month+year devolve "abril de
-               2026", enquanto as outras três stacks compõem "abril 2026". A
-               legenda é texto visível, e divergir nela é divergir na tela. -->
-          <CalendarHeading>
-            {{ formatter.custom(toDate(date), { month: 'long' }) }}
-            {{ formatter.custom(toDate(date), { year: 'numeric' }) }}
-          </CalendarHeading>
-        </template>
-      </slot>
-    </CalendarHeader>
-
-    <div class="nds-calendar-months">
-      <CalendarGrid
+      <div
         v-for="month in grid"
         :key="month.value.toString()"
+        class="nds-calendar-month"
       >
-        <CalendarGridHead>
-          <CalendarGridRow>
-            <CalendarHeadCell
-              v-for="day in weekDays"
-              :key="day"
-            >
-              {{ day.replace(/\.$/, '') }}
-            </CalendarHeadCell>
-          </CalendarGridRow>
-        </CalendarGridHead>
-        <CalendarGridBody>
-          <CalendarGridRow
-            v-for="(weekDates, index) in month.rows"
-            :key="`weekDate-${index}`"
-            class="nds-calendar-week"
+        <CalendarHeader>
+          <slot
+            name="calendar-heading"
+            :date="month.value"
+            :month="ReuseMonthTemplate"
+            :year="ReuseYearTemplate"
           >
-            <CalendarCell
-              v-for="weekDate in weekDates"
-              :key="weekDate.toString()"
-              :date="weekDate"
+            <template v-if="layout === 'month-and-year'">
+              <div class="nds-calendar-caption-dropdown">
+                <ReuseMonthTemplate :date="date" />
+                <ReuseYearTemplate :date="date" />
+              </div>
+            </template>
+            <template v-else>
+              <!-- Mês e ano formatados SEPARADAMENTE e juntados por espaço, e não
+                   num formato só: em pt-BR e es o Intl com month+year devolve
+                   "abril de 2026", enquanto as outras stacks compõem "abril
+                   2026". A legenda é texto visível, e divergir nela é divergir na
+                   tela. -->
+              <CalendarHeading>
+                {{ formatter.custom(toDate(month.value), { month: 'long' }) }}
+                {{ formatter.custom(toDate(month.value), { year: 'numeric' }) }}
+              </CalendarHeading>
+            </template>
+          </slot>
+        </CalendarHeader>
+
+        <!-- A tabela se nomeia: sem `aria-label` o grid é anunciado como "tabela"
+             e nada mais, e com dois meses na tela as duas soam iguais. -->
+        <CalendarGrid
+          :aria-label="`${formatter.custom(toDate(month.value), { month: 'long' })} ${formatter.custom(toDate(month.value), { year: 'numeric' })}`"
+        >
+          <CalendarGridHead>
+            <CalendarGridRow>
+              <CalendarHeadCell
+                v-for="day in weekDays"
+                :key="day"
+              >
+                {{ day.replace(/\.$/, '') }}
+              </CalendarHeadCell>
+            </CalendarGridRow>
+          </CalendarGridHead>
+          <CalendarGridBody>
+            <CalendarGridRow
+              v-for="(weekDates, index) in month.rows"
+              :key="`weekDate-${index}`"
+              class="nds-calendar-week"
             >
-              <CalendarCellTrigger
-                :day="weekDate"
-                :month="month.value"
-              />
-            </CalendarCell>
-          </CalendarGridRow>
-        </CalendarGridBody>
-      </CalendarGrid>
+              <CalendarCell
+                v-for="weekDate in weekDates"
+                :key="weekDate.toString()"
+                :date="weekDate"
+              >
+                <CalendarCellTrigger
+                  :day="weekDate"
+                  :month="month.value"
+                  :bloqueado="props.isDateDisabled?.(weekDate) === true"
+                />
+              </CalendarCell>
+            </CalendarGridRow>
+          </CalendarGridBody>
+        </CalendarGrid>
+      </div>
     </div>
   </CalendarRoot>
 </template>

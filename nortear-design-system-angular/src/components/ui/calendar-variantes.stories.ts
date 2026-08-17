@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { parseDate } from '@internationalized/date';
+import {
+  ESTADOS_COM_TEXTO_LEGIVEL,
+  descreverContraste,
+  medirContrasteDoCalendario,
+} from '@shared/testing/calendar-probe';
 import { NdsCalendar } from './calendar';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -77,6 +82,18 @@ export const Single: Story = {
 
       await userEvent.click(dia(12));
       await expect(marcadas(canvasElement)).toEqual(['2026-04-12']);
+    });
+
+    await step('O dia escolhido passa em contraste nos três temas e nos dois modos', async () => {
+      // accessibility.item6 — o item prometia 4.5:1 e a verificação declarada era
+      // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
+      // sexto do produto. O escuro é a outra metade, e nunca era medido.
+      const medidas = medirContrasteDoCalendario(canvasElement).filter(
+        (m) => m.presente && (ESTADOS_COM_TEXTO_LEGIVEL as readonly string[]).includes(m.estado),
+      );
+      await expect(medidas.length).toBeGreaterThan(0);
+      const reprovadas = medidas.filter((m) => (m.razao ?? 0) < 4.5).map(descreverContraste);
+      await expect(reprovadas).toEqual([]);
     });
   },
 };

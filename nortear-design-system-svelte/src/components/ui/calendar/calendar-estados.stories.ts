@@ -92,6 +92,18 @@ export const Disabled: Story = {
       // que liberasse a data ao primeiro clique passaria só com a asserção acima.
       await expect(bloqueada).toHaveAttribute('data-disabled');
     });
+
+    await step('Dia bloqueado fica fora da tabulação', async () => {
+      // accessibility.item2 — o dia bloqueado não é destino de Tab em nenhuma
+      // stack; onde a lib deixava o atributo ausente, ele voltava para a ordem
+      // (um `<button>` sem tabindex é tabulável) e a grade ganhava uma parada por
+      // data bloqueada.
+      const bloqueados = Array.from(
+        canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-day-btn[data-disabled]'),
+      );
+      await expect(bloqueados.length).toBeGreaterThan(0);
+      await expect(bloqueados.filter((b) => b.tabIndex >= 0)).toEqual([]);
+    });
   },
 };
 

@@ -6,6 +6,13 @@
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 	import type { ButtonVariant } from "../button/button.svelte";
 	import { rotulosDoCalendario } from "@shared/primitives/calendar-labels";
+	import {
+		destinoDaTecla,
+		diaNaGrade,
+		isoDoElemento,
+	} from "@shared/primitives/calendar-teclado";
+	import { parseDate, type DateValue } from "@internationalized/date";
+	import { tick } from "svelte";
 
 	let {
 		ref = $bindable(null),
@@ -31,6 +38,27 @@
 	// Os botões de mês só têm ícone: quem usa leitor de tela ouve o aria-label,
 	// e o da lib vinha "Previous", em inglês e sem dizer do que é anterior.
 	const rotulos = $derived(rotulosDoCalendario(locale));
+
+	/**
+	 * O resto do teclado da grade — `Home`, `End`, `PageUp`, `PageDown`. Gêmeo do
+	 * que existe no calendário de data única, e pela mesma razão: a lib trata
+	 * seta, Enter e Espaço, e estas quatro não chegavam a lugar nenhum.
+	 */
+	async function aoTeclarNaGrade(evento: KeyboardEvent) {
+		const raiz = evento.currentTarget as HTMLElement | null;
+		const destino = destinoDaTecla(isoDoElemento(evento.target as Element | null), evento);
+		if (!destino || !raiz) return;
+		evento.preventDefault();
+		placeholder = parseDate(destino);
+		await tick();
+		diaNaGrade(raiz, destino)?.focus();
+	}
+
+	/** Nome do mês por extenso mais o ano — o rótulo acessível da grade. */
+	const rotuloDoMes = (m: DateValue) =>
+		`${new Intl.DateTimeFormat(locale, { month: "long" }).format(
+			new Date(m.year, m.month - 1, 1),
+		)} ${m.year}`;
 </script>
 
 <!--
@@ -49,6 +77,7 @@ o miolo diferente sem despintar também a seleção simples.
 	{locale}
 	{monthFormat}
 	{yearFormat}
+	onkeydown={aoTeclarNaGrade}
 	{...restProps}
 >
 	{#snippet children({ months, weekdays })}
@@ -72,7 +101,9 @@ o miolo diferente sem despintar também a seleção simples.
 							{monthIndex}
 						/>
 					</Calendar.Header>
-					<Calendar.Grid>
+					<!-- A tabela se nomeia: sem `aria-label` o grid é anunciado como
+					     "tabela" e nada mais. -->
+					<Calendar.Grid aria-label={rotuloDoMes(month.value)}>
 						<Calendar.GridHead>
 							<Calendar.GridRow class="nds-calendar-row">
 								{#each weekdays as weekday, i (i)}

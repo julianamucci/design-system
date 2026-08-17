@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { ref } from 'vue';
 import { CalendarDate } from '@internationalized/date';
+import {
+  ESTADOS_COM_TEXTO_LEGIVEL,
+  descreverContraste,
+  medirContrasteDoCalendario,
+} from '@shared/testing/calendar-probe';
 import { Calendar } from './index';
 import { RangeCalendar } from '@/components/ui/range-calendar';
 
@@ -195,6 +200,22 @@ export const Range: Story = {
       await expect(parseFloat(fim.borderTopRightRadius)).toBeGreaterThan(0);
       await expect(parseFloat(fim.borderTopLeftRadius)).toBe(0);
       await expect(parseFloat(miolo.borderTopLeftRadius)).toBe(0);
+    });
+
+    await step('As pontas do intervalo passam em contraste nos três temas e nos dois modos', async () => {
+      // accessibility.item6 — o item prometia 4.5:1 e a verificação declarada era
+      // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
+      // sexto do produto. Medido no ESCURO, as pontas marcavam 1.18:1 aqui: o dia
+      // compunha `.nds-button-ghost` por fora, a lib marca o dia escolhido com
+      // `aria-pressed`, e `.dark .nds-button-ghost[aria-pressed="true"]` vencia o
+      // fundo `--primary` por especificidade. O número do dia sumia — no escuro,
+      // que o axe não vê.
+      const medidas = medirContrasteDoCalendario(canvasElement).filter(
+        (m) => m.presente && (ESTADOS_COM_TEXTO_LEGIVEL as readonly string[]).includes(m.estado),
+      );
+      await expect(medidas.length).toBeGreaterThan(0);
+      const reprovadas = medidas.filter((m) => (m.razao ?? 0) < 4.5).map(descreverContraste);
+      await expect(reprovadas).toEqual([]);
     });
   },
 };

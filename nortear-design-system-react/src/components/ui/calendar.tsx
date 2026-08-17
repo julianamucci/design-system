@@ -83,8 +83,13 @@ function Calendar({
       endMonth={fimPadrao}
       locale={locale}
       formatters={{
+        // Mês por EXTENSO no seletor, como no Vanilla, que é a referência: a
+        // forma curta em pt-BR sai com ponto ("jan."), e o ponto numa opção de
+        // uma palavra só é ruído — o mesmo motivo pelo qual ele já era removido
+        // do cabeçalho da semana. Medido, o seletor com o nome inteiro tem 61px
+        // contra 58px: cabe.
         formatMonthDropdown: (date) =>
-          date.toLocaleString(locale?.code, { month: "short" }),
+          date.toLocaleString(locale?.code, { month: "long" }),
         // Pelo Intl, e não pelos dados de locale da lib: ela devolve "sab" sem
         // acento, e as outras três stacks mostram "sáb". Mesma fonte nas
         // quatro, e sem o ponto que o pt-BR acrescenta em "dom.".

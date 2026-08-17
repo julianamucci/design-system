@@ -136,6 +136,18 @@ export const Disabled: Story = {
       await userEvent.click(canvas.getByRole('button', { name: /16 de abril de 2026/i }));
       await expect(onSelect).toHaveBeenCalledTimes(1);
     });
+
+    await step('Dia bloqueado fica fora da tabulação', async () => {
+      // accessibility.item2 — esta stack é a referência do comportamento, e é ela
+      // que fixa o alvo: onde a lib das outras deixava o atributo ausente, o dia
+      // bloqueado voltava para a ordem do Tab (um `<button>` sem tabindex é
+      // tabulável) e a grade ganhava uma parada por data bloqueada.
+      const bloqueados = Array.from(
+        canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-day-btn[disabled]'),
+      );
+      await expect(bloqueados.length).toBeGreaterThan(0);
+      await expect(bloqueados.filter((b) => b.tabIndex >= 0)).toEqual([]);
+    });
   },
 };
 

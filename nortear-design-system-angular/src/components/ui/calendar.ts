@@ -3,6 +3,7 @@ import {
   Component,
   Directive,
   ElementRef,
+  Injector,
   OnInit,
   ViewEncapsulation,
   afterNextRender,
@@ -17,6 +18,7 @@ import {
 } from '@angular/core';
 import {
   getLocalTimeZone,
+  parseDate,
   today,
   type DateValue,
 } from '@internationalized/date';
@@ -34,6 +36,7 @@ import {
   RdxCalendarRootDirective,
 } from '@radix-ng/primitives/calendar';
 import { rotulosDoCalendario } from '@shared/primitives/calendar-labels';
+import { destinoDaTecla, diaNaGrade, isoDoElemento } from '@shared/primitives/calendar-teclado';
 
 // ─── Calendar ─────────────────────────────────────────────────────────────────
 //
@@ -189,6 +192,36 @@ export class NdsCalendarMonths implements OnInit {
   }
 }
 
+// ─── NdsCalendarDay ───────────────────────────────────────────────────────────
+
+/**
+ * O botão de um dia da grade.
+ *
+ * Existe só para corrigir a TABULAÇÃO. O primitivo liga
+ * `tabindex = isFocusedDate ? 0 : isOutsideView || isDisabled ? undefined : -1`
+ * — e `undefined` não é "fora da ordem": é atributo ausente, e um `<button>` sem
+ * `tabindex` É tabulável. O resultado medido era o avesso da intenção: o dia
+ * corrente entrava na ordem (certo), os dias comuns saíam (certo) e os
+ * BLOQUEADOS e os de fora do mês entravam junto — quinze paradas de tabulação
+ * numa grade que deve ter uma.
+ *
+ * Diretiva PRÓPRIA com o primitivo como host directive, e não uma ligação no
+ * template: host binding de diretiva roda DEPOIS das ligações do template no
+ * mesmo elemento (armadilha 11), então escrever `[attr.tabindex]` no `<button>`
+ * perderia para o primitivo em silêncio.
+ */
+@Directive({
+  selector: 'button[ndsCalendarDay]',
+  standalone: true,
+  hostDirectives: [{ directive: RdxCalendarCellTriggerDirective, inputs: ['day', 'month'] }],
+  host: {
+    '[attr.tabindex]': 'gatilho.isFocusedDate() ? 0 : -1',
+  },
+})
+export class NdsCalendarDay {
+  protected readonly gatilho = inject(RdxCalendarCellTriggerDirective, { self: true });
+}
+
 // ─── NdsCalendar ──────────────────────────────────────────────────────────────
 
 /**
@@ -213,7 +246,7 @@ export class NdsCalendarMonths implements OnInit {
     RdxCalendarGridRowDirective,
     RdxCalendarHeadCellDirective,
     RdxCalendarCellDirective,
-    RdxCalendarCellTriggerDirective,
+    NdsCalendarDay,
     RdxCalendarPrevDirective,
     RdxCalendarNextDirective,
   ],
@@ -334,7 +367,7 @@ export class NdsCalendarMonths implements OnInit {
                       @if (mostraODia(dia, mes)) {
                         <button
                           type="button"
-                          rdxCalendarCellTrigger
+                          ndsCalendarDay
                           [day]="dia"
                           [month]="mes.value"
                           class="nds-calendar-day-btn"
@@ -401,6 +434,9 @@ export class NdsCalendar implements OnInit {
   protected readonly semanaComecaEm = SEMANA_COMECA_EM;
 
   private readonly elemento = inject<ElementRef<HTMLElement>>(ElementRef);
+
+  /** Necessário para agendar `afterNextRender` fora do contexto de injeção. */
+  private readonly injetor = inject(Injector);
 
   /**
    * O mês em vista.
@@ -477,7 +513,7 @@ export class NdsCalendar implements OnInit {
   constructor() {
     afterNextRender(() => {
       if (!this.initialFocus()) return;
-      this.focarDia(this.vista());
+      this.focarDia(this.vista().toString());
 
       // Nada de segunda tentativa por tempo: dentro de um overlay o painel ainda
       // está `visibility: hidden` esperando o floating-ui medir, e `focus()` em
@@ -553,73 +589,32 @@ export class NdsCalendar implements OnInit {
    * então a visão está uma ou mais casas atrás do que a pessoa vê em foco.
    */
   protected aoTeclarNaGrade(evento: KeyboardEvent): void {
-    const alvo = evento.target as HTMLElement | null;
-    const iso = alvo?.getAttribute?.('data-value');
-    if (!iso) return;
-
-    const atual = this.diaPorIso(iso);
-    if (!atual) return;
-
-    let destino: DateValue | undefined;
-    switch (evento.key) {
-      case 'Home':
-      case 'End': {
-        const semana = this.semanaDoDia(iso);
-        if (!semana) return;
-        destino = evento.key === 'Home' ? semana[0] : semana[semana.length - 1];
-        break;
-      }
-      case 'PageUp':
-        destino = atual.subtract(evento.shiftKey ? { years: 1 } : { months: 1 });
-        break;
-      case 'PageDown':
-        destino = atual.add(evento.shiftKey ? { years: 1 } : { months: 1 });
-        break;
-      default:
-        return;
-    }
+    const destino = destinoDaTecla(isoDoElemento(evento.target as Element | null), evento);
+    if (!destino) return;
 
     evento.preventDefault();
     // A visão acompanha o foco: um dia que sai do mês em vista precisa aparecer,
     // senão o foco iria para uma célula que não está na tela.
-    this.vista.set(destino);
+    this.vista.set(parseDate(destino));
     this.focarDia(destino);
   }
 
-  private diaPorIso(iso: string): DateValue | undefined {
-    for (const mes of this.meses()) {
-      for (const dia of mes.dates) if (dia.toString() === iso) return dia;
-    }
-    return undefined;
-  }
-
-  private semanaDoDia(iso: string): DateValue[] | undefined {
-    for (const mes of this.meses()) {
-      for (const semana of mes.weeks) {
-        if (semana.some((d) => d.toString() === iso)) return semana;
-      }
-    }
-    return undefined;
-  }
-
   /**
-   * Foca a célula de uma data, esperando o render quando ela ainda não existe.
+   * Foca o botão de uma data DEPOIS que a grade tiver sido redesenhada.
    *
-   * Home e End costumam cair numa célula já desenhada, e aí a primeira tentativa
-   * resolve. Mudar de mês recria a grade, e o elemento só existe no ciclo
-   * seguinte — daí o teto de tentativas, que evita um laço eterno se a data
-   * pedida nunca chegar à tela.
+   * `afterNextRender` e não uma chamada direta: `vista.set()` agenda a detecção
+   * de mudanças, e num app zoneless ela roda depois do handler. Focando na hora,
+   * o alvo encontrado era o botão da grade ANTIGA — ele recebia o foco e em
+   * seguida deixava de existir, jogando o foco no `body`. Era o que acontecia
+   * com Home, End, PageUp e PageDown: a legenda até virava, e o foco sumia.
+   *
+   * O `injector` é obrigatório porque isto roda fora do contexto de injeção.
    */
-  private focarDia(dia: DateValue, tentativa = 0): void {
-    const alvo = this.elemento.nativeElement.querySelector<HTMLElement>(
-      `[data-value="${dia.toString()}"]`,
+  private focarDia(iso: string): void {
+    afterNextRender(
+      () => diaNaGrade(this.elemento.nativeElement, iso)?.focus(),
+      { injector: this.injetor },
     );
-    if (alvo) {
-      alvo.focus();
-      return;
-    }
-    if (tentativa > 10) return;
-    setTimeout(() => this.focarDia(dia, tentativa + 1), 0);
   }
 }
 

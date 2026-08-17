@@ -256,13 +256,13 @@
     "accessibility": {
       "title": "Acessibilidade",
       "keyboardTitle": "Navegação por Teclado",
-      "summary": "O Calendar herda do <code>react-day-picker v9</code> toda a acessibilidade nativa: grid com <code>role=\"grid\"</code>, foco por Arrow keys, anúncio de seleção e respeito a <code>prefers-reduced-motion</code>. Cumpre WCAG 2.2 AA: 2.1.1 (teclado), 2.4.7 (foco visível), 4.1.2 (nome, função, valor).",
-      "item1": "<strong>Grid semântico</strong> — <code>role=\"grid\"</code> no calendário com <code>gridcell</code> por célula e <code>rowheader</code> nos dias da semana.",
-      "item2": "<strong>Foco gerenciado</strong> — apenas uma célula tem <code>tabIndex=0</code>; as demais respondem às Arrow keys.",
+      "summary": "O Calendar é uma grade de datas navegável por teclado: <code>role=\"grid\"</code>, foco que percorre a grade pelas setas, anúncio da data por extenso em cada dia e respeito a <code>prefers-reduced-motion</code>. Cumpre WCAG 2.2 AA: 2.1.1 (teclado), 2.4.7 (foco visível), 4.1.2 (nome, função, valor).",
+      "item1": "<strong>Grade semântica</strong> — <code>role=\"grid\"</code> no mês, <code>gridcell</code> em cada célula e a grade nomeada pelo mês e ano em vista.",
+      "item2": "<strong>Foco gerenciado</strong> — a grade é UMA parada de tabulação: só o dia corrente entra na ordem do <kbd>Tab</kbd>, e os demais são alcançados pelas setas. Dia bloqueado e dia de fora do mês ficam fora da tabulação.",
       "item3": "<strong>aria-selected</strong> — aplicado automaticamente na(s) data(s) selecionada(s).",
-      "item4": "<strong>aria-disabled</strong> — nos dias bloqueados por <code>disabled</code>; pointer-events desativados.",
-      "item5": "<strong>Ícones decorativos</strong> — <code>ChevronLeft</code>/<code>ChevronRight</code> com <code>aria-hidden=\"true\"</code>; o botão tem <code>aria-label</code> descritivo.",
-      "item6": "<strong>Contraste</strong> — selected cumpre 4.5:1 com <code>primary</code> sobre <code>primary-foreground</code>; disabled mantém relação mínima via <code>opacity-50</code>.",
+      "item4": "<strong>Dia bloqueado</strong> — anunciado como indisponível, sem receber foco e sem responder ao clique.",
+      "item5": "<strong>Ícones decorativos</strong> — os chevrons dos botões de mês têm <code>aria-hidden=\"true\"</code>; quem carrega o nome acessível é o botão, pelo <code>aria-label</code>.",
+      "item6": "<strong>Contraste</strong> — o dia escolhido e o dia de hoje cumprem 4.5:1 nos três temas e nos dois modos; o dia bloqueado é texto de interface inativa, isento pela 1.4.3.",
       "keyboard": {
         "arrows": "<kbd>Arrow</kbd> (esquerda/direita) move um dia; <kbd>Arrow</kbd> (cima/baixo) move uma semana.",
         "pageUpDown": "<kbd>Page Up</kbd>/<kbd>Page Down</kbd> muda de mês; com <kbd>Shift</kbd>, muda de ano.",
@@ -271,15 +271,15 @@
         "tab": "<kbd>Tab</kbd> move para os botões de navegação e sai do grid."
       },
       "aria": {
-        "role": "<code>role=\"grid\"</code> no container; <code>role=\"gridcell\"</code> em cada célula; <code>role=\"rowheader\"</code> nos dias da semana.",
+        "role": "<code>role=\"grid\"</code> na tabela do mês; <code>role=\"gridcell\"</code> em cada célula. A linha dos dias da semana fica fora da árvore de acessibilidade: cada dia já anuncia a data por extenso.",
         "selected": "<code>aria-selected=\"true\"</code> na data selecionada.",
-        "disabled": "<code>aria-disabled=\"true\"</code> nos dias bloqueados.",
-        "label": "<code>aria-label</code> do DayButton traz a data por extenso no locale ativo."
+        "disabled": "O dia bloqueado é marcado como indisponível e sai da ordem de tabulação.",
+        "label": "O botão de cada dia traz a data por extenso no idioma ativo, em <code>aria-label</code>."
       },
       "screenReader": {
         "onFocus": "Ao mover o foco: leitor anuncia a data completa no locale ativo (ex: \"sexta-feira, 12 de março de 2026\").",
         "onSelect": "Ao selecionar: leitor anuncia \"selecionado\" junto à data.",
-        "onDisabled": "Em data bloqueada: leitor anuncia \"indisponível\" e o foco ainda pode passar, mas a seleção é ignorada.",
+        "onDisabled": "Em data bloqueada: o leitor anuncia \"indisponível\", o foco não para nela e o clique é ignorado.",
         "nav": "Botões Anterior/Próximo anunciam o mês de destino."
       }
     },
@@ -329,38 +329,38 @@
         "title": "Comportamento Funcional",
         "description": "O que deve acontecer para cada configuração do Calendar.",
         "item1": {
-          "action": "Renderizar mode=\"single\" sem data",
-          "result": "Grid do mês atual; dia de hoje com <code>bg-muted</code>; sem <code>aria-selected</code>",
+          "action": "Abrir no modo de data única, sem data escolhida",
+          "result": "Grade do mês corrente; o dia de hoje aparece marcado como tal e nenhuma célula está escolhida",
           "priority": "high"
         },
         "item2": {
-          "action": "Clicar em uma data válida",
-          "result": "Célula recebe <code>data-selected-single=\"true\"</code>; <code>onSelect</code> é chamado com <code>Date</code>",
+          "action": "Escolher uma data válida",
+          "result": "A célula passa a constar como escolhida e o callback de mudança recebe a data",
           "priority": "high"
         },
         "item3": {
-          "action": "Renderizar mode=\"range\" com from e to",
-          "result": "Início/fim com <code>bg-primary</code>; dias do meio com <code>bg-muted</code>",
+          "action": "Abrir no modo intervalo com início e fim",
+          "result": "As pontas têm peso, o miolo vira faixa contínua e os três se distinguem por forma, não só por cor",
           "priority": "high"
         },
         "item4": {
-          "action": "Passar disabled={{ before: new Date() }}",
-          "result": "Datas passadas com <code>aria-disabled=\"true\"</code> e <code>opacity-50</code>; clique não dispara onSelect",
+          "action": "Bloquear as datas anteriores a um limite",
+          "result": "As datas bloqueadas são anunciadas como indisponíveis, ficam fora da tabulação e o clique não reporta escolha",
           "priority": "high"
         },
         "item5": {
-          "action": "Navegar por teclado com Arrow keys",
-          "result": "Foco percorre o grid conforme o mapeamento; <code>aria-label</code> anuncia a data completa",
+          "action": "Navegar pelo teclado dentro da grade",
+          "result": "As setas andam um dia e uma semana; <kbd>Home</kbd>/<kbd>End</kbd> vão às pontas da semana; <kbd>Page Up</kbd>/<kbd>Page Down</kbd> mudam de mês e o foco acompanha",
           "priority": "high"
         },
         "item6": {
-          "action": "Passar locale={ptBR}",
-          "result": "Meses e dias da semana renderizam em português do Brasil",
+          "action": "Montar com outro idioma",
+          "result": "Nomes de mês e de dia da semana saem no idioma pedido, com a semana começando no domingo",
           "priority": "medium"
         },
         "item7": {
-          "action": "Renderizar captionLayout=\"dropdown\"",
-          "result": "Mês e ano viram <code>&lt;select&gt;</code> com foco próprio e opções do range configurado",
+          "action": "Usar a legenda com seletores de mês e ano",
+          "result": "Mês e ano viram <code>&lt;select&gt;</code> com foco próprio, e escolher neles move a visão",
           "priority": "medium"
         }
       },
@@ -701,13 +701,13 @@
     "accessibility": {
       "title": "Accessibility",
       "keyboardTitle": "Keyboard Navigation",
-      "summary": "Calendar inherits full native accessibility from <code>react-day-picker v9</code>: <code>role=\"grid\"</code>, Arrow key focus, selection announcement and <code>prefers-reduced-motion</code> support. Meets WCAG 2.2 AA: 2.1.1 (keyboard), 2.4.7 (focus visible), 4.1.2 (name, role, value).",
-      "item1": "<strong>Semantic grid</strong> — <code>role=\"grid\"</code> on the calendar with <code>gridcell</code> per cell and <code>rowheader</code> on weekday headers.",
-      "item2": "<strong>Managed focus</strong> — only one cell has <code>tabIndex=0</code>; others respond to Arrow keys.",
+      "summary": "Calendar is a keyboard-navigable date grid: <code>role=\"grid\"</code>, focus moving across the grid with the Arrow keys, each day announcing the full date, and <code>prefers-reduced-motion</code> support. Meets WCAG 2.2 AA: 2.1.1 (keyboard), 2.4.7 (focus visible), 4.1.2 (name, role, value).",
+      "item1": "<strong>Semantic grid</strong> — <code>role=\"grid\"</code> on the month, <code>gridcell</code> on every cell, and the grid named after the month and year in view.",
+      "item2": "<strong>Managed focus</strong> — the grid is ONE tab stop: only the current day is in the <kbd>Tab</kbd> order, the rest are reached with the Arrow keys. Blocked days and days outside the month stay out of the tab order.",
       "item3": "<strong>aria-selected</strong> — automatically set on the selected date(s).",
-      "item4": "<strong>aria-disabled</strong> — on dates blocked by <code>disabled</code>; pointer-events off.",
-      "item5": "<strong>Decorative icons</strong> — <code>ChevronLeft</code>/<code>ChevronRight</code> with <code>aria-hidden=\"true\"</code>; the button has a descriptive <code>aria-label</code>.",
-      "item6": "<strong>Contrast</strong> — selected meets 4.5:1 via <code>primary</code> over <code>primary-foreground</code>; disabled keeps minimum ratio via <code>opacity-50</code>.",
+      "item4": "<strong>Blocked day</strong> — announced as unavailable, never taking focus and never responding to a click.",
+      "item5": "<strong>Decorative icons</strong> — the month chevrons carry <code>aria-hidden=\"true\"</code>; the accessible name lives on the button, in its <code>aria-label</code>.",
+      "item6": "<strong>Contrast</strong> — the selected day and today meet 4.5:1 across the three themes and both modes; a blocked day is inactive interface text, exempt under 1.4.3.",
       "keyboard": {
         "arrows": "<kbd>Arrow</kbd> (left/right) moves one day; <kbd>Arrow</kbd> (up/down) moves one week.",
         "pageUpDown": "<kbd>Page Up</kbd>/<kbd>Page Down</kbd> changes month; with <kbd>Shift</kbd>, changes year.",
@@ -716,15 +716,15 @@
         "tab": "<kbd>Tab</kbd> moves to navigation buttons and out of the grid."
       },
       "aria": {
-        "role": "<code>role=\"grid\"</code> on the container; <code>role=\"gridcell\"</code> on each cell; <code>role=\"rowheader\"</code> on weekdays.",
+        "role": "<code>role=\"grid\"</code> on the month table; <code>role=\"gridcell\"</code> on every cell. The weekday row stays out of the accessibility tree: each day already announces the full date.",
         "selected": "<code>aria-selected=\"true\"</code> on the selected date.",
-        "disabled": "<code>aria-disabled=\"true\"</code> on blocked days.",
-        "label": "DayButton <code>aria-label</code> carries the full date in the active locale."
+        "disabled": "A blocked day is marked as unavailable and leaves the tab order.",
+        "label": "Each day button carries the full date in the active language, in <code>aria-label</code>."
       },
       "screenReader": {
         "onFocus": "On focus move: reader announces the full date in the active locale (e.g., \"Friday, March 12, 2026\").",
         "onSelect": "On selection: reader announces \"selected\" next to the date.",
-        "onDisabled": "On a blocked date: reader announces \"unavailable\"; focus may still pass but selection is ignored.",
+        "onDisabled": "On a blocked date: the reader announces \"unavailable\", focus does not stop there and the click is ignored.",
         "nav": "Prev/Next buttons announce the target month."
       }
     },
@@ -774,38 +774,38 @@
         "title": "Functional Behavior",
         "description": "What should happen for each Calendar configuration.",
         "item1": {
-          "action": "Render mode=\"single\" with no date",
-          "result": "Current month grid; today with <code>bg-muted</code>; no <code>aria-selected</code>",
+          "action": "Open in single-date mode with no date chosen",
+          "result": "Current month grid; today shows as today and no cell is selected",
           "priority": "high"
         },
         "item2": {
-          "action": "Click a valid date",
-          "result": "Cell gets <code>data-selected-single=\"true\"</code>; <code>onSelect</code> called with <code>Date</code>",
+          "action": "Choose a valid date",
+          "result": "The cell reads as selected and the change callback receives the date",
           "priority": "high"
         },
         "item3": {
-          "action": "Render mode=\"range\" with from and to",
-          "result": "Start/end with <code>bg-primary</code>; middle days with <code>bg-muted</code>",
+          "action": "Open in range mode with a start and an end",
+          "result": "The ends carry weight, the middle becomes a continuous band, and the three differ by shape, not colour alone",
           "priority": "high"
         },
         "item4": {
-          "action": "Pass disabled={{ before: new Date() }}",
-          "result": "Past dates with <code>aria-disabled=\"true\"</code> and <code>opacity-50</code>; click does not fire onSelect",
+          "action": "Block the dates before a cut-off",
+          "result": "Blocked dates are announced as unavailable, stay out of the tab order, and clicking reports no selection",
           "priority": "high"
         },
         "item5": {
-          "action": "Keyboard navigation with Arrow keys",
-          "result": "Focus traverses the grid per mapping; <code>aria-label</code> announces full date",
+          "action": "Navigate the grid from the keyboard",
+          "result": "Arrows move a day and a week; <kbd>Home</kbd>/<kbd>End</kbd> reach the ends of the week; <kbd>Page Up</kbd>/<kbd>Page Down</kbd> change month and focus follows",
           "priority": "high"
         },
         "item6": {
-          "action": "Pass locale={enUS}",
-          "result": "Months and weekdays render in English (US)",
+          "action": "Mount with another language",
+          "result": "Month and weekday names come out in the requested language, with the week starting on Sunday",
           "priority": "medium"
         },
         "item7": {
-          "action": "Render captionLayout=\"dropdown\"",
-          "result": "Month and year become <code>&lt;select&gt;</code> with own focus and configured range options",
+          "action": "Use the caption with month and year pickers",
+          "result": "Month and year become <code>&lt;select&gt;</code> elements with their own focus, and choosing in them moves the view",
           "priority": "medium"
         }
       },
@@ -1146,13 +1146,13 @@
     "accessibility": {
       "title": "Accesibilidad",
       "keyboardTitle": "Navegación por Teclado",
-      "summary": "Calendar hereda de <code>react-day-picker v9</code> toda la accesibilidad nativa: grid con <code>role=\"grid\"</code>, foco con Arrow keys, anuncio de selección y respeto a <code>prefers-reduced-motion</code>. Cumple WCAG 2.2 AA: 2.1.1 (teclado), 2.4.7 (foco visible), 4.1.2 (nombre, rol, valor).",
-      "item1": "<strong>Grid semántico</strong> — <code>role=\"grid\"</code> en el calendario con <code>gridcell</code> por celda y <code>rowheader</code> en los días de la semana.",
-      "item2": "<strong>Foco gestionado</strong> — solo una celda tiene <code>tabIndex=0</code>; las demás responden a las Arrow keys.",
+      "summary": "Calendar es una cuadrícula de fechas navegable por teclado: <code>role=\"grid\"</code>, foco que recorre la cuadrícula con las Arrow keys, anuncio de la fecha completa en cada día y respeto a <code>prefers-reduced-motion</code>. Cumple WCAG 2.2 AA: 2.1.1 (teclado), 2.4.7 (foco visible), 4.1.2 (nombre, rol, valor).",
+      "item1": "<strong>Cuadrícula semántica</strong> — <code>role=\"grid\"</code> en el mes, <code>gridcell</code> en cada celda y la cuadrícula nombrada con el mes y el año en vista.",
+      "item2": "<strong>Foco gestionado</strong> — la cuadrícula es UNA parada de tabulación: solo el día actual entra en el orden del <kbd>Tab</kbd>, y los demás se alcanzan con las flechas. El día bloqueado y el día fuera del mes quedan fuera de la tabulación.",
       "item3": "<strong>aria-selected</strong> — aplicado automáticamente en la(s) fecha(s) seleccionada(s).",
-      "item4": "<strong>aria-disabled</strong> — en los días bloqueados por <code>disabled</code>; pointer-events desactivados.",
-      "item5": "<strong>Íconos decorativos</strong> — <code>ChevronLeft</code>/<code>ChevronRight</code> con <code>aria-hidden=\"true\"</code>; el botón tiene <code>aria-label</code> descriptivo.",
-      "item6": "<strong>Contraste</strong> — selected cumple 4.5:1 con <code>primary</code> sobre <code>primary-foreground</code>; disabled mantiene relación mínima vía <code>opacity-50</code>.",
+      "item4": "<strong>Día bloqueado</strong> — se anuncia como no disponible, no recibe foco y no responde al clic.",
+      "item5": "<strong>Iconos decorativos</strong> — los chevrons de los botones de mes llevan <code>aria-hidden=\"true\"</code>; el nombre accesible vive en el botón, en su <code>aria-label</code>.",
+      "item6": "<strong>Contraste</strong> — el día elegido y el día de hoy cumplen 4.5:1 en los tres temas y en los dos modos; el día bloqueado es texto de interfaz inactiva, exento por la 1.4.3.",
       "keyboard": {
         "arrows": "<kbd>Arrow</kbd> (izquierda/derecha) mueve un día; <kbd>Arrow</kbd> (arriba/abajo) mueve una semana.",
         "pageUpDown": "<kbd>Page Up</kbd>/<kbd>Page Down</kbd> cambia de mes; con <kbd>Shift</kbd>, cambia de año.",
@@ -1161,15 +1161,15 @@
         "tab": "<kbd>Tab</kbd> mueve a los botones de navegación y sale del grid."
       },
       "aria": {
-        "role": "<code>role=\"grid\"</code> en el contenedor; <code>role=\"gridcell\"</code> en cada celda; <code>role=\"rowheader\"</code> en los días.",
+        "role": "<code>role=\"grid\"</code> en la tabla del mes; <code>role=\"gridcell\"</code> en cada celda. La fila de los días de la semana queda fuera del árbol de accesibilidad: cada día ya anuncia la fecha completa.",
         "selected": "<code>aria-selected=\"true\"</code> en la fecha seleccionada.",
-        "disabled": "<code>aria-disabled=\"true\"</code> en los días bloqueados.",
-        "label": "<code>aria-label</code> del DayButton trae la fecha por extenso en el locale activo."
+        "disabled": "El día bloqueado se marca como no disponible y sale del orden de tabulación.",
+        "label": "El botón de cada día lleva la fecha completa en el idioma activo, en <code>aria-label</code>."
       },
       "screenReader": {
         "onFocus": "Al mover el foco: el lector anuncia la fecha completa en el locale activo (ej: \"viernes, 12 de marzo de 2026\").",
         "onSelect": "Al seleccionar: el lector anuncia \"seleccionado\" junto a la fecha.",
-        "onDisabled": "En una fecha bloqueada: el lector anuncia \"no disponible\"; el foco puede pasar pero la selección se ignora.",
+        "onDisabled": "En una fecha bloqueada: el lector anuncia \"no disponible\", el foco no se detiene en ella y el clic se ignora.",
         "nav": "Los botones Anterior/Próximo anuncian el mes de destino."
       }
     },
@@ -1219,38 +1219,38 @@
         "title": "Comportamiento Funcional",
         "description": "Lo que debe ocurrir para cada configuración del Calendar.",
         "item1": {
-          "action": "Renderizar mode=\"single\" sin fecha",
-          "result": "Grid del mes actual; hoy con <code>bg-muted</code>; sin <code>aria-selected</code>",
+          "action": "Abrir en modo de fecha única, sin fecha elegida",
+          "result": "Cuadrícula del mes actual; el día de hoy aparece marcado como tal y ninguna celda está elegida",
           "priority": "high"
         },
         "item2": {
-          "action": "Hacer clic en una fecha válida",
-          "result": "La celda recibe <code>data-selected-single=\"true\"</code>; <code>onSelect</code> se llama con <code>Date</code>",
+          "action": "Elegir una fecha válida",
+          "result": "La celda pasa a constar como elegida y el callback de cambio recibe la fecha",
           "priority": "high"
         },
         "item3": {
-          "action": "Renderizar mode=\"range\" con from y to",
-          "result": "Inicio/fin con <code>bg-primary</code>; días intermedios con <code>bg-muted</code>",
+          "action": "Abrir en modo intervalo con inicio y fin",
+          "result": "Los extremos tienen peso, el centro se vuelve una franja continua y los tres se distinguen por forma, no solo por color",
           "priority": "high"
         },
         "item4": {
-          "action": "Pasar disabled={{ before: new Date() }}",
-          "result": "Fechas pasadas con <code>aria-disabled=\"true\"</code> y <code>opacity-50</code>; el clic no dispara onSelect",
+          "action": "Bloquear las fechas anteriores a un límite",
+          "result": "Las fechas bloqueadas se anuncian como no disponibles, quedan fuera de la tabulación y el clic no reporta elección",
           "priority": "high"
         },
         "item5": {
-          "action": "Navegar por teclado con Arrow keys",
-          "result": "El foco recorre el grid según el mapeo; <code>aria-label</code> anuncia la fecha completa",
+          "action": "Navegar por el teclado dentro de la cuadrícula",
+          "result": "Las flechas mueven un día y una semana; <kbd>Home</kbd>/<kbd>End</kbd> van a los extremos de la semana; <kbd>Page Up</kbd>/<kbd>Page Down</kbd> cambian de mes y el foco acompaña",
           "priority": "high"
         },
         "item6": {
-          "action": "Pasar locale={es}",
-          "result": "Meses y días de la semana aparecen en español",
+          "action": "Montar con otro idioma",
+          "result": "Los nombres de mes y de día de la semana salen en el idioma pedido, con la semana empezando en domingo",
           "priority": "medium"
         },
         "item7": {
-          "action": "Renderizar captionLayout=\"dropdown\"",
-          "result": "Mes y año se vuelven <code>&lt;select&gt;</code> con foco propio y opciones del rango configurado",
+          "action": "Usar la leyenda con selectores de mes y año",
+          "result": "Mes y año se vuelven <code>&lt;select&gt;</code> con foco propio, y elegir en ellos mueve la vista",
           "priority": "medium"
         }
       },

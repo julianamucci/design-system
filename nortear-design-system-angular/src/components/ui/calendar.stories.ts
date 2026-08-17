@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { within, expect } from 'storybook/test';
+import { within, expect, userEvent, waitFor } from 'storybook/test';
+import { isoDoFoco } from '@shared/testing/calendar-probe';
 import { parseDate } from '@internationalized/date';
 import { NdsCalendar, type CalendarCaptionLayout, type CalendarMode } from './calendar';
 import { NdsCalendarDocs } from '@/components/docs/CalendarDocs';
@@ -203,9 +204,62 @@ export const Playground: Story = {
     await step('O grid é uma única parada de tabulação', async () => {
       // Se cada dia fosse uma parada, sair do calendário custaria mais de
       // trinta Tabs.
+      //
+      // Contar `[tabindex="0"]` NÃO bastava, e foi o que deixou o defeito passar:
+      // o primitivo devolve `undefined` para o dia de fora do mês e para o
+      // bloqueado, e `<button>` SEM tabindex é tabulável. A conta certa é quantos
+      // dias estão na ordem — medido, eram seis nesta grade e quinze na de datas
+      // bloqueadas.
+      const tabulaveis = Array.from(
+        canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-day-btn'),
+      ).filter((d) => d.tabIndex >= 0);
+      await expect(tabulaveis).toHaveLength(1);
+    });
+
+    await step('A grade se nomeia pelo mês em vista', async () => {
+      // Sem `aria-label` o grid é anunciado como "tabela" e nada mais — e com
+      // dois meses na tela as duas soam iguais.
+      const grade = canvasElement.querySelector('table')!;
+      await expect(grade.getAttribute('aria-label')).toMatch(/abril 2026/i);
+    });
+
+    await step('Home, End e Page Up/Down andam na grade e o foco acompanha', async () => {
+      // accessibility.keyboard.homeEnd e .pageUpDown — as duas linhas estavam
+      // documentadas e sem asserção nenhuma. Aqui as teclas eram tratadas, a
+      // legenda até virava de mês, e o foco ia parar no `body`: a grade era
+      // redesenhada DEPOIS do `focus()`, e o botão focado deixava de existir.
+      //
+      // A precondição é própria e a sequência devolve a grade ao mês de partida,
+      // para o replay do painel medir o mesmo.
+      const doc = canvasElement.ownerDocument;
+      // A partida é o dia que É a parada de tabulação da grade — o mesmo ponto a
+      // que um teclado chega por Tab. Pegar um dia qualquer por índice testaria
+      // uma entrada que ninguém consegue fazer.
+      const partida = Array.from(
+        canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-day-btn'),
+      ).find((d) => d.tabIndex >= 0)!;
+      partida.focus();
+      await expect(isoDoFoco(doc)).not.toBeNull();
+      const emUtc = (iso: string) => new Date(`${iso}T00:00:00Z`);
+
+      await userEvent.keyboard('{Home}');
+      await waitFor(() => expect(emUtc(isoDoFoco(doc)!).getUTCDay()).toBe(0));
+      const domingo = isoDoFoco(doc)!;
+
+      await userEvent.keyboard('{End}');
+      await waitFor(() => expect(emUtc(isoDoFoco(doc)!).getUTCDay()).toBe(6));
       await expect(
-        canvasElement.querySelectorAll('.nds-calendar-day-btn[tabindex="0"]').length,
-      ).toBe(1);
+        (emUtc(isoDoFoco(doc)!).getTime() - emUtc(domingo).getTime()) / 86_400_000,
+      ).toBe(6);
+      const sabado = isoDoFoco(doc)!;
+
+      await userEvent.keyboard('{PageDown}');
+      await waitFor(() =>
+        expect(emUtc(isoDoFoco(doc)!).getUTCMonth()).toBe((emUtc(sabado).getUTCMonth() + 1) % 12),
+      );
+
+      await userEvent.keyboard('{PageUp}');
+      await waitFor(() => expect(isoDoFoco(doc)).toBe(sabado));
     });
 
     await step('O dia é um quadrado de célula, com o número no centro', async () => {

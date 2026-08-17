@@ -158,6 +158,19 @@ export const DisabledDates: Story = {
       const vizinhos = raiz.querySelectorAll('.nds-calendar-day-btn[data-outside-view]');
       await expect(vizinhos.length).toBeGreaterThan(0);
     });
+
+    await step('Dia bloqueado e dia vizinho ficam fora da tabulação', async () => {
+      // accessibility.item2 — o primitivo devolvia tabindex NENHUM para os dois
+      // casos, e `<button>` sem tabindex é tabulável: medido, esta grade tinha
+      // quinze paradas de tabulação em vez de uma.
+      const fora = Array.from(
+        raiz.querySelectorAll<HTMLElement>(
+          '.nds-calendar-day-btn[data-disabled], .nds-calendar-day-btn[data-outside-view]',
+        ),
+      );
+      await expect(fora.length).toBeGreaterThan(0);
+      await expect(fora.filter((b) => b.tabIndex >= 0)).toEqual([]);
+    });
   },
 };
 

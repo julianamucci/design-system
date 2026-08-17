@@ -4,8 +4,13 @@
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 	import type { ButtonVariant } from "../button/button.svelte";
 	import { rotulosDoCalendario } from "@shared/primitives/calendar-labels";
-	import { isEqualMonth, type DateValue } from "@internationalized/date";
-	import type { Snippet } from "svelte";
+	import {
+		destinoDaTecla,
+		diaNaGrade,
+		isoDoElemento,
+	} from "@shared/primitives/calendar-teclado";
+	import { isEqualMonth, parseDate, type DateValue } from "@internationalized/date";
+	import { tick, type Snippet } from "svelte";
 
 	let {
 		ref = $bindable(null),
@@ -34,9 +39,12 @@
 		day?: Snippet<[{ day: DateValue; outsideMonth: boolean }]>;
 	} = $props();
 
-	// O formato do mês acompanha a legenda: por extenso no texto, abreviado no
-	// seletor, onde não cabe. Era prop configurável que nenhuma story passava.
-	const monthFormat = $derived(captionLayout === "dropdown" ? "short" : "long");
+	// Mês por EXTENSO nas duas legendas, como no Vanilla, que é a referência. A
+	// forma curta em pt-BR sai com ponto ("jan."), e o ponto numa opção de uma
+	// palavra só é ruído — o mesmo motivo pelo qual ele já era removido do
+	// cabeçalho da semana. Medido, o seletor com o nome inteiro tem 61px contra
+	// 58px: cabe. Era prop configurável que nenhuma story passava.
+	const monthFormat = "long";
 	const yearFormat = "numeric";
 
 	// Os botões de mês só têm ícone: quem usa leitor de tela ouve o aria-label,
@@ -56,6 +64,35 @@
 	 * Simétrico, e não o padrão da lib (cem anos para trás, dez para frente).
 	 */
 	const ANOS_PARA_CADA_LADO = 100;
+
+	/**
+	 * O resto do teclado da grade — `Home`, `End`, `PageUp`, `PageDown`.
+	 *
+	 * A lib trata seta, Enter e Espaço; estas quatro não chegavam a lugar nenhum,
+	 * apesar de o conteúdo compartilhado prometê-las desde sempre (medido: o foco
+	 * ficava parado no mesmo dia nas quatro).
+	 *
+	 * A data de partida vem do elemento em FOCO, e não do `placeholder`: a
+	 * navegação por setas da lib move o foco sem mexer na visão.
+	 *
+	 * O foco é devolvido depois do `tick` porque mudar o mês recria a grade — o
+	 * botão de destino ainda não existe no instante da tecla.
+	 */
+	async function aoTeclarNaGrade(evento: KeyboardEvent) {
+		const raiz = evento.currentTarget as HTMLElement | null;
+		const destino = destinoDaTecla(isoDoElemento(evento.target as Element | null), evento);
+		if (!destino || !raiz) return;
+		evento.preventDefault();
+		placeholder = parseDate(destino);
+		await tick();
+		diaNaGrade(raiz, destino)?.focus();
+	}
+
+	/** Nome do mês por extenso mais o ano — o rótulo acessível da grade. */
+	const rotuloDoMes = (m: DateValue) =>
+		`${new Intl.DateTimeFormat(locale, { month: "long" }).format(
+			new Date(m.year, m.month - 1, 1),
+		)} ${m.year}`;
 
 	const anoEmVista = $derived(placeholder?.year ?? new Date().getFullYear());
 	const anosDaLista = $derived(
@@ -84,6 +121,7 @@ get along, so we shut typescript up by casting `value` to `never`.
 	{locale}
 	{monthFormat}
 	{yearFormat}
+	onkeydown={aoTeclarNaGrade}
 	{...restProps}
 >
 	{#snippet children({ months, weekdays })}
@@ -107,7 +145,10 @@ get along, so we shut typescript up by casting `value` to `never`.
 							{monthIndex}
 						/>
 					</Calendar.Header>
-					<Calendar.Grid>
+					<!-- A tabela se nomeia: sem `aria-label` o grid é anunciado como
+					     "tabela" e nada mais, e com dois meses na tela as duas soam
+					     iguais. -->
+					<Calendar.Grid aria-label={rotuloDoMes(month.value)}>
 						<Calendar.GridHead>
 							<Calendar.GridRow class="nds-calendar-row">
 								{#each weekdays as weekday, i (i)}

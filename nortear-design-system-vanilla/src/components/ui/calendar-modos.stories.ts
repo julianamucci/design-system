@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCalendar } from './calendar';
 import { fn, userEvent, within, expect } from 'storybook/test';
+import {
+  ESTADOS_COM_TEXTO_LEGIVEL,
+  descreverContraste,
+  medirContrasteDoCalendario,
+} from '@shared/testing/calendar-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -172,6 +177,19 @@ export const Range: Story = {
       const dias = marcados();
       await expect(dias[0]).toBe('2026-04-10');
       await expect(dias[dias.length - 1]).toBe('2026-04-18');
+    });
+
+    await step('As pontas do intervalo passam em contraste nos três temas e nos dois modos', async () => {
+      // accessibility.item6 — o item prometia 4.5:1 e a verificação declarada era
+      // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
+      // sexto do produto. Medido no escuro, as pontas do intervalo de uma stack
+      // marcavam 1.18:1 e o número do dia sumia. Aritmética, não olhômetro.
+      const medidas = medirContrasteDoCalendario(canvasElement).filter(
+        (m) => m.presente && (ESTADOS_COM_TEXTO_LEGIVEL as readonly string[]).includes(m.estado),
+      );
+      await expect(medidas.length).toBeGreaterThan(0);
+      const reprovadas = medidas.filter((m) => (m.razao ?? 0) < 4.5).map(descreverContraste);
+      await expect(reprovadas).toEqual([]);
     });
   },
 };

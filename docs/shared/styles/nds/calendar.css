@@ -115,7 +115,12 @@
  */
 
 .nds-calendar-root {
-  --nds-cell-size: 2rem;                          /* 32px */
+  /* A célula lê a escada `--size-*`, que tem valor por densidade, em vez de um
+   * rem cravado. Com `2rem` fixo o padding e os vãos do calendário encolhiam no
+   * tema condensado e a grade de dias ficava exatamente do mesmo tamanho — a
+   * mesma armadilha que o botão de ícone já teve. No degrau padrão os dois
+   * valores coincidem (2rem), então nada muda na densidade default. */
+  --nds-cell-size: var(--size-default, 2rem);     /* 32px no degrau padrão */
   --nds-cell-radius: var(--radius-md);
 
   width: fit-content;
@@ -335,12 +340,20 @@
 }
 
 /* ── Range ───────────────────────────────────────────────────────────────── */
+/* A faixa do intervalo é `--accent`, e não `--muted`.
+ *
+ * Esta família de classes (a que a lib do React aplica na célula) usava
+ * `--muted`; a família por atributo, que as outras quatro stacks emitem, pinta
+ * a faixa com `.nds-calendar-day-cell:has([data-selected])`, que é `--accent`.
+ * No tema default os dois tokens têm o MESMO valor e ninguém via — no warm e no
+ * cold não têm: medido, a faixa saía cinza numa stack e tingida nas outras
+ * (245,242,240 contra 246,236,223). Um token só para uma faixa só. */
 .nds-calendar-range-start,
 .nds-calendar-range-end {
   position: relative;
   isolation: isolate;
   z-index: 0;
-  background-color: hsl(var(--muted));
+  background-color: hsl(var(--accent));
 }
 
 .nds-calendar-range-start {
@@ -354,7 +367,7 @@
   inset-block: 0;
   right: 0;
   width: var(--spacing-4);
-  background-color: hsl(var(--muted));
+  background-color: hsl(var(--accent));
   z-index: -1;
 }
 
@@ -369,12 +382,15 @@
   inset-block: 0;
   left: 0;
   width: var(--spacing-4);
-  background-color: hsl(var(--muted));
+  background-color: hsl(var(--accent));
   z-index: -1;
 }
 
+/* O miolo é pintado pela CÉLULA, que encosta na vizinha — pintar o botão deixa
+ * falha entre as colunas. É o que as outras quatro stacks já faziam. */
 .nds-calendar-range-middle {
   border-radius: var(--radius-none);
+  background-color: hsl(var(--accent));
 }
 
 /* Reto por dentro, redondo por fora — a ponta do intervalo mantinha o raio dos
@@ -392,10 +408,14 @@
 }
 
 /* ── Estados da célula ───────────────────────────────────────────────────── */
+/* Mesmo par de tokens que a forma por atributo mais abaixo
+ * (`[data-today]:not([data-selected])`): as duas marcam o mesmo dia, e usar
+ * `--muted` aqui e `--accent` lá pintava o dia de hoje de cinza numa stack e
+ * tingido nas outras assim que o tema deixava de ser o default. */
 .nds-calendar-today {
   border-radius: var(--nds-cell-radius);
-  background-color: hsl(var(--muted));
-  color: hsl(var(--foreground));
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
 }
 
 .nds-calendar-today[data-selected="true"] {
@@ -407,9 +427,13 @@
   color: hsl(var(--muted-foreground));
 }
 
+/* Sem `opacity` aqui: quem apaga o dia bloqueado é o BOTÃO
+ * (`.nds-calendar-day-btn[data-disabled]`), e as duas opacidades se multiplicam
+ * onde a lib marca a célula E o botão — 0.5 × 0.5 = 0.25. Medido, o número do
+ * dia bloqueado ficava em 1.41:1 numa stack contra 2.10:1 nas outras quatro:
+ * o mesmo estado, quase invisível em uma delas. */
 .nds-calendar-disabled {
   color: hsl(var(--muted-foreground));
-  opacity: 0.5;
 }
 
 .nds-calendar-hidden {
@@ -511,10 +535,14 @@
   color: hsl(var(--primary-foreground));
 }
 
+/* Transparente: a faixa vem da célula (`.nds-calendar-range-middle`), como nas
+ * demais stacks. Pintar o botão punha a cor numa caixa menor que a célula e
+ * usava outro par de tokens — `--muted`/`--foreground` contra
+ * `--accent`/`--accent-foreground`. */
 .nds-calendar-day-btn[data-range-middle="true"] {
   border-radius: var(--radius-none);
-  background-color: hsl(var(--muted));
-  color: hsl(var(--foreground));
+  background-color: transparent;
+  color: hsl(var(--accent-foreground));
 }
 
 /*

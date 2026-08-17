@@ -339,6 +339,12 @@ export function createCalendar(options: CalendarOptions = {}): HTMLElement {
         if (isDisabled) { btn.disabled = true; btn.dataset.disabled = ''; }
 
         btn.addEventListener('keydown', (e) => {
+          // O passo parte SEMPRE do dia deste botão. `moverFoco` anda a partir de
+          // `focado`, e os dois podem estar em dias diferentes quando o foco
+          // chegou aqui por fora da navegação — foco programático, restauração de
+          // foco ao fechar um popover. Aí `Home` calculava o deslocamento pelo
+          // dia certo e o aplicava ao dia errado, e caía num sábado.
+          focado = date;
           const passos: Record<string, [number, number]> = {
             ArrowRight: [1, 0],
             ArrowLeft: [-1, 0],

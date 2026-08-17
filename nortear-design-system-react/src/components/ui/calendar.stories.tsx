@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState, type ComponentProps } from "react";
-import { userEvent, within, expect } from "storybook/test";
+import { userEvent, within, expect, waitFor } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
+import { isoDoFoco } from "@shared/testing/calendar-probe";
 import { Calendar } from "./calendar";
 import { CalendarDocs } from "@/components/docs/CalendarDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -211,6 +212,65 @@ export const Playground: Story = {
       await expect(
         new Date(destino!).getTime() - new Date(origem!).getTime(),
       ).toBe(umDia);
+    });
+
+    await step("A grade é UMA parada de tabulação", async () => {
+      // accessibility.item2 — o item promete "só o dia corrente entra na ordem
+      // do Tab" desde sempre, e nenhuma asserção o cobrava: medido, uma stack
+      // tinha trinta paradas e outra seis. Contar é o único jeito de ver isso.
+      const tabulaveis = Array.from(
+        canvasElement.querySelectorAll<HTMLElement>(".nds-calendar-day-btn"),
+      ).filter((d) => d.tabIndex >= 0);
+      await expect(tabulaveis).toHaveLength(1);
+    });
+
+    await step("A grade se nomeia pelo mês em vista", async () => {
+      // Sem `aria-label` o grid é anunciado como "tabela" e nada mais — e com
+      // dois meses na tela as duas soam iguais.
+      const grade = canvasElement.querySelector("table")!;
+      await expect(grade.getAttribute("aria-label")).toMatch(/\d{4}/);
+    });
+
+    await step("Home, End e Page Up/Down andam na grade e o foco acompanha", async () => {
+      // accessibility.keyboard.homeEnd e .pageUpDown — as duas linhas estavam
+      // documentadas e sem asserção nenhuma; medido, duas stacks não faziam
+      // nada com essas teclas e uma largava o foco no body.
+      //
+      // A precondição é própria (o foco parte de um dia conhecido) e a sequência
+      // devolve a grade ao mês de partida, para o replay do painel medir o mesmo.
+      const doc = canvasElement.ownerDocument;
+      // A partida é o dia que É a parada de tabulação da grade — o mesmo ponto a
+      // que um teclado chega por Tab. Pegar um dia qualquer por índice testaria
+      // uma entrada que ninguém consegue fazer.
+      const partida = Array.from(
+        canvasElement.querySelectorAll<HTMLElement>(".nds-calendar-day-btn"),
+      ).find((d) => d.tabIndex >= 0)!;
+      partida.focus();
+      const origem = isoDoFoco(doc);
+      await expect(origem).not.toBeNull();
+      const emUtc = (iso: string) => new Date(`${iso}T00:00:00Z`);
+
+      await userEvent.keyboard("{Home}");
+      await waitFor(() => expect(emUtc(isoDoFoco(doc)!).getUTCDay()).toBe(0));
+      const domingo = isoDoFoco(doc)!;
+
+      await userEvent.keyboard("{End}");
+      await waitFor(() => expect(emUtc(isoDoFoco(doc)!).getUTCDay()).toBe(6));
+      // Mesma semana: seis dias depois do domingo em que Home parou.
+      await expect(
+        (emUtc(isoDoFoco(doc)!).getTime() - emUtc(domingo).getTime()) / 86_400_000,
+      ).toBe(6);
+      const sabado = isoDoFoco(doc)!;
+
+      await userEvent.keyboard("{PageDown}");
+      await waitFor(() =>
+        expect(emUtc(isoDoFoco(doc)!).getUTCMonth()).toBe(
+          (emUtc(sabado).getUTCMonth() + 1) % 12,
+        ),
+      );
+
+      await userEvent.keyboard("{PageUp}");
+      await waitFor(() => expect(isoDoFoco(doc)).toBe(sabado));
     });
   },
 };

@@ -13,8 +13,11 @@ const forwardedProps = useForwardProps(delegatedProps)
 </script>
 
 <template>
+  <!-- `scope="col"`: a lib devolve um <th> sem escopo, e um <th> sem escopo é
+       cabeçalho de nada. As outras stacks o declaram; esta ficava de fora. -->
   <CalendarHeadCell
     data-slot="calendar-head-cell"
+    scope="col"
     :class="cn('nds-calendar-weekday', props.class)"
     v-bind="forwardedProps"
   >

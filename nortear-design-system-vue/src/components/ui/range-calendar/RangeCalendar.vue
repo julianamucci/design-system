@@ -1,12 +1,14 @@
 <script lang="ts" setup>
-import type { RangeCalendarRootEmits, RangeCalendarRootProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { reactiveOmit } from '@vueuse/core'
+import type { DateValue, RangeCalendarRootEmits, RangeCalendarRootProps } from 'reka-ui'
+import type { HTMLAttributes, Ref } from 'vue'
+import { reactiveOmit, useVModel } from '@vueuse/core'
+import { getLocalTimeZone, parseDate, today } from '@internationalized/date'
 import { RangeCalendarRoot, useDateFormatter, useForwardPropsEmits } from 'reka-ui'
 import { toDate } from 'reka-ui/date'
-import { computed } from 'vue'
+import { computed, nextTick } from 'vue'
 import { cn } from '@/lib/utils'
 import { rotulosDoCalendario } from '@shared/primitives/calendar-labels'
+import { destinoDaTecla, diaNaGrade, isoDoElemento } from '@shared/primitives/calendar-teclado'
 import { RangeCalendarCell, RangeCalendarCellTrigger, RangeCalendarGrid, RangeCalendarGridBody, RangeCalendarGridHead, RangeCalendarGridRow, RangeCalendarHeadCell, RangeCalendarHeader, RangeCalendarHeading, RangeCalendarNextButton, RangeCalendarPrevButton } from './index'
 
 const props = withDefaults(defineProps<RangeCalendarRootProps & { class?: HTMLAttributes['class'] }>(), {
@@ -18,9 +20,16 @@ const props = withDefaults(defineProps<RangeCalendarRootProps & { class?: HTMLAt
 
 const emits = defineEmits<RangeCalendarRootEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class')
+const delegatedProps = reactiveOmit(props, 'class', 'placeholder')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+// A visão precisa ser escrita daqui para o teclado poder virar o mês; sem um
+// ref local só dava para lê-la. Mesmo arranjo do calendário de data única.
+const placeholder = useVModel(props, 'placeholder', emits, {
+  passive: true,
+  defaultValue: props.defaultPlaceholder ?? today(getLocalTimeZone()),
+}) as Ref<DateValue>
 
 /* v8 ignore next -- o idioma vem sempre de quem monta o calendário; o 'en' é
    rede de segurança para uso sem prop, que nenhuma story representa. */
@@ -29,68 +38,93 @@ const formatter = useDateFormatter(props.locale ?? 'en')
 // Os botões de mês só têm ícone: quem usa leitor de tela ouve o aria-label, e o
 // da lib vinha "Previous page" — em inglês e descrevendo página, não mês.
 const rotulos = computed(() => rotulosDoCalendario(props.locale))
+
+/**
+ * O resto do teclado da grade — `Home`, `End`, `PageUp`, `PageDown`.
+ *
+ * Gêmeo do que existe no calendário de data única, e pela mesma razão: a lib
+ * trata seta, Enter e Espaço, e as outras quatro teclas não chegavam a lugar
+ * nenhum apesar de o conteúdo compartilhado prometê-las.
+ */
+function aoTeclarNaGrade(evento: KeyboardEvent) {
+  const raiz = evento.currentTarget as HTMLElement | null
+  const destino = destinoDaTecla(isoDoElemento(evento.target as Element | null), evento)
+  if (!destino || !raiz) return
+  evento.preventDefault()
+  placeholder.value = parseDate(destino)
+  void nextTick(() => diaNaGrade(raiz, destino)?.focus())
+}
 </script>
 
 <template>
   <RangeCalendarRoot
-    v-slot="{ grid, weekDays, date }"
+    v-slot="{ grid, weekDays }"
+    v-model:placeholder="placeholder"
     data-slot="range-calendar"
     :class="cn('nds-calendar-root nds-calendar-range', props.class)"
     v-bind="forwarded"
+    @keydown="aoTeclarNaGrade"
   >
-    <RangeCalendarHeader>
-      <!-- Mês e ano formatados SEPARADAMENTE e juntados por espaço: em pt-BR e
-           es o Intl com month+year devolve "abril de 2026", e as outras três
-           stacks compõem "abril 2026". -->
-      <RangeCalendarHeading>
-        {{ formatter.custom(toDate(date), { month: 'long' }) }}
-        {{ formatter.custom(toDate(date), { year: 'numeric' }) }}
-      </RangeCalendarHeading>
-
+    <!-- Mesma árvore do Vanilla: a faixa de navegação é irmã dos meses e fica
+         por cima deles, e cada mês traz a própria legenda no meio. -->
+    <div class="nds-calendar-months">
       <!-- Mesma classe do calendário de data única: é ela que prende os botões
            nas pontas e deixa a legenda centralizada. Com `.nds-calendar-nav`,
-           que é a família de classes do Vanilla, o cabeçalho do intervalo
+           que é a família de classes antiga do Vanilla, o cabeçalho do intervalo
            montava de um jeito e o da data única de outro. -->
       <div class="nds-calendar-nav-overlay">
         <RangeCalendarPrevButton :aria-label="rotulos.mesAnterior" />
         <RangeCalendarNextButton :aria-label="rotulos.proximoMes" />
       </div>
-    </RangeCalendarHeader>
 
-    <div class="nds-calendar-months">
-      <RangeCalendarGrid
+      <div
         v-for="month in grid"
         :key="month.value.toString()"
+        class="nds-calendar-month"
       >
-        <RangeCalendarGridHead>
-          <RangeCalendarGridRow>
-            <RangeCalendarHeadCell
-              v-for="day in weekDays"
-              :key="day"
+        <RangeCalendarHeader>
+          <!-- Mês e ano formatados SEPARADAMENTE e juntados por espaço: em pt-BR
+               e es o Intl com month+year devolve "abril de 2026", e as outras
+               stacks compõem "abril 2026". -->
+          <RangeCalendarHeading>
+            {{ formatter.custom(toDate(month.value), { month: 'long' }) }}
+            {{ formatter.custom(toDate(month.value), { year: 'numeric' }) }}
+          </RangeCalendarHeading>
+        </RangeCalendarHeader>
+
+        <RangeCalendarGrid
+          :aria-label="`${formatter.custom(toDate(month.value), { month: 'long' })} ${formatter.custom(toDate(month.value), { year: 'numeric' })}`"
+        >
+          <RangeCalendarGridHead>
+            <RangeCalendarGridRow>
+              <RangeCalendarHeadCell
+                v-for="day in weekDays"
+                :key="day"
+              >
+                {{ day.replace(/\.$/, '') }}
+              </RangeCalendarHeadCell>
+            </RangeCalendarGridRow>
+          </RangeCalendarGridHead>
+          <RangeCalendarGridBody>
+            <RangeCalendarGridRow
+              v-for="(weekDates, index) in month.rows"
+              :key="`weekDate-${index}`"
+              class="nds-calendar-week"
             >
-              {{ day.replace(/\.$/, '') }}
-            </RangeCalendarHeadCell>
-          </RangeCalendarGridRow>
-        </RangeCalendarGridHead>
-        <RangeCalendarGridBody>
-          <RangeCalendarGridRow
-            v-for="(weekDates, index) in month.rows"
-            :key="`weekDate-${index}`"
-            class="nds-calendar-week"
-          >
-            <RangeCalendarCell
-              v-for="weekDate in weekDates"
-              :key="weekDate.toString()"
-              :date="weekDate"
-            >
-              <RangeCalendarCellTrigger
-                :day="weekDate"
-                :month="month.value"
-              />
-            </RangeCalendarCell>
-          </RangeCalendarGridRow>
-        </RangeCalendarGridBody>
-      </RangeCalendarGrid>
+              <RangeCalendarCell
+                v-for="weekDate in weekDates"
+                :key="weekDate.toString()"
+                :date="weekDate"
+              >
+                <RangeCalendarCellTrigger
+                  :day="weekDate"
+                  :month="month.value"
+                />
+              </RangeCalendarCell>
+            </RangeCalendarGridRow>
+          </RangeCalendarGridBody>
+        </RangeCalendarGrid>
+      </div>
     </div>
   </RangeCalendarRoot>
 </template>
