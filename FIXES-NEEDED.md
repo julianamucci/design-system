@@ -1,4 +1,73 @@
-# Fixes Pendentes — Pipeline `new` code-block — 2026-07-30
+# Fixes Pendentes
+
+> **Reconciliação de 2026-08-17.** Este arquivo é um log cronológico que ia de
+> 2026-07-30 a 2026-08-09 e acumulou 41 itens marcados como abertos. Entre 11 e
+> 17 de agosto rodou a revisão serial dos 50 componentes nas 5 stacks, e o
+> arquivo ficou para trás: itens escritos no calor de uma rodada e nunca
+> revisitados.
+>
+> Os 41 foram conferidos **um por um contra o código**, não contra o texto daqui.
+> Resultado: **22 resolvidos**, **12 ainda abertos**, **7 mudaram de forma**.
+> Os resolvidos estão marcados `[x]` no corpo, com o commit que os fechou. Os
+> que mudaram de forma estão anotados no corpo e reescritos abaixo — porque o
+> texto antigo deles virou **falsidade ativa**, não apenas desatualização.
+>
+> Duas lições de método que o próprio arquivo ensinou:
+>
+> - **Um item guardava um diagnóstico errado como se fosse conclusão.** O de
+>   foco inicial em Cancelar (L946) recomendava "corrigir o texto, não o código
+>   — a implementação está certa nos 4 casos". Fez-se o oposto, e o oposto
+>   estava certo: a sonda provou que o texto estava correto e a implementação
+>   errada no Svelte.
+> - **Um item afirmava uma política que não existe.** O do warning do Svelte
+>   (L118) diz que "a política do projeto proíbe `svelte-ignore`", e a stack usa
+>   `svelte-ignore` do exato rule em dois lugares.
+>
+> Registrar sem prazo de validade produz um arquivo em que não se pode confiar.
+> Pendência que não cabe na rodada do componente que a descobriu deve nascer com
+> dono e com forma de medir.
+
+**Como ler este arquivo.** A lista de aberto abaixo é a **canônica**. Os mesmos
+12 itens também continuam marcados `[ ]` mais abaixo, no log, no contexto em que
+foram descobertos — então `grep -c "^- \[ \]"` conta 24, não 12. O log é
+histórico; a lista de cima é o que está por fazer.
+
+## Aberto de verdade — 12 itens
+
+### Precisam de decisão da dona (5)
+
+- [ ] **`description` do alert-dialog: opcional no código, obrigatória na anatomia** (L73 do log). A assinatura do Vanilla diz `description?: string` e a anatomia compartilhada diz "descrição obrigatória, fonte do `aria-describedby`". Há dois `v8 ignore` no código apontando para este arquivo. Ou a anatomia passa a dizer "recomendada", ou as cinco stacks exigem. **São cinco stacks hoje, não quatro.**
+- [ ] **`collapsible` do accordion.** Duas contradições. O default documentado é `"false"` e o Vanilla usa `true`. E a prop não existe em **duas** das cinco stacks (react e angular, por limitação idiomática das libs, documentada em cada uma). Nenhuma story exercita `collapsible: false` em stack nenhuma. Ou entra no contrato com dispensa declarada nas duas, ou sai da tabela de props.
+- [ ] **`defaultOpen` na tabela de props do alert-dialog, só no Svelte.** Medido em `bits-ui/dist/bits/dialog/types.d.ts`: a raiz expõe `open`/`onOpenChange`/`onOpenChangeComplete`, sem `defaultOpen`. As outras quatro têm a prop de verdade. A correção é local — override no `t()` ou `ABSENT_PROPS`.
+- [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
+- [ ] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic.
+
+### Dívida de fundação, sem dono de componente (4)
+
+- [ ] **Keyframes de dialog e select duplicam `nds-animate-in/out`.** Mesmo desenho (`opacity` + `scale(0.95)`), nomes distintos — por isso a regra de keyframes duplicadas não os pega. **Atenção: o timing difere.** As compartilhadas usam `--duration-spring`/`--ease-spring`; dialog usa `--duration-base`/`--ease-entrance` e select `--duration-fast`. Migrar **muda o movimento**, não só remove duplicação.
+- [ ] **Classes de movimento não documentadas na foundation page de Motion.** `nds-animate-in`, `nds-animate-out`, `--ease-spring` e `--duration-spring` não aparecem no conteúdo compartilhado em nenhum dos três idiomas. Pior: o texto atual diz que spring existe "apenas via biblioteca", o que contradiz por omissão o token que o sistema passou a ter.
+- [ ] **`test:coverage` fora do CI.** A justificativa antiga — "passaria vazio ou falharia por threshold" — **está obsoleta**: as quatro suítes de navegador estão 100% verdes (react 694, vue 685, svelte 693, vanilla 716 testes). Há duas ações destravadas no mesmo lugar: pôr `test:coverage` no CI, e remover o `continue-on-error: true` de `test.yml`, cujo próprio comentário diz "quando todas chegarem a 100%".
+- [ ] **`TEXT_SURFACE_PREFIXES` não cobre `import.*`, `demonstration.*` nem chaves de header** (novo, achado na conferência). A regra `markup_in_text_surface` está a zero hoje — mas por não olhar esses prefixos, não por medir.
+
+### Divergência cross-stack do carrossel (3)
+
+- [ ] **`class` do `CarouselContent` cai em nós diferentes.** Nas três stacks com lib vai para o **track**; no Vanilla e no Angular vai para o **recorte**. Três primitivos a mexer, com Chromatic a reboque.
+- [ ] **Track horizontal do Vanilla não declara `data-orientation`.** É escolha consciente, com comentário no código — mas o React escreve sempre, e o respiro de 16px é diferença visível.
+- [ ] **Conteúdo compartilhado do carrossel descreve a API do Embla**, e é mais amplo do que o item registrava: "Opções do Embla" e "plugins do Embla" na tabela de props; `basis-*`, `-ml-4`, `pl-4`, `h-[400px]` em anatomia, guidelines, variantes e dicas; e "Embla" em `description`, `seo.aiSummary` e `seo.aiEntities` — que é o que buscador e IA leem. Nenhuma dessas chaves é `*Code`, então o auditor de literais segue cego a elas. Trabalho de `ux-writer`.
+
+## Mudaram de forma — 7 itens reescritos
+
+- **Warning `a11y_no_noninteractive_tabindex` no Svelte.** O item dizia "aceitar 1 warning por build, porque a política proíbe `svelte-ignore`". Hoje a stack faz as **três** coisas ao mesmo tempo: aceita o warning (`code-block.svelte`, `table.svelte`), usa `svelte-ignore` do exato rule (`drawer-body.svelte`, `sheet-body.svelte`) e usa `role="region"` (`DialogStory.svelte`). A afirmação de política é falsa. **Vira: uniformizar o tratamento da região rolável no Svelte.**
+- **Icons sem folga de timeout.** Duas premissas caíram: não são 120s nas quatro (react é 60s), e o axe **não** está mais desligado no react — o comentário no código diz que o catálogo inteiro sob o axe cabe no timeout, "ao contrário do que a nota antiga supunha". O commit `6a045c28` atacou por outro caminho: catálogo em JSON compartilhado, bundle de 1.26MB para 595KB. **Vira: assimetria do Icons — svelte fora da fumaça e grid não virtualizado (2003 ladrilhos).**
+- **"Foco inicial em Cancelar".** Ver a nota de método no topo. O código foi corrigido, não o texto, e as chaves citadas no item (`functional.item1`, `functional.item6`) não existem mais — a seção virou `testes.*`. **Vira: registro histórico, fechado por `b9975914`.**
+- **Rótulos das composições do alert-dialog.** A divergência persiste, mas **os lados trocaram**: hoje as stories das cinco e o conteúdo compartilhado estão alinhados na forma imperativa, e quem diverge são as docs pages de Vue e Svelte, na forma interrogativa. "Publicar agora" desapareceu do repo. **Vira duas coisas: (a) Vue e Svelte alinham ao compartilhado; (b) react/vue/svelte/vanilla deveriam ler `demonstration.labels.*` como o Angular faz, em vez de cravar.**
+- **Gap do `coverage_divergence`.** Foi feito **e superado**. A regra ganhou o gatilho de razão que o item pedia (com o comentário citando "12 asserções contra 21"), e depois o eixo mudou: a razão é **suprimida** quando o contrato está resolvido nas cinco, porque ali a contagem por story mede distribuição, não cobertura. `--contract-status` hoje: **48 de 48**. **Vira: registro de como a comparação por contagem foi aposentada em favor do contrato declarado.**
+- **`toPlainText` container por container.** O auditor está a zero e o bloco grande do item **não descreve mais o código**: as 185 chaves `accessibility.aria.*` com markup alimentam `DocsAccessibility items`, que renderiza HTML sanitizado — ali **não envolver é o correto**, e envolver reintroduziria o bug que o item cita. **Vira regra fechada, não fila de 264 chaves.**
+- **`aria-disabled` nas setas do carrossel.** Virou 3×2, não 2×3: o Svelte passou a escrever o par. A divergência a resolver é só em React e Vue — bem menor do que o item descreve.
+
+---
+
+## Log histórico — 2026-07-30 a 2026-08-09
 
 O lote completo (opção 3) foi aplicado. Sobrou **um** item, e ele precisa de
 decisão sua — não é trabalho parado por falta de tempo.
@@ -42,7 +111,8 @@ decisão sua — não é trabalho parado por falta de tempo.
   forçar troca de idioma neles deixa a fala picotada. Volume medido: 5.185
   ocorrências no total, 1.179 em prosa contra 302 dentro de `<code>`.
 
-- [ ] **`slider > Em Formulario` reprova no axe por `target-size`, só em Vue e
+- [x] **`slider > Em Formulario` reprova no axe por `target-size`, só em Vue e  
+      **RESOLVIDO** (conferido 2026-08-17) — 87ee6a92
   Svelte (2026-08-07).** Medido nas quatro: react e vanilla passam, vue e svelte
   falham com "16px by 16px, should be at least 24px" e "insufficient space to
   its closest neighbors".
@@ -53,7 +123,8 @@ decisão sua — não é trabalho parado por falta de tempo.
   monta em volta do thumb, não na regra. Achado ao rodar a suíte depois do lint;
   é anterior a esta rodada e não foi diagnosticado.
 
-- [ ] **Classe utilitária não vence CSS de componente — e a docs page prometia
+- [x] **Classe utilitária não vence CSS de componente — e a docs page prometia  
+      **RESOLVIDO** (conferido 2026-08-17) — fb301ab1
   que sim (2026-08-07).** `utilities.css` é importado na linha 13 do bundle e o
   CSS dos componentes a partir da 31: mesma especificidade, quem vem depois
   ganha. Então `class="nds-max-w-sm"` num `.nds-alert-dialog-content` não muda
@@ -81,7 +152,8 @@ decisão sua — não é trabalho parado por falta de tempo.
   "recomendada", ou as quatro stacks passam a exigir — e aí a story que prova
   isso precisa nascer nas quatro.
 
-- [ ] **92 cliques cegos em 14 componentes (2026-08-07).** Regra nova
+- [x] **92 cliques cegos em 14 componentes (2026-08-07).** Regra nova  
+      **RESOLVIDO** (conferido 2026-08-17) — 7b88514c
   `play_nao_idempotente`. São plays que clicam e asseveram estado no mesmo alvo:
   passam no vitest (que remonta) e falham no replay do painel Interactions (que
   não remonta). Medido depois de corrigir o accordion, que zerou:
@@ -115,7 +187,8 @@ decisão sua — não é trabalho parado por falta de tempo.
   Enquanto isso o ramo está declarado com `v8 ignore` e motivo em
   `nortear-design-system-vanilla/src/components/ui/accordion.ts`.
 
-- [ ] **Warning `a11y_no_noninteractive_tabindex` no primitivo Svelte.**
+- [x] **Warning `a11y_no_noninteractive_tabindex` no primitivo Svelte.**  
+      **MUDOU DE FORMA** (conferido 2026-08-17) — o texto deste item foi SUBSTITUÍDO na seção "Mudaram de forma", no topo. Não use o texto abaixo.
   A região de scroll do CodeBlock tem `tabindex="0"` de propósito: é o que
   permite rolar o bloco sem mouse (WCAG 2.1.1), e está documentado na própria
   docs page.
@@ -699,7 +772,8 @@ montou").
   na composição (preview E snippet) das 4.
   **Lição**: quando story e docs page divergem, a story pode ser a certa —
   conferir qual das duas usa a API real do componente antes de "convergir".
-- [ ] **`AlertDescription` do Svelte renderiza `<section>`**, enquanto o
+- [x] **`AlertDescription` do Svelte renderiza `<section>`**, enquanto o  
+      **RESOLVIDO** (conferido 2026-08-17) — 1ed7e51f
   vanilla (referência) usa `<div>`. Não há justificativa semântica para
   `<section>` dentro de um alert. Primitivo — ficou fora do escopo do lote.
 
@@ -802,7 +876,8 @@ variante do botão vence. O `AlertDialogAction class="nds-bg-destructive"` das
 docs pages renderizava com fundo primary. Corrigido em react e vue com
 `variant="destructive"` (inclusive nos snippets, que ensinavam a classe morta).
 
-- [ ] **Pendente**: a mesma classe é usada em `ContextMenuDocs`, `SidebarDocs`
+- [x] **Pendente**: a mesma classe é usada em `ContextMenuDocs`, `SidebarDocs`  
+      **RESOLVIDO** (conferido 2026-08-17) — revisão serial
   e no container `DocsDoDont` de várias stacks. Sobre elemento que NÃO é botão
   a classe funciona — cada uso precisa ser verificado antes de trocar.
 
@@ -897,7 +972,8 @@ determinístico e ainda exercita o caminho de quem pede menos movimento.
   26 são `Unable to find` e 15 `Timed out`, ou seja, o elemento não chega a
   renderizar. Comparação antes/depois idêntica fora do alert-dialog.
 
-- [ ] **Icons sem folga de timeout**: 120s nas 4 stacks, e a página mede
+- [x] **Icons sem folga de timeout**: 120s nas 4 stacks, e a página mede  
+      **MUDOU DE FORMA** (conferido 2026-08-17) — o texto deste item foi SUBSTITUÍDO na seção "Mudaram de forma", no topo. Não use o texto abaixo.
   ~75–112s sob carga concorrente. Falha de forma intermitente quando várias
   stacks rodam em paralelo (é o caso do CI). Virtualizar/paginar o grid
   resolveria de vez — e destravaria também o axe, hoje desligado nessa página
@@ -935,15 +1011,18 @@ era testada nas 4 stacks.
 Cada stack verificou na fonte da sua lib. Precisa de decisão (recomendação:
 **corrigir o texto, não o código** — a implementação está certa nos 4 casos):
 
-- [ ] **"Clique no overlay fecha"** (`functional.item6`, `accessibility.item5`,
+- [x] **"Clique no overlay fecha"** (`functional.item6`, `accessibility.item5`,  
+      **RESOLVIDO** (conferido 2026-08-17) — fb4e668a
   `states.cancelled.trigger`) — falso nas 4. react:
   `disablePointerDismissal = isAlertDialog || prop` · vue:
   `withModifiers(..., ['prevent'])` · svelte: `interactOutsideBehavior =
   "ignore"` · vanilla: decisão comentada na factory. É o comportamento
   CORRETO por WAI-ARIA APG (alert dialog exige escolha explícita).
-- [ ] **`aria-modal` documentado** — o Base UI não emite; isola o fundo com
+- [x] **`aria-modal` documentado** — o Base UI não emite; isola o fundo com  
+      **RESOLVIDO** (conferido 2026-08-17) — fb4e668a
   `aria-hidden` + `data-base-ui-inert` nos irmãos.
-- [ ] **"Foco inicial em Cancelar"** (`functional.item1`, `states.open.behavior`,
+- [x] **"Foco inicial em Cancelar"** (`functional.item1`, `states.open.behavior`,  
+      **MUDOU DE FORMA** (conferido 2026-08-17) — o texto deste item foi SUBSTITUÍDO na seção "Mudaram de forma", no topo. Não use o texto abaixo.
   `accessibility.item3`, `notes.tip1`) — as libs focam o painel
   (`tabindex=-1`); o primeiro Tab leva ao Cancelar.
 - [ ] **`defaultOpen` na tabela de props** — não existe no bits-ui
@@ -955,15 +1034,19 @@ contradição antes da decisão.
 
 ### Outras pendências levantadas (menores)
 
-- [ ] `docs/shared/styles/nds/alert-dialog.css` (cabeçalho) diz "sem
+- [x] `docs/shared/styles/nds/alert-dialog.css` (cabeçalho) diz "sem  
+      **RESOLVIDO** (conferido 2026-08-17) — 4c4af6fd
   Escape-to-close" — obsoleto, a factory fecha com Escape.
-- [ ] Vanilla não emite `data-slot` na descrição (só header/footer/content):
+- [x] Vanilla não emite `data-slot` na descrição (só header/footer/content):  
+      **RESOLVIDO** (conferido 2026-08-17) — c224b4f9
   seletor que funciona em 3 stacks falha na 4ª.
-- [ ] Rótulos das composições divergem entre stories e docs page nas 4
+- [x] Rótulos das composições divergem entre stories e docs page nas 4  
+      **MUDOU DE FORMA** (conferido 2026-08-17) — o texto deste item foi SUBSTITUÍDO na seção "Mudaram de forma", no topo. Não use o texto abaixo.
   stacks (stories: "Excluir sua conta?" / "Publicar agora"; docs page:
   "Excluir conta" / "Sair da conta"). O react alinhou os dele à docs page;
   as outras 3 mantiveram os próprios. Mexe em baseline do Chromatic.
-- [ ] Tabela de tokens lista utilitários Tailwind mortos (`bg-black/80`,
+- [x] Tabela de tokens lista utilitários Tailwind mortos (`bg-black/80`,  
+      **RESOLVIDO** (conferido 2026-08-17) — c224b4f9
   `bg-background`, `border`, `sm:rounded-lg`) — resíduo da migração `.nds-*`,
   idêntico nas 4.
 - [x] ~~`accessibility.aria.*` e `accessibility.screenReader.*` do JSON são
@@ -1023,7 +1106,8 @@ e **outro agent removeu a entrada**; as edições sumiram da árvore e da
 `git stash list` (voltaram intactas, por sorte). O stash é global. Também
 houve **absorção de commit**: o commit do Vue entrou dentro do commit do
 Vanilla porque os agents compartilham o índice.
-- [ ] Proibir `git stash` nos prompts de agent paralelo; comparar baseline
+- [x] Proibir `git stash` nos prompts de agent paralelo; comparar baseline  
+      **RESOLVIDO** (conferido 2026-08-17) — CLAUDE.md + prompts
   copiando o arquivo para o scratchpad.
 
 ## Foco na navegação das docs pages — RESOLVIDO (2026-08-02)
@@ -1069,11 +1153,13 @@ As 4 stacks registraram isso independentemente. Elas não usam
 `FoundationsRenderer`, sem menu de seções), então o bug 2 não existe lá — mas
 o bug 1 continua: "Ir para o conteúdo" não tem alvo nessas páginas.
 `IconsDocs` e `ThemeColorsDocs` estão na mesma situação.
-- [ ] Segundo passe nas 4 stacks para dar `<main>` nomeado às Foundations.
+- [x] Segundo passe nas 4 stacks para dar `<main>` nomeado às Foundations.  
+      **RESOLVIDO** (conferido 2026-08-17) — 01c09bda
 
 ### Backlog de analytics encontrado no caminho
 
-- [ ] `AccordionDocs` (vue, e provavelmente outras) não passa `componentSlug`
+- [x] `AccordionDocs` (vue, e provavelmente outras) não passa `componentSlug`  
+      **RESOLVIDO** (conferido 2026-08-17) — lote de contrato das docs pages
   ao `DocsPageLayout` — os botões do nav ficam sem `data-track-id`, então a
   navegação por seção não é rastreada nessas páginas.
 
@@ -1168,7 +1254,8 @@ O problema nunca foi congelamento: era **asserção racy no quadro zero**.
 Consequência: `waitFor` é a correção certa, e a emulação de reduced-motion é
 instrumento cego — deixa o CI verde escondendo o que o usuário vê.
 
-- [ ] **Decisão pendente: manter ou remover a emulação de reduced-motion.**
+- [x] **Decisão pendente: manter ou remover a emulação de reduced-motion.**  
+      **RESOLVIDO** (conferido 2026-08-17) — beedec2e
   Medido no vue (com → sem): dialog 2 → 12 falhas · sheet 2 → 2 · popover
   4 → 4 · tooltip 10 → 10. Ou seja, ela não causa falha; **esconde ~10
   asserções racy no dialog**. Manter = CI estável e Storybook com erro.
@@ -1222,7 +1309,8 @@ risco.
 svelte 18/9). Achado no caminho: os spies `onConfirm`/`onCancel` existiam no
 `setup()` e **nunca eram asseverados** — spies mortos.
 
-- [ ] **Gap do auditor**: `coverage_divergence` compara story a story e não
+- [x] **Gap do auditor**: `coverage_divergence` compara story a story e não  
+      **MUDOU DE FORMA** (conferido 2026-08-17) — o texto deste item foi SUBSTITUÍDO na seção "Mudaram de forma", no topo. Não use o texto abaixo.
   pegou 12 vs 21 no Playground. Reforçar a regra para comparar também o
   Playground entre stacks.
 
@@ -1236,7 +1324,8 @@ Falhas pré-existentes, sem relação com animação (falham com e sem emulaçã
 - **vanilla**: 12, sobretudo `drawer` ("multiple elements with role dialog" —
   overlay vazando entre stories) e `target-size`.
 - **react**: 8 (tooltip 7 + drawer axe).
-- [ ] Priorizar: `tooltip` e `drawer` são os piores em 3 das 4 stacks.
+- [x] Priorizar: `tooltip` e `drawer` são os piores em 3 das 4 stacks.  
+      **RESOLVIDO** (conferido 2026-08-17) — 389eb249
 
 ### Processo
 
@@ -1293,7 +1382,8 @@ entidade caindo em superfície de texto nas docs pages de componente:
 container não tem prop `aria`. Cada docs page monta essa tabela por conta, então
 o destino precisa ser conferido caso a caso antes de converter.
 
-- [ ] Verificar container por container antes de aplicar `toPlainText`.
+- [x] Verificar container por container antes de aplicar `toPlainText`.  
+      **MUDOU DE FORMA** (conferido 2026-08-17) — o texto deste item foi SUBSTITUÍDO na seção "Mudaram de forma", no topo. Não use o texto abaixo.
   Converter por prefixo sem conferir foi o que transformou `&lt;img&gt;` num
   `<img>` sem alt no Avatar e no Card.
 - [x] Regra  criada — ver secao abaixo.
@@ -1309,7 +1399,8 @@ fatia verde gera. Como as 4 stacks têm o backlog aberto de tooltip/drawer/sheet
 Enquanto isso, a medição útil é por componente
 (`npx vitest run --coverage <slug>`), que é o recorte que o `/quality` usa.
 
-- [ ] Fechar o backlog de tooltip/drawer/sheet destrava a cobertura agregada.
+- [x] Fechar o backlog de tooltip/drawer/sheet destrava a cobertura agregada.  
+      **RESOLVIDO** (conferido 2026-08-17) — rodadas 22/26/27
 - [ ] Só então faz sentido pôr `test:coverage` em CI — hoje ele passaria vazio
   ou falharia por threshold sem produzir número.
 
@@ -1357,7 +1448,8 @@ tooltip 13, popover 10, pagination 10, hover-card 10, drawer 10, menubar 9,
 dropdown-menu 9, select 6, scroll-area 5, e cauda. Nenhuma em button, accordion
 ou badge.
 
-- [ ] É o mesmo backlog já registrado, agora com número atual e por família.
+- [x] É o mesmo backlog já registrado, agora com número atual e por família.  
+      **RESOLVIDO** (conferido 2026-08-17) — ba6a331c
   Enquanto ele existir, `npm run test:coverage` não emite cobertura no Svelte.
 
 ## Backlog de portais no Svelte — 2026-08-05
@@ -1443,15 +1535,19 @@ select 5 · slider 1 · sidebar 1 · popover 1 · drawer 1
 dialog 1 · data-table 1 · aspect-ratio 1
 ```
 
-- [ ] **slider (1)** — o thumb tem 16×16 e o axe cobra 24×24 (WCAG 2.5.8). O
+- [x] **slider (1)** — o thumb tem 16×16 e o axe cobra 24×24 (WCAG 2.5.8). O  
+      **RESOLVIDO** (conferido 2026-08-17) — 87ee6a92
   CSS compartilhado tenta resolver com um `::after` de hit-area, mas o axe mede
   a caixa do elemento, não o pseudo. O arranjo atual presume um
   `<input type="range">` por baixo (modelo do Vanilla); no bits-ui o thumb **é**
   o alvo. Corrigir mexe em CSS compartilhado pelas 4 stacks e desloca o thumb —
   precisa de verificação visual no Chromatic, não de um ajuste às cegas.
-- [ ] **drawer (1)** — foco não entra no drawer ao abrir; medido, defeito real.
-- [ ] **popover (1)** — passa isolado, falha na suíte: portal vazando.
-- [ ] sidebar, dialog, data-table, aspect-ratio: 1 cada, não diagnosticadas.
+- [x] **drawer (1)** — foco não entra no drawer ao abrir; medido, defeito real.  
+      **RESOLVIDO** (conferido 2026-08-17) — b3449edf
+- [x] **popover (1)** — passa isolado, falha na suíte: portal vazando.  
+      **RESOLVIDO** (conferido 2026-08-17) — cad2cd06
+- [x] sidebar, dialog, data-table, aspect-ratio: 1 cada, não diagnosticadas.  
+      **RESOLVIDO** (conferido 2026-08-17) — 12eab069 · 237c3822 · 90886af4 · cefca288
 
 ## Regras de audit novas — 2026-08-05
 
@@ -1828,7 +1924,8 @@ design antes de alguém "alinhar" no sentido errado.
   Deliberadamente NÃO alterado nesta rodada: ligar o atributo muda a
   renderização do Vanilla de imediato, e alinhar os cinco é decisão de design.
 
-- [ ] **`aria-disabled` nas setas.** Vanilla e Angular escrevem o par
+- [x] **`aria-disabled` nas setas.** Vanilla e Angular escrevem o par  
+      **MUDOU DE FORMA** (conferido 2026-08-17) — o texto deste item foi SUBSTITUÍDO na seção "Mudaram de forma", no topo. Não use o texto abaixo.
   (`disabled` nativo + `aria-disabled`); React, Vue e Svelte só o nativo. O
   nativo já basta para o leitor de tela, então isto é redundância defensiva —
   mas é divergência contra a referência, e as asserções ficam diferentes por
@@ -1865,7 +1962,8 @@ design antes de alguém "alinhar" no sentido errado.
 
 ## Sheet — vizinho tocado de raspão (2026-08-15, rodada 22 da revisão serial)
 
-- [ ] **`regiao()` do `sonner.fixtures.ts` (Svelte) não é renderizado por
+- [x] **`regiao()` do `sonner.fixtures.ts` (Svelte) não é renderizado por  
+      **RESOLVIDO** (conferido 2026-08-17) — 87943277
   ninguém, e ninguém via.** O `export_sem_story` estava sendo satisfeito por um
   COMENTÁRIO no `SheetStory.svelte` — "a regiao rolavel precisa de acesso por
   teclado" —, num arquivo de outro componente. Reescrever aquele comentário
