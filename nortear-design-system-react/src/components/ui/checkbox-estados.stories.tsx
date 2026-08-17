@@ -145,7 +145,11 @@ export const Disabled: Story = {
     const checkbox = canvas.getByRole("checkbox");
 
     await step("Checkbox está desabilitado", async () => {
-      await expect(checkbox).toHaveAttribute("aria-disabled", "true");
+      // Efeito computado, não nome de atributo: a raiz virou <button> nativo
+      // (é o que faz o `id` chegar ao elemento visível), e aí a lib escreve o
+      // `disabled` do HTML em vez de `aria-disabled`. `toBeDisabled()` cobre as
+      // duas formas sem amarrar a asserção ao canal que a lib escolheu.
+      await expect(checkbox).toBeDisabled();
     });
 
     await step("Clique não altera o estado nem dispara o callback quando disabled", async () => {
@@ -180,7 +184,11 @@ export const DisabledChecked: Story = {
     const checkbox = canvas.getByRole("checkbox");
 
     await step("Checkbox está desabilitado", async () => {
-      await expect(checkbox).toHaveAttribute("aria-disabled", "true");
+      // Efeito computado, não nome de atributo: a raiz virou <button> nativo
+      // (é o que faz o `id` chegar ao elemento visível), e aí a lib escreve o
+      // `disabled` do HTML em vez de `aria-disabled`. `toBeDisabled()` cobre as
+      // duas formas sem amarrar a asserção ao canal que a lib escolheu.
+      await expect(checkbox).toBeDisabled();
     });
 
     await step("Checkbox está marcado mesmo disabled", async () => {

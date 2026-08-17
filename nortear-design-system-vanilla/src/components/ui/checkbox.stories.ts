@@ -79,17 +79,15 @@ function buildCheckboxWithLabel(args: CheckboxArgs): HTMLElement {
   });
 
   if (args.label) {
-    const labelId = `${id}-label`;
-    cb.setAttribute('aria-labelledby', labelId);
+    // Só `for`/`id`: a caixa é um <button>, que é controle rotulável, então o
+    // navegador nomeia, foca e ativa sem ouvinte nenhum na story. Antes desta
+    // rodada havia aqui um `label.addEventListener('click', …)` reenviando o
+    // clique à mão — andaime compensando o componente, que é o defeito que a
+    // asserção antiga não via.
     const label = document.createElement('label');
-    label.id = labelId;
     label.htmlFor = id;
     label.textContent = args.label;
     label.className = 'nds-label nds-text-body nds-font-medium nds-leading-none ' + (args.disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
-    label.addEventListener('click', (e) => {
-      e.preventDefault();
-      cb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    });
     wrapper.append(cb, label);
   } else {
     wrapper.append(cb);
@@ -119,6 +117,7 @@ export const Playground: Story = {
       'functional.item1',
       'functional.item2',
       'functional.item3',
+      'functional.item7',
       'accessibility.item1',
       'accessibility.item3',
       'accessibility.item5',
@@ -152,7 +151,23 @@ export const Playground: Story = {
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(false);
     });
 
+    // functional.item7 — os DOIS eixos do par rótulo+caixa, e é o efeito que
+    // está sendo verificado, não a presença do atributo `for`. A asserção que
+    // vivia aqui conferia `label.htmlFor` e passou anos verde sobre um par
+    // inerte: a caixa era um <div>, que `label[for]` não alcança.
+    await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
+      const rotulo = canvas.getByText(args.label);
+      await desmarcar(checkbox);                       // precondição própria
+      (checkbox as HTMLElement).blur();
+      await expect(checkbox).not.toHaveFocus();        // o foco tem que VIR do clique
+      await userEvent.click(rotulo);
+      await expect(checkbox).toHaveFocus();
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
+      await expect(args.onCheckedChange).toHaveBeenLastCalledWith(true);
+    });
+
     await step('Space alterna o estado e dispara o callback', async () => {
+      await desmarcar(checkbox);                       // precondição própria
       (checkbox as HTMLElement).focus();
       await userEvent.keyboard(' ');
       await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));

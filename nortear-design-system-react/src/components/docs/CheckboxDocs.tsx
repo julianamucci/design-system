@@ -860,7 +860,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
                 result: tNav("common.expectedResult"),
                 priority: tNav("common.priority"),
               },
-              items: [1, 2, 3, 4, 5, 6].map((i) => ({
+              items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
                 action: toPlainText(tContent(`testes.functional.item${i}.action`)),
                 result: toPlainText(tContent(`testes.functional.item${i}.result`)),
                 priority: tNav(priorityKeyMap[tContent(`testes.functional.item${i}.priority`)] ?? "common.high"),

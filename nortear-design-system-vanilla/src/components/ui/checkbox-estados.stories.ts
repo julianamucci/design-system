@@ -35,17 +35,12 @@ function wrapWithLabel(cb: HTMLElement, labelText: string, id: string, disabled 
   wrapper.dataset.spacing = 'sm';
   if (disabled) wrapper.dataset.disabled = 'true';
   cb.id = id;
-  const labelId = `${id}-label`;
-  cb.setAttribute('aria-labelledby', labelId);
+  // Só `for`/`id`: a caixa é um <button>, controle rotulável do HTML, então o
+  // par funciona sem ouvinte de clique escrito na story.
   const label = document.createElement('label');
-  label.id = labelId;
   label.htmlFor = id;
   label.textContent = labelText;
   label.className = 'nds-label nds-text-body nds-font-medium nds-leading-none ' + (disabled ? 'nds-cursor-default' : 'nds-cursor-pointer');
-  label.addEventListener('click', (e) => {
-    e.preventDefault();
-    cb.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-  });
   wrapper.append(cb, label);
   return wrapper;
 }
@@ -210,10 +205,7 @@ export const Error: Story = {
     cb.setAttribute('aria-describedby', 'cb-error-msg');
 
     const label = document.createElement('label');
-    label.id = `${id}-label`;
-    cb.setAttribute('aria-labelledby', `${id}-label`);
     label.htmlFor = id;
-    label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
     label.textContent = 'Aceito os termos e condições';
     label.className = 'nds-label nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 

@@ -82,6 +82,7 @@ export const Playground: Story = {
       "functional.item1",
       "functional.item2",
       "functional.item3",
+      "functional.item7",
       "accessibility.item1",
       "accessibility.item3",
       "accessibility.item5",
@@ -141,7 +142,23 @@ export const Playground: Story = {
       await expect(args.onCheckedChange).toHaveBeenLastCalledWith(false);
     });
 
+    // functional.item7 — os DOIS eixos do par rótulo+caixa. Antes desta rodada
+    // o `id` do consumidor caía no <input> escondido do base-ui, então o `for`
+    // do rótulo apontava para um elemento que ninguém vê; hoje a raiz é um
+    // <button> nativo e a associação é a do HTML.
+    await step("Clicar no texto do rótulo foca a caixa E alterna o estado", async () => {
+      const rotulo = canvas.getByText("Aceito os termos e condições");
+      await desmarcar();                          // precondição própria
+      checkbox.blur();
+      await expect(checkbox).not.toHaveFocus();   // o foco tem que VIR do clique
+      await userEvent.click(rotulo);
+      await expect(checkbox).toHaveFocus();
+      await waitFor(() => expect(checkbox).toHaveAttribute("aria-checked", "true"));
+      await expect(args.onCheckedChange).toHaveBeenLastCalledWith(true);
+    });
+
     await step("Space com foco alterna o estado e dispara o callback", async () => {
+      await desmarcar();                          // precondição própria
       checkbox.focus();
       await expect(checkbox).toHaveFocus();
       await userEvent.keyboard(" ");

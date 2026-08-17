@@ -4,7 +4,7 @@ import type { CheckboxRootEmits, CheckboxRootProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
 import { computed } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
-import { CheckIcon } from 'lucide-vue-next'
+import { CheckIcon, MinusIcon } from 'lucide-vue-next'
 import { CheckboxIndicator, CheckboxRoot, useForwardPropsEmits } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
@@ -39,7 +39,12 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       class="nds-checkbox-indicator"
     >
       <slot v-bind="slotProps">
-        <CheckIcon />
+        <!-- O estado misto desenha um TRAÇO, não a marca de seleção: o fundo é
+             o mesmo do marcado, então o desenho é a única coisa que distingue
+             "alguns selecionados" de "todos selecionados". A sonda pegou esta
+             stack exibindo a marca no misto. -->
+        <MinusIcon v-if="slotProps.state === 'indeterminate'" />
+        <CheckIcon v-else />
       </slot>
     </CheckboxIndicator>
   </CheckboxRoot>

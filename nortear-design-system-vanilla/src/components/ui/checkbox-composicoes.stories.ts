@@ -33,10 +33,7 @@ export const WithLabel: Story = {
     const cb = createCheckbox({ id });
 
     const label = document.createElement('label');
-    label.id = `${id}-label`;
-    cb.setAttribute('aria-labelledby', `${id}-label`);
     label.htmlFor = id;
-    label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
     label.textContent = 'Aceito os termos e condições';
     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
@@ -79,10 +76,7 @@ export const WithDescription: Story = {
     textGroup.dataset.spacing = 'xs';
 
     const label = document.createElement('label');
-    label.id = `${id}-label`;
-    cb.setAttribute('aria-labelledby', `${id}-label`);
     label.htmlFor = id;
-    label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
     label.textContent = 'Receber novidades por email';
     label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
@@ -139,10 +133,7 @@ export const InFieldsetGroup: Story = {
 
       const cb = createCheckbox({ id });
       const label = document.createElement('label');
-      label.id = `${id}-label`;
-      cb.setAttribute('aria-labelledby', `${id}-label`);
       label.htmlFor = id;
-      label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
       label.textContent = labelText;
       label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
 
@@ -281,7 +272,6 @@ export const SelectAll: Story = {
           });
         },
       });
-      el.setAttribute('aria-labelledby', 'cb-select-all-label');
       return el;
     }
 
@@ -293,9 +283,7 @@ export const SelectAll: Story = {
 
     cbAll = makeParentCheckbox();
     const labelAll = document.createElement('label');
-    labelAll.id = 'cb-select-all-label';
     labelAll.htmlFor = 'cb-select-all';
-    labelAll.addEventListener('click', (e) => { e.preventDefault(); cbAll.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
     labelAll.textContent = 'Selecionar todos os itens';
     labelAll.className = 'nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer';
     allRow.append(cbAll, labelAll);
@@ -311,10 +299,7 @@ export const SelectAll: Story = {
       const cb = createCheckbox({ id, onCheckedChange: () => syncParent() });
       childCheckboxes.push(cb);
       const label = document.createElement('label');
-      label.id = `${id}-label`;
-      cb.setAttribute('aria-labelledby', `${id}-label`);
       label.htmlFor = id;
-      label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
       label.textContent = labelText;
       label.className = 'nds-text-body nds-font-medium nds-leading-none nds-cursor-pointer';
       row.append(cb, label);
@@ -379,10 +364,7 @@ export const InItemList: Story = {
 
       const cb = createCheckbox({ id, checked });
       const label = document.createElement('label');
-      label.id = `${id}-label`;
-      cb.setAttribute('aria-labelledby', `${id}-label`);
       label.htmlFor = id;
-      label.addEventListener('click', (e) => { e.preventDefault(); cb.dispatchEvent(new MouseEvent('click', { bubbles: true })); });
       label.textContent = labelText;
       label.className = 'nds-text-body nds-font-medium nds-cursor-pointer';
 

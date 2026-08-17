@@ -1,14 +1,19 @@
 /*
  * ─── nds-checkbox ───────────────────────────────────────────────────────────
- * Checkbox vanilla com semântica ARIA (role="checkbox") sobre <div>.
+ * Caixa de seleção: <button> com semântica ARIA de checkbox.
  *
- *   <div class="nds-checkbox" role="checkbox" tabindex="0"
- *        aria-checked="false" data-state="unchecked">
- *     <input type="checkbox" aria-hidden="true" ... />  ← native sr-only
- *     <span class="nds-checkbox-indicator">              ← visual check
+ *   <button type="button" class="nds-checkbox" role="checkbox"
+ *           aria-checked="false" data-state="unchecked">
+ *     <span class="nds-checkbox-indicator">              ← marca visual
  *       <svg>...</svg>
  *     </span>
- *   </div>
+ *   </button>
+ *
+ * A raiz é um <button> nas cinco stacks, e não por gosto de markup: `label[for]`
+ * só alcança CONTROLE ROTULÁVEL do HTML (button, input, select, textarea, meter,
+ * output, progress). Sobre <div> ou <span> o par rótulo+caixa fica inerte —
+ * clicar no texto não foca nem alterna nada, que foi exatamente o defeito medido
+ * no Vanilla e no React antes desta rodada. Ver docs/shared/testing/checkbox-probe.ts.
  *
  * Tokens: --primary, --primary-foreground, --input, --border, --ring,
  *         --destructive, --background, --radius-sm
@@ -20,6 +25,15 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+
+  /* Zera o desenho de <button> do navegador: sem isto o padding do agente de
+     usuário (1px 6px) come a caixa de conteúdo de 16px por dentro do
+     border-box e desloca a marca de seleção. */
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  appearance: none;
+  -webkit-appearance: none;
 
   width: var(--spacing-4);                      /* 16px */
   height: var(--spacing-4);
@@ -84,7 +98,8 @@
   height: 0.875rem;
 }
 
-/* Native input visualmente oculto (mas presente para forms) */
+/* Native input visualmente oculto (mas presente para forms) — só as stacks que
+   rodam lib headless o renderizam; o Vanilla sincroniza o campo pelo callback. */
 .nds-checkbox > input[type="checkbox"] {
   position: absolute;
   width: 1px;

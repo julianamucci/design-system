@@ -309,6 +309,11 @@
           "action": "Renderizar com <code>defaultChecked={true}</code>",
           "result": "Estado inicial marcado sem controle externo",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Clicar no texto do rótulo associado",
+          "result": "O foco vai para a caixa e o estado alterna; o callback de mudança dispara",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -696,6 +701,11 @@
           "action": "Render with <code>defaultChecked={true}</code>",
           "result": "Initial state is checked without external control",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Click the text of the associated label",
+          "result": "Focus moves to the box and the state toggles; the change callback fires",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1083,6 +1093,11 @@
           "action": "Renderizar con <code>defaultChecked={true}</code>",
           "result": "Estado inicial marcado sin control externo",
           "priority": "medium"
+        },
+        "item7": {
+          "action": "Hacer clic en el texto de la etiqueta asociada",
+          "result": "El foco va a la casilla y el estado alterna; el callback de cambio se dispara",
+          "priority": "high"
         }
       },
       "accessibility": {

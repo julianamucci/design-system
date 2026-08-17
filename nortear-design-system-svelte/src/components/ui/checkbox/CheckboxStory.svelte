@@ -44,12 +44,11 @@
       {value}
       {onCheckedChange}
       aria-invalid={ariaInvalid || undefined}
-      aria-labelledby="{id}-label"
       aria-describedby="{id}-description"
       class="nds-mt-0-5"
     />
     <div class="nds-stack" data-spacing="xs">
-      <Label id="{id}-label" for={id}>
+      <Label for={id}>
         {labelText}
       </Label>
       <p id="{id}-description" class="nds-text-body">{descriptionText}</p>
@@ -66,9 +65,8 @@
       {value}
       {onCheckedChange}
       aria-invalid={ariaInvalid || undefined}
-      aria-labelledby="{id}-label"
     />
-    <Label id="{id}-label" for={id}>
+    <Label for={id}>
       {labelText}
     </Label>
   </div>

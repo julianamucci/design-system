@@ -345,6 +345,7 @@ const functionalTestItems = computed(() => [
   { action: toPlainText(tContent('testes.functional.item4.action')), result: toPlainText(tContent('testes.functional.item4.result')), priority: localPriority(tContent('testes.functional.item4.priority')) },
   { action: toPlainText(tContent('testes.functional.item5.action')), result: toPlainText(tContent('testes.functional.item5.result')), priority: localPriority(tContent('testes.functional.item5.priority')) },
   { action: toPlainText(tContent('testes.functional.item6.action')), result: toPlainText(tContent('testes.functional.item6.result')), priority: localPriority(tContent('testes.functional.item6.priority')) },
+  { action: toPlainText(tContent('testes.functional.item7.action')), result: toPlainText(tContent('testes.functional.item7.result')), priority: localPriority(tContent('testes.functional.item7.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [

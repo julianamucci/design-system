@@ -63,13 +63,18 @@ export const WithCheckbox: Story = {
       await expect(checkbox).toHaveAccessibleName('Concordo com os termos de uso');
     });
 
-    await step('Clicar no rótulo alterna a caixa', async () => {
+    await step('Clicar no rótulo foca a caixa E alterna o estado', async () => {
       // Par idempotente: o painel Interactions reexecuta no mesmo DOM, e sem
       // desmarcar antes a segunda rodada partiria de "marcada" e inverteria o
       // resultado.
       if (checkbox.getAttribute('aria-checked') === 'true') await userEvent.click(label);
       await expect(checkbox).toHaveAttribute('aria-checked', 'false');
+      // O foco é o segundo eixo, e é o que nenhuma das cinco stacks verificava:
+      // `for` só alcança controle rotulável, e sem isso o rótulo não leva o foco.
+      (checkbox as HTMLElement).blur();
+      await expect(checkbox).not.toHaveFocus();
       await userEvent.click(label);
+      await expect(checkbox).toHaveFocus();
       await expect(checkbox).toHaveAttribute('aria-checked', 'true');
     });
   },

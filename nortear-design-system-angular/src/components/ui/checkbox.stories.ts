@@ -80,7 +80,7 @@ export const Playground: Story = {
   parameters: {
     docs: { source: { transform: playgroundSource } },
     covers: [
-      'functional.item1', 'functional.item2', 'functional.item3',
+      'functional.item1', 'functional.item2', 'functional.item3', 'functional.item7',
       'accessibility.item1', 'accessibility.item3', 'accessibility.item5',
     ],
   },
@@ -163,6 +163,22 @@ export const Playground: Story = {
         await desmarcar();
         await expect(cb).toHaveAttribute('data-state', 'unchecked');
         await expect(spy).toHaveBeenLastCalledWith(false);
+      });
+
+      // functional.item7 — os DOIS eixos do par rótulo+caixa. A caixa é um
+      // <button>, controle rotulável do HTML: o clique no texto move o foco
+      // para ela E dispara a ativação, sem nenhum ouvinte escrito na story.
+      await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
+        const rotulo = canvas.getByText(args.label);
+        await desmarcar();                        // precondição própria
+        cb.blur();
+        await expect(cb).not.toHaveFocus();       // o foco tem que VIR do clique
+        await userEvent.click(rotulo);
+        await expect(cb).toHaveFocus();
+        await waitFor(async () => {
+          await expect(cb).toHaveAttribute('aria-checked', 'true');
+        });
+        await expect(spy).toHaveBeenLastCalledWith(true);
       });
 
       await step('Space alterna o estado e também dispara o callback', async () => {

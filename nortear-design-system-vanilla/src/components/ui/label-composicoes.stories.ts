@@ -75,12 +75,9 @@ export const WithCheckbox: Story = {
     const checkbox = createCheckbox({ id: checkboxId });
     const label = createLabel({ text: 'Concordo com os termos de uso', htmlFor: checkboxId });
 
-    // A caixa desta stack é um elemento com `role="checkbox"`, e o atributo
-    // `for` do <label> só alcança controle rotulável do HTML. Quem carrega o
-    // nome acessível aqui é o `aria-labelledby`, e é ELE que a story verifica.
-    label.id = `${checkboxId}-label`;
-    checkbox.setAttribute('aria-labelledby', label.id);
-
+    // Só `for`/`id`. A caixa é um <button>, que é controle rotulável do HTML, e
+    // por isso a associação nativa basta — nem `aria-labelledby` de reserva, nem
+    // ouvinte de clique reenviando o evento à mão.
     wrapper.append(checkbox, label);
     return wrapper;
   },
@@ -91,12 +88,20 @@ export const WithCheckbox: Story = {
 
     await step('A caixa recebe o nome acessível do rótulo', async () => {
       await expect(checkbox).toHaveAccessibleName('Concordo com os termos de uso');
-      await expect(checkbox).toHaveAttribute('aria-labelledby', label.id);
     });
 
-    await step('O rótulo aponta para a mesma caixa', async () => {
-      await expect(label.htmlFor).toBe('comp-checkbox');
-      await expect(canvasElement.querySelector('#comp-checkbox')).toBe(checkbox);
+    // A asserção anterior conferia `label.htmlFor` e `getElementById`, e passou
+    // anos verde sobre um par que não funcionava: a caixa era um <div>, que
+    // `label[for]` não alcança. O que prova a associação é o EFEITO.
+    await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
+      // Par idempotente: o painel Interactions reexecuta no mesmo DOM.
+      if (checkbox.getAttribute('aria-checked') === 'true') await userEvent.click(label);
+      await expect(checkbox).toHaveAttribute('aria-checked', 'false');
+      (checkbox as HTMLElement).blur();
+      await expect(checkbox).not.toHaveFocus();
+      await userEvent.click(label);
+      await expect(checkbox).toHaveFocus();
+      await expect(checkbox).toHaveAttribute('aria-checked', 'true');
     });
   },
 };

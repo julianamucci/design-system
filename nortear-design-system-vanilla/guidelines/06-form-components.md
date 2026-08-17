@@ -128,29 +128,45 @@ form (noValidate, space-y-4)
 **Estrutura**:
 
 ```
-wrapper (flex items-center space-x-2)
-├── input[type=checkbox] (id)
-└── label (htmlFor=id, cursor-pointer)
+button[role=checkbox]   (a raiz que a fábrica devolve; carrega o id)
+└── indicador           (marca de seleção, ou traço no estado misto)
+
+label[for=id]           (irmão, fora da raiz — quem monta é quem compõe)
 ```
 
 **Opts da factory**:
 
 | Nome | Default | Função |
 |---|---|---|
-| `id` | — | Obrigatório |
-| `label` | — | Texto do label |
+| `id` | — | Identificador da raiz; é por ele que o rótulo alcança a caixa |
 | `checked` | `false` | Estado inicial |
-| `indeterminate` | `false` | Estado tri-state (parent de grupo) |
+| `indeterminate` | `false` | Estado misto — só em pai de grupo |
+| `disabled` | `false` | Desabilita a interação |
+| `onCheckedChange` | — | Callback de mudança do estado marcado |
+| `onIndeterminateChange` | — | Callback de resolução do estado misto |
+| `aria-label` | — | Nome acessível quando não há rótulo visível |
 
 **Regras**:
-- `<input type="checkbox">` nativo — não recriar como `<div role="checkbox">` em vanilla
-- Label sempre associado via `htmlFor`/`id`
-- Tamanho fixo `h-4 w-4` (ícone, não texto — segue 8-grid via tokens)
-- Gap label↔checkbox em `--spacing-2`
-- Tri-state (indeterminate): apenas em parent de grupo, definido via JS (`input.indeterminate = true`)
-- Foco visível: `ring-2 ring-ring ring-offset-2`
+- A raiz é um **`<button type="button">`** com `role="checkbox"`, e a escolha do
+  elemento é funcional: `label[for]` só alcança controle rotulável do HTML
+  (button, input, select, textarea, meter, output, progress). Sobre `<div>` ou
+  `<span>` o par rótulo+caixa fica inerte — clicar no texto não foca nem alterna.
+- Rótulo sempre associado por `for`/`id`, e **nada de ouvinte de clique no
+  rótulo**: reenviar o clique à mão é andaime que esconde a escolha errada de
+  elemento.
+- Sem `<input type="checkbox">` no DOM: dois elementos interativos aninhados
+  quebram `nested-interactive`. Quem precisa de submit nativo escreve o próprio
+  campo a partir do callback de mudança.
+- Estado misto só em **pai de grupo**; item de folha não é tri-state.
+- Tamanho é de ícone, não de texto: não cresce com a fonte, e é por isso que
+  ali a dimensão fixa é legítima.
+- Grupo de checkboxes: envolver em `<fieldset>` + `<legend>`.
 
 **Acessibilidade**:
-- Label clicável (cobre o input via `htmlFor`)
-- `aria-checked` é gerenciado nativamente
-- Grupo de checkboxes: envolver em `<fieldset>` + `<legend>`
+- `aria-checked` reflete os três estados, com `mixed` no misto.
+- <kbd>Space</kbd> alterna (ativação nativa do botão); <kbd>Enter</kbd> **não**
+  alterna, e a fábrica cancela o padrão do botão para garantir isso.
+- Desabilitado usa `aria-disabled` e `tabindex="-1"`: sai do Tab, continua
+  alcançável para quem navega lendo a tela.
+- Clicar no texto do rótulo move o foco para a caixa E alterna o estado — os
+  dois eixos, verificados por story, não por presença de atributo.

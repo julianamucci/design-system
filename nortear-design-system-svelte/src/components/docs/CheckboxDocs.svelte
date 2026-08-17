@@ -706,6 +706,7 @@ import { Label } from "@/components/ui/label";`;
         { action: toPlainText($tStore('testes.functional.item4.action')), result: toPlainText($tStore('testes.functional.item4.result')), priority: localPriority($tStore('testes.functional.item4.priority'), $tNavStore) },
         { action: toPlainText($tStore('testes.functional.item5.action')), result: toPlainText($tStore('testes.functional.item5.result')), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
         { action: toPlainText($tStore('testes.functional.item6.action')), result: toPlainText($tStore('testes.functional.item6.result')), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
+        { action: toPlainText($tStore('testes.functional.item7.action')), result: toPlainText($tStore('testes.functional.item7.result')), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
       ],
     }}
     accessibility={{

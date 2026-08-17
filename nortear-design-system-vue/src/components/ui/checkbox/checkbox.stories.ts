@@ -81,6 +81,7 @@ export const Playground: Story = {
       'functional.item1',
       'functional.item2',
       'functional.item3',
+      'functional.item7',
       'accessibility.item1',
       'accessibility.item3',
       'accessibility.item5',
@@ -140,6 +141,21 @@ export const Playground: Story = {
       onUpdate.mockClear();
       await desmarcar();
       await expect(onUpdate).toHaveBeenCalledWith(false);
+    });
+
+    // functional.item7 — os DOIS eixos do par rótulo+caixa. A caixa é um
+    // <button>, controle rotulável do HTML: o clique no texto move o foco para
+    // ela E dispara a ativação, sem nenhum ouvinte escrito na story.
+    await step('Clicar no texto do rótulo foca a caixa E alterna o estado', async () => {
+      const rotulo = canvas.getByText('Aceito os termos e condições');
+      await desmarcar();                                 // precondição própria
+      (checkbox as HTMLElement).blur();
+      await expect(checkbox).not.toHaveFocus();          // o foco tem que VIR do clique
+      onUpdate.mockClear();
+      await userEvent.click(rotulo);
+      await expect(checkbox).toHaveFocus();
+      await waitFor(() => expect(checkbox).toHaveAttribute('aria-checked', 'true'));
+      await expect(onUpdate).toHaveBeenCalledWith(true);
     });
 
     await step('Space com foco alterna o estado e dispara o callback', async () => {

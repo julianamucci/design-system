@@ -69,10 +69,12 @@ function buildCheckboxWithLabel(opts: {
   wrapper.className = 'nds-cluster';
   wrapper.dataset.spacing = 'xs';
 
-  // O checkbox do Nortear é um <div role="checkbox"> — <label htmlFor> não é
-  // associável a elemento não-rotulável, então o nome acessível vem do aria-label
-  // (mesmo texto do label visível). Sem isso: axe aria-toggle-field-name.
-  const cb = createCheckbox({ checked, disabled, id, 'aria-label': labelText ?? descText });
+  // A caixa é um <button role="checkbox">, que é controle rotulável do HTML:
+  // o `for` do rótulo visível já a nomeia, foca e ativa. O `aria-label` fica só
+  // para o caso SEM rótulo visível — repeti-lo sobre um rótulo existente criaria
+  // dois canais de nome para o mesmo controle, e o `aria-label` venceria o texto
+  // que a pessoa lê na tela.
+  const cb = createCheckbox({ checked, disabled, id, ...(labelText ? {} : { 'aria-label': descText }) });
   if (ariaInvalid) cb.setAttribute('aria-invalid', 'true');
 
   if (labelText) {
@@ -221,7 +223,6 @@ export function createCheckboxDocs(): HTMLElement {
               const cb = createCheckbox({
                 checked,
                 id: cbId,
-                'aria-label': t(`demonstration.labels.${key}`),
                 onCheckedChange: (val) => {
                   track('field_change', { component: 'checkbox', field_name: key, value: String(val), location: 'docs_demo' });
                 },
@@ -305,7 +306,7 @@ export function createCheckboxDocs(): HTMLElement {
           row.className = 'nds-cluster';
           row.dataset.spacing = 'xs';
           const id = `dodont-${Math.random().toString(36).slice(2, 7)}`;
-          const cb = createCheckbox({ checked, id, 'aria-label': labelText });
+          const cb = createCheckbox({ checked, id });
           const label = document.createElement('label');
           label.htmlFor = id;
           label.textContent = labelText;
@@ -410,7 +411,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 outer.dataset.spacing = 'xs';
                 outer.dataset.align = 'start';
                 const id = 'v-with-desc';
-                const cb = createCheckbox({ id, 'aria-label': t('demonstration.labels.newsletter') });
+                const cb = createCheckbox({ id });
                 const textGroup = document.createElement('div');
                 textGroup.className = 'nds-stack';
                 textGroup.dataset.spacing = 'xs';
@@ -484,7 +485,7 @@ label.textContent = 'Aceito os termos e condições';`,
                   const row = document.createElement('div');
                   row.className = 'nds-cluster';
                   row.dataset.spacing = 'xs';
-                  const cb = createCheckbox({ id, 'aria-label': labelText });
+                  const cb = createCheckbox({ id });
                   const label = document.createElement('label');
                   label.htmlFor = id;
                   label.textContent = labelText;
@@ -551,7 +552,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 allRow.className = 'nds-cluster nds-border-b';
                 allRow.dataset.spacing = 'xs';
                 allRow.style.paddingBottom = '0.5rem';
-                const cbAll = createCheckbox({ id: 'comp-cb-select-all', 'aria-label': 'Selecionar todos os itens' });
+                const cbAll = createCheckbox({ id: 'comp-cb-select-all' });
                 const labelAll = document.createElement('label');
                 labelAll.htmlFor = 'comp-cb-select-all';
                 labelAll.textContent = 'Selecionar todos os itens';
@@ -568,7 +569,7 @@ label.textContent = 'Aceito os termos e condições';`,
                   row.className = 'nds-cluster';
                   row.dataset.spacing = 'xs';
                   row.style.paddingLeft = '0.5rem';
-                  const cb = createCheckbox({ id, 'aria-label': labelText });
+                  const cb = createCheckbox({ id });
                   childCheckboxes.push(cb);
                   const label = document.createElement('label');
                   label.htmlFor = id;
@@ -649,7 +650,7 @@ label.textContent = 'Aceito os termos e condições';`,
                   const leftSide = document.createElement('div');
                   leftSide.className = 'nds-cluster';
                   leftSide.dataset.spacing = 'xs';
-                  const cb = createCheckbox({ id, checked, 'aria-label': labelText });
+                  const cb = createCheckbox({ id, checked });
                   const label = document.createElement('label');
                   label.htmlFor = id;
                   label.textContent = labelText;
@@ -832,7 +833,7 @@ export type CheckboxOptions = {
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
               action: toPlainText(t(`testes.functional.item${i}.action`)),
               result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
