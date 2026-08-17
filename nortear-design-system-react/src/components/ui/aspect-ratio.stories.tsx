@@ -2,6 +2,11 @@ import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { AspectRatio } from "./aspect-ratio";
+import {
+  descreverFalhasDeProporcao,
+  medirProporcao,
+  reprovasDeProporcao,
+} from "@shared/testing/aspect-ratio-probe";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { AspectRatioDocs } from "@/components/docs/AspectRatioDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -59,11 +64,20 @@ export const Playground: Story = {
     await step("Caixa respeita a proporção do control", async () => {
       // functional.item1 — medir contra args.ratio prova que o control chega ao
       // CSS. O passo anterior verificava só que a imagem tinha um elemento pai.
-      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-      await expect(caixa).not.toBeNull();
-      const { width, height } = caixa!.getBoundingClientRect();
-      await expect(width).toBeGreaterThan(0);
-      await expect(Math.abs(width / height - args.ratio)).toBeLessThan(0.02);
+      //
+      // A sonda mede mais que a razão: confere que a caixa é a `.nds-aspect-ratio`
+      // do design system, que a proporção sai do `aspect-ratio` nativo da folha
+      // (e não de um truque de padding embutido por uma lib), que não há altura
+      // cravada e que o filho direto está sendo esticado para cobrir a caixa.
+      // Medir só a razão aprovava as duas stacks que não tinham a classe.
+      const falhas = reprovasDeProporcao(
+        [medirProporcao(canvasElement, "playground")],
+        args.ratio,
+      );
+      await expect(
+        falhas,
+        falhas.length ? `\n${descreverFalhasDeProporcao(falhas)}\n` : "",
+      ).toEqual([]);
     });
 
     await step("Imagem tem alt descritivo não vazio", async () => {

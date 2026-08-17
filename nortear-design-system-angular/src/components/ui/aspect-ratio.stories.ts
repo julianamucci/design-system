@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NdsAspectRatio } from './aspect-ratio';
+import {
+  descreverFalhasDeProporcao,
+  medirProporcao,
+  reprovasDeProporcao,
+} from '@shared/testing/aspect-ratio-probe';
 import { NdsAspectRatioDocs } from '@/components/docs/AspectRatioDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -92,10 +97,20 @@ export const Playground: Story = {
     await step('A caixa resultante respeita a proporção pedida', async () => {
       // Medir a caixa é o único jeito de saber que a custom property foi de
       // fato consumida: `--ratio` correto com o CSS ausente passaria igual.
-      const box = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
-      const { width, height } = box.getBoundingClientRect();
-      await expect(height).toBeGreaterThan(0);
-      await expect(Math.abs(width / height - args.ratio)).toBeLessThan(0.1);
+      //
+      // A sonda mede mais que a razão: confere que a caixa é a `.nds-aspect-ratio`
+      // do design system, que a proporção sai do `aspect-ratio` nativo da folha
+      // (e não de um truque de padding embutido por uma lib), que não há altura
+      // cravada e que o filho direto está sendo esticado para cobrir a caixa.
+      // Medir só a razão aprovava as duas stacks que não tinham a classe.
+      const falhas = reprovasDeProporcao(
+        [medirProporcao(canvasElement, 'playground')],
+        args.ratio,
+      );
+      await expect(
+        falhas,
+        falhas.length ? `\n${descreverFalhasDeProporcao(falhas)}\n` : '',
+      ).toEqual([]);
     });
 
     await step('A imagem tem alternativa textual', async () => {

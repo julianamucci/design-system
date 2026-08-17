@@ -2,6 +2,11 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { AspectRatio } from './index';
+import {
+  descreverFalhasDeProporcao,
+  medirProporcao,
+  reprovasDeProporcao,
+} from '@shared/testing/aspect-ratio-probe';
 import AspectRatioDocs from '@/components/docs/AspectRatioDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -16,7 +21,7 @@ const meta = {
       page: withAutoDocsTab(AspectRatioDocs),
       description: {
         component:
-          'AspectRatio preserva uma proporção fixa de largura-altura para mídia responsiva — imagens, vídeos, iframes e mapas. Container passivo e stateless baseado em reka-ui.',
+          'AspectRatio preserva uma proporção fixa de largura-altura para mídia responsiva — imagens, vídeos, iframes e mapas. Container passivo e sem estado.',
       },
     },
   },
@@ -62,11 +67,20 @@ export const Playground: Story = {
     await step('Caixa respeita a proporção do control', async () => {
       // functional.item1 — medir contra args.ratio prova que o control chega ao
       // CSS; a presença do wrapper sozinha não prova proporção nenhuma.
-      const caixa = canvasElement.querySelector('[data-slot="aspect-ratio"]');
-      await expect(caixa).not.toBeNull();
-      const { width, height } = caixa!.getBoundingClientRect();
-      await expect(width).toBeGreaterThan(0);
-      await expect(Math.abs(width / height - args.ratio!)).toBeLessThan(0.02);
+      //
+      // A sonda mede mais que a razão: confere que a caixa é a `.nds-aspect-ratio`
+      // do design system, que a proporção sai do `aspect-ratio` nativo da folha
+      // (e não de um truque de padding embutido por uma lib), que não há altura
+      // cravada e que o filho direto está sendo esticado para cobrir a caixa.
+      // Medir só a razão aprovava as duas stacks que não tinham a classe.
+      const falhas = reprovasDeProporcao(
+        [medirProporcao(canvasElement, 'playground')],
+        args.ratio!,
+      );
+      await expect(
+        falhas,
+        falhas.length ? `\n${descreverFalhasDeProporcao(falhas)}\n` : '',
+      ).toEqual([]);
     });
 
     await step('Imagem tem atributo alt descritivo', async () => {
