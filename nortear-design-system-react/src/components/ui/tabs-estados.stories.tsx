@@ -125,7 +125,7 @@ export const FocusVisible: Story = {
 
 export const Disabled: Story = {
   parameters: {
-    covers: ["visual.item4"],
+    covers: ["visual.item4", "functional.item5", "accessibility.item6"],
     docs: {
       description: {
         story:
@@ -137,14 +137,26 @@ export const Disabled: Story = {
   render: () => <TresAbas desabilitada />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const primeira = canvas.getByRole("tab", { name: "Visão geral" });
     const desabilitada = canvas.getByRole("tab", { name: "Propriedades" });
+    const ultima = canvas.getByRole("tab", { name: "Exemplos" });
 
-    await step("A aba se anuncia desabilitada", async () => {
-      // O primitivo NÃO usa o atributo `disabled` nativo: o padrão WAI-ARIA
-      // manda a seta poder pousar na aba desabilitada para que ela seja
-      // anunciada, e um botão nativo desabilitado sai do alcance do foco.
+    // Precondição de CADA passo, e não herança do anterior: o painel
+    // Interactions reexecuta a play no mesmo DOM, e um passo que assumisse o
+    // estado deixado pelo passo passado inverteria o resultado no replay.
+    const voltarAoInicio = async () => {
+      if (primeira.getAttribute("aria-selected") !== "true") await userEvent.click(primeira);
+      await waitFor(() =>
+        expect(primeira).toHaveAttribute("aria-selected", "true")
+      );
+    };
+
+    await step("Anuncia-se desabilitada sem sair do alcance do foco", async () => {
       await expect(desabilitada).toHaveAttribute("aria-disabled", "true");
-      await expect(desabilitada).toHaveAttribute("data-disabled");
+      // O atributo nativo é justamente o que NÃO pode estar aqui: ele remove o
+      // botão do alcance do foco, e a aba deixa de ser anunciada — a pessoa
+      // nunca descobre que ela existe.
+      await expect(desabilitada).not.toBeDisabled();
       await expect(desabilitada).toHaveAttribute("aria-selected", "false");
     });
 
@@ -154,7 +166,32 @@ export const Disabled: Story = {
       await expect(estilo.pointerEvents).toBe("none");
     });
 
-    await step("O clique não a ativa", async () => {
+    await step("A seta ALCANÇA a aba desabilitada, e não a ativa", async () => {
+      await voltarAoInicio();
+      primeira.focus();
+      await userEvent.keyboard("{ArrowRight}");
+      await waitFor(() => expect(desabilitada).toHaveFocus());
+      // Alcançar não é ativar: com ativação automática, focar uma aba habilitada
+      // já trocaria o painel. Nesta, o painel tem de continuar o mesmo.
+      await expect(desabilitada).toHaveAttribute("aria-selected", "false");
+      await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+        "Conteúdo da visão geral"
+      );
+    });
+
+    await step("Enter e Espaço com ela em foco não trocam o painel", async () => {
+      await voltarAoInicio();
+      desabilitada.focus();
+      await userEvent.keyboard("{Enter}");
+      await userEvent.keyboard(" ");
+      await expect(desabilitada).toHaveAttribute("aria-selected", "false");
+      await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
+        "Conteúdo da visão geral"
+      );
+    });
+
+    await step("O clique também não", async () => {
+      await voltarAoInicio();
       // `pointerEventsCheck: 0` porque o alvo tem o ponteiro bloqueado: sem
       // isso o userEvent recusa o clique e o teste passaria sem exercitar nada.
       await userEvent.click(desabilitada, { pointerEventsCheck: 0 });
@@ -162,6 +199,15 @@ export const Disabled: Story = {
       await expect(canvas.getByRole("tabpanel")).toHaveTextContent(
         "Conteúdo da visão geral"
       );
+    });
+
+    await step("A seta segue adiante a partir dela", async () => {
+      // Sem isto, a aba desabilitada viraria um beco sem saída para o teclado —
+      // pior que a exclusão que o alcance veio corrigir.
+      desabilitada.focus();
+      await userEvent.keyboard("{ArrowRight}");
+      await waitFor(() => expect(ultima).toHaveFocus());
+      await voltarAoInicio();
     });
   },
 };

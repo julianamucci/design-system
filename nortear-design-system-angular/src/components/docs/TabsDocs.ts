@@ -74,7 +74,7 @@ const { t, dict } = useTranslation(tabsTranslations as Record<string, unknown>, 
     'notes.item1':
       '<strong>Primitivo</strong>: <code>@radix-ng/primitives/tabs</code> — entrega roving tabindex, navegação por setas e Home/End, os papéis ARIA e a amarração entre aba e painel.',
     'notes.item5':
-      '<strong>Aba desabilitada</strong> — marcada com <code>aria-disabled</code>, sem o atributo <code>disabled</code> nativo: o padrão WAI-ARIA pede que a seta possa pousar nela para ser anunciada, e um botão nativamente desabilitado sai do alcance do foco. O clique é bloqueado por <code>pointer-events</code>.',
+      '<strong>Aba desabilitada</strong> — marcada com <code>aria-disabled</code>, sem o atributo <code>disabled</code> nativo: o padrão WAI-ARIA pede que a seta possa pousar nela para ser anunciada, e um botão nativamente desabilitado sai do alcance do foco. Nem o clique nem Enter/Espaço ativam a aba.',
     'notes.item6':
       '<strong>Pendência de CSS compartilhado</strong> — a lista horizontal tem altura cravada na folha do componente, o que impede o bloco de crescer junto quando a pessoa aumenta a fonte do navegador. A correção vale para todas as stacks e está registrada.',
   },
@@ -92,7 +92,7 @@ const { t, dict } = useTranslation(tabsTranslations as Record<string, unknown>, 
     'notes.item1':
       '<strong>Primitive</strong>: <code>@radix-ng/primitives/tabs</code> — provides roving tabindex, arrow and Home/End navigation, the ARIA roles and the tab-to-panel wiring.',
     'notes.item5':
-      '<strong>Disabled tab</strong> — marked with <code>aria-disabled</code>, without the native <code>disabled</code> attribute: the WAI-ARIA pattern asks that arrow keys can land on it so it gets announced, and a natively disabled button leaves the focus order. The click is blocked by <code>pointer-events</code>.',
+      '<strong>Disabled tab</strong> — marked with <code>aria-disabled</code>, without the native <code>disabled</code> attribute: the WAI-ARIA pattern asks that arrow keys can land on it so it gets announced, and a natively disabled button leaves the focus order. Neither click nor Enter/Space activates the tab.',
     'notes.item6':
       '<strong>Shared CSS pending item</strong> — the horizontal list has a hardcoded height in the component stylesheet, which stops the block from growing when the reader increases the browser font size. The fix applies to every stack and is on record.',
   },
@@ -110,7 +110,7 @@ const { t, dict } = useTranslation(tabsTranslations as Record<string, unknown>, 
     'notes.item1':
       '<strong>Primitivo</strong>: <code>@radix-ng/primitives/tabs</code> — aporta roving tabindex, navegación por flechas y Home/End, los roles ARIA y el vínculo entre tab y panel.',
     'notes.item5':
-      '<strong>Tab deshabilitada</strong> — marcada con <code>aria-disabled</code>, sin el atributo <code>disabled</code> nativo: el patrón WAI-ARIA pide que las flechas puedan posarse en ella para anunciarla, y un botón nativamente deshabilitado sale del orden de foco. El clic se bloquea con <code>pointer-events</code>.',
+      '<strong>Tab deshabilitada</strong> — marcada con <code>aria-disabled</code>, sin el atributo <code>disabled</code> nativo: el patrón WAI-ARIA pide que las flechas puedan posarse en ella para anunciarla, y un botón nativamente deshabilitado sale del orden de foco. Ni el clic ni Enter/Espacio activan la tab.',
     'notes.item6':
       '<strong>Pendiente de CSS compartido</strong> — la lista horizontal tiene una altura fija en la hoja del componente, lo que impide que el bloque crezca cuando se aumenta la fuente del navegador. La corrección vale para todas las stacks y está registrada.',
   },
@@ -828,7 +828,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
 
   protected readonly a11yItems = computed(() => {
     dict();
-    return [1, 2, 3, 4, 5, 6].map((i) => t(`accessibility.items.item${i}`));
+    return [1, 2, 3, 4, 5, 6, 7].map((i) => t(`accessibility.items.item${i}`));
   });
 
   protected readonly keyboardItems = computed(() => {
@@ -929,7 +929,7 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: [1, 2, 3, 4, 5].map((i) => ({
+      items: [1, 2, 3, 4, 5, 6].map((i) => ({
         criterion: toPlainText(t(`testes.accessibility.item${i}`)),
         level: '—',
         how: 'axe + play',

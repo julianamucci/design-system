@@ -303,6 +303,7 @@ Tabs
 | `Tab` | Move para o conteúdo do painel ativo |
 
 - O foco vai automaticamente para o `TabsContent` ativo ao pressionar `Tab` — não adicionar `tabIndex` manual nos painéis.
+- Aba desabilitada: marcada com `aria-disabled`, nunca com o atributo `disabled` nativo — o botão nativamente desabilitado sai do alcance do foco e a aba nunca é anunciada. Ela permanece no percurso das setas, para ser anunciada como indisponível, e nem o clique nem Enter/Espaço a ativam.
 
 **UX Writing** (ver `19-tom-de-voz.md`):
 - Labels: substantivos ou gerúndios curtos, máximo 2 palavras, sem ponto final.

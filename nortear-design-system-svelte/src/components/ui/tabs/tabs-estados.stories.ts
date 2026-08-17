@@ -124,12 +124,12 @@ export const Disabled: Story = {
     },
   }),
   parameters: {
-    covers: ['visual.item4'],
+    covers: ['visual.item4', 'functional.item5', 'accessibility.item6'],
     docs: {
       description: {
         story:
-          'Aba desabilitada: aparece esmaecida, não responde ao clique e a navegação por setas ' +
-          'passa direto por ela.',
+          'Aba desabilitada: aparece esmaecida e não responde ao clique, mas continua ' +
+          'alcançável pela seta para que o leitor de tela a anuncie como indisponível.',
       },
     },
   },
@@ -139,12 +139,19 @@ export const Disabled: Story = {
     const propriedades = canvas.getByRole('tab', { name: 'Propriedades' });
     const exemplos = canvas.getByRole('tab', { name: 'Exemplos' });
 
-    await step('A aba se anuncia desabilitada', async () => {
-      // Esta stack emite o `disabled` nativo do botão junto do `data-disabled`
-      // que o CSS e a navegação por setas leem. Assere o que a stack REALMENTE
-      // escreve — presumir `aria-disabled` daria verde sobre atributo ausente.
-      await expect(propriedades).toBeDisabled();
-      await expect(propriedades).toHaveAttribute('data-disabled');
+    // Precondição de CADA passo, e não herança do anterior: o painel Interactions
+    // reexecuta a play no mesmo DOM.
+    const voltarAoInicio = async () => {
+      if (visaoGeral.getAttribute('aria-selected') !== 'true') await userEvent.click(visaoGeral);
+      await waitFor(() => expect(visaoGeral).toHaveAttribute('aria-selected', 'true'));
+    };
+
+    await step('Anuncia-se desabilitada sem sair do alcance do foco', async () => {
+      await expect(propriedades).toHaveAttribute('aria-disabled', 'true');
+      // O atributo nativo é justamente o que NÃO pode estar aqui: ele remove o
+      // botão do alcance do foco, e a aba deixa de ser anunciada.
+      await expect(propriedades).not.toBeDisabled();
+      await expect(propriedades).toHaveAttribute('aria-selected', 'false');
     });
 
     await step('E se mostra desabilitada', async () => {
@@ -152,7 +159,28 @@ export const Disabled: Story = {
       await expect(getComputedStyle(propriedades).pointerEvents).toBe('none');
     });
 
-    await step('O clique não a ativa', async () => {
+    await step('A seta ALCANÇA a aba desabilitada, e não a ativa', async () => {
+      await voltarAoInicio();
+      visaoGeral.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(propriedades).toHaveFocus());
+      // Alcançar não é ativar: com ativação automática, focar uma aba habilitada
+      // já trocaria o painel. Nesta, o painel tem de continuar o mesmo.
+      await expect(propriedades).toHaveAttribute('aria-selected', 'false');
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Conteúdo da visão geral');
+    });
+
+    await step('Enter e Espaço com ela em foco não trocam o painel', async () => {
+      await voltarAoInicio();
+      propriedades.focus();
+      await userEvent.keyboard('{Enter}');
+      await userEvent.keyboard(' ');
+      await expect(propriedades).toHaveAttribute('aria-selected', 'false');
+      await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Conteúdo da visão geral');
+    });
+
+    await step('O clique também não', async () => {
+      await voltarAoInicio();
       // `pointerEventsCheck: 0` é obrigatório: com `pointer-events: none` o
       // userEvent RECUSA o clique e o teste passaria sem exercitar nada.
       await userEvent.click(propriedades, { pointerEventsCheck: 0 });
@@ -160,18 +188,13 @@ export const Disabled: Story = {
       await expect(canvas.getByRole('tabpanel')).toHaveTextContent('Conteúdo da visão geral');
     });
 
-    await step('A seta pula a aba desabilitada', async () => {
-      visaoGeral.focus();
+    await step('A seta segue adiante a partir dela', async () => {
+      // Sem isto, a aba desabilitada viraria um beco sem saída para o teclado —
+      // pior que a exclusão que o alcance veio corrigir.
+      propriedades.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(exemplos).toHaveFocus();
-      await waitFor(() => expect(exemplos).toHaveAttribute('aria-selected', 'true'));
-    });
-
-    await step('Home devolve o estado inicial', async () => {
-      // Fecha o ciclo: a rodada seguinte do painel Interactions começa onde esta
-      // começou.
-      await userEvent.keyboard('{Home}');
-      await waitFor(() => expect(visaoGeral).toHaveAttribute('aria-selected', 'true'));
+      await waitFor(() => expect(exemplos).toHaveFocus());
+      await voltarAoInicio();
     });
   },
 };

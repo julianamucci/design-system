@@ -75,6 +75,7 @@ Tabs (container)
 - `role="tablist"`, `role="tab"`, `role="tabpanel"` obrigatórios
 - Foco visível no tab ativo
 - `aria-selected="true"` apenas no tab atual
+- Aba desabilitada: marcada com `aria-disabled`, nunca com o atributo `disabled` nativo — o botão nativamente desabilitado sai do alcance do foco e a aba nunca é anunciada. Ela permanece no percurso das setas, para ser anunciada como indisponível, e nem o clique nem Enter/Espaço a ativam.
 
 **Analytics**: emitir `tab_change` com `{ from, to, label }` no clique.
 

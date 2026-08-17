@@ -188,7 +188,7 @@
       "disabled": {
         "label": "Disabled",
         "trigger": "—",
-        "behavior": "Tab desabilitada — esmaecida e fora do alcance do ponteiro."
+        "behavior": "Tab desabilitada — esmaecida e fora do alcance do ponteiro. Continua alcançável pelas setas e anunciada como indisponível; nem o clique nem Enter/Espaço a ativam."
       },
       "cols": {
         "state": "Estado",
@@ -298,7 +298,8 @@
         "item3": "<code>role=\"tabpanel\"</code> + <code>aria-controls</code> + <code>aria-labelledby</code> automáticos",
         "item4": "<code>aria-label</code> no <code>TabsList</code> obrigatório",
         "item5": "Navegação por setas com roving tabindex — só a tab ativa é focável via Tab",
-        "item6": "Anel de foco visível na tab focada por teclado"
+        "item6": "Anel de foco visível na tab focada por teclado",
+        "item7": "Tab desabilitada continua alcançável pelas setas e é anunciada como indisponível"
       },
       "keyboard": {
         "title": "Navegação por Teclado",
@@ -351,7 +352,7 @@
       "title": "Notas de Implementação",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>activationMode</strong> — <code>automatic</code> (padrão) ativa ao mover setas; <code>manual</code> exige Enter/Space para ativar.",
-      "item3": "<strong>Roving tabindex</strong> — só a tab ativa é focável via Tab; setas movem entre tabs do grupo.",
+      "item3": "<strong>Roving tabindex</strong> — só a tab ativa é focável via Tab; setas movem entre tabs do grupo, inclusive as desabilitadas.",
       "item4": "<strong>Variant line</strong> — visual minimalista com linha inferior; útil para sub-navegação dentro de páginas."
     },
     "analytics": {
@@ -391,6 +392,11 @@
           "action": "Tab focal vai ao painel",
           "result": "Próximo Tab move foco para o conteúdo do painel ativo",
           "priority": "medium"
+        },
+        "item5": {
+          "action": "Clicar ou pressionar Enter/Espaço em uma tab desabilitada",
+          "result": "Nada acontece — a tab ativa e o painel visível continuam os mesmos",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -400,7 +406,8 @@
         "item2": "Contraste mínimo 4.5:1 entre texto e fundo",
         "item3": "Focus ring visível na tab focada por teclado",
         "item4": "role=\"tablist\"/\"tab\"/\"tabpanel\" presentes",
-        "item5": "aria-selected reflete a tab ativa"
+        "item5": "aria-selected reflete a tab ativa",
+        "item6": "Tab desabilitada alcançável pelas setas e com estado de desabilitada exposto"
       },
       "visual": {
         "title": "Regressão Visual",
@@ -634,7 +641,7 @@
       "disabled": {
         "label": "Disabled",
         "trigger": "—",
-        "behavior": "Disabled tab — dimmed and out of pointer reach."
+        "behavior": "Disabled tab — dimmed and out of pointer reach. It stays reachable by the arrow keys and is announced as unavailable; neither click nor Enter/Space activates it."
       },
       "cols": {
         "state": "State",
@@ -744,7 +751,8 @@
         "item3": "<code>role=\"tabpanel\"</code> + <code>aria-controls</code> + <code>aria-labelledby</code> automatic",
         "item4": "<code>aria-label</code> on <code>TabsList</code> required",
         "item5": "Arrow navigation with roving tabindex — only the active tab is Tab-focusable",
-        "item6": "Visible focus ring on the keyboard-focused tab"
+        "item6": "Visible focus ring on the keyboard-focused tab",
+        "item7": "Disabled tab stays reachable by the arrow keys and is announced as unavailable"
       },
       "keyboard": {
         "title": "Keyboard Navigation",
@@ -797,7 +805,7 @@
       "title": "Implementation Notes",
       "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
       "item2": "<strong>activationMode</strong> — <code>automatic</code> (default) activates on arrow move; <code>manual</code> requires Enter/Space.",
-      "item3": "<strong>Roving tabindex</strong> — only the active tab is Tab-focusable; arrows move between tabs.",
+      "item3": "<strong>Roving tabindex</strong> — only the active tab is Tab-focusable; arrows move between tabs, disabled ones included.",
       "item4": "<strong>Line variant</strong> — minimalist look with bottom line; useful for sub-navigation within pages."
     },
     "analytics": {
@@ -837,6 +845,11 @@
           "action": "Tab focus to panel",
           "result": "Next Tab moves focus to active panel content",
           "priority": "medium"
+        },
+        "item5": {
+          "action": "Click or press Enter/Space on a disabled tab",
+          "result": "Nothing happens — the active tab and the visible panel stay the same",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -846,7 +859,8 @@
         "item2": "Minimum 4.5:1 contrast between text and background",
         "item3": "Visible focus ring on the keyboard-focused tab",
         "item4": "role=\"tablist\"/\"tab\"/\"tabpanel\" present",
-        "item5": "aria-selected reflects active tab"
+        "item5": "aria-selected reflects active tab",
+        "item6": "Disabled tab reachable by the arrow keys and with its disabled state exposed"
       },
       "visual": {
         "title": "Visual Regression",
@@ -1080,7 +1094,7 @@
       "disabled": {
         "label": "Disabled",
         "trigger": "—",
-        "behavior": "Tab deshabilitada — atenuada y fuera del alcance del puntero."
+        "behavior": "Tab deshabilitada — atenuada y fuera del alcance del puntero. Sigue siendo alcanzable con las flechas y se anuncia como no disponible; ni el clic ni Enter/Espacio la activan."
       },
       "cols": {
         "state": "Estado",
@@ -1190,7 +1204,8 @@
         "item3": "<code>role=\"tabpanel\"</code> + <code>aria-controls</code> + <code>aria-labelledby</code> automáticos",
         "item4": "<code>aria-label</code> en <code>TabsList</code> obligatorio",
         "item5": "Navegación por flechas con roving tabindex — solo la tab activa es focalizable vía Tab",
-        "item6": "Anillo de foco visible en la tab enfocada por teclado"
+        "item6": "Anillo de foco visible en la tab enfocada por teclado",
+        "item7": "La tab deshabilitada sigue siendo alcanzable con las flechas y se anuncia como no disponible"
       },
       "keyboard": {
         "title": "Navegación por Teclado",
@@ -1243,7 +1258,7 @@
       "title": "Notas de Implementación",
       "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
       "item2": "<strong>activationMode</strong> — <code>automatic</code> (por defecto) activa al mover flechas; <code>manual</code> requiere Enter/Space para activar.",
-      "item3": "<strong>Roving tabindex</strong> — solo la tab activa es focalizable vía Tab; las flechas mueven entre tabs del grupo.",
+      "item3": "<strong>Roving tabindex</strong> — solo la tab activa es focalizable vía Tab; las flechas mueven entre tabs del grupo, incluidas las deshabilitadas.",
       "item4": "<strong>Variant line</strong> — estilo minimalista con línea inferior; útil para sub-navegación dentro de páginas."
     },
     "analytics": {
@@ -1283,6 +1298,11 @@
           "action": "Tab desde el foco va al panel",
           "result": "El siguiente Tab mueve el foco al contenido del panel activo",
           "priority": "medium"
+        },
+        "item5": {
+          "action": "Hacer clic o pulsar Enter/Espacio en una tab deshabilitada",
+          "result": "No pasa nada — la tab activa y el panel visible siguen siendo los mismos",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1292,7 +1312,8 @@
         "item2": "Contraste mínimo 4.5:1 entre texto y fondo",
         "item3": "Anillo de foco visible en la tab enfocada por teclado",
         "item4": "role=\"tablist\"/\"tab\"/\"tabpanel\" presentes",
-        "item5": "aria-selected refleja la tab activa"
+        "item5": "aria-selected refleja la tab activa",
+        "item6": "Tab deshabilitada alcanzable con las flechas y con el estado de deshabilitada expuesto"
       },
       "visual": {
         "title": "Regresión Visual",

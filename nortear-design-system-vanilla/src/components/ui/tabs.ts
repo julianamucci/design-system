@@ -100,7 +100,18 @@ export function createTabs(options: TabsOptions): HTMLElement {
     triggerEl.dataset.value = item.value;
     triggerEl.textContent = item.label;
 
-    if (item.disabled) triggerEl.disabled = true;
+    // `aria-disabled`, e NÃO o `disabled` nativo do botão.
+    //
+    // O padrão WAI-ARIA para `tab` manda a aba desabilitada continuar
+    // alcançável pela seta: é assim que o leitor de tela chega nela, anuncia o
+    // rótulo e diz que está indisponível. Um `<button disabled>` faz o oposto —
+    // sai do alcance do foco, e quem navega por teclado nunca descobre que a
+    // aba existe. O bloqueio real da ativação está nos dois lugares que podem
+    // ativar: o `click` (que cobre também o Enter/Espaço, porque o navegador os
+    // converte em clique num botão) e a ativação automática da seta, ambos
+    // logo abaixo. `pointer-events: none` na folha é o reforço visual, não a
+    // trava.
+    if (item.disabled) triggerEl.setAttribute('aria-disabled', 'true');
 
     triggerMap.set(item.value, triggerEl);
     listEl.appendChild(triggerEl);
@@ -149,11 +160,18 @@ export function createTabs(options: TabsOptions): HTMLElement {
   });
 
   // Click events
+  //
+  // O ouvinte é registrado SEMPRE, inclusive na aba desabilitada, e a guarda
+  // mora dentro dele. Não registrar era uma trava por omissão: bastava alguém
+  // remover o `pointer-events: none` da folha, ou a pessoa chegar pelo teclado,
+  // para o comportamento mudar sem nenhum aviso. A guarda explícita também é o
+  // que barra Enter e Espaço, que o navegador entrega como clique.
   items.forEach((item) => {
     const trigger = triggerMap.get(item.value)!;
-    if (!item.disabled) {
-      trigger.addEventListener('click', () => activate(item.value));
-    }
+    trigger.addEventListener('click', () => {
+      if (item.disabled) return;
+      activate(item.value);
+    });
   });
 
   // Keyboard navigation
@@ -161,29 +179,41 @@ export function createTabs(options: TabsOptions): HTMLElement {
   // A tecla segue a ORIENTAÇÃO: num conjunto empilhado, Left/Right não descreve
   // o movimento que o olho vê. Home/End valem nas duas direções.
   // A seta ATIVA a aba (ativação automática) — é o contrato do design system.
+  //
+  // A seta percorre TODAS as abas, inclusive a desabilitada: ela recebe o foco
+  // para ser anunciada, e só não é ativada. Filtrar as desabilitadas do percurso
+  // era o que as escondia de quem navega por teclado.
   const nextKey = orientation === 'vertical' ? 'ArrowDown' : 'ArrowRight';
   const prevKey = orientation === 'vertical' ? 'ArrowUp' : 'ArrowLeft';
 
   listEl.addEventListener('keydown', (e) => {
-    const enabledItems = items.filter(i => !i.disabled);
-    if (enabledItems.length === 0) return;
-    const currentIdx = enabledItems.findIndex(i => i.value === activeValue);
+    if (items.length === 0) return;
+
+    // A referência é a aba FOCADA, não a ativa. Com a desabilitada dentro do
+    // percurso as duas deixam de ser a mesma, e partir da ativa faria a seta
+    // saltar de volta para ela a cada toque.
+    const focado = listEl.ownerDocument.activeElement;
+    const idxFocado = items.findIndex(i => triggerMap.get(i.value) === focado);
+    const currentIdx = idxFocado !== -1 ? idxFocado : items.findIndex(i => i.value === activeValue);
+    if (currentIdx === -1) return;
 
     const irPara = (idx: number) => {
       e.preventDefault();
-      const value = enabledItems[idx].value;
-      activate(value);
-      triggerMap.get(value)?.focus();
+      const item = items[idx];
+      triggerMap.get(item.value)?.focus();
+      // Ativação automática só vale para a aba habilitada. A desabilitada
+      // ganha o foco — e mais nada.
+      if (!item.disabled) activate(item.value);
     };
 
     if (e.key === nextKey) {
-      irPara((currentIdx + 1) % enabledItems.length);
+      irPara((currentIdx + 1) % items.length);
     } else if (e.key === prevKey) {
-      irPara((currentIdx - 1 + enabledItems.length) % enabledItems.length);
+      irPara((currentIdx - 1 + items.length) % items.length);
     } else if (e.key === 'Home') {
       irPara(0);
     } else if (e.key === 'End') {
-      irPara(enabledItems.length - 1);
+      irPara(items.length - 1);
     }
   });
 

@@ -115,3 +115,4 @@ Tabs (defaultValue)
 **Acessibilidade**:
 - `role="tablist"`, `role="tab"`, `role="tabpanel"` aplicados automaticamente pelo Bits UI
 - Navegação por teclado: Arrow Left/Right entre tabs; Tab entra no conteúdo
+- Aba desabilitada: marcada com `aria-disabled`, nunca com o atributo `disabled` nativo — o botão nativamente desabilitado sai do alcance do foco e a aba nunca é anunciada. Ela permanece no percurso das setas, para ser anunciada como indisponível, e nem o clique nem Enter/Espaço a ativam.

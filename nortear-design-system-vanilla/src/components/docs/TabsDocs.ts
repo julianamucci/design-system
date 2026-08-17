@@ -663,7 +663,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
                 { name: 'value',    type: 'string',      defaultValue: '—',     required: 'Sim', description: 'Identificador único da tab (vincula trigger ao panel).' },
                 { name: 'label',    type: 'string',      defaultValue: '—',     required: 'Sim', description: 'Texto curto exibido no TabsTrigger (máx. 2 palavras).' },
                 { name: 'content',  type: 'HTMLElement', defaultValue: '—',     required: 'Sim', description: 'Elemento renderizado dentro do TabsContent associado.' },
-                { name: 'disabled', type: 'boolean',     defaultValue: 'false', required: 'Não', description: 'Bloqueia interação com a tab e exclui da navegação por setas.' },
+                { name: 'disabled', type: 'boolean',     defaultValue: 'false', required: 'Não', description: 'Bloqueia a interação com a tab. A tab continua alcançável pelas setas, para ser anunciada como desabilitada.' },
               ],
             },
           ],
@@ -708,6 +708,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
             stripHtml(t('accessibility.items.item4')),
             stripHtml(t('accessibility.items.item5')),
             stripHtml(t('accessibility.items.item6')),
+            stripHtml(t('accessibility.items.item7')),
           ],
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
@@ -772,7 +773,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4].map(i => ({
+            items: [1, 2, 3, 4, 5].map(i => ({
               action: toPlainText(t(`testes.functional.item${i}.action`)),
               result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -787,6 +788,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
               { criterion: t('testes.accessibility.item3'), level: '2.4.7',  how: 'Visual' },
               { criterion: t('testes.accessibility.item4'), level: '4.1.2',  how: 'axe-core' },
               { criterion: t('testes.accessibility.item5'), level: '4.1.2',  how: 'axe-core' },
+              { criterion: t('testes.accessibility.item6'), level: '2.1.1',  how: 'Teclado / play' },
             ],
           },
           visual: {

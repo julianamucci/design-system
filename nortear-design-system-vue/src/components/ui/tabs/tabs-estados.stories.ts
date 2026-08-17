@@ -173,7 +173,7 @@ export const Disabled: Story = {
           <TabsTrigger value="examples">Exemplos</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">
-          A aba "Propriedades" está desabilitada: esmaecida e fora do alcance do ponteiro.
+          Conteúdo da visão geral.
         </TabsContent>
         <TabsContent value="properties" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">—</TabsContent>
         <TabsContent value="examples" class="nds-text-body nds-text-muted-foreground" style="padding-top: 0.75rem">Exemplos.</TabsContent>
@@ -181,21 +181,33 @@ export const Disabled: Story = {
     `,
   }),
   parameters: {
-    covers: ['visual.item4'],
+    covers: ['visual.item4', 'functional.item5', 'accessibility.item6'],
     docs: {
       description: {
-        story: 'Aba desabilitada — esmaecida e fora do alcance do ponteiro. Use para seções temporariamente indisponíveis.',
+        story:
+          'Aba desabilitada — esmaecida e fora do alcance do ponteiro, mas ainda alcançável '
+          + 'pela seta para que o leitor de tela a anuncie como indisponível.',
       },
     },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const abas = canvas.getAllByRole('tab') as HTMLElement[];
-    const desabilitada = abas[1];
+    const [primeira, desabilitada, ultima] = abas;
 
-    await step('A segunda aba se anuncia desabilitada', async () => {
-      await expect(desabilitada).toBeDisabled();
-      await expect(desabilitada).toHaveAttribute('data-disabled');
+    // Precondição de CADA passo, e não herança do anterior: o painel Interactions
+    // reexecuta a play no mesmo DOM.
+    const voltarAoInicio = async () => {
+      if (primeira.getAttribute('aria-selected') !== 'true') await userEvent.click(primeira);
+      await waitFor(() => expect(primeira).toHaveAttribute('aria-selected', 'true'));
+    };
+
+    await step('Anuncia-se desabilitada sem sair do alcance do foco', async () => {
+      await expect(desabilitada).toHaveAttribute('aria-disabled', 'true');
+      // O atributo nativo é justamente o que NÃO pode estar aqui: ele remove o
+      // botão do alcance do foco, e a aba deixa de ser anunciada.
+      await expect(desabilitada).not.toBeDisabled();
+      await expect(desabilitada).toHaveAttribute('aria-selected', 'false');
     });
 
     await step('E aparece esmaecida e inerte ao ponteiro', async () => {
@@ -203,10 +215,42 @@ export const Disabled: Story = {
       await expect(getComputedStyle(desabilitada).pointerEvents).toBe('none');
     });
 
-    await step('Clicar nela não ativa a aba nem troca o painel', async () => {
+    await step('A seta ALCANÇA a aba desabilitada, e não a ativa', async () => {
+      await voltarAoInicio();
+      primeira.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(desabilitada).toHaveFocus());
+      // Alcançar não é ativar: com ativação automática, focar uma aba habilitada
+      // já trocaria o painel. Nesta, o painel tem de continuar o mesmo.
+      await expect(desabilitada).toHaveAttribute('aria-selected', 'false');
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', primeira.id);
+    });
+
+    await step('Enter e Espaço com ela em foco não trocam o painel', async () => {
+      await voltarAoInicio();
+      desabilitada.focus();
+      await userEvent.keyboard('{Enter}');
+      await userEvent.keyboard(' ');
+      await expect(desabilitada).toHaveAttribute('aria-selected', 'false');
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', primeira.id);
+    });
+
+    await step('O clique também não', async () => {
+      await voltarAoInicio();
+      // `pointerEventsCheck: 0` é obrigatório: com `pointer-events: none` o
+      // userEvent RECUSA o clique e o teste passaria sem exercitar nada.
       await userEvent.click(desabilitada, { pointerEventsCheck: 0 });
       await expect(desabilitada).toHaveAttribute('aria-selected', 'false');
-      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', abas[0].id);
+      await expect(canvas.getByRole('tabpanel')).toHaveAttribute('aria-labelledby', primeira.id);
+    });
+
+    await step('A seta segue adiante a partir dela', async () => {
+      // Sem isto, a aba desabilitada viraria um beco sem saída para o teclado —
+      // pior que a exclusão que o alcance veio corrigir.
+      desabilitada.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(ultima).toHaveFocus());
+      await voltarAoInicio();
     });
   },
 };

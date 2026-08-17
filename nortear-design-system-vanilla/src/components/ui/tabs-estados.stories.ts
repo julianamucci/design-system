@@ -132,8 +132,14 @@ export const FocusVisible: Story = {
 
 export const Disabled: Story = {
   parameters: {
-    covers: ['visual.item4'],
-    docs: { description: { story: 'Aba desabilitada: esmaecida, sem resposta ao ponteiro e pulada pela navegação por setas.' } },
+    covers: ['visual.item4', 'functional.item5', 'accessibility.item6'],
+    docs: {
+      description: {
+        story:
+          'Aba desabilitada: esmaecida e sem resposta ao ponteiro, mas ainda alcançável pela '
+          + 'seta para que o leitor de tela a anuncie como indisponível.',
+      },
+    },
   },
   render: () => setLabel(createTabs({ defaultValue: 'overview', class: 'nds-w-full nds-max-w-md', items: withDisabled() })),
   play: async ({ canvasElement, step }) => {
@@ -142,13 +148,38 @@ export const Disabled: Story = {
     const bloqueada = canvas.getByRole('tab', { name: 'Propriedades' });
     const ultima = canvas.getByRole('tab', { name: 'Exemplos' });
 
-    await step('A aba bloqueada se anuncia e se mostra desabilitada', async () => {
-      await expect(bloqueada).toBeDisabled();
+    await step('Anuncia-se desabilitada sem sair do alcance do foco', async () => {
+      await expect(bloqueada).toHaveAttribute('aria-disabled', 'true');
+      // O atributo nativo é justamente o que NÃO pode estar aqui: ele remove o
+      // botão do alcance do foco, e a aba deixa de ser anunciada — a pessoa
+      // nunca descobre que ela existe.
+      await expect(bloqueada).not.toBeDisabled();
+      await expect(bloqueada).toHaveAttribute('aria-selected', 'false');
       await expect(Number(getComputedStyle(bloqueada).opacity)).toBeLessThan(1);
       await expect(getComputedStyle(bloqueada).pointerEvents).toBe('none');
     });
 
-    await step('Clicar nela não muda a seleção', async () => {
+    await step('A seta ALCANÇA a aba desabilitada, e não a ativa', async () => {
+      await ativar(primeira);
+      primeira.focus();
+      await userEvent.keyboard('{ArrowRight}');
+      await waitFor(() => expect(bloqueada).toHaveFocus());
+      // Alcançar não é ativar: com ativação automática, focar uma aba habilitada
+      // já trocaria o painel. Nesta, a seleção tem de continuar onde estava.
+      await expect(bloqueada).toHaveAttribute('aria-selected', 'false');
+      await expect(primeira).toHaveAttribute('aria-selected', 'true');
+    });
+
+    await step('Enter e Espaço com ela em foco não mudam a seleção', async () => {
+      await ativar(primeira);
+      bloqueada.focus();
+      await userEvent.keyboard('{Enter}');
+      await userEvent.keyboard(' ');
+      await expect(bloqueada).toHaveAttribute('aria-selected', 'false');
+      await expect(primeira).toHaveAttribute('aria-selected', 'true');
+    });
+
+    await step('Clicar nela também não', async () => {
       await ativar(primeira);
       // `pointerEventsCheck: 0` é obrigatório: com pointer-events none o
       // userEvent RECUSA o clique, e o teste passaria sem exercitar nada.
@@ -157,8 +188,10 @@ export const Disabled: Story = {
       await expect(primeira).toHaveAttribute('aria-selected', 'true');
     });
 
-    await step('A seta pula a aba bloqueada', async () => {
-      primeira.focus();
+    await step('A seta segue adiante a partir dela', async () => {
+      // Sem isto, a aba desabilitada viraria um beco sem saída para o teclado —
+      // pior que a exclusão que o alcance veio corrigir.
+      bloqueada.focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(ultima).toHaveAttribute('aria-selected', 'true'));
       // Home devolve o conjunto ao estado de montagem para o próximo replay.

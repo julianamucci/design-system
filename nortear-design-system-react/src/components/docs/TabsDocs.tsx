@@ -852,7 +852,7 @@ interface TabsContentProps {
         screenReaderItems={screenReaderItems}
         title={tContent("accessibility.title")}
         summary={tContent("accessibility.summary")}
-        items={[1, 2, 3, 4, 5, 6].map((i) =>
+        items={[1, 2, 3, 4, 5, 6, 7].map((i) =>
           tContent(`accessibility.items.item${i}`)
         )}
         keyboardTitle={tContent("accessibility.keyboard.title")}
@@ -963,7 +963,7 @@ interface TabsContentProps {
             result: tNav("common.expectedResult"),
             priority: tNav("common.priority"),
           },
-          items: [1, 2, 3, 4].map((i) => ({
+          items: [1, 2, 3, 4, 5].map((i) => ({
             action: toPlainText(tContent(`testes.functional.item${i}.action`)),
             result: toPlainText(tContent(`testes.functional.item${i}.result`)),
             priority: tNav(
@@ -979,7 +979,7 @@ interface TabsContentProps {
             level: "WCAG",
             how: tNav("common.howToVerify"),
           },
-          items: [1, 2, 3, 4, 5].map((i) => ({
+          items: [1, 2, 3, 4, 5, 6].map((i) => ({
             criterion: toPlainText(tContent(`testes.accessibility.item${i}`)),
             level: "AA",
             how: "—",

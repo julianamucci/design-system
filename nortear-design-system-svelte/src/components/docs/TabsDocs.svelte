@@ -602,6 +602,7 @@ interface TabsContentProps {
       $tStore('accessibility.items.item4'),
       $tStore('accessibility.items.item5'),
       $tStore('accessibility.items.item6'),
+      $tStore('accessibility.items.item7'),
     ]}
     keyboardTitle={$tStore('accessibility.keyboard.title')}
     keyboardItems={[
@@ -662,7 +663,7 @@ interface TabsContentProps {
         result: $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4].map((i) => ({
+      items: [1, 2, 3, 4, 5].map((i) => ({
         action:   toPlainText($tStore(`testes.functional.item${i}.action`)),
         result:   toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),
@@ -681,6 +682,7 @@ interface TabsContentProps {
         { criterion: toPlainText($tStore('testes.accessibility.item3')), level: '2.4.7', how: 'Keyboard test' },
         { criterion: toPlainText($tStore('testes.accessibility.item4')), level: '4.1.2', how: 'DOM inspection' },
         { criterion: toPlainText($tStore('testes.accessibility.item5')), level: '4.1.2', how: 'DOM inspection' },
+        { criterion: toPlainText($tStore('testes.accessibility.item6')), level: '2.1.1', how: 'Keyboard test' },
       ],
     }}
     visual={{
