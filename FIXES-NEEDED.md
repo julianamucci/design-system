@@ -47,7 +47,13 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Keyframes de dialog e select duplicam `nds-animate-in/out`.** Mesmo desenho (`opacity` + `scale(0.95)`), nomes distintos — por isso a regra de keyframes duplicadas não os pega. **Atenção: o timing difere.** As compartilhadas usam `--duration-spring`/`--ease-spring`; dialog usa `--duration-base`/`--ease-entrance` e select `--duration-fast`. Migrar **muda o movimento**, não só remove duplicação.
 - [ ] **Classes de movimento não documentadas na foundation page de Motion.** `nds-animate-in`, `nds-animate-out`, `--ease-spring` e `--duration-spring` não aparecem no conteúdo compartilhado em nenhum dos três idiomas. Pior: o texto atual diz que spring existe "apenas via biblioteca", o que contradiz por omissão o token que o sistema passou a ter.
 - [ ] **`test:coverage` fora do CI.** A justificativa antiga — "passaria vazio ou falharia por threshold" — **está obsoleta**: as quatro suítes de navegador estão 100% verdes (react 694, vue 685, svelte 693, vanilla 716 testes). Há duas ações destravadas no mesmo lugar: pôr `test:coverage` no CI, e remover o `continue-on-error: true` de `test.yml`, cujo próprio comentário diz "quando todas chegarem a 100%".
-- [ ] **`TEXT_SURFACE_PREFIXES` não cobre `import.*`, `demonstration.*` nem chaves de header** (novo, achado na conferência). A regra `markup_in_text_surface` está a zero hoje — mas por não olhar esses prefixos, não por medir.
+- [ ] **A cobertura de `markup_in_text_surface` nunca foi medida contra a superfície real.** Registrei este item como "não cobre `import.*`, `demonstration.*` e header", e **medi depois: essa formulação está errada**. `import.` tem 94 chaves e `demonstration.` 464, mas **nenhuma tem markup**, e `header.` não existe — estender a regra para os três captura zero, hoje e por construção. Testei com os prefixos adicionados: 0 achados novos.
+
+  O que de fato fica fora, com markup, é outra coisa: `anatomy.` (290 chaves com markup), `usage.` fora dos dois sub-prefixos cobertos (284 no total), `variants.` (246), `notes.` (190) e `accessibility.` fora de `keyboard.` (447).
+
+  **Mas isso não é bug por si.** A lista é uma *allowlist de containers que escrevem textNode*, não de chaves — e a conferência provou que em `accessibility.aria.*` **não envolver é o correto**, porque o destino renderiza HTML sanitizado. Envolver ali reintroduziria o defeito que a regra existe para pegar.
+
+  O trabalho real, então, é **mapear container por container** quais das cinco famílias acima caem em textNode, e só então estender a lista. Sem esse mapeamento, estender gera falso positivo em massa; e sem estender, a regra fica a zero sem que se saiba se é higiene ou ponto cego.
 
 ### Divergência cross-stack do carrossel (3)
 
