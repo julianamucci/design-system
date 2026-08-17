@@ -25,6 +25,7 @@ import { Directive, input } from '@angular/core';
 // prop sobrescreve — aqui ele só duplicaria o que o framework já faz.
 
 export type SeparatorOrientation = 'horizontal' | 'vertical';
+export type SeparatorEmphasis = 'default' | 'strong';
 
 @Directive({
   selector: 'div[ndsSeparator]',
@@ -33,6 +34,9 @@ export type SeparatorOrientation = 'horizontal' | 'vertical';
     class: 'nds-separator',
     '[attr.data-slot]': '"separator"',
     '[attr.data-orientation]': 'orientation()',
+    // A folha compartilhada só conhece `strong`; o valor default não vira
+    // atributo para o DOM não carregar um estado que não muda nada.
+    '[attr.data-emphasis]': 'emphasis() === "strong" ? "strong" : null',
     // Quando decorativo o elemento sai da árvore de acessibilidade
     // (role="none" + aria-hidden); quando semântico anuncia a própria
     // orientação. São exatamente os atributos que as outras stacks emitem.
@@ -45,4 +49,6 @@ export class NdsSeparator {
   readonly orientation = input<SeparatorOrientation>('horizontal');
   /** `true` (padrão) esconde da tecnologia assistiva; `false` expõe como divisor. */
   readonly decorative = input<boolean>(true);
+  /** `strong` dobra a espessura e troca o token de cor da linha. */
+  readonly emphasis = input<SeparatorEmphasis>('default');
 }

@@ -7,13 +7,13 @@ const meta: Meta<any> = {
   component: Separator,
   tags: ['layout'],
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
     docs: {
       description: {
         component:
-          'Estados do Separator quanto à semântica de acessibilidade: decorativo (role=none, aria-hidden) e semântico (role=separator, aria-orientation).',
+          'Modos do Separator: decorativo (padrão, ignorado por leitores de tela) e semântico (anunciado como divisor, com a própria orientação).',
       },
     },
   },
@@ -23,49 +23,59 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Decorative: Story = {
+  parameters: { covers: ['functional.item3', 'accessibility.item2', 'accessibility.item3'] },
   render: () => ({
     components: { Separator },
     template: `
-      <div class="" data-spacing="sm" style="width: 360px">
-        <div class="nds-text-body">Bloco visual A.</div>
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+        <h3 class="nds-text-body nds-font-medium">Decorativo (padrão)</h3>
+        <p class="nds-text-caption nds-text-muted-foreground">Ignorado por leitores de tela — a divisão é só visual.</p>
+        <p class="nds-text-body">Conteúdo antes do separador.</p>
         <Separator orientation="horizontal" :decorative="true" />
-        <div class="nds-text-body">Bloco visual B (separação ignorada por leitores de tela).</div>
+        <p class="nds-text-body">Conteúdo depois do separador.</p>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Separator decorativo tem role=none', async () => {
-      const separator = canvasElement.querySelector('[data-slot="separator"]');
-      await expect(separator).toHaveAttribute('role', 'none');
+    const sep = canvasElement.querySelector<HTMLElement>('.nds-separator');
+
+    await step('Sai da árvore de acessibilidade', async () => {
+      await expect(sep).toHaveAttribute('role', 'none');
+      await expect(sep).toHaveAttribute('aria-hidden', 'true');
     });
 
-    await step('Separator decorativo tem aria-hidden=true', async () => {
-      const separator = canvasElement.querySelector('[data-slot="separator"]');
-      await expect(separator).toHaveAttribute('aria-hidden', 'true');
+    await step('Não anuncia orientação', async () => {
+      // `aria-orientation` não é permitido em role="none" e nada informaria
+      // fora da árvore de acessibilidade — o atributo é ruído, não detalhe.
+      await expect(sep).not.toHaveAttribute('aria-orientation');
     });
   },
 };
 
 export const Semantic: Story = {
+  parameters: { covers: ['functional.item4', 'accessibility.item4'] },
   render: () => ({
     components: { Separator },
     template: `
-      <div class="" data-spacing="sm" style="width: 360px">
-        <div class="nds-text-body">Grupo Documentação</div>
+      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+        <h3 class="nds-text-body nds-font-medium">Semântico</h3>
+        <p class="nds-text-caption nds-text-muted-foreground">Anunciado como divisor, com a orientação da linha.</p>
+        <p class="nds-text-body">Categoria: Layout</p>
         <Separator orientation="horizontal" :decorative="false" />
-        <div class="nds-text-body">Grupo Componentes (anunciado por leitor de tela).</div>
+        <p class="nds-text-body">Categoria: Formulários</p>
       </div>
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    await step('Separator semântico tem role=separator', async () => {
-      const separator = canvasElement.querySelector('[data-slot="separator"]');
-      await expect(separator).toHaveAttribute('role', 'separator');
+    const sep = canvasElement.querySelector<HTMLElement>('.nds-separator');
+
+    await step('Exposto como divisor', async () => {
+      await expect(sep).toHaveAttribute('role', 'separator');
+      await expect(sep).not.toHaveAttribute('aria-hidden');
     });
 
-    await step('Separator semântico tem aria-orientation=horizontal', async () => {
-      const separator = canvasElement.querySelector('[data-slot="separator"]');
-      await expect(separator).toHaveAttribute('aria-orientation', 'horizontal');
+    await step('Anuncia a própria orientação', async () => {
+      await expect(sep).toHaveAttribute('aria-orientation', 'horizontal');
     });
   },
 };

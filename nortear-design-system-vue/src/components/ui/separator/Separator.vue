@@ -4,9 +4,13 @@ import { reactiveOmit } from '@vueuse/core'
 import { Separator } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
+export type SeparatorEmphasis = 'default' | 'strong'
+
 interface SeparatorProps {
   orientation?: 'horizontal' | 'vertical'
   decorative?: boolean
+  /** `strong` dobra a espessura e troca o token de cor da linha. */
+  emphasis?: SeparatorEmphasis
   asChild?: boolean
   as?: any
 }
@@ -16,9 +20,10 @@ const props = withDefaults(defineProps<
 >(), {
   orientation: 'horizontal',
   decorative: true,
+  emphasis: 'default',
 })
 
-const delegatedProps = reactiveOmit(props, 'class')
+const delegatedProps = reactiveOmit(props, 'class', 'emphasis')
 </script>
 
 <template>
@@ -27,6 +32,7 @@ const delegatedProps = reactiveOmit(props, 'class')
     v-bind="delegatedProps"
     :aria-hidden="props.decorative ? 'true' : undefined"
     :aria-orientation="!props.decorative ? props.orientation : undefined"
+    :data-emphasis="props.emphasis === 'strong' ? 'strong' : undefined"
     :class="cn( 'nds-separator', props.class, )"
   />
 </template>

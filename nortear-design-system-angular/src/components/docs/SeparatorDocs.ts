@@ -92,8 +92,12 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
+/** Linhas da tabela de tokens, na ordem em que a folha compartilhada as aplica. */
+const TOKEN_ROWS = ['line', 'horizontal', 'vertical', 'emphasisColor', 'emphasisThickness'] as const;
+
 const INTERFACE_CODE = `// <div ndsSeparator> — diretiva de atributo no próprio <div>
 export type SeparatorOrientation = 'horizontal' | 'vertical';
+export type SeparatorEmphasis = 'default' | 'strong';
 
 @Directive({
   selector: 'div[ndsSeparator]',
@@ -102,6 +106,7 @@ export type SeparatorOrientation = 'horizontal' | 'vertical';
 export class NdsSeparator {
   readonly orientation = input<SeparatorOrientation>('horizontal');
   readonly decorative = input<boolean>(true);
+  readonly emphasis = input<SeparatorEmphasis>('default');
 }`;
 
 @Component({
@@ -141,9 +146,11 @@ export class NdsSeparator {
       </div>
     </ng-template>
     <ng-template #tplDoDont2Dont>
-      <div class="nds-cluster nds-docs-demo-row" data-spacing="sm">
+      <!-- Contêiner de BLOCO: é onde o separador vertical colapsa para 0px e
+           some da tela sem erro nenhum. -->
+      <div class="nds-block nds-w-full nds-max-w-sm">
         <span class="nds-text-body">Editar</span>
-        <div ndsSeparator></div>
+        <div ndsSeparator orientation="vertical"></div>
         <span class="nds-text-body">Duplicar</span>
       </div>
     </ng-template>
@@ -359,7 +366,7 @@ export class NdsSeparatorDocs implements AfterViewInit, OnDestroy {
 
   protected readonly anatomyItems = computed(() => {
     dict();
-    return [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3')];
+    return [t('anatomy.item1'), t('anatomy.item2'), t('anatomy.item3'), t('anatomy.item4')];
   });
 
   protected readonly guidelines = computed(() => {
@@ -496,7 +503,7 @@ export class NdsSeparatorDocs implements AfterViewInit, OnDestroy {
       {
         title: 'NdsSeparator',
         cols,
-        items: ['orientation', 'decorative', 'className'].map((p) => ({
+        items: ['orientation', 'decorative', 'emphasis', 'className'].map((p) => ({
           // A chave do conteúdo compartilhado é `className` (herança das outras
           // stacks); aqui a linha documenta o atributo `class` nativo.
           name: p === 'className' ? 'class' : p,
@@ -520,14 +527,14 @@ export class NdsSeparatorDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    // A tabela deste componente não tem coluna de token CSS por linha — o
-    // conteúdo compartilhado descreve classe + parte. O token fica no valor.
-    return ['background', 'heightHorizontal', 'widthHorizontal', 'widthVertical', 'heightVertical']
-      .map((k) => ({
-        token: t(`tokens.table.${k}.class`),
-        value: '.nds-separator',
-        description: t(`tokens.table.${k}.part`),
-      }));
+    // Token, seletor e aplicação saem TODOS do conteúdo compartilhado. Antes
+    // cada stack escrevia a primeira coluna à mão, e as cinco divergiram: uma
+    // trazia `--border`, outra `bg-border`, outra o próprio seletor.
+    return TOKEN_ROWS.map((k) => ({
+      token: t(`tokens.table.${k}.token`),
+      value: t(`tokens.table.${k}.class`),
+      description: t(`tokens.table.${k}.part`),
+    }));
   });
 
   protected readonly a11yItems = computed(() => {

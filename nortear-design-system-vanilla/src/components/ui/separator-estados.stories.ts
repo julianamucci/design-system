@@ -12,8 +12,8 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Modos do Separator: decorativo (padrão, ignorado por SR) e semântico ' +
-          '(role=separator + aria-orientation, anunciado por leitores de tela).',
+          'Modos do Separator: decorativo (padrão, ignorado por leitores de tela) e semântico ' +
+          '(anunciado como divisor, com a própria orientação).',
       },
     },
   },
@@ -25,6 +25,7 @@ type Story = StoryObj;
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Decorative: Story = {
+  parameters: { covers: ['functional.item3', 'accessibility.item2', 'accessibility.item3'] },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -36,7 +37,7 @@ export const Decorative: Story = {
 
     const note = document.createElement('p');
     note.className = 'nds-text-caption nds-text-muted-foreground';
-    note.textContent = 'role="none" + aria-hidden="true". Ignorado por leitores de tela.';
+    note.textContent = 'Ignorado por leitores de tela — a divisão é só visual.';
 
     const before = document.createElement('p');
     before.className = 'nds-text-body';
@@ -56,15 +57,23 @@ export const Decorative: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Modo decorativo: role=none + aria-hidden=true', async () => {
-      const separator = canvasElement.querySelector<HTMLElement>('[role="none"]');
-      await expect(separator).toBeTruthy();
-      await expect(separator).toHaveAttribute('aria-hidden', 'true');
+    const sep = canvasElement.querySelector<HTMLElement>('.nds-separator');
+
+    await step('Sai da árvore de acessibilidade', async () => {
+      await expect(sep).toHaveAttribute('role', 'none');
+      await expect(sep).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('Não anuncia orientação', async () => {
+      // `aria-orientation` não é permitido em role="none" e nada informaria
+      // fora da árvore de acessibilidade — o atributo é ruído, não detalhe.
+      await expect(sep).not.toHaveAttribute('aria-orientation');
     });
   },
 };
 
 export const Semantic: Story = {
+  parameters: { covers: ['functional.item4', 'accessibility.item4'] },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -76,7 +85,7 @@ export const Semantic: Story = {
 
     const note = document.createElement('p');
     note.className = 'nds-text-caption nds-text-muted-foreground';
-    note.textContent = 'role="separator" + aria-orientation. Anunciado por leitores de tela.';
+    note.textContent = 'Anunciado como divisor, com a orientação da linha.';
 
     const before = document.createElement('p');
     before.className = 'nds-text-body';
@@ -84,7 +93,7 @@ export const Semantic: Story = {
 
     const after = document.createElement('p');
     after.className = 'nds-text-body';
-    after.textContent = 'Categoria: Forms';
+    after.textContent = 'Categoria: Formulários';
 
     wrap.append(
       heading,
@@ -96,10 +105,15 @@ export const Semantic: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Modo semântico: role=separator + aria-orientation', async () => {
-      const separator = canvasElement.querySelector<HTMLElement>('[role="separator"]');
-      await expect(separator).toBeTruthy();
-      await expect(separator).toHaveAttribute('aria-orientation', 'horizontal');
+    const sep = canvasElement.querySelector<HTMLElement>('.nds-separator');
+
+    await step('Exposto como divisor', async () => {
+      await expect(sep).toHaveAttribute('role', 'separator');
+      await expect(sep).not.toHaveAttribute('aria-hidden');
+    });
+
+    await step('Anuncia a própria orientação', async () => {
+      await expect(sep).toHaveAttribute('aria-orientation', 'horizontal');
     });
   },
 };

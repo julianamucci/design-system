@@ -8,12 +8,13 @@ const meta: Meta = {
   component: SeparatorStory,
   tags: ['layout'],
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Variantes de orientação: horizontal (h-px w-full) e vertical (w-px h-full em flex container).',
+          'Orientações do Separator. A horizontal é uma linha de 1px de altura que ocupa a largura do contêiner; a vertical é uma linha de 1px de largura cuja altura vem do contêiner flex ou de grade, sem medida cravada.',
       },
     },
   },
@@ -23,45 +24,52 @@ export default meta;
 type Story = StoryObj;
 
 export const Horizontal: Story = {
-  args: {
-    orientation: 'horizontal',
-    decorative: true,
-  },
+  parameters: { covers: ['functional.item1', 'visual.item1'] },
+  render: () => ({
+    Component: SeparatorStory,
+    props: { caso: 'variantes', orientation: 'horizontal' },
+  }),
   play: async ({ canvasElement, step }) => {
-    await step('Separator horizontal presente com data-slot', async () => {
-      const sep = canvasElement.querySelector('[data-slot="separator"]');
+    const wrap = canvasElement.querySelector<HTMLElement>('.nds-stack')!;
+    const sep = wrap.querySelector<HTMLElement>('.nds-separator');
+
+    await step('A orientação horizontal chega ao DOM', async () => {
       await expect(sep).toBeInTheDocument();
-    });
-    await step('data-orientation="horizontal"', async () => {
-      const sep = canvasElement.querySelector('[data-slot="separator"]');
       await expect(sep).toHaveAttribute('data-orientation', 'horizontal');
     });
-    await step('Dimensões horizontais (1px de altura, largura total)', async () => {
-      const sep = canvasElement.querySelector('[data-slot="separator"]') as HTMLElement;
-      await expect(sep).toHaveClass('nds-separator');
-      await expect(getComputedStyle(sep).height).toBe('1px');
+
+    await step('Linha fina na altura e cheia na largura', async () => {
+      // O que o horizontal promete é linha cheia e fina. Medir os dois evita
+      // que uma troca de folha passe com o atributo certo e o visual errado.
+      const caixa = sep!.getBoundingClientRect();
+      await expect(caixa.height).toBeCloseTo(1, 1);
+      await expect(caixa.width).toBeCloseTo(wrap.getBoundingClientRect().width, 0);
     });
   },
 };
 
 export const Vertical: Story = {
-  args: {
-    orientation: 'vertical',
-    decorative: true,
-  },
+  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  render: () => ({
+    Component: SeparatorStory,
+    props: { caso: 'variantes', orientation: 'vertical' },
+  }),
   play: async ({ canvasElement, step }) => {
-    await step('Separator vertical presente com data-slot', async () => {
-      const sep = canvasElement.querySelector('[data-slot="separator"]');
-      await expect(sep).toBeInTheDocument();
+    const seps = canvasElement.querySelectorAll<HTMLElement>('.nds-separator');
+
+    await step('As duas linhas verticais chegam ao DOM', async () => {
+      await expect(seps).toHaveLength(2);
+      await expect(seps[0]).toHaveAttribute('data-orientation', 'vertical');
     });
-    await step('data-orientation="vertical"', async () => {
-      const sep = canvasElement.querySelector('[data-slot="separator"]');
-      await expect(sep).toHaveAttribute('data-orientation', 'vertical');
-    });
-    await step('Dimensões verticais (1px de largura)', async () => {
-      const sep = canvasElement.querySelector('[data-slot="separator"]') as HTMLElement;
-      await expect(sep).toHaveClass('nds-separator');
-      await expect(getComputedStyle(sep).width).toBe('1px');
+
+    await step('Linha fina na largura e esticada na altura, sem medida cravada', async () => {
+      // Este é o caso que a asserção antiga jamais pegaria: o separador vertical
+      // colapsa para 0px quando o contêiner não é flex nem grade, e continua
+      // presente no DOM com o atributo certo. Medir a altura é o que denuncia.
+      const caixa = seps[0].getBoundingClientRect();
+      await expect(caixa.width).toBeCloseTo(1, 1);
+      await expect(caixa.height).toBeGreaterThan(8);
+      await expect(seps[0].style.height).toBe('');
     });
   },
 };

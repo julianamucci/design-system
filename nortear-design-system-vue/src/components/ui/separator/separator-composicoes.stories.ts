@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/angular-vite';
-import { moduleMetadata } from '@storybook/angular-vite';
+import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
-import { NdsSeparator } from './separator';
-import { NDS_CARD } from './card';
+import { Separator } from './index';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-const meta: Meta = {
+const meta: Meta<any> = {
   title: 'UI/Separator/Compositions',
-  decorators: [moduleMetadata({ imports: [NdsSeparator, ...NDS_CARD] })],
+  component: Separator,
+  tags: ['layout'],
   parameters: {
     layout: 'padded',
     controls: { disable: true },
@@ -21,22 +21,23 @@ const meta: Meta = {
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof meta>;
 
 export const InCard: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
+    components: { Separator, Card, CardContent, CardDescription, CardHeader, CardTitle },
     template: `
-      <div ndsCard class="nds-max-w-md">
-        <div ndsCardHeader>
-          <div ndsCardTitle>Resumo do pedido</div>
-          <div ndsCardDescription>3 itens, entrega em 5 dias úteis.</div>
-        </div>
-        <div ndsSeparator orientation="horizontal"></div>
-        <div ndsCardContent>
+      <Card class="nds-max-w-md">
+        <CardHeader>
+          <CardTitle>Resumo do pedido</CardTitle>
+          <CardDescription>3 itens, entrega em 5 dias úteis.</CardDescription>
+        </CardHeader>
+        <Separator orientation="horizontal" />
+        <CardContent>
           <p class="nds-text-body">Total: R$ 249,90</p>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     `,
   }),
   play: async ({ canvasElement, step }) => {
@@ -61,13 +62,14 @@ export const InCard: Story = {
 export const InMenu: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => ({
+    components: { Separator },
     // A divisão entre grupos de um menu FAZ parte da estrutura da informação:
     // é o caso em que o separador deixa de ser decorativo.
     template: `
       <div class="nds-stack nds-max-w-xs nds-rounded-md nds-border-default nds-bg-background nds-p-1" data-spacing="xs">
         <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Perfil</div>
         <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Conta</div>
-        <div ndsSeparator orientation="horizontal" [decorative]="false"></div>
+        <Separator orientation="horizontal" :decorative="false" />
         <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Sair</div>
       </div>
     `,
@@ -94,15 +96,15 @@ export const InMenu: Story = {
 export const EmphasisStrong: Story = {
   parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item5'] },
   render: () => ({
+    components: { Separator },
     // A classe extra entra junto com a ênfase: é o mesmo par que a docs page
-    // documenta em Extensibilidade. Não existe input `class` aqui — o Angular
-    // já mescla o `class` escrito no elemento com o que a diretiva declara.
+    // documenta em Extensibilidade, e prova que ela convive com a base.
     template: `
       <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
         <p class="nds-text-body nds-text-muted-foreground">Fim da seção</p>
-        <div ndsSeparator orientation="horizontal" data-testid="padrao"></div>
+        <Separator orientation="horizontal" data-testid="padrao" />
         <p class="nds-text-body nds-text-muted-foreground">Continuação do mesmo assunto</p>
-        <div ndsSeparator orientation="horizontal" emphasis="strong" class="nds-mt-4" data-testid="forte"></div>
+        <Separator orientation="horizontal" emphasis="strong" class="nds-mt-4" data-testid="forte" />
         <p class="nds-text-body nds-font-medium">Troca de assunto</p>
       </div>
     `,

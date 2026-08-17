@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/angular-vite';
-import { moduleMetadata } from '@storybook/angular-vite';
+import type { Meta, StoryObj } from '@storybook/svelte-vite';
+
 import { expect } from 'storybook/test';
-import { NdsSeparator } from './separator';
-import { NDS_CARD } from './card';
+import SeparatorStory from './SeparatorStory.svelte';
 
 const meta: Meta = {
   title: 'UI/Separator/Compositions',
-  decorators: [moduleMetadata({ imports: [NdsSeparator, ...NDS_CARD] })],
+  component: SeparatorStory,
+  tags: ['layout'],
   parameters: {
     layout: 'padded',
     controls: { disable: true },
@@ -25,20 +25,7 @@ type Story = StoryObj;
 
 export const InCard: Story = {
   parameters: { covers: ['visual.item3'] },
-  render: () => ({
-    template: `
-      <div ndsCard class="nds-max-w-md">
-        <div ndsCardHeader>
-          <div ndsCardTitle>Resumo do pedido</div>
-          <div ndsCardDescription>3 itens, entrega em 5 dias úteis.</div>
-        </div>
-        <div ndsSeparator orientation="horizontal"></div>
-        <div ndsCardContent>
-          <p class="nds-text-body">Total: R$ 249,90</p>
-        </div>
-      </div>
-    `,
-  }),
+  render: () => ({ Component: SeparatorStory, props: { caso: 'card' } }),
   play: async ({ canvasElement, step }) => {
     const card = canvasElement.querySelector<HTMLElement>('.nds-card')!;
     const sep = card.querySelector<HTMLElement>('.nds-separator');
@@ -60,18 +47,7 @@ export const InCard: Story = {
 
 export const InMenu: Story = {
   parameters: { covers: ['visual.item4'] },
-  render: () => ({
-    // A divisão entre grupos de um menu FAZ parte da estrutura da informação:
-    // é o caso em que o separador deixa de ser decorativo.
-    template: `
-      <div class="nds-stack nds-max-w-xs nds-rounded-md nds-border-default nds-bg-background nds-p-1" data-spacing="xs">
-        <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Perfil</div>
-        <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Conta</div>
-        <div ndsSeparator orientation="horizontal" [decorative]="false"></div>
-        <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Sair</div>
-      </div>
-    `,
-  }),
+  render: () => ({ Component: SeparatorStory, props: { caso: 'menu' } }),
   play: async ({ canvasElement, step }) => {
     const menu = canvasElement.querySelector<HTMLElement>('.nds-stack')!;
     const sep = menu.querySelector<HTMLElement>('.nds-separator')!;
@@ -93,20 +69,7 @@ export const InMenu: Story = {
 
 export const EmphasisStrong: Story = {
   parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item5'] },
-  render: () => ({
-    // A classe extra entra junto com a ênfase: é o mesmo par que a docs page
-    // documenta em Extensibilidade. Não existe input `class` aqui — o Angular
-    // já mescla o `class` escrito no elemento com o que a diretiva declara.
-    template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
-        <p class="nds-text-body nds-text-muted-foreground">Fim da seção</p>
-        <div ndsSeparator orientation="horizontal" data-testid="padrao"></div>
-        <p class="nds-text-body nds-text-muted-foreground">Continuação do mesmo assunto</p>
-        <div ndsSeparator orientation="horizontal" emphasis="strong" class="nds-mt-4" data-testid="forte"></div>
-        <p class="nds-text-body nds-font-medium">Troca de assunto</p>
-      </div>
-    `,
-  }),
+  render: () => ({ Component: SeparatorStory, props: { caso: 'emphasis' } }),
   play: async ({ canvasElement, step }) => {
     const padrao = canvasElement.querySelector<HTMLElement>('[data-testid="padrao"]')!;
     const forte = canvasElement.querySelector<HTMLElement>('[data-testid="forte"]')!;

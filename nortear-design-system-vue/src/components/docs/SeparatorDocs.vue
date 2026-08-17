@@ -129,7 +129,7 @@ const codeImportBasic = `import { Separator } from "@/components/ui/separator";`
 
 const codeHorizontal = `<Separator orientation="horizontal" />`;
 
-const codeVertical = `<div class="nds-cluster" data-spacing="md" data-align="center" style="height: 3rem">
+const codeVertical = `<div class="nds-cluster nds-docs-demo-row" data-spacing="md" data-align="center">
   <span>Início</span>
   <Separator orientation="vertical" />
   <span>Docs</span>
@@ -140,10 +140,13 @@ const codeCustomization = `/* Override de cor para tema customizado */
   background-color: hsl(var(--accent) / 0.4);
 }`;
 
-const interfaceCode = `// Separator
-interface SeparatorProps {
+/** Linhas da tabela de tokens, na ordem em que a folha compartilhada as aplica. */
+const TOKEN_ROWS = ['line', 'horizontal', 'vertical', 'emphasisColor', 'emphasisThickness'] as const;
+
+const interfaceCode = `interface SeparatorProps {
   orientation?: 'horizontal' | 'vertical'; // default: 'horizontal'
   decorative?: boolean;                    // default: true
+  emphasis?: 'default' | 'strong';         // default: 'default'
   class?: string;
 }`;
 
@@ -155,6 +158,7 @@ const anatomyItems = computed(() => [
   tContent('anatomy.item1'),
   tContent('anatomy.item2'),
   tContent('anatomy.item3'),
+  tContent('anatomy.item4'),
 ]);
 
 const variantItems = computed(() => [
@@ -178,16 +182,20 @@ const propCols = computed(() => ({
 const separatorPropItems = computed(() => [
   { name: 'orientation', type: tContent('props.table.orientation.type'),  defaultValue: tContent('props.table.orientation.default'),  required: tContent('props.table.orientation.required'),  description: toPlainText(tContent('props.table.orientation.description')) },
   { name: 'decorative',  type: tContent('props.table.decorative.type'),   defaultValue: tContent('props.table.decorative.default'),   required: tContent('props.table.decorative.required'),   description: toPlainText(tContent('props.table.decorative.description'))  },
+  { name: 'emphasis',    type: tContent('props.table.emphasis.type'),     defaultValue: tContent('props.table.emphasis.default'),     required: tContent('props.table.emphasis.required'),     description: toPlainText(tContent('props.table.emphasis.description'))     },
   { name: 'class',       type: tContent('props.table.className.type'),    defaultValue: tContent('props.table.className.default'),    required: tContent('props.table.className.required'),    description: toPlainText(tContent('props.table.className.description'))    },
 ]);
 
-const tokenRows = computed(() => [
-  { token: '--border', value: tContent('tokens.table.background.class'),       description: tContent('tokens.table.background.part')       },
-  { token: '—',        value: tContent('tokens.table.heightHorizontal.class'), description: tContent('tokens.table.heightHorizontal.part') },
-  { token: '—',        value: tContent('tokens.table.widthHorizontal.class'),  description: tContent('tokens.table.widthHorizontal.part')  },
-  { token: '—',        value: tContent('tokens.table.widthVertical.class'),    description: tContent('tokens.table.widthVertical.part')    },
-  { token: '—',        value: tContent('tokens.table.heightVertical.class'),   description: tContent('tokens.table.heightVertical.part')   },
-]);
+// Token, seletor e aplicação saem TODOS do conteúdo compartilhado. Antes cada
+// stack escrevia a primeira coluna à mão, e as cinco divergiram: uma trazia
+// `--border`, outra `bg-border`, outra o próprio seletor.
+const tokenRows = computed(() =>
+  TOKEN_ROWS.map((k) => ({
+    token: tContent(`tokens.table.${k}.token`),
+    value: tContent(`tokens.table.${k}.class`),
+    description: tContent(`tokens.table.${k}.part`),
+  })),
+);
 
 const accessibilityItems = computed(() => [
   tContent('accessibility.items.item1'),
@@ -298,10 +306,9 @@ const visualTestItems = computed(() => [
           data-spacing="sm"
         >
           <div
-            class="nds-cluster nds-border-default nds-rounded-md nds-px-4 nds-text-body"
+            class="nds-cluster nds-docs-demo-row nds-border-default nds-rounded-md nds-px-4 nds-text-body"
             data-spacing="md"
             data-align="center"
-            style="height: 4rem"
           >
             <span>Início</span>
             <Separator orientation="vertical" />
@@ -454,10 +461,9 @@ const visualTestItems = computed(() => [
       </template>
       <template #do-preview-1>
         <div
-          class="nds-cluster nds-w-full nds-text-body nds-border-default nds-rounded-md nds-px-4"
+          class="nds-cluster nds-docs-demo-row nds-w-full nds-text-body nds-border-default nds-rounded-md nds-px-4"
           data-spacing="md"
           data-align="center"
-          style="height: 2.5rem"
         >
           <span>Início</span>
           <Separator orientation="vertical" />
@@ -465,10 +471,9 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div
-          class="nds-stack nds-w-full nds-text-body nds-border-default nds-rounded-md nds-p-4"
-          data-spacing="sm"
-        >
+        <!-- Contêiner de BLOCO: é onde o separador vertical colapsa para 0px e
+             some da tela sem erro nenhum. -->
+        <div class="nds-block nds-w-full nds-max-w-sm nds-text-body nds-border-default nds-rounded-md nds-p-4">
           <span>Início</span>
           <Separator orientation="vertical" />
           <span>Sobre</span>
@@ -499,10 +504,9 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-1>
         <div
-          class="nds-cluster nds-w-full nds-text-body"
+          class="nds-cluster nds-docs-demo-row nds-w-full nds-text-body"
           data-spacing="md"
           data-align="center"
-          style="height: 2.5rem"
         >
           <span>A</span>
           <Separator orientation="vertical" />
@@ -545,7 +549,7 @@ const visualTestItems = computed(() => [
       }"
       :items="tokenRows"
       :customization-title="tContent('tokens.customizationTitle')"
-      :customization-code="codeCustomization"
+      :customization-code="tContent('tokens.customizationCode')"
     />
 
     <!-- ── Acessibilidade ─────────────────────────────────────────── -->

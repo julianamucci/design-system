@@ -50,6 +50,9 @@ const priorityKeyMap: Record<string, string> = {
   low: 'common.low',
 };
 
+/** Linhas da tabela de tokens, na ordem em que a folha compartilhada as aplica. */
+const TOKEN_ROWS = ['line', 'horizontal', 'vertical', 'emphasisColor', 'emphasisThickness'] as const;
+
 function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
@@ -85,10 +88,9 @@ function buildVerticalDemo(label: string): HTMLElement {
   caption.textContent = label;
 
   const row = document.createElement('div');
-  row.className = 'nds-cluster';
+  row.className = 'nds-cluster nds-docs-demo-row';
   row.dataset.spacing = 'sm';
   row.dataset.align = 'center';
-  row.style.height = '3rem';
 
   const a = document.createElement('span');
   a.className = 'nds-text-body';
@@ -132,20 +134,17 @@ function buildMenuDemo(label: string): HTMLElement {
 
   items1.forEach((txt) => {
     const item = document.createElement('div');
-    item.className = 'nds-rounded-sm nds-hover-bg-accent nds-px-2';
-    item.style.paddingBlock = '0.375rem';
+    item.className = 'nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1';
     item.textContent = txt;
     menu.appendChild(item);
   });
 
   const sep = createSeparator({ orientation: 'horizontal' });
-  sep.classList.add('nds-my-1');
   menu.appendChild(sep);
 
   items2.forEach((txt) => {
     const item = document.createElement('div');
-    item.className = 'nds-rounded-sm nds-hover-bg-accent nds-px-2';
-    item.style.paddingBlock = '0.375rem';
+    item.className = 'nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1';
     item.textContent = txt;
     menu.appendChild(item);
   });
@@ -290,7 +289,10 @@ export function createSeparatorDocs(): HTMLElement {
             const grid = document.createElement('div');
             grid.className = 'nds-grid nds-w-full';
             grid.dataset.spacing = 'lg';
-            grid.dataset.min = '18rem';
+            // `data-cols` e não `data-min`: o .nds-grid só lê `data-spacing`,
+            // `data-cols` e `data-fixed`. `data-min` não existe em regra nenhuma
+            // e não fazia nada — as outras stacks já usavam `data-cols="2"`.
+            grid.dataset.cols = '2';
             grid.append(
               buildHorizontalDemo(t('demonstration.labels.horizontal')),
               buildVerticalDemo(t('demonstration.labels.vertical')),
@@ -308,6 +310,7 @@ export function createSeparatorDocs(): HTMLElement {
             DOMPurify.sanitize(t('anatomy.item1')),
             DOMPurify.sanitize(t('anatomy.item2')),
             DOMPurify.sanitize(t('anatomy.item3')),
+            DOMPurify.sanitize(t('anatomy.item4')),
           ],
           structureLabel: t('anatomy.structureLabel'),
           structureCode: t('anatomy.structureCode'),
@@ -373,19 +376,15 @@ export function createSeparatorDocs(): HTMLElement {
                 wrap.className = 'nds-w-full nds-max-w-xs nds-stack nds-rounded-md nds-border-default nds-bg-background nds-p-1 nds-text-body';
                 wrap.dataset.spacing = 'xs';
                 const a = document.createElement('div');
-                a.className = 'nds-px-2';
-                a.style.paddingBlock = '0.375rem';
+                a.className = 'nds-px-2 nds-py-1';
                 a.textContent = 'Perfil';
                 const b = document.createElement('div');
-                b.className = 'nds-px-2';
-                b.style.paddingBlock = '0.375rem';
+                b.className = 'nds-px-2 nds-py-1';
                 b.textContent = 'Conta';
                 const c = document.createElement('div');
-                c.className = 'nds-px-2';
-                c.style.paddingBlock = '0.375rem';
+                c.className = 'nds-px-2 nds-py-1';
                 c.textContent = 'Sair';
                 const sep = createSeparator({ orientation: 'horizontal' });
-                sep.classList.add('nds-my-1');
                 wrap.append(a, b, sep, c);
                 return wrap;
               },
@@ -396,7 +395,6 @@ export function createSeparatorDocs(): HTMLElement {
                 const a = document.createElement('p');
                 a.textContent = 'Linha 1';
                 const sep = createSeparator({ orientation: 'horizontal' });
-                sep.classList.add('nds-my-2');
                 const b = document.createElement('p');
                 b.textContent = 'Linha 2';
                 wrap.append(a, sep, b);
@@ -413,7 +411,6 @@ export function createSeparatorDocs(): HTMLElement {
                 wrap.className = 'nds-cluster nds-w-full nds-max-w-sm';
                 wrap.dataset.spacing = 'sm';
                 wrap.dataset.align = 'center';
-                wrap.style.height = '3rem';
                 const a = document.createElement('span');
                 a.className = 'nds-text-body';
                 a.textContent = 'Blog';
@@ -450,9 +447,9 @@ export function createSeparatorDocs(): HTMLElement {
           `const sep = createSeparator({ orientation: 'horizontal' });\n` +
           `container.append(top, sep, bottom);`;
         const codeVertical =
-          `// Parent precisa de altura — use flex container:\n` +
+          `// O contêiner precisa ser flex ou grade — a altura da linha vem dele:\n` +
           `const row = document.createElement('div');\n` +
-          `row.className = 'nds-cluster';\nrow.dataset.spacing = 'sm';\nrow.dataset.align = 'center';\nrow.style.height = '3rem';\n` +
+          `row.className = 'nds-cluster';\nrow.dataset.spacing = 'sm';\nrow.dataset.align = 'center';\n` +
           `row.append(itemA, createSeparator({ orientation: 'vertical' }), itemB);`;
 
         return createDocsVariants({
@@ -489,12 +486,13 @@ export function createSeparatorDocs(): HTMLElement {
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createSeparator(options)
-export type SeparatorOrientation = 'horizontal' | 'vertical';
+        const interfaceCode = `export type SeparatorOrientation = 'horizontal' | 'vertical';
+export type SeparatorEmphasis = 'default' | 'strong';
 
 export interface SeparatorOptions {
-  orientation?: SeparatorOrientation;
-  decorative?: boolean;
+  orientation?: SeparatorOrientation;  // padrão: 'horizontal'
+  decorative?: boolean;                // padrão: true
+  emphasis?: SeparatorEmphasis;        // padrão: 'default'
   className?: string;
 }
 
@@ -530,6 +528,13 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
                   description: t('props.table.decorative.description'),
                 },
                 {
+                  name: 'emphasis',
+                  type: t('props.table.emphasis.type'),
+                  defaultValue: t('props.table.emphasis.default'),
+                  required: t('props.table.emphasis.required'),
+                  description: t('props.table.emphasis.description'),
+                },
+                {
                   name: 'className',
                   type: t('props.table.className.type'),
                   defaultValue: t('props.table.className.default'),
@@ -553,13 +558,15 @@ export function createSeparator(options?: SeparatorOptions): HTMLElement;`;
             value: t('tokens.table.class'),
             description: t('tokens.table.part'),
           },
-          items: [
-            { token: '--border', value: t('tokens.table.background.class'),      description: t('tokens.table.background.part') },
-            { token: '—',        value: t('tokens.table.heightHorizontal.class'), description: t('tokens.table.heightHorizontal.part') },
-            { token: '—',        value: t('tokens.table.widthHorizontal.class'),  description: t('tokens.table.widthHorizontal.part') },
-            { token: '—',        value: t('tokens.table.widthVertical.class'),    description: t('tokens.table.widthVertical.part') },
-            { token: '—',        value: t('tokens.table.heightVertical.class'),   description: t('tokens.table.heightVertical.part') },
-          ],
+          // Token, seletor e aplicação saem TODOS do conteúdo compartilhado.
+          // Antes cada stack escrevia a primeira coluna à mão, e as cinco
+          // divergiram: uma trazia `--border`, outra `bg-border`, outra o
+          // próprio seletor.
+          items: TOKEN_ROWS.map((k) => ({
+            token: t(`tokens.table.${k}.token`),
+            value: t(`tokens.table.${k}.class`),
+            description: t(`tokens.table.${k}.part`),
+          })),
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode: t('tokens.customizationCode'),
         });

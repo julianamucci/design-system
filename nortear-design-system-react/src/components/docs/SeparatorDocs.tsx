@@ -33,6 +33,9 @@ const priorityKeyMap: Record<string, string> = {
   low: "common.low",
 };
 
+/** Linhas da tabela de tokens, na ordem em que a folha compartilhada as aplica. */
+const TOKEN_ROWS = ["line", "horizontal", "vertical", "emphasisColor", "emphasisThickness"] as const;
+
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 
 const getNavGroups = (t: (key: string) => string) => [
@@ -135,7 +138,7 @@ export function SeparatorDocs() {
   <div>Item 2</div>
 </div>`;
 
-  const codeVertical = `<div className="nds-cluster" data-spacing="md" data-align="center" style={{ height: "3rem" }}>
+  const codeVertical = `<div className="nds-cluster nds-docs-demo-row" data-spacing="md" data-align="center">
   <span>Item 1</span>
   <Separator orientation="vertical" />
   <span>Item 2</span>
@@ -143,10 +146,10 @@ export function SeparatorDocs() {
 
   const structureCode = tContent('anatomy.structureCode');
 
-  const interfaceCode = `// Separator (Base UI)
-interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
+  const interfaceCode = `interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
   orientation?: "horizontal" | "vertical"; // padrão: "horizontal"
   decorative?: boolean;                    // padrão: true
+  emphasis?: "default" | "strong";         // padrão: "default"
   className?: string;
 }`;
 
@@ -189,7 +192,7 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
               {tContent("demonstration.labels.vertical")}
             </p>
-            <div className="nds-cluster nds-text-body nds-border-default nds-rounded-md nds-px-4" data-spacing="md" data-align="center" style={{ height: "4rem" }}>
+            <div className="nds-cluster nds-docs-demo-row nds-text-body nds-border-default nds-rounded-md nds-px-4" data-spacing="md" data-align="center">
               <span>Item 1</span>
               <Separator orientation="vertical" />
               <span>Item 2</span>
@@ -207,6 +210,7 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
           tContent("anatomy.item1"),
           tContent("anatomy.item2"),
           tContent("anatomy.item3"),
+          tContent("anatomy.item4"),
         ]}
         structureCode={structureCode}
         structureLabel={tContent("anatomy.structureLabel")}
@@ -322,7 +326,7 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
             doLabel: tNav("common.do"),
             dontLabel: tNav("common.dont"),
             doPreview: (
-              <div className="nds-cluster nds-text-body" data-spacing="md" data-align="center" style={{ height: "3rem" }}>
+              <div className="nds-cluster nds-docs-demo-row nds-text-body" data-spacing="md" data-align="center">
                 <a href="#" className="nds-text-primary">Link 1</a>
                 <Separator orientation="vertical" />
                 <a href="#" className="nds-text-primary">Link 2</a>
@@ -331,7 +335,11 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
               </div>
             ),
             dontPreview: (
-              <div className="nds-cluster nds-text-body" data-spacing="md">
+              // Contêiner de BLOCO: é onde o separador vertical colapsa para 0px
+              // e some da tela sem erro nenhum. Antes este exemplo usava um
+              // contêiner flex, onde a linha aparece — o "não faça" mostrava o
+              // caso funcionando e contradizia a própria legenda.
+              <div className="nds-block nds-w-full nds-max-w-sm nds-text-body">
                 <a href="#" className="nds-text-primary">Link 1</a>
                 <Separator orientation="vertical" />
                 <a href="#" className="nds-text-primary">Link 2</a>
@@ -368,7 +376,7 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
             description: stripHtml(tContent("variants.styles.vertical")),
             code: codeVertical,
             preview: (
-              <div className="nds-cluster nds-text-body" data-spacing="md" data-align="center" style={{ height: "3rem" }}>
+              <div className="nds-cluster nds-docs-demo-row nds-text-body" data-spacing="md" data-align="center">
                 <span>Item 1</span>
                 <Separator orientation="vertical" />
                 <span>Item 2</span>
@@ -428,6 +436,13 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: toPlainText(tContent("props.table.decorative.description")),
               },
               {
+                name: "emphasis",
+                type: tContent("props.table.emphasis.type"),
+                defaultValue: tContent("props.table.emphasis.default"),
+                required: tContent("props.table.emphasis.required"),
+                description: toPlainText(tContent("props.table.emphasis.description")),
+              },
+              {
                 name: "className",
                 type: tContent("props.table.className.type"),
                 defaultValue: tContent("props.table.className.default"),
@@ -450,33 +465,14 @@ interface SeparatorProps extends React.HTMLAttributes<HTMLDivElement> {
           value: tContent("tokens.table.class"),
           description: tContent("tokens.table.part"),
         }}
-        items={[
-          {
-            token: "--border",
-            value: tContent("tokens.table.background.class"),
-            description: tContent("tokens.table.background.part"),
-          },
-          {
-            token: "h-px",
-            value: tContent("tokens.table.heightHorizontal.class"),
-            description: tContent("tokens.table.heightHorizontal.part"),
-          },
-          {
-            token: "w-full",
-            value: tContent("tokens.table.widthHorizontal.class"),
-            description: tContent("tokens.table.widthHorizontal.part"),
-          },
-          {
-            token: "w-px",
-            value: tContent("tokens.table.widthVertical.class"),
-            description: tContent("tokens.table.widthVertical.part"),
-          },
-          {
-            token: "h-full",
-            value: tContent("tokens.table.heightVertical.class"),
-            description: tContent("tokens.table.heightVertical.part"),
-          },
-        ]}
+        // Token, seletor e aplicação saem TODOS do conteúdo compartilhado. Antes
+        // cada stack escrevia a primeira coluna à mão, e as cinco divergiram: uma
+        // trazia `--border`, outra `bg-border`, outra o próprio seletor.
+        items={TOKEN_ROWS.map((k) => ({
+          token: tContent(`tokens.table.${k}.token`),
+          value: tContent(`tokens.table.${k}.class`),
+          description: tContent(`tokens.table.${k}.part`),
+        }))}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={tContent("tokens.customizationCode")}
       />

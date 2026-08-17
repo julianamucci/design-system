@@ -99,14 +99,14 @@
 
 <Separator orientation="horizontal" />
 
-<div class="nds-cluster" data-spacing="md" data-align="center" style="height: 1.25rem">
+<div class="nds-cluster nds-docs-demo-row" data-spacing="md" data-align="center">
   <span>Item A</span>
   <Separator orientation="vertical" />
   <span>Item B</span>
 </div>`;
 
   const codeHorizontal = `<Separator orientation="horizontal" />`;
-  const codeVertical = `<div class="nds-cluster" data-spacing="md" data-align="center" style="height: 3rem">
+  const codeVertical = `<div class="nds-cluster nds-docs-demo-row" data-spacing="md" data-align="center">
   <span>A</span>
   <Separator orientation="vertical" />
   <span>B</span>
@@ -118,10 +118,14 @@
   const codeSemantic = `<Separator decorative={false} />`;
 
   const interfaceCode = `interface SeparatorProps {
-  orientation?: 'horizontal' | 'vertical';
-  decorative?: boolean;
+  orientation?: 'horizontal' | 'vertical'; // default: 'horizontal'
+  decorative?: boolean;                    // default: true
+  emphasis?: 'default' | 'strong';         // default: 'default'
   class?: string;
 }`;
+
+  /** Linhas da tabela de tokens, na ordem em que a folha compartilhada as aplica. */
+  const TOKEN_ROWS = ['line', 'horizontal', 'vertical', 'emphasisColor', 'emphasisThickness'] as const;
 </script>
 
 <DocsPageLayout navGroups={NAV_GROUPS} activeSection={section.value}>
@@ -150,7 +154,7 @@
       <!-- Vertical -->
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
-        <div class="nds-cluster nds-rounded-md nds-border-default nds-px-4 nds-text-body" data-spacing="md" data-align="center" style="height: 4rem">
+        <div class="nds-cluster nds-docs-demo-row nds-rounded-md nds-border-default nds-px-4 nds-text-body" data-spacing="md" data-align="center">
           <span>Docs</span>
           <Separator orientation="vertical" />
           <span>Source</span>
@@ -193,6 +197,7 @@
       $tStore('anatomy.item1'),
       $tStore('anatomy.item2'),
       $tStore('anatomy.item3'),
+      $tStore('anatomy.item4'),
     ]}
     structureCode={$tStore('anatomy.structureCode')}
   />
@@ -284,7 +289,7 @@
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="nds-cluster nds-text-body nds-rounded-md nds-border-default nds-px-4" data-spacing="md" data-align="center" style="height: 2rem">
+    <div class="nds-cluster nds-docs-demo-row nds-text-body nds-rounded-md nds-border-default nds-px-4" data-spacing="md" data-align="center">
       <span>Docs</span>
       <Separator orientation="vertical" />
       <span>API</span>
@@ -315,14 +320,14 @@
   />
 
   {#snippet variantHorizontal()}
-    <div class="nds-stack nds-text-body" data-spacing="sm" style="width: 18rem">
+    <div class="nds-stack nds-text-body" data-spacing="sm">
       <p class="nds-text-muted-foreground">Linha A</p>
       <Separator />
       <p class="nds-text-muted-foreground">Linha B</p>
     </div>
   {/snippet}
   {#snippet variantVertical()}
-    <div class="nds-cluster nds-text-body" data-spacing="md" data-align="center" style="height: 3rem">
+    <div class="nds-cluster nds-docs-demo-row nds-text-body" data-spacing="md" data-align="center">
       <span>A</span>
       <Separator orientation="vertical" />
       <span>B</span>
@@ -360,6 +365,7 @@
         items: [
           { name: 'orientation', type: $tStore('props.table.orientation.type'),  defaultValue: $tStore('props.table.orientation.default'),  required: $tStore('props.table.orientation.required'),  description: $tStore('props.table.orientation.description')  },
           { name: 'decorative',  type: $tStore('props.table.decorative.type'),   defaultValue: $tStore('props.table.decorative.default'),   required: $tStore('props.table.decorative.required'),   description: $tStore('props.table.decorative.description')   },
+          { name: 'emphasis',    type: $tStore('props.table.emphasis.type'),     defaultValue: $tStore('props.table.emphasis.default'),     required: $tStore('props.table.emphasis.required'),     description: $tStore('props.table.emphasis.description')     },
           { name: 'class',       type: $tStore('props.table.className.type'),    defaultValue: $tStore('props.table.className.default'),    required: $tStore('props.table.className.required'),    description: $tStore('props.table.className.description')    },
         ],
       },
@@ -369,7 +375,10 @@
     extensibilityNotes={$tStore('props.extensibilityCode')}
   />
 
-  <!-- ── Tokens ─────────────────────────────────────────────────── -->
+  <!-- ── Tokens ───────────────────────────────────────────────────
+       Token, seletor e aplicação saem TODOS do conteúdo compartilhado. Antes
+       cada stack escrevia a primeira coluna à mão, e as cinco divergiram: uma
+       trazia `--border`, outra `bg-border`, outra o próprio seletor. -->
   <DocsTokens
     title={$tStore('tokens.title')}
     cols={{
@@ -377,13 +386,11 @@
       value: $tStore('tokens.table.class'),
       description: $tStore('tokens.table.part'),
     }}
-    items={[
-      { token: 'bg-border', value: $tStore('tokens.table.background.class'),       description: $tStore('tokens.table.background.part')       },
-      { token: 'h-px',      value: $tStore('tokens.table.heightHorizontal.class'), description: $tStore('tokens.table.heightHorizontal.part') },
-      { token: 'w-full',    value: $tStore('tokens.table.widthHorizontal.class'),  description: $tStore('tokens.table.widthHorizontal.part')  },
-      { token: 'w-px',      value: $tStore('tokens.table.widthVertical.class'),    description: $tStore('tokens.table.widthVertical.part')    },
-      { token: 'h-full',    value: $tStore('tokens.table.heightVertical.class'),   description: $tStore('tokens.table.heightVertical.part')   },
-    ]}
+    items={TOKEN_ROWS.map((k) => ({
+      token: $tStore(`tokens.table.${k}.token`),
+      value: $tStore(`tokens.table.${k}.class`),
+      description: $tStore(`tokens.table.${k}.part`),
+    }))}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={$tStore('tokens.customizationCode')}
   />

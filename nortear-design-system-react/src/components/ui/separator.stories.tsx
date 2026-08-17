@@ -1,96 +1,138 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
+import { expect } from "storybook/test";
 import { Separator } from "./separator";
 import { SeparatorDocs } from "@/components/docs/SeparatorDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+
+type SeparatorArgs = {
+  orientation: "horizontal" | "vertical";
+  decorative: boolean;
+  emphasis: "default" | "strong";
+};
+
+/**
+ * O painel Code imprime o `render` da story inteiro — o `if` que alterna os dois
+ * exemplos e o contêiner de andaime. É o que a pessoa copia, e não é o que ela
+ * deve escrever. O `transform` devolve o uso real com os controls resolvidos.
+ */
+function playgroundSource(_gerado: string, ctx: { args?: Partial<SeparatorArgs> }): string {
+  const { orientation = "horizontal", decorative = true, emphasis = "default" } = ctx.args ?? {};
+  // Só o que difere do padrão entra no snippet.
+  const attrs = [
+    `orientation="${orientation}"`,
+    decorative ? "" : "decorative={false}",
+    emphasis === "strong" ? 'emphasis="strong"' : "",
+  ].filter(Boolean).join(" ");
+
+  return `import { Separator } from "@/components/ui/separator";
+
+<p>Seção superior</p>
+<Separator ${attrs} />
+<p>Seção inferior</p>`;
+}
 
 const meta = {
   title: "UI/Separator",
   component: Separator,
   tags: ["autodocs", "layout"],
   parameters: {
-    layout: "centered",
-    docs: { page: withAutoDocsTab(SeparatorDocs) },
+    layout: "padded",
+    docs: { page: withAutoDocsTab(SeparatorDocs), source: { transform: playgroundSource } },
   },
   argTypes: {
     orientation: {
-      control: { type: "radio" },
+      control: { type: "inline-radio" },
       options: ["horizontal", "vertical"],
       description: "Direção do divisor.",
+      table: { type: { summary: "'horizontal' | 'vertical'" }, defaultValue: { summary: "'horizontal'" } },
     },
     decorative: {
       control: { type: "boolean" },
       description:
-        "Quando true (padrão), aplica role=\"none\" + aria-hidden. Quando false, anuncia como separator.",
+        "Quando true (padrão), aplica role=none e aria-hidden, sem anunciar orientação. Quando false, expõe role=separator + aria-orientation.",
+      table: { type: { summary: "boolean" }, defaultValue: { summary: "true" } },
+    },
+    emphasis: {
+      control: { type: "inline-radio" },
+      options: ["default", "strong"],
+      description: "Peso da linha. O valor forte dobra a espessura e troca o token de cor.",
+      table: { type: { summary: "'default' | 'strong'" }, defaultValue: { summary: "'default'" } },
     },
   },
   args: {
     orientation: "horizontal",
     decorative: true,
+    emphasis: "default",
   },
 } as Meta<typeof Separator>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<SeparatorArgs>;
 
 export const Playground: Story = {
+  parameters: {
+    covers: ["functional.item1", "functional.item3", "accessibility.item1", "accessibility.item5"],
+  },
   render: (args) => {
     if (args.orientation === "vertical") {
+      // Sem altura cravada: o `align-self: stretch` da folha faz a linha
+      // acompanhar a linha do flex. Cravar altura aqui esconderia o contrato.
       return (
         <div
           key={args.orientation}
-          className="nds-cluster nds-text-body" data-align="center" data-spacing="md" style={{ height: "3rem" }}
+          className="nds-cluster nds-docs-demo-row nds-w-full nds-max-w-md"
+          data-spacing="md"
         >
-          <span>Item 1</span>
+          <span className="nds-text-body">Item A</span>
           <Separator {...args} />
-          <span>Item 2</span>
+          <span className="nds-text-body nds-text-muted-foreground">Item B</span>
         </div>
-      );
+      )
     }
     return (
-      <div key={args.orientation} className="nds-stack nds-text-body" data-spacing="md" style={{ width: "16rem" }}>
-        <div>Item 1</div>
+      <div key={args.orientation} className="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
+        <p className="nds-text-body">Seção superior</p>
         <Separator {...args} />
-        <div>Item 2</div>
+        <p className="nds-text-body">Seção inferior</p>
       </div>
-    );
+    )
   },
   play: async ({ canvasElement, args, step }) => {
-    const canvas = within(canvasElement);
-    const separator = canvasElement.querySelector(
-      "[data-slot='separator']"
-    ) as HTMLElement | null;
+    const separador = canvasElement.querySelector<HTMLElement>(".nds-separator");
 
-    await step("Separator está no DOM", async () => {
-      await expect(separator).toBeInTheDocument();
+    await step("A linha existe e reflete a orientação escolhida", async () => {
+      await expect(separador).toBeInTheDocument();
+      await expect(separador).toHaveAttribute("data-orientation", args.orientation);
     });
 
-    await step("Tem data-orientation correspondente à prop", async () => {
-      await expect(separator).toHaveAttribute(
-        "data-orientation",
-        args.orientation ?? "horizontal"
-      );
+    await step("Espessura de 1px no eixo da orientação", async () => {
+      // Medida computada, não nome de classe: é a espessura que a pessoa vê, e
+      // é o que uma troca de folha quebraria sem mudar atributo nenhum.
+      const caixa = separador!.getBoundingClientRect();
+      await expect(Math.min(caixa.width, caixa.height)).toBeCloseTo(1, 1);
+      await expect(Math.max(caixa.width, caixa.height)).toBeGreaterThan(8);
     });
 
-    await step("Role muda conforme decorative", async () => {
-      if (args.decorative === false) {
-        await expect(separator).toHaveAttribute("role", "separator");
-        await expect(separator).toHaveAttribute(
-          "aria-orientation",
-          args.orientation ?? "horizontal"
-        );
+    await step("Semântica conforme o modo escolhido", async () => {
+      if (args.decorative) {
+        await expect(separador).toHaveAttribute("role", "none");
+        await expect(separador).toHaveAttribute("aria-hidden", "true");
+        // O atributo não é permitido em role="none" e nada informaria fora da
+        // árvore de acessibilidade.
+        await expect(separador).not.toHaveAttribute("aria-orientation");
       } else {
-        await expect(separator).toHaveAttribute("role", "none");
+        await expect(separador).toHaveAttribute("role", "separator");
+        await expect(separador).toHaveAttribute("aria-orientation", args.orientation);
+        await expect(separador).not.toHaveAttribute("aria-hidden");
       }
     });
 
-    await step("Não recebe foco por teclado", async () => {
-      await expect(separator).not.toHaveAttribute("tabindex", "0");
-      // Tenta focar — separator não deve receber foco
-      separator?.focus?.();
-      await expect(document.activeElement).not.toBe(separator);
-      // Sanity: canvas existe
-      await expect(canvas).toBeTruthy();
+    await step("Fora da ordem de tabulação e sem aceitar foco", async () => {
+      await expect(separador).not.toHaveAttribute("tabindex");
+      // `focus()` num elemento não focável não muda o `activeElement` — a
+      // asserção é idempotente e sobrevive ao replay do painel Interactions.
+      separador!.focus?.();
+      await expect(canvasElement.ownerDocument.activeElement).not.toBe(separador);
     });
   },
 };

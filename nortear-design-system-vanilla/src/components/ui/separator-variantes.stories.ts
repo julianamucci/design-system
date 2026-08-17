@@ -12,8 +12,8 @@ const meta: Meta = {
     docs: {
       description: {
         component:
-          'Orientações do Separator: horizontal (h-px w-full) e vertical (w-px h-full). ' +
-          'A orientação vertical exige um parent com altura definida ou flex container.',
+          'Orientações do Separator. A horizontal é uma linha de 1px de altura que ocupa a largura do contêiner; ' +
+          'a vertical é uma linha de 1px de largura cuja altura vem do contêiner flex ou de grade, sem medida cravada.',
       },
     },
   },
@@ -25,6 +25,7 @@ type Story = StoryObj;
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Horizontal: Story = {
+  parameters: { covers: ['functional.item1', 'visual.item1'] },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -34,7 +35,7 @@ export const Horizontal: Story = {
     top.className = 'nds-text-body';
     const topTitle = document.createElement('p');
     topTitle.className = 'nds-font-medium';
-    topTitle.textContent = 'Configuracoes da conta';
+    topTitle.textContent = 'Configurações da conta';
     const topDesc = document.createElement('p');
     topDesc.className = 'nds-text-muted-foreground';
     topDesc.textContent = 'Gerencie seu nome e e-mail.';
@@ -54,20 +55,31 @@ export const Horizontal: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Separator horizontal presente com data-orientation', async () => {
-      const separator = canvasElement.querySelector<HTMLElement>('[data-slot="separator"]');
-      await expect(separator).toBeTruthy();
-      await expect(separator).toHaveAttribute('data-orientation', 'horizontal');
-      await expect(separator).toHaveClass('nds-separator');
+    const wrap = canvasElement.querySelector<HTMLElement>('.nds-stack')!;
+    const sep = wrap.querySelector<HTMLElement>('.nds-separator');
+
+    await step('A orientação horizontal chega ao DOM', async () => {
+      await expect(sep).toBeInTheDocument();
+      await expect(sep).toHaveAttribute('data-orientation', 'horizontal');
+    });
+
+    await step('Linha fina na altura e cheia na largura', async () => {
+      // O que o horizontal promete é linha cheia e fina. Medir os dois evita
+      // que uma troca de folha passe com o atributo certo e o visual errado.
+      const caixa = sep!.getBoundingClientRect();
+      const pai = wrap.getBoundingClientRect();
+      await expect(caixa.height).toBeCloseTo(1, 1);
+      await expect(caixa.width).toBeCloseTo(pai.width, 0);
     });
   },
 };
 
 export const Vertical: Story = {
+  parameters: { covers: ['functional.item2', 'visual.item2'] },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-cluster nds-w-full nds-max-w-md';
-    wrap.style.height = '4rem';
+    wrap.className = 'nds-cluster nds-docs-demo-row nds-w-full nds-max-w-md';
+    wrap.dataset.spacing = 'md';
 
     const a = document.createElement('span');
     a.className = 'nds-text-body';
@@ -91,10 +103,21 @@ export const Vertical: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    await step('Separators verticais presentes', async () => {
-      const separators = canvasElement.querySelectorAll<HTMLElement>('[data-slot="separator"][data-orientation="vertical"]');
-      await expect(separators.length).toBeGreaterThan(0);
-      await expect(separators[0]).toHaveClass('nds-separator');
+    const seps = canvasElement.querySelectorAll<HTMLElement>('.nds-separator');
+
+    await step('As duas linhas verticais chegam ao DOM', async () => {
+      await expect(seps).toHaveLength(2);
+      await expect(seps[0]).toHaveAttribute('data-orientation', 'vertical');
+    });
+
+    await step('Linha fina na largura e esticada na altura, sem medida cravada', async () => {
+      // Este é o caso que a asserção antiga jamais pegaria: o separador vertical
+      // colapsa para 0px quando o contêiner não é flex nem grade, e continua
+      // presente no DOM com o atributo certo. Medir a altura é o que denuncia.
+      const caixa = seps[0].getBoundingClientRect();
+      await expect(caixa.width).toBeCloseTo(1, 1);
+      await expect(caixa.height).toBeGreaterThan(8);
+      await expect(seps[0].style.height).toBe('');
     });
   },
 };

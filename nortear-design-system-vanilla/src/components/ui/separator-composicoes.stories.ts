@@ -1,16 +1,21 @@
-import type { Meta, StoryObj } from '@storybook/angular-vite';
-import { moduleMetadata } from '@storybook/angular-vite';
+import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
-import { NdsSeparator } from './separator';
-import { NDS_CARD } from './card';
+import { createSeparator } from './separator';
+import {
+  createCard,
+  createCardContent,
+  createCardDescription,
+  createCardHeader,
+  createCardTitle,
+} from './card';
 
 const meta: Meta = {
+  tags: ['layout'],
   title: 'UI/Separator/Compositions',
-  decorators: [moduleMetadata({ imports: [NdsSeparator, ...NDS_CARD] })],
   parameters: {
+    actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
-    actions: { disable: true },
     docs: {
       description: {
         component:
@@ -23,22 +28,32 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+function texto(txt: string, classe = 'nds-text-body'): HTMLElement {
+  const el = document.createElement('p');
+  el.className = classe;
+  el.textContent = txt;
+  return el;
+}
+
+// ─── Stories ──────────────────────────────────────────────────────────────────
+
 export const InCard: Story = {
   parameters: { covers: ['visual.item3'] },
-  render: () => ({
-    template: `
-      <div ndsCard class="nds-max-w-md">
-        <div ndsCardHeader>
-          <div ndsCardTitle>Resumo do pedido</div>
-          <div ndsCardDescription>3 itens, entrega em 5 dias úteis.</div>
-        </div>
-        <div ndsSeparator orientation="horizontal"></div>
-        <div ndsCardContent>
-          <p class="nds-text-body">Total: R$ 249,90</p>
-        </div>
-      </div>
-    `,
-  }),
+  render: () => {
+    const card = createCard({ className: 'nds-max-w-md' });
+
+    const header = createCardHeader();
+    header.append(
+      createCardTitle({ text: 'Resumo do pedido' }),
+      createCardDescription({ text: '3 itens, entrega em 5 dias úteis.' }),
+    );
+
+    const content = createCardContent();
+    content.append(texto('Total: R$ 249,90'));
+
+    card.append(header, createSeparator({ orientation: 'horizontal' }), content);
+    return card;
+  },
   play: async ({ canvasElement, step }) => {
     const card = canvasElement.querySelector<HTMLElement>('.nds-card')!;
     const sep = card.querySelector<HTMLElement>('.nds-separator');
@@ -60,18 +75,28 @@ export const InCard: Story = {
 
 export const InMenu: Story = {
   parameters: { covers: ['visual.item4'] },
-  render: () => ({
-    // A divisão entre grupos de um menu FAZ parte da estrutura da informação:
-    // é o caso em que o separador deixa de ser decorativo.
-    template: `
-      <div class="nds-stack nds-max-w-xs nds-rounded-md nds-border-default nds-bg-background nds-p-1" data-spacing="xs">
-        <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Perfil</div>
-        <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Conta</div>
-        <div ndsSeparator orientation="horizontal" [decorative]="false"></div>
-        <div class="nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body">Sair</div>
-      </div>
-    `,
-  }),
+  render: () => {
+    const menu = document.createElement('div');
+    menu.className = 'nds-stack nds-max-w-xs nds-rounded-md nds-border-default nds-bg-background nds-p-1';
+    menu.dataset.spacing = 'xs';
+
+    const item = (txt: string) => {
+      const el = document.createElement('div');
+      el.className = 'nds-rounded-sm nds-hover-bg-accent nds-px-2 nds-py-1 nds-text-body';
+      el.textContent = txt;
+      return el;
+    };
+
+    menu.append(
+      item('Perfil'),
+      item('Conta'),
+      // A divisão entre grupos de um menu FAZ parte da estrutura da informação:
+      // é o caso em que o separador deixa de ser decorativo.
+      createSeparator({ orientation: 'horizontal', decorative: false }),
+      item('Sair'),
+    );
+    return menu;
+  },
   play: async ({ canvasElement, step }) => {
     const menu = canvasElement.querySelector<HTMLElement>('.nds-stack')!;
     const sep = menu.querySelector<HTMLElement>('.nds-separator')!;
@@ -93,20 +118,32 @@ export const InMenu: Story = {
 
 export const EmphasisStrong: Story = {
   parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item5'] },
-  render: () => ({
+  render: () => {
+    const wrap = document.createElement('div');
+    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.dataset.spacing = 'md';
+
+    const padrao = createSeparator({ orientation: 'horizontal' });
+    padrao.dataset.testid = 'padrao';
+
     // A classe extra entra junto com a ênfase: é o mesmo par que a docs page
-    // documenta em Extensibilidade. Não existe input `class` aqui — o Angular
-    // já mescla o `class` escrito no elemento com o que a diretiva declara.
-    template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
-        <p class="nds-text-body nds-text-muted-foreground">Fim da seção</p>
-        <div ndsSeparator orientation="horizontal" data-testid="padrao"></div>
-        <p class="nds-text-body nds-text-muted-foreground">Continuação do mesmo assunto</p>
-        <div ndsSeparator orientation="horizontal" emphasis="strong" class="nds-mt-4" data-testid="forte"></div>
-        <p class="nds-text-body nds-font-medium">Troca de assunto</p>
-      </div>
-    `,
-  }),
+    // documenta em Extensibilidade, e prova que ela convive com a base.
+    const forte = createSeparator({
+      orientation: 'horizontal',
+      emphasis: 'strong',
+      className: 'nds-mt-4',
+    });
+    forte.dataset.testid = 'forte';
+
+    wrap.append(
+      texto('Fim da seção', 'nds-text-body nds-text-muted-foreground'),
+      padrao,
+      texto('Continuação do mesmo assunto', 'nds-text-body nds-text-muted-foreground'),
+      forte,
+      texto('Troca de assunto', 'nds-text-body nds-font-medium'),
+    );
+    return wrap;
+  },
   play: async ({ canvasElement, step }) => {
     const padrao = canvasElement.querySelector<HTMLElement>('[data-testid="padrao"]')!;
     const forte = canvasElement.querySelector<HTMLElement>('[data-testid="forte"]')!;
@@ -120,9 +157,9 @@ export const EmphasisStrong: Story = {
     await step('A ênfase forte troca o token de cor da linha', async () => {
       // Comparar com o separador padrão renderizado ao lado, e não com um valor
       // literal: o token muda por tema, a diferença entre os dois não.
-      await expect(getComputedStyle(forte).backgroundColor).not.toBe(
-        getComputedStyle(padrao).backgroundColor,
-      );
+      const corPadrao = getComputedStyle(padrao).backgroundColor;
+      const corForte = getComputedStyle(forte).backgroundColor;
+      await expect(corForte).not.toBe(corPadrao);
     });
 
     await step('A classe extra convive com a classe base', async () => {

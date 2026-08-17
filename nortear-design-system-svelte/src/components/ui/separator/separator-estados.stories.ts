@@ -8,12 +8,13 @@ const meta: Meta = {
   component: SeparatorStory,
   tags: ['layout'],
   parameters: {
-    layout: 'centered',
+    layout: 'padded',
     controls: { disable: true },
+    actions: { disable: true },
     docs: {
       description: {
         component:
-          'Modos de acessibilidade: decorativo (role="none" + aria-hidden) e semântico (role="separator" + aria-orientation).',
+          'Modos do Separator: decorativo (padrão, ignorado por leitores de tela) e semântico (anunciado como divisor, com a própria orientação).',
       },
     },
   },
@@ -23,36 +24,42 @@ export default meta;
 type Story = StoryObj;
 
 export const Decorative: Story = {
-  args: {
-    orientation: 'horizontal',
-    decorative: true,
-  },
+  parameters: { covers: ['functional.item3', 'accessibility.item2', 'accessibility.item3'] },
+  render: () => ({
+    Component: SeparatorStory,
+    props: { caso: 'estados', decorative: true },
+  }),
   play: async ({ canvasElement, step }) => {
-    await step('Separator decorativo presente', async () => {
-      const sep = canvasElement.querySelector('[data-slot="separator"]');
-      await expect(sep).toBeInTheDocument();
-    });
-    await step('role="none" + aria-hidden="true"', async () => {
-      const sep = canvasElement.querySelector('[data-slot="separator"]');
+    const sep = canvasElement.querySelector<HTMLElement>('.nds-separator');
+
+    await step('Sai da árvore de acessibilidade', async () => {
       await expect(sep).toHaveAttribute('role', 'none');
       await expect(sep).toHaveAttribute('aria-hidden', 'true');
+    });
+
+    await step('Não anuncia orientação', async () => {
+      // `aria-orientation` não é permitido em role="none" e nada informaria
+      // fora da árvore de acessibilidade — o atributo é ruído, não detalhe.
+      await expect(sep).not.toHaveAttribute('aria-orientation');
     });
   },
 };
 
 export const Semantic: Story = {
-  args: {
-    orientation: 'horizontal',
-    decorative: false,
-  },
+  parameters: { covers: ['functional.item4', 'accessibility.item4'] },
+  render: () => ({
+    Component: SeparatorStory,
+    props: { caso: 'estados', decorative: false },
+  }),
   play: async ({ canvasElement, step }) => {
-    await step('Separator semântico presente', async () => {
-      const sep = canvasElement.querySelector('[data-slot="separator"]');
-      await expect(sep).toBeInTheDocument();
-    });
-    await step('role="separator" + aria-orientation', async () => {
-      const sep = canvasElement.querySelector('[data-slot="separator"]');
+    const sep = canvasElement.querySelector<HTMLElement>('.nds-separator');
+
+    await step('Exposto como divisor', async () => {
       await expect(sep).toHaveAttribute('role', 'separator');
+      await expect(sep).not.toHaveAttribute('aria-hidden');
+    });
+
+    await step('Anuncia a própria orientação', async () => {
       await expect(sep).toHaveAttribute('aria-orientation', 'horizontal');
     });
   },
