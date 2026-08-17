@@ -944,17 +944,26 @@ const [showRulers, setShowRulers] = useState(false);
           value: tContent("tokens.table.class"),
           description: tContent("tokens.table.part"),
         }}
+        // A coluna do meio é "Classe .nds-*" e trazia nome de utilitária do
+        // Tailwind — vocabulário morto desde a migração. Cada linha aponta agora
+        // o seletor que o CSS realmente usa, e cada token foi medido no
+        // navegador: só `--elevation-md` muda a sombra (`--shadow` e
+        // `--shadow-md` não movem nada), o separador é `--muted` e não
+        // `--border`, e o raio do item é `--radius-sm`, não `--radius`.
         items={[
-          { token: "--popover",            value: "bg-popover",            description: tContent("tokens.table.popoverBg") },
-          { token: "--popover-foreground", value: "text-popover-foreground", description: tContent("tokens.table.popoverFg") },
-          { token: "--accent",             value: "bg-accent",             description: tContent("tokens.table.accentBg") },
-          { token: "--accent-foreground",  value: "text-accent-foreground", description: tContent("tokens.table.accentFg") },
-          { token: "--destructive",        value: "text-destructive",      description: tContent("tokens.table.destructive") },
-          { token: "--destructive",        value: "bg-destructive/10",     description: tContent("tokens.table.destructiveFocus") },
-          { token: "--muted-foreground",   value: "nds-text-muted-foreground", description: tContent("tokens.table.mutedFg") },
-          { token: "--border",             value: "bg-border",             description: tContent("tokens.table.border") },
-          { token: "--shadow",             value: "shadow-md",             description: tContent("tokens.table.shadow") },
-          { token: "--radius",             value: "rounded-lg",            description: tContent("tokens.table.radius") },
+          { token: "--popover",            value: ".nds-dropdown-menu-content",    description: tContent("tokens.table.popoverBg") },
+          { token: "--popover-foreground", value: ".nds-dropdown-menu-content",    description: tContent("tokens.table.popoverFg") },
+          { token: "--accent",             value: ".nds-dropdown-menu-item",       description: tContent("tokens.table.accentBg") },
+          { token: "--accent-foreground",  value: ".nds-dropdown-menu-item",       description: tContent("tokens.table.accentFg") },
+          { token: "--destructive",        value: '[data-variant="destructive"]',  description: tContent("tokens.table.destructive") },
+          { token: "--destructive",        value: '[data-variant="destructive"]:focus', description: tContent("tokens.table.destructiveFocus") },
+          { token: "--muted-foreground",   value: ".nds-dropdown-menu-shortcut",   description: tContent("tokens.table.mutedFg") },
+          { token: "--muted",              value: ".nds-dropdown-menu-separator",  description: tContent("tokens.table.border") },
+          { token: "--border",             value: ".nds-dropdown-menu-content",    description: tContent("tokens.table.popupBorder") },
+          { token: "--elevation-md",       value: ".nds-dropdown-menu-content",    description: tContent("tokens.table.shadow") },
+          { token: "--radius",             value: ".nds-dropdown-menu-content",    description: tContent("tokens.table.radius") },
+          { token: "--radius-sm",          value: ".nds-dropdown-menu-item",       description: tContent("tokens.table.radiusItem") },
+          { token: "--z-popover",          value: ".nds-dropdown-menu-positioner", description: tContent("tokens.table.zIndex") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}

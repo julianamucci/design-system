@@ -14,6 +14,25 @@
  * Tokens: --popover (bg), --popover-foreground (fg), --border, --radius
  */
 
+/*
+ * A largura padrão do painel, DECLARADA — e declarada aqui, no `:root`.
+ *
+ * Ela vivia só como fallback de `var(--hover-card-width, 20rem)`. Medido em
+ * navegador, o gancho funcionava (redefinir levava o painel de 320px a 480px),
+ * mas o token não EXISTIA para ninguém: não aparecia ao inspecionar o tema, e a
+ * varredura de tokens documentados o acusava de inerte — a tabela de tokens
+ * prometia uma customização que nada no CSS confirmava.
+ *
+ * `:root` e não `.nds-hover-card-content`: custom property declarada no próprio
+ * elemento vence a herdada, e um `:root { --hover-card-width: 24rem }` na folha
+ * de quem consome — que é a customização documentada — deixaria de ter efeito.
+ * No `:root`, a folha do consumidor entra depois desta e ganha, e qualquer
+ * ancestral mais próximo também.
+ */
+:root {
+  --hover-card-width: 20rem;                     /* 320px */
+}
+
 .nds-hover-card-content {
   position: absolute;
   z-index: var(--z-popover);
@@ -26,6 +45,9 @@
    *    index.css: mesma especificidade, e quem vem depois ganha. (A nota antiga
    *    aqui dizia o contrário; era de antes de as utilities mudarem de posição.)
    */
+  /* O fallback continua: a declaração do `:root` acima é a fonte, e ele é a
+   * rede para o caso de a folha de tokens não alcançar o painel (portal em
+   * outro documento, shadow root). Os dois dizem 20rem. */
   width: var(--hover-card-width, 20rem);         /* 320px */
 
   padding: var(--spacing-4);                     /* 16px */

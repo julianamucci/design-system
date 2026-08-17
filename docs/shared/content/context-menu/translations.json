@@ -232,8 +232,10 @@
         "destructiveFocus": "Fundo de item destrutivo em foco",
         "mutedFg": "Texto de label e shortcut",
         "border": "Linha separadora",
+    "popupBorder": "Borda de 1px do popup",
         "shadow": "Sombra do popup",
-        "radius": "Border radius do popup e dos itens",
+        "radius": "Border radius do popup",
+    "radiusItem": "Border radius dos itens do menu",
         "zIndex": "Camada de empilhamento do popup"
       },
       "customizationTitle": "Como personalizar via tema:"
@@ -666,8 +668,10 @@
         "destructiveFocus": "Destructive item focus background",
         "mutedFg": "Label and shortcut text",
         "border": "Separator line",
+    "popupBorder": "1px popup border",
         "shadow": "Popup shadow",
-        "radius": "Popup and item border radius",
+        "radius": "Popup border radius",
+    "radiusItem": "Menu item border radius",
         "zIndex": "Popup stacking layer"
       },
       "customizationTitle": "How to customize via theme:"
@@ -1100,8 +1104,10 @@
         "destructiveFocus": "Fondo de ítem destructivo en foco",
         "mutedFg": "Texto de etiqueta y atajo",
         "border": "Línea separadora",
+    "popupBorder": "Borde de 1px del popup",
         "shadow": "Sombra del popup",
-        "radius": "Border radius del popup e ítems",
+        "radius": "Border radius del popup",
+    "radiusItem": "Border radius de los ítems del menú",
         "zIndex": "Capa de apilamiento del popup"
       },
       "customizationTitle": "Cómo personalizar vía tema:"

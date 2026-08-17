@@ -813,16 +813,25 @@ interface ContextMenuRadioGroupProps {
       description: $tStore('tokens.table.part'),
     }}
     items={[
-      { token: '--popover',            value: 'bg-popover',              description: $tStore('tokens.table.popoverBg')        },
-      { token: '--popover-foreground', value: 'text-popover-foreground', description: $tStore('tokens.table.popoverFg')        },
-      { token: '--accent',             value: 'bg-accent',               description: $tStore('tokens.table.accentBg')         },
-      { token: '--accent-foreground',  value: 'text-accent-foreground',  description: $tStore('tokens.table.accentFg')         },
-      { token: '--destructive',        value: 'text-destructive',        description: $tStore('tokens.table.destructive')      },
-      { token: '--destructive',        value: 'bg-destructive/10',       description: $tStore('tokens.table.destructiveFocus') },
-      { token: '--muted-foreground',   value: 'nds-text-muted-foreground',   description: $tStore('tokens.table.mutedFg')          },
-      { token: '--border',             value: 'bg-border',               description: $tStore('tokens.table.border')           },
-      { token: '--shadow',             value: 'shadow-md',               description: $tStore('tokens.table.shadow')           },
-      { token: '--radius',             value: 'rounded-lg',              description: $tStore('tokens.table.radius')           },
+      // A coluna do meio é "Classe .nds-*" e trazia nome de utilitária do
+      // Tailwind — vocabulário morto desde a migração. Cada linha aponta agora o
+      // seletor que o CSS realmente usa, e cada token foi medido no navegador:
+      // só `--elevation-md` muda a sombra (`--shadow` e `--shadow-md` não movem
+      // nada), o separador é `--muted` e não `--border`, e o raio do item é
+      // `--radius-sm`, não `--radius`.
+      { token: '--popover',            value: '.nds-dropdown-menu-content',    description: $tStore('tokens.table.popoverBg')        },
+      { token: '--popover-foreground', value: '.nds-dropdown-menu-content',    description: $tStore('tokens.table.popoverFg')        },
+      { token: '--accent',             value: '.nds-dropdown-menu-item',       description: $tStore('tokens.table.accentBg')         },
+      { token: '--accent-foreground',  value: '.nds-dropdown-menu-item',       description: $tStore('tokens.table.accentFg')         },
+      { token: '--destructive',        value: '[data-variant="destructive"]',  description: $tStore('tokens.table.destructive')      },
+      { token: '--destructive',        value: '[data-variant="destructive"]:focus', description: $tStore('tokens.table.destructiveFocus') },
+      { token: '--muted-foreground',   value: '.nds-dropdown-menu-shortcut',   description: $tStore('tokens.table.mutedFg')          },
+      { token: '--muted',              value: '.nds-dropdown-menu-separator',  description: $tStore('tokens.table.border')           },
+      { token: '--border',             value: '.nds-dropdown-menu-content',    description: $tStore('tokens.table.popupBorder')      },
+      { token: '--elevation-md',       value: '.nds-dropdown-menu-content',    description: $tStore('tokens.table.shadow')           },
+      { token: '--radius',             value: '.nds-dropdown-menu-content',    description: $tStore('tokens.table.radius')           },
+      { token: '--radius-sm',          value: '.nds-dropdown-menu-item',       description: $tStore('tokens.table.radiusItem')       },
+      { token: '--z-popover',          value: '.nds-dropdown-menu-positioner', description: $tStore('tokens.table.zIndex')           },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}

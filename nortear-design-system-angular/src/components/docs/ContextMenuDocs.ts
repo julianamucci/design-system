@@ -659,9 +659,15 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
       { token: '--destructive',          k: 'destructive',      alvo: '[data-variant="destructive"]' },
       { token: '--destructive',          k: 'destructiveFocus', alvo: '[data-variant="destructive"]' },
       { token: '--muted-foreground',     k: 'mutedFg',          alvo: '.nds-dropdown-menu-shortcut' },
-      { token: '--border',               k: 'border',           alvo: '.nds-dropdown-menu-separator' },
+      // Medido no navegador: o separador é `--muted` (245,245,245), não
+      // `--border` (230,230,230) — este último pinta a BORDA do popup, que
+      // agora tem linha própria. O raio do item é `--radius-sm` (6px), não o
+      // `--radius` (10px) do popup.
+      { token: '--muted',                k: 'border',           alvo: '.nds-dropdown-menu-separator' },
+      { token: '--border',               k: 'popupBorder',      alvo: '.nds-dropdown-menu-content' },
       { token: '--elevation-md',         k: 'shadow',           alvo: '.nds-dropdown-menu-content' },
       { token: '--radius',               k: 'radius',           alvo: '.nds-dropdown-menu-content' },
+      { token: '--radius-sm',            k: 'radiusItem',       alvo: '.nds-dropdown-menu-item' },
       { token: '--z-popover',            k: 'zIndex',           alvo: '.nds-dropdown-menu-positioner' },
     ].map(({ token, k, alvo }) => ({
       token,

@@ -923,17 +923,26 @@ export type ContextMenuOptions = {
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--popover',            value: 'bg-popover',           description: t('tokens.table.popoverBg')        },
-            { token: '--popover-foreground', value: 'text-popover-foreground', description: t('tokens.table.popoverFg')    },
-            { token: '--accent',             value: 'bg-accent',            description: t('tokens.table.accentBg')         },
-            { token: '--accent-foreground',  value: 'text-accent-foreground',  description: t('tokens.table.accentFg')     },
-            { token: '--destructive',        value: 'text-destructive',     description: t('tokens.table.destructive')      },
-            { token: '--destructive',        value: 'bg-destructive/10',    description: t('tokens.table.destructiveFocus') },
-            { token: '--muted-foreground',   value: 'nds-text-muted-foreground',description: t('tokens.table.mutedFg')          },
-            { token: '--border',             value: 'bg-muted / border',    description: t('tokens.table.border')           },
-            { token: '--shadow-md',          value: 'shadow-md',            description: t('tokens.table.shadow')           },
-            { token: '--radius',             value: 'rounded-md / rounded-sm', description: t('tokens.table.radius')        },
-            { token: 'z-50',                 value: 'z-50',                 description: t('tokens.table.zIndex')           },
+            // A coluna do meio é "Classe .nds-*" e trazia nome de utilitária do
+            // Tailwind — vocabulário morto desde a migração. Cada linha aponta
+            // agora o seletor que o CSS realmente usa, e cada token foi medido
+            // no navegador: só `--elevation-md` muda a sombra (`--shadow-md` não
+            // move nada aqui), o separador é `--muted` e não `--border`, o raio
+            // do item é `--radius-sm` e a camada é `--z-popover` — `z-50` era
+            // nome de utilitária, não token.
+            { token: '--popover',            value: '.nds-dropdown-menu-content',    description: t('tokens.table.popoverBg')        },
+            { token: '--popover-foreground', value: '.nds-dropdown-menu-content',    description: t('tokens.table.popoverFg')        },
+            { token: '--accent',             value: '.nds-dropdown-menu-item',       description: t('tokens.table.accentBg')         },
+            { token: '--accent-foreground',  value: '.nds-dropdown-menu-item',       description: t('tokens.table.accentFg')         },
+            { token: '--destructive',        value: '[data-variant="destructive"]',  description: t('tokens.table.destructive')      },
+            { token: '--destructive',        value: '[data-variant="destructive"]:focus', description: t('tokens.table.destructiveFocus') },
+            { token: '--muted-foreground',   value: '.nds-dropdown-menu-shortcut',   description: t('tokens.table.mutedFg')          },
+            { token: '--muted',              value: '.nds-dropdown-menu-separator',  description: t('tokens.table.border')           },
+            { token: '--border',             value: '.nds-dropdown-menu-content',    description: t('tokens.table.popupBorder')      },
+            { token: '--elevation-md',       value: '.nds-dropdown-menu-content',    description: t('tokens.table.shadow')           },
+            { token: '--radius',             value: '.nds-dropdown-menu-content',    description: t('tokens.table.radius')           },
+            { token: '--radius-sm',          value: '.nds-dropdown-menu-item',       description: t('tokens.table.radiusItem')       },
+            { token: '--z-popover',          value: '.nds-dropdown-menu-positioner', description: t('tokens.table.zIndex')           },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,
