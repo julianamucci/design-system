@@ -34,21 +34,23 @@
   --accent-foreground: 18 60% 22%;
 
   /* Feedback — paleta quente */
+  /* Os quatro `-foreground` são o texto corrido do contêiner colorido, e neste
+     projeto valem `--foreground` — a regra da casa. São ponto de extensão: um
+     tema derivado pode dar a cada um valor próprio. Ver tokens.css. */
   --destructive: 0 74% 42%;
-  --destructive-foreground: 0 0% 100%;
+  --destructive-foreground: var(--foreground);
   --success: 130 60% 28%;
-  --success-foreground: 0 0% 100%;
+  --success-foreground: var(--foreground);
   --warning: 28 95% 38%;
-  --warning-foreground: 0 0% 100%;
+  --warning-foreground: var(--foreground);
   --info: 24 85% 45%;
-  --info-foreground: 0 0% 100%;
+  --info-foreground: var(--foreground);
 
   /* Structure */
   --border: 30 15% 88%;
   --input: 30 15% 54%;              /* 3.27:1 sobre --background; matiz quente preservado */
   --input-background: 30 25% 99%;
   --ring: 18 75% 45%;               /* alinhado com primary */
-  --ring-offset-color: 30 25% 99%;
 
   /* Charts — paleta âmbar/laranja */
   --chart-1: 32 95% 60%;
@@ -89,18 +91,17 @@
   --accent: 25 20% 18%;
   --accent-foreground: 35 55% 90%;
   --destructive: 0 80% 65%;
-  --destructive-foreground: 0 0% 100%;
+  --destructive-foreground: var(--foreground);
   --success: 130 60% 55%;
-  --success-foreground: 0 0% 0%;
+  --success-foreground: var(--foreground);
   --warning: 35 92% 55%;
-  --warning-foreground: 0 0% 0%;
+  --warning-foreground: var(--foreground);
   --info: 24 85% 58%;
-  --info-foreground: 0 0% 0%;
+  --info-foreground: var(--foreground);
   --border: 25 10% 16%;
   --input: 25 10% 41%;              /* 3.26:1 sobre --background; matiz quente preservado */
   --input-background: 25 15% 9%;
   --ring: 22 85% 55%;
-  --ring-offset-color: 25 15% 9%;
   --sidebar: 25 15% 9%;
   --sidebar-foreground: 30 20% 96%;
   --sidebar-primary: 22 85% 60%;

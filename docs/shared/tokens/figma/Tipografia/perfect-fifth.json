@@ -25,6 +25,28 @@
       "$value": 81
     }
   },
+  "controle": {
+    "text-control-xs": {
+      "$type": "number",
+      "$value": 10
+    },
+    "text-control-sm": {
+      "$type": "number",
+      "$value": 12
+    },
+    "text-control": {
+      "$type": "number",
+      "$value": 14
+    },
+    "text-control-lg": {
+      "$type": "number",
+      "$value": 16
+    },
+    "text-control-xl": {
+      "$type": "number",
+      "$value": 18
+    }
+  },
   "escala": {
     "type-base": {
       "$type": "number",
@@ -39,6 +61,10 @@
     "font-weight-extra-bold": {
       "$type": "number",
       "$value": 800
+    },
+    "font-weight-bold": {
+      "$type": "number",
+      "$value": 700
     },
     "font-weight-semi-bold": {
       "$type": "number",

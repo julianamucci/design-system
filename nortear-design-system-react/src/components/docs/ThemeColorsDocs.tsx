@@ -34,7 +34,7 @@ const PALETTE_GROUPS: Array<{ key: string; tokens: string[] }> = [
   },
   {
     key: 'structure',
-    tokens: ['border', 'input', 'input-background', 'ring', 'ring-offset-color'],
+    tokens: ['border', 'input', 'input-background', 'ring'],
   },
   {
     key: 'sidebar',

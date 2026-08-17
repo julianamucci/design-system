@@ -185,12 +185,35 @@ function layer(...selectors) {
   return Object.assign({}, ...selectors.map(get));
 }
 
+/**
+ * Segue indireção PURA entre tokens de cor: `--destructive-foreground:
+ * var(--foreground)`.
+ *
+ * Os quatro `--*-foreground` de feedback são declarados assim de propósito — o
+ * valor é `--foreground` neste projeto, e o token existe para que um projeto
+ * derivado o redefina sem tocar em componente. O `HSL` não casa `var(...)`, e
+ * sem seguir a indireção os quatro DESAPARECIAM do export: quatro variáveis
+ * documentadas na paleta e ausentes da biblioteca do Figma, sem aviso.
+ *
+ * Só a indireção pura é seguida. `hsl(var(--foreground))` — a forma dos
+ * `--code-block-*` — continua fora, porque ali o alias é o próprio ponto: são
+ * tokens de conveniência da folha, não variáveis de paleta.
+ */
+function resolverAlias(raw, decls, vistos = new Set()) {
+  const m = /^var\(\s*(--[\w-]+)\s*\)$/.exec(String(raw).trim());
+  if (!m) return raw;
+  if (vistos.has(m[1])) return raw;             // ciclo: devolve cru e o HSL descarta
+  vistos.add(m[1]);
+  const alvo = decls[m[1]];
+  return alvo === undefined ? raw : resolverAlias(alvo, decls, vistos);
+}
+
 /** Agrupamento das cores — espelha os comentários de seção do tokens.css. */
 const COLOR_GROUPS = [
   ['superficie', ['background', 'foreground', 'card', 'card-foreground', 'popover', 'popover-foreground']],
   ['marca', ['primary', 'primary-foreground', 'secondary', 'secondary-foreground', 'muted', 'muted-foreground', 'accent', 'accent-foreground']],
   ['feedback', ['destructive', 'destructive-foreground', 'success', 'success-foreground', 'warning', 'warning-foreground', 'info', 'info-foreground']],
-  ['estrutura', ['border', 'input', 'input-background', 'ring', 'ring-offset-color']],
+  ['estrutura', ['border', 'input', 'input-background', 'ring']],
 ];
 
 function colorGroupOf(name) {
@@ -224,7 +247,7 @@ for (const tema of TEMAS) {
   for (const [modo, decls] of [[`${tema}-light`, light], [`${tema}-dark`, dark]]) {
     const tree = {};
     for (const [token, raw] of Object.entries(decls)) {
-      const cor = hslToDtcg(raw);
+      const cor = hslToDtcg(resolverAlias(raw, decls));
       if (!cor) continue;
       const name = token.slice(2);
       put(tree, `${colorGroupOf(name)}/${name}`, { $type: 'color', $value: cor });
@@ -246,7 +269,7 @@ for (const tema of TEMAS) {
   }
 
   // Token de cor que existe no claro e some no escuro seria buraco de modo.
-  const claras = Object.keys(light).filter((t) => hslToDtcg(light[t]));
+  const claras = Object.keys(light).filter((t) => hslToDtcg(resolverAlias(light[t], light)));
   const escuras = new Set(Object.keys(layer(':root', `.tema-${tema}`, '.dark', `.dark.tema-${tema}`)));
   for (const t of claras) if (!escuras.has(t)) avisos.push(`${t} existe em ${tema}-light e não em ${tema}-dark`);
 }

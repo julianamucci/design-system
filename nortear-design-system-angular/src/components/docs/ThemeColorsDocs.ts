@@ -94,7 +94,7 @@ const GRUPOS_DA_PALETA: GrupoDaPaleta[] = [
   {
     chave: 'structure',
     rotulo: 'palette.groups.structure',
-    tokens: ['border', 'input', 'input-background', 'ring', 'ring-offset-color'],
+    tokens: ['border', 'input', 'input-background', 'ring'],
   },
   {
     chave: 'sidebar',

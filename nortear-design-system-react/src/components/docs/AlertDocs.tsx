@@ -756,6 +756,7 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               { token: "--radius-alert", value: "var(--radius-alert)", description: tContent("tokens.table.radius") },
               { token: "--alert-bg", value: "hsl(var(--muted))", description: tContent("tokens.table.alertBg") },
               { token: "--alert-fg", value: "hsl(var(--card-foreground))", description: tContent("tokens.table.alertFg") },
+              { token: "--alert-body-fg", value: "hsl(var(--foreground))", description: tContent("tokens.table.alertBodyFg") },
               { token: "--alert-border", value: "hsl(var(--border))", description: tContent("tokens.table.alertBorder") },
               { token: "--alert-glow", value: "hsl(var(--border))", description: tContent("tokens.table.alertGlow") },
             ]}

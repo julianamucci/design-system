@@ -67,8 +67,13 @@ export function luminancia(cor: string): number | null {
  * `getComputedStyle` como `rgba(115,115,115,0.4)`, e ler a luminância desse
  * rgba ignora os 60% de fundo que a pessoa enxerga por baixo. Foi exatamente
  * essa a borda de hover que passou a APAGAR o campo quando o repouso escureceu.
+ *
+ * Exportada porque o FUNDO também precisa ser composto às vezes, não só a
+ * frente: contêiner colorido pinta `hsl(var(--destructive) / 0.1)`, e medir o
+ * texto contra esse rgba translúcido dá um número que ninguém vê na tela. Na
+ * sonda do badge, medir sem compor deu razão ~1.0 em cinco variantes de seis.
  */
-function compor(frente: string, fundo: string): string {
+export function compor(frente: string, fundo: string): string {
   const f = componentes(frente);
   const b = componentes(fundo);
   if (!f || !b) return frente;
@@ -288,6 +293,48 @@ export function declaracaoDaRegra(
     }
   }
   return null;
+}
+
+/**
+ * Seletores das regras que LEEM `--token` em alguma declaração.
+ *
+ * Serve para provar CONSUMO, não resultado: um token documentado que nenhuma
+ * regra lê é decoração de tabela, e foi exatamente esse o defeito que os quatro
+ * pares de feedback carregaram por uma rodada inteira — a paleta prometia
+ * contraste de um par que a tela não formava. Medir a cor não pega isso: uma cor
+ * que ninguém aplica passa em qualquer limite.
+ *
+ * Percorre as folhas recursivamente (`@media`/`@supports` embrulham regras) e
+ * casa a string `var(--token)` no `cssText` da regra — e não iterando
+ * `regra.style`, porque a iteração de `CSSStyleDeclaration` já não expôs custom
+ * property em todo motor, e é justamente por custom property intermediária que
+ * alert e badge consomem estes tokens
+ * (`--alert-body-fg: hsl(var(--info-foreground))`). O `cssText` serializa a
+ * declaração inteira, custom properties incluídas.
+ */
+export function seletoresQueLeem(doc: Document, token: string): string[] {
+  const alvo = `var(--${token})`;
+  const achados: string[] = [];
+
+  const visitar = (regras: CSSRuleList) => {
+    for (const regra of Array.from(regras)) {
+      if (regra instanceof CSSStyleRule) {
+        if (regra.cssText.includes(alvo)) achados.push(regra.selectorText);
+      }
+      const aninhadas = (regra as CSSGroupingRule).cssRules;
+      if (aninhadas) visitar(aninhadas);
+    }
+  };
+
+  for (const folha of Array.from(doc.styleSheets)) {
+    try {
+      visitar(folha.cssRules);
+    } catch {
+      // Folha de outra origem: inacessível por CORS, e nenhuma do design
+      // system entra assim. Segue para a próxima.
+    }
+  }
+  return achados;
 }
 
 /** Linha legível de uma medida — o que a falha da story precisa mostrar. */

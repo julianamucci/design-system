@@ -243,11 +243,12 @@
         "alertBg": "Fundo do container — var interna, segue o tema pela variante",
         "alertFg": "Texto e ícone — var interna",
         "alertBorder": "Borda — var interna",
+        "alertBodyFg": "Texto corrido da descrição — var interna. Separada de --alert-fg porque ícone e título podem carregar a cor semântica e o texto corrido não pode: cada variante a aponta para o par de texto da sua cor",
         "alertGlow": "Tom base do gradiente animado da borda — var interna, igual nas 5 variantes; as 4 variações saem daí"
       },
       "customizationTitle": "Como personalizar via tema:",
       "customizationCode": {
-        "web": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tom base do gradiente — sem alfa */\n}"
+        "web": "/* As vars internas são declaradas no próprio .nds-alert, então o\n   override precisa ser escopado — no :root ele não vence. */\n.meu-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-body-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tom base do gradiente — sem alfa */\n}"
       }
     },
     "accessibility": {
@@ -667,11 +668,12 @@
         "alertBg": "Container background — internal var, follows the theme per variant",
         "alertFg": "Text and icon — internal var",
         "alertBorder": "Border — internal var",
+        "alertBodyFg": "Body text of the description — internal var. Kept apart from --alert-fg because icon and title may carry the semantic colour and body text may not: each variant points it at its colour's text pair",
         "alertGlow": "Base tone of the animated border gradient — internal var, the same across all 5 variants; the 4 variations derive from it"
       },
       "customizationTitle": "How to customize via theme:",
       "customizationCode": {
-        "web": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* gradient base tone — no alpha */\n}"
+        "web": "/* Internal vars are declared on .nds-alert itself, so the\n   override must be scoped — :root does not win. */\n.my-theme .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-body-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* gradient base tone — no alpha */\n}"
       }
     },
     "accessibility": {
@@ -1091,11 +1093,12 @@
         "alertBg": "Fondo del contenedor — var interna, sigue el tema según la variante",
         "alertFg": "Texto e ícono — var interna",
         "alertBorder": "Borde — var interna",
+        "alertBodyFg": "Texto corrido de la descripción — var interna. Separada de --alert-fg porque el icono y el título pueden llevar el color semántico y el texto corrido no: cada variante la apunta al par de texto de su color",
         "alertGlow": "Tono base del degradado animado del borde — var interna, igual en las 5 variantes; las 4 variaciones salen de ahí"
       },
       "customizationTitle": "Cómo personalizar vía tema:",
       "customizationCode": {
-        "web": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tono base del degradado — sin alfa */\n}"
+        "web": "/* Las vars internas se declaran en el propio .nds-alert, así que el\n   override debe tener alcance — en :root no gana. */\n.mi-tema .nds-alert {\n  --alert-bg: hsl(var(--card));\n  --alert-border: hsl(var(--primary) / 0.3);\n  --alert-fg: hsl(var(--foreground));\n  --alert-body-fg: hsl(var(--foreground));\n  --alert-glow: hsl(var(--primary));   /* tono base del degradado — sin alfa */\n}"
       }
     },
     "accessibility": {

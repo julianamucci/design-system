@@ -10,8 +10,12 @@
  * `min-height` em pixels fixos.
  *
  * Tokens de cor: --primary, --primary-foreground, --secondary, --secondary-foreground,
- *                --accent, --accent-foreground, --destructive, --destructive-foreground,
+ *                --accent, --accent-foreground, --destructive,
  *                --background, --foreground, --input, --ring, --border
+ *
+ * `--destructive-foreground` NÃO entra aqui: a variante destrutiva é soft (fundo
+ * `--destructive / 0.1` com o rótulo na PRÓPRIA cor semântica, que é curto e
+ * alcança 4.5:1). O par `-foreground` é do texto corrido de alert/badge/toast.
  * Tokens de spacing: --spacing-* (grid 8: múltiplos/divisores de 8 apenas)
  * Tokens de raio: --radius-button
  * Tokens de tipografia: --font-family

@@ -16,7 +16,7 @@
  * Nenhuma função afirma nada: todas devolvem valor. A asserção é da story.
  */
 
-import { razao, resolverCor, TEMAS, MODOS } from './cor';
+import { compor, razao, resolverCor, seletoresQueLeem, TEMAS, MODOS } from './cor';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -184,21 +184,112 @@ export function falhasDePar(medidas: MedidaDePar[], minimo: number): string[] {
     );
 }
 
+// ─── Pares de FUNDO SUAVE ─────────────────────────────────────────────────────
+
+/**
+ * Alfas com que a cor semântica pinta FUNDO que carrega texto, nas folhas
+ * `.nds-*`. Varridos todos porque o pior caso é o tom mais forte, e qual é o
+ * mais forte muda com o modo.
+ *
+ *   0.08  docs-callout
+ *   0.10  alert, toast, `.nds-bg-*-soft`, badge destructive (claro)
+ *   0.12  badge warning/success/info (claro)
+ *   0.15  pill, badge destructive (escuro)
+ *   0.18  badge warning/success/info (escuro) — o mais forte em uso hoje
+ *   0.25  folga: é o hover destrutivo do button no escuro, o teto da folha
+ */
+export const ALFAS_DE_FUNDO_SUAVE = [0.08, 0.1, 0.12, 0.15, 0.18, 0.25] as const;
+
+export interface MedidaDeParSuave {
+  tema: string;
+  modo: string;
+  /** `destructive` para o par `--destructive` / `--destructive-foreground`. */
+  par: string;
+  alfa: number;
+  /** Fundo suave JÁ COMPOSTO sobre `--background`. */
+  fundo: string | null;
+  frente: string | null;
+  /** `null` quando um dos dois tokens não existe — o achado. */
+  razao: number | null;
+}
+
+/**
+ * Contraste do par de feedback COMO A TELA O FORMA.
+ *
+ * `medirPares` mede o par clássico — texto sobre a cor CHEIA — e nenhuma regra
+ * do sistema escreve assim: a cor semântica pinta um fundo suave
+ * (`hsl(var(--destructive) / 0.1)`) e o texto corrido por cima é
+ * `--destructive-foreground`. Medir contra a cor cheia dá 3.09:1 no claro do
+ * tema default e reprovaria um par que a tela nunca desenha. Contra o fundo
+ * suave composto, as 144 combinações (4 pares × 6 alfas × 3 temas × 2 modos)
+ * ficam entre 9:1 e 18.21:1 — o pior caso é warning no escuro do default a 0.25.
+ *
+ * O fundo é COMPOSTO sobre `--background` antes da divisão. Sem compor, a razão
+ * sai de um rgba translúcido que ninguém vê — foi assim que a sonda do badge
+ * devolveu ~1.0 em cinco variantes de seis.
+ */
+export async function medirParesSuaves(
+  raiz: HTMLElement,
+  pares: string[],
+  alfas: readonly number[] = ALFAS_DE_FUNDO_SUAVE,
+): Promise<MedidaDeParSuave[]> {
+  return (
+    await porTemaNoDocumento(raiz.ownerDocument, async (tema, modo) => {
+      const superficie = resolverCor(raiz, 'hsl(var(--background))');
+      return pares.flatMap((par) => {
+        const frente = resolverCor(raiz, `hsl(var(--${par}-foreground))`);
+        return alfas.map((alfa): MedidaDeParSuave => {
+          const tinta = resolverCor(raiz, `hsl(var(--${par}) / ${alfa})`);
+          const fundo = tinta && superficie ? compor(tinta, superficie) : null;
+          const r = fundo && frente ? razao(frente, fundo) : null;
+          return { tema, modo, par, alfa, fundo, frente, razao: r?.razao ?? null };
+        });
+      });
+    })
+  ).flat();
+}
+
+export function falhasDeParSuave(medidas: MedidaDeParSuave[], minimo: number): string[] {
+  return medidas
+    .filter((m) => m.razao === null || m.razao < minimo)
+    .map((m) =>
+      m.razao === null
+        ? `${m.tema}/${m.modo} · --${m.par}-foreground sobre --${m.par}/${m.alfa}: token não resolve`
+        : `${m.tema}/${m.modo} · --${m.par}-foreground (${m.frente}) sobre --${m.par}/${m.alfa} (${m.fundo}): ${m.razao}:1 (mínimo ${minimo})`,
+    );
+}
+
+/**
+ * Pares cujo token de texto NENHUMA regra `.nds-*` lê.
+ *
+ * Token documentado sem consumidor foi o defeito que estes quatro pares
+ * carregaram: a página prometia contraste de uma combinação que a tela não
+ * formava, e nenhuma medida de cor pegava isso — cor que ninguém aplica passa em
+ * qualquer limite. Aqui a pergunta é outra: alguma regra LÊ o token?
+ */
+export function paresSemConsumidor(doc: Document, pares: string[]): string[] {
+  return pares.filter((par) => seletoresQueLeem(doc, `${par}-foreground`).length === 0);
+}
+
 // ─── Canal de saída ───────────────────────────────────────────────────────────
 
 export async function reportar(stack: string, raiz: HTMLElement): Promise<never> {
   const swatches = await medirSwatches(raiz);
   const pares = paresDaPagina(raiz);
   const medidasDePar = await medirPares(raiz, pares);
+  const suaves = await medirParesSuaves(raiz, pares);
   throw new Error(
     `SONDA::${stack}::` +
       JSON.stringify({
         totalDeSwatches: swatches.length / (TEMAS.length * MODOS.length),
         pares,
+        semConsumidor: paresSemConsumidor(raiz.ownerDocument, pares),
         falhasDeSwatch: falhasDeSwatch(swatches),
         parLimite4_5: falhasDePar(medidasDePar, 4.5),
         parLimite3: falhasDePar(medidasDePar, 3),
         razoes: medidasDePar.map((m) => `${m.tema}/${m.modo} ${m.par}=${m.razao}`),
+        suaveLimite4_5: falhasDeParSuave(suaves, 4.5),
+        razoesSuaves: suaves.map((m) => `${m.tema}/${m.modo} ${m.par}@${m.alfa}=${m.razao}`),
       }),
   );
 }

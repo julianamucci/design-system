@@ -204,12 +204,12 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          1,
-          1,
-          1
+          0.98,
+          0.98,
+          0.98
         ],
         "alpha": 1,
-        "hex": "#ffffff"
+        "hex": "#fafafa"
       }
     },
     "success": {
@@ -230,12 +230,12 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0,
-          0,
-          0
+          0.98,
+          0.98,
+          0.98
         ],
         "alpha": 1,
-        "hex": "#000000"
+        "hex": "#fafafa"
       }
     },
     "warning": {
@@ -256,12 +256,12 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0,
-          0,
-          0
+          0.98,
+          0.98,
+          0.98
         ],
         "alpha": 1,
-        "hex": "#000000"
+        "hex": "#fafafa"
       }
     },
     "info": {
@@ -269,12 +269,12 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.1399,
-          0.386963,
-          0.9201
+          0.3412,
+          0.53044,
+          0.9388
         ],
         "alpha": 1,
-        "hex": "#2463eb"
+        "hex": "#5787ef"
       }
     },
     "info-foreground": {
@@ -282,12 +282,12 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          1,
-          1,
-          1
+          0.98,
+          0.98,
+          0.98
         ],
         "alpha": 1,
-        "hex": "#ffffff"
+        "hex": "#fafafa"
       }
     }
   },
@@ -310,12 +310,12 @@
       "$value": {
         "colorSpace": "srgb",
         "components": [
-          0.15,
-          0.15,
-          0.15
+          0.41,
+          0.41,
+          0.41
         ],
         "alpha": 1,
-        "hex": "#262626"
+        "hex": "#696969"
       }
     },
     "input-background": {
@@ -342,19 +342,6 @@
         ],
         "alpha": 1,
         "hex": "#737373"
-      }
-    },
-    "ring-offset-color": {
-      "$type": "color",
-      "$value": {
-        "colorSpace": "srgb",
-        "components": [
-          0.09,
-          0.09,
-          0.09
-        ],
-        "alpha": 1,
-        "hex": "#171717"
       }
     }
   },

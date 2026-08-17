@@ -31,7 +31,7 @@
     },
     "modes": {
       "title": "Light e Dark",
-      "subtitle": "Cada token de cor tem um valor para light (:root) e dark (.dark). Os pares de superfície e texto que os componentes realmente aplicam mantêm contraste WCAG 2.2 AA nos dois modos. Exceções: os tokens de gráficos usam a mesma paleta em ambos, e os tokens de texto sobre fundo sólido de feedback não são aplicados por componente nenhum — as variantes semânticas escrevem a própria cor sobre fundo suave.",
+      "subtitle": "Cada token de cor tem um valor para light (:root) e dark (.dark). Os pares de superfície e texto que os componentes realmente aplicam mantêm contraste WCAG 2.2 AA nos dois modos. Os tokens de gráficos são a exceção: usam a mesma paleta em ambos. Nos tokens de texto de feedback o par não é sobre a cor cheia — a cor semântica pinta um fundo suave, e o texto corrido por cima é o token de texto do par, medido contra esse fundo composto.",
       "light": "Light",
       "dark": "Dark"
     },
@@ -113,7 +113,7 @@
     },
     "modes": {
       "title": "Light and Dark",
-      "subtitle": "Each color token has a light (:root) and dark (.dark) value. The surface-and-text pairs components actually apply preserve WCAG 2.2 AA contrast in both modes. Exceptions: chart tokens use the same palette in both, and the feedback text-on-solid tokens are applied by no component — semantic variants write their own colour on a soft background.",
+      "subtitle": "Each color token has a light (:root) and dark (.dark) value. The surface-and-text pairs components actually apply preserve WCAG 2.2 AA contrast in both modes. Chart tokens are the exception: they use the same palette in both. For the feedback text tokens the pair is not against the full colour — the semantic colour paints a soft background, and the body text over it is the pair's text token, measured against that composited background.",
       "light": "Light",
       "dark": "Dark"
     },
@@ -195,7 +195,7 @@
     },
     "modes": {
       "title": "Light y Dark",
-      "subtitle": "Cada token de color tiene un valor para light (:root) y dark (.dark). Los pares de superficie y texto que los componentes aplican realmente mantienen contraste WCAG 2.2 AA en ambos modos. Excepciones: los tokens de gráficos usan la misma paleta en ambos, y los tokens de texto sobre fondo sólido de feedback no los aplica ningún componente — las variantes semánticas escriben su propio color sobre fondo suave.",
+      "subtitle": "Cada token de color tiene un valor para light (:root) y dark (.dark). Los pares de superficie y texto que los componentes aplican realmente mantienen contraste WCAG 2.2 AA en ambos modos. Los tokens de gráficos son la excepción: usan la misma paleta en ambos. En los tokens de texto de feedback el par no es sobre el color pleno — el color semántico pinta un fondo suave, y el texto corrido encima es el token de texto del par, medido contra ese fondo compuesto.",
       "light": "Light",
       "dark": "Dark"
     },

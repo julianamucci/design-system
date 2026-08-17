@@ -569,6 +569,7 @@ interface AlertTitleProps {
           { token: '--radius-alert', value: 'var(--radius-alert)',           description: $tStore('tokens.table.radius')            },
           { token: '--alert-bg',     value: 'hsl(var(--muted))',             description: $tStore('tokens.table.alertBg')           },
           { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',   description: $tStore('tokens.table.alertFg')           },
+          { token: '--alert-body-fg', value: 'hsl(var(--foreground))',       description: $tStore('tokens.table.alertBodyFg')       },
           { token: '--alert-border', value: 'hsl(var(--border))',            description: $tStore('tokens.table.alertBorder')       },
           { token: '--alert-glow',   value: 'hsl(var(--border))',            description: $tStore('tokens.table.alertGlow')         },
         ]}

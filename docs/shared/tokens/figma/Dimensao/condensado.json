@@ -20,17 +20,37 @@
       "$type": "number",
       "$value": 3.2
     },
+    "spacing-1-5": {
+      "$type": "number",
+      "$value": 4.8
+    },
     "spacing-2": {
       "$type": "number",
       "$value": 6.4
+    },
+    "spacing-2-5": {
+      "$type": "number",
+      "$value": 8
+    },
+    "spacing-3": {
+      "$type": "number",
+      "$value": 9.6
     },
     "spacing-4": {
       "$type": "number",
       "$value": 12.8
     },
+    "spacing-5": {
+      "$type": "number",
+      "$value": 16
+    },
     "spacing-6": {
       "$type": "number",
       "$value": 19.2
+    },
+    "spacing-7": {
+      "$type": "number",
+      "$value": 22.4
     },
     "spacing-8": {
       "$type": "number",
@@ -52,6 +72,10 @@
       "$type": "number",
       "$value": 51.2
     },
+    "spacing-18": {
+      "$type": "number",
+      "$value": 57.6
+    },
     "spacing-20": {
       "$type": "number",
       "$value": 64
@@ -59,6 +83,14 @@
     "spacing-24": {
       "$type": "number",
       "$value": 76.8
+    },
+    "spacing-40": {
+      "$type": "number",
+      "$value": 128
+    },
+    "spacing-96": {
+      "$type": "number",
+      "$value": 307.2
     }
   },
   "altura": {

@@ -760,6 +760,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
       { token: '--radius-alert',  valor: 'var(--radius-alert)',               k: 'radius'           },
       { token: '--alert-bg',      valor: 'hsl(var(--muted))',                 k: 'alertBg'          },
       { token: '--alert-fg',      valor: 'hsl(var(--card-foreground))',       k: 'alertFg'          },
+      { token: '--alert-body-fg', valor: 'hsl(var(--foreground))',            k: 'alertBodyFg'      },
       { token: '--alert-border',  valor: 'hsl(var(--border))',                k: 'alertBorder'      },
       { token: '--alert-glow',    valor: 'hsl(var(--border))',                k: 'alertGlow'        },
     ].map(({ token, valor, k }) => ({

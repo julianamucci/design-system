@@ -577,6 +577,7 @@ export interface AlertTitleOptions {
             { token: '--radius-alert', value: 'var(--radius-alert)',           description: t('tokens.table.radius') },
             { token: '--alert-bg',     value: 'hsl(var(--muted))',             description: t('tokens.table.alertBg') },
             { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',   description: t('tokens.table.alertFg') },
+            { token: '--alert-body-fg', value: 'hsl(var(--foreground))',       description: t('tokens.table.alertBodyFg') },
             { token: '--alert-border', value: 'hsl(var(--border))',            description: t('tokens.table.alertBorder') },
             { token: '--alert-glow',   value: 'hsl(var(--border))',            description: t('tokens.table.alertGlow') },
           ],

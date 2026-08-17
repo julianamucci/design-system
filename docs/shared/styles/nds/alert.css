@@ -13,7 +13,8 @@
  *   .nds-alert                  → default (bg-muted, fg-card-foreground)
  *   .nds-alert.nds-alert-destructive → vermelho (texto destructive)
  *
- * Tokens: --muted, --card-foreground, --foreground, --destructive,
+ * Tokens: --muted, --card-foreground, --foreground, --destructive/-foreground,
+ *         --success/-foreground, --warning/-foreground, --info/-foreground,
  *         --border, --radius-alert, --spacing-*
  */
 
@@ -21,6 +22,13 @@
   --alert-bg: hsl(var(--muted));
   --alert-fg: hsl(var(--card-foreground));
   --alert-border: hsl(var(--border));
+  /* Cor do TEXTO CORRIDO (descrição e links dentro dela). Separado de
+     `--alert-fg` porque `--alert-fg` é o tom do ícone e do título, que podem
+     carregar a cor semântica, e o texto corrido não pode — a regra do contêiner
+     colorido. Cada variante semântica troca este por `hsl(var(--X-foreground))`,
+     que neste projeto vale `--foreground` e pinta a mesma cor; a indireção é o
+     ponto de extensão para projetos derivados. Ver tokens.css. */
+  --alert-body-fg: hsl(var(--foreground));
   /* Tom base do gradiente animado da borda — as 4 variações saem daí.
      É o mesmo em TODAS as variantes, de propósito: o gradiente é acabamento, e
      acompanhar a cor semântica fazia o destructive girar vermelho e o success
@@ -90,7 +98,7 @@
   gap: var(--spacing-1);                        /* 4px entre <p> */
   justify-items: start;
   font-size: inherit;
-  color: hsl(var(--foreground));
+  color: var(--alert-body-fg);
 }
 .nds-alert-description > p,
 .nds-alert > section > p {
@@ -109,13 +117,16 @@
  * Regra WCAG 2.2 AA (contraste 4.5:1):
  *   - Container colorido: bg-soft + border-soft com tons da cor semântica
  *   - Ícone e título: podem usar a cor semântica (são curtos, contraste 3:1 ok)
- *   - Texto corrido (description): SEMPRE --foreground para garantir 4.5:1
+ *   - Texto corrido (description): NUNCA a cor semântica. Escreve o par
+ *     `--X-foreground`, que neste projeto vale `--foreground` — os 4.5:1
+ *     continuam garantidos e o token abre a customização em projetos derivados.
  * ────────────────────────────────────────────────────────────────────────── */
 
 /* destructive — vermelho com bg soft */
 .nds-alert-destructive {
   --alert-bg: hsl(var(--destructive) / 0.1);
   --alert-fg: hsl(var(--destructive));
+  --alert-body-fg: hsl(var(--destructive-foreground));
   --alert-border: hsl(var(--destructive) / 0.3);
 }
 
@@ -123,6 +134,7 @@
 .nds-alert-success {
   --alert-bg: hsl(var(--success) / 0.1);
   --alert-fg: hsl(var(--success));
+  --alert-body-fg: hsl(var(--success-foreground));
   --alert-border: hsl(var(--success) / 0.3);
 }
 
@@ -130,12 +142,14 @@
 .nds-alert-warning {
   --alert-bg: hsl(var(--warning) / 0.1);
   --alert-fg: hsl(var(--warning));
+  --alert-body-fg: hsl(var(--warning-foreground));
   --alert-border: hsl(var(--warning) / 0.3);
 }
 /* info — azul no tema Default e no Cold, laranja no Warm */
 .nds-alert-info {
   --alert-bg: hsl(var(--info) / 0.1);
   --alert-fg: hsl(var(--info));
+  --alert-body-fg: hsl(var(--info-foreground));
   --alert-border: hsl(var(--info) / 0.3);
 }
 
@@ -158,14 +172,22 @@
  * deles nas seis combinações é 4.84:1.
  *
  * Guardado pela story `Variants/Contrast` das cinco stacks, que varre os três
- * temas nos dois modos. */
+ * temas nos dois modos.
+ *
+ * Os dois blocos são separados, e não uma lista de seletores só, porque cada um
+ * usa o par `-foreground` da SUA cor: `--warning-foreground` no warning e
+ * `--info-foreground` no info. Nos dois o valor é `--foreground` neste projeto —
+ * a cor pintada é a mesma de antes — mas um tema derivado pode divergir os dois,
+ * e uma lista única obrigaria os dois a andarem juntos. */
 .nds-alert-warning .nds-alert-title,
 .nds-alert-warning > h1,
 .nds-alert-warning > h2,
 .nds-alert-warning > h3,
 .nds-alert-warning > h4,
 .nds-alert-warning > h5,
-.nds-alert-warning > h6,
+.nds-alert-warning > h6 {
+  color: hsl(var(--warning-foreground));
+}
 .nds-alert-info .nds-alert-title,
 .nds-alert-info > h1,
 .nds-alert-info > h2,
@@ -173,7 +195,7 @@
 .nds-alert-info > h4,
 .nds-alert-info > h5,
 .nds-alert-info > h6 {
-  color: hsl(var(--foreground));
+  color: hsl(var(--info-foreground));
 }
 
 /* ── Action (botão no canto superior direito) ─────────────────────────────── */
@@ -215,7 +237,7 @@
 
 .nds-alert-title a:hover,
 .nds-alert-description a:hover {
-  color: hsl(var(--foreground));
+  color: var(--alert-body-fg);
 }
 
 /* A regra "descrição sempre foreground" vale para TODAS as variantes e vive na

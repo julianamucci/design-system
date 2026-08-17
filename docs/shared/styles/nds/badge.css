@@ -11,7 +11,8 @@
  * Acessibilidade: badge não tem semântica nativa. Use texto descritivo
  * ou aria-label se conteúdo for crítico (ex.: "5 mensagens não lidas").
  *
- * Tokens: --primary, --secondary, --destructive, --warning, --success, --info,
+ * Tokens: --primary, --secondary, --destructive/-foreground,
+ *         --warning/-foreground, --success/-foreground, --info/-foreground,
  *         --foreground, --background, --border, --ring, --accent, --spacing-*
  */
 
@@ -90,7 +91,13 @@
 }
 
 /* Destructive (soft style alinhado ao restante do projeto)
- * WCAG: bg colorido + border colorida + texto foreground (contraste 4.5:1).
+ * WCAG: bg colorido + border colorida + texto no par `-foreground` da cor.
+ *
+ * O texto não escreve `--foreground` direto: escreve
+ * `hsl(var(--destructive-foreground))`, que neste projeto VALE `--foreground` e
+ * portanto pinta a mesma cor. A indireção é o ponto de extensão — um projeto
+ * derivado redefine o token no tema e muda o texto das quatro variantes
+ * semânticas sem tocar nesta folha. Ver tokens.css.
  *
  * O alfa mora em `--badge-alpha-bg` / `--badge-alpha-border` porque muda no tema
  * escuro E porque o Figma o vincula numa variável de opacidade. Com custom
@@ -101,7 +108,7 @@
   --badge-alpha-bg: 0.1;
   --badge-alpha-border: 0.3;
   --badge-bg: hsl(var(--destructive) / var(--badge-alpha-bg));
-  --badge-fg: hsl(var(--foreground));
+  --badge-fg: hsl(var(--destructive-foreground));
   --badge-border: hsl(var(--destructive) / var(--badge-alpha-border));
 }
 .dark .nds-badge-destructive {
@@ -112,9 +119,9 @@
 }
 
 /* Warning, success e info — mesmo desenho do destructive: fundo e borda dão a
- * cor, o texto fica em --foreground. Cor semântica no texto corrido não passa
- * em 4.5:1 nas três, e a regra do projeto é que o contraste não dependa da
- * variante escolhida.
+ * cor, o texto fica no par `-foreground` dela (que é `--foreground` aqui). Cor
+ * semântica no texto corrido não passa em 4.5:1 nas três, e a regra do projeto
+ * é que o contraste não dependa da variante escolhida.
  *
  * Existiam antes como `-high`, `-medium` e `-low`, um trio criado só para a
  * tabela de prioridade das docs pages — cor semântica com nome de uso, que
@@ -124,7 +131,7 @@
   --badge-alpha-bg: 0.12;
   --badge-alpha-border: 0.35;
   --badge-bg: hsl(var(--warning) / var(--badge-alpha-bg));
-  --badge-fg: hsl(var(--foreground));
+  --badge-fg: hsl(var(--warning-foreground));
   --badge-border: hsl(var(--warning) / var(--badge-alpha-border));
 }
 .dark .nds-badge-warning {
@@ -138,7 +145,7 @@
   --badge-alpha-bg: 0.12;
   --badge-alpha-border: 0.35;
   --badge-bg: hsl(var(--success) / var(--badge-alpha-bg));
-  --badge-fg: hsl(var(--foreground));
+  --badge-fg: hsl(var(--success-foreground));
   --badge-border: hsl(var(--success) / var(--badge-alpha-border));
 }
 .dark .nds-badge-success {
@@ -152,7 +159,7 @@
   --badge-alpha-bg: 0.12;
   --badge-alpha-border: 0.35;
   --badge-bg: hsl(var(--info) / var(--badge-alpha-bg));
-  --badge-fg: hsl(var(--foreground));
+  --badge-fg: hsl(var(--info-foreground));
   --badge-border: hsl(var(--info) / var(--badge-alpha-border));
 }
 .dark .nds-badge-info {

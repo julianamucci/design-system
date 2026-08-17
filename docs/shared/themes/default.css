@@ -30,20 +30,22 @@
   --accent: 0 0% 96%;
   --accent-foreground: 0 0% 9%;
 
+  /* Os quatro `-foreground` são o texto corrido do contêiner colorido, e neste
+     projeto valem `--foreground` — a regra da casa. São ponto de extensão: um
+     tema derivado pode dar a cada um valor próprio. Ver tokens.css. */
   --destructive: 0 74% 42%;
-  --destructive-foreground: 0 0% 100%;
+  --destructive-foreground: var(--foreground);
   --success: 142 85% 22%;
-  --success-foreground: 0 0% 100%;
+  --success-foreground: var(--foreground);
   --warning: 45 95% 36%;
-  --warning-foreground: 0 0% 100%;
+  --warning-foreground: var(--foreground);
   --info: 221 83% 43%;
-  --info-foreground: 0 0% 100%;
+  --info-foreground: var(--foreground);
 
   --border: 0 0% 90%;
   --input: 0 0% 56%;                /* 3.24:1 sobre --background (WCAG 1.4.11) */
   --input-background: 0 0% 100%;
   --ring: 0 0% 45%;
-  --ring-offset-color: 0 0% 100%;
 
   /* Chart — sem variante dark (mesma paleta nos dois modos, como em warm/cold) */
   --chart-1: 199 89% 65%;
@@ -92,19 +94,18 @@
   --accent-foreground: 0 0% 98%;
 
   --destructive: 0 85% 70%;
-  --destructive-foreground: 0 0% 100%;
+  --destructive-foreground: var(--foreground);
   --success: 142 71% 55%;
-  --success-foreground: 0 0% 0%;
+  --success-foreground: var(--foreground);
   --warning: 48 95% 60%;
-  --warning-foreground: 0 0% 0%;
+  --warning-foreground: var(--foreground);
   --info: 221 83% 64%;
-  --info-foreground: 0 0% 0%;
+  --info-foreground: var(--foreground);
 
   --border: 0 0% 15%;
   --input: 0 0% 41%;                /* 3.25:1 sobre --background (WCAG 1.4.11) */
   --input-background: 0 0% 9%;
   --ring: 0 0% 45%;
-  --ring-offset-color: 0 0% 9%;
 
   --sidebar: 0 0% 9%;
   --sidebar-foreground: 0 0% 98%;

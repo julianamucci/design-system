@@ -219,12 +219,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.04,
+                0.04,
+                0.04
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#0a0a0a"
             }
           },
           "success": {
@@ -245,12 +245,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.04,
+                0.04,
+                0.04
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#0a0a0a"
             }
           },
           "warning": {
@@ -271,12 +271,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.04,
+                0.04,
+                0.04
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#0a0a0a"
             }
           },
           "info": {
@@ -297,12 +297,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.04,
+                0.04,
+                0.04
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#0a0a0a"
             }
           }
         },
@@ -357,19 +357,6 @@
               ],
               "alpha": 1,
               "hex": "#737373"
-            }
-          },
-          "ring-offset-color": {
-            "$type": "color",
-            "$value": {
-              "colorSpace": "srgb",
-              "components": [
-                1,
-                1,
-                1
-              ],
-              "alpha": 1,
-              "hex": "#ffffff"
             }
           }
         },
@@ -898,12 +885,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.98,
+                0.98,
+                0.98
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#fafafa"
             }
           },
           "success": {
@@ -924,12 +911,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0,
-                0
+                0.98,
+                0.98,
+                0.98
               ],
               "alpha": 1,
-              "hex": "#000000"
+              "hex": "#fafafa"
             }
           },
           "warning": {
@@ -950,12 +937,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0,
-                0
+                0.98,
+                0.98,
+                0.98
               ],
               "alpha": 1,
-              "hex": "#000000"
+              "hex": "#fafafa"
             }
           },
           "info": {
@@ -976,12 +963,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0,
-                0
+                0.98,
+                0.98,
+                0.98
               ],
               "alpha": 1,
-              "hex": "#000000"
+              "hex": "#fafafa"
             }
           }
         },
@@ -1036,19 +1023,6 @@
               ],
               "alpha": 1,
               "hex": "#737373"
-            }
-          },
-          "ring-offset-color": {
-            "$type": "color",
-            "$value": {
-              "colorSpace": "srgb",
-              "components": [
-                0.09,
-                0.09,
-                0.09
-              ],
-              "alpha": 1,
-              "hex": "#171717"
             }
           }
         },
@@ -1577,12 +1551,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.096,
+                0.077333,
+                0.064
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#181410"
             }
           },
           "success": {
@@ -1603,12 +1577,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.096,
+                0.077333,
+                0.064
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#181410"
             }
           },
           "warning": {
@@ -1629,12 +1603,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.096,
+                0.077333,
+                0.064
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#181410"
             }
           },
           "info": {
@@ -1655,12 +1629,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.096,
+                0.077333,
+                0.064
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#181410"
             }
           }
         },
@@ -1715,19 +1689,6 @@
               ],
               "alpha": 1,
               "hex": "#c9501d"
-            }
-          },
-          "ring-offset-color": {
-            "$type": "color",
-            "$value": {
-              "colorSpace": "srgb",
-              "components": [
-                0.9925,
-                0.99,
-                0.9875
-              ],
-              "alpha": 1,
-              "hex": "#fdfcfc"
             }
           }
         },
@@ -2256,12 +2217,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.968,
+                0.96,
+                0.952
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#f7f5f3"
             }
           },
           "success": {
@@ -2282,12 +2243,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0,
-                0
+                0.968,
+                0.96,
+                0.952
               ],
               "alpha": 1,
-              "hex": "#000000"
+              "hex": "#f7f5f3"
             }
           },
           "warning": {
@@ -2308,12 +2269,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0,
-                0
+                0.968,
+                0.96,
+                0.952
               ],
               "alpha": 1,
-              "hex": "#000000"
+              "hex": "#f7f5f3"
             }
           },
           "info": {
@@ -2334,12 +2295,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0,
-                0
+                0.968,
+                0.96,
+                0.952
               ],
               "alpha": 1,
-              "hex": "#000000"
+              "hex": "#f7f5f3"
             }
           }
         },
@@ -2394,19 +2355,6 @@
               ],
               "alpha": 1,
               "hex": "#ee722b"
-            }
-          },
-          "ring-offset-color": {
-            "$type": "color",
-            "$value": {
-              "colorSpace": "srgb",
-              "components": [
-                0.1035,
-                0.08775,
-                0.0765
-              ],
-              "alpha": 1,
-              "hex": "#1a1614"
             }
           }
         },
@@ -2935,12 +2883,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.06,
+                0.076667,
+                0.1
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#0f141a"
             }
           },
           "success": {
@@ -2961,12 +2909,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.06,
+                0.076667,
+                0.1
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#0f141a"
             }
           },
           "warning": {
@@ -2987,12 +2935,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.06,
+                0.076667,
+                0.1
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#0f141a"
             }
           },
           "info": {
@@ -3013,12 +2961,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.06,
+                0.076667,
+                0.1
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#0f141a"
             }
           }
         },
@@ -3073,19 +3021,6 @@
               ],
               "alpha": 1,
               "hex": "#186adc"
-            }
-          },
-          "ring-offset-color": {
-            "$type": "color",
-            "$value": {
-              "colorSpace": "srgb",
-              "components": [
-                0.987,
-                0.99,
-                0.993
-              ],
-              "alpha": 1,
-              "hex": "#fcfcfd"
             }
           }
         },
@@ -3614,12 +3549,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                1,
-                1,
-                1
+                0.95,
+                0.96,
+                0.97
               ],
               "alpha": 1,
-              "hex": "#ffffff"
+              "hex": "#f2f5f7"
             }
           },
           "success": {
@@ -3640,12 +3575,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0,
-                0
+                0.95,
+                0.96,
+                0.97
               ],
               "alpha": 1,
-              "hex": "#000000"
+              "hex": "#f2f5f7"
             }
           },
           "warning": {
@@ -3666,12 +3601,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0,
-                0
+                0.95,
+                0.96,
+                0.97
               ],
               "alpha": 1,
-              "hex": "#000000"
+              "hex": "#f2f5f7"
             }
           },
           "info": {
@@ -3692,12 +3627,12 @@
             "$value": {
               "colorSpace": "srgb",
               "components": [
-                0,
-                0,
-                0
+                0.95,
+                0.96,
+                0.97
               ],
               "alpha": 1,
-              "hex": "#000000"
+              "hex": "#f2f5f7"
             }
           }
         },
@@ -3752,19 +3687,6 @@
               ],
               "alpha": 1,
               "hex": "#3494f4"
-            }
-          },
-          "ring-offset-color": {
-            "$type": "color",
-            "$value": {
-              "colorSpace": "srgb",
-              "components": [
-                0.0675,
-                0.08625,
-                0.1125
-              ],
-              "alpha": 1,
-              "hex": "#11161d"
             }
           }
         },
@@ -4619,6 +4541,10 @@
             "$type": "number",
             "$value": 800
           },
+          "font-weight-bold": {
+            "$type": "number",
+            "$value": 700
+          },
           "font-weight-semi-bold": {
             "$type": "number",
             "$value": 600
@@ -4728,6 +4654,10 @@
           "font-weight-extra-bold": {
             "$type": "number",
             "$value": 800
+          },
+          "font-weight-bold": {
+            "$type": "number",
+            "$value": 700
           },
           "font-weight-semi-bold": {
             "$type": "number",
@@ -4839,6 +4769,10 @@
             "$type": "number",
             "$value": 800
           },
+          "font-weight-bold": {
+            "$type": "number",
+            "$value": 700
+          },
           "font-weight-semi-bold": {
             "$type": "number",
             "$value": 600
@@ -4948,6 +4882,10 @@
           "font-weight-extra-bold": {
             "$type": "number",
             "$value": 800
+          },
+          "font-weight-bold": {
+            "$type": "number",
+            "$value": 700
           },
           "font-weight-semi-bold": {
             "$type": "number",
@@ -5059,6 +4997,10 @@
             "$type": "number",
             "$value": 800
           },
+          "font-weight-bold": {
+            "$type": "number",
+            "$value": 700
+          },
           "font-weight-semi-bold": {
             "$type": "number",
             "$value": 600
@@ -5168,6 +5110,10 @@
           "font-weight-extra-bold": {
             "$type": "number",
             "$value": 800
+          },
+          "font-weight-bold": {
+            "$type": "number",
+            "$value": 700
           },
           "font-weight-semi-bold": {
             "$type": "number",
@@ -5279,6 +5225,10 @@
             "$type": "number",
             "$value": 800
           },
+          "font-weight-bold": {
+            "$type": "number",
+            "$value": 700
+          },
           "font-weight-semi-bold": {
             "$type": "number",
             "$value": 600
@@ -5388,6 +5338,10 @@
           "font-weight-extra-bold": {
             "$type": "number",
             "$value": 800
+          },
+          "font-weight-bold": {
+            "$type": "number",
+            "$value": 700
           },
           "font-weight-semi-bold": {
             "$type": "number",

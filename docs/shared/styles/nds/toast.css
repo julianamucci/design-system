@@ -15,7 +15,8 @@
  *   </div>
  *
  * Tokens: --background, --foreground, --muted-foreground, --border, --primary,
- *         --success, --destructive, --warning, --info, --spacing-*
+ *         --success/-foreground, --destructive/-foreground,
+ *         --warning/-foreground, --info/-foreground, --spacing-*
  */
 
 /* ── Toaster (container fixed posicionado) ───────────────────────────────── */
@@ -65,31 +66,37 @@
   transform: translateY(0);
 }
 
-/* ── Variantes coloridas (rich-colors) ───────────────────────────────────── */
+/* ── Variantes coloridas (rich-colors) ───────────────────────────────────── *
+ * A cor semântica pinta fundo suave, borda e ÍCONE; o texto fica no par
+ * `-foreground` dela, que neste projeto vale `--foreground` (a regra do
+ * contêiner colorido) e pinta portanto a mesma cor de antes. Escrever o token em
+ * vez de `--foreground` é o ponto de extensão: um projeto derivado redefine
+ * `--success-foreground` no tema e o toast acompanha. Ver tokens.css. */
 .nds-toast[data-rich-colors="true"][data-type="success"] {
   background-color: hsl(var(--success) / 0.1);
-  color: hsl(var(--foreground));
+  color: hsl(var(--success-foreground));
   border-color: hsl(var(--success) / 0.3);
 }
 .nds-toast[data-rich-colors="true"][data-type="success"] .nds-toast-icon { color: hsl(var(--success)); }
 
+/* `error` é o nome do tipo no toast; a cor dele é `destructive`. */
 .nds-toast[data-rich-colors="true"][data-type="error"] {
   background-color: hsl(var(--destructive) / 0.1);
-  color: hsl(var(--foreground));
+  color: hsl(var(--destructive-foreground));
   border-color: hsl(var(--destructive) / 0.3);
 }
 .nds-toast[data-rich-colors="true"][data-type="error"] .nds-toast-icon { color: hsl(var(--destructive)); }
 
 .nds-toast[data-rich-colors="true"][data-type="warning"] {
   background-color: hsl(var(--warning) / 0.1);
-  color: hsl(var(--foreground));
+  color: hsl(var(--warning-foreground));
   border-color: hsl(var(--warning) / 0.3);
 }
 .nds-toast[data-rich-colors="true"][data-type="warning"] .nds-toast-icon { color: hsl(var(--warning)); }
 
 .nds-toast[data-rich-colors="true"][data-type="info"] {
   background-color: hsl(var(--info) / 0.1);
-  color: hsl(var(--foreground));
+  color: hsl(var(--info-foreground));
   border-color: hsl(var(--info) / 0.3);
 }
 .nds-toast[data-rich-colors="true"][data-type="info"] .nds-toast-icon { color: hsl(var(--info)); }

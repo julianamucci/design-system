@@ -34,7 +34,7 @@
     },
     {
       key: 'structure',
-      tokens: ['border', 'input', 'input-background', 'ring', 'ring-offset-color'],
+      tokens: ['border', 'input', 'input-background', 'ring'],
     },
     {
       key: 'sidebar',
