@@ -55,7 +55,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<AvatarArgs> }):
       <img ndsAvatarImage src="/maria.jpg" alt="${alt}" />
       <!-- aria-hidden porque o alt acima já identifica a pessoa:
            sem isso o leitor de tela anuncia o nome duas vezes. -->
-      <span ndsAvatarFallback${atraso} aria-hidden="true">${fallback}</span>
+      <span ndsAvatarFallback${atraso}>${fallback}</span>
     </span>
   \`,
 })
@@ -125,7 +125,7 @@ export const Playground: Story = {
           [alt]="alt"
           (onLoadingStatusChange)="onStatusChange($event)"
         />
-        <span ndsAvatarFallback [delayMs]="delayMs" aria-hidden="true">{{ fallback }}</span>
+        <span ndsAvatarFallback [delayMs]="delayMs">{{ fallback }}</span>
       </span>
     `,
   }),

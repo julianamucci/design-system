@@ -41,12 +41,12 @@ type Story = StoryObj<typeof meta>;
 
 export const WithImage: Story = {
   parameters: {
-    covers: ["functional.item1", "accessibility.item1", "accessibility.item2"],
+    covers: ["functional.item1", "accessibility.item1"],
   },
   render: () => (
     <Avatar>
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback aria-hidden="true" delayMs={600}>
+      <AvatarFallback delayMs={600}>
         MR
       </AvatarFallback>
     </Avatar>
@@ -62,12 +62,22 @@ export const WithImage: Story = {
       await expect(img).not.toBeNull();
       await expect(img!.alt).toBe("Foto de perfil de Maria Rodrigues");
     }, { timeout: 5000 });
-    // accessibility.item2 — com alt descritivo, as iniciais não são anunciadas
-    // de novo: seriam a mesma pessoa lida duas vezes.
-    const fallback = canvasElement.querySelector('[data-slot="avatar-fallback"]');
-    if (fallback) {
-      await expect(fallback).toHaveAttribute("aria-hidden", "true");
-    }
+    // Sem duplicação de voz, e sem aria-hidden: quando a foto aparece o
+    // componente já tira o fallback da árvore de acessibilidade (remove do DOM
+    // ou o oculta), então o atributo não evitava nada — e deixava o avatar MUDO
+    // no estado em que o fallback é o único conteúdo. Ver a story Failed.
+    // O waitFor gateia na CARGA, não no relógio: enquanto a foto não chega, o
+    // fallback está na tela de propósito. Sem ele o passo passava por acidente
+    // nas stacks cujo fallback tem delayMs — ainda nem existia no DOM.
+    await waitFor(async () => {
+      const fallback = canvasElement.querySelector<HTMLElement>('[data-slot="avatar-fallback"]');
+      const foraDaArvore =
+        !fallback ||
+        getComputedStyle(fallback).display === "none" ||
+        getComputedStyle(fallback).visibility === "hidden" ||
+        fallback.getBoundingClientRect().height === 0;
+      await expect(foraDaArvore).toBe(true);
+    }, { timeout: 5000 });
   },
 };
 
@@ -94,10 +104,7 @@ export const WithIcon: Story = {
   render: () => (
     <Avatar>
       <AvatarFallback role="img" aria-label="Usuário genérico">
-        <User
-          aria-hidden="true"
-          style={{ height: "1.25rem", width: "1.25rem" }}
-        />
+        <User aria-hidden="true" className="nds-icon-lg" />
       </AvatarFallback>
     </Avatar>
   ),
@@ -118,15 +125,15 @@ export const Group: Story = {
     <AvatarGroup role="group" aria-label="Participantes">
       <Avatar>
         <AvatarImage src={IMG_MARIA} alt="" />
-        <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+        <AvatarFallback>MR</AvatarFallback>
       </Avatar>
       <Avatar>
         <AvatarImage src={IMG_SECOND} alt="" />
-        <AvatarFallback aria-hidden="true">JP</AvatarFallback>
+        <AvatarFallback>JP</AvatarFallback>
       </Avatar>
       <Avatar>
         <AvatarImage src={IMG_THIRD} alt="" />
-        <AvatarFallback aria-hidden="true">AS</AvatarFallback>
+        <AvatarFallback>AS</AvatarFallback>
       </Avatar>
       <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
     </AvatarGroup>
@@ -160,7 +167,7 @@ export const WithStatus: Story = {
   render: () => (
     <Avatar>
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+      <AvatarFallback>MR</AvatarFallback>
       <AvatarBadge role="img" aria-label="Online" />
     </Avatar>
   ),

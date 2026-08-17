@@ -44,7 +44,7 @@
 {#if variant === 'image'}
   <Avatar {size} {delayMs} class={className}>
     <AvatarImage {src} {alt} />
-    <AvatarFallback aria-hidden="true">{initials}</AvatarFallback>
+    <AvatarFallback>{initials}</AvatarFallback>
   </Avatar>
 {:else if variant === 'initials'}
   <Avatar {size}>
@@ -53,7 +53,7 @@
 {:else if variant === 'icon'}
   <Avatar {size}>
     <AvatarFallback role="img" aria-label="Usuário genérico">
-      <User style="height: 1.25rem; width: 1.25rem" aria-hidden="true" />
+      <User class="nds-icon-lg" aria-hidden="true" />
     </AvatarFallback>
   </Avatar>
 {:else if variant === 'group'}
@@ -64,7 +64,7 @@
     {#each groupImages as item (item.initials)}
       <Avatar {size}>
         <AvatarImage src={item.src} alt="" />
-        <AvatarFallback aria-hidden="true">{item.initials}</AvatarFallback>
+        <AvatarFallback>{item.initials}</AvatarFallback>
       </Avatar>
     {/each}
     <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
@@ -72,7 +72,7 @@
 {:else if variant === 'withStatus'}
   <Avatar {size}>
     <AvatarImage {src} {alt} />
-    <AvatarFallback aria-hidden="true">{initials}</AvatarFallback>
+    <AvatarFallback>{initials}</AvatarFallback>
     <AvatarBadge role="img" aria-label={statusLabel} />
   </Avatar>
 {/if}

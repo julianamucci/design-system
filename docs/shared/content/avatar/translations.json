@@ -228,7 +228,7 @@
       "summary": "Avatar em si não é interativo. Quando usado como trigger (link ou botão), deve receber foco e ter <code>aria-label</code> descritivo. Cumpre WCAG 2.2 AA: 1.1.1 (texto alternativo), 1.4.3 (contraste) e 4.1.2 (nome e papel).",
       "item1": "<strong>Imagem identificadora</strong> — <code>alt</code> descritivo com o nome da pessoa: <code>\"Foto de perfil de Maria Rodrigues\"</code>. Nunca use \"avatar\" ou \"imagem\" genérico.",
       "item2": "<strong>Imagem decorativa</strong> — <code>alt=\"\"</code> quando o nome já aparece ao lado. Leitor de tela ignora a imagem e lê apenas o texto.",
-      "item3": "<strong>Fallback não decorativo</strong> — iniciais e ícones do fallback devem ter <code>aria-hidden=\"true\"</code> quando a imagem tem <code>alt</code> descritivo. Evita duplicação na leitura.",
+      "item3": "<strong>Fallback sempre legível</strong> — não marque as iniciais nem o ícone com <code>aria-hidden</code>. Enquanto a foto aparece, o fallback já está fora da árvore de acessibilidade (o componente o remove do DOM ou o oculta), então o atributo não evita duplicação nenhuma; quando a foto falha, o fallback é o único conteúdo — e escondê-lo deixa o avatar sem nome acessível.",
       "item4": "<strong>Avatar como link ou botão</strong> — envolva em <code>&lt;a&gt;</code> ou <code>&lt;button&gt;</code> com <code>aria-label</code> contextual: <code>\"Ver perfil de Maria Rodrigues\"</code>.",
       "item5": "<strong>Indicador de status</strong> — comunique também via texto (<code>sr-only</code>) ou <code>aria-label</code>. Nunca use apenas cor para comunicar status (WCAG 1.4.1)."
     },
@@ -313,7 +313,7 @@
           "how": "Inspecionar atributo alt no DOM"
         },
         "item2": {
-          "criterion": "AvatarFallback com aria-hidden=\"true\" quando alt é descritivo",
+          "criterion": "Com a imagem falhando, o avatar continua com nome acessível — o fallback não é escondido do leitor de tela",
           "level": "AA",
           "how": "Inspecionar atributos no DOM"
         },
@@ -599,7 +599,7 @@
       "summary": "Avatar itself is not interactive. When used as a trigger (link or button), it must be focusable and have a descriptive <code>aria-label</code>. Meets WCAG 2.2 AA: 1.1.1 (text alternative), 1.4.3 (contrast), and 4.1.2 (name and role).",
       "item1": "<strong>Identifying image</strong> — descriptive <code>alt</code> with the person's name: <code>\"Profile picture of Maria Rodrigues\"</code>. Never use generic \"avatar\" or \"image\".",
       "item2": "<strong>Decorative image</strong> — <code>alt=\"\"</code> when the name already appears next to it. Screen reader ignores the image and reads only the text.",
-      "item3": "<strong>Non-decorative fallback</strong> — initials and icons in the fallback must have <code>aria-hidden=\"true\"</code> when the image has a descriptive <code>alt</code>. Avoids duplication.",
+      "item3": "<strong>Fallback always readable</strong> — do not mark the initials or the icon with <code>aria-hidden</code>. While the photo is showing, the fallback is already outside the accessibility tree (the component removes or hides it), so the attribute prevents no duplication; when the photo fails, the fallback is the only content — and hiding it leaves the avatar with no accessible name.",
       "item4": "<strong>Avatar as link or button</strong> — wrap in <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> with contextual <code>aria-label</code>: <code>\"View Maria Rodrigues's profile\"</code>.",
       "item5": "<strong>Status indicator</strong> — also communicate via text (<code>sr-only</code>) or <code>aria-label</code>. Never use color alone to communicate status (WCAG 1.4.1)."
     },
@@ -684,7 +684,7 @@
           "how": "Inspect alt attribute in DOM"
         },
         "item2": {
-          "criterion": "AvatarFallback with aria-hidden=\"true\" when alt is descriptive",
+          "criterion": "With the image failing, the avatar still has an accessible name — the fallback is not hidden from screen readers",
           "level": "AA",
           "how": "Inspect attributes in DOM"
         },
@@ -970,7 +970,7 @@
       "summary": "Avatar en sí no es interactivo. Cuando se usa como trigger (link o botón), debe recibir foco y tener <code>aria-label</code> descriptivo. Cumple WCAG 2.2 AA: 1.1.1 (texto alternativo), 1.4.3 (contraste) y 4.1.2 (nombre y rol).",
       "item1": "<strong>Imagen identificadora</strong> — <code>alt</code> descriptivo con el nombre de la persona: <code>\"Foto de perfil de Maria Rodrigues\"</code>. Nunca uses \"avatar\" o \"imagen\" genérico.",
       "item2": "<strong>Imagen decorativa</strong> — <code>alt=\"\"</code> cuando el nombre ya aparece al lado. El lector de pantalla ignora la imagen y lee solo el texto.",
-      "item3": "<strong>Fallback no decorativo</strong> — iniciales e íconos del fallback deben tener <code>aria-hidden=\"true\"</code> cuando la imagen tiene <code>alt</code> descriptivo. Evita duplicación en la lectura.",
+      "item3": "<strong>Fallback siempre legible</strong> — no marques las iniciales ni el ícono con <code>aria-hidden</code>. Mientras la foto se muestra, el fallback ya está fuera del árbol de accesibilidad (el componente lo remueve u oculta), así que el atributo no evita ninguna duplicación; cuando la foto falla, el fallback es el único contenido — y esconderlo deja el avatar sin nombre accesible.",
       "item4": "<strong>Avatar como link o botón</strong> — envuelve en <code>&lt;a&gt;</code> o <code>&lt;button&gt;</code> con <code>aria-label</code> contextual: <code>\"Ver perfil de Maria Rodrigues\"</code>.",
       "item5": "<strong>Indicador de estado</strong> — comunica también vía texto (<code>sr-only</code>) o <code>aria-label</code>. Nunca uses solo color para comunicar estado (WCAG 1.4.1)."
     },
@@ -1055,7 +1055,7 @@
           "how": "Inspeccionar atributo alt en el DOM"
         },
         "item2": {
-          "criterion": "AvatarFallback con aria-hidden=\"true\" cuando alt es descriptivo",
+          "criterion": "Con la imagen fallando, el avatar mantiene el nombre accesible — el fallback no se esconde del lector de pantalla",
           "level": "AA",
           "how": "Inspeccionar atributos en el DOM"
         },

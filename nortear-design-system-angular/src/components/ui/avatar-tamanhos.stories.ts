@@ -37,7 +37,7 @@ export const Presets: Story = {
           <div class="nds-stack" data-spacing="xs">
             <span ndsAvatar [size]="p" [attr.data-testid]="'avatar-' + p">
               <img ndsAvatarImage [src]="src" alt="" />
-              <span ndsAvatarFallback aria-hidden="true">MR</span>
+              <span ndsAvatarFallback>MR</span>
             </span>
             <p class="nds-text-caption nds-text-muted-foreground">{{ p }}</p>
           </div>

@@ -38,7 +38,7 @@ export const Loaded: Story = {
     template: `
       <Avatar>
         <AvatarImage :src="IMG_MARIA" alt="Foto de perfil de Maria Rodrigues" />
-        <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+        <AvatarFallback>MR</AvatarFallback>
       </Avatar>
     `,
   }),
@@ -86,7 +86,7 @@ export const Loading: Story = {
 };
 
 export const Failed: Story = {
-  parameters: { covers: ['functional.item2'] },
+  parameters: { covers: ['functional.item2', 'accessibility.item2'] },
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback },
     setup: () => ({ IMG_BROKEN }),
@@ -110,6 +110,16 @@ export const Failed: Story = {
     const r = root.getBoundingClientRect();
     const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
     await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).toBeNull();
+
+    // accessibility.item2 — com a foto fora, o fallback é o ÚNICO conteúdo do
+    // avatar. Marcá-lo com aria-hidden (que a regra antiga do conteúdo
+    // compartilhado mandava fazer) deixava o avatar sem nome acessível nenhum:
+    // a imagem sai da árvore junto com a foto, e as iniciais ficavam mudas.
+    // Medido pela sonda nas cinco stacks.
+    const fallbackFinal = canvasElement.querySelector<HTMLElement>('[data-slot="avatar-fallback"]');
+    await expect(fallbackFinal).not.toBeNull();
+    await expect(fallbackFinal).not.toHaveAttribute('aria-hidden', 'true');
+    await expect(fallbackFinal).toHaveTextContent('MR');
   },
 };
 
@@ -122,7 +132,7 @@ export const NoImage: Story = {
         <AvatarFallback role="img" aria-label="Usuário genérico">
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-               style="height: 1.25rem; width: 1.25rem">
+               class="nds-icon-lg">
             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>

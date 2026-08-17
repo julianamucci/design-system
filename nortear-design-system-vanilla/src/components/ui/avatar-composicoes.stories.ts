@@ -48,8 +48,11 @@ function createUserIconSvg(): SVGSVGElement {
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
   svg.setAttribute('aria-hidden', 'true');
-  svg.style.width = '1.25rem';
-  svg.style.height = '1.25rem';
+  // `.nds-icon-lg` (20px) em vez de style inline: inline vence a folha e sai do
+  // tema, da densidade e da escala. A utilitária já existe em utilities.css e
+  // era a única stack a usá-la aqui (Angular) — as outras quatro cravavam o
+  // valor no atributo `style`.
+  svg.setAttribute('class', 'nds-icon-lg');
 
   for (const [tag, attrs] of User as unknown as LucideIconNode[]) {
     const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -63,7 +66,7 @@ function createUserIconSvg(): SVGSVGElement {
 
 export const WithImage: Story = {
   parameters: {
-    covers: ['functional.item1', 'accessibility.item1', 'accessibility.item2'],
+    covers: ['functional.item1', 'accessibility.item1'],
     docs: {
       description: {
         story: 'Avatar com imagem carregada. O fallback fica oculto após o load.',
@@ -76,9 +79,6 @@ export const WithImage: Story = {
       alt: 'Foto de perfil de Maria Rodrigues',
       fallbackText: 'MR',
     });
-    // accessibility.item2 — com alt descritivo no <img>, as iniciais não podem
-    // ser anunciadas também: seriam a mesma pessoa lida duas vezes.
-    av.querySelector('[data-slot="avatar-fallback"]')?.setAttribute('aria-hidden', 'true');
     return av;
   },
   play: async ({ canvasElement }) => {
@@ -211,7 +211,6 @@ export const WithStatus: Story = {
       alt: 'Foto de perfil de Maria Rodrigues',
       fallbackText: 'MR',
     });
-    avatar.querySelector('[data-slot="avatar-fallback"]')?.setAttribute('aria-hidden', 'true');
     avatar.appendChild(createAvatarBadge({ label: 'Online' }));
     return avatar;
   },

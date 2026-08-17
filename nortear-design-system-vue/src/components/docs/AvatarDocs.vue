@@ -144,14 +144,14 @@ const codeIcon = `<Avatar>
 const codeGroup = `<AvatarGroup role="group" aria-label="Participantes">
   <Avatar>
     <AvatarImage src="/maria.jpg" alt="" />
-    <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+    <AvatarFallback>MR</AvatarFallback>
   </Avatar>
   <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
 </AvatarGroup>`;
 
 const codeWithStatus = `<Avatar>
   <AvatarImage src="/maria.jpg" alt="" />
-  <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+  <AvatarFallback>MR</AvatarFallback>
   <AvatarBadge role="img" aria-label="Online" />
 </Avatar>`;
 
@@ -468,7 +468,7 @@ const testesVisual = computed(() => ({
                 :src="imgMaria"
                 alt=""
               />
-              <AvatarFallback aria-hidden="true">
+              <AvatarFallback>
                 MR
               </AvatarFallback>
             </Avatar>
@@ -477,7 +477,7 @@ const testesVisual = computed(() => ({
                 :src="imgAna"
                 alt=""
               />
-              <AvatarFallback aria-hidden="true">
+              <AvatarFallback>
                 AS
               </AvatarFallback>
             </Avatar>
@@ -486,7 +486,7 @@ const testesVisual = computed(() => ({
                 :src="imgCarlos"
                 alt=""
               />
-              <AvatarFallback aria-hidden="true">
+              <AvatarFallback>
                 CS
               </AvatarFallback>
             </Avatar>
@@ -509,7 +509,7 @@ const testesVisual = computed(() => ({
               :src="imgMaria"
               :alt="tContent('demonstration.labels.withImageAlt')"
             />
-            <AvatarFallback aria-hidden="true">
+            <AvatarFallback>
               MR
             </AvatarFallback>
             <AvatarBadge
@@ -629,7 +629,7 @@ const testesVisual = computed(() => ({
               :src="imgMaria"
               alt=""
             />
-            <AvatarFallback aria-hidden="true">
+            <AvatarFallback>
               MR
             </AvatarFallback>
           </Avatar>
@@ -638,7 +638,7 @@ const testesVisual = computed(() => ({
               :src="imgAna"
               alt=""
             />
-            <AvatarFallback aria-hidden="true">
+            <AvatarFallback>
               AS
             </AvatarFallback>
           </Avatar>
@@ -647,7 +647,7 @@ const testesVisual = computed(() => ({
               :src="imgCarlos"
               alt=""
             />
-            <AvatarFallback aria-hidden="true">
+            <AvatarFallback>
               CS
             </AvatarFallback>
           </Avatar>
@@ -662,7 +662,7 @@ const testesVisual = computed(() => ({
             :src="imgMaria"
             :alt="tContent('demonstration.labels.withImageAlt')"
           />
-          <AvatarFallback aria-hidden="true">
+          <AvatarFallback>
             MR
           </AvatarFallback>
           <AvatarBadge

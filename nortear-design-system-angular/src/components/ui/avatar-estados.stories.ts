@@ -36,7 +36,7 @@ export const Loaded: Story = {
     template: `
       <span ndsAvatar>
         <img ndsAvatarImage [src]="src" alt="Foto de perfil de Maria Rodrigues" />
-        <span ndsAvatarFallback aria-hidden="true">MR</span>
+        <span ndsAvatarFallback>MR</span>
       </span>
     `,
   }),
@@ -80,11 +80,11 @@ export const AwaitingDelay: Story = {
       <div class="nds-cluster" data-spacing="lg">
         <span ndsAvatar data-testid="sem-atraso">
           <img ndsAvatarImage [src]="src" alt="" />
-          <span ndsAvatarFallback aria-hidden="true">MR</span>
+          <span ndsAvatarFallback>MR</span>
         </span>
         <span ndsAvatar data-testid="com-atraso">
           <img ndsAvatarImage [src]="src" alt="" />
-          <span ndsAvatarFallback [delayMs]="2000" aria-hidden="true">JP</span>
+          <span ndsAvatarFallback [delayMs]="2000">JP</span>
         </span>
       </div>
     `,
@@ -118,7 +118,7 @@ export const AwaitingDelay: Story = {
 
 export const Failed: Story = {
   parameters: {
-    covers: ['functional.item2'],
+    covers: ['functional.item2', 'accessibility.item2'],
     docs: {
       description: {
         story: 'Imagem que não carrega — o fallback fica permanentemente, e a foto não entra.',
@@ -130,7 +130,7 @@ export const Failed: Story = {
     template: `
       <span ndsAvatar>
         <img ndsAvatarImage [src]="src" alt="Foto de perfil de Maria Rodrigues" />
-        <span ndsAvatarFallback aria-hidden="true">MR</span>
+        <span ndsAvatarFallback>MR</span>
       </span>
     `,
   }),
@@ -148,6 +148,16 @@ export const Failed: Story = {
       const r = root.getBoundingClientRect();
       const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
       await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).toBeNull();
+    });
+
+    await step('As iniciais continuam legíveis para o leitor de tela', async () => {
+      // Com a foto fora, o fallback é o ÚNICO conteúdo do avatar. Marcá-lo com
+      // aria-hidden (que a regra antiga do conteúdo compartilhado mandava
+      // fazer) deixava o avatar sem nome acessível nenhum. Medido pela sonda
+      // nas cinco stacks.
+      const fallback = canvasElement.querySelector<HTMLElement>('[data-slot="avatar-fallback"]')!;
+      await expect(fallback).not.toHaveAttribute('aria-hidden', 'true');
+      await expect(fallback).toHaveTextContent('MR');
     });
   },
 };

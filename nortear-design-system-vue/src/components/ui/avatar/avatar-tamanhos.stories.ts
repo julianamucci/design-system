@@ -45,7 +45,7 @@ const render = (size?: string) => () => ({
   template: `
     <Avatar :size="size">
       <AvatarImage :src="IMG_MARIA" alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+      <AvatarFallback>MR</AvatarFallback>
     </Avatar>
   `,
 });

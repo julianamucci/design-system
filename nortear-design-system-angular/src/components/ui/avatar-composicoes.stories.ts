@@ -25,7 +25,7 @@ type Story = StoryObj;
 
 export const WithPhoto: Story = {
   parameters: {
-    covers: ['functional.item1', 'accessibility.item1', 'accessibility.item2'],
+    covers: ['functional.item1', 'accessibility.item1'],
     docs: {
       description: {
         story: 'Foto com alternativa textual descritiva. O fallback fica oculto depois do load.',
@@ -37,7 +37,7 @@ export const WithPhoto: Story = {
     template: `
       <span ndsAvatar size="lg">
         <img ndsAvatarImage [src]="src" alt="Foto de perfil de Maria Rodrigues" />
-        <span ndsAvatarFallback aria-hidden="true">MR</span>
+        <span ndsAvatarFallback>MR</span>
       </span>
     `,
   }),
@@ -50,8 +50,13 @@ export const WithPhoto: Story = {
     });
 
     await step('As iniciais não são anunciadas junto', async () => {
-      // Seriam a mesma pessoa lida duas vezes pelo leitor de tela.
-      await expect(fallback).toHaveAttribute('aria-hidden', 'true');
+      // Sem duplicação de voz, e sem aria-hidden: com a foto na tela o
+      // componente já tira o fallback da árvore de acessibilidade, então o
+      // atributo não evitava nada — e deixava o avatar MUDO no estado em que o
+      // fallback é o único conteúdo. Ver a story Failed.
+      await waitFor(async () => {
+        await expect(getComputedStyle(fallback).display).toBe('none');
+      }, { timeout: 5000 });
     });
 
     await step('Carregada a foto, o fallback sai de cena', async () => {
@@ -157,14 +162,14 @@ export const Group: Story = {
       <div ndsAvatarGroup role="group" aria-label="Participantes">
         <span ndsAvatar>
           <img ndsAvatarImage [src]="src" alt="" />
-          <span ndsAvatarFallback aria-hidden="true">MR</span>
+          <span ndsAvatarFallback>MR</span>
         </span>
         <span ndsAvatar>
           <img ndsAvatarImage [src]="src" alt="" />
-          <span ndsAvatarFallback aria-hidden="true">JP</span>
+          <span ndsAvatarFallback>JP</span>
         </span>
         <span ndsAvatar>
-          <span ndsAvatarFallback aria-hidden="true">AS</span>
+          <span ndsAvatarFallback>AS</span>
         </span>
         <div ndsAvatarGroupCount aria-hidden="true">+3</div>
       </div>
@@ -209,7 +214,7 @@ export const WithStatus: Story = {
     template: `
       <span ndsAvatar size="lg">
         <img ndsAvatarImage [src]="src" alt="Foto de perfil de Maria Rodrigues" />
-        <span ndsAvatarFallback aria-hidden="true">MR</span>
+        <span ndsAvatarFallback>MR</span>
         <span ndsAvatarBadge role="img" aria-label="online"></span>
       </span>
     `,

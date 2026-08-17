@@ -52,7 +52,7 @@ export const Playground: Story = {
   render: (args) => (
     <Avatar {...args}>
       <AvatarImage src={DEMO_IMAGE} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback aria-hidden="true" delayMs={600}>
+      <AvatarFallback delayMs={600}>
         MR
       </AvatarFallback>
     </Avatar>

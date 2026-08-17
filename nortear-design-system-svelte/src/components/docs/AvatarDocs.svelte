@@ -111,14 +111,14 @@ import User from '@lucide/svelte/icons/user';`;
   const codeGroup = `<AvatarGroup role="group" aria-label="Participantes">
   <Avatar>
     <AvatarImage src="/maria.jpg" alt="" />
-    <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+    <AvatarFallback>MR</AvatarFallback>
   </Avatar>
   <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
 </AvatarGroup>`;
 
   const codeStatus = `<Avatar>
   <AvatarImage src="/maria.jpg" alt="" />
-  <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+  <AvatarFallback>MR</AvatarFallback>
   <AvatarBadge role="img" aria-label="Online" />
 </Avatar>`;
 
@@ -186,15 +186,15 @@ interface AvatarFallbackProps {
         <AvatarGroup role="group" aria-label={$tStore('demonstration.labels.groupTitle')}>
           <Avatar>
             <AvatarImage src={IMG_MARIA} alt="" />
-            <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+            <AvatarFallback>MR</AvatarFallback>
           </Avatar>
           <Avatar>
             <AvatarImage src={IMG_JOAO} alt="" />
-            <AvatarFallback aria-hidden="true">JP</AvatarFallback>
+            <AvatarFallback>JP</AvatarFallback>
           </Avatar>
           <Avatar>
             <AvatarImage src={IMG_ANA} alt="" />
-            <AvatarFallback aria-hidden="true">AS</AvatarFallback>
+            <AvatarFallback>AS</AvatarFallback>
           </Avatar>
           <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
         </AvatarGroup>
@@ -205,7 +205,7 @@ interface AvatarFallbackProps {
              region, e o AvatarBadge já posiciona no canto. -->
         <Avatar>
           <AvatarImage src={IMG_MARIA} alt={$tStore('demonstration.labels.withImageAlt')} />
-          <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+          <AvatarFallback>MR</AvatarFallback>
           <AvatarBadge role="img" aria-label={$tStore('demonstration.labels.statusOnline')} />
         </Avatar>
         <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.statusTitle')}</span>

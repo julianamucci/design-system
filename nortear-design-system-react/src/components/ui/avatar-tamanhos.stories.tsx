@@ -45,7 +45,7 @@ export const Sm: Story = {
   render: () => (
     <Avatar size="sm">
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+      <AvatarFallback>MR</AvatarFallback>
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
@@ -64,7 +64,7 @@ export const Md: Story = {
   render: () => (
     <Avatar>
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+      <AvatarFallback>MR</AvatarFallback>
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
@@ -85,7 +85,7 @@ export const Lg: Story = {
   render: () => (
     <Avatar size="lg">
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+      <AvatarFallback>MR</AvatarFallback>
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
@@ -101,7 +101,7 @@ export const Xl: Story = {
   render: () => (
     <Avatar size="xl">
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+      <AvatarFallback>MR</AvatarFallback>
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
@@ -117,7 +117,7 @@ export const TwoXl: Story = {
   render: () => (
     <Avatar size="2xl">
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
-      <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+      <AvatarFallback>MR</AvatarFallback>
     </Avatar>
   ),
   play: async ({ canvasElement }) => {

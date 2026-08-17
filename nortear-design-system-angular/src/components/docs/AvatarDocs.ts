@@ -150,7 +150,7 @@ const CODE_IMAGE = `<span ndsAvatar>
     src="https://exemplo.com/maria.jpg"
     alt="Foto de perfil de Maria Rodrigues"
   />
-  <span ndsAvatarFallback [delayMs]="600" aria-hidden="true">MR</span>
+  <span ndsAvatarFallback [delayMs]="600">MR</span>
 </span>`;
 
 const CODE_INITIALS = `<span ndsAvatar>
@@ -166,14 +166,14 @@ const CODE_ICON = `<span ndsAvatar>
 const CODE_GROUP = `<div ndsAvatarGroup role="group" aria-label="Participantes">
   <span ndsAvatar>
     <img ndsAvatarImage src="/maria.jpg" alt="" />
-    <span ndsAvatarFallback aria-hidden="true">MR</span>
+    <span ndsAvatarFallback>MR</span>
   </span>
   <div ndsAvatarGroupCount aria-hidden="true">+3</div>
 </div>`;
 
 const CODE_STATUS = `<span ndsAvatar>
   <img ndsAvatarImage src="/maria.jpg" alt="" />
-  <span ndsAvatarFallback aria-hidden="true">MR</span>
+  <span ndsAvatarFallback>MR</span>
   <span ndsAvatarBadge role="img" aria-label="online"></span>
 </span>`;
 
@@ -193,7 +193,7 @@ const CODE_STATUS = `<span ndsAvatar>
     <ng-template #tplDoDont1Do>
       <span ndsAvatar size="lg">
         <img ndsAvatarImage [src]="foto" [alt]="t('demonstration.labels.withImageAlt')" />
-        <span ndsAvatarFallback [delayMs]="600" aria-hidden="true">MR</span>
+        <span ndsAvatarFallback [delayMs]="600">MR</span>
       </span>
     </ng-template>
     <ng-template #tplDoDont1Dont>
@@ -215,7 +215,7 @@ const CODE_STATUS = `<span ndsAvatar>
     <ng-template #tplVarImage>
       <span ndsAvatar size="lg">
         <img ndsAvatarImage [src]="foto" [alt]="t('demonstration.labels.withImageAlt')" />
-        <span ndsAvatarFallback [delayMs]="600" aria-hidden="true">MR</span>
+        <span ndsAvatarFallback [delayMs]="600">MR</span>
       </span>
     </ng-template>
     <ng-template #tplVarInitials>
@@ -234,14 +234,14 @@ const CODE_STATUS = `<span ndsAvatar>
       <div ndsAvatarGroup role="group" [attr.aria-label]="t('demonstration.labels.groupTitle')">
         <span ndsAvatar>
           <img ndsAvatarImage [src]="foto" alt="" />
-          <span ndsAvatarFallback aria-hidden="true">MR</span>
+          <span ndsAvatarFallback>MR</span>
         </span>
         <span ndsAvatar>
           <img ndsAvatarImage [src]="foto" alt="" />
-          <span ndsAvatarFallback aria-hidden="true">JP</span>
+          <span ndsAvatarFallback>JP</span>
         </span>
         <span ndsAvatar>
-          <span ndsAvatarFallback aria-hidden="true">AS</span>
+          <span ndsAvatarFallback>AS</span>
         </span>
         <div ndsAvatarGroupCount aria-hidden="true">+3</div>
       </div>
@@ -249,7 +249,7 @@ const CODE_STATUS = `<span ndsAvatar>
     <ng-template #tplVarStatus>
       <span ndsAvatar size="lg">
         <img ndsAvatarImage [src]="foto" alt="" />
-        <span ndsAvatarFallback aria-hidden="true">MR</span>
+        <span ndsAvatarFallback>MR</span>
         <span ndsAvatarBadge role="img" [attr.aria-label]="t('demonstration.labels.statusOnline')"></span>
       </span>
     </ng-template>
@@ -274,7 +274,7 @@ const CODE_STATUS = `<span ndsAvatar>
             <div class="nds-stack" data-spacing="xs">
               <span ndsAvatar size="lg">
                 <img ndsAvatarImage [src]="foto" [alt]="t('demonstration.labels.withImageAlt')" />
-                <span ndsAvatarFallback [delayMs]="600" aria-hidden="true">MR</span>
+                <span ndsAvatarFallback [delayMs]="600">MR</span>
               </span>
               <p class="nds-text-caption nds-text-muted-foreground">
                 {{ t('demonstration.labels.withImage') }}
@@ -305,14 +305,14 @@ const CODE_STATUS = `<span ndsAvatar>
               <div ndsAvatarGroup role="group" [attr.aria-label]="t('demonstration.labels.groupTitle')">
                 <span ndsAvatar size="lg">
                   <img ndsAvatarImage [src]="foto" alt="" />
-                  <span ndsAvatarFallback aria-hidden="true">MR</span>
+                  <span ndsAvatarFallback>MR</span>
                 </span>
                 <span ndsAvatar size="lg">
                   <img ndsAvatarImage [src]="foto" alt="" />
-                  <span ndsAvatarFallback aria-hidden="true">JP</span>
+                  <span ndsAvatarFallback>JP</span>
                 </span>
                 <span ndsAvatar size="lg">
-                  <span ndsAvatarFallback aria-hidden="true">AS</span>
+                  <span ndsAvatarFallback>AS</span>
                 </span>
                 <div ndsAvatarGroupCount aria-hidden="true">+3</div>
               </div>
@@ -324,7 +324,7 @@ const CODE_STATUS = `<span ndsAvatar>
             <div class="nds-stack" data-spacing="xs">
               <span ndsAvatar size="lg">
                 <img ndsAvatarImage [src]="foto" alt="" />
-                <span ndsAvatarFallback aria-hidden="true">MR</span>
+                <span ndsAvatarFallback>MR</span>
                 <span
                   ndsAvatarBadge
                   role="img"

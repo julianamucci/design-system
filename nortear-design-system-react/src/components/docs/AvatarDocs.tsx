@@ -149,14 +149,14 @@ import { User } from "lucide-react";`;
   const codeGroup = `<AvatarGroup role="group" aria-label="Participantes">
   <Avatar>
     <AvatarImage src="/maria.jpg" alt="" />
-    <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+    <AvatarFallback>MR</AvatarFallback>
   </Avatar>
   <AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>
 </AvatarGroup>`;
 
   const codeWithStatus = `<Avatar>
   <AvatarImage src="/maria.jpg" alt="" />
-  <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+  <AvatarFallback>MR</AvatarFallback>
   <AvatarBadge role="img" aria-label="Online" />
 </Avatar>`;
 
@@ -244,14 +244,14 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
             <AvatarGroup role="group" aria-label={tContent("demonstration.labels.groupTitle")}>
               <Avatar>
                 <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
-                <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+                <AvatarFallback>MR</AvatarFallback>
               </Avatar>
               <Avatar>
                 <AvatarImage src={DEMO_IMAGE_SECOND} alt="" />
-                <AvatarFallback aria-hidden="true">JP</AvatarFallback>
+                <AvatarFallback>JP</AvatarFallback>
               </Avatar>
               <Avatar>
-                <AvatarFallback aria-hidden="true">
+                <AvatarFallback>
                   <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
                 </AvatarFallback>
               </Avatar>
@@ -267,7 +267,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
                 region, e o AvatarBadge já posiciona no canto. */}
             <Avatar>
               <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
-              <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+              <AvatarFallback>MR</AvatarFallback>
               <AvatarBadge role="img" aria-label={tContent("demonstration.labels.statusOnline")} />
             </Avatar>
             <span className="nds-text-caption nds-text-muted-foreground">
@@ -474,18 +474,18 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
               <div style={{ display: "flex" }}>
                 <Avatar style={{ boxShadow: "0 0 0 2px var(--background)" }}>
                   <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
-                  <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+                  <AvatarFallback>MR</AvatarFallback>
                 </Avatar>
                 <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
                   <AvatarImage src={DEMO_IMAGE_SECOND} alt="" />
-                  <AvatarFallback aria-hidden="true">JP</AvatarFallback>
+                  <AvatarFallback>JP</AvatarFallback>
                 </Avatar>
                 <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
                   <AvatarImage src={DEMO_IMAGE_THIRD} alt="" />
-                  <AvatarFallback aria-hidden="true">AS</AvatarFallback>
+                  <AvatarFallback>AS</AvatarFallback>
                 </Avatar>
                 <Avatar style={{ boxShadow: "0 0 0 2px var(--background)", marginLeft: "-0.5rem" }}>
-                  <AvatarFallback aria-hidden="true">
+                  <AvatarFallback>
                     <User aria-hidden="true" className="nds-icon nds-text-muted-foreground" />
                   </AvatarFallback>
                 </Avatar>
@@ -500,7 +500,7 @@ interface AvatarFallbackProps extends React.ComponentPropsWithoutRef<typeof Avat
               <div style={{ position: "relative", display: "inline-block" }}>
                 <Avatar>
                   <AvatarImage src={DEMO_IMAGE_MARIA} alt="" />
-                  <AvatarFallback aria-hidden="true">MR</AvatarFallback>
+                  <AvatarFallback>MR</AvatarFallback>
                 </Avatar>
                 <span
                   role="status"

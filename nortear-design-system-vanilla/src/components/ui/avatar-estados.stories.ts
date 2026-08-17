@@ -44,7 +44,6 @@ export const Loaded: Story = {
       alt: 'Foto de perfil de Maria Rodrigues',
       fallbackText: 'MR',
     });
-    av.querySelector('[data-slot="avatar-fallback"]')?.setAttribute('aria-hidden', 'true');
     return av;
   },
   play: async ({ canvasElement }) => {
@@ -95,7 +94,7 @@ export const Loading: Story = {
 
 export const Failed: Story = {
   parameters: {
-    covers: ['functional.item2'],
+    covers: ['functional.item2', 'accessibility.item2'],
     docs: {
       description: {
         story:
@@ -122,6 +121,16 @@ export const Failed: Story = {
     const r = root.getBoundingClientRect();
     const alvo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
     await expect(alvo && alvo.closest('[data-slot="avatar-image"]')).toBeNull();
+
+    // accessibility.item2 — com a foto fora, o fallback é o ÚNICO conteúdo do
+    // avatar. Marcá-lo com aria-hidden (que a regra antiga do conteúdo
+    // compartilhado mandava fazer) deixava o avatar sem nome acessível nenhum:
+    // a imagem sai da árvore junto com a foto, e as iniciais ficavam mudas.
+    // Medido pela sonda nas cinco stacks.
+    const fallbackFinal = canvasElement.querySelector<HTMLElement>('[data-slot="avatar-fallback"]');
+    await expect(fallbackFinal).not.toBeNull();
+    await expect(fallbackFinal).not.toHaveAttribute('aria-hidden', 'true');
+    await expect(fallbackFinal).toHaveTextContent('MR');
   },
 };
 

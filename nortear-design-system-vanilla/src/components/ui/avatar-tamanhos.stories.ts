@@ -32,7 +32,6 @@ function buildAvatar(size?: AvatarSize): HTMLElement {
     fallbackText: 'MR',
     size,
   });
-  av.querySelector('[data-slot="avatar-fallback"]')?.setAttribute('aria-hidden', 'true');
   return av;
 }
 
