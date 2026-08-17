@@ -70,7 +70,7 @@ type CrumbDef =
 
 function buildBreadcrumb(
   crumbs: CrumbDef[],
-  separator: string | HTMLElement = '›',
+  separator?: string | HTMLElement,
   label?: string,
 ): HTMLElement {
   // aria-label distinto por instância (landmark-unique): usa a string que já
@@ -101,10 +101,15 @@ function buildBreadcrumb(
     list.appendChild(item);
 
     if (index < crumbs.length - 1) {
+      // Sem valor, cai no desenho padrão da factory (ChevronRight), que é o
+      // que a anatomia compartilhada documenta. Só o exemplo de separador
+      // customizado passa um valor.
       const sep =
-        typeof separator === 'string'
-          ? createBreadcrumbSeparator({ content: separator })
-          : createBreadcrumbSeparator({ content: separator.cloneNode(true) as HTMLElement });
+        separator === undefined
+          ? createBreadcrumbSeparator()
+          : typeof separator === 'string'
+            ? createBreadcrumbSeparator({ content: separator })
+            : createBreadcrumbSeparator({ content: separator.cloneNode(true) as HTMLElement });
       list.appendChild(sep);
     }
   });
@@ -120,7 +125,7 @@ function buildDefaultBreadcrumb(label?: string): HTMLElement {
       { type: 'link', text: t('demonstration.labels.components'), href: '#' },
       { type: 'page', text: t('demonstration.labels.breadcrumb') },
     ],
-    '›',
+    undefined,
     label,
   );
 }
@@ -133,7 +138,7 @@ function buildWithEllipsisBreadcrumb(label?: string): HTMLElement {
       { type: 'link', text: t('demonstration.labels.components'), href: '#' },
       { type: 'page', text: t('demonstration.labels.breadcrumb') },
     ],
-    '›',
+    undefined,
     label,
   );
 }
@@ -159,7 +164,7 @@ function buildResponsiveBreadcrumb(label?: string): HTMLElement {
       { type: 'link', text: t('demonstration.labels.components'), href: '#' },
       { type: 'page', text: t('demonstration.labels.breadcrumb') },
     ],
-    '›',
+    undefined,
     label,
   );
 }
@@ -383,7 +388,7 @@ export function createBreadcrumbDocs(): HTMLElement {
                     { type: 'link', text: t('demonstration.labels.components'), href: '#' },
                     { type: 'link', text: t('demonstration.labels.breadcrumb'), href: '#' },
                   ],
-                  '›',
+                  undefined,
                   toPlainText(t('doDont.pair1.dont')),
                 ),
             },
@@ -403,7 +408,7 @@ export function createBreadcrumbDocs(): HTMLElement {
                     { type: 'link', text: t('demonstration.labels.components'), href: '#' },
                     { type: 'page', text: t('demonstration.labels.breadcrumb') },
                   ],
-                  '›',
+                  undefined,
                   stripHtml(t('doDont.pair2.dont')),
                 ),
             },
@@ -544,7 +549,7 @@ export interface BreadcrumbPageOptions {
 }
 
 export interface BreadcrumbSeparatorOptions {
-  content?: string | HTMLElement; // default: "›"
+  content?: string | HTMLElement; // default: ChevronRight
   className?: string;
 }
 
@@ -607,7 +612,7 @@ export interface BreadcrumbEllipsisOptions {
               title: t('props.separatorTitle'),
               cols: propsCols,
               items: [
-                { name: 'content', type: 'string | HTMLElement', defaultValue: '"›"', required: 'Não', description: 'Conteúdo do separador (texto ou ícone).' },
+                { name: 'content', type: 'string | HTMLElement', defaultValue: 'ChevronRight', required: 'Não', description: 'Conteúdo do separador (texto ou ícone).' },
                 { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
               ],
             },

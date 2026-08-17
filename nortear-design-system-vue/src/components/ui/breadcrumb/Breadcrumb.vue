@@ -11,7 +11,7 @@ const props = defineProps<{
   <nav
     aria-label="breadcrumb"
     data-slot="breadcrumb"
-    :class="cn('', props.class)"
+    :class="cn('nds-breadcrumb', props.class)"
   >
     <slot />
   </nav>

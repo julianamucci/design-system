@@ -11,6 +11,11 @@ import {
 } from './breadcrumb';
 import { createBreadcrumbDocs } from '@/components/docs/BreadcrumbDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import {
+  descreverFalhasDeBreadcrumb,
+  medirBreadcrumb,
+  reprovasDeBreadcrumb,
+} from '@shared/testing/breadcrumb-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -110,6 +115,20 @@ export const Playground: Story = {
         await expect(sep).toHaveAttribute('aria-hidden', 'true');
         await expect(sep).toHaveAttribute('role', 'presentation');
       }
+    });
+
+    await step('A anatomia compartilhada bate com o DOM', async () => {
+      // Contagem de asserção não pega o que NENHUMA stack verifica. Esta sonda
+      // confere de uma vez o contrato inteiro: a classe .nds-breadcrumb na raiz
+      // (que faltava em duas stacks — uma com string vazia, outra com um nome de
+      // classe digitado errado), <nav> nomeado, <ol> com a classe da folha,
+      // aria-current="page" no ÚLTIMO item e sem href, separadores decorativos, e
+      // a ordem de leitura sem nenhuma peça decorativa vazada.
+      const falhas = reprovasDeBreadcrumb(medirBreadcrumb(canvasElement));
+      await expect(
+        falhas,
+        falhas.length ? `\n${descreverFalhasDeBreadcrumb(falhas)}\n` : '',
+      ).toEqual([]);
     });
   },
 };

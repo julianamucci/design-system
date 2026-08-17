@@ -15,7 +15,7 @@
 	bind:this={ref}
 	data-slot="breadcrumb"
 	aria-label="breadcrumb"
-	class={cn("cn-breadcrumb", className)}
+	class={cn("nds-breadcrumb", className)}
 	{...restProps}
 >
 	{@render children?.()}

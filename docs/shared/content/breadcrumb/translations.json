@@ -215,7 +215,7 @@
       "item1": "<strong>nav com aria-label</strong> — o container usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, diferenciando-se de outros <code>&lt;nav&gt;</code> da página.",
       "item2": "<strong>aria-current=\"page\"</strong> — aplicado automaticamente no <code>BreadcrumbPage</code>; leitor de tela anuncia como página atual.",
       "item3": "<strong>Separadores decorativos</strong> — <code>BreadcrumbSeparator</code> tem <code>role=\"presentation\"</code> e <code>aria-hidden=\"true\"</code>; não são lidos.",
-      "item4": "<strong>Ellipsis com sr-only</strong> — <code>BreadcrumbEllipsis</code> inclui texto <code>sr-only</code> \"More\" para leitores de tela.",
+      "item4": "<strong>Reticências com rótulo opcional</strong> — <code>BreadcrumbEllipsis</code> é anunciado quando recebe rótulo (<code>role=\"img\"</code> mais nome acessível) e fica decorativo quando não recebe, que é o certo quando um gatilho o envolve e já tem o próprio nome.",
       "item5": "<strong>Contraste</strong> — texto <code>muted-foreground</code> cumpre 4.5:1 sobre <code>background</code> em ambos os modos.",
       "keyboard": {
         "tab": "Move foco entre os links do Breadcrumb.",
@@ -225,8 +225,8 @@
       "aria": {
         "navLabel": "<code>aria-label=\"breadcrumb\"</code> — aplicado no <code>&lt;nav&gt;</code> raiz para identificar o propósito.",
         "current": "<code>aria-current=\"page\"</code> — aplicado automaticamente em <code>BreadcrumbPage</code>.",
-        "hidden": "<code>aria-hidden=\"true\"</code> — aplicado em <code>BreadcrumbSeparator</code> e <code>BreadcrumbEllipsis</code>.",
-        "role": "<code>role=\"presentation\"</code> — em separadores e ellipsis para remover da árvore de acessibilidade."
+        "hidden": "<code>aria-hidden=\"true\"</code> — sempre em <code>BreadcrumbSeparator</code>; em <code>BreadcrumbEllipsis</code> apenas quando ele não recebe rótulo.",
+        "role": "<code>role=\"presentation\"</code> — no separador, que nunca é lido. As reticências com rótulo usam <code>role=\"img\"</code>, porque aí passam a ser conteúdo anunciado."
       },
       "screenReader": {
         "onEnter": "Ao focar o Breadcrumb: leitor anuncia \"navegação, breadcrumb\" e o número total de itens.",
@@ -603,7 +603,7 @@
       "item1": "<strong>nav with aria-label</strong> — the container uses <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, distinguishing it from other <code>&lt;nav&gt;</code> elements on the page.",
       "item2": "<strong>aria-current=\"page\"</strong> — automatically applied on <code>BreadcrumbPage</code>; screen readers announce it as the current page.",
       "item3": "<strong>Decorative separators</strong> — <code>BreadcrumbSeparator</code> has <code>role=\"presentation\"</code> and <code>aria-hidden=\"true\"</code>; not read.",
-      "item4": "<strong>Ellipsis with sr-only</strong> — <code>BreadcrumbEllipsis</code> includes <code>sr-only</code> text \"More\" for screen readers.",
+      "item4": "<strong>Ellipsis with optional label</strong> — <code>BreadcrumbEllipsis</code> is announced when given a label (<code>role=\"img\"</code> plus an accessible name) and stays decorative when not, which is correct when a trigger wraps it and already carries its own name.",
       "item5": "<strong>Contrast</strong> — <code>muted-foreground</code> text meets 4.5:1 over <code>background</code> in both modes.",
       "keyboard": {
         "tab": "Moves focus between Breadcrumb links.",
@@ -613,8 +613,8 @@
       "aria": {
         "navLabel": "<code>aria-label=\"breadcrumb\"</code> — applied on the root <code>&lt;nav&gt;</code> to identify the purpose.",
         "current": "<code>aria-current=\"page\"</code> — automatically applied on <code>BreadcrumbPage</code>.",
-        "hidden": "<code>aria-hidden=\"true\"</code> — applied on <code>BreadcrumbSeparator</code> and <code>BreadcrumbEllipsis</code>.",
-        "role": "<code>role=\"presentation\"</code> — on separators and ellipsis to remove them from the accessibility tree."
+        "hidden": "<code>aria-hidden=\"true\"</code> — always on <code>BreadcrumbSeparator</code>; on <code>BreadcrumbEllipsis</code> only when it has no label.",
+        "role": "<code>role=\"presentation\"</code> — on the separator, which is never read. A labelled ellipsis uses <code>role=\"img\"</code>, because then it becomes announced content."
       },
       "screenReader": {
         "onEnter": "On focusing the Breadcrumb: reader announces \"navigation, breadcrumb\" and the total number of items.",
@@ -991,7 +991,7 @@
       "item1": "<strong>nav con aria-label</strong> — el contenedor usa <code>&lt;nav aria-label=\"breadcrumb\"&gt;</code>, diferenciándose de otros <code>&lt;nav&gt;</code> de la página.",
       "item2": "<strong>aria-current=\"page\"</strong> — aplicado automáticamente en <code>BreadcrumbPage</code>; el lector de pantalla lo anuncia como página actual.",
       "item3": "<strong>Separadores decorativos</strong> — <code>BreadcrumbSeparator</code> tiene <code>role=\"presentation\"</code> y <code>aria-hidden=\"true\"</code>; no se leen.",
-      "item4": "<strong>Ellipsis con sr-only</strong> — <code>BreadcrumbEllipsis</code> incluye texto <code>sr-only</code> \"More\" para lectores de pantalla.",
+      "item4": "<strong>Elipsis con rótulo opcional</strong> — <code>BreadcrumbEllipsis</code> se anuncia cuando recibe rótulo (<code>role=\"img\"</code> más nombre accesible) y queda decorativo cuando no, que es lo correcto cuando un disparador lo envuelve y ya lleva su propio nombre.",
       "item5": "<strong>Contraste</strong> — texto <code>muted-foreground</code> cumple 4.5:1 sobre <code>background</code> en ambos modos.",
       "keyboard": {
         "tab": "Mueve el foco entre los enlaces del Breadcrumb.",
@@ -1001,8 +1001,8 @@
       "aria": {
         "navLabel": "<code>aria-label=\"breadcrumb\"</code> — aplicado en el <code>&lt;nav&gt;</code> raíz para identificar el propósito.",
         "current": "<code>aria-current=\"page\"</code> — aplicado automáticamente en <code>BreadcrumbPage</code>.",
-        "hidden": "<code>aria-hidden=\"true\"</code> — aplicado en <code>BreadcrumbSeparator</code> y <code>BreadcrumbEllipsis</code>.",
-        "role": "<code>role=\"presentation\"</code> — en separadores y ellipsis para removerlos del árbol de accesibilidad."
+        "hidden": "<code>aria-hidden=\"true\"</code> — siempre en <code>BreadcrumbSeparator</code>; en <code>BreadcrumbEllipsis</code> solo cuando no recibe rótulo.",
+        "role": "<code>role=\"presentation\"</code> — en el separador, que nunca se lee. La elipsis con rótulo usa <code>role=\"img\"</code>, porque entonces pasa a ser contenido anunciado."
       },
       "screenReader": {
         "onEnter": "Al enfocar el Breadcrumb: el lector anuncia \"navegación, breadcrumb\" y el número total de ítems.",

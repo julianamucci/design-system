@@ -1,3 +1,4 @@
+import { ChevronRight, MoreHorizontal } from 'lucide';
 import { cn } from '@/lib/utils';
 // ─── Breadcrumb — Vanilla factories standalone ──────────────────────────────
 //
@@ -29,7 +30,12 @@ export interface BreadcrumbPageOptions {
 }
 
 export interface BreadcrumbSeparatorOptions {
-  /** Custom separator content; defaults to the › character. */
+  /**
+   * Conteúdo do separador. Sem valor, o desenho é o `ChevronRight` — que é o
+   * que a anatomia compartilhada documenta e o que o CSS dimensiona
+   * (`.nds-breadcrumb-separator > svg`). Passe uma string (`'/'`) ou um
+   * elemento para trocar.
+   */
   content?: string | HTMLElement;
   className?: string;
 }
@@ -42,6 +48,36 @@ export interface BreadcrumbEllipsisOptions {
    */
   label?: string;
   className?: string;
+}
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+type LucideIconNode = [string, Record<string, string>];
+
+/**
+ * Monta um ícone do lucide por `createElementNS`.
+ *
+ * Mesma decisão do `alert.ts`: os nós vêm da lista `[tag, attrs]` do pacote
+ * agnóstico `lucide`, e não de um `d` copiado à mão — copiado, ele congela na
+ * versão do dia e some do radar quando o pacote muda o desenho. Construir nós é
+ * imune a XSS: não há `innerHTML` no caminho.
+ */
+function criarIconeLucide(nodes: LucideIconNode[]): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('xmlns', SVG_NS);
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+  for (const [tag, attrs] of nodes) {
+    const filho = document.createElementNS(SVG_NS, tag);
+    for (const [k, v] of Object.entries(attrs)) filho.setAttribute(k, v);
+    svg.appendChild(filho);
+  }
+  return svg;
 }
 
 export function createBreadcrumb(options: BreadcrumbOptions = {}): HTMLElement {
@@ -105,7 +141,7 @@ export function createBreadcrumbPage(options: BreadcrumbPageOptions = {}): HTMLE
 }
 
 export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = {}): HTMLElement {
-  const { content = '›', className } = options;
+  const { content, className } = options;
 
   const li = document.createElement('li');
   li.dataset.slot = 'breadcrumb-separator';
@@ -113,7 +149,16 @@ export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = 
   li.setAttribute('aria-hidden', 'true');
   li.className = cn('nds-breadcrumb-separator', className);
 
-  if (typeof content === 'string') {
+  // O default era o caractere `›`, e era o único dos cinco. A anatomia
+  // compartilhada diz "padrão é ChevronRight", o CSS dimensiona
+  // `.nds-breadcrumb-separator > svg` (e nada dimensiona o caractere), e as
+  // outras quatro stacks desenham o chevron — então a própria docs page desta
+  // stack afirmava uma coisa enquanto a factory produzia outra, e o Chromatic
+  // fotografava um separador diferente aqui. `content` continua trocando o
+  // desenho para quem quer `/`.
+  if (content === undefined) {
+    li.appendChild(criarIconeLucide(ChevronRight as unknown as LucideIconNode[]));
+  } else if (typeof content === 'string') {
     li.textContent = content;
   } else {
     li.appendChild(content);
@@ -143,25 +188,7 @@ export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}
   }
   span.className = cn('nds-breadcrumb-ellipsis', className);
 
-  // SVG MoreHorizontal — anexado via createElementNS (sem innerHTML em elemento de fluxo).
-  const SVG_NS = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(SVG_NS, 'svg');
-  svg.setAttribute('xmlns', SVG_NS);
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '2');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  svg.setAttribute('aria-hidden', 'true');
-  for (const cx of ['5', '12', '19']) {
-    const c = document.createElementNS(SVG_NS, 'circle');
-    c.setAttribute('cx', cx);
-    c.setAttribute('cy', '12');
-    c.setAttribute('r', '1');
-    svg.appendChild(c);
-  }
-  span.appendChild(svg);
+  span.appendChild(criarIconeLucide(MoreHorizontal as unknown as LucideIconNode[]));
 
   return span;
 }
