@@ -4,12 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Layout
 
-This is a **multi-stack design system monorepo**. The same design system is implemented in 4 stacks that share content, themes, and guidelines:
+This is a **multi-stack design system monorepo**. The same design system is implemented in 5 stacks that share content, themes, and guidelines:
 
 - `nortear-design-system-react/` — React 19 + `@base-ui/react` — port **6006**
 - `nortear-design-system-vue/` — Vue 3 + `reka-ui` — port **6007**
 - `nortear-design-system-svelte/` — Svelte 5 + `bits-ui` — port **6008**
 - `nortear-design-system-vanilla/` — Vanilla TS factories + CSS `.nds-*` — port **6009**
+- `nortear-design-system-angular/` — Angular 22 + `@radix-ng/primitives` — port **6010**
+
+`STACKS` in `scripts/audit.mjs` is the authoritative list, and it has five entries. Any doc that says "four stacks" is stale.
 
 Shared (read by all stacks):
 - `docs/shared/content/<slug>/translations.json` — pt-BR/en/es content per component
@@ -18,7 +21,9 @@ Shared (read by all stacks):
 - `docs/shared/skill-refs/` — schemas/references consumed by `.claude/commands/*.md` skills
 - `scripts/audit.mjs` and `scripts/audit-translation-literals.mjs` — deterministic checks
 
-Per-stack guidelines live in `nortear-design-system-<stack>/guidelines/` and each stack has its own `CLAUDE.md`.
+Per-stack guidelines live in `nortear-design-system-<stack>/guidelines/` and each stack has its own `CLAUDE.md`. That directory carries **16 files with the same names in every stack**, and two audit rules sweep it (`dead_lib_in_infra`, `code_in_component_guideline`) — a stack missing it is invisible to both. Each stack's `CLAUDE.md` is a **~20-line pointer** to those guidelines, never a self-contained manual: operational knowledge belongs in the guideline file for its subject, where someone searching for that subject will find it.
+
+**Creating a new stack**: follow `docs/shared/guidelines/15-nova-stack.md` — measured inventory of what to copy, what to reference from `docs/shared/` instead of copying, and how to verify the new stack is complete. Write `guidelines/` and the pointer `CLAUDE.md` **before** the components, not after: building 47 components first is exactly how Angular ended up with zero guidelines.
 
 ## Common Commands
 
@@ -26,7 +31,7 @@ Each stack is an independent npm package; run commands from inside the stack dir
 
 ```bash
 # Storybook (the primary developer interface — NOT App.tsx/main.ts)
-npm run storybook          # React:6006 · Vue:6007 · Svelte:6008 · Vanilla:6009
+npm run storybook          # React:6006 · Vue:6007 · Svelte:6008 · Vanilla:6009 · Angular:6010
 
 # Build + typecheck
 npm run build              # tsc -b && vite build (varies per stack)
@@ -95,11 +100,12 @@ Different UI libraries (`@base-ui` / `reka-ui` / `bits-ui` / factories) expose d
 "structureCode": {
   "react": "<Button>Salvar</Button>",
   "vue":   "<Button>Salvar</Button>",
-  "web":   "/* CSS igual nos 4 stacks de navegador */"
+  "web":   "/* CSS igual nos 5 stacks de navegador */"
 }
 ```
 
-`web` is a group covering react+vue+svelte+vanilla — use it for CSS. A plain
+`web` is a group covering react+vue+svelte+vanilla+angular (`WEB_STACKS` in
+`code-variants.ts` is the authoritative list) — use it for CSS. A plain
 string still works and means "same snippet for every stack". Resolution lives in
 `docs/shared/primitives/code-variants.ts`; each stack's `i18n.ts` declares its
 own `STACK` constant and the flatten step swaps the variant in, so docs pages
@@ -146,7 +152,7 @@ When `*Docs.tsx` iterates `translations[locale].props.<group>.items` directly (b
 
 ## Cross-Stack Source Of Truth
 
-**Vanilla is the reference.** In any divergence of markup, `.nds-*` classes or behaviour, the other four stacks align to it. React, Vue and Svelte run a headless lib (`@base-ui` / `reka-ui` / `bits-ui`) that injects its own markup and state attributes, which hides shadcn residue inherited from before the `.nds-*` migration. Vanilla has no lib: what is there is what the design system actually defines, and every divergence investigated so far ended with Vanilla right. React was the reference in the shadcn + Tailwind era — the migration inverted that.
+**Vanilla is the reference.** In any divergence of markup, `.nds-*` classes or behaviour, the other four stacks align to it. React, Vue, Svelte and Angular run a headless lib (`@base-ui` / `reka-ui` / `bits-ui` / `@radix-ng/primitives`) that injects its own markup and state attributes, which hides shadcn residue inherited from before the `.nds-*` migration. Vanilla has no lib: what is there is what the design system actually defines, and every divergence investigated so far ended with Vanilla right. React was the reference in the shadcn + Tailwind era — the migration inverted that.
 
 Exception: divergence in **framework API** (prop name, composition shape, event syntax) has no source of truth. Record it instead of "aligning".
 

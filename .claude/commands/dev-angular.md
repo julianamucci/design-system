@@ -19,7 +19,13 @@ O usuário invocou o comando com: **$ARGUMENTS**
 ## Leituras obrigatórias (antes de começar)
 
 1. **`_dev-shared.md`** — padrões compartilhados das stacks. **Esta skill complementa com o que é específico de Angular.**
-2. **`nortear-design-system-angular/CLAUDE.md`** — as armadilhas silenciosas do stack. Não pule.
+2. **`nortear-design-system-angular/guidelines/`** — onde vivem as armadilhas silenciosas do stack, por assunto. Não pule:
+   - `13-system-design.md` — `hostDirectives`, `data-slot` disputado, projeção em `@if`, `input()` no construtor, `(click)` no `host`, diretiva faltando no `imports`
+   - `12-arquitetura-projeto.md` — `noEmit`/AOT, extração de documentação desligada, pré-empacotamento do Radix NG
+   - `11-documentacao-componentes.md` — painel Code, função em `args`, containers de seção
+   - `02-template-caracteres-especiais.md` — `@`, `{{`, expressão sem globais
+   - `RULES.md` e `Guidelines.md` — o índice e as regras duras
+   O `CLAUDE.md` do pacote é só o ponteiro para esses arquivos.
 3. UI primitive: `nortear-design-system-angular/src/components/ui/<slug>.ts`
 4. `docs/shared/content/<slug>/translations.json`
 5. `.pipeline-context/<slug>.md` (se existir)
