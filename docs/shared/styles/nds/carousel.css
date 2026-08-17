@@ -48,8 +48,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--spacing-9, 2.25rem);               /* 36px */
-  height: var(--spacing-9, 2.25rem);
+  width: var(--size-lg);               /* 36px */
+  height: var(--size-lg);
 
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
@@ -129,24 +129,24 @@
 
 .nds-carousel-arrow-prev[data-orientation="horizontal"] {
   top: 50%;
-  left: calc(var(--spacing-12, 3rem) * -1);
+  left: calc(var(--spacing-12) * -1);
   transform: translateY(-50%);
 }
 
 .nds-carousel-arrow-prev[data-orientation="vertical"] {
-  top: calc(var(--spacing-12, 3rem) * -1);
+  top: calc(var(--spacing-12) * -1);
   left: 50%;
   transform: translateX(-50%) rotate(90deg);
 }
 
 .nds-carousel-arrow-next[data-orientation="horizontal"] {
   top: 50%;
-  right: calc(var(--spacing-12, 3rem) * -1);
+  right: calc(var(--spacing-12) * -1);
   transform: translateY(-50%);
 }
 
 .nds-carousel-arrow-next[data-orientation="vertical"] {
-  bottom: calc(var(--spacing-12, 3rem) * -1);
+  bottom: calc(var(--spacing-12) * -1);
   left: 50%;
   transform: translateX(-50%) rotate(90deg);
 }
@@ -171,8 +171,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--spacing-6, 1.5rem);                /* 24px — alvo */
-  height: var(--spacing-6, 1.5rem);
+  width: var(--spacing-6);                /* 24px — alvo */
+  height: var(--spacing-6);
   padding: 0;
   border: 0;
   background-color: transparent;
@@ -182,8 +182,8 @@
 
 .nds-carousel-dot::before {
   content: "";
-  width: var(--spacing-2, 0.5rem);                /* 8px — marca */
-  height: var(--spacing-2, 0.5rem);
+  width: var(--spacing-2);                /* 8px — marca */
+  height: var(--spacing-2);
   border-radius: var(--radius-full);
   background-color: hsl(var(--muted-foreground) / 0.3);
   transition: background-color var(--duration-fast);

@@ -96,8 +96,8 @@
   height: var(--spacing-4);                           /* 16px */
 }
 .nds-switch[data-size="sm"] .nds-switch-thumb {
-  width: var(--spacing-3, 0.75rem);                   /* 12px */
-  height: var(--spacing-3, 0.75rem);
+  width: var(--spacing-3);                   /* 12px */
+  height: var(--spacing-3);
 }
 .nds-switch[data-size="sm"] .nds-switch-thumb[data-state="checked"],
 .nds-switch[data-size="sm"] .nds-switch-thumb[data-checked] {

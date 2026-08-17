@@ -17,7 +17,7 @@
   width: 100%;
 
   padding-block: var(--spacing-2);                /* 8px */
-  padding-inline: var(--spacing-3, 0.75rem);      /* 12px */
+  padding-inline: var(--spacing-3);      /* 12px */
   padding-inline-end: var(--spacing-8);           /* 32px — espaço pro chevron */
 
   font-family: inherit;
@@ -32,7 +32,7 @@
   /* Chevron SVG inline (cor controlada via stroke=currentColor) */
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right var(--spacing-2-5, 0.625rem) center;
+  background-position: right var(--spacing-2-5) center;
   background-size: 1rem;
 
   /* Esconde o chevron padrão do browser */
@@ -96,9 +96,9 @@
   width: 100%;
   min-width: 0;
   appearance: none;
-  padding-block: var(--spacing-1, 0.25rem);
-  padding-inline-start: var(--spacing-2-5, 0.625rem);
-  padding-inline-end: var(--spacing-8, 2rem);
+  padding-block: var(--spacing-1);
+  padding-inline-start: var(--spacing-2-5);
+  padding-inline-end: var(--spacing-8);
 
   font-family: inherit;
   font-size: var(--text-control);
@@ -166,10 +166,10 @@
   width: fit-content;
   align-items: center;
   justify-content: space-between;
-  gap: var(--spacing-1-5, 0.375rem);
+  gap: var(--spacing-1-5);
 
   padding-block: var(--spacing-2);                /* 8px — altura via padding (WCAG 1.4.4) */
-  padding-inline-start: var(--spacing-2-5, 0.625rem);
+  padding-inline-start: var(--spacing-2-5);
   padding-inline-end: var(--spacing-2);
 
   font-size: var(--text-control);
@@ -188,7 +188,7 @@
 }
 
 .nds-select-trigger[data-size="sm"] {
-  padding-block: var(--spacing-1, 0.25rem);       /* 4px — altura via padding, sem height fixo */
+  padding-block: var(--spacing-1);       /* 4px — altura via padding, sem height fixo */
   border-radius: var(--radius-md);
 }
 
@@ -250,7 +250,7 @@
   display: flex;
   flex: 1;
   align-items: center;
-  gap: var(--spacing-1-5, 0.375rem);
+  gap: var(--spacing-1-5);
   text-align: left;
   overflow: hidden;
 }
@@ -285,7 +285,7 @@
   height: var(--reka-select-trigger-height, var(--bits-select-anchor-height));
   width: 100%;
   min-width: var(--reka-select-trigger-width, var(--bits-select-anchor-width));
-  scroll-margin-block: var(--spacing-1, 0.25rem);
+  scroll-margin-block: var(--spacing-1);
 }
 
 .nds-select-content[data-open] {
@@ -303,13 +303,13 @@
 
 /* ── Group / Label ───────────────────────────────────────────────────────── */
 .nds-select-group {
-  padding: var(--spacing-1, 0.25rem);
-  scroll-margin-block: var(--spacing-1, 0.25rem);
+  padding: var(--spacing-1);
+  scroll-margin-block: var(--spacing-1);
 }
 
 .nds-select-label {
-  padding-inline: var(--spacing-1-5, 0.375rem);
-  padding-block: var(--spacing-1, 0.25rem);
+  padding-inline: var(--spacing-1-5);
+  padding-block: var(--spacing-1);
   font-size: var(--text-control-sm);
   color: hsl(var(--muted-foreground));
 }
@@ -320,10 +320,10 @@
   display: flex;
   width: 100%;
   align-items: center;
-  gap: var(--spacing-1-5, 0.375rem);
+  gap: var(--spacing-1-5);
 
-  padding-block: var(--spacing-1, 0.25rem);
-  padding-inline-start: var(--spacing-1-5, 0.375rem);
+  padding-block: var(--spacing-1);
+  padding-inline-start: var(--spacing-1-5);
   padding-inline-end: var(--spacing-8);           /* 32px — espaço pro check */
 
   border-radius: var(--radius-md);
@@ -390,7 +390,7 @@
   width: 100%;
   align-items: center;
   justify-content: center;
-  padding-block: var(--spacing-1, 0.25rem);
+  padding-block: var(--spacing-1);
   background-color: hsl(var(--popover));
   cursor: default;
 }

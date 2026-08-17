@@ -24,7 +24,7 @@
   min-height: calc(var(--spacing-8) * 2);       /* ~64px — placeholder mínimo */
 
   padding-block: var(--spacing-2);              /* 8px */
-  padding-inline: var(--spacing-3, 0.75rem);    /* 12px */
+  padding-inline: var(--spacing-3);    /* 12px */
 
   font-family: inherit;
   font-size: var(--text-control);                          /* 14px */

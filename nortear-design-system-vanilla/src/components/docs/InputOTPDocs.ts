@@ -630,7 +630,7 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement;`;
             description: t('tokens.table.part'),
           },
           items: [
-            { token: '--spacing-9',        value: t('tokens.table.slotSize.class'),  description: t('tokens.table.slotSize.part')  },
+            { token: '--size-lg',        value: t('tokens.table.slotSize.class'),  description: t('tokens.table.slotSize.part')  },
             { token: '--input',            value: t('tokens.table.border.class'),    description: t('tokens.table.border.part')    },
             { token: '--radius',           value: t('tokens.table.rounded.class'),   description: t('tokens.table.rounded.part')   },
             { token: '--ring',             value: t('tokens.table.hover.class'),     description: t('tokens.table.hover.part')     },

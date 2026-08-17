@@ -32,8 +32,8 @@
   align-items: center;
   justify-content: center;
 
-  width: var(--spacing-9, 2.25rem);               /* 36px */
-  height: var(--spacing-9, 2.25rem);
+  width: var(--size-lg);               /* 36px */
+  height: var(--size-lg);
   padding: 0;
 
   background-color: hsl(var(--background));

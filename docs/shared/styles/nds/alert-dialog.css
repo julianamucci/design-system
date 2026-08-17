@@ -182,8 +182,8 @@
 /* ── Media (ícone destacado no header) ───────────────────────────────────── */
 .nds-alert-dialog-media {
   display: inline-flex;
-  width: var(--spacing-10, 2.5rem);
-  height: var(--spacing-10, 2.5rem);
+  width: var(--spacing-10);
+  height: var(--spacing-10);
   align-items: center;
   justify-content: center;
   margin-bottom: var(--spacing-2);
@@ -193,8 +193,8 @@
 }
 
 .nds-alert-dialog-media svg:not([class*="size-"]) {
-  width: var(--spacing-6, 1.5rem);
-  height: var(--spacing-6, 1.5rem);
+  width: var(--spacing-6);
+  height: var(--spacing-6);
 }
 
 /* Header com mídia centraliza no mobile */

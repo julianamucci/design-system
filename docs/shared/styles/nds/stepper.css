@@ -54,8 +54,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--spacing-8, 2rem);
-  height: var(--spacing-8, 2rem);
+  width: var(--spacing-8);
+  height: var(--spacing-8);
   border-radius: var(--radius-full);
   color: hsl(var(--muted-foreground) / 0.5);
   background-color: hsl(var(--muted) / 0.5);
@@ -91,7 +91,7 @@
 .nds-stepper-separator {
   flex: 1;
   height: 1px;
-  min-width: var(--spacing-8, 2rem);
+  min-width: var(--spacing-8);
   background-color: hsl(var(--border));
 }
 

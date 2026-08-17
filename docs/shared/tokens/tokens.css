@@ -130,24 +130,52 @@
      um valor de spacing nomeado. Acompanham a densidade automaticamente porque
      referenciam --spacing-base.
 
-     Regra do projeto: o valor RESOLVIDO em px deve ser múltiplo ou divisor de 8.
-     O sufixo do token é o multiplicador, não o px — --spacing-10 resolve 40px
-     (8×5) e é válido; o que não pode existir é um px fora do grid, como 12px,
-     20px, 28px ou 36px. Valor assim em CSS é bug a corrigir. */
+     A ÚNICA invariante é --spacing-{n} = n × --spacing-base. O sufixo é o
+     multiplicador, não o px.
+
+     Aqui houve durante muito tempo uma segunda regra — "o valor resolvido em px
+     deve ser múltiplo ou divisor de 8" — e ela não pode ser invariante, porque a
+     própria densidade a quebra por construção: em .densidade-condensado a base
+     vale 3.2px, e aí --spacing-2 resolve 6.4px e --spacing-4 resolve 12.8px.
+     O grid de 8 descreve a LINHA PADRÃO da tabela, não o sistema. Tratá-lo como
+     lei fez a escala nascer só com os degraus pares, e os ímpares que o desenho
+     realmente usa (6, 10, 12, 20, 28px) atravessaram 34 folhas .nds-* escritos
+     como var(--spacing-3, 0.75rem): o token não existia, o literal ganhava
+     sempre, e esses cinco valores eram os únicos do sistema que NÃO respondiam à
+     densidade. A escala abaixo tem todos os degraus que alguém consome.
+
+     O que continua não existindo é --spacing-9 (36px), e por outro motivo: seus
+     13 consumos eram todos width/height/min-height de controle quadrado, não
+     espaçamento. Medida de caixa tem escada própria — ver --size-* mais abaixo,
+     onde 36px é --size-lg. Dimensionar quadrado com token de spacing era o bug;
+     criar o degrau teria carimbado o bug de oficial.
+
+     Quem for acrescentar degrau: só entra se houver consumidor (auditOrphanTokens
+     cobra), e o consumo se escreve var(--spacing-{n}) SEM fallback — o fallback é
+     intenção declarada para o auditor, então ele silencia justamente o caso em
+     que o token some. */
   --spacing-0:   0;  /* audit-ignore: orphan-token — degrau da régua; a escala precisa do zero mesmo sem consumidor */
   --spacing-px:  1px;  /* audit-ignore: orphan-token — degrau da régua (hairline) */
-  --spacing-0-5: calc(var(--spacing-base) * 0.5);   /* 2px  — divisor de 8 (8÷4) */
-  --spacing-1:   calc(var(--spacing-base) * 1);     /* 4px  — divisor de 8 (8÷2) */
-  --spacing-2:   calc(var(--spacing-base) * 2);     /* 8px  — base do grid */
+  --spacing-0-5: calc(var(--spacing-base) * 0.5);   /* 2px */
+  --spacing-1:   calc(var(--spacing-base) * 1);     /* 4px */
+  --spacing-1-5: calc(var(--spacing-base) * 1.5);   /* 6px  — meio-degrau: padding-block de campo, item de menu, tooltip */
+  --spacing-2:   calc(var(--spacing-base) * 2);     /* 8px  — base do grid na densidade padrão */
+  --spacing-2-5: calc(var(--spacing-base) * 2.5);   /* 10px — meio-degrau: respiro interno de item e de grupo de campo */
+  --spacing-3:   calc(var(--spacing-base) * 3);     /* 12px — respiro horizontal de campo (input, select, textarea, tabs) */
   --spacing-4:   calc(var(--spacing-base) * 4);     /* 16px */
+  --spacing-5:   calc(var(--spacing-base) * 5);     /* 20px — ícone/indicador de 20px e piso de linha */
   --spacing-6:   calc(var(--spacing-base) * 6);     /* 24px */
+  --spacing-7:   calc(var(--spacing-base) * 7);     /* 28px — recuo de item de menu alinhado à calha de ícone */
   --spacing-8:   calc(var(--spacing-base) * 8);     /* 32px */
   --spacing-10:  calc(var(--spacing-base) * 10);    /* 40px */
   --spacing-12:  calc(var(--spacing-base) * 12);    /* 48px */
   --spacing-14:  calc(var(--spacing-base) * 14);  /* 56px — audit-ignore: orphan-token — degrau da régua */
   --spacing-16:  calc(var(--spacing-base) * 16);    /* 64px */
+  --spacing-18:  calc(var(--spacing-base) * 18);    /* 72px — calha do botão de ação no canto do alert */
   --spacing-20:  calc(var(--spacing-base) * 20);    /* 80px */
   --spacing-24:  calc(var(--spacing-base) * 24);    /* 96px */
+  --spacing-40:  calc(var(--spacing-base) * 40);    /* 160px — comprimento mínimo do trilho de slider vertical */
+  --spacing-96:  calc(var(--spacing-base) * 96);    /* 384px — altura de leitura de área rolável */
 
   /* Elevation / Shadows */
   --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);

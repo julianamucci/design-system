@@ -147,7 +147,7 @@ const PROPS_MAP: { chave: string; nome: string; tipo: string; padrao: string }[]
 // desde esta rodada guarda o seletor REAL e não mais uma classe utilitária sem
 // prefixo. Aqui fica só a custom property, que é o que a pessoa sobrescreve.
 const TOKENS_MAP: { chave: string; token: string }[] = [
-  { chave: 'slotSize',  token: '--spacing-9' },
+  { chave: 'slotSize',  token: '--size-lg' },
   { chave: 'border',    token: '--input' },
   { chave: 'rounded',   token: '--radius' },
   { chave: 'hover',     token: '--ring' },

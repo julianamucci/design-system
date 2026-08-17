@@ -37,7 +37,7 @@
 .nds-command-input-wrapper {
   display: flex;
   align-items: center;
-  padding-inline: var(--spacing-3, 0.75rem);
+  padding-inline: var(--spacing-3);
   border-bottom: 1px solid hsl(var(--border));
 }
 
@@ -88,13 +88,13 @@
 /* ── Group ───────────────────────────────────────────────────────────────── */
 .nds-command-group {
   overflow: hidden;
-  padding: var(--spacing-1, 0.25rem);
+  padding: var(--spacing-1);
   color: hsl(var(--foreground));
 }
 
 .nds-command-group-heading {
   padding-inline: var(--spacing-2);
-  padding-block: var(--spacing-1-5, 0.375rem);
+  padding-block: var(--spacing-1-5);
   font-size: var(--text-control-sm);                              /* 12px */
   font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--muted-foreground));
@@ -108,7 +108,7 @@
   gap: var(--spacing-2);
 
   padding-inline: var(--spacing-2);
-  padding-block: var(--spacing-1-5, 0.375rem);
+  padding-block: var(--spacing-1-5);
 
   border-radius: var(--radius-sm); /* Ri = Re − inset: radius (10) − spacing-1 (4) */
   font-size: var(--text-control);                             /* 14px */
@@ -173,7 +173,7 @@
 
 .nds-command-group [cmdk-group-heading] {
   padding-inline: var(--spacing-2);
-  padding-block: var(--spacing-1-5, 0.375rem);
+  padding-block: var(--spacing-1-5);
   font-size: var(--text-control-sm);
   font-weight: var(--font-weight-medium, 500);
   color: hsl(var(--muted-foreground));
@@ -273,7 +273,7 @@
 }
 
 .nds-combobox-viewport {
-  max-height: calc(18rem - var(--spacing-9, 2.25rem));
+  max-height: calc(18rem - var(--size-lg));
   overflow-y: auto;
   padding: var(--spacing-1);
   scroll-padding-block: var(--spacing-1);

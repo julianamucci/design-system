@@ -313,7 +313,7 @@ const inputOtpPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--spacing-9',       value: tContent('tokens.table.slotSize.class'),  description: tContent('tokens.table.slotSize.part')  },
+  { token: '--size-lg',       value: tContent('tokens.table.slotSize.class'),  description: tContent('tokens.table.slotSize.part')  },
   { token: '--input',           value: tContent('tokens.table.border.class'),    description: tContent('tokens.table.border.part')    },
   { token: '--radius',          value: tContent('tokens.table.rounded.class'),   description: tContent('tokens.table.rounded.part')   },
   { token: '--ring',            value: tContent('tokens.table.hover.class'),     description: tContent('tokens.table.hover.part')     },

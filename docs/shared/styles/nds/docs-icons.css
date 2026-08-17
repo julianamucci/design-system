@@ -82,7 +82,7 @@ input.nds-icon-search-input {
   align-items: center;
   width: 100%;
   gap: var(--spacing-2);                    /* 8px */
-  padding: var(--spacing-3, 0.75rem);       /* 12px */
+  padding: var(--spacing-3);       /* 12px */
   background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-lg);

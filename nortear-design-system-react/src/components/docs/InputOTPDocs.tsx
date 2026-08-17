@@ -809,7 +809,7 @@ interface InputOTPProps {
         }}
         items={[
           {
-            token: "--spacing-9",
+            token: "--size-lg",
             value: tContent("tokens.table.slotSize.class"),
             description: tContent("tokens.table.slotSize.part"),
           },

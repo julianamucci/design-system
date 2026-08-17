@@ -47,7 +47,7 @@
   min-width: 0;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-2-5, 0.625rem);
+  gap: var(--spacing-2-5);
   font-size: var(--text-control);
   text-wrap: balance;
 }
@@ -89,8 +89,8 @@
 }
 
 .nds-empty-media-icon {
-  width: var(--spacing-8, 2rem);
-  height: var(--spacing-8, 2rem);
+  width: var(--spacing-8);
+  height: var(--spacing-8);
   border-radius: var(--radius);
   background-color: hsl(var(--muted));
   color: hsl(var(--foreground));

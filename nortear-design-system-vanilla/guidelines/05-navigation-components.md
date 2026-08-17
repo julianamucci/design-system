@@ -107,7 +107,7 @@ nav (aria-label="Paginação dos resultados")
 - `<nav>` com `aria-label` descritivo
 - Botões Anterior/Próxima sempre presentes; `disabled` nos extremos (não esconder)
 - Página atual com `aria-current="page"`
-- Altura dos botões em `--spacing-9` (36px); gap em `--spacing-1`
+- Altura mínima dos botões em `--size-lg` (36px na densidade padrão, e é piso de alvo de toque, não teto); gap em `--spacing-1`
 - Nunca usar emojis literais — usar ícones SVG (`ChevronLeft`, `ChevronRight`)
 - Em mobile, exibir apenas controles "Anterior / X de Y / Próxima"
 

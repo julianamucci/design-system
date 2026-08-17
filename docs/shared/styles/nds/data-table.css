@@ -39,7 +39,7 @@
 }
 
 .nds-data-table-search-input {
-  padding-left: var(--spacing-8, 2rem);
+  padding-left: var(--spacing-8);
   width: 100%;
 }
 
@@ -57,7 +57,7 @@
 .nds-data-table-columns-menu {
   position: absolute;
   right: 0;
-  top: calc(100% + var(--spacing-1, 0.25rem));
+  top: calc(100% + var(--spacing-1));
   z-index: var(--z-dropdown);
   min-width: 16rem;
   background-color: hsl(var(--background));
@@ -100,8 +100,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--spacing-6, 1.5rem);
-  height: var(--spacing-6, 1.5rem);
+  width: var(--spacing-6);
+  height: var(--spacing-6);
   background: transparent;
   border: 0;
   border-radius: var(--radius-sm);
@@ -147,7 +147,7 @@
   /* `min-block-size` e não `height`, pelo mesmo motivo do `th` do primitivo:
    * 40px é PISO, não teto — o rótulo do cabeçalho não pode ser recortado
    * quando a fonte do navegador cresce (WCAG 1.4.4). */
-  min-block-size: var(--spacing-10, 2.5rem);
+  min-block-size: var(--spacing-10);
   padding-inline: var(--spacing-2);
   text-align: left;
   vertical-align: middle;
@@ -158,7 +158,7 @@
 .nds-data-table-th-inner {
   display: flex;
   align-items: center;
-  gap: var(--spacing-1, 0.25rem);
+  gap: var(--spacing-1);
 }
 
 .nds-data-table-th-label {
@@ -212,7 +212,7 @@
 .nds-data-table-filter-input,
 .nds-data-table-filter-select {
   width: 100%;
-  height: var(--spacing-8, 2rem);
+  height: var(--spacing-8);
   font-size: var(--text-control-sm);
   padding-inline: var(--spacing-2);
   border: 1px solid hsl(var(--input));
@@ -288,7 +288,7 @@
 
 /* ── Empty state ───────────────────────────────────────────────────────── */
 .nds-data-table-empty {
-  height: var(--spacing-24, 6rem);
+  height: var(--spacing-24);
   text-align: center;
   color: hsl(var(--muted-foreground));
 }
@@ -321,7 +321,7 @@
 }
 
 .nds-data-table-page-size-select {
-  height: var(--spacing-8, 2rem);
+  height: var(--spacing-8);
   padding-inline: var(--spacing-2);
   border: 1px solid hsl(var(--input));
   background-color: transparent;
@@ -338,7 +338,7 @@
 .nds-data-table-pagination-nav {
   display: flex;
   align-items: center;
-  gap: var(--spacing-1, 0.25rem);
+  gap: var(--spacing-1);
 }
 
 /* ── Composite (React/TanStack com primitivos compostos) ───────────────── */
@@ -359,7 +359,7 @@
 .nds-data-table-pin-wrap {
   display: flex;
   flex-shrink: 0;
-  padding-right: var(--spacing-1, 0.25rem);
+  padding-right: var(--spacing-1);
 }
 
 .nds-data-table-scroll-virtual {

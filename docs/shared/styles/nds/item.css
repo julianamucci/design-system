@@ -20,10 +20,10 @@
   width: 100%;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--spacing-2-5, 0.625rem);
+  gap: var(--spacing-2-5);
 
-  padding-inline: var(--spacing-3, 0.75rem);
-  padding-block: var(--spacing-2-5, 0.625rem);
+  padding-inline: var(--spacing-3);
+  padding-block: var(--spacing-2-5);
 
   border: 1px solid transparent;
   border-radius: var(--radius);
@@ -51,7 +51,7 @@ a.nds-item:hover {
 
 .nds-item[data-size="xs"] {
   gap: var(--spacing-2);
-  padding-inline: var(--spacing-2-5, 0.625rem);
+  padding-inline: var(--spacing-2-5);
   padding-block: var(--spacing-2);
 }
 
@@ -63,7 +63,7 @@ a.nds-item:hover {
   gap: var(--spacing-4);
 }
 
-.nds-item-group:has([data-size="sm"]) { gap: var(--spacing-2-5, 0.625rem); }
+.nds-item-group:has([data-size="sm"]) { gap: var(--spacing-2-5); }
 .nds-item-group:has([data-size="xs"]) { gap: var(--spacing-2); }
 
 .nds-item-media {
@@ -89,8 +89,8 @@ a.nds-item:hover {
 }
 
 .nds-item-media-image {
-  width: var(--spacing-10, 2.5rem);
-  height: var(--spacing-10, 2.5rem);
+  width: var(--spacing-10);
+  height: var(--spacing-10);
   overflow: hidden;
   border-radius: var(--radius-xs);
 }

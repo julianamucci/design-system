@@ -1,10 +1,9 @@
 /*
  * ─── Spacing utilities ───────────────────────────────────────────────────────
- * Padding/margin atômicos, restritos ao grid 8 (múltiplos/divisores de 8 apenas).
- * Sempre preferir primitivas (.nds-stack, .nds-cluster, .nds-box) — estas classes
- * só devem ser usadas como complemento pontual.
+ * Padding/margin atômicos. Sempre preferir primitivas (.nds-stack, .nds-cluster,
+ * .nds-box) — estas classes só devem ser usadas como complemento pontual.
  *
- * Convenção do número:
+ * Convenção do número (px na densidade padrão):
  *   0    = 0
  *   0-5  = 2px  (--spacing-0-5)
  *   1    = 4px  (--spacing-1)
@@ -13,8 +12,12 @@
  *   6    = 24px (--spacing-6)
  *   8    = 32px (--spacing-8)
  *
- * Valores fora do grid (3=12, 5=20, 7=28, etc.) NÃO existem como utility.
- * Use a opção mais próxima do grid (3→2 ou 4; 5→4 ou 6).
+ * O vocabulário de UTILITY é deliberadamente menor que a escala de tokens: aqui
+ * a restrição a múltiplos de 8 é boa, porque utility é escrita em marcação
+ * avulsa, onde meio-degrau vira ruído sem revisão. Os meios-degraus da escala
+ * (--spacing-1-5, -2-5, -3, -5, -7) existem e são legítimos, mas moram no CSS de
+ * COMPONENTE, que tem dono e revisão. Precisou de 12px numa marcação avulsa? É
+ * sinal de que aquilo quer virar componente — ou de que 8 ou 16 servia.
  */
 
 /* ── Padding (todos os lados) ──────────────────────────────────────────────── */

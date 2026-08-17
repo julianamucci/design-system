@@ -156,8 +156,8 @@
 }
 
 .nds-avatar-group:has(.nds-avatar[data-size="sm"]) .nds-avatar-group-count > svg {
-  width: var(--spacing-3, 0.75rem);
-  height: var(--spacing-3, 0.75rem);
+  width: var(--spacing-3);
+  height: var(--spacing-3);
 }
 
 .nds-avatar-group:has(.nds-avatar[data-size="lg"]) .nds-avatar-group-count {
@@ -166,8 +166,8 @@
 }
 
 .nds-avatar-group:has(.nds-avatar[data-size="lg"]) .nds-avatar-group-count > svg {
-  width: var(--spacing-5, 1.25rem);
-  height: var(--spacing-5, 1.25rem);
+  width: var(--spacing-5);
+  height: var(--spacing-5);
 }
 
 /* xl e 2xl faltavam: o contador ficava em 32px ao lado de avatares de 48 e 64,

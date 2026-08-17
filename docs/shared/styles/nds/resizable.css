@@ -162,7 +162,7 @@
   top: 50%;
   left: 0;
   width: 100%;
-  height: var(--spacing-1, 0.25rem);
+  height: var(--spacing-1);
   transform: translateY(-50%);
 }
 
@@ -189,7 +189,7 @@
   top: 50%;
   left: 0;
   width: 100%;
-  height: var(--spacing-1, 0.25rem);
+  height: var(--spacing-1);
   transform: translateY(-50%);
 }
 
@@ -210,7 +210,7 @@
   top: 50%;
   left: 0;
   width: 100%;
-  height: var(--spacing-1, 0.25rem);
+  height: var(--spacing-1);
   transform: translateY(-50%);
 }
 
@@ -230,7 +230,7 @@
   position: absolute;
   inset-block: 0;
   left: 50%;
-  width: var(--spacing-1, 0.25rem);
+  width: var(--spacing-1);
   transform: translateX(-50%);
 }
 
@@ -240,7 +240,7 @@
   top: 50%;
   left: 0;
   width: 100%;
-  height: var(--spacing-1, 0.25rem);
+  height: var(--spacing-1);
   transform: translateY(-50%);
 }
 
@@ -249,8 +249,8 @@
   z-index: 10;
   display: flex;
   flex-shrink: 0;
-  width: var(--spacing-1, 0.25rem);
-  height: var(--spacing-6, 1.5rem);
+  width: var(--spacing-1);
+  height: var(--spacing-6);
   border-radius: var(--radius);
   /* Mesma razão da linha e do pegador de pontos. */
   background-color: hsl(var(--ring));

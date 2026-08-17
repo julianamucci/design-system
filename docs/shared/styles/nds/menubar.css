@@ -42,7 +42,7 @@
    * rótulos), então a altura tem que nascer do conteúdo. Cravada em 36px ela
    * recorta os rótulos quando a pessoa aumenta a fonte do navegador
    * (guideline 12, WCAG 1.4.4). No tamanho padrão nada muda. */
-  min-height: var(--spacing-9, 2.25rem);          /* 36px */
+  min-height: var(--size-lg);          /* 36px */
   padding: var(--spacing-1);
 
   background-color: hsl(var(--background));
@@ -62,7 +62,7 @@
   display: flex;
   align-items: center;
 
-  padding-inline: var(--spacing-3, 0.75rem);
+  padding-inline: var(--spacing-3);
   padding-block: var(--spacing-1);
 
   background: transparent;

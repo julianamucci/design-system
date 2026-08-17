@@ -25,8 +25,8 @@
   align-items: center;
   justify-content: center;
 
-  height: var(--spacing-9, 2.25rem);          /* 36px — fora do grid-8 (herança do design original) */
-  padding: var(--spacing-1, 0.25rem);          /* 4px interno */
+  height: var(--size-lg);          /* 36px na densidade padrão — mesma caixa do botão icon-lg */
+  padding: var(--spacing-1);          /* 4px interno */
 
   background-color: hsl(var(--muted));
   border-radius: var(--radius);
@@ -41,8 +41,8 @@
   white-space: nowrap;
   gap: var(--spacing-1);
 
-  padding-inline: var(--spacing-3, 0.75rem);
-  padding-block: var(--spacing-1, 0.25rem);
+  padding-inline: var(--spacing-3);
+  padding-block: var(--spacing-1);
 
   background: transparent;
   border: 0;

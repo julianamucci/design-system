@@ -80,7 +80,7 @@
    * cravada o rótulo do cabeçalho é recortado quando a pessoa aumenta a fonte
    * do navegador (guideline 12, WCAG 1.4.4). O padding é o mesmo do `td`, então
    * a aparência no tamanho padrão não muda. */
-  min-block-size: var(--spacing-10, 2.5rem);      /* 40px */
+  min-block-size: var(--spacing-10);      /* 40px */
   padding-block: var(--spacing-2);                /* 8px */
   padding-inline: var(--spacing-2);               /* 8px */
   text-align: left;
@@ -112,7 +112,7 @@
  * mensagem de duas linhas.
  */
 .nds-table-empty {
-  block-size: var(--spacing-24, 6rem);             /* 96px */
+  block-size: var(--spacing-24);             /* 96px */
   text-align: center;
   color: hsl(var(--muted-foreground));
 }

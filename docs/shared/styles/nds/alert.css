@@ -165,7 +165,7 @@
 }
 
 .nds-alert:has(.nds-alert-action) {
-  padding-inline-end: var(--spacing-18, 4.5rem);
+  padding-inline-end: var(--spacing-18);
 }
 
 /* ── Dismiss (X no canto superior direito) ────────────────────────────────── *

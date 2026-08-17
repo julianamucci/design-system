@@ -176,7 +176,7 @@
   flex-direction: column;
   width: auto;
   height: 100%;
-  min-height: var(--spacing-40, 10rem);
+  min-height: var(--spacing-40);
 }
 .nds-slider[data-vertical] .nds-slider-track,
 .nds-slider[data-orientation="vertical"] .nds-slider-track {
