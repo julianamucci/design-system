@@ -31,7 +31,7 @@
     },
     "modes": {
       "title": "Light e Dark",
-      "subtitle": "Cada token de cor tem um valor para light (:root) e dark (.dark), mantendo contraste WCAG 2.2 AA nos dois modos. Exceção: os tokens de gráficos usam a mesma paleta em ambos.",
+      "subtitle": "Cada token de cor tem um valor para light (:root) e dark (.dark). Os pares de superfície e texto que os componentes realmente aplicam mantêm contraste WCAG 2.2 AA nos dois modos. Exceções: os tokens de gráficos usam a mesma paleta em ambos, e os tokens de texto sobre fundo sólido de feedback não são aplicados por componente nenhum — as variantes semânticas escrevem a própria cor sobre fundo suave.",
       "light": "Light",
       "dark": "Dark"
     },
@@ -113,7 +113,7 @@
     },
     "modes": {
       "title": "Light and Dark",
-      "subtitle": "Each color token has a light (:root) and dark (.dark) value, preserving WCAG 2.2 AA contrast in both modes. Exception: chart tokens use the same palette in both.",
+      "subtitle": "Each color token has a light (:root) and dark (.dark) value. The surface-and-text pairs components actually apply preserve WCAG 2.2 AA contrast in both modes. Exceptions: chart tokens use the same palette in both, and the feedback text-on-solid tokens are applied by no component — semantic variants write their own colour on a soft background.",
       "light": "Light",
       "dark": "Dark"
     },
@@ -195,7 +195,7 @@
     },
     "modes": {
       "title": "Light y Dark",
-      "subtitle": "Cada token de color tiene un valor para light (:root) y dark (.dark), manteniendo contraste WCAG 2.2 AA en ambos modos. Excepción: los tokens de gráficos usan la misma paleta en ambos.",
+      "subtitle": "Cada token de color tiene un valor para light (:root) y dark (.dark). Los pares de superficie y texto que los componentes aplican realmente mantienen contraste WCAG 2.2 AA en ambos modos. Excepciones: los tokens de gráficos usan la misma paleta en ambos, y los tokens de texto sobre fondo sólido de feedback no los aplica ningún componente — las variantes semánticas escriben su propio color sobre fondo suave.",
       "light": "Light",
       "dark": "Dark"
     },

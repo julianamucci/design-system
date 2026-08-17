@@ -91,7 +91,18 @@
 
   /* Ring & Focus Mappings */
   --ring-offset: var(--ring-offset-width);
-  --ring-offset-color: hsl(var(--ring-offset-color));
+  /* `--ring-offset-color: hsl(var(--ring-offset-color))` foi REMOVIDO daqui.
+   * Era auto-referência: uma custom property que se lê a si mesma é inválida
+   * em tempo de valor computado, então a declaração não mapeava nada — ela
+   * DESTRUÍA o token. Medido na sonda da paleta: o swatch de
+   * `--ring-offset-color` ficava sem cor nenhuma no modo claro nesta stack, e
+   * pintava normalmente no Vanilla e no Angular, que nunca tiveram a linha.
+   * No escuro o defeito sumia sozinho, porque `.dark` redeclara o token depois
+   * e quebra o ciclo — por isso metade das medições parecia sã.
+   *
+   * Resíduo dos mapeamentos da era Tailwind: os vizinhos (`--color-x:
+   * hsl(var(--x))`) renomeiam, este repetia o nome. O token continua vindo de
+   * tokens.css e dos temas, como nas duas stacks de referência. */
 
   /* Animations dos componentes */
   --animate-indeterminate: progress-indeterminate 1.5s ease-in-out infinite;
