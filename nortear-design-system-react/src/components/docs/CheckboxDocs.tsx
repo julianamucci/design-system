@@ -873,7 +873,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
                 level: "WCAG",
                 how: tNav("common.howToVerify"),
               },
-              items: [1, 2, 3, 4, 5].map((i) => ({
+              items: [1, 2, 3, 4, 5, 6].map((i) => ({
                 criterion: toPlainText(tContent(`testes.accessibility.item${i}.criterion`)),
                 level: tContent(`testes.accessibility.item${i}.level`),
                 how: tContent(`testes.accessibility.item${i}.how`),

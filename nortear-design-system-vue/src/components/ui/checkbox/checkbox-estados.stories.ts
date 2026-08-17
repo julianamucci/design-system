@@ -1,6 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
+import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
 import { Checkbox } from './index';
+
+// Ferramentas de teclado/ponteiro entregues ao contrato compartilhado. Iguais
+// nas cinco stacks — o que muda entre elas é o componente, não a medição.
+const FERRAMENTAS = {
+  tab: () => userEvent.tab(),
+  teclar: (sequencia: string) => userEvent.keyboard(sequencia),
+  // `pointerEventsCheck: 0`: a caixa desabilitada mantém `cursor: not-allowed`,
+  // e a checagem do userEvent reprovaria antes de o clique chegar ao componente
+  // — que é justamente o que se quer testar.
+  clicar: (el: HTMLElement) => userEvent.click(el, { pointerEventsCheck: 0 }),
+};
 
 const meta = {
   title: 'UI/Checkbox/States',
@@ -113,7 +125,7 @@ export const Indeterminate: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item4'] },
+  parameters: { covers: ['functional.item4', 'accessibility.item6'] },
   args: {
     'onUpdate:modelValue': fn(),
   } as never,
@@ -137,23 +149,27 @@ export const Disabled: Story = {
     const checkbox = canvas.getByRole('checkbox');
     const onUpdate = (args as { 'onUpdate:modelValue': ReturnType<typeof fn> })['onUpdate:modelValue'];
 
-    await step('Checkbox presente e desabilitado', async () => {
-      await expect(checkbox).toBeInTheDocument();
-      await expect(checkbox).toBeDisabled();
-    });
+    await step(
+      'Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam',
+      async () => {
+        // Contrato compartilhado — a mesma lista nas cinco stacks. `toBeDisabled()`
+        // saiu daqui: ele lê o atributo nativo e ignora `aria-disabled`, então
+        // afirmaria o contrário da decisão (peça fora da tabulação) e a forma
+        // negada nem poderia falhar.
+        onUpdate.mockClear();
+        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+      },
+    );
 
-    await step('Clique não altera o estado nem dispara o callback', async () => {
-      // Exceção legítima à idempotência: clique num controle disabled não
-      // deveria fazer nada em run nenhum, então não há precondição a montar.
-      onUpdate.mockClear();
-      await userEvent.click(checkbox, { pointerEventsCheck: 0 });
-      await expect(checkbox).not.toBeChecked();
+    await step('O callback de mudança não disparou em nenhuma das tentativas', async () => {
       await expect(onUpdate).not.toHaveBeenCalled();
     });
   },
 };
 
-// Story de estado visual — não interage.
+// Interage, mas o estado final é o mesmo do inicial: uma caixa desabilitada não
+// alterna em rodada nenhuma, então a foto do Chromatic continua sendo a do
+// estado marcado e a play sobrevive ao REPLAY sem par idempotente.
 export const DisabledChecked: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => ({
@@ -172,9 +188,15 @@ export const DisabledChecked: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
-    await step('Checkbox marcado e desabilitado', async () => {
+    await step(
+      'Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam',
+      async () => {
+        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+      },
+    );
+
+    await step('Checkbox continua marcado — desabilitado não é o mesmo que vazio', async () => {
       await expect(checkbox).toBeChecked();
-      await expect(checkbox).toBeDisabled();
     });
   },
 };

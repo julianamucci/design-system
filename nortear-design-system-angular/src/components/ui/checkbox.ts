@@ -28,6 +28,13 @@ import {
 // `button[rdxCheckboxButton]`, que é elemento interativo de verdade — então o
 // markup fica mais simples E mais correto.
 //
+// Desabilitado: nada a fazer aqui, e isso é um resultado, não uma omissão. O
+// `RdxCheckboxButton` já escreve `aria-disabled="true"` sem escrever o `disabled`
+// nativo, então a caixa continua na ordem de tabulação, e ele guarda a ativação
+// no próprio `clicked()` (`if (… rootContext.disabled() …) return`). É o
+// comportamento que a dona decidiu para as cinco, e esta stack já o cumpria: a
+// sonda mediu Tab alcançando a caixa desabilitada só aqui.
+//
 // `data-state` além do que o primitivo emite: o Radix NG usa `data-checked` /
 // `data-unchecked` (convenção do Base UI) e as outras quatro stacks emitem
 // `data-state="checked|unchecked"`. O CSS compartilhado aceita os dois, mas a

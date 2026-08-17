@@ -354,6 +354,7 @@ const a11yTestItems = computed(() => [
   { criterion: tContent('testes.accessibility.item3.criterion'), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
   { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
   { criterion: tContent('testes.accessibility.item5.criterion'), level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
+  { criterion: tContent('testes.accessibility.item6.criterion'), level: tContent('testes.accessibility.item6.level'), how: tContent('testes.accessibility.item6.how') },
 ]);
 
 const visualTestItems = computed(() => [

@@ -15,13 +15,44 @@ const props = defineProps<CheckboxRootProps & {
 }>()
 const emits = defineEmits<CheckboxRootEmits>()
 
-const delegatedProps = reactiveOmit(props, 'class', 'checked')
+// `disabled` sai da lista repassada: quando ele chega ao primitivo, o primitivo
+// escreve o `disabled` NATIVO no <button>, e o controle some da ordem de
+// tabulação. Ver o bloco de comentário no template.
+const delegatedProps = reactiveOmit(props, 'class', 'checked', 'disabled')
 
 const resolvedDefault = computed(() => {
   if (props.defaultValue !== undefined) return props.defaultValue
   if (props.checked !== undefined) return props.checked
   return undefined
 })
+
+const desabilitado = computed(() => props.disabled === true)
+
+/**
+ * Contém a ativação quando desabilitado.
+ *
+ * Aqui a causa é DIFERENTE da que apareceu no tabs, e medir antes foi o que
+ * evitou o remendo errado: o `handleClick` do primitivo não tem guarda de
+ * `disabled` nenhuma. O que impedia a alternância era só o atributo nativo — o
+ * mesmo atributo que precisa sair para a caixa continuar alcançável. Tirá-lo
+ * sem repor a guarda deixaria a caixa "desabilitada" alternando ao clique.
+ *
+ * `stopImmediatePropagation` é o canal certo, e não `preventDefault`: o
+ * primitivo registra `onClick` no mesmo elemento, e o que salta um ouvinte irmão
+ * é a parada imediata. Vale porque o runtime do Vue funde ouvintes do mesmo
+ * evento numa LISTA e a percorre checando `_stopped` a cada passo, então parar
+ * no primeiro item impede o segundo de rodar. Este handler chega pelos `$attrs`,
+ * que o primitivo espalha ANTES do próprio `onClick` — a ordem da lista é o que
+ * torna a contenção possível.
+ *
+ * Cobre o teclado junto: num <button> nativo o Espaço vira `click` no keyup.
+ * O Enter já é cancelado pelo próprio primitivo.
+ */
+function conterAtivacao(evento: Event) {
+  if (!desabilitado.value) return
+  evento.preventDefault()
+  evento.stopImmediatePropagation()
+}
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
@@ -33,6 +64,8 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-bind="forwarded"
     :default-value="resolvedDefault"
     :class="cn('nds-checkbox', props.class)"
+    :aria-disabled="desabilitado ? 'true' : undefined"
+    @click="conterAtivacao"
   >
     <CheckboxIndicator
       data-slot="checkbox-indicator"

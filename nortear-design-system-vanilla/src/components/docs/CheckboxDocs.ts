@@ -846,7 +846,7 @@ export type CheckboxOptions = {
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5].map(i => ({
+            items: [1, 2, 3, 4, 5, 6].map(i => ({
               criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
               how: toPlainText(t(`testes.accessibility.item${i}.how`)),

@@ -1,6 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect } from "storybook/test";
+import { reprovasDoDesabilitado } from "@shared/testing/checkbox-probe";
 import { Checkbox } from "./checkbox";
+
+// Ferramentas de teclado/ponteiro entregues ao contrato compartilhado. Iguais
+// nas cinco stacks — o que muda entre elas é o componente, não a medição.
+const FERRAMENTAS = {
+  tab: () => userEvent.tab(),
+  teclar: (sequencia: string) => userEvent.keyboard(sequencia),
+  // `pointerEventsCheck: 0`: a caixa desabilitada mantém `cursor: not-allowed`,
+  // e a checagem do userEvent reprovaria antes de o clique chegar ao componente
+  // — que é justamente o que se quer testar.
+  clicar: (el: HTMLElement) => userEvent.click(el, { pointerEventsCheck: 0 }),
+};
 
 const meta = {
   title: "UI/Checkbox/States",
@@ -122,41 +134,48 @@ export const Indeterminate: Story = {
   },
 };
 
+// Espião de escopo de módulo, como nas outras quatro stacks. O de `args` chega
+// opcional pelo tipo do primitivo, e `mockClear()` nele não compila; além disso,
+// o espião próprio não depende de quando o Storybook reseta os args entre
+// reexecuções do painel Interactions.
+const espiaoDesabilitado = fn();
+
 export const Disabled: Story = {
-  render: (args) => (
+  render: () => (
     <div className="nds-cluster" data-spacing="sm" data-disabled="true">
-      <Checkbox id="disabled" disabled onCheckedChange={args.onCheckedChange} />
+      <Checkbox id="disabled" disabled onCheckedChange={espiaoDesabilitado} />
       <label htmlFor="disabled" className="nds-label">
         Receber notificações push
       </label>
     </div>
   ),
   parameters: {
-    covers: ["functional.item4"],
+    covers: ["functional.item4", "accessibility.item6"],
     docs: {
       description: {
         story:
-          "Estado desabilitado. opacity-50, cursor-not-allowed. Não responde a interações.",
+          "Estado desabilitado. Opacidade reduzida, cursor bloqueado. Continua alcançável pelo Tab e é anunciado como indisponível, mas não alterna.",
       },
     },
   },
-  play: async ({ canvasElement, step, args }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole("checkbox");
 
-    await step("Checkbox está desabilitado", async () => {
-      // Efeito computado, não nome de atributo: a raiz virou <button> nativo
-      // (é o que faz o `id` chegar ao elemento visível), e aí a lib escreve o
-      // `disabled` do HTML em vez de `aria-disabled`. `toBeDisabled()` cobre as
-      // duas formas sem amarrar a asserção ao canal que a lib escolheu.
-      await expect(checkbox).toBeDisabled();
-    });
+    await step(
+      "Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam",
+      async () => {
+        // Contrato compartilhado — a mesma lista nas cinco stacks. `toBeDisabled()`
+        // saiu daqui: ele lê o atributo nativo e ignora `aria-disabled`, então
+        // afirmaria o contrário da decisão (peça fora da tabulação) e a forma
+        // negada nem poderia falhar.
+        espiaoDesabilitado.mockClear();
+        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+      },
+    );
 
-    await step("Clique não altera o estado nem dispara o callback quando disabled", async () => {
-      const wasChecked = checkbox.getAttribute("aria-checked");
-      await userEvent.click(checkbox, { pointerEventsCheck: 0 });
-      await expect(checkbox).toHaveAttribute("aria-checked", wasChecked ?? "false");
-      await expect(args.onCheckedChange).not.toHaveBeenCalled();
+    await step("O callback de mudança não disparou em nenhuma das tentativas", async () => {
+      await expect(espiaoDesabilitado).not.toHaveBeenCalled();
     });
   },
 };
@@ -183,15 +202,14 @@ export const DisabledChecked: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole("checkbox");
 
-    await step("Checkbox está desabilitado", async () => {
-      // Efeito computado, não nome de atributo: a raiz virou <button> nativo
-      // (é o que faz o `id` chegar ao elemento visível), e aí a lib escreve o
-      // `disabled` do HTML em vez de `aria-disabled`. `toBeDisabled()` cobre as
-      // duas formas sem amarrar a asserção ao canal que a lib escolheu.
-      await expect(checkbox).toBeDisabled();
-    });
+    await step(
+      "Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam",
+      async () => {
+        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+      },
+    );
 
-    await step("Checkbox está marcado mesmo disabled", async () => {
+    await step("Checkbox continua marcado — desabilitado não é o mesmo que vazio", async () => {
       await expect(checkbox).toBeChecked();
     });
   },

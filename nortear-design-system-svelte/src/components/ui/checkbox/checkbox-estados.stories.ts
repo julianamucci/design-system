@@ -1,8 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
+import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
+
+// Ferramentas de teclado/ponteiro entregues ao contrato compartilhado. Iguais
+// nas cinco stacks — o que muda entre elas é o componente, não a medição.
+const FERRAMENTAS = {
+  tab: () => userEvent.tab(),
+  teclar: (sequencia: string) => userEvent.keyboard(sequencia),
+  // `pointerEventsCheck: 0`: a caixa desabilitada mantém `cursor: not-allowed`,
+  // e a checagem do userEvent reprovaria antes de o clique chegar ao componente
+  // — que é justamente o que se quer testar.
+  clicar: (el: HTMLElement) => userEvent.click(el, { pointerEventsCheck: 0 }),
+};
 
 const meta: Meta = {
   title: 'UI/Checkbox/States',
@@ -106,7 +118,7 @@ const disabledOnCheckedChange = fn();
 
 export const Disabled: Story = {
   parameters: {
-    covers: ['functional.item4'],
+    covers: ['functional.item4', 'accessibility.item6'],
   },
   render: () => ({
     Component: CheckboxStory,
@@ -123,14 +135,19 @@ export const Disabled: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
-    await step('Checkbox está desabilitado', async () => {
-      await expect(checkbox).toBeDisabled();
-    });
+    await step(
+      'Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam',
+      async () => {
+        // Contrato compartilhado — a mesma lista nas cinco stacks. `toBeDisabled()`
+        // saiu daqui: ele lê o atributo nativo e ignora `aria-disabled`, então
+        // afirmaria o contrário da decisão (peça fora da tabulação) e a forma
+        // negada nem poderia falhar.
+        disabledOnCheckedChange.mockClear();
+        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+      },
+    );
 
-    await step('Clicar não altera o estado nem dispara o callback', async () => {
-      disabledOnCheckedChange.mockClear();
-      await userEvent.click(checkbox, { pointerEventsCheck: 0 });
-      await expect(checkbox).not.toBeChecked();
+    await step('O callback de mudança não disparou em nenhuma das tentativas', async () => {
       await expect(disabledOnCheckedChange).not.toHaveBeenCalled();
     });
   },
@@ -154,8 +171,14 @@ export const DisabledChecked: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
-    await step('Checkbox desabilitado e marcado', async () => {
-      await expect(checkbox).toBeDisabled();
+    await step(
+      'Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam',
+      async () => {
+        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+      },
+    );
+
+    await step('Checkbox continua marcado — desabilitado não é o mesmo que vazio', async () => {
       await expect(checkbox).toBeChecked();
     });
   },
@@ -221,8 +244,13 @@ export const Error: Story = {
       await expect(checkbox).toHaveAttribute('aria-invalid', 'true');
     });
 
-    await step('Checkbox não está desabilitado', async () => {
-      await expect(checkbox).not.toBeDisabled();
+    await step('Erro não é indisponibilidade: a caixa continua operável', async () => {
+      // `not.toBeDisabled()` não servia aqui: o jest-dom lê só o atributo
+      // nativo e ignora `aria-disabled`, então a negação passaria mesmo numa
+      // caixa desabilitada — asserção que não pode falhar. O que separa
+      // "inválido" de "indisponível" é o canal ARIA, e é ele que se afirma.
+      await expect(checkbox).not.toHaveAttribute('aria-disabled');
+      await expect((checkbox as HTMLButtonElement).disabled).toBe(false);
     });
   },
 };

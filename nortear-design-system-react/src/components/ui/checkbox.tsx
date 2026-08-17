@@ -28,6 +28,27 @@ import { CheckIcon, MinusIcon } from "lucide-react"
 // `data-state` vem do render prop porque o base-ui é a única das cinco stacks
 // que não o emite (ele usa data-checked/data-indeterminate). O CSS aceita os
 // dois, mas a paridade de markup é o que a auditoria cross-stack compara.
+//
+// ─── Por que o `disabled` nativo é trocado por `aria-disabled` ───────────────
+//
+// Decisão da dona, a mesma já tomada no tabs: a caixa desabilitada continua
+// alcançável pelo Tab e é ANUNCIADA como indisponível, em vez de sumir da
+// navegação. Quem navega lendo a tela precisa saber que a opção existe e está
+// bloqueada — `disabled` nativo apaga as duas informações de uma vez.
+//
+// O caminho não é uma prop: `CheckboxRoot` chama `useButton({ disabled, native })`
+// sem repassar `focusableWhenDisabled`, então o único ramo que emitiria
+// `aria-disabled` (em `useFocusableWhenDisabled`) é inalcançável a partir da API
+// pública. Verificado na fonte, não na documentação.
+//
+// O que se faz então é retirar o atributo do DOM aqui, no render prop — que é
+// ponto de extensão suportado — e MANTER `disabled` verdadeiro na lib. Isso não
+// é contenção cosmética: a lib bloqueia a ativação em dois lugares que não
+// dependem do atributo, e ambos foram lidos na fonte —
+// `useButton().getButtonProps().onClick` faz `preventDefault(); return` e o
+// `onClick` do próprio `CheckboxRoot` faz `if (readOnly || disabled) return`.
+// Como no <button> nativo o Espaço vira `click` no keyup, a mesma guarda cobre
+// ponteiro e teclado. Não foi preciso ouvinte em fase de captura.
 function Checkbox({ className, indeterminate, ...props }: CheckboxPrimitive.Root.Props) {
   return (
     <CheckboxPrimitive.Root
@@ -35,15 +56,23 @@ function Checkbox({ className, indeterminate, ...props }: CheckboxPrimitive.Root
       className={cn("nds-checkbox", className)}
       indeterminate={indeterminate}
       nativeButton
-      render={(rootProps, state) => (
-        <button
-          type="button"
-          data-state={
-            state.indeterminate ? "indeterminate" : state.checked ? "checked" : "unchecked"
-          }
-          {...rootProps}
-        />
-      )}
+      render={(rootProps, state) => {
+        // `disabled` sai do DOM; `state.disabled` continua verdadeiro na lib, e
+        // é ele que bloqueia a alternância. O `tabIndex={0}` que a lib já
+        // escreve passa a valer, porque nada mais tira o botão da tabulação.
+        const { disabled: _semAtributoNativo, ...semDisabled } =
+          rootProps as typeof rootProps & { disabled?: boolean }
+        return (
+          <button
+            type="button"
+            data-state={
+              state.indeterminate ? "indeterminate" : state.checked ? "checked" : "unchecked"
+            }
+            {...semDisabled}
+            aria-disabled={state.disabled || undefined}
+          />
+        )
+      }}
       {...props}
     >
       <CheckboxPrimitive.Indicator

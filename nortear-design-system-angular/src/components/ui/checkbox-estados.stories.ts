@@ -1,8 +1,20 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
+import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
 import { NdsCheckbox } from './checkbox';
 import { NdsLabel } from './label';
+
+// Ferramentas de teclado/ponteiro entregues ao contrato compartilhado. Iguais
+// nas cinco stacks — o que muda entre elas é o componente, não a medição.
+const FERRAMENTAS = {
+  tab: () => userEvent.tab(),
+  teclar: (sequencia: string) => userEvent.keyboard(sequencia),
+  // `pointerEventsCheck: 0`: a caixa desabilitada mantém `cursor: not-allowed`,
+  // e a checagem do userEvent reprovaria antes de o clique chegar ao componente
+  // — que é justamente o que se quer testar.
+  clicar: (el: HTMLElement) => userEvent.click(el, { pointerEventsCheck: 0 }),
+};
 
 const meta: Meta = {
   title: 'UI/Checkbox/States',
@@ -73,7 +85,7 @@ export const Keyboard: Story = {
 const espiaoDesabilitado = fn();
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item4'] },
+  parameters: { covers: ['functional.item4', 'visual.item4', 'accessibility.item6'] },
   render: () => ({
     props: { onCheckedChange: espiaoDesabilitado },
     template: `
@@ -97,20 +109,29 @@ export const Disabled: Story = {
   play: async ({ canvasElement, step }) => {
     espiaoDesabilitado.mockClear();
 
-    await step('O clique não altera o estado, e o callback não dispara', async () => {
-      const cb = canvasElement.querySelector<HTMLElement>('#dis-off')!;
-      const antes = cb.getAttribute('aria-checked');
-      await userEvent.click(cb, { pointerEventsCheck: 0 });
-      await expect(cb.getAttribute('aria-checked')).toBe(antes);
+    await step(
+      'Desmarcada: alcançável pelo Tab, anunciada como desabilitada, sem alternar por clique ou Espaço',
+      async () => {
+        // Contrato compartilhado — a mesma lista nas cinco stacks.
+        const cb = canvasElement.querySelector<HTMLElement>('#dis-off')!;
+        await expect(await reprovasDoDesabilitado(cb, FERRAMENTAS)).toEqual([]);
+      },
+    );
+
+    await step('O callback de mudança não disparou em nenhuma das tentativas', async () => {
       await expect(espiaoDesabilitado).not.toHaveBeenCalled();
     });
 
-    await step('O estado marcado continua visível quando desabilitado', async () => {
-      // Desabilitado não é o mesmo que vazio: quem lê a tela precisa saber que
-      // a opção está marcada, ainda que não possa mudá-la.
-      const cb = canvasElement.querySelector<HTMLElement>('#dis-on')!;
-      await expect(cb).toHaveAttribute('data-state', 'checked');
-    });
+    await step(
+      'Marcada: mesmo contrato, e o estado marcado continua visível',
+      async () => {
+        // Desabilitado não é o mesmo que vazio: quem lê a tela precisa saber que
+        // a opção está marcada, ainda que não possa mudá-la.
+        const cb = canvasElement.querySelector<HTMLElement>('#dis-on')!;
+        await expect(await reprovasDoDesabilitado(cb, FERRAMENTAS)).toEqual([]);
+        await expect(cb).toHaveAttribute('data-state', 'checked');
+      },
+    );
   },
 };
 

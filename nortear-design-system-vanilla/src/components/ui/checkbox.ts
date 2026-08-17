@@ -66,10 +66,25 @@ export function createCheckbox(options: CheckboxOptions = {}): HTMLElement {
   if (disabled) {
     // `aria-disabled` em vez do `disabled` nativo: o controle continua
     // alcançável para quem navega lendo a tela, que é a recomendação do
-    // WAI-ARIA APG. O `tabindex="-1"` o tira do Tab sem tirá-lo do documento, e
-    // quem impede a alternância é a ausência dos ouvintes abaixo.
+    // WAI-ARIA APG.
+    //
+    // NÃO vai `tabindex="-1"` aqui. Ele estava, e a sonda mostrou o que isso
+    // custava: a caixa aceitava foco programático — o que fazia a medição
+    // ingênua parecer boa — e mesmo assim o Tab passava reto por ela. O efeito
+    // final era o do `disabled` nativo que a decisão veio justamente evitar,
+    // com o agravante de parecer resolvido. `aria-disabled` sem `tabindex="-1"`
+    // é o par que entrega alcançável E anunciado como indisponível.
+    //
+    // Quem impede a alternância é a ausência dos ouvintes registrados abaixo:
+    // sem ouvinte de clique não há alternância por ponteiro nem por Espaço
+    // (num <button> nativo a barra vira `click` no keyup).
     wrapper.setAttribute('aria-disabled', 'true');
-    wrapper.setAttribute('tabindex', '-1');
+    // Não vai `data-disabled` junto. Ele existe nas stacks com lib headless
+    // porque é vocabulário DA LIB, não do design system — e a sonda mostrou que
+    // uma delas nem consegue emiti-lo depois desta mudança. `aria-disabled` é o
+    // canal que as cinco cumprem, é o que o CSS compartilhado casa e é o que o
+    // leitor de tela lê; inventar o outro aqui seria copiar o sotaque da lib
+    // para a stack que existe justamente para não ter um.
   }
 
   const indicator = document.createElement('span');

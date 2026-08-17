@@ -159,7 +159,7 @@
       "disabled": {
         "label": "Disabled",
         "trigger": "Prop <code>disabled</code>",
-        "behavior": "Opacidade reduzida, cursor bloqueado, não responde a interações"
+        "behavior": "Opacidade reduzida, cursor bloqueado. Continua alcançável por <kbd>Tab</kbd> e anunciado como indisponível; não responde a interações."
       },
       "error": {
         "label": "Error",
@@ -184,7 +184,7 @@
         "checked": "<code>checked</code> — estado marcado. Onde o estado misto é um terceiro valor do próprio campo, aceita também o valor indeterminado.",
         "defaultChecked": "Estado inicial não controlado, aplicado apenas na montagem. O nome exato varia por stack (ver tabela abaixo).",
         "onCheckedChange": "Callback de mudança disparado ao alternar o estado. Recebe <code>boolean | \"indeterminate\"</code>. O nome da prop varia por stack (ver tabela de divergências).",
-        "disabled": "<code>disabled</code> — desabilita o componente. Reduz a opacidade, bloqueia o cursor e impede a interação.",
+        "disabled": "<code>disabled</code> — desabilita o componente. Reduz a opacidade, bloqueia o cursor e impede a alternância. O controle continua alcançável por teclado e é anunciado como indisponível.",
         "required": "<code>required</code> — marca o campo como obrigatório. Propaga <code>aria-required</code>.",
         "name": "<code>name</code> — nome do campo para participação em formulários HTML nativos.",
         "value": "<code>value</code> — valor enviado no submit do formulário quando marcado. Padrão <code>\"on\"</code>.",
@@ -221,12 +221,12 @@
         "tab": "Move o foco para o checkbox na ordem natural do DOM.",
         "space": "Alterna o estado: desmarcado → marcado → desmarcado.",
         "shiftTab": "Retorna o foco ao elemento anterior.",
-        "disabled": "Quando <code>disabled</code>, o checkbox não recebe foco por teclado e não responde a <kbd>Space</kbd>."
+        "disabled": "Quando desabilitado, o checkbox <strong>continua na ordem de tabulação</strong> e recebe foco, e é anunciado como indisponível. Não alterna com <kbd>Space</kbd> nem com clique."
       },
       "aria": {
         "roleCheckbox": "<code>role=\"checkbox\"</code> — identifica o elemento como checkbox para tecnologias assistivas.",
         "ariaChecked": "<code>aria-checked</code> — comunica o estado atual: <code>false</code>, <code>true</code> ou <code>mixed</code>.",
-        "ariaDisabled": "<code>aria-disabled=\"true\"</code> ou atributo <code>disabled</code> — informa que a interação está bloqueada.",
+        "ariaDisabled": "<code>aria-disabled=\"true\"</code> — informa que a interação está bloqueada sem tirar o controle da ordem de tabulação, para que quem navega por teclado ainda encontre a opção e saiba que ela existe.",
         "ariaRequired": "<code>aria-required=\"true\"</code> — propagado via prop <code>required</code>. Informar campos obrigatórios.",
         "ariaInvalid": "<code>aria-invalid=\"true\"</code> — aplicado pelo <code>FormControl</code> quando há erro de validação.",
         "ariaLabel": "<code>aria-label</code> — obrigatório quando não há <code>&lt;label&gt;</code> externo visível associado por <code>id</code>."
@@ -343,6 +343,11 @@
           "criterion": "Sem violações axe-core no estado padrão",
           "level": "AA",
           "how": "axe-playwright no test-runner do Storybook"
+        },
+        "item6": {
+          "criterion": "Desabilitado continua alcançável por Tab, é anunciado como indisponível, e não alterna por clique nem por Space",
+          "level": "AA",
+          "how": "Tab até o controle, conferir o estado anunciado e tentar alternar por clique e por Space"
         }
       },
       "visual": {
@@ -551,7 +556,7 @@
       "disabled": {
         "label": "Disabled",
         "trigger": "Prop <code>disabled</code>",
-        "behavior": "Reduced opacity, blocked cursor, does not respond to interactions"
+        "behavior": "Reduced opacity, blocked cursor. Still reachable with <kbd>Tab</kbd> and announced as unavailable; does not respond to interaction."
       },
       "error": {
         "label": "Error",
@@ -576,7 +581,7 @@
         "checked": "<code>checked</code> — checked state. Where the mixed state is a third value of the field itself, it also accepts the indeterminate value.",
         "defaultChecked": "Uncontrolled initial state, applied on mount only. The exact name varies per stack (see the table below).",
         "onCheckedChange": "Change callback fired on toggle. Receives <code>boolean | \"indeterminate\"</code>. Prop name varies per stack (see divergence table).",
-        "disabled": "<code>disabled</code> — disables the component. Reduces opacity, blocks the cursor and prevents interaction.",
+        "disabled": "<code>disabled</code> — disables the component. Reduces opacity, blocks the cursor and prevents toggling. The control stays reachable by keyboard and is announced as unavailable.",
         "required": "<code>required</code> — marks the field as required. Propagates <code>aria-required</code>.",
         "name": "<code>name</code> — field name for native HTML form participation.",
         "value": "<code>value</code> — value submitted on form submit when checked. Default <code>\"on\"</code>.",
@@ -613,12 +618,12 @@
         "tab": "Moves focus to the checkbox in natural DOM order.",
         "space": "Toggles state: unchecked → checked → unchecked.",
         "shiftTab": "Returns focus to the previous element.",
-        "disabled": "When <code>disabled</code>, the checkbox does not receive keyboard focus and does not respond to <kbd>Space</kbd>."
+        "disabled": "When disabled, the checkbox <strong>stays in the tab order</strong> and receives focus, and is announced as unavailable. It does not toggle with <kbd>Space</kbd> or with a click."
       },
       "aria": {
         "roleCheckbox": "<code>role=\"checkbox\"</code> — identifies the element as a checkbox to assistive technologies.",
         "ariaChecked": "<code>aria-checked</code> — communicates current state: <code>false</code>, <code>true</code>, or <code>mixed</code>.",
-        "ariaDisabled": "<code>aria-disabled=\"true\"</code> or <code>disabled</code> attribute — indicates interaction is blocked.",
+        "ariaDisabled": "<code>aria-disabled=\"true\"</code> — indicates interaction is blocked without removing the control from the tab order, so keyboard users can still find the option and know it exists.",
         "ariaRequired": "<code>aria-required=\"true\"</code> — propagated via the <code>required</code> prop. Marks mandatory fields.",
         "ariaInvalid": "<code>aria-invalid=\"true\"</code> — applied by <code>FormControl</code> when there is a validation error.",
         "ariaLabel": "<code>aria-label</code> — required when no visible external <code>&lt;label&gt;</code> is associated by <code>id</code>."
@@ -735,6 +740,11 @@
           "criterion": "No axe-core violations in default state",
           "level": "AA",
           "how": "axe-playwright in Storybook test-runner"
+        },
+        "item6": {
+          "criterion": "Disabled stays reachable with Tab, is announced as unavailable, and does not toggle on click or Space",
+          "level": "AA",
+          "how": "Tab to the control, check the announced state and try toggling by click and by Space"
         }
       },
       "visual": {
@@ -943,7 +953,7 @@
       "disabled": {
         "label": "Disabled",
         "trigger": "Prop <code>disabled</code>",
-        "behavior": "Opacidad reducida, cursor bloqueado, no responde a interacciones"
+        "behavior": "Opacidad reducida, cursor bloqueado. Sigue siendo alcanzable con <kbd>Tab</kbd> y se anuncia como no disponible; no responde a interacciones."
       },
       "error": {
         "label": "Error",
@@ -968,7 +978,7 @@
         "checked": "<code>checked</code> — estado marcado. Donde el estado mixto es un tercer valor del propio campo, acepta también el valor indeterminado.",
         "defaultChecked": "Estado inicial no controlado, aplicado solo en el montaje. El nombre exacto varía por stack (ver la tabla abajo).",
         "onCheckedChange": "Callback de cambio que se dispara al alternar el estado. Recibe <code>boolean | \"indeterminate\"</code>. El nombre de la prop varía por stack (ver tabla de divergencias).",
-        "disabled": "<code>disabled</code> — deshabilita el componente. Reduce la opacidad, bloquea el cursor e impide la interacción.",
+        "disabled": "<code>disabled</code> — deshabilita el componente. Reduce la opacidad, bloquea el cursor e impide la alternancia. El control sigue siendo alcanzable por teclado y se anuncia como no disponible.",
         "required": "<code>required</code> — marca el campo como obligatorio. Propaga <code>aria-required</code>.",
         "name": "<code>name</code> — nombre del campo para participación en formularios HTML nativos.",
         "value": "<code>value</code> — valor enviado en el submit cuando está marcado. Por defecto <code>\"on\"</code>.",
@@ -1005,12 +1015,12 @@
         "tab": "Mueve el foco al checkbox en el orden natural del DOM.",
         "space": "Alterna el estado: desmarcado → marcado → desmarcado.",
         "shiftTab": "Devuelve el foco al elemento anterior.",
-        "disabled": "Cuando <code>disabled</code>, el checkbox no recibe foco por teclado y no responde a <kbd>Space</kbd>."
+        "disabled": "Cuando está deshabilitado, el checkbox <strong>permanece en el orden de tabulación</strong> y recibe foco, y se anuncia como no disponible. No alterna con <kbd>Space</kbd> ni con clic."
       },
       "aria": {
         "roleCheckbox": "<code>role=\"checkbox\"</code> — identifica el elemento como checkbox para tecnologías asistivas.",
         "ariaChecked": "<code>aria-checked</code> — comunica el estado actual: <code>false</code>, <code>true</code> o <code>mixed</code>.",
-        "ariaDisabled": "<code>aria-disabled=\"true\"</code> o atributo <code>disabled</code> — indica que la interacción está bloqueada.",
+        "ariaDisabled": "<code>aria-disabled=\"true\"</code> — indica que la interacción está bloqueada sin sacar el control del orden de tabulación, para que quien navega por teclado siga encontrando la opción y sepa que existe.",
         "ariaRequired": "<code>aria-required=\"true\"</code> — propagado vía prop <code>required</code>. Informa campos obligatorios.",
         "ariaInvalid": "<code>aria-invalid=\"true\"</code> — aplicado por <code>FormControl</code> cuando hay error de validación.",
         "ariaLabel": "<code>aria-label</code> — obligatorio cuando no hay <code>&lt;label&gt;</code> externo visible asociado por <code>id</code>."
@@ -1127,6 +1137,11 @@
           "criterion": "Sin violaciones axe-core en estado predeterminado",
           "level": "AA",
           "how": "axe-playwright en test-runner de Storybook"
+        },
+        "item6": {
+          "criterion": "Deshabilitado sigue siendo alcanzable con Tab, se anuncia como no disponible y no alterna al hacer clic ni con Space",
+          "level": "AA",
+          "how": "Tabular hasta el control, comprobar el estado anunciado e intentar alternar con clic y con Space"
         }
       },
       "visual": {

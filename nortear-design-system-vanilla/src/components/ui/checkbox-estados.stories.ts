@@ -1,6 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
+import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
 import { createCheckbox } from './checkbox';
+
+// Ferramentas de teclado/ponteiro entregues ao contrato compartilhado. Iguais
+// nas cinco stacks — o que muda entre elas é o componente, não a medição.
+const FERRAMENTAS = {
+  tab: () => userEvent.tab(),
+  teclar: (sequencia: string) => userEvent.keyboard(sequencia),
+  // `pointerEventsCheck: 0`: a caixa desabilitada mantém `cursor: not-allowed`,
+  // e a checagem do userEvent reprovaria antes de o clique chegar ao componente
+  // — que é justamente o que se quer testar.
+  clicar: (el: HTMLElement) => userEvent.click(el, { pointerEventsCheck: 0 }),
+};
 
 const meta: Meta = {
   tags: ['form'],
@@ -133,27 +145,26 @@ export const DisabledUnchecked: Story = {
     true,
   ),
   parameters: {
-    covers: ['functional.item4'],
-    docs: { description: { story: 'Estado desabilitado desmarcado. Opacidade reduzida, cursor bloqueado, não responde a interações.' } },
+    covers: ['functional.item4', 'accessibility.item6'],
+    docs: { description: { story: 'Estado desabilitado desmarcado. Opacidade reduzida, cursor bloqueado. Continua alcançável pelo Tab e é anunciado como indisponível, mas não alterna.' } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
-    await step('aria-disabled está presente', async () => {
-      await expect(checkbox).toHaveAttribute('aria-disabled', 'true');
-    });
+    await step(
+      'Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam',
+      async () => {
+        // Contrato compartilhado — a mesma lista nas cinco stacks. O passo
+        // "tabindex é -1" que morava aqui afirmava o OPOSTO da decisão: a caixa
+        // aceitava foco programático e mesmo assim o Tab passava reto por ela,
+        // o que na prática reproduzia o `disabled` nativo que se quer evitar.
+        onDisabledUncheckedChange.mockClear();
+        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+      },
+    );
 
-    await step('tabindex é -1 (não recebe foco por teclado)', async () => {
-      await expect(checkbox).toHaveAttribute('tabindex', '-1');
-    });
-
-    await step('Clique não altera o estado nem dispara o callback', async () => {
-      // pointerEventsCheck: 0 — clique em elemento desabilitado é a exceção
-      // legítima ao par idempotente: não há transição possível em rodada
-      // nenhuma, então não há estado anterior para "vazar" no replay.
-      await userEvent.click(checkbox, { pointerEventsCheck: 0 });
-      await expect(checkbox).toHaveAttribute('aria-checked', 'false');
+    await step('O callback de mudança não disparou em nenhuma das tentativas', async () => {
       await expect(onDisabledUncheckedChange).not.toHaveBeenCalled();
     });
   },
@@ -176,12 +187,14 @@ export const DisabledChecked: Story = {
     const canvas = within(canvasElement);
     const checkbox = canvas.getByRole('checkbox');
 
-    await step('aria-checked permanece "true"', async () => {
-      await expect(checkbox).toHaveAttribute('aria-checked', 'true');
-    });
+    await step(
+      'Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam',
+      async () => {
+        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+      },
+    );
 
-    await step('Clique não altera o estado', async () => {
-      await userEvent.click(checkbox, { pointerEventsCheck: 0 });
+    await step('Checkbox continua marcado — desabilitado não é o mesmo que vazio', async () => {
       await expect(checkbox).toHaveAttribute('aria-checked', 'true');
     });
   },

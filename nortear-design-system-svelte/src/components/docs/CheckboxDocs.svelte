@@ -722,6 +722,7 @@ import { Label } from "@/components/ui/label";`;
         { criterion: $tStore('testes.accessibility.item3.criterion'),            level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
         { criterion: $tStore('testes.accessibility.item4.criterion'),            level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
         { criterion: $tStore('testes.accessibility.item5.criterion'),            level: $tStore('testes.accessibility.item5.level'), how: $tStore('testes.accessibility.item5.how') },
+        { criterion: $tStore('testes.accessibility.item6.criterion'),            level: $tStore('testes.accessibility.item6.level'), how: $tStore('testes.accessibility.item6.how') },
       ],
     }}
     visual={{

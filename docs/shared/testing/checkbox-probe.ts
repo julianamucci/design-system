@@ -295,6 +295,14 @@ export function medirCaixa(raiz: HTMLElement) {
       id: caixa.getAttribute('id'),
       dataSlot: caixa.getAttribute('data-slot'),
       tabIndex: caixa.getAttribute('tabindex'),
+      /**
+       * O tabIndex EFETIVO, não o atributo. Um `<button disabled>` continua
+       * reportando `0` aqui e não tem atributo `tabindex` nenhum — o que o tira
+       * da ordem de tabulação é o `disabled`, não o índice. Ler só o atributo
+       * responderia "0" nas duas situações opostas, que é exatamente o erro que
+       * esta sonda existe para não cometer.
+       */
+      tabIndexEfetivo: (caixa as HTMLElement).tabIndex,
       temClasseBase: classes.includes('nds-checkbox'),
       /** Classe sem o prefixo do design system: inerte, não pinta nada. */
       classesInertes: classes.filter((c) => !c.startsWith('nds-')),
@@ -407,6 +415,14 @@ export function medirCaixas(raiz: HTMLElement, cenarios: string[]) {
  * a sequência de ponteiro (pointerdown → mousedown → focus → click) e tem lógica
  * própria de foco. A asserção permanente vai rodar pelo segundo — então medir só
  * o primeiro deixaria a asserção sem lastro.
+ *
+ * Há um segundo motivo, medido: `medirCaixa` é SÍNCRONO e lê o estado no
+ * instante seguinte ao `.click()`. Onde o renderizador aplica a mudança em
+ * microtarefa ou em ciclo próprio de detecção, aquele campo sai `alternou:false`
+ * mesmo com o componente correto — falso negativo de medição, não defeito. Foi
+ * o que aconteceu com três das cinco stacks, enquanto ESTA função, que aguarda,
+ * devolveu `true` nas cinco. Ao comparar as stacks, o campo desta função é o que
+ * vale; o de `medirCaixa.cliqueNoRotulo` só serve como pista.
  */
 export async function medirCliqueDoUsuario(
   raiz: HTMLElement,
@@ -443,6 +459,202 @@ export async function medirCliqueDoUsuario(
   return registro;
 }
 
+// ─── Alcance por teclado ──────────────────────────────────────────────────────
+
+/** Teto de Tabs por cenário. Alto o bastante para o pior caso, finito de propósito. */
+const LIMITE_TAB = 12;
+
+export type FerramentasDeTeclado = {
+  /** `userEvent.tab` da stack. */
+  tab: () => Promise<unknown>;
+  /** `userEvent.keyboard` da stack. */
+  teclar: (sequencia: string) => Promise<unknown>;
+  /** `userEvent.click` da stack — o caminho de ponteiro real, não `.click()`. */
+  clicar: (el: HTMLElement) => Promise<unknown>;
+};
+
+/**
+ * Mede o que o `tabIndex` NÃO responde: a caixa entra na ordem de tabulação, e o
+ * que acontece quando ela é ativada por teclado e por ponteiro.
+ *
+ * A pergunta desta rodada tem três eixos, e o resultado só é bom quando os três
+ * valem ao mesmo tempo na peça desabilitada:
+ *
+ *   1. Tab PARA na caixa — ela continua alcançável;
+ *   2. Espaço NÃO alterna;
+ *   3. o clique de ponteiro NÃO alterna.
+ *
+ * Por que Tab de verdade, e não `focus()`: `focus()` passa em elemento com
+ * `tabindex="-1"`, e é exatamente essa a diferença entre "focável" e "alcançável
+ * pelo teclado". Medir com `focus()` daria verde numa caixa que ninguém alcança.
+ *
+ * Tudo é desfeito: o estado marcável volta ao valor anterior e o foco é solto.
+ */
+export async function medirAlcancePorTeclado(
+  raiz: HTMLElement,
+  cenarios: string[],
+  { tab, teclar, clicar }: FerramentasDeTeclado,
+) {
+  const registro: Record<string, unknown> = {};
+
+  for (const cenario of cenarios) {
+    const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
+    const caixa = alvo?.querySelector<HTMLElement>(SELETOR_CAIXA) ?? null;
+    if (!caixa) {
+      registro[cenario] = null;
+      continue;
+    }
+
+    const doc = caixa.ownerDocument;
+    const inicial = estadoMarcado(caixa);
+
+    // ── 1. Tab para na caixa? ────────────────────────────────────────────────
+    (doc.activeElement as HTMLElement | null)?.blur?.();
+    let alcancadaPorTab = false;
+    let tabsAteChegar: number | null = null;
+    const paradasDoTab: string[] = [];
+    for (let i = 1; i <= LIMITE_TAB && !alcancadaPorTab; i += 1) {
+      await tab();
+      paradasDoTab.push(descreverNo(doc.activeElement) ?? 'nenhum');
+      if (focoEstaNa(caixa)) {
+        alcancadaPorTab = true;
+        tabsAteChegar = i;
+      }
+    }
+
+    // ── 2. Espaço alterna? ───────────────────────────────────────────────────
+    // Foco programático como reserva: sem foco, a tecla iria para o documento e
+    // a medição responderia "não alterna" pelo motivo errado.
+    let espacoAlterna: boolean | null = null;
+    let focoAceitoParaTecla = alcancadaPorTab;
+    if (!alcancadaPorTab) {
+      caixa.focus?.();
+      focoAceitoParaTecla = doc.activeElement === caixa;
+    }
+    if (focoAceitoParaTecla) {
+      const antes = estadoMarcado(caixa);
+      await teclar(' ');
+      espacoAlterna = antes === null ? null : estadoMarcado(caixa) !== antes;
+      if (antes !== null && estadoMarcado(caixa) !== antes) await teclar(' ');
+    }
+
+    // ── 3. O clique de ponteiro alterna? ─────────────────────────────────────
+    let cliqueAlterna: boolean | null = null;
+    let erroDoClique: string | null = null;
+    {
+      const antes = estadoMarcado(caixa);
+      try {
+        await clicar(caixa);
+        cliqueAlterna = antes === null ? null : estadoMarcado(caixa) !== antes;
+      } catch (e) {
+        erroDoClique = e instanceof Error ? e.message : String(e);
+      }
+    }
+
+    // Desfaz tudo o que a medição possa ter mudado.
+    if (inicial !== null && estadoMarcado(caixa) !== inicial) caixa.click();
+    (doc.activeElement as HTMLElement | null)?.blur?.();
+
+    registro[cenario] = {
+      alcancadaPorTab,
+      tabsAteChegar,
+      paradasDoTab,
+      focoAceitoParaTecla,
+      espacoAlterna,
+      cliqueAlterna,
+      erroDoClique,
+      estadoPreservado: estadoMarcado(caixa) === inicial,
+    };
+  }
+
+  return registro;
+}
+
+// ─── Contrato do estado desabilitado ──────────────────────────────────────────
+
+/**
+ * Reprovas da caixa DESABILITADA, como lista fechada. Vazia significa correta.
+ *
+ * Existe compartilhado, e não copiado em cinco stories, porque o contrato é um
+ * só e a divergência entre cópias foi o defeito da rodada anterior: cada stack
+ * afirmava o estado desabilitado por um canal diferente, e três delas afirmavam
+ * justamente o comportamento que a dona decidiu abandonar.
+ *
+ * O que se exige, e por quê:
+ *
+ *   1. **`aria-disabled="true"`, sem `disabled` nativo.** Os dois juntos não
+ *      existem: o nativo tira da tabulação, que é o que se quer evitar. Checar a
+ *      ausência do nativo é o que faz esta asserção PODER falhar se alguém
+ *      reintroduzir o atributo — `aria-disabled` sozinho passaria nas duas.
+ *   2. **Tab alcança a caixa.** Com Tab de verdade, nunca `focus()`: o
+ *      programático passa até em `tabindex="-1"`, e foi exatamente essa a
+ *      diferença que a sonda encontrou no Vanilla.
+ *   3. **Espaço não alterna.**
+ *   4. **O clique não alterna.**
+ *
+ * `toBeDisabled()` do jest-dom NÃO serve para nada disto: ele lê o atributo
+ * nativo e ignora `aria-disabled`, então passaria a valer o contrário do
+ * contrato — e a versão negada (`not.toBeDisabled()`) viraria asserção que não
+ * pode falhar.
+ *
+ * Cada verificação estabelece a própria precondição (solta o foco, relê o
+ * estado antes de cada ação), e o estado de uma caixa desabilitada não muda em
+ * rodada nenhuma — então a lista sobrevive ao REPLAY do painel Interactions.
+ */
+export async function reprovasDoDesabilitado(
+  caixa: HTMLElement,
+  { tab, teclar, clicar }: FerramentasDeTeclado,
+): Promise<string[]> {
+  const reprovas: string[] = [];
+  const doc = caixa.ownerDocument;
+
+  // 1. Anunciada como indisponível, pelo canal que não tira da tabulação.
+  if (caixa.getAttribute('aria-disabled') !== 'true') {
+    reprovas.push(
+      `não é anunciada como desabilitada: aria-disabled=${JSON.stringify(
+        caixa.getAttribute('aria-disabled'),
+      )}`,
+    );
+  }
+  if ((caixa as HTMLButtonElement).disabled === true) {
+    reprovas.push('carrega o atributo `disabled` nativo, que a tira da ordem de tabulação');
+  }
+
+  // 2. Tab alcança a caixa.
+  (doc.activeElement as HTMLElement | null)?.blur?.();
+  let alcancada = false;
+  for (let i = 0; i < LIMITE_TAB && !alcancada; i += 1) {
+    await tab();
+    if (focoEstaNa(caixa)) alcancada = true;
+  }
+  if (!alcancada) {
+    reprovas.push(`o Tab não alcança a caixa em ${LIMITE_TAB} passos`);
+  }
+
+  // 3. Espaço não alterna. Só faz sentido perguntar com o foco na caixa.
+  if (alcancada) {
+    const antes = estadoMarcado(caixa);
+    await teclar(' ');
+    if (estadoMarcado(caixa) !== antes) {
+      reprovas.push(`Espaço alternou o estado: ${String(antes)} → ${String(estadoMarcado(caixa))}`);
+    }
+  }
+
+  // 4. O clique não alterna. `pointerEventsCheck: 0` fica a cargo de quem chama:
+  // `cursor: not-allowed` não bloqueia ponteiro, mas a checagem do userEvent
+  // reprova antes de clicar em parte das stacks.
+  {
+    const antes = estadoMarcado(caixa);
+    await clicar(caixa);
+    if (estadoMarcado(caixa) !== antes) {
+      reprovas.push(`o clique alternou o estado: ${String(antes)} → ${String(estadoMarcado(caixa))}`);
+    }
+  }
+
+  (doc.activeElement as HTMLElement | null)?.blur?.();
+  return reprovas;
+}
+
 /**
  * Emite o registro para fora do navegador.
  *
@@ -453,11 +665,12 @@ export async function reportarSonda(
   stack: string,
   raiz: HTMLElement,
   cenarios: string[],
-  clicar: (el: HTMLElement) => Promise<unknown>,
+  ferramentas: FerramentasDeTeclado,
 ) {
   const registro = {
     dom: medirCaixas(raiz, cenarios),
-    cliqueDoUsuario: await medirCliqueDoUsuario(raiz, cenarios, clicar),
+    cliqueDoUsuario: await medirCliqueDoUsuario(raiz, cenarios, ferramentas.clicar),
+    teclado: await medirAlcancePorTeclado(raiz, cenarios, ferramentas),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);
 }
