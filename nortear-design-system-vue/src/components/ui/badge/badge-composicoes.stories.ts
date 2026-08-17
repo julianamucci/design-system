@@ -70,7 +70,7 @@ export const CountBadge: Story = {
         role="status"
         aria-label="12 notificações não lidas"
       >
-        <Bell aria-hidden="true" class="nds-text-foreground" style="height: 1.25rem; width: 1.25rem" />
+        <Bell aria-hidden="true" class="nds-text-foreground nds-icon-lg" />
         <Badge variant="destructive">12</Badge>
       </span>
     `,

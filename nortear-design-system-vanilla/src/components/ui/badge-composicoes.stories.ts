@@ -91,9 +91,9 @@ export const CountBadge: Story = {
     wrap.dataset.spacing = 'sm';
 
     const sino = createIcon(Bell as unknown as LucideIconNode[]);
-    sino.setAttribute('class', 'nds-text-foreground');
-    sino.style.width = '1.25rem';
-    sino.style.height = '1.25rem';
+    // A utilitaria de 20px em vez de style inline: inline vence a folha e sai
+    // do tema, da densidade e da escala. E as docs pages ja usam esta classe.
+    sino.setAttribute('class', 'nds-text-foreground nds-icon-lg');
 
     wrap.append(sino, createBadge({ variant: 'destructive', children: '12' }));
     return wrap;

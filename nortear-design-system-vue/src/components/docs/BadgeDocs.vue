@@ -173,7 +173,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.asLink.name'),
     description: tContent('variants.compositions.asLink.description'),
     useWhen: tContent('variants.compositions.asLink.use'),
-    code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" style="display: inline-flex">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
+    code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" class="nds-cluster">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
   },
   {
     name: tContent('variants.compositions.asTrigger.name'),
@@ -504,7 +504,7 @@ const visualTestItems = computed(() => [
         <a
           href="#design"
           aria-label="Ver todos os itens da categoria Design"
-          style="display: inline-flex"
+          class="nds-cluster"
         >
           <Badge variant="secondary">Design</Badge>
         </a>

@@ -377,10 +377,14 @@ const badgeVariants = cva(
             name: tContent("variants.compositions.count.name"),
             description: tContent("variants.compositions.count.description"),
             useWhen: tContent("variants.compositions.count.use"),
-            code: `<span role="status" aria-label="12 notificações não lidas" style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>\n  <Bell size={20} aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
+            // `nds-cluster` + `nds-icon-lg` em vez de style inline: é o que as
+            // outras quatro docs pages já mostravam, e o snippet aqui é o que a
+            // pessoa copia — ensinar estilo inline num design system tokenizado
+            // é ensinar a sair do tema, da densidade e da escala.
+            code: `<span role="status" aria-label="12 notificações não lidas" className="nds-cluster" data-spacing="sm">\n  <Bell className="nds-icon-lg" aria-hidden="true" />\n  <Badge variant="destructive">12</Badge>\n</span>`,
             preview: (
-              <span role="status" aria-label="12 notificações não lidas" style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--spacing-2)' }}>
-                <Bell size={20} aria-hidden="true" />
+              <span role="status" aria-label="12 notificações não lidas" className="nds-cluster" data-spacing="sm">
+                <Bell className="nds-icon-lg" aria-hidden="true" />
                 <Badge variant="destructive">12</Badge>
               </span>
             ),
@@ -389,12 +393,15 @@ const badgeVariants = cva(
             name: tContent("variants.compositions.asLink.name"),
             description: tContent("variants.compositions.asLink.description"),
             useWhen: tContent("variants.compositions.asLink.use"),
-            code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" style={{ display: 'inline-flex' }}>\n  <Badge variant="secondary">Design</Badge>\n</a>`,
+            // `nds-cluster` em vez de style inline, e a mesma classe que a
+            // story usa — o exemplo da docs page e a story são o mesmo caso, e
+            // divergir faz a regressão visual proteger outra coisa.
+            code: `<a href="#design" aria-label="Ver todos os itens da categoria Design" className="nds-cluster">\n  <Badge variant="secondary">Design</Badge>\n</a>`,
             preview: (
               <a
                 href="#design"
                 aria-label="Ver todos os itens da categoria Design"
-                style={{ display: 'inline-flex' }}
+                className="nds-cluster"
                 onClick={() =>
                   track("badge_click", {
                     component: "badge",
@@ -412,13 +419,16 @@ const badgeVariants = cva(
             name: tContent("variants.compositions.asTrigger.name"),
             description: tContent("variants.compositions.asTrigger.description"),
             useWhen: tContent("variants.compositions.asTrigger.use"),
-            code: `<button type="button" aria-label="Filtrar por React" className="nds-rounded-md nds-cursor-pointer nds-bg-transparent" style={{ display: 'inline-flex', padding: 0, border: 0 }}>\n  <Badge variant="outline">React</Badge>\n</button>`,
+            // `padding` e `border` a zero continuam inline: são o RESET do
+            // <button>, não valor de design. O que saiu foi o `display`, que a
+            // classe já dá — e é a mesma que a story usa.
+            code: `<button type="button" aria-label="Filtrar por React" className="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent" style={{ padding: 0, border: 0 }}>\n  <Badge variant="outline">React</Badge>\n</button>`,
             preview: (
               <button
                 type="button"
                 aria-label="Filtrar por React"
-                className="nds-rounded-md nds-cursor-pointer nds-bg-transparent"
-                style={{ display: 'inline-flex', padding: 0, border: 0 }}
+                className="nds-cluster nds-rounded-md nds-cursor-pointer nds-bg-transparent"
+                style={{ padding: 0, border: 0 }}
                 onClick={() =>
                   track("badge_click", {
                     component: "badge",

@@ -32,7 +32,7 @@
   <!-- Contador AO LADO do sino, como a documentação descreve. Quem nomeia é o
        container: "12" sozinho não diz de que é a contagem. -->
   <span class="nds-cluster" data-spacing="sm" role="status" aria-label={ariaLabel}>
-    <Bell aria-hidden="true" class="nds-text-foreground" style="height: 1.25rem; width: 1.25rem" />
+    <Bell aria-hidden="true" class="nds-text-foreground nds-icon-lg" />
     <Badge {variant} class={className}>{label}</Badge>
   </span>
 {:else if caso === 'link'}

@@ -50,6 +50,13 @@ export const Playground: Story = {
       await expect(badge).toHaveAttribute('data-variant', String(args.variant));
     });
 
+    await step('É um <span>, para caber dentro de frase e célula', async () => {
+      // Um <div> aqui quebra o fluxo do texto que acompanha o badge, e
+      // <div> dentro de <p> é aninhamento inválido. Só o Angular afirmava
+      // isso — e era justamente a stack que sobrava que renderizava <div>.
+      await expect(badge.tagName).toBe('SPAN');
+    });
+
     await step('Etiqueta inline, não bloco', async () => {
       // accessibility.item1 — o badge mora dentro de frase e de célula: se
       // virasse bloco, quebraria a linha do texto que o acompanha.
