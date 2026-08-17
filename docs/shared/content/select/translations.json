@@ -271,7 +271,7 @@
         "class": "Classe",
         "part": "Aplicação",
         "input": {
-          "class": ".nds-select, .nds-select-trigger",
+          "class": ".nds-select-trigger",
           "part": "Borda do campo fechado"
         },
         "popover": {
@@ -291,11 +291,11 @@
           "part": "Texto da opção em destaque"
         },
         "ring": {
-          "class": ".nds-select:focus-visible, .nds-select-trigger:focus-visible",
+          "class": ".nds-select-trigger:focus-visible",
           "part": "Anel de foco por teclado no campo"
         },
         "destructive": {
-          "class": ".nds-select[aria-invalid=\"true\"], .nds-select-trigger[aria-invalid=\"true\"]",
+          "class": ".nds-select-trigger[aria-invalid=\"true\"]",
           "part": "Borda e anel em validação falha"
         },
         "mutedForeground": {
@@ -742,7 +742,7 @@
         "class": "Class",
         "part": "Application",
         "input": {
-          "class": ".nds-select, .nds-select-trigger",
+          "class": ".nds-select-trigger",
           "part": "Closed field border"
         },
         "popover": {
@@ -762,11 +762,11 @@
           "part": "Highlighted option text"
         },
         "ring": {
-          "class": ".nds-select:focus-visible, .nds-select-trigger:focus-visible",
+          "class": ".nds-select-trigger:focus-visible",
           "part": "Keyboard focus ring on the field"
         },
         "destructive": {
-          "class": ".nds-select[aria-invalid=\"true\"], .nds-select-trigger[aria-invalid=\"true\"]",
+          "class": ".nds-select-trigger[aria-invalid=\"true\"]",
           "part": "Border and ring on failed validation"
         },
         "mutedForeground": {
@@ -1213,7 +1213,7 @@
         "class": "Clase",
         "part": "Aplicación",
         "input": {
-          "class": ".nds-select, .nds-select-trigger",
+          "class": ".nds-select-trigger",
           "part": "Borde del campo cerrado"
         },
         "popover": {
@@ -1233,11 +1233,11 @@
           "part": "Texto de la opción destacada"
         },
         "ring": {
-          "class": ".nds-select:focus-visible, .nds-select-trigger:focus-visible",
+          "class": ".nds-select-trigger:focus-visible",
           "part": "Anillo de foco por teclado en el campo"
         },
         "destructive": {
-          "class": ".nds-select[aria-invalid=\"true\"], .nds-select-trigger[aria-invalid=\"true\"]",
+          "class": ".nds-select-trigger[aria-invalid=\"true\"]",
           "part": "Borde y anillo en validación fallida"
         },
         "mutedForeground": {

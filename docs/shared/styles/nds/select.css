@@ -1,89 +1,15 @@
 /*
- * ─── nds-select ─────────────────────────────────────────────────────────────
- * <select> nativo estilizado com aparência consistente. Sem altura fixa
- * (WCAG 1.4.4) — usa padding-block + line-height.
- *
- *   <select class="nds-select">
- *     <option value="">Selecione…</option>
- *     <option value="a">Opção A</option>
- *   </select>
- *
- * Tokens: --input (border), --background, --foreground, --muted-foreground,
- *         --ring, --destructive, --radius, --spacing-*
- */
-
-.nds-select {
-  display: block;
-  width: 100%;
-
-  padding-block: var(--spacing-2);                /* 8px */
-  padding-inline: var(--spacing-3);      /* 12px */
-  padding-inline-end: var(--spacing-8);           /* 32px — espaço pro chevron */
-
-  font-family: inherit;
-  font-size: var(--text-control);                            /* 14px */
-  line-height: 1.5;
-  color: hsl(var(--foreground));
-
-  background-color: hsl(var(--background));
-  border: 1px solid hsl(var(--input, var(--border)));
-  border-radius: var(--radius);
-
-  /* Chevron SVG inline (cor controlada via stroke=currentColor) */
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right var(--spacing-2-5) center;
-  background-size: 1rem;
-
-  /* Esconde o chevron padrão do browser */
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  cursor: pointer;
-  outline: 0;
-  transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
-}
-
-/* Anel opaco no hover — `--ring / 0.4` compõe em ~1.7:1 e ficaria ABAIXO do
- * repouso (3.2:1) depois que --input escureceu. Ver nota em input.css. */
-.nds-select:hover:not(:disabled):not([aria-invalid="true"]) {
-  border-color: hsl(var(--ring));
-}
-
-.nds-select:focus-visible {
-  border-color: hsl(var(--ring));
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.3);
-}
-
-.nds-select:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background-color: hsl(var(--muted) / 0.3);
-}
-
-.nds-select[aria-invalid="true"] {
-  border-color: hsl(var(--destructive));
-}
-
-.nds-select[aria-invalid="true"]:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--destructive) / 0.3);
-}
-
-/* Opções do select — limitado pelo browser, mas algumas propriedades funcionam */
-.nds-select > option {
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-}
-
-.nds-select > option:disabled {
-  color: hsl(var(--muted-foreground));
-}
-
-/*
  * ─── nds-native-select ──────────────────────────────────────────────────────
- * Wrapper para <select> nativo com ícone próprio (em vez do chevron de
- * background do .nds-select). Usado pelos seletores de mês/ano e helpers.
+ * Wrapper para <select> nativo com ícone próprio, desenhado ao lado do campo em
+ * vez de vir como imagem de fundo. Usado pelos seletores de mês/ano e helpers.
+ *
+ * O campo de escolha do sistema é o COMPOSTO (bloco no fim desta folha):
+ * gatilho + lista em portal, com listbox próprio. Houve aqui um bloco
+ * `.nds-select` que estilizava um `<select>` nativo de página inteira; ele
+ * perdeu o último consumidor quando as cinco stacks passaram a montar o
+ * composto, e saiu. Quem precisa de `<select>` nativo hoje traz classe própria
+ * — `.nds-calendar-select`, `.nds-data-table-filter-select`,
+ * `.nds-data-table-page-size-select` — ou este wrapper.
  */
 
 .nds-native-select {

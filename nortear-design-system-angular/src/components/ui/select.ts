@@ -43,10 +43,10 @@ import { ChevronDown, ChevronUp, Check } from 'lucide';
 // `formControlName` e de validação.
 //
 // Visual: bloco "composite" de docs/shared/styles/nds/select.css
-// (`.nds-select-trigger`, `.nds-select-content`, `.nds-select-item`, …), o mesmo
-// que React, Vue e Svelte consomem. O bloco `.nds-select` do topo da folha é o
-// do Vanilla, que estiliza um `<select>` nativo; stacks com lib headless
-// desenham o listbox à mão e é esse markup que o bloco composto descreve.
+// (`.nds-select-trigger`, `.nds-select-content`, `.nds-select-item`, …) — o
+// único bloco de campo de escolha da folha compartilhada, e o que descreve este
+// markup. Não existe classe para um `<select>` nativo de página: quem precisa de
+// um traz classe própria (`.nds-calendar-select` e as da tabela de dados).
 //
 // ─── O que o primitivo entrega ────────────────────────────────────────────────
 //

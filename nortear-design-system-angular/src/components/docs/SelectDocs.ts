@@ -1019,20 +1019,24 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    // A coluna do meio mostra a classe `.nds-*` real, não a classe utilitária
-    // que o conteúdo compartilhado guarda — é o que existe no CSS deste sistema.
+    // A coluna do meio vem do conteúdo compartilhado, como as outras duas. Ela
+    // já guarda o seletor `.nds-*` com o estado que carrega o token
+    // (`:focus-visible`, `[aria-invalid]`, `[data-highlighted]`); a lista cravada
+    // aqui era herança de quando o conteúdo guardava classe utilitária, e desde
+    // então dizia menos do que a folha (perdia o estado) e não acompanhava
+    // correção nenhuma feita no compartilhado.
     return [
-      { token: '--input',              k: 'input',             classe: '.nds-select-trigger' },
-      { token: '--ring',               k: 'ring',              classe: '.nds-select-trigger' },
-      { token: '--destructive',        k: 'destructive',       classe: '.nds-select-trigger' },
-      { token: '--popover',            k: 'popover',           classe: '.nds-select-content' },
-      { token: '--popover-foreground', k: 'popoverForeground', classe: '.nds-select-content' },
-      { token: '--accent',             k: 'accent',            classe: '.nds-select-item'    },
-      { token: '--accent-foreground',  k: 'accentForeground',  classe: '.nds-select-item'    },
-      { token: '--muted-foreground',   k: 'mutedForeground',   classe: '.nds-select-label'   },
-    ].map(({ token, k, classe }) => ({
+      { token: '--input',              k: 'input'             },
+      { token: '--ring',               k: 'ring'              },
+      { token: '--destructive',        k: 'destructive'       },
+      { token: '--popover',            k: 'popover'           },
+      { token: '--popover-foreground', k: 'popoverForeground' },
+      { token: '--accent',             k: 'accent'            },
+      { token: '--accent-foreground',  k: 'accentForeground'  },
+      { token: '--muted-foreground',   k: 'mutedForeground'   },
+    ].map(({ token, k }) => ({
       token,
-      value: classe,
+      value: toPlainText(t(`tokens.table.${k}.class`)),
       description: toPlainText(t(`tokens.table.${k}.part`)),
     }));
   });
