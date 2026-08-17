@@ -221,3 +221,217 @@ export function contrasteNosDoisTemas(raiz: HTMLElement, minimo = 4.5): FalhaDeC
 export function descreverFalhas(fs: FalhaDeContraste[]): string {
   return fs.map((f) => `  · ${f.variante} — ${f.parte} em ${f.contraste}:1`).join('\n');
 }
+
+// ─── Sonda: os três temas de marca, não só claro × escuro ────────────────────
+//
+// `contrasteNosDoisTemas` mede o tema VIGENTE em claro e escuro — e o vigente é
+// sempre o `default`, porque é o que a toolbar entrega ao test-runner. Warm e
+// Cold re-declaram `--destructive`, `--success`, `--warning` e `--info` com
+// outros matizes, então cada um é um par de cores diferente sobre um fundo
+// diferente. Seis combinações, não duas.
+//
+// A varredura por tema vem de `cor.ts` (`porTema`) para não existir um segundo
+// colhedor de tema neste repositório: é ele que sabe que `.dark.tema-x` exige as
+// duas classes NO MESMO elemento.
+
+import { TEMAS, MODOS } from './cor';
+
+/**
+ * Roda `fn` uma vez por tema de marca e modo, trocando a classe NO
+ * `documentElement`.
+ *
+ * O `porTema` do `cor.ts` estampa a classe na raiz da story, e para medir a
+ * BORDA de um campo isso basta. Aqui não basta, e a primeira versão desta sonda
+ * caiu no buraco: o fundo do alert tem alfa, então a cor que se enxerga depende
+ * de quem pinta por baixo — e quem pinta é o `body`, com
+ * `background-color: hsl(var(--background))`. Com a classe só na raiz da story,
+ * o `body` continuava no claro e TODA variante translúcida era medida sobre
+ * branco no tema escuro: o `warning` acusava 1.01:1, um defeito que não existe.
+ *
+ * Estampando no `documentElement`, o `body` repinta junto e a medida é a do
+ * produto. As classes que não são de tema (densidade, fonte, escala) são
+ * preservadas; a original volta no `finally`, senão a story seguinte e a foto
+ * do Chromatic herdam o tema da última iteração.
+ */
+export function porTemaNoDocumento<T>(
+  doc: Document,
+  fn: (tema: (typeof TEMAS)[number], modo: (typeof MODOS)[number]) => T,
+): T[] {
+  const html = doc.documentElement;
+  const original = html.className;
+  const preservadas = Array.from(html.classList).filter(
+    (c) => !c.startsWith('tema-') && c !== 'dark',
+  );
+  const saida: T[] = [];
+  try {
+    for (const tema of TEMAS) {
+      for (const modo of MODOS) {
+        html.className = [...preservadas, `tema-${tema}`, ...(modo === 'escuro' ? ['dark'] : [])].join(' ');
+        void html.offsetHeight;
+        saida.push(fn(tema, modo));
+      }
+    }
+  } finally {
+    html.className = original;
+    void html.offsetHeight;
+  }
+  return saida;
+}
+
+/**
+ * As camadas de fundo entre o elemento e a primeira superfície opaca, com o
+ * elemento que pinta cada uma.
+ *
+ * Serve para responder "contra o que este texto está sendo medido?" — pergunta
+ * que decide se um contraste baixo é defeito de paleta ou artefato de harness.
+ */
+export function camadasDeFundo(el: HTMLElement): string[] {
+  const camadas: string[] = [];
+  let atual: HTMLElement | null = el;
+  while (atual) {
+    const cor = getComputedStyle(atual).backgroundColor;
+    const quem =
+      atual.tagName.toLowerCase() +
+      (atual.id ? `#${atual.id}` : '') +
+      (typeof atual.className === 'string' && atual.className
+        ? `.${atual.className.trim().split(/\s+/).join('.')}`
+        : '');
+    if (cor !== 'rgba(0, 0, 0, 0)') camadas.push(`${quem} → ${cor}`);
+    const [, , , alfa = 1] = (cor.match(/-?[\d.]+/g) ?? []).map(Number);
+    if (cor !== 'rgba(0, 0, 0, 0)' && alfa >= 1) break;
+    atual = atual.parentElement;
+  }
+  return camadas;
+}
+
+export interface MedidaDeVariante {
+  tema: string;
+  modo: 'claro' | 'escuro';
+  variante: string;
+  fundo: string;
+  /** `null` quando o elemento não existe — isso É o achado, não falha da sonda. */
+  titulo: MedidaDeTexto | null;
+  descricao: MedidaDeTexto | null;
+  icone: MedidaDeTexto | null;
+}
+
+/**
+ * Contraste de todos os alerts da tela nos TRÊS temas de marca e nos DOIS modos.
+ *
+ * Devolve a tabela inteira, não só as falhas: resultado negativo também é
+ * resultado, e a linha que passa com folga é o que prova que a regra do
+ * contêiner colorido está sendo cumprida.
+ */
+export function contrastePorTema(raiz: HTMLElement): MedidaDeVariante[] {
+  return porTemaNoDocumento(raiz.ownerDocument, (tema, modo) =>
+    Array.from(raiz.querySelectorAll<HTMLElement>('.nds-alert')).map((alerta): MedidaDeVariante => {
+      const fundo = fundoEfetivo(alerta);
+      const icone = alerta.querySelector<HTMLElement>(':scope > svg:not(.nds-icon)')
+        ?? alerta.querySelector<HTMLElement>(':scope > svg');
+      return {
+        tema,
+        modo,
+        variante: varianteDe(alerta),
+        fundo,
+        titulo: medirTexto(alerta.querySelector('.nds-alert-title'), fundo),
+        descricao: medirTexto(alerta.querySelector('.nds-alert-description'), fundo),
+        icone: medirTexto(icone, fundo),
+      };
+    }),
+  ).flat();
+}
+
+/** Uma linha por medida — a tabela inteira, para o diff campo a campo. */
+export function resumirPorTema(medidas: MedidaDeVariante[]): string[] {
+  const n = (m: MedidaDeTexto | null) => (m ? String(m.contraste) : 'null');
+  return medidas.map(
+    (m) =>
+      `${m.variante}|${m.tema}/${m.modo}|fundo=${m.fundo}|titulo=${n(m.titulo)}|texto=${n(m.descricao)}|icone=${n(m.icone)}`,
+  );
+}
+
+/** Só as linhas que reprovam o mínimo, já legíveis. */
+export function reprovasPorTema(medidas: MedidaDeVariante[], minimo = 4.5): string[] {
+  const saida: string[] = [];
+  for (const m of medidas) {
+    const rotulo = `${m.variante} · ${m.tema}/${m.modo}`;
+    if (m.titulo && m.titulo.contraste < minimo) {
+      saida.push(`${rotulo} — título ${m.titulo.contraste}:1 (${m.titulo.cor} sobre ${m.fundo})`);
+    }
+    if (m.descricao && m.descricao.contraste < minimo) {
+      saida.push(`${rotulo} — texto ${m.descricao.contraste}:1 (${m.descricao.cor} sobre ${m.fundo})`);
+    }
+    if (!m.titulo) saida.push(`${rotulo} — título AUSENTE (.nds-alert-title não casou)`);
+    if (!m.descricao) saida.push(`${rotulo} — texto AUSENTE (.nds-alert-description não casou)`);
+  }
+  return saida;
+}
+
+// ─── Sonda: semântica de anúncio e ordem de leitura ──────────────────────────
+
+export interface SemanticaDoAlert {
+  variante: string;
+  /** Tag da raiz — o contrato do design system é `div`. */
+  tag: string;
+  papel: string | null;
+  ariaLive: string | null;
+  ariaAtomic: string | null;
+  /** `null` quando não há `<svg>` filho direto. */
+  icone: { ariaHidden: string | null; role: string | null; focusable: string | null } | null;
+  /** Tag do título — `null` quando `.nds-alert-title` não casou. */
+  tituloTag: string | null;
+  descricaoTag: string | null;
+  /** O que o leitor de tela percorre, na ordem do DOM. */
+  ordemDeLeitura: string[];
+  dismiss: { tag: string; rotulo: string | null; ehUltimoFilho: boolean; tabIndex: number } | null;
+}
+
+/**
+ * Texto que o leitor de tela realmente percorre, na ordem do DOM.
+ *
+ * Filho com `aria-hidden="true"` sai da árvore de acessibilidade e não entra na
+ * lista — é assim que se vê se o ícone está mudo e se o botão de fechar é
+ * anunciado antes ou depois da mensagem.
+ */
+function ordemDeLeitura(alerta: HTMLElement): string[] {
+  return Array.from(alerta.children)
+    .filter((f) => f.getAttribute('aria-hidden') !== 'true')
+    .map((f) => {
+      const rotulo = f.getAttribute('aria-label');
+      const texto = (f.textContent ?? '').trim().replace(/\s+/g, ' ');
+      return rotulo ? `[${rotulo}]` : texto;
+    })
+    .filter((t) => t.length > 0);
+}
+
+export function medirSemantica(raiz: HTMLElement): SemanticaDoAlert[] {
+  return Array.from(raiz.querySelectorAll<HTMLElement>('.nds-alert')).map((alerta) => {
+    const svg = alerta.querySelector<SVGElement>(':scope > svg');
+    const fechar = alerta.querySelector<HTMLElement>('[data-slot="alert-dismiss"]');
+    return {
+      variante: varianteDe(alerta),
+      tag: alerta.tagName.toLowerCase(),
+      papel: alerta.getAttribute('role'),
+      ariaLive: alerta.getAttribute('aria-live'),
+      ariaAtomic: alerta.getAttribute('aria-atomic'),
+      icone: svg
+        ? {
+            ariaHidden: svg.getAttribute('aria-hidden'),
+            role: svg.getAttribute('role'),
+            focusable: svg.getAttribute('focusable'),
+          }
+        : null,
+      tituloTag: alerta.querySelector('.nds-alert-title')?.tagName.toLowerCase() ?? null,
+      descricaoTag: alerta.querySelector('.nds-alert-description')?.tagName.toLowerCase() ?? null,
+      ordemDeLeitura: ordemDeLeitura(alerta),
+      dismiss: fechar
+        ? {
+            tag: fechar.tagName.toLowerCase(),
+            rotulo: fechar.getAttribute('aria-label'),
+            ehUltimoFilho: alerta.lastElementChild === fechar,
+            tabIndex: fechar.tabIndex,
+          }
+        : null,
+    };
+  });
+}

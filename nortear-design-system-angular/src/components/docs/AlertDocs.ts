@@ -756,6 +756,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
       { token: '--destructive',   valor: 'hsl(var(--destructive))',           k: 'destructiveText'  },
       { token: '--success',       valor: '.nds-alert-success',                k: 'success'          },
       { token: '--warning',       valor: '.nds-alert-warning',                k: 'warning'          },
+      { token: '--info',          valor: '.nds-alert-info',                   k: 'info'             },
       { token: '--radius-alert',  valor: 'var(--radius-alert)',               k: 'radius'           },
       { token: '--alert-bg',      valor: 'hsl(var(--muted))',                 k: 'alertBg'          },
       { token: '--alert-fg',      valor: 'hsl(var(--card-foreground))',       k: 'alertFg'          },

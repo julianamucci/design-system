@@ -24,7 +24,7 @@ export const Complete: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+        <Info class="nds-icon" aria-hidden="true" />
         <AlertTitle>Atenção</AlertTitle>
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
@@ -51,7 +51,7 @@ export const WithoutTitle: Story = {
     setup() { return {}; },
     template: `
       <Alert>
-        <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+        <Info class="nds-icon" aria-hidden="true" />
         <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
       </Alert>
     `,
@@ -109,12 +109,12 @@ export const WithoutAnnouncement: Story = {
     template: `
       <div class="nds-stack" data-spacing="md">
         <Alert role="note" data-testid="alert-nota">
-          <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+          <Info class="nds-icon" aria-hidden="true" />
           <AlertTitle>Nota de implementação</AlertTitle>
           <AlertDescription>Conteúdo estático, já presente no carregamento: o leitor de tela lê na ordem da página, sem interromper.</AlertDescription>
         </Alert>
         <Alert data-testid="alert-padrao">
-          <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+          <Info class="nds-icon" aria-hidden="true" />
           <AlertTitle>Falha ao salvar</AlertTitle>
           <AlertDescription>Sem role explícito o alert segue como live region assertiva.</AlertDescription>
         </Alert>
@@ -150,7 +150,7 @@ export const DynamicInsertion: Story = {
     template: `
       <div aria-live="polite">
         <Alert>
-          <Info class="" style="height: 1rem; width: 1rem" aria-hidden="true" />
+          <Info class="nds-icon" aria-hidden="true" />
           <AlertTitle>Operação concluída</AlertTitle>
           <AlertDescription>O relatório foi gerado com sucesso.</AlertDescription>
         </Alert>

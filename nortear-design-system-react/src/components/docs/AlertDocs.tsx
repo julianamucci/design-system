@@ -745,17 +745,19 @@ interface AlertDescriptionProps extends React.HTMLAttributes<HTMLParagraphElemen
               description: tContent("tokens.table.part"),
             }}
             items={[
-              { token: "--background", value: "hsl(var(--background))", description: tContent("tokens.table.background") },
+              { token: "--muted", value: "hsl(var(--muted))", description: tContent("tokens.table.background") },
               { token: "--foreground", value: "hsl(var(--foreground))", description: tContent("tokens.table.foreground") },
               { token: "--border", value: "hsl(var(--border))", description: tContent("tokens.table.border") },
               { token: "--destructive", value: "hsl(var(--destructive) / 0.3)", description: tContent("tokens.table.destructiveBorder") },
               { token: "--destructive", value: "hsl(var(--destructive))", description: tContent("tokens.table.destructiveText") },
               { token: "--success", value: ".nds-alert-success", description: tContent("tokens.table.success") },
               { token: "--warning", value: ".nds-alert-warning", description: tContent("tokens.table.warning") },
+              { token: "--info", value: ".nds-alert-info", description: tContent("tokens.table.info") },
+              { token: "--radius-alert", value: "var(--radius-alert)", description: tContent("tokens.table.radius") },
               { token: "--alert-bg", value: "hsl(var(--muted))", description: tContent("tokens.table.alertBg") },
               { token: "--alert-fg", value: "hsl(var(--card-foreground))", description: tContent("tokens.table.alertFg") },
               { token: "--alert-border", value: "hsl(var(--border))", description: tContent("tokens.table.alertBorder") },
-              { token: "--radius", value: "var(--radius-alert, 0.625rem)", description: tContent("tokens.table.radius") },
+              { token: "--alert-glow", value: "hsl(var(--border))", description: tContent("tokens.table.alertGlow") },
             ]}
             customizationTitle={tContent("tokens.customizationTitle")}
             customizationCode={tContent("tokens.customizationCode")}

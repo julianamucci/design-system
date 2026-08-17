@@ -6,7 +6,7 @@ import { within, expect, fn, userEvent, waitFor } from "storybook/test";
 // alias o ícone e o export colidem no mesmo escopo de módulo.
 import { AlertCircle, CheckCircle2, Info as InfoIcon, TriangleAlert } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
-import { contrasteNosDoisTemas, descreverFalhas } from "@shared/testing/alert-probe";
+import { contrastePorTema, reprovasPorTema } from "@shared/testing/alert-probe";
 
 const meta = {
   title: "UI/Alert/Variants",
@@ -284,8 +284,12 @@ export const DismissibleByKeyboard: Story = {
  *
  * As stories por variante conferem a classe e a cor; nenhuma perguntava se o
  * texto é legível sobre o fundo que a variante pinta. É a pergunta que importa
- * num componente cuja função é chamar atenção — e a que estava sem resposta no
- * tema escuro.
+ * num componente cuja função é chamar atenção.
+ *
+ * A varredura é dos TRÊS temas de marca nos DOIS modos, não só claro × escuro
+ * do tema vigente: cada tema redeclara as quatro cores de feedback, e foi num
+ * deles que o título do `info` estava em 3.34:1 enquanto os outros dois
+ * passavam com folga.
  */
 export const Contrast: Story = {
   parameters: {
@@ -293,7 +297,7 @@ export const Contrast: Story = {
     docs: {
       description: {
         story:
-          "Título e texto de cada variante medidos contra o fundo composto, no tema claro e no escuro. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.",
+          "Título e texto de cada variante medidos contra o fundo composto, nos três temas de marca e nos dois modos. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.",
       },
     },
   },
@@ -324,13 +328,11 @@ export const Contrast: Story = {
   play: async ({ canvasElement }) => {
     // Contraste é aritmética, não olhômetro: a play calcula a razão entre a cor
     // do texto e o fundo COMPOSTO (o bg do alert tem alfa, então a cor declarada
-    // não é a que se vê). O tema escuro entra junto porque é metade do produto e
-    // não era medido em lugar nenhum — foi lá que o título do info estava em
-    // 3.19:1, enquanto no claro marcava 6.16.
-    const problemas = contrasteNosDoisTemas(canvasElement);
-    await expect(
-      problemas,
-      problemas.length ? `\n${descreverFalhas(problemas)}\n` : "",
-    ).toEqual([]);
+    // não é a que se vê). A classe de tema vai no `documentElement`, e não na
+    // raiz da story, porque quem pinta por baixo do alert translúcido é o
+    // `body` — com a classe só na raiz ele ficava no claro e toda variante
+    // acusava ~1:1 no escuro, defeito que não existe.
+    const reprovas = reprovasPorTema(contrastePorTema(canvasElement));
+    await expect(reprovas, reprovas.length ? `\n${reprovas.join("\n")}\n` : "").toEqual([]);
   },
 };

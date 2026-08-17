@@ -238,6 +238,7 @@
         "destructiveText": "Texto e ícone (variante destructive)",
         "success": "Fundo + texto + borda (variante success do tema)",
         "warning": "Fundo + texto + borda (variante warning do tema)",
+          "info": "Fundo + texto + borda (variante info do tema)",
         "radius": "Border radius do container",
         "alertBg": "Fundo do container — var interna, segue o tema pela variante",
         "alertFg": "Texto e ícone — var interna",
@@ -318,7 +319,7 @@
         "description": "O que deve acontecer para cada configuração do Alert.",
         "item1": {
           "action": "Renderizar variante default",
-          "result": "Container usa --background, borda padrão e texto em --foreground",
+          "result": "Container usa --muted, borda padrão e texto em --foreground",
           "priority": "high"
         },
         "item2": {
@@ -368,7 +369,7 @@
         "item3": {
           "criterion": "Contraste mínimo 4.5:1 em todas as variantes",
           "level": "AA",
-          "how": "Story Variantes/Contraste — razão calculada entre texto e fundo composto, nos temas claro e escuro"
+          "how": "Story Variantes/Contraste — razão calculada entre texto e fundo composto, nos três temas de marca e nos dois modos"
         },
         "item4": {
           "criterion": "Sem violações axe-core no estado padrão",
@@ -661,6 +662,7 @@
         "destructiveText": "Text and icon (destructive variant)",
         "success": "Background + text + border (theme's success variant)",
         "warning": "Background + text + border (theme's warning variant)",
+          "info": "Background + text + border (theme's info variant)",
         "radius": "Container border radius",
         "alertBg": "Container background — internal var, follows the theme per variant",
         "alertFg": "Text and icon — internal var",
@@ -741,7 +743,7 @@
         "description": "What should happen for each Alert configuration.",
         "item1": {
           "action": "Render default variant",
-          "result": "Container uses --background, default border, and --foreground text",
+          "result": "Container uses --muted, default border, and --foreground text",
           "priority": "high"
         },
         "item2": {
@@ -791,7 +793,7 @@
         "item3": {
           "criterion": "Minimum contrast 4.5:1 across all variants",
           "level": "AA",
-          "how": "Variants/Contrast story — ratio computed between text and composited background, in light and dark themes"
+          "how": "Variants/Contrast story — ratio computed between text and composited background, across the three brand themes and both modes"
         },
         "item4": {
           "criterion": "No axe-core violations in default state",
@@ -1084,6 +1086,7 @@
         "destructiveText": "Texto e ícono (variante destructive)",
         "success": "Fondo + texto + borde (variante success del tema)",
         "warning": "Fondo + texto + borde (variante warning del tema)",
+          "info": "Fondo + texto + borde (variante info del tema)",
         "radius": "Border radius del contenedor",
         "alertBg": "Fondo del contenedor — var interna, sigue el tema según la variante",
         "alertFg": "Texto e ícono — var interna",
@@ -1164,7 +1167,7 @@
         "description": "Lo que debe ocurrir para cada configuración del Alert.",
         "item1": {
           "action": "Renderizar variante default",
-          "result": "Contenedor usa --background, borde predeterminado y texto en --foreground",
+          "result": "Contenedor usa --muted, borde predeterminado y texto en --foreground",
           "priority": "high"
         },
         "item2": {
@@ -1214,7 +1217,7 @@
         "item3": {
           "criterion": "Contraste mínimo 4.5:1 en todas las variantes",
           "level": "AA",
-          "how": "Story Variantes/Contraste — razón calculada entre texto y fondo compuesto, en los temas claro y oscuro"
+          "how": "Story Variantes/Contraste — razón calculada entre texto y fondo compuesto, en los tres temas de marca y en los dos modos"
         },
         "item4": {
           "criterion": "Sin violaciones axe-core en estado predeterminado",

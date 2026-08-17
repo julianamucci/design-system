@@ -132,30 +132,49 @@
   --alert-fg: hsl(var(--warning));
   --alert-border: hsl(var(--warning) / 0.3);
 }
-/* Em warning, a cor âmbar não atinge 4.5:1 sobre bg-soft.
-   Título usa --foreground; o ícone (curto, 3:1) mantém --alert-fg. */
+/* info — azul no tema Default e no Cold, laranja no Warm */
+.nds-alert-info {
+  --alert-bg: hsl(var(--info) / 0.1);
+  --alert-fg: hsl(var(--info));
+  --alert-border: hsl(var(--info) / 0.3);
+}
+
+/* ── Títulos que NÃO podem usar a cor semântica ──────────────────────────────
+ * O título é 14px semibold, que pela WCAG não é texto grande (precisaria de
+ * 18.66px em negrito): o limite dele é 4.5:1, não 3:1.
+ *
+ * `warning` e `info` reprovam esse limite, e a medida é dos TRÊS temas de marca
+ * nos dois modos — não só do Default, que era o único que alguém tinha medido:
+ *
+ *   warning · claro: 2.9:1 (default) — o âmbar nunca chegou perto
+ *   info    · warm/claro: 3.34:1     — o laranja do Warm sobre o próprio bg soft
+ *   info    · default/claro: 6.16 · cold/claro: 4.79 · escuros: 4.64 a 5.86
+ *
+ * O `info` passava no Default e no Cold e reprovava só no Warm. Um título cuja
+ * legibilidade depende do tema de marca escolhido é o mesmo defeito que a regra
+ * do contêiner colorido proíbe por variante — então os dois recebem
+ * `--foreground`, e a variante segue se distinguindo pelo fundo, pela borda e
+ * pelo ícone. `destructive` e `success` mantêm a cor semântica: o pior caso
+ * deles nas seis combinações é 4.84:1.
+ *
+ * Guardado pela story `Variants/Contrast` das cinco stacks, que varre os três
+ * temas nos dois modos. */
 .nds-alert-warning .nds-alert-title,
 .nds-alert-warning > h1,
 .nds-alert-warning > h2,
 .nds-alert-warning > h3,
 .nds-alert-warning > h4,
 .nds-alert-warning > h5,
-.nds-alert-warning > h6 {
+.nds-alert-warning > h6,
+.nds-alert-info .nds-alert-title,
+.nds-alert-info > h1,
+.nds-alert-info > h2,
+.nds-alert-info > h3,
+.nds-alert-info > h4,
+.nds-alert-info > h5,
+.nds-alert-info > h6 {
   color: hsl(var(--foreground));
 }
-
-/* info — azul com bg soft */
-.nds-alert-info {
-  --alert-bg: hsl(var(--info) / 0.1);
-  --alert-fg: hsl(var(--info));
-  --alert-border: hsl(var(--info) / 0.3);
-}
-/* O azul do info passa nos dois temas depois que --info subiu de 53% para 64%
- * no escuro: 6.16:1 no claro e 4.64:1 no escuro, sobre o próprio bg soft. Havia
- * aqui um override que forçava --foreground no escuro; ele existia porque o
- * token estava escuro demais, e o lugar do conserto era o tema, não a variante.
- * O título é 14px semibold, que NÃO é texto grande pela WCAG (precisaria de
- * 18.66px em negrito), então o limite dele é 4.5 e não 3. */
 
 /* ── Action (botão no canto superior direito) ─────────────────────────────── */
 .nds-alert-action {

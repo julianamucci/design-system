@@ -296,17 +296,19 @@ const alertTitlePropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() => [
-  { token: '--background',  value: 'bg-background',                                description: tContent('tokens.table.background')        },
-  { token: '--foreground',  value: 'text-foreground',                              description: tContent('tokens.table.foreground')        },
-  { token: '--border',      value: 'border',                                       description: tContent('tokens.table.border')            },
-  { token: '--destructive', value: 'border-destructive/50',                        description: tContent('tokens.table.destructiveBorder') },
-  { token: '--destructive', value: 'text-destructive',                             description: tContent('tokens.table.destructiveText')   },
-  { token: '--success',     value: 'bg-success/10 text-success border-success/30', description: tContent('tokens.table.success')           },
-  { token: '--warning',     value: 'bg-warning/10 text-warning border-warning/30', description: tContent('tokens.table.warning')           },
-  { token: '--alert-bg',     value: 'hsl(var(--muted))',                            description: tContent('tokens.table.alertBg')           },
-  { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',                 description: tContent('tokens.table.alertFg')           },
-  { token: '--alert-border', value: 'hsl(var(--border))',                          description: tContent('tokens.table.alertBorder')       },
-  { token: '--radius',      value: 'rounded-lg',                                   description: tContent('tokens.table.radius')            },
+  { token: '--muted',        value: 'hsl(var(--muted))',                description: tContent('tokens.table.background')        },
+  { token: '--foreground',   value: 'hsl(var(--foreground))',           description: tContent('tokens.table.foreground')        },
+  { token: '--border',       value: 'hsl(var(--border))',               description: tContent('tokens.table.border')            },
+  { token: '--destructive',  value: 'hsl(var(--destructive) / 0.3)',    description: tContent('tokens.table.destructiveBorder') },
+  { token: '--destructive',  value: 'hsl(var(--destructive))',          description: tContent('tokens.table.destructiveText')   },
+  { token: '--success',      value: '.nds-alert-success',               description: tContent('tokens.table.success')           },
+  { token: '--warning',      value: '.nds-alert-warning',               description: tContent('tokens.table.warning')           },
+  { token: '--info',         value: '.nds-alert-info',                  description: tContent('tokens.table.info')              },
+  { token: '--radius-alert', value: 'var(--radius-alert)',              description: tContent('tokens.table.radius')            },
+  { token: '--alert-bg',     value: 'hsl(var(--muted))',                description: tContent('tokens.table.alertBg')           },
+  { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',      description: tContent('tokens.table.alertFg')           },
+  { token: '--alert-border', value: 'hsl(var(--border))',               description: tContent('tokens.table.alertBorder')       },
+  { token: '--alert-glow',   value: 'hsl(var(--border))',               description: tContent('tokens.table.alertGlow')         },
 ]);
 
 const accessibilityItems = computed(() => [

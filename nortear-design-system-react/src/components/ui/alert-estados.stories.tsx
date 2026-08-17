@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 export const Complete: Story = {
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <Info aria-hidden="true" className="nds-icon" />
       <AlertTitle>Atenção</AlertTitle>
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
@@ -43,7 +43,7 @@ export const Complete: Story = {
 export const WithoutTitle: Story = {
   render: () => (
     <Alert>
-      <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+      <Info aria-hidden="true" className="nds-icon" />
       <AlertDescription>
         Suas alterações serão aplicadas na próxima sessão.
       </AlertDescription>
@@ -95,7 +95,7 @@ export const WithoutAnnouncement: Story = {
     <div className="nds-stack" data-spacing="sm">
       {/* Estático: não deve virar live region. */}
       <Alert role="note">
-        <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+        <Info aria-hidden="true" className="nds-icon" />
         <AlertTitle>Nota de implementação</AlertTitle>
         <AlertDescription>
           Conteúdo já presente no carregamento — o leitor de tela não é interrompido.
@@ -103,7 +103,7 @@ export const WithoutAnnouncement: Story = {
       </Alert>
       {/* Sem a prop, o default segue sendo a live region assertiva. */}
       <Alert>
-        <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+        <Info aria-hidden="true" className="nds-icon" />
         <AlertTitle>Sessão expirada</AlertTitle>
         <AlertDescription>
           Mensagem urgente que surge em tempo de execução.
@@ -132,7 +132,7 @@ export const DynamicInsertion: Story = {
   render: () => (
     <div aria-live="polite">
       <Alert>
-        <Info aria-hidden="true" className="" style={{ height: "1rem", width: "1rem" }} />
+        <Info aria-hidden="true" className="nds-icon" />
         <AlertTitle>Operação concluída</AlertTitle>
         <AlertDescription>
           O relatório foi gerado com sucesso.

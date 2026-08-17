@@ -558,17 +558,19 @@ interface AlertTitleProps {
           description: $tStore('tokens.table.part'),
         }}
         items={[
-          { token: '--background',  value: 'bg-background',                                description: $tStore('tokens.table.background')        },
-          { token: '--foreground',  value: 'text-foreground',                              description: $tStore('tokens.table.foreground')        },
-          { token: '--border',      value: 'border',                                       description: $tStore('tokens.table.border')            },
-          { token: '--destructive', value: 'border-destructive/50',                        description: $tStore('tokens.table.destructiveBorder') },
-          { token: '--destructive', value: 'text-destructive',                             description: $tStore('tokens.table.destructiveText')   },
-          { token: '--success',     value: 'bg-success/10 text-success border-success/30', description: $tStore('tokens.table.success')           },
-          { token: '--warning',     value: 'bg-warning/10 text-warning border-warning/30', description: $tStore('tokens.table.warning')           },
-          { token: '--alert-bg',     value: 'hsl(var(--muted))',                            description: $tStore('tokens.table.alertBg')           },
-          { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',                 description: $tStore('tokens.table.alertFg')           },
-          { token: '--alert-border', value: 'hsl(var(--border))',                          description: $tStore('tokens.table.alertBorder')       },
-          { token: '--radius',      value: 'rounded-lg',                                   description: $tStore('tokens.table.radius')            },
+          { token: '--muted',        value: 'hsl(var(--muted))',             description: $tStore('tokens.table.background')        },
+          { token: '--foreground',   value: 'hsl(var(--foreground))',        description: $tStore('tokens.table.foreground')        },
+          { token: '--border',       value: 'hsl(var(--border))',            description: $tStore('tokens.table.border')            },
+          { token: '--destructive',  value: 'hsl(var(--destructive) / 0.3)', description: $tStore('tokens.table.destructiveBorder') },
+          { token: '--destructive',  value: 'hsl(var(--destructive))',       description: $tStore('tokens.table.destructiveText')   },
+          { token: '--success',      value: '.nds-alert-success',            description: $tStore('tokens.table.success')           },
+          { token: '--warning',      value: '.nds-alert-warning',            description: $tStore('tokens.table.warning')           },
+          { token: '--info',         value: '.nds-alert-info',               description: $tStore('tokens.table.info')              },
+          { token: '--radius-alert', value: 'var(--radius-alert)',           description: $tStore('tokens.table.radius')            },
+          { token: '--alert-bg',     value: 'hsl(var(--muted))',             description: $tStore('tokens.table.alertBg')           },
+          { token: '--alert-fg',     value: 'hsl(var(--card-foreground))',   description: $tStore('tokens.table.alertFg')           },
+          { token: '--alert-border', value: 'hsl(var(--border))',            description: $tStore('tokens.table.alertBorder')       },
+          { token: '--alert-glow',   value: 'hsl(var(--border))',            description: $tStore('tokens.table.alertGlow')         },
         ]}
         customizationTitle={$tStore('tokens.customizationTitle')}
         customizationCode={$tStore('tokens.customizationCode')}
