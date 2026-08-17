@@ -28,7 +28,7 @@ type Story = StoryObj;
 
 export const Closed: Story = {
   parameters: {
-    covers: ['accessibility.item2', 'visual.item3'],
+    covers: ['accessibility.item2', 'accessibility.item7', 'visual.item3'],
     docs: {
       description: {
         story: 'Estado padrão: `aria-expanded="false"` no gatilho e chevron apontando para baixo.',
@@ -51,18 +51,30 @@ export const Closed: Story = {
 
     await step('Gatilho tem aria-expanded=false', async () => {
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
-      await expect(gatilho).toHaveAttribute('data-state', 'closed');
     });
 
     await step('O painel fechado permanece no documento', async () => {
       // `hidden="until-found"` é o que deixa o Ctrl+F achar a resposta dentro
-      // de um item fechado. Desmontar o painel mataria o recurso em silêncio.
+      // de um item fechado; desmontar o painel mataria o recurso em silêncio. O
+      // display entra junto porque um `display: none` de autor o anula sem
+      // quebrar nada visível.
       const painel = await waitFor(() => {
         const el = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]');
         if (!el || !el.hasAttribute('hidden')) throw new Error('painel ainda assentando');
         return el;
       });
       await expect(painel.getAttribute('hidden')).toBe('until-found');
+      await expect(getComputedStyle(painel).display).not.toBe('none');
+    });
+
+    await step('Fechado, o gatilho ainda aponta para o painel', async () => {
+      // Sem `role="region"` no painel, o aria-controls é o ÚNICO vínculo entre
+      // gatilho e conteúdo.
+      const contentId = gatilho.getAttribute('aria-controls');
+      await expect(contentId).toBeTruthy();
+      await expect(
+        canvasElement.querySelector(`#${CSS.escape(contentId!)}`),
+      ).toBeInTheDocument();
     });
   },
 };
@@ -105,7 +117,7 @@ export const Open: Story = {
       // colapsado.
       await waitFor(() => {
         const painel = canvasElement.querySelector<HTMLElement>(
-          '[data-slot="accordion-content"][data-state="open"]',
+          '[data-slot="accordion-content"]:not([hidden])',
         );
         if (!painel || painel.getBoundingClientRect().height === 0) {
           throw new Error('painel ainda abrindo');

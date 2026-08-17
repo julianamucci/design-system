@@ -31,7 +31,7 @@ export const Closed: Story = {
     </Accordion>
   ),
   parameters: {
-    covers: ['accessibility.item2', 'visual.item3'],
+    covers: ['accessibility.item2', 'accessibility.item7', 'visual.item3'],
     docs: {
       description: {
         story:
@@ -45,6 +45,31 @@ export const Closed: Story = {
 
     await step("Trigger tem aria-expanded=false", async () => {
       await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    });
+
+    await step("O painel fechado permanece no documento", async () => {
+      // `hidden="until-found"` é o que deixa o Ctrl+F achar a resposta dentro
+      // de um item fechado; desmontar o painel mataria o recurso em silêncio. O
+      // display entra junto porque um `display: none` de autor o anula sem
+      // quebrar nada visível.
+      const panel = await waitFor(() => {
+        const el = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]');
+        if (!el || !el.hasAttribute("hidden")) throw new Error("painel ainda assentando");
+        return el;
+      });
+      await expect(panel.getAttribute("hidden")).toBe("until-found");
+      await expect(getComputedStyle(panel).display).not.toBe("none");
+    });
+
+    await step("Fechado, o gatilho ainda aponta para o painel", async () => {
+      // Sem `role="region"` no painel, o aria-controls é o ÚNICO vínculo entre
+      // gatilho e conteúdo — e o base-ui o apagava com o item fechado, deixando
+      // o par sem relação nenhuma. Ver o contexto de ids em accordion.tsx.
+      const contentId = trigger.getAttribute("aria-controls");
+      await expect(contentId).toBeTruthy();
+      await expect(
+        canvasElement.querySelector(`#${CSS.escape(contentId!)}`),
+      ).toBeInTheDocument();
     });
   },
 };
@@ -78,6 +103,21 @@ export const Open: Story = {
         () => expect(trigger).toHaveAttribute("aria-expanded", "true"),
         { timeout: 500 }
       );
+    });
+
+    await step("O painel aberto tem altura de verdade", async () => {
+      // aria-expanded sozinho não prova que o painel apareceu: a altura vem da
+      // animação de grid (0fr → 1fr), e já houve regressão com o gatilho
+      // anunciando aberto e o painel colapsado. O waitFor gateia na altura
+      // computada, não no relógio.
+      await waitFor(() => {
+        const panel = canvasElement.querySelector<HTMLElement>(
+          '[data-slot="accordion-content"]:not([hidden])',
+        );
+        if (!panel || panel.getBoundingClientRect().height === 0) {
+          throw new Error("painel ainda abrindo");
+        }
+      });
     });
   },
 };

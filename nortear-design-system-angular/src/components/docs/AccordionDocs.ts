@@ -1121,7 +1121,7 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-      items: [1, 2, 3, 4, 5, 6].map((i) => ({
+      items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
         criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
         level: t(`testes.accessibility.item${i}.level`),
         how: t(`testes.accessibility.item${i}.how`),

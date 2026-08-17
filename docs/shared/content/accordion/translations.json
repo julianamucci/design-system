@@ -528,6 +528,11 @@
           "criterion": "Setas movem o foco entre triggers, com loop nas pontas",
           "level": "AA",
           "how": "userEvent.keyboard('{ArrowDown}') / ('{ArrowUp}') + toHaveFocus()"
+        },
+        "item7": {
+          "criterion": "O gatilho aponta para o painel por aria-controls, também com o item fechado, e o painel fechado permanece no documento",
+          "level": "A",
+          "how": "toHaveAttribute('aria-controls') + querySelector do id + hidden=\"until-found\""
         }
       },
       "visual": {
@@ -1106,6 +1111,11 @@
           "criterion": "Arrow keys move focus between triggers, looping at both ends",
           "level": "AA",
           "how": "userEvent.keyboard('{ArrowDown}') / ('{ArrowUp}') + toHaveFocus()"
+        },
+        "item7": {
+          "criterion": "The trigger points to the panel through aria-controls, including while the item is closed, and the closed panel stays in the document",
+          "level": "A",
+          "how": "toHaveAttribute('aria-controls') + querySelector by id + hidden=\"until-found\""
         }
       },
       "visual": {
@@ -1684,6 +1694,11 @@
           "criterion": "Las flechas mueven el foco entre triggers, con bucle en los extremos",
           "level": "AA",
           "how": "userEvent.keyboard('{ArrowDown}') / ('{ArrowUp}') + toHaveFocus()"
+        },
+        "item7": {
+          "criterion": "El trigger apunta al panel mediante aria-controls, también con el ítem cerrado, y el panel cerrado permanece en el documento",
+          "level": "A",
+          "how": "toHaveAttribute('aria-controls') + querySelector por id + hidden=\"until-found\""
         }
       },
       "visual": {

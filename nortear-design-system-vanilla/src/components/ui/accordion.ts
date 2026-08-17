@@ -188,6 +188,12 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     triggerEl.dataset.value = item.value;
     triggerEl.setAttribute('aria-controls', contentId);
     triggerEl.setAttribute('aria-expanded', 'false');
+    // `data-state` já no nascimento, como o painel logo abaixo. Sem isto o
+    // gatilho fechado nascia SEM o atributo e só o ganhava no primeiro toggle:
+    // o docblock deste arquivo o promete nas duas peças, o CSS seleciona por
+    // ele e as outras quatro stacks o emitem desde a montagem. Medido pela
+    // sonda — era a única stack com o campo nulo no cenário fechado.
+    triggerEl.dataset.state = 'closed';
     triggerEl.className = 'nds-accordion-trigger';
     if (item.disabled) triggerEl.disabled = true;
 

@@ -1,7 +1,31 @@
+import * as React from "react"
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion"
 
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon } from "lucide-react"
+
+/**
+ * Ponte de id entre Item, Trigger e Content.
+ *
+ * O `@base-ui/react` emite `aria-controls` só enquanto o painel está ABERTO
+ * (`'aria-controls': open ? panelId : undefined`, em AccordionTrigger.js) —
+ * regra que faz sentido quando o painel fechado é desmontado, e não faz aqui:
+ * este design system mantém o painel montado com `hidden="until-found"`, então
+ * o alvo existe o tempo todo e o gatilho fechado ficava sem NENHUMA relação com
+ * ele. Medido pela sonda: `aria-controls` presente aberto, ausente fechado —
+ * divergente do Vanilla, que é a referência e o emite sempre.
+ *
+ * Pesa mais aqui do que na maioria dos disclosures porque o painel também não
+ * tem `role="region"` (ver AccordionContent): sem `aria-controls` não sobra
+ * nenhum vínculo entre gatilho e conteúdo.
+ *
+ * O id sai do Item e desce para os dois lados — mesma solução do stack Svelte
+ * (accordion-a11y.ts). Passar `id` ao Panel também registra o valor no contexto
+ * do base-ui (`setPanelIdState`), então as duas pontas continuam coerentes.
+ */
+const AccordionItemIdsContext = React.createContext<{ contentId: string } | null>(
+  null,
+)
 
 const NAV_KEYS = ["ArrowDown", "ArrowUp", "Home", "End"] as const
 
@@ -70,12 +94,16 @@ function Accordion({ className, onKeyDown, ...props }: AccordionPrimitive.Root.P
 }
 
 function AccordionItem({ className, ...props }: AccordionPrimitive.Item.Props) {
+  const uid = React.useId()
+  const ids = React.useMemo(() => ({ contentId: `${uid}-content` }), [uid])
   return (
-    <AccordionPrimitive.Item
-      data-slot="accordion-item"
-      className={cn("nds-accordion-item", className)}
-      {...props}
-    />
+    <AccordionItemIdsContext.Provider value={ids}>
+      <AccordionPrimitive.Item
+        data-slot="accordion-item"
+        className={cn("nds-accordion-item", className)}
+        {...props}
+      />
+    </AccordionItemIdsContext.Provider>
   )
 }
 
@@ -84,11 +112,16 @@ function AccordionTrigger({
   children,
   ...props
 }: AccordionPrimitive.Trigger.Props) {
+  const ids = React.useContext(AccordionItemIdsContext)
   return (
     <AccordionPrimitive.Header className="nds-accordion-header">
       <AccordionPrimitive.Trigger
         data-slot="accordion-trigger"
         className={cn("nds-accordion-trigger", className)}
+        // Depois do spread do base-ui e antes do do consumidor: o mergeProps do
+        // base-ui deixa o mais à direita vencer, então isto repõe o atributo que
+        // ele apaga com o item fechado, sem tirar a palavra final de quem usa.
+        aria-controls={ids?.contentId}
         {...props}
       >
         {/* O rótulo vive num <span> próprio: o sublinhado de hover é
@@ -107,6 +140,7 @@ function AccordionContent({
   children,
   ...props
 }: AccordionPrimitive.Panel.Props) {
+  const ids = React.useContext(AccordionItemIdsContext)
   // `hiddenUntilFound`: o painel fechado fica no DOM com `hidden="until-found"`,
   // então o Ctrl+F do navegador acha a resposta dentro dele e o abre. Obriga o
   // painel a permanecer montado — o base-ui ignora `keepMounted={false}` aqui e
@@ -123,6 +157,7 @@ function AccordionContent({
       data-slot="accordion-content"
       className="nds-accordion-content"
       hiddenUntilFound
+      id={ids?.contentId}
       {...props}
       role={undefined}
       aria-labelledby={undefined}

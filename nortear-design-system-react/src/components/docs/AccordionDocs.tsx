@@ -961,7 +961,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 level: "WCAG",
                 how: tNav("common.howToVerify"),
               },
-              items: [1, 2, 3, 4, 5, 6].map((i) => ({
+              items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
                 criterion: toPlainText(tContent(`testes.accessibility.item${i}.criterion`)),
                 level: tContent(`testes.accessibility.item${i}.level`),
                 how: tContent(`testes.accessibility.item${i}.how`),

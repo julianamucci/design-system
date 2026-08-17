@@ -1,13 +1,27 @@
 <script setup lang="ts">
 import type { AccordionContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { reactiveOmit } from '@vueuse/core'
+import { inject, onMounted, ref } from 'vue'
+import { reactiveOmit, unrefElement } from '@vueuse/core'
 import { AccordionContent } from 'reka-ui'
 import { cn } from '@/lib/utils'
+import { ACCORDION_ITEM_IDS } from './accordion-a11y'
 
 const props = defineProps<AccordionContentProps & { class?: HTMLAttributes['class'] }>()
 
 const delegatedProps = reactiveOmit(props, 'class')
+
+// Ver accordion-a11y.ts: o id nasce dentro do reka e só pode ser LIDO daqui —
+// tentar impô-lo pelo atributo perde para o mergeProps da lib, e o
+// aria-controls acabaria apontando para um elemento que não existe.
+const painel = ref<InstanceType<typeof AccordionContent> | null>(null)
+const contentId = inject(ACCORDION_ITEM_IDS, ref(''))
+onMounted(() => {
+  const el = unrefElement(painel as never) as HTMLElement | undefined
+  /* v8 ignore next -- o painel fica sempre montado (unmount-on-hide=false),
+     então o elemento existe em toda story; a guarda é de tipo. */
+  if (el?.id) contentId.value = el.id
+})
 </script>
 
 <template>
@@ -19,14 +33,14 @@ const delegatedProps = reactiveOmit(props, 'class')
     landmark-unique). É a "proliferação de landmarks" que a APG manda evitar, e
     por isso ela trata o role no painel como opcional.
 
-    ATENÇÃO: esta stack é a única SEM `aria-controls` no gatilho. O reka provê
-    `contentId: ''` no contexto do Collapsible e só o preenche quando o conteúdo
-    se registra — depois de o gatilho já ter renderizado. Passar um id nosso
-    daqui não resolve: o painel do reka mantém o id próprio, e o `aria-controls`
-    passa a apontar para elemento inexistente (medido: axe
-    aria-valid-attr-value). Catalogado no FIXES-NEEDED.
+    O `aria-controls` do gatilho é fiado por accordion-a11y.ts: o reka o monta a
+    partir de um contexto não reativo que ainda está vazio quando o gatilho
+    renderiza, e nunca mais o atualiza. A ponte publica daqui o id REAL do
+    painel — ler em vez de impor, porque o mergeProps da lib vence um id nosso e
+    o atributo passaria a apontar para elemento inexistente.
   -->
   <AccordionContent
+    ref="painel"
     data-slot="accordion-content"
     v-bind="delegatedProps"
     class="nds-accordion-content"

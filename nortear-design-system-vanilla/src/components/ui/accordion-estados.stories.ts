@@ -1,6 +1,6 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
 
 const meta: Meta = {
@@ -43,7 +43,7 @@ const FOCUS_ITEMS: AccordionOptions['items'] = [
 export const Closed: Story = {
   render: () => createAccordion({ type: 'single', collapsible: true, items: SINGLE_ITEM }),
   parameters: {
-    covers: ['accessibility.item2', 'visual.item3'],
+    covers: ['accessibility.item2', 'accessibility.item7', 'visual.item3'],
     docs: {
       description: {
         story: 'Estado padrão: todos os itens fechados. O chevron aponta para baixo.',
@@ -58,6 +58,30 @@ export const Closed: Story = {
       for (const trigger of triggers) {
         await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       }
+    });
+
+    await step('O painel fechado permanece no documento', async () => {
+      // `hidden="until-found"` é o que deixa o Ctrl+F achar a resposta dentro
+      // de um item fechado; desmontar o painel mataria o recurso em silêncio. O
+      // display entra junto porque um `display: none` de autor o anula sem
+      // quebrar nada visível.
+      const painel = await waitFor(() => {
+        const el = canvasElement.querySelector<HTMLElement>('[data-slot="accordion-content"]');
+        if (!el || !el.hasAttribute('hidden')) throw new Error('painel ainda assentando');
+        return el;
+      });
+      await expect(painel.getAttribute('hidden')).toBe('until-found');
+      await expect(getComputedStyle(painel).display).not.toBe('none');
+    });
+
+    await step('Fechado, o gatilho ainda aponta para o painel', async () => {
+      // Sem `role="region"` no painel, o aria-controls é o ÚNICO vínculo entre
+      // gatilho e conteúdo — esta é a stack de referência para ele.
+      const contentId = triggers[0].getAttribute('aria-controls');
+      await expect(contentId).toBeTruthy();
+      await expect(
+        canvasElement.querySelector(`#${CSS.escape(contentId!)}`),
+      ).toBeInTheDocument();
     });
   },
 };
@@ -84,6 +108,21 @@ export const Open: Story = {
 
     await step('Primeiro trigger tem aria-expanded=true', async () => {
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    await step('O painel aberto tem altura de verdade', async () => {
+      // aria-expanded sozinho não prova que o painel apareceu: a altura vem da
+      // animação de grid (0fr → 1fr), e já houve regressão com o gatilho
+      // anunciando aberto e o painel colapsado. O waitFor gateia na altura
+      // computada, não no relógio.
+      await waitFor(() => {
+        const painel = canvasElement.querySelector<HTMLElement>(
+          '[data-slot="accordion-content"]:not([hidden])',
+        );
+        if (!painel || painel.getBoundingClientRect().height === 0) {
+          throw new Error('painel ainda abrindo');
+        }
+      });
     });
   },
 };
