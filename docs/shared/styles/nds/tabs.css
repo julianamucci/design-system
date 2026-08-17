@@ -20,12 +20,26 @@
 }
 
 /* ── List (track de triggers) ────────────────────────────────────────────── */
+/*
+ * A11Y — WCAG 1.4.4 (Resize Text 200%):
+ * A caixa do trilho é RESULTADO do respiro (`padding`) mais a caixa do gatilho.
+ * `min-height` é PISO de alvo de toque, não medida: o conteúdo empurra além
+ * dele assim que o texto cresce, que é o que um `height` cravado impedia — ele
+ * prendia o trilho em 36px enquanto o rótulo continuava crescendo, e o gatilho
+ * passava a vazar para fora do fundo arredondado. É a mesma forma de
+ * `.nds-toggle` e `.nds-pagination-link`; NUNCA reintroduzir `height` aqui.
+ *
+ * Medido (Inter, densidade padrão, fonte da raiz em 16px): gatilho 24px +
+ * 2 × 4px de respiro = 32px de conteúdo, com o piso de 36px valendo. Nas outras
+ * densidades o piso acompanha `--size-lg` (32px condensado, 44px confortável),
+ * exatamente como antes — a troca não move um pixel na caixa de hoje.
+ */
 .nds-tabs-list {
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  height: var(--size-lg);          /* 36px na densidade padrão — mesma caixa do botão icon-lg */
+  min-height: var(--size-lg);         /* piso de 36px na densidade padrão */
   padding: var(--spacing-1);          /* 4px interno */
 
   background-color: hsl(var(--muted));
@@ -43,6 +57,13 @@
 
   padding-inline: var(--spacing-3);
   padding-block: var(--spacing-1);
+  /* WCAG 2.5.8 (Target Size, AA): 24 CSS px é piso ABSOLUTO, então não pode
+   * acompanhar a densidade — `--size-*` encolhe no condensado e derrubaria o
+   * alvo para os 22.38px medidos ali. A altura continua saindo de
+   * `padding-block` + entrelinha; isto só impede que ela caia abaixo do mínimo
+   * legal. Na densidade padrão o gatilho já mede exatamente 24px, então o piso
+   * não move nada. */
+  min-height: 1.5rem;
 
   background: transparent;
   border: 0;
@@ -105,8 +126,9 @@
   flex: 1;
 }
 
+/* `height: auto` morava aqui só para desfazer a altura cravada da regra base.
+ * Com o trilho medindo por respiro, não há o que desfazer. */
 .nds-tabs[data-orientation="vertical"] .nds-tabs-list {
-  height: auto;
   flex-direction: column;
 }
 

@@ -273,6 +273,159 @@ export function desviosDaAbaDesabilitada(m: MedidaDaAbaDesabilitada): string[] {
   return desvios;
 }
 
+// ─── Caixa do trilho — WCAG 1.4.4 e 2.5.8 ────────────────────────────────────
+//
+// O trilho (`.nds-tabs-list`) tinha `height: var(--size-lg)` cravada. Medir a
+// altura UMA vez não distingue "36px porque o respiro pede" de "36px porque
+// alguém escreveu 36px": os dois devolvem 36. E dobrar a fonte da raiz também
+// não distingue, porque `--size-lg` é declarado em `rem` e dobra junto — foi
+// exatamente o que a medição mostrou antes da correção (36 → 72, fator 2.0,
+// com a altura cravada no lugar).
+//
+// O que separa gaiola de resultado é EMPURRAR o conteúdo: um gatilho mais alto
+// que o trilho faz o trilho crescer quando a altura é resultado, e vaza para
+// fora do fundo arredondado quando é cravada. É esse estímulo que a asserção
+// permanente aplica, e é ele que fica vermelho se o `height` voltar.
+
+/** WCAG 2.5.8 (Target Size, Minimum) — piso absoluto, em CSS px. */
+export const ALVO_MINIMO_PX = 24;
+
+export interface CaixaDoTrilho {
+  /** Altura do `.nds-tabs-list`. */
+  trilho: number;
+  /** Altura do gatilho mais alto. */
+  gatilho: number;
+  /** Respiro somado do trilho (topo + base). */
+  respiro: number;
+  /**
+   * Sobra entre o interior do trilho e o gatilho. Negativa significa que o
+   * gatilho vazou para fora do trilho — o sintoma da altura cravada.
+   */
+  folga: number;
+}
+
+function trilhoDe(raiz: HTMLElement): HTMLElement {
+  const el = raiz.querySelector<HTMLElement>('.nds-tabs-list');
+  if (!el) throw new Error('SONDA: nenhum .nds-tabs-list em cena');
+  return el;
+}
+
+const arred = (n: number) => Math.round(n * 100) / 100;
+
+/** Lê a caixa do trilho e do gatilho mais alto, no estado atual do documento. */
+export function medirCaixaDoTrilho(raiz: HTMLElement): CaixaDoTrilho {
+  const lista = trilhoDe(raiz);
+  const cs = getComputedStyle(lista);
+  const respiro = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+  const gatilhos = Array.from(lista.querySelectorAll<HTMLElement>('[role="tab"]'));
+  const gatilho = Math.max(...gatilhos.map((g) => g.getBoundingClientRect().height));
+  const trilho = lista.getBoundingClientRect().height;
+  return {
+    trilho: arred(trilho),
+    gatilho: arred(gatilho),
+    respiro: arred(respiro),
+    folga: arred(trilho - respiro - gatilho),
+  };
+}
+
+export interface CrescimentoDoTrilho {
+  /** Caixa com a fonte da raiz no valor normal. */
+  normal: CaixaDoTrilho;
+  /** Caixa com a fonte da raiz DOBRADA. */
+  dobrada: CaixaDoTrilho;
+  /** `dobrada.trilho / normal.trilho`. 1.0 é altura presa; ~2.0 é altura que acompanha. */
+  fator: number;
+  /** Caixa com um gatilho forçado a ficar mais alto que o trilho de hoje. */
+  empurrado: CaixaDoTrilho;
+  /** Quanto o trilho cresceu sob o empurrão. Zero é gaiola. */
+  ganho: number;
+}
+
+/**
+ * Mede a caixa do trilho em três situações, e devolve a fonte e o gatilho ao
+ * estado original em `finally` — fonte ou estilo vazado envenena a story
+ * seguinte e a foto do Chromatic.
+ *
+ * 1. fonte da raiz normal;
+ * 2. fonte da raiz DOBRADA (é o `<html>` que `rem` referencia e que a
+ *    configuração do navegador mexe);
+ * 3. um gatilho empurrado para além da caixa atual — o estímulo que distingue
+ *    respiro de altura cravada.
+ */
+export function medirCrescimentoDoTrilho(raiz: HTMLElement): CrescimentoDoTrilho {
+  const lista = trilhoDe(raiz);
+  const html = raiz.ownerDocument.documentElement;
+  const fonteOriginal = html.style.fontSize;
+  const gatilho = lista.querySelector<HTMLElement>('[role="tab"]')!;
+  const minOriginal = gatilho.style.minHeight;
+  const reflow = () => void raiz.offsetHeight;
+
+  try {
+    const normal = medirCaixaDoTrilho(raiz);
+
+    const emPx = parseFloat(getComputedStyle(html).fontSize) || 16;
+    html.style.fontSize = `${emPx * 2}px`;
+    reflow();
+    const dobrada = medirCaixaDoTrilho(raiz);
+
+    if (fonteOriginal) html.style.fontSize = fonteOriginal;
+    else html.style.removeProperty('font-size');
+    reflow();
+
+    // O empurrão parte da caixa MEDIDA, não de um número escrito à mão: assim
+    // ele continua sendo "mais alto que o trilho" em qualquer densidade, tema
+    // ou família de fonte.
+    gatilho.style.minHeight = `${normal.trilho + 8}px`;
+    reflow();
+    const empurrado = medirCaixaDoTrilho(raiz);
+
+    return {
+      normal,
+      dobrada,
+      fator: normal.trilho > 0 ? arred(dobrada.trilho / normal.trilho) : 0,
+      empurrado,
+      ganho: arred(empurrado.trilho - normal.trilho),
+    };
+  } finally {
+    if (fonteOriginal) html.style.fontSize = fonteOriginal;
+    else html.style.removeProperty('font-size');
+    if (minOriginal) gatilho.style.minHeight = minOriginal;
+    else gatilho.style.removeProperty('min-height');
+    reflow();
+  }
+}
+
+/**
+ * O veredito da dona sobre a caixa do trilho. Lista vazia é o resultado bom.
+ *
+ * Não afirma nada sobre nome de classe nem sobre qual propriedade foi escrita —
+ * só sobre o efeito medido.
+ */
+export function desviosDaCaixaDoTrilho(m: CrescimentoDoTrilho): string[] {
+  const d: string[] = [];
+  if (m.fator < 1.9)
+    d.push(
+      `o trilho não acompanha a fonte da raiz: ${m.normal.trilho}px → ${m.dobrada.trilho}px ` +
+        `(fator ${m.fator}, esperado ~2)`,
+    );
+  if (m.ganho <= 0)
+    d.push(
+      `o trilho não cresce com o conteúdo: gatilho empurrado para além dele e o trilho ` +
+        `ficou em ${m.empurrado.trilho}px (era ${m.normal.trilho}px) — altura cravada`,
+    );
+  if (m.empurrado.folga < 0)
+    d.push(
+      `o gatilho vazou para fora do trilho sob o empurrão (folga ${m.empurrado.folga}px)`,
+    );
+  if (m.normal.folga < 0)
+    d.push(`o gatilho já vaza para fora do trilho em repouso (folga ${m.normal.folga}px)`);
+  if (m.normal.gatilho < ALVO_MINIMO_PX)
+    d.push(
+      `alvo de toque do gatilho em ${m.normal.gatilho}px, abaixo dos ${ALVO_MINIMO_PX}px da WCAG 2.5.8`,
+    );
+  return d;
+}
+
 /**
  * Canal de saída da sonda.
  *

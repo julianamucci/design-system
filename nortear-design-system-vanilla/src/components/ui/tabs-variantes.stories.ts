@@ -1,5 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
+import {
+  desviosDaCaixaDoTrilho,
+  medirCrescimentoDoTrilho,
+} from '@shared/testing/tabs-probe';
 import { createTabs, type TabsItemDef } from './tabs';
 
 const meta: Meta = {
@@ -58,7 +62,7 @@ export const Default: Story = {
     root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Seções do componente');
     return root;
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const lista = canvas.getByRole('tablist');
     const abas = canvas.getAllByRole('tab');
@@ -74,6 +78,17 @@ export const Default: Story = {
     // A aba ativa se distingue por FUNDO, não só por cor de texto (WCAG 1.4.1).
     await expect(getComputedStyle(abas[0]).backgroundColor)
       .not.toBe(getComputedStyle(abas[1]).backgroundColor);
+
+    await step('A caixa do trilho é resultado do respiro, não medida cravada', async () => {
+      // Ler a altura UMA vez não distingue as duas coisas: respiro e `height`
+      // cravada devolvem os mesmos 36px. Dobrar a fonte da raiz também não
+      // bastava — `--size-lg` é declarado em `rem` e dobrava junto. O que
+      // separa gaiola de resultado é EMPURRAR o conteúdo para além da caixa:
+      // com altura cravada o trilho fica parado e o gatilho vaza para fora do
+      // fundo arredondado. O colhedor devolve a fonte e o gatilho ao original.
+      const m = medirCrescimentoDoTrilho(canvasElement);
+      await expect(desviosDaCaixaDoTrilho(m), JSON.stringify(m)).toEqual([]);
+    });
   },
 };
 

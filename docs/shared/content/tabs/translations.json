@@ -286,7 +286,7 @@
       },
       "customizationTitle": "Customização",
       "customizationCode": {
-        "web": "/* Altura customizada do TabsList */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Cor customizada da linha (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+        "web": "/* Piso de altura do TabsList — a caixa continua crescendo com o texto */\n[data-slot=\"tabs-list\"] {\n  min-height: 2.5rem;\n}\n\n/* Cor customizada da linha (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
       }
     },
     "accessibility": {
@@ -350,7 +350,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o roving tabindex, a navegação por setas e Home/End, os papéis ARIA e a amarração entre aba e painel vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-tabs-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>activationMode</strong> — <code>automatic</code> (padrão) ativa ao mover setas; <code>manual</code> exige Enter/Space para ativar.",
       "item3": "<strong>Roving tabindex</strong> — só a tab ativa é focável via Tab; setas movem entre tabs do grupo, inclusive as desabilitadas.",
       "item4": "<strong>Variant line</strong> — visual minimalista com linha inferior; útil para sub-navegação dentro de páginas."
@@ -739,7 +739,7 @@
       },
       "customizationTitle": "Customization",
       "customizationCode": {
-        "web": "/* Custom TabsList height */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Custom line color (line variant) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+        "web": "/* TabsList height floor — the box still grows with the text */\n[data-slot=\"tabs-list\"] {\n  min-height: 2.5rem;\n}\n\n/* Custom line color (line variant) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
       }
     },
     "accessibility": {
@@ -803,7 +803,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
+      "item1": "<strong>Behaviour and looks in separate layers</strong> — roving tabindex, arrow and Home/End navigation, the ARIA roles and the tab-to-panel wiring come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-tabs-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>activationMode</strong> — <code>automatic</code> (default) activates on arrow move; <code>manual</code> requires Enter/Space.",
       "item3": "<strong>Roving tabindex</strong> — only the active tab is Tab-focusable; arrows move between tabs, disabled ones included.",
       "item4": "<strong>Line variant</strong> — minimalist look with bottom line; useful for sub-navigation within pages."
@@ -1192,7 +1192,7 @@
       },
       "customizationTitle": "Personalización",
       "customizationCode": {
-        "web": "/* Altura personalizada del TabsList */\n[data-slot=\"tabs-list\"] {\n  height: 2.5rem;\n}\n\n/* Color personalizado de la línea (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
+        "web": "/* Piso de altura del TabsList — la caja sigue creciendo con el texto */\n[data-slot=\"tabs-list\"] {\n  min-height: 2.5rem;\n}\n\n/* Color personalizado de la línea (variant line) */\n.tabs-brand [data-slot=\"tabs-list\"][data-variant=\"line\"] [data-slot=\"tabs-trigger\"]:after {\n  background: hsl(220 90% 50%);\n}"
       }
     },
     "accessibility": {
@@ -1256,7 +1256,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el roving tabindex, la navegación por flechas y Home/End, los roles ARIA y el vínculo entre tab y panel vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-tabs-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>activationMode</strong> — <code>automatic</code> (por defecto) activa al mover flechas; <code>manual</code> requiere Enter/Space para activar.",
       "item3": "<strong>Roving tabindex</strong> — solo la tab activa es focalizable vía Tab; las flechas mueven entre tabs del grupo, incluidas las deshabilitadas.",
       "item4": "<strong>Variant line</strong> — estilo minimalista con línea inferior; útil para sub-navegación dentro de páginas."

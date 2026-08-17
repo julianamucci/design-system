@@ -53,9 +53,11 @@ const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
 // some do conteúdo compartilhado; os que divergem viram const neste arquivo,
 // com a divergência reportada.
 //
-// `notes.item1` — o texto compartilhado lista as libs das outras stacks pelo
-// nome, e cada docs page é consumida isoladamente.
-// `notes.item5` / `notes.item6` — comportamento e pendência que só existem aqui.
+// `notes.item1` NÃO entra mais: o texto compartilhado deixou de listar lib por
+// nome e passou a descrever a separação entre camada de comportamento e camada
+// visual, que vale igual aqui. Override que só repete o conteúdo compartilhado
+// é conteúdo preso a uma stack.
+// `notes.item5` — comportamento que só existe aqui.
 // `props.*` — nomes de prop deste stack e as duas props que o conteúdo
 // compartilhado não descreve (o `value` obrigatório do trigger e do painel, e o
 // `disabled` do trigger).
@@ -71,12 +73,8 @@ const { t, dict } = useTranslation(tabsTranslations as Record<string, unknown>, 
       'Bloqueia a interação com a aba. A aba continua alcançável pelas setas, para ser anunciada como desabilitada.',
     'props.loopFocus.description':
       'Quando verdadeiro (padrão), a seta dá a volta da última aba para a primeira.',
-    'notes.item1':
-      '<strong>Primitivo</strong>: <code>@radix-ng/primitives/tabs</code> — entrega roving tabindex, navegação por setas e Home/End, os papéis ARIA e a amarração entre aba e painel.',
     'notes.item5':
       '<strong>Aba desabilitada</strong> — marcada com <code>aria-disabled</code>, sem o atributo <code>disabled</code> nativo: o padrão WAI-ARIA pede que a seta possa pousar nela para ser anunciada, e um botão nativamente desabilitado sai do alcance do foco. Nem o clique nem Enter/Espaço ativam a aba.',
-    'notes.item6':
-      '<strong>Pendência de CSS compartilhado</strong> — a lista horizontal tem altura cravada na folha do componente, o que impede o bloco de crescer junto quando a pessoa aumenta a fonte do navegador. A correção vale para todas as stacks e está registrada.',
   },
   en: {
     'props.table.className.description':
@@ -89,12 +87,8 @@ const { t, dict } = useTranslation(tabsTranslations as Record<string, unknown>, 
       'Blocks interaction with the tab. The tab stays reachable by arrow keys so it can be announced as disabled.',
     'props.loopFocus.description':
       'When true (default), arrow keys wrap from the last tab back to the first.',
-    'notes.item1':
-      '<strong>Primitive</strong>: <code>@radix-ng/primitives/tabs</code> — provides roving tabindex, arrow and Home/End navigation, the ARIA roles and the tab-to-panel wiring.',
     'notes.item5':
       '<strong>Disabled tab</strong> — marked with <code>aria-disabled</code>, without the native <code>disabled</code> attribute: the WAI-ARIA pattern asks that arrow keys can land on it so it gets announced, and a natively disabled button leaves the focus order. Neither click nor Enter/Space activates the tab.',
-    'notes.item6':
-      '<strong>Shared CSS pending item</strong> — the horizontal list has a hardcoded height in the component stylesheet, which stops the block from growing when the reader increases the browser font size. The fix applies to every stack and is on record.',
   },
   es: {
     'props.table.className.description':
@@ -107,12 +101,8 @@ const { t, dict } = useTranslation(tabsTranslations as Record<string, unknown>, 
       'Bloquea la interacción con la tab. La tab sigue alcanzable por las flechas para ser anunciada como deshabilitada.',
     'props.loopFocus.description':
       'Cuando es verdadero (por defecto), la flecha da la vuelta de la última tab a la primera.',
-    'notes.item1':
-      '<strong>Primitivo</strong>: <code>@radix-ng/primitives/tabs</code> — aporta roving tabindex, navegación por flechas y Home/End, los roles ARIA y el vínculo entre tab y panel.',
     'notes.item5':
       '<strong>Tab deshabilitada</strong> — marcada con <code>aria-disabled</code>, sin el atributo <code>disabled</code> nativo: el patrón WAI-ARIA pide que las flechas puedan posarse en ella para anunciarla, y un botón nativamente deshabilitado sale del orden de foco. Ni el clic ni Enter/Espacio activan la tab.',
-    'notes.item6':
-      '<strong>Pendiente de CSS compartido</strong> — la lista horizontal tiene una altura fija en la hoja del componente, lo que impide que el bloque crezca cuando se aumenta la fuente del navegador. La corrección vale para todas las stacks y está registrada.',
   },
 });
 
@@ -875,7 +865,10 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
 
   protected readonly noteItems = computed(() => {
     dict();
-    return [1, 2, 3, 4, 5, 6].map((i) => ({ title: '', content: t(`notes.item${i}`) }));
+    // 1–4 vêm do conteúdo compartilhado; o 5 é o override desta stack. O antigo
+    // item 6 registrava a altura cravada do trilho na folha compartilhada, que
+    // deixou de existir.
+    return [1, 2, 3, 4, 5].map((i) => ({ title: '', content: t(`notes.item${i}`) }));
   });
 
   protected readonly analyticsCols = computed(() => {

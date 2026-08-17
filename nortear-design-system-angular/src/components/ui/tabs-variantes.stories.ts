@@ -1,6 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect } from 'storybook/test';
+import {
+  desviosDaCaixaDoTrilho,
+  medirCrescimentoDoTrilho,
+} from '@shared/testing/tabs-probe';
 import { NDS_TABS } from './tabs';
 
 const meta: Meta = {
@@ -74,6 +78,17 @@ export const Default: Story = {
       await expect(getComputedStyle(ativa).backgroundColor).not.toBe(
         getComputedStyle(inativa).backgroundColor,
       );
+    });
+
+    await step('A caixa do trilho é resultado do respiro, não medida cravada', async () => {
+      // Ler a altura UMA vez não distingue as duas coisas: respiro e `height`
+      // cravada devolvem os mesmos 36px. Dobrar a fonte da raiz também não
+      // bastava — `--size-lg` é declarado em `rem` e dobrava junto. O que
+      // separa gaiola de resultado é EMPURRAR o conteúdo para além da caixa:
+      // com altura cravada o trilho fica parado e o gatilho vaza para fora do
+      // fundo arredondado. O colhedor devolve a fonte e o gatilho ao original.
+      const m = medirCrescimentoDoTrilho(canvasElement);
+      await expect(desviosDaCaixaDoTrilho(m), JSON.stringify(m)).toEqual([]);
     });
   },
 };
