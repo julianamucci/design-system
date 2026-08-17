@@ -533,7 +533,11 @@ export function falhasDeAnel(raiz: HTMLElement, minimo: number): string[] {
   for (const linha of medirAnelPorTema(raiz)) {
     for (const [nome, valor] of Object.entries(linha)) {
       if (nome === 'tema' || nome === 'modo') continue;
-      const r = valor as number | null;
+      // `tema` e `modo` saíram no `continue` acima, então o que resta é razão
+      // ou `null`. A guarda por tipo é o que o `Object.entries` exige — o cast
+      // direto para número não compila, e forçá-lo esconderia um campo novo de
+      // outro tipo no dia em que a linha crescer.
+      const r = typeof valor === 'number' ? valor : null;
       // `null` quer dizer que a REGRA sumiu da folha — achado, não aprovação.
       if (r === null) saida.push(`${linha.tema}/${linha.modo} · ${nome}: regra ausente na folha`);
       else if (r < minimo) saida.push(`${linha.tema}/${linha.modo} · ${nome}: ${r}:1 (mínimo ${minimo})`);
