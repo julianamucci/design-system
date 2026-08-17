@@ -279,7 +279,7 @@
   flex: 1;
   border-radius: var(--nds-cell-radius);
   font-size: 0.8rem;
-  font-weight: var(--font-weight-normal, 400);
+  font-weight: var(--font-weight-regular);
   color: hsl(var(--muted-foreground));
   user-select: none;
 }
@@ -454,7 +454,7 @@
   font-family: inherit;
   font-size: var(--text-control);
   line-height: 1;
-  font-weight: var(--font-weight-normal, 400);
+  font-weight: var(--font-weight-regular);
   cursor: pointer;
   outline: 0;
   transition: background-color var(--duration-fast), color var(--duration-fast);

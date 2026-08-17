@@ -62,7 +62,7 @@
 
 /* ── Page (atual, não navegável) ─────────────────────────────────────────── */
 .nds-breadcrumb-page {
-  font-weight: var(--font-weight-normal, 400);
+  font-weight: var(--font-weight-regular);
   color: hsl(var(--foreground));
 }
 

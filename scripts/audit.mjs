@@ -1321,6 +1321,35 @@ function auditCssTokenUsage() {
       }
     });
 
+    // Degrau de ESCALA com fallback literal. Para token comum o fallback é
+    // intenção declarada, e por isso a regra acima o aceita. Para uma escala
+    // não é: `--spacing-3` ou existe, e aí o fallback é ruído, ou não existe, e
+    // aí a propriedade resolve para o literal SEMPRE — deixando de acompanhar a
+    // densidade sem sintoma nenhum. Foi por essa fresta que 166 fallbacks
+    // atravessaram 39 folhas até a rodada `168a61bb`.
+    //
+    // O encadeamento `var(--x, var(--y))` continua permitido: ali a reserva é
+    // outro token, não um número cravado.
+    lines.forEach((line, i) => {
+      for (const m of line.matchAll(/var\(\s*(--(?:spacing|size|radius|text|font-weight|line-height)-[a-z0-9-]+)\s*,\s*([^),]+)\)/gi)) {
+        const token = m[1].toLowerCase();
+        const reserva = m[2].trim();
+        if (reserva.startsWith('var(')) continue; // reserva é outro token
+        // Só acusa quando o degrau NÃO existe. Com o token definido, o literal
+        // é letra morta — nunca se aplica — e acusá-lo renderia 51 achados sem
+        // um defeito sequer, que é o tipo de ruído que ensina a ignorar a regra.
+        if (known.has(token)) continue;
+        const chave = `escala:${token}`;
+        if (seen.has(chave)) continue;
+        seen.add(chave);
+        violations.push({
+          category: 'quality', severity: 'high', slug: '_infra', stack: 'shared',
+          file: rel, line: i + 1, rule: 'escala_com_fallback_literal',
+          message: `var(${token}, ${reserva}) — o degrau NÃO existe na escala, então isto resolve para ${reserva} sempre e nunca acompanha a densidade`,
+        });
+      }
+    });
+
     lines.forEach((line, i) => {
       // Sem vírgula dentro do var(): com fallback, a ausência é intencional.
       for (const m of line.matchAll(/var\(\s*(--[a-z0-9-]+)\s*\)/gi)) {

@@ -118,7 +118,7 @@
   margin: 0;
   text-align: left;
   font-size: var(--text-control);
-  font-weight: var(--font-weight-normal, 400);
+  font-weight: var(--font-weight-regular);
   line-height: 1.5;
   color: hsl(var(--muted-foreground));
 }
@@ -135,7 +135,7 @@
 .nds-field-error {
   margin: 0;
   font-size: var(--text-control);
-  font-weight: var(--font-weight-normal, 400);
+  font-weight: var(--font-weight-regular);
   color: hsl(var(--destructive));
 }
 
