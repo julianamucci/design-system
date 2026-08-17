@@ -7,7 +7,9 @@
 > revisitados.
 >
 > Os 41 foram conferidos **um por um contra o código**, não contra o texto daqui.
-> Resultado: **22 resolvidos**, **12 ainda abertos**, **7 mudaram de forma**.
+> Resultado: **22 resolvidos**, **12 ainda abertos**, **7 mudaram de forma**. Um
+> dos 12 foi medido e fechado no mesmo dia (o de `markup_in_text_surface`), então
+> a lista abaixo tem **11**.
 > Os resolvidos estão marcados `[x]` no corpo, com o commit que os fechou. Os
 > que mudaram de forma estão anotados no corpo e reescritos abaixo — porque o
 > texto antigo deles virou **falsidade ativa**, não apenas desatualização.
@@ -28,11 +30,11 @@
 > dono e com forma de medir.
 
 **Como ler este arquivo.** A lista de aberto abaixo é a **canônica**. Os mesmos
-12 itens também continuam marcados `[ ]` mais abaixo, no log, no contexto em que
-foram descobertos — então `grep -c "^- \[ \]"` conta 24, não 12. O log é
+11 itens também continuam marcados `[ ]` mais abaixo, no log, no contexto em que
+foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 12 itens
+## Aberto de verdade — 11 itens
 
 ### Precisam de decisão da dona (5)
 
@@ -42,18 +44,22 @@ histórico; a lista de cima é o que está por fazer.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [ ] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic.
 
-### Dívida de fundação, sem dono de componente (4)
+### Dívida de fundação, sem dono de componente (3)
 
 - [ ] **Keyframes de dialog e select duplicam `nds-animate-in/out`.** Mesmo desenho (`opacity` + `scale(0.95)`), nomes distintos — por isso a regra de keyframes duplicadas não os pega. **Atenção: o timing difere.** As compartilhadas usam `--duration-spring`/`--ease-spring`; dialog usa `--duration-base`/`--ease-entrance` e select `--duration-fast`. Migrar **muda o movimento**, não só remove duplicação.
 - [ ] **Classes de movimento não documentadas na foundation page de Motion.** `nds-animate-in`, `nds-animate-out`, `--ease-spring` e `--duration-spring` não aparecem no conteúdo compartilhado em nenhum dos três idiomas. Pior: o texto atual diz que spring existe "apenas via biblioteca", o que contradiz por omissão o token que o sistema passou a ter.
 - [ ] **`test:coverage` fora do CI.** A justificativa antiga — "passaria vazio ou falharia por threshold" — **está obsoleta**: as quatro suítes de navegador estão 100% verdes (react 694, vue 685, svelte 693, vanilla 716 testes). Há duas ações destravadas no mesmo lugar: pôr `test:coverage` no CI, e remover o `continue-on-error: true` de `test.yml`, cujo próprio comentário diz "quando todas chegarem a 100%".
-- [ ] **A cobertura de `markup_in_text_surface` nunca foi medida contra a superfície real.** Registrei este item como "não cobre `import.*`, `demonstration.*` e header", e **medi depois: essa formulação está errada**. `import.` tem 94 chaves e `demonstration.` 464, mas **nenhuma tem markup**, e `header.` não existe — estender a regra para os três captura zero, hoje e por construção. Testei com os prefixos adicionados: 0 achados novos.
+- [x] **A cobertura de `markup_in_text_surface` foi medida — os 10 prefixos bastam.** (Aberto e fechado em 2026-08-17.)
 
-  O que de fato fica fora, com markup, é outra coisa: `anatomy.` (290 chaves com markup), `usage.` fora dos dois sub-prefixos cobertos (284 no total), `variants.` (246), `notes.` (190) e `accessibility.` fora de `keyboard.` (447).
+  Nasceu como "a regra não cobre `import.*`, `demonstration.*` e header, então está a zero por não olhar, não por medir". Hipótese razoável, e **falsa nos dois pontos**.
 
-  **Mas isso não é bug por si.** A lista é uma *allowlist de containers que escrevem textNode*, não de chaves — e a conferência provou que em `accessibility.aria.*` **não envolver é o correto**, porque o destino renderiza HTML sanitizado. Envolver ali reintroduziria o defeito que a regra existe para pegar.
+  **Primeiro:** `import.` tem 94 chaves e `demonstration.` 464, mas **nenhuma delas tem markup**, e `header.` não existe como prefixo. Rodei o auditor com os três adicionados: **0 achados novos**.
 
-  O trabalho real, então, é **mapear container por container** quais das cinco famílias acima caem em textNode, e só então estender a lista. Sem esse mapeamento, estender gera falso positivo em massa; e sem estender, a regra fica a zero sem que se saiba se é higiene ou ponto cego.
+  **Segundo:** a superfície com markup que fica fora da lista é outra — `accessibility.` fora de `keyboard.` (447 chaves), `anatomy.` (290), `usage.` fora dos dois sub-prefixos cobertos (284), `variants.` (246), `notes.` (190). Mas **todas caem em `innerHTML` sanitizado**. Dentro dessas seções, o único caminho de textNode são `<secao>.title` e `anatomy.structureLabel` — varri os **2.175** campos desse tipo (3 idiomas × 48 componentes) e **zero têm markup**.
+
+  Conclusão: os 10 prefixos cobrem a superfície de risco real. A regra estar em zero é **higiene**, não ponto cego. Envolver as famílias "descobertas" reintroduziria o defeito que a regra existe para pegar — foi o que a conferência já tinha provado em `accessibility.aria.*`.
+
+  **Armadilha de método, para quem revisitar:** um filtro por sufixo de chave (`/\.label$/`) devolve 54 falsos "títulos com markup" — são `props.table.label` (descrição de uma prop chamada "label"), `variants.items.label` (variante chamada "label") e `accessibility.aria.label` (descrição do atributo). **Nome de chave não diz destino**; só o container diz.
 
 ### Divergência cross-stack do carrossel (3)
 
