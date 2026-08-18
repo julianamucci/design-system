@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
 
@@ -209,15 +210,6 @@ export const ItemDisabled: Story = {
 export const CheckboxChecked: Story = {
   parameters: {
     covers: ['functional.item7'],
-    // Medido na própria factory: o item de marcação é de DOIS estados. A opção
-    // declara `checked?: boolean`, o callback de mudança entrega `boolean`, e o
-    // `aria-checked` é escrito a partir desse booleano. Não há terceiro valor a
-    // receber, logo não há misto para anunciar nem traço para desenhar. A caixa
-    // de seleção avulsa desta stack resolve o misto; o item de menu não a expõe.
-    coversNotApplicable: {
-      'functional.item9':
-        'a factory do item de marcação é de dois estados — a opção é booleana, o callback entrega booleano e o aria-checked sai dele, sem terceiro valor para anunciar como misto',
-    },
   },
   render: () =>
     embrulhar(
@@ -269,6 +261,68 @@ export const CheckboxChecked: Story = {
         await expect(regua.getAttribute('aria-checked')).toBe('false');
       });
       await expect(painelAberto(canvasElement)).not.toBeNull();
+    });
+  },
+};
+
+// ─── CheckboxIndeterminate ────────────────────────────────────────────────────
+//
+// Story SEM interação, de propósito. O que ela declara vale na montagem, e o
+// primeiro clique num item misto o resolve para marcado — uma play que clicasse
+// aqui mediria outro estado no REPLAY do painel Interactions, que reexecuta no
+// mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
+
+export const CheckboxIndeterminate: Story = {
+  parameters: { covers: ['functional.item9'] },
+  render: () =>
+    embrulhar(
+      createMenubar(
+        [
+          {
+            label: 'Exibir',
+            items: [
+              { type: 'label', label: 'Mostrar na tela' },
+              { type: 'checkbox', label: 'Colunas', indeterminate: true },
+              { type: 'checkbox', label: 'Régua', checked: true },
+              { type: 'checkbox', label: 'Grade', checked: false },
+            ],
+          },
+        ],
+        { defaultOpen: 0 },
+      ),
+    ),
+  play: async ({ canvasElement, step }) => {
+    const painel = await waitFor(() => {
+      const p = painelAberto(canvasElement);
+      if (!p) throw new Error('painel não abriu');
+      return p;
+    });
+    const canvas = within(painel);
+    const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
+    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
+    const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
+
+    await step('O estado misto é anunciado como misto, e não como marcado', async () => {
+      // Uma comparação frouxa leria o misto como verdadeiro; o que a pessoa ouve
+      // tem que separar os três estados.
+      await expect(misto.getAttribute('aria-checked')).toBe('mixed');
+      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
+    });
+
+    await step('O misto desenha traço; o marcado, tique', async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
+      // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
+      // nos dois estados — o defeito — esta asserção fica vermelha.
+      const formaMista = formaDoIndicador(misto);
+      const formaMarcada = formaDoIndicador(marcado);
+      await expect(ehTraco(formaMista)).toBe(true);
+      await expect(ehTique(formaMista)).toBe(false);
+      await expect(ehTique(formaMarcada)).toBe(true);
+    });
+
+    await step('O desmarcado continua sem glifo nenhum', async () => {
+      await expect(formaDoIndicador(desmarcado)).toBeNull();
     });
   },
 };

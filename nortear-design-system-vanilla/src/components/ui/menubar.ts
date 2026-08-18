@@ -17,7 +17,7 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
-import { Check, ChevronRight } from 'lucide';
+import { Check, ChevronRight, Minus } from 'lucide';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -48,6 +48,15 @@ export type MenubarItem = {
   /** `type: 'checkbox'` — estado inicial e callback de mudança. */
   checked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
+  /**
+   * `type: 'checkbox'` — estado misto ("alguns dos filhos selecionados"). Vale
+   * sobre `checked` enquanto durar, e o primeiro clique o resolve para marcado,
+   * como faz a propriedade `indeterminate` do input nativo. Mesma semântica da
+   * caixa de seleção avulsa desta stack.
+   */
+  indeterminate?: boolean;
+  /** Disparado quando o estado misto é resolvido por interação. */
+  onIndeterminateChange?: (indeterminate: boolean) => void;
   /** `type: 'radio-group'` — opções, valor inicial e callback de mudança. */
   options?: MenubarRadioOption[];
   value?: string;
@@ -103,13 +112,25 @@ function criarIcone(nos: LucideIconNode[]): SVGSVGElement {
 
 const ICONE_MARCA = () => criarIcone(Check as unknown as LucideIconNode[]);
 const ICONE_SUBMENU = () => criarIcone(ChevronRight as unknown as LucideIconNode[]);
+/**
+ * Traço do estado misto — o mesmo desenho da caixa de seleção avulsa desta
+ * stack (`checkbox.ts`): um segmento horizontal de (5,12) a (19,12). Tique quer
+ * dizer "marcado", e misto não é isso; repetir o tique nos dois estados apagaria
+ * a diferença justamente para quem depende do símbolo.
+ */
+const ICONE_TRACO = () => criarIcone(Minus as unknown as LucideIconNode[]);
 
 // ─── Peças do painel ──────────────────────────────────────────────────────────
 
 /** Marcador à direita do item, presente em marcação e escolha única. */
-function criarIndicador(icone: SVGSVGElement | null): HTMLSpanElement {
+function criarIndicador(icone: SVGSVGElement | null, slot: string): HTMLSpanElement {
   const span = document.createElement('span');
   span.className = 'nds-dropdown-menu-item-indicator';
+  // O `data-slot` é por TIPO de item, como nas outras quatro stacks
+  // (`menubar-checkbox-item-indicator` / `menubar-radio-item-indicator`): aqui
+  // ele não existia, e sem ele o indicador do menubar era o único do sistema
+  // sem endereço próprio.
+  span.dataset.slot = slot;
   span.setAttribute('aria-hidden', 'true');
   if (icone) span.appendChild(icone);
   return span;
@@ -245,21 +266,45 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         aplicarComuns(caixa, item);
 
         let marcado = item.checked ?? false;
-        const indicador = criarIndicador(marcado ? ICONE_MARCA() : null);
-        caixa.setAttribute('aria-checked', String(marcado));
-        if (marcado) caixa.dataset.checked = '';
+        // O estado é TRI-VALORADO: marcado, desmarcado e misto. O misto vale
+        // SOBRE o marcado enquanto durar — é ele quem manda no que se anuncia e
+        // no que se desenha.
+        let misto = item.indeterminate ?? false;
+        const indicador = criarIndicador(null, 'menubar-checkbox-item-indicator');
+
+        const pintar = (): void => {
+          // "mixed" é o que distingue "alguns selecionados" de "todos
+          // selecionados"; um booleano aqui mentiria para quem lê a tela.
+          caixa.setAttribute('aria-checked', misto ? 'mixed' : String(marcado));
+          // Misto não é marcado: o atributo de dado do estado marcado fica fora.
+          if (!misto && marcado) caixa.dataset.checked = '';
+          else delete caixa.dataset.checked;
+          indicador.replaceChildren();
+          if (misto) indicador.appendChild(ICONE_TRACO());
+          else if (marcado) indicador.appendChild(ICONE_MARCA());
+        };
+
+        pintar();
 
         criarRotuloEAtalho(caixa, item);
         caixa.appendChild(indicador);
 
         const alternar = (): void => {
           if (item.disabled) return;
+          if (misto) {
+            // O primeiro clique RESOLVE o misto para marcado, como faz a
+            // propriedade `indeterminate` do input nativo — e não devolve o
+            // estado misto a ninguém, porque "alguns" é conclusão de quem
+            // consome, não de um clique.
+            misto = false;
+            marcado = true;
+            pintar();
+            item.onIndeterminateChange?.(false);
+            item.onCheckedChange?.(true);
+            return;
+          }
           marcado = !marcado;
-          caixa.setAttribute('aria-checked', String(marcado));
-          if (marcado) caixa.dataset.checked = '';
-          else delete caixa.dataset.checked;
-          indicador.replaceChildren();
-          if (marcado) indicador.appendChild(ICONE_MARCA());
+          pintar();
           item.onCheckedChange?.(marcado);
           // Marcar NÃO fecha: quem marca uma preferência quer marcar a próxima.
         };
@@ -298,7 +343,10 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
           if (marcado) escolha.dataset.checked = '';
 
           criarRotuloEAtalho(escolha, { label: opcao.label });
-          const indicador = criarIndicador(marcado ? ICONE_MARCA() : null);
+          const indicador = criarIndicador(
+            marcado ? ICONE_MARCA() : null,
+            'menubar-radio-item-indicator',
+          );
           escolha.appendChild(indicador);
 
           escolha.addEventListener('click', () => {

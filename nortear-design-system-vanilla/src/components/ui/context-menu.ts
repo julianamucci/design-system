@@ -28,11 +28,20 @@ export type ContextMenuItemDef = {
   shortcut?: string;
   /** Estado inicial de um item `checkbox`. */
   checked?: boolean;
+  /**
+   * Só em `checkbox`: estado misto ("alguns dos filhos selecionados"). Vale
+   * sobre `checked` enquanto durar, e o primeiro clique o resolve para marcado,
+   * como faz a propriedade `indeterminate` do input nativo. Mesma semântica da
+   * caixa de seleção avulsa desta stack.
+   */
+  indeterminate?: boolean;
   /** Itens do submenu, quando `type: 'submenu'`. */
   items?: ContextMenuItemDef[];
   onClick?: () => void;
   /** Disparado por `checkbox` a cada alternância. */
   onCheckedChange?: (checked: boolean) => void;
+  /** Disparado quando o estado misto de um `checkbox` é resolvido por interação. */
+  onIndeterminateChange?: (indeterminate: boolean) => void;
 };
 
 export type ContextMenuOptions = {
@@ -64,6 +73,30 @@ function createCheckIcon(): SVGSVGElement {
   const path = document.createElementNS(SVG_NS, 'path');
   path.setAttribute('d', 'M20 6 9 17l-5-5');
   svg.appendChild(path);
+  return svg;
+}
+
+/**
+ * Traço do estado misto — o MESMO desenho da caixa de seleção avulsa desta stack
+ * (`checkbox.ts`): um segmento horizontal de (5,12) a (19,12). Tique quer dizer
+ * "marcado", e misto não é isso; repetir o tique nos dois estados apagaria a
+ * diferença justamente para quem depende do símbolo.
+ */
+function createMinusIcon(): SVGSVGElement {
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('fill', 'none');
+  svg.setAttribute('stroke', 'currentColor');
+  svg.setAttribute('stroke-width', '2');
+  svg.setAttribute('stroke-linecap', 'round');
+  svg.setAttribute('stroke-linejoin', 'round');
+  svg.setAttribute('aria-hidden', 'true');
+  const linha = document.createElementNS(SVG_NS, 'line');
+  linha.setAttribute('x1', '5');
+  linha.setAttribute('y1', '12');
+  linha.setAttribute('x2', '19');
+  linha.setAttribute('y2', '12');
+  svg.appendChild(linha);
   return svg;
 }
 
@@ -160,12 +193,17 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
     }
 
     if (type === 'checkbox' || type === 'radio') {
-      const marcado =
+      let marcado =
         type === 'checkbox' ? item.checked === true : radioValue === item.value;
+      // O misto vale SOBRE o marcado enquanto durar — é ele quem manda no que se
+      // anuncia e no que se desenha. Só o item de marcação o tem.
+      let misto = type === 'checkbox' && item.indeterminate === true;
 
       const li = document.createElement('li');
       li.setAttribute('role', type === 'checkbox' ? 'menuitemcheckbox' : 'menuitemradio');
-      li.setAttribute('aria-checked', String(marcado));
+      // "mixed" é o que distingue "alguns selecionados" de "todos selecionados";
+      // um booleano aqui mentiria para quem lê a tela.
+      li.setAttribute('aria-checked', misto ? 'mixed' : String(marcado));
       li.setAttribute('tabindex', '-1');
       li.dataset.slot = type === 'checkbox' ? 'context-menu-checkbox-item' : 'context-menu-radio-item';
       li.className =
@@ -177,9 +215,13 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       }
 
       const indicador = document.createElement('span');
-      indicador.dataset.slot = 'context-menu-item-indicator';
+      // `data-slot` por TIPO de item, como nas outras quatro stacks
+      // (`context-menu-checkbox-item-indicator` / `…-radio-item-indicator`).
+      indicador.dataset.slot =
+        type === 'checkbox' ? 'context-menu-checkbox-item-indicator' : 'context-menu-radio-item-indicator';
       indicador.className = 'nds-dropdown-menu-item-indicator';
-      if (marcado) indicador.appendChild(createCheckIcon());
+      if (misto) indicador.appendChild(createMinusIcon());
+      else if (marcado) indicador.appendChild(createCheckIcon());
       li.appendChild(indicador);
 
       fillItemContent(li, item);
@@ -187,11 +229,24 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       if (!item.disabled) {
         const alternar = () => {
           if (type === 'checkbox') {
-            const novo = li.getAttribute('aria-checked') !== 'true';
-            li.setAttribute('aria-checked', String(novo));
+            if (misto) {
+              // O primeiro clique RESOLVE o misto para marcado, como faz a
+              // propriedade `indeterminate` do input nativo — e não devolve o
+              // misto a ninguém, porque "alguns" é conclusão de quem consome.
+              misto = false;
+              marcado = true;
+              li.setAttribute('aria-checked', 'true');
+              indicador.replaceChildren(createCheckIcon());
+              item.onIndeterminateChange?.(false);
+              item.onCheckedChange?.(true);
+              item.onClick?.();
+              return;
+            }
+            marcado = !marcado;
+            li.setAttribute('aria-checked', String(marcado));
             indicador.replaceChildren();
-            if (novo) indicador.appendChild(createCheckIcon());
-            item.onCheckedChange?.(novo);
+            if (marcado) indicador.appendChild(createCheckIcon());
+            item.onCheckedChange?.(marcado);
           } else if (item.value) {
             radioValue = item.value;
             sincronizarRadios(li.closest('[data-slot="context-menu-content"]') as HTMLElement);

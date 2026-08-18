@@ -3,6 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const meta: Meta = {
   tags: ['overlay'],
@@ -95,15 +96,6 @@ export const Closed: Story = {
 export const Open: Story = {
   parameters: {
     covers: ['functional.item1', 'functional.item2', 'accessibility.item3'],
-    // Medido na própria factory: o item de marcação é de DOIS estados. A opção
-    // declara `checked?: boolean`, o callback de mudança entrega `boolean`, e o
-    // `aria-checked` é escrito a partir desse booleano. Não há terceiro valor a
-    // receber, logo não há misto para anunciar nem traço para desenhar. A caixa
-    // de seleção avulsa desta stack resolve o misto; o item de menu não a expõe.
-    coversNotApplicable: {
-      'functional.item8':
-        'a factory do item de marcação é de dois estados — a opção é booleana, o callback entrega booleano e o aria-checked sai dele, sem terceiro valor para anunciar como misto',
-    },
   },
   // O menu abre pelo CLIQUE da `play`, não por um `.click()` na montagem: é o
   // caminho de quem usa, e é o único em que dá para afirmar onde o foco pousa.
@@ -257,6 +249,63 @@ export const ItemDisabled: Story = {
 
     await step('Limpa via ESC', async () => {
       await closeAfter();
+    });
+  },
+};
+
+// ─── CheckboxIndeterminate ────────────────────────────────────────────────────
+//
+// Story SEM interação, de propósito. O que ela declara vale na montagem, e o
+// primeiro clique num item misto o resolve para marcado — uma play que clicasse
+// aqui mediria outro estado no REPLAY do painel Interactions, que reexecuta no
+// mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
+
+export const CheckboxIndeterminate: Story = {
+  parameters: { covers: ['functional.item8'] },
+  render: () => {
+    const trigger = createButton({ variant: 'outline', label: 'Colunas' });
+    const menu = createDropdownMenu({
+      trigger,
+      items: [
+        { type: 'label', label: 'Colunas visíveis' },
+        { type: 'checkbox', label: 'Nome', value: 'nome', indeterminate: true },
+        { type: 'checkbox', label: 'E-mail', value: 'email', checked: true },
+        { type: 'checkbox', label: 'Telefone', value: 'telefone', checked: false },
+      ],
+    });
+    // A abertura é da MONTAGEM, e o painel fica aberto até o fim: é o estado que
+    // a story existe para mostrar, e é o que o Chromatic fotografa.
+    queueMicrotask(() => trigger.click());
+    return wrap(menu);
+  },
+  play: async ({ step }) => {
+    const menu = await within(document.body).findByRole('menu');
+    const canvas = within(menu);
+    const misto = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
+    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
+    const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Telefone' });
+
+    await step('O estado misto é anunciado como misto, e não como marcado', async () => {
+      // Uma comparação frouxa leria o misto como verdadeiro; o que a pessoa ouve
+      // tem que separar os três estados.
+      await expect(misto.getAttribute('aria-checked')).toBe('mixed');
+      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
+    });
+
+    await step('O misto desenha traço; o marcado, tique', async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
+      // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
+      // nos dois estados — o defeito — esta asserção fica vermelha.
+      const formaMista = formaDoIndicador(misto);
+      const formaMarcada = formaDoIndicador(marcado);
+      await expect(ehTraco(formaMista)).toBe(true);
+      await expect(ehTique(formaMista)).toBe(false);
+      await expect(ehTique(formaMarcada)).toBe(true);
+    });
+
+    await step('O desmarcado continua sem glifo nenhum', async () => {
+      await expect(formaDoIndicador(desmarcado)).toBeNull();
     });
   },
 };

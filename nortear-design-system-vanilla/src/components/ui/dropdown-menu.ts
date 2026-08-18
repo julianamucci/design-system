@@ -18,11 +18,20 @@ export type DropdownMenuItemDef = {
   shortcut?: string;
   /** Só em `checkbox` e `radio`: estado inicial de marcação. */
   checked?: boolean;
+  /**
+   * Só em `checkbox`: estado misto ("alguns dos filhos selecionados"). Vale
+   * sobre `checked` enquanto durar, e o primeiro clique o resolve para marcado,
+   * como faz a propriedade `indeterminate` do input nativo. Mesma semântica da
+   * caixa de seleção avulsa desta stack.
+   */
+  indeterminate?: boolean;
   /** Só em `radio`: nome do grupo de escolha única a que o item pertence. */
   group?: string;
   onClick?: () => void;
   /** Só em `checkbox` e `radio`: avisado a cada mudança de marcação. */
   onCheckedChange?: (checked: boolean) => void;
+  /** Só em `checkbox`: disparado quando o estado misto é resolvido por interação. */
+  onIndeterminateChange?: (indeterminate: boolean) => void;
 };
 
 export type DropdownMenuOptions = {
@@ -49,20 +58,33 @@ const CLASSE_POR_TIPO = {
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
 /**
+ * Estado de marcação de um item. É TRI-VALORADO: o misto ("alguns dos filhos
+ * selecionados") não é marcado nem desmarcado, e tem símbolo próprio.
+ */
+type EstadoDeMarcacao = 'checked' | 'unchecked' | 'indeterminate';
+
+/**
  * Marca do item escolhido. Fica sempre no DOM; o que muda é o conteúdo.
  *
  * O ícone é montado nó a nó, e não por `innerHTML`: aqui não há conteúdo de
  * fora para sanitizar, mas `innerHTML` numa fábrica é o caminho por onde a
  * injeção entra na próxima vez que alguém passar um rótulo por ali.
+ *
+ * O traço do misto é o MESMO desenho da caixa de seleção avulsa desta stack
+ * (`checkbox.ts`): um segmento horizontal de (5,12) a (19,12). Tique quer dizer
+ * "marcado", e misto não é isso — repetir o tique nos dois estados apagaria a
+ * diferença justamente para quem depende do símbolo.
  */
-function criarIndicador(marcado: boolean): HTMLSpanElement {
+function criarIndicador(estado: EstadoDeMarcacao, slot: string): HTMLSpanElement {
   const span = document.createElement('span');
   span.className = 'nds-dropdown-menu-item-indicator';
-  span.dataset.slot = 'dropdown-menu-item-indicator';
+  // `data-slot` por TIPO de item, como nas outras quatro stacks
+  // (`dropdown-menu-checkbox-item-indicator` / `…-radio-item-indicator`).
+  span.dataset.slot = slot;
   // Redundante com o `aria-checked` que o papel já anuncia: para o leitor de
   // tela é ruído, para quem enxerga é o estado inteiro.
   span.setAttribute('aria-hidden', 'true');
-  if (!marcado) return span;
+  if (estado === 'unchecked') return span;
 
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -71,9 +93,18 @@ function criarIndicador(marcado: boolean): HTMLSpanElement {
   svg.setAttribute('stroke-width', '2');
   svg.setAttribute('stroke-linecap', 'round');
   svg.setAttribute('stroke-linejoin', 'round');
-  const path = document.createElementNS(SVG_NS, 'path');
-  path.setAttribute('d', 'M20 6 9 17l-5-5');
-  svg.appendChild(path);
+  if (estado === 'indeterminate') {
+    const linha = document.createElementNS(SVG_NS, 'line');
+    linha.setAttribute('x1', '5');
+    linha.setAttribute('y1', '12');
+    linha.setAttribute('x2', '19');
+    linha.setAttribute('y2', '12');
+    svg.appendChild(linha);
+  } else {
+    const path = document.createElementNS(SVG_NS, 'path');
+    path.setAttribute('d', 'M20 6 9 17l-5-5');
+    svg.appendChild(path);
+  }
   span.appendChild(svg);
   return span;
 }
@@ -152,10 +183,25 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
       if (item.group) li.dataset.group = item.group;
 
       const marcavel = tipo !== 'item';
-      if (marcavel) {
-        li.setAttribute('aria-checked', String(item.checked ?? false));
-        li.appendChild(criarIndicador(item.checked ?? false));
+      const slotDoIndicador = `dropdown-menu-${tipo}-item-indicator`;
+      // O misto vale SOBRE o marcado enquanto durar — é ele quem manda no que se
+      // anuncia e no que se desenha. Só o item de marcação o tem.
+      let misto = tipo === 'checkbox' && item.indeterminate === true;
+      let marcado = item.checked ?? false;
+
+      function pintarMarcacao(): void {
+        // "mixed" é o que distingue "alguns selecionados" de "todos
+        // selecionados"; um booleano aqui mentiria para quem lê a tela.
+        li.setAttribute('aria-checked', misto ? 'mixed' : String(marcado));
+        const novo = criarIndicador(
+          misto ? 'indeterminate' : marcado ? 'checked' : 'unchecked',
+          slotDoIndicador,
+        );
+        if (li.firstElementChild) li.replaceChild(novo, li.firstElementChild);
+        else li.appendChild(novo);
       }
+
+      if (marcavel) pintarMarcacao();
 
       const texto = document.createElement('span');
       texto.textContent = item.label ?? '';
@@ -173,10 +219,20 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
 
       function alternarMarcacao(): void {
         if (tipo === 'checkbox') {
-          const proximo = li.getAttribute('aria-checked') !== 'true';
-          li.setAttribute('aria-checked', String(proximo));
-          li.replaceChild(criarIndicador(proximo), li.firstElementChild!);
-          item.onCheckedChange?.(proximo);
+          if (misto) {
+            // O primeiro clique RESOLVE o misto para marcado, como faz a
+            // propriedade `indeterminate` do input nativo — e não devolve o
+            // misto a ninguém, porque "alguns" é conclusão de quem consome.
+            misto = false;
+            marcado = true;
+            pintarMarcacao();
+            item.onIndeterminateChange?.(false);
+            item.onCheckedChange?.(true);
+            return;
+          }
+          marcado = !marcado;
+          pintarMarcacao();
+          item.onCheckedChange?.(marcado);
           return;
         }
         // Escolha única: os irmãos do mesmo grupo desmarcam junto.
@@ -186,7 +242,13 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
         irmaos.forEach((irmao) => {
           const escolhido = irmao === li;
           irmao.setAttribute('aria-checked', String(escolhido));
-          irmao.replaceChild(criarIndicador(escolhido), irmao.firstElementChild!);
+          irmao.replaceChild(
+            criarIndicador(
+              escolhido ? 'checked' : 'unchecked',
+              'dropdown-menu-radio-item-indicator',
+            ),
+            irmao.firstElementChild!,
+          );
         });
         item.onCheckedChange?.(true);
       }
