@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect, userEvent, waitFor } from 'storybook/test';
+import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
 import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
+import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 // Sem argTypes, então o painel Controls é desligado — do contrário abriria vazio.
 
@@ -320,6 +321,73 @@ export const DarkPalette: Story = {
         return 0.2126 * r + 0.7152 * g + 0.0722 * b;
       };
       await expect(brilho(cs.backgroundColor)).toBeLessThan(brilho(cs.color));
+    });
+  },
+};
+
+// ─── CheckboxIndeterminate ────────────────────────────────────────────────────
+//
+// Story SEM interação sobre os itens, de propósito. O que ela declara vale na
+// montagem, e o primeiro clique num item misto o resolve para marcado — uma play
+// que clicasse mediria outro estado no REPLAY do painel Interactions, que
+// reexecuta no mesmo DOM. Abrir o menu é idempotente: `abrirPorGesto` parte das
+// coordenadas da área, não do estado anterior.
+
+export const CheckboxIndeterminate: Story = {
+  render: () => ({
+    props: { areaClasse: AREA_CLICK_DIREITO },
+    template: `
+      <div ndsContextMenu>
+        <div
+          ndsContextMenuTrigger
+          [class]="areaClasse"
+          data-align="center"
+          data-justify="center"
+          data-testid="area"
+        >Clique com o botão direito aqui</div>
+
+        <ng-template ndsContextMenuContent>
+          <div ndsContextMenuLabel>Mostrar na tela</div>
+          <div ndsContextMenuCheckboxItem [checked]="'indeterminate'">Colunas</div>
+          <div ndsContextMenuCheckboxItem [checked]="true">Régua</div>
+          <div ndsContextMenuCheckboxItem [checked]="false">Grade</div>
+        </ng-template>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const area = canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
+    const menu = await abrirPorGesto(area);
+    const canvas = within(menu);
+    const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
+    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
+    const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
+
+    await step('O estado misto é anunciado como misto, e não como marcado', async () => {
+      // Uma comparação frouxa leria `'indeterminate'` como verdadeiro; o que a
+      // pessoa ouve tem que separar os três estados.
+      await expect(misto.getAttribute('aria-checked')).toBe('mixed');
+      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
+    });
+
+    await step('O misto desenha traço; o marcado, tique', async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
+      // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
+      // nos dois estados — o defeito — esta asserção fica vermelha.
+      const formaMista = formaDoIndicador(misto);
+      const formaMarcada = formaDoIndicador(marcado);
+      await expect(ehTraco(formaMista)).toBe(true);
+      await expect(ehTique(formaMista)).toBe(false);
+      await expect(ehTique(formaMarcada)).toBe(true);
+    });
+
+    await step('O desmarcado não mostra glifo nenhum', async () => {
+      // Aqui o indicador CONTINUA montado (é assim que a lib deixa possível uma
+      // animação de saída) e some por `display: none`. Sem caixa de layout o
+      // `getBBox` devolve tudo zerado, que é o que o colhedor lê como
+      // "sem glifo" — a asserção mede o que a pessoa vê, não o que existe.
+      await expect(formaDoIndicador(desmarcado)).toBeNull();
     });
   },
 };

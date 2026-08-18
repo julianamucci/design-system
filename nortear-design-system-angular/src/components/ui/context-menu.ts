@@ -32,8 +32,9 @@ import {
   RdxMenuRadioItem,
   RdxMenuRadioItemIndicator,
   injectRdxMenuGroupContext,
+  isIndeterminate,
 } from '@radix-ng/primitives/menu';
-import { ChevronRight, Check } from 'lucide';
+import { ChevronRight, Check, Minus } from 'lucide';
 
 // ─── ContextMenu ──────────────────────────────────────────────────────────────
 //
@@ -331,6 +332,11 @@ type LucideIconNode = [string, Record<string, string>];
 const CONTEXT_ICON_MAP = {
   chevron: ChevronRight as unknown as LucideIconNode[],
   check: Check as unknown as LucideIconNode[],
+  // O traço do estado misto. Não é desenho novo: `Minus` do lucide é
+  // `M5 12h14`, o MESMO segmento que `<line x1="5" y1="12" x2="19" y2="12" />`
+  // da caixa de seleção desta stack — mesma geometria, entrando pelo mesmo
+  // mecanismo de ícone que o resto do menu já usa.
+  minus: Minus as unknown as LucideIconNode[],
 };
 
 @Component({
@@ -416,13 +422,27 @@ export class NdsContextMenuSubTrigger {
   template: `
     <span class="nds-dropdown-menu-item-indicator" data-slot="context-menu-checkbox-item-indicator">
       <span rdxMenuCheckboxItemIndicator>
-        <svg ndsContextMenuIcon kind="check"></svg>
+        <svg ndsContextMenuIcon [kind]="misto() ? 'minus' : 'check'"></svg>
       </span>
     </span>
     <ng-content />
   `,
 })
-export class NdsContextMenuCheckboxItem {}
+export class NdsContextMenuCheckboxItem {
+  private readonly item = inject(RdxMenuCheckboxItem, { self: true });
+
+  /**
+   * O símbolo do estado misto é TRAÇO, não tique.
+   *
+   * Tique quer dizer "marcado", e o misto ("alguns dos filhos") não é isso. O
+   * desenho vem da caixa de seleção desta stack, que já resolve o misto com um
+   * traço horizontal. Mesma razão do item de marcação do menubar: o indicador
+   * da lib não entrega o estado ao conteúdo projetado, então a fonte é o
+   * `checked` do próprio item; e resolver por CSS exigiria os dois glifos no
+   * markup com um oculto — um tique presente num estado que não é "marcado".
+   */
+  protected readonly misto = computed(() => isIndeterminate(this.item.checked()));
+}
 
 @Directive({
   selector: 'div[ndsContextMenuRadioGroup]',

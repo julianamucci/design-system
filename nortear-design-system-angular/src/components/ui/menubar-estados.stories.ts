@@ -3,6 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
 import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
 
@@ -256,6 +257,68 @@ export const CheckboxChecked: Story = {
         await expect(regua.getAttribute('aria-checked')).toBe('false');
       });
       await expect(document.body.contains(menu)).toBe(true);
+    });
+  },
+};
+
+// ─── CheckboxIndeterminate ────────────────────────────────────────────────────
+//
+// Story SEM interação, de propósito. O que ela declara vale na montagem, e o
+// primeiro clique num item misto o resolve para marcado — uma play que clicasse
+// aqui mediria outro estado no REPLAY do painel Interactions, que reexecuta no
+// mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
+
+export const CheckboxIndeterminate: Story = {
+  parameters: {
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+  },
+  render: () => ({
+    template: `
+      <nds-menubar [modal]="false">
+        <nds-menubar-menu [defaultOpen]="true">
+          <button ndsMenubarTrigger>Exibir</button>
+          <ng-template ndsMenubarContent>
+            <div ndsMenubarLabel>Mostrar na tela</div>
+            <div ndsMenubarCheckboxItem [checked]="'indeterminate'">Colunas</div>
+            <div ndsMenubarCheckboxItem [checked]="true">Régua</div>
+            <div ndsMenubarCheckboxItem [checked]="false">Grade</div>
+          </ng-template>
+        </nds-menubar-menu>
+      </nds-menubar>
+    `,
+  }),
+  play: async ({ step }) => {
+    const menu = await esperarPortal('menu');
+    const canvas = within(menu);
+    const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
+    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
+    const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
+
+    await step('O estado misto é anunciado como misto, e não como marcado', async () => {
+      // Uma comparação frouxa leria `'indeterminate'` como verdadeiro; o que a
+      // pessoa ouve tem que separar os três estados.
+      await expect(misto.getAttribute('aria-checked')).toBe('mixed');
+      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
+    });
+
+    await step('O misto desenha traço; o marcado, tique', async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
+      // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
+      // nos dois estados — o defeito — esta asserção fica vermelha.
+      const formaMista = formaDoIndicador(misto);
+      const formaMarcada = formaDoIndicador(marcado);
+      await expect(ehTraco(formaMista)).toBe(true);
+      await expect(ehTique(formaMista)).toBe(false);
+      await expect(ehTique(formaMarcada)).toBe(true);
+    });
+
+    await step('O desmarcado não mostra glifo nenhum', async () => {
+      // Aqui o indicador CONTINUA montado (é assim que a lib deixa possível uma
+      // animação de saída) e some por `display: none`. Sem caixa de layout o
+      // `getBBox` devolve tudo zerado, que é o que o colhedor lê como
+      // "sem glifo" — a asserção mede o que a pessoa vê, não o que existe.
+      await expect(formaDoIndicador(desmarcado)).toBeNull();
     });
   },
 };
