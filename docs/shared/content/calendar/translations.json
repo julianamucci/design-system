@@ -40,7 +40,7 @@
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Use <code>mode=\"single\"</code> por padrão — <code>range</code> só quando o fluxo exigir início e fim.",
-        "item2": "<code>locale</code> de <code>react-day-picker/locale</code> é obrigatório — sem ele os rótulos vão em inglês.",
+        "item2": "Definir o <code>locale</code> é obrigatório — sem ele os nomes de meses e dias vão em inglês.",
         "item3": "Dentro de <code>Popover</code>, combine com <code>Button</code> para compor o padrão <code>DatePicker</code>.",
         "item4": "Use <code>disabled</code> para bloquear datas passadas, futuras ou específicas — aceita função, intervalo ou array.",
         "item5": "Para formulário, integre via <code>FormField</code> com <code>field.value</code> e <code>field.onChange</code>."
@@ -150,7 +150,7 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Modos e Layouts",
-      "note": "O Calendar não tem variantes <code>cva()</code>. O que varia é a <strong>composição</strong>: modo de seleção (<code>mode</code>), layout da legenda (<code>captionLayout</code>) e variante dos botões de navegação (<code>buttonVariant</code>). <strong>Disponibilidade por stack:</strong> <code>range</code> está em React (<code>react-day-picker</code>) e Vue (via <code>RangeCalendar</code>) — Svelte (<code>bits-ui</code>) expõe apenas <code>single</code>/<code>multiple</code>, Vanilla expõe apenas <code>single</code>. <code>showWeekNumber</code> é exclusivo do React. <code>numberOfMonths</code> e <code>captionLayout=\"dropdown\"</code> existem em React, Vue e Svelte.",
+      "note": "O Calendar não tem variantes <code>cva()</code>. O que varia é a <strong>composição</strong>: modo de seleção (<code>mode</code>), layout da legenda (<code>captionLayout</code>) e variante dos botões de navegação (<code>buttonVariant</code>). Nem todo modo de seleção está disponível em toda parte — a tabela de propriedades desta página lista os que este pacote expõe.",
       "items": {
         "single": "<code>mode=\"single\"</code> — seleção de uma data única. Valor: <code>Date | undefined</code>.",
         "multiple": "<code>mode=\"multiple\"</code> — várias datas independentes. Valor: <code>Date[]</code>.",
@@ -221,7 +221,7 @@
         "mode": "Modo de seleção: <code>\"single\"</code>, <code>\"multiple\"</code> ou <code>\"range\"</code>.",
         "selected": "Valor selecionado — <code>Date</code>, <code>Date[]</code> ou <code>{ from, to }</code> conforme o <code>mode</code>.",
         "onSelect": "Callback disparado ao escolher uma data. Recebe o novo valor.",
-        "locale": "Locale do <code>react-day-picker/locale</code> — controla nomes de meses e dias.",
+        "locale": "Idioma do calendário — controla nomes de meses e dias.",
         "disabled": "Datas bloqueadas — aceita <code>Date</code>, array, função ou <code>{ before, after }</code>.",
         "showOutsideDays": "Exibe dias do mês anterior/próximo apagados nas bordas do grid.",
         "captionLayout": "Legenda do mês: <code>\"label\"</code> (texto) ou <code>\"dropdown\"</code> (selects).",
@@ -231,7 +231,7 @@
         "classNames": "Mapa de overrides por slot (<code>root</code>, <code>day</code>, <code>today</code>, etc.)."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "<code>classNames</code> aceita um mapa por slot (<code>day</code>, <code>today</code>, <code>range_start</code>, etc.) — todas as chaves dos <code>defaultClassNames</code> do <code>react-day-picker</code>. Para customizações profundas, use <code>components</code> para substituir partes como <code>DayButton</code> ou <code>Chevron</code>."
+      "extensibility": "<code>classNames</code> aceita um mapa por slot (<code>day</code>, <code>today</code>, <code>range_start</code>, etc.) — uma chave para cada parte do desenho da grade. Para customizações profundas, substitua as partes em si, como o botão do dia ou a seta de navegação."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -289,12 +289,12 @@
       "usedWith": "Costuma ser usado com",
       "datePicker": "Calendar dentro de Popover com Button — padrão composto para seleção inline em formulários.",
       "popover": "Wrapper para esconder o Calendar e acioná-lo por um Button.",
-      "form": "Integração com React Hook Form via <code>FormField</code> e <code>field.onChange</code>.",
+      "form": "Integração com validação de formulário: o campo entrega o valor escolhido ao formulário e recebe de volta o estado de erro.",
       "input": "Alternativa quando basta <code>type=\"date\"</code> nativo do browser."
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "O <code>locale</code> do Calendar vem de <code>react-day-picker/locale</code>. Já o <code>format()</code> do DatePicker vem de <code>date-fns/locale</code> — são pacotes diferentes, ambos precisam estar configurados.",
+      "tip1": "O idioma do Calendar e o do <code>format()</code> do DatePicker vêm de fontes diferentes — configure as duas, ou a data escrita sai num idioma e a grade em outro.",
       "tip2": "Para formulários, use <code>FormField</code> com <code>field.value</code> e <code>field.onChange</code>. O <code>zodResolver</code> valida tipos <code>Date</code> nativamente.",
       "tip3": "Em <code>mode=\"range\"</code>, exibir <code>numberOfMonths={2}</code> reduz o número de cliques de navegação em reservas longas.",
       "tip4": "<code>initialFocus</code> no Calendar dentro de Popover move o foco automaticamente ao abrir — melhora a usabilidade por teclado."
@@ -485,7 +485,7 @@
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Use <code>mode=\"single\"</code> by default — <code>range</code> only when the flow requires start and end.",
-        "item2": "<code>locale</code> from <code>react-day-picker/locale</code> is required — without it labels fall back to English.",
+        "item2": "Setting the <code>locale</code> is required — without it month and weekday names fall back to English.",
         "item3": "Inside a <code>Popover</code>, combine with a <code>Button</code> to compose the <code>DatePicker</code> pattern.",
         "item4": "Use <code>disabled</code> to block past, future or specific dates — accepts function, range or array.",
         "item5": "For forms, integrate via <code>FormField</code> with <code>field.value</code> and <code>field.onChange</code>."
@@ -595,7 +595,7 @@
     "variants": {
       "title": "Variants",
       "visualTitle": "Modes and Layouts",
-      "note": "Calendar has no <code>cva()</code> variants. What varies is the <strong>composition</strong>: selection <code>mode</code>, caption layout (<code>captionLayout</code>) and navigation button variant (<code>buttonVariant</code>). <strong>Availability per stack:</strong> <code>range</code> is supported in React (<code>react-day-picker</code>) and Vue (via <code>RangeCalendar</code>) — Svelte (<code>bits-ui</code>) exposes only <code>single</code>/<code>multiple</code>, Vanilla exposes only <code>single</code>. <code>showWeekNumber</code> is React-only. <code>numberOfMonths</code> and <code>captionLayout=\"dropdown\"</code> are available in React, Vue and Svelte.",
+      "note": "Calendar has no <code>cva()</code> variants. What varies is the <strong>composition</strong>: selection <code>mode</code>, caption layout (<code>captionLayout</code>) and navigation button variant (<code>buttonVariant</code>). Not every selection mode is available everywhere — the property table on this page lists the ones this package exposes.",
       "items": {
         "single": "<code>mode=\"single\"</code> — pick one date. Value: <code>Date | undefined</code>.",
         "multiple": "<code>mode=\"multiple\"</code> — several independent dates. Value: <code>Date[]</code>.",
@@ -666,7 +666,7 @@
         "mode": "Selection mode: <code>\"single\"</code>, <code>\"multiple\"</code> or <code>\"range\"</code>.",
         "selected": "Selected value — <code>Date</code>, <code>Date[]</code> or <code>{ from, to }</code> depending on <code>mode</code>.",
         "onSelect": "Callback fired when a date is picked. Receives the new value.",
-        "locale": "Locale from <code>react-day-picker/locale</code> — controls month and weekday names.",
+        "locale": "Calendar language — controls month and weekday names.",
         "disabled": "Blocked dates — accepts <code>Date</code>, array, function or <code>{ before, after }</code>.",
         "showOutsideDays": "Shows faded days from previous/next months at grid edges.",
         "captionLayout": "Month caption: <code>\"label\"</code> (text) or <code>\"dropdown\"</code> (selects).",
@@ -676,7 +676,7 @@
         "classNames": "Per-slot override map (<code>root</code>, <code>day</code>, <code>today</code>, etc.)."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "<code>classNames</code> accepts a per-slot map (<code>day</code>, <code>today</code>, <code>range_start</code>, etc.) — all <code>defaultClassNames</code> keys from <code>react-day-picker</code>. For deep customization, use <code>components</code> to swap parts like <code>DayButton</code> or <code>Chevron</code>."
+      "extensibility": "<code>classNames</code> accepts a per-slot map (<code>day</code>, <code>today</code>, <code>range_start</code>, etc.) — one key for each part of the grid design. For deep customization, replace the parts themselves, such as the day button or the navigation chevron."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -734,12 +734,12 @@
       "usedWith": "Often used with",
       "datePicker": "Calendar inside Popover with Button — composed pattern for inline date selection in forms.",
       "popover": "Wrapper to hide the Calendar and trigger it via a Button.",
-      "form": "Integration with React Hook Form via <code>FormField</code> and <code>field.onChange</code>.",
+      "form": "Form validation integration: the field hands the chosen value to the form and gets the error state back.",
       "input": "Alternative when the browser's native <code>type=\"date\"</code> is enough."
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "Calendar <code>locale</code> comes from <code>react-day-picker/locale</code>. DatePicker's <code>format()</code> comes from <code>date-fns/locale</code> — different packages, both must be set.",
+      "tip1": "The Calendar language and the DatePicker <code>format()</code> language come from different sources — set both, or the written date lands in one language and the grid in another.",
       "tip2": "For forms, use <code>FormField</code> with <code>field.value</code> and <code>field.onChange</code>. <code>zodResolver</code> validates <code>Date</code> natively.",
       "tip3": "In <code>mode=\"range\"</code>, showing <code>numberOfMonths={2}</code> reduces navigation clicks on long bookings.",
       "tip4": "<code>initialFocus</code> on Calendar inside Popover moves focus automatically on open — improves keyboard UX."
@@ -930,7 +930,7 @@
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Usa <code>mode=\"single\"</code> por defecto — <code>range</code> solo cuando el flujo requiera inicio y fin.",
-        "item2": "<code>locale</code> de <code>react-day-picker/locale</code> es obligatorio — sin él los rótulos caen a inglés.",
+        "item2": "Definir el <code>locale</code> es obligatorio — sin él los nombres de meses y días caen a inglés.",
         "item3": "Dentro de <code>Popover</code>, combina con <code>Button</code> para componer el patrón <code>DatePicker</code>.",
         "item4": "Usa <code>disabled</code> para bloquear fechas pasadas, futuras o específicas — acepta función, rango o array.",
         "item5": "Para formulario, integra vía <code>FormField</code> con <code>field.value</code> y <code>field.onChange</code>."
@@ -1040,7 +1040,7 @@
     "variants": {
       "title": "Variantes",
       "visualTitle": "Modos y Layouts",
-      "note": "Calendar no tiene variantes <code>cva()</code>. Lo que varía es la <strong>composición</strong>: modo de selección (<code>mode</code>), layout de la leyenda (<code>captionLayout</code>) y variante de los botones de navegación (<code>buttonVariant</code>). <strong>Disponibilidad por stack:</strong> <code>range</code> está en React (<code>react-day-picker</code>) y Vue (vía <code>RangeCalendar</code>) — Svelte (<code>bits-ui</code>) expone solo <code>single</code>/<code>multiple</code>, Vanilla expone solo <code>single</code>. <code>showWeekNumber</code> es exclusivo de React. <code>numberOfMonths</code> y <code>captionLayout=\"dropdown\"</code> existen en React, Vue y Svelte.",
+      "note": "Calendar no tiene variantes <code>cva()</code>. Lo que varía es la <strong>composición</strong>: modo de selección (<code>mode</code>), layout de la leyenda (<code>captionLayout</code>) y variante de los botones de navegación (<code>buttonVariant</code>). No todo modo de selección está disponible en todas partes — la tabla de propiedades de esta página lista los que este paquete expone.",
       "items": {
         "single": "<code>mode=\"single\"</code> — selección de una sola fecha. Valor: <code>Date | undefined</code>.",
         "multiple": "<code>mode=\"multiple\"</code> — varias fechas independientes. Valor: <code>Date[]</code>.",
@@ -1111,7 +1111,7 @@
         "mode": "Modo de selección: <code>\"single\"</code>, <code>\"multiple\"</code> o <code>\"range\"</code>.",
         "selected": "Valor seleccionado — <code>Date</code>, <code>Date[]</code> o <code>{ from, to }</code> según el <code>mode</code>.",
         "onSelect": "Callback disparado al elegir una fecha. Recibe el valor nuevo.",
-        "locale": "Locale de <code>react-day-picker/locale</code> — controla nombres de meses y días.",
+        "locale": "Idioma del calendario — controla nombres de meses y días.",
         "disabled": "Fechas bloqueadas — acepta <code>Date</code>, array, función o <code>{ before, after }</code>.",
         "showOutsideDays": "Muestra días del mes anterior/próximo atenuados en los bordes del grid.",
         "captionLayout": "Leyenda del mes: <code>\"label\"</code> (texto) o <code>\"dropdown\"</code> (selects).",
@@ -1121,7 +1121,7 @@
         "classNames": "Mapa de overrides por slot (<code>root</code>, <code>day</code>, <code>today</code>, etc.)."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "<code>classNames</code> acepta un mapa por slot (<code>day</code>, <code>today</code>, <code>range_start</code>, etc.) — todas las claves de <code>defaultClassNames</code> de <code>react-day-picker</code>. Para personalización profunda, usa <code>components</code> para reemplazar partes como <code>DayButton</code> o <code>Chevron</code>."
+      "extensibility": "<code>classNames</code> acepta un mapa por slot (<code>day</code>, <code>today</code>, <code>range_start</code>, etc.) — una clave para cada parte del diseño de la grilla. Para personalización profunda, reemplaza las partes en sí, como el botón del día o la flecha de navegación."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1179,12 +1179,12 @@
       "usedWith": "Se usa frecuentemente con",
       "datePicker": "Calendar dentro de Popover con Button — patrón compuesto para selección inline en formularios.",
       "popover": "Wrapper para esconder el Calendar y accionarlo con un Button.",
-      "form": "Integración con React Hook Form vía <code>FormField</code> y <code>field.onChange</code>.",
+      "form": "Integración con validación de formulario: el campo entrega el valor elegido al formulario y recibe de vuelta el estado de error.",
       "input": "Alternativa cuando basta <code>type=\"date\"</code> nativo del navegador."
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "El <code>locale</code> del Calendar viene de <code>react-day-picker/locale</code>. El <code>format()</code> del DatePicker viene de <code>date-fns/locale</code> — son paquetes distintos, ambos deben estar configurados.",
+      "tip1": "El idioma del Calendar y el del <code>format()</code> del DatePicker vienen de fuentes distintas — configura ambos, o la fecha escrita sale en un idioma y la grilla en otro.",
       "tip2": "Para formularios, usa <code>FormField</code> con <code>field.value</code> y <code>field.onChange</code>. El <code>zodResolver</code> valida tipos <code>Date</code> nativamente.",
       "tip3": "En <code>mode=\"range\"</code>, mostrar <code>numberOfMonths={2}</code> reduce clics de navegación en reservas largas.",
       "tip4": "<code>initialFocus</code> en Calendar dentro de Popover mueve el foco automáticamente al abrir — mejora la UX por teclado."

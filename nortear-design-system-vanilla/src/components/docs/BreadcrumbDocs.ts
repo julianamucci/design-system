@@ -47,7 +47,24 @@ function screenReaderItems(): string[] {
       ?.accessibility?.screenReader ?? {},
   );
 }
-const { t, subscribe } = createTranslation(breadcrumbTranslations as Record<string, unknown>);
+// O compartilhado explica a integração com roteador pela troca do elemento raiz
+// do link. Aqui a factory sempre devolve um `<a href>` pronto — não há elemento
+// a substituir. Divergência de API, registrada neste override em vez de virar
+// ressalva por stack no texto comum. Nenhuma chave `*Code` passa por aqui.
+const { t, subscribe } = createTranslation(breadcrumbTranslations as Record<string, unknown>, {
+  'pt-BR': {
+    'props.extensibility':
+      '<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Para integração com roteadores, a factory do link já devolve um <code>&lt;a&gt;</code> com o <code>href</code> que você passou: intercepte o clique nele e delegue ao roteador, mantendo o endereço real no atributo para abrir em nova aba e para o menu de contexto.',
+  },
+  en: {
+    'props.extensibility':
+      '<code>className</code> — all subcomponents accept <code>className</code> for customization. For router integration, the link factory already returns an <code>&lt;a&gt;</code> with the <code>href</code> you passed: intercept the click on it and delegate to the router, keeping the real address in the attribute so open-in-new-tab and the context menu keep working.',
+  },
+  es: {
+    'props.extensibility':
+      '<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Para integración con enrutadores, la factory del enlace ya devuelve un <code>&lt;a&gt;</code> con el <code>href</code> que pasaste: intercepta el clic y delega al enrutador, manteniendo la dirección real en el atributo para abrir en pestaña nueva y para el menú contextual.',
+  },
+});
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

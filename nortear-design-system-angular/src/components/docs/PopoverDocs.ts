@@ -1078,9 +1078,9 @@ export class NdsPopoverDocs implements AfterViewInit, OnDestroy {
 
   protected readonly noteItems = computed(() => {
     const d = dict();
-    // `notes.item5` descreve as limitações da factory de OUTRA stack. Cada docs
-    // page é lida isolada, então a comparação não tem onde aterrissar aqui — o
-    // item fica de fora. `item1` entra pelo override, com a lib deste stack.
+    // O corte em 4 é guarda: o conteúdo compartilhado já não traz um `item5`
+    // com limitações de uma stack só, e as quatro notas restantes valem aqui.
+    // `item1` entra pelo override, com a lib deste stack.
     return listFromDict(d, 'notes')
       .slice(0, 4)
       .map((content) => ({ title: '', content }));

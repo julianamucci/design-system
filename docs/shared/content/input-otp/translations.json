@@ -354,7 +354,7 @@
         },
         "form": {
           "name": "Form",
-          "description": "Wrapper para validação com react-hook-form e zod."
+          "description": "Wrapper de validação: amarra rótulo, mensagem de erro e estado inválido ao campo."
         },
         "label": {
           "name": "Label",
@@ -832,7 +832,7 @@
         },
         "form": {
           "name": "Form",
-          "description": "Wrapper for validation with react-hook-form and zod."
+          "description": "Validation wrapper: wires label, error message and invalid state to the field."
         },
         "label": {
           "name": "Label",
@@ -1310,7 +1310,7 @@
         },
         "form": {
           "name": "Form",
-          "description": "Wrapper para validación con react-hook-form y zod."
+          "description": "Wrapper de validación: vincula etiqueta, mensaje de error y estado inválido al campo."
         },
         "label": {
           "name": "Label",

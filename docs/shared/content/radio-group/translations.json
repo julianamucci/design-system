@@ -332,13 +332,13 @@
         },
         "form": {
           "name": "Form",
-          "description": "Integração com validação via React Hook Form."
+          "description": "Integração com validação de formulário: rótulo, mensagem de erro e estado inválido amarrados ao grupo."
         }
       }
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o roving tabindex, a navegação por setas com seleção em movimento, a exclusividade da escolha dentro do grupo e os papéis ARIA vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-radio-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Seleção automática ao focar</strong> — comportamento padrão em desktop: navegar com setas já seleciona. Em mobile, requer toque.",
       "item3": "<strong>Não pré-selecione</strong> sem motivo de negócio — força o usuário a confirmar a escolha e evita erros silenciosos.",
       "item4": "<strong>Sem layout próprio</strong> — o componente apenas agrupa; use <code>flex</code>/<code>grid</code> em volta de cada par item+label."
@@ -767,13 +767,13 @@
         },
         "form": {
           "name": "Form",
-          "description": "Validation integration via React Hook Form."
+          "description": "Form validation integration: label, error message and invalid state wired to the group."
         }
       }
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
+      "item1": "<strong>Behaviour and looks in separate layers</strong> — the roving tabindex, arrow navigation with selection on move, the single-choice rule within the group, and the ARIA roles come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-radio-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Auto-select on focus</strong> — default behavior on desktop: arrow navigation selects on move. On mobile, requires tap.",
       "item3": "<strong>Don't pre-select</strong> without business reason — forces user to confirm the choice and avoids silent errors.",
       "item4": "<strong>No own layout</strong> — the component only groups; use <code>flex</code>/<code>grid</code> around each item+label pair."
@@ -1202,13 +1202,13 @@
         },
         "form": {
           "name": "Form",
-          "description": "Integración de validación vía React Hook Form."
+          "description": "Integración con validación de formulario: etiqueta, mensaje de error y estado inválido vinculados al grupo."
         }
       }
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el roving tabindex, la navegación por flechas con selección en movimiento, la exclusividad de la elección dentro del grupo y los roles ARIA vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-radio-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Selección automática al enfocar</strong> — comportamiento por defecto en desktop: navegar con flechas ya selecciona. En móvil requiere toque.",
       "item3": "<strong>No preseleccione</strong> sin razón de negocio — fuerza al usuario a confirmar la elección y evita errores silenciosos.",
       "item4": "<strong>Sin layout propio</strong> — el componente solo agrupa; usa <code>flex</code>/<code>grid</code> alrededor de cada par ítem+label."

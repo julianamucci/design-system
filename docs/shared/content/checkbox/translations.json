@@ -169,10 +169,6 @@
     },
     "props": {
       "title": "Propriedades",
-      "reactTitle": "React",
-      "vueTitle": "Vue",
-      "svelteTitle": "Svelte",
-      "vanillaTitle": "Vanilla",
       "table": {
         "prop": "Propriedade",
         "type": "Tipo",
@@ -566,10 +562,6 @@
     },
     "props": {
       "title": "Properties",
-      "reactTitle": "React",
-      "vueTitle": "Vue",
-      "svelteTitle": "Svelte",
-      "vanillaTitle": "Vanilla",
       "table": {
         "prop": "Property",
         "type": "Type",
@@ -963,10 +955,6 @@
     },
     "props": {
       "title": "Propiedades",
-      "reactTitle": "React",
-      "vueTitle": "Vue",
-      "svelteTitle": "Svelte",
-      "vanillaTitle": "Vanilla",
       "table": {
         "prop": "Propiedad",
         "type": "Tipo",

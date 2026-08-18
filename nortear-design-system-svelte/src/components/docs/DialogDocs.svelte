@@ -113,8 +113,8 @@
   DialogTrigger,
 } from "@/components/ui/dialog";`;
 
-  const codeImportWithScroll = `// Em Svelte/React não existe DialogScrollContent.
-// Aplique max-h + overflow-y-auto manualmente no body do DialogContent:
+  const codeImportWithScroll = `// Não há subcomponente de rolagem: aplique altura máxima
+// + overflow-y-auto no body do DialogContent.
 <DialogContent>
   <DialogHeader>...</DialogHeader>
   <div class="nds-overflow-y" style="max-height: 80vh;">

@@ -42,7 +42,24 @@ import { stripHtml, toPlainText } from '@/lib/strip-html';
 // ─── i18n ─────────────────────────────────────────────────────────────────────
 
 const { t: tNav } = useTranslation(uiTranslations);
-const { t: tContent, locale } = useTranslation(dialogTranslations);
+// O conteúdo compartilhado descreve o padrão de rolagem interna sem nomear
+// subcomponente, porque nem toda stack tem um. Aqui existe `DialogScrollContent`
+// — divergência de API de framework, que fica registrada neste override em vez
+// de virar comparação no texto comum. Nenhuma chave `*Code` passa por aqui.
+const { t: tContent, locale } = useTranslation(dialogTranslations, {
+  'pt-BR': {
+    'notes.tip3':
+      'Conteúdo mais alto que a janela deve rolar dentro do corpo, não junto com a página. Use <code>DialogScrollContent</code> no lugar de <code>DialogContent</code>: ele já dá ao corpo a altura máxima e a rolagem vertical, e mantém cabeçalho e rodapé sempre visíveis.',
+  },
+  en: {
+    'notes.tip3':
+      'Content taller than the window must scroll inside the body, not along with the page. Use <code>DialogScrollContent</code> in place of <code>DialogContent</code>: it already gives the body a max height and vertical scrolling, and keeps header and footer always visible.',
+  },
+  es: {
+    'notes.tip3':
+      'El contenido más alto que la ventana debe desplazarse dentro del cuerpo, no junto con la página. Usa <code>DialogScrollContent</code> en lugar de <code>DialogContent</code>: ya da al cuerpo la altura máxima y el desplazamiento vertical, y mantiene encabezado y pie siempre visibles.',
+  },
+});
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 

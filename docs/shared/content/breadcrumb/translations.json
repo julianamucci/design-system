@@ -186,11 +186,11 @@
         "className": "Classes .nds-* adicionais para customização visual.",
         "children": "Conteúdo do elemento (ícones, texto, componentes filhos).",
         "href": "URL de destino do link. Omitir em <code>BreadcrumbPage</code>.",
-        "render": "Função de renderização customizada (React) — permite integração com routers.",
-        "asChild": "Renderiza o primeiro filho como o elemento raiz (Vue/Svelte)."
+        "render": "Função de renderização customizada — troca o elemento raiz do link, por exemplo pelo componente de link do roteador.",
+        "asChild": "Assume o elemento recebido como filho em vez de criar um <code>&lt;a&gt;</code> próprio."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Para integração com routers (Next.js, React Router, Vue Router), use <code>render</code> (React) ou <code>asChild</code> (Vue/Svelte) no <code>BreadcrumbLink</code>."
+      "extensibility": "<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Para integração com roteadores, o link do rastro assume o elemento de link do roteador em vez de criar um <code>&lt;a&gt;</code> próprio, preservando o pré-carregamento e o histórico que o roteador já cuida."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -574,11 +574,11 @@
         "className": "Additional .nds-* classes for visual customization.",
         "children": "Element content (icons, text, child components).",
         "href": "Link destination URL. Omit on <code>BreadcrumbPage</code>.",
-        "render": "Custom render function (React) — enables router integration.",
-        "asChild": "Renders the first child as the root element (Vue/Svelte)."
+        "render": "Custom render function — replaces the link root element, with the router link component for instance.",
+        "asChild": "Takes over the element received as a child instead of creating its own <code>&lt;a&gt;</code>."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. For router integration (Next.js, React Router, Vue Router), use <code>render</code> (React) or <code>asChild</code> (Vue/Svelte) on <code>BreadcrumbLink</code>."
+      "extensibility": "<code>className</code> — all subcomponents accept <code>className</code> for customization. For router integration, the trail link takes over the router link element instead of creating its own <code>&lt;a&gt;</code>, preserving the prefetching and history the router already handles."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -962,11 +962,11 @@
         "className": "Clases .nds-* adicionales para personalización visual.",
         "children": "Contenido del elemento (íconos, texto, componentes hijos).",
         "href": "URL de destino del enlace. Omitir en <code>BreadcrumbPage</code>.",
-        "render": "Función de render personalizada (React) — permite integración con routers.",
-        "asChild": "Renderiza el primer hijo como elemento raíz (Vue/Svelte)."
+        "render": "Función de render personalizada — reemplaza el elemento raíz del enlace, por ejemplo por el componente de enlace del enrutador.",
+        "asChild": "Asume el elemento recibido como hijo en lugar de crear su propio <code>&lt;a&gt;</code>."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Para integración con routers (Next.js, React Router, Vue Router), usa <code>render</code> (React) o <code>asChild</code> (Vue/Svelte) en <code>BreadcrumbLink</code>."
+      "extensibility": "<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Para integración con enrutadores, el enlace del rastro asume el elemento de enlace del enrutador en lugar de crear su propio <code>&lt;a&gt;</code>, preservando la precarga y el historial que el enrutador ya gestiona."
     },
     "tokens": {
       "title": "Design Tokens",

@@ -232,12 +232,12 @@
         "variant": "Estilo do botão: <code>\"default\"</code> (sem borda) ou <code>\"outline\"</code> (com borda).",
         "size": "Tamanho: <code>\"default\"</code> (h-8), <code>\"sm\"</code> (h-7) ou <code>\"lg\"</code> (h-12).",
         "tooltip": "Tooltip exibido quando a sidebar está no modo icon colapsado. String ou objeto <code>TooltipContent</code>.",
-        "render": "Prop de render do Base UI — permite usar <code>&lt;a&gt;</code> ou outros elementos como root."
+        "render": "Troca o elemento raiz — permite usar <code>&lt;a&gt;</code> ou o componente de link do roteador no lugar do botão."
       },
       "menuSubButton": {
         "isActive": "Marca o subitem como ativo.",
         "size": "Tamanho do texto: <code>\"sm\"</code> (xs) ou <code>\"md\"</code> (sm, padrão).",
-        "render": "Prop de render do Base UI — padrão é <code>&lt;a&gt;</code>."
+        "render": "Troca o elemento raiz — o padrão aqui já é <code>&lt;a&gt;</code>."
       },
       "menuSkeleton": {
         "showIcon": "Exibe um skeleton circular de ícone (16x16px) à esquerda do texto."
@@ -312,7 +312,7 @@
     "notes": {
       "title": "Notas de Implementação",
       "tip1": "O <code>SidebarProvider</code> persiste o estado em cookie (<code>sidebar_state</code>, TTL de 7 dias). Em SSR, leia o cookie no servidor e passe <code>defaultOpen</code> para evitar flash de conteúdo.",
-      "tip2": "O <code>SidebarMenuButton</code> usa <code>useRender</code> do Base UI — para links de roteador, passe <code>render={&lt;Link href=\"...\" /&gt;}</code> ou o equivalente do seu framework.",
+      "tip2": "O botão de menu troca o próprio elemento raiz — para links de roteador, passe o componente de link do seu roteador no lugar do <code>&lt;button&gt;</code> padrão, e o item continua com o desenho e o estado ativo do menu.",
       "tip3": "No modo de recolhimento <strong>icon</strong>, elementos marcados com a classe utilitária correspondente ao estado recolhido são ocultados automaticamente — labels de grupo, subitens e badges desaparecem sem CSS extra.",
       "tip4": "A largura sai de três variáveis CSS: <code>--sidebar-width</code> (16rem) no desktop expandido, <code>--sidebar-width-icon</code> (3rem) no modo recolhido em ícones e <code>--sidebar-width-mobile</code> (18rem) no overlay de mobile. As duas primeiras são declaradas no container raiz; a terceira vive na própria classe do overlay, que abre num portal no fim do documento e por isso não herda nada do container — ela também alimenta <code>--sheet-width</code> e <code>--sheet-max-width</code>, que o painel deslizante lê. Sobrescreva qualquer uma no tema.",
       "tip5": "Nunca aninhe <code>SidebarProvider</code> — ele fornece contexto global de layout. Use apenas uma instância por página."
@@ -710,12 +710,12 @@
         "variant": "Button style: <code>\"default\"</code> (no border) or <code>\"outline\"</code> (with border).",
         "size": "Size: <code>\"default\"</code> (h-8), <code>\"sm\"</code> (h-7), or <code>\"lg\"</code> (h-12).",
         "tooltip": "Tooltip shown when sidebar is in icon collapsed mode. String or <code>TooltipContent</code> object.",
-        "render": "Base UI render prop — allows using <code>&lt;a&gt;</code> or other elements as root."
+        "render": "Replaces the root element — lets you use <code>&lt;a&gt;</code> or the router link component instead of the button."
       },
       "menuSubButton": {
         "isActive": "Marks the sub-item as active.",
         "size": "Text size: <code>\"sm\"</code> (xs) or <code>\"md\"</code> (sm, default).",
-        "render": "Base UI render prop — defaults to <code>&lt;a&gt;</code>."
+        "render": "Replaces the root element — the default here is already <code>&lt;a&gt;</code>."
       },
       "menuSkeleton": {
         "showIcon": "Displays a circular icon skeleton (16x16px) to the left of the text skeleton."
@@ -790,7 +790,7 @@
     "notes": {
       "title": "Implementation Notes",
       "tip1": "The <code>SidebarProvider</code> persists state in a cookie (<code>sidebar_state</code>, 7-day TTL). In SSR, read the cookie server-side and pass <code>defaultOpen</code> to avoid content flash.",
-      "tip2": "The <code>SidebarMenuButton</code> uses Base UI's <code>useRender</code> — for router links, pass <code>render={&lt;Link href=\"...\" /&gt;}</code> or the equivalent for your framework.",
+      "tip2": "The menu button swaps its own root element — for router links, pass your router link component in place of the default <code>&lt;button&gt;</code>, and the item keeps the menu design and active state.",
       "tip3": "In the <strong>icon</strong> collapse mode, elements marked with the utility class that targets the collapsed state are hidden automatically — group labels, sub-items, and badges disappear without extra CSS.",
       "tip4": "Width comes from three CSS variables: <code>--sidebar-width</code> (16rem) on expanded desktop, <code>--sidebar-width-icon</code> (3rem) in icon collapsed mode, and <code>--sidebar-width-mobile</code> (18rem) in the mobile overlay. The first two are declared on the root container; the third lives on the overlay class itself, because the overlay opens in a portal at the end of the document and inherits nothing from the container — it also feeds <code>--sheet-width</code> and <code>--sheet-max-width</code>, which the sliding panel reads. Override any of them in the theme.",
       "tip5": "Never nest <code>SidebarProvider</code> — it provides global layout context. Use only one instance per page."
@@ -1188,12 +1188,12 @@
         "variant": "Estilo del botón: <code>\"default\"</code> (sin borde) o <code>\"outline\"</code> (con borde).",
         "size": "Tamaño: <code>\"default\"</code> (h-8), <code>\"sm\"</code> (h-7) o <code>\"lg\"</code> (h-12).",
         "tooltip": "Tooltip mostrado cuando el sidebar está en modo icon colapsado. String u objeto <code>TooltipContent</code>.",
-        "render": "Prop render de Base UI — permite usar <code>&lt;a&gt;</code> u otros elementos como root."
+        "render": "Reemplaza el elemento raíz — permite usar <code>&lt;a&gt;</code> o el componente de enlace del enrutador en lugar del botón."
       },
       "menuSubButton": {
         "isActive": "Marca el subítem como activo.",
         "size": "Tamaño del texto: <code>\"sm\"</code> (xs) o <code>\"md\"</code> (sm, predeterminado).",
-        "render": "Prop render de Base UI — predeterminado es <code>&lt;a&gt;</code>."
+        "render": "Reemplaza el elemento raíz — el predeterminado aquí ya es <code>&lt;a&gt;</code>."
       },
       "menuSkeleton": {
         "showIcon": "Muestra un skeleton circular de ícono (16x16px) a la izquierda del skeleton de texto."
@@ -1268,7 +1268,7 @@
     "notes": {
       "title": "Notas de Implementación",
       "tip1": "El <code>SidebarProvider</code> persiste el estado en cookie (<code>sidebar_state</code>, TTL de 7 días). En SSR, lee el cookie en el servidor y pasa <code>defaultOpen</code> para evitar flash de contenido.",
-      "tip2": "El <code>SidebarMenuButton</code> usa <code>useRender</code> de Base UI — para links de enrutador, pasa <code>render={&lt;Link href=\"...\" /&gt;}</code> o el equivalente de tu framework.",
+      "tip2": "El botón de menú cambia su propio elemento raíz — para enlaces de enrutador, pasa el componente de enlace de tu enrutador en lugar del <code>&lt;button&gt;</code> predeterminado, y el ítem conserva el diseño y el estado activo del menú.",
       "tip3": "En el modo de colapso <strong>icon</strong>, los elementos marcados con la clase utilitaria que apunta al estado colapsado se ocultan automáticamente — labels de grupo, subítems y badges desaparecen sin CSS extra.",
       "tip4": "El ancho sale de tres variables CSS: <code>--sidebar-width</code> (16rem) en escritorio expandido, <code>--sidebar-width-icon</code> (3rem) en el modo recogido en iconos y <code>--sidebar-width-mobile</code> (18rem) en el overlay móvil. Las dos primeras se declaran en el contenedor raíz; la tercera vive en la propia clase del overlay, que se abre en un portal al final del documento y por eso no hereda nada del contenedor — también alimenta <code>--sheet-width</code> y <code>--sheet-max-width</code>, que lee el panel deslizante. Sobrescribe cualquiera en el tema.",
       "tip5": "Nunca anides <code>SidebarProvider</code> — provee contexto global de layout. Usa solo una instancia por página."

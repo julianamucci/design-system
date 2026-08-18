@@ -586,7 +586,7 @@ import { Label } from "@/components/ui/label";`;
     title={$tStore('props.title')}
     tables={[
       {
-        title: $tStore('props.svelteTitle'),
+        title: 'Checkbox',
         cols: {
           prop: $tStore('props.table.prop'),
           type: $tStore('props.table.type'),

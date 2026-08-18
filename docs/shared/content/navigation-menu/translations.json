@@ -345,7 +345,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: NavigationMenu usa <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom com hover/focus events.",
+      "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a abertura por ponteiro e por foco, a navegação por teclado entre itens, o posicionamento do painel e os papéis ARIA do menu vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-navigation-menu-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Viewport compartilhado</strong>: ao contrário do DropdownMenu (cada Content em portal próprio), o NavigationMenu usa um único Viewport que muda de tamanho com transição.",
       "item3": "<strong>Mobile</strong>: NavigationMenu não funciona bem em telas pequenas — sempre tenha um <code>Drawer</code> com menu vertical como fallback responsive.",
       "item4": "<strong>Mega-menu</strong>: para Content com grid + cards, use <code>className=\"grid w-[600px] grid-cols-2 gap-3 p-4\"</code> dentro do <code>&lt;ul&gt;</code>.",
@@ -801,7 +801,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: NavigationMenu uses <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> uses a custom factory with hover/focus events.",
+      "item1": "<strong>Behaviour and looks in separate layers</strong> — opening by pointer and by focus, keyboard navigation between items, panel positioning and the menu ARIA roles come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-navigation-menu-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Shared Viewport</strong>: unlike DropdownMenu (each Content in its own portal), NavigationMenu uses a single Viewport that resizes with transition.",
       "item3": "<strong>Mobile</strong>: NavigationMenu doesn't work well on small screens — always have a <code>Drawer</code> with vertical menu as a responsive fallback.",
       "item4": "<strong>Mega-menu</strong>: for Content with grid + cards, use <code>className=\"grid w-[600px] grid-cols-2 gap-3 p-4\"</code> inside <code>&lt;ul&gt;</code>.",
@@ -1257,7 +1257,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: NavigationMenu usa <code>base-ui/navigation-menu</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte). <strong>Vanilla</strong> usa factory custom con eventos hover/focus.",
+      "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la apertura por puntero y por foco, la navegación por teclado entre ítems, el posicionamiento del panel y los roles ARIA del menú vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-navigation-menu-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Viewport compartido</strong>: a diferencia de DropdownMenu (cada Content en su propio portal), el NavigationMenu usa un único Viewport que cambia de tamaño con transición.",
       "item3": "<strong>Mobile</strong>: NavigationMenu no funciona bien en pantallas pequeñas — siempre ten un <code>Drawer</code> con menú vertical como fallback responsive.",
       "item4": "<strong>Mega-menú</strong>: para Content con grid + tarjetas, usa <code>className=\"grid w-[600px] grid-cols-2 gap-3 p-4\"</code> dentro del <code>&lt;ul&gt;</code>.",

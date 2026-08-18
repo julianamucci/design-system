@@ -350,7 +350,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o estado <code>aria-pressed</code>, a alternância por ponteiro e por teclado e o bloqueio da interação quando desabilitado vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-toggle</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle usa <code>aria-pressed</code> (botão de alternância), que é o contrato de estado; Switch usa <code>role=\"switch\"</code> + <code>aria-checked</code>. O atributo de estado no DOM varia com a lib headless (<code>data-state=\"on|off\"</code> ou <code>data-pressed</code>), e a folha de estilo aceita as duas formas.",
       "item3": "<strong>Token de raio</strong> — o raio sai de <code>--radius-button</code>, o mesmo do Button, e acompanha a identidade de forma do tema.",
       "item4": "<strong>Para conjunto</strong> — use <code>ToggleGroup</code> em vez de múltiplos Toggle soltos quando representam escolha conjunta."
@@ -797,7 +797,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
+      "item1": "<strong>Behaviour and looks in separate layers</strong> — the <code>aria-pressed</code> state, toggling by pointer and by keyboard, and blocking interaction when disabled come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-toggle</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle uses <code>aria-pressed</code> (toggle button), which is the state contract; Switch uses <code>role=\"switch\"</code> + <code>aria-checked</code>. The DOM state attribute varies with the headless lib (<code>data-state=\"on|off\"</code> or <code>data-pressed</code>), and the stylesheet accepts both forms.",
       "item3": "<strong>Radius token</strong> — the radius comes from <code>--radius-button</code>, the same as Button, and follows the theme shape identity.",
       "item4": "<strong>For sets</strong> — use <code>ToggleGroup</code> instead of multiple loose Toggles when they represent a joint choice."
@@ -1244,7 +1244,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el estado <code>aria-pressed</code>, la alternancia por puntero y por teclado y el bloqueo de la interacción cuando está deshabilitado vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-toggle</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>aria-pressed vs aria-checked</strong> — Toggle usa <code>aria-pressed</code> (botón de alternancia), que es el contrato de estado; Switch usa <code>role=\"switch\"</code> + <code>aria-checked</code>. El atributo de estado en el DOM varía con la lib headless (<code>data-state=\"on|off\"</code> o <code>data-pressed</code>), y la hoja de estilo acepta las dos formas.",
       "item3": "<strong>Token de radio</strong> — el radio sale de <code>--radius-button</code>, el mismo del Button, y acompaña la identidad de forma del tema.",
       "item4": "<strong>Para conjunto</strong> — usa <code>ToggleGroup</code> en vez de múltiples Toggle sueltos cuando representan una elección conjunta."

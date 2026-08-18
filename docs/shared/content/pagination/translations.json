@@ -336,8 +336,7 @@
       "item1": "<strong>Renderiza <code>&lt;a&gt;</code> por padrão</strong> — em SPAs sem URLs reais, componha com elemento filho para renderizar <code>&lt;button&gt;</code>.",
       "item2": "<strong>Estado disabled</strong> — em <code>&lt;a&gt;</code> não existe <code>disabled</code>. O par correto é <code>aria-disabled=\"true\"</code> mais <code>tabindex=\"-1\"</code>; a opacidade e o bloqueio do ponteiro vêm do CSS do design system.",
       "item3": "<strong>Reticências tipográficas</strong> — o caractere <code>…</code> (U+2026) como texto do elemento, não três pontos <code>...</code> nem um ícone. É o que o leitor de tela ignora e o que o CSS dimensiona.",
-      "item4": "<strong>Mobile</strong> — o texto de Previous e Next é oculto em telas menores que <code>sm</code>; o ícone permanece visível.",
-      "item5": "<strong>Vanilla</strong> — a factory <code>createPagination({ total, current, onPageChange })</code> não permite compor com elemento filho nem expõe <code>PaginationLink</code> individuais. Para integrar com router, use <code>onPageChange</code> e atualize a URL manualmente."
+      "item4": "<strong>Mobile</strong> — o texto de Previous e Next é oculto em telas menores que <code>sm</code>; o ícone permanece visível."
     },
     "analytics": {
       "title": "Analytics",
@@ -768,8 +767,7 @@
       "item1": "<strong>Renders <code>&lt;a&gt;</code> by default</strong> — in SPAs without real URLs, compose with a child element to render <code>&lt;button&gt;</code>.",
       "item2": "<strong>Disabled state</strong> — <code>&lt;a&gt;</code> has no <code>disabled</code>. The correct pair is <code>aria-disabled=\"true\"</code> plus <code>tabindex=\"-1\"</code>; opacity and pointer blocking come from the design system CSS.",
       "item3": "<strong>Typographic ellipsis</strong> — the <code>…</code> character (U+2026) as the element text, not three dots <code>...</code> and not an icon. It is what the screen reader ignores and what the CSS sizes.",
-      "item4": "<strong>Mobile</strong> — Previous and Next text is hidden below <code>sm</code> screens; the icon stays visible.",
-      "item5": "<strong>Vanilla</strong> — the <code>createPagination({ total, current, onPageChange })</code> factory does not allow composing with a child element nor exposes individual <code>PaginationLink</code>. To integrate with a router, use <code>onPageChange</code> and update the URL manually."
+      "item4": "<strong>Mobile</strong> — Previous and Next text is hidden below <code>sm</code> screens; the icon stays visible."
     },
     "analytics": {
       "title": "Analytics",
@@ -1200,8 +1198,7 @@
       "item1": "<strong>Renderiza <code>&lt;a&gt;</code> por defecto</strong> — en SPAs sin URLs reales, compón con elemento hijo para renderizar <code>&lt;button&gt;</code>.",
       "item2": "<strong>Estado disabled</strong> — en <code>&lt;a&gt;</code> no existe <code>disabled</code>. El par correcto es <code>aria-disabled=\"true\"</code> más <code>tabindex=\"-1\"</code>; la opacidad y el bloqueo del puntero vienen del CSS del design system.",
       "item3": "<strong>Puntos suspensivos tipográficos</strong> — el carácter <code>…</code> (U+2026) como texto del elemento, no tres puntos <code>...</code> ni un icono. Es lo que el lector de pantalla ignora y lo que el CSS dimensiona.",
-      "item4": "<strong>Mobile</strong> — el texto de Previous y Next se oculta en pantallas menores que <code>sm</code>; el icono permanece visible.",
-      "item5": "<strong>Vanilla</strong> — la factory <code>createPagination({ total, current, onPageChange })</code> no permite componer con elemento hijo ni expone <code>PaginationLink</code> individuales. Para integrar con router, usa <code>onPageChange</code> y actualiza la URL manualmente."
+      "item4": "<strong>Mobile</strong> — el texto de Previous y Next se oculta en pantallas menores que <code>sm</code>; el icono permanece visible."
     },
     "analytics": {
       "title": "Analytics",

@@ -365,7 +365,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> Dialog (React), <code>reka-ui</code> Dialog (Vue), <code>bits-ui</code> Dialog (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a modalidade do overlay, a retenção do foco enquanto aberto, o bloqueio da rolagem de fundo, o fechamento por Escape e o retorno do foco ao gatilho vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-sheet-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Sheet usa Dialog</strong> — internamente é uma Dialog com estilo de painel lateral; daí a obrigatoriedade de Title/Description.",
       "item3": "<strong>side no Content</strong> — a prop <code>side</code> fica no <code>SheetContent</code>, não no <code>Sheet</code> root.",
       "item4": "<strong>Largura padrão</strong> — em <code>side=\"right\"</code>/<code>\"left\"</code>: 75% da largura da tela, com teto de 24rem. Para painéis maiores, redefina <code>--sheet-width</code> e <code>--sheet-max-width</code>. Uma classe de largura não resolve: a regra de lado é mais específica que qualquer utilitário, e custom property não disputa especificidade."
@@ -836,7 +836,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> Dialog (React), <code>reka-ui</code> Dialog (Vue), <code>bits-ui</code> Dialog (Svelte), custom factory (Vanilla).",
+      "item1": "<strong>Behaviour and looks in separate layers</strong> — the modal overlay, keeping focus inside while open, locking background scroll, closing on Escape and returning focus to the trigger come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-sheet-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Sheet uses Dialog</strong> — internally it's a Dialog with side-panel styling; hence the mandatory Title/Description.",
       "item3": "<strong>side on Content</strong> — the <code>side</code> prop is on <code>SheetContent</code>, not <code>Sheet</code> root.",
       "item4": "<strong>Default width</strong> — on <code>side=\"right\"</code>/<code>\"left\"</code>: 75% of the viewport width, capped at 24rem. For wider panels, redefine <code>--sheet-width</code> and <code>--sheet-max-width</code>. A width utility class will not do it: the side rule is more specific than any utility, and custom properties do not compete on specificity."
@@ -1307,7 +1307,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> Dialog (React), <code>reka-ui</code> Dialog (Vue), <code>bits-ui</code> Dialog (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la modalidad del overlay, la retención del foco mientras está abierto, el bloqueo del desplazamiento de fondo, el cierre por Escape y el retorno del foco al disparador vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-sheet-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Sheet usa Dialog</strong> — internamente es un Dialog con estilo de panel lateral; de ahí la obligatoriedad de Title/Description.",
       "item3": "<strong>side en Content</strong> — la prop <code>side</code> va en <code>SheetContent</code>, no en <code>Sheet</code> root.",
       "item4": "<strong>Ancho por defecto</strong> — en <code>side=\"right\"</code>/<code>\"left\"</code>: 75% del ancho de la pantalla, con tope de 24rem. Para paneles más grandes, redefine <code>--sheet-width</code> y <code>--sheet-max-width</code>. Una clase de ancho no lo resuelve: la regla de lado es más específica que cualquier utilidad, y las custom properties no compiten por especificidad."

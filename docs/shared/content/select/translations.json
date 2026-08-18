@@ -363,7 +363,7 @@
         },
         "form": {
           "name": "Form",
-          "description": "Integração com validação via React Hook Form."
+          "description": "Integração com validação de formulário: rótulo, mensagem de erro e estado inválido amarrados ao campo."
         }
       }
     },
@@ -834,7 +834,7 @@
         },
         "form": {
           "name": "Form",
-          "description": "Validation integration via React Hook Form."
+          "description": "Form validation integration: label, error message and invalid state wired to the field."
         }
       }
     },
@@ -1305,7 +1305,7 @@
         },
         "form": {
           "name": "Form",
-          "description": "Integración de validación vía React Hook Form."
+          "description": "Integración con validación de formulario: etiqueta, mensaje de error y estado inválido vinculados al campo."
         }
       }
     },

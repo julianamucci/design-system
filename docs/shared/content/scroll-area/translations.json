@@ -306,7 +306,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a medição do conteúdo, o dimensionamento e a visibilidade das barras e o arrasto do polegar vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-scroll-area-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Altura obrigatória</strong> — o ScrollArea só rola quando o container pai tem altura definida; sem isso o conteúdo simplesmente expande.",
       "item3": "<strong>Mobile</strong> — em telas pequenas prefira <code>overflow-auto</code> nativo; ScrollArea pode quebrar gestos de swipe e inércia.",
       "item4": "<strong>Não aninhar</strong> — múltiplas ScrollAreas dentro umas das outras causam scroll duplo confuso."
@@ -709,7 +709,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
+      "item1": "<strong>Behaviour and looks in separate layers</strong> — measuring the content, sizing and showing the scrollbars, and dragging the thumb come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-scroll-area-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Required height</strong> — ScrollArea only scrolls when parent container has explicit height; without it, content simply expands.",
       "item3": "<strong>Mobile</strong> — on small screens prefer native <code>overflow-auto</code>; ScrollArea can break swipe gestures and inertia.",
       "item4": "<strong>Don't nest</strong> — multiple ScrollAreas nested cause confusing double scroll."
@@ -1112,7 +1112,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la medición del contenido, el dimensionamiento y la visibilidad de las barras y el arrastre del pulgar vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-scroll-area-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Altura obligatoria</strong> — el ScrollArea solo desplaza cuando el contenedor padre tiene altura definida; sin eso el contenido simplemente se expande.",
       "item3": "<strong>Móvil</strong> — en pantallas pequeñas prefiere <code>overflow-auto</code> nativo; ScrollArea puede romper gestos de swipe e inercia.",
       "item4": "<strong>No anidar</strong> — múltiples ScrollAreas anidados causan scroll doble confuso."

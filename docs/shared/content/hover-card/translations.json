@@ -329,7 +329,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: HoverCard usa <code>base-ui/preview-card</code> (React), <code>reka-ui/HoverCard</code> (Vue), <code>bits-ui/LinkPreview</code> (Svelte). <strong>Vanilla</strong> usa factory custom com mouseenter/mouseleave + delays.",
+      "item1": "<strong>Comportamento e visual em camadas separadas</strong> — os atrasos de abertura e de fechamento, o posicionamento ancorado no gatilho com desvio por colisão e a amarração ARIA entre gatilho e painel vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-hover-card-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Portal</strong>: Content renderiza em portal fora de <code>#storybook-root</code>. Em previews, aplicar <code>contain: layout</code> no wrapper.",
       "item3": "<strong>Touch devices</strong>: hover não funciona em touch. SEMPRE forneça alternativa (clique no link, página dedicada). HoverCard é enriquecimento, não único caminho.",
       "item4": "<strong>Esperas</strong>: a espera padrão do sistema é de 600ms para abrir e 300ms para fechar, igual nas cinco stacks. Para previews ricos use 300-500ms; abaixo disso o cartão passa a abrir quando o cursor só atravessa o texto.",
@@ -763,7 +763,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: HoverCard uses <code>base-ui/preview-card</code> (React), <code>reka-ui/HoverCard</code> (Vue), <code>bits-ui/LinkPreview</code> (Svelte). <strong>Vanilla</strong> uses a custom factory with mouseenter/mouseleave + delays.",
+      "item1": "<strong>Behaviour and looks in separate layers</strong> — the open and close delays, the trigger-anchored positioning with collision shifting and the ARIA wiring between trigger and panel come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-hover-card-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Portal</strong>: Content renders in a portal outside <code>#storybook-root</code>. In previews, apply <code>contain: layout</code> on the wrapper.",
       "item3": "<strong>Touch devices</strong>: hover doesn't work on touch. ALWAYS provide alternative (link click, dedicated page). HoverCard is enrichment, not the only path.",
       "item4": "<strong>Delays</strong>: the system default is 600ms to open and 300ms to close, the same in all five stacks. For rich previews use 300-500ms; below that the card starts opening when the cursor merely crosses the text.",
@@ -1197,7 +1197,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: HoverCard usa <code>base-ui/preview-card</code> (React), <code>reka-ui/HoverCard</code> (Vue), <code>bits-ui/LinkPreview</code> (Svelte). <strong>Vanilla</strong> usa factory custom con mouseenter/mouseleave + delays.",
+      "item1": "<strong>Comportamiento y visual en capas separadas</strong> — los retrasos de apertura y de cierre, el posicionamiento anclado al disparador con desvío por colisión y el vínculo ARIA entre disparador y panel vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-hover-card-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Portal</strong>: Content renderiza en portal fuera de <code>#storybook-root</code>. En previews, aplica <code>contain: layout</code> en el wrapper.",
       "item3": "<strong>Touch devices</strong>: hover no funciona en touch. SIEMPRE proporciona alternativa (clic en el link, página dedicada). HoverCard es enriquecimiento, no único camino.",
       "item4": "<strong>Esperas</strong>: la espera predeterminada del sistema es de 600ms para abrir y 300ms para cerrar, igual en los cinco stacks. Para previews ricos usa 300-500ms; por debajo de eso la tarjeta empieza a abrirse cuando el cursor solo atraviesa el texto.",

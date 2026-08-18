@@ -65,6 +65,11 @@ const { t, dict } = useTranslation(calendarTranslations as Record<string, unknow
       'Não existe nesta stack: classes extras vão no atributo class do elemento, e o framework as mescla com a base.',
     'props.table.className':
       'Não é uma entrada: o framework mescla o class escrito no elemento com a classe base.',
+    // O compartilhado deixou de listar disponibilidade stack a stack. Quem lê
+    // esta página precisa saber o que ESTE pacote expõe — e é aqui que isso
+    // fica registrado, não numa comparação no conteúdo comum.
+    'variants.note':
+      'O Calendar não tem variantes <code>cva()</code>. O que varia é a <strong>composição</strong>: modo de seleção (<code>mode</code>), layout da legenda (<code>captionLayout</code>) e variante dos botões de navegação (<code>buttonVariant</code>). Aqui o modo é <code>single</code> ou <code>multiple</code> — não há intervalo, porque o primitivo expõe uma data ou uma lista de datas avulsas, nunca um par início/fim. <code>captionLayout="dropdown"</code> e <code>numberOfMonths</code> estão disponíveis.',
   },
   en: {
     'props.table.mode': 'Selection mode: one date, or several separate dates.',
@@ -76,6 +81,8 @@ const { t, dict } = useTranslation(calendarTranslations as Record<string, unknow
       'Does not exist in this stack: extra classes go on the element class attribute, and the framework merges them with the base.',
     'props.table.className':
       'Not an entry: the framework merges the class written on the element with the base class.',
+    'variants.note':
+      'Calendar has no <code>cva()</code> variants. What varies is the <strong>composition</strong>: selection <code>mode</code>, caption layout (<code>captionLayout</code>) and navigation button variant (<code>buttonVariant</code>). Here the mode is <code>single</code> or <code>multiple</code> — there is no range, because the primitive exposes one date or a list of separate dates, never a start/end pair. <code>captionLayout="dropdown"</code> and <code>numberOfMonths</code> are available.',
   },
   es: {
     'props.table.mode': 'Modo de selección: una fecha o varias fechas sueltas.',
@@ -87,6 +94,8 @@ const { t, dict } = useTranslation(calendarTranslations as Record<string, unknow
       'No existe en este stack: las clases extra van en el atributo class del elemento, y el framework las combina con la base.',
     'props.table.className':
       'No es una entrada: el framework combina el class escrito en el elemento con la clase base.',
+    'variants.note':
+      'Calendar no tiene variantes <code>cva()</code>. Lo que varía es la <strong>composición</strong>: modo de selección (<code>mode</code>), layout de la leyenda (<code>captionLayout</code>) y variante de los botones de navegación (<code>buttonVariant</code>). Aquí el modo es <code>single</code> o <code>multiple</code> — no hay intervalo, porque el primitivo expone una fecha o una lista de fechas sueltas, nunca un par inicio/fin. <code>captionLayout="dropdown"</code> y <code>numberOfMonths</code> están disponibles.',
   },
 });
 

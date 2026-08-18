@@ -660,7 +660,9 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
             title={tContent("props.title")}
             tables={[
               {
-                title: tContent("props.reactTitle"),
+                // Título da tabela é o nome do primitivo, não o da stack: a
+                // página é lida isolada e só há uma tabela aqui.
+                title: "Checkbox",
                 cols: {
                   prop: tContent("props.table.prop"),
                   type: tContent("props.table.type"),

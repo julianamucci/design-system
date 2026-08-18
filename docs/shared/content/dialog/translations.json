@@ -46,7 +46,7 @@
         "item1": "Use para formulários modais, edição de recursos ou conteúdo informativo que precisa de atenção temporária.",
         "item2": "Sempre inclua <code>DialogTitle</code> — base para <code>aria-labelledby</code> e leitura por leitores de tela.",
         "item3": "Inclua <code>DialogDescription</code> sempre que houver contexto adicional — alimenta <code>aria-describedby</code>.",
-        "item4": "Para conteúdo longo, use <code>DialogScrollContent</code> (Vue) ou aplique <code>max-h</code> + <code>overflow-y-auto</code> manualmente.",
+        "item4": "Para conteúdo longo, deixe o corpo rolar por dentro: altura máxima no corpo mais rolagem no eixo vertical, com cabeçalho e rodapé fixos.",
         "item5": "Para confirmação destrutiva (excluir, cancelar, encerrar), use <code>AlertDialog</code> — Dialog não é o componente certo.",
         "item6": "Em mobile com formulários longos, considere <code>Sheet</code> ou <code>Drawer</code> em vez de Dialog."
       },
@@ -156,7 +156,7 @@
     "import": {
       "title": "Importação",
       "basic": "Import básico:",
-      "withScroll": "Com scroll interno (Vue):"
+      "withScroll": "Com scroll interno:"
     },
     "variants": {
       "title": "Variantes",
@@ -165,7 +165,7 @@
       "items": {
         "default": "Title + Description + Footer com ação primária. Composição padrão para formulários e edições.",
         "withForm": "Body com formulário inline (inputs, selects). Submissão dispara a ação primária do Footer.",
-        "withScrollContent": "Body com conteúdo longo e scroll interno. Header e Footer fixos. Em Vue, use <code>DialogScrollContent</code>.",
+        "withScrollContent": "Body com conteúdo longo e scroll interno. Header e Footer fixos.",
         "noFooter": "Apenas Title + Description, sem Footer. Para uso informativo ou pré-visualização passiva.",
         "withDestructiveAction": "Footer com ação primária <code>destructive</code>. Diferente de AlertDialog — use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista).",
         "customCloseInFooter": "<code>showCloseButton={false}</code> no Content e <code>showCloseButton</code> no Footer — botão de fechar fica abaixo das ações.",
@@ -239,7 +239,7 @@
         "children": "Conteúdo renderizado dentro do subcomponente. Em Title e Description, é o texto exibido."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "Todos os subcomponentes aceitam <code>className</code> e props HTML nativos. <code>DialogContent</code> repassa props do Popup da Base UI (ex: <code>onPointerDownOutside</code>, <code>onEscapeKeyDown</code>) para customizar o fechamento."
+      "extensibility": "Todos os subcomponentes aceitam <code>className</code> e props HTML nativos. O conteúdo repassa as props do painel flutuante da camada de comportamento (interceptar o ponteiro fora e a tecla Escape, por exemplo) para customizar o fechamento."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -300,7 +300,7 @@
       "title": "Notas de Implementação",
       "tip1": "Por padrão, <code>DialogContent</code> renderiza em Portal — isola de overflow e transform de pais, mas pode causar conflitos com z-index custom. Use <code>className=\"z-[60]\"</code> se precisar elevar.",
       "tip2": "Para fechar Dialog após submit assíncrono, controle <code>open</code> via state e feche apenas em caso de sucesso. Em erro, mantenha aberto e exiba feedback inline.",
-      "tip3": "<code>DialogScrollContent</code> existe apenas em Vue (Reka UI). Em React/Svelte, aplique <code>max-h-[80vh] overflow-y-auto</code> manualmente no Body.",
+      "tip3": "Conteúdo mais alto que a janela deve rolar dentro do corpo, não junto com a página: dê ao corpo uma altura máxima relativa à janela e rolagem no eixo vertical, mantendo cabeçalho e rodapé sempre visíveis.",
       "tip4": "Evite aninhar Dialog dentro de DropdownMenu ou Popover — o focus trap pode conflitar. Feche o menu antes de abrir o diálogo."
     },
     "analytics": {
@@ -500,7 +500,7 @@
         "item1": "Use for modal forms, resource editing, or informational content needing temporary attention.",
         "item2": "Always include <code>DialogTitle</code> — it powers <code>aria-labelledby</code> and screen reader announcements.",
         "item3": "Include <code>DialogDescription</code> whenever there is additional context — it powers <code>aria-describedby</code>.",
-        "item4": "For long content, use <code>DialogScrollContent</code> (Vue) or apply <code>max-h</code> + <code>overflow-y-auto</code> manually.",
+        "item4": "For long content, let the body scroll internally: a max height on the body plus vertical scrolling, with header and footer fixed.",
         "item5": "For destructive confirmation (delete, cancel, terminate), use <code>AlertDialog</code> — Dialog is not the right component.",
         "item6": "On mobile with long forms, consider <code>Sheet</code> or <code>Drawer</code> instead of Dialog."
       },
@@ -610,7 +610,7 @@
     "import": {
       "title": "Import",
       "basic": "Basic import:",
-      "withScroll": "With internal scroll (Vue):"
+      "withScroll": "With internal scroll:"
     },
     "variants": {
       "title": "Variants",
@@ -619,7 +619,7 @@
       "items": {
         "default": "Title + Description + Footer with primary action. Default composition for forms and editing.",
         "withForm": "Body with inline form (inputs, selects). Submit fires the Footer's primary action.",
-        "withScrollContent": "Body with long content and internal scroll. Header and Footer fixed. In Vue, use <code>DialogScrollContent</code>.",
+        "withScrollContent": "Body with long content and internal scroll. Header and Footer fixed.",
         "noFooter": "Only Title + Description, no Footer. For informational use or passive preview.",
         "withDestructiveAction": "Footer with <code>destructive</code> primary action. Different from AlertDialog — use only when destructiveness is secondary to the flow (e.g. remove item from list).",
         "customCloseInFooter": "<code>showCloseButton={false}</code> on Content and <code>showCloseButton</code> on Footer — close button sits below the actions.",
@@ -693,7 +693,7 @@
         "children": "Content rendered inside the subcomponent. In Title and Description, it is the displayed text."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "All subcomponents accept <code>className</code> and native HTML props. <code>DialogContent</code> forwards Base UI Popup props (e.g. <code>onPointerDownOutside</code>, <code>onEscapeKeyDown</code>) to customize closing."
+      "extensibility": "All subcomponents accept <code>className</code> and native HTML props. The content forwards the behaviour layer floating-panel props (intercepting the outside pointer and the Escape key, for instance) to customize closing."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -754,7 +754,7 @@
       "title": "Implementation Notes",
       "tip1": "By default, <code>DialogContent</code> renders in a Portal — isolates from parent overflow and transform but may conflict with custom z-index. Use <code>className=\"z-[60]\"</code> if you need to raise it.",
       "tip2": "To close Dialog after async submit, control <code>open</code> via state and close only on success. On error, keep open and show inline feedback.",
-      "tip3": "<code>DialogScrollContent</code> exists only in Vue (Reka UI). In React/Svelte, apply <code>max-h-[80vh] overflow-y-auto</code> manually on the Body.",
+      "tip3": "Content taller than the window must scroll inside the body, not along with the page: give the body a max height relative to the window and vertical scrolling, keeping header and footer always visible.",
       "tip4": "Avoid nesting Dialog inside DropdownMenu or Popover — focus trap may conflict. Close the menu before opening the dialog."
     },
     "analytics": {
@@ -954,7 +954,7 @@
         "item1": "Úsalo para formularios modales, edición de recursos o contenido informativo que requiera atención temporal.",
         "item2": "Siempre incluye <code>DialogTitle</code> — base para <code>aria-labelledby</code> y lectura por lectores de pantalla.",
         "item3": "Incluye <code>DialogDescription</code> siempre que haya contexto adicional — alimenta <code>aria-describedby</code>.",
-        "item4": "Para contenido largo, usa <code>DialogScrollContent</code> (Vue) o aplica <code>max-h</code> + <code>overflow-y-auto</code> manualmente.",
+        "item4": "Para contenido largo, deja que el cuerpo se desplace por dentro: altura máxima en el cuerpo más desplazamiento vertical, con encabezado y pie fijos.",
         "item5": "Para confirmación destructiva (eliminar, cancelar, finalizar), usa <code>AlertDialog</code> — Dialog no es el componente correcto.",
         "item6": "En mobile con formularios largos, considera <code>Sheet</code> o <code>Drawer</code> en lugar de Dialog."
       },
@@ -1064,7 +1064,7 @@
     "import": {
       "title": "Importación",
       "basic": "Import básico:",
-      "withScroll": "Con scroll interno (Vue):"
+      "withScroll": "Con scroll interno:"
     },
     "variants": {
       "title": "Variantes",
@@ -1073,7 +1073,7 @@
       "items": {
         "default": "Title + Description + Footer con acción primaria. Composición estándar para formularios y ediciones.",
         "withForm": "Body con formulario inline (inputs, selects). El submit dispara la acción primaria del Footer.",
-        "withScrollContent": "Body con contenido largo y scroll interno. Header y Footer fijos. En Vue, usa <code>DialogScrollContent</code>.",
+        "withScrollContent": "Body con contenido largo y scroll interno. Header y Footer fijos.",
         "noFooter": "Solo Title + Description, sin Footer. Para uso informativo o previsualización pasiva.",
         "withDestructiveAction": "Footer con acción primaria <code>destructive</code>. Distinto de AlertDialog — úsalo solo cuando lo destructivo es secundario al flujo (ej. quitar ítem de lista).",
         "customCloseInFooter": "<code>showCloseButton={false}</code> en Content y <code>showCloseButton</code> en Footer — el botón de cerrar queda debajo de las acciones.",
@@ -1147,7 +1147,7 @@
         "children": "Contenido renderizado dentro del subcomponente. En Title y Description, es el texto mostrado."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "Todos los subcomponentes aceptan <code>className</code> y props HTML nativos. <code>DialogContent</code> reenvía props del Popup de Base UI (ej. <code>onPointerDownOutside</code>, <code>onEscapeKeyDown</code>) para personalizar el cierre."
+      "extensibility": "Todos los subcomponentes aceptan <code>className</code> y props HTML nativos. El contenido reenvía las props del panel flotante de la capa de comportamiento (interceptar el puntero fuera y la tecla Escape, por ejemplo) para personalizar el cierre."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1208,7 +1208,7 @@
       "title": "Notas de Implementación",
       "tip1": "Por defecto, <code>DialogContent</code> renderiza en Portal — aísla del overflow y transform de los padres, pero puede chocar con z-index custom. Usa <code>className=\"z-[60]\"</code> si necesitas elevarlo.",
       "tip2": "Para cerrar Dialog tras submit asíncrono, controla <code>open</code> vía state y cierra solo en caso de éxito. En error, mantén abierto y muestra feedback inline.",
-      "tip3": "<code>DialogScrollContent</code> existe solo en Vue (Reka UI). En React/Svelte, aplica <code>max-h-[80vh] overflow-y-auto</code> manualmente en el Body.",
+      "tip3": "El contenido más alto que la ventana debe desplazarse dentro del cuerpo, no junto con la página: da al cuerpo una altura máxima relativa a la ventana y desplazamiento vertical, manteniendo encabezado y pie siempre visibles.",
       "tip4": "Evita anidar Dialog dentro de DropdownMenu o Popover — el focus trap puede chocar. Cierra el menú antes de abrir el diálogo."
     },
     "analytics": {

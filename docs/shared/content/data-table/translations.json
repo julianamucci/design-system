@@ -278,7 +278,7 @@
         "metaEditable": "Marca a coluna como editável inline. A célula vira input ao clicar; o valor é notificado via <code>onCellEdit</code>."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "Para recursos não cobertos pela API (agrupamento, expansão, sub-rows, server-side), use <code>onTableReady</code> para acessar a instância e configure os modelos correspondentes do TanStack Table externamente. O componente é uma camada visual sobre a engine headless — qualquer configuração suportada pela engine pode ser combinada."
+      "extensibility": "Para recursos não cobertos pela API (agrupamento, expansão, sub-linhas, dados no servidor), cada stack expõe o acesso à própria instância de tabela, e o que estiver além pode ser configurado por fora. O componente é uma camada visual sobre a máquina de estado — qualquer configuração que ela suporte pode ser combinada."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -347,7 +347,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "<strong>Lib upstream</strong>: o DataTable é construído sobre <strong>TanStack Table v8</strong> (headless) + <strong>TanStack Virtual</strong>. Cada stack usa o adapter oficial correspondente.",
+      "tip1": "<strong>Comportamento e visual em camadas separadas</strong> — a ordenação, a filtragem, a paginação, a seleção e a virtualização vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-data-table-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "tip2": "<strong>Headless</strong>: a engine não renderiza nada — apenas calcula estado de ordenação, filtro, seleção e paginação. O DataTable injeta isso no <code>Table</code> primitivo do design system, mantendo tokens e a11y.",
       "tip3": "<strong>Estado interno</strong>: ordenação, filtros, seleção, visibilidade, ordem, pinning e tamanho de colunas vivem no componente. Para persistir entre montagens, use <code>onTableReady</code> e copie o estado para fora.",
       "tip4": "<strong>Dataset não mutado</strong>: o array de <code>data</code> nunca é modificado. Para edição inline, o caller é responsável por atualizar o array via <code>onCellEdit</code>.",
@@ -786,7 +786,7 @@
         "metaEditable": "Marks the column as inline-editable. The cell becomes an input on click; the value is notified via <code>onCellEdit</code>."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "For features not covered by the API (grouping, expansion, sub-rows, server-side), use <code>onTableReady</code> to access the instance and configure the corresponding TanStack Table models externally. The component is a visual layer over the headless engine — any configuration supported by the engine can be combined."
+      "extensibility": "For features not covered by the API (grouping, expansion, sub-rows, server-side data), each stack exposes access to its own table instance, and anything beyond that can be configured externally. The component is a visual layer over the state machine — any configuration it supports can be combined."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -855,7 +855,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "<strong>Upstream lib</strong>: DataTable is built on <strong>TanStack Table v8</strong> (headless) + <strong>TanStack Virtual</strong>. Each stack uses the corresponding official adapter.",
+      "tip1": "<strong>Behaviour and looks in separate layers</strong> — sorting, filtering, pagination, selection and virtualisation come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-data-table-*</code> classes. Swapping the behaviour layer does not change the design.",
       "tip2": "<strong>Headless</strong>: the engine does not render anything — it only computes sort, filter, selection, and pagination state. DataTable injects that into the design-system <code>Table</code> primitive, preserving tokens and a11y.",
       "tip3": "<strong>Internal state</strong>: sort, filters, selection, visibility, order, pinning, and column sizing live inside the component. To persist across mounts, use <code>onTableReady</code> and copy state out.",
       "tip4": "<strong>Dataset not mutated</strong>: the <code>data</code> array is never modified. For inline edit, the caller is responsible for updating the array via <code>onCellEdit</code>.",
@@ -1294,7 +1294,7 @@
         "metaEditable": "Marca la columna como editable inline. La celda pasa a input al hacer clic; el valor se notifica vía <code>onCellEdit</code>."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "Para recursos no cubiertos por la API (agrupamiento, expansión, sub-rows, server-side), usa <code>onTableReady</code> para acceder a la instancia y configura los modelos correspondientes de TanStack Table externamente. El componente es una capa visual sobre la engine headless — cualquier configuración soportada por la engine puede combinarse."
+      "extensibility": "Para recursos no cubiertos por la API (agrupamiento, expansión, sub-filas, datos en el servidor), cada stack expone el acceso a su propia instancia de tabla, y lo que quede más allá puede configurarse por fuera. El componente es una capa visual sobre la máquina de estado — cualquier configuración que ella soporte puede combinarse."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -1363,7 +1363,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "<strong>Lib upstream</strong>: DataTable está construido sobre <strong>TanStack Table v8</strong> (headless) + <strong>TanStack Virtual</strong>. Cada stack usa el adapter oficial correspondiente.",
+      "tip1": "<strong>Comportamiento y visual en capas separadas</strong> — el ordenamiento, el filtrado, la paginación, la selección y la virtualización vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-data-table-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "tip2": "<strong>Headless</strong>: la engine no renderiza nada — solo calcula estado de orden, filtro, selección y paginación. DataTable lo inyecta en el primitivo <code>Table</code> del design system, manteniendo tokens y a11y.",
       "tip3": "<strong>Estado interno</strong>: orden, filtros, selección, visibilidad, orden, pinning y tamaño de columnas viven en el componente. Para persistir entre montajes, usa <code>onTableReady</code> y copia el estado hacia fuera.",
       "tip4": "<strong>Dataset no mutado</strong>: el array <code>data</code> nunca se modifica. Para edición inline, el caller es responsable de actualizar el array vía <code>onCellEdit</code>.",

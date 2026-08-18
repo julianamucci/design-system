@@ -65,7 +65,7 @@
         "item2": "<code>TableCaption</code> é obrigatório em toda tabela — use <code>nds-sr-only</code> quando o contexto visual já é claro.",
         "item3": "<code>scope=\"col\"</code> em todos os <code>TableHead</code> — associa cabeçalhos às células para leitores de tela.",
         "item4": "Implemente sempre o empty state — nunca exiba tabela vazia sem mensagem explicativa.",
-        "item5": "Para ordenação, filtragem e paginação robustas, combine com <code>@tanstack/react-table</code>."
+        "item5": "Para ordenação, filtragem e paginação robustas, use o <code>DataTable</code> — ele compõe esta Table com uma engine de tabela headless."
       },
       "scenarios": {
         "title": "Tabela de Cenários",
@@ -96,7 +96,7 @@
         },
         "item5": {
           "s": "Dados com ordenação e filtros",
-          "u": "Sim, com TanStack Table",
+          "u": "Sim, com o DataTable",
           "a": "-"
         }
       },
@@ -521,7 +521,7 @@
         "item2": "<code>TableCaption</code> is required in every table — use <code>nds-sr-only</code> when the visual context is already clear.",
         "item3": "<code>scope=\"col\"</code> on all <code>TableHead</code> elements — associates headers to cells for screen readers.",
         "item4": "Always implement empty state — never display a table without an explanatory message when data is absent.",
-        "item5": "For sorting, filtering, and robust pagination, combine with <code>@tanstack/react-table</code>."
+        "item5": "For sorting, filtering and robust pagination, use the <code>DataTable</code> — it composes this Table with a headless table engine."
       },
       "scenarios": {
         "title": "Scenario Table",
@@ -552,7 +552,7 @@
         },
         "item5": {
           "s": "Data with sorting and filters",
-          "u": "Yes, with TanStack Table",
+          "u": "Yes, with the DataTable",
           "a": "-"
         }
       },
@@ -977,7 +977,7 @@
         "item2": "<code>TableCaption</code> es obligatorio en toda tabla — usa <code>nds-sr-only</code> cuando el contexto visual ya es claro.",
         "item3": "<code>scope=\"col\"</code> en todos los <code>TableHead</code> — asocia los encabezados a las celdas para lectores de pantalla.",
         "item4": "Implementa siempre el empty state — nunca muestres una tabla sin mensaje explicativo cuando no hay datos.",
-        "item5": "Para ordenación, filtrado y paginación robustos, combina con <code>@tanstack/react-table</code>."
+        "item5": "Para ordenación, filtrado y paginación robustos, usa el <code>DataTable</code> — compone esta Table con un motor de tabla headless."
       },
       "scenarios": {
         "title": "Tabla de Escenarios",
@@ -1008,7 +1008,7 @@
         },
         "item5": {
           "s": "Datos con ordenación y filtros",
-          "u": "Sí, con TanStack Table",
+          "u": "Sí, con el DataTable",
           "a": "-"
         }
       },

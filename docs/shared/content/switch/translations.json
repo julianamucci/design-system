@@ -336,13 +336,13 @@
         },
         "form": {
           "name": "Form",
-          "description": "Integração com validação via React Hook Form."
+          "description": "Integração com validação de formulário: rótulo, mensagem de erro e estado inválido amarrados ao controle."
         }
       }
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o papel <code>switch</code>, o estado <code>aria-checked</code>, a alternância por ponteiro e por teclado e a participação no formulário vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-switch-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>Efeito imediato</strong> — o Switch dispara o callback de mudança a cada toggle. Não usar dentro de form que exige submit.",
       "item3": "<strong>Label descritivo</strong> — sempre descreva o estado ativo (\"Receber notificações\", não \"Notificações\").",
       "item4": "<strong>Tamanhos</strong> — apenas <code>default</code> e <code>sm</code>. Para uma medida própria, sobrescreva <code>.nds-switch[data-size]</code> no CSS.",
@@ -776,13 +776,13 @@
         },
         "form": {
           "name": "Form",
-          "description": "Validation integration via React Hook Form."
+          "description": "Form validation integration: label, error message and invalid state wired to the control."
         }
       }
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
+      "item1": "<strong>Behaviour and looks in separate layers</strong> — the <code>switch</code> role, the <code>aria-checked</code> state, toggling by pointer and by keyboard, and taking part in the form come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-switch-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>Immediate effect</strong> — Switch fires the change callback on every toggle. Don't use inside form that requires submit.",
       "item3": "<strong>Descriptive Label</strong> — always describe the active state (\"Receive notifications\", not \"Notifications\").",
       "item4": "<strong>Sizes</strong> — only <code>default</code> and <code>sm</code>. For a size of your own, override <code>.nds-switch[data-size]</code> in CSS.",
@@ -1216,13 +1216,13 @@
         },
         "form": {
           "name": "Form",
-          "description": "Integración de validación vía React Hook Form."
+          "description": "Integración con validación de formulario: etiqueta, mensaje de error y estado inválido vinculados al control."
         }
       }
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el rol <code>switch</code>, el estado <code>aria-checked</code>, la alternancia por puntero y por teclado y la participación en el formulario vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-switch-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>Efecto inmediato</strong> — el Switch dispara el callback de cambio en cada toggle. No usar dentro de form que requiere submit.",
       "item3": "<strong>Label descriptivo</strong> — describe siempre el estado activo (\"Recibir notificaciones\", no \"Notificaciones\").",
       "item4": "<strong>Tamaños</strong> — solo <code>default</code> y <code>sm</code>. Para una medida propia, sobrescribe <code>.nds-switch[data-size]</code> en CSS.",

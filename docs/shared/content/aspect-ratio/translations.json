@@ -174,7 +174,7 @@
         "className": "Classes CSS adicionais no wrapper. Evite alterar <code>position</code> ou <code>display</code>."
       },
       "extensibilityTitle": "Extensibilidade",
-      "extensibility": "Use <code>className</code> para espaçamento externo, border-radius e sombras no wrapper. No filho, aplique <code>object-fit: cover</code> e <code>width: 100%; height: 100%</code> (ou classes utilitárias equivalentes). Quando precisar substituir o <code>div</code> raiz, use <code>asChild</code>."
+      "extensibility": "Use <code>className</code> para espaçamento externo, border-radius e sombras no wrapper. No filho, aplique <code>object-fit: cover</code> e <code>width: 100%; height: 100%</code> (ou classes utilitárias equivalentes)."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -225,8 +225,8 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "Em implementações modernas o componente usa a propriedade CSS nativa <code>aspect-ratio</code>; o ratio é preservado antes do carregamento da mídia, sem reflow.",
-      "item2": "Bits UI (Svelte) usa a mesma técnica com runes.",
-      "item3": "Vanilla implementa manualmente via <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
+      "item2": "O cálculo é reativo: mudar o valor de <code>ratio</code> recalcula a caixa no lugar, sem recriar o nó nem perder o que já estava carregado dentro dele.",
+      "item3": "Onde a propriedade nativa não é uma opção, a mesma proporção sai do truque de preenchimento — <code>padding-bottom</code> igual a <code>(1 / ratio) * 100%</code> no wrapper, com o conteúdo posicionado por cima.",
       "item4": "Aspect Ratio nativa do CSS (<code>aspect-ratio: 16 / 9</code>) é alternativa moderna sem JS — use AspectRatio quando precisar de compatibilidade ampla ou de compor com o restante do design system."
     },
     "analytics": {
@@ -520,7 +520,7 @@
         "className": "Extra CSS classes on the wrapper. Do not override <code>position</code> or <code>display</code>."
       },
       "extensibilityTitle": "Extensibility",
-      "extensibility": "Use <code>className</code> for outer spacing, border-radius, and shadows on the wrapper. On the child, apply <code>object-fit: cover</code> and <code>width: 100%; height: 100%</code> (or equivalent utility classes). When you must replace the root <code>div</code>, use <code>asChild</code>."
+      "extensibility": "Use <code>className</code> for outer spacing, border-radius, and shadows on the wrapper. On the child, apply <code>object-fit: cover</code> and <code>width: 100%; height: 100%</code> (or equivalent utility classes)."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -571,8 +571,8 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "Modern implementations use the native CSS <code>aspect-ratio</code> property; the ratio is preserved before media loads, with no reflow.",
-      "item2": "Bits UI (Svelte) uses the same technique with runes.",
-      "item3": "Vanilla implements it manually via <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
+      "item2": "The calculation is reactive: changing the <code>ratio</code> value recomputes the box in place, without recreating the node or losing what was already loaded inside it.",
+      "item3": "Where the native property is not an option, the same ratio comes from the padding trick — <code>padding-bottom</code> equal to <code>(1 / ratio) * 100%</code> on the wrapper, with the content positioned on top.",
       "item4": "The native CSS aspect-ratio (<code>aspect-ratio: 16 / 9</code>) is a modern JS-free alternative — use AspectRatio when you need broad support or composition with the rest of the design system."
     },
     "analytics": {
@@ -866,7 +866,7 @@
         "className": "Clases CSS adicionales en el wrapper. No alterar <code>position</code> ni <code>display</code>."
       },
       "extensibilityTitle": "Extensibilidad",
-      "extensibility": "Usa <code>className</code> para espaciado externo, border-radius y sombras en el wrapper. En el hijo, aplica <code>object-fit: cover</code> y <code>width: 100%; height: 100%</code> (o clases utilitarias equivalentes). Cuando necesites reemplazar el <code>div</code> raíz, usa <code>asChild</code>."
+      "extensibility": "Usa <code>className</code> para espaciado externo, border-radius y sombras en el wrapper. En el hijo, aplica <code>object-fit: cover</code> y <code>width: 100%; height: 100%</code> (o clases utilitarias equivalentes)."
     },
     "tokens": {
       "title": "Design Tokens",
@@ -917,8 +917,8 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "Las implementaciones modernas usan la propiedad CSS nativa <code>aspect-ratio</code>; la proporción se preserva antes de la carga del medio, sin reflow.",
-      "item2": "Bits UI (Svelte) usa la misma técnica con runes.",
-      "item3": "Vanilla la implementa manualmente vía <code>paddingBottom: (1 / ratio) * 100 + '%'</code>.",
+      "item2": "El cálculo es reactivo: cambiar el valor de <code>ratio</code> recalcula la caja en el sitio, sin recrear el nodo ni perder lo que ya estaba cargado dentro.",
+      "item3": "Donde la propiedad nativa no es una opción, la misma proporción sale del truco de relleno — <code>padding-bottom</code> igual a <code>(1 / ratio) * 100%</code> en el wrapper, con el contenido posicionado encima.",
       "item4": "El aspect-ratio nativo del CSS (<code>aspect-ratio: 16 / 9</code>) es alternativa moderna sin JS — usa AspectRatio cuando necesites soporte amplio o composición con el resto del design system."
     },
     "analytics": {

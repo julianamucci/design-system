@@ -351,7 +351,7 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamento e visual em camadas separadas</strong> — o atraso de abertura, a exibição por foco além do ponteiro, o descarte por Escape, o posicionamento ancorado e a ligação por <code>aria-describedby</code> vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-tooltip-*</code>. Trocar a camada de comportamento não muda o desenho.",
       "item2": "<strong>TooltipProvider obrigatório</strong> — colocar no root da app uma única vez. Sem ele, tooltips simplesmente não aparecem.",
       "item3": "<strong>Não-interativo</strong> — Tooltip é texto descritivo apenas. Para conteúdo clicável use Popover ou HoverCard.",
       "item4": "<strong>Mobile</strong> — sem hover, o tooltip não aparece em touch. Botão icon-only deve ter <code>aria-label</code> próprio."
@@ -799,7 +799,7 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "item1": "<strong>Upstream lib</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), custom factory (Vanilla).",
+      "item1": "<strong>Behaviour and looks in separate layers</strong> — the open delay, showing on focus as well as on pointer, dismissal by Escape, anchored positioning and the <code>aria-describedby</code> link come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-tooltip-*</code> classes. Swapping the behaviour layer does not change the design.",
       "item2": "<strong>TooltipProvider required</strong> — place at app root once. Without it, tooltips simply don't appear.",
       "item3": "<strong>Non-interactive</strong> — Tooltip is descriptive text only. For clickable content use Popover or HoverCard.",
       "item4": "<strong>Mobile</strong> — without hover, tooltip doesn't appear on touch. Icon-only button must have its own <code>aria-label</code>."
@@ -1247,7 +1247,7 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "item1": "<strong>Lib upstream</strong>: <code>@base-ui/react</code> (React), <code>reka-ui</code> (Vue), <code>bits-ui</code> (Svelte), factory custom (Vanilla).",
+      "item1": "<strong>Comportamiento y visual en capas separadas</strong> — el retraso de apertura, la aparición por foco además del puntero, el descarte por Escape, el posicionamiento anclado y el vínculo por <code>aria-describedby</code> vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-tooltip-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
       "item2": "<strong>TooltipProvider obligatorio</strong> — colocar en el root de la app una sola vez. Sin él, los tooltips simplemente no aparecen.",
       "item3": "<strong>No interactivo</strong> — el Tooltip es solo texto descriptivo. Para contenido clicable usa Popover o HoverCard.",
       "item4": "<strong>Móvil</strong> — sin hover, el tooltip no aparece en touch. El botón icon-only debe tener su propio <code>aria-label</code>."

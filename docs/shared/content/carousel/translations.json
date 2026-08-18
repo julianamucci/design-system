@@ -3,7 +3,7 @@
     "title": "Carousel",
     "category": "Display",
     "type": "Componente",
-    "description": "Exibição sequencial de itens em um container com navegação por botões, teclado e gesto de arrastar, construída sobre Embla Carousel.",
+    "description": "Exibição sequencial de itens em um container com navegação por botões, teclado e gesto de arrastar.",
     "seo": {
       "title": "Carousel — Display",
       "description": "Documentação do Carousel: orientação horizontal e vertical, plugin de autoplay, dots via API, acessibilidade WCAG com role region.",
@@ -193,8 +193,8 @@
         "default": "Padrão",
         "required": "Obrigatório",
         "description": "Descrição",
-        "opts": "Opções do Embla (<code>loop</code>, <code>align</code>, <code>startIndex</code>, etc.).",
-        "plugins": "Array de plugins do Embla (ex: <code>Autoplay()</code>).",
+        "opts": "Opções da engine de carrossel (<code>loop</code>, <code>align</code>, <code>startIndex</code>, etc.).",
+        "plugins": "Array de plugins da engine de carrossel (ex: <code>Autoplay()</code>).",
         "orientation": "Direção do deslize: <code>\"horizontal\"</code> (padrão) ou <code>\"vertical\"</code>.",
         "setApi": "Callback que recebe a <code>CarouselApi</code> — use para dots, contadores e sincronização externa.",
         "className": "Classes .nds-* adicionais aplicadas ao container ou subcomponente.",
@@ -229,7 +229,7 @@
       "item2": "<strong>Slides anunciados</strong> — cada <code>CarouselItem</code> recebe <code>role=\"group\"</code> e <code>aria-roledescription=\"slide\"</code>. Considere adicionar <code>aria-label=\"Slide N de M\"</code>.",
       "item3": "<strong>Setas do teclado</strong> — <code>ArrowLeft</code> e <code>ArrowRight</code> (ou <code>ArrowUp</code>/<code>ArrowDown</code> em vertical) movem entre slides quando o container tem foco.",
       "item4": "<strong>Autoplay e WCAG 2.2.2</strong> — sempre permita parar, pausar ou ocultar autoplay com duração maior que 5s. Use <code>stopOnInteraction: true</code>.",
-      "item5": "<strong>prefers-reduced-motion</strong> — o Embla respeita automaticamente a preferência do sistema, reduzindo ou eliminando a animação de deslize.",
+      "item5": "<strong>prefers-reduced-motion</strong> — a preferência do sistema é respeitada automaticamente, reduzindo ou eliminando a animação de deslize.",
       "keyboard": {
         "tab": "Leva foco ao carrossel e aos botões de navegação em sequência natural.",
         "arrowLeft": "Move para o slide anterior (em orientação horizontal).",
@@ -260,10 +260,10 @@
     },
     "notes": {
       "title": "Notas de Implementação",
-      "tip1": "O padrão de espaçamento do Embla é <code>-ml-4</code> no <code>CarouselContent</code> somado a <code>pl-4</code> no <code>CarouselItem</code>. O componente já aplica esse padrão — sobrescreva apenas se necessário.",
+      "tip1": "O espaçamento entre itens sai de uma margem negativa no container somada a um preenchimento igual em cada item. O componente já aplica esse par — sobrescreva apenas se necessário.",
       "tip2": "Para implementar dots, capture a <code>CarouselApi</code> via <code>setApi</code> e escute o evento <code>select</code>. Use <code>scrollTo(i)</code> para ativar o slide pelo índice.",
       "tip3": "Evite autoplay em conteúdo informacional crítico — usuários com leitores de tela ou motores cognitivos podem perder o conteúdo antes de lê-lo. Prefira loop sem autoplay.",
-      "tip4": "Em orientação vertical, defina altura explícita no container (<code>h-[400px]</code>, por exemplo) — sem altura o Embla não calcula o viewport corretamente."
+      "tip4": "Em orientação vertical, defina altura explícita no container — sem altura o viewport não é calculado corretamente."
     },
     "analytics": {
       "title": "Analytics",
@@ -409,7 +409,7 @@
     "title": "Carousel",
     "category": "Display",
     "type": "Component",
-    "description": "Sequential display of items in a container with button, keyboard, and drag navigation, built on top of Embla Carousel.",
+    "description": "Sequential display of items in a container with button, keyboard and drag navigation.",
     "seo": {
       "title": "Carousel — Display",
       "description": "Documentation for Carousel: horizontal and vertical orientation, autoplay plugin, API-based dots, WCAG accessibility with region role.",
@@ -599,8 +599,8 @@
         "default": "Default",
         "required": "Required",
         "description": "Description",
-        "opts": "Embla options (<code>loop</code>, <code>align</code>, <code>startIndex</code>, etc.).",
-        "plugins": "Array of Embla plugins (e.g., <code>Autoplay()</code>).",
+        "opts": "Carousel engine options (<code>loop</code>, <code>align</code>, <code>startIndex</code>, etc.).",
+        "plugins": "Array of carousel engine plugins (e.g. <code>Autoplay()</code>).",
         "orientation": "Slide direction: <code>\"horizontal\"</code> (default) or <code>\"vertical\"</code>.",
         "setApi": "Callback that receives <code>CarouselApi</code> — use for dots, counters, and external sync.",
         "className": "Additional .nds-* classes applied to the container or subcomponent.",
@@ -635,7 +635,7 @@
       "item2": "<strong>Announced slides</strong> — each <code>CarouselItem</code> receives <code>role=\"group\"</code> and <code>aria-roledescription=\"slide\"</code>. Consider adding <code>aria-label=\"Slide N of M\"</code>.",
       "item3": "<strong>Keyboard arrows</strong> — <code>ArrowLeft</code> and <code>ArrowRight</code> (or <code>ArrowUp</code>/<code>ArrowDown</code> in vertical) move between slides when the container has focus.",
       "item4": "<strong>Autoplay and WCAG 2.2.2</strong> — always allow pause, stop, or hide for autoplay longer than 5s. Use <code>stopOnInteraction: true</code>.",
-      "item5": "<strong>prefers-reduced-motion</strong> — Embla automatically respects the system preference, reducing or removing the slide animation.",
+      "item5": "<strong>prefers-reduced-motion</strong> — the system preference is honoured automatically, reducing or removing the slide animation.",
       "keyboard": {
         "tab": "Moves focus to the carousel and navigation buttons in natural order.",
         "arrowLeft": "Moves to the previous slide (in horizontal orientation).",
@@ -666,10 +666,10 @@
     },
     "notes": {
       "title": "Implementation Notes",
-      "tip1": "Embla's spacing pattern is <code>-ml-4</code> on <code>CarouselContent</code> plus <code>pl-4</code> on <code>CarouselItem</code>. The component already applies this — override only if needed.",
+      "tip1": "The spacing between items comes from a negative margin on the container plus an equal padding on each item. The component already applies that pair — override only if needed.",
       "tip2": "To implement dots, capture the <code>CarouselApi</code> via <code>setApi</code> and listen to the <code>select</code> event. Use <code>scrollTo(i)</code> to activate a slide by index.",
       "tip3": "Avoid autoplay on critical informational content — screen reader and cognitive users may miss content before reading it. Prefer loop without autoplay.",
-      "tip4": "In vertical orientation, set an explicit height on the container (e.g., <code>h-[400px]</code>) — without height Embla cannot compute the viewport correctly."
+      "tip4": "In vertical orientation, set an explicit height on the container — without a height the viewport is not computed correctly."
     },
     "analytics": {
       "title": "Analytics",
@@ -815,7 +815,7 @@
     "title": "Carousel",
     "category": "Display",
     "type": "Componente",
-    "description": "Exhibición secuencial de ítems en un contenedor con navegación por botones, teclado y gesto de arrastrar, construido sobre Embla Carousel.",
+    "description": "Exhibición secuencial de ítems en un contenedor con navegación por botones, teclado y gesto de arrastre.",
     "seo": {
       "title": "Carousel — Display",
       "description": "Documentación del Carousel: orientación horizontal y vertical, plugin de autoplay, dots vía API, accesibilidad WCAG con role region.",
@@ -1005,8 +1005,8 @@
         "default": "Por defecto",
         "required": "Obligatorio",
         "description": "Descripción",
-        "opts": "Opciones de Embla (<code>loop</code>, <code>align</code>, <code>startIndex</code>, etc.).",
-        "plugins": "Array de plugins de Embla (ej: <code>Autoplay()</code>).",
+        "opts": "Opciones del motor de carrusel (<code>loop</code>, <code>align</code>, <code>startIndex</code>, etc.).",
+        "plugins": "Array de plugins del motor de carrusel (ej. <code>Autoplay()</code>).",
         "orientation": "Dirección del deslizamiento: <code>\"horizontal\"</code> (predeterminado) o <code>\"vertical\"</code>.",
         "setApi": "Callback que recibe la <code>CarouselApi</code> — úsalo para dots, contadores y sincronización externa.",
         "className": "Clases .nds-* adicionales aplicadas al contenedor o subcomponente.",
@@ -1041,7 +1041,7 @@
       "item2": "<strong>Slides anunciados</strong> — cada <code>CarouselItem</code> recibe <code>role=\"group\"</code> y <code>aria-roledescription=\"slide\"</code>. Considera agregar <code>aria-label=\"Slide N de M\"</code>.",
       "item3": "<strong>Flechas del teclado</strong> — <code>ArrowLeft</code> y <code>ArrowRight</code> (o <code>ArrowUp</code>/<code>ArrowDown</code> en vertical) mueven entre slides cuando el contenedor tiene foco.",
       "item4": "<strong>Autoplay y WCAG 2.2.2</strong> — siempre permite pausar, detener u ocultar autoplay con duración mayor a 5s. Usa <code>stopOnInteraction: true</code>.",
-      "item5": "<strong>prefers-reduced-motion</strong> — Embla respeta automáticamente la preferencia del sistema, reduciendo o eliminando la animación del deslizamiento.",
+      "item5": "<strong>prefers-reduced-motion</strong> — la preferencia del sistema se respeta automáticamente, reduciendo o eliminando la animación de deslizamiento.",
       "keyboard": {
         "tab": "Lleva el foco al carrusel y a los botones de navegación en secuencia natural.",
         "arrowLeft": "Mueve al slide anterior (en orientación horizontal).",
@@ -1072,10 +1072,10 @@
     },
     "notes": {
       "title": "Notas de Implementación",
-      "tip1": "El patrón de espaciado de Embla es <code>-ml-4</code> en <code>CarouselContent</code> sumado a <code>pl-4</code> en <code>CarouselItem</code>. El componente ya aplica ese patrón — sobrescribe solo si es necesario.",
+      "tip1": "El espaciado entre ítems sale de un margen negativo en el contenedor más un relleno igual en cada ítem. El componente ya aplica ese par — sobrescribe solo si es necesario.",
       "tip2": "Para implementar dots, captura la <code>CarouselApi</code> vía <code>setApi</code> y escucha el evento <code>select</code>. Usa <code>scrollTo(i)</code> para activar el slide por índice.",
       "tip3": "Evita autoplay en contenido informacional crítico — usuarios con lectores de pantalla o motores cognitivos pueden perder el contenido antes de leerlo. Prefiere loop sin autoplay.",
-      "tip4": "En orientación vertical, define altura explícita en el contenedor (<code>h-[400px]</code>, por ejemplo) — sin altura Embla no calcula el viewport correctamente."
+      "tip4": "En orientación vertical, define una altura explícita en el contenedor — sin altura el viewport no se calcula correctamente."
     },
     "analytics": {
       "title": "Analytics",

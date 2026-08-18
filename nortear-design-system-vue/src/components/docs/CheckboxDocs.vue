@@ -894,7 +894,7 @@ const visualTestItems = computed(() => [
       :title="tContent('props.title')"
       :tables="[
         {
-          title: tContent('props.vueTitle'),
+          title: 'Checkbox',
           cols: propCols,
           items: checkboxPropItems,
         },

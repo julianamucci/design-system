@@ -707,7 +707,7 @@ export type CheckboxOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: t('props.vanillaTitle'),
+              title: 'createCheckbox',
               cols: propsCols,
               items: [
                 { name: 'checked',               type: 'boolean',                          defaultValue: 'false', required: 'Não', description: 'Estado inicial marcado.' },
