@@ -72,6 +72,24 @@ export const WithCheckbox: Story = {
       await expect(alvo('reguas').getAttribute('aria-checked')).toBe('true');
     });
 
+    await step('O indicador publica o data-slot do seu tipo de item', async () => {
+      // `data-slot` é o endereço de markup que as cinco stacks compartilham, e
+      // o do indicador é por TIPO de item. Aqui ele não existia.
+      await abrirPorGesto(area());
+      for (const id of ['grade', 'reguas']) {
+        await expect(
+          alvo(id).querySelector('[data-slot="context-menu-checkbox-item-indicator"]'),
+        ).not.toBeNull();
+      }
+      // O tique mora DENTRO do indicador — prova que o atributo ficou no
+      // invólucro, e não no item nem no nó que a lib injeta.
+      await expect(
+        alvo('reguas').querySelector(
+          '[data-slot="context-menu-checkbox-item-indicator"] svg',
+        ),
+      ).not.toBeNull();
+    });
+
     await step('Marcar alterna o estado anunciado e o indicador', async () => {
       // Lê o estado ANTES de clicar: no replay a story parte do que a rodada
       // anterior deixou, e um valor esperado fixo inverteria o resultado.
@@ -101,6 +119,25 @@ export const WithRadioGroup: Story = {
       await abrirPorGesto(area());
       await expect(alvo('grid').getAttribute('role')).toBe('menuitemradio');
       await expect(alvo('list').getAttribute('role')).toBe('menuitemradio');
+    });
+
+    await step('O indicador publica o data-slot do seu tipo de item', async () => {
+      // Endereço por TIPO de item: escolha única e marcação não compartilham
+      // slot, como nas outras stacks.
+      await abrirPorGesto(area());
+      const opcoes = ['grid', 'list', 'columns'].map(alvo);
+      for (const opcao of opcoes) {
+        await expect(
+          opcao.querySelector('[data-slot="context-menu-radio-item-indicator"]'),
+        ).not.toBeNull();
+      }
+      // O tique mora DENTRO do indicador — prova que o atributo ficou no
+      // invólucro. Qual opção está marcada varia entre rodadas, então ela é
+      // procurada, nunca fixada.
+      const marcada = opcoes.find((o) => o.getAttribute('aria-checked') === 'true')!;
+      await expect(
+        marcada.querySelector('[data-slot="context-menu-radio-item-indicator"] svg'),
+      ).not.toBeNull();
     });
 
     await step('Escolher uma opção limpa a anterior', async () => {

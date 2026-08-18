@@ -25,7 +25,10 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-bind="forwarded"
     :class="cn('nds-dropdown-menu-radio-item', props.class)"
   >
-    <span class="nds-dropdown-menu-item-indicator">
+    <span
+      class="nds-dropdown-menu-item-indicator"
+      data-slot="menubar-radio-item-indicator"
+    >
       <MenubarItemIndicator>
         <slot name="indicator-icon">
           <CheckIcon />

@@ -252,6 +252,17 @@ export const WithCheckboxItems: Story = {
       }
     })
 
+    await step("O indicador publica o data-slot do seu tipo de item", async () => {
+      // `data-slot` é o endereço de markup que as cinco stacks compartilham, e
+      // o do indicador é por TIPO de item. Aqui ele não existia: o menubar era,
+      // com o context-menu, o único indicador do sistema sem endereço próprio.
+      for (const caixa of caixas) {
+        await expect(
+          caixa.querySelector('[data-slot="menubar-checkbox-item-indicator"]')
+        ).not.toBeNull()
+      }
+    })
+
     await step("Alternar reflete no estado anunciado e no marcador visual", async () => {
       const alvo = caixas[EXIBICOES.indexOf("Barra lateral")]
       // Idempotente: o clique só acontece com a caixa desmarcada, então o
@@ -261,9 +272,12 @@ export const WithCheckboxItems: Story = {
       }
       await waitFor(async () => {
         await expect(alvo.getAttribute("aria-checked")).toBe("true")
-        // `aria-checked` é o que a pessoa ouve; o tique é o que ela vê.
+        // `aria-checked` é o que a pessoa ouve; o tique é o que ela vê. Buscar
+        // pelo `data-slot` prova de quebra que o atributo ficou no INVÓLUCRO do
+        // marcador — se caísse no item ou no nó interno da lib, o tique não
+        // estaria dentro dele.
         await expect(
-          alvo.querySelector(".nds-dropdown-menu-item-indicator svg")
+          alvo.querySelector('[data-slot="menubar-checkbox-item-indicator"] svg')
         ).not.toBeNull()
       })
     })
@@ -308,6 +322,22 @@ export const WithRadioGroup: Story = {
       await expect(
         opcoes.filter((o) => o.getAttribute("aria-checked") === "true")
       ).toHaveLength(1)
+    })
+
+    await step("O indicador publica o data-slot do seu tipo de item", async () => {
+      // Endereço por TIPO de item: escolha única e marcação não compartilham
+      // slot, como nas outras stacks.
+      for (const opcao of opcoes) {
+        await expect(
+          opcao.querySelector('[data-slot="menubar-radio-item-indicator"]')
+        ).not.toBeNull()
+      }
+      // O tique mora DENTRO do indicador — prova que o atributo ficou no
+      // invólucro, e não no item nem no nó que a lib injeta.
+      const marcada = opcoes.find((o) => o.getAttribute("aria-checked") === "true")!
+      await expect(
+        marcada.querySelector('[data-slot="menubar-radio-item-indicator"] svg')
+      ).not.toBeNull()
     })
 
     await step("Escolher outra opção transfere a marcação", async () => {

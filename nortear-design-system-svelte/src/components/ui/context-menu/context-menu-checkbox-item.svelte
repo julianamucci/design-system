@@ -29,7 +29,10 @@
 	{...restProps}
 >
 	{#snippet children({ checked, indeterminate })}
-		<span class="nds-dropdown-menu-item-indicator">
+		<span
+			class="nds-dropdown-menu-item-indicator"
+			data-slot="context-menu-checkbox-item-indicator"
+		>
 			<!-- Traço para o estado misto, tique para o marcado: tique quer dizer
 			     "marcado", e misto é "alguns dos filhos". O `indeterminate` já
 			     chegava ligado aqui e o snippet o descartava, então o item misto

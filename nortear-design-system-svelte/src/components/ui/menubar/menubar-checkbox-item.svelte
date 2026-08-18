@@ -31,6 +31,7 @@
 	{#snippet children({ checked: checked, indeterminate: indeterminate })}
 		<span
 			class="nds-dropdown-menu-item-indicator"
+			data-slot="menubar-checkbox-item-indicator"
 		>
 			{#if indeterminate}
 				<MinusIcon  />

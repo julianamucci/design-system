@@ -22,7 +22,10 @@
 	{...restProps}
 >
 	{#snippet children({ checked })}
-		<span class="nds-dropdown-menu-item-indicator">
+		<span
+			class="nds-dropdown-menu-item-indicator"
+			data-slot="context-menu-radio-item-indicator"
+		>
 			{#if checked}
 				<CheckIcon  />
 			{/if}

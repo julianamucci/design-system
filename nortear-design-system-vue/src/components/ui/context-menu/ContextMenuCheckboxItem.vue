@@ -84,7 +84,10 @@ const misto = computed(() => props.checked === 'indeterminate')
     @update:model-value="emits('update:checked', $event)"
     @select="emits('select', $event)"
   >
-    <span class="nds-dropdown-menu-item-indicator">
+    <span
+      class="nds-dropdown-menu-item-indicator"
+      data-slot="context-menu-checkbox-item-indicator"
+    >
       <ContextMenuItemIndicator>
         <slot name="indicator-icon">
           <MinusIcon v-if="misto" />

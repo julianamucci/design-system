@@ -24,6 +24,7 @@
 	{#snippet children({ checked })}
 		<span
 			class="nds-dropdown-menu-item-indicator"
+			data-slot="menubar-radio-item-indicator"
 		>
 			{#if checked}
 				<CheckIcon  />

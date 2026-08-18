@@ -173,7 +173,10 @@ function ContextMenuCheckboxItem({
       checked={checked}
       {...props}
     >
-      <span className="nds-dropdown-menu-item-indicator">
+      <span
+        className="nds-dropdown-menu-item-indicator"
+        data-slot="context-menu-checkbox-item-indicator"
+      >
         <ContextMenuPrimitive.CheckboxItemIndicator>
           <CheckIcon
           />
@@ -210,7 +213,10 @@ function ContextMenuRadioItem({
       className={cn("nds-dropdown-menu-radio-item", className)}
       {...props}
     >
-      <span className="nds-dropdown-menu-item-indicator">
+      <span
+        className="nds-dropdown-menu-item-indicator"
+        data-slot="context-menu-radio-item-indicator"
+      >
         <ContextMenuPrimitive.RadioItemIndicator>
           <CheckIcon
           />

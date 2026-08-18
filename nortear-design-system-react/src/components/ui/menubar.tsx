@@ -129,7 +129,10 @@ function MenubarCheckboxItem({
       checked={checked}
       {...props}
     >
-      <span className="nds-dropdown-menu-item-indicator">
+      <span
+        className="nds-dropdown-menu-item-indicator"
+        data-slot="menubar-checkbox-item-indicator"
+      >
         <MenuPrimitive.CheckboxItemIndicator>
           <CheckIcon
           />
@@ -164,7 +167,10 @@ function MenubarRadioItem({
       )}
       {...props}
     >
-      <span className="nds-dropdown-menu-item-indicator">
+      <span
+        className="nds-dropdown-menu-item-indicator"
+        data-slot="menubar-radio-item-indicator"
+      >
         <MenuPrimitive.RadioItemIndicator>
           <CheckIcon
           />
