@@ -389,8 +389,20 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
 
   protected readonly marcaAtiva = signal('tema-default');
   protected readonly paginaEscura = signal(false);
-  /** Valores HSL resolvidos, relidos a cada troca de classe do `<html>`. */
-  protected readonly valoresDosTokens = signal<Record<string, string>>({});
+  /**
+   * Valores HSL resolvidos, relidos a cada troca de classe do `<html>`.
+   *
+   * O valor admite ausência porque o mapa NASCE vazio: só `lerTema()` o
+   * preenche, e ele roda no `ngOnInit`. Indexar `Record<string, string>`
+   * devolveria `string` mesmo com o mapa em `{}` — o tipo afirmaria um valor
+   * que ainda não existe, e o `?? ''` do template viraria código morto (NG8102).
+   * Tipado assim, a guarda é a guarda: o `??` cobre a janela antes da primeira
+   * leitura do tema, em vez de depender da ordem do ciclo de vida.
+   *
+   * `noUncheckedIndexedAccess` resolveria a mesma coisa e nenhuma das cinco
+   * stacks o liga — a mudança fica local, sem mexer no tipo do repositório.
+   */
+  protected readonly valoresDosTokens = signal<Record<string, string | undefined>>({});
 
   /**
    * Classe de cada cartão de MARCA: o tema do cartão + o modo atual da página.
