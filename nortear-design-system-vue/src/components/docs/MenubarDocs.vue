@@ -401,7 +401,7 @@ const analyticsItems = computed(() => [
   { event: 'menubar_shortcut_invoke',  trigger: 'atalho registrado',       payload: "{ component: 'menubar', shortcut, label }" },
 ]);
 
-const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
+const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => ({
   action: toPlainText(tContent(`testes.functional.item${i}.action`)),
   result: toPlainText(tContent(`testes.functional.item${i}.result`)),
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),

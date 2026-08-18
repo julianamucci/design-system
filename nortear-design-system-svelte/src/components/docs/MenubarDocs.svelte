@@ -850,7 +850,7 @@ interface MenubarRadioGroupProps {
         result: $tNavStore('common.expectedResult'),
         priority: $tNavStore('common.priority'),
       },
-      items: [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
+      items: [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => ({
         action: toPlainText($tStore(`testes.functional.item${i}.action`)),
         result: toPlainText($tStore(`testes.functional.item${i}.result`)),
         priority: localPriority($tStore(`testes.functional.item${i}.priority`), $tNavStore),

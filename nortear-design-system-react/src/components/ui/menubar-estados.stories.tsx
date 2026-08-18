@@ -226,6 +226,17 @@ export const CheckboxChecked: Story = {
   parameters: {
     a11y: AXE_COM_MENU_ABERTO,
     covers: ["functional.item7"],
+    // Medido na tipagem do primitivo: o item de marcação do menu é de DOIS
+    // estados. `checked` é booleano, o payload da mudança é booleano, o estado
+    // exposto ao indicador é booleano e os únicos atributos de dado são
+    // `data-checked` e `data-unchecked` — não existe terceiro valor. A caixa de
+    // seleção avulsa da MESMA lib tem `indeterminate`; o item de menu não.
+    // Sem terceiro estado não há o que anunciar como misto nem o que desenhar
+    // como traço, e declarar cobertura aqui faria o auditor mentir.
+    coversNotApplicable: {
+      "functional.item9":
+        "o item de marcação do menu neste primitivo é de dois estados — prop, payload e estado do indicador são booleanos, sem terceiro valor para anunciar como misto",
+    },
   },
   render: () => (
     <div style={wrapperStyle}>

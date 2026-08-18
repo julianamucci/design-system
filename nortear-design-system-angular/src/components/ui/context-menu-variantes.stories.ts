@@ -334,6 +334,7 @@ export const DarkPalette: Story = {
 // coordenadas da área, não do estado anterior.
 
 export const CheckboxIndeterminate: Story = {
+  parameters: { covers: ['functional.item11'] },
   render: () => ({
     props: { areaClasse: AREA_CLICK_DIREITO },
     template: `

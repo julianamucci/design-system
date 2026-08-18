@@ -1143,6 +1143,11 @@ const [showRulers, setShowRulers] = useState(false);
               result: tContent("testes.functional.item10.result"),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item10.priority")] ?? "common.high"),
             },
+            {
+              action: tContent("testes.functional.item11.action"),
+              result: tContent("testes.functional.item11.result"),
+              priority: tNav(priorityKeyMap[tContent("testes.functional.item11.priority")] ?? "common.high"),
+            },
           ],
         }}
         accessibility={{

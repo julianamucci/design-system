@@ -392,7 +392,7 @@ const analyticsItems = computed(() => [
   { event: 'dropdown_menu_item_select', trigger: '@select em Item',     payload: "{ component: 'dropdown-menu', location, label }" },
 ]);
 
-const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
+const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
   action: toPlainText(tContent(`testes.functional.item${i}.action`)),
   result: toPlainText(tContent(`testes.functional.item${i}.result`)),
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),

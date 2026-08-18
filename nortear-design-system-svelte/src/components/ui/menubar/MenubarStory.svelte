@@ -7,6 +7,7 @@
     MenubarItem,
     MenubarGroup,
     MenubarGroupHeading,
+    MenubarLabel,
     MenubarSeparator,
     MenubarShortcut,
     MenubarCheckboxItem,
@@ -23,6 +24,7 @@
     | 'shortcuts'
     | 'submenu'
     | 'checkbox'
+    | 'indeterminate'
     | 'radio'
     | 'itemDisabled'
     | 'destructive'
@@ -127,6 +129,20 @@
               <MenubarCheckboxItem bind:checked={barraLateral}>Barra lateral</MenubarCheckboxItem>
               <MenubarCheckboxItem bind:checked={grade}>Grade</MenubarCheckboxItem>
             </MenubarGroup>
+          </MenubarContent>
+        </MenubarMenu>
+      {:else if demonstration === 'indeterminate'}
+        <MenubarMenu value="view">
+          <MenubarTrigger>Exibir</MenubarTrigger>
+          <MenubarContent>
+            <MenubarLabel>Mostrar na tela</MenubarLabel>
+            <!--
+              Os três estados lado a lado: sem o vizinho marcado a asserção do
+              traço não teria com o que comparar o tique.
+            -->
+            <MenubarCheckboxItem indeterminate>Colunas</MenubarCheckboxItem>
+            <MenubarCheckboxItem checked>Régua</MenubarCheckboxItem>
+            <MenubarCheckboxItem>Grade</MenubarCheckboxItem>
           </MenubarContent>
         </MenubarMenu>
       {:else if demonstration === 'radio'}

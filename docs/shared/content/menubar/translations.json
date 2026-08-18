@@ -414,6 +414,11 @@
           "action": "Click em Trigger com menu aberto",
           "result": "Fecha o menu (toggle)",
           "priority": "medium"
+        },
+        "item9": {
+          "action": "Exibir um item de marcação no estado misto",
+          "result": "Desenha um traço em vez do tique do estado marcado, e é anunciado como misto — nem marcado, nem desmarcado",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -890,6 +895,11 @@
           "action": "Click on Trigger with menu open",
           "result": "Closes the menu (toggle)",
           "priority": "medium"
+        },
+        "item9": {
+          "action": "Render a checkable item in the mixed state",
+          "result": "Draws a dash instead of the check mark of the checked state, and is announced as mixed — neither checked nor unchecked",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1366,6 +1376,11 @@
           "action": "Click en Trigger con menú abierto",
           "result": "Cierra el menú (toggle)",
           "priority": "medium"
+        },
+        "item9": {
+          "action": "Mostrar un elemento de marcación en estado mixto",
+          "result": "Dibuja un guion en vez de la marca de verificación del estado marcado, y se anuncia como mixto — ni marcado ni desmarcado",
+          "priority": "high"
         }
       },
       "accessibility": {

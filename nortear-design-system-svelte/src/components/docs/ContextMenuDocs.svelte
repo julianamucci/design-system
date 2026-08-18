@@ -929,6 +929,7 @@ interface ContextMenuRadioGroupProps {
         { action: $tStore('testes.functional.item8.action'),  result: $tStore('testes.functional.item8.result'),  priority: localPriority($tStore('testes.functional.item8.priority'),  $tNavStore) },
         { action: $tStore('testes.functional.item9.action'),  result: $tStore('testes.functional.item9.result'),  priority: localPriority($tStore('testes.functional.item9.priority'),  $tNavStore) },
         { action: $tStore('testes.functional.item10.action'), result: $tStore('testes.functional.item10.result'), priority: localPriority($tStore('testes.functional.item10.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item11.action'), result: $tStore('testes.functional.item11.result'), priority: localPriority($tStore('testes.functional.item11.priority'), $tNavStore) },
       ],
     }}
     accessibility={{

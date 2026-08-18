@@ -271,6 +271,7 @@ export const CheckboxChecked: Story = {
 export const CheckboxIndeterminate: Story = {
   parameters: {
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    covers: ['functional.item9'],
   },
   render: () => ({
     template: `

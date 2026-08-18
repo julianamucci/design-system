@@ -30,6 +30,7 @@ import {
   RdxMenuRadioItem,
   RdxMenuRadioItemIndicator,
   injectRdxMenuGroupContext,
+  isIndeterminate,
 } from '@radix-ng/primitives/menu';
 
 // ─── DropdownMenu ─────────────────────────────────────────────────────────────
@@ -409,13 +410,18 @@ export class NdsDropdownMenuShortcut {}
 // Não são exportados — servem só ao chevron do sub-gatilho e ao indicador de
 // marcação, ambos montados aqui dentro.
 
-import { ChevronRight, Check } from 'lucide';
+import { ChevronRight, Check, Minus } from 'lucide';
 
 type LucideIconNode = [string, Record<string, string>];
 
 const DROPDOWN_ICON_MAP = {
   chevron: ChevronRight as unknown as LucideIconNode[],
   check: Check as unknown as LucideIconNode[],
+  // O traço do estado misto. Não é desenho novo: `Minus` do lucide é
+  // `M5 12h14`, o MESMO segmento que `<line x1="5" y1="12" x2="19" y2="12" />`
+  // da caixa de seleção desta stack — mesma geometria, entrando pelo mesmo
+  // mecanismo de ícone que o resto do menu já usa.
+  minus: Minus as unknown as LucideIconNode[],
 };
 
 @Component({
@@ -496,7 +502,11 @@ export class NdsDropdownMenuSubTrigger {
 // ─── CheckboxItem ─────────────────────────────────────────────────────────────
 
 /**
- * Item com estado booleano — `role="menuitemcheckbox"` e `aria-checked`.
+ * Item com estado de marcação — `role="menuitemcheckbox"` e `aria-checked`.
+ *
+ * O estado é TRI-VALORADO: `true`, `false` e `'indeterminate'` (o misto,
+ * "alguns dos filhos"). O primitivo já anuncia os três — `aria-checked="mixed"`
+ * no misto —, mas quem desenha o glifo é este componente.
  *
  * Não fecha o menu ao alternar (padrão do primitivo): quem marca uma coluna
  * costuma querer marcar a próxima logo em seguida.
@@ -525,13 +535,34 @@ export class NdsDropdownMenuSubTrigger {
       data-slot="dropdown-menu-checkbox-item-indicator"
     >
       <span rdxMenuCheckboxItemIndicator>
-        <svg ndsDropdownMenuIcon kind="check"></svg>
+        <svg ndsDropdownMenuIcon [kind]="misto() ? 'minus' : 'check'"></svg>
       </span>
     </span>
     <ng-content />
   `,
 })
-export class NdsDropdownMenuCheckboxItem {}
+export class NdsDropdownMenuCheckboxItem {
+  private readonly item = inject(RdxMenuCheckboxItem, { self: true });
+
+  /**
+   * O símbolo do estado misto é TRAÇO, não tique.
+   *
+   * Tique quer dizer "marcado", e misto não é isso. O desenho vem da caixa de
+   * seleção desta stack, que já resolve o misto com um traço horizontal.
+   *
+   * A ramificação mora aqui, no markup, e não numa regra sobre
+   * `[data-indeterminate]`, por duas medições:
+   *
+   * 1. O indicador da lib não entrega o estado ao conteúdo projetado — a fonte
+   *    é o `checked` do próprio item, lido do host directive.
+   * 2. Por CSS os dois glifos precisariam existir no markup com um deles
+   *    oculto — ou seja, um tique presente num estado que não é "marcado" —, e
+   *    a regra moraria na folha compartilhada pelas cinco stacks, cujas árvores
+   *    diferem. As demais resolvem ramificando; uma regra só de CSS criaria um
+   *    segundo vocabulário para o mesmo estado.
+   */
+  protected readonly misto = computed(() => isIndeterminate(this.item.checked()));
+}
 
 // ─── RadioGroup + RadioItem ───────────────────────────────────────────────────
 

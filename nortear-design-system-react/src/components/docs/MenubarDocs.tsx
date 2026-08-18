@@ -1003,6 +1003,11 @@ interface MenubarItemProps {
               result: tContent("testes.functional.item8.result"),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item8.priority")] ?? "common.medium"),
             },
+            {
+              action: tContent("testes.functional.item9.action"),
+              result: tContent("testes.functional.item9.result"),
+              priority: tNav(priorityKeyMap[tContent("testes.functional.item9.priority")] ?? "common.high"),
+            },
           ],
         }}
         accessibility={{

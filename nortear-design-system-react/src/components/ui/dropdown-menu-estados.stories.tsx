@@ -43,7 +43,18 @@ const wrapperStyle: React.CSSProperties = {
 };
 
 export const Closed: Story = {
-  parameters: { covers: ["accessibility.item2"] },
+  parameters: {
+    covers: ["accessibility.item2"],
+    // Medido na tipagem do primitivo: o item de marcação do menu é de DOIS
+    // estados. `checked` é booleano, o payload da mudança é booleano, o estado
+    // exposto ao indicador é booleano e os únicos atributos de dado são
+    // `data-checked` e `data-unchecked` — não existe terceiro valor. A caixa de
+    // seleção avulsa da MESMA lib tem `indeterminate`; o item de menu não.
+    coversNotApplicable: {
+      "functional.item8":
+        "o item de marcação do menu neste primitivo é de dois estados — prop, payload e estado do indicador são booleanos, sem terceiro valor para anunciar como misto",
+    },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <DropdownMenu>

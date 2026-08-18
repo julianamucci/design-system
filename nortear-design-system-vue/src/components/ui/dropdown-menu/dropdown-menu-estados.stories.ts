@@ -241,6 +241,7 @@ export const ItemDisabled: Story = {
 // mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
 
 export const CheckboxIndeterminate: Story = {
+  parameters: { covers: ['functional.item8'] },
   render: () => ({
     components: componentes,
     template: `

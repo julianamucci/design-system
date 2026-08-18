@@ -93,7 +93,18 @@ export const Closed: Story = {
 };
 
 export const Open: Story = {
-  parameters: { covers: ['functional.item1', 'functional.item2', 'accessibility.item3'] },
+  parameters: {
+    covers: ['functional.item1', 'functional.item2', 'accessibility.item3'],
+    // Medido na própria factory: o item de marcação é de DOIS estados. A opção
+    // declara `checked?: boolean`, o callback de mudança entrega `boolean`, e o
+    // `aria-checked` é escrito a partir desse booleano. Não há terceiro valor a
+    // receber, logo não há misto para anunciar nem traço para desenhar. A caixa
+    // de seleção avulsa desta stack resolve o misto; o item de menu não a expõe.
+    coversNotApplicable: {
+      'functional.item8':
+        'a factory do item de marcação é de dois estados — a opção é booleana, o callback entrega booleano e o aria-checked sai dele, sem terceiro valor para anunciar como misto',
+    },
+  },
   // O menu abre pelo CLIQUE da `play`, não por um `.click()` na montagem: é o
   // caminho de quem usa, e é o único em que dá para afirmar onde o foco pousa.
   render: () => buildBase({ triggerLabel: 'Abrir menu' }).wrapper,

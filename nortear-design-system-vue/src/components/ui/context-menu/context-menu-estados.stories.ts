@@ -217,6 +217,7 @@ export const ItemDestructive: Story = {
 // estado anterior.
 
 export const CheckboxIndeterminate: Story = {
+  parameters: { covers: ['functional.item11'] },
   render: () => ({
     components: componentes,
     template: `

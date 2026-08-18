@@ -3,6 +3,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
+import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const meta: Meta = {
   title: 'UI/DropdownMenu/States',
@@ -141,6 +142,48 @@ export const ItemDisabled: Story = {
       await userEvent.keyboard('{ArrowDown}');
       await expect(document.activeElement).not.toBe(desabilitado);
       await expect(document.activeElement).toBe(itens[2]);
+    });
+  },
+};
+
+// ─── CheckboxIndeterminate ────────────────────────────────────────────────────
+//
+// Story SEM interação, de propósito. O que ela declara vale na montagem, e o
+// primeiro clique num item misto o resolve para marcado — uma play que clicasse
+// aqui mediria outro estado no REPLAY do painel Interactions, que reexecuta no
+// mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
+
+export const CheckboxIndeterminate: Story = {
+  args: { defaultOpen: true, variant: 'indeterminate', triggerLabel: 'Colunas' },
+  parameters: { covers: ['functional.item8'] },
+  play: async ({ step }) => {
+    const menu = await waitForPortal('menu');
+    const canvas = within(menu);
+    const misto = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
+    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
+    const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Telefone' });
+
+    await step('O estado misto é anunciado como misto, e não como marcado', async () => {
+      // Uma comparação frouxa leria o misto como verdadeiro; o que a pessoa ouve
+      // tem que separar os três estados.
+      await expect(misto.getAttribute('aria-checked')).toBe('mixed');
+      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
+    });
+
+    await step('O misto desenha traço; o marcado, tique', async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
+      // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
+      // nos dois estados — o defeito — esta asserção fica vermelha.
+      const formaMista = formaDoIndicador(misto);
+      const formaMarcada = formaDoIndicador(marcado);
+      await expect(ehTraco(formaMista)).toBe(true);
+      await expect(ehTique(formaMista)).toBe(false);
+      await expect(ehTique(formaMarcada)).toBe(true);
+    });
+
+    await step('O desmarcado continua sem glifo nenhum', async () => {
+      await expect(formaDoIndicador(desmarcado)).toBeNull();
     });
   },
 };

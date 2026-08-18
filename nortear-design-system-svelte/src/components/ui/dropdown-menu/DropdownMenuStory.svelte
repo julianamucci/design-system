@@ -25,6 +25,7 @@
     | 'destructive'
     | 'withLabel'
     | 'withCheckbox'
+    | 'indeterminate'
     | 'withRadio'
     | 'withSubmenu'
     | 'withShortcuts'
@@ -112,6 +113,16 @@
             >
               Activity bar
             </DropdownMenuCheckboxItem>
+          {:else if variant === 'indeterminate'}
+            <DropdownMenuLabel>Colunas visíveis</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <!--
+              Os três estados lado a lado: sem o vizinho marcado a asserção do
+              traço não teria com o que comparar o tique.
+            -->
+            <DropdownMenuCheckboxItem indeterminate>Nome</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem checked>E-mail</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem>Telefone</DropdownMenuCheckboxItem>
           {:else if variant === 'withRadio'}
             <DropdownMenuLabel>Posição</DropdownMenuLabel>
             <DropdownMenuSeparator />

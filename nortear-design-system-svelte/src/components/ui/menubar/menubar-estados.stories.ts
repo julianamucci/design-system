@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
+import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'];
 
@@ -178,6 +179,51 @@ export const CheckboxChecked: Story = {
         await expect(regua.getAttribute('aria-checked')).toBe('false');
       });
       await expect(document.body.contains(menu)).toBe(true);
+    });
+  },
+};
+
+// ─── CheckboxIndeterminate ────────────────────────────────────────────────────
+//
+// Story SEM interação, de propósito. O que ela declara vale na montagem, e o
+// primeiro clique num item misto o resolve para marcado — uma play que clicasse
+// aqui mediria outro estado no REPLAY do painel Interactions, que reexecuta no
+// mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
+
+export const CheckboxIndeterminate: Story = {
+  args: { defaultValue: 'view', demonstration: 'indeterminate' },
+  parameters: {
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    covers: ['functional.item9'],
+  },
+  play: async ({ step }) => {
+    const menu = await waitForPortal('menu');
+    const canvas = within(menu);
+    const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
+    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
+    const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
+
+    await step('O estado misto é anunciado como misto, e não como marcado', async () => {
+      // Uma comparação frouxa leria o misto como verdadeiro; o que a pessoa ouve
+      // tem que separar os três estados.
+      await expect(misto.getAttribute('aria-checked')).toBe('mixed');
+      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
+    });
+
+    await step('O misto desenha traço; o marcado, tique', async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
+      // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
+      // nos dois estados — o defeito — esta asserção fica vermelha.
+      const formaMista = formaDoIndicador(misto);
+      const formaMarcada = formaDoIndicador(marcado);
+      await expect(ehTraco(formaMista)).toBe(true);
+      await expect(ehTique(formaMista)).toBe(false);
+      await expect(ehTique(formaMarcada)).toBe(true);
+    });
+
+    await step('O desmarcado continua sem glifo nenhum', async () => {
+      await expect(formaDoIndicador(desmarcado)).toBeNull();
     });
   },
 };

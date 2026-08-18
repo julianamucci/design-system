@@ -207,7 +207,18 @@ export const ItemDisabled: Story = {
 // ─── CheckboxChecked ──────────────────────────────────────────────────────────
 
 export const CheckboxChecked: Story = {
-  parameters: { covers: ['functional.item7'] },
+  parameters: {
+    covers: ['functional.item7'],
+    // Medido na própria factory: o item de marcação é de DOIS estados. A opção
+    // declara `checked?: boolean`, o callback de mudança entrega `boolean`, e o
+    // `aria-checked` é escrito a partir desse booleano. Não há terceiro valor a
+    // receber, logo não há misto para anunciar nem traço para desenhar. A caixa
+    // de seleção avulsa desta stack resolve o misto; o item de menu não a expõe.
+    coversNotApplicable: {
+      'functional.item9':
+        'a factory do item de marcação é de dois estados — a opção é booleana, o callback entrega booleano e o aria-checked sai dele, sem terceiro valor para anunciar como misto',
+    },
+  },
   render: () =>
     embrulhar(
       createMenubar(

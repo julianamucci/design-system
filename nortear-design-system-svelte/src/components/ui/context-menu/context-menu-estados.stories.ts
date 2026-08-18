@@ -133,6 +133,7 @@ export const ItemDestructive: Story = {
 // estado anterior.
 
 export const CheckboxIndeterminate: Story = {
+  parameters: { covers: ['functional.item11'] },
   render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'indeterminate' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
