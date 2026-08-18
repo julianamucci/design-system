@@ -8,7 +8,7 @@
 // da UI já foi preenchido como `bash node ../scripts/vercel-should-build.mjs`,
 // e o `bash` sobrando faz o shell tentar EXECUTAR O BINÁRIO do node como script
 // ("cannot execute binary file"), derrubando o deploy antes de qualquer build.
-// No arquivo o comando fica versionado, revisável e igual nas 4 stacks.
+// No arquivo o comando fica versionado, revisável e igual nas 5 stacks.
 // Se o campo da UI ainda tiver algum valor, esvazie-o: o vercel.json prevalece,
 // mas deixar os dois divergentes só confunde quem for depurar depois.
 //

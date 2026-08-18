@@ -110,13 +110,6 @@ const CODE_16_9 = `<div ndsAspectRatio [ratio]="16 / 9">
   <img src="/orla.jpg" alt="Vista aérea da orla" />
 </div>`;
 
-const PROPORCOES = [
-  { key: 'sixteenNine', ratio: 16 / 9, nome: '16:9' },
-  { key: 'fourThree',   ratio: 4 / 3,  nome: '4:3'  },
-  { key: 'square',      ratio: 1,      nome: '1:1'  },
-  { key: 'threeFour',   ratio: 3 / 4,  nome: '3:4'  },
-] as const;
-
 @Component({
   selector: 'nds-aspect-ratio-docs',
   standalone: true,

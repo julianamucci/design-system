@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { getLocalTimeZone, parseDate, today, type DateValue } from '@internationalized/date';
 import { NdsCalendar } from './calendar';
 

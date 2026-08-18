@@ -64,7 +64,7 @@ AlertDialog
 └── AlertDialogContent
     ├── AlertDialogHeader
     │   ├── AlertDialogTitle       (obrigatório)
-    │   └── AlertDialogDescription (obrigatório)
+    │   └── AlertDialogDescription (opcional, recomendado)
     └── AlertDialogFooter
         ├── AlertDialogCancel
         └── AlertDialogAction
@@ -78,7 +78,7 @@ AlertDialog
 
 **Acessibilidade** (ver `11-acessibilidade.md`):
 - Focus trap e retorno de foco ao trigger automáticos
-- `AlertDialogTitle` e `AlertDialogDescription` obrigatórios — base para `aria-labelledby` e `aria-describedby`
+- `AlertDialogTitle` obrigatório — base do `aria-labelledby`. `AlertDialogDescription` é opcional e recomendado: quando existe alimenta o `aria-describedby`, e quando não existe o painel omite o atributo. O primitivo desta stack gera o id da descrição sozinho e ligaria o atributo mesmo sem descrição — o wrapper do design system corta isso, porque referência para id ausente reprova no axe e não anuncia nada
 - `aria-label` contextual no `AlertDialogAction` quando o texto do botão sozinho não tem contexto suficiente
 
 **UX Writing** (ver `../../docs/shared/guidelines/05-tom-de-voz.md`):

@@ -222,7 +222,7 @@ nds-alert-dialog
         ├── div[ndsAlertDialogHeader]
         │   ├── div[ndsAlertDialogMedia]    (opcional)
         │   ├── h2|h3[ndsAlertDialogTitle]
-        │   └── p[ndsAlertDialogDescription]
+        │   └── p[ndsAlertDialogDescription] (opcional)
         └── div[ndsAlertDialogFooter]
             ├── button[ndsAlertDialogCancel]
             └── button[ndsAlertDialogAction]
@@ -232,7 +232,7 @@ nds-alert-dialog
 
 **Regras**:
 - **O perfil é fixo, não configurável**: papel de `alertdialog`, sempre modal, e dispensa por clique fora e por perda de foco desligada. Isso é o que distingue este componente do Dialog — não há input para afrouxar. **O Escape continua fechando, de propósito**: barrar o Escape prende quem navega por teclado
-- Título e descrição são obrigatórios: são a base do nome e da descrição acessível do painel
+- Título obrigatório: é a base do nome acessível do painel. Descrição **opcional e recomendada** — quando existe, é a base da descrição acessível; quando não existe, o painel omite o atributo em vez de referenciar um id ausente. Omitir só se justifica quando o próprio título já diz o que se perde
 - Ordem no rodapé: `[Cancelar] [Confirmar]` — o primário à direita, e a ordem do DOM é a ordem visual
 - O rótulo do botão de ação **repete o verbo** do título ("Excluir", não "OK"): botão genérico faz a pessoa reler o diálogo
 - Não aninhar Alert Dialog dentro de Alert Dialog

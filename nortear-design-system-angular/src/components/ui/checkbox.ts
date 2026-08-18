@@ -3,8 +3,6 @@ import {
   Component,
   computed,
   inject,
-  model,
-  input,
   ViewEncapsulation,
 } from '@angular/core';
 import {

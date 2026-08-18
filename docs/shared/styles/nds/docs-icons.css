@@ -161,32 +161,6 @@ input.nds-icon-search-input {
   padding: 0;
 }
 
-/* ── Callout (caixa decorativa pra exemplos do/dont nas docs) ───────────────
- * Bg/border soft em uma cor semântica; conteúdo herda layout via nds-stack.
- */
-.nds-docs-callout {
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-2);                /* 8px */
-  background-color: hsl(var(--muted) / 0.5);
-  border: 1px solid hsl(var(--border));
-}
-.nds-docs-callout[data-tone="success"] {
-  background-color: hsl(var(--success) / 0.08);
-  border-color: hsl(var(--success) / 0.3);
-}
-.nds-docs-callout[data-tone="info"] {
-  background-color: hsl(var(--info) / 0.08);
-  border-color: hsl(var(--info) / 0.3);
-}
-.nds-docs-callout[data-tone="warning"] {
-  background-color: hsl(var(--warning) / 0.08);
-  border-color: hsl(var(--warning) / 0.3);
-}
-.nds-docs-callout[data-tone="destructive"] {
-  background-color: hsl(var(--destructive) / 0.08);
-  border-color: hsl(var(--destructive) / 0.3);
-}
-
 /* ── Tooltip "Copiado" sobre o tile (estado on-hover ou pós-click) ────────── */
 .nds-icon-tile-tooltip {
   position: absolute;

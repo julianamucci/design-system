@@ -502,10 +502,10 @@ Componentes como **Badge** usam a factory vanilla-TS `createBadge({ variant?, cl
 
 Componentes como **AlertDialog** (implementação vanilla-TS com foco-trap manual e `role="alertdialog"`) são overlays de decisão forçada — sem `cva()`; severidade vem da factory do Button usada em Trigger/Action.
 
-1. **Sem `cva()`** — sem prop `variant`. `DocsVariants.items` documenta **tipos de uso** (`destructive`, `default`). Como a factory `createAlertDialog` **não aceita** `open`/`defaultOpen` inicial, cada `previewFactory` chama `queueMicrotask(() => trigger.click())` para abrir programaticamente no mount — Chromatic captura o modal visível.
-2. **`DocsAnatomy`** — 9 items: Root (wrapper), Trigger (button), Content (dialog), Header, Title (`h2`), Description (`p`), Footer, Cancel (button), Action (button). `structureCode` mostra a estrutura HTML gerada.
+1. **Sem `cva()`** — sem prop `variant`. `DocsVariants.items` documenta **tipos de uso** (`destructive`, `default`). A factory aceita `defaultOpen`, que é como as capturas visuais nascem com o modal aberto — não é preciso simular o clique no gatilho.
+2. **`DocsAnatomy`** — 10 items: Root (wrapper), Trigger (button), Content (dialog), Header, Title (`h2`), Description (`p`, **opcional**), Footer, Cancel (button), Action (button), Media (bloco de ícone, opcional). `structureCode` mostra a estrutura HTML gerada.
 3. **`DocsStates`** — `closed`, `open`, `confirmed`, `cancelled`, `controlled`. Omitir `loading`/`disabled`.
-4. **`DocsProps`** — 5 tables: `createAlertDialog({ trigger, title, description, cancelButton, actionButton, onOpenChange? })`, `createAlertDialogTrigger`, `createAlertDialogContent({ className })`, `createAlertDialogAction({ onClick, className })`, `createAlertDialogCancel({ onClick, className })`. Factory **não** aceita `open`/`defaultOpen` — controle programático via `trigger.click()`.
+4. **`DocsProps`** — 5 tables: `createAlertDialog({ trigger, title, description?, media?, cancelButton, actionButton, defaultOpen?, onOpenChange?, class? })`, `createAlertDialogTrigger`, `createAlertDialogContent({ className })`, `createAlertDialogAction({ onClick, className })`, `createAlertDialogCancel({ onClick, className })`. `description` é **opcional**: sem ela o painel não declara `aria-describedby`.
 5. **`DocsTokens`** — 7 tokens: overlayBg, contentBg, contentForeground, border, mutedForeground, destructive, destructiveForeground, radius.
 6. **`DocsNotes`** — overlay **não** fecha ao clicar fora (diferença do Dialog). Documentar em nota dedicada.
 7. **`DocsAccessibility`** — `role="alertdialog"` + `aria-modal="true"` aplicados pela factory. Focus trap manual via listeners `keydown` em Tab/Shift+Tab. Foco inicial no Cancel; `Escape` fecha.

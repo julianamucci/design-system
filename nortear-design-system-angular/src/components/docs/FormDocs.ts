@@ -569,10 +569,11 @@ export class NdsFormDocs implements AfterViewInit, OnDestroy {
     dict();
     // Uma composição só no conteúdo compartilhado — derivada da chave, não
     // contada à mão, para acompanhar o conteúdo se ele crescer.
-    const chaves = Object.keys(
-      (formTranslations as Record<string, { variants?: { compositions?: Record<string, unknown> } }>)
-        [getLocale()]?.variants?.compositions ?? {},
-    );
+    const porLocale = formTranslations as Record<
+      string,
+      { variants?: { compositions?: Record<string, unknown> } }
+    >;
+    const chaves = Object.keys(porLocale[getLocale()]?.variants?.compositions ?? {});
     const previews: Record<string, TemplateRef<unknown>> = {
       fieldset: this.tplCompFieldset(),
     };

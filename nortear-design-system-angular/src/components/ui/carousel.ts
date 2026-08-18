@@ -16,6 +16,7 @@ import {
 import { ChevronLeft, ChevronRight } from 'lucide';
 import { btnClass, type ButtonSize, type ButtonVariant } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { prefersReducedMotion } from '@/lib/motion';
 
 // ─── Carousel ─────────────────────────────────────────────────────────────────
 //
@@ -61,20 +62,12 @@ export interface CarouselSlideChange {
 /** Rótulo padrão dos slides: só números, para não cravar idioma no primitivo. */
 const ROTULO_PADRAO = '{index} / {total}';
 
-/**
- * Movimento reduzido, pelas duas vias que este projeto reconhece.
- *
- * O toolbar "Motion" do Storybook escreve `data-reduced-motion` no `<html>` e o
- * `motion.css` zera as durações a partir dele; a media query cobre a preferência
- * real do sistema. Uma animação de rolagem que ignorasse as duas seria
- * exatamente o tipo de movimento involuntário que a WCAG 2.3.3 pede para
- * desligar.
- */
-function movimentoReduzido(): boolean {
-  if (typeof window === 'undefined') return false;
-  if (document.documentElement.dataset['reducedMotion'] === 'true') return true;
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
+// Movimento reduzido vem de `@/lib/motion`, que responde pelas duas vias que
+// este projeto reconhece: o toolbar "Motion" do Storybook escreve
+// `data-reduced-motion` no `<html>` e o `motion.css` zera as durações a partir
+// dele; a media query cobre a preferência real do sistema. Uma animação de
+// rolagem que ignorasse as duas seria exatamente o tipo de movimento
+// involuntário que a WCAG 2.3.3 pede para desligar.
 
 /** Ordem de documento — a de registro depende da ordem de construção das views. */
 function ordenarPorDocumento(elementos: HTMLElement[]): HTMLElement[] {
@@ -160,7 +153,7 @@ export class NdsCarouselStore {
     const alvo = lista[i];
     const primeiro = lista[0];
     if (!vp || !alvo || !primeiro) return;
-    const behavior: ScrollBehavior = movimentoReduzido() ? 'auto' : 'smooth';
+    const behavior: ScrollBehavior = prefersReducedMotion() ? 'auto' : 'smooth';
     if (this.orientation() === 'vertical') {
       vp.scrollTo({ top: alvo.offsetTop - primeiro.offsetTop, behavior });
     } else {
@@ -335,7 +328,7 @@ export class NdsCarousel implements OnInit {
       // Movimento reduzido não é lido como signal de propósito: é preferência de
       // sistema, avaliada quando o ciclo (re)começa. Ligar autoplay sob ela
       // seria justamente o que a preferência pede para não acontecer.
-      if (!rodando || movimentoReduzido()) return;
+      if (!rodando || prefersReducedMotion()) return;
       const ms = this.autoplayDelay();
       const timer = setInterval(() => this.store.proximo('autoplay'), ms);
       onCleanup(() => clearInterval(timer));

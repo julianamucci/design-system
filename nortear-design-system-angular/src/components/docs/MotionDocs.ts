@@ -9,6 +9,11 @@ import {
 import { NdsFoundationPage } from './shared/FoundationPage';
 import { NdsButton } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
+// `motion.css` zera os `--duration-*` sob reduced motion, então tudo que é CSS
+// obedece sozinho. O laço da mola é o único trecho que não passa por token — e
+// por isso é o único que pergunta. Pergunta ao helper compartilhado, que também
+// enxerga o override `data-reduced-motion` do toolbar do Storybook.
+import { prefersReducedMotion } from '@/lib/motion';
 import translations from '@shared/content/foundations/motion/translations.json';
 
 /**
@@ -370,7 +375,7 @@ export class NdsMotionDocs implements OnDestroy {
       this.velocidadeY = 0;
     }
 
-    if (this.movimentoReduzido()) {
+    if (prefersReducedMotion()) {
       this.repousar();
       return;
     }
@@ -425,19 +430,6 @@ export class NdsMotionDocs implements OnDestroy {
       cancelAnimationFrame(this.quadro);
       this.quadro = undefined;
     }
-  }
-
-  /**
-   * `motion.css` zera os `--duration-*` sob reduced motion, então tudo que é
-   * CSS obedece sozinho. O laço da mola é o único trecho que não passa por
-   * token — e por isso é o único que pergunta.
-   */
-  private movimentoReduzido(): boolean {
-    return (
-      typeof window !== 'undefined' &&
-      typeof window.matchMedia === 'function' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    );
   }
 
   ngOnDestroy(): void {

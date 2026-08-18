@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
 import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';

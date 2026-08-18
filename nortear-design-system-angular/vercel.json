@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build-storybook",
+  "outputDirectory": "storybook-static",
+  "installCommand": "npm ci",
+  "ignoreCommand": "node ../scripts/vercel-should-build.mjs",
+  "framework": null,
+  "build": {
+    "env": {
+      "NODE_OPTIONS": "--max-old-space-size=7168"
+    }
+  }
+}

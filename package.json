@@ -22,7 +22,7 @@
     "chromatic:svelte": "npm run chromatic --prefix nortear-design-system-svelte",
     "chromatic:vanilla": "npm run chromatic --prefix nortear-design-system-vanilla",
     "chromatic:angular": "npm run chromatic --prefix nortear-design-system-angular",
-    "chromatic:all": "npm run chromatic:react && npm run chromatic:vue && npm run chromatic:svelte && npm run chromatic:vanilla",
+    "chromatic:all": "npm run chromatic:react && npm run chromatic:vue && npm run chromatic:svelte && npm run chromatic:vanilla && npm run chromatic:angular",
     "prepare": "husky"
   },
   "devDependencies": {

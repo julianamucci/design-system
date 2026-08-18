@@ -191,7 +191,9 @@ export function falhasDePar(medidas: MedidaDePar[], minimo: number): string[] {
  * `.nds-*`. Varridos todos porque o pior caso é o tom mais forte, e qual é o
  * mais forte muda com o modo.
  *
- *   0.08  docs-callout
+ *   0.08  folga: piso da varredura. Era o `.nds-docs-callout`, removido por não
+ *         ter um único consumidor no repositório; o alfa fica porque o piso é
+ *         barato de medir e cara de redescobrir.
  *   0.10  alert, toast, `.nds-bg-*-soft`, badge destructive (claro)
  *   0.12  badge warning/success/info (claro)
  *   0.15  pill, badge destructive (escuro)

@@ -56,6 +56,7 @@ nortear-design-system-angular/
 │   │   ├── use-seo.ts              # applySeo() → devolve cleanup
 │   │   ├── use-active-section.ts   # IntersectionObserver (onActive / onDwell)
 │   │   ├── docs-tracking.ts        # observer de clique via data-track*
+│   │   ├── motion.ts               # tokens de duração/easing + prefersReducedMotion()
 │   │   ├── strip-html.ts           # stripHtml e toPlainText
 │   │   ├── wait-for-portal.ts      # esperarPortal + a regra de âncora de foco
 │   │   ├── story-tags.ts           # slug → categoria, para o filtro da sidebar
@@ -69,11 +70,38 @@ nortear-design-system-angular/
 │   └── types/
 │
 ├── tsconfig.json                ← LEIA a seção "noEmit" abaixo antes de editar
+├── eslint.config.js             # flat config; ver "Lint" abaixo
+├── vercel.json                  # igual nas cinco stacks
 ├── vite.config.ts
 └── chromatic.config.json
 ```
 
 O conteúdo das docs pages **não** mora aqui: vem de `docs/shared/content/<slug>/translations.json`, pelo alias `@shared`.
+
+---
+
+## Movimento reduzido é uma pergunta só
+
+`src/lib/motion.ts` lê os tokens de `motion.css` (duração, easing, offset) e responde `prefersReducedMotion()` pelas **duas** vias que o projeto reconhece: a preferência real do sistema e o override `data-reduced-motion` que o toolbar "Motion" do Storybook escreve no `<html>`. Quem for animar em JS pergunta a ele; ninguém reescreve a checagem localmente. Já custou uma vez: a mola da página de fundamento de Motion perguntava só pela media query e continuava correndo com o toolbar em movimento reduzido.
+
+Divergência medida das outras stacks: lá o consumidor do módulo é o Chart, que passa duração e liga/desliga a animação do ECharts. O Chart daqui desenha SVG estático e não tem animação para configurar — os consumidores desta stack são o carrossel e a página de Motion.
+
+---
+
+## Lint
+
+`npm run lint` roda `eslint .` sobre a flat config da raiz do pacote. A espinha é a mesma das outras quatro stacks — `js.recommended` + `typescript-eslint` + `unused-imports` + `eslint-plugin-storybook`, com os mesmos ignores. O que é idioma daqui:
+
+| Item | Decisão |
+|---|---|
+| `angular-eslint` (`tsRecommended`) | ligado |
+| `processInlineTemplates` + `templateRecommended` | ligado — não há arquivo `.html` no pacote, todo template é inline, e sem o processor as regras de template não veriam nada |
+| `@angular-eslint/directive-selector` | `error`, prefixo `nds`, atributo, camelCase |
+| `@angular-eslint/component-selector` | **desligado**: mais da metade dos componentes usa seletor de atributo (`div[ndsAlert]`) e a regra aceita um único `style` |
+| `@angular-eslint/no-output-on-prefix` | **desligado**: os nomes `on*` são outputs do `@radix-ng/primitives` re-expostos por `hostDirectives`, mais o `onSelect` próprio do command, que existe para não colidir com o evento `select` do DOM |
+| `templateAccessibility` | **desligado**: acusa diretiva que injeta conteúdo e wiring em tempo de execução como se fosse elemento vazio. Acessibilidade é medida por axe sobre o DOM montado, em toda story |
+
+As três linhas "desligado" não são atalho: cada uma foi medida contra o código existente antes de decidir. Se você for religar uma, meça de novo — o custo está anotado aqui para não ser redescoberto.
 
 ---
 

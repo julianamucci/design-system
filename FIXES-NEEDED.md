@@ -34,13 +34,12 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 11 itens
+## Aberto de verdade — 9 itens
 
-### Precisam de decisão da dona (5)
+### Precisam de decisão da dona (3)
 
-- [ ] **`description` do alert-dialog: opcional no código, obrigatória na anatomia** (L73 do log). A assinatura do Vanilla diz `description?: string` e a anatomia compartilhada diz "descrição obrigatória, fonte do `aria-describedby`". Há dois `v8 ignore` no código apontando para este arquivo. Ou a anatomia passa a dizer "recomendada", ou as cinco stacks exigem. **São cinco stacks hoje, não quatro.**
-- [ ] **`collapsible` do accordion.** Duas contradições. O default documentado é `"false"` e o Vanilla usa `true`. E a prop não existe em **duas** das cinco stacks (react e angular, por limitação idiomática das libs, documentada em cada uma). Nenhuma story exercita `collapsible: false` em stack nenhuma. Ou entra no contrato com dispensa declarada nas duas, ou sai da tabela de props.
-- [ ] **`defaultOpen` na tabela de props do alert-dialog, só no Svelte.** Medido em `bits-ui/dist/bits/dialog/types.d.ts`: a raiz expõe `open`/`onOpenChange`/`onOpenChangeComplete`, sem `defaultOpen`. As outras quatro têm a prop de verdade. A correção é local — override no `t()` ou `ABSENT_PROPS`.
+- [x] **`description` do alert-dialog: opcional no código, obrigatória na anatomia** (L73 do log). **Decidido pela dona (2026-08-17): a documentação alinha ao código — a descrição é opcional.** `anatomy.item6`, `usage.guidelines.item2`, `accessibility.item2`, `accessibility.aria.describedby` e `accessibility.screenReader.onOpen` reescritos nos três idiomas; os dois `v8 ignore` do Vanilla saíram; guidelines de react, vue e angular corrigidas. O caminho passou a ter contrato (`testes.accessibility.item8`) e story nas cinco (`WithoutDescription`). **Achado da medição**: das cinco, só o Vue quebrava — o `DialogContentImpl` do reka-ui gera o id da descrição sempre e ligava `aria-describedby` a um id inexistente (a própria lib avisa disso em dev). Corrigido no wrapper via registro da descrição.
+- [x] **`defaultOpen` na tabela de props do alert-dialog, só no Svelte.** Medido em `bits-ui/dist/bits/dialog/types.d.ts`: a raiz expõe `open`/`onOpenChange`/`onOpenChangeComplete`, sem `defaultOpen`. As outras quatro têm a prop de verdade. **Resolvido (2026-08-17)**: a prop saiu dos dois lugares de `AlertDialogDocs.svelte` — a linha da tabela e o `interfaceCode` que o leitor copia — pela mesma convenção do `DropdownMenuDocs.svelte`, o comentário no lugar da linha. As outras quatro ficaram intactas.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
 - [ ] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic.
 
@@ -153,16 +152,14 @@ decisão sua — não é trabalho parado por falta de tempo.
   inverte a precedência em 48 componentes de uma vez, e o que hoje é ignorado
   passa a valer, inclusive onde ninguém esperava.
 
-- [ ] **`description` do alert-dialog: opcional no código, obrigatória na
+- [x] **`description` do alert-dialog: opcional no código, obrigatória na
   anatomia (2026-08-07).** A factory do Vanilla declara `description?: string`
   e a props table diz "Obrigatório: Não"; a anatomia (`anatomy.item6`, texto
   compartilhado) diz "descrição obrigatória. Fonte do aria-describedby". React,
   Vue e Svelte também permitem omitir — é um componente separado.
 
-  Nenhuma story omite, então o caminho sem descrição está declarado com
-  `v8 ignore` no Vanilla. Resolver é escolher: ou a anatomia passa a dizer
-  "recomendada", ou as quatro stacks passam a exigir — e aí a story que prova
-  isso precisa nascer nas quatro.
+  **Fechado em 2026-08-17 pela decisão da dona: a documentação alinha ao
+  código.** Ver o item correspondente na lista canônica, no topo do arquivo.
 
 - [x] **92 cliques cegos em 14 componentes (2026-08-07).** Regra nova  
       **RESOLVIDO** (conferido 2026-08-17) — 7b88514c
@@ -181,23 +178,19 @@ decisão sua — não é trabalho parado por falta de tempo.
   cada um, e não num lote só: em toggle e collapsible o volume sugere que a
   story inteira precisa de releitura, não só a troca de chamada.
 
-- [ ] **`collapsible: false` no accordion não tem story em stack nenhuma (2026-08-07).**
-  A prop está documentada na tabela compartilhada (`props.accordion.items.collapsible`,
-  "Permite fechar o item ativo clicando nele novamente") e existe em Vue (reka),
-  Svelte (bits) e Vanilla. **O React não tem**: o `AccordionRoot` do base-ui expõe
-  `value`, `defaultValue`, `disabled` e `multiple`, e mais nada — conferido no
-  `.d.ts`. Nenhuma das quatro stacks tem story com `collapsible: false`.
-
-  Duas coisas a decidir juntas, porque uma depende da outra:
-  1. A story nasce só nas três que suportam (e o React declara
-     `coversNotApplicable`), ou a prop sai da tabela compartilhada por não ser
-     contrato das quatro?
-  2. O **default documentado está errado**: a tabela diz `false`, a factory do
-     Vanilla usa `true`. Uma das duas precisa ceder, e a escolha muda o
-     comportamento padrão de quem já consome.
-
-  Enquanto isso o ramo está declarado com `v8 ignore` e motivo em
-  `nortear-design-system-vanilla/src/components/ui/accordion.ts`.
+- [x] **`collapsible` do accordion — FECHADO (2026-08-17).** Decisão da dona: o
+  comportamento é `true` nas cinco. Como `false` deixou de ser alcançável, a prop
+  **saiu da API pública** — a alternativa (documentá-la como `true` fixo) manteria
+  um booleano com um valor legal só, e a medição mostrou que ela nunca foi
+  contrato: **três** libs de cinco não têm o conceito (`@base-ui/react`,
+  `bits-ui` e `@radix-ng/primitives` fecham o item aberto incondicionalmente,
+  conferido no `.d.ts` e no `dist`), e o item anterior deste arquivo errava ao
+  contar o Svelte entre as que tinham. Só `reka-ui` a expunha, com `false` por
+  omissão — e é por isso que a stack Vue passou a fixá-la por dentro, fora da
+  API. O `v8 ignore` do ramo saiu junto com o ramo. O contrato
+  `testes.functional.item2` passou a ser exercido também pela story
+  `CloseOnSecondClick`, que monta o modo único **sem configuração nenhuma** e
+  sobrevive ao replay do painel Interactions.
 
 - [x] **Warning `a11y_no_noninteractive_tabindex` no primitivo Svelte.**  
       **MUDOU DE FORMA** (conferido 2026-08-17) — o texto deste item foi SUBSTITUÍDO na seção "Mudaram de forma", no topo. Não use o texto abaixo.
