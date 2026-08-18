@@ -6,7 +6,7 @@ import {
   input,
   ViewEncapsulation,
 } from '@angular/core';
-import { RdxSwitchRoot, RdxSwitchThumb } from '@radix-ng/primitives/switch';
+import { RdxSwitchRoot } from '@radix-ng/primitives/switch';
 
 // ─── Switch ───────────────────────────────────────────────────────────────────
 //
@@ -27,6 +27,24 @@ import { RdxSwitchRoot, RdxSwitchThumb } from '@radix-ng/primitives/switch';
 // alcançar o controle — em silêncio, porque o rótulo continua na tela. Mesma
 // regra do `invalid` no Checkbox: quem compõe não é dono do atributo que o
 // primitivo liga.
+//
+// SEM `RdxSwitchThumb`, pelo mesmo diagnóstico do Checkbox e com uma diferença
+// medida. O seletor real é `span[rdxSwitchThumb]`; o knob trazia
+// `ndsSwitchThumb`, que não casa com diretiva nenhuma — import e atributo
+// mortos juntos, NG8113 no `ngc`.
+//
+// A diretiva NÃO tem `keepMounted`, e nem precisaria: o knob nunca sai do DOM.
+// Tudo o que ela faria é escrever `data-checked` / `data-unchecked` /
+// `data-disabled` / `data-readonly` / `data-required` no knob. E o movimento
+// não depende disso: `docs/shared/styles/nds/switch.css` desloca por
+// `.nds-switch-thumb[data-state="checked"]` (e aceita `[data-checked]` como
+// alternativa), e o `data-state` já é escrito aqui. A folha também não tem
+// animação de saída — o que existe é `transition: transform`, que roda nos dois
+// sentidos num nó que sempre esteve montado.
+//
+// O markup de referência está documentado no topo da própria folha:
+// `<span class="nds-switch-thumb" data-state="unchecked">`. É exatamente o que
+// sai daqui; ligar a diretiva afastaria o DOM do Vanilla para ganhar nada.
 
 export type SwitchSize = 'default' | 'sm';
 
@@ -35,7 +53,6 @@ export type SwitchSize = 'default' | 'sm';
   standalone: true,
   template: `
     <span
-      ndsSwitchThumb
       class="nds-switch-thumb"
       data-slot="switch-thumb"
       [attr.data-state]="estado()"
@@ -43,7 +60,6 @@ export type SwitchSize = 'default' | 'sm';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [RdxSwitchThumb],
   hostDirectives: [
     {
       directive: RdxSwitchRoot,

@@ -8,7 +8,6 @@ import {
 import {
   RdxCheckboxRootDirective,
   RdxCheckboxButtonDirective,
-  RdxCheckboxIndicatorDirective,
 } from '@radix-ng/primitives/checkbox';
 
 // ─── Checkbox ─────────────────────────────────────────────────────────────────
@@ -38,13 +37,36 @@ import {
 // `data-state="checked|unchecked"`. O CSS compartilhado aceita os dois, mas a
 // paridade de markup é o que a auditoria cross-stack compara — então emitimos
 // os dois de propósito.
+//
+// SEM `RdxCheckboxIndicator`, e isso é medido. O seletor real da diretiva é
+// `[rdxCheckboxIndicator]`; o indicador aqui trazia `ndsCheckboxIndicator`, que
+// não casa com diretiva nenhuma — nem da lib, nem nossa. Import e atributo
+// estavam mortos juntos, e o `ngc` acusava NG8113.
+//
+// O que a diretiva entregaria: os atributos `data-checked` / `data-unchecked` /
+// `data-indeterminate` no indicador, `style.pointer-events: none`, e o
+// `keepMounted` — manter o indicador no DOM quando desmarcado para uma animação
+// de SAÍDA em CSS. Ligá-la não acrescenta nada:
+//
+//   · a visibilidade já é decidida aqui pelo `@if (checked() || indeterminate())`;
+//   · `docs/shared/styles/nds/checkbox.css` NÃO tem regra de saída — a única
+//     animação é `nds-indicator-pop`, de ENTRADA, disparada na montagem do svg;
+//     não há `data-ending-style`, `nds-animate-out` nem transição de opacidade
+//     no indicador (o vocabulário `data-ending-style` existe na folha, mas só
+//     nas famílias de overlay: alert-dialog, popover, sheet, accordion…);
+//   · o estado do indicador já sai em `data-state`, que é o que as outras
+//     quatro stacks emitem e o que a folha compartilhada lê.
+//
+// Ou seja, ligar acrescentaria markup e estilo inline sem efeito, e ainda
+// afastaria o DOM do Vanilla, que é a referência. Se um dia a folha ganhar
+// animação de saída no indicador, o caminho é `[rdxCheckboxIndicator]
+// keepMounted` — não o atributo inerte que estava aqui.
 
 @Component({
   selector: 'button[ndsCheckbox]',
   standalone: true,
   template: `
     <span
-      ndsCheckboxIndicator
       class="nds-checkbox-indicator"
       data-slot="checkbox-indicator"
       [attr.data-state]="estado()"
@@ -71,7 +93,6 @@ import {
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [RdxCheckboxIndicatorDirective],
   hostDirectives: [
     {
       directive: RdxCheckboxRootDirective,
