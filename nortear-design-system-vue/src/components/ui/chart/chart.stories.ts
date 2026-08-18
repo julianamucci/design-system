@@ -107,7 +107,10 @@ const meta = {
         'Classes .nds-* extras no container. Use para largura e espaçamento; a altura tem prop própria.',
       table: { type: { summary: 'string' } },
     },
-    'aria-label': {
+    // A chave é o nome da prop; `name` é como se escreve no template. Storybook
+    // casa argTypes com args pela chave, e a prop declarada é `ariaLabel`.
+    ariaLabel: {
+      name: 'aria-label',
       control: false,
       description:
         'Descrição do desenho para leitor de tela. Sem valor, cai no título do option e, por último, numa palavra genérica.',

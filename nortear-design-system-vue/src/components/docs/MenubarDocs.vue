@@ -740,13 +740,13 @@ const a11yCritCols = computed(() => ({
               <MenubarContent>
                 <MenubarCheckboxItem
                   :checked="compShowSidebar"
-                  @update:checked="(v: boolean) => (compShowSidebar = v)"
+                  @update:checked="compShowSidebar = $event"
                 >
                   Sidebar
                 </MenubarCheckboxItem>
                 <MenubarCheckboxItem
                   :checked="compShowGrid"
-                  @update:checked="(v: boolean) => (compShowGrid = v)"
+                  @update:checked="compShowGrid = $event"
                 >
                   Grid
                 </MenubarCheckboxItem>

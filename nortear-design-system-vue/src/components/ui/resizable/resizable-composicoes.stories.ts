@@ -21,10 +21,16 @@ const meta = {
       },
     },
   },
-} satisfies Meta<any>;
+  // `direction` é prop obrigatória do grupo. Sem o valor padrão aqui, o tipo de
+  // Story exige `args` em CADA story — e estas montam a composição no próprio
+  // template. É o mesmo padrão do meta de `resizable.stories.ts`.
+  args: {
+    direction: 'horizontal',
+  },
+} satisfies Meta<typeof ResizablePanelGroup>;
 
 export default meta;
-type Story = StoryObj<Meta<any>>;
+type Story = StoryObj<typeof meta>;
 
 export const EditorWithPreview: Story = {
   render: () => ({

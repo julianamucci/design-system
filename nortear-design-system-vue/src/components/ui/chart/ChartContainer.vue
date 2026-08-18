@@ -3,7 +3,7 @@
   baseado em @unovis/vue. API agora é declarativa: `<ChartContainer :option="..." />`.
 -->
 <script setup lang="ts">
-import { computed, nextTick, onMounted, onBeforeUnmount, ref, useAttrs } from 'vue';
+import { computed, onMounted, onBeforeUnmount, ref } from 'vue';
 import VChart from 'vue-echarts';
 import * as echarts from 'echarts/core';
 import { BarChart, LineChart, PieChart } from 'echarts/charts';
@@ -39,6 +39,19 @@ const props = defineProps<{
   height?: number;
   /** Frase mostrada no lugar do gráfico quando não há série com dado. */
   emptyLabel?: string;
+  /**
+   * Rótulo do desenho para leitor de tela — escreve-se `aria-label="…"` no
+   * template, que é o mesmo nome em camelCase.
+   *
+   * É prop DECLARADA, e não atributo herdado, porque o componente precisa LER o
+   * valor (para decidir o encadeamento de nome acessível) e, ao mesmo tempo,
+   * NÃO aplicá-lo no estado vazio. Como atributo herdado ele fazia as duas
+   * coisas erradas: chegava só via `useAttrs`, invisível para o tipo e para a
+   * tabela de props, e a herança de atributos sobrescrevia o `undefined` que o
+   * template define de propósito quando não há dado — o rótulo de imagem
+   * pousava no `div` mesmo sem imagem alguma para nomear.
+   */
+  ariaLabel?: string;
 }>();
 
 const containerRef = ref<HTMLDivElement | null>(null);
@@ -136,14 +149,13 @@ onBeforeUnmount(() => observer?.disconnect());
 const containerClass = computed(() => cn('nds-chart', props.class));
 const rendererName = computed(() => props.renderer ?? 'svg');
 
-const attrs = useAttrs();
 /**
  * Rótulo do gráfico, na ordem: o que o consumidor passou, o título do próprio
  * option, e por último uma palavra genérica. Nunca fica sem nome — `role="img"`
  * sem nome acessível é violação de axe, e um desenho mudo é conteúdo perdido.
  */
 const accessibleLabel = computed(() => {
-  const fornecido = attrs['aria-label'] as string | undefined;
+  const fornecido = props.ariaLabel;
   if (fornecido) return fornecido;
   const titulo = (props.option as { title?: { text?: string } | { text?: string }[] }).title;
   const doOption = Array.isArray(titulo) ? titulo[0]?.text : titulo?.text;

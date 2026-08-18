@@ -32,8 +32,19 @@ const props = defineProps<
   }
 >()
 
+/**
+ * A ENTRADA é de três estados; a SAÍDA é de dois.
+ *
+ * `checked` aceita `'indeterminate'` porque o estado misto é um valor que o
+ * consumidor entrega. O evento não: ao clicar, o item misto resolve para
+ * marcado e o item de dois estados alterna — a lib declara o próprio payload
+ * como `boolean` justamente por isso. Declarar a saída como três estados era
+ * mais larga que a realidade e que a lib, e obrigava quem escuta o evento a
+ * tratar um `'indeterminate'` que nunca chega — numa comparação frouxa ele
+ * passaria por verdadeiro.
+ */
 const emits = defineEmits<{
-  'update:checked': [value: boolean | 'indeterminate']
+  'update:checked': [value: boolean]
   select: [event: Event]
 }>()
 
