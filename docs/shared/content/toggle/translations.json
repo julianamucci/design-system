@@ -8,7 +8,7 @@
       "title": "Toggle — Formulário",
       "description": "Documentação do Toggle: variantes default/outline, tamanhos sm/default/lg, aria-pressed e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Toggle de dois estados com aria-pressed automático, variantes default/outline, tamanhos sm/default/lg para formatação visual e filtros.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, aria-pressed"
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -455,7 +455,7 @@
       "title": "Toggle — Form",
       "description": "Toggle documentation: default/outline variants, sm/default/lg sizes, aria-pressed and WCAG 2.2 AA support.",
       "aiSummary": "Toggle two-state component with automatic aria-pressed, default/outline variants, sm/default/lg sizes for visual formatting and filters.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, aria-pressed"
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -902,7 +902,7 @@
       "title": "Toggle — Formulario",
       "description": "Documentación de Toggle: variantes default/outline, tamaños sm/default/lg, aria-pressed y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Toggle de dos estados con aria-pressed automático, variantes default/outline, tamaños sm/default/lg para formato visual y filtros.",
-      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, aria-pressed"
+      "aiEntities": "Toggle, Toggle Group, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demostración",

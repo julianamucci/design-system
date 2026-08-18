@@ -7,8 +7,8 @@
     "seo": {
       "title": "Table — Display",
       "description": "Documentação do Table: 8 subcomponentes semânticos, scroll horizontal, empty state, acessibilidade WCAG com scope e caption.",
-      "aiSummary": "Componente Table com 8 subcomponentes (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), scroll horizontal automático, empty state obrigatório e integração com TanStack Table para ordenação e filtros.",
-      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.2, TanStack Table"
+      "aiSummary": "Componente Table com 8 subcomponentes (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), scroll horizontal automático, empty state obrigatório e integração com o DataTable para ordenação e filtros.",
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -463,8 +463,8 @@
     "seo": {
       "title": "Table — Display",
       "description": "Table documentation: 8 semantic subcomponents, horizontal scroll, empty state, WCAG accessibility with scope and caption.",
-      "aiSummary": "Table component with 8 subcomponents (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), automatic horizontal scroll, mandatory empty state, and TanStack Table integration for sorting and filters.",
-      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.2, TanStack Table"
+      "aiSummary": "Table component with 8 subcomponents (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), automatic horizontal scroll, mandatory empty state, and DataTable integration for sorting and filters.",
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -919,8 +919,8 @@
     "seo": {
       "title": "Table — Display",
       "description": "Documentación del Table: 8 subcomponentes semánticos, scroll horizontal, empty state, accesibilidad WCAG con scope y caption.",
-      "aiSummary": "Componente Table con 8 subcomponentes (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), scroll horizontal automático, empty state obligatorio e integración con TanStack Table para ordenación y filtros.",
-      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, WCAG 2.2, TanStack Table"
+      "aiSummary": "Componente Table con 8 subcomponentes (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption), scroll horizontal automático, empty state obligatorio e integración con el DataTable para ordenación y filtros.",
+      "aiEntities": "Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demostración",

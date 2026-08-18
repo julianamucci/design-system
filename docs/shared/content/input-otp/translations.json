@@ -8,7 +8,7 @@
       "title": "InputOTP — Formulário",
       "description": "Documentação do InputOTP: campo de código de verificação com uma caixa por dígito, foco automático, colar e WCAG 2.2 AA.",
       "aiSummary": "Componente InputOTP para códigos de verificação OTP/PIN, com uma caixa por dígito, suporte a colar, foco automático, pedido de código de uso único ao sistema e formatos de 4 a 8 caracteres com separador opcional.",
-      "aiEntities": "InputOTP, OTP, PIN, one-time-code, código de verificação, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
+      "aiEntities": "InputOTP, React, Vue, Svelte, Vanilla, Angular, OTP, PIN, one-time-code, código de verificação, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -486,7 +486,7 @@
       "title": "InputOTP — Form",
       "description": "InputOTP documentation: verification code field with one box per digit, auto focus, paste and WCAG 2.2 AA.",
       "aiSummary": "InputOTP component for OTP/PIN verification codes, with one box per digit, paste support, auto focus, one-time-code autofill request and formats from 4 to 8 characters with an optional separator.",
-      "aiEntities": "InputOTP, OTP, PIN, one-time-code, verification code, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
+      "aiEntities": "InputOTP, React, Vue, Svelte, Vanilla, Angular, OTP, PIN, one-time-code, verification code, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -964,7 +964,7 @@
       "title": "InputOTP — Formulario",
       "description": "Documentación de InputOTP: campo de código de verificación con una caja por dígito, foco automático, pegar y WCAG 2.2 AA.",
       "aiSummary": "Componente InputOTP para códigos de verificación OTP/PIN, con una caja por dígito, soporte para pegar, foco automático, petición de código de un solo uso al sistema y formatos de 4 a 8 caracteres con separador opcional.",
-      "aiEntities": "InputOTP, OTP, PIN, one-time-code, código de verificación, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
+      "aiEntities": "InputOTP, React, Vue, Svelte, Vanilla, Angular, OTP, PIN, one-time-code, código de verificación, autocomplete, paste, WCAG 2.2, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demostración",

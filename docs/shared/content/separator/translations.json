@@ -8,7 +8,7 @@
       "title": "Separator — Layout",
       "description": "Documentação do Separator: divisor de 1px horizontal ou vertical, decorativo por padrão e semântico sob pedido, com modificador de ênfase forte.",
       "aiSummary": "Componente Separator que renderiza um divisor de 1px horizontal ou vertical; é decorativo por padrão (role=none e aria-hidden) e semântico sob pedido (role=separator e aria-orientation), com modificador de ênfase que dobra a espessura.",
-      "aiEntities": "Separator, divisor, role=separator, aria-orientation, WCAG 1.3.1, WCAG 1.4.1"
+      "aiEntities": "Separator, React, Vue, Svelte, Vanilla, Angular, divisor, role=separator, aria-orientation, WCAG 1.3.1, WCAG 1.4.1"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -408,7 +408,7 @@
       "title": "Separator — Layout",
       "description": "Separator documentation: 1px horizontal or vertical divider, decorative by default and semantic on request, with a strong emphasis modifier.",
       "aiSummary": "Separator component renders a 1px horizontal or vertical divider; it is decorative by default (role=none and aria-hidden) and semantic on request (role=separator and aria-orientation), with an emphasis modifier that doubles the thickness.",
-      "aiEntities": "Separator, divider, role=separator, aria-orientation, WCAG 1.3.1, WCAG 1.4.1"
+      "aiEntities": "Separator, React, Vue, Svelte, Vanilla, Angular, divider, role=separator, aria-orientation, WCAG 1.3.1, WCAG 1.4.1"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -808,7 +808,7 @@
       "title": "Separator — Layout",
       "description": "Documentación de Separator: divisor de 1px horizontal o vertical, decorativo por defecto y semántico bajo pedido, con modificador de énfasis fuerte.",
       "aiSummary": "Componente Separator que renderiza un divisor de 1px horizontal o vertical; es decorativo por defecto (role=none y aria-hidden) y semántico bajo pedido (role=separator y aria-orientation), con un modificador de énfasis que duplica el grosor.",
-      "aiEntities": "Separator, divisor, role=separator, aria-orientation, WCAG 1.3.1, WCAG 1.4.1"
+      "aiEntities": "Separator, React, Vue, Svelte, Vanilla, Angular, divisor, role=separator, aria-orientation, WCAG 1.3.1, WCAG 1.4.1"
     },
     "demonstration": {
       "title": "Demostración",

@@ -7,8 +7,8 @@
     "seo": {
       "title": "Chart — Display",
       "description": "Documentação do Chart: gráficos bar, line, area e pie via objeto declarativo, tema reativo por tokens e acessibilidade WCAG.",
-      "aiSummary": "Componente Chart com ChartContainer e helpers buildBarOption/buildLineOption/buildAreaOption/buildPieOption. API declarativa baseada em Apache ECharts. Tokens --chart-1 a --chart-5 para cores de séries.",
-      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
+      "aiSummary": "Componente Chart com ChartContainer e helpers buildBarOption/buildLineOption/buildAreaOption/buildPieOption. API declarativa de opções. Tokens --chart-1 a --chart-5 para cores de séries.",
+      "aiEntities": "Chart, React, Vue, Svelte, Vanilla, Angular, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -435,8 +435,8 @@
     "seo": {
       "title": "Chart — Display",
       "description": "Chart documentation: bar, line, area, and pie via declarative object, reactive theme through tokens, and WCAG accessibility.",
-      "aiSummary": "Chart component with ChartContainer and buildBarOption/buildLineOption/buildAreaOption/buildPieOption helpers. Declarative API built on Apache ECharts. Tokens --chart-1 to --chart-5 for series colors.",
-      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
+      "aiSummary": "Chart component with ChartContainer and buildBarOption/buildLineOption/buildAreaOption/buildPieOption helpers. Declarative option API. Tokens --chart-1 to --chart-5 for series colors.",
+      "aiEntities": "Chart, React, Vue, Svelte, Vanilla, Angular, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -863,8 +863,8 @@
     "seo": {
       "title": "Chart — Display",
       "description": "Documentación de Chart: gráficos bar, line, area y pie mediante objeto declarativo, tema reactivo por tokens y accesibilidad WCAG.",
-      "aiSummary": "Componente Chart con ChartContainer y helpers buildBarOption/buildLineOption/buildAreaOption/buildPieOption. API declarativa basada en Apache ECharts. Tokens --chart-1 a --chart-5 para colores de series.",
-      "aiEntities": "Chart, ECharts, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
+      "aiSummary": "Componente Chart con ChartContainer y helpers buildBarOption/buildLineOption/buildAreaOption/buildPieOption. API declarativa de opciones. Tokens --chart-1 a --chart-5 para colores de series.",
+      "aiEntities": "Chart, React, Vue, Svelte, Vanilla, Angular, ChartContainer, buildBarOption, buildLineOption, buildAreaOption, buildPieOption, SVG, Canvas, WCAG 2.2, aria-label, decal pattern"
     },
     "demonstration": {
       "title": "Demostración",

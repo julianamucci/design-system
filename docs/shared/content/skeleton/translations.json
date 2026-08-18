@@ -8,7 +8,7 @@
       "title": "Skeleton — Feedback",
       "description": "Documentação do Skeleton: placeholder de carregamento com pulso por opacidade, forma e largura por atributo, decorativo via aria-hidden e com a animação desligada sob movimento reduzido.",
       "aiSummary": "O componente Skeleton renderiza um placeholder que imita a caixa do conteúdo que vai substituir. Forma e largura vêm dos atributos data-shape e data-width, o fundo é a cor primária a 10% sobre o container, e o pulso por opacidade é desligado pela própria folha de estilo sob prefers-reduced-motion. O placeholder é decorativo (aria-hidden): quem anuncia o carregamento é a região que o contém, com role status, aria-busy e nome acessível.",
-      "aiEntities": "Skeleton, placeholder de carregamento, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
+      "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, Angular, placeholder de carregamento, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -413,7 +413,7 @@
       "title": "Skeleton — Feedback",
       "description": "Skeleton documentation: loading placeholder with an opacity pulse, shape and width set by attribute, decorative via aria-hidden, and animation switched off under reduced motion.",
       "aiSummary": "The Skeleton component renders a placeholder that mirrors the box of the content it will be replaced by. Shape and width come from the data-shape and data-width attributes, the background is the primary colour at 10% over the container, and the opacity pulse is switched off by the stylesheet itself under prefers-reduced-motion. The placeholder is decorative (aria-hidden): the loading state is announced by the region that contains it, with role status, aria-busy and an accessible name.",
-      "aiEntities": "Skeleton, loading placeholder, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
+      "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, Angular, loading placeholder, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -818,7 +818,7 @@
       "title": "Skeleton — Feedback",
       "description": "Documentación de Skeleton: placeholder de carga con pulso por opacidad, forma y ancho por atributo, decorativo vía aria-hidden y con la animación apagada bajo movimiento reducido.",
       "aiSummary": "El componente Skeleton renderiza un placeholder que imita la caja del contenido que va a sustituir. La forma y el ancho vienen de los atributos data-shape y data-width, el fondo es el color primario al 10% sobre el container, y el pulso por opacidad lo apaga la propia hoja de estilo bajo prefers-reduced-motion. El placeholder es decorativo (aria-hidden): quien anuncia la carga es la región que lo contiene, con role status, aria-busy y nombre accesible.",
-      "aiEntities": "Skeleton, placeholder de carga, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
+      "aiEntities": "Skeleton, React, Vue, Svelte, Vanilla, Angular, placeholder de carga, data-shape, data-width, aria-hidden, aria-busy, role status, prefers-reduced-motion, WCAG 2.3.3, WCAG 4.1.2"
     },
     "demonstration": {
       "title": "Demostración",

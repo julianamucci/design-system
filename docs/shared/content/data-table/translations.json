@@ -7,8 +7,8 @@
     "seo": {
       "title": "DataTable — Display",
       "description": "Transforme listas estáticas em ferramentas exploráveis: ordene, filtre, selecione e edite milhares de linhas com performance e acessibilidade WCAG.",
-      "aiSummary": "Componente DataTable construído sobre TanStack Table v8 (headless). Estende o Table primitivo com ordenação multi-coluna, filtro global e por coluna, seleção de linhas, paginação, redimensionamento, reordenação, fixação e edição inline. Suporta virtualização para datasets grandes.",
-      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
+      "aiSummary": "Componente DataTable headless que estende o Table primitivo com ordenação multi-coluna, filtro global e por coluna, seleção de linhas, paginação, redimensionamento, reordenação, fixação e edição inline. Suporta virtualização para datasets grandes.",
+      "aiEntities": "DataTable, React, Vue, Svelte, Vanilla, Angular, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -515,8 +515,8 @@
     "seo": {
       "title": "DataTable — Display",
       "description": "Turn static lists into explorable tools: sort, filter, select, and edit thousands of rows with performance and WCAG-grade accessibility.",
-      "aiSummary": "DataTable component built on TanStack Table v8 (headless). Extends the Table primitive with multi-column sorting, global and per-column filtering, row selection, pagination, resizing, reordering, pinning, and inline editing. Supports virtualization for large datasets.",
-      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
+      "aiSummary": "Headless DataTable component that extends the Table primitive with multi-column sorting, global and per-column filtering, row selection, pagination, resizing, reordering, pinning, and inline editing. Supports virtualization for large datasets.",
+      "aiEntities": "DataTable, React, Vue, Svelte, Vanilla, Angular, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -1023,8 +1023,8 @@
     "seo": {
       "title": "DataTable — Display",
       "description": "Convierte listas estáticas en herramientas explorables: ordena, filtra, selecciona y edita miles de filas con performance y accesibilidad WCAG.",
-      "aiSummary": "Componente DataTable construido sobre TanStack Table v8 (headless). Extiende el primitivo Table con orden multi-columna, filtro global y por columna, selección de filas, paginación, redimensionamiento, reordenamiento, fijación y edición inline. Soporta virtualización para datasets grandes.",
-      "aiEntities": "DataTable, TanStack Table, TanStack Virtual, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
+      "aiSummary": "Componente DataTable headless que extiende el primitivo Table con orden multi-columna, filtro global y por columna, selección de filas, paginación, redimensionamiento, reordenamiento, fijación y edición inline. Soporta virtualización para datasets grandes.",
+      "aiEntities": "DataTable, React, Vue, Svelte, Vanilla, Angular, Table, headless table, sorting, filtering, row selection, pagination, column resize, column reorder, column pinning, inline edit, virtualization, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demostración",

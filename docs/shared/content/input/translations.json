@@ -8,7 +8,7 @@
       "title": "Input — Formulário",
       "description": "Documentação do Input: campo de texto linha única, tipos HTML nativos, estados disabled e error, acessibilidade WCAG, integração com Form.",
       "aiSummary": "Componente Input de linha única com suporte a todos os tipos HTML nativos, estados disabled e aria-invalid, integração com FormField e InputGroup para composição avançada.",
-      "aiEntities": "Input, InputGroup, WCAG 2.2, aria-invalid, campo de formulário, design system"
+      "aiEntities": "Input, React, Vue, Svelte, Vanilla, Angular, InputGroup, WCAG 2.2, aria-invalid, campo de formulário, design system"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -436,7 +436,7 @@
       "title": "Input — Form",
       "description": "Documentation for Input: single-line text field, native HTML types, disabled and error states, WCAG accessibility, Form integration.",
       "aiSummary": "Single-line Input component supporting all native HTML types, disabled and aria-invalid states, FormField integration and InputGroup for advanced composition.",
-      "aiEntities": "Input, InputGroup, WCAG 2.2, aria-invalid, form field, design system"
+      "aiEntities": "Input, React, Vue, Svelte, Vanilla, Angular, InputGroup, WCAG 2.2, aria-invalid, form field, design system"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -864,7 +864,7 @@
       "title": "Input — Formulario",
       "description": "Documentación del Input: campo de texto línea única, tipos HTML nativos, estados disabled y error, accesibilidad WCAG, integración con Form.",
       "aiSummary": "Componente Input de línea única con soporte a todos los tipos HTML nativos, estados disabled y aria-invalid, integración con FormField e InputGroup para composición avanzada.",
-      "aiEntities": "Input, InputGroup, WCAG 2.2, aria-invalid, campo de formulario, design system"
+      "aiEntities": "Input, React, Vue, Svelte, Vanilla, Angular, InputGroup, WCAG 2.2, aria-invalid, campo de formulario, design system"
     },
     "demonstration": {
       "title": "Demostración",

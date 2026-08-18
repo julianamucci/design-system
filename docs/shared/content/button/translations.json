@@ -8,7 +8,7 @@
       "title": "Button — Formulário",
       "description": "Documentação do Button: 6 variantes, 6 tamanhos, composição com elemento filho para links, acessibilidade WCAG e suporte a ícones.",
       "aiSummary": "Componente Button com 6 variantes (default, destructive, outline, secondary, ghost, link), 8 tamanhos, composição com elemento filho, foco visível e suporte a ícones decorativos.",
-      "aiEntities": "Button, botão, design system, componente de formulário, WCAG 2.2, acessibilidade, foco visível, ícone"
+      "aiEntities": "Button, React, Vue, Svelte, Vanilla, Angular, botão, design system, componente de formulário, WCAG 2.2, acessibilidade, foco visível, ícone"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -456,7 +456,7 @@
       "title": "Button — Form",
       "description": "Documentation for Button: 6 variants, 6 sizes, child element composition for links, WCAG accessibility and icon support.",
       "aiSummary": "Button component with 6 variants (default, destructive, outline, secondary, ghost, link), 8 sizes, child element composition, visible focus ring, and support for decorative icons.",
-      "aiEntities": "Button, design system, form component, WCAG 2.2, accessibility, focus ring, icon button"
+      "aiEntities": "Button, React, Vue, Svelte, Vanilla, Angular, design system, form component, WCAG 2.2, accessibility, focus ring, icon button"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -904,7 +904,7 @@
       "title": "Button — Formulario",
       "description": "Documentación del Button: 6 variantes, 6 tamaños, composición con elemento hijo para enlaces, accesibilidad WCAG y soporte para íconos.",
       "aiSummary": "Componente Button con 6 variantes (default, destructive, outline, secondary, ghost, link), 8 tamaños, composición con elemento hijo, foco visible y soporte para íconos decorativos.",
-      "aiEntities": "Button, botón, design system, componente de formulario, WCAG 2.2, accesibilidad, foco visible, ícono"
+      "aiEntities": "Button, React, Vue, Svelte, Vanilla, Angular, botón, design system, componente de formulario, WCAG 2.2, accesibilidad, foco visible, ícono"
     },
     "demonstration": {
       "title": "Demostración",

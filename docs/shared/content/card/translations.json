@@ -8,7 +8,7 @@
       "title": "Card — Layout",
       "description": "Documentação do Card: 2 tamanhos (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens de tema.",
       "aiSummary": "Componente Card estrutural com 2 sizes (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) e tokens semânticos --card e --radius-card do tema.",
-      "aiEntities": "Card, React, Vue, Svelte, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
+      "aiEntities": "Card, React, Vue, Svelte, Vanilla, Angular, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -428,7 +428,7 @@
       "title": "Card — Layout",
       "description": "Documentation for Card: 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and theme tokens.",
       "aiSummary": "Structural Card component with 2 sizes (default, sm), 7 subcomponents (Header, Title, Description, Action, Content, Footer) and semantic theme tokens --card and --radius-card.",
-      "aiEntities": "Card, React, Vue, Svelte, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
+      "aiEntities": "Card, React, Vue, Svelte, Vanilla, Angular, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -848,7 +848,7 @@
       "title": "Card — Layout",
       "description": "Documentación del Card: 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens de tema.",
       "aiSummary": "Componente Card estructural con 2 tamaños (default, sm), 7 subcomponentes (Header, Title, Description, Action, Content, Footer) y tokens semánticos --card y --radius-card del tema.",
-      "aiEntities": "Card, React, Vue, Svelte, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
+      "aiEntities": "Card, React, Vue, Svelte, Vanilla, Angular, TypeScript, WCAG 2.2, Layout, Container, Composition, Slot"
     },
     "demonstration": {
       "title": "Demostración",

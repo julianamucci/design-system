@@ -8,7 +8,7 @@
       "title": "Label — Formulário",
       "description": "Documentação do Label: associação com campos via htmlFor, estados disabled e required, acessibilidade WCAG para formulários.",
       "aiSummary": "Componente Label para formulários: associação obrigatória via htmlFor/id, suporte a required com asterisco, opacity reduzida quando o campo associado está disabled.",
-      "aiEntities": "Label, formulário, rótulo, WCAG 2.2, for, id, aria-required"
+      "aiEntities": "Label, React, Vue, Svelte, Vanilla, Angular, formulário, rótulo, WCAG 2.2, for, id, aria-required"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -283,7 +283,7 @@
       "title": "Label — Form",
       "description": "Documentation for Label: field association via htmlFor, disabled and required states, WCAG accessibility for forms.",
       "aiSummary": "Label component for forms: mandatory association via htmlFor/id, required support with asterisk marker, reduced opacity when the associated field is disabled.",
-      "aiEntities": "Label, form, field label, WCAG 2.2, for, id, aria-required"
+      "aiEntities": "Label, React, Vue, Svelte, Vanilla, Angular, form, field label, WCAG 2.2, for, id, aria-required"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -558,7 +558,7 @@
       "title": "Label — Formulario",
       "description": "Documentación del Label: asociación con campos via htmlFor, estados disabled y required, accesibilidad WCAG para formularios.",
       "aiSummary": "Componente Label para formularios: asociación obligatoria via htmlFor/id, soporte required con asterisco, opacidad reducida cuando el campo asociado está disabled.",
-      "aiEntities": "Label, formulario, etiqueta, WCAG 2.2, for, id, aria-required"
+      "aiEntities": "Label, React, Vue, Svelte, Vanilla, Angular, formulario, etiqueta, WCAG 2.2, for, id, aria-required"
     },
     "demonstration": {
       "title": "Demostración",

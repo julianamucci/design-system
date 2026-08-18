@@ -8,7 +8,7 @@
       "title": "Select — Formulário",
       "description": "Documentação do Select: Trigger, Content, Item, Group e Label, com role=\"combobox\", navegação por teclado e WCAG 2.2 AA.",
       "aiSummary": "Componente Select com Trigger, Content, Item, Group e Label, role=\"combobox\" automático, navegação por teclado e suporte a opções agrupadas.",
-      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role combobox"
+      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role combobox"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -479,7 +479,7 @@
       "title": "Select — Form",
       "description": "Select documentation: Trigger, Content, Item, Group and Label, with role=\"combobox\", keyboard navigation and WCAG 2.2 AA.",
       "aiSummary": "Select component with Trigger, Content, Item, Group and Label, automatic role=\"combobox\", keyboard navigation and grouped options support.",
-      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role combobox"
+      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role combobox"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -950,7 +950,7 @@
       "title": "Select — Formulario",
       "description": "Documentación de Select: Trigger, Content, Item, Group y Label, con role=\"combobox\", navegación por teclado y WCAG 2.2 AA.",
       "aiSummary": "Componente Select con Trigger, Content, Item, Group y Label, role=\"combobox\" automático, navegación por teclado y opciones agrupadas.",
-      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role combobox"
+      "aiEntities": "Select, SelectTrigger, SelectContent, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role combobox"
     },
     "demonstration": {
       "title": "Demostración",

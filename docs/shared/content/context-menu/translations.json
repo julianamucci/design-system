@@ -8,7 +8,7 @@
       "title": "Context Menu — Overlay",
       "description": "Documentação do Context Menu: submenus, checkboxes, radio items, shortcuts e acessibilidade WCAG para menus de clique direito.",
       "aiSummary": "Componente Context Menu ativado por right-click com suporte a itens, submenus, checkboxes, radio groups, separadores e atalhos de teclado visuais.",
-      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup"
+      "aiEntities": "ContextMenu, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role menu, aria-haspopup"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -444,7 +444,7 @@
       "title": "Context Menu — Overlay",
       "description": "Context Menu docs: submenus, checkboxes, radio items, keyboard shortcuts and WCAG accessibility for right-click menus.",
       "aiSummary": "Context Menu component triggered by right-click with support for items, submenus, checkboxes, radio groups, separators and visual keyboard shortcuts.",
-      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup"
+      "aiEntities": "ContextMenu, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role menu, aria-haspopup"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -880,7 +880,7 @@
       "title": "Context Menu — Overlay",
       "description": "Documentación del Context Menu: submenús, checkboxes, radio items, atajos y accesibilidad WCAG para menús de clic derecho.",
       "aiSummary": "Componente Context Menu activado por clic derecho con soporte para ítems, submenús, checkboxes, radio groups, separadores y atajos de teclado visuales.",
-      "aiEntities": "ContextMenu, React, Vue, Svelte, WCAG 2.2, role menu, aria-haspopup"
+      "aiEntities": "ContextMenu, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role menu, aria-haspopup"
     },
     "demonstration": {
       "title": "Demostración",

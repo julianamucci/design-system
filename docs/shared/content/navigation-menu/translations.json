@@ -6,9 +6,9 @@
     "description": "Menu de navegação principal para sites e produtos web, com sub-menus expansíveis em hover/focus e viewport animado.",
     "seo": {
       "title": "NavigationMenu — Navegação",
-      "description": "Documentação do NavigationMenu: menu horizontal para web com sub-menus, viewport animado, indicador e WCAG 2.2 AA via base-ui/reka-ui/bits-ui/radix-ng.",
-      "aiSummary": "Componente NavigationMenu construído sobre base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) e factory custom (Vanilla) que apresenta menu de navegação web horizontal com triggers expansíveis em hover/focus, viewport compartilhado, indicador animado e suporte a links nativos com aria-current.",
-      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, radix-ng, React, Vue, Svelte, Vanilla, navegação, hover, focus, viewport, WCAG 2.2, aria-current, role=navigation, link"
+      "description": "Documentação do NavigationMenu: menu horizontal para web com sub-menus, viewport animado, indicador e WCAG 2.2 AA.",
+      "aiSummary": "Componente NavigationMenu que apresenta menu de navegação web horizontal com triggers expansíveis em hover/focus, viewport compartilhado, indicador animado e suporte a links nativos com aria-current.",
+      "aiEntities": "NavigationMenu, React, Vue, Svelte, Vanilla, Angular, navegação, hover, focus, viewport, WCAG 2.2, aria-current, role=navigation, link"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -462,9 +462,9 @@
     "description": "Main navigation menu for websites and web products, with sub-menus expanding on hover/focus and animated viewport.",
     "seo": {
       "title": "NavigationMenu — Navigation",
-      "description": "NavigationMenu documentation: web horizontal menu with sub-menus, animated viewport, indicator, and WCAG 2.2 AA via base-ui/reka-ui/bits-ui/radix-ng.",
-      "aiSummary": "NavigationMenu component built on base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) and a custom factory (Vanilla) presenting a horizontal web navigation menu with hover/focus-expanding triggers, shared viewport, animated indicator, and native link support with aria-current.",
-      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, radix-ng, React, Vue, Svelte, Vanilla, navigation, hover, focus, viewport, WCAG 2.2, aria-current, role=navigation, link"
+      "description": "NavigationMenu documentation: web horizontal menu with sub-menus, animated viewport, indicator, and WCAG 2.2 AA.",
+      "aiSummary": "NavigationMenu component presenting a horizontal web navigation menu with hover/focus-expanding triggers, shared viewport, animated indicator, and native link support with aria-current.",
+      "aiEntities": "NavigationMenu, React, Vue, Svelte, Vanilla, Angular, navigation, hover, focus, viewport, WCAG 2.2, aria-current, role=navigation, link"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -918,9 +918,9 @@
     "description": "Menú de navegación principal para sitios y productos web, con sub-menús expansibles en hover/focus y viewport animado.",
     "seo": {
       "title": "NavigationMenu — Navegación",
-      "description": "Documentación de NavigationMenu: menú horizontal para web con sub-menús, viewport animado, indicador y WCAG 2.2 AA vía base-ui/reka-ui/bits-ui/radix-ng.",
-      "aiSummary": "Componente NavigationMenu construido sobre base-ui/navigation-menu (React), reka-ui (Vue), bits-ui (Svelte) y factory custom (Vanilla) que presenta menú de navegación web horizontal con triggers expansibles en hover/focus, viewport compartido, indicador animado y soporte a links nativos con aria-current.",
-      "aiEntities": "NavigationMenu, base-ui, reka-ui, bits-ui, radix-ng, React, Vue, Svelte, Vanilla, navegación, hover, focus, viewport, WCAG 2.2, aria-current, role=navigation, link"
+      "description": "Documentación de NavigationMenu: menú horizontal para web con sub-menús, viewport animado, indicador y WCAG 2.2 AA.",
+      "aiSummary": "Componente NavigationMenu que presenta un menú de navegación web horizontal con triggers expansibles en hover/focus, viewport compartido, indicador animado y soporte a links nativos con aria-current.",
+      "aiEntities": "NavigationMenu, React, Vue, Svelte, Vanilla, Angular, navegación, hover, focus, viewport, WCAG 2.2, aria-current, role=navigation, link"
     },
     "demonstration": {
       "title": "Demostración",

@@ -8,7 +8,7 @@
       "title": "Breadcrumb — Navegação",
       "description": "Documentação do Breadcrumb: navegação hierárquica acessível com separadores customizáveis, ellipsis para níveis longos e suporte a JSON-LD.",
       "aiSummary": "Componente Breadcrumb composto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator e BreadcrumbEllipsis — navegação hierárquica com aria-current automático.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -396,7 +396,7 @@
       "title": "Breadcrumb — Navigation",
       "description": "Documentation for Breadcrumb: accessible hierarchical navigation with customizable separators, ellipsis for long paths, and JSON-LD support.",
       "aiSummary": "Breadcrumb component composed of BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator, and BreadcrumbEllipsis — hierarchical navigation with automatic aria-current.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -784,7 +784,7 @@
       "title": "Breadcrumb — Navegación",
       "description": "Documentación del Breadcrumb: navegación jerárquica accesible con separadores personalizables, ellipsis para rutas largas y soporte a JSON-LD.",
       "aiSummary": "Componente Breadcrumb compuesto por BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator y BreadcrumbEllipsis — navegación jerárquica con aria-current automático.",
-      "aiEntities": "Breadcrumb, React, Vue, Svelte, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
+      "aiEntities": "Breadcrumb, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current, BreadcrumbList, Schema.org"
     },
     "demonstration": {
       "title": "Demostración",

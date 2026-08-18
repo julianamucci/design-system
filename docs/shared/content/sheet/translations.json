@@ -8,7 +8,7 @@
       "title": "Sheet — Overlay",
       "description": "Documentação do Sheet: Trigger, Content, Header, Title, Description, Footer e Close com posicionamento por side e WCAG 2.2 AA.",
       "aiSummary": "Componente Sheet com Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer e Close, baseado em Dialog com foco gerenciado.",
-      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, base-ui Dialog, reka-ui, bits-ui, WCAG 2.2, role dialog"
+      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -479,7 +479,7 @@
       "title": "Sheet — Overlay",
       "description": "Sheet documentation: Trigger, Content, Header, Title, Description, Footer and Close with side positioning and WCAG 2.2 AA.",
       "aiSummary": "Sheet component with Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer and Close, based on Dialog with managed focus.",
-      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, base-ui Dialog, reka-ui, bits-ui, WCAG 2.2, role dialog"
+      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -950,7 +950,7 @@
       "title": "Sheet — Overlay",
       "description": "Documentación de Sheet: Trigger, Content, Header, Title, Description, Footer y Close con posicionamiento por side y WCAG 2.2 AA.",
       "aiSummary": "Componente Sheet con Trigger, Content (side top/right/bottom/left), Header, Title, Description, Footer y Close, basado en Dialog con foco gestionado.",
-      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, base-ui Dialog, reka-ui, bits-ui, WCAG 2.2, role dialog"
+      "aiEntities": "Sheet, Sheet vs Drawer, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog"
     },
     "demonstration": {
       "title": "Demostración",

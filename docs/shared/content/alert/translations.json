@@ -8,7 +8,7 @@
       "title": "Alert — Feedback",
       "description": "Documentação do Alert: 5 variantes semânticas via prop, opção dismissible e semântica de anúncio configurável para leitores de tela.",
       "aiSummary": "Componente Alert com 5 variantes semânticas (default, destructive, success, warning, info) pela prop de variante, opção dismissible com botão de fechar, semântica de anúncio configurável (assertiva, polida ou estática) e suporte a ícone, título e descrição.",
-      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
+      "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -433,7 +433,7 @@
       "title": "Alert — Feedback",
       "description": "Alert documentation: 5 semantic variants via prop, dismissible option, and configurable announcement semantics for screen readers.",
       "aiSummary": "Alert component with 5 semantic variants (default, destructive, success, warning, info) via the variant prop, dismissible option with a close button, configurable announcement semantics (assertive, polite, or static), and support for icon, title, and description.",
-      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
+      "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -858,7 +858,7 @@
       "title": "Alert — Feedback",
       "description": "Documentación del Alert: 5 variantes semánticas vía prop, opción dismissible y semántica de anuncio configurable para lectores de pantalla.",
       "aiSummary": "Componente Alert con 5 variantes semánticas (default, destructive, success, warning, info) por la prop de variante, opción dismissible con botón de cerrar, semántica de anuncio configurable (asertiva, polite o estática) y soporte de icono, título y descripción.",
-      "aiEntities": "Alert, React, Vue, Svelte, WCAG 2.2, role alert, aria-live"
+      "aiEntities": "Alert, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role alert, aria-live"
     },
     "demonstration": {
       "title": "Demostración",

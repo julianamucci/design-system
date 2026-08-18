@@ -8,7 +8,7 @@
       "title": "Drawer — Disclosure",
       "description": "Documentação do Drawer: painel deslizante com 4 direções, gestos de arrastar, focus trap e WCAG 2.2 AA.",
       "aiSummary": "Componente Drawer mobile-first que renderiza um painel deslizante com 4 direções (bottom/top/left/right), com fechamento por Escape, por clique fora e por botão explícito, focus trap e overlay.",
-      "aiEntities": "Drawer, painel deslizante, focus trap, gesto de arrastar, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
+      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, painel deslizante, focus trap, gesto de arrastar, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -450,7 +450,7 @@
       "title": "Drawer — Disclosure",
       "description": "Drawer documentation: sliding panel with 4 directions, drag gestures, focus trap, and WCAG 2.2 AA.",
       "aiSummary": "Mobile-first Drawer component renders a sliding panel with 4 directions (bottom/top/left/right), closing via Escape, outside click, and an explicit button, with focus trap and overlay.",
-      "aiEntities": "Drawer, sliding panel, focus trap, drag gesture, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
+      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, sliding panel, focus trap, drag gesture, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -892,7 +892,7 @@
       "title": "Drawer — Disclosure",
       "description": "Documentación de Drawer: panel deslizante con 4 direcciones, gestos de arrastre, focus trap y WCAG 2.2 AA.",
       "aiSummary": "Componente Drawer mobile-first que renderiza un panel deslizante con 4 direcciones (bottom/top/left/right), con cierre por Escape, clic fuera y botón explícito, focus trap y overlay.",
-      "aiEntities": "Drawer, panel deslizante, focus trap, gesto de arrastre, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
+      "aiEntities": "Drawer, React, Vue, Svelte, Vanilla, Angular, panel deslizante, focus trap, gesto de arrastre, WCAG 2.2, role=dialog, aria-modal, data-vaul-drawer-direction"
     },
     "demonstration": {
       "title": "Demostración",

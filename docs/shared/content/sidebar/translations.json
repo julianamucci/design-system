@@ -8,7 +8,7 @@
       "title": "Sidebar — Layout",
       "description": "Documentação da Sidebar: variantes sidebar, floating e inset, modos de recolhimento offcanvas e icon, acessibilidade WCAG e atalho Ctrl+B.",
       "aiSummary": "Componente Sidebar com 3 variantes (sidebar, floating, inset), 3 modos de recolhimento (offcanvas, icon, none), overlay mobile via Sheet e atalho de teclado Ctrl+B.",
-      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, WCAG 2.2, aria-current"
+      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -486,7 +486,7 @@
       "title": "Sidebar — Layout",
       "description": "Sidebar documentation: sidebar, floating and inset variants, offcanvas and icon collapse modes, WCAG accessibility and Ctrl+B shortcut.",
       "aiSummary": "Sidebar component with 3 variants (sidebar, floating, inset), 3 collapse modes (offcanvas, icon, none), mobile Sheet overlay, and Ctrl+B keyboard shortcut.",
-      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, WCAG 2.2, aria-current"
+      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -964,7 +964,7 @@
       "title": "Sidebar — Layout",
       "description": "Documentación del Sidebar: variantes sidebar, floating e inset, modos de colapso offcanvas e icon, accesibilidad WCAG y atajo Ctrl+B.",
       "aiSummary": "Componente Sidebar con 3 variantes (sidebar, floating, inset), 3 modos de colapso (offcanvas, icon, none), overlay mobile vía Sheet y atajo de teclado Ctrl+B.",
-      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, WCAG 2.2, aria-current"
+      "aiEntities": "Sidebar, SidebarProvider, SidebarMenu, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-current"
     },
     "demonstration": {
       "title": "Demostración",

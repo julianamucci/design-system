@@ -8,7 +8,7 @@
       "title": "Textarea — Formulário",
       "description": "Documentação do Textarea: redimensionamento, contador de caracteres, integração com FormField e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Textarea para entrada de múltiplas linhas: classes .nds-resize-y, .nds-resize-none e .nds-resize para redimensionamento, altura mínima pelos utilitários .nds-min-h-*, contador de caracteres com aria-live e integração com campos de formulário.",
-      "aiEntities": "Textarea, Input, Label, Formulário, WCAG 2.2, aria-invalid, aria-live, maxlength, redimensionamento, altura mínima"
+      "aiEntities": "Textarea, React, Vue, Svelte, Vanilla, Angular, Input, Label, Formulário, WCAG 2.2, aria-invalid, aria-live, maxlength, redimensionamento, altura mínima"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -505,7 +505,7 @@
       "title": "Textarea — Form",
       "description": "Textarea documentation: resize, character counter, FormField integration and WCAG 2.2 AA support.",
       "aiSummary": "Textarea component for multi-line input: .nds-resize-y, .nds-resize-none and .nds-resize classes for resizing, minimum height through the .nds-min-h-* utilities, character counter with aria-live and form field integration.",
-      "aiEntities": "Textarea, Input, Label, Form, WCAG 2.2, aria-invalid, aria-live, maxlength, resize, minimum height"
+      "aiEntities": "Textarea, React, Vue, Svelte, Vanilla, Angular, Input, Label, Form, WCAG 2.2, aria-invalid, aria-live, maxlength, resize, minimum height"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -1002,7 +1002,7 @@
       "title": "Textarea — Formulario",
       "description": "Documentación de Textarea: redimensionamiento, contador de caracteres, integración con FormField y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Textarea para entrada multilínea: clases .nds-resize-y, .nds-resize-none y .nds-resize para el redimensionamiento, altura mínima mediante las utilidades .nds-min-h-*, contador de caracteres con aria-live e integración con campos de formulario.",
-      "aiEntities": "Textarea, Input, Label, Formulario, WCAG 2.2, aria-invalid, aria-live, maxlength, redimensionamiento, altura mínima"
+      "aiEntities": "Textarea, React, Vue, Svelte, Vanilla, Angular, Input, Label, Formulario, WCAG 2.2, aria-invalid, aria-live, maxlength, redimensionamiento, altura mínima"
     },
     "demonstration": {
       "title": "Demostración",

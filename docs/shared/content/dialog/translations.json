@@ -8,7 +8,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentação do Dialog: modal versátil para formulários e conteúdo, com focus trap, Portal, Escape e fechamento por overlay.",
       "aiSummary": "Componente Dialog modal genérico para formulários e conteúdo informativo, com focus trap, role=\"dialog\", aria-labelledby e aria-describedby automáticos via Base UI, Reka UI e Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide"
+      "aiEntities": "Dialog, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog, focus trap, modal"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -462,7 +462,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentation for Dialog: versatile modal for forms and content, with focus trap, Portal, Escape, and overlay-click dismiss.",
       "aiSummary": "Generic Dialog modal component for forms and informational content, with focus trap, role=\"dialog\", and automatic aria-labelledby and aria-describedby via Base UI, Reka UI, and Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide"
+      "aiEntities": "Dialog, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog, focus trap, modal"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -916,7 +916,7 @@
       "title": "Dialog — Overlay",
       "description": "Documentación del Dialog: modal versátil para formularios y contenido, con focus trap, Portal, Escape y cierre por overlay.",
       "aiSummary": "Componente Dialog modal genérico para formularios y contenido informativo, con focus trap, role=\"dialog\", aria-labelledby y aria-describedby automáticos vía Base UI, Reka UI y Bits UI.",
-      "aiEntities": "Dialog, React, Vue, Svelte, Base UI, Reka UI, Bits UI, WCAG 2.2, role dialog, focus trap, modal, lucide"
+      "aiEntities": "Dialog, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role dialog, focus trap, modal"
     },
     "demonstration": {
       "title": "Demostración",

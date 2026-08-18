@@ -8,7 +8,7 @@
       "title": "Avatar — Display",
       "description": "Documentação do Avatar: composição com imagem e fallback, 5 tamanhos preset (sm/md/lg/xl/2xl), agrupamento e indicador de status.",
       "aiSummary": "Componente Avatar com Avatar, AvatarImage e AvatarFallback; 5 tamanhos preset (sm/md/lg/xl/2xl) via prop size, suporte a agrupamento e indicador de status.",
-      "aiEntities": "Avatar, React, Vue, Svelte, WCAG 2.2"
+      "aiEntities": "Avatar, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -379,7 +379,7 @@
       "title": "Avatar — Display",
       "description": "Documentation for Avatar: image and fallback composition, 5 preset sizes (sm/md/lg/xl/2xl), grouping, and status indicator.",
       "aiSummary": "Avatar component with Avatar, AvatarImage, and AvatarFallback; 5 preset sizes (sm/md/lg/xl/2xl) via the size prop, with grouping and status support.",
-      "aiEntities": "Avatar, React, Vue, Svelte, WCAG 2.2"
+      "aiEntities": "Avatar, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -750,7 +750,7 @@
       "title": "Avatar — Display",
       "description": "Documentación del Avatar: composición con imagen y fallback, 5 tamaños preset (sm/md/lg/xl/2xl), agrupación e indicador de estado.",
       "aiSummary": "Componente Avatar con Avatar, AvatarImage y AvatarFallback; 5 tamaños preset (sm/md/lg/xl/2xl) vía la prop size, con soporte para agrupación e indicador de estado.",
-      "aiEntities": "Avatar, React, Vue, Svelte, WCAG 2.2"
+      "aiEntities": "Avatar, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2"
     },
     "demonstration": {
       "title": "Demostración",

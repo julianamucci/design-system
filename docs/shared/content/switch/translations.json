@@ -8,7 +8,7 @@
       "title": "Switch — Formulário",
       "description": "Documentação do Switch: Root, Thumb e tamanhos com role=\"switch\", aria-checked automático e suporte WCAG 2.2 AA.",
       "aiSummary": "Componente Switch toggle on/off com Root e Thumb, role=\"switch\" automático, tamanhos default/sm, efeito imediato sem submissão.",
-      "aiEntities": "Switch, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role switch"
+      "aiEntities": "Switch, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role switch"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -448,7 +448,7 @@
       "title": "Switch — Form",
       "description": "Switch documentation: Root, Thumb and sizes with role=\"switch\", automatic aria-checked and WCAG 2.2 AA support.",
       "aiSummary": "Switch on/off toggle component with Root and Thumb, automatic role=\"switch\", default/sm sizes, immediate effect without submission.",
-      "aiEntities": "Switch, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role switch"
+      "aiEntities": "Switch, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role switch"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -888,7 +888,7 @@
       "title": "Switch — Formulario",
       "description": "Documentación de Switch: Root, Thumb y tamaños con role=\"switch\", aria-checked automático y soporte WCAG 2.2 AA.",
       "aiSummary": "Componente Switch toggle on/off con Root y Thumb, role=\"switch\" automático, tamaños default/sm, efecto inmediato sin envío.",
-      "aiEntities": "Switch, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, role switch"
+      "aiEntities": "Switch, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, role switch"
     },
     "demonstration": {
       "title": "Demostración",

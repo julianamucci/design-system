@@ -8,7 +8,7 @@
       "title": "ToggleGroup — Formulário",
       "description": "Documentação do ToggleGroup: single/multiple, orientação horizontal/vertical, ARIA com roving tabindex e WCAG 2.2 AA.",
       "aiSummary": "Componente ToggleGroup com Items, seleção single ou multiple, orientação horizontal/vertical, spacing configurável e ARIA com roving tabindex.",
-      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, aria-pressed"
+      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -480,7 +480,7 @@
       "title": "ToggleGroup — Form",
       "description": "ToggleGroup documentation: single/multiple, horizontal/vertical orientation, ARIA with roving tabindex and WCAG 2.2 AA.",
       "aiSummary": "ToggleGroup component with Items, single or multiple selection, horizontal/vertical orientation, configurable spacing and ARIA with roving tabindex.",
-      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, aria-pressed"
+      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -952,7 +952,7 @@
       "title": "ToggleGroup — Formulario",
       "description": "Documentación de ToggleGroup: single/multiple, orientación horizontal/vertical, ARIA con roving tabindex y WCAG 2.2 AA.",
       "aiSummary": "Componente ToggleGroup con Items, selección single o multiple, orientación horizontal/vertical, spacing configurable y ARIA con roving tabindex.",
-      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, base-ui, reka-ui, bits-ui, radix-ng, WCAG 2.2, aria-pressed"
+      "aiEntities": "ToggleGroup, ToggleGroupItem, Toggle, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-pressed"
     },
     "demonstration": {
       "title": "Demostración",

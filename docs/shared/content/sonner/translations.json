@@ -8,7 +8,7 @@
       "title": "Sonner — Feedback",
       "description": "Documentação do Sonner: tipos de toast, composições com promise e ação, posições e acessibilidade WCAG com aria-live.",
       "aiSummary": "Componente Sonner com 6 tipos de toast (default, success, error, warning, info, loading), composições com descrição, ação, promise e persistente, e suporte a richColors e posição configurável.",
-      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, WCAG 2.2, aria-live"
+      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-live"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -405,7 +405,7 @@
       "title": "Sonner — Feedback",
       "description": "Sonner documentation: toast types, promise and action compositions, positions, and WCAG accessibility with aria-live.",
       "aiSummary": "Sonner component with 6 toast types (default, success, error, warning, info, loading), compositions with description, action, promise, and persistent, and support for richColors and configurable position.",
-      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, WCAG 2.2, aria-live"
+      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-live"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -802,7 +802,7 @@
       "title": "Sonner — Feedback",
       "description": "Documentación del Sonner: tipos de toast, composiciones con promise y acción, posiciones y accesibilidad WCAG con aria-live.",
       "aiSummary": "Componente Sonner con 6 tipos de toast (default, success, error, warning, info, loading), composiciones con descripción, acción, promise y persistente, y soporte a richColors y posición configurable.",
-      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, WCAG 2.2, aria-live"
+      "aiEntities": "Sonner, toast, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, aria-live"
     },
     "demonstration": {
       "title": "Demostración",

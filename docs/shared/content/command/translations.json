@@ -8,7 +8,7 @@
       "title": "Command — Overlay",
       "description": "Documentação do Command: busca fuzzy integrada, padrões inline, combobox e command palette (Cmd+K), acessibilidade WCAG com navegação por teclado.",
       "aiSummary": "Componente Command com filtro fuzzy nativo, 3 padrões de uso (inline, combobox, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut e CommandEmpty.",
-      "aiEntities": "Command, WCAG 2.2, ARIA Combobox, Command Palette, atalho de teclado, filtro por texto"
+      "aiEntities": "Command, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA Combobox, Command Palette, atalho de teclado, filtro por texto"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -393,7 +393,7 @@
       "title": "Command — Overlay",
       "description": "Documentation for Command: built-in fuzzy search, inline, combobox, and command palette (Cmd+K) patterns, WCAG accessibility with keyboard navigation.",
       "aiSummary": "Command component with native fuzzy filtering, 3 usage patterns (inline, combobox, command palette), subcomponents CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut, and CommandEmpty.",
-      "aiEntities": "Command, WCAG 2.2, ARIA Combobox, Command Palette, keyboard shortcut, text filtering"
+      "aiEntities": "Command, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA Combobox, Command Palette, keyboard shortcut, text filtering"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -778,7 +778,7 @@
       "title": "Command — Overlay",
       "description": "Documentación del Command: búsqueda fuzzy integrada, patrones inline, combobox y command palette (Cmd+K), accesibilidad WCAG con navegación por teclado.",
       "aiSummary": "Componente Command con filtro fuzzy nativo, 3 patrones de uso (inline, combobox, command palette), subcomponentes CommandInput, CommandList, CommandGroup, CommandItem, CommandShortcut y CommandEmpty.",
-      "aiEntities": "Command, WCAG 2.2, ARIA Combobox, Command Palette, atajo de teclado, filtro por texto"
+      "aiEntities": "Command, React, Vue, Svelte, Vanilla, Angular, WCAG 2.2, ARIA Combobox, Command Palette, atajo de teclado, filtro por texto"
     },
     "demonstration": {
       "title": "Demostración",

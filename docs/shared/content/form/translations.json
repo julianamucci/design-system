@@ -8,7 +8,7 @@
       "title": "Form — Formulário",
       "description": "Documentação do Form: wrapper de campo (label + controle + descrição + erro) e fieldset com legend, com associação acessível automática e WCAG 2.2 AA.",
       "aiSummary": "Componente Form para estruturar campos de formulário com label, controle (input/textarea/select/checkbox), descrição e mensagem de erro, mais fieldset+legend para agrupamento semântico.",
-      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
+      "aiEntities": "Form, React, Vue, Svelte, Vanilla, Angular, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demonstração",
@@ -364,7 +364,7 @@
       "title": "Form — Form",
       "description": "Documentation for Form: field wrapper (label + control + description + error) and fieldset with legend, with automatic accessible association and WCAG 2.2 AA.",
       "aiSummary": "Form component to structure form fields with label, control (input/textarea/select/checkbox), description and error message, plus fieldset+legend for semantic grouping.",
-      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
+      "aiEntities": "Form, React, Vue, Svelte, Vanilla, Angular, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demonstration",
@@ -720,7 +720,7 @@
       "title": "Form — Formulario",
       "description": "Documentación del Form: envoltorio de campo (label + control + descripción + error) y fieldset con legend, con asociación accesible automática y WCAG 2.2 AA.",
       "aiSummary": "Componente Form para estructurar campos de formulario con etiqueta, control (input/textarea/select/checkbox), descripción y mensaje de error, más fieldset+legend para agrupamiento semántico.",
-      "aiEntities": "Form, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
+      "aiEntities": "Form, React, Vue, Svelte, Vanilla, Angular, FormField, Fieldset, Label, Input, Textarea, Select, WCAG 2.2, htmlFor, aria-invalid, aria-describedby"
     },
     "demonstration": {
       "title": "Demostración",
