@@ -34,9 +34,9 @@
 foram descobertos — então `grep -c "^- \[ \]"` conta 23, não 11. O log é
 histórico; a lista de cima é o que está por fazer.
 
-## Aberto de verdade — 9 itens
+## Aberto de verdade — 8 itens
 
-### Precisam de decisão da dona (3)
+### Precisam de decisão da dona (2)
 
 - [x] **`description` do alert-dialog: opcional no código, obrigatória na anatomia** (L73 do log). **Decidido pela dona (2026-08-17): a documentação alinha ao código — a descrição é opcional.** `anatomy.item6`, `usage.guidelines.item2`, `accessibility.item2`, `accessibility.aria.describedby` e `accessibility.screenReader.onOpen` reescritos nos três idiomas; os dois `v8 ignore` do Vanilla saíram; guidelines de react, vue e angular corrigidas. O caminho passou a ter contrato (`testes.accessibility.item8`) e story nas cinco (`WithoutDescription`). **Achado da medição**: das cinco, só o Vue quebrava — o `DialogContentImpl` do reka-ui gera o id da descrição sempre e ligava `aria-describedby` a um id inexistente (a própria lib avisa disso em dev). Corrigido no wrapper via registro da descrição.
 - [x] **`defaultOpen` na tabela de props do alert-dialog, só no Svelte.** Medido em `bits-ui/dist/bits/dialog/types.d.ts`: a raiz expõe `open`/`onOpenChange`/`onOpenChangeComplete`, sem `defaultOpen`. As outras quatro têm a prop de verdade. **Resolvido (2026-08-17)**: a prop saiu dos dois lugares de `AlertDialogDocs.svelte` — a linha da tabela e o `interfaceCode` que o leitor copia — pela mesma convenção do `DropdownMenuDocs.svelte`, o comentário no lugar da linha. As outras quatro ficaram intactas.
@@ -64,7 +64,7 @@ histórico; a lista de cima é o que está por fazer.
 
 - [ ] **`class` do `CarouselContent` cai em nós diferentes.** Nas três stacks com lib vai para o **track**; no Vanilla e no Angular vai para o **recorte**. Três primitivos a mexer, com Chromatic a reboque.
 - [ ] **Track horizontal do Vanilla não declara `data-orientation`.** É escolha consciente, com comentário no código — mas o React escreve sempre, e o respiro de 16px é diferença visível.
-- [ ] **Conteúdo compartilhado do carrossel descreve a API do Embla**, e é mais amplo do que o item registrava: "Opções do Embla" e "plugins do Embla" na tabela de props; `basis-*`, `-ml-4`, `pl-4`, `h-[400px]` em anatomia, guidelines, variantes e dicas; e "Embla" em `description`, `seo.aiSummary` e `seo.aiEntities` — que é o que buscador e IA leem. Nenhuma dessas chaves é `*Code`, então o auditor de literais segue cego a elas. Trabalho de `ux-writer`.
+- [ ] **Conteúdo compartilhado do carrossel descreve a API do Embla** — **parcialmente resolvido em `a9817257`**: saíram as menções em `description`, `accessibility.item5`, `notes.tip1`, `notes.tip4`, `props.table.opts` e `props.table.plugins`, e o `seo.*` foi limpo em `2752f0eb`. **O que resta**: `basis-*`, `-ml-4`, `pl-4` e `h-[400px]` em anatomia, guidelines, variantes e dicas — vocabulário do framework utilitário que saiu, não nome de lib. Nenhuma dessas chaves é `*Code`, então o auditor de literais segue cego a elas. Trabalho de `ux-writer`.
 
 ## Mudaram de forma — 7 itens reescritos
 
