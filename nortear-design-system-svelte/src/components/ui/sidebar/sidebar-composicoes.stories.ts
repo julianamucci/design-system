@@ -25,7 +25,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-export const WithNavGroups: Story = {
+export const WithNavGroups: StoryObj<Record<string, never>> = {
   name: 'With nav groups',
   parameters: { covers: ['accessibility.item6'] },
   render: () => ({
@@ -116,7 +116,7 @@ export const WithSubmenu: StoryObj<Record<string, never>> = {
   },
 };
 
-export const WithSkeleton: Story = {
+export const WithSkeleton: StoryObj<Record<string, never>> = {
   name: 'Loading state (Skeleton)',
   parameters: { covers: ['functional.item9'] },
   render: () => ({

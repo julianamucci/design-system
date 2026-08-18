@@ -24,9 +24,13 @@
      descarta o `aria-label` de fora, deixando o botão anunciando "Next". -->
 <CalendarPrimitive.NextButton bind:ref {...restProps}>
 	{#snippet child({ props })}
+		<!-- `props` é um saco de chaves desconhecidas, então o rótulo da lib chega
+		     como `unknown`. A checagem de tipo em runtime é o que o transforma em
+		     texto sem fingir que ele já era. -->
+		{@const rotuloDaLib = typeof props["aria-label"] === "string" ? props["aria-label"] : undefined}
 		<button
 			{...props}
-			aria-label={ariaLabel ?? props["aria-label"]}
+			aria-label={ariaLabel ?? rotuloDaLib}
 			class={cn(buttonVariants({ variant }), "nds-calendar-nav-btn", className)}
 		>
 			{#if children}

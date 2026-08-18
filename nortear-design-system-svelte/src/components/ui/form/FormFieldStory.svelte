@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { HTMLInputAttributes } from "svelte/elements";
 	import Input from "@/components/ui/input/input.svelte";
 	import FormField from "./form-field.svelte";
 
@@ -21,7 +22,10 @@
 		value?: string;
 		disabled?: boolean;
 		ariaInvalid?: boolean;
-		autocomplete?: string;
+		// O mesmo tipo que o campo aceita: `autocomplete` é um vocabulário
+		// fechado do HTML, e `string` deixava passar valor que o navegador
+		// ignora em silêncio.
+		autocomplete?: HTMLInputAttributes["autocomplete"];
 	} = $props();
 </script>
 

@@ -104,8 +104,20 @@ export function withAutoDocsTab(SvelteComponent: Component) {
             paddingLeft: '0.75rem',
           },
         },
-        h(TabButton, { active: activeTab === 'docs', onClick: () => setActiveTab('docs') }, 'Documentação'),
-        h(TabButton, { active: activeTab === 'api', onClick: () => setActiveTab('api') }, 'API Reference'),
+        // O rótulo vai DENTRO das props, e não como terceiro argumento do
+        // `createElement`: quando o componente declara `children` como
+        // obrigatório, a sobrecarga que valida o objeto de props cobra a chave
+        // ali mesmo, e o filho variádico não a satisfaz.
+        h(TabButton, {
+          active: activeTab === 'docs',
+          onClick: () => setActiveTab('docs'),
+          children: 'Documentação',
+        }),
+        h(TabButton, {
+          active: activeTab === 'api',
+          onClick: () => setActiveTab('api'),
+          children: 'API Reference',
+        }),
       ),
       activeTab === 'docs' && h('div', { ref, style: { flex: 1, minHeight: '100%' } }),
       activeTab === 'api' && h(ApiReferencePage, null),

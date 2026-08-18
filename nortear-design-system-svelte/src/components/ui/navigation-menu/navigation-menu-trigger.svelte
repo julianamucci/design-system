@@ -2,9 +2,10 @@
 	import { cn } from "@/lib/utils.js";
 	import { cva } from "class-variance-authority";
 
-	export const navigationMenuTriggerStyle = cva("nds-navigation-menu-trigger", {
-		
-	});
+	// Sem segundo argumento: o gatilho não tem variante nenhuma. O objeto vazio
+	// que estava aqui era resíduo — configuração que não configura nada, e que o
+	// tipo do `cva` rejeita justamente por isso.
+	export const navigationMenuTriggerStyle = cva("nds-navigation-menu-trigger");
 </script>
 
 <script lang="ts">

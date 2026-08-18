@@ -25,6 +25,7 @@ import {
   Search,
   Settings2,
 } from 'lucide';
+import type { CheckedState } from '@radix-ng/primitives/menu';
 import { cn } from '@/lib/utils';
 import { NdsButton } from './button';
 import { NdsCheckbox } from './checkbox';
@@ -260,7 +261,10 @@ const DATA_TABLE_ICON_MAP: Record<DataTableIconKind, LucideIconNode[]> = {
     '[attr.class]': 'svgClass()',
   },
 })
-class NdsDataTableIcon {
+// Exportado por exigência do verificador de templates: o bloco de checagem que
+// o compilador gera precisa IMPORTAR a classe, e símbolo não exportado quebra a
+// geração (NG3004). Não é API pública — nenhum barril a reexporta.
+export class NdsDataTableIcon {
   readonly kind = input.required<DataTableIconKind>();
   /** `muted` apaga o ícone de "ordenável, sem ordem aplicada". */
   readonly tone = input<'default' | 'muted'>('default');
@@ -915,9 +919,16 @@ export class NdsDataTable<TData> implements OnInit {
 
   // ─── Visibilidade ───────────────────────────────────────────────────────────
 
-  protected alternarVisibilidade(id: string, visivel: boolean): void {
+  /**
+   * O item de marcação do menu emite TRÊS estados, não dois: além de ligado e
+   * desligado existe o misto. Assinar `boolean` deixava o compilador de
+   * templates sem como provar a chamada, e um `'indeterminate'` chegando aqui
+   * ocultaria a coluna — porque só `true` é verdadeiro numa comparação estrita,
+   * e misto não quer dizer "escondida".
+   */
+  protected alternarVisibilidade(id: string, visivel: CheckedState): void {
     const proximo = new Set(this.ocultas());
-    if (visivel) proximo.delete(id);
+    if (visivel !== false) proximo.delete(id);
     else proximo.add(id);
     this.ocultas.set(proximo);
   }

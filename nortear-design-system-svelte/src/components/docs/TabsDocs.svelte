@@ -140,7 +140,7 @@
   TabsContent,
 } from "@/components/ui/tabs";`;
 
-  const codeDefault = `<Tabs defaultValue="overview" class="nds-w-full nds-max-w-lg">
+  const codeDefault = `<Tabs value="overview" class="nds-w-full nds-max-w-lg">
   <TabsList aria-label="Seções do componente">
     <TabsTrigger value="overview">Visão geral</TabsTrigger>
     <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -151,7 +151,7 @@
   <TabsContent value="examples">Exemplos de uso</TabsContent>
 </Tabs>`;
 
-  const codeLine = `<Tabs defaultValue="preview" class="nds-w-full nds-max-w-lg">
+  const codeLine = `<Tabs value="preview" class="nds-w-full nds-max-w-lg">
   <TabsList variant="line" aria-label="Modos de visualização">
     <TabsTrigger value="preview">Preview</TabsTrigger>
     <TabsTrigger value="code">Código</TabsTrigger>
@@ -160,7 +160,7 @@
   <TabsContent value="code">&lt;Button&gt;Click&lt;/Button&gt;</TabsContent>
 </Tabs>`;
 
-  const codeVertical = `<Tabs defaultValue="profile" orientation="vertical" class="nds-w-full" style="max-width: 36rem">
+  const codeVertical = `<Tabs value="profile" orientation="vertical" class="nds-w-full" style="max-width: 36rem">
   <TabsList aria-label="Configurações">
     <TabsTrigger value="profile">Perfil</TabsTrigger>
     <TabsTrigger value="account">Conta</TabsTrigger>
@@ -174,7 +174,6 @@
   const interfaceCode = `// Tabs (Svelte 5 + bits-ui)
 interface TabsProps {
   value?: string;
-  defaultValue?: string;
   onValueChange?: (value: string) => void;
   orientation?: 'horizontal' | 'vertical';
   activationMode?: 'automatic' | 'manual';
@@ -332,7 +331,7 @@ interface TabsContentProps {
   />
 
   {#snippet doPair1()}
-    <Tabs defaultValue="overview" class="nds-w-full nds-max-w-xs nds-text-body">
+    <Tabs value="overview" class="nds-w-full nds-max-w-xs nds-text-body">
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -342,7 +341,7 @@ interface TabsContentProps {
     </Tabs>
   {/snippet}
   {#snippet dontPair1()}
-    <Tabs defaultValue="t1" class="nds-w-full nds-max-w-xs nds-text-body">
+    <Tabs value="t1" class="nds-w-full nds-max-w-xs nds-text-body">
       <TabsList aria-label="Tabs">
         <TabsTrigger value="t1">Aba 1</TabsTrigger>
         <TabsTrigger value="t2">Aba 2</TabsTrigger>
@@ -352,7 +351,7 @@ interface TabsContentProps {
     </Tabs>
   {/snippet}
   {#snippet doPair2()}
-    <Tabs defaultValue="profile" class="nds-w-full nds-max-w-xs nds-text-body">
+    <Tabs value="profile" class="nds-w-full nds-max-w-xs nds-text-body">
       <TabsList aria-label="Configurações da conta">
         <TabsTrigger value="profile">Perfil</TabsTrigger>
         <TabsTrigger value="account">Conta</TabsTrigger>
@@ -362,7 +361,7 @@ interface TabsContentProps {
     </Tabs>
   {/snippet}
   {#snippet dontPair2()}
-    <Tabs defaultValue="profile" class="nds-w-full nds-max-w-xs nds-text-body">
+    <Tabs value="profile" class="nds-w-full nds-max-w-xs nds-text-body">
       <TabsList>
         <TabsTrigger value="profile">Perfil</TabsTrigger>
         <TabsTrigger value="account">Conta</TabsTrigger>
@@ -389,7 +388,7 @@ interface TabsContentProps {
   />
 
   {#snippet variantDefault()}
-    <Tabs defaultValue="overview" class="nds-w-full nds-max-w-sm nds-text-body">
+    <Tabs value="overview" class="nds-w-full nds-max-w-sm nds-text-body">
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -401,7 +400,7 @@ interface TabsContentProps {
     </Tabs>
   {/snippet}
   {#snippet variantLine()}
-    <Tabs defaultValue="preview" class="nds-w-full nds-max-w-sm nds-text-body">
+    <Tabs value="preview" class="nds-w-full nds-max-w-sm nds-text-body">
       <TabsList variant="line" aria-label="Modos de visualização">
         <TabsTrigger value="preview">Preview</TabsTrigger>
         <TabsTrigger value="code">Código</TabsTrigger>
@@ -411,7 +410,7 @@ interface TabsContentProps {
     </Tabs>
   {/snippet}
   {#snippet variantVertical()}
-    <Tabs defaultValue="profile" orientation="vertical" class="nds-w-full nds-max-w-md nds-text-body">
+    <Tabs value="profile" orientation="vertical" class="nds-w-full nds-max-w-md nds-text-body">
       <TabsList aria-label="Configurações">
         <TabsTrigger value="profile">Perfil</TabsTrigger>
         <TabsTrigger value="account">Conta</TabsTrigger>
@@ -555,7 +554,10 @@ interface TabsContentProps {
         cols: propsTableCols,
         items: [
           { name: 'value',          type: $tStore('props.table.value.type'),          defaultValue: $tStore('props.table.value.default'),          required: $tStore('props.table.value.required'),          description: toPlainText($tStore('props.table.value.description'))          },
-          { name: 'defaultValue',   type: $tStore('props.table.defaultValue.type'),   defaultValue: $tStore('props.table.defaultValue.default'),   required: $tStore('props.table.defaultValue.required'),   description: toPlainText($tStore('props.table.defaultValue.description'))   },
+          /* Sem linha para um valor inicial separado: nesta stack a aba de
+             partida é o próprio `value`, e a lib ignora em silêncio qualquer
+             outro nome. Documentar o que não existe é prometer o que a página
+             não cumpre. */
           { name: 'onValueChange',  type: $tStore('props.table.onValueChange.type'),  defaultValue: $tStore('props.table.onValueChange.default'),  required: $tStore('props.table.onValueChange.required'),  description: toPlainText($tStore('props.table.onValueChange.description'))  },
           { name: 'orientation',    type: $tStore('props.table.orientation.type'),    defaultValue: $tStore('props.table.orientation.default'),    required: $tStore('props.table.orientation.required'),    description: toPlainText($tStore('props.table.orientation.description'))    },
           { name: 'activationMode', type: $tStore('props.table.activationMode.type'), defaultValue: $tStore('props.table.activationMode.default'), required: $tStore('props.table.activationMode.required'), description: toPlainText($tStore('props.table.activationMode.description')) },

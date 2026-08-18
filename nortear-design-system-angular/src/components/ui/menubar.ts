@@ -430,7 +430,10 @@ const MENUBAR_ICON_MAP = {
     'aria-hidden': 'true',
   },
 })
-class NdsMenubarIcon {
+// Exportado por exigência do verificador de templates: o bloco de checagem que
+// o compilador gera precisa IMPORTAR a classe, e símbolo não exportado quebra a
+// geração (NG3004). Não é API pública — nenhum barril a reexporta.
+export class NdsMenubarIcon {
   readonly kind = input.required<keyof typeof MENUBAR_ICON_MAP>();
 
   private readonly hostRef = inject<ElementRef<SVGSVGElement>>(ElementRef);

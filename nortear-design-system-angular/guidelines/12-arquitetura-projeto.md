@@ -6,12 +6,28 @@ O **Storybook** é a interface de documentação. Este pacote **não tem sandbox
 
 ```bash
 npm run storybook                                # porta 6010
+npm run build                                    # portão de tipos (ngc --noEmit) — ver abaixo
 npm run build-storybook                          # build + geração de arquivos de SEO + minificação
 npm test                                         # Storybook Test (vitest browser) — play + axe
-npx tsc -p .storybook/tsconfig.json --noEmit     # checagem de tipos
 npm run lint
 npm run chromatic
 ```
+
+### Por que o `build` daqui não empacota nada
+
+As outras quatro stacks fazem `build = <checagem de tipos> && vite build`, e a segunda metade empacota o **sandbox** (`App`/`main` + `index.html`). Este pacote não tem sandbox, não tem `index.html`, não tem `angular.json` e não publica biblioteca: o artefato é o Storybook, e ele já tem script próprio (`build-storybook`). Inventar um `vite build` aqui só produziria um alvo sem entrada.
+
+O que faltava era a **primeira** metade. O script `build` é ela, e só ela.
+
+### O portão é `ngc`, não `tsc`
+
+`tsc --noEmit` passa neste pacote e sempre passou — porque não olha template nenhum. O `angularCompilerOptions.strictTemplates` estava declarado no `tsconfig.json` e **nada o executava**: `ngc --noEmit` é o análogo do `vue-tsc` e do `svelte-check`, e é ele que checa binding, `$event` e diretiva do template junto com o TypeScript.
+
+Ao ser ligado pela primeira vez ele achou, em código que a suíte dava por verde: um `$event` de item de marcação recebido como `boolean` quando o primitivo emite três estados; um `$event` de aba recebido como texto quando o primitivo emite texto, número ou vazio; e quatro `<svg ndsLucideGlyph [ndsLucideGlyph]="…">` com o atributo estático repetido ao lado do binding, o que atribuía `''` a um input que espera nó de ícone.
+
+`--noEmit` na LINHA DE COMANDO é seguro e é o uso correto; o que não pode é a flag dentro do `tsconfig.json` (§1 abaixo).
+
+**Classe de componente usada em template precisa ser `export`ada.** O compilador gera um arquivo `*.ngtypecheck.ts` que **importa** cada peça usada no template; símbolo não exportado quebra a geração com `NG3004` e o erro sai sem linha útil. Oito ícones e utilitários internos deste pacote estavam sem `export` — nenhum é API pública, e nenhum barril os reexporta.
 
 ---
 

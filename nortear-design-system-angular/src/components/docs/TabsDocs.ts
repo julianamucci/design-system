@@ -10,6 +10,7 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
+import type { RdxTabsValue } from '@radix-ng/primitives/tabs';
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { useTranslation, getLocale } from '@/lib/i18n';
@@ -568,11 +569,18 @@ export class NdsTabsDocs implements AfterViewInit, OnDestroy {
    * o componente dispararia num app. O payload leva o VALOR da aba, nunca o
    * rótulo traduzido — o rótulo partiria um evento em três no GA4.
    */
-  protected onTabChange(valor: string): void {
+  /**
+   * O primitivo declara o valor da aba como texto, número ou vazio — assinar só
+   * `string` deixava o compilador de templates sem como provar a chamada. A
+   * normalização é aqui e não no template porque o payload que vai ao GA4 tem
+   * que ser estável: `null` viraria uma categoria a mais no relatório.
+   */
+  protected onTabChange(valor: RdxTabsValue | undefined): void {
+    const aba = typeof valor === 'string' ? valor : '';
     track('tab_change', {
       component: 'tabs',
-      label: valor,
-      index: ABAS_DEMO.indexOf(valor as (typeof ABAS_DEMO)[number]),
+      label: aba,
+      index: ABAS_DEMO.indexOf(aba as (typeof ABAS_DEMO)[number]),
       total: ABAS_DEMO.length,
       location: 'docs-demonstration',
     });

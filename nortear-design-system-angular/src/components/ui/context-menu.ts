@@ -352,7 +352,10 @@ const CONTEXT_ICON_MAP = {
     'aria-hidden': 'true',
   },
 })
-class NdsContextMenuIcon {
+// Exportado por exigência do verificador de templates: o bloco de checagem que
+// o compilador gera precisa IMPORTAR a classe, e símbolo não exportado quebra a
+// geração (NG3004). Não é API pública — nenhum barril a reexporta.
+export class NdsContextMenuIcon {
   readonly kind = input.required<keyof typeof CONTEXT_ICON_MAP>();
 
   private readonly hostRef = inject<ElementRef<SVGSVGElement>>(ElementRef);

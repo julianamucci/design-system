@@ -150,7 +150,6 @@
   const interfaceCode = `// NavigationMenu (Root)
 interface NavigationMenuRootProps {
   value?: string;
-  defaultValue?: string;
   onValueChange?: (value: string) => void;
   delayDuration?: number;     // default 200
   skipDelayDuration?: number; // default 300
@@ -198,7 +197,7 @@ interface NavigationMenuLinkProps {
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <div class="nds-cluster nds-w-full" data-justify="center" style="contain: layout">
       <!-- aria-label por instância: a página monta vários <nav>; com o mesmo rótulo o axe acusa landmark-unique -->
-      <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label={$tStore('demonstration.title')}>
+      <NavigationMenuRoot delayDuration={80} aria-label={$tStore('demonstration.title')}>
         <NavigationMenuList>
           <NavigationMenuItem value="home">
             <NavigationMenuLink href="/" aria-current="page">Início</NavigationMenuLink>
@@ -365,7 +364,7 @@ interface NavigationMenuLinkProps {
   {/snippet}
   {#snippet doPair2()}
     <div style="contain: layout">
-      <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label={stripHtml($tStore('doDont.pair2.do'))}>
+      <NavigationMenuRoot delayDuration={80} aria-label={stripHtml($tStore('doDont.pair2.do'))}>
         <NavigationMenuList>
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
@@ -384,7 +383,7 @@ interface NavigationMenuLinkProps {
   {/snippet}
   {#snippet dontPair2()}
     <div style="contain: layout">
-      <NavigationMenuRoot defaultValue="produtos" delayDuration={80} aria-label={stripHtml($tStore('doDont.pair2.dont'))}>
+      <NavigationMenuRoot delayDuration={80} aria-label={stripHtml($tStore('doDont.pair2.dont'))}>
         <NavigationMenuList>
           <NavigationMenuItem value="produtos">
             <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
@@ -557,7 +556,7 @@ interface NavigationMenuLinkProps {
 
   {#snippet variantComDropdown()}
     <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="center">
-      <NavigationMenuRoot delayDuration={80} defaultValue="produtos" aria-label={$tStore('variants.items.comDropdown.name')}>
+      <NavigationMenuRoot delayDuration={80} aria-label={$tStore('variants.items.comDropdown.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="home"><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
           <NavigationMenuItem value="produtos">
@@ -578,7 +577,7 @@ interface NavigationMenuLinkProps {
 
   {#snippet variantMegaMenuGrid()}
     <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
-      <NavigationMenuRoot delayDuration={80} defaultValue="solucoes" aria-label={$tStore('variants.items.megaMenuGrid.name')}>
+      <NavigationMenuRoot delayDuration={80} aria-label={$tStore('variants.items.megaMenuGrid.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="solucoes">
             <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
@@ -600,7 +599,7 @@ interface NavigationMenuLinkProps {
 
   {#snippet variantComCardDestacado()}
     <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
-      <NavigationMenuRoot delayDuration={80} defaultValue="recursos" aria-label={$tStore('variants.items.comCardDestacado.name')}>
+      <NavigationMenuRoot delayDuration={80} aria-label={$tStore('variants.items.comCardDestacado.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="recursos">
             <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
@@ -649,7 +648,9 @@ interface NavigationMenuLinkProps {
         items: [
           { name: 'value',             type: $tStore('props.table.value.type'),             defaultValue: $tStore('props.table.value.default'),             required: $tStore('props.table.value.required'),             description: $tStore('props.table.value.description')             },
           { name: 'onValueChange',     type: $tStore('props.table.onValueChange.type'),     defaultValue: $tStore('props.table.onValueChange.default'),     required: $tStore('props.table.onValueChange.required'),     description: $tStore('props.table.onValueChange.description')     },
-          { name: 'defaultValue',      type: $tStore('props.table.defaultValue.type'),      defaultValue: $tStore('props.table.defaultValue.default'),      required: $tStore('props.table.defaultValue.required'),      description: $tStore('props.table.defaultValue.description')      },
+          /* Sem linha para um valor inicial separado: nesta stack o item aberto
+             é o próprio `value`, e a lib ignora em silêncio qualquer outro nome.
+             Documentar o que não existe é prometer o que a página não cumpre. */
           { name: 'delayDuration',     type: $tStore('props.table.delayDuration.type'),     defaultValue: $tStore('props.table.delayDuration.default'),     required: $tStore('props.table.delayDuration.required'),     description: $tStore('props.table.delayDuration.description')     },
           { name: 'skipDelayDuration', type: $tStore('props.table.skipDelayDuration.type'), defaultValue: $tStore('props.table.skipDelayDuration.default'), required: $tStore('props.table.skipDelayDuration.required'), description: $tStore('props.table.skipDelayDuration.description') },
           { name: 'orientation',       type: $tStore('props.table.orientation.type'),       defaultValue: $tStore('props.table.orientation.default'),       required: $tStore('props.table.orientation.required'),       description: $tStore('props.table.orientation.description')       },

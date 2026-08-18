@@ -55,7 +55,10 @@
 	}: ButtonProps = $props();
 
 	// PATCH: security — validar protocolo de href para evitar XSS via javascript:/data:/vbscript: (ver guideline 09-seguranca-xss.md)
-	function isSafeUrl(url: string | undefined): url is string {
+	// `null` entra na assinatura porque é o que o atributo `href` do HTML aceita
+	// (e portanto o que o tipo do prop entrega). A guarda logo abaixo já o tratava
+	// em runtime; o tipo é que estava mais estreito que a realidade.
+	function isSafeUrl(url: string | null | undefined): url is string {
 		/* c8 ignore next -- inalcançável pelo componente: `safeHref` é $derived e
 		   só é lido dentro de {#if href}, e mesmo lá o ternário de `disabled`
 		   curto-circuita antes. A guarda fica para chamada direta, que não existe

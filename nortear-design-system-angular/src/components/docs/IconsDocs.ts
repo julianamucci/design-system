@@ -154,7 +154,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
             <span
               class="nds-badge nds-bg-muted nds-text-muted-foreground nds-font-mono nds-border-default"
             >
-              <svg ndsLucideGlyph [ndsLucideGlyph]="glifoDoPacote" class="nds-icon"></svg>
+              <svg [ndsLucideGlyph]="glifoDoPacote" class="nds-icon"></svg>
               lucide
             </span>
             <!-- Sem opacity extra: --muted-foreground já é o tom secundário, e
@@ -213,7 +213,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
             <p class="nds-text-body">{{ t('search.subtitle') }}</p>
           </div>
           <div class="nds-icon-search-wrap">
-            <svg ndsLucideGlyph [ndsLucideGlyph]="glifoDaBusca" class="nds-icon-search-svg"></svg>
+            <svg [ndsLucideGlyph]="glifoDaBusca" class="nds-icon-search-svg"></svg>
             <input
               type="search"
               class="nds-input nds-icon-search-input"
@@ -236,7 +236,6 @@ const REGRAS_DE_ACESSIBILIDADE = [
              (Sem crase neste comentário: o template é template literal.) -->
         <div class="nds-icon-empty-state" [class.is-visible]="semResultados()" role="status">
           <svg
-            ndsLucideGlyph
             [ndsLucideGlyph]="glifoDaBusca"
             class="nds-icon-empty-state-svg"
           ></svg>
@@ -262,7 +261,7 @@ const REGRAS_DE_ACESSIBILIDADE = [
                 (click)="copiar(icone.nome)"
               >
                 <span class="nds-icon-tile-svg">
-                  <svg ndsLucideGlyph [ndsLucideGlyph]="icone.no" class="nds-icon-lg"></svg>
+                  <svg [ndsLucideGlyph]="icone.no" class="nds-icon-lg"></svg>
                 </span>
                 <span class="nds-icon-tile-name">{{ icone.nome }}</span>
                 <span

@@ -158,7 +158,10 @@ const SELECT_ICON_MAP = {
     'aria-hidden': 'true',
   },
 })
-class NdsSelectIcon {
+// Exportado por exigência do verificador de templates: o bloco de checagem que
+// o compilador gera precisa IMPORTAR a classe, e símbolo não exportado quebra a
+// geração (NG3004). Não é API pública — nenhum barril a reexporta.
+export class NdsSelectIcon {
   readonly kind = input.required<keyof typeof SELECT_ICON_MAP>();
 
   private readonly hostRef = inject<ElementRef<SVGSVGElement>>(ElementRef);
@@ -232,7 +235,10 @@ export class NdsSelectContent {
   selector: 'ng-container[ndsSelectOutlet]',
   standalone: true,
 })
-class NdsSelectOutlet implements OnInit {
+// Exportado por exigência do verificador de templates: o bloco de checagem que
+// o compilador gera precisa IMPORTAR a classe, e símbolo não exportado quebra a
+// geração (NG3004). Não é API pública — nenhum barril a reexporta.
+export class NdsSelectOutlet implements OnInit {
   readonly molde = input.required<TemplateRef<unknown>>({ alias: 'ndsSelectOutlet' });
 
   private readonly container = inject(ViewContainerRef);

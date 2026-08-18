@@ -5,6 +5,7 @@
  */
   import { onMount, onDestroy } from 'svelte';
   import 'quill/dist/quill.snow.css';
+  import QuillField from './QuillField.svelte';
   import { createDocsStore } from './useDocs';
   import type { Locale } from '@/lib/i18n';
 

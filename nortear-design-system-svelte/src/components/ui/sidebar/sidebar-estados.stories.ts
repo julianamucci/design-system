@@ -55,7 +55,7 @@ export const Expanded: Story = {
   },
 };
 
-export const IconMode: Story = {
+export const IconMode: StoryObj<Record<string, never>> = {
   name: 'Icon mode (collapsed)',
   parameters: {
     covers: ['functional.item4', 'functional.item7', 'visual.item2'],

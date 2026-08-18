@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
+import type { ComponentProps } from 'svelte';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { CodeBlock } from './index';
@@ -154,7 +155,7 @@ export const UnknownLanguage: Story = {
   },
 };
 
-export const RemovedBeforeFeedback: Story = {
+export const RemovedBeforeFeedback: StoryObj<ComponentProps<typeof CodeBlockRemovivelStory>> = {
   parameters: { covers: ['functional.item8'] },
   render: (args) => ({ Component: CodeBlockRemovivelStory, props: args }),
   args: { code: BASE_CODE },

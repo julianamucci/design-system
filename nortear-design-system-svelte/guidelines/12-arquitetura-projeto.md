@@ -11,9 +11,25 @@ O **Storybook** é a interface de documentação principal.
 ```bash
 npm run storybook      # porta 6006 — interface principal
 npm run dev            # sandbox de desenvolvimento (App.svelte) — uso secundário
+npm run build          # svelte-check --threshold error && vite build
 ```
 
 `App.svelte` é um **sandbox**. Novos componentes **não precisam** ser registrados nele.
+
+## O portão de tipos
+
+`npm run build` roda `svelte-check` **antes** do `vite build`, e reprova a build inteira no primeiro erro de tipo.
+
+Isso não existia. O `build` era só `vite build`, e o Vite compila `.svelte` sem checar tipo nenhum — o `tsconfig.json` estava escrito, `strict` ligado, e nada o executava. Quando o portão foi ligado pela primeira vez havia **36 erros em 26 arquivos**, entre eles quatro defeitos de comportamento que a suíte dava por verdes:
+
+- um componente inteiro invocado e nunca escrito (o campo de texto rico do editor de documentação): Svelte compila componente desconhecido sem reclamar, e o ramo abria vazio;
+- `defaultValue` passado treze vezes a componentes cuja lib só conhece `value` — as abas da docs page abriam com nenhuma aba escolhida, e a tabela de props documentava a propriedade inexistente;
+- `bind:value` no menu de navegação, cujo raiz não declarava a prop como vinculável: quem escrevia o binding não recebia nada de volta, e um `value` vindo de fora prendia o menu aberto;
+- uma prop entregue a uma seção da docs page que não a aceita — o conteúdo sumia sem aviso.
+
+O resto era ambiente não declarado (`vite/client`, `*.css`, `import.meta.env`) e tipagem estreita demais. A regra que sai disso: **nada de `as any`, `@ts-ignore` ou afrouxar o `tsconfig`** — se o tipo reclama, quem está errado é o código ou a assinatura.
+
+`src/vite-env.d.ts` declara o ambiente do Vite, igual ao da stack Vanilla. Sem ele todo `import './x.css'` vira erro TS2882.
 
 ---
 

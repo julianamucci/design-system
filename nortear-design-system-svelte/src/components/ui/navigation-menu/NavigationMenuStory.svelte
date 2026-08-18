@@ -37,7 +37,11 @@
     defaultValue = undefined,
     // `defaultValue` nao existe no bits-ui: a prop era ignorada e o painel
     // nunca abria. A API e `value` (bindable) — mesma familia do defaultOpen.
-    value = $bindable(defaultValue),
+    //
+    // O `?? ''` é o "nenhum menu aberto" escrito por extenso: agora que a raiz
+    // declara `value` como vinculável com valor de partida, mandar `undefined`
+    // para dentro de um `bind:` é erro de runtime do Svelte, e não silêncio.
+    value = $bindable(defaultValue ?? ''),
     delayDuration = 100,
     orientation = 'horizontal',
     ariaLabel = 'Navegação principal',

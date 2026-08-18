@@ -686,7 +686,6 @@ import { Label } from "@/components/ui/label";`;
       { event: $tStore('analytics.table.sectionViewed'),  trigger: toPlainText($tStore('analytics.table.sectionViewedTrigger')),  payload: $tStore('analytics.table.sectionViewedPayload') },
       { event: $tStore('analytics.table.langSwitch'),     trigger: toPlainText($tStore('analytics.table.langSwitchTrigger')),     payload: $tStore('analytics.table.langSwitchPayload') },
     ]}
-    note={$tStore('analytics.note')}
   />
 
   <!-- ── Testes ────────────────────────────────────────────────────────── -->

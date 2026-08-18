@@ -207,7 +207,11 @@ const CAROUSEL_ICON_MAP: Record<CarouselIconKind, LucideIconNode[]> = {
     'aria-hidden': 'true',
   },
 })
-class NdsCarouselIcon {
+// Exportado por exigência do verificador de templates: o bloco de checagem que
+// o compilador gera para quem usa `<svg ndsCarouselIcon>` precisa IMPORTAR a
+// classe, e símbolo não exportado quebra a geração (NG3004). Não é API pública —
+// o barril de componentes não a reexporta.
+export class NdsCarouselIcon {
   readonly kind = input.required<CarouselIconKind>();
 
   private readonly hostRef = inject<ElementRef<SVGSVGElement>>(ElementRef);

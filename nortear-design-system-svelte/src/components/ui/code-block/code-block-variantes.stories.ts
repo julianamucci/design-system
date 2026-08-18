@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
+import type { ComponentProps } from 'svelte';
 import { expect } from 'storybook/test';
 import { CodeBlock } from './index';
 import CodeBlockPaletaStory from './CodeBlockPaletaStory.svelte';
@@ -130,7 +131,7 @@ export const Text: Story = {
 // na paleta de sintaxe", nos dois fundos possíveis (a superfície e a linha em
 // destaque) e nos dois modos.
 
-export const LightPalette: Story = {
+export const LightPalette: StoryObj<ComponentProps<typeof CodeBlockPaletaStory>> = {
   parameters: { covers: ['accessibility.item4'] },
   render: (args) => ({ Component: CodeBlockPaletaStory, props: args }),
   args: { code: PALETA_CODE },
@@ -157,7 +158,7 @@ export const LightPalette: Story = {
   },
 };
 
-export const DarkPalette: Story = {
+export const DarkPalette: StoryObj<ComponentProps<typeof CodeBlockPaletaStory>> = {
   parameters: {
     covers: ['accessibility.item4'],
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story

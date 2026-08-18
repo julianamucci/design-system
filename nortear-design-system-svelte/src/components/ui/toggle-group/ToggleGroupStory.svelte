@@ -88,17 +88,7 @@
   });
 </script>
 
-<ToggleGroup
-  {type}
-  bind:value
-  {disabled}
-  {orientation}
-  {variant}
-  {size}
-  {spacing}
-  onValueChange={onValueChange as never}
-  aria-label={ariaLabel}
->
+{#snippet botoes()}
   {#each resolvedItems as item (item.value)}
     <ToggleGroupItem
       value={item.value}
@@ -109,4 +99,50 @@
       <IconCmp aria-hidden="true" />
     </ToggleGroupItem>
   {/each}
-</ToggleGroup>
+{/snippet}
+
+<!--
+As duas formas do grupo são uma união DISCRIMINADA: em `multiple` o valor é uma
+lista, em `single` é um texto. Passar `type` como união e `value` como união
+obrigava a calar o compilador — e um `as never` no `onValueChange` fazia o
+espião da aba Actions perder o próprio tipo. Ramificar estreita `type` para o
+literal em cada lado, e aí o valor e o callback casam sozinhos.
+
+`bind:` sai junto: o par valor + callback é exatamente o que ele expande, e
+escrito assim o repasse ao espião da story fica explícito.
+-->
+{#if type === 'multiple'}
+  <ToggleGroup
+    type="multiple"
+    value={Array.isArray(value) ? value : []}
+    onValueChange={(novo) => {
+      value = novo;
+      onValueChange?.(novo);
+    }}
+    {disabled}
+    {orientation}
+    {variant}
+    {size}
+    {spacing}
+    aria-label={ariaLabel}
+  >
+    {@render botoes()}
+  </ToggleGroup>
+{:else}
+  <ToggleGroup
+    type="single"
+    value={typeof value === 'string' ? value : ''}
+    onValueChange={(novo) => {
+      value = novo;
+      onValueChange?.(novo);
+    }}
+    {disabled}
+    {orientation}
+    {variant}
+    {size}
+    {spacing}
+    aria-label={ariaLabel}
+  >
+    {@render botoes()}
+  </ToggleGroup>
+{/if}
