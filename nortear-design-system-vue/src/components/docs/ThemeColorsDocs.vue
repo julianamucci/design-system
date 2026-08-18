@@ -94,6 +94,8 @@ useSeoEffect(
   computed(() => ({
     title: `${t('title')} — ${t('category')}`,
     description: t('description'),
+    aiSummary: t('seo.aiSummary'),
+    aiEntities: t('seo.aiEntities'),
     locale: store.locale,
     componentSlug: 'theme-colors',
     kind: 'guide' as const,

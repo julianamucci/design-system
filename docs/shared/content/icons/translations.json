@@ -39,6 +39,10 @@
       "rule2": "<code>aria-label</code> no elemento pai quando o ícone é a única comunicação visual",
       "rule3": "Cor nunca é o único indicador de estado — sempre acompanhar com ícone + texto",
       "rule4": "Tamanho mínimo recomendado: <code>nds-icon</code> (16px) para legibilidade"
+    },
+    "seo": {
+      "aiSummary": "Página de fundamentos que cataloga os ícones do Design System, com busca por nome, cópia do import com um clique, orientação de uso por tamanho e as regras de acessibilidade para ícone decorativo e ícone informativo.",
+      "aiEntities": "Icons, React, Vue, Svelte, Vanilla, Angular, Lucide, catálogo de ícones, aria-hidden, ícone decorativo, tamanho de ícone, WCAG 2.2"
     }
   },
   "en": {
@@ -81,6 +85,10 @@
       "rule2": "<code>aria-label</code> on the parent element when the icon is the only visual communication",
       "rule3": "Color is never the sole state indicator — always pair with icon + text",
       "rule4": "Minimum recommended size: <code>nds-icon</code> (16px) for readability"
+    },
+    "seo": {
+      "aiSummary": "Foundations page cataloguing the Design System icons, with search by name, one-click import copying, sizing guidance and the accessibility rules for decorative versus informative icons.",
+      "aiEntities": "Icons, React, Vue, Svelte, Vanilla, Angular, Lucide, icon catalogue, aria-hidden, decorative icon, icon sizing, WCAG 2.2"
     }
   },
   "es": {
@@ -123,6 +131,10 @@
       "rule2": "<code>aria-label</code> en el elemento padre cuando el ícono es la única comunicación visual",
       "rule3": "El color nunca es el único indicador de estado — siempre acompañar con ícono + texto",
       "rule4": "Tamaño mínimo recomendado: <code>nds-icon</code> (16px) para legibilidad"
+    },
+    "seo": {
+      "aiSummary": "Página de fundamentos que cataloga los íconos del Design System, con búsqueda por nombre, copia del import en un clic, orientación de tamaño y las reglas de accesibilidad para ícono decorativo e informativo.",
+      "aiEntities": "Icons, React, Vue, Svelte, Vanilla, Angular, Lucide, catálogo de íconos, aria-hidden, ícono decorativo, tamaño de ícono, WCAG 2.2"
     }
   }
 }

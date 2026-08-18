@@ -34,6 +34,8 @@ export function IconsDocs() {
   useSeoEffect({
     title: `${t('title')} — ${t('category')}`,
     description: t('description'),
+    aiSummary: t('seo.aiSummary'),
+    aiEntities: t('seo.aiEntities'),
     locale,
     componentSlug: 'icons',
     kind: 'guide',

@@ -79,6 +79,10 @@
           "lxgw-wenkai": "LXGW WenKai TC — manuscrita"
         }
       }
+    },
+    "seo": {
+      "aiSummary": "Página de fundamentos que documenta a paleta do Design System em tokens semânticos HSL, os temas de marca, os modos claro e escuro, e os eixos de densidade e fonte aplicados por classe na raiz do documento, com cópia do token por clique.",
+      "aiEntities": "Cores, temas, React, Vue, Svelte, Vanilla, Angular, token semântico, HSL, tema de marca, modo claro, modo escuro, densidade, contraste, WCAG 2.2"
     }
   },
   "en": {
@@ -161,6 +165,10 @@
           "lxgw-wenkai": "LXGW WenKai TC — handwritten"
         }
       }
+    },
+    "seo": {
+      "aiSummary": "Foundations page documenting the Design System palette as semantic HSL tokens, the brand themes, light and dark modes, and the density and font axes applied by class on the document root, with click-to-copy tokens.",
+      "aiEntities": "Colors, themes, React, Vue, Svelte, Vanilla, Angular, semantic token, HSL, brand theme, light mode, dark mode, density, contrast, WCAG 2.2"
     }
   },
   "es": {
@@ -243,6 +251,10 @@
           "lxgw-wenkai": "LXGW WenKai TC — manuscrita"
         }
       }
+    },
+    "seo": {
+      "aiSummary": "Página de fundamentos que documenta la paleta del Design System en tokens semánticos HSL, los temas de marca, los modos claro y oscuro, y los ejes de densidad y fuente aplicados por clase en la raíz del documento, con copia del token por clic.",
+      "aiEntities": "Colores, temas, React, Vue, Svelte, Vanilla, Angular, token semántico, HSL, tema de marca, modo claro, modo oscuro, densidad, contraste, WCAG 2.2"
     }
   }
 }

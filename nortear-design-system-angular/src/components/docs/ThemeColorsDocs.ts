@@ -450,6 +450,8 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
         // `seo.title` NÃO leva "· Design System": o applySeo acrescenta.
         title: `${t('title')} — ${t('category')}`,
         description: t('description'),
+        aiSummary: t('seo.aiSummary'),
+        aiEntities: t('seo.aiEntities'),
         locale: idioma,
         componentSlug: 'theme-colors',
         // Fundamento é guia, não componente: sem SoftwareSourceCode no JSON-LD.

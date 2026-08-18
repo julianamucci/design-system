@@ -142,6 +142,8 @@ export function createThemeColorsDocs(): HTMLElement {
     const cleanup = applySeo({
       title: `${t('title')} — ${t('category')}`,
       description: t('description'),
+      aiSummary: t('seo.aiSummary'),
+      aiEntities: t('seo.aiEntities'),
       locale,
       componentSlug: 'theme-colors',
       kind: 'guide',
