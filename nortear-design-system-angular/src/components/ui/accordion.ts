@@ -75,9 +75,10 @@ const SELETOR_GATILHOS =
   hostDirectives: [
     {
       directive: RdxAccordionRootDirective,
-      // `multiple`, e não `type="single" | "multiple"`: é o nome do primitivo,
-      // é o que o React (base-ui) expõe, e no modo único o item ativo sempre
-      // fecha ao ser clicado de novo — não existe `collapsible` separado.
+      // `multiple`, e não `type="single" | "multiple"`: é o nome do primitivo.
+      // No modo único o item aberto sempre fecha ao ser clicado de novo — é o
+      // comportamento do design system nas cinco stacks, e não há entrada para
+      // desligá-lo.
       inputs: ['multiple', 'value', 'defaultValue', 'disabled'],
       outputs: ['valueChange', 'onValueChange'],
     },

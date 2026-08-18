@@ -130,7 +130,7 @@ const codeImport = `import {
   AccordionTrigger,
 } from "@/components/ui/accordion";`;
 
-const codeSingle = `<Accordion type="single" :collapsible="true" default-value="item-1">
+const codeSingle = `<Accordion type="single" default-value="item-1">
   <AccordionItem value="item-1">
     <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
     <AccordionContent>
@@ -155,16 +155,17 @@ import { ref } from 'vue';
 const openItem = ref('item-1');
 <\/script>
 
-<Accordion type="single" :collapsible="true" :value="openItem" @update:model-value="openItem = $event">
+<Accordion type="single" :value="openItem" @update:model-value="openItem = $event">
   <AccordionItem value="item-1">
     <AccordionTrigger>Item 1 — controlado</AccordionTrigger>
     <AccordionContent>Estado gerenciado externamente.</AccordionContent>
   </AccordionItem>
 </Accordion>`;
 
+// Sem `collapsible`: no modo único, clicar de novo no item aberto sempre o
+// fecha, e o componente não expõe chave para desligar isso.
 const interfaceCode = `interface AccordionProps {
   type: 'single' | 'multiple';
-  collapsible?: boolean;
   defaultValue?: string | string[];
   value?: string | string[];
   class?: string;
@@ -238,7 +239,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.iconTrigger.name'),
     description: tContent('variants.compositions.iconTrigger.description'),
     useWhen: tContent('variants.compositions.iconTrigger.use'),
-    code: `<Accordion type="single" :collapsible="true" class="nds-max-w-lg">
+    code: `<Accordion type="single" class="nds-max-w-lg">
   <AccordionItem value="info">
     <AccordionTrigger>
       <Info class="nds-icon-sm nds-shrink-0" aria-hidden="true" />
@@ -252,7 +253,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.badgeTrigger.name'),
     description: tContent('variants.compositions.badgeTrigger.description'),
     useWhen: tContent('variants.compositions.badgeTrigger.use'),
-    code: `<Accordion type="single" :collapsible="true" class="nds-max-w-lg">
+    code: `<Accordion type="single" class="nds-max-w-lg">
   <AccordionItem value="novo">
     <AccordionTrigger>
       Novidades da versão
@@ -298,7 +299,7 @@ const compositionItems = computed(() => [
     description: tContent('variants.compositions.faq.description'),
     useWhen: tContent('variants.compositions.faq.use'),
     code: `<h2>Perguntas frequentes</h2>
-<Accordion type="single" :collapsible="true" class="nds-max-w-lg">
+<Accordion type="single" class="nds-max-w-lg">
   <AccordionItem value="senha">
     <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
     <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>
@@ -417,7 +418,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
     <DocsDemonstration :title="tContent('demonstration.title')">
       <Accordion
         type="single"
-        :collapsible="true"
         default-value="q1"
         class="nds-max-w-lg"
       >
@@ -499,7 +499,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       <template #do-preview-0>
         <Accordion
           type="single"
-          :collapsible="true"
           class="nds-max-w-xs nds-text-body"
         >
           <AccordionItem value="faq">
@@ -511,7 +510,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       <template #dont-preview-0>
         <Accordion
           type="single"
-          :collapsible="true"
           class="nds-max-w-xs nds-text-body"
         >
           <AccordionItem value="faq">
@@ -538,7 +536,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       <template #dont-preview-1>
         <Accordion
           type="single"
-          :collapsible="true"
           class="nds-max-w-xs nds-text-body"
         >
           <AccordionItem value="s1">
@@ -565,7 +562,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       <template #variant-preview-0>
         <Accordion
           type="single"
-          :collapsible="true"
           default-value="item-1"
           class="nds-max-w-sm nds-text-body"
         >
@@ -597,7 +593,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       <template #variant-preview-2>
         <Accordion
           type="single"
-          :collapsible="true"
           default-value="item-1"
           class="nds-max-w-sm nds-text-body"
         >
@@ -614,7 +609,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       <template #variant-preview-3>
         <Accordion
           type="single"
-          :collapsible="true"
           default-value="item-1"
           class="nds-max-w-sm nds-text-body"
         >
@@ -640,7 +634,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       <template #variant-preview-0>
         <Accordion
           type="single"
-          :collapsible="true"
           class="nds-max-w-lg nds-text-body"
         >
           <AccordionItem value="info">
@@ -693,7 +686,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
       <template #variant-preview-1>
         <Accordion
           type="single"
-          :collapsible="true"
           class="nds-max-w-lg nds-text-body"
         >
           <AccordionItem value="novo">
@@ -785,7 +777,6 @@ function handleDemoTriggerClick(e: MouseEvent, label: string) {
           </h2>
           <Accordion
             type="single"
-            :collapsible="true"
             class="nds-text-body"
           >
             <AccordionItem value="senha">

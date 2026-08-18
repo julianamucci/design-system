@@ -9,7 +9,6 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 type AccordionArgs = {
   type: 'single' | 'multiple';
-  collapsible: boolean;
   // Documentadas na aba "API Reference" sem control — o Playground não as
   // encaminha para a factory, mas fazem parte de AccordionOptions.
   defaultValue?: AccordionOptions['defaultValue'];
@@ -36,11 +35,6 @@ const meta: Meta<AccordionArgs> = {
       description: 'Modo de expansão: um item ou múltiplos simultaneamente.',
       table: { type: { summary: "'single' | 'multiple'" }, defaultValue: { summary: "'single'" } },
     },
-    collapsible: {
-      control: 'boolean',
-      description: 'Permite fechar o item aberto (apenas no modo único).',
-      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'true' } },
-    },
     defaultValue: {
       control: false,
       description: "Item(ns) aberto(s) inicialmente. O Playground fixa 'item-1'.",
@@ -64,7 +58,6 @@ const meta: Meta<AccordionArgs> = {
   },
   args: {
     type: 'single',
-    collapsible: true,
     onValueChange: fn(),
   },
 };
@@ -83,9 +76,9 @@ const DEMO_ITEMS: AccordionOptions['items'] = [
 
 export const Playground: Story = {
   // O renderer html monta o snippet a partir do `outerHTML` do elemento
-  // devolvido pelo render. `type` e `collapsible` só existem no closure da
-  // factory — não viram atributo — então o HTML sai idêntico nos dois modos e a
-  // caixa de código nunca mudava ao mexer nos controls. Além disso, um dump de
+  // devolvido pelo render. `type` só existe no closure da factory — não vira
+  // atributo — então o HTML sai idêntico nos dois modos e a caixa de código
+  // nunca mudava ao mexer nos controls. Além disso, um dump de
   // DOM não é o que o consumidor escreve: ele chama a factory. O snippet passa
   // a ser a chamada real, montada a partir dos args.
   parameters: {
@@ -97,7 +90,7 @@ export const Playground: Story = {
     docs: {
       source: {
         transform: (_generated: string, ctx: { args?: Partial<AccordionArgs> }) => {
-          const { type = 'single', collapsible = true } = ctx.args ?? {};
+          const { type = 'single' } = ctx.args ?? {};
           const items = DEMO_ITEMS.map(
             (i) => `    { value: '${i.value}', trigger: '${i.trigger}', content: '…' },`,
           ).join('\n');
@@ -105,7 +98,6 @@ export const Playground: Story = {
 
 const accordion = createAccordion({
   type: '${type}',
-  collapsible: ${collapsible},
   defaultValue: ['item-1'],
   class: 'nds-max-w-lg',
   items: [
@@ -121,7 +113,6 @@ document.querySelector('#app')?.append(accordion);`;
   render: (args) =>
     createAccordion({
       type: args.type,
-      collapsible: args.collapsible,
       // Array, como o defaultValue={["item-1"]} do Playground do React. A forma
       // em string continua exercitada nas stories de variantes e estados.
       defaultValue: ['item-1'],
@@ -150,7 +141,6 @@ document.querySelector('#app')?.append(accordion);`;
     await step('A raiz registra a configuração recebida', async () => {
       const root = canvasElement.querySelector('[data-slot="accordion"]');
       await expect(root).toHaveAttribute('data-type', args.type);
-      await expect(root).toHaveAttribute('data-collapsible', String(args.collapsible));
     });
 
     // O painel Interactions reexecuta a play no MESMO DOM: o estado inicial da
@@ -196,7 +186,7 @@ document.querySelector('#app')?.append(accordion);`;
       await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'true'));
     });
 
-    await step('Space colapsa um item aberto (collapsible=true)', async () => {
+    await step('Space colapsa um item aberto', async () => {
       await abrir(triggers[2]);
       triggers[2].focus();
       await userEvent.keyboard(' ');

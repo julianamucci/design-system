@@ -41,7 +41,7 @@ const FOCUS_ITEMS: AccordionOptions['items'] = [
 // ─── Estados ──────────────────────────────────────────────────────────────────
 
 export const Closed: Story = {
-  render: () => createAccordion({ type: 'single', collapsible: true, items: SINGLE_ITEM }),
+  render: () => createAccordion({ type: 'single', items: SINGLE_ITEM }),
   parameters: {
     covers: ['accessibility.item2', 'accessibility.item7', 'visual.item3'],
     docs: {
@@ -90,7 +90,6 @@ export const Open: Story = {
   render: () =>
     createAccordion({
       type: 'single',
-      collapsible: true,
       defaultValue: 'item-1',
       items: OPEN_ITEM,
     }),
@@ -128,7 +127,7 @@ export const Open: Story = {
 };
 
 export const Disabled: Story = {
-  render: () => createAccordion({ type: 'single', collapsible: true, items: DISABLED_ITEMS }),
+  render: () => createAccordion({ type: 'single', items: DISABLED_ITEMS }),
   parameters: {
     covers: ['functional.item5', 'accessibility.item5', 'visual.item5'],
     docs: {
@@ -153,7 +152,7 @@ export const Disabled: Story = {
 };
 
 export const FocusVisible: Story = {
-  render: () => createAccordion({ type: 'single', collapsible: true, defaultValue: 'item-1', items: FOCUS_ITEMS }),
+  render: () => createAccordion({ type: 'single', defaultValue: 'item-1', items: FOCUS_ITEMS }),
   parameters: {
     covers: ['accessibility.item3'],
     docs: {

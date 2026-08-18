@@ -144,9 +144,9 @@
   </AccordionItem>
 </Accordion>`;
 
-  // Bloco de tipo, não de argumentação: a divergência em relação a outras
-  // stacks (ausência de collapsible/defaultValue) é explicada uma única vez,
-  // na linha correspondente da tabela de props — ver ADJUSTED abaixo.
+  // Bloco de tipo, não de argumentação: a única divergência de API desta stack
+  // (ausência de `defaultValue`, cujo papel cabe em `value`) é explicada uma
+  // vez só, na linha correspondente da tabela de props — ver ADJUSTED abaixo.
   const interfaceCode = `// Accordion (raiz) — bits-ui
 type AccordionProps = {
   type: 'single' | 'multiple';               // obrigatório
@@ -168,7 +168,7 @@ type AccordionProps = {
   type Loc = Record<string, string>;
 
   /** Props da tabela compartilhada que o bits-ui não tem. */
-  const ABSENT_PROPS = new Set(['collapsible', 'defaultValue', 'asChild']);
+  const ABSENT_PROPS = new Set(['defaultValue', 'asChild']);
 
   const pick = (m: Loc) => m[$locale] ?? m['pt-BR'];
 
@@ -217,22 +217,17 @@ type AccordionProps = {
   /**
    * Ajustes de nome/tipo/default sobre linhas que existem nas duas APIs.
    *
-   * Esta tabela é o ÚNICO lugar que explica as duas ausências desta stack:
-   * `collapsible` (na linha `type`) e `defaultValue` (na linha `value`). Cada
-   * fato aparece na linha onde o leitor vai procurá-lo — quem quer estado
-   * inicial olha `value`, quem quer fechar o item ativo olha `type`. O
-   * `interfaceCode` acima não repete, e a API Reference (argTypes na story)
+   * Esta tabela é o ÚNICO lugar que explica a ausência de `defaultValue` nesta
+   * stack — e o fato aparece na linha onde o leitor vai procurá-lo (`value`).
+   * O `interfaceCode` acima não repete, e a API Reference (argTypes na story)
    * também não.
+   *
+   * `collapsible` já não está aqui: a prop saiu da tabela compartilhada, e o
+   * texto de `type` no conteúdo compartilhado passou a afirmar o fechamento no
+   * modo único — que agora vale nas cinco stacks, não só nesta.
    */
   const ADJUSTED: Record<string, { name?: string; type?: string; defaultValue?: string; description?: Loc }> = {
     className: { name: 'class' },
-    type: {
-      description: {
-        'pt-BR': 'Define se um ou múltiplos itens podem ser abertos simultaneamente. No modo único, fechar o item ativo é sempre permitido — não existe prop separada para isso.',
-        en: 'Defines whether one or multiple items can be open simultaneously. In single mode, closing the active item is always allowed — there is no separate prop for it.',
-        es: 'Define si uno o múltiples ítems pueden estar abiertos simultáneamente. En modo único, cerrar el ítem activo siempre está permitido — no existe una prop separada para eso.',
-      },
-    },
     value: {
       type: 'string | string[]',
       defaultValue: "'' | []",

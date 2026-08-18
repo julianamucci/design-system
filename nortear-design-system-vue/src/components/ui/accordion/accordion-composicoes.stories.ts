@@ -35,7 +35,7 @@ export const WithIconInTrigger: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent, Info, AlertTriangle, CheckCircle },
     template: `
-      <Accordion type="single" :collapsible="true" class="nds-max-w-lg">
+      <Accordion type="single" class="nds-max-w-lg">
         <AccordionItem value="info">
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
@@ -102,7 +102,7 @@ export const WithBadgeInTrigger: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent, Badge },
     template: `
-      <Accordion type="single" :collapsible="true" class="nds-max-w-lg">
+      <Accordion type="single" class="nds-max-w-lg">
         <AccordionItem value="novo">
           <AccordionTrigger>
             <span class="nds-cluster" data-spacing="sm">
@@ -233,7 +233,7 @@ export const FAQ: Story = {
     template: `
       <div class="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
         <h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
-        <Accordion type="single" :collapsible="true">
+        <Accordion type="single">
           <AccordionItem v-for="item in items" :key="item.value" :value="item.value">
             <AccordionTrigger>{{ item.q }}</AccordionTrigger>
             <AccordionContent>{{ item.a }}</AccordionContent>

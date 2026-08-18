@@ -51,7 +51,7 @@ const SPEC_ITEMS: AccordionOptions['items'] = [
 // ─── Modos ────────────────────────────────────────────────────────────────────
 
 export const Single: Story = {
-  render: () => createAccordion({ type: 'single', collapsible: true, defaultValue: 'senha', items: FAQ_ITEMS }),
+  render: () => createAccordion({ type: 'single', defaultValue: 'senha', items: FAQ_ITEMS }),
   parameters: {
     covers: ['functional.item2', 'functional.item3', 'functional.item6', 'visual.item2'],
     docs: {
@@ -75,6 +75,52 @@ export const Single: Story = {
 
     await step('Clicar no item ativo fecha-o (modo single permite collapse)', async () => {
       await fechar(triggers[1]);
+    });
+  },
+};
+
+/**
+ * O fechar-ao-clicar-de-novo, medido sem nenhuma configuração.
+ *
+ * A factory é chamada só com `type: 'single'` e os itens — nada mais. É esse
+ * recorte que prova o contrato: o comportamento não depende de uma chave que
+ * quem consome precise lembrar de ligar. Enquanto existia um `collapsible`, esta
+ * story ficava vermelha na stack cuja lib o trazia desligado por omissão — foi
+ * assim que a divergência foi medida.
+ *
+ * Sobrevive ao REPLAY: cada passo estabelece a própria precondição, e o par
+ * `abrir`/`fechar` garante um clique real nesta rodada partindo de um estado
+ * conhecido, em vez de alternar a partir do que a rodada anterior deixou.
+ */
+export const CloseOnSecondClick: Story = {
+  render: () => createAccordion({ type: 'single', items: FAQ_ITEMS.slice(0, 2) }),
+  parameters: {
+    covers: ['functional.item2'],
+    docs: {
+      description: {
+        story: 'Modo único sem nenhuma configuração extra: clicar de novo no item aberto o fecha.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Clicar de novo no item aberto o fecha', async () => {
+      const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[0]);  // precondição própria: garantidamente aberto
+      await fechar(triggers[0]); // clique real nesta rodada + asserção de estado
+    });
+
+    await step('O painel recolhe de fato, não só o atributo', async () => {
+      // Atributo é promessa, altura é entrega. Sem esta asserção, um painel que
+      // continuasse expandido com aria-expanded="false" passaria despercebido.
+      // A tolerância de 1px cobre o arredondamento do grid em 0fr.
+      await waitFor(() => {
+        const expandidos = Array.from(
+          canvasElement.querySelectorAll<HTMLElement>('[data-slot="accordion-content"]'),
+        ).filter((p) => p.getBoundingClientRect().height > 1);
+        expect(expandidos).toHaveLength(0);
+      });
     });
   },
 };
@@ -132,7 +178,6 @@ export const Controlled: Story = {
 
     const accordion = createAccordion({
       type: 'single',
-      collapsible: true,
       defaultValue: 'item-1',
       onValueChange: setIndicator,
       items: [
@@ -176,7 +221,6 @@ export const DefaultOpen: Story = {
   render: () =>
     createAccordion({
       type: 'single',
-      collapsible: true,
       defaultValue: 'item-1',
       items: DEFAULT_OPEN_ITEMS,
     }),

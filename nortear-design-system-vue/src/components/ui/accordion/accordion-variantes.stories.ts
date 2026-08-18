@@ -38,7 +38,7 @@ export const Single: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="single" :collapsible="true" default-value="item-1" class="nds-max-w-lg">
+      <Accordion type="single" default-value="item-1" class="nds-max-w-lg">
         <AccordionItem value="item-1">
           <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
           <AccordionContent>
@@ -65,7 +65,7 @@ export const Single: Story = {
     covers: ['functional.item2', 'functional.item3', 'functional.item6', 'visual.item2'],
     docs: {
       description: {
-        story: 'Modo single com collapsible. Apenas um item aberto por vez. Clicar no item ativo o fecha. Use para FAQ.',
+        story: 'Modo single. Apenas um item aberto por vez, e clicar de novo no item aberto o fecha. Use para FAQ.',
       },
     },
   },
@@ -86,9 +86,73 @@ export const Single: Story = {
       await expect(triggers[0]).toHaveAttribute('aria-expanded', 'false');
     });
 
-    await step('Clicar no trigger ativo fecha o item (collapsible)', async () => {
+    await step('Clicar no trigger ativo fecha o item', async () => {
       const triggers = canvas.getAllByRole('button');
       await fechar(triggers[1]);
+    });
+  },
+};
+
+/**
+ * O fechar-ao-clicar-de-novo, medido sem nenhuma configuração.
+ *
+ * A raiz é montada só com `type="single"` — nada mais. É esse recorte que prova
+ * o contrato: o comportamento não depende de uma chave que quem consome precise
+ * lembrar de ligar. Enquanto a prop `collapsible` era pública, esta story ficava
+ * VERMELHA nesta stack (o reka a traz desligada por omissão) e verde nas outras
+ * quatro — foi assim que a divergência foi medida.
+ *
+ * Sobrevive ao REPLAY: cada passo estabelece a própria precondição, e o par
+ * `abrir`/`fechar` garante um clique real nesta rodada partindo de um estado
+ * conhecido, em vez de alternar a partir do que a rodada anterior deixou.
+ */
+export const CloseOnSecondClick: Story = {
+  render: () => ({
+    components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
+    template: `
+      <Accordion type="single" class="nds-max-w-lg">
+        <AccordionItem value="item-1">
+          <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
+          <AccordionContent>
+            Acesse a tela de login e clique em "Esqueci minha senha".
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="item-2">
+          <AccordionTrigger>Quais formas de pagamento são aceitas?</AccordionTrigger>
+          <AccordionContent>
+            Aceitamos cartão de crédito, Pix e boleto bancário.
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    `,
+  }),
+  parameters: {
+    covers: ['functional.item2'],
+    docs: {
+      description: {
+        story: 'Modo único sem nenhuma configuração extra: clicar de novo no item aberto o fecha.',
+      },
+    },
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Clicar de novo no item aberto o fecha', async () => {
+      const triggers = canvas.getAllByRole('button');
+      await abrir(triggers[0]);  // precondição própria: garantidamente aberto
+      await fechar(triggers[0]); // clique real nesta rodada + asserção de estado
+    });
+
+    await step('O painel recolhe de fato, não só o atributo', async () => {
+      // Atributo é promessa, altura é entrega. Sem esta asserção, um painel que
+      // continuasse expandido com aria-expanded="false" passaria despercebido.
+      // A tolerância de 1px cobre o arredondamento do grid em 0fr.
+      await waitFor(() => {
+        const expandidos = Array.from(
+          canvasElement.querySelectorAll<HTMLElement>('[data-slot="accordion-content"]'),
+        ).filter((p) => p.getBoundingClientRect().height > 1);
+        expect(expandidos).toHaveLength(0);
+      });
     });
   },
 };
@@ -159,7 +223,6 @@ export const Controlled: Story = {
         </p>
         <Accordion
           type="single"
-          :collapsible="true"
           :model-value="value"
           @update:model-value="value = $event"
           class="nds-w-full"
@@ -203,7 +266,7 @@ export const DefaultOpen: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="single" :collapsible="true" default-value="item-1" class="nds-max-w-lg">
+      <Accordion type="single" default-value="item-1" class="nds-max-w-lg">
         <AccordionItem value="item-1">
           <AccordionTrigger>Item aberto por padrão</AccordionTrigger>
           <AccordionContent>

@@ -97,21 +97,19 @@ export function AccordionDocs() {
 
   // Override stack-específico: @base-ui usa `multiple` (boolean), não `type` ("single"|"multiple").
   const rootItemsOverride = useMemo(() => {
-    const desc = {
-      "pt-BR": "Permite múltiplos itens abertos simultaneamente.",
-      en: "Allows multiple items to be open simultaneously.",
-      es: "Permite múltiples ítems abiertos simultáneamente.",
-    } as const;
     const requiredLabel = locale === "pt-BR" ? "Não" : "No";
     const original = (accordionTranslations as unknown as Record<string, Record<string, Record<string, Record<string, Record<string, Record<string, string>>>>>>)[locale]?.props?.accordion?.items ?? {};
     return Object.entries(original).map(([key, v]) => {
       if (key === "type") {
+        // Só nome, tipo e default são de stack; a descrição vem do conteúdo
+        // compartilhado, como no Angular — ela fala do modo de expansão, que é
+        // o mesmo conceito com outro nome de prop.
         return {
           name: "multiple",
           type: "boolean",
           defaultValue: "false",
           required: requiredLabel,
-          description: desc[locale as keyof typeof desc] ?? desc["pt-BR"],
+          description: stripHtml(v.description),
         };
       }
       return {
@@ -121,7 +119,7 @@ export function AccordionDocs() {
         required: v.required,
         description: stripHtml(v.description),
       };
-    }).filter((row) => row.name !== "collapsible");
+    });
   }, [locale]);
 
   // Override stack-específico: o @base-ui não tem `asChild` (composição vai
@@ -512,7 +510,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 name: tContent("variants.compositions.iconTrigger.name"),
                 description: tContent("variants.compositions.iconTrigger.description"),
                 useWhen: tContent("variants.compositions.iconTrigger.use"),
-                code: `<Accordion type="single" collapsible className="nds-max-w-lg">
+                code: `<Accordion className="nds-max-w-lg">
   <AccordionItem value="info">
     <AccordionTrigger>
       <span className="nds-cluster" data-spacing="xs">
@@ -577,7 +575,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 name: tContent("variants.compositions.badgeTrigger.name"),
                 description: tContent("variants.compositions.badgeTrigger.description"),
                 useWhen: tContent("variants.compositions.badgeTrigger.use"),
-                code: `<Accordion type="single" collapsible className="nds-max-w-lg">
+                code: `<Accordion className="nds-max-w-lg">
   <AccordionItem value="novo">
     <AccordionTrigger>
       <span className="nds-cluster" data-spacing="xs">
@@ -694,7 +692,7 @@ interface AccordionItemProps extends React.HTMLAttributes<HTMLDivElement> {
                 description: tContent("variants.compositions.faq.description"),
                 useWhen: tContent("variants.compositions.faq.use"),
                 code: `<h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
-<Accordion type="single" collapsible className="nds-max-w-lg">
+<Accordion className="nds-max-w-lg">
   <AccordionItem value="senha">
     <AccordionTrigger>Como redefinir minha senha?</AccordionTrigger>
     <AccordionContent>Acesse a tela de login e clique em "Esqueci minha senha".</AccordionContent>

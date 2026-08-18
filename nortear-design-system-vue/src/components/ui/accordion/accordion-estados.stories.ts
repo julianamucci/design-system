@@ -25,7 +25,7 @@ export const Closed: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="single" :collapsible="true" class="nds-max-w-lg">
+      <Accordion type="single" class="nds-max-w-lg">
         <AccordionItem value="item-1">
           <AccordionTrigger>Item fechado (estado padrão)</AccordionTrigger>
           <AccordionContent>Conteúdo oculto.</AccordionContent>
@@ -80,7 +80,7 @@ export const Open: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="single" :collapsible="true" default-value="item-1" class="nds-max-w-lg">
+      <Accordion type="single" default-value="item-1" class="nds-max-w-lg">
         <AccordionItem value="item-1">
           <AccordionTrigger>Item aberto</AccordionTrigger>
           <AccordionContent>
@@ -129,7 +129,7 @@ export const Disabled: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="single" :collapsible="true" class="nds-max-w-lg">
+      <Accordion type="single" class="nds-max-w-lg">
         <AccordionItem value="item-1">
           <AccordionTrigger>Item habilitado</AccordionTrigger>
           <AccordionContent>Este item funciona normalmente.</AccordionContent>
@@ -168,7 +168,7 @@ export const FocusVisible: Story = {
   render: () => ({
     components: { Accordion, AccordionItem, AccordionTrigger, AccordionContent },
     template: `
-      <Accordion type="single" :collapsible="true" default-value="item-1" class="nds-max-w-lg">
+      <Accordion type="single" default-value="item-1" class="nds-max-w-lg">
         <AccordionItem value="item-1">
           <AccordionTrigger>Navegar com Tab para ver focus ring</AccordionTrigger>
           <AccordionContent>Focus ring visível ao navegar por teclado.</AccordionContent>

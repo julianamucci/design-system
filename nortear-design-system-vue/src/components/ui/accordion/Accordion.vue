@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { AccordionRootEmits, AccordionRootProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { computed } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import {
   AccordionRoot,
@@ -9,14 +8,18 @@ import {
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<AccordionRootProps & { class?: HTMLAttributes['class'] }>()
+// `collapsible` fica FORA da API pública, de propósito.
+//
+// A decisão do design system é comportamental: no modo único, clicar de novo
+// no item aberto sempre o fecha. Três das cinco stacks rodam libs headless
+// (base-ui, bits-ui, radix-ng) cuja máquina de estado do modo único não tem
+// esse ramo — fechar é incondicional e não há prop para desligar. O reka é a
+// única que tem a chave, e com `false` por padrão: deixá-la exposta faria esta
+// stack ser a única capaz de entregar um estado que as outras quatro não
+// alcançam, e ainda por omissão. Por isso o `Omit` no tipo (passar a prop vira
+// erro de compilação) e o valor fixo no template.
+const props = defineProps<Omit<AccordionRootProps, 'collapsible'> & { class?: HTMLAttributes['class'] }>()
 const emits = defineEmits<AccordionRootEmits>()
-
-// O fallback existe porque `collapsible` é opcional no reka: sem ele o
-// atributo sairia "undefined" no DOM e o seletor de CSS/teste erraria. Toda
-// story passa a prop, então o lado falso não tem como ser exercitado.
-/* v8 ignore next */
-const collapsivelAttr = computed(() => String(props.collapsible ?? false))
 
 const delegatedProps = reactiveOmit(props, 'class')
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
@@ -29,14 +32,18 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     deixa o Ctrl+F do navegador achar a resposta dentro do item fechado e
     abri-lo (`beforematch`). Passar `true` desliga a busca — em silêncio.
     Fica antes do v-bind para o consumidor ainda poder sobrescrever.
+
+    `collapsible` fica DEPOIS do v-bind, pelo motivo oposto: não é um default
+    negociável, é o comportamento do design system (ver o bloco no script), e o
+    reka o desligaria por omissão.
   -->
   <AccordionRoot
     v-slot="slotProps"
     data-slot="accordion"
     :data-type="props.type"
-    :data-collapsible="collapsivelAttr"
     :unmount-on-hide="false"
     v-bind="forwarded"
+    :collapsible="true"
     :class="cn('nds-accordion', props.class)"
   >
     <slot v-bind="slotProps" />

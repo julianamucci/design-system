@@ -29,11 +29,6 @@ const meta = {
       description: 'Define se um ou múltiplos itens podem estar abertos.',
       table: { type: { summary: "'single' | 'multiple'" }, defaultValue: { summary: '—' } },
     },
-    collapsible: {
-      control: 'boolean',
-      description: 'Permite fechar o item ativo (apenas com modo único).',
-      table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
-    },
     disabled: {
       control: 'boolean',
       description: 'Desabilita todos os itens de uma vez.',
@@ -74,7 +69,6 @@ const meta = {
   },
   args: {
     type: 'single',
-    collapsible: true,
     disabled: false,
     orientation: 'vertical',
     unmountOnHide: false,
@@ -198,7 +192,7 @@ export const Playground: Story = {
       await waitFor(() => expect(triggers[2]).toHaveAttribute('aria-expanded', 'true'));
     });
 
-    await step('Space colapsa item aberto (collapsible=true)', async () => {
+    await step('Space colapsa item aberto', async () => {
       const triggers = canvas.getAllByRole('button');
       await abrir(triggers[2]);
       triggers[2].focus();

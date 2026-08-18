@@ -132,9 +132,9 @@ const ANATOMY_CODE = `<div ndsAccordion defaultValue="item-1">
   <!-- … -->
 </div>`;
 
-const INTERFACE_CODE = `// A raiz compõe o primitivo headless; o modo é um booleano,
-// como no Base UI — no modo único o item ativo sempre fecha ao
-// ser clicado de novo, então não existe um \`collapsible\` à parte.
+const INTERFACE_CODE = `// A raiz compõe o primitivo headless; o modo é um booleano.
+// No modo único o item aberto sempre fecha ao ser clicado de
+// novo, e não há entrada para desligar isso.
 @Component({
   selector: 'div[ndsAccordion]',
   hostDirectives: [
@@ -936,8 +936,8 @@ export class NdsAccordionDocs implements AfterViewInit, OnDestroy {
         cols,
         items: [
           // `type` do conteúdo compartilhado vira `multiple`: é o nome do
-          // primitivo e o mesmo da stack React. E `collapsible` não existe —
-          // no modo único o item ativo sempre fecha ao ser clicado de novo.
+          // primitivo. A descrição continua vindo do conteúdo compartilhado —
+          // o conceito é o mesmo, só o nome da entrada muda.
           {
             name: 'multiple',
             type: 'boolean',

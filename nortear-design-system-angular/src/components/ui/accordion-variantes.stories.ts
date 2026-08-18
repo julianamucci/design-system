@@ -97,6 +97,68 @@ export const Single: Story = {
   },
 };
 
+/**
+ * O fechar-ao-clicar-de-novo, medido sem nenhuma configuração.
+ *
+ * A raiz é montada com o modo único PADRÃO — nada é passado além dos itens. É
+ * esse recorte que prova o contrato: o comportamento não depende de uma entrada
+ * que quem consome precise lembrar de ligar. Enquanto existia um `collapsible`
+ * na tabela compartilhada, esta story ficava vermelha na stack cuja lib o trazia
+ * desligado por omissão — foi assim que a divergência foi medida.
+ *
+ * Sobrevive ao REPLAY: cada passo estabelece a própria precondição, e o par
+ * `abrir`/`fechar` garante um clique real nesta rodada partindo de um estado
+ * conhecido, em vez de alternar a partir do que a rodada anterior deixou.
+ */
+export const CloseOnSecondClick: Story = {
+  parameters: {
+    covers: ['functional.item2'],
+    docs: {
+      description: {
+        story:
+          'Modo único sem nenhuma configuração extra: clicar de novo no item aberto o fecha.',
+      },
+    },
+  },
+  render: () => ({
+    template: `
+      <div ndsAccordion class="nds-max-w-lg">
+        <div ndsAccordionItem value="item-1">
+          <button ndsAccordionTrigger>Como faço para redefinir minha senha?</button>
+          <div ndsAccordionContent>
+            Acesse a tela de login e clique em "Esqueci minha senha".
+          </div>
+        </div>
+        <div ndsAccordionItem value="item-2">
+          <button ndsAccordionTrigger>Quais formas de pagamento são aceitas?</button>
+          <div ndsAccordionContent>Aceitamos cartão de crédito, Pix e boleto bancário.</div>
+        </div>
+      </div>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+
+    await step('Clicar de novo no item aberto o fecha', async () => {
+      const gatilhos = canvas.getAllByRole('button');
+      await abrir(gatilhos[0]);  // precondição própria: garantidamente aberto
+      await fechar(gatilhos[0]); // clique real nesta rodada + asserção de estado
+    });
+
+    await step('O painel recolhe de fato, não só o atributo', async () => {
+      // Atributo é promessa, altura é entrega. Sem esta asserção, um painel que
+      // continuasse expandido com aria-expanded="false" passaria despercebido.
+      // A tolerância de 1px cobre o arredondamento do grid em 0fr.
+      await waitFor(() => {
+        const expandidos = Array.from(
+          canvasElement.querySelectorAll<HTMLElement>('[data-slot="accordion-content"]'),
+        ).filter((p) => p.getBoundingClientRect().height > 1);
+        expect(expandidos).toHaveLength(0);
+      });
+    });
+  },
+};
+
 export const Multiple: Story = {
   parameters: {
     covers: ['functional.item4'],

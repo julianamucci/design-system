@@ -31,15 +31,15 @@
       "item4": "<strong>AccordionContent</strong> — área de conteúdo com animação de abertura/fechamento via CSS. Respeita <code>prefers-reduced-motion</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>",
-        "angular": "<nds-accordion type=\"single\" collapsible>\n  <nds-accordion-item value=\"item-1\">\n    <button ndsAccordionTrigger>Título</button>\n    <div ndsAccordionPanel>Conteúdo</div>\n  </nds-accordion-item>\n</nds-accordion>"
+        "react": "<Accordion type=\"single\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>",
+        "angular": "<div ndsAccordion defaultValue=\"item-1\">\n  <div ndsAccordionItem value=\"item-1\">\n    <button ndsAccordionTrigger>Título</button>\n    <div ndsAccordionContent>Conteúdo</div>\n  </div>\n</div>"
       }
     },
     "usage": {
       "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
-        "item1": "Use o modo único para FAQ — apenas um item aberto por vez e permite fechar o item ativo clicando nele novamente.",
+        "item1": "Use o modo único para FAQ — apenas um item aberto por vez, e clicar de novo no item aberto o fecha.",
         "item2": "Use o modo múltiplo para especificações ou configurações onde o usuário compara seções simultâneas.",
         "item3": "Cada <code>AccordionItem</code> exige prop <code>value</code> única — é o identificador interno para estado controlado.",
         "item4": "Máximo de 8–10 itens por Accordion. Acima disso, organize por categorias ou adicione busca.",
@@ -153,7 +153,7 @@
       "items": {
         "single": {
           "label": "Single (padrão)",
-          "description": "Apenas um item aberto por vez; permite fechar o item ativo clicando nele. Ideal para FAQ."
+          "description": "Apenas um item aberto por vez; clicar de novo no item aberto o fecha. Ideal para FAQ."
         },
         "multiple": {
           "label": "Multiple",
@@ -173,7 +173,7 @@
       "title": "Estados",
       "closed": {
         "label": "Fechado (padrão)",
-        "trigger": "—",
+        "trigger": "Estado inicial, ou clique no item já aberto",
         "behavior": "Item colapsado. Chevron aponta para baixo."
       },
       "open": {
@@ -212,14 +212,7 @@
             "type": "\"single\" | \"multiple\"",
             "default": "—",
             "required": "Sim",
-            "description": "Define se um ou múltiplos itens podem ser abertos simultaneamente."
-          },
-          "collapsible": {
-            "name": "collapsible",
-            "type": "boolean",
-            "default": "false",
-            "required": "Não",
-            "description": "Permite fechar o item ativo clicando nele novamente."
+            "description": "Define se um ou múltiplos itens podem ser abertos simultaneamente. No modo único, clicar de novo no item aberto sempre o fecha."
           },
           "defaultValue": {
             "name": "defaultValue",
@@ -436,7 +429,7 @@
       "item2": "A abertura e o fechamento animam <code>grid-template-rows</code> junto com a opacidade, via keyframes <code>nds-accordion-expand</code> e <code>nds-accordion-collapse</code> no CSS standalone. A altura vem do próprio conteúdo — não use as custom properties de altura das libs, que não incluem o padding e cortam o texto.",
       "item3": "Para modo controlado, use <code>value</code> + callback de mudança. O formato do valor pode variar conforme o modo (único = string; múltiplo = array) — consulte a tabela de propriedades.",
       "item4": "Não aninhe Accordions sem propósito claro — prefira Sidebar com Accordion para hierarquia de navegação.",
-      "item5": "No modo múltiplo todos os itens são individualmente fecháveis. No modo único, fechar o item ativo depende da configuração do componente — consulte a tabela de propriedades."
+      "item5": "No modo múltiplo todos os itens são individualmente fecháveis. No modo único, clicar de novo no item aberto também o fecha — o comportamento é fixo, e não há configuração que o desligue."
     },
     "analytics": {
       "title": "Analytics",
@@ -471,7 +464,7 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Clicar em AccordionTrigger aberto (modo único permite fechar)",
+          "action": "Clicar de novo em AccordionTrigger já aberto (modo único)",
           "result": "Item colapsa; AccordionContent some da tela",
           "priority": "high"
         },
@@ -614,15 +607,15 @@
       "item4": "<strong>AccordionContent</strong> — content area with open/close animation via CSS. Respects <code>prefers-reduced-motion</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Title</AccordionTrigger>\n    <AccordionContent>Content</AccordionContent>\n  </AccordionItem>\n</Accordion>",
-        "angular": "<nds-accordion type=\"single\" collapsible>\n  <nds-accordion-item value=\"item-1\">\n    <button ndsAccordionTrigger>Título</button>\n    <div ndsAccordionPanel>Conteúdo</div>\n  </nds-accordion-item>\n</nds-accordion>"
+        "react": "<Accordion type=\"single\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Title</AccordionTrigger>\n    <AccordionContent>Content</AccordionContent>\n  </AccordionItem>\n</Accordion>",
+        "angular": "<div ndsAccordion defaultValue=\"item-1\">\n  <div ndsAccordionItem value=\"item-1\">\n    <button ndsAccordionTrigger>Title</button>\n    <div ndsAccordionContent>Content</div>\n  </div>\n</div>"
       }
     },
     "usage": {
       "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
-        "item1": "Use single mode for FAQ — only one item open at a time and allows closing the active item by clicking it again.",
+        "item1": "Use single mode for FAQ — only one item open at a time, and clicking the open item again closes it.",
         "item2": "Use multiple mode for specs or settings where users compare simultaneous sections.",
         "item3": "Each <code>AccordionItem</code> requires a unique <code>value</code> prop — it's the internal identifier for controlled state.",
         "item4": "Maximum 8–10 items per Accordion. Beyond that, organize by category or add search.",
@@ -736,7 +729,7 @@
       "items": {
         "single": {
           "label": "Single (default)",
-          "description": "Only one item open at a time; allows closing the active item by clicking it. Ideal for FAQ."
+          "description": "Only one item open at a time; clicking the open item again closes it. Ideal for FAQ."
         },
         "multiple": {
           "label": "Multiple",
@@ -756,7 +749,7 @@
       "title": "States",
       "closed": {
         "label": "Closed (default)",
-        "trigger": "—",
+        "trigger": "Initial state, or click on the already-open item",
         "behavior": "Collapsed item. Chevron points down."
       },
       "open": {
@@ -795,14 +788,7 @@
             "type": "\"single\" | \"multiple\"",
             "default": "—",
             "required": "Yes",
-            "description": "Defines whether one or multiple items can be open simultaneously."
-          },
-          "collapsible": {
-            "name": "collapsible",
-            "type": "boolean",
-            "default": "false",
-            "required": "No",
-            "description": "Allows closing the active item by clicking it again."
+            "description": "Defines whether one or multiple items can be open simultaneously. In single mode, clicking the open item again always closes it."
           },
           "defaultValue": {
             "name": "defaultValue",
@@ -1019,7 +1005,7 @@
       "item2": "Opening and closing animate <code>grid-template-rows</code> together with opacity, via the <code>nds-accordion-expand</code> and <code>nds-accordion-collapse</code> keyframes in the standalone CSS. Height comes from the content itself — do not use the libraries’ height custom properties, which exclude the padding and clip the text.",
       "item3": "For controlled mode, use <code>value</code> + change callback. The value format may vary with the mode (single = string; multiple = array) — see the properties table.",
       "item4": "Don't nest Accordions without a clear purpose — prefer Sidebar with Accordion for navigation hierarchy.",
-      "item5": "In multiple mode all items are individually closable. In single mode, closing the active item depends on the component configuration — see the properties table."
+      "item5": "In multiple mode every item is individually closable. In single mode, clicking the open item again also closes it — the behaviour is fixed, and there is no setting that turns it off."
     },
     "analytics": {
       "title": "Analytics",
@@ -1054,7 +1040,7 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Click open AccordionTrigger (single mode allows closing)",
+          "action": "Click an already-open AccordionTrigger again (single mode)",
           "result": "Item collapses; AccordionContent hidden",
           "priority": "high"
         },
@@ -1197,15 +1183,15 @@
       "item4": "<strong>AccordionContent</strong> — área de contenido con animación de apertura/cierre via CSS. Respeta <code>prefers-reduced-motion</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Accordion type=\"single\" collapsible>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>",
-        "angular": "<nds-accordion type=\"single\" collapsible>\n  <nds-accordion-item value=\"item-1\">\n    <button ndsAccordionTrigger>Título</button>\n    <div ndsAccordionPanel>Conteúdo</div>\n  </nds-accordion-item>\n</nds-accordion>"
+        "react": "<Accordion type=\"single\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>",
+        "angular": "<div ndsAccordion defaultValue=\"item-1\">\n  <div ndsAccordionItem value=\"item-1\">\n    <button ndsAccordionTrigger>Título</button>\n    <div ndsAccordionContent>Contenido</div>\n  </div>\n</div>"
       }
     },
     "usage": {
       "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guías Obligatorias",
-        "item1": "Usa el modo único para FAQ — solo un ítem abierto a la vez y permite cerrar el ítem activo haciendo clic en él nuevamente.",
+        "item1": "Usa el modo único para FAQ — solo un ítem abierto a la vez, y volver a hacer clic en el ítem abierto lo cierra.",
         "item2": "Usa el modo múltiple para especificaciones o configuraciones donde el usuario compara secciones simultáneas.",
         "item3": "Cada <code>AccordionItem</code> requiere prop <code>value</code> única — es el identificador interno para el estado controlado.",
         "item4": "Máximo 8–10 ítems por Accordion. Más de eso, organiza por categorías o agrega búsqueda.",
@@ -1319,7 +1305,7 @@
       "items": {
         "single": {
           "label": "Single (predeterminado)",
-          "description": "Solo un ítem abierto a la vez; permite cerrar el ítem activo haciendo clic en él. Ideal para FAQ."
+          "description": "Solo un ítem abierto a la vez; volver a hacer clic en el ítem abierto lo cierra. Ideal para FAQ."
         },
         "multiple": {
           "label": "Multiple",
@@ -1339,7 +1325,7 @@
       "title": "Estados",
       "closed": {
         "label": "Cerrado (predeterminado)",
-        "trigger": "—",
+        "trigger": "Estado inicial, o clic en el ítem ya abierto",
         "behavior": "Ítem colapsado. El chevron apunta hacia abajo."
       },
       "open": {
@@ -1378,14 +1364,7 @@
             "type": "\"single\" | \"multiple\"",
             "default": "—",
             "required": "Sí",
-            "description": "Define si uno o múltiples ítems pueden estar abiertos simultáneamente."
-          },
-          "collapsible": {
-            "name": "collapsible",
-            "type": "boolean",
-            "default": "false",
-            "required": "No",
-            "description": "Permite cerrar el ítem activo haciendo clic en él nuevamente."
+            "description": "Define si uno o múltiples ítems pueden estar abiertos simultáneamente. En modo único, volver a hacer clic en el ítem abierto siempre lo cierra."
           },
           "defaultValue": {
             "name": "defaultValue",
@@ -1602,7 +1581,7 @@
       "item2": "La apertura y el cierre animan <code>grid-template-rows</code> junto con la opacidad, vía los keyframes <code>nds-accordion-expand</code> y <code>nds-accordion-collapse</code> en el CSS standalone. La altura viene del propio contenido — no uses las custom properties de altura de las librerías, que no incluyen el padding y cortan el texto.",
       "item3": "Para modo controlado, usa <code>value</code> + callback de cambio. El formato del valor puede variar según el modo (único = string; múltiple = array) — consulta la tabla de propiedades.",
       "item4": "No anides Accordions sin un propósito claro — prefiere Sidebar con Accordion para jerarquía de navegación.",
-      "item5": "En modo múltiple todos los ítems son individualmente cerrables. En modo único, cerrar el ítem activo depende de la configuración del componente — consulta la tabla de propiedades."
+      "item5": "En modo múltiple todos los ítems son individualmente cerrables. En modo único, volver a hacer clic en el ítem abierto también lo cierra — el comportamiento es fijo, y no hay ajuste que lo desactive."
     },
     "analytics": {
       "title": "Analytics",
@@ -1637,7 +1616,7 @@
           "priority": "high"
         },
         "item2": {
-          "action": "Hacer clic en AccordionTrigger abierto (modo único permite cerrar)",
+          "action": "Volver a hacer clic en un AccordionTrigger ya abierto (modo único)",
           "result": "Ítem colapsa; AccordionContent desaparece",
           "priority": "high"
         },

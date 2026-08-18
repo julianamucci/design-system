@@ -49,7 +49,6 @@ function priorityLabel(raw: string): string {
 function buildDemoAccordion(): HTMLElement {
   return createAccordion({
     type: 'single',
-    collapsible: true,
     defaultValue: 'q1',
     class: 'nds-max-w-lg',
     items: [
@@ -279,11 +278,11 @@ export function createAccordionDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createAccordion({
-                type: 'single', collapsible: true, class: 'nds-max-w-xs nds-text-body',
+                type: 'single', class: 'nds-max-w-xs nds-text-body',
                 items: [{ value: 'faq', trigger: 'Como faço para redefinir minha senha?', content: 'Acesse a tela de login e clique em "Esqueci minha senha".' }],
               }),
               dontPreviewFactory: () => createAccordion({
-                type: 'single', collapsible: true, class: 'nds-max-w-xs nds-text-body',
+                type: 'single', class: 'nds-max-w-xs nds-text-body',
                 items: [{ value: 'faq', trigger: 'Senha', content: 'Informações sobre redefinição.' }],
               }),
             },
@@ -300,7 +299,7 @@ export function createAccordionDocs(): HTMLElement {
                 ],
               }),
               dontPreviewFactory: () => createAccordion({
-                type: 'single', collapsible: true, class: 'nds-max-w-xs nds-text-body',
+                type: 'single', class: 'nds-max-w-xs nds-text-body',
                 items: [{ value: 's1', trigger: 'Expandir', content: 'Conteúdo único.' }],
               }),
             },
@@ -315,9 +314,9 @@ export function createAccordionDocs(): HTMLElement {
         });
 
       case 'variantes': {
-        const codeSingle = `createAccordion({\n  type: 'single',\n  collapsible: true,\n  items: [{ value: 'item-1', trigger: 'Pergunta', content: 'Resposta' }],\n});`;
+        const codeSingle = `createAccordion({\n  type: 'single',\n  items: [{ value: 'item-1', trigger: 'Pergunta', content: 'Resposta' }],\n});`;
         const codeMultiple = `createAccordion({\n  type: 'multiple',\n  items: [{ value: 's1', trigger: 'Especificações', content: 'CPU, RAM...' }],\n});`;
-        const codeControlled = `createAccordion({\n  type: 'single',\n  collapsible: true,\n  defaultValue: 'item-1',\n  onValueChange: (val) => console.log(val),\n  items: [...],\n});`;
+        const codeControlled = `createAccordion({\n  type: 'single',\n  defaultValue: 'item-1',\n  onValueChange: (val) => console.log(val),\n  items: [...],\n});`;
 
         return createDocsVariants({
           id: 'variantes',
@@ -328,7 +327,7 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.items.single.description')),
               code: codeSingle,
               previewFactory: () => createAccordion({
-                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
+                type: 'single', defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
                 items: [
                   { value: 'item-1', trigger: 'Pergunta 1', content: 'Resposta objetiva em 1–2 linhas.' },
                   { value: 'item-2', trigger: 'Pergunta 2', content: 'Outro conteúdo aqui.' },
@@ -352,7 +351,7 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.items.controlled.description')),
               code: codeControlled,
               previewFactory: () => createAccordion({
-                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
+                type: 'single', defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
                 items: [
                   { value: 'item-1', trigger: 'Item 1 — controlado', content: 'Estado gerenciado externamente.' },
                   { value: 'item-2', trigger: 'Item 2 — controlado', content: 'Útil para sincronizar com URL.' },
@@ -364,7 +363,7 @@ export function createAccordionDocs(): HTMLElement {
               description: stripHtml(t('variants.items.defaultOpen.description')),
               code: codeSingle,
               previewFactory: () => createAccordion({
-                type: 'single', collapsible: true, defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
+                type: 'single', defaultValue: 'item-1', class: 'nds-max-w-sm nds-text-body',
                 items: [
                   { value: 'item-1', trigger: 'Item aberto por padrão', content: 'Este item inicia expandido via defaultValue.' },
                   { value: 'item-2', trigger: 'Item fechado por padrão', content: 'Este item inicia colapsado.' },
@@ -432,7 +431,7 @@ export function createAccordionDocs(): HTMLElement {
           `  { value: 'success', label: 'Confirmação', nodes: CheckCircle2 },\n` +
           `];\n` +
           `const accordion = createAccordion({\n` +
-          `  type: 'single', collapsible: true,\n` +
+          `  type: 'single',\n` +
           `  items: items.map(({ value, label }) => ({ value, trigger: label, content: '...' })),\n` +
           `});\n` +
           `items.forEach(({ value, nodes, label }) => {\n` +
@@ -446,7 +445,7 @@ export function createAccordionDocs(): HTMLElement {
           `  { value: 'beta', label: 'Funcionalidades em beta',   badge: 'Beta', variant: 'secondary' },\n` +
           `];\n` +
           `const accordion = createAccordion({\n` +
-          `  type: 'single', collapsible: true,\n` +
+          `  type: 'single',\n` +
           `  items: items.map(({ value, label }) => ({ value, trigger: label, content: '...' })),\n` +
           `});\n` +
           `items.forEach(({ value, label, badge, variant }) => {\n` +
@@ -475,7 +474,7 @@ export function createAccordionDocs(): HTMLElement {
           `const heading = document.createElement('h2');\n` +
           `heading.textContent = 'Perguntas frequentes';\n` +
           `wrapper.append(heading, createAccordion({\n` +
-          `  type: 'single', collapsible: true,\n` +
+          `  type: 'single',\n` +
           `  items: [\n` +
           `    { value: 'senha',        trigger: 'Como faço para redefinir minha senha?', content: '...' },\n` +
           `    { value: 'pagamento',    trigger: 'Quais formas de pagamento são aceitas?', content: '...' },\n` +
@@ -503,8 +502,7 @@ export function createAccordionDocs(): HTMLElement {
                   { value: 'success', nodes: SUCCESS_ICON, label: 'Confirmação', content: 'Use ícones consistentes entre itens do mesmo accordion para criar padrão visual.' },
                 ];
                 const accordion = createAccordion({
-                  type: 'single', collapsible: true,
-                  items: iconItems.map(({ value, label, content }) => ({ value, trigger: label, content })),
+                  type: 'single', items: iconItems.map(({ value, label, content }) => ({ value, trigger: label, content })),
                 });
                 iconItems.forEach(({ value, nodes, label }) => {
                   const trigger = accordion.querySelector<HTMLButtonElement>(`[data-value="${value}"]`);
@@ -528,8 +526,7 @@ export function createAccordionDocs(): HTMLElement {
                   { value: 'beta', label: 'Funcionalidades em beta', badge: 'Beta', variant: 'secondary' as const, content: 'Funcionalidades beta podem mudar. Feedback é bem-vindo.' },
                 ];
                 const accordion = createAccordion({
-                  type: 'single', collapsible: true,
-                  items: badgeItems.map(({ value, label, content }) => ({ value, trigger: label, content })),
+                  type: 'single', items: badgeItems.map(({ value, label, content }) => ({ value, trigger: label, content })),
                 });
                 badgeItems.forEach(({ value, label, badge, variant }) => {
                   const trigger = accordion.querySelector<HTMLButtonElement>(`[data-value="${value}"]`);
@@ -600,8 +597,7 @@ export function createAccordionDocs(): HTMLElement {
                 heading.className = 'nds-text-base nds-font-semibold';
                 heading.textContent = 'Perguntas frequentes';
                 wrapper.append(heading, createAccordion({
-                  type: 'single', collapsible: true,
-                  items: [
+                  type: 'single', items: [
                     { value: 'senha',        trigger: 'Como faço para redefinir minha senha?', content: 'Acesse a tela de login e clique em "Esqueci minha senha". Você receberá um link de redefinição no email cadastrado, válido por 24 horas.' },
                     { value: 'pagamento',    trigger: 'Quais formas de pagamento são aceitas?', content: 'Aceitamos cartão de crédito, Pix e boleto bancário. Parcelamento disponível em até 12 vezes sem juros no cartão.' },
                     { value: 'cancelamento', trigger: 'Como cancelo minha assinatura?',         content: 'Você pode cancelar a qualquer momento em Configurações → Assinatura. O acesso permanece ativo até o fim do período já pago.' },
@@ -634,7 +630,6 @@ export function createAccordionDocs(): HTMLElement {
       case 'propriedades': {
         const interfaceCode = `export type AccordionOptions = {
   type?: 'single' | 'multiple';
-  collapsible?: boolean;
   defaultValue?: string | string[];
   items: Array<{ value: string; trigger: string; content: string; disabled?: boolean }>;
   class?: string;

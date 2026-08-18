@@ -2,7 +2,7 @@
 //
 // Visual: classes .nds-accordion-* (standalone .nds-*).
 // Comportamentos preservados:
-//   - type="single" | "multiple" + collapsible
+//   - type="single" | "multiple"
 //   - defaultValue (string | string[])
 //   - data-state="open|closed" no trigger e content (chevron gira via CSS)
 //   - keyboard: ArrowUp/Down, Home, End
@@ -16,7 +16,6 @@ const CHEVRON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="
 
 export type AccordionOptions = {
   type?: 'single' | 'multiple';
-  collapsible?: boolean;
   defaultValue?: string | string[];
   items: Array<{
     value: string;
@@ -47,7 +46,7 @@ const CLOSE_HIDE_DELAY = 360;
 let accordionInstanceCount = 0;
 
 export function createAccordion(options: AccordionOptions): HTMLElement {
-  const { type = 'single', collapsible = true, defaultValue, items, onValueChange } = options;
+  const { type = 'single', defaultValue, items, onValueChange } = options;
 
   /** Timers de reesconder pendentes, por elemento de conteúdo. */
   const closeTimers = new Map<HTMLElement, number>();
@@ -65,7 +64,6 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
   // distingue um accordion single de um multiple depois de montado: CSS, teste,
   // devtools e o gerador de snippet do Storybook viam exatamente o mesmo HTML.
   root.dataset.type = type;
-  root.dataset.collapsible = String(collapsible);
   root.className = cn('nds-accordion', options.class);
 
   function isOpen(value: string): boolean {
@@ -76,12 +74,14 @@ export function createAccordion(options: AccordionOptions): HTMLElement {
     const currentlyOpen = isOpen(value);
 
     if (type === 'single') {
+      // Clicar de novo no item aberto SEMPRE o fecha. Não há chave que desligue
+      // isso: das cinco stacks, três rodam libs headless (base-ui, bits-ui,
+      // radix-ng) cuja máquina de estado do modo único não tem esse ramo, e uma
+      // quarta (reka) só o tinha por configuração. Manter um `collapsible`
+      // aqui seria prometer, na referência cross-stack, um estado que quatro
+      // stacks não alcançam. Coberto pela story CloseOnSecondClick.
       if (currentlyOpen) {
-        /* v8 ignore next 2 -- o caminho collapsible: false não tem story: o
-           React (base-ui) não expõe a prop, e criar a story só nas outras três
-           quebraria a paridade. Registrado no FIXES-NEEDED. */
-        if (collapsible) openValues.delete(value);
-        else return;
+        openValues.delete(value);
       } else {
         openValues.clear();
         openValues.add(value);

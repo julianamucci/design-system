@@ -77,7 +77,6 @@ export const WithIconInTrigger: Story = {
 
     const accordion = createAccordion({
       type: 'single',
-      collapsible: true,
       items: iconItems.map(({ value, label, content }) => ({ value, trigger: label, content })),
     });
 
@@ -134,7 +133,6 @@ export const WithBadgeInTrigger: Story = {
 
     const accordion = createAccordion({
       type: 'single',
-      collapsible: true,
       items: badgeItems.map(({ value, label, content }) => ({ value, trigger: label, content })),
     });
 
@@ -266,7 +264,7 @@ export const FAQ: Story = {
     heading.className = 'nds-text-base nds-font-semibold';
     heading.textContent = 'Perguntas frequentes';
 
-    wrapper.append(heading, createAccordion({ type: 'single', collapsible: true, items: FAQ_ITEMS }));
+    wrapper.append(heading, createAccordion({ type: 'single', items: FAQ_ITEMS }));
     return wrapper;
   },
   parameters: {
