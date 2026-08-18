@@ -182,20 +182,19 @@ export const Playground: Story = {
       await expect(legenda()).toBe(inicial);
     });
 
-    // A data de cada célula: o <td> carrega o ISO, que é comparável; o
-    // data-day do <button> é a data formatada no locale e não serve para
-    // aritmética.
-    const isoDoFoco = () =>
-      (canvasElement.ownerDocument.activeElement as HTMLElement | null)
-        ?.closest("[role=gridcell]")
-        ?.getAttribute("data-day") ?? null;
+    // O ISO do dia focado vem do colhedor compartilhado. Havia aqui uma cópia
+    // local que lia só o <td>, porque o data-day do <button> é formatado no
+    // locale e não serve para aritmética — o colhedor já resolve isso: valida o
+    // formato antes de aceitar o atributo do botão e cai para a célula quando
+    // ele não bate. A cópia sombreava o import e quebrava o typecheck.
+    const doc = canvasElement.ownerDocument;
 
     await step("DayButton entra na ordem de tabulação", async () => {
       // Tab, não .focus(): o critério é o dia entrar na navegação por teclado.
       // Forçar o foco passaria mesmo com o grid inteiro fora da ordem.
       (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
-      for (let i = 0; i < 20 && !isoDoFoco(); i += 1) await userEvent.tab();
-      await expect(isoDoFoco()).not.toBeNull();
+      for (let i = 0; i < 20 && !isoDoFoco(doc); i += 1) await userEvent.tab();
+      await expect(isoDoFoco(doc)).not.toBeNull();
     });
 
     await step("Seta move o foco para o dia seguinte", async () => {
@@ -203,10 +202,10 @@ export const Playground: Story = {
       // passava mesmo quando a lib não movia foco nenhum. O que o item promete
       // é percorrer o grid: então o teste compara a data de origem com a de
       // destino, e só passa se ela andou exatamente um dia.
-      const origem = isoDoFoco();
+      const origem = isoDoFoco(doc);
       await expect(origem).not.toBeNull();
       await userEvent.keyboard("{ArrowRight}");
-      const destino = isoDoFoco();
+      const destino = isoDoFoco(doc);
       await expect(destino).not.toBe(origem);
       const umDia = 24 * 60 * 60 * 1000;
       await expect(
