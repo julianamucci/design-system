@@ -12,6 +12,7 @@ import {
   NdsTableWrapper,
 } from './table';
 import { NdsSkeleton } from './skeleton';
+import { animacaoAtiva, distincaoDoFundo } from '@shared/testing/skeleton-probe';
 import { FATURAS } from './table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -257,6 +258,8 @@ export const Loading: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Uma célula de esqueleto por coluna, em cada linha', async () => {
+      // visual.item6 — o esqueleto mede a caixa que o dado vai ocupar; a grade
+      // não pode encolher enquanto carrega, senão a tabela salta ao chegar.
       const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
       await expect(linhas.length).toBe(LINHAS_ESQUELETO.length);
       for (const linha of linhas) {
@@ -264,6 +267,7 @@ export const Loading: Story = {
           COLUNAS.length,
         );
       }
+      await expect(canvasElement.querySelectorAll('thead th').length).toBe(COLUNAS.length);
     });
 
     await step('O esqueleto some da árvore de acessibilidade; a região anuncia', async () => {
@@ -277,6 +281,19 @@ export const Loading: Story = {
         await expect(sk).toHaveAttribute('aria-hidden', 'true');
         await expect(sk.getBoundingClientRect().height).toBeGreaterThan(0);
       }
+    });
+
+    await step('O esqueleto pinta de verdade dentro da célula', async () => {
+      // Ocupar espaço não é aparecer. Um esqueleto que recebe só as classes de
+      // MEDIDA desenha um retângulo invisível, e o markup não denuncia — foi o
+      // defeito da rodada do sidebar. Quem responde é o computado: fundo
+      // distinguível do container e pulso rodando de fato.
+      //
+      // Mesmo piso e mesmo colhedor do skeleton-estados: dois números para a
+      // mesma pergunta divergem na primeira correção.
+      const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
+      await expect(distincaoDoFundo(sk).razao).toBeGreaterThan(1.05);
+      await expect(animacaoAtiva(sk)).toBe(true);
     });
   },
 };

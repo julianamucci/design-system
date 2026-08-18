@@ -40,7 +40,6 @@ import { NdsButton, NdsButtonIcon } from '@/components/ui/button';
 import { NdsCheckbox } from '@/components/ui/checkbox';
 import { NdsInput } from '@/components/ui/input';
 import { NdsLabel } from '@/components/ui/label';
-import { NdsSkeleton } from '@/components/ui/skeleton';
 import uiTranslations from '@/i18n/ui.json';
 import tableTranslations from '@shared/content/table/translations.json';
 
@@ -353,7 +352,6 @@ const LINHAS_DEMO: {
     NdsTableWrapper, NdsTable, NdsTableCaption, NdsTableHeader, NdsTableBody,
     NdsTableFooter, NdsTableRow, NdsTableHead, NdsTableCell,
     NdsBadge, NdsButton, NdsButtonIcon, NdsCheckbox, NdsInput, NdsLabel,
-    NdsSkeleton,
     NdsDocsPageLayout, NdsDocsHeader, NdsDocsDemonstration, NdsDocsAnatomy,
     NdsDocsWhenToUse, NdsDocsDoDont, NdsDocsImport, NdsDocsVariants,
     NdsDocsStates, NdsDocsProps, NdsDocsTokens, NdsDocsAccessibility,
