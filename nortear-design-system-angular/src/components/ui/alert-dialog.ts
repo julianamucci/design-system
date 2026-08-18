@@ -7,7 +7,6 @@ import {
   computed,
   contentChild,
   inject,
-  input,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -178,11 +177,16 @@ export class NdsAlertDialogMedia {}
 export class NdsAlertDialogTitle {}
 
 /**
- * Descrição — obrigatória aqui, ao contrário do Dialog.
+ * Descrição — opcional, e fortemente recomendada.
  *
  * `role="alertdialog"` faz o leitor de tela ler a descrição junto do título na
  * abertura: é ela que diz o que a confirmação custa. Sem ela, a pessoa ouve
- * "Excluir conta" e dois botões, sem saber o que se perde.
+ * "Excluir conta" e dois botões, sem saber o que se perde — por isso omiti-la
+ * só se justifica quando o próprio título já diz.
+ *
+ * Omitir é seguro: o primitivo só emite `aria-describedby` quando esta diretiva
+ * registra um id, então o painel fica sem o atributo em vez de apontar para um
+ * alvo inexistente. É o mesmo comportamento das outras quatro stacks.
  */
 @Directive({
   selector: 'p[ndsAlertDialogDescription]',

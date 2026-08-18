@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { AlertDialogContentEmits, AlertDialogContentProps } from 'reka-ui'
 import type { HTMLAttributes } from 'vue'
-import { computed, useAttrs } from 'vue'
+import { computed, onScopeDispose, provide, ref, useAttrs } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
 import {
   AlertDialogContent,
@@ -10,6 +10,7 @@ import {
   useForwardPropsEmits,
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
+import { ALERT_DIALOG_DESCRICAO } from './alert-dialog.context'
 
 defineOptions({
   inheritAttrs: false,
@@ -31,6 +32,25 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
 const attrs = useAttrs()
 /* v8 ignore next */
 const fallbackLabel = computed(() => (attrs['aria-labelledby'] ? undefined : 'AlertDialog'))
+
+// A descrição é opcional. O primitivo desta stack, porém, gera o id da descrição
+// sempre e liga `aria-describedby` a ele mesmo quando ninguém a renderiza — o
+// painel apontaria para um id ausente, que o axe reprova em
+// `aria-valid-attr-value`. Ver `alert-dialog.context.ts`.
+//
+// `$attrs` vence a ligação interna no `mergeProps` do primitivo, então declarar o
+// atributo como indefinido aqui é o que o apaga. Com descrição registrada a chave
+// nem entra no objeto, e a ligação da lib segue valendo.
+const descricoes = ref(0)
+provide(ALERT_DIALOG_DESCRICAO, {
+  registrar() {
+    descricoes.value += 1
+    onScopeDispose(() => { descricoes.value -= 1 })
+  },
+})
+const semDescricao = computed(() =>
+  descricoes.value === 0 ? { 'aria-describedby': undefined } : {},
+)
 </script>
 
 <template>
@@ -48,7 +68,7 @@ const fallbackLabel = computed(() => (attrs['aria-labelledby'] ? undefined : 'Al
     />
     <AlertDialogContent
       data-slot="alert-dialog-content"
-      v-bind="{ 'aria-modal': 'true', 'aria-label': fallbackLabel, ...$attrs, ...forwarded }"
+      v-bind="{ 'aria-modal': 'true', 'aria-label': fallbackLabel, ...semDescricao, ...$attrs, ...forwarded }"
       :class="cn( 'nds-alert-dialog-content', props.class, )"
     >
       <slot />

@@ -21,6 +21,15 @@
     triggerLabel?: string;
     triggerVariant?: 'default' | 'destructive' | 'outline' | 'ghost' | 'secondary' | 'link';
     title?: string;
+    /**
+     * Descrição do diálogo. A descrição é opcional no design system, mas este
+     * wrapper sempre a renderiza **de propósito**: o primitivo desta stack grava
+     * o id da descrição no estado da raiz e NÃO o apaga ao destruí-la (conferido
+     * em `bits-ui/dist/bits/dialog/dialog.svelte.js`), então remover o parágrafo
+     * em tempo de execução deixaria o painel apontando para um id ausente. Quem
+     * exercita o caminho sem descrição é `AlertDialogSemDescricaoStory.svelte`,
+     * que nasce sem ela.
+     */
     description?: string;
     /** Bloco de ícone no topo do header. É o control showMedia do Playground. */
     showMedia?: boolean;

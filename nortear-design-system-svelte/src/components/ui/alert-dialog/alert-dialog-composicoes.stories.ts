@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
+import AlertDialogSemDescricaoStory from './AlertDialogSemDescricaoStory.svelte';
 
 const meta: Meta = {
   title: 'UI/AlertDialog/Compositions',
@@ -191,6 +192,53 @@ export const LongDescription: Story = {
       const lineHeight = parseFloat(getComputedStyle(description).lineHeight);
       await expect(description.getBoundingClientRect().height).toBeGreaterThan(lineHeight * 1.5);
       await expect(description.scrollWidth).toBeLessThanOrEqual(dialog.clientWidth);
+    });
+  },
+};
+
+// testes.accessibility.item8 — a descrição é opcional (anatomy.item6), e o
+// caminho sem ela precisa de uma story: enquanto nenhuma omitia, a única prova
+// de que o componente aguenta era a assinatura. O que se mede aqui não é a
+// ausência do parágrafo — é que o painel deixa de declarar `aria-describedby`
+// em vez de apontar para um id que não existe, o que o axe reprova em
+// `aria-valid-attr-value` e o leitor de tela anuncia como nada.
+export const WithoutDescription: Story = {
+  parameters: {
+    covers: ['accessibility.item8'],
+    docs: {
+      description: {
+        story:
+          'Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.',
+      },
+    },
+  },
+  // Wrapper próprio: a composição precisa nascer sem o subcomponente de
+  // descrição, não perdê-lo depois. Ver o comentário em
+  // AlertDialogSemDescricaoStory.svelte.
+  render: () => ({ Component: AlertDialogSemDescricaoStory, props: { open: true } }),
+  play: async ({ step }) => {
+    const body = within(document.body);
+
+    await step('O painel abre sem descrição e mantém o nome acessível', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await waitFor(() => expect(dialog).toBeVisible());
+      await expect(
+        dialog.querySelector('[data-slot="alert-dialog-description"]'),
+      ).toBeNull();
+      await expect(dialog).toHaveAccessibleName(/Descartar rascunho/i);
+    });
+
+    await step('Nenhum aria-describedby pendurado', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await expect(dialog).not.toHaveAttribute('aria-describedby');
+      await expect(dialog).toHaveAccessibleDescription('');
+    });
+
+    await step('As duas saídas continuam presentes e alcançáveis', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const scope = within(dialog);
+      await expect(scope.getByRole('button', { name: /^Cancelar$/i })).toBeInTheDocument();
+      await expect(scope.getByRole('button', { name: /^Descartar$/i })).toBeInTheDocument();
     });
   },
 };

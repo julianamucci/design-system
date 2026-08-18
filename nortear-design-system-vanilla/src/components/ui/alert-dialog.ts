@@ -118,9 +118,10 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     panelEl.setAttribute('role', 'alertdialog');
     panelEl.setAttribute('aria-modal', 'true');
     panelEl.setAttribute('aria-labelledby', titleId);
-    /* v8 ignore next -- diálogo sem descrição: a anatomia documenta a
-       descrição como obrigatória e nenhuma story a omite. A opção continua
-       opcional na assinatura — contradição registrada no FIXES-NEEDED. */
+    // A descrição é opcional, e o atributo acompanha: sem ela, `aria-describedby`
+    // simplesmente não é declarado. Declarar apontando para um id que não existe
+    // seria pior que a ausência — o leitor de tela não anuncia nada e o axe
+    // reprova em `aria-valid-attr-value`. Exercitado pela story WithoutDescription.
     if (description) panelEl.setAttribute('aria-describedby', descId);
     panelEl.dataset.slot = 'alert-dialog-content';
 
@@ -140,7 +141,8 @@ export function createAlertDialog(options: AlertDialogOptions): DestroyableEleme
     titleEl.textContent = title;
     headerEl.appendChild(titleEl);
 
-    /* v8 ignore next -- mesmo caso do aria-describedby acima. */
+    // Mesmo caminho opcional do aria-describedby acima: sem descrição, o header
+    // fica só com o título (e a mídia, quando existe).
     if (description) {
       const descEl = document.createElement('p');
       descEl.id = descId;

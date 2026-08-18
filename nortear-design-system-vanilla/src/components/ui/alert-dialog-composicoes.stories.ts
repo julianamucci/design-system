@@ -231,6 +231,53 @@ export const LongDescription: Story = {
   },
 };
 
+// testes.accessibility.item8 — a descrição é opcional (`description?: string` na
+// assinatura da factory, anatomy.item6 no conteúdo), e o caminho sem ela precisa
+// de uma story: enquanto nenhuma omitia, os dois ramos viviam sob `v8 ignore`.
+// O que se mede aqui não é a ausência do parágrafo — é que o painel deixa de
+// declarar `aria-describedby` em vez de apontar para um id que não existe, o que
+// o axe reprova em `aria-valid-attr-value` e o leitor de tela anuncia como nada.
+export const WithoutDescription: Story = {
+  parameters: {
+    covers: ['accessibility.item8'],
+    docs: {
+      description: {
+        story:
+          'Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.',
+      },
+    },
+  },
+  render: () => {
+    const trigger = createButton({ variant: 'destructive', label: 'Descartar rascunho' });
+    const cancelButton = createButton({ variant: 'outline', label: 'Cancelar' });
+    const actionButton = createButton({ variant: 'destructive', label: 'Descartar' });
+    // `description` fica de fora da chamada — é assim que o consumidor omite.
+    return createAlertDialog({
+      trigger,
+      title: 'Descartar rascunho',
+      cancelButton,
+      actionButton,
+      defaultOpen: true,
+    });
+  },
+  play: async () => {
+    const dialog = await waitForPortal('alertdialog');
+    await waitFor(() => expect(dialog).toBeVisible());
+
+    // O header fica só com o título: nenhum parágrafo vazio ocupando espaço.
+    await expect(dialog.querySelector('[data-slot="alert-dialog-description"]')).toBeNull();
+    await expect(dialog).toHaveAccessibleName('Descartar rascunho');
+
+    await expect(dialog).not.toHaveAttribute('aria-describedby');
+    await expect(dialog).toHaveAccessibleDescription('');
+
+    // As duas saídas continuam presentes — omitir a descrição não mexe no rodapé.
+    const escopo = within(dialog);
+    await expect(escopo.getByRole('button', { name: /^Cancelar$/i })).toBeInTheDocument();
+    await expect(escopo.getByRole('button', { name: /^Descartar$/i })).toBeInTheDocument();
+  },
+};
+
 // testes.visual.item5 — layout responsivo. O empilhamento dos botões vem de
 // `flex-direction: column-reverse` abaixo de 40rem (nds/alert-dialog.css), então
 // a captura precisa acontecer numa viewport estreita: daí os viewports do

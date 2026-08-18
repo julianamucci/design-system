@@ -290,6 +290,68 @@ export const LongDescription: Story = {
   },
 };
 
+// testes.accessibility.item8 — a descrição é opcional (anatomy.item6), e o
+// caminho sem ela precisa de uma story: enquanto nenhuma omitia, a única prova
+// de que o componente aguenta era a assinatura. O que se mede aqui não é a
+// ausência do parágrafo — é que o painel deixa de declarar `aria-describedby`
+// em vez de apontar para um id que não existe, o que o axe reprova em
+// `aria-valid-attr-value` e o leitor de tela anuncia como nada.
+export const WithoutDescription: Story = {
+  parameters: {
+    covers: ['accessibility.item8'],
+    docs: {
+      description: {
+        story:
+          'Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.',
+      },
+    },
+  },
+  render: () => ({
+    components: sharedComponents,
+    template: `
+      <AlertDialog default-open>
+        <AlertDialogTrigger as-child>
+          <Button variant="destructive">Descartar rascunho</Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Descartar rascunho</AlertDialogTitle>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction variant="destructive">Descartar</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    `,
+  }),
+  play: async ({ step }) => {
+    const body = within(document.body);
+
+    await step('O painel abre sem descrição e mantém o nome acessível', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await waitFor(() => expect(dialog).toBeVisible());
+      await expect(
+        dialog.querySelector('[data-slot="alert-dialog-description"]'),
+      ).toBeNull();
+      await expect(dialog).toHaveAccessibleName(/Descartar rascunho/i);
+    });
+
+    await step('Nenhum aria-describedby pendurado', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      await expect(dialog).not.toHaveAttribute('aria-describedby');
+      await expect(dialog).toHaveAccessibleDescription('');
+    });
+
+    await step('As duas saídas continuam presentes e alcançáveis', async () => {
+      const dialog = await body.findByRole('alertdialog');
+      const scope = within(dialog);
+      await expect(scope.getByRole('button', { name: /^Cancelar$/i })).toBeInTheDocument();
+      await expect(scope.getByRole('button', { name: /^Descartar$/i })).toBeInTheDocument();
+    });
+  },
+};
+
 // testes.visual.item5 — layout responsivo. O empilhamento dos botões vem de
 // `flex-direction: column-reverse` abaixo de 40rem (nds/alert-dialog.css), então
 // a captura precisa acontecer numa viewport estreita: daí os viewports do

@@ -353,7 +353,7 @@ const functionalTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
   priority: localPriority(tContent(`testes.functional.item${i}.priority`)),
 })));
 
-const a11yTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7].map((i) => ({
+const a11yTestItems = computed(() => [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
   criterion: tContent(`testes.accessibility.item${i}.criterion`),
   level: tContent(`testes.accessibility.item${i}.level`),
   how: tContent(`testes.accessibility.item${i}.how`),

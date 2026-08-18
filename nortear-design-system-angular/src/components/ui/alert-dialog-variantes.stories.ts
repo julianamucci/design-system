@@ -111,6 +111,56 @@ export const LongDescription: Story = {
   },
 };
 
+// testes.accessibility.item8 — a descrição é opcional (anatomy.item6), e o
+// caminho sem ela precisa de uma story: enquanto nenhuma omitia, a única prova
+// de que o componente aguenta era a assinatura. O que se mede aqui não é a
+// ausência do parágrafo — é que o painel deixa de declarar `aria-describedby`
+// em vez de apontar para um id que não existe, o que o axe reprova em
+// `aria-valid-attr-value` e o leitor de tela anuncia como nada.
+export const WithoutDescription: Story = {
+  parameters: { covers: ['accessibility.item8'] },
+  render: () => ({
+    template: `
+      <nds-alert-dialog [defaultOpen]="true">
+        <button ndsAlertDialogTrigger ndsButton variant="destructive">Descartar rascunho</button>
+
+        <ng-template ndsAlertDialogContent>
+          <div ndsAlertDialogHeader>
+            <h2 ndsAlertDialogTitle>Descartar rascunho</h2>
+          </div>
+          <div ndsAlertDialogFooter>
+            <button ndsAlertDialogCancel ndsButton variant="outline">Cancelar</button>
+            <button ndsAlertDialogAction ndsButton variant="destructive">Descartar</button>
+          </div>
+        </ng-template>
+      </nds-alert-dialog>
+    `,
+  }),
+  play: async ({ step }) => {
+    await step('O painel abre sem descrição e mantém o nome acessível', async () => {
+      const painel = await esperarPortal('alertdialog');
+      await expect(painel).toBeVisible();
+      await expect(
+        painel.querySelector('[data-slot="alert-dialog-description"]'),
+      ).toBeNull();
+      await expect(painel).toHaveAccessibleName(/Descartar rascunho/i);
+    });
+
+    await step('Nenhum aria-describedby pendurado', async () => {
+      const painel = await esperarPortal('alertdialog');
+      await expect(painel).not.toHaveAttribute('aria-describedby');
+      await expect(painel).toHaveAccessibleDescription('');
+    });
+
+    await step('As duas saídas continuam presentes e alcançáveis', async () => {
+      const painel = await esperarPortal('alertdialog');
+      const escopo = within(painel);
+      await expect(escopo.getByRole('button', { name: /^Cancelar$/i })).toBeInTheDocument();
+      await expect(escopo.getByRole('button', { name: /^Descartar$/i })).toBeInTheDocument();
+    });
+  },
+};
+
 export const WithMedia: Story = {
   parameters: { covers: ['visual.item6'] },
   render: () => ({

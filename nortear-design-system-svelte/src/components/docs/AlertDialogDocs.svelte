@@ -185,10 +185,13 @@ import {
   --destructive: 0 62.8% 30.6%;
 }`;
 
+  // `defaultOpen` não entra: a raiz desta stack não tem a prop — ela seria
+  // aceita e ignorada em silêncio. O estado inicial sai do próprio `open`, que
+  // é bindável. Snippet didático é o que o leitor copia: uma prop inexistente
+  // aqui vira bug de quem consome, não erro de compilação.
   const interfaceCode = `// AlertDialog (Root)
 interface AlertDialogProps {
   open?: boolean;
-  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   children?: Snippet;
 }
@@ -412,7 +415,11 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         cols: propsTableCols,
         items: [
           { name: 'open',         type: 'boolean',                     defaultValue: '—',      required: 'Não', description: toPlainText($tStore('props.table.open'))         },
-          { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false',  required: 'Não', description: toPlainText($tStore('props.table.defaultOpen')) },
+          // `defaultOpen` não entra: não existe na API desta stack — a raiz
+          // expõe `open`, `onOpenChange` e `onOpenChangeComplete`, e a prop era
+          // aceita e ignorada em silêncio. O estado inicial sai do próprio
+          // `open`, que é bindável. Documentar prop que o componente ignora é
+          // prometer o que o produto não cumpre.
           { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',      required: 'Não', description: toPlainText($tStore('props.table.onOpenChange'))},
           { name: 'children',     type: 'Snippet',                     defaultValue: '—',      required: 'Sim', description: toPlainText($tStore('props.table.children'))    },
         ],
@@ -571,7 +578,7 @@ interface CancelProps  { onclick?: (e: MouseEvent) => void; class?: string }`;
         level: 'WCAG',
         how: $tNavStore('common.howToVerify'),
       },
-      items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
+      items: [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
         criterion: $tStore(`testes.accessibility.item${i}.criterion`),
         level: $tStore(`testes.accessibility.item${i}.level`),
         how: $tStore(`testes.accessibility.item${i}.how`),

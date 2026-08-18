@@ -31,7 +31,7 @@
       "item3": "<strong>AlertDialogContent</strong> — painel modal com <code>role=\"alertdialog\"</code>, focus trap e Portal automáticos.",
       "item4": "<strong>AlertDialogHeader</strong> — agrupa título e descrição. Centralizado em mobile, alinhado à esquerda em desktop.",
       "item5": "<strong>AlertDialogTitle</strong> — título obrigatório. Fonte do <code>aria-labelledby</code>.",
-      "item6": "<strong>AlertDialogDescription</strong> — descrição obrigatória. Fonte do <code>aria-describedby</code>.",
+      "item6": "<strong>AlertDialogDescription</strong> — descrição opcional, e recomendada: é ela que diz o que a confirmação custa. Quando existe, é a fonte do <code>aria-describedby</code>; quando não existe, o painel omite o atributo em vez de apontar para um alvo inexistente.",
       "item7": "<strong>AlertDialogFooter</strong> — agrupa Cancel e Action. Empilhado em mobile, lado a lado em desktop.",
       "item8": "<strong>AlertDialogCancel</strong> — botão de cancelamento. Fecha o diálogo e retorna foco ao trigger.",
       "item9": "<strong>AlertDialogAction</strong> — botão de confirmação. Executa a ação e fecha o diálogo.",
@@ -50,7 +50,7 @@
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Reserve para ações destrutivas ou irreversíveis — exclusão, cancelamento, encerramento.",
-        "item2": "Sempre inclua <code>AlertDialogTitle</code> e <code>AlertDialogDescription</code> — são base para ARIA.",
+        "item2": "Sempre inclua <code>AlertDialogTitle</code> — é a base do nome acessível. A descrição é opcional; omita só quando o título já disser o que se perde.",
         "item3": "Cancel sempre antes de Action no DOM — confirmação fica à direita visualmente.",
         "item4": "Para trigger <code>destructive</code>, o <code>AlertDialogAction</code> também deve ser destructive — consistência visual.",
         "item5": "Para formulários, edição ou visualização, use <code>Dialog</code> — AlertDialog é apenas para decisão."
@@ -210,6 +210,7 @@
         "description": "Descrição",
         "open": "Estado controlado de abertura. Use com o callback de mudança correspondente.",
         "defaultOpen": "Estado inicial em modo não controlado.",
+        "optionalDescription": "Texto de apoio abaixo do título. Opcional: sem ele o diálogo não declara descrição acessível.",
         "onOpenChange": "Callback disparado ao abrir ou fechar. Recebe o novo estado booleano.",
         "asChild": "Permite compor com um elemento filho (ex: <code>Button</code>) sem renderizar wrapper.",
         "onClick": "Callback da confirmação ou cancelamento. O diálogo fecha automaticamente após disparar.",
@@ -244,7 +245,7 @@
       "keyboardTitle": "Navegação por Teclado",
       "summary": "AlertDialog usa <code>role=\"alertdialog\"</code> com focus trap automático e retorno de foco ao trigger. Cumpre WCAG 2.2 AA: 2.1.2 (sem armadilhas de teclado com escape), 2.4.3 (ordem de foco), 4.1.2 (nome, função, valor).",
       "item1": "<strong>role=\"alertdialog\"</strong> — diferencia de <code>dialog</code> comum e sinaliza ao leitor que é uma decisão obrigatória.",
-      "item2": "<strong>aria-labelledby e aria-describedby</strong> — aplicados automaticamente a partir de <code>AlertDialogTitle</code> e <code>AlertDialogDescription</code>. Ambos são obrigatórios.",
+      "item2": "<strong>aria-labelledby e aria-describedby</strong> — aplicados automaticamente. O primeiro vem do <code>AlertDialogTitle</code> e está sempre presente. O segundo depende do <code>AlertDialogDescription</code>: sem ele o atributo não é declarado, porque referência para um ID inexistente é pior que atributo ausente.",
       "item3": "<strong>Focus trap</strong> — Tab e Shift+Tab navegam apenas dentro do diálogo. Foco inicial no <code>AlertDialogCancel</code> para evitar ação acidental.",
       "item4": "<strong>Retorno de foco</strong> — ao fechar, o foco volta ao trigger que abriu o diálogo.",
       "item5": "<strong>Escape</strong> — fecha o diálogo sem executar a ação. Clique no overlay não fecha: a decisão precisa ser explícita.",
@@ -259,11 +260,11 @@
       "aria": {
         "role": "<code>role=\"alertdialog\"</code> — aplicado automaticamente no AlertDialogContent.",
         "labelledby": "<code>aria-labelledby</code> — referencia automaticamente o ID do AlertDialogTitle.",
-        "describedby": "<code>aria-describedby</code> — referencia automaticamente o ID do AlertDialogDescription.",
+        "describedby": "<code>aria-describedby</code> — referencia automaticamente o ID do AlertDialogDescription quando ele é renderizado; sem descrição, o atributo é omitido.",
         "ariaModal": "O conteúdo fora do diálogo fica inativo para leitores de tela e para o teclado enquanto ele está aberto."
       },
       "screenReader": {
-        "onOpen": "Ao abrir: leitor anuncia \"diálogo de alerta\" seguido do título e da descrição completos.",
+        "onOpen": "Ao abrir: leitor anuncia \"diálogo de alerta\" seguido do título completo e, quando existe, da descrição.",
         "onFocusChange": "Ao mudar foco entre botões: leitor anuncia o label do botão focado.",
         "onClose": "Ao fechar: leitor anuncia o retorno ao contexto anterior (trigger)."
       }
@@ -366,9 +367,9 @@
           "how": "Inspecionar DOM após abrir"
         },
         "item3": {
-          "criterion": "aria-describedby apontando para AlertDialogDescription",
+          "criterion": "aria-describedby apontando para AlertDialogDescription quando ela existe",
           "level": "AA",
-          "how": "Inspecionar DOM após abrir"
+          "how": "Inspecionar DOM após abrir — o ID referenciado precisa existir"
         },
         "item4": {
           "criterion": "Focus trap ativo — Tab não sai do diálogo",
@@ -389,6 +390,11 @@
           "criterion": "Sem violações axe-core no estado aberto",
           "level": "AA",
           "how": "axe-playwright no test-runner do Storybook"
+        },
+        "item8": {
+          "criterion": "Sem descrição, o painel omite aria-describedby em vez de referenciar um ID inexistente",
+          "level": "AA",
+          "how": "Abrir sem descrição e conferir que o atributo não existe no painel"
         }
       },
       "visual": {
@@ -474,7 +480,7 @@
       "item3": "<strong>AlertDialogContent</strong> — modal panel with automatic <code>role=\"alertdialog\"</code>, focus trap, and Portal.",
       "item4": "<strong>AlertDialogHeader</strong> — groups title and description. Centered on mobile, left-aligned on desktop.",
       "item5": "<strong>AlertDialogTitle</strong> — required title. Source for <code>aria-labelledby</code>.",
-      "item6": "<strong>AlertDialogDescription</strong> — required description. Source for <code>aria-describedby</code>.",
+      "item6": "<strong>AlertDialogDescription</strong> — optional description, and recommended: it is what tells the reader what the confirmation costs. When present, it is the source for <code>aria-describedby</code>; when absent, the panel omits the attribute instead of pointing at a target that does not exist.",
       "item7": "<strong>AlertDialogFooter</strong> — groups Cancel and Action. Stacked on mobile, side-by-side on desktop.",
       "item8": "<strong>AlertDialogCancel</strong> — cancel button. Closes the dialog and returns focus to the trigger.",
       "item9": "<strong>AlertDialogAction</strong> — confirmation button. Executes the action and closes the dialog.",
@@ -493,7 +499,7 @@
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Reserve for destructive or irreversible actions — deletion, cancellation, termination.",
-        "item2": "Always include <code>AlertDialogTitle</code> and <code>AlertDialogDescription</code> — they power ARIA.",
+        "item2": "Always include <code>AlertDialogTitle</code> — it powers the accessible name. The description is optional; leave it out only when the title already says what is lost.",
         "item3": "Cancel always before Action in the DOM — confirmation sits on the right visually.",
         "item4": "For a <code>destructive</code> trigger, <code>AlertDialogAction</code> must also be destructive — visual consistency.",
         "item5": "For forms, editing, or viewing, use <code>Dialog</code> — AlertDialog is only for decisions."
@@ -653,6 +659,7 @@
         "description": "Description",
         "open": "Controlled open state. Use with the corresponding change callback.",
         "defaultOpen": "Initial state in uncontrolled mode.",
+        "optionalDescription": "Supporting text below the title. Optional: without it the dialog declares no accessible description.",
         "onOpenChange": "Callback fired when opening or closing. Receives the new boolean state.",
         "asChild": "Lets you compose with a child element (e.g. <code>Button</code>) without rendering a wrapper.",
         "onClick": "Confirmation or cancellation callback. The dialog closes automatically after firing.",
@@ -687,7 +694,7 @@
       "keyboardTitle": "Keyboard Navigation",
       "summary": "AlertDialog uses <code>role=\"alertdialog\"</code> with automatic focus trap and focus return to the trigger. Meets WCAG 2.2 AA: 2.1.2 (no keyboard trap without escape), 2.4.3 (focus order), 4.1.2 (name, role, value).",
       "item1": "<strong>role=\"alertdialog\"</strong> — differentiates from plain <code>dialog</code> and signals to the reader that a mandatory decision is required.",
-      "item2": "<strong>aria-labelledby and aria-describedby</strong> — applied automatically from <code>AlertDialogTitle</code> and <code>AlertDialogDescription</code>. Both are required.",
+      "item2": "<strong>aria-labelledby and aria-describedby</strong> — applied automatically. The first comes from <code>AlertDialogTitle</code> and is always present. The second depends on <code>AlertDialogDescription</code>: without it the attribute is not declared, because a reference to a missing ID is worse than no attribute at all.",
       "item3": "<strong>Focus trap</strong> — Tab and Shift+Tab navigate only within the dialog. Initial focus on <code>AlertDialogCancel</code> to prevent accidental action.",
       "item4": "<strong>Focus return</strong> — when closed, focus returns to the trigger that opened the dialog.",
       "item5": "<strong>Escape</strong> — closes the dialog without executing the action. Overlay click does not close it: the decision must be explicit.",
@@ -702,11 +709,11 @@
       "aria": {
         "role": "<code>role=\"alertdialog\"</code> — automatically applied to AlertDialogContent.",
         "labelledby": "<code>aria-labelledby</code> — automatically references AlertDialogTitle's ID.",
-        "describedby": "<code>aria-describedby</code> — automatically references AlertDialogDescription's ID.",
+        "describedby": "<code>aria-describedby</code> — automatically references AlertDialogDescription's ID when it is rendered; without a description, the attribute is omitted.",
         "ariaModal": "Content outside the dialog is inert to screen readers and keyboard while it is open."
       },
       "screenReader": {
-        "onOpen": "On open: reader announces \"alert dialog\" followed by the full title and description.",
+        "onOpen": "On open: reader announces \"alert dialog\" followed by the full title and, when present, the description.",
         "onFocusChange": "On focus change between buttons: reader announces the focused button's label.",
         "onClose": "On close: reader announces the return to the previous context (trigger)."
       }
@@ -809,9 +816,9 @@
           "how": "Inspect DOM after open"
         },
         "item3": {
-          "criterion": "aria-describedby points to AlertDialogDescription",
+          "criterion": "aria-describedby points to AlertDialogDescription when it exists",
           "level": "AA",
-          "how": "Inspect DOM after open"
+          "how": "Inspect DOM after open — the referenced ID must exist"
         },
         "item4": {
           "criterion": "Active focus trap — Tab doesn't leave the dialog",
@@ -832,6 +839,11 @@
           "criterion": "No axe-core violations in open state",
           "level": "AA",
           "how": "axe-playwright in Storybook test-runner"
+        },
+        "item8": {
+          "criterion": "Without a description, the panel omits aria-describedby instead of referencing a missing ID",
+          "level": "AA",
+          "how": "Open without a description and check that the attribute is absent from the panel"
         }
       },
       "visual": {
@@ -917,7 +929,7 @@
       "item3": "<strong>AlertDialogContent</strong> — panel modal con <code>role=\"alertdialog\"</code>, focus trap y Portal automáticos.",
       "item4": "<strong>AlertDialogHeader</strong> — agrupa título y descripción. Centrado en mobile, alineado a la izquierda en desktop.",
       "item5": "<strong>AlertDialogTitle</strong> — título obligatorio. Fuente de <code>aria-labelledby</code>.",
-      "item6": "<strong>AlertDialogDescription</strong> — descripción obligatoria. Fuente de <code>aria-describedby</code>.",
+      "item6": "<strong>AlertDialogDescription</strong> — descripción opcional, y recomendada: es la que dice lo que cuesta la confirmación. Cuando existe, es la fuente de <code>aria-describedby</code>; cuando no existe, el panel omite el atributo en lugar de apuntar a un destino inexistente.",
       "item7": "<strong>AlertDialogFooter</strong> — agrupa Cancel y Action. Apilados en mobile, lado a lado en desktop.",
       "item8": "<strong>AlertDialogCancel</strong> — botón de cancelación. Cierra el diálogo y devuelve el foco al trigger.",
       "item9": "<strong>AlertDialogAction</strong> — botón de confirmación. Ejecuta la acción y cierra el diálogo.",
@@ -936,7 +948,7 @@
       "guidelines": {
         "title": "Guías Obligatorias",
         "item1": "Reserva para acciones destructivas o irreversibles — eliminación, cancelación, finalización.",
-        "item2": "Siempre incluye <code>AlertDialogTitle</code> y <code>AlertDialogDescription</code> — son la base para ARIA.",
+        "item2": "Siempre incluye <code>AlertDialogTitle</code> — es la base del nombre accesible. La descripción es opcional; omítela solo cuando el título ya diga lo que se pierde.",
         "item3": "Cancel siempre antes de Action en el DOM — la confirmación queda a la derecha visualmente.",
         "item4": "Para trigger <code>destructive</code>, el <code>AlertDialogAction</code> también debe ser destructive — consistencia visual.",
         "item5": "Para formularios, edición o visualización, usa <code>Dialog</code> — AlertDialog es solo para decisión."
@@ -1096,6 +1108,7 @@
         "description": "Descripción",
         "open": "Estado controlado de apertura. Úsalo con el callback de cambio correspondiente.",
         "defaultOpen": "Estado inicial en modo no controlado.",
+        "optionalDescription": "Texto de apoyo debajo del título. Opcional: sin él el diálogo no declara descripción accesible.",
         "onOpenChange": "Callback disparado al abrir o cerrar. Recibe el nuevo estado booleano.",
         "asChild": "Permite componer con un elemento hijo (ej. <code>Button</code>) sin renderizar wrapper.",
         "onClick": "Callback de confirmación o cancelación. El diálogo se cierra automáticamente tras disparar.",
@@ -1130,7 +1143,7 @@
       "keyboardTitle": "Navegación por Teclado",
       "summary": "AlertDialog usa <code>role=\"alertdialog\"</code> con focus trap automático y retorno de foco al trigger. Cumple WCAG 2.2 AA: 2.1.2 (sin trampas de teclado con escape), 2.4.3 (orden de foco), 4.1.2 (nombre, función, valor).",
       "item1": "<strong>role=\"alertdialog\"</strong> — se diferencia del <code>dialog</code> común y señala al lector que es una decisión obligatoria.",
-      "item2": "<strong>aria-labelledby y aria-describedby</strong> — aplicados automáticamente desde <code>AlertDialogTitle</code> y <code>AlertDialogDescription</code>. Ambos son obligatorios.",
+      "item2": "<strong>aria-labelledby y aria-describedby</strong> — aplicados automáticamente. El primero viene de <code>AlertDialogTitle</code> y siempre está presente. El segundo depende de <code>AlertDialogDescription</code>: sin ella el atributo no se declara, porque una referencia a un ID inexistente es peor que la ausencia del atributo.",
       "item3": "<strong>Focus trap</strong> — Tab y Shift+Tab navegan solo dentro del diálogo. Foco inicial en <code>AlertDialogCancel</code> para evitar acción accidental.",
       "item4": "<strong>Retorno de foco</strong> — al cerrar, el foco vuelve al trigger que abrió el diálogo.",
       "item5": "<strong>Escape</strong> — cierra el diálogo sin ejecutar la acción. El clic en el overlay no lo cierra: la decisión debe ser explícita.",
@@ -1145,11 +1158,11 @@
       "aria": {
         "role": "<code>role=\"alertdialog\"</code> — aplicado automáticamente en AlertDialogContent.",
         "labelledby": "<code>aria-labelledby</code> — referencia automáticamente el ID de AlertDialogTitle.",
-        "describedby": "<code>aria-describedby</code> — referencia automáticamente el ID de AlertDialogDescription.",
+        "describedby": "<code>aria-describedby</code> — referencia automáticamente el ID de AlertDialogDescription cuando se renderiza; sin descripción, el atributo se omite.",
         "ariaModal": "El contenido fuera del diálogo queda inactivo para lectores de pantalla y teclado mientras está abierto."
       },
       "screenReader": {
-        "onOpen": "Al abrir: el lector anuncia \"diálogo de alerta\" seguido del título y la descripción completos.",
+        "onOpen": "Al abrir: el lector anuncia \"diálogo de alerta\" seguido del título completo y, cuando existe, de la descripción.",
         "onFocusChange": "Al cambiar el foco entre botones: el lector anuncia el label del botón enfocado.",
         "onClose": "Al cerrar: el lector anuncia el retorno al contexto anterior (trigger)."
       }
@@ -1252,9 +1265,9 @@
           "how": "Inspeccionar DOM tras abrir"
         },
         "item3": {
-          "criterion": "aria-describedby apunta a AlertDialogDescription",
+          "criterion": "aria-describedby apunta a AlertDialogDescription cuando existe",
           "level": "AA",
-          "how": "Inspeccionar DOM tras abrir"
+          "how": "Inspeccionar DOM tras abrir — el ID referenciado debe existir"
         },
         "item4": {
           "criterion": "Focus trap activo — Tab no sale del diálogo",
@@ -1275,6 +1288,11 @@
           "criterion": "Sin violaciones axe-core en estado abierto",
           "level": "AA",
           "how": "axe-playwright en test-runner de Storybook"
+        },
+        "item8": {
+          "criterion": "Sin descripción, el panel omite aria-describedby en lugar de referenciar un ID inexistente",
+          "level": "AA",
+          "how": "Abrir sin descripción y comprobar que el atributo no existe en el panel"
         }
       },
       "visual": {

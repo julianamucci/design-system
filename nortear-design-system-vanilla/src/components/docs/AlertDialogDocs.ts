@@ -501,7 +501,7 @@ export interface AlertDialogOptions {
               items: [
                 { name: 'trigger',       type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
                 { name: 'title',         type: 'string',                   defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
-                { name: 'description',   type: 'string',                   defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.children')) },
+                { name: 'description',   type: 'string',                   defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.optionalDescription')) },
                 { name: 'media',         type: 'HTMLElement',              defaultValue: '—', required: 'Não', description: toPlainText(t('anatomy.item10')) },
                 { name: 'cancelButton',  type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
                 { name: 'actionButton',  type: 'HTMLElement',              defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.children')) },
@@ -673,7 +673,7 @@ export interface AlertDialogOptions {
           accessibility: {
             title: t('testes.accessibility.title'),
             cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
-            items: [1, 2, 3, 4, 5, 6, 7].map(i => ({
+            items: [1, 2, 3, 4, 5, 6, 7, 8].map(i => ({
               criterion: t(`testes.accessibility.item${i}.criterion`),
               level: t(`testes.accessibility.item${i}.level`),
               how: t(`testes.accessibility.item${i}.how`),
