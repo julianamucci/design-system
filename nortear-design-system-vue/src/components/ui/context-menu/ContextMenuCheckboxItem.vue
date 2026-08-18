@@ -2,8 +2,9 @@
 import type { ContextMenuCheckboxItemProps } from 'reka-ui'
 
 import type { HTMLAttributes } from 'vue'
+import { computed } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
-import { CheckIcon } from 'lucide-vue-next'
+import { CheckIcon, MinusIcon } from 'lucide-vue-next'
 import {
   ContextMenuCheckboxItem,
   ContextMenuItemIndicator,
@@ -50,6 +51,28 @@ const emits = defineEmits<{
 const delegatedProps = reactiveOmit(props, 'class', 'checked')
 
 const forwarded = useForwardProps(delegatedProps)
+
+/**
+ * O símbolo do estado misto é TRAÇO, não tique.
+ *
+ * Tique quer dizer "marcado", e misto não é isso — é "alguns dos filhos". O
+ * desenho vem da caixa de seleção do design system, que já resolve o misto com
+ * um traço horizontal, e da composição equivalente no menu, que ramifica.
+ *
+ * A ramificação mora aqui, na composição, e não em CSS sobre
+ * `[data-state="indeterminate"]`, por duas medições:
+ *
+ * 1. O indicador da lib não entrega o estado ao slot — e o item de marcação
+ *    TAMBÉM não: o componente público repassa o slot padrão sem carga, mesmo o
+ *    interno provendo `modelValue`. A única fonte de estado disponível é a
+ *    própria prop `checked`, que é o valor entregue à lib como `model-value`.
+ * 2. Por CSS os dois glifos precisariam existir no markup com um deles oculto —
+ *    ou seja, um tique presente num estado que não é "marcado" —, e a regra
+ *    moraria na folha compartilhada pelas cinco stacks, cujas árvores diferem.
+ *    As demais resolvem o misto ramificando o markup; uma regra só de CSS
+ *    criaria um segundo vocabulário para o mesmo estado.
+ */
+const misto = computed(() => props.checked === 'indeterminate')
 </script>
 
 <template>
@@ -64,7 +87,8 @@ const forwarded = useForwardProps(delegatedProps)
     <span class="nds-dropdown-menu-item-indicator">
       <ContextMenuItemIndicator>
         <slot name="indicator-icon">
-          <CheckIcon />
+          <MinusIcon v-if="misto" />
+          <CheckIcon v-else />
         </slot>
       </ContextMenuItemIndicator>
     </span>

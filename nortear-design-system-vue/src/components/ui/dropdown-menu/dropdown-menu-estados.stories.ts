@@ -3,12 +3,14 @@ import { ref } from 'vue';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
 import { waitForPortal, waitForPortalGone, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const meta = {
   title: 'UI/DropdownMenu/States',
@@ -34,6 +36,7 @@ type Story = StoryObj<typeof meta>;
 
 const componentes = {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
@@ -226,6 +229,60 @@ export const ItemDisabled: Story = {
       await userEvent.keyboard('{ArrowDown}');
       await expect(document.activeElement).not.toBe(desabilitado);
       await expect(document.activeElement).toBe(itens[2]);
+    });
+  },
+};
+
+// ─── CheckboxIndeterminate ────────────────────────────────────────────────────
+//
+// Story SEM interação, de propósito. O que ela declara vale na montagem, e o
+// primeiro clique num item misto o resolve para marcado — uma play que clicasse
+// aqui mediria outro estado no REPLAY do painel Interactions, que reexecuta no
+// mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
+
+export const CheckboxIndeterminate: Story = {
+  render: () => ({
+    components: componentes,
+    template: `
+      <div style="contain: layout; min-height: 260px;">
+        <DropdownMenu :default-open="true" :modal="false">
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline">Colunas</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent side="bottom" align="start">
+            <DropdownMenuCheckboxItem model-value="indeterminate">Nome</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem :model-value="true">E-mail</DropdownMenuCheckboxItem>
+            <DropdownMenuCheckboxItem :model-value="false">Telefone</DropdownMenuCheckboxItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    `,
+  }),
+  play: async ({ step }) => {
+    const menu = await waitForPortal('menu');
+    const canvas = within(menu);
+    const misto = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
+    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
+    const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Telefone' });
+
+    await step('O estado misto é anunciado como misto, e não como marcado', async () => {
+      await expect(misto.getAttribute('aria-checked')).toBe('mixed');
+      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
+    });
+
+    await step('O misto desenha traço; o marcado, tique', async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
+      // traço é largo e sem altura, tique tem a diagonal.
+      const formaMista = formaDoIndicador(misto);
+      const formaMarcada = formaDoIndicador(marcado);
+      await expect(ehTraco(formaMista)).toBe(true);
+      await expect(ehTique(formaMista)).toBe(false);
+      await expect(ehTique(formaMarcada)).toBe(true);
+    });
+
+    await step('O desmarcado continua sem glifo nenhum', async () => {
+      await expect(formaDoIndicador(desmarcado)).toBeNull();
     });
   },
 };

@@ -2,7 +2,7 @@
   import * as ContextMenu from '@/components/ui/context-menu';
   import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 
-  type Estado = 'disabled' | 'inset' | 'destructive' | 'dark';
+  type Estado = 'disabled' | 'inset' | 'destructive' | 'dark' | 'indeterminate';
 
   let { estado = 'disabled' as Estado }: { estado?: Estado } = $props();
 </script>
@@ -60,6 +60,17 @@
         Excluir permanentemente
         <ContextMenu.Shortcut>⌫</ContextMenu.Shortcut>
       </ContextMenu.Item>
+    </ContextMenu.Content>
+  </ContextMenu.Root>
+
+{:else if estado === 'indeterminate'}
+  <ContextMenu.Root>
+    {@render area()}
+    <ContextMenu.Content>
+      <ContextMenu.Label>Mostrar na tela</ContextMenu.Label>
+      <ContextMenu.CheckboxItem indeterminate>Colunas</ContextMenu.CheckboxItem>
+      <ContextMenu.CheckboxItem checked>Régua</ContextMenu.CheckboxItem>
+      <ContextMenu.CheckboxItem>Grade</ContextMenu.CheckboxItem>
     </ContextMenu.Content>
   </ContextMenu.Root>
 

@@ -2,6 +2,7 @@
 	import { ContextMenu as ContextMenuPrimitive } from "bits-ui";
 	import { cn, type WithoutChildrenOrChild } from "@/lib/utils.js";
 	import type { Snippet } from "svelte";
+	import MinusIcon from '@lucide/svelte/icons/minus';
 	import CheckIcon from '@lucide/svelte/icons/check';
 
 	let {
@@ -27,9 +28,15 @@
 	class={cn("nds-dropdown-menu-checkbox-item", className)}
 	{...restProps}
 >
-	{#snippet children({ checked })}
+	{#snippet children({ checked, indeterminate })}
 		<span class="nds-dropdown-menu-item-indicator">
-			{#if checked}
+			<!-- Traço para o estado misto, tique para o marcado: tique quer dizer
+			     "marcado", e misto é "alguns dos filhos". O `indeterminate` já
+			     chegava ligado aqui e o snippet o descartava, então o item misto
+			     desenhava tique — mesmo desenho do marcado, significado diferente. -->
+			{#if indeterminate}
+				<MinusIcon  />
+			{:else if checked}
 				<CheckIcon  />
 			{/if}
 		</span>

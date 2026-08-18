@@ -2,8 +2,9 @@
 import type { DropdownMenuCheckboxItemEmits, DropdownMenuCheckboxItemProps } from 'reka-ui'
 
 import type { HTMLAttributes } from 'vue'
+import { computed } from 'vue'
 import { reactiveOmit } from '@vueuse/core'
-import { CheckIcon } from 'lucide-vue-next'
+import { CheckIcon, MinusIcon } from 'lucide-vue-next'
 import {
   DropdownMenuCheckboxItem,
   DropdownMenuItemIndicator,
@@ -17,6 +18,16 @@ const emits = defineEmits<DropdownMenuCheckboxItemEmits>()
 const delegatedProps = reactiveOmit(props, 'class')
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
+
+/**
+ * O símbolo do estado misto é TRAÇO, não tique.
+ *
+ * Tique quer dizer "marcado", e misto não é isso — é "alguns dos filhos". Ver a
+ * nota longa no item de marcação da barra de menus: o indicador da lib não
+ * entrega o estado ao slot, o item público também não, e por isso a única fonte
+ * é o valor que este componente já recebe.
+ */
+const misto = computed(() => props.modelValue === 'indeterminate')
 </script>
 
 <template>
@@ -31,7 +42,8 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     >
       <DropdownMenuItemIndicator>
         <slot name="indicator-icon">
-          <CheckIcon />
+          <MinusIcon v-if="misto" />
+          <CheckIcon v-else />
         </slot>
       </DropdownMenuItemIndicator>
     </span>

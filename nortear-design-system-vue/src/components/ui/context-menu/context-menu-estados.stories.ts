@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO, abrirPorGesto, brilho } from '@shared/testing/context-menu-area';
+import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -11,6 +12,7 @@ import {
   ContextMenuSeparator,
   ContextMenuShortcut,
   ContextMenuLabel,
+  ContextMenuCheckboxItem,
 } from '@/components/ui/context-menu';
 
 const meta: Meta = {
@@ -43,6 +45,7 @@ const componentes = {
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuShortcut,
+  ContextMenuCheckboxItem,
 };
 
 const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
@@ -201,6 +204,64 @@ export const ItemDestructive: Story = {
       await expect(getComputedStyle(alvo('perigo')).color).not.toBe(
         getComputedStyle(alvo('normal')).color,
       );
+    });
+  },
+};
+
+// ── Item de marcação em estado misto ──────────────────────────────────────────
+//
+// Story SEM interação, de propósito. O que ela declara vale na montagem, e o
+// primeiro clique num item misto o resolve para marcado — uma play que clicasse
+// aqui mediria outro estado no REPLAY do painel Interactions, que reexecuta no
+// mesmo DOM. Abrir o menu é idempotente: `abrirPorGesto` parte da área, não do
+// estado anterior.
+
+export const CheckboxIndeterminate: Story = {
+  render: () => ({
+    components: componentes,
+    template: `
+      <ContextMenu>
+        <ContextMenuTrigger class="${AREA_CLICK_DIREITO}" data-align="center" data-justify="center" data-testid="area">
+          Clique com o botão direito aqui
+        </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuLabel>Mostrar na tela</ContextMenuLabel>
+          <ContextMenuCheckboxItem checked="indeterminate">Colunas</ContextMenuCheckboxItem>
+          <ContextMenuCheckboxItem :checked="true">Régua</ContextMenuCheckboxItem>
+          <ContextMenuCheckboxItem :checked="false">Grade</ContextMenuCheckboxItem>
+        </ContextMenuContent>
+      </ContextMenu>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const area = () => within(canvasElement).getByTestId('area');
+    const menu = await abrirPorGesto(area());
+    const canvas = within(menu);
+    const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
+    const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
+    const desmarcado = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
+
+    await step('O estado misto é anunciado como misto, e não como marcado', async () => {
+      // Uma comparação frouxa leria `'indeterminate'` como verdadeiro; o que a
+      // pessoa ouve tem que separar os três estados.
+      await expect(misto.getAttribute('aria-checked')).toBe('mixed');
+      await expect(marcado.getAttribute('aria-checked')).toBe('true');
+      await expect(desmarcado.getAttribute('aria-checked')).toBe('false');
+    });
+
+    await step('O misto desenha traço; o marcado, tique', async () => {
+      // A medida é a GEOMETRIA do glifo, não o nome da classe nem o do ícone:
+      // traço é largo e sem altura, tique tem a diagonal. Com o mesmo símbolo
+      // nos dois estados — o defeito — esta asserção fica vermelha.
+      const formaMista = formaDoIndicador(misto);
+      const formaMarcada = formaDoIndicador(marcado);
+      await expect(ehTraco(formaMista)).toBe(true);
+      await expect(ehTique(formaMista)).toBe(false);
+      await expect(ehTique(formaMarcada)).toBe(true);
+    });
+
+    await step('O desmarcado continua sem glifo nenhum', async () => {
+      await expect(formaDoIndicador(desmarcado)).toBeNull();
     });
   },
 };
