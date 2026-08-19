@@ -2030,3 +2030,32 @@ Escadas que faltam, por volume medido:
       pode, primitivo com texto não.
 
 Enquanto isso, o auditor reprova as 988 — é dívida visível, não silenciosa.
+
+## Escada de altura — o que a conversão deixou medido (2026-08-19)
+
+O `scroll-area` fechou nas cinco stacks (`be6cb1ea` … `0887edb9`). Três coisas
+ficaram abertas, todas descobertas *por causa* da conversão.
+
+- [ ] **A prop `size` não aparece na tabela de propriedades de nenhuma stack.**
+      Não é esquecimento de uma stack: `docs/shared/content/scroll-area/translations.json`
+      não tem o grupo `props.table.size`, então a linha teria de ser escrita à
+      mão em português numa stack só — rachando a documentação das cinco. É uma
+      mudança de conteúdo compartilhado mais uma linha por stack, e pertence a
+      quem fechar a passada cross-stack.
+
+- [ ] **Valor de design passado como prop é invisível ao auditor.** As stories
+      do Svelte passam `width: '500px'` para `ScrollAreaStory`, que interpola em
+      `style` dentro de um `$derived`. O valor tem o mesmo efeito na cascata de
+      um `style` inline e não aparece em regra nenhuma — 12 alturas viviam assim
+      antes desta rodada, e as larguras continuam. É exatamente a lavagem que
+      motivou recusar "só passe como parâmetro" como solução: move o valor, não
+      o resolve. Vale decidir se `width` também ganha escada.
+
+- [ ] **Vue diverge de React e Svelte nos degraus.** Para o mesmo conjunto de 13
+      áreas de rolagem, React e Svelte chegaram a distribuições **idênticas**
+      (lg:1 · md:4 · sm:5 · xl:3) e o Vue a outra (lg:2 · md:7 · sm:1 · xl:2 ·
+      xs:1). A causa é anterior: as alturas de origem já diferiam (180px onde as
+      outras usavam 160px). A escada não criou a divergência — tornou-a legível
+      pela primeira vez, porque ninguém compara `style` inline entre stacks.
+      Pela regra de paridade de exemplo, a mesma demo deveria render igual nas
+      cinco; alinhar agora é trocar uma palavra por arquivo.
