@@ -2444,8 +2444,12 @@ function inlineStyleDecls(content) {
     return lo + 1;
   };
 
-  const push = (prop, valor, abs) => {
-    if (mask[abs]) return;                              // snippet exibido, não aplicado
+  // `jaConferido` existe para o gabarito do Svelte: lá a validação de snippet é
+  // feita na posição do `style=`, e reconferir na posição da declaração daria
+  // sempre mascarado — ela fica DEPOIS da crase de abertura, que é justamente o
+  // que a máscara marca.
+  const push = (prop, valor, abs, jaConferido = false) => {
+    if (!jaConferido && mask[abs]) return;              // snippet exibido, não aplicado
     const nome = kebab(String(prop).trim().replace(/['"]/g, ''));
     const v = String(valor).trim().replace(/['"]/g, '');
     if (!INLINE_DESIGN_PROPS.has(nome)) return;
@@ -2474,6 +2478,25 @@ function inlineStyleDecls(content) {
       i++;
     }
     pares(src.slice(m.index, i), m.index);
+  }
+
+  // style={`width: 1.5rem; background: ${cor}`} — svelte com literal de gabarito.
+  //
+  // Some da varredura geral por um efeito colateral da guarda de snippet: a
+  // crase que abre o gabarito abre também uma região "exibida ao leitor", e
+  // tudo depois dela fica mascarado. A consulta aqui é na posição do `style=`,
+  // ANTES da crase — se o atributo em si não está dentro de um snippet, o que
+  // vem nele é estilo aplicado. Uma ocorrência real hoje, virando guarda para
+  // não voltar a passar despercebida.
+  for (const m of src.matchAll(/style=\{`([^`]*)`\}/g)) {
+    if (mask[m.index]) continue;
+    const corpo = m[1];
+    const delta = m.index + m[0].indexOf('`') + 1;
+    for (const d of corpo.split(';')) {
+      const rel = corpo.indexOf(d);
+      const [p, ...r] = d.split(':');
+      if (p && r.length) push(p, r.join(':'), delta + rel, true);
+    }
   }
 
   let base = 0;
