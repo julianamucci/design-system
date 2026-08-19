@@ -36,8 +36,8 @@ export const TagList: Story = {
     },
   },
   render: () => (
-    <div style={{ height: "300px", width: "280px" }}>
-      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div style={{ width: "280px" }}>
+      <ScrollArea size="xl" className="nds-w-full nds-rounded-md nds-border-default">
         <div className="nds-p-4">
           <h4 className="nds-mb-2 nds-text-body nds-font-medium" style={{ lineHeight: 1 }}>Tags</h4>
           {tags.map((tag, i) => (
@@ -83,8 +83,8 @@ export const CardCarousel: Story = {
     },
   },
   render: () => (
-    <div style={{ height: "200px", width: "500px" }}>
-      <ScrollArea className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div style={{ width: "500px" }}>
+      <ScrollArea size="md" className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default">
         <div className="nds-cluster nds-p-4" style={{ width: "max-content" }} data-spacing="md">
           {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => (
             <figure key={n} className="nds-shrink-0">
@@ -135,8 +135,8 @@ export const DataMatrix: Story = {
     const rows = Array.from({ length: 15 }, (_, i) => i + 1);
     const cols = Array.from({ length: 15 }, (_, i) => i + 1);
     return (
-      <div style={{ height: "280px", width: "500px" }}>
-        <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+      <div style={{ width: "500px" }}>
+        <ScrollArea size="xl" className="nds-w-full nds-rounded-md nds-border-default">
           <table className="nds-border-collapse nds-text-caption" style={{ width: "max-content" }}>
             <tbody>
               {rows.map((r) => (
@@ -196,8 +196,8 @@ export const SidebarMenu: Story = {
       { name: "Feedback", items: ["Alert", "Toast", "Sonner", "Progress", "Skeleton"] },
     ];
     return (
-      <div style={{ height: "320px", width: "240px" }}>
-        <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+      <div style={{ width: "240px" }}>
+        <ScrollArea size="xl" className="nds-w-full nds-rounded-md nds-border-default">
           <nav aria-label="Sidebar" className="nds-p-2">
             {sections.map((sec) => (
               <div key={sec.name} className="nds-mb-4">

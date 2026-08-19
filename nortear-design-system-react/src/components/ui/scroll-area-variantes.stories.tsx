@@ -46,8 +46,8 @@ export const Vertical: Story = {
     },
   },
   render: () => (
-    <div style={{ height: "300px", width: "320px" }}>
-      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div style={{ width: "320px" }}>
+      <ScrollArea size="xl" className="nds-w-full nds-rounded-md nds-border-default">
         <div className="nds-p-4" data-spacing="sm">
           {tags.map((n) => (
             <div key={n} className="nds-text-body nds-border-b nds-last-border-0" style={{ paddingBottom: "0.5rem" }}>
@@ -91,14 +91,13 @@ export const Horizontal: Story = {
     },
   },
   render: () => (
-    <div style={{ height: "160px", width: "500px" }}>
-      <ScrollArea className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}>
-        <div className="nds-cluster" style={{width: "max-content", padding: "0.75rem" }} data-spacing="sm" >
+    <div style={{ width: "500px" }}>
+      <ScrollArea size="sm" className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default">
+        <div className="nds-cluster" style={{width: "max-content", padding: "0.75rem" }} data-spacing="sm">
           {cards.map((n) => (
             <div
               key={n}
-              className="nds-cluster nds-rounded-md nds-bg-muted nds-text-body nds-shrink-0" data-align="center" data-justify="center" style={{ height: "120px", width: "140px" }}
-            >
+              className="nds-cluster nds-rounded-md nds-bg-muted nds-text-body nds-shrink-0" data-align="center" data-justify="center" style={{ height: "120px", width: "140px" }}>
               Card {n}
             </div>
           ))}
@@ -138,8 +137,8 @@ export const Both: Story = {
     },
   },
   render: () => (
-    <div style={{ height: "260px", width: "500px" }}>
-      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div style={{ width: "500px" }}>
+      <ScrollArea size="lg" className="nds-w-full nds-rounded-md nds-border-default">
         <table className="nds-border-collapse nds-text-caption" style={{ width: "max-content" }}>
           <tbody>
             {rows.map((r) => (

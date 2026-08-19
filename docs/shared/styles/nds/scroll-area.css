@@ -3,16 +3,31 @@
  * Container com altura/largura fixa que rola o conteúdo interno via scrollbar
  * nativo do browser. Sem scrollbar customizado (padrão consistente com OS).
  *
- *   <div class="nds-scroll-area" style="height: 200px">
+ *   <div class="nds-scroll-area" data-size="md">
  *     <div class="nds-scroll-area-viewport">[conteúdo longo]</div>
  *   </div>
+ *
+ * A altura é OBRIGATÓRIA — sem limite não há transbordo, e sem transbordo não
+ * há rolagem. Até 2026-08-19 este comentário ensinava `style="height: 200px"`,
+ * e as docs pages seguiram a instrução: 60 alturas cravadas em três stacks,
+ * cada uma escolhendo o próprio número. Quem precisar de uma altura fora da
+ * escada usa `--box-height` no elemento, que a folha continua governando.
  */
 
 .nds-scroll-area {
   position: relative;
   overflow: hidden;
   border-radius: inherit;
+  block-size: var(--box-height);
 }
+
+/* Escada de janela. Ver `--box-height-*` em tokens.css: não acompanha a
+ * densidade de propósito — o conteúdo rola, não é cortado. */
+.nds-scroll-area[data-size="xs"] { --box-height: var(--box-height-xs); }
+.nds-scroll-area[data-size="sm"] { --box-height: var(--box-height-sm); }
+.nds-scroll-area[data-size="md"] { --box-height: var(--box-height-md); }
+.nds-scroll-area[data-size="lg"] { --box-height: var(--box-height-lg); }
+.nds-scroll-area[data-size="xl"] { --box-height: var(--box-height-xl); }
 
 .nds-scroll-area-viewport {
   width: 100%;

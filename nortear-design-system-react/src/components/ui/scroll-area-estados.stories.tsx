@@ -82,8 +82,8 @@ export const Idle: Story = {
     },
   },
   render: () => (
-    <div style={{ height: "260px", width: "300px" }}>
-      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div style={{ width: "300px" }}>
+      <ScrollArea size="lg" className="nds-w-full nds-rounded-md nds-border-default">
         <List />
       </ScrollArea>
     </div>
@@ -113,8 +113,8 @@ export const AlwaysVisible: Story = {
     },
   },
   render: () => (
-    <div style={{ height: "260px", width: "300px" }}>
-      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div style={{ width: "300px" }}>
+      <ScrollArea size="lg" className="nds-w-full nds-rounded-md nds-border-default">
         <List />
       </ScrollArea>
     </div>
@@ -236,8 +236,8 @@ export const Hover: Story = {
     },
   },
   render: () => (
-    <div style={{ height: "260px", width: "300px" }}>
-      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div style={{ width: "300px" }}>
+      <ScrollArea size="lg" className="nds-w-full nds-rounded-md nds-border-default">
         <List />
       </ScrollArea>
     </div>
@@ -271,8 +271,8 @@ export const Focus: Story = {
     },
   },
   render: () => (
-    <div style={{ height: "260px", width: "300px" }}>
-      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div style={{ width: "300px" }}>
+      <ScrollArea size="lg" className="nds-w-full nds-rounded-md nds-border-default">
         <List />
       </ScrollArea>
     </div>
@@ -312,8 +312,8 @@ export const FocusableContent: Story = {
     },
   },
   render: () => (
-    <div style={{ height: "260px", width: "300px" }}>
-      <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+    <div style={{ width: "300px" }}>
+      <ScrollArea size="lg" className="nds-w-full nds-rounded-md nds-border-default">
         <nav aria-label="Ações" className="nds-p-4">
           <ul className="nds-stack" data-spacing="xs">
             {acoes.map((n) => (
@@ -375,8 +375,8 @@ export const NoLimit: Story = {
         <List />
       </ScrollArea>
 
-      <div style={{ height: "160px" }}>
-        <ScrollArea className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}>
+      <div>
+        <ScrollArea size="sm" className="nds-w-full nds-rounded-md nds-border-default">
           <List />
         </ScrollArea>
       </div>

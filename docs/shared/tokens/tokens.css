@@ -246,6 +246,21 @@
   --height-sm: 1.75rem;       /* 28px — audit-ignore: orphan-token — degrau da escada, redefinido nas três densidades (themes/densities.css) e documentado na guideline 12; o último consumidor era uma story que cravava altura num campo com texto, que é justamente o que a regra proíbe */
   --height-default: 2rem;     /* 32px */
 
+  /* Caixa — altura de container que emoldura conteúdo rolável ou demonstrado.
+     Categoria distinta de --height-*: lá a altura é de INTERATIVO e sai de
+     padding + line-height, porque há texto a ser cortado. Aqui não há: o
+     conteúdo transborda e rola, então limitar a caixa é o objetivo, não um
+     efeito colateral — uma área de rolagem sem altura simplesmente não rola.
+     Por isso também NÃO acompanha a densidade: densidade aperta controle, não
+     encolhe janela.
+     A escada saiu da medição de 110 alturas cravadas em docs e stories, que
+     usavam 20 valores distintos entre 90px e 320px para dizer a mesma coisa. */
+  --box-height-xs: 7.5rem;    /* 120px */
+  --box-height-sm: 10rem;     /* 160px */
+  --box-height-md: 12.5rem;   /* 200px */
+  --box-height-lg: 15rem;     /* 240px */
+  --box-height-xl: 18.75rem;  /* 300px */
+
   /* Quadrados sem texto — icon-only, indicador, knob, thumb. Aqui medida fixa é
      correta (não há frase a ser cortada), e a escada acompanha a densidade. */
   --size-xs: 1.5rem;          /* 24px */

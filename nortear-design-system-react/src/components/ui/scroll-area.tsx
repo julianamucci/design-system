@@ -16,14 +16,24 @@ import { cn } from "@/lib/utils"
 // e de rolagem é publicado como `data-hovering` / `data-scrolling` na própria
 // barra, para o CSS decidir a aparência. Não há tempo de espera a configurar.
 
+// A altura é obrigatória: sem limite não há transbordo, e sem transbordo não há
+// rolagem. `size` é a escada de janela (`--box-height-*`), e existe porque a
+// alternativa praticada era cada página escolher o próprio número em `style`
+// inline — 60 alturas cravadas, 20 valores distintos para dizer a mesma coisa.
+// Altura fora da escada continua possível pela custom property `--box-height`,
+// que a folha governa.
+type ScrollAreaSize = "xs" | "sm" | "md" | "lg" | "xl";
+
 function ScrollArea({
   className,
   children,
+  size,
   ...props
-}: ScrollAreaPrimitive.Root.Props) {
+}: ScrollAreaPrimitive.Root.Props & { size?: ScrollAreaSize }) {
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
+      data-size={size}
       className={cn("nds-scroll-area", className)}
       {...props}
     >

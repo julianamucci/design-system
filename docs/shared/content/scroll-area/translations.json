@@ -36,7 +36,7 @@
       "title": "Quando e Como Usar",
       "guidelines": {
         "title": "Guidelines Obrigatórias",
-        "item1": "Sempre defina altura específica no container pai — sem isso o ScrollArea não funciona.",
+        "item1": "Sempre defina a altura da área de rolagem — sem limite não há transbordo, e sem transbordo não há rolagem.",
         "item2": "Use <code>h-full w-full</code> no <code>ScrollArea</code> e <code>overflow-hidden</code> no container pai.",
         "item3": "Não aninhe ScrollAreas — causa scroll duplo e desorientação.",
         "item4": "Para tabelas dentro de ScrollArea, use <code>overflow-x-auto</code> no wrapper, não outro ScrollArea."
@@ -83,9 +83,9 @@
           "avoid": "Evitar",
           "container": {
             "name": "Container pai",
-            "format": "Altura explícita · <code>h-*</code> ou inline style",
+            "format": "Altura pela escada de tamanhos do componente",
             "good": "<code>className=\"h-[400px]\"</code>",
-            "bad": "Sem altura · <code>h-auto</code>"
+            "bad": "Sem altura definida"
           },
           "scrollArea": {
             "name": "ScrollArea",
@@ -119,7 +119,7 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "Defina altura explícita no container pai antes de usar ScrollArea.",
+        "do": "Defina a altura da área de rolagem pela escada de tamanhos.",
         "dont": "Não envolva conteúdo de altura indefinida — ScrollArea fica invisível."
       },
       "pair2": {
@@ -307,7 +307,7 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "<strong>Comportamento e visual em camadas separadas</strong> — a medição do conteúdo, o dimensionamento e a visibilidade das barras e o arrasto do polegar vêm da camada de comportamento; o design system entrega a camada visual, nas classes <code>.nds-scroll-area-*</code>. Trocar a camada de comportamento não muda o desenho.",
-      "item2": "<strong>Altura obrigatória</strong> — o ScrollArea só rola quando o container pai tem altura definida; sem isso o conteúdo simplesmente expande.",
+      "item2": "<strong>Altura obrigatória</strong> — a área de rolagem só rola quando tem altura definida; sem isso o conteúdo simplesmente expande.",
       "item3": "<strong>Mobile</strong> — em telas pequenas prefira <code>overflow-auto</code> nativo; ScrollArea pode quebrar gestos de swipe e inércia.",
       "item4": "<strong>Não aninhar</strong> — múltiplas ScrollAreas dentro umas das outras causam scroll duplo confuso."
     },
@@ -345,7 +345,7 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Container pai sem altura definida",
+          "action": "Área de rolagem sem altura definida",
           "result": "ScrollArea não funciona — conteúdo expande",
           "priority": "medium"
         }
@@ -439,7 +439,7 @@
       "title": "When and How to Use",
       "guidelines": {
         "title": "Required Guidelines",
-        "item1": "Always define explicit height on the parent container — without it the ScrollArea won't work.",
+        "item1": "Always define the height of the scroll area — without a limit there is no overflow, and without overflow there is no scrolling.",
         "item2": "Use <code>h-full w-full</code> on <code>ScrollArea</code> and <code>overflow-hidden</code> on the parent.",
         "item3": "Don't nest ScrollAreas — causes double scroll and disorientation.",
         "item4": "For tables inside ScrollArea, use <code>overflow-x-auto</code> on the wrapper, not another ScrollArea."
@@ -486,9 +486,9 @@
           "avoid": "Avoid",
           "container": {
             "name": "Parent container",
-            "format": "Explicit height · <code>h-*</code> or inline style",
+            "format": "Height from the component size scale",
             "good": "<code>className=\"h-[400px]\"</code>",
-            "bad": "No height · <code>h-auto</code>"
+            "bad": "No defined height"
           },
           "scrollArea": {
             "name": "ScrollArea",
@@ -522,7 +522,7 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "Set explicit height on the parent before using ScrollArea.",
+        "do": "Set the scroll area height from the size scale.",
         "dont": "Don't wrap undefined-height content — ScrollArea becomes invisible."
       },
       "pair2": {
@@ -710,7 +710,7 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "<strong>Behaviour and looks in separate layers</strong> — measuring the content, sizing and showing the scrollbars, and dragging the thumb come from the behaviour layer; the design system ships the visual layer, in the <code>.nds-scroll-area-*</code> classes. Swapping the behaviour layer does not change the design.",
-      "item2": "<strong>Required height</strong> — ScrollArea only scrolls when parent container has explicit height; without it, content simply expands.",
+      "item2": "<strong>Required height</strong> — the scroll area only scrolls when it has a defined height; without it, content simply expands.",
       "item3": "<strong>Mobile</strong> — on small screens prefer native <code>overflow-auto</code>; ScrollArea can break swipe gestures and inertia.",
       "item4": "<strong>Don't nest</strong> — multiple ScrollAreas nested cause confusing double scroll."
     },
@@ -748,7 +748,7 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Parent container without defined height",
+          "action": "Scroll area without defined height",
           "result": "ScrollArea doesn't work — content expands",
           "priority": "medium"
         }
@@ -842,7 +842,7 @@
       "title": "Cuándo y Cómo Usar",
       "guidelines": {
         "title": "Guidelines Obligatorias",
-        "item1": "Define siempre altura específica en el contenedor padre — sin eso el ScrollArea no funciona.",
+        "item1": "Define siempre la altura del área de desplazamiento — sin límite no hay desbordamiento, y sin desbordamiento no hay desplazamiento.",
         "item2": "Usa <code>h-full w-full</code> en el <code>ScrollArea</code> y <code>overflow-hidden</code> en el padre.",
         "item3": "No anides ScrollAreas — causa scroll doble y desorientación.",
         "item4": "Para tablas dentro de ScrollArea, usa <code>overflow-x-auto</code> en el wrapper, no otro ScrollArea."
@@ -889,9 +889,9 @@
           "avoid": "Evitar",
           "container": {
             "name": "Contenedor padre",
-            "format": "Altura explícita · <code>h-*</code> o inline style",
+            "format": "Altura por la escala de tamaños del componente",
             "good": "<code>className=\"h-[400px]\"</code>",
-            "bad": "Sin altura · <code>h-auto</code>"
+            "bad": "Sin altura definida"
           },
           "scrollArea": {
             "name": "ScrollArea",
@@ -925,7 +925,7 @@
     "doDont": {
       "title": "Do & Don't",
       "pair1": {
-        "do": "Define altura explícita en el contenedor padre antes de usar ScrollArea.",
+        "do": "Define la altura del área de desplazamiento por la escala de tamaños.",
         "dont": "No envuelvas contenido de altura indefinida — ScrollArea queda invisible."
       },
       "pair2": {
@@ -1113,7 +1113,7 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "<strong>Comportamiento y visual en capas separadas</strong> — la medición del contenido, el dimensionamiento y la visibilidad de las barras y el arrastre del pulgar vienen de la capa de comportamiento; el design system entrega la capa visual, en las clases <code>.nds-scroll-area-*</code>. Cambiar la capa de comportamiento no cambia el diseño.",
-      "item2": "<strong>Altura obligatoria</strong> — el ScrollArea solo desplaza cuando el contenedor padre tiene altura definida; sin eso el contenido simplemente se expande.",
+      "item2": "<strong>Altura obligatoria</strong> — el área de desplazamiento solo se desplaza cuando tiene altura definida; sin eso el contenido simplemente se expande.",
       "item3": "<strong>Móvil</strong> — en pantallas pequeñas prefiere <code>overflow-auto</code> nativo; ScrollArea puede romper gestos de swipe e inercia.",
       "item4": "<strong>No anidar</strong> — múltiples ScrollAreas anidados causan scroll doble confuso."
     },
@@ -1151,7 +1151,7 @@
           "priority": "high"
         },
         "item4": {
-          "action": "Contenedor padre sin altura definida",
+          "action": "Área de desplazamiento sin altura definida",
           "result": "ScrollArea no funciona — contenido se expande",
           "priority": "medium"
         }

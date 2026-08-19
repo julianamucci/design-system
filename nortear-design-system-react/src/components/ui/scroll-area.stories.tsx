@@ -60,10 +60,10 @@ export const Playground: Story = {
         // key re-monta ao mudar a forma do conteúdo do exemplo
         <div
           key={orientation}
-          style={{ height: "160px", width: "500px" }}
+          style={{ width: "500px" }}
         >
           <ScrollArea
-            className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style={{ height: "100%" }}
+            size="sm" className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default"
           >
             <div className="nds-cluster" style={{width: "max-content", padding: "0.75rem" }} data-spacing="sm" >
               {items.map((n) => (
@@ -87,10 +87,10 @@ export const Playground: Story = {
       return (
         <div
           key={orientation}
-          style={{ height: "260px", width: "500px" }}
+          style={{ width: "500px" }}
         >
           <ScrollArea
-            className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}
+            size="lg" className="nds-w-full nds-rounded-md nds-border-default"
           >
             <table className="nds-border-collapse nds-text-caption" style={{ width: "max-content" }}>
               <tbody>
@@ -115,10 +115,10 @@ export const Playground: Story = {
     return (
       <div
         key={orientation}
-        style={{ height: "300px", width: "320px" }}
+        style={{ width: "320px" }}
       >
         <ScrollArea
-          className="nds-w-full nds-rounded-md nds-border-default" style={{ height: "100%" }}
+          size="xl" className="nds-w-full nds-rounded-md nds-border-default"
         >
           <div className="nds-p-4" data-spacing="sm">
             {items.map((n) => (

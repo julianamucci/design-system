@@ -49,3 +49,29 @@
 .nds-docs-skeleton-media {
   aspect-ratio: 16 / 9;
 }
+
+/*
+ * ─── nds-demo-box ─────────────────────────────────────────────────────────────
+ * Caixa que emoldura uma demonstração precisando de altura definida: painel
+ * redimensionável, carrossel, slider vertical, cartão de altura fixa.
+ *
+ * Existe porque a altura ali é ANDAIME DE DOCUMENTAÇÃO, não contrato do
+ * componente — diferente da área de rolagem, que precisa de altura para
+ * funcionar e por isso recebeu `data-size` no próprio `.nds-scroll-area`.
+ * Embarcar a medida da demo no produto seria vender andaime como componente.
+ *
+ * A escada é a mesma (`--box-height-*`), e pelo mesmo motivo não acompanha a
+ * densidade: o conteúdo é emoldurado, não comprimido.
+ *
+ *   <div class="nds-demo-box" data-size="md">[demo]</div>
+ */
+.nds-demo-box {
+  block-size: var(--box-height, var(--box-height-md));
+  inline-size: 100%;
+}
+
+.nds-demo-box[data-size="xs"] { --box-height: var(--box-height-xs); }
+.nds-demo-box[data-size="sm"] { --box-height: var(--box-height-sm); }
+.nds-demo-box[data-size="md"] { --box-height: var(--box-height-md); }
+.nds-demo-box[data-size="lg"] { --box-height: var(--box-height-lg); }
+.nds-demo-box[data-size="xl"] { --box-height: var(--box-height-xl); }
