@@ -217,7 +217,7 @@ const value = ref<number[]>([100, 400]);
 </template>`;
 
 const codeVertical = `<template>
-  <div style="height: 10rem;">
+  <div class="nds-demo-box" data-size="sm">
     <Slider
       v-model="value"
       orientation="vertical"
@@ -527,9 +527,9 @@ const visualTestItems = computed(() => [
             </span>
           </div>
           <div
-            class="nds-cluster"
+            class="nds-cluster nds-demo-box"
             data-justify="center"
-            style="height: 10rem;"
+            data-size="sm"
           >
             <Slider
               v-model="verticalValue"
@@ -761,9 +761,9 @@ const visualTestItems = computed(() => [
       <!-- vertical -->
       <template #variant-preview-2>
         <div
-          class="nds-cluster"
+          class="nds-cluster nds-demo-box"
           data-justify="center"
-          style="height: 10rem;"
+          data-size="sm"
         >
           <Slider
             :model-value="[60]"

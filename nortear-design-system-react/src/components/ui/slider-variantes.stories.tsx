@@ -104,7 +104,7 @@ export const Vertical: Story = {
   render: function VerticalRender() {
     const [value, setValue] = useState<number[]>([50]);
     return (
-      <div className="nds-stack" data-align="center" data-spacing="sm" style={{ height: "10rem", width: "8rem" }}>
+      <div className="nds-stack nds-demo-box" data-align="center" data-spacing="sm" data-size="sm" style={{ width: "8rem" }}>
         <span aria-live="polite" className="nds-text-body nds-tabular-nums">
           {value[0]}%
         </span>

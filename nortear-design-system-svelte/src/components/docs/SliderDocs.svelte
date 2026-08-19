@@ -133,7 +133,7 @@
 
 <Slider bind:value min={0} max={100} step={1} aria-label="Faixa de preço" />`;
 
-  const codeVertical = `<div class="nds-cluster" data-justify="center" style="height: 10rem;">
+  const codeVertical = `<div class="nds-cluster nds-demo-box" data-justify="center" data-size="sm">
   <Slider
     bind:value
     orientation="vertical"
@@ -256,7 +256,7 @@ interface SliderProps {
             <Label>{$tStore('demonstration.labels.brightness')}</Label>
             <span class="nds-text-body" style="font-variant-numeric: tabular-nums;" aria-live="polite">{demoBrightness[0]}%</span>
           </div>
-          <div class="nds-cluster" data-justify="center" style="height: 10rem;">
+          <div class="nds-cluster nds-demo-box" data-justify="center" data-size="sm">
             <Slider
               bind:value={demoBrightness}
               onValueCommit={(v: number[]) => track('slider_change', { component: 'slider', field_name: 'brightness', value: v[0], min: 0, max: 100, location: 'docs_demo' })}
@@ -442,7 +442,7 @@ interface SliderProps {
     </div>
   {/snippet}
   {#snippet variantVertical()}
-    <div class="nds-cluster" data-justify="center" style="height: 10rem;">
+    <div class="nds-cluster nds-demo-box" data-justify="center" data-size="sm">
       <Slider value={[50]} orientation="vertical" min={0} max={100} aria-label="Brilho" />
     </div>
   {/snippet}

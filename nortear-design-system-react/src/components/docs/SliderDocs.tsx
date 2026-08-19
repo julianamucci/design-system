@@ -143,7 +143,7 @@ function PriceRangeDemo({ label }: { label: string }) {
 function VerticalDemo({ label }: { label: string }) {
   const [value, setValue] = useState<number[]>([60]);
   return (
-    <div className="nds-stack" data-spacing="sm" style={{ alignItems: "center", height: "10rem", width: "8rem" }}>
+    <div className="nds-stack nds-demo-box" data-spacing="sm" data-size="sm" style={{ alignItems: "center", width: "8rem" }}>
       <span aria-live="polite" className="nds-text-body" style={{ fontVariantNumeric: "tabular-nums" }}>
         {value[0]}%
       </span>
@@ -307,7 +307,7 @@ export function SliderDocs() {
   aria-label="Faixa de preço"
 />`;
 
-  const codeVertical = `<div style={{ height: "10rem" }}>
+  const codeVertical = `<div className="nds-demo-box" data-size="sm">
   <Slider
     value={[60]}
     onValueChange={setValue}
@@ -562,7 +562,7 @@ interface SliderProps {
             description: stripHtml(tContent("variants.styles.vertical")),
             code: codeVertical,
             preview: (
-              <div className="nds-cluster nds-w-full" data-justify="center" style={{ height: "10rem" }}>
+              <div className="nds-cluster nds-w-full nds-demo-box" data-justify="center" data-size="sm">
                 <Slider
                   defaultValue={[60]}
                   orientation="vertical"
