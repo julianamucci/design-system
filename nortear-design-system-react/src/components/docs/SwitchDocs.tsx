@@ -248,7 +248,7 @@ import { Label } from "@/components/ui/label";`;
             </Label>
           </div>
 
-          <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style={{ width: "20rem" }}>
+          <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm" data-justify="between">
             <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
               <Label htmlFor="demo-marketing">
                 {tContent("demonstration.labels.marketing")}
@@ -264,7 +264,7 @@ import { Label } from "@/components/ui/label";`;
             />
           </div>
 
-          <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style={{ width: "20rem" }}>
+          <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm" data-justify="between">
             <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
               <Label htmlFor="demo-darkmode">
                 {tContent("demonstration.labels.darkMode")}
@@ -455,7 +455,7 @@ import { Label } from "@/components/ui/label";`;
             description: stripHtml(tContent("variants.styles.withDescription")),
             code: codeWithDescription,
             preview: (
-              <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between" style={{ width: "20rem" }}>
+              <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm" data-justify="between">
                 <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>
                   <Label htmlFor="var-marketing">Emails de marketing</Label>
                   <p className="nds-text-body">
@@ -509,9 +509,9 @@ import { Label } from "@/components/ui/label";`;
             name: tContent("variants.compositions.settingsList.name"),
             description: tContent("variants.compositions.settingsList.description"),
             useWhen: tContent("variants.compositions.settingsList.use"),
-            code: `<div className="nds-stack" data-spacing="sm" style={{ width: "24rem" }}>\n  <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-email">Receber novidades por email</Label>\n      <p className="nds-text-body">Resumo semanal sobre o produto.</p>\n    </div>\n    <Switch id="pref-email" defaultChecked />\n  </div>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-push">Receber notificações push</Label>\n      <p className="nds-text-body">Alertas no dispositivo em tempo real.</p>\n    </div>\n    <Switch id="pref-push" />\n  </div>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-sms">Alertas por SMS</Label>\n      <p className="nds-text-body">Eventos críticos via mensagem de texto.</p>\n    </div>\n    <Switch id="pref-sms" />\n  </div>\n</div>`,
+            code: `<div className="nds-stack nds-w-md" data-spacing="sm">\n  <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-email">Receber novidades por email</Label>\n      <p className="nds-text-body">Resumo semanal sobre o produto.</p>\n    </div>\n    <Switch id="pref-email" defaultChecked />\n  </div>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-push">Receber notificações push</Label>\n      <p className="nds-text-body">Alertas no dispositivo em tempo real.</p>\n    </div>\n    <Switch id="pref-push" />\n  </div>\n  <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>\n      <Label htmlFor="pref-sms">Alertas por SMS</Label>\n      <p className="nds-text-body">Eventos críticos via mensagem de texto.</p>\n    </div>\n    <Switch id="pref-sms" />\n  </div>\n</div>`,
             preview: (
-              <div className="nds-stack" data-spacing="sm" style={{ width: "24rem" }}>
+              <div className="nds-stack nds-w-md" data-spacing="sm">
                 <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
                 <div className="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
                   <div className="nds-stack" data-spacing="xs" style={{ paddingRight: "var(--spacing-2)" }}>

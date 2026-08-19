@@ -103,10 +103,11 @@ export const DeliveryMethod: Story = {
         { value: 'express', label: 'Expressa (1 dia)' },
         { value: 'pickup', label: 'Retirar na loja' },
       ],
+      // Dispara `.nds-radio-group[aria-orientation="horizontal"]`, que já traz o
+      // grid em coluna com `gap: var(--spacing-6)` — e alinha o anúncio do
+      // leitor de tela ao layout, coisa que as três declarações inline não faziam.
+      orientation: 'horizontal',
     });
-    group.style.gridAutoFlow = 'column';
-    group.style.gridAutoColumns = 'max-content';
-    group.style.gap = '1.5rem';
     return withLegend(group, 'Forma de entrega', 'comp-delivery-legend');
   },
   parameters: {
@@ -130,9 +131,8 @@ export const DeliveryMethod: Story = {
 export const WithDescription: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack';
+    wrap.className = 'nds-stack nds-w-sm';
     wrap.dataset.spacing = 'xs';
-    wrap.style.width = '20rem';
 
     const legend = document.createElement('p');
     legend.id = 'comp-desc-legend';
@@ -198,9 +198,8 @@ export const WithDescription: Story = {
 export const InForm: Story = {
   render: () => {
     const form = document.createElement('form');
-    form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';
+    form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg nds-w-sm';
     form.dataset.spacing = 'md';
-    form.style.width = '20rem';
     form.noValidate = true;
 
     // Fieldset semântico com legend nativo

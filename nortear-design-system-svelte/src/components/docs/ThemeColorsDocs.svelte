@@ -165,10 +165,10 @@
 </script>
 
 <div bind:this={trackingRoot} class="sb-unstyled nds-flex-1 nds-w-full ds-docs" style="height: 100%; overflow: auto">
-  <div class="nds-p-8 nds-stack" data-spacing="xl" style="max-width: 72rem; margin-inline: auto">
+  <div class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto" data-spacing="xl">
 
     <!-- ── Header ──────────────────────────────────────────────────────── -->
-    <header class="nds-stack nds-pb-8" style="padding-bottom: 2rem">
+    <header class="nds-stack nds-pb-8">
       <div class="nds-cluster" data-justify="between">
         <div class="nds-cluster" data-spacing="sm" data-align="center">
           <Badge variant="secondary" class="nds-bg-primary-soft nds-text-primary nds-border-primary-soft nds-font-medium">
@@ -186,7 +186,7 @@
         {$tStore('title')}
       </h1>
 
-      <p class="nds-text-muted-foreground nds-leading-relaxed" style="max-width: 48rem">
+      <p class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose">
         {$tStore('description')}
       </p>
     </header>

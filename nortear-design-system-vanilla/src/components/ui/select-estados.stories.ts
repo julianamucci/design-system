@@ -43,9 +43,8 @@ function comRotulo(
   opcoes: Parameters<typeof createSelect>[0],
 ): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'nds-stack';
+  wrap.className = 'nds-stack nds-w-sm';
   wrap.dataset.spacing = 'sm';
-  wrap.style.width = '20rem';
 
   const label = document.createElement('label');
   label.htmlFor = id;
@@ -290,9 +289,8 @@ export const Disabled: Story = {
 export const DisabledItem: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack';
+    wrap.className = 'nds-stack nds-w-sm';
     wrap.dataset.spacing = 'lg';
-    wrap.style.width = '20rem';
 
     wrap.append(
       comRotulo('st-disabled-item', 'Estado', {
@@ -403,9 +401,8 @@ export const DisabledItem: Story = {
 export const Invalid: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack';
+    wrap.className = 'nds-stack nds-w-sm';
     wrap.dataset.spacing = 'sm';
-    wrap.style.width = '20rem';
 
     const label = document.createElement('label');
     label.htmlFor = 'st-invalid';

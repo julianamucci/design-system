@@ -31,9 +31,8 @@ function comRotulo(
   opcoes: Parameters<typeof createSelect>[0],
 ): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'nds-stack';
+  wrap.className = 'nds-stack nds-w-sm';
   wrap.dataset.spacing = 'sm';
-  wrap.style.width = '20rem';
 
   const label = document.createElement('label');
   label.htmlFor = id;
@@ -138,9 +137,8 @@ export const RegionWithGroups: Story = {
   // ouve leem a mesma coisa.
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack';
+    wrap.className = 'nds-stack nds-w-sm';
     wrap.dataset.spacing = 'sm';
-    wrap.style.width = '20rem';
 
     const label = document.createElement('label');
     label.id = 'comp-region-label';
@@ -212,10 +210,8 @@ export const RegionWithGroups: Story = {
 export const InForm: Story = {
   render: () => {
     const form = document.createElement('form');
-    form.className = 'nds-stack nds-border-default nds-rounded-lg';
+    form.className = 'nds-stack nds-border-default nds-rounded-lg nds-w-sm nds-p-4';
     form.dataset.spacing = 'md';
-    form.style.width = '20rem';
-    form.style.padding = '1rem';
     form.noValidate = true;
 
     const field = document.createElement('div');

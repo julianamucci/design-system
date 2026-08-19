@@ -200,7 +200,8 @@ export const WithoutToaster: Story = {
   },
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.style.cssText = 'contain: layout; position: relative; min-height: 7.5rem;';
+    wrapper.className = 'nds-min-h-30';
+    wrapper.style.cssText = 'contain: layout; position: relative;';
     const p = document.createElement('p');
     p.className = 'nds-text-body nds-text-muted-foreground';
     p.textContent = 'Esta story não monta região nenhuma. A fila monta a dela, e nada deve quebrar.';

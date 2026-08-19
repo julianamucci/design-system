@@ -289,7 +289,7 @@ interface RadioGroupItemProps {
                 });
                 setDeliveryValue(value);
               }}
-              style={{ gridAutoFlow: "column", gridAutoColumns: "max-content", gap: "1.5rem" }}
+              aria-orientation="horizontal"
               aria-label={tContent("demonstration.labels.deliveryLabel")}
             >
               <div className="nds-cluster" data-spacing="xs">
@@ -579,7 +579,7 @@ interface RadioGroupItemProps {
             code: codeHorizontal,
             preview: (
               <RadioGroup
-                style={{ gridAutoFlow: "column", gridAutoColumns: "max-content", gap: "1.5rem" }}
+                aria-orientation="horizontal"
                 aria-label="Forma de entrega"
               >
                 <div className="nds-cluster" data-spacing="xs">

@@ -154,13 +154,12 @@ export function ThemeColorsDocs() {
       <main
         tabIndex={-1}
         aria-labelledby={DOCS_PAGE_TITLE_ID}
-        className="nds-p-8 nds-stack"
+        className="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
         data-spacing="xl"
-        style={{ maxWidth: '72rem', marginInline: 'auto' }}
       >
 
         {/* ── Header ──────────────────────────────────────────────────────── */}
-        <header className="nds-stack nds-pb-8" style={{ paddingBottom: '2rem' }}>
+        <header className="nds-stack nds-pb-8">
           <div className="nds-cluster" data-justify="between">
             <div className="nds-cluster" data-spacing="sm" data-align="center">
               <Badge
@@ -186,7 +185,7 @@ export function ThemeColorsDocs() {
             {t('title')}
           </h1>
 
-          <p className="nds-text-muted-foreground nds-leading-relaxed" style={{ maxWidth: '48rem' }}>
+          <p className="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose">
             {t('description')}
           </p>
         </header>

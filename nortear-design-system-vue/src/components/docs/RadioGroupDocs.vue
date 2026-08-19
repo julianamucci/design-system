@@ -475,7 +475,6 @@ const visualTestItems = computed(() => [
           <RadioGroup
             orientation="horizontal"
             :aria-label="tContent('demonstration.labels.deliveryLabel')"
-            style="grid-auto-flow: column; grid-auto-columns: max-content; gap: 1.5rem"
             @update:model-value="(v) => handleDemoRadioChange('delivery-method', String(v))"
           >
             <div
@@ -828,7 +827,6 @@ const visualTestItems = computed(() => [
         <RadioGroup
           orientation="horizontal"
           aria-label="Forma de entrega"
-          style="grid-auto-flow: column; grid-auto-columns: max-content; gap: 1.5rem"
         >
           <div
             class="nds-cluster"

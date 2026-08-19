@@ -76,16 +76,16 @@ function buildRadioGroupWithLegend(opts: {
   legend.className = 'nds-text-body nds-font-semibold';
   legend.textContent = legendText;
 
+  // `orientation` já é o contrato: a factory vira `aria-orientation`, e
+  // `.nds-radio-group[aria-orientation="horizontal"]` traz o grid em coluna com
+  // `gap: var(--spacing-6)`. Cravar as três declarações inline duplicava a folha
+  // — e sem o atributo o leitor de tela anunciava o grupo como vertical.
   const group = createRadioGroup({
     name,
     defaultValue,
     items,
+    orientation: horizontal ? 'horizontal' : undefined,
   });
-  if (horizontal) {
-    group.style.gridAutoFlow = 'column';
-    group.style.gridAutoColumns = 'max-content';
-    group.style.gap = '1.5rem';
-  }
   group.setAttribute('role', 'radiogroup');
   group.setAttribute('aria-labelledby', legendId);
   if (ariaInvalid) {
@@ -506,9 +506,8 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
       case 'composicoes': {
         const buildInForm = () => {
           const form = document.createElement('form');
-          form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';
+          form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg nds-w-sm';
           form.dataset.spacing = 'md';
-          form.style.width = '20rem';
           form.noValidate = true;
 
           const fs = document.createElement('fieldset');

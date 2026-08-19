@@ -225,7 +225,7 @@ const codeCompWithLabel = `<div class="nds-cluster" data-spacing="sm">
   </Label>
 </div>`;
 
-const codeCompSettingsList = `<div class="nds-stack" data-spacing="sm" style="width: 24rem;">
+const codeCompSettingsList = `<div class="nds-stack nds-w-md" data-spacing="sm">
   <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de notificação</p>
   <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
     <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2);">
@@ -410,9 +410,8 @@ const visualTestItems = computed(() => [
         </div>
 
         <div
-          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm"
           data-justify="between"
-          style="width: 20rem;"
         >
           <div
             class="nds-stack"
@@ -432,9 +431,8 @@ const visualTestItems = computed(() => [
         </div>
 
         <div
-          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm"
           data-justify="between"
-          style="width: 20rem;"
         >
           <div
             class="nds-stack"
@@ -644,9 +642,8 @@ const visualTestItems = computed(() => [
       <!-- withDescription -->
       <template #variant-preview-1>
         <div
-          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2"
+          class="nds-cluster nds-rounded-lg nds-border-default nds-p-2 nds-w-sm"
           data-justify="between"
-          style="width: 20rem;"
         >
           <div
             class="nds-stack"
@@ -706,9 +703,8 @@ const visualTestItems = computed(() => [
       <!-- settingsList -->
       <template #variant-preview-1>
         <div
-          class="nds-stack"
+          class="nds-stack nds-w-md"
           data-spacing="sm"
-          style="width: 24rem;"
         >
           <p class="nds-text-body nds-font-semibold nds-mb-2">
             Preferências de notificação

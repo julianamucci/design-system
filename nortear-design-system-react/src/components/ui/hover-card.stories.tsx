@@ -100,8 +100,8 @@ export const Playground: Story = {
     // `key`: `defaultOpen` só é lido na montagem, então trocar o control sem
     // remontar não mudaria nada na tela.
     <p
-      className="nds-text-body"
-      style={{ contain: "layout", minHeight: 250, position: "relative", maxWidth: "24rem" }}
+      className="nds-text-body nds-max-w-sm"
+      style={{ contain: "layout", minHeight: 250, position: "relative" }}
     >
       Comentário de{" "}
       <HoverCard

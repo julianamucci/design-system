@@ -96,9 +96,9 @@ export const Playground: Story = {
   },
   render: (args) => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack';
+    wrapper.className = 'nds-stack nds-min-h-30';
     wrapper.dataset.spacing = 'md';
-    wrapper.style.cssText = 'contain: layout; position: relative; min-height: 7.5rem;';
+    wrapper.style.cssText = 'contain: layout; position: relative;';
 
     wrapper.appendChild(
       createButton({

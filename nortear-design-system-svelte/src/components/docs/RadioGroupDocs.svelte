@@ -267,7 +267,6 @@ interface RadioGroupItemProps {
           bind:value={deliveryValue}
           onValueChange={(v: string) => track('radio_change', { component: 'radio_group', name: 'delivery', value: v, location: 'docs_demo' })}
           orientation="horizontal"
-          style="grid-auto-flow: column; grid-auto-columns: max-content; gap: 1.5rem"
           aria-label={$tStore('demonstration.labels.deliveryLabel')}
           data-track="demo"
           data-track-id="radio-group:demo:delivery"
@@ -545,7 +544,6 @@ interface RadioGroupItemProps {
     <RadioGroup
       bind:value={varHorizontalValue}
       orientation="horizontal"
-      style="grid-auto-flow: column; grid-auto-columns: max-content; gap: 1.5rem"
       aria-label="Forma de entrega"
     >
       <div class="nds-cluster" data-spacing="xs">

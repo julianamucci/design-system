@@ -176,16 +176,14 @@ onUnmounted(() => {
          layout próprio, então o <main> é este wrapper — mesmas classes e mesma
          posição na árvore, sem mudança visual. -->
     <main
-      class="nds-p-8 nds-stack"
+      class="nds-p-8 nds-stack nds-max-w-docs nds-mx-auto"
       data-spacing="xl"
-      style="max-width: 72rem; margin-inline: auto"
       tabindex="-1"
       aria-labelledby="docs-page-title"
     >
       <!-- ── Header ──────────────────────────────────────────────────────── -->
       <header
         class="nds-stack nds-pb-8"
-        style="padding-bottom: 2rem"
       >
         <div
           class="nds-cluster"
@@ -221,8 +219,7 @@ onUnmounted(() => {
         </h1>
 
         <p
-          class="nds-text-muted-foreground nds-leading-relaxed"
-          style="max-width: 48rem"
+          class="nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose"
         >
           {{ t('description') }}
         </p>

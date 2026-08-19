@@ -57,9 +57,8 @@ function comRotulo(
   opcoes: Parameters<typeof createSelect>[0],
 ): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'nds-stack';
+  wrap.className = 'nds-stack nds-w-sm';
   wrap.dataset.spacing = 'sm';
-  wrap.style.width = '20rem';
 
   const label = document.createElement('label');
   label.htmlFor = id;

@@ -135,9 +135,8 @@ export const Horizontal: Story = {
 export const WithDescription: Story = {
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack';
+    wrap.className = 'nds-stack nds-w-sm';
     wrap.dataset.spacing = 'xs';
-    wrap.style.width = '20rem';
 
     const legend = document.createElement('p');
     legend.id = 'rg-desc-legend';

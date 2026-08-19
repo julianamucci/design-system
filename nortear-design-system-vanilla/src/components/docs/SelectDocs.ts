@@ -271,9 +271,8 @@ export function createSelectDocs(): HTMLElement {
           title: t('demonstration.title'),
           demoFactory: () => {
             const wrap = document.createElement('div');
-            wrap.className = 'nds-stack';
+            wrap.className = 'nds-stack nds-w-sm';
             wrap.dataset.spacing = 'lg';
-            wrap.style.width = '20rem';
 
             const stateField = buildLabeledSelect({
               id: 'demo-state',
@@ -665,9 +664,8 @@ form.addEventListener('submit', (e) => {
 });`,
               previewFactory: () => {
                 const form = document.createElement('form');
-                form.className = 'nds-stack nds-border-default nds-rounded-lg';
+                form.className = 'nds-stack nds-border-default nds-rounded-lg nds-w-sm nds-p-4';
                 form.dataset.spacing = 'md';
-                form.style.cssText = 'width:20rem;padding:1rem;';
                 form.noValidate = true;
 
                 const field = document.createElement('div');

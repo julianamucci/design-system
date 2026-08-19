@@ -268,7 +268,7 @@ export const Sides: Story = {
     },
   },
   render: () => (
-    <div className="nds-grid" data-cols="2" data-spacing="lg" style={{ maxWidth: "32rem" }}>
+    <div className="nds-grid nds-max-w-lg" data-cols="2" data-spacing="lg">
       {(
         [
           ["acima", "top"],

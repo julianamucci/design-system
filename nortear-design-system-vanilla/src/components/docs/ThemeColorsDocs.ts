@@ -127,10 +127,8 @@ export function createThemeColorsDocs(): HTMLElement {
   // foundationsRenderer nem pelo DocsPageLayout). Mesmas classes e mesmo lugar
   // na árvore que o <div> anterior: zero mudança visual.
   const container = document.createElement('main');
-  container.className = 'nds-p-8 nds-stack';
+  container.className = 'nds-p-8 nds-stack nds-max-w-docs nds-mx-auto';
   container.dataset.spacing = 'xl';
-  container.style.maxWidth = '72rem';
-  container.style.marginInline = 'auto';
   container.tabIndex = -1;
   container.setAttribute('aria-labelledby', DOCS_PAGE_TITLE_ID);
   root.appendChild(container);
@@ -170,7 +168,6 @@ export function createThemeColorsDocs(): HTMLElement {
 
   const header = document.createElement('header');
   header.className = 'nds-stack nds-pb-8';
-  header.style.paddingBottom = '2rem';
 
   const topRow = document.createElement('div');
   topRow.className = 'nds-cluster nds-w-full';
@@ -189,8 +186,7 @@ export function createThemeColorsDocs(): HTMLElement {
   h1.className = 'nds-text-h1 nds-font-bold nds-tracking-tight nds-text-foreground';
 
   const desc = document.createElement('p');
-  desc.className = 'nds-text-muted-foreground nds-leading-relaxed';
-  desc.style.maxWidth = '48rem';
+  desc.className = 'nds-text-muted-foreground nds-leading-relaxed nds-max-w-prose';
 
   header.append(topRow, h1, desc);
 

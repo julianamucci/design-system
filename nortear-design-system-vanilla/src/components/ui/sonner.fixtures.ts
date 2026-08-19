@@ -32,7 +32,8 @@ export const PERSISTENTE: ToastOptions = { duration: Number.POSITIVE_INFINITY };
 /** Monta a região da story e devolve o wrapper que o `render` entrega. */
 export function montarToaster(options: SonnerToasterOptions = {}): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.style.cssText = 'contain: layout; position: relative; min-height: 7.5rem;';
+  wrapper.className = 'nds-min-h-30';
+  wrapper.style.cssText = 'contain: layout; position: relative;';
   wrapper.appendChild(createSonnerToaster({ position: 'top-right', richColors: true, ...options }));
   return wrapper;
 }

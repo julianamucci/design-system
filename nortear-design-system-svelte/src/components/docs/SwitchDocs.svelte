@@ -486,7 +486,7 @@ interface SwitchProps {
         name: $tStore('variants.compositions.settingsList.name'),
         description: $tStore('variants.compositions.settingsList.description'),
         useWhen: $tStore('variants.compositions.settingsList.use'),
-        code: `<div class="nds-stack" data-spacing="sm" style="width: 24rem">\n  <h3 class="nds-text-body nds-font-medium">Preferências de notificação</h3>\n  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n      <Label for="sw-list-email">Email</Label>\n      <p class="nds-text-body">Receba avisos importantes por email.</p>\n    </div>\n    <Switch id="sw-list-email" checked />\n  </div>\n  <!-- demais painéis: push, sms -->\n</div>`,
+        code: `<div class="nds-stack nds-w-md" data-spacing="sm">\n  <h3 class="nds-text-body nds-font-medium">Preferências de notificação</h3>\n  <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">\n    <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">\n      <Label for="sw-list-email">Email</Label>\n      <p class="nds-text-body">Receba avisos importantes por email.</p>\n    </div>\n    <Switch id="sw-list-email" checked />\n  </div>\n  <!-- demais painéis: push, sms -->\n</div>`,
         preview: compSettingsList,
       },
       {
@@ -507,7 +507,7 @@ interface SwitchProps {
   {/snippet}
 
   {#snippet compSettingsList()}
-    <div class="nds-stack" data-spacing="sm" style="width: 24rem">
+    <div class="nds-stack nds-w-md" data-spacing="sm">
       <h3 class="nds-text-body nds-font-medium">Preferências de notificação</h3>
       <div class="nds-cluster nds-rounded-lg nds-border-default nds-p-2" data-justify="between">
         <div class="nds-stack" data-spacing="xs" style="padding-right: var(--spacing-2)">
