@@ -10,14 +10,26 @@ import {
 import { cn } from '@/lib/utils'
 import ScrollBar from './ScrollBar.vue'
 
-const props = defineProps<ScrollAreaRootProps & { class?: HTMLAttributes['class'] }>()
+// A altura é obrigatória: sem limite não há transbordo, e sem transbordo não há
+// rolagem. `size` é a escada de janela (`--box-height-*`), e existe porque a
+// alternativa praticada era cada página escolher o próprio número em `style`
+// inline — 60 alturas cravadas, 20 valores distintos para dizer a mesma coisa.
+// Altura fora da escada continua possível pela custom property `--box-height`,
+// que a folha governa.
+type ScrollAreaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 
-const delegatedProps = reactiveOmit(props, 'class')
+const props = defineProps<ScrollAreaRootProps & {
+  class?: HTMLAttributes['class']
+  size?: ScrollAreaSize
+}>()
+
+const delegatedProps = reactiveOmit(props, 'class', 'size')
 </script>
 
 <template>
   <ScrollAreaRoot
     data-slot="scroll-area"
+    :data-size="size"
     v-bind="delegatedProps"
     :class="cn('nds-scroll-area', props.class)"
   >

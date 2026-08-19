@@ -141,16 +141,16 @@ const matrixRows = Array.from({ length: 12 }, (_, i) => `R${i + 1}`);
 
 const codeImportBasic = `import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";`;
 
-const codeVertical = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="height: 300px; width: 280px">
-  <ScrollArea class="nds-w-full" style="height: 100%">
+const codeVertical = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 280px">
+  <ScrollArea size="xl" class="nds-w-full">
     <div class="nds-p-4">
       <div v-for="tag in tags" :key="tag" class="nds-text-body">{{ tag }}</div>
     </div>
   </ScrollArea>
 </div>`;
 
-const codeHorizontal = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 500px; height: 180px">
-  <ScrollArea class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+const codeHorizontal = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 500px">
+  <ScrollArea size="md" class="nds-w-full nds-whitespace-nowrap">
     <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
       <figure v-for="card in cards" :key="card.id" class="nds-shrink-0 nds-rounded-md nds-border-default nds-p-4" style="width: 160px">
         {{ card.title }}
@@ -160,8 +160,8 @@ const codeHorizontal = `<div class="nds-overflow-hidden nds-rounded-md nds-borde
   </ScrollArea>
 </div>`;
 
-const codeBoth = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 500px; height: 280px">
-  <ScrollArea class="nds-w-full" style="height: 100%">
+const codeBoth = `<div class="nds-overflow-hidden nds-rounded-md nds-border-default" style="width: 500px">
+  <ScrollArea size="xl" class="nds-w-full">
     <table class="nds-border-collapse">
       <!-- linhas/colunas que excedem o viewport -->
     </table>
@@ -344,13 +344,10 @@ const visualTestItems = computed(() => [
             <p class="nds-mb-2 nds-text-caption nds-font-medium nds-text-muted-foreground">
               {{ tContent('demonstration.labels.verticalTitle') }}
             </p>
-            <div
-              class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
-              style="height: 260px"
-            >
+            <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default">
               <ScrollArea
+                size="lg"
                 class="nds-w-full"
-                style="height: 100%"
               >
                 <div
                   class="nds-stack nds-p-4"
@@ -372,13 +369,10 @@ const visualTestItems = computed(() => [
             <p class="nds-mb-2 nds-text-caption nds-font-medium nds-text-muted-foreground">
               {{ tContent('demonstration.labels.horizontalTitle') }}
             </p>
-            <div
-              class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
-              style="height: 180px"
-            >
+            <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default">
               <ScrollArea
+                size="md"
                 class="nds-w-full nds-whitespace-nowrap"
-                style="height: 100%"
               >
                 <div
                   class="nds-cluster nds-p-4"
@@ -405,13 +399,10 @@ const visualTestItems = computed(() => [
           <p class="nds-mb-2 nds-text-caption nds-font-medium nds-text-muted-foreground">
             {{ tContent('demonstration.labels.bothTitle') }}
           </p>
-          <div
-            class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
-            style="height: 260px"
-          >
+          <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default">
             <ScrollArea
+              size="lg"
               class="nds-w-full"
-              style="height: 100%"
             >
               <table class="nds-border-collapse nds-text-body">
                 <thead>
@@ -539,13 +530,10 @@ const visualTestItems = computed(() => [
       ]"
     >
       <template #do-preview-0>
-        <div
-          class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
-          style="height: 180px"
-        >
+        <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default">
           <ScrollArea
+            size="md"
             class="nds-w-full"
-            style="height: 100%"
           >
             <div
               class="nds-stack"
@@ -582,13 +570,10 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #do-preview-1>
-        <div
-          class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
-          style="height: 180px"
-        >
+        <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default">
           <ScrollArea
+            size="md"
             class="nds-w-full"
-            style="height: 100%"
           >
             <div
               class="nds-stack"
@@ -607,17 +592,14 @@ const visualTestItems = computed(() => [
         </div>
       </template>
       <template #dont-preview-1>
-        <div
-          class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default"
-          style="height: 180px"
-        >
+        <div class="nds-w-full nds-overflow-hidden nds-rounded-md nds-border-default">
           <ScrollArea
+            size="md"
             class="nds-w-full"
-            style="height: 100%"
           >
             <ScrollArea
+              size="xs"
               class="nds-w-full"
-              style="height: 100px"
             >
               <div
                 class="nds-stack"
@@ -652,11 +634,11 @@ const visualTestItems = computed(() => [
       <template #variant-preview-0>
         <div
           class="nds-overflow-hidden nds-rounded-md nds-border-default"
-          style="height: 200px; width: 260px"
+          style="width: 260px"
         >
           <ScrollArea
+            size="md"
             class="nds-w-full"
-            style="height: 100%"
           >
             <div
               class="nds-stack"
@@ -677,11 +659,11 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <div
           class="nds-overflow-hidden nds-rounded-md nds-border-default"
-          style="height: 140px; width: 420px"
+          style="width: 420px"
         >
           <ScrollArea
+            size="sm"
             class="nds-w-full nds-whitespace-nowrap"
-            style="height: 100%"
           >
             <div
               class="nds-cluster"
@@ -704,11 +686,11 @@ const visualTestItems = computed(() => [
       <template #variant-preview-2>
         <div
           class="nds-overflow-hidden nds-rounded-md nds-border-default"
-          style="height: 200px; width: 420px"
+          style="width: 420px"
         >
           <ScrollArea
+            size="md"
             class="nds-w-full"
-            style="height: 100%"
           >
             <table class="nds-border-collapse nds-text-caption">
               <tbody>

@@ -82,8 +82,8 @@ export const SidebarList: Story = {
     // própria com borda, como no Vanilla, que é a referência de markup.
     template: `
       <div class="nds-cluster" data-spacing="md" data-align="stretch" style="width: 640px">
-        <aside class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 200px; height: 320px">
-          <ScrollArea class="nds-w-full" style="height: 100%">
+        <aside class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 200px">
+          <ScrollArea size="xl" class="nds-w-full">
             <nav aria-label="Seções da documentação" class="nds-p-2">
               <a
                 v-for="item in items"
@@ -144,8 +144,8 @@ export const HorizontalGallery: Story = {
     // mecânica. Não pintava cor nenhuma e deixava um atributo inválido no
     // markup. Agora a cor é um binding de verdade.
     template: `
-      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 560px; height: 220px">
-        <ScrollArea type="always" class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 560px">
+        <ScrollArea type="always" size="md" class="nds-w-full nds-whitespace-nowrap">
           <div class="nds-cluster nds-p-4" data-spacing="sm" style="width: max-content">
             <figure
               v-for="item in items"
@@ -202,8 +202,8 @@ export const WideTable: Story = {
     // CSS do design system — o cabeçalho nunca grudou. Removidas: a referência
     // cross-stack (Vanilla) também rola o cabeçalho junto.
     template: `
-      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 560px; height: 320px">
-        <ScrollArea type="always" class="nds-w-full" style="height: 100%">
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 560px">
+        <ScrollArea type="always" size="xl" class="nds-w-full">
           <table class="nds-border-collapse nds-text-body">
             <thead>
               <tr>

@@ -31,8 +31,8 @@ type Story = StoryObj<typeof meta>;
 const TAGS = Array.from({ length: 30 }, (_, i) => `Tag ${i + 1}`);
 
 const wrapTemplate = (typeAttr: string) => `
-  <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px; height: 260px">
-    <ScrollArea ${typeAttr} class="nds-w-full" style="height: 100%">
+  <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px">
+    <ScrollArea ${typeAttr} size="lg" class="nds-w-full">
       <div class="nds-p-4" data-spacing="sm">
         <div
           v-for="tag in tags"
@@ -321,8 +321,8 @@ export const FocusableContent: Story = {
       return { acoes: Array.from({ length: 20 }, (_, i) => `Ação ${i + 1}`) };
     },
     template: `
-      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px; height: 260px">
-        <ScrollArea class="nds-w-full" style="height: 100%">
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px">
+        <ScrollArea size="lg" class="nds-w-full">
           <nav aria-label="Ações" class="nds-p-4">
             <ul class="nds-stack nds-list-none" data-spacing="xs" style="padding: 0; margin: 0">
               <li v-for="acao in acoes" :key="acao">
@@ -390,8 +390,8 @@ export const NoLimit: Story = {
           </ScrollArea>
         </div>
 
-        <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="height: 160px">
-          <ScrollArea class="nds-w-full" style="height: 100%">
+        <div class="nds-rounded-md nds-border-default nds-overflow-hidden">
+          <ScrollArea size="sm" class="nds-w-full">
             <div class="nds-p-4" data-spacing="sm">
               <div v-for="tag in tags" :key="tag" class="nds-text-body">{{ tag }}</div>
             </div>

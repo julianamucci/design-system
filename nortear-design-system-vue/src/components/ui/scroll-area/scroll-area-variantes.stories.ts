@@ -51,8 +51,8 @@ export const Vertical: Story = {
       return { tags: TAGS };
     },
     template: `
-      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px; height: 300px">
-        <ScrollArea type="always" class="nds-w-full" style="height: 100%">
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px">
+        <ScrollArea type="always" size="xl" class="nds-w-full">
           <div class="nds-p-4">
             <h4 class="nds-mb-2 nds-text-body nds-font-medium" style="line-height: 1">Tags</h4>
             <div class="nds-stack" data-spacing="sm">
@@ -101,8 +101,8 @@ export const Horizontal: Story = {
       return { cards: CARDS };
     },
     template: `
-      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 500px; height: 180px">
-        <ScrollArea type="always" class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 500px">
+        <ScrollArea type="always" size="md" class="nds-w-full nds-whitespace-nowrap">
           <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
             <figure
               v-for="card in cards"
@@ -154,8 +154,8 @@ export const Both: Story = {
       return { cols: COLS, rows: ROWS };
     },
     template: `
-      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 500px; height: 280px">
-        <ScrollArea type="always" class="nds-w-full" style="height: 100%">
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 500px">
+        <ScrollArea type="always" size="xl" class="nds-w-full">
           <table class="nds-border-collapse nds-text-body">
             <thead>
               <tr>

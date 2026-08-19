@@ -59,8 +59,8 @@ export const Playground: Story = {
       return { args, tags: TAGS };
     },
     template: `
-      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px; height: 300px">
-        <ScrollArea v-bind="args" class="nds-w-full" style="height: 100%">
+      <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 280px">
+        <ScrollArea v-bind="args" size="xl" class="nds-w-full">
           <div class="nds-p-4">
             <h4 class="nds-mb-2 nds-text-body nds-font-medium" style="line-height: 1">Tags</h4>
             <div class="nds-stack" data-spacing="sm">
