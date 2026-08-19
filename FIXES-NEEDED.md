@@ -2059,3 +2059,30 @@ ficaram abertas, todas descobertas *por causa* da conversão.
       pela primeira vez, porque ninguém compara `style` inline entre stacks.
       Pela regra de paridade de exemplo, a mesma demo deveria render igual nas
       cinco; alinhar agora é trocar uma palavra por arquivo.
+
+## Resizable — achados da conversão para `.nds-demo-box` (2026-08-19)
+
+- [ ] **Vazamento cross-stack: docs page citando outra stack pelo nome.** O
+      projeto proíbe, porque cada página é consumida isolada. Confirmado em três
+      lugares: `nortear-design-system-vanilla/.../ResizableDocs.ts` na linha do
+      `autoSaveId` da tabela de props ("paridade com react-resizable-panels") e
+      no `interfaceCode` ("use as stacks React (react-resizable-panels), Vue
+      (reka-ui Splitter) ou Svelte (paneforge)"); e
+      `nortear-design-system-svelte/.../ResizableDocs.svelte:106`, onde
+      `codeImportAliased` abre com "// Aliases que espelham a API React/Vue" —
+      comentário que o leitor VÊ. O do Angular (`ResizableDocs.ts:45`) é
+      comentário de fonte, nunca renderiza, e não conta.
+
+- [ ] **Nenhuma das cinco casa com o Vanilla nos degraus.** Vanilla (referência)
+      é md/lg/xl na demonstração e md nos quatro do/dont. Demonstração vertical:
+      `lg` em React/Svelte/Vanilla, `md` em Vue/Angular. Aninhado: `xl` em
+      React/Svelte/Vanilla, `lg` no Vue, `md` no Angular. Do/dont: `md` em
+      Vanilla/Vue/Angular, `xs` no React, `sm` no Svelte. A conversão foi fiel a
+      cada valor de origem de propósito — alinhar é decisão de design, e agora
+      custa uma palavra por sítio. Mesmo caso já registrado para o `scroll-area`.
+
+- [ ] **Padding do painel diverge entre as cinco**: `var(--spacing-4)` no Vanilla
+      e no React, `nds-p-4` no Angular, `0.75rem` nos previews menores do Vue, e
+      AUSENTE no Svelte. Bloqueado em parte pela `.nds-p-3` inexistente, que já
+      consta na lista de utilitárias faltantes acima — os 15 restantes do Vue e
+      os 10 do React em `resizable-composicoes.stories.tsx` são exatamente isso.
