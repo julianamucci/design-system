@@ -110,21 +110,24 @@ Separator (<hr> | <div role="separator">)
 **Estrutura**:
 
 ```
-ScrollArea (overflow-auto, border, rounded-md)
-└── inner (padding em --spacing-4)
-    └── content
+.nds-scroll-area (recorta, data-size resolve a altura)
+└── .nds-scroll-area-viewport (overflow: auto, tabindex="0")
+    └── children
 ```
 
 **Opts da factory**:
 
 | Nome | Default | Função |
 |---|---|---|
-| `height` | `288px` (72 × 4) | Altura máxima do container |
-| `content` | — | Conteúdo a ser rolado |
+| `size` | — | Degrau da escada de altura da janela (`xs`…`xl`), escrito em `data-size` no root |
+| `width` | — | Largura do root; útil para rolagem horizontal |
+| `label` | — | Nome acessível da região rolável |
+| `class` | — | Classes `.nds-*` extras no root |
+| `children` | — | Conteúdo a ser rolado, montado dentro do viewport |
 
 **Regras**:
-- Altura múltipla de 8 (8-grid) — defaults sugeridos: 144, 240, 288, 384
-- Padding interno fixo em `--spacing-4` (16px)
+- A altura é **obrigatória** para haver rolagem, e vem da escada nomeada — nunca de um número escrito no call site. Os degraus são os tokens `--box-height-*`; uma medida fora deles vem da custom property `--box-height` no root
+- O degrau mora no **root**: a folha resolve `block-size` ali, e o viewport é `height: 100%` por ela. Repetir a medida no viewport é declaração morta
 - Não usar `overflow: scroll` (scrollbar sempre visível) — usar `overflow: auto`
 - Border opcional via token `border-border`
 

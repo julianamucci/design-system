@@ -64,8 +64,8 @@ const { t, dict } = useTranslation(scrollAreaTranslations as Record<string, unkn
       '<strong>Barra nativa</strong> — a rolagem é a do navegador, sem lib headless. Arrasto do pegador, roda do mouse, teclado e inércia de toque vêm prontos e com a aparência do sistema.',
     'props.table.label':
       'Nome acessível da região rolável. Com nome, a área vira uma região anunciada pelo leitor de tela; sem nome, nenhum papel é emitido.',
-    'props.table.maxHeight':
-      'Teto da área rolável, aplicado ao viewport. É um máximo da escada de espaçamento, não uma altura cravada: a caixa encolhe com pouco conteúdo.',
+    'props.table.size':
+      'Degrau da escada de altura da janela rolável, escrito no elemento raiz. Sem ele não há teto, e sem teto não há rolagem. Uma medida fora da escada vem da custom property de altura de caixa.',
     'props.table.typeAbsent':
       'Não existe nesta stack. Quando exibir a barra é decisão do navegador e do sistema operacional, não do componente.',
     'props.table.scrollHideDelayAbsent':
@@ -84,8 +84,8 @@ const { t, dict } = useTranslation(scrollAreaTranslations as Record<string, unkn
       '<strong>Native bar</strong> — scrolling is the browser one, with no headless lib. Thumb dragging, mouse wheel, keyboard and touch inertia come for free and with the system look.',
     'props.table.label':
       'Accessible name of the scrollable region. With a name the area becomes a region announced by the screen reader; without one, no role is emitted.',
-    'props.table.maxHeight':
-      'Ceiling of the scrollable area, applied to the viewport. It is a maximum from the spacing scale, not a fixed height: the box shrinks with little content.',
+    'props.table.size':
+      'Step of the scroll window height scale, written on the root element. Without it there is no ceiling, and without a ceiling there is no scrolling. A measure outside the scale comes from the box height custom property.',
     'props.table.typeAbsent':
       'Does not exist in this stack. When to show the bar is a browser and operating system decision, not the component one.',
     'props.table.scrollHideDelayAbsent':
@@ -104,8 +104,8 @@ const { t, dict } = useTranslation(scrollAreaTranslations as Record<string, unkn
       '<strong>Barra nativa</strong> — el desplazamiento es el del navegador, sin lib headless. Arrastre del agarre, rueda del ratón, teclado e inercia táctil vienen listos y con la apariencia del sistema.',
     'props.table.label':
       'Nombre accesible de la región desplazable. Con nombre, el área se convierte en una región anunciada por el lector de pantalla; sin nombre no se emite ningún rol.',
-    'props.table.maxHeight':
-      'Techo del área desplazable, aplicado al viewport. Es un máximo de la escalera de espaciado, no una altura fija: la caja encoge con poco contenido.',
+    'props.table.size':
+      'Escalón de la escala de altura de la ventana desplazable, escrito en el elemento raíz. Sin él no hay techo, y sin techo no hay desplazamiento. Una medida fuera de la escala viene de la custom property de altura de caja.',
     'props.table.typeAbsent':
       'No existe en esta stack. Cuándo mostrar la barra es decisión del navegador y del sistema operativo, no del componente.',
     'props.table.scrollHideDelayAbsent':
@@ -146,13 +146,13 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-const ESTRUTURA_CODE = `<div ndsScrollArea label="Lista de tags" class="nds-w-sm nds-rounded-md nds-border-default">
+const ESTRUTURA_CODE = `<div ndsScrollArea size="lg" label="Lista de tags" class="nds-w-sm nds-rounded-md nds-border-default">
   <div class="nds-stack nds-p-4" data-spacing="sm">
     <!-- Conteúdo longo -->
   </div>
 </div>`;
 
-const CODE_VERTICAL = `<div ndsScrollArea label="Lista vertical de tags" class="nds-w-sm">
+const CODE_VERTICAL = `<div ndsScrollArea size="md" label="Lista vertical de tags" class="nds-w-sm">
   <div class="nds-stack nds-p-4" data-spacing="sm">
     @for (tag of tags; track tag) {
       <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -169,7 +169,7 @@ const CODE_HORIZONTAL = `<div ndsScrollArea label="Fila horizontal de cards" cla
   </div>
 </div>`;
 
-const CODE_BOTH = `<div ndsScrollArea label="Matriz com rolagem nos dois eixos" class="nds-max-w-md">
+const CODE_BOTH = `<div ndsScrollArea size="md" label="Matriz com rolagem nos dois eixos" class="nds-max-w-md">
   <div class="nds-stack nds-p-4" data-spacing="sm">
     @for (linha of linhas; track linha) {
       <div class="nds-row nds-whitespace-nowrap" data-spacing="md">
@@ -190,13 +190,16 @@ const INTERFACE_CODE = `// <div ndsScrollArea> — componente de atributo num <d
   // template: um <div class="nds-scroll-area-viewport" tabindex="0">
   //           com <ng-content /> dentro
 })
+export type ScrollAreaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 export class NdsScrollArea {
-  readonly label = input<string>('');               // nome da região
-  readonly maxHeight = input<'md' | 'none'>('md');  // teto no viewport
+  readonly label = input<string>('');                    // nome da região
+  readonly size = input<ScrollAreaSize | undefined>();   // degrau em data-size
 }`;
 
-const EXTENSIBILIDADE_CODE = `<!-- Rolagem horizontal: nada a ligar, é o conteúdo que decide o eixo -->
-<div ndsScrollArea label="Catálogo" maxHeight="none" class="nds-max-w-md nds-whitespace-nowrap">
+const EXTENSIBILIDADE_CODE = `<!-- Rolagem horizontal: nada a ligar, é o conteúdo que decide o eixo.
+     Sem "size" a altura vem do conteúdo — uma fila de cards não precisa de teto. -->
+<div ndsScrollArea label="Catálogo" class="nds-max-w-md nds-whitespace-nowrap">
   <div class="nds-row nds-p-4" data-spacing="md">
     @for (item of itens; track item.id) {
       <div ndsCard class="nds-shrink-0 nds-w-xs">{{ item.nome }}</div>
@@ -262,7 +265,7 @@ const CAMINHOS: Record<string, string> = {
       (landmark-unique). Aqui o que se demonstra é a altura, não a nomeação.
     -->
     <ng-template #tplDoDont1Do>
-      <div ndsScrollArea class="nds-w-sm nds-rounded-md nds-border-default">
+      <div ndsScrollArea size="sm" class="nds-w-sm nds-rounded-md nds-border-default">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (tag of tagsDemo(); track tag) {
             <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -270,8 +273,13 @@ const CAMINHOS: Record<string, string> = {
         </div>
       </div>
     </ng-template>
+    <!--
+      SEM "size" de propósito: a legenda deste preview é "não envolva conteúdo de
+      altura indefinida — ScrollArea fica invisível". Dar-lhe um degrau mostraria
+      o certo com o texto do errado.
+    -->
     <ng-template #tplDoDont1Dont>
-      <div ndsScrollArea maxHeight="none" class="nds-w-sm nds-rounded-md nds-border-default">
+      <div ndsScrollArea class="nds-w-sm nds-rounded-md nds-border-default">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (tag of tagsCurtas(); track tag) {
             <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -280,7 +288,7 @@ const CAMINHOS: Record<string, string> = {
       </div>
     </ng-template>
     <ng-template #tplDoDont2Do>
-      <div ndsScrollArea class="nds-w-sm nds-rounded-md nds-border-default">
+      <div ndsScrollArea size="sm" class="nds-w-sm nds-rounded-md nds-border-default">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (tag of tagsDemo(); track tag) {
             <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -288,9 +296,14 @@ const CAMINHOS: Record<string, string> = {
         </div>
       </div>
     </ng-template>
+    <!--
+      Aqui as duas áreas TÊM degrau de propósito: o defeito demonstrado é o
+      aninhamento, não a falta de teto — sem altura nas duas não haveria rolagem
+      dupla a ver.
+    -->
     <ng-template #tplDoDont2Dont>
-      <div ndsScrollArea class="nds-w-sm nds-rounded-md nds-border-default">
-        <div ndsScrollArea class="nds-rounded-md nds-border-default">
+      <div ndsScrollArea size="sm" class="nds-w-sm nds-rounded-md nds-border-default">
+        <div ndsScrollArea size="xs" class="nds-rounded-md nds-border-default">
           <div class="nds-stack nds-p-4" data-spacing="sm">
             @for (tag of tagsDemo(); track tag) {
               <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -301,7 +314,7 @@ const CAMINHOS: Record<string, string> = {
     </ng-template>
 
     <ng-template #tplVarVertical>
-      <div ndsScrollArea [label]="rotulos().vertical" class="nds-w-sm nds-rounded-md nds-border-default">
+      <div ndsScrollArea size="md" [label]="rotulos().vertical" class="nds-w-sm nds-rounded-md nds-border-default">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (tag of tagsDemo(); track tag) {
             <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -321,7 +334,7 @@ const CAMINHOS: Record<string, string> = {
       </div>
     </ng-template>
     <ng-template #tplVarBoth>
-      <div ndsScrollArea [label]="rotulos().both" class="nds-max-w-md nds-rounded-md nds-border-default">
+      <div ndsScrollArea size="md" [label]="rotulos().both" class="nds-max-w-md nds-rounded-md nds-border-default">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (linha of linhasDemo(); track linha) {
             <div class="nds-row nds-whitespace-nowrap" data-spacing="md">
@@ -355,7 +368,7 @@ const CAMINHOS: Record<string, string> = {
               <p class="nds-text-caption nds-text-muted-foreground nds-m-0">
                 {{ t('demonstration.labels.verticalTitle') }}
               </p>
-              <div ndsScrollArea [label]="t('demonstration.labels.verticalTitle')" class="nds-rounded-md nds-border-default">
+              <div ndsScrollArea size="lg" [label]="t('demonstration.labels.verticalTitle')" class="nds-rounded-md nds-border-default">
                 <div class="nds-stack nds-p-4" data-spacing="sm">
                   @for (tag of tagsDemo(); track tag) {
                     <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -383,7 +396,7 @@ const CAMINHOS: Record<string, string> = {
               <p class="nds-text-caption nds-text-muted-foreground nds-m-0">
                 {{ t('demonstration.labels.bothTitle') }}
               </p>
-              <div ndsScrollArea [label]="t('demonstration.labels.bothTitle')" class="nds-rounded-md nds-border-default">
+              <div ndsScrollArea size="lg" [label]="t('demonstration.labels.bothTitle')" class="nds-rounded-md nds-border-default">
                 <div class="nds-stack nds-p-4" data-spacing="sm">
                   @for (linha of linhasDemo(); track linha) {
                     <div class="nds-row nds-whitespace-nowrap" data-spacing="md">
@@ -674,7 +687,7 @@ export class NdsScrollAreaDocs implements AfterViewInit, OnDestroy {
         cols,
         items: [
           { name: 'label', type: 'string', defaultValue: '—', required: nao, description: toPlainText(t('props.table.label')) },
-          { name: 'maxHeight', type: '"md" | "none"', defaultValue: '"md"', required: nao, description: toPlainText(t('props.table.maxHeight')) },
+          { name: 'size', type: '"xs" | "sm" | "md" | "lg" | "xl"', defaultValue: '—', required: nao, description: toPlainText(t('props.table.size')) },
           // `class` e o conteúdo continuam descritos pelo conteúdo compartilhado:
           // as chaves são objetos ({type, default, required, description}), então
           // o caminho é completo — `t('props.table.className')` devolveria a

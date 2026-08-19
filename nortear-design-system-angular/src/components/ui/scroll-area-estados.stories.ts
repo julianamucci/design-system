@@ -33,7 +33,6 @@ export default meta;
 type Story = StoryObj;
 
 const TAGS = Array.from({ length: 24 }, (_, i) => `Tag ${i + 1}`);
-const POUCAS = Array.from({ length: 3 }, (_, i) => `Tag ${i + 1}`);
 const ACOES = Array.from({ length: 20 }, (_, i) => `Ação ${i + 1}`);
 
 export const Focus: Story = {
@@ -41,7 +40,7 @@ export const Focus: Story = {
   render: () => ({
     props: { tags: TAGS },
     template: `
-      <div ndsScrollArea label="Lista com foco no viewport" class="nds-w-sm nds-rounded-md nds-border-default">
+      <div ndsScrollArea size="md" label="Lista com foco no viewport" class="nds-w-sm nds-rounded-md nds-border-default">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (tag of tags; track tag) {
             <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -76,7 +75,7 @@ export const FocusableContent: Story = {
   render: () => ({
     props: { acoes: ACOES },
     template: `
-      <div ndsScrollArea label="Lista de ações" class="nds-w-sm nds-rounded-md nds-border-default">
+      <div ndsScrollArea size="md" label="Lista de ações" class="nds-w-sm nds-rounded-md nds-border-default">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (acao of acoes; track acao) {
             <button ndsButton variant="outline" size="sm">{{ acao }}</button>
@@ -119,10 +118,10 @@ export const FocusableContent: Story = {
 export const NoLimit: Story = {
   parameters: { covers: ['functional.item4'] },
   render: () => ({
-    props: { tags: TAGS, poucas: POUCAS },
+    props: { tags: TAGS },
     template: `
       <div class="nds-stack" data-spacing="lg">
-        <div ndsScrollArea maxHeight="none" class="nds-w-sm nds-rounded-md nds-border-default">
+        <div ndsScrollArea class="nds-w-sm nds-rounded-md nds-border-default">
           <div class="nds-stack nds-p-4" data-spacing="sm">
             @for (tag of tags; track tag) {
               <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -130,9 +129,9 @@ export const NoLimit: Story = {
           </div>
         </div>
 
-        <div ndsScrollArea label="Lista curta com teto" class="nds-w-sm nds-rounded-md nds-border-default">
+        <div ndsScrollArea size="sm" label="Lista com degrau de altura" class="nds-w-sm nds-rounded-md nds-border-default">
           <div class="nds-stack nds-p-4" data-spacing="sm">
-            @for (tag of poucas; track tag) {
+            @for (tag of tags; track tag) {
               <p class="nds-text-body nds-m-0">{{ tag }}</p>
             }
           </div>
@@ -144,21 +143,24 @@ export const NoLimit: Story = {
     const [semTeto, comTeto] = Array.from(
       canvasElement.querySelectorAll<HTMLElement>('[data-slot="scroll-area-viewport"]'),
     );
+    const [raizSemTeto, raizComTeto] = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>('[data-slot="scroll-area"]'),
+    );
 
-    await step('Sem teto o conteúdo expande e não há rolagem', async () => {
+    await step('Sem degrau de altura o conteúdo expande e não há rolagem', async () => {
       // functional.item4. É o erro de uso mais comum: o componente aparenta
       // estar quebrado quando, na verdade, ninguém disse até onde ele pode ir.
-      await expect(semTeto.className).not.toMatch(/nds-scroll-area-md/);
+      await expect(raizSemTeto.getAttribute('data-size')).toBeNull();
       await expect(semTeto.scrollHeight).toBe(semTeto.clientHeight);
       await expect(semTeto.getBoundingClientRect().height).toBeGreaterThan(400);
     });
 
-    await step('O teto é um máximo, não uma altura cravada', async () => {
-      // Pouco conteúdo com o teto aplicado: a caixa encolhe até o conteúdo, o
-      // que é a diferença entre `max-block-size` e `height` (guideline 12).
-      await expect(comTeto).toHaveClass(/nds-scroll-area-md/);
-      await expect(comTeto.scrollHeight).toBe(comTeto.clientHeight);
-      await expect(comTeto.getBoundingClientRect().height).toBeLessThan(300);
+    await step('Com o degrau o mesmo conteúdo rola', async () => {
+      // O par é a mesma lista nas duas caixas: o que muda entre não rolar e
+      // rolar é só o degrau na raiz.
+      await expect(raizComTeto.dataset.size).toBe('sm');
+      await expect(comTeto.scrollHeight).toBeGreaterThan(comTeto.clientHeight);
+      await expect(comTeto.getBoundingClientRect().height).toBeLessThan(200);
     });
   },
 };

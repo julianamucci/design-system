@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
-import { NdsScrollArea } from './scroll-area';
+import { NdsScrollArea, type ScrollAreaSize } from './scroll-area';
 import { NdsScrollAreaDocs } from '@/components/docs/ScrollAreaDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 type ScrollAreaArgs = {
   orientation: 'vertical' | 'horizontal' | 'both';
   itemCount: number;
-  maxHeight: 'md' | 'none';
+  size: ScrollAreaSize;
   label: string;
 };
 
@@ -21,16 +21,16 @@ type ScrollAreaArgs = {
 function playgroundSource(_gerado: string, ctx: { args?: Partial<ScrollAreaArgs> }): string {
   const {
     orientation = 'vertical',
-    maxHeight = 'md',
+    size = 'lg',
     label = 'Lista de tags',
   } = ctx.args ?? {};
 
-  // Só o que difere do default entra no snippet — documentação que repete valor
-  // padrão ensina ruído.
+  // `size` entra sempre, e não só quando difere do valor de partida: ele não tem
+  // default no componente — sem ele não há teto, e sem teto não há rolagem.
   const raiz = [
     '<div ndsScrollArea',
+    `size="${size}"`,
     `label="${label}"`,
-    maxHeight === 'none' ? 'maxHeight="none"' : '',
     `class="${orientation === 'vertical' ? 'nds-w-sm' : 'nds-max-w-md'} nds-rounded-md nds-border-default"`,
   ]
     .filter(Boolean)
@@ -91,11 +91,11 @@ const meta: Meta<ScrollAreaArgs> = {
       control: { type: 'number', min: 5, max: 60, step: 5 },
       description: 'Quantidade de itens no conteúdo — apenas para o exemplo.',
     },
-    maxHeight: {
+    size: {
       control: 'radio',
-      options: ['md', 'none'],
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
       description:
-        'Teto da área rolável. "md" aplica a medida da escada de espaçamento; "none" devolve a medida para quem consome.',
+        'Degrau da escada de altura da janela rolável, escrito em data-size na raiz. Não tem default: a ausência dele é o cenário da story NoLimit, em States.',
     },
     label: {
       control: 'text',
@@ -106,7 +106,7 @@ const meta: Meta<ScrollAreaArgs> = {
   args: {
     orientation: 'vertical',
     itemCount: 30,
-    maxHeight: 'md',
+    size: 'lg',
     label: 'Lista de tags',
   },
 };
@@ -148,7 +148,7 @@ export const Playground: Story = {
           <div
             ndsScrollArea
             [label]="label"
-            [maxHeight]="maxHeight"
+            [size]="size"
             class="nds-max-w-md nds-rounded-md nds-border-default"
           >
             <div class="nds-row nds-p-4 nds-whitespace-nowrap" data-spacing="md">
@@ -163,7 +163,7 @@ export const Playground: Story = {
           <div
             ndsScrollArea
             [label]="label"
-            [maxHeight]="maxHeight"
+            [size]="size"
             class="nds-max-w-md nds-rounded-md nds-border-default"
           >
             <div class="nds-stack nds-p-4" data-spacing="sm">
@@ -180,7 +180,7 @@ export const Playground: Story = {
           <div
             ndsScrollArea
             [label]="label"
-            [maxHeight]="maxHeight"
+            [size]="size"
             class="nds-w-sm nds-rounded-md nds-border-default"
           >
             <div class="nds-stack nds-p-4" data-spacing="sm">
@@ -209,17 +209,17 @@ export const Playground: Story = {
       await expect(viewport).toHaveClass(/nds-scroll-area-viewport/);
     });
 
-    await step('O teto vem do input e mora no viewport', async () => {
+    await step('O degrau vem do input e mora na raiz', async () => {
       // Esta é a asserção que prova o binding de input: sob JIT o componente
-      // renderiza no default e a classe viria sempre a mesma, com o control em
-      // "none" (armadilha 1 do CLAUDE.md deste stack). E o teto tem de estar no
-      // VIEWPORT — na raiz ele recortaria o conteúdo sem produzir rolagem.
-      if (args.maxHeight === 'md') {
-        await expect(viewport).toHaveClass(/nds-scroll-area-md/);
-        await expect(raiz.className).not.toMatch(/nds-scroll-area-md/);
-      } else {
-        await expect(viewport.className).not.toMatch(/nds-scroll-area-md/);
-      }
+      // renderiza no valor de partida e o atributo viria sempre o mesmo, com o
+      // control em outro degrau (armadilha 1 do CLAUDE.md deste stack).
+      //
+      // O degrau mora na RAIZ, e não no viewport: é a folha compartilhada que
+      // resolve `block-size` ali, e o viewport é `height: 100%` por ela. Com a
+      // raiz dimensionada a porcentagem resolve, e não há segunda medida.
+      await expect(raiz.dataset.size).toBe(args.size);
+      await expect(viewport.style.blockSize).toBe('');
+      await expect(viewport.style.maxBlockSize).toBe('');
     });
 
     await step('A região rolável tem nome acessível e é alcançável por teclado', async () => {
@@ -260,15 +260,11 @@ export const Playground: Story = {
           ? viewport.scrollWidth - viewport.clientWidth
           : viewport.scrollHeight - viewport.clientHeight;
 
-      if (args.maxHeight === 'none' && eixo === 'scrollTop') {
-        // Sem teto e com conteúdo vertical não há transbordo — é o cenário do
-        // `functional.item4`, coberto na story SemLimite.
-        await expect(maximo).toBe(0);
-      } else {
-        await expect(maximo).toBeGreaterThan(0);
-        viewport[eixo] = 40;
-        await expect(viewport[eixo]).toBe(40);
-      }
+      // Com degrau há sempre teto, nos três formatos de conteúdo. O cenário sem
+      // teto é `functional.item4`, coberto na story NoLimit.
+      await expect(maximo).toBeGreaterThan(0);
+      viewport[eixo] = 40;
+      await expect(viewport[eixo]).toBe(40);
       await expect(document.scrollingElement?.scrollTop ?? 0).toBe(paginaAntes);
     });
 

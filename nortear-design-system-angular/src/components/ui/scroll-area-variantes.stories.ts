@@ -51,7 +51,7 @@ export const Vertical: Story = {
   render: () => ({
     props: { tags: TAGS },
     template: `
-      <div ndsScrollArea label="Lista vertical de tags" class="${RAIZ_VERTICAL}">
+      <div ndsScrollArea size="lg" label="Lista vertical de tags" class="${RAIZ_VERTICAL}">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (tag of tags; track tag) {
             <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -65,10 +65,13 @@ export const Vertical: Story = {
       '[data-slot="scroll-area-viewport"]',
     )!;
 
-    await step('O teto da escada de espaçamento chega ao viewport', async () => {
-      // Sem o teto não há transbordo, e sem transbordo não há barra: a classe no
-      // viewport é a condição de existir a variante.
-      await expect(viewport).toHaveClass(/nds-scroll-area-md/);
+    await step('O degrau da escada de altura chega à raiz', async () => {
+      // Sem o teto não há transbordo, e sem transbordo não há barra: o degrau na
+      // raiz é a condição de existir a variante. Ele mora lá, e não no viewport,
+      // porque é a folha compartilhada que resolve `block-size` na raiz — o
+      // viewport é `height: 100%` por ela.
+      const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area"]')!;
+      await expect(raiz.dataset.size).toBe('lg');
     });
 
     await step('Rola só na vertical', async () => {
@@ -124,7 +127,7 @@ export const Bidirectional: Story = {
   render: () => ({
     props: { linhas: LINHAS, colunas: COLUNAS },
     template: `
-      <div ndsScrollArea label="Matriz com rolagem nos dois eixos" class="${RAIZ_LARGA}">
+      <div ndsScrollArea size="lg" label="Matriz com rolagem nos dois eixos" class="${RAIZ_LARGA}">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (linha of linhas; track linha) {
             <div class="nds-row nds-whitespace-nowrap" data-spacing="md">

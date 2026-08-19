@@ -60,7 +60,7 @@ export const TagList: Story = {
     tags.forEach(([t, c]) => list.appendChild(tagItem(t, c)));
 
     outer.appendChild(createScrollArea({
-      height: '300px',
+      size: 'xl',
       label: 'Versões publicadas',
       class: 'nds-w-full nds-rounded-md nds-border-default',
       children: list,
@@ -73,7 +73,7 @@ export const TagList: Story = {
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="scroll-area-viewport"]')!;
 
     await step('A lista inteira está no DOM, dentro do viewport', async () => {
-      await expect(raiz.style.height).toBe('300px');
+      await expect(raiz.dataset.size).toBe('xl');
       await expect(viewport.contains(canvas.getByText('v1.0.0'))).toBe(true);
       await expect(canvas.getAllByText(/^v\d+\.\d+\.\d+$/).length).toBe(20);
     });
@@ -201,7 +201,7 @@ export const WideTable: Story = {
     wrap.appendChild(table);
 
     outer.appendChild(createScrollArea({
-      height: '320px',
+      size: 'xl',
       width: '100%',
       label: 'Tabela ampla',
       class: 'nds-rounded-md nds-border-default',
@@ -273,7 +273,7 @@ export const InsideCard: Story = {
     });
 
     content.appendChild(createScrollArea({
-      height: '240px',
+      size: 'lg',
       label: 'Últimas ações do usuário',
       class: 'nds-w-full nds-border-default',
       children: list,
@@ -349,7 +349,7 @@ export const Sidebar: Story = {
     nav.appendChild(list);
 
     const sidebar = createScrollArea({
-      height: '360px',
+      size: 'xl',
       label: 'Navegação lateral',
       class: 'nds-rounded-md nds-border-default',
       children: nav,

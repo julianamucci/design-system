@@ -86,13 +86,13 @@ function buildMatrix(rows: number, cols: number): HTMLElement {
 export const Vertical: Story = {
   parameters: {
     covers: ['visual.item1'],
-    docs: { description: { story: 'Scroll vertical — altura fixa no root, conteúdo mais alto que o viewport gera barra à direita.' } },
+    docs: { description: { story: 'Scroll vertical — degrau de altura no root, conteúdo mais alto que o viewport gera barra à direita.' } },
   },
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full nds-max-w-sm';
     outer.appendChild(createScrollArea({
-      height: '240px',
+      size: 'lg',
       label: 'Lista vertical de itens',
       class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildVerticalList(30),
@@ -106,11 +106,15 @@ export const Vertical: Story = {
       '[data-slot="scroll-area-viewport"]',
     )!;
 
-    await step('O teto de altura chega ao root e ao viewport', async () => {
+    await step('O degrau de altura chega ao root, e só a ele', async () => {
       // Sem o teto não há transbordo, e sem transbordo não há barra: a medida é
-      // a condição de existir a variante.
-      await expect(raiz.style.height).toBe('240px');
-      await expect(viewport.style.maxHeight).toBe('240px');
+      // a condição de existir a variante. Ela mora numa só declaração — a folha
+      // resolve `block-size` no root e o viewport é `height: 100%` por ela.
+      await expect(raiz.dataset.size).toBe('lg');
+      await expect(viewport.style.maxHeight).toBe('');
+      // O degrau `lg` de `--box-height-*` são 15rem. A conta vai à raiz porque é
+      // ela que a folha dimensiona; o viewport preenche o que sobra da borda.
+      await expect(raiz.getBoundingClientRect().height).toBe(240);
     });
 
     await step('Rola só na vertical', async () => {
@@ -166,13 +170,13 @@ export const Both: Story = {
   name: 'Bidirectional',
   parameters: {
     covers: ['visual.item3'],
-    docs: { description: { story: 'Scroll bidirecional — altura e largura fixas no root, conteúdo maior nas duas dimensões.' } },
+    docs: { description: { story: 'Scroll bidirecional — degrau de altura e largura no root, conteúdo maior nas duas dimensões.' } },
   },
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full nds-max-w-lg';
     outer.appendChild(createScrollArea({
-      height: '240px',
+      size: 'lg',
       width: '100%',
       label: 'Matriz com rolagem nos dois eixos',
       class: 'nds-rounded-md nds-border-default',

@@ -9,8 +9,17 @@
 
 import { cn } from '@/lib/utils';
 
+// A altura é obrigatória: sem limite não há transbordo, e sem transbordo não há
+// rolagem. `size` é a escada de janela (`--box-height-*`), e existe porque a
+// alternativa praticada era cada página escolher o próprio número em `style`
+// inline. O degrau vai para `data-size` na RAIZ, que é onde a folha compartilhada
+// resolve `block-size`; o viewport já é `height: 100%` por ela, então não há
+// medida a repetir aqui. Altura fora da escada continua possível pela custom
+// property `--box-height`, que a folha governa.
+export type ScrollAreaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 export type ScrollAreaOptions = {
-  height?: string;
+  size?: ScrollAreaSize;
   width?: string;
   /**
    * Nome acessível da região rolável.
@@ -32,12 +41,12 @@ export type ScrollAreaOptions = {
 // ─── createScrollArea ─────────────────────────────────────────────────────────
 
 export function createScrollArea(options: ScrollAreaOptions = {}): HTMLElement {
-  const { height, width, label, children } = options;
+  const { size, width, label, children } = options;
 
   const root = document.createElement('div');
   root.dataset.slot = 'scroll-area';
   root.className = cn('nds-scroll-area', options.class);
-  if (height) root.style.height = height;
+  if (size) root.dataset.size = size;
   if (width) root.style.width = width;
 
   const viewport = document.createElement('div');
@@ -49,8 +58,6 @@ export function createScrollArea(options: ScrollAreaOptions = {}): HTMLElement {
     viewport.setAttribute('role', 'region');
     viewport.setAttribute('aria-label', label);
   }
-  if (height) viewport.style.maxHeight = height;
-
   if (children) viewport.appendChild(children);
 
   root.appendChild(viewport);

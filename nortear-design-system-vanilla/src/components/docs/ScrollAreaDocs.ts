@@ -237,7 +237,7 @@ export function createScrollAreaDocs(): HTMLElement {
             verticalTitle.className = 'nds-text-caption nds-text-muted-foreground';
             verticalTitle.textContent = stripHtml(t('demonstration.labels.verticalTitle'));
             const verticalArea = createScrollArea({
-              height: '240px',
+              size: 'lg',
               class: 'nds-w-full nds-rounded-md nds-border-default',
               children: buildTagList(30),
             });
@@ -267,7 +267,7 @@ export function createScrollAreaDocs(): HTMLElement {
             bothTitle.className = 'nds-text-caption nds-text-muted-foreground';
             bothTitle.textContent = stripHtml(t('demonstration.labels.bothTitle'));
             const bothArea = createScrollArea({
-              height: '240px',
+              size: 'lg',
               width: '100%',
               class: 'nds-rounded-md nds-border-default nds-whitespace-nowrap',
               children: buildMatrix(12, 15),
@@ -363,15 +363,21 @@ export function createScrollAreaDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => createScrollArea({
-                height: '160px',
+                size: 'sm',
                 class: 'nds-w-full nds-rounded-md nds-border-default',
                 children: buildTagList(20),
               }),
               dontPreviewFactory: () => {
-                // Sem altura — conteúdo expande, ScrollArea fica invisível.
+                // Sem `size` — conteúdo expande, ScrollArea fica invisível. É a
+                // legenda deste par, então a área NÃO ganha degrau: dar altura a
+                // ela mostraria o certo com o texto do errado.
+                //
+                // A caixa que a emoldura recebe `.nds-demo-box`, que é andaime de
+                // documentação (só impede o preview de esticar a página) e não
+                // encosta na área rolável de dentro.
                 const wrap = document.createElement('div');
-                wrap.className = 'nds-w-full nds-rounded-md nds-border-default nds-overflow-hidden';
-                wrap.style.maxHeight = '160px';
+                wrap.className = 'nds-demo-box nds-w-full nds-rounded-md nds-border-default nds-overflow-hidden';
+                wrap.dataset.size = 'sm';
                 const area = createScrollArea({
                   class: 'nds-w-full',
                   children: buildTagList(20),
@@ -386,20 +392,22 @@ export function createScrollAreaDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => createScrollArea({
-                height: '160px',
+                size: 'sm',
                 class: 'nds-w-full nds-rounded-md nds-border-default',
                 children: buildTagList(20),
               }),
               dontPreviewFactory: () => {
-                // ScrollArea aninhada (anti-padrão).
+                // ScrollArea aninhada (anti-padrão). Aqui as duas têm altura de
+                // propósito: o defeito demonstrado é o aninhamento, não a falta
+                // de teto — sem os dois degraus não haveria rolagem dupla a ver.
                 const outer = createScrollArea({
-                  height: '160px',
+                  size: 'sm',
                   class: 'nds-w-full nds-rounded-md nds-border-default',
                 });
                 const innerWrap = document.createElement('div');
                 innerWrap.className = 'nds-p-2';
                 innerWrap.appendChild(createScrollArea({
-                  height: '120px',
+                  size: 'xs',
                   class: 'nds-w-full nds-rounded-md nds-border-default',
                   children: buildTagList(20),
                 }));
@@ -421,7 +429,7 @@ export function createScrollAreaDocs(): HTMLElement {
             `const list = document.createElement('ul');\n` +
             `// ... popular o conteúdo\n\n` +
             `const area = createScrollArea({\n` +
-            `  height: '400px',\n` +
+            `  size: 'xl',\n` +
             `  class: 'nds-w-full nds-rounded-md nds-border-default',\n` +
             `  children: list,\n` +
             `});`,
@@ -430,7 +438,7 @@ export function createScrollAreaDocs(): HTMLElement {
       case 'variantes': {
         const codeVertical =
           `createScrollArea({\n` +
-          `  height: '240px',\n` +
+          `  size: 'lg',\n` +
           `  class: 'nds-w-full nds-rounded-md nds-border-default',\n` +
           `  children: list,\n` +
           `});`;
@@ -442,7 +450,7 @@ export function createScrollAreaDocs(): HTMLElement {
           `});`;
         const codeBoth =
           `createScrollArea({\n` +
-          `  height: '240px',\n` +
+          `  size: 'lg',\n` +
           `  width: '100%',\n` +
           `  class: 'nds-rounded-md nds-border-default',\n` +
           `  children: matrix, // table ou grid largo\n` +
@@ -456,7 +464,7 @@ export function createScrollAreaDocs(): HTMLElement {
               description: stripHtml(t('variants.styles.vertical')),
               code: codeVertical,
               previewFactory: () => createScrollArea({
-                height: '180px',
+                size: 'md',
                 class: 'nds-w-full nds-rounded-md nds-border-default',
                 children: buildTagList(20),
               }),
@@ -476,7 +484,7 @@ export function createScrollAreaDocs(): HTMLElement {
               description: stripHtml(t('variants.styles.both')),
               code: codeBoth,
               previewFactory: () => createScrollArea({
-                height: '200px',
+                size: 'md',
                 width: '100%',
                 class: 'nds-rounded-md nds-border-default nds-whitespace-nowrap',
                 children: buildMatrix(10, 10),
@@ -504,10 +512,13 @@ export function createScrollAreaDocs(): HTMLElement {
 
       case 'propriedades': {
         const interfaceCode = `// createScrollArea(options)
+export type ScrollAreaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 export interface ScrollAreaOptions {
-  height?: string;   // ex.: '400px', '50vh'
-  width?: string;    // ex.: '100%', '500px'
-  class?: string;    // classes extras no root
+  size?: ScrollAreaSize;  // escada de altura da janela rolável
+  width?: string;         // ex.: '100%', '500px'
+  label?: string;         // nome acessível da região
+  class?: string;         // classes extras no root
   children?: HTMLElement; // conteúdo do viewport
 }`;
 
@@ -526,7 +537,7 @@ export interface ScrollAreaOptions {
               title: 'createScrollArea',
               cols: propsCols,
               items: [
-                { name: 'height',   type: 'string',      defaultValue: '—', required: 'Não', description: 'Altura do root e maxHeight do viewport. Sem ela o ScrollArea NÃO rola — o conteúdo expande naturalmente.' },
+                { name: 'size',     type: `'xs' | 'sm' | 'md' | 'lg' | 'xl'`, defaultValue: '—', required: 'Não', description: 'Degrau da escada de altura da janela rolável. Sem ele o ScrollArea NÃO rola — o conteúdo expande naturalmente. Uma altura fora da escada vem da custom property --box-height no root.' },
                 { name: 'width',    type: 'string',      defaultValue: '—', required: 'Não', description: 'Largura do root. Útil para scroll horizontal.' },
                 { name: 'label',    type: 'string',      defaultValue: '—', required: 'Não', description: 'Nome acessível da região rolável. Com nome, o viewport vira uma região anunciada pelo leitor de tela; sem nome, nenhum papel é emitido — aria-label em elemento sem papel é atributo proibido.' },
                 { name: 'children', type: 'HTMLElement', defaultValue: '—', required: 'Não', description: 'Conteúdo renderizado dentro do viewport (data-slot="scroll-area-viewport").' },

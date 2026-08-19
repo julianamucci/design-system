@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { transbordo } from '@shared/testing/scroll-area-probe';
-import { createScrollArea } from './scroll-area';
+import { createScrollArea, type ScrollAreaSize } from './scroll-area';
 import { createScrollAreaDocs } from '@/components/docs/ScrollAreaDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
 type ScrollAreaArgs = {
-  height: string;
+  size: ScrollAreaSize;
   width: string;
   label: string;
   itemCount: number;
@@ -23,9 +23,11 @@ const meta: Meta<ScrollAreaArgs> = {
     docs: { page: withAutoDocsTab(createScrollAreaDocs) },
   },
   argTypes: {
-    height: {
-      control: 'text',
-      description: 'Altura do root (e maxHeight do viewport). OBRIGATÓRIA para o scroll funcionar.',
+    size: {
+      control: 'radio',
+      options: ['xs', 'sm', 'md', 'lg', 'xl'],
+      description:
+        'Degrau da escada de altura da janela rolável, escrito em data-size no root. OBRIGATÓRIO para o scroll funcionar — a ausência dele é a story NoLimit, em States.',
     },
     width: {
       control: 'text',
@@ -46,7 +48,7 @@ const meta: Meta<ScrollAreaArgs> = {
     },
   },
   args: {
-    height: '240px',
+    size: 'lg',
     width: '100%',
     label: 'Lista de itens',
     itemCount: 30,
@@ -96,7 +98,7 @@ export const Playground: Story = {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(createScrollArea({
-      height: args.height || undefined,
+      size: args.size || undefined,
       width: args.width || undefined,
       label: args.label || undefined,
       class: args.className || undefined,
@@ -116,7 +118,10 @@ export const Playground: Story = {
       await expect(raiz).toHaveClass('nds-scroll-area');
       await expect(viewport.tagName).toBe('DIV');
       await expect(viewport).toHaveClass('nds-scroll-area-viewport');
-      await expect(raiz.style.height).toBe(args.height);
+      // O degrau vai para a RAIZ, e é ela que a folha compartilhada dimensiona:
+      // o viewport é `height: 100%` por ela, sem medida repetida no elemento.
+      await expect(raiz.dataset.size).toBe(args.size);
+      await expect(viewport.style.maxHeight).toBe('');
     });
 
     await step('A rolagem é a nativa do navegador', async () => {

@@ -83,8 +83,9 @@ div[ndsCard]
 **Estrutura**:
 
 ```
-div[ndsScrollArea]  (tabindex="0" quando rolável)
-└── conteúdo projetado
+div[ndsScrollArea]  (data-size resolve a altura)
+└── div.nds-scroll-area-viewport  (overflow: auto, tabindex="0")
+    └── conteúdo projetado
 ```
 
 **Entradas**:
@@ -92,10 +93,12 @@ div[ndsScrollArea]  (tabindex="0" quando rolável)
 | Nome | Default | Função |
 |---|---|---|
 | `label` | — | Nome acessível da região rolável |
-| `maxHeight` | `md` | `md` (altura de leitura padrão) ou `none` (a altura vem de fora) |
+| `size` | — | Degrau da escada de altura da janela (`xs`…`xl`), escrito em `data-size` na raiz |
 
 **Regras**:
-- A altura padrão é token, não número escrito no call site
+- A altura vem da escada nomeada, nunca de um número escrito no call site. Os degraus são os tokens `--box-height-*`; uma medida fora deles vem da custom property `--box-height` no elemento
+- `size` **não tem default**, e isso é decisão: sem teto não há transbordo e sem transbordo não há rolagem, então a ausência dele é o cenário de erro que a story `NoLimit` e o "não faça" do Do & Dont demonstram
+- O degrau mora na **raiz**: é lá que a folha compartilhada resolve `block-size`, e o viewport é `height: 100%` por ela. Repetir a medida no viewport é declaração morta
 - Rolagem é `auto`, nunca `scroll` — barra sempre visível é ruído
 - Uma só camada rola: aninhar duas áreas roláveis produz captura de rolagem imprevisível
 

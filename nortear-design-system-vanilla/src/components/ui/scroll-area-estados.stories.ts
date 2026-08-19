@@ -68,7 +68,7 @@ export const Idle: Story = {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full nds-max-w-sm';
     outer.appendChild(createScrollArea({
-      height: '200px',
+      size: 'md',
       label: 'Lista em repouso',
       class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildList(25),
@@ -99,7 +99,7 @@ export const Scrolling: Story = {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full nds-max-w-sm';
     const area = createScrollArea({
-      height: '200px',
+      size: 'md',
       label: 'Lista em rolagem',
       class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildList(25),
@@ -133,7 +133,7 @@ export const Hover: Story = {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full nds-max-w-sm';
     outer.appendChild(createScrollArea({
-      height: '200px',
+      size: 'md',
       label: 'Lista sob o ponteiro',
       class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildList(25),
@@ -171,7 +171,7 @@ export const Focus: Story = {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full nds-max-w-sm';
     outer.appendChild(createScrollArea({
-      height: '200px',
+      size: 'md',
       label: 'Lista rolável de itens',
       class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildList(25),
@@ -216,7 +216,7 @@ export const FocusableContent: Story = {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full nds-max-w-sm';
     outer.appendChild(createScrollArea({
-      height: '200px',
+      size: 'md',
       label: 'Lista de ações',
       class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildLinkList(20),
@@ -257,7 +257,7 @@ export const FocusableContent: Story = {
 export const NoLimit: Story = {
   parameters: {
     covers: ['functional.item4'],
-    docs: { description: { story: 'Sem altura no root — o conteúdo expande e não há rolagem. É o erro de uso mais comum: o componente aparenta estar quebrado quando ninguém disse até onde ele pode ir.' } },
+    docs: { description: { story: 'Sem degrau de altura no root — o conteúdo expande e não há rolagem. É o erro de uso mais comum: o componente aparenta estar quebrado quando ninguém disse até onde ele pode ir.' } },
   },
   render: () => {
     const outer = document.createElement('div');
@@ -269,7 +269,7 @@ export const NoLimit: Story = {
       children: buildList(25),
     }));
     outer.appendChild(createScrollArea({
-      height: '160px',
+      size: 'sm',
       label: 'Lista com teto de altura',
       class: 'nds-w-full nds-rounded-md nds-border-default',
       children: buildList(25),
@@ -281,7 +281,7 @@ export const NoLimit: Story = {
       canvasElement.querySelectorAll<HTMLElement>('[data-slot="scroll-area-viewport"]'),
     );
 
-    await step('Sem altura no root o conteúdo expande e não há rolagem', async () => {
+    await step('Sem degrau de altura no root o conteúdo expande e não há rolagem', async () => {
       // functional.item4.
       await expect(transbordo(semAltura).y).toBe(false);
       await expect(semAltura.scrollHeight).toBe(semAltura.clientHeight);
@@ -295,7 +295,7 @@ export const NoLimit: Story = {
       await expect(semAltura.getAttribute('aria-label')).toBeNull();
     });
 
-    await step('Com altura no root o mesmo conteúdo rola', async () => {
+    await step('Com o degrau de altura no root o mesmo conteúdo rola', async () => {
       await expect(transbordo(comAltura).y).toBe(true);
       await expect(comAltura.getBoundingClientRect().height).toBeLessThan(200);
     });

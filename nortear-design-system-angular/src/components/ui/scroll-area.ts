@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
-  computed,
   input,
 } from '@angular/core';
 
@@ -41,6 +40,8 @@ import {
 // arrasto do pegador, roda do mouse, teclado (setas, PageUp/PageDown, Home/End)
 // e inércia de toque — tudo do navegador, com a aparência do sistema.
 
+export type ScrollAreaSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 /**
  * Área com rolagem interna.
  *
@@ -63,10 +64,11 @@ import {
   host: {
     class: 'nds-scroll-area',
     '[attr.data-slot]': '"scroll-area"',
+    '[attr.data-size]': 'size() || null',
   },
   template: `
     <div
-      [class]="viewportClass()"
+      class="nds-scroll-area-viewport"
       data-slot="scroll-area-viewport"
       tabindex="0"
       [attr.role]="label() ? 'region' : null"
@@ -93,25 +95,21 @@ export class NdsScrollArea {
   readonly label = input<string>('');
 
   /**
-   * Limite de altura da área rolável.
+   * Degrau da escada de altura da janela rolável.
    *
    * Uma área de rolagem só rola se houver um teto — sem ele o conteúdo
    * simplesmente empurra a página, que é o erro mais comum deste componente.
-   * O teto mora no VIEWPORT, e não na raiz: `.nds-scroll-area-viewport` é
-   * `height: 100%`, e porcentagem contra um pai de altura automática resolve
-   * para automático — o teto na raiz recortaria o conteúdo sem produzir barra.
+   * Por isso a ausência de `size` NÃO é um default a corrigir: é o cenário que
+   * a story SemLimite e o "não faça" do Do & Dont demonstram.
    *
-   * `'md'` aplica `.nds-scroll-area-md`, que é `max-block-size` na escada de
-   * espaçamento — máximo, não altura fixa: a caixa continua encolhendo com pouco
-   * conteúdo e continua rolando quando a pessoa aumenta a fonte do navegador
-   * (guideline 12, WCAG 1.4.4). `'none'` devolve a medida para quem consome.
+   * O degrau vai para `data-size` na RAIZ, e é lá que a folha compartilhada
+   * resolve `block-size` a partir de `--box-height-*`. O viewport é
+   * `height: 100%` por ela: com a raiz dimensionada a porcentagem resolve, e
+   * não há segunda medida a escrever aqui. Uma altura fora da escada continua
+   * possível pela custom property `--box-height` no elemento.
+   *
+   * A escada não acompanha a densidade de propósito — densidade aperta
+   * controle, e aqui não há texto a ser cortado: o conteúdo rola.
    */
-  readonly maxHeight = input<'md' | 'none'>('md');
-
-  /** Classes do viewport — só as do próprio componente. */
-  protected readonly viewportClass = computed(() =>
-    ['nds-scroll-area-viewport', this.maxHeight() === 'md' ? 'nds-scroll-area-md' : '']
-      .filter(Boolean)
-      .join(' '),
-  );
+  readonly size = input<ScrollAreaSize | undefined>(undefined);
 }
