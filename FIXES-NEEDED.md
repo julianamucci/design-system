@@ -2117,3 +2117,37 @@ ficaram abertas, todas descobertas *por causa* da conversão.
       não varre `src/lib/`) e é infra de decorator do Storybook, não marcação
       avulsa. Converter em três das cinco fabricaria divergência num arquivo que
       deveria ser igual — ou nas cinco, ou em nenhuma.
+
+## Achados da conversão do meio-degrau (2026-08-19)
+
+- [ ] **`class="nds-px-4"` inerte em dois `SidebarHeader` do Svelte**
+      (`SidebarDocs.svelte:286` e `:311`). `.nds-sidebar-header` declara o
+      SHORTHAND `padding: var(--spacing-2)`, e shorthand posterior sobrescreve a
+      propriedade longa anterior — então o eixo inline ali é 8px, não 16px. A
+      classe está escrita, parece funcionar, e não faz nada. O conserto é dar ao
+      `.nds-sidebar-header` padding por eixo em vez de shorthand; aí a utility
+      volta a poder complementar.
+
+- [ ] **O inventário é cego às stories do Vue.** Markup de story no Vue vive em
+      template string, e a guarda de snippet do auditor trata crase como "trecho
+      exibido" — então nada ali é contado. **Mais 45 sítios de meio-degrau
+      existem fora da medição**: 33× `padding-top: 0.75rem` nas quatro stories de
+      `tabs` e 12× `padding-inline: 0.75rem` nas de `scroll-area`. Todos os
+      números de Vue que este arquivo cita são, portanto, PISO e não total. Mesma
+      família do vão já registrado para o Svelte.
+
+- [ ] **O padding do `TabsContent` é decoração só do Vue.** `.nds-tabs-content`
+      não declara padding no CSS compartilhado (só `margin-top: 8px`), e React,
+      Svelte, Vanilla e Angular não põem nada. O Vue punha 12px, e esta rodada o
+      levou a 16px — ou seja, ALARGOU a divergência em vez de fechá-la. Pela
+      regra de paridade de exemplo e com o Vanilla como referência, o certo é
+      remover, não escalar. São 9 `nds-pt-4` e possivelmente os 8 `nds-pt-2`
+      vizinhos. Decisão da dona porque muda o respiro da demo.
+
+- [ ] **`popover-variantes.stories.ts:99` do Svelte falha sob carga.** O play faz
+      `cancelar.focus()` e um `Tab` sem esperar o painel assentar; com 27 arquivos
+      em paralelo a tecla chega antes do focus trap do `bits-ui` montar e é
+      engolida. Medido em par na mesma máquina (baseline isolado passa; o bloco
+      inteiro com a edição passa), então **não é regressão** — mas pela regra do
+      repositório falha intermitente não fecha como "não reproduz". O conserto é
+      o play esperar a condição.
