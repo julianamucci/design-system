@@ -2388,11 +2388,54 @@ function stripMarkupComments(src) {
   return src.replace(/<!--[\s\S]*?-->/g, (m) => m.replace(/[^\n]/g, ' '));
 }
 
+/**
+ * Marca os trechos que são SNIPPET EXIBIDO AO LEITOR, não estilo aplicado.
+ *
+ * Foi o que separou a regra útil da regra ruidosa quando o alcance passou a
+ * incluir stories e docs pages: das 1457 declarações que a varredura crua
+ * achou, 429 (29%) estavam dentro de um bloco de código que a página ENSINA —
+ * `code: \`<SelectTrigger style="width: 14rem">\``, o `padding-bottom: 56.25%`
+ * do AspectRatio, o `structureCode` do vanilla. `style` num trecho que ensina
+ * não é `style` aplicado, e acusá-lo faz o leitor do relatório desconfiar de
+ * todos os outros achados.
+ *
+ * O sinal é a crase: template literal é onde as cinco stacks guardam snippet, e
+ * crase não aparece em markup renderizado. Medido antes de confiar nisso — nos
+ * 219 arquivos com achado, o número de crases é PAR em todos, então o rastreio
+ * caractere a caractere pelo arquivo inteiro nunca fica preso num estado errado.
+ * Rastrear só dentro de `<script>` seria pior: em Svelte o `code:` do
+ * `DocsCompositions` mora no markup, dentro de uma expressão `{…}`.
+ *
+ * Posição, não linha: `code: \`<Tabs style="max-width: 36rem">` abre a crase na
+ * mesma linha do achado, e `<code …>data={\`{5000 linhas}\`}</code>` tem crase
+ * em markup de verdade. Só o offset do match distingue os dois.
+ */
+function snippetMask(src) {
+  const mask = new Uint8Array(src.length);
+  let dentro = false;
+  for (let i = 0; i < src.length; i++) {
+    if (src[i] === '\\') {
+      if (dentro) { mask[i] = 1; if (i + 1 < src.length) mask[i + 1] = 1; }
+      i++;
+      continue;
+    }
+    if (src[i] === '`') { dentro = !dentro; mask[i] = 1; continue; }
+    if (dentro) mask[i] = 1;
+  }
+  return mask;
+}
+
 /** Declarações inline de um arquivo, nas sintaxes que as cinco stacks usam. */
 function inlineStyleDecls(content) {
   const out = [];
-  stripMarkupComments(stripComments(content)).split('\n').forEach((linha, i) => {
-    const push = (prop, valor) => {
+  const src = stripMarkupComments(stripComments(content));
+  const mask = snippetMask(src);
+  let base = 0;
+  src.split('\n').forEach((linha, i) => {
+    const ini = base;
+    base += linha.length + 1;
+    const push = (prop, valor, pos) => {
+      if (mask[ini + pos]) return;                       // snippet exibido, não aplicado
       const nome = kebab(String(prop).trim().replace(/['"]/g, ''));
       const v = String(valor).trim().replace(/['"]/g, '');
       if (!INLINE_DESIGN_PROPS.has(nome)) return;
@@ -2401,56 +2444,70 @@ function inlineStyleDecls(content) {
       if (!INLINE_QUANTITY.test(v)) return;
       out.push({ line: i + 1, decl: `${nome}: ${v}` });
     };
-    const pares = (txt) => {
-      for (const m of txt.matchAll(/([a-zA-Z-]+)\s*:\s*(["'])([^"']*)\2/g)) push(m[1], m[3]);
+    const pares = (txt, delta) => {
+      for (const m of txt.matchAll(/([a-zA-Z-]+)\s*:\s*(["'])([^"']*)\2/g)) push(m[1], m[3], delta + m.index);
     };
 
     // style={{ height: '2rem' }} — jsx
-    if (/style=\{\{/.test(linha)) pares(linha);
+    if (/style=\{\{/.test(linha)) pares(linha, 0);
     // :style="{ minHeight: '200px' }" — vue com objeto ligado
-    for (const m of linha.matchAll(/:style=(["'])\s*\{([\s\S]*?)\}\s*\1/g)) pares(m[2]);
+    for (const m of linha.matchAll(/:style=(["'])\s*\{([\s\S]*?)\}\s*\1/g)) pares(m[2], m.index);
     // style="a: 1rem; b: 2rem" — vue, svelte, angular, html
     for (const m of linha.matchAll(/(?<!:)style=(["'])([^"']*)\1/g)) {
       if (m[2].trim().startsWith('{')) continue;         // objeto, já tratado acima
       for (const d of m[2].split(';')) {
         const [p, ...r] = d.split(':');
-        if (p && r.length) push(p, r.join(':'));
+        if (p && r.length) push(p, r.join(':'), m.index);
       }
     }
     // el.style.height = '2rem' — factories vanilla
-    for (const m of linha.matchAll(/\.style\.([a-zA-Z]+)\s*=\s*(["'])([^"']*)\2/g)) push(m[1], m[3]);
+    for (const m of linha.matchAll(/\.style\.([a-zA-Z]+)\s*=\s*(["'])([^"']*)\2/g)) {
+      if (m[1] === 'cssText') continue;                 // tratado abaixo, é folha inteira
+      push(m[1], m[3], m.index);
+    }
+    // el.style.cssText = 'width:20rem;padding:1rem' — mesma coisa, uma linha só.
+    // Ficou de fora da primeira versão e escondia 12 declarações reais no vanilla,
+    // entre elas `min-height: 7.5rem` repetido em três arquivos do sonner.
+    for (const m of linha.matchAll(/\.style\.cssText\s*\+?=\s*(["'])([^"']*)\1/g)) {
+      for (const d of m[2].split(';')) {
+        const [p, ...r] = d.split(':');
+        if (p && r.length) push(p, r.join(':'), m.index);
+      }
+    }
   });
   return out;
 }
 
 /**
- * Valor de design cravado em `style` inline dentro de `components/ui`.
+ * Valor de design cravado em `style` inline. Regra GERAL das cinco stacks.
  *
  * Inline vence qualquer folha, então a declaração fica fora do tema, fora da
  * densidade e fora da escala tipográfica — e `height` cravado é o defeito de
- * WCAG 1.4.4 que a convenção de altura já proíbe. Medido ao criar a regra:
- * 18 em primitivo e 148 em andaime de story, estes últimos todos no Svelte,
- * o que por si só é divergência cross-stack.
+ * WCAG 1.4.4 que a convenção de altura já proíbe.
  *
- * FORA DE ESCOPO, de propósito: docs pages. Elas misturam estilo renderizado
- * com snippet de código exibido ao leitor (o `padding-bottom: 56.25%` do
- * AspectRatio é o truque antigo sendo demonstrado), e separar os dois por
- * regex não é confiável. O grep manual do passo 1 da skill `quality` continua
- * cobrindo esse lado.
+ * O alcance começou em `components/ui` sem stories, e era estreito demais: a
+ * proibição valia para o repositório inteiro, mas o detector só olhava o
+ * primitivo. As DOCS PAGES ficaram de fora por medo do falso positivo — elas
+ * misturam estilo renderizado com snippet exibido ao leitor — e é justamente
+ * lá que o dano é maior: é o markup que o leitor copia, e a fase 3 do carrossel
+ * corrigiu exatamente esse defeito. A separação hoje é feita por
+ * `snippetMask`, medida em 29% dos achados crus.
+ *
+ * Severidade por dano: docs page e primitivo são **high** (o leitor copia um,
+ * o produto usa o outro); andaime de story é **medium**.
  */
 function auditInlineStyle(slug) {
   const violations = [];
   for (const stack of STACKS) {
-    const { ui } = filesForSlug(slug, stack);
-    for (const file of ui) {
-      if (/\.stories\./.test(file)) continue;
+    const { ui, docs } = filesForSlug(slug, stack);
+    for (const file of [...ui, ...docs]) {
       const content = readFile(file);
       if (!content) continue;
       const decls = inlineStyleDecls(content);
       if (!decls.length) continue;
-      // Andaime de demo tem peso menor que o primitivo, mas é o que as pessoas
-      // copiam — por isso entra, em vez de ser ignorado.
-      const andaime = /Story\.[a-z]+$/i.test(basename(file));
+      // Andaime de demo tem peso menor que o primitivo e que a docs page, mas é
+      // o que as pessoas copiam — por isso entra, em vez de ser ignorado.
+      const andaime = /Story\.[a-z]+$/i.test(basename(file)) || /\.stories\./.test(file);
       const amostra = [...new Set(decls.map((d) => d.decl))].slice(0, 3).join(' · ');
       violations.push({
         category: 'quality', severity: andaime ? 'medium' : 'high', slug, stack,
