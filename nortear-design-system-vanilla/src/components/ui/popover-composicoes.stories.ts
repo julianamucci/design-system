@@ -182,9 +182,7 @@ export const ColorPicker: Story = {
     for (const s of swatches) {
       const btn = document.createElement('button');
       btn.type = 'button';
-      btn.className = 'nds-rounded-full';
-      btn.style.height = '1.5rem';
-      btn.style.width = '1.5rem';
+      btn.className = 'nds-rounded-full nds-size-6';
       btn.style.boxShadow = '0 0 0 1px rgb(0 0 0 / 0.1)';
       btn.style.backgroundColor = s.color;
       btn.setAttribute('aria-label', s.name);
