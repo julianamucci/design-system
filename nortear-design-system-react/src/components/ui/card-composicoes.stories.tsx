@@ -117,7 +117,7 @@ export const WithAction: Story = {
             size="icon"
             aria-label="Ações do produto Cadeira Gamer Pro"
           >
-            <MoreVertical aria-hidden="true" style={{ height: "1rem", width: "1rem" }} />
+            <MoreVertical aria-hidden="true" className="nds-size-4" />
           </Button>
         </CardAction>
       </CardHeader>

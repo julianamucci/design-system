@@ -671,8 +671,7 @@ function onDemoInit(payload: any) {
             style="padding: 0.375rem 0.75rem"
           >
             <span
-              class="nds-rounded-full nds-bg-success"
-              style="width: 0.5rem; height: 0.5rem"
+              class="nds-rounded-full nds-bg-success nds-size-2"
               aria-hidden="true"
             />
             <code>Autoplay({ delay: 3000, stopOnInteraction: true })</code>
