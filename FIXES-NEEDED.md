@@ -1922,12 +1922,13 @@ design antes de alguém "alinhar" no sentido errado.
   altura valer numa stack e não na outra. Vanilla é a referência, então o alvo
   seria o recorte — mas são três primitivos a mexer, com Chromatic a reboque.
 
-- [ ] **O track do Vanilla horizontal não declara `data-orientation`.** A regra
+- [x] **O track do Vanilla horizontal não declara `data-orientation`.** A regra
   `.nds-carousel-track[data-orientation="horizontal"]` traz a margem negativa
   que encosta o primeiro slide na borda; as outras quatro stacks a recebem e o
   Vanilla não, então ele mostra um respiro de 16px que as outras não têm.
-  Deliberadamente NÃO alterado nesta rodada: ligar o atributo muda a
-  renderização do Vanilla de imediato, e alinhar os cinco é decisão de design.
+  Estava deliberadamente NÃO alterado por ser decisão de design.
+  **RESOLVIDO (2026-08-19, `230602c6`)** — a dona decidiu alinhar. O atributo
+  passou a ser escrito nos dois eixos.
 
 - [x] **`aria-disabled` nas setas.** Vanilla e Angular escrevem o par  
       **MUDOU DE FORMA** (conferido 2026-08-17) — o texto deste item foi SUBSTITUÍDO na seção "Mudaram de forma", no topo. Não use o texto abaixo.
@@ -1999,3 +2000,33 @@ design antes de alguém "alinhar" no sentido errado.
   export como texto, então qualquer comentário que use a mesma palavra dá falso
   negativo. Um nome de export com cara de palavra comum (`regiao`, `titulo`,
   `item`) fica coberto por acidente.
+
+## `style` inline: 843 declarações sem utilitária (2026-08-19)
+
+A regra `inline_style_design_value` passou a cobrir stories e docs pages nas
+cinco stacks (`2f4595ac`). A primeira leva fechou os 27 arquivos que o
+vocabulário `.nds-*` atual fecha por completo (`1efb6e2d`). **Sobram 138
+arquivos, 988 declarações — e só 18% delas têm utilitária hoje.**
+
+Fechar o resto exige cunhar ~100 classes, o que é decisão de design, não de
+correção. Escrever valor cravado numa classe nova sem esse aval trocaria um
+problema por outro: o número sai do markup e vira vocabulário do sistema.
+
+Escadas que faltam, por volume medido:
+
+- [ ] `.nds-p-3` / `.nds-px-3` — o degrau de `0.75rem`, de longe o mais repetido
+      (86 + 31 ocorrências). Não existe, apesar de `--spacing-3` existir.
+- [ ] `.nds-pt-*` e `.nds-pl-*` — as famílias inteiras não existem (37 + 30).
+- [ ] degraus de `w-*` fora de 16/20/24/32rem: `18rem` (40), `14rem` (13),
+      e `max-w-36rem`.
+- [ ] `min-h-*` além de 96/100/120/200/400px — 166 ocorrências espalhadas em
+      220, 80, 60, 260, 140, 180 e 320px. A dispersão é o sinal: cada página
+      escolheu a sua, e nenhuma escada as cobre.
+- [ ] `min-w-*` (20), `max-h-*` (8), paddings compostos como `0.5rem 0.75rem` (24).
+- [ ] **`height` — 139 ocorrências, e NÃO vire utilitária genérica sem decisão
+      explícita.** Altura fixa em elemento com texto é exatamente o que a
+      WCAG 1.4.4 proíbe, e uma `.nds-h-*` de uso livre convida o defeito de
+      volta pela porta da frente. A saída provável é caso a caso: container
+      pode, primitivo com texto não.
+
+Enquanto isso, o auditor reprova as 988 — é dívida visível, não silenciosa.
