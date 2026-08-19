@@ -105,10 +105,10 @@
     return tNav(priorityKeyMap[raw] ?? 'common.high');
   }
 
-  // Dots demo — capture API to sync dots with selected slide
+  // A demonstração não tem paginação — a API é capturada só para o evento
+  // `slide_change`, que precisa do índice e do total a cada troca.
   let demoApi = $state<CarouselAPI | undefined>(undefined);
   let demoSelectedIndex = $state(0);
-  let demoScrollSnaps = $state<number[]>([]);
   // Modalidade da navegação — capturada no wrapper da demo (capture phase)
   // antes de o select do embla disparar; swipe é detectado via dragHandler.
   let demoNavModality: 'button' | 'keyboard' = 'button';
@@ -116,7 +116,6 @@
   function setDemoApi(a: CarouselAPI | undefined) {
     demoApi = a;
     if (!a) return;
-    demoScrollSnaps = a.scrollSnapList();
     demoSelectedIndex = a.selectedScrollSnap();
     a.on('select', () => {
       demoSelectedIndex = a.selectedScrollSnap();
@@ -130,13 +129,8 @@
       });
     });
     a.on('reInit', () => {
-      demoScrollSnaps = a.scrollSnapList();
       demoSelectedIndex = a.selectedScrollSnap();
     });
-  }
-
-  function demoGoTo(i: number) {
-    demoApi?.scrollTo(i);
   }
 
   // Composições — dots preview state
@@ -363,25 +357,11 @@ interface CarouselNavProps extends ButtonProps {
         <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
       </Carousel>
       <!--
-        Mesma fileira de paginação da seção de composições, e da mesma classe
-        compartilhada. Esta aqui era a única das cinco docs pages que a montava
-        como `tablist`/`tab`: o controle não comanda painel nenhum, e o conteúdo
-        compartilhado descreve `aria-current` num botão comum. Ela também
-        desenhava o ponto à mão com 8px de lado (reprova em `target-size`, WCAG
-        2.5.8) e nomeava só a posição — "Ir para o slide 2" sem o total, que é
-        exatamente o formato que a tabela de UX writing rejeita.
+        Sem fileira de paginação aqui. Esta docs page era a única das cinco com
+        uma na Demonstração — a paginação é assunto da seção de Composições, e é
+        lá que ela vive nas cinco. O `setApi` continua: ele alimenta o evento
+        `slide_change`, que não depende de haver paginação na tela.
       -->
-      <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm">
-        {#each demoScrollSnaps as _, i (i)}
-          <button
-            type="button"
-            class="nds-carousel-dot"
-            aria-label={`${$tStore('demonstration.labels.goToSlide')} ${i + 1} ${$tStore('demonstration.labels.of')} ${demoScrollSnaps.length}`}
-            aria-current={demoSelectedIndex === i ? 'true' : undefined}
-            onclick={() => demoGoTo(i)}
-          ><span class="nds-carousel-dot-label">{$tStore('demonstration.labels.slide')} {i + 1}</span></button>
-        {/each}
-      </div>
     </div>
   </DocsDemonstration>
 
