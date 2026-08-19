@@ -2086,3 +2086,34 @@ ficaram abertas, todas descobertas *por causa* da conversão.
       AUSENTE no Svelte. Bloqueado em parte pela `.nds-p-3` inexistente, que já
       consta na lista de utilitárias faltantes acima — os 15 restantes do Vue e
       os 10 do React em `resizable-composicoes.stories.tsx` são exatamente isso.
+
+## `spacing.css` carrega antes dos componentes — utility que não vence (2026-08-19)
+
+- [ ] **`spacing.css` é importado na linha 13 do `index.css`, antes de TODA folha
+      de componente** (`input.css` está na 39). Mesma especificidade (0,1,0), então
+      a ordem decide: **nenhuma classe `.nds-p*` consegue sobrescrever o padding de
+      um componente**. Uma utility que não vence não é utility.
+
+      O próprio `index.css` declara a intenção certa no import do `utilities.css`
+      (linha 92): *"Utility genérica por último, regra de componente no CSS do
+      componente"*. O `spacing.css` se descreve como utility no cabeçalho e está
+      do lado errado dessa linha.
+
+      Descoberto ao converter `padding` inline: em
+      `nortear-design-system-svelte/.../TableDocs.svelte:750` um `<Input>` usa
+      `style="padding-left: 2rem"` para abrir espaço ao ícone de busca, e trocar
+      por `.nds-pl-8` faria o recuo sumir — `.nds-input` tem `padding-inline` e
+      ganharia. O inline é a única coisa que ainda vence ali.
+
+      **Raio de alcance medido: 12 sítios** no repositório combinam uma classe de
+      componente que declara padding com uma classe de espaçamento — quatro deles
+      `nds-button + nds-px-4` no Svelte, e o resto `nds-docs-demo-row + nds-px-4`.
+      Mover o import faria a utility passar a vencer nesses 12. Provavelmente é o
+      que quem escreveu esperava; mas em pelo menos os quatro do botão isso muda
+      pixel, então cada um precisa de um olhar antes.
+
+- [ ] **`src/lib/withAutoDocsTab.ts` tem `padding: '2rem'` inline nas cinco stacks.**
+      Mapeia limpo para `.nds-p-8`, mas fica fora do alcance do auditor (a regra
+      não varre `src/lib/`) e é infra de decorator do Storybook, não marcação
+      avulsa. Converter em três das cinco fabricaria divergência num arquivo que
+      deveria ser igual — ou nas cinco, ou em nenhuma.
