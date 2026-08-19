@@ -75,3 +75,26 @@
 .nds-demo-box[data-size="md"] { --box-height: var(--box-height-md); }
 .nds-demo-box[data-size="lg"] { --box-height: var(--box-height-lg); }
 .nds-demo-box[data-size="xl"] { --box-height: var(--box-height-xl); }
+
+/*
+ * `data-min` — MOLDURA COM PISO, em vez de moldura fixa.
+ *
+ * A distinção não é estética. Onde a demo emoldura algo que rola (scroll-area),
+ * a altura tem que ser fixa: sem limite não há transbordo. Onde ela emoldura
+ * algo que se REDIMENSIONA (painel divisível), fixar a altura briga com o
+ * componente — o piso dá a área mínima para arrastar e deixa o conteúdo crescer.
+ *
+ * Que o piso é o contrato saiu da medição, não de gosto: três das cinco stacks
+ * já usavam `min-height` no painel divisível — o Vanilla numa função `frame()`,
+ * o React numa const `demoBoxStyle`, o Angular numa classe — e nenhuma das três
+ * era visível para o auditor, porque valor em variável não é literal em `style`.
+ * As outras duas fixavam a altura, e uma delas escrevia as duas coisas no mesmo
+ * elemento.
+ */
+.nds-demo-box[data-min] { block-size: auto; min-block-size: var(--box-min); }
+
+.nds-demo-box[data-min="xs"] { --box-min: var(--box-height-xs); }
+.nds-demo-box[data-min="sm"] { --box-min: var(--box-height-sm); }
+.nds-demo-box[data-min="md"] { --box-min: var(--box-height-md); }
+.nds-demo-box[data-min="lg"] { --box-min: var(--box-height-lg); }
+.nds-demo-box[data-min="xl"] { --box-min: var(--box-height-xl); }
