@@ -63,7 +63,7 @@ histórico; a lista de cima é o que está por fazer.
 ### Divergência cross-stack do carrossel (3)
 
 - [ ] **`class` do `CarouselContent` cai em nós diferentes.** Nas três stacks com lib vai para o **track**; no Vanilla e no Angular vai para o **recorte**. Três primitivos a mexer, com Chromatic a reboque.
-- [ ] **Track horizontal do Vanilla não declara `data-orientation`.** É escolha consciente, com comentário no código — mas o React escreve sempre, e o respiro de 16px é diferença visível.
+- [x] **Track horizontal do Vanilla não declara `data-orientation`.** RESOLVIDO (2026-08-19, `230602c6`): a dona decidiu alinhar, e o atributo passou a ser escrito nos dois eixos.
 - [ ] **Conteúdo compartilhado do carrossel descreve a API do Embla** — **parcialmente resolvido em `a9817257`**: saíram as menções em `description`, `accessibility.item5`, `notes.tip1`, `notes.tip4`, `props.table.opts` e `props.table.plugins`, e o `seo.*` foi limpo em `2752f0eb`. **O que resta**: `basis-*`, `-ml-4`, `pl-4` e `h-[400px]` em anatomia, guidelines, variantes e dicas — vocabulário do framework utilitário que saiu, não nome de lib. Nenhuma dessas chaves é `*Code`, então o auditor de literais segue cego a elas. Trabalho de `ux-writer`.
 
 ## Mudaram de forma — 7 itens reescritos
@@ -2014,9 +2014,12 @@ problema por outro: o número sai do markup e vira vocabulário do sistema.
 
 Escadas que faltam, por volume medido:
 
-- [ ] `.nds-p-3` / `.nds-px-3` — o degrau de `0.75rem`, de longe o mais repetido
-      (86 + 31 ocorrências). Não existe, apesar de `--spacing-3` existir.
-- [ ] `.nds-pt-*` e `.nds-pl-*` — as famílias inteiras não existem (37 + 30).
+- [x] `.nds-p-3` / `.nds-px-3` — **RESOLVIDO POR DECISÃO (2026-08-19)**: a classe NÃO
+      foi criada. O cabeçalho do `spacing.css` exclui meio-degrau de propósito, e a
+      dona escolheu converter os sítios para 16px (`e8399ab8`). 134 -> 22 isoladas;
+      as 22 que restam são bloqueio de cascata, registrado adiante.
+- [x] `.nds-pt-*` e `.nds-pl-*` — **RESOLVIDO** (`f8591a70`): famílias criadas nos
+      degraus permitidos, mais `pr-2`, `pb-1`, `py-4` e `py-8`. Era assimetria, não política.
 - [ ] degraus de `w-*` fora de 16/20/24/32rem: `18rem` (40), `14rem` (13),
       e `max-w-36rem`.
 - [ ] `min-h-*` além de 96/100/120/200/400px — 166 ocorrências espalhadas em
