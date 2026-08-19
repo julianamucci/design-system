@@ -44,7 +44,10 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>",
-        "angular": "<!-- Sem lib de tabela: ordenação, filtro e paginação vivem no componente -->\n<div\n  ndsDataTable\n  [columns]=\"colunas\"\n  [data]=\"linhas\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n  caption=\"Pedidos do trimestre\"\n></div>"
+        "angular": "<!-- Sem lib de tabela: ordenação, filtro e paginação vivem no componente -->\n<div\n  ndsDataTable\n  [columns]=\"colunas\"\n  [data]=\"linhas\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n  caption=\"Pedidos do trimestre\"\n></div>",
+        "vue": "<DataTable\n  :columns=\"colunas\"\n  :data=\"linhas\"\n  enable-row-selection\n  enable-column-filters\n  enable-column-pinning\n  global-filter-placeholder=\"Buscar...\"\n  caption=\"Pedidos do trimestre\"\n  :row-key=\"(pedido) => pedido.id\"\n/>",
+        "svelte": "<DataTable\n  columns={colunas}\n  data={linhas}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n  caption=\"Pedidos do trimestre\"\n  rowKey={(pedido) => pedido.id}\n/>",
+        "vanilla": "import { createDataTable } from '@/components/ui/data-table';\n\nconst tabela = createDataTable({\n  columns: colunas,\n  data: linhas,\n  enableRowSelection: true,\n  enableColumnFilters: true,\n  enableColumnPinning: true,\n  globalFilterPlaceholder: 'Buscar...',\n  caption: 'Pedidos do trimestre',                  // Vira <caption> fora da tela\n  rowKey: (pedido) => pedido.id,    // Identidade estável da linha\n});\n\ndocument.body.appendChild(tabela);"
       }
     },
     "usage": {
@@ -552,7 +555,10 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Search...\"\n/>",
-        "angular": "<!-- No table library: sorting, filtering and pagination live in the component -->\n<div\n  ndsDataTable\n  [columns]=\"columns\"\n  [data]=\"rows\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  globalFilterPlaceholder=\"Search...\"\n  caption=\"Orders this quarter\"\n></div>"
+        "angular": "<!-- No table library: sorting, filtering and pagination live in the component -->\n<div\n  ndsDataTable\n  [columns]=\"columns\"\n  [data]=\"rows\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  globalFilterPlaceholder=\"Search...\"\n  caption=\"Orders this quarter\"\n></div>",
+        "vue": "<DataTable\n  :columns=\"columns\"\n  :data=\"rows\"\n  enable-row-selection\n  enable-column-filters\n  enable-column-pinning\n  global-filter-placeholder=\"Search...\"\n  caption=\"Orders this quarter\"\n  :row-key=\"(order) => order.id\"\n/>",
+        "svelte": "<DataTable\n  columns={columns}\n  data={rows}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Search...\"\n  caption=\"Orders this quarter\"\n  rowKey={(order) => order.id}\n/>",
+        "vanilla": "import { createDataTable } from '@/components/ui/data-table';\n\nconst table = createDataTable({\n  columns: columns,\n  data: rows,\n  enableRowSelection: true,\n  enableColumnFilters: true,\n  enableColumnPinning: true,\n  globalFilterPlaceholder: 'Search...',\n  caption: 'Orders this quarter',                  // Becomes an off-screen <caption>\n  rowKey: (order) => order.id,    // Stable row identity\n});\n\ndocument.body.appendChild(table);"
       }
     },
     "usage": {
@@ -1060,7 +1066,10 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<DataTable\n  columns={columns}\n  data={data}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n/>",
-        "angular": "<!-- Sin librería de tabla: orden, filtro y paginación viven en el componente -->\n<div\n  ndsDataTable\n  [columns]=\"columnas\"\n  [data]=\"filas\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n  caption=\"Pedidos del trimestre\"\n></div>"
+        "angular": "<!-- Sin librería de tabla: orden, filtro y paginación viven en el componente -->\n<div\n  ndsDataTable\n  [columns]=\"columnas\"\n  [data]=\"filas\"\n  [enableRowSelection]=\"true\"\n  [enableColumnFilters]=\"true\"\n  globalFilterPlaceholder=\"Buscar...\"\n  caption=\"Pedidos del trimestre\"\n></div>",
+        "vue": "<DataTable\n  :columns=\"columnas\"\n  :data=\"filas\"\n  enable-row-selection\n  enable-column-filters\n  enable-column-pinning\n  global-filter-placeholder=\"Buscar...\"\n  caption=\"Pedidos del trimestre\"\n  :row-key=\"(pedido) => pedido.id\"\n/>",
+        "svelte": "<DataTable\n  columns={columnas}\n  data={filas}\n  enableRowSelection\n  enableColumnFilters\n  enableColumnPinning\n  globalFilterPlaceholder=\"Buscar...\"\n  caption=\"Pedidos del trimestre\"\n  rowKey={(pedido) => pedido.id}\n/>",
+        "vanilla": "import { createDataTable } from '@/components/ui/data-table';\n\nconst tabla = createDataTable({\n  columns: columnas,\n  data: filas,\n  enableRowSelection: true,\n  enableColumnFilters: true,\n  enableColumnPinning: true,\n  globalFilterPlaceholder: 'Buscar...',\n  caption: 'Pedidos del trimestre',                  // Se vuelve un <caption> fuera de pantalla\n  rowKey: (pedido) => pedido.id,    // Identidad estable de la fila\n});\n\ndocument.body.appendChild(tabla);"
       }
     },
     "usage": {

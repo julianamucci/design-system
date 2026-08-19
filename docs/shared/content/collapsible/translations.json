@@ -29,7 +29,10 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Exibir detalhes</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* conteúdo colapsável */}\n  </CollapsibleContent>\n</Collapsible>",
-        "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- conteúdo colapsável -->\n  </div>\n</nds-collapsible>"
+        "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- conteúdo colapsável -->\n  </div>\n</nds-collapsible>",
+        "vue": "<Collapsible v-model:open=\"aberto\">\n  <CollapsibleTrigger as-child>\n    <Button variant=\"ghost\">Exibir detalhes</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    <!-- conteúdo colapsável -->\n  </CollapsibleContent>\n</Collapsible>",
+        "svelte": "<Collapsible bind:open={aberto}>\n  <CollapsibleTrigger class=\"nds-button nds-button-ghost\">Exibir detalhes</CollapsibleTrigger>\n  <CollapsibleContent>\n    <!-- conteúdo colapsável -->\n  </CollapsibleContent>\n</Collapsible>",
+        "vanilla": "import { createCollapsible } from '@/components/ui/collapsible';\n\nconst painel = document.createElement('div');   // Conteúdo colapsável\n\nconst bloco = createCollapsible({\n  trigger: 'Exibir detalhes',      // Texto ou elemento do gatilho\n  content: painel,\n  defaultOpen: false,\n  onOpenChange: (aberto) => { /* … */ },\n});\n\nbloco.setOpen(true);          // Controle externo do estado\ndocument.body.appendChild(bloco);"
       }
     },
     "usage": {
@@ -413,7 +416,10 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Show details</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* collapsible content */}\n  </CollapsibleContent>\n</Collapsible>",
-        "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- collapsible content -->\n  </div>\n</nds-collapsible>"
+        "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- collapsible content -->\n  </div>\n</nds-collapsible>",
+        "vue": "<Collapsible v-model:open=\"open\">\n  <CollapsibleTrigger as-child>\n    <Button variant=\"ghost\">Show details</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    <!-- collapsible content -->\n  </CollapsibleContent>\n</Collapsible>",
+        "svelte": "<Collapsible bind:open={open}>\n  <CollapsibleTrigger class=\"nds-button nds-button-ghost\">Show details</CollapsibleTrigger>\n  <CollapsibleContent>\n    <!-- collapsible content -->\n  </CollapsibleContent>\n</Collapsible>",
+        "vanilla": "import { createCollapsible } from '@/components/ui/collapsible';\n\nconst panel = document.createElement('div');   // Collapsible content\n\nconst block = createCollapsible({\n  trigger: 'Show details',      // Trigger text or element\n  content: panel,\n  defaultOpen: false,\n  onOpenChange: (open) => { /* … */ },\n});\n\nblock.setOpen(true);          // External control of the state\ndocument.body.appendChild(block);"
       }
     },
     "usage": {
@@ -797,7 +803,10 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Collapsible open={isOpen} onOpenChange={setIsOpen}>\n  <CollapsibleTrigger asChild>\n    <Button>Mostrar detalles</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    {/* contenido colapsable */}\n  </CollapsibleContent>\n</Collapsible>",
-        "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- contenido colapsable -->\n  </div>\n</nds-collapsible>"
+        "angular": "<nds-collapsible [(open)]=\"isOpen\">\n  <button ndsCollapsibleTrigger ndsButton>Exibir detalhes</button>\n  <div ndsCollapsiblePanel>\n    <!-- contenido colapsable -->\n  </div>\n</nds-collapsible>",
+        "vue": "<Collapsible v-model:open=\"abierto\">\n  <CollapsibleTrigger as-child>\n    <Button variant=\"ghost\">Mostrar detalles</Button>\n  </CollapsibleTrigger>\n  <CollapsibleContent>\n    <!-- contenido colapsable -->\n  </CollapsibleContent>\n</Collapsible>",
+        "svelte": "<Collapsible bind:open={abierto}>\n  <CollapsibleTrigger class=\"nds-button nds-button-ghost\">Mostrar detalles</CollapsibleTrigger>\n  <CollapsibleContent>\n    <!-- contenido colapsable -->\n  </CollapsibleContent>\n</Collapsible>",
+        "vanilla": "import { createCollapsible } from '@/components/ui/collapsible';\n\nconst panel = document.createElement('div');   // Contenido colapsable\n\nconst bloque = createCollapsible({\n  trigger: 'Mostrar detalles',      // Texto o elemento del disparador\n  content: panel,\n  defaultOpen: false,\n  onOpenChange: (abierto) => { /* … */ },\n});\n\nbloque.setOpen(true);          // Control externo del estado\ndocument.body.appendChild(bloque);"
       }
     },
     "usage": {

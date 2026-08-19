@@ -36,6 +36,9 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<CodeBlock                       {/* Raiz: borda, superfície e recorte */}\n  title=\"exemplo.tsx\"            {/* Rótulo do header (opcional) */}\n  language=\"tsx\"                 {/* Classificação de sintaxe */}\n  code={source}                  {/* Conteúdo exibido e copiado */}\n  showLineNumbers                {/* Coluna de numeração */}\n  highlightLines={[3, \"5-7\"]}    {/* Linhas em destaque */}\n  footer=\"Requer Node 20+\"       {/* Observação abaixo do código */}\n/>",
+        "vue": "<template>\n  <CodeBlock                        <!-- Raiz: borda, superfície e recorte -->\n    title=\"exemplo.tsx\"             <!-- Rótulo do header (opcional) -->\n    language=\"tsx\"                  <!-- Classificação de sintaxe -->\n    :code=\"source\"                  <!-- Conteúdo exibido e copiado -->\n    show-line-numbers               <!-- Coluna de numeração -->\n    :highlight-lines=\"[3, '5-7']\"   <!-- Linhas em destaque -->\n    footer=\"Requer Node 20+\"        <!-- Observação abaixo do código -->\n  />\n</template>",
+        "svelte": "<!-- Raiz: borda, superfície, recorte e as regiões de header, código e rodapé -->\n<CodeBlock\n  title=\"exemplo.svelte\"\n  language=\"svelte\"\n  code={source}\n  showLineNumbers\n  highlightLines={[3, \"5-7\"]}\n  footer=\"Requer Node 20+\"\n/>",
+        "vanilla": "const bloco = createCodeBlock({    // Raiz: borda, superfície e recorte\n  title: 'exemplo.tsx',            // Rótulo do header (opcional)\n  language: 'tsx',                 // Classificação de sintaxe\n  code: source,                    // Conteúdo exibido e copiado\n  showLineNumbers: true,           // Coluna de numeração\n  highlightLines: [3, '5-7'],      // Linhas em destaque\n  footer: 'Requer Node 20+',       // Observação abaixo do código\n});",
         "angular": "<nds-code-block                  <!-- Raiz: borda, superfície e recorte -->\n  title=\"exemplo.ts\"             <!-- Rótulo do header (opcional) -->\n  language=\"ts\"                  <!-- Classificação de sintaxe -->\n  [code]=\"source\"                <!-- Conteúdo exibido e copiado -->\n  [showLineNumbers]=\"true\"       <!-- Coluna de numeração -->\n  [highlightLines]=\"[3, '5-7']\"  <!-- Linhas em destaque -->\n  footer=\"Requer Node 20+\"       <!-- Observação abaixo do código -->\n/>"
       }
     },
@@ -287,6 +290,9 @@
       "extensibility": "A raiz repassa os atributos HTML do elemento e aceita classes adicionais. Toda a aparência é controlada por custom properties declaradas na raiz — sobrescreva-as em uma classe própria em vez de redefinir cor ou espaçamento com seletor de descendente.",
       "extensibilityCode": {
         "react": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"instalacao\"\n  footer={<span>Requer Node 20 ou superior.</span>}\n/>",
+        "vue": "<template>\n  <CodeBlock\n    :code=\"source\"\n    language=\"bash\"\n    title=\"terminal\"\n    :show-line-numbers=\"false\"\n    class=\"instalacao\"\n  >\n    <template #footer>\n      <span>Requer Node 20 ou superior.</span>\n    </template>\n  </CodeBlock>\n</template>",
+        "svelte": "{#snippet nota()}\n  <span>Requer Node 20 ou superior.</span>\n{/snippet}\n\n<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  class=\"instalacao\"\n  footer={nota}\n/>",
+        "vanilla": "const bloco = createCodeBlock({\n  code: source,\n  language: 'bash',\n  title: 'terminal',\n  showLineNumbers: false,\n  class: 'instalacao',\n  footer: 'Requer Node 20 ou superior.',\n});",
         "angular": "<nds-code-block\n  [code]=\"source\"\n  language=\"bash\"\n  title=\"terminal\"\n  [showLineNumbers]=\"false\"\n  class=\"instalacao\"\n  footer=\"Requer Node 20 ou superior.\"\n/>"
       }
     },
@@ -620,6 +626,9 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<CodeBlock                       {/* Root: border, surface, clipping */}\n  title=\"example.tsx\"            {/* Header label (optional) */}\n  language=\"tsx\"                 {/* Syntax classification */}\n  code={source}                  {/* Content shown and copied */}\n  showLineNumbers                {/* Line number column */}\n  highlightLines={[3, \"5-7\"]}    {/* Highlighted lines */}\n  footer=\"Requires Node 20+\"     {/* Note below the code */}\n/>",
+        "vue": "<template>\n  <CodeBlock                        <!-- Root: border, surface, clipping -->\n    title=\"example.tsx\"             <!-- Header label (optional) -->\n    language=\"tsx\"                  <!-- Syntax classification -->\n    :code=\"source\"                  <!-- Content shown and copied -->\n    show-line-numbers               <!-- Line number column -->\n    :highlight-lines=\"[3, '5-7']\"   <!-- Highlighted lines -->\n    footer=\"Requires Node 20+\"      <!-- Note below the code -->\n  />\n</template>",
+        "svelte": "<!-- Root: border, surface, clipping and the header, code and footer regions -->\n<CodeBlock\n  title=\"example.svelte\"\n  language=\"svelte\"\n  code={source}\n  showLineNumbers\n  highlightLines={[3, \"5-7\"]}\n  footer=\"Requires Node 20+\"\n/>",
+        "vanilla": "const block = createCodeBlock({    // Root: border, surface, clipping\n  title: 'example.tsx',            // Header label (optional)\n  language: 'tsx',                 // Syntax classification\n  code: source,                    // Content shown and copied\n  showLineNumbers: true,           // Line number column\n  highlightLines: [3, '5-7'],      // Highlighted lines\n  footer: 'Requires Node 20+',     // Note below the code\n});",
         "angular": "<nds-code-block                  <!-- Root: border, surface and clipping -->\n  title=\"exemplo.ts\"             <!-- Header label (optional) -->\n  language=\"ts\"                  <!-- Syntax classification -->\n  [code]=\"source\"                <!-- Content shown and copied -->\n  [showLineNumbers]=\"true\"       <!-- Line number column -->\n  [highlightLines]=\"[3, '5-7']\"  <!-- Highlighted lines -->\n  footer=\"Requer Node 20+\"       <!-- Note below the code -->\n/>"
       }
     },
@@ -871,6 +880,9 @@
       "extensibility": "The root forwards the element's HTML attributes and accepts extra classes. The whole appearance is driven by custom properties declared on the root — override them in your own class instead of redefining color or spacing through descendant selectors.",
       "extensibilityCode": {
         "react": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"install-snippet\"\n  footer={<span>Requires Node 20 or later.</span>}\n/>",
+        "vue": "<template>\n  <CodeBlock\n    :code=\"source\"\n    language=\"bash\"\n    title=\"terminal\"\n    :show-line-numbers=\"false\"\n    class=\"install-snippet\"\n  >\n    <template #footer>\n      <span>Requires Node 20 or later.</span>\n    </template>\n  </CodeBlock>\n</template>",
+        "svelte": "{#snippet note()}\n  <span>Requires Node 20 or later.</span>\n{/snippet}\n\n<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  class=\"install-snippet\"\n  footer={note}\n/>",
+        "vanilla": "const block = createCodeBlock({\n  code: source,\n  language: 'bash',\n  title: 'terminal',\n  showLineNumbers: false,\n  class: 'install-snippet',\n  footer: 'Requires Node 20 or later.',\n});",
         "angular": "<nds-code-block\n  [code]=\"source\"\n  language=\"bash\"\n  title=\"terminal\"\n  [showLineNumbers]=\"false\"\n  class=\"instalacao\"\n  footer=\"Requer Node 20 ou superior.\"\n/>"
       }
     },
@@ -1204,6 +1216,9 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<CodeBlock                       {/* Raíz: borde, superficie y recorte */}\n  title=\"ejemplo.tsx\"            {/* Etiqueta del header (opcional) */}\n  language=\"tsx\"                 {/* Clasificación de sintaxis */}\n  code={source}                  {/* Contenido mostrado y copiado */}\n  showLineNumbers                {/* Columna de numeración */}\n  highlightLines={[3, \"5-7\"]}    {/* Líneas destacadas */}\n  footer=\"Requiere Node 20+\"     {/* Observación bajo el código */}\n/>",
+        "vue": "<template>\n  <CodeBlock                        <!-- Raíz: borde, superficie y recorte -->\n    title=\"ejemplo.tsx\"             <!-- Etiqueta del header (opcional) -->\n    language=\"tsx\"                  <!-- Clasificación de sintaxis -->\n    :code=\"source\"                  <!-- Contenido mostrado y copiado -->\n    show-line-numbers               <!-- Columna de numeración -->\n    :highlight-lines=\"[3, '5-7']\"   <!-- Líneas destacadas -->\n    footer=\"Requiere Node 20+\"      <!-- Observación bajo el código -->\n  />\n</template>",
+        "svelte": "<!-- Raíz: borde, superficie, recorte y las regiones de header, código y pie -->\n<CodeBlock\n  title=\"ejemplo.svelte\"\n  language=\"svelte\"\n  code={source}\n  showLineNumbers\n  highlightLines={[3, \"5-7\"]}\n  footer=\"Requiere Node 20+\"\n/>",
+        "vanilla": "const bloque = createCodeBlock({   // Raíz: borde, superficie y recorte\n  title: 'ejemplo.tsx',            // Etiqueta del header (opcional)\n  language: 'tsx',                 // Clasificación de sintaxis\n  code: source,                    // Contenido mostrado y copiado\n  showLineNumbers: true,           // Columna de numeración\n  highlightLines: [3, '5-7'],      // Líneas destacadas\n  footer: 'Requiere Node 20+',     // Observación bajo el código\n});",
         "angular": "<nds-code-block                  <!-- Raíz: borde, superficie y recorte -->\n  title=\"exemplo.ts\"             <!-- Etiqueta del header (opcional) -->\n  language=\"ts\"                  <!-- Clasificación de sintaxis -->\n  [code]=\"source\"                <!-- Contenido mostrado y copiado -->\n  [showLineNumbers]=\"true\"       <!-- Columna de numeración -->\n  [highlightLines]=\"[3, '5-7']\"  <!-- Líneas destacadas -->\n  footer=\"Requer Node 20+\"       <!-- Observación debajo del código -->\n/>"
       }
     },
@@ -1455,6 +1470,9 @@
       "extensibility": "La raíz reenvía los atributos HTML del elemento y acepta clases adicionales. Toda la apariencia se controla con custom properties declaradas en la raíz — sobrescríbelas en una clase propia en vez de redefinir color o espaciado con selectores de descendiente.",
       "extensibilityCode": {
         "react": "<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  className=\"instalacion\"\n  footer={<span>Requiere Node 20 o superior.</span>}\n/>",
+        "vue": "<template>\n  <CodeBlock\n    :code=\"source\"\n    language=\"bash\"\n    title=\"terminal\"\n    :show-line-numbers=\"false\"\n    class=\"instalacion\"\n  >\n    <template #footer>\n      <span>Requiere Node 20 o superior.</span>\n    </template>\n  </CodeBlock>\n</template>",
+        "svelte": "{#snippet nota()}\n  <span>Requiere Node 20 o superior.</span>\n{/snippet}\n\n<CodeBlock\n  code={source}\n  language=\"bash\"\n  title=\"terminal\"\n  showLineNumbers={false}\n  class=\"instalacion\"\n  footer={nota}\n/>",
+        "vanilla": "const bloque = createCodeBlock({\n  code: source,\n  language: 'bash',\n  title: 'terminal',\n  showLineNumbers: false,\n  class: 'instalacion',\n  footer: 'Requiere Node 20 o superior.',\n});",
         "angular": "<nds-code-block\n  [code]=\"source\"\n  language=\"bash\"\n  title=\"terminal\"\n  [showLineNumbers]=\"false\"\n  class=\"instalacao\"\n  footer=\"Requer Node 20 ou superior.\"\n/>"
       }
     },

@@ -29,6 +29,9 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Receber notificações</Label>\n</div>",
+        "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" v-model=\"enabled\" />\n  <Label for=\"notifications\">Receber notificações</Label>\n</div>",
+        "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" bind:checked={enabled} />\n  <Label for=\"notifications\">Receber notificações</Label>\n</div>",
+        "vanilla": "const linha = document.createElement('div');\nlinha.className = 'nds-cluster';\nlinha.dataset.spacing = 'sm';\n\nlinha.append(\n  createSwitch({\n    id: 'notifications',\n    checked: enabled,\n    onCheckedChange: (checked) => setEnabled(checked),\n  }),\n  createLabel({ text: 'Receber notificações', htmlFor: 'notifications' }),\n);",
         "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-switch id=\"notifications\" [(checked)]=\"enabled\" />\n  <label ndsLabel for=\"notifications\">Receber notificações</label>\n</div>"
       }
     },
@@ -253,6 +256,9 @@
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
         "react": "// Switch com descrição em painel de configurações\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Emails de marketing</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>",
+        "vue": "<!-- Switch com descrição em painel de configurações -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <Label for=\"marketing\">Emails de marketing</Label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <Switch id=\"marketing\" v-model=\"marketing\" />\n</div>",
+        "svelte": "<!-- Switch com descrição em painel de configurações -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <Label for=\"marketing\">Emails de marketing</Label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <Switch id=\"marketing\" bind:checked={marketing} />\n</div>",
+        "vanilla": "// Switch com descrição em painel de configurações\nconst texto = document.createElement('div');\ntexto.className = 'nds-stack';\ntexto.dataset.spacing = 'xs';\n\nconst descricao = document.createElement('p');\ndescricao.className = 'nds-text-caption nds-text-muted-foreground';\ndescricao.textContent = 'Receba novidades e promoções da plataforma.';\ntexto.append(createLabel({ text: 'Emails de marketing', htmlFor: 'marketing' }), descricao);\n\nconst linha = document.createElement('div');\nlinha.className = 'nds-cluster';\nlinha.dataset.justify = 'between';\nlinha.append(\n  texto,\n  createSwitch({\n    id: 'marketing',\n    checked: marketing,\n    onCheckedChange: (checked) => setMarketing(checked),\n  }),\n);",
         "angular": "<!-- Switch com descrição em painel de configurações -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <label ndsLabel for=\"marketing\">Emails de marketing</label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <nds-switch id=\"marketing\" [(checked)]=\"marketing\" />\n</div>"
       }
     },
@@ -469,6 +475,9 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Receive notifications</Label>\n</div>",
+        "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" v-model=\"enabled\" />\n  <Label for=\"notifications\">Receive notifications</Label>\n</div>",
+        "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" bind:checked={enabled} />\n  <Label for=\"notifications\">Receive notifications</Label>\n</div>",
+        "vanilla": "const row = document.createElement('div');\nrow.className = 'nds-cluster';\nrow.dataset.spacing = 'sm';\n\nrow.append(\n  createSwitch({\n    id: 'notifications',\n    checked: enabled,\n    onCheckedChange: (checked) => setEnabled(checked),\n  }),\n  createLabel({ text: 'Receive notifications', htmlFor: 'notifications' }),\n);",
         "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-switch id=\"notifications\" [(checked)]=\"enabled\" />\n  <label ndsLabel for=\"notifications\">Receber notificações</label>\n</div>"
       }
     },
@@ -693,6 +702,9 @@
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
         "react": "// Switch with description in settings panel\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Marketing emails</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Receive news and promotions from the platform.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>",
+        "vue": "<!-- Switch with description in settings panel -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <Label for=\"marketing\">Marketing emails</Label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Receive news and promotions from the platform.\n    </p>\n  </div>\n  <Switch id=\"marketing\" v-model=\"marketing\" />\n</div>",
+        "svelte": "<!-- Switch with description in settings panel -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <Label for=\"marketing\">Marketing emails</Label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Receive news and promotions from the platform.\n    </p>\n  </div>\n  <Switch id=\"marketing\" bind:checked={marketing} />\n</div>",
+        "vanilla": "// Switch with description in settings panel\nconst text = document.createElement('div');\ntext.className = 'nds-stack';\ntext.dataset.spacing = 'xs';\n\nconst description = document.createElement('p');\ndescription.className = 'nds-text-caption nds-text-muted-foreground';\ndescription.textContent = 'Receive news and promotions from the platform.';\ntext.append(createLabel({ text: 'Marketing emails', htmlFor: 'marketing' }), description);\n\nconst row = document.createElement('div');\nrow.className = 'nds-cluster';\nrow.dataset.justify = 'between';\nrow.append(\n  text,\n  createSwitch({\n    id: 'marketing',\n    checked: marketing,\n    onCheckedChange: (checked) => setMarketing(checked),\n  }),\n);",
         "angular": "<!-- Switch with description in a settings panel -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <label ndsLabel for=\"marketing\">Emails de marketing</label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <nds-switch id=\"marketing\" [(checked)]=\"marketing\" />\n</div>"
       }
     },
@@ -909,6 +921,9 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<div className=\"flex items-center space-x-2\">\n  <Switch\n    id=\"notifications\"\n    checked={enabled}\n    onCheckedChange={setEnabled}\n  />\n  <Label htmlFor=\"notifications\">Recibir notificaciones</Label>\n</div>",
+        "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" v-model=\"enabled\" />\n  <Label for=\"notifications\">Recibir notificaciones</Label>\n</div>",
+        "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Switch id=\"notifications\" bind:checked={enabled} />\n  <Label for=\"notifications\">Recibir notificaciones</Label>\n</div>",
+        "vanilla": "const fila = document.createElement('div');\nfila.className = 'nds-cluster';\nfila.dataset.spacing = 'sm';\n\nfila.append(\n  createSwitch({\n    id: 'notifications',\n    checked: enabled,\n    onCheckedChange: (checked) => setEnabled(checked),\n  }),\n  createLabel({ text: 'Recibir notificaciones', htmlFor: 'notifications' }),\n);",
         "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-switch id=\"notifications\" [(checked)]=\"enabled\" />\n  <label ndsLabel for=\"notifications\">Receber notificações</label>\n</div>"
       }
     },
@@ -1133,6 +1148,9 @@
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
         "react": "// Switch con descripción en panel de configuración\n<div className=\"flex items-center justify-between\">\n  <div className=\"space-y-0.5\">\n    <Label htmlFor=\"marketing\">Emails de marketing</Label>\n    <p className=\"text-sm text-muted-foreground\">\n      Recibe novedades y promociones de la plataforma.\n    </p>\n  </div>\n  <Switch\n    id=\"marketing\"\n    checked={marketing}\n    onCheckedChange={setMarketing}\n  />\n</div>",
+        "vue": "<!-- Switch con descripción en panel de configuración -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <Label for=\"marketing\">Emails de marketing</Label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Recibe novedades y promociones de la plataforma.\n    </p>\n  </div>\n  <Switch id=\"marketing\" v-model=\"marketing\" />\n</div>",
+        "svelte": "<!-- Switch con descripción en panel de configuración -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <Label for=\"marketing\">Emails de marketing</Label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Recibe novedades y promociones de la plataforma.\n    </p>\n  </div>\n  <Switch id=\"marketing\" bind:checked={marketing} />\n</div>",
+        "vanilla": "// Switch con descripción en panel de configuración\nconst texto = document.createElement('div');\ntexto.className = 'nds-stack';\ntexto.dataset.spacing = 'xs';\n\nconst descripcion = document.createElement('p');\ndescripcion.className = 'nds-text-caption nds-text-muted-foreground';\ndescripcion.textContent = 'Recibe novedades y promociones de la plataforma.';\ntexto.append(createLabel({ text: 'Emails de marketing', htmlFor: 'marketing' }), descripcion);\n\nconst fila = document.createElement('div');\nfila.className = 'nds-cluster';\nfila.dataset.justify = 'between';\nfila.append(\n  texto,\n  createSwitch({\n    id: 'marketing',\n    checked: marketing,\n    onCheckedChange: (checked) => setMarketing(checked),\n  }),\n);",
         "angular": "<!-- Switch con descripción en panel de configuración -->\n<div class=\"nds-cluster\" data-justify=\"between\">\n  <div class=\"nds-stack\" data-spacing=\"xs\">\n    <label ndsLabel for=\"marketing\">Emails de marketing</label>\n    <p class=\"nds-text-caption nds-text-muted-foreground\">\n      Receba novidades e promoções da plataforma.\n    </p>\n  </div>\n  <nds-switch id=\"marketing\" [(checked)]=\"marketing\" />\n</div>"
       }
     },

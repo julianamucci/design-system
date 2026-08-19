@@ -35,7 +35,10 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Badge variant=\"default\">   {/* Container inline-flex */}\n  <Icon />              {/* Ícone opcional, aria-hidden */}\n  Texto                 {/* Rótulo curto */}\n</Badge>",
-        "angular": "<span ndsBadge variant=\"default\">  <!-- Container inline-flex -->\n  <svg ndsBadgeIcon></svg>         <!-- Ícone opcional, aria-hidden -->\n  Texto                            <!-- Rótulo curto -->\n</span>"
+        "angular": "<span ndsBadge variant=\"default\">  <!-- Container inline-flex -->\n  <svg ndsBadgeIcon></svg>         <!-- Ícone opcional, aria-hidden -->\n  Texto                            <!-- Rótulo curto -->\n</span>",
+        "vue": "<Badge variant=\"default\">   <!-- Container inline-flex -->\n  <Icon />              <!-- Ícone opcional, aria-hidden -->\n  Texto                 <!-- Rótulo curto -->\n</Badge>",
+        "svelte": "<Badge variant=\"default\">   <!-- Container inline-flex -->\n  <Icon />              <!-- Ícone opcional, aria-hidden -->\n  Texto                 <!-- Rótulo curto -->\n</Badge>",
+        "vanilla": "const etiqueta = createBadge({\n  variant: 'default',              // Container inline-flex, renderizado em <span>\n  children: [iconeSvg, 'Texto'],   // Ícone opcional (aria-hidden) + rótulo curto\n});"
       }
     },
     "usage": {
@@ -444,7 +447,10 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Badge variant=\"default\">   {/* inline-flex container */}\n  <Icon />              {/* Optional icon, aria-hidden */}\n  Text                  {/* Short label */}\n</Badge>",
-        "angular": "<span ndsBadge variant=\"default\">  <!-- inline-flex container -->\n  <svg ndsBadgeIcon></svg>         <!-- Optional icon, aria-hidden -->\n  Texto                            <!-- Short label -->\n</span>"
+        "angular": "<span ndsBadge variant=\"default\">  <!-- inline-flex container -->\n  <svg ndsBadgeIcon></svg>         <!-- Optional icon, aria-hidden -->\n  Texto                            <!-- Short label -->\n</span>",
+        "vue": "<Badge variant=\"default\">   <!-- inline-flex container -->\n  <Icon />              <!-- Optional icon, aria-hidden -->\n  Text                  <!-- Short label -->\n</Badge>",
+        "svelte": "<Badge variant=\"default\">   <!-- inline-flex container -->\n  <Icon />              <!-- Optional icon, aria-hidden -->\n  Text                  <!-- Short label -->\n</Badge>",
+        "vanilla": "const etiqueta = createBadge({\n  variant: 'default',              // inline-flex container, rendered as a <span>\n  children: [iconeSvg, 'Text'],    // Optional icon (aria-hidden) + short label\n});"
       }
     },
     "usage": {
@@ -853,7 +859,10 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Badge variant=\"default\">   {/* Contenedor inline-flex */}\n  <Icon />              {/* Ícono opcional, aria-hidden */}\n  Texto                 {/* Etiqueta corta */}\n</Badge>",
-        "angular": "<span ndsBadge variant=\"default\">  <!-- Contenedor inline-flex -->\n  <svg ndsBadgeIcon></svg>         <!-- Icono opcional, aria-hidden -->\n  Texto                            <!-- Etiqueta corta -->\n</span>"
+        "angular": "<span ndsBadge variant=\"default\">  <!-- Contenedor inline-flex -->\n  <svg ndsBadgeIcon></svg>         <!-- Icono opcional, aria-hidden -->\n  Texto                            <!-- Etiqueta corta -->\n</span>",
+        "vue": "<Badge variant=\"default\">   <!-- Contenedor inline-flex -->\n  <Icon />              <!-- Ícono opcional, aria-hidden -->\n  Texto                 <!-- Etiqueta corta -->\n</Badge>",
+        "svelte": "<Badge variant=\"default\">   <!-- Contenedor inline-flex -->\n  <Icon />              <!-- Ícono opcional, aria-hidden -->\n  Texto                 <!-- Etiqueta corta -->\n</Badge>",
+        "vanilla": "const etiqueta = createBadge({\n  variant: 'default',              // Contenedor inline-flex, renderizado en <span>\n  children: [iconeSvg, 'Texto'],   // Ícono opcional (aria-hidden) + etiqueta corta\n});"
       }
     },
     "usage": {

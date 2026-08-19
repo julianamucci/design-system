@@ -35,7 +35,10 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícone (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descrição */}\n</Alert>",
-        "angular": "<div ndsAlert role=\"status\">   <!-- Container — role por input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Ícone (opcional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Título (opcional) -->\n  <div ndsAlertDescription></div>  <!-- Descrição -->\n</div>"
+        "angular": "<div ndsAlert role=\"status\">   <!-- Container — role por input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Ícone (opcional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Título (opcional) -->\n  <div ndsAlertDescription></div>  <!-- Descrição -->\n</div>",
+        "vue": "<Alert role=\"status\">                    <!-- Container — semântica de anúncio por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Ícone (opcional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Título (opcional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Descrição -->\n</Alert>",
+        "svelte": "<Alert role=\"status\">                    <!-- Container — semântica de anúncio por prop (alert | status | note) -->\n  <Info class=\"nds-icon\" aria-hidden=\"true\" />  <!-- Ícone (opcional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Título (opcional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Descrição -->\n</Alert>",
+        "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });  // Container — semântica de anúncio por opção\nalert.appendChild(createAlertIcon('info'));                      // Ícone (opcional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Título' }));  // Título (opcional)\nalert.appendChild(createAlertDescription({ text: 'Descrição' }));  // Descrição"
       }
     },
     "usage": {
@@ -238,7 +241,7 @@
         "destructiveText": "Texto e ícone (variante destructive)",
         "success": "Fundo + texto + borda (variante success do tema)",
         "warning": "Fundo + texto + borda (variante warning do tema)",
-          "info": "Fundo + texto + borda (variante info do tema)",
+        "info": "Fundo + texto + borda (variante info do tema)",
         "radius": "Border radius do container",
         "alertBg": "Fundo do container — var interna, segue o tema pela variante",
         "alertFg": "Texto e ícone — var interna",
@@ -460,7 +463,10 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Alert>                  {/* Container — role por prop (alert | status | note) */}\n  <Icon />             {/* Icon (optional, aria-hidden) */}\n  <AlertTitle />       {/* Title (optional) */}\n  <AlertDescription /> {/* Description */}\n</Alert>",
-        "angular": "<div ndsAlert role=\"status\">   <!-- Container — role via input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Icon (optional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Title (optional) -->\n  <div ndsAlertDescription></div>  <!-- Description -->\n</div>"
+        "angular": "<div ndsAlert role=\"status\">   <!-- Container — role via input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Icon (optional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Title (optional) -->\n  <div ndsAlertDescription></div>  <!-- Description -->\n</div>",
+        "vue": "<Alert role=\"status\">                    <!-- Container — announcement semantics via prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Icon (optional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Title (optional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Description -->\n</Alert>",
+        "svelte": "<Alert role=\"status\">                    <!-- Container — announcement semantics via prop (alert | status | note) -->\n  <Info class=\"nds-icon\" aria-hidden=\"true\" />  <!-- Icon (optional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Title (optional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Description -->\n</Alert>",
+        "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });  // Container — announcement semantics via option\nalert.appendChild(createAlertIcon('info'));                      // Icon (optional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Title' }));  // Title (optional)\nalert.appendChild(createAlertDescription({ text: 'Description' }));  // Description"
       }
     },
     "usage": {
@@ -663,7 +669,7 @@
         "destructiveText": "Text and icon (destructive variant)",
         "success": "Background + text + border (theme's success variant)",
         "warning": "Background + text + border (theme's warning variant)",
-          "info": "Background + text + border (theme's info variant)",
+        "info": "Background + text + border (theme's info variant)",
         "radius": "Container border radius",
         "alertBg": "Container background — internal var, follows the theme per variant",
         "alertFg": "Text and icon — internal var",
@@ -885,7 +891,10 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Alert>                  {/* Contenedor — role por prop (alert | status | note) */}\n  <Icon />             {/* Ícono (opcional, aria-hidden) */}\n  <AlertTitle />       {/* Título (opcional) */}\n  <AlertDescription /> {/* Descripción */}\n</Alert>",
-        "angular": "<div ndsAlert role=\"status\">   <!-- Contenedor — role por input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Icono (opcional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Título (opcional) -->\n  <div ndsAlertDescription></div>  <!-- Descripción -->\n</div>"
+        "angular": "<div ndsAlert role=\"status\">   <!-- Contenedor — role por input (alert | status | note) -->\n  <svg ndsAlertIcon></svg>     <!-- Icono (opcional, aria-hidden) -->\n  <h5 ndsAlertTitle></h5>      <!-- Título (opcional) -->\n  <div ndsAlertDescription></div>  <!-- Descripción -->\n</div>",
+        "vue": "<Alert role=\"status\">                    <!-- Contenedor — semántica de anuncio por prop (alert | status | note) -->\n  <Info aria-hidden=\"true\" />           <!-- Icono (opcional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Título (opcional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Descripción -->\n</Alert>",
+        "svelte": "<Alert role=\"status\">                    <!-- Contenedor — semántica de anuncio por prop (alert | status | note) -->\n  <Info class=\"nds-icon\" aria-hidden=\"true\" />  <!-- Icono (opcional, aria-hidden) -->\n  <AlertTitle>…</AlertTitle>            <!-- Título (opcional) -->\n  <AlertDescription>…</AlertDescription>  <!-- Descripción -->\n</Alert>",
+        "vanilla": "import {\n  createAlert,\n  createAlertIcon,\n  createAlertTitle,\n  createAlertDescription,\n} from '@/components/ui/alert';\n\nconst alert = createAlert({ variant: 'info', role: 'status' });  // Contenedor — semántica de anuncio por opción\nalert.appendChild(createAlertIcon('info'));                      // Icono (opcional, aria-hidden)\nalert.appendChild(createAlertTitle({ text: 'Título' }));  // Título (opcional)\nalert.appendChild(createAlertDescription({ text: 'Descripción' }));  // Descripción"
       }
     },
     "usage": {
@@ -1088,7 +1097,7 @@
         "destructiveText": "Texto e ícono (variante destructive)",
         "success": "Fondo + texto + borde (variante success del tema)",
         "warning": "Fondo + texto + borde (variante warning del tema)",
-          "info": "Fondo + texto + borde (variante info del tema)",
+        "info": "Fondo + texto + borde (variante info del tema)",
         "radius": "Border radius del contenedor",
         "alertBg": "Fondo del contenedor — var interna, sigue el tema según la variante",
         "alertFg": "Texto e ícono — var interna",

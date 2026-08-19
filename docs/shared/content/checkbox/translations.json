@@ -29,7 +29,10 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<div>\n  <Checkbox id=\"termos\" />        {/* Root + Indicator */}\n  <Label htmlFor=\"termos\">        {/* Label externo */}\n    Aceito os termos\n  </Label>\n</div>",
-        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <label ndsLabel for=\"termos\">       <!-- Label externo -->\n    Aceito os termos\n  </label>\n</div>"
+        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <label ndsLabel for=\"termos\">       <!-- Label externo -->\n    Aceito os termos\n  </label>\n</div>",
+        "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <Label for=\"termos\">            <!-- Label externo -->\n    Aceito os termos\n  </Label>\n</div>",
+        "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <Label for=\"termos\">            <!-- Label externo -->\n    Aceito os termos\n  </Label>\n</div>",
+        "vanilla": "const caixa = createCheckbox({          // Root + Indicator\n  id: 'termos',\n  onCheckedChange: (marcado) => console.log(marcado),\n});\n\nconst rotulo = createLabel({            // Label externo\n  htmlFor: 'termos',\n  text: 'Aceito os termos',\n});"
       }
     },
     "usage": {
@@ -422,7 +425,10 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<div>\n  <Checkbox id=\"terms\" />          {/* Root + Indicator */}\n  <Label htmlFor=\"terms\">          {/* External label */}\n    I accept the terms\n  </Label>\n</div>",
-        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <label ndsLabel for=\"termos\">       <!-- External label -->\n    Aceito os termos\n  </label>\n</div>"
+        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <label ndsLabel for=\"termos\">       <!-- External label -->\n    Aceito os termos\n  </label>\n</div>",
+        "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"terms\" />         <!-- Root + Indicator -->\n  <Label for=\"terms\">             <!-- External label -->\n    I accept the terms\n  </Label>\n</div>",
+        "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"terms\" />         <!-- Root + Indicator -->\n  <Label for=\"terms\">             <!-- External label -->\n    I accept the terms\n  </Label>\n</div>",
+        "vanilla": "const caixa = createCheckbox({          // Root + Indicator\n  id: 'terms',\n  onCheckedChange: (marcado) => console.log(marcado),\n});\n\nconst rotulo = createLabel({            // External label\n  htmlFor: 'terms',\n  text: 'I accept the terms',\n});"
       }
     },
     "usage": {
@@ -815,7 +821,10 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<div>\n  <Checkbox id=\"terminos\" />       {/* Root + Indicator */}\n  <Label htmlFor=\"terminos\">       {/* Label externo */}\n    Acepto los términos\n  </Label>\n</div>",
-        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <label ndsLabel for=\"termos\">       <!-- Label externo -->\n    Aceito os termos\n  </label>\n</div>"
+        "angular": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <nds-checkbox id=\"termos\" />        <!-- Root + Indicator -->\n  <label ndsLabel for=\"termos\">       <!-- Label externo -->\n    Aceito os termos\n  </label>\n</div>",
+        "vue": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"terminos\" />      <!-- Root + Indicator -->\n  <Label for=\"terminos\">          <!-- Label externo -->\n    Acepto los términos\n  </Label>\n</div>",
+        "svelte": "<div class=\"nds-cluster\" data-spacing=\"sm\">\n  <Checkbox id=\"terminos\" />      <!-- Root + Indicator -->\n  <Label for=\"terminos\">          <!-- Label externo -->\n    Acepto los términos\n  </Label>\n</div>",
+        "vanilla": "const caixa = createCheckbox({          // Root + Indicator\n  id: 'terminos',\n  onCheckedChange: (marcado) => console.log(marcado),\n});\n\nconst rotulo = createLabel({            // Label externo\n  htmlFor: 'terminos',\n  text: 'Acepto los términos',\n});"
       }
     },
     "usage": {

@@ -30,7 +30,10 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Progress value={42}>\n  <ProgressLabel>Enviando arquivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
-        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Enviando arquivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
+        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Enviando arquivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>",
+        "vue": "<!-- Raiz + indicador: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  :model-value=\"42\"              <!-- null ativa o modo indeterminado -->\n  :max=\"100\"\n  aria-label=\"Enviando arquivo\"  <!-- o nome vem daqui: não há slot de rótulo -->\n/>",
+        "svelte": "<!-- Raiz + indicador: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  value={42}                     <!-- null ativa o modo indeterminado -->\n  max={100}\n  aria-label=\"Enviando arquivo\"  <!-- o nome vem daqui: não há slot de rótulo -->\n/>",
+        "vanilla": "// Raiz + indicador: div[data-slot=\"progress\"] > .nds-progress-indicator\nconst barra = createProgress({\n  value: 42,          // null ativa o modo indeterminado\n  max: 100,\n  variant: 'success', // ausente, a barra usa o primário\n});\n\n// O nome vem de fora: a factory não tem slot de rótulo nem de valor.\nbarra.setAttribute('aria-label', 'Enviando arquivo');"
       }
     },
     "usage": {
@@ -462,7 +465,10 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Progress value={42}>\n  <ProgressLabel>Uploading file</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
-        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Uploading file</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
+        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Uploading file</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>",
+        "vue": "<!-- Root + indicator: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  :model-value=\"42\"              <!-- null turns on the indeterminate mode -->\n  :max=\"100\"\n  aria-label=\"Uploading file\"    <!-- the name comes from here: there is no label slot -->\n/>",
+        "svelte": "<!-- Root + indicator: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  value={42}                     <!-- null turns on the indeterminate mode -->\n  max={100}\n  aria-label=\"Uploading file\"    <!-- the name comes from here: there is no label slot -->\n/>",
+        "vanilla": "// Root + indicator: div[data-slot=\"progress\"] > .nds-progress-indicator\nconst barra = createProgress({\n  value: 42,          // null turns on the indeterminate mode\n  max: 100,\n  variant: 'success', // absent, the bar uses the primary colour\n});\n\n// The name comes from outside: the factory has no label or value slot.\nbarra.setAttribute('aria-label', 'Uploading file');"
       }
     },
     "usage": {
@@ -894,7 +900,10 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Progress value={42}>\n  <ProgressLabel>Subiendo archivo</ProgressLabel>\n  <ProgressValue />\n  <ProgressTrack>\n    <ProgressIndicator />\n  </ProgressTrack>\n</Progress>",
-        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Enviando archivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
+        "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Enviando archivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>",
+        "vue": "<!-- Raíz + indicador: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  :model-value=\"42\"              <!-- null activa el modo indeterminado -->\n  :max=\"100\"\n  aria-label=\"Subiendo archivo\"  <!-- el nombre viene de aquí: no hay slot de etiqueta -->\n/>",
+        "svelte": "<!-- Raíz + indicador: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  value={42}                     <!-- null activa el modo indeterminado -->\n  max={100}\n  aria-label=\"Subiendo archivo\"  <!-- el nombre viene de aquí: no hay slot de etiqueta -->\n/>",
+        "vanilla": "// Raíz + indicador: div[data-slot=\"progress\"] > .nds-progress-indicator\nconst barra = createProgress({\n  value: 42,          // null activa el modo indeterminado\n  max: 100,\n  variant: 'success', // ausente, la barra usa el primario\n});\n\n// El nombre viene de fuera: la factory no tiene slot de etiqueta ni de valor.\nbarra.setAttribute('aria-label', 'Subiendo archivo');"
       }
     },
     "usage": {

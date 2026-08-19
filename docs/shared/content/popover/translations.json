@@ -37,7 +37,10 @@
       "structureLabel": "Estrutura básica:",
       "structureCode": {
         "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* conteúdo interativo */}\n  </PopoverContent>\n</Popover>",
-        "angular": "<nds-popover>\n  <button ndsPopoverTrigger ndsButton>Abrir</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Descrição opcional.</p>\n    </div>\n    <!-- conteúdo interativo -->\n  </ng-template>\n</nds-popover>"
+        "angular": "<nds-popover>\n  <button ndsPopoverTrigger ndsButton>Abrir</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Descrição opcional.</p>\n    </div>\n    <!-- conteúdo interativo -->\n  </ng-template>\n</nds-popover>",
+        "vue": "<Popover>\n  <PopoverTrigger as-child>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- conteúdo interativo -->\n  </PopoverContent>\n</Popover>",
+        "svelte": "<Popover>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Abrir</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descrição opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- conteúdo interativo -->\n  </PopoverContent>\n</Popover>",
+        "vanilla": "import { createPopover } from '@/components/ui/popover';\nimport { createButton } from '@/components/ui/button';\n\n// Cabeçalho e corpo são montados por quem chama: a fábrica recebe o painel pronto\nconst painel = document.createElement('div');\npainel.className = 'nds-stack';\npainel.dataset.spacing = 'sm';\n// .nds-popover-title, .nds-popover-description, conteúdo interativo\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Abrir' }),\n  content: painel,\n  side: 'bottom',\n  align: 'center',\n});\n\ndocument.body.appendChild(popover);"
       }
     },
     "usage": {
@@ -256,7 +259,10 @@
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
         "react": "// Controle externo do estado aberto/fechado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>",
-        "angular": "<!-- Controle externo do estado aberto/fechado -->\n<nds-popover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <nds-form />\n  </ng-template>\n</nds-popover>"
+        "angular": "<!-- Controle externo do estado aberto/fechado -->\n<nds-popover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <nds-form />\n  </ng-template>\n</nds-popover>",
+        "vue": "<!-- Controle externo do estado aberto/fechado -->\n<Popover v-model:open=\"aberto\">\n  <PopoverTrigger as-child>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" :side-offset=\"8\">\n    <FormularioPerfil />\n  </PopoverContent>\n</Popover>",
+        "svelte": "<!-- Controle externo do estado aberto/fechado -->\n<Popover bind:open={aberto}>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Editar</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <FormularioPerfil />\n  </PopoverContent>\n</Popover>",
+        "vanilla": "// O estado é do próprio popover: o gatilho alterna e `onOpenChange` avisa\n// O afastamento do gatilho é fixo — esta fábrica não expõe deslocamento\nconst popover = createPopover({\n  trigger: createButton({ label: 'Editar' }),\n  content: formulario,\n  side: 'bottom',\n  align: 'start',\n  onOpenChange: (aberto) => registrar(aberto),\n});"
       }
     },
     "tokens": {
@@ -489,7 +495,10 @@
       "structureLabel": "Basic structure:",
       "structureCode": {
         "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    {/* interactive content */}\n  </PopoverContent>\n</Popover>",
-        "angular": "<nds-popover>\n  <button ndsPopoverTrigger ndsButton>Abrir</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Description opcional.</p>\n    </div>\n    <!-- interactive content -->\n  </ng-template>\n</nds-popover>"
+        "angular": "<nds-popover>\n  <button ndsPopoverTrigger ndsButton>Abrir</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Description opcional.</p>\n    </div>\n    <!-- interactive content -->\n  </ng-template>\n</nds-popover>",
+        "vue": "<Popover>\n  <PopoverTrigger as-child>\n    <Button>Open</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    <!-- interactive content -->\n  </PopoverContent>\n</Popover>",
+        "svelte": "<Popover>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Open</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Title</PopoverTitle>\n      <PopoverDescription>Optional description.</PopoverDescription>\n    </PopoverHeader>\n    <!-- interactive content -->\n  </PopoverContent>\n</Popover>",
+        "vanilla": "import { createPopover } from '@/components/ui/popover';\nimport { createButton } from '@/components/ui/button';\n\n// Header and body are built by the caller: the factory receives a ready-made panel\nconst panel = document.createElement('div');\npanel.className = 'nds-stack';\npanel.dataset.spacing = 'sm';\n// .nds-popover-title, .nds-popover-description, interactive content\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Open' }),\n  content: panel,\n  side: 'bottom',\n  align: 'center',\n});\n\ndocument.body.appendChild(popover);"
       }
     },
     "usage": {
@@ -708,7 +717,10 @@
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
         "react": "// External control of open state\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Edit</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>",
-        "angular": "<!-- External control of the open/closed state -->\n<nds-popover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <nds-form />\n  </ng-template>\n</nds-popover>"
+        "angular": "<!-- External control of the open/closed state -->\n<nds-popover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <nds-form />\n  </ng-template>\n</nds-popover>",
+        "vue": "<!-- External control of the open/closed state -->\n<Popover v-model:open=\"open\">\n  <PopoverTrigger as-child>\n    <Button>Edit</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" :side-offset=\"8\">\n    <ProfileForm />\n  </PopoverContent>\n</Popover>",
+        "svelte": "<!-- External control of the open/closed state -->\n<Popover bind:open={open}>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Edit</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <ProfileForm />\n  </PopoverContent>\n</Popover>",
+        "vanilla": "// The state belongs to the popover itself: the trigger toggles it and `onOpenChange` reports\n// The gap from the trigger is fixed — this factory exposes no offset\nconst popover = createPopover({\n  trigger: createButton({ label: 'Edit' }),\n  content: form,\n  side: 'bottom',\n  align: 'start',\n  onOpenChange: (open) => record(open),\n});"
       }
     },
     "tokens": {
@@ -941,7 +953,10 @@
       "structureLabel": "Estructura básica:",
       "structureCode": {
         "react": "<Popover>\n  <PopoverTrigger asChild>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    {/* contenido interactivo */}\n  </PopoverContent>\n</Popover>",
-        "angular": "<nds-popover>\n  <button ndsPopoverTrigger ndsButton>Abrir</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Descripción opcional.</p>\n    </div>\n    <!-- contenido interactivo -->\n  </ng-template>\n</nds-popover>"
+        "angular": "<nds-popover>\n  <button ndsPopoverTrigger ndsButton>Abrir</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"center\">\n    <div ndsPopoverHeader>\n      <h3 ndsPopoverTitle>Título</h3>\n      <p ndsPopoverDescription>Descripción opcional.</p>\n    </div>\n    <!-- contenido interactivo -->\n  </ng-template>\n</nds-popover>",
+        "vue": "<Popover>\n  <PopoverTrigger as-child>\n    <Button>Abrir</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- contenido interactivo -->\n  </PopoverContent>\n</Popover>",
+        "svelte": "<Popover>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Abrir</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"center\">\n    <PopoverHeader>\n      <PopoverTitle>Título</PopoverTitle>\n      <PopoverDescription>Descripción opcional.</PopoverDescription>\n    </PopoverHeader>\n    <!-- contenido interactivo -->\n  </PopoverContent>\n</Popover>",
+        "vanilla": "import { createPopover } from '@/components/ui/popover';\nimport { createButton } from '@/components/ui/button';\n\n// El encabezado y el cuerpo los arma quien llama: la fábrica recibe el panel listo\nconst panel = document.createElement('div');\npanel.className = 'nds-stack';\npanel.dataset.spacing = 'sm';\n// .nds-popover-title, .nds-popover-description, contenido interactivo\n\nconst popover = createPopover({\n  trigger: createButton({ label: 'Abrir' }),\n  content: panel,\n  side: 'bottom',\n  align: 'center',\n});\n\ndocument.body.appendChild(popover);"
       }
     },
     "usage": {
@@ -1160,7 +1175,10 @@
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
         "react": "// Control externo del estado abierto/cerrado\n<Popover open={open} onOpenChange={setOpen}>\n  <PopoverTrigger asChild>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <Form />\n  </PopoverContent>\n</Popover>",
-        "angular": "<!-- Control externo del estado abierto/cerrado -->\n<nds-popover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <nds-form />\n  </ng-template>\n</nds-popover>"
+        "angular": "<!-- Control externo del estado abierto/cerrado -->\n<nds-popover [(open)]=\"open\">\n  <button ndsPopoverTrigger ndsButton>Editar</button>\n  <ng-template ndsPopoverContent side=\"bottom\" align=\"start\" [sideOffset]=\"8\">\n    <nds-form />\n  </ng-template>\n</nds-popover>",
+        "vue": "<!-- Control externo del estado abierto/cerrado -->\n<Popover v-model:open=\"abierto\">\n  <PopoverTrigger as-child>\n    <Button>Editar</Button>\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" :side-offset=\"8\">\n    <FormularioPerfil />\n  </PopoverContent>\n</Popover>",
+        "svelte": "<!-- Control externo del estado abierto/cerrado -->\n<Popover bind:open={abierto}>\n  <PopoverTrigger>\n    {#snippet child({ props })}\n      <Button {...props}>Editar</Button>\n    {/snippet}\n  </PopoverTrigger>\n  <PopoverContent side=\"bottom\" align=\"start\" sideOffset={8}>\n    <FormularioPerfil />\n  </PopoverContent>\n</Popover>",
+        "vanilla": "// El estado es del propio popover: el disparador alterna y `onOpenChange` avisa\n// La separación del disparador es fija — esta fábrica no expone desplazamiento\nconst popover = createPopover({\n  trigger: createButton({ label: 'Editar' }),\n  content: formulario,\n  side: 'bottom',\n  align: 'start',\n  onOpenChange: (abierto) => registrar(abierto),\n});"
       }
     },
     "tokens": {
