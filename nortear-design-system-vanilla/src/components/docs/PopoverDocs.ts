@@ -562,9 +562,7 @@ for (const s of swatches) {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.setAttribute('aria-label', s.name);
-  btn.className = 'nds-rounded-full';
-  btn.style.width = '1.5rem';
-  btn.style.height = '1.5rem';
+  btn.className = 'nds-rounded-full nds-size-6';
   btn.style.background = s.color;
   grid.appendChild(btn);
 }
@@ -706,9 +704,7 @@ createPopover({ trigger, content });`;
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.setAttribute('aria-label', s.name);
-            btn.className = 'nds-rounded-full';
-            btn.style.width = '1.5rem';
-            btn.style.height = '1.5rem';
+            btn.className = 'nds-rounded-full nds-size-6';
             btn.style.background = s.color;
             btn.style.boxShadow = '0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent)';
             grid.appendChild(btn);

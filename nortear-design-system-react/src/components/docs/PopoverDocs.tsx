@@ -790,8 +790,8 @@ interface PopoverContentProps {
           key={s.name}
           type="button"
           aria-label={s.name}
-          className="nds-rounded-full"
-          style={{ width: "1.5rem", height: "1.5rem", background: s.color }}
+          className="nds-rounded-full nds-size-6"
+          style={{ background: s.color }}
         />
       ))}
     </div>
@@ -820,10 +820,8 @@ interface PopoverContentProps {
                           key={s.name}
                           type="button"
                           aria-label={s.name}
-                          className="nds-rounded-full"
+                          className="nds-rounded-full nds-size-6"
                           style={{
-                            width: "1.5rem",
-                            height: "1.5rem",
                             background: s.color,
                             boxShadow: "0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent)",
                           }}

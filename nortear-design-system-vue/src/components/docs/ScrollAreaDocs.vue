@@ -576,10 +576,7 @@ const visualTestItems = computed(() => [
           >
             Item {{ i }}
           </div>
-          <p
-            class="nds-text-muted-foreground"
-            style="font-size: 10px"
-          >
+          <p class="nds-text-muted-foreground nds-text-2xs">
             Sem altura — conteúdo expande
           </p>
         </div>

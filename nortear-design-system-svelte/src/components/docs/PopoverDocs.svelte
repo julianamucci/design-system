@@ -685,8 +685,8 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
             <button
               type="button"
               aria-label={s.name}
-              class="nds-rounded-full"
-              style={`width: 1.5rem; height: 1.5rem; background: ${s.color}; box-shadow: 0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent)`}
+              class="nds-rounded-full nds-size-6"
+              style={`background: ${s.color}; box-shadow: 0 0 0 1px color-mix(in oklch, var(--foreground) 10%, transparent)`}
             ></button>
           {/each}
         </div>

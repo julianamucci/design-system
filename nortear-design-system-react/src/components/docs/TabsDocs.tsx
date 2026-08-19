@@ -673,13 +673,13 @@ interface TabsContentProps {
     <TabsTrigger value="inbox">
       <span className="nds-cluster" data-spacing="sm">
         Caixa de entrada
-        <Badge style={{ fontSize: "10px", height: "1rem" }}>12</Badge>
+        <Badge className="nds-text-2xs">12</Badge>
       </span>
     </TabsTrigger>
     <TabsTrigger value="spam">
       <span className="nds-cluster" data-spacing="sm">
         Spam
-        <Badge variant="destructive" style={{ fontSize: "10px", height: "1rem" }}>3</Badge>
+        <Badge variant="destructive" className="nds-text-2xs">3</Badge>
       </span>
     </TabsTrigger>
     <TabsTrigger value="trash">
@@ -711,13 +711,13 @@ interface TabsContentProps {
                   <TabsTrigger value="inbox">
                     <span className="nds-cluster" data-spacing="sm">
                       Caixa de entrada
-                      <Badge style={{ fontSize: "10px", height: "1rem" }}>12</Badge>
+                      <Badge className="nds-text-2xs">12</Badge>
                     </span>
                   </TabsTrigger>
                   <TabsTrigger value="spam">
                     <span className="nds-cluster" data-spacing="sm">
                       Spam
-                      <Badge variant="destructive" style={{ fontSize: "10px", height: "1rem" }}>3</Badge>
+                      <Badge variant="destructive" className="nds-text-2xs">3</Badge>
                     </span>
                   </TabsTrigger>
                   <TabsTrigger value="trash">

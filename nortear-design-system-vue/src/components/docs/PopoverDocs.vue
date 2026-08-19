@@ -162,6 +162,19 @@ function handleDemoOpenChange(triggerLabel: string, open: boolean) {
 }
 // ─── Code strings ─────────────────────────────────────────────────────────────
 
+// A cor aqui é DADO da demonstração, não estilo: é o que o seletor oferece.
+// Ficava cravada seis vezes no markup, e era a única stack assim — as outras
+// quatro já liam de uma lista. Como valor ligado, sai do caminho da folha e
+// para de disputar com o tema.
+const swatches = [
+  { name: 'Vermelho', color: '#ef4444' },
+  { name: 'Laranja',  color: '#f97316' },
+  { name: 'Amarelo',  color: '#eab308' },
+  { name: 'Verde',    color: '#22c55e' },
+  { name: 'Azul',     color: '#3b82f6' },
+  { name: 'Roxo',     color: '#a855f7' },
+];
+
 const codeImportBasic = `import {
   Popover,
   PopoverTrigger,
@@ -292,7 +305,18 @@ const codeTableFilter = `<Popover>
   </PopoverContent>
 </Popover>`;
 
-const codeColorPicker = `<Popover>
+const codeColorPicker = `<script setup>
+const swatches = [
+  { name: 'Vermelho', color: '#ef4444' },
+  { name: 'Laranja',  color: '#f97316' },
+  { name: 'Amarelo',  color: '#eab308' },
+  { name: 'Verde',    color: '#22c55e' },
+  { name: 'Azul',     color: '#3b82f6' },
+  { name: 'Roxo',     color: '#a855f7' },
+];
+<\/script>
+
+<Popover>
   <PopoverTrigger as-child>
     <Button variant="outline">Cor</Button>
   </PopoverTrigger>
@@ -301,12 +325,7 @@ const codeColorPicker = `<Popover>
       <PopoverTitle>Selecionar cor</PopoverTitle>
     </PopoverHeader>
     <div class="nds-grid" data-cols="6" data-spacing="xs">
-      <button type="button" aria-label="Vermelho" class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #ef4444" />
-      <button type="button" aria-label="Laranja"  class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #f97316" />
-      <button type="button" aria-label="Amarelo"  class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #eab308" />
-      <button type="button" aria-label="Verde"    class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #22c55e" />
-      <button type="button" aria-label="Azul"     class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #3b82f6" />
-      <button type="button" aria-label="Roxo"     class="nds-rounded-full" style="width: 1.5rem; height: 1.5rem; background: #a855f7" />
+      <button v-for="s in swatches" :key="s.name" type="button" :aria-label="s.name" class="nds-rounded-full nds-size-6" :style="{ background: s.color }" />
     </div>
   </PopoverContent>
 </Popover>`;
@@ -947,40 +966,12 @@ const a11yCritCols = computed(() => ({
                 data-spacing="xs"
               >
                 <button
+                  v-for="s in swatches"
+                  :key="s.name"
                   type="button"
-                  aria-label="Vermelho"
-                  class="nds-rounded-full"
-                  style="width: 1.5rem; height: 1.5rem; background: #ef4444"
-                />
-                <button
-                  type="button"
-                  aria-label="Laranja"
-                  class="nds-rounded-full"
-                  style="width: 1.5rem; height: 1.5rem; background: #f97316"
-                />
-                <button
-                  type="button"
-                  aria-label="Amarelo"
-                  class="nds-rounded-full"
-                  style="width: 1.5rem; height: 1.5rem; background: #eab308"
-                />
-                <button
-                  type="button"
-                  aria-label="Verde"
-                  class="nds-rounded-full"
-                  style="width: 1.5rem; height: 1.5rem; background: #22c55e"
-                />
-                <button
-                  type="button"
-                  aria-label="Azul"
-                  class="nds-rounded-full"
-                  style="width: 1.5rem; height: 1.5rem; background: #3b82f6"
-                />
-                <button
-                  type="button"
-                  aria-label="Roxo"
-                  class="nds-rounded-full"
-                  style="width: 1.5rem; height: 1.5rem; background: #a855f7"
+                  :aria-label="s.name"
+                  class="nds-rounded-full nds-size-6"
+                  :style="{ background: s.color }"
                 />
               </div>
             </PopoverContent>

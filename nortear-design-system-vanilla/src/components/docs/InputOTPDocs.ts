@@ -92,8 +92,7 @@ function buildAlphanumeric(): HTMLElement {
   wrapper.dataset.spacing = 'sm';
   const otp = createInputOTP({ length: 6 });
   const note = document.createElement('p');
-  note.className = 'nds-text-muted-foreground nds-italic';
-  note.style.fontSize = '10px';
+  note.className = 'nds-text-muted-foreground nds-italic nds-text-2xs';
   note.textContent = 'Nortear: apenas dígitos (fallback)';
   wrapper.append(otp, note);
   return wrapper;
