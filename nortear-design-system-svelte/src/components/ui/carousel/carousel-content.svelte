@@ -3,6 +3,7 @@
 	import type { HTMLAttributes } from "svelte/elements";
 	import { getEmblaContext } from "./context.js";
 	import { cn, type WithElementRef } from "@/lib/utils.js";
+	import { prefersReducedMotion } from "@/lib/motion";
 
 	let {
 		ref = $bindable(null),
@@ -23,6 +24,12 @@
 			slides: "[data-embla-slide]",
 			...emblaCtx.options,
 			axis: emblaCtx.orientation === "horizontal" ? "x" : "y",
+			// O motor anima o deslize em JS, quadro a quadro — nenhuma media
+			// query alcança isso, e a folha compartilhada não tem mais transição
+			// no track (ela atrapalhava o gesto). Zerar a duração AQUI é o único
+			// lugar onde a preferência por movimento reduzido chega ao deslize:
+			// sem isto o carrossel continuava correndo com a preferência ligada.
+			...(prefersReducedMotion() ? { duration: 0 } : null),
 		},
 		plugins: emblaCtx.plugins,
 	}}

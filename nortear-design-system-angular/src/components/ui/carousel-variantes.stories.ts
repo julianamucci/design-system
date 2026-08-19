@@ -115,7 +115,8 @@ export const Vertical: Story = {
     await step('A seta para baixo avança em vertical', async () => {
       // Em vertical o par de teclas muda: ArrowLeft/Right não teriam sentido
       // para quem lê a pilha de cima para baixo.
-      regiao.focus();
+      // O foco vai ao RECORTE, que é quem rola; a tecla sobe até a região.
+      viewport.focus();
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(() => expect(viewport.scrollTop).toBeGreaterThan(0));
     });

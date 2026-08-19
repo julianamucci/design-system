@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCarousel } from './carousel';
 import { createCard, createCardContent } from './card';
-import { within, expect, userEvent, waitFor } from 'storybook/test';
+import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
@@ -74,32 +74,132 @@ export const Single: Story = {
 
 // ─── Conjunto longo ───────────────────────────────────────────────────────────
 
+/** Ver a nota em carousel-estados: o motor move o trilho, não o `scrollLeft`. */
+function visivelNoRecorte(slide: Element, recorte: Element): boolean {
+  const s = slide.getBoundingClientRect();
+  const v = recorte.getBoundingClientRect();
+  return s.right > v.left + 1 && s.left < v.right - 1 && s.bottom > v.top + 1 && s.top < v.bottom - 1;
+}
+
+function recorteDe(canvasElement: HTMLElement): HTMLElement {
+  return canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
+}
+
+/**
+ * Um passo de gesto de TOQUE, com o evento que o motor de fato assina.
+ *
+ * Medido, não suposto: o motor registra `touchstart`/`touchmove`/`touchend` e
+ * `mousedown`/`mousemove`/`mouseup`, e NUNCA eventos de ponteiro. Uma sequência
+ * de `userEvent.pointer` com `[TouchA>]` deixou o trilho parado em 0px — ela
+ * despacha eventos de ponteiro, que aqui não são escutados por ninguém. Estes
+ * são os eventos de toque de verdade, com as coordenadas no lugar em que o
+ * motor as lê (`touches[0]`).
+ *
+ * `cancelable: true` não é enfeite: o motor devolve o gesto quando o
+ * `touchmove` não é cancelável, porque aí não teria como impedir a página de
+ * rolar junto.
+ */
+function toque(
+  alvo: HTMLElement,
+  tipo: 'touchstart' | 'touchmove' | 'touchend',
+  x: number,
+  y: number,
+): void {
+  const dedo = new Touch({ identifier: 1, target: alvo, clientX: x, clientY: y });
+  const soltou = tipo === 'touchend';
+  alvo.dispatchEvent(
+    new TouchEvent(tipo, {
+      touches: soltou ? [] : [dedo],
+      targetTouches: soltou ? [] : [dedo],
+      changedTouches: [dedo],
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+}
+
+/**
+ * Um passo de arraste por MOUSE, com os eventos que o motor de fato assina.
+ *
+ * Simétrico ao de toque, e pelo mesmo motivo: o motor registra
+ * `mousedown`/`mousemove`/`mouseup`. A sequência de `userEvent.pointer`
+ * entregava o começo do arraste mas não o fim — o trilho ficava parado onde o
+ * cursor largou, a 135px do ponto de parada, porque o `mouseup` nunca chegou
+ * ao manipulador. Despachar o evento certo remove o intermediário.
+ *
+ * `buttons: 1` enquanto o botão está apertado: é por ele que o motor sabe que
+ * o arraste continua vivo.
+ */
+function mouse(
+  alvo: HTMLElement,
+  tipo: 'mousedown' | 'mousemove' | 'mouseup',
+  x: number,
+  y: number,
+): void {
+  alvo.dispatchEvent(
+    new MouseEvent(tipo, {
+      clientX: x,
+      clientY: y,
+      button: 0,
+      buttons: tipo === 'mouseup' ? 0 : 1,
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+}
+
 export const MultiResponsive: Story = {
   parameters: {
-    covers: ['visual.item3'],
-    // A factory desliza um slide por vez: o deslocamento é `translate` de 100%
-    // do track, que não tem como resolver uma base fracionária no slide. Fazer
-    // `basis-1/2` valer aqui exigiria trocar o deslocamento por deslocamento
-    // medido (offset do slide) com trava no fim do trilho — mudança de motor,
-    // não de story. Enquanto isso não for decidido, esta stack não reivindica o
-    // item: declarar cobertura que não existe é pior do que não declarar.
-    coversNotApplicable: {
-      'functional.item6': 'a factory desliza um slide por vez e não expõe base fracionária no slide',
-    },
+    // `functional.item6` deixou de ser "não aplicável" nesta stack. A base
+    // fracionária dependia de o motor MEDIR onde cada slide começa, e o motor
+    // antigo assumia que o slide ocupava o recorte inteiro. Com a medição vindo
+    // do motor compartilhado, `nds-md-basis-half` passou a valer aqui como vale
+    // nas outras quatro, e o item passou a ser verificado em vez de declarado.
+    covers: ['functional.item6', 'visual.item3'],
   },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-lg';
-    wrap.appendChild(createCarousel({ items: buildSlides(6), label: 'Conjunto longo de slides' }));
+    wrap.appendChild(
+      createCarousel({
+        items: buildSlides(6),
+        // A base do slide é responsiva e vem por CLASSE, do mesmo vocabulário
+        // que as outras stacks penduram em cada item da composição. Aqui a
+        // fábrica é quem constrói o slide, então a classe entra por `slideClass`
+        // — divergência de API de framework, não de capacidade.
+        slideClass: 'nds-md-basis-half nds-lg-basis-third',
+        label: 'Conjunto longo de slides',
+      }),
+    );
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
+    const recorte = recorteDe(canvasElement);
+    // A classe é responsiva por definição: afirmar "um terço" sem consultar a
+    // media query amarraria o teste à largura do runner, que nenhum
+    // `parameters.viewport` controla aqui.
+    const janela = canvasElement.ownerDocument.defaultView!;
+    const grande = janela.matchMedia('(min-width: 1024px)').matches;
+    const medio = janela.matchMedia('(min-width: 768px)').matches;
+    const porTela = grande ? 3 : medio ? 2 : 1;
+
+    await step('A base do slide acompanha o breakpoint em vigor', async () => {
+      const slide = canvas.getAllByRole('group')[0];
+      const proporcao = slide.getBoundingClientRect().width / recorte.clientWidth;
+      await expect(proporcao).toBeCloseTo(1 / porTela, 1);
+    });
+
+    await step('Vários slides ficam enquadrados ao mesmo tempo', async () => {
+      const slides = canvas.getAllByRole('group');
+      await expect(slides.length).toBe(6);
+      const visiveis = slides.filter((s) => visivelNoRecorte(s, recorte)).length;
+      await expect(visiveis).toBe(porTela);
+    });
 
     await step('Todos os slides continuam anunciáveis com posição e total', async () => {
       const slides = canvas.getAllByRole('group');
       const total = slides.length;
-      await expect(total).toBe(6);
       for (const [i, slide] of slides.entries()) {
         await expect(slide).toHaveAccessibleName(`Slide ${i + 1} de ${total}`);
       }
@@ -114,6 +214,18 @@ export const MultiResponsive: Story = {
 
 // ─── Autoplay com parada na interação ─────────────────────────────────────────
 
+/**
+ * Trocas de slide desta story, com a origem de cada uma.
+ *
+ * Escopo de MÓDULO, não do `render`: um espião criado lá dentro é inalcançável
+ * pela play. É por ele que o passo de parada mede, e não mais pela posição do
+ * trilho — com o motor animando quadro a quadro, "o trilho não se moveu" é uma
+ * medida com deriva, e ela reprovou este passo por 56px de sobra de uma
+ * animação que ainda terminava. O índice não tem esse ruído, e é exatamente o
+ * que "não avançou mais" quer dizer.
+ */
+const aoTrocarSlide = fn();
+
 export const Autoplay: Story = {
   parameters: { covers: ['functional.item7', 'visual.item3'] },
   render: () => {
@@ -127,19 +239,19 @@ export const Autoplay: Story = {
         // real a recomendação do conteúdo compartilhado é 3–6s.
         autoplayInterval: 400,
         label: 'Destaques',
+        onIndexChange: (index, source) => aoTrocarSlide(index, source),
       }),
     );
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    const canvas = within(canvasElement);
-    const track = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-track"]')!;
-    const recorte = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
-    const posicao = () => track.getBoundingClientRect().left;
+    const recorte = recorteDe(canvasElement);
 
     await step('O carrossel avança sozinho', async () => {
-      const antes = posicao();
-      await waitFor(() => expect(posicao()).toBeLessThan(antes), { timeout: 4000 });
+      await waitFor(
+        () => expect(aoTrocarSlide).toHaveBeenCalledWith(expect.any(Number), 'autoplay'),
+        { timeout: 4000 },
+      );
     });
 
     await step('A primeira interação para o relógio de vez', async () => {
@@ -152,32 +264,179 @@ export const Autoplay: Story = {
       // posição aqui é conduzida por um temporizador, e quando o relógio para
       // num extremo a seta nasce desabilitada — o `userEvent` recusa o clique e
       // o teste falha por corrida, não por defeito. É também o gesto que as
-      // outras stacks reconhecem, onde o plugin assina o `pointerDown` da área
-      // dos slides e nunca vê o clique das setas.
+      // outras stacks reconhecem, onde o motor assina o começo do arraste na
+      // área dos slides e nunca vê o clique das setas.
       await userEvent.click(recorte);
 
-      // A medida de referência só vale depois que o deslize assenta: parar o
-      // relógio não cancela o quadro que já estava em curso.
-      //
-      // `NaN` na semente não é descuido, é o que obriga a espera a comparar
-      // duas amostras SEPARADAS NO TEMPO. Semeando com a posição atual, a
-      // primeira verificação — que roda no mesmo quadro — comparava o valor
-      // consigo mesmo, dava "assentou" e a espera saía sem provar nada;
-      // o deslize seguia por mais 214px depois disso.
-      let anterior = NaN;
-      await waitFor(async () => {
-        const agora = posicao();
-        const assentou = Math.abs(agora - anterior) < 0.5;
-        anterior = agora;
-        await expect(assentou).toBe(true);
-      }, { timeout: 3000 });
-      const parado = anterior;
+      // Zera DEPOIS do preparo: o que está sendo medido é o que acontece a
+      // partir daqui, e a contagem anterior é do avanço que já foi provado.
+      aoTrocarSlide.mockClear();
 
-      // Dois intervalos inteiros sem sair do lugar. É também o que deixa a foto
-      // do Chromatic e a varredura do axe caírem num componente imóvel — story
-      // com temporizador vivo fotografa um slide diferente a cada rodada.
+      // Dois intervalos inteiros sem nenhuma troca de origem 'autoplay'. É
+      // também o que deixa a foto do Chromatic e a varredura do axe caírem num
+      // componente imóvel — story com temporizador vivo fotografa um slide
+      // diferente a cada rodada.
       await new Promise((resolve) => setTimeout(resolve, 900));
-      await expect(Math.abs(posicao() - parado)).toBeLessThan(0.5);
+      await expect(aoTrocarSlide).not.toHaveBeenCalledWith(expect.any(Number), 'autoplay');
+    });
+  },
+};
+
+/**
+ * Gesto de arrastar — o mesmo caminho para o dedo e para o mouse.
+ *
+ * Este gesto não existia nesta stack: o motor antigo andava de slide inteiro em
+ * slide inteiro e o único ouvinte de ponteiro servia para PARAR o avanço
+ * automático. Com o motor compartilhado, arrastar passou a mover o trilho
+ * continuamente, e o ponteiro atende dedo e mouse pelo mesmo caminho.
+ *
+ * Clique sintético não serve para verificar isto: um `click` não tem trajeto, e
+ * o que está sendo verificado é justamente que o conteúdo ACOMPANHA o trajeto e
+ * só depois assenta. Daí a sequência de `userEvent.pointer` em passos, com uma
+ * medição NO MEIO do gesto — sem ela, a story provaria apenas que a posição
+ * final mudou, o que um clique na seta também faria.
+ */
+export const DragGesture: Story = {
+  parameters: { covers: ['functional.item9'] },
+  render: () => {
+    const wrap = document.createElement('div');
+    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.appendChild(
+      createCarousel({ items: buildSlides(4), label: 'Galeria com gesto de arrastar' }),
+    );
+    return wrap;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const recorte = recorteDe(canvasElement);
+    const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
+    const anterior = () => canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
+    const proximo = () => canvas.getByRole('button', { name: 'Próximo item' });
+
+    // Quanto o trilho já saiu do recorte. O motor move o trilho por
+    // `transform`, então `scrollLeft` fica em zero o tempo todo.
+    const deslocamento = () =>
+      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
+    const slides = () => canvas.getAllByRole('group') as HTMLElement[];
+
+    /**
+     * Espera a posição PARAR de verdade: quatro leituras seguidas dentro de
+     * meio pixel.
+     *
+     * Duas não bastam. O motor desacelera até encostar, e no fim da curva ele
+     * anda menos de meio pixel entre duas leituras enquanto ainda falta
+     * caminho — foi assim que uma medida de "parou" deu por assentada uma
+     * posição a 152px do ponto de parada.
+     */
+    const assentar = async () => {
+      let estaveis = 0;
+      let ultimo = Number.NaN;
+      await waitFor(async () => {
+        const agora = deslocamento();
+        estaveis = Math.abs(agora - ultimo) < 0.5 ? estaveis + 1 : 0;
+        ultimo = agora;
+        await expect(estaveis).toBeGreaterThanOrEqual(3);
+      }, { timeout: 4000 });
+      return ultimo;
+    };
+
+    /** Espera a posição chegar a uma coordenada já conhecida. */
+    const emPosicao = async (alvo: number) => {
+      await waitFor(async () => {
+        await expect(Math.abs(deslocamento() - alvo)).toBeLessThan(2);
+      }, { timeout: 4000 });
+    };
+
+    // O motor só mede depois que a raiz entra no documento: esperar a seta de
+    // avanço acordar é o portão de montagem, não uma folga arbitrária.
+    await waitFor(() => expect(proximo()).toBeEnabled());
+
+    // ── A RÉGUA ───────────────────────────────────────────────────────────────
+    //
+    // As posições que as SETAS alcançam. É contra elas que o gesto é medido, e
+    // não contra uma conta de `índice x largura`: a geometria do trilho varia
+    // entre as stacks (onde ele compensa o respiro do slide com margem
+    // negativa, nasce deslocado), e uma conta que sirva a uma erra na outra.
+    // Medir contra as setas também é exatamente o que o contrato promete — que
+    // o gesto pare onde a seta pararia.
+    let posZero = 0;
+    let posUm = 0;
+
+    await step('Precondição: a régua sai das próprias setas', async () => {
+      // O painel Interactions reexecuta a play no MESMO DOM: começar voltando
+      // ao primeiro slide é o que faz a segunda rodada valer tanto quanto a
+      // primeira.
+      for (let volta = 0; volta < slides().length; volta++) {
+        const botao = anterior();
+        if (botao.disabled) break;
+        await userEvent.click(botao);
+      }
+      posZero = await assentar();
+      await expect(anterior()).toBeDisabled();
+
+      await userEvent.click(proximo());
+      posUm = await assentar();
+      await expect(posUm).toBeGreaterThan(posZero);
+
+      await userEvent.click(anterior());
+      await emPosicao(posZero);
+      await expect(anterior()).toBeDisabled();
+    });
+
+    const caixa = recorte.getBoundingClientRect();
+    const y = caixa.top + caixa.height / 2;
+    const direita = caixa.left + caixa.width * 0.85;
+    const esquerda = caixa.left + caixa.width * 0.15;
+
+    await step('O conteúdo acompanha o DEDO durante o gesto', async () => {
+      // Pressiona e anda um pedaço, sem soltar. A medida acontece com o gesto
+      // ainda em curso — é isto que separa "arrastou" de "mudou de slide".
+      toque(recorte, 'touchstart', direita, y);
+      toque(recorte, 'touchmove', direita - 30, y);
+      toque(recorte, 'touchmove', direita - 60, y);
+      toque(recorte, 'touchmove', direita - 90, y);
+      await waitFor(async () => {
+        await expect(deslocamento()).toBeGreaterThan(posZero + 4);
+      });
+    });
+
+    await step('Ao soltar, para onde a seta pararia', async () => {
+      toque(recorte, 'touchmove', esquerda, y);
+      toque(recorte, 'touchend', esquerda, y);
+
+      // Assentou EM UM SLIDE, e no MESMO ponto que a seta alcança — não onde o
+      // dedo largou. Um carrossel de rolagem livre pararia no meio, e é isto
+      // que este passo reprova.
+      await emPosicao(posUm);
+      await waitFor(async () => {
+        await expect(anterior()).toBeEnabled();
+      });
+    });
+
+    await step('O MOUSE percorre o mesmo caminho, de volta ao primeiro slide', async () => {
+      // Mesma engrenagem, outro conjunto de eventos: o motor trata arraste de
+      // mouse e de dedo no mesmo manipulador, e o que muda é só por onde as
+      // coordenadas chegam. Os eventos são despachados direto, pelo mesmo
+      // motivo do gesto de dedo: é o que o motor escuta.
+      //
+      // O arraste é para a DIREITA, então volta um slide: a story termina no
+      // estado inicial, que é o que o Chromatic fotografa e o replay do painel
+      // Interactions reencontra.
+      mouse(recorte, 'mousedown', esquerda, y);
+      mouse(recorte, 'mousemove', esquerda + 40, y);
+      mouse(recorte, 'mousemove', esquerda + 80, y);
+      // Já andou de volta junto com o cursor, antes de soltar.
+      await waitFor(async () => {
+        await expect(deslocamento()).toBeLessThan(posUm - 4);
+      });
+
+      mouse(recorte, 'mousemove', direita, y);
+      mouse(recorte, 'mouseup', direita, y);
+
+      await emPosicao(posZero);
+      await waitFor(async () => {
+        await expect(anterior()).toBeDisabled();
+      });
     });
   },
 };

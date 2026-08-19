@@ -23,6 +23,7 @@
     "clsx": "^2.1.1",
     "dompurify": "^3.4.12",
     "echarts": "^6.1.0",
+    "embla-carousel": "^8.6.0",
     "lucide": "^1.27.0",
     "motion": "^12.42.2",
     "quill": "^2.0.3",

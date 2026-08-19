@@ -163,8 +163,13 @@ export const Playground: Story = {
       // É o caminho que um carrossel só-arrasto não tem: WCAG 2.1.1 exige
       // equivalente de teclado para toda navegação.
       const antes = viewport[eixo];
-      regiao.focus();
-      await expect(regiao).toHaveFocus();
+      // O foco vai ao RECORTE, e não à região: é o recorte que rola, e região
+      // rolável que não recebe foco deixa quem navega por teclado sem acesso ao
+      // que está fora da vista. A tecla continua sendo tratada pela região —
+      // o evento sobe até lá.
+      viewport.focus();
+      await expect(viewport).toHaveFocus();
+      await expect(regiao).toHaveAttribute('aria-roledescription', 'carousel');
       await userEvent.keyboard(args.orientation === 'vertical' ? '{ArrowDown}' : '{ArrowRight}');
       await waitFor(() => expect(viewport[eixo]).toBeGreaterThan(antes));
     });

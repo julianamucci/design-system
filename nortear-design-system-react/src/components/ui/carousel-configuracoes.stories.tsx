@@ -56,6 +56,69 @@ function viewportDe(canvasElement: HTMLElement): HTMLElement {
   return canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
 }
 
+/**
+ * Um passo de gesto de TOQUE, com o evento que o motor de fato assina.
+ *
+ * Medido, não suposto: o motor registra `touchstart`/`touchmove`/`touchend` e
+ * `mousedown`/`mousemove`/`mouseup`, e NUNCA eventos de ponteiro. Uma sequência
+ * de `userEvent.pointer` com `[TouchA>]` deixou o trilho parado em 0px — ela
+ * despacha eventos de ponteiro, que aqui não são escutados por ninguém. Estes
+ * são os eventos de toque de verdade, com as coordenadas no lugar em que o
+ * motor as lê (`touches[0]`).
+ *
+ * `cancelable: true` não é enfeite: o motor devolve o gesto quando o
+ * `touchmove` não é cancelável, porque aí não teria como impedir a página de
+ * rolar junto.
+ */
+function toque(
+  alvo: HTMLElement,
+  tipo: "touchstart" | "touchmove" | "touchend",
+  x: number,
+  y: number
+): void {
+  const dedo = new Touch({ identifier: 1, target: alvo, clientX: x, clientY: y });
+  const soltou = tipo === "touchend";
+  alvo.dispatchEvent(
+    new TouchEvent(tipo, {
+      touches: soltou ? [] : [dedo],
+      targetTouches: soltou ? [] : [dedo],
+      changedTouches: [dedo],
+      bubbles: true,
+      cancelable: true,
+    })
+  );
+}
+
+/**
+ * Um passo de arraste por MOUSE, com os eventos que o motor de fato assina.
+ *
+ * Simétrico ao de toque, e pelo mesmo motivo: o motor registra
+ * `mousedown`/`mousemove`/`mouseup`. A sequência de `userEvent.pointer`
+ * entregava o começo do arraste mas não o fim — o trilho ficava parado onde o
+ * cursor largou, a 135px do ponto de parada, porque o `mouseup` nunca chegou
+ * ao manipulador. Despachar o evento certo remove o intermediário.
+ *
+ * `buttons: 1` enquanto o botão está apertado: é por ele que o motor sabe que
+ * o arraste continua vivo.
+ */
+function mouse(
+  alvo: HTMLElement,
+  tipo: "mousedown" | "mousemove" | "mouseup",
+  x: number,
+  y: number,
+): void {
+  alvo.dispatchEvent(
+    new MouseEvent(tipo, {
+      clientX: x,
+      clientY: y,
+      button: 0,
+      buttons: tipo === "mouseup" ? 0 : 1,
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+}
+
 export const Single: Story = {
   parameters: {
     covers: ["visual.item3"],
@@ -258,6 +321,178 @@ export const Autoplay: Story = {
       await new Promise((resolve) => setTimeout(resolve, 1400));   // 3,5x o delay
       await expect(autoplayApi!.selectedScrollSnap()).toBe(antes);
       await expect(relogio().isPlaying()).toBe(false);
+    });
+  },
+};
+
+/**
+ * Gesto de arrastar — o mesmo caminho para o dedo e para o mouse.
+ *
+ * O motor de deslize reconhece eventos de PONTEIRO, e ponteiro é o que o dedo e
+ * o mouse produzem: um único mecanismo atende os dois, e não há caminho separado
+ * de toque para testar à parte. É por isso que o gesto aqui é conduzido com
+ * `[TouchA>]` — o tipo de ponteiro que um toque real emite.
+ *
+ * Clique sintético não serve para isto: um `click` não tem trajeto, e o que está
+ * sendo verificado é justamente que o conteúdo ACOMPANHA o trajeto e só depois
+ * assenta. Daí a sequência de `userEvent.pointer` em passos, com uma medição
+ * NO MEIO do gesto — sem ela, a story provaria apenas que a posição final mudou,
+ * o que um clique na seta também faria.
+ */
+export const DragGesture: Story = {
+  parameters: {
+    covers: ["functional.item9"],
+    docs: {
+      description: {
+        story:
+          "Arrastar a área dos slides move o conteúdo junto com o ponteiro e assenta no slide mais próximo ao soltar.",
+      },
+    },
+  },
+  render: () => (
+    <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria com gesto de arrastar">
+      <CarouselContent>
+        {Array.from({ length: 4 }).map((_, i) => (
+          <CarouselItem key={i}>
+            <SlideCard label={`Slide ${i + 1}`} />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious aria-label="Item anterior" />
+      <CarouselNext aria-label="Próximo item" />
+    </Carousel>
+  ),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const viewport = viewportDe(canvasElement);
+    const track = canvasElement.querySelector<HTMLElement>(".nds-carousel-track")!;
+    const anterior = () => canvas.getByRole("button", { name: "Item anterior" }) as HTMLButtonElement;
+    const proximo = () => canvas.getByRole("button", { name: "Próximo item" });
+
+    // Quanto o trilho já saiu do recorte. O motor move o trilho por
+    // `transform`, então `scrollLeft` fica em zero o tempo todo.
+    const deslocamento = () =>
+      viewport.getBoundingClientRect().left - track.getBoundingClientRect().left;
+    const slides = () => canvas.getAllByRole("group") as HTMLElement[];
+
+    /**
+     * Espera a posição PARAR de verdade: quatro leituras seguidas dentro de
+     * meio pixel.
+     *
+     * Duas não bastam. O motor desacelera até encostar, e no fim da curva ele
+     * anda menos de meio pixel entre duas leituras enquanto ainda falta
+     * caminho — foi assim que uma medida de "parou" deu por assentada uma
+     * posição a 152px do ponto de parada.
+     */
+    const assentar = async () => {
+      let estaveis = 0;
+      let ultimo = Number.NaN;
+      await waitFor(async () => {
+        const agora = deslocamento();
+        estaveis = Math.abs(agora - ultimo) < 0.5 ? estaveis + 1 : 0;
+        ultimo = agora;
+        await expect(estaveis).toBeGreaterThanOrEqual(3);
+      }, { timeout: 4000 });
+      return ultimo;
+    };
+
+    /** Espera a posição chegar a uma coordenada já conhecida. */
+    const emPosicao = async (alvo: number) => {
+      await waitFor(async () => {
+        await expect(Math.abs(deslocamento() - alvo)).toBeLessThan(2);
+      }, { timeout: 4000 });
+    };
+
+    // O motor só mede depois que a raiz entra no documento: esperar a seta de
+    // avanço acordar é o portão de montagem, não uma folga arbitrária.
+    await waitFor(() => expect(proximo()).toBeEnabled());
+
+    // ── A RÉGUA ───────────────────────────────────────────────────────────────
+    //
+    // As posições que as SETAS alcançam. É contra elas que o gesto é medido, e
+    // não contra uma conta de `índice x largura`: a geometria do trilho varia
+    // entre as stacks (onde ele compensa o respiro do slide com margem
+    // negativa, nasce deslocado), e uma conta que sirva a uma erra na outra.
+    // Medir contra as setas também é exatamente o que o contrato promete — que
+    // o gesto pare onde a seta pararia.
+    let posZero = 0;
+    let posUm = 0;
+
+    await step("Precondição: a régua sai das próprias setas", async () => {
+      // O painel Interactions reexecuta a play no MESMO DOM: começar voltando
+      // ao primeiro slide é o que faz a segunda rodada valer tanto quanto a
+      // primeira.
+      for (let volta = 0; volta < slides().length; volta++) {
+        const botao = anterior();
+        if (botao.disabled) break;
+        await userEvent.click(botao);
+      }
+      posZero = await assentar();
+      await expect(anterior()).toBeDisabled();
+
+      await userEvent.click(proximo());
+      posUm = await assentar();
+      await expect(posUm).toBeGreaterThan(posZero);
+
+      await userEvent.click(anterior());
+      await emPosicao(posZero);
+      await expect(anterior()).toBeDisabled();
+    });
+
+    const caixa = viewport.getBoundingClientRect();
+    const y = caixa.top + caixa.height / 2;
+    const direita = caixa.left + caixa.width * 0.85;
+    const esquerda = caixa.left + caixa.width * 0.15;
+
+    await step("O conteúdo acompanha o DEDO durante o gesto", async () => {
+      // Pressiona e anda um pedaço, sem soltar. A medida acontece com o gesto
+      // ainda em curso — é isto que separa "arrastou" de "mudou de slide".
+      toque(viewport, "touchstart", direita, y);
+      toque(viewport, "touchmove", direita - 30, y);
+      toque(viewport, "touchmove", direita - 60, y);
+      toque(viewport, "touchmove", direita - 90, y);
+      await waitFor(async () => {
+        await expect(deslocamento()).toBeGreaterThan(posZero + 4);
+      });
+    });
+
+    await step("Ao soltar, para onde a seta pararia", async () => {
+      toque(viewport, "touchmove", esquerda, y);
+      toque(viewport, "touchend", esquerda, y);
+
+      // Assentou EM UM SLIDE, e no MESMO ponto que a seta alcança — não onde o
+      // dedo largou. Um carrossel de rolagem livre pararia no meio, e é isto
+      // que este passo reprova.
+      await emPosicao(posUm);
+      await waitFor(async () => {
+        await expect(anterior()).toBeEnabled();
+      });
+    });
+
+    await step("O MOUSE percorre o mesmo caminho, de volta ao primeiro slide", async () => {
+      // Mesma engrenagem, outro conjunto de eventos: o motor trata arraste de
+      // mouse e de dedo no mesmo manipulador, e o que muda é só por onde as
+      // coordenadas chegam. Os eventos são despachados direto, pelo mesmo
+      // motivo do gesto de dedo: é o que o motor escuta.
+      //
+      // O arraste é para a DIREITA, então volta um slide: a story termina no
+      // estado inicial, que é o que o Chromatic fotografa e o replay do painel
+      // Interactions reencontra.
+      mouse(viewport, "mousedown", esquerda, y);
+      mouse(viewport, "mousemove", esquerda + 40, y);
+      mouse(viewport, "mousemove", esquerda + 80, y);
+      // Já andou de volta junto com o cursor, antes de soltar.
+      await waitFor(async () => {
+        await expect(deslocamento()).toBeLessThan(posUm - 4);
+      });
+
+      mouse(viewport, "mousemove", direita, y);
+      mouse(viewport, "mouseup", direita, y);
+
+      await emPosicao(posZero);
+      await waitFor(async () => {
+        await expect(anterior()).toBeDisabled();
+      });
     });
   },
 };

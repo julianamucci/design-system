@@ -1,16 +1,44 @@
 // ─── Carousel — Vanilla factory standalone ──────────────────────────────────
 // Visual: classes .nds-carousel-* (standalone).
-// Comportamento: setas + setas do teclado + autoplay opcional (pausa no hover,
-// para de vez na primeira interação de quem lê).
+// Comportamento: gesto de arrastar (dedo e mouse) + setas + setas do teclado +
+// autoplay opcional (pausa no hover, para de vez na primeira interação de quem
+// lê).
+//
+// ── O motor ──────────────────────────────────────────────────────────────────
+//
+// O deslize é do `embla-carousel` (core, agnóstico de framework), o mesmo motor
+// das stacks que rodam React, Vue e Svelte — lá pelos pacotes `-react`, `-vue` e
+// `-svelte`, que são casca fina sobre este mesmo núcleo. Antes daqui a fábrica
+// escrevia `track.style.transform = -index * 100%` a cada clique, e isso custava
+// duas coisas que não davam para contornar por story:
+//
+//   • NÃO havia gesto. Um passo de 100% do track só sabe ir de slide inteiro em
+//     slide inteiro; arrastar exige posição contínua, com atrito, inércia e
+//     volta ao ponto de parada mais próximo.
+//   • NÃO havia base fracionária. Mostrar 2 ou 3 slides por vez depende de o
+//     motor MEDIR onde cada slide começa; um deslocamento de 100% do track
+//     assume que o slide ocupa o recorte inteiro, e por isso `nds-md-basis-half`
+//     não tinha como valer aqui. Era o item do contrato que esta stack declarava
+//     como não aplicável.
+//
+// O Embla resolve os dois com o mesmo mecanismo: ele mede os slides reais. A
+// árvore e as classes `.nds-*` continuam EXATAMENTE as mesmas — o motor troca o
+// que move o track, não o que o DOM é.
 
+import EmblaCarousel, { type EmblaCarouselType } from 'embla-carousel';
 import { cn } from '@/lib/utils';
+import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import { prefersReducedMotion } from '@/lib/motion';
 import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 // PATCH: api — origem da navegação exposta para analytics (ver PATCHES.md#vanilla-carousel-nav-source)
 // 'init' é o posicionamento inicial no mount — consumidores normalmente o ignoram.
-export type CarouselNavSource = 'init' | 'button' | 'keyboard' | 'autoplay';
+// 'swipe' é o gesto de arrastar, que não existia antes de o motor mudar. O nome
+// é o do catálogo tipado de analytics (`slide_change.trigger`), e não um sinônimo
+// novo: fonte de navegação e evento medido falam o mesmo vocabulário.
+export type CarouselNavSource = 'init' | 'button' | 'keyboard' | 'autoplay' | 'swipe';
 
 export type CarouselOrientation = 'horizontal' | 'vertical';
 
@@ -25,6 +53,14 @@ export type CarouselOptions = {
   class?: string;
   /** Classes do recorte — é onde mora a altura definida do carrossel vertical. */
   contentClass?: string;
+  /**
+   * Classes aplicadas a CADA slide. É por aqui que passa a base fracionária:
+   * `nds-md-basis-half nds-lg-basis-third` faz caber 2 slides a partir de
+   * tablet e 3 a partir de desktop, exatamente como as outras stacks fazem
+   * classificando cada item da composição. A fábrica constrói os slides, então
+   * quem consome não tem outro lugar onde pendurar a classe.
+   */
+  slideClass?: string;
   /** Nome acessível da região. Sem ele o leitor anuncia "carrossel" sem dizer de quê. */
   label?: string;
   /** Rótulo de cada slide. `{index}` e `{total}` são substituídos. */
@@ -42,13 +78,14 @@ const CHEVRON_RIGHT =
 
 // ─── createCarousel ───────────────────────────────────────────────────────────
 
-export function createCarousel(options: CarouselOptions): HTMLElement {
+export function createCarousel(options: CarouselOptions): DestroyableElement {
   const {
     items,
     orientation = 'horizontal',
     autoplay = false,
     autoplayInterval = 3000,
     onIndexChange,
+    slideClass,
     label = 'Carrossel',
     slideLabel = 'Slide {index} de {total}',
     previousLabel = 'Item anterior',
@@ -74,16 +111,23 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   root.tabIndex = 0;
   root.className = cn('nds-carousel', options.class);
 
-  // Overflow wrapper
-  // `contentClass` cai no RECORTE, que é o único nó da árvore com largura
-  // definida — e é de largura definida que uma proporção tira altura. No track
-  // a conta não fecha: a altura do recorte viria do track e a do track da
-  // proporção dele próprio, um ciclo que o layout resolve caindo no conteúdo.
-  // Com a altura no recorte, `.nds-carousel-track[data-orientation="vertical"]`
-  // a herda por `height: 100%`, e aí sim a base `flex: 0 0 100%` do slide tem
-  // contra o que resolver.
+  // Overflow wrapper — é o RECORTE, e é ele que o motor recebe: o Embla mede a
+  // caixa deste nó e move o primeiro filho dele.
+  //
+  // `contentClass` cai aqui, que é o único nó da árvore com largura definida —
+  // e é de largura definida que uma proporção tira altura. No track a conta não
+  // fecha: a altura do recorte viria do track e a do track da proporção dele
+  // próprio, um ciclo que o layout resolve caindo no conteúdo. Com a altura no
+  // recorte, `.nds-carousel-track[data-orientation="vertical"]` a herda por
+  // `height: 100%`, e aí sim a base `flex: 0 0 100%` do slide tem contra o que
+  // resolver.
   const overflow = document.createElement('div');
   overflow.className = cn('nds-carousel-overflow', options.contentClass);
+  // As outras quatro stacks marcam o recorte com este `data-slot`; esta não
+  // marcava, e por isso todo seletor de sonda e de story precisava de uma forma
+  // só para cá. A marca não muda um pixel — só torna o recorte alcançável pelo
+  // mesmo seletor nas cinco.
+  overflow.dataset.slot = 'carousel-content';
 
   // Track
   const track = document.createElement('div');
@@ -93,12 +137,12 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   // compartilhado traz a margem negativa que encosta o primeiro slide na borda
   // — comportamento das outras stacks, e ligá-lo aqui mudaria a renderização
   // horizontal desta stack de imediato. Alinhar as duas é decisão de design,
-  // não efeito colateral de uma orientação nova.
+  // não efeito colateral de uma troca de motor.
   if (vertical) track.dataset.orientation = 'vertical';
 
   items.forEach((item, i) => {
     const slide = document.createElement('div');
-    slide.className = 'nds-carousel-slide';
+    slide.className = cn('nds-carousel-slide', slideClass);
     slide.dataset.slot = 'carousel-item';
     slide.setAttribute('role', 'group');
     slide.setAttribute('aria-roledescription', 'slide');
@@ -128,30 +172,114 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   nextBtn.type = 'button';
   nextBtn.className = 'nds-carousel-button nds-carousel-button-next';
   nextBtn.setAttribute('aria-label', nextLabel);
+  // Nasce vivo quando há para onde ir. Estado SÍNCRONO: o motor só mede depois
+  // que a raiz entra no documento, e sem isto a seta apareceria apagada no
+  // primeiro quadro de toda story.
+  const podeAvancarNoInicio = items.length > 1;
+  nextBtn.setAttribute('aria-disabled', podeAvancarNoInicio ? 'false' : 'true');
+  nextBtn.disabled = !podeAvancarNoInicio;
   if (vertical) nextBtn.dataset.orientation = 'vertical';
   nextBtn.innerHTML = DOMPurify.sanitize(CHEVRON_RIGHT);
 
   root.appendChild(prevBtn);
   root.appendChild(nextBtn);
 
-  function goTo(index: number, source: CarouselNavSource): void {
-    // O avanço automático dá a volta; a navegação de quem usa respeita os
-    // extremos. Sem essa distinção o teclado atravessava o fim do trilho e
-    // voltava ao primeiro slide enquanto a seta ao lado estava desabilitada
-    // dizendo que não dava — as duas metades do mesmo componente discordando.
-    currentIndex = source === 'autoplay'
-      ? (index + items.length) % items.length
-      : Math.min(Math.max(index, 0), items.length - 1);
-    const deslocamento = `-${currentIndex * 100}%`;
-    track.style.transform = vertical
-      ? `translateY(${deslocamento})`
-      : `translateX(${deslocamento})`;
-    prevBtn.setAttribute('aria-disabled', currentIndex === 0 ? 'true' : 'false');
-    prevBtn.toggleAttribute('disabled', currentIndex === 0);
-    nextBtn.setAttribute('aria-disabled', currentIndex === items.length - 1 ? 'true' : 'false');
-    nextBtn.toggleAttribute('disabled', currentIndex === items.length - 1);
-    onIndexChange?.(currentIndex, source);
+  // ── Motor ───────────────────────────────────────────────────────────────────
+
+  let embla: EmblaCarouselType | null = null;
+  // O gesto é reconhecido pelo motor, que avisa `pointerDown` antes de avisar a
+  // troca. A bandeira é o que permite dizer de ONDE veio a mudança sem inventar
+  // um segundo detector de arraste ao lado do que o motor já tem.
+  let veioDeGesto = false;
+
+  function sincronizarSetas(): void {
+    const podePrev = embla ? embla.canScrollPrev() : false;
+    const podeNext = embla ? embla.canScrollNext() : podeAvancarNoInicio;
+    prevBtn.setAttribute('aria-disabled', podePrev ? 'false' : 'true');
+    prevBtn.toggleAttribute('disabled', !podePrev);
+    nextBtn.setAttribute('aria-disabled', podeNext ? 'false' : 'true');
+    nextBtn.toggleAttribute('disabled', !podeNext);
   }
+
+  // A origem é declarada por quem MANDA o motor andar, e lida quando ele avisa
+  // que andou — o Embla não carrega essa informação no evento.
+  let origemPendente: CarouselNavSource = 'button';
+
+  function aoSelecionar(): void {
+    if (!embla) return;
+    currentIndex = embla.selectedScrollSnap();
+    sincronizarSetas();
+    onIndexChange?.(currentIndex, veioDeGesto ? 'swipe' : origemPendente);
+    veioDeGesto = false;
+    origemPendente = 'button';
+  }
+
+  function mover(alvo: 'prev' | 'next', source: CarouselNavSource): void {
+    origemPendente = source;
+    // O motor é montado quando a raiz entra no documento, e isso acontece um
+    // quadro depois de a fábrica devolver o nó. Quem clica ANTES desse quadro
+    // teria o comando engolido em silêncio — e engolido de verdade: foi uma
+    // reprovação intermitente, com o carrossel parando um slide antes do fim
+    // porque o primeiro clique se perdeu. Montar sob demanda fecha a janela:
+    // se há um comando, a raiz já está na página.
+    if (!embla) iniciarMotor();
+    if (!embla) return;
+    if (alvo === 'next') {
+      // O avanço automático dá a volta; a navegação de quem usa respeita os
+      // extremos. Sem essa distinção o teclado atravessava o fim do trilho e
+      // voltava ao primeiro slide enquanto a seta ao lado estava desabilitada
+      // dizendo que não dava — as duas metades do mesmo componente discordando.
+      if (embla.canScrollNext()) embla.scrollNext();
+      else if (source === 'autoplay') embla.scrollTo(0);
+    } else if (embla.canScrollPrev()) {
+      embla.scrollPrev();
+    }
+  }
+
+  /**
+   * O motor só mede depois que a raiz está no documento.
+   *
+   * A fábrica devolve um nó SOLTO — quem consome o insere depois. Um Embla
+   * iniciado sobre um nó desanexado mede zero em tudo, conclui que não há para
+   * onde rolar e nasce travado, sem erro nenhum no console. Por isso a
+   * inicialização espera a conexão em vez de acontecer no corpo da fábrica.
+   */
+  let quadro: number | null = null;
+
+  function iniciarMotor(): void {
+    if (embla || !root.isConnected) return;
+    embla = EmblaCarousel(overflow, {
+      axis: vertical ? 'y' : 'x',
+      // Duração do deslize EM UNIDADES DO MOTOR. Zerada sob movimento reduzido:
+      // nenhuma media query alcança uma animação escrita em JS, e o track deixou
+      // de ter transição de CSS justamente porque ela atrapalhava o gesto.
+      duration: prefersReducedMotion() ? 0 : 25,
+    });
+    embla.on('select', aoSelecionar);
+    embla.on('reInit', sincronizarSetas);
+    embla.on('pointerDown', () => {
+      veioDeGesto = true;
+    });
+    // Um toque que não arrasta nada (um clique seco na área dos slides) marca a
+    // bandeira e nunca chega a um `select` que a limpe. Sem esta baixa, a
+    // PRÓXIMA troca — vinda de uma seta ou do teclado — seria relatada como
+    // gesto. `settle` é o fim do movimento, e vem sempre depois de `select`.
+    embla.on('settle', () => {
+      veioDeGesto = false;
+    });
+    sincronizarSetas();
+  }
+
+  function aguardarConexao(): void {
+    if (embla) return;
+    if (root.isConnected) {
+      iniciarMotor();
+      return;
+    }
+    quadro = requestAnimationFrame(aguardarConexao);
+  }
+
+  aguardarConexao();
 
   // ── Autoplay ────────────────────────────────────────────────────────────────
   //
@@ -168,7 +296,7 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
 
   function iniciarAutoplay(): void {
     if (!autoplayLigado || autoplayTimer) return;
-    autoplayTimer = setInterval(() => goTo(currentIndex + 1, 'autoplay'), autoplayInterval);
+    autoplayTimer = setInterval(() => mover('next', 'autoplay'), autoplayInterval);
   }
 
   function pararAutoplay(): void {
@@ -177,12 +305,12 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   }
 
   prevBtn.addEventListener('click', () => {
-    goTo(currentIndex - 1, 'button');
+    mover('prev', 'button');
     pararAutoplay();
   });
 
   nextBtn.addEventListener('click', () => {
-    goTo(currentIndex + 1, 'button');
+    mover('next', 'button');
     pararAutoplay();
   });
 
@@ -194,7 +322,7 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
   root.addEventListener('keydown', (e) => {
     if (e.key !== teclaVoltar && e.key !== teclaAvancar) return;
     e.preventDefault();
-    goTo(currentIndex + (e.key === teclaAvancar ? 1 : -1), 'keyboard');
+    mover(e.key === teclaAvancar ? 'next' : 'prev', 'keyboard');
     pararAutoplay();
   });
 
@@ -209,6 +337,15 @@ export function createCarousel(options: CarouselOptions): HTMLElement {
     iniciarAutoplay();
   }
 
-  goTo(0, 'init');
-  return root;
+  onIndexChange?.(0, 'init');
+
+  // O motor prende ouvintes de ponteiro, um ResizeObserver e um laço de
+  // animação — nada disso sai sozinho quando a raiz deixa a página. `destroy()`
+  // é a forma única desta stack, e a raiz saindo do documento já o dispara.
+  return tornarDestruivel(root, root, () => {
+    if (quadro !== null) cancelAnimationFrame(quadro);
+    suspenderAutoplay();
+    embla?.destroy();
+    embla = null;
+  });
 }

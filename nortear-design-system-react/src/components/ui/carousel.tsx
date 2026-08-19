@@ -4,6 +4,7 @@ import useEmblaCarousel, {
 } from "embla-carousel-react"
 
 import { cn } from "@/lib/utils"
+import { prefersReducedMotion } from "@/lib/motion"
 import { Button } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 
@@ -53,6 +54,12 @@ function Carousel({
     {
       ...opts,
       axis: orientation === "horizontal" ? "x" : "y",
+      // O motor anima o deslize em JS, quadro a quadro — nenhuma media query
+      // alcança isso, e a folha compartilhada não tem mais transição no track
+      // (ela atrapalhava o gesto). Zerar a duração AQUI é o único lugar onde a
+      // preferência por movimento reduzido chega ao deslize: sem isto o
+      // carrossel continuava correndo com a preferência ligada.
+      ...(prefersReducedMotion() ? { duration: 0 } : null),
     },
     plugins
   )

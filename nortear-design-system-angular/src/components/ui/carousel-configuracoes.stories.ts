@@ -14,6 +14,45 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * Um passo de arraste por PONTEIRO, com o evento que o componente assina.
+ *
+ * O arraste por mouse desta stack escuta `pointerdown`/`pointermove`/
+ * `pointerup` e ignora o que não for ponteiro de mouse — o dedo tem caminho
+ * próprio, que é a rolagem nativa. Despachar o evento direto é o que entrega o
+ * gesto inteiro: a sequência de `userEvent.pointer` entregava o começo e
+ * deixava o trilho parado onde o cursor largou, porque a soltura não chegava ao
+ * manipulador.
+ *
+ * `buttons: 1` enquanto o botão está apertado: é por ele que o arraste sabe
+ * que o gesto continua vivo.
+ */
+/** Um quadro de renderização — o intervalo que separa dois passos de um gesto real. */
+function quadro(): Promise<void> {
+  return new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+}
+
+function ponteiro(
+  alvo: HTMLElement,
+  tipo: 'pointerdown' | 'pointermove' | 'pointerup',
+  x: number,
+  y: number,
+): void {
+  alvo.dispatchEvent(
+    new PointerEvent(tipo, {
+      pointerId: 1,
+      pointerType: 'mouse',
+      isPrimary: true,
+      clientX: x,
+      clientY: y,
+      button: 0,
+      buttons: tipo === 'pointerup' ? 0 : 1,
+      bubbles: true,
+      cancelable: true,
+    }),
+  );
+}
+
 // ─── Um item por vez ──────────────────────────────────────────────────────────
 
 export const Single: Story = {
@@ -206,6 +245,196 @@ export const Autoplay: Story = {
 
       await new Promise((resolve) => setTimeout(resolve, 900));
       await expect(viewport.scrollLeft).toBe(parado);
+    });
+  },
+};
+
+// ─── Gesto de arrastar ────────────────────────────────────────────────────────
+
+/**
+ * Gesto de arrastar, nas duas metades — e elas são MECANISMOS DIFERENTES aqui.
+ *
+ * Esta stack não move o trilho por `transform`: quem desliza é o próprio
+ * recorte, e a posição mora no `scrollLeft`. Isso divide o gesto em dois:
+ *
+ *   • O TOQUE é rolagem nativa. Não há código próprio no caminho — o que
+ *     faltava era o recorte estar liberado, e é isso que o primeiro passo
+ *     verifica. Um evento de toque SINTÉTICO não produz rolagem nativa em
+ *     navegador nenhum (a rolagem por gesto acontece na thread do compositor,
+ *     fora do alcance de eventos despachados por script), então "arrastar com o
+ *     dedo" não é encenável aqui como é nas stacks de `transform`. O que É
+ *     verificável, e está verificado: que o recorte rola de fato, que o gesto
+ *     tem onde parar, e que a posição de rolagem — que é tudo o que o dedo
+ *     produz — reconcilia o estado do componente.
+ *   • O MOUSE é arraste escrito à mão, porque arrastar com o mouse não é gesto
+ *     de rolagem em navegador nenhum. Esse sim é encenável de ponta a ponta, e
+ *     é o que o último passo faz com `userEvent.pointer`.
+ */
+export const DragGesture: Story = {
+  parameters: { covers: ['functional.item9'] },
+  render: () => ({
+    props: { slides: [1, 2, 3, 4] },
+    template: `
+      <nds-carousel class="nds-w-full nds-max-w-md" label="Galeria com gesto de arrastar" slideLabel="Slide {index} de {total}">
+        <div ndsCarouselContent>
+          @for (i of slides; track i) {
+            <div ndsCarouselItem>
+              <div ndsAspectRatio [ratio]="16 / 9">
+                <div class="nds-cluster nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ i }}</span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+        <button ndsCarouselPrevious label="Item anterior"></button>
+        <button ndsCarouselNext label="Próximo item"></button>
+      </nds-carousel>
+    `,
+  }),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
+    const anterior = () =>
+      canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
+    const proximo = () =>
+      canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
+    const slides = () => canvas.getAllByRole('group') as HTMLElement[];
+
+    /**
+     * Espera a rolagem PARAR de verdade: quatro leituras seguidas dentro de
+     * meio pixel. Duas não bastam — a rolagem suave desacelera até encostar, e
+     * no fim da curva ela anda menos de meio pixel entre duas leituras
+     * enquanto ainda falta caminho.
+     */
+    const assentar = async () => {
+      let estaveis = 0;
+      let ultimo = Number.NaN;
+      await waitFor(async () => {
+        const agora = viewport.scrollLeft;
+        estaveis = Math.abs(agora - ultimo) < 0.5 ? estaveis + 1 : 0;
+        ultimo = agora;
+        await expect(estaveis).toBeGreaterThanOrEqual(3);
+      }, { timeout: 4000 });
+      return ultimo;
+    };
+
+    /** Espera a rolagem chegar a uma coordenada já conhecida. */
+    const emPosicao = async (alvo: number) => {
+      await waitFor(async () => {
+        await expect(Math.abs(viewport.scrollLeft - alvo)).toBeLessThan(2);
+      }, { timeout: 4000 });
+    };
+
+    // ── A RÉGUA ───────────────────────────────────────────────────────────────
+    //
+    // As posições que as SETAS alcançam. É contra elas que o gesto é medido, e
+    // não contra uma conta de `índice x largura`: o trilho compensa o respiro
+    // do slide com margem negativa e a rolagem é contida no fim, então a conta
+    // crua erra justamente nos extremos. Medir contra as setas é também o que o
+    // contrato promete — que o gesto pare onde a seta pararia.
+    let posZero = 0;
+    let posUm = 0;
+
+    await step('Precondição: a régua sai das próprias setas', async () => {
+      // O painel Interactions reexecuta a play no MESMO DOM: começar voltando
+      // ao primeiro slide é o que faz a segunda rodada valer tanto quanto a
+      // primeira.
+      for (let volta = 0; volta < slides().length; volta++) {
+        const botao = anterior();
+        if (botao.disabled) break;
+        await userEvent.click(botao);
+      }
+      posZero = await assentar();
+      await expect(anterior()).toBeDisabled();
+
+      await userEvent.click(proximo());
+      posUm = await assentar();
+      await expect(posUm).toBeGreaterThan(posZero);
+
+      await userEvent.click(anterior());
+      await emPosicao(posZero);
+      await expect(anterior()).toBeDisabled();
+    });
+
+    await step('O recorte está LIBERADO para o gesto, com onde parar', async () => {
+      // Era exatamente isto que faltava: a rolagem sempre esteve aqui, e o
+      // recorte cego (`overflow: hidden`) a deixava alcançável só por script.
+      // Um recorte que não rola não tem gesto de toque nenhum — nem que o
+      // componente inteiro esteja correto.
+      const estilo = getComputedStyle(viewport);
+      await expect(['auto', 'scroll']).toContain(estilo.overflowX);
+      // E o gesto para em slide, não em qualquer pixel.
+      await expect(estilo.scrollSnapType).toContain('x');
+      // Rolável de verdade: há mais trilho do que recorte.
+      await expect(viewport.scrollWidth).toBeGreaterThan(viewport.clientWidth + 1);
+      // E alcançável por teclado — região rolável sem foco deixa quem não usa
+      // mouse sem acesso ao que está fora da vista (WCAG 2.1.1).
+      await expect(viewport).toHaveAttribute('tabindex', '0');
+    });
+
+    await step('A posição de rolagem reconcilia o estado do componente', async () => {
+      // É tudo o que um dedo produz: ele move a rolagem e solta. A partir daí
+      // quem tem de se ajustar é o componente — e antes desta rodada ele não se
+      // ajustava, porque nada olhava para a rolagem.
+      //
+      // O TOQUE em si não é encenável aqui: a rolagem por gesto acontece na
+      // thread do compositor, fora do alcance de qualquer evento despachado por
+      // script. O que o dedo deixa para trás é esta posição, e é ela que o
+      // componente precisa ler.
+      viewport.scrollLeft = posUm;
+      await waitFor(() => expect(anterior()).toBeEnabled());
+    });
+
+    const caixa = viewport.getBoundingClientRect();
+    const y = caixa.top + caixa.height / 2;
+    const direita = caixa.left + caixa.width * 0.85;
+    const esquerda = caixa.left + caixa.width * 0.15;
+
+    await step('O arraste por MOUSE move o conteúdo junto com o ponteiro', async () => {
+      await userEvent.click(anterior());
+      await emPosicao(posZero);
+
+      // Eventos de ponteiro despachados direto, e não por `userEvent.pointer`:
+      // o arraste por mouse desta stack assina `pointerdown`/`pointermove`/
+      // `pointerup` e distingue o tipo de ponteiro, e o caminho direto é o que
+      // entrega o gesto inteiro — incluindo o fim dele.
+      // Um quadro entre os passos, como num gesto de verdade. Não é folga: ao
+      // começar o arraste o componente marca o recorte para o CSS suspender o
+      // ponto de parada, e essa marca só chega ao DOM no próximo ciclo de
+      // renderização. Despachando tudo no mesmo instante, a marca ainda não
+      // valia e cada posição escrita era puxada de volta ao ponto de parada —
+      // a rolagem media zero, que foi o que reprovou este passo.
+      ponteiro(viewport, 'pointerdown', direita, y);
+      await quadro();
+      ponteiro(viewport, 'pointermove', direita - 40, y);
+      await quadro();
+      ponteiro(viewport, 'pointermove', direita - 80, y);
+      // Medida com o gesto AINDA EM CURSO — é isto que separa "arrastou" de
+      // "mudou de slide".
+      await waitFor(async () => {
+        await expect(viewport.scrollLeft).toBeGreaterThan(posZero + 4);
+      });
+    });
+
+    await step('Ao soltar, para onde a seta pararia', async () => {
+      ponteiro(viewport, 'pointermove', esquerda, y);
+      await quadro();
+      ponteiro(viewport, 'pointerup', esquerda, y);
+
+      // Assentou EM UM SLIDE, e no MESMO ponto que a seta alcança — não onde o
+      // cursor largou. Um carrossel de rolagem livre pararia no meio.
+      await emPosicao(posUm);
+      await waitFor(async () => {
+        await expect(anterior()).toBeEnabled();
+      });
+    });
+
+    await step('E a story termina no primeiro slide', async () => {
+      // O Chromatic fotografa o quadro final e o axe varre a partir dele.
+      await userEvent.click(anterior());
+      await emPosicao(posZero);
+      await expect(anterior()).toBeDisabled();
     });
   },
 };

@@ -333,6 +333,11 @@
           "action": "Mudar de slide com a fileira de paginação à vista",
           "result": "O controle do slide atual vira pílula na própria posição da fileira, com o rótulo \"Slide N\" à vista; os demais continuam pontos, sem rótulo visível",
           "priority": "high"
+        },
+        "item9": {
+          "action": "Arrastar a área dos slides com o dedo ou com o mouse",
+          "result": "Os slides acompanham o gesto e param no slide mais próximo quando o gesto termina; a posição resultante é a mesma que as setas e o teclado alcançam",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -749,6 +754,11 @@
           "action": "Change slide with the pagination row on screen",
           "result": "The current slide's control becomes a pill at its own position in the row, showing the label \"Slide N\"; the others stay dots, with no visible label",
           "priority": "high"
+        },
+        "item9": {
+          "action": "Drag the slide area with a finger or with the mouse",
+          "result": "The slides follow the gesture and settle on the nearest slide when it ends; the resulting position is the same one the arrows and the keyboard reach",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1164,6 +1174,11 @@
         "item8": {
           "action": "Cambiar de slide con la fila de paginación a la vista",
           "result": "El control del slide actual se vuelve píldora en su propia posición de la fila, con la etiqueta \"Slide N\" a la vista; los demás siguen siendo puntos, sin etiqueta visible",
+          "priority": "high"
+        },
+        "item9": {
+          "action": "Arrastrar el área de los slides con el dedo o con el ratón",
+          "result": "Los slides acompañan el gesto y se detienen en el slide más cercano cuando termina; la posición resultante es la misma que alcanzan las flechas y el teclado",
           "priority": "high"
         }
       },

@@ -89,7 +89,8 @@ function buildCarouselPreview(): HTMLElement {
   // intitula visivelmente o bloco onde o preview aparece.
   const carousel = createCarousel({
     items: buildSlides(total),
-    // Nortear: o factory navega apenas via setas (ou Enter/Espaço nelas) —
+    // A navegação vem por setas, teclado ou gesto de arrastar, e a origem chega
+    // aqui para virar o `trigger` do evento medido.
     onIndexChange: (index, source) => {
       // 'init' é o posicionamento inicial (não é interação); autoplay não é
       // navegação do usuário — nenhum dos dois vira evento.
@@ -685,10 +686,12 @@ export type CarouselOptions = {
   autoplay?: boolean;
   /** Intervalo em milissegundos entre avanços automáticos. */
   autoplayInterval?: number;
-  /** Callback disparado a cada mudança de slide. */
-  onIndexChange?: (index: number) => void;
+  /** Callback disparado a cada mudança de slide, com a origem da navegação. */
+  onIndexChange?: (index: number, source: CarouselNavSource) => void;
   /** Classes CSS adicionais aplicadas ao container. */
   class?: string;
+  /** Classes aplicadas a cada slide — é por aqui que passa a base fracionária. */
+  slideClass?: string;
 };`;
 
         const propsCols = {
@@ -729,13 +732,24 @@ export type CarouselOptions = {
                 },
                 {
                   name: 'onIndexChange',
-                  type: '(index: number) => void',
+                  type: '(index: number, source: CarouselNavSource) => void',
                   defaultValue: '—',
                   required: 'Não',
                   description: toPlainText(t('props.table.setApi')),
                 },
                 {
                   name: 'class',
+                  type: 'string',
+                  defaultValue: '—',
+                  required: 'Não',
+                  description: toPlainText(t('props.table.className')),
+                },
+                // A fábrica constrói os slides, então a classe de cada um entra
+                // por aqui — é o equivalente ao que as outras stacks penduram
+                // em cada item da composição, e é por ela que passa a base
+                // fracionária (mostrar 2 ou 3 slides por vez).
+                {
+                  name: 'slideClass',
                   type: 'string',
                   defaultValue: '—',
                   required: 'Não',

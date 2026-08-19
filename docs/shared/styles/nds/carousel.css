@@ -21,14 +21,91 @@
 }
 
 /* ── Overflow (recorta os slides fora da viewport) ───────────────────────── */
+/*
+ * Padrão: recorte cego. O motor de `transform` (Embla) EXIGE isto — se o
+ * recorte também rolasse, o gesto moveria a caixa e o motor moveria o track ao
+ * mesmo tempo, e os dois deslocamentos se somariam.
+ */
 .nds-carousel-overflow {
   overflow: hidden;
 }
 
+/*
+ * ── Motor de ROLAGEM NATIVA ───────────────────────────────────────────────
+ *
+ * `data-engine="native"` é a DECLARAÇÃO de que este carrossel não é movido por
+ * `transform`: quem desliza é o próprio recorte, e a posição mora no
+ * `scrollLeft`. A stack que o usa não escreve estilo inline por regra própria, e
+ * `overflow: hidden` deixa o container rolável POR SCRIPT e por mais ninguém —
+ * então o gesto de quem lê não alcançava a rolagem que já estava ali.
+ *
+ * O atributo existe para que a divergência de motor fique ESCRITA no lugar onde
+ * ela é real, em vez de virar uma segunda família de classes paralela à
+ * primeira. Sem o atributo, o padrão acima continua valendo.
+ *
+ * `scrollbar-width: none` é o que mantém a foto de regressão visual idêntica à
+ * de antes: a barra apareceria em toda story ao trocar `hidden` por `auto`.
+ * Esconder a barra não esconde o conteúdo — o mesmo gesto, as setas e as teclas
+ * continuam alcançando todos os slides.
+ */
+.nds-carousel-overflow[data-engine="native"] {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  /* O gesto que chega ao fim do trilho não deve virar navegação de página. */
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.nds-carousel-overflow[data-engine="native"][data-orientation="vertical"] {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  overscroll-behavior-y: contain;
+}
+
+.nds-carousel-overflow[data-engine="native"]::-webkit-scrollbar {
+  display: none;
+}
+
+/*
+ * Arraste por MOUSE em curso. O toque nunca chega aqui — ele rola nativamente.
+ *
+ * O snap precisa sair durante o gesto: com `mandatory` valendo, cada posição
+ * escrita pelo arraste é puxada de volta ao ponto de parada no mesmo quadro, e
+ * o conteúdo treme em vez de acompanhar o cursor. Sai também o `scroll-behavior`
+ * suave, que transformaria cada passo do arraste numa animação própria — o
+ * tempo do gesto é o da mão.
+ */
+.nds-carousel-overflow[data-engine="native"][data-dragging="true"] {
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+  cursor: grabbing;
+  user-select: none;
+}
+
+/*
+ * O ponto de parada é o INÍCIO do slide — a mesma coordenada que a navegação
+ * por script já usava (`offsetLeft` do slide menos o do primeiro). Gesto e
+ * setas param exatamente no mesmo lugar, então uma não desfaz a outra.
+ */
+.nds-carousel-overflow[data-engine="native"] .nds-carousel-slide {
+  scroll-snap-align: start;
+}
+
 /* ── Track (linha horizontal com todos os slides) ────────────────────────── */
+/*
+ * SEM `transition: transform`. O track é movido pelo MOTOR, que escreve
+ * `translate3d` a cada quadro — e uma transição de 250ms sobre uma propriedade
+ * reescrita 60 vezes por segundo faz cada quadro perseguir o anterior: o slide
+ * fica para trás do dedo durante o arraste e continua andando depois que o
+ * gesto termina. Enquanto o único motor era o `transform` de um passo só
+ * (escrito uma vez por clique), a transição ERA a animação; com gesto ela virou
+ * defeito. A duração do deslize passou a ser do motor, e é lá que a preferência
+ * por movimento reduzido a zera.
+ */
 .nds-carousel-track {
   display: flex;
-  transition: transform var(--duration-moderate) var(--ease-standard);
 }
 
 /* ── Slide ───────────────────────────────────────────────────────────────── */
@@ -264,11 +341,21 @@
   box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
 }
 
+/*
+ * `.nds-carousel-track` saiu desta lista junto com a transição dele: o track não
+ * anima mais por CSS, e a duração do deslize passou a ser do motor. Cada motor
+ * zera a sua — o de `transform` recebe duração 0, o nativo troca `smooth` por
+ * `auto` — porque nenhuma regra de CSS alcança uma animação escrita em JS.
+ */
 @media (prefers-reduced-motion: reduce) {
-  .nds-carousel-track,
   .nds-carousel-button,
   .nds-carousel-dot,
   .nds-carousel-dot::before {
     transition: none;
+  }
+
+  /* Rolagem nativa: o snap continua, o percurso suave não. */
+  .nds-carousel-overflow[data-engine="native"] {
+    scroll-behavior: auto;
   }
 }
