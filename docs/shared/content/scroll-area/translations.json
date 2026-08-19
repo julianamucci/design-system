@@ -28,8 +28,11 @@
       "item5": "<strong>Corner</strong> — quadrado no canto quando há ambas as scrollbars visíveis.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Conteúdo longo */}\n  </ScrollArea>\n</div>",
-        "angular": "<div class=\"nds-scroll-area-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full\">\n    <!-- Conteúdo longo -->\n  </nds-scroll-area>\n</div>"
+        "react": "<ScrollArea size=\"xl\">\n  {/* Conteúdo longo */}\n</ScrollArea>",
+        "vue": "<ScrollArea size=\"xl\">\n  <!-- Conteúdo longo -->\n</ScrollArea>",
+        "svelte": "<ScrollArea size=\"xl\">\n  <!-- Conteúdo longo -->\n</ScrollArea>",
+        "vanilla": "createScrollArea({ size: 'xl', children: conteudo });",
+        "angular": "<nds-scroll-area size=\"xl\">\n  <!-- Conteúdo longo -->\n</nds-scroll-area>"
       }
     },
     "usage": {
@@ -37,7 +40,7 @@
       "guidelines": {
         "title": "Guidelines Obrigatórias",
         "item1": "Sempre defina a altura da área de rolagem — sem limite não há transbordo, e sem transbordo não há rolagem.",
-        "item2": "Use <code>h-full w-full</code> no <code>ScrollArea</code> e <code>overflow-hidden</code> no container pai.",
+        "item2": "Escolha o degrau no próprio componente — ele não precisa de um container pai para ter altura.",
         "item3": "Não aninhe ScrollAreas — causa scroll duplo e desorientação.",
         "item4": "Para tabelas dentro de ScrollArea, use <code>overflow-x-auto</code> no wrapper, não outro ScrollArea."
       },
@@ -83,15 +86,15 @@
           "avoid": "Evitar",
           "container": {
             "name": "Container pai",
-            "format": "Altura pela escada de tamanhos do componente",
-            "good": "<code>className=\"h-[400px]\"</code>",
-            "bad": "Sem altura definida"
+            "format": "Sem altura — quem tem altura é a área de rolagem",
+            "good": "Só largura e borda, quando precisar",
+            "bad": "Altura no pai e na área ao mesmo tempo"
           },
           "scrollArea": {
             "name": "ScrollArea",
-            "format": "<code>h-full w-full</code> · evitar tamanhos próprios",
-            "good": "<code>className=\"h-full w-full\"</code>",
-            "bad": "<code>className=\"h-screen\"</code>"
+            "format": "Altura por um degrau da escada de tamanhos",
+            "good": "Um degrau da escada",
+            "bad": "Altura própria fora da escada"
           },
           "orientation": {
             "name": "ScrollBar orientation",
@@ -212,8 +215,11 @@
       },
       "extensibilityTitle": "Extensibilidade",
       "extensibilityCode": {
-        "react": "// Scroll horizontal — adicionar ScrollBar horizontal explícita\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>",
-        "angular": "<!-- Scroll horizontal — adicionar a barra horizontal explícita -->\n<div class=\"nds-max-w-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full nds-whitespace-nowrap\">\n    <div class=\"nds-cluster\" data-spacing=\"md\">\n      @for (item of items; track item.id) {\n        <nds-card [item]=\"item\" />\n      }\n    </div>\n    <nds-scroll-bar orientation=\"horizontal\" />\n  </nds-scroll-area>\n</div>"
+        "react": "// Rolagem horizontal — barra horizontal explícita\n<ScrollArea size=\"md\" className=\"nds-whitespace-nowrap\">\n  <div className=\"nds-cluster\" data-spacing=\"md\" style={{ width: \"max-content\" }}>\n    {items.map((item) => <Card key={item.id} {...item} />)}\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
+        "vue": "<!-- Rolagem horizontal — barra horizontal explícita -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    <Card v-for=\"item in items\" :key=\"item.id\" v-bind=\"item\" />\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
+        "svelte": "<!-- Rolagem horizontal — barra horizontal explícita -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    {#each items as item (item.id)}\n      <Card {...item} />\n    {/each}\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
+        "vanilla": "// Rolagem horizontal — barra horizontal explícita\nconst area = createScrollArea({ size: 'md', orientation: 'horizontal', children: trilha });",
+        "angular": "<!-- Rolagem horizontal — barra horizontal explícita -->\n<nds-scroll-area size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    @for (item of items; track item.id) {\n      <nds-card [item]=\"item\" />\n    }\n  </div>\n  <nds-scroll-bar orientation=\"horizontal\" />\n</nds-scroll-area>"
       }
     },
     "tokens": {
@@ -431,8 +437,11 @@
       "item5": "<strong>Corner</strong> — corner square when both scrollbars are visible.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Long content */}\n  </ScrollArea>\n</div>",
-        "angular": "<div class=\"nds-scroll-area-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full\">\n    <!-- Long content -->\n  </nds-scroll-area>\n</div>"
+        "react": "<ScrollArea size=\"xl\">\n  {/* Long content */}\n</ScrollArea>",
+        "vue": "<ScrollArea size=\"xl\">\n  <!-- Long content -->\n</ScrollArea>",
+        "svelte": "<ScrollArea size=\"xl\">\n  <!-- Long content -->\n</ScrollArea>",
+        "vanilla": "createScrollArea({ size: 'xl', children: conteudo });",
+        "angular": "<nds-scroll-area size=\"xl\">\n  <!-- Long content -->\n</nds-scroll-area>"
       }
     },
     "usage": {
@@ -440,7 +449,7 @@
       "guidelines": {
         "title": "Required Guidelines",
         "item1": "Always define the height of the scroll area — without a limit there is no overflow, and without overflow there is no scrolling.",
-        "item2": "Use <code>h-full w-full</code> on <code>ScrollArea</code> and <code>overflow-hidden</code> on the parent.",
+        "item2": "Pick the step on the component itself — it does not need a parent container to have height.",
         "item3": "Don't nest ScrollAreas — causes double scroll and disorientation.",
         "item4": "For tables inside ScrollArea, use <code>overflow-x-auto</code> on the wrapper, not another ScrollArea."
       },
@@ -486,15 +495,15 @@
           "avoid": "Avoid",
           "container": {
             "name": "Parent container",
-            "format": "Height from the component size scale",
-            "good": "<code>className=\"h-[400px]\"</code>",
-            "bad": "No defined height"
+            "format": "No height — the scroll area is what carries height",
+            "good": "Width and border only, when needed",
+            "bad": "Height on both the parent and the area"
           },
           "scrollArea": {
             "name": "ScrollArea",
-            "format": "<code>h-full w-full</code> · avoid own sizes",
-            "good": "<code>className=\"h-full w-full\"</code>",
-            "bad": "<code>className=\"h-screen\"</code>"
+            "format": "Height from a step of the size scale",
+            "good": "A step of the scale",
+            "bad": "Its own height outside the scale"
           },
           "orientation": {
             "name": "ScrollBar orientation",
@@ -615,8 +624,11 @@
       },
       "extensibilityTitle": "Extensibility",
       "extensibilityCode": {
-        "react": "// Horizontal scroll — add explicit horizontal ScrollBar\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>",
-        "angular": "<!-- Horizontal scroll — add the explicit horizontal bar -->\n<div class=\"nds-max-w-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full nds-whitespace-nowrap\">\n    <div class=\"nds-cluster\" data-spacing=\"md\">\n      @for (item of items; track item.id) {\n        <nds-card [item]=\"item\" />\n      }\n    </div>\n    <nds-scroll-bar orientation=\"horizontal\" />\n  </nds-scroll-area>\n</div>"
+        "react": "// Horizontal scroll — explicit horizontal bar\n<ScrollArea size=\"md\" className=\"nds-whitespace-nowrap\">\n  <div className=\"nds-cluster\" data-spacing=\"md\" style={{ width: \"max-content\" }}>\n    {items.map((item) => <Card key={item.id} {...item} />)}\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
+        "vue": "<!-- Horizontal scroll — explicit horizontal bar -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    <Card v-for=\"item in items\" :key=\"item.id\" v-bind=\"item\" />\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
+        "svelte": "<!-- Horizontal scroll — explicit horizontal bar -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    {#each items as item (item.id)}\n      <Card {...item} />\n    {/each}\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
+        "vanilla": "// Horizontal scroll — explicit horizontal bar\nconst area = createScrollArea({ size: 'md', orientation: 'horizontal', children: trilha });",
+        "angular": "<!-- Horizontal scroll — explicit horizontal bar -->\n<nds-scroll-area size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    @for (item of items; track item.id) {\n      <nds-card [item]=\"item\" />\n    }\n  </div>\n  <nds-scroll-bar orientation=\"horizontal\" />\n</nds-scroll-area>"
       }
     },
     "tokens": {
@@ -834,8 +846,11 @@
       "item5": "<strong>Corner</strong> — cuadrado en la esquina cuando ambas scrollbars están visibles.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<div className=\"h-[400px]\">\n  <ScrollArea className=\"h-full w-full\">\n    {/* Contenido largo */}\n  </ScrollArea>\n</div>",
-        "angular": "<div class=\"nds-scroll-area-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full\">\n    <!-- Contenido largo -->\n  </nds-scroll-area>\n</div>"
+        "react": "<ScrollArea size=\"xl\">\n  {/* Contenido largo */}\n</ScrollArea>",
+        "vue": "<ScrollArea size=\"xl\">\n  <!-- Contenido largo -->\n</ScrollArea>",
+        "svelte": "<ScrollArea size=\"xl\">\n  <!-- Contenido largo -->\n</ScrollArea>",
+        "vanilla": "createScrollArea({ size: 'xl', children: conteudo });",
+        "angular": "<nds-scroll-area size=\"xl\">\n  <!-- Contenido largo -->\n</nds-scroll-area>"
       }
     },
     "usage": {
@@ -843,7 +858,7 @@
       "guidelines": {
         "title": "Guidelines Obligatorias",
         "item1": "Define siempre la altura del área de desplazamiento — sin límite no hay desbordamiento, y sin desbordamiento no hay desplazamiento.",
-        "item2": "Usa <code>h-full w-full</code> en el <code>ScrollArea</code> y <code>overflow-hidden</code> en el padre.",
+        "item2": "Elige el escalón en el propio componente — no necesita un contenedor padre para tener altura.",
         "item3": "No anides ScrollAreas — causa scroll doble y desorientación.",
         "item4": "Para tablas dentro de ScrollArea, usa <code>overflow-x-auto</code> en el wrapper, no otro ScrollArea."
       },
@@ -889,15 +904,15 @@
           "avoid": "Evitar",
           "container": {
             "name": "Contenedor padre",
-            "format": "Altura por la escala de tamaños del componente",
-            "good": "<code>className=\"h-[400px]\"</code>",
-            "bad": "Sin altura definida"
+            "format": "Sin altura — quien tiene altura es el área de desplazamiento",
+            "good": "Solo ancho y borde, cuando haga falta",
+            "bad": "Altura en el padre y en el área a la vez"
           },
           "scrollArea": {
             "name": "ScrollArea",
-            "format": "<code>h-full w-full</code> · evita tamaños propios",
-            "good": "<code>className=\"h-full w-full\"</code>",
-            "bad": "<code>className=\"h-screen\"</code>"
+            "format": "Altura por un escalón de la escala de tamaños",
+            "good": "Un escalón de la escala",
+            "bad": "Altura propia fuera de la escala"
           },
           "orientation": {
             "name": "ScrollBar orientation",
@@ -1018,8 +1033,11 @@
       },
       "extensibilityTitle": "Extensibilidad",
       "extensibilityCode": {
-        "react": "// Scroll horizontal — añadir ScrollBar horizontal explícita\n<div className=\"w-[500px]\">\n  <ScrollArea className=\"h-full w-full whitespace-nowrap\">\n    <div className=\"flex w-max gap-4\">\n      {items.map((item) => <Card key={item.id} {...item} />)}\n    </div>\n    <ScrollBar orientation=\"horizontal\" />\n  </ScrollArea>\n</div>",
-        "angular": "<!-- Scroll horizontal — añadir la barra horizontal explícita -->\n<div class=\"nds-max-w-md\">\n  <nds-scroll-area class=\"nds-h-full nds-w-full nds-whitespace-nowrap\">\n    <div class=\"nds-cluster\" data-spacing=\"md\">\n      @for (item of items; track item.id) {\n        <nds-card [item]=\"item\" />\n      }\n    </div>\n    <nds-scroll-bar orientation=\"horizontal\" />\n  </nds-scroll-area>\n</div>"
+        "react": "// Desplazamiento horizontal — barra horizontal explícita\n<ScrollArea size=\"md\" className=\"nds-whitespace-nowrap\">\n  <div className=\"nds-cluster\" data-spacing=\"md\" style={{ width: \"max-content\" }}>\n    {items.map((item) => <Card key={item.id} {...item} />)}\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
+        "vue": "<!-- Desplazamiento horizontal — barra horizontal explícita -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    <Card v-for=\"item in items\" :key=\"item.id\" v-bind=\"item\" />\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
+        "svelte": "<!-- Desplazamiento horizontal — barra horizontal explícita -->\n<ScrollArea size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    {#each items as item (item.id)}\n      <Card {...item} />\n    {/each}\n  </div>\n  <ScrollBar orientation=\"horizontal\" />\n</ScrollArea>",
+        "vanilla": "// Desplazamiento horizontal — barra horizontal explícita\nconst area = createScrollArea({ size: 'md', orientation: 'horizontal', children: trilha });",
+        "angular": "<!-- Desplazamiento horizontal — barra horizontal explícita -->\n<nds-scroll-area size=\"md\" class=\"nds-whitespace-nowrap\">\n  <div class=\"nds-cluster\" data-spacing=\"md\">\n    @for (item of items; track item.id) {\n      <nds-card [item]=\"item\" />\n    }\n  </div>\n  <nds-scroll-bar orientation=\"horizontal\" />\n</nds-scroll-area>"
       }
     },
     "tokens": {

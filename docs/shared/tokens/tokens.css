@@ -194,7 +194,7 @@
   --spacing-20:  calc(var(--spacing-base) * 20);    /* 80px */
   --spacing-24:  calc(var(--spacing-base) * 24);    /* 96px */
   --spacing-40:  calc(var(--spacing-base) * 40);    /* 160px — comprimento mínimo do trilho de slider vertical */
-  --spacing-96:  calc(var(--spacing-base) * 96);    /* 384px — altura de leitura de área rolável */
+  --spacing-96:  calc(var(--spacing-base) * 96);    /* 384px — audit-ignore: orphan-token — degrau da régua. O único consumidor era `.nds-scroll-area-md`, o teto de 384px que o Angular usava sozinho; a escada `--box-height-*` o substituiu nas cinco stacks em 2026-08-19. O degrau fica porque a régua é contínua, não porque alguém o use */
 
   /* Elevation / Shadows */
   --elevation-sm: 0px 1px 2px 0px rgba(0, 0, 0, 0.1);

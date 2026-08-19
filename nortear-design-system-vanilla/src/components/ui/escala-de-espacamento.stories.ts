@@ -98,7 +98,6 @@ function cenario(): HTMLElement {
     </div>
     <nav class="nds-pagination"><a class="nds-pagination-link" href="#">2</a></nav>
     <div class="nds-input-otp"><div class="nds-input-otp-slot">7</div></div>
-    <div class="nds-scroll-area-md"></div>
     <button type="button" class="nds-button nds-button-xs nds-button-default">xs</button>
   `;
   raiz.prepend(campo);
@@ -135,8 +134,6 @@ const ALVOS: AlvoDeEspaco[] = [
     esperado: { condensado: 22.4, default: 28, confortavel: 35 } },
   { nome: 'alert com ação · degrau 18', seletor: '.nds-alert', prop: 'padding-inline-end',
     esperado: { condensado: 57.6, default: 72, confortavel: 90 } },
-  { nome: 'scroll-area média · degrau 96', seletor: '.nds-scroll-area-md', prop: 'max-block-size',
-    esperado: { condensado: 307.2, default: 384, confortavel: 480 } },
 
   // ── Literal PURO, que a varredura de fallbacks não alcançava ─────────────
   // O `168a61bb` varreu `var(--x, literal)`; este era `0.125rem` sozinho, sem
