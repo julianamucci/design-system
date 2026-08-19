@@ -412,7 +412,7 @@ interface ScrollBarProps {
             doPreview: (
               <div className="nds-w-full">
                 <ScrollArea size="sm" className="nds-w-full nds-rounded-md nds-border-default">
-                  <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
+                  <div className="nds-stack nds-text-caption nds-p-4" data-spacing="sm">
                     {Array.from({ length: 12 }, (_, i) => (
                       <div key={i}>Item {i + 1}</div>
                     ))}
@@ -423,7 +423,7 @@ interface ScrollBarProps {
             dontPreview: (
               <div className="nds-w-full">
                 <ScrollArea className="nds-w-full nds-rounded-md nds-border-default">
-                  <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
+                  <div className="nds-stack nds-text-caption nds-p-4" data-spacing="sm">
                     {Array.from({ length: 5 }, (_, i) => (
                       <div key={i}>Item {i + 1}</div>
                     ))}
@@ -440,7 +440,7 @@ interface ScrollBarProps {
             doPreview: (
               <div className="nds-w-full">
                 <ScrollArea size="sm" className="nds-w-full nds-rounded-md nds-border-default">
-                  <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
+                  <div className="nds-stack nds-text-caption nds-p-4" data-spacing="sm">
                     {Array.from({ length: 14 }, (_, i) => (
                       <div key={i}>Linha {i + 1}</div>
                     ))}
@@ -453,7 +453,7 @@ interface ScrollBarProps {
                 <ScrollArea size="sm" className="nds-w-full nds-rounded-md nds-border-default">
                   <div>
                     <ScrollArea size="sm" className="nds-w-full">
-                      <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
+                      <div className="nds-stack nds-text-caption nds-p-4" data-spacing="sm">
                         {Array.from({ length: 14 }, (_, i) => (
                           <div key={i}>Linha {i + 1}</div>
                         ))}
@@ -483,7 +483,7 @@ interface ScrollBarProps {
             preview: (
               <div className="nds-w-full" style={{ maxWidth: "300px" }}>
                 <ScrollArea size="md" className="nds-w-full nds-rounded-md nds-border-default">
-                  <div className="nds-stack nds-text-caption" data-spacing="sm" style={{ padding: "0.75rem" }}>
+                  <div className="nds-stack nds-text-caption nds-p-4" data-spacing="sm">
                     {VERTICAL_TAGS.slice(0, 20).map((n) => (
                       <div key={n} className="nds-border-b nds-last-border-0 nds-pb-1">
                         {lblTag} {n}
@@ -501,7 +501,7 @@ interface ScrollBarProps {
             preview: (
               <div className="nds-w-full" style={{ maxWidth: "420px" }}>
                 <ScrollArea size="sm" className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default">
-                  <div className="nds-cluster" data-spacing="sm" style={{ width: "max-content", padding: "0.75rem" }}>
+                  <div className="nds-cluster nds-p-4" data-spacing="sm" style={{ width: "max-content" }}>
                     {HORIZONTAL_CARDS.map((n) => (
                       <div
                         key={n}

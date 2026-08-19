@@ -317,9 +317,8 @@ export function createCheckboxDocs(): HTMLElement {
 
         const buildFieldset = (legendText: string, itemLabels: string[]) => {
           const fs = document.createElement('fieldset');
-          fs.className = 'nds-border-default nds-rounded-lg nds-stack nds-w-full';
+          fs.className = 'nds-border-default nds-rounded-lg nds-stack nds-w-full nds-p-4';
           fs.dataset.spacing = 'xs';
-          fs.style.padding = '0.75rem';
           const legend = document.createElement('legend');
           legend.className = 'nds-text-caption nds-font-semibold nds-px-1';
           legend.textContent = legendText;
@@ -606,9 +605,8 @@ label.textContent = 'Aceito os termos e condições';`,
                 `];\n` +
                 `options.forEach(({ id, label: labelText, checked }) => {\n` +
                 `  const row = document.createElement('div');\n` +
-                `  row.className = 'nds-cluster nds-rounded-md nds-border-default nds-py-2';\n` +
+                `  row.className = 'nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4';\n` +
                 `  row.dataset.justify = 'between';\n` +
-                `  row.style.paddingInline = '0.75rem';\n` +
                 `  const leftSide = document.createElement('div');\n` +
                 `  leftSide.className = 'nds-cluster';\n` +
                 `  leftSide.dataset.spacing = 'xs';\n` +
@@ -638,9 +636,8 @@ label.textContent = 'Aceito os termos e condições';`,
                 ];
                 options.forEach(({ id, label: labelText, checked }) => {
                   const row = document.createElement('div');
-                  row.className = 'nds-cluster nds-rounded-md nds-border-default nds-py-2';
+                  row.className = 'nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4';
                   row.dataset.justify = 'between';
-                  row.style.paddingInline = '0.75rem';
                   const leftSide = document.createElement('div');
                   leftSide.className = 'nds-cluster';
                   leftSide.dataset.spacing = 'xs';

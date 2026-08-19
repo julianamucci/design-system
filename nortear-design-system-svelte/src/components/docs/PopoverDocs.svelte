@@ -289,8 +289,8 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
                 <span>{$tStore('demonstration.labels.form.name')}</span>
                 <input
                   type="text"
-                  class="nds-bg-background nds-border-default nds-text-body"
-                  style="border-radius: var(--radius-input); padding-inline: 0.75rem; height: var(--height-default)"
+                  class="nds-bg-background nds-border-default nds-text-body nds-px-4"
+                  style="border-radius: var(--radius-input); height: var(--height-default)"
                   value="Maria Silva"
                 />
               </label>
@@ -298,8 +298,8 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
                 <span>{$tStore('demonstration.labels.form.email')}</span>
                 <input
                   type="email"
-                  class="nds-bg-background nds-border-default nds-text-body"
-                  style="border-radius: var(--radius-input); padding-inline: 0.75rem; height: var(--height-default)"
+                  class="nds-bg-background nds-border-default nds-text-body nds-px-4"
+                  style="border-radius: var(--radius-input); height: var(--height-default)"
                   value="maria@exemplo.com"
                 />
               </label>
@@ -617,8 +617,8 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
             <span>Nome</span>
             <input
               type="text"
-              class="nds-bg-background nds-border-default nds-text-body"
-              style="border-radius: var(--radius-input); padding-inline: 0.75rem; height: var(--height-default)"
+              class="nds-bg-background nds-border-default nds-text-body nds-px-4"
+              style="border-radius: var(--radius-input); height: var(--height-default)"
               value="Joana Silva"
             />
           </label>
@@ -626,8 +626,8 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
             <span>Email</span>
             <input
               type="email"
-              class="nds-bg-background nds-border-default nds-text-body"
-              style="border-radius: var(--radius-input); padding-inline: 0.75rem; height: var(--height-default)"
+              class="nds-bg-background nds-border-default nds-text-body nds-px-4"
+              style="border-radius: var(--radius-input); height: var(--height-default)"
               value="joana@example.com"
             />
           </label>
@@ -727,8 +727,8 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <input
             type="text"
             aria-label={$tStore('demonstration.labels.form.name')}
-            class="nds-bg-background nds-border-default nds-text-body"
-            style="border-radius: var(--radius-input); padding-inline: 0.75rem; height: var(--height-default)"
+            class="nds-bg-background nds-border-default nds-text-body nds-px-4"
+            style="border-radius: var(--radius-input); height: var(--height-default)"
             value="Maria Silva"
           />
  <div class="nds-cluster nds-pt-1" data-justify="end">

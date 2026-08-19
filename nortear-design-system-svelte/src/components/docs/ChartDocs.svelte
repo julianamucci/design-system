@@ -234,8 +234,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         <button
           type="button"
           onclick={() => demoType = 'bar'}
-          class="nds-rounded-md nds-text-body nds-font-medium nds-py-1"
-          style="padding-inline: 0.75rem; transition: background-color .15s, color .15s"
+          class="nds-rounded-md nds-text-body nds-font-medium nds-py-1 nds-px-4"
+          style="transition: background-color .15s, color .15s"
           class:nds-bg-primary={demoType === 'bar'}
           class:nds-text-primary-foreground={demoType === 'bar'}
           class:nds-bg-muted={demoType !== 'bar'}
@@ -246,8 +246,8 @@ declare function buildPieOption(o: { data: ChartDataPoint[]; title?: string }): 
         <button
           type="button"
           onclick={() => demoType = 'line'}
-          class="nds-rounded-md nds-text-body nds-font-medium nds-py-1"
-          style="padding-inline: 0.75rem; transition: background-color .15s, color .15s"
+          class="nds-rounded-md nds-text-body nds-font-medium nds-py-1 nds-px-4"
+          style="transition: background-color .15s, color .15s"
           class:nds-bg-primary={demoType === 'line'}
           class:nds-text-primary-foreground={demoType === 'line'}
           class:nds-bg-muted={demoType !== 'line'}

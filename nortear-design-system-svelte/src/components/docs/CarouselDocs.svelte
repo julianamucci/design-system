@@ -250,7 +250,7 @@ import Autoplay from "embla-carousel-autoplay";`;
           <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft" data-justify="center" data-align="center">
             <span class="nds-text-h3 nds-font-semibold nds-text-foreground">{photo.title}</span>
           </div>
-          <div style="padding: 0.75rem">
+          <div class="nds-p-4">
             <h3 class="nds-text-body nds-font-semibold">{photo.title}</h3>
             <p class="nds-text-caption nds-text-muted-foreground">{photo.description}</p>
           </div>
@@ -751,7 +751,7 @@ interface CarouselNavProps extends ButtonProps {
                 <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft" data-justify="center" data-align="center">
                   <span class="nds-text-h3 nds-font-semibold nds-text-foreground">{photo.title}</span>
                 </div>
-                <div style="padding: 0.75rem">
+                <div class="nds-p-4">
                   <h3 class="nds-text-body nds-font-semibold">{photo.title}</h3>
                   <p class="nds-text-caption nds-text-muted-foreground">{photo.description}</p>
                 </div>

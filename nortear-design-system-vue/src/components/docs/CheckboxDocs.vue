@@ -257,7 +257,7 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.inList.name'),
     description: stripHtml(tContent('variants.compositions.inList.description')),
     useWhen: stripHtml(tContent('variants.compositions.inList.use')),
-    code: `<div class="nds-stack" data-spacing="xs" style="width: 20rem">\n  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>\n  <div class="nds-cluster nds-rounded-md nds-border-default nds-py-2" data-justify="between" style="padding-inline: 0.75rem">\n    <div class="nds-cluster" data-spacing="xs">\n      <Checkbox id="list-email" :checked="true" />\n      <Label for="list-email">Receber novidades por email</Label>\n    </div>\n  </div>\n  <!-- demais linhas -->\n</div>`,
+    code: `<div class="nds-stack" data-spacing="xs" style="width: 20rem">\n  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>\n  <div class="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">\n    <div class="nds-cluster" data-spacing="xs">\n      <Checkbox id="list-email" :checked="true" />\n      <Label for="list-email">Receber novidades por email</Label>\n    </div>\n  </div>\n  <!-- demais linhas -->\n</div>`,
   },
 ]);
 
@@ -568,9 +568,8 @@ const visualTestItems = computed(() => [
       <!-- Pair 2: fieldset vs checkboxes soltos -->
       <template #do-preview-1>
         <fieldset
-          class="nds-border-default nds-rounded-lg nds-stack nds-w-full"
+          class="nds-border-default nds-rounded-lg nds-stack nds-w-full nds-p-4"
           data-spacing="xs"
-          style="padding: 0.75rem"
         >
           <legend class="nds-text-caption nds-font-semibold nds-px-1">
             Notificações
@@ -807,9 +806,8 @@ const visualTestItems = computed(() => [
             Preferências de contato
           </p>
           <div
-            class="nds-cluster nds-rounded-md nds-border-default nds-py-2"
+            class="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4"
             data-justify="between"
-            style="padding-inline: 0.75rem"
           >
             <div
               class="nds-cluster"
@@ -823,9 +821,8 @@ const visualTestItems = computed(() => [
             </div>
           </div>
           <div
-            class="nds-cluster nds-rounded-md nds-border-default nds-py-2"
+            class="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4"
             data-justify="between"
-            style="padding-inline: 0.75rem"
           >
             <div
               class="nds-cluster"
@@ -839,9 +836,8 @@ const visualTestItems = computed(() => [
             </div>
           </div>
           <div
-            class="nds-cluster nds-rounded-md nds-border-default nds-py-2"
+            class="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4"
             data-justify="between"
-            style="padding-inline: 0.75rem"
           >
             <div
               class="nds-cluster"
@@ -855,9 +851,8 @@ const visualTestItems = computed(() => [
             </div>
           </div>
           <div
-            class="nds-cluster nds-rounded-md nds-border-default nds-py-2"
+            class="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4"
             data-justify="between"
-            style="padding-inline: 0.75rem"
           >
             <div
               class="nds-cluster"

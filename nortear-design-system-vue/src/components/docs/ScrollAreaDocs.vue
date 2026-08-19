@@ -382,8 +382,8 @@ const visualTestItems = computed(() => [
                   <figure
                     v-for="card in horizontalCards"
                     :key="card.id"
-                    class="nds-shrink-0 nds-rounded-md nds-border-default nds-bg-muted"
-                    style="width: 140px; padding: 0.75rem"
+                    class="nds-shrink-0 nds-rounded-md nds-border-default nds-bg-muted nds-p-4"
+                    style="width: 140px"
                   >
                     <div class="nds-text-body nds-font-medium">
                       {{ card.title }}
@@ -536,9 +536,8 @@ const visualTestItems = computed(() => [
             class="nds-w-full"
           >
             <div
-              class="nds-stack"
+              class="nds-stack nds-p-4"
               data-spacing="sm"
-              style="padding: 0.75rem"
             >
               <div
                 v-for="i in 18"
@@ -553,9 +552,8 @@ const visualTestItems = computed(() => [
       </template>
       <template #dont-preview-0>
         <div
-          class="nds-w-full nds-rounded-md nds-border-default nds-stack"
+          class="nds-w-full nds-rounded-md nds-border-default nds-stack nds-p-4"
           data-spacing="sm"
-          style="padding: 0.75rem"
         >
           <div
             v-for="i in 6"
@@ -576,9 +574,8 @@ const visualTestItems = computed(() => [
             class="nds-w-full"
           >
             <div
-              class="nds-stack"
+              class="nds-stack nds-p-4"
               data-spacing="sm"
-              style="padding: 0.75rem"
             >
               <div
                 v-for="i in 14"
@@ -602,9 +599,8 @@ const visualTestItems = computed(() => [
               class="nds-w-full"
             >
               <div
-                class="nds-stack"
+                class="nds-stack nds-p-4"
                 data-spacing="sm"
-                style="padding: 0.75rem"
               >
                 <div
                   v-for="i in 10"
@@ -641,9 +637,8 @@ const visualTestItems = computed(() => [
             class="nds-w-full"
           >
             <div
-              class="nds-stack"
+              class="nds-stack nds-p-4"
               data-spacing="sm"
-              style="padding: 0.75rem"
             >
               <div
                 v-for="i in 20"
@@ -666,15 +661,15 @@ const visualTestItems = computed(() => [
             class="nds-w-full nds-whitespace-nowrap"
           >
             <div
-              class="nds-cluster"
+              class="nds-cluster nds-p-4"
               data-spacing="sm"
-              style="width: max-content; padding: 0.75rem"
+              style="width: max-content"
             >
               <figure
                 v-for="i in 10"
                 :key="i"
-                class="nds-shrink-0 nds-rounded-md nds-border-default nds-bg-muted nds-text-caption"
-                style="width: 120px; padding: 0.75rem"
+                class="nds-shrink-0 nds-rounded-md nds-border-default nds-bg-muted nds-text-caption nds-p-4"
+                style="width: 120px"
               >
                 Card {{ i }}
               </figure>

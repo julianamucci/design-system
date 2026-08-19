@@ -222,7 +222,7 @@ function SidebarDemoPreview({
           correta para uma aplicação real.
         */}
         <div data-slot="sidebar-inset" className="nds-sidebar-inset">
-          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
+          <header className="nds-cluster nds-border-b nds-p-4" data-align="center" data-spacing="sm">
             <SidebarTrigger onClick={() => { toggleSource.current = "button"; }} />
             <span className="nds-text-caption nds-text-muted-foreground">Conteúdo</span>
           </header>
@@ -308,7 +308,7 @@ function PreviewWithGroups({ navLabel }: { navLabel: string }) {
           </Sidebar>
         </nav>
         <div data-slot="sidebar-inset" className="nds-sidebar-inset">
-          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
+          <header className="nds-cluster nds-border-b nds-p-4" data-align="center" data-spacing="sm">
             <SidebarTrigger />
             <span className="nds-text-caption nds-text-muted-foreground">Dashboard</span>
           </header>
@@ -384,7 +384,7 @@ function PreviewWithSubMenu({ navLabel }: { navLabel: string }) {
           </Sidebar>
         </nav>
         <div data-slot="sidebar-inset" className="nds-sidebar-inset">
-          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
+          <header className="nds-cluster nds-border-b nds-p-4" data-align="center" data-spacing="sm">
             <SidebarTrigger />
             <span className="nds-text-caption nds-text-muted-foreground">Clique em "Componentes"</span>
           </header>
@@ -446,7 +446,7 @@ function PreviewWithSearch({ navLabel }: { navLabel: string }) {
           </Sidebar>
         </nav>
         <div data-slot="sidebar-inset" className="nds-sidebar-inset">
-          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
+          <header className="nds-cluster nds-border-b nds-p-4" data-align="center" data-spacing="sm">
             <SidebarTrigger />
             <span className="nds-text-caption nds-text-muted-foreground">Busca no header</span>
           </header>
@@ -502,7 +502,7 @@ function PreviewWithBadges({ navLabel }: { navLabel: string }) {
           </Sidebar>
         </nav>
         <div data-slot="sidebar-inset" className="nds-sidebar-inset">
-          <header className="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style={{ padding: "0.75rem" }}>
+          <header className="nds-cluster nds-border-b nds-p-4" data-align="center" data-spacing="sm">
             <SidebarTrigger />
             <span className="nds-text-caption nds-text-muted-foreground">Inbox</span>
           </header>

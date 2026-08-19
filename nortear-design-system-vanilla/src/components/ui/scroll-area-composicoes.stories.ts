@@ -97,9 +97,8 @@ export const HorizontalCards: Story = {
     outer.style.maxWidth = '42rem';
 
     const row = document.createElement('div');
-    row.className = 'nds-cluster';
+    row.className = 'nds-cluster nds-p-4';
     row.dataset.spacing = 'md';
-    row.style.padding = '0.75rem';
     row.style.width = 'max-content';
 
     const products = [

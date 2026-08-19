@@ -327,7 +327,7 @@ interface ScrollAreaRootProps {
   {#snippet doPair1()}
     <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%;">
       <ScrollArea orientation="vertical" size="sm" class="nds-w-full">
-        <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
+        <div class="nds-stack nds-text-caption nds-p-4" data-spacing="sm">
           {#each Array.from({ length: 12 }, (_, i) => i + 1) as i (i)}
             <div>Item {i}</div>
           {/each}
@@ -341,7 +341,7 @@ interface ScrollAreaRootProps {
   {#snippet dontPair1()}
     <div class="nds-w-full">
       <ScrollArea orientation="vertical" class="nds-w-full nds-rounded-md nds-border-default">
-        <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
+        <div class="nds-stack nds-text-caption nds-p-4" data-spacing="sm">
           {#each Array.from({ length: 5 }, (_, i) => i + 1) as i (i)}
             <div>Item {i}</div>
           {/each}
@@ -352,7 +352,7 @@ interface ScrollAreaRootProps {
   {#snippet doPair2()}
     <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%;">
       <ScrollArea orientation="vertical" size="sm" class="nds-w-full">
-        <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
+        <div class="nds-stack nds-text-caption nds-p-4" data-spacing="sm">
           {#each Array.from({ length: 14 }, (_, i) => i + 1) as i (i)}
             <div>Linha {i}</div>
           {/each}
@@ -365,7 +365,7 @@ interface ScrollAreaRootProps {
       <ScrollArea orientation="vertical" size="sm" class="nds-w-full">
         <div>
           <ScrollArea orientation="vertical" size="sm" class="nds-w-full">
-            <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
+            <div class="nds-stack nds-text-caption nds-p-4" data-spacing="sm">
               {#each Array.from({ length: 14 }, (_, i) => i + 1) as i (i)}
                 <div>Linha {i}</div>
               {/each}
@@ -392,7 +392,7 @@ interface ScrollAreaRootProps {
   {#snippet variantVertical()}
     <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%; max-width: 300px;">
       <ScrollArea orientation="vertical" size="md" class="nds-w-full">
-        <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
+        <div class="nds-stack nds-text-caption nds-p-4" data-spacing="sm">
           {#each VERTICAL_TAGS.slice(0, 20) as n (n)}
  <div class="nds-border-b nds-last-border-0 nds-pb-1">{$tStore('demonstration.labels.tag')} {n}</div>
           {/each}
@@ -403,7 +403,7 @@ interface ScrollAreaRootProps {
   {#snippet variantHorizontal()}
     <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%; max-width: 420px;">
       <ScrollArea orientation="horizontal" size="sm" class="nds-w-full nds-whitespace-nowrap">
-        <div class="nds-cluster" data-spacing="sm" style="width: max-content; padding: 0.75rem">
+        <div class="nds-cluster nds-p-4" data-spacing="sm" style="width: max-content">
           {#each HORIZONTAL_CARDS as n (n)}
             <div class="nds-cluster nds-rounded-md nds-bg-muted nds-text-caption nds-shrink-0" data-align="center" data-justify="center" style="height: 90px; width: 120px">
               Card {n}

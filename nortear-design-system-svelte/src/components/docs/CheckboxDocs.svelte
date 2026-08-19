@@ -233,19 +233,19 @@ import { Label } from "@/components/ui/label";`;
 
   const codeCompInList = `<div class="nds-stack" data-spacing="xs" style="width: 20rem">
   <h3 class="nds-text-body nds-font-semibold">Preferências de contato</h3>
-  <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
+  <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="xs">
     <Checkbox id="list-email" bind:checked={email} />
     <Label for="list-email">Email</Label>
   </div>
-  <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
+  <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="xs">
     <Checkbox id="list-push" bind:checked={push} />
     <Label for="list-push">Push</Label>
   </div>
-  <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
+  <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="xs">
     <Checkbox id="list-sms" bind:checked={sms} />
     <Label for="list-sms">SMS</Label>
   </div>
-  <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
+  <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="xs">
     <Checkbox id="list-newsletter" bind:checked={newsletter} />
     <Label for="list-newsletter">Newsletter</Label>
   </div>
@@ -382,7 +382,7 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   {#snippet doPair2Do()}
-    <fieldset class="nds-border-default nds-rounded-lg nds-stack nds-w-full" data-spacing="xs" style="padding: 0.75rem">
+    <fieldset class="nds-border-default nds-rounded-lg nds-stack nds-w-full nds-p-4" data-spacing="xs">
       <legend class="nds-text-caption nds-font-semibold nds-px-1">Preferências</legend>
       <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="do-pair2-do-1" bind:checked={doPair2Checked1} />
@@ -545,19 +545,19 @@ import { Label } from "@/components/ui/label";`;
   {#snippet compInList()}
     <div class="nds-stack" data-spacing="xs" style="width: 20rem">
       <h3 class="nds-text-body nds-font-semibold">Preferências de contato</h3>
-      <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
+      <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="xs">
         <Checkbox id="list-email" bind:checked={compInListEmail} />
         <Label for="list-email">Email</Label>
       </div>
-      <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
+      <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="xs">
         <Checkbox id="list-push" bind:checked={compInListPush} />
         <Label for="list-push">Push</Label>
       </div>
-      <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
+      <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="xs">
         <Checkbox id="list-sms" bind:checked={compInListSms} />
         <Label for="list-sms">SMS</Label>
       </div>
-      <div class="nds-cluster nds-rounded-md nds-border-default" data-spacing="xs" style="padding: 0.75rem">
+      <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="xs">
         <Checkbox id="list-newsletter" bind:checked={compInListNewsletter} />
         <Label for="list-newsletter">Newsletter</Label>
       </div>

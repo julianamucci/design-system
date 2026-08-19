@@ -457,14 +457,14 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset style="padding: 0.75rem">
+        <SidebarInset class="nds-p-4">
           <SidebarTrigger />
         </SidebarInset>
       </SidebarProvider>
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption nds-text-muted-foreground" style="min-height: 200px; padding: 0.75rem">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption nds-text-muted-foreground nds-p-4" style="min-height: 200px">
       <div class="nds-p-2" style="border-right: 1px solid hsl(var(--border)); height: 100%; float: left; width: 8rem">
         <div class="nds-font-medium nds-text-foreground">Dashboard</div>
         <div>Componentes</div>
@@ -552,7 +552,7 @@ interface SidebarMenuButtonProps {
           </Sidebar>
         </nav>
         <SidebarInset style="min-height: 120px">
-          <header class="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style="height: 2.5rem; padding-inline: 0.75rem">
+          <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 2.5rem">
             <SidebarTrigger />
             <span class="nds-text-caption nds-text-muted-foreground">SidebarRail no desktop, Trigger no mobile</span>
           </header>
@@ -578,7 +578,7 @@ interface SidebarMenuButtonProps {
           </Sidebar>
         </nav>
         <SidebarInset style="min-height: 120px">
-          <header class="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style="height: 2.5rem; padding-inline: 0.75rem">
+          <header class="nds-cluster nds-border-b nds-px-4" data-align="center" data-spacing="sm" style="height: 2.5rem">
             <SidebarTrigger />
             <span class="nds-text-caption nds-text-muted-foreground">SidebarTrigger no desktop — ocupa espaço</span>
           </header>

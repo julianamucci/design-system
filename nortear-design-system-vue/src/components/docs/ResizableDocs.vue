@@ -636,10 +636,10 @@ const visualTestItems = computed(() => [
               :max-size="50"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 Sidebar
               </div>
@@ -653,10 +653,10 @@ const visualTestItems = computed(() => [
               :min-size="50"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 Conteúdo
               </div>
@@ -673,10 +673,10 @@ const visualTestItems = computed(() => [
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel>
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 Sidebar
               </div>
@@ -684,10 +684,10 @@ const visualTestItems = computed(() => [
             <ResizableHandle aria-label="Redimensionar painéis — use setas" />
             <ResizablePanel>
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 Conteúdo
               </div>
@@ -708,10 +708,10 @@ const visualTestItems = computed(() => [
               :max-size="60"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 A
               </div>
@@ -725,10 +725,10 @@ const visualTestItems = computed(() => [
               :min-size="40"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 B
               </div>
@@ -749,10 +749,10 @@ const visualTestItems = computed(() => [
               :max-size="60"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 A
               </div>
@@ -766,10 +766,10 @@ const visualTestItems = computed(() => [
               :min-size="40"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 B
               </div>
@@ -803,10 +803,10 @@ const visualTestItems = computed(() => [
               :max-size="50"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 {{ tContent('demonstration.labels.left') }}
               </div>
@@ -820,10 +820,10 @@ const visualTestItems = computed(() => [
               :min-size="50"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 {{ tContent('demonstration.labels.right') }}
               </div>
@@ -844,10 +844,10 @@ const visualTestItems = computed(() => [
               :max-size="80"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 {{ tContent('demonstration.labels.top') }}
               </div>
@@ -862,10 +862,10 @@ const visualTestItems = computed(() => [
               :max-size="80"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 {{ tContent('demonstration.labels.bottom') }}
               </div>
@@ -886,10 +886,10 @@ const visualTestItems = computed(() => [
               :max-size="50"
             >
               <div
-                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground"
+                class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground nds-p-4"
                 data-align="center"
                 data-justify="center"
-                style="height: 100%; padding: 0.75rem"
+                style="height: 100%"
               >
                 {{ tContent('demonstration.labels.sidebar') }}
               </div>
@@ -908,10 +908,10 @@ const visualTestItems = computed(() => [
                   :min-size="20"
                 >
                   <div
-                    class="nds-cluster nds-w-full nds-text-caption nds-font-medium"
+                    class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-p-4"
                     data-align="center"
                     data-justify="center"
-                    style="height: 100%; padding: 0.75rem"
+                    style="height: 100%"
                   >
                     {{ tContent('demonstration.labels.content') }}
                   </div>
@@ -925,10 +925,10 @@ const visualTestItems = computed(() => [
                   :min-size="20"
                 >
                   <div
-                    class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground"
+                    class="nds-cluster nds-w-full nds-text-caption nds-font-medium nds-bg-muted nds-text-muted-foreground nds-p-4"
                     data-align="center"
                     data-justify="center"
-                    style="height: 100%; padding: 0.75rem"
+                    style="height: 100%"
                   >
                     Console
                   </div>

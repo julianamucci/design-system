@@ -95,24 +95,24 @@ export const IDELayout: Story = {
           minSize={15}
           maxSize={35}
         >
-          <div className="nds-stack nds-bg-muted nds-text-caption" style={{ height: "100%", padding: "0.75rem" }}>
+          <div className="nds-stack nds-bg-muted nds-text-caption nds-p-4" style={{ height: "100%" }}>
             <div className="nds-font-medium nds-mb-2">Explorer</div>
             <div>📁 src</div>
-            <div style={{ paddingLeft: "0.75rem" }}>📄 App.tsx</div>
-            <div style={{ paddingLeft: "0.75rem" }}>📄 main.tsx</div>
+            <div className="nds-pl-4">📄 App.tsx</div>
+            <div className="nds-pl-4">📄 main.tsx</div>
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={80} minSize={50}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel id="editor" defaultSize={70} minSize={30}>
-              <div className="nds-cluster nds-text-caption nds-font-mono" style={{ height: "100%", padding: "0.75rem" }}>
+              <div className="nds-cluster nds-text-caption nds-font-mono nds-p-4" style={{ height: "100%" }}>
                 <div className="nds-text-muted-foreground">App.tsx (1:1)</div>
               </div>
             </ResizablePanel>
             <ResizableHandle withHandle aria-label={ariaLabel} />
             <ResizablePanel id="console" defaultSize={30} minSize={15}>
-              <div className="nds-cluster nds-bg-muted-60 nds-text-caption nds-font-mono" style={{ height: "100%", padding: "0.75rem" }}>
+              <div className="nds-cluster nds-bg-muted-60 nds-text-caption nds-font-mono nds-p-4" style={{ height: "100%" }}>
                 <span className="nds-text-muted-foreground">{">"}</span>
                 <span style={{ marginLeft: "0.5rem" }}>npm run dev</span>
               </div>
@@ -169,19 +169,19 @@ export const TripleSplit: Story = {
     <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
-          <div className="nds-cluster nds-bg-muted nds-text-caption" data-align="center" data-justify="center" style={{ height: "100%", padding: "0.75rem" }}>
+          <div className="nds-cluster nds-bg-muted nds-text-caption nds-p-4" data-align="center" data-justify="center" style={{ height: "100%" }}>
             Lista
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={50} minSize={25}>
-          <div className="nds-cluster nds-text-caption" data-align="center" data-justify="center" style={{ height: "100%", padding: "0.75rem" }}>
+          <div className="nds-cluster nds-text-caption nds-p-4" data-align="center" data-justify="center" style={{ height: "100%" }}>
             Mensagens
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle aria-label={ariaLabel} />
         <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>
-          <div className="nds-cluster nds-bg-muted nds-text-caption" data-align="center" data-justify="center" style={{ height: "100%", padding: "0.75rem" }}>
+          <div className="nds-cluster nds-bg-muted nds-text-caption nds-p-4" data-align="center" data-justify="center" style={{ height: "100%" }}>
             Leitura
           </div>
         </ResizablePanel>

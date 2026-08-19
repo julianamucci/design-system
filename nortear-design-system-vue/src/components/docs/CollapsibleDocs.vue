@@ -497,8 +497,8 @@ const visualTestItems = computed(() => [
                 Estado: <strong>{{ demoControlledOpen ? 'aberto' : 'fechado' }}</strong>
               </span>
               <button
-                class="nds-rounded-md nds-border-default nds-bg-background nds-py-1 nds-text-caption nds-font-medium nds-hover-bg-accent"
-                style="padding-inline: 0.75rem"
+                class="nds-rounded-md nds-border-default nds-bg-background nds-py-1 nds-text-caption nds-font-medium nds-hover-bg-accent nds-px-4"
+                
                 @click="handleControlledToggle(!demoControlledOpen)"
               >
                 {{ demoControlledOpen ? 'Fechar' : 'Abrir' }}

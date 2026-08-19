@@ -888,8 +888,7 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <div
                 id="main-content-v1"
-                class="nds-text-caption nds-text-muted-foreground"
-                style="padding: 0.75rem"
+                class="nds-text-caption nds-text-muted-foreground nds-p-4"
               >
                 variant="sidebar"
               </div>
@@ -944,8 +943,7 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <div
                 id="main-content-v2"
-                class="nds-text-caption nds-text-muted-foreground"
-                style="padding: 0.75rem"
+                class="nds-text-caption nds-text-muted-foreground nds-p-4"
               >
                 variant="floating"
               </div>
@@ -1000,8 +998,7 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <div
                 id="main-content-v3"
-                class="nds-text-caption nds-text-muted-foreground"
-                style="padding: 0.75rem"
+                class="nds-text-caption nds-text-muted-foreground nds-p-4"
               >
                 variant="inset"
               </div>
@@ -1062,8 +1059,7 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <div
                 id="main-content-v4"
-                class="nds-text-caption nds-text-muted-foreground"
-                style="padding: 0.75rem"
+                class="nds-text-caption nds-text-muted-foreground nds-p-4"
               >
                 collapsible="icon"
               </div>
@@ -1117,8 +1113,7 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <div
                 id="main-content-v5"
-                class="nds-text-caption nds-text-muted-foreground"
-                style="padding: 0.75rem"
+                class="nds-text-caption nds-text-muted-foreground nds-p-4"
               >
                 collapsible="none"
               </div>
@@ -1137,8 +1132,7 @@ const compositionItems = computed(() => [
             <SidebarInset>
               <div
                 id="main-content-v6"
-                class="nds-text-caption nds-text-muted-foreground"
-                style="padding: 0.75rem"
+                class="nds-text-caption nds-text-muted-foreground nds-p-4"
               >
                 side="right"
               </div>
@@ -1254,10 +1248,10 @@ const compositionItems = computed(() => [
             </nav>
             <SidebarInset>
               <header
-                class="nds-cluster nds-border-b"
+                class="nds-cluster nds-border-b nds-px-4"
                 data-spacing="sm"
                 data-align="center"
-                style="height: 2.5rem; padding-inline: 0.75rem"
+                style="height: 2.5rem"
               >
                 <SidebarTrigger /><span class="nds-text-caption nds-text-muted-foreground">Clique em "Componentes"</span>
               </header>
@@ -1327,10 +1321,10 @@ const compositionItems = computed(() => [
             </nav>
             <SidebarInset>
               <header
-                class="nds-cluster nds-border-b"
+                class="nds-cluster nds-border-b nds-px-4"
                 data-spacing="sm"
                 data-align="center"
-                style="height: 2.5rem; padding-inline: 0.75rem"
+                style="height: 2.5rem"
               >
                 <SidebarTrigger /><span class="nds-text-caption nds-text-muted-foreground">Inbox</span>
               </header>
@@ -1422,10 +1416,10 @@ const compositionItems = computed(() => [
             </nav>
             <SidebarInset>
               <header
-                class="nds-cluster nds-border-b"
+                class="nds-cluster nds-border-b nds-px-4"
                 data-spacing="sm"
                 data-align="center"
-                style="height: 2.5rem; padding-inline: 0.75rem"
+                style="height: 2.5rem"
               >
                 <SidebarTrigger /><span class="nds-text-caption nds-text-muted-foreground">Dashboard</span>
               </header>
@@ -1502,10 +1496,10 @@ const compositionItems = computed(() => [
             </nav>
             <SidebarInset>
               <header
-                class="nds-cluster nds-border-b"
+                class="nds-cluster nds-border-b nds-px-4"
                 data-spacing="sm"
                 data-align="center"
-                style="height: 2.5rem; padding-inline: 0.75rem"
+                style="height: 2.5rem"
               >
                 <SidebarTrigger /><span class="nds-text-caption nds-text-muted-foreground">Busca no header</span>
               </header>

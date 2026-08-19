@@ -460,22 +460,19 @@ function handleTabChange(value: string) {
         </TabsList>
         <TabsContent
           value="overview"
-          class="nds-text-muted-foreground"
-          style="padding-top: 0.75rem"
+          class="nds-text-muted-foreground nds-pt-4"
         >
           {{ demoLabels.overviewContent }}
         </TabsContent>
         <TabsContent
           value="properties"
-          class="nds-text-muted-foreground"
-          style="padding-top: 0.75rem"
+          class="nds-text-muted-foreground nds-pt-4"
         >
           {{ demoLabels.propertiesContent }}
         </TabsContent>
         <TabsContent
           value="examples"
-          class="nds-text-muted-foreground"
-          style="padding-top: 0.75rem"
+          class="nds-text-muted-foreground nds-pt-4"
         >
           {{ demoLabels.examplesContent }}
         </TabsContent>
@@ -682,22 +679,19 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="overview"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.75rem"
+            class="nds-text-muted-foreground nds-pt-4"
           >
             Conteúdo da visão geral
           </TabsContent>
           <TabsContent
             value="properties"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.75rem"
+            class="nds-text-muted-foreground nds-pt-4"
           >
             Lista de propriedades
           </TabsContent>
           <TabsContent
             value="examples"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.75rem"
+            class="nds-text-muted-foreground nds-pt-4"
           >
             Exemplos de uso
           </TabsContent>
@@ -724,22 +718,19 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="overview"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.75rem"
+            class="nds-text-muted-foreground nds-pt-4"
           >
             Conteúdo da visão geral
           </TabsContent>
           <TabsContent
             value="properties"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.75rem"
+            class="nds-text-muted-foreground nds-pt-4"
           >
             Lista de propriedades
           </TabsContent>
           <TabsContent
             value="examples"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.75rem"
+            class="nds-text-muted-foreground nds-pt-4"
           >
             Exemplos de uso
           </TabsContent>
@@ -764,22 +755,19 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="profile"
-            class="nds-text-muted-foreground"
-            style="padding-left: 0.75rem"
+            class="nds-text-muted-foreground nds-pl-4"
           >
             Configurações do perfil
           </TabsContent>
           <TabsContent
             value="account"
-            class="nds-text-muted-foreground"
-            style="padding-left: 0.75rem"
+            class="nds-text-muted-foreground nds-pl-4"
           >
             Configurações da conta
           </TabsContent>
           <TabsContent
             value="security"
-            class="nds-text-muted-foreground"
-            style="padding-left: 0.75rem"
+            class="nds-text-muted-foreground nds-pl-4"
           >
             Configurações de segurança
           </TabsContent>

@@ -401,7 +401,7 @@ export function CheckboxDocs() {
                 doLabel: tNav("common.do"),
                 dontLabel: tNav("common.dont"),
                 doPreview: (
-                  <fieldset className="nds-border-default nds-rounded-lg nds-stack nds-w-full" data-spacing="xs" style={{ padding: "0.75rem" }}>
+                  <fieldset className="nds-border-default nds-rounded-lg nds-stack nds-w-full nds-p-4" data-spacing="xs">
                     <legend className="nds-text-caption nds-font-semibold nds-px-1">Preferências</legend>
                     {["Email", "SMS", "Push"].map((opt) => (
                       <div key={opt} className="nds-cluster" data-spacing="xs">
@@ -571,13 +571,13 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
                 useWhen: tContent("variants.compositions.inList.use"),
                 code: `<div className="nds-stack" data-spacing="xs" style={{ width: "20rem" }}>
   <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>
-  <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2" data-justify="between" style={{ paddingInline: "0.75rem" }}>
+  <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">
     <div className="nds-cluster" data-spacing="xs">
       <Checkbox id="pref-email" defaultChecked />
       <Label htmlFor="pref-email">Receber novidades por email</Label>
     </div>
   </div>
-  <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2" data-justify="between" style={{ paddingInline: "0.75rem" }}>
+  <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">
     <div className="nds-cluster" data-spacing="xs">
       <Checkbox id="pref-push" />
       <Label htmlFor="pref-push">Receber notificações push</Label>
@@ -588,25 +588,25 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
                 preview: (
                   <div className="nds-stack" data-spacing="xs" style={{ width: "20rem" }}>
                     <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>
-                    <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2" data-justify="between" style={{ paddingInline: "0.75rem" }}>
+                    <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">
                       <div className="nds-cluster" data-spacing="xs">
                         <Checkbox id="pref-email" defaultChecked />
                         <Label htmlFor="pref-email">Receber novidades por email</Label>
                       </div>
                     </div>
-                    <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2" data-justify="between" style={{ paddingInline: "0.75rem" }}>
+                    <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">
                       <div className="nds-cluster" data-spacing="xs">
                         <Checkbox id="pref-push" />
                         <Label htmlFor="pref-push">Receber notificações push</Label>
                       </div>
                     </div>
-                    <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2" data-justify="between" style={{ paddingInline: "0.75rem" }}>
+                    <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">
                       <div className="nds-cluster" data-spacing="xs">
                         <Checkbox id="pref-sms" />
                         <Label htmlFor="pref-sms">Alertas por SMS</Label>
                       </div>
                     </div>
-                    <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2" data-justify="between" style={{ paddingInline: "0.75rem" }}>
+                    <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">
                       <div className="nds-cluster" data-spacing="xs">
                         <Checkbox id="pref-weekly" defaultChecked />
                         <Label htmlFor="pref-weekly">Newsletter semanal</Label>

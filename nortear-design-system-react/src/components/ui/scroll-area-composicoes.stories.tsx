@@ -142,7 +142,7 @@ export const DataMatrix: Story = {
               {rows.map((r) => (
                 <tr key={r}>
                   {cols.map((c) => (
-                    <td key={c} className="nds-border-default nds-py-2 nds-whitespace-nowrap" style={{ paddingInline: "0.75rem" }}>
+                    <td key={c} className="nds-border-default nds-py-2 nds-whitespace-nowrap nds-px-4">
                       R{r}·C{c}
                     </td>
                   ))}

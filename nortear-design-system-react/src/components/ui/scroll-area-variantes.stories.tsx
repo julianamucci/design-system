@@ -93,7 +93,7 @@ export const Horizontal: Story = {
   render: () => (
     <div style={{ width: "500px" }}>
       <ScrollArea size="sm" className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default">
-        <div className="nds-cluster" style={{width: "max-content", padding: "0.75rem" }} data-spacing="sm">
+        <div className="nds-cluster nds-p-4" style={{ width: "max-content" }} data-spacing="sm">
           {cards.map((n) => (
             <div
               key={n}
@@ -144,7 +144,7 @@ export const Both: Story = {
             {rows.map((r) => (
               <tr key={r}>
                 {cols.map((c) => (
-                  <td key={c} className="nds-border-default nds-py-2 nds-whitespace-nowrap" style={{ paddingInline: "0.75rem" }}>
+                  <td key={c} className="nds-border-default nds-py-2 nds-whitespace-nowrap nds-px-4">
                     R{r}·C{c}
                   </td>
                 ))}

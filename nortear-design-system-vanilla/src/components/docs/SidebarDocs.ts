@@ -195,11 +195,10 @@ function buildMiniSidebar(opts: {
   inset.className = 'nds-stack nds-flex-1';
   inset.dataset.spacing = 'xs';
   const topbar = document.createElement('div');
-  topbar.className = 'nds-cluster nds-border-b nds-px-2';
+  topbar.className = 'nds-cluster nds-border-b nds-px-4';
   topbar.dataset.spacing = 'sm';
   topbar.dataset.align = 'center';
   topbar.style.height = '2.5rem';
-  topbar.style.paddingInline = '0.75rem';
   topbar.appendChild(createSidebarTrigger(instance.toggle));
   const mainArea = document.createElement('div');
   mainArea.className = 'nds-cluster nds-flex-1 nds-text-caption nds-text-muted-foreground nds-p-4';
@@ -572,11 +571,10 @@ export function createSidebarDocs(): HTMLElement {
           parentBtn.appendChild(chevron);
 
           const subList = document.createElement('ul');
-          subList.className = 'nds-mt-1 nds-stack';
+          subList.className = 'nds-mt-1 nds-stack nds-pl-4';
           subList.dataset.spacing = 'xs';
           subList.style.marginLeft = '1rem';
           subList.style.borderLeft = '1px solid var(--sidebar-border)';
-          subList.style.paddingLeft = '0.75rem';
           subList.setAttribute('data-sidebar', 'menu-sub');
           subList.style.display = 'none';
 
@@ -623,11 +621,10 @@ export function createSidebarDocs(): HTMLElement {
           inset.className = 'nds-stack nds-flex-1';
   inset.dataset.spacing = 'xs';
           const topbar = document.createElement('div');
-          topbar.className = 'nds-cluster nds-border-b nds-px-2';
+          topbar.className = 'nds-cluster nds-border-b nds-px-4';
   topbar.dataset.spacing = 'sm';
   topbar.dataset.align = 'center';
   topbar.style.height = '2.5rem';
-  topbar.style.paddingInline = '0.75rem';
           topbar.appendChild(createSidebarTrigger(instance.toggle));
           const lbl = document.createElement('span');
           lbl.className = 'nds-text-caption nds-text-muted-foreground';
@@ -672,11 +669,10 @@ export function createSidebarDocs(): HTMLElement {
           inset.className = 'nds-stack nds-flex-1';
   inset.dataset.spacing = 'xs';
           const topbar = document.createElement('div');
-          topbar.className = 'nds-cluster nds-border-b nds-px-2';
+          topbar.className = 'nds-cluster nds-border-b nds-px-4';
   topbar.dataset.spacing = 'sm';
   topbar.dataset.align = 'center';
   topbar.style.height = '2.5rem';
-  topbar.style.paddingInline = '0.75rem';
           topbar.appendChild(createSidebarTrigger(instance.toggle));
           const lbl = document.createElement('span');
           lbl.className = 'nds-text-caption nds-text-muted-foreground';
@@ -805,11 +801,10 @@ export function createSidebarDocs(): HTMLElement {
           inset.className = 'nds-stack nds-flex-1';
   inset.dataset.spacing = 'xs';
           const topbar = document.createElement('div');
-          topbar.className = 'nds-cluster nds-border-b nds-px-2';
+          topbar.className = 'nds-cluster nds-border-b nds-px-4';
   topbar.dataset.spacing = 'sm';
   topbar.dataset.align = 'center';
   topbar.style.height = '2.5rem';
-  topbar.style.paddingInline = '0.75rem';
           topbar.appendChild(createSidebarTrigger(instance.toggle));
           const lbl = document.createElement('span');
           lbl.className = 'nds-text-caption nds-text-muted-foreground';
@@ -877,11 +872,10 @@ export function createSidebarDocs(): HTMLElement {
           inset.className = 'nds-stack nds-flex-1';
   inset.dataset.spacing = 'xs';
           const topbar = document.createElement('div');
-          topbar.className = 'nds-cluster nds-border-b nds-px-2';
+          topbar.className = 'nds-cluster nds-border-b nds-px-4';
   topbar.dataset.spacing = 'sm';
   topbar.dataset.align = 'center';
   topbar.style.height = '2.5rem';
-  topbar.style.paddingInline = '0.75rem';
           topbar.appendChild(createSidebarTrigger(instance.toggle));
           const lbl = document.createElement('span');
           lbl.className = 'nds-text-caption nds-text-muted-foreground';
