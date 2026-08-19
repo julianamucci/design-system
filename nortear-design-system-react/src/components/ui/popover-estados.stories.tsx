@@ -221,7 +221,7 @@ export const Modal: Story = {
               Interações fora do popover são bloqueadas.
             </PopoverDescription>
           </PopoverHeader>
-          <div className="nds-cluster" style={{ paddingTop: "0.25rem" }} data-justify="end">
+          <div className="nds-cluster nds-pt-1" data-justify="end">
             <Button size="sm">OK</Button>
           </div>
         </PopoverContent>

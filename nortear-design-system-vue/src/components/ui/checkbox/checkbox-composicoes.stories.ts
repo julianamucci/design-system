@@ -161,7 +161,7 @@ export const SelectAll: Story = {
     template: `
       <fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm">
         <legend class="nds-text-body nds-font-semibold nds-px-1">Preferências</legend>
-        <div class="nds-cluster nds-border-b" data-align="center" data-spacing="sm" style="padding-bottom: 0.5rem">
+        <div class="nds-cluster nds-border-b nds-pb-2" data-align="center" data-spacing="sm">
           <Checkbox id="select-all" />
           <label for="select-all" class="nds-label">
             Selecionar todos os itens

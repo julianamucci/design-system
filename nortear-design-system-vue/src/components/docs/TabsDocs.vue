@@ -558,15 +558,13 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="overview"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.5rem"
+            class="nds-text-muted-foreground nds-pt-2"
           >
             Conteúdo claro
           </TabsContent>
           <TabsContent
             value="properties"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.5rem"
+            class="nds-text-muted-foreground nds-pt-2"
           >
             Lista de props
           </TabsContent>
@@ -587,15 +585,13 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="t1"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.5rem"
+            class="nds-text-muted-foreground nds-pt-2"
           >
             Conteúdo genérico
           </TabsContent>
           <TabsContent
             value="t2"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.5rem"
+            class="nds-text-muted-foreground nds-pt-2"
           >
             Sem contexto
           </TabsContent>
@@ -616,15 +612,13 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="profile"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.5rem"
+            class="nds-text-muted-foreground nds-pt-2"
           >
             Perfil
           </TabsContent>
           <TabsContent
             value="account"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.5rem"
+            class="nds-text-muted-foreground nds-pt-2"
           >
             Conta
           </TabsContent>
@@ -645,15 +639,13 @@ function handleTabChange(value: string) {
           </TabsList>
           <TabsContent
             value="profile"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.5rem"
+            class="nds-text-muted-foreground nds-pt-2"
           >
             Sem aria-label
           </TabsContent>
           <TabsContent
             value="account"
-            class="nds-text-muted-foreground"
-            style="padding-top: 0.5rem"
+            class="nds-text-muted-foreground nds-pt-2"
           >
             Sem contexto SR
           </TabsContent>

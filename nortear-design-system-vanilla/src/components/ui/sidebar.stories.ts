@@ -140,11 +140,9 @@ function buildDemoSidebar(args: SidebarArgs): HTMLElement {
   inset.style.flexDirection = 'column';
 
   const topbar = document.createElement('div');
-  topbar.className = 'nds-cluster nds-border-b';
+  topbar.className = 'nds-cluster nds-border-b nds-pl-4 nds-pr-4';
   topbar.dataset.spacing = 'sm';
   topbar.style.height = '3rem';
-  topbar.style.paddingLeft = '1rem';
-  topbar.style.paddingRight = '1rem';
 
   const trigger = createSidebarTrigger(instance.toggle);
   topbar.appendChild(trigger);
@@ -155,9 +153,8 @@ function buildDemoSidebar(args: SidebarArgs): HTMLElement {
   topbar.appendChild(breadcrumb);
 
   const mainContent = document.createElement('div');
-  mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+  mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground nds-p-8';
   mainContent.dataset.justify = 'center';
-  mainContent.style.padding = '2rem';
   mainContent.textContent = 'Conteúdo principal';
 
   inset.appendChild(topbar);

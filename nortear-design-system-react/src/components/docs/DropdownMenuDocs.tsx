@@ -461,7 +461,7 @@ interface DropdownMenuItemProps {
               <div className="nds-text-body nds-stack" data-spacing="xs">
                 <div className="nds-font-medium">Conta</div>
                 <div className="nds-text-muted-foreground">Perfil / Configurações</div>
-                <div className="nds-text-muted-foreground" style={{ borderTop: "1px solid var(--border)", paddingTop: "0.25rem" }}>Equipe</div>
+                <div className="nds-text-muted-foreground nds-pt-1" style={{ borderTop: "1px solid var(--border)" }}>Equipe</div>
               </div>
             ),
             dontPreview: (

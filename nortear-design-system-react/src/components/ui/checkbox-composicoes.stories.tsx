@@ -151,7 +151,7 @@ export const SelectAll: Story = {
   render: function SelecionarTodosRender() {
     return (
       <div className="nds-stack" data-spacing="sm">
-        <div className="nds-cluster nds-border-b" style={{ paddingBottom: "0.5rem" }} data-align="center" data-spacing="sm">
+        <div className="nds-cluster nds-border-b nds-pb-2" data-align="center" data-spacing="sm">
           <Checkbox id="select-all" />
           <label htmlFor="select-all" className="nds-label nds-font-semibold nds-cursor-pointer">
             Selecionar todos os itens
@@ -162,7 +162,7 @@ export const SelectAll: Story = {
           { id: "item-2", label: "Relatório trimestral" },
           { id: "item-3", label: "Relatório anual" },
         ].map(({ id, label }) => (
-          <div key={id} className="nds-cluster" style={{ paddingLeft: "1rem" }} data-align="center" data-spacing="sm">
+          <div key={id} className="nds-cluster nds-pl-4" data-align="center" data-spacing="sm">
             <Checkbox id={id} />
             <label htmlFor={id} className="nds-label">
               {label}

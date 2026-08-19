@@ -251,13 +251,13 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.selectAll.name'),
     description: stripHtml(tContent('variants.compositions.selectAll.description')),
     useWhen: stripHtml(tContent('variants.compositions.selectAll.use')),
-    code: `<script setup lang="ts">\nimport { ref, computed } from 'vue';\nconst c1 = ref(true); const c2 = ref(false); const c3 = ref(true);\nconst all = computed<boolean | 'indeterminate'>({\n  get() {\n    const allChecked = c1.value && c2.value && c3.value;\n    const noneChecked = !c1.value && !c2.value && !c3.value;\n    if (allChecked) return true;\n    if (noneChecked) return false;\n    return 'indeterminate';\n  },\n  set(v) { const n = v === true; c1.value = n; c2.value = n; c3.value = n; },\n});\n<\/script>\n\n<template>\n  <div class="nds-stack" data-spacing="sm" style="width: 18rem">\n    <div class="nds-cluster nds-border-b" data-spacing="xs" style="padding-bottom: 0.5rem">\n      <Checkbox id="cb-select-all" v-model:checked="all" />\n      <Label for="cb-select-all" class="nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer">\n        Selecionar todos os itens\n      </Label>\n    </div>\n    <div class="nds-cluster" data-spacing="xs" style="padding-left: 0.5rem">\n      <Checkbox id="cb-item-1" v-model:checked="c1" />\n      <Label for="cb-item-1">Item 1</Label>\n    </div>\n    <!-- demais filhos -->\n  </div>\n<\/template>`,
+    code: `<script setup lang="ts">\nimport { ref, computed } from 'vue';\nconst c1 = ref(true); const c2 = ref(false); const c3 = ref(true);\nconst all = computed<boolean | 'indeterminate'>({\n  get() {\n    const allChecked = c1.value && c2.value && c3.value;\n    const noneChecked = !c1.value && !c2.value && !c3.value;\n    if (allChecked) return true;\n    if (noneChecked) return false;\n    return 'indeterminate';\n  },\n  set(v) { const n = v === true; c1.value = n; c2.value = n; c3.value = n; },\n});\n<\/script>\n\n<template>\n  <div class="nds-stack" data-spacing="sm" style="width: 18rem">\n    <div class="nds-cluster nds-border-b nds-pb-2" data-spacing="xs">\n      <Checkbox id="cb-select-all" v-model:checked="all" />\n      <Label for="cb-select-all" class="nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer">\n        Selecionar todos os itens\n      </Label>\n    </div>\n    <div class="nds-cluster nds-pl-2" data-spacing="xs">\n      <Checkbox id="cb-item-1" v-model:checked="c1" />\n      <Label for="cb-item-1">Item 1</Label>\n    </div>\n    <!-- demais filhos -->\n  </div>\n<\/template>`,
   },
   {
     name: tContent('variants.compositions.inList.name'),
     description: stripHtml(tContent('variants.compositions.inList.description')),
     useWhen: stripHtml(tContent('variants.compositions.inList.use')),
-    code: `<div class="nds-stack" data-spacing="xs" style="width: 20rem">\n  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>\n  <div class="nds-cluster nds-rounded-md nds-border-default" data-justify="between" style="padding-inline: 0.75rem; padding-block: 0.5rem">\n    <div class="nds-cluster" data-spacing="xs">\n      <Checkbox id="list-email" :checked="true" />\n      <Label for="list-email">Receber novidades por email</Label>\n    </div>\n  </div>\n  <!-- demais linhas -->\n</div>`,
+    code: `<div class="nds-stack" data-spacing="xs" style="width: 20rem">\n  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>\n  <div class="nds-cluster nds-rounded-md nds-border-default nds-py-2" data-justify="between" style="padding-inline: 0.75rem">\n    <div class="nds-cluster" data-spacing="xs">\n      <Checkbox id="list-email" :checked="true" />\n      <Label for="list-email">Receber novidades por email</Label>\n    </div>\n  </div>\n  <!-- demais linhas -->\n</div>`,
   },
 ]);
 
@@ -749,9 +749,8 @@ const visualTestItems = computed(() => [
           style="width: 18rem"
         >
           <div
-            class="nds-cluster nds-border-b"
+            class="nds-cluster nds-border-b nds-pb-2"
             data-spacing="xs"
-            style="padding-bottom: 0.5rem"
           >
             <Checkbox
               id="cb-select-all"
@@ -765,9 +764,8 @@ const visualTestItems = computed(() => [
             </Label>
           </div>
           <div
-            class="nds-cluster"
+            class="nds-cluster nds-pl-2"
             data-spacing="xs"
-            style="padding-left: 0.5rem"
           >
             <Checkbox
               id="cb-select-child-1"
@@ -776,9 +774,8 @@ const visualTestItems = computed(() => [
             <Label for="cb-select-child-1">Receber novidades por email</Label>
           </div>
           <div
-            class="nds-cluster"
+            class="nds-cluster nds-pl-2"
             data-spacing="xs"
-            style="padding-left: 0.5rem"
           >
             <Checkbox
               id="cb-select-child-2"
@@ -787,9 +784,8 @@ const visualTestItems = computed(() => [
             <Label for="cb-select-child-2">Receber notificações push</Label>
           </div>
           <div
-            class="nds-cluster"
+            class="nds-cluster nds-pl-2"
             data-spacing="xs"
-            style="padding-left: 0.5rem"
           >
             <Checkbox
               id="cb-select-child-3"
@@ -811,9 +807,9 @@ const visualTestItems = computed(() => [
             Preferências de contato
           </p>
           <div
-            class="nds-cluster nds-rounded-md nds-border-default"
+            class="nds-cluster nds-rounded-md nds-border-default nds-py-2"
             data-justify="between"
-            style="padding-inline: 0.75rem; padding-block: 0.5rem"
+            style="padding-inline: 0.75rem"
           >
             <div
               class="nds-cluster"
@@ -827,9 +823,9 @@ const visualTestItems = computed(() => [
             </div>
           </div>
           <div
-            class="nds-cluster nds-rounded-md nds-border-default"
+            class="nds-cluster nds-rounded-md nds-border-default nds-py-2"
             data-justify="between"
-            style="padding-inline: 0.75rem; padding-block: 0.5rem"
+            style="padding-inline: 0.75rem"
           >
             <div
               class="nds-cluster"
@@ -843,9 +839,9 @@ const visualTestItems = computed(() => [
             </div>
           </div>
           <div
-            class="nds-cluster nds-rounded-md nds-border-default"
+            class="nds-cluster nds-rounded-md nds-border-default nds-py-2"
             data-justify="between"
-            style="padding-inline: 0.75rem; padding-block: 0.5rem"
+            style="padding-inline: 0.75rem"
           >
             <div
               class="nds-cluster"
@@ -859,9 +855,9 @@ const visualTestItems = computed(() => [
             </div>
           </div>
           <div
-            class="nds-cluster nds-rounded-md nds-border-default"
+            class="nds-cluster nds-rounded-md nds-border-default nds-py-2"
             data-justify="between"
-            style="padding-inline: 0.75rem; padding-block: 0.5rem"
+            style="padding-inline: 0.75rem"
           >
             <div
               class="nds-cluster"

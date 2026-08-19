@@ -391,7 +391,7 @@ interface CardPartProps {
   {#snippet dontPair1()}
     <Card class="nds-w-full">
       <CardContent>
-        <p class="nds-text-body" style="padding-block: 1rem">—</p>
+ <p class="nds-text-body nds-py-4">—</p>
       </CardContent>
     </Card>
   {/snippet}

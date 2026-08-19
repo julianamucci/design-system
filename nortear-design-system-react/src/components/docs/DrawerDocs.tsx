@@ -259,8 +259,7 @@ interface DrawerProps {
                     </DrawerDescription>
                   </DrawerHeader>
                   <div
-                    className="nds-px-4 nds-text-body nds-text-muted-foreground"
-                    style={{ paddingBottom: "0.5rem" }}
+                    className="nds-px-4 nds-pb-2 nds-text-body nds-text-muted-foreground"
                   >
                     {DOMPurify.sanitize(tContent(`variants.styles.${dir}`))}
                   </div>

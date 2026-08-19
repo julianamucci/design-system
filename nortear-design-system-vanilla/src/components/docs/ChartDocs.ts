@@ -379,9 +379,8 @@ document.body.appendChild(el);`,
 });`;
 
         const codeSmallInline = `const wrap = document.createElement('div');
-wrap.className = 'nds-cluster nds-rounded-md nds-border-default';
+wrap.className = 'nds-cluster nds-rounded-md nds-border-default nds-p-4';
 wrap.dataset.spacing = 'md';
-wrap.style.padding = '1rem';
 wrap.style.width = 'fit-content';
 
 const stats = document.createElement('div');
@@ -425,9 +424,8 @@ wrap.appendChild(spark);`;
               code: codeSmallInline,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'nds-cluster nds-rounded-md nds-border-default';
+                wrap.className = 'nds-cluster nds-rounded-md nds-border-default nds-p-4';
                 wrap.dataset.spacing = 'md';
-                wrap.style.padding = '1rem';
                 wrap.style.width = 'fit-content';
                 const stats = document.createElement('div');
                 const label = document.createElement('p');

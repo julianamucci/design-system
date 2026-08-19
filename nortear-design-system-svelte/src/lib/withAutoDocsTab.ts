@@ -57,7 +57,7 @@ function TabButton({
 function ApiReferencePage() {
   return h(
     'div',
-    { style: { padding: '2rem', maxWidth: '75rem', margin: '0 auto' } },
+    { className: 'nds-p-8', style: { maxWidth: '75rem', margin: '0 auto' } },
     h(Title, null),
     h(Description, null),
     h(Primary, null),

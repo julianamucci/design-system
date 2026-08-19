@@ -156,13 +156,13 @@ export const Vertical: Story = {
           <TabsTrigger value="account">Conta</TabsTrigger>
           <TabsTrigger value="security">Segurança</TabsTrigger>
         </TabsList>
-        <TabsContent value="profile" class="nds-text-body nds-text-muted-foreground" style="padding-left: 1rem">
+        <TabsContent value="profile" class="nds-text-body nds-text-muted-foreground nds-pl-4">
           Configuracoes do perfil — nome, foto e bio.
         </TabsContent>
-        <TabsContent value="account" class="nds-text-body nds-text-muted-foreground" style="padding-left: 1rem">
+        <TabsContent value="account" class="nds-text-body nds-text-muted-foreground nds-pl-4">
           Configuracoes da conta — e-mail, idioma e fuso.
         </TabsContent>
-        <TabsContent value="security" class="nds-text-body nds-text-muted-foreground" style="padding-left: 1rem">
+        <TabsContent value="security" class="nds-text-body nds-text-muted-foreground nds-pl-4">
           Configuracoes de segurança — senha e 2FA.
         </TabsContent>
       </Tabs>

@@ -215,7 +215,7 @@ export const Error: Story = {
             Aceito os termos e condições
           </label>
         </div>
-        <p id="error-msg" class="nds-text-body nds-text-destructive" style="padding-left: 1.5rem">
+        <p id="error-msg" class="nds-text-body nds-text-destructive nds-pl-6">
           Você precisa aceitar os termos para continuar.
         </p>
       </div>

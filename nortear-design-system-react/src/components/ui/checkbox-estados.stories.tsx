@@ -224,7 +224,7 @@ export const Error: Story = {
           Aceito os termos e condições
         </label>
       </div>
-      <p className="nds-text-body nds-text-destructive" style={{ paddingLeft: "1.5rem" }}>
+      <p className="nds-text-body nds-text-destructive nds-pl-6">
         Você precisa aceitar os termos para continuar.
       </p>
     </div>

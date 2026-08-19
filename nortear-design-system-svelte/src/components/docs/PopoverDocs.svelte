@@ -163,7 +163,7 @@
       <PopoverTitle>Configurações de exibição</PopoverTitle>
       <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
     </PopoverHeader>
-    <div class="nds-cluster" data-spacing="sm" data-justify="end" style="padding-top: 0.25rem">
+ <div class="nds-cluster nds-pt-1" data-spacing="sm" data-justify="end">
       <PopoverClose>
         {#snippet child({ props })}
           <Button variant="outline" size="sm" {...props}>Cancelar</Button>
@@ -185,7 +185,7 @@
       <PopoverTitle>Editar perfil</PopoverTitle>
       <PopoverDescription>Atualize seu nome e e-mail.</PopoverDescription>
     </PopoverHeader>
-    <form class="nds-stack" data-spacing="sm" style="padding-top: 0.25rem" onsubmit={(e) => { e.preventDefault(); save(); }}>
+ <form class="nds-stack nds-pt-1" data-spacing="sm" onsubmit={(e) => { e.preventDefault(); save(); }}>
       <Input name="name" />
       <Input name="email" type="email" />
       <Button type="submit" size="sm">Atualizar</Button>
@@ -257,7 +257,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
               <PopoverTitle>{$tStore('demonstration.labels.title')}</PopoverTitle>
               <PopoverDescription>{$tStore('demonstration.labels.description')}</PopoverDescription>
             </PopoverHeader>
-            <div class="nds-cluster" data-spacing="sm" data-justify="end" style="padding-top: 0.25rem">
+ <div class="nds-cluster nds-pt-1" data-spacing="sm" data-justify="end">
               <PopoverClose>
                 {#snippet child({ props })}
                   <Button variant="outline" size="sm" {...props}>{$tStore('demonstration.labels.cancel')}</Button>
@@ -284,7 +284,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
               <PopoverTitle>{$tStore('demonstration.labels.form.trigger')}</PopoverTitle>
               <PopoverDescription>{$tStore('demonstration.labels.description')}</PopoverDescription>
             </PopoverHeader>
-            <form class="nds-stack" data-spacing="sm" style="padding-top: 0.25rem" onsubmit={(e) => e.preventDefault()}>
+ <form class="nds-stack nds-pt-1" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
               <label class="nds-stack nds-text-body" data-spacing="xs">
                 <span>{$tStore('demonstration.labels.form.name')}</span>
                 <input
@@ -303,7 +303,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
                   value="maria@exemplo.com"
                 />
               </label>
-              <div class="nds-cluster" data-justify="end" style="padding-top: 0.25rem">
+ <div class="nds-cluster nds-pt-1" data-justify="end">
                 <Button type="submit" size="sm">{$tStore('demonstration.labels.form.submit')}</Button>
               </div>
             </form>
@@ -467,7 +467,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <PopoverTitle>Configurações de exibição</PopoverTitle>
           <PopoverDescription>Ajuste a aparência do conteúdo da página.</PopoverDescription>
         </PopoverHeader>
-        <div class="nds-cluster" data-spacing="sm" data-justify="end" style="padding-top: 0.25rem">
+ <div class="nds-cluster nds-pt-1" data-spacing="sm" data-justify="end">
           <PopoverClose>
             {#snippet child({ props })}
               <Button variant="outline" size="sm" {...props}>Cancelar</Button>
@@ -539,7 +539,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <input type="checkbox" /> Arquivado
       </label>
     </div>
-    <div class="nds-cluster" data-spacing="sm" data-justify="end" style="padding-top: 0.5rem">
+ <div class="nds-cluster nds-pt-2" data-spacing="sm" data-justify="end">
       <Button variant="ghost" size="sm">Limpar</Button>
       <Button size="sm">Aplicar</Button>
     </div>
@@ -612,7 +612,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <PopoverTitle>Dados do perfil</PopoverTitle>
           <PopoverDescription>As mudanças são salvas ao confirmar.</PopoverDescription>
         </PopoverHeader>
-        <form class="nds-stack" data-spacing="sm" style="padding-top: 0.25rem" onsubmit={(e) => e.preventDefault()}>
+ <form class="nds-stack nds-pt-1" data-spacing="sm" onsubmit={(e) => e.preventDefault()}>
           <label class="nds-stack nds-text-body" data-spacing="xs">
             <span>Nome</span>
             <input
@@ -645,7 +645,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <PopoverHeader>
           <PopoverTitle>Filtrar por status</PopoverTitle>
         </PopoverHeader>
-        <div class="nds-stack" data-spacing="sm" style="padding-top: 0.25rem">
+ <div class="nds-stack nds-pt-1" data-spacing="sm">
           <label class="nds-cluster nds-text-body" data-spacing="sm">
             <input type="checkbox" checked class="nds-size-4" />
             <span>Ativo</span>
@@ -659,7 +659,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
             <span>Arquivado</span>
           </label>
         </div>
-        <div class="nds-cluster" data-spacing="sm" data-justify="end" style="padding-top: 0.5rem">
+ <div class="nds-cluster nds-pt-2" data-spacing="sm" data-justify="end">
           <Button variant="ghost" size="sm">Limpar</Button>
           <Button size="sm">Aplicar</Button>
         </div>
@@ -673,7 +673,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <PopoverHeader>
           <PopoverTitle>Selecionar cor</PopoverTitle>
         </PopoverHeader>
-        <div class="nds-grid" data-cols="6" data-spacing="xs" style="padding-top: 0.25rem">
+ <div class="nds-grid nds-pt-1" data-cols="6" data-spacing="xs">
           {#each [
             { name: 'Vermelho', color: '#ef4444' },
             { name: 'Laranja',  color: '#f97316' },
@@ -700,7 +700,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
         <PopoverHeader>
           <PopoverTitle>Preferências rápidas</PopoverTitle>
         </PopoverHeader>
-        <div class="nds-stack" data-spacing="sm" style="padding-top: 0.25rem">
+ <div class="nds-stack nds-pt-1" data-spacing="sm">
           {#each [
             { id: 'cfg-notifs-sv',  label: 'Notificações',  checked: true  },
             { id: 'cfg-dark-sv',    label: 'Modo escuro',   checked: false },
@@ -723,7 +723,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <PopoverTitle>Editar perfil</PopoverTitle>
           <PopoverDescription>Atualize seu nome e e-mail.</PopoverDescription>
         </PopoverHeader>
-        <form class="nds-stack" data-spacing="sm" style="padding-top: 0.25rem">
+ <form class="nds-stack nds-pt-1" data-spacing="sm">
           <input
             type="text"
             aria-label={$tStore('demonstration.labels.form.name')}
@@ -731,7 +731,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
             style="border-radius: var(--radius-input); padding-inline: 0.75rem; height: var(--height-default)"
             value="Maria Silva"
           />
-          <div class="nds-cluster" data-justify="end" style="padding-top: 0.25rem">
+ <div class="nds-cluster nds-pt-1" data-justify="end">
             <Button size="sm">Atualizar</Button>
           </div>
         </form>

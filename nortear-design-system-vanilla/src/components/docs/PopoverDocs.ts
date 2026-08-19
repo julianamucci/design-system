@@ -522,10 +522,9 @@ for (const opt of ['Ativo', 'Pendente', 'Arquivado']) {
 }
 
 const actions = document.createElement('div');
-actions.className = 'nds-cluster';
+actions.className = 'nds-cluster nds-pt-2';
 actions.dataset.spacing = 'xs';
 actions.dataset.justify = 'end';
-actions.style.paddingTop = '0.5rem';
 actions.append(
   createButton({ variant: 'ghost',   size: 'sm', label: 'Limpar'  }),
   createButton({ variant: 'default', size: 'sm', label: 'Aplicar' }),
@@ -663,10 +662,9 @@ createPopover({ trigger, content });`;
           }
 
           const actions = document.createElement('div');
-          actions.className = 'nds-cluster';
+          actions.className = 'nds-cluster nds-pt-2';
           actions.dataset.spacing = 'xs';
           actions.dataset.justify = 'end';
-          actions.style.paddingTop = '0.5rem';
           actions.append(
             createButton({ variant: 'ghost',   size: 'sm', label: 'Limpar'  }),
             createButton({ variant: 'default', size: 'sm', label: 'Aplicar' }),

@@ -621,9 +621,9 @@ campo.destroy();`,
               description: stripHtml(t('variants.compositions.inForm.description')),
               useWhen: stripHtml(t('variants.compositions.inForm.use')),
               code: `const form = document.createElement('form');
-form.className = 'nds-stack nds-border-default nds-rounded-lg';
+form.className = 'nds-stack nds-border-default nds-rounded-lg nds-p-4';
 form.dataset.spacing = 'md';
-form.style.cssText = 'width:20rem;padding:1rem;';
+form.style.cssText = 'width:20rem;';
 
 const field = document.createElement('div');
 field.className = 'nds-stack';

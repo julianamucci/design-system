@@ -100,11 +100,9 @@ function wrapSidebar(instance: ReturnType<typeof createSidebar>, main: HTMLEleme
 /** Barra superior com o gatilho e um rótulo de contexto. */
 function buildTopbar(instance: ReturnType<typeof createSidebar>, texto: string): HTMLElement {
   const topbar = document.createElement('div');
-  topbar.className = 'nds-cluster nds-border-b';
+  topbar.className = 'nds-cluster nds-border-b nds-pl-4 nds-pr-4';
   topbar.dataset.spacing = 'sm';
   topbar.style.height = '3rem';
-  topbar.style.paddingLeft = '1rem';
-  topbar.style.paddingRight = '1rem';
   topbar.appendChild(createSidebarTrigger(instance.toggle));
   const lbl = document.createElement('span');
   lbl.className = 'nds-text-body nds-text-muted-foreground';
@@ -120,9 +118,8 @@ function buildPlainInset(instance: ReturnType<typeof createSidebar>, topo: strin
   inset.style.display = 'flex';
   inset.style.flexDirection = 'column';
   const mainContent = document.createElement('div');
-  mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+  mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground nds-p-8';
   mainContent.dataset.justify = 'center';
-  mainContent.style.padding = '2rem';
   mainContent.textContent = corpo;
   inset.append(buildTopbar(instance, topo), mainContent);
   return inset;
@@ -324,8 +321,7 @@ export const WithGroupActions: Story = {
     const inset = createSidebarInset();
     inset.appendChild(buildTopbar(instance, 'Projetos'));
     const corpo = document.createElement('p');
-    corpo.className = 'nds-text-body nds-text-muted-foreground';
-    corpo.style.padding = '2rem';
+    corpo.className = 'nds-text-body nds-text-muted-foreground nds-p-8';
     corpo.textContent = 'Ação de grupo, contador ancorado e ação por item.';
     inset.appendChild(corpo);
 

@@ -728,7 +728,7 @@ interface PopoverContentProps {
         Arquivado
       </label>
     </div>
-    <div className="nds-cluster" data-spacing="xs" data-justify="end" style={{ paddingTop: "0.5rem" }}>
+    <div className="nds-cluster nds-pt-2" data-spacing="xs" data-justify="end">
       <Button variant="ghost" size="sm">Limpar</Button>
       <Button size="sm">Aplicar</Button>
     </div>
@@ -756,7 +756,7 @@ interface PopoverContentProps {
                         </label>
                       ))}
                     </div>
-                    <div className="nds-cluster" data-spacing="xs" data-justify="end" style={{ paddingTop: "0.5rem" }}>
+                    <div className="nds-cluster nds-pt-2" data-spacing="xs" data-justify="end">
                       <Button variant="ghost" size="sm">Limpar</Button>
                       <Button size="sm">Aplicar</Button>
                     </div>

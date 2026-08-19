@@ -47,7 +47,7 @@ function TabButton({ active, onClick, children }: TabButtonProps) {
 
 function ApiReferencePage() {
   return (
-    <div style={{ padding: '2rem', maxWidth: '75rem', margin: '0 auto' }}>
+    <div className="nds-p-8" style={{ maxWidth: '75rem', margin: '0 auto' }}>
       <Title />
       <Description />
       <Primary />

@@ -248,10 +248,9 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
   /** Lista simples de strings (array) → <ul>. */
   function renderStringList(parent: HTMLElement, basePath: string, arr: string[]) {
     const ul = document.createElement('ul');
-    ul.className = 'nds-stack nds-text-body nds-leading-relaxed';
+    ul.className = 'nds-stack nds-text-body nds-leading-relaxed nds-pl-6';
     ul.dataset.spacing = 'sm';
     ul.style.listStyle = 'disc';
-    ul.style.paddingInlineStart = '1.5rem';
     arr.forEach((_, i) => {
       const li = document.createElement('li');
       addText(li, `${basePath}.${i}`, true);

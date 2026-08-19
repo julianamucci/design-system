@@ -609,9 +609,9 @@ interface DialogDescriptionProps extends DialogPrimitive.Description.Props {}`;
                     </DialogDescription>
                   </DialogHeader>
                   <div
-                    className="nds-stack nds-overflow-y nds-text-body nds-text-muted-foreground"
+                    className="nds-stack nds-overflow-y nds-text-body nds-text-muted-foreground nds-pr-2"
                     data-spacing="sm"
-                    style={{ maxHeight: "40vh", paddingRight: "0.5rem" }}
+                    style={{ maxHeight: "40vh" }}
                   >
                     {Array.from({ length: 8 }).map((_, i) => (
                       <p key={i}>Cláusula {i + 1}. Lorem ipsum dolor sit amet.</p>

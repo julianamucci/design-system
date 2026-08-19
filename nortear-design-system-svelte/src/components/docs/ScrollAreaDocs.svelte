@@ -175,7 +175,7 @@ interface ScrollAreaRootProps {
           <ScrollArea orientation="vertical" size="xl" class="nds-w-full">
             <div class="nds-stack nds-p-4" data-spacing="sm">
               {#each VERTICAL_TAGS as n (n)}
-                <div class="nds-text-body nds-border-b nds-last-border-0" style="padding-bottom: 0.5rem">
+ <div class="nds-text-body nds-border-b nds-last-border-0 nds-pb-2">
                   {$tStore('demonstration.labels.tag')} {n}
                 </div>
               {/each}
@@ -394,7 +394,7 @@ interface ScrollAreaRootProps {
       <ScrollArea orientation="vertical" size="md" class="nds-w-full">
         <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
           {#each VERTICAL_TAGS.slice(0, 20) as n (n)}
-            <div class="nds-border-b nds-last-border-0" style="padding-bottom: 0.25rem">{$tStore('demonstration.labels.tag')} {n}</div>
+ <div class="nds-border-b nds-last-border-0 nds-pb-1">{$tStore('demonstration.labels.tag')} {n}</div>
           {/each}
         </div>
       </ScrollArea>

@@ -506,9 +506,8 @@ label.textContent = 'Aceito os termos e condições';`,
                 `wrapper.dataset.spacing = 'sm';\n` +
                 `wrapper.style.width = '18rem';\n` +
                 `const allRow = document.createElement('div');\n` +
-                `allRow.className = 'nds-cluster nds-border-b';\n` +
+                `allRow.className = 'nds-cluster nds-border-b nds-pb-2';\n` +
                 `allRow.dataset.spacing = 'xs';\n` +
-                `allRow.style.paddingBottom = '0.5rem';\n` +
                 `const cbAll = createCheckbox({ id: 'cb-select-all' });\n` +
                 `const labelAll = document.createElement('label');\n` +
                 `labelAll.htmlFor = 'cb-select-all';\n` +
@@ -523,9 +522,8 @@ label.textContent = 'Aceito os termos e condições';`,
                 `const childCheckboxes: HTMLElement[] = [];\n` +
                 `const itemRows = items.map(({ id, label: labelText }) => {\n` +
                 `  const row = document.createElement('div');\n` +
-                `  row.className = 'nds-cluster';\n` +
+                `  row.className = 'nds-cluster nds-pl-2';\n` +
                 `  row.dataset.spacing = 'xs';\n` +
-                `  row.style.paddingLeft = '0.5rem';\n` +
                 `  const cb = createCheckbox({ id });\n` +
                 `  childCheckboxes.push(cb);\n` +
                 `  const label = document.createElement('label');\n` +
@@ -549,9 +547,8 @@ label.textContent = 'Aceito os termos e condições';`,
                 wrapper.dataset.spacing = 'sm';
                 wrapper.style.width = '18rem';
                 const allRow = document.createElement('div');
-                allRow.className = 'nds-cluster nds-border-b';
+                allRow.className = 'nds-cluster nds-border-b nds-pb-2';
                 allRow.dataset.spacing = 'xs';
-                allRow.style.paddingBottom = '0.5rem';
                 const cbAll = createCheckbox({ id: 'comp-cb-select-all' });
                 const labelAll = document.createElement('label');
                 labelAll.htmlFor = 'comp-cb-select-all';
@@ -566,9 +563,8 @@ label.textContent = 'Aceito os termos e condições';`,
                 const childCheckboxes: HTMLElement[] = [];
                 const itemRows = items.map(({ id, label: labelText }) => {
                   const row = document.createElement('div');
-                  row.className = 'nds-cluster';
+                  row.className = 'nds-cluster nds-pl-2';
                   row.dataset.spacing = 'xs';
-                  row.style.paddingLeft = '0.5rem';
                   const cb = createCheckbox({ id });
                   childCheckboxes.push(cb);
                   const label = document.createElement('label');
@@ -610,10 +606,9 @@ label.textContent = 'Aceito os termos e condições';`,
                 `];\n` +
                 `options.forEach(({ id, label: labelText, checked }) => {\n` +
                 `  const row = document.createElement('div');\n` +
-                `  row.className = 'nds-cluster nds-rounded-md nds-border-default';\n` +
+                `  row.className = 'nds-cluster nds-rounded-md nds-border-default nds-py-2';\n` +
                 `  row.dataset.justify = 'between';\n` +
                 `  row.style.paddingInline = '0.75rem';\n` +
-                `  row.style.paddingBlock = '0.5rem';\n` +
                 `  const leftSide = document.createElement('div');\n` +
                 `  leftSide.className = 'nds-cluster';\n` +
                 `  leftSide.dataset.spacing = 'xs';\n` +
@@ -643,10 +638,9 @@ label.textContent = 'Aceito os termos e condições';`,
                 ];
                 options.forEach(({ id, label: labelText, checked }) => {
                   const row = document.createElement('div');
-                  row.className = 'nds-cluster nds-rounded-md nds-border-default';
+                  row.className = 'nds-cluster nds-rounded-md nds-border-default nds-py-2';
                   row.dataset.justify = 'between';
                   row.style.paddingInline = '0.75rem';
-                  row.style.paddingBlock = '0.5rem';
                   const leftSide = document.createElement('div');
                   leftSide.className = 'nds-cluster';
                   leftSide.dataset.spacing = 'xs';

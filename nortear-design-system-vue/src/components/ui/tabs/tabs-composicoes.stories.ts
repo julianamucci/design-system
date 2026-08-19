@@ -244,15 +244,15 @@ export const VerticalSettings: Story = {
             Segurança
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="profile" class="nds-text-body" style="padding-left: 1rem">
+        <TabsContent value="profile" class="nds-text-body nds-pl-4">
           <h3 class="nds-font-medium nds-text-foreground">Perfil público</h3>
           <p class="nds-mt-1 nds-text-muted-foreground">Nome, foto e bio visíveis para outros usuários.</p>
         </TabsContent>
-        <TabsContent value="account" class="nds-text-body" style="padding-left: 1rem">
+        <TabsContent value="account" class="nds-text-body nds-pl-4">
           <h3 class="nds-font-medium nds-text-foreground">Conta</h3>
           <p class="nds-mt-1 nds-text-muted-foreground">E-mail, idioma e preferências regionais.</p>
         </TabsContent>
-        <TabsContent value="security" class="nds-text-body" style="padding-left: 1rem">
+        <TabsContent value="security" class="nds-text-body nds-pl-4">
           <h3 class="nds-font-medium nds-text-foreground">Segurança</h3>
           <p class="nds-mt-1 nds-text-muted-foreground">Senha, autenticação em dois fatores e sessões.</p>
         </TabsContent>

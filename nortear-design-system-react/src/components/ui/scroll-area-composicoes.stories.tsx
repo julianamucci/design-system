@@ -91,7 +91,7 @@ export const CardCarousel: Story = {
               <div className="nds-cluster nds-rounded-md nds-bg-muted nds-text-body" data-align="center" data-justify="center" style={{ height: "140px", width: "160px" }}>
                 Imagem {n}
               </div>
-              <figcaption className="nds-text-caption nds-text-muted-foreground" style={{ paddingTop: "0.5rem" }}>
+              <figcaption className="nds-text-caption nds-text-muted-foreground nds-pt-2">
                 Foto {n} — autor {n}
               </figcaption>
             </figure>

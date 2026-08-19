@@ -422,9 +422,9 @@ const visualTestItems = computed(() => [
       component-slug="chart"
     >
       <div
-        class="nds-stack nds-w-full"
+        class="nds-stack nds-w-full nds-py-8"
         data-spacing="md"
-        style="align-items: center; justify-content: center; padding-block: 2rem"
+        style="align-items: center; justify-content: center"
       >
         <ChartContainer
           :option="buildBarOption({ xAxis: xMonths, series: multiSeries })"
@@ -535,9 +535,9 @@ const visualTestItems = computed(() => [
       <!-- Pair 2: DO — com aria-label -->
       <template #do-preview-1>
         <div
-          class="nds-stack"
+          class="nds-stack nds-py-4"
           data-spacing="sm"
-          style="align-items: center; justify-content: center; padding-block: 1rem"
+          style="align-items: center; justify-content: center"
         >
           <div
             class="nds-cluster nds-rounded-full nds-bg-muted nds-text-caption nds-font-mono"
@@ -561,9 +561,9 @@ const visualTestItems = computed(() => [
       <!-- Pair 2: DON'T — sem aria-label -->
       <template #dont-preview-1>
         <div
-          class="nds-stack"
+          class="nds-stack nds-py-4"
           data-spacing="sm"
-          style="align-items: center; justify-content: center; padding-block: 1rem"
+          style="align-items: center; justify-content: center"
         >
           <div
             class="nds-cluster nds-rounded-full nds-bg-muted nds-text-caption nds-font-mono"

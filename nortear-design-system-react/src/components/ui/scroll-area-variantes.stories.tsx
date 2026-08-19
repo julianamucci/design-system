@@ -50,7 +50,7 @@ export const Vertical: Story = {
       <ScrollArea size="xl" className="nds-w-full nds-rounded-md nds-border-default">
         <div className="nds-p-4" data-spacing="sm">
           {tags.map((n) => (
-            <div key={n} className="nds-text-body nds-border-b nds-last-border-0" style={{ paddingBottom: "0.5rem" }}>
+            <div key={n} className="nds-text-body nds-border-b nds-last-border-0 nds-pb-2">
               Tag {n}
             </div>
           ))}

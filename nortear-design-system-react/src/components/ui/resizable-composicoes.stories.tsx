@@ -54,7 +54,7 @@ export const EditorPreview: Story = {
           <div className="nds-stack nds-p-4 nds-text-caption nds-font-mono" style={{ height: "100%" }}>
             <div className="nds-text-muted-foreground nds-mb-2">editor.tsx</div>
             <div>export function App() {`{`}</div>
-            <div style={{ paddingLeft: "1rem" }}>return &lt;Hello /&gt;;</div>
+            <div className="nds-pl-4">return &lt;Hello /&gt;;</div>
             <div>{`}`}</div>
           </div>
         </ResizablePanel>

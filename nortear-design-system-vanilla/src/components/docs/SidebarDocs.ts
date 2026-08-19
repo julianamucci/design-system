@@ -850,11 +850,10 @@ export function createSidebarDocs(): HTMLElement {
           searchInput.type = 'search';
           searchInput.placeholder = 'Buscar...';
           searchInput.setAttribute('aria-label', 'Buscar navegação');
-          searchInput.className = 'nds-w-full nds-rounded-md nds-px-2 nds-text-caption';
+          searchInput.className = 'nds-w-full nds-rounded-md nds-px-2 nds-text-caption nds-pl-8';
           searchInput.style.border = '1px solid var(--sidebar-border)';
           searchInput.style.background = 'var(--sidebar)';
           searchInput.style.paddingBlock = '0.375rem';
-          searchInput.style.paddingLeft = '2rem';
           searchInput.style.color = 'hsl(var(--sidebar-foreground))';
           searchWrapper.appendChild(searchIcon);
           searchWrapper.appendChild(searchInput);

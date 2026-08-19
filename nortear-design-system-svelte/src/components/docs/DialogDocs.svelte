@@ -549,7 +549,7 @@ interface TriggerProps { class?: string; child?: Snippet<[{ props: Record<string
           <DialogTitle>Termos de uso</DialogTitle>
           <DialogDescription>Leia atentamente antes de aceitar.</DialogDescription>
         </DialogHeader>
-        <div class="nds-stack nds-overflow-y nds-text-body nds-text-muted-foreground" data-spacing="sm" style="max-height: 40vh; padding-right: 0.5rem;">
+        <div class="nds-stack nds-overflow-y nds-text-body nds-text-muted-foreground nds-pr-2" data-spacing="sm" style="max-height: 40vh">
           {#each Array.from({ length: 10 }) as _, i (i)}
             <p>Parágrafo {i + 1}: conteúdo extenso para demonstrar scroll interno.</p>
           {/each}

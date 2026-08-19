@@ -90,9 +90,8 @@ function buildBase(
 
   const content = createSidebarContent();
   const menu = document.createElement('ul');
-  menu.className = 'nds-stack nds-w-full nds-min-w-0';
+  menu.className = 'nds-stack nds-w-full nds-min-w-0 nds-p-2';
   menu.dataset.spacing = 'xs';
-  menu.style.padding = '0.5rem';
   menu.setAttribute('data-sidebar', 'menu');
 
   const navItems = [
@@ -122,11 +121,9 @@ function buildBase(
   inset.style.flexDirection = 'column';
 
   const topbar = document.createElement('div');
-  topbar.className = 'nds-cluster nds-border-b';
+  topbar.className = 'nds-cluster nds-border-b nds-pl-4 nds-pr-4';
   topbar.dataset.spacing = 'sm';
   topbar.style.height = '3rem';
-  topbar.style.paddingLeft = '1rem';
-  topbar.style.paddingRight = '1rem';
 
   if (collapsible !== 'none') {
     topbar.appendChild(createSidebarTrigger(instance.toggle));
@@ -138,9 +135,8 @@ function buildBase(
   topbar.appendChild(stateLabel);
 
   const mainContent = document.createElement('div');
-  mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+  mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground nds-p-8';
   mainContent.dataset.justify = 'center';
-  mainContent.style.padding = '2rem';
   mainContent.textContent = 'Conteúdo principal';
 
   inset.append(topbar, mainContent);
@@ -217,10 +213,8 @@ export const IconMode: Story = {
 
     const header = createSidebarHeader();
     const logoRow = document.createElement('div');
-    logoRow.className = 'nds-cluster';
+    logoRow.className = 'nds-cluster nds-pt-1 nds-pb-1';
     logoRow.dataset.justify = 'center';
-    logoRow.style.paddingTop = '0.25rem';
-    logoRow.style.paddingBottom = '0.25rem';
     logoRow.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>';
     header.appendChild(logoRow);
     inner.appendChild(header);
@@ -233,9 +227,8 @@ export const IconMode: Story = {
     ];
 
     const menu = document.createElement('ul');
-    menu.className = 'nds-stack nds-w-full nds-min-w-0';
+    menu.className = 'nds-stack nds-w-full nds-min-w-0 nds-p-2';
   menu.dataset.spacing = 'xs';
-  menu.style.padding = '0.5rem';
     menu.setAttribute('data-sidebar', 'menu');
 
     navItems.forEach(item => {
@@ -259,11 +252,9 @@ export const IconMode: Story = {
   inset.style.flexDirection = 'column';
 
     const topbar = document.createElement('div');
-    topbar.className = 'nds-cluster nds-border-b';
+    topbar.className = 'nds-cluster nds-border-b nds-pl-4 nds-pr-4';
   topbar.dataset.spacing = 'sm';
   topbar.style.height = '3rem';
-  topbar.style.paddingLeft = '1rem';
-  topbar.style.paddingRight = '1rem';
     topbar.appendChild(createSidebarTrigger(instance.toggle));
 
     const label = document.createElement('span');
@@ -272,9 +263,8 @@ export const IconMode: Story = {
     topbar.appendChild(label);
 
     const mainContent = document.createElement('div');
-    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground';
+    mainContent.className = 'nds-cluster nds-flex-1 nds-text-body nds-text-muted-foreground nds-p-8';
   mainContent.dataset.justify = 'center';
-  mainContent.style.padding = '2rem';
     mainContent.textContent = 'Sidebar recolhida no modo icon: apenas ícones visíveis';
 
     inset.append(topbar, mainContent);

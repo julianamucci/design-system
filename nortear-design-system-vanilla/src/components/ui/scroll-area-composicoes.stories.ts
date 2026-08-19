@@ -259,10 +259,8 @@ export const InsideCard: Story = {
       'Configurou webhook', 'Testou webhook', 'Removeu webhook', 'Conectou GitHub', 'Desconectou GitHub'];
     actions.forEach((a, i) => {
       const li = document.createElement('li');
-      li.className = 'nds-cluster nds-text-body nds-border-b-soft';
+      li.className = 'nds-cluster nds-text-body nds-border-b-soft nds-pt-2 nds-pb-2';
       li.dataset.justify = 'between';
-      li.style.paddingTop = '0.5rem';
-      li.style.paddingBottom = '0.5rem';
       const left = document.createElement('span');
       left.textContent = a;
       const right = document.createElement('span');
@@ -357,8 +355,7 @@ export const Sidebar: Story = {
     sidebar.style.width = '14rem';
 
     const content = document.createElement('div');
-    content.className = 'nds-flex-1 nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground';
-    content.style.padding = '1rem';
+    content.className = 'nds-flex-1 nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-p-4';
     content.textContent = 'Conteúdo principal — a sidebar à esquerda rola independentemente desta área.';
 
     outer.append(sidebar, content);

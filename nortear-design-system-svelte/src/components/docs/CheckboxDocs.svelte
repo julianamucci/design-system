@@ -224,7 +224,7 @@ import { Label } from "@/components/ui/label";`;
     <Checkbox id="sa-parent" checked={parent} {indeterminate} onCheckedChange={toggleAll} />
     <Label for="sa-parent">Selecionar todos</Label>
   </div>
-  <div class="nds-stack" data-spacing="xs" style="padding-left: 1.5rem">
+ <div class="nds-stack nds-pl-6" data-spacing="xs">
     <div class="nds-cluster" data-spacing="xs"><Checkbox id="sa-1" bind:checked={c1} /><Label for="sa-1">Opção 1</Label></div>
     <div class="nds-cluster" data-spacing="xs"><Checkbox id="sa-2" bind:checked={c2} /><Label for="sa-2">Opção 2</Label></div>
     <div class="nds-cluster" data-spacing="xs"><Checkbox id="sa-3" bind:checked={c3} /><Label for="sa-3">Opção 3</Label></div>
@@ -525,7 +525,7 @@ import { Label } from "@/components/ui/label";`;
         />
         <Label for="sa-parent">Selecionar todos</Label>
       </div>
-      <div class="nds-stack" data-spacing="xs" style="padding-left: 1.5rem">
+ <div class="nds-stack nds-pl-6" data-spacing="xs">
         <div class="nds-cluster" data-spacing="xs">
           <Checkbox id="sa-1" bind:checked={compSelectAllChild1} />
           <Label for="sa-1">Opção 1</Label>

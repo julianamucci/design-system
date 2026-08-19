@@ -102,7 +102,7 @@ export const WithTitle: Story = {
               Ajuste a aparência do conteúdo da página.
             </PopoverDescription>
           </PopoverHeader>
-          <div className="nds-cluster" style={{ paddingTop: "0.25rem" }} data-justify="end" data-spacing="sm">
+          <div className="nds-cluster nds-pt-1" data-justify="end" data-spacing="sm">
             <Button variant="ghost" size="sm">
               Cancelar
             </Button>
