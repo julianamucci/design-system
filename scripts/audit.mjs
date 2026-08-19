@@ -3606,6 +3606,56 @@ const slugs = all
     })()
   : [slug];
 
+/**
+ * Inventário da dívida de `style` inline, arquivo a arquivo.
+ *
+ * A regra reprova o arquivo inteiro numa violação só, com amostra de três
+ * declarações — o que basta para o gate e não basta para decidir o que fazer
+ * com cada arquivo. A dívida vai ser paga em rodadas (só 18% dela tem
+ * utilitária hoje), e a cada rodada alguém precisa da quebra por propriedade.
+ *
+ * Sai daqui, e não de um script à parte, porque reusa `inlineStyleDecls` tal
+ * como ela é: uma segunda implementação divergiria da guarda de snippet, que é
+ * justamente o que separa 29% de falso positivo do achado real.
+ */
+if (args.includes('--inline-inventory')) {
+  const linhas = [];
+  for (const s of slugs) {
+    for (const stack of STACKS) {
+      const { ui, docs } = filesForSlug(s, stack);
+      for (const file of [...ui, ...docs]) {
+        const decls = inlineStyleDecls(readFile(file) ?? '');
+        if (!decls.length) continue;
+        const props = {};
+        for (const d of decls) {
+          const p = d.decl.split(':')[0];
+          (props[p] ??= []).push(d.decl.split(':').slice(1).join(':').trim());
+        }
+        linhas.push({
+          slug: s, stack, file: relative(ROOT, file).replace(/\\/g, '/'),
+          tipo: /\.stories\./.test(file) ? 'story' : /components[\\/]docs[\\/]/.test(file) ? 'docs' : 'ui',
+          total: decls.length, props,
+        });
+      }
+    }
+  }
+  linhas.sort((a, b) => b.total - a.total || a.file.localeCompare(b.file));
+  if (json) {
+    console.log(JSON.stringify(linhas, null, 2));
+  } else {
+    console.log(`# style inline — ${linhas.length} arquivos, ${linhas.reduce((n, l) => n + l.total, 0)} declarações\n`);
+    console.log('| arquivo | tipo | n | propriedades |');
+    console.log('|---|---|---|---|');
+    for (const l of linhas) {
+      const p = Object.entries(l.props)
+        .sort((a, b) => b[1].length - a[1].length)
+        .map(([k, v]) => `${k}×${v.length}`).join(', ');
+      console.log(`| ${l.file} | ${l.tipo} | ${l.total} | ${p} |`);
+    }
+  }
+  process.exit(0);
+}
+
 const allViolations = {};
 for (const s of slugs) {
   allViolations[s] = runAudit(s, category);
