@@ -292,16 +292,17 @@ const CODE_DOTS = `<!-- #carrossel JÁ é a instância: a posição e o total sa
   <button ndsCarouselNext label="Próximo item"></button>
 </nds-carousel>
 
-<div class="nds-cluster" data-justify="center">
+<!-- O atual vira pílula rotulada; os demais continuam pontos. Toda a forma
+     sai de .nds-carousel-dot, a classe compartilhada. -->
+<div class="nds-cluster" data-justify="center" data-spacing="sm">
   @for (i of indices; track i) {
     <button
-      ndsButton
-      [variant]="carrossel.index() === i ? 'default' : 'outline'"
-      size="icon-sm"
+      type="button"
+      class="nds-carousel-dot"
       [attr.aria-current]="carrossel.index() === i ? 'true' : null"
       [attr.aria-label]="'Ir para o slide ' + (i + 1) + ' de ' + indices.length"
       (click)="carrossel.irPara(i)"
-    >{{ i + 1 }}</button>
+    ><span class="nds-carousel-dot-label">Slide {{ i + 1 }}</span></button>
   }
 </div>`;
 
@@ -622,18 +623,27 @@ const TOKENS_CSS = `/* O Carousel não declara variáveis próprias: consome os 
           <button ndsCarouselNext [label]="t('demonstration.labels.next')"></button>
         </nds-carousel>
 
-        <!-- Cada dot é um <button> com nome que traz posição E total: "2" sozinho
-             não diz para onde leva. -->
-        <div class="nds-cluster" data-justify="center">
+        <!-- Cada controle é um button com nome que traz posição E total: "2"
+             sozinho não diz para onde leva.
+
+             Sem crase neste comentário: o template é um literal de template de
+             JavaScript, e uma crase aqui dentro fecha a string.
+
+             A classe nds-carousel-dot é a MESMA das outras quatro stacks. Esta
+             docs page montava a fileira com o componente de botão em variante
+             numerada: legível, mas uma composição diferente da que o conteúdo
+             compartilhado descreve. O atual vira pílula com o rótulo à vista,
+             os demais continuam pontos, e o alvo tem piso de 24px nos dois
+             estados (WCAG 2.5.8). -->
+        <div class="nds-cluster" data-justify="center" data-spacing="sm">
           @for (i of cincoSlides; track i) {
             <button
-              ndsButton
-              [variant]="comDots.index() === i - 1 ? 'default' : 'outline'"
-              size="icon-sm"
+              type="button"
+              class="nds-carousel-dot"
               [attr.aria-current]="comDots.index() === i - 1 ? 'true' : null"
               [attr.aria-label]="rotuloDoDot(i, cincoSlides.length)"
               (click)="comDots.irPara(i - 1)"
-            >{{ i }}</button>
+            ><span class="nds-carousel-dot-label">{{ rotuloVisivelDoDot(i) }}</span></button>
           }
         </div>
       </div>
@@ -849,6 +859,18 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
 
   protected rotuloDoDot(posicao: number, total: number): string {
     return `${t('demonstration.labels.goToSlide')} ${posicao} ${t('demonstration.labels.of')} ${total}`;
+  }
+
+  /**
+   * Texto VISÍVEL dentro da pílula do slide atual.
+   *
+   * É um PEDAÇO do nome acessível ("Ir para o slide 2 de 5" contém "Slide 2"),
+   * e não um segundo nome: o `aria-label` substitui o conteúdo para a
+   * tecnologia assistiva, então nada é lido duas vezes, e a contenção é o que a
+   * WCAG 2.5.3 (Label in Name, A) cobra de quem comanda por voz.
+   */
+  protected rotuloVisivelDoDot(posicao: number): string {
+    return `${t('demonstration.labels.slide')} ${posicao}`;
   }
 
   /**

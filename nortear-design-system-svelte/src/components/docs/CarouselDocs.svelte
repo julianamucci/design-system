@@ -233,16 +233,17 @@ import Autoplay from "embla-carousel-autoplay";`;
     <CarouselPrevious aria-label="Item anterior" />
     <CarouselNext aria-label="Próximo item" />
   </Carousel>
-  <div class="nds-cluster" data-spacing="sm" data-justify="center" aria-label="Ir para o slide">
+  <!-- O atual vira pílula rotulada; os demais continuam pontos. Tudo em
+       .nds-carousel-dot — nenhuma medida cravada aqui. -->
+  <div class="nds-cluster" data-spacing="sm" data-justify="center">
     {#each slides as _, i}
       <button
         type="button"
+        class="nds-carousel-dot"
         aria-label={\`Ir para o slide \${i + 1} de \${slides.length}\`}
-        aria-current={i === current ? 'true' : 'false'}
-        class={\`nds-rounded-full \${i === current ? 'nds-bg-primary' : ''}\`}
-        style="height: 0.5rem; width: 0.5rem"
+        aria-current={i === current ? 'true' : undefined}
         onclick={() => api?.scrollTo(i)}
-      />
+      ><span class="nds-carousel-dot-label">Slide {i + 1}</span></button>
     {/each}
   </div>
 </div>`;
@@ -361,18 +362,24 @@ interface CarouselNavProps extends ButtonProps {
         <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
         <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
       </Carousel>
-      <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm" role="tablist" aria-label="Paginação">
+      <!--
+        Mesma fileira de paginação da seção de composições, e da mesma classe
+        compartilhada. Esta aqui era a única das cinco docs pages que a montava
+        como `tablist`/`tab`: o controle não comanda painel nenhum, e o conteúdo
+        compartilhado descreve `aria-current` num botão comum. Ela também
+        desenhava o ponto à mão com 8px de lado (reprova em `target-size`, WCAG
+        2.5.8) e nomeava só a posição — "Ir para o slide 2" sem o total, que é
+        exatamente o formato que a tabela de UX writing rejeita.
+      -->
+      <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm">
         {#each demoScrollSnaps as _, i (i)}
           <button
             type="button"
-            role="tab"
-            aria-label={`${$tStore('demonstration.labels.goToSlide')} ${i + 1}`}
-            aria-selected={demoSelectedIndex === i}
-            class="nds-rounded-full"
-            class:nds-bg-primary={demoSelectedIndex === i}
-            style={`height: 0.5rem; width: 0.5rem; transition: background-color 200ms;${demoSelectedIndex !== i ? ' background: color-mix(in oklch, var(--muted-foreground) 30%, transparent)' : ''}`}
+            class="nds-carousel-dot"
+            aria-label={`${$tStore('demonstration.labels.goToSlide')} ${i + 1} ${$tStore('demonstration.labels.of')} ${demoScrollSnaps.length}`}
+            aria-current={demoSelectedIndex === i ? 'true' : undefined}
             onclick={() => demoGoTo(i)}
-          ></button>
+          ><span class="nds-carousel-dot-label">{$tStore('demonstration.labels.slide')} {i + 1}</span></button>
         {/each}
       </div>
     </div>
@@ -730,17 +737,25 @@ interface CarouselNavProps extends ButtonProps {
         <CarouselPrevious aria-label={$tStore('demonstration.labels.previous')} />
         <CarouselNext aria-label={$tStore('demonstration.labels.next')} />
       </Carousel>
-      <div class="nds-cluster" data-align="center" data-justify="center" data-spacing="sm" aria-label={$tStore('demonstration.labels.goToSlide')}>
+      <!--
+        Toda a forma sai de `.nds-carousel-dot`: o atual vira pílula com o rótulo
+        à vista, os demais continuam pontos, e o alvo tem piso de 24px nos dois
+        estados. O ponto desenhado à mão com 8px de lado, que estava aqui,
+        reprova no `target-size` (WCAG 2.5.8) — e medida cravada em `style`
+        inline ainda vence a folha e sai do tema.
+
+        `aria-current` SOME no inativo em vez de virar "false": a string "false"
+        casaria com o seletor de presença.
+      -->
+      <div class="nds-cluster" data-align="center" data-justify="center" data-spacing="sm">
         {#each [1, 2, 3, 4, 5] as _, i (i)}
           <button
             type="button"
+            class="nds-carousel-dot"
             aria-label={`${$tStore('demonstration.labels.goToSlide')} ${i + 1} ${$tStore('demonstration.labels.of')} 5`}
-            aria-current={i === dotsCurrent ? 'true' : 'false'}
-            class="nds-rounded-full"
-            class:nds-bg-primary={i === dotsCurrent}
-            style={`height: 0.5rem; width: 0.5rem; transition: background-color 200ms;${i !== dotsCurrent ? ' background: color-mix(in oklch, var(--muted-foreground) 30%, transparent)' : ''}`}
+            aria-current={i === dotsCurrent ? 'true' : undefined}
             onclick={() => dotsApi?.scrollTo(i)}
-          ></button>
+          ><span class="nds-carousel-dot-label">{$tStore('demonstration.labels.slide')} {i + 1}</span></button>
         {/each}
       </div>
     </div>
@@ -955,6 +970,7 @@ interface CarouselNavProps extends ButtonProps {
         { action: $tStore('testes.functional.item5.action'), result: $tStore('testes.functional.item5.result'), priority: localPriority($tStore('testes.functional.item5.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item7.action'), result: $tStore('testes.functional.item7.result'), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item8.action'), result: $tStore('testes.functional.item8.result'), priority: localPriority($tStore('testes.functional.item8.priority'), $tNavStore) },
       ],
     }}
     accessibility={{
@@ -970,6 +986,7 @@ interface CarouselNavProps extends ButtonProps {
         { criterion: $tStore('testes.accessibility.item3.criterion'), level: $tStore('testes.accessibility.item3.level'), how: $tStore('testes.accessibility.item3.how') },
         { criterion: $tStore('testes.accessibility.item4.criterion'), level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
         { criterion: $tStore('testes.accessibility.item5.criterion'), level: $tStore('testes.accessibility.item5.level'), how: $tStore('testes.accessibility.item5.how') },
+        { criterion: $tStore('testes.accessibility.item6.criterion'), level: $tStore('testes.accessibility.item6.level'), how: $tStore('testes.accessibility.item6.how') },
       ],
     }}
     visual={{

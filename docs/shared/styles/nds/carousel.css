@@ -153,31 +153,77 @@
 
 /*
  * ─── nds-carousel-dot ───────────────────────────────────────────────────────
- * Atalho para um slide, na fileira abaixo do viewport.
+ * Atalho para um slide, na fileira abaixo do viewport. A fileira NÃO é de N
+ * peças iguais: o slide atual vira uma PÍLULA rotulada, na própria posição
+ * dele, e os demais continuam pontos.
  *
  *   <button class="nds-carousel-dot" aria-label="Ir para o slide 2 de 5"
- *           aria-current="true"></button>
+ *           aria-current="true">
+ *     <span class="nds-carousel-dot-label">Slide 2</span>
+ *   </button>
  *
- * O ALVO tem 24px e a MARCA visível tem 8px, e a diferença é o ponto da regra:
- * encolher o botão até o tamanho do ponto deixa o alvo menor que o dedo, e o
- * axe reprova por `target-size` (WCAG 2.5.8, AA) — foi o que aconteceu quando
- * as quatro stacks desenharam o dot à mão com 8px de altura e largura.
+ *   • [Slide 2] • • • •        ← com 6 slides e o 2º ativo
+ *
+ * O rótulo existe em TODOS os controles, e não só no ativo: é o que permite a
+ * pílula abrir e fechar por recorte, em vez de o texto piscar. No ponto, a
+ * coluna do rótulo mede `0fr` e o `overflow: hidden` o esconde por inteiro.
+ *
+ * O ALVO tem 24px no PISO e a MARCA visível tem 8px, e a diferença é o ponto da
+ * regra: encolher o botão até o tamanho do ponto deixa o alvo menor que o dedo,
+ * e o axe reprova por `target-size` (WCAG 2.5.8, AA) — foi o que aconteceu
+ * quando as cinco stacks desenharam o dot à mão com 8px de altura e largura.
+ *
+ * `min-width`/`min-height`, nunca `width`/`height`: a pílula tem TEXTO dentro, e
+ * medida cravada impede o controle de crescer junto com a fonte do navegador
+ * (WCAG 1.4.4, Resize Text 200%). Os 24px viram piso, não teto.
  *
  * O estado ativo é `aria-current="true"`, e não uma classe: o mesmo atributo
- * que o leitor de tela anuncia é o que pinta o ponto, então os dois nunca
+ * que o leitor de tela anuncia é o que pinta o controle, então os dois nunca
  * divergem.
+ *
+ * O texto visível ("Slide 2") é um PEDAÇO do nome acessível ("Ir para o slide 2
+ * de 5"), e não um segundo nome: o `aria-label` substitui o conteúdo para a
+ * tecnologia assistiva, então nada é lido duas vezes, e a contenção é o que a
+ * WCAG 2.5.3 (Label in Name, A) cobra de quem comanda por voz. Por isso o
+ * rótulo NÃO leva `aria-hidden`: escondê-lo tiraria da árvore justamente o
+ * texto que o comando por voz procura.
  */
 .nds-carousel-dot {
-  display: inline-flex;
+  /* Duas colunas: a MARCA (`::before`) e o RÓTULO. No ponto a primeira mede o
+   * seu tamanho e a segunda mede `0fr`; na pílula elas trocam. `fr` é
+   * interpolável — é o que deixa a largura animar até o tamanho do CONTEÚDO sem
+   * cravar um valor que a tradução mais longa estouraria. Mesmo mecanismo do
+   * painel do accordion, ali em linhas. */
+  display: inline-grid;
+  grid-template-columns: auto 0fr;
   align-items: center;
+  /* Sem isto a marca de 8px encosta na esquerda: a folga entre os 8px das
+   * faixas e os 24px do piso é distribuída para a faixa `auto`. */
   justify-content: center;
-  width: var(--spacing-6);                /* 24px — alvo */
-  height: var(--spacing-6);
-  padding: 0;
+
+  min-width: var(--spacing-6);            /* 24px — piso do alvo */
+  min-height: var(--spacing-6);
+  padding-block: var(--spacing-0-5);      /* 2px */
+  padding-inline: 0;
   border: 0;
   background-color: transparent;
+  color: hsl(var(--primary-foreground));
   border-radius: var(--radius-full);
   cursor: pointer;
+
+  font-family: var(--font-family, inherit);
+  font-size: var(--text-control-sm);      /* 12px */
+  line-height: 1.5;
+  font-weight: var(--font-weight-medium, 500);
+
+  /* `--duration-base` e não `--duration-panel`: a lista de reduced-motion zera
+   * a primeira e não a segunda, então a preferência do sistema chega aqui sem
+   * nenhuma regra a mais. `--ease-size` é a curva de percurso que o olho
+   * acompanha inteiro — é a mudança de tamanho que está sendo vista. */
+  transition:
+    grid-template-columns var(--duration-base) var(--ease-size),
+    padding-inline var(--duration-base) var(--ease-size),
+    background-color var(--duration-base) var(--ease-size);
 }
 
 .nds-carousel-dot::before {
@@ -186,11 +232,31 @@
   height: var(--spacing-2);
   border-radius: var(--radius-full);
   background-color: hsl(var(--muted-foreground) / 0.3);
-  transition: background-color var(--duration-fast);
+  transition:
+    width var(--duration-base) var(--ease-size),
+    background-color var(--duration-base) var(--ease-size);
 }
 
-.nds-carousel-dot[aria-current="true"]::before {
+/* `min-width: 0` é o que deixa a faixa de `0fr` realmente fechar: sem ele o
+ * mínimo automático do item de grid é o tamanho do texto, e a pílula nunca
+ * volta a ser ponto. */
+.nds-carousel-dot-label {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.nds-carousel-dot[aria-current="true"] {
+  grid-template-columns: 0fr 1fr;
+  padding-inline: var(--spacing-3);       /* 12px */
   background-color: hsl(var(--primary));
+}
+
+/* A marca some dentro da pílula: o que identifica o atual passa a ser o próprio
+ * rótulo. Sem isto sobra um ponto claro grudado no texto. */
+.nds-carousel-dot[aria-current="true"]::before {
+  width: 0;
 }
 
 .nds-carousel-dot:focus-visible {
@@ -201,6 +267,7 @@
 @media (prefers-reduced-motion: reduce) {
   .nds-carousel-track,
   .nds-carousel-button,
+  .nds-carousel-dot,
   .nds-carousel-dot::before {
     transition: none;
   }

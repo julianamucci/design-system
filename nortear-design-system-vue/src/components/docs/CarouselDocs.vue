@@ -253,17 +253,20 @@ function onInitApi(payload: CarouselApi) {
       <CarouselPrevious aria-label="Item anterior" />
       <CarouselNext aria-label="Próximo item" />
     </Carousel>
-    <div class="nds-cluster" data-spacing="sm" data-justify="center" aria-label="Ir para o slide">
+    <!-- O atual vira pílula rotulada; os demais continuam pontos. Tudo em
+         .nds-carousel-dot — nenhuma medida cravada aqui. -->
+    <div class="nds-cluster" data-spacing="sm" data-justify="center">
       <button
         v-for="(_, i) in slides"
         :key="i"
         type="button"
+        class="nds-carousel-dot"
         :aria-label="\`Ir para o slide \${i + 1} de \${slides.length}\`"
-        :aria-current="i === current ? 'true' : 'false'"
-        :class="['nds-rounded-full', i === current ? 'nds-bg-primary' : '']"
-        :style="{ height: '0.5rem', width: '0.5rem' }"
+        :aria-current="i === current ? 'true' : null"
         @click="api?.scrollTo(i)"
-      />
+      >
+        <span class="nds-carousel-dot-label">{{ \`Slide \${i + 1}\` }}</span>
+      </button>
     </div>
   </div>
 </template>`;
@@ -432,6 +435,7 @@ const functionalTestItems = computed(() => [
   { action: tContent('testes.functional.item5.action'), result: tContent('testes.functional.item5.result'), priority: localPriority(tContent('testes.functional.item5.priority')) },
   { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
   { action: tContent('testes.functional.item7.action'), result: tContent('testes.functional.item7.result'), priority: localPriority(tContent('testes.functional.item7.priority')) },
+  { action: tContent('testes.functional.item8.action'), result: tContent('testes.functional.item8.result'), priority: localPriority(tContent('testes.functional.item8.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
@@ -440,6 +444,7 @@ const a11yTestItems = computed(() => [
   { criterion: tContent('testes.accessibility.item3.criterion'), level: tContent('testes.accessibility.item3.level'), how: tContent('testes.accessibility.item3.how') },
   { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
   { criterion: tContent('testes.accessibility.item5.criterion'), level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
+  { criterion: tContent('testes.accessibility.item6.criterion'), level: tContent('testes.accessibility.item6.level'), how: tContent('testes.accessibility.item6.how') },
 ]);
 
 const visualTestItems = computed(() => [
@@ -943,24 +948,30 @@ function onDemoInit(payload: any) {
             <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
             <CarouselNext :aria-label="tContent('demonstration.labels.next')" />
           </Carousel>
+          <!-- Toda a forma sai de `.nds-carousel-dot`: o atual vira pílula com o
+               rótulo à vista, os demais continuam pontos, e o alvo tem piso de
+               24px nos dois estados. O ponto desenhado à mão com 8px de lado,
+               que estava aqui, reprova no `target-size` (WCAG 2.5.8) — e medida
+               cravada em `style` inline ainda vence a folha e sai do tema.
+
+               `aria-current` SOME no inativo em vez de virar "false": a string
+               "false" casaria com o seletor de presença. -->
           <div
             class="nds-cluster"
             data-spacing="sm"
             data-justify="center"
-            :aria-label="tContent('demonstration.labels.goToSlide')"
           >
             <button
               v-for="(_, i) in demoSlides"
               :key="i"
               type="button"
+              class="nds-carousel-dot"
               :aria-label="`${tContent('demonstration.labels.goToSlide')} ${i + 1} ${tContent('demonstration.labels.of')} ${demoSlides.length}`"
-              :aria-current="i === dotsCurrent ? 'true' : 'false'"
-              :class="['nds-rounded-full', i === dotsCurrent ? 'nds-bg-primary' : '']"
-              :style="i === dotsCurrent
-                ? { height: '0.5rem', width: '0.5rem', transition: 'background-color 200ms' }
-                : { height: '0.5rem', width: '0.5rem', transition: 'background-color 200ms', background: 'color-mix(in oklch, var(--muted-foreground) 30%, transparent)' }"
+              :aria-current="i === dotsCurrent ? 'true' : undefined"
               @click="(dotsApi as any)?.scrollTo(i)"
-            />
+            >
+              <span class="nds-carousel-dot-label">{{ `${tContent('demonstration.labels.slide')} ${i + 1}` }}</span>
+            </button>
           </div>
         </div>
       </template>

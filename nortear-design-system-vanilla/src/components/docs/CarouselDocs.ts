@@ -494,41 +494,46 @@ const carousel = createCarousel({
           dotsRow.className = 'nds-cluster';
           dotsRow.dataset.spacing = 'sm';
           dotsRow.dataset.justify = 'center';
-          dotsRow.setAttribute('aria-label', stripHtml(t('demonstration.labels.goToSlide')));
 
+          // Toda a forma sai de `.nds-carousel-dot`: o atual vira pílula com o
+          // rótulo à vista, os demais continuam pontos, e o alvo tem piso de
+          // 24px nos dois estados. O ponto desenhado à mão com 8px de lado, que
+          // estava aqui, reprova no `target-size` (WCAG 2.5.8) — e as classes
+          // `bg-primary`/`bg-muted-foreground/30` que ele alternava nem existem
+          // mais no vocabulário `.nds-*`: eram inertes desde a migração.
           const dots: HTMLButtonElement[] = [];
           const goToLabel = stripHtml(t('demonstration.labels.goToSlide'));
           const ofLabel = stripHtml(t('demonstration.labels.of'));
+          const slideLabel = stripHtml(t('demonstration.labels.slide'));
           for (let i = 0; i < total; i++) {
             const dot = document.createElement('button');
             dot.type = 'button';
+            dot.className = 'nds-carousel-dot';
             dot.setAttribute('aria-label', `${goToLabel} ${i + 1} ${ofLabel} ${total}`);
-            dot.className = 'nds-rounded-full';
-            dot.style.height = '0.5rem';
-            dot.style.width = '0.5rem';
-            dot.style.background = 'color-mix(in oklch, var(--muted-foreground) 30%, transparent)';
-            dot.style.transition = 'background-color 200ms';
+            const rotulo = document.createElement('span');
+            rotulo.className = 'nds-carousel-dot-label';
+            rotulo.textContent = `${slideLabel} ${i + 1}`;
+            dot.appendChild(rotulo);
             dots.push(dot);
             dotsRow.appendChild(dot);
           }
 
+          // `aria-current` SOME no inativo em vez de virar "false": a string
+          // "false" casaria com o seletor de presença.
+          const marcarAtual = (index: number) =>
+            dots.forEach((d, i) => {
+              if (i === index) d.setAttribute('aria-current', 'true');
+              else d.removeAttribute('aria-current');
+            });
+
           const carousel = createCarousel({
-            items: buildSlides(total, stripHtml(t('demonstration.labels.slide'))),
-            onIndexChange: (index) => {
-              dots.forEach((d, i) => {
-                const active = i === index;
-                d.classList.toggle('bg-primary', active);
-                d.classList.toggle('bg-muted-foreground/30', !active);
-                d.setAttribute('aria-current', active ? 'true' : 'false');
-              });
-            },
+            items: buildSlides(total, slideLabel),
+            onIndexChange: (index) => marcarAtual(index),
           });
 
           carousel.setAttribute('aria-label', stripHtml(t('variants.compositions.withDots.name')));
 
-          dots[0].classList.remove('bg-muted-foreground/30');
-          dots[0].classList.add('nds-bg-primary');
-          dots[0].setAttribute('aria-current', 'true');
+          marcarAtual(0);
 
           wrap.append(carousel, dotsRow);
           return wrap;
@@ -581,20 +586,23 @@ const carousel = createCarousel({
           return wrap;
         };
 
-        const codeWithDots = `// Dots controlados via onIndexChange
+        const codeWithDots = `// Paginação controlada via onIndexChange. A forma sai toda de
+// .nds-carousel-dot: o atual vira pílula rotulada, os demais são pontos.
 const total = 5;
 const dotsRow = document.createElement('div');
 dotsRow.className = 'nds-cluster';
 dotsRow.dataset.spacing = 'sm';
 dotsRow.dataset.justify = 'center';
-dotsRow.setAttribute('aria-label', 'Ir para o slide');
 
 const dots = Array.from({ length: total }, (_, i) => {
   const dot = document.createElement('button');
   dot.type = 'button';
+  dot.className = 'nds-carousel-dot';
   dot.setAttribute('aria-label', \`Ir para o slide \${i + 1} de \${total}\`);
-  dot.className = 'nds-rounded-full';
-  Object.assign(dot.style, { height: '0.5rem', width: '0.5rem', background: 'color-mix(in oklch, var(--muted-foreground) 30%, transparent)' });
+  const rotulo = document.createElement('span');
+  rotulo.className = 'nds-carousel-dot-label';
+  rotulo.textContent = \`Slide \${i + 1}\`;
+  dot.appendChild(rotulo);
   dotsRow.appendChild(dot);
   return dot;
 });
@@ -603,9 +611,9 @@ const carousel = createCarousel({
   items: buildSlides(total),
   onIndexChange: (index) => {
     dots.forEach((d, i) => {
-      d.classList.toggle('bg-primary', i === index);
-      d.classList.toggle('bg-muted-foreground/30', i !== index);
-      d.setAttribute('aria-current', i === index ? 'true' : 'false');
+      // O inativo NÃO carrega o atributo: "false" casaria com [aria-current].
+      if (i === index) d.setAttribute('aria-current', 'true');
+      else d.removeAttribute('aria-current');
     });
   },
 });`;
@@ -866,7 +874,7 @@ export type CarouselOptions = {
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
+            items: [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
               action: toPlainText(t(`testes.functional.item${i}.action`)),
               result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -879,7 +887,7 @@ export type CarouselOptions = {
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5].map((i) => ({
+            items: [1, 2, 3, 4, 5, 6].map((i) => ({
               criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
               how: toPlainText(t(`testes.accessibility.item${i}.how`)),

@@ -41,7 +41,7 @@ histórico; a lista de cima é o que está por fazer.
 - [x] **`description` do alert-dialog: opcional no código, obrigatória na anatomia** (L73 do log). **Decidido pela dona (2026-08-17): a documentação alinha ao código — a descrição é opcional.** `anatomy.item6`, `usage.guidelines.item2`, `accessibility.item2`, `accessibility.aria.describedby` e `accessibility.screenReader.onOpen` reescritos nos três idiomas; os dois `v8 ignore` do Vanilla saíram; guidelines de react, vue e angular corrigidas. O caminho passou a ter contrato (`testes.accessibility.item8`) e story nas cinco (`WithoutDescription`). **Achado da medição**: das cinco, só o Vue quebrava — o `DialogContentImpl` do reka-ui gera o id da descrição sempre e ligava `aria-describedby` a um id inexistente (a própria lib avisa disso em dev). Corrigido no wrapper via registro da descrição.
 - [x] **`defaultOpen` na tabela de props do alert-dialog, só no Svelte.** Medido em `bits-ui/dist/bits/dialog/types.d.ts`: a raiz expõe `open`/`onOpenChange`/`onOpenChangeComplete`, sem `defaultOpen`. As outras quatro têm a prop de verdade. **Resolvido (2026-08-17)**: a prop saiu dos dois lugares de `AlertDialogDocs.svelte` — a linha da tabela e o `interfaceCode` que o leitor copia — pela mesma convenção do `DropdownMenuDocs.svelte`, o comentário no lugar da linha. As outras quatro ficaram intactas.
 - [ ] **Motor de múltiplos itens no carrossel Vanilla.** A fábrica desliza um slide por vez e não expõe base fracionária, com `coversNotApplicable` declarado. Trocar o motor, ou tirar o item do contrato das cinco.
-- [ ] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic.
+- [x] **Dots do carrossel no Angular são botões numerados**; as outras quatro usam `.nds-carousel-dot`, classe que não aparece em arquivo nenhum do Angular. Alinhar muda a foto do Chromatic. **Resolvido (2026-08-18), junto com o redesenho da paginação aprovado pela dona.** O Angular passou a usar `.nds-carousel-dot` na story de composições E na docs page; as cinco montam a MESMA fileira. O padrão novo: o slide atual vira uma pílula rotulada ("Slide N") na própria posição da fileira, os demais continuam pontos, e a mudança de forma anima por `grid-template-columns: 0fr → 1fr` com `--duration-base`/`--ease-size` (mesmo mecanismo do painel do accordion, sem biblioteca de animação). Contrato novo nas cinco: `testes.functional.item8` e `testes.accessibility.item6`.
 
 ### Dívida de fundação, sem dono de componente (3)
 
@@ -1936,10 +1936,25 @@ design antes de alguém "alinhar" no sentido errado.
   mas é divergência contra a referência, e as asserções ficam diferentes por
   causa dela.
 
-- [ ] **Os dots do Angular são botões numerados**, os das outras quatro são o
+- [x] **Os dots do Angular são botões numerados**, os das outras quatro são o
   ponto redondo de `.nds-carousel-dot`. O conteúdo compartilhado descreve o
   ponto. A numeração do Angular é legível e passa no `target-size`; não foi
-  mexida, mas as cinco não mostram a mesma composição.
+  mexida, mas as cinco não mostram a mesma composição. **Fechado em 2026-08-18**
+  pelo redesenho da paginação: as cinco usam `.nds-carousel-dot`, e o conteúdo
+  compartilhado passou a descrever a pílula.
+
+- [ ] **Piso de alvo de 24px é escalado pela densidade.** `.nds-carousel-dot`
+  usa `min-width/min-height: var(--spacing-6)`, e `--spacing-6` é
+  `--spacing-base × 6`: 24px na densidade padrão, mas **19,2px em
+  `.densidade-condensado`** e 30px em `.densidade-confortavel`. A WCAG 2.5.8
+  cobra 24 CSS px independentemente da densidade, então o piso deveria ser
+  invariante. Nenhum token existente serve: `--size-xs` também encolhe (20px no
+  condensado). É dívida ANTERIOR a esta rodada — o dot já media
+  `width: var(--spacing-6)` — e não foi inventado valor cravado no lugar.
+  **Decisão da dona: criar um token de alvo mínimo invariante à densidade
+  (algo como `--target-min: 1.5rem`) e apontar o dot, o checkbox e o radio para
+  ele?** A asserção de `accessibility.item6` mede na densidade padrão do
+  preview, que é onde a suíte roda.
 
 - [ ] **O conteúdo compartilhado descreve a API do Embla.** `props.table.opts`
   diz "Opções do Embla", `plugins` diz "Array de plugins do Embla", e

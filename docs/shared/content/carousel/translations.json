@@ -94,10 +94,10 @@
             "bad": "\"Próximo\", \"Avançar\", \"&gt;\""
           },
           "dots": {
-            "name": "Dots de navegação",
-            "format": "Posição + total · frase clara",
-            "good": "\"Ir para o slide 2 de 5\"",
-            "bad": "\"Slide 2\", \"Ponto 2\""
+            "name": "Nome acessível da paginação",
+            "format": "Posição + total · frase clara. O rótulo visível da pílula é um pedaço dele",
+            "good": "\"Ir para o slide 2 de 5\", com \"Slide 2\" à vista",
+            "bad": "\"Ponto 2\", \"2\", nome que não contém o texto visível"
           },
           "caption": {
             "name": "Descrição do carrossel",
@@ -157,7 +157,7 @@
       "compositions": {
         "withDots": {
           "name": "Carrossel com dots",
-          "description": "Carousel acompanhado de uma fileira de dots abaixo do viewport. Cada dot é um <code>&lt;button&gt;</code> com <code>aria-label</code> indicando \"Ir para o slide N de M\". O dot ativo recebe <code>aria-current=\"true\"</code> e cor de destaque.",
+          "description": "Carousel acompanhado de uma fileira de paginação abaixo do viewport. O slide atual ocupa a própria posição na fileira como uma pílula de cantos arredondados, fundo de destaque e o rótulo \"Slide N\" escrito dentro; os demais continuam pontos pequenos. Cada controle é um <code>&lt;button&gt;</code> com <code>aria-label</code> indicando \"Ir para o slide N de M\", e o atual recebe <code>aria-current=\"true\"</code> — é esse atributo que a folha usa para desenhar a pílula, com a mudança de forma animada.",
           "use": "Galerias e banners onde o usuário precisa visualizar a posição atual e pular diretamente para um slide específico. Recomendado para 3–7 slides — acima disso, prefira um indicador numérico ou Pagination."
         },
         "gallery": {
@@ -217,7 +217,7 @@
         "accent": "Fundo do Button ao hover",
         "ring": "Anel de foco visível via teclado",
         "radiusButton": "Raio dos botões de navegação",
-        "primary": "Cor dos dots ativos em dots customizados"
+        "primary": "Fundo da pílula do slide atual na fileira de paginação"
       },
       "customizationTitle": "Como personalizar via tema:"
     },
@@ -328,6 +328,11 @@
           "action": "Ativar plugin Autoplay com stopOnInteraction",
           "result": "Autoplay avança a cada delay; pausa ao clicar ou arrastar",
           "priority": "medium"
+        },
+        "item8": {
+          "action": "Mudar de slide com a fileira de paginação à vista",
+          "result": "O controle do slide atual vira pílula na própria posição da fileira, com o rótulo \"Slide N\" à vista; os demais continuam pontos, sem rótulo visível",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -357,6 +362,11 @@
           "criterion": "Contraste mínimo 4.5:1 nos botões de navegação",
           "level": "AA",
           "how": "axe-core / Lighthouse"
+        },
+        "item6": {
+          "criterion": "Alvo de cada controle da paginação com no mínimo 24 x 24 px, tanto no ponto quanto na pílula",
+          "level": "AA",
+          "how": "Medir a caixa de cada controle da fileira (WCAG 2.5.8)"
         }
       },
       "visual": {
@@ -379,7 +389,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Composições — com autoplay e dots customizados",
+          "story": "Composições — paginação com o slide atual em pílula rotulada",
           "priority": "medium"
         }
       }
@@ -500,10 +510,10 @@
             "bad": "\"Next\", \"Forward\", \"&gt;\""
           },
           "dots": {
-            "name": "Navigation dots",
-            "format": "Position + total · clear phrase",
-            "good": "\"Go to slide 2 of 5\"",
-            "bad": "\"Slide 2\", \"Dot 2\""
+            "name": "Pagination accessible name",
+            "format": "Position + total · clear phrase. The pill's visible label is a slice of it",
+            "good": "\"Go to slide 2 of 5\", with \"Slide 2\" on screen",
+            "bad": "\"Dot 2\", \"2\", a name that does not contain the visible text"
           },
           "caption": {
             "name": "Carousel description",
@@ -563,7 +573,7 @@
       "compositions": {
         "withDots": {
           "name": "Carousel with dots",
-          "description": "Carousel paired with a row of dots below the viewport. Each dot is a <code>&lt;button&gt;</code> with <code>aria-label</code> stating \"Go to slide N of M\". The active dot gets <code>aria-current=\"true\"</code> and a highlight color.",
+          "description": "Carousel paired with a pagination row below the viewport. The current slide takes its own position in the row as a fully rounded pill with a highlight background and the label \"Slide N\" written inside; the others stay small dots. Every control is a <code>&lt;button&gt;</code> with <code>aria-label</code> stating \"Go to slide N of M\", and the current one gets <code>aria-current=\"true\"</code> — that attribute is what the stylesheet uses to draw the pill, with an animated change of shape.",
           "use": "Galleries and banners where the user needs to see the current position and jump directly to a specific slide. Recommended for 3–7 slides — beyond that, prefer a numeric indicator or Pagination."
         },
         "gallery": {
@@ -623,7 +633,7 @@
         "accent": "Navigation Button hover background",
         "ring": "Visible focus ring via keyboard",
         "radiusButton": "Navigation button radius",
-        "primary": "Active dot color in custom dots"
+        "primary": "Current slide pill background in the pagination row"
       },
       "customizationTitle": "How to customize via theme:"
     },
@@ -734,6 +744,11 @@
           "action": "Enable Autoplay plugin with stopOnInteraction",
           "result": "Autoplay advances every delay; pauses on click or drag",
           "priority": "medium"
+        },
+        "item8": {
+          "action": "Change slide with the pagination row on screen",
+          "result": "The current slide's control becomes a pill at its own position in the row, showing the label \"Slide N\"; the others stay dots, with no visible label",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -763,6 +778,11 @@
           "criterion": "Minimum 4.5:1 contrast on navigation buttons",
           "level": "AA",
           "how": "axe-core / Lighthouse"
+        },
+        "item6": {
+          "criterion": "Each pagination control has a target of at least 24 x 24 px, as a dot and as a pill",
+          "level": "AA",
+          "how": "Measure the box of every control in the row (WCAG 2.5.8)"
         }
       },
       "visual": {
@@ -785,7 +805,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Compositions — with autoplay and custom dots",
+          "story": "Compositions — pagination with the current slide as a labelled pill",
           "priority": "medium"
         }
       }
@@ -906,10 +926,10 @@
             "bad": "\"Próximo\", \"Avanzar\", \"&gt;\""
           },
           "dots": {
-            "name": "Dots de navegación",
-            "format": "Posición + total · frase clara",
-            "good": "\"Ir al slide 2 de 5\"",
-            "bad": "\"Slide 2\", \"Punto 2\""
+            "name": "Nombre accesible de la paginación",
+            "format": "Posición + total · frase clara. La etiqueta visible de la píldora es un trozo de él",
+            "good": "\"Ir al slide 2 de 5\", con \"Slide 2\" a la vista",
+            "bad": "\"Punto 2\", \"2\", nombre que no contiene el texto visible"
           },
           "caption": {
             "name": "Descripción del carrusel",
@@ -969,7 +989,7 @@
       "compositions": {
         "withDots": {
           "name": "Carrusel con dots",
-          "description": "Carousel acompañado de una fila de dots debajo del viewport. Cada dot es un <code>&lt;button&gt;</code> con <code>aria-label</code> indicando \"Ir al slide N de M\". El dot activo recibe <code>aria-current=\"true\"</code> y color de destaque.",
+          "description": "Carousel acompañado de una fila de paginación debajo del viewport. El slide actual ocupa su propia posición en la fila como una píldora de esquinas redondeadas, fondo de destaque y la etiqueta \"Slide N\" escrita dentro; los demás siguen siendo puntos pequeños. Cada control es un <code>&lt;button&gt;</code> con <code>aria-label</code> indicando \"Ir al slide N de M\", y el actual recibe <code>aria-current=\"true\"</code> — es ese atributo el que la hoja usa para dibujar la píldora, con el cambio de forma animado.",
           "use": "Galerías y banners donde el usuario necesita ver la posición actual y saltar directamente a un slide específico. Recomendado para 3–7 slides — por encima de eso, prefiere un indicador numérico o Pagination."
         },
         "gallery": {
@@ -1029,7 +1049,7 @@
         "accent": "Fondo del Button al hover",
         "ring": "Anillo de foco visible vía teclado",
         "radiusButton": "Radio de los botones de navegación",
-        "primary": "Color de los dots activos en dots customizados"
+        "primary": "Fondo de la píldora del slide actual en la fila de paginación"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
     },
@@ -1140,6 +1160,11 @@
           "action": "Activar plugin Autoplay con stopOnInteraction",
           "result": "Autoplay avanza cada delay; pausa al clicar o arrastrar",
           "priority": "medium"
+        },
+        "item8": {
+          "action": "Cambiar de slide con la fila de paginación a la vista",
+          "result": "El control del slide actual se vuelve píldora en su propia posición de la fila, con la etiqueta \"Slide N\" a la vista; los demás siguen siendo puntos, sin etiqueta visible",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1169,6 +1194,11 @@
           "criterion": "Contraste mínimo 4.5:1 en botones de navegación",
           "level": "AA",
           "how": "axe-core / Lighthouse"
+        },
+        "item6": {
+          "criterion": "Objetivo de cada control de la paginación con al menos 24 x 24 px, como punto y como píldora",
+          "level": "AA",
+          "how": "Medir la caja de cada control de la fila (WCAG 2.5.8)"
         }
       },
       "visual": {
@@ -1191,7 +1221,7 @@
           "priority": "medium"
         },
         "item5": {
-          "story": "Composiciones — con autoplay y dots customizados",
+          "story": "Composiciones — paginación con el slide actual como píldora etiquetada",
           "priority": "medium"
         }
       }

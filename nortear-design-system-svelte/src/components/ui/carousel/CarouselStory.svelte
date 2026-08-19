@@ -160,17 +160,21 @@
     <div class="nds-cluster nds-mt-4" data-align="center" data-justify="center" data-spacing="sm">
       {#each scrollSnaps as _, i (i)}
         <!--
-          Botão comum, não aba: o dot não controla um painel e o conjunto não é
-          um `tablist`. O conteúdo compartilhado documenta `aria-current="true"`
-          no dot atual, que é o que um leitor de tela usa para dizer "atual"
-          numa lista de atalhos. Inativo NÃO carrega o atributo — a string
-          "false" ainda casaria com o seletor de presença `[aria-current]`.
+          Botão comum, não aba: o controle não comanda um painel e o conjunto
+          não é um `tablist`. O conteúdo compartilhado documenta
+          `aria-current="true"` no atual, que é o que um leitor de tela usa para
+          dizer "atual" numa lista de atalhos. Inativo NÃO carrega o atributo —
+          a string "false" ainda casaria com o seletor de presença.
 
-          Toda a aparência mora em `.nds-carousel-dot`: o ALVO tem 24px e a
-          MARCA visível, desenhada no `::before`, tem 8px. Desenhar o botão com
-          os 8px da marca reprovava no axe por `target-size` (WCAG 2.5.8). O
-          estado ativo é pintado pelo próprio `aria-current`, então o que o
-          leitor anuncia e o que o olho vê não têm como divergir.
+          Toda a aparência mora em `.nds-carousel-dot`: o atual vira PÍLULA com
+          o rótulo à vista, os demais continuam pontos, e o ALVO tem piso de
+          24px nos dois estados. Desenhar o botão com os 8px da marca reprovava
+          no axe por `target-size` (WCAG 2.5.8). A forma sai do próprio
+          `aria-current`, então o que o leitor anuncia e o que o olho vê não têm
+          como divergir.
+
+          O rótulo mora em TODOS os controles, não só no atual: é o que deixa a
+          pílula abrir e fechar por recorte em vez de o texto piscar.
         -->
         <button
           type="button"
@@ -178,7 +182,7 @@
           aria-label={`${goToSlideLabel} ${i + 1} ${ofLabel} ${scrollSnaps.length}`}
           aria-current={selectedIndex === i ? 'true' : undefined}
           onclick={() => goTo(i)}
-        ></button>
+        ><span class="nds-carousel-dot-label">{slideLabel} {i + 1}</span></button>
       {/each}
     </div>
   {/if}

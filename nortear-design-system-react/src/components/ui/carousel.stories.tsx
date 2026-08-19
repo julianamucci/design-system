@@ -118,8 +118,18 @@ export const Playground: Story = {
       return melhor;
     };
 
+    /**
+     * O orçamento é maior que o padrão de 1s de propósito. O que se espera aqui
+     * é o FIM do deslize, e a duração dele é do Embla, não do teste: numa
+     * rodada fria — a primeira depois de mexer no CSS compartilhado, com o
+     * transform da suíte inteira em cache vazio — a espera estourou com o
+     * trilho ainda entre dois slides (esperava 2, media 1), e as rodadas
+     * quentes seguintes passaram nos dois lados do par HEAD × trabalho. Não é
+     * asserção afrouxada: o alvo continua sendo o slide `i` em foco, e um
+     * carrossel que não chega lá continua reprovando.
+     */
     const emSlide = async (i: number) =>
-      waitFor(async () => { await expect(slideEmFoco()).toBe(i); });
+      waitFor(async () => { await expect(slideEmFoco()).toBe(i); }, { timeout: 4000 });
 
     /**
      * Volta ao primeiro slide clicando ENQUANTO a seta de voltar estiver viva.

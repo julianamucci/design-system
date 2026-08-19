@@ -2,6 +2,21 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
 import { createCard, createCardContent, createCardHeader, createCardTitle, createCardDescription } from './card';
+import carouselTranslations from '@shared/content/carousel/translations.json';
+
+/**
+ * "Slide" é texto VISÍVEL dentro da pílula, então é conteúdo e não literal de
+ * código: sai do mesmo `translations.json` que a docs page lê, onde a chave
+ * existe nos três idiomas. A story é fixture e fica presa a pt-BR de propósito
+ * — quem resolve o idioma de quem lê é a docs page, e uma play que dependesse
+ * do seletor de idioma procuraria um nome diferente a cada rodada.
+ */
+const CONTEUDO = carouselTranslations['pt-BR'].demonstration.labels;
+/** Nome acessível: posição E total. "Slide 2" sozinho não diz para onde leva. */
+const nomeAcessivel = (posicao: number, total: number) =>
+  `${CONTEUDO.goToSlide} ${posicao} ${CONTEUDO.of} ${total}`;
+/** Texto visível da pílula — um PEDAÇO do nome acessível (WCAG 2.5.3). */
+const rotuloVisivel = (posicao: number) => `${CONTEUDO.slide} ${posicao}`;
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
@@ -50,7 +65,7 @@ type Story = StoryObj;
 const TOTAL_DOTS = 5;
 
 export const WithDots: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: { covers: ['functional.item8', 'accessibility.item6', 'visual.item5'] },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -62,12 +77,14 @@ export const WithDots: Story = {
     dotsRow.dataset.justify = 'center';
     dotsRow.dataset.spacing = 'sm';
 
-    // `.nds-carousel-dot` traz o alvo de 24px e a marca visível de 8px. Desenhar
-    // o dot à mão com 8px de lado — que é o que as cinco stacks faziam — reprova
-    // no axe por `target-size` (WCAG 2.5.8, AA): o alvo fica menor que o dedo.
+    // `.nds-carousel-dot` traz o alvo com piso de 24px nos dois estados: o atual
+    // vira pílula com o rótulo à vista, os demais continuam pontos de 8px.
+    // Desenhar o ponto à mão com 8px de lado — que é o que as cinco stacks
+    // faziam — reprova no axe por `target-size` (WCAG 2.5.8, AA): o alvo fica
+    // menor que o dedo.
     //
-    // O estado ativo é só `aria-current`: é o atributo que o leitor de tela
-    // anuncia E o que a folha usa para pintar, então os dois nunca divergem.
+    // O estado atual é só `aria-current`: é o atributo que o leitor de tela
+    // anuncia E o que a folha usa para desenhar, então os dois nunca divergem.
     const pintar = (dot: HTMLElement, ativo: boolean) => {
       if (ativo) dot.setAttribute('aria-current', 'true');
       else dot.removeAttribute('aria-current');
@@ -79,7 +96,13 @@ export const WithDots: Story = {
       dot.type = 'button';
       dot.className = 'nds-carousel-dot';
       // Posição E total no nome: "2" sozinho não diz para onde leva.
-      dot.setAttribute('aria-label', `Ir para o slide ${i + 1} de ${TOTAL_DOTS}`);
+      dot.setAttribute('aria-label', nomeAcessivel(i + 1, TOTAL_DOTS));
+      // O rótulo mora em TODOS os controles, não só no atual: é o que deixa a
+      // pílula abrir e fechar por recorte em vez de o texto piscar.
+      const rotulo = document.createElement('span');
+      rotulo.className = 'nds-carousel-dot-label';
+      rotulo.textContent = rotuloVisivel(i + 1);
+      dot.appendChild(rotulo);
       pintar(dot, i === 0);
       dots.push(dot);
       dotsRow.appendChild(dot);
@@ -113,8 +136,14 @@ export const WithDots: Story = {
     const canvas = within(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-track"]')!;
     const recorte = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
-    const dot = (n: number) =>
-      canvas.getByRole('button', { name: `Ir para o slide ${n} de ${TOTAL_DOTS}` });
+    const dot = (n: number) => canvas.getByRole('button', { name: nomeAcessivel(n, TOTAL_DOTS) });
+    /**
+     * O rótulo é o único filho do controle — a marca do ponto é `::before`, e
+     * pseudo-elemento não entra em `firstElementChild`. Buscar por classe seria
+     * asserir o nome dela; o que interessa aqui é a CAIXA que ela produz.
+     */
+    const rotulo = (el: Element) => el.firstElementChild as HTMLElement;
+    const largura = (el: Element) => el.getBoundingClientRect().width;
 
     // Quanto o track já andou, em pixels, medido contra o recorte. É valor
     // ABSOLUTO: não depende de onde a rodada anterior parou, ao contrário de um
@@ -139,16 +168,46 @@ export const WithDots: Story = {
       await expect(dot(2).hasAttribute('aria-current')).toBe(false);
     });
 
-    await step('O dot ativo se distingue dos outros por mais do que a posição', async () => {
-      // Comparação entre dois dots, e não medida absoluta de um só: "tem fundo"
-      // é verdade para os cinco. O que prova o destaque é o ativo ter um fundo
-      // DIFERENTE do inativo.
-      //
-      // A leitura é do `::before`, que é onde a marca visível mora. Medir o
-      // botão devolveria `transparent` para os dois — uma comparação que nunca
-      // falha, exatamente o defeito que esta rodada existe para remover.
-      const cor = (el: Element) => getComputedStyle(el, '::before').backgroundColor;
-      await expect(cor(dot(1))).not.toBe(cor(dot(2)));
+    await step('O slide atual vira pílula rotulada na própria posição da fileira', async () => {
+      // Este é o padrão novo: a fileira não é de N peças iguais. Com o 2º slide
+      // atual, ela é `• [Slide 2] • • •` — e a asserção mede exatamente isso,
+      // na posição 2, sem nunca citar nome de classe.
+      await irPara(2);
+
+      // `waitFor` porque a mudança de forma é ANIMADA: medida no primeiro
+      // quadro, a pílula ainda está fechada e o ponto anterior ainda aberto.
+      await waitFor(() => {
+        expect(largura(rotulo(dot(2)))).toBeGreaterThan(0);
+        expect(largura(rotulo(dot(1)))).toBeLessThan(1);
+      });
+
+      // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
+      await expect(rotulo(dot(2))).toHaveTextContent(rotuloVisivel(2));
+      await expect(nomeAcessivel(2, TOTAL_DOTS).toLowerCase()).toContain(
+        rotuloVisivel(2).toLowerCase(),
+      );
+
+      // A forma mudou, não só a cor: a pílula é mais larga que o ponto vizinho.
+      await expect(largura(dot(2))).toBeGreaterThan(largura(dot(3)));
+
+      // E os DEMAIS continuam pontos: nenhum outro rótulo à vista, e um único
+      // `aria-current` na fileira inteira.
+      const demais = Array.from({ length: TOTAL_DOTS }, (_, k) => k + 1).filter((p) => p !== 2);
+      for (const posicao of demais) {
+        await expect(largura(rotulo(dot(posicao)))).toBeLessThan(1);
+        await expect(dot(posicao).hasAttribute('aria-current')).toBe(false);
+      }
+    });
+
+    await step('O alvo de cada controle da paginação continua com 24px de piso', async () => {
+      // Medido na densidade padrão do preview. O ponto tem marca de 8px e a
+      // pílula tem texto de 12px: sem o piso, os dois ficariam abaixo dos 24px
+      // que a WCAG 2.5.8 cobra — foi o defeito que criou `.nds-carousel-dot`.
+      for (let posicao = 1; posicao <= TOTAL_DOTS; posicao++) {
+        const caixa = dot(posicao).getBoundingClientRect();
+        await expect(caixa.width).toBeGreaterThanOrEqual(24);
+        await expect(caixa.height).toBeGreaterThanOrEqual(24);
+      }
     });
 
     await step('Clicar num dot leva o carrossel àquele slide', async () => {
