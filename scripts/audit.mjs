@@ -2430,40 +2430,70 @@ function inlineStyleDecls(content) {
   const out = [];
   const src = stripMarkupComments(stripComments(content));
   const mask = snippetMask(src);
+
+  // Posição absoluta -> linha. Necessário porque um objeto de estilo pode estar
+  // quebrado em várias linhas, e o achado tem que ser reportado onde ele está.
+  const inicioDaLinha = [0];
+  for (let i = 0; i < src.length; i++) if (src[i] === '\n') inicioDaLinha.push(i + 1);
+  const linhaDe = (abs) => {
+    let lo = 0, hi = inicioDaLinha.length - 1;
+    while (lo < hi) {
+      const meio = (lo + hi + 1) >> 1;
+      if (inicioDaLinha[meio] <= abs) lo = meio; else hi = meio - 1;
+    }
+    return lo + 1;
+  };
+
+  const push = (prop, valor, abs) => {
+    if (mask[abs]) return;                              // snippet exibido, não aplicado
+    const nome = kebab(String(prop).trim().replace(/['"]/g, ''));
+    const v = String(valor).trim().replace(/['"]/g, '');
+    if (!INLINE_DESIGN_PROPS.has(nome)) return;
+    if (INLINE_MECHANICAL_VALUE.test(v)) return;
+    if (INLINE_DYNAMIC.test(v)) return;
+    if (!INLINE_QUANTITY.test(v)) return;
+    out.push({ line: linhaDe(abs), decl: `${nome}: ${v}` });
+  };
+  const pares = (txt, delta) => {
+    for (const m of txt.matchAll(/([a-zA-Z-]+)\s*:\s*(["'])([^"']*)\2/g)) push(m[1], m[3], delta + m.index);
+  };
+
+  // style={{ … }} — jsx, com o objeto numa linha ou quebrado em várias.
+  //
+  // A primeira versão varria linha a linha e só enxergava o objeto inteiro numa
+  // linha só. `style={{` seguido das propriedades nas linhas de baixo — que é o
+  // que o prettier produz assim que a linha passa de 80 colunas — ficava
+  // invisível: 14 ocorrências, DUAS DELAS EM PRIMITIVO, a categoria de
+  // gravidade alta que o inventário dava como zerada. Por isso o casamento é de
+  // chaves, sobre a fonte inteira, e não por linha.
+  for (const m of src.matchAll(/style=\{\{/g)) {
+    let i = m.index + m[0].length, prof = 2;
+    while (i < src.length && prof > 0) {
+      if (src[i] === '{') prof++;
+      else if (src[i] === '}') prof--;
+      i++;
+    }
+    pares(src.slice(m.index, i), m.index);
+  }
+
   let base = 0;
-  src.split('\n').forEach((linha, i) => {
+  src.split('\n').forEach((linha) => {
     const ini = base;
     base += linha.length + 1;
-    const push = (prop, valor, pos) => {
-      if (mask[ini + pos]) return;                       // snippet exibido, não aplicado
-      const nome = kebab(String(prop).trim().replace(/['"]/g, ''));
-      const v = String(valor).trim().replace(/['"]/g, '');
-      if (!INLINE_DESIGN_PROPS.has(nome)) return;
-      if (INLINE_MECHANICAL_VALUE.test(v)) return;
-      if (INLINE_DYNAMIC.test(v)) return;
-      if (!INLINE_QUANTITY.test(v)) return;
-      out.push({ line: i + 1, decl: `${nome}: ${v}` });
-    };
-    const pares = (txt, delta) => {
-      for (const m of txt.matchAll(/([a-zA-Z-]+)\s*:\s*(["'])([^"']*)\2/g)) push(m[1], m[3], delta + m.index);
-    };
-
-    // style={{ height: '2rem' }} — jsx
-    if (/style=\{\{/.test(linha)) pares(linha, 0);
     // :style="{ minHeight: '200px' }" — vue com objeto ligado
-    for (const m of linha.matchAll(/:style=(["'])\s*\{([\s\S]*?)\}\s*\1/g)) pares(m[2], m.index);
+    for (const m of linha.matchAll(/:style=(["'])\s*\{([\s\S]*?)\}\s*\1/g)) pares(m[2], ini + m.index);
     // style="a: 1rem; b: 2rem" — vue, svelte, angular, html
     for (const m of linha.matchAll(/(?<!:)style=(["'])([^"']*)\1/g)) {
       if (m[2].trim().startsWith('{')) continue;         // objeto, já tratado acima
       for (const d of m[2].split(';')) {
         const [p, ...r] = d.split(':');
-        if (p && r.length) push(p, r.join(':'), m.index);
+        if (p && r.length) push(p, r.join(':'), ini + m.index);
       }
     }
     // el.style.height = '2rem' — factories vanilla
     for (const m of linha.matchAll(/\.style\.([a-zA-Z]+)\s*=\s*(["'])([^"']*)\2/g)) {
       if (m[1] === 'cssText') continue;                 // tratado abaixo, é folha inteira
-      push(m[1], m[3], m.index);
+      push(m[1], m[3], ini + m.index);
     }
     // el.style.cssText = 'width:20rem;padding:1rem' — mesma coisa, uma linha só.
     // Ficou de fora da primeira versão e escondia 12 declarações reais no vanilla,
@@ -2471,10 +2501,11 @@ function inlineStyleDecls(content) {
     for (const m of linha.matchAll(/\.style\.cssText\s*\+?=\s*(["'])([^"']*)\1/g)) {
       for (const d of m[2].split(';')) {
         const [p, ...r] = d.split(':');
-        if (p && r.length) push(p, r.join(':'), m.index);
+        if (p && r.length) push(p, r.join(':'), ini + m.index);
       }
     }
   });
+  out.sort((a, b) => a.line - b.line);
   return out;
 }
 
