@@ -235,10 +235,13 @@ interface PanelResizeHandleProps {
   // renderiza um wrapper interno com overflow:auto que não aceita props, então
   // é o conteúdo que dá acesso de teclado à região rolável (WCAG 2.1.1) —
   // mesmo princípio do CodeBlock. Sem isso: axe scrollable-region-focusable.
-  const demoBoxStyle: React.CSSProperties = {
-    minHeight: 220,
-    contain: "layout",
-  };
+  // A moldura de cada demo é `.nds-demo-box` com `data-min`: piso de altura, e
+  // não altura cravada — um painel que se redimensiona precisa crescer com o
+  // conteúdo e com o zoom de fonte. O degrau vem da escada `--box-height-*`.
+  // `contain: layout` fica inline porque não é valor de design: é isolamento de
+  // layout (o arrasto de um painel não deve reflowar a página inteira), e não
+  // tem tema, densidade nem escala de tipo para acompanhar.
+  const containLayout: React.CSSProperties = { contain: "layout" };
 
   return (
     <DocsPageLayout
@@ -263,8 +266,9 @@ interface PanelResizeHandleProps {
               {lblHorizontal}
             </p>
             <div
-              className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-              style={demoBoxStyle}
+              className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+              data-min="md"
+              style={containLayout}
             >
               <ResizablePanelGroup
                 direction="horizontal"
@@ -299,8 +303,9 @@ interface PanelResizeHandleProps {
               {lblVertical}
             </p>
             <div
-              className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-              style={{ minHeight: 260, contain: "layout" }}
+              className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+              data-min="lg"
+              style={containLayout}
             >
               <ResizablePanelGroup
                 direction="vertical"
@@ -335,8 +340,9 @@ interface PanelResizeHandleProps {
               {lblNested}
             </p>
             <div
-              className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-              style={{ minHeight: 300, contain: "layout" }}
+              className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+              data-min="xl"
+              style={containLayout}
             >
               <ResizablePanelGroup
                 direction="horizontal"
@@ -474,8 +480,9 @@ interface PanelResizeHandleProps {
             dontLabel: tNav("common.dont"),
             doPreview: (
               <div
-                className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-                style={{ minHeight: 120, contain: "layout" }}
+                className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+                data-min="xs"
+                style={containLayout}
               >
                 <ResizablePanelGroup direction="horizontal">
                   <ResizablePanel defaultSize={35} minSize={20} maxSize={60}>
@@ -494,8 +501,9 @@ interface PanelResizeHandleProps {
             ),
             dontPreview: (
               <div
-                className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-                style={{ minHeight: 120, contain: "layout" }}
+                className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+                data-min="xs"
+                style={containLayout}
               >
                 <ResizablePanelGroup direction="horizontal">
                   <ResizablePanel defaultSize={35}>
@@ -547,8 +555,9 @@ interface PanelResizeHandleProps {
             code: codeHorizontal,
             preview: (
               <div
-                className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-                style={{ minHeight: 160, contain: "layout" }}
+                className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+                data-min="sm"
+                style={containLayout}
               >
                 <ResizablePanelGroup direction="horizontal">
                   <ResizablePanel defaultSize={30} minSize={20} maxSize={50}>
@@ -572,8 +581,9 @@ interface PanelResizeHandleProps {
             code: codeVertical,
             preview: (
               <div
-                className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-                style={{ minHeight: 200, contain: "layout" }}
+                className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+                data-min="md"
+                style={containLayout}
               >
                 <ResizablePanelGroup direction="vertical">
                   <ResizablePanel defaultSize={50} minSize={20} maxSize={80}>
@@ -597,8 +607,9 @@ interface PanelResizeHandleProps {
             code: codeNested,
             preview: (
               <div
-                className="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-                style={{ minHeight: 240, contain: "layout" }}
+                className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+                data-min="lg"
+                style={containLayout}
               >
                 <ResizablePanelGroup direction="horizontal">
                   <ResizablePanel defaultSize={25} minSize={15} maxSize={40}>

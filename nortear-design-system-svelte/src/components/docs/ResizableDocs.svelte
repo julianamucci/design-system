@@ -110,7 +110,7 @@ import {
   ResizableHandle,
 } from "@/components/ui/resizable";`;
 
-  const codeHorizontal = `<PaneGroup direction="horizontal" style="height: 15rem">
+  const codeHorizontal = `<PaneGroup direction="horizontal">
   <Pane defaultSize={30} minSize={20} maxSize={50}>
     <!-- Sidebar -->
   </Pane>
@@ -120,7 +120,7 @@ import {
   </Pane>
 </PaneGroup>`;
 
-  const codeVertical = `<PaneGroup direction="vertical" style="height: 20rem">
+  const codeVertical = `<PaneGroup direction="vertical">
   <Pane defaultSize={50} minSize={20}>
     <!-- Topo -->
   </Pane>
@@ -130,7 +130,7 @@ import {
   </Pane>
 </PaneGroup>`;
 
-  const codeNested = `<PaneGroup direction="horizontal" style="height: 20rem">
+  const codeNested = `<PaneGroup direction="horizontal">
   <Pane defaultSize={30} minSize={20}>
     <!-- Sidebar -->
   </Pane>
@@ -206,7 +206,7 @@ interface HandleProps {
     <div class="nds-stack nds-w-full" data-spacing="lg">
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.horizontal')}</p>
-        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 200px;">
+        <div class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md">
           <PaneGroup direction="horizontal" style="height: 100%">
             <Pane defaultSize={30} minSize={20} maxSize={50} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
               <span class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
@@ -221,7 +221,7 @@ interface HandleProps {
 
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.vertical')}</p>
-        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 240px;">
+        <div class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="lg">
           <PaneGroup direction="vertical" style="height: 100%">
             <Pane defaultSize={50} minSize={20} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
               <span class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.top')}</span>
@@ -236,7 +236,7 @@ interface HandleProps {
 
       <div class="nds-stack" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.nested')}</p>
-        <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 280px;">
+        <div class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="xl">
           <PaneGroup direction="horizontal" style="height: 100%">
             <Pane defaultSize={30} minSize={20} maxSize={50} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
               <span class="nds-text-body nds-text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
@@ -356,7 +356,7 @@ interface HandleProps {
   />
 
   {#snippet doPair1()}
-    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 140px;">
+    <div class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="sm">
       <PaneGroup direction="horizontal" style="height: 100%">
         <Pane defaultSize={30} minSize={20} maxSize={50} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
           <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
@@ -369,7 +369,7 @@ interface HandleProps {
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 140px;">
+    <div class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="sm">
       <PaneGroup direction="horizontal" style="height: 100%">
         <Pane class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
           <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>
@@ -382,7 +382,7 @@ interface HandleProps {
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 140px;">
+    <div class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="sm">
       <PaneGroup direction="horizontal" style="height: 100%">
         <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
           <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.left')}</span>
@@ -395,7 +395,7 @@ interface HandleProps {
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 140px;">
+    <div class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="sm">
       <PaneGroup direction="horizontal" style="height: 100%">
         <Pane defaultSize={50} minSize={20} maxSize={80} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
           <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.left')}</span>
@@ -426,7 +426,7 @@ interface HandleProps {
   />
 
   {#snippet variantHorizontal()}
-    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 180px;">
+    <div class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md">
       <PaneGroup direction="horizontal" style="height: 100%">
         <Pane defaultSize={30} minSize={20} maxSize={50} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
           <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.left')}</span>
@@ -439,7 +439,7 @@ interface HandleProps {
     </div>
   {/snippet}
   {#snippet variantVertical()}
-    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 200px;">
+    <div class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md">
       <PaneGroup direction="vertical" style="height: 100%">
         <Pane defaultSize={50} minSize={20} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
           <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.top')}</span>
@@ -452,7 +452,7 @@ interface HandleProps {
     </div>
   {/snippet}
   {#snippet variantNested()}
-    <div class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" style="height: 240px;">
+    <div class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="lg">
       <PaneGroup direction="horizontal" style="height: 100%">
         <Pane defaultSize={30} minSize={20} class="nds-cluster nds-bg-muted" data-align="center" data-justify="center">
           <span class="nds-text-caption nds-text-muted-foreground">{$tStore('demonstration.labels.sidebar')}</span>

@@ -67,11 +67,22 @@ function panelContent(label: string, extraClass = ''): HTMLElement {
   return el;
 }
 
-function frame(child: HTMLElement, minHeight = '220px'): HTMLElement {
+/**
+ * Moldura da demo: `.nds-demo-box` com `data-min`, que é PISO de altura e não
+ * altura cravada — um painel que se redimensiona precisa de área para arrastar
+ * sem impedir o conteúdo de crescer. O degrau vem da escada `--box-height-*`.
+ *
+ * `contain: layout` continua inline: não é valor de design, é isolamento de
+ * layout (arrastar um painel não reflowa a página), sem tema, densidade nem
+ * escala de tipo para acompanhar.
+ */
+type DemoBoxStep = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+function frame(child: HTMLElement, size: DemoBoxStep = 'md'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.style.contain = 'layout';
-  wrap.style.minHeight = minHeight;
-  wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
+  wrap.className = 'nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
+  wrap.dataset.min = size;
   wrap.appendChild(child);
   return wrap;
 }
@@ -95,7 +106,7 @@ function buildVerticalDemo(): HTMLElement {
       { defaultSize: 50, minSize: 20, content: panelContent(t('demonstration.labels.bottom'), 'nds-bg-muted nds-text-muted-foreground') },
     ],
   });
-  return frame(root, '260px');
+  return frame(root, 'lg');
 }
 
 function buildNestedDemo(): HTMLElement {
@@ -118,7 +129,7 @@ function buildNestedDemo(): HTMLElement {
       { defaultSize: 70, minSize: 30, content: innerWrap },
     ],
   });
-  return frame(root, '300px');
+  return frame(root, 'xl');
 }
 
 // ─── createResizableDocs ──────────────────────────────────────────────────────
@@ -297,7 +308,7 @@ export function createResizableDocs(): HTMLElement {
                     { defaultSize: 70, minSize: 40, content: panelContent('Editor') },
                   ],
                 });
-                return frame(el, '180px');
+                return frame(el, 'md');
               },
               dontPreviewFactory: () => {
                 // Don't: sem minSize, painel pode colapsar.
@@ -308,7 +319,7 @@ export function createResizableDocs(): HTMLElement {
                     { defaultSize: 95, content: panelContent('Editor') },
                   ],
                 });
-                return frame(el, '180px');
+                return frame(el, 'md');
               },
             },
             {
@@ -326,7 +337,7 @@ export function createResizableDocs(): HTMLElement {
                 });
                 const handle = el.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
                 handle?.setAttribute('aria-label', 'Redimensionar painéis — use setas para ajustar');
-                return frame(el, '180px');
+                return frame(el, 'md');
               },
               dontPreviewFactory: () => {
                 const el = createResizablePanel({
@@ -338,7 +349,7 @@ export function createResizableDocs(): HTMLElement {
                 });
                 const handle = el.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
                 handle?.setAttribute('aria-label', 'Handle');
-                return frame(el, '180px');
+                return frame(el, 'md');
               },
             },
           ],

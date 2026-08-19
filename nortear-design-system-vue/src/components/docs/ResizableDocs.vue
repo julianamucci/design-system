@@ -385,8 +385,9 @@ const visualTestItems = computed(() => [
           data-cols="2"
         >
           <div
-            class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-            style="height: 220px; min-height: 200px; contain: layout"
+            class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+            data-min="md"
+            style="contain: layout"
           >
             <ResizablePanelGroup
               direction="horizontal"
@@ -427,8 +428,9 @@ const visualTestItems = computed(() => [
             </ResizablePanelGroup>
           </div>
           <div
-            class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-            style="height: 220px; min-height: 200px; contain: layout"
+            class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+            data-min="md"
+            style="contain: layout"
           >
             <ResizablePanelGroup
               direction="vertical"
@@ -471,8 +473,9 @@ const visualTestItems = computed(() => [
           </div>
         </div>
         <div
-          class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-          style="height: 280px; min-height: 240px; contain: layout"
+          class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+          data-min="lg"
+          style="contain: layout"
         >
           <ResizablePanelGroup
             direction="horizontal"
@@ -622,8 +625,9 @@ const visualTestItems = computed(() => [
     >
       <template #do-preview-0>
         <div
-          class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-          style="height: 200px; min-height: 200px; contain: layout"
+          class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+          data-min="md"
+          style="contain: layout"
         >
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
@@ -662,8 +666,9 @@ const visualTestItems = computed(() => [
       </template>
       <template #dont-preview-0>
         <div
-          class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-          style="height: 200px; min-height: 200px; contain: layout"
+          class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+          data-min="md"
+          style="contain: layout"
         >
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel>
@@ -692,8 +697,9 @@ const visualTestItems = computed(() => [
       </template>
       <template #do-preview-1>
         <div
-          class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-          style="height: 200px; min-height: 200px; contain: layout"
+          class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+          data-min="md"
+          style="contain: layout"
         >
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
@@ -732,8 +738,9 @@ const visualTestItems = computed(() => [
       </template>
       <template #dont-preview-1>
         <div
-          class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-          style="height: 200px; min-height: 200px; contain: layout"
+          class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+          data-min="md"
+          style="contain: layout"
         >
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
@@ -785,8 +792,9 @@ const visualTestItems = computed(() => [
     >
       <template #variant-preview-0>
         <div
-          class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-          style="height: 200px; min-height: 200px; contain: layout"
+          class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+          data-min="md"
+          style="contain: layout"
         >
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel
@@ -825,8 +833,9 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-1>
         <div
-          class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-          style="height: 260px; min-height: 200px; contain: layout"
+          class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+          data-min="md"
+          style="contain: layout"
         >
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel
@@ -866,8 +875,9 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-2>
         <div
-          class="nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
-          style="height: 260px; min-height: 200px; contain: layout"
+          class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+          data-min="md"
+          style="contain: layout"
         >
           <ResizablePanelGroup direction="horizontal">
             <ResizablePanel

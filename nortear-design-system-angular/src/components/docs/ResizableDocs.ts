@@ -110,7 +110,7 @@ export class NdsResizableHandle {
   // sem nome é anunciado apenas como "separador".
 }`;
 
-const ANATOMY_CODE = `<div ndsResizable direction="horizontal" class="nds-min-h-50">
+const ANATOMY_CODE = `<div ndsResizable direction="horizontal">
   <div ndsResizablePanel [defaultSize]="30" [minSize]="20" [maxSize]="50">
     <!-- Painel esquerdo -->
   </div>
@@ -126,19 +126,19 @@ const ANATOMY_CODE = `<div ndsResizable direction="horizontal" class="nds-min-h-
   </div>
 </div>`;
 
-const VARIANT_HORIZONTAL_CODE = `<div ndsResizable direction="horizontal" class="nds-min-h-50">
+const VARIANT_HORIZONTAL_CODE = `<div ndsResizable direction="horizontal">
   <div ndsResizablePanel [defaultSize]="30" [minSize]="20" [maxSize]="50">…</div>
   <div ndsResizableHandle [withHandle]="true" aria-label="Redimensionar painéis — use as setas"></div>
   <div ndsResizablePanel [defaultSize]="70" [minSize]="50">…</div>
 </div>`;
 
-const VARIANT_VERTICAL_CODE = `<div ndsResizable direction="vertical" class="nds-min-h-50">
+const VARIANT_VERTICAL_CODE = `<div ndsResizable direction="vertical">
   <div ndsResizablePanel [defaultSize]="50" [minSize]="20" [maxSize]="80">…</div>
   <div ndsResizableHandle [withHandle]="true" aria-label="Redimensionar painéis — use as setas"></div>
   <div ndsResizablePanel [defaultSize]="50" [minSize]="20" [maxSize]="80">…</div>
 </div>`;
 
-const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds-min-h-50">
+const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal">
   <div ndsResizablePanel [defaultSize]="25" [minSize]="15" [maxSize]="40">…</div>
   <div ndsResizableHandle [withHandle]="true" aria-label="Redimensionar painéis — use as setas"></div>
 
@@ -151,8 +151,10 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
   </div>
 </div>`;
 
-// A caixa de cada demo é `nds-min-h-50`: `min-height` cresce com o conteúdo,
-// altura cravada não cresceria quando a pessoa aumentasse a fonte do navegador.
+// A caixa de cada demo é `.nds-demo-box` com `data-min`: piso de altura, e não
+// altura cravada — o painel cresce com o conteúdo e com a fonte do navegador,
+// e ainda sobra área para arrastar. O degrau vem da escada `--box-height-*`
+// compartilhada, no lugar do `nds-min-h-50` que só esta stack usava.
 // As classes vão literais no template, e não por uma constante ligada em
 // `[class]`: assim o auditor de `unknown_class_reference` consegue lê-las.
 
@@ -173,7 +175,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
          separators com o mesmo rótulo na mesma página deixam de ser
          localizáveis por quem navega pela lista de controles. -->
     <ng-template #tplDoDont1Do>
-      <div ndsResizable direction="horizontal" class="nds-w-full nds-min-h-50 nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background">
+      <div ndsResizable direction="horizontal" class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md">
         <div ndsResizablePanel [defaultSize]="40" [minSize]="25" [maxSize]="60">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.left') }}
@@ -189,7 +191,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
     </ng-template>
 
     <ng-template #tplDoDont1Dont>
-      <div ndsResizable direction="horizontal" class="nds-w-full nds-min-h-50 nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background">
+      <div ndsResizable direction="horizontal" class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md">
         <div ndsResizablePanel [defaultSize]="40" [minSize]="0" [maxSize]="100">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.left') }}
@@ -205,7 +207,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
     </ng-template>
 
     <ng-template #tplDoDont2Do>
-      <div ndsResizable direction="horizontal" class="nds-w-full nds-min-h-50 nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background">
+      <div ndsResizable direction="horizontal" class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md">
         <div ndsResizablePanel [defaultSize]="50" [minSize]="20">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.left') }}
@@ -221,7 +223,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
     </ng-template>
 
     <ng-template #tplDoDont2Dont>
-      <div ndsResizable direction="horizontal" class="nds-w-full nds-min-h-50 nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background">
+      <div ndsResizable direction="horizontal" class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md">
         <div ndsResizablePanel [defaultSize]="50" [minSize]="20">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.left') }}
@@ -239,7 +241,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
     </ng-template>
 
     <ng-template #tplVarHorizontal>
-      <div ndsResizable direction="horizontal" class="nds-w-full nds-min-h-50 nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background">
+      <div ndsResizable direction="horizontal" class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md">
         <div ndsResizablePanel [defaultSize]="30" [minSize]="20" [maxSize]="50">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.sidebar') }}
@@ -255,7 +257,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
     </ng-template>
 
     <ng-template #tplVarVertical>
-      <div ndsResizable direction="vertical" class="nds-w-full nds-min-h-50 nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background">
+      <div ndsResizable direction="vertical" class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md">
         <div ndsResizablePanel [defaultSize]="50" [minSize]="20" [maxSize]="80">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.top') }}
@@ -271,7 +273,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
     </ng-template>
 
     <ng-template #tplVarAninhado>
-      <div ndsResizable direction="horizontal" class="nds-w-full nds-min-h-50 nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background">
+      <div ndsResizable direction="horizontal" class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md">
         <div ndsResizablePanel [defaultSize]="25" [minSize]="15" [maxSize]="40">
           <div class="nds-cluster nds-h-full nds-w-full nds-p-4 nds-text-body nds-font-medium nds-bg-muted nds-text-muted-foreground" data-align="center" data-justify="center" tabindex="0">
             {{ t('demonstration.labels.sidebar') }}
@@ -320,7 +322,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
               <div
                 ndsResizable
                 direction="horizontal"
-                class="nds-w-full nds-min-h-50 nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+                class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md"
                 (layout)="aoRedimensionar('demo_horizontal', $event)"
               >
                 <div ndsResizablePanel [defaultSize]="30" [minSize]="20" [maxSize]="50">
@@ -344,7 +346,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
               <div
                 ndsResizable
                 direction="vertical"
-                class="nds-w-full nds-min-h-50 nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+                class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md"
                 (layout)="aoRedimensionar('demo_vertical', $event)"
               >
                 <div ndsResizablePanel [defaultSize]="50" [minSize]="20" [maxSize]="80">
@@ -368,7 +370,7 @@ const VARIANT_NESTED_CODE = `<div ndsResizable direction="horizontal" class="nds
               <div
                 ndsResizable
                 direction="horizontal"
-                class="nds-w-full nds-min-h-50 nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
+                class="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background" data-min="md"
                 (layout)="aoRedimensionar('demo_nested', $event)"
               >
                 <div ndsResizablePanel [defaultSize]="25" [minSize]="15" [maxSize]="40">
