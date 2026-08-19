@@ -109,8 +109,14 @@ export const Playground: Story = {
     // aqui: a espera resolve no PRIMEIRO quadro em que a caixa passa do limiar,
     // com a transição ainda correndo, e a medida seguinte parte de um número em
     // movimento. Custou uma reprovação (-448 contra -166) para aparecer.
+    // A leitura é RELATIVA ao repouso. O track tem margem negativa de -16px em
+    // horizontal (o seletor de orientação no CSS compartilhado, ligado em 2026-08-19
+    // para o primeiro slide encostar na borda como nas outras quatro), então a
+    // distância entre recorte e track NUNCA é zero em repouso. Medir em absoluto
+    // dava 16.7 onde a conta esperava 0.
+    const repouso = recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
     const deslocamento = () =>
-      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
+      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left - repouso;
 
     // Coordenada de LAYOUT: `offsetLeft` não é afetado pelo `transform`
     // corrente, então o passo esperado não muda enquanto o deslize corre.

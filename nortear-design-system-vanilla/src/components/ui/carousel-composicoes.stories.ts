@@ -153,8 +153,14 @@ export const WithDots: Story = {
     // Quanto o track já andou, em pixels, medido contra o recorte. É valor
     // ABSOLUTO: não depende de onde a rodada anterior parou, ao contrário de um
     // "andou mais do que antes", que só vale na primeira execução.
+    // A leitura é RELATIVA ao repouso. O track tem margem negativa de -16px em
+    // horizontal (o seletor de orientação no CSS compartilhado, ligado em 2026-08-19
+    // para o primeiro slide encostar na borda como nas outras quatro), então a
+    // distância entre recorte e track NUNCA é zero em repouso. Medir em absoluto
+    // dava 16.7 onde a conta esperava 0.
+    const repouso = recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
     const deslocamento = () =>
-      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
+      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left - repouso;
 
     // Par idempotente: só clica quando o dot ainda não é o atual. O painel
     // Interactions reexecuta a play no MESMO DOM, e um clique cego partiria do

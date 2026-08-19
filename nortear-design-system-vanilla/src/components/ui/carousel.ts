@@ -135,12 +135,11 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   const track = document.createElement('div');
   track.className = 'nds-carousel-track';
   track.dataset.slot = 'carousel-track';
-  // Só em vertical. O seletor `[data-orientation="horizontal"]` do CSS
-  // compartilhado traz a margem negativa que encosta o primeiro slide na borda
-  // — comportamento das outras stacks, e ligá-lo aqui mudaria a renderização
-  // horizontal desta stack de imediato. Alinhar as duas é decisão de design,
-  // não efeito colateral de uma troca de motor.
-  if (vertical) track.dataset.orientation = 'vertical';
+  // Sempre escrito, nos dois eixos. O seletor `[data-orientation="horizontal"]`
+  // do CSS compartilhado traz a margem negativa que encosta o primeiro slide na
+  // borda; enquanto ela não era escrita aqui, esta stack começava 16px para
+  // dentro das outras quatro. A dona decidiu alinhar (2026-08-19).
+  track.dataset.orientation = vertical ? 'vertical' : 'horizontal';
 
   items.forEach((item, i) => {
     const slide = document.createElement('div');
