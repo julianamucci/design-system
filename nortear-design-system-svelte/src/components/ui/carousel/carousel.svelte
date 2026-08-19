@@ -6,6 +6,7 @@
 		setEmblaContext,
 	} from "./context.js";
 	import { cn, type WithElementRef } from "@/lib/utils.js";
+	import { marcarSlideAtual } from "@shared/primitives/carousel-active-slide";
 
 	let {
 		ref = $bindable(null),
@@ -54,6 +55,10 @@
 		carouselState.selectedIndex = carouselState.api.selectedScrollSnap();
 		carouselState.canScrollNext = carouselState.api.canScrollNext();
 		carouselState.canScrollPrev = carouselState.api.canScrollPrev();
+		// Direto no DOM, e não por estado reativo: os slides vêm do snippet de
+		// quem consome o componente, então não há por onde passar uma prop até
+		// eles. O motor já mantém a lista de nós, e é a mesma que ele move.
+		marcarSlideAtual(carouselState.api.slideNodes(), carouselState.selectedIndex);
 	}
 
 	function handleKeyDown(e: KeyboardEvent) {
@@ -79,12 +84,18 @@
 
 		carouselState.scrollSnaps = carouselState.api.scrollSnapList();
 		carouselState.api.on("select", onSelect);
+		// `reInit` também: as outras stacks já o assinavam, e é o evento que o
+		// motor emite quando a lista de slides muda. Sem ele, um slide entrando
+		// ou saindo deixava o estado do slide atual apontando para o índice
+		// antigo — e agora é ele que decide qual slide fica em tamanho cheio.
+		carouselState.api.on("reInit", onSelect);
 		onSelect();
 	}
 
 	$effect(() => {
 		return () => {
 			carouselState.api?.off("select", onSelect);
+			carouselState.api?.off("reInit", onSelect);
 		};
 	});
 </script>

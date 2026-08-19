@@ -1,5 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { within, expect } from "storybook/test";
+import { within, expect, waitFor } from "storybook/test";
+import {
+  medirSlides,
+  reprovasDeEscala,
+  reprovasDoFeedbackDePonteiro,
+  pontoDeParadaIntacto,
+  alcanceDoControle,
+  escalaSobMovimentoReduzido,
+  descreverFalhas,
+} from "@shared/testing/carousel-probe";
 import {
   Carousel,
   CarouselContent,
@@ -56,7 +65,7 @@ function visivelNoViewport(slide: Element, viewport: Element): boolean {
 
 export const Horizontal: Story = {
   parameters: {
-    covers: ["accessibility.item5", "visual.item2"],
+    covers: ["accessibility.item5", "accessibility.item7", "functional.item10", "visual.item2", "visual.item6"],
     docs: {
       description: {
         story:
@@ -107,12 +116,54 @@ export const Horizontal: Story = {
       await expect(anterior.left).toBeLessThan(area.left);
       await expect(proximo.right).toBeGreaterThan(area.right);
     });
+
+    await step("O slide atual fica em tamanho cheio e os vizinhos recuam", async () => {
+      // A escala é `transform`, e `transform` não deixa rastro em atributo, em
+      // texto nem em papel ARIA: a única prova é a caixa RENDERIZADA contra a
+      // caixa de LAYOUT. O `waitFor` não é folga — a transição parte do tamanho
+      // cheio e leva `--duration-base` para chegar, então o primeiro quadro
+      // mede o ponto de partida e reprovaria por corrida.
+      await waitFor(async () => {
+        await expect(descreverFalhas(reprovasDeEscala(medirSlides(canvasElement), 0))).toBe("");
+      });
+    });
+
+    await step("A escala não moveu o ponto de parada da rolagem", async () => {
+      // `transform` é pintura, não layout — mas isso é promessa. Passos de
+      // layout desiguais entre slides significariam que a escala vazou para o
+      // layout, e o carrossel passaria a parar fora do slide.
+      await expect(descreverFalhas(pontoDeParadaIntacto(canvasElement))).toBe("");
+    });
+
+    await step("Com movimento reduzido a escala some por inteiro", async () => {
+      // Não basta a transição parar: um salto de tamanho é justamente o que a
+      // preferência pede para não acontecer. A sonda liga a preferência pelo
+      // mesmo canal do toolbar do Storybook e a desliga no `finally`, senão a
+      // story seguinte e a foto dela sairiam envenenadas.
+      const falhas = await escalaSobMovimentoReduzido(canvasElement, waitFor);
+      await expect(descreverFalhas(falhas)).toBe("");
+    });
+
+    await step("A seta responde ao ponteiro sem sair do lugar", async () => {
+      const proximo = canvas.getByRole("button", { name: /próximo item/i });
+
+      // A escrita direta do `transform` faz as vezes do ponteiro. Não é atalho:
+      // `userEvent.hover` despacha eventos, e o `:hover` do CSS responde ao
+      // cursor de verdade — medido, dá razão 1.000 e não verifica nada. O que
+      // importa aqui é a COLISÃO de duas regras na propriedade `transform`, e
+      // escrevê-la à mão reproduz a colisão inteira.
+      const falhas = [
+        ...(await reprovasDoFeedbackDePonteiro(proximo, waitFor)),
+        ...alcanceDoControle(proximo),
+      ];
+      await expect(descreverFalhas(falhas)).toBe("");
+    });
   },
 };
 
 export const Vertical: Story = {
   parameters: {
-    covers: ["functional.item5", "visual.item2"],
+    covers: ["functional.item5", "functional.item10", "visual.item2"],
     docs: {
       description: {
         story:
@@ -173,6 +224,17 @@ export const Vertical: Story = {
         .getBoundingClientRect();
       await expect(anterior.top).toBeLessThan(area.top);
       await expect(proximo.bottom).toBeGreaterThan(area.bottom);
+    });
+
+    await step("A seta girada também não sai do lugar sob o ponteiro", async () => {
+      // O eixo vertical é o caso difícil: aqui a centralização vem acompanhada
+      // de uma ROTAÇÃO. Escrita em `transform`, ela desaparecia junto com a
+      // centralização quando o `scale` do hover chegava — o chevron voltava a
+      // apontar para o lado errado no mesmo quadro em que o botão despencava.
+      // Escrita em `translate` + `rotate`, as duas convivem com o `scale`.
+      const proximo = canvas.getByRole("button", { name: /próximo item/i });
+      const falhas = await reprovasDoFeedbackDePonteiro(proximo, waitFor);
+      await expect(descreverFalhas(falhas)).toBe("");
     });
   },
 };

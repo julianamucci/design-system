@@ -295,20 +295,26 @@ export const DragGesture: Story = {
     const slides = () => canvas.getAllByRole('group') as HTMLElement[];
 
     /**
-     * Espera a posição PARAR de verdade: quatro leituras seguidas dentro de
-     * meio pixel.
+     * Espera a posição PARAR de verdade: quatro leituras IDÊNTICAS.
      *
-     * Duas não bastam. O motor desacelera até encostar, e no fim da curva ele
-     * anda menos de meio pixel entre duas leituras enquanto ainda falta
-     * caminho — foi assim que uma medida de "parou" deu por assentada uma
-     * posição a 152px do ponto de parada.
+     * `< 0.5px` entre leituras não é parar — é andar devagar. O motor desacelera
+     * até encostar, e na cauda da curva ele anda meio pixel por leitura enquanto
+     * ainda falta caminho: primeiro isso deu por assentada uma posição a 152px do
+     * ponto de parada, e depois, com a margem apertada para meio pixel, uma a
+     * 3.12px dele. O segundo caso reprovava o GESTO por um erro da régua — o
+     * gesto tinha chegado ao ponto certo, e era a posição da seta, colhida cedo
+     * demais, que estava errada.
+     *
+     * Igualdade exata é o único critério que separa os dois: enquanto anima, o
+     * motor reescreve a posição a cada quadro e duas leituras nunca coincidem; ao
+     * terminar, ele escreve o valor final e para de escrever.
      */
     const assentar = async () => {
       let estaveis = 0;
       let ultimo = Number.NaN;
       await waitFor(async () => {
         const agora = deslocamento();
-        estaveis = Math.abs(agora - ultimo) < 0.5 ? estaveis + 1 : 0;
+        estaveis = agora === ultimo ? estaveis + 1 : 0;
         ultimo = agora;
         await expect(estaveis).toBeGreaterThanOrEqual(3);
       }, { timeout: 4000 });

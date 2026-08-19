@@ -118,13 +118,18 @@ export const WithDots: Story = {
     // salto é composto a partir da navegação que ela EXPÕE — os próprios
     // botões de seta, acionados na direção certa. Nada de evento sintético:
     // o caminho é o mesmo que o dedo de quem usa percorre.
-    const seta = (direcao: 'prev' | 'next') =>
-      carousel.querySelector<HTMLButtonElement>(`.nds-carousel-button-${direcao}`)!;
+    // A busca é pelo `data-slot` da composição, e não pela classe de estilo: é o
+    // marcador que as cinco stacks emitem para o mesmo controle, e o único que
+    // sobrevive a uma troca de vocabulário `.nds-*` — que é exatamente o que
+    // acabou de acontecer aqui, quando as duas famílias de classe do controle
+    // viraram uma só.
+    const seta = (direcao: 'previous' | 'next') =>
+      carousel.querySelector<HTMLButtonElement>(`[data-slot="carousel-${direcao}"]`)!;
 
     dots.forEach((dot, alvo) => {
       dot.addEventListener('click', () => {
         const atual = dots.findIndex((d) => d.getAttribute('aria-current') === 'true');
-        const botao = seta(alvo > atual ? 'next' : 'prev');
+        const botao = seta(alvo > atual ? 'next' : 'previous');
         for (let passo = 0; passo < Math.abs(alvo - atual); passo++) botao.click();
       });
     });

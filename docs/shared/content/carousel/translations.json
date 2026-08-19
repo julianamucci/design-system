@@ -217,7 +217,8 @@
         "accent": "Fundo do Button ao hover",
         "ring": "Anel de foco visível via teclado",
         "radiusButton": "Raio dos botões de navegação",
-        "primary": "Fundo da pílula do slide atual na fileira de paginação"
+        "primary": "Fundo da pílula do slide atual na fileira de paginação",
+        "slideScale": "Quanto o slide vizinho recua em relação ao atual — a propriedade --nds-carousel-slide-scale vale 0.9 por padrão, e 1 desliga o efeito"
       },
       "customizationTitle": "Como personalizar via tema:"
     },
@@ -338,6 +339,11 @@
           "action": "Arrastar a área dos slides com o dedo ou com o mouse",
           "result": "Os slides acompanham o gesto e param no slide mais próximo quando o gesto termina; a posição resultante é a mesma que as setas e o teclado alcançam",
           "priority": "high"
+        },
+        "item10": {
+          "action": "Passar o ponteiro sobre uma seta de navegação",
+          "result": "A seta cresce em resposta ao ponteiro sem mudar de lugar: o centro do controle continua na mesma posição, tanto no eixo horizontal quanto no vertical",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -372,6 +378,11 @@
           "criterion": "Alvo de cada controle da paginação com no mínimo 24 x 24 px, tanto no ponto quanto na pílula",
           "level": "AA",
           "how": "Medir a caixa de cada controle da fileira (WCAG 2.5.8)"
+        },
+        "item7": {
+          "criterion": "Com movimento reduzido, o slide atual e os vizinhos ficam do mesmo tamanho — nenhuma mudança de escala acontece",
+          "level": "AA",
+          "how": "Ligar a preferência e medir a caixa renderizada de um slide que não é o atual (WCAG 2.3.3)"
         }
       },
       "visual": {
@@ -395,6 +406,10 @@
         },
         "item5": {
           "story": "Composições — paginação com o slide atual em pílula rotulada",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Variantes — slide atual em tamanho cheio e vizinhos recuados",
           "priority": "medium"
         }
       }
@@ -638,7 +653,8 @@
         "accent": "Navigation Button hover background",
         "ring": "Visible focus ring via keyboard",
         "radiusButton": "Navigation button radius",
-        "primary": "Current slide pill background in the pagination row"
+        "primary": "Current slide pill background in the pagination row",
+        "slideScale": "How far a neighbouring slide scales back from the current one — the --nds-carousel-slide-scale property is 0.9 by default, and 1 turns the effect off"
       },
       "customizationTitle": "How to customize via theme:"
     },
@@ -759,6 +775,11 @@
           "action": "Drag the slide area with a finger or with the mouse",
           "result": "The slides follow the gesture and settle on the nearest slide when it ends; the resulting position is the same one the arrows and the keyboard reach",
           "priority": "high"
+        },
+        "item10": {
+          "action": "Hover the pointer over a navigation arrow",
+          "result": "The arrow grows in response to the pointer without moving: the centre of the control stays in place, on both the horizontal and the vertical axis",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -793,6 +814,11 @@
           "criterion": "Each pagination control has a target of at least 24 x 24 px, as a dot and as a pill",
           "level": "AA",
           "how": "Measure the box of every control in the row (WCAG 2.5.8)"
+        },
+        "item7": {
+          "criterion": "With reduced motion, the current slide and its neighbours are the same size — no scale change happens",
+          "level": "AA",
+          "how": "Turn the preference on and measure the rendered box of a slide that is not the current one (WCAG 2.3.3)"
         }
       },
       "visual": {
@@ -816,6 +842,10 @@
         },
         "item5": {
           "story": "Compositions — pagination with the current slide as a labelled pill",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Variants — current slide at full size and neighbours scaled back",
           "priority": "medium"
         }
       }
@@ -1059,7 +1089,8 @@
         "accent": "Fondo del Button al hover",
         "ring": "Anillo de foco visible vía teclado",
         "radiusButton": "Radio de los botones de navegación",
-        "primary": "Fondo de la píldora del slide actual en la fila de paginación"
+        "primary": "Fondo de la píldora del slide actual en la fila de paginación",
+        "slideScale": "Cuánto se reduce el slide vecino respecto al actual — la propiedad --nds-carousel-slide-scale vale 0.9 por defecto, y 1 desactiva el efecto"
       },
       "customizationTitle": "Cómo personalizar vía tema:"
     },
@@ -1180,6 +1211,11 @@
           "action": "Arrastrar el área de los slides con el dedo o con el ratón",
           "result": "Los slides acompañan el gesto y se detienen en el slide más cercano cuando termina; la posición resultante es la misma que alcanzan las flechas y el teclado",
           "priority": "high"
+        },
+        "item10": {
+          "action": "Pasar el puntero sobre una flecha de navegación",
+          "result": "La flecha crece en respuesta al puntero sin cambiar de lugar: el centro del control permanece en la misma posición, tanto en el eje horizontal como en el vertical",
+          "priority": "high"
         }
       },
       "accessibility": {
@@ -1214,6 +1250,11 @@
           "criterion": "Objetivo de cada control de la paginación con al menos 24 x 24 px, como punto y como píldora",
           "level": "AA",
           "how": "Medir la caja de cada control de la fila (WCAG 2.5.8)"
+        },
+        "item7": {
+          "criterion": "Con movimiento reducido, el slide actual y los vecinos quedan del mismo tamaño — no ocurre ningún cambio de escala",
+          "level": "AA",
+          "how": "Activar la preferencia y medir la caja renderizada de un slide que no es el actual (WCAG 2.3.3)"
         }
       },
       "visual": {
@@ -1237,6 +1278,10 @@
         },
         "item5": {
           "story": "Composiciones — paginación con el slide actual como píldora etiquetada",
+          "priority": "medium"
+        },
+        "item6": {
+          "story": "Variantes — slide actual a tamaño completo y vecinos reducidos",
           "priority": "medium"
         }
       }

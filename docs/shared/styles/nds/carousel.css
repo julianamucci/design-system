@@ -4,16 +4,35 @@
  *
  *   <div class="nds-carousel" role="region" aria-roledescription="carousel">
  *     <div class="nds-carousel-overflow">
- *       <div class="nds-carousel-track">
- *         <div class="nds-carousel-slide" role="group">[slide]</div>
+ *       <div class="nds-carousel-track" data-orientation="horizontal">
+ *         <div class="nds-carousel-slide" role="group" data-active="true">[slide]</div>
  *       </div>
  *     </div>
- *     <button class="nds-carousel-button nds-carousel-button-prev">‹</button>
- *     <button class="nds-carousel-button nds-carousel-button-next">›</button>
+ *     <button class="nds-button nds-button-icon-sm nds-button-outline
+ *                    nds-carousel-arrow nds-carousel-arrow-prev"
+ *             data-orientation="horizontal">‹</button>
+ *     <button class="nds-button nds-button-icon-sm nds-button-outline
+ *                    nds-carousel-arrow nds-carousel-arrow-next"
+ *             data-orientation="horizontal">›</button>
  *   </div>
  *
+ * O controle de navegação é UM só: `.nds-carousel-arrow` COMPONDO `.nds-button`.
+ * Havia uma segunda família aqui — `.nds-carousel-button` — que redeclarava à
+ * mão caixa, cor, borda, foco e desabilitado de um botão de ícone `outline`, e
+ * era usada por uma única stack. Duas famílias para o mesmo controle é uma
+ * segunda cópia do CSS do botão, e cópia envelhece: a que saiu já não tinha a
+ * superfície elevada do modo escuro (`.dark .nds-button-outline`), nem
+ * `touch-action`, nem o anel opaco que o botão ganhou por WCAG 1.4.11 — e
+ * ninguém via, porque as duas rendem um círculo com um chevron dentro.
+ *
+ * A direção da unificação não foi votada por maioria: o conteúdo compartilhado
+ * descreve estes controles como "Button de navegação (variante outline)" e
+ * documenta `--radius-button` como o raio deles. Quem compõe `.nds-button` está
+ * cumprindo o que está escrito; quem redeclarava, não.
+ *
  * Tokens: --background, --foreground, --border, --ring, --accent,
- *         --accent-foreground, --radius, --spacing-*
+ *         --accent-foreground, --radius, --spacing-*, --duration-base,
+ *         --ease-size
  */
 
 .nds-carousel {
@@ -109,68 +128,67 @@
 }
 
 /* ── Slide ───────────────────────────────────────────────────────────────── */
+/*
+ * A ESCALA POR ESTADO ATIVO.
+ *
+ * O slide atual fica em tamanho cheio e os vizinhos recuam. É o terceiro
+ * pedaço da referência adotada ("each slide scales dynamically based on its
+ * active state") e vem sem biblioteca de animação: uma transição de CSS sobre
+ * `transform`, com a duração e a curva vindas dos tokens — os mesmos que a
+ * pílula da paginação já usa.
+ *
+ * `--duration-base` e `--ease-size`, e não outra dupla qualquer:
+ *  · a lista de movimento reduzido em `motion.css` zera `--duration-base` (não
+ *    zera `--duration-panel` nem `--duration-spring`), então a preferência do
+ *    sistema chega aqui sem uma regra a mais;
+ *  · `--ease-size` é a curva de percurso que o olho acompanha inteiro, e o que
+ *    está sendo visto É a mudança de tamanho.
+ *
+ * O ESTADO É TRÊS, e não dois — é o que evita o piscar. Sem `data-active`
+ * nenhum, o slide fica em tamanho cheio: o motor só sabe qual é o atual depois
+ * de medir, e medir só acontece depois que a raiz entra no documento. Um slide
+ * que nascesse reduzido apareceria pequeno no primeiro quadro e pularia para o
+ * tamanho cheio no segundo, em TODA story. Por isso o valor negativo é escrito
+ * (`data-active="false"`), em vez de deduzido por ausência.
+ *
+ * QUEM ESCALA É O CONTEÚDO DO SLIDE, E NÃO O SLIDE. A diferença não é de gosto:
+ * o `scroll-snap` calcula o ponto de parada sobre a caixa TRANSFORMADA do
+ * elemento, e não sobre a caixa de layout. Com a escala no próprio slide, cada
+ * vizinho encolhido puxava o próprio ponto de encosto para dentro, e a stack de
+ * rolagem nativa passou a parar fora do slide — medido, e progressivo: 2px no
+ * segundo slide, 45px no meio do trilho, 61px no último. O motor mandava rolar
+ * para a coordenada de layout e o snap puxava de volta para outra.
+ *
+ * Com a escala um nível abaixo, a caixa do slide continua intacta: o ponto de
+ * encosto, a largura do trilho e o alvo de `scrollTo` são exatamente os de
+ * antes, e só a pintura muda. O respiro entre slides também fica melhor — ele
+ * mora no `padding` do slide, que agora não encolhe junto.
+ *
+ * O controle de navegação é IRMÃO do recorte, não descendente do slide, então
+ * nenhuma escala daqui alcança o alvo de toque dele. `pontoDeParadaIntacto` e
+ * `alcanceDoControle`, em `carousel-probe.ts`, medem as duas coisas — as duas
+ * seriam invisíveis num teste de aparência.
+ *
+ * Só encolhe, nunca aumenta: um slide maior que a própria caixa transbordaria o
+ * recorte — e no motor de rolagem nativa, transbordo é barra de rolagem nova.
+ */
 .nds-carousel-slide {
   flex: 0 0 100%;
   min-width: 0;
   padding-left: var(--spacing-4);                 /* 16px */
+
+  /* Recuo do vizinho. Um único ponto de ajuste, e um valor sóbrio de propósito:
+   * o efeito tem de dizer "este é o atual" sem virar o assunto do componente. */
+  --nds-carousel-slide-scale: 0.9;
 }
 
-/* ── Navigation buttons ──────────────────────────────────────────────────── */
-.nds-carousel-button {
-  position: absolute;
-  top: 50%;
-  z-index: 10;
-  transform: translateY(-50%);
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: var(--size-lg);               /* 36px */
-  height: var(--size-lg);
-
-  background-color: hsl(var(--background));
-  color: hsl(var(--foreground));
-  border: 1px solid hsl(var(--border));
-  border-radius: var(--radius-full);
-  cursor: pointer;
-  outline: 0;
-  box-shadow: 0 1px 2px hsl(0 0% 0% / 0.05);
-  transition: background-color var(--duration-fast), color var(--duration-fast), opacity var(--duration-fast);
+.nds-carousel-slide > * {
+  transform-origin: center;
+  transition: transform var(--duration-base) var(--ease-size);
 }
 
-.nds-carousel-button-prev { left: var(--spacing-2); }
-.nds-carousel-button-next { right: var(--spacing-2); }
-
-/* Em vertical as setas trocam de eixo: acima e abaixo do viewport, e giradas
- * para que o chevron aponte para onde ele leva. Especificidade 0-2-0 vence as
- * regras de posição acima sem precisar de !important. */
-.nds-carousel-button[data-orientation="vertical"] {
-  top: auto;
-  right: auto;
-  left: 50%;
-  transform: translateX(-50%) rotate(90deg);
-}
-
-.nds-carousel-button-prev[data-orientation="vertical"] { top: var(--spacing-2); }
-.nds-carousel-button-next[data-orientation="vertical"] { bottom: var(--spacing-2); }
-
-.nds-carousel-button:hover:not(:disabled) {
-  background-color: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
-}
-
-.nds-carousel-button:focus-visible {
-  box-shadow: 0 0 0 2px hsl(var(--ring) / 0.5);
-}
-
-.nds-carousel-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.nds-carousel-button > svg {
-  width: var(--spacing-4);
-  height: var(--spacing-4);
+.nds-carousel-slide[data-active="false"] > * {
+  transform: scale(var(--nds-carousel-slide-scale));
 }
 
 /*
@@ -200,32 +218,65 @@
 
 .nds-carousel-arrow {
   position: absolute;
+  z-index: 10;
   touch-action: manipulation;
   border-radius: var(--radius-full);
 }
 
+/*
+ * A CENTRALIZAÇÃO MORA EM `translate`/`rotate`, NUNCA EM `transform`.
+ *
+ * `.nds-button` dá feedback de ponteiro escrevendo `transform: scale(1.05)` no
+ * hover e `scale(0.95)` no press. `transform` é UMA propriedade: um valor novo
+ * SUBSTITUI o anterior, não se soma a ele. Com a centralização escrita como
+ * `transform: translateY(-50%)`, o hover apagava a centralização — e o seletor
+ * do botão (`.nds-button:hover:not(:disabled):not([data-disabled])
+ * :not([aria-disabled="true"])`, especificidade 0-5-0) vence com folga o daqui
+ * (0-2-0), então nem a ordem no arquivo salvava. O controle despencava metade
+ * da própria altura no instante em que o ponteiro chegava: 16px num alvo de
+ * 32px — ele literalmente saía de baixo do cursor, o hover caía, o botão
+ * voltava, e o ciclo recomeçava.
+ *
+ * `translate` e `rotate` são propriedades INDIVIDUAIS de transformação, e o
+ * navegador as compõe na ordem fixa translate → rotate → scale → transform.
+ * Escrita aqui, a centralização passa a conviver com o `scale` do hover em vez
+ * de disputar o mesmo slot — sem `!important`, sem duplicar a regra do botão e
+ * sem apagar o feedback de ponteiro, que continua acontecendo.
+ *
+ * No eixo vertical há também rotação, e ela NÃO precisa de tratamento à parte:
+ * `rotate` existe como propriedade individual desde 2022 nos três motores,
+ * exatamente como `translate` e `scale`. O resultado composto é idêntico ao
+ * antigo `translateX(-50%) rotate(90deg)` — e o `scale` do hover entra depois
+ * da rotação, que é onde ele tem de entrar para o botão crescer em torno do
+ * próprio centro em vez de escorregar ao longo do eixo girado.
+ *
+ * `carousel-probe.ts` mede o efeito, não a declaração: o centro do controle
+ * antes e depois do hover, nos dois eixos.
+ */
 .nds-carousel-arrow-prev[data-orientation="horizontal"] {
   top: 50%;
   left: calc(var(--spacing-12) * -1);
-  transform: translateY(-50%);
+  translate: 0 -50%;
 }
 
 .nds-carousel-arrow-prev[data-orientation="vertical"] {
   top: calc(var(--spacing-12) * -1);
   left: 50%;
-  transform: translateX(-50%) rotate(90deg);
+  translate: -50% 0;
+  rotate: 90deg;
 }
 
 .nds-carousel-arrow-next[data-orientation="horizontal"] {
   top: 50%;
   right: calc(var(--spacing-12) * -1);
-  transform: translateY(-50%);
+  translate: 0 -50%;
 }
 
 .nds-carousel-arrow-next[data-orientation="vertical"] {
   bottom: calc(var(--spacing-12) * -1);
   left: 50%;
-  transform: translateX(-50%) rotate(90deg);
+  translate: -50% 0;
+  rotate: 90deg;
 }
 
 /*
@@ -348,9 +399,9 @@
  * `auto` — porque nenhuma regra de CSS alcança uma animação escrita em JS.
  */
 @media (prefers-reduced-motion: reduce) {
-  .nds-carousel-button,
   .nds-carousel-dot,
-  .nds-carousel-dot::before {
+  .nds-carousel-dot::before,
+  .nds-carousel-slide > * {
     transition: none;
   }
 
@@ -358,4 +409,42 @@
   .nds-carousel-overflow[data-engine="native"] {
     scroll-behavior: auto;
   }
+
+  /*
+   * A ESCALA SAI INTEIRA, e não só a transição dela.
+   *
+   * Zerar a duração deixaria o tamanho MUDANDO — só que de um quadro para o
+   * outro, em salto. Trocar um percurso suave por um salto é piorar o que a
+   * preferência pede para não acontecer: quem liga movimento reduzido está
+   * pedindo que a tela pare de se mexer, não que se mexa mais rápido.
+   *
+   * Dá para tirar sem perda porque a escala nunca foi a única marca do slide
+   * atual: o rótulo em pílula na fileira de paginação e o `aria-current` que a
+   * pinta continuam de pé, e o nome acessível de cada slide continua dizendo
+   * "slide 2 de 5". A escala é reforço visual, e reforço é exatamente o que
+   * pode sair.
+   */
+  .nds-carousel-slide[data-active="false"] > * {
+    transform: none;
+  }
+}
+
+/*
+ * O mesmo, pelo caminho do Storybook.
+ *
+ * O toolbar de movimento escreve `data-reduced-motion="true"` no `<html>`, e o
+ * bloco de `motion.css` que responde a ele zera durações de transição — o que
+ * mata a ANIMAÇÃO da escala, mas não a escala. Sem esta regra a preferência
+ * forçada produziria justamente o salto que o bloco acima existe para evitar, e
+ * a revisão veria um comportamento diferente do de quem tem a preferência
+ * ligada no sistema.
+ *
+ * É também por aqui que a garantia fica MEDÍVEL: o navegador dos testes roda
+ * com animação de propósito (emular a preferência escondia asserção racy), e o
+ * atributo é o único canal que uma play function alcança sem mexer no ambiente
+ * do runner. `escalaSobMovimentoReduzido`, em `carousel-probe.ts`, liga o
+ * atributo, mede a caixa visível do vizinho e o desliga no `finally`.
+ */
+[data-reduced-motion="true"] .nds-carousel-slide[data-active="false"] > * {
+  transform: none;
 }

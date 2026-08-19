@@ -27,8 +27,10 @@
 
 import EmblaCarousel, { type EmblaCarouselType } from 'embla-carousel';
 import { cn } from '@/lib/utils';
+import { btnClass } from '@/components/ui/button';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import { prefersReducedMotion } from '@/lib/motion';
+import { marcarSlideAtual } from '@shared/primitives/carousel-active-slide';
 import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -159,18 +161,48 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   root.appendChild(overflow);
 
   // Navigation buttons
+  //
+  // ── A FAMÍLIA DE CLASSE É UMA SÓ ───────────────────────────────────────────
+  //
+  // Estes controles usavam `.nds-carousel-button`, uma segunda família que
+  // redeclarava à mão a caixa, a cor, a borda, o foco e o desabilitado de um
+  // botão de ícone `outline` — enquanto as outras quatro stacks compunham
+  // `.nds-button` sob `.nds-carousel-arrow`. Duas famílias para o mesmo
+  // controle é uma segunda cópia do CSS do botão, e cópia envelhece: a que
+  // ficava aqui já não tinha a superfície elevada do modo escuro, nem
+  // `touch-action`, nem o anel de foco opaco que o botão ganhou por WCAG
+  // 1.4.11. Nada disso aparecia, porque as duas rendem um círculo com um
+  // chevron dentro.
+  //
+  // A direção da unificação não foi decidida por maioria — o conteúdo
+  // compartilhado descreve estes controles como "Button de navegação (variante
+  // outline)" e documenta o raio deles como `--radius-button`. Compor é cumprir
+  // o que está escrito. É a exceção declarada da regra de que esta stack é a
+  // referência: ela vale para markup e comportamento, não para uma cópia
+  // privada de um primitivo que o design system já define num lugar só.
+  //
+  // `data-orientation` agora é SEMPRE escrito, inclusive `"horizontal"`. As
+  // regras de posição do controle são seletores de atributo com valor, e sem o
+  // valor escrito o controle ficaria sem posição nenhuma no eixo horizontal.
+  const orientacao = vertical ? 'vertical' : 'horizontal';
+  const classeDaSeta = (direcao: 'prev' | 'next') =>
+    cn(btnClass('outline', 'icon-sm'), 'nds-carousel-arrow', `nds-carousel-arrow-${direcao}`);
+
   const prevBtn = document.createElement('button');
   prevBtn.type = 'button';
-  prevBtn.className = 'nds-carousel-button nds-carousel-button-prev';
+  prevBtn.className = classeDaSeta('prev');
+  prevBtn.dataset.slot = 'carousel-previous';
+  prevBtn.dataset.orientation = orientacao;
   prevBtn.setAttribute('aria-label', previousLabel);
   prevBtn.setAttribute('aria-disabled', 'true');
   prevBtn.disabled = true;
-  if (vertical) prevBtn.dataset.orientation = 'vertical';
   prevBtn.innerHTML = DOMPurify.sanitize(CHEVRON_LEFT);
 
   const nextBtn = document.createElement('button');
   nextBtn.type = 'button';
-  nextBtn.className = 'nds-carousel-button nds-carousel-button-next';
+  nextBtn.className = classeDaSeta('next');
+  nextBtn.dataset.slot = 'carousel-next';
+  nextBtn.dataset.orientation = orientacao;
   nextBtn.setAttribute('aria-label', nextLabel);
   // Nasce vivo quando há para onde ir. Estado SÍNCRONO: o motor só mede depois
   // que a raiz entra no documento, e sem isto a seta apareceria apagada no
@@ -178,7 +210,6 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   const podeAvancarNoInicio = items.length > 1;
   nextBtn.setAttribute('aria-disabled', podeAvancarNoInicio ? 'false' : 'true');
   nextBtn.disabled = !podeAvancarNoInicio;
-  if (vertical) nextBtn.dataset.orientation = 'vertical';
   nextBtn.innerHTML = DOMPurify.sanitize(CHEVRON_RIGHT);
 
   root.appendChild(prevBtn);
@@ -199,6 +230,10 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     prevBtn.toggleAttribute('disabled', !podePrev);
     nextBtn.setAttribute('aria-disabled', podeNext ? 'false' : 'true');
     nextBtn.toggleAttribute('disabled', !podeNext);
+    // O estado do slide atual anda junto com o das setas: os dois saem da mesma
+    // pergunta ao motor, e separá-los abriria a janela em que a seta já sabe
+    // que andou e a escala ainda não.
+    if (embla) marcarSlideAtual(embla.slideNodes(), embla.selectedScrollSnap());
   }
 
   // A origem é declarada por quem MANDA o motor andar, e lida quando ele avisa

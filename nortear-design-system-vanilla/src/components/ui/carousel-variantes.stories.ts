@@ -2,6 +2,15 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
 import { createCard, createCardContent } from './card';
+import {
+  medirSlides,
+  reprovasDeEscala,
+  reprovasDoFeedbackDePonteiro,
+  pontoDeParadaIntacto,
+  alcanceDoControle,
+  escalaSobMovimentoReduzido,
+  descreverFalhas,
+} from '@shared/testing/carousel-probe';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
@@ -50,7 +59,7 @@ type Story = StoryObj;
 // ─── Horizontal ───────────────────────────────────────────────────────────────
 
 export const Horizontal: Story = {
-  parameters: { covers: ['accessibility.item5', 'visual.item2'] },
+  parameters: { covers: ['accessibility.item5', 'accessibility.item7', 'functional.item10', 'visual.item2', 'visual.item6'] },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
@@ -68,8 +77,8 @@ export const Horizontal: Story = {
     });
 
     await step('As setas ficam nas laterais opostas', async () => {
-      // É o que `.nds-carousel-button-prev/-next` fazem; se as regras não
-      // chegassem, os dois botões empilhariam no mesmo canto sem nenhum erro
+      // É o que as regras de posição do controle fazem; se o eixo não chegasse
+      // a elas, os dois botões empilhariam no mesmo canto sem nenhum erro
       // visível no console.
       const anterior = canvas
         .getByRole('button', { name: 'Item anterior' })
@@ -81,13 +90,55 @@ export const Horizontal: Story = {
       // Mesma faixa vertical: em horizontal elas se alinham pelo meio.
       await expect(Math.abs(anterior.top - proximo.top)).toBeLessThan(2);
     });
+
+    await step('O slide atual fica em tamanho cheio e os vizinhos recuam', async () => {
+      // A escala é `transform`, e `transform` não deixa rastro em atributo, em
+      // texto nem em papel ARIA: a única prova é a caixa RENDERIZADA contra a
+      // caixa de LAYOUT. O `waitFor` não é folga — a transição parte do tamanho
+      // cheio e leva `--duration-base` para chegar, então o primeiro quadro
+      // mede o ponto de partida e reprovaria por corrida.
+      await waitFor(async () => {
+        await expect(descreverFalhas(reprovasDeEscala(medirSlides(canvasElement), 0))).toBe('');
+      });
+    });
+
+    await step('A escala não moveu o ponto de parada da rolagem', async () => {
+      // `transform` é pintura, não layout — mas isso é promessa. Passos de
+      // layout desiguais entre slides significariam que a escala vazou para o
+      // layout, e o carrossel passaria a parar fora do slide.
+      await expect(descreverFalhas(pontoDeParadaIntacto(canvasElement))).toBe('');
+    });
+
+    await step('Com movimento reduzido a escala some por inteiro', async () => {
+      // Não basta a transição parar: um salto de tamanho é justamente o que a
+      // preferência pede para não acontecer. A sonda liga a preferência pelo
+      // mesmo canal do toolbar do Storybook e a desliga no `finally`, senão a
+      // story seguinte e a foto dela sairiam envenenadas.
+      const falhas = await escalaSobMovimentoReduzido(canvasElement, waitFor);
+      await expect(descreverFalhas(falhas)).toBe('');
+    });
+
+    await step('A seta responde ao ponteiro sem sair do lugar', async () => {
+      const proximo = canvas.getByRole('button', { name: 'Próximo item' });
+
+      // A escrita direta do `transform` faz as vezes do ponteiro. Não é atalho:
+      // `userEvent.hover` despacha eventos, e o `:hover` do CSS responde ao
+      // cursor de verdade — medido, dá razão 1.000 e não verifica nada. O que
+      // importa aqui é a COLISÃO de duas regras na propriedade `transform`, e
+      // escrevê-la à mão reproduz a colisão inteira.
+      const falhas = [
+        ...(await reprovasDoFeedbackDePonteiro(proximo, waitFor)),
+        ...alcanceDoControle(proximo),
+      ];
+      await expect(descreverFalhas(falhas)).toBe('');
+    });
   },
 };
 
 // ─── Vertical ─────────────────────────────────────────────────────────────────
 
 export const Vertical: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item2'] },
+  parameters: { covers: ['functional.item5', 'functional.item10', 'visual.item2'] },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-xs';
@@ -156,6 +207,17 @@ export const Vertical: Story = {
       // Tolerância de um pixel: a caixa volta ao mesmo lugar, mas o retângulo é
       // medido em float e o arredondamento do compositor não é garantido.
       await waitFor(() => expect(Math.abs(posicao() - antes)).toBeLessThan(1));
+    });
+
+    await step('A seta girada também não sai do lugar sob o ponteiro', async () => {
+      // O eixo vertical é o caso difícil: aqui a centralização vem acompanhada
+      // de uma ROTAÇÃO. Escrita em `transform`, ela desaparecia junto com a
+      // centralização quando o `scale` do hover chegava — o chevron voltava a
+      // apontar para o lado errado no mesmo quadro em que o botão despencava.
+      // Escrita em `translate` + `rotate`, as duas convivem com o `scale`.
+      const proximo = canvas.getByRole('button', { name: 'Próximo item' });
+      const falhas = await reprovasDoFeedbackDePonteiro(proximo, waitFor);
+      await expect(descreverFalhas(falhas)).toBe('');
     });
   },
 };

@@ -5,6 +5,7 @@ import useEmblaCarousel, {
 
 import { cn } from "@/lib/utils"
 import { prefersReducedMotion } from "@/lib/motion"
+import { marcarSlideAtual } from "@shared/primitives/carousel-active-slide"
 import { Button } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 
@@ -70,6 +71,10 @@ function Carousel({
     if (!api) return
     setCanScrollPrev(api.canScrollPrev())
     setCanScrollNext(api.canScrollNext())
+    // Direto no DOM, e não por estado de React: os slides são `children` de
+    // quem consome o componente, então não há por onde passar uma prop até
+    // eles. O motor já mantém a lista de nós, e é a mesma que ele move.
+    marcarSlideAtual(api.slideNodes(), api.selectedScrollSnap())
   }, [])
 
   const scrollPrev = React.useCallback(() => {

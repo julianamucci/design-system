@@ -56,21 +56,30 @@ function priorityLabel(raw: string): string {
 
 // ─── Slide builders ───────────────────────────────────────────────────────────
 
+/**
+ * O MESMO slide que as stories montam.
+ *
+ * A docs page DEMONSTRA o componente, e a story é a referência de uso — quando
+ * as duas divergem, quem lê a página aprende um exemplo que o Chromatic não
+ * fotografa e que ninguém testa. Aqui a proporção e o corpo da letra estavam
+ * cravados em `style` inline, contra classes na story: inline vence a folha,
+ * então este slide estava FORA do tema, da densidade e da escala tipográfica —
+ * e 1.875rem cravado não acompanha a preferência de fonte de quem lê (WCAG
+ * 1.4.4). A story já estava certa; era esta página que precisava alcançá-la.
+ */
 function buildSlide(label: string, tone: 'muted' | 'primary' = 'muted'): HTMLElement {
   const card = createCard({
     className: tone === 'primary'
-      ? 'nds-w-full nds-cluster nds-bg-primary-soft'
-      : 'nds-w-full nds-cluster nds-bg-muted-soft',
+      ? 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-primary-soft'
+      : 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft',
   });
   card.dataset.justify = 'center';
   card.dataset.align = 'center';
-  card.style.aspectRatio = '16 / 9';
   const content = createCardContent({ className: 'nds-cluster' });
   content.dataset.justify = 'center';
   content.dataset.align = 'center';
   const span = document.createElement('span');
-  span.className = 'nds-font-semibold nds-text-foreground';
-  span.style.fontSize = '1.875rem';
+  span.className = 'nds-text-h2 nds-font-semibold nds-text-foreground';
   span.textContent = label;
   content.appendChild(span);
   card.appendChild(content);
@@ -263,7 +272,7 @@ export function createCarouselDocs(): HTMLElement {
               use: t('usage.scenarios.cols.use'),
               alternative: t('usage.scenarios.cols.alternative'),
             },
-            items: [1, 2, 3, 4, 5].map((i) => ({
+            items: [1, 2, 3, 4, 5, 6].map((i) => ({
               s: t(`usage.scenarios.item${i}.s`),
               u: t(`usage.scenarios.item${i}.u`),
               a: t(`usage.scenarios.item${i}.a`),
@@ -316,17 +325,15 @@ export function createCarouselDocs(): HTMLElement {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-sm';
                 const fake = createCard({
-                  className: 'nds-w-full nds-cluster nds-bg-muted-soft nds-overflow-hidden',
+                  className: 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-overflow-hidden',
                 });
                 fake.dataset.justify = 'center';
                 fake.dataset.align = 'center';
-                fake.style.aspectRatio = '16 / 9';
                 const content = createCardContent({ className: 'nds-cluster' });
                 content.dataset.justify = 'center';
                 content.dataset.align = 'center';
                 const span = document.createElement('span');
-                span.className = 'nds-font-semibold nds-text-foreground';
-                span.style.fontSize = '1.875rem';
+                span.className = 'nds-text-h2 nds-font-semibold nds-text-foreground';
                 span.textContent = 'Slide 1';
                 content.appendChild(span);
                 fake.appendChild(content);
@@ -556,14 +563,11 @@ const carousel = createCarousel({
             const card = createCard({ className: 'nds-w-full nds-overflow-hidden' });
 
             const cover = document.createElement('div');
-            cover.className = 'nds-w-full nds-cluster';
+            cover.className = 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft';
             cover.dataset.justify = 'center';
             cover.dataset.align = 'center';
-            cover.style.aspectRatio = '16 / 9';
-            cover.style.background = 'linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))';
             const coverLabel = document.createElement('span');
-            coverLabel.className = 'nds-font-semibold nds-text-foreground';
-            coverLabel.style.fontSize = '1.5rem';
+            coverLabel.className = 'nds-text-h3 nds-font-semibold nds-text-foreground';
             coverLabel.textContent = photo.title;
             cover.appendChild(coverLabel);
 
@@ -624,9 +628,7 @@ const items = photos.map((photo) => {
   const card = createCard({ className: 'nds-w-full nds-overflow-hidden' });
 
   const cover = document.createElement('div');
-  cover.className = 'nds-w-full';
-  cover.style.aspectRatio = '16 / 9';
-  cover.style.background = 'linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))';
+  cover.className = 'nds-w-full nds-aspect-16-9 nds-bg-muted-soft';
   card.appendChild(cover);
 
   const header = createCardHeader();
@@ -796,6 +798,7 @@ export type CarouselOptions = {
             { token: '--ring', value: 'nds-focus-ring', description: t('tokens.table.ring') },
             { token: '--radius-button', value: 'rounded-(--radius-button)', description: t('tokens.table.radiusButton') },
             { token: '--primary', value: 'bg-primary', description: t('tokens.table.primary') },
+            { token: '--nds-carousel-slide-scale', value: '.nds-carousel-slide', description: t('tokens.table.slideScale') },
           ],
           customizationTitle: t('tokens.customizationTitle'),
           customizationCode,
@@ -888,7 +891,7 @@ export type CarouselOptions = {
               result: tNav('common.expectedResult'),
               priority: tNav('common.priority'),
             },
-            items: [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
+            items: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => ({
               action: toPlainText(t(`testes.functional.item${i}.action`)),
               result: toPlainText(t(`testes.functional.item${i}.result`)),
               priority: priorityLabel(t(`testes.functional.item${i}.priority`)),
@@ -901,7 +904,7 @@ export type CarouselOptions = {
               level: 'WCAG',
               how: tNav('common.howToVerify'),
             },
-            items: [1, 2, 3, 4, 5, 6].map((i) => ({
+            items: [1, 2, 3, 4, 5, 6, 7].map((i) => ({
               criterion: toPlainText(t(`testes.accessibility.item${i}.criterion`)),
               level: t(`testes.accessibility.item${i}.level`),
               how: toPlainText(t(`testes.accessibility.item${i}.how`)),

@@ -18,6 +18,7 @@ import { ChevronLeft, ChevronRight } from 'lucide';
 import { btnClass, type ButtonSize, type ButtonVariant } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { prefersReducedMotion } from '@/lib/motion';
+import { estadoDoSlide } from '@shared/primitives/carousel-active-slide';
 
 // ─── Carousel ─────────────────────────────────────────────────────────────────
 //
@@ -146,6 +147,18 @@ export class NdsCarouselStore {
 
   removerSlide(el: HTMLElement): void {
     this._slides.update((lista) => lista.filter((x) => x !== el));
+  }
+
+  /**
+   * O estado "este é o slide atual", para a folha compartilhada escalar o
+   * slide. `null` enquanto o slide ainda não foi registrado: sem registro não
+   * há índice, e a folha trata a ausência como tamanho cheio — que é o que
+   * evita o slide nascer encolhido e pular no quadro seguinte.
+   */
+  estadoAtivo(el: HTMLElement): 'true' | 'false' | null {
+    const posicao = this._slides().indexOf(el);
+    if (posicao < 0) return null;
+    return estadoDoSlide(posicao, this._index());
   }
 
   /** Rótulo acessível de um slide, já com posição e total resolvidos. */
@@ -690,6 +703,7 @@ export class NdsCarouselContent implements OnDestroy {
     'aria-roledescription': 'slide',
     '[attr.data-slot]': '"carousel-item"',
     '[attr.data-orientation]': 'store.orientation()',
+    '[attr.data-active]': 'ativo()',
     '[attr.aria-label]': 'nomeAcessivel()',
   },
 })
@@ -705,6 +719,15 @@ export class NdsCarouselItem {
   protected readonly nomeAcessivel = computed(
     () => this.label() ?? this.rotuloEscrito ?? this.store.rotuloDoSlide(this.host),
   );
+
+  /**
+   * Aqui é ligação de host, e não escrita direta no DOM como nas stacks de
+   * motor por `transform`: o slide É este componente, então o índice atual
+   * chega a ele pelo signal do store e o atributo se reescreve sozinho. O
+   * atributo, os valores e a semântica do terceiro estado (a ausência) são os
+   * mesmos das outras quatro — o que muda é só por onde a informação anda.
+   */
+  protected readonly ativo = computed(() => this.store.estadoAtivo(this.host));
 
   constructor() {
     this.store.registrarSlide(this.host);

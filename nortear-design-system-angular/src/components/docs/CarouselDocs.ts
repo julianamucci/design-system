@@ -1129,6 +1129,7 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
       { token: '--ring',       k: 'ring',         alvo: '.nds-carousel-arrow' },
       { token: '--radius',     k: 'radiusButton', alvo: '.nds-carousel-arrow' },
       { token: '--primary',    k: 'primary',      alvo: '.nds-carousel' },
+      { token: '--nds-carousel-slide-scale', k: 'slideScale', alvo: '.nds-carousel-slide' },
     ].map(({ token, k, alvo }) => ({
       token,
       value: alvo,

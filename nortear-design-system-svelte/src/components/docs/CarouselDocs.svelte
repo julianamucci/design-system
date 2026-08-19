@@ -247,8 +247,8 @@ import Autoplay from "embla-carousel-autoplay";`;
     {#each photos as photo}
       <CarouselItem>
         <div class="nds-overflow-hidden nds-rounded-md nds-border-default nds-bg-card">
-          <div class="nds-cluster" data-justify="center" data-align="center" style="aspect-ratio: 16 / 9; background: linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))">
-            <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{photo.title}</span>
+          <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft" data-justify="center" data-align="center">
+            <span class="nds-text-h3 nds-font-semibold nds-text-foreground">{photo.title}</span>
           </div>
           <div style="padding: 0.75rem">
             <h3 class="nds-text-body nds-font-semibold">{photo.title}</h3>
@@ -341,10 +341,10 @@ interface CarouselNavProps extends ButtonProps {
             <CarouselItem>
               <div class="nds-p-1">
                 <div
-                  class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground"
+                  class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground"
                   data-justify="center"
                   data-align="center"
-                  style="aspect-ratio: 1 / 1; font-size: 1.875rem; user-select: none"
+                  style="user-select: none"
                   aria-label={`${$tStore('demonstration.labels.slide')} ${i} ${$tStore('demonstration.labels.of')} 5`}
                 >
                   {i}
@@ -471,7 +471,7 @@ interface CarouselNavProps extends ButtonProps {
           {#each [1, 2, 3] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
+                <div class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center">
                   {i}
                 </div>
               </div>
@@ -490,7 +490,7 @@ interface CarouselNavProps extends ButtonProps {
           {#each [1, 2, 3] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
+                <div class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center">
                   {i}
                 </div>
               </div>
@@ -511,7 +511,7 @@ interface CarouselNavProps extends ButtonProps {
           {#each [1, 2, 3] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
+                <div class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center">
                   {i}
                 </div>
               </div>
@@ -534,7 +534,7 @@ interface CarouselNavProps extends ButtonProps {
           {#each [1, 2, 3] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
+                <div class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center">
                   {i}
                 </div>
               </div>
@@ -584,7 +584,7 @@ interface CarouselNavProps extends ButtonProps {
           {#each [1, 2, 3, 4] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
+                <div class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center">
                   {i}
                 </div>
               </div>
@@ -603,7 +603,7 @@ interface CarouselNavProps extends ButtonProps {
           {#each [1, 2, 3, 4] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
+                <div class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center">
                   {i}
                 </div>
               </div>
@@ -622,7 +622,7 @@ interface CarouselNavProps extends ButtonProps {
           {#each [1, 2, 3] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
+                <div class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center">
                   {i}
                 </div>
               </div>
@@ -641,7 +641,7 @@ interface CarouselNavProps extends ButtonProps {
           {#each [1, 2, 3, 4, 5, 6] as i (i)}
             <CarouselItem class="nds-md-basis-half nds-lg-basis-third">
               <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.25rem">
+                <div class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center">
                   {i}
                 </div>
               </div>
@@ -664,7 +664,7 @@ interface CarouselNavProps extends ButtonProps {
           {#each [1, 2, 3, 4] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
+                <div class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center">
                   {i}
                 </div>
               </div>
@@ -707,7 +707,7 @@ interface CarouselNavProps extends ButtonProps {
           {#each [1, 2, 3, 4, 5] as i (i)}
             <CarouselItem>
               <div class="nds-p-1">
-                <div class="nds-cluster nds-rounded-md nds-bg-muted nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center" style="aspect-ratio: 1 / 1; font-size: 1.5rem">
+                <div class="nds-cluster nds-aspect-square nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" data-justify="center" data-align="center">
                   {i}
                 </div>
               </div>
@@ -748,8 +748,8 @@ interface CarouselNavProps extends ButtonProps {
           {#each galleryPhotos as photo (photo.title)}
             <CarouselItem>
               <div class="nds-overflow-hidden nds-rounded-md nds-border-default nds-bg-card">
-                <div class="nds-cluster" data-justify="center" data-align="center" style="aspect-ratio: 16 / 9; background: linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))">
-                  <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{photo.title}</span>
+                <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft" data-justify="center" data-align="center">
+                  <span class="nds-text-h3 nds-font-semibold nds-text-foreground">{photo.title}</span>
                 </div>
                 <div style="padding: 0.75rem">
                   <h3 class="nds-text-body nds-font-semibold">{photo.title}</h3>
@@ -865,6 +865,7 @@ interface CarouselNavProps extends ButtonProps {
       { token: '--ring',          value: 'nds-focus-ring',        description: $tStore('tokens.table.ring')         },
       { token: '--radius-button', value: 'rounded-(--radius-button)', description: $tStore('tokens.table.radiusButton') },
       { token: '--primary',       value: 'bg-primary',           description: $tStore('tokens.table.primary')      },
+      { token: '--nds-carousel-slide-scale', value: '.nds-carousel-slide', description: $tStore('tokens.table.slideScale') },
     ]}
     customizationTitle={$tStore('tokens.customizationTitle')}
     customizationCode={codeCustomizationTokens}
@@ -951,6 +952,8 @@ interface CarouselNavProps extends ButtonProps {
         { action: $tStore('testes.functional.item6.action'), result: $tStore('testes.functional.item6.result'), priority: localPriority($tStore('testes.functional.item6.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item7.action'), result: $tStore('testes.functional.item7.result'), priority: localPriority($tStore('testes.functional.item7.priority'), $tNavStore) },
         { action: $tStore('testes.functional.item8.action'), result: $tStore('testes.functional.item8.result'), priority: localPriority($tStore('testes.functional.item8.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item9.action'), result: $tStore('testes.functional.item9.result'), priority: localPriority($tStore('testes.functional.item9.priority'), $tNavStore) },
+        { action: $tStore('testes.functional.item10.action'), result: $tStore('testes.functional.item10.result'), priority: localPriority($tStore('testes.functional.item10.priority'), $tNavStore) },
       ],
     }}
     accessibility={{
@@ -967,6 +970,7 @@ interface CarouselNavProps extends ButtonProps {
         { criterion: $tStore('testes.accessibility.item4.criterion'), level: $tStore('testes.accessibility.item4.level'), how: $tStore('testes.accessibility.item4.how') },
         { criterion: $tStore('testes.accessibility.item5.criterion'), level: $tStore('testes.accessibility.item5.level'), how: $tStore('testes.accessibility.item5.how') },
         { criterion: $tStore('testes.accessibility.item6.criterion'), level: $tStore('testes.accessibility.item6.level'), how: $tStore('testes.accessibility.item6.how') },
+        { criterion: $tStore('testes.accessibility.item7.criterion'), level: $tStore('testes.accessibility.item7.level'), how: $tStore('testes.accessibility.item7.how') },
       ],
     }}
     visual={{
@@ -981,6 +985,7 @@ interface CarouselNavProps extends ButtonProps {
         { story: $tStore('testes.visual.item3.story'), priority: localPriority($tStore('testes.visual.item3.priority'), $tNavStore) },
         { story: $tStore('testes.visual.item4.story'), priority: localPriority($tStore('testes.visual.item4.priority'), $tNavStore) },
         { story: $tStore('testes.visual.item5.story'), priority: localPriority($tStore('testes.visual.item5.priority'), $tNavStore) },
+        { story: $tStore('testes.visual.item6.story'), priority: localPriority($tStore('testes.visual.item6.priority'), $tNavStore) },
       ],
     }}
   />

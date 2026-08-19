@@ -276,12 +276,11 @@ const codeCompositionGallery = `<Carousel class="nds-w-full nds-max-w-md" aria-l
     <CarouselItem v-for="photo in photos" :key="photo.id">
       <Card class="nds-w-full nds-overflow-hidden">
         <div
-          class="nds-w-full nds-cluster"
+          class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
           data-justify="center"
           data-align="center"
-          style="aspect-ratio: 16 / 9; background: linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))"
         >
-          <span class="nds-font-semibold nds-text-foreground" style="font-size: 1.5rem">{{ photo.title }}</span>
+          <span class="nds-text-h3 nds-font-semibold nds-text-foreground">{{ photo.title }}</span>
         </div>
         <div class="nds-p-4">
           <h3 class="nds-text-body nds-font-semibold">{{ photo.title }}</h3>
@@ -381,6 +380,7 @@ const tokenRows = computed(() => [
   { token: '--ring',          value: 'nds-focus-ring', description: tContent('tokens.table.ring')  },
   { token: '--radius-button', value: 'rounded-(--radius-button)', description: tContent('tokens.table.radiusButton')  },
   { token: '--primary',       value: 'bg-primary',      description: tContent('tokens.table.primary')       },
+  { token: '--nds-carousel-slide-scale', value: '.nds-carousel-slide', description: tContent('tokens.table.slideScale') },
 ]);
 
 const accessibilityItems = computed(() => [
@@ -436,6 +436,8 @@ const functionalTestItems = computed(() => [
   { action: tContent('testes.functional.item6.action'), result: tContent('testes.functional.item6.result'), priority: localPriority(tContent('testes.functional.item6.priority')) },
   { action: tContent('testes.functional.item7.action'), result: tContent('testes.functional.item7.result'), priority: localPriority(tContent('testes.functional.item7.priority')) },
   { action: tContent('testes.functional.item8.action'), result: tContent('testes.functional.item8.result'), priority: localPriority(tContent('testes.functional.item8.priority')) },
+  { action: tContent('testes.functional.item9.action'), result: tContent('testes.functional.item9.result'), priority: localPriority(tContent('testes.functional.item9.priority')) },
+  { action: tContent('testes.functional.item10.action'), result: tContent('testes.functional.item10.result'), priority: localPriority(tContent('testes.functional.item10.priority')) },
 ]);
 
 const a11yTestItems = computed(() => [
@@ -445,6 +447,7 @@ const a11yTestItems = computed(() => [
   { criterion: tContent('testes.accessibility.item4.criterion'), level: tContent('testes.accessibility.item4.level'), how: tContent('testes.accessibility.item4.how') },
   { criterion: tContent('testes.accessibility.item5.criterion'), level: tContent('testes.accessibility.item5.level'), how: tContent('testes.accessibility.item5.how') },
   { criterion: tContent('testes.accessibility.item6.criterion'), level: tContent('testes.accessibility.item6.level'), how: tContent('testes.accessibility.item6.how') },
+  { criterion: tContent('testes.accessibility.item7.criterion'), level: tContent('testes.accessibility.item7.level'), how: tContent('testes.accessibility.item7.how') },
 ]);
 
 const visualTestItems = computed(() => [
@@ -453,6 +456,7 @@ const visualTestItems = computed(() => [
   { story: tContent('testes.visual.item3.story'), priority: localPriority(tContent('testes.visual.item3.priority')) },
   { story: tContent('testes.visual.item4.story'), priority: localPriority(tContent('testes.visual.item4.priority')) },
   { story: tContent('testes.visual.item5.story'), priority: localPriority(tContent('testes.visual.item5.priority')) },
+  { story: tContent('testes.visual.item6.story'), priority: localPriority(tContent('testes.visual.item6.priority')) },
 ]);
 
 const demoSlides = [1, 2, 3, 4, 5];
@@ -503,7 +507,7 @@ function onDemoInit(payload: any) {
       component-slug="carousel"
     >
       <div
-        class="nds-w-full nds-cluster"
+        class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
         data-justify="center"
         data-align="center"
       >
@@ -519,17 +523,13 @@ function onDemoInit(payload: any) {
               v-for="n in demoSlides"
               :key="n"
             >
-              <Card
-                class="nds-cluster nds-p-6"
+              <div
+                class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
                 data-align="center"
                 data-justify="center"
-                style="aspect-ratio: 1 / 1"
               >
-                <span
-                  class="nds-font-semibold nds-text-foreground"
-                  style="font-size: 1.875rem"
-                >{{ n }}</span>
-              </Card>
+                <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ tContent('demonstration.labels.slide') }} {{ n }}</span>
+              </div>
             </CarouselItem>
           </CarouselContent>
           <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
@@ -602,7 +602,7 @@ function onDemoInit(payload: any) {
     >
       <template #do-preview-0>
         <div
-          class="nds-w-full nds-cluster"
+          class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
           data-justify="center"
           data-align="center"
         >
@@ -616,17 +616,13 @@ function onDemoInit(payload: any) {
                 v-for="n in [1, 2, 3]"
                 :key="n"
               >
-                <Card
-                  class="nds-cluster nds-p-4"
+                <div
+                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
-                  style="aspect-ratio: 1 / 1"
                 >
-                  <span
-                    class="nds-font-semibold nds-text-foreground"
-                    style="font-size: 1.25rem"
-                  >{{ n }}</span>
-                </Card>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ tContent('demonstration.labels.slide') }} {{ n }}</span>
+                </div>
               </CarouselItem>
             </CarouselContent>
             <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
@@ -636,7 +632,7 @@ function onDemoInit(payload: any) {
       </template>
       <template #dont-preview-0>
         <div
-          class="nds-w-full nds-cluster"
+          class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
           data-justify="center"
           data-align="center"
         >
@@ -650,17 +646,13 @@ function onDemoInit(payload: any) {
                 v-for="n in [1, 2, 3]"
                 :key="n"
               >
-                <Card
-                  class="nds-cluster nds-p-4"
+                <div
+                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
-                  style="aspect-ratio: 1 / 1"
                 >
-                  <span
-                    class="nds-font-semibold nds-text-foreground"
-                    style="font-size: 1.25rem"
-                  >{{ n }}</span>
-                </Card>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ tContent('demonstration.labels.slide') }} {{ n }}</span>
+                </div>
               </CarouselItem>
             </CarouselContent>
           </Carousel>
@@ -741,7 +733,7 @@ function onDemoInit(payload: any) {
     >
       <template #variant-preview-0>
         <div
-          class="nds-w-full nds-cluster"
+          class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
           data-justify="center"
           data-align="center"
         >
@@ -754,17 +746,13 @@ function onDemoInit(payload: any) {
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card
-                  class="nds-cluster nds-p-6"
+                <div
+                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
-                  style="aspect-ratio: 1 / 1"
                 >
-                  <span
-                    class="nds-font-semibold nds-text-foreground"
-                    style="font-size: 1.5rem"
-                  >{{ n }}</span>
-                </Card>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ tContent('demonstration.labels.slide') }} {{ n }}</span>
+                </div>
               </CarouselItem>
             </CarouselContent>
             <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
@@ -774,7 +762,7 @@ function onDemoInit(payload: any) {
       </template>
       <template #variant-preview-1>
         <div
-          class="nds-w-full nds-cluster"
+          class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
           data-justify="center"
           data-align="center"
         >
@@ -789,17 +777,13 @@ function onDemoInit(payload: any) {
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card
-                  class="nds-cluster nds-p-4"
+                <div
+                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
-                  style="aspect-ratio: 1 / 1"
                 >
-                  <span
-                    class="nds-font-semibold nds-text-foreground"
-                    style="font-size: 1.5rem"
-                  >{{ n }}</span>
-                </Card>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ tContent('demonstration.labels.slide') }} {{ n }}</span>
+                </div>
               </CarouselItem>
             </CarouselContent>
             <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
@@ -809,7 +793,7 @@ function onDemoInit(payload: any) {
       </template>
       <template #variant-preview-2>
         <div
-          class="nds-w-full nds-cluster"
+          class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
           data-justify="center"
           data-align="center"
         >
@@ -822,17 +806,13 @@ function onDemoInit(payload: any) {
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card
-                  class="nds-cluster nds-p-6"
+                <div
+                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
-                  style="aspect-ratio: 1 / 1"
                 >
-                  <span
-                    class="nds-font-semibold nds-text-foreground"
-                    style="font-size: 1.5rem"
-                  >{{ n }}</span>
-                </Card>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ tContent('demonstration.labels.slide') }} {{ n }}</span>
+                </div>
               </CarouselItem>
             </CarouselContent>
             <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
@@ -842,7 +822,7 @@ function onDemoInit(payload: any) {
       </template>
       <template #variant-preview-3>
         <div
-          class="nds-w-full nds-cluster"
+          class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
           data-justify="center"
           data-align="center"
         >
@@ -856,17 +836,13 @@ function onDemoInit(payload: any) {
                 :key="n"
                 class="nds-md-basis-half nds-lg-basis-third"
               >
-                <Card
-                  class="nds-cluster nds-p-4"
+                <div
+                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
-                  style="aspect-ratio: 1 / 1"
                 >
-                  <span
-                    class="nds-font-semibold nds-text-foreground"
-                    style="font-size: 1.25rem"
-                  >{{ n }}</span>
-                </Card>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ tContent('demonstration.labels.slide') }} {{ n }}</span>
+                </div>
               </CarouselItem>
             </CarouselContent>
             <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
@@ -876,7 +852,7 @@ function onDemoInit(payload: any) {
       </template>
       <template #variant-preview-4>
         <div
-          class="nds-w-full nds-cluster"
+          class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
           data-justify="center"
           data-align="center"
         >
@@ -890,17 +866,13 @@ function onDemoInit(payload: any) {
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card
-                  class="nds-cluster nds-p-6"
+                <div
+                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
-                  style="aspect-ratio: 1 / 1"
                 >
-                  <span
-                    class="nds-font-semibold nds-text-foreground"
-                    style="font-size: 1.5rem"
-                  >{{ n }}</span>
-                </Card>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ tContent('demonstration.labels.slide') }} {{ n }}</span>
+                </div>
               </CarouselItem>
             </CarouselContent>
             <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
@@ -932,17 +904,13 @@ function onDemoInit(payload: any) {
                 v-for="n in demoSlides"
                 :key="n"
               >
-                <Card
-                  class="nds-cluster nds-p-6"
+                <div
+                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
-                  style="aspect-ratio: 1 / 1"
                 >
-                  <span
-                    class="nds-font-semibold nds-text-foreground"
-                    style="font-size: 1.5rem"
-                  >{{ n }}</span>
-                </Card>
+                  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ tContent('demonstration.labels.slide') }} {{ n }}</span>
+                </div>
               </CarouselItem>
             </CarouselContent>
             <CarouselPrevious :aria-label="tContent('demonstration.labels.previous')" />
@@ -977,7 +945,7 @@ function onDemoInit(payload: any) {
       </template>
       <template #variant-preview-1>
         <div
-          class="nds-w-full nds-cluster"
+          class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
           data-justify="center"
           data-align="center"
         >
@@ -992,14 +960,12 @@ function onDemoInit(payload: any) {
               >
                 <Card class="nds-w-full nds-overflow-hidden nds-shadow-none">
                   <div
-                    class="nds-w-full nds-cluster"
+                    class="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
                     data-justify="center"
                     data-align="center"
-                    style="aspect-ratio: 16 / 9; background: linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))"
                   >
                     <span
-                      class="nds-font-semibold nds-text-foreground"
-                      style="font-size: 1.5rem"
+                      class="nds-text-h3 nds-font-semibold nds-text-foreground"
                     >{{ photo.title }}</span>
                   </div>
                   <div class="nds-p-4">

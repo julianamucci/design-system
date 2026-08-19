@@ -147,7 +147,7 @@ export const LastSlide: Story = {
 
       // Espelho da comparação do primeiro slide: agora a apagada é a outra.
       //
-      // O `waitFor` não é folga: `.nds-carousel-button` declara
+      // O `waitFor` não é folga: o controle declara
       // `transition: … opacity var(--duration-fast)`, e o botão só ficou
       // desabilitado no clique anterior. Ler a opacidade no primeiro quadro
       // pega o valor de PARTIDA — 1 contra 1 — e o teste reprova por corrida,

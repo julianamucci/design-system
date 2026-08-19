@@ -83,20 +83,32 @@ const getNavGroups = (t: (key: string) => string) => [
 
 // ─── Helpers de slide ─────────────────────────────────────────────────────────
 
+/**
+ * O MESMO slide que as stories renderizam.
+ *
+ * A docs page DEMONSTRA o componente, e a story é a referência de uso — quando
+ * as duas divergem, quem lê a página aprende um exemplo que o Chromatic não
+ * fotografa e que ninguém testa. E divergiam: aqui havia um `Card` inteiro, com
+ * a proporção e o corpo da letra cravados em `style` inline, contra uma caixa
+ * simples de proporção e cor por classe na story.
+ *
+ * A diferença não era só de forma. `style` inline vence a folha, então o slide
+ * desta página estava FORA do tema, da densidade e da escala tipográfica — o
+ * corpo de 1.875rem não acompanhava a preferência de fonte de quem lê (WCAG
+ * 1.4.4), e a proporção não podia ser redefinida por tema nenhum. A story já
+ * estava certa; era esta página que precisava alcançá-la.
+ */
 function SlideCard({ label, className = "" }: { label: string; className?: string }) {
   return (
-    <Card
-      className={`nds-w-full nds-cluster nds-bg-muted-soft nds-shadow-none ${className}`}
-      data-justify="center"
-      data-align="center"
-      style={{ aspectRatio: "16 / 9" }}
-    >
-      <CardContent className="nds-cluster" data-justify="center" data-align="center">
-        <span className="nds-font-semibold nds-text-foreground" style={{ fontSize: "1.875rem" }}>
-          {label}
-        </span>
-      </CardContent>
-    </Card>
+    <div className={`nds-aspect-16-9 ${className}`.trim()}>
+      <div
+        className="nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg"
+        data-align="center"
+        data-justify="center"
+      >
+        <span className="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{label}</span>
+      </div>
+    </div>
   );
 }
 
@@ -774,16 +786,11 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
       <CarouselItem key={photo.id}>
         <Card className="nds-w-full nds-overflow-hidden">
           <div
-            className="nds-w-full nds-cluster"
+            className="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
             data-justify="center"
             data-align="center"
-            style={{
-              aspectRatio: "16 / 9",
-              background:
-                "linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))",
-            }}
           >
-            <span className="nds-font-semibold nds-text-foreground" style={{ fontSize: "1.5rem" }}>
+            <span className="nds-text-h3 nds-font-semibold nds-text-foreground">
               {photo.title}
             </span>
           </div>
@@ -813,19 +820,11 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
                     <CarouselItem key={i}>
                       <Card className="nds-w-full nds-overflow-hidden nds-shadow-none">
                         <div
-                          className="nds-w-full nds-cluster"
+                          className="nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft"
                           data-justify="center"
                           data-align="center"
-                          style={{
-                            aspectRatio: "16 / 9",
-                            background:
-                              "linear-gradient(to bottom right, color-mix(in oklch, var(--primary) 20%, transparent), var(--muted))",
-                          }}
                         >
-                          <span
-                            className="nds-font-semibold nds-text-foreground"
-                            style={{ fontSize: "1.5rem" }}
-                          >
+                          <span className="nds-text-h3 nds-font-semibold nds-text-foreground">
                             {photo.title}
                           </span>
                         </div>
@@ -1027,6 +1026,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
           { token: "--ring",          value: "nds-focus-ring", description: tContent("tokens.table.ring") },
           { token: "--radius-button", value: "rounded-(--radius-button)", description: tContent("tokens.table.radiusButton") },
           { token: "--primary",       value: "bg-primary",      description: tContent("tokens.table.primary") },
+          { token: "--nds-carousel-slide-scale", value: ".nds-carousel-slide", description: tContent("tokens.table.slideScale") },
         ]}
         customizationTitle={tContent("tokens.customizationTitle")}
         customizationCode={codeCustomizationTokens}
@@ -1183,6 +1183,16 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               result: tContent("testes.functional.item8.result"),
               priority: tNav(priorityKeyMap[tContent("testes.functional.item8.priority")] ?? "common.medium"),
             },
+            {
+              action: tContent("testes.functional.item9.action"),
+              result: tContent("testes.functional.item9.result"),
+              priority: tNav(priorityKeyMap[tContent("testes.functional.item9.priority")] ?? "common.high"),
+            },
+            {
+              action: tContent("testes.functional.item10.action"),
+              result: tContent("testes.functional.item10.result"),
+              priority: tNav(priorityKeyMap[tContent("testes.functional.item10.priority")] ?? "common.high"),
+            },
           ],
         }}
         accessibility={{
@@ -1223,6 +1233,11 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
               level: tContent("testes.accessibility.item6.level"),
               how: tContent("testes.accessibility.item6.how"),
             },
+            {
+              criterion: tContent("testes.accessibility.item7.criterion"),
+              level: tContent("testes.accessibility.item7.level"),
+              how: tContent("testes.accessibility.item7.how"),
+            },
           ],
         }}
         visual={{
@@ -1237,6 +1252,7 @@ interface CarouselNavProps extends React.ComponentProps<typeof Button> {}`;
             { story: tContent("testes.visual.item3.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item3.priority")] ?? "common.medium") },
             { story: tContent("testes.visual.item4.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item4.priority")] ?? "common.medium") },
             { story: tContent("testes.visual.item5.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item5.priority")] ?? "common.medium") },
+            { story: tContent("testes.visual.item6.story"), priority: tNav(priorityKeyMap[tContent("testes.visual.item6.priority")] ?? "common.medium") },
           ],
         }}
       />
