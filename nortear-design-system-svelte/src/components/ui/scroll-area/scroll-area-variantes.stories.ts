@@ -41,7 +41,7 @@ export const Vertical: Story = {
       // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
       // Chromatic nem a assercao viam nada.
       type: 'always',
-      height: '300px',
+      size: 'xl',
       width: '320px',
       itemCount: 30,
       tagLabel: 'Tag',
@@ -75,7 +75,7 @@ export const Horizontal: Story = {
       variant: 'horizontal',
       // type: 'always' — mesmo motivo da Vertical.
       type: 'always',
-      height: '180px',
+      size: 'md',
       width: '500px',
       itemCount: 10,
       cardLabel: 'Card',
@@ -112,7 +112,7 @@ export const Both: Story = {
       variant: 'both',
       // type: 'always' — mesmo motivo da Vertical.
       type: 'always',
-      height: '260px',
+      size: 'lg',
       width: '500px',
       rowCount: 12,
       colCount: 12,

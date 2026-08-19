@@ -110,8 +110,8 @@
 
   const codeImportBasic = `import { ScrollArea } from "@/components/ui/scroll-area";`;
 
-  const codeVertical = `<div style="height: 300px">
-  <ScrollArea orientation="vertical" class="nds-w-full nds-rounded-md nds-border-default" style="height: 100%">
+  const codeVertical = `<div>
+  <ScrollArea orientation="vertical" size="xl" class="nds-w-full nds-rounded-md nds-border-default">
     <div class="nds-stack nds-p-4" data-spacing="sm">
       {#each tags as tag}
         <div class="nds-text-body">Tag {tag}</div>
@@ -121,7 +121,7 @@
 </div>`;
 
   const codeHorizontal = `<div style="width: 500px">
-  <ScrollArea orientation="horizontal" class="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default" style="height: 100%">
+  <ScrollArea orientation="horizontal" size="md" class="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default">
     <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
       {#each items as item}
         <Card {...item} />
@@ -130,8 +130,8 @@
   </ScrollArea>
 </div>`;
 
-  const codeBoth = `<div style="height: 300px; width: 500px">
-  <ScrollArea orientation="both" class="nds-w-full nds-rounded-md nds-border-default" style="height: 100%">
+  const codeBoth = `<div style="width: 500px">
+  <ScrollArea orientation="both" size="xl" class="nds-w-full nds-rounded-md nds-border-default">
     <table style="width: max-content"><!-- conteúdo amplo --></table>
   </ScrollArea>
 </div>`;
@@ -171,8 +171,8 @@ interface ScrollAreaRootProps {
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
           {$tStore('demonstration.labels.verticalTitle')}
         </p>
-        <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 300px; width: 100%; max-width: 360px;">
-          <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
+        <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%; max-width: 360px;">
+          <ScrollArea orientation="vertical" size="xl" class="nds-w-full">
             <div class="nds-stack nds-p-4" data-spacing="sm">
               {#each VERTICAL_TAGS as n (n)}
                 <div class="nds-text-body nds-border-b nds-last-border-0" style="padding-bottom: 0.5rem">
@@ -189,8 +189,8 @@ interface ScrollAreaRootProps {
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
           {$tStore('demonstration.labels.horizontalTitle')}
         </p>
-        <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 180px; width: 100%; max-width: 500px;">
-          <ScrollArea orientation="horizontal" class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+        <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%; max-width: 500px;">
+          <ScrollArea orientation="horizontal" size="md" class="nds-w-full nds-whitespace-nowrap">
             <div class="nds-cluster nds-p-4" data-spacing="md" style="width: max-content">
               {#each HORIZONTAL_CARDS as n (n)}
                 <div class="nds-cluster nds-rounded-md nds-bg-muted nds-text-body nds-shrink-0" data-align="center" data-justify="center" style="height: 120px; width: 140px">
@@ -207,8 +207,8 @@ interface ScrollAreaRootProps {
         <p class="nds-text-caption nds-font-medium nds-text-muted-foreground">
           {$tStore('demonstration.labels.bothTitle')}
         </p>
-        <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 260px; width: 100%; max-width: 500px;">
-          <ScrollArea orientation="both" class="nds-w-full" style="height: 100%">
+        <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%; max-width: 500px;">
+          <ScrollArea orientation="both" size="lg" class="nds-w-full">
             <table class="nds-border-collapse nds-text-caption" style="width: max-content">
               <tbody>
                 {#each MATRIX_ROWS as r (r)}
@@ -325,8 +325,8 @@ interface ScrollAreaRootProps {
   />
 
   {#snippet doPair1()}
-    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 160px; width: 100%;">
-      <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
+    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%;">
+      <ScrollArea orientation="vertical" size="sm" class="nds-w-full">
         <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
           {#each Array.from({ length: 12 }, (_, i) => i + 1) as i (i)}
             <div>Item {i}</div>
@@ -335,9 +335,12 @@ interface ScrollAreaRootProps {
       </ScrollArea>
     </div>
   {/snippet}
+  <!-- Sem `size` de propósito: a legenda deste par é "não envolva conteúdo de
+       altura indefinida — ScrollArea fica invisível", e o preview É a falha.
+       Dar altura a ele faria a página mostrar o certo com a legenda do errado. -->
   {#snippet dontPair1()}
     <div class="nds-w-full">
-      <ScrollArea orientation="vertical" class="nds-w-full nds-rounded-md nds-border-default" style="height: 100%">
+      <ScrollArea orientation="vertical" class="nds-w-full nds-rounded-md nds-border-default">
         <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
           {#each Array.from({ length: 5 }, (_, i) => i + 1) as i (i)}
             <div>Item {i}</div>
@@ -347,8 +350,8 @@ interface ScrollAreaRootProps {
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 160px; width: 100%;">
-      <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
+    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%;">
+      <ScrollArea orientation="vertical" size="sm" class="nds-w-full">
         <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
           {#each Array.from({ length: 14 }, (_, i) => i + 1) as i (i)}
             <div>Linha {i}</div>
@@ -358,10 +361,10 @@ interface ScrollAreaRootProps {
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 160px; width: 100%;">
-      <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
-        <div style="height: 140px;">
-          <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
+    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%;">
+      <ScrollArea orientation="vertical" size="sm" class="nds-w-full">
+        <div>
+          <ScrollArea orientation="vertical" size="sm" class="nds-w-full">
             <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
               {#each Array.from({ length: 14 }, (_, i) => i + 1) as i (i)}
                 <div>Linha {i}</div>
@@ -387,8 +390,8 @@ interface ScrollAreaRootProps {
   />
 
   {#snippet variantVertical()}
-    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 200px; width: 100%; max-width: 300px;">
-      <ScrollArea orientation="vertical" class="nds-w-full" style="height: 100%">
+    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%; max-width: 300px;">
+      <ScrollArea orientation="vertical" size="md" class="nds-w-full">
         <div class="nds-stack nds-text-caption" data-spacing="sm" style="padding: 0.75rem">
           {#each VERTICAL_TAGS.slice(0, 20) as n (n)}
             <div class="nds-border-b nds-last-border-0" style="padding-bottom: 0.25rem">{$tStore('demonstration.labels.tag')} {n}</div>
@@ -398,8 +401,8 @@ interface ScrollAreaRootProps {
     </div>
   {/snippet}
   {#snippet variantHorizontal()}
-    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 140px; width: 100%; max-width: 420px;">
-      <ScrollArea orientation="horizontal" class="nds-w-full nds-whitespace-nowrap" style="height: 100%">
+    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%; max-width: 420px;">
+      <ScrollArea orientation="horizontal" size="sm" class="nds-w-full nds-whitespace-nowrap">
         <div class="nds-cluster" data-spacing="sm" style="width: max-content; padding: 0.75rem">
           {#each HORIZONTAL_CARDS as n (n)}
             <div class="nds-cluster nds-rounded-md nds-bg-muted nds-text-caption nds-shrink-0" data-align="center" data-justify="center" style="height: 90px; width: 120px">
@@ -411,8 +414,8 @@ interface ScrollAreaRootProps {
     </div>
   {/snippet}
   {#snippet variantBoth()}
-    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="height: 200px; width: 100%; max-width: 420px;">
-      <ScrollArea orientation="both" class="nds-w-full" style="height: 100%">
+    <div class="nds-rounded-md nds-border-default nds-bg-background nds-overflow-hidden" style="width: 100%; max-width: 420px;">
+      <ScrollArea orientation="both" size="md" class="nds-w-full">
         <table class="nds-border-collapse nds-text-caption" style="width: max-content">
           <tbody>
             {#each MATRIX_ROWS.slice(0, 10) as r (r)}

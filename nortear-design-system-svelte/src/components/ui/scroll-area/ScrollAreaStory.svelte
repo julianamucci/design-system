@@ -2,12 +2,18 @@
   import { ScrollArea } from './index';
 
   type Variant = 'vertical' | 'horizontal' | 'both' | 'links';
+  type Size = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
   interface Props {
     variant?: Variant;
     type?: 'auto' | 'always' | 'scroll' | 'hover';
     scrollHideDelay?: number;
-    height?: string;
+    /**
+     * Degrau da escada de janela, repassado ao ScrollArea. Substituiu o antigo
+     * `height` em px: o andaime não escolhe mais número, ele escolhe degrau — e
+     * a altura passa a sair da folha, como no produto.
+     */
+    size?: Size;
     width?: string;
     /** Sem teto no pai: o conteúdo expande e não há rolagem (erro de uso). */
     semAltura?: boolean;
@@ -24,7 +30,7 @@
     variant = 'vertical',
     type = 'hover',
     scrollHideDelay = 600,
-    height = '300px',
+    size = 'xl',
     width = '100%',
     semAltura = false,
     itemCount = 30,
@@ -51,15 +57,17 @@
       .join(' '),
   );
 
-  // Sem teto o invólucro não recebe medida nenhuma — é exatamente o cenário em
-  // que o ScrollArea não rola, e ele precisa existir para poder ser testado.
-  const wrapperStyle = $derived(semAltura ? `width: ${width};` : `height: ${height}; width: ${width};`);
-  const areaStyle = $derived(semAltura ? undefined : 'height: 100%');
+  // Sem teto ninguém recebe altura — nem o invólucro, nem o degrau do
+  // ScrollArea. É exatamente o cenário em que ele não rola, e precisa existir
+  // para poder ser testado. O invólucro só carrega largura agora: a altura
+  // desceu para o próprio componente, onde a folha a governa.
+  const wrapperStyle = $derived(`width: ${width};`);
+  const areaSize = $derived(semAltura ? undefined : size);
 </script>
 
 {#if variant === 'vertical'}
   <div class={wrapperClass} style={wrapperStyle}>
-    <ScrollArea orientation="vertical" {type} {scrollHideDelay} class="nds-w-full" style={areaStyle}>
+    <ScrollArea orientation="vertical" {type} {scrollHideDelay} size={areaSize} class="nds-w-full">
       <div class="nds-p-4" data-spacing="sm">
         {#each tags as n (n)}
           <div class="nds-text-body nds-border-b nds-last-border-0 nds-pb-2">{tagLabel} {n}</div>
@@ -69,7 +77,7 @@
   </div>
 {:else if variant === 'horizontal'}
   <div class={wrapperClass} style={wrapperStyle}>
-    <ScrollArea orientation="horizontal" {type} {scrollHideDelay} class="nds-w-full nds-whitespace-nowrap" style={areaStyle}>
+    <ScrollArea orientation="horizontal" {type} {scrollHideDelay} size={areaSize} class="nds-w-full nds-whitespace-nowrap">
       <!-- nds-row e nao nds-cluster: o cluster tem flex-wrap: wrap, entao os
            itens quebravam linha em vez de transbordar na horizontal — sem
            transbordo o bits-ui nao materializa a scrollbar horizontal. -->
@@ -84,7 +92,7 @@
   </div>
 {:else if variant === 'both'}
   <div class={wrapperClass} style={wrapperStyle}>
-    <ScrollArea orientation="both" {type} {scrollHideDelay} class="nds-w-full" style={areaStyle}>
+    <ScrollArea orientation="both" {type} {scrollHideDelay} size={areaSize} class="nds-w-full">
       <table class="nds-border-collapse nds-text-caption" style="width: max-content">
         <tbody>
           {#each rows as r (r)}
@@ -100,7 +108,7 @@
   </div>
 {:else if variant === 'links'}
   <div class={wrapperClass} style={wrapperStyle}>
-    <ScrollArea orientation="vertical" {type} {scrollHideDelay} class="nds-w-full" style={areaStyle}>
+    <ScrollArea orientation="vertical" {type} {scrollHideDelay} size={areaSize} class="nds-w-full">
       <nav aria-label={navLabel} class="nds-p-4">
         <ul class="nds-stack nds-list-none nds-p-0 nds-m-0" data-spacing="xs">
           {#each tags as n (n)}

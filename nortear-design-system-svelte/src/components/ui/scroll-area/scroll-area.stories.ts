@@ -66,7 +66,7 @@ export const Playground: Story = {
       variant: (args.orientation as 'vertical' | 'horizontal' | 'both') ?? 'vertical',
       type: args.type,
       scrollHideDelay: args.scrollHideDelay,
-      height: '300px',
+      size: 'xl',
       width: '360px',
       itemCount: 30,
       tagLabel: 'Tag',

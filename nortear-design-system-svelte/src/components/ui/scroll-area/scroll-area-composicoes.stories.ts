@@ -30,7 +30,7 @@ export const SidebarList: Story = {
     props: {
       variant: 'links',
       type: 'hover',
-      height: '360px',
+      size: 'xl',
       width: '260px',
       itemCount: 40,
       tagLabel: 'Item',
@@ -69,7 +69,7 @@ export const HorizontalGallery: Story = {
       // ponteiro sobre a area: a story existe para MOSTRAR a barra, e nem o
       // Chromatic nem a assercao viam nada.
       type: 'always',
-      height: '180px',
+      size: 'md',
       width: '500px',
       itemCount: 10,
       cardLabel: 'Card',
@@ -107,7 +107,7 @@ export const WideTable: Story = {
     props: {
       variant: 'both',
       type: 'always',
-      height: '300px',
+      size: 'xl',
       width: '500px',
       rowCount: 15,
       colCount: 15,

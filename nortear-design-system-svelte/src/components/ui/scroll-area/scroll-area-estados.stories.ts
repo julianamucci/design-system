@@ -63,7 +63,7 @@ export const Idle: Story = {
     props: {
       variant: 'vertical',
       type: 'hover',
-      height: '240px',
+      size: 'lg',
       width: '320px',
       itemCount: 20,
     },
@@ -91,7 +91,7 @@ export const Always: Story = {
       // type: 'always' — barra sempre montada, que é a condição para arrastar o
       // pegador e para medir o contraste dele.
       type: 'always',
-      height: '240px',
+      size: 'lg',
       width: '320px',
       itemCount: 20,
     },
@@ -210,7 +210,7 @@ export const ScrollOnly: Story = {
       variant: 'vertical',
       type: 'scroll',
       scrollHideDelay: 1000,
-      height: '240px',
+      size: 'lg',
       width: '320px',
       itemCount: 20,
     },
@@ -245,7 +245,7 @@ export const Focus: Story = {
     props: {
       variant: 'vertical',
       type: 'always',
-      height: '240px',
+      size: 'lg',
       width: '320px',
       itemCount: 20,
     },
@@ -281,7 +281,7 @@ export const FocusableContent: Story = {
     props: {
       variant: 'links',
       type: 'always',
-      height: '240px',
+      size: 'lg',
       width: '320px',
       itemCount: 20,
       tagLabel: 'Ação',
