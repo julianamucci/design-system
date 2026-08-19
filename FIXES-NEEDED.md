@@ -2154,3 +2154,68 @@ ficaram abertas, todas descobertas *por causa* da conversão.
       inteiro com a edição passa), então **não é regressão** — mas pela regra do
       repositório falha intermitente não fecha como "não reproduz". O conserto é
       o play esperar a condição.
+
+## Factories do Vanilla expõem menos que as outras quatro (2026-08-19)
+
+Descoberto ao escrever as variantes de snippet: para documentar a chamada REAL de
+cada factory, foi preciso ler as assinaturas — e em 14 componentes a opção que as
+outras stacks têm simplesmente não existe. Os snippets foram escritos para a
+verdade, com o contorno documentado; o que segue é dívida de produto.
+
+Incômodo porque **o Vanilla é a referência cross-stack**. A regra continua válida
+(ela vale para markup, classe e comportamento, não para completude de API), mas
+nestes pontos a referência é quem oferece menos.
+
+**Nome acessível — o subgrupo mais sério, porque o contorno é `setAttribute` solto:**
+
+- [ ] `createToggle` não tem `aria-label`, e `createSwitch` TEM. O toggle só de
+      ícone é o caso canônico dele, e é o que fica sem nome.
+- [ ] `createRadioGroup` não tem como nomear o grupo: renderiza
+      `<fieldset role="radiogroup">` sem `legend` e sem opção de rótulo.
+- [ ] `createProgress` não tem `aria-label` (nem slots de rótulo/valor).
+- [ ] `createTabs` não expõe o `aria-label` obrigatório do tablist.
+- [ ] `createToggleGroup` não expõe nome do grupo nem de cada item; a story atual
+      faz `setAttribute` em cada `[data-slot="toggle"]` depois de construir.
+- [ ] `createResizablePanel` não deixa nomear a divisória — atributo relevante
+      para WCAG entregue ao consumidor.
+
+**Capacidade que as outras têm:**
+
+- [ ] `createSlider` não faz intervalo: `value` é um `number` só, sem dois pegadores.
+- [ ] `createDropdownMenu` não tem `side`/`align`/`sideOffset` nem `open` controlado
+      — e a story declara `side`/`align`/`modal` como argTypes que **não alcançam
+      nada** (três controles mortos, já comentados no arquivo).
+- [ ] `createPopover` não tem `sideOffset` nem `open` controlado, e não tem
+      sub-factories de cabeçalho/título/descrição: o chamador monta a div e aplica
+      as classes na mão.
+- [ ] `createNavigationMenu` não tem `skipDelayDuration` nem valor controlado.
+- [ ] `createTooltip` não tem Provider — o atraso é constante de módulo — e
+      `content` é string, então não aceita marcação.
+- [ ] `createCommand` não aceita item separador, embora `createSelect` aceite.
+- [ ] `createPagination` crava `href="#"` com `preventDefault()`, sem integração
+      de rota — que é justamente o assunto do `props.extensibilityCode`.
+- [ ] `createDrawer` não abre por código. `createHoverCard` e `createSidebar`
+      abrem, e ainda por nomes diferentes: `abrir`/`fechar` num, `open`/`close`/
+      `toggle` no outro.
+- [ ] Nome da opção de classe está rachado: `card`, `label` e `breadcrumb` usam
+      `className`; as outras dez usam `class`.
+
+## Duas inconsistências de infra achadas na mesma passada (2026-08-19)
+
+- [ ] **`flutter` é uma sexta stack em `code-variants.ts` e não existe no
+      `audit.mjs`** (que tem cinco). O `CLAUDE.md` afirma que a lista do
+      `audit.mjs` é a autoritativa — hoje as duas discordam. O relatório de
+      cobertura mostra flutter 0/101, e o pacote tem 7 widgets e nenhuma docs page
+      consumindo o conteúdo compartilhado. Se a intenção é que ele consuma, são
+      101 chaves próprias; se não é, ele não deveria estar em `STACKS`.
+
+- [ ] **Os overrides de `code-block` ficaram redundantes.** As três docs pages
+      (`vue`, `svelte`, `vanilla`) prendem `anatomy.structureCode` e
+      `props.extensibilityCode` num override de `useTranslation`, e esse texto foi
+      migrado VERBATIM para o JSON compartilhado. O override ainda vence (é
+      aplicado depois da resolução), então a página renderiza igual — mas apagá-lo
+      agora é seguro e leva `--only soltos` de 18 para zero.
+
+- [ ] **Descrição obsoleta em `vanilla/.../calendar.stories.ts`** (~linha 33):
+      afirma que a factory não suporta `mode` multiple/range, `captionLayout` nem
+      `locale`. O `CalendarOptions` atual tem os três.
