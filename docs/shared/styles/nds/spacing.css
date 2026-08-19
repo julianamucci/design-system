@@ -41,9 +41,35 @@
 .nds-py-0-5  { padding-block: var(--spacing-0-5); }
 .nds-py-1    { padding-block: var(--spacing-1); }
 .nds-py-2    { padding-block: var(--spacing-2); }
+.nds-py-4    { padding-block: var(--spacing-4); }
+.nds-py-8    { padding-block: var(--spacing-8); }
 
 /* ── Padding inline-end (pr) ───────────────────────────────────────────────── */
+.nds-pr-2    { padding-inline-end: var(--spacing-2); }
 .nds-pr-4    { padding-inline-end: var(--spacing-4); }
+
+/*
+ * ── Padding block-start (pt) e inline-start (pl) ────────────────────────────
+ *
+ * As duas famílias não existiam. Não por decisão: `pb` tinha quatro degraus e
+ * `pr` tinha um, porque foram criados sob demanda, um lado de cada vez —
+ * e quem precisou de topo ou de início escreveu inline em vez de criar a classe.
+ * A assimetria sozinha respondia por 67 declarações cravadas.
+ *
+ * Só degraus PERMITIDOS pela convenção do topo deste arquivo. O meio-degrau de
+ * 12px continua fora, de propósito.
+ */
+.nds-pt-1    { padding-block-start: var(--spacing-1); }
+.nds-pt-2    { padding-block-start: var(--spacing-2); }
+.nds-pt-4    { padding-block-start: var(--spacing-4); }
+.nds-pt-6    { padding-block-start: var(--spacing-6); }
+.nds-pt-8    { padding-block-start: var(--spacing-8); }
+
+.nds-pl-1    { padding-inline-start: var(--spacing-1); }
+.nds-pl-2    { padding-inline-start: var(--spacing-2); }
+.nds-pl-4    { padding-inline-start: var(--spacing-4); }
+.nds-pl-6    { padding-inline-start: var(--spacing-6); }
+.nds-pl-8    { padding-inline-start: var(--spacing-8); }
 
 /* ── Margin-bottom (mb) ────────────────────────────────────────────────────── */
 .nds-mb-0    { margin-bottom: 0; }
@@ -65,10 +91,16 @@
 .nds-mt-6    { margin-top: var(--spacing-6); }
 
 /* ── Padding-bottom (pb) ───────────────────────────────────────────────────── */
-.nds-pb-2    { padding-bottom: var(--spacing-2); }
-.nds-pb-4    { padding-bottom: var(--spacing-4); }
-.nds-pb-6    { padding-bottom: var(--spacing-6); }
-.nds-pb-8    { padding-bottom: var(--spacing-8); }
+/* `padding-block-end`, não `padding-bottom`: `pr` já era lógica e `pb` era
+ * física, duas convenções para a mesma família. Em escrita horizontal são a
+ * mesma coisa, então a troca não muda nada hoje — e passa a acompanhar a
+ * direção quando alguém traduzir para um idioma que não é da esquerda para a
+ * direita. */
+.nds-pb-1    { padding-block-end: var(--spacing-1); }
+.nds-pb-2    { padding-block-end: var(--spacing-2); }
+.nds-pb-4    { padding-block-end: var(--spacing-4); }
+.nds-pb-6    { padding-block-end: var(--spacing-6); }
+.nds-pb-8    { padding-block-end: var(--spacing-8); }
 
 /* ── Margin (todos) ────────────────────────────────────────────────────────── */
 .nds-m-0     { margin: 0; }
