@@ -159,6 +159,57 @@ Dúvida-chave para decidir: **"Se o usuário trocar de tema, essa medida precisa
 - Sim → tokenizar
 - Não → pode ser hardcoded
 
+## `style` inline com valor de design — proibido nas cinco stacks
+
+**Esta é a regra canônica.** Ela vale para as cinco stacks e para os três tipos
+de arquivo, e é daqui que os `CLAUDE.md` de cada stack apontam. Não a copie: a
+duplicata diverge em silêncio, e foi assim que a proibição passou meses parecendo
+regra só do Angular.
+
+Valor de design cravado em `style` inline sai do sistema. Inline vence qualquer
+folha, então a declaração fica **fora do tema, fora da densidade e fora da escala
+tipográfica** — e `height` cravado é o mesmo defeito de WCAG 1.4.4 que a seção
+"Altura de quem tem texto" já proíbe. Vale para `style="…"`, `style={{…}}`,
+`:style="{…}"`, `[style]`, `el.style.<prop> =` e `el.style.cssText =`.
+
+**Alcance**: `src/components/ui/` (primitivo **e** stories) e
+`src/components/docs/`. As docs pages são o pior lugar para a violação, não o
+melhor: é o markup que o leitor copia.
+
+**O que NÃO é violação** — e o auditor sabe distinguir cada um:
+
+| Caso | Exemplo | Por quê |
+|---|---|---|
+| Propriedade mecânica | `position`, `display`, `transform`, `contain`, `object-fit`, `overflow`, `z-index` | Não existe como token; proibir geraria ruído em `display: contents` de factory |
+| Valor mecânico | `auto`, `100%`, `0`, `fit-content` | Preenchimento, não medida escolhida |
+| Token | `style={{ blockSize: 'var(--height-default)' }}` | É exatamente o que esta guideline pede |
+| Custom property | `el.style.setProperty('--ratio', …)` | Alimenta a folha em vez de contorná-la |
+| Valor dinâmico | vindo de prop, signal ou `args` | Não é literal cravado |
+| Snippet exibido ao leitor | `` code: `<Tabs style="max-width: 36rem">` `` | `style` num trecho que **ensina** não é `style` aplicado |
+
+**Corrigir é mover para classe `.nds-*`, nunca apagar o efeito.** Se a utilitária
+não existir, crie a regra no CSS compartilhado seguindo o Vanilla — não crave o
+valor e não invente classe fora do vocabulário (ver "Nunca invente classe
+`.nds-*`" na guideline de regras gerais de cada stack).
+
+Antes de trocar a inline por classe, confira se a **folha já faz aquilo**. Foi o
+caso mais comum desta varredura: `.nds-radio-group[aria-orientation="horizontal"]`
+já traz `grid-auto-flow: column` e `gap: var(--spacing-6)`, e quatro docs pages
+repetiam as três declarações inline — em vanilla, sem sequer marcar o atributo,
+de modo que o leitor de tela anunciava o grupo como vertical.
+
+Portão: `node scripts/audit.mjs <slug>`, regra `inline_style_design_value`
+(**high** em primitivo e docs page, **medium** em andaime de story).
+
+**Dívida medida em 2026-08-19** (varredura das cinco stacks, já com a guarda de
+snippet): 138 arquivos e 988 declarações, em 36 slugs — react 39 · vue 28 ·
+svelte 26 · vanilla 45, Angular limpo. **82% delas não têm utilitária hoje**: o
+que falta é `p-3`/`px-3`/`pt-*`/`pl-*` (a escada de `0.75rem`, de longe a mais
+repetida), degraus de `w-*` e `max-w-*` fora de 16/20/24/32rem, e as famílias
+`min-h-*`, `min-w-*`, `max-h-*` e `height` — esta última nunca deve virar
+utilitária genérica sem decisão explícita, justamente por causa da WCAG 1.4.4.
+Mintar essas classes é decisão de dona do projeto, não de quem passa corrigindo.
+
 ## Onde aplicar
 
 ### Componentes UI primitivos (`src/components/ui/<comp>.tsx`)
@@ -234,4 +285,9 @@ Se algum match aparecer fora dos casos aceitáveis acima, tokenize.
 
 ## Histórico
 
+- **2026-08-19**: a proibição de `style` inline passou a ser regra geral e
+  canônica desta guideline — antes vivia só no `01-regras-gerais.md` do Angular,
+  e os outros quatro `CLAUDE.md` não a mencionavam. A regra `inline_style_design_value`
+  do `audit.mjs` deixou de varrer só primitivo e passou a incluir stories e docs
+  pages, com guarda de snippet (`snippetMask`) e leitura de `style.cssText`.
 - **2026-04-21**: tokens de dimensão introduzidos junto com os 7 temas de densidade (Nova, Vega, Maia, Lyra, Mira, Luma, Sera). Patches aplicados em Button, Input, Select, Toggle, Badge. Registrado em [PATCHES.md](../../../PATCHES.md#button-dimension-tokens).

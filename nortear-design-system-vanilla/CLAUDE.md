@@ -19,3 +19,4 @@ Guidelines compartilhadas (todas as stacks):
 - `../docs/shared/guidelines/06-seo-geo.md`
 - `../docs/shared/guidelines/07-analytics.md`
 - `../docs/shared/guidelines/08-docs-pages-foundations.md`
+- `../docs/shared/guidelines/12-tokenizacao-dimensoes.md` — dimensões em token, e a **regra canônica de `style` inline com valor de design**: proibido nas cinco stacks, em primitivo, story e docs page. Portão `inline_style_design_value` do `audit.mjs`.

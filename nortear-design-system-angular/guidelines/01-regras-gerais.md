@@ -84,7 +84,9 @@ Portão: `node scripts/audit.mjs <slug>`, regra `unknown_class_reference`.
 
 Sem `style="…"`, sem `[style]`. Medida que falta vira regra no CSS compartilhado, com token da escada `--spacing-*` (o grid de 8px) ou `--size-*`.
 
-**Altura não se crava** em primitivo interativo: nasce de `padding-block` mais tipografia, para o bloco crescer junto quando a pessoa aumenta a fonte do navegador (WCAG 1.4.4). Tokens `--height-*` seguem válidos para containers (card, modal, sidebar) e para ícones, que não têm texto a crescer.
+Esta regra **não é do Angular**: vale para as cinco stacks, e o texto canônico — alcance (primitivo, story e docs page), o que não conta como violação (`var()`, custom property, valor mecânico, snippet exibido ao leitor) e a dívida medida — mora em `../../docs/shared/guidelines/12-tokenizacao-dimensoes.md`, seção "`style` inline com valor de design". Portão: `node scripts/audit.mjs <slug>`, regra `inline_style_design_value`.
+
+Mesma guideline responde por **altura não se cravar** em primitivo com texto (nasce de `padding-block` mais tipografia, WCAG 1.4.4) — seção "Altura de quem tem texto".
 
 Quando a variação é escolha de quem usa — forma e largura de um esqueleto, por exemplo — exponha `data-*`, como `data-spacing` e `data-size` já fazem no resto do sistema.
 
