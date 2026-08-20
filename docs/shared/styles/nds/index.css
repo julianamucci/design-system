@@ -6,11 +6,9 @@
 @import "./reset.css";
 @import "./layout.css";
 @import "./typography.css";
-@import "./colors.css";
 @import "./pill.css";
 @import "./code.css";
 @import "./code-block.css";
-@import "./spacing.css";
 @import "./app-shell.css";
 @import "./button.css";
 @import "./button-group.css";
@@ -89,4 +87,27 @@
  * silenciosa. Utility genérica por último, regra de componente no CSS do
  * componente.
  */
+/*
+ * As três folhas de UTILITY, juntas e por último.
+ *
+ * `colors.css` estava na posição 4 e `spacing.css` na 8 — antes de TODA folha de
+ * componente. Mesma especificidade, e o import posterior vence: nenhuma classe
+ * `.nds-bg-*`, `.nds-text-*` ou `.nds-p-*` conseguia complementar um componente
+ * que declarasse a mesma propriedade. Utility que não vence não é utility, e o
+ * comentário logo abaixo já dizia isso — só valia para uma das três.
+ *
+ * Custou dois defeitos VISÍVEIS antes de virar conserto: o slide do carousel no
+ * Vanilla saía branco porque o fundo do `.nds-card` apagava `nds-bg-muted-soft`,
+ * e um `<Input>` com ícone precisava de `padding-left` inline porque `.nds-input`
+ * vencia `.nds-pl-8`.
+ *
+ * Raio medido antes de mover: 20 sítios em 4 pares. Doze são badges na página de
+ * ícones, onde quem escreveu `nds-bg-muted` esperava que valesse e não valia —
+ * esses PASSAM a funcionar. Os outros oito são `nds-px-4` sobre `.nds-button` no
+ * tamanho padrão, cujo `padding-inline` é o mesmo `--spacing-4`: nenhuma mudança
+ * de pixel. Nenhuma das duas folhas declara variável, só classe, então mover não
+ * afeta o que os componentes consomem.
+ */
+@import "./colors.css";
+@import "./spacing.css";
 @import "./utilities.css";

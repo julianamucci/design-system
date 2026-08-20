@@ -514,7 +514,7 @@ interface ContextMenuCheckboxItemProps
             ),
             dontPreview: (
               <div
-                className="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-bg-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default"
+                className="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default"
                 data-align="center"
                 data-justify="center"
                 style={{ borderStyle: "dashed", userSelect: "none" }}

@@ -780,7 +780,7 @@ const codeCompositionShortcuts = `<ContextMenu>
       </template>
       <template #dont-preview-2>
         <div
-          class="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-bg-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default"
+          class="nds-cluster nds-w-full nds-rounded-md nds-border-destructive-soft nds-text-body nds-text-muted-foreground nds-cursor-default"
           data-align="center"
           data-justify="center"
           style="border-style: dashed; user-select: none"
