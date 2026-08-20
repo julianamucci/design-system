@@ -31,98 +31,10 @@ import { toPlainText } from '@/lib/strip-html';
 // `{/* */}`). Aqui trocamos só o que muda de sintaxe — o texto descritivo é
 // neutro e fica como está.
 
-const STRUCTURE_CODE: Record<string, string> = {
-  'pt-BR': `<template>
-  <CodeBlock                        <!-- Raiz: borda, superfície e recorte -->
-    title="exemplo.tsx"             <!-- Rótulo do header (opcional) -->
-    language="tsx"                  <!-- Classificação de sintaxe -->
-    :code="source"                  <!-- Conteúdo exibido e copiado -->
-    show-line-numbers               <!-- Coluna de numeração -->
-    :highlight-lines="[3, '5-7']"   <!-- Linhas em destaque -->
-    footer="Requer Node 20+"        <!-- Observação abaixo do código -->
-  />
-</template>`,
-  en: `<template>
-  <CodeBlock                        <!-- Root: border, surface, clipping -->
-    title="example.tsx"             <!-- Header label (optional) -->
-    language="tsx"                  <!-- Syntax classification -->
-    :code="source"                  <!-- Content shown and copied -->
-    show-line-numbers               <!-- Line number column -->
-    :highlight-lines="[3, '5-7']"   <!-- Highlighted lines -->
-    footer="Requires Node 20+"      <!-- Note below the code -->
-  />
-</template>`,
-  es: `<template>
-  <CodeBlock                        <!-- Raíz: borde, superficie y recorte -->
-    title="ejemplo.tsx"             <!-- Etiqueta del header (opcional) -->
-    language="tsx"                  <!-- Clasificación de sintaxis -->
-    :code="source"                  <!-- Contenido mostrado y copiado -->
-    show-line-numbers               <!-- Columna de numeración -->
-    :highlight-lines="[3, '5-7']"   <!-- Líneas destacadas -->
-    footer="Requiere Node 20+"      <!-- Observación bajo el código -->
-  />
-</template>`,
-};
-
-const EXTENSIBILITY_CODE: Record<string, string> = {
-  'pt-BR': `<template>
-  <CodeBlock
-    :code="source"
-    language="bash"
-    title="terminal"
-    :show-line-numbers="false"
-    class="instalacao"
-  >
-    <template #footer>
-      <span>Requer Node 20 ou superior.</span>
-    </template>
-  </CodeBlock>
-</template>`,
-  en: `<template>
-  <CodeBlock
-    :code="source"
-    language="bash"
-    title="terminal"
-    :show-line-numbers="false"
-    class="install-snippet"
-  >
-    <template #footer>
-      <span>Requires Node 20 or later.</span>
-    </template>
-  </CodeBlock>
-</template>`,
-  es: `<template>
-  <CodeBlock
-    :code="source"
-    language="bash"
-    title="terminal"
-    :show-line-numbers="false"
-    class="instalacion"
-  >
-    <template #footer>
-      <span>Requiere Node 20 o superior.</span>
-    </template>
-  </CodeBlock>
-</template>`,
-};
-
-
 const overrides: TranslationOverrides = {
   '*': {
     'props.table.className.name': 'class',
     'props.table.footer.type': 'string | slot',
-  },
-  'pt-BR': {
-    'anatomy.structureCode': STRUCTURE_CODE['pt-BR'],
-    'props.extensibilityCode': EXTENSIBILITY_CODE['pt-BR'],
-  },
-  en: {
-    'anatomy.structureCode': STRUCTURE_CODE.en,
-    'props.extensibilityCode': EXTENSIBILITY_CODE.en,
-  },
-  es: {
-    'anatomy.structureCode': STRUCTURE_CODE.es,
-    'props.extensibilityCode': EXTENSIBILITY_CODE.es,
   },
 };
 

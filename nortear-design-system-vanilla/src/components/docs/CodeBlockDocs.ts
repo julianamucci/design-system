@@ -1,6 +1,6 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
-import { getLocale, createTranslation, type Locale, type TranslationOverrides } from '@/lib/i18n';
+import { getLocale, createTranslation, type TranslationOverrides } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createCodeBlock, type CodeBlockOptions } from '@/components/ui/code-block';
 import uiTranslations from '@/i18n/ui.json';
@@ -34,88 +34,10 @@ import {
 //   · `footer` aceita `string | HTMLElement`, não um nó de framework;
 //   · os blocos de estrutura e extensibilidade são chamadas de função.
 
-const ANATOMY_STRUCTURE: Record<Locale, string> = {
-  'pt-BR': [
-    "const bloco = createCodeBlock({    // Raiz: borda, superfície e recorte",
-    "  title: 'exemplo.tsx',            // Rótulo do header (opcional)",
-    "  language: 'tsx',                 // Classificação de sintaxe",
-    "  code: source,                    // Conteúdo exibido e copiado",
-    "  showLineNumbers: true,           // Coluna de numeração",
-    "  highlightLines: [3, '5-7'],      // Linhas em destaque",
-    "  footer: 'Requer Node 20+',       // Observação abaixo do código",
-    "});",
-  ].join('\n'),
-  en: [
-    "const block = createCodeBlock({    // Root: border, surface, clipping",
-    "  title: 'example.tsx',            // Header label (optional)",
-    "  language: 'tsx',                 // Syntax classification",
-    "  code: source,                    // Content shown and copied",
-    "  showLineNumbers: true,           // Line number column",
-    "  highlightLines: [3, '5-7'],      // Highlighted lines",
-    "  footer: 'Requires Node 20+',     // Note below the code",
-    "});",
-  ].join('\n'),
-  es: [
-    "const bloque = createCodeBlock({   // Raíz: borde, superficie y recorte",
-    "  title: 'ejemplo.tsx',            // Etiqueta del header (opcional)",
-    "  language: 'tsx',                 // Clasificación de sintaxis",
-    "  code: source,                    // Contenido mostrado y copiado",
-    "  showLineNumbers: true,           // Columna de numeración",
-    "  highlightLines: [3, '5-7'],      // Líneas destacadas",
-    "  footer: 'Requiere Node 20+',     // Observación bajo el código",
-    "});",
-  ].join('\n'),
-};
-
-const EXTENSIBILITY_CODE: Record<Locale, string> = {
-  'pt-BR': [
-    'const bloco = createCodeBlock({',
-    '  code: source,',
-    "  language: 'bash',",
-    "  title: 'terminal',",
-    '  showLineNumbers: false,',
-    "  class: 'instalacao',",
-    "  footer: 'Requer Node 20 ou superior.',",
-    '});',
-  ].join('\n'),
-  en: [
-    'const block = createCodeBlock({',
-    '  code: source,',
-    "  language: 'bash',",
-    "  title: 'terminal',",
-    '  showLineNumbers: false,',
-    "  class: 'install-snippet',",
-    "  footer: 'Requires Node 20 or later.',",
-    '});',
-  ].join('\n'),
-  es: [
-    'const bloque = createCodeBlock({',
-    '  code: source,',
-    "  language: 'bash',",
-    "  title: 'terminal',",
-    '  showLineNumbers: false,',
-    "  class: 'instalacion',",
-    "  footer: 'Requiere Node 20 o superior.',",
-    '});',
-  ].join('\n'),
-};
-
 const overrides: TranslationOverrides = {
   '*': {
     'props.table.className.name': 'class',
     'props.table.footer.type': 'string | HTMLElement',
-  },
-  'pt-BR': {
-    'anatomy.structureCode': ANATOMY_STRUCTURE['pt-BR'],
-    'props.extensibilityCode': EXTENSIBILITY_CODE['pt-BR'],
-  },
-  en: {
-    'anatomy.structureCode': ANATOMY_STRUCTURE.en,
-    'props.extensibilityCode': EXTENSIBILITY_CODE.en,
-  },
-  es: {
-    'anatomy.structureCode': ANATOMY_STRUCTURE.es,
-    'props.extensibilityCode': EXTENSIBILITY_CODE.es,
   },
 };
 
@@ -503,7 +425,7 @@ export function createCodeBlockDocs(): HTMLElement {
           description: t('import.basic'),
           code: `import { createCodeBlock } from '@/components/ui/code-block';`,
           secondaryDescription: t('import.withFooter'),
-          secondaryCode: EXTENSIBILITY_CODE[getLocale()],
+          secondaryCode: t('props.extensibilityCode'),
         });
 
       case 'variantes':

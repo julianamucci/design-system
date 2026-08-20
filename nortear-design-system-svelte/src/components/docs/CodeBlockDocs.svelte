@@ -31,96 +31,13 @@
 }`;
 
   // ─── Overrides desta stack ───────────────────────────────────────────────────
-  // O translations.json é compartilhado e descreve a API em React: `className` e
-  // `ReactNode`, com os snippets de estrutura/extensibilidade em JSX. Aqui a prop
-  // é `class` e o footer aceita `string | Snippet`.
-
-  const structureCodePtBr = `<script lang="ts">
-  import { CodeBlock } from "@/components/ui/code-block";
-
-  const source = "const total = items.length;";
-<\/script>
-
-<!-- Raiz: borda, superfície, recorte e as regiões de header, código e rodapé -->
-<CodeBlock
-  title="exemplo.svelte"
-  language="svelte"
-  code={source}
-  showLineNumbers
-  highlightLines={[3, "5-7"]}
-  footer="Requer Node 20+"
-/>`;
-
-  const structureCodeEn = `<script lang="ts">
-  import { CodeBlock } from "@/components/ui/code-block";
-
-  const source = "const total = items.length;";
-<\/script>
-
-<!-- Root: border, surface, clipping and the header, code and footer regions -->
-<CodeBlock
-  title="example.svelte"
-  language="svelte"
-  code={source}
-  showLineNumbers
-  highlightLines={[3, "5-7"]}
-  footer="Requires Node 20+"
-/>`;
-
-  const structureCodeEs = `<script lang="ts">
-  import { CodeBlock } from "@/components/ui/code-block";
-
-  const source = "const total = items.length;";
-<\/script>
-
-<!-- Raíz: borde, superficie, recorte y las regiones de header, código y pie -->
-<CodeBlock
-  title="ejemplo.svelte"
-  language="svelte"
-  code={source}
-  showLineNumbers
-  highlightLines={[3, "5-7"]}
-  footer="Requiere Node 20+"
-/>`;
-
-  const extensibilityCodePtBr = `{#snippet nota()}
-  <span>Requer Node 20 ou superior.</span>
-{/snippet}
-
-<CodeBlock
-  code={source}
-  language="bash"
-  title="terminal"
-  showLineNumbers={false}
-  class="instalacao"
-  footer={nota}
-/>`;
-
-  const extensibilityCodeEn = `{#snippet note()}
-  <span>Requires Node 20 or later.</span>
-{/snippet}
-
-<CodeBlock
-  code={source}
-  language="bash"
-  title="terminal"
-  showLineNumbers={false}
-  class="install-snippet"
-  footer={note}
-/>`;
-
-  const extensibilityCodeEs = `{#snippet nota()}
-  <span>Requiere Node 20 o superior.</span>
-{/snippet}
-
-<CodeBlock
-  code={source}
-  language="bash"
-  title="terminal"
-  showLineNumbers={false}
-  class="instalacion"
-  footer={nota}
-/>`;
+  // Sobra apenas o nome e o tipo da prop: aqui ela é `class` e o footer aceita
+  // `string | Snippet`.
+  //
+  // Os snippets de estrutura e extensibilidade moravam aqui e voltaram para o
+  // `translations.json`, que passou a ter variante própria por stack. Em override
+  // eles ficavam invisíveis para o conteúdo compartilhado — e para quem escrevesse
+  // a próxima stack.
 
 
   const { tStore: tNavStore } = useTranslation(uiTranslations);
@@ -128,18 +45,6 @@
     '*': {
       'props.table.className.name': 'class',
       'props.table.footer.type': 'string | Snippet',
-    },
-    'pt-BR': {
-      'anatomy.structureCode': structureCodePtBr,
-      'props.extensibilityCode': extensibilityCodePtBr,
-    },
-    en: {
-      'anatomy.structureCode': structureCodeEn,
-      'props.extensibilityCode': extensibilityCodeEn,
-    },
-    es: {
-      'anatomy.structureCode': structureCodeEs,
-      'props.extensibilityCode': extensibilityCodeEs,
     },
   });
 
