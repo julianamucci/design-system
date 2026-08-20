@@ -31,7 +31,7 @@
       "item4": "<strong>AccordionContent</strong> — área de conteúdo com animação de abertura/fechamento via CSS. Respeita <code>prefers-reduced-motion</code>.",
       "structureLabel": "Estrutura básica:",
       "structureCode": {
-        "react": "<Accordion type=\"single\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>",
+        "react": "<Accordion defaultValue={[\"item-1\"]}>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "vue": "<Accordion type=\"single\" default-value=\"item-1\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "svelte": "<Accordion type=\"single\" bind:value>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Conteúdo</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "vanilla": "const acordeao = createAccordion({\n  type: 'single',\n  defaultValue: 'item-1',\n  items: [\n    { value: 'item-1', trigger: 'Título', content: 'Conteúdo' },\n  ],\n});",
@@ -610,7 +610,7 @@
       "item4": "<strong>AccordionContent</strong> — content area with open/close animation via CSS. Respects <code>prefers-reduced-motion</code>.",
       "structureLabel": "Basic structure:",
       "structureCode": {
-        "react": "<Accordion type=\"single\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Title</AccordionTrigger>\n    <AccordionContent>Content</AccordionContent>\n  </AccordionItem>\n</Accordion>",
+        "react": "<Accordion defaultValue={[\"item-1\"]}>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Title</AccordionTrigger>\n    <AccordionContent>Content</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "vue": "<Accordion type=\"single\" default-value=\"item-1\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Title</AccordionTrigger>\n    <AccordionContent>Content</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "svelte": "<Accordion type=\"single\" bind:value>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Title</AccordionTrigger>\n    <AccordionContent>Content</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "vanilla": "const accordion = createAccordion({\n  type: 'single',\n  defaultValue: 'item-1',\n  items: [\n    { value: 'item-1', trigger: 'Title', content: 'Content' },\n  ],\n});",
@@ -1189,7 +1189,7 @@
       "item4": "<strong>AccordionContent</strong> — área de contenido con animación de apertura/cierre via CSS. Respeta <code>prefers-reduced-motion</code>.",
       "structureLabel": "Estructura básica:",
       "structureCode": {
-        "react": "<Accordion type=\"single\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>",
+        "react": "<Accordion defaultValue={[\"item-1\"]}>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "vue": "<Accordion type=\"single\" default-value=\"item-1\">\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "svelte": "<Accordion type=\"single\" bind:value>\n  <AccordionItem value=\"item-1\">\n    <AccordionTrigger>Título</AccordionTrigger>\n    <AccordionContent>Contenido</AccordionContent>\n  </AccordionItem>\n</Accordion>",
         "vanilla": "const acordeon = createAccordion({\n  type: 'single',\n  defaultValue: 'item-1',\n  items: [\n    { value: 'item-1', trigger: 'Título', content: 'Contenido' },\n  ],\n});",
