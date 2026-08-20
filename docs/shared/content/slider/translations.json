@@ -148,8 +148,8 @@
         }
       },
       "styles": {
-        "single": "Um único thumb — <code>value={[50]}</code>, controla um valor.",
-        "range": "Dois thumbs — <code>value={[20, 80]}</code>, controla min e max.",
+        "single": "Uma alça — controla um valor único.",
+        "range": "Duas alças — controlam o início e o fim de um intervalo.",
         "vertical": "Orientação vertical — <code>orientation=\"vertical\"</code> + altura definida no pai."
       },
       "compositionsTitle": "Composições",
@@ -370,7 +370,7 @@
     "notes": {
       "title": "Notas de Implementação",
       "item1": "<strong>Duas anatomias para a alça</strong> — ora ela envolve um <code>&lt;input type=\"range\"&gt;</code>, que já traz papel e limites do navegador, ora ela mesma é o elemento focável, com os limites escritos em ARIA. As duas anunciam a mesma coisa ao leitor de tela; asserção que exige uma delas reprova a outra sem que nada esteja quebrado.",
-      "item2": "<strong>Array de valores</strong> — <code>value</code> e <code>defaultValue</code> são sempre arrays, mesmo para um valor só (<code>[50]</code>).",
+      "item2": "<strong>Uma alça ou duas</strong> — o que separa os dois modos é a forma do valor entregue ao componente. Cada alça é um controle de verdade: parada de tabulação própria, nome acessível próprio, e os extremos não se cruzam.",
       "item3": "<strong>Mudança contínua vs valor confirmado</strong> — o callback de mudança dispara durante arrasto; use o callback de commit (ao soltar) para analytics e submit, evitando spam.",
       "item4": "<strong>Vertical</strong> — o componente já tem altura mínima própria em pé; defina a altura no container quando quiser um trilho mais longo."
     },
@@ -614,8 +614,8 @@
         }
       },
       "styles": {
-        "single": "Single thumb — <code>value={[50]}</code>, controls one value.",
-        "range": "Two thumbs — <code>value={[20, 80]}</code>, controls min and max.",
+        "single": "One thumb — controls a single value.",
+        "range": "Two thumbs — control the start and the end of a range.",
         "vertical": "Vertical orientation — <code>orientation=\"vertical\"</code> + height defined on parent."
       },
       "compositionsTitle": "Compositions",
@@ -836,7 +836,7 @@
     "notes": {
       "title": "Implementation Notes",
       "item1": "<strong>Two anatomies for the thumb</strong> — sometimes it wraps an <code>&lt;input type=\"range\"&gt;</code>, which already brings role and bounds from the browser; sometimes the thumb itself is the focusable element, with the bounds written in ARIA. Both announce the same thing to a screen reader; an assertion that demands one of them fails the other with nothing broken.",
-      "item2": "<strong>Value array</strong> — <code>value</code> and <code>defaultValue</code> are always arrays, even for a single value (<code>[50]</code>).",
+      "item2": "<strong>One thumb or two</strong> — what separates the two modes is the shape of the value handed to the component. Each thumb is a real control: its own tab stop, its own accessible name, and the ends never cross.",
       "item3": "<strong>Continuous change vs committed value</strong> — the change callback fires during drag; use the commit callback (on release) for analytics and submit to avoid spam.",
       "item4": "<strong>Vertical</strong> — the component already has its own minimum height when upright; set the height on the container when you want a longer track."
     },
@@ -1080,8 +1080,8 @@
         }
       },
       "styles": {
-        "single": "Un único thumb — <code>value={[50]}</code>, controla un valor.",
-        "range": "Dos thumbs — <code>value={[20, 80]}</code>, controla min y max.",
+        "single": "Un control — maneja un valor único.",
+        "range": "Dos controles — manejan el inicio y el fin de un intervalo.",
         "vertical": "Orientación vertical — <code>orientation=\"vertical\"</code> + altura definida en el padre."
       },
       "compositionsTitle": "Composiciones",
@@ -1302,7 +1302,7 @@
     "notes": {
       "title": "Notas de Implementación",
       "item1": "<strong>Dos anatomías para el thumb</strong> — a veces envuelve un <code>&lt;input type=\"range\"&gt;</code>, que ya trae rol y límites del navegador; a veces el propio thumb es el elemento enfocable, con los límites escritos en ARIA. Ambas anuncian lo mismo al lector de pantalla; una aserción que exija una de ellas reprueba la otra sin que nada esté roto.",
-      "item2": "<strong>Array de valores</strong> — <code>value</code> y <code>defaultValue</code> son siempre arrays, incluso para un solo valor (<code>[50]</code>).",
+      "item2": "<strong>Un control o dos</strong> — lo que separa los dos modos es la forma del valor entregado al componente. Cada control es real: parada de tabulación propia, nombre accesible propio, y los extremos no se cruzan.",
       "item3": "<strong>Cambio continuo vs valor confirmado</strong> — el callback de cambio dispara durante el arrastre; usa el callback de commit (al soltar) para analytics y submit, evitando spam.",
       "item4": "<strong>Vertical</strong> — el componente ya tiene altura mínima propia cuando está de pie; define la altura en el contenedor cuando quieras una pista más larga."
     },
