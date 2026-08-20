@@ -7,6 +7,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "./carousel";
+import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
 
 const meta = {
   title: "UI/Carousel/States",
@@ -27,33 +28,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-/** Slide sem medida cravada — proporção e cor vêm de classe, não de `style`. */
-function SlideCard({ label }: { label: string }) {
-  return (
-    <div className="nds-aspect-16-9">
-      <div
-        className="nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg"
-        data-align="center"
-        data-justify="center"
-      >
-        <span className="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{label}</span>
-      </div>
-    </div>
-  );
-}
-
-/**
- * O slide divide área com o viewport?
- *
- * O Embla desloca o TRILHO com `transform` e nunca toca em `scrollLeft` — que
- * fica em zero o tempo todo. Só a geometria diz onde o carrossel parou.
- */
-function visivelNoViewport(slide: Element, viewport: Element): boolean {
-  const s = slide.getBoundingClientRect();
-  const v = viewport.getBoundingClientRect();
-  return s.right > v.left + 1 && s.left < v.right - 1 && s.bottom > v.top + 1 && s.top < v.bottom - 1;
-}
 
 const SLIDES = [1, 2, 3];
 

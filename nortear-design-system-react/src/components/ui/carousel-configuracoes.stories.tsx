@@ -9,6 +9,7 @@ import {
   CarouselNext,
   type CarouselApi,
 } from "./carousel";
+import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
 
 const meta = {
   title: "UI/Carousel/Settings",
@@ -29,28 +30,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-/** Slide sem medida cravada — proporção e cor vêm de classe, não de `style`. */
-function SlideCard({ label }: { label: string }) {
-  return (
-    <div className="nds-aspect-16-9">
-      <div
-        className="nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg"
-        data-align="center"
-        data-justify="center"
-      >
-        <span className="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{label}</span>
-      </div>
-    </div>
-  );
-}
-
-/** Ver a nota em carousel-estados: o Embla move o trilho, não o `scrollLeft`. */
-function visivelNoViewport(slide: Element, viewport: Element): boolean {
-  const s = slide.getBoundingClientRect();
-  const v = viewport.getBoundingClientRect();
-  return s.right > v.left + 1 && s.left < v.right - 1 && s.bottom > v.top + 1 && s.top < v.bottom - 1;
-}
 
 function viewportDe(canvasElement: HTMLElement): HTMLElement {
   return canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;

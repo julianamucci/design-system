@@ -5,6 +5,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "./resizable";
+import { fracaoDoPrimeiro } from "./resizable.fixtures";
 import { ResizableDocs } from "@/components/docs/ResizableDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -24,21 +25,6 @@ type PlaygroundArgs = {
   minSize: number;
   maxSize: number;
 };
-
-/**
- * Fração do eixo principal que o painel ocupa NA TELA.
- *
- * Nunca `style.width`: o painel vive de `flex-grow`, e a largura inline não
- * decide nada. Não é exportado de propósito — export nomeado em arquivo de
- * story vira story fantasma no indexador.
- */
-function fracaoDoPrimeiro(canvasElement: HTMLElement, horizontal: boolean): number {
-  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const medidas = paineis.map((p) =>
-    horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height,
-  );
-  return medidas[0] / medidas.reduce((a, b) => a + b, 0);
-}
 
 const meta = {
   title: "UI/Resizable",

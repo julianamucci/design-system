@@ -3,6 +3,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, userEvent } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
+import { painel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
 const meta: Meta = {
@@ -27,10 +28,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
 
 export const Default: Story = {
   parameters: {

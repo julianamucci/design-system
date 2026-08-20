@@ -7,6 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./tooltip";
+import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save } from "lucide-react";
 
@@ -17,12 +18,6 @@ import { Save } from "lucide-react";
 
 /** Espera em ms que o hover do provider precisa vencer nas stories de delay. */
 const DELAY_LONGO = 600;
-
-/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute("aria-describedby");
-  return id ? document.getElementById(id) : null;
-}
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function espera(ms: number): Promise<void> {

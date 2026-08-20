@@ -6,16 +6,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./tooltip";
+import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save } from "lucide-react";
 import { TooltipDocs } from "@/components/docs/TooltipDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
-
-/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute("aria-describedby");
-  return id ? document.getElementById(id) : null;
-}
 
 /**
  * De que lado o balão nasceu.

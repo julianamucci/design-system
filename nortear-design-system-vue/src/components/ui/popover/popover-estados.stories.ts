@@ -11,6 +11,7 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
+import { painel } from './popover.fixtures';
 
 const meta = {
   title: 'UI/Popover/States',
@@ -41,10 +42,6 @@ const sharedComponents = {
   PopoverTrigger,
   Button,
 };
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
 
 const PAINEL_SIMPLES = `
           <PopoverContent side="bottom" align="start">

@@ -9,6 +9,7 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-vue-next';
+import { balaoDe } from './tooltip.fixtures';
 
 // Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
 // aberto por hover (depois do delay do provider) e aberto por foco (na hora). A
@@ -17,17 +18,6 @@ import { Save } from 'lucide-vue-next';
 
 /** Espera em ms que o hover do provider precisa vencer nas stories de delay. */
 const DELAY_LONGO = 600;
-
-/**
- * O balão vive num portal no `body` — o caminho até ele é o aria-describedby.
- * A lib põe o id num `<span>` de leitura DENTRO do balão, então subir até o
- * `[data-slot="tooltip-content"]` é o que devolve o balão em si.
- */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
-}
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function espera(ms: number): Promise<void> {

@@ -5,6 +5,7 @@ import { PaneGroup } from './index';
 import ResizableStory from './ResizableStory.svelte';
 import ResizableDocs from '@/components/docs/ResizableDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { fracaoDoPrimeiro, type Eixo } from './resizable.fixtures';
 import { resizableSource } from './resizable.source';
 
 /**
@@ -15,15 +16,6 @@ import { resizableSource } from './resizable.source';
  * alternativa ao arrasto não tem nenhuma pista visual.
  */
 const ROTULO_PUNHO = 'Redimensionar painéis — use setas para ajustar';
-
-/** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
-function fracaoDoPrimeiro(canvasElement: HTMLElement, horizontal: boolean): number {
-  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const medidas = paineis.map((p) =>
-    horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height,
-  );
-  return medidas[0] / medidas.reduce((a, b) => a + b, 0);
-}
 
 const meta: Meta = {
   title: 'UI/Resizable',
@@ -102,7 +94,8 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const punho = canvas.getByRole('separator', { name: ROTULO_PUNHO });
-    const horizontal = args.direction === 'horizontal';
+    const eixo = args.direction as Eixo;
+    const horizontal = eixo === 'horizontal';
 
     await step('O divisor é um separator com nome e valor', async () => {
       // accessibility.item4 e item5 — o `getByRole` acima já falharia sem papel
@@ -114,7 +107,7 @@ export const Playground: Story = {
       );
       await expect(punho).toHaveAttribute('aria-valuemin', String(args.minSize));
       await expect(Number(punho.getAttribute('aria-valuenow'))).toBeCloseTo(
-        fracaoDoPrimeiro(canvasElement, horizontal) * 100,
+        fracaoDoPrimeiro(canvasElement, eixo) * 100,
         0,
       );
     });
@@ -123,7 +116,7 @@ export const Playground: Story = {
       // Os painéis não tinham nem `data-slot` nem a classe do contrato: a sonda
       // procurou e achou ZERO nesta stack. Os testes contavam grupos e punhos,
       // nunca painéis — e por isso a ausência atravessou todas as auditorias.
-      await expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(
+      await expect(fracaoDoPrimeiro(canvasElement, eixo)).toBeCloseTo(
         args.defaultSize / 100,
         1,
       );
@@ -136,7 +129,7 @@ export const Playground: Story = {
       // O par cresce/encolhe é de saldo ZERO: o painel Interactions reexecuta a
       // play no mesmo DOM, e um passo que só cresce iria encostando no limite
       // até a asserção inverter de sentido numa rodada qualquer.
-      const antes = fracaoDoPrimeiro(canvasElement, horizontal);
+      const antes = fracaoDoPrimeiro(canvasElement, eixo);
       punho.focus();
       await expect(punho).toHaveFocus();
 
@@ -145,21 +138,21 @@ export const Playground: Story = {
 
       await userEvent.keyboard(cresce);
       await waitFor(() =>
-        expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeGreaterThan(antes + 0.01),
+        expect(fracaoDoPrimeiro(canvasElement, eixo)).toBeGreaterThan(antes + 0.01),
       );
 
       await userEvent.keyboard(encolhe);
       await waitFor(() =>
-        expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(antes, 2),
+        expect(fracaoDoPrimeiro(canvasElement, eixo)).toBeCloseTo(antes, 2),
       );
     });
 
     await step('A seta do outro eixo não é sequestrada', async () => {
       // Um separator vertical que consumisse ArrowUp roubaria a rolagem de quem
       // só está de passagem pelo foco.
-      const antes = fracaoDoPrimeiro(canvasElement, horizontal);
+      const antes = fracaoDoPrimeiro(canvasElement, eixo);
       await userEvent.keyboard(horizontal ? '{ArrowUp}' : '{ArrowLeft}');
-      await expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(antes, 2);
+      await expect(fracaoDoPrimeiro(canvasElement, eixo)).toBeCloseTo(antes, 2);
     });
   },
 };

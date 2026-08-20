@@ -9,21 +9,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { Save } from 'lucide-vue-next';
+import { balaoDe } from './tooltip.fixtures';
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
 // com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
 // visual capturar o balão, que só existe no DOM enquanto está aberto.
-
-/**
- * O balão vive num portal no `body` — o caminho até ele é o aria-describedby.
- * A lib põe o id num `<span>` de leitura DENTRO do balão, então subir até o
- * `[data-slot="tooltip-content"]` é o que devolve o balão em si.
- */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
-}
 
 /** Luminância relativa da WCAG a partir de um `rgb(r, g, b)` computado. */
 function luminancia(cor: string): number {

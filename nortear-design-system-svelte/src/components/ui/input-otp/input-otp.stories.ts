@@ -4,6 +4,7 @@ import { userEvent, expect, fn, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 import InputOTPDocs from '@/components/docs/InputOTPDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { campo } from './input-otp.fixtures';
 import { inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
@@ -90,18 +91,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-/**
- * O `<input>` da lib é único e fica recortado atrás das caixas. Conferir só o
- * valor dele deixaria a story verde mesmo com ZERO caixas pintadas — foi assim
- * que o defeito equivalente sobreviveu noutra stack. Toda asserção olha as
- * CAIXAS; o input só recebe a digitação.
- */
-function campo(raiz: HTMLElement): HTMLInputElement {
-  const el = raiz.querySelector<HTMLInputElement>('input[autocomplete="one-time-code"]');
-  if (!el) throw new Error('input do OTP não encontrado');
-  return el;
-}
 
 const caixas = (raiz: HTMLElement): HTMLElement[] => [
   ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),

@@ -7,6 +7,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from './index';
+import { campo } from './input-otp.fixtures';
 
 const meta = {
   title: 'UI/InputOTP/States',
@@ -29,17 +30,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { InputOTP, InputOTPGroup, InputOTPSlot };
-
-function campo(raiz: HTMLElement): HTMLInputElement {
-  const el = raiz.querySelector<HTMLInputElement>('input[autocomplete="one-time-code"]');
-  // `globalThis.Error`, e não `Error`: este arquivo exporta uma story chamada
-  // `Error` — o estado de erro do componente —, e o nome dela sombreia o
-  // construtor global no escopo do módulo. Escrito `new Error(...)`, o TypeScript
-  // acusa "expression is not constructable" e em runtime a linha só quebraria no
-  // dia em que o campo faltasse, que é justamente o dia em que ela precisa falar.
-  if (!el) throw new globalThis.Error('input do OTP não encontrado');
-  return el;
-}
 
 const caixas = (raiz: HTMLElement): HTMLElement[] => [
   ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),

@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, expect } from 'storybook/test';
 import { razao, resolverCor } from '@shared/testing/cor';
 import InputOTPStory from './InputOTPStory.svelte';
+import { campo } from './input-otp.fixtures';
 import { inputOtpComErroSource, inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
@@ -27,17 +28,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-function campo(raiz: HTMLElement): HTMLInputElement {
-  const el = raiz.querySelector<HTMLInputElement>('input[autocomplete="one-time-code"]');
-  // `globalThis.Error`, e não `Error`: este arquivo exporta uma story chamada
-  // `Error` — o estado de erro do componente —, e o nome dela sombreia o
-  // construtor global no escopo do módulo. Escrito `new Error(...)`, o TypeScript
-  // acusa "expression is not constructable" e em runtime a linha só quebraria no
-  // dia em que o campo faltasse, que é justamente o dia em que ela precisa falar.
-  if (!el) throw new globalThis.Error('input do OTP não encontrado');
-  return el;
-}
 
 const caixas = (raiz: HTMLElement): HTMLElement[] => [
   ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),

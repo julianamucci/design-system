@@ -3,6 +3,7 @@ import { defineComponent, h, ref } from 'vue';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import type { CarouselApi } from './index';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
+import { slideEmFoco } from './carousel.fixtures';
 import carouselTranslations from '@shared/content/carousel/translations.json';
 
 /**
@@ -37,34 +38,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-/**
- * Índice do slide que ocupa a maior parte do viewport.
- *
- * O embla translada o TRILHO com `transform` — o `scrollLeft` do viewport fica
- * em zero o tempo todo, então a prova de posição é geométrica. Mas contar
- * PIXEL não fecha: o slide é mais largo que o viewport (a margem negativa do
- * trilho mais o respiro entre slides), e o embla não desloca um "passo" inteiro
- * por snap — esperar dois passos de `offsetLeft` errava por 174px.
- *
- * Qual slide está à vista não depende do alinhamento do embla, nem do respiro
- * entre slides, nem da cauda da animação. E é o que a story afirma.
- */
-function slideEmFoco(canvasElement: HTMLElement): number {
-  const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
-  const slides = Array.from(
-    canvasElement.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'),
-  );
-  const v = viewport.getBoundingClientRect();
-  let melhor = 0;
-  let maior = -Infinity;
-  slides.forEach((slide, i) => {
-    const r = slide.getBoundingClientRect();
-    const visivel = Math.min(r.right, v.right) - Math.max(r.left, v.left);
-    if (visivel > maior) { maior = visivel; melhor = i; }
-  });
-  return melhor;
-}
 
 // Componente auxiliar para dots — captura CarouselApi e sincroniza índice
 const CarouselComDots = defineComponent({

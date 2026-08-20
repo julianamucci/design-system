@@ -5,6 +5,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 import PopoverDocs from '@/components/docs/PopoverDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { painel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
 const meta: Meta = {
@@ -109,10 +110,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
 
 export const Playground: Story = {
   parameters: {

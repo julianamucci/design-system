@@ -10,6 +10,7 @@ import {
   type CarouselApi,
 } from "./carousel";
 import { Card, CardContent } from "./card";
+import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
 import carouselTranslations from "@shared/content/carousel/translations.json";
 
 /**
@@ -47,28 +48,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const TOTAL_SLIDES = 5;
-
-/** Slide sem medida cravada — proporção e cor vêm de classe, não de `style`. */
-function SlideCard({ label }: { label: string }) {
-  return (
-    <div className="nds-aspect-16-9">
-      <div
-        className="nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg"
-        data-align="center"
-        data-justify="center"
-      >
-        <span className="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{label}</span>
-      </div>
-    </div>
-  );
-}
-
-/** Ver a nota em carousel-estados: o Embla move o trilho, não o `scrollLeft`. */
-function visivelNoViewport(slide: Element, viewport: Element): boolean {
-  const s = slide.getBoundingClientRect();
-  const v = viewport.getBoundingClientRect();
-  return s.right > v.left + 1 && s.left < v.right - 1 && s.bottom > v.top + 1 && s.top < v.bottom - 1;
-}
 
 function ComDotsCarousel() {
   const [api, setApi] = useState<CarouselApi>();

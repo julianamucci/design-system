@@ -5,6 +5,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from './index';
+import { fracaoDoPrimeiro } from './resizable.fixtures';
 import ResizableDocs from '@/components/docs/ResizableDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -16,15 +17,6 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
  * alternativa ao arrasto não tem nenhuma pista visual.
  */
 const ROTULO_PUNHO = 'Redimensionar painéis — use setas para ajustar';
-
-/** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
-function fracaoDoPrimeiro(canvasElement: HTMLElement, horizontal: boolean): number {
-  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const medidas = paineis.map((p) =>
-    horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height,
-  );
-  return medidas[0] / medidas.reduce((a, b) => a + b, 0);
-}
 
 const meta = {
   title: 'UI/Resizable',

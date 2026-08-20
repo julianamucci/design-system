@@ -16,6 +16,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "./carousel";
+import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
 
 const meta = {
   title: "UI/Carousel/Variants",
@@ -36,32 +37,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-/**
- * Slide sem medida cravada. Em horizontal a altura vem da proporção 16:9; em
- * vertical o slide já tem altura própria (a base `flex: 0 0 100%` resolvida
- * contra o trilho), então o cartão só precisa preenchê-la.
- */
-function SlideCard({ label, preencher = false }: { label: string; preencher?: boolean }) {
-  return (
-    <div className={preencher ? "nds-h-full" : "nds-aspect-16-9"}>
-      <div
-        className="nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg"
-        data-align="center"
-        data-justify="center"
-      >
-        <span className="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{label}</span>
-      </div>
-    </div>
-  );
-}
-
-/** Ver a nota em carousel-estados: o Embla move o trilho, não o `scrollLeft`. */
-function visivelNoViewport(slide: Element, viewport: Element): boolean {
-  const s = slide.getBoundingClientRect();
-  const v = viewport.getBoundingClientRect();
-  return s.right > v.left + 1 && s.left < v.right - 1 && s.bottom > v.top + 1 && s.top < v.bottom - 1;
-}
 
 export const Horizontal: Story = {
   parameters: {

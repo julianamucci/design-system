@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
+import { painel } from './popover.fixtures';
 
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
 // filtro de tabela, seletor de cor e configurações rápidas. Nenhuma acrescenta
@@ -49,10 +50,6 @@ const sharedComponents = {
   Input,
   Label,
 };
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
 
 export const EditProfile: Story = {
   parameters: {

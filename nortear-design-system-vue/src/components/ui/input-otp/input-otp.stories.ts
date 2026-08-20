@@ -7,6 +7,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from './index';
+import { campo } from './input-otp.fixtures';
 import InputOTPDocs from '@/components/docs/InputOTPDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -58,20 +59,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-/**
- * O `<input>` da lib é único e fica recortado atrás das caixas. Conferir só o
- * valor dele foi exatamente o que deixou esta story verde enquanto o campo
- * montava com ZERO caixas: `:max-length` caía em `$attrs` e a lista de slots
- * chegava vazia. Toda asserção daqui olha as CAIXAS.
- */
-function campo(canvasElement: HTMLElement): HTMLInputElement {
-  const el = canvasElement.querySelector<HTMLInputElement>(
-    'input[autocomplete="one-time-code"]',
-  );
-  if (!el) throw new Error('input do OTP não encontrado');
-  return el;
-}
 
 const caixas = (canvasElement: HTMLElement): HTMLElement[] => [
   ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),

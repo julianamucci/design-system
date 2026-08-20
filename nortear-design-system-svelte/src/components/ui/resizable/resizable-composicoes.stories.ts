@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
+import { fracoes } from './resizable.fixtures';
 import {
   resizableDivisaoVerticalSource,
   resizableEditorPreviewSource,
@@ -33,16 +34,6 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-/** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
-function fracoes(canvasElement: HTMLElement, horizontal: boolean): number[] {
-  const grupo = canvasElement.querySelector('[data-slot="resizable-pane-group"]')!;
-  const paineis = [...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
-  const medida = (p: HTMLElement) =>
-    horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
-  const total = paineis.reduce((a, p) => a + medida(p), 0);
-  return paineis.map((p) => medida(p) / total);
-}
-
 export const SidebarLayout: Story = {
   parameters: {
     docs: { source: { transform: resizableSidebarSource } },
@@ -68,7 +59,7 @@ export const SidebarLayout: Story = {
       await expect(canvas.getByText('Conteúdo principal')).toBeVisible();
     });
     await step('A sidebar ocupa a fatia declarada', async () => {
-      await expect(fracoes(canvasElement, true)[0]).toBeCloseTo(0.3, 1);
+      await expect(fracoes(canvasElement)[0]).toBeCloseTo(0.3, 1);
     });
     await step('Handle com aria-label contextual', async () => {
       await expect(canvas.getByRole('separator', { name: /sidebar/i })).toBeInTheDocument();
@@ -101,7 +92,7 @@ export const EditorPreview: Story = {
       await expect(canvas.getByText('Preview')).toBeVisible();
     });
     await step('E dividem a largura ao meio', async () => {
-      await expect(fracoes(canvasElement, true)[0]).toBeCloseTo(0.5, 1);
+      await expect(fracoes(canvasElement)[0]).toBeCloseTo(0.5, 1);
     });
   },
 };
@@ -131,7 +122,7 @@ export const VerticalSplit: Story = {
       // A asserção anterior era `canvasElement.firstElementChild` ser truthy:
       // passava com a tela vazia, com o eixo trocado e com os dois painéis do
       // mesmo tamanho. A medida agora é a proporção que a story demonstra.
-      const [a, b] = fracoes(canvasElement, false);
+      const [a, b] = fracoes(canvasElement, 'vertical');
       await expect(a).toBeCloseTo(0.4, 1);
       await expect(b).toBeCloseTo(0.6, 1);
     });

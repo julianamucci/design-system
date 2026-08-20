@@ -7,6 +7,10 @@ import {
   CarouselNext,
   type CarouselApi,
 } from "@/components/ui/carousel";
+// O MESMO slide que as stories renderizam. A docs page DEMONSTRA o componente e
+// a story é a referência de uso: quando as duas divergem, quem lê a página
+// aprende um exemplo que o Chromatic não fotografa e que ninguém testa.
+import { SlideCard } from "@/components/ui/carousel.fixtures";
 import { Card, CardContent } from "@/components/ui/card";
 import { useTranslation } from "@/lib/i18n";
 import { useSeoEffect } from "@/lib/use-seo";
@@ -82,35 +86,6 @@ const getNavGroups = (t: (key: string) => string) => [
 ];
 
 // ─── Helpers de slide ─────────────────────────────────────────────────────────
-
-/**
- * O MESMO slide que as stories renderizam.
- *
- * A docs page DEMONSTRA o componente, e a story é a referência de uso — quando
- * as duas divergem, quem lê a página aprende um exemplo que o Chromatic não
- * fotografa e que ninguém testa. E divergiam: aqui havia um `Card` inteiro, com
- * a proporção e o corpo da letra cravados em `style` inline, contra uma caixa
- * simples de proporção e cor por classe na story.
- *
- * A diferença não era só de forma. `style` inline vence a folha, então o slide
- * desta página estava FORA do tema, da densidade e da escala tipográfica — o
- * corpo de 1.875rem não acompanhava a preferência de fonte de quem lê (WCAG
- * 1.4.4), e a proporção não podia ser redefinida por tema nenhum. A story já
- * estava certa; era esta página que precisava alcançá-la.
- */
-function SlideCard({ label, className = "" }: { label: string; className?: string }) {
-  return (
-    <div className={`nds-aspect-16-9 ${className}`.trim()}>
-      <div
-        className="nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg"
-        data-align="center"
-        data-justify="center"
-      >
-        <span className="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{label}</span>
-      </div>
-    </div>
-  );
-}
 
 function DotsCarouselPreview({ total, ariaLabel, previousLabel, nextLabel, slidePrefix, goToLabel, ofLabel }: {
   total: number;

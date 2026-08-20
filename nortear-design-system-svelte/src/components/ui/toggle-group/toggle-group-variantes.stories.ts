@@ -2,21 +2,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
+import { ligado } from './toggle-group.fixtures';
 import {
   toggleGroupFormatacaoSource,
   toggleGroupSource,
   toggleGroupVerticalSource,
 } from './toggle-group.source';
-
-/**
- * O estado do item é anunciado por `aria-checked` no modo exclusivo (a lib
- * anuncia o grupo como conjunto de rádio) e por `aria-pressed` no combinado.
- */
-function ligado(el: Element): boolean {
-  return (
-    el.getAttribute('aria-checked') === 'true' || el.getAttribute('aria-pressed') === 'true'
-  );
-}
 
 /** Clica só quando o estado atual não é o desejado — a play tem que sobreviver
  *  ao replay do painel Interactions, que roda no mesmo DOM. */

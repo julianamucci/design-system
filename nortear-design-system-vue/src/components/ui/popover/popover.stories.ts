@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import PopoverDocs from '@/components/docs/PopoverDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal } from '@/lib/wait-for-portal';
+import { painel } from './popover.fixtures';
 
 const meta = {
   title: 'UI/Popover',
@@ -55,10 +56,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<Meta<any>>;
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
 
 export const Playground: Story = {
   parameters: {

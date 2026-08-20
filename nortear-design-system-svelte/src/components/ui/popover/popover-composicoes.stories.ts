@@ -3,6 +3,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
+import { painel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
@@ -31,10 +32,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
 
 /**
  * Espera o foco automático da abertura assentar dentro do painel.

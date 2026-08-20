@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
+import { SEL_GRUPO, fracoes, paineisDiretos } from './resizable.fixtures';
 import {
   resizableAninhadoSource,
   resizableComPegadorSource,
@@ -32,20 +33,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-/** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
-function fracoes(paineis: HTMLElement[], horizontal: boolean): number[] {
-  const medida = (p: HTMLElement) =>
-    horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
-  const total = paineis.reduce((a, p) => a + medida(p), 0);
-  return paineis.map((p) => medida(p) / total);
-}
-
-function paineisDiretos(grupo: Element): HTMLElement[] {
-  return [...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
-}
-
-const SEL_GRUPO = '[data-slot="resizable-pane-group"]';
 
 export const Horizontal: Story = {
   parameters: {
@@ -79,7 +66,7 @@ export const Horizontal: Story = {
 
     await step('Os painéis dividem a LARGURA na proporção declarada', async () => {
       const grupo = canvasElement.querySelector(SEL_GRUPO)!;
-      await expect(fracoes(paineisDiretos(grupo), true)[0]).toBeCloseTo(0.3, 1);
+      await expect(fracoes(paineisDiretos(grupo))[0]).toBeCloseTo(0.3, 1);
     });
   },
 };
@@ -115,7 +102,7 @@ export const Vertical: Story = {
       // O eixo trocado é invisível numa foto quadrada: os dois painéis
       // apareceriam empilhados de qualquer jeito e só a proporção denunciaria.
       const grupo = canvasElement.querySelector(SEL_GRUPO)!;
-      await expect(fracoes(paineisDiretos(grupo), false)[0]).toBeCloseTo(0.4, 1);
+      await expect(fracoes(paineisDiretos(grupo), 'vertical')[0]).toBeCloseTo(0.4, 1);
     });
   },
 };
@@ -162,8 +149,8 @@ export const Nested: Story = {
 
     await step('E as proporções de cada grupo são independentes', async () => {
       const grupos = [...canvasElement.querySelectorAll(SEL_GRUPO)];
-      await expect(fracoes(paineisDiretos(grupos[0]), true)[0]).toBeCloseTo(0.3, 1);
-      await expect(fracoes(paineisDiretos(grupos[1]), false)[0]).toBeCloseTo(0.6, 1);
+      await expect(fracoes(paineisDiretos(grupos[0]))[0]).toBeCloseTo(0.3, 1);
+      await expect(fracoes(paineisDiretos(grupos[1]), 'vertical')[0]).toBeCloseTo(0.6, 1);
     });
   },
 };

@@ -9,21 +9,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { Save, Trash2, Share2, Copy, Pencil } from 'lucide-vue-next';
+import { balaoDe } from './tooltip.fixtures';
 
 // As composições que o conteúdo compartilhado documenta. Todas repetem a mesma
 // regra: o Tooltip acrescenta contexto a um elemento que JÁ se explica sozinho —
 // nunca é o único portador da informação.
-
-/**
- * O balão vive num portal no `body` — o caminho até ele é o aria-describedby.
- * A lib põe o id num `<span>` de leitura DENTRO do balão, então subir até o
- * `[data-slot="tooltip-content"]` é o que devolve o balão em si.
- */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
-}
 
 /** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
 function ladoDe(balao: HTMLElement | null): string | null {

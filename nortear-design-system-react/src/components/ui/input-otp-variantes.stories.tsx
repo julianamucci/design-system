@@ -8,6 +8,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "./input-otp";
+import { campo } from "./input-otp.fixtures";
 
 const meta = {
   title: "UI/InputOTP/Variants",
@@ -28,14 +29,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof InputOTP>;
-
-function campo(canvasElement: HTMLElement): HTMLInputElement {
-  const el = canvasElement.querySelector<HTMLInputElement>(
-    'input[autocomplete="one-time-code"]'
-  );
-  if (!el) throw new Error("input do OTP não encontrado");
-  return el;
-}
 
 const caixas = (canvasElement: HTMLElement): HTMLElement[] => [
   ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),

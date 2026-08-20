@@ -8,22 +8,9 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-vue-next';
+import { balaoDe } from './tooltip.fixtures';
 import TooltipDocs from '@/components/docs/TooltipDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-/**
- * O balão vive num portal no `body` — o caminho até ele é o aria-describedby.
- *
- * A lib põe o id referenciado num `<span>` de leitura DENTRO do balão (uma
- * cópia acessível do texto, que é também por que `textContent` vem duplicado),
- * então subir até o `[data-slot="tooltip-content"]` é o que devolve o balão em
- * si — e continua correto onde o id está no próprio balão.
- */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
-}
 
 /** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
 function ladoDe(balao: HTMLElement | null): string | null {

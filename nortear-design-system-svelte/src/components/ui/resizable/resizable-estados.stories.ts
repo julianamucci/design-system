@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
+// Sem eixo: todas as stories deste arquivo são horizontais, e o padrão de
+// `fracaoDoPrimeiro` é justamente esse.
+import { fracaoDoPrimeiro } from './resizable.fixtures';
 import {
   resizableArrastoSource,
   resizableDesabilitadoSource,
@@ -34,13 +37,6 @@ export default meta;
 type Story = StoryObj;
 
 const ROTULO = 'Redimensionar painéis — use setas para ajustar';
-
-/** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
-function fracaoDoPrimeiro(canvasElement: HTMLElement): number {
-  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const medidas = paineis.map((p) => p.getBoundingClientRect().width);
-  return medidas[0] / medidas.reduce((a, b) => a + b, 0);
-}
 
 function razaoDeContraste(frente: string, fundo: string): number {
   const luminancia = (cor: string): number => {

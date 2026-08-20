@@ -1,18 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
+import { balaoDe } from './tooltip.fixtures';
 import { tooltipSource } from './tooltip.source';
 
 // As composições que o conteúdo compartilhado documenta, mais os quatro lados de
 // posicionamento. Em todas, o Tooltip acrescenta contexto a um elemento que JÁ
 // se explica sozinho — nunca é o único portador da informação.
-
-/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
-}
 
 /** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
 function ladoDe(balao: HTMLElement | null): string | null {

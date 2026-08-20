@@ -5,6 +5,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "./resizable";
+import { fracaoDoPrimeiro } from "./resizable.fixtures";
 
 const meta = {
   title: "UI/Resizable/States",
@@ -28,13 +29,6 @@ type Story = StoryObj<typeof meta>;
 
 const boxStyle: React.CSSProperties = { width: 520, height: 240 };
 const ROTULO = "Redimensionar painéis — use setas para ajustar";
-
-/** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
-function fracaoDoPrimeiro(canvasElement: HTMLElement): number {
-  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const medidas = paineis.map((p) => p.getBoundingClientRect().width);
-  return medidas[0] / medidas.reduce((a, b) => a + b, 0);
-}
 
 function razaoDeContraste(frente: string, fundo: string): number {
   const luminancia = (cor: string): number => {

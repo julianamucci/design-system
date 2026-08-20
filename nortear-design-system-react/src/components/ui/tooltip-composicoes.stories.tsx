@@ -6,18 +6,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./tooltip";
+import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save, Trash2, Share2 } from "lucide-react";
 
 // As composições que o conteúdo compartilhado documenta. Todas repetem a mesma
 // regra: o Tooltip acrescenta contexto a um elemento que JÁ se explica sozinho —
 // nunca é o único portador da informação.
-
-/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute("aria-describedby");
-  return id ? document.getElementById(id) : null;
-}
 
 /**
  * De que lado o balão nasceu.

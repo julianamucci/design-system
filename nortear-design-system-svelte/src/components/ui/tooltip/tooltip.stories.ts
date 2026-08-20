@@ -1,16 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
+import { balaoDe } from './tooltip.fixtures';
 import TooltipDocs from '@/components/docs/TooltipDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { tooltipSource } from './tooltip.source';
-
-/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
-}
 
 /** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
 function ladoDe(balao: HTMLElement | null): string | null {

@@ -1,14 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { REGRA_GUARDA_DE_FOCO, waitForPortal } from "@/lib/wait-for-portal";
-import {
-  AREA_CLICK_DIREITO,
-  abrirPorGesto,
-  brilho,
-} from "@shared/testing/context-menu-area";
+import { abrirPorGesto, brilho } from "@shared/testing/context-menu-area";
+import { AreaGatilho } from "./context-menu.fixtures";
 import {
   ContextMenu,
-  ContextMenuTrigger,
   ContextMenuContent,
   ContextMenuGroup,
   ContextMenuLabel,
@@ -39,21 +35,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-// ─── Área de clique direito compartilhada ────────────────────────────────────
-
-function AreaGatilho({ children }: { children: React.ReactNode }) {
-  return (
-    <ContextMenuTrigger
-      className={AREA_CLICK_DIREITO}
-      data-align="center"
-      data-justify="center"
-      data-testid="area"
-    >
-      {children}
-    </ContextMenuTrigger>
-  );
-}
 
 const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
 

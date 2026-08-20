@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
+import { campo } from './input-otp.fixtures';
 import { inputOtpComSeparadorSource, inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
@@ -26,12 +27,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-function campo(raiz: HTMLElement): HTMLInputElement {
-  const el = raiz.querySelector<HTMLInputElement>('input[autocomplete="one-time-code"]');
-  if (!el) throw new Error('input do OTP não encontrado');
-  return el;
-}
 
 const caixas = (raiz: HTMLElement): HTMLElement[] => [
   ...raiz.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),

@@ -7,6 +7,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "./carousel";
+import { SlideCard } from "./carousel.fixtures";
 import { CarouselDocs } from "@/components/docs/CarouselDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -32,26 +33,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-/**
- * Slide sem uma medida cravada: a proporção e a cor vêm de classe, então o
- * exemplo acompanha tema, densidade e escala tipográfica. `style` inline
- * venceria a folha e sairia dos três.
- */
-function SlideCard({ label }: { label: string }) {
-  return (
-    <div className="nds-aspect-16-9">
-      <div
-        className="nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg"
-        data-align="center"
-        data-justify="center"
-      >
-        <span className="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{label}</span>
-      </div>
-    </div>
-  );
-}
-
 
 export const Playground: Story = {
   parameters: {

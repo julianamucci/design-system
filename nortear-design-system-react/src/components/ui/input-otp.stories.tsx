@@ -6,6 +6,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "./input-otp";
+import { campo } from "./input-otp.fixtures";
 import { InputOTPDocs } from "@/components/docs/InputOTPDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -52,20 +53,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof InputOTP>;
-
-/**
- * O `<input>` da lib é único e fica recortado atrás das caixas. Buscá-lo pelo
- * papel não serve — ele não é o que a pessoa vê —, e é justamente por conferir
- * só o valor dele que uma play pode ficar verde com ZERO caixas pintadas. Toda
- * asserção daqui olha as CAIXAS; o input só recebe a digitação.
- */
-function campo(canvasElement: HTMLElement): HTMLInputElement {
-  const el = canvasElement.querySelector<HTMLInputElement>(
-    'input[autocomplete="one-time-code"]'
-  );
-  if (!el) throw new Error("input do OTP não encontrado");
-  return el;
-}
 
 const caixas = (canvasElement: HTMLElement): HTMLElement[] => [
   ...canvasElement.querySelectorAll<HTMLElement>('[data-slot="input-otp-slot"]'),

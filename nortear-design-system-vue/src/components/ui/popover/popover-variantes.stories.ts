@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
+import { painel } from './popover.fixtures';
 
 const meta = {
   title: 'UI/Popover/Variants',
@@ -44,10 +45,6 @@ const sharedComponents = {
   Input,
   Label,
 };
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
 
 export const Default: Story = {
   parameters: {
