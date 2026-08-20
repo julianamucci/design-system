@@ -2351,13 +2351,21 @@ vue 3, **angular 0** — de novo a stack mais nova é a mais limpa.
   largura, a de `carousel.stories` recebe o eixo. Parece grave e **não é**: todas
   as stories daquele arquivo são horizontais. Divergência benigna.
 
-- [ ] **Decidir o alcance da extração.** O caso do carousel prova o custo: com N
-      cópias, quem corrige uma acredita ter resolvido, e a documentação continua
-      ensinando o defeito nas outras N-1. O padrão `*.fixtures.ts` já existe na
-      stack e serviu bem. Começar pelos 27 divergidos, em ordem de cópias, é o
-      recorte com maior retorno — os 37 idênticos são mecânicos e podem esperar.
+- [x] **Extração feita, e a regra existe.** RESOLVIDO em `f8654486` (regra),
+      `7b0b58b8` (vanilla), `c1247aba` (react/vue/svelte) e `3c0c8d06` (os
+      assíncronos). `fixture_duplicada_entre_stories` está em **zero**.
 
-- [ ] **Não há gate para isto.** Nenhuma regra do `audit.mjs` mede duplicação de
-      helper entre arquivos de story do mesmo slug, e foi por isso que 182 cópias
-      se acumularam sem ninguém ver. A varredura que produziu estes números é
-      determinística e caberia como regra.
+      A classificação em três tipos valeu: o Vanilla teve DOIS casos de mesmo
+      nome para funções diferentes (renomeados, não unificados), e o resto se
+      dividiu entre divergência acidental e variação com motivo — que virou
+      parâmetro com padrão.
+
+      **O que a regra não vê, e custou duas quase-quebras:** corpos idênticos com
+      PADRÕES diferentes na assinatura (`dropdown-menu` do Vanilla teria encolhido
+      a demonstração de 220px para 180px em silêncio) e cópias que fecham sobre
+      estado de módulo do próprio arquivo (`breadcrumb.aoNavegar` do Angular —
+      exportar a função pronta faria dois arquivos dividirem um espião só). Quem
+      unificar no futuro precisa conferir a assinatura e o fecho, não só o corpo.
+
+      Efeito colateral medido: `inline_style_design_value` caiu de 130 para 122
+      achados, porque parametrizar dimensões tirou literais.
