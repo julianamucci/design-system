@@ -87,9 +87,21 @@ function frame(child: HTMLElement, size: DemoBoxStep = 'md'): HTMLElement {
   return wrap;
 }
 
+/**
+ * Nome do divisor: os dois painéis que ele move, separados por barra.
+ *
+ * Montado com os rótulos já traduzidos dos painéis, e não com uma frase nova —
+ * assim o nome do separator acompanha o idioma sem exigir uma chave de conteúdo
+ * só para ele. É o nome que o leitor de tela lê antes do valor.
+ */
+function nomeDoDivisor(a: string, b: string): string {
+  return `${a} / ${b}`;
+}
+
 function buildHorizontalDemo(): HTMLElement {
   const root = createResizablePanel({
     direction: 'horizontal',
+    'aria-label': nomeDoDivisor(t('demonstration.labels.sidebar'), t('demonstration.labels.content')),
     panels: [
       { defaultSize: 30, minSize: 15, content: panelContent(t('demonstration.labels.sidebar'), 'nds-bg-muted nds-text-muted-foreground') },
       { defaultSize: 70, minSize: 30, content: panelContent(t('demonstration.labels.content')) },
@@ -101,6 +113,7 @@ function buildHorizontalDemo(): HTMLElement {
 function buildVerticalDemo(): HTMLElement {
   const root = createResizablePanel({
     direction: 'vertical',
+    'aria-label': nomeDoDivisor(t('demonstration.labels.top'), t('demonstration.labels.bottom')),
     panels: [
       { defaultSize: 50, minSize: 20, content: panelContent(t('demonstration.labels.top')) },
       { defaultSize: 50, minSize: 20, content: panelContent(t('demonstration.labels.bottom'), 'nds-bg-muted nds-text-muted-foreground') },
@@ -112,6 +125,7 @@ function buildVerticalDemo(): HTMLElement {
 function buildNestedDemo(): HTMLElement {
   const inner = createResizablePanel({
     direction: 'vertical',
+    'aria-label': nomeDoDivisor(t('demonstration.labels.top'), t('demonstration.labels.bottom')),
     panels: [
       { defaultSize: 60, minSize: 20, content: panelContent(t('demonstration.labels.top')) },
       { defaultSize: 40, minSize: 20, content: panelContent(t('demonstration.labels.bottom'), 'nds-bg-muted nds-text-muted-foreground') },
@@ -124,6 +138,7 @@ function buildNestedDemo(): HTMLElement {
 
   const root = createResizablePanel({
     direction: 'horizontal',
+    'aria-label': nomeDoDivisor(t('demonstration.labels.sidebar'), t('demonstration.labels.content')),
     panels: [
       { defaultSize: 30, minSize: 15, content: panelContent(t('demonstration.labels.sidebar'), 'nds-bg-muted nds-text-muted-foreground') },
       { defaultSize: 70, minSize: 30, content: innerWrap },
@@ -303,6 +318,7 @@ export function createResizableDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const el = createResizablePanel({
                   direction: 'horizontal',
+                  'aria-label': nomeDoDivisor('Sidebar', 'Editor'),
                   panels: [
                     { defaultSize: 30, minSize: 20, content: panelContent('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
                     { defaultSize: 70, minSize: 40, content: panelContent('Editor') },
@@ -314,6 +330,7 @@ export function createResizableDocs(): HTMLElement {
                 // Don't: sem minSize, painel pode colapsar.
                 const el = createResizablePanel({
                   direction: 'horizontal',
+                  'aria-label': nomeDoDivisor('?', 'Editor'),
                   panels: [
                     { defaultSize: 5,  content: panelContent('?', 'nds-bg-muted nds-text-muted-foreground nds-text-caption') },
                     { defaultSize: 95, content: panelContent('Editor') },
@@ -330,25 +347,24 @@ export function createResizableDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const el = createResizablePanel({
                   direction: 'horizontal',
+                  'aria-label': 'Redimensionar painéis — use setas para ajustar',
                   panels: [
                     { defaultSize: 40, minSize: 20, content: panelContent('Lista') },
                     { defaultSize: 60, minSize: 30, content: panelContent('Detalhes', 'nds-bg-muted nds-text-muted-foreground') },
                   ],
                 });
-                const handle = el.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
-                handle?.setAttribute('aria-label', 'Redimensionar painéis — use setas para ajustar');
                 return frame(el, 'md');
               },
               dontPreviewFactory: () => {
                 const el = createResizablePanel({
                   direction: 'horizontal',
+                  // Don't: nome genérico — não diz o que o divisor move.
+                  'aria-label': 'Handle',
                   panels: [
                     { defaultSize: 40, minSize: 20, content: panelContent('Lista') },
                     { defaultSize: 60, minSize: 30, content: panelContent('Detalhes', 'nds-bg-muted nds-text-muted-foreground') },
                   ],
                 });
-                const handle = el.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
-                handle?.setAttribute('aria-label', 'Handle');
                 return frame(el, 'md');
               },
             },
@@ -364,6 +380,7 @@ export function createResizableDocs(): HTMLElement {
       case 'variantes': {
         const codeHorizontal = `const root = createResizablePanel({
   direction: 'horizontal',
+  'aria-label': 'Sidebar / Conteúdo principal',
   panels: [
     { defaultSize: 30, minSize: 15, content: sidebarEl },
     { defaultSize: 70, minSize: 30, content: contentEl },
@@ -371,14 +388,17 @@ export function createResizableDocs(): HTMLElement {
 });`;
         const codeVertical = `const root = createResizablePanel({
   direction: 'vertical',
+  'aria-label': 'Topo / Rodapé',
   panels: [
     { defaultSize: 50, minSize: 20, content: topEl },
     { defaultSize: 50, minSize: 20, content: bottomEl },
   ],
 });`;
         const codeNested = `// PanelGroup vertical dentro de panel horizontal.
+// Cada grupo nomeia o próprio divisor.
 const inner = createResizablePanel({
   direction: 'vertical',
+  'aria-label': 'Conteúdo / Console',
   panels: [
     { defaultSize: 60, minSize: 20, content: contentEl },
     { defaultSize: 40, minSize: 20, content: consoleEl },
@@ -386,6 +406,7 @@ const inner = createResizablePanel({
 });
 const root = createResizablePanel({
   direction: 'horizontal',
+  'aria-label': 'Sidebar / Área principal',
   panels: [
     { defaultSize: 30, minSize: 15, content: sidebarEl },
     { defaultSize: 70, minSize: 30, content: inner },
@@ -445,6 +466,11 @@ export type ResizablePanel = {
 export type ResizablePanelOptions = {
   direction?: 'horizontal' | 'vertical';
   panels: ResizablePanel[];
+  /** Nome acessível dos divisores — OBRIGATÓRIO. Array nomeia um a um. */
+  'aria-label'?: string | string[];
+  withHandle?: boolean;
+  disabled?: boolean;
+  onLayout?: (sizes: number[]) => void;
   class?: string;
 };
 
@@ -471,7 +497,10 @@ export function createResizablePanel(
                 { name: 'panels',      type: 'ResizablePanel[]',                defaultValue: '—',            required: 'Sim',                                  description: 'Lista de painéis renderizados em ordem; handles inseridos automaticamente entre painéis adjacentes.' },
                 { name: 'class',       type: 'string',                          defaultValue: '—',            required: 'Não',                                  description: 'Classes adicionais no Root <div data-slot="resizable">.' },
                 { name: 'autoSaveId',  type: 'string',                          defaultValue: '—',            required: 'Não',                                  description: toPlainText(t('props.table.id.description')) + ' NOTA: factory Nortear NÃO persiste tamanhos em localStorage; argType para paridade com react-resizable-panels.' },
-                { name: 'onLayout',    type: '(sizes: number[]) => void',       defaultValue: '—',            required: 'Não',                                  description: toPlainText(t('props.table.onLayout.description')) + ' NOTA: factory Nortear NÃO emite callback; consumidor deve observar mutações de width/height ou implementar wrapper.' },
+                { name: 'onLayout',    type: '(sizes: number[]) => void',       defaultValue: '—',            required: 'Não',                                  description: toPlainText(t('props.table.onLayout.description')) + ' Um evento por gesto, ao fim da interação — não um por pixel.' },
+                { name: 'aria-label',  type: 'string | string[]',               defaultValue: '—',            required: 'Sim',                                  description: 'Nome acessível dos divisores. Uma string nomeia todos; um array nomeia um a um, que é o que um grupo de três painéis ou mais precisa.' },
+                { name: 'withHandle',  type: 'boolean',                         defaultValue: 'false',        required: 'Não',                                  description: toPlainText(t('props.table.withHandle.description')) },
+                { name: 'disabled',    type: 'boolean',                         defaultValue: 'false',        required: 'Não',                                  description: 'Trava os divisores: continuam anunciados e focáveis, mas não movem nada.' },
               ],
             },
             {
@@ -481,7 +510,7 @@ export function createResizablePanel(
                 { name: 'content',     type: 'HTMLElement', defaultValue: '—',  required: 'Sim',                                   description: 'Elemento renderizado dentro do painel — consumidor define background e overflow.' },
                 { name: 'defaultSize', type: 'number',      defaultValue: '—',  required: t('props.table.defaultSize.required'),   description: toPlainText(t('props.table.defaultSize.description')) + ' Quando omitido, tamanho é distribuído igualmente entre os painéis.' },
                 { name: 'minSize',     type: 'number',      defaultValue: '10', required: t('props.table.minSize.required'),       description: toPlainText(t('props.table.minSize.description')) },
-                { name: 'maxSize',     type: 'number',      defaultValue: '100',required: t('props.table.maxSize.required'),       description: toPlainText(t('props.table.maxSize.description')) + ' NOTA: factory Nortear ainda NÃO aplica maxSize — apenas minSize é respeitado.' },
+                { name: 'maxSize',     type: 'number',      defaultValue: '100',required: t('props.table.maxSize.required'),       description: toPlainText(t('props.table.maxSize.description')) },
                 { name: 'id',          type: 'string',      defaultValue: '—',  required: 'Não',                                   description: toPlainText(t('props.table.id.description')) + ' NOTA: factory Nortear não usa id (sem persistência).' },
               ],
             },
@@ -492,8 +521,8 @@ export function createResizablePanel(
                 { name: 'role',             type: '"separator"',           defaultValue: '"separator"',  required: 'Auto', description: 'Aplicado automaticamente pela factory em cada handle.' },
                 { name: 'aria-orientation', type: '"horizontal"|"vertical"', defaultValue: 'derivado', required: 'Auto', description: 'Derivado de direction: handle de PanelGroup horizontal recebe aria-orientation="vertical".' },
                 { name: 'tabindex',         type: 'number',                defaultValue: '0',            required: 'Auto', description: 'Handle é focável; setas ajustam tamanho (WCAG 2.5.7).' },
-                { name: 'aria-label',       type: 'string',                defaultValue: '—',            required: 'Sim*', description: '*OBRIGATÓRIO pelo consumidor — a factory NÃO aplica aria-label; defina via handle.setAttribute("aria-label", ...) após criar.' },
-                { name: 'withHandle',       type: 'boolean',               defaultValue: 'true',         required: 'Auto', description: toPlainText(t('props.table.withHandle.description')) + ' NOTA: factory Nortear SEMPRE exibe o grip visual; não há opção para ocultar.' },
+                { name: 'aria-label',       type: 'string',                defaultValue: '—',            required: 'Sim',  description: 'Vem da opção `aria-label` do grupo — uma string nomeia todos os divisores, um array nomeia cada um. Sem ela o separator é anunciado só pelo valor.' },
+                { name: 'withHandle',       type: 'boolean',               defaultValue: 'false',        required: 'Não',  description: toPlainText(t('props.table.withHandle.description')) + ' Opção do grupo: liga o pegador visual em todos os divisores.' },
               ],
             },
           ],
@@ -501,7 +530,7 @@ export function createResizablePanel(
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes:
             t('props.extensibilityCode') +
-            '\n\n// NOTA Nortear: a factory custom NÃO suporta autoSaveId, id por painel,\n// onLayout, maxSize, nem ResizableHandle.withHandle=false. Para persistência\n// de tamanhos ou callbacks, envolva manualmente em listeners de MutationObserver\n// sobre style.width/height ou use as stacks React (react-resizable-panels),\n// Vue (reka-ui Splitter) ou Svelte (paneforge).',
+            '\n\n// NOTA: a factory não persiste tamanhos — não há autoSaveId nem id por\n// painel. Para guardar o layout entre sessões, escute onLayout e grave o\n// array de tamanhos você mesmo.',
         });
       }
 

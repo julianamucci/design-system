@@ -29,6 +29,14 @@ export interface ProgressOptions {
   max?: number;
   /** Cor semântica da barra. Ausente, a barra usa o primário. */
   variant?: ProgressVariant;
+  /**
+   * Nome acessível da barra. Um `role="progressbar"` sem nome é anunciado só
+   * como "barra de progresso, 40%" — o leitor de tela diz quanto, nunca de quê.
+   *
+   * Vive aqui, e não num `setAttribute` depois de construir, porque o contorno
+   * desaparece na primeira refatoração sem nada na tela denunciar.
+   */
+  'aria-label'?: string;
   className?: string;
 }
 
@@ -42,6 +50,7 @@ export function createProgress(options: ProgressOptions = {}): HTMLElement {
   root.setAttribute('aria-valuemax', String(max));
   root.className = cn('nds-progress', className);
   if (variant) root.dataset.variant = variant;
+  if (options['aria-label']) root.setAttribute('aria-label', options['aria-label']);
 
   const indicator = document.createElement('div');
   indicator.dataset.slot = 'progress-indicator';

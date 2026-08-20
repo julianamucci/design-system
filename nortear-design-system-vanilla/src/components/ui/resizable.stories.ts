@@ -117,6 +117,7 @@ export const Playground: Story = {
     const root = createResizablePanel({
       direction: args.direction,
       withHandle: args.withHandle,
+      'aria-label': ROTULO_PUNHO,
       panels: [
         {
           defaultSize: args.defaultSize,
@@ -131,9 +132,6 @@ export const Playground: Story = {
         },
       ],
     });
-    root
-      .querySelector<HTMLElement>('[data-slot="resizable-handle"]')
-      ?.setAttribute('aria-label', ROTULO_PUNHO);
     return frame(root, args.direction === 'vertical' ? '280px' : '220px');
   },
   play: async ({ canvasElement, step, args }) => {
@@ -143,8 +141,11 @@ export const Playground: Story = {
 
     await step('O divisor é um separator com nome e valor', async () => {
       // accessibility.item4 e item5 — o `getByRole` acima já falharia sem papel
-      // ou sem nome. Aqui fica o VALOR, que é o que um separator focável precisa
-      // ter para o leitor de tela anunciar o tamanho ao mover.
+      // ou sem nome. Ele já passava antes, com a story escrevendo o atributo por
+      // fora; o que a busca por nome prova agora é que a OPÇÃO `aria-label` da
+      // factory chega ao divisor. Aqui fica o VALOR, que é o que um separator
+      // focável precisa ter para o leitor de tela anunciar o tamanho ao mover.
+      await expect(punho).toHaveAttribute('aria-label', ROTULO_PUNHO);
       await expect(punho).toHaveAttribute('aria-orientation', horizontal ? 'vertical' : 'horizontal');
       await expect(punho).toHaveAttribute('aria-valuemin', String(args.minSize));
       await expect(Number(punho.getAttribute('aria-valuenow'))).toBe(

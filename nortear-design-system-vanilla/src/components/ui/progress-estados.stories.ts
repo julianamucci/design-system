@@ -34,8 +34,7 @@ export const Default: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
-    const bar = createProgress({ value: 0 });
-    bar.setAttribute('aria-label', 'Progresso do upload');
+    const bar = createProgress({ value: 0, 'aria-label': 'Progresso do upload' });
     wrap.appendChild(bar);
     return wrap;
   },
@@ -64,8 +63,7 @@ export const Loading: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
-    const bar = createProgress({ value: 50 });
-    bar.setAttribute('aria-label', 'Carregando dados');
+    const bar = createProgress({ value: 50, 'aria-label': 'Carregando dados' });
     wrap.appendChild(bar);
     return wrap;
   },
@@ -94,8 +92,7 @@ export const Complete: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
-    const bar = createProgress({ value: 100 });
-    bar.setAttribute('aria-label', 'Concluído');
+    const bar = createProgress({ value: 100, 'aria-label': 'Concluído' });
     wrap.appendChild(bar);
     return wrap;
   },
@@ -125,8 +122,7 @@ export const Indeterminate: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
-    const bar = createProgress({ value: null });
-    bar.setAttribute('aria-label', 'Processando…');
+    const bar = createProgress({ value: null, 'aria-label': 'Processando…' });
     wrap.appendChild(bar);
     return wrap;
   },
@@ -188,8 +184,7 @@ export const Animated: Story = {
 
     row.append(label, value);
 
-    const bar = createProgress({ value: 0 });
-    bar.setAttribute('aria-label', 'Progresso do upload');
+    const bar = createProgress({ value: 0, 'aria-label': 'Progresso do upload' });
     const indicator = bar.firstElementChild as HTMLElement | null;
 
     wrap.append(row, bar);

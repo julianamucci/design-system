@@ -62,32 +62,23 @@ function buildRadioGroupWithLegend(opts: {
   defaultValue?: string;
   ariaInvalid?: boolean;
   horizontal?: boolean;
-  idPrefix?: string;
 }): HTMLElement {
-  const { name, legendText, items, defaultValue, ariaInvalid, horizontal, idPrefix = name } = opts;
-
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-stack';
-  wrap.dataset.spacing = 'sm';
-
-  const legend = document.createElement('p');
-  const legendId = `${idPrefix}-legend`;
-  legend.id = legendId;
-  legend.className = 'nds-text-body nds-font-semibold';
-  legend.textContent = legendText;
+  const { name, legendText, items, defaultValue, ariaInvalid, horizontal } = opts;
 
   // `orientation` já é o contrato: a factory vira `aria-orientation`, e
   // `.nds-radio-group[aria-orientation="horizontal"]` traz o grid em coluna com
   // `gap: var(--spacing-6)`. Cravar as três declarações inline duplicava a folha
   // — e sem o atributo o leitor de tela anunciava o grupo como vertical.
+  //
+  // A legenda também é da factory: um `<legend>` dentro do próprio `<fieldset>`,
+  // e não um `<p>` do lado de fora amarrado por `aria-labelledby` à mão.
   const group = createRadioGroup({
     name,
+    legend: legendText,
     defaultValue,
     items,
     orientation: horizontal ? 'horizontal' : undefined,
   });
-  group.setAttribute('role', 'radiogroup');
-  group.setAttribute('aria-labelledby', legendId);
   if (ariaInvalid) {
     group.setAttribute('aria-invalid', 'true');
     group.querySelectorAll<HTMLButtonElement>('[data-slot="radio-group-item"]').forEach((btn) => {
@@ -96,8 +87,7 @@ function buildRadioGroupWithLegend(opts: {
     });
   }
 
-  wrap.append(legend, group);
-  return wrap;
+  return group;
 }
 
 // ─── createRadioGroupDocs ─────────────────────────────────────────────────────
@@ -212,7 +202,6 @@ export function createRadioGroupDocs(): HTMLElement {
             // Vertical — Forma de pagamento
             const payment = buildRadioGroupWithLegend({
               name: 'demo-payment',
-              idPrefix: 'demo-payment',
               legendText: t('demonstration.labels.groupLabel'),
               items: [
                 { value: 'card',    label: t('demonstration.labels.card')    },
@@ -247,7 +236,6 @@ export function createRadioGroupDocs(): HTMLElement {
             // Horizontal — Forma de entrega
             const delivery = buildRadioGroupWithLegend({
               name: 'demo-delivery',
-              idPrefix: 'demo-delivery',
               legendText: t('demonstration.labels.deliveryLabel'),
               items: [
                 { value: 'standard', label: t('demonstration.labels.standard') },
@@ -325,29 +313,24 @@ export function createRadioGroupDocs(): HTMLElement {
         const buildDoLabeled = () =>
           buildRadioGroupWithLegend({
             name: 'dodont-do',
-            idPrefix: 'dodont-do',
             legendText: 'Forma de pagamento',
             items: [
               { value: 'card', label: 'Cartão de crédito' },
               { value: 'pix',  label: 'Pix' },
             ],
           });
-        const buildDontUnlabeled = () => {
-          // Sem legend/aria-labelledby — radios "soltos"
-          const group = createRadioGroup({
+        const buildDontUnlabeled = () =>
+          // Don't: sem `legend` — o grupo fica sem nome e as opções soltas.
+          createRadioGroup({
             name: 'dodont-dont',
             items: [
               { value: 'card', label: 'Cartão' },
               { value: 'pix',  label: 'Pix' },
             ],
           });
-          group.removeAttribute('aria-labelledby');
-          return group;
-        };
         const buildDoNoPreselect = () =>
           buildRadioGroupWithLegend({
             name: 'dodont-no-preselect',
-            idPrefix: 'dodont-no-preselect',
             legendText: 'Forma de pagamento',
             items: [
               { value: 'card', label: 'Cartão de crédito' },
@@ -358,7 +341,6 @@ export function createRadioGroupDocs(): HTMLElement {
         const buildDontPreselect = () =>
           buildRadioGroupWithLegend({
             name: 'dodont-preselect',
-            idPrefix: 'dodont-preselect',
             legendText: 'Forma de pagamento',
             defaultValue: 'card',
             items: [
@@ -399,17 +381,15 @@ export function createRadioGroupDocs(): HTMLElement {
           secondaryDescription: 'Uso básico:',
           secondaryCode: `const group = createRadioGroup({
   name: 'payment',
+  // A pergunta do grupo, visível na <legend> do fieldset.
+  legend: 'Forma de pagamento',
   items: [
     { value: 'card',   label: 'Cartão de crédito' },
     { value: 'pix',    label: 'Pix' },
     { value: 'boleto', label: 'Boleto bancário' },
   ],
   onValueChange: (value) => console.log('selected:', value),
-});
-
-// Associe um legend externo via aria-labelledby
-group.setAttribute('role', 'radiogroup');
-group.setAttribute('aria-labelledby', 'payment-legend');`,
+});`,
         });
 
       case 'variantes': {
@@ -421,11 +401,10 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
             {
               name: stripHtml(t('variants.items.vertical')),
               description: stripHtml(t('variants.styles.vertical')),
-              code: `createRadioGroup({ name: 'payment', items });`,
+              code: `createRadioGroup({ name: 'payment', legend: 'Forma de pagamento', items });`,
               previewFactory: () =>
                 buildRadioGroupWithLegend({
                   name: 'v-vertical',
-                  idPrefix: 'v-vertical',
                   legendText: t('demonstration.labels.groupLabel'),
                   items: [
                     { value: 'card', label: t('demonstration.labels.card') },
@@ -437,11 +416,10 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
             {
               name: stripHtml(t('variants.items.horizontal')),
               description: stripHtml(t('variants.styles.horizontal')),
-              code: `const g = createRadioGroup({ name: 'delivery', items });\ng.style.gridAutoFlow = 'column'; g.style.gridAutoColumns = 'max-content'; g.style.gap = '1.5rem';`,
+              code: `createRadioGroup({\n  name: 'delivery',\n  legend: 'Forma de entrega',\n  orientation: 'horizontal',\n  items,\n});`,
               previewFactory: () =>
                 buildRadioGroupWithLegend({
                   name: 'v-horizontal',
-                  idPrefix: 'v-horizontal',
                   legendText: t('demonstration.labels.deliveryLabel'),
                   horizontal: true,
                   items: [
@@ -454,15 +432,11 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
             {
               name: stripHtml(t('variants.items.withDescription')),
               description: stripHtml(t('variants.styles.withDescription')),
-              code: `// Factory não expõe \`description\` por item — composição manual:\nconst group = createRadioGroup({ name: 'delivery', items });\n// percorra group.children e injete <p> de descrição ao lado do <label>`,
+              code: `// Factory não expõe \`description\` por item — composição manual:\nconst group = createRadioGroup({\n  name: 'delivery',\n  legend: 'Forma de entrega',\n  items,\n});\n// percorra as .nds-radio-row e injete <p> de descrição ao lado do <label>`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack';
                 wrap.dataset.spacing = 'sm';
-                const legend = document.createElement('p');
-                legend.id = 'v-desc-legend';
-                legend.className = 'nds-text-body nds-font-semibold';
-                legend.textContent = t('demonstration.labels.deliveryLabel');
 
                 const items = [
                   { value: 'standard', label: t('demonstration.labels.standard'), description: 'Entrega em 5 dias úteis.' },
@@ -472,13 +446,13 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
 
                 const base = createRadioGroup({
                   name: 'v-with-desc',
+                  legend: t('demonstration.labels.deliveryLabel'),
                   items: items.map(i => ({ value: i.value, label: i.label })),
                 });
-                base.setAttribute('role', 'radiogroup');
-                base.setAttribute('aria-labelledby', 'v-desc-legend');
 
+                const linhas = Array.from(base.querySelectorAll<HTMLElement>('.nds-radio-row'));
                 items.forEach((item, idx) => {
-                  const row = base.children[idx] as HTMLElement;
+                  const row = linhas[idx];
                   if (!row) return;
                   row.style.alignItems = 'flex-start';
                   const label = row.querySelector('label');
@@ -495,7 +469,7 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
                   }
                 });
 
-                wrap.append(legend, base);
+                wrap.appendChild(base);
                 return wrap;
               },
             },
@@ -510,26 +484,18 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
           form.dataset.spacing = 'md';
           form.noValidate = true;
 
-          const fs = document.createElement('fieldset');
-          fs.className = 'nds-stack nds-border-none nds-p-0 nds-m-0';
-          fs.dataset.spacing = 'sm';
-
-          const legend = document.createElement('legend');
-          legend.className = 'nds-text-body nds-font-semibold nds-mb-2';
-          legend.textContent = 'Forma de pagamento';
-          fs.appendChild(legend);
-
+          // O `<fieldset>` com `<legend>` nativo é o do próprio grupo — não há
+          // um segundo agrupamento em volta só para carregar a legenda.
           const group = createRadioGroup({
             name: 'payment',
+            legend: 'Forma de pagamento',
             items: [
               { value: 'card', label: 'Cartão de crédito' },
               { value: 'pix', label: 'Pix' },
               { value: 'boleto', label: 'Boleto bancário' },
             ],
           });
-          group.setAttribute('role', 'radiogroup');
-          fs.appendChild(group);
-          form.appendChild(fs);
+          form.appendChild(group);
 
           const submit = document.createElement('button');
           submit.type = 'submit';
@@ -555,24 +521,17 @@ group.setAttribute('aria-labelledby', 'payment-legend');`,
         const codeInForm = `const form = document.createElement('form');
 form.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';
 
-const fs = document.createElement('fieldset');
-fs.className = 'nds-stack border-0 nds-p-0 nds-m-0';
-const legend = document.createElement('legend');
-legend.className = 'nds-text-body nds-font-semibold nds-mb-2';
-legend.textContent = 'Forma de pagamento';
-fs.appendChild(legend);
-
+// A factory já emite o <fieldset> com <legend> — não embrulhe num segundo.
 const group = createRadioGroup({
   name: 'payment',
+  legend: 'Forma de pagamento',
   items: [
     { value: 'card', label: 'Cartão de crédito' },
     { value: 'pix', label: 'Pix' },
     { value: 'boleto', label: 'Boleto bancário' },
   ],
 });
-group.setAttribute('role', 'radiogroup');
-fs.appendChild(group);
-form.appendChild(fs);
+form.appendChild(group);
 
 const submit = document.createElement('button');
 submit.type = 'submit';
@@ -637,6 +596,12 @@ export type RadioGroupOptions = {
   name: string;
   items: RadioGroupItem[];
   defaultValue?: string;
+  /** Pergunta do grupo, VISÍVEL, num <legend> — a forma preferida de nomear. */
+  legend?: string;
+  /** Nome invisível, para quando a pergunta já está dita por um título ao lado. */
+  'aria-label'?: string;
+  disabled?: boolean;
+  orientation?: 'vertical' | 'horizontal';
   onValueChange?: (value: string) => void;
   class?: string;
 };`;
@@ -659,6 +624,10 @@ export type RadioGroupOptions = {
                 { name: 'name',          type: 'string',                            defaultValue: '—',      required: 'Sim', description: toPlainText(t('props.table.name.description')) + ' Obrigatório no Nortear (não-controlado, participa do `FormData`).' },
                 { name: 'items',         type: 'RadioGroupItem[]',                  defaultValue: '—',      required: 'Sim', description: 'Lista de itens. Cada item: { value, label, disabled? }.' },
                 { name: 'defaultValue',  type: 'string',                            defaultValue: '—',      required: 'Não', description: toPlainText(t('props.table.defaultValue.description')) + ' Não há prop `value` controlada — o factory é não-controlado.' },
+                { name: 'legend',        type: 'string',                            defaultValue: '—',      required: 'Sim*', description: '*Nome do grupo, VISÍVEL, num `<legend>` dentro do `<fieldset>`. É a forma preferida: quem vê as opções também lê a pergunta que elas respondem.' },
+                { name: 'aria-label',    type: 'string',                            defaultValue: '—',      required: 'Sim*', description: '*Alternativa a `legend` quando a pergunta já está dita por um título próximo. Ignorado se `legend` for passado — dois nomes no mesmo elemento é o defeito, não a solução.' },
+                { name: 'disabled',      type: 'boolean',                           defaultValue: 'false',  required: 'Não', description: 'Trava o grupo inteiro; cada item herda. `items[i].disabled` trava só um.' },
+                { name: 'orientation',   type: '"vertical" | "horizontal"',         defaultValue: '"vertical"', required: 'Não', description: 'Direção da navegação por setas. Vira `aria-orientation`, que é também o gancho do layout em linha.' },
                 { name: 'onValueChange', type: '(value: string) => void',           defaultValue: '—',      required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) },
                 { name: 'class',         type: 'string',                            defaultValue: '—',      required: 'Não', description: 'Classes .nds-* adicionais no `<fieldset>` raiz.' },
               ],
@@ -667,7 +636,7 @@ export type RadioGroupOptions = {
           interfaceCode,
           extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
-            'O factory custom diverge das libs upstream nos seguintes pontos: (1) é estritamente não-controlado — não aceita prop `value`; use `defaultValue` + `onValueChange`. (2) Não expõe prop `disabled` no grupo — desabilite item-a-item via `items[i].disabled`. (3) Não expõe prop `orientation` — aplique `grid-flow-col auto-cols-max gap-6` via `class` para layout horizontal. (4) Não expõe campo `description` por item — componha o layout manualmente. Em todos os outros pontos (ARIA, navegação por setas, role) o comportamento é equivalente às libs upstream.',
+            'O factory custom diverge das libs upstream nos seguintes pontos: (1) é estritamente não-controlado — não aceita prop `value`; use `defaultValue` + `onValueChange`. (2) Não expõe campo `description` por item — componha o layout manualmente. (3) O grupo é um `<fieldset>` de verdade, então o nome preferido é a `<legend>` da opção `legend`, e não um rótulo invisível. Em todos os outros pontos (ARIA, navegação por setas, role) o comportamento é equivalente às libs upstream.',
         });
       }
 

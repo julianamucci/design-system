@@ -23,35 +23,19 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function withLegend(group: HTMLElement, labelText: string, id: string): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-stack';
-  wrap.dataset.spacing = 'xs';
-  const legend = document.createElement('p');
-  legend.id = id;
-  legend.className = 'nds-text-body nds-font-semibold';
-  legend.textContent = labelText;
-  group.setAttribute('aria-labelledby', id);
-  wrap.append(legend, group);
-  return wrap;
-}
-
 // ─── Vertical ─────────────────────────────────────────────────────────────────
 
 export const Vertical: Story = {
   render: () =>
-    withLegend(
-      createRadioGroup({
-        name: 'rg-vertical',
-        items: [
-          { value: 'card', label: 'Cartão de crédito' },
-          { value: 'pix', label: 'Pix' },
-          { value: 'boleto', label: 'Boleto bancário' },
-        ],
-      }),
-      'Forma de pagamento',
-      'rg-vertical-legend',
-    ),
+    createRadioGroup({
+      name: 'rg-vertical',
+      legend: 'Forma de pagamento',
+      items: [
+        { value: 'card', label: 'Cartão de crédito' },
+        { value: 'pix', label: 'Pix' },
+        { value: 'boleto', label: 'Boleto bancário' },
+      ],
+    }),
   parameters: {
     docs: {
       description: {
@@ -87,19 +71,16 @@ export const Vertical: Story = {
 
 export const Horizontal: Story = {
   render: () =>
-    withLegend(
-      createRadioGroup({
-        name: 'rg-horizontal',
-        orientation: 'horizontal',
-        items: [
-          { value: 'standard', label: 'Padrão (5 dias)' },
-          { value: 'express', label: 'Expressa (1 dia)' },
-          { value: 'pickup', label: 'Retirar na loja' },
-        ],
-      }),
-      'Forma de entrega',
-      'rg-horizontal-legend',
-    ),
+    createRadioGroup({
+      name: 'rg-horizontal',
+      legend: 'Forma de entrega',
+      orientation: 'horizontal',
+      items: [
+        { value: 'standard', label: 'Padrão (5 dias)' },
+        { value: 'express', label: 'Expressa (1 dia)' },
+        { value: 'pickup', label: 'Retirar na loja' },
+      ],
+    }),
   parameters: {
     docs: {
       description: {
@@ -138,26 +119,6 @@ export const WithDescription: Story = {
     wrap.className = 'nds-stack nds-w-sm';
     wrap.dataset.spacing = 'xs';
 
-    const legend = document.createElement('p');
-    legend.id = 'rg-desc-legend';
-    legend.className = 'nds-text-body nds-font-semibold';
-    legend.textContent = 'Forma de entrega';
-
-    // Custom factory não suporta description por item — construímos o layout
-    // manualmente reaproveitando o item visual do createRadioGroup e injetando
-    // um <p> de descrição ao lado do label.
-    const fieldset = document.createElement('fieldset');
-    fieldset.className = 'nds-grid';
-    fieldset.dataset.spacing = 'sm';
-    fieldset.style.border = '0';
-    fieldset.style.padding = '0';
-    fieldset.style.margin = '0';
-    fieldset.setAttribute('role', 'radiogroup');
-    fieldset.setAttribute('aria-labelledby', 'rg-desc-legend');
-    // Este fieldset é montado à mão (o factory não expõe `description` por
-    // item), então o `role` precisa ser escrito aqui — nos demais casos quem o
-    // escreve é o próprio factory.
-
     const items = [
       {
         value: 'standard',
@@ -176,14 +137,18 @@ export const WithDescription: Story = {
       },
     ];
 
-    // Reaproveita o factory para obter a estrutura base de cada item,
-    // mas anexamos a descrição ao lado do label.
-    const base = createRadioGroup({
+    // O grupo é o da factory, legenda incluída — a story só acrescenta a
+    // descrição por item, que é o único ponto que a factory não cobre. Antes
+    // daqui ela remontava um `<fieldset role="radiogroup">` à mão para pendurar
+    // um `<p>` como rótulo: uma segunda implementação do mesmo componente, que
+    // envelhece à parte da primeira.
+    const group = createRadioGroup({
       name: 'rg-with-desc',
+      legend: 'Forma de entrega',
       items: items.map((i) => ({ value: i.value, label: i.label })),
     });
 
-    const baseRows = Array.from(base.children) as HTMLElement[];
+    const baseRows = Array.from(group.querySelectorAll<HTMLElement>('.nds-radio-row'));
     items.forEach((item, idx) => {
       const row = baseRows[idx];
       if (!row) return;
@@ -207,18 +172,16 @@ export const WithDescription: Story = {
           .querySelector('[data-slot="radio-group-item"]')
           ?.setAttribute('aria-describedby', desc.id);
       }
-
-      fieldset.appendChild(row);
     });
 
-    wrap.append(legend, fieldset);
+    wrap.appendChild(group);
     return wrap;
   },
   parameters: {
     docs: {
       description: {
         story:
-          'Cada par item + Label acompanha um texto auxiliar abaixo, útil quando o nome da opção sozinho não comunica o critério de escolha. Layout construído manualmente — o factory `createRadioGroup` (Vanilla) não expõe campo `description` por item.',
+          'Cada par item + Label acompanha um texto auxiliar abaixo, útil quando o nome da opção sozinho não comunica o critério de escolha. A descrição é acrescentada pela composição — a factory não expõe campo `description` por item.',
       },
     },
   },

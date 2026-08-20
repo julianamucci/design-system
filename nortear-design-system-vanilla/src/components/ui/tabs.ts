@@ -29,6 +29,19 @@ export type TabsOptions = {
   variant?: TabsVariant;
   /** Direção do conjunto. Também define qual par de setas navega. */
   orientation?: TabsOrientation;
+  /**
+   * Nome acessível da lista de abas — vai no elemento `role="tablist"`, que é
+   * quem o leitor de tela anuncia ao entrar no conjunto. OBRIGATÓRIO: sem ele
+   * o anúncio é só "lista de abas", e uma página com dois conjuntos fica com
+   * dois controles indistinguíveis.
+   *
+   * A opção mora na raiz porque a lista não é um elemento que quem consome
+   * receba: até aqui só se escrevia o nome com
+   * `root.querySelector('[role="tablist"]').setAttribute(...)` depois de
+   * construir — um contorno preso à estrutura interna da fábrica, que quebra
+   * calado se ela mudar.
+   */
+  'aria-label'?: string;
   onValueChange?: (value: string) => void;
   class?: string;
 };
@@ -61,6 +74,7 @@ export function createTabs(options: TabsOptions): HTMLElement {
   // `aria-orientation` só no vertical: horizontal é o padrão implícito do papel
   // `tablist`, e repetir o padrão é ruído para quem lê com leitor de tela.
   if (orientation === 'vertical') listEl.setAttribute('aria-orientation', 'vertical');
+  if (options['aria-label']) listEl.setAttribute('aria-label', options['aria-label']);
 
   const panelMap = new Map<string, HTMLElement>();
   const triggerMap = new Map<string, HTMLButtonElement>();

@@ -29,6 +29,21 @@ export type ResizablePanelOptions = {
    * documentação que prometia um padrão (`false`) que esta stack não cumpria.
    */
   withHandle?: boolean;
+  /**
+   * Nome acessível dos divisores. OBRIGATÓRIO: o divisor é um `role="separator"`
+   * focável, e sem nome o leitor de tela anuncia apenas "separador, 30" — não há
+   * como saber o que aquele número redimensiona.
+   *
+   * Uma string nomeia todos os divisores do grupo; um array nomeia um a um, que
+   * é o que um grupo de três painéis ou mais precisa — dois separadores com o
+   * mesmo nome são dois controles indistinguíveis na lista do leitor de tela.
+   *
+   * Vive aqui porque o divisor não é um elemento que quem consome receba: até
+   * aqui o único caminho era percorrer `[data-slot="resizable-handle"]` depois
+   * de construir, e num grupo aninhado esse percurso pega também os divisores
+   * do grupo de dentro.
+   */
+  'aria-label'?: string | string[];
   /** Divisores travados: continuam anunciados e focáveis, mas não movem nada. */
   disabled?: boolean;
   /** Tamanhos finais, em porcentagem, ao fim de cada gesto. */
@@ -57,6 +72,12 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
   root.dataset.slot = 'resizable';
   root.dataset.direction = direction;
   root.className = cn('nds-resizable', options.class);
+
+  /** Nome do divisor `i` — string única vale para todos; array indexa. */
+  const rotuloDe = (i: number): string | undefined => {
+    const rotulo = options['aria-label'];
+    return Array.isArray(rotulo) ? rotulo[i] : rotulo;
+  };
 
   const minimoDe = (i: number) => panels[i]?.minSize ?? 10;
   const maximoDe = (i: number) => panels[i]?.maxSize ?? 100;
@@ -142,6 +163,8 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
       handle.setAttribute('aria-orientation', isHorizontal ? 'vertical' : 'horizontal');
       handle.setAttribute('tabindex', '0');
       handle.className = 'nds-resizable-handle';
+      const rotulo = rotuloDe(i);
+      if (rotulo) handle.setAttribute('aria-label', rotulo);
       if (disabled) {
         // `aria-disabled` em vez de sumir da ordem de tabulação: um controle que
         // desaparece do Tab não tem como explicar por que está travado.

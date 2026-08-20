@@ -23,18 +23,8 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function withLegend(group: HTMLElement, labelText: string, id: string): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-stack';
-  wrap.dataset.spacing = 'xs';
-  const legend = document.createElement('p');
-  legend.id = id;
-  legend.className = 'nds-text-body nds-font-semibold';
-  legend.textContent = labelText;
-  group.setAttribute('aria-labelledby', id);
-  wrap.append(legend, group);
-  return wrap;
-}
+/** Pergunta do grupo, igual em todas as stories deste arquivo. */
+const PERGUNTA = 'Forma de pagamento';
 
 /**
  * Razão de contraste da WCAG entre duas cores computadas opacas. Comparar nome
@@ -60,18 +50,15 @@ function razaoContraste(a: string, b: string): number {
 
 export const Default: Story = {
   render: () =>
-    withLegend(
-      createRadioGroup({
-        name: 'rg-default',
-        items: [
-          { value: 'card', label: 'Cartão de crédito' },
-          { value: 'pix', label: 'Pix' },
-          { value: 'boleto', label: 'Boleto bancário' },
-        ],
-      }),
-      'Forma de pagamento',
-      'rg-default-legend',
-    ),
+    createRadioGroup({
+      name: 'rg-default',
+      legend: PERGUNTA,
+      items: [
+        { value: 'card', label: 'Cartão de crédito' },
+        { value: 'pix', label: 'Pix' },
+        { value: 'boleto', label: 'Boleto bancário' },
+      ],
+    }),
   parameters: {
     covers: ['visual.item1', 'accessibility.item2'],
     docs: {
@@ -109,19 +96,16 @@ export const Default: Story = {
 
 export const Checked: Story = {
   render: () =>
-    withLegend(
-      createRadioGroup({
-        name: 'rg-checked',
-        defaultValue: 'pix',
-        items: [
-          { value: 'card', label: 'Cartão de crédito' },
-          { value: 'pix', label: 'Pix' },
-          { value: 'boleto', label: 'Boleto bancário' },
-        ],
-      }),
-      'Forma de pagamento',
-      'rg-checked-legend',
-    ),
+    createRadioGroup({
+      name: 'rg-checked',
+      legend: PERGUNTA,
+      defaultValue: 'pix',
+      items: [
+        { value: 'card', label: 'Cartão de crédito' },
+        { value: 'pix', label: 'Pix' },
+        { value: 'boleto', label: 'Boleto bancário' },
+      ],
+    }),
   parameters: {
     covers: ['visual.item2'],
     docs: {
@@ -154,19 +138,16 @@ export const Disabled: Story = {
     },
   },
   render: () =>
-    withLegend(
-      createRadioGroup({
-        name: 'rg-disabled',
-        disabled: true,
-        items: [
-          { value: 'card', label: 'Cartão de crédito' },
-          { value: 'pix', label: 'Pix' },
-          { value: 'boleto', label: 'Boleto bancário' },
-        ],
-      }),
-      'Forma de pagamento',
-      'rg-disabled-legend',
-    ),
+    createRadioGroup({
+      name: 'rg-disabled',
+      legend: PERGUNTA,
+      disabled: true,
+      items: [
+        { value: 'card', label: 'Cartão de crédito' },
+        { value: 'pix', label: 'Pix' },
+        { value: 'boleto', label: 'Boleto bancário' },
+      ],
+    }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('O disabled do grupo desce para todos os itens', async () => {
@@ -191,18 +172,15 @@ export const Disabled: Story = {
 
 export const DisabledItem: Story = {
   render: () =>
-    withLegend(
-      createRadioGroup({
-        name: 'rg-disabled-item',
-        items: [
-          { value: 'card', label: 'Cartão de crédito' },
-          { value: 'pix', label: 'Pix' },
-          { value: 'boleto', label: 'Boleto (temporariamente indisponível)', disabled: true },
-        ],
-      }),
-      'Forma de pagamento',
-      'rg-disabled-item-legend',
-    ),
+    createRadioGroup({
+      name: 'rg-disabled-item',
+      legend: PERGUNTA,
+      items: [
+        { value: 'card', label: 'Cartão de crédito' },
+        { value: 'pix', label: 'Pix' },
+        { value: 'boleto', label: 'Boleto (temporariamente indisponível)', disabled: true },
+      ],
+    }),
   parameters: {
     docs: {
       description: {
@@ -229,20 +207,15 @@ export const Invalid: Story = {
     wrap.className = 'nds-stack';
     wrap.dataset.spacing = 'xs';
 
-    const legend = document.createElement('p');
-    legend.id = 'rg-invalid-legend';
-    legend.className = 'nds-text-body nds-font-semibold';
-    legend.textContent = 'Forma de pagamento';
-
     const group = createRadioGroup({
       name: 'rg-invalid',
+      legend: PERGUNTA,
       items: [
         { value: 'card', label: 'Cartão de crédito' },
         { value: 'pix', label: 'Pix' },
         { value: 'boleto', label: 'Boleto bancário' },
       ],
     });
-    group.setAttribute('aria-labelledby', 'rg-invalid-legend');
     group.setAttribute('aria-invalid', 'true');
     group.setAttribute('aria-describedby', 'rg-invalid-msg');
 
@@ -260,7 +233,7 @@ export const Invalid: Story = {
     msg.className = 'nds-text-body nds-text-destructive';
     msg.textContent = 'Selecione uma forma de pagamento para continuar.';
 
-    wrap.append(legend, group, msg);
+    wrap.append(group, msg);
     return wrap;
   },
   parameters: {
@@ -290,18 +263,15 @@ export const Invalid: Story = {
 
 export const FocusVisible: Story = {
   render: () =>
-    withLegend(
-      createRadioGroup({
-        name: 'rg-focus',
-        items: [
-          { value: 'card', label: 'Cartão de crédito' },
-          { value: 'pix', label: 'Pix' },
-          { value: 'boleto', label: 'Boleto bancário' },
-        ],
-      }),
-      'Forma de pagamento',
-      'rg-focus-legend',
-    ),
+    createRadioGroup({
+      name: 'rg-focus',
+      legend: PERGUNTA,
+      items: [
+        { value: 'card', label: 'Cartão de crédito' },
+        { value: 'pix', label: 'Pix' },
+        { value: 'boleto', label: 'Boleto bancário' },
+      ],
+    }),
   parameters: {
     covers: ['accessibility.item3'],
     docs: {

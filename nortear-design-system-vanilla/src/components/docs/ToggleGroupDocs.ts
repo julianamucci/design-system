@@ -118,12 +118,6 @@ function injectIconsAndText(group: HTMLElement, entries: Array<{ icon: unknown; 
   });
 }
 
-function applyItemAriaLabels(group: HTMLElement, labels: string[]): void {
-  group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
-    if (labels[i]) btn.setAttribute('aria-label', labels[i]);
-  });
-}
-
 // ─── Group builder (com aria-label + analytics + items icon-only) ─────────────
 
 function buildToggleGroupDemo(opts: {
@@ -142,6 +136,9 @@ function buildToggleGroupDemo(opts: {
     value: it.value,
     children: '',
     disabled: it.disabled,
+    // O nome viaja COM o item. Antes ficava num segundo passo que casava rótulo
+    // com posição no array, e um item inserido no meio renomeava os seguintes.
+    'aria-label': it.ariaLabel,
   }));
 
   const root = createToggleGroup({
@@ -149,6 +146,9 @@ function buildToggleGroupDemo(opts: {
     variant: opts.variant ?? 'outline',
     items: groupItems,
     defaultValue: opts.defaultValue,
+    orientation: opts.orientation ?? 'horizontal',
+    // aria-label obrigatório no grupo
+    'aria-label': opts.ariaLabel,
     onValueChange: (value) => {
       const flat = Array.isArray(value) ? value.join(',') : value;
       track('field_change', {
@@ -160,19 +160,7 @@ function buildToggleGroupDemo(opts: {
     },
   });
 
-  // aria-label obrigatório no grupo
-  root.setAttribute('aria-label', opts.ariaLabel);
-
-  // aria-orientation refletindo a orientation
-  const orientation = opts.orientation ?? 'horizontal';
-  root.setAttribute('aria-orientation', orientation);
-  if (orientation === 'vertical') {
-    // Nortear: factory não expõe orientation — aplicar utility classes manualmente
-    root.classList.remove('flex-row');
-    root.classList.add('nds-stack');
-  }
-
-  // Injeta SVG (seguro: createElementNS, sem innerHTML) + aria-label por item
+  // Injeta SVG (seguro: createElementNS, sem innerHTML)
   const buttons = root.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]');
   buttons.forEach((btn, idx) => {
     const meta = opts.items[idx];
@@ -182,7 +170,6 @@ function buildToggleGroupDemo(opts: {
       wrap.style.display = 'inline-flex';
       wrap.appendChild(buildLucideSvg(meta.icon));
       btn.appendChild(wrap);
-      btn.setAttribute('aria-label', meta.ariaLabel);
     }
   });
 
@@ -455,9 +442,9 @@ export function createToggleGroupDocs(): HTMLElement {
           // Grupo SEM aria-label — anti-pattern didático do par 2. Os items
           // mantêm aria-label invisível para não violar button-name no axe.
           const items: ToggleGroupItem[] = [
-            { value: 'bold',      children: '' },
-            { value: 'italic',    children: '' },
-            { value: 'underline', children: '' },
+            { value: 'bold',      children: '', 'aria-label': stripHtml(t('demonstration.labels.bold'))      },
+            { value: 'italic',    children: '', 'aria-label': stripHtml(t('demonstration.labels.italic'))    },
+            { value: 'underline', children: '', 'aria-label': stripHtml(t('demonstration.labels.underline')) },
           ];
           const g = createToggleGroup({ type: 'multiple', variant: 'outline', items });
           const icons = [Bold, Italic, Underline];
@@ -468,11 +455,6 @@ export function createToggleGroupDocs(): HTMLElement {
             wrap.appendChild(buildLucideSvg(icons[i]));
             btn.appendChild(wrap);
           });
-          applyItemAriaLabels(g, [
-            stripHtml(t('demonstration.labels.bold')),
-            stripHtml(t('demonstration.labels.italic')),
-            stripHtml(t('demonstration.labels.underline')),
-          ]);
           return g;
         };
 
@@ -509,24 +491,17 @@ export function createToggleGroupDocs(): HTMLElement {
   type: 'single',
   variant: 'outline',
   defaultValue: 'left',
+  'aria-label': 'Alinhamento do texto',
   items: [
-    { value: 'left',   children: '<svg ...>...</svg>' },
-    { value: 'center', children: '<svg ...>...</svg>' },
-    { value: 'right',  children: '<svg ...>...</svg>' },
+    { value: 'left',   children: '<svg ...>...</svg>', 'aria-label': 'Alinhar à esquerda' },
+    { value: 'center', children: '<svg ...>...</svg>', 'aria-label': 'Centralizar'        },
+    { value: 'right',  children: '<svg ...>...</svg>', 'aria-label': 'Alinhar à direita'  },
   ],
   onValueChange: (value) => console.log('alignment:', value),
-});
-
-// ARIA: aplicar manualmente — factory não expõe aria-label como prop
-group.setAttribute('aria-label', 'Alinhamento do texto');
-group.querySelectorAll('[data-slot="toggle"]').forEach((btn, i) => {
-  btn.setAttribute('aria-label', ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita'][i]);
 });`,
         });
 
       case 'variantes': {
-        const DIVERGENCE = ' (Nortear: factory não expõe esta prop — aplicar manualmente via setAttribute/classList).';
-
         return createDocsVariants({
           title: t('variants.title'),
           items: [
@@ -537,14 +512,14 @@ group.querySelectorAll('[data-slot="toggle"]').forEach((btn, i) => {
   type: 'single',
   variant: 'outline',
   defaultValue: 'left',
+  'aria-label': 'Alinhamento do texto',
   items: [
-    { value: 'left',   children: svgLeft   },
-    { value: 'center', children: svgCenter },
-    { value: 'right',  children: svgRight  },
+    { value: 'left',   children: svgLeft,   'aria-label': 'Alinhar à esquerda' },
+    { value: 'center', children: svgCenter, 'aria-label': 'Centralizar'        },
+    { value: 'right',  children: svgRight,  'aria-label': 'Alinhar à direita'  },
   ],
   onValueChange: (value) => console.log(value), // string
-});
-group.setAttribute('aria-label', 'Alinhamento do texto');`,
+});`,
               previewFactory: () => buildToggleGroupDemo({
                 type: 'single',
                 ariaLabel: stripHtml(t('demonstration.labels.alignmentLabel')),
@@ -565,14 +540,14 @@ group.setAttribute('aria-label', 'Alinhamento do texto');`,
   type: 'multiple',
   variant: 'outline',
   defaultValue: ['bold'],
+  'aria-label': 'Formatação',
   items: [
-    { value: 'bold',      children: svgBold      },
-    { value: 'italic',    children: svgItalic    },
-    { value: 'underline', children: svgUnderline },
+    { value: 'bold',      children: svgBold,      'aria-label': 'Negrito'    },
+    { value: 'italic',    children: svgItalic,    'aria-label': 'Itálico'    },
+    { value: 'underline', children: svgUnderline, 'aria-label': 'Sublinhado' },
   ],
   onValueChange: (value) => console.log(value), // string[]
-});
-group.setAttribute('aria-label', 'Formatação');`,
+});`,
               previewFactory: () => buildToggleGroupDemo({
                 type: 'multiple',
                 ariaLabel: stripHtml(t('demonstration.labels.formattingLabel')),
@@ -588,21 +563,18 @@ group.setAttribute('aria-label', 'Formatação');`,
             },
             {
               name: stripHtml(t('variants.items.vertical')),
-              description: stripHtml(t('variants.styles.vertical')) + DIVERGENCE,
-              code: `// Nortear: factory NÃO expõe orientation. Aplicar manualmente:
-const group = createToggleGroup({
+              description: stripHtml(t('variants.styles.vertical')),
+              code: `const group = createToggleGroup({
   type: 'single',
   variant: 'outline',
   defaultValue: 'grid',
+  orientation: 'vertical',
+  'aria-label': 'Modo de visualização',
   items: [
-    { value: 'grid', children: svgGrid },
-    { value: 'list', children: svgList },
+    { value: 'grid', children: svgGrid, 'aria-label': 'Grade' },
+    { value: 'list', children: svgList, 'aria-label': 'Lista' },
   ],
-});
-group.setAttribute('aria-label', 'Modo de visualização');
-group.setAttribute('aria-orientation', 'vertical');
-group.classList.remove('flex-row');
-group.classList.add('nds-stack');`,
+});`,
               previewFactory: () => buildToggleGroupDemo({
                 type: 'single',
                 ariaLabel: stripHtml(t('demonstration.labels.viewLabel')),
@@ -631,34 +603,32 @@ group.classList.add('nds-stack');`,
               description: t('variants.compositions.alignmentBar.description'),
               useWhen: t('variants.compositions.alignmentBar.use'),
               code: `const items: ToggleGroupItem[] = [
-  { value: 'left',   children: '' },
-  { value: 'center', children: '' },
-  { value: 'right',  children: '' },
+  { value: 'left',   children: '', 'aria-label': 'Alinhar à esquerda' },
+  { value: 'center', children: '', 'aria-label': 'Centralizar'        },
+  { value: 'right',  children: '', 'aria-label': 'Alinhar à direita'  },
 ];
 const group = createToggleGroup({
   type: 'single',
   variant: 'outline',
   items,
   defaultValue: 'left',
+  'aria-label': 'Alinhamento do texto',
 });
-injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
-group.setAttribute('aria-label', 'Alinhamento do texto');
-applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita']);`,
+injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);`,
               previewFactory: () => {
                 const items: ToggleGroupItem[] = [
-                  { value: 'left',   children: '' },
-                  { value: 'center', children: '' },
-                  { value: 'right',  children: '' },
+                  { value: 'left',   children: '', 'aria-label': 'Alinhar à esquerda' },
+                  { value: 'center', children: '', 'aria-label': 'Centralizar'        },
+                  { value: 'right',  children: '', 'aria-label': 'Alinhar à direita'  },
                 ];
                 const group = createToggleGroup({
                   type: 'single',
                   variant: 'outline',
                   items,
                   defaultValue: 'left',
+                  'aria-label': 'Alinhamento do texto',
                 });
                 injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
-                group.setAttribute('aria-label', 'Alinhamento do texto');
-                applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita']);
                 return group;
               },
             },
@@ -675,16 +645,14 @@ const group = createToggleGroup({
   variant: 'outline',
   items,
   defaultValue: 'grid',
+  orientation: 'vertical',
+  'aria-label': 'Modo de visualização',
 });
+// Itens com texto visível dispensam aria-label próprio.
 injectIconsAndText(group, [
   { icon: LayoutGrid, text: 'Grade' },
   { icon: List,       text: 'Lista' },
-]);
-group.setAttribute('aria-label', 'Modo de visualização');
-group.setAttribute('aria-orientation', 'vertical');
-// Divergência Nortear: factory não expõe orientation
-group.classList.remove('flex-row');
-group.classList.add('nds-stack');`,
+]);`,
               previewFactory: () => {
                 const items: ToggleGroupItem[] = [
                   { value: 'grid', children: '' },
@@ -695,15 +663,13 @@ group.classList.add('nds-stack');`,
                   variant: 'outline',
                   items,
                   defaultValue: 'grid',
+                  orientation: 'vertical',
+                  'aria-label': 'Modo de visualização',
                 });
                 injectIconsAndText(group, [
                   { icon: LayoutGrid, text: 'Grade' },
                   { icon: List,       text: 'Lista' },
                 ]);
-                group.setAttribute('aria-label', 'Modo de visualização');
-                group.setAttribute('aria-orientation', 'vertical');
-                group.classList.remove('flex-row');
-                group.classList.add('nds-stack');
                 return group;
               },
             },
@@ -730,12 +696,12 @@ const group = createToggleGroup({
   variant: 'outline',
   items,
   defaultValue: ['compact'],
+  'aria-label': 'Filtros de exibição',
 });
 injectIconsAndText(group, [
   { icon: Eye,  text: 'Ocultos'  },
   { icon: List, text: 'Compacto' },
 ]);
-group.setAttribute('aria-label', 'Filtros de exibição');
 wrapper.appendChild(group);`,
               previewFactory: () => {
                 const wrapper = document.createElement('div');
@@ -757,12 +723,12 @@ wrapper.appendChild(group);`,
                   variant: 'outline',
                   items,
                   defaultValue: ['compact'],
+                  'aria-label': 'Filtros de exibição',
                 });
                 injectIconsAndText(group, [
                   { icon: Eye,  text: 'Ocultos'  },
                   { icon: List, text: 'Compacto' },
                 ]);
-                group.setAttribute('aria-label', 'Filtros de exibição');
                 wrapper.appendChild(group);
                 return wrapper;
               },
@@ -795,13 +761,19 @@ export type ToggleGroupItem = {
   label?: string;
   children?: string;     // SVG ou texto (string literal — sem interpolação dinâmica)
   disabled?: boolean;
+  'aria-label'?: string; // OBRIGATÓRIO em item só de ícone
 };
 
 export type ToggleGroupOptions = {
   type?: 'single' | 'multiple';   // default 'single'
   variant?: 'default' | 'outline'; // default 'default'
+  size?: 'default' | 'sm' | 'lg';
+  orientation?: 'horizontal' | 'vertical';
+  spacing?: number;
+  disabled?: boolean;
   items: ToggleGroupItem[];
   defaultValue?: string | string[];
+  'aria-label'?: string; // OBRIGATÓRIO — nome do role="toolbar"
   onValueChange?: (value: string | string[]) => void;
   class?: string;
 };
@@ -879,35 +851,35 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
                   type: 'boolean',
                   defaultValue: 'false',
                   required: 'Não',
-                  description: toPlainText(t('props.table.disabled.description')) + DIVERGENCE + ' Use `item.disabled` por item.',
+                  description: toPlainText(t('props.table.disabled.description')) + ' Cada item herda; `item.disabled` trava só um.',
                 },
                 {
                   name: 'orientation',
                   type: '"horizontal" | "vertical"',
                   defaultValue: '"horizontal"',
                   required: 'Não',
-                  description: toPlainText(t('props.table.orientation.description')) + DIVERGENCE,
+                  description: toPlainText(t('props.table.orientation.description')),
                 },
                 {
                   name: 'size',
                   type: '"default" | "sm" | "lg"',
                   defaultValue: '"default"',
                   required: 'Não',
-                  description: toPlainText(t('props.table.size.description')) + DIVERGENCE + ' Items usam tamanho padrão do Toggle.',
+                  description: toPlainText(t('props.table.size.description')),
                 },
                 {
                   name: 'spacing',
                   type: 'number',
                   defaultValue: '0',
                   required: 'Não',
-                  description: toPlainText(t('props.table.spacing.description')) + DIVERGENCE + ' Use `gap-*` via prop `class`.',
+                  description: toPlainText(t('props.table.spacing.description')),
                 },
                 {
                   name: 'aria-label',
-                  type: 'string (atributo HTML)',
+                  type: 'string',
                   defaultValue: '—',
-                  required: 'Condicional',
-                  description: 'OBRIGATÓRIO no grupo. Defina via `el.setAttribute("aria-label", ...)` no elemento retornado.',
+                  required: 'Sim',
+                  description: 'Nome acessível do grupo. Um `role="toolbar"` sem nome é anunciado apenas como "barra de ferramentas".',
                 },
               ],
             },
@@ -919,14 +891,14 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
                 { name: 'children', type: 'string',  defaultValue: '—',     required: 'Não', description: 'Conteúdo HTML interno (SVG do ícone com aria-hidden, ou texto). Apenas strings literais — nunca conteúdo dinâmico (XSS).' },
                 { name: 'label',    type: 'string',  defaultValue: '—',     required: 'Não', description: 'Texto alternativo se `children` não for fornecido.' },
                 { name: 'disabled', type: 'boolean', defaultValue: 'false', required: 'Não', description: 'Desabilita interação neste item.' },
-                { name: 'aria-label', type: 'string (atributo HTML)', defaultValue: '—', required: 'Condicional', description: 'OBRIGATÓRIO em items icon-only. Setar via `setAttribute` no botão após criar (factory não expõe).' },
+                { name: 'aria-label', type: 'string', defaultValue: '—', required: 'Condicional', description: 'OBRIGATÓRIO em items só de ícone. Dispensável quando o item tem texto visível.' },
               ],
             },
           ],
           interfaceCode,
           extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
-            'A factory Nortear diverge das libs upstream nos seguintes pontos: (1) é não-controlada — não há prop `value`, apenas `defaultValue`. (2) Não expõe `orientation`, `size`, `spacing`, nem `disabled` no grupo — aplicar via `class`/`setAttribute` ou usar `item.disabled`. (3) `children` é uma string HTML literal — para evitar XSS, NUNCA interpolar dados dinâmicos; gere o SVG via `document.createElementNS` e use `svg.outerHTML`. (4) `aria-label` no grupo e em items icon-only NÃO é prop — aplicar via `setAttribute` no elemento retornado e nos botões `[data-slot="toggle"]`. (5) Não há roving tabindex automático — todos items recebem `tabindex=0` herdado do `<button>`; para roving real, ouvir teclas ArrowLeft/Right e mover foco manualmente.',
+            'A factory Nortear diverge das libs upstream nos seguintes pontos: (1) é não-controlada — não há prop `value`, apenas `defaultValue`. (2) `children` é uma string HTML literal — para evitar XSS, NUNCA interpolar dados dinâmicos; gere o SVG via `document.createElementNS` e use `svg.outerHTML`.',
         });
       }
 
@@ -999,7 +971,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement;`;
             { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // 3ª camada de divergência (notes + DocsProps + composicoes)
-            { title: '', content: DOMPurify.sanitize('<strong>Nortear</strong> — a factory custom <code>createToggleGroup</code> é <strong>não-controlada</strong> (sem prop <code>value</code>); não expõe <code>orientation</code>, <code>size</code>, <code>spacing</code> nem <code>disabled</code> no grupo — aplicar via <code>setAttribute</code>/<code>classList</code>/<code>item.disabled</code>. <code>aria-label</code> no grupo e em items icon-only é OBRIGATÓRIO e deve ser aplicado manualmente via <code>setAttribute</code>. <code>children</code> é string HTML literal — gere o SVG via <code>createElementNS</code> e use <code>outerHTML</code>, NUNCA interpole dados dinâmicos.') },
+            { title: '', content: DOMPurify.sanitize('<strong>Nortear</strong> — a factory custom <code>createToggleGroup</code> é <strong>não-controlada</strong> (sem prop <code>value</code>). O nome do grupo é a opção <code>aria-label</code>, e o de cada item só de ícone é o <code>aria-label</code> do próprio item — ambos OBRIGATÓRIOS. <code>children</code> é string HTML literal — gere o SVG via <code>createElementNS</code> e use <code>outerHTML</code>, NUNCA interpole dados dinâmicos.') },
           ],
         });
 

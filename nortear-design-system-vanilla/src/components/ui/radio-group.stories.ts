@@ -38,7 +38,7 @@ const meta: Meta<RadioGroupArgs> = {
     },
     groupLabel: {
       control: 'text',
-      description: 'Texto que nomeia o grupo — associado por `aria-labelledby`.',
+      description: 'Pergunta do grupo, visível na `<legend>` do fieldset — opção `legend` da factory.',
       table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
     },
   },
@@ -76,18 +76,14 @@ export const Playground: Story = {
       'accessibility.item5',
     ],
   },
-  render: (args) => {
-    const wrap = document.createElement('div');
-    wrap.className = 'nds-stack';
-    wrap.dataset.spacing = 'xs';
-
-    const legend = document.createElement('p');
-    legend.id = 'rg-pg-legend';
-    legend.className = 'nds-text-body nds-font-semibold';
-    legend.textContent = args.groupLabel;
-
-    const group = createRadioGroup({
+  render: (args) =>
+    // A pergunta do grupo é a `<legend>` do próprio `<fieldset>` que a factory
+    // emite. Antes daqui ela era um `<p>` do lado de fora, amarrado por
+    // `aria-labelledby` à mão: um rótulo que o HTML nativo não reconhecia como
+    // tal, e um id repetido em cada story.
+    createRadioGroup({
       name: args.name,
+      legend: args.groupLabel,
       disabled: args.disabled,
       orientation: args.orientation,
       items: [
@@ -95,18 +91,22 @@ export const Playground: Story = {
         { value: 'pix', label: 'Pix' },
         { value: 'boleto', label: 'Boleto bancário' },
       ],
-    });
-    group.setAttribute('aria-labelledby', 'rg-pg-legend');
-
-    wrap.append(legend, group);
-    return wrap;
-  },
+    }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const radios = canvas.getAllByRole('radio') as HTMLElement[];
 
     await step('O grupo é um radiogroup com nome acessível', async () => {
-      await expect(canvas.getByRole('radiogroup', { name: args.groupLabel })).toBeInTheDocument();
+      // A busca por nome já existia e passava — com a story montando o rótulo
+      // por fora. O que ela prova agora é que a OPÇÃO `legend` da factory nomeia
+      // o grupo, e que o nome é VISÍVEL: a legenda é um elemento na tela, não um
+      // atributo invisível.
+      const grupo = canvas.getByRole('radiogroup', { name: args.groupLabel });
+      await expect(grupo).toBeInTheDocument();
+      const legenda = canvasElement.querySelector<HTMLElement>('[data-slot="radio-group-legend"]')!;
+      await expect(legenda).toBeVisible();
+      await expect(legenda).toHaveTextContent(args.groupLabel);
+      await expect(grupo).toHaveAttribute('aria-labelledby', legenda.id);
       await expect(radios).toHaveLength(3);
     });
 

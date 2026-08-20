@@ -21,6 +21,29 @@ export type RadioGroupOptions = {
   name: string;
   items: RadioGroupItem[];
   defaultValue?: string;
+  /**
+   * Pergunta do grupo, VISÍVEL, num `<legend>`.
+   *
+   * É a forma preferida de nomear o grupo, e a única das duas que aparece na
+   * tela: quem vê as opções também lê o que elas respondem. Um rótulo invisível
+   * atende o leitor de tela e deixa a pessoa vidente adivinhando, o que é uma
+   * falha de 3.3.2 (Labels or Instructions) mesmo com o nome acessível correto.
+   *
+   * A fábrica já emite `<fieldset>` — o `<legend>` é o mecanismo NATIVO de
+   * rótulo desse elemento, e é por isso que ele existe aqui e não em stacks
+   * cujo grupo é um `<div>`. Como o papel é sobrescrito para `radiogroup`, o
+   * nome não é deixado ao mapeamento implícito do `<fieldset>`: a legenda ganha
+   * `id` e o grupo aponta para ela por `aria-labelledby`, que vale igual em
+   * qualquer papel.
+   */
+  legend?: string;
+  /**
+   * Nome acessível do grupo quando ele NÃO leva legenda visível — a pergunta
+   * já está dita por um título próximo, ou o grupo é um controle isolado numa
+   * barra. Ignorado quando `legend` é passado: dois nomes concorrentes no mesmo
+   * elemento é o defeito, não a solução.
+   */
+  'aria-label'?: string;
   /** Desabilita o grupo inteiro — equivalente a marcar todos os itens. */
   disabled?: boolean;
   /**
@@ -44,6 +67,22 @@ export function createRadioGroup(options: RadioGroupOptions): HTMLElement {
   // de opções, e cada story teria de repetir o atributo por fora.
   fieldset.setAttribute('role', 'radiogroup');
   if (orientation) fieldset.setAttribute('aria-orientation', orientation);
+
+  // Nome do grupo. A legenda visível ganha do rótulo invisível quando as duas
+  // são passadas, e o `aria-labelledby` é o que carrega o nome: com `role`
+  // sobrescrito para `radiogroup`, o vínculo nativo entre `<fieldset>` e
+  // `<legend>` deixa de ser garantido, e o nome não pode depender disso.
+  if (options.legend) {
+    const legendEl = document.createElement('legend');
+    legendEl.id = `${name}-legend`;
+    legendEl.dataset.slot = 'radio-group-legend';
+    legendEl.className = 'nds-text-body nds-font-medium nds-mb-2';
+    legendEl.textContent = options.legend;
+    fieldset.appendChild(legendEl);
+    fieldset.setAttribute('aria-labelledby', legendEl.id);
+  } else if (options['aria-label']) {
+    fieldset.setAttribute('aria-label', options['aria-label']);
+  }
 
   const isDisabled = (item: RadioGroupItem): boolean => groupDisabled || item.disabled === true;
 

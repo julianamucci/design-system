@@ -82,12 +82,6 @@ function injectIconsAndText(group: HTMLElement, entries: Array<{ icon: unknown; 
   });
 }
 
-function applyItemAriaLabels(group: HTMLElement, labels: string[]): void {
-  group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
-    if (labels[i]) btn.setAttribute('aria-label', labels[i]);
-  });
-}
-
 /**
  * Clica só quando o estado atual não é o desejado. Reexecutar a play no painel
  * Interactions parte do estado que a rodada anterior deixou; um clique cego
@@ -104,23 +98,22 @@ async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
 export const AlignmentBar: Story = {
   render: () => {
     const items: ToggleGroupItem[] = [
-      { value: 'left',   children: '' },
-      { value: 'center', children: '' },
-      { value: 'right',  children: '' },
+      { value: 'left',   children: '', 'aria-label': 'Alinhar à esquerda' },
+      { value: 'center', children: '', 'aria-label': 'Centralizar' },
+      { value: 'right',  children: '', 'aria-label': 'Alinhar à direita' },
     ];
     const group = createToggleGroup({
       type: 'single',
       variant: 'outline',
       items,
       defaultValue: 'left',
+      'aria-label': 'Alinhamento do texto',
       onValueChange: (value) => {
         // Em produção, dispara analytics.track('field_change', { component: 'toggle_group', ... })
         console.log('alignment:', value);
       },
     });
     injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
-    group.setAttribute('aria-label', 'Alinhamento do texto');
-    applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita']);
     return group;
   },
   parameters: {
@@ -162,22 +155,21 @@ export const AlignmentBar: Story = {
 export const FormattingBar: Story = {
   render: () => {
     const items: ToggleGroupItem[] = [
-      { value: 'bold',      children: '' },
-      { value: 'italic',    children: '' },
-      { value: 'underline', children: '' },
+      { value: 'bold',      children: '', 'aria-label': 'Negrito' },
+      { value: 'italic',    children: '', 'aria-label': 'Itálico' },
+      { value: 'underline', children: '', 'aria-label': 'Sublinhado' },
     ];
     const group = createToggleGroup({
       type: 'multiple',
       variant: 'outline',
       items,
       defaultValue: ['bold'],
+      'aria-label': 'Formatação',
       onValueChange: (value) => {
         console.log('formatting:', value); // string[]
       },
     });
     injectIcons(group, [Bold, Italic, Underline]);
-    group.setAttribute('aria-label', 'Formatação');
-    applyItemAriaLabels(group, ['Negrito', 'Itálico', 'Sublinhado']);
     return group;
   },
   parameters: {
@@ -224,12 +216,12 @@ export const ViewMode: Story = {
       orientation: 'vertical',
       items,
       defaultValue: 'grid',
+      'aria-label': 'Modo de visualização',
     });
     injectIconsAndText(group, [
       { icon: LayoutGrid, text: 'Grade' },
       { icon: List,       text: 'Lista' },
     ]);
-    group.setAttribute('aria-label', 'Modo de visualização');
     // Items aqui têm texto visível, então não precisam de aria-label próprio.
     return group;
   },
@@ -270,26 +262,25 @@ export const ViewMode: Story = {
 export const WithDisabledItem: Story = {
   render: () => {
     const items: ToggleGroupItem[] = [
-      { value: 'left',   children: '' },
-      { value: 'center', children: '', disabled: true },
-      { value: 'right',  children: '' },
+      { value: 'left',   children: '', 'aria-label': 'Alinhar à esquerda' },
+      { value: 'center', children: '', disabled: true, 'aria-label': 'Centralizar (indisponível)' },
+      { value: 'right',  children: '', 'aria-label': 'Alinhar à direita' },
     ];
     const group = createToggleGroup({
       type: 'single',
       variant: 'outline',
       items,
       defaultValue: 'left',
+      'aria-label': 'Alinhamento do texto',
     });
     injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
-    group.setAttribute('aria-label', 'Alinhamento do texto');
-    applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar (indisponível)', 'Alinhar à direita']);
     return group;
   },
   parameters: {
     docs: {
       description: {
         story:
-          'Um item desabilitado (via `item.disabled: true`) — útil quando uma opção não se aplica ao contexto. O `aria-label` do item indica explicitamente a indisponibilidade. **Divergência Vanilla**: para desabilitar o grupo inteiro, aplicar `disabled: true` em CADA item (factory não expõe `disabled` no grupo).',
+          'Um item desabilitado (via `item.disabled: true`) — útil quando uma opção não se aplica ao contexto. O `aria-label` do item indica explicitamente a indisponibilidade; para travar o grupo inteiro existe `disabled` no grupo, que cada item herda.',
       },
     },
   },
@@ -329,6 +320,7 @@ export const WithVisibleFilter: Story = {
       spacing: 1,
       items,
       defaultValue: ['compact'],
+      'aria-label': 'Filtros de exibição',
     });
     injectIconsAndText(group, [
       { icon: Eye,  text: 'Ocultos'  },
@@ -337,7 +329,6 @@ export const WithVisibleFilter: Story = {
     group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn) => {
       btn.dataset.variant = 'outline';
     });
-    group.setAttribute('aria-label', 'Filtros de exibição');
     wrapper.appendChild(group);
 
     return wrapper;

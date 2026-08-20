@@ -66,11 +66,6 @@ function makeRichPanel(title: string, description: string): HTMLElement {
   return wrap;
 }
 
-function setLabel(root: HTMLElement, label: string): HTMLElement {
-  root.querySelector('[role="tablist"]')?.setAttribute('aria-label', label);
-  return root;
-}
-
 /** Só clica quando a aba ainda não está selecionada — a play reexecuta no mesmo DOM. */
 async function ativar(aba: HTMLElement): Promise<void> {
   if (aba.getAttribute('aria-selected') !== 'true') await userEvent.click(aba);
@@ -106,7 +101,12 @@ export const WithIconsInTrigger: Story = {
       security: Shield as unknown as LucideIconNode[],
     };
 
-    const root = createTabs({ defaultValue: 'profile', class: 'nds-w-full nds-max-w-lg', items });
+    const root = createTabs({
+      defaultValue: 'profile',
+      class: 'nds-w-full nds-max-w-lg',
+      items,
+      'aria-label': 'Configurações',
+    });
 
     // Substitui textContent do trigger por icon + label (textContent escapa automaticamente).
     items.forEach((item) => {
@@ -123,7 +123,7 @@ export const WithIconsInTrigger: Story = {
       trigger.appendChild(wrapper);
     });
 
-    return setLabel(root, 'Configurações');
+    return root;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -176,7 +176,12 @@ export const WithBadgeInTrigger: Story = {
       spam:  { text: '3',  variant: 'destructive' },
     };
 
-    const root = createTabs({ defaultValue: 'inbox', class: 'nds-w-full nds-max-w-lg', items });
+    const root = createTabs({
+      defaultValue: 'inbox',
+      class: 'nds-w-full nds-max-w-lg',
+      items,
+      'aria-label': 'Caixas de mensagem',
+    });
 
     items.forEach((item) => {
       const badgeCfg = badgeMap[item.value];
@@ -195,7 +200,7 @@ export const WithBadgeInTrigger: Story = {
       trigger.appendChild(wrapper);
     });
 
-    return setLabel(root, 'Caixas de mensagem');
+    return root;
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -235,15 +240,13 @@ export const Vertical: Story = {
     },
   },
   render: () =>
-    setLabel(
-      createTabs({
-        defaultValue: 'profile',
-        orientation: 'vertical',
-        class: 'nds-w-full nds-max-w-lg',
-        items: configItems(),
-      }),
-      'Configurações',
-    ),
+    createTabs({
+      defaultValue: 'profile',
+      orientation: 'vertical',
+      class: 'nds-w-full nds-max-w-lg',
+      items: configItems(),
+      'aria-label': 'Configurações',
+    }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const raiz = canvasElement.querySelector('[data-slot="tabs"]')!;
@@ -288,10 +291,13 @@ export const SubNavigationLine: Story = {
       { value: 'archived', label: 'Arquivados', content: makePanel('Mostrando apenas arquivados.') },
     ];
 
-    return setLabel(
-      createTabs({ defaultValue: 'all', variant: 'line', class: 'nds-w-full nds-max-w-lg', items }),
-      'Filtros de listagem',
-    );
+    return createTabs({
+      defaultValue: 'all',
+      variant: 'line',
+      class: 'nds-w-full nds-max-w-lg',
+      items,
+      'aria-label': 'Filtros de listagem',
+    });
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

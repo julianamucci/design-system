@@ -106,7 +106,7 @@ div role="progressbar" (aria-valuenow, aria-valuemin=0, aria-valuemax=100)
 
 **Regras**:
 - Altura fixa em `--spacing-2` (8px) — é elemento gráfico, não textual
-- `aria-label` obrigatório descrevendo o que está progredindo
+- `aria-label` obrigatório descrevendo o que está progredindo — opção da factory, não retoque no elemento retornado
 - `aria-valuenow` reflete progresso real (não animação visual)
 - Para progresso indeterminado, usar Skeleton ou Spinner — não Progress
 

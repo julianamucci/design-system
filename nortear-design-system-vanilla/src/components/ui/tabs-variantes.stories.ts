@@ -58,8 +58,8 @@ export const Default: Story = {
       defaultValue: 'overview',
       class: 'nds-w-full nds-max-w-md',
       items: items(),
+      'aria-label': 'Seções do componente',
     });
-    root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Seções do componente');
     return root;
   },
   play: async ({ canvasElement, step }) => {
@@ -111,8 +111,8 @@ export const Line: Story = {
       variant: 'line',
       class: 'nds-w-full nds-max-w-md',
       items: items(),
+      'aria-label': 'Seções do componente',
     });
-    root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Seções do componente');
     return root;
   },
   play: async ({ canvasElement }) => {
@@ -150,8 +150,8 @@ export const Vertical: Story = {
       orientation: 'vertical',
       class: 'nds-w-full nds-max-w-md',
       items: items(),
+      'aria-label': 'Seções do componente',
     });
-    root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Seções do componente');
     return root;
   },
   play: async ({ canvasElement }) => {

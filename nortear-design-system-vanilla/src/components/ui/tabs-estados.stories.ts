@@ -39,9 +39,16 @@ function withDisabled(): TabsItemDef[] {
   ];
 }
 
-function setLabel(root: HTMLElement, label = 'Seções do componente'): HTMLElement {
-  root.querySelector('[role="tablist"]')?.setAttribute('aria-label', label);
-  return root;
+const ROTULO_LISTA = 'Seções do componente';
+
+/** O nome da lista de abas vem da opção da factory, não de um retoque no DOM. */
+function grupo(defaultValue: string, items: TabsItemDef[]): HTMLElement {
+  return createTabs({
+    defaultValue,
+    class: 'nds-w-full nds-max-w-md',
+    items,
+    'aria-label': ROTULO_LISTA,
+  });
 }
 
 /** Só clica quando a aba ainda não está selecionada — a play reexecuta no mesmo DOM. */
@@ -53,7 +60,7 @@ async function ativar(aba: HTMLElement): Promise<void> {
 // ─── Default (primeira ativa) ─────────────────────────────────────────────────
 
 export const Default: Story = {
-  render: () => setLabel(createTabs({ defaultValue: 'overview', class: 'nds-w-full nds-max-w-md', items: baseItems() })),
+  render: () => grupo('overview', baseItems()),
   parameters: {
     docs: { description: { story: 'Estado inicial: primeira aba ativa, demais inativas, um único painel visível.' } },
   },
@@ -77,7 +84,7 @@ export const Default: Story = {
 // ─── Active (segunda ativa via defaultValue) ──────────────────────────────────
 
 export const Active: Story = {
-  render: () => setLabel(createTabs({ defaultValue: 'properties', class: 'nds-w-full nds-max-w-md', items: baseItems() })),
+  render: () => grupo('properties', baseItems()),
   parameters: {
     docs: { description: { story: 'Aba ativa escolhida na montagem. O painel visível é o dela, e a seleção não depende de clique.' } },
   },
@@ -104,7 +111,7 @@ export const FocusVisible: Story = {
     covers: ['functional.item4', 'accessibility.item3'],
     docs: { description: { story: 'Foco por teclado: anel visível na aba focada. Roving tabindex — só a aba ativa entra na ordem de Tab, e o Tab seguinte cai no painel.' } },
   },
-  render: () => setLabel(createTabs({ defaultValue: 'overview', class: 'nds-w-full nds-max-w-md', items: baseItems() })),
+  render: () => grupo('overview', baseItems()),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const abas = canvas.getAllByRole('tab');
@@ -141,7 +148,7 @@ export const Disabled: Story = {
       },
     },
   },
-  render: () => setLabel(createTabs({ defaultValue: 'overview', class: 'nds-w-full nds-max-w-md', items: withDisabled() })),
+  render: () => grupo('overview', withDisabled()),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const primeira = canvas.getByRole('tab', { name: 'Visão geral' });

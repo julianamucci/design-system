@@ -38,8 +38,7 @@ export const Determinate: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
-    const bar = createProgress({ value: 42 });
-    bar.setAttribute('aria-label', 'Progresso do upload');
+    const bar = createProgress({ value: 42, 'aria-label': 'Progresso do upload' });
     wrap.appendChild(bar);
     return wrap;
   },
@@ -66,8 +65,7 @@ export const Indeterminate: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
-    const bar = createProgress({ value: null });
-    bar.setAttribute('aria-label', 'Processando…');
+    const bar = createProgress({ value: null, 'aria-label': 'Processando…' });
     wrap.appendChild(bar);
     return wrap;
   },
@@ -113,8 +111,7 @@ export const WithLabel: Story = {
 
     row.append(label, value);
 
-    const bar = createProgress({ value: 42 });
-    bar.setAttribute('aria-label', 'Enviando arquivo');
+    const bar = createProgress({ value: 42, 'aria-label': 'Enviando arquivo' });
 
     wrap.append(row, bar);
     return wrap;
@@ -150,11 +147,17 @@ export const SemanticColor: Story = {
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
     wrap.dataset.spacing = 'sm';
 
-    const ok = createProgress({ value: 100, variant: 'success' });
-    ok.setAttribute('aria-label', 'Sincronização concluída');
+    const ok = createProgress({
+      value: 100,
+      variant: 'success',
+      'aria-label': 'Sincronização concluída',
+    });
 
-    const critico = createProgress({ value: 92, variant: 'destructive' });
-    critico.setAttribute('aria-label', 'Espaço de armazenamento quase esgotado');
+    const critico = createProgress({
+      value: 92,
+      variant: 'destructive',
+      'aria-label': 'Espaço de armazenamento quase esgotado',
+    });
 
     wrap.append(ok, critico);
     return wrap;

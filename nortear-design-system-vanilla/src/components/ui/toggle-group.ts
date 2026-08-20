@@ -11,6 +11,15 @@ export type ToggleGroupItem = {
   label?: string;
   children?: string;
   disabled?: boolean;
+  /**
+   * Nome acessível do item. OBRIGATÓRIO quando o item é só ícone — o caso mais
+   * comum do grupo (alinhamento, formatação, modo de visualização).
+   *
+   * Antes daqui, cada story percorria `[data-slot="toggle"]` depois de
+   * construir e casava rótulo com posição no array: um item inserido no meio
+   * trocava silenciosamente o nome de todos os seguintes.
+   */
+  'aria-label'?: string;
 };
 
 export type ToggleGroupOrientation = 'horizontal' | 'vertical';
@@ -28,6 +37,12 @@ export type ToggleGroupOptions = {
   items: ToggleGroupItem[];
   defaultValue?: string | string[];
   onValueChange?: (value: string | string[]) => void;
+  /**
+   * Nome acessível do grupo. OBRIGATÓRIO: `role="toolbar"` sem nome é anunciado
+   * como "barra de ferramentas" e nada mais, e duas barras na mesma página
+   * ficam indistinguíveis para quem navega por leitor de tela.
+   */
+  'aria-label'?: string;
   class?: string;
 };
 
@@ -54,6 +69,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
   if (variant !== 'default') root.dataset.variant = variant;
   if (size !== 'default') root.dataset.size = size;
   root.setAttribute('role', 'toolbar');
+  if (options['aria-label']) root.setAttribute('aria-label', options['aria-label']);
 
   // A folha compartilhada lê `data-orientation` para empilhar e `data-spacing`
   // + `--gap` para o espaçamento; `aria-orientation` conta a mesma coisa a
@@ -80,6 +96,7 @@ export function createToggleGroup(options: ToggleGroupOptions): HTMLElement {
       disabled: disabled || item.disabled,
       variant,
       size,
+      'aria-label': item['aria-label'],
       children: item.children ?? item.label ?? item.value,
       onClick: () => {
         const isActive = activeValues.has(item.value);

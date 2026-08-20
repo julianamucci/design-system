@@ -88,11 +88,15 @@ function frame(child: HTMLElement, altura = '320px'): HTMLElement {
   return wrap;
 }
 
-function labelHandles(root: HTMLElement, label: string): void {
-  root.querySelectorAll<HTMLElement>('[data-slot="resizable-handle"]').forEach((h, i, arr) => {
-    const suffix = arr.length > 1 ? ` (${i + 1}/${arr.length})` : '';
-    h.setAttribute('aria-label', `${label}${suffix} — use setas para ajustar`);
-  });
+/**
+ * Nome de cada divisor, na ordem em que aparecem no grupo.
+ *
+ * O nome nomeia o PAR de painéis que o divisor move — dois separadores com o
+ * mesmo texto são dois controles indistinguíveis na lista do leitor de tela, e
+ * era isso que a numeração "(1/2)" tapava.
+ */
+function rotulos(...pares: string[]): string[] {
+  return pares.map((par) => `Redimensionar ${par} — use setas para ajustar`);
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
@@ -113,12 +117,12 @@ export const EditorWithPreview: Story = {
     const root = createResizablePanel({
       direction: 'horizontal',
       withHandle: true,
+      'aria-label': rotulos('Editor e Preview'),
       panels: [
         { defaultSize: 50, minSize: 25, content: editor },
         { defaultSize: 50, minSize: 25, content: preview },
       ],
     });
-    labelHandles(root, 'Redimensionar Editor e Preview');
     return frame(root, '300px');
   },
   play: async ({ canvasElement, step }) => {
@@ -152,6 +156,7 @@ export const SidebarWithContentAndConsole: Story = {
     const right = createResizablePanel({
       direction: 'vertical',
       withHandle: true,
+      'aria-label': rotulos('Conteúdo e Console'),
       panels: [
         { defaultSize: 70, minSize: 30, content },
         { defaultSize: 30, minSize: 15, content: console_ },
@@ -165,12 +170,12 @@ export const SidebarWithContentAndConsole: Story = {
     const root = createResizablePanel({
       direction: 'horizontal',
       withHandle: true,
+      'aria-label': rotulos('Arquivos e área principal'),
       panels: [
         { defaultSize: 25, minSize: 15, content: sidebar },
         { defaultSize: 75, minSize: 40, content: rightWrap },
       ],
     });
-    labelHandles(root, 'Redimensionar painel');
     return frame(root, '360px');
   },
   play: async ({ canvasElement, step }) => {
@@ -205,12 +210,12 @@ export const ListDetail: Story = {
     const root = createResizablePanel({
       direction: 'horizontal',
       withHandle: true,
+      'aria-label': rotulos('Lista e Detalhe'),
       panels: [
         { defaultSize: 35, minSize: 20, content: list },
         { defaultSize: 65, minSize: 35, content: detail },
       ],
     });
-    labelHandles(root, 'Redimensionar Lista e Detalhe');
     return frame(root, '300px');
   },
   play: async ({ canvasElement, step }) => {
@@ -239,13 +244,16 @@ export const ThreeColumns: Story = {
     const root = createResizablePanel({
       direction: 'horizontal',
       withHandle: true,
+      // Um nome por divisor: o primeiro move Navegação/Conteúdo, o segundo
+      // Conteúdo/Metadados. São duas colunas diferentes, e o leitor de tela
+      // precisa poder distingui-las.
+      'aria-label': rotulos('a coluna Navegação', 'a coluna Metadados'),
       panels: [
         { defaultSize: 20, minSize: 12, content: nav },
         { defaultSize: 55, minSize: 30, content },
         { defaultSize: 25, minSize: 15, content: meta_ },
       ],
     });
-    labelHandles(root, 'Redimensionar coluna');
     return frame(root, '300px');
   },
   play: async ({ canvasElement, step }) => {

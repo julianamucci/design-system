@@ -55,21 +55,15 @@ function injectIcons(group: HTMLElement, icons: unknown[]): void {
   });
 }
 
-function applyItemAriaLabels(group: HTMLElement, labels: string[]): void {
-  group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
-    if (labels[i]) btn.setAttribute('aria-label', labels[i]);
-  });
-}
-
 function makeAlignmentGroup(opts: {
   defaultValue?: string;
   disabledAll?: boolean;
   disabledIndex?: number;
 }): HTMLElement {
   const items: ToggleGroupItem[] = [
-    { value: 'left',   children: '', disabled: opts.disabledIndex === 0 },
-    { value: 'center', children: '', disabled: opts.disabledIndex === 1 },
-    { value: 'right',  children: '', disabled: opts.disabledIndex === 2 },
+    { value: 'left',   children: '', disabled: opts.disabledIndex === 0, 'aria-label': 'Alinhar à esquerda' },
+    { value: 'center', children: '', disabled: opts.disabledIndex === 1, 'aria-label': 'Centralizar' },
+    { value: 'right',  children: '', disabled: opts.disabledIndex === 2, 'aria-label': 'Alinhar à direita' },
   ];
   const group = createToggleGroup({
     type: 'single',
@@ -77,10 +71,9 @@ function makeAlignmentGroup(opts: {
     items,
     disabled: opts.disabledAll,
     defaultValue: opts.defaultValue,
+    'aria-label': 'Alinhamento do texto',
   });
   injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
-  group.setAttribute('aria-label', 'Alinhamento do texto');
-  applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita']);
   return group;
 }
 

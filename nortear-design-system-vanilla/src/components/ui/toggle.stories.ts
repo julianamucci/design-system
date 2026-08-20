@@ -123,10 +123,10 @@ function buildPlaygroundToggle(args: ToggleArgs): HTMLElement {
     size: args.size,
     onClick: args.onClick,
     children,
+    // Nome acessível vem do rótulo quando não há texto visível — opção da
+    // factory, e não um `setAttribute` depois de construir.
+    'aria-label': args.label ? undefined : args.ariaLabel || undefined,
   });
-
-  // Nome acessível vem do rótulo quando não há texto visível.
-  if (!args.label && args.ariaLabel) btn.setAttribute('aria-label', args.ariaLabel);
 
   return btn;
 }
@@ -166,6 +166,9 @@ export const Playground: Story = {
     await step('O nome acessível existe nos dois modos', async () => {
       const nome = args.label ? btn.textContent?.trim() : btn.getAttribute('aria-label');
       await expect(nome).toBeTruthy();
+      // Sem texto visível, o nome só pode vir da OPÇÃO `aria-label`: é ela que
+      // tem de produzir o atributo, e não um retoque no elemento retornado.
+      if (!args.label) await expect(btn).toHaveAttribute('aria-label', args.ariaLabel);
       // Ícone decorativo: quem lê a tela não deve ouvi-lo duas vezes.
       await expect(btn.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     });

@@ -65,12 +65,6 @@ function injectIcons(group: HTMLElement, icons: unknown[]): void {
   });
 }
 
-function applyItemAriaLabels(group: HTMLElement, labels: string[]): void {
-  group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
-    if (labels[i]) btn.setAttribute('aria-label', labels[i]);
-  });
-}
-
 /**
  * Clica só quando o estado atual não é o desejado. Reexecutar a play no painel
  * Interactions parte do estado que a rodada anterior deixou; um clique cego
@@ -87,19 +81,18 @@ async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
 export const Single: Story = {
   render: () => {
     const items: ToggleGroupItem[] = [
-      { value: 'left',   children: '' },
-      { value: 'center', children: '' },
-      { value: 'right',  children: '' },
+      { value: 'left',   children: '', 'aria-label': 'Alinhar à esquerda' },
+      { value: 'center', children: '', 'aria-label': 'Centralizar' },
+      { value: 'right',  children: '', 'aria-label': 'Alinhar à direita' },
     ];
     const group = createToggleGroup({
       type: 'single',
       variant: 'outline',
       items,
       defaultValue: 'left',
+      'aria-label': 'Alinhamento do texto',
     });
     injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
-    group.setAttribute('aria-label', 'Alinhamento do texto');
-    applyItemAriaLabels(group, ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita']);
     return group;
   },
   parameters: {
@@ -149,19 +142,18 @@ export const Single: Story = {
 export const Multiple: Story = {
   render: () => {
     const items: ToggleGroupItem[] = [
-      { value: 'bold',      children: '' },
-      { value: 'italic',    children: '' },
-      { value: 'underline', children: '' },
+      { value: 'bold',      children: '', 'aria-label': 'Negrito' },
+      { value: 'italic',    children: '', 'aria-label': 'Itálico' },
+      { value: 'underline', children: '', 'aria-label': 'Sublinhado' },
     ];
     const group = createToggleGroup({
       type: 'multiple',
       variant: 'outline',
       items,
       defaultValue: ['bold', 'italic'],
+      'aria-label': 'Formatação',
     });
     injectIcons(group, [Bold, Italic, Underline]);
-    group.setAttribute('aria-label', 'Formatação');
-    applyItemAriaLabels(group, ['Negrito', 'Itálico', 'Sublinhado']);
     return group;
   },
   parameters: {
@@ -209,8 +201,8 @@ export const Multiple: Story = {
 export const Vertical: Story = {
   render: () => {
     const items: ToggleGroupItem[] = [
-      { value: 'grid', children: '' },
-      { value: 'list', children: '' },
+      { value: 'grid', children: '', 'aria-label': 'Grade' },
+      { value: 'list', children: '', 'aria-label': 'Lista' },
     ];
     const group = createToggleGroup({
       type: 'single',
@@ -218,10 +210,9 @@ export const Vertical: Story = {
       orientation: 'vertical',
       items,
       defaultValue: 'grid',
+      'aria-label': 'Modo de visualização',
     });
     injectIcons(group, [LayoutGrid, List]);
-    group.setAttribute('aria-label', 'Modo de visualização');
-    applyItemAriaLabels(group, ['Grade', 'Lista']);
     return group;
   },
   parameters: {

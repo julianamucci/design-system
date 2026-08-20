@@ -59,15 +59,14 @@ function iconToggle(opts: {
   const filhos = opts.texto
     ? [buildLucideSvg(opts.icon), opts.texto]
     : [buildLucideSvg(opts.icon)];
-  const btn = createToggle({
+  return createToggle({
     pressed: opts.pressed ?? false,
     variant: opts.variant ?? 'default',
     size: opts.size ?? 'default',
     children: filhos,
+    // Texto visível dispensa aria-label — o leitor usa o conteúdo do botão.
+    'aria-label': opts.ariaLabel,
   });
-  // Texto visível dispensa aria-label — o leitor usa o conteúdo do botão.
-  if (opts.ariaLabel) btn.setAttribute('aria-label', opts.ariaLabel);
-  return btn;
 }
 
 function cluster(...filhos: HTMLElement[]): HTMLElement {

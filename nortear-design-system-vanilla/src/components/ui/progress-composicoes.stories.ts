@@ -33,9 +33,7 @@ type Story = StoryObj;
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function buildBar(value: number, ariaLabel: string, variant?: ProgressVariant): HTMLElement {
-  const bar = createProgress({ value, variant });
-  bar.setAttribute('aria-label', ariaLabel);
-  return bar;
+  return createProgress({ value, variant, 'aria-label': ariaLabel });
 }
 
 function buildLabeled(opts: {

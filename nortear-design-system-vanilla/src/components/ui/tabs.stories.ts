@@ -88,9 +88,10 @@ export const Playground: Story = {
       defaultValue: args.defaultValue,
       class: 'nds-w-full nds-max-w-lg',
       items: buildItems(),
+      // ARIA: nome da lista de abas, OBRIGATÓRIO. A opção escreve no
+      // `role="tablist"`, que é o elemento que o leitor de tela anuncia.
+      'aria-label': args.ariaLabel,
     });
-    // ARIA: aria-label OBRIGATÓRIO no TabsList.
-    root.querySelector('[role="tablist"]')?.setAttribute('aria-label', args.ariaLabel);
     return root;
   },
   play: async ({ canvasElement, args, step }) => {
@@ -103,6 +104,8 @@ export const Playground: Story = {
     const primeira = canvas.getByRole('tab', { name: ROTULOS.overview });
 
     await step('Os três papéis do padrão tabs estão no DOM', async () => {
+      // A asserção já existia e passava — com a story escrevendo o atributo por
+      // fora. O que ela prova agora é que a OPÇÃO da factory chega ao tablist.
       await expect(lista).toHaveAttribute('aria-label', args.ariaLabel);
       await expect(abas).toHaveLength(3);
       // Só o painel da aba ativa está na árvore de acessibilidade — os demais

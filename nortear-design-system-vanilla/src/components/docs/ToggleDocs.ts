@@ -103,6 +103,7 @@ function buildIconToggle(opts: {
     variant: opts.variant ?? 'default',
     size: opts.size ?? 'default',
     children: wrapIcon(opts.icon),
+    'aria-label': opts.ariaLabel,
   };
   if (opts.fieldName) {
     toggleOpts.onClick = (pressed) => {
@@ -114,9 +115,7 @@ function buildIconToggle(opts: {
       });
     };
   }
-  const btn = createToggle(toggleOpts);
-  btn.setAttribute('aria-label', opts.ariaLabel);
-  return btn;
+  return createToggle(toggleOpts);
 }
 
 function buildLabelToggle(opts: {
@@ -416,9 +415,9 @@ const toggle = createToggle({
   variant: 'default',
   size: 'default',
   children: icon,
+  'aria-label': 'Negrito',
   onClick: (pressed) => console.log('pressed:', pressed),
-});
-toggle.setAttribute('aria-label', 'Negrito');`,
+});`,
         });
 
       case 'variantes': {
@@ -434,8 +433,8 @@ toggle.setAttribute('aria-label', 'Negrito');`,
               code: `const t = createToggle({
   variant: 'default',
   children: iconBold,
-});
-t.setAttribute('aria-label', 'Negrito');`,
+  'aria-label': 'Negrito',
+});`,
               previewFactory: () => buildIconToggle({
                 icon: Bold,
                 ariaLabel: stripHtml(t('demonstration.labels.bold')),
@@ -449,8 +448,8 @@ t.setAttribute('aria-label', 'Negrito');`,
               code: `const t = createToggle({
   variant: 'outline',
   children: iconItalic,
-});
-t.setAttribute('aria-label', 'Itálico');`,
+  'aria-label': 'Itálico',
+});`,
               previewFactory: () => buildIconToggle({
                 icon: Italic,
                 ariaLabel: stripHtml(t('demonstration.labels.italic')),
@@ -486,17 +485,14 @@ const t = createToggle({ variant: 'outline', children: wrap });`,
 row.className = 'nds-cluster';
 row.dataset.spacing = 'sm';
 
-const sm = createToggle({ variant: 'outline', size: 'sm', children: wrapIcon(Bold) });
-sm.setAttribute('aria-label', 'Negrito (sm)');
-row.appendChild(sm);
-
-const md = createToggle({ variant: 'outline', size: 'default', children: wrapIcon(Bold) });
-md.setAttribute('aria-label', 'Negrito (default)');
-row.appendChild(md);
-
-const lg = createToggle({ variant: 'outline', size: 'lg', children: wrapIcon(Bold) });
-lg.setAttribute('aria-label', 'Negrito (lg)');
-row.appendChild(lg);`,
+for (const size of ['sm', 'default', 'lg'] as const) {
+  row.appendChild(createToggle({
+    variant: 'outline',
+    size,
+    children: wrapIcon(Bold),
+    'aria-label': \`Negrito (\${size})\`,
+  }));
+}`,
               previewFactory: () => {
                 const row = document.createElement('div');
                 row.className = 'nds-cluster';
@@ -527,17 +523,19 @@ toolbar.setAttribute('aria-label', 'Formatação de texto');
 toolbar.className = 'nds-cluster nds-rounded-md nds-border-default nds-p-1';
 toolbar.dataset.spacing = 'xs';
 
-const bold = createToggle({ pressed: true, children: wrapIcon(Bold) });
-bold.setAttribute('aria-label', 'Negrito');
-toolbar.appendChild(bold);
-
-const italic = createToggle({ children: wrapIcon(Italic) });
-italic.setAttribute('aria-label', 'Itálico');
-toolbar.appendChild(italic);
-
-const underline = createToggle({ children: wrapIcon(Underline) });
-underline.setAttribute('aria-label', 'Sublinhado');
-toolbar.appendChild(underline);`,
+toolbar.appendChild(createToggle({
+  pressed: true,
+  children: wrapIcon(Bold),
+  'aria-label': 'Negrito',
+}));
+toolbar.appendChild(createToggle({
+  children: wrapIcon(Italic),
+  'aria-label': 'Itálico',
+}));
+toolbar.appendChild(createToggle({
+  children: wrapIcon(Underline),
+  'aria-label': 'Sublinhado',
+}));`,
               previewFactory: () => {
                 const toolbar = document.createElement('div');
                 toolbar.setAttribute('role', 'group');
@@ -641,8 +639,10 @@ export type ToggleOptions = {
   variant?: ToggleVariant;
   size?: ToggleSize;
   class?: string;
+  /** Accessible name — REQUIRED for icon-only toggles. */
+  'aria-label'?: string;
   onClick?: (pressed: boolean) => void;
-  children?: HTMLElement | string;
+  children?: ToggleChild | ToggleChild[];
 };`;
 
         const propsCols = {
@@ -710,14 +710,14 @@ export type ToggleOptions = {
                   type: 'HTMLElement | string',
                   defaultValue: '—',
                   required: 'Não',
-                  description: 'Conteúdo interno (ícone SVG com `aria-hidden="true"` e/ou texto). Em icon-only, defina `aria-label` no botão retornado.',
+                  description: 'Conteúdo interno (ícone SVG com `aria-hidden="true"` e/ou texto). Em icon-only, o nome vem de `aria-label`.',
                 },
                 {
                   name: 'aria-label',
-                  type: 'string (atributo HTML)',
+                  type: 'string',
                   defaultValue: '—',
                   required: 'Condicional',
-                  description: 'OBRIGATÓRIO em toggles icon-only. Defina via `el.setAttribute("aria-label", ...)` no botão retornado pelo factory (não é prop do options).',
+                  description: 'OBRIGATÓRIO em toggles icon-only — sem ele o leitor de tela anuncia "pressionado" sem dizer o quê. Dispensável quando há texto visível dentro do botão.',
                 },
               ],
             },
@@ -725,7 +725,7 @@ export type ToggleOptions = {
           interfaceCode,
           extensibilityTitle: 'Divergências da factory custom (Nortear)',
           extensibilityNotes:
-            'O factory custom diverge das libs upstream nos seguintes pontos: (1) o callback de mudança chama-se `onClick` (não `onPressedChange`). (2) É não-controlado: `pressed` define apenas o valor inicial — o estado vive internamente. (3) Não há prop `defaultPressed` separada — use `pressed` como inicial. (4) `aria-label` não é prop do options; aplique via `setAttribute` no `<button>` retornado. (5) O factory já aplica `aria-pressed` e `data-state` automaticamente no click — não duplique a lógica externamente.',
+            'O factory custom diverge das libs upstream nos seguintes pontos: (1) o callback de mudança chama-se `onClick` (não `onPressedChange`). (2) É não-controlado: `pressed` define apenas o valor inicial — o estado vive internamente. (3) Não há prop `defaultPressed` separada — use `pressed` como inicial. (4) O factory já aplica `aria-pressed` e `data-state` automaticamente no click — não duplique a lógica externamente.',
         });
       }
 
@@ -799,7 +799,7 @@ export type ToggleOptions = {
             { title: '', content: DOMPurify.sanitize(t('notes.item3')) },
             { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // Divergência idiomática Nortear
-            { title: '', content: DOMPurify.sanitize('<strong>Nortear</strong> — o factory custom expõe o callback como <code>onClick(pressed)</code> em vez de <code>onPressedChange</code>; é não-controlado (<code>pressed</code> é só estado inicial); <code>aria-label</code> não é prop do options — aplique via <code>setAttribute</code> no <code>&lt;button&gt;</code> retornado. O factory já gerencia <code>aria-pressed</code> e <code>data-state</code> automaticamente.') },
+            { title: '', content: DOMPurify.sanitize('<strong>Nortear</strong> — o factory custom expõe o callback como <code>onClick(pressed)</code> em vez de <code>onPressedChange</code> e é não-controlado (<code>pressed</code> é só estado inicial). O factory já gerencia <code>aria-pressed</code> e <code>data-state</code> automaticamente.') },
           ],
         });
 

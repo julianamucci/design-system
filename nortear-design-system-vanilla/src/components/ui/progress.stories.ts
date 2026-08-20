@@ -40,7 +40,7 @@ const meta: Meta<ProgressArgs> = {
     },
     ariaLabel: {
       control: 'text',
-      description: 'Texto descrevendo o que está sendo medido. Obrigatório — setado pela aplicação via setAttribute.',
+      description: 'Texto descrevendo o que está sendo medido. Obrigatório — opção `aria-label` da factory.',
       table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
     },
   },
@@ -68,8 +68,8 @@ export const Playground: Story = {
       value: args.value,
       max: args.max,
       variant: args.variant || undefined,
+      'aria-label': args.ariaLabel,
     });
-    bar.setAttribute('aria-label', args.ariaLabel);
     container.appendChild(bar);
     return container;
   },
@@ -77,8 +77,12 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
 
     await step('A raiz é anunciada como barra de progresso, com nome próprio', async () => {
+      // O nome vem da OPÇÃO `aria-label` da factory. A asserção já existia, mas
+      // passava com a story escrevendo o atributo por fora depois de construir:
+      // o buraco era da fábrica, e o teste não tinha como vê-lo.
       const bar = canvas.getByRole('progressbar', { name: args.ariaLabel });
       await expect(bar).toHaveAttribute('data-slot', 'progress');
+      await expect(bar).toHaveAttribute('aria-label', args.ariaLabel);
     });
 
     await step('A escala inteira chega ao leitor de tela', async () => {

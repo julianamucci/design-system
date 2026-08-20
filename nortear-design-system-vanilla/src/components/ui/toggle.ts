@@ -16,6 +16,16 @@ export type ToggleOptions = {
   class?: string;
   onClick?: (pressed: boolean) => void;
   /**
+   * Nome acessível do botão. OBRIGATÓRIO no toggle só de ícone — que é o caso
+   * canônico deste componente: sem texto visível, `aria-pressed` sozinho faz o
+   * leitor de tela anunciar "pressionado" sem dizer o quê.
+   *
+   * Existe como opção, e não como `setAttribute` depois de construir, porque o
+   * contorno some na primeira refatoração e leva o nome junto — em silêncio,
+   * porque nada na tela muda.
+   */
+  'aria-label'?: string;
+  /**
    * Filhos diretos do botão. Aceita lista porque o caso com rótulo é ícone
    * MAIS texto lado a lado — e os dois precisam ser filhos DIRETOS: o espaço
    * entre eles vem do `gap` do próprio `.nds-toggle`, e a medida do ícone da
@@ -41,6 +51,7 @@ export function createToggle(options: ToggleOptions = {}): HTMLButtonElement {
   btn.setAttribute('aria-pressed', String(pressed));
   btn.dataset.state = pressed ? 'on' : 'off';
 
+  if (options['aria-label']) btn.setAttribute('aria-label', options['aria-label']);
   if (disabled) btn.disabled = true;
 
   if (options.children) {

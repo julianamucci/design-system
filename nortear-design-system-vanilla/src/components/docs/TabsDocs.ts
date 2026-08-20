@@ -127,6 +127,8 @@ function buildDemoTabs(): HTMLElement {
     defaultValue: 'overview',
     items,
     class: 'nds-w-full',
+    // ARIA: nome da lista de abas, OBRIGATÓRIO.
+    'aria-label': t('demonstration.title'),
     onValueChange: (value) => {
       const idx = items.findIndex((i) => i.value === value);
       track('tab_change', {
@@ -138,9 +140,6 @@ function buildDemoTabs(): HTMLElement {
       });
     },
   });
-  // ARIA: aria-label OBRIGATÓRIO no tablist (factory não exige; setamos aqui).
-  const list = root.querySelector('[role="tablist"]');
-  if (list) list.setAttribute('aria-label', t('demonstration.title'));
   return root;
 }
 
@@ -316,12 +315,12 @@ export function createTabsDocs(): HTMLElement {
                 const r = createTabs({
                   defaultValue: 'overview',
                   class: 'nds-w-full nds-max-w-xs',
+                  'aria-label': 'Seções',
                   items: [
                     { value: 'overview',   label: 'Visão geral',  content: textPanel('Conteúdo.') },
                     { value: 'properties', label: 'Propriedades', content: textPanel('Conteúdo.') },
                   ],
                 });
-                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Seções');
                 return r;
               },
               dontPreviewFactory: () => {
@@ -346,13 +345,13 @@ export function createTabsDocs(): HTMLElement {
                 const r = createTabs({
                   defaultValue: 'profile',
                   class: 'nds-w-full nds-max-w-xs',
+                  'aria-label': 'Configurações',
                   items: [
                     { value: 'profile',  label: 'Perfil',  content: textPanel('Conteúdo.') },
                     { value: 'account',  label: 'Conta',   content: textPanel('Conteúdo.') },
                     { value: 'security', label: 'Segurança', content: textPanel('Conteúdo.') },
                   ],
                 });
-                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Configurações');
                 return r;
               },
               dontPreviewFactory: () => {
@@ -413,13 +412,13 @@ export function createTabsDocs(): HTMLElement {
                 const r = createTabs({
                   defaultValue: 'overview',
                   class: 'nds-w-full nds-max-w-md',
+                  'aria-label': t('demonstration.title'),
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
                     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
                     { value: 'examples',   label: t('demonstration.labels.examples'),   content: textPanel(t('demonstration.labels.examplesContent')) },
                   ],
                 });
-                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', t('demonstration.title'));
                 return r;
               },
             },
@@ -432,13 +431,13 @@ export function createTabsDocs(): HTMLElement {
                   defaultValue: 'overview',
                   variant: 'line',
                   class: 'nds-w-full nds-max-w-md',
+                  'aria-label': t('demonstration.title'),
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
                     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
                     { value: 'examples',   label: t('demonstration.labels.examples'),   content: textPanel(t('demonstration.labels.examplesContent')) },
                   ],
                 });
-                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', t('demonstration.title'));
                 return r;
               },
             },
@@ -451,13 +450,13 @@ export function createTabsDocs(): HTMLElement {
                   defaultValue: 'overview',
                   orientation: 'vertical',
                   class: 'nds-w-full nds-max-w-md',
+                  'aria-label': t('demonstration.title'),
                   items: [
                     { value: 'overview',   label: t('demonstration.labels.overview'),   content: textPanel(t('demonstration.labels.overviewContent')) },
                     { value: 'properties', label: t('demonstration.labels.properties'), content: textPanel(t('demonstration.labels.propertiesContent')) },
                     { value: 'examples',   label: t('demonstration.labels.examples'),   content: textPanel(t('demonstration.labels.examplesContent')) },
                   ],
                 });
-                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', t('demonstration.title'));
                 return r;
               },
             },
@@ -472,7 +471,12 @@ export function createTabsDocs(): HTMLElement {
   { value: 'account',  label: 'Conta',     content: panelEl },
   { value: 'security', label: 'Segurança', content: panelEl },
 ];
-const root = createTabs({ defaultValue: 'profile', class: 'nds-w-full', items });
+const root = createTabs({
+  defaultValue: 'profile',
+  class: 'nds-w-full',
+  'aria-label': 'Configurações',
+  items,
+});
 // Substitui textContent do trigger por icon + label
 items.forEach((item) => {
   const trigger = root.querySelector(\`[role="tab"][data-value="\${item.value}"]\`);
@@ -485,8 +489,7 @@ items.forEach((item) => {
   label.textContent = item.label;
   wrapper.appendChild(label);
   trigger.appendChild(wrapper);
-});
-root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Configurações');`;
+});`;
 
         const codeBadgeTrigger =
 `const items = [
@@ -494,7 +497,12 @@ root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Configuraç�
   { value: 'spam',  label: 'Spam',             content: panelEl },
   { value: 'trash', label: 'Lixeira',          content: panelEl },
 ];
-const root = createTabs({ defaultValue: 'inbox', class: 'nds-w-full', items });
+const root = createTabs({
+  defaultValue: 'inbox',
+  class: 'nds-w-full',
+  'aria-label': 'Caixas de mensagem',
+  items,
+});
 const badgeMap = {
   inbox: { text: '12', variant: 'default' as const },
   spam:  { text: '3',  variant: 'destructive' as const },
@@ -510,8 +518,7 @@ Object.entries(badgeMap).forEach(([value, cfg]) => {
   labelEl.textContent = labelText;
   wrapper.append(labelEl, createBadge({ text: cfg.text, variant: cfg.variant, className: 'text-[10px] h-4' }));
   trigger.appendChild(wrapper);
-});
-root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de mensagem');`;
+});`;
 
         return createDocsCompositions({
           title: t('variants.compositionsTitle'),
@@ -534,7 +541,12 @@ root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de me
                   account: iconSettings,
                   security: iconShield,
                 };
-                const r = createTabs({ defaultValue: 'profile', class: 'nds-w-full', items });
+                const r = createTabs({
+                  defaultValue: 'profile',
+                  class: 'nds-w-full',
+                  'aria-label': 'Configurações',
+                  items,
+                });
                 items.forEach((item) => {
                   const trigger = r.querySelector<HTMLButtonElement>(`[role="tab"][data-value="${item.value}"]`);
                   if (!trigger) return;
@@ -548,7 +560,6 @@ root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de me
                   wrapper.appendChild(label);
                   trigger.appendChild(wrapper);
                 });
-                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Configurações');
                 return r;
               },
             },
@@ -567,7 +578,12 @@ root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de me
                   inbox: { text: '12', variant: 'default' },
                   spam:  { text: '3',  variant: 'destructive' },
                 };
-                const r = createTabs({ defaultValue: 'inbox', class: 'nds-w-full', items });
+                const r = createTabs({
+                  defaultValue: 'inbox',
+                  class: 'nds-w-full',
+                  'aria-label': 'Caixas de mensagem',
+                  items,
+                });
                 items.forEach((item) => {
                   const cfg = badgeMap[item.value];
                   if (!cfg) return;
@@ -584,7 +600,6 @@ root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de me
                   wrapper.append(labelEl, badge);
                   trigger.appendChild(wrapper);
                 });
-                r.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de mensagem');
                 return r;
               },
             },
@@ -621,6 +636,10 @@ root.querySelector('[role="tablist"]')?.setAttribute('aria-label', 'Caixas de me
 export type TabsOptions = {
   defaultValue: string;
   items: TabsItemDef[];
+  variant?: 'default' | 'line';
+  orientation?: 'horizontal' | 'vertical';
+  /** Accessible name of the tablist — REQUIRED. */
+  'aria-label'?: string;
   onValueChange?: (value: string) => void;
   class?: string;
 };
@@ -654,6 +673,7 @@ export function createTabs(options: TabsOptions): HTMLElement;`;
                 { name: 'orientation',  type: '"horizontal" | "vertical"',    defaultValue: '"horizontal"', required: 'Não', description: toPlainText(t('props.table.orientation.description')) + ' Também define o par de setas que navega: horizontal usa esquerda/direita, vertical usa cima/baixo.' },
                 { name: 'activationMode', type: '"automatic" | "manual"',     defaultValue: '"automatic"', required: 'Não', description: toPlainText(t('props.table.activationMode.description')) + ' Nortear: apenas "automatic" implementado.' },
                 { name: 'variant',      type: '"default" | "line"',           defaultValue: '"default"', required: 'Não', description: toPlainText(t('props.table.variant.description')) },
+                { name: 'aria-label',   type: 'string',                       defaultValue: '—',         required: 'Sim', description: 'Nome acessível da lista de abas. Sem ele o conjunto é anunciado apenas como "lista de abas".' },
               ],
             },
             {

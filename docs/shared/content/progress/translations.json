@@ -33,7 +33,7 @@
         "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Enviando arquivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>",
         "vue": "<!-- Raiz + indicador: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  :model-value=\"42\"              <!-- null ativa o modo indeterminado -->\n  :max=\"100\"\n  aria-label=\"Enviando arquivo\"  <!-- o nome vem daqui: não há slot de rótulo -->\n/>",
         "svelte": "<!-- Raiz + indicador: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  value={42}                     <!-- null ativa o modo indeterminado -->\n  max={100}\n  aria-label=\"Enviando arquivo\"  <!-- o nome vem daqui: não há slot de rótulo -->\n/>",
-        "vanilla": "// Raiz + indicador: div[data-slot=\"progress\"] > .nds-progress-indicator\nconst barra = createProgress({\n  value: 42,          // null ativa o modo indeterminado\n  max: 100,\n  variant: 'success', // ausente, a barra usa o primário\n});\n\n// O nome vem de fora: a factory não tem slot de rótulo nem de valor.\nbarra.setAttribute('aria-label', 'Enviando arquivo');"
+        "vanilla": "// Raiz + indicador: div[data-slot=\"progress\"] > .nds-progress-indicator\nconst barra = createProgress({\n  value: 42,          // null ativa o modo indeterminado\n  max: 100,\n  variant: 'success', // ausente, a barra usa o primário\n  // Obrigatório: sem nome, a barra é anunciada só como percentual.\n  'aria-label': 'Enviando arquivo',\n});"
       }
     },
     "usage": {
@@ -225,7 +225,7 @@
         "react": "// Cor semântica da barra\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronização\" />\n\n// Texto acessível customizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 arquivos processados`}\n/>",
         "vue": "<!-- Cor semântica da barra -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sincronização\" />\n\n<!-- Texto acessível customizado -->\n<Progress\n  :model-value=\"42\"\n  :get-value-text=\"(v) => `${v} de 100 arquivos processados`\"\n/>",
         "svelte": "<!-- Cor semântica da barra -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronização\" />",
-        "vanilla": "// Cor semântica da barra\nconst bar = createProgress({ value: progresso, variant: 'success' });\nbar.setAttribute('aria-label', 'Sincronização');",
+        "vanilla": "// Cor semântica da barra\nconst bar = createProgress({\n  value: progresso,\n  variant: 'success',\n  'aria-label': 'Sincronização',\n});",
         "angular": "<!-- Cor semântica da barra -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sincronização\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
       }
     },
@@ -468,7 +468,7 @@
         "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Uploading file</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>",
         "vue": "<!-- Root + indicator: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  :model-value=\"42\"              <!-- null turns on the indeterminate mode -->\n  :max=\"100\"\n  aria-label=\"Uploading file\"    <!-- the name comes from here: there is no label slot -->\n/>",
         "svelte": "<!-- Root + indicator: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  value={42}                     <!-- null turns on the indeterminate mode -->\n  max={100}\n  aria-label=\"Uploading file\"    <!-- the name comes from here: there is no label slot -->\n/>",
-        "vanilla": "// Root + indicator: div[data-slot=\"progress\"] > .nds-progress-indicator\nconst barra = createProgress({\n  value: 42,          // null turns on the indeterminate mode\n  max: 100,\n  variant: 'success', // absent, the bar uses the primary colour\n});\n\n// The name comes from outside: the factory has no label or value slot.\nbarra.setAttribute('aria-label', 'Uploading file');"
+        "vanilla": "// Root + indicator: div[data-slot=\"progress\"] > .nds-progress-indicator\nconst bar = createProgress({\n  value: 42,          // null turns on the indeterminate mode\n  max: 100,\n  variant: 'success', // absent, the bar uses the primary colour\n  // Required: with no name, the bar is announced as a percentage only.\n  'aria-label': 'Uploading file',\n});"
       }
     },
     "usage": {
@@ -660,7 +660,7 @@
         "react": "// Semantic bar colour\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sync\" />\n\n// Custom accessible text\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} of 100 files processed`}\n/>",
         "vue": "<!-- Semantic bar colour -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sync\" />\n\n<!-- Custom accessible text -->\n<Progress\n  :model-value=\"42\"\n  :get-value-text=\"(v) => `${v} of 100 files processed`\"\n/>",
         "svelte": "<!-- Semantic bar colour -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sync\" />",
-        "vanilla": "// Semantic bar colour\nconst bar = createProgress({ value: progress, variant: 'success' });\nbar.setAttribute('aria-label', 'Sync');",
+        "vanilla": "// Semantic bar colour\nconst bar = createProgress({\n  value: progress,\n  variant: 'success',\n  'aria-label': 'Sync',\n});",
         "angular": "<!-- Semantic bar colour -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sync\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
       }
     },
@@ -903,7 +903,7 @@
         "angular": "<div ndsProgress [value]=\"42\">\n  <span ndsProgressLabel>Enviando archivo</span>\n  <span ndsProgressValue></span>\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>",
         "vue": "<!-- Raíz + indicador: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  :model-value=\"42\"              <!-- null activa el modo indeterminado -->\n  :max=\"100\"\n  aria-label=\"Subiendo archivo\"  <!-- el nombre viene de aquí: no hay slot de etiqueta -->\n/>",
         "svelte": "<!-- Raíz + indicador: div[data-slot=\"progress\"] > div[data-slot=\"progress-indicator\"] -->\n<Progress\n  value={42}                     <!-- null activa el modo indeterminado -->\n  max={100}\n  aria-label=\"Subiendo archivo\"  <!-- el nombre viene de aquí: no hay slot de etiqueta -->\n/>",
-        "vanilla": "// Raíz + indicador: div[data-slot=\"progress\"] > .nds-progress-indicator\nconst barra = createProgress({\n  value: 42,          // null activa el modo indeterminado\n  max: 100,\n  variant: 'success', // ausente, la barra usa el primario\n});\n\n// El nombre viene de fuera: la factory no tiene slot de etiqueta ni de valor.\nbarra.setAttribute('aria-label', 'Subiendo archivo');"
+        "vanilla": "// Raíz + indicador: div[data-slot=\"progress\"] > .nds-progress-indicator\nconst barra = createProgress({\n  value: 42,          // null activa el modo indeterminado\n  max: 100,\n  variant: 'success', // ausente, la barra usa el primario\n  // Obligatorio: sin nombre, la barra se anuncia solo como porcentaje.\n  'aria-label': 'Subiendo archivo',\n});"
       }
     },
     "usage": {
@@ -1095,7 +1095,7 @@
         "react": "// Color semántico de la barra\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronización\" />\n\n// Texto accesible personalizado\n<Progress\n  value={42}\n  getAriaValueText={(v) => `${v} de 100 archivos procesados`}\n/>",
         "vue": "<!-- Color semántico de la barra -->\n<Progress :model-value=\"progress\" data-variant=\"success\" aria-label=\"Sincronización\" />\n\n<!-- Texto accesible personalizado -->\n<Progress\n  :model-value=\"42\"\n  :get-value-text=\"(v) => `${v} de 100 archivos procesados`\"\n/>",
         "svelte": "<!-- Color semántico de la barra -->\n<Progress value={progress} data-variant=\"success\" aria-label=\"Sincronización\" />",
-        "vanilla": "// Color semántico de la barra\nconst bar = createProgress({ value: progreso, variant: 'success' });\nbar.setAttribute('aria-label', 'Sincronización');",
+        "vanilla": "// Color semántico de la barra\nconst bar = createProgress({\n  value: progreso,\n  variant: 'success',\n  'aria-label': 'Sincronización',\n});",
         "angular": "<!-- Color semántico de la barra -->\n<div ndsProgress [value]=\"progress\" data-variant=\"success\" aria-label=\"Sincronización\">\n  <div ndsProgressTrack>\n    <div ndsProgressIndicator></div>\n  </div>\n</div>"
       }
     },

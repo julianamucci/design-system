@@ -57,14 +57,13 @@ function makeToggle(opts: {
   ariaLabel: string;
   variant?: ToggleOptions['variant'];
 }): HTMLButtonElement {
-  const btn = createToggle({
+  return createToggle({
     pressed: opts.pressed ?? false,
     disabled: opts.disabled ?? false,
     variant: opts.variant ?? 'default',
     children: buildLucideSvg(opts.icon ?? Bold),
+    'aria-label': opts.ariaLabel,
   });
-  btn.setAttribute('aria-label', opts.ariaLabel);
-  return btn;
 }
 
 function cluster(...filhos: HTMLElement[]): HTMLElement {
@@ -224,8 +223,7 @@ export const Invalid: Story = {
     // `.nds-toggle[aria-invalid="true"]` da folha compartilhada. Fazer isso à
     // mão (classe extra mais `style.boxShadow`) escondia a ausência da regra e
     // ainda punha valor de design em estilo inline.
-    const btn = createToggle({ children: buildLucideSvg(Bold) });
-    btn.setAttribute('aria-label', 'Negrito');
+    const btn = createToggle({ children: buildLucideSvg(Bold), 'aria-label': 'Negrito' });
     btn.setAttribute('aria-invalid', 'true');
     btn.setAttribute('aria-describedby', 'toggle-invalid-msg');
 

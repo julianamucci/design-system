@@ -121,10 +121,13 @@ export const Playground: Story = {
     ],
   },
   render: (args) => {
+    // O nome de cada item viaja COM o item, e não por posição depois de
+    // construir: casar rótulo com índice quebrava calado a cada item inserido
+    // no meio da lista.
     const items: ToggleGroupItem[] = [
-      { value: 'left',   children: '' },
-      { value: 'center', children: '' },
-      { value: 'right',  children: '' },
+      { value: 'left',   children: '', 'aria-label': ROTULOS[0] },
+      { value: 'center', children: '', 'aria-label': ROTULOS[1] },
+      { value: 'right',  children: '', 'aria-label': ROTULOS[2] },
     ];
 
     const group = createToggleGroup({
@@ -136,18 +139,12 @@ export const Playground: Story = {
       disabled: args.disabled,
       items,
       defaultValue: args.type === 'single' ? 'left' : ['left'],
+      // aria-label OBRIGATÓRIO no grupo
+      'aria-label': args.ariaLabel,
     });
 
     // Injeta SVGs (factory usa textContent quando children é string)
     injectIcons(group, [AlignLeft, AlignCenter, AlignRight]);
-
-    // aria-label OBRIGATÓRIO no grupo
-    group.setAttribute('aria-label', args.ariaLabel);
-
-    // aria-label OBRIGATÓRIO em items icon-only
-    group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
-      btn.setAttribute('aria-label', ROTULOS[i] ?? `Item ${i + 1}`);
-    });
 
     return group;
   },
@@ -163,7 +160,10 @@ export const Playground: Story = {
       await expect(group).toHaveAttribute('data-slot', 'toggle-group');
       const btns = canvas.getAllByRole('button');
       await expect(btns).toHaveLength(3);
-      for (const b of btns) await expect(b.getAttribute('aria-label')).toBeTruthy();
+      // As duas asserções já existiam e passavam — com a story escrevendo os
+      // atributos por fora. O que provam agora é que as OPÇÕES da factory
+      // (grupo e item) produzem os nomes.
+      await expect(btns.map((b) => b.getAttribute('aria-label'))).toEqual(ROTULOS);
     });
 
     await step('Orientação e espaçamento chegam ao markup', async () => {

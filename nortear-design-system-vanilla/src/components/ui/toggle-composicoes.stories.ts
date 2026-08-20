@@ -57,14 +57,13 @@ function toggle(opts: {
   const filhos = opts.texto
     ? [buildLucideSvg(opts.icon), opts.texto]
     : [buildLucideSvg(opts.icon)];
-  const btn = createToggle({
+  return createToggle({
     pressed: opts.pressed ?? false,
     variant: opts.variant ?? 'default',
     onClick: opts.onClick,
     children: filhos,
+    'aria-label': opts.ariaLabel,
   });
-  if (opts.ariaLabel) btn.setAttribute('aria-label', opts.ariaLabel);
-  return btn;
 }
 
 /**

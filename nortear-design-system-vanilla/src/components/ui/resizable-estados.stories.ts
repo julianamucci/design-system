@@ -70,6 +70,7 @@ function grupo(opcoes: {
     disabled: opcoes.disabled,
     withHandle: opcoes.withHandle,
     onLayout: opcoes.onLayout,
+    'aria-label': ROTULO,
     panels: [
       {
         defaultSize: 50,
@@ -80,9 +81,6 @@ function grupo(opcoes: {
       { defaultSize: 50, minSize: opcoes.minA ?? 20, content: panelContent('Painel B') },
     ],
   });
-  root
-    .querySelector<HTMLElement>('[data-slot="resizable-handle"]')
-    ?.setAttribute('aria-label', ROTULO);
   return frame(root);
 }
 

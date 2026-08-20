@@ -71,7 +71,7 @@ const TOKEN_ROWS = [
 ] as const;
 
 /**
- * Builds a Progress element and sets `aria-label` (REQUIRED — factory does not).
+ * Builds a Progress element with its required accessible name.
  */
 function buildProgress(opts: {
   value?: number | null;
@@ -80,14 +80,13 @@ function buildProgress(opts: {
   className?: string;
   ariaLabel: string;
 }): HTMLElement {
-  const el = createProgress({
+  return createProgress({
     value: opts.value,
     max: opts.max,
     variant: opts.variant,
     className: opts.className,
+    'aria-label': opts.ariaLabel,
   });
-  el.setAttribute('aria-label', opts.ariaLabel);
-  return el;
 }
 
 /**
@@ -398,11 +397,7 @@ export function createProgressDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () =>
                 buildProgress({ value: 42, ariaLabel: 'Progresso do upload' }),
-              dontPreviewFactory: () => {
-                const el = createProgress({ value: 42 });
-                el.setAttribute('aria-label', 'Barra');
-                return el;
-              },
+              dontPreviewFactory: () => createProgress({ value: 42, 'aria-label': 'Barra' }),
             },
             {
               doLabel: tNav('common.do'),
@@ -425,8 +420,10 @@ export function createProgressDocs(): HTMLElement {
 
       case 'variantes': {
         const codeDeterminate =
-          `const bar = createProgress({ value: 42 });\n` +
-          `bar.setAttribute('aria-label', 'Progresso do upload');`;
+          `const bar = createProgress({\n` +
+          `  value: 42,\n` +
+          `  'aria-label': 'Progresso do upload',\n` +
+          `});`;
         const codeWithLabel =
           `// DIVERGÊNCIA Nortear: factory não expõe ProgressLabel/ProgressValue.\n` +
           `// Componha manualmente com DOM nativo acima da barra.\n` +
@@ -435,10 +432,16 @@ export function createProgressDocs(): HTMLElement {
           `// ... label + value ...\n` +
           `wrap.append(row, createProgress({ value: 42 }));`;
         const codeSemantic =
-          `const ok = createProgress({ value: 100, variant: 'success' });\n` +
-          `ok.setAttribute('aria-label', 'Sincronização concluída');\n\n` +
-          `const cheio = createProgress({ value: 92, variant: 'destructive' });\n` +
-          `cheio.setAttribute('aria-label', 'Espaço quase esgotado');`;
+          `const ok = createProgress({\n` +
+          `  value: 100,\n` +
+          `  variant: 'success',\n` +
+          `  'aria-label': 'Sincronização concluída',\n` +
+          `});\n\n` +
+          `const cheio = createProgress({\n` +
+          `  value: 92,\n` +
+          `  variant: 'destructive',\n` +
+          `  'aria-label': 'Espaço quase esgotado',\n` +
+          `});`;
 
         return createDocsVariants({
           title: t('variants.title'),
@@ -500,6 +503,8 @@ export interface ProgressOptions {
   max?: number;
   /** Semantic colour of the bar. */
   variant?: 'success' | 'destructive';
+  /** Accessible name — REQUIRED, describes what is being measured. */
+  'aria-label'?: string;
   /** Additional CSS classes to append to the root element. */
   className?: string;
 }
@@ -551,10 +556,10 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
                 },
                 {
                   name: 'aria-label',
-                  type: 'string (atributo HTML)',
+                  type: 'string',
                   defaultValue: '—',
                   required: 'Sim',
-                  description: 'Obrigatório — setado pela aplicação via setAttribute. Factory não recebe via options.',
+                  description: 'Obrigatório — nome do que está sendo medido. A barra sem nome é anunciada só como percentual.',
                 },
               ],
             },
@@ -625,7 +630,7 @@ export function createProgress(options?: ProgressOptions): HTMLElement;`;
             { title: '', content: DOMPurify.sanitize(t('notes.item4')) },
             // Divergências desta stack — API, não comportamento.
             { title: '', content: 'A factory não expõe os subcomponentes <code>ProgressLabel</code>, <code>ProgressValue</code> e <code>ProgressTrack</code>: o rótulo e o valor são compostos com DOM nativo acima da barra.' },
-            { title: '', content: '<code>aria-label</code> não é parâmetro da factory — a aplicação o define com <code>el.setAttribute(\'aria-label\', ...)</code> logo após <code>createProgress(...)</code>. A factory também não aceita <code>min</code> nem <code>getAriaValueText</code>.' },
+            { title: '', content: 'A factory não aceita <code>min</code> nem <code>getAriaValueText</code>.' },
           ],
         });
 

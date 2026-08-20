@@ -75,13 +75,12 @@ export const Horizontal: Story = {
   render: () => {
     const root = createResizablePanel({
       direction: 'horizontal',
+      'aria-label': 'Redimensionar Sidebar e Conteúdo — use setas para ajustar',
       panels: [
         { defaultSize: 30, minSize: 15, content: panelContent('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
         { defaultSize: 70, minSize: 30, content: panelContent('Conteúdo principal') },
       ],
     });
-    const handle = root.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
-    handle?.setAttribute('aria-label', 'Redimensionar Sidebar e Conteúdo — use setas para ajustar');
     return frame(root, '220px');
   },
   play: async ({ canvasElement, step }) => {
@@ -110,13 +109,12 @@ export const Vertical: Story = {
   render: () => {
     const root = createResizablePanel({
       direction: 'vertical',
+      'aria-label': 'Redimensionar Topo e Rodapé — use setas para ajustar',
       panels: [
         { defaultSize: 40, minSize: 20, content: panelContent('Topo') },
         { defaultSize: 60, minSize: 20, content: panelContent('Rodapé', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
-    const handle = root.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
-    handle?.setAttribute('aria-label', 'Redimensionar Topo e Rodapé — use setas para ajustar');
     return frame(root, '280px');
   },
   play: async ({ canvasElement, step }) => {
@@ -140,8 +138,12 @@ export const Vertical: Story = {
 export const Nested: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => {
+    // Cada grupo nomeia o PRÓPRIO divisor. Percorrer os divisores a partir da
+    // raiz do grupo de fora, como se fazia aqui, alcançava também os do grupo de
+    // dentro — e nomeava dois controles de layouts diferentes por posição.
     const inner = createResizablePanel({
       direction: 'vertical',
+      'aria-label': 'Redimensionar Editor e Console — use setas para ajustar',
       panels: [
         { defaultSize: 60, minSize: 20, content: panelContent('Editor') },
         { defaultSize: 40, minSize: 20, content: panelContent('Console', 'nds-bg-muted nds-text-muted-foreground') },
@@ -154,13 +156,11 @@ export const Nested: Story = {
 
     const root = createResizablePanel({
       direction: 'horizontal',
+      'aria-label': 'Redimensionar Sidebar e área principal — use setas para ajustar',
       panels: [
         { defaultSize: 30, minSize: 15, content: panelContent('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
         { defaultSize: 70, minSize: 30, content: innerWrap },
       ],
-    });
-    root.querySelectorAll<HTMLElement>('[data-slot="resizable-handle"]').forEach((h, i) => {
-      h.setAttribute('aria-label', `Redimensionar painéis (handle ${i + 1}) — use setas para ajustar`);
     });
     return frame(root, '320px');
   },
@@ -199,13 +199,12 @@ export const WithHandle: Story = {
     const root = createResizablePanel({
       direction: 'horizontal',
       withHandle: true,
+      'aria-label': 'Redimensionar painéis — use setas para ajustar',
       panels: [
         { defaultSize: 50, minSize: 20, content: panelContent('Antes') },
         { defaultSize: 50, minSize: 20, content: panelContent('Depois', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
-    const handle = root.querySelector<HTMLElement>('[data-slot="resizable-handle"]');
-    handle?.setAttribute('aria-label', 'Redimensionar painéis — use setas para ajustar');
     return frame(root, '220px');
   },
   play: async ({ canvasElement, step }) => {

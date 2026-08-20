@@ -24,19 +24,6 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function withLegend(group: HTMLElement, labelText: string, id: string): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-stack';
-  wrap.dataset.spacing = 'xs';
-  const legend = document.createElement('p');
-  legend.id = id;
-  legend.className = 'nds-text-body nds-font-semibold';
-  legend.textContent = labelText;
-  group.setAttribute('aria-labelledby', id);
-  wrap.append(legend, group);
-  return wrap;
-}
-
 /** Idempotente — ver a nota em `radio-group.stories.ts`. */
 const escolher = async (alvo: HTMLElement): Promise<void> => {
   if (alvo.getAttribute('aria-checked') !== 'true') await userEvent.click(alvo);
@@ -47,18 +34,15 @@ const escolher = async (alvo: HTMLElement): Promise<void> => {
 
 export const PaymentMethod: Story = {
   render: () =>
-    withLegend(
-      createRadioGroup({
-        name: 'payment',
-        items: [
-          { value: 'card', label: 'Cartão de crédito' },
-          { value: 'pix', label: 'Pix' },
-          { value: 'boleto', label: 'Boleto bancário' },
-        ],
-      }),
-      'Forma de pagamento',
-      'comp-payment-legend',
-    ),
+    createRadioGroup({
+      name: 'payment',
+      legend: 'Forma de pagamento',
+      items: [
+        { value: 'card', label: 'Cartão de crédito' },
+        { value: 'pix', label: 'Pix' },
+        { value: 'boleto', label: 'Boleto bancário' },
+      ],
+    }),
   parameters: {
     docs: {
       description: {
@@ -95,9 +79,10 @@ export const PaymentMethod: Story = {
 // ─── FormaDeEntrega (horizontal) ──────────────────────────────────────────────
 
 export const DeliveryMethod: Story = {
-  render: () => {
-    const group = createRadioGroup({
+  render: () =>
+    createRadioGroup({
       name: 'delivery',
+      legend: 'Forma de entrega',
       items: [
         { value: 'standard', label: 'Padrão (5 dias)' },
         { value: 'express', label: 'Expressa (1 dia)' },
@@ -107,9 +92,7 @@ export const DeliveryMethod: Story = {
       // grid em coluna com `gap: var(--spacing-6)` — e alinha o anúncio do
       // leitor de tela ao layout, coisa que as três declarações inline não faziam.
       orientation: 'horizontal',
-    });
-    return withLegend(group, 'Forma de entrega', 'comp-delivery-legend');
-  },
+    }),
   parameters: {
     docs: {
       description: {
@@ -134,11 +117,6 @@ export const WithDescription: Story = {
     wrap.className = 'nds-stack nds-w-sm';
     wrap.dataset.spacing = 'xs';
 
-    const legend = document.createElement('p');
-    legend.id = 'comp-desc-legend';
-    legend.className = 'nds-text-body nds-font-semibold';
-    legend.textContent = 'Forma de entrega';
-
     const items = [
       { value: 'standard', label: 'Padrão', description: 'Entrega em 5 dias úteis — frete grátis acima de R$ 199.' },
       { value: 'express', label: 'Expressa', description: 'Receba em 1 dia útil — taxa adicional de R$ 19,90.' },
@@ -146,15 +124,17 @@ export const WithDescription: Story = {
     ];
 
     // Factory base + ajuste manual: o factory não expõe campo `description`.
+    // O papel e o nome do grupo são dele — a legenda vem da opção `legend`, e
+    // não de um `<p>` amarrado por fora.
     const base = createRadioGroup({
       name: 'delivery-desc',
+      legend: 'Forma de entrega',
       items: items.map((i) => ({ value: i.value, label: i.label })),
     });
-    base.setAttribute('role', 'radiogroup');
-    base.setAttribute('aria-labelledby', 'comp-desc-legend');
 
+    const linhas = Array.from(base.querySelectorAll<HTMLElement>('.nds-radio-row'));
     items.forEach((item, idx) => {
-      const row = base.children[idx] as HTMLElement;
+      const row = linhas[idx];
       if (!row) return;
       row.style.alignItems = 'flex-start';
 
@@ -172,7 +152,7 @@ export const WithDescription: Story = {
       }
     });
 
-    wrap.append(legend, base);
+    wrap.appendChild(base);
     return wrap;
   },
   parameters: {
@@ -202,31 +182,20 @@ export const InForm: Story = {
     form.dataset.spacing = 'md';
     form.noValidate = true;
 
-    // Fieldset semântico com legend nativo
-    const fs = document.createElement('fieldset');
-    fs.className = 'nds-stack';
-    fs.dataset.spacing = 'xs';
-    fs.style.border = '0';
-    fs.style.padding = '0';
-    fs.style.margin = '0';
-
-    const legend = document.createElement('legend');
-    legend.className = 'nds-text-body nds-font-semibold nds-mb-2';
-    legend.textContent = 'Forma de pagamento';
-    fs.appendChild(legend);
-
+    // O `<fieldset>` com `<legend>` nativo é o do próprio grupo. Antes daqui a
+    // story embrulhava o grupo num SEGUNDO fieldset só para ter onde pôr a
+    // legenda — dois agrupamentos aninhados anunciando o mesmo campo.
     const group = createRadioGroup({
       name: 'payment',
+      legend: 'Forma de pagamento',
       items: [
         { value: 'card', label: 'Cartão de crédito' },
         { value: 'pix', label: 'Pix' },
         { value: 'boleto', label: 'Boleto bancário' },
       ],
     });
-    group.setAttribute('role', 'radiogroup');
-    fs.appendChild(group);
 
-    form.appendChild(fs);
+    form.appendChild(group);
 
     // `createButton`, não um `<button>` cru com as classes do framework
     // utilitário antigo: elas não existem no CSS `.nds-*` e o botão de submit

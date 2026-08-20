@@ -60,8 +60,13 @@ Tabs (container)
 
 | Nome | Default | Função |
 |---|---|---|
-| `tabs` | — | Array `{ value, label, content }` |
-| `defaultValue` | primeiro item | Tab ativo inicial |
+| `items` | — | Array `{ value, label, content, disabled? }` |
+| `defaultValue` | — | Tab ativo inicial |
+| `variant` | `default` | `default` desenha o trilho; `line` marca o ativo por um traço |
+| `orientation` | `horizontal` | Direção do conjunto; define também qual par de setas navega |
+| `aria-label` | — | **Obrigatório.** Nome da lista de abas — escrito no `role="tablist"` |
+| `onValueChange` | — | Recebe o valor da aba ativada |
+| `class` | — | Classes `.nds-*` adicionais na raiz |
 
 **Regras**:
 - TabList em `inline-flex` com `bg-muted` e `p-1` (8-grid)
@@ -75,6 +80,7 @@ Tabs (container)
 - `role="tablist"`, `role="tab"`, `role="tabpanel"` obrigatórios
 - Foco visível no tab ativo
 - `aria-selected="true"` apenas no tab atual
+- Nome da lista de abas obrigatório, pela opção `aria-label` da factory — nunca por um `setAttribute` depois de construir, que some na primeira refatoração
 - Aba desabilitada: marcada com `aria-disabled`, nunca com o atributo `disabled` nativo — o botão nativamente desabilitado sai do alcance do foco e a aba nunca é anunciada. Ela permanece no percurso das setas, para ser anunciada como indisponível, e nem o clique nem Enter/Espaço a ativam.
 
 **Analytics**: emitir `tab_change` com `{ from, to, label }` no clique.
@@ -100,9 +106,14 @@ nav (aria-label="Paginação dos resultados")
 
 | Nome | Default | Função |
 |---|---|---|
-| `currentPage` | — | Página atual (1-indexed) |
-| `totalPages` | — | Total de páginas |
-| `onPageChange` | — | Callback ao mudar página |
+| `total` | — | Total de páginas |
+| `current` | — | Página atual (1-indexed) |
+| `onPageChange` | — | Avisado quando outra página é pedida. Opcional: uma paginação inteiramente de rota não precisa dele |
+| `hrefForPage` | — | Endereço real de cada página. Com ele o link é destino de verdade e o clique SEGUE — é o ponto de integração com roteador de cliente. Sem ele todo link nasce `#` e o clique é anulado |
+| `showPrevNext` | `true` | Exibe os controles Anterior/Próxima |
+| `label` | `'Paginação'` | Nome acessível do landmark |
+| `align` | — | `start`/`end` encolhem a faixa e a encostam na ponta; sem valor ela ocupa a linha e fica centrada |
+| `class` | — | Classes adicionais |
 
 **Regras**:
 - `<nav>` com `aria-label` descritivo
