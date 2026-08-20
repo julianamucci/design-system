@@ -2296,3 +2296,27 @@ decisão ou dívida separada.
       snippets que documentam justamente essas assinaturas. Mudar a API no meio
       produziria a divergência que a unificação existe para fechar. Fazer depois
       que o painel Code assentar.
+
+## Cache do servidor vira defeito fantasma (2026-08-20)
+
+Duas ocorrências no mesmo dia, ambas durante escrita concorrente de agentes, e
+ambas custando investigação no lugar errado — em nenhuma o código estava errado.
+
+1. **Índice preso no Svelte.** O servidor indexou `table-estados.stories.ts`
+   enquanto ele era escrito, guardou o erro de parse e nunca tentou de novo. Um
+   arquivo derruba o índice INTEIRO, então o Storybook não abria em página
+   nenhuma — o sintoma apareceu numa story de carousel que não tinha defeito.
+2. **Módulo preso no Angular.** `carousel-probe.ts` era servido numa versão
+   anterior ao commit que criou `reprovasDoFeedbackDePonteiro`, e a story
+   quebrava com "does not provide an export named". O export existia desde
+   `877d2280`, e a suíte do mesmo arquivo passava.
+
+**O sinal que distingue é rápido: se a suíte passa e o Storybook não, é cache.**
+O remédio nos dois casos foi `touch` no arquivo para invalidar.
+
+- [ ] **Decidir se vale mitigar.** Não achei causa de configuração: os dois
+      arquivos são servidos por caminhos de cache diferentes (`/@fs/` para o que
+      está fora da raiz do pacote), e em ambos o servidor leu um arquivo a meio
+      escrever. Opções: aceitar e documentar o sinal, ou investigar
+      `server.watch` para `docs/shared` nas cinco stacks. Enquanto não se
+      decide, o sintoma volta a cada rodada com agentes em paralelo.
