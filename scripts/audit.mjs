@@ -1251,7 +1251,14 @@ function auditUnknownClass(slug) {
     { file: join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json'), stack: 'shared' },
     ...STACKS.flatMap((s) => {
       const { all } = filesForSlug(slug, s);
-      return all.map((file) => ({ file, stack: s }));
+      // Arquivo de TESTE fica de fora. Ele não vira markup, e o que ele carrega
+      // são EXPRESSÕES sobre markup — `/nds-max-w-w+/`, `nds-w-(xs|full)` — que
+      // esta regra lia como se fossem nomes de classe. Três falsos positivos
+      // apareceram assim no dia em que os `*.source.test.ts` entraram na
+      // varredura; classe morta de verdade mora no que renderiza.
+      return all
+        .filter((file) => !/.(test|spec).[jt]sx?$/.test(file))
+        .map((file) => ({ file, stack: s }));
     }),
   ];
 
@@ -1998,7 +2005,10 @@ function auditDeadClassInComponent(slug) {
     const { ui } = filesForSlug(slug, stack);
     for (const file of ui) {
       const nome = basename(file).toLowerCase();
-      if (/\.stories\./.test(nome) || nome.endsWith('story.svelte')) continue;
+      // Teste também sai, pelo mesmo motivo da regra irmã: ele guarda
+      // EXPRESSÕES sobre markup, e a asserção que procura `undefined` num
+      // snippet virava "classe undefined não existe".
+      if (/\.stories\./.test(nome) || /\.(test|spec)\.[jt]sx?$/.test(nome) || nome.endsWith('story.svelte')) continue;
 
       const content = readFile(file);
       if (!content) continue;
