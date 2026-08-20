@@ -29,8 +29,12 @@ export type CarouselSnippetOptions = {
  * A chamada real de `createCarousel` com as opções da story.
  *
  * Os slides são elementos que quem consome constrói — a fábrica não os inventa.
- * O snippet monta os dele com `createCard`, que é design system, e não com um
- * `buildSlide` que só existe dentro do arquivo de story.
+ *
+ * A moldura é `div` + classe, e NÃO `createCard`. O card declara
+ * `background-color` próprio, e `card.css` é importado depois de `colors.css`
+ * no `index.css`: mesma especificidade, o posterior vence, e o fundo do card
+ * apagava `nds-bg-muted-soft`. O snippet ensinava o slide branco que a dona viu
+ * na tela — copiar daqui reproduzia o defeito.
  */
 export function carouselSnippet(o: CarouselSnippetOptions = {}): string {
   const total = o.slides ?? 5;
@@ -48,14 +52,19 @@ export function carouselSnippet(o: CarouselSnippetOptions = {}): string {
   return snippet(
     [
       importar('carousel', 'createCarousel'),
-      importar('card', 'createCard', 'createCardContent'),
     ].join('\n'),
     `const slides = Array.from({ length: ${total} }, (_, i) => {
-  const card = createCard({ className: 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft' });
-  const conteudo = createCardContent({ className: 'nds-cluster' });
-  conteudo.textContent = \`Slide \${i + 1}\`;
-  card.appendChild(conteudo);
-  return card;
+  const moldura = document.createElement('div');
+  moldura.className = 'nds-aspect-16-9';
+
+  const caixa = document.createElement('div');
+  caixa.className = 'nds-cluster nds-h-full nds-rounded-lg nds-bg-muted-soft';
+  caixa.dataset.align = 'center';
+  caixa.dataset.justify = 'center';
+  caixa.textContent = \`Slide \${i + 1}\`;
+
+  moldura.appendChild(caixa);
+  return moldura;
 });`,
     `const carrossel = ${chamada('createCarousel', linhas)};`,
     montar('carrossel'),

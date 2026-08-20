@@ -34,12 +34,20 @@ describe('carouselSnippet', () => {
     expect(carouselSnippet({ autoplay: true, autoplayInterval: 5000 })).toContain('autoplayInterval: 5000');
   });
 
-  it('constrói os slides com fábricas do design system, sem helper de story', () => {
+  it('constrói os slides com o vocabulário do design system, sem helper de story', () => {
     const código = carouselSnippet({ slides: 3 });
     expect(código).toContain('const slides = Array.from({ length: 3 }');
-    expect(código).toContain('createCard(');
     expect(código).not.toContain('buildSlide');
     expect(código).not.toContain('buildSlides');
+
+    // A moldura é `div` + classe, e NÃO `createCard`. O card declara
+    // `background-color` próprio e `card.css` carrega depois de `colors.css`,
+    // então o fundo dele apagava `nds-bg-muted-soft` e o slide saía branco.
+    // Ensinar o card aqui reproduziria na mão de quem copia o defeito que a
+    // dona viu na tela.
+    expect(código).not.toContain('createCard(');
+    expect(código).toContain("moldura.className = 'nds-aspect-16-9'");
+    expect(código).toContain('nds-bg-muted-soft');
   });
 });
 

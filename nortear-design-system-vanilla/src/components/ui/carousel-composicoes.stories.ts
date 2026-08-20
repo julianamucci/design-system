@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
+import { slidesDeExemplo } from './carousel.fixtures';
 import { carouselSource, carouselSourceCom } from './carousel.source';
 import { createCard, createCardHeader, createCardTitle, createCardDescription } from './card';
 import carouselTranslations from '@shared/content/carousel/translations.json';
@@ -20,36 +21,6 @@ const nomeAcessivel = (posicao: number, total: number) =>
 const rotuloVisivel = (posicao: number) => `${CONTEUDO.slide} ${posicao}`;
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
-
-function buildSlide(label: string): HTMLElement {
-  // Div simples, e NÃO `createCard`. O card traz `background-color` próprio, e
-  // `card.css` é importado DEPOIS de `colors.css` no `index.css` — mesma
-  // especificidade, então o fundo do card vencia `nds-bg-muted-soft` e o slide
-  // saía branco, sem a caixa que as outras stacks mostram. O anel do card
-  // desaparecia junto por ser `box-shadow` recortado pelo `overflow` do slide.
-  //
-  // React e Angular já montavam exatamente esta árvore; o Vanilla era o único
-  // com card, e por isso o único visualmente diferente.
-  const moldura = document.createElement('div');
-  moldura.className = 'nds-aspect-16-9';
-
-  const caixa = document.createElement('div');
-  caixa.className = 'nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg';
-  caixa.dataset.align = 'center';
-  caixa.dataset.justify = 'center';
-
-  const span = document.createElement('span');
-  span.className = 'nds-text-h3 nds-font-semibold nds-text-muted-foreground';
-  span.textContent = label;
-
-  caixa.appendChild(span);
-  moldura.appendChild(caixa);
-  return moldura;
-}
-
-function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
-  return Array.from({ length: count }, (_, i) => buildSlide(`${prefix} ${i + 1}`));
-}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -135,7 +106,7 @@ export const WithDots: Story = {
     }
 
     const carousel = createCarousel({
-      items: buildSlides(TOTAL_DOTS),
+      items: slidesDeExemplo(TOTAL_DOTS),
       label: 'Galeria com dots',
       onIndexChange: (index) => dots.forEach((d, i) => pintar(d, i === index)),
     });

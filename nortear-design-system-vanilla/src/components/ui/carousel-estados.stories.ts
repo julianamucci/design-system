@@ -1,29 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
+import { slidesDeExemplo } from './carousel.fixtures';
 import { carouselSource, carouselSourceCom } from './carousel.source';
-import { createCard, createCardContent } from './card';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
-function buildSlide(label: string): HTMLElement {
-  const card = createCard({ className: 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft' });
-  card.dataset.align = 'center';
-  card.dataset.justify = 'center';
-  const content = createCardContent({ className: 'nds-cluster' });
-  content.dataset.align = 'center';
-  content.dataset.justify = 'center';
-  const span = document.createElement('span');
-  span.className = 'nds-text-h2 nds-font-semibold nds-text-foreground';
-  span.textContent = label;
-  content.appendChild(span);
-  card.appendChild(content);
-  return card;
-}
-
-function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
-  return Array.from({ length: count }, (_, i) => buildSlide(`${prefix} ${i + 1}`));
-}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -54,7 +36,7 @@ type Story = StoryObj;
 function montar(total: number, label: string): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-w-full nds-max-w-md';
-  wrap.appendChild(createCarousel({ items: buildSlides(total), label }));
+  wrap.appendChild(createCarousel({ items: slidesDeExemplo(total), label }));
   return wrap;
 }
 

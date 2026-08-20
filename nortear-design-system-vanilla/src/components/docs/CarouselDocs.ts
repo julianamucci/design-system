@@ -4,6 +4,7 @@ import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { createCarousel } from '@/components/ui/carousel';
 import { createCard, createCardContent } from '@/components/ui/card';
+import { slidesDeExemplo } from '@/components/ui/carousel.fixtures';
 import uiTranslations from '@/i18n/ui.json';
 import carouselTranslations from '@shared/content/carousel/translations.json';
 
@@ -67,28 +68,6 @@ function priorityLabel(raw: string): string {
  * e 1.875rem cravado não acompanha a preferência de fonte de quem lê (WCAG
  * 1.4.4). A story já estava certa; era esta página que precisava alcançá-la.
  */
-function buildSlide(label: string, tone: 'muted' | 'primary' = 'muted'): HTMLElement {
-  const card = createCard({
-    className: tone === 'primary'
-      ? 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-primary-soft'
-      : 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft',
-  });
-  card.dataset.justify = 'center';
-  card.dataset.align = 'center';
-  const content = createCardContent({ className: 'nds-cluster' });
-  content.dataset.justify = 'center';
-  content.dataset.align = 'center';
-  const span = document.createElement('span');
-  span.className = 'nds-text-h2 nds-font-semibold nds-text-foreground';
-  span.textContent = label;
-  content.appendChild(span);
-  card.appendChild(content);
-  return card;
-}
-
-function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
-  return Array.from({ length: count }, (_, i) => buildSlide(`${prefix} ${i + 1}`));
-}
 
 function buildCarouselPreview(): HTMLElement {
   const wrap = document.createElement('div');
@@ -97,7 +76,7 @@ function buildCarouselPreview(): HTMLElement {
   // aria-label distinto por instância (landmark-unique): usa a string que já
   // intitula visivelmente o bloco onde o preview aparece.
   const carousel = createCarousel({
-    items: buildSlides(total),
+    items: slidesDeExemplo(total),
     // A navegação vem por setas, teclado ou gesto de arrastar, e a origem chega
     // aqui para virar o `trigger` do evento medido.
     onIndexChange: (index, source) => {
@@ -315,7 +294,7 @@ export function createCarouselDocs(): HTMLElement {
               doPreviewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-sm';
-                const carousel = createCarousel({ items: buildSlides(3) });
+                const carousel = createCarousel({ items: slidesDeExemplo(3) });
                 carousel.setAttribute('aria-label', stripHtml(t('doDont.pair1.do')));
                 wrap.appendChild(carousel);
                 return wrap;
@@ -350,7 +329,7 @@ export function createCarouselDocs(): HTMLElement {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-sm';
                 const carousel =
-                  createCarousel({ items: buildSlides(3), autoplay: true, autoplayInterval: 3500 });
+                  createCarousel({ items: slidesDeExemplo(3), autoplay: true, autoplayInterval: 3500 });
                 carousel.setAttribute('aria-label', stripHtml(t('doDont.pair2.do')));
                 wrap.appendChild(carousel);
                 return wrap;
@@ -359,7 +338,7 @@ export function createCarouselDocs(): HTMLElement {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-sm';
                 const carousel =
-                  createCarousel({ items: buildSlides(3), autoplay: true, autoplayInterval: 800 });
+                  createCarousel({ items: slidesDeExemplo(3), autoplay: true, autoplayInterval: 800 });
                 carousel.setAttribute('aria-label', stripHtml(t('doDont.pair2.dont')));
                 wrap.appendChild(carousel);
                 return wrap;
@@ -393,7 +372,7 @@ const el = createCarousel({
 const el = createCarousel({ items: slides });`;
 
         const codeSingle = `// Cada CarouselItem ocupa 100% do viewport (basis-full).
-const el = createCarousel({ items: buildSlides(4) });`;
+const el = createCarousel({ items: slidesDeExemplo(4) });`;
 
         const codeMulti = `// Multi-item: aplique largura reduzida no slide para exibir 2+ por vez.
 items.forEach((i) => i.classList.add('basis-1/2'));
@@ -403,7 +382,7 @@ const el = createCarousel({ items });`;
           const wrap = document.createElement('div');
           wrap.className = 'nds-w-full nds-max-w-md';
           const carousel = createCarousel({
-            items: buildSlides(4, stripHtml(t('demonstration.labels.slide'))),
+            items: slidesDeExemplo(4, { prefixo: stripHtml(t('demonstration.labels.slide')) }),
             autoplay: true,
             autoplayInterval: 4000,
           });
@@ -414,7 +393,7 @@ const el = createCarousel({ items });`;
 
         const codeAutoplay = `// Autoplay com pausa no hover
 const carousel = createCarousel({
-  items: buildSlides(4),
+  items: slidesDeExemplo(4),
   autoplay: true,
   autoplayInterval: 4000,
 });
@@ -433,7 +412,7 @@ const carousel = createCarousel({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-md';
-                const carousel = createCarousel({ items: buildSlides(5) });
+                const carousel = createCarousel({ items: slidesDeExemplo(5) });
                 carousel.setAttribute('aria-label', 'horizontal');
                 wrap.appendChild(carousel);
                 return wrap;
@@ -446,7 +425,7 @@ const carousel = createCarousel({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-md';
-                const carousel = createCarousel({ items: buildSlides(4) });
+                const carousel = createCarousel({ items: slidesDeExemplo(4) });
                 carousel.setAttribute('aria-label', 'vertical');
                 wrap.appendChild(carousel);
                 return wrap;
@@ -459,7 +438,7 @@ const carousel = createCarousel({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-md';
-                const carousel = createCarousel({ items: buildSlides(4) });
+                const carousel = createCarousel({ items: slidesDeExemplo(4) });
                 carousel.setAttribute('aria-label', 'single');
                 wrap.appendChild(carousel);
                 return wrap;
@@ -472,7 +451,7 @@ const carousel = createCarousel({
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-w-full nds-max-w-md';
-                const carousel = createCarousel({ items: buildSlides(5) });
+                const carousel = createCarousel({ items: slidesDeExemplo(5) });
                 carousel.setAttribute('aria-label', 'multi');
                 wrap.appendChild(carousel);
                 return wrap;
@@ -535,7 +514,7 @@ const carousel = createCarousel({
             });
 
           const carousel = createCarousel({
-            items: buildSlides(total, slideLabel),
+            items: slidesDeExemplo(total, { prefixo: slideLabel }),
             onIndexChange: (index) => marcarAtual(index),
           });
 
@@ -613,7 +592,7 @@ const dots = Array.from({ length: total }, (_, i) => {
 });
 
 const carousel = createCarousel({
-  items: buildSlides(total),
+  items: slidesDeExemplo(total),
   onIndexChange: (index) => {
     dots.forEach((d, i) => {
       // O inativo NÃO carrega o atributo: "false" casaria com [aria-current].

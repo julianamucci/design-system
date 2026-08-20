@@ -1,33 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
+import { slidesDeExemplo } from './carousel.fixtures';
 import { carouselSource } from './carousel.source';
-import { createCard, createCardContent } from './card';
 import { createCarouselDocs } from '@/components/docs/CarouselDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
-function buildSlide(label: string): HTMLElement {
-  // A proporção vem da classe, nunca de `style`: inline vence a folha e sai do
-  // tema, da densidade e da escala.
-  const card = createCard({ className: 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft' });
-  card.dataset.align = 'center';
-  card.dataset.justify = 'center';
-  const content = createCardContent({ className: 'nds-cluster' });
-  content.dataset.align = 'center';
-  content.dataset.justify = 'center';
-  const span = document.createElement('span');
-  span.className = 'nds-text-h2 nds-font-semibold nds-text-foreground';
-  span.textContent = label;
-  content.appendChild(span);
-  card.appendChild(content);
-  return card;
-}
-
-function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
-  return Array.from({ length: count }, (_, i) => buildSlide(`${prefix} ${i + 1}`));
-}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -86,7 +66,7 @@ export const Playground: Story = {
     wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
       createCarousel({
-        items: buildSlides(args.slides),
+        items: slidesDeExemplo(args.slides),
         autoplay: args.autoplay,
         autoplayInterval: args.autoplayInterval,
         label: 'Galeria de exemplos',

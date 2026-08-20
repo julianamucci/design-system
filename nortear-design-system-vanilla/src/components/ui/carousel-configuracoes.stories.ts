@@ -1,29 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCarousel } from './carousel';
+import { slidesDeExemplo } from './carousel.fixtures';
 import { carouselSource, carouselSourceCom } from './carousel.source';
-import { createCard, createCardContent } from './card';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
 
-function buildSlide(label: string): HTMLElement {
-  const card = createCard({ className: 'nds-w-full nds-cluster nds-aspect-16-9 nds-bg-muted-soft' });
-  card.dataset.align = 'center';
-  card.dataset.justify = 'center';
-  const content = createCardContent({ className: 'nds-cluster' });
-  content.dataset.align = 'center';
-  content.dataset.justify = 'center';
-  const span = document.createElement('span');
-  span.className = 'nds-text-h2 nds-font-semibold nds-text-foreground';
-  span.textContent = label;
-  content.appendChild(span);
-  card.appendChild(content);
-  return card;
-}
-
-function buildSlides(count: number, prefix = 'Slide'): HTMLElement[] {
-  return Array.from({ length: count }, (_, i) => buildSlide(`${prefix} ${i + 1}`));
-}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -57,7 +39,7 @@ export const Single: Story = {
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
-    wrap.appendChild(createCarousel({ items: buildSlides(4), label: 'Um item por vez' }));
+    wrap.appendChild(createCarousel({ items: slidesDeExemplo(4), label: 'Um item por vez' }));
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
@@ -179,7 +161,7 @@ export const MultiResponsive: Story = {
     wrap.className = 'nds-w-full nds-max-w-lg';
     wrap.appendChild(
       createCarousel({
-        items: buildSlides(6),
+        items: slidesDeExemplo(6),
         // A base do slide é responsiva e vem por CLASSE, do mesmo vocabulário
         // que as outras stacks penduram em cada item da composição. Aqui a
         // fábrica é quem constrói o slide, então a classe entra por `slideClass`
@@ -265,7 +247,7 @@ export const Autoplay: Story = {
     wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
       createCarousel({
-        items: buildSlides(4, 'Destaque'),
+        items: slidesDeExemplo(4, { prefixo: 'Destaque' }),
         autoplay: true,
         // Intervalo curto para o teste não esperar por três segundos; em uso
         // real a recomendação do conteúdo compartilhado é 3–6s.
@@ -337,7 +319,7 @@ export const DragGesture: Story = {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
-      createCarousel({ items: buildSlides(4), label: 'Galeria com gesto de arrastar' }),
+      createCarousel({ items: slidesDeExemplo(4), label: 'Galeria com gesto de arrastar' }),
     );
     return wrap;
   },

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
 import { carouselSource, carouselSourceCom } from './carousel.source';
-import { createCard, createCardContent } from './card';
+import { slidesDeExemplo } from './carousel.fixtures';
 import {
   medirSlides,
   reprovasDeEscala,
@@ -14,27 +14,6 @@ import {
 } from '@shared/testing/carousel-probe';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
-
-// Em horizontal a altura do slide vem de uma proporção; em vertical ela vem do
-// track, e o cartão só precisa preenchê-la.
-function buildSlide(label: string, medida: string): HTMLElement {
-  const card = createCard({ className: `nds-w-full nds-cluster ${medida} nds-bg-muted-soft` });
-  card.dataset.align = 'center';
-  card.dataset.justify = 'center';
-  const content = createCardContent({ className: 'nds-cluster' });
-  content.dataset.align = 'center';
-  content.dataset.justify = 'center';
-  const span = document.createElement('span');
-  span.className = 'nds-text-h2 nds-font-semibold nds-text-foreground';
-  span.textContent = label;
-  content.appendChild(span);
-  card.appendChild(content);
-  return card;
-}
-
-function buildSlides(count: number, medida: string): HTMLElement[] {
-  return Array.from({ length: count }, (_, i) => buildSlide(`Slide ${i + 1}`, medida));
-}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -66,7 +45,7 @@ export const Horizontal: Story = {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
     wrap.appendChild(
-      createCarousel({ items: buildSlides(5, 'nds-aspect-16-9'), label: 'Slides na horizontal' }),
+      createCarousel({ items: slidesDeExemplo(5), label: 'Slides na horizontal' }),
     );
     return wrap;
   },
@@ -183,7 +162,7 @@ export const Vertical: Story = {
     wrap.className = 'nds-w-full nds-max-w-xs';
     wrap.appendChild(
       createCarousel({
-        items: buildSlides(4, 'nds-h-full'),
+        items: slidesDeExemplo(4, { medida: 'nds-h-full' }),
         orientation: 'vertical',
         // A altura definida é o que a base `flex: 0 0 100%` do slide precisa
         // para resolver. Sem ela o carrossel vertical empilha e nada é
