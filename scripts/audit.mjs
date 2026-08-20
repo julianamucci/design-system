@@ -2583,7 +2583,11 @@ function auditFixtureDuplicada(slug) {
     for (const file of stories) {
       const src = readFile(file);
       if (!src) continue;
-      const re = /^(?:export\s+)?function\s+(\w+)\s*\(/gm;
+      // `async` entra. A primeira versão desta regra casava só `function`, e o
+      // helper que ABRE um overlay — o mais copiado de todos, porque toda story
+      // de painel precisa dele — é assíncrono por natureza. `popover.abrir`
+      // estava em três arquivos byte a byte e não aparecia no relatório.
+      const re = /^(?:export\s+)?(?:async\s+)?function\s+(\w+)\s*\(/gm;
       let m;
       while ((m = re.exec(src))) {
         // Pula a lista de parâmetros ANTES de procurar o corpo. Sem isto, o
