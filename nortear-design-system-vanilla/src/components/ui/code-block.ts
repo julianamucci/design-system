@@ -116,7 +116,7 @@ export function createCodeBlock(options: CodeBlockOptions): DestroyableElement {
   const copyButton = createButton({
     variant: 'ghost',
     size: 'icon-sm',
-    ariaLabel: copyLabel,
+    'aria-label': copyLabel,
   });
   copyButton.dataset.slot = 'code-block-copy';
   copyButton.appendChild(createIcon(Copy as unknown as LucideIconNode[]));

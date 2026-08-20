@@ -557,7 +557,7 @@ export function createDataTable<TData extends RowData>(
         variant: 'outline',
         size: 'sm',
         class: 'nds-data-table-columns-btn',
-        ariaLabel: L.columns,
+        'aria-label': L.columns,
       });
       visBtn.appendChild(svgEl(ICONS.settings));
       const lbl = document.createElement('span');
@@ -1087,7 +1087,7 @@ export function createDataTable<TData extends RowData>(
       const btn = createButton({
         variant: 'outline',
         size: 'icon',
-        ariaLabel: label,
+        'aria-label': label,
         disabled,
         onClick: () => onClick(),
       });

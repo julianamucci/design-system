@@ -33,6 +33,8 @@ export type ScrollAreaOptions = {
    * DISTINTOS: dois landmarks de mesmo papel e mesmo nome são indistinguíveis
    * na lista de regiões do leitor.
    */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   label?: string;
   class?: string;
   children?: HTMLElement;
@@ -41,7 +43,10 @@ export type ScrollAreaOptions = {
 // ─── createScrollArea ─────────────────────────────────────────────────────────
 
 export function createScrollArea(options: ScrollAreaOptions = {}): HTMLElement {
-  const { size, width, label, children } = options;
+  const { size, width, children } = options;
+
+  // `label` continua aceito como apelido do nome acessível; o canônico vence.
+  const label = options['aria-label'] ?? options.label;
 
   const root = document.createElement('div');
   root.dataset.slot = 'scroll-area';

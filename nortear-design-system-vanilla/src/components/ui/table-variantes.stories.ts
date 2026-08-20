@@ -236,7 +236,7 @@ export const WithRowActions: Story = {
           variant: 'ghost',
           size: 'sm',
           label: 'Ações',
-          ariaLabel: `Ações para fatura ${LINHAS[i].id}`,
+          'aria-label': `Ações para fatura ${LINHAS[i].id}`,
         }),
       );
       tr.appendChild(actionCell);

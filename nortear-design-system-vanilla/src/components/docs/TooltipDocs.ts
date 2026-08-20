@@ -63,7 +63,7 @@ function makeIconButton(ariaLabel: string): HTMLButtonElement {
   return createButton({
     variant: 'ghost',
     size: 'icon',
-    ariaLabel,
+    'aria-label': ariaLabel,
     children: iconWrap,
   });
 }
@@ -79,7 +79,7 @@ function buildDefaultTooltip(): HTMLElement {
   const trigger = createButton({
     variant: 'outline',
     label: t('demonstration.labels.saveButton'),
-    ariaLabel: t('demonstration.labels.saveButton'),
+    'aria-label': t('demonstration.labels.saveButton'),
   });
   return createTooltip({
     trigger,
@@ -103,7 +103,7 @@ function buildLongTextTooltip(): HTMLElement {
   const trigger = createButton({
     variant: 'outline',
     label: t('demonstration.labels.shareButton'),
-    ariaLabel: t('demonstration.labels.shareButton'),
+    'aria-label': t('demonstration.labels.shareButton'),
   });
   return createTooltip({
     trigger,
@@ -374,7 +374,7 @@ createTooltip({
         const codeDefault = `const trigger = createButton({
   variant: 'outline',
   label: 'Salvar',
-  ariaLabel: 'Salvar',
+  'aria-label': 'Salvar',
 });
 
 createTooltip({ trigger, content: 'Salvar', side: 'top' });`;
@@ -383,7 +383,7 @@ createTooltip({ trigger, content: 'Salvar', side: 'top' });`;
 const trigger = createButton({
   variant: 'ghost',
   size: 'icon',
-  ariaLabel: 'Salvar',
+  'aria-label': 'Salvar',
   children: iconSvg,
 });
 
@@ -397,7 +397,7 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
 });`;
 
         const codeSides = `for (const side of ['top', 'right', 'bottom', 'left'] as const) {
-  const trigger = createButton({ variant: 'outline', label: side, ariaLabel: side });
+  const trigger = createButton({ variant: 'outline', label: side, 'aria-label': side });
   const el = createTooltip({ trigger, content: \`Tooltip \${side}\`, side });
   grid.appendChild(el);
 }`;
@@ -419,7 +419,7 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
           ];
 
           for (const { side, label } of sides) {
-            const trigger = createButton({ variant: 'outline', label, ariaLabel: label });
+            const trigger = createButton({ variant: 'outline', label, 'aria-label': label });
             const el = createTooltip({ trigger, content: `Tooltip ${label}`, side });
             grid.appendChild(el);
           }
@@ -471,7 +471,7 @@ iconWrap.appendChild(createButtonIcon('download'));
 const trigger = createButton({
   variant: 'ghost',
   size: 'icon',
-  ariaLabel: 'Salvar',
+  'aria-label': 'Salvar',
   children: iconWrap,
 });
 
@@ -480,7 +480,7 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
         const codeFormHelp = `const help = createButton({
   variant: 'ghost',
   size: 'icon-xs',
-  ariaLabel: 'Ajuda sobre Token de API',
+  'aria-label': 'Ajuda sobre Token de API',
   label: '?',
 });
 
@@ -494,7 +494,7 @@ createTooltip({
         const codeMetric = `const help = createButton({
   variant: 'ghost',
   size: 'icon-xs',
-  ariaLabel: 'O que é LCP',
+  'aria-label': 'O que é LCP',
   label: 'i',
 });
 
@@ -512,7 +512,7 @@ createTooltip({
           const trigger = createButton({
             variant: 'ghost',
             size: 'icon',
-            ariaLabel: 'Salvar',
+            'aria-label': 'Salvar',
             children: iconWrap,
           });
           return createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });
@@ -536,7 +536,7 @@ createTooltip({
           const help = createButton({
             variant: 'ghost',
             size: 'icon-sm',
-            ariaLabel: 'Ajuda sobre Token de API',
+            'aria-label': 'Ajuda sobre Token de API',
             label: '?',
           });
 
@@ -577,7 +577,7 @@ createTooltip({
           const help = createButton({
             variant: 'ghost',
             size: 'icon-sm',
-            ariaLabel: 'O que é LCP',
+            'aria-label': 'O que é LCP',
             label: 'i',
           });
 

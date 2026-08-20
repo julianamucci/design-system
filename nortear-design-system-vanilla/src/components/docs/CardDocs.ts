@@ -94,7 +94,7 @@ function buildProductCardPreview(): HTMLElement {
     createButton({
       variant: 'outline',
       label: t('demonstration.labels.actionEdit'),
-      ariaLabel: `${t('demonstration.labels.actionEdit')} ${t('demonstration.labels.productTitle')}`,
+      'aria-label': `${t('demonstration.labels.actionEdit')} ${t('demonstration.labels.productTitle')}`,
       onClick: () => track('button_click', { component: 'button', variant: 'outline', label: 'action-edit', location: 'docs_demo' }),
     }),
   );
@@ -102,7 +102,7 @@ function buildProductCardPreview(): HTMLElement {
     createButton({
       variant: 'destructive',
       label: t('demonstration.labels.actionDelete'),
-      ariaLabel: `${t('demonstration.labels.actionDelete')} ${t('demonstration.labels.productTitle')}`,
+      'aria-label': `${t('demonstration.labels.actionDelete')} ${t('demonstration.labels.productTitle')}`,
       onClick: () => track('button_click', { component: 'button', variant: 'destructive', label: 'action-delete', location: 'docs_demo' }),
     }),
   );
@@ -192,7 +192,7 @@ function buildWithActionPreview(): HTMLElement {
       variant: 'outline',
       size: 'sm',
       label: t('demonstration.labels.actionEdit'),
-      ariaLabel: `${t('demonstration.labels.actionEdit')} ${t('demonstration.labels.metricTitle')}`,
+      'aria-label': `${t('demonstration.labels.actionEdit')} ${t('demonstration.labels.metricTitle')}`,
       onClick: () => track('button_click', { component: 'button', variant: 'outline', label: 'action-edit', location: 'docs_demo' }),
     }),
   );

@@ -89,7 +89,7 @@ export const Playground: Story = {
     const trigger = createButton({
       variant: 'outline',
       label: args.triggerLabel,
-      ariaLabel: args.triggerLabel,
+      'aria-label': args.triggerLabel,
     });
 
     container.appendChild(

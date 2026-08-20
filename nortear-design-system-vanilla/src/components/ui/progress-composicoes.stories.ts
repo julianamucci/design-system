@@ -39,7 +39,7 @@ function buildBar(value: number, ariaLabel: string, variant?: ProgressVariant): 
 function buildLabeled(opts: {
   value: number;
   label: string;
-  ariaLabel: string;
+  'aria-label': string;
   variant?: ProgressVariant;
 }): HTMLElement {
   const wrap = document.createElement('div');
@@ -60,7 +60,7 @@ function buildLabeled(opts: {
   value.textContent = `${opts.value}%`;
 
   row.append(label, value);
-  wrap.append(row, buildBar(opts.value, opts.ariaLabel, opts.variant));
+  wrap.append(row, buildBar(opts.value, opts['aria-label'], opts.variant));
   return wrap;
 }
 
@@ -83,7 +83,7 @@ export const FileUpload: Story = {
     card.append(title, meta, buildLabeled({
       value: 48,
       label: 'Enviando arquivo',
-      ariaLabel: 'Progresso do upload de documento-final.pdf',
+      'aria-label': 'Progresso do upload de documento-final.pdf',
     }));
     return card;
   },
@@ -171,10 +171,10 @@ export const MultipleUploads: Story = {
     wrap.dataset.spacing = 'md';
 
     wrap.append(
-      buildLabeled({ value: 100, label: 'foto-1.jpg',     ariaLabel: 'Upload de foto-1.jpg concluído' }),
-      buildLabeled({ value: 74,  label: 'foto-2.jpg',     ariaLabel: 'Progresso do upload de foto-2.jpg' }),
-      buildLabeled({ value: 32,  label: 'foto-3.jpg',     ariaLabel: 'Progresso do upload de foto-3.jpg' }),
-      buildLabeled({ value: 0,   label: 'foto-4.jpg',     ariaLabel: 'Upload de foto-4.jpg aguardando' }),
+      buildLabeled({ value: 100, label: 'foto-1.jpg',     'aria-label': 'Upload de foto-1.jpg concluído' }),
+      buildLabeled({ value: 74,  label: 'foto-2.jpg',     'aria-label': 'Progresso do upload de foto-2.jpg' }),
+      buildLabeled({ value: 32,  label: 'foto-3.jpg',     'aria-label': 'Progresso do upload de foto-3.jpg' }),
+      buildLabeled({ value: 0,   label: 'foto-4.jpg',     'aria-label': 'Upload de foto-4.jpg aguardando' }),
     );
     return wrap;
   },
@@ -220,18 +220,18 @@ export const CustomColor: Story = {
       buildLabeled({
         value: 100,
         label: 'Sincronização',
-        ariaLabel: 'Sincronização concluída',
+        'aria-label': 'Sincronização concluída',
         variant: 'success',
       }),
       buildLabeled({
         value: 72,
         label: 'Backup',
-        ariaLabel: 'Progresso do backup',
+        'aria-label': 'Progresso do backup',
       }),
       buildLabeled({
         value: 92,
         label: 'Espaço usado',
-        ariaLabel: 'Espaço de armazenamento quase esgotado',
+        'aria-label': 'Espaço de armazenamento quase esgotado',
         variant: 'destructive',
       }),
     );
@@ -287,7 +287,7 @@ export const AriaBusyContainer: Story = {
     status.append(title, desc, buildLabeled({
       value: 35,
       label: 'Analisando dados',
-      ariaLabel: 'Progresso da análise de dados',
+      'aria-label': 'Progresso da análise de dados',
     }));
     return status;
   },

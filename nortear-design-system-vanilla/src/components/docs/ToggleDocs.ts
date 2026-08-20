@@ -90,7 +90,7 @@ function wrapIcon(icon: unknown, className = 'nds-icon-sm'): HTMLSpanElement {
 
 function buildIconToggle(opts: {
   icon: unknown;
-  ariaLabel: string;
+  'aria-label': string;
   pressed?: boolean;
   disabled?: boolean;
   variant?: ToggleVariant;
@@ -103,7 +103,7 @@ function buildIconToggle(opts: {
     variant: opts.variant ?? 'default',
     size: opts.size ?? 'default',
     children: wrapIcon(opts.icon),
-    'aria-label': opts.ariaLabel,
+    'aria-label': opts['aria-label'],
   };
   if (opts.fieldName) {
     toggleOpts.onClick = (pressed) => {
@@ -272,10 +272,10 @@ export function createToggleDocs(): HTMLElement {
             toolbar.dataset.spacing = 'xs';
             toolbar.setAttribute('role', 'group');
             toolbar.setAttribute('aria-label', t('title'));
-            toolbar.appendChild(buildIconToggle({ icon: Bold, ariaLabel: stripHtml(t('demonstration.labels.bold')), pressed: true, fieldName: 'bold' }));
-            toolbar.appendChild(buildIconToggle({ icon: Italic, ariaLabel: stripHtml(t('demonstration.labels.italic')), fieldName: 'italic' }));
-            toolbar.appendChild(buildIconToggle({ icon: Underline, ariaLabel: stripHtml(t('demonstration.labels.underline')), fieldName: 'underline' }));
-            toolbar.appendChild(buildIconToggle({ icon: List, ariaLabel: stripHtml(t('demonstration.labels.list')), fieldName: 'list' }));
+            toolbar.appendChild(buildIconToggle({ icon: Bold, 'aria-label': stripHtml(t('demonstration.labels.bold')), pressed: true, fieldName: 'bold' }));
+            toolbar.appendChild(buildIconToggle({ icon: Italic, 'aria-label': stripHtml(t('demonstration.labels.italic')), fieldName: 'italic' }));
+            toolbar.appendChild(buildIconToggle({ icon: Underline, 'aria-label': stripHtml(t('demonstration.labels.underline')), fieldName: 'underline' }));
+            toolbar.appendChild(buildIconToggle({ icon: List, 'aria-label': stripHtml(t('demonstration.labels.list')), fieldName: 'list' }));
             wrap.appendChild(toolbar);
 
             // 2) Outline com label visível (Mostrar ocultos)
@@ -349,9 +349,9 @@ export function createToggleDocs(): HTMLElement {
 
       case 'do-dont': {
         const buildDoDescriptive = () =>
-          buildIconToggle({ icon: Bold, ariaLabel: stripHtml(t('demonstration.labels.bold')), pressed: true });
+          buildIconToggle({ icon: Bold, 'aria-label': stripHtml(t('demonstration.labels.bold')), pressed: true });
         const buildDontGeneric = () => {
-          const btn = buildIconToggle({ icon: Bold, ariaLabel: 'Botão B', pressed: true });
+          const btn = buildIconToggle({ icon: Bold, 'aria-label': 'Botão B', pressed: true });
           return btn;
         };
         const buildDoGroupSurrogate = () => {
@@ -362,7 +362,7 @@ export function createToggleDocs(): HTMLElement {
           group.style.display = 'inline-flex';
           group.setAttribute('role', 'group');
           group.setAttribute('aria-label', 'Alinhamento de texto');
-          const a = buildIconToggle({ icon: AlignLeft, ariaLabel: 'Alinhar à esquerda', pressed: true });
+          const a = buildIconToggle({ icon: AlignLeft, 'aria-label': 'Alinhar à esquerda', pressed: true });
           a.style.borderRadius = '0';
           a.style.border = '0';
           group.appendChild(a);
@@ -372,8 +372,8 @@ export function createToggleDocs(): HTMLElement {
           const wrap = document.createElement('div');
           wrap.className = 'nds-cluster';
           wrap.dataset.spacing = 'sm';
-          wrap.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito' }));
-          wrap.appendChild(buildIconToggle({ icon: Italic, ariaLabel: 'Itálico' }));
+          wrap.appendChild(buildIconToggle({ icon: Bold, 'aria-label': 'Negrito' }));
+          wrap.appendChild(buildIconToggle({ icon: Italic, 'aria-label': 'Itálico' }));
           return wrap;
         };
 
@@ -437,7 +437,7 @@ const toggle = createToggle({
 });`,
               previewFactory: () => buildIconToggle({
                 icon: Bold,
-                ariaLabel: stripHtml(t('demonstration.labels.bold')),
+                'aria-label': stripHtml(t('demonstration.labels.bold')),
                 pressed: true,
                 variant: 'default',
               }),
@@ -452,7 +452,7 @@ const toggle = createToggle({
 });`,
               previewFactory: () => buildIconToggle({
                 icon: Italic,
-                ariaLabel: stripHtml(t('demonstration.labels.italic')),
+                'aria-label': stripHtml(t('demonstration.labels.italic')),
                 variant: 'outline',
               }),
             },
@@ -497,9 +497,9 @@ for (const size of ['sm', 'default', 'lg'] as const) {
                 const row = document.createElement('div');
                 row.className = 'nds-cluster';
 row.dataset.spacing = 'sm';
-                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (sm)', variant: 'outline', size: 'sm' }));
-                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (default)', variant: 'outline', size: 'default' }));
-                row.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito (lg)', variant: 'outline', size: 'lg' }));
+                row.appendChild(buildIconToggle({ icon: Bold, 'aria-label': 'Negrito (sm)', variant: 'outline', size: 'sm' }));
+                row.appendChild(buildIconToggle({ icon: Bold, 'aria-label': 'Negrito (default)', variant: 'outline', size: 'default' }));
+                row.appendChild(buildIconToggle({ icon: Bold, 'aria-label': 'Negrito (lg)', variant: 'outline', size: 'lg' }));
                 return row;
               },
             },
@@ -542,9 +542,9 @@ toolbar.appendChild(createToggle({
                 toolbar.setAttribute('aria-label', 'Formatação de texto');
                 toolbar.className = 'nds-cluster nds-rounded-md nds-border-default nds-p-1';
 toolbar.dataset.spacing = 'xs';
-                toolbar.appendChild(buildIconToggle({ icon: Bold, ariaLabel: 'Negrito', pressed: true }));
-                toolbar.appendChild(buildIconToggle({ icon: Italic, ariaLabel: 'Itálico' }));
-                toolbar.appendChild(buildIconToggle({ icon: Underline, ariaLabel: 'Sublinhado' }));
+                toolbar.appendChild(buildIconToggle({ icon: Bold, 'aria-label': 'Negrito', pressed: true }));
+                toolbar.appendChild(buildIconToggle({ icon: Italic, 'aria-label': 'Itálico' }));
+                toolbar.appendChild(buildIconToggle({ icon: Underline, 'aria-label': 'Sublinhado' }));
                 return toolbar;
               },
             },

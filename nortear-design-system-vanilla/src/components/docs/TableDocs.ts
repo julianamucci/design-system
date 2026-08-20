@@ -395,7 +395,7 @@ export function createTableDocs(): HTMLElement {
 
         const codeSrOnly = `table.appendChild(createTableCaption('Lista de faturas recentes', 'nds-sr-only'));`;
 
-        const codeAcoes = `const actionCell = createTableCell('');\nconst btn = createButton({\n  variant: 'ghost',\n  label: '...',\n  ariaLabel: \`Ações para fatura \${inv.id}\`,\n});\nactionCell.appendChild(btn);\ntr.appendChild(actionCell);`;
+        const codeAcoes = `const actionCell = createTableCell('');\nconst btn = createButton({\n  variant: 'ghost',\n  label: '...',\n  'aria-label': \`Ações para fatura \${inv.id}\`,\n});\nactionCell.appendChild(btn);\ntr.appendChild(actionCell);`;
 
         return createDocsVariants({
           title: t('variants.title'),

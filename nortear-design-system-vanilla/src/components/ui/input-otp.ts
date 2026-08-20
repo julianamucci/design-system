@@ -44,6 +44,8 @@ export type InputOTPOptions = {
    */
   autocomplete?: string;
   /** Nome acessível do CONJUNTO, anunciado ao entrar no campo. */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   ariaLabel?: string;
   /** Prefixo do nome de cada slot: "Dígito 1", "Dígito 2"… */
   digitLabel?: string;
@@ -66,9 +68,11 @@ export function createInputOTP(options: InputOTPOptions): HTMLElement {
     describedBy,
     autoFocus = false,
     autocomplete = 'one-time-code',
-    ariaLabel = 'Código de verificação',
     digitLabel = 'Dígito',
   } = options;
+
+  // `ariaLabel` continua aceito como apelido; o canônico vence quando vêm os dois.
+  const ariaLabel = options['aria-label'] ?? options.ariaLabel ?? 'Código de verificação';
 
   const separatorIndices: Set<number> = new Set(separatorAt);
   const aceito = mode === 'alphanumeric' ? /^[a-zA-Z0-9]$/ : /^[0-9]$/;

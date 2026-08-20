@@ -115,7 +115,7 @@ export function createAlert(options: AlertOptions = {}): HTMLElement {
     const dismissButton = createButton({
       variant: 'ghost',
       size: 'icon-sm',
-      ariaLabel: dismissLabel,
+      'aria-label': dismissLabel,
       class: 'nds-alert-dismiss',
       onClick: () => {
         if (dismissed) return;

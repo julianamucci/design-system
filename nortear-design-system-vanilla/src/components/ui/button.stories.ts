@@ -15,7 +15,7 @@ type ButtonArgs = {
   onClick?: (e: MouseEvent) => void;
   // Documentadas na aba "API Reference" sem control — o Playground não as
   // encaminha para a factory, mas fazem parte de ButtonOptions.
-  ariaLabel?: string;
+  'aria-label'?: string;
   type?: 'button' | 'submit' | 'reset';
   class?: string;
 };
@@ -43,7 +43,7 @@ const meta: Meta<ButtonArgs> = {
     // Estava em `args` sem argType: ficava fora da aba API Reference.
     // A aba "API Reference" documenta a API real; o Playground não encaminha
     // estas três, então control ativo aqui seria controle morto.
-    ariaLabel: {
+    'aria-label': {
       control: false,
       description: 'Nome acessível. Obrigatório em botões icon-only.',
       table: { type: { summary: 'string' } },
@@ -96,7 +96,7 @@ export const Playground: Story = {
       variant: args.variant,
       size: args.size,
       label: isIcon ? undefined : args.label,
-      ariaLabel: isIcon ? (args.label || 'Ação') : undefined,
+      'aria-label': isIcon ? (args.label || 'Ação') : undefined,
       disabled: args.disabled,
       onClick: args.onClick,
     });
@@ -121,6 +121,26 @@ export const Playground: Story = {
     await step('Clique dispara onClick', async () => {
       await userEvent.click(button);
       await expect(args.onClick).toHaveBeenCalled();
+    });
+
+    await step('O apelido depreciado continua produzindo o atributo', async () => {
+      // As fábricas tinham três grafias para o mesmo conceito — `ariaLabel`,
+      // `'aria-label'` e `label`. A unificação manteve as antigas como apelido
+      // em vez de apagá-las, porque apagar quebraria chamador em silêncio.
+      //
+      // Compatibilidade sem teste é promessa: esta asserção é o que separa
+      // "aceitamos o nome antigo" de "aceitávamos, e alguém removeu sem notar".
+      const antigo = createButton({ size: 'icon', ariaLabel: 'Adicionar' });
+      await expect(antigo).toHaveAttribute('aria-label', 'Adicionar');
+
+      // E o canônico vence quando os dois vierem — dois nomes disputando um
+      // atributo é o defeito que a unificação existe para fechar.
+      const ambos = createButton({
+        size: 'icon',
+        ariaLabel: 'Antigo',
+        'aria-label': 'Canônico',
+      });
+      await expect(ambos).toHaveAttribute('aria-label', 'Canônico');
     });
 
     await step('Tab leva o foco ao botão', async () => {

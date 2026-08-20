@@ -68,7 +68,7 @@ type Story = StoryObj;
 
 export const Closed: Story = {
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
+    const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
     return wrap(createTooltip({ trigger, content: 'Salvar (Ctrl+S)' }));
   },
   play: async ({ canvasElement, step }) => {
@@ -93,7 +93,7 @@ export const Closed: Story = {
 
 export const Open: Story = {
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
+    const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
     const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)' });
     queueMicrotask(() => trigger.focus());
     return wrap(el);
@@ -130,7 +130,7 @@ export const Open: Story = {
 export const Hover: Story = {
   parameters: { covers: ['functional.item1'] },
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
+    const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
     return wrap(createTooltip({ trigger, content: 'Salvar (Ctrl+S)' }));
   },
   play: async ({ canvasElement, step }) => {
@@ -163,7 +163,7 @@ export const KeyboardFocus: Story = {
   name: 'Keyboard focus',
   parameters: { covers: ['functional.item2'] },
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
+    const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
     return wrap(createTooltip({ trigger, content: 'Salvar (Ctrl+S)' }));
   },
   play: async ({ canvasElement, step }) => {
@@ -195,7 +195,7 @@ export const PersistenceInBubble: Story = {
     const trigger = createButton({
       variant: 'outline',
       label: 'Compartilhar',
-      ariaLabel: 'Compartilhar',
+      'aria-label': 'Compartilhar',
     });
     return wrap(
       createTooltip({

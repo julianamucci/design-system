@@ -35,7 +35,7 @@ type Story = StoryObj;
 function withLabel(opts: {
   idPrefix: string;
   labelText: string;
-  ariaLabel: string;
+  'aria-label': string;
   min?: number;
   max?: number;
   step?: number;
@@ -43,7 +43,7 @@ function withLabel(opts: {
   disabled?: boolean;
   unit?: string;
 }): HTMLElement {
-  const { idPrefix, labelText, ariaLabel, min = 0, max = 100, step = 1, value = 0, disabled = false, unit = '' } = opts;
+  const { idPrefix, labelText, 'aria-label': ariaLabel, min = 0, max = 100, step = 1, value = 0, disabled = false, unit = '' } = opts;
 
   const wrap = document.createElement('div');
   wrap.className = 'nds-stack nds-w-sm';
@@ -72,7 +72,7 @@ function withLabel(opts: {
     step,
     value,
     disabled,
-    ariaLabel,
+    'aria-label': ariaLabel,
     onValueChange: (v) => {
       valueText.textContent = `${v}${unit}`;
     },
@@ -103,7 +103,7 @@ export const Default: Story = {
     withLabel({
       idPrefix: 's-default',
       labelText: 'Volume',
-      ariaLabel: 'Volume',
+      'aria-label': 'Volume',
       value: 50,
       unit: '%',
     }),
@@ -138,7 +138,7 @@ export const Focus: Story = {
     withLabel({
       idPrefix: 's-focus',
       labelText: 'Volume',
-      ariaLabel: 'Volume',
+      'aria-label': 'Volume',
       value: 50,
       unit: '%',
     }),
@@ -168,7 +168,7 @@ export const Active: Story = {
     withLabel({
       idPrefix: 's-active',
       labelText: 'Volume',
-      ariaLabel: 'Volume',
+      'aria-label': 'Volume',
       value: 50,
       unit: '%',
     }),
@@ -226,7 +226,7 @@ export const Disabled: Story = {
     withLabel({
       idPrefix: 's-disabled',
       labelText: 'Volume',
-      ariaLabel: 'Volume',
+      'aria-label': 'Volume',
       value: 50,
       disabled: true,
       unit: '%',
@@ -253,7 +253,7 @@ export const MaxValue: Story = {
     withLabel({
       idPrefix: 's-max',
       labelText: 'Brilho',
-      ariaLabel: 'Brilho',
+      'aria-label': 'Brilho',
       value: 100,
       unit: '%',
     }),

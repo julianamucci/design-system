@@ -19,7 +19,7 @@ type SliderArgs = {
   value: number;
   disabled: boolean;
   orientation: 'horizontal' | 'vertical';
-  ariaLabel: string;
+  'aria-label': string;
   unit: string;
   onValueChange: (value: number) => void;
   onValueCommitted: (value: number) => void;
@@ -66,7 +66,7 @@ const meta: Meta<SliderArgs> = {
         defaultValue: { summary: "'horizontal'" },
       },
     },
-    ariaLabel: {
+    'aria-label': {
       control: 'text',
       description: 'Nome acessível, aplicado à alça. Obrigatório.',
       table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
@@ -94,7 +94,7 @@ const meta: Meta<SliderArgs> = {
     value: 50,
     disabled: false,
     orientation: 'horizontal',
-    ariaLabel: 'Volume',
+    'aria-label': 'Volume',
     unit: '%',
     onValueChange: fn(),
     onValueCommitted: fn(),
@@ -131,7 +131,7 @@ export const Playground: Story = {
     const label = document.createElement('label');
     label.id = 'pg-slider-label';
     label.className = 'nds-text-body nds-font-medium';
-    label.textContent = args.ariaLabel;
+    label.textContent = args['aria-label'];
 
     const valueText = document.createElement('span');
     valueText.id = 'pg-slider-value';
@@ -148,7 +148,7 @@ export const Playground: Story = {
       value: args.value,
       disabled: args.disabled,
       orientation: args.orientation,
-      ariaLabel: args.ariaLabel,
+      'aria-label': args['aria-label'],
       onValueChange: (v) => {
         valueText.textContent = `${v}${args.unit}`;
         args.onValueChange?.(v);

@@ -34,6 +34,8 @@ type SliderBaseOptions = {
    * (`['Preço mínimo', 'Preço máximo']`). Um nome só é repetido nas duas, o que
    * deixa quem ouve sem saber qual extremo está mexendo.
    */
+  'aria-label'?: string | string[];
+  /** @deprecated Apelido de `aria-label`. */
   ariaLabel?: string | string[];
   class?: string;
 };
@@ -75,8 +77,10 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
     step = 1,
     disabled = false,
     orientation = 'horizontal',
-    ariaLabel,
   } = options;
+
+  // `ariaLabel` continua aceito como apelido; o canônico vence quando vêm os dois.
+  const ariaLabel = options['aria-label'] ?? options.ariaLabel;
 
   const ehIntervalo = Array.isArray(options.value);
   const valores: number[] = ehIntervalo

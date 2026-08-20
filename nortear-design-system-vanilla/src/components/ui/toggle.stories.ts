@@ -40,7 +40,7 @@ type ToggleArgs = {
   variant: 'default' | 'outline';
   size: 'default' | 'sm' | 'lg';
   label: string;
-  ariaLabel: string;
+  'aria-label': string;
   onClick?: (pressed: boolean) => void;
 };
 
@@ -84,7 +84,7 @@ const meta: Meta<ToggleArgs> = {
       description: 'Texto visível ao lado do ícone. Vazio = toggle icon-only.',
       table: { type: { summary: 'string' } },
     },
-    ariaLabel: {
+    'aria-label': {
       control: 'text',
       description: 'Nome acessível — obrigatório em toggles sem texto visível.',
       table: { type: { summary: 'string' } },
@@ -101,7 +101,7 @@ const meta: Meta<ToggleArgs> = {
     variant: 'default',
     size: 'default',
     label: '',
-    ariaLabel: 'Negrito',
+    'aria-label': 'Negrito',
     onClick: fn(),
   },
 };
@@ -125,7 +125,7 @@ function buildPlaygroundToggle(args: ToggleArgs): HTMLElement {
     children,
     // Nome acessível vem do rótulo quando não há texto visível — opção da
     // factory, e não um `setAttribute` depois de construir.
-    'aria-label': args.label ? undefined : args.ariaLabel || undefined,
+    'aria-label': args.label ? undefined : args['aria-label'] || undefined,
   });
 
   return btn;
@@ -168,7 +168,7 @@ export const Playground: Story = {
       await expect(nome).toBeTruthy();
       // Sem texto visível, o nome só pode vir da OPÇÃO `aria-label`: é ela que
       // tem de produzir o atributo, e não um retoque no elemento retornado.
-      if (!args.label) await expect(btn).toHaveAttribute('aria-label', args.ariaLabel);
+      if (!args.label) await expect(btn).toHaveAttribute('aria-label', args['aria-label']);
       // Ícone decorativo: quem lê a tela não deve ouvi-lo duas vezes.
       await expect(btn.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
     });

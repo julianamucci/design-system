@@ -92,7 +92,7 @@ function buildDemoButton(variant: ButtonVariant, label: string, location: string
 }
 
 function buildIconButton(variant: ButtonVariant, size: ButtonSize, ariaLabel: string): HTMLButtonElement {
-  const btn = createButton({ variant, size, ariaLabel });
+  const btn = createButton({ variant, size, 'aria-label': ariaLabel });
   // Mapeia o size do button para o size do icon SVG.
   const iconSize: 'sm' | 'md' | 'lg' =
     size === 'icon-sm' ? 'sm' :
@@ -225,7 +225,7 @@ export function createButtonDocs(): HTMLElement {
             const iconOnly = createButton({
               variant: 'destructive',
               size: 'icon',
-              ariaLabel: t('demonstration.labels.iconOnly'),
+              'aria-label': t('demonstration.labels.iconOnly'),
               onClick: () => track('button_click', { component: 'button', variant: 'destructive', label: 'icon-only', location: 'docs_demo' }),
             });
             iconOnly.appendChild(createButtonIcon('trash'));
@@ -451,25 +451,25 @@ export function createButtonDocs(): HTMLElement {
             {
               name: 'icon',
               description: stripHtml(t('variants.sizes.icon')),
-              code: `const btn = createButton({ size: 'icon', ariaLabel: 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
+              code: `const btn = createButton({ size: 'icon', 'aria-label': 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
               previewFactory: () => buildIconButton('default', 'icon', 'Adicionar'),
             },
             {
               name: 'icon-xs',
               description: stripHtml(t('variants.sizes.icon-xs')),
-              code: `const btn = createButton({ size: 'icon-xs', ariaLabel: 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
+              code: `const btn = createButton({ size: 'icon-xs', 'aria-label': 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
               previewFactory: () => buildIconButton('default', 'icon-xs', 'Adicionar'),
             },
             {
               name: 'icon-sm',
               description: stripHtml(t('variants.sizes.icon-sm')),
-              code: `const btn = createButton({ size: 'icon-sm', ariaLabel: 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
+              code: `const btn = createButton({ size: 'icon-sm', 'aria-label': 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
               previewFactory: () => buildIconButton('default', 'icon-sm', 'Adicionar'),
             },
             {
               name: 'icon-lg',
               description: stripHtml(t('variants.sizes.icon-lg')),
-              code: `const btn = createButton({ size: 'icon-lg', ariaLabel: 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
+              code: `const btn = createButton({ size: 'icon-lg', 'aria-label': 'Adicionar item' });\nbtn.appendChild(createButtonIcon('plus'));`,
               previewFactory: () => buildIconButton('default', 'icon-lg', 'Adicionar'),
             },
           ],
@@ -592,7 +592,7 @@ export interface ButtonOptions {
   variant?: ButtonVariant;
   size?: ButtonSize;
   label?: string;
-  ariaLabel?: string;
+  'aria-label'?: string;
   ariaBusy?: boolean;
   ariaInvalid?: boolean;
   disabled?: boolean;

@@ -59,7 +59,7 @@ function priorityLabel(raw: string): string {
  * Constrói um Slider rotulado:
  * - <label> textual (id) associado via aria-labelledby à alça
  * - <span aria-live="polite"> que mostra o valor textualmente
- * - `ariaLabel` vai direto na opção da factory, que o escreve na alça
+ * - `aria-label` vai direto na opção da factory, que o escreve na alça
  *
  * A alça é um <input type="range"> de verdade, então role="slider",
  * aria-valuenow/min/max e a navegação Arrow/Home/End/PgUp/PgDn vêm do navegador.
@@ -67,7 +67,7 @@ function priorityLabel(raw: string): string {
 function buildLabeledSlider(opts: {
   idPrefix: string;
   labelText: string;
-  ariaLabel: string;
+  'aria-label': string;
   min?: number;
   max?: number;
   step?: number;
@@ -80,7 +80,7 @@ function buildLabeledSlider(opts: {
   const {
     idPrefix,
     labelText,
-    ariaLabel,
+    'aria-label': ariaLabel,
     min = 0,
     max = 100,
     step = 1,
@@ -120,7 +120,7 @@ function buildLabeledSlider(opts: {
     step,
     value,
     disabled,
-    ariaLabel,
+    'aria-label': ariaLabel,
     onValueChange: (v) => {
       valueText.textContent = `${v}${unit}`;
       onValueChange?.(v);
@@ -128,7 +128,7 @@ function buildLabeledSlider(opts: {
     onValueCommitted,
   });
 
-  // O nome acessível já veio pela opção `ariaLabel`; aqui só se amarra o rótulo
+  // O nome acessível já veio pela opção `aria-label`; aqui só se amarra o rótulo
   // visível e o texto de valor à alça.
   const input = slider.querySelector('input[type="range"]') as HTMLInputElement | null;
   if (input) {
@@ -272,7 +272,7 @@ export function createSliderDocs(): HTMLElement {
             const volume = buildLabeledSlider({
               idPrefix: 'demo-volume',
               labelText: t('demonstration.labels.volume'),
-              ariaLabel: t('demonstration.labels.volume'),
+              'aria-label': t('demonstration.labels.volume'),
               min: 0,
               max: 100,
               step: 1,
@@ -286,7 +286,7 @@ export function createSliderDocs(): HTMLElement {
             const brightness = buildLabeledSlider({
               idPrefix: 'demo-brightness',
               labelText: t('demonstration.labels.brightness'),
-              ariaLabel: t('demonstration.labels.brightness'),
+              'aria-label': t('demonstration.labels.brightness'),
               min: 0,
               max: 100,
               step: 5,
@@ -364,7 +364,7 @@ export function createSliderDocs(): HTMLElement {
           buildLabeledSlider({
             idPrefix: 'dodont-do-value',
             labelText: t('demonstration.labels.volume'),
-            ariaLabel: t('demonstration.labels.volume'),
+            'aria-label': t('demonstration.labels.volume'),
             min: 0,
             max: 100,
             value: 60,
@@ -373,19 +373,19 @@ export function createSliderDocs(): HTMLElement {
         const buildDontNoValue = () => {
           // Slider sem rótulo visível nem texto de valor ao lado — quem olha não
           // sabe onde está. O anti-padrão é visual: a alça continua nomeada por
-          // `ariaLabel` (sem nome, o axe acusa a página inteira).
+          // `aria-label` (sem nome, o axe acusa a página inteira).
           return createSlider({
             min: 0,
             max: 100,
             value: 60,
-            ariaLabel: t('demonstration.labels.volume'),
+            'aria-label': t('demonstration.labels.volume'),
           });
         };
         const buildDoAriaLabel = () =>
           buildLabeledSlider({
             idPrefix: 'dodont-do-aria',
             labelText: t('demonstration.labels.brightness'),
-            ariaLabel: t('demonstration.labels.brightness'),
+            'aria-label': t('demonstration.labels.brightness'),
             min: 0,
             max: 100,
             value: 80,
@@ -395,7 +395,7 @@ export function createSliderDocs(): HTMLElement {
           const wrap = buildLabeledSlider({
             idPrefix: 'dodont-dont-aria',
             labelText: 'Slider',
-            ariaLabel: 'Slider',
+            'aria-label': 'Slider',
             min: 0,
             max: 100,
             value: 80,
@@ -442,7 +442,7 @@ export function createSliderDocs(): HTMLElement {
   max: 100,
   step: 1,
   value: 50,
-  ariaLabel: 'Volume',
+  'aria-label': 'Volume',
   onValueChange: (value) => console.log('arrastando:', value),
   onValueCommitted: (value) => console.log('soltou em:', value),
 });
@@ -453,7 +453,7 @@ const intervalo = createSlider({
   max: 1000,
   step: 10,
   value: [100, 400],
-  ariaLabel: ['Preço mínimo', 'Preço máximo'],
+  'aria-label': ['Preço mínimo', 'Preço máximo'],
   onValueCommitted: ([minimo, maximo]) => console.log(minimo, maximo),
 });`,
         });
@@ -468,12 +468,12 @@ const intervalo = createSlider({
             {
               name: stripHtml(t('variants.items.single')),
               description: stripHtml(t('variants.styles.single')),
-              code: `createSlider({ min: 0, max: 100, value: 50, ariaLabel: 'Volume' });`,
+              code: `createSlider({ min: 0, max: 100, value: 50, 'aria-label': 'Volume' });`,
               previewFactory: () =>
                 buildLabeledSlider({
                   idPrefix: 'v-single',
                   labelText: t('demonstration.labels.volume'),
-                  ariaLabel: t('demonstration.labels.volume'),
+                  'aria-label': t('demonstration.labels.volume'),
                   min: 0,
                   max: 100,
                   value: 50,
@@ -488,7 +488,7 @@ const intervalo = createSlider({
               code: `const intervalo = createSlider({
   min: 0, max: 1000, step: 10,
   value: [100, 400],
-  ariaLabel: ['Preço mínimo', 'Preço máximo'],
+  'aria-label': ['Preço mínimo', 'Preço máximo'],
   onValueChange: ([minimo, maximo]) => { … },
 });`,
               previewFactory: () => {
@@ -522,7 +522,7 @@ const intervalo = createSlider({
                   max: 1000,
                   step: 10,
                   value: [100, 400],
-                  ariaLabel: [
+                  'aria-label': [
                     `${t('demonstration.labels.priceRange')} — mínimo`,
                     `${t('demonstration.labels.priceRange')} — máximo`,
                   ],
@@ -539,7 +539,7 @@ const intervalo = createSlider({
               code: `createSlider({
   orientation: 'vertical',
   min: 0, max: 100, value: 60,
-  ariaLabel: 'Volume',
+  'aria-label': 'Volume',
 });`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
@@ -554,7 +554,7 @@ const intervalo = createSlider({
                     min: 0,
                     max: 100,
                     value: 60,
-                    ariaLabel: t('demonstration.labels.volume'),
+                    'aria-label': t('demonstration.labels.volume'),
                   }),
                 );
                 return wrap;
@@ -573,7 +573,7 @@ const intervalo = createSlider({
                 buildLabeledSlider({
                   idPrefix: 'v-brightness',
                   labelText: 'Brilho',
-                  ariaLabel: 'Brilho',
+                  'aria-label': 'Brilho',
                   min: 0,
                   max: 100,
                   step: 5,
@@ -597,14 +597,14 @@ const intervalo = createSlider({
               useWhen: stripHtml(t('variants.compositions.volume.use')),
               code: `const slider = createSlider({
   min: 0, max: 100, value: 50,
-  ariaLabel: 'Volume',
+  'aria-label': 'Volume',
   onValueChange: (v) => { valueText.textContent = v + '%'; },
 });`,
               previewFactory: () =>
                 buildLabeledSlider({
                   idPrefix: 'comp-volume',
                   labelText: 'Volume',
-                  ariaLabel: 'Volume',
+                  'aria-label': 'Volume',
                   min: 0,
                   max: 100,
                   value: 50,
@@ -618,7 +618,7 @@ const intervalo = createSlider({
               code: `// O contínuo pinta a tela; o commitado alimenta a analítica.
 const slider = createSlider({
   min: 0, max: 100, value: 60,
-  ariaLabel: 'Volume',
+  'aria-label': 'Volume',
   onValueChange: (v) => { valueText.textContent = v + '%'; },
   onValueCommitted: (v) => {
     track('slider_change', { component: 'slider', field_name: 'volume', value: v });
@@ -641,7 +641,7 @@ const slider = createSlider({
                 const slider = buildLabeledSlider({
                   idPrefix: 'comp-form-volume',
                   labelText: 'Volume',
-                  ariaLabel: 'Volume',
+                  'aria-label': 'Volume',
                   min: 0,
                   max: 100,
                   value: lastCommitted,
@@ -702,7 +702,7 @@ type SliderBaseOptions = {
   step?: number;         // default 1
   disabled?: boolean;    // default false
   orientation?: 'horizontal' | 'vertical';   // default 'horizontal'
-  ariaLabel?: string | string[];             // par de nomes no intervalo
+  'aria-label'?: string | string[];             // par de nomes no intervalo
   class?: string;
 };
 
@@ -829,7 +829,7 @@ export function createSlider(options: SliderRangeOptions): HTMLElement;`;
             {
               title: '',
               content: DOMPurify.sanitize(
-                '<strong>Uma alça ou duas</strong> — o que separa os dois modos é a forma do valor: <code>value: 50</code> desenha uma alça, <code>value: [100, 400]</code> desenha o intervalo, e aí <code>onValueChange</code> e <code>onValueCommitted</code> passam a devolver um par. Cada alça é um <code>&lt;input type="range"&gt;</code> de verdade — parada de tabulação própria, nome próprio por <code>ariaLabel</code>, e os extremos não se cruzam. Para o ponteiro, a alça mais perto sobe: duas caixas sobrepostas disputariam o clique, e sem isso a de baixo ficaria inalcançável no meio do trilho.',
+                '<strong>Uma alça ou duas</strong> — o que separa os dois modos é a forma do valor: <code>value: 50</code> desenha uma alça, <code>value: [100, 400]</code> desenha o intervalo, e aí <code>onValueChange</code> e <code>onValueCommitted</code> passam a devolver um par. Cada alça é um <code>&lt;input type="range"&gt;</code> de verdade — parada de tabulação própria, nome próprio por <code>aria-label</code>, e os extremos não se cruzam. Para o ponteiro, a alça mais perto sobe: duas caixas sobrepostas disputariam o clique, e sem isso a de baixo ficaria inalcançável no meio do trilho.',
               ),
             },
             {

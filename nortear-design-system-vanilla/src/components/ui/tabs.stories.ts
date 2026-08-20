@@ -8,7 +8,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 type TabsArgs = {
   defaultValue: string;
-  ariaLabel: string;
+  'aria-label': string;
 };
 
 const meta: Meta<TabsArgs> = {
@@ -23,14 +23,14 @@ const meta: Meta<TabsArgs> = {
       options: ['overview', 'properties', 'examples'],
       description: 'Tab ativa inicial (não-controlada).',
     },
-    ariaLabel: {
+    'aria-label': {
       control: 'text',
       description: 'aria-label do TabsList — OBRIGATÓRIO. Descreve o agrupamento de tabs.',
     },
   },
   args: {
     defaultValue: 'overview',
-    ariaLabel: 'Seções do componente',
+    'aria-label': 'Seções do componente',
   },
 };
 
@@ -90,7 +90,7 @@ export const Playground: Story = {
       items: buildItems(),
       // ARIA: nome da lista de abas, OBRIGATÓRIO. A opção escreve no
       // `role="tablist"`, que é o elemento que o leitor de tela anuncia.
-      'aria-label': args.ariaLabel,
+      'aria-label': args['aria-label'],
     });
     return root;
   },
@@ -106,7 +106,7 @@ export const Playground: Story = {
     await step('Os três papéis do padrão tabs estão no DOM', async () => {
       // A asserção já existia e passava — com a story escrevendo o atributo por
       // fora. O que ela prova agora é que a OPÇÃO da factory chega ao tablist.
-      await expect(lista).toHaveAttribute('aria-label', args.ariaLabel);
+      await expect(lista).toHaveAttribute('aria-label', args['aria-label']);
       await expect(abas).toHaveLength(3);
       // Só o painel da aba ativa está na árvore de acessibilidade — os demais
       // saem por `hidden`, que é o que impede o leitor de tela de lê-los.

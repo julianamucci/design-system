@@ -48,7 +48,7 @@ function buildLucideSvg(icon: unknown): SVGSVGElement {
 
 function iconToggle(opts: {
   icon: unknown;
-  ariaLabel?: string;
+  'aria-label'?: string;
   texto?: string;
   pressed?: boolean;
   variant?: ToggleOptions['variant'];
@@ -65,7 +65,7 @@ function iconToggle(opts: {
     size: opts.size ?? 'default',
     children: filhos,
     // Texto visível dispensa aria-label — o leitor usa o conteúdo do botão.
-    'aria-label': opts.ariaLabel,
+    'aria-label': opts['aria-label'],
   });
 }
 
@@ -81,7 +81,7 @@ function cluster(...filhos: HTMLElement[]): HTMLElement {
 
 export const Default: Story = {
   parameters: { covers: ['accessibility.item5'] },
-  render: () => iconToggle({ icon: Bold, ariaLabel: 'Negrito' }),
+  render: () => iconToggle({ icon: Bold, 'aria-label': 'Negrito' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const toggle = canvas.getByRole('button', { name: 'Negrito' });
@@ -112,8 +112,8 @@ export const Outline: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () =>
     cluster(
-      iconToggle({ icon: Bold, ariaLabel: 'Negrito' }),
-      iconToggle({ icon: Italic, ariaLabel: 'Itálico', variant: 'outline' }),
+      iconToggle({ icon: Bold, 'aria-label': 'Negrito' }),
+      iconToggle({ icon: Italic, 'aria-label': 'Itálico', variant: 'outline' }),
     ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -171,9 +171,9 @@ export const WithLabel: Story = {
 export const Sizes: Story = {
   render: () =>
     cluster(
-      iconToggle({ icon: Bold, ariaLabel: 'Negrito pequeno', size: 'sm', variant: 'outline' }),
-      iconToggle({ icon: Bold, ariaLabel: 'Negrito padrão', variant: 'outline' }),
-      iconToggle({ icon: Bold, ariaLabel: 'Negrito grande', size: 'lg', variant: 'outline' }),
+      iconToggle({ icon: Bold, 'aria-label': 'Negrito pequeno', size: 'sm', variant: 'outline' }),
+      iconToggle({ icon: Bold, 'aria-label': 'Negrito padrão', variant: 'outline' }),
+      iconToggle({ icon: Bold, 'aria-label': 'Negrito grande', size: 'lg', variant: 'outline' }),
     ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

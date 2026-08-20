@@ -47,7 +47,7 @@ function buildLucideSvg(icon: unknown): SVGSVGElement {
 
 function toggle(opts: {
   icon: unknown;
-  ariaLabel?: string;
+  'aria-label'?: string;
   texto?: string;
   pressed?: boolean;
   variant?: ToggleOptions['variant'];
@@ -62,7 +62,7 @@ function toggle(opts: {
     variant: opts.variant ?? 'default',
     onClick: opts.onClick,
     children: filhos,
-    'aria-label': opts.ariaLabel,
+    'aria-label': opts['aria-label'],
   });
 }
 
@@ -88,10 +88,10 @@ export const FormattingToolbar: Story = {
     toolbar.setAttribute('aria-label', 'Formatação de texto');
 
     toolbar.append(
-      toggle({ icon: Bold, ariaLabel: 'Negrito' }),
-      toggle({ icon: Italic, ariaLabel: 'Itálico' }),
-      toggle({ icon: Underline, ariaLabel: 'Sublinhado' }),
-      toggle({ icon: List, ariaLabel: 'Lista' }),
+      toggle({ icon: Bold, 'aria-label': 'Negrito' }),
+      toggle({ icon: Italic, 'aria-label': 'Itálico' }),
+      toggle({ icon: Underline, 'aria-label': 'Sublinhado' }),
+      toggle({ icon: List, 'aria-label': 'Lista' }),
     );
 
     return toolbar;
@@ -197,7 +197,7 @@ export const Controlled: Story = {
 
     const btn = toggle({
       icon: Bold,
-      ariaLabel: 'Negrito',
+      'aria-label': 'Negrito',
       onClick: (pressed) => {
         valor.textContent = String(pressed);
       },

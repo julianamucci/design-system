@@ -49,7 +49,7 @@ type ToggleGroupArgs = {
   orientation: 'horizontal' | 'vertical';
   spacing: number;
   disabled: boolean;
-  ariaLabel: string;
+  'aria-label': string;
 };
 
 const meta: Meta<ToggleGroupArgs> = {
@@ -87,7 +87,7 @@ const meta: Meta<ToggleGroupArgs> = {
       control: 'boolean',
       description: 'Desabilita o grupo inteiro.',
     },
-    ariaLabel: {
+    'aria-label': {
       control: 'text',
       description: 'aria-label do grupo — OBRIGATÓRIO.',
     },
@@ -99,7 +99,7 @@ const meta: Meta<ToggleGroupArgs> = {
     orientation: 'horizontal',
     spacing: 0,
     disabled: false,
-    ariaLabel: 'Alinhamento do texto',
+    'aria-label': 'Alinhamento do texto',
   },
 };
 
@@ -140,7 +140,7 @@ export const Playground: Story = {
       items,
       defaultValue: args.type === 'single' ? 'left' : ['left'],
       // aria-label OBRIGATÓRIO no grupo
-      'aria-label': args.ariaLabel,
+      'aria-label': args['aria-label'],
     });
 
     // Injeta SVGs (factory usa textContent quando children é string)
@@ -156,7 +156,7 @@ export const Playground: Story = {
 
     await step('accessibility.item5 — o grupo e cada item icon-only têm nome', async () => {
       const group = canvas.getByRole('toolbar');
-      await expect(group).toHaveAttribute('aria-label', args.ariaLabel);
+      await expect(group).toHaveAttribute('aria-label', args['aria-label']);
       await expect(group).toHaveAttribute('data-slot', 'toggle-group');
       const btns = canvas.getAllByRole('button');
       await expect(btns).toHaveLength(3);

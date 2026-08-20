@@ -256,14 +256,14 @@ export const WithGroupActions: Story = {
     let adicionados = 0;
     group.appendChild(
       createSidebarGroupAction({
-        label: 'Adicionar projeto',
+        'aria-label': 'Adicionar projeto',
         icon: makeIcon(ICON_PLUS),
         onClick: () => { adicionados += 1; group.dataset.adicionados = String(adicionados); },
       }),
     );
 
     const groupContent = createSidebarGroupContent();
-    const menu = createSidebarMenu({ labelledBy: 'grupo-projetos' });
+    const menu = createSidebarMenu({ 'aria-labelledby': 'grupo-projetos' });
 
     // Item completo: botão + contador ancorado + ação flutuante, os três irmãos
     // dentro do mesmo <li>.
@@ -273,7 +273,7 @@ export const WithGroupActions: Story = {
         label: 'Nortear',
         // A contagem entra no NOME do item porque o contador ao lado é
         // `aria-hidden` — senão o número seria anunciado solto.
-        ariaLabel: 'Nortear, 12 pendências',
+        'aria-label': 'Nortear, 12 pendências',
         icon: makeIcon(ICON_LAYOUT),
         href: '#',
         active: true,
@@ -283,7 +283,7 @@ export const WithGroupActions: Story = {
     let acoesAbertas = 0;
     itemNortear.appendChild(
       createSidebarMenuAction({
-        label: 'Mais opções de Nortear',
+        'aria-label': 'Mais opções de Nortear',
         icon: makeIcon(ICON_MORE),
         showOnHover: true,
         onClick: () => { acoesAbertas += 1; itemNortear.dataset.acoes = String(acoesAbertas); },
@@ -457,7 +457,7 @@ export const WithSubmenu: Story = {
     group.appendChild(createSidebarGroupLabel({ text: 'Componentes', id: 'grupo-componentes' }));
 
     const groupContent = createSidebarGroupContent();
-    const menu = createSidebarMenu({ labelledBy: 'grupo-componentes' });
+    const menu = createSidebarMenu({ 'aria-labelledby': 'grupo-componentes' });
 
     menu.appendChild(createSidebarMenuItem({ label: 'Dashboard', icon: makeIcon(ICON_HOME), active: true, href: '#' }));
 
@@ -465,7 +465,7 @@ export const WithSubmenu: Story = {
     const parentLi = createSidebarMenuItem();
     const parentBtn = createSidebarMenuButton({
       label: 'Componentes',
-      ariaLabel: 'Componentes',
+      'aria-label': 'Componentes',
       icon: makeIcon(ICON_LAYOUT),
     });
     parentBtn.setAttribute('aria-expanded', 'false');
@@ -602,12 +602,12 @@ export const LoadingSkeleton: Story = {
     group.appendChild(createSidebarGroupLabel({ text: 'Navegação', id: 'grupo-carregando' }));
 
     const groupContent = createSidebarGroupContent();
-    const menu = createSidebarMenu({ labelledBy: 'grupo-carregando' });
+    const menu = createSidebarMenu({ 'aria-labelledby': 'grupo-carregando' });
 
     // A primeira linha se anuncia (`role="status"`); as demais são decoração
     // muda. Três regiões vivas repetindo o mesmo aviso seria pior que nenhuma.
     const linhas = [
-      { showIcon: true,  label: 'Carregando navegação', width: '70%' },
+      { showIcon: true,  'aria-label': 'Carregando navegação', width: '70%' },
       { showIcon: true,  width: '55%' },
       { showIcon: false, width: '85%' },
     ];
@@ -716,7 +716,7 @@ export const WithSearch: Story = {
     // caractere digitado, e um campo que perde o nome ao ser usado é um campo
     // sem nome.
     const searchInput = createSidebarInput({
-      label: 'Buscar na navegação',
+      'aria-label': 'Buscar na navegação',
       placeholder: 'Buscar...',
     });
 

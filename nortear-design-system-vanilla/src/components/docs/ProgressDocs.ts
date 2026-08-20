@@ -78,14 +78,14 @@ function buildProgress(opts: {
   max?: number;
   variant?: ProgressVariant;
   className?: string;
-  ariaLabel: string;
+  'aria-label': string;
 }): HTMLElement {
   return createProgress({
     value: opts.value,
     max: opts.max,
     variant: opts.variant,
     className: opts.className,
-    'aria-label': opts.ariaLabel,
+    'aria-label': opts['aria-label'],
   });
 }
 
@@ -99,7 +99,7 @@ function buildProgress(opts: {
  * barra vazia e parada.
  */
 function buildIndeterminate(ariaLabel: string): HTMLElement {
-  return buildProgress({ value: null, ariaLabel });
+  return buildProgress({ value: null, 'aria-label': ariaLabel });
 }
 
 /**
@@ -110,7 +110,7 @@ function buildIndeterminate(ariaLabel: string): HTMLElement {
 function buildLabeled(opts: {
   value: number;
   labelText: string;
-  ariaLabel: string;
+  'aria-label': string;
 }): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-stack nds-w-full';
@@ -133,7 +133,7 @@ function buildLabeled(opts: {
 
   row.append(label, value);
 
-  const bar = buildProgress({ value: opts.value, ariaLabel: opts.ariaLabel });
+  const bar = buildProgress({ value: opts.value, 'aria-label': opts['aria-label'] });
 
   wrap.append(row, bar);
   return wrap;
@@ -252,7 +252,7 @@ export function createProgressDocs(): HTMLElement {
             const animated = buildLabeled({
               value: 0,
               labelText: t('demonstration.labels.upload'),
-              ariaLabel: t('demonstration.labels.upload'),
+              'aria-label': t('demonstration.labels.upload'),
             });
             grid.appendChild(animated);
 
@@ -283,13 +283,13 @@ export function createProgressDocs(): HTMLElement {
             grid.appendChild(buildLabeled({
               value: 50,
               labelText: t('demonstration.labels.loading'),
-              ariaLabel: t('demonstration.labels.loading'),
+              'aria-label': t('demonstration.labels.loading'),
             }));
 
             grid.appendChild(buildLabeled({
               value: 100,
               labelText: t('demonstration.labels.complete'),
-              ariaLabel: t('demonstration.labels.complete'),
+              'aria-label': t('demonstration.labels.complete'),
             }));
 
             // Indeterminate row
@@ -396,7 +396,7 @@ export function createProgressDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair1.do')),
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () =>
-                buildProgress({ value: 42, ariaLabel: 'Progresso do upload' }),
+                buildProgress({ value: 42, 'aria-label': 'Progresso do upload' }),
               dontPreviewFactory: () => createProgress({ value: 42, 'aria-label': 'Barra' }),
             },
             {
@@ -405,9 +405,9 @@ export function createProgressDocs(): HTMLElement {
               doCaption: toPlainText(t('doDont.pair2.do')),
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () =>
-                buildLabeled({ value: 50, labelText: 'Enviando arquivo', ariaLabel: 'Progresso do upload' }),
+                buildLabeled({ value: 50, labelText: 'Enviando arquivo', 'aria-label': 'Progresso do upload' }),
               dontPreviewFactory: () =>
-                buildLabeled({ value: 47, labelText: 'Enviando arquivo', ariaLabel: 'Progresso do upload' }),
+                buildLabeled({ value: 47, labelText: 'Enviando arquivo', 'aria-label': 'Progresso do upload' }),
             },
           ],
         });
@@ -450,14 +450,14 @@ export function createProgressDocs(): HTMLElement {
               name: t('variants.items.determinate'),
               description: DOMPurify.sanitize(t('variants.styles.determinate')),
               code: codeDeterminate,
-              previewFactory: () => buildProgress({ value: 42, ariaLabel: 'Progresso do upload' }),
+              previewFactory: () => buildProgress({ value: 42, 'aria-label': 'Progresso do upload' }),
             },
             {
               name: t('variants.items.withLabel'),
               description: DOMPurify.sanitize(t('variants.styles.withLabel')),
               code: codeWithLabel,
               previewFactory: () =>
-                buildLabeled({ value: 42, labelText: t('demonstration.labels.upload'), ariaLabel: t('demonstration.labels.upload') }),
+                buildLabeled({ value: 42, labelText: t('demonstration.labels.upload'), 'aria-label': t('demonstration.labels.upload') }),
             },
             {
               name: t('variants.items.semantic'),
@@ -468,8 +468,8 @@ export function createProgressDocs(): HTMLElement {
                 wrap.className = 'nds-stack nds-w-full';
                 wrap.dataset.spacing = 'sm';
                 wrap.append(
-                  buildProgress({ value: 100, variant: 'success', ariaLabel: 'Sincronização concluída' }),
-                  buildProgress({ value: 92, variant: 'destructive', ariaLabel: 'Espaço de armazenamento quase esgotado' }),
+                  buildProgress({ value: 100, variant: 'success', 'aria-label': 'Sincronização concluída' }),
+                  buildProgress({ value: 92, variant: 'destructive', 'aria-label': 'Espaço de armazenamento quase esgotado' }),
                 );
                 return wrap;
               },

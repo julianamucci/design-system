@@ -67,7 +67,7 @@ export const Large: Story = {
 
 export const Icon: Story = {
   render: () => {
-    const btn = createButton({ size: 'icon', ariaLabel: 'Adicionar item' });
+    const btn = createButton({ size: 'icon', 'aria-label': 'Adicionar item' });
     btn.appendChild(createButtonIcon('plus'));
     return btn;
   },
@@ -91,7 +91,7 @@ export const Icon: Story = {
 
 export const IconExtraSmall: Story = {
   render: () => {
-    const btn = createButton({ size: 'icon-xs', ariaLabel: 'Adicionar item' });
+    const btn = createButton({ size: 'icon-xs', 'aria-label': 'Adicionar item' });
     btn.appendChild(createButtonIcon('plus'));
     return btn;
   },
@@ -112,7 +112,7 @@ export const IconExtraSmall: Story = {
 
 export const IconSmall: Story = {
   render: () => {
-    const btn = createButton({ size: 'icon-sm', ariaLabel: 'Adicionar item' });
+    const btn = createButton({ size: 'icon-sm', 'aria-label': 'Adicionar item' });
     btn.appendChild(createButtonIcon('plus'));
     return btn;
   },
@@ -133,7 +133,7 @@ export const IconSmall: Story = {
 
 export const IconLarge: Story = {
   render: () => {
-    const btn = createButton({ size: 'icon-lg', ariaLabel: 'Adicionar item' });
+    const btn = createButton({ size: 'icon-lg', 'aria-label': 'Adicionar item' });
     btn.appendChild(createButtonIcon('plus'));
     return btn;
   },

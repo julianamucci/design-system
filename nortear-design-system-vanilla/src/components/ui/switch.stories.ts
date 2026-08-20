@@ -23,7 +23,7 @@ type SwitchArgs = {
   disabled: boolean;
   size: SwitchSize;
   label: string;
-  ariaLabel: string;
+  'aria-label': string;
   onCheckedChange: (checked: boolean) => void;
 };
 
@@ -56,7 +56,7 @@ const meta: Meta<SwitchArgs> = {
         'Texto do Label associado via `htmlFor` ao `id` do Switch. Descreve o estado ATIVO da função.',
       table: { type: { summary: 'string' } },
     },
-    ariaLabel: {
+    'aria-label': {
       control: 'text',
       description: 'aria-label quando não há Label visível associado.',
       table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
@@ -72,7 +72,7 @@ const meta: Meta<SwitchArgs> = {
     disabled: false,
     size: 'default',
     label: 'Receber notificações por email',
-    ariaLabel: '',
+    'aria-label': '',
     onCheckedChange: fn(),
   },
 };
@@ -94,7 +94,7 @@ function buildSwitchWithLabel(args: SwitchArgs): HTMLElement {
     disabled: args.disabled,
     size: args.size,
     onCheckedChange: args.onCheckedChange,
-    ...(args.ariaLabel ? { 'aria-label': args.ariaLabel } : {}),
+    ...(args['aria-label'] ? { 'aria-label': args['aria-label'] } : {}),
   });
 
   if (args.label) {

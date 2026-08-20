@@ -572,7 +572,7 @@ export type InputOTPOptions = {
   describedBy?: string;                // aria-describedby nos slots
   autoFocus?: boolean;
   autocomplete?: string;               // vai só no primeiro slot
-  ariaLabel?: string;                  // nome do conjunto
+  'aria-label'?: string;                  // nome do conjunto
   digitLabel?: string;                 // prefixo do nome de cada slot
   class?: string;
 };

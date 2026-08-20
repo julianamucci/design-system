@@ -11,7 +11,7 @@ type InputOTPArgs = {
   disabled: boolean;
   invalid: boolean;
   withSeparator: boolean;
-  ariaLabel: string;
+  'aria-label': string;
   onComplete: (codigo: string) => void;
 };
 
@@ -44,7 +44,7 @@ const meta: Meta<InputOTPArgs> = {
         'Insere um separador no meio do código. Divergência idiomática do factory: os separadores vêm por índice na opção separatorAt, não por subcomponente.',
       table: { type: { summary: 'boolean' }, defaultValue: { summary: 'false' } },
     },
-    ariaLabel: {
+    'aria-label': {
       control: 'text',
       description: 'Nome acessível do conjunto.',
       table: { type: { summary: 'string' }, defaultValue: { summary: 'Código de verificação' } },
@@ -60,7 +60,7 @@ const meta: Meta<InputOTPArgs> = {
     disabled: false,
     invalid: false,
     withSeparator: false,
-    ariaLabel: 'Código de verificação',
+    'aria-label': 'Código de verificação',
     onComplete: fn(),
   },
 };
@@ -98,7 +98,7 @@ export const Playground: Story = {
       length: args.length,
       disabled: args.disabled,
       invalid: args.invalid,
-      ariaLabel: args.ariaLabel,
+      'aria-label': args['aria-label'],
       separatorAt: args.withSeparator ? [Math.floor(args.length / 2)] : [],
       onComplete: (codigo) => args.onComplete(codigo),
     });
@@ -113,7 +113,7 @@ export const Playground: Story = {
       // Seis campos anônimos são o defeito clássico deste componente: o leitor
       // anuncia "editar" seis vezes sem dizer de quê. O nome do grupo situa; o
       // do slot diz em qual dígito a pessoa está.
-      await expect(canvas.getByRole('group', { name: args.ariaLabel })).toBeTruthy();
+      await expect(canvas.getByRole('group', { name: args['aria-label'] })).toBeTruthy();
       await expect(slots()).toHaveLength(args.length);
       await expect(slots()[2]).toHaveAttribute('aria-label', 'Dígito 3');
     });

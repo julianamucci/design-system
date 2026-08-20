@@ -78,7 +78,7 @@ export const DestructiveIcon: Story = {
 
 export const IconOnly: Story = {
   render: () => {
-    const btn = createButton({ size: 'icon', ariaLabel: 'Baixar arquivo' });
+    const btn = createButton({ size: 'icon', 'aria-label': 'Baixar arquivo' });
     btn.appendChild(createButtonIcon('download'));
     return btn;
   },

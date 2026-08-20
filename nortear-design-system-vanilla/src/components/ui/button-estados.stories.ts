@@ -57,7 +57,7 @@ export const Disabled: Story = {
 
 export const Loading: Story = {
   render: () => {
-    const btn = createButton({ variant: 'default', disabled: true, ariaBusy: true });
+    const btn = createButton({ variant: 'default', disabled: true, 'aria-busy': true });
     btn.appendChild(createButtonIcon('loader', { spin: true }));
     const label = document.createElement('span');
     label.textContent = 'Salvando…';
@@ -111,7 +111,7 @@ export const FocusVisible: Story = {
 };
 
 export const Invalid: Story = {
-  render: () => createButton({ variant: 'outline', label: 'Formulário inválido', ariaInvalid: true }),
+  render: () => createButton({ variant: 'outline', label: 'Formulário inválido', 'aria-invalid': true }),
   parameters: { docs: { description: { story: 'Estado inválido. Use aria-invalid="true" para sinalizar problemas de validação.' } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

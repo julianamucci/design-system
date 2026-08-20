@@ -122,8 +122,8 @@ function injectIconsAndText(group: HTMLElement, entries: Array<{ icon: unknown; 
 
 function buildToggleGroupDemo(opts: {
   type: 'single' | 'multiple';
-  ariaLabel: string;
-  items: Array<{ value: string; icon: unknown; ariaLabel: string; disabled?: boolean }>;
+  'aria-label': string;
+  items: Array<{ value: string; icon: unknown; 'aria-label': string; disabled?: boolean }>;
   defaultValue?: string | string[];
   variant?: 'default' | 'outline';
   fieldName: string;
@@ -138,7 +138,7 @@ function buildToggleGroupDemo(opts: {
     disabled: it.disabled,
     // O nome viaja COM o item. Antes ficava num segundo passo que casava rótulo
     // com posição no array, e um item inserido no meio renomeava os seguintes.
-    'aria-label': it.ariaLabel,
+    'aria-label': it['aria-label'],
   }));
 
   const root = createToggleGroup({
@@ -148,7 +148,7 @@ function buildToggleGroupDemo(opts: {
     defaultValue: opts.defaultValue,
     orientation: opts.orientation ?? 'horizontal',
     // aria-label obrigatório no grupo
-    'aria-label': opts.ariaLabel,
+    'aria-label': opts['aria-label'],
     onValueChange: (value) => {
       const flat = Array.isArray(value) ? value.join(',') : value;
       track('field_change', {
@@ -293,26 +293,26 @@ export function createToggleGroupDocs(): HTMLElement {
             // 1) Single — alinhamento
             wrap.appendChild(buildToggleGroupDemo({
               type: 'single',
-              ariaLabel: stripHtml(t('demonstration.labels.alignmentLabel')),
+              'aria-label': stripHtml(t('demonstration.labels.alignmentLabel')),
               fieldName: 'text_alignment',
               defaultValue: 'left',
               items: [
-                { value: 'left',   icon: AlignLeft,   ariaLabel: stripHtml(t('demonstration.labels.left'))   },
-                { value: 'center', icon: AlignCenter, ariaLabel: stripHtml(t('demonstration.labels.center')) },
-                { value: 'right',  icon: AlignRight,  ariaLabel: stripHtml(t('demonstration.labels.right'))  },
+                { value: 'left',   icon: AlignLeft,   'aria-label': stripHtml(t('demonstration.labels.left'))   },
+                { value: 'center', icon: AlignCenter, 'aria-label': stripHtml(t('demonstration.labels.center')) },
+                { value: 'right',  icon: AlignRight,  'aria-label': stripHtml(t('demonstration.labels.right'))  },
               ],
             }));
 
             // 2) Multiple — formatação
             wrap.appendChild(buildToggleGroupDemo({
               type: 'multiple',
-              ariaLabel: stripHtml(t('demonstration.labels.formattingLabel')),
+              'aria-label': stripHtml(t('demonstration.labels.formattingLabel')),
               fieldName: 'text_formatting',
               defaultValue: ['bold'],
               items: [
-                { value: 'bold',      icon: Bold,      ariaLabel: stripHtml(t('demonstration.labels.bold'))      },
-                { value: 'italic',    icon: Italic,    ariaLabel: stripHtml(t('demonstration.labels.italic'))    },
-                { value: 'underline', icon: Underline, ariaLabel: stripHtml(t('demonstration.labels.underline')) },
+                { value: 'bold',      icon: Bold,      'aria-label': stripHtml(t('demonstration.labels.bold'))      },
+                { value: 'italic',    icon: Italic,    'aria-label': stripHtml(t('demonstration.labels.italic'))    },
+                { value: 'underline', icon: Underline, 'aria-label': stripHtml(t('demonstration.labels.underline')) },
               ],
             }));
 
@@ -320,12 +320,12 @@ export function createToggleGroupDocs(): HTMLElement {
             wrap.appendChild(buildToggleGroupDemo({
               type: 'single',
               orientation: 'vertical',
-              ariaLabel: stripHtml(t('demonstration.labels.viewLabel')),
+              'aria-label': stripHtml(t('demonstration.labels.viewLabel')),
               fieldName: 'view_mode',
               defaultValue: 'grid',
               items: [
-                { value: 'grid', icon: LayoutGrid, ariaLabel: stripHtml(t('demonstration.labels.grid')) },
-                { value: 'list', icon: List,       ariaLabel: stripHtml(t('demonstration.labels.list')) },
+                { value: 'grid', icon: LayoutGrid, 'aria-label': stripHtml(t('demonstration.labels.grid')) },
+                { value: 'list', icon: List,       'aria-label': stripHtml(t('demonstration.labels.list')) },
               ],
             }));
 
@@ -394,13 +394,13 @@ export function createToggleGroupDocs(): HTMLElement {
       case 'do-dont': {
         const buildDoSingle = () => buildToggleGroupDemo({
           type: 'single',
-          ariaLabel: stripHtml(t('demonstration.labels.alignmentLabel')),
+          'aria-label': stripHtml(t('demonstration.labels.alignmentLabel')),
           fieldName: 'text_alignment',
           defaultValue: 'left',
           items: [
-            { value: 'left',   icon: AlignLeft,   ariaLabel: stripHtml(t('demonstration.labels.left'))   },
-            { value: 'center', icon: AlignCenter, ariaLabel: stripHtml(t('demonstration.labels.center')) },
-            { value: 'right',  icon: AlignRight,  ariaLabel: stripHtml(t('demonstration.labels.right'))  },
+            { value: 'left',   icon: AlignLeft,   'aria-label': stripHtml(t('demonstration.labels.left'))   },
+            { value: 'center', icon: AlignCenter, 'aria-label': stripHtml(t('demonstration.labels.center')) },
+            { value: 'right',  icon: AlignRight,  'aria-label': stripHtml(t('demonstration.labels.right'))  },
           ],
         });
 
@@ -428,13 +428,13 @@ export function createToggleGroupDocs(): HTMLElement {
 
         const buildDoNamed = () => buildToggleGroupDemo({
           type: 'multiple',
-          ariaLabel: stripHtml(t('demonstration.labels.formattingLabel')),
+          'aria-label': stripHtml(t('demonstration.labels.formattingLabel')),
           fieldName: 'text_formatting',
           defaultValue: ['bold'],
           items: [
-            { value: 'bold',      icon: Bold,      ariaLabel: stripHtml(t('demonstration.labels.bold'))      },
-            { value: 'italic',    icon: Italic,    ariaLabel: stripHtml(t('demonstration.labels.italic'))    },
-            { value: 'underline', icon: Underline, ariaLabel: stripHtml(t('demonstration.labels.underline')) },
+            { value: 'bold',      icon: Bold,      'aria-label': stripHtml(t('demonstration.labels.bold'))      },
+            { value: 'italic',    icon: Italic,    'aria-label': stripHtml(t('demonstration.labels.italic'))    },
+            { value: 'underline', icon: Underline, 'aria-label': stripHtml(t('demonstration.labels.underline')) },
           ],
         });
 
@@ -522,14 +522,14 @@ export function createToggleGroupDocs(): HTMLElement {
 });`,
               previewFactory: () => buildToggleGroupDemo({
                 type: 'single',
-                ariaLabel: stripHtml(t('demonstration.labels.alignmentLabel')),
+                'aria-label': stripHtml(t('demonstration.labels.alignmentLabel')),
                 fieldName: 'text_alignment',
                 defaultValue: 'left',
                 location: 'docs-variants',
                 items: [
-                  { value: 'left',   icon: AlignLeft,   ariaLabel: stripHtml(t('demonstration.labels.left'))   },
-                  { value: 'center', icon: AlignCenter, ariaLabel: stripHtml(t('demonstration.labels.center')) },
-                  { value: 'right',  icon: AlignRight,  ariaLabel: stripHtml(t('demonstration.labels.right'))  },
+                  { value: 'left',   icon: AlignLeft,   'aria-label': stripHtml(t('demonstration.labels.left'))   },
+                  { value: 'center', icon: AlignCenter, 'aria-label': stripHtml(t('demonstration.labels.center')) },
+                  { value: 'right',  icon: AlignRight,  'aria-label': stripHtml(t('demonstration.labels.right'))  },
                 ],
               }),
             },
@@ -550,14 +550,14 @@ export function createToggleGroupDocs(): HTMLElement {
 });`,
               previewFactory: () => buildToggleGroupDemo({
                 type: 'multiple',
-                ariaLabel: stripHtml(t('demonstration.labels.formattingLabel')),
+                'aria-label': stripHtml(t('demonstration.labels.formattingLabel')),
                 fieldName: 'text_formatting',
                 defaultValue: ['bold'],
                 location: 'docs-variants',
                 items: [
-                  { value: 'bold',      icon: Bold,      ariaLabel: stripHtml(t('demonstration.labels.bold'))      },
-                  { value: 'italic',    icon: Italic,    ariaLabel: stripHtml(t('demonstration.labels.italic'))    },
-                  { value: 'underline', icon: Underline, ariaLabel: stripHtml(t('demonstration.labels.underline')) },
+                  { value: 'bold',      icon: Bold,      'aria-label': stripHtml(t('demonstration.labels.bold'))      },
+                  { value: 'italic',    icon: Italic,    'aria-label': stripHtml(t('demonstration.labels.italic'))    },
+                  { value: 'underline', icon: Underline, 'aria-label': stripHtml(t('demonstration.labels.underline')) },
                 ],
               }),
             },
@@ -577,14 +577,14 @@ export function createToggleGroupDocs(): HTMLElement {
 });`,
               previewFactory: () => buildToggleGroupDemo({
                 type: 'single',
-                ariaLabel: stripHtml(t('demonstration.labels.viewLabel')),
+                'aria-label': stripHtml(t('demonstration.labels.viewLabel')),
                 fieldName: 'view_mode',
                 defaultValue: 'grid',
                 orientation: 'vertical',
                 location: 'docs-variants',
                 items: [
-                  { value: 'grid', icon: LayoutGrid, ariaLabel: stripHtml(t('demonstration.labels.grid')) },
-                  { value: 'list', icon: List,       ariaLabel: stripHtml(t('demonstration.labels.list')) },
+                  { value: 'grid', icon: LayoutGrid, 'aria-label': stripHtml(t('demonstration.labels.grid')) },
+                  { value: 'list', icon: List,       'aria-label': stripHtml(t('demonstration.labels.list')) },
                 ],
               }),
             },

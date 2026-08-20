@@ -65,7 +65,7 @@ type Story = StoryObj;
 export const Default: Story = {
   parameters: { covers: ['visual.item1', 'accessibility.item2'] },
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
+    const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
     const el = createTooltip({ trigger, content: 'Salvar' });
     queueMicrotask(() => trigger.focus());
     return wrap(el);
@@ -99,7 +99,7 @@ export const Default: Story = {
 export const WithShortcut: Story = {
   parameters: { covers: ['visual.item2'] },
   render: () => {
-    const trigger = createButton({ variant: 'outline', label: 'Salvar', ariaLabel: 'Salvar' });
+    const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
     const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)' });
     queueMicrotask(() => trigger.focus());
     return wrap(el);
@@ -134,7 +134,7 @@ export const LongText: Story = {
     const trigger = createButton({
       variant: 'outline',
       label: 'Mais informação',
-      ariaLabel: 'Mais informação',
+      'aria-label': 'Mais informação',
     });
     const el = createTooltip({
       trigger,

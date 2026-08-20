@@ -27,7 +27,7 @@ type Story = StoryObj;
 function withLabel(opts: {
   idPrefix: string;
   labelText: string;
-  ariaLabel: string;
+  'aria-label': string;
   min?: number;
   max?: number;
   step?: number;
@@ -38,7 +38,7 @@ function withLabel(opts: {
   const {
     idPrefix,
     labelText,
-    ariaLabel,
+    'aria-label': ariaLabel,
     min = 0,
     max = 100,
     step = 1,
@@ -75,7 +75,7 @@ function withLabel(opts: {
     step,
     value,
     orientation,
-    ariaLabel,
+    'aria-label': ariaLabel,
     onValueChange: (v) => {
       valueText.textContent = `${v}${unit}`;
     },
@@ -103,7 +103,7 @@ export const Single: Story = {
     withLabel({
       idPrefix: 'v-single',
       labelText: 'Volume',
-      ariaLabel: 'Volume',
+      'aria-label': 'Volume',
       value: 50,
       unit: '%',
     }),
@@ -177,7 +177,7 @@ export const Range: Story = {
       max: 100,
       step: 1,
       value: [20, 80],
-      ariaLabel: ['Faixa de preço — mínimo', 'Faixa de preço — máximo'],
+      'aria-label': ['Faixa de preço — mínimo', 'Faixa de preço — máximo'],
       onValueChange: fmt,
     });
 
@@ -235,7 +235,7 @@ export const Vertical: Story = {
     withLabel({
       idPrefix: 'v-vertical',
       labelText: 'Brilho',
-      ariaLabel: 'Brilho',
+      'aria-label': 'Brilho',
       value: 60,
       unit: '%',
       orientation: 'vertical',

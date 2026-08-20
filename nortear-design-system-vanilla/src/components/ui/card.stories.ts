@@ -96,14 +96,14 @@ function buildPlaygroundCard(args: CardArgs): HTMLElement {
       createButton({
         variant: 'outline',
         label: 'Editar',
-        ariaLabel: `Editar produto ${args.title}`,
+        'aria-label': `Editar produto ${args.title}`,
       }),
     );
     footer.appendChild(
       createButton({
         variant: 'destructive',
         label: 'Excluir',
-        ariaLabel: `Excluir produto ${args.title}`,
+        'aria-label': `Excluir produto ${args.title}`,
       }),
     );
     card.appendChild(footer);

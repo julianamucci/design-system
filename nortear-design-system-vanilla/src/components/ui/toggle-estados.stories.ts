@@ -54,7 +54,7 @@ function makeToggle(opts: {
   icon?: unknown;
   pressed?: boolean;
   disabled?: boolean;
-  ariaLabel: string;
+  'aria-label': string;
   variant?: ToggleOptions['variant'];
 }): HTMLButtonElement {
   return createToggle({
@@ -62,7 +62,7 @@ function makeToggle(opts: {
     disabled: opts.disabled ?? false,
     variant: opts.variant ?? 'default',
     children: buildLucideSvg(opts.icon ?? Bold),
-    'aria-label': opts.ariaLabel,
+    'aria-label': opts['aria-label'],
   });
 }
 
@@ -78,7 +78,7 @@ function cluster(...filhos: HTMLElement[]): HTMLElement {
 
 export const Off: Story = {
   parameters: { covers: ['visual.item1'] },
-  render: () => makeToggle({ ariaLabel: 'Negrito' }),
+  render: () => makeToggle({ 'aria-label': 'Negrito' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const btn = canvas.getByRole('button', { name: 'Negrito' });
@@ -102,8 +102,8 @@ export const On: Story = {
   parameters: { covers: ['visual.item2', 'accessibility.item2'] },
   render: () =>
     cluster(
-      makeToggle({ ariaLabel: 'Negrito inativo' }),
-      makeToggle({ ariaLabel: 'Negrito ativo', pressed: true }),
+      makeToggle({ 'aria-label': 'Negrito inativo' }),
+      makeToggle({ 'aria-label': 'Negrito ativo', pressed: true }),
     ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -140,8 +140,8 @@ export const FocusVisible: Story = {
   parameters: { covers: ['accessibility.item3'] },
   render: () =>
     cluster(
-      makeToggle({ ariaLabel: 'Negrito' }),
-      makeToggle({ ariaLabel: 'Itálico', icon: Italic, variant: 'outline' }),
+      makeToggle({ 'aria-label': 'Negrito' }),
+      makeToggle({ 'aria-label': 'Itálico', icon: Italic, variant: 'outline' }),
     ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -173,9 +173,9 @@ export const Disabled: Story = {
   parameters: { covers: ['visual.item4', 'functional.item4'] },
   render: () =>
     cluster(
-      makeToggle({ ariaLabel: 'Negrito', disabled: true }),
+      makeToggle({ 'aria-label': 'Negrito', disabled: true }),
       makeToggle({
-        ariaLabel: 'Itálico ativo e desabilitado',
+        'aria-label': 'Itálico ativo e desabilitado',
         icon: Italic,
         disabled: true,
         pressed: true,

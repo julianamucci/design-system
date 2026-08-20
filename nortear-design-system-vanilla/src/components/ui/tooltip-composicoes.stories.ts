@@ -56,7 +56,7 @@ export const IconButtonWithShortcut: Story = {
     const trigger = createButton({
       variant: 'ghost',
       size: 'icon',
-      ariaLabel: 'Salvar',
+      'aria-label': 'Salvar',
       children: iconWrap,
     });
 
@@ -103,7 +103,7 @@ export const HelpInFormField: Story = {
     const help = createButton({
       variant: 'ghost',
       size: 'icon-sm',
-      ariaLabel: 'Onde encontrar o Token de API',
+      'aria-label': 'Onde encontrar o Token de API',
       label: '?',
     });
 
@@ -168,7 +168,7 @@ export const MetricDescription: Story = {
     const help = createButton({
       variant: 'ghost',
       size: 'icon-sm',
-      ariaLabel: 'O que é LCP',
+      'aria-label': 'O que é LCP',
       label: 'i',
     });
 
@@ -219,7 +219,7 @@ export const PlacementSides: Story = {
     const lados: Array<'top' | 'right' | 'bottom' | 'left'> = ['top', 'right', 'bottom', 'left'];
 
     for (const side of lados) {
-      const trigger = createButton({ variant: 'outline', label: side, ariaLabel: side });
+      const trigger = createButton({ variant: 'outline', label: side, 'aria-label': side });
       grid.appendChild(createTooltip({ trigger, content: `Tooltip ${side}`, side }));
       queueMicrotask(() => {
         trigger.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
@@ -287,7 +287,7 @@ export const ProviderWithMarkup: Story = {
     const grupo = createTooltipProvider({ delayDuration: 3000, skipDelayDuration: 5000 });
 
     for (const [acao, tecla] of [['Copiar', 'C'], ['Colar', 'V']] as const) {
-      const trigger = createButton({ variant: 'outline', label: acao, ariaLabel: acao });
+      const trigger = createButton({ variant: 'outline', label: acao, 'aria-label': acao });
 
       const conteudo = document.createElement('span');
       conteudo.append(`${acao} `);

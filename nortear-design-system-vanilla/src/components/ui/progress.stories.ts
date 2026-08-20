@@ -11,7 +11,7 @@ type ProgressArgs = {
   value: number;
   max: number;
   variant: '' | 'success' | 'destructive';
-  ariaLabel: string;
+  'aria-label': string;
 };
 
 const meta: Meta<ProgressArgs> = {
@@ -38,7 +38,7 @@ const meta: Meta<ProgressArgs> = {
       description: 'Cor semântica da barra. Vazio, a barra usa o primário.',
       table: { type: { summary: "'success' | 'destructive'" }, defaultValue: { summary: '—' } },
     },
-    ariaLabel: {
+    'aria-label': {
       control: 'text',
       description: 'Texto descrevendo o que está sendo medido. Obrigatório — opção `aria-label` da factory.',
       table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
@@ -48,7 +48,7 @@ const meta: Meta<ProgressArgs> = {
     value: 42,
     max: 100,
     variant: '',
-    ariaLabel: 'Progresso do upload',
+    'aria-label': 'Progresso do upload',
   },
 };
 
@@ -68,7 +68,7 @@ export const Playground: Story = {
       value: args.value,
       max: args.max,
       variant: args.variant || undefined,
-      'aria-label': args.ariaLabel,
+      'aria-label': args['aria-label'],
     });
     container.appendChild(bar);
     return container;
@@ -80,9 +80,9 @@ export const Playground: Story = {
       // O nome vem da OPÇÃO `aria-label` da factory. A asserção já existia, mas
       // passava com a story escrevendo o atributo por fora depois de construir:
       // o buraco era da fábrica, e o teste não tinha como vê-lo.
-      const bar = canvas.getByRole('progressbar', { name: args.ariaLabel });
+      const bar = canvas.getByRole('progressbar', { name: args['aria-label'] });
       await expect(bar).toHaveAttribute('data-slot', 'progress');
-      await expect(bar).toHaveAttribute('aria-label', args.ariaLabel);
+      await expect(bar).toHaveAttribute('aria-label', args['aria-label']);
     });
 
     await step('A escala inteira chega ao leitor de tela', async () => {

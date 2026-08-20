@@ -68,8 +68,33 @@ export type SidebarOptions = {
   onMobileOpenChange?: (open: boolean) => void;
 };
 
+// ─── `aria-label`, e `label` como apelido nas peças só de ícone ──────────────
+//
+// `label` significa DUAS coisas nesta fábrica: no item de menu é o texto
+// visível (vira `<span>`), e no gatilho, na busca e nas ações é o nome
+// acessível (vira `setAttribute('aria-label')`). A mesma chave querendo dizer
+// coisas diferentes conforme a peça é o que faz quem compõe ter de decorar
+// caso a caso.
+//
+// Onde `label` era o nome acessível, `aria-label` passa a ser o nome canônico —
+// o mesmo atributo que as outras quatro stacks passam direto. `label` continua
+// aceito; apagá-lo quebraria chamador em silêncio. Quando os dois vêm,
+// `aria-label` vence. Onde `label` é texto VISÍVEL, nada muda.
+//
+// A união abaixo é o que preserva a obrigatoriedade nas peças em que o nome
+// nunca pode faltar: sem nenhuma das duas grafias, a chamada não compila.
+type NomeAcessivelObrigatorio =
+  | { 'aria-label': string; label?: string }
+  | { 'aria-label'?: string; label: string };
+
+/** Resolve as duas grafias do nome acessível, com o canônico vencendo. */
+function nomeAcessivelDe(o: { 'aria-label'?: string; label?: string }): string | undefined {
+  return o['aria-label'] ?? o.label;
+}
+
 export type SidebarMenuItemOptions = {
   icon?: SVGElement | HTMLElement;
+  /** Texto VISÍVEL do item. Vira o `<span>` que o CSS trunca no modo de ícones. */
   label: string;
   href?: string;
   active?: boolean;
@@ -398,19 +423,19 @@ function panelLeftIcon(): SVGElement {
 /**
  * Botão que alterna a barra.
  *
- * `label` é o nome acessível: o botão carrega só o ícone, e o ícone é
+ * `aria-label` é o nome acessível: o botão carrega só o ícone, e o ícone é
  * `aria-hidden`. O padrão vem do conteúdo compartilhado, em português — o
  * controle principal do componente anunciava "Toggle sidebar" até aqui. Continua
  * trocável para o caso em que o rótulo depende do contexto.
  */
 export function createSidebarTrigger(
   toggleFn: () => void,
-  options: { class?: string; label?: string } = {}
+  options: { class?: string; 'aria-label'?: string; /** @deprecated Apelido de `aria-label`. */ label?: string } = {}
 ): HTMLButtonElement {
   const btn = createButton({ variant: 'ghost', size: 'icon', class: options.class });
   btn.dataset.slot = 'sidebar-trigger';
   btn.setAttribute('data-sidebar', 'trigger');
-  btn.setAttribute('aria-label', options.label ?? ROTULOS_SIDEBAR_PADRAO.alternar);
+  btn.setAttribute('aria-label', nomeAcessivelDe(options) ?? ROTULOS_SIDEBAR_PADRAO.alternar);
   btn.appendChild(panelLeftIcon());
   btn.addEventListener('click', toggleFn);
   return btn;
@@ -490,19 +515,19 @@ export function createSidebarFooter(options: { class?: string } = {}): HTMLEleme
 /**
  * Campo de busca dentro da barra.
  *
- * `label` é obrigatório e vira o nome acessível: o `placeholder` some no
- * primeiro caractere digitado, e um campo que perde o nome ao ser usado é um
- * campo sem nome. Nenhuma das outras implementações força isso — lá o nome é
- * responsabilidade de quem compõe, e por isso falta.
+ * O nome acessível é obrigatório: o `placeholder` some no primeiro caractere
+ * digitado, e um campo que perde o nome ao ser usado é um campo sem nome.
+ * Nenhuma das outras implementações força isso — lá o nome é responsabilidade
+ * de quem compõe, e por isso falta.
  */
 export function createSidebarInput(
-  options: InputOptions & { label: string }
+  options: InputOptions & NomeAcessivelObrigatorio
 ): HTMLInputElement {
-  const { label, ...rest } = options;
+  const { label: _label, 'aria-label': _ariaLabel, ...rest } = options;
   const input = createInput({ type: 'search', ...rest, class: cn('nds-sidebar-input', rest.class) });
   input.dataset.slot = 'sidebar-input';
   input.setAttribute('data-sidebar', 'input');
-  input.setAttribute('aria-label', label);
+  input.setAttribute('aria-label', nomeAcessivelDe(options)!);
   return input;
 }
 
@@ -540,19 +565,20 @@ export function createSidebarGroupContent(options: { class?: string } = {}): HTM
 /**
  * Ação no canto do grupo (adicionar, filtrar).
  *
- * `label` é obrigatório: o botão carrega só um ícone, e ícone é `aria-hidden`.
- * Sem o rótulo o controle entra na ordem de tabulação sem nome nenhum. As
- * outras implementações não exigem — o nome fica por conta de quem compõe.
+ * O nome acessível é obrigatório: o botão carrega só um ícone, e ícone é
+ * `aria-hidden`. Sem o rótulo o controle entra na ordem de tabulação sem nome
+ * nenhum. As outras implementações não exigem — o nome fica por conta de quem
+ * compõe.
  */
 export function createSidebarGroupAction(
-  options: { label: string; icon?: SVGElement | HTMLElement; onClick?: () => void; class?: string }
+  options: NomeAcessivelObrigatorio & { icon?: SVGElement | HTMLElement; onClick?: () => void; class?: string }
 ): HTMLButtonElement {
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = cn('nds-sidebar-group-action', options.class);
   btn.dataset.slot = 'sidebar-group-action';
   btn.setAttribute('data-sidebar', 'group-action');
-  btn.setAttribute('aria-label', options.label);
+  btn.setAttribute('aria-label', nomeAcessivelDe(options)!);
   if (options.icon) btn.appendChild(options.icon);
   if (options.onClick) btn.addEventListener('click', options.onClick);
   return btn;
@@ -563,25 +589,33 @@ export function createSidebarGroupAction(
 /**
  * A lista de itens.
  *
- * `labelledBy` aponta para o `id` do rótulo do grupo. Uma `<ul>` sem nome é
+ * `aria-labelledby` aponta para o `id` do rótulo do grupo. Uma `<ul>` sem nome é
  * anunciada como "lista, 4 itens" e nada mais; com o rótulo ligado, ela é "Conta,
  * lista, 4 itens".
  */
 export function createSidebarMenu(
-  options: { labelledBy?: string; class?: string } = {}
+  options: {
+    'aria-labelledby'?: string;
+    /** @deprecated Apelido de `aria-labelledby`. */
+    labelledBy?: string;
+    class?: string;
+  } = {}
 ): HTMLUListElement {
   const ul = document.createElement('ul');
   ul.className = cn('nds-sidebar-menu', options.class);
   ul.dataset.slot = 'sidebar-menu';
   ul.setAttribute('data-sidebar', 'menu');
-  if (options.labelledBy) ul.setAttribute('aria-labelledby', options.labelledBy);
+  const rotuladoPor = options['aria-labelledby'] ?? options.labelledBy;
+  if (rotuladoPor) ul.setAttribute('aria-labelledby', rotuladoPor);
   return ul;
 }
 
 export type SidebarMenuButtonOptions = {
-  /** Rótulo visível. Vira o `<span>` que o CSS trunca no modo de ícones. */
+  /** Rótulo VISÍVEL. Vira o `<span>` que o CSS trunca no modo de ícones. */
   label?: string;
   /** Nome acessível. Use quando o rótulo visível some (modo de ícones) ou não basta. */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   ariaLabel?: string;
   icon?: SVGElement | HTMLElement;
   href?: string;
@@ -641,7 +675,9 @@ export function createSidebarMenuButton(
     }
   }
 
-  const nome = options.ariaLabel ?? options.label;
+  // `label` aqui NÃO é apelido: é o texto visível servindo de recurso quando
+  // nenhum nome acessível foi declarado.
+  const nome = options['aria-label'] ?? options.ariaLabel ?? options.label;
   if (nome) el.setAttribute('aria-label', nome);
 
   if (options.onClick) el.addEventListener('click', options.onClick);
@@ -659,13 +695,12 @@ export function createSidebarMenuButton(
 /**
  * Ação flutuante à direita do item (menu de contexto, remover).
  *
- * `label` obrigatório pelo mesmo motivo da ação de grupo: é um botão só de
- * ícone. `showOnHover` só esconde a partir de 48rem, e o `:focus-within` do
+ * Nome acessível obrigatório pelo mesmo motivo da ação de grupo: é um botão só
+ * de ícone. `showOnHover` só esconde a partir de 48rem, e o `:focus-within` do
  * item o traz de volta para quem chega por teclado.
  */
 export function createSidebarMenuAction(
-  options: {
-    label: string;
+  options: NomeAcessivelObrigatorio & {
     icon?: SVGElement | HTMLElement;
     showOnHover?: boolean;
     onClick?: () => void;
@@ -681,7 +716,7 @@ export function createSidebarMenuAction(
   );
   btn.dataset.slot = 'sidebar-menu-action';
   btn.setAttribute('data-sidebar', 'menu-action');
-  btn.setAttribute('aria-label', options.label);
+  btn.setAttribute('aria-label', nomeAcessivelDe(options)!);
   if (options.icon) btn.appendChild(options.icon);
   if (options.onClick) btn.addEventListener('click', options.onClick);
   return btn;
@@ -693,7 +728,7 @@ export function createSidebarMenuAction(
  * `aria-hidden` de fábrica: o número mora FORA do botão (o CSS o posiciona por
  * cima, com `pointer-events: none`), então lido como conteúdo ele vira um "12"
  * solto depois do rótulo, sem dizer de quê. A contagem entra no nome acessível
- * do item — `ariaLabel: 'Notificações, 12 não lidas'`. É o que a implementação
+ * do item — `'aria-label': 'Notificações, 12 não lidas'`. É o que a implementação
  * do Angular já faz; as outras três deixam o número solto.
  */
 export function createSidebarMenuBadge(
@@ -715,22 +750,31 @@ export function createSidebarMenuBadge(
  * em `.nds-skeleton`, e as classes `.nds-sidebar-menu-skeleton-*` só dão a
  * medida. Sem a peça de esqueleto por baixo, o placeholder não pinta nada.
  *
- * Sem `label` a linha inteira é `aria-hidden`: um bloco cinza pulsando não é
- * conteúdo, e quem anuncia o carregamento é a região que contém a lista. Com
- * `label`, a linha vira `role="status"` e se anuncia sozinha — use no caso de
- * uma linha só, senão cada linha vira uma região viva repetindo o mesmo aviso.
+ * Sem nome acessível a linha inteira é `aria-hidden`: um bloco cinza pulsando
+ * não é conteúdo, e quem anuncia o carregamento é a região que contém a lista.
+ * Com `aria-label`, a linha vira `role="status"` e se anuncia sozinha — use no
+ * caso de uma linha só, senão cada linha vira uma região viva repetindo o mesmo
+ * aviso.
  */
 export function createSidebarMenuSkeleton(
-  options: { showIcon?: boolean; label?: string; width?: string; class?: string } = {}
+  options: {
+    showIcon?: boolean;
+    'aria-label'?: string;
+    /** @deprecated Apelido de `aria-label`. */
+    label?: string;
+    width?: string;
+    class?: string;
+  } = {}
 ): HTMLElement {
   const el = document.createElement('div');
   el.className = cn('nds-sidebar-menu-skeleton', options.class);
   el.dataset.slot = 'sidebar-menu-skeleton';
   el.setAttribute('data-sidebar', 'menu-skeleton');
 
-  if (options.label) {
+  const nome = nomeAcessivelDe(options);
+  if (nome) {
     el.setAttribute('role', 'status');
-    el.setAttribute('aria-label', options.label);
+    el.setAttribute('aria-label', nome);
   } else {
     el.setAttribute('aria-hidden', 'true');
   }
@@ -772,7 +816,11 @@ export function createSidebarMenuSubItem(options: { class?: string } = {}): HTML
 }
 
 export type SidebarMenuSubButtonOptions = {
+  /** Rótulo VISÍVEL. Vira o `<span>` do subitem. */
   label?: string;
+  /** Nome acessível. Use quando o rótulo visível some ou não basta. */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   ariaLabel?: string;
   icon?: SVGElement | HTMLElement;
   href?: string;
@@ -822,7 +870,9 @@ export function createSidebarMenuSubButton(
     else (el as HTMLButtonElement).disabled = true;
   }
 
-  const nome = options.ariaLabel ?? options.label;
+  // `label` aqui NÃO é apelido: é o texto visível servindo de recurso quando
+  // nenhum nome acessível foi declarado.
+  const nome = options['aria-label'] ?? options.ariaLabel ?? options.label;
   if (nome) el.setAttribute('aria-label', nome);
 
   if (options.onClick) el.addEventListener('click', options.onClick);
@@ -876,7 +926,7 @@ export function createSidebarMenuItem(
     label: options.label,
     // O nome acessível é sempre declarado: no modo de ícones o `<span>` some, e
     // o item não pode sumir junto do leitor de tela.
-    ariaLabel: options.label,
+    'aria-label': options.label,
     icon: options.icon,
     href: options.href,
     active: options.active,

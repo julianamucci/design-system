@@ -64,6 +64,8 @@ export type CarouselOptions = {
    */
   slideClass?: string;
   /** Nome acessível da região. Sem ele o leitor anuncia "carrossel" sem dizer de quê. */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   label?: string;
   /** Rótulo de cada slide. `{index}` e `{total}` são substituídos. */
   slideLabel?: string;
@@ -88,11 +90,13 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     autoplayInterval = 3000,
     onIndexChange,
     slideClass,
-    label = 'Carrossel',
     slideLabel = 'Slide {index} de {total}',
     previousLabel = 'Item anterior',
     nextLabel = 'Próximo item',
   } = options;
+
+  // `label` continua aceito como apelido do nome acessível; o canônico vence.
+  const label = options['aria-label'] ?? options.label ?? 'Carrossel';
 
   const vertical = orientation === 'vertical';
   let currentIndex = 0;

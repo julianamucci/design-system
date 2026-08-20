@@ -11,7 +11,7 @@ type CheckboxArgs = {
   indeterminate: boolean;
   disabled: boolean;
   label: string;
-  ariaLabel: string;
+  'aria-label': string;
   onCheckedChange: (checked: boolean) => void;
 };
 
@@ -38,7 +38,7 @@ const meta: Meta<CheckboxArgs> = {
       control: 'text',
       description: 'Texto do label associado',
     },
-    ariaLabel: {
+    'aria-label': {
       control: 'text',
       description: 'aria-label quando não há label visível',
     },
@@ -52,7 +52,7 @@ const meta: Meta<CheckboxArgs> = {
     indeterminate: false,
     disabled: false,
     label: 'Aceito os termos e condições',
-    ariaLabel: '',
+    'aria-label': '',
     onCheckedChange: fn(),
   },
 };
@@ -75,7 +75,7 @@ function buildCheckboxWithLabel(args: CheckboxArgs): HTMLElement {
     disabled: args.disabled,
     id,
     onCheckedChange: args.onCheckedChange,
-    ...(args.ariaLabel ? { 'aria-label': args.ariaLabel } : {}),
+    ...(args['aria-label'] ? { 'aria-label': args['aria-label'] } : {}),
   });
 
   if (args.label) {

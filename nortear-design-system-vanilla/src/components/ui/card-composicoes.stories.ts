@@ -75,11 +75,11 @@ export const WithFooter: Story = {
       createButton({
         variant: 'outline',
         label: 'Cancelar',
-        ariaLabel: 'Cancelar edição de Cadeira Gamer Pro',
+        'aria-label': 'Cancelar edição de Cadeira Gamer Pro',
       }),
     );
     footer.appendChild(
-      createButton({ label: 'Salvar', ariaLabel: 'Salvar alterações em Cadeira Gamer Pro' }),
+      createButton({ label: 'Salvar', 'aria-label': 'Salvar alterações em Cadeira Gamer Pro' }),
     );
 
     card.append(
@@ -134,7 +134,7 @@ export const WithAction: Story = {
         variant: 'ghost',
         size: 'sm',
         label: 'Editar',
-        ariaLabel: 'Editar produto Cadeira Gamer Pro',
+        'aria-label': 'Editar produto Cadeira Gamer Pro',
       }),
     );
     header.appendChild(action);

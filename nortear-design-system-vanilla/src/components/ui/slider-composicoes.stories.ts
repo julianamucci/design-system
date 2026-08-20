@@ -29,7 +29,7 @@ type Story = StoryObj;
 function withLabel(opts: {
   idPrefix: string;
   labelText: string;
-  ariaLabel: string;
+  'aria-label': string;
   min?: number;
   max?: number;
   step?: number;
@@ -41,7 +41,7 @@ function withLabel(opts: {
   const {
     idPrefix,
     labelText,
-    ariaLabel,
+    'aria-label': ariaLabel,
     min = 0,
     max = 100,
     step = 1,
@@ -77,7 +77,7 @@ function withLabel(opts: {
     max,
     step,
     value,
-    ariaLabel,
+    'aria-label': ariaLabel,
     onValueChange: (v) => {
       valueText.textContent = `${v}${unit}`;
       onValueChange?.(v);
@@ -103,7 +103,7 @@ export const Volume: Story = {
     withLabel({
       idPrefix: 'comp-volume',
       labelText: 'Volume',
-      ariaLabel: 'Volume',
+      'aria-label': 'Volume',
       value: 50,
       unit: '%',
     }),
@@ -133,7 +133,7 @@ export const Glow: Story = {
     withLabel({
       idPrefix: 'comp-brightness',
       labelText: 'Brilho',
-      ariaLabel: 'Brilho',
+      'aria-label': 'Brilho',
       min: 0,
       max: 100,
       step: 5,
@@ -191,7 +191,7 @@ export const PriceRange: Story = {
       max: 1000,
       step: 10,
       value: [100, 400],
-      ariaLabel: ['Faixa de preço — mínimo', 'Faixa de preço — máximo'],
+      'aria-label': ['Faixa de preço — mínimo', 'Faixa de preço — máximo'],
       onValueChange: fmt,
     });
 
@@ -254,7 +254,7 @@ export const InForm: Story = {
     const volume = withLabel({
       idPrefix: 'form-volume',
       labelText: 'Volume',
-      ariaLabel: 'Volume',
+      'aria-label': 'Volume',
       value: ultimoCommit,
       unit: '%',
       // O commit é o `change` do input nativo — um evento por interação, e não

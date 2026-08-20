@@ -9,9 +9,17 @@ export type ButtonSize = 'default' | 'xs' | 'sm' | 'lg' | 'icon' | 'icon-xs' | '
 export type ButtonOptions = {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  /** Texto VISÍVEL do botão. Não é o nome acessível — para isso existe `aria-label`. */
   label?: string;
+  /** Nome acessível. Obrigatório no botão só de ícone, onde não há texto visível. */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   ariaLabel?: string;
+  'aria-busy'?: boolean;
+  /** @deprecated Apelido de `aria-busy`. */
   ariaBusy?: boolean;
+  'aria-invalid'?: boolean;
+  /** @deprecated Apelido de `aria-invalid`. */
   ariaInvalid?: boolean;
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
@@ -51,16 +59,22 @@ export function btnClass(variant: ButtonVariant | string = 'default', size: Butt
 // ─── createButton ─────────────────────────────────────────────────────────────
 
 export function createButton(options: ButtonOptions): HTMLButtonElement {
-  const { variant = 'default', size = 'default', label, ariaLabel, disabled, type = 'button', onClick, children } = options;
+  const { variant = 'default', size = 'default', label, disabled, type = 'button', onClick, children } = options;
+
+  // Nome do atributo como nome da opção — `ariaLabel`/`ariaBusy`/`ariaInvalid`
+  // continuam aceitos como apelido, e o canônico vence quando vêm os dois.
+  const nomeAcessivel = options['aria-label'] ?? options.ariaLabel;
+  const ocupado = options['aria-busy'] ?? options.ariaBusy;
+  const invalido = options['aria-invalid'] ?? options.ariaInvalid;
 
   const el = document.createElement('button');
   el.type = type;
   el.className = cn(btnClass(variant, size), options.class);
 
   if (label) el.textContent = label;
-  if (ariaLabel) el.setAttribute('aria-label', ariaLabel);
-  if (options.ariaBusy) el.setAttribute('aria-busy', 'true');
-  if (options.ariaInvalid) el.setAttribute('aria-invalid', 'true');
+  if (nomeAcessivel) el.setAttribute('aria-label', nomeAcessivel);
+  if (ocupado) el.setAttribute('aria-busy', 'true');
+  if (invalido) el.setAttribute('aria-invalid', 'true');
   if (disabled) el.disabled = true;
 
   if (children) {

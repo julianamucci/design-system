@@ -1,10 +1,10 @@
 import { getLocale, setLocale, type Locale } from '@/lib/i18n';
 import { track } from '@/lib/analytics';
 
-const LOCALE_DEFS: { value: Locale; label: string; ariaLabel: string }[] = [
-  { value: 'pt-BR', label: 'PT', ariaLabel: 'Português' },
-  { value: 'en',    label: 'EN', ariaLabel: 'English'   },
-  { value: 'es',    label: 'ES', ariaLabel: 'Español'   },
+const LOCALE_DEFS: { value: Locale; label: string; 'aria-label': string }[] = [
+  { value: 'pt-BR', label: 'PT', 'aria-label': 'Português' },
+  { value: 'en',    label: 'EN', 'aria-label': 'English'   },
+  { value: 'es',    label: 'ES', 'aria-label': 'Español'   },
 ];
 
 export function createLanguageSwitcher(): HTMLElement {
@@ -14,7 +14,7 @@ export function createLanguageSwitcher(): HTMLElement {
   const renderButtons = () => {
     wrap.replaceChildren();
     const current = getLocale();
-    LOCALE_DEFS.forEach(({ value, label, ariaLabel }) => {
+    LOCALE_DEFS.forEach(({ value, label, 'aria-label': ariaLabel }) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'nds-lang-switcher-button';
