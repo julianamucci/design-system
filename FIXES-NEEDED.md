@@ -2268,3 +2268,25 @@ decisão ou dívida separada.
       alguém ler a página: o relatório dizia zero. Chave descritiva com fragmento
       de JSX, de template Vue ou de chamada de fábrica é literal de API pelo mesmo
       motivo que um nome de prop é — amarra o texto compartilhado a uma stack.
+
+## A unificação de `aria-label` no Vanilla ficou incompleta (2026-08-20)
+
+- [ ] **`createBreadcrumb` e `createChart` ainda usam `label` como nome acessível**,
+      sem a opção canônica `'aria-label'`. Em ambos o valor vira literalmente
+      `setAttribute('aria-label', label)` — `breadcrumb.ts:107` (o landmark
+      `<nav>`) e `chart.ts:95` (o container do gráfico).
+
+      **É falha de escopo minha, não da direção.** Em `1ab54322` eu medi a
+      DIREÇÃO (`'aria-label'` vence, por maioria e por paridade com as outras
+      stacks) mas herdei a LISTA do relatório de um agente, que citava só
+      `carousel` e `scroll-area`. Não conferi se a lista era completa, e não era.
+
+      Os dois têm a mesma colisão semântica já tratada no button e no sidebar:
+      `label` significa outra coisa noutro lugar do mesmo arquivo — no breadcrumb
+      é também o nome das reticências, e no chart é o rótulo de cada série de
+      dados. A correção precisa distinguir os dois usos, não trocar por varredura.
+
+      **Deliberadamente NÃO corrigido agora**: nove subagentes estão escrevendo os
+      snippets que documentam justamente essas assinaturas. Mudar a API no meio
+      produziria a divergência que a unificação existe para fechar. Fazer depois
+      que o painel Code assentar.
