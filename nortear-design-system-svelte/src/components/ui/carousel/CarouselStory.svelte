@@ -133,19 +133,29 @@
                 alt={slide.alt}
                 loading="lazy"
                 decoding="async"
-                class="nds-aspect-square nds-w-full nds-rounded-md nds-bg-muted" style="object-fit: cover"
+                class="nds-aspect-16-9 nds-w-full nds-rounded-lg nds-bg-muted-soft" style="object-fit: cover"
               />
             </div>
           {:else}
-            <div class="nds-p-1" class:nds-h-full={vertical}>
+            <!--
+              Mesma árvore que React, Angular e Vanilla montam: proporção 16:9
+              por fora, caixa `muted-soft` arredondada por dentro, e o rótulo
+              inteiro em vez de só o número. Esta stack era a última divergente —
+              usava quadrado, `bg-muted` cheio e o número solto, então a mesma
+              demonstração aparecia diferente em cada Storybook.
+
+              O `nds-p-1` saiu: `.nds-carousel-slide` já traz `padding-left` de
+              16px, e o embrulho duplicava o respiro só aqui.
+            -->
+            <div class:nds-h-full={vertical}>
               <div
-                class="nds-cluster nds-rounded-md nds-bg-muted nds-text-h3 nds-font-semibold nds-text-muted-foreground" style="user-select: none"
-                class:nds-aspect-square={!vertical}
+                class="nds-cluster nds-rounded-lg nds-bg-muted-soft nds-text-h3 nds-font-semibold nds-text-muted-foreground" style="user-select: none"
+                class:nds-aspect-16-9={!vertical}
                 class:nds-h-full={vertical}
                 data-align="center"
                 data-justify="center"
               >
-                {i + 1}
+                {slideLabel} {i + 1}
               </div>
             </div>
           {/if}
