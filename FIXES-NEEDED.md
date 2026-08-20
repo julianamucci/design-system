@@ -2238,12 +2238,14 @@ decisão ou dívida separada.
       todo popover do Vanilla, que é a referência de markup das outras quatro,
       então o comportamento ficou idêntico e o motivo está no arquivo.
 
-- [x] **O Vanilla tinha nomes de opção rachados dentro de si.** RESOLVIDO em : eram TRÊS grafias, não duas, e o  consumia duas delas no mesmo arquivo. Antigas mantidas como apelido , com asserção provando que ainda funcionam. `createButton`,
-      `createSlider`, `createCarousel`, `createInputOtp` e `createScrollArea` usam
-      `ariaLabel` em camelCase; `createSwitch`, `createCheckbox`, `createSelect` e
-      as seis desta rodada usam `aria-label`. As outras stacks usam a segunda
-      forma. Unificar quebra chamador, então precisa do mesmo apelido
-      `@deprecated` que `class`/`className` recebeu.
+- [x] **O Vanilla tinha nomes de opção rachados dentro de si.** RESOLVIDO em
+      `1ab54322`. Eram **três** grafias, não as duas relatadas: `'aria-label'` em
+      oito fábricas, `ariaLabel` em três, e `label` em duas — e neste último caso
+      a mesma chave significava o texto VISÍVEL no button e no sidebar. Havia
+      ainda `ariaInvalid` contra `'aria-invalid'`. O `data-table` consumia duas
+      grafias no mesmo arquivo. As antigas ficaram como apelido `@deprecated`,
+      com asserção provando que ainda produzem o atributo e que o canônico vence
+      na disputa.
 
 - [ ] **Falta o degrau de 18rem em `.nds-w-*`** (existe `xs` = 16rem e `sm` = 20rem).
       É o que mantém `width: 18rem` cravado no slider — 40 ocorrências no
