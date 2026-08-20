@@ -2320,3 +2320,44 @@ O remédio nos dois casos foi `touch` no arquivo para invalidar.
       escrever. Opções: aceitar e documentar o sinal, ou investigar
       `server.watch` para `docs/shared` nas cinco stacks. Enquanto não se
       decide, o sintoma volta a cada rodada com agentes em paralelo.
+
+## Fixture de story duplicada entre arquivos do mesmo componente (2026-08-20)
+
+Investigado depois de o carousel do Vanilla ter o construtor de slide em SEIS
+cópias — corrigir uma deixou cinco erradas, e a dona viu isso na tela.
+
+Varredura das cinco stacks, comparando funções de topo de arquivo por nome E por
+corpo normalizado dentro do mesmo slug:
+
+| | |
+|---|---|
+| helpers duplicados | **64** |
+| cópias no total | **182** |
+| cópias IDÊNTICAS | 37 helpers |
+| cópias que DIVERGIRAM | **27 helpers, 75 cópias** |
+
+Por stack: vanilla **39 helpers / 107 cópias** (59% do total), react 8/24,
+svelte 7/21, vue 6/17, angular 4/13. Divergidos: vanilla 17, react 4, svelte 3,
+vue 3, **angular 0** — de novo a stack mais nova é a mais limpa.
+
+**A divergência é o que interessa, e nem toda ela é defeito.** Conferi duas:
+
+- `react carousel.SlideCard` (5 cópias) — quatro trazem a moldura
+  `nds-aspect-16-9` e a de `variantes` não, porque o eixo vertical usa altura
+  cheia. É EXATAMENTE a forma do defeito que o Vanilla tinha: uma dimensão que
+  varia, resolvida por cópia em vez de parâmetro. Extração legítima, com o mesmo
+  desenho de `carousel.fixtures.ts`.
+- `vanilla resizable.fracaoDoPrimeiro` (3 cópias) — a de `estados` mede só
+  largura, a de `carousel.stories` recebe o eixo. Parece grave e **não é**: todas
+  as stories daquele arquivo são horizontais. Divergência benigna.
+
+- [ ] **Decidir o alcance da extração.** O caso do carousel prova o custo: com N
+      cópias, quem corrige uma acredita ter resolvido, e a documentação continua
+      ensinando o defeito nas outras N-1. O padrão `*.fixtures.ts` já existe na
+      stack e serviu bem. Começar pelos 27 divergidos, em ordem de cópias, é o
+      recorte com maior retorno — os 37 idênticos são mecânicos e podem esperar.
+
+- [ ] **Não há gate para isto.** Nenhuma regra do `audit.mjs` mede duplicação de
+      helper entre arquivos de story do mesmo slug, e foi por isso que 182 cópias
+      se acumularam sem ninguém ver. A varredura que produziu estes números é
+      determinística e caberia como regra.
