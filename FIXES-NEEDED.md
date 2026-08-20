@@ -2155,7 +2155,9 @@ ficaram abertas, todas descobertas *por causa* da conversão.
       repositório falha intermitente não fecha como "não reproduz". O conserto é
       o play esperar a condição.
 
-## Factories do Vanilla expõem menos que as outras quatro (2026-08-19)
+## Factories do Vanilla — RESOLVIDO (2026-08-19)
+
+**As 14 fechadas**: `6e4243ad` (nome acessível) e `a8ef7a15` (capacidade).
 
 Descoberto ao escrever as variantes de snippet: para documentar a chamada REAL de
 cada factory, foi preciso ler as assinaturas — e em 14 componentes a opção que as
@@ -2168,36 +2170,36 @@ nestes pontos a referência é quem oferece menos.
 
 **Nome acessível — o subgrupo mais sério, porque o contorno é `setAttribute` solto:**
 
-- [ ] `createToggle` não tem `aria-label`, e `createSwitch` TEM. O toggle só de
+- [x] `createToggle` não tem `aria-label`, e `createSwitch` TEM. O toggle só de
       ícone é o caso canônico dele, e é o que fica sem nome.
-- [ ] `createRadioGroup` não tem como nomear o grupo: renderiza
+- [x] `createRadioGroup` não tem como nomear o grupo: renderiza
       `<fieldset role="radiogroup">` sem `legend` e sem opção de rótulo.
-- [ ] `createProgress` não tem `aria-label` (nem slots de rótulo/valor).
-- [ ] `createTabs` não expõe o `aria-label` obrigatório do tablist.
-- [ ] `createToggleGroup` não expõe nome do grupo nem de cada item; a story atual
+- [x] `createProgress` não tem `aria-label` (nem slots de rótulo/valor).
+- [x] `createTabs` não expõe o `aria-label` obrigatório do tablist.
+- [x] `createToggleGroup` não expõe nome do grupo nem de cada item; a story atual
       faz `setAttribute` em cada `[data-slot="toggle"]` depois de construir.
-- [ ] `createResizablePanel` não deixa nomear a divisória — atributo relevante
+- [x] `createResizablePanel` não deixa nomear a divisória — atributo relevante
       para WCAG entregue ao consumidor.
 
 **Capacidade que as outras têm:**
 
-- [ ] `createSlider` não faz intervalo: `value` é um `number` só, sem dois pegadores.
-- [ ] `createDropdownMenu` não tem `side`/`align`/`sideOffset` nem `open` controlado
+- [x] `createSlider` não faz intervalo: `value` é um `number` só, sem dois pegadores.
+- [x] `createDropdownMenu` não tem `side`/`align`/`sideOffset` nem `open` controlado
       — e a story declara `side`/`align`/`modal` como argTypes que **não alcançam
       nada** (três controles mortos, já comentados no arquivo).
-- [ ] `createPopover` não tem `sideOffset` nem `open` controlado, e não tem
+- [x] `createPopover` não tem `sideOffset` nem `open` controlado, e não tem
       sub-factories de cabeçalho/título/descrição: o chamador monta a div e aplica
       as classes na mão.
-- [ ] `createNavigationMenu` não tem `skipDelayDuration` nem valor controlado.
-- [ ] `createTooltip` não tem Provider — o atraso é constante de módulo — e
+- [x] `createNavigationMenu` não tem `skipDelayDuration` nem valor controlado.
+- [x] `createTooltip` não tem Provider — o atraso é constante de módulo — e
       `content` é string, então não aceita marcação.
-- [ ] `createCommand` não aceita item separador, embora `createSelect` aceite.
-- [ ] `createPagination` crava `href="#"` com `preventDefault()`, sem integração
+- [x] `createCommand` não aceita item separador, embora `createSelect` aceite.
+- [x] `createPagination` crava `href="#"` com `preventDefault()`, sem integração
       de rota — que é justamente o assunto do `props.extensibilityCode`.
-- [ ] `createDrawer` não abre por código. `createHoverCard` e `createSidebar`
+- [x] `createDrawer` não abre por código. `createHoverCard` e `createSidebar`
       abrem, e ainda por nomes diferentes: `abrir`/`fechar` num, `open`/`close`/
       `toggle` no outro.
-- [ ] Nome da opção de classe está rachado: `card`, `label` e `breadcrumb` usam
+- [x] Nome da opção de classe está rachado: `card`, `label` e `breadcrumb` usam
       `className`; as outras dez usam `class`.
 
 ## Duas inconsistências de infra achadas na mesma passada (2026-08-19)
@@ -2209,7 +2211,7 @@ nestes pontos a referência é quem oferece menos.
       consumindo o conteúdo compartilhado. Se a intenção é que ele consuma, são
       101 chaves próprias; se não é, ele não deveria estar em `STACKS`.
 
-- [ ] **Os overrides de `code-block` ficaram redundantes.** As três docs pages
+- [x] **Os overrides de `code-block` ficaram redundantes.** RESOLVIDO em `e56b8688`. A migração NÃO era literal, ao contrário do relatado: o Svelte perdera o bloco de script com o import e a variável, restaurado antes de apagar. `soltos` 18 → 0. As três docs pages
       (`vue`, `svelte`, `vanilla`) prendem `anatomy.structureCode` e
       `props.extensibilityCode` num override de `useTranslation`, e esse texto foi
       migrado VERBATIM para o JSON compartilhado. O override ainda vence (é
@@ -2219,3 +2221,40 @@ nestes pontos a referência é quem oferece menos.
 - [ ] **Descrição obsoleta em `vanilla/.../calendar.stories.ts`** (~linha 33):
       afirma que a factory não suporta `mode` multiple/range, `captionLayout` nem
       `locale`. O `CalendarOptions` atual tem os três.
+
+## Achados das 14 factories (2026-08-19)
+
+Apareceram ao completar as fábricas do Vanilla. Nenhum é bloqueio; todos são
+decisão ou dívida separada.
+
+- [ ] **`createHoverCard` expõe `abrir`/`fechar` em português**, enquanto sidebar,
+      drawer, popover e dropdown usam `open`/`close`/`toggle`. Não renomeado de
+      propósito: é API pública e quebraria chamador em silêncio.
+
+- [ ] **`positionFloating` deixa `display: block` inline depois de medir.** Herdado
+      das três cópias que ele unificou. No dropdown e no tooltip é inócuo, mas no
+      popover ele vence o `display: flex` que `.nds-popover-content` declara — e
+      com ele some o `gap` entre os filhos diretos. Corrigir muda o desenho de
+      todo popover do Vanilla, que é a referência de markup das outras quatro,
+      então o comportamento ficou idêntico e o motivo está no arquivo.
+
+- [ ] **O Vanilla tem nomes de opção rachados dentro de si.** `createButton`,
+      `createSlider`, `createCarousel`, `createInputOtp` e `createScrollArea` usam
+      `ariaLabel` em camelCase; `createSwitch`, `createCheckbox`, `createSelect` e
+      as seis desta rodada usam `aria-label`. As outras stacks usam a segunda
+      forma. Unificar quebra chamador, então precisa do mesmo apelido
+      `@deprecated` que `class`/`className` recebeu.
+
+- [ ] **Falta o degrau de 18rem em `.nds-w-*`** (existe `xs` = 16rem e `sm` = 20rem).
+      É o que mantém `width: 18rem` cravado no slider — 40 ocorrências no
+      repositório, já listadas na dívida de dimensão.
+
+- [ ] **`slider/translations.json` carrega literal de API em chave descritiva**:
+      `styles.single` e `styles.range` mostram `value={[20, 80]}`, que é JSX dentro
+      de texto que deveria ser neutro de API. É o que `audit-translation-literals`
+      cobra, e não foi pego porque a chave não termina em `Code`.
+
+- [ ] **Toggle, ToggleGroup, RadioGroup e Resizable não têm seção nas guidelines
+      do Vanilla.** As tabelas de opções desses quatro não existem para atualizar —
+      lacuna anterior a esta rodada, e o único lugar onde a documentação de
+      opções da stack deveria viver.
