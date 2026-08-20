@@ -130,7 +130,7 @@ export const Square: Story = {
           'Avatar quadrado — proporção 1/1',
         ),
       }),
-      'max-w-xs',
+      '20rem',
     ),
 
   play: async ({ canvasElement }) => {
@@ -167,7 +167,7 @@ export const ThreeFour: Story = {
           'Retrato vertical — proporção 3/4',
         ),
       }),
-      'max-w-sm',
+      '24rem',
     ),
 
   play: async ({ canvasElement }) => {
@@ -204,7 +204,7 @@ export const UltraWide: Story = {
           'Hero cinematográfico — proporção 21/9',
         ),
       }),
-      'max-w-3xl',
+      '48rem',
     ),
 
   play: async ({ canvasElement }) => {

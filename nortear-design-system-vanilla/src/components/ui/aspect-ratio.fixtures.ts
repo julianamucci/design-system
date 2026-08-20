@@ -15,12 +15,26 @@
  */
 
 /**
+ * Medida CSS, e não `string` solta.
+ *
+ * O tipo existe por causa de um defeito real: três stories passavam
+ * `'max-w-xs'`, `'max-w-sm'` e `'max-w-3xl'` — NOMES DE CLASSE, e ainda por cima
+ * do vocabulário Tailwind que saiu do projeto. `style.maxWidth` descarta valor
+ * inválido em silêncio, então aquelas três demonstrações ficaram sem teto
+ * nenhum: cresciam até a largura da viewport, e nada acusava.
+ *
+ * Um `string` aceitava as duas coisas. Este tipo só aceita a que funciona, e o
+ * erro passa a ser de compilação em vez de pixel.
+ */
+export type MedidaCSS = `${number}rem` | `${number}px` | `${number}%` | `${number}ch`;
+
+/**
  * Embrulho que limita a largura da demonstração.
  *
  * A caixa cresce com o container, então sem um teto a proporção 21/9 ocuparia
  * a viewport inteira e a captura visual não caberia na página.
  */
-export function boxed(el: HTMLElement, maxWidth = '36rem'): HTMLElement {
+export function boxed(el: HTMLElement, maxWidth: MedidaCSS = '36rem'): HTMLElement {
   const wrap = document.createElement('div');
   wrap.className = 'nds-w-full';
   wrap.style.maxWidth = maxWidth;
