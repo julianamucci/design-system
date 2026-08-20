@@ -2271,10 +2271,16 @@ decisão ou dívida separada.
 
 ## A unificação de `aria-label` no Vanilla ficou incompleta (2026-08-20)
 
-- [ ] **`createBreadcrumb` e `createChart` ainda usam `label` como nome acessível**,
-      sem a opção canônica `'aria-label'`. Em ambos o valor vira literalmente
-      `setAttribute('aria-label', label)` — `breadcrumb.ts:107` (o landmark
-      `<nav>`) e `chart.ts:95` (o container do gráfico).
+- [ ] **Três fábricas ainda usam `label` como nome acessível**, sem a opção
+      canônica `'aria-label'`: `createBreadcrumb` (o landmark `<nav>`),
+      `createChart` (o container do gráfico) e `createAvatarGroup`/`createAvatarBadge`
+      (que emitem `role` + `aria-label`). Nos três o valor vira literalmente
+      `setAttribute('aria-label', label)`.
+
+      A terceira apareceu num relatório posterior ao registro desta entrada — ou
+      seja, a lista cresceu duas vezes depois de eu a ter dado por completa. O
+      levantamento definitivo tem que ser por varredura de `setAttribute('aria-label'`
+      contra as opções declaradas, não por relato.
 
       **É falha de escopo minha, não da direção.** Em `1ab54322` eu medi a
       DIREÇÃO (`'aria-label'` vence, por maioria e por paridade com as outras
