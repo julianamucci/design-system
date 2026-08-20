@@ -2092,7 +2092,11 @@ ficaram abertas, todas descobertas *por causa* da conversão.
 
 ## `spacing.css` carrega antes dos componentes — utility que não vence (2026-08-19)
 
-- [ ] **`spacing.css` é importado na linha 13 do `index.css`, antes de TODA folha
+- [x] **`spacing.css` era importado antes de toda folha de componente.** RESOLVIDO em `7c173dcf`: ele e o `colors.css` passaram a carregar por último, junto do `utilities.css`. Raio medido antes de mover — 20 sítios em 4 pares; doze passaram a funcionar como quem escreveu esperava, oito não mudaram um pixel porque o token era o mesmo. A suíte pegou uma consequência que a medição não previu: o `dontPreview` do do/dont ganhou o tom que nunca tinha, e o `<div>` interno do ContextMenu passou a aplicá-lo duas vezes, derrubando o contraste — o fundo redundante saiu.
+
+      Texto original abaixo, para quem precisar do histórico:
+
+      > **`spacing.css` é importado na linha 13 do `index.css`, antes de TODA folha
       de componente** (`input.css` está na 39). Mesma especificidade (0,1,0), então
       a ordem decide: **nenhuma classe `.nds-p*` consegue sobrescrever o padding de
       um componente**. Uma utility que não vence não é utility.
@@ -2369,3 +2373,41 @@ vue 3, **angular 0** — de novo a stack mais nova é a mais limpa.
 
       Efeito colateral medido: `inline_style_design_value` caiu de 130 para 122
       achados, porque parametrizar dimensões tirou literais.
+
+## Painel Code — fechado em quatro stacks, e o que ele revelou (2026-08-20)
+
+O painel mostrava, por stack: `<wrapper/>` no Svelte (nome da função compilada),
+`outerHTML` cru no Vanilla, a tag sem filhos no Vue, e JSX que ensina andaime no
+React. Angular cobria só as Playground.
+
+Fechado em `81be0e1c` (vanilla), `c639ad97` (svelte) e `8f00154f` (vue); React em
+andamento.
+
+**O desenho que tornou isso viável**: `docs.source.transform` no `meta` cascateia
+para todas as stories do arquivo — ~47 componentes em vez de ~2.500 stories.
+Ninguém usava, nem o Angular. Foi medido sob o runtime real capturando o canal
+`storybook/docs/snippet-rendered`, inclusive a precedência da story sobre o meta.
+
+**Por que ficou quebrado tanto tempo**: a saída do painel NÃO chega ao DOM durante
+a `play`. Nenhuma suíte de browser a alcança, então quatro stacks quebraram sem
+nada acusar. A correção só tem guarda porque as transforms são funções exportadas
+e testáveis — hoje são ~3.500 testes unitários somando as três stacks fechadas.
+
+- [ ] **O vão do portão no Vue continua aberto.** A guarda de snippet do auditor
+      trata toda crase como "trecho exibido", e markup de story no Vue vive em
+      `template:`. São **260 declarações de valor de design em 54 arquivos**
+      invisíveis a `inline_style_design_value`, que reporta 26 na stack.
+
+      O conserto está escrito e medido (desmascarar as regiões de `template:`
+      eleva os achados de 122 para 176 arquivos), mas foi segurado para não mudar
+      a régua no meio do trabalho dos agentes. Aplicar quando o React fechar.
+
+      O que distingue é a chave, não a crase: `code:` ensina, `template:` executa.
+
+- [ ] **Utilitárias que os relatórios pediram três vezes, de agentes
+      independentes**: `object-fit: cover` (não existe; hoje só cravado dentro de
+      `avatar.css` e `item.css`) e um degrau de `min-height` entre 120 e 200px.
+
+- [ ] **Prosa vazando nome de lib headless em texto visível**: a story `AsLink` do
+      button no Vue tem `description.story` dizendo "Usando asChild com reka-ui
+      Primitive". Não é snippet, então nenhuma regra o alcança.
