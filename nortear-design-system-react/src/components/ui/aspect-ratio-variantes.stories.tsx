@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { AspectRatio } from "./aspect-ratio";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import {
+  aspectRatioQuadradoSource,
+  aspectRatioQuatroTercosSource,
+  aspectRatioSource,
+  aspectRatioTresQuartosSource,
+  aspectRatioUltraWideSource,
+} from "./aspect-ratio.source";
 
 const LANDSCAPE_SRC =
   "https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1200&q=80";
@@ -23,6 +30,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: aspectRatioSource },
       description: {
         component:
           "Ratios canônicos adotados pelo design system: 16/9, 4/3, 1/1, 3/4 e 21/9. AspectRatio não tem variantes via cva() — os ratios são presets de uso, não variantes CSS.",
@@ -62,7 +70,12 @@ export const SixteenNine: Story = {
 };
 
 export const FourThree: Story = {
-  parameters: { covers: ["visual.item2"] },
+  // O `render` crava o ratio e o `meta` do arquivo continua em 16/9: sem
+  // override o painel mostraria a proporção errada.
+  parameters: {
+    covers: ["visual.item2"],
+    docs: { source: { transform: aspectRatioQuatroTercosSource } },
+  },
   render: () => (
     <div className="" style={{maxWidth: "100%", width: "420px" }} >
       <AspectRatio ratio={4 / 3}>
@@ -88,7 +101,11 @@ export const FourThree: Story = {
 };
 
 export const Square: Story = {
-  parameters: { covers: ["functional.item2", "visual.item3"] },
+  // Mesmo motivo do 4/3: a proporção da story não vem dos args.
+  parameters: {
+    covers: ["functional.item2", "visual.item3"],
+    docs: { source: { transform: aspectRatioQuadradoSource } },
+  },
   render: () => (
     <div className="" style={{ width: "280px" }}>
       <AspectRatio ratio={1}>
@@ -114,7 +131,11 @@ export const Square: Story = {
 };
 
 export const ThreeFour: Story = {
-  parameters: { covers: ["visual.item4"] },
+  // Idem — o retrato vertical é o assunto, e ele mora no `render`.
+  parameters: {
+    covers: ["visual.item4"],
+    docs: { source: { transform: aspectRatioTresQuartosSource } },
+  },
   render: () => (
     <div className="" style={{ width: "320px" }}>
       <AspectRatio ratio={3 / 4}>
@@ -140,7 +161,11 @@ export const ThreeFour: Story = {
 };
 
 export const UltraWide: Story = {
-  parameters: { covers: ["visual.item5"] },
+  // Idem — a panorâmica 21/9 não é descrita por arg nenhum deste arquivo.
+  parameters: {
+    covers: ["visual.item5"],
+    docs: { source: { transform: aspectRatioUltraWideSource } },
+  },
   render: () => (
     <div className="" style={{maxWidth: "100%", width: "640px" }} >
       <AspectRatio ratio={21 / 9}>

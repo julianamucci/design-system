@@ -12,6 +12,11 @@ import {
   ContextMenuSeparator,
   ContextMenuShortcut,
 } from "@/components/ui/context-menu";
+import {
+  contextMenuItemDesabilitadoSource,
+  contextMenuItemRecuadoSource,
+  contextMenuSource,
+} from "./context-menu.source";
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -25,6 +30,7 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: contextMenuSource },
       description: {
         component:
           "Estados do ContextMenu: item desabilitado, item recuado, item destrutivo e a paleta escura.",
@@ -43,6 +49,9 @@ const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="
 export const ItemDisabled: Story = {
   parameters: {
     covers: ["functional.item9", "accessibility.item6", "visual.item5"],
+    // `disabled` é prop do ITEM: sem o override o snippet não mostraria onde a
+    // prop entra, que é o assunto da story.
+    docs: { source: { transform: contextMenuItemDesabilitadoSource } },
     // Medido na tipagem do primitivo: o item de marcação do menu é de DOIS
     // estados. `checked` é booleano, o payload da mudança é booleano, o estado
     // exposto ao indicador é booleano e os únicos atributos de dado são
@@ -109,6 +118,11 @@ export const ItemDisabled: Story = {
 // ─── Item recuado ─────────────────────────────────────────────────────────────
 
 export const ItemInset: Story = {
+  // `inset` no item e no rótulo do grupo: o recuo alinha com itens que têm
+  // indicador à esquerda, e nada disso aparece no snippet do `meta`.
+  parameters: {
+    docs: { source: { transform: contextMenuItemRecuadoSource } },
+  },
   render: () => (
     <ContextMenu>
       <AreaGatilho>Clique com o botão direito aqui</AreaGatilho>

@@ -7,6 +7,7 @@ import {
   InputOTPSlot,
 } from "./input-otp";
 import { campo } from "./input-otp.fixtures";
+import { inputOtpSource } from "./input-otp.source";
 import { InputOTPDocs } from "@/components/docs/InputOTPDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -16,7 +17,13 @@ const meta = {
   tags: ["autodocs", "form"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(InputOTPDocs) },
+    docs: {
+      page: withAutoDocsTab(InputOTPDocs),
+      // O painel imprimia `campo(canvasElement)` — uma fixture que só existe no
+      // repositório de testes — como se fosse API do design system. A transform
+      // devolve o uso controlado real, e cascateia para todo o arquivo.
+      source: { transform: inputOtpSource },
+    },
   },
   argTypes: {
     maxLength: {

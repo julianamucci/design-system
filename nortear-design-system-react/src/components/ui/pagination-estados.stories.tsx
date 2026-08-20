@@ -9,6 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./pagination";
+import { paginationDesabilitadoSource, paginationSource } from "./pagination.source";
 
 const meta = {
   title: "UI/Pagination/States",
@@ -19,6 +20,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: paginationSource },
       description: {
         component:
           "Estados canônicos do Pagination: Default, Hover, ActivePage, Disabled (Previous na primeira página), Focus e Contrast.",
@@ -163,6 +165,9 @@ export const Disabled: Story = {
   parameters: {
     covers: ["functional.item2", "visual.item4"],
     docs: {
+      // O par `aria-disabled` + `tabIndex={-1}` escrito à mão no extremo é o
+      // assunto; o meta o deriva do estado e nunca o mostra fixado.
+      source: { transform: paginationDesabilitadoSource },
       description: {
         story:
           "Na primeira página o controle Anterior fica desabilitado: opacidade reduzida, fora da tabulação e sem navegar.",

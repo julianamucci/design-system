@@ -9,6 +9,18 @@ import {
   InputGroupButton,
   InputGroupText,
 } from "./input-group";
+import {
+  inputGroupAlinhamentosSource,
+  inputGroupBotaoInternoSource,
+  inputGroupCliqueNoAddonSource,
+  inputGroupComErroSource,
+  inputGroupDesabilitadoSource,
+  inputGroupIconeFimSource,
+  inputGroupPrefixoESufixoSource,
+  inputGroupPrefixoTextoSource,
+  inputGroupSenhaSource,
+  inputGroupSource,
+} from "./input.source";
 
 const meta = {
   title: "UI/Input/Compositions",
@@ -19,6 +31,10 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O `component` deste arquivo é o InputGroup, não o Input: a transform do
+      // campo simples deixaria o snippet padrão ensinando outro componente. A
+      // do grupo cai no ícone à esquerda, que é a forma canônica.
+      source: { transform: inputGroupSource },
       description: {
         component:
           "Composicoes do InputGroup — container que combina Input com addons, ícones, textos decorativos e botões internos.",
@@ -65,6 +81,8 @@ export const AddonIconLeft: Story = {
 };
 
 export const AddonIconRight: Story = {
+  // O lado do addon é o assunto: muda o `align` E a ordem das peças no JSX.
+  parameters: { docs: { source: { transform: inputGroupIconeFimSource } } },
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-icon-right" className="nds-text-body nds-font-medium">
@@ -93,6 +111,8 @@ export const AddonIconRight: Story = {
 };
 
 export const AddonTextLeft: Story = {
+  // `InputGroupText` é a peça que o snippet do ícone nu não mostra.
+  parameters: { docs: { source: { transform: inputGroupPrefixoTextoSource } } },
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-text-left" className="nds-text-body nds-font-medium">
@@ -119,6 +139,8 @@ export const AddonTextLeft: Story = {
 };
 
 export const AddonTextRight: Story = {
+  // Dois addons no mesmo grupo, com uma moldura só: é o que a story prova.
+  parameters: { docs: { source: { transform: inputGroupPrefixoESufixoSource } } },
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-text-right" className="nds-text-body nds-font-medium">
@@ -149,6 +171,9 @@ export const AddonTextRight: Story = {
 };
 
 export const InnerButton: Story = {
+  // `InputGroupButton` dentro do addon, com nome acessível próprio — um botão
+  // só de ícone é mudo sem o `aria-label`.
+  parameters: { docs: { source: { transform: inputGroupBotaoInternoSource } } },
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-btn-search" className="nds-text-body nds-font-medium">
@@ -186,6 +211,9 @@ export const InnerButton: Story = {
 };
 
 export const PasswordWithToggle: Story = {
+  // Única composição com estado: o `useState` e a troca dupla (tipo do campo e
+  // nome do botão) não existem em nenhum snippet estático.
+  parameters: { docs: { source: { transform: inputGroupSenhaSource } } },
   render: function SenhaComToggleRender() {
     const [show, setShow] = useState(false);
     return (
@@ -237,6 +265,8 @@ export const PasswordWithToggle: Story = {
 };
 
 export const Disabled: Story = {
+  // O `disabled` vai no CONTROLE, não no contêiner: é a lição da story.
+  parameters: { docs: { source: { transform: inputGroupDesabilitadoSource } } },
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-disabled" className="nds-text-body nds-font-medium">
@@ -266,6 +296,9 @@ export const Disabled: Story = {
 };
 
 export const WithError: Story = {
+  // As marcas de ARIA ficam no controle interno, e a mensagem é peça a mais que
+  // o snippet do grupo padrão não tem.
+  parameters: { docs: { source: { transform: inputGroupComErroSource } } },
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="comp-error" className="nds-text-body nds-font-medium">
@@ -309,7 +342,12 @@ export const WithError: Story = {
  * propriedade `order` no CSS, e um `align` no elemento errado passaria batido.
  */
 export const Alignments: Story = {
-  parameters: { covers: ["functional.item7", "visual.item4"] },
+  parameters: {
+    covers: ["functional.item7", "visual.item4"],
+    // Os três alinhamentos juntos: o assunto é a comparação, e um grupo sozinho
+    // não mostraria que `block-start` empilha.
+    docs: { source: { transform: inputGroupAlinhamentosSource } },
+  },
   render: () => (
     <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
       <div className="nds-stack" data-spacing="xs">
@@ -384,7 +422,12 @@ export const Alignments: Story = {
 
 /** Fecha `functional.item8`. */
 export const AddonClick: Story = {
-  parameters: { covers: ["functional.item8"] },
+  parameters: {
+    covers: ["functional.item8"],
+    // O assunto é a exceção: o addon leva o foco ao campo, MENOS quando o alvo
+    // é um botão. Sem o botão ao lado, o snippet esconderia metade da regra.
+    docs: { source: { transform: inputGroupCliqueNoAddonSource } },
+  },
   render: () => (
     <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
       <label htmlFor="ig-clique" className="nds-text-body nds-font-medium">Usuário</label>

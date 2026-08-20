@@ -35,6 +35,12 @@ import {
   SidebarSeparator,
   SidebarTrigger,
 } from "./sidebar";
+import {
+  sidebarBuscaSource,
+  sidebarGruposSource,
+  sidebarSource,
+  sidebarSubmenuSource,
+} from "./sidebar.source";
 
 // ─── Composição 1: Grupos de navegação ────────────────────────────────────────
 
@@ -303,6 +309,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sidebarSource },
       description: {
         component:
           "Composicoes comuns da Sidebar: com grupos e badges, com submenu aninhado (SidebarMenuSub) e com campo de busca (SidebarInput).",
@@ -325,7 +332,14 @@ type Story = StoryObj<typeof meta>;
 
 export const WithNavGroups: Story = {
   name: "With nav groups",
-  parameters: { covers: ["accessibility.item6"] },
+  parameters: {
+    covers: ["accessibility.item6"],
+    docs: {
+      // Sub-composição que o meta esconderia: contador ao lado do destino e ação
+      // de grupo com nome próprio, duas peças a mais na mesma estrutura.
+      source: { transform: sidebarGruposSource },
+    },
+  },
   render: () => <SidebarWithNavGroups />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -368,6 +382,13 @@ export const WithNavGroups: Story = {
 
 export const WithSubmenu: Story = {
   name: "With nested submenu",
+  parameters: {
+    docs: {
+      // Sub-composição controlada por `useState`: o nível aninhado e o
+      // `aria-expanded` do pai não existem no snippet do meta.
+      source: { transform: sidebarSubmenuSource },
+    },
+  },
   render: () => <SidebarWithSubMenu />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -407,6 +428,13 @@ export const WithSubmenu: Story = {
 
 export const WithSearch: Story = {
   name: "With SidebarInput (search)",
+  parameters: {
+    docs: {
+      // Sub-composição com campo no cabeçalho e lista filtrada por estado — a
+      // busca é o assunto, e ela não cabe na composição do meta.
+      source: { transform: sidebarBuscaSource },
+    },
+  },
   render: () => <SidebarWithSearch />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

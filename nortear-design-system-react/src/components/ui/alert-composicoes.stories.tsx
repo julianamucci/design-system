@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, userEvent } from "storybook/test";
 import { Info } from "lucide-react";
 import { Alert, AlertAction, AlertTitle, AlertDescription } from "./alert";
+import {
+  alertClasseAdicionalSource,
+  alertComAcaoSource,
+  alertSemIconeSource,
+  alertSource,
+} from "./alert.source";
 import { Button } from "./button";
 
 const meta = {
@@ -13,6 +19,7 @@ const meta = {
     design: figmaDesign("alert"),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: alertSource } },
   },
 } satisfies Meta<typeof Alert>;
 
@@ -37,6 +44,8 @@ export const WithIcon: Story = {
 };
 
 export const WithAction: Story = {
+  // AlertAction + Button são peças que o snippet do meta nem importa.
+  parameters: { docs: { source: { transform: alertComAcaoSource } } },
   render: () => (
     <Alert>
       <Info aria-hidden="true" className="nds-icon" />
@@ -82,6 +91,8 @@ export const WithAction: Story = {
  * a composição de classes sem mexer no snapshot visual.
  */
 export const AdditionalClass: Story = {
+  // O className em CADA subcomponente é o que a story prova; o meta só tem raiz.
+  parameters: { docs: { source: { transform: alertClasseAdicionalSource } } },
   render: () => (
     <Alert className="nds-w-full">
       <Info aria-hidden="true" className="nds-icon" />
@@ -116,7 +127,11 @@ export const AdditionalClass: Story = {
 };
 
 export const WithoutIcon: Story = {
-  parameters: { covers: ["visual.item4"] },
+  parameters: {
+    covers: ["visual.item4"],
+    // Mesma ausência que a story de estados prova: o meta traz o ícone.
+    docs: { source: { transform: alertSemIconeSource } },
+  },
   render: () => (
     <Alert>
       <AlertTitle>Sem ícone</AlertTitle>

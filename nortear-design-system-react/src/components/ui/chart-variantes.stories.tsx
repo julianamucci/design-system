@@ -12,6 +12,12 @@ import {
   formasDeDado,
 } from '@shared/testing/chart-probe';
 import { desenhoPronto } from './chart.fixtures';
+import {
+  chartAreaSource,
+  chartLinhaSource,
+  chartPizzaSource,
+  chartSource,
+} from './chart.source';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const serieUnica = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
@@ -30,7 +36,12 @@ const meta: Meta = {
   title: 'UI/Chart/Types',
   tags: ['display'],
   // Sem argTypes: sem isto o painel Controls abre vazio.
-  parameters: { layout: 'padded', controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    layout: 'padded',
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: chartSource } },
+  },
 };
 export default meta;
 type Story = StoryObj;
@@ -91,7 +102,12 @@ export const Bar: Story = {
 export const Line: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
-    docs: { description: { story: 'Tendência contínua ao longo do tempo.' } },
+    docs: {
+      // Outro construtor e mais de uma série: o snippet do meta ensina barras
+      // com série única e esconderia as duas diferenças.
+      source: { transform: chartLinhaSource },
+      description: { story: 'Tendência contínua ao longo do tempo.' },
+    },
   },
   render: () => (
     <ChartContainer
@@ -126,7 +142,11 @@ export const Line: Story = {
 
 export const Area: Story = {
   parameters: {
-    docs: { description: { story: 'Tendência com ênfase no volume acumulado.' } },
+    docs: {
+      // A área é um construtor próprio, e não uma bandeira do de linhas.
+      source: { transform: chartAreaSource },
+      description: { story: 'Tendência com ênfase no volume acumulado.' },
+    },
   },
   render: () => (
     <ChartContainer
@@ -163,7 +183,12 @@ export const Area: Story = {
 export const Pie: Story = {
   parameters: {
     covers: ['functional.item5'],
-    docs: { description: { story: 'Proporção de partes em relação ao todo.' } },
+    docs: {
+      // A pizza recebe outra FORMA de dado — pares de rótulo e valor, sem eixo
+      // —, então o snippet do meta ensinaria uma chamada que aqui nem compila.
+      source: { transform: chartPizzaSource },
+      description: { story: 'Proporção de partes em relação ao todo.' },
+    },
   },
   render: () => (
     <ChartContainer

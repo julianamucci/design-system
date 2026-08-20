@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, userEvent } from "storybook/test";
 import { transbordo } from "@shared/testing/scroll-area-probe";
 import { ScrollArea, ScrollBar } from "./scroll-area";
+import {
+  scrollAreaCarrosselSource,
+  scrollAreaListaDeTagsSource,
+  scrollAreaMenuLateralSource,
+  scrollAreaSource,
+  scrollAreaTabelaSource,
+} from "./scroll-area.source";
 import { Separator } from "./separator";
 
 const meta = {
@@ -13,6 +20,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: scrollAreaSource },
       description: {
         component:
           "Composicoes típicas: TagList (lista com Separator), CardCarousel (cards horizontais), DataMatrix (tabela bidirecional) e SidebarMenu (navegação rolável de sidebar).",
@@ -29,6 +37,9 @@ const tags = Array.from({ length: 30 }, (_, i) => `v1.0.${i}`);
 export const TagList: Story = {
   parameters: {
     docs: {
+      // Sub-composição com Separator entre os itens — o snippet do meta traz a
+      // lista sem divisor.
+      source: { transform: scrollAreaListaDeTagsSource },
       description: {
         story:
           "Lista vertical com Separator entre itens — padrão clássico para tags, versões ou changelog.",
@@ -76,6 +87,9 @@ export const TagList: Story = {
 export const CardCarousel: Story = {
   parameters: {
     docs: {
+      // Direção horizontal com figure/figcaption: composição que os args do
+      // meta não descrevem.
+      source: { transform: scrollAreaCarrosselSource },
       description: {
         story:
           "Carrossel horizontal de cards — conteúdo com largura de conteúdo e itens que não encolhem, com ScrollBar horizontal explícita.",
@@ -125,6 +139,8 @@ export const CardCarousel: Story = {
 export const DataMatrix: Story = {
   parameters: {
     docs: {
+      // Dois eixos ao mesmo tempo: a mesma composição da variante Both.
+      source: { transform: scrollAreaTabelaSource },
       description: {
         story:
           "Matriz de dados ampla — tabela 15×15 dentro de um container fixo. Scroll bidirecional automático e canto no encontro das barras.",
@@ -182,6 +198,9 @@ export const DataMatrix: Story = {
 export const SidebarMenu: Story = {
   parameters: {
     docs: {
+      // Navegação em seções dentro da área rolável — sub-composição que o
+      // snippet do meta esconderia.
+      source: { transform: scrollAreaMenuLateralSource },
       description: {
         story:
           "Menu lateral rolável — a área isola o scroll da navegação sem mover a página, e os links continuam alcançáveis por teclado.",

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Skeleton } from "./skeleton";
+import { skeletonSource } from "./skeleton.source";
 import { SkeletonDocs } from "@/components/docs/SkeletonDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { FRACAO_DE_LARGURA, caixaDesenhada } from "@shared/testing/skeleton-probe";
@@ -23,7 +24,10 @@ const meta = {
   tags: ["autodocs", "feedback"],
   parameters: {
     layout: "padded",
-    docs: { page: withAutoDocsTab(SkeletonDocs) },
+    docs: {
+      page: withAutoDocsTab(SkeletonDocs),
+      source: { transform: skeletonSource },
+    },
   },
   argTypes: {
     shape: {

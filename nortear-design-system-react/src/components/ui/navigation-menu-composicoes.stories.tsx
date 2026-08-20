@@ -15,6 +15,12 @@ import {
   esperarPainelSumir,
   popupAberto,
 } from "./navigation-menu.fixtures";
+import {
+  navigationMenuDestaqueSource,
+  navigationMenuMegaMenuSource,
+  navigationMenuSomenteDestinosSource,
+  navigationMenuSource,
+} from "./navigation-menu.source";
 import { REGRA_GUARDA_DE_FOCO } from "@/lib/wait-for-portal";
 
 const meta = {
@@ -27,6 +33,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para WithDropdown, que é a forma do meta: um gatilho com
+      // lista vertical de destinos.
+      source: { transform: navigationMenuSource },
       description: {
         component:
           "As quatro formas canônicas do painel, do mais simples ao mais denso: só destinos diretos, um item com lista vertical, um mega-menu em duas colunas com descrição e um painel com destino em destaque ao lado dos complementares.",
@@ -58,6 +67,9 @@ function aoNavegar(event: React.MouseEvent): void {
 export const SimpleLink: Story = {
   parameters: {
     docs: {
+      // A ausência de painel É o assunto: sem hierarquia não há gatilho nenhum
+      // na barra, e o snippet do meta traz justamente um.
+      source: { transform: navigationMenuSomenteDestinosSource },
       description: {
         story:
           "Apenas destinos diretos, sem painel — ideal para três a cinco categorias planas.",
@@ -183,6 +195,9 @@ export const MegaMenuGrid: Story = {
     // Esta story termina com o painel ABERTO; ver a nota da regra.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      // Grade de duas colunas com uma linha de contexto por destino: a
+      // descrição é o que atende ao propósito do link, e o meta não a tem.
+      source: { transform: navigationMenuMegaMenuSource },
       description: {
         story:
           "Painel em duas colunas, com título e uma linha de contexto por destino — útil para apresentar soluções sem obrigar o leitor a adivinhar o que há do outro lado.",
@@ -281,6 +296,9 @@ export const WithHighlightedCard: Story = {
     // Esta story termina com o painel ABERTO; ver a nota da regra.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      // Destino em destaque ao lado de uma lista de apoio: a hierarquia vem do
+      // tamanho do bloco, e some se o snippet mostrar só a lista.
+      source: { transform: navigationMenuDestaqueSource },
       description: {
         story:
           "Um destino em destaque ao lado dos complementares — a hierarquia aparece pelo tamanho do bloco, não por cor.",

@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect } from "storybook/test";
 import { Slider } from "./slider";
+import {
+  sliderComRotuloSource,
+  sliderEmFormularioSource,
+  sliderPassoSource,
+  sliderPrecoSource,
+  sliderSource,
+} from "./slider.source";
 import { Label } from "./label";
 import { Button } from "./button";
 import { Input } from "./input";
@@ -14,6 +21,7 @@ const meta = {
   parameters: {
     layout: "padded",
     docs: {
+      source: { transform: sliderSource },
       description: {
         component:
           "Composicoes do Slider: com Label e valor textual (aria-live), faixa de preço, step customizado e múltiplos sliders em formulário.",
@@ -28,6 +36,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const WithLabelAndValue: Story = {
+  parameters: {
+    docs: {
+      // Sub-composição com `<Label>`: o rótulo visível e o `aria-label` convivem,
+      // porque `htmlFor` não alcança a alça que a lib desenha por dentro.
+      source: { transform: sliderComRotuloSource },
+    },
+  },
   render: function ComLabelEValorRender() {
     const [value, setValue] = useState<number[]>([75]);
     return (
@@ -70,6 +85,13 @@ export const WithLabelAndValue: Story = {
 };
 
 export const PriceRange: Story = {
+  parameters: {
+    docs: {
+      // Duas alças, `max` fora do padrão e `step` de 10 — nada disso vem dos
+      // args, tudo é afirmado no `render`.
+      source: { transform: sliderPrecoSource },
+    },
+  },
   render: function FaixaDePrecoRender() {
     const [value, setValue] = useState<number[]>([100, 400]);
     return (
@@ -107,6 +129,12 @@ export const PriceRange: Story = {
 };
 
 export const CustomStep: Story = {
+  parameters: {
+    docs: {
+      // O passo é o assunto da story e vive só no `render`.
+      source: { transform: sliderPassoSource },
+    },
+  },
   render: function StepCustomizadoRender() {
     const [value, setValue] = useState<number[]>([50]);
     return (
@@ -140,6 +168,13 @@ export const CustomStep: Story = {
 };
 
 export const InForm: Story = {
+  parameters: {
+    docs: {
+      // Sub-composição dentro de formulário: dois controles, cada um com nome
+      // acessível PRÓPRIO, e um botão de envio.
+      source: { transform: sliderEmFormularioSource },
+    },
+  },
   render: function EmFormularioRender() {
     const [volume, setVolume] = useState<number[]>([60]);
     const [brilho, setBrilho] = useState<number[]>([80]);

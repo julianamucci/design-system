@@ -9,6 +9,7 @@ import {
   NavigationMenuTrigger,
 } from "./navigation-menu";
 import { esperarPainel, esperarPainelSumir, popupAberto } from "./navigation-menu.fixtures";
+import { navigationMenuSource } from "./navigation-menu.source";
 import { NavigationMenuDocs } from "@/components/docs/NavigationMenuDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -26,7 +27,12 @@ const meta = {
   tags: ["autodocs", "navigation"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(NavigationMenuDocs) },
+    docs: {
+      page: withAutoDocsTab(NavigationMenuDocs),
+      // O painel imprimia a árvore do `render`, com as esperas de portal do
+      // módulo de apoio das stories. A transform devolve o uso real.
+      source: { transform: navigationMenuSource },
+    },
   },
   argTypes: {
     defaultValue: {

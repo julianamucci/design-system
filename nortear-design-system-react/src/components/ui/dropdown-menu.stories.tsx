@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
+import { dropdownMenuSource } from "./dropdown-menu.source";
 import { Button } from "./button";
 import { DropdownMenuDocs } from "@/components/docs/DropdownMenuDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -20,7 +21,12 @@ const meta = {
   tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(DropdownMenuDocs) },
+    docs: {
+      page: withAutoDocsTab(DropdownMenuDocs),
+      // O painel imprimia o `<div style={{ contain, minHeight }}>` do canvas e
+      // o `{...rootArgs}` da desestruturação — andaime, não componente.
+      source: { transform: dropdownMenuSource },
+    },
   },
   argTypes: {
     side: {

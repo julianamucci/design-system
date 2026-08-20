@@ -7,6 +7,12 @@ import {
 } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 import { definir } from "./toggle-group.fixtures";
+import {
+  toggleGroupCombinadoSource,
+  toggleGroupExclusivoSource,
+  toggleGroupSource,
+  toggleGroupVerticalSource,
+} from "./toggle-group.source";
 
 const meta = {
   title: "UI/ToggleGroup/Variants",
@@ -16,6 +22,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: toggleGroupSource },
       description: {
         component:
           "Variantes do ToggleGroup: single (seleção exclusiva), multiple (combinação) e vertical (items empilhados).",
@@ -44,6 +51,8 @@ export const Single: Story = {
   parameters: {
     covers: ["functional.item1", "visual.item1"],
     docs: {
+      // O arquivo desliga os controls: o modo e o item ativo vêm da story.
+      source: { transform: toggleGroupExclusivoSource },
       description: {
         story:
           'Seleção exclusiva (apenas um item ativo) — o valor é uma string. Ideal para alinhamento de texto.',
@@ -97,6 +106,8 @@ export const Multiple: Story = {
   parameters: {
     covers: ["functional.item2", "visual.item2"],
     docs: {
+      // No modo combinado a forma do valor vira lista — é a diferença de API.
+      source: { transform: toggleGroupCombinadoSource },
       description: {
         story:
           'Seleção combinada (vários items podem estar ativos) — o valor é um array de strings. Ideal para formatação Bold/Italic/Underline.',
@@ -151,6 +162,8 @@ export const Vertical: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // Outro conjunto de itens e o eixo trocado — nada disso cabe nos args.
+      source: { transform: toggleGroupVerticalSource },
       description: {
         story:
           'orientation="vertical" — items empilhados. Navegação via ArrowUp/ArrowDown. Útil para sidebars com modos de visualização.',

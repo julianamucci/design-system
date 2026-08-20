@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import { Switch } from "./switch";
 import { Label } from "./label";
+import {
+  switchDesabilitadoLigadoSource,
+  switchDesabilitadoSource,
+  switchInvalidoSource,
+  switchLigadoSource,
+  switchSource,
+} from "./switch.source";
 
 const meta = {
   title: "UI/Switch/States",
@@ -12,6 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: switchSource },
       description: {
         component:
           "Estados visuais e interativos do Switch: unchecked, checked, focus, disabled e invalid.",
@@ -94,6 +102,8 @@ export const Checked: Story = {
   parameters: {
     covers: ["visual.item2", "accessibility.item2"],
     docs: {
+      // `defaultChecked` só existe no render desta story.
+      source: { transform: switchLigadoSource },
       description: {
         story:
           'Estado ativado: aria-checked="true", trilho na cor primária e thumb à direita.',
@@ -167,6 +177,8 @@ export const Disabled: Story = {
   parameters: {
     covers: ["functional.item4", "visual.item3"],
     docs: {
+      // `disabled` só existe no render desta story.
+      source: { transform: switchDesabilitadoSource },
       description: {
         story:
           "Switch desabilitado: opacidade reduzida, cursor bloqueado e clique sem efeito.",
@@ -204,6 +216,8 @@ export const Disabled: Story = {
 export const DisabledChecked: Story = {
   parameters: {
     docs: {
+      // O par `disabled` + `defaultChecked` é afirmado no render.
+      source: { transform: switchDesabilitadoLigadoSource },
       description: {
         story:
           "Switch desabilitado e ativado ao mesmo tempo — mostra o estado sem permitir alteração.",
@@ -233,6 +247,8 @@ export const DisabledChecked: Story = {
 export const Invalid: Story = {
   parameters: {
     docs: {
+      // A mensagem de erro e o `aria-describedby` são composição do render.
+      source: { transform: switchInvalidoSource },
       description: {
         story:
           'Switch em estado inválido via aria-invalid="true": anel na cor de erro em volta do trilho.',

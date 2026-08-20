@@ -3,6 +3,13 @@ import { useState } from "react";
 import { userEvent, within, expect } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
+import {
+  calendarDoisMesesSource,
+  calendarLegendaSeletoresSource,
+  calendarLegendaTextoSource,
+  calendarNumeroDaSemanaSource,
+  calendarSource,
+} from "./calendar.source";
 
 const meta = {
   title: "UI/Calendar/Layouts",
@@ -13,6 +20,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: calendarSource },
       description: {
         component:
           "Formato da legenda do mês, quantidade de meses visíveis ao mesmo tempo e coluna com o número da semana.",
@@ -46,6 +54,9 @@ export const CaptionLabel: Story = {
   parameters: {
     covers: ["functional.item6", "visual.item3"],
     docs: {
+      // A story existe para nomear o formato da legenda; o `meta` omite o valor
+      // por ser o padrão, e sem ele o par com a story de seletores se perde.
+      source: { transform: calendarLegendaTextoSource },
       description: { story: "Legenda em texto com mês e ano no idioma configurado." },
     },
   },
@@ -97,6 +108,9 @@ export const CaptionDropdown: Story = {
   parameters: {
     covers: ["functional.item7"],
     docs: {
+      // A legenda vira dois controles operáveis: o `meta` cai no formato de
+      // texto, que é exatamente o que esta story existe para contrastar.
+      source: { transform: calendarLegendaSeletoresSource },
       description: {
         story: "Mês e ano viram seletores, para saltar de período sem passar mês a mês.",
       },
@@ -204,6 +218,9 @@ export const TwoMonths: Story = {
   },
   parameters: {
     docs: {
+      // São dois painéis e o modo de intervalo que os justifica; o `meta` deste
+      // arquivo cai num mês só, em data única.
+      source: { transform: calendarDoisMesesSource },
       description: {
         story: "Dois meses lado a lado, para escolher datas que atravessam a virada.",
       },
@@ -239,6 +256,9 @@ export const WithWeekNumber: Story = {
   },
   parameters: {
     docs: {
+      // A coluna vem desligada por padrão: sem a prop escrita, o snippet
+      // mostraria um grid de sete colunas para uma story de oito.
+      source: { transform: calendarNumeroDaSemanaSource },
       description: {
         story:
           "Coluna com o número da semana à esquerda do grid, para quem organiza o trabalho por semana.",

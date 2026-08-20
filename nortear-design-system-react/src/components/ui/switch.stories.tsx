@@ -5,13 +5,17 @@ import { definir } from "./switch.fixtures";
 import { Label } from "./label";
 import { SwitchDocs } from "@/components/docs/SwitchDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { switchSource } from "./switch.source";
 
 const meta = {
   title: "UI/Switch",
   component: Switch,
   tags: ["autodocs", "form"],
   parameters: {
-    docs: { page: withAutoDocsTab(SwitchDocs) },
+    docs: {
+      page: withAutoDocsTab(SwitchDocs),
+      source: { transform: switchSource },
+    },
   },
   argTypes: {
     checked: {

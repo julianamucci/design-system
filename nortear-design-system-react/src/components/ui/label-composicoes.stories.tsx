@@ -3,6 +3,11 @@ import { userEvent, within, expect } from "storybook/test";
 import { Label } from "./label";
 import { Input } from "./input";
 import { Checkbox } from "./checkbox";
+import {
+  labelComCheckboxSource,
+  labelObrigatorioSource,
+  labelSource,
+} from "./label.source";
 
 const meta = {
   title: "UI/Label/Compositions",
@@ -13,6 +18,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O par rótulo + campo é a composição de base; as outras duas trocam o
+      // controle ou acrescentam semântica e dizem a sua.
+      source: { transform: labelSource },
       description: {
         component:
           "Composições do rótulo com outros elementos de formulário: campo de texto, caixa de seleção e campo obrigatório.",
@@ -61,6 +69,9 @@ export const WithInput: Story = {
 export const WithCheckbox: Story = {
   parameters: {
     docs: {
+      // Outro controle e outro eixo: o par vira linha, e o snippet do campo de
+      // texto esconderia as duas trocas.
+      source: { transform: labelComCheckboxSource },
       description: {
         story:
           "Rótulo associado a uma caixa de seleção. Clicar no texto alterna a caixa — é o alcance de clique que a associação entrega.",
@@ -102,6 +113,9 @@ export const WithCheckbox: Story = {
 export const RequiredField: Story = {
   parameters: {
     docs: {
+      // Mesma composição de duas metades da story Required: o asterisco
+      // decorativo e o `aria-required` não cabem no par padrão.
+      source: { transform: labelObrigatorioSource },
       description: {
         story:
           "Campo obrigatório: asterisco decorativo no rótulo e `aria-required` no campo. As duas partes são necessárias — uma é visual, a outra é semântica.",

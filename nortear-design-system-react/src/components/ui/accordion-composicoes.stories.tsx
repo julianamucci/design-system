@@ -9,6 +9,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./accordion";
+import {
+  accordionComBadgeSource,
+  accordionComIconeSource,
+  accordionConteudoRicoSource,
+  accordionFaqSource,
+  accordionSource,
+} from "./accordion.source";
 
 const meta: Meta = {
   title: "UI/Accordion/Compositions",
@@ -17,6 +24,7 @@ const meta: Meta = {
     design: figmaDesign("accordionTrigger"),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: accordionSource } },
   },
 };
 
@@ -72,6 +80,8 @@ export const WithIconInTrigger: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item4'],
     docs: {
+      // O ícone dentro do gatilho é composição: não cabe em nenhum arg da raiz.
+      source: { transform: accordionComIconeSource },
       description: {
         story:
           "Ícones no trigger. Adicione aria-hidden=\"true\" no ícone — o texto do trigger já descreve o item para leitores de tela.",
@@ -126,6 +136,8 @@ export const WithBadgeInTrigger: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // O Badge é outro componente dentro do gatilho — o meta não o importa.
+      source: { transform: accordionComBadgeSource },
       description: {
         story:
           "Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.",
@@ -189,6 +201,8 @@ export const RichContent: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
     docs: {
+      // A tabela dentro do painel é o assunto; o meta imprimiria um parágrafo.
+      source: { transform: accordionConteudoRicoSource },
       description: {
         story:
           "AccordionContent aceita qualquer conteúdo React. Use para tabelas de dados, parágrafos ou listas estruturadas.",
@@ -250,6 +264,9 @@ export const FAQ: Story = {
   parameters: {
     covers: ['functional.item1', 'functional.item3'],
     docs: {
+      // O render itera um array declarado no arquivo de story; sem ele o
+      // snippet não compila, então o array vem junto no bloco.
+      source: { transform: accordionFaqSource },
       description: {
         story:
           "Padrão FAQ canônico. Perguntas interrogativas completas no trigger. Respostas objetivas em 2–3 linhas no content.",

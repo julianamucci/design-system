@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Skeleton } from "./skeleton";
+import { skeletonPulsandoSource, skeletonSource } from "./skeleton.source";
 import {
   animacaoAtiva,
   distincaoDoFundo,
@@ -16,6 +17,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: skeletonSource },
       description: {
         component:
           "Os dois estados que o conteúdo compartilhado documenta: o pulso padrão enquanto o conteúdo carrega, e o pulso desligado quando o sistema pede movimento reduzido.",
@@ -31,6 +33,9 @@ export const Pulsing: Story = {
   parameters: {
     covers: ["functional.item1", "accessibility.item5"],
     docs: {
+      // Duas linhas empilhadas: o pulso só é lido como bloco carregando quando
+      // há mais de uma barra, e o meta imprime a linha solta do Playground.
+      source: { transform: skeletonPulsandoSource },
       description: {
         story:
           "Estado padrão: pulso por opacidade, cantos arredondados e fundo distinto do container.",

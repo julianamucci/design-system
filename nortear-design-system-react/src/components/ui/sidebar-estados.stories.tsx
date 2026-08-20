@@ -25,6 +25,15 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "./sidebar";
+import {
+  sidebarCarregandoSource,
+  sidebarExpandidaSource,
+  sidebarMovelSource,
+  sidebarRecolhidaEmIconesSource,
+  sidebarRecolhidaOffcanvasSource,
+  sidebarSemRecolhimentoSource,
+  sidebarSource,
+} from "./sidebar.source";
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -159,6 +168,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sidebarSource },
       description: {
         component:
           "Estados da Sidebar: **expandida** (padrão), **recolhida icon** (collapsible=icon), **offcanvas** (sidebar fora da viewport) e **loading** (SidebarMenuSkeleton).",
@@ -181,6 +191,13 @@ type Story = StoryObj<typeof meta>;
 
 export const Expanded: Story = {
   name: "State: expanded",
+  parameters: {
+    docs: {
+      // O estado inicial é afirmado no `render`, e escrevê-lo é o que distingue
+      // esta story das vizinhas que nascem recolhidas.
+      source: { transform: sidebarExpandidaSource },
+    },
+  },
   render: () => <SidebarStatePreview defaultOpen={true} collapsible="offcanvas" label="Sidebar expandida (defaultOpen=true)" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -200,7 +217,14 @@ export const Expanded: Story = {
 
 export const CollapsedIcon: Story = {
   name: "State: collapsed (icon mode)",
-  parameters: { covers: ["functional.item4", "functional.item7", "visual.item2"] },
+  parameters: {
+    covers: ["functional.item4", "functional.item7", "visual.item2"],
+    docs: {
+      // O par `defaultOpen={false}` + `collapsible="icon"` é o que faz a barra
+      // nascer estreita em vez de fora da tela; nenhum control o descreve.
+      source: { transform: sidebarRecolhidaEmIconesSource },
+    },
+  },
   render: () => <SidebarStatePreview defaultOpen={false} collapsible="icon" label="Sidebar icon mode (collapsible=icon, defaultOpen=false)" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -257,6 +281,13 @@ export const CollapsedIcon: Story = {
 
 export const Offcanvas: Story = {
   name: "State: offcanvas (hidden)",
+  parameters: {
+    docs: {
+      // Nasce recolhida para fora da tela: o estado inicial vive no `render`, e
+      // o gatilho é o único caminho de volta.
+      source: { transform: sidebarRecolhidaOffcanvasSource },
+    },
+  },
   render: () => <SidebarStatePreview defaultOpen={false} collapsible="offcanvas" label="Sidebar offcanvas (colapsada fora da viewport)" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -282,7 +313,14 @@ export const Offcanvas: Story = {
 
 export const Fixed: Story = {
   name: "State: fixed (collapsible=none)",
-  parameters: { covers: ["functional.item5"] },
+  parameters: {
+    covers: ["functional.item5"],
+    docs: {
+      // Sem recolhimento não há gatilho no snippet: a AUSÊNCIA dele é parte do
+      // caso, e é a mesma composição da variante sem recolhimento.
+      source: { transform: sidebarSemRecolhimentoSource },
+    },
+  },
   render: () => <SidebarStatePreview defaultOpen={true} collapsible="none" label="Sidebar fixa (collapsible=none)" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -304,7 +342,14 @@ export const Fixed: Story = {
 
 export const Loading: Story = {
   name: "State: loading (SidebarMenuSkeleton)",
-  parameters: { covers: ["functional.item9"] },
+  parameters: {
+    covers: ["functional.item9"],
+    docs: {
+      // O placeholder toma o lugar do destino DENTRO do mesmo item de menu — é
+      // uma peça diferente na mesma estrutura, e o meta não a imprimiria.
+      source: { transform: sidebarCarregandoSource },
+    },
+  },
   render: () => <SidebarLoadingPreview />,
   play: async ({ canvasElement, step }) => {
     await step("Cada item de menu vira um placeholder", async () => {
@@ -338,6 +383,12 @@ export const Mobile: Story = {
   parameters: {
     viewport: { defaultViewport: "mobile1" },
     covers: ["functional.item3", "visual.item5"],
+    docs: {
+      // A consulta sempre verdadeira e a classe de marcação são sondas do teste.
+      // O snippet mostra o ponto de virada como PRODUTO: `mobileQuery` existe
+      // para a aplicação escolher onde a coluna vira gaveta.
+      source: { transform: sidebarMovelSource },
+    },
   },
   render: () => (
     <SidebarStatePreview

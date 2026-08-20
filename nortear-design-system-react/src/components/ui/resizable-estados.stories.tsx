@@ -6,6 +6,13 @@ import {
   ResizablePanelGroup,
 } from "./resizable";
 import { fracaoDoPrimeiro } from "./resizable.fixtures";
+import {
+  resizableArrastoSource,
+  resizableFocoSource,
+  resizableLimitesSource,
+  resizableSource,
+  resizableTravadoSource,
+} from "./resizable.source";
 
 const meta = {
   title: "UI/Resizable/States",
@@ -16,6 +23,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: resizableSource },
       description: {
         component:
           "Estados do ResizableHandle: Dragging (arrasto ajusta os painéis em tempo real), Limits (o painel para no mínimo e no máximo), Focus (divisor alcançado pelo Tab, com anel visível) e Disabled (divisor travado).",
@@ -47,7 +55,14 @@ function razaoDeContraste(frente: string, fundo: string): number {
 const aoLayout = fn();
 
 export const Dragging: Story = {
-  parameters: { covers: ["functional.item1", "accessibility.item2"] },
+  parameters: {
+    covers: ["functional.item1", "accessibility.item2"],
+    docs: {
+      // `onLayout` está no `render`, e no snippet ele precisa desembocar em
+      // algum lugar — o espião da story não é composição que alguém escreva.
+      source: { transform: resizableArrastoSource },
+    },
+  },
   render: () => (
     <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal" onLayout={aoLayout}>
@@ -121,7 +136,13 @@ export const Dragging: Story = {
 };
 
 export const Limits: Story = {
-  parameters: { covers: ["functional.item3"] },
+  parameters: {
+    covers: ["functional.item3"],
+    docs: {
+      // O par minSize/maxSize é o assunto e vive só no `render`.
+      source: { transform: resizableLimitesSource },
+    },
+  },
   render: () => (
     <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
@@ -172,7 +193,13 @@ export const Limits: Story = {
 };
 
 export const Focus: Story = {
-  parameters: { covers: ["functional.item4", "accessibility.item3"] },
+  parameters: {
+    covers: ["functional.item4", "accessibility.item3"],
+    docs: {
+      // Divisão 50/50 sem pegador, afirmada no `render`.
+      source: { transform: resizableFocoSource },
+    },
+  },
   render: () => (
     <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
@@ -220,6 +247,12 @@ export const Focus: Story = {
 };
 
 export const Disabled: Story = {
+  parameters: {
+    docs: {
+      // `disabled` no punho é o estado que só existe no `render`.
+      source: { transform: resizableTravadoSource },
+    },
+  },
   render: () => (
     <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">

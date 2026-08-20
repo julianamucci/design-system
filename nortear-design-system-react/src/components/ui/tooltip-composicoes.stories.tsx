@@ -9,6 +9,12 @@ import {
 import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save, Trash2, Share2 } from "lucide-react";
+import {
+  tooltipAtalhoEmBarraSource,
+  tooltipBarraDeIconesSource,
+  tooltipLadosSource,
+  tooltipSource,
+} from "./tooltip.source";
 
 // As composições que o conteúdo compartilhado documenta. Todas repetem a mesma
 // regra: o Tooltip acrescenta contexto a um elemento que JÁ se explica sozinho —
@@ -41,6 +47,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: tooltipSource },
       description: {
         component:
           "Barra de ações icon-only, botão de ação rápida com atalho e os quatro lados de posicionamento.",
@@ -65,6 +72,8 @@ export const IconBarToolbar: Story = {
         story:
           "Toolbar de ações icon-only — cada Button tem aria-label próprio (mobile sem hover) e Tooltip complementar com a mesma label.",
       },
+      // Três gatilhos numa barra: a repetição é a lição, não o balão sozinho.
+      source: { transform: tooltipBarraDeIconesSource },
     },
   },
   render: () => (
@@ -126,6 +135,8 @@ export const WithKeyboardShortcut: Story = {
         story:
           "Botão de ação rápida com hotkey — o aria-label sozinho já diz o que o botão faz; o Tooltip acrescenta a tecla, que é conveniência.",
       },
+      // O par de <kbd> dentro do balão é composição, não argumento.
+      source: { transform: tooltipAtalhoEmBarraSource },
     },
   },
   render: () => (
@@ -169,6 +180,8 @@ export const PlacementSides: Story = {
         story:
           "Quatro tooltips abertos lado a lado mostrando side=top/right/bottom/left. O auto-flip por colisão pode trocar o lado quando falta espaço.",
       },
+      // Os quatro lados juntos: um `side` sozinho prometeria o que não garante.
+      source: { transform: tooltipLadosSource },
     },
   },
   render: () => (

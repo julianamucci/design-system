@@ -13,6 +13,11 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from "./menubar"
+import {
+  menubarItemDestrutivoSource,
+  menubarItemNeutroSource,
+  menubarSource,
+} from "./menubar.source"
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
@@ -37,6 +42,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: menubarSource },
       description: {
         component:
           "As duas ênfases de item dentro de um menu da barra. `default` é o item neutro; `destructive` marca a ação irreversível com a cor de perigo, e existe para que \"Descartar alterações\" não pareça \"Salvar\".",
@@ -57,7 +63,13 @@ const wrapperStyle: React.CSSProperties = {
 // ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  parameters: { a11y: AXE_COM_MENU_ABERTO, covers: ["accessibility.item7"] },
+  parameters: {
+    a11y: AXE_COM_MENU_ABERTO,
+    covers: ["accessibility.item7"],
+    // A ausência de `variant` é o assunto: o snippet do meta traz atalhos, que
+    // aqui só disputariam atenção com o item neutro.
+    docs: { source: { transform: menubarItemNeutroSource } },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <Menubar modal={false}>
@@ -115,7 +127,13 @@ export const Default: Story = {
 // ─── Destructive ──────────────────────────────────────────────────────────────
 
 export const Destructive: Story = {
-  parameters: { a11y: AXE_COM_MENU_ABERTO, covers: ["visual.item5"] },
+  parameters: {
+    a11y: AXE_COM_MENU_ABERTO,
+    covers: ["visual.item5"],
+    // `variant="destructive"` e o separador que o afasta do item neutro — nada
+    // disso é descrito por args, e o snippet do meta esconderia o par.
+    docs: { source: { transform: menubarItemDestrutivoSource } },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <Menubar modal={false}>

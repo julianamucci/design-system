@@ -5,6 +5,7 @@ import {
   medirCrescimentoDoTrilho,
 } from "@shared/testing/tabs-probe";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
+import { tabsLinhaSource, tabsSource, tabsVerticalSource } from "./tabs.source";
 
 const meta: Meta = {
   title: "UI/Tabs/Variants",
@@ -16,6 +17,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: tabsSource },
       description: {
         component:
           "Estilo da lista e direção da navegação. A variante decide se há um trilho com fundo " +
@@ -115,6 +117,8 @@ export const Line: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
+      // A variante mora na LISTA, e nenhum control deste arquivo a descreve.
+      source: { transform: tabsLinhaSource },
       description: {
         story:
           "Variante de linha — sem trilho, apenas um traço sob a aba ativa. Útil para " +
@@ -167,6 +171,8 @@ export const Vertical: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // A orientação é afirmada no `render`, sem control que a descreva.
+      source: { transform: tabsVerticalSource },
       description: {
         story:
           "Orientação vertical — a fileira de abas vira uma coluna à esquerda e o painel ocupa " +

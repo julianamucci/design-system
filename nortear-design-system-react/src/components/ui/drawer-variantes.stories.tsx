@@ -12,6 +12,12 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./drawer";
+import {
+  drawerDireitaSource,
+  drawerEsquerdaSource,
+  drawerSource,
+  drawerTopoSource,
+} from "./drawer.source";
 import { Button } from "./button";
 
 const meta = {
@@ -23,6 +29,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Bottom é o padrão do componente: sem `direction` escrito, esta transform
+      // já é o snippet da story Bottom.
+      source: { transform: drawerSource },
       description: {
         component:
           "Direção de entrada pela prop direction da raiz. Bottom é o padrão mobile-first e a única direção em que a alça aparece; left e right servem a painéis laterais.",
@@ -105,6 +114,8 @@ export const Top: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
+      // `direction="top"` é o assunto, e o arquivo desliga os controls.
+      source: { transform: drawerTopoSource },
       description: {
         story:
           "Entra por cima, com cantos arredondados embaixo. Serve a notificação rica e a seletor rápido — conteúdo curto e saída imediata.",
@@ -128,6 +139,8 @@ export const Left: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // `direction="left"` é o assunto, e o arquivo desliga os controls.
+      source: { transform: drawerEsquerdaSource },
       description: {
         story:
           "Painel lateral à esquerda — a direção do menu de navegação, que a pessoa espera encontrar onde o menu costuma ficar.",
@@ -151,6 +164,8 @@ export const Right: Story = {
   parameters: {
     covers: ["functional.item5", "visual.item2"],
     docs: {
+      // `direction="right"` é o assunto, e o arquivo desliga os controls.
+      source: { transform: drawerDireitaSource },
       description: {
         story:
           "Painel lateral à direita — alternativa de desktop para edição e filtros, sem trocar de componente.",

@@ -3,6 +3,15 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import { Plus, Trash2, ChevronRight, Download } from "lucide-react";
 import { Button, buttonVariants } from "./button";
+import {
+  buttonComoLinkSource,
+  buttonDestrutivoComIconeSource,
+  buttonIconeDireitaSource,
+  buttonIconeEsquerdaSource,
+  buttonParDeAcoesSource,
+  buttonSomenteIconeSource,
+  buttonSource,
+} from "./button.source";
 
 const meta = {
   title: "UI/Button/Compositions",
@@ -12,6 +21,9 @@ const meta = {
     design: figmaDesign("button"),
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      source: { transform: buttonSource },
+    },
   },
 } satisfies Meta<typeof Button>;
 
@@ -28,6 +40,9 @@ export const WithIconLeft: Story = {
   parameters: {
     covers: ["visual.item5"],
     docs: {
+      // O ícone dentro do botão é composição, não arg: o `meta` imprimiria só o
+      // rótulo e o `aria-hidden` que tira o ícone da leitura sumiria junto.
+      source: { transform: buttonIconeEsquerdaSource },
       description: {
         story: "Ícone à esquerda do label. O SVG deve ter aria-hidden=\"true\" para não poluir leitores de tela.",
       },
@@ -50,6 +65,9 @@ export const WithIconRight: Story = {
   ),
   parameters: {
     docs: {
+      // A ORDEM entre ícone e rótulo é o que separa esta story da anterior, e
+      // ordem de filhos não existe em arg nenhum.
+      source: { transform: buttonIconeDireitaSource },
       description: {
         story: "Ícone à direita do label. Use em botões de navegação progressiva.",
       },
@@ -73,6 +91,9 @@ export const DestructiveIcon: Story = {
   ),
   parameters: {
     docs: {
+      // A combinação variante + ícone é o assunto; o `meta` teria a variante e
+      // perderia o ícone.
+      source: { transform: buttonDestrutivoComIconeSource },
       description: {
         story: "Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.",
       },
@@ -93,6 +114,9 @@ export const IconOnly: Story = {
   ),
   parameters: {
     docs: {
+      // A AUSÊNCIA de texto é o assunto: sem ela o `aria-label` obrigatório
+      // pareceria opcional no snippet.
+      source: { transform: buttonSomenteIconeSource },
       description: {
         story: "Botão apenas com ícone. aria-label é obrigatório para acessibilidade.",
       },
@@ -117,6 +141,9 @@ export const ActionPair: Story = {
   ),
   parameters: {
     docs: {
+      // São DOIS botões e o contêiner que os espaça: um botão sozinho esconderia
+      // a regra de ordem que a story existe para afirmar.
+      source: { transform: buttonParDeAcoesSource },
       description: {
         story: "Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.",
       },
@@ -147,6 +174,9 @@ export const AsLink: Story = {
   parameters: {
     covers: ["functional.item5"],
     docs: {
+      // Aqui não há componente Button: o que se ensina é o <a> real levando as
+      // classes da variante, e um `<Button>` no painel diria o contrário.
+      source: { transform: buttonComoLinkSource },
       description: {
         story: "Link estilizado como botão. Aplique as classes do botão em um <a> real para preservar a semântica de link.",
       },

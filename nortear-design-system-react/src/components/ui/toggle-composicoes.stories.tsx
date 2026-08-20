@@ -3,6 +3,12 @@ import { useState } from "react";
 import { userEvent, within, expect } from "storybook/test";
 import { Bold, Italic, Underline, List, Eye } from "lucide-react";
 import { Toggle } from "./toggle";
+import {
+  toggleBarraFormatacaoSource,
+  toggleControladoSource,
+  toggleFiltrosSource,
+  toggleSource,
+} from "./toggle.source";
 
 const meta = {
   title: "UI/Toggle/Compositions",
@@ -14,6 +20,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleSource },
       description: {
         component:
           "As duas composições documentadas — toolbar de formatação e lista de filtros — mais o padrão controlado.",
@@ -36,6 +43,12 @@ async function definir(btn: HTMLElement, alvo: boolean) {
 }
 
 export const FormattingToolbar: Story = {
+  parameters: {
+    docs: {
+      // O grupo nomeado em volta dos quatro toggles é a composição inteira.
+      source: { transform: toggleBarraFormatacaoSource },
+    },
+  },
   render: () => (
     <div
       role="group"
@@ -89,6 +102,12 @@ export const FormattingToolbar: Story = {
 };
 
 export const FilterList: Story = {
+  parameters: {
+    docs: {
+      // Dois filtros combináveis com rótulo visível — sub-composição do render.
+      source: { transform: toggleFiltrosSource },
+    },
+  },
   render: () => (
     <div className="nds-stack" data-spacing="sm">
       <p className="nds-text-body nds-font-semibold">Filtros de exibição</p>
@@ -135,6 +154,12 @@ export const FilterList: Story = {
 };
 
 export const Controlled: Story = {
+  parameters: {
+    docs: {
+      // O estado externo vive num `useState` que o meta não imprime.
+      source: { transform: toggleControladoSource },
+    },
+  },
   render: function ControladoRender() {
     const [isBold, setIsBold] = useState(false);
     return (

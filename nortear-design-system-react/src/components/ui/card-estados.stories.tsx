@@ -9,6 +9,11 @@ import {
   CardTitle,
 } from "./card";
 import { Button } from "./button";
+import {
+  cardClicavelSource,
+  cardSemRodapeSource,
+  cardSource,
+} from "./card.source";
 
 /**
  * Espiões em escopo de MÓDULO: criados dentro do `render` seriam inalcançáveis
@@ -27,6 +32,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: cardSource },
       description: {
         component:
           "Configurações do Card: padrão (container passivo), clicável (envolvido em <a> com aria-label descritivo) e com footer de ações. O Card raiz nunca recebe foco — a semântica de ativação vive no wrapper ou nos controles internos.",
@@ -39,7 +45,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  parameters: { covers: ["accessibility.item2"] },
+  parameters: {
+    covers: ["accessibility.item2"],
+    // O assunto é o Card PASSIVO: sem rodapé, sem papel e fora da ordem de
+    // foco. O snippet do meta traz ações, que é o oposto do que se mostra aqui.
+    docs: { source: { transform: cardSemRodapeSource } },
+  },
   render: () => (
     <Card className="nds-w-full nds-max-w-sm">
       <CardHeader>
@@ -80,6 +91,9 @@ export const Clickable: Story = {
   parameters: {
     covers: ["functional.item6", "accessibility.item4", "visual.item4"],
     docs: {
+      // Quem recebe foco e nome acessível é a âncora EM VOLTA do Card, e essa
+      // envoltória é justamente o que o snippet do meta não tem.
+      source: { transform: cardClicavelSource },
       description: {
         story:
           "Card envolvido em `<a>` com `aria-label` descritivo. Não use `onClick` no Card root — a semântica de ativação por teclado e o anel de foco vivem no wrapper, e o Tab alcança um destino só.",

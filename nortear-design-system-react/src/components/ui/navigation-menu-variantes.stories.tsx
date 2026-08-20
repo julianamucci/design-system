@@ -10,6 +10,7 @@ import {
   NavigationMenuTrigger,
 } from "./navigation-menu";
 import { abrir, fechar } from "./navigation-menu.fixtures";
+import { navigationMenuSource, navigationMenuVerticalSource } from "./navigation-menu.source";
 
 const meta = {
   title: "UI/NavigationMenu/Variants",
@@ -21,6 +22,8 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para Horizontal, que é a orientação padrão do componente.
+      source: { transform: navigationMenuSource },
       description: {
         component:
           "As duas direções da barra. Horizontal é o cabeçalho de site, com os itens em linha e o painel abrindo para baixo; vertical é a coluna de uma barra lateral ou gaveta, com os itens empilhados e o painel abrindo para o lado — abrir para baixo numa coluna cobriria os próprios itens seguintes.",
@@ -134,6 +137,9 @@ export const Vertical: Story = {
   parameters: {
     covers: ["visual.item5"],
     docs: {
+      // Este arquivo desliga os controls, então o meta não tem de onde ler a
+      // orientação: a vertical diz a sua, junto com o empilhamento da lista.
+      source: { transform: navigationMenuVerticalSource },
       description: {
         story:
           "Itens empilhados; usado em barras laterais e gavetas móveis. As setas Cima/Baixo percorrem a barra.",

@@ -17,6 +17,7 @@ import {
   CarouselNext,
 } from "./carousel";
 import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
+import { carouselSource, carouselVerticalSource } from "./carousel.source";
 
 const meta = {
   title: "UI/Carousel/Variants",
@@ -27,6 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: carouselSource },
       description: {
         component:
           "Variações de orientação do Carousel: horizontal (padrão) e vertical.",
@@ -140,6 +142,9 @@ export const Vertical: Story = {
   parameters: {
     covers: ["functional.item5", "functional.item10", "visual.item2"],
     docs: {
+      // O arquivo desliga os controls, então o meta não tem de onde ler o eixo
+      // — e o eixo é o assunto: com ele mudam o trilho, as setas e as teclas.
+      source: { transform: carouselVerticalSource },
       description: {
         story:
           "Os slides empilham e as setas passam para cima e para baixo do viewport, que recebe altura por classe de proporção.",

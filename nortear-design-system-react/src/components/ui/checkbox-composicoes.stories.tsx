@@ -2,6 +2,14 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, waitFor, within, expect } from "storybook/test";
 import { Checkbox } from "./checkbox";
 import { Button } from "./button";
+import {
+  checkboxComDescricaoSource,
+  checkboxEmCardSource,
+  checkboxEmFormularioSource,
+  checkboxGrupoSource,
+  checkboxSelecionarTodosSource,
+  checkboxSource,
+} from "./checkbox.source";
 
 const meta = {
   title: "UI/Checkbox/Compositions",
@@ -10,6 +18,7 @@ const meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: checkboxSource } },
   },
 } satisfies Meta<typeof Checkbox>;
 
@@ -87,6 +96,8 @@ export const WithDescription: Story = {
   ),
   parameters: {
     docs: {
+      // O texto auxiliar muda o alinhamento do par — não é o snippet do meta.
+      source: { transform: checkboxComDescricaoSource },
       description: {
         story:
           "Checkbox + Label + texto auxiliar abaixo. Para contexto adicional sobre a opção selecionada.",
@@ -125,6 +136,8 @@ export const GroupWithFieldset: Story = {
   ),
   parameters: {
     docs: {
+      // O fieldset + legend é o assunto: uma caixa sozinha não tem grupo.
+      source: { transform: checkboxGrupoSource },
       description: {
         story:
           "Grupo de checkboxes em fieldset + legend. Obrigatório para WCAG 1.3.1 quando os itens pertencem ao mesmo conjunto.",
@@ -174,6 +187,9 @@ export const SelectAll: Story = {
   },
   parameters: {
     docs: {
+      // A caixa do topo é controlada: o estado misto é uma conta sobre os filhos,
+      // e marcação estática esconderia justamente isso.
+      source: { transform: checkboxSelecionarTodosSource },
       description: {
         story:
           "Padrão de seleção em massa: checkbox pai + checkboxes filhos. O pai usa o estado indeterminate (propriedade dedicada) quando alguns itens estão selecionados — ver a story Indeterminate em States.",
@@ -222,6 +238,8 @@ export const InsideCard: Story = {
   ),
   parameters: {
     docs: {
+      // A moldura do card é parte da composição e não cabe nos args.
+      source: { transform: checkboxEmCardSource },
       description: {
         story:
           "Checkbox integrado em card de seleção. Útil em interfaces de comparação de planos ou seleção de itens em listas.",
@@ -249,6 +267,9 @@ export const InForm: Story = {
   parameters: {
     covers: ["functional.item5"],
     docs: {
+      // O <form> e a leitura por FormData são o assunto; o render da story monta
+      // um componente local que não existe fora dela.
+      source: { transform: checkboxEmFormularioSource },
       description: {
         story:
           "Integração com <form>. O base-ui mantém um <input> oculto ao lado do Root, que carrega name/value no submit — leia o estado real via FormData, não via state de React.",

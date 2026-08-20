@@ -15,6 +15,13 @@ import {
   AlertDialogTrigger,
 } from "./alert-dialog";
 import { Button } from "./button";
+import {
+  alertDialogAbertoSource,
+  alertDialogCanceladoSource,
+  alertDialogConfirmadoSource,
+  alertDialogControladoSource,
+  alertDialogSource,
+} from "./alert-dialog.source";
 
 const meta = {
   title: "UI/AlertDialog/States",
@@ -26,6 +33,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: alertDialogSource },
       description: {
         component:
           "Cada estado canônico do AlertDialog: closed, open, confirmed, cancelled e controlled.",
@@ -122,6 +130,9 @@ export const Open: Story = {
     // a varredura axe (contraste incluído) do estado aberto.
     covers: ["accessibility.item6", "accessibility.item7"],
     docs: {
+      // `defaultOpen` é o assunto, e o arquivo desliga os controls: sem override
+      // o painel mostraria a forma fechada.
+      source: { transform: alertDialogAbertoSource },
       description: {
         story:
           "Diálogo aberto com `defaultOpen`. Usado para captura visual no Chromatic.",
@@ -174,6 +185,8 @@ export const Confirmed: Story = {
   parameters: {
     covers: ["functional.item2"],
     docs: {
+      // O `onClick` no Action é o que a story mede; o `meta` não o tem.
+      source: { transform: alertDialogConfirmadoSource },
       description: {
         story:
           "Usuário confirma a ação clicando em Action — handler `onClick` é disparado e o diálogo fecha. Enter com o Action focado produz o mesmo resultado.",
@@ -264,6 +277,8 @@ export const Cancelled: Story = {
   parameters: {
     covers: ["functional.item3"],
     docs: {
+      // O Cancel também recebe `onClick`, e a ação destrutiva não roda por ele.
+      source: { transform: alertDialogCanceladoSource },
       description: {
         story:
           "Usuário cancela — diálogo fecha e `onClick` do Cancel é disparado. Space com o Cancel focado produz o mesmo resultado.",
@@ -340,6 +355,9 @@ export const Controlled: Story = {
   parameters: {
     covers: ["functional.item7"],
     docs: {
+      // Composição diferente da do `meta`: estado do pai, gatilho FORA da raiz
+      // e nenhum AlertDialogTrigger.
+      source: { transform: alertDialogControladoSource },
       description: {
         story:
           "Abertura controlada via `open` + `onOpenChange` — pai decide quando abrir e fechar.",

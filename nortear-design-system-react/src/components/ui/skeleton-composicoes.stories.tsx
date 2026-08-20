@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Skeleton } from "./skeleton";
 import { AspectRatio } from "./aspect-ratio";
+import {
+  skeletonCardDePerfilSource,
+  skeletonImagemEmProporcaoSource,
+  skeletonListaSource,
+  skeletonParagrafoSource,
+  skeletonSource,
+} from "./skeleton.source";
 
 const meta = {
   title: "UI/Skeleton/Compositions",
@@ -12,6 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: skeletonSource },
       description: {
         component:
           "Composições típicas — card de perfil, lista, imagem em proporção e parágrafo. Cada bloco é uma região `role=\"status\"` com `aria-busy`, e cada placeholder fica fora da árvore de acessibilidade.",
@@ -27,6 +35,9 @@ export const ProfileCard: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // Avatar + duas linhas num cluster: a composição É o formato que o card de
+      // perfil imita, e o meta imprime uma linha de texto solta.
+      source: { transform: skeletonCardDePerfilSource },
       description: {
         story: "Avatar circular + 2 linhas de texto — padrão de carregamento de card de perfil.",
       },
@@ -76,6 +87,9 @@ export const ListWithAvatar: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
+      // Cinco itens numa lista, com a região ocupada na lista inteira — um aviso
+      // de carregamento por item seria ruído para quem ouve.
+      source: { transform: skeletonListaSource },
       description: {
         story: "Cinco itens com avatar pequeno e duas linhas — padrão de carregamento de lista.",
       },
@@ -129,6 +143,9 @@ export const ImageInAspectRatio: Story = {
   parameters: {
     covers: ["visual.item5"],
     docs: {
+      // Quem estabelece a caixa é a proporção: o placeholder ocupa exatamente o
+      // espaço da imagem que vai chegar.
+      source: { transform: skeletonImagemEmProporcaoSource },
       description: {
         story: "Placeholder de imagem dentro de uma proporção 16/9 — quem define a caixa é o container.",
       },
@@ -166,6 +183,9 @@ export const ImageInAspectRatio: Story = {
 export const Paragraph: Story = {
   parameters: {
     docs: {
+      // Três linhas de larguras decrescentes: é a variação entre elas que faz o
+      // bloco parecer parágrafo.
+      source: { transform: skeletonParagrafoSource },
       description: {
         story: "Três linhas com larguras decrescentes — placeholder de parágrafo.",
       },

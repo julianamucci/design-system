@@ -2,6 +2,11 @@ import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, waitFor, within, expect } from "storybook/test";
 import { CodeBlock } from "./code-block";
+import {
+  codeBlockRemovivelSource,
+  codeBlockRolagemSource,
+  codeBlockSource,
+} from "./code-block.source";
 import { Button } from "@/components/ui/button";
 
 const BASE_CODE = `const items = await load();
@@ -28,6 +33,7 @@ const meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: codeBlockSource } },
   },
 } satisfies Meta<typeof CodeBlock>;
 
@@ -98,7 +104,12 @@ export const Copied: Story = {
 };
 
 export const DoubleScroll: Story = {
-  parameters: { covers: ["visual.item5"] },
+  parameters: {
+    covers: ["visual.item5"],
+    // O trecho da story tem 40 linhas geradas: despejá-lo no painel seria uma
+    // parede de texto, e não existe prop de rolagem para ensinar.
+    docs: { source: { transform: codeBlockRolagemSource } },
+  },
   args: { code: SCROLL_CODE, language: "ts" },
   render: (args) => <CodeBlock {...args} />,
   play: async ({ canvasElement, step }) => {
@@ -170,7 +181,12 @@ function BlocoRemovivel({ code }: { code: string }) {
 }
 
 export const RemovedBeforeFeedback: Story = {
-  parameters: { covers: ["functional.item8"] },
+  parameters: {
+    covers: ["functional.item8"],
+    // A ausência do bloco é o assunto: o que se ensina é a montagem condicional,
+    // e o render da story usa um componente que só existe dentro dela.
+    docs: { source: { transform: codeBlockRemovivelSource } },
+  },
   args: { code: BASE_CODE },
   render: (args) => <BlocoRemovivel code={args.code} />,
   play: async ({ canvasElement, step }) => {

@@ -11,6 +11,11 @@ import {
 } from "./carousel";
 import { Card, CardContent } from "./card";
 import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
+import {
+  carouselComDotsSource,
+  carouselGaleriaSource,
+  carouselSource,
+} from "./carousel.source";
 import carouselTranslations from "@shared/content/carousel/translations.json";
 
 /**
@@ -36,6 +41,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: carouselSource },
       description: {
         component:
           "Composicoes do Carousel com outros componentes: dots customizados via CarouselApi e galeria de imagens em Card.",
@@ -117,6 +123,9 @@ export const WithDots: Story = {
   parameters: {
     covers: ["functional.item8", "accessibility.item6", "visual.item5"],
     docs: {
+      // A paginação se monta sobre a instância entregue em `setApi` e precisa
+      // de estado: o exemplo é um componente inteiro, não marcação solta.
+      source: { transform: carouselComDotsSource },
       description: {
         story:
           "A paginação traz posição e total no nome — \"2\" sozinho não diz para onde leva — e o slide atual ocupa a própria posição da fileira como pílula rotulada, não só como ponto de outra cor.",
@@ -231,6 +240,9 @@ export const WithDots: Story = {
 export const Gallery: Story = {
   parameters: {
     docs: {
+      // Aqui a imagem É o conteúdo do slide: cada uma com o seu texto
+      // alternativo, coisa que o miolo genérico do meta não mostraria.
+      source: { transform: carouselGaleriaSource },
       description: {
         story: "Fotos em Card: cada imagem carrega alt próprio, não um rótulo genérico repetido.",
       },

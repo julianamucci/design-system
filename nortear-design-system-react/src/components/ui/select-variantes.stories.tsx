@@ -12,6 +12,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select";
+import {
+  selectComGruposSource,
+  selectComIconeSource,
+  selectSource,
+} from "./select.source";
 
 /** Rótulos das regiões — a asserção deriva daqui em vez de contar à mão. */
 const REGIOES = {
@@ -39,6 +44,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: selectSource },
       description: {
         component:
           "Variantes do Select: Default (lista plana), WithGroups (SelectGroup + SelectLabel) e WithIcon (SelectItem com ícone inline).",
@@ -103,6 +109,9 @@ export const Default: Story = {
 export const WithGroups: Story = {
   parameters: {
     docs: {
+      // Sub-composição que o snippet do meta esconderia: SelectGroup,
+      // SelectLabel e o separador decorativo entre os grupos.
+      source: { transform: selectComGruposSource },
       description: {
         story:
           "SelectGroup + SelectLabel agrupam opções por categoria. Use quando há ≥2 categorias claras com ≥2 itens cada.",
@@ -185,6 +194,8 @@ export const WithGroups: Story = {
 export const WithIcon: Story = {
   parameters: {
     docs: {
+      // O ícone dentro da opção é o assunto, e nenhum control o descreve.
+      source: { transform: selectComIconeSource },
       description: {
         story:
           "SelectItem com ícone inline antes do texto. Ícone deve ter size-4 (padrão via SVG não-classed) e ficar à esquerda do label.",

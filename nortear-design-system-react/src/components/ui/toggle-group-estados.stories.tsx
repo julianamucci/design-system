@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
+import {
+  toggleGroupDesabilitadoSource,
+  toggleGroupExclusivoSource,
+  toggleGroupItemDesabilitadoSource,
+  toggleGroupSource,
+  toggleGroupVazioSource,
+} from "./toggle-group.source";
 
 const meta = {
   title: "UI/ToggleGroup/States",
@@ -11,6 +18,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: toggleGroupSource },
       description: {
         component:
           "Estados visuais e interativos do ToggleGroup: default, selected, focus (roving tabindex), disabled (grupo e item individual).",
@@ -42,6 +50,8 @@ export const Default: Story = {
         story:
           'Estado padrão — nenhum item selecionado. Todos com aria-pressed="false", fundo transparente.',
       },
+      // A AUSÊNCIA de defaultValue é o assunto: o grupo nasce sem seleção.
+      source: { transform: toggleGroupVazioSource },
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -83,6 +93,8 @@ export const Selected: Story = {
         story:
           'Estado selecionado — item ativo via defaultValue. aria-pressed="true" e fundo --accent.',
       },
+      // O item ativo é o do meio, e não o primeiro que o padrão marcaria.
+      source: { transform: toggleGroupExclusivoSource },
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -177,6 +189,8 @@ export const Disabled: Story = {
         story:
           'Grupo desabilitado via disabled — todos os items ficam disabled, opacity-50 e pointer-events-none. Clique não altera aria-pressed.',
       },
+      // A prop mora no grupo e desce por herança até cada item.
+      source: { transform: toggleGroupDesabilitadoSource },
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -219,6 +233,8 @@ export const DisabledItem: Story = {
         story:
           "Item individual desabilitado — apenas 'Centralizar' está disabled, enquanto os demais permanecem interativos.",
       },
+      // A prop desce para o ITEM: é o oposto de desabilitar o grupo.
+      source: { transform: toggleGroupItemDesabilitadoSource },
     },
   },
   play: async ({ canvasElement, step }) => {

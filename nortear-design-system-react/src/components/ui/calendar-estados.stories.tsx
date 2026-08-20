@@ -3,6 +3,13 @@ import { useState } from "react";
 import { userEvent, within, expect, fn } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
+import {
+  calendarBloqueadoSource,
+  calendarDiasDeForaSource,
+  calendarHojeSource,
+  calendarIntervaloComMioloSource,
+  calendarSource,
+} from "./calendar.source";
 
 const meta = {
   title: "UI/Calendar/States",
@@ -13,6 +20,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: calendarSource },
       description: {
         component:
           "Estados de célula: escolhida, bloqueada, o dia de hoje, os dias de fora do mês e o miolo de um intervalo.",
@@ -51,6 +59,8 @@ export const Selected: Story = {
   parameters: {
     covers: ["accessibility.item2", "accessibility.item3"],
     docs: {
+      // Sem override: o snippet do `meta` já é o calendário controlado, e a
+      // marcação da data escolhida vem justamente do estado que ele mostra.
       description: {
         story: "Data escolhida — a célula fica marcada e anuncia a data por extenso.",
       },
@@ -97,6 +107,9 @@ export const Disabled: Story = {
   parameters: {
     covers: ["functional.item4", "visual.item4"],
     docs: {
+      // `disabled` recebe um descritor de intervalo — prop que não cabe em
+      // control nenhum e que o snippet do `meta` nunca mostraria.
+      source: { transform: calendarBloqueadoSource },
       description: {
         story: "Datas anteriores a um limite ficam bloqueadas e não podem ser escolhidas.",
       },
@@ -154,6 +167,9 @@ export const Today: Story = {
   parameters: {
     covers: ["functional.item1"],
     docs: {
+      // A AUSÊNCIA de seleção é o assunto: o snippet controlado do `meta`
+      // mostraria o oposto, e destacar hoje não é tê-lo escolhido.
+      source: { transform: calendarHojeSource },
       description: {
         story: "Sem data escolhida: o calendário abre no mês corrente e destaca o dia de hoje.",
       },
@@ -190,6 +206,9 @@ export const WithOutsideDays: Story = {
   },
   parameters: {
     docs: {
+      // A story existe para NOMEAR a prop; o `meta` a omite por ser o padrão, e
+      // omiti-la aqui deixaria o leitor sem saber como desligar as bordas.
+      source: { transform: calendarDiasDeForaSource },
       description: {
         story:
           "Dias do mês anterior e do próximo completam a primeira e a última semana, apagados para não competirem com o mês em foco.",
@@ -233,6 +252,9 @@ export const RangeWithMiddle: Story = {
   },
   parameters: {
     docs: {
+      // Modo de intervalo num mês só: outro formato de estado, e o `meta` deste
+      // arquivo cai em data única.
+      source: { transform: calendarIntervaloComMioloSource },
       description: {
         story: "Intervalo com miolo: os dias entre início e fim também ficam marcados.",
       },

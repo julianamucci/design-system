@@ -4,6 +4,7 @@ import { within, expect, waitFor } from "storybook/test";
 import { Progress } from "./progress";
 import { ProgressDocs } from "@/components/docs/ProgressDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { progressAnimadoSource, progressSource } from "./progress.source";
 import {
   percentualDesenhado,
   indicadorDoProgresso,
@@ -15,7 +16,10 @@ const meta = {
   tags: ["autodocs", "feedback"],
   parameters: {
     layout: "padded",
-    docs: { page: withAutoDocsTab(ProgressDocs) },
+    docs: {
+      page: withAutoDocsTab(ProgressDocs),
+      source: { transform: progressSource },
+    },
   },
   argTypes: {
     value: {
@@ -119,7 +123,13 @@ export const Animated: Story = {
     value: 0,
     "aria-label": "Carregando dados",
   },
-  parameters: { controls: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    docs: {
+      // O valor que anda sozinho vive no `render`: nenhum control o descreve.
+      source: { transform: progressAnimadoSource },
+    },
+  },
   render: function AnimatedRender(args) {
     const [value, setValue] = useState<number>(0);
 

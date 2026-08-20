@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Separator } from "./separator";
+import { separatorSource, separatorVerticalSource } from "./separator.source";
 
 const meta = {
   title: "UI/Separator/Variants",
@@ -11,6 +12,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: separatorSource },
       description: {
         component:
           "Orientações do Separator. A horizontal é uma linha de 1px de altura que ocupa a largura do contêiner; a vertical é uma linha de 1px de largura cuja altura vem do contêiner flex ou de grade, sem medida cravada.",
@@ -57,7 +59,14 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ["functional.item2", "visual.item2"] },
+  parameters: {
+    covers: ["functional.item2", "visual.item2"],
+    docs: {
+      // A orientação vertical não vem de control neste arquivo, e só se sustenta
+      // dentro de uma linha de flex — o meta imprime a composição empilhada.
+      source: { transform: separatorVerticalSource },
+    },
+  },
   render: () => (
     <div className="nds-cluster nds-docs-demo-row nds-w-full nds-max-w-md" data-spacing="md">
       <span className="nds-text-body">Blog</span>

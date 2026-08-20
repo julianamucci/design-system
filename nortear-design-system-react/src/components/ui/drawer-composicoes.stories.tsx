@@ -12,6 +12,12 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./drawer";
+import {
+  drawerComConfirmacaoSource,
+  drawerComFormularioSource,
+  drawerComRolagemSource,
+  drawerSource,
+} from "./drawer.source";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
@@ -25,6 +31,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: drawerSource },
       description: {
         component:
           "Combinações canônicas: formulário curto com confirmar/cancelar, confirmação de ação destrutiva e corpo mais alto que o painel.",
@@ -46,6 +53,9 @@ export const WithForm: Story = {
   parameters: {
     covers: ["visual.item5"],
     docs: {
+      // O par rótulo/campo dentro do corpo é o assunto, e o snippet do meta o
+      // esconderia atrás de uma linha de texto.
+      source: { transform: drawerComFormularioSource },
       description: {
         story:
           "Formulário curto no corpo e par de ações no rodapé. Título e descrição dizem o que está sendo editado — juntos formam o nome e a descrição acessíveis do painel.",
@@ -111,6 +121,9 @@ export const WithForm: Story = {
 export const WithConfirmation: Story = {
   parameters: {
     docs: {
+      // Painel sem corpo, com a ação principal na variante destrutiva — outra
+      // composição, não uma configuração da do meta.
+      source: { transform: drawerComConfirmacaoSource },
       description: {
         story:
           "Mensagem curta e par de ações, com a principal na variante destrutiva. Vale para confirmação reversível; se a ação for realmente bloqueante, o componente é o AlertDialog.",
@@ -161,6 +174,9 @@ export const WithConfirmation: Story = {
 export const WithScroll: Story = {
   parameters: {
     docs: {
+      // Só uma lista mais alta que o painel mostra que quem rola é o corpo e
+      // que o rodapé continua na tela.
+      source: { transform: drawerComRolagemSource },
       description: {
         story:
           "Corpo mais alto que o painel. O corpo rola sozinho dentro do teto de altura e o rodapé continua visível — é o que separa 'conteúdo longo' de 'ação fora de alcance'.",

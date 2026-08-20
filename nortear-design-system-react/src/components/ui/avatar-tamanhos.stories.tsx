@@ -2,6 +2,13 @@ import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
+import {
+  avatar2xlSource,
+  avatarLgSource,
+  avatarSmSource,
+  avatarSource,
+  avatarXlSource,
+} from "./avatar.source";
 
 const IMG_MARIA =
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces";
@@ -16,6 +23,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: avatarSource },
       description: {
         component:
           "Presets de tamanho da prop `size`: sm (24px), md (32px, padrão), lg (40px), xl (48px) e 2xl (64px).",
@@ -41,7 +49,12 @@ const caixaDo = (canvasElement: HTMLElement) => {
 
 export const Sm: Story = {
   name: "sm (24px)",
-  parameters: { covers: ["functional.item6", "visual.item3"] },
+  // O preset está cravado no `render` e o arquivo desliga os controls: sem
+  // override o painel mostraria o md do padrão.
+  parameters: {
+    covers: ["functional.item6", "visual.item3"],
+    docs: { source: { transform: avatarSmSource } },
+  },
   render: () => (
     <Avatar size="sm">
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
@@ -81,7 +94,11 @@ export const Md: Story = {
 
 export const Lg: Story = {
   name: "lg (40px)",
-  parameters: { covers: ["functional.item6", "visual.item3"] },
+  // Mesmo motivo do sm: o preset não vem dos args.
+  parameters: {
+    covers: ["functional.item6", "visual.item3"],
+    docs: { source: { transform: avatarLgSource } },
+  },
   render: () => (
     <Avatar size="lg">
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
@@ -97,7 +114,11 @@ export const Lg: Story = {
 
 export const Xl: Story = {
   name: "xl (48px)",
-  parameters: { covers: ["functional.item6", "visual.item3"] },
+  // Idem — xl e 2xl nem existiam na API antes, e o snippet precisa dizê-lo.
+  parameters: {
+    covers: ["functional.item6", "visual.item3"],
+    docs: { source: { transform: avatarXlSource } },
+  },
   render: () => (
     <Avatar size="xl">
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />
@@ -113,7 +134,11 @@ export const Xl: Story = {
 
 export const TwoXl: Story = {
   name: "2xl (64px)",
-  parameters: { covers: ["functional.item6", "visual.item3"] },
+  // Idem.
+  parameters: {
+    covers: ["functional.item6", "visual.item3"],
+    docs: { source: { transform: avatar2xlSource } },
+  },
   render: () => (
     <Avatar size="2xl">
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />

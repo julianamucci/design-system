@@ -21,6 +21,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
+import {
+  dialogAbertoSource,
+  dialogControladoSource,
+  dialogSemBotaoFecharSource,
+  dialogSource,
+} from "./dialog.source";
 import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
 import dialogTranslations from "@shared/content/dialog/translations.json";
@@ -34,6 +40,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: dialogSource },
       description: {
         component:
           "Configuracoes canônicas do Dialog: Closed (estado inicial), Open (defaultOpen), WithCloseButtonHidden (sem X no canto) e Controlled (controle externo via open + onOpenChange).",
@@ -105,6 +112,9 @@ export const Open: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // `defaultOpen` é o assunto da story, e o arquivo desliga os controls: o
+      // snippet do `meta` cairia no padrão e não mostraria a prop.
+      source: { transform: dialogAbertoSource },
       description: {
         story:
           "Diálogo aberto via `defaultOpen`. Overlay com blur, focus trap ativo, scroll-lock no body.",
@@ -162,6 +172,9 @@ export const WithCloseButtonHidden: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // A prop vive no Content, não na raiz — o snippet do `meta` esconderia
+      // justamente onde ela entra.
+      source: { transform: dialogSemBotaoFecharSource },
       description: {
         story:
           "`showCloseButton={false}` no Content. Sem X no canto — fechamento apenas por Escape, clique no overlay ou ação do Footer.",
@@ -221,6 +234,9 @@ export const Controlled: Story = {
   parameters: {
     covers: ["functional.item7"],
     docs: {
+      // Sem gatilho e com estado externo: `open` + `onOpenChange` é outra
+      // composição, não a padrão com `DialogTrigger`.
+      source: { transform: dialogControladoSource },
       description: {
         story:
           "Abertura controlada por estado externo via `open` + `onOpenChange`. Útil quando o pai precisa abrir o diálogo a partir de outro fluxo (ex.: confirmação assíncrona).",

@@ -3,6 +3,13 @@ import { userEvent, within, expect } from "storybook/test";
 import { Textarea } from "./textarea";
 import { Label } from "./label";
 import {
+  textareaDesabilitadoSource,
+  textareaInvalidoSource,
+  textareaPreenchidoSource,
+  textareaSomenteLeituraSource,
+  textareaSource,
+} from "./textarea.source";
+import {
   anelDeFocoAssentado,
   contrasteTextoFundo,
   resizeComputado,
@@ -17,6 +24,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: textareaSource },
       description: {
         component:
           "Estados visuais e interativos do Textarea: default, focus, filled, disabled, invalid e readonly.",
@@ -113,6 +121,8 @@ export const Filled: Story = {
   parameters: {
     covers: ["accessibility.item2", "visual.item2"],
     docs: {
+      // O conteúdo inicial só existe no `render`, via defaultValue.
+      source: { transform: textareaPreenchidoSource },
       description: {
         story:
           "Com conteúdo — texto --foreground, placeholder some. A altura não muda: o conteúdo rola.",
@@ -150,6 +160,8 @@ export const Disabled: Story = {
   parameters: {
     covers: ["visual.item5"],
     docs: {
+      // Estado que só existe no `render`.
+      source: { transform: textareaDesabilitadoSource },
       description: {
         story:
           "Desabilitado — opacidade 50%, cursor bloqueado, fundo --muted a 30% e redimensionamento travado.",
@@ -194,6 +206,8 @@ export const Invalid: Story = {
   parameters: {
     covers: ["accessibility.item5", "visual.item3"],
     docs: {
+      // O par aria-invalid + mensagem ligada é sub-composição do render.
+      source: { transform: textareaInvalidoSource },
       description: {
         story:
           'aria-invalid="true" — borda --destructive e mensagem ligada via aria-describedby.',
@@ -241,6 +255,8 @@ export const ReadOnly: Story = {
   parameters: {
     covers: ["visual.item5"],
     docs: {
+      // Estado que só existe no `render`.
+      source: { transform: textareaSomenteLeituraSource },
       description: {
         story:
           "Somente leitura — texto selecionável mas não editável; sem mudança de fundo.",

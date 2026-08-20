@@ -8,6 +8,7 @@ import {
 import { fracaoDoPrimeiro } from "./resizable.fixtures";
 import { ResizableDocs } from "@/components/docs/ResizableDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { resizableSource } from "./resizable.source";
 
 /**
  * Rótulo do punho repetido nas stories.
@@ -32,7 +33,10 @@ const meta = {
   tags: ["autodocs", "layout"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(ResizableDocs) },
+    docs: {
+      page: withAutoDocsTab(ResizableDocs),
+      source: { transform: resizableSource },
+    },
   },
   argTypes: {
     direction: {

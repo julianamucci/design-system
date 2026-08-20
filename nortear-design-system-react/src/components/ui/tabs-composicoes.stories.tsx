@@ -4,6 +4,13 @@ import { userEvent, within, expect, waitFor } from "storybook/test";
 import { Settings, Shield, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
+import {
+  tabsAtivacaoManualSource,
+  tabsComBadgeSource,
+  tabsComIconesSource,
+  tabsControladoSource,
+  tabsSource,
+} from "./tabs.source";
 
 const meta: Meta = {
   title: "UI/Tabs/Compositions",
@@ -15,6 +22,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: tabsSource },
       description: {
         component:
           "Combinações canônicas do Tabs: ícone e badge dentro do trigger, estado controlado por " +
@@ -42,6 +50,9 @@ export const WithIcons: Story = {
   parameters: {
     covers: ["accessibility.item4"],
     docs: {
+      // O ícone dentro do gatilho é a sub-composição que o snippet do meta
+      // esconderia.
+      source: { transform: tabsComIconesSource },
       description: {
         story:
           "Ícone à esquerda do rótulo. O ícone é decorativo e fica escondido do leitor de tela — " +
@@ -116,6 +127,8 @@ export const WithBadge: Story = {
   parameters: {
     covers: ["functional.item1"],
     docs: {
+      // O Badge dentro do gatilho é sub-composição, e vem de outro componente.
+      source: { transform: tabsComBadgeSource },
       description: {
         story:
           "Badge no trigger para indicar contagem. A contagem faz parte do que a aba significa " +
@@ -192,6 +205,8 @@ export const Controlled: Story = {
   render: () => <ControlledTabs />,
   parameters: {
     docs: {
+      // O estado externo vive num `useState` que o meta não imprime.
+      source: { transform: tabsControladoSource },
       description: {
         story:
           "Modo controlado — o estado da aba ativa vive fora do componente, que passa a apenas " +
@@ -225,6 +240,8 @@ export const ManualActivation: Story = {
     // esta story demonstra justamente o comportamento oposto. Declará-la ali
     // seria cobertura fantasma.
     docs: {
+      // `activationMode` é afirmado na LISTA, sem control que o descreva.
+      source: { transform: tabsAtivacaoManualSource },
       description: {
         story:
           "Ativação manual — a seta apenas move o foco e a troca só acontece no Enter ou Space. " +

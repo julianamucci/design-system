@@ -8,6 +8,13 @@ import {
 } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 import { definir } from "./toggle-group.fixtures";
+import {
+  toggleGroupContornoEspacadoSource,
+  toggleGroupControladoCombinadoSource,
+  toggleGroupControladoExclusivoSource,
+  toggleGroupSource,
+  toggleGroupVerticalSource,
+} from "./toggle-group.source";
 
 const meta = {
   title: "UI/ToggleGroup/Compositions",
@@ -17,6 +24,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: toggleGroupSource },
       description: {
         component:
           "Composicoes reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), seletor vertical e versão outline/segmented.",
@@ -67,6 +75,8 @@ export const SingleAlignment: Story = {
         story:
           "Barra de alinhamento com seleção única controlada — o modo exclusivo garante que apenas um item esteja ativo por vez.",
       },
+      // O painel imprimia `<AlinhamentoSingleRender />`, que não existe fora daqui.
+      source: { transform: toggleGroupControladoExclusivoSource },
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -132,6 +142,8 @@ export const MultipleFormatting: Story = {
         story:
           "Barra de formatação Bold/Italic/Underline com seleção múltipla — o modo combinado permite ativar items independentemente.",
       },
+      // Controlado no modo combinado: o callback recebe a lista inteira.
+      source: { transform: toggleGroupControladoCombinadoSource },
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -175,6 +187,8 @@ export const Vertical: Story = {
         story:
           "Seletor de modo de visualização (Grid/Lista) em orientação vertical — ideal para painéis laterais.",
       },
+      // Outro conjunto de itens e o eixo trocado — nada disso cabe nos args.
+      source: { transform: toggleGroupVerticalSource },
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -220,6 +234,8 @@ export const OutlineSpaced: Story = {
         story:
           "spacing=1 com contorno em cada item — botões separados, cada um com a própria borda. Contraste com o estilo segmented padrão (spacing=0).",
       },
+      // O contorno vai no ITEM: no grupo ele emendaria os botões e zeraria as bordas.
+      source: { transform: toggleGroupContornoEspacadoSource },
     },
   },
   play: async ({ canvasElement, step }) => {

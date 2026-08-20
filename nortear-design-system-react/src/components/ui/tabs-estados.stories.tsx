@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
+import { tabsAbaDesabilitadaSource, tabsSource } from "./tabs.source";
 
 const meta: Meta = {
   title: "UI/Tabs/States",
@@ -12,6 +13,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: tabsSource },
       description: {
         component:
           "Estado inicial, foco por teclado e aba desabilitada. O percurso do Tab e o bloqueio " +
@@ -127,6 +129,8 @@ export const Disabled: Story = {
   parameters: {
     covers: ["visual.item4", "functional.item5", "accessibility.item6"],
     docs: {
+      // O `disabled` desce para UM gatilho, e só existe no `render`.
+      source: { transform: tabsAbaDesabilitadaSource },
       description: {
         story:
           "Aba desabilitada — esmaecida e fora do alcance do ponteiro, mas ainda alcançável " +

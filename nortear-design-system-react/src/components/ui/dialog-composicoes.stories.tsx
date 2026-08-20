@@ -20,6 +20,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
+import {
+  dialogComMidiaSource,
+  dialogPerfilSource,
+  dialogSource,
+} from "./dialog.source";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
@@ -32,6 +37,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: dialogSource },
       description: {
         component:
           "Composicoes reais do Dialog em fluxos de produto: confirmar e-mail, edição de perfil e pré-visualização de mídia.",
@@ -103,6 +109,9 @@ export const ConfirmEmail: Story = {
 export const ProfileEdit: Story = {
   parameters: {
     docs: {
+      // Formulário dentro do painel, com o rodapé dentro do `<form>`: o snippet
+      // do `meta` só tem cabeçalho e rodapé.
+      source: { transform: dialogPerfilSource },
       description: {
         story:
           "Edição de perfil em formulário modal. Submissão dispara `dialog_action` e fecha o Dialog ao concluir.",
@@ -178,6 +187,9 @@ export const MediaPreview: Story = {
   parameters: {
     covers: ["functional.item4", "accessibility.item6"],
     docs: {
+      // Corpo de mídia com nome acessível e sem rodapé: duas diferenças
+      // estruturais que o snippet do `meta` não carrega.
+      source: { transform: dialogComMidiaSource },
       description: {
         story:
           "Pré-visualização de mídia (imagem) em destaque, sem Footer. Fechamento via X, Escape ou clique no overlay.",

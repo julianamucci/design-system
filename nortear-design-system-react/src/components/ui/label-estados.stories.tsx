@@ -7,6 +7,12 @@ import {
 } from "@shared/testing/label-probe";
 import { Label } from "./label";
 import { Input } from "./input";
+import {
+  labelDesabilitadoPorBlocoSource,
+  labelDesabilitadoSource,
+  labelObrigatorioSource,
+  labelSource,
+} from "./label.source";
 
 const meta = {
   title: "UI/Label/States",
@@ -17,6 +23,10 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O arquivo desliga os controls, então a transform do `meta` cai no par
+      // canônico — que é exatamente o estado padrão. As stories que mudam a
+      // MARCAÇÃO declaram a sua.
+      source: { transform: labelSource },
       description: {
         component:
           "Estados do rótulo: padrão, desabilitado pelo controle irmão, desabilitado pelo bloco e obrigatório.",
@@ -70,6 +80,8 @@ export const Disabled: Story = {
   parameters: {
     covers: ["functional.item2", "visual.item3"],
     docs: {
+      // A marca `nds-peer` no controle é o assunto, e o par padrão não a tem.
+      source: { transform: labelDesabilitadoSource },
       description: {
         story:
           "Controle irmão desabilitado. A marca `nds-peer` vai no CONTROLE; o rótulo esmaece sozinho e troca o cursor.",
@@ -105,6 +117,9 @@ export const DisabledViaGroup: Story = {
   parameters: {
     covers: ["functional.item4"],
     docs: {
+      // O `data-disabled` mora no ANCESTRAL: quem copia o par padrão não vê
+      // onde o atributo entra.
+      source: { transform: labelDesabilitadoPorBlocoSource },
       description: {
         story:
           "Bloco inteiro desabilitado por `data-disabled=\"true\"` no ancestral: todos os rótulos descendentes esmaecem e saem do alcance do ponteiro.",
@@ -137,6 +152,9 @@ export const Required: Story = {
   parameters: {
     covers: ["functional.item3", "accessibility.item3", "visual.item2"],
     docs: {
+      // Obrigatoriedade tem duas metades — asterisco decorativo no rótulo e
+      // `aria-required` no controle — e nenhuma delas está no par padrão.
+      source: { transform: labelObrigatorioSource },
       description: {
         story:
           "Campo obrigatório: o asterisco é decorativo (`aria-hidden`) e quem informa a obrigatoriedade ao leitor de tela é o `aria-required` do controle.",

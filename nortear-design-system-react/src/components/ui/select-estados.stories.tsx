@@ -9,6 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select";
+import {
+  selectCompactoSource,
+  selectDesabilitadoSource,
+  selectInvalidoSource,
+  selectSelecionadoSource,
+  selectSource,
+} from "./select.source";
 
 const meta = {
   title: "UI/Select/States",
@@ -18,6 +25,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: selectSource },
       description: {
         component:
           "Estados do Select: Default (placeholder), Open (dropdown aberto), Selected (com valor), Disabled, Invalid (aria-invalid) e Size SM.",
@@ -75,6 +83,8 @@ export const Selected: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
+      // O valor de partida vem do `render` e nenhum control o descreve.
+      source: { transform: selectSelecionadoSource },
       description: {
         story:
           "Estado com valor pré-escolhido. O rótulo da opção substitui o placeholder — e o rótulo vem do mapa `items`, porque a lista ainda não foi aberta nenhuma vez. (Pré-selecionar serve para ver o estado; em formulário real, evite.)",
@@ -184,6 +194,8 @@ export const Disabled: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
+      // Estado que só existe no `render`: este arquivo não tem controls.
+      source: { transform: selectDesabilitadoSource },
       description: {
         story:
           "Trigger desabilitado via prop disabled. opacity-50, cursor-not-allowed; cliques são ignorados e dropdown não abre.",
@@ -223,6 +235,8 @@ export const Invalid: Story = {
   parameters: {
     covers: ["visual.item5"],
     docs: {
+      // Erro é composição, não só atributo: o campo vem com a mensagem ao lado.
+      source: { transform: selectInvalidoSource },
       description: {
         story:
           "Estado de erro via aria-invalid=\"true\" no trigger. Borda --destructive e anel --destructive/20. Use junto com mensagem auxiliar.",
@@ -273,6 +287,8 @@ export const Invalid: Story = {
 export const SizeSm: Story = {
   parameters: {
     docs: {
+      // `size` mora no gatilho e não há control para ele neste arquivo.
+      source: { transform: selectCompactoSource },
       description: {
         story:
           "Densidade compacta via size=\"sm\" no SelectTrigger. A altura menor vem do padding-block, não de um valor cravado — útil em toolbars, filtros densos ou linhas de tabela.",

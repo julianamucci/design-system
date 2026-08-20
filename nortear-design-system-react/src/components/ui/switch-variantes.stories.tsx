@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { Switch } from "./switch";
 import { Label } from "./label";
+import {
+  switchComDescricaoSource,
+  switchCompactoSource,
+  switchSource,
+} from "./switch.source";
 
 const meta = {
   title: "UI/Switch/Variants",
@@ -12,6 +17,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: switchSource },
       description: {
         component:
           "Variantes visuais do Switch: padrão, com descrição em painel e tamanho compacto.",
@@ -69,6 +75,9 @@ export const WithDescription: Story = {
   ),
   parameters: {
     docs: {
+      // O painel com descrição auxiliar é composição do render, e o snippet do
+      // meta imprimiria só o par rótulo ↔ controle.
+      source: { transform: switchComDescricaoSource },
       description: {
         story:
           "Switch em painel de configurações — texto à esquerda, controle à direita.",
@@ -109,6 +118,9 @@ export const Sm: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
+      // `size="sm"` é afirmado no render, sem control neste arquivo; o padrão ao
+      // lado é vitrine de comparação, não composição a copiar.
+      source: { transform: switchCompactoSource },
       description: {
         story:
           "Degrau compacto — trilho de 24×16px com thumb de 12px, ao lado do padrão para comparação. Indicado para listas e menus densos.",

@@ -9,6 +9,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "./breadcrumb";
+import { breadcrumbSource } from "./breadcrumb.source";
 import { BreadcrumbDocs } from "@/components/docs/BreadcrumbDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import {
@@ -23,7 +24,12 @@ const meta = {
   tags: ["autodocs", "navigation"],
   parameters: {
     design: figmaDesign("breadcrumb"),
-    docs: { page: withAutoDocsTab(BreadcrumbDocs) },
+    docs: {
+      page: withAutoDocsTab(BreadcrumbDocs),
+      // O painel imprimia a árvore do `render`; a transform devolve a trilha
+      // canônica, que é o que quem lê consegue colar.
+      source: { transform: breadcrumbSource },
+    },
   },
 } satisfies Meta<typeof Breadcrumb>;
 

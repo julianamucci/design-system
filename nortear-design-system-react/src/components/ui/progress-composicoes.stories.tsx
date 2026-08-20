@@ -14,6 +14,13 @@ import {
   nomeAcessivel,
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
+import {
+  progressComAriaLiveSource,
+  progressCoresSource,
+  progressRotuloEValorSource,
+  progressSource,
+  progressVariosNiveisSource,
+} from "./progress.source";
 
 const meta = {
   title: "UI/Progress/Compositions",
@@ -22,6 +29,7 @@ const meta = {
   parameters: {
     layout: "padded",
     docs: {
+      source: { transform: progressSource },
       description: {
         component:
           "Composicoes do Progress: várias barras lado a lado, cores semânticas numa lista, rótulo com valor formatado e texto aria-live anunciando o progresso.",
@@ -36,6 +44,12 @@ export default meta;
 type Story = StoryObj<typeof Progress>;
 
 export const MultipleLevels: Story = {
+  parameters: {
+    docs: {
+      // Três barras irmãs, cada uma com o próprio nome — o meta imprime uma.
+      source: { transform: progressVariosNiveisSource },
+    },
+  },
   render: () => (
     <div className="nds-stack nds-w-sm" data-spacing="md">
       <Progress value={0} aria-label="Etapa 1" />
@@ -73,6 +87,12 @@ export const MultipleLevels: Story = {
 };
 
 export const CustomColor: Story = {
+  parameters: {
+    docs: {
+      // A lista com `data-variant` não sai de control nenhum neste arquivo.
+      source: { transform: progressCoresSource },
+    },
+  },
   render: () => (
     <div className="nds-stack nds-w-sm" data-spacing="md">
       <Progress
@@ -125,6 +145,12 @@ export const CustomColor: Story = {
 };
 
 export const WithLabelAndValue: Story = {
+  parameters: {
+    docs: {
+      // Composição de quatro peças mais o valor vivo, que só existe no `render`.
+      source: { transform: progressRotuloEValorSource },
+    },
+  },
   render: function ComLabelEValorRender() {
     const [value, setValue] = useState<number>(0);
 
@@ -173,6 +199,12 @@ export const WithLabelAndValue: Story = {
 };
 
 export const WithAriaLive: Story = {
+  parameters: {
+    docs: {
+      // A região `aria-live` ao lado da barra é a composição que a story ensina.
+      source: { transform: progressComAriaLiveSource },
+    },
+  },
   render: function ComAriaLiveRender() {
     const [value, setValue] = useState<number>(0);
 

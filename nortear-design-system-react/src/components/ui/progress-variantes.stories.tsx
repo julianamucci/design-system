@@ -14,6 +14,12 @@ import {
   nomeAcessivel,
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
+import {
+  progressComRotuloSource,
+  progressCorSemanticaSource,
+  progressIndeterminadoSource,
+  progressSource,
+} from "./progress.source";
 
 const meta = {
   title: "UI/Progress/Variants",
@@ -22,6 +28,7 @@ const meta = {
   parameters: {
     layout: "padded",
     docs: {
+      source: { transform: progressSource },
       description: {
         component:
           "As formas de uso: valor conhecido, valor com rótulo e cor semântica. Rótulo e valor formatado são partes do próprio componente — não texto solto ao lado.",
@@ -65,6 +72,12 @@ export const Determinate: Story = {
 };
 
 export const Indeterminate: Story = {
+  parameters: {
+    docs: {
+      // `value={null}` é o assunto e não sai de nenhum control deste arquivo.
+      source: { transform: progressIndeterminadoSource },
+    },
+  },
   render: () => (
     <div className="nds-w-sm">
       <Progress value={null} aria-label="Processando dados" />
@@ -89,7 +102,14 @@ export const Indeterminate: Story = {
 };
 
 export const WithLabel: Story = {
-  parameters: { covers: ["accessibility.item5"] },
+  parameters: {
+    covers: ["accessibility.item5"],
+    docs: {
+      // Composição de quatro peças: quem declara a própria trilha declara o
+      // indicador junto, e o meta imprime só a barra sozinha.
+      source: { transform: progressComRotuloSource },
+    },
+  },
   render: () => (
     <div className="nds-w-sm">
       <Progress value={42}>
@@ -131,6 +151,12 @@ export const WithLabel: Story = {
 };
 
 export const SemanticColor: Story = {
+  parameters: {
+    docs: {
+      // Duas barras com `data-variant` — a cor só se lê em comparação.
+      source: { transform: progressCorSemanticaSource },
+    },
+  },
   render: () => (
     <div className="nds-stack nds-w-sm" data-spacing="sm">
       <Progress

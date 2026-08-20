@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { Textarea } from "./textarea";
+import { textareaSource } from "./textarea.source";
 import { Label } from "./label";
 import { TextareaDocs } from "@/components/docs/TextareaDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -12,7 +13,10 @@ const meta = {
   component: Textarea,
   tags: ["autodocs", "form"],
   parameters: {
-    docs: { page: withAutoDocsTab(TextareaDocs) },
+    docs: {
+      page: withAutoDocsTab(TextareaDocs),
+      source: { transform: textareaSource },
+    },
   },
   argTypes: {
     placeholder: {

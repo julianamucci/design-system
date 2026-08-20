@@ -1,7 +1,7 @@
-import type { ComponentProps } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption, CHART_EMPTY_LABEL } from './chart';
+import { chartSource } from './chart.source';
 import { ChartDocs } from '@/components/docs/ChartDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { desenhoEscreve, desenhoPintado, exigirRaiz } from '@shared/testing/chart-probe';
@@ -13,32 +13,6 @@ const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const series = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
 const ROTULO = 'Acessos mensais no desktop, de janeiro a junho';
 
-type ChartArgs = ComponentProps<typeof ChartContainer>;
-
-/**
- * O painel Code imprimiria a chamada com o espalhamento dos args, que não é o
- * que ninguém escreve. Aqui o trecho é remontado a partir dos controls, então
- * ele acompanha o que a pessoa mexeu em vez de congelar num texto fixo.
- */
-function fonteDoPlayground(_gerado: string, ctx: { args: ChartArgs }): string {
-  const { renderer, height, emptyLabel, className } = ctx.args;
-  const linhas = ['<ChartContainer', '  option={buildBarOption({ xAxis: meses, series })}'];
-  if (height !== undefined) linhas.push(`  height={${height}}`);
-  if (renderer && renderer !== 'svg') linhas.push(`  renderer="${renderer}"`);
-  if (emptyLabel && emptyLabel !== CHART_EMPTY_LABEL) linhas.push(`  emptyLabel="${emptyLabel}"`);
-  if (className) linhas.push(`  className="${className}"`);
-  // O rótulo é o contrato de acessibilidade do componente: sem ele o desenho
-  // não é anunciado, e é isso que o trecho precisa mostrar.
-  linhas.push(`  aria-label="${ctx.args['aria-label'] ?? ''}"`, '/>');
-
-  return `import { ChartContainer, buildBarOption } from '@/components/ui/chart';
-
-const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
-const series = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
-
-${linhas.join('\n')}`;
-}
-
 const meta = {
   title: 'UI/Chart',
   component: ChartContainer,
@@ -47,7 +21,7 @@ const meta = {
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(ChartDocs),
-      source: { transform: fonteDoPlayground },
+      source: { transform: chartSource },
     },
   },
   argTypes: {

@@ -7,6 +7,11 @@ import {
   transbordo,
 } from "@shared/testing/scroll-area-probe";
 import { ScrollArea } from "./scroll-area";
+import {
+  scrollAreaConteudoFocavelSource,
+  scrollAreaSemAlturaSource,
+  scrollAreaSource,
+} from "./scroll-area.source";
 
 const meta = {
   title: "UI/ScrollArea/States",
@@ -17,6 +22,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: scrollAreaSource },
       description: {
         component:
           'Estados canônicos do ScrollArea: Idle (padrão), AlwaysVisible (a barra permanece montada enquanto houver transbordo), Hover (o ponteiro marca a barra), Focus (viewport na ordem de tabulação), FocusableContent (conteúdo focável dentro da área) e NoLimit (pai sem altura — o erro de uso mais comum).',
@@ -305,6 +311,9 @@ export const FocusableContent: Story = {
   parameters: {
     covers: ["accessibility.item4"],
     docs: {
+      // Sub-composição: são os links dentro da área que fazem o assunto, e o
+      // snippet do meta traz uma lista de texto sem nada focável.
+      source: { transform: scrollAreaConteudoFocavelSource },
       description: {
         story:
           "Conteúdo focável dentro da área rolável — o componente não reordena nem remove nada da ordem de tabulação, e o navegador traz para o campo visível o item focado.",
@@ -363,6 +372,9 @@ export const NoLimit: Story = {
   parameters: {
     covers: ["functional.item4"],
     docs: {
+      // A AUSÊNCIA de teto de altura é o assunto, e ela só se lê no par com a
+      // versão que tem `size`.
+      source: { transform: scrollAreaSemAlturaSource },
       description: {
         story:
           "Pai sem altura definida — o conteúdo expande e não há rolagem. É o erro de uso mais comum: o componente aparenta estar quebrado quando ninguém disse até onde ele pode ir.",

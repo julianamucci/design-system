@@ -13,6 +13,13 @@ import {
 } from "./table";
 import { Button } from "@/components/ui/button";
 import { INVOICES, TOTAL } from "./table.fixtures";
+import {
+  tableAcoesPorLinhaSource,
+  tableBasicaSource,
+  tableLegendaOcultaSource,
+  tableRolagemHorizontalSource,
+  tableSource,
+} from "./table.source";
 
 // ─── Meta ────────────────────────────────────────────────────────────────────
 
@@ -24,6 +31,7 @@ const meta: Meta = {
     // Sem argTypes: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: tableSource } },
   },
 };
 
@@ -40,7 +48,13 @@ type Story = StoryObj;
 // ─── Básica ──────────────────────────────────────────────────────────────────
 
 export const Basic: Story = {
-  parameters: { covers: ["functional.item1", "visual.item1"] },
+  parameters: {
+    covers: ["functional.item1", "visual.item1"],
+    docs: {
+      // A legenda visível e a ausência de rodapé são afirmadas no render.
+      source: { transform: tableBasicaSource },
+    },
+  },
   render: () => (
     <Table>
       <TableCaption>Lista de faturas recentes</TableCaption>
@@ -164,7 +178,13 @@ export const WithFooter: Story = {
 // ─── Legenda só para leitor de tela ──────────────────────────────────────────
 
 export const CaptionSrOnly: Story = {
-  parameters: { covers: ["functional.item6", "accessibility.item2"] },
+  parameters: {
+    covers: ["functional.item6", "accessibility.item2"],
+    docs: {
+      // O título visível ao lado da legenda invisível é o par que a story ensina.
+      source: { transform: tableLegendaOcultaSource },
+    },
+  },
   render: () => (
     <div className="nds-stack" data-spacing="sm">
       <h2 className="nds-text-h3 nds-m-0">Faturas recentes</h2>
@@ -216,7 +236,13 @@ export const CaptionSrOnly: Story = {
 // ─── Com Ações por Linha ─────────────────────────────────────────────────────
 
 export const WithRowActions: Story = {
-  parameters: { covers: ["accessibility.item3", "visual.item4"] },
+  parameters: {
+    covers: ["accessibility.item3", "visual.item4"],
+    docs: {
+      // A coluna de ações é composição do render, com Button e ícone mudo.
+      source: { transform: tableAcoesPorLinhaSource },
+    },
+  },
   render: () => (
     <Table>
       <TableCaption className="nds-sr-only">Faturas recentes com ações</TableCaption>
@@ -293,7 +319,13 @@ const MESES = ["2025", "2026"].flatMap((ano) =>
 );
 
 export const HorizontalScroll: Story = {
-  parameters: { covers: ["functional.item5"] },
+  parameters: {
+    covers: ["functional.item5"],
+    docs: {
+      // As 24 colunas que provocam a rolagem só existem no render.
+      source: { transform: tableRolagemHorizontalSource },
+    },
+  },
   render: () => (
     <Table>
       <TableCaption className="nds-sr-only">Faturas por mês de competência</TableCaption>

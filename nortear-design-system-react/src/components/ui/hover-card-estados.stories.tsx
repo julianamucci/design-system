@@ -10,6 +10,11 @@ import {
   razaoDeContraste,
 } from "@shared/testing/hover-card-probe";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
+import {
+  hoverCardControladoSource,
+  hoverCardFechadoSource,
+  hoverCardSource,
+} from "./hover-card.source";
 import { Button } from "./button";
 
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
@@ -27,6 +32,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: hoverCardSource },
       description: {
         component:
           "Fechado, aberto e controlado. O painel só existe no DOM enquanto o cartão está aberto — fechado, o portal não deixa resíduo nenhum.",
@@ -65,6 +71,9 @@ const CartaoPerfil = () => (
 export const Closed: Story = {
   parameters: {
     docs: {
+      // O que a story afirma é uma AUSÊNCIA — nem `aria-expanded` nem
+      // `aria-haspopup` no gatilho —, e ausência não sai dos args.
+      source: { transform: hoverCardFechadoSource },
       description: {
         story:
           "Estado inicial. Nada além do gatilho existe no documento, e o gatilho não anuncia nenhum estado expandido: um cartão de preview não é um menu.",
@@ -178,6 +187,9 @@ export const Controlled: Story = {
   parameters: {
     covers: ["functional.item6"],
     docs: {
+      // Estado de fora: o par `open` + `onOpenChange` com `useState` é outra
+      // composição, não uma configuração do cartão padrão.
+      source: { transform: hoverCardControladoSource },
       description: {
         story:
           "Estado vindo de fora. Útil quando outra parte da tela precisa saber que o cartão está aberto — para pausar um carrossel, por exemplo. O gatilho continua abrindo por ponteiro e por foco; cada mudança volta pelo callback.",

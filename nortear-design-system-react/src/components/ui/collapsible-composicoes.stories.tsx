@@ -6,6 +6,12 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "./collapsible";
+import {
+  collapsibleComBotaoSource,
+  collapsibleComIconeSource,
+  collapsibleEstruturadoSource,
+  collapsibleSource,
+} from "./collapsible.source";
 import { buttonVariants } from "./button";
 import { cn } from "@/lib/utils";
 
@@ -23,6 +29,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: collapsibleSource },
       description: {
         component:
           "Composicoes do Collapsible: trigger estilizado como botão, ícone no trigger e conteúdo estruturado.",
@@ -47,7 +54,11 @@ const fechar = async (t: HTMLElement) => {
 // ─── Trigger estilizado como botão ────────────────────────────────────────────
 
 export const WithCustomButton: Story = {
-  parameters: { covers: ["functional.item5"] },
+  parameters: {
+    covers: ["functional.item5"],
+    // A variante de botão fica no gatilho, não na raiz: não há arg que a descreva.
+    docs: { source: { transform: collapsibleComBotaoSource } },
+  },
   render: () => (
     <Collapsible className="nds-w-full nds-max-w-sm">
       <CollapsibleTrigger
@@ -92,7 +103,12 @@ export const WithCustomButton: Story = {
 // ─── Com ícone no trigger ─────────────────────────────────────────────────────
 
 export const WithIconInTrigger: Story = {
-  parameters: { covers: ["accessibility.item4", "visual.item4"] },
+  parameters: {
+    covers: ["accessibility.item4", "visual.item4"],
+    // Dois ícones no gatilho, os dois fora da árvore de acessibilidade — é a
+    // sub-composição que o snippet do meta esconderia.
+    docs: { source: { transform: collapsibleComIconeSource } },
+  },
   render: () => (
     <Collapsible className="nds-w-full nds-max-w-sm">
       <CollapsibleTrigger
@@ -148,6 +164,11 @@ export const WithIconInTrigger: Story = {
 // ─── Com conteúdo estruturado ─────────────────────────────────────────────────
 
 export const WithStructuredContent: Story = {
+  parameters: {
+    // O gatilho sai de dentro do cabeçalho e vira botão só de ícone: sem texto
+    // próprio, o nome acessível passa a depender do aria-label.
+    docs: { source: { transform: collapsibleEstruturadoSource } },
+  },
   render: () => (
     <Collapsible className="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
       <div

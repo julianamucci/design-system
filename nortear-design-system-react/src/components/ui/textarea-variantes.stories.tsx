@@ -4,6 +4,11 @@ import { userEvent, within, expect } from "storybook/test";
 import { Textarea } from "./textarea";
 import { Label } from "./label";
 import {
+  textareaComContadorSource,
+  textareaSemRedimensionarSource,
+  textareaSource,
+} from "./textarea.source";
+import {
   alturaMinimaPx,
   preencherAte,
   resizeComputado,
@@ -18,6 +23,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: textareaSource },
       description: {
         component:
           "Variantes visuais do Textarea: padrão (redimensiona na vertical), com contador de caracteres e sem redimensionamento.",
@@ -96,6 +102,9 @@ export const WithCounter: Story = {
   parameters: {
     covers: ["functional.item3", "visual.item4"],
     docs: {
+      // A contagem exige o valor em estado — composição que o meta sem args
+      // não imprime.
+      source: { transform: textareaComContadorSource },
       description: {
         story:
           'Com contador de caracteres — maxLength + span com aria-live="polite" e aria-label descritivo.',
@@ -140,6 +149,8 @@ export const NoResize: Story = {
   ),
   parameters: {
     docs: {
+      // A classe que trava a alça É o assunto, e nenhum control a descreve.
+      source: { transform: textareaSemRedimensionarSource },
       description: {
         story:
           "Sem redimensionamento — útil em modais ou layouts onde arrastar a alça quebra a UI.",

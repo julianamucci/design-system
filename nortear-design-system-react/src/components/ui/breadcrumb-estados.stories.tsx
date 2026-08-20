@@ -11,6 +11,13 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "./breadcrumb";
+import {
+  breadcrumbComEllipsisSource,
+  breadcrumbLinkCustomizadoSource,
+  breadcrumbSeparadorCustomizadoSource,
+  breadcrumbSimplesSource,
+  breadcrumbSource,
+} from "./breadcrumb.source";
 
 const meta = {
   title: "UI/Breadcrumb/States",
@@ -22,6 +29,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: breadcrumbSource },
       description: {
         component:
           "Configuracoes estruturais do Breadcrumb: simples, com ellipsis, separador customizado e link customizado via render.",
@@ -40,6 +48,9 @@ export const Simple: Story = {
   parameters: {
     covers: ["functional.item3", "functional.item6", "accessibility.item5"],
     docs: {
+      // Dois níveis é a forma mínima: a trilha de três do `meta` esconderia que
+      // sobra UMA parada de teclado, porque a página atual não é navegável.
+      source: { transform: breadcrumbSimplesSource },
       description: {
         story: "Composição básica com 2 níveis — link inicial + BreadcrumbPage.",
       },
@@ -98,6 +109,9 @@ export const WithEllipsis: Story = {
   parameters: {
     covers: ["functional.item5", "visual.item2"],
     docs: {
+      // O indicador de níveis ocultos é uma peça a mais na trilha, e o `label`
+      // é o que decide se ele é anunciado — nada disso cabe na trilha do `meta`.
+      source: { transform: breadcrumbComEllipsisSource },
       description: {
         story:
           "Ellipsis colapsando níveis intermediários. Com rótulo, o indicador é anunciado; sem ele, fica decorativo.",
@@ -154,6 +168,9 @@ export const CustomSeparator: Story = {
   parameters: {
     covers: ["functional.item4", "visual.item3"],
     docs: {
+      // A ausência de children é o que faz o chevron padrão aparecer: passar um
+      // ícone é o oposto do que o snippet do `meta` mostra.
+      source: { transform: breadcrumbSeparadorCustomizadoSource },
       description: {
         story:
           "Separador customizado via children de BreadcrumbSeparator — mantém aria-hidden automaticamente.",
@@ -210,6 +227,9 @@ export const AsChildLink: Story = {
   parameters: {
     covers: ["functional.item3"],
     docs: {
+      // A prop `render` só aparece aqui: é ela que troca o elemento do link sem
+      // envolvê-lo, e o `href` do `meta` esconderia a composição inteira.
+      source: { transform: breadcrumbLinkCustomizadoSource },
       description: {
         story:
           "Link customizado via prop render (useRender do base-ui) — permite integração com routers como Next.js Link ou React Router Link.",

@@ -6,6 +6,11 @@ import { Fieldset as FieldsetRoot, FormField } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
+import {
+  formComFieldsetSource,
+  formComVariosCamposSource,
+  formSource,
+} from "./form.source"
 
 const meta: Meta = {
   title: "UI/Form/Compositions",
@@ -13,6 +18,7 @@ const meta: Meta = {
     layout: "padded",
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: formSource } },
   },
 }
 
@@ -26,6 +32,9 @@ type Story = StoryObj
 export const Fieldset: Story = {
   parameters: {
     covers: ["functional.item5", "accessibility.item4", "visual.item4"],
+    // O agrupamento é a outra peça exportada pelo componente, e o snippet do
+    // meta (um campo solto) não a mostra.
+    docs: { source: { transform: formComFieldsetSource } },
   },
   render: () => (
     <FieldsetRoot className="nds-max-w-sm" legend="Endereço de entrega">
@@ -71,7 +80,12 @@ export const Fieldset: Story = {
  * É onde a ordem de tabulação e a associação de uma `<textarea>` são o assunto.
  */
 export const MultipleFields: Story = {
-  parameters: { covers: ["functional.item6", "functional.item8"] },
+  parameters: {
+    covers: ["functional.item6", "functional.item8"],
+    // Três controles diferentes pelo mesmo campo e a ordem de tabulação vindo
+    // do DOM: só o formulário inteiro mostra isso.
+    docs: { source: { transform: formComVariosCamposSource } },
+  },
   render: () => (
     <form className="nds-stack nds-max-w-sm" onSubmit={(e) => e.preventDefault()}>
       <FormField label="Nome completo" description="Como aparece em documentos oficiais.">

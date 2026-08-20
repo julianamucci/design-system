@@ -1,13 +1,23 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, userEvent, waitFor, expect } from "storybook/test"
 import { DataTable } from "./data-table"
+import {
+  dataTableComRotuloDeLinhaSource,
+  dataTablePaginadaSource,
+  dataTableSource,
+  dataTableVirtualizadaSource,
+} from "./data-table.source"
 import { baseColumns, invoices, type Invoice } from "./data-table.fixtures"
 
 const meta: Meta<typeof DataTable<Invoice>> = {
   title: "UI/DataTable/Settings",
   tags: ["tables"],
   component: DataTable<Invoice>,
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: dataTableSource } },
+  },
 }
 
 export default meta
@@ -34,6 +44,9 @@ export const Paginated: Story = {
     covers: ["functional.item8"],
     controls: { disable: true },
     actions: { disable: true },
+    // `pageSize` e `pageSizeOptions` precisam aparecer JUNTOS: um tamanho fora
+    // da lista deixa o seletor exibindo outro número.
+    docs: { source: { transform: dataTablePaginadaSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -150,6 +163,9 @@ export const ExplicitRowLabel: Story = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    // `rowLabel` é justamente a prop que o snippet do `meta` deixa de fora, por
+    // ser lá que o degrau do meio do fallback é provado.
+    docs: { source: { transform: dataTableComRotuloDeLinhaSource } },
   },
   play: async ({ canvasElement, step }) => {
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>("tbody tr")]
@@ -204,7 +220,12 @@ export const Virtualized1000Rows: Story = {
     covers: ["functional.item7", "visual.item5"],
     controls: { disable: true },
     actions: { disable: true },
-    docs: { canvas: { sourceState: "none" } },
+    docs: {
+      // `sourceState: "none"` escondia o painel porque a árvore impressa trazia
+      // mil linhas geradas no arquivo de story. Com um snippet honesto — que
+      // declara o conjunto grande em duas linhas — o painel volta a valer.
+      source: { transform: dataTableVirtualizadaSource },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const rolador = () =>

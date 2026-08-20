@@ -6,6 +6,7 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "./collapsible";
+import { collapsibleSource } from "./collapsible.source";
 import { buttonVariants } from "./button";
 import { cn } from "@/lib/utils";
 import { CollapsibleDocs } from "@/components/docs/CollapsibleDocs";
@@ -25,7 +26,12 @@ const meta = {
   component: Collapsible,
   tags: ["autodocs", "disclosure"],
   parameters: {
-    docs: { page: withAutoDocsTab(CollapsibleDocs) },
+    docs: {
+      page: withAutoDocsTab(CollapsibleDocs),
+      // O painel imprimia as constantes de classe do arquivo de story, que não
+      // existem para quem copia. A transform devolve as três peças montadas.
+      source: { transform: collapsibleSource },
+    },
     layout: "centered",
   },
   argTypes: {

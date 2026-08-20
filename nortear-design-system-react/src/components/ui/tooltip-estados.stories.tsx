@@ -10,6 +10,13 @@ import {
 import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save } from "lucide-react";
+import {
+  tooltipAbertoSource,
+  tooltipComAtrasoSource,
+  tooltipControladoSource,
+  tooltipPersistenteSource,
+  tooltipSource,
+} from "./tooltip.source";
 
 // Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
 // aberto por hover (depois do delay do provider) e aberto por foco (na hora). A
@@ -40,6 +47,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: tooltipSource },
       description: {
         component:
           "Fechado é o padrão e o balão nem existe no DOM. Aberto pode vir do estado externo, do hover (depois do delay) ou do foco (imediato). Levar o mouse do gatilho até o balão não fecha nada — é a persistência que a WCAG 1.4.13 exige.",
@@ -105,6 +113,8 @@ export const Open: Story = {
         story:
           "Tooltip aberto via defaultOpen — Content visível com role=tooltip e aria-describedby ligando trigger ao conteúdo.",
       },
+      // O estado inicial aberto é o assunto, e não cabe nos args deste arquivo.
+      source: { transform: tooltipAbertoSource },
     },
   },
   render: () => (
@@ -153,6 +163,8 @@ export const Hover: Story = {
         story:
           "Hover no trigger com delay longo — o balão só abre depois da espera do Provider. É o delay que separa passar o mouse de parar sobre o elemento.",
       },
+      // O atraso é a lição, e ele mora no provider — fora da raiz do Tooltip.
+      source: { transform: tooltipComAtrasoSource },
     },
   },
   render: () => (
@@ -202,6 +214,8 @@ export const Focused: Story = {
         story:
           "Foco via teclado — WCAG 1.4.13. O foco abre o tooltip sem hover e sem esperar o delay; sair do trigger fecha.",
       },
+      // Mesma montagem do atraso: o que a story afirma é que o foco a ignora.
+      source: { transform: tooltipComAtrasoSource },
     },
   },
   render: () => (
@@ -254,6 +268,8 @@ export const PersistenceInBubble: Story = {
         story:
           "Levar o ponteiro do trigger até o balão não fecha nada — a área de tolerância entre os dois é o que a WCAG 1.4.13 (Hoverable) exige.",
       },
+      // Gatilho com texto, e não só-ícone: aqui o balão acrescenta, não nomeia.
+      source: { transform: tooltipPersistenteSource },
     },
   },
   render: () => (
@@ -302,6 +318,8 @@ export const Controlled: Story = {
         story:
           "Estado controlado via open + onOpenChange. Botões externos abrem e fecham programaticamente.",
       },
+      // O painel imprimia `<ControlledDemo />`, que não existe fora da story.
+      source: { transform: tooltipControladoSource },
     },
   },
   render: () => {

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor, fn } from "storybook/test";
 import { CodeBlock } from "./code-block";
+import { codeBlockSource } from "./code-block.source";
 import { CodeBlockDocs } from "@/components/docs/CodeBlockDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -21,7 +22,12 @@ const meta = {
   component: CodeBlock,
   tags: ["autodocs", "display"],
   parameters: {
-    docs: { page: withAutoDocsTab(CodeBlockDocs) },
+    docs: {
+      page: withAutoDocsTab(CodeBlockDocs),
+      // O trecho chega por prop de texto: o painel precisa declará-lo como
+      // template literal, senão o snippet copiado perde as quebras de linha.
+      source: { transform: codeBlockSource },
+    },
   },
   // A aba "API Reference" combina o docgen com estes argTypes.
   argTypes: {

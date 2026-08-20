@@ -19,6 +19,7 @@ import { Button } from "./button";
 import { TriangleAlert } from "lucide-react";
 import { AlertDialogDocs } from "@/components/docs/AlertDialogDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { alertDialogSource } from "./alert-dialog.source";
 
 // Args da raiz + args que montam a composição. Os segundos ficam na categoria
 // "Demonstração" — mesmos nomes, ordem e valores nas 4 stacks, para o painel de
@@ -41,7 +42,12 @@ const meta = {
   tags: ["autodocs", "overlay"],
   parameters: {
     design: figmaDesign("alertDialog"),
-    docs: { page: withAutoDocsTab(AlertDialogDocs) },
+    docs: {
+      page: withAutoDocsTab(AlertDialogDocs),
+      // O painel imprimia a árvore do `render`, com os args de demonstração
+      // desestruturados e o `key` de remontagem — andaime, não composição.
+      source: { transform: alertDialogSource },
+    },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. Props que o
   // render não encaminha ficam como documentação (control: false).

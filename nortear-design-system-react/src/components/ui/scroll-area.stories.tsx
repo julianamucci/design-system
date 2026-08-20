@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, userEvent } from "storybook/test";
 import { transbordo } from "@shared/testing/scroll-area-probe";
 import { ScrollArea, ScrollBar } from "./scroll-area";
+import { scrollAreaSource } from "./scroll-area.source";
 import { ScrollAreaDocs } from "@/components/docs/ScrollAreaDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -16,7 +17,10 @@ const meta = {
   tags: ["autodocs", "layout"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(ScrollAreaDocs) },
+    docs: {
+      page: withAutoDocsTab(ScrollAreaDocs),
+      source: { transform: scrollAreaSource },
+    },
   },
   argTypes: {
     orientation: {

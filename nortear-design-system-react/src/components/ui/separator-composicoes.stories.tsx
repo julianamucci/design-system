@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Separator } from "./separator";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./card";
+import {
+  separatorEmCardSource,
+  separatorEmMenuSource,
+  separatorEnfaseForteSource,
+  separatorSource,
+} from "./separator.source";
 
 const meta = {
   title: "UI/Separator/Compositions",
@@ -12,6 +18,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: separatorSource },
       description: {
         component:
           "Composições do Separator: dentro de um Card, dentro de um menu vertical e com a ênfase forte.",
@@ -24,7 +31,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const InCard: Story = {
-  parameters: { covers: ["visual.item3"] },
+  parameters: {
+    covers: ["visual.item3"],
+    docs: {
+      // Sub-composição: o divisor mora ENTRE cabeçalho e conteúdo do Card, e o
+      // snippet do meta esconderia essa posição.
+      source: { transform: separatorEmCardSource },
+    },
+  },
   render: () => (
     <Card className="nds-max-w-md">
       <CardHeader>
@@ -57,7 +71,14 @@ export const InCard: Story = {
 };
 
 export const InMenu: Story = {
-  parameters: { covers: ["visual.item4"] },
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      // Sub-composição dentro de um menu, e com `decorative={false}` afirmado no
+      // `render`: a divisão entre grupos faz parte da estrutura da informação.
+      source: { transform: separatorEmMenuSource },
+    },
+  },
   render: () => (
     <div
       className="nds-stack nds-max-w-xs nds-rounded-md nds-border-default nds-bg-background nds-p-1"
@@ -91,7 +112,14 @@ export const InMenu: Story = {
 };
 
 export const EmphasisStrong: Story = {
-  parameters: { covers: ["functional.item5", "functional.item6", "visual.item5"] },
+  parameters: {
+    covers: ["functional.item5", "functional.item6", "visual.item5"],
+    docs: {
+      // `emphasis="strong"` vem do `render`, sem control, e só se lê ao lado da
+      // linha padrão — o par é a composição que a story ensina.
+      source: { transform: separatorEnfaseForteSource },
+    },
+  },
   render: () => (
     <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
       <p className="nds-text-body nds-text-muted-foreground">Fim da seção</p>

@@ -10,6 +10,7 @@ import {
   CommandItem,
   CommandSeparator,
 } from "./command";
+import { commandSource } from "./command.source";
 import { CommandDocs } from "@/components/docs/CommandDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { LayoutIcon, TypeIcon, MinusIcon } from "lucide-react";
@@ -24,7 +25,12 @@ const meta: Meta<CommandArgs> = {
   tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(CommandDocs) },
+    docs: {
+      page: withAutoDocsTab(CommandDocs),
+      // A árvore do `render` traz a moldura da demonstração e o espião das
+      // actions; a transform devolve o uso real, com os controls resolvidos.
+      source: { transform: commandSource },
+    },
     // A lib desta stack renderiza <div role="listbox"> com filhos auxiliares
     // (divisor e mensagem de vazio) que a spec ARIA não admite dentro de um
     // listbox. É comportamento upstream deliberado — ver

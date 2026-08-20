@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { CodeBlock } from "./code-block";
+import { codeBlockSource } from "./code-block.source";
 
 /** Mesmo código base das 4 composições da docs page. */
 const COMPOSITION_CODE = `const items = await load();
@@ -37,6 +38,9 @@ const meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    // Todas as composições daqui são dirigidas por args (título, numeração,
+    // destaque, rodapé), então a transform do meta as cobre sem override.
+    docs: { source: { transform: codeBlockSource } },
   },
 } satisfies Meta<typeof CodeBlock>;
 

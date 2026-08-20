@@ -7,6 +7,12 @@ import {
   CollapsibleTrigger,
   CollapsibleContent,
 } from "./collapsible";
+import {
+  collapsibleAbertoPorPadraoSource,
+  collapsibleControladoSource,
+  collapsibleDesabilitadoSource,
+  collapsibleSource,
+} from "./collapsible.source";
 import { Button, buttonVariants } from "./button";
 import { cn } from "@/lib/utils";
 
@@ -25,6 +31,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: collapsibleSource },
       description: {
         component:
           "Estados do Collapsible: não-controlado (defaultOpen), controlado (open + onOpenChange) e desabilitado (disabled).",
@@ -96,6 +103,8 @@ export const Uncontrolled: Story = {
 export const OpenByDefault: Story = {
   parameters: {
     covers: ["functional.item3", "accessibility.item5", "visual.item2"],
+    // O arquivo não tem args: só a story diz que o painel monta expandido.
+    docs: { source: { transform: collapsibleAbertoPorPadraoSource } },
   },
   render: () => (
     <Collapsible defaultOpen className="nds-w-full nds-max-w-sm">
@@ -172,7 +181,12 @@ function ControlledExample() {
 }
 
 export const Controlled: Story = {
-  parameters: { covers: ["functional.item4", "visual.item3"] },
+  parameters: {
+    covers: ["functional.item4", "visual.item3"],
+    // O modo controlado é o par open + onOpenChange sobre um estado de fora —
+    // é isso que o snippet precisa ensinar, não o componente local da story.
+    docs: { source: { transform: collapsibleControladoSource } },
+  },
   render: () => <ControlledExample />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -211,7 +225,12 @@ export const Controlled: Story = {
 // ─── Disabled ─────────────────────────────────────────────────────────────────
 
 export const Disabled: Story = {
-  parameters: { covers: ["functional.item6", "visual.item5"] },
+  parameters: {
+    covers: ["functional.item6", "visual.item5"],
+    // `disabled` vai no gatilho, e a seta perde a transição: sem estado para
+    // alternar, girar 180° não significaria nada.
+    docs: { source: { transform: collapsibleDesabilitadoSource } },
+  },
   render: () => (
     <Collapsible className="nds-w-full nds-max-w-sm">
       <CollapsibleTrigger

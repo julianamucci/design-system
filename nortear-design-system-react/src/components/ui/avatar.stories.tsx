@@ -4,6 +4,7 @@ import { expect, waitFor } from "storybook/test";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import { AvatarDocs } from "@/components/docs/AvatarDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { avatarSource } from "./avatar.source";
 
 const DEMO_IMAGE =
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces";
@@ -18,7 +19,12 @@ const meta = {
   parameters: {
     design: figmaDesign("avatar"),
     layout: "centered",
-    docs: { page: withAutoDocsTab(AvatarDocs) },
+    docs: {
+      page: withAutoDocsTab(AvatarDocs),
+      // O painel imprimia `src={DEMO_IMAGE}` — constante do arquivo de story,
+      // com URL de banco de imagens que nada tem a ver com o design system.
+      source: { transform: avatarSource },
+    },
   },
   argTypes: {
     size: {

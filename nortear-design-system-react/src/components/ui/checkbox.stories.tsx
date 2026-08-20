@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, waitFor, within, expect } from "storybook/test";
 import { Checkbox } from "./checkbox";
+import { checkboxSource } from "./checkbox.source";
 import { CheckboxDocs } from "@/components/docs/CheckboxDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -9,7 +10,12 @@ const meta = {
   component: Checkbox,
   tags: ["autodocs", "form"],
   parameters: {
-    docs: { page: withAutoDocsTab(CheckboxDocs) },
+    docs: {
+      page: withAutoDocsTab(CheckboxDocs),
+      // O painel imprimia a árvore do `render`, que monta o par caixa+rótulo com
+      // andaime da story. A transform devolve o uso real, lendo os controls.
+      source: { transform: checkboxSource },
+    },
   },
   argTypes: {
     checked: {

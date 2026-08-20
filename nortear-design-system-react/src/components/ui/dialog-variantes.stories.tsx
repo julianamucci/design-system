@@ -17,6 +17,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
+import {
+  dialogComAcaoDestrutivaSource,
+  dialogComFormularioSource,
+  dialogComRolagemSource,
+  dialogFecharNoRodapeSource,
+  dialogSemRodapeSource,
+  dialogSource,
+} from "./dialog.source";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
@@ -32,6 +40,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: dialogSource },
       description: {
         component:
           "Composicoes estruturais do Dialog: Default, WithForm, WithScrollContent, NoFooter, WithDestructiveAction e CustomCloseInFooter. Não há prop `variant` — a forma é dada pela composição interna.",
@@ -105,6 +114,9 @@ export const WithForm: Story = {
   parameters: {
     covers: ["visual.item2", "visual.item4"],
     docs: {
+      // O rodapé entra DENTRO do `<form>`: é a composição que a story mostra e
+      // que o snippet do `meta`, sem formulário, não tem como ensinar.
+      source: { transform: dialogComFormularioSource },
       description: {
         story:
           "Body com formulário inline (inputs e selects). Submissão dispara a ação primária do Footer.",
@@ -183,6 +195,9 @@ export const WithScrollContent: Story = {
   parameters: {
     covers: ["visual.item5"],
     docs: {
+      // A região rolável tem `tabindex` e nome próprios — peça de corpo que o
+      // snippet do `meta` não tem.
+      source: { transform: dialogComRolagemSource },
       description: {
         story:
           "Conteúdo longo com scroll interno. Header e Footer fixos; o body recebe `max-h-[60vh] overflow-y-auto`.",
@@ -259,6 +274,9 @@ export const NoFooter: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
+      // A AUSÊNCIA do rodapé é o assunto: o snippet do `meta` traz um, e
+      // ensinaria o contrário do que a story mostra.
+      source: { transform: dialogSemRodapeSource },
       description: {
         story:
           "Apenas Title + Description, sem Footer. Para uso informativo ou pré-visualização passiva — fechamento via X, Escape ou clique no overlay.",
@@ -307,6 +325,9 @@ export const WithDestructiveAction: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
+      // A variante destrutiva na ação primária muda o que o rodapé ensina, e
+      // não vem de arg nenhum.
+      source: { transform: dialogComAcaoDestrutivaSource },
       description: {
         story:
           "Footer com ação primária `destructive`. Use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista). Para confirmação destrutiva canônica, use AlertDialog.",
@@ -361,6 +382,9 @@ export const CustomCloseInFooter: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
+      // `showCloseButton` existe no Content e no Footer e faz coisas
+      // diferentes: só o snippet com os dois mostra o par.
+      source: { transform: dialogFecharNoRodapeSource },
       description: {
         story:
           "`showCloseButton={false}` no Content e `showCloseButton` no Footer — botão de fechar fica abaixo das ações.",

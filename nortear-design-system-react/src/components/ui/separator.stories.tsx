@@ -1,35 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Separator } from "./separator";
+import { separatorSource, type SeparatorArgs } from "./separator.source";
 import { SeparatorDocs } from "@/components/docs/SeparatorDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
-
-type SeparatorArgs = {
-  orientation: "horizontal" | "vertical";
-  decorative: boolean;
-  emphasis: "default" | "strong";
-};
-
-/**
- * O painel Code imprime o `render` da story inteiro — o `if` que alterna os dois
- * exemplos e o contêiner de andaime. É o que a pessoa copia, e não é o que ela
- * deve escrever. O `transform` devolve o uso real com os controls resolvidos.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SeparatorArgs> }): string {
-  const { orientation = "horizontal", decorative = true, emphasis = "default" } = ctx.args ?? {};
-  // Só o que difere do padrão entra no snippet.
-  const attrs = [
-    `orientation="${orientation}"`,
-    decorative ? "" : "decorative={false}",
-    emphasis === "strong" ? 'emphasis="strong"' : "",
-  ].filter(Boolean).join(" ");
-
-  return `import { Separator } from "@/components/ui/separator";
-
-<p>Seção superior</p>
-<Separator ${attrs} />
-<p>Seção inferior</p>`;
-}
 
 const meta = {
   title: "UI/Separator",
@@ -37,7 +11,7 @@ const meta = {
   tags: ["autodocs", "layout"],
   parameters: {
     layout: "padded",
-    docs: { page: withAutoDocsTab(SeparatorDocs), source: { transform: playgroundSource } },
+    docs: { page: withAutoDocsTab(SeparatorDocs), source: { transform: separatorSource } },
   },
   argTypes: {
     orientation: {

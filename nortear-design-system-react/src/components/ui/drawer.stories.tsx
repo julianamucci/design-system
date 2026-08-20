@@ -12,6 +12,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./drawer";
+import { drawerSource } from "./drawer.source";
 import { Button } from "./button";
 import { DrawerDocs } from "@/components/docs/DrawerDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -30,7 +31,12 @@ const meta = {
   tags: ["autodocs", "disclosure"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(DrawerDocs) },
+    docs: {
+      page: withAutoDocsTab(DrawerDocs),
+      // O painel imprimia o `<div style={{ contain, minHeight }}>` do canvas e
+      // o `{...args}` — andaime da story, não o componente.
+      source: { transform: drawerSource },
+    },
   },
   argTypes: {
     direction: {

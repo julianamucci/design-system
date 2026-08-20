@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { Slider } from "./slider";
+import { sliderSource } from "./slider.source";
 import { SliderDocs } from "@/components/docs/SliderDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { limitesDaAlca, valorDaAlca } from "@shared/testing/slider-probe";
@@ -12,7 +13,10 @@ const meta = {
   tags: ["autodocs", "form"],
   parameters: {
     layout: "padded",
-    docs: { page: withAutoDocsTab(SliderDocs) },
+    docs: {
+      page: withAutoDocsTab(SliderDocs),
+      source: { transform: sliderSource },
+    },
   },
   argTypes: {
     min: {

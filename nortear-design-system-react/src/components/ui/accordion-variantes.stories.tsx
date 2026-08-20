@@ -8,6 +8,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./accordion";
+import {
+  accordionControladoSource,
+  accordionMultiploSource,
+  accordionSemConfiguracaoSource,
+  accordionSource,
+} from "./accordion.source";
 
 const meta: Meta = {
   title: "UI/Accordion/Variants",
@@ -16,6 +22,7 @@ const meta: Meta = {
     design: figmaDesign("accordion"),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: accordionSource } },
   },
 };
 
@@ -124,6 +131,9 @@ export const CloseOnSecondClick: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
+      // A ausência de configuração é o assunto: o snippet do meta traz
+      // defaultValue e esconderia justamente o que a story prova.
+      source: { transform: accordionSemConfiguracaoSource },
       description: {
         story:
           "Modo único sem nenhuma configuração extra: clicar de novo no item aberto o fecha.",
@@ -179,6 +189,8 @@ export const Multiple: Story = {
   parameters: {
     covers: ['functional.item4'],
     docs: {
+      // O arquivo desliga os controls: sem args, o meta imprimiria modo único.
+      source: { transform: accordionMultiploSource },
       description: {
         story:
           "Modo multiple. Múltiplos itens podem estar abertos ao mesmo tempo. Use para especificações técnicas comparáveis.",
@@ -233,6 +245,8 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item6'],
     docs: {
+      // O estado externo vive no andaime da story; o snippet precisa mostrá-lo.
+      source: { transform: accordionControladoSource },
       description: {
         story:
           "Modo controlado. value e onValueChange gerenciam o estado externamente. O indicador acima mostra o item ativo.",

@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, fn, waitFor } from "storybook/test";
 import { Info } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
+import { alertSource } from "./alert.source";
 import { AlertDocs } from "@/components/docs/AlertDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -12,7 +13,12 @@ const meta = {
   tags: ["autodocs", "feedback"],
   parameters: {
     design: figmaDesign("alert"),
-    docs: { page: withAutoDocsTab(AlertDocs) },
+    docs: {
+      page: withAutoDocsTab(AlertDocs),
+      // O painel imprimia a árvore do `render`; a transform do `meta` devolve o
+      // uso real e cascateia para toda story do arquivo.
+      source: { transform: alertSource },
+    },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. children fica sem
   // control porque o render fixa a composição da story.

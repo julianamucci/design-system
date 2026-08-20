@@ -10,6 +10,12 @@ import {
   PopoverTrigger,
 } from "./popover";
 import { Button } from "./button";
+import {
+  popoverAbertoSource,
+  popoverControladoSource,
+  popoverModalSource,
+  popoverSource,
+} from "./popover.source";
 
 const meta = {
   title: "UI/Popover/States",
@@ -19,6 +25,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: popoverSource },
       description: {
         component:
           "Estados canônicos do Popover: Closed (apenas trigger), Open (defaultOpen), Controlado (open + onOpenChange) e Modal (foco trapeado).",
@@ -77,6 +84,9 @@ export const Open: Story = {
     // final seria declarar cobertura que não existe.
     covers: ["accessibility.item1", "accessibility.item2"],
     docs: {
+      // `defaultOpen` é o estado que a story afirma no `render`; o meta imprime
+      // o painel fechado, que é o padrão do componente.
+      source: { transform: popoverAbertoSource },
       description: {
         story:
           "Popover aberto via defaultOpen — Content visível com role=dialog. Foco move ao primeiro elemento focável.",
@@ -124,6 +134,9 @@ export const Open: Story = {
 export const Controlled: Story = {
   parameters: {
     docs: {
+      // Abertura controlada por `useState` de fora, com dois botões externos —
+      // sub-composição que o snippet do meta não tem como mostrar.
+      source: { transform: popoverControladoSource },
       description: {
         story:
           "Estado controlado via open + onOpenChange. Botões externos abrem e fecham programaticamente.",
@@ -202,6 +215,9 @@ export const Controlled: Story = {
 export const Modal: Story = {
   parameters: {
     docs: {
+      // `modal` vem do `render`, sem control neste arquivo: é ele que prende o
+      // foco e bloqueia a rolagem enquanto o painel está aberto.
+      source: { transform: popoverModalSource },
       description: {
         story:
           "modal=true — foco trapeado dentro do Content e scroll do body bloqueado enquanto aberto.",

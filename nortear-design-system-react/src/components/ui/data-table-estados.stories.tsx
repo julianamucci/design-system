@@ -1,13 +1,18 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, expect } from "storybook/test"
 import { DataTable } from "./data-table"
+import { dataTableSemResultadosSource, dataTableSource } from "./data-table.source"
 import { baseColumns, type Invoice } from "./data-table.fixtures"
 
 const meta: Meta<typeof DataTable<Invoice>> = {
   title: "UI/DataTable/States",
   tags: ["tables"],
   component: DataTable<Invoice>,
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: dataTableSource } },
+  },
 }
 
 export default meta
@@ -24,6 +29,9 @@ export const NoResults: Story = {
     covers: ["visual.item6"],
     controls: { disable: true },
     actions: { disable: true },
+    // O conjunto VAZIO é o assunto: um snippet com dados ensinaria o contrário
+    // do que a story mostra.
+    docs: { source: { transform: dataTableSemResultadosSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)

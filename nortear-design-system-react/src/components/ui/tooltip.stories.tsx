@@ -11,6 +11,7 @@ import { Button } from "./button";
 import { Save } from "lucide-react";
 import { TooltipDocs } from "@/components/docs/TooltipDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { tooltipSource } from "./tooltip.source";
 
 /**
  * De que lado o balão nasceu.
@@ -37,7 +38,7 @@ const meta = {
   ],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(TooltipDocs) },
+    docs: { page: withAutoDocsTab(TooltipDocs), source: { transform: tooltipSource } },
   },
   argTypes: {
     side: {

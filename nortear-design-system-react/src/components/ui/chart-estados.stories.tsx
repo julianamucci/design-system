@@ -14,6 +14,13 @@ import {
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
 import { desenhoPronto } from './chart.fixtures';
+import {
+  chartDoisDesenhosSource,
+  chartMultiSerieSource,
+  chartSerieUnicaSource,
+  chartSource,
+  chartVazioSource,
+} from './chart.source';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const serieUnica = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
@@ -29,7 +36,12 @@ const FRASE_VAZIA = 'Nenhum dado disponível para o período selecionado.';
 const meta: Meta = {
   title: 'UI/Chart/States',
   tags: ['display'],
-  parameters: { layout: 'padded', controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    layout: 'padded',
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: chartSource } },
+  },
 };
 export default meta;
 type Story = StoryObj;
@@ -38,6 +50,9 @@ export const Empty: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item3'],
     docs: {
+      // Série vazia, frase própria e NENHUMA altura: o que segura o bloco aqui
+      // é o piso de altura, e um `height` no snippet apagaria a lição.
+      source: { transform: chartVazioSource },
       description: {
         story: 'Sem série com dado o container troca o desenho por uma frase que orienta a próxima ação.',
       },
@@ -78,7 +93,12 @@ export const Empty: Story = {
 export const SingleSeries: Story = {
   parameters: {
     covers: ['functional.item3'],
-    docs: { description: { story: 'Uma única série — a legenda não aparece: não há o que comparar.' } },
+    docs: {
+      // Linhas com uma série só: a ausência da legenda é resultado do DADO, e
+      // o construtor aqui não é o de barras do meta.
+      source: { transform: chartSerieUnicaSource },
+      description: { story: 'Uma única série — a legenda não aparece: não há o que comparar.' },
+    },
   },
   render: () => (
     <ChartContainer
@@ -109,7 +129,12 @@ export const SingleSeries: Story = {
 export const MultiSeries: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
-    docs: { description: { story: 'Mais de uma série — a legenda aparece sozinha e cada série ganha trama própria.' } },
+    docs: {
+      // Legenda e trama por série nascem da PLURALIDADE das séries; a série
+      // única do meta não produziria nenhuma das duas.
+      source: { transform: chartMultiSerieSource },
+      description: { story: 'Mais de uma série — a legenda aparece sozinha e cada série ganha trama própria.' },
+    },
   },
   render: () => (
     <ChartContainer
@@ -167,7 +192,12 @@ export const ThemeTokens: Story = {
       'functional.item6': 'montar ou alternar o tema com o gráfico da lib vivo fecha a aba nesta stack — verificação em aberto',
       'visual.item4': 'a foto no tema escuro depende do mesmo caminho — verificação em aberto',
     },
-    docs: { description: { story: 'Cor e tipografia do desenho saem dos tokens do tema em vigor, não de valores cravados.' } },
+    docs: {
+      // São DOIS containers independentes na mesma tela, cada um com o seu
+      // rótulo — o snippet do meta mostraria um só.
+      source: { transform: chartDoisDesenhosSource },
+      description: { story: 'Cor e tipografia do desenho saem dos tokens do tema em vigor, não de valores cravados.' },
+    },
   },
   render: () => (
     <>
@@ -230,7 +260,12 @@ export const ThemeTokens: Story = {
 export const GraphicContrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
-    docs: { description: { story: 'Contorno das formas e texto dos eixos medidos contra o fundo real.' } },
+    docs: {
+      // O contorno que sustenta 3:1 é do TEMA, não de prop: o que a story
+      // escolhe é o multi-série, e é ele que o snippet precisa mostrar.
+      source: { transform: chartMultiSerieSource },
+      description: { story: 'Contorno das formas e texto dos eixos medidos contra o fundo real.' },
+    },
   },
   render: () => (
     <ChartContainer

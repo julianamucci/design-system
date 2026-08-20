@@ -5,6 +5,13 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "./resizable";
+import {
+  resizableEditorPreviewSource,
+  resizableIdeSource,
+  resizablePersistidoSource,
+  resizableSource,
+  resizableTriploSource,
+} from "./resizable.source";
 
 const meta = {
   title: "UI/Resizable/Compositions",
@@ -15,6 +22,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: resizableSource },
       description: {
         component:
           "Composicoes típicas: EditorPreview (editor + preview lado a lado), IDELayout (sidebar + editor + console), TripleSplit (3 painéis lado a lado) e PersistedLayout (autoSaveId persistindo tamanhos no localStorage).",
@@ -36,6 +44,8 @@ const ariaLabel = "Redimensionar painéis — use setas para ajustar";
 export const EditorPreview: Story = {
   parameters: {
     docs: {
+      // Sub-composição: o conteúdo de código de um lado e o resultado do outro.
+      source: { transform: resizableEditorPreviewSource },
       description: {
         story:
           "Editor de código + preview lado a lado — caso clássico de Resizable em ferramentas dev/design (Storybook, CodeSandbox, Figma Make).",
@@ -80,6 +90,8 @@ export const EditorPreview: Story = {
 export const IDELayout: Story = {
   parameters: {
     docs: {
+      // Sub-composição: grupo vertical dentro do painel da direita.
+      source: { transform: resizableIdeSource },
       description: {
         story:
           "Layout típico de IDE — Sidebar | (Editor / Console). Combina direções horizontais e verticais para reproduzir VS Code, IntelliJ etc.",
@@ -159,6 +171,8 @@ export const IDELayout: Story = {
 export const TripleSplit: Story = {
   parameters: {
     docs: {
+      // Três painéis e dois punhos — o meta imprime só um par.
+      source: { transform: resizableTriploSource },
       description: {
         story:
           "3 painéis lado a lado com 2 handles — distribuição inicial 25/50/25. Útil para Email (lista | mensagem | leitura).",
@@ -215,6 +229,8 @@ export const TripleSplit: Story = {
 export const PersistedLayout: Story = {
   parameters: {
     docs: {
+      // `autoSaveId` é o assunto e não sai de control nenhum.
+      source: { transform: resizablePersistidoSource },
       description: {
         story:
           'autoSaveId="resizable-demo" — react-resizable-panels persiste os tamanhos no localStorage automaticamente; ao recarregar a página, o layout volta como estava.',

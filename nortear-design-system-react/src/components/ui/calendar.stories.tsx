@@ -4,6 +4,7 @@ import { userEvent, within, expect, waitFor } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
 import { isoDoFoco } from "@shared/testing/calendar-probe";
 import { Calendar } from "./calendar";
+import { calendarSource } from "./calendar.source";
 import { CalendarDocs } from "@/components/docs/CalendarDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -12,7 +13,13 @@ const meta = {
   component: Calendar,
   tags: ["autodocs", "form"],
   parameters: {
-    docs: { page: withAutoDocsTab(CalendarDocs) },
+    docs: {
+      page: withAutoDocsTab(CalendarDocs),
+      // O painel imprimia o wrapper de estado deste arquivo, que não existe
+      // fora dele. A transform devolve o calendário controlado de verdade, com
+      // o formato de estado que o modo escolhido exige.
+      source: { transform: calendarSource },
+    },
   },
   argTypes: {
     mode: {

@@ -11,6 +11,12 @@ import {
 } from "./table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { INVOICES } from "./table.fixtures";
+import {
+  tableCarregandoSource,
+  tableLinhaSelecionadaSource,
+  tableSource,
+  tableVaziaSource,
+} from "./table.source";
 
 // ─── Meta ────────────────────────────────────────────────────────────────────
 
@@ -22,6 +28,7 @@ const meta: Meta = {
     // Sem argTypes: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: tableSource } },
   },
 };
 
@@ -33,7 +40,13 @@ const COLUNAS = ["Fatura", "Status", "Método", "Valor"];
 // ─── Empty ───────────────────────────────────────────────────────────────────
 
 export const Empty: Story = {
-  parameters: { covers: ["functional.item2", "visual.item2"] },
+  parameters: {
+    covers: ["functional.item2", "visual.item2"],
+    docs: {
+      // A linha de mensagem com colSpan é composição do render.
+      source: { transform: tableVaziaSource },
+    },
+  },
   render: () => (
     <Table>
       <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
@@ -89,7 +102,13 @@ export const Empty: Story = {
 // ─── Linha Selecionada ───────────────────────────────────────────────────────
 
 export const SelectedRow: Story = {
-  parameters: { covers: ["functional.item4", "visual.item5"] },
+  parameters: {
+    covers: ["functional.item4", "visual.item5"],
+    docs: {
+      // O `data-state="selected"` só existe no render desta story.
+      source: { transform: tableLinhaSelecionadaSource },
+    },
+  },
   render: () => (
     <Table>
       <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
@@ -141,7 +160,13 @@ export const SelectedRow: Story = {
 const LINHAS_ESQUELETO = [1, 2, 3];
 
 export const Loading: Story = {
-  parameters: { covers: ["functional.item7", "visual.item6"] },
+  parameters: {
+    covers: ["functional.item7", "visual.item6"],
+    docs: {
+      // A região com aria-busy em volta e os esqueletos são do render.
+      source: { transform: tableCarregandoSource },
+    },
+  },
   render: () => (
     // aria-busy na REGIÃO, não na célula: o esqueleto é aria-hidden, e sem o
     // container quem usa leitor de tela ouve uma tabela vazia sem saber que os

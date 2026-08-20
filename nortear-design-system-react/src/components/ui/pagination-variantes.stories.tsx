@@ -9,6 +9,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./pagination";
+import {
+  paginationDirecionalSource,
+  paginationLinkAtivoSource,
+  paginationLinkInativoSource,
+  paginationSource,
+} from "./pagination.source";
 
 const meta = {
   title: "UI/Pagination/Variants",
@@ -19,6 +25,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: paginationSource },
       description: {
         component:
           "Variantes do PaginationLink: Default (link inativo), Active (página atual, com aria-current=page) e Directional (Previous/Next com ícone e rótulo).",
@@ -33,6 +40,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   parameters: {
     docs: {
+      // A AUSÊNCIA de `isActive` é o assunto: um link só, sem estado nem faixa
+      // em volta, é o que deixa a ausência visível.
+      source: { transform: paginationLinkInativoSource },
       description: {
         story:
           "Link inativo — fundo transparente. Padrão para toda página que não é a atual.",
@@ -67,6 +77,9 @@ export const Active: Story = {
   parameters: {
     covers: ["accessibility.item4"],
     docs: {
+      // `isActive` só se lê no par com o vizinho inativo, que não carrega
+      // `aria-current` de jeito nenhum.
+      source: { transform: paginationLinkAtivoSource },
       description: {
         story:
           "Página atual — destaque visual permanente e aria-current=\"page\" para o leitor de tela.",
@@ -112,6 +125,9 @@ export const Directional: Story = {
   parameters: {
     covers: ["accessibility.item5", "accessibility.item6"],
     docs: {
+      // Override: a story mostra SÓ os controles de direção, sem a régua de
+      // páginas que o snippet do meta traz — é a ausência que ela documenta.
+      source: { transform: paginationDirecionalSource },
       description: {
         story:
           "Só os controles de direção. O rótulo textual some abaixo de 40rem e o ícone permanece — o nome acessível não muda.",

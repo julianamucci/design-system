@@ -3,6 +3,11 @@ import { expect, within } from "storybook/test"
 
 import { FormField } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+  formComDescricaoSource,
+  formRotuloEControleSource,
+  formSource,
+} from "./form.source"
 
 // O Form não tem variante por prop — o que muda é quais peças opcionais entram
 // no campo. As duas stories abaixo são exatamente as duas combinações que o
@@ -14,6 +19,7 @@ const meta: Meta = {
     layout: "padded",
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: formSource } },
   },
 }
 
@@ -25,7 +31,12 @@ export const LabelAndControl: Story = {
   // `visual.item1` é "Padrão — label + input", e é ESTA a foto: o Playground
   // nasce com descrição nos args, então o que o Chromatic captura lá tem três
   // peças, não duas.
-  parameters: { covers: ["visual.item1"] },
+  parameters: {
+    covers: ["visual.item1"],
+    // A AUSÊNCIA da descrição é o assunto, e o arquivo desliga os controls: sem
+    // override o painel imprimiria o campo com as três peças.
+    docs: { source: { transform: formRotuloEControleSource } },
+  },
   render: () => (
     <FormField className="nds-max-w-sm" label="Nome completo">
       <Input type="text" placeholder="ex: João da Silva" />
@@ -50,7 +61,12 @@ export const LabelAndControl: Story = {
 
 /** Rótulo, controle e um parágrafo de apoio que o leitor de tela também lê. */
 export const WithDescription: Story = {
-  parameters: { covers: ["functional.item3", "visual.item2"] },
+  parameters: {
+    covers: ["functional.item3", "visual.item2"],
+    // Outro controle (senha, com `autoComplete`) e outro texto de apoio — nada
+    // disso sai dos args, que estão desligados aqui.
+    docs: { source: { transform: formComDescricaoSource } },
+  },
   render: () => (
     <FormField
       className="nds-max-w-sm"

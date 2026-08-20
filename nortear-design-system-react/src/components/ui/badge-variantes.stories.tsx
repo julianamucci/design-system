@@ -2,6 +2,14 @@ import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { Badge } from "./badge";
+import {
+  badgeDefaultSource,
+  badgeDestrutivoSource,
+  badgeOutlineSource,
+  badgeSecundarioSource,
+  badgeSemanticasSource,
+  badgeSource,
+} from "./badge.source";
 
 const meta = {
   title: "UI/Badge/Variants",
@@ -13,6 +21,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: badgeSource },
       description: {
         component:
           "Cada variante do Badge reflete um nível de hierarquia visual: default destaca, secondary informa, destructive alerta e outline oferece baixa ênfase.",
@@ -41,7 +50,12 @@ const pintura = (el: HTMLElement) => {
 const transparente = (cor: string) => cor === "rgba(0, 0, 0, 0)" || cor === "transparent";
 
 export const Default: Story = {
-  parameters: { covers: ["functional.item1", "visual.item2"] },
+  // O arquivo desliga os controls, então o `meta` não tem args de onde ler a
+  // variante: cada story diz a sua.
+  parameters: {
+    covers: ["functional.item1", "visual.item2"],
+    docs: { source: { transform: badgeDefaultSource } },
+  },
   render: () => <Badge variant="default">Novo</Badge>,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -56,7 +70,10 @@ export const Default: Story = {
 };
 
 export const Secondary: Story = {
-  parameters: { covers: ["functional.item2", "visual.item2"] },
+  parameters: {
+    covers: ["functional.item2", "visual.item2"],
+    docs: { source: { transform: badgeSecundarioSource } },
+  },
   render: () => <Badge variant="secondary">Beta</Badge>,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -78,7 +95,10 @@ export const Secondary: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ["functional.item3", "accessibility.item3", "visual.item2"] },
+  parameters: {
+    covers: ["functional.item3", "accessibility.item3", "visual.item2"],
+    docs: { source: { transform: badgeDestrutivoSource } },
+  },
   render: () => <Badge variant="destructive">Urgente</Badge>,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -101,7 +121,10 @@ export const Destructive: Story = {
 };
 
 export const Outline: Story = {
-  parameters: { covers: ["functional.item4", "visual.item2"] },
+  parameters: {
+    covers: ["functional.item4", "visual.item2"],
+    docs: { source: { transform: badgeOutlineSource } },
+  },
   render: () => <Badge variant="outline">Rascunho</Badge>,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -125,6 +148,8 @@ export const Semantics: Story = {
   parameters: {
     covers: ["functional.item7", "visual.item5", "accessibility.item3"],
     docs: {
+      // A escala inteira é o assunto; um badge sozinho a esconderia.
+      source: { transform: badgeSemanticasSource },
       description: {
         story:
           "warning avisa, success confirma e info contextualiza. As três existiam no CSS como -high, -medium e -low, servindo só à tabela de prioridade das docs pages.",

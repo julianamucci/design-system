@@ -10,6 +10,7 @@ import {
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import { AspectRatioDocs } from "@/components/docs/AspectRatioDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { aspectRatioSource } from "./aspect-ratio.source";
 
 const LANDSCAPE_SRC =
   "https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1200&q=80";
@@ -21,7 +22,12 @@ const meta = {
   parameters: {
     design: figmaDesign("aspectRatio"),
     layout: "centered",
-    docs: { page: withAutoDocsTab(AspectRatioDocs) },
+    docs: {
+      page: withAutoDocsTab(AspectRatioDocs),
+      // O painel imprimia `ImageWithFallback` — andaime das stories, fora do
+      // design system — e o ratio já dividido em ponto flutuante.
+      source: { transform: aspectRatioSource },
+    },
   },
   argTypes: {
     ratio: {

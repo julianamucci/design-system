@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { CodeBlock } from "./code-block";
+import { codeBlockPaletaSource, codeBlockSource } from "./code-block.source";
 import {
   MINIMO_DE_CONTRASTE,
   TRECHOS_DA_PALETA,
@@ -42,6 +43,9 @@ const meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    // Cada linguagem chega pelos args da story, então a transform do meta já
+    // imprime o trecho e a prop `language` corretos.
+    docs: { source: { transform: codeBlockSource } },
   },
 } satisfies Meta<typeof CodeBlock>;
 
@@ -147,7 +151,12 @@ const Paleta = () => (
 );
 
 export const LightPalette: Story = {
-  parameters: { covers: ["accessibility.item4"] },
+  parameters: {
+    covers: ["accessibility.item4"],
+    // A story empilha vários blocos só para medir contraste; o que se ensina é
+    // um bloco, porque a cor vem do tema e não de prop nenhuma.
+    docs: { source: { transform: codeBlockPaletaSource } },
+  },
   args: { code: PALETA_CODE },
   render: () => <Paleta />,
   play: async ({ canvasElement, step }) => {
@@ -176,6 +185,9 @@ export const LightPalette: Story = {
 export const DarkPalette: Story = {
   parameters: {
     covers: ["accessibility.item4"],
+    // Mesmo snippet da paleta clara: o que muda entre as duas é o tema aplicado
+    // pelo toolbar, nunca o código.
+    docs: { source: { transform: codeBlockPaletaSource } },
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: "dark" },

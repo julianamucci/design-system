@@ -2,6 +2,7 @@ import { figmaDesign } from "@shared/figma/design-links";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { Button } from "./button";
+import { buttonSource } from "./button.source";
 import { ButtonDocs } from "@/components/docs/ButtonDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -11,7 +12,12 @@ const meta = {
   tags: ["autodocs", "form"],
   parameters: {
     design: figmaDesign("button"),
-    docs: { page: withAutoDocsTab(ButtonDocs) },
+    docs: {
+      page: withAutoDocsTab(ButtonDocs),
+      // A transform lê os controls e imprime o uso real; o espião de `onClick`
+      // fica de fora, senão o corpo do mock viraria código no painel.
+      source: { transform: buttonSource },
+    },
   },
   argTypes: {
     variant: {

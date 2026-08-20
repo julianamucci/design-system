@@ -11,6 +11,14 @@ import {
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
+import {
+  popoverAcimaSource,
+  popoverEditarPerfilSource,
+  popoverFiltroSource,
+  popoverPaletaSource,
+  popoverPreferenciasSource,
+  popoverSource,
+} from "./popover.source";
 
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
 // filtro de tabela, seletor de cor e configurações rápidas — mais a prova de
@@ -28,6 +36,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: popoverSource },
       description: {
         component:
           "Formulário curto, filtros combináveis, paleta restrita e preferências booleanas. Todo gatilho nomeia a ação e o objeto — nunca \"Mais\" ou \"Clique aqui\".",
@@ -54,6 +63,9 @@ const SWATCH_CLASSES = "nds-size-8 nds-rounded-full nds-border-soft nds-focus-ri
 export const EditProfile: Story = {
   parameters: {
     docs: {
+      // Sub-composição com formulário e o par Cancelar / Atualizar dentro do
+      // painel — nada disso está no snippet do meta.
+      source: { transform: popoverEditarPerfilSource },
       description: {
         story:
           "Formulário inline para edição rápida de perfil. PopoverTitle obrigatório para acessibilidade.",
@@ -102,6 +114,9 @@ export const EditProfile: Story = {
 export const TableFilter: Story = {
   parameters: {
     docs: {
+      // Sub-composição de escolha múltipla: as caixas de marcação e o par
+      // Limpar / Aplicar são o assunto da story.
+      source: { transform: popoverFiltroSource },
       description: {
         story:
           "Filtros contextuais de uma listagem — status combináveis e o par Limpar / Aplicar ao final.",
@@ -164,6 +179,9 @@ export const TableFilter: Story = {
 export const ColorPicker: Story = {
   parameters: {
     docs: {
+      // Sub-composição de paleta: cada amostra carrega o próprio `aria-label`,
+      // que é o que o meta não teria como ensinar.
+      source: { transform: popoverPaletaSource },
       description: {
         story: "Paleta restrita em grid — cada amostra tem nome acessível próprio.",
       },
@@ -219,6 +237,9 @@ export const ColorPicker: Story = {
 export const QuickSettings: Story = {
   parameters: {
     docs: {
+      // Sub-composição de preferências independentes — linhas com rótulo à
+      // esquerda e controle à direita, ausentes do snippet do meta.
+      source: { transform: popoverPreferenciasSource },
       description: {
         story:
           "Preferências booleanas independentes — alternativa leve ao Dialog para ajustes rápidos.",
@@ -283,6 +304,9 @@ export const SideTop: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
+      // `side="top"` e `sideOffset={12}` vêm do `render`, sem control neste
+      // arquivo: é a ancoragem que a story documenta.
+      source: { transform: popoverAcimaSource },
       description: {
         story:
           "side=top — abre acima do trigger. Em caso de colisão com a viewport, o auto-flip reposiciona automaticamente.",

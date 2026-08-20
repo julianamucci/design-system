@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Skeleton } from "./skeleton";
+import {
+  skeletonAvatarSource,
+  skeletonBlocoDeMidiaSource,
+  skeletonParagrafoSource,
+  skeletonSource,
+} from "./skeleton.source";
 
 const meta = {
   title: "UI/Skeleton/Variants",
@@ -11,6 +17,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: skeletonSource },
       description: {
         component:
           "Formas do esqueleto. Não há variante via prop: a forma vem de `data-shape` e a largura de `data-width`, e a folha de estilo continua dona das medidas.",
@@ -26,6 +33,9 @@ export const Rectangle: Story = {
   parameters: {
     covers: ["visual.item1"],
     docs: {
+      // `fill` não tem medida própria: quem estabelece a caixa é a proporção
+      // de mídia em volta, e sem ela o snippet ensinaria altura zero.
+      source: { transform: skeletonBlocoDeMidiaSource },
       description: {
         story:
           "`data-shape=\"fill\"` preenche a caixa que o container estabelece — aqui, uma proporção de mídia 16/9.",
@@ -56,6 +66,9 @@ export const Circle: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
+      // A AUSÊNCIA de `data-width` é o assunto: a fração só vale para as formas
+      // de texto, e o avatar tira a medida da escada de tamanhos.
+      source: { transform: skeletonAvatarSource },
       description: {
         story:
           "`data-shape=\"avatar\"` é a exceção que a guideline 12 prevê: peça sem fluxo de texto tem medida, e ela vem da escada `--size-*`.",
@@ -89,6 +102,9 @@ export const Circle: Story = {
 export const TextLine: Story = {
   parameters: {
     docs: {
+      // São TRÊS linhas de larguras diferentes, e a variação entre elas é o que
+      // faz o bloco ser lido como texto — uma linha só não ensina isso.
+      source: { transform: skeletonParagrafoSource },
       description: {
         story:
           "Altura derivada da escada de texto e largura em fração do container. Variar a largura entre linhas é o que faz o bloco parecer parágrafo.",

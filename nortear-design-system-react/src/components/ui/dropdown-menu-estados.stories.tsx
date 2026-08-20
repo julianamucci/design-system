@@ -12,6 +12,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
+import {
+  dropdownMenuControladoSource,
+  dropdownMenuItemDesabilitadoSource,
+  dropdownMenuSource,
+} from "./dropdown-menu.source";
 import { Button } from "./button";
 
 const meta = {
@@ -24,6 +29,9 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      // Fechado é o padrão do componente, e abrir por clique ou por seta não é
+      // markup: esta transform serve tanto a Closed quanto a Open.
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           "Fechado, aberto, controlado por fora e item desabilitado. Teclado, foco e bloqueio " +
@@ -145,6 +153,11 @@ export const Open: Story = {
 };
 
 export const Controlled: Story = {
+  parameters: {
+    // Composição diferente: estado de fora, com um botão da página comandando
+    // o mesmo menu que o gatilho abre.
+    docs: { source: { transform: dropdownMenuControladoSource } },
+  },
   render: () => {
     const ControlledDemo = () => {
       const [open, setOpen] = useState(false);
@@ -194,6 +207,10 @@ export const Controlled: Story = {
 };
 
 export const ItemDisabled: Story = {
+  parameters: {
+    // `disabled` é prop do ITEM, e nenhum control do arquivo a descreve.
+    docs: { source: { transform: dropdownMenuItemDesabilitadoSource } },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>

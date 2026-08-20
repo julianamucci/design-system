@@ -5,6 +5,12 @@ import { contrastesNosDoisModos } from "@shared/testing/form-probe"
 
 import { Fieldset, FormField } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+  formDesabilitadoSource,
+  formEmDuasPaletasSource,
+  formInvalidoSource,
+  formSource,
+} from "./form.source"
 
 const meta: Meta = {
   title: "UI/Form/States",
@@ -12,6 +18,7 @@ const meta: Meta = {
     layout: "padded",
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: formSource } },
   },
 }
 
@@ -31,6 +38,9 @@ export const Invalid: Story = {
       "accessibility.item5",
       "visual.item3",
     ],
+    // O par obrigatório do estado inválido — `error` no campo E `aria-invalid`
+    // no controle — não sai dos args, desligados neste arquivo.
+    docs: { source: { transform: formInvalidoSource } },
   },
   render: () => (
     <FormField
@@ -89,7 +99,12 @@ export const Invalid: Story = {
 }
 
 export const Disabled: Story = {
-  parameters: { covers: ["functional.item7"] },
+  parameters: {
+    covers: ["functional.item7"],
+    // `disabled` é do CONTROLE, não do campo — o snippet precisa mostrar onde
+    // ele fica para que o rótulo continue visível e associado.
+    docs: { source: { transform: formDesabilitadoSource } },
+  },
   render: () => (
     <FormField
       className="nds-max-w-sm"
@@ -136,6 +151,9 @@ export const Disabled: Story = {
 export const DarkPalette: Story = {
   parameters: {
     covers: ["visual.item5"],
+    // Três campos e um fieldset numa story só: é a combinação inteira que
+    // mostra erro e apoio precisando de tokens distintos em qualquer paleta.
+    docs: { source: { transform: formEmDuasPaletasSource } },
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: "dark" },

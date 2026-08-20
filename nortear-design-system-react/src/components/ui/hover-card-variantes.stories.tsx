@@ -6,6 +6,11 @@ import {
   painelAberto,
 } from "@shared/testing/hover-card-probe";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
+import {
+  hoverCardEsperaCurtaSource,
+  hoverCardEsperaPadraoSource,
+  hoverCardSource,
+} from "./hover-card.source";
 
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
 // varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
@@ -23,6 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: hoverCardSource },
       description: {
         component:
           "As duas configurações de tempo. Padrão usa a espera do próprio componente; a segunda encurta a espera, o que só se justifica quando o cartão traz informação que o leitor está procurando ativamente.",
@@ -44,6 +50,9 @@ const paragrafo: React.CSSProperties = {
 export const Default: Story = {
   parameters: {
     docs: {
+      // A AUSÊNCIA das esperas é o assunto, e o `defaultOpen` daqui é só o
+      // device da captura visual — nenhum dos dois cabe nos args do arquivo.
+      source: { transform: hoverCardEsperaPadraoSource },
       description: {
         story:
           "Espera padrão: 600ms para abrir, 300ms para fechar. Nenhum atraso é escrito no markup — o cartão nasce aberto aqui só para a captura visual, e no uso real responde ao ponteiro e ao foco.",
@@ -87,6 +96,9 @@ export const WithShortDelay: Story = {
   parameters: {
     covers: ["functional.item1"],
     docs: {
+      // As esperas moram na RAIZ, e o arquivo desliga os controls: sem override
+      // o painel imprimiria um cartão sem atraso nenhum.
+      source: { transform: hoverCardEsperaCurtaSource },
       description: {
         story:
           "Espera curta (150ms para abrir, 100ms para fechar) para previews que o leitor procura de propósito. Abaixo de ~300ms o cartão passa a abrir sozinho quando o cursor só atravessa o texto — é o que a diretriz de uso desaconselha.",

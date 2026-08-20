@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
 } from "./popover";
 import { Button } from "./button";
+import { popoverSource } from "./popover.source";
 import { PopoverDocs } from "@/components/docs/PopoverDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -18,7 +19,7 @@ const meta = {
   tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(PopoverDocs) },
+    docs: { page: withAutoDocsTab(PopoverDocs), source: { transform: popoverSource } },
   },
   argTypes: {
     side: {

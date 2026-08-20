@@ -4,6 +4,13 @@ import { userEvent, within, expect } from "storybook/test";
 import { Textarea } from "./textarea";
 import { Label } from "./label";
 import { Button } from "./button";
+import {
+  textareaComDescricaoSource,
+  textareaContadorAcessivelSource,
+  textareaControladoSource,
+  textareaEmFormularioSource,
+  textareaSource,
+} from "./textarea.source";
 
 const meta = {
   title: "UI/Textarea/Compositions",
@@ -14,6 +21,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: textareaSource },
       description: {
         component:
           "Composicoes reais do Textarea: com Label + descrição, com contador acessível, em formulário e controlado.",
@@ -43,6 +51,8 @@ export const WithLabelAndDescription: Story = {
   parameters: {
     covers: ["accessibility.item4"],
     docs: {
+      // O texto de apoio ligado por aria-describedby é sub-composição.
+      source: { transform: textareaComDescricaoSource },
       description: {
         story:
           "Par obrigatório Label (htmlFor) + Textarea (id) com FormDescription auxiliar vinculada via aria-describedby.",
@@ -97,6 +107,9 @@ export const WithAccessibleCounter: Story = {
   render: () => <ComContadorRender />,
   parameters: {
     docs: {
+      // Contagem com limite curto — composição controlada que o meta sem args
+      // não imprime.
+      source: { transform: textareaContadorAcessivelSource },
       description: {
         story:
           'maxLength=280 combinado com contador "X/Y" + aria-live="polite" + aria-label descritivo para leitores de tela.',
@@ -169,6 +182,8 @@ export const InForm: Story = {
   render: () => <EmFormularioRender />,
   parameters: {
     docs: {
+      // O campo dentro de <form>, com name, required e botão de envio.
+      source: { transform: textareaEmFormularioSource },
       description: {
         story:
           "Textarea integrado em <form> com name, required e Button submit. Estado controlado via useState.",
@@ -210,6 +225,8 @@ export const Controlled: Story = {
   render: () => <ControladoRender />,
   parameters: {
     docs: {
+      // O estado externo vive num `useState` que o meta não imprime.
+      source: { transform: textareaControladoSource },
       description: {
         story:
           "Textarea controlado via useState — o componente pai mantém o estado e atualiza via onChange.",

@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./sheet";
+import { sheetSource } from "./sheet.source";
 import { Button } from "./button";
 import { useI18nStore, useTranslation } from "@/lib/i18n";
 import sheetTranslations from "@shared/content/sheet/translations.json";
@@ -47,7 +48,10 @@ const meta = {
   tags: ["autodocs", "disclosure"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(SheetDocs) },
+    docs: {
+      page: withAutoDocsTab(SheetDocs),
+      source: { transform: sheetSource },
+    },
   },
   argTypes: {
     side: {

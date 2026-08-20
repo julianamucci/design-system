@@ -4,6 +4,12 @@ import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
 import { Label } from "./label";
 import { Button } from "./button";
+import {
+  radioGroupCartoesSource,
+  radioGroupControladoSource,
+  radioGroupEmFormularioSource,
+  radioGroupSource,
+} from "./radio-group.source";
 
 const meta = {
   title: "UI/RadioGroup/Compositions",
@@ -14,6 +20,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: radioGroupSource },
       description: {
         component:
           "Composicoes do RadioGroup: controle reativo via useState, integração em formulário com submit e card de seleção visual.",
@@ -28,6 +35,8 @@ type Story = StoryObj<typeof meta>;
 export const Controlled: Story = {
   parameters: {
     docs: {
+      // Sub-composição com `useState`: o par value + onValueChange é o assunto.
+      source: { transform: radioGroupControladoSource },
       description: {
         story:
           "Versão controlada via useState. value + onValueChange refletem a seleção do usuário e podem ser persistidos ou validados externamente.",
@@ -88,6 +97,8 @@ export const Controlled: Story = {
 export const InForm: Story = {
   parameters: {
     docs: {
+      // Sub-composição dentro de <form>, com botão preso à escolha.
+      source: { transform: radioGroupEmFormularioSource },
       description: {
         story:
           "Integração com <form>. RadioGroup recebe name para serializar no submit. Botão fica desabilitado até uma opção ser escolhida.",
@@ -156,6 +167,8 @@ export const InForm: Story = {
 export const CardSelection: Story = {
   parameters: {
     docs: {
+      // Sub-composição em cartões: o rótulo envolve o cartão inteiro.
+      source: { transform: radioGroupCartoesSource },
       description: {
         story:
           "Cada item envolto em um Label clicável estilizado como card. O Label é a região de clique inteira; o RadioGroupItem fica posicionado no canto.",

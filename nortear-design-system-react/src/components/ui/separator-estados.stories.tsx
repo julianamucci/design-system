@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { Separator } from "./separator";
+import { separatorSemanticoSource, separatorSource } from "./separator.source";
 
 const meta = {
   title: "UI/Separator/States",
@@ -11,6 +12,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: separatorSource },
       description: {
         component:
           "Modos do Separator: decorativo (padrão, ignorado por leitores de tela) e semântico (anunciado como divisor, com a própria orientação).",
@@ -52,7 +54,14 @@ export const Decorative: Story = {
 };
 
 export const Semantic: Story = {
-  parameters: { covers: ["functional.item4", "accessibility.item4"] },
+  parameters: {
+    covers: ["functional.item4", "accessibility.item4"],
+    docs: {
+      // `decorative={false}` é o que a story afirma no `render`, sem control
+      // nenhum descrevendo a troca de `role="none"` por `role="separator"`.
+      source: { transform: separatorSemanticoSource },
+    },
+  },
   render: () => (
     <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
       <h3 className="nds-text-body nds-font-medium">Semântico</h3>

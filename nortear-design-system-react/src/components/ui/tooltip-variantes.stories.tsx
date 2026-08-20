@@ -9,6 +9,12 @@ import {
 import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save } from "lucide-react";
+import {
+  tooltipComAtalhoSource,
+  tooltipCurtoSource,
+  tooltipSource,
+  tooltipTextoLongoSource,
+} from "./tooltip.source";
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
 // com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
@@ -45,6 +51,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: tooltipSource },
       description: {
         component:
           "Default é texto curto. Com atalho acrescenta a tecla em <kbd>, que a folha compartilhada reconhece e usa para encurtar o respiro à direita. Texto longo quebra dentro do limite de largura do balão — passou disso, o caso é de Popover.",
@@ -66,6 +73,9 @@ export const Default: Story = {
   parameters: {
     covers: ["visual.item1", "accessibility.item2"],
     docs: {
+      // Nasce aberta, e o estado inicial é o assunto: o balão só existe no DOM
+      // enquanto aberto.
+      source: { transform: tooltipCurtoSource },
       description: {
         story:
           "Default — texto curto explicativo, com o par de cores do balão medido contra o limite de 4.5:1.",
@@ -112,6 +122,8 @@ export const WithShortcut: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
+      // O par <kbd data-slot="kbd"> é a composição que os args não descrevem.
+      source: { transform: tooltipComAtalhoSource },
       description: {
         story:
           "Tooltip com atalho de teclado em <kbd> — útil para botões icon-only com hotkeys (ex.: Salvar Ctrl+S).",
@@ -165,6 +177,8 @@ export const LongText: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
+      // O comprimento do texto É a variante: o snippet do meta o esconderia.
+      source: { transform: tooltipTextoLongoSource },
       description: {
         story:
           "Texto longo — quebra dentro do limite de largura do balão. Use só se realmente couber em poucas linhas; passou disso, o caso é de Popover.",

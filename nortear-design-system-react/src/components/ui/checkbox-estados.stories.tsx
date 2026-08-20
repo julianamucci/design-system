@@ -2,6 +2,14 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { reprovasDoDesabilitado } from "@shared/testing/checkbox-probe";
 import { Checkbox } from "./checkbox";
+import {
+  checkboxDesabilitadoMarcadoSource,
+  checkboxDesabilitadoSource,
+  checkboxErroSource,
+  checkboxIndeterminadoSource,
+  checkboxMarcadoSource,
+  checkboxSource,
+} from "./checkbox.source";
 
 // Ferramentas de teclado/ponteiro entregues ao contrato compartilhado. Iguais
 // nas cinco stacks — o que muda entre elas é o componente, não a medição.
@@ -21,6 +29,7 @@ const meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: checkboxSource } },
   },
   argTypes: {
     onCheckedChange: { control: false },
@@ -81,6 +90,8 @@ export const Checked: Story = {
   parameters: {
     covers: ["visual.item2", "functional.item6"],
     docs: {
+      // O arquivo desliga os controls: sem args, só a story diz que nasce marcada.
+      source: { transform: checkboxMarcadoSource },
       description: {
         story:
           "Estado marcado. Fundo --primary, CheckIcon visível, aria-checked=\"true\".",
@@ -114,6 +125,8 @@ export const Indeterminate: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // O estado misto é propriedade dedicada, e é o assunto inteiro da story.
+      source: { transform: checkboxIndeterminadoSource },
       description: {
         story:
           "Estado misto (seleção parcial). Fundo --primary, traço (MinusIcon) visível no indicador, aria-checked=\"mixed\". Não é atributo HTML nativo — é propriedade dedicada do base-ui.",
@@ -152,6 +165,8 @@ export const Disabled: Story = {
   parameters: {
     covers: ["functional.item4", "accessibility.item6"],
     docs: {
+      // O esmaecimento é do grupo (data-disabled), não uma cor na caixa.
+      source: { transform: checkboxDesabilitadoSource },
       description: {
         story:
           "Estado desabilitado. Opacidade reduzida, cursor bloqueado. Continua alcançável pelo Tab e é anunciado como indisponível, mas não alterna.",
@@ -192,6 +207,8 @@ export const DisabledChecked: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
+      // A combinação das duas props é o assunto: desabilitado não é vazio.
+      source: { transform: checkboxDesabilitadoMarcadoSource },
       description: {
         story:
           "Estado desabilitado e marcado simultaneamente. Mostra o estado de seleção sem permitir alteração.",
@@ -232,6 +249,8 @@ export const Error: Story = {
   parameters: {
     covers: ["visual.item5"],
     docs: {
+      // A mensagem abaixo do par faz parte do estado — a caixa sozinha não o explica.
+      source: { transform: checkboxErroSource },
       description: {
         story:
           "Estado de erro via aria-invalid=\"true\". Borda e ring --destructive. Use FormMessage para exibir a mensagem.",

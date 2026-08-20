@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select";
+import { selectSource } from "./select.source";
 import { SelectDocs } from "@/components/docs/SelectDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -18,7 +19,10 @@ const meta = {
   component: Select,
   tags: ["autodocs", "form"],
   parameters: {
-    docs: { page: withAutoDocsTab(SelectDocs) },
+    docs: {
+      page: withAutoDocsTab(SelectDocs),
+      source: { transform: selectSource },
+    },
   },
   argTypes: {
     disabled: {

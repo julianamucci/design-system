@@ -8,6 +8,12 @@ import {
 } from "./input-otp";
 import { Label } from "./label";
 import { Button } from "./button";
+import {
+  inputOtpComErroSource,
+  inputOtpComReenvioSource,
+  inputOtpComTextoAuxiliarSource,
+  inputOtpSource,
+} from "./input-otp.source";
 
 const meta = {
   title: "UI/InputOTP/Compositions",
@@ -18,6 +24,10 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O rótulo já faz parte do exemplo canônico — o `<input>` real fica
+      // recortado atrás das caixas, e sem `htmlFor` ↔ `id` o campo não tem nome
+      // acessível nenhum. Por isso a story WithLabel fica com a do `meta`.
+      source: { transform: inputOtpSource },
       description: {
         component:
           "Composicoes típicas: ComLabel, ComHelpText, ComErrorMessage e ComResendButton.",
@@ -84,6 +94,9 @@ export const WithLabel: Story = {
 export const WithHelpText: Story = {
   parameters: {
     docs: {
+      // O parágrafo auxiliar e o `aria-describedby` que o liga são peças a mais
+      // que o exemplo canônico não tem.
+      source: { transform: inputOtpComTextoAuxiliarSource },
       description: {
         story:
           "Texto auxiliar conectado via aria-describedby (origem + tempo de validade).",
@@ -131,7 +144,10 @@ export const WithHelpText: Story = {
 
 export const WithErrorMessage: Story = {
   parameters: {
+    // Mesma composição da story Error dos estados: `aria-invalid` no campo mais
+    // a mensagem ligada por `aria-describedby`.
     docs: {
+      source: { transform: inputOtpComErroSource },
       description: {
         story:
           "aria-invalid=true + mensagem de erro associada via aria-describedby (causa + ação corretiva).",
@@ -185,6 +201,9 @@ export const WithErrorMessage: Story = {
 export const WithResendButton: Story = {
   parameters: {
     docs: {
+      // O botão é peça de outro componente, e a ORDEM dele no DOM é a lição:
+      // depois do campo, para cair no próximo Tab de quem terminou de digitar.
+      source: { transform: inputOtpComReenvioSource },
       description: {
         story:
           "InputOTP + Button 'Reenviar código' — fluxo típico de verificação 2FA.",

@@ -6,6 +6,13 @@ import {
   indicadorDoProgresso,
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
+import {
+  progressCarregandoSource,
+  progressConcluidoSource,
+  progressIndeterminadoSource,
+  progressSource,
+  progressZeroSource,
+} from "./progress.source";
 
 const meta = {
   title: "UI/Progress/States",
@@ -14,6 +21,7 @@ const meta = {
   parameters: {
     layout: "padded",
     docs: {
+      source: { transform: progressSource },
       description: {
         component:
           "Estados derivados do valor: default (0), loading (parcial), complete (100) e indeterminate (sem valor). O estado é do primitivo — chega ao DOM em data-progressing, data-complete e data-indeterminate.",
@@ -28,7 +36,13 @@ export default meta;
 type Story = StoryObj<typeof Progress>;
 
 export const Default: Story = {
-  parameters: { covers: ["functional.item1", "visual.item1"] },
+  parameters: {
+    covers: ["functional.item1", "visual.item1"],
+    docs: {
+      // `value={0}` está no `render`; o meta imprime o valor do Playground.
+      source: { transform: progressZeroSource },
+    },
+  },
   render: () => (
     <div className="nds-w-sm">
       <Progress value={0} aria-label="Progresso inicial" />
@@ -58,7 +72,13 @@ export const Default: Story = {
 };
 
 export const Loading: Story = {
-  parameters: { covers: ["functional.item2", "visual.item2"] },
+  parameters: {
+    covers: ["functional.item2", "visual.item2"],
+    docs: {
+      // Valor afirmado no `render`, sem control que o descreva.
+      source: { transform: progressCarregandoSource },
+    },
+  },
   render: () => (
     <div className="nds-w-sm">
       <Progress value={50} aria-label="Carregando dados" />
@@ -88,7 +108,13 @@ export const Loading: Story = {
 };
 
 export const Complete: Story = {
-  parameters: { covers: ["functional.item3", "visual.item3"] },
+  parameters: {
+    covers: ["functional.item3", "visual.item3"],
+    docs: {
+      // Valor afirmado no `render`, sem control que o descreva.
+      source: { transform: progressConcluidoSource },
+    },
+  },
   render: () => (
     <div className="nds-w-sm">
       <Progress value={100} aria-label="Concluído" />
@@ -120,7 +146,13 @@ export const Complete: Story = {
 };
 
 export const Indeterminate: Story = {
-  parameters: { covers: ["functional.item4", "visual.item4"] },
+  parameters: {
+    covers: ["functional.item4", "visual.item4"],
+    docs: {
+      // A ausência de valor é o assunto: `value={null}`, não zero.
+      source: { transform: progressIndeterminadoSource },
+    },
+  },
   render: () => (
     <div className="nds-w-sm">
       <Progress value={null} aria-label="Processando" />

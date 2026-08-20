@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import { alturaResultante, campoDe, contrasteDaBorda } from "@shared/testing/input-probe";
 import { Input } from "./input";
+import { inputSource } from "./input.source";
 import { InputDocs } from "@/components/docs/InputDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -11,7 +12,13 @@ const meta = {
   tags: ["autodocs", "form"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(InputDocs) },
+    docs: {
+      page: withAutoDocsTab(InputDocs),
+      // O painel imprimia a árvore do `render`, com o `{...args}` e o andaime
+      // da coluna. A transform devolve o par rótulo + campo que compila colado,
+      // e cascateia para todas as stories do arquivo.
+      source: { transform: inputSource },
+    },
   },
   argTypes: {
     type: {

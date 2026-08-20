@@ -256,6 +256,15 @@ function ContextMenuShortcut({
   )
 }
 
+// `ContextMenuPortal` saiu da lista abaixo: o `ContextMenuContent` já portaliza
+// por dentro, então o wrapper exportado só existia para ser importado em dupla e
+// portalizar duas vezes. Nenhuma outra stack o expõe, e a anatomia do conteúdo
+// compartilhado não lista peça de portal. Era resíduo do scaffold.
+//
+// A nota mora FORA das chaves de propósito: comentário entre elas quebra quem lê
+// a lista de exportações por texto — a guarda das transforms do painel Code
+// varre este bloco, e com o comentário dentro `ContextMenuSub` sumia do conjunto
+// de nomes exportados.
 export {
   ContextMenu,
   ContextMenuTrigger,
@@ -267,10 +276,6 @@ export {
   ContextMenuSeparator,
   ContextMenuShortcut,
   ContextMenuGroup,
-  // `ContextMenuPortal` saiu daqui: o `ContextMenuContent` já portaliza por
-  // dentro, então o wrapper exportado só existia para ser importado em dupla e
-  // portalizar duas vezes. Nenhuma outra stack o expõe, e a anatomia do
-  // conteúdo compartilhado não lista peça de portal. Era resíduo do scaffold.
   ContextMenuSub,
   ContextMenuSubContent,
   ContextMenuSubTrigger,

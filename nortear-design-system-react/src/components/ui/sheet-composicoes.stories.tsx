@@ -12,6 +12,13 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./sheet";
+import {
+  sheetConteudoLongoSource,
+  sheetFiltrosSource,
+  sheetNavegacaoSource,
+  sheetPainelInferiorSource,
+  sheetSource,
+} from "./sheet.source";
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
@@ -25,6 +32,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sheetSource },
       description: {
         component:
           "Composições reais do Sheet em fluxos de produto: filtros avançados, navegação " +
@@ -47,6 +55,9 @@ type Story = StoryObj<typeof meta>;
 export const FiltersPanel: Story = {
   parameters: {
     docs: {
+      // Formulário dentro do SheetBody — sub-composição que o snippet do meta,
+      // só com cabeçalho e rodapé, esconderia.
+      source: { transform: sheetFiltrosSource },
       description: {
         story:
           "Sheet à direita com filtros avançados em formulário. O título nomeia a ação, a " +
@@ -106,6 +117,9 @@ export const FiltersPanel: Story = {
 export const SecondaryNavigation: Story = {
   parameters: {
     docs: {
+      // Painel à esquerda, com nav no corpo e SEM rodapé: a ausência de
+      // confirmação faz parte do que a story ensina.
+      source: { transform: sheetNavegacaoSource },
       description: {
         story:
           "Sheet à esquerda como menu de navegação secundária — itens clicáveis dentro do " +
@@ -144,6 +158,9 @@ export const SecondaryNavigation: Story = {
 export const BottomPanel: Story = {
   parameters: {
     docs: {
+      // Direção inferior mais a fileira de ações no corpo — nenhum control
+      // descreve isso neste arquivo.
+      source: { transform: sheetPainelInferiorSource },
       description: {
         story:
           "Sheet inferior — o mesmo desenho do Drawer mobile, sem o gesto de arrastar. " +
@@ -185,6 +202,8 @@ export const WithLongScrollContent: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
+      // O corpo que rola é o assunto, e ele só aparece com o SheetBody cheio.
+      source: { transform: sheetConteudoLongoSource },
       description: {
         story:
           "Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — " +

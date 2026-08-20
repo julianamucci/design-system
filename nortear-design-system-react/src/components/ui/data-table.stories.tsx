@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, userEvent, waitFor, expect, fn } from "storybook/test"
 import { medirRolagem } from "@shared/testing/data-table-probe"
 import { DataTable } from "./data-table"
+import { dataTableSource } from "./data-table.source"
 import { DataTableDocs } from "@/components/docs/DataTableDocs"
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab"
 import {
@@ -14,82 +15,19 @@ import {
 /** Legenda da tabela — o nome que o leitor de tela anuncia ao entrar na grade. */
 const LEGENDA = "Faturas recentes"
 
-/**
- * O painel Code imprime a story como está escrita — com a fixture do arquivo e
- * os spies das actions. O `transform` devolve o uso real, com o valor atual dos
- * controls já resolvido.
- */
-function playgroundSource(
-  _gerado: string,
-  ctx: {
-    args?: Partial<{
-      enableRowSelection: boolean
-      enablePagination: boolean
-      pageSize: number
-      caption: string
-    }>
-  }
-): string {
-  const {
-    enableRowSelection = true,
-    enablePagination = true,
-    pageSize = 10,
-    caption = LEGENDA,
-  } = ctx.args ?? {}
-  const flags = [
-    enableRowSelection ? "  enableRowSelection" : null,
-    enablePagination ? null : "  enablePagination={false}",
-    pageSize === 10 ? null : `  pageSize={${pageSize}}`,
-  ]
-    .filter(Boolean)
-    .join("\n")
-
-  return `import {
-  DataTable,
-  type DataTableColumn,
-  type DataTableLabels,
-} from "@/components/ui/data-table"
-
-interface Invoice { id: string; customer: string; status: string; method: string; amount: number }
-
-// Definidas UMA vez, em escopo estável: recriar o array a cada render zeraria
-// ordenação, filtros e seleção.
-const columns: DataTableColumn<Invoice>[] = [
-  { accessorKey: "id", header: "Fatura", size: 110 },
-  { accessorKey: "customer", header: "Cliente", size: 200 },
-  { accessorKey: "status", header: "Status", size: 140 },
-  { accessorKey: "method", header: "Método", size: 200 },
-  { accessorKey: "amount", header: "Valor", size: 130 },
-]
-
-// Só as chaves informadas mudam; o resto continua no padrão do componente.
-const rotulos: Partial<DataTableLabels> = {
-  selectAll: "Selecionar todas as faturas",
-  selectRow: (r) => \`Selecionar fatura \${r}\`,
-  rowsSelected: (s, n) => \`\${s} de \${n} fatura(s) selecionada(s).\`,
-}
-
-<DataTable
-  columns={columns}
-  data={invoices}
-${flags}
-  caption="${caption}"
-  labels={rotulos}
-  // Identidade da linha vem do dado, não da posição na tela.
-  rowKey={(f) => f.id}
-  // Sem \`rowLabel\`: o identificador do controle de seleção sai da primeira
-  // coluna, que é a mesma que identifica a linha para quem enxerga.
-  globalFilterPlaceholder="Buscar fatura, cliente, método..."
-/>`
-}
-
 const meta: Meta<typeof DataTable<Invoice>> = {
   title: "UI/DataTable",
   component: DataTable<Invoice>,
   tags: ["autodocs", "tables"],
   parameters: {
     layout: "padded",
-    docs: { page: withAutoDocsTab(DataTableDocs) },
+    docs: {
+      page: withAutoDocsTab(DataTableDocs),
+      // A árvore do `render` traz a fixture do arquivo e os espiões das
+      // actions; a transform devolve o uso real, com colunas e dados
+      // DECLARADOS no próprio snippet.
+      source: { transform: dataTableSource },
+    },
   },
   argTypes: {
     enableRowSelection: {
@@ -216,7 +154,6 @@ export const Playground: Story = {
       "accessibility.item6",
       "visual.item1",
     ],
-    docs: { source: { transform: playgroundSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)

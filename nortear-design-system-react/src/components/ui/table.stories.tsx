@@ -13,6 +13,7 @@ import {
 import { TableDocs } from "@/components/docs/TableDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { INVOICES, TOTAL } from "./table.fixtures";
+import { tableSource } from "./table.source";
 
 // ─── Meta ────────────────────────────────────────────────────────────────────
 
@@ -31,7 +32,10 @@ const meta: Meta<TableArgs & React.ComponentProps<typeof Table>> = {
   tags: ["autodocs", "tables"],
   parameters: {
     layout: "padded",
-    docs: { page: withAutoDocsTab(TableDocs) },
+    docs: {
+      page: withAutoDocsTab(TableDocs),
+      source: { transform: tableSource },
+    },
   },
   argTypes: {
     captionVisivel: {

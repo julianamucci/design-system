@@ -4,6 +4,7 @@ import { ChartContainer, buildBarOption } from './chart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
 import { desenhoEscreve } from '@shared/testing/chart-probe';
 import { desenhoPronto } from './chart.fixtures';
+import { chartEmCardSource, chartSource, chartTituloSemRotuloSource } from './chart.source';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const seriesMulti = [
@@ -17,7 +18,12 @@ const TITULO_NO_DESENHO = 'Vendas mensais';
 const meta: Meta = {
   title: 'UI/Chart/Compositions',
   tags: ['display'],
-  parameters: { layout: 'padded', controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    layout: 'padded',
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: chartSource } },
+  },
 };
 export default meta;
 type Story = StoryObj;
@@ -25,6 +31,9 @@ type Story = StoryObj;
 export const WithCard: Story = {
   parameters: {
     docs: {
+      // O Card em volta é a composição inteira desta story, e ele não é arg do
+      // gráfico nenhum.
+      source: { transform: chartEmCardSource },
       description: {
         story: 'Gráfico dentro de um Card — o cabeçalho carrega título e período, o desenho carrega o dado.',
       },
@@ -70,6 +79,9 @@ export const WithCard: Story = {
 export const InlineTitle: Story = {
   parameters: {
     docs: {
+      // A AUSÊNCIA do rótulo autoral é o assunto: sem ele o container cai no
+      // título do desenho, e escrever um aqui esconderia a rede de segurança.
+      source: { transform: chartTituloSemRotuloSource },
       description: {
         story: 'Título dentro da própria configuração — útil quando o gráfico não tem card em volta.',
       },

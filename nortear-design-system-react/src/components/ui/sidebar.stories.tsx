@@ -26,6 +26,7 @@ import {
   SidebarSeparator,
   SidebarTrigger,
 } from "./sidebar";
+import { sidebarSource } from "./sidebar.source";
 import { SidebarDocs } from "@/components/docs/SidebarDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -134,7 +135,10 @@ const meta = {
   tags: ["autodocs", "layout"],
   parameters: {
     layout: "fullscreen",
-    docs: { page: withAutoDocsTab(SidebarDocs) },
+    docs: {
+      page: withAutoDocsTab(SidebarDocs),
+      source: { transform: sidebarSource },
+    },
   },
   decorators: [
     (Story) => (

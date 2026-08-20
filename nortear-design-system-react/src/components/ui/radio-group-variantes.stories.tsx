@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
 import { Label } from "./label";
+import {
+  radioGroupComDescricaoSource,
+  radioGroupHorizontalSource,
+  radioGroupSource,
+} from "./radio-group.source";
 
 const meta = {
   title: "UI/RadioGroup/Variants",
@@ -11,6 +16,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: radioGroupSource },
       description: {
         component:
           "Variantes de layout do RadioGroup: Vertical (padrão para 4+ opções), Horizontal (2–3 opções curtas) e WithDescription (cada item com texto auxiliar).",
@@ -63,6 +69,8 @@ export const Vertical: Story = {
 export const Horizontal: Story = {
   parameters: {
     docs: {
+      // `aria-orientation` está afirmado no `render`; nenhum control o descreve.
+      source: { transform: radioGroupHorizontalSource },
       description: {
         story:
           "Em linha — para 2–3 opções curtas. Sai de aria-orientation=\"horizontal\" no grupo: o mesmo atributo anuncia a direção das setas e dispõe as opções lado a lado.",
@@ -112,6 +120,9 @@ export const Horizontal: Story = {
 export const WithDescription: Story = {
   parameters: {
     docs: {
+      // Sub-composição: o texto auxiliar e o alinhamento do item ao topo não
+      // cabem no par item + rótulo que o meta imprime.
+      source: { transform: radioGroupComDescricaoSource },
       description: {
         story:
           "Cada item com Label + descrição auxiliar abaixo, ligada ao controle por aria-describedby. O .nds-cluster com data-align=\"start\" alinha o rádio à primeira linha do texto.",

@@ -4,6 +4,13 @@ import { waitFor, within, expect } from "storybook/test";
 import { Switch } from "./switch";
 import { definir } from "./switch.fixtures";
 import { Label } from "./label";
+import {
+  switchControladoSource,
+  switchListaCompactaSource,
+  switchPainelSource,
+  switchPreferenciasSource,
+  switchSource,
+} from "./switch.source";
 
 const meta = {
   title: "UI/Switch/Compositions",
@@ -14,6 +21,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: switchSource },
       description: {
         component:
           "Composicoes reais do Switch: Label associado, painel de configurações, lista de preferências e controle controlado.",
@@ -75,6 +83,8 @@ export const SettingsPanel: Story = {
   ),
   parameters: {
     docs: {
+      // Painel inteiro no render, com o controle já ligado.
+      source: { transform: switchPainelSource },
       description: {
         story:
           "Painel com Label + descrição auxiliar à esquerda e Switch à direita.",
@@ -120,6 +130,8 @@ export const PreferenceList: Story = {
   ),
   parameters: {
     docs: {
+      // O `fieldset` + `legend` é composição do render, não do componente.
+      source: { transform: switchPreferenciasSource },
       description: {
         story:
           "Grupo de switches em fieldset + legend para agrupar preferências relacionadas (WCAG 1.3.1).",
@@ -158,6 +170,8 @@ export const Controlled: Story = {
   },
   parameters: {
     docs: {
+      // O estado externo vive num `useState` do render.
+      source: { transform: switchControladoSource },
       description: {
         story:
           "Switch controlado — o componente pai mantém o estado e o atualiza pelo callback de mudança.",
@@ -201,6 +215,8 @@ export const CompactSize: Story = {
   ),
   parameters: {
     docs: {
+      // Lista e `size="sm"` são afirmados no render, sem control.
+      source: { transform: switchListaCompactaSource },
       description: {
         story:
           "Lista densa de toggles no degrau compacto — adequado para barras de configurações e menus.",

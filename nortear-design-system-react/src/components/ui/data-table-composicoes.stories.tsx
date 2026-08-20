@@ -2,6 +2,13 @@ import * as React from "react"
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, userEvent, waitFor, fireEvent, expect, fn } from "storybook/test"
 import { DataTable, type DataTableColumn } from "./data-table"
+import {
+  dataTableComEdicaoSource,
+  dataTableComFiltrosDeColunaSource,
+  dataTableRedimensionavelSource,
+  dataTableReordenavelEFixavelSource,
+  dataTableSource,
+} from "./data-table.source"
 import { Badge } from "@/components/ui/badge"
 import { waitForPortal, waitForPortalGone, REGRA_GUARDA_DE_FOCO } from "@/lib/wait-for-portal"
 import {
@@ -16,7 +23,11 @@ const meta: Meta<typeof DataTable<Invoice>> = {
   title: "UI/DataTable/Compositions",
   tags: ["tables"],
   component: DataTable<Invoice>,
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: dataTableSource } },
+  },
 }
 
 export default meta
@@ -70,6 +81,9 @@ export const WithColumnFilters: Story = {
     covers: ["functional.item2", "accessibility.item4", "visual.item2"],
     controls: { disable: true },
     actions: { disable: true },
+    // O recorte é declarado na COLUNA (`meta.filter`): outro conjunto de
+    // colunas, que o snippet do `meta` não tem como mostrar.
+    docs: { source: { transform: dataTableComFiltrosDeColunaSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -129,6 +143,9 @@ export const ResizableColumns: Story = {
     covers: ["visual.item3"],
     controls: { disable: true },
     actions: { disable: true },
+    // `enableColumnResizing` não vem de arg nenhum neste arquivo — o snippet do
+    // `meta` cairia no padrão e não mostraria a flag.
+    docs: { source: { transform: dataTableRedimensionavelSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -181,6 +198,8 @@ export const ReorderableAndPinnable: Story = {
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     controls: { disable: true },
     actions: { disable: true },
+    // As duas flags andam juntas e nenhuma delas está nos args do `meta`.
+    docs: { source: { transform: dataTableReordenavelEFixavelSource } },
   },
   play: async ({ canvasElement, step }) => {
     const cabecalhos = () =>
@@ -319,6 +338,9 @@ export const WithInlineEditing: Story = {
     covers: ["functional.item5", "visual.item4"],
     controls: { disable: true },
     actions: { disable: true },
+    // A tabela não guarda os dados: sem o dono de estado que `onCellEdit`
+    // exige, o snippet ensinaria uma edição que volta atrás sozinha.
+    docs: { source: { transform: dataTableComEdicaoSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)

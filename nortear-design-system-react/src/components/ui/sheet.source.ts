@@ -1,0 +1,385 @@
+/**
+ * Transforms do painel Code do Sheet.
+ *
+ * Módulo de TS puro — o `.tsx` só entra por `import type`, que o compilador
+ * apaga. É o que deixa as funções rodarem no projeto `unit` do vitest, a única
+ * guarda que elas têm: a saída do painel não chega ao DOM durante a `play`.
+ *
+ * O que as stories montam em volta é ANDAIME e não entra no snippet: o
+ * decorator `<div style={{ contain: "layout", minHeight: 320 }}>` existe porque
+ * o painel é portalizado e o Storybook precisa de um quadro com altura para o
+ * exemplo não colapsar, e `useTranslation` resolve rótulo, que é conteúdo de
+ * quem consome. Os snippets trazem o texto já em português, idioma em que o
+ * design system nasce.
+ *
+ * O `defaultOpen` das stories de direção também é andaime: elas nascem abertas
+ * porque a regressão visual e o axe precisam do painel no DOM, não porque a
+ * direção dependa disso. Ele só aparece no snippet onde a abertura inicial É o
+ * assunto. O gatilho entra sempre com `render={<Button />}`: o gatilho não é um
+ * invólucro, é o botão que JÁ existe na interface recebendo as props de
+ * abertura — é o que mantém um só elemento focável e um só nome acessível.
+ */
+import {
+  attrs,
+  filhoTexto,
+  jsxSnippet,
+  propBool,
+  propOpcao,
+  type SourceTransform,
+} from '@/lib/story-source';
+
+export type SheetArgs = {
+  side: 'top' | 'right' | 'bottom' | 'left';
+  showCloseButton: boolean;
+  modal: boolean;
+  defaultOpen: boolean;
+  triggerLabel: string;
+};
+
+const LADOS = ['top', 'right', 'bottom', 'left'] as const;
+
+const IMPORT_BOTAO = 'import { Button } from "@/components/ui/button";';
+
+/** Bloco de import do componente, em ordem alfabética das peças usadas. */
+function importarSheet(...pecas: string[]): string {
+  const lista = [...pecas].sort();
+  return `import {\n${lista
+    .map((peca) => `  ${peca},`)
+    .join('\n')}\n} from "@/components/ui/sheet";`;
+}
+
+const PECAS_BASE = [
+  'Sheet',
+  'SheetClose',
+  'SheetContent',
+  'SheetDescription',
+  'SheetFooter',
+  'SheetHeader',
+  'SheetTitle',
+  'SheetTrigger',
+];
+
+const TITULO = 'Filtros avançados';
+const DESCRICAO = 'Configure os filtros para refinar os resultados.';
+
+/**
+ * Cabeçalho com título E descrição. Os dois não são decoração: é deles que saem
+ * o `aria-labelledby` e o `aria-describedby` do painel, e um diálogo modal sem
+ * nome chega ao leitor de tela como uma região anônima.
+ */
+function cabecalho(titulo = TITULO, descricao = DESCRICAO): string {
+  return `    <SheetHeader>
+      <SheetTitle>${titulo}</SheetTitle>
+      <SheetDescription>
+        ${descricao}
+      </SheetDescription>
+    </SheetHeader>`;
+}
+
+/**
+ * Rodapé com a saída explícita à esquerda e a ação primária por último no DOM.
+ * A ordem de leitura e de foco é a do markup — inverter aqui mudaria o que o
+ * teclado alcança primeiro, mesmo com o CSS desenhando o contrário.
+ */
+function rodape(acao = 'Aplicar filtros', saida = 'Cancelar'): string {
+  return `    <SheetFooter>
+      <SheetClose render={<Button variant="outline" />}>${saida}</SheetClose>
+      <Button>${acao}</Button>
+    </SheetFooter>`;
+}
+
+/** A composição inteira: raiz, gatilho e painel. */
+function sheet(raiz: string, painel: string, corpo: string, gatilhoRotulo: string): string {
+  return `<Sheet${raiz}>
+  <SheetTrigger render={<Button variant="outline" />}>
+    ${gatilhoRotulo}
+  </SheetTrigger>
+  <SheetContent${painel}>
+${corpo}
+  </SheetContent>
+</Sheet>`;
+}
+
+/**
+ * Transform do `meta` — vale para todas as stories do arquivo. Lê os controls do
+ * Playground; nas stories sem args cai no painel fechado à direita, que é o
+ * padrão do componente e o uso canônico. Só o que difere do padrão entra no
+ * snippet: repetir `side="right"` ou `modal` ensina ruído a quem copia.
+ *
+ * `onOpenChange` NÃO é interpolado: o Storybook o entrega como espião, e o corpo
+ * do mock apareceria no painel como se fosse código do design system.
+ */
+export const sheetSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
+  const args = ctx?.args ?? {};
+  const raiz = attrs(
+    propBool('defaultOpen', args.defaultOpen),
+    propBool('modal', args.modal, true),
+  );
+  const painel = attrs(
+    propOpcao('side', args.side, LADOS, 'right'),
+    propBool('showCloseButton', args.showCloseButton, true),
+  );
+  return jsxSnippet(
+    `${importarSheet(...PECAS_BASE)}\n${IMPORT_BOTAO}`,
+    sheet(
+      raiz,
+      painel,
+      `${cabecalho()}\n${rodape()}`,
+      filhoTexto(args.triggerLabel, 'Abrir filtros'),
+    ),
+  );
+};
+
+/**
+ * Painel de um lado nomeado — `side` mora no conteúdo, não na raiz.
+ *
+ * Gatilho, descrição e rodapé são os MESMOS das quatro direções: o que muda de
+ * uma para a outra é só a borda de onde o painel desliza, e trocar o conteúdo
+ * junto faria parecer que a direção pede outra composição.
+ */
+function porLado(lado: string, titulo: string): string {
+  return jsxSnippet(
+    `${importarSheet(...PECAS_BASE)}\n${IMPORT_BOTAO}`,
+    sheet('', ` side="${lado}"`, `${cabecalho(titulo)}\n${rodape()}`, 'Abrir filtros'),
+  );
+}
+
+/**
+ * Esquerda: a direção é o assunto e nenhum control a descreve neste arquivo. É
+ * o lado da navegação secundária — onde a pessoa espera encontrar o menu.
+ */
+export function sheetLadoEsquerdoSource(): string {
+  return porLado('left', 'Painel esquerdo');
+}
+
+/**
+ * Topo: ocupa a largura inteira e a altura vem do conteúdo. Serve a filtros
+ * horizontais e avisos ricos demais para caber num Alert.
+ */
+export function sheetLadoSuperiorSource(): string {
+  return porLado('top', 'Painel superior');
+}
+
+/**
+ * Base: o mesmo desenho do Drawer, sem o gesto de arrastar. Quando o gesto
+ * importa, o componente é o Drawer.
+ */
+export function sheetLadoInferiorSource(): string {
+  return porLado('bottom', 'Painel inferior');
+}
+
+/**
+ * Aberto na montagem. `defaultOpen` é o caminho NÃO controlado: quem abre e
+ * fecha continua sendo o componente, e o valor só diz por onde começar.
+ */
+export function sheetAbertoSource(): string {
+  return jsxSnippet(
+    `${importarSheet(...PECAS_BASE)}\n${IMPORT_BOTAO}`,
+    sheet(' defaultOpen', '', `${cabecalho()}\n${rodape()}`, 'Abrir filtros'),
+  );
+}
+
+/**
+ * Sem o botão do canto — a AUSÊNCIA é o assunto. Só se sustenta porque o rodapé
+ * oferece outra saída: Escape continua fechando, mas tirar a saída visível de um
+ * painel sem rodapé deixaria quem usa ponteiro sem caminho nenhum.
+ */
+export function sheetSemBotaoFecharSource(): string {
+  return jsxSnippet(
+    `${importarSheet(...PECAS_BASE)}\n${IMPORT_BOTAO}`,
+    sheet(
+      '',
+      ' showCloseButton={false}',
+      `${cabecalho()}
+    <SheetFooter>
+      <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+    </SheetFooter>`,
+      'Abrir filtros',
+    ),
+  );
+}
+
+/**
+ * Abertura controlada de fora, e por isso SEM gatilho interno: quem abre é o
+ * botão que já existe no fluxo. `onOpenChange` precisa devolver o valor ao dono
+ * do estado — sem isso o fechamento por Escape ou pelo overlay não chega até
+ * ele, e o painel reabre no render seguinte.
+ */
+export function sheetControladoSource(): string {
+  return jsxSnippet(
+    `import { useState } from "react";
+${importarSheet(
+  'Sheet',
+  'SheetClose',
+  'SheetContent',
+  'SheetDescription',
+  'SheetFooter',
+  'SheetHeader',
+  'SheetTitle',
+)}
+${IMPORT_BOTAO}
+
+const [aberto, setAberto] = useState(false);`,
+    `<div className="nds-stack" data-spacing="sm">
+  <Button variant="outline" onClick={() => setAberto(true)}>
+    Abrir filtros
+  </Button>
+
+  <Sheet open={aberto} onOpenChange={setAberto}>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>${TITULO}</SheetTitle>
+        <SheetDescription>
+          ${DESCRICAO}
+        </SheetDescription>
+      </SheetHeader>
+      <SheetFooter>
+        <SheetClose render={<Button variant="outline" />}>Cancelar</SheetClose>
+      </SheetFooter>
+    </SheetContent>
+  </Sheet>
+</div>`,
+  );
+}
+
+/**
+ * Formulário de filtros no corpo do painel. O `SheetBody` é quem rola: cabeçalho
+ * e rodapé ficam parados, e é isso que mantém "Aplicar" ao alcance mesmo com a
+ * lista de campos crescendo.
+ */
+export function sheetFiltrosSource(): string {
+  return jsxSnippet(
+    `${importarSheet(...PECAS_BASE, 'SheetBody')}
+${IMPORT_BOTAO}
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";`,
+    sheet(
+      '',
+      '',
+      `${cabecalho(TITULO, 'Refine os resultados por categoria, preço e disponibilidade.')}
+    <SheetBody>
+      <form
+        className="nds-stack"
+        data-spacing="md"
+        onSubmit={(evento) => evento.preventDefault()}
+      >
+        <div className="nds-stack" data-spacing="sm">
+          <Label htmlFor="filtro-categoria">Categoria</Label>
+          <Input id="filtro-categoria" defaultValue="Eletrônicos" />
+        </div>
+        <div className="nds-stack" data-spacing="sm">
+          <Label htmlFor="filtro-minimo">Preço mínimo</Label>
+          <Input id="filtro-minimo" type="number" defaultValue="100" />
+        </div>
+        <div className="nds-stack" data-spacing="sm">
+          <Label htmlFor="filtro-maximo">Preço máximo</Label>
+          <Input id="filtro-maximo" type="number" defaultValue="2000" />
+        </div>
+      </form>
+    </SheetBody>
+${rodape()}`,
+      'Abrir filtros',
+    ),
+  );
+}
+
+/**
+ * Navegação secundária. A `<nav>` nomeada mora dentro do corpo, e o painel não
+ * tem rodapé: aqui não há decisão a confirmar — escolher um destino já fecha o
+ * painel por si.
+ */
+export function sheetNavegacaoSource(): string {
+  return jsxSnippet(
+    `${importarSheet(
+      'Sheet',
+      'SheetBody',
+      'SheetContent',
+      'SheetDescription',
+      'SheetHeader',
+      'SheetTitle',
+      'SheetTrigger',
+    )}
+${IMPORT_BOTAO}
+
+const SECOES = ["Dashboard", "Projetos", "Equipe", "Configurações"];`,
+    `<Sheet>
+  <SheetTrigger render={<Button variant="outline" />}>
+    Abrir menu
+  </SheetTrigger>
+  <SheetContent side="left">
+    <SheetHeader>
+      <SheetTitle>Navegação</SheetTitle>
+      <SheetDescription>
+        Acesse as seções principais do aplicativo.
+      </SheetDescription>
+    </SheetHeader>
+    <SheetBody>
+      <nav className="nds-stack" data-spacing="xs" aria-label="Seções">
+        {SECOES.map((secao) => (
+          <Button key={secao} variant="ghost">
+            {secao}
+          </Button>
+        ))}
+      </nav>
+    </SheetBody>
+  </SheetContent>
+</Sheet>`,
+  );
+}
+
+/**
+ * Painel inferior de ações. A ação destrutiva fica por último e é a única com a
+ * variante que a anuncia — três botões destrutivos lado a lado tirariam o peso
+ * justamente do que precisa de peso.
+ */
+export function sheetPainelInferiorSource(): string {
+  return jsxSnippet(
+    `${importarSheet(...PECAS_BASE, 'SheetBody')}
+${IMPORT_BOTAO}`,
+    sheet(
+      '',
+      ' side="bottom"',
+      `${cabecalho('Ações rápidas', 'Escolha uma das ações disponíveis para este item.')}
+    <SheetBody>
+      <div className="nds-cluster" data-spacing="sm">
+        <Button variant="outline">Compartilhar</Button>
+        <Button variant="outline">Duplicar</Button>
+        <Button variant="destructive">Excluir</Button>
+      </div>
+    </SheetBody>
+    <SheetFooter>
+      <SheetClose render={<Button variant="outline" />}>Fechar</SheetClose>
+    </SheetFooter>`,
+      'Abrir ações',
+    ),
+  );
+}
+
+/**
+ * Corpo mais alto que o painel. O `SheetBody` traz `tabIndex={0}` de fábrica —
+ * região que rola precisa ser alcançável por teclado (WCAG 2.1.1) —, e é o
+ * `flex` da folha que segura o rodapé no lugar enquanto o texto corre.
+ */
+export function sheetConteudoLongoSource(): string {
+  return jsxSnippet(
+    `${importarSheet(...PECAS_BASE, 'SheetBody')}
+${IMPORT_BOTAO}
+
+const PARAGRAFOS = Array.from({ length: 24 }, (_, i) => i + 1);`,
+    sheet(
+      '',
+      '',
+      `${cabecalho('Termos de uso', 'Leia atentamente antes de aceitar.')}
+    <SheetBody className="nds-stack" data-spacing="sm">
+      {PARAGRAFOS.map((n) => (
+        <p key={n} className="nds-text-body">
+          Parágrafo {n}: texto longo o bastante para o corpo precisar rolar
+          dentro do painel, sem empurrar o rodapé para fora da tela.
+        </p>
+      ))}
+    </SheetBody>
+${rodape('Aceitar termos')}`,
+      'Ler termos',
+    ),
+  );
+}

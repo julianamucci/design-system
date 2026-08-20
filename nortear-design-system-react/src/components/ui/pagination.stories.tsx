@@ -10,6 +10,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "./pagination";
+import { paginationSource } from "./pagination.source";
 import { PaginationDocs } from "@/components/docs/PaginationDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -28,7 +29,12 @@ const meta = {
   tags: ["autodocs", "navigation"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(PaginationDocs) },
+    docs: {
+      page: withAutoDocsTab(PaginationDocs),
+      // O painel imprimia o invólucro declarado neste arquivo — um componente
+      // que não existe fora dele. A transform devolve o que o invólucro faz.
+      source: { transform: paginationSource },
+    },
   },
   argTypes: {
     totalPages: {

@@ -5,13 +5,17 @@ import { RadioGroup, RadioGroupItem } from "./radio-group";
 import { Label } from "./label";
 import { RadioGroupDocs } from "@/components/docs/RadioGroupDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { radioGroupSource } from "./radio-group.source";
 
 const meta = {
   title: "UI/RadioGroup",
   component: RadioGroup,
   tags: ["autodocs", "form"],
   parameters: {
-    docs: { page: withAutoDocsTab(RadioGroupDocs) },
+    docs: {
+      page: withAutoDocsTab(RadioGroupDocs),
+      source: { transform: radioGroupSource },
+    },
   },
   argTypes: {
     disabled: {

@@ -5,6 +5,13 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "./resizable";
+import {
+  resizableAninhadoSource,
+  resizableComPegadorSource,
+  resizableHorizontalSource,
+  resizableSource,
+  resizableVerticalSource,
+} from "./resizable.source";
 
 const meta = {
   title: "UI/Resizable/Variants",
@@ -15,6 +22,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: resizableSource },
       description: {
         component:
           "Variantes de layout do Resizable: Horizontal (split lateral), Vertical (split empilhado), Nested (PanelGroup dentro de Panel) e WithHandle (pegador visual centralizado).",
@@ -53,7 +61,14 @@ function paineisDiretos(grupo: Element): HTMLElement[] {
 }
 
 export const Horizontal: Story = {
-  parameters: { covers: ["visual.item1"] },
+  parameters: {
+    covers: ["visual.item1"],
+    docs: {
+      // Os limites 30/20/50 e a AUSÊNCIA de pegador estão no `render`; este
+      // arquivo não tem control nenhum.
+      source: { transform: resizableHorizontalSource },
+    },
+  },
   render: () => (
     <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
@@ -91,7 +106,13 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ["visual.item2"] },
+  parameters: {
+    covers: ["visual.item2"],
+    docs: {
+      // A direção é o assunto e vem afirmada no `render`.
+      source: { transform: resizableVerticalSource },
+    },
+  },
   render: () => (
     <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="vertical">
@@ -128,7 +149,13 @@ export const Vertical: Story = {
 };
 
 export const Nested: Story = {
-  parameters: { covers: ["visual.item3"] },
+  parameters: {
+    covers: ["visual.item3"],
+    docs: {
+      // Sub-composição: grupo dentro de painel, que o meta não imprimiria.
+      source: { transform: resizableAninhadoSource },
+    },
+  },
   render: () => (
     <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">
@@ -185,7 +212,13 @@ export const Nested: Story = {
 };
 
 export const WithHandle: Story = {
-  parameters: { covers: ["visual.item4"] },
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      // Divisão 50/50 com pegador, afirmada no `render`.
+      source: { transform: resizableComPegadorSource },
+    },
+  },
   render: () => (
     <div className="nds-rounded-lg nds-border-default nds-overflow-hidden" style={boxStyle}>
       <ResizablePanelGroup direction="horizontal">

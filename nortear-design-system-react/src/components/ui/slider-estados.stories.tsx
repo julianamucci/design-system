@@ -3,6 +3,11 @@ import { useState } from "react";
 import { userEvent, within, expect } from "storybook/test";
 import { Slider } from "./slider";
 import {
+  sliderDesabilitadoSource,
+  sliderNaoControladoSource,
+  sliderSource,
+} from "./slider.source";
+import {
   alcaDesabilitada,
   alcasDoSlider,
   anelDeFocoAssentado,
@@ -18,6 +23,7 @@ const meta = {
   parameters: {
     layout: "padded",
     docs: {
+      source: { transform: sliderSource },
       description: {
         component:
           "Estados do Slider: default, focus (via teclado), active (durante arrasto) e disabled.",
@@ -32,7 +38,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
-  parameters: { covers: ["accessibility.item2"] },
+  parameters: {
+    covers: ["accessibility.item2"],
+    docs: {
+      // A AUSÊNCIA de estado é o assunto: `defaultValue` é o caso em que o valor
+      // não precisa sair do componente, e o meta imprime o par controlado.
+      source: { transform: sliderNaoControladoSource },
+    },
+  },
   render: () => (
     <div className="nds-w-sm">
       <Slider defaultValue={[50]} min={0} max={100} aria-label="Volume" />
@@ -55,7 +68,14 @@ export const Default: Story = {
 };
 
 export const Focus: Story = {
-  parameters: { covers: ["accessibility.item3"] },
+  parameters: {
+    covers: ["accessibility.item3"],
+    docs: {
+      // Mesmo controle não controlado da story anterior: o anel de foco é da
+      // folha, e nenhuma prop o liga — não há o que acrescentar ao snippet.
+      source: { transform: sliderNaoControladoSource },
+    },
+  },
   render: () => (
     <div className="nds-w-sm">
       <Slider defaultValue={[50]} min={0} max={100} aria-label="Volume" />
@@ -125,7 +145,14 @@ export const KeyboardInteraction: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ["visual.item4"] },
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      // Estado que só existe no `render`: `disabled` desliga todas as alças de
+      // uma vez, e não há control que o descreva neste arquivo.
+      source: { transform: sliderDesabilitadoSource },
+    },
+  },
   render: () => (
     <div className="nds-w-sm">
       <Slider

@@ -12,6 +12,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./sheet";
+import {
+  sheetLadoEsquerdoSource,
+  sheetLadoInferiorSource,
+  sheetLadoSuperiorSource,
+  sheetSource,
+} from "./sheet.source";
 import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
 import sheetTranslations from "@shared/content/sheet/translations.json";
@@ -31,6 +37,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sheetSource },
       description: {
         component:
           "Direção do painel pela prop side do conteúdo. Right é o padrão de desktop; " +
@@ -108,6 +115,8 @@ export const Left: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
+      // A direção é afirmada no `render` e não há control neste arquivo.
+      source: { transform: sheetLadoEsquerdoSource },
       description: {
         story:
           "Desliza da esquerda. Mesma medida do right, do outro lado — é a direção da " +
@@ -128,6 +137,8 @@ export const Left: Story = {
 export const Top: Story = {
   parameters: {
     docs: {
+      // A direção é afirmada no `render` e não há control neste arquivo.
+      source: { transform: sheetLadoSuperiorSource },
       description: {
         story:
           "Desliza do topo e ocupa a largura inteira, com altura definida pelo conteúdo. " +
@@ -149,6 +160,8 @@ export const Bottom: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // A direção é afirmada no `render` e não há control neste arquivo.
+      source: { transform: sheetLadoInferiorSource },
       description: {
         story:
           "Desliza de baixo — o mesmo desenho do Drawer, sem o gesto de arrastar. " +

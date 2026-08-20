@@ -15,6 +15,12 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "./menubar"
+import {
+  menubarAbertoSource,
+  menubarItemBloqueadoSource,
+  menubarItemMarcadoSource,
+  menubarSource,
+} from "./menubar.source"
 
 // As stories que TERMINAM com um menu aberto desligam duas regras do axe, e as
 // duas descrevem defeitos da lib, não do design system — ver os comentários em
@@ -46,6 +52,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: menubarSource },
       description: {
         component:
           "Os quatro estados que o conteúdo compartilhado descreve: barra fechada, menu aberto, item bloqueado e item marcado.",
@@ -116,6 +123,9 @@ export const Open: Story = {
   parameters: {
     a11y: AXE_COM_MENU_ABERTO,
     covers: ["accessibility.item4"],
+    // `defaultOpen` mora no MENU, não na barra — é o assunto desta story, e
+    // nenhum arg do meta o descreve.
+    docs: { source: { transform: menubarAbertoSource } },
   },
   render: () => (
     <div style={wrapperStyle}>
@@ -170,6 +180,9 @@ export const Open: Story = {
 export const ItemDisabled: Story = {
   parameters: {
     a11y: AXE_COM_MENU_ABERTO,
+    // O `disabled` de um item só existe nesta composição; o snippet do meta
+    // mostraria três itens todos disponíveis.
+    docs: { source: { transform: menubarItemBloqueadoSource } },
   },
   render: () => (
       <div style={wrapperStyle}>
@@ -226,6 +239,9 @@ export const CheckboxChecked: Story = {
   parameters: {
     a11y: AXE_COM_MENU_ABERTO,
     covers: ["functional.item7"],
+    // Item de marcação dentro de grupo rotulado: três peças que o snippet do
+    // meta não tem, e o par marcado/desmarcado é justamente o que se ensina.
+    docs: { source: { transform: menubarItemMarcadoSource } },
     // Medido na tipagem do primitivo: o item de marcação do menu é de DOIS
     // estados. `checked` é booleano, o payload da mudança é booleano, o estado
     // exposto ao indicador é booleano e os únicos atributos de dado são

@@ -3,10 +3,18 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { Info } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
+import {
+  alertInsercaoDinamicaSource,
+  alertSemAnuncioSource,
+  alertSemIconeSource,
+  alertSemTituloSource,
+  alertSource,
+} from "./alert.source";
 
 const meta = {
   parameters: {
     design: figmaDesign("alert"),
+    docs: { source: { transform: alertSource } },
   },
   title: "UI/Alert/States",
   tags: ["feedback"],
@@ -41,6 +49,8 @@ export const Complete: Story = {
 };
 
 export const WithoutTitle: Story = {
+  // A ausência do título é o assunto; o snippet do meta o traria de volta.
+  parameters: { docs: { source: { transform: alertSemTituloSource } } },
   render: () => (
     <Alert>
       <Info aria-hidden="true" className="nds-icon" />
@@ -65,6 +75,8 @@ export const WithoutTitle: Story = {
 };
 
 export const WithoutIcon: Story = {
+  // Idem para o ícone: o layout de coluna única vem da ausência, não de prop.
+  parameters: { docs: { source: { transform: alertSemIconeSource } } },
   render: () => (
     <Alert>
       <AlertTitle>Atenção</AlertTitle>
@@ -90,7 +102,11 @@ export const WithoutIcon: Story = {
 
 export const WithoutAnnouncement: Story = {
   parameters: {
-    covers: ["functional.item4", "visual.item3"], controls: { disable: true } },
+    covers: ["functional.item4", "visual.item3"],
+    controls: { disable: true },
+    // O par note × padrão é o assunto: um alerta só não mostra a diferença.
+    docs: { source: { transform: alertSemAnuncioSource } },
+  },
   render: () => (
     <div className="nds-stack" data-spacing="sm">
       {/* Estático: não deve virar live region. */}
@@ -128,7 +144,11 @@ export const WithoutAnnouncement: Story = {
 };
 
 export const DynamicInsertion: Story = {
-  parameters: { covers: ["functional.item6"] },
+  parameters: {
+    covers: ["functional.item6"],
+    // Quem muda o comportamento é o contêiner aria-live, fora do alcance dos args.
+    docs: { source: { transform: alertInsercaoDinamicaSource } },
+  },
   render: () => (
     <div aria-live="polite">
       <Alert>

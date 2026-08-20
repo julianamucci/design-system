@@ -10,6 +10,15 @@ import {
   TEXTOS,
   torradasNaTela,
 } from "./sonner.fixtures";
+import {
+  sonnerEmpilhadoSource,
+  sonnerPausaSource,
+  sonnerPrazoSource,
+  sonnerRodapeCentradoSource,
+  sonnerSemRegiaoSource,
+  sonnerSource,
+  sonnerTemaEscuroSource,
+} from "./sonner.source";
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -38,6 +47,7 @@ const meta = {
       },
     },
     docs: {
+      source: { transform: sonnerSource },
       description: {
         component: "Prazo, pausa na leitura, empilhamento, posição e o caso sem Toaster montado.",
       },
@@ -59,6 +69,8 @@ export const AutoDismiss: Story = {
   parameters: {
     covers: ["functional.item2"],
     docs: {
+      // O prazo é o assunto e vive na região; o meta imprime a fila padrão.
+      source: { transform: sonnerPrazoSource },
       description: {
         story:
           "A notificação sai sozinha quando o prazo vence. É o que a separa do Alert: aqui a mensagem é passageira, e nada fica esperando uma decisão.",
@@ -93,6 +105,8 @@ export const AutoDismiss: Story = {
 export const PauseOnHover: Story = {
   parameters: {
     docs: {
+      // A pausa é comportamento, sem prop: o snippet é a região com prazo.
+      source: { transform: sonnerPausaSource },
       description: {
         story:
           "O relógio congela enquanto o ponteiro estiver dentro da região. Sem isso, o tempo de leitura seria o mesmo para todo mundo — e quem lê devagar perderia a mensagem (WCAG 2.2.1).",
@@ -130,6 +144,8 @@ export const PauseOnHover: Story = {
 export const Stacked: Story = {
   parameters: {
     docs: {
+      // `expand` e as três chamadas só existem no render e na play.
+      source: { transform: sonnerEmpilhadoSource },
       description: {
         story:
           "Três notificações na fila, com a pilha aberta. Mensagem ainda não lida não pode ser encoberta pela seguinte — por isso `expand` existe.",
@@ -179,6 +195,8 @@ export const PositionBottomCenter: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // O canto é afirmado no render, sem control que o descreva.
+      source: { transform: sonnerRodapeCentradoSource },
       description: {
         story:
           "A pilha no rodapé, centrada. A posição é escolha do projeto e vale para a aplicação inteira — misturar cantos faria a pessoa procurar a notificação a cada vez.",
@@ -220,6 +238,8 @@ export const WithoutToaster: Story = {
   parameters: {
     covers: ["functional.item7"],
     docs: {
+      // A AUSÊNCIA da região é o assunto: o snippet não a monta.
+      source: { transform: sonnerSemRegiaoSource },
       description: {
         story:
           "Sem Toaster montado no root, `toast()` não desenha nada — e também não quebra. A fila existe independentemente de quem a desenha, então uma tela que ainda não montou a região não derruba o fluxo que a chamou.",
@@ -257,6 +277,8 @@ export const DarkTheme: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
+      // O tema fixo e a pilha aberta são afirmados no render.
+      source: { transform: sonnerTemaEscuroSource },
       description: {
         story:
           "Tema escuro, com os cinco tipos na tela. O tema da região acompanha a classe do documento.",

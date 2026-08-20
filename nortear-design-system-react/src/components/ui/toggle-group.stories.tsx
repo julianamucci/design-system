@@ -4,13 +4,14 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 import { ToggleGroupDocs } from "@/components/docs/ToggleGroupDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { toggleGroupSource } from "./toggle-group.source";
 
 const meta = {
   title: "UI/ToggleGroup",
   component: ToggleGroup,
   tags: ["autodocs", "form"],
   parameters: {
-    docs: { page: withAutoDocsTab(ToggleGroupDocs) },
+    docs: { page: withAutoDocsTab(ToggleGroupDocs), source: { transform: toggleGroupSource } },
   },
   argTypes: {
     type: {

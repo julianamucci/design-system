@@ -4,6 +4,7 @@ import { within, expect } from "storybook/test";
 import { Badge } from "./badge";
 import { BadgeDocs } from "@/components/docs/BadgeDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
+import { badgeSource } from "./badge.source";
 
 const meta = {
   title: "UI/Badge",
@@ -11,7 +12,7 @@ const meta = {
   tags: ["autodocs", "feedback"],
   parameters: {
     design: figmaDesign("badge"),
-    docs: { page: withAutoDocsTab(BadgeDocs) },
+    docs: { page: withAutoDocsTab(BadgeDocs), source: { transform: badgeSource } },
   },
   argTypes: {
     variant: {

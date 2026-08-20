@@ -3,6 +3,15 @@ import { expect } from "storybook/test";
 import { toast } from "sonner";
 import { Toaster } from "./sonner";
 import { esperarTorrada, limparTorradas, PERSISTENTE, TEXTOS, tipoDaTorrada } from "./sonner.fixtures";
+import {
+  sonnerAvisoSource,
+  sonnerCarregandoSource,
+  sonnerErroSource,
+  sonnerInfoSource,
+  sonnerNeutroSource,
+  sonnerSource,
+  sonnerSucessoSource,
+} from "./sonner.source";
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -31,6 +40,7 @@ const meta = {
       },
     },
     docs: {
+      source: { transform: sonnerSource },
       description: {
         component:
           "Tipos semânticos da notificação. O ícone e a cor acompanham o tipo; o texto descreve o estado por extenso, para não depender só da cor.",
@@ -53,6 +63,9 @@ export const Default: Story = {
   parameters: {
     covers: ["accessibility.item4", "visual.item1"],
     docs: {
+      // O tipo é decidido na `play`, não nos args: sem override o painel
+      // imprimiria a notificação de êxito do meta.
+      source: { transform: sonnerNeutroSource },
       description: {
         story:
           "Notificação neutra, sem tipo semântico: nenhum ícone e as cores base do tema. Serve a confirmações que não são nem êxito nem falha.",
@@ -89,6 +102,8 @@ export const Success: Story = {
   parameters: {
     covers: ["functional.item1", "visual.item1"],
     docs: {
+      // O tipo e o texto nascem na `play`; o snippet do meta não os descreve.
+      source: { transform: sonnerSucessoSource },
       description: {
         story: "Confirmação de ação concluída. Ícone e cor verdes vêm de `richColors`.",
       },
@@ -136,6 +151,8 @@ export const Error: Story = {
   parameters: {
     covers: ["visual.item1"],
     docs: {
+      // O tipo e o texto nascem na `play`; o snippet do meta não os descreve.
+      source: { transform: sonnerErroSource },
       description: {
         story:
           "Falha de uma operação. O texto diz a causa e o caminho de saída — nunca culpa quem estava usando.",
@@ -160,6 +177,8 @@ export const Warning: Story = {
   parameters: {
     covers: ["visual.item1"],
     docs: {
+      // O tipo e o texto nascem na `play`; o snippet do meta não os descreve.
+      source: { transform: sonnerAvisoSource },
       description: {
         story:
           "Aviso não crítico. Se a mensagem precisa continuar visível enquanto a pessoa age, o componente certo é o Alert.",
@@ -183,6 +202,8 @@ export const Info: Story = {
   parameters: {
     covers: ["visual.item1"],
     docs: {
+      // O tipo e o texto nascem na `play`; o snippet do meta não os descreve.
+      source: { transform: sonnerInfoSource },
       description: {
         story: "Informação contextual ou novidade — nada aconteceu de errado nem de certo.",
       },
@@ -204,6 +225,9 @@ export const Info: Story = {
 export const Loading: Story = {
   parameters: {
     docs: {
+      // A ausência de prazo é o assunto, e ela mora na chamada — nenhum arg
+      // deste arquivo a descreve.
+      source: { transform: sonnerCarregandoSource },
       description: {
         story:
           "Operação em curso. Não tem prazo: quem a encerra é o fim da operação — na prática, `toast.promise`.",

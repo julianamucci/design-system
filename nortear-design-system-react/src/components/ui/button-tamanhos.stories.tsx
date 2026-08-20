@@ -3,6 +3,17 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { Plus } from "lucide-react";
 import { Button } from "./button";
+import {
+  buttonIconeLgSource,
+  buttonIconeSmSource,
+  buttonIconeSource,
+  buttonIconeXsSource,
+  buttonSource,
+  buttonTamanhoLgSource,
+  buttonTamanhoPadraoSource,
+  buttonTamanhoSmSource,
+  buttonTamanhoXsSource,
+} from "./button.source";
 
 const meta = {
   title: "UI/Button/Sizes",
@@ -12,6 +23,9 @@ const meta = {
     design: figmaDesign("button"),
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      source: { transform: buttonSource },
+    },
   },
 } satisfies Meta<typeof Button>;
 
@@ -23,6 +37,9 @@ export const Default: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // O arquivo desliga os controls: sem args, o `meta` não sabe o tamanho —
+      // cada story diz o seu, ou as oito imprimiriam o mesmo snippet.
+      source: { transform: buttonTamanhoPadraoSource },
       description: {
         story: "Tamanho padrão. Use em formulários e diálogos como default.",
       },
@@ -41,6 +58,8 @@ export const ExtraSmall: Story = {
   render: () => <Button size="xs">Mínimo</Button>,
   parameters: {
     docs: {
+      // Controls desligados: o tamanho é o assunto e precisa vir da story.
+      source: { transform: buttonTamanhoXsSource },
       description: {
         story: "Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.",
       },
@@ -56,6 +75,8 @@ export const Small: Story = {
   render: () => <Button size="sm">Pequeno</Button>,
   parameters: {
     docs: {
+      // Controls desligados: o tamanho é o assunto e precisa vir da story.
+      source: { transform: buttonTamanhoSmSource },
       description: {
         story: "Tamanho pequeno. Use em toolbars e áreas densas.",
       },
@@ -71,6 +92,8 @@ export const Large: Story = {
   render: () => <Button size="lg">Grande</Button>,
   parameters: {
     docs: {
+      // Controls desligados: o tamanho é o assunto e precisa vir da story.
+      source: { transform: buttonTamanhoLgSource },
       description: {
         story: "Tamanho grande. Use em CTAs de destaque e hero sections.",
       },
@@ -97,6 +120,9 @@ export const Icon: Story = {
   parameters: {
     covers: ["functional.item6", "accessibility.item4"],
     docs: {
+      // Sem texto dentro, quem nomeia é o aria-label e o ícone sai da árvore de
+      // acessibilidade: composição que o snippet de rótulo do `meta` esconderia.
+      source: { transform: buttonIconeSource },
       description: {
         story: "Botão ícone padrão. Sempre forneça aria-label descritivo.",
       },
@@ -124,6 +150,8 @@ export const IconExtraSmall: Story = {
   ),
   parameters: {
     docs: {
+      // Mesma composição de ícone sem rótulo, no tamanho que esta story afirma.
+      source: { transform: buttonIconeXsSource },
       description: {
         story: "Botão ícone mínimo. Use em linhas de tabela e listas densas.",
       },
@@ -151,6 +179,8 @@ export const IconSmall: Story = {
   ),
   parameters: {
     docs: {
+      // Mesma composição de ícone sem rótulo, no tamanho que esta story afirma.
+      source: { transform: buttonIconeSmSource },
       description: {
         story: "Botão ícone pequeno. Use em toolbars compactas.",
       },
@@ -178,6 +208,8 @@ export const IconLarge: Story = {
   ),
   parameters: {
     docs: {
+      // Mesma composição de ícone sem rótulo, no tamanho que esta story afirma.
+      source: { transform: buttonIconeLgSource },
       description: {
         story: "Botão ícone grande. Use como FAB ou CTAs visuais.",
       },

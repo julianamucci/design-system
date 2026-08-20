@@ -8,6 +8,14 @@ import {
   InputOTPSlot,
 } from "./input-otp";
 import { campo } from "./input-otp.fixtures";
+import {
+  inputOtpCompletoSource,
+  inputOtpComErroSource,
+  inputOtpDesabilitadoSource,
+  inputOtpPreenchendoSource,
+  inputOtpSource,
+  inputOtpVazioSource,
+} from "./input-otp.source";
 
 const meta = {
   title: "UI/InputOTP/States",
@@ -18,6 +26,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cada estado deste arquivo nasce de um valor inicial ou de um atributo
+      // que os controls desligados não descrevem: todos declaram a sua.
+      source: { transform: inputOtpSource },
       description: {
         component:
           "Estados canônicos do InputOTP: Vazio, Preenchendo (3 de 6), Completo (6 de 6), Desabilitado e Erro.",
@@ -41,7 +52,11 @@ const textos = (canvasElement: HTMLElement): string[] =>
 export const Empty: Story = {
   parameters: {
     covers: ["visual.item1"],
-    docs: { description: { story: "Nenhuma caixa preenchida, com o campo já em foco." } },
+    docs: {
+      // O `autoFocus` é o que a story documenta, e ele não vem de arg aqui.
+      source: { transform: inputOtpVazioSource },
+      description: { story: "Nenhuma caixa preenchida, com o campo já em foco." },
+    },
   },
   render: () => (
     <div className="nds-stack" data-spacing="sm">
@@ -77,7 +92,12 @@ export const Empty: Story = {
 export const Filling: Story = {
   parameters: {
     covers: ["visual.item2", "accessibility.item6"],
-    docs: { description: { story: "Parcialmente preenchido — 3 de 6 caixas." } },
+    docs: {
+      // O valor inicial parcial é o assunto: é ele que mostra a distribuição da
+      // esquerda para a direita, e o snippet vazio a esconderia.
+      source: { transform: inputOtpPreenchendoSource },
+      description: { story: "Parcialmente preenchido — 3 de 6 caixas." },
+    },
   },
   render: () => {
     const Demo = () => {
@@ -125,7 +145,12 @@ export const Filling: Story = {
 export const Complete: Story = {
   parameters: {
     covers: ["visual.item3"],
-    docs: { description: { story: "Todas as 6 caixas preenchidas." } },
+    docs: {
+      // As seis posições ocupadas é justamente quando `onComplete` dispara — o
+      // snippet mostra o valor cheio junto com o callback.
+      source: { transform: inputOtpCompletoSource },
+      description: { story: "Todas as 6 caixas preenchidas." },
+    },
   },
   render: () => {
     const Demo = () => {
@@ -164,7 +189,11 @@ export const Complete: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ["functional.item6"],
-    docs: { description: { story: "Bloqueado: não aceita foco nem digitação, e o campo esmaece." } },
+    docs: {
+      // O `disabled` é o assunto e não vem de arg: os controls estão desligados.
+      source: { transform: inputOtpDesabilitadoSource },
+      description: { story: "Bloqueado: não aceita foco nem digitação, e o campo esmaece." },
+    },
   },
   render: () => (
     <div className="nds-stack" data-spacing="sm">
@@ -210,6 +239,9 @@ export const Error: Story = {
   parameters: {
     covers: ["functional.item7", "accessibility.item5", "visual.item4"],
     docs: {
+      // A story monta DOIS campos só para comparar bordas; o exemplo que se
+      // copia é um só, com as marcas de ARIA e a mensagem ligada.
+      source: { transform: inputOtpComErroSource },
       description: {
         story:
           "Erro: aria-invalid marca o campo, a borda troca para a cor de erro e a mensagem vem conectada por aria-describedby.",

@@ -11,6 +11,11 @@ import {
 import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
+import {
+  popoverConteudoLivreSource,
+  popoverFormularioSource,
+  popoverSource,
+} from "./popover.source";
 
 const meta = {
   title: "UI/Popover/Variants",
@@ -20,6 +25,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: popoverSource },
       description: {
         component:
           "Variantes do Popover: Default (conteúdo livre), ComTitulo (PopoverHeader + Title + Description) e Form (Inputs e botões inline).",
@@ -41,6 +47,9 @@ export const Default: Story = {
   parameters: {
     covers: ["visual.item1"],
     docs: {
+      // A AUSÊNCIA de título é o assunto: sem `PopoverTitle` o painel herda o
+      // nome acessível do gatilho, e o meta imprime o cabeçalho completo.
+      source: { transform: popoverConteudoLivreSource },
       description: {
         story:
           "Conteúdo livre dentro do PopoverContent. Sem título, o painel herda o nome acessível do gatilho.",
@@ -158,6 +167,9 @@ export const Form: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // Sub-composição com formulário dentro do painel — campos, rótulos e
+      // submit que o snippet do meta não carrega.
+      source: { transform: popoverFormularioSource },
       description: {
         story:
           "Formulário inline — Inputs e botão dentro do PopoverContent. Caso de uso: edição rápida sem trocar de tela.",

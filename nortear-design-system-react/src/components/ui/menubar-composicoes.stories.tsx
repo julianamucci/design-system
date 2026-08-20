@@ -22,6 +22,13 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from "./menubar"
+import {
+  menubarCaixasDeSelecaoSource,
+  menubarEditorSource,
+  menubarEscolhaUnicaSource,
+  menubarSource,
+  menubarSubmenuSource,
+} from "./menubar.source"
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -61,6 +68,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para WithShortcuts, cuja composição é exatamente a do meta:
+      // item com atalho visível à direita do rótulo.
+      source: { transform: menubarSource },
       description: {
         component:
           "As composições canônicas de um menu da barra: atalhos visíveis, submenu, alternadores independentes, escolha única e a barra completa de um editor.",
@@ -143,6 +153,9 @@ export const WithSubmenu: Story = {
   parameters: {
     a11y: AXE_COM_MENU_ABERTO,
     covers: ["functional.item5", "visual.item4"],
+    // O submenu é outro par de gatilho e painel DENTRO do painel: uma
+    // sub-composição que o snippet do meta esconderia por inteiro.
+    docs: { source: { transform: menubarSubmenuSource } },
   },
   render: () => (
     <div style={wrapperStyle}>
@@ -217,7 +230,13 @@ export const WithSubmenu: Story = {
 // ─── WithCheckboxItems ────────────────────────────────────────────────────────
 
 export const WithCheckboxItems: Story = {
-  parameters: { a11y: AXE_COM_MENU_ABERTO, covers: ["functional.item7", "visual.item3"] },
+  parameters: {
+    a11y: AXE_COM_MENU_ABERTO,
+    covers: ["functional.item7", "visual.item3"],
+    // Alternadores dentro de grupo rotulado — peças que o meta não usa, e a
+    // independência entre as linhas só aparece com três delas juntas.
+    docs: { source: { transform: menubarCaixasDeSelecaoSource } },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <Menubar modal={false}>
@@ -293,7 +312,13 @@ export const WithCheckboxItems: Story = {
 // ─── WithRadioGroup ───────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  parameters: { a11y: AXE_COM_MENU_ABERTO, covers: ["accessibility.item5"] },
+  parameters: {
+    a11y: AXE_COM_MENU_ABERTO,
+    covers: ["accessibility.item5"],
+    // Escolha única: quem guarda o valor é o GRUPO, e é essa relação — não o
+    // item isolado — que o snippet precisa mostrar.
+    docs: { source: { transform: menubarEscolhaUnicaSource } },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <Menubar modal={false}>
@@ -361,6 +386,12 @@ export const WithRadioGroup: Story = {
 // ─── EditorCompleto ───────────────────────────────────────────────────────────
 
 export const EditorCompleto: Story = {
+  parameters: {
+    // A barra inteira é o assunto: grupo, separador, ação destrutiva, atalhos e
+    // alternadores CONVIVENDO. Cada peça sozinha esconde o custo de arrumar a
+    // hierarquia dentro de um painel só.
+    docs: { source: { transform: menubarEditorSource } },
+  },
   render: () => (
     <div style={{ ...wrapperStyle, minHeight: 200 }}>
       <Menubar>

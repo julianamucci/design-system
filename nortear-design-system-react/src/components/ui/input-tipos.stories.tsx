@@ -2,6 +2,14 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import { alturaResultante, campoDe } from "@shared/testing/input-probe";
 import { Input } from "./input";
+import {
+  inputArquivoSource,
+  inputBuscaSource,
+  inputEmailSource,
+  inputNumeroSource,
+  inputSenhaSource,
+  inputSource,
+} from "./input.source";
 
 const meta = {
   title: "UI/Input/Types",
@@ -12,6 +20,10 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O arquivo desliga os controls, então a transform do `meta` não tem args
+      // de onde ler o tipo: ela cai no campo de texto, que é a story Text. Cada
+      // outro tipo diz o seu.
+      source: { transform: inputSource },
       description: {
         component:
           "O Input não tem variantes via prop. A aparência muda conforme o `type` HTML — text, email, password, number e file são os mais comuns.",
@@ -42,6 +54,9 @@ export const Text: Story = {
 };
 
 export const Email: Story = {
+  // O tipo é o assunto da story e não vem de arg nenhum: os controls estão
+  // desligados neste arquivo.
+  parameters: { docs: { source: { transform: inputEmailSource } } },
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="tipo-email" className="nds-text-body nds-font-medium">
@@ -60,6 +75,8 @@ export const Email: Story = {
 };
 
 export const Password: Story = {
+  // Idem: o `type="password"` é o que a story documenta.
+  parameters: { docs: { source: { transform: inputSenhaSource } } },
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="tipo-password" className="nds-text-body nds-font-medium">
@@ -78,6 +95,8 @@ export const Password: Story = {
 };
 
 export const Number: Story = {
+  // Idem: o `type="number"` troca o papel implícito para spinbutton.
+  parameters: { docs: { source: { transform: inputNumeroSource } } },
   render: () => (
     <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
       <label htmlFor="tipo-number" className="nds-text-body nds-font-medium">
@@ -100,7 +119,12 @@ export const Number: Story = {
  * seção Variantes documenta e que o contrato pede em `visual.item3`.
  */
 export const Search: Story = {
-  parameters: { covers: ["visual.item3"] },
+  parameters: {
+    covers: ["visual.item3"],
+    // `type="search"` é o que troca o papel para searchbox — nada no visual
+    // denuncia se o snippet ensinar `text`.
+    docs: { source: { transform: inputBuscaSource } },
+  },
   render: () => (
     <div className="nds-stack nds-w-xs" data-spacing="xs">
       <label htmlFor="tipo-search" className="nds-text-body nds-font-medium">
@@ -130,7 +154,12 @@ export const Search: Story = {
 };
 
 export const File: Story = {
-  parameters: { covers: ["functional.item5"] },
+  parameters: {
+    covers: ["functional.item5"],
+    // A ausência do `placeholder` é deliberada e faz parte da lição: quem
+    // desenha o miolo do campo de arquivo é o navegador.
+    docs: { source: { transform: inputArquivoSource } },
+  },
   render: () => (
     <div className="nds-stack nds-w-xs" data-spacing="xs">
       <label htmlFor="tipo-file" className="nds-text-body nds-font-medium">

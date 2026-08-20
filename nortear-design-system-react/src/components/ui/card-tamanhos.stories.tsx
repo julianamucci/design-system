@@ -7,6 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./card";
+import { cardCompactoSource, cardSemRodapeSource, cardSource } from "./card.source";
 
 const meta = {
   title: "UI/Card/Sizes",
@@ -17,6 +18,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: cardSource },
       description: {
         component:
           "Tamanhos do Card controlados pela prop `size`. A propagação ocorre via `data-size` no root; as partes internas reagem ao atributo e ajustam padding e tamanho do título.",
@@ -48,7 +50,12 @@ function medirNoOutroTamanho(
 
 export const Default: Story = {
   name: 'size="default"',
-  parameters: { covers: ["visual.item2"] },
+  parameters: {
+    covers: ["visual.item2"],
+    // O padrão não se escreve — o que se compara com o `sm` é esta mesma
+    // composição de duas peças, sem o rodapé que o snippet do meta traz.
+    docs: { source: { transform: cardSemRodapeSource } },
+  },
   render: () => (
     <Card className="nds-w-full nds-max-w-sm">
       <CardHeader>
@@ -80,7 +87,12 @@ export const Default: Story = {
 
 export const Small: Story = {
   name: 'size="sm"',
-  parameters: { covers: ["functional.item2"] },
+  parameters: {
+    covers: ["functional.item2"],
+    // O arquivo desliga os controls, então o meta não tem de onde ler o
+    // tamanho — e `size="sm"` é o assunto da story.
+    docs: { source: { transform: cardCompactoSource } },
+  },
   render: () => (
     <Card size="sm" className="nds-w-full nds-max-w-xs">
       <CardHeader>

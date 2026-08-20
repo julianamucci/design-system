@@ -18,6 +18,7 @@ import {
   ContextMenuSeparator,
   ContextMenuShortcut,
 } from "@/components/ui/context-menu";
+import { contextMenuSource } from "./context-menu.source";
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -47,6 +48,9 @@ const meta: Meta<ContextMenuArgs> = {
           "Menu contextual ativado pelo botão direito. Suporta itens, marcação, escolha única, submenus e atalhos.",
       },
       page: withAutoDocsTab(ContextMenuDocs),
+      // O `render` imprime a área com o gancho das plays e o espião do
+      // callback; a transform devolve a composição que se copia.
+      source: { transform: contextMenuSource },
     },
   },
   argTypes: {

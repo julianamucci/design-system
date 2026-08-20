@@ -13,6 +13,14 @@ import {
 import { Button } from "./button";
 import { Badge } from "./badge";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import {
+  cardComAcaoSource,
+  cardComImagemSource,
+  cardCompactoSource,
+  cardPerfilSource,
+  cardProdutoSource,
+  cardSource,
+} from "./card.source";
 
 /**
  * Imagem em data URI, igual nas cinco stacks: a asserção de radius e de padding
@@ -32,6 +40,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: cardSource },
       description: {
         component:
           "Composições canônicas do Card: com footer, com action, com imagem e exemplos reais (ProductCard, MetricCard, ProfileCard) para catálogo, dashboard e listas de perfil.",
@@ -100,6 +109,9 @@ export const WithAction: Story = {
   parameters: {
     covers: ["functional.item3", "accessibility.item5", "visual.item3"],
     docs: {
+      // A ação vive DENTRO do header e o snippet do meta não a tem: é a peça
+      // que faz o header virar grade de duas colunas.
+      source: { transform: cardComAcaoSource },
       description: {
         story:
           "Com CardAction o header vira grid de duas colunas e a ação encosta à direita. A ordem do DOM continua título → descrição → ação, então o leitor de tela lê na ordem lógica.",
@@ -155,6 +167,9 @@ export const WithImage: Story = {
   parameters: {
     covers: ["functional.item4", "visual.item5"],
     docs: {
+      // A imagem como PRIMEIRO filho direto é o que dispara o sangramento por
+      // CSS; a posição dela é a lição, e não cabe em nenhum arg.
+      source: { transform: cardComImagemSource },
       description: {
         story:
           "Imagem como primeiro filho: o Card arredonda o topo dela e remove o próprio padding superior por CSS — não é preciso passar classe na `<img>`.",
@@ -206,6 +221,9 @@ export const WithImage: Story = {
 export const ProductCard: Story = {
   parameters: {
     docs: {
+      // Unidade completa: imagem, status na ação e rodapé de uma vez só — o
+      // meta mostra a forma canônica, esta story mostra o caso montado.
+      source: { transform: cardProdutoSource },
       description: {
         story:
           'Exemplo real de catálogo: imagem + título + descrição + Badge de status na ação do header + rodapé com ações contextuais ("Editar produto Cadeira Gamer Pro", "Excluir produto Cadeira Gamer Pro").',
@@ -272,6 +290,9 @@ export const ProductCard: Story = {
 export const MetricCard: Story = {
   parameters: {
     docs: {
+      // Densidade de painel: `size="sm"` e nenhum rodapé — o valor mora no
+      // corpo, e o meta traria uma composição com ações que não existe aqui.
+      source: { transform: cardCompactoSource },
       description: {
         story:
           'KPI em dashboard: `size="sm"` para densidade, título curto, valor em destaque no corpo e a tendência em texto de apoio com ícone decorativo.',
@@ -323,6 +344,9 @@ export const MetricCard: Story = {
 export const ProfileCard: Story = {
   parameters: {
     docs: {
+      // Avatar dentro do header e a ausência de corpo e rodapé: é a unidade
+      // semântica mínima, e o `alt` vazio da foto faz parte da lição.
+      source: { transform: cardPerfilSource },
       description: {
         story:
           "Card de perfil: avatar à esquerda do header, título (nome) e descrição (papel e localização). Sem footer — é a unidade semântica mínima.",

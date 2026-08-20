@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect } from "storybook/test";
 import { Slider } from "./slider";
+import { sliderFaixaSource, sliderSource, sliderVerticalSource } from "./slider.source";
 import { alcasDoSlider, trilhoDoSlider, valorDaAlca } from "@shared/testing/slider-probe";
 
 const meta = {
@@ -11,6 +12,7 @@ const meta = {
   parameters: {
     layout: "padded",
     docs: {
+      source: { transform: sliderSource },
       description: {
         component:
           "Variantes do Slider: single (um thumb), range (dois thumbs para min/max) e vertical (orientação vertical com altura definida no container).",
@@ -56,7 +58,14 @@ export const Single: Story = {
 };
 
 export const Range: Story = {
-  parameters: { covers: ["visual.item2"] },
+  parameters: {
+    covers: ["visual.item2"],
+    docs: {
+      // A segunda alça não vem de prop: vem do `value` chegar com DOIS números,
+      // e o meta imprime o array de um elemento do Playground.
+      source: { transform: sliderFaixaSource },
+    },
+  },
   render: function RangeRender() {
     const [value, setValue] = useState<number[]>([20, 80]);
     return (
@@ -100,7 +109,14 @@ export const Range: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ["visual.item3"] },
+  parameters: {
+    covers: ["visual.item3"],
+    docs: {
+      // A orientação troca a COMPOSIÇÃO: em pé não há largura para o par
+      // rótulo/valor lado a lado, e o valor sobe para cima da barra.
+      source: { transform: sliderVerticalSource },
+    },
+  },
   render: function VerticalRender() {
     const [value, setValue] = useState<number[]>([50]);
     return (

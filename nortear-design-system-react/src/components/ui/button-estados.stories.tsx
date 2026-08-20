@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { Loader2 } from "lucide-react";
 import { Button } from "./button";
+import {
+  buttonCarregandoSource,
+  buttonDesabilitadoSource,
+  buttonInvalidoSource,
+  buttonSource,
+} from "./button.source";
 import { falhasDeAnel } from "@shared/testing/button-probe";
 
 const meta = {
@@ -11,6 +17,9 @@ const meta = {
   component: Button,
   parameters: {
     design: figmaDesign("button"),
+    docs: {
+      source: { transform: buttonSource },
+    },
   },
   args: {
     onClick: fn(),
@@ -29,6 +38,9 @@ export const Disabled: Story = {
   parameters: {
     covers: ["functional.item2", "visual.item4"],
     docs: {
+      // O `disabled` do render não passa pelos args do `meta`, e é ele — o
+      // atributo nativo — que tira o botão da tabulação e mata o clique.
+      source: { transform: buttonDesabilitadoSource },
       description: {
         story: "Estado desabilitado. Previne cliques e reduz opacidade para 50%.",
       },
@@ -67,6 +79,9 @@ export const Loading: Story = {
   ),
   parameters: {
     docs: {
+      // Carregar é disabled + aria-busy + rótulo em progresso, com o ícone
+      // girando por `.nds-spin`: nada disso cabe nos args do `meta`.
+      source: { transform: buttonCarregandoSource },
       description: {
         story: "Estado de carregamento. Use disabled + aria-busy e substitua o label por estado progressivo.",
       },
@@ -91,6 +106,8 @@ export const FocusVisible: Story = {
   parameters: {
     covers: ["accessibility.item3"],
     docs: {
+      // Sem override: o anel é regra de CSS em :focus-visible, não marcação —
+      // um snippet próprio teria de inventar atributo que ninguém escreve.
       description: {
         story: "Estado de foco por teclado. Navegue com Tab: o anel só aparece em :focus-visible, não no clique.",
       },
@@ -131,6 +148,9 @@ export const Invalid: Story = {
   ),
   parameters: {
     docs: {
+      // `aria-invalid` é o que o leitor de tela anuncia, e ele não é arg do
+      // `meta`; a borda de erro é consequência dele no CSS, não uma variante.
+      source: { transform: buttonInvalidoSource },
       description: {
         story: "Estado inválido. Use aria-invalid=\"true\" para sinalizar problemas de validação.",
       },

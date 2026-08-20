@@ -9,6 +9,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
+import {
+  dropdownMenuItemDestrutivoSource,
+  dropdownMenuItemPadraoSource,
+  dropdownMenuSource,
+} from "./dropdown-menu.source";
 import { Button } from "./button";
 
 const meta = {
@@ -21,6 +26,7 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           "As duas ênfases de item. `default` é o item neutro; `destructive` marca a ação " +
@@ -41,7 +47,12 @@ const wrapperStyle: React.CSSProperties = {
 };
 
 export const Default: Story = {
-  parameters: { covers: ["accessibility.item4", "accessibility.item6"] },
+  parameters: {
+    covers: ["accessibility.item4", "accessibility.item6"],
+    // A forma mínima do menu — lista de ações sem grupo nem rótulo. O snippet
+    // do meta traz o grupo, e esconderia justamente o que esta story mostra.
+    docs: { source: { transform: dropdownMenuItemPadraoSource } },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
@@ -90,7 +101,12 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ["visual.item5"] },
+  parameters: {
+    covers: ["visual.item5"],
+    // A variante é do ITEM, não da raiz: nenhum control do arquivo a descreve,
+    // e o par neutro/destrutivo lado a lado é o que a story afirma.
+    docs: { source: { transform: dropdownMenuItemDestrutivoSource } },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>

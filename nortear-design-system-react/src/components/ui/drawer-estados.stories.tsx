@@ -12,6 +12,12 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "./drawer";
+import {
+  drawerAbertoSource,
+  drawerControladoSource,
+  drawerNaoDispensavelSource,
+  drawerSource,
+} from "./drawer.source";
 import { Button } from "./button";
 
 const meta = {
@@ -23,6 +29,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Fechado é o padrão do componente: esta transform já é o snippet da
+      // story Closed.
+      source: { transform: drawerSource },
       description: {
         component:
           "Estados canônicos do Drawer: fechado (padrão), aberto, controlado por estado externo e não dispensável.",
@@ -92,6 +101,9 @@ export const Open: Story = {
   parameters: {
     covers: ["accessibility.item2"],
     docs: {
+      // Aqui abrir na montagem É o assunto — nas demais stories o `defaultOpen`
+      // só serve à captura visual, e por isso não entra naqueles snippets.
+      source: { transform: drawerAbertoSource },
       description: {
         story:
           "Aberto ao montar, sem estado externo. Overlay ativo, foco dentro do painel e contrato de markup completo.",
@@ -145,6 +157,9 @@ export const Controlled: Story = {
   parameters: {
     covers: ["functional.item6"],
     docs: {
+      // Composição diferente: estado de fora, sem `DrawerTrigger` — quem abre é
+      // o botão da página.
+      source: { transform: drawerControladoSource },
       description: {
         story:
           "Estado do lado de fora: o componente não decide nada sozinho — abre quando o valor ligado diz que sim e avisa a cada mudança para que o dono do estado acompanhe.",
@@ -214,6 +229,9 @@ export const Controlled: Story = {
 export const NotDismissible: Story = {
   parameters: {
     docs: {
+      // `dismissible={false}` só faz sentido junto da saída explícita do rodapé
+      // — o snippet precisa mostrar os dois na mesma composição.
+      source: { transform: drawerNaoDispensavelSource },
       description: {
         story:
           "Sem dispensa por gesto: Escape e clique no overlay não fecham. A saída existe e é explícita — o botão do rodapé, alcançável por teclado.",

@@ -8,6 +8,13 @@ import {
   haloDeFoco,
 } from "@shared/testing/input-probe";
 import { Input } from "./input";
+import {
+  inputComErroSource,
+  inputDesabilitadoSource,
+  inputEmailSource,
+  inputPaletaEscuraSource,
+  inputSource,
+} from "./input.source";
 
 const meta = {
   title: "UI/Input/States",
@@ -18,6 +25,10 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Padrão e Foco têm a MESMA marcação — o foco é estado de runtime, não
+      // atributo —, então as duas ficam com a transform do `meta`. As que
+      // mudam a marcação declaram a sua.
+      source: { transform: inputSource },
       description: {
         component:
           "Estados do Input: padrão, foco, desabilitado e erro (aria-invalid). Cada asserção afere a cor computada, nunca o nome da classe.",
@@ -136,6 +147,9 @@ export const Focus: Story = {
 };
 
 export const WithPlaceholder: Story = {
+  // O formato de exemplo é o assunto, e ele muda com o tipo: num email o
+  // placeholder mostra o desenho do endereço, não um nome próprio.
+  parameters: { docs: { source: { transform: inputEmailSource } } },
   render: () => (
     <div className="nds-stack nds-w-xs" data-spacing="xs">
       <label htmlFor="estado-placeholder" className="nds-text-body nds-font-medium">
@@ -162,7 +176,11 @@ export const WithPlaceholder: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ["functional.item3"] },
+  parameters: {
+    covers: ["functional.item3"],
+    // O `disabled` é o assunto e não vem de arg: os controls estão desligados.
+    docs: { source: { transform: inputDesabilitadoSource } },
+  },
   render: () => (
     <div className="nds-stack nds-w-xs" data-spacing="xs">
       <label htmlFor="estado-disabled" className="nds-text-body nds-font-medium">
@@ -198,6 +216,10 @@ export const Disabled: Story = {
 export const Error: Story = {
   parameters: {
     covers: ["functional.item4", "accessibility.item3", "accessibility.item4"],
+    // O erro traz uma peça a mais que o campo padrão esconderia: a mensagem
+    // ligada por `aria-describedby`, sem a qual o vermelho só existe para quem
+    // enxerga.
+    docs: { source: { transform: inputComErroSource } },
   },
   render: () => (
     <div className="nds-stack nds-w-xs" data-spacing="xs">
@@ -261,6 +283,9 @@ export const DarkPalette: Story = {
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: "dark" },
+    // O assunto é a COMPARAÇÃO entre os três estados sob a paleta escura; um
+    // campo sozinho não mostraria que eles seguem distinguíveis.
+    docs: { source: { transform: inputPaletaEscuraSource } },
   },
   render: () => (
     <div className="nds-stack nds-w-xs" data-spacing="md">

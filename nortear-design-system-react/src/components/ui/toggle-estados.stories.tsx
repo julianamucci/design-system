@@ -7,6 +7,13 @@ import {
   medirAnelDeFoco,
 } from "@shared/testing/toggle-probe";
 import { Toggle } from "./toggle";
+import {
+  toggleAtivoSource,
+  toggleDesabilitadoSource,
+  toggleFocoSource,
+  toggleInvalidoSource,
+  toggleSource,
+} from "./toggle.source";
 
 const meta = {
   title: "UI/Toggle/States",
@@ -18,6 +25,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleSource },
       description: {
         component:
           "Estados visuais e interativos do Toggle: off, on, foco por teclado, desabilitado e inválido.",
@@ -53,7 +61,11 @@ export const Off: Story = {
 };
 
 export const On: Story = {
-  parameters: { covers: ["visual.item2", "accessibility.item2"] },
+  parameters: {
+    covers: ["visual.item2", "accessibility.item2"],
+    // Override: o par ligado/desligado — o meta imprime um toggle só.
+    docs: { source: { transform: toggleAtivoSource } },
+  },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Toggle aria-label="Negrito inativo">
@@ -95,7 +107,11 @@ export const On: Story = {
 };
 
 export const FocusVisible: Story = {
-  parameters: { covers: ["accessibility.item3"] },
+  parameters: {
+    covers: ["accessibility.item3"],
+    // Override: as duas variantes juntas, que é o que a story compara.
+    docs: { source: { transform: toggleFocoSource } },
+  },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Toggle aria-label="Negrito">
@@ -131,7 +147,11 @@ export const FocusVisible: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ["visual.item4", "functional.item4"] },
+  parameters: {
+    covers: ["visual.item4", "functional.item4"],
+    // Override: `disabled` afirmado no `render`, e nas duas posições.
+    docs: { source: { transform: toggleDesabilitadoSource } },
+  },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Toggle disabled aria-label="Negrito">
@@ -173,6 +193,10 @@ export const Disabled: Story = {
 };
 
 export const Invalid: Story = {
+  parameters: {
+    // Override: o par aria-invalid + mensagem ligada, que o meta não traz.
+    docs: { source: { transform: toggleInvalidoSource } },
+  },
   render: () => (
     <div className="nds-stack" data-spacing="xs">
       <Toggle aria-invalid="true" aria-describedby="toggle-invalid-msg" aria-label="Negrito">

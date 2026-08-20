@@ -21,6 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./dialog";
+import { dialogSource } from "./dialog.source";
 import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
 import dialogTranslations from "@shared/content/dialog/translations.json";
@@ -32,7 +33,12 @@ const meta = {
   component: Dialog,
   tags: ["autodocs", "overlay"],
   parameters: {
-    docs: { page: withAutoDocsTab(DialogDocs) },
+    docs: {
+      page: withAutoDocsTab(DialogDocs),
+      // O `render` chama `useTranslation` para os rótulos: o painel imprimia
+      // `t("demonstration.labels.title")` como se fosse a API do componente.
+      source: { transform: dialogSource },
+    },
   },
   argTypes: {
     defaultOpen: {

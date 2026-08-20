@@ -10,6 +10,14 @@ import {
   AvatarGroupCount,
   AvatarBadge,
 } from "./avatar";
+import {
+  avatarComAtrasoSource,
+  avatarComIconeSource,
+  avatarComStatusSource,
+  avatarEmGrupoSource,
+  avatarSoIniciaisSource,
+  avatarSource,
+} from "./avatar.source";
 
 const IMG_MARIA =
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces";
@@ -28,6 +36,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: avatarSource },
       description: {
         component:
           "Composicoes canônicas do Avatar: com imagem, com iniciais, com ícone, agrupamento e com indicador de status.",
@@ -42,6 +51,9 @@ type Story = StoryObj<typeof meta>;
 export const WithImage: Story = {
   parameters: {
     covers: ["functional.item1", "accessibility.item1"],
+    // O `delayMs` no fallback é o que evita o pisca-pisca das iniciais aqui, e
+    // o `meta` não o traz.
+    docs: { source: { transform: avatarComAtrasoSource } },
   },
   render: () => (
     <Avatar>
@@ -84,6 +96,8 @@ export const WithImage: Story = {
 export const WithInitials: Story = {
   parameters: {
     covers: ["functional.item3", "accessibility.item3", "visual.item2"],
+    // Sem AvatarImage: a ausência é o assunto, e o `meta` sempre monta a foto.
+    docs: { source: { transform: avatarSoIniciaisSource } },
   },
   render: () => (
     <Avatar>
@@ -100,7 +114,11 @@ export const WithInitials: Story = {
 };
 
 export const WithIcon: Story = {
-  parameters: { covers: ["visual.item2"] },
+  // Ícone no lugar das iniciais: o rótulo no fallback é quem nomeia o avatar.
+  parameters: {
+    covers: ["visual.item2"],
+    docs: { source: { transform: avatarComIconeSource } },
+  },
   render: () => (
     <Avatar>
       <AvatarFallback role="img" aria-label="Usuário genérico">
@@ -120,7 +138,12 @@ export const WithIcon: Story = {
 };
 
 export const Group: Story = {
-  parameters: { covers: ["functional.item5", "visual.item4"] },
+  // AvatarGroup e AvatarGroupCount são peças a mais; um avatar sozinho não
+  // mostraria a sobreposição, que é o que a story promete.
+  parameters: {
+    covers: ["functional.item5", "visual.item4"],
+    docs: { source: { transform: avatarEmGrupoSource } },
+  },
   render: () => (
     <AvatarGroup role="group" aria-label="Participantes">
       <Avatar>
@@ -163,7 +186,12 @@ export const Group: Story = {
 };
 
 export const WithStatus: Story = {
-  parameters: { covers: ["visual.item4"] },
+  // O AvatarBadge é irmão da imagem dentro do próprio Avatar — sub-composição
+  // que o snippet do `meta` esconderia.
+  parameters: {
+    covers: ["visual.item4"],
+    docs: { source: { transform: avatarComStatusSource } },
+  },
   render: () => (
     <Avatar>
       <AvatarImage src={IMG_MARIA} alt="Foto de perfil de Maria Rodrigues" />

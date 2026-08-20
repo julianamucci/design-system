@@ -8,6 +8,11 @@ import {
   medirContrasteDoCalendario,
 } from "@shared/testing/calendar-probe";
 import { Calendar } from "./calendar";
+import {
+  calendarIntervaloSource,
+  calendarMultiplasSource,
+  calendarSource,
+} from "./calendar.source";
 
 const meta = {
   title: "UI/Calendar/Modes",
@@ -18,6 +23,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: calendarSource },
       description: {
         component:
           "Modos de seleção: uma data, várias datas avulsas ou um intervalo contínuo. O que a seleção guarda muda com o modo.",
@@ -63,6 +69,8 @@ export const Single: Story = {
   parameters: {
     covers: ["functional.item2", "accessibility.item1", "visual.item2"],
     docs: {
+      // Sem override: o padrão do `meta` já é o calendário de uma data só, e um
+      // snippet próprio seria a mesma string escrita duas vezes.
       description: {
         story: "Uma data por vez: escolher outra troca a marcação em vez de somar.",
       },
@@ -113,6 +121,9 @@ export const Multiple: Story = {
   },
   parameters: {
     docs: {
+      // O estado vira lista: é a troca de FORMATO do valor selecionado que o
+      // snippet de data única esconderia.
+      source: { transform: calendarMultiplasSource },
       description: {
         story: "Várias datas avulsas: cada escolha soma à lista, e escolher de novo remove.",
       },
@@ -165,6 +176,9 @@ export const Range: Story = {
   parameters: {
     covers: ["functional.item3"],
     docs: {
+      // O estado guarda início e fim, não uma lista de dias — outro formato, e
+      // com dois meses na tela porque o intervalo costuma cruzar a virada.
+      source: { transform: calendarIntervaloSource },
       description: {
         story: "Intervalo contínuo: os extremos e todos os dias entre eles ficam marcados.",
       },

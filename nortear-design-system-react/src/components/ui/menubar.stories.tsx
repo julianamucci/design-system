@@ -13,6 +13,7 @@ import {
   MenubarShortcut,
   MenubarTrigger,
 } from "./menubar"
+import { menubarSource } from "./menubar.source"
 import { MenubarDocs } from "@/components/docs/MenubarDocs"
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab"
 
@@ -62,7 +63,12 @@ const meta = {
   parameters: {
     layout: "centered",
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
-    docs: { page: withAutoDocsTab(MenubarDocs) },
+    docs: {
+      page: withAutoDocsTab(MenubarDocs),
+      // O painel imprimia a árvore do `render`, que monta a barra a partir de
+      // uma lista declarada só neste arquivo. A transform devolve o uso real.
+      source: { transform: menubarSource },
+    },
   },
   argTypes: {
     modal: {

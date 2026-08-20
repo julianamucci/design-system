@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { Check, Bell } from "lucide-react";
 import { Badge } from "./badge";
+import {
+  badgeComIconeSource,
+  badgeComoBotaoSource,
+  badgeComoLinkSource,
+  badgeContadorSource,
+  badgeSource,
+} from "./badge.source";
 
 const meta = {
   title: "UI/Badge/Compositions",
@@ -14,6 +21,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: badgeSource },
       description: {
         component:
           "Configuracoes contextuais do Badge: combinado com ícone, como contador numérico, envolvido em <a> para navegação ou em <button> para trigger clicável.",
@@ -26,7 +34,11 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const WithIcon: Story = {
-  parameters: { covers: ["functional.item5", "accessibility.item2", "visual.item3"] },
+  parameters: {
+    covers: ["functional.item5", "accessibility.item2", "visual.item3"],
+    // A composição é o assunto: o ícone dentro do badge não cabe nos args.
+    docs: { source: { transform: badgeComIconeSource } },
+  },
   render: () => (
     <Badge>
       <Check aria-hidden="true" data-icon="inline-start" />
@@ -57,7 +69,11 @@ export const WithIcon: Story = {
 };
 
 export const CountBadge: Story = {
-  parameters: { covers: ["visual.item3"] },
+  parameters: {
+    covers: ["visual.item3"],
+    // O que se ensina aqui é o contêiner que dá significado ao número.
+    docs: { source: { transform: badgeContadorSource } },
+  },
   render: () => (
     <span
       className="nds-cluster"
@@ -88,7 +104,11 @@ export const CountBadge: Story = {
 };
 
 export const AsLink: Story = {
-  parameters: { covers: ["functional.item6", "accessibility.item4", "visual.item4"] },
+  parameters: {
+    covers: ["functional.item6", "accessibility.item4", "visual.item4"],
+    // O badge NÃO vira o elemento clicável — quem envolve é que recebe o foco.
+    docs: { source: { transform: badgeComoLinkSource } },
+  },
   render: () => (
     <a
       href="#design"
@@ -112,7 +132,11 @@ export const AsLink: Story = {
 };
 
 export const AsButton: Story = {
-  parameters: { covers: ["functional.item6", "accessibility.item4", "visual.item4"] },
+  parameters: {
+    covers: ["functional.item6", "accessibility.item4", "visual.item4"],
+    // Mesma regra do link, com o botão no lugar da âncora.
+    docs: { source: { transform: badgeComoBotaoSource } },
+  },
   render: () => (
     <button
       type="button"

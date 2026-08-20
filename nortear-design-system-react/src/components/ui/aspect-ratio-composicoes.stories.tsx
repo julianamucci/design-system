@@ -3,6 +3,14 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { AspectRatio } from "./aspect-ratio";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
+import {
+  aspectRatioComIframeSource,
+  aspectRatioComVideoSource,
+  aspectRatioEmGradeSource,
+  aspectRatioImagemDecorativaSource,
+  aspectRatioPlaceholderSource,
+  aspectRatioSource,
+} from "./aspect-ratio.source";
 
 const LANDSCAPE_SRC =
   "https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=1200&q=80";
@@ -21,6 +29,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: aspectRatioSource },
       description: {
         component:
           "Composicoes canônicas: imagem com ImageWithFallback, iframe de mapa, vídeo com legendas e grid de cards mantendo a mesma proporção.",
@@ -72,6 +81,8 @@ export const WithIframe: Story = {
   parameters: {
     covers: ["accessibility.item3"],
     docs: {
+      // Filho de outro tipo: o iframe traz `title`, que a imagem não tem.
+      source: { transform: aspectRatioComIframeSource },
       description: {
         story:
           "Iframe de mapa com `title` obrigatório descrevendo o conteúdo embedado (requisito WCAG 2.2 — 4.1.2).",
@@ -104,6 +115,9 @@ export const WithVideo: Story = {
   parameters: {
     covers: ["accessibility.item4", "accessibility.item5"],
     docs: {
+      // A faixa de legendas e o `controls` são o contrato aqui, e nenhum dos
+      // dois aparece num exemplo de imagem.
+      source: { transform: aspectRatioComVideoSource },
       description: {
         story:
           "Elemento `<video>` nativo. Para produção, inclua `<track kind=\"captions\">` com legendas sincronizadas (WCAG 2.2 AA — 1.2.2).",
@@ -154,6 +168,8 @@ export const EmptyPlaceholder: Story = {
   parameters: {
     covers: ["functional.item5"],
     docs: {
+      // A AUSÊNCIA da mídia é o assunto: o espaço reservado é o que se ensina.
+      source: { transform: aspectRatioPlaceholderSource },
       description: {
         story:
           "Sem mídia dentro, o container já reserva o espaço na proporção — é o que evita o salto de layout quando o conteúdo termina de carregar.",
@@ -189,6 +205,9 @@ export const InGrid: Story = {
   parameters: {
     covers: ["functional.item4"],
     docs: {
+      // A grade em volta é o que resolve o problema; um AspectRatio sozinho
+      // não mostraria alturas iguais em larguras diferentes.
+      source: { transform: aspectRatioEmGradeSource },
       description: {
         story:
           "Grid de cards em que todos os itens preservam a mesma proporção — resolve o problema de alturas desiguais em listagens com imagens de dimensões variáveis.",
@@ -238,6 +257,8 @@ export const WithDecorativeImage: Story = {
   parameters: {
     covers: ["accessibility.item2"],
     docs: {
+      // O `alt` vazio é o assunto — e um alt descritivo é o padrão do `meta`.
+      source: { transform: aspectRatioImagemDecorativaSource },
       description: {
         story:
           'Imagem decorativa usa `alt=""` (string vazia) para ser ignorada por leitores de tela — nunca omita o atributo.',

@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { transbordo } from "@shared/testing/scroll-area-probe";
 import { ScrollArea, ScrollBar } from "./scroll-area";
+import {
+  scrollAreaHorizontalSource,
+  scrollAreaSource,
+  scrollAreaTabelaSource,
+} from "./scroll-area.source";
 
 const meta = {
   title: "UI/ScrollArea/Variants",
@@ -12,6 +17,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: scrollAreaSource },
       description: {
         component:
           "Variantes de direção do ScrollArea: Vertical (lista longa em altura fixa), Horizontal (cards inline com ScrollBar horizontal) e Both (scroll bidirecional com 2 ScrollBars + Corner).",
@@ -84,6 +90,9 @@ export const Horizontal: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
+      // A direção é o assunto e nenhum control a descreve: a faixa horizontal
+      // pede ScrollBar explícita e itens que não encolhem.
+      source: { transform: scrollAreaHorizontalSource },
       description: {
         story:
           "Scroll horizontal apenas — faixa de cards com largura de conteúdo, itens que não encolhem e ScrollBar horizontal explícita.",
@@ -130,6 +139,9 @@ export const Both: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // Composição de dois eixos: tabela ampla e a segunda ScrollBar, que o
+      // snippet do meta (lista vertical) esconderia.
+      source: { transform: scrollAreaTabelaSource },
       description: {
         story:
           "Scroll bidirecional — tabela ampla dentro de container fixo; renderiza a barra vertical (automática), a horizontal explícita e o canto.",

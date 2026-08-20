@@ -7,6 +7,7 @@ import {
   textosDoDesenho,
 } from '@shared/testing/chart-probe';
 import { desenhoPronto } from './chart.fixtures';
+import { chartComTituloSource, chartMultiSerieSource, chartSource } from './chart.source';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const serieUnica = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
@@ -19,7 +20,12 @@ const seriesMulti = [
 const meta: Meta = {
   title: 'UI/Chart/Settings',
   tags: ['display'],
-  parameters: { layout: 'padded', controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    layout: 'padded',
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: chartSource } },
+  },
 };
 export default meta;
 type Story = StoryObj;
@@ -76,7 +82,12 @@ export const WithTooltip: Story = {
 
 export const WithCaption: Story = {
   parameters: {
-    docs: { description: { story: 'A legenda aparece sozinha a partir da segunda série.' } },
+    docs: {
+      // O assunto é o que MAIS DE UMA série produz sozinha; com a série única
+      // do meta a legenda nem existiria.
+      source: { transform: chartMultiSerieSource },
+      description: { story: 'A legenda aparece sozinha a partir da segunda série.' },
+    },
   },
   render: () => (
     <ChartContainer
@@ -104,7 +115,12 @@ export const WithCaption: Story = {
 
 export const MultipleSeries: Story = {
   parameters: {
-    docs: { description: { story: 'Multi-série com título dentro do desenho — o caso típico de painel analítico.' } },
+    docs: {
+      // Título dentro da configuração E rótulo autoral: dois textos com papéis
+      // diferentes, e o snippet precisa mostrar os dois convivendo.
+      source: { transform: chartComTituloSource },
+      description: { story: 'Multi-série com título dentro do desenho — o caso típico de painel analítico.' },
+    },
   },
   render: () => (
     <ChartContainer

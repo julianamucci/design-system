@@ -9,6 +9,12 @@ import {
   InputOTPSlot,
 } from "./input-otp";
 import { campo } from "./input-otp.fixtures";
+import {
+  inputOtpAlfanumericoSource,
+  inputOtpComSeparadorSource,
+  inputOtpQuatroDigitosSource,
+  inputOtpSource,
+} from "./input-otp.source";
 
 const meta = {
   title: "UI/InputOTP/Variants",
@@ -19,6 +25,10 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O arquivo desliga os controls, então a transform do `meta` cai no
+      // código de seis dígitos — que é a story SixDigits. As outras três
+      // trocam comprimento, agrupamento ou conjunto aceito e dizem a sua.
+      source: { transform: inputOtpSource },
       description: {
         component:
           "Variantes do InputOTP: SixDigits (padrão SMS), FourDigits (PIN), WithSeparator (3+3) e Alphanumeric (código de autenticação).",
@@ -94,6 +104,9 @@ export const SixDigits: Story = {
 export const FourDigits: Story = {
   parameters: {
     docs: {
+      // `maxLength` e a contagem de caixas andam juntos, e o par vale 4 aqui —
+      // o snippet de seis deixaria duas caixas mortas na tela de quem copiar.
+      source: { transform: inputOtpQuatroDigitosSource },
       description: {
         story: "PIN de 4 dígitos — PINs locais (carteira, conta, app travado).",
       },
@@ -147,6 +160,9 @@ export const WithSeparator: Story = {
   parameters: {
     covers: ["accessibility.item4", "visual.item5"],
     docs: {
+      // Dois grupos e um separador: uma sub-composição que o snippet de grupo
+      // único esconde, com os índices explícitos em vez do laço.
+      source: { transform: inputOtpComSeparadorSource },
       description: {
         story:
           "Dois grupos de 3 caixas com um separador entre eles — formato xxx-xxx de códigos de recuperação.",
@@ -222,6 +238,9 @@ export const WithSeparator: Story = {
 export const Alphanumeric: Story = {
   parameters: {
     docs: {
+      // O padrão do componente só aceita dígito: aceitar letra exige trocar o
+      // `pattern`, e o snippet padrão não mostraria a troca nem o import.
+      source: { transform: inputOtpAlfanumericoSource },
       description: {
         story:
           "Conjunto alfanumérico e teclado de texto — códigos de autenticação que misturam letras e dígitos.",

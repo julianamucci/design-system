@@ -7,6 +7,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./accordion";
+import { accordionSource } from "./accordion.source";
 import { AccordionDocs } from "@/components/docs/AccordionDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -16,7 +17,12 @@ const meta = {
   tags: ["autodocs", "disclosure"],
   parameters: {
     design: figmaDesign("accordion"),
-    docs: { page: withAutoDocsTab(AccordionDocs) },
+    docs: {
+      page: withAutoDocsTab(AccordionDocs),
+      // O `render` monta o andaime do Playground; o painel precisa imprimir o
+      // uso real, e a transform do `meta` cascateia para toda story do arquivo.
+      source: { transform: accordionSource },
+    },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. Declarar a API
   // real evita que a tabela saia com uma linha só. Props sem control são

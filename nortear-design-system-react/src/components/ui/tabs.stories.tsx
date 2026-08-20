@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
+import { tabsSource } from "./tabs.source";
 import { TabsDocs } from "@/components/docs/TabsDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -9,7 +10,10 @@ const meta = {
   component: Tabs,
   tags: ["autodocs", "navigation"],
   parameters: {
-    docs: { page: withAutoDocsTab(TabsDocs) },
+    docs: {
+      page: withAutoDocsTab(TabsDocs),
+      source: { transform: tabsSource },
+    },
   },
   argTypes: {
     orientation: {

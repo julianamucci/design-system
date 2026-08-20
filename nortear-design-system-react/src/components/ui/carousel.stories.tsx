@@ -8,6 +8,7 @@ import {
   CarouselNext,
 } from "./carousel";
 import { SlideCard } from "./carousel.fixtures";
+import { carouselSource } from "./carousel.source";
 import { CarouselDocs } from "@/components/docs/CarouselDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -17,7 +18,10 @@ const meta = {
   tags: ["autodocs", "display"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(CarouselDocs) },
+    docs: {
+      page: withAutoDocsTab(CarouselDocs),
+      source: { transform: carouselSource },
+    },
   },
   argTypes: {
     orientation: {

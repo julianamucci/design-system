@@ -23,6 +23,17 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "./sidebar";
+import {
+  sidebarLadoDireitoSource,
+  sidebarLadoEsquerdoSource,
+  sidebarRecolhivelIconeSource,
+  sidebarRecolhivelOffcanvasSource,
+  sidebarSemRecolhimentoSource,
+  sidebarSource,
+  sidebarVarianteEncaixadaSource,
+  sidebarVarianteFlutuanteSource,
+  sidebarVariantePadraoSource,
+} from "./sidebar.source";
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -110,6 +121,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sidebarSource },
       description: {
         component:
           "Variantes visuais da Sidebar: **sidebar** (padrão colada à borda), **floating** (com sombra e border-radius) e **inset** (conteúdo com container arredondado adjacente). Além das variantes de `side`: **left** e **right**.",
@@ -133,6 +145,13 @@ type Story = StoryObj<typeof meta>;
 const raizDe = (el: HTMLElement) => el.querySelector<HTMLElement>("[data-slot='sidebar']")!;
 
 export const VariantSidebar: Story = {
+  parameters: {
+    docs: {
+      // A variante é afirmada no `render`, sem control. Numa galeria, o
+      // snippet que não a nomeia deixa quem lê sem saber qual das três vê.
+      source: { transform: sidebarVariantePadraoSource },
+    },
+  },
   render: () => <SidebarPreview variant="sidebar" />,
   play: async ({ canvasElement, step }) => {
     await step("A variante padrão não arredonda o painel interno", async () => {
@@ -145,7 +164,14 @@ export const VariantSidebar: Story = {
 };
 
 export const VariantFloating: Story = {
-  parameters: { covers: ["functional.item8", "visual.item3"] },
+  parameters: {
+    covers: ["functional.item8", "visual.item3"],
+    docs: {
+      // `variant="floating"` vive só no `render` — nenhum control o descreve
+      // neste arquivo.
+      source: { transform: sidebarVarianteFlutuanteSource },
+    },
+  },
   render: () => <SidebarPreview variant="floating" />,
   play: async ({ canvasElement, step }) => {
     await step("floating ganha borda, cantos e sombra no painel interno", async () => {
@@ -165,7 +191,14 @@ export const VariantFloating: Story = {
 };
 
 export const VariantInset: Story = {
-  parameters: { covers: ["visual.item4"] },
+  parameters: {
+    covers: ["visual.item4"],
+    docs: {
+      // A variante encaixada depende de a barra e o conteúdo serem IRMÃOS, e
+      // o snippet precisa mostrar os dois lado a lado.
+      source: { transform: sidebarVarianteEncaixadaSource },
+    },
+  },
   render: () => <SidebarPreview variant="inset" />,
   play: async ({ canvasElement, step }) => {
     await step("inset marca a variante que arredonda o conteúdo adjacente", async () => {
@@ -180,6 +213,12 @@ export const VariantInset: Story = {
 };
 
 export const CollapsibleOffcanvas: Story = {
+  parameters: {
+    docs: {
+      // O modo de recolhimento é o assunto da story e é afirmado no `render`.
+      source: { transform: sidebarRecolhivelOffcanvasSource },
+    },
+  },
   render: () => <SidebarPreview variant="sidebar" collapsible="offcanvas" />,
   play: async ({ canvasElement, step }) => {
     await step("Aberta, o modo de recolhimento ainda não marca nada", async () => {
@@ -193,6 +232,13 @@ export const CollapsibleOffcanvas: Story = {
 };
 
 export const CollapsibleIcon: Story = {
+  parameters: {
+    docs: {
+      // `collapsible="icon"` vem do `render`, e é ele que torna o `tooltip` de
+      // cada destino obrigatório em vez de enfeite.
+      source: { transform: sidebarRecolhivelIconeSource },
+    },
+  },
   render: () => <SidebarPreview variant="sidebar" collapsible="icon" />,
   play: async ({ canvasElement, step }) => {
     await step("Aberta, o modo icon não estreita o painel", async () => {
@@ -209,6 +255,13 @@ export const CollapsibleIcon: Story = {
 };
 
 export const CollapsibleNone: Story = {
+  parameters: {
+    docs: {
+      // A AUSÊNCIA do gatilho é parte do caso: sem recolhimento não há o que
+      // alternar, e o botão prometeria uma ação inexistente.
+      source: { transform: sidebarSemRecolhimentoSource },
+    },
+  },
   render: () => <SidebarPreview variant="sidebar" collapsible="none" />,
   play: async ({ canvasElement, step }) => {
     await step("Sem recolhimento não há painel fixo nem vão reservado", async () => {
@@ -221,6 +274,13 @@ export const CollapsibleNone: Story = {
 };
 
 export const SideLeft: Story = {
+  parameters: {
+    docs: {
+      // O lado é afirmado no `render`, e numa galeria de lados o snippet tem
+      // de nomeá-lo mesmo quando é o padrão.
+      source: { transform: sidebarLadoEsquerdoSource },
+    },
+  },
   render: () => <SidebarPreview variant="sidebar" side="left" />,
   play: async ({ canvasElement, step }) => {
     await step("O painel encosta na esquerda", async () => {
@@ -233,7 +293,14 @@ export const SideLeft: Story = {
 };
 
 export const SideRight: Story = {
-  parameters: { covers: ["visual.item6"] },
+  parameters: {
+    covers: ["visual.item6"],
+    docs: {
+      // `side="right"` vive só no `render`; é ele que vira painel e faixa de
+      // arrasto ao mesmo tempo.
+      source: { transform: sidebarLadoDireitoSource },
+    },
+  },
   render: () => <SidebarPreview variant="sidebar" side="right" />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

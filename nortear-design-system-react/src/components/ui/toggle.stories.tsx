@@ -3,6 +3,7 @@ import type { ComponentProps } from "react";
 import { fn, userEvent, within, expect } from "storybook/test";
 import { Bold, Eye } from "lucide-react";
 import { Toggle } from "./toggle";
+import { toggleSource } from "./toggle.source";
 import { ToggleDocs } from "@/components/docs/ToggleDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -17,40 +18,6 @@ type PlaygroundArgs = Omit<ComponentProps<typeof Toggle>, "onPressedChange"> & {
   label?: string;
 };
 
-/**
- * O gerador padrão imprime o andaime da story (com `iconOnly` e o spread dos
- * args). O `transform` devolve o uso real, com os valores atuais dos controls —
- * é o que a pessoa copia.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<PlaygroundArgs> }): string {
-  const {
-    variant = "default",
-    size = "default",
-    defaultPressed = false,
-    disabled = false,
-    label = "Mostrar ocultos",
-    iconOnly = true,
-  } = ctx.args ?? {};
-
-  // Só o que difere do padrão entra no snippet: documentação que repete valor
-  // default ensina ruído.
-  const attrs = [
-    variant === "default" ? "" : `variant="${variant}"`,
-    size === "default" ? "" : `size="${size}"`,
-    defaultPressed ? "defaultPressed" : "",
-    disabled ? "disabled" : "",
-    // Toggle sem texto visível não tem nome acessível nenhum sem isto.
-    iconOnly ? `aria-label="${label || "Alternar"}"` : "",
-  ].filter(Boolean);
-
-  const abertura = attrs.length ? `<Toggle ${attrs.join(" ")}>` : "<Toggle>";
-  const conteudo = iconOnly
-    ? "  <Bold aria-hidden=\"true\" />"
-    : `  <Eye aria-hidden="true" />\n  ${label}`;
-
-  return `${abertura}\n${conteudo}\n</Toggle>`;
-}
-
 const meta: Meta<PlaygroundArgs> = {
   title: "UI/Toggle",
   component: Toggle,
@@ -58,7 +25,7 @@ const meta: Meta<PlaygroundArgs> = {
   parameters: {
     docs: {
       page: withAutoDocsTab(ToggleDocs),
-      source: { transform: playgroundSource },
+      source: { transform: toggleSource },
     },
   },
   argTypes: {

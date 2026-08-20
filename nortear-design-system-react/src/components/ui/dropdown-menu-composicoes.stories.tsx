@@ -22,6 +22,14 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
+import {
+  dropdownMenuComAtalhosSource,
+  dropdownMenuComCheckboxSource,
+  dropdownMenuComRadioSource,
+  dropdownMenuComRotuloSource,
+  dropdownMenuComSubmenuSource,
+  dropdownMenuSource,
+} from "./dropdown-menu.source";
 import { Button } from "./button";
 
 const meta = {
@@ -37,6 +45,7 @@ const meta = {
     // da lib, e o motivo de cada uma está em `wait-for-portal.ts`.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_FILHOS_DE_MENU] } },
     docs: {
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           "As composições canônicas: grupos com rótulo, alternadores, escolha única, submenu e " +
@@ -63,7 +72,12 @@ const wrapperStyle: React.CSSProperties = {
  */
 
 export const WithLabel: Story = {
-  parameters: { covers: ["visual.item1"] },
+  parameters: {
+    covers: ["visual.item1"],
+    // Dois grupos rotulados separados por um divisor — o snippet do meta tem um
+    // grupo só e esconderia a estrutura que a story afirma.
+    docs: { source: { transform: dropdownMenuComRotuloSource } },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
@@ -110,7 +124,11 @@ export const WithLabel: Story = {
 };
 
 export const WithCheckboxItems: Story = {
-  parameters: { covers: ["functional.item5", "accessibility.item4", "visual.item2"] },
+  parameters: {
+    covers: ["functional.item5", "accessibility.item4", "visual.item2"],
+    // Sub-composição inteira: item de marcação mais o estado que o alimenta.
+    docs: { source: { transform: dropdownMenuComCheckboxSource } },
+  },
   render: () => {
     const Demo = () => {
       const [nome, setNome] = useState(true);
@@ -176,7 +194,12 @@ export const WithCheckboxItems: Story = {
 };
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ["functional.item6", "accessibility.item4", "visual.item3"] },
+  parameters: {
+    covers: ["functional.item6", "accessibility.item4", "visual.item3"],
+    // O valor mora no GRUPO, não em cada item — só a sub-composição inteira
+    // mostra de onde vem a exclusividade da escolha.
+    docs: { source: { transform: dropdownMenuComRadioSource } },
+  },
   render: () => {
     const Demo = () => {
       const [tema, setTema] = useState("light");
@@ -225,7 +248,11 @@ export const WithRadioGroup: Story = {
 };
 
 export const WithSubmenu: Story = {
-  parameters: { covers: ["functional.item7", "visual.item4"] },
+  parameters: {
+    covers: ["functional.item7", "visual.item4"],
+    // O trio Sub/SubTrigger/SubContent não existe no snippet do meta.
+    docs: { source: { transform: dropdownMenuComSubmenuSource } },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>
@@ -284,6 +311,11 @@ export const WithSubmenu: Story = {
 };
 
 export const WithShortcuts: Story = {
+  parameters: {
+    // O atalho vive DENTRO do item e entra no nome acessível: é a posição no
+    // markup que a story afirma, e ela some no snippet do meta.
+    docs: { source: { transform: dropdownMenuComAtalhosSource } },
+  },
   render: () => (
     <div style={wrapperStyle}>
       <DropdownMenu defaultOpen modal={false}>

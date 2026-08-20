@@ -9,6 +9,7 @@ import {
   sairComPonteiro,
 } from "@shared/testing/hover-card-probe";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
+import { hoverCardSource } from "./hover-card.source";
 import { HoverCardDocs } from "@/components/docs/HoverCardDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -30,7 +31,12 @@ const meta = {
   tags: ["autodocs", "overlay"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(HoverCardDocs) },
+    docs: {
+      page: withAutoDocsTab(HoverCardDocs),
+      // O painel imprimia `<HoverCardForArgs …>`, alias de tipo que só existe
+      // neste arquivo para o Storybook montar os controls.
+      source: { transform: hoverCardSource },
+    },
   },
   argTypes: {
     triggerLabel: {

@@ -3,6 +3,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, waitFor } from "storybook/test";
 import { User } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
+import {
+  avatarComAtrasoSource,
+  avatarComIconeSource,
+  avatarSource,
+} from "./avatar.source";
 
 const IMG_MARIA =
   "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces";
@@ -20,6 +25,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: avatarSource },
       description: {
         component:
           "Configuracoes do Avatar conforme o ciclo de carregamento da imagem: loaded, loading (com atraso), failed e noImage.",
@@ -65,7 +71,11 @@ export const Loaded: Story = {
 
 export const Loading: Story = {
   name: "Loading (600ms delay)",
-  parameters: { covers: ["functional.item4"] },
+  // O `delayMs` no fallback É o assunto, e não é arg de lugar nenhum.
+  parameters: {
+    covers: ["functional.item4"],
+    docs: { source: { transform: avatarComAtrasoSource } },
+  },
   render: () => (
     <Avatar>
       <AvatarImage src={IMG_BROKEN} alt="Foto de perfil de Maria Rodrigues" />
@@ -124,7 +134,12 @@ export const Failed: Story = {
 };
 
 export const NoImage: Story = {
-  parameters: { covers: ["functional.item3"] },
+  // A ausência do AvatarImage é o assunto, e com ela vem o rótulo que dá voz
+  // ao fallback — sem isso o avatar fica mudo.
+  parameters: {
+    covers: ["functional.item3"],
+    docs: { source: { transform: avatarComIconeSource } },
+  },
   render: () => (
     <Avatar>
       <AvatarFallback role="img" aria-label="Usuário genérico">

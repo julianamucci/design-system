@@ -12,6 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./select";
+import {
+  selectComRotuloSource,
+  selectControladoSource,
+  selectEmFormularioSource,
+  selectSource,
+} from "./select.source";
 import { Label } from "./label";
 import { Button } from "./button";
 
@@ -23,6 +29,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: selectSource },
       description: {
         component:
           "Composicoes do Select: controle reativo com useState, integração em formulário com submit e Select com Label externo associado.",
@@ -37,6 +44,9 @@ type Story = StoryObj<typeof meta>;
 export const Controlled: Story = {
   parameters: {
     docs: {
+      // Estado controlado por useState — composição que o snippet do meta,
+      // não controlado, esconderia.
+      source: { transform: selectControladoSource },
       description: {
         story:
           "Versão controlada via useState. value + onValueChange refletem a seleção do usuário e podem ser persistidos ou validados externamente.",
@@ -99,6 +109,8 @@ export const Controlled: Story = {
 export const InForm: Story = {
   parameters: {
     docs: {
+      // Dentro de formulário, com Label e botão de envio: sub-composição.
+      source: { transform: selectEmFormularioSource },
       description: {
         story:
           "Integração com <form>. Select recebe name para serializar no submit. Botão fica desabilitado até uma opção ser escolhida.",
@@ -183,6 +195,9 @@ export const InForm: Story = {
 export const WithLabel: Story = {
   parameters: {
     docs: {
+      // O par Label + id no gatilho é o assunto, e o meta imprime o campo só
+      // com aria-label.
+      source: { transform: selectComRotuloSource },
       description: {
         story:
           "Select com Label externo associado via htmlFor/id. Quando há Label visível, o aria-label do trigger pode ser dispensado, mas o exemplo mantém ambos para acessibilidade redundante.",

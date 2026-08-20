@@ -12,6 +12,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "./sheet";
+import {
+  sheetAbertoSource,
+  sheetControladoSource,
+  sheetSemBotaoFecharSource,
+  sheetSource,
+} from "./sheet.source";
 import { Button } from "./button";
 import { useTranslation } from "@/lib/i18n";
 import sheetTranslations from "@shared/content/sheet/translations.json";
@@ -28,6 +34,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sheetSource },
       description: {
         component:
           "Estados canônicos do Sheet: Closed (inicial), Open (defaultOpen), " +
@@ -95,6 +102,9 @@ export const Closed: Story = {
 export const Open: Story = {
   parameters: {
     docs: {
+      // Aqui a abertura inicial É o assunto — nas outras stories `defaultOpen`
+      // é só o que põe o painel no DOM para a foto.
+      source: { transform: sheetAbertoSource },
       description: {
         story:
           "Aberto por defaultOpen, sem estado externo nenhum. O foco entra no painel e o " +
@@ -150,6 +160,9 @@ export const Open: Story = {
 export const WithCloseButtonHidden: Story = {
   parameters: {
     docs: {
+      // A AUSÊNCIA do botão do canto é o assunto, e ela só se sustenta com o
+      // rodapé oferecendo a outra saída.
+      source: { transform: sheetSemBotaoFecharSource },
       description: {
         story:
           "Sem o botão do canto. Só faz sentido quando o rodapé já oferece uma saída " +
@@ -201,6 +214,9 @@ export const WithCloseButtonHidden: Story = {
 export const Controlled: Story = {
   parameters: {
     docs: {
+      // Estado externo por useState e SEM gatilho interno: composição que o
+      // snippet do meta, não controlado, esconderia.
+      source: { transform: sheetControladoSource },
       description: {
         story:
           "Estado do lado de fora. O componente não decide nada sozinho: abre quando o " +

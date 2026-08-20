@@ -6,6 +6,15 @@ import { within, expect, fn, userEvent, waitFor } from "storybook/test";
 // alias o ícone e o export colidem no mesmo escopo de módulo.
 import { AlertCircle, CheckCircle2, Info as InfoIcon, TriangleAlert } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
+import {
+  alertAvisoSource,
+  alertContrasteSource,
+  alertDestrutivoSource,
+  alertDispensavelSource,
+  alertInfoSource,
+  alertSource,
+  alertSucessoSource,
+} from "./alert.source";
 import { contrastePorTema, reprovasPorTema } from "@shared/testing/alert-probe";
 
 const meta = {
@@ -16,6 +25,7 @@ const meta = {
     design: figmaDesign("alert"),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: alertSource } },
   },
 } satisfies Meta<typeof Alert>;
 
@@ -43,7 +53,11 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ["functional.item2"] },
+  parameters: {
+    covers: ["functional.item2"],
+    // Controls desligados no arquivo: sem args o meta imprimiria a default.
+    docs: { source: { transform: alertDestrutivoSource } },
+  },
   render: () => (
     <Alert variant="destructive">
       <AlertCircle aria-hidden="true" className="nds-icon" />
@@ -62,7 +76,11 @@ export const Destructive: Story = {
 };
 
 export const Success: Story = {
-  parameters: { covers: ["functional.item5"] },
+  parameters: {
+    covers: ["functional.item5"],
+    // Cada variante troca também o ícone — cor sozinha não comunica.
+    docs: { source: { transform: alertSucessoSource } },
+  },
   render: () => (
     <Alert variant="success">
       <CheckCircle2 aria-hidden="true" className="nds-icon" />
@@ -81,6 +99,8 @@ export const Success: Story = {
 };
 
 export const Warning: Story = {
+  // Idem: a variante e o ícone que a acompanha não vêm de arg nenhum.
+  parameters: { docs: { source: { transform: alertAvisoSource } } },
   render: () => (
     <Alert variant="warning">
       <TriangleAlert aria-hidden="true" className="nds-icon" />
@@ -99,6 +119,8 @@ export const Warning: Story = {
 };
 
 export const Info: Story = {
+  // Idem: a variante e o ícone que a acompanha não vêm de arg nenhum.
+  parameters: { docs: { source: { transform: alertInfoSource } } },
   render: () => (
     <Alert variant="info">
       <InfoIcon aria-hidden="true" className="nds-icon" />
@@ -153,7 +175,12 @@ function AlertDismissivelRemontavel({
 }
 
 export const Dismissible: Story = {
-  parameters: { covers: ["functional.item7", "visual.item5"] },
+  parameters: {
+    covers: ["functional.item7", "visual.item5"],
+    // O render monta o wrapper que remonta o alert ao fechar — andaime de
+    // teste, para o canvas não ficar vazio depois da play.
+    docs: { source: { transform: alertDispensavelSource } },
+  },
   args: { onDismiss: fn() },
   render: (args) => (
     <AlertDismissivelRemontavel
@@ -243,6 +270,8 @@ export const Dismissible: Story = {
 // Segundo cenário do contrato: o caso documentado é "clique ou Enter" — este
 // story cobre o caminho de teclado (Enter no botão focado).
 export const DismissibleByKeyboard: Story = {
+  // Mesmo andaime de remontagem; a marcação é a mesma, muda só como a play aciona.
+  parameters: { docs: { source: { transform: alertDispensavelSource } } },
   args: { onDismiss: fn() },
   render: (args) => (
     <AlertDismissivelRemontavel
@@ -295,6 +324,8 @@ export const Contrast: Story = {
   parameters: {
     covers: ["accessibility.item3"],
     docs: {
+      // A comparação entre as cinco é o assunto; um alerta sozinho a esconderia.
+      source: { transform: alertContrasteSource },
       description: {
         story:
           "Título e texto de cada variante medidos contra o fundo composto, nos três temas de marca e nos dois modos. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.",

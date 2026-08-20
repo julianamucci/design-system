@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
 import { Label } from "./label";
+import {
+  radioGroupDesabilitadoSource,
+  radioGroupInvalidoSource,
+  radioGroupItemDesabilitadoSource,
+  radioGroupMarcadoSource,
+  radioGroupSource,
+} from "./radio-group.source";
 
 const meta = {
   title: "UI/RadioGroup/States",
@@ -11,6 +18,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     docs: {
+      source: { transform: radioGroupSource },
       description: {
         component:
           "Estados do RadioGroup: Default, Checked, Disabled (grupo e item), Invalid e Focus. Cada estado é controlado por atributos do RadioGroupItem.",
@@ -94,6 +102,8 @@ export const Checked: Story = {
   parameters: {
     covers: ["visual.item2"],
     docs: {
+      // `defaultValue` é a escolha inicial e vive só no `render`.
+      source: { transform: radioGroupMarcadoSource },
       description: {
         story:
           "Item com defaultValue selecionado: aria-checked=\"true\" e bolinha interna --primary visível, com animação curta de entrada.",
@@ -128,6 +138,9 @@ export const Disabled: Story = {
   parameters: {
     covers: ["functional.item4", "visual.item3"],
     docs: {
+      // O bloqueio está no `render`, na raiz e em cada item — este arquivo não
+      // tem control de `disabled`.
+      source: { transform: radioGroupDesabilitadoSource },
       description: {
         story:
           "Grupo inteiro desabilitado pela prop disabled na raiz e em cada item: item e rótulo a 50% de opacidade, cursor bloqueado, sem resposta a clique.",
@@ -165,6 +178,9 @@ export const Disabled: Story = {
 export const ItemDisabled: Story = {
   parameters: {
     docs: {
+      // A ausência deliberada é o assunto: só UM item fora do ar, e o rótulo
+      // dizendo isso.
+      source: { transform: radioGroupItemDesabilitadoSource },
       description: {
         story:
           "Apenas um item desabilitado (ex.: opção indisponível). Os demais permanecem interativos e seguem a navegação por setas.",
@@ -202,6 +218,8 @@ export const Invalid: Story = {
   parameters: {
     covers: ["visual.item4"],
     docs: {
+      // O erro e a mensagem que o acompanha só existem no `render`.
+      source: { transform: radioGroupInvalidoSource },
       description: {
         story:
           "Estado de erro via aria-invalid=\"true\" no item: borda --destructive. Use junto com FormMessage para exibir a mensagem.",

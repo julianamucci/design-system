@@ -10,6 +10,11 @@ import {
   NavigationMenuTrigger,
 } from "./navigation-menu";
 import { esperarPainel, popupAberto } from "./navigation-menu.fixtures";
+import {
+  navigationMenuAbertoSource,
+  navigationMenuAtivoSource,
+  navigationMenuSource,
+} from "./navigation-menu.source";
 import { REGRA_GUARDA_DE_FOCO } from "@/lib/wait-for-portal";
 
 const meta = {
@@ -22,6 +27,8 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para Closed: fechado é o estado padrão do componente.
+      source: { transform: navigationMenuSource },
       description: {
         component:
           "Os três estados canônicos: Fechado (só a barra), Aberto (painel do item ativo no popup compartilhado) e Ativo (o destino da página atual).",
@@ -99,6 +106,9 @@ export const Open: Story = {
     // Esta story termina com o painel ABERTO; ver a nota da regra.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      // Valor inicial casando com o `value` do item, mais a seta indicadora que
+      // nasce desligada: duas props que os controls deste arquivo não alcançam.
+      source: { transform: navigationMenuAbertoSource },
       description: {
         story:
           "O item nasce aberto e a seta indicadora aponta para o gatilho. A story termina aberta de propósito: é o estado que a regressão visual precisa capturar.",
@@ -177,6 +187,9 @@ export const Active: Story = {
   parameters: {
     covers: ["functional.item6", "accessibility.item4", "visual.item3"],
     docs: {
+      // A marcação da página atual só se lê no CONTRASTE com os vizinhos, que
+      // não carregam o atributo — um destino sozinho não ensinaria a regra.
+      source: { transform: navigationMenuAtivoSource },
       description: {
         story:
           'O destino da página atual leva aria-current="page" — o leitor de tela anuncia "página atual" e o fundo muda, porque cor sozinha não informa quem não a distingue.',

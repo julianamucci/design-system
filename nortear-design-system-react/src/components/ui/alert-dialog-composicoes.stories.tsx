@@ -16,6 +16,13 @@ import {
 } from "./alert-dialog";
 import { Button } from "./button";
 import { TriangleAlert } from "lucide-react";
+import {
+  alertDialogClasseExtraSource,
+  alertDialogComIconeSource,
+  alertDialogNeutroSource,
+  alertDialogSemDescricaoSource,
+  alertDialogSource,
+} from "./alert-dialog.source";
 
 const meta = {
   title: "UI/AlertDialog/Compositions",
@@ -27,6 +34,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: alertDialogSource },
       description: {
         component:
           "Composicoes canônicas: confirmação destrutiva, confirmação neutra, descrição longa e layout responsivo.",
@@ -42,6 +50,8 @@ export const WithIcon: Story = {
   parameters: {
     covers: ["visual.item6"],
     docs: {
+      // O AlertDialogMedia é uma peça a mais no header, e o `meta` não a monta.
+      source: { transform: alertDialogComIconeSource },
       description: {
         story:
           "Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.",
@@ -147,6 +157,9 @@ export const Neutral: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // Variante neutra: o `tone` do `meta` é destrutivo e os controls estão
+      // desligados neste arquivo, então nada a descreveria.
+      source: { transform: alertDialogNeutroSource },
       description: {
         story:
           "Action com tokens padrão do Button. Use para confirmações que não são destrutivas (sair, publicar, arquivar).",
@@ -255,6 +268,9 @@ export const WithoutDescription: Story = {
   parameters: {
     covers: ["accessibility.item8"],
     docs: {
+      // A ausência da descrição É o assunto — encurtar o texto ensinaria o
+      // contrário do que a story mede.
+      source: { transform: alertDialogSemDescricaoSource },
       description: {
         story:
           "Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.",
@@ -378,7 +394,8 @@ export const Responsive: Story = {
 // e ao bloco de mídia era a prosa da docs page.
 export const ExtraClass: Story = {
   parameters: {
-    docs: { description: { story: "Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout." } },
+    // As classes extras no painel e no bloco de mídia são o assunto.
+    docs: { source: { transform: alertDialogClasseExtraSource }, description: { story: "Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout." } },
   },
   render: () => (
     <AlertDialog defaultOpen>

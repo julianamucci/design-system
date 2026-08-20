@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import { Bold, Italic, Eye, List } from "lucide-react";
 import { Toggle } from "./toggle";
+import {
+  toggleComRotuloSource,
+  toggleContornoSource,
+  toggleSource,
+  toggleTamanhosSource,
+} from "./toggle.source";
 
 const meta = {
   title: "UI/Toggle/Variants",
@@ -13,6 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleSource },
       description: {
         component:
           "Variantes visuais do Toggle: default (sem borda), outline (com borda), rótulo visível e a escada de tamanhos.",
@@ -59,7 +66,14 @@ export const Default: Story = {
 };
 
 export const Outline: Story = {
-  parameters: { covers: ["visual.item3"] },
+  parameters: {
+    covers: ["visual.item3"],
+    docs: {
+      // O par lado a lado é vitrine da comparação; o que a story ensina é a
+      // variante de contorno.
+      source: { transform: toggleContornoSource },
+    },
+  },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Toggle aria-label="Negrito">
@@ -90,6 +104,12 @@ export const Outline: Story = {
 };
 
 export const WithLabel: Story = {
+  parameters: {
+    docs: {
+      // A AUSÊNCIA de aria-label é o assunto: o texto visível já nomeia o botão.
+      source: { transform: toggleComRotuloSource },
+    },
+  },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Toggle variant="outline">
@@ -126,6 +146,12 @@ export const WithLabel: Story = {
 };
 
 export const Sizes: Story = {
+  parameters: {
+    docs: {
+      // A escada só significa alguma coisa com os três degraus juntos.
+      source: { transform: toggleTamanhosSource },
+    },
+  },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
       <Toggle variant="outline" size="sm" aria-label="Negrito pequeno">

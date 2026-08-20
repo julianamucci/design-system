@@ -9,6 +9,11 @@ import {
   CommandItem,
   CommandShortcut,
 } from "./command";
+import {
+  commandItemDesabilitadoSource,
+  commandItemMarcadoSource,
+  commandSource,
+} from "./command.source";
 
 const meta = {
   title: "UI/Command/States",
@@ -19,6 +24,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: commandSource },
       description: {
         component:
           "Os estados que a paleta assume sozinha (sem resultados) e os que cada comando assume (desabilitado, marcado).",
@@ -107,6 +113,9 @@ export const ItemDisabled: Story = {
   name: "Disabled item",
   parameters: {
     covers: ["functional.item4", "accessibility.item4", "visual.item5"],
+    // `disabled` é prop do comando, e não da paleta: sem o override o snippet
+    // não ensinaria onde a prop entra.
+    docs: { source: { transform: commandItemDesabilitadoSource } },
   },
   render: () => (
     <div className="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
@@ -191,7 +200,12 @@ export const ItemDisabled: Story = {
 
 export const CheckedItem: Story = {
   name: "Checked item",
-  parameters: { covers: ["functional.item5", "visual.item5"] },
+  parameters: {
+    covers: ["functional.item5", "visual.item5"],
+    // `checked` é prop do comando: o snippet do `meta` não declara estado de
+    // escolha nenhum, que é justamente o assunto aqui.
+    docs: { source: { transform: commandItemMarcadoSource } },
+  },
   render: () => (
     <div className="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
       <Command>

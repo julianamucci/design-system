@@ -23,6 +23,13 @@ import {
   ContextMenuSubTrigger,
   ContextMenuSubContent,
 } from "@/components/ui/context-menu";
+import {
+  contextMenuCompletoSource,
+  contextMenuComEscolhaUnicaSource,
+  contextMenuComMarcacaoSource,
+  contextMenuComSubmenuSource,
+  contextMenuSource,
+} from "./context-menu.source";
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -36,6 +43,7 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: contextMenuSource },
       description: {
         component:
           "Composições do ContextMenu: atalhos, marcação, escolha única, submenu e o menu completo.",
@@ -130,7 +138,12 @@ function DemoCheckbox() {
 }
 
 export const WithCheckbox: Story = {
-  parameters: { covers: ["functional.item7", "accessibility.item4"] },
+  parameters: {
+    covers: ["functional.item7", "accessibility.item4"],
+    // O item de marcação é controlado: quem guarda o valor é o call site, e o
+    // snippet do `meta` não tem estado nenhum.
+    docs: { source: { transform: contextMenuComMarcacaoSource } },
+  },
   render: () => <DemoCheckbox />,
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId("area");
@@ -206,7 +219,12 @@ function DemoRadio() {
 
 export const WithRadio: Story = {
   name: "With radio group",
-  parameters: { covers: ["functional.item8", "accessibility.item5"] },
+  parameters: {
+    covers: ["functional.item8", "accessibility.item5"],
+    // Quem guarda o valor é o grupo de escolha única, peça que não existe no
+    // snippet do `meta`.
+    docs: { source: { transform: contextMenuComEscolhaUnicaSource } },
+  },
   render: () => <DemoRadio />,
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId("area");
@@ -256,6 +274,9 @@ export const WithSubmenu: Story = {
   parameters: {
     covers: ["functional.item5", "functional.item6", "visual.item3"],
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_FILHOS_DE_MENU] } },
+    // As três peças do submenu andam juntas e nenhuma aparece no snippet do
+    // `meta`.
+    docs: { source: { transform: contextMenuComSubmenuSource } },
   },
   render: () => (
     <ContextMenu>
@@ -374,7 +395,12 @@ function DemoCompleta() {
 }
 
 export const CompleteComposition: Story = {
-  parameters: { covers: ["visual.item4"] },
+  parameters: {
+    covers: ["visual.item4"],
+    // A convivência de marcação, escolha única e submenu num menu só é o
+    // assunto; cada peça isolada já vive nas outras composições.
+    docs: { source: { transform: contextMenuCompletoSource } },
+  },
   render: () => <DemoCompleta />,
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId("area");

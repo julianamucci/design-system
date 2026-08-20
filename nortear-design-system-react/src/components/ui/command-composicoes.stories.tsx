@@ -14,6 +14,12 @@ import {
   CommandSeparator,
 } from "./command";
 import {
+  commandComAtalhosSource,
+  commandComoComboboxSource,
+  commandPaletaSource,
+  commandSource,
+} from "./command.source";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -36,6 +42,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: commandSource },
       description: {
         component:
           "Os arranjos da paleta: com grupos e divisor, com atalhos, dentro de um Popover (combobox) e dentro de um Dialog (command palette). Nenhuma peça nova entra aqui — é composição de call site.",
@@ -156,6 +163,11 @@ export const WithGroups: Story = {
 // ─── Com Shortcuts ────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
+  // O atalho dentro do comando é a peça do exemplo, e o snippet do `meta` não
+  // a mostra.
+  parameters: {
+    docs: { source: { transform: commandComAtalhosSource } },
+  },
   render: () => (
     <div className="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
       <Command>
@@ -304,6 +316,9 @@ export const AsCombobox: Story = {
     // PATCHES.md#command-combobox-portal-flaky. O que ela NÃO deixa de proteger:
     // `accessibility.item1` é declarado pela Playground, com o axe ligado.
     a11y: { test: 'off' },
+    // Paleta dentro de Popover, com estado e o papel de combobox escrito à mão:
+    // é outra composição, não a paleta solta do `meta`.
+    docs: { source: { transform: commandComoComboboxSource } },
   },
   render: () => <ComboboxDemo />,
   play: async ({ canvasElement, step }) => {
@@ -457,6 +472,9 @@ export const CommandPalette: Story = {
       "accessibility.item3",
       "visual.item4",
     ],
+    // Paleta dentro do CommandDialog, com o atalho global registrado por quem
+    // consome: nada disso cabe no snippet da paleta solta.
+    docs: { source: { transform: commandPaletaSource } },
   },
   render: () => <CommandPaletteDemo />,
   play: async ({ canvasElement, step }) => {

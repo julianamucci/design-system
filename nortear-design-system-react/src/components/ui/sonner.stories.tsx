@@ -4,6 +4,7 @@ import { toast, type ExternalToast } from "sonner";
 import { Toaster, ROTULO_REGIAO } from "./sonner";
 import { Button } from "./button";
 import { esperarTorrada, limparTorradas, TEXTOS, type ToastType } from "./sonner.fixtures";
+import { sonnerSource } from "./sonner.source";
 import { SonnerDocs } from "@/components/docs/SonnerDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -23,7 +24,10 @@ const meta = {
   tags: ["autodocs", "feedback"],
   parameters: {
     layout: "padded",
-    docs: { page: withAutoDocsTab(SonnerDocs) },
+    docs: {
+      page: withAutoDocsTab(SonnerDocs),
+      source: { transform: sonnerSource },
+    },
     // A paleta de `richColors` é da lib externa e não passa pelos tokens do
     // tema, então o contraste dela não é auditável aqui — ver
     // PATCHES.md#sonner-rich-colors-contrast. `aria-prohibited-attr`: a lib

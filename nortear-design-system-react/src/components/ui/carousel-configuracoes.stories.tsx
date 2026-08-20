@@ -10,6 +10,12 @@ import {
   type CarouselApi,
 } from "./carousel";
 import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
+import {
+  carouselAutoplaySource,
+  carouselItemUnicoSource,
+  carouselSource,
+  carouselVariosItensSource,
+} from "./carousel.source";
 
 const meta = {
   title: "UI/Carousel/Settings",
@@ -20,6 +26,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: carouselSource },
       description: {
         component:
           "Configuracoes funcionais do Carousel: item único, múltiplos itens responsivos e autoplay via plugin.",
@@ -102,6 +109,9 @@ export const Single: Story = {
   parameters: {
     covers: ["visual.item3"],
     docs: {
+      // A base de largura mora no ITEM, e é ela que faz um slide por vez —
+      // nenhum arg do carrossel descreve essa escolha.
+      source: { transform: carouselItemUnicoSource },
       description: {
         story: "Um item por vez: cada slide ocupa a largura inteira do viewport.",
       },
@@ -148,6 +158,9 @@ export const MultiResponsive: Story = {
   parameters: {
     covers: ["functional.item6", "visual.item3"],
     docs: {
+      // A responsividade é um par de classes de base no item; o snippet do meta
+      // esconderia justamente o que muda por breakpoint.
+      source: { transform: carouselVariosItensSource },
       description: {
         story:
           "A base do slide muda por breakpoint: um item em telas estreitas, dois em médias, três em largas.",
@@ -212,6 +225,9 @@ export const Autoplay: Story = {
   parameters: {
     covers: ["functional.item7", "visual.item3"],
     docs: {
+      // O avanço automático vem de um plugin do motor e de `opts`, não de uma
+      // prop do componente: sem o snippet próprio a lição inteira se perderia.
+      source: { transform: carouselAutoplaySource },
       description: {
         story:
           "O plugin avança sozinho a cada intervalo e cede o controle na primeira interação com o carrossel.",

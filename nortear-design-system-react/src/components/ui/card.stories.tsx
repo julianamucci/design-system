@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "./card";
 import { Button } from "./button";
+import { cardSource } from "./card.source";
 import { CardDocs } from "@/components/docs/CardDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
@@ -18,7 +19,10 @@ const meta = {
   tags: ["autodocs", "layout"],
   parameters: {
     layout: "centered",
-    docs: { page: withAutoDocsTab(CardDocs) },
+    docs: {
+      page: withAutoDocsTab(CardDocs),
+      source: { transform: cardSource },
+    },
   },
   argTypes: {
     size: {

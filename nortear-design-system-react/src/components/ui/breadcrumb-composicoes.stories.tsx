@@ -16,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./dropdown-menu";
+import { breadcrumbResponsivoSource, breadcrumbSource } from "./breadcrumb.source";
 
 const meta = {
   title: "UI/Breadcrumb/Compositions",
@@ -27,6 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: breadcrumbSource },
       description: {
         component:
           "Composicoes canônicas do Breadcrumb: trilha completa com evento de navegação e trilha responsiva com DropdownMenu expondo os níveis ocultos.",
@@ -122,6 +124,9 @@ export const Responsive: Story = {
   parameters: {
     covers: ["functional.item5", "visual.item4"],
     docs: {
+      // As reticências viram gatilho de menu — sub-composição que a trilha do
+      // `meta`, feita só de links, não teria como sugerir.
+      source: { transform: breadcrumbResponsivoSource },
       description: {
         story:
           "Composição responsiva: BreadcrumbEllipsis envolvido em DropdownMenu para expor níveis ocultos em mobile.",
