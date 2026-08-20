@@ -40,17 +40,20 @@ export function positionFloating(
   const scrollX = window.scrollX;
   const scrollY = window.scrollY;
 
-  // Visível para medir, e invisível para não piscar na posição antiga.
+  // Invisível para não piscar na posição antiga — e SÓ isso.
   //
-  // O `display: block` FICA depois da medida, e isso é herdado de propósito: era
-  // o comportamento das três cópias que esta função substitui. No dropdown e no
-  // tooltip ele não muda nada (um `<ul>` e uma `<div>` já são blocos), mas no
-  // popover ele VENCE o `display: flex` que a folha compartilhada declara em
-  // `.nds-popover-content`, e com ele some o `gap` entre os filhos diretos.
-  // Corrigir aqui mudaria o desenho de todo popover desta stack numa tarefa que
-  // é de API — fica registrado como divergência a decidir, não silenciada.
+  // Havia também um `display: block` aqui, herdado das três cópias que esta
+  // função substituiu, e ele ficava depois da medida. Inline vence a folha:
+  // `.nds-popover-content` declara `display: flex` com `gap` de 10px entre os
+  // filhos diretos, e a declaração inline apagava os dois. Esta stack ficava sem
+  // o respiro que as outras quatro têm, sem erro nenhum e sem nada no DOM
+  // denunciando — a classe estava lá, aplicada, e perdendo.
+  //
+  // Era desnecessário desde sempre: as três fábricas chamam `appendChild` ANTES
+  // de posicionar, então o painel já está no documento e `offsetWidth` mede sem
+  // que ninguém precise mexer no `display`. Um painel fechado aqui não existe;
+  // ele é criado ao abrir e removido ao fechar.
   panel.style.visibility = 'hidden';
-  panel.style.display = 'block';
   const pw = panel.offsetWidth;
   const ph = panel.offsetHeight;
   panel.style.visibility = '';

@@ -204,6 +204,21 @@ export const Playground: Story = {
       await expect(document.getElementById(id!)).toBe(painel());
     });
 
+    await step('A folha governa o layout do painel, não o posicionador', async () => {
+      // O posicionador media o painel forçando `display: block` inline e DEIXAVA
+      // a declaração. Inline vence a folha, então `.nds-popover-content` perdia
+      // o `display: flex` e, com ele, o `gap` de 10px entre os filhos diretos —
+      // esta stack ficava sem o respiro que as outras quatro têm, sem erro
+      // nenhum e sem nada no DOM denunciando.
+      //
+      // A medição é do valor COMPUTADO, não da classe: classe presente com
+      // declaração inline por cima é exatamente o caso que passava despercebido.
+      const estilo = getComputedStyle(painel()!);
+      await expect(estilo.display).toBe('flex');
+      await expect(estilo.flexDirection).toBe('column');
+      await expect(parseFloat(estilo.rowGap)).toBeGreaterThan(0);
+    });
+
     await step('O painel não é modal', async () => {
       // Popover não bloqueia o resto da página: `aria-modal` faria o leitor de
       // tela esconder tudo o que está fora dele, que é contrato de Dialog.

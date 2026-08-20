@@ -2231,7 +2231,7 @@ decisão ou dívida separada.
       drawer, popover e dropdown usam `open`/`close`/`toggle`. Não renomeado de
       propósito: é API pública e quebraria chamador em silêncio.
 
-- [ ] **`positionFloating` deixa `display: block` inline depois de medir.** Herdado
+- [x] **`positionFloating` deixava `display: block` inline depois de medir.** RESOLVIDO — era desnecessário desde sempre: as três fábricas fazem `appendChild` antes de posicionar, então o painel já é mensurável. Herdado
       das três cópias que ele unificou. No dropdown e no tooltip é inócuo, mas no
       popover ele vence o `display: flex` que `.nds-popover-content` declara — e
       com ele some o `gap` entre os filhos diretos. Corrigir muda o desenho de
