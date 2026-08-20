@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
+import { tooltipSource, tooltipSourceCom } from './tooltip.source';
 import { createButton } from './button';
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
@@ -51,6 +52,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: tooltipSource },
       description: {
         component:
           'Default é texto curto. Com atalho traz a tecla junto do texto. Texto longo quebra dentro do limite de largura do balão — passou disso, o caso é de Popover. NOTA: a factory recebe o conteúdo como texto, então o atalho não vai em <kbd> separado.',
@@ -63,7 +65,10 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
-  parameters: { covers: ['visual.item1', 'accessibility.item2'] },
+  parameters: {
+    covers: ['visual.item1', 'accessibility.item2'],
+    docs: { source: { transform: tooltipSourceCom({ content: 'Salvar' }) } },
+  },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Salvar', 'aria-label': 'Salvar' });
     const el = createTooltip({ trigger, content: 'Salvar' });
@@ -129,7 +134,18 @@ export const WithShortcut: Story = {
 };
 
 export const LongText: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      source: {
+        transform: tooltipSourceCom({
+          triggerLabel: 'Mais informação',
+          content:
+            'Esta ação salva todas as alterações localmente e sincroniza com o servidor quando houver conexão.',
+        }),
+      },
+    },
+  },
   render: () => {
     const trigger = createButton({
       variant: 'outline',

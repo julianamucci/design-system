@@ -9,6 +9,7 @@ import {
   createBreadcrumbPage,
   createBreadcrumbSeparator,
 } from './breadcrumb';
+import { breadcrumbSource } from './breadcrumb.source';
 import { createBreadcrumbDocs } from '@/components/docs/BreadcrumbDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
@@ -24,7 +25,10 @@ const meta: Meta = {
   tags: ['autodocs', 'navigation'],
   parameters: {
     design: figmaDesign('breadcrumb'),
-    docs: { page: withAutoDocsTab(createBreadcrumbDocs) },
+    docs: {
+      page: withAutoDocsTab(createBreadcrumbDocs),
+      source: { transform: breadcrumbSource },
+    },
   },
 };
 

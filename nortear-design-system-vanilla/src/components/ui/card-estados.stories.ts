@@ -8,6 +8,7 @@ import {
   createCardContent,
   createCardFooter,
 } from './card';
+import { cardClicavelSourceCom, cardSource, cardSourceCom } from './card.source';
 import { createButton } from '@/components/ui/button';
 
 /**
@@ -26,6 +27,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: cardSource },
       description: {
         component:
           'Configurações do Card: padrão (container passivo), clicável (envolvido em <a> com aria-label descritivo) e com footer de ações. O Card raiz nunca recebe foco — a semântica de ativação vive no wrapper ou nos controles internos.',
@@ -91,6 +93,9 @@ export const Clickable: Story = {
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
     docs: {
+      // Override de story: a forma do snippet é outra — o `<a>` de fora é o
+      // assunto, e é ele que carrega nome, anel de foco e ativação.
+      source: { transform: cardClicavelSourceCom() },
       description: {
         story:
           'Card envolvido em `<a>` com `aria-label` descritivo. Não use handler de clique no Card root — a semântica de ativação por teclado e o anel de foco vivem no wrapper, e o Tab alcança um destino só.',
@@ -143,6 +148,9 @@ export const WithFooter: Story = {
   parameters: {
     covers: ['functional.item5'],
     docs: {
+      // Override de story: o rodapé é uma fábrica a mais na composição, e é ele
+      // que zera o respiro de baixo do Card.
+      source: { transform: cardSourceCom({ showFooter: true }) },
       description: {
         story:
           'Composição com CardFooter: o Card zera o próprio padding inferior quando detecta o rodapé como filho direto, e o rodapé ganha borda superior e fundo soft. Botões usam `aria-label` contextual para não virarem rótulos repetidos numa lista.',

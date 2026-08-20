@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPagination } from './pagination';
+import {
+  paginationComEstadoSourceCom,
+  paginationSource,
+  paginationSourceCom,
+} from './pagination.source';
 
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
 const ROTULO_PROXIMA = 'Ir para a próxima página';
@@ -13,6 +18,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: paginationSource },
       description: {
         component:
           'Composições do Pagination: Simple (5 páginas), WithEllipsis (12 páginas), LastPage (próxima desabilitado), Interactive (estado do consumidor) e CompleteTable (rodapé de tabela). A factory não guarda estado — quem consome mantém `current` e remonta a faixa a cada mudança.',
@@ -80,7 +86,20 @@ export const Simple: Story = {
 
 export const WithEllipsis: Story = {
   name: 'With ellipsis (12 pages, current 6)',
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    // Override de story: as reticências só aparecem acima de 7 páginas — o
+    // snippet do meta, com 5, esconderia justamente o assunto.
+    docs: {
+      source: {
+        transform: paginationSourceCom({
+          total: 12,
+          current: 6,
+          label: 'Paginação com reticências',
+        }),
+      },
+    },
+  },
   render: () =>
     wrap(
       createPagination({
@@ -125,6 +144,17 @@ export const WithEllipsis: Story = {
 
 export const LastPage: Story = {
   name: 'Last page (next disabled)',
+  parameters: {
+    docs: {
+      source: {
+        transform: paginationSourceCom({
+          total: 10,
+          current: 10,
+          label: 'Paginação na última página',
+        }),
+      },
+    },
+  },
   render: () =>
     wrap(
       createPagination({
@@ -155,6 +185,19 @@ export const LastPage: Story = {
 
 export const Interactive: Story = {
   name: 'Interactive (state held by the consumer)',
+  parameters: {
+    // Override de story: aqui o assunto é o estado do lado de quem consome, e
+    // ele pede outra FORMA de snippet — a fábrica não guarda a página.
+    docs: {
+      source: {
+        transform: paginationComEstadoSourceCom({
+          total: 8,
+          current: 3,
+          label: 'Paginação interativa',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack nds-w-full nds-p-2 nds-min-h-24';
@@ -233,6 +276,20 @@ export const Interactive: Story = {
 
 export const WithRoute: Story = {
   name: 'Integrated with routing',
+  parameters: {
+    // Override de story: `hrefForPage` é o assunto, e sem ele o snippet do meta
+    // mostraria links que nascem `#`.
+    docs: {
+      source: {
+        transform: paginationSourceCom({
+          total: 8,
+          current: 3,
+          label: 'Paginação por rota',
+          hrefForPage: '(page) => `?page=${page}`',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack nds-w-full nds-p-2 nds-min-h-24';
@@ -294,6 +351,20 @@ export const WithRoute: Story = {
 
 export const CompleteTable: Story = {
   name: 'Complete table footer',
+  parameters: {
+    // Override de story: o alinhamento é o PONTO desta composição, e `align`
+    // não passa por control nenhum.
+    docs: {
+      source: {
+        transform: paginationSourceCom({
+          total: 12,
+          current: 2,
+          align: 'end',
+          label: 'Paginação do rodapé da tabela',
+        }),
+      },
+    },
+  },
   render: () => {
     // `nds-cluster` e não `nds-stack`: só o cluster tem data-align/data-justify,
     // e é ele que quebra a linha sozinho quando a largura aperta.

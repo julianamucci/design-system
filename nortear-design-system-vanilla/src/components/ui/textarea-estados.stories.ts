@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
+import { textareaSource, textareaSourceCom } from './textarea.source';
 import { createLabel } from './label';
 import {
   anelDeFocoAssentado,
@@ -15,6 +16,7 @@ const meta: Meta = {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
+      source: { transform: textareaSource },
       description: {
         component:
           'Estados do Textarea: padrão (vazio), foco, preenchido, desabilitado, read-only e inválido (aria-invalid).',
@@ -94,7 +96,20 @@ export const Focus: Story = {
 };
 
 export const Filled: Story = {
-  parameters: { covers: ['accessibility.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['accessibility.item2', 'visual.item2'],
+    docs: {
+      source: {
+        transform: textareaSourceCom({
+          id: 'biografia',
+          label: 'Biografia',
+          placeholder: 'Conte um pouco sobre você...',
+          value:
+            'Designer multidisciplinar com 8 anos de experiência em produtos digitais. Apaixonado por sistemas de design escaláveis.',
+        }),
+      },
+    },
+  },
   render: () => labeled(
     'est-filled',
     'Biografia',
@@ -121,7 +136,12 @@ export const Filled: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: {
+      source: { transform: textareaSourceCom({ disabled: true, placeholder: 'Não disponível' }) },
+    },
+  },
   render: () => labeled(
     'est-disabled',
     'Descrição',
@@ -147,7 +167,20 @@ export const Disabled: Story = {
 };
 
 export const ReadOnly: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    // `readOnly` não é opção da fábrica: vai pela API do DOM depois de criar.
+    docs: {
+      source: {
+        transform: textareaSourceCom({
+          id: 'observacoes',
+          label: 'Observações',
+          readOnly: true,
+          value: 'Pedido confirmado em 02/05/2026. Entrega prevista em até 5 dias úteis.',
+        }),
+      },
+    },
+  },
   render: () => {
     const ta = createTextarea({
       value: 'Pedido confirmado em 02/05/2026. Entrega prevista em até 5 dias úteis.',
@@ -173,7 +206,18 @@ export const ReadOnly: Story = {
 };
 
 export const Invalid: Story = {
-  parameters: { covers: ['accessibility.item5', 'visual.item3'] },
+  parameters: {
+    covers: ['accessibility.item5', 'visual.item3'],
+    docs: {
+      source: {
+        transform: textareaSourceCom({
+          value: 'curto',
+          ariaInvalid: true,
+          erro: 'A descrição precisa de pelo menos 20 caracteres.',
+        }),
+      },
+    },
+  },
   render: () => {
     const ta = createTextarea({ value: 'curto', class: CLASSES });
     ta.setAttribute('aria-invalid', 'true');

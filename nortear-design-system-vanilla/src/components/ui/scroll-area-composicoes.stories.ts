@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea } from './scroll-area';
+import {
+  scrollAreaSource,
+  scrollAreaSourceCom,
+  scrollAreaSourceEmCard,
+} from './scroll-area.source';
 import { createCard, createCardHeader, createCardTitle, createCardDescription, createCardContent } from './card';
 import { createBadge } from './badge';
 
@@ -13,6 +18,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: scrollAreaSource },
       description: {
         component:
           'Composicoes reais: lista vertical com badges, cards horizontais em carrossel, tabela ampla bidirecional, ScrollArea dentro de Card e sidebar de navegação rolável.',
@@ -43,6 +49,19 @@ function tagItem(label: string, count: string): HTMLElement {
 
 export const TagList: Story = {
   name: 'Vertical list with badges',
+  parameters: {
+    // A etiqueta ao lado de cada linha é a composição: sem o override o snippet
+    // mostraria uma lista de textos e o Badge sumiria.
+    docs: {
+      source: {
+        transform: scrollAreaSourceCom({
+          size: 'xl',
+          'aria-label': 'Versões publicadas',
+          conteudo: 'badges',
+        }),
+      },
+    },
+  },
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full nds-max-w-sm';
@@ -91,6 +110,20 @@ export const TagList: Story = {
 
 export const HorizontalCards: Story = {
   name: 'Horizontal card carousel',
+  parameters: {
+    docs: {
+      source: {
+        transform: scrollAreaSourceCom({
+          size: null,
+          width: '100%',
+          'aria-label': 'Carrossel de produtos',
+          class: 'nds-rounded-md nds-border-default',
+          conteudo: 'fileira',
+          itemCount: 10,
+        }),
+      },
+    },
+  },
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full';
@@ -156,6 +189,20 @@ export const HorizontalCards: Story = {
 
 export const WideTable: Story = {
   name: 'Wide table (bidirectional)',
+  parameters: {
+    docs: {
+      source: {
+        transform: scrollAreaSourceCom({
+          size: 'xl',
+          width: '100%',
+          'aria-label': 'Tabela ampla',
+          class: 'nds-rounded-md nds-border-default',
+          conteudo: 'matriz',
+          itemCount: 20,
+        }),
+      },
+    },
+  },
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-w-full';
@@ -235,6 +282,19 @@ export const WideTable: Story = {
 
 export const InsideCard: Story = {
   name: 'Inside card',
+  parameters: {
+    // A vizinhança é o assunto: o cabeçalho do cartão fica FORA da área rolável,
+    // e é isso que o snippet do meta não teria como mostrar.
+    docs: {
+      source: {
+        transform: scrollAreaSourceEmCard({
+          size: 'lg',
+          'aria-label': 'Últimas ações do usuário',
+          class: 'nds-w-full nds-border-default',
+        }),
+      },
+    },
+  },
   render: () => {
     const card = createCard({ className: 'nds-w-full nds-max-w-md' });
 
@@ -309,6 +369,21 @@ export const InsideCard: Story = {
 
 export const Sidebar: Story = {
   name: 'Navigation sidebar',
+  parameters: {
+    // A navegação dentro da área rolável é a composição: o marco continua sendo
+    // marco, e é ele que precisa de nome próprio.
+    docs: {
+      source: {
+        transform: scrollAreaSourceCom({
+          size: 'xl',
+          'aria-label': 'Navegação lateral',
+          class: 'nds-rounded-md nds-border-default',
+          conteudo: 'links',
+          itemCount: 44,
+        }),
+      },
+    },
+  },
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-cluster nds-w-full';

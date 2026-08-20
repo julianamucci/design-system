@@ -5,6 +5,7 @@ import {
   medirCrescimentoDoTrilho,
 } from '@shared/testing/tabs-probe';
 import { createTabs, type TabsItemDef } from './tabs';
+import { tabsSource, tabsSourceCom } from './tabs.source';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -13,6 +14,7 @@ const meta: Meta = {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
+      source: { transform: tabsSource },
       description: {
         component:
           'As variantes saem das opções `variant` e `orientation` da factory: elas escrevem ' +
@@ -98,6 +100,7 @@ export const Line: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: { transform: tabsSourceCom({ variant: 'line' }) },
       description: {
         story:
           'Variante line: sem trilho, o ativo é marcado por um traço fino desenhado em `::after`. ' +
@@ -137,6 +140,7 @@ export const Vertical: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: tabsSourceCom({ orientation: 'vertical' }) },
       description: {
         story:
           'Orientação vertical: lista empilhada à esquerda, painel ao lado. ' +

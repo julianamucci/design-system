@@ -27,6 +27,13 @@ import {
   createSidebarSeparator,
   type SidebarMenuSubButtonOptions,
 } from './sidebar';
+import {
+  sidebarSource,
+  sidebarSourceCom,
+  sidebarSourceComAcoes,
+  sidebarSourceComEsqueleto,
+  sidebarSourceComSubmenu,
+} from './sidebar.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -38,6 +45,7 @@ const meta: Meta = {
     layout: 'fullscreen',
     controls: { disable: true },
     docs: {
+      source: { transform: sidebarSource },
       description: {
         component:
           'Composicoes avançadas da Sidebar: com grupos de navegação e labels, com badges em itens, com sub-menu e com busca no header.',
@@ -175,6 +183,30 @@ export const WithGroups: Story = {
   parameters: {
     covers: ['accessibility.item6'],
     docs: {
+      // Dois grupos e a linha entre eles: é a separação que a story documenta.
+      source: {
+        transform: sidebarSourceCom({
+          grupos: [
+            {
+              label: 'Principal',
+              items: [
+                { label: 'Dashboard', href: '#', active: true, icon: 'House' },
+                { label: 'Componentes', href: '#', icon: 'LayoutGrid' },
+                { label: 'Tokens', href: '#', icon: 'Layers' },
+              ],
+            },
+            {
+              label: 'Conta',
+              items: [
+                { label: 'Configurações', href: '#', icon: 'Settings' },
+                { label: 'Notificações', href: '#', icon: 'Bell', badge: '5' },
+                { label: 'Perfil', href: '#', icon: 'User' },
+              ],
+            },
+          ],
+          rodape: false,
+        }),
+      },
       description: {
         story: 'Sidebar com dois grupos de navegação separados por <code>SidebarSeparator</code>. Itens com ícones e badge.',
       },
@@ -330,6 +362,9 @@ export const WithGroupActions: Story = {
   parameters: {
     covers: ['accessibility.item2', 'accessibility.item3'],
     docs: {
+      // As sub-fábricas são o assunto: o atalho `createSidebarGroup` esconderia
+      // o rótulo com id, a ação do grupo, o contador ancorado e a faixa.
+      source: { transform: sidebarSourceComAcoes() },
       description: {
         story:
           'Grupo montado peça a peça: <code>SidebarGroupLabel</code> nomeia a lista via <code>aria-labelledby</code>, ' +
@@ -521,6 +556,9 @@ export const WithSubmenu: Story = {
   },
   parameters: {
     docs: {
+      // O recolhimento não é do componente: a fábrica entrega a lista aninhada e
+      // quem compõe liga `aria-expanded` à visibilidade dela.
+      source: { transform: sidebarSourceComSubmenu() },
       description: {
         story: 'Sidebar com item expandível mostrando sub-menu aninhado. Clicar em "Componentes" revela os subitens com linha de referência visual.',
       },
@@ -630,6 +668,8 @@ export const LoadingSkeleton: Story = {
   parameters: {
     covers: ['functional.item9'],
     docs: {
+      // A regra de anúncio é o assunto: só a primeira linha vira `role="status"`.
+      source: { transform: sidebarSourceComEsqueleto() },
       description: {
         story:
           'Espaço reservado enquanto o menu carrega. <code>SidebarMenuSkeleton</code> com <code>showIcon</code> desenha a caixa do ícone à esquerda da caixa do texto.',
@@ -752,6 +792,24 @@ export const WithSearch: Story = {
   },
   parameters: {
     docs: {
+      // O campo de busca é o assunto, e o nome acessível dele é obrigatório na
+      // fábrica: o `placeholder` some no primeiro caractere digitado.
+      source: {
+        transform: sidebarSourceCom({
+          busca: 'Buscar na navegação',
+          grupos: [
+            {
+              label: 'Navegação',
+              items: [
+                { label: 'Dashboard', href: '#', active: true, icon: 'House' },
+                { label: 'Componentes', href: '#', icon: 'LayoutGrid' },
+                { label: 'Tokens', href: '#', icon: 'Layers' },
+                { label: 'Configurações', href: '#', icon: 'Settings' },
+              ],
+            },
+          ],
+        }),
+      },
       description: {
         story: 'Sidebar com campo de busca (<code>SidebarInput</code>) no header. Use para filtrar itens de navegação em apps com muitas seções.',
       },
@@ -828,6 +886,22 @@ export const WithBadges: Story = {
   },
   parameters: {
     docs: {
+      // O contador é o assunto: ele entra no próprio item, dentro do botão.
+      source: {
+        transform: sidebarSourceCom({
+          rodape: false,
+          grupos: [
+            {
+              items: [
+                { label: 'Dashboard', href: '#', active: true, icon: 'House' },
+                { label: 'Notificações', href: '#', icon: 'Bell', badge: '12' },
+                { label: 'Componentes', href: '#', icon: 'LayoutGrid', badge: '3' },
+                { label: 'Configurações', href: '#', icon: 'Settings' },
+              ],
+            },
+          ],
+        }),
+      },
       description: {
         story: 'Sidebar com <code>SidebarMenuBadge</code> nos itens de menu. Use para exibir contadores de notificações ou pendências.',
       },

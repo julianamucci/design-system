@@ -7,6 +7,7 @@ import {
   paineisAbertos,
 } from '@shared/testing/hover-card-probe';
 import { createHoverCard } from './hover-card';
+import { hoverCardSource, hoverCardSourceCom } from './hover-card.source';
 import {
   construirBotao,
   construirCartaoPerfil,
@@ -31,6 +32,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: hoverCardSource },
       description: {
         component:
           'Perfil, preview de link, definição de termo, métrica explicada, lados de abertura e classe extra no painel. O gatilho aparece sempre dentro de uma frase: é o uso real do componente e é o que mantém o alvo em linha dispensado do mínimo de 24px.',
@@ -136,7 +138,22 @@ export const LinkPreview: Story = {
 export const TermDefinition: Story = {
   parameters: {
     covers: ['visual.item3'],
+    // Override de story: o gatilho é OUTRO elemento — um botão, porque não há
+    // para onde navegar — e carrega rótulo próprio, de onde sai o nome do
+    // painel. O snippet do meta mostraria o link, que aqui seria errado.
     docs: {
+      source: {
+        transform: hoverCardSourceCom({
+          triggerTipo: 'botao',
+          triggerLabel: 'WCAG 2.2 AA',
+          triggerAriaLabel: 'Definição de WCAG 2.2 AA',
+          contentTitle: 'WCAG 2.2 nível AA',
+          contentApoio:
+            'Diretrizes de acessibilidade para conteúdo web — contraste mínimo de 4.5:1, operação por teclado e alvo de toque de 24px.',
+          fraseAntes: 'Todo componente do sistema atende',
+          fraseDepois: ', sem exceção.',
+        }),
+      },
       description: {
         story:
           'Sigla no meio da prosa abre o termo por extenso e a definição em uma frase. O gatilho é um botão, não um link: não há para onde navegar — o glossário continua sendo o caminho alternativo obrigatório.',
@@ -178,7 +195,21 @@ export const TermDefinition: Story = {
 
 export const ExplainedMetric: Story = {
   parameters: {
+    // Override de story: mesma razão do termo — o gatilho é um botão com rótulo
+    // próprio, porque uma métrica não navega para lugar nenhum.
     docs: {
+      source: {
+        transform: hoverCardSourceCom({
+          triggerTipo: 'botao',
+          triggerLabel: 'LCP 1.8s',
+          triggerAriaLabel: 'Explicação da métrica LCP',
+          contentTitle: 'Largest Contentful Paint',
+          contentApoio:
+            'Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.',
+          fraseAntes: 'A página inicial fechou o mês em',
+          fraseDepois: ', dentro da meta.',
+        }),
+      },
       description: {
         story:
           'Valor de painel com o nome completo da métrica e os limiares. A cor semântica fica no número — texto corrido dentro do cartão continua na cor de corpo, que é o que garante o contraste independentemente do valor.',
@@ -232,7 +263,22 @@ export const ExplainedMetric: Story = {
 export const Sides: Story = {
   parameters: {
     covers: ['visual.item4'],
+    // Override de story: o lado de abertura é o assunto e não tem control neste
+    // arquivo. O snippet mostra UM cartão com o lado escolhido — a grade de
+    // quatro é o andaime da comparação, não o que se copia.
     docs: {
+      source: {
+        transform: hoverCardSourceCom({
+          triggerTipo: 'botao',
+          triggerLabel: 'acima',
+          triggerAriaLabel: 'Cartão acima do gatilho',
+          side: 'top',
+          contentTitle: 'Lado preferido: acima.',
+          contentApoio: 'O painel publica em data-side o lado que de fato usou.',
+          fraseAntes: 'Abre',
+          fraseDepois: 'do gatilho.',
+        }),
+      },
       description: {
         story:
           'Os quatro lados de abertura. O painel publica em data-side o lado que de fato usou — nesta factory o lado é o pedido, sem fuga de colisão, e é isso que a asserção afirma por eixo.',
@@ -297,7 +343,18 @@ export const Sides: Story = {
 export const ExtraPanelClass: Story = {
   parameters: {
     covers: ['visual.item5'],
+    // Override de story: a classe extra do painel é o assunto inteiro, e não há
+    // control que a carregue — sem isto o snippet mostraria o painel padrão.
     docs: {
+      source: {
+        transform: hoverCardSourceCom({
+          class: 'nds-w-md nds-text-center',
+          contentTitle: 'Joana Silva',
+          contentApoio: 'Fechou 14 tarefas nesta sprint, 9 delas em revisão de acessibilidade.',
+          fraseAntes: 'Resumo da entrega de',
+          fraseDepois: 'nesta sprint.',
+        }),
+      },
       description: {
         story:
           'A classe extra do painel é o caminho para o que a folha do cartão não define — e também para trocar a largura de UMA instância: as utilities entram por último no CSS compartilhado, então uma utilitária de largura vence a largura padrão de 20rem.',

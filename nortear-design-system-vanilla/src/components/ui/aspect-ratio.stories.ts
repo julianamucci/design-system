@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createAspectRatio } from './aspect-ratio';
+import { aspectRatioSource } from './aspect-ratio.source';
 import {
   descreverFalhasDeProporcao,
   medirProporcao,
@@ -24,7 +25,10 @@ const meta: Meta<AspectRatioArgs> = {
   parameters: {
     design: figmaDesign('aspectRatio'),
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createAspectRatioDocs) },
+    docs: {
+      page: withAutoDocsTab(createAspectRatioDocs),
+      source: { transform: aspectRatioSource },
+    },
   },
   argTypes: {
     ratio: {

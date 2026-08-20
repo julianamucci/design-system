@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createSwitch } from './switch';
+import {
+  switchSource,
+  switchSourceFormulario,
+  switchSourcePainel,
+} from './switch.source';
 import { createButton } from './button';
 
 /**
@@ -21,6 +26,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: switchSource },
       description: {
         component:
           'Composicoes de uso do Switch: par básico Switch + Label, painel com descrição, lista de configurações e formulário com envio (sincronizando estado em `<input type="hidden">`, dado que a factory não expõe campo oculto próprio).',
@@ -110,6 +116,16 @@ export const WithDescription: Story = {
   },
   parameters: {
     docs: {
+      source: {
+        transform: switchSourcePainel([
+          {
+            id: 'emails-marketing',
+            label: 'Emails de marketing',
+            description: 'Receba novidades e promoções da plataforma.',
+            checked: true,
+          },
+        ]),
+      },
       description: {
         story:
           'Switch em painel — Label + descrição auxiliar à esquerda, controle à direita. Use para contextualizar o efeito da configuração.',
@@ -175,6 +191,13 @@ export const SettingsList: Story = {
   },
   parameters: {
     docs: {
+      source: {
+        transform: switchSourcePainel([
+          { id: 'pref-email', label: 'Receber novidades por email', description: 'Resumo semanal sobre o produto.', checked: true },
+          { id: 'pref-push', label: 'Receber notificações push', description: 'Alertas no dispositivo em tempo real.' },
+          { id: 'pref-sms', label: 'Alertas por SMS', description: 'Eventos críticos via mensagem de texto.' },
+        ]),
+      },
       description: {
         story:
           'Lista de configurações com vários Switches em painéis empilhados. Padrão recomendado para preferências de usuário (notificações, privacidade, recursos opt-in).',
@@ -236,6 +259,15 @@ export const InFormWithHidden: Story = {
   },
   parameters: {
     docs: {
+      // A fábrica não emite campo oculto: o formulário inteiro é o assunto.
+      source: {
+        transform: switchSourceFormulario({
+          id: 'newsletter',
+          name: 'newsletter',
+          label: 'Aceitar newsletter semanal',
+          checked: true,
+        }),
+      },
       description: {
         story:
           'Padrão para envio em formulário: como a factory não emite campo oculto próprio, sincronize o estado do Switch para um `<input type="hidden" name="...">` pelo callback de mudança.',

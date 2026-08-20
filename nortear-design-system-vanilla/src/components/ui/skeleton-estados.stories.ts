@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSkeleton } from './skeleton';
+import { skeletonSourceCom } from './skeleton.source';
 import {
   animacaoAtiva,
   distincaoDoFundo,
@@ -15,6 +16,16 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      // As duas stories montam a MESMA região de duas linhas: o que muda entre
+      // elas é a preferência do sistema, que opção nenhuma da fábrica controla.
+      source: {
+        transform: skeletonSourceCom({
+          linhas: [
+            { shape: 'text', width: 'full' },
+            { shape: 'text', width: '3-4' },
+          ],
+        }),
+      },
       description: {
         component:
           'Os dois estados que o conteúdo compartilhado documenta: o pulso padrão enquanto o conteúdo carrega, e o pulso desligado quando o sistema pede movimento reduzido.',

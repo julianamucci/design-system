@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
+import {
+  tabsSource,
+  tabsSourceCom,
+  tabsSourceComBadge,
+  tabsSourceComIcones,
+} from './tabs.source';
 import { createBadge } from './badge';
 import { User, Settings, Shield } from 'lucide';
 
@@ -11,6 +17,7 @@ const meta: Meta = {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
+      source: { transform: tabsSource },
       description: {
         component:
           'Composições reais com Tabs: ícone e badge no gatilho, lista lateral e sub-navegação. ' +
@@ -86,6 +93,18 @@ export const WithIconsInTrigger: Story = {
   parameters: {
     covers: ['accessibility.item4'],
     docs: {
+      // `label` é texto: o ícone entra no gatilho depois de montado, e é isso
+      // que o leitor precisa ver.
+      source: {
+        transform: tabsSourceComIcones(
+          [
+            { value: 'profile', label: 'Perfil', content: 'Edite suas informações públicas.', icon: 'User' },
+            { value: 'account', label: 'Conta', content: 'Email, idioma e preferências.', icon: 'Settings' },
+            { value: 'security', label: 'Segurança', content: 'Senha e autenticação em dois fatores.', icon: 'Shield' },
+          ],
+          { 'aria-label': 'Configurações' },
+        ),
+      },
       description: {
         story:
           'Ícones no gatilho. O ícone é sempre decorativo (`aria-hidden="true"`): o rótulo textual já descreve a aba, ' +
@@ -158,6 +177,16 @@ export const WithBadgeInTrigger: Story = {
   parameters: {
     covers: ['functional.item1'],
     docs: {
+      source: {
+        transform: tabsSourceComBadge(
+          [
+            { value: 'inbox', label: 'Caixa de entrada', content: '12 mensagens não lidas.', badge: { text: '12' } },
+            { value: 'spam', label: 'Spam', content: '3 mensagens marcadas como spam.', badge: { text: '3', variant: 'destructive' } },
+            { value: 'trash', label: 'Lixeira', content: 'Itens excluídos nos últimos 30 dias.' },
+          ],
+          { 'aria-label': 'Caixas de mensagem' },
+        ),
+      },
       description: {
         story:
           'Badge no gatilho para contador ou status. O badge entra no nome da aba, mas não é um segundo alvo de foco — ' +
@@ -232,6 +261,17 @@ export const WithBadgeInTrigger: Story = {
 export const Vertical: Story = {
   parameters: {
     docs: {
+      source: {
+        transform: tabsSourceCom({
+          orientation: 'vertical',
+          'aria-label': 'Configurações',
+          itens: [
+            { value: 'profile', label: 'Perfil', content: 'Edite suas informações públicas.' },
+            { value: 'account', label: 'Conta', content: 'Email, idioma e preferências.' },
+            { value: 'security', label: 'Segurança', content: 'Senha e autenticação em dois fatores.' },
+          ],
+        }),
+      },
       description: {
         story:
           'Lista lateral com o painel ao lado. Cabe quando os rótulos são longos ou passam de cinco — ' +
@@ -277,6 +317,17 @@ export const Vertical: Story = {
 export const SubNavigationLine: Story = {
   parameters: {
     docs: {
+      source: {
+        transform: tabsSourceCom({
+          variant: 'line',
+          'aria-label': 'Filtros de listagem',
+          itens: [
+            { value: 'all', label: 'Tudo', content: 'Mostrando todos os itens.' },
+            { value: 'active', label: 'Ativos', content: 'Mostrando apenas ativos.' },
+            { value: 'archived', label: 'Arquivados', content: 'Mostrando apenas arquivados.' },
+          ],
+        }),
+      },
       description: {
         story:
           'Sub-navegação minimalista. Sem trilho, o conjunto não compete com os containers da página em volta; ' +

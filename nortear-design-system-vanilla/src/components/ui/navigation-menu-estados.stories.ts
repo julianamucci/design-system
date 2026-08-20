@@ -8,6 +8,11 @@ import {
   painelAberto,
 } from './navigation-menu.fixtures';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
+import {
+  navigationMenuSource,
+  navigationMenuSourceCom,
+  navigationMenuSourceControlado,
+} from './navigation-menu.source';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -18,6 +23,7 @@ const meta: Meta = {
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     docs: {
+      source: { transform: navigationMenuSource },
       description: {
         component:
           'Os três estados canônicos: Fechado (só a barra), Aberto (painel do item ativo) e Ativo (o destino da página atual).',
@@ -87,6 +93,25 @@ export const Open: Story = {
     coversNotApplicable: {
       'visual.item4': 'a factory não desenha a seta indicadora — não há motor de posicionamento nesta stack',
     },
+    // A descrição de cada destino é o que faz o painel valer a pena aqui, e ela
+    // é opção do item — o snippet do meta mostraria destinos sem descrição.
+    docs: {
+      source: {
+        transform: navigationMenuSourceCom({
+          items: [
+            { label: 'Início', href: '#inicio' },
+            {
+              label: 'Produtos',
+              children: [
+                { label: 'Plano Inicial', href: '#inicial', description: 'Para times pequenos começando.' },
+                { label: 'Plano Profissional', href: '#profissional', description: 'Para empresas em crescimento.' },
+                { label: 'Plano Empresarial', href: '#empresarial', description: 'Recursos avançados e SLA.' },
+              ],
+            },
+          ],
+        }),
+      },
+    },
   },
   render: () => {
     const nav = createNavigationMenu([
@@ -138,7 +163,22 @@ export const Open: Story = {
 };
 
 export const Active: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
+    // `active` é o assunto: é ele que escreve `aria-current="page"`, e sem
+    // override o snippet mostraria uma barra sem destino atual nenhum.
+    docs: {
+      source: {
+        transform: navigationMenuSourceCom({
+          items: [
+            { label: 'Início', href: '#inicio', active: true },
+            { label: 'Produtos', href: '#produtos' },
+            { label: 'Sobre', href: '#sobre' },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início', href: '#inicio', active: true },
@@ -181,6 +221,9 @@ export const Active: Story = {
 export const ControlledValue: Story = {
   parameters: {
     docs: {
+      // Forma diferente de snippet: o modo controlado troca quem manda na
+      // barra, e isso aparece na chamada E nas duas linhas que vêm depois dela.
+      source: { transform: navigationMenuSourceControlado() },
       description: {
         story:
           'A barra não decide nada sozinha: o clique só avisa qual painel foi pedido, e o ' +
@@ -274,6 +317,23 @@ export const ListenerCleanup: Story = {
     // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
     // sempre a mesma legenda.
     chromatic: { disable: true },
+    docs: {
+      source: {
+        transform: navigationMenuSourceCom({
+          destroy: true,
+          items: [
+            {
+              label: 'Produtos',
+              children: [
+                { label: 'Visão geral', href: '#visao' },
+                { label: 'Preços', href: '#precos' },
+              ],
+            },
+            { label: 'Suporte', href: '#suporte' },
+          ],
+        }),
+      },
+    },
   },
   render: () => hospedeiroDeSonda(
     'Sonda de limpeza: a barra é montada, um painel é aberto e a barra sai da página.',

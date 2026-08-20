@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createCheckbox } from './checkbox';
+import {
+  checkboxComDescricaoSourceCom,
+  checkboxEmGrupoSourceCom,
+  checkboxSelecionarTodosSource,
+  checkboxSource,
+} from './checkbox.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -10,6 +16,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: checkboxSource },
       description: {
         component:
           'Composicoes de uso do Checkbox: com label, com descrição auxiliar, em grupo fieldset e em lista de múltipla seleção.',
@@ -90,6 +97,9 @@ export const WithDescription: Story = {
   },
   parameters: {
     docs: {
+      // Override de story: o texto auxiliar é uma peça a mais, e o lugar dele —
+      // fora do <label> — é justamente o que a story ensina.
+      source: { transform: checkboxComDescricaoSourceCom() },
       description: {
         story: 'Checkbox + Label + texto auxiliar abaixo. Para contexto adicional sobre a opção selecionada.',
       },
@@ -145,6 +155,9 @@ export const InFieldsetGroup: Story = {
   },
   parameters: {
     docs: {
+      // Override de story: são VÁRIAS caixas dentro de um fieldset nomeado, e o
+      // snippet do meta mostraria uma só, solta.
+      source: { transform: checkboxEmGrupoSourceCom({ fieldset: true }) },
       description: {
         story: 'Grupo de checkboxes relacionados em `<fieldset>` + `<legend>`. Obrigatório para WCAG 1.3.1 (informação em estrutura).',
       },
@@ -311,6 +324,9 @@ export const SelectAll: Story = {
   },
   parameters: {
     docs: {
+      // Override de story: a forma do snippet é outra — o pai é RECRIADO a cada
+      // mudança de filho, e é essa engrenagem que a story ensina.
+      source: { transform: checkboxSelecionarTodosSource },
       description: {
         story: 'Padrão "selecionar todos" com checkbox pai que controla os filhos, recuados com `.nds-checkbox-sublist`. Com seleção parcial dos filhos o pai fica indeterminado; com todos marcados, o pai marca; com nenhum, o pai desmarca.',
       },
@@ -377,6 +393,19 @@ export const InItemList: Story = {
   },
   parameters: {
     docs: {
+      // Override de story: são quatro caixas em linhas com borda, e duas já
+      // nascem marcadas — o snippet do meta mostraria uma só, sem borda.
+      source: {
+        transform: checkboxEmGrupoSourceCom({
+          legenda: 'Preferências de contato',
+          itens: [
+            { id: 'pref-email', label: 'Receber novidades por email', checked: true },
+            { id: 'pref-push', label: 'Receber notificações push' },
+            { id: 'pref-sms', label: 'Alertas por SMS' },
+            { id: 'pref-news', label: 'Newsletter semanal', checked: true },
+          ],
+        }),
+      },
       description: {
         story: 'Checkboxes integrados em lista de itens com borda. Padrão para preferências e configurações.',
       },

@@ -10,6 +10,7 @@ import {
   createBreadcrumbSeparator,
   createBreadcrumbEllipsis,
 } from './breadcrumb';
+import { breadcrumbSource, breadcrumbSourceCom } from './breadcrumb.source';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -20,6 +21,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: breadcrumbSource },
       description: {
         component:
           'Configuracoes estruturais do Breadcrumb: simples, com ellipsis, separador customizado e link com atributos de router.',
@@ -59,6 +61,15 @@ export const Simple: Story = {
   parameters: {
     covers: ['functional.item3', 'functional.item6', 'accessibility.item5'],
     docs: {
+      // Override de story: um nível só, e o ouvinte de navegação — nem a
+      // profundidade da trilha nem o callback passam por control.
+      source: {
+        transform: breadcrumbSourceCom({
+          niveis: ['Início'],
+          atual: 'Componentes',
+          onNavigate: 'registrarNavegacao(text);',
+        }),
+      },
       description: { story: 'Composição básica com 2 níveis — link inicial + BreadcrumbPage.' },
     },
   },
@@ -113,6 +124,11 @@ export const WithEllipsis: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
     docs: {
+      // Override de story: as reticências são o assunto, e a fábrica delas é
+      // uma peça a mais na composição.
+      source: {
+        transform: breadcrumbSourceCom({ ellipsis: true, ellipsisLabel: 'Mais páginas' }),
+      },
       description: {
         story:
           'Ellipsis colapsando níveis intermediários. Com rótulo, o indicador é anunciado; sem ele, fica decorativo.',
@@ -173,6 +189,9 @@ export const CustomSeparator: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
     docs: {
+      // Override de story: o desenho do separador entra por `content`, e o
+      // snippet do meta mostraria o chevron padrão.
+      source: { transform: breadcrumbSourceCom({ separator: '/' }) },
       description: {
         story:
           'Separador customizado via content de createBreadcrumbSeparator — mantém aria-hidden automaticamente.',
@@ -229,6 +248,13 @@ export const AsChildLink: Story = {
   parameters: {
     covers: ['functional.item3'],
     docs: {
+      // Override de story: o assunto é o atributo do consumidor sobrevivendo no
+      // <a> do componente, e o snippet do meta não mostraria atributo nenhum.
+      source: {
+        transform: breadcrumbSourceCom({
+          linkSetup: "link.setAttribute('data-router-link', 'true');",
+        }),
+      },
       description: {
         story:
           'Link com atributos do consumidor — os data-* do router passam direto para o <a> do componente.',

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fn, userEvent, waitFor, within, expect } from 'storybook/test';
 import { createCalendar } from './calendar';
+import { calendarComPopoverSourceCom, calendarSource } from './calendar.source';
 import { createPopover } from './popover';
 import { createButton } from './button';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
@@ -18,6 +19,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: calendarSource },
       description: {
         component:
           'Seletor de data: um botão mostra a data escolhida e abre o calendário num popover.',
@@ -42,6 +44,9 @@ export const DatePicker: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      // Override de story: a forma do snippet é outra — são três fábricas, e o
+      // que se ensina é a ligação entre elas, não o calendário sozinho.
+      source: { transform: calendarComPopoverSourceCom() },
       description: {
         story:
           'O botão carrega a data escolhida; escolher uma nova atualiza o rótulo e fecha o popover.',

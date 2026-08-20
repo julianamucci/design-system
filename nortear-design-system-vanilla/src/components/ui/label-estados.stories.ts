@@ -7,6 +7,7 @@ import {
 } from '@shared/testing/label-probe';
 import { createLabel } from './label';
 import { createInput } from './input';
+import { labelSource, labelSourceBloco, labelSourceCom, labelSourceObrigatorio } from './label.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -18,6 +19,7 @@ const meta: Meta = {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
+      source: { transform: labelSource },
       description: {
         component:
           'Estados do rótulo: padrão, desabilitado pelo controle irmão, desabilitado pelo bloco e obrigatório.',
@@ -77,6 +79,18 @@ export const Default: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item3'],
+    // A marca do esmaecimento vai no CONTROLE (`nds-peer`), e a ordem do DOM
+    // faz parte da regra: sem override o snippet mostraria um par comum.
+    docs: {
+      source: {
+        transform: labelSourceCom({
+          text: 'CPF',
+          htmlFor: 'cpf',
+          placeholder: '000.000.000-00',
+          disabled: true,
+        }),
+      },
+    },
   },
   render: () => {
     const wrapper = bloco();
@@ -111,6 +125,15 @@ export const Disabled: Story = {
 export const DisabledViaGroup: Story = {
   parameters: {
     covers: ['functional.item4'],
+    docs: {
+      source: {
+        transform: labelSourceBloco({
+          text: 'Documento',
+          htmlFor: 'documento',
+          placeholder: 'ex: 000.000.000-00',
+        }),
+      },
+    },
   },
   render: () => {
     const wrapper = bloco();
@@ -139,6 +162,16 @@ export const DisabledViaGroup: Story = {
 export const Required: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+    docs: {
+      source: {
+        transform: labelSourceObrigatorio({
+          text: 'Email profissional',
+          htmlFor: 'email',
+          type: 'email',
+          placeholder: 'ex: joao@empresa.com',
+        }),
+      },
+    },
   },
   render: () => {
     const wrapper = bloco();

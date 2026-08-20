@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPopover } from './popover';
+import { popoverSource, popoverSourceAcoes, popoverSourceCom } from './popover.source';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
@@ -12,6 +13,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: popoverSource },
       description: {
         component:
           'Estados do Popover: fechado (painel fora do DOM), aberto, ancorado acima, ' +
@@ -131,7 +133,14 @@ export const Open: Story = {
 };
 
 export const SideTop: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // Override de story: o lado é o assunto, e `side` não passa por control
+    // neste arquivo.
+    docs: {
+      source: { transform: popoverSourceCom({ side: 'top', triggerLabel: 'Abrir acima' }) },
+    },
+  },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Abrir acima' });
     const el = createPopover({
@@ -168,7 +177,14 @@ export const SideTop: Story = {
 };
 
 export const Controlled: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    // Override de story: quem observa o estado por fora é `onOpenChange`, e é
+    // essa linha que o snippet do meta não teria como adivinhar.
+    docs: {
+      source: { transform: popoverSourceCom({ onOpenChange: '(aberto) => mostrarEstado(aberto)' }) },
+    },
+  },
   render: () => {
     const status = document.createElement('span');
     status.className = 'nds-text-caption nds-font-mono nds-text-muted-foreground';
@@ -230,7 +246,12 @@ export const Controlled: Story = {
 };
 
 export const Focused: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item3'],
+    // Override de story: o assunto é o foco entrar no primeiro focável, e o
+    // snippet do meta mostra um painel só de texto, sem nenhum.
+    docs: { source: { transform: popoverSourceAcoes({ title: 'Confirmar alteração' }) } },
+  },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
 
@@ -310,6 +331,17 @@ export const ListenerCleanup: Story = {
     // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
     // sempre a mesma legenda.
     chromatic: { disable: true },
+    // Override de story: o assunto é a limpeza, e a linha de `destroy()` é
+    // justamente o que o snippet do meta não mostra.
+    docs: {
+      source: {
+        transform: popoverSourceCom({
+          triggerLabel: 'Abrir',
+          text: 'Conteúdo do popover.',
+          destroy: true,
+        }),
+      },
+    },
   },
   render: () => hospedeiroDeSonda(
     'Sonda de limpeza: o popover é montado, aberto e removido da página pela play.',

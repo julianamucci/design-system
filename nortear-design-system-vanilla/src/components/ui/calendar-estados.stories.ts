@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fn, userEvent, within, expect } from 'storybook/test';
 import { createCalendar } from './calendar';
+import { calendarSource, calendarSourceCom } from './calendar.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -20,6 +21,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: calendarSource },
       description: {
         component: 'Estados de célula: selecionada, bloqueada e o dia de hoje.',
       },
@@ -93,6 +95,15 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
     docs: {
+      // Override de story: a regra que bloqueia datas é o assunto, e o snippet
+      // do meta mostraria um calendário sem restrição nenhuma.
+      source: {
+        transform: calendarSourceCom({
+          value: 'new Date(2026, 3, 15)',
+          disabled: '(data) => [0, 6].includes(data.getDay())',
+          onSelect: '(data) => registrarEscolha(data)',
+        }),
+      },
       description: {
         story:
           'Datas bloqueadas por uma regra — aqui, fins de semana. A célula bloqueada não recebe foco nem reporta seleção.',
@@ -156,6 +167,9 @@ export const Today: Story = {
   parameters: {
     covers: ['functional.item1'],
     docs: {
+      // Override de story: a AUSÊNCIA de valor inicial é o assunto — é ela que
+      // faz o calendário abrir no mês corrente com hoje só destacado.
+      source: { transform: calendarSourceCom({ value: undefined }) },
       description: {
         story:
           'Sem data escolhida: o calendário abre no mês corrente e destaca o dia de hoje, sem marcá-lo como selecionado.',
@@ -325,6 +339,13 @@ export const RangeWithMiddle: Story = {
     }),
   parameters: {
     docs: {
+      // Override de story: modo intervalo, com o valor na forma de par.
+      source: {
+        transform: calendarSourceCom({
+          mode: 'range',
+          value: '{ from: new Date(2026, 3, 10), to: new Date(2026, 3, 18) }',
+        }),
+      },
       description: {
         story: 'Intervalo com miolo: os dias entre início e fim também ficam marcados.',
       },

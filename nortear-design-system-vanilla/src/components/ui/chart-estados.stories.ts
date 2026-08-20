@@ -13,6 +13,7 @@ import {
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
+import { chartSource, chartSourceCom } from './chart.source';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
@@ -34,6 +35,7 @@ const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: chartSource } },
   },
   title: 'UI/Chart/States',
 };
@@ -47,6 +49,16 @@ export const Empty: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item3'],
     docs: {
+      // Override de story: a AUSÊNCIA de dado é o assunto, e com ela some a
+      // descrição do desenho — sem imagem não há o que narrar.
+      source: {
+        transform: chartSourceCom({
+          dados: 'vazio',
+          label: undefined,
+          height: undefined,
+          emptyLabel: FRASE_VAZIA,
+        }),
+      },
       description: {
         story: 'Sem série com dado, o bloco troca o desenho por uma frase que explica a ausência e orienta a próxima ação.',
       },
@@ -91,6 +103,9 @@ export const Empty: Story = {
 export const SingleSeries: Story = {
   parameters: {
     docs: {
+      // Override de story: uma série SÓ, na forma `xAxis` + `series` — é o que
+      // faz a legenda desaparecer sozinha.
+      source: { transform: chartSourceCom({ dados: 'serieUnica' }) },
       description: {
         story: 'Com uma série só a legenda não aparece: não há o que comparar, e a linha extra só roubaria altura do desenho.',
       },
@@ -130,6 +145,13 @@ export const MultiSeries: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
     docs: {
+      // Override de story: são DUAS séries, e é a contagem que acende a legenda.
+      source: {
+        transform: chartSourceCom({
+          dados: 'multi',
+          label: 'Acessos mensais por dispositivo: desktop e mobile',
+        }),
+      },
       description: {
         story: 'Com mais de uma série a legenda aparece sozinha, e cada série ganha cor e trama próprias.',
       },
@@ -187,6 +209,11 @@ export const MultiSeries: Story = {
 export const OnePoint: Story = {
   parameters: {
     docs: {
+      // Override de story: o caso de borda é o dado, e é ele que o snippet
+      // precisa mostrar — um ponto só.
+      source: {
+        transform: chartSourceCom({ dados: 'umPonto', label: 'Acessos de janeiro' }),
+      },
       description: {
         story: 'Série com um único ponto. Caso de borda: o desenho continua com eixo, categoria escrita e uma forma de dado.',
       },
@@ -238,6 +265,13 @@ export const ThemeTokens: Story = {
       'visual.item4': 'a foto no tema escuro depende do mesmo caminho — verificação em aberto',
     },
     docs: {
+      // Override de story: duas séries, na forma `xAxis` + `series`.
+      source: {
+        transform: chartSourceCom({
+          dados: 'multi',
+          label: 'Acessos mensais por dispositivo, no tema em vigor',
+        }),
+      },
       description: {
         story: 'Cor e tipografia do desenho saem dos tokens do tema em vigor, e não de valores cravados.',
       },
@@ -290,6 +324,13 @@ export const GraphicContrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
+      // Override de story: duas séries, na forma `xAxis` + `series`.
+      source: {
+        transform: chartSourceCom({
+          dados: 'multi',
+          label: 'Acessos mensais por dispositivo: desktop e mobile',
+        }),
+      },
       description: {
         story: 'O contorno das formas e o texto dos eixos medidos contra o fundo que se enxerga atrás do gráfico.',
       },

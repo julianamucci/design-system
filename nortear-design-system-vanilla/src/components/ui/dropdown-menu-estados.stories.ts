@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
+import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
@@ -13,6 +14,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           'Estados do DropdownMenu: Fechado (apenas trigger), Aberto (defaultOpen via .click()), Controlado (open externo) e ItemDesabilitado (aria-disabled).',
@@ -155,6 +157,23 @@ export const Open: Story = {
 };
 
 export const Controlled: Story = {
+  parameters: {
+    // Override de story: o assunto é o callback que devolve cada mudança a quem
+    // é dono do estado — sem ele o snippet mostraria um menu que ninguém
+    // acompanha de fora.
+    docs: {
+      source: {
+        transform: dropdownMenuSourceCom({
+          triggerLabel: 'Abrir menu',
+          items: [
+            { label: 'Comando A', value: 'a' },
+            { label: 'Comando B', value: 'b' },
+          ],
+          onOpenChange: '(aberto) => sincronizarEstadoExterno(aberto)',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.style.contain = 'layout';
@@ -216,6 +235,23 @@ export const Controlled: Story = {
 };
 
 export const ItemDisabled: Story = {
+  parameters: {
+    // Override de story: o item bloqueado é o assunto, e a marca dele é uma
+    // chave da lista — o snippet do meta traria a lista canônica, sem nenhum.
+    docs: {
+      source: {
+        transform: dropdownMenuSourceCom({
+          triggerLabel: 'Mais ações',
+          items: [
+            { label: 'Editar', value: 'edit' },
+            { label: 'Arquivar', value: 'archive', disabled: true },
+            { label: 'Excluir', value: 'delete' },
+          ],
+          defaultOpen: true,
+        }),
+      },
+    },
+  },
   render: () => buildBase({
     triggerLabel: 'Mais ações',
     openInitially: true,
@@ -261,7 +297,26 @@ export const ItemDisabled: Story = {
 // mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
 
 export const CheckboxIndeterminate: Story = {
-  parameters: { covers: ['functional.item8'] },
+  parameters: {
+    covers: ['functional.item8'],
+    // Override de story: o item de marcação e o estado misto são o assunto, e
+    // vivem na lista — o snippet do meta mostraria uma lista de ações simples,
+    // sem `checkbox` nenhum.
+    docs: {
+      source: {
+        transform: dropdownMenuSourceCom({
+          triggerLabel: 'Colunas',
+          items: [
+            { type: 'label', label: 'Colunas visíveis' },
+            { type: 'checkbox', label: 'Nome', value: 'nome', indeterminate: true },
+            { type: 'checkbox', label: 'E-mail', value: 'email', checked: true },
+            { type: 'checkbox', label: 'Telefone', value: 'telefone', checked: false },
+          ],
+          defaultOpen: true,
+        }),
+      },
+    },
+  },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Colunas' });
     const menu = createDropdownMenu({

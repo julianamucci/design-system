@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
+import { carouselSource, carouselSourceCom } from './carousel.source';
 import { createCard, createCardContent } from './card';
 
 // ─── Slide helpers ────────────────────────────────────────────────────────────
@@ -38,6 +39,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: carouselSource },
       description: {
         component:
           'Estados extremos do Carousel — no primeiro slide a seta de voltar está desabilitada, no último a de avançar.',
@@ -57,7 +59,10 @@ function montar(total: number, label: string): HTMLElement {
 }
 
 export const FirstSlide: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: { source: { transform: carouselSourceCom({ slides: 4, ariaLabel: 'Slides no primeiro item' }) } },
+  },
   render: () => montar(4, 'Slides no primeiro item'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -90,7 +95,10 @@ export const FirstSlide: Story = {
 };
 
 export const LastSlide: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item4'],
+    docs: { source: { transform: carouselSourceCom({ slides: 3, ariaLabel: 'Slides no último item' }) } },
+  },
   render: () => montar(3, 'Slides no último item'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

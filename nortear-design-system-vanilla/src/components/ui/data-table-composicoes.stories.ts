@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, waitFor, fireEvent, expect, fn } from 'storybook/test';
 import { createDataTable, type DataTableColumn } from './data-table';
+import { dataTableSource, dataTableSourceCom } from './data-table.source';
 import { createBadge } from './badge';
 import { type Invoice, invoices, currency, statusVariant, baseColumns } from './data-table.fixtures';
 
@@ -13,6 +14,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: dataTableSource } },
   },
 };
 
@@ -78,6 +80,17 @@ export const WithColumnFilters: Story = {
     covers: ['functional.item2', 'accessibility.item4', 'visual.item2'],
     controls: { disable: true },
     actions: { disable: true },
+    // O filtro por coluna mora no `meta` de cada coluna: o desenho canônico de
+    // colunas do meta esconderia a única coisa que esta story documenta.
+    docs: {
+      source: {
+        transform: dataTableSourceCom({
+          colunas: 'filtro',
+          enableColumnFilters: true,
+          enablePagination: false,
+        }),
+      },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -143,6 +156,7 @@ export const ResizableColumns: Story = {
     covers: ['visual.item3'],
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: dataTableSourceCom({ enableColumnResizing: true }) } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -200,6 +214,14 @@ export const ReorderableAndPinnable: Story = {
     covers: ['functional.item6', 'visual.item3'],
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      source: {
+        transform: dataTableSourceCom({
+          enableColumnOrdering: true,
+          enableColumnPinning: true,
+        }),
+      },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const cabecalhos = () => [
@@ -343,6 +365,20 @@ export const WithInlineEditing: Story = {
     covers: ['functional.item5', 'visual.item4'],
     controls: { disable: true },
     actions: { disable: true },
+    // A edição inline é uma chave no `meta` da coluna mais o evento que
+    // devolve (rowIndex, columnId, value) — quem atualiza os dados é quem
+    // consome, e é isso que o snippet precisa mostrar.
+    docs: {
+      source: {
+        transform: dataTableSourceCom({
+          colunas: 'editavel',
+          enableGlobalFilter: false,
+          enableColumnVisibility: false,
+          enablePagination: false,
+          onCellEdit: '(rowIndex, columnId, value) => atualizar(rowIndex, columnId, value)',
+        }),
+      },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

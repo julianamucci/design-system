@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createCodeBlock } from './code-block';
+import { codeBlockSource, codeBlockSourceCom } from './code-block.source';
 import { LANGUAGE_ITEMS } from '@/components/docs/CodeBlockDocs';
 import {
   MINIMO_DE_CONTRASTE,
@@ -21,6 +22,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: codeBlockSource },
       description: {
         component:
           'Linguagens suportadas pela classificação de sintaxe. Sem numeração: os trechos têm uma linha só.',
@@ -36,6 +38,22 @@ type Story = StoryObj;
 const PALETA_CODE = `const items = await load();
 const total = items.length;
 render(items, total);`;
+
+/**
+ * Snippet da story: a MESMA linguagem e o mesmo trecho que ela renderiza.
+ *
+ * Override e não a transform do meta: a linguagem é o assunto de cada story
+ * aqui, e o snippet do meta — que cai no padrão da fábrica — esconderia
+ * justamente a opção que a story existe para mostrar.
+ */
+function sourceDaLinguagem(key: string) {
+  const item = LANGUAGE_ITEMS.find(i => i.key === key)!;
+  return codeBlockSourceCom({
+    code: item.code,
+    language: item.language,
+    showLineNumbers: false,
+  });
+}
 
 /** Trecho e linguagem da seção Variantes, pela chave do item. */
 function renderLanguage(key: string): () => HTMLElement {
@@ -66,7 +84,10 @@ function root(canvasElement: HTMLElement): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Script: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: sourceDaLinguagem('script') } },
+  },
   render: renderLanguage('script'),
   play: async ({ canvasElement, step }) => {
     await step('TypeScript recebe classificação de sintaxe', async () => {
@@ -77,7 +98,10 @@ export const Script: Story = {
 };
 
 export const Markup: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: sourceDaLinguagem('markup') } },
+  },
   render: renderLanguage('markup'),
   play: async ({ canvasElement, step }) => {
     await step('Marcação recebe classificação de sintaxe', async () => {
@@ -88,7 +112,10 @@ export const Markup: Story = {
 };
 
 export const Styles: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: sourceDaLinguagem('styles') } },
+  },
   render: renderLanguage('styles'),
   play: async ({ canvasElement, step }) => {
     await step('CSS recebe classificação de sintaxe', async () => {
@@ -99,7 +126,10 @@ export const Styles: Story = {
 };
 
 export const Date: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: sourceDaLinguagem('data') } },
+  },
   render: renderLanguage('data'),
   play: async ({ canvasElement, step }) => {
     await step('JSON recebe classificação de sintaxe', async () => {
@@ -110,7 +140,10 @@ export const Date: Story = {
 };
 
 export const Shell: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: sourceDaLinguagem('shell') } },
+  },
   render: renderLanguage('shell'),
   play: async ({ canvasElement, step }) => {
     await step('Linha de comando recebe classificação de sintaxe', async () => {
@@ -121,7 +154,10 @@ export const Shell: Story = {
 };
 
 export const Text: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: sourceDaLinguagem('text') } },
+  },
   render: renderLanguage('text'),
   play: async ({ canvasElement, step }) => {
     await step('Texto simples não recebe nenhuma cor', async () => {

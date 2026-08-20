@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
+import { menubarSource, menubarSourceCom } from './menubar.source';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -35,6 +36,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: menubarSource },
       description: {
         component:
           'As composições canônicas de um menu da barra: atalhos visíveis, submenu, ' +
@@ -77,7 +79,22 @@ async function esperarPainel(canvasElement: HTMLElement): Promise<HTMLElement> {
 // ─── WithShortcuts ────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            {
+              label: 'Editar',
+              items: ATALHOS.map((a) => ({ label: a.label, shortcut: a.shortcut })),
+            },
+          ],
+          defaultOpen: 0,
+        }),
+      },
+    },
+  },
   render: () =>
     embrulhar(
       createMenubar(
@@ -114,7 +131,31 @@ export const WithShortcuts: Story = {
 // ─── WithSubmenu ──────────────────────────────────────────────────────────────
 
 export const WithSubmenu: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item4'] },
+  // O submenu é o assunto: o snippet do meta esconderia a sub-lista, que é a
+  // única coisa que distingue esta composição de um menu comum.
+  parameters: {
+    covers: ['functional.item5', 'visual.item4'],
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            {
+              label: 'Arquivo',
+              items: [
+                { label: 'Novo' },
+                {
+                  type: 'submenu',
+                  label: 'Exportar',
+                  items: EXPORTACOES.map((e) => ({ label: e })),
+                },
+              ],
+            },
+          ],
+          defaultOpen: 0,
+        }),
+      },
+    },
+  },
   render: () =>
     embrulhar(
       createMenubar(
@@ -181,7 +222,30 @@ export const WithSubmenu: Story = {
 // ─── WithCheckboxItems ────────────────────────────────────────────────────────
 
 export const WithCheckboxItems: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item3'],
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            {
+              label: 'Exibir',
+              items: [
+                { type: 'label', label: 'Mostrar na tela' },
+                ...EXIBICOES.map((e) => ({
+                  type: 'checkbox' as const,
+                  label: e.label,
+                  checked: e.checked,
+                  onCheckedChange: '(marcado) => alternar(marcado)',
+                })),
+              ],
+            },
+          ],
+          defaultOpen: 0,
+        }),
+      },
+    },
+  },
   render: () =>
     embrulhar(
       createMenubar(
@@ -236,7 +300,30 @@ export const WithCheckboxItems: Story = {
 // ─── WithRadioGroup ───────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ['accessibility.item5'] },
+  parameters: {
+    covers: ['accessibility.item5'],
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            {
+              label: 'Aparência',
+              items: [
+                { type: 'label', label: 'Tema' },
+                {
+                  type: 'radio-group',
+                  value: 'light',
+                  options: TEMAS.map((t) => ({ value: t.value, label: t.label })),
+                  onValueChange: '(valor) => aplicarTema(valor)',
+                },
+              ],
+            },
+          ],
+          defaultOpen: 0,
+        }),
+      },
+    },
+  },
   render: () =>
     embrulhar(
       createMenubar(
@@ -282,6 +369,47 @@ export const WithRadioGroup: Story = {
 // ─── EditorCompleto ───────────────────────────────────────────────────────────
 
 export const EditorCompleto: Story = {
+  // A barra inteira é o assunto: as quatro categorias convivendo é o que o
+  // snippet do meta, com dois menus, deixaria de fora.
+  parameters: {
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            {
+              label: 'Arquivo',
+              items: [
+                { type: 'label', label: 'Documento' },
+                { label: 'Novo', shortcut: '⌘N' },
+                { label: 'Abrir', shortcut: '⌘O' },
+                { type: 'separator' },
+                { label: 'Descartar alterações', variant: 'destructive' },
+              ],
+            },
+            {
+              label: 'Editar',
+              items: [
+                { label: 'Desfazer', shortcut: '⌘Z' },
+                { label: 'Refazer', shortcut: '⇧⌘Z' },
+              ],
+            },
+            {
+              label: 'Exibir',
+              items: [
+                { type: 'label', label: 'Mostrar na tela' },
+                { type: 'checkbox', label: 'Régua', checked: true },
+                { type: 'checkbox', label: 'Grade' },
+              ],
+            },
+            {
+              label: 'Ajuda',
+              items: [{ label: 'Documentação' }, { label: 'Atalhos de teclado' }],
+            },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     embrulhar(
       createMenubar([

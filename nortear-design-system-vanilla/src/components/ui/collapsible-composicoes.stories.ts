@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, waitFor, within, expect } from 'storybook/test';
 import { createCollapsible } from './collapsible';
+import { collapsibleComGatilhoSource, collapsibleSource } from './collapsible.source';
 import { ChevronDown, Filter, Settings } from 'lucide';
 
 const meta: Meta = {
@@ -8,6 +9,7 @@ const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: collapsibleSource } },
   },
   title: 'UI/Collapsible/Compositions',
 };
@@ -98,6 +100,11 @@ export const WithCustomButton: Story = {
   parameters: {
     covers: ['functional.item5'],
     docs: {
+      // O gatilho como ELEMENTO é o assunto: com o snippet do meta, que passa
+      // texto, a story deixaria de mostrar o que documenta.
+      source: {
+        transform: collapsibleComGatilhoSource({ trigger: 'Exibir opções avançadas' }),
+      },
       description: {
         story: 'Trigger customizado passando um <code>HTMLButtonElement</code> diretamente. O Collapsible mantém o ARIA (aria-expanded, aria-controls) no elemento passado.',
       },
@@ -143,6 +150,7 @@ export const WithIconInTrigger: Story = {
   parameters: {
     covers: ['accessibility.item4'],
     docs: {
+      source: { transform: collapsibleComGatilhoSource({ trigger: 'Filtros avançados' }) },
       description: {
         story: 'Ícone no trigger. O ícone tem <code>aria-hidden="true"</code> — o texto do trigger descreve a ação para leitores de tela.',
       },
@@ -222,6 +230,12 @@ export const WithRotatingChevron: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: {
+        transform: collapsibleComGatilhoSource({
+          trigger: 'Configurações avançadas',
+          chevron: true,
+        }),
+      },
       description: {
         story: 'Chevron rotativo via CSS: a classe <code>.nds-chevron</code> gira 180° sozinha quando o trigger está aberto. O <code>data-state</code> e o <code>aria-expanded</code> são aplicados pelo Collapsible.',
       },
@@ -301,6 +315,9 @@ export const WithSettingsIcon: Story = {
   },
   parameters: {
     docs: {
+      source: {
+        transform: collapsibleComGatilhoSource({ trigger: 'Configurações do sistema' }),
+      },
       description: {
         story: 'Ícone Settings com conteúdo rico (checkboxes). O CollapsibleContent aceita qualquer HTML — ideal para formulários de configuração raramente acessados.',
       },

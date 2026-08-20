@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { toast } from './sonner';
+import { sonnerSource, sonnerSourceCom } from './sonner.source';
 import { esperarTorrada, limparTorradas, montarToaster, PERSISTENTE, TEXTOS } from './sonner.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -24,6 +25,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cada story dispara um tipo diferente, e o tipo é o assunto: todas
+      // sobrepõem esta transform com o seu.
+      source: { transform: sonnerSource },
       description: {
         component:
           'Tipos semânticos da notificação. O ícone e a cor acompanham o tipo; o texto descreve o estado por extenso, para não depender só da cor.',
@@ -36,12 +40,20 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * A região que estas stories montam. O prazo NÃO entra: o `Infinity` daqui é
+ * recurso de teste, para o axe e o Chromatic medirem sempre o mesmo estado —
+ * documentar isso viraria recomendação de algo que ninguém deve escrever.
+ */
+const REGIAO = { position: 'top-right', richColors: true } as const;
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
   parameters: {
     covers: ['accessibility.item4', 'visual.item1'],
     docs: {
+      source: { transform: sonnerSourceCom({ ...REGIAO, type: 'default', title: TEXTOS.padrao }) },
       description: {
         story:
           'Notificação neutra, sem tipo semântico: nenhum ícone e as cores base do tema. Serve a confirmações que não são nem êxito nem falha.',
@@ -74,6 +86,7 @@ export const Success: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item1'],
     docs: {
+      source: { transform: sonnerSourceCom({ ...REGIAO, type: 'success', title: TEXTOS.sucesso }) },
       description: {
         story: 'Confirmação de ação concluída. Ícone e cor verdes vêm de `richColors`.',
       },
@@ -115,6 +128,7 @@ export const Error: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
+      source: { transform: sonnerSourceCom({ ...REGIAO, type: 'error', title: TEXTOS.erro }) },
       description: {
         story:
           'Falha de uma operação. O texto diz a causa e o caminho de saída — nunca culpa quem estava usando.',
@@ -139,6 +153,7 @@ export const Warning: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
+      source: { transform: sonnerSourceCom({ ...REGIAO, type: 'warning', title: TEXTOS.aviso }) },
       description: {
         story:
           'Aviso não crítico. Se a mensagem precisa continuar visível enquanto a pessoa age, o componente certo é o Alert.',
@@ -162,6 +177,7 @@ export const Info: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
+      source: { transform: sonnerSourceCom({ ...REGIAO, type: 'info', title: TEXTOS.info }) },
       description: {
         story: 'Informação contextual ou novidade — nada aconteceu de errado nem de certo.',
       },
@@ -183,6 +199,9 @@ export const Info: Story = {
 export const Loading: Story = {
   parameters: {
     docs: {
+      source: {
+        transform: sonnerSourceCom({ ...REGIAO, type: 'loading', title: TEXTOS.carregando }),
+      },
       description: {
         story:
           'Operação em curso. Não tem prazo: quem a encerra é o fim da operação — na prática, `toast.promise`.',

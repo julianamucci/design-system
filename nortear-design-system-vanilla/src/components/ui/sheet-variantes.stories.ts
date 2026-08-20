@@ -3,6 +3,7 @@ import { expect } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
 import { createSheet, type SheetSide } from './sheet';
+import { sheetSource, sheetSourceCom } from './sheet.source';
 import { createButton } from './button';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -19,6 +20,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: sheetSource },
       description: {
         component:
           'Direção do painel pela prop side. Right é o padrão de desktop; left serve à ' +
@@ -100,7 +102,19 @@ export const Right: Story = {
 export const Left: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { description: { story: 'Desliza da esquerda. Ideal para navegação secundária.' } },
+    // O lado é o assunto da story, e `right` é o padrão da fábrica: sem o
+    // override o painel Code mostraria a direção errada.
+    docs: {
+      source: {
+        transform: sheetSourceCom({
+          side: 'left',
+          triggerLabel: 'Abrir painel esquerdo',
+          title: 'Painel esquerdo',
+          description: 'Navegação secundária encostada à esquerda.',
+        }),
+      },
+      description: { story: 'Desliza da esquerda. Ideal para navegação secundária.' },
+    },
   },
   render: () => buildSheetSide({
     side: 'left',
@@ -118,7 +132,17 @@ export const Left: Story = {
 
 export const Top: Story = {
   parameters: {
-    docs: { description: { story: 'Desliza do topo, com altura definida pelo conteúdo.' } },
+    docs: {
+      source: {
+        transform: sheetSourceCom({
+          side: 'top',
+          triggerLabel: 'Abrir painel superior',
+          title: 'Painel superior',
+          description: 'Faixa superior com ações rápidas.',
+        }),
+      },
+      description: { story: 'Desliza do topo, com altura definida pelo conteúdo.' },
+    },
   },
   render: () => buildSheetSide({
     side: 'top',
@@ -137,7 +161,17 @@ export const Top: Story = {
 export const Bottom: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { description: { story: 'Desliza de baixo — o desenho do Drawer, sem o gesto.' } },
+    docs: {
+      source: {
+        transform: sheetSourceCom({
+          side: 'bottom',
+          triggerLabel: 'Abrir painel inferior',
+          title: 'Painel inferior',
+          description: 'Painel mobile-style sem swipe.',
+        }),
+      },
+      description: { story: 'Desliza de baixo — o desenho do Drawer, sem o gesto.' },
+    },
   },
   render: () => buildSheetSide({
     side: 'bottom',

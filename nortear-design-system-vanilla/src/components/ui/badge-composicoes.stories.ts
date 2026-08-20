@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { Check, Bell } from 'lucide';
 import { createBadge } from './badge';
+import { badgeEmGatilhoSourceCom, badgeSource, badgeSourceCom } from './badge.source';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -13,6 +14,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: badgeSource },
       description: {
         component:
           'Configuracoes contextuais do Badge: combinado com ícone, como contador numérico, ' +
@@ -52,7 +54,14 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
 // ─── Composicoes ──────────────────────────────────────────────────────────────
 
 export const WithIcon: Story = {
-  parameters: { covers: ['functional.item5', 'accessibility.item2', 'visual.item3'] },
+  // Override de story: o ícone entra no MESMO `children`, junto com o texto —
+  // é a lista que o snippet do meta não mostraria.
+  parameters: {
+    covers: ['functional.item5', 'accessibility.item2', 'visual.item3'],
+    docs: {
+      source: { transform: badgeSourceCom({ comIcone: true, label: 'Ativo' }) },
+    },
+  },
   render: () => {
     const icone = createIcon(Check as unknown as LucideIconNode[]);
     icone.dataset.icon = 'inline-start';
@@ -82,7 +91,14 @@ export const WithIcon: Story = {
 };
 
 export const CountBadge: Story = {
-  parameters: { covers: ['visual.item3'] },
+  // Override de story: a variante e o número mudam, e o significado da contagem
+  // vive no rótulo do container — não na etiqueta.
+  parameters: {
+    covers: ['visual.item3'],
+    docs: {
+      source: { transform: badgeSourceCom({ variant: 'destructive', label: '12' }) },
+    },
+  },
   render: () => {
     const wrap = document.createElement('span');
     wrap.setAttribute('role', 'status');
@@ -115,7 +131,22 @@ export const CountBadge: Story = {
 };
 
 export const AsLink: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item4'] },
+  // Override de story: quem recebe o clique e o foco é o link em volta, e é
+  // dele o nome acessível — outra FORMA de snippet.
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
+    docs: {
+      source: {
+        transform: badgeEmGatilhoSourceCom({
+          como: 'link',
+          href: '#design',
+          variant: 'secondary',
+          label: 'Design',
+          nomeAcessivel: 'Ver todos os itens da categoria Design',
+        }),
+      },
+    },
+  },
   render: () => {
     const link = document.createElement('a');
     link.href = '#design';
@@ -138,7 +169,22 @@ export const AsLink: Story = {
 };
 
 export const AsButton: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item4'] },
+  // Override de story: mesma FORMA da AsLink, com o botão no lugar do link.
+  // A reinicialização da aparência do <button> que esta story faz em `style`
+  // não entra no snippet: não existe utilitária .nds-* para ela (relatado).
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
+    docs: {
+      source: {
+        transform: badgeEmGatilhoSourceCom({
+          como: 'botao',
+          variant: 'outline',
+          label: 'React',
+          nomeAcessivel: 'Filtrar por React',
+        }),
+      },
+    },
+  },
   render: () => {
     const btn = document.createElement('button');
     btn.type = 'button';

@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
+import {
+  radioGroupSource,
+  radioGroupSourceCom,
+  radioGroupSourceDescricao,
+  radioGroupSourceFormulario,
+} from './radio-group.source';
 import { createButton } from './button';
 
 const meta: Meta = {
@@ -11,6 +17,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: radioGroupSource },
       description: {
         component:
           'Composicoes de uso do RadioGroup: FormaDePagamento (vertical, 3 opções), FormaDeEntrega (horizontal, 3 opções curtas), ComDescricao (cada item com texto auxiliar) e EmFormulario (integrado a um `<form>` com submit).',
@@ -94,7 +101,20 @@ export const DeliveryMethod: Story = {
       orientation: 'horizontal',
     }),
   parameters: {
+    // Override de story: `orientation` é o assunto.
     docs: {
+      source: {
+        transform: radioGroupSourceCom({
+          name: 'delivery',
+          legend: 'Forma de entrega',
+          orientation: 'horizontal',
+          items: [
+            { value: 'standard', label: 'Padrão (5 dias)' },
+            { value: 'express', label: 'Expressa (1 dia)' },
+            { value: 'pickup', label: 'Retirar na loja' },
+          ],
+        }),
+      },
       description: {
         story: 'Layout horizontal para 3 opções curtas. Aplique `grid-flow-col auto-cols-max gap-6` no `<fieldset>` raiz.',
       },
@@ -156,7 +176,31 @@ export const WithDescription: Story = {
     return wrap;
   },
   parameters: {
+    // Override de story: a descrição por item não é opção da fábrica — a
+    // composição que a acrescenta é outra FORMA de snippet.
     docs: {
+      source: {
+        transform: radioGroupSourceDescricao(
+          [
+            {
+              value: 'standard',
+              label: 'Padrão',
+              description: 'Entrega em 5 dias úteis — frete grátis acima de R$ 199.',
+            },
+            {
+              value: 'express',
+              label: 'Expressa',
+              description: 'Receba em 1 dia útil — taxa adicional de R$ 19,90.',
+            },
+            {
+              value: 'pickup',
+              label: 'Retirar na loja',
+              description: 'Disponível em 2h — sem custo de frete.',
+            },
+          ],
+          { name: 'delivery', legend: 'Forma de entrega' },
+        ),
+      },
       description: {
         story:
           'Cada item acompanha um texto auxiliar abaixo do Label. Útil quando o nome da opção sozinho não comunica o critério de escolha. NOTA: o factory custom (Vanilla) não expõe campo `description` por item — o layout é composto manualmente.',
@@ -217,7 +261,10 @@ export const InForm: Story = {
     return form;
   },
   parameters: {
+    // Override de story: o `<form>` e o `FormData` do submit são o assunto, e
+    // o snippet do meta mostraria o grupo sozinho.
     docs: {
+      source: { transform: radioGroupSourceFormulario({ name: 'payment' }) },
       description: {
         story:
           'RadioGroup dentro de `<form>` com `<fieldset>` + `<legend>` nativos. O `<input type="radio">` interno (com `name`) participa do `FormData` no submit.',

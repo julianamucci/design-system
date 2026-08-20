@@ -1,6 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAspectRatio } from './aspect-ratio';
+import { aspectRatioSource, aspectRatioSourceCom } from './aspect-ratio.source';
 import { createCard, createCardContent, createCardHeader, createCardTitle, createCardDescription } from './card';
 import { expect } from 'storybook/test';
 
@@ -13,6 +14,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: aspectRatioSource },
       description: {
         component:
           'Composicoes reais: AspectRatio com <img>, <iframe>, <video>, em grid de cards ' +
@@ -76,7 +78,19 @@ export const WithImage: Story = {
 };
 
 export const WithIframe: Story = {
-  parameters: { covers: ['accessibility.item3'] },
+  // Override de story: o filho é outro, e com ele muda o atributo que dá o nome
+  // acessível — `title` no iframe, `alt` na imagem.
+  parameters: {
+    covers: ['accessibility.item3'],
+    docs: {
+      source: {
+        transform: aspectRatioSourceCom({
+          content: 'iframe',
+          alt: 'Mapa do escritório em São Paulo',
+        }),
+      },
+    },
+  },
   render: () => {
     const iframe = document.createElement('iframe');
     iframe.src = 'https://www.openstreetmap.org/export/embed.html?bbox=-46.66,-23.57,-46.63,-23.54&layer=mapnik';
@@ -99,7 +113,20 @@ export const WithIframe: Story = {
 };
 
 export const WithVideo: Story = {
-  parameters: { covers: ['accessibility.item4', 'accessibility.item5'] },
+  // Override de story: o filho é um vídeo, e a faixa de legendas faz parte do
+  // que a story promete — nada disso caberia no snippet de imagem.
+  parameters: {
+    covers: ['accessibility.item4', 'accessibility.item5'],
+    docs: {
+      source: {
+        transform: aspectRatioSourceCom({
+          content: 'video',
+          alt: 'Vídeo demonstrativo com legendas',
+          imageUrl: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=1200&q=80',
+        }),
+      },
+    },
+  },
   render: () => {
     const video = document.createElement('video');
     video.controls = true;
@@ -142,7 +169,21 @@ export const WithVideo: Story = {
 };
 
 export const InGrid: Story = {
-  parameters: { covers: ['functional.item4'] },
+  // Override de story: a proporção dos cartões é 4/3. O grid em volta é
+  // andaime da demonstração — o que a story promete é que a MESMA proporção
+  // sobrevive a larguras diferentes, e isso é uma chamada só.
+  parameters: {
+    covers: ['functional.item4'],
+    docs: {
+      source: {
+        transform: aspectRatioSourceCom({
+          ratio: 4 / 3,
+          imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
+          alt: 'Relógio de pulso moderno',
+        }),
+      },
+    },
+  },
   name: 'Card grid',
   render: () => {
     const grid = document.createElement('div');
@@ -218,7 +259,19 @@ export const InGrid: Story = {
 };
 
 export const EmptyPlaceholder: Story = {
-  parameters: { covers: ['functional.item5'] },
+  // Override de story: sem filho nenhum, e o visual vem por classe na própria
+  // caixa — o snippet do meta mostraria uma imagem que a story não tem.
+  parameters: {
+    covers: ['functional.item5'],
+    docs: {
+      source: {
+        transform: aspectRatioSourceCom({
+          content: 'none',
+          className: 'nds-rounded-md nds-bg-muted',
+        }),
+      },
+    },
+  },
   name: 'Placeholder (skeleton)',
   render: () =>
     // Sem `content` mesmo: o item documentado é "renderizar sem filho", e a
@@ -245,7 +298,12 @@ export const EmptyPlaceholder: Story = {
 
 export const WithDecorativeImage: Story = {
   name: 'Decorative image',
-  parameters: { covers: ['accessibility.item2'] },
+  // Override de story: o alt VAZIO é o assunto, e ele é diferente de não ter o
+  // atributo — sem isso o leitor de tela anuncia o nome do arquivo.
+  parameters: {
+    covers: ['accessibility.item2'],
+    docs: { source: { transform: aspectRatioSourceCom({ alt: '' }) } },
+  },
   render: () =>
     boxed(
       createAspectRatio({

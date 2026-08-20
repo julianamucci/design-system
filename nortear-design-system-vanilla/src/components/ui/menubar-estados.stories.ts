@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
+import { menubarSource, menubarSourceCom } from './menubar.source';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -26,6 +27,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: menubarSource },
       description: {
         component:
           'Os quatro estados que o conteúdo compartilhado descreve: barra fechada, menu aberto, ' +
@@ -105,7 +107,21 @@ export const Closed: Story = {
 // ─── Open ─────────────────────────────────────────────────────────────────────
 
 export const Open: Story = {
-  parameters: { covers: ['accessibility.item4'] },
+  parameters: {
+    covers: ['accessibility.item4'],
+    // `defaultOpen` é o que faz o menu nascer aberto — é o assunto da story.
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            { label: 'Arquivo', items: [{ label: 'Novo' }, { label: 'Abrir' }] },
+            { label: 'Editar', items: [{ label: 'Desfazer' }] },
+          ],
+          defaultOpen: 0,
+        }),
+      },
+    },
+  },
   render: () =>
     embrulhar(
       createMenubar(
@@ -156,6 +172,25 @@ export const Open: Story = {
 // ─── ItemDisabled ─────────────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            {
+              label: 'Arquivo',
+              items: ITENS_COM_BLOQUEIO.map((i) => ({
+                label: i.label,
+                disabled: i.disabled || undefined,
+                onClick: '() => executar()',
+              })),
+            },
+          ],
+          defaultOpen: 0,
+        }),
+      },
+    },
+  },
   args: { onSelect: fn() },
   argTypes: { onSelect: { control: false, table: { disable: true } } },
   render: (args) =>
@@ -210,6 +245,27 @@ export const ItemDisabled: Story = {
 export const CheckboxChecked: Story = {
   parameters: {
     covers: ['functional.item7'],
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            {
+              label: 'Exibir',
+              items: [
+                { type: 'label', label: 'Mostrar na tela' },
+                ...EXIBICOES.map((e) => ({
+                  type: 'checkbox' as const,
+                  label: e.label,
+                  checked: e.checked,
+                  onCheckedChange: '(marcado) => alternar(marcado)',
+                })),
+              ],
+            },
+          ],
+          defaultOpen: 0,
+        }),
+      },
+    },
   },
   render: () =>
     embrulhar(
@@ -273,7 +329,29 @@ export const CheckboxChecked: Story = {
 // mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
 
 export const CheckboxIndeterminate: Story = {
-  parameters: { covers: ['functional.item9'] },
+  parameters: {
+    covers: ['functional.item9'],
+    // O estado misto é o assunto, e ele vale SOBRE o marcado: mostrar os dois
+    // juntos ensinaria um estado que a fábrica resolve por conta própria.
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            {
+              label: 'Exibir',
+              items: [
+                { type: 'label', label: 'Mostrar na tela' },
+                { type: 'checkbox', label: 'Colunas', indeterminate: true },
+                { type: 'checkbox', label: 'Régua', checked: true },
+                { type: 'checkbox', label: 'Grade' },
+              ],
+            },
+          ],
+          defaultOpen: 0,
+        }),
+      },
+    },
+  },
   render: () =>
     embrulhar(
       createMenubar(
@@ -342,6 +420,19 @@ export const ListenerCleanup: Story = {
     // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
     // sempre a mesma legenda.
     chromatic: { disable: true },
+    // O assunto é a limpeza: o snippet do meta pararia antes da única linha
+    // que a story existe para mostrar.
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            { label: 'Arquivo', items: [{ label: 'Novo' }, { label: 'Salvar' }] },
+            { label: 'Editar', items: [{ label: 'Desfazer' }] },
+          ],
+          destroy: true,
+        }),
+      },
+    },
   },
   render: () => hospedeiroDeSonda(
     'Sonda de limpeza: a barra é montada, um menu é aberto e a barra sai da página.',

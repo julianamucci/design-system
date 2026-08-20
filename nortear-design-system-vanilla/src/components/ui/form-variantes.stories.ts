@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { createFormField } from './form';
+import { formSource, formSourceCom } from './form.source';
 import { createInput } from './input';
 
 // O Form não tem variante por prop — o que muda é quais peças opcionais entram
@@ -13,6 +14,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: formSource } },
   },
 };
 
@@ -50,7 +52,21 @@ export const LabelAndControl: Story = {
 
 /** Rótulo, controle e um parágrafo de apoio que o leitor de tela também lê. */
 export const WithDescription: Story = {
-  parameters: { covers: ['functional.item3', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item3', 'visual.item2'],
+    // Override de story: o texto de apoio é a peça que esta combinação
+    // acrescenta, e neste arquivo não há control que o carregue — sem isto o
+    // snippet mostraria o campo mínimo, que é a OUTRA story.
+    docs: {
+      source: {
+        transform: formSourceCom({
+          label: 'Senha',
+          inputType: 'password',
+          description: 'Use pelo menos 8 caracteres, com letras e números.',
+        }),
+      },
+    },
+  },
   render: () =>
     createFormField({
       label: 'Senha',

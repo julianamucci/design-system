@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
 import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
 import { createCheckbox } from './checkbox';
+import { checkboxSource, checkboxSourceCom } from './checkbox.source';
 
 // Ferramentas de teclado/ponteiro entregues ao contrato compartilhado. Iguais
 // nas cinco stacks — o que muda entre elas é o componente, não a medição.
@@ -28,6 +29,7 @@ const meta: Meta = {
       'functional.item5': 'a factory não insere o input nativo no DOM — dois elementos interativos aninhados quebram nested-interactive; o campo é sincronizado pelo callback de mudança',
     },
     docs: {
+      source: { transform: checkboxSource },
       description: {
         component:
           'Estados do Checkbox: unchecked, checked, indeterminate (misto), disabled (desmarcado e marcado) e error (aria-invalid).',
@@ -90,7 +92,11 @@ export const Checked: Story = {
   ),
   parameters: {
     covers: ['visual.item2', 'functional.item6'],
-    docs: { description: { story: 'Estado marcado, renderizado direto sem controle externo. Fundo `--primary`, CheckIcon visível, `aria-checked="true"`.' } },
+    // Override de story: o estado marcado é o assunto, e não há control aqui.
+    docs: {
+      source: { transform: checkboxSourceCom({ checked: true }) },
+      description: { story: 'Estado marcado, renderizado direto sem controle externo. Fundo `--primary`, CheckIcon visível, `aria-checked="true"`.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -113,7 +119,13 @@ export const Indeterminate: Story = {
   ),
   parameters: {
     covers: ['visual.item3'],
-    docs: { description: { story: 'Estado misto (seleção parcial de um grupo). Fundo `--primary`, `aria-checked="mixed"`, `data-state="indeterminate"`. O indicador desenha um traço, não a marca de seleção.' } },
+    // Override de story: o estado misto é o assunto.
+    docs: {
+      source: {
+        transform: checkboxSourceCom({ indeterminate: true, label: 'Selecionar todos os itens' }),
+      },
+      description: { story: 'Estado misto (seleção parcial de um grupo). Fundo `--primary`, `aria-checked="mixed"`, `data-state="indeterminate"`. O indicador desenha um traço, não a marca de seleção.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -146,7 +158,14 @@ export const DisabledUnchecked: Story = {
   ),
   parameters: {
     covers: ['functional.item4', 'accessibility.item6'],
-    docs: { description: { story: 'Estado desabilitado desmarcado. Opacidade reduzida, cursor bloqueado. Continua alcançável pelo Tab e é anunciado como indisponível, mas não alterna.' } },
+    // Override de story: o desabilitado é o assunto, e ele muda também a linha
+    // que envolve o par e a classe de cursor do rótulo.
+    docs: {
+      source: {
+        transform: checkboxSourceCom({ disabled: true, label: 'Manter sessão ativa' }),
+      },
+      description: { story: 'Estado desabilitado desmarcado. Opacidade reduzida, cursor bloqueado. Continua alcançável pelo Tab e é anunciado como indisponível, mas não alterna.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -181,7 +200,17 @@ export const DisabledChecked: Story = {
   ),
   parameters: {
     covers: ['visual.item4'],
-    docs: { description: { story: 'Estado desabilitado marcado. Não pode ser alterado pelo usuário.' } },
+    // Override de story: desabilitado E marcado — os dois estados juntos.
+    docs: {
+      source: {
+        transform: checkboxSourceCom({
+          checked: true,
+          disabled: true,
+          label: 'Manter sessão ativa',
+        }),
+      },
+      description: { story: 'Estado desabilitado marcado. Não pode ser alterado pelo usuário.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -234,7 +263,12 @@ export const Error: Story = {
   },
   parameters: {
     covers: ['visual.item5'],
-    docs: { description: { story: 'Estado de erro via `aria-invalid="true"`. Ring e borda `--destructive`. Mensagem de erro associada via `aria-describedby`.' } },
+    // Override de story: o erro traz uma mensagem a mais e a ligação dela com a
+    // caixa — a composição inteira muda, não só um atributo.
+    docs: {
+      source: { transform: checkboxSourceCom({ invalid: true }) },
+      description: { story: 'Estado de erro via `aria-invalid="true"`. Ring e borda `--destructive`. Mensagem de erro associada via `aria-describedby`.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { toast, createSonnerToaster, type ToastOptions, type ToastPosition, type ToastType } from './sonner';
+import { sonnerSource } from './sonner.source';
 import { esperarTorrada, limparTorradas, TEXTOS } from './sonner.fixtures';
 import { createButton } from './button';
 import { createSonnerDocs } from '@/components/docs/SonnerDocs';
@@ -24,7 +25,7 @@ const meta: Meta<SonnerArgs> = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createSonnerDocs) },
+    docs: { page: withAutoDocsTab(createSonnerDocs), source: { transform: sonnerSource } },
   },
   argTypes: {
     type: {

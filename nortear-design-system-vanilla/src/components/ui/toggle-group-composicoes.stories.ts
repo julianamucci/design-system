@@ -12,6 +12,7 @@ import {
   Eye,
 } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
+import { toggleGroupSource, toggleGroupSourceCom } from './toggle-group.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -21,6 +22,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: toggleGroupSource },
       description: {
         component:
           'Composicoes reais do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização (vertical com texto). **Divergências Vanilla**: (1) a factory é não-controlada — sem prop `value`, apenas `defaultValue`; (2) `aria-label` no grupo e em items icon-only é setado via `setAttribute` no elemento retornado; (3) `children` é string literal — gerar SVG via `createElementNS` e anexar por DOM (NUNCA interpolar dado dinâmico).',
@@ -119,6 +121,14 @@ export const AlignmentBar: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: toggleGroupSourceCom({
+          items: [
+            { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
+            { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar' },
+            { value: 'right', icon: 'AlignRight', 'aria-label': 'Alinhar à direita' },
+          ],
+          onValueChange: '(value) => aplicarAlinhamento(value)',
+        }) },
       description: {
         story:
           'Caso clássico de `type="single"`: alinhamento de texto. Apenas uma opção ativa. O callback recebe a string do `value` (ou vazia se nenhum). aria-label no grupo descreve a categoria; em cada item, a função específica.',
@@ -174,6 +184,17 @@ export const FormattingBar: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: toggleGroupSourceCom({
+          type: 'multiple',
+          'aria-label': 'Formatação',
+          defaultValue: ['bold'],
+          items: [
+            { value: 'bold', icon: 'Bold', 'aria-label': 'Negrito' },
+            { value: 'italic', icon: 'Italic', 'aria-label': 'Itálico' },
+            { value: 'underline', icon: 'Underline', 'aria-label': 'Sublinhado' },
+          ],
+          onValueChange: '(values) => aplicarFormatacao(values)',
+        }) },
       description: {
         story:
           'Caso clássico de `type="multiple"`: formatação (Bold + Italic + Underline combinados). O callback recebe `string[]` com todos os values ativos. Ordem de items segue a convenção do domínio (B → I → U), não alfabética.',
@@ -227,6 +248,16 @@ export const ViewMode: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: toggleGroupSourceCom({
+          orientation: 'vertical',
+          'aria-label': 'Modo de visualização',
+          defaultValue: 'grid',
+          // Com texto visível o item dispensa nome acessível próprio.
+          items: [
+            { value: 'grid', icon: 'LayoutGrid', children: 'Grade' },
+            { value: 'list', icon: 'List', children: 'Lista' },
+          ],
+        }) },
       description: {
         story:
           'Orientação vertical + texto visível ao lado do ícone. Quando o texto é visível, items NÃO precisam de `aria-label` (o leitor usa o texto interno). O grupo ainda precisa de `aria-label`.',
@@ -278,6 +309,13 @@ export const WithDisabledItem: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: toggleGroupSourceCom({
+          items: [
+            { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
+            { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar (indisponível)', disabled: true },
+            { value: 'right', icon: 'AlignRight', 'aria-label': 'Alinhar à direita' },
+          ],
+        }) },
       description: {
         story:
           'Um item desabilitado (via `item.disabled: true`) — útil quando uma opção não se aplica ao contexto. O `aria-label` do item indica explicitamente a indisponibilidade; para travar o grupo inteiro existe `disabled` no grupo, que cada item herda.',
@@ -336,6 +374,16 @@ export const WithVisibleFilter: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      source: { transform: toggleGroupSourceCom({
+          type: 'multiple',
+          spacing: 1,
+          'aria-label': 'Filtros de exibição',
+          defaultValue: ['compact'],
+          items: [
+            { value: 'hidden', icon: 'Eye', children: 'Ocultos' },
+            { value: 'compact', icon: 'List', children: 'Compacto' },
+          ],
+        }) },
       description: {
         story:
           'Conjunto de filtros booleanos independentes com texto visível — `type="multiple"` permite combinar Ocultos + Compacto. O `aria-label` do grupo descreve a categoria geral; cada item dispensa `aria-label` porque o texto está visível. `spacing: 1` separa os botões, e o contorno passa a ser de cada item.',

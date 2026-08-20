@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSheet, type SheetSide } from './sheet';
+import { sheetSource } from './sheet.source';
 import { createButton } from './button';
 import { createSheetDocs } from '@/components/docs/SheetDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -23,7 +24,7 @@ const meta: Meta<SheetArgs> = {
   tags: ['autodocs', 'disclosure'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(createSheetDocs) },
+    docs: { page: withAutoDocsTab(createSheetDocs), source: { transform: sheetSource } },
   },
   argTypes: {
     triggerLabel: {

@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createBadge } from './badge';
+import { badgeEmGrupoSourceCom, badgeSource, badgeSourceCom } from './badge.source';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -12,6 +13,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: badgeSource },
       description: {
         component:
           'As 4 variantes nativas do Badge renderizadas via createBadge({ variant, children }). ' +
@@ -58,7 +60,14 @@ export const Default: Story = {
 };
 
 export const Secondary: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  // Override de story: a variante não passa por control neste arquivo, e o
+  // snippet do meta mostraria `default` onde a story renderiza outra.
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    docs: {
+      source: { transform: badgeSourceCom({ variant: 'secondary', label: 'Beta' }) },
+    },
+  },
   render: () => createBadge({ variant: 'secondary', children: 'Beta' }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -79,7 +88,13 @@ export const Secondary: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ['functional.item3', 'accessibility.item3', 'visual.item2'] },
+  // Override de story: mesma razão da Secondary — a variante é o assunto.
+  parameters: {
+    covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+    docs: {
+      source: { transform: badgeSourceCom({ variant: 'destructive', label: 'Urgente' }) },
+    },
+  },
   render: () => createBadge({ variant: 'destructive', children: 'Urgente' }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -101,7 +116,13 @@ export const Destructive: Story = {
 };
 
 export const Outline: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item2'] },
+  // Override de story: mesma razão da Secondary — a variante é o assunto.
+  parameters: {
+    covers: ['functional.item4', 'visual.item2'],
+    docs: {
+      source: { transform: badgeSourceCom({ variant: 'outline', label: 'Rascunho' }) },
+    },
+  },
   render: () => createBadge({ variant: 'outline', children: 'Rascunho' }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -124,7 +145,18 @@ export const Outline: Story = {
 export const Semantics: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item5', 'accessibility.item3'],
+    // Override de story: o assunto é o CONJUNTO — uma etiqueta sozinha não
+    // mostra o que as três variantes semânticas prometem, ser distinguíveis.
     docs: {
+      source: {
+        transform: badgeEmGrupoSourceCom({
+          itens: [
+            { variant: 'warning', label: 'Vence hoje' },
+            { variant: 'success', label: 'Aprovado' },
+            { variant: 'info', label: 'Novidade' },
+          ],
+        }),
+      },
       description: {
         story:
           'warning avisa, success confirma e info contextualiza. As três existiam no CSS como -high, -medium e -low, servindo só à tabela de prioridade das docs pages.',

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
+import { textareaSource } from './textarea.source';
 import { createLabel } from './label';
 import { createTextareaDocs } from '@/components/docs/TextareaDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -23,7 +24,7 @@ const meta: Meta<TextareaArgs> = {
   title: 'UI/Textarea',
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(createTextareaDocs) },
+    docs: { page: withAutoDocsTab(createTextareaDocs), source: { transform: textareaSource } },
   },
   argTypes: {
     placeholder: {

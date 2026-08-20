@@ -3,6 +3,7 @@ import { expect, userEvent, within } from 'storybook/test';
 import { resolverCor } from '@shared/testing/cor';
 import { contrastesNosDoisModos } from '@shared/testing/form-probe';
 import { createFormField, createFieldset } from './form';
+import { formSource, formSourceCom } from './form.source';
 import { createInput } from './input';
 
 const meta: Meta = {
@@ -11,6 +12,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: formSource } },
   },
 };
 
@@ -30,6 +32,22 @@ export const Invalid: Story = {
       'accessibility.item5',
       'visual.item3',
     ],
+    // Override de story: a mensagem e o `aria-invalid` são o estado inteiro, e o
+    // atributo é de quem compõe — a fábrica deliberadamente não o escreve, então
+    // um snippet sem ele documentaria um campo que se pinta de erro sem se
+    // anunciar como inválido.
+    docs: {
+      source: {
+        transform: formSourceCom({
+          label: 'Senha',
+          inputType: 'password',
+          value: '123',
+          description: 'Use pelo menos 8 caracteres, com letras e números.',
+          error: 'A senha precisa ter pelo menos 8 caracteres.',
+          ariaInvalid: true,
+        }),
+      },
+    },
   },
   render: () => {
     const input = createInput({ type: 'password', value: '123' });
@@ -91,7 +109,23 @@ export const Invalid: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item7'] },
+  parameters: {
+    covers: ['functional.item7'],
+    // Override de story: o `disabled` vive no CONTROLE, e não no campo — sem
+    // isto o snippet mostraria um campo comum onde a story renderiza um campo
+    // que não recebe foco.
+    docs: {
+      source: {
+        transform: formSourceCom({
+          label: 'CPF',
+          inputType: 'text',
+          value: '000.000.000-00',
+          description: 'Preenchido pelo cadastro da empresa.',
+          disabled: true,
+        }),
+      },
+    },
+  },
   render: () =>
     createFormField({
       label: 'CPF',

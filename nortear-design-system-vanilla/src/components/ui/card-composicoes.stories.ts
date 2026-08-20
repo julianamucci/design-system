@@ -9,6 +9,7 @@ import {
   createCardContent,
   createCardFooter,
 } from './card';
+import { cardSource, cardSourceCom } from './card.source';
 import { createButton } from '@/components/ui/button';
 
 /**
@@ -26,6 +27,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: cardSource },
       description: {
         component:
           'Composições canônicas do Card: com footer (ações), com slot de ação no header e com imagem como primeiro filho (padding superior removido automaticamente).',
@@ -60,6 +62,8 @@ function buildPrice(text = 'R$ 1.299,00'): HTMLElement {
 export const WithFooter: Story = {
   parameters: {
     docs: {
+      // Override de story: o rodapé é a fábrica em foco.
+      source: { transform: cardSourceCom({ showFooter: true }) },
       description: {
         story:
           'O CardFooter ganha borda superior e fundo soft; o Card zera o próprio padding inferior ao detectar o rodapé como filho direto, para a borda encostar na base.',
@@ -118,6 +122,9 @@ export const WithAction: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item5', 'visual.item3'],
     docs: {
+      // Override de story: `createCardAction` é a fábrica em foco, e é ela que
+      // faz o cabeçalho virar grid de duas colunas.
+      source: { transform: cardSourceCom({ action: true, description: 'Em estoque' }) },
       description: {
         story:
           'Com CardAction o header vira grid de duas colunas e a ação encosta à direita. A ordem do DOM continua título → descrição → ação, então o leitor de tela lê na ordem lógica.',
@@ -167,6 +174,9 @@ export const WithImage: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item5'],
     docs: {
+      // Override de story: a imagem como PRIMEIRO filho é o assunto — é a
+      // posição dela que dispara a regra de CSS.
+      source: { transform: cardSourceCom({ image: true }) },
       description: {
         story:
           'Imagem como primeiro filho: o Card arredonda o topo dela e remove o próprio padding superior por CSS — não é preciso passar classe na imagem.',

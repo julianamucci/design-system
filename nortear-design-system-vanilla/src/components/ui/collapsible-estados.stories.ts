@@ -1,12 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, waitFor, within, expect } from 'storybook/test';
 import { createCollapsible } from './collapsible';
+import {
+  collapsibleControladoSource,
+  collapsibleSource,
+  collapsibleSourceCom,
+} from './collapsible.source';
 
 const meta: Meta = {
   tags: ['disclosure'],
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: collapsibleSource } },
   },
   title: 'UI/Collapsible/States',
 };
@@ -94,6 +100,11 @@ export const OpenByDefault: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item5', 'visual.item2'],
     docs: {
+      // `defaultOpen` é o assunto, e ele é o oposto do padrão da fábrica: sem
+      // override o snippet do meta o esconderia.
+      source: {
+        transform: collapsibleSourceCom({ trigger: 'Ocultar filtros avançados', defaultOpen: true }),
+      },
       description: {
         story: 'Modo não-controlado com <code>defaultOpen: true</code>. O painel renderiza expandido na montagem sem controle externo de estado.',
       },
@@ -179,6 +190,9 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
     docs: {
+      // Forma própria de snippet: no modo controlado a posse do estado muda de
+      // lado, e a chamada sozinha não mostraria o `setOpen` do outro lado.
+      source: { transform: collapsibleControladoSource() },
       description: {
         story: 'Modo controlado: a factory recebe <code>open</code> e devolve <code>setOpen</code>. O clique no trigger apenas emite o novo valor — quem escreve no DOM é o estado externo.',
       },
@@ -229,6 +243,12 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item5'],
     docs: {
+      source: {
+        transform: collapsibleSourceCom({
+          trigger: 'Filtros avançados (desabilitado)',
+          disabled: true,
+        }),
+      },
       description: {
         story: 'Estado desabilitado. O trigger não responde a cliques nem a interações de teclado. Aparência visual de opacidade reduzida.',
       },

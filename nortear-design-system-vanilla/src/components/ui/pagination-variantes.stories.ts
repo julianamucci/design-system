@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { alvosAbaixoDoMinimo } from '@shared/testing/pagination-probe';
 import { createPagination } from './pagination';
+import { paginationSource, paginationSourceCom } from './pagination.source';
 
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
 const ROTULO_PROXIMA = 'Ir para a próxima página';
@@ -14,6 +15,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: paginationSource },
       description: {
         component:
           'Variantes do link de paginação: Default (inativo), Active (página atual, com aria-current=page) e Directional (anterior/próxima com ícone). A factory não expõe uma prop de variante — a marcação da página atual é aplicada quando `page === current`.',
@@ -39,6 +41,20 @@ function wrap(child: HTMLElement): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
+  parameters: {
+    // Override de story: a supressão dos direcionais é o assunto aqui, e
+    // `showPrevNext` não passa por control nenhum neste arquivo.
+    docs: {
+      source: {
+        transform: paginationSourceCom({
+          total: 5,
+          current: 2,
+          showPrevNext: false,
+          label: 'Paginação com link inativo',
+        }),
+      },
+    },
+  },
   render: () =>
     wrap(
       createPagination({
@@ -70,6 +86,18 @@ export const Default: Story = {
 
 export const Active: Story = {
   name: 'Active (current page)',
+  parameters: {
+    docs: {
+      source: {
+        transform: paginationSourceCom({
+          total: 7,
+          current: 4,
+          showPrevNext: false,
+          label: 'Paginação com página atual',
+        }),
+      },
+    },
+  },
   render: () =>
     wrap(
       createPagination({

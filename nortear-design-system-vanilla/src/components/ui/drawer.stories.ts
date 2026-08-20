@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createDrawer, type DrawerDirection, type DrawerElement } from './drawer';
+import { drawerSource } from './drawer.source';
 import { createButton } from './button';
 import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
 import { createDrawerDocs } from '@/components/docs/DrawerDocs';
@@ -26,7 +27,7 @@ const meta: Meta<DrawerArgs> = {
   tags: ['autodocs', 'disclosure'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createDrawerDocs) },
+    docs: { page: withAutoDocsTab(createDrawerDocs), source: { transform: drawerSource } },
   },
   argTypes: {
     triggerLabel: {

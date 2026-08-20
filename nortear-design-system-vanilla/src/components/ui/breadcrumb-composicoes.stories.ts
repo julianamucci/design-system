@@ -10,6 +10,11 @@ import {
   createBreadcrumbSeparator,
   createBreadcrumbEllipsis,
 } from './breadcrumb';
+import {
+  breadcrumbComMenuSourceCom,
+  breadcrumbSource,
+  breadcrumbSourceCom,
+} from './breadcrumb.source';
 import { createDropdownMenu } from './dropdown-menu';
 
 const meta: Meta = {
@@ -21,6 +26,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: breadcrumbSource },
       description: {
         component:
           'Composicoes canônicas do Breadcrumb: trilha completa com evento de navegação e trilha responsiva com DropdownMenu expondo os níveis ocultos.',
@@ -39,6 +45,11 @@ export const Default: Story = {
   parameters: {
     covers: ['functional.item1', 'functional.item3'],
     docs: {
+      // Override de story: o ouvinte que reporta a navegação é o assunto aqui, e
+      // control nenhum o alcança.
+      source: {
+        transform: breadcrumbSourceCom({ onNavigate: 'registrarNavegacao(text);' }),
+      },
       description: {
         story:
           'Composição padrão com 3 níveis e separador ChevronRight automático. Último item usa BreadcrumbPage.',
@@ -104,6 +115,9 @@ export const Responsive: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item4'],
     docs: {
+      // Override de story: a forma do snippet é outra — o menu que expõe os
+      // níveis ocultos é uma segunda fábrica, e é ela o assunto.
+      source: { transform: breadcrumbComMenuSourceCom() },
       description: {
         story:
           'Composição responsiva: BreadcrumbEllipsis envolvido em DropdownMenu para expor níveis ocultos em mobile.',

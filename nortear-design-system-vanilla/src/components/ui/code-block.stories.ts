@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createCodeBlock } from './code-block';
+import { codeBlockSource } from './code-block.source';
 import { createCodeBlockDocs } from '@/components/docs/CodeBlockDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -56,7 +57,13 @@ const meta: Meta<CodeBlockArgs> = {
   title: 'UI/CodeBlock',
   tags: ['autodocs', 'display'],
   parameters: {
-    docs: { page: withAutoDocsTab(createCodeBlockDocs) },
+    docs: {
+      page: withAutoDocsTab(createCodeBlockDocs),
+      // O renderer html imprime o `outerHTML` — aqui, o DOM tokenizado inteiro,
+      // ilegível e longe do que se escreve. A transform devolve a chamada da
+      // fábrica e cascateia para todas as stories deste arquivo.
+      source: { transform: codeBlockSource },
+    },
   },
   // Esta stack não tem docgen (não há componente de framework para
   // introspectar): a aba "API Reference" sai só destes argTypes.
@@ -124,9 +131,8 @@ type Story = StoryObj<CodeBlockArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
-  // O renderer html monta o snippet a partir do outerHTML, que aqui é o DOM
-  // tokenizado inteiro — ilegível e não é o que o consumidor escreve. Aqui vai a
-  // chamada real da factory, montada a partir dos args.
+  // A transform do painel Code vem do `meta` — ela lê estes mesmos args e está
+  // em `code-block.source.ts`, com teste unitário próprio.
   parameters: {
     // accessibility.item5 é 'sem violações axe-core': o addon-a11y roda em toda
     // story, mas o audit só enxerga o critério se alguma story o declarar.
@@ -135,26 +141,6 @@ export const Playground: Story = {
       'accessibility.item1', 'accessibility.item2', 'accessibility.item3', 'accessibility.item5',
       'visual.item1',
     ],
-    docs: {
-      source: {
-        transform: (_generated: string, ctx: { args?: Partial<CodeBlockArgs> }) => {
-          const a = ctx.args ?? {};
-          const lines = [
-            "import { createCodeBlock } from '@/components/ui/code-block';",
-            '',
-            'const block = createCodeBlock({',
-            '  code: source,',
-            `  language: '${a.language ?? 'text'}',`,
-          ];
-          if (a.title) lines.push(`  title: '${a.title}',`);
-          if (a.showLineNumbers === false) lines.push('  showLineNumbers: false,');
-          if (a.highlightLines) lines.push(`  highlightLines: '${a.highlightLines}',`);
-          if (a.footer) lines.push(`  footer: '${a.footer}',`);
-          lines.push('});');
-          return lines.join('\n');
-        },
-      },
-    },
   },
   render: (args) =>
     createCodeBlock({

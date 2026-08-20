@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect, type SelectItem } from './select';
+import { selectSource, selectSourceCom } from './select.source';
 import { medirAnelDeFoco } from '@shared/testing/select-probe';
 
 const meta: Meta = {
@@ -12,6 +13,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: selectSource },
       description: {
         component:
           'Estados do Select: Default (placeholder visível), Selected (valor escolhido), Open (lista aberta em portal), Disabled (campo bloqueado), DisabledItem (apenas uma opção bloqueada), Invalid (aria-invalid + mensagem) e FocusVisible (anel `--ring`).',
@@ -116,6 +118,8 @@ export const Selected: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // O valor inicial é o assunto, e nenhum control o cobre aqui.
+      source: { transform: selectSourceCom({ defaultValue: 'rj' }) },
       description: {
         story:
           'Valor inicial não-controlado — Rio de Janeiro escolhido de partida, placeholder oculto. (Pré-selecionar serve para ver o estado; em formulário real, evite.)',
@@ -248,6 +252,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: selectSourceCom({ disabled: true }) },
       description: {
         story:
           'Campo bloqueado — opacidade reduzida, cursor de bloqueio, fora do percurso do Tab, e a lista não abre.',
@@ -316,6 +321,16 @@ export const DisabledItem: Story = {
   },
   parameters: {
     docs: {
+      // A opção bloqueada é o assunto: ela mora na própria entrada da lista.
+      source: {
+        transform: selectSourceCom({
+          items: [
+            { value: 'sp', label: 'São Paulo' },
+            { value: 'rj', label: 'Rio de Janeiro' },
+            { value: 'mg', label: 'Minas Gerais (indisponível)', disabled: true },
+          ],
+        }),
+      },
       description: {
         story:
           'Opções indisponíveis. No primeiro campo, só a terceira: ela se anuncia bloqueada e o teclado a pula. No segundo, todas: a lista abre sem apontar nenhuma, e não há o que confirmar.',
@@ -429,6 +444,15 @@ export const Invalid: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      // O erro é o assunto: o campo se anuncia inválido e aponta a mensagem que
+      // explica o porquê — os dois lados do par entram no snippet.
+      source: {
+        transform: selectSourceCom({
+          id: 'estado-invalido',
+          'aria-invalid': true,
+          mensagemDeErro: 'Selecione um estado para continuar.',
+        }),
+      },
       description: {
         story:
           'Estado de erro no campo fechado. A borda e o anel vêm da folha compartilhada, e a mensagem é associada ao campo para o leitor de tela.',

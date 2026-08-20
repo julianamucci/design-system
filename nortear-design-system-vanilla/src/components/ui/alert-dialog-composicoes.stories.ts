@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog, createAlertDialogMedia } from './alert-dialog';
+import { alertDialogSource, alertDialogSourceCom } from './alert-dialog.source';
 import { createAlertIcon } from './alert';
 import { createButton } from './button';
 
@@ -17,6 +18,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: alertDialogSource },
       description: {
         component:
           'Composicoes canônicas: confirmação destrutiva, confirmação neutra, descrição longa e layout responsivo.',
@@ -67,7 +69,10 @@ function buildDemo(opts: Options): HTMLElement {
 export const Destructive: Story = {
   parameters: {
     covers: ['visual.item2'],
+    // Override de story: todas as composições deste arquivo nascem abertas, e
+    // `defaultOpen` não passa por control nenhum aqui.
     docs: {
+      source: { transform: alertDialogSourceCom({ defaultOpen: true }) },
       description: {
         story:
           'Action e trigger usam a variante destructive do Button. Use para ações irreversíveis.',
@@ -117,7 +122,10 @@ export const Destructive: Story = {
 export const WithIcon: Story = {
   parameters: {
     covers: ['visual.item6'],
+    // Override de story: o bloco de mídia É o assunto, e ele é uma sub-fábrica
+    // que o snippet do meta não mostraria.
     docs: {
+      source: { transform: alertDialogSourceCom({ defaultOpen: true, showMedia: true }) },
       description: {
         story:
           'Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.',
@@ -164,7 +172,20 @@ export const WithIcon: Story = {
 export const Neutral: Story = {
   parameters: {
     covers: ['visual.item3'],
+    // Override de story: a confirmação neutra troca a variante dos dois botões
+    // — é o oposto do que o snippet do meta mostraria.
     docs: {
+      source: {
+        transform: alertDialogSourceCom({
+          defaultOpen: true,
+          tone: 'default',
+          triggerVariant: 'outline',
+          triggerLabel: 'Sair da conta',
+          title: 'Sair da conta',
+          description: 'Você precisará entrar novamente para acessar seus dados.',
+          actionLabel: 'Sair',
+        }),
+      },
       description: {
         story:
           'Action com tokens padrão do Button. Use para confirmações não destrutivas (publicar, enviar, arquivar).',
@@ -198,7 +219,9 @@ export const Neutral: Story = {
 export const LongDescription: Story = {
   parameters: {
     covers: ['visual.item4'],
+    // Override de story: nasce aberta, como as demais composições.
     docs: {
+      source: { transform: alertDialogSourceCom({ defaultOpen: true }) },
       description: {
         story:
           'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
@@ -240,7 +263,18 @@ export const LongDescription: Story = {
 export const WithoutDescription: Story = {
   parameters: {
     covers: ['accessibility.item8'],
+    // Override de story: a AUSÊNCIA da descrição é o assunto — é ela que decide
+    // se o painel declara `aria-describedby`.
     docs: {
+      source: {
+        transform: alertDialogSourceCom({
+          defaultOpen: true,
+          description: '',
+          triggerLabel: 'Descartar rascunho',
+          title: 'Descartar rascunho',
+          actionLabel: 'Descartar',
+        }),
+      },
       description: {
         story:
           'Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.',
@@ -294,7 +328,10 @@ export const Responsive: Story = {
     ],
     covers: ['visual.item5'],
     chromatic: { viewports: [375] },
+    // Override de story: nasce aberta, como as demais composições. O
+    // empilhamento é media query — não há opção da fábrica para mostrar.
     docs: {
+      source: { transform: alertDialogSourceCom({ defaultOpen: true }) },
       description: {
         story:
           'Abaixo de 40rem o footer empilha os botões em column-reverse e o header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.',
@@ -340,7 +377,17 @@ export const Responsive: Story = {
 // e ao bloco de mídia era a prosa da docs page.
 export const ExtraClass: Story = {
   parameters: {
-    docs: { description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' } },
+    // Override de story: a classe extra no painel É o assunto, e ela só aparece
+    // na chamada da fábrica.
+    docs: {
+      source: {
+        transform: alertDialogSourceCom({
+          defaultOpen: true,
+          showMedia: true,
+          class: 'nds-overflow-hidden',
+        }),
+      },
+      description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' } },
   },
   render: () => {
     const trigger = createButton({ variant: 'destructive', label: 'Excluir conta' });

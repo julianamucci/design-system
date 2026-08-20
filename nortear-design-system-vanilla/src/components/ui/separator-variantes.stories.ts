@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSeparator } from './separator';
+import { separatorSource, separatorSourceCom } from './separator.source';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -10,6 +11,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: separatorSource },
       description: {
         component:
           'Orientações do Separator. A horizontal é uma linha de 1px de altura que ocupa a largura do contêiner; ' +
@@ -75,7 +77,12 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    // A orientação é o assunto da story, e nenhum control a cobre aqui: sem o
+    // override o painel Code mostraria a horizontal, que é o padrão da fábrica.
+    docs: { source: { transform: separatorSourceCom({ orientation: 'vertical', antes: 'Blog', depois: 'Documentação' }) } },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-cluster nds-docs-demo-row nds-w-full nds-max-w-md';

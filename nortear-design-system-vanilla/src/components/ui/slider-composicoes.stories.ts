@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createSlider } from './slider';
+import { sliderSource, sliderSourceCom } from './slider.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { apertarTecla, valorDaAlca } from '@shared/testing/slider-probe';
@@ -13,6 +14,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: sliderSource },
       description: {
         component:
           'Composições reais do Slider: Volume (com unidade), Glow (passo grande), PriceRange (faixa composta por duas alças com clamping mútuo) e InForm (dentro de `<form>`, com o callback de commit alimentando o analytics).',
@@ -142,6 +144,8 @@ export const Glow: Story = {
     }),
   parameters: {
     docs: {
+      // O assunto é o passo: com o padrão de 1 o snippet não mostraria nada.
+      source: { transform: sliderSourceCom({ step: 5, value: 75, 'aria-label': 'Brilho' }) },
       description: {
         story: 'Controle de brilho com `step=5` — granularidade discreta para evitar movimentos minúsculos quando o ajuste fino não importa.',
       },
@@ -200,6 +204,16 @@ export const PriceRange: Story = {
   },
   parameters: {
     docs: {
+      source: {
+        transform: sliderSourceCom({
+          min: 0,
+          max: 1000,
+          step: 10,
+          value: [100, 400],
+          'aria-label': ['Faixa de preço — mínimo', 'Faixa de preço — máximo'],
+          onValueChange: '([minimo, maximo]) => mostrarFaixa(minimo, maximo)',
+        }),
+      },
       description: {
         story:
           'Faixa de preço numa instância só: um par de valores pede as duas alças, e o limite ' +
@@ -277,6 +291,15 @@ export const InForm: Story = {
   },
   parameters: {
     docs: {
+      // O assunto é o callback de commit — um evento por interação, e não um
+      // por pixel arrastado.
+      source: {
+        transform: sliderSourceCom({
+          value: 60,
+          'aria-label': 'Volume',
+          onValueCommitted: '(valor) => registrarAjuste(valor)',
+        }),
+      },
       description: {
         story:
           'Slider em formulário: o callback de commit dispara ao soltar o arrasto ou largar a tecla, e é o que alimenta o analytics — o callback contínuo geraria um evento por pixel.',

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { createContextMenu } from './context-menu';
+import { contextMenuSource, contextMenuSourceCom } from './context-menu.source';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 import {
   abrirPorGesto,
@@ -20,6 +21,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: contextMenuSource },
       description: {
         component:
           'Estados do ContextMenu: item desabilitado, item recuado, item destrutivo e a paleta escura.',
@@ -39,6 +41,19 @@ const item = (valor: string) =>
 export const ItemDisabled: Story = {
   parameters: {
     covers: ['functional.item9', 'accessibility.item6', 'visual.item5'],
+    // `disabled` é o assunto, e o menu canônico do meta não o tem.
+    docs: {
+      source: {
+        transform: contextMenuSourceCom({
+          items: [
+            { label: 'Editar', value: 'edit' },
+            { label: 'Duplicar', value: 'off', disabled: true },
+            { type: 'separator' },
+            { label: 'Excluir', value: 'perigo-off', variant: 'destructive', disabled: true },
+          ],
+        }),
+      },
+    },
   },
   render: () =>
     createContextMenu({
@@ -86,6 +101,23 @@ export const ItemDisabled: Story = {
 // ─── Item recuado ─────────────────────────────────────────────────────────────
 
 export const ItemInset: Story = {
+  parameters: {
+    // O recuo e o rótulo de grupo são o assunto, e nenhum dos dois está no
+    // menu canônico do meta.
+    docs: {
+      source: {
+        transform: contextMenuSourceCom({
+          items: [
+            { type: 'label', label: 'Arquivo', inset: true },
+            { label: 'Editar', value: 'normal' },
+            { label: 'Duplicar', value: 'recuado', inset: true },
+            { type: 'separator' },
+            { label: 'Excluir', value: 'delete', inset: true, variant: 'destructive' },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     createContextMenu({
       trigger: criarAreaDeClique('Clique com o botão direito aqui'),
@@ -209,7 +241,23 @@ export const DarkPalette: Story = {
 // partir das mesmas definições: cada rodada mede exatamente o mesmo.
 
 export const CheckboxIndeterminate: Story = {
-  parameters: { covers: ['functional.item11'] },
+  parameters: {
+    covers: ['functional.item11'],
+    // O item de marcação e o estado misto são o assunto: o menu canônico do
+    // meta só tem itens de ação.
+    docs: {
+      source: {
+        transform: contextMenuSourceCom({
+          items: [
+            { type: 'label', label: 'Mostrar na tela' },
+            { type: 'checkbox', label: 'Colunas', value: 'colunas', indeterminate: true },
+            { type: 'checkbox', label: 'Régua', value: 'regua', checked: true },
+            { type: 'checkbox', label: 'Grade', value: 'grade', checked: false },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     createContextMenu({
       trigger: criarAreaDeClique('Clique com o botão direito aqui'),

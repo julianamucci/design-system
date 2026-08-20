@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, spyOn, userEvent, waitFor } from 'storybook/test';
 import { toast } from './sonner';
 import {
+  sonnerSource,
+  sonnerSourceCom,
+  sonnerSourcePilha,
+  sonnerSourceSemRegiao,
+} from './sonner.source';
+import {
   esperarSemTorradas,
   esperarTorrada,
   limparTorradas,
@@ -29,6 +35,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sonnerSource },
       description: {
         component:
           'Prazo, pausa na leitura, empilhamento, posição e o caso sem região montada.',
@@ -39,6 +46,13 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
+
+/**
+ * A região que estas stories montam. O `duration` encurtado que algumas usam
+ * NÃO entra no snippet: 400ms é recurso de teste, e documentá-lo viraria
+ * recomendação de um prazo curto demais para ler.
+ */
+const REGIAO = { position: 'top-right', richColors: true } as const;
 
 /** Espera fixa — usada só onde a prova é a AUSÊNCIA de mudança no intervalo. */
 function esperar(ms: number): Promise<void> {
@@ -51,6 +65,7 @@ export const AutoDismiss: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
+      source: { transform: sonnerSourceCom({ ...REGIAO, type: 'error', title: TEXTOS.erro }) },
       description: {
         story:
           'A notificação sai sozinha quando o prazo vence. É o que a separa do Alert: aqui a mensagem é passageira, e nada fica esperando uma decisão.',
@@ -81,6 +96,7 @@ export const AutoDismiss: Story = {
 export const PauseOnHover: Story = {
   parameters: {
     docs: {
+      source: { transform: sonnerSourceCom({ ...REGIAO, type: 'info', title: TEXTOS.info }) },
       description: {
         story:
           'O relógio congela enquanto o ponteiro ou o foco estiverem dentro da região. Sem isso, o tempo de leitura seria o mesmo para todo mundo — e quem lê devagar perderia a mensagem (WCAG 2.2.1).',
@@ -114,6 +130,17 @@ export const PauseOnHover: Story = {
 export const Stacked: Story = {
   parameters: {
     docs: {
+      // Três chamadas, três notificações: a pilha é o assunto.
+      source: {
+        transform: sonnerSourcePilha(
+          [
+            { type: 'success', title: TEXTOS.sucesso },
+            { type: 'warning', title: TEXTOS.aviso },
+            { type: 'info', title: TEXTOS.info },
+          ],
+          REGIAO,
+        ),
+      },
       description: {
         story:
           'Três notificações na fila. A pilha é uma coluna com espaço entre os itens: a nova entra ao lado, nunca por cima — mensagem ainda não lida não pode ser encoberta pela seguinte.',
@@ -154,6 +181,14 @@ export const PositionBottomCenter: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: {
+        transform: sonnerSourceCom({
+          position: 'bottom-center',
+          richColors: true,
+          type: 'success',
+          title: TEXTOS.sucesso,
+        }),
+      },
       description: {
         story:
           'A pilha no rodapé, centrada. A posição é escolha do projeto e vale para a aplicação inteira — misturar cantos faria a pessoa procurar a notificação a cada vez.',
@@ -192,6 +227,10 @@ export const WithoutToaster: Story = {
         'nesta stack a fila cria a própria região sob demanda: toast() desenha sem ninguém montar nada, e é esse o contrato documentado. Não existe o estado "sem Toaster no root".',
     },
     docs: {
+      // O assunto é a AUSÊNCIA da região: o snippet do meta a mostraria montada.
+      source: {
+        transform: sonnerSourceSemRegiao({ type: 'success', title: TEXTOS.sucesso }),
+      },
       description: {
         story:
           'Sem ninguém montar a região, `toast()` cria a dela e desenha assim mesmo — o contrário do que fazem as stacks em que o Toaster é um componente. Nada quebra, e a notificação chega.',
@@ -232,6 +271,18 @@ export const DarkTheme: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: {
+        transform: sonnerSourcePilha(
+          [
+            { type: 'default', title: TEXTOS.padrao },
+            { type: 'success', title: TEXTOS.sucesso },
+            { type: 'error', title: TEXTOS.erro },
+            { type: 'warning', title: TEXTOS.aviso },
+            { type: 'info', title: TEXTOS.info },
+          ],
+          REGIAO,
+        ),
+      },
       description: {
         story:
           'Tema escuro, com os cinco tipos na tela. Quem recolore é a cascata: os tokens da notificação são lidos do tema, então trocar a classe do documento basta.',

@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog, createAlertDialogMedia } from './alert-dialog';
+import { alertDialogSource } from './alert-dialog.source';
 import { createAlertIcon } from './alert';
 import { createButton } from './button';
 import { createAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
@@ -33,7 +34,10 @@ const meta: Meta<AlertDialogArgs> = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     design: figmaDesign('alertDialog'),
-    docs: { page: withAutoDocsTab(createAlertDialogDocs) },
+    docs: {
+      page: withAutoDocsTab(createAlertDialogDocs),
+      source: { transform: alertDialogSource },
+    },
   },
   // Esta stack não tem docgen (não há componente de framework para
   // introspectar): a aba "API Reference" sai só destes argTypes.
@@ -150,8 +154,8 @@ function buildDemo(args: AlertDialogArgs, onConfirm?: () => void, onCancel?: () 
 
 export const Playground: Story = {
   // O renderer html monta o snippet a partir do outerHTML, que é um dump de DOM
-  // e não o que o consumidor escreve. Aqui vai a composição real das factories,
-  // montada a partir dos args para acompanhar os controls.
+  // e não o que o consumidor escreve. A composição real das factories vem da
+  // transform declarada no meta (`alertDialogSource`), que lê estes controls.
   parameters: {
     // Contrato de teste (docs/shared/content/alert-dialog/translations.json →
     // testes.*). Só entra aqui o que os steps abaixo realmente asseveram.
@@ -166,45 +170,6 @@ export const Playground: Story = {
       'accessibility.item5',
       'visual.item1',
     ],
-    docs: {
-      source: {
-        transform: (_generated: string, ctx: { args?: Partial<AlertDialogArgs> }) => {
-          const a = ctx.args ?? {};
-          const actionVariant = a.tone === 'destructive' ? 'destructive' : 'default';
-          return [
-            a.showMedia
-              ? "import { createAlertDialog, createAlertDialogMedia } from '@/components/ui/alert-dialog';"
-              : "import { createAlertDialog } from '@/components/ui/alert-dialog';",
-            ...(a.showMedia ? ["import { createAlertIcon } from '@/components/ui/alert';"] : []),
-            "import { createButton } from '@/components/ui/button';",
-            '',
-            `const trigger = createButton({ variant: '${actionVariant}', label: '${a.triggerLabel ?? ''}' });`,
-            `const cancelButton = createButton({ variant: 'outline', label: '${a.cancelLabel ?? ''}' });`,
-            `const actionButton = createButton({ variant: '${actionVariant}', label: '${a.actionLabel ?? ''}' });`,
-            ...(a.showMedia
-              ? [
-                  '',
-                  'const media = createAlertDialogMedia();',
-                  "media.appendChild(createAlertIcon('warning'));",
-                ]
-              : []),
-            '',
-            'const dialog = createAlertDialog({',
-            '  trigger,',
-            `  title: '${a.title ?? ''}',`,
-            `  description: '${a.description ?? ''}',`,
-            ...(a.showMedia ? ['  media,'] : []),
-            '  cancelButton,',
-            '  actionButton,',
-            ...(a.defaultOpen ? ['  defaultOpen: true,'] : []),
-            ...(a.class ? [`  class: '${a.class}',`] : []),
-            '});',
-            '',
-            "document.querySelector('#app')?.append(dialog);",
-          ].join('\n');
-        },
-      },
-    },
   },
   render: (args) => buildDemo(args, fn(), fn()),
   play: async ({ args, canvasElement, step }) => {

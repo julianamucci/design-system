@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea, type ScrollAreaSize } from './scroll-area';
+import { scrollAreaSource } from './scroll-area.source';
 import { createScrollAreaDocs } from '@/components/docs/ScrollAreaDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -20,7 +21,7 @@ const meta: Meta<ScrollAreaArgs> = {
   tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createScrollAreaDocs) },
+    docs: { page: withAutoDocsTab(createScrollAreaDocs), source: { transform: scrollAreaSource } },
   },
   argTypes: {
     size: {

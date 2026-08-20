@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createPopover } from './popover';
+import { popoverSource } from './popover.source';
 import { createButton } from './button';
 import { createPopoverDocs } from '@/components/docs/PopoverDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -22,7 +23,7 @@ const meta: Meta<PopoverArgs> = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createPopoverDocs) },
+    docs: { page: withAutoDocsTab(createPopoverDocs), source: { transform: popoverSource } },
   },
   argTypes: {
     triggerLabel: {

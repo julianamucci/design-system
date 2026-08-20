@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { AlignLeft, AlignCenter, AlignRight } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
+import { toggleGroupSource } from './toggle-group.source';
 import { createToggleGroupDocs } from '@/components/docs/ToggleGroupDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -56,7 +57,7 @@ const meta: Meta<ToggleGroupArgs> = {
   title: 'UI/ToggleGroup',
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(createToggleGroupDocs) },
+    docs: { page: withAutoDocsTab(createToggleGroupDocs), source: { transform: toggleGroupSource } },
   },
   argTypes: {
     type: {

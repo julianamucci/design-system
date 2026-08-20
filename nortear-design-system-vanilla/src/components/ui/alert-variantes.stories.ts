@@ -1,6 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
+import { alertSource, alertSourceCom } from './alert.source';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { contrastePorTema, reprovasPorTema } from '@shared/testing/alert-probe';
 
@@ -10,6 +11,7 @@ const meta: Meta = {
     design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: alertSource } },
   },
   title: 'UI/Alert/Variants',
 };
@@ -37,7 +39,20 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ['functional.item2'] },
+  // Override de story: a variante não passa por control neste arquivo, e o
+  // snippet do meta mostraria `default` onde a story renderiza `destructive`.
+  parameters: {
+    covers: ['functional.item2'],
+    docs: {
+      source: {
+        transform: alertSourceCom({
+          variant: 'destructive',
+          title: 'Erro ao salvar',
+          description: 'Não foi possível salvar. Verifique sua conexão e tente novamente.',
+        }),
+      },
+    },
+  },
   render: () => {
     const alert = createAlert({ variant: 'destructive' });
     alert.appendChild(createAlertIcon('error'));
@@ -55,7 +70,19 @@ export const Destructive: Story = {
 };
 
 export const Success: Story = {
-  parameters: { covers: ['functional.item5'] },
+  // Override de story: mesma razão da Destructive — a variante é o assunto.
+  parameters: {
+    covers: ['functional.item5'],
+    docs: {
+      source: {
+        transform: alertSourceCom({
+          variant: 'success',
+          title: 'Perfil atualizado',
+          description: 'Suas informações foram salvas com sucesso.',
+        }),
+      },
+    },
+  },
   render: () => {
     const alert = createAlert({ variant: 'success' });
     alert.appendChild(createAlertIcon('success'));
@@ -73,6 +100,18 @@ export const Success: Story = {
 };
 
 export const Warning: Story = {
+  // Override de story: mesma razão da Destructive — a variante é o assunto.
+  parameters: {
+    docs: {
+      source: {
+        transform: alertSourceCom({
+          variant: 'warning',
+          title: 'Assinatura expirando',
+          description: 'Sua assinatura expira em 3 dias. Renove para evitar interrupções.',
+        }),
+      },
+    },
+  },
   render: () => {
     const alert = createAlert({ variant: 'warning' });
     alert.appendChild(createAlertIcon('warning'));
@@ -90,6 +129,18 @@ export const Warning: Story = {
 };
 
 export const Info: Story = {
+  // Override de story: mesma razão da Destructive — a variante é o assunto.
+  parameters: {
+    docs: {
+      source: {
+        transform: alertSourceCom({
+          variant: 'info',
+          title: 'Dica',
+          description: 'Você pode fixar os filtros mais usados para acessá-los mais rápido.',
+        }),
+      },
+    },
+  },
   render: () => {
     const alert = createAlert({ variant: 'info' });
     alert.appendChild(createAlertIcon('info'));
@@ -133,7 +184,22 @@ function mountRemountingAlert(spy: () => void, build: (onDismiss: () => void) =>
 // DismissibleTeclado): mesma matriz de cobertura por nome de story nas 4, e o
 // Chromatic fotografa os mesmos casos.
 export const Dismissible: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item5'] },
+  // Override de story: o botão de fechar e o callback são o assunto, e nenhum
+  // dos dois passa por control neste arquivo. O andaime que REMONTA o alerta
+  // fica de fora — ele existe para a story não terminar vazia, não é API.
+  parameters: {
+    covers: ['functional.item7', 'visual.item5'],
+    docs: {
+      source: {
+        transform: alertSourceCom({
+          dismissible: true,
+          onDismiss: "() => salvarPreferencia('aviso-fechado')",
+          title: 'Preferências salvas',
+          description: 'Você pode fechar este aviso quando quiser.',
+        }),
+      },
+    },
+  },
   render: () => {
     onDismissClick.mockClear();
     return mountRemountingAlert(onDismissClick, (onDismiss) => {
@@ -227,6 +293,21 @@ export const Dismissible: Story = {
 };
 
 export const DismissibleByKeyboard: Story = {
+  // Override de story: o rótulo do botão de fechar é o que muda aqui, e ele só
+  // existe na chamada da fábrica.
+  parameters: {
+    docs: {
+      source: {
+        transform: alertSourceCom({
+          variant: 'success',
+          dismissible: true,
+          dismissLabel: 'Fechar confirmação',
+          title: 'Perfil atualizado',
+          description: 'Suas informações foram salvas com sucesso.',
+        }),
+      },
+    },
+  },
   render: () => {
     onDismissKeyboard.mockClear();
     return mountRemountingAlert(onDismissKeyboard, (onDismiss) => {
@@ -280,7 +361,16 @@ export const DismissibleByKeyboard: Story = {
 export const Contrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
+    // Override de story: as cinco variantes aparecem sem ícone, e é a
+    // composição título + texto corrido que está sendo medida.
     docs: {
+      source: {
+        transform: alertSourceCom({
+          icon: false,
+          title: 'Título da variante',
+          description: 'Texto corrido da variante.',
+        }),
+      },
       description: {
         story:
           'Título e texto de cada variante medidos contra o fundo composto, nos três temas de marca e nos dois modos. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.',

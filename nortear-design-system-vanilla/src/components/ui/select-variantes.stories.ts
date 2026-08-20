@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect, type SelectItem } from './select';
+import { selectSource, selectSourceCom } from './select.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -11,6 +12,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: selectSource },
       description: {
         component:
           'Variantes do Select: Default (lista plana), WithGroups (cabeçalho por categoria) e WithIcon (ícone inline antes do rótulo).',
@@ -153,6 +155,19 @@ export const WithGroups: Story = {
     }),
   parameters: {
     docs: {
+      // O agrupamento é o assunto: a lista plana do meta esconderia o cabeçalho
+      // de categoria e a linha entre os grupos.
+      source: {
+        transform: selectSourceCom({
+          id: 'regiao',
+          labelText: 'Selecione a região',
+          items: [
+            { type: 'group', label: 'Sudeste', items: [...REGIOES.Sudeste] },
+            { type: 'separator' },
+            { type: 'group', label: 'Sul', items: [...REGIOES.Sul] },
+          ],
+        }),
+      },
       description: {
         story:
           'Opções agrupadas por categoria, com cabeçalho nomeando cada grupo. Use quando houver duas ou mais categorias claras com pelo menos duas opções cada.',
@@ -213,6 +228,19 @@ export const WithIcon: Story = {
     }),
   parameters: {
     docs: {
+      // O ícone é o assunto: ele entra na própria opção, como traçado, e é
+      // decorativo — fica fora do nome acessível.
+      source: {
+        transform: selectSourceCom({
+          id: 'canal',
+          labelText: 'Canal de contato',
+          items: [
+            { value: 'email', label: 'E-mail', icon: [...ICONES.email] },
+            { value: 'phone', label: 'Telefone', icon: ICONES.telefone },
+            { value: 'chat', label: 'Chat', icon: ICONES.chat },
+          ],
+        }),
+      },
       description: {
         story:
           'Ícone inline antes do rótulo. Ele é decorativo: fica fora do nome acessível da opção e é dimensionado pela folha do componente, não pelo tamanho intrínseco do desenho.',

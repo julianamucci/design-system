@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createProgress } from './progress';
 import {
+  progressSource,
+  progressSourceCom,
+  progressSourceLista,
+  progressSourceRotulo,
+} from './progress.source';
+import {
   barrasDeProgresso,
   contrasteBarraTrilha,
   indicadorDoProgresso,
@@ -17,6 +23,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: progressSource },
       description: {
         component:
           'As formas de uso: valor conhecido, valor com rótulo e cor semântica. ' +
@@ -62,6 +69,15 @@ export const Determinate: Story = {
 // ─── Indeterminate ───────────────────────────────────────────────────────────
 
 export const Indeterminate: Story = {
+  parameters: {
+    // Override de story: `value: null` é o assunto, e o snippet do meta parte
+    // de um valor conhecido.
+    docs: {
+      source: {
+        transform: progressSourceCom({ value: null, 'aria-label': 'Processando…' }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
@@ -90,7 +106,20 @@ export const Indeterminate: Story = {
 // ─── With Label ──────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
-  parameters: { covers: ['accessibility.item5'] },
+  parameters: {
+    covers: ['accessibility.item5'],
+    // Override de story: rótulo e valor visíveis são compostos acima da barra —
+    // outra FORMA de snippet, não outra opção da fábrica.
+    docs: {
+      source: {
+        transform: progressSourceRotulo({
+          value: 42,
+          label: 'Enviando arquivo',
+          'aria-label': 'Enviando arquivo',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -142,6 +171,21 @@ export const WithLabel: Story = {
 // ─── Cor semântica ───────────────────────────────────────────────────────────
 
 export const SemanticColor: Story = {
+  parameters: {
+    // Override de story: são duas barras, e `variant` é o assunto de cada uma.
+    docs: {
+      source: {
+        transform: progressSourceLista([
+          { value: 100, variant: 'success', 'aria-label': 'Sincronização concluída' },
+          {
+            value: 92,
+            variant: 'destructive',
+            'aria-label': 'Espaço de armazenamento quase esgotado',
+          },
+        ]),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';

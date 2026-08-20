@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { alturaResultante, campoDe } from '@shared/testing/input-probe';
 import { createInput } from './input';
+import { inputSource, inputSourceCom } from './input.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -10,6 +11,7 @@ const meta: Meta = {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
+      source: { transform: inputSource },
       description: {
         component: 'Tipos HTML disponíveis para o Input. Use sempre o tipo semântico correto para o dado esperado.',
       },
@@ -46,6 +48,20 @@ export const Text: Story = {
 };
 
 export const Email: Story = {
+  // O `type` é o assunto da story: sem override o painel mostraria o padrão
+  // `text` embaixo de um campo que renderiza outro tipo.
+  parameters: {
+    docs: {
+      source: {
+        transform: inputSourceCom({
+          type: 'email',
+          id: 'email',
+          label: 'Email',
+          placeholder: 'ex: joao@empresa.com',
+        }),
+      },
+    },
+  },
   render: () => campoRotulado('tipo-email', 'Email', 'email', 'ex: joao@empresa.com'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -57,6 +73,18 @@ export const Email: Story = {
 };
 
 export const Password: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: inputSourceCom({
+          type: 'password',
+          id: 'senha',
+          label: 'Senha',
+          placeholder: '••••••••',
+        }),
+      },
+    },
+  },
   render: () => campoRotulado('tipo-password', 'Senha', 'password', '••••••••'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -68,6 +96,18 @@ export const Password: Story = {
 };
 
 export const Number: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: inputSourceCom({
+          type: 'number',
+          id: 'quantidade',
+          label: 'Quantidade',
+          placeholder: '0',
+        }),
+      },
+    },
+  },
   render: () => campoRotulado('tipo-number', 'Quantidade', 'number', '0'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -83,7 +123,19 @@ export const Number: Story = {
  * seção Variantes documenta e que o contrato pede em `visual.item3`.
  */
 export const Search: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: {
+      source: {
+        transform: inputSourceCom({
+          type: 'search',
+          id: 'busca',
+          label: 'Buscar',
+          placeholder: 'Buscar componentes...',
+        }),
+      },
+    },
+  },
   render: () => campoRotulado('tipo-search', 'Buscar', 'search', 'Buscar componentes...'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -106,7 +158,14 @@ export const Search: Story = {
 };
 
 export const File: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    docs: {
+      source: {
+        transform: inputSourceCom({ type: 'file', id: 'arquivo', label: 'Arquivo' }),
+      },
+    },
+  },
   render: () => campoRotulado('tipo-file', 'Arquivo', 'file'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

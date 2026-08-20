@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createMenubar, type MenubarAlign, type MenubarSide } from './menubar';
+import { menubarSource } from './menubar.source';
 import { createMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -52,7 +53,7 @@ const meta: Meta<MenubarArgs> = {
   tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createMenubarDocs) },
+    docs: { page: withAutoDocsTab(createMenubarDocs), source: { transform: menubarSource } },
   },
   argTypes: {
     loop: {

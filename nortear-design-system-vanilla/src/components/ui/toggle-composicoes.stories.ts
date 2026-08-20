@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { toggleSource, toggleSourceBarra, toggleSourceCom, toggleSourceFileira } from './toggle.source';
 import { within, expect, userEvent } from 'storybook/test';
 import { Bold, Italic, Underline, List, Eye } from 'lucide';
 import { createToggle, type ToggleOptions } from './toggle';
@@ -12,6 +13,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleSource },
       description: {
         component:
           'As duas composições documentadas — toolbar de formatação e lista de filtros — mais o padrão controlado.',
@@ -79,6 +81,23 @@ async function definir(btn: HTMLElement, alvo: boolean) {
 // ─── FormattingToolbar ────────────────────────────────────────────────────────
 
 export const FormattingToolbar: Story = {
+  parameters: {
+    // Override: a composição é o grupo NOMEADO em volta dos toggles, e é ela
+    // que a story documenta.
+    docs: {
+      source: {
+        transform: toggleSourceBarra(
+          [
+            { icon: 'Bold', 'aria-label': 'Negrito' },
+            { icon: 'Italic', 'aria-label': 'Itálico' },
+            { icon: 'Underline', 'aria-label': 'Sublinhado' },
+            { icon: 'List', 'aria-label': 'Lista' },
+          ],
+          'Formatação de texto',
+        ),
+      },
+    },
+  },
   render: () => {
     const toolbar = document.createElement('div');
     toolbar.className = 'nds-cluster nds-rounded-lg nds-border-default nds-p-1';
@@ -129,6 +148,16 @@ export const FormattingToolbar: Story = {
 // ─── FilterList ───────────────────────────────────────────────────────────────
 
 export const FilterList: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: toggleSourceFileira([
+          { icon: 'Eye', label: 'Mostrar ocultos', variant: 'outline' },
+          { icon: 'List', label: 'Visão compacta', variant: 'outline', pressed: true },
+        ]),
+      },
+    },
+  },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';
@@ -182,6 +211,17 @@ export const FilterList: Story = {
 // ─── Controlled ───────────────────────────────────────────────────────────────
 
 export const Controlled: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: toggleSourceCom({
+          icon: 'Bold',
+          'aria-label': 'Negrito',
+          onClick: '(pressed) => { saida.textContent = String(pressed); }',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';

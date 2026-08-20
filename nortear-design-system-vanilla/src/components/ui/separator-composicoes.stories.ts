@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSeparator } from './separator';
+import { separatorEmCardSource, separatorSource, separatorSourceCom } from './separator.source';
 import {
   createCard,
   createCardContent,
@@ -17,6 +18,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: separatorSource },
       description: {
         component:
           'Composições do Separator: dentro de um Card, dentro de um menu vertical e com a ênfase forte.',
@@ -38,7 +40,12 @@ function texto(txt: string, classe = 'nds-text-body'): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const InCard: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // O Card é a composição: o snippet do meta mostraria dois parágrafos soltos
+    // e esconderia as sub-fábricas que dão a vizinhança da linha.
+    docs: { source: { transform: separatorEmCardSource() } },
+  },
   render: () => {
     const card = createCard({ className: 'nds-max-w-md' });
 
@@ -74,7 +81,15 @@ export const InCard: Story = {
 };
 
 export const InMenu: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // A divisão entre grupos de um menu faz parte da estrutura da informação: é
+    // o caso em que a linha deixa de ser decorativa, e o padrão da fábrica é o
+    // contrário.
+    docs: {
+      source: { transform: separatorSourceCom({ decorative: false, antes: 'Conta', depois: 'Sair' }) },
+    },
+  },
   render: () => {
     const menu = document.createElement('div');
     menu.className = 'nds-stack nds-max-w-xs nds-rounded-md nds-border-default nds-bg-background nds-p-1';
@@ -117,7 +132,21 @@ export const InMenu: Story = {
 };
 
 export const EmphasisStrong: Story = {
-  parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item5', 'functional.item6', 'visual.item5'],
+    // A ênfase forte é o assunto, e a classe extra ao lado dela é o par que a
+    // docs page documenta em Extensibilidade.
+    docs: {
+      source: {
+        transform: separatorSourceCom({
+          emphasis: 'strong',
+          className: 'nds-mt-4',
+          antes: 'Continuação do mesmo assunto',
+          depois: 'Troca de assunto',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';

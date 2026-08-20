@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createSwitch } from './switch';
+import { switchSource, switchSourceCom, switchSourceInvalido } from './switch.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -10,6 +11,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: switchSource },
       description: {
         component:
           'Estados do Switch: Unchecked, Checked, Disabled, DisabledChecked, Invalid (aria-invalid) e FocusVisible. A factory expõe `role="switch"` + `aria-checked` automaticamente.',
@@ -113,7 +115,10 @@ export const Unchecked: Story = {
 export const Checked: Story = {
   parameters: {
     covers: ['visual.item2', 'accessibility.item2'],
-    docs: { description: { story: 'Estado ligado: trilho na cor primária, thumb à direita, `aria-checked="true"`.' } },
+    docs: {
+      source: { transform: switchSourceCom({ checked: true }) },
+      description: { story: 'Estado ligado: trilho na cor primária, thumb à direita, `aria-checked="true"`.' },
+    },
   },
   render: () => wrapWithLabel(
     createSwitch({ checked: true }),
@@ -147,7 +152,10 @@ export const Checked: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
-    docs: { description: { story: 'Switch desabilitado e desligado. Opacidade reduzida, cursor bloqueado, não responde a interações.' } },
+    docs: {
+      source: { transform: switchSourceCom({ disabled: true, label: 'Modo escuro', id: 'modo-escuro' }) },
+      description: { story: 'Switch desabilitado e desligado. Opacidade reduzida, cursor bloqueado, não responde a interações.' },
+    },
   },
   render: () => wrapWithLabel(
     createSwitch({ checked: false, disabled: true }),
@@ -180,7 +188,17 @@ export const Disabled: Story = {
 
 export const DisabledChecked: Story = {
   parameters: {
-    docs: { description: { story: 'Switch desabilitado e ligado. Estado bloqueado para edição pelo usuário.' } },
+    docs: {
+      source: {
+        transform: switchSourceCom({
+          checked: true,
+          disabled: true,
+          label: 'Modo escuro',
+          id: 'modo-escuro',
+        }),
+      },
+      description: { story: 'Switch desabilitado e ligado. Estado bloqueado para edição pelo usuário.' },
+    },
   },
   render: () => wrapWithLabel(
     createSwitch({ checked: true, disabled: true }),
@@ -243,7 +261,12 @@ export const Invalid: Story = {
     return wrapper;
   },
   parameters: {
-    docs: { description: { story: 'Estado de erro via `aria-invalid="true"`: anel na cor de erro em volta do trilho, com a mensagem associada por `aria-describedby`.' } },
+    docs: {
+      // O estado inválido não é opção da fábrica: é atributo escrito depois, e
+      // a mensagem que ele aponta faz parte do que a story ensina.
+      source: { transform: switchSourceInvalido },
+      description: { story: 'Estado de erro via `aria-invalid="true"`: anel na cor de erro em volta do trilho, com a mensagem associada por `aria-describedby`.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

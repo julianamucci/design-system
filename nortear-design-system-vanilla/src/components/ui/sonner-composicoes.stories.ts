@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, fn, userEvent } from 'storybook/test';
 import { toast, ROTULO_FECHAR } from './sonner';
+import { sonnerSource, sonnerSourceCom, sonnerSourcePromessa } from './sonner.source';
 import {
   esperarSemTorradas,
   esperarTorrada,
@@ -28,6 +29,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sonnerSource },
       description: {
         component:
           'Descrição, ação, ciclo de promessa e prazo infinito. A ação oferecida dentro da notificação precisa existir em outro lugar da interface: a notificação some, e o que só existia nela some junto.',
@@ -40,12 +42,27 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * A região que estas stories montam. O prazo infinito das fixtures não entra no
+ * snippet: ali ele existe para o Chromatic e o axe medirem sempre o mesmo
+ * estado, e só a story Persistent o usa como assunto.
+ */
+const REGIAO = { position: 'top-right', richColors: true } as const;
+
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const WithDescription: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: {
+        transform: sonnerSourceCom({
+          ...REGIAO,
+          type: 'success',
+          title: TEXTOS.comDescricao,
+          description: TEXTOS.comDescricaoDetalhe,
+        }),
+      },
       description: {
         story:
           'Título mais descrição, para quando o título sozinho não orienta. A descrição é uma frase completa — se precisar de três linhas, o lugar da mensagem não é uma notificação.',
@@ -79,6 +96,14 @@ export const WithAction: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item2', 'visual.item2'],
     docs: {
+      source: {
+        transform: sonnerSourceCom({
+          ...REGIAO,
+          type: 'default',
+          title: TEXTOS.comAcao,
+          actionLabel: TEXTOS.comAcaoRotulo,
+        }),
+      },
       description: {
         story:
           'Ação embutida para operação reversível. O botão entra na sequência de foco enquanto a notificação está na tela, e some com ela — por isso desfazer também precisa existir fora daqui.',
@@ -144,6 +169,8 @@ export const PromiseResolved: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
     docs: {
+      // Forma diferente de chamada: uma promessa e três mensagens, não um título.
+      source: { transform: sonnerSourcePromessa(REGIAO) },
       description: {
         story:
           'Uma notificação para a operação inteira: nasce em carregamento e vira êxito no mesmo lugar, sem piscar duas caixas.',
@@ -191,6 +218,7 @@ export const PromiseRejected: Story = {
   parameters: {
     covers: ['functional.item4'],
     docs: {
+      source: { transform: sonnerSourcePromessa(REGIAO) },
       description: {
         story:
           'O mesmo ciclo, com a operação falhando: o carregamento vira falha, com o texto que diz o caminho de saída.',
@@ -233,6 +261,16 @@ export const Persistent: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item2'],
     docs: {
+      // Aqui o prazo infinito É o assunto — e nunca vai sozinho: sem botão de
+      // fechar, a notificação que não sai vira obstáculo.
+      source: {
+        transform: sonnerSourceCom({
+          ...REGIAO,
+          type: 'error',
+          title: TEXTOS.persistente,
+          persistente: true,
+        }),
+      },
       description: {
         story:
           'Prazo infinito, reservado a falha crítica que exige decisão. Sempre com botão de fechar: uma notificação que não sai sozinha e não pode ser fechada vira obstáculo.',

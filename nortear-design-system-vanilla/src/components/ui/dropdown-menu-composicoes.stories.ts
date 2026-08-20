@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu, type DropdownMenuItemDef } from './dropdown-menu';
+import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
 import { createButton } from './button';
 
 const meta: Meta = {
@@ -11,6 +12,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           'As composições canônicas: grupos com rótulo, alternadores, escolha única e atalhos. ' +
@@ -60,7 +62,27 @@ async function fecharNoFim(): Promise<void> {
 // ─── Com Label ────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    // Override de story: são DOIS grupos rotulados, e a composição da lista é o
+    // assunto — o snippet do meta traria um só.
+    docs: {
+      source: {
+        transform: dropdownMenuSourceCom({
+          triggerLabel: 'Conta',
+          items: [
+            { type: 'label', label: 'Conta' },
+            { label: 'Perfil', value: 'profile' },
+            { label: 'Configurações', value: 'settings' },
+            { type: 'separator' },
+            { type: 'label', label: 'Suporte' },
+            { label: 'Documentação', value: 'docs' },
+            { label: 'Sair', value: 'logout' },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     montar('Conta', [
       { type: 'label', label: 'Conta' },
@@ -97,7 +119,24 @@ export const WithLabel: Story = {
 // ─── Com CheckboxItems ────────────────────────────────────────────────────────
 
 export const WithCheckboxItems: Story = {
-  parameters: { covers: ['functional.item5', 'accessibility.item4', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item5', 'accessibility.item4', 'visual.item2'],
+    // Override de story: o item alternador tem papel ARIA e indicador próprios,
+    // e o snippet do meta mostraria itens de ação simples.
+    docs: {
+      source: {
+        transform: dropdownMenuSourceCom({
+          triggerLabel: 'Colunas',
+          items: [
+            { type: 'label', label: 'Colunas visíveis' },
+            { type: 'checkbox', label: 'Nome', value: 'nome', checked: true },
+            { type: 'checkbox', label: 'E-mail', value: 'email', checked: false },
+            { type: 'checkbox', label: 'Função', value: 'funcao', checked: false },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     montar('Colunas', [
       { type: 'label', label: 'Colunas visíveis' },
@@ -149,7 +188,25 @@ export const WithCheckboxItems: Story = {
 // ─── Com RadioGroup ───────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
+    // Override de story: a escolha única depende do `group`, que é o que faz os
+    // irmãos desmarcarem juntos — sem ele a lista viraria um punhado de
+    // alternadores independentes.
+    docs: {
+      source: {
+        transform: dropdownMenuSourceCom({
+          triggerLabel: 'Tema',
+          items: [
+            { type: 'label', label: 'Aparência' },
+            { type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true },
+            { type: 'radio', label: 'Escuro', value: 'dark', group: 'tema' },
+            { type: 'radio', label: 'Sistema', value: 'system', group: 'tema' },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     montar('Tema', [
       { type: 'label', label: 'Aparência' },
@@ -191,6 +248,23 @@ export const WithRadioGroup: Story = {
 // ─── Com atalhos ──────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
+  parameters: {
+    // Override de story: o atalho é uma chave do item e integra o nome
+    // acessível — o snippet do meta mostraria itens sem tecla nenhuma.
+    docs: {
+      source: {
+        transform: dropdownMenuSourceCom({
+          triggerLabel: 'Editar',
+          items: [
+            { label: 'Desfazer', value: 'undo', shortcut: 'Ctrl Z' },
+            { label: 'Copiar', value: 'copy', shortcut: 'Ctrl C' },
+            { type: 'separator' },
+            { label: 'Colar', value: 'paste', shortcut: 'Ctrl V' },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     montar('Editar', [
       { type: 'item', label: 'Desfazer', value: 'undo', shortcut: 'Ctrl Z' },

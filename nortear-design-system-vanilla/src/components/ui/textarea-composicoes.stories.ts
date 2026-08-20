@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
+import {
+  textareaSource,
+  textareaSourceCom,
+  textareaSourceFormulario,
+} from './textarea.source';
 import { createButton } from './button';
 import { createLabel } from './label';
 
@@ -12,6 +17,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: textareaSource },
       description: {
         component:
           'Composicoes do Textarea com Label externo, texto de apoio, contador acessível, mensagem de erro e envio em formulário HTML nativo. ' +
@@ -115,6 +121,15 @@ export const WithLabel: Story = {
 };
 
 export const WithSupportText: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: textareaSourceCom({
+          hint: 'Descreva o produto com clareza, destacando os principais atributos.',
+        }),
+      },
+    },
+  },
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',
@@ -137,6 +152,17 @@ export const WithSupportText: Story = {
 };
 
 export const WithAccessibleCounter: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: textareaSourceCom({
+          placeholder: 'ex: Descreva o produto em até 500 caracteres...',
+          hint: 'Descreva o produto com clareza.',
+          maxLength: 500,
+        }),
+      },
+    },
+  },
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto em até 500 caracteres...',
@@ -167,6 +193,16 @@ export const WithAccessibleCounter: Story = {
 };
 
 export const WithErrorMessage: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: textareaSourceCom({
+          ariaInvalid: true,
+          erro: 'A descrição é obrigatória e deve ter pelo menos 20 caracteres.',
+        }),
+      },
+    },
+  },
   render: () => {
     const textarea = createTextarea({
       placeholder: 'ex: Descreva o produto...',
@@ -192,6 +228,21 @@ export const WithErrorMessage: Story = {
 };
 
 export const InForm: Story = {
+  parameters: {
+    // O `name` é o que faz o campo aparecer no FormData — o assunto da story é
+    // o formulário inteiro, e não o campo isolado.
+    docs: {
+      source: {
+        transform: textareaSourceFormulario({
+          id: 'feedback',
+          name: 'feedback',
+          label: 'Feedback',
+          hint: 'Sua opinião nos ajuda a evoluir.',
+          maxLength: 280,
+        }),
+      },
+    },
+  },
   render: () => {
     const form = document.createElement('form');
     form.className = 'nds-stack nds-w-full nds-max-w-md';

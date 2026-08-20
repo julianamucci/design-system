@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { createResizablePanel } from './resizable';
+import { resizableSource, resizableSourceCom } from './resizable.source';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
 const meta: Meta = {
@@ -11,6 +12,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: resizableSource },
       description: {
         component:
           'Estados do Resizable: Dragging (arrasto ajusta os painéis em tempo real), Limits (o painel para no mínimo e no máximo), Focus (divisor alcançado pelo Tab, com anel visível) e Disabled (divisor travado, ainda anunciado e alcançável).',
@@ -90,7 +92,24 @@ function grupo(opcoes: {
 const layoutsEmitidos: number[][] = [];
 
 export const Dragging: Story = {
-  parameters: { covers: ['functional.item1', 'accessibility.item2'] },
+  parameters: {
+    covers: ['functional.item1', 'accessibility.item2'],
+    // Override de story: `onLayout` e `withHandle` são o assunto, e nenhum
+    // control deste arquivo os cobre.
+    docs: {
+      source: {
+        transform: resizableSourceCom({
+          withHandle: true,
+          onLayout: '(sizes) => guardarLayout(sizes)',
+          'aria-label': ROTULO,
+          panels: [
+            { titulo: 'Painel A', defaultSize: 50 },
+            { titulo: 'Painel B', defaultSize: 50 },
+          ],
+        }),
+      },
+    },
+  },
   render: () => grupo({ minA: 10, withHandle: true, onLayout: (s) => layoutsEmitidos.push(s) }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -158,7 +177,22 @@ export const Dragging: Story = {
 };
 
 export const Limits: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    // Override de story: piso e teto são o assunto, e eles moram dentro de
+    // `panels`.
+    docs: {
+      source: {
+        transform: resizableSourceCom({
+          'aria-label': ROTULO,
+          panels: [
+            { titulo: 'Painel A', defaultSize: 50, minSize: 30, maxSize: 60 },
+            { titulo: 'Painel B', defaultSize: 50, minSize: 30 },
+          ],
+        }),
+      },
+    },
+  },
   render: () => grupo({ minA: 30, maxA: 60 }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -202,7 +236,20 @@ export const Limits: Story = {
 };
 
 export const Focus: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item3'],
+    docs: {
+      source: {
+        transform: resizableSourceCom({
+          'aria-label': ROTULO,
+          panels: [
+            { titulo: 'Painel A', defaultSize: 50, minSize: 20 },
+            { titulo: 'Painel B', defaultSize: 50, minSize: 20 },
+          ],
+        }),
+      },
+    },
+  },
   render: () => grupo({}),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -235,6 +282,21 @@ export const Focus: Story = {
 };
 
 export const Disabled: Story = {
+  parameters: {
+    // Override de story: `disabled` é o assunto, e `false` é o padrão.
+    docs: {
+      source: {
+        transform: resizableSourceCom({
+          disabled: true,
+          'aria-label': ROTULO,
+          panels: [
+            { titulo: 'Painel A', defaultSize: 50, minSize: 20 },
+            { titulo: 'Painel B', defaultSize: 50, minSize: 20 },
+          ],
+        }),
+      },
+    },
+  },
   render: () => grupo({ disabled: true }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -276,6 +338,17 @@ export const ListenerCleanup: Story = {
     // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
     // sempre a mesma legenda.
     chromatic: { disable: true },
+    // Override de story: o assunto é a limpeza, e a linha de `destroy()` é
+    // justamente o que o snippet do meta não mostra.
+    docs: {
+      source: {
+        transform: resizableSourceCom({
+          destroy: true,
+          'aria-label': ROTULO,
+          panels: [{ titulo: 'Esquerda' }, { titulo: 'Direita' }],
+        }),
+      },
+    },
   },
   render: () => hospedeiroDeSonda(
     'Sonda de limpeza: o arraste começa e a página é trocada com o botão ainda pressionado.',

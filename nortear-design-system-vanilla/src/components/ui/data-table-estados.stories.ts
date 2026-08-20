@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createDataTable } from './data-table';
+import { dataTableSource, dataTableSourceCom } from './data-table.source';
 import { type Invoice, baseColumns, invoices } from './data-table.fixtures';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
@@ -13,6 +14,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: dataTableSource } },
   },
 };
 
@@ -33,6 +35,17 @@ export const NoResults: Story = {
     covers: ['visual.item6'],
     controls: { disable: true },
     actions: { disable: true },
+    // Sem resultado é DADO vazio com a grade montada, e o texto da mensagem
+    // difere do padrão da fábrica.
+    docs: {
+      source: {
+        transform: dataTableSourceCom({
+          semDados: true,
+          enableRowSelection: true,
+          emptyMessage: 'Nenhuma fatura encontrada.',
+        }),
+      },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

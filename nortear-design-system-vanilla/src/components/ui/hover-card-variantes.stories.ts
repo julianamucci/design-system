@@ -6,6 +6,7 @@ import {
   painelAberto,
 } from '@shared/testing/hover-card-probe';
 import { createHoverCard } from './hover-card';
+import { hoverCardSource, hoverCardSourceCom } from './hover-card.source';
 import { construirDuasLinhas, construirLink, emFrase } from './hover-card.fixtures';
 
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
@@ -23,6 +24,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: hoverCardSource },
       description: {
         component:
           'As duas configurações de tempo. Padrão usa a espera do próprio componente; a segunda encurta a espera, o que só se justifica quando o cartão traz informação que o leitor está procurando ativamente.',
@@ -69,7 +71,22 @@ export const Default: Story = {
 export const WithShortDelay: Story = {
   parameters: {
     covers: ['functional.item1'],
+    // Override de story: as duas esperas são o assunto, e neste arquivo não há
+    // control que as carregue — o snippet do meta cairia no padrão da fábrica,
+    // que é a OUTRA story.
     docs: {
+      source: {
+        transform: hoverCardSourceCom({
+          triggerLabel: 'design-system.dev',
+          triggerHref: 'https://design-system.dev',
+          contentTitle: 'Guia de overlays acessíveis',
+          contentApoio: 'Espera de 150ms para abrir e 100ms para fechar.',
+          openDelay: 150,
+          closeDelay: 100,
+          fraseAntes: 'Documentação em',
+          fraseDepois: '— leitura de 8 minutos.',
+        }),
+      },
       description: {
         story:
           'Espera curta (150ms para abrir, 100ms para fechar) para previews que o leitor procura de propósito. Abaixo de ~300ms o cartão passa a abrir sozinho quando o cursor só atravessa o texto — é o que a diretriz de uso desaconselha.',

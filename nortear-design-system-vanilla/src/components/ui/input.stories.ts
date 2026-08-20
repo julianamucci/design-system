@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { alturaResultante, campoDe, contrasteDaBorda } from '@shared/testing/input-probe';
 import { createInput } from './input';
+import { inputSource } from './input.source';
 import { createInputDocs } from '@/components/docs/InputDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -19,7 +20,7 @@ const meta: Meta<InputArgs> = {
   title: 'UI/Input',
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(createInputDocs) },
+    docs: { page: withAutoDocsTab(createInputDocs), source: { transform: inputSource } },
   },
   argTypes: {
     type: {

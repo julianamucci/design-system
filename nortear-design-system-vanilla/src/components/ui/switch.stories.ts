@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, waitFor, within, expect, fn } from 'storybook/test';
 import { createSwitch, type SwitchSize } from './switch';
+import { switchSource } from './switch.source';
 import { createSwitchDocs } from '@/components/docs/SwitchDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -31,7 +32,7 @@ const meta: Meta<SwitchArgs> = {
   title: 'UI/Switch',
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(createSwitchDocs) },
+    docs: { page: withAutoDocsTab(createSwitchDocs), source: { transform: switchSource } },
   },
   argTypes: {
     checked: {

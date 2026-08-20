@@ -1,6 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAspectRatio } from './aspect-ratio';
+import { aspectRatioSource, aspectRatioSourceCom } from './aspect-ratio.source';
 import { expect } from 'storybook/test';
 
 const meta: Meta = {
@@ -12,6 +13,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: aspectRatioSource },
       description: {
         component:
           'Ratios canônicos adotados pelo design system: 16/9, 4/3, 1/1, 3/4 e 21/9. ' +
@@ -49,7 +51,19 @@ function boxed(el: HTMLElement, maxWidth = '36rem'): HTMLElement {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const SixteenNine: Story = {
-  parameters: { covers: ['functional.item1', 'visual.item1'] },
+  // A proporção é a única coisa que muda entre as stories deste arquivo, e ela
+  // não passa por control nenhum: cada uma declara a sua.
+  parameters: {
+    covers: ['functional.item1', 'visual.item1'],
+    docs: {
+      source: {
+        transform: aspectRatioSourceCom({
+          ratio: 16 / 9,
+          alt: 'Paisagem montanhosa — proporção 16/9',
+        }),
+      },
+    },
+  },
   name: '16 / 9',
   render: () =>
     boxed(
@@ -74,7 +88,18 @@ export const SixteenNine: Story = {
 };
 
 export const FourThree: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: {
+      source: {
+        transform: aspectRatioSourceCom({
+          ratio: 4 / 3,
+          imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&q=80',
+          alt: 'Imagem de produto — proporção 4/3',
+        }),
+      },
+    },
+  },
   name: '4 / 3',
   render: () =>
     boxed(
@@ -99,7 +124,20 @@ export const FourThree: Story = {
 };
 
 export const Square: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item3'] },
+  // O quadrado é o padrão da fábrica, então a opção `ratio` some do snippet —
+  // documentação não ensina a repetir o default.
+  parameters: {
+    covers: ['functional.item2', 'visual.item3'],
+    docs: {
+      source: {
+        transform: aspectRatioSourceCom({
+          ratio: 1,
+          imageUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800&q=80',
+          alt: 'Avatar quadrado — proporção 1/1',
+        }),
+      },
+    },
+  },
   name: '1 / 1',
   render: () =>
     boxed(
@@ -125,7 +163,18 @@ export const Square: Story = {
 };
 
 export const ThreeFour: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      source: {
+        transform: aspectRatioSourceCom({
+          ratio: 3 / 4,
+          imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&q=80',
+          alt: 'Retrato vertical — proporção 3/4',
+        }),
+      },
+    },
+  },
   name: '3 / 4',
   render: () =>
     boxed(
@@ -151,7 +200,18 @@ export const ThreeFour: Story = {
 };
 
 export const UltraWide: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: {
+      source: {
+        transform: aspectRatioSourceCom({
+          ratio: 21 / 9,
+          imageUrl: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1600&q=80',
+          alt: 'Hero cinematográfico — proporção 21/9',
+        }),
+      },
+    },
+  },
   name: '21 / 9',
   render: () =>
     boxed(

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { createDataTable } from './data-table';
+import { dataTableSource, dataTableSourceCom } from './data-table.source';
 import { type Invoice, invoices, baseColumns } from './data-table.fixtures';
 
 // ─── Meta ──────────────────────────────────────────────────────────────────
@@ -12,6 +13,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: dataTableSource } },
   },
 };
 
@@ -40,6 +42,17 @@ export const Paginated: Story = {
     covers: ['functional.item8'],
     controls: { disable: true },
     actions: { disable: true },
+    // O tamanho da página e a lista de opções são o assunto, e os dois são
+    // diferentes do padrão da fábrica.
+    docs: {
+      source: {
+        transform: dataTableSourceCom({
+          enableGlobalFilter: false,
+          pageSize: TAMANHO_DE_PAGINA,
+          pageSizeOptions: [TAMANHO_DE_PAGINA, 10],
+        }),
+      },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -154,6 +167,18 @@ export const ExplicitRowLabel: Story = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    // `rowLabel` é o assunto: sem ele o snippet mostraria o degrau do meio do
+    // fallback, que é o que o Playground já documenta.
+    docs: {
+      source: {
+        transform: dataTableSourceCom({
+          enableRowSelection: true,
+          enableGlobalFilter: false,
+          enablePagination: false,
+          rowLabel: '(fatura) => fatura.customer',
+        }),
+      },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
@@ -208,7 +233,16 @@ export const Virtualized1000Rows: Story = {
     covers: ['functional.item7', 'visual.item5'],
     controls: { disable: true },
     actions: { disable: true },
-    docs: { canvas: { sourceState: 'none' } },
+    docs: {
+      canvas: { sourceState: 'none' },
+      source: {
+        transform: dataTableSourceCom({
+          virtualized: true,
+          maxHeight: '400px',
+          enableColumnVisibility: false,
+        }),
+      },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

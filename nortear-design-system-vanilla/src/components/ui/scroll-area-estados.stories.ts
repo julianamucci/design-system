@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { anelDeFocoDeclarado, transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea } from './scroll-area';
+import {
+  scrollAreaSource,
+  scrollAreaSourceCom,
+  scrollAreaSourceSemLimite,
+} from './scroll-area.source';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -11,6 +16,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: scrollAreaSource },
       description: {
         component:
           'Estados do ScrollArea. A barra é a NATIVA do navegador, então idle, rolando e hover são desenhados pelo ' +
@@ -210,7 +216,17 @@ export const Focus: Story = {
 export const FocusableContent: Story = {
   parameters: {
     covers: ['accessibility.item4'],
-    docs: { description: { story: 'Conteúdo focável dentro da área rolável — o componente não reordena nem remove nada da ordem de tabulação, e o navegador traz para o campo visível o item focado.' } },
+    docs: {
+      // O conteúdo focável é o assunto: uma lista de textos não mostraria a
+      // ordem de tabulação que a story documenta.
+      source: {
+        transform: scrollAreaSourceCom({
+          size: 'md',
+          'aria-label': 'Lista de ações',
+          conteudo: 'links',
+        }),
+      },
+      description: { story: 'Conteúdo focável dentro da área rolável — o componente não reordena nem remove nada da ordem de tabulação, e o navegador traz para o campo visível o item focado.' } },
   },
   render: () => {
     const outer = document.createElement('div');
@@ -257,7 +273,11 @@ export const FocusableContent: Story = {
 export const NoLimit: Story = {
   parameters: {
     covers: ['functional.item4'],
-    docs: { description: { story: 'Sem degrau de altura no root — o conteúdo expande e não há rolagem. É o erro de uso mais comum: o componente aparenta estar quebrado quando ninguém disse até onde ele pode ir.' } },
+    docs: {
+      // O assunto é a AUSÊNCIA da opção: o snippet do meta mostraria a chamada
+      // certa e esconderia justamente o erro de uso que a story documenta.
+      source: { transform: scrollAreaSourceSemLimite({ size: 'sm' }) },
+      description: { story: 'Sem degrau de altura no root — o conteúdo expande e não há rolagem. É o erro de uso mais comum: o componente aparenta estar quebrado quando ninguém disse até onde ele pode ir.' } },
   },
   render: () => {
     const outer = document.createElement('div');

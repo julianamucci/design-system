@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createAccordion, type AccordionOptions } from './accordion';
+import { accordionSource, accordionSourceCom } from './accordion.source';
 import DOMPurify from 'dompurify';
 
 const meta: Meta = {
@@ -10,6 +11,7 @@ const meta: Meta = {
     design: figmaDesign('accordion'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: accordionSource } },
   },
   title: 'UI/Accordion/Variants',
 };
@@ -54,7 +56,10 @@ export const Single: Story = {
   render: () => createAccordion({ type: 'single', defaultValue: 'senha', items: FAQ_ITEMS }),
   parameters: {
     covers: ['functional.item2', 'functional.item3', 'functional.item6', 'visual.item2'],
+    // Override de story: o valor inicial não passa por control nenhum, e sem os
+    // itens desta story ele apontaria para um `value` que o snippet não tem.
     docs: {
+      source: { transform: accordionSourceCom({ defaultValue: 'senha', items: FAQ_ITEMS }) },
       description: {
         story: 'Apenas um item pode estar aberto por vez. Abrir um novo fecha o anterior automaticamente.',
       },
@@ -130,7 +135,16 @@ export const Multiple: Story = {
   beforeEach: () => { onMultipleChange.mockClear(); },
   parameters: {
     covers: ['functional.item4'],
+    // Override de story: o modo múltiplo e o callback são o assunto daqui, e
+    // nenhum dos dois passa por control.
     docs: {
+      source: {
+        transform: accordionSourceCom({
+          type: 'multiple',
+          items: SPEC_ITEMS,
+          onValueChange: '(abertos) => registrar(abertos)',
+        }),
+      },
       description: {
         story: 'Múltiplos itens podem estar abertos simultaneamente. Use para conteúdo independente que o usuário precisa comparar.',
       },
@@ -191,7 +205,19 @@ export const Controlled: Story = {
   },
   parameters: {
     covers: ['functional.item6'],
+    // Override de story: o valor inicial e o callback que alimenta o indicador
+    // externo são o assunto, e nenhum dos dois passa por control.
     docs: {
+      source: {
+        transform: accordionSourceCom({
+          defaultValue: 'item-1',
+          items: [
+            { value: 'item-1', trigger: 'Item 1 — controlado' },
+            { value: 'item-2', trigger: 'Item 2 — controlado' },
+          ],
+          onValueChange: '(aberto) => atualizarIndicador(aberto)',
+        }),
+      },
       description: {
         story: 'Modo controlado via onValueChange. O indicador acima mostra o item ativo em tempo real.',
       },
@@ -226,7 +252,11 @@ export const DefaultOpen: Story = {
     }),
   parameters: {
     covers: ['functional.item6'],
+    // Override de story: o valor inicial É o assunto, e não passa por control.
     docs: {
+      source: {
+        transform: accordionSourceCom({ defaultValue: 'item-1', items: DEFAULT_OPEN_ITEMS }),
+      },
       description: {
         story: 'Item aberto por padrão via defaultValue. Use para destacar a pergunta mais frequente ou o passo atual de um fluxo.',
       },

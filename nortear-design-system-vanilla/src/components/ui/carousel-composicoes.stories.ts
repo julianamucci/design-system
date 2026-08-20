@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
+import { carouselSource, carouselSourceCom } from './carousel.source';
 import { createCard, createCardContent, createCardHeader, createCardTitle, createCardDescription } from './card';
 import carouselTranslations from '@shared/content/carousel/translations.json';
 
@@ -49,6 +50,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: carouselSource },
       description: {
         component:
           'Composicoes do Carousel — com dots que levam direto a um slide e galeria de imagens com legenda.',
@@ -65,7 +67,20 @@ type Story = StoryObj;
 const TOTAL_DOTS = 5;
 
 export const WithDots: Story = {
-  parameters: { covers: ['functional.item8', 'accessibility.item6', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item8', 'accessibility.item6', 'visual.item5'],
+    // Override de story: os dots são composição de quem consome, e o que os
+    // liga ao carrossel é o callback — nenhum dos dois passa por control.
+    docs: {
+      source: {
+        transform: carouselSourceCom({
+          slides: TOTAL_DOTS,
+          ariaLabel: 'Galeria com dots',
+          onIndexChange: '(index) => marcarDotAtual(index)',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -252,6 +267,9 @@ const FOTOS = [
 ];
 
 export const Gallery: Story = {
+  parameters: {
+    docs: { source: { transform: carouselSourceCom({ slides: 4, ariaLabel: 'Galeria de fotos do produto' }) } },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';

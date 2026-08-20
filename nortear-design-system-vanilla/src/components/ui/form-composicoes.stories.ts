@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { ordemDeTabulacao } from '@shared/testing/form-probe';
 import { createFieldset, createFormField } from './form';
+import {
+  formComFieldsetSource,
+  formComVariosCamposSource,
+  formSource,
+} from './form.source';
 import { createInput } from './input';
 import { createTextarea } from './textarea';
 import { createButton } from './button';
@@ -12,6 +17,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: formSource } },
   },
 };
 
@@ -25,6 +31,20 @@ type Story = StoryObj;
 export const Fieldset: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item4', 'visual.item4'],
+    // Override de story: a fábrica é OUTRA. `createFieldset` emite o par nativo
+    // fieldset/legend, e o snippet do meta mostraria um campo avulso, que é
+    // exatamente o que esta composição existe para agrupar.
+    docs: {
+      source: {
+        transform: formComFieldsetSource({
+          legend: 'Endereço de entrega',
+          campos: [
+            { label: 'Rua', placeholder: 'ex: Av. Paulista, 1000' },
+            { label: 'Cidade', placeholder: 'ex: São Paulo' },
+          ],
+        }),
+      },
+    },
   },
   render: () =>
     createFieldset({
@@ -76,7 +96,40 @@ export const Fieldset: Story = {
  * É onde a ordem de tabulação e a associação de uma `<textarea>` são o assunto.
  */
 export const MultipleFields: Story = {
-  parameters: { covers: ['functional.item6', 'functional.item8'] },
+  parameters: {
+    covers: ['functional.item6', 'functional.item8'],
+    // Override de story: o assunto é o formulário inteiro — a ordem em que o
+    // teclado visita os controles e o fato de a área de texto passar pelo mesmo
+    // campo. Um campo avulso não mostraria nem uma coisa nem outra.
+    docs: {
+      source: {
+        transform: formComVariosCamposSource({
+          campos: [
+            {
+              label: 'Nome completo',
+              name: 'nome',
+              placeholder: 'ex: João da Silva',
+              description: 'Como aparece em documentos oficiais.',
+            },
+            {
+              label: 'Email',
+              type: 'email',
+              name: 'email',
+              placeholder: 'ex: joao@empresa.com',
+            },
+            {
+              label: 'Biografia',
+              controle: 'textarea',
+              name: 'bio',
+              rows: 3,
+              description: 'Máximo 280 caracteres.',
+            },
+          ],
+          submitLabel: 'Salvar',
+        }),
+      },
+    },
+  },
   render: () => {
     const form = document.createElement('form');
     form.className = 'nds-stack nds-max-w-sm';

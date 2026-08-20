@@ -29,6 +29,11 @@ export default defineConfig({
       exclude: [
         'src/components/ui/**/*.stories.{ts,tsx}',
         'src/components/ui/**/index.ts',
+        // Snippet do painel Code e o teste dele: infra de documentação, não
+        // produto. Quem os guarda é o projeto `unit` abaixo, não o threshold
+        // de cobertura do primitivo.
+        'src/components/ui/**/*.source.ts',
+        'src/components/ui/**/*.test.ts',
       ],
       thresholds: {
         statements: 90,
@@ -38,6 +43,18 @@ export default defineConfig({
       },
     },
     projects: [
+      {
+        // Testes unitários de função pura, em node. Existe por causa das
+        // transforms do painel Code (`<slug>.source.ts`): a saída do painel não
+        // aparece no DOM durante a `play`, então nenhuma suíte de browser a
+        // alcança. Entra `ctx.args`, sai a string — e isso se testa aqui.
+        extends: true,
+        test: {
+          name: 'unit',
+          environment: 'node',
+          include: ['src/**/*.test.ts'],
+        },
+      },
       {
         extends: true,
         plugins: [

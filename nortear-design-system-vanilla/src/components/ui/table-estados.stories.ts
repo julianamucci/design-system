@@ -10,6 +10,12 @@ import {
   createTableCaption,
 } from './table';
 import { createSkeleton } from '@/components/ui/skeleton';
+import {
+  tableCarregandoSource,
+  tableSource,
+  tableSourceCom,
+  tableVaziaSource,
+} from './table.source';
 import { COLUNAS, INVOICES } from './table.fixtures';
 
 const meta: Meta = {
@@ -20,6 +26,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
+    docs: { source: { transform: tableSource } },
   },
 };
 
@@ -43,7 +50,12 @@ function buildStandardHeader(table: HTMLTableElement): void {
 // ─── Vazio ────────────────────────────────────────────────────────────────────
 
 export const Empty: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    // Forma própria de snippet: o corpo aqui é uma célula só, que atravessa a
+    // tabela — a montagem canônica com linhas de dado não mostraria isso.
+    docs: { source: { transform: tableVaziaSource() } },
+  },
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Lista de faturas recentes', 'nds-sr-only'));
@@ -94,7 +106,10 @@ export const Empty: Story = {
 // ─── Linha selecionada ────────────────────────────────────────────────────────
 
 export const SelectedRow: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item5'],
+    docs: { source: { transform: tableSourceCom({ linhaSelecionada: true }) } },
+  },
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Lista de faturas recentes', 'nds-sr-only'));
@@ -145,7 +160,12 @@ export const SelectedRow: Story = {
 const LINHAS_ESQUELETO = [1, 2, 3];
 
 export const Loading: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item6'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item6'],
+    // Forma própria de snippet: a região que anuncia o carregamento envolve a
+    // tabela inteira, e é ela que entra na página no lugar do wrapper.
+    docs: { source: { transform: tableCarregandoSource() } },
+  },
   render: () => {
     // aria-busy na REGIÃO, não na célula: o esqueleto é aria-hidden, e sem o
     // container quem usa leitor de tela ouve uma tabela vazia sem saber que os

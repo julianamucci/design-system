@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createSwitch } from './switch';
+import { switchSource, switchSourceCom, switchSourcePainel } from './switch.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -10,6 +11,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: switchSource },
       description: {
         component:
           'Variantes de uso do Switch: Default (Label à direita), WithDescription (painel com o texto à esquerda) e Sm (degrau compacto). O degrau vem da opção `size`, que a factory traduz em `data-size` — é o CSS compartilhado que guarda a medida.',
@@ -108,6 +110,17 @@ export const WithDescription: Story = {
   },
   parameters: {
     docs: {
+      // Composição estruturalmente diferente: o painel põe rótulo e descrição de
+      // um lado e o controle do outro, e é isso que a story mostra.
+      source: {
+        transform: switchSourcePainel([
+          {
+            id: 'emails-marketing',
+            label: 'Emails de marketing',
+            description: 'Receba novidades e promoções da plataforma.',
+          },
+        ]),
+      },
       description: {
         story:
           'Switch em painel — Label e descrição auxiliar à esquerda, controle à direita. Padrão para listas de configurações (notificações, privacidade, preferências).',
@@ -150,6 +163,9 @@ export const Sm: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // O assunto é o degrau: sem o override o snippet mostraria o padrão, que é
+      // justamente o que a story usa só como referência de comparação.
+      source: { transform: switchSourceCom({ size: 'sm', label: 'Tamanho compacto', id: 'tamanho-compacto' }) },
       description: {
         story:
           'Degrau compacto — trilho de 24×16px com thumb de 12px, ao lado do padrão para comparação. Indicado para listas densas e menus.',

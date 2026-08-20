@@ -6,6 +6,7 @@ import {
   createPopoverHeader,
   createPopoverTitle,
 } from './popover';
+import { popoverSource, popoverSourceCom, popoverSourceFormulario } from './popover.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
@@ -18,6 +19,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: popoverSource },
       description: {
         component:
           'Conteúdo livre, cabeçalho com título e descrição, e formulário inline. ' +
@@ -58,7 +60,19 @@ async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    // Override de story: aqui o conteúdo é texto puro, e o snippet do meta
+    // mostraria as sub-fábricas de cabeçalho que esta story não usa.
+    docs: {
+      source: {
+        transform: popoverSourceCom({
+          triggerLabel: 'Ver atalhos',
+          text: 'Use Ctrl + K para abrir a busca em qualquer tela.',
+        }),
+      },
+    },
+  },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Ver atalhos' });
 
@@ -139,7 +153,12 @@ export const WithTitle: Story = {
 };
 
 export const Form: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // Override de story: o conteúdo interativo pede outra FORMA de snippet —
+    // rótulo, campo e submit dentro do painel.
+    docs: { source: { transform: popoverSourceFormulario({ triggerLabel: 'Editar perfil' }) } },
+  },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 

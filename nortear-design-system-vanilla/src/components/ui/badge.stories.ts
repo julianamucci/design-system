@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createBadge, type BadgeVariant } from './badge';
+import { badgeSource } from './badge.source';
 import { createBadgeDocs } from '@/components/docs/BadgeDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -17,7 +18,10 @@ const meta: Meta<BadgeArgs> = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     design: figmaDesign('badge'),
-    docs: { page: withAutoDocsTab(createBadgeDocs) },
+    docs: {
+      page: withAutoDocsTab(createBadgeDocs),
+      source: { transform: badgeSource },
+    },
   },
   argTypes: {
     variant: {

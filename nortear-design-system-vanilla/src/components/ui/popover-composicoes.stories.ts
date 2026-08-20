@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPopover } from './popover';
+import { popoverSource, popoverSourceFormulario } from './popover.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
@@ -13,6 +14,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: popoverSource },
       description: {
         component:
           'Composicoes reais do Popover: EditarPerfil (form inline), FiltroDeTabela (checkboxes + ação), SeletorDeCor (swatches) e ConfiguracoesRapidas (toggles via inputs). Demonstra uso prático em fluxos comuns de produto.',
@@ -45,6 +47,11 @@ async function waitForOpen(): Promise<void> {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const EditProfile: Story = {
+  parameters: {
+    // Override de story: o formulário dentro do painel pede outra FORMA de
+    // snippet — rótulo, campo e submit.
+    docs: { source: { transform: popoverSourceFormulario({ triggerLabel: 'Editar perfil' }) } },
+  },
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Editar perfil' });
 

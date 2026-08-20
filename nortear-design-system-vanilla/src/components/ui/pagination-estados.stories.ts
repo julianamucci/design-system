@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fireEvent, fn, userEvent, within, expect } from 'storybook/test';
 import { alvosAbaixoDoMinimo, contrastesDaFaixa } from '@shared/testing/pagination-probe';
 import { createPagination } from './pagination';
+import { paginationSource, paginationSourceCom } from './pagination.source';
 
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
 const ROTULO_PROXIMA = 'Ir para a próxima página';
@@ -17,6 +18,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: paginationSource },
       description: {
         component:
           'Estados do Pagination: Default (inativo), Hover, Active (aria-current="page"), Disabled nos dois extremos, Focus e Contrast.',
@@ -146,7 +148,12 @@ export const DisabledFirst: Story = {
 
 export const DisabledLast: Story = {
   name: 'Disabled (next on last page)',
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    // Override de story: estar na ÚLTIMA página é o assunto, e o snippet do
+    // meta parte da primeira.
+    docs: { source: { transform: paginationSourceCom({ total: 5, current: 5 }) } },
+  },
   render: faixa('Paginação na última página', 5),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

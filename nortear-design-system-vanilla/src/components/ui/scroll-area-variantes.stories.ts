@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea } from './scroll-area';
+import { scrollAreaSource, scrollAreaSourceCom } from './scroll-area.source';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -11,6 +12,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: scrollAreaSource },
       description: {
         component:
           'Três direções canônicas de scroll: vertical (padrão), horizontal e bidirecional. ' +
@@ -129,7 +131,20 @@ export const Vertical: Story = {
 export const Horizontal: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { description: { story: 'Scroll horizontal — largura fixa no root e faixa com largura de conteúdo (itens que não encolhem) geram barra inferior.' } },
+    // O eixo nasce do conteúdo, não de uma opção: aqui não há degrau de altura,
+    // e quem transborda é a fileira de cartões que não encolhem.
+    docs: {
+      source: {
+        transform: scrollAreaSourceCom({
+          size: null,
+          width: '100%',
+          'aria-label': 'Fila horizontal de cards',
+          class: 'nds-rounded-md nds-border-default',
+          conteudo: 'fileira',
+        }),
+      },
+      description: { story: 'Scroll horizontal — largura fixa no root e faixa com largura de conteúdo (itens que não encolhem) geram barra inferior.' },
+    },
   },
   render: () => {
     const outer = document.createElement('div');
@@ -170,7 +185,20 @@ export const Both: Story = {
   name: 'Bidirectional',
   parameters: {
     covers: ['visual.item3'],
-    docs: { description: { story: 'Scroll bidirecional — degrau de altura e largura no root, conteúdo maior nas duas dimensões.' } },
+    docs: {
+      // Os dois eixos vêm de uma matriz cujas células não quebram linha: é ela
+      // que passa da caixa nas duas dimensões.
+      source: {
+        transform: scrollAreaSourceCom({
+          size: 'lg',
+          width: '100%',
+          'aria-label': 'Matriz com rolagem nos dois eixos',
+          class: 'nds-rounded-md nds-border-default',
+          conteudo: 'matriz',
+        }),
+      },
+      description: { story: 'Scroll bidirecional — degrau de altura e largura no root, conteúdo maior nas duas dimensões.' },
+    },
   },
   render: () => {
     const outer = document.createElement('div');

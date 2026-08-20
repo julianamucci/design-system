@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
 import { esperarPainel, esperarPainelSumir, painelAberto } from './navigation-menu.fixtures';
+import { navigationMenuSource } from './navigation-menu.source';
 import { createNavigationMenuDocs } from '@/components/docs/NavigationMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -17,7 +18,10 @@ const meta: Meta<NavigationMenuArgs> = {
   tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createNavigationMenuDocs) },
+    docs: {
+      page: withAutoDocsTab(createNavigationMenuDocs),
+      source: { transform: navigationMenuSource },
+    },
   },
   argTypes: {
     delayDuration: {

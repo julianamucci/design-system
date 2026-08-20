@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createTextarea } from './textarea';
+import { textareaSource, textareaSourceCom } from './textarea.source';
 import { createLabel } from './label';
 import {
   alturaMinimaPx,
@@ -16,6 +17,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: textareaSource },
       description: {
         component:
           'Variantes do Textarea: padrão (redimensiona na vertical, altura mínima de 120px), com contador de caracteres e sem redimensionamento. ' +
@@ -108,7 +110,22 @@ export const Default: Story = {
 };
 
 export const WithCounter: Story = {
-  parameters: { covers: ['functional.item3', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item3', 'visual.item4'],
+    // O contador é o assunto, e não é opção da fábrica: `maxLength` vai pela
+    // API do DOM e o número precisa ser anunciado a quem não o vê.
+    docs: {
+      source: {
+        transform: textareaSourceCom({
+          id: 'descricao',
+          label: 'Descrição',
+          placeholder: 'ex: Camiseta de algodão, gola redonda...',
+          hint: 'Descreva com clareza.',
+          maxLength: 500,
+        }),
+      },
+    },
+  },
   render: () => buildLabeled({
     id: 'var-counter',
     labelText: 'Descrição',
@@ -144,6 +161,18 @@ export const WithCounter: Story = {
 };
 
 export const NoResize: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: textareaSourceCom({
+          resize: 'none',
+          id: 'feedback',
+          label: 'Feedback',
+          placeholder: 'O que poderíamos melhorar?',
+        }),
+      },
+    },
+  },
   render: () => buildLabeled({
     id: 'var-noresize',
     labelText: 'Feedback',

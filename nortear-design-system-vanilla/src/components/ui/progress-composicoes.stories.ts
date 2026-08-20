@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor, within } from 'storybook/test';
 import { createProgress, type ProgressVariant } from './progress';
 import {
+  progressSource,
+  progressSourceLista,
+  progressSourceOcupado,
+  progressSourceRotulo,
+} from './progress.source';
+import {
   barrasDeProgresso,
   contrasteBarraTrilha,
   indicadorDoProgresso,
@@ -17,6 +23,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: progressSource },
       description: {
         component:
           'Composicoes do Progress em contextos reais de aplicação. Como a factory desta stack ' +
@@ -67,6 +74,18 @@ function buildLabeled(opts: {
 // ─── Upload de Arquivo ───────────────────────────────────────────────────────
 
 export const FileUpload: Story = {
+  parameters: {
+    // Override de story: rótulo e valor visíveis pedem outra FORMA de snippet.
+    docs: {
+      source: {
+        transform: progressSourceRotulo({
+          value: 48,
+          label: 'Enviando arquivo',
+          'aria-label': 'Progresso do upload de documento-final.pdf',
+        }),
+      },
+    },
+  },
   render: () => {
     const card = document.createElement('div');
     card.className = 'nds-stack nds-w-full nds-max-w-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground';
@@ -113,6 +132,20 @@ export const FileUpload: Story = {
 // ─── Multi-step Wizard ───────────────────────────────────────────────────────
 
 export const WizardSteps: Story = {
+  parameters: {
+    // Override de story: aqui a região `polite` anuncia o nome da etapa, e não
+    // a porcentagem.
+    docs: {
+      source: {
+        transform: progressSourceRotulo({
+          value: 60,
+          label: 'Etapa 3 de 5',
+          valueText: 'Endereço',
+          'aria-label': 'Progresso do cadastro: etapa 3 de 5',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -165,6 +198,20 @@ export const WizardSteps: Story = {
 // ─── Múltiplos Uploads ───────────────────────────────────────────────────────
 
 export const MultipleUploads: Story = {
+  parameters: {
+    // Override de story: são quatro barras, e o assunto é cada uma ter nome
+    // acessível próprio.
+    docs: {
+      source: {
+        transform: progressSourceLista([
+          { value: 100, 'aria-label': 'Upload de foto-1.jpg concluído' },
+          { value: 74, 'aria-label': 'Progresso do upload de foto-2.jpg' },
+          { value: 32, 'aria-label': 'Progresso do upload de foto-3.jpg' },
+          { value: 0, 'aria-label': 'Upload de foto-4.jpg aguardando' },
+        ]),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -211,6 +258,21 @@ export const MultipleUploads: Story = {
 // ─── Cor Customizada ─────────────────────────────────────────────────────────
 
 export const CustomColor: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: progressSourceLista([
+          { value: 100, variant: 'success', 'aria-label': 'Sincronização concluída' },
+          { value: 72, 'aria-label': 'Progresso do backup' },
+          {
+            value: 92,
+            variant: 'destructive',
+            'aria-label': 'Espaço de armazenamento quase esgotado',
+          },
+        ]),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';
@@ -269,6 +331,19 @@ export const CustomColor: Story = {
 // ─── Container com aria-busy ─────────────────────────────────────────────────
 
 export const AriaBusyContainer: Story = {
+  parameters: {
+    // Override de story: o assunto é o contêiner que se declara ocupado ao
+    // redor da barra, e ele não é opção de fábrica nenhuma.
+    docs: {
+      source: {
+        transform: progressSourceOcupado({
+          value: 35,
+          label: 'Processando relatório',
+          'aria-label': 'Progresso da análise de dados',
+        }),
+      },
+    },
+  },
   render: () => {
     const status = document.createElement('div');
     status.setAttribute('role', 'status');

@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { createResizablePanel } from './resizable';
+import {
+  resizableSource,
+  resizableSourceAninhado,
+  resizableSourceCom,
+} from './resizable.source';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -10,6 +15,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: resizableSource },
       description: {
         component:
           'Variantes do Resizable: Horizontal (split lateral com handle vertical), Vertical (split vertical com handle horizontal), Nested (PanelGroup dentro de Panel combinando direções) e WithHandle (pegador visual centralizado).',
@@ -105,7 +111,23 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    // Override de story: o eixo é o assunto, e `direction` não passa por
+    // control neste arquivo.
+    docs: {
+      source: {
+        transform: resizableSourceCom({
+          direction: 'vertical',
+          'aria-label': 'Redimensionar Topo e Rodapé — use setas para ajustar',
+          panels: [
+            { titulo: 'Topo', defaultSize: 40, minSize: 20 },
+            { titulo: 'Rodapé', defaultSize: 60, minSize: 20 },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const root = createResizablePanel({
       direction: 'vertical',
@@ -136,7 +158,33 @@ export const Vertical: Story = {
 };
 
 export const Nested: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // Override de story: um grupo dentro do painel de outro pede outra FORMA de
+    // snippet — cada grupo nomeia o próprio divisor.
+    docs: {
+      source: {
+        transform: resizableSourceAninhado({
+          interno: {
+            direction: 'vertical',
+            'aria-label': 'Redimensionar Editor e Console — use setas para ajustar',
+            panels: [
+              { titulo: 'Editor', defaultSize: 60, minSize: 20 },
+              { titulo: 'Console', defaultSize: 40, minSize: 20 },
+            ],
+          },
+          externo: {
+            'aria-label': 'Redimensionar Sidebar e área principal — use setas para ajustar',
+            panels: [
+              { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
+              { titulo: 'Área principal', defaultSize: 70, minSize: 30 },
+            ],
+          },
+          vizinho: { titulo: 'Sidebar', defaultSize: 30, minSize: 15 },
+        }),
+      },
+    },
+  },
   render: () => {
     // Cada grupo nomeia o PRÓPRIO divisor. Percorrer os divisores a partir da
     // raiz do grupo de fora, como se fazia aqui, alcançava também os do grupo de
@@ -194,7 +242,23 @@ export const Nested: Story = {
 };
 
 export const WithHandle: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // Override de story: `withHandle` é o assunto, e `false` é o padrão da
+    // fábrica — sem esta linha o snippet esconderia justamente a opção.
+    docs: {
+      source: {
+        transform: resizableSourceCom({
+          withHandle: true,
+          'aria-label': 'Redimensionar painéis — use setas para ajustar',
+          panels: [
+            { titulo: 'Antes', defaultSize: 50, minSize: 20 },
+            { titulo: 'Depois', defaultSize: 50, minSize: 20 },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const root = createResizablePanel({
       direction: 'horizontal',

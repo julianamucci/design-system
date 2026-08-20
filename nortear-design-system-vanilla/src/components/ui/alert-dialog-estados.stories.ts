@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog } from './alert-dialog';
+import { alertDialogSource, alertDialogSourceCom } from './alert-dialog.source';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
@@ -17,6 +18,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: alertDialogSource },
       description: {
         component:
           'Cada estado canônico do AlertDialog: closed, open, confirmed, cancelled.',
@@ -104,6 +106,8 @@ async function garantirAberto(canvas: ReturnType<typeof within>, rotuloTrigger: 
 
 export const Closed: Story = {
   parameters: {
+    // Sem override: fechado é o estado inicial da fábrica, e a composição da
+    // transform do meta é exatamente esta — só o texto de exemplo muda.
     docs: {
       description: { story: 'Estado inicial — apenas o trigger é visível.' },
     },
@@ -131,7 +135,19 @@ export const Open: Story = {
     // A story termina com o diálogo aberto: é sobre ela que o addon-a11y roda
     // a varredura axe (contraste incluído) do estado aberto.
     covers: ['accessibility.item6', 'accessibility.item7'],
+    // Override de story: nascer aberto é o assunto, e `defaultOpen` não passa
+    // por control neste arquivo.
     docs: {
+      source: {
+        transform: alertDialogSourceCom({
+          defaultOpen: true,
+          triggerLabel: 'Excluir item',
+          title: 'Excluir item permanentemente?',
+          description:
+            'O item será removido de forma definitiva e não poderá ser recuperado.',
+          actionLabel: 'Excluir',
+        }),
+      },
       description: {
         story: 'Diálogo aberto programaticamente. Captura visual no Chromatic.',
       },
@@ -173,7 +189,17 @@ export const Open: Story = {
 export const Confirmed: Story = {
   parameters: {
     covers: ['functional.item2'],
+    // Override de story: nasce aberto, e o botão de ação leva o handler que a
+    // play verifica.
     docs: {
+      source: {
+        transform: alertDialogSourceCom({
+          defaultOpen: true,
+          triggerLabel: 'Excluir',
+          title: 'Confirmar exclusão',
+          description: 'Esta ação é permanente.',
+        }),
+      },
       description: { story: 'Clique em Action dispara o handler e fecha o diálogo.' },
     },
   },
@@ -227,7 +253,16 @@ export const Confirmed: Story = {
 export const Cancelled: Story = {
   parameters: {
     covers: ['functional.item3'],
+    // Override de story: nasce aberto, como a Confirmed ao lado.
     docs: {
+      source: {
+        transform: alertDialogSourceCom({
+          defaultOpen: true,
+          triggerLabel: 'Excluir',
+          title: 'Confirmar exclusão',
+          description: 'Esta ação é permanente.',
+        }),
+      },
       description: { story: 'Cancel é clicado — diálogo fecha sem executar ação.' },
     },
   },
@@ -289,7 +324,19 @@ export const Controlled: Story = {
       'functional.item7':
         'createAlertDialog não expõe uma opção open — o estado de abertura vive na factory e só é observável por onOpenChange',
     },
+    // Override de story: o callback de mudança é o assunto, e ele não passa por
+    // control neste arquivo.
     docs: {
+      source: {
+        transform: alertDialogSourceCom({
+          triggerLabel: 'Abrir via estado externo',
+          title: 'Controlado pelo pai',
+          description: 'Este diálogo é comandado por estado externo.',
+          cancelLabel: 'Fechar',
+          actionLabel: 'Confirmar',
+          onOpenChange: '(aberto) => sincronizarEstado(aberto)',
+        }),
+      },
       description: {
         story: 'Abertura comandada por estado externo — o trigger fica fora do diálogo e o callback de mudança reporta cada transição.',
       },

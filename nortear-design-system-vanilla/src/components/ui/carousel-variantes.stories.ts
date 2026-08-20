@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
+import { carouselSource, carouselSourceCom } from './carousel.source';
 import { createCard, createCardContent } from './card';
 import {
   medirSlides,
@@ -45,6 +46,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: carouselSource },
       description: {
         component:
           'Orientações disponíveis para o Carousel — horizontal (padrão) e vertical. A orientação decide o eixo do deslize, o par de setas do teclado e onde os botões ficam.',
@@ -68,9 +70,32 @@ export const Horizontal: Story = {
     );
     return wrap;
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, parameters }) => {
     const canvas = within(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-track"]')!;
+
+    // ─── Prova da cascata ────────────────────────────────────────────────────
+    //
+    // Esta story NÃO declara `transform` — só o `meta` do arquivo declara. Se
+    // `parameters.docs.source.transform` chega aqui, chega igual ao painel
+    // Code: `useCode` do addon-docs lê exatamente este `storyContext.parameters`
+    // (`parameters.docs?.source`), que é o resultado da fusão global + meta +
+    // story feita pelo `prepareStory`. A saída do painel não existe no DOM
+    // durante a play, então é aqui — no parâmetro resolvido — que a cascata é
+    // observável. Todo o desenho (uma transform por componente, e não uma por
+    // story) depende deste passo.
+    await step('O painel Code herda a transform declarada no meta', async () => {
+      const transform = parameters.docs?.source?.transform;
+      // A comparação sai do `expect`: o instrumenter do Storybook envolve os
+      // argumentos num Proxy, e `toBe` entre duas referências de função reprova
+      // por identidade mesmo quando ela é a MESMA (medido). O booleano é
+      // calculado aqui, fora do alcance do proxy.
+      await expect(transform === carouselSource).toBe(true);
+      // E o que ela devolve é a chamada da fábrica, não o `outerHTML`.
+      const código = transform('<div data-slot="carousel" role="region"></div>', {});
+      await expect(código).toContain('createCarousel({');
+      await expect(código).not.toContain('data-slot');
+    });
 
     await step('O track deita os slides em linha', async () => {
       await expect(getComputedStyle(track).flexDirection).toBe('row');
@@ -138,7 +163,21 @@ export const Horizontal: Story = {
 // ─── Vertical ─────────────────────────────────────────────────────────────────
 
 export const Vertical: Story = {
-  parameters: { covers: ['functional.item5', 'functional.item10', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item5', 'functional.item10', 'visual.item2'],
+    // Override de story: o eixo e a altura definida do recorte não passam por
+    // control nenhum, então a transform do meta não teria como saber deles.
+    docs: {
+      source: {
+        transform: carouselSourceCom({
+          slides: 4,
+          orientation: 'vertical',
+          contentClass: 'nds-aspect-4-3',
+          ariaLabel: 'Slides na vertical',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-xs';

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { createContextMenu } from './context-menu';
+import { contextMenuSource, contextMenuSourceCom } from './context-menu.source';
 import {
   abrirPorGesto,
   criarAreaDeClique,
@@ -17,6 +18,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: contextMenuSource },
       description: {
         component:
           'Composições do ContextMenu: atalhos, marcação, escolha única, submenu e o menu completo.',
@@ -72,7 +74,20 @@ export const WithShortcut: Story = {
 // ─── Com marcação ─────────────────────────────────────────────────────────────
 
 export const WithCheckbox: Story = {
-  parameters: { covers: ['functional.item7', 'accessibility.item4'] },
+  parameters: {
+    covers: ['functional.item7', 'accessibility.item4'],
+    docs: {
+      source: {
+        transform: contextMenuSourceCom({
+          items: [
+            { type: 'label', label: 'Visualização' },
+            { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: false },
+            { type: 'checkbox', label: 'Mostrar réguas', value: 'reguas', checked: true },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     createContextMenu({
       trigger: criarAreaDeClique('Clique com o botão direito aqui'),
@@ -106,7 +121,24 @@ export const WithCheckbox: Story = {
 // ─── Com escolha única ────────────────────────────────────────────────────────
 
 export const WithRadio: Story = {
-  parameters: { covers: ['functional.item8', 'accessibility.item5'] },
+  parameters: {
+    covers: ['functional.item8', 'accessibility.item5'],
+    // A escolha única mora em duas opções ao mesmo tempo — os itens `radio` e o
+    // `radioValue` que diz qual deles vale.
+    docs: {
+      source: {
+        transform: contextMenuSourceCom({
+          radioValue: 'grid',
+          items: [
+            { type: 'label', label: 'Layout' },
+            { type: 'radio', label: 'Grade', value: 'grid' },
+            { type: 'radio', label: 'Lista', value: 'list' },
+            { type: 'radio', label: 'Colunas', value: 'columns' },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     createContextMenu({
       trigger: criarAreaDeClique('Clique com o botão direito aqui'),
@@ -143,7 +175,28 @@ export const WithRadio: Story = {
 // ─── Com submenu ──────────────────────────────────────────────────────────────
 
 export const WithSubmenu: Story = {
-  parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item5', 'functional.item6', 'visual.item3'],
+    docs: {
+      source: {
+        transform: contextMenuSourceCom({
+          items: [
+            { label: 'Editar', value: 'edit' },
+            { label: 'Duplicar', value: 'duplicate' },
+            {
+              type: 'submenu',
+              label: 'Compartilhar',
+              value: 'sub',
+              items: [
+                { label: 'Por e-mail', value: 'por-email' },
+                { label: 'Por link', value: 'por-link' },
+              ],
+            },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     createContextMenu({
       trigger: criarAreaDeClique('Clique com o botão direito aqui'),
@@ -209,7 +262,38 @@ export const WithSubmenu: Story = {
 // ─── Composição completa ──────────────────────────────────────────────────────
 
 export const CompleteComposition: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      source: {
+        transform: contextMenuSourceCom({
+          radioValue: 'grid',
+          items: [
+            { type: 'label', label: 'Ações' },
+            { label: 'Editar', value: 'edit', shortcut: '⌘E' },
+            {
+              type: 'submenu',
+              label: 'Compartilhar',
+              value: 'sub',
+              items: [
+                { label: 'Por e-mail', value: 'por-email' },
+                { label: 'Por link', value: 'por-link' },
+              ],
+            },
+            { type: 'separator' },
+            { type: 'label', label: 'Visualização' },
+            { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: true },
+            { type: 'separator' },
+            { type: 'label', label: 'Layout' },
+            { type: 'radio', label: 'Grade', value: 'grid' },
+            { type: 'radio', label: 'Lista', value: 'list' },
+            { type: 'separator' },
+            { label: 'Excluir', value: 'delete', shortcut: '⌫', variant: 'destructive' },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     createContextMenu({
       trigger: criarAreaDeClique('Clique com o botão direito aqui'),

@@ -7,6 +7,7 @@ import {
   formasDeDado,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
+import { chartEmCardSourceCom, chartSource, chartSourceCom } from './chart.source';
 import {
   createCard,
   createCardHeader,
@@ -34,6 +35,7 @@ const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: chartSource } },
   },
   title: 'UI/Chart/Compositions',
 };
@@ -46,6 +48,15 @@ type Story = StoryObj;
 export const WithCard: Story = {
   parameters: {
     docs: {
+      // Override de story: a forma do snippet é outra — o Card é uma família de
+      // fábricas a mais, e o que se ensina é onde o desenho entra nela.
+      source: {
+        transform: chartEmCardSourceCom({
+          height: 220,
+          label: 'Acessos mensais de janeiro a junho de 2024',
+          cardTitle: TITULO_DO_CARD,
+        }),
+      },
       description: {
         story: 'Gráfico dentro de um Card: o título e o recorte temporal ficam no cabeçalho, em texto de verdade, e o desenho no conteúdo.',
       },
@@ -98,6 +109,11 @@ export const WithCard: Story = {
 export const InlineTitle: Story = {
   parameters: {
     docs: {
+      // Override de story: o assunto é o título DESENHADO e a ausência de
+      // descrição própria — é ela que faz o título virar a alternativa textual.
+      source: {
+        transform: chartSourceCom({ title: TITULO_INLINE, height: 260, label: undefined }),
+      },
       description: {
         story: 'Título desenhado acima dos eixos, para quando o gráfico aparece solto, sem moldura que o nomeie. Na falta de descrição própria, o título vira a alternativa textual.',
       },

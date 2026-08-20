@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { isoDoFoco } from '@shared/testing/calendar-probe';
 import { createCalendar } from './calendar';
+import { calendarSource } from './calendar.source';
 import { createCalendarDocs } from '@/components/docs/CalendarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -12,7 +13,10 @@ const meta: Meta = {
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(createCalendarDocs) },
+    docs: {
+      page: withAutoDocsTab(createCalendarDocs),
+      source: { transform: calendarSource },
+    },
   },
 };
 

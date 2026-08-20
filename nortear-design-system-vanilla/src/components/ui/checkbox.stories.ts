@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createCheckbox } from './checkbox';
+import { checkboxSource } from './checkbox.source';
 import { createCheckboxDocs } from '@/components/docs/CheckboxDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -19,7 +20,10 @@ const meta: Meta<CheckboxArgs> = {
   title: 'UI/Checkbox',
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(createCheckboxDocs) },
+    docs: {
+      page: withAutoDocsTab(createCheckboxDocs),
+      source: { transform: checkboxSource },
+    },
   },
   argTypes: {
     checked: {

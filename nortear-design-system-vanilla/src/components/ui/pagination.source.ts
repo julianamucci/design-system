@@ -1,0 +1,128 @@
+// Snippet do painel Code do Pagination — ver `@/lib/story-source`.
+
+import {
+  chamada,
+  importar,
+  montar,
+  opcoes,
+  snippet,
+  texto,
+  type SourceTransform,
+} from '@/lib/story-source';
+
+/** O que as stories usam da `PaginationOptions` e que o snippet precisa mostrar. */
+export type PaginationSnippetOptions = {
+  total?: number;
+  current?: number;
+  showPrevNext?: boolean;
+  /**
+   * Nome acessível do landmark.
+   *
+   * Nesta fábrica a opção se chama `label` e não tem apelido: não existe
+   * `aria-label` em `PaginationOptions`, então `label` É o nome canônico aqui.
+   */
+  label?: string;
+  align?: 'start' | 'end';
+  /** Expressão de `hrefForPage` — presença liga a paginação de rota. */
+  hrefForPage?: string;
+  /** Expressão do callback de mudança de página. */
+  onPageChange?: string;
+};
+
+/** Nome que a fábrica assume quando `label` não é passado. */
+const ROTULO_PADRAO = 'Paginação';
+
+/** Callback mostrado quando a story não exercita um específico. */
+const CALLBACK_PADRAO = '(page) => irPara(page)';
+
+/**
+ * Reindenta as linhas seguintes de um bloco já montado.
+ *
+ * `chamada()` recua os próprios pares em dois espaços, medida certa para uma
+ * chamada no topo do arquivo e curta demais quando ela entra dentro de um
+ * corpo de função.
+ */
+function recuar(bloco: string, espacos: string): string {
+  return bloco
+    .split('\n')
+    .map((linha, i) => (i === 0 ? linha : `${espacos}${linha}`))
+    .join('\n');
+}
+
+/** As opções comuns às duas formas de snippet. */
+function linhasComuns(o: PaginationSnippetOptions, current: string): Array<[string, string | undefined]> {
+  return [
+    ['total', String(o.total ?? 5)],
+    ['current', current],
+    ['label', o.label && o.label !== ROTULO_PADRAO ? texto(o.label) : undefined],
+    ['align', o.align ? texto(o.align) : undefined],
+    // `true` é o padrão da fábrica: só a supressão dos direcionais entra.
+    ['showPrevNext', o.showPrevNext === false ? 'false' : undefined],
+    ['hrefForPage', o.hrefForPage],
+  ];
+}
+
+/** A chamada real de `createPagination` com as opções da story. */
+export function paginationSnippet(o: PaginationSnippetOptions = {}): string {
+  const linhas = opcoes([
+    ...linhasComuns(o, String(o.current ?? 1)),
+    ['onPageChange', o.onPageChange ?? CALLBACK_PADRAO],
+  ]);
+
+  return snippet(
+    importar('pagination', 'createPagination'),
+    `const faixa = ${chamada('createPagination', linhas)};`,
+    montar('faixa'),
+  );
+}
+
+/**
+ * A faixa com o estado do lado de quem consome.
+ *
+ * A fábrica não guarda a página: ela desenha a que recebeu e avisa qual foi
+ * pedida. Quem consome guarda o número e remonta — e um snippet que omitisse
+ * isso ensinaria uma paginação que não pagina.
+ */
+export function paginationComEstadoSnippet(o: PaginationSnippetOptions = {}): string {
+  const linhas = opcoes([
+    ...linhasComuns(o, 'paginaAtual'),
+    ['onPageChange', '(page) => { paginaAtual = page; remontar(); }'],
+  ]);
+
+  return snippet(
+    importar('pagination', 'createPagination'),
+    `// A fábrica não guarda estado: quem consome mantém o número da página e
+// remonta a faixa a cada mudança.
+const faixa = document.createElement('div');
+let paginaAtual = ${o.current ?? 1};
+
+function remontar() {
+  faixa.replaceChildren(${recuar(chamada('createPagination', linhas), '  ')});
+}
+
+remontar();`,
+    montar('faixa'),
+  );
+}
+
+/** Transform do `meta` — vale para todas as stories do arquivo. */
+export const paginationSource: SourceTransform<PaginationSnippetOptions> = (_gerado, ctx) =>
+  paginationSnippet(ctx.args ?? {});
+
+/** Transform de story: mesma fábrica, opções fixas que os controls não cobrem. */
+export function paginationSourceCom(
+  fixas: PaginationSnippetOptions,
+): SourceTransform<PaginationSnippetOptions> {
+  return (_gerado, ctx) => paginationSnippet({ ...ctx.args, ...fixas });
+}
+
+/** Transform do `meta` do Playground, que mantém a página do lado de fora. */
+export const paginationComEstadoSource: SourceTransform<PaginationSnippetOptions> = (_gerado, ctx) =>
+  paginationComEstadoSnippet(ctx.args ?? {});
+
+/** Transform de story para a faixa com estado, com opções fixas. */
+export function paginationComEstadoSourceCom(
+  fixas: PaginationSnippetOptions,
+): SourceTransform<PaginationSnippetOptions> {
+  return (_gerado, ctx) => paginationComEstadoSnippet({ ...ctx.args, ...fixas });
+}

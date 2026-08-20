@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu, type DropdownMenuItemDef } from './dropdown-menu';
+import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
 import { createButton } from './button';
 import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
 
@@ -12,6 +13,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           'As duas ênfases de item. `default` é o item neutro; `destructive` marca a ação ' +
@@ -102,7 +104,24 @@ export const Default: Story = {
 // ─── Destructive ──────────────────────────────────────────────────────────────
 
 export const Destructive: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    // Override de story: a ênfase do item não passa por control nenhum, e o
+    // snippet do meta mostraria `default` onde a story marca a ação
+    // irreversível.
+    docs: {
+      source: {
+        transform: dropdownMenuSourceCom({
+          triggerLabel: 'Mais ações',
+          items: [
+            { label: 'Editar', value: 'edit' },
+            { type: 'separator' },
+            { label: 'Excluir conta', value: 'delete', variant: 'destructive' },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     montar('Mais ações', [
       { type: 'item', label: 'Editar', value: 'edit' },
@@ -152,7 +171,23 @@ export const Destructive: Story = {
 
 export const Placement: Story = {
   parameters: {
+    // Override de story: lado, encosto e modo não têm control neste arquivo, e
+    // são os três o assunto — o snippet do meta mostraria o padrão, que é
+    // justamente o oposto do que a story renderiza.
     docs: {
+      source: {
+        transform: dropdownMenuSourceCom({
+          triggerLabel: 'Abrir para cima',
+          items: [
+            { label: 'Renomear', value: 'rename' },
+            { label: 'Mover', value: 'move' },
+            { label: 'Arquivar', value: 'archive' },
+          ],
+          side: 'top',
+          align: 'end',
+          modal: false,
+        }),
+      },
       description: {
         story:
           'O menu sai pela borda escolhida (`side`) e encosta na ponta escolhida (`align`). ' +

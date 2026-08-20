@@ -10,6 +10,7 @@ import {
   createSidebarGroup,
   type SidebarVariant,
 } from './sidebar';
+import { sidebarSource, sidebarSourceCom } from './sidebar.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -21,6 +22,7 @@ const meta: Meta = {
     layout: 'fullscreen',
     controls: { disable: true },
     docs: {
+      source: { transform: sidebarSource },
       description: {
         component:
           'Três variantes visuais da Sidebar: <code>sidebar</code> (padrão colada na borda), <code>floating</code> (com sombra e borda arredondada) e <code>inset</code> (integrada ao layout com conteúdo arredondado adjacente).',
@@ -151,6 +153,8 @@ export const VariantFloating: Story = {
   parameters: {
     covers: ['functional.item8', 'visual.item3'],
     docs: {
+      // A variante é o assunto, e `sidebar` é o padrão da fábrica.
+      source: { transform: sidebarSourceCom({ variant: 'floating' }) },
       description: {
         story: 'Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.',
       },
@@ -177,6 +181,7 @@ export const VariantInset: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: sidebarSourceCom({ variant: 'inset' }) },
       description: {
         story: 'Sidebar integrada ao layout com o conteúdo em container arredondado adjacente.',
       },
@@ -271,6 +276,24 @@ export const SideRight: Story = {
   parameters: {
     covers: ['visual.item6'],
     docs: {
+      // O lado é o assunto, e o marco ganha nome próprio: dois marcos de
+      // navegação com o mesmo nome são indistinguíveis para quem os lista.
+      source: {
+        transform: sidebarSourceCom({
+          side: 'right',
+          navLabel: 'Detalhes',
+          rodape: false,
+          grupos: [
+            {
+              items: [
+                { label: 'Informações', href: '#', active: true },
+                { label: 'Histórico', href: '#' },
+                { label: 'Comentários', href: '#', badge: '3' },
+              ],
+            },
+          ],
+        }),
+      },
       description: {
         story: 'Sidebar posicionada na direita. Usada para painéis de detalhes ou contexto.',
       },

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSkeleton, type SkeletonShape, type SkeletonWidth } from './skeleton';
+import { skeletonSource } from './skeleton.source';
 import { createSkeletonDocs } from '@/components/docs/SkeletonDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { FRACAO_DE_LARGURA, caixaDesenhada } from '@shared/testing/skeleton-probe';
@@ -22,7 +23,7 @@ const meta: Meta<SkeletonArgs> = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createSkeletonDocs) },
+    docs: { page: withAutoDocsTab(createSkeletonDocs), source: { transform: skeletonSource } },
   },
   argTypes: {
     shape: {

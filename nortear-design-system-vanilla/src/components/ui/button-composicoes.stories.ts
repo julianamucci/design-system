@@ -2,6 +2,12 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createButton, createButtonIcon, btnClass } from './button';
+import {
+  buttonComoLinkSourceCom,
+  buttonParDeAcoesSourceCom,
+  buttonSource,
+  buttonSourceCom,
+} from './button.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -9,6 +15,7 @@ const meta: Meta = {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: buttonSource } },
   },
   title: 'UI/Button/Compositions',
 };
@@ -27,7 +34,13 @@ export const WithIconLeft: Story = {
   },
   parameters: {
     covers: ['visual.item5'],
-    docs: { description: { story: 'Ícone à esquerda do label. O SVG tem aria-hidden="true" para não poluir leitores de tela.' } },
+    // Override de story: com ícone E texto, o texto deixa de entrar por `label`
+    // — a fábrica o escreve antes de qualquer filho, e a ordem se decide no
+    // `append`. O snippet do meta esconderia isso.
+    docs: {
+      source: { transform: buttonSourceCom({ icon: 'plus', label: 'Adicionar item' }) },
+      description: { story: 'Ícone à esquerda do label. O SVG tem aria-hidden="true" para não poluir leitores de tela.' },
+    },
   },
 
   play: async ({ canvasElement }) => {
@@ -47,7 +60,21 @@ export const WithIconRight: Story = {
     btn.appendChild(createButtonIcon('chevron-right'));
     return btn;
   },
-  parameters: { docs: { description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' } } },
+  parameters: {
+    // Override de story: o lado do ícone é o assunto, e é a ordem do `append`
+    // que o decide.
+    docs: {
+      source: {
+        transform: buttonSourceCom({
+          variant: 'outline',
+          icon: 'chevron-right',
+          iconSide: 'right',
+          label: 'Próximo',
+        }),
+      },
+      description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: 'Próximo' });
@@ -67,7 +94,15 @@ export const DestructiveIcon: Story = {
     btn.appendChild(label);
     return btn;
   },
-  parameters: { docs: { description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' } } },
+  parameters: {
+    // Override de story: variante e ícone, nenhum dos dois com control.
+    docs: {
+      source: {
+        transform: buttonSourceCom({ variant: 'destructive', icon: 'trash', label: 'Excluir' }),
+      },
+      description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: 'Excluir' });
@@ -82,7 +117,20 @@ export const IconOnly: Story = {
     btn.appendChild(createButtonIcon('download'));
     return btn;
   },
-  parameters: { docs: { description: { story: 'Botão apenas com ícone. aria-label é obrigatório para acessibilidade.' } } },
+  parameters: {
+    // Override de story: sem texto visível, o nome acessível é obrigatório.
+    docs: {
+      source: {
+        transform: buttonSourceCom({
+          size: 'icon',
+          label: undefined,
+          ariaLabel: 'Baixar arquivo',
+          icon: 'download',
+        }),
+      },
+      description: { story: 'Botão apenas com ícone. aria-label é obrigatório para acessibilidade.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -104,7 +152,14 @@ export const ActionPair: Story = {
     );
     return wrap;
   },
-  parameters: { docs: { description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' } } },
+  parameters: {
+    // Override de story: a forma do snippet é outra — são DOIS botões e o
+    // contêiner que fixa a ordem, que é justamente o assunto.
+    docs: {
+      source: { transform: buttonParDeAcoesSourceCom() },
+      description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -129,7 +184,12 @@ export const AsLink: Story = {
     covers: ['functional.item5'],
     // Antes citava "o asChild do React": cada docs page é lida isolada, então
     // comparar com outra stack vaza.
-    docs: { description: { story: 'Link estilizado como botão. Aplique as classes do botão em um <a> real para preservar a semântica de link.' } },
+    // Override de story: aqui não há chamada de fábrica nenhuma — o que se usa
+    // é `btnClass` num `<a>` de verdade, e é essa a forma que o snippet mostra.
+    docs: {
+      source: { transform: buttonComoLinkSourceCom() },
+      description: { story: 'Link estilizado como botão. Aplique as classes do botão em um <a> real para preservar a semântica de link.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -170,7 +230,15 @@ export const SanitizedHtmlContent: Story = {
       children: '<strong>Salvar</strong><img src="x" alt="" onerror="window.__xss = true">',
     }),
   parameters: {
-    docs: { description: { story: 'Conteúdo em HTML passa por sanitização antes de ir para o DOM: a marcação segura é preservada e vetores de execução são removidos.' } },
+    // Override de story: `children` como STRING é o caminho que passa pelo
+    // sanitizador, e é o assunto. O vetor de ataque da story fica de fora do
+    // snippet de propósito — valor de teste não vira recomendação.
+    docs: {
+      source: {
+        transform: buttonSourceCom({ label: undefined, children: '<strong>Salvar</strong>' }),
+      },
+      description: { story: 'Conteúdo em HTML passa por sanitização antes de ir para o DOM: a marcação segura é preservada e vetores de execução são removidos.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -201,7 +269,12 @@ export const ContentAsElement: Story = {
     return createButton({ variant: 'default', children: span });
   },
   parameters: {
-    docs: { description: { story: 'Conteúdo como elemento é anexado direto, sem passar por sanitização — não há string para sanitizar.' } },
+    // Override de story: o ramo irmão do anterior — `children` como ELEMENTO,
+    // que vai direto no append.
+    docs: {
+      source: { transform: buttonSourceCom({ label: undefined, childrenElement: 'Salvar' }) },
+      description: { story: 'Conteúdo como elemento é anexado direto, sem passar por sanitização — não há string para sanitizar.' },
+    },
   },
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: 'Salvar' });

@@ -1,6 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSkeleton } from './skeleton';
+import {
+  skeletonSource,
+  skeletonSourceCom,
+  skeletonSourceEmProporcao,
+  skeletonSourceLista,
+  skeletonSourcePerfil,
+} from './skeleton.source';
 import { createAspectRatio } from './aspect-ratio';
 import { caixaDesenhada } from '@shared/testing/skeleton-probe';
 
@@ -12,6 +19,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: skeletonSource },
       description: {
         component:
           'Composições típicas — card de perfil, lista, imagem em proporção e parágrafo. Cada bloco é uma região de carregamento com `aria-busy`, e cada placeholder fica fora da árvore de acessibilidade.',
@@ -45,6 +53,8 @@ export const ProfileCard: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // O arranjo é o assunto: peça redonda ao lado do bloco de linhas.
+      source: { transform: skeletonSourcePerfil() },
       description: {
         story: 'Avatar circular + 2 linhas de texto — padrão de carregamento de card de perfil.',
       },
@@ -94,6 +104,8 @@ export const ListWithAvatar: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // A região é a LISTA inteira: uma por item repetiria o aviso cinco vezes.
+      source: { transform: skeletonSourceLista() },
       description: {
         story: 'Cinco itens com avatar pequeno e duas linhas — padrão de carregamento de lista.',
       },
@@ -153,6 +165,7 @@ export const ImageInAspectRatio: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      source: { transform: skeletonSourceEmProporcao() },
       description: {
         story:
           'Placeholder de imagem dentro de uma proporção 16/9 — quem define a caixa é o container.',
@@ -191,6 +204,16 @@ export const ImageInAspectRatio: Story = {
 export const Paragraph: Story = {
   parameters: {
     docs: {
+      source: {
+        transform: skeletonSourceCom({
+          regionLabel: 'Carregando parágrafo',
+          linhas: [
+            { shape: 'text', width: 'full' },
+            { shape: 'text', width: '3-4' },
+            { shape: 'text', width: '1-2' },
+          ],
+        }),
+      },
       description: {
         story: 'Três linhas com larguras decrescentes — placeholder de parágrafo.',
       },

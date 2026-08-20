@@ -2,6 +2,10 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createAvatar, type AvatarSize } from './avatar';
+import { avatarSource, avatarSourceCom } from './avatar.source';
+
+const IMG_MARIA =
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
 
 const meta: Meta = {
   tags: ['display'],
@@ -12,6 +16,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: avatarSource },
       description: {
         component:
           'Presets de tamanho da prop `size`: sm (24px), md (32px, padrão), lg (40px), xl (48px) e 2xl (64px).',
@@ -27,7 +32,7 @@ type Story = StoryObj;
 
 function buildAvatar(size?: AvatarSize): HTMLElement {
   const av = createAvatar({
-    src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces',
+    src: IMG_MARIA,
     alt: 'Foto de perfil de Maria Rodrigues',
     fallbackText: 'MR',
     size,
@@ -50,9 +55,14 @@ const caixaDo = (canvasElement: HTMLElement) => {
 
 export const Sm: Story = {
   name: 'sm (24px)',
+  // O preset é a única coisa que muda entre as stories deste arquivo, e ele não
+  // passa por control nenhum: cada uma declara o seu.
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    docs: { description: { story: 'Tamanho compacto (24px) — listas densas.' } },
+    docs: {
+      source: { transform: avatarSourceCom({ size: 'sm', src: IMG_MARIA }) },
+      description: { story: 'Tamanho compacto (24px) — listas densas.' },
+    },
   },
   render: () => buildAvatar('sm'),
   play: async ({ canvasElement }) => {
@@ -70,7 +80,12 @@ export const Md: Story = {
   name: 'md (32px · default)',
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    docs: { description: { story: 'Tamanho padrão do componente (32px) — comentários e chips.' } },
+    // `md` é o padrão da fábrica: a opção some do snippet, como a story a omite
+    // na chamada.
+    docs: {
+      source: { transform: avatarSourceCom({ src: IMG_MARIA }) },
+      description: { story: 'Tamanho padrão do componente (32px) — comentários e chips.' },
+    },
   },
   // Sem passar size: o padrão da factory é o preset md.
   render: () => buildAvatar(),
@@ -85,7 +100,10 @@ export const Lg: Story = {
   name: 'lg (40px)',
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    docs: { description: { story: 'Tamanho médio-grande (40px).' } },
+    docs: {
+      source: { transform: avatarSourceCom({ size: 'lg', src: IMG_MARIA }) },
+      description: { story: 'Tamanho médio-grande (40px).' },
+    },
   },
   render: () => buildAvatar('lg'),
   play: async ({ canvasElement }) => {
@@ -99,7 +117,10 @@ export const Xl: Story = {
   name: 'xl (48px)',
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    docs: { description: { story: 'Tamanho grande (48px) — headers de perfil.' } },
+    docs: {
+      source: { transform: avatarSourceCom({ size: 'xl', src: IMG_MARIA }) },
+      description: { story: 'Tamanho grande (48px) — headers de perfil.' },
+    },
   },
   render: () => buildAvatar('xl'),
   play: async ({ canvasElement }) => {
@@ -113,7 +134,10 @@ export const TwoXl: Story = {
   name: '2xl (64px)',
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    docs: { description: { story: 'Maior preset (64px) — página de perfil.' } },
+    docs: {
+      source: { transform: avatarSourceCom({ size: '2xl', src: IMG_MARIA }) },
+      description: { story: 'Maior preset (64px) — página de perfil.' },
+    },
   },
   render: () => buildAvatar('2xl'),
   play: async ({ canvasElement }) => {

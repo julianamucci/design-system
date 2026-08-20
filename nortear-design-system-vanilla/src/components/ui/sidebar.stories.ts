@@ -12,6 +12,7 @@ import {
   type SidebarVariant,
   type SidebarSide,
 } from './sidebar';
+import { sidebarSource } from './sidebar.source';
 import { createSidebarDocs } from '@/components/docs/SidebarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -32,7 +33,7 @@ const meta: Meta<SidebarArgs> = {
   tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'fullscreen',
-    docs: { page: withAutoDocsTab(createSidebarDocs) },
+    docs: { page: withAutoDocsTab(createSidebarDocs), source: { transform: sidebarSource } },
   },
   argTypes: {
     variant: {

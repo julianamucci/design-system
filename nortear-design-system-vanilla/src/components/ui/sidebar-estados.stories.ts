@@ -13,6 +13,7 @@ import {
   createSidebarFooter,
   createSidebarMenuItem,
 } from './sidebar';
+import { sidebarSource, sidebarSourceCom } from './sidebar.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -24,6 +25,7 @@ const meta: Meta = {
     layout: 'fullscreen',
     controls: { disable: true },
     docs: {
+      source: { transform: sidebarSource },
       description: {
         component:
           'Estados da Sidebar: expandida (padrão), recolhida no modo icon (apenas ícones visíveis) e fixada sem possibilidade de toggle.',
@@ -184,6 +186,8 @@ export const Collapsed: Story = {
   render: () => buildBase(false),
   parameters: {
     docs: {
+      // O estado inicial é o assunto, e `true` é o padrão da fábrica.
+      source: { transform: sidebarSourceCom({ defaultOpen: false }) },
       description: {
         story: 'Estado recolhido via <code>collapsible="offcanvas"</code>: sidebar desliza para fora da viewport. <code>data-state="collapsed"</code>.',
       },
@@ -288,6 +292,10 @@ export const IconMode: Story = {
         'a fábrica desta stack não monta tooltip no item de menu — o rótulo fica no aria-label',
     },
     docs: {
+      // A fábrica não expõe modo de recolhimento: o que ela tem é a barra
+      // recolhida, e é só isso que o snippet pode prometer. O esconde-rótulo da
+      // story é andaime, não API.
+      source: { transform: sidebarSourceCom({ defaultOpen: false, rodape: false }) },
       description: {
         story: 'Sidebar reduzida a 3rem no modo icon. Apenas ícones são exibidos; tooltips são mostrados ao hover de cada item. <code>data-state="collapsed"</code>.',
       },
@@ -323,6 +331,9 @@ export const WithoutToggle: Story = {
         'a fábrica desta stack não expõe modo de recolhimento; aqui o "sem toggle" é obtido não montando o gatilho, e a raiz continua com data-state',
     },
     docs: {
+      // "Sem toggle" aqui é não montar o gatilho: é a única forma que a fábrica
+      // oferece, e o snippet mostra exatamente ela.
+      source: { transform: sidebarSourceCom({ comGatilho: false }) },
       description: {
         story: 'Sidebar sempre visível com <code>collapsible="none"</code>. Sem botão de toggle. Usada em dashboards fixos.',
       },
@@ -363,6 +374,15 @@ export const MobileOverlay: Story = {
     },
     covers: ['functional.item3', 'visual.item5'],
     docs: {
+      // A consulta sempre verdadeira da story é valor de TESTE e não entra no
+      // snippet. O que a gaveta oferece de API é o aviso de abertura e o ponto
+      // de virada do produto — é isso que o painel Code mostra.
+      source: {
+        transform: sidebarSourceCom({
+          onMobileOpenChange: true,
+          mobileQuery: '(max-width: 900px)',
+        }),
+      },
       description: {
         story: 'Abaixo do ponto de virada a barra sai do fluxo e vira gaveta modal sobreposta (18rem), aberta pelo gatilho ou pelo atalho Ctrl+B e fechada por Escape ou por clique fora.',
       },
@@ -510,6 +530,9 @@ export const ListenerCleanup: Story = {
     // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
     // sempre a mesma legenda.
     chromatic: { disable: true },
+    // O assunto é a limpeza: o atalho de teclado é registrado na montagem, e o
+    // snippet mostra a chamada que o desfaz.
+    docs: { source: { transform: sidebarSourceCom({ mostrarDestroy: true }) } },
   },
   render: () => hospedeiroDeSonda(
     'Sonda de limpeza: a barra é montada, o atalho de teclado é registrado e a barra sai da página.',

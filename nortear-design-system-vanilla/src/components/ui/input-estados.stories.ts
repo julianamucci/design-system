@@ -8,6 +8,7 @@ import {
   haloDeFoco,
 } from '@shared/testing/input-probe';
 import { createInput } from './input';
+import { inputSource, inputSourceCom } from './input.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -16,6 +17,7 @@ const meta: Meta = {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
+      source: { transform: inputSource },
       description: {
         component:
           'Estados do Input: padrão, foco, desabilitado e erro (aria-invalid). Cada asserção afere a cor computada, nunca o nome da classe.',
@@ -166,6 +168,18 @@ export const Focus: Story = {
 };
 
 export const WithPlaceholder: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: inputSourceCom({
+          type: 'email',
+          id: 'email',
+          label: 'Email',
+          placeholder: 'ex: joao@empresa.com',
+        }),
+      },
+    },
+  },
   render: () =>
     campoRotulado({ id: 'estado-placeholder', rotulo: 'Email', type: 'email', placeholder: 'ex: joao@empresa.com' }),
   play: async ({ canvasElement, step }) => {
@@ -186,7 +200,19 @@ export const WithPlaceholder: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    docs: {
+      source: {
+        transform: inputSourceCom({
+          disabled: true,
+          id: 'bloqueado',
+          label: 'Campo desabilitado',
+          placeholder: 'Não disponível',
+        }),
+      },
+    },
+  },
   render: () =>
     campoRotulado({ id: 'estado-disabled', rotulo: 'Campo desabilitado', placeholder: 'Não disponível', disabled: true }),
   play: async ({ canvasElement, step }) => {
@@ -216,6 +242,20 @@ export const Disabled: Story = {
 export const Error: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item3', 'accessibility.item4'],
+    // O erro não é opção da fábrica: são dois atributos e uma mensagem com id
+    // próprio. Sem override o painel esconderia justamente o assunto da story.
+    docs: {
+      source: {
+        transform: inputSourceCom({
+          type: 'email',
+          id: 'email',
+          label: 'Email',
+          placeholder: 'ex: joao@empresa.com',
+          ariaInvalid: true,
+          mensagem: 'Email inválido. Use o formato nome@dominio.com',
+        }),
+      },
+    },
   },
   render: () =>
     campoRotulado({
@@ -271,6 +311,9 @@ export const DarkPalette: Story = {
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },
+    // O campo é o mesmo dos demais estados; o que muda é a classe de tema no
+    // documento. É isso que o snippet precisa mostrar, e não um quarto campo.
+    docs: { source: { transform: inputSourceCom({ temaEscuro: true }) } },
   },
   render: () => {
     const raiz = document.createElement('div');

@@ -11,6 +11,7 @@ import {
   createTableCaption,
 } from './table';
 import { createButton } from '@/components/ui/button';
+import { tableSource, tableSourceCom } from './table.source';
 import { COLUNAS, INVOICES, MESES, totalDe, type Invoice } from './table.fixtures';
 
 const meta: Meta = {
@@ -21,6 +22,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     controls: { disable: true },
+    docs: { source: { transform: tableSource } },
   },
 };
 
@@ -63,7 +65,12 @@ function buildBodyRows(table: HTMLTableElement, rows: Invoice[]): HTMLTableSecti
 // ─── Básica ───────────────────────────────────────────────────────────────────
 
 export const Basic: Story = {
-  parameters: { covers: ['functional.item1', 'visual.item1'] },
+  parameters: {
+    covers: ['functional.item1', 'visual.item1'],
+    // Legenda VISÍVEL: o snippet do meta a deixa fora da tela, que é o oposto
+    // do que esta story mostra.
+    docs: { source: { transform: tableSourceCom({ captionVisivel: true }) } },
+  },
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Lista de faturas recentes'));
@@ -110,7 +117,14 @@ export const Basic: Story = {
 // ─── Com rodapé ───────────────────────────────────────────────────────────────
 
 export const WithFooter: Story = {
-  parameters: { covers: ['functional.item3', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item3', 'visual.item3'],
+    docs: {
+      source: {
+        transform: tableSourceCom({ caption: 'Faturas recentes com total', comRodape: true }),
+      },
+    },
+  },
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Faturas recentes com total', 'nds-sr-only'));
@@ -159,6 +173,7 @@ export const WithFooter: Story = {
 
 export const CaptionSrOnly: Story = {
   parameters: { covers: ['functional.item6', 'accessibility.item2'] },
+  // Sem override: a legenda fora da tela já é o que o snippet do meta mostra.
   render: () => {
     const bloco = document.createElement('div');
     bloco.className = 'nds-stack';
@@ -205,7 +220,16 @@ export const CaptionSrOnly: Story = {
 // ─── Ações por linha ──────────────────────────────────────────────────────────
 
 export const WithRowActions: Story = {
-  parameters: { covers: ['accessibility.item3', 'visual.item4'] },
+  parameters: {
+    covers: ['accessibility.item3', 'visual.item4'],
+    // A coluna de ação muda a montagem: mais um cabeçalho e mais uma célula
+    // por linha, com o nome do botão dizendo de qual fatura ele é.
+    docs: {
+      source: {
+        transform: tableSourceCom({ caption: 'Faturas recentes com ações', comAcoes: true }),
+      },
+    },
+  },
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Faturas recentes com ações', 'nds-sr-only'));
@@ -272,6 +296,8 @@ export const WithRowActions: Story = {
 
 export const HorizontalScroll: Story = {
   parameters: { covers: ['functional.item5'] },
+  // Sem override: a rolagem é do wrapper que a montagem canônica já cria — o
+  // que muda aqui é só quantas colunas o exemplo tem.
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Faturas por mês de competência', 'nds-sr-only'));

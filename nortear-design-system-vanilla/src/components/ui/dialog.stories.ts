@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createDialog } from './dialog';
+import { dialogSource } from './dialog.source';
 import { createButton } from './button';
 import { createDialogDocs } from '@/components/docs/DialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -32,7 +33,7 @@ const meta: Meta<DialogArgs> = {
   title: 'UI/Dialog',
   tags: ['autodocs', 'overlay'],
   parameters: {
-    docs: { page: withAutoDocsTab(createDialogDocs) },
+    docs: { page: withAutoDocsTab(createDialogDocs), source: { transform: dialogSource } },
   },
   argTypes: {
     triggerLabel: { control: 'text', description: 'Texto do botão que abre o diálogo.' },

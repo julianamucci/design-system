@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
 import { createAvatar, type AvatarSize } from './avatar';
+import { avatarSource } from './avatar.source';
 import { createAvatarDocs } from '@/components/docs/AvatarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -20,7 +21,10 @@ const meta: Meta<AvatarArgs> = {
   tags: ['autodocs', 'display'],
   parameters: {
     design: figmaDesign('avatar'),
-    docs: { page: withAutoDocsTab(createAvatarDocs) },
+    docs: {
+      page: withAutoDocsTab(createAvatarDocs),
+      source: { transform: avatarSource },
+    },
   },
   argTypes: {
     src: { control: 'text', description: 'URL da imagem (deixe vazio para mostrar o fallback).' },

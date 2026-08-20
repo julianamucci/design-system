@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { AlignLeft, AlignCenter, AlignRight } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
+import { toggleGroupSource, toggleGroupSourceCom } from './toggle-group.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -11,6 +12,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: toggleGroupSource },
       description: {
         component:
           'Estados do ToggleGroup: Default (nenhum selecionado), Selected (um ou mais ativos), Disabled (grupo inteiro bloqueado), DisabledItem (apenas um item bloqueado) e FocusVisible. Não há prop `aria-invalid` no grupo; para estado de erro, aplicar o atributo no item.',
@@ -82,7 +84,13 @@ function makeAlignmentGroup(opts: {
 export const Default: Story = {
   render: () => makeAlignmentGroup({}),
   parameters: {
-    docs: { description: { story: 'Estado inicial sem nenhum item selecionado. Todos os items têm `aria-pressed="false"` e `data-state="off"`. Fundo transparente; borda `input` da variante outline.' } },
+    docs: {
+      source: { transform: toggleGroupSourceCom({ defaultValue: null, items: [
+            { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
+            { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar' },
+            { value: 'right', icon: 'AlignRight', 'aria-label': 'Alinhar à direita' },
+          ] }) },
+      description: { story: 'Estado inicial sem nenhum item selecionado. Todos os items têm `aria-pressed="false"` e `data-state="off"`. Fundo transparente; borda `input` da variante outline.' } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -107,7 +115,13 @@ export const Selected: Story = {
   render: () => makeAlignmentGroup({ defaultValue: 'center' }),
   parameters: {
     covers: ['accessibility.item2'],
-    docs: { description: { story: 'Item ativo via `defaultValue`. `aria-pressed="true"`, `data-state="on"`, fundo `--accent`. A factory aplica automaticamente no click.' } },
+    docs: {
+      source: { transform: toggleGroupSourceCom({ defaultValue: 'center', items: [
+            { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
+            { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar' },
+            { value: 'right', icon: 'AlignRight', 'aria-label': 'Alinhar à direita' },
+          ] }) },
+      description: { story: 'Item ativo via `defaultValue`. `aria-pressed="true"`, `data-state="on"`, fundo `--accent`. A factory aplica automaticamente no click.' } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -136,6 +150,11 @@ export const Disabled: Story = {
   render: () => makeAlignmentGroup({ defaultValue: 'left', disabledAll: true }),
   parameters: {
     docs: {
+      source: { transform: toggleGroupSourceCom({ disabled: true, items: [
+            { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
+            { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar' },
+            { value: 'right', icon: 'AlignRight', 'aria-label': 'Alinhar à direita' },
+          ] }) },
       description: {
         story:
           '`disabled: true` no grupo — cada item nasce com o atributo HTML `disabled`, e o grupo marca `data-disabled`. A opacidade reduzida e a ausência de resposta ao ponteiro vêm da folha do Toggle.',
@@ -165,7 +184,15 @@ export const Disabled: Story = {
 export const DisabledItem: Story = {
   render: () => makeAlignmentGroup({ defaultValue: 'left', disabledIndex: 1 }),
   parameters: {
-    docs: { description: { story: 'Apenas o item Centralizar desabilitado via `item.disabled: true`. Os demais permanecem interativos. Útil quando uma opção não está disponível no contexto atual.' } },
+    docs: {
+      source: { transform: toggleGroupSourceCom({
+          items: [
+            { value: 'left', icon: 'AlignLeft', 'aria-label': 'Alinhar à esquerda' },
+            { value: 'center', icon: 'AlignCenter', 'aria-label': 'Centralizar', disabled: true },
+            { value: 'right', icon: 'AlignRight', 'aria-label': 'Alinhar à direita' },
+          ],
+        }) },
+      description: { story: 'Apenas o item Centralizar desabilitado via `item.disabled: true`. Os demais permanecem interativos. Útil quando uma opção não está disponível no contexto atual.' } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

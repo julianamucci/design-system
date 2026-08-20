@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
 import { abrir, fechar } from './navigation-menu.fixtures';
+import { navigationMenuSource, navigationMenuSourceCom } from './navigation-menu.source';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -12,6 +13,7 @@ const meta: Meta = {
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     docs: {
+      source: { transform: navigationMenuSource },
       description: {
         component:
           'As duas direções da barra. Horizontal é o cabeçalho de site, com os itens em linha e o painel abrindo para baixo; vertical é a coluna de uma barra lateral ou gaveta, com os itens empilhados e o painel abrindo para o lado — abrir para baixo numa coluna cobriria os próprios itens seguintes.',
@@ -99,7 +101,31 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ['visual.item5'] },
+  // A orientação é opção da fábrica, e é o assunto da story: sem override o
+  // painel mostraria a barra horizontal, que é o padrão.
+  parameters: {
+    covers: ['visual.item5'],
+    docs: {
+      source: {
+        transform: navigationMenuSourceCom({
+          orientation: 'vertical',
+          class: 'nds-w-sm',
+          ariaLabel: 'Navegação da conta',
+          items: [
+            { label: 'Painel', href: '#painel' },
+            {
+              label: 'Relatórios',
+              children: [
+                { label: 'Vendas', href: '#vendas' },
+                { label: 'Assinaturas', href: '#assinaturas' },
+              ],
+            },
+            { label: 'Configurações', href: '#configuracoes' },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const nav = createNavigationMenu(
       [

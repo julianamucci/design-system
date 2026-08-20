@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
+import { tabsSource } from './tabs.source';
 import { createTabsDocs } from '@/components/docs/TabsDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -15,7 +16,7 @@ const meta: Meta<TabsArgs> = {
   title: 'UI/Tabs',
   tags: ['autodocs', 'navigation'],
   parameters: {
-    docs: { page: withAutoDocsTab(createTabsDocs) },
+    docs: { page: withAutoDocsTab(createTabsDocs), source: { transform: tabsSource } },
   },
   argTypes: {
     defaultValue: {

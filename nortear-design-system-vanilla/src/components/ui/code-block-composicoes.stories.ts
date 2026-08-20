@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createCodeBlock } from './code-block';
+import { codeBlockSource, codeBlockSourceCom } from './code-block.source';
 import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -15,6 +16,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: codeBlockSource },
       description: {
         component:
           'Arranjos canônicos: rótulo no header, sem numeração, com linha destacada, com intervalo destacado, com e sem rodapé.',
@@ -54,6 +56,11 @@ const linhasMarcadas = (canvasElement: HTMLElement): number[] =>
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
+  // Cada arranjo desta seção É uma opção da fábrica: sem override, o snippet do
+  // meta mostraria a mesma chamada nas seis stories.
+  parameters: {
+    docs: { source: { transform: codeBlockSourceCom({ language: 'ts', title: 'lista.ts' }) } },
+  },
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', title: 'lista.ts' }),
   play: async ({ canvasElement, step }) => {
@@ -80,6 +87,11 @@ export const WithLabel: Story = {
 };
 
 export const WithoutNumbering: Story = {
+  parameters: {
+    docs: {
+      source: { transform: codeBlockSourceCom({ language: 'ts', showLineNumbers: false }) },
+    },
+  },
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', showLineNumbers: false }),
   play: async ({ canvasElement, step }) => {
@@ -93,7 +105,12 @@ export const WithoutNumbering: Story = {
 };
 
 export const WithHighlight: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item4'],
+    docs: {
+      source: { transform: codeBlockSourceCom({ language: 'ts', highlightLines: [2] }) },
+    },
+  },
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', highlightLines: [2] }),
   play: async ({ canvasElement, step }) => {
@@ -116,7 +133,18 @@ export const WithHighlight: Story = {
 };
 
 export const WithHighlightedRange: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item4'],
+    docs: {
+      source: {
+        transform: codeBlockSourceCom({
+          code: RANGE_CODE,
+          language: 'ts',
+          highlightLines: '1, 4-5',
+        }),
+      },
+    },
+  },
   render: () =>
     createCodeBlock({ code: RANGE_CODE, language: 'ts', highlightLines: '1, 4-5' }),
   play: async ({ canvasElement, step }) => {
@@ -142,6 +170,11 @@ export const WithHighlightedRange: Story = {
 };
 
 export const WithFooter: Story = {
+  parameters: {
+    docs: {
+      source: { transform: codeBlockSourceCom({ language: 'ts', footer: FOOTER_NOTE }) },
+    },
+  },
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', footer: FOOTER_NOTE }),
   play: async ({ canvasElement, step }) => {
@@ -161,6 +194,9 @@ export const WithFooter: Story = {
 };
 
 export const WithoutFooter: Story = {
+  parameters: {
+    docs: { source: { transform: codeBlockSourceCom({ language: 'ts' }) } },
+  },
   render: () => createCodeBlock({ code: COMPOSITION_CODE, language: 'ts' }),
   play: async ({ canvasElement, step }) => {
     await step('Sem observação o bloco não cria a faixa inferior', async () => {

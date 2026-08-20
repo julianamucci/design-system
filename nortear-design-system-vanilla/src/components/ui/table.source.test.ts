@@ -1,0 +1,113 @@
+import { describe, expect, it } from 'vitest';
+import {
+  tableCarregandoSnippet,
+  tableSnippet,
+  tableSource,
+  tableSourceCom,
+  tableVaziaSnippet,
+} from './table.source';
+
+describe('tableSnippet', () => {
+  it('devolve a montagem das fábricas, e não o outerHTML da tabela', () => {
+    const código = tableSnippet();
+    expect(código).toContain("} from '@/components/ui/table';");
+    expect(código).toContain('const { wrapper, table } = createTable();');
+    expect(código).toContain('createTableHead(');
+    expect(código).toContain("document.querySelector('#app')?.append(wrapper);");
+    expect(código).not.toContain('data-slot=');
+    expect(código).not.toContain('<table');
+  });
+
+  it('não importa a peça que a story não usa', () => {
+    expect(tableSnippet()).not.toContain('createTableFooter');
+    expect(tableSnippet({ comRodape: true })).toContain('createTableFooter');
+    expect(tableSnippet()).not.toContain('createButton');
+    expect(tableSnippet({ comAcoes: true })).toContain(
+      "import { createButton } from '@/components/ui/button';",
+    );
+  });
+
+  it('a legenda fica fora da tela por padrão e visível quando a story pede', () => {
+    expect(tableSnippet()).toContain(
+      "createTableCaption('Lista de faturas recentes', 'nds-sr-only')",
+    );
+    expect(tableSnippet({ captionVisivel: true })).toContain(
+      "createTableCaption('Lista de faturas recentes')",
+    );
+  });
+
+  it('mostra o rodapé, a ação por linha e a linha marcada quando a story as usa', () => {
+    expect(tableSnippet({ comRodape: true })).toContain("createTableCell('Total')");
+    const comAcoes = tableSnippet({ comAcoes: true });
+    expect(comAcoes).toContain("variant: 'ghost'");
+    expect(comAcoes).toContain("'aria-label': `Ações para fatura ${fatura.id}`");
+    expect(tableSnippet({ linhaSelecionada: true })).toContain(
+      "linha.setAttribute('data-state', 'selected')",
+    );
+    expect(tableSnippet()).not.toContain('data-state');
+  });
+
+  it('usa o nome acessível canônico, nunca o apelido depreciado', () => {
+    const código = tableSnippet({ comAcoes: true });
+    expect(código).toContain("'aria-label':");
+    expect(código).not.toContain('ariaLabel');
+  });
+
+  it('leva dados próprios, e não a fixture das stories', () => {
+    const código = tableSnippet();
+    expect(código).toContain('const faturas = [');
+    expect(código).not.toContain('INVOICES');
+    expect(código).not.toContain('table.fixtures');
+    expect(código).not.toContain('totalDe(');
+    expect(código).not.toContain('buildHeader');
+    expect(código).not.toContain('buildBodyRows');
+  });
+});
+
+describe('tableVaziaSnippet', () => {
+  it('atravessa a tabela com a mensagem, sem desmontar o cabeçalho', () => {
+    const código = tableVaziaSnippet();
+    expect(código).toContain("'nds-table-empty'");
+    expect(código).toContain("celula.setAttribute('colspan', String(colunas.length));");
+    expect(código).toContain('createTableHead(');
+    expect(código).not.toContain('const faturas = [');
+  });
+});
+
+describe('tableCarregandoSnippet', () => {
+  it('põe o esqueleto na célula e o anúncio na região', () => {
+    const código = tableCarregandoSnippet();
+    expect(código).toContain("import { createSkeleton } from '@/components/ui/skeleton';");
+    expect(código).toContain("createSkeleton({ shape: 'text', width: '3-4' })");
+    expect(código).toContain("regiao.setAttribute('aria-busy', 'true');");
+    expect(código).toContain("document.querySelector('#app')?.append(regiao);");
+  });
+});
+
+describe('tableSource', () => {
+  it('acompanha os controls em vez de congelar um snippet fixo', () => {
+    const semArgs = tableSource('<table data-slot="table">', {});
+    const comArgs = tableSource('<table data-slot="table">', {
+      args: { captionVisivel: true, comRodape: true },
+    });
+    expect(semArgs).not.toBe(comArgs);
+    expect(comArgs).toContain('createTableFooter');
+    // Legenda visível: a chamada fecha sem a classe que a tira da tela.
+    expect(comArgs).toContain("createTableCaption('Lista de faturas recentes'));");
+  });
+
+  it('ignora o HTML gerado pelo renderer', () => {
+    expect(tableSource('<div data-slot="table-container" tabindex="0">', {})).not.toContain(
+      'table-container',
+    );
+  });
+});
+
+describe('tableSourceCom', () => {
+  it('sobrepõe os args da story com as opções fixas', () => {
+    const transform = tableSourceCom({ comRodape: false, comAcoes: true });
+    const código = transform('', { args: { comRodape: true } });
+    expect(código).not.toContain('createTableFooter');
+    expect(código).toContain('createButton');
+  });
+});

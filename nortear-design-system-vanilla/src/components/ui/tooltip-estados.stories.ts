@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
+import { tooltipSource, tooltipSourceCom } from './tooltip.source';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
@@ -55,6 +56,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: tooltipSource },
       description: {
         component:
           'Fechado é o padrão e o balão nem existe no DOM. Aberto vem do hover (depois da espera interna da factory) ou do foco (imediato). Levar o mouse do gatilho até o balão não fecha nada — é a persistência que a WCAG 1.4.13 exige. NOTA: a factory usa uma espera interna fixa por instância; não há Provider compartilhado.',
@@ -190,7 +192,18 @@ export const KeyboardFocus: Story = {
 };
 
 export const PersistenceInBubble: Story = {
-  parameters: { covers: ['functional.item4'] },
+  parameters: {
+    covers: ['functional.item4'],
+    docs: {
+      source: {
+        transform: tooltipSourceCom({
+          triggerLabel: 'Compartilhar',
+          content: 'Cria um link público de leitura',
+          side: 'bottom',
+        }),
+      },
+    },
+  },
   render: () => {
     const trigger = createButton({
       variant: 'outline',
@@ -265,6 +278,11 @@ export const PersistenceInBubble: Story = {
 export const ListenerCleanup: Story = {
   parameters: {
     controls: { disable: true },
+    docs: {
+      source: {
+        transform: tooltipSourceCom({ triggerLabel: 'Ajuda', content: 'Texto de ajuda.' }),
+      },
+    },
     // A story existe para o que acontece DEPOIS da saída do nó: a foto seria
     // sempre a mesma legenda.
     chromatic: { disable: true },

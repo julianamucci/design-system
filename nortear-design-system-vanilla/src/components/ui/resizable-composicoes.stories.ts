@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { createResizablePanel } from './resizable';
+import {
+  resizableSource,
+  resizableSourceAninhado,
+  resizableSourceCom,
+} from './resizable.source';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -10,6 +15,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: resizableSource },
       description: {
         component:
           'Composicoes reais do Resizable: EditorComPreview (editor + preview lado a lado), SidebarComConteudoEConsole (sidebar | conteúdo / console — layout aninhado tipo IDE), ListaDetalhe (lista de itens + painel de detalhes) e TresColunas (navegação | conteúdo | metadados). A fábrica expõe onLayout, minSize e maxSize; persistir o layout fica a cargo de quem consome.',
@@ -102,6 +108,20 @@ function rotulos(...pares: string[]): string[] {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const EditorWithPreview: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: resizableSourceCom({
+          withHandle: true,
+          'aria-label': 'Redimensionar Editor e Preview — use setas para ajustar',
+          panels: [
+            { titulo: 'Editor', defaultSize: 50, minSize: 25 },
+            { titulo: 'Preview', defaultSize: 50, minSize: 25 },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const editor = block(
       'Editor',
@@ -144,6 +164,34 @@ export const EditorWithPreview: Story = {
 
 export const SidebarWithContentAndConsole: Story = {
   name: 'Sidebar + content / console',
+  parameters: {
+    // Override de story: um grupo dentro do painel de outro pede outra FORMA de
+    // snippet — cada grupo nomeia o próprio divisor.
+    docs: {
+      source: {
+        transform: resizableSourceAninhado({
+          interno: {
+            direction: 'vertical',
+            withHandle: true,
+            'aria-label': 'Redimensionar Conteúdo e Console — use setas para ajustar',
+            panels: [
+              { titulo: 'Conteúdo', defaultSize: 70, minSize: 30 },
+              { titulo: 'Console', defaultSize: 30, minSize: 15 },
+            ],
+          },
+          externo: {
+            withHandle: true,
+            'aria-label': 'Redimensionar Arquivos e área principal — use setas para ajustar',
+            panels: [
+              { titulo: 'Arquivos', defaultSize: 25, minSize: 15 },
+              { titulo: 'Área principal', defaultSize: 75, minSize: 40 },
+            ],
+          },
+          vizinho: { titulo: 'Arquivos', defaultSize: 25, minSize: 15 },
+        }),
+      },
+    },
+  },
   render: () => {
     const sidebar = listBlock('Arquivos', ['index.ts', 'README.md', 'package.json', 'tsconfig.json']);
     const content = block('Conteúdo', 'Conteúdo principal do arquivo selecionado.');
@@ -195,6 +243,20 @@ export const SidebarWithContentAndConsole: Story = {
 };
 
 export const ListDetail: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: resizableSourceCom({
+          withHandle: true,
+          'aria-label': 'Redimensionar Lista e Detalhe — use setas para ajustar',
+          panels: [
+            { titulo: 'Inbox (4)', defaultSize: 35, minSize: 20 },
+            { titulo: 'Detalhe', defaultSize: 65, minSize: 35 },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const list = listBlock('Inbox (4)', [
       'Maria Santos — Atualização do projeto',
@@ -232,6 +294,26 @@ export const ListDetail: Story = {
 };
 
 export const ThreeColumns: Story = {
+  parameters: {
+    // Override de story: três painéis são DOIS divisores, e é aqui que o nome
+    // por divisor — o array de `aria-label` — deixa de ser opcional.
+    docs: {
+      source: {
+        transform: resizableSourceCom({
+          withHandle: true,
+          'aria-label': [
+            'Redimensionar a coluna Navegação — use setas para ajustar',
+            'Redimensionar a coluna Metadados — use setas para ajustar',
+          ],
+          panels: [
+            { titulo: 'Navegação', defaultSize: 20, minSize: 12 },
+            { titulo: 'Conteúdo', defaultSize: 55, minSize: 30 },
+            { titulo: 'Metadados', defaultSize: 25, minSize: 15 },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const nav = listBlock('Navegação', ['Visão geral', 'Componentes', 'Tokens', 'Guidelines']);
     const content = block('Conteúdo', 'Conteúdo principal da página selecionada.');

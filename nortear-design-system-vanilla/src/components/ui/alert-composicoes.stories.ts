@@ -1,6 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAlert, createAlertAction, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
+import { alertComAcaoSourceCom, alertSource, alertSourceCom } from './alert.source';
 import { createButton } from './button';
 import { within, expect, userEvent } from 'storybook/test';
 
@@ -10,6 +11,7 @@ const meta: Meta = {
     design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: alertSource } },
   },
   title: 'UI/Alert/Compositions',
 };
@@ -38,6 +40,19 @@ export const WithIcon: Story = {
 // ─── Com Ação ────────────────────────────────────────────────────────────────
 
 export const WithAction: Story = {
+  // Override de story: o slot de ação é uma sub-fábrica que nasce vazia, e é
+  // ela o assunto — o snippet do meta a esconderia por inteiro.
+  parameters: {
+    docs: {
+      source: {
+        transform: alertComAcaoSourceCom({
+          acao: 'Atualizar',
+          title: 'Atualização disponível',
+          description: 'Uma nova versão está pronta para instalação.',
+        }),
+      },
+    },
+  },
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertIcon('info'));
@@ -84,6 +99,20 @@ export const WithAction: Story = {
  * a composição de classes sem mexer no snapshot visual.
  */
 export const AdditionalClass: Story = {
+  // Override de story: a classe do consumidor É o assunto, e ela só aparece na
+  // chamada da fábrica.
+  parameters: {
+    docs: {
+      source: {
+        transform: alertComAcaoSourceCom({
+          className: 'nds-w-full',
+          acao: 'Ação',
+          title: 'Classe adicional',
+          description: 'A classe do consumidor convive com as do design system.',
+        }),
+      },
+    },
+  },
   render: () => {
     const alert = createAlert({ className: 'nds-w-full' });
     alert.appendChild(createAlertIcon('info'));
@@ -120,7 +149,19 @@ export const AdditionalClass: Story = {
 };
 
 export const WithoutIcon: Story = {
-  parameters: { covers: ['visual.item4'] },
+  // Override de story: a ausência do ícone É o assunto.
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      source: {
+        transform: alertSourceCom({
+          icon: false,
+          title: 'Sem ícone',
+          description: 'Alert sem ícone mantém layout de coluna única.',
+        }),
+      },
+    },
+  },
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertTitle({ text: 'Sem ícone' }));

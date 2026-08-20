@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
+import {
+  radioGroupSource,
+  radioGroupSourceCom,
+  radioGroupSourceInvalido,
+} from './radio-group.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -10,6 +15,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: radioGroupSource },
       description: {
         component:
           'Estados do RadioGroup: Default (nenhum selecionado), Checked (uma opção marcada), Disabled (grupo inteiro), DisabledItem (apenas 1 item bloqueado), Invalid (aria-invalid + mensagem) e Focus (anel `--ring`).',
@@ -108,7 +114,9 @@ export const Checked: Story = {
     }),
   parameters: {
     covers: ['visual.item2'],
+    // Override de story: `defaultValue` é o assunto.
     docs: {
+      source: { transform: radioGroupSourceCom({ name: 'pagamento', defaultValue: 'pix' }) },
       description: {
         story: 'Item "Pix" marcado via `defaultValue`. Indicador interno visível, `aria-checked="true"`.',
       },
@@ -130,7 +138,9 @@ export const Checked: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
+    // Override de story: `disabled` no grupo é o assunto.
     docs: {
+      source: { transform: radioGroupSourceCom({ name: 'pagamento', disabled: true }) },
       description: {
         story:
           'Grupo inteiro bloqueado por `disabled: true` nas opções do factory — item e rótulo a 50% de opacidade, cursor bloqueado, sem foco e sem clique.',
@@ -182,7 +192,19 @@ export const DisabledItem: Story = {
       ],
     }),
   parameters: {
+    // Override de story: `disabled` por ITEM é o assunto, e ele mora dentro de
+    // `items` — nenhum control chega lá.
     docs: {
+      source: {
+        transform: radioGroupSourceCom({
+          name: 'pagamento',
+          items: [
+            { value: 'card', label: 'Cartão de crédito' },
+            { value: 'pix', label: 'Pix' },
+            { value: 'boleto', label: 'Boleto (temporariamente indisponível)', disabled: true },
+          ],
+        }),
+      },
       description: {
         story: 'Apenas o terceiro item desabilitado. Útil para indicar opções temporariamente indisponíveis.',
       },
@@ -238,7 +260,10 @@ export const Invalid: Story = {
   },
   parameters: {
     covers: ['visual.item4'],
+    // Override de story: o erro não é opção da fábrica — é atributo marcado
+    // depois de construir, mais a mensagem associada.
     docs: {
+      source: { transform: radioGroupSourceInvalido({ name: 'pagamento' }) },
       description: {
         story:
           'Estado de erro via `aria-invalid="true"` no grupo. Borda `--destructive` em cada item, mensagem associada via `aria-describedby`.',

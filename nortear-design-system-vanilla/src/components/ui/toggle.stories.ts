@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { Bold, Eye } from 'lucide';
 import { createToggle } from './toggle';
+import { toggleSource } from './toggle.source';
 import { createToggleDocs } from '@/components/docs/ToggleDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -48,7 +49,7 @@ const meta: Meta<ToggleArgs> = {
   title: 'UI/Toggle',
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(createToggleDocs) },
+    docs: { page: withAutoDocsTab(createToggleDocs), source: { transform: toggleSource } },
   },
   argTypes: {
     // A factory re-executa a cada mudança de control, então este é ao mesmo

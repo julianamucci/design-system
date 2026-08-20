@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createDialog } from './dialog';
+import {
+  dialogComCorpoRolavelSource,
+  dialogComFormularioSource,
+  dialogSource,
+  dialogSourceCom,
+} from './dialog.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
@@ -22,6 +28,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: dialogSource },
       description: {
         component:
           'Composicoes estruturais do Dialog. Não há prop variant — escolha a composição que melhor descreve o caso de uso.',
@@ -113,7 +120,20 @@ export const Default: Story = {
 export const WithForm: Story = {
   parameters: {
     covers: ['visual.item2', 'visual.item4'],
-    docs: { description: { story: 'Body com formulário inline. O submit dispara a ação primária.' } },
+    // Override de story: o corpo deixa de ser um parágrafo e passa a ser uma
+    // composição de campos — a sub-fábrica que fecha o par rótulo ↔ controle é
+    // justamente o assunto aqui, e o snippet do meta a esconderia.
+    docs: {
+      source: {
+        transform: dialogComFormularioSource({
+          campos: [
+            { label: 'Nome', value: 'Maria Souza' },
+            { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
+          ],
+        }),
+      },
+      description: { story: 'Body com formulário inline. O submit dispara a ação primária.' },
+    },
   },
   render: () => {
     const form = document.createElement('form');
@@ -161,7 +181,18 @@ export const WithForm: Story = {
 export const WithScrollContent: Story = {
   parameters: {
     covers: ['visual.item5'],
+    // Override de story: a rolagem não é automática — vem da classe que quem
+    // compõe pendura no corpo, junto do papel, do `tabindex` e do nome. É o que
+    // esta composição ensina, e um corpo de parágrafo não mostraria nada disso.
     docs: {
+      source: {
+        transform: dialogComCorpoRolavelSource({
+          triggerLabel: 'Ler termos',
+          title: 'Termos de uso',
+          description: 'Leia atentamente antes de aceitar.',
+          actionLabel: 'Aceitar termos',
+        }),
+      },
       description: {
         story:
           'Body longo com rolagem própria: o painel fica parado e centralizado, e header e rodapé continuam visíveis.',
@@ -218,7 +249,20 @@ export const WithScrollContent: Story = {
 export const NoFooter: Story = {
   parameters: {
     covers: ['visual.item2'],
-    docs: { description: { story: 'Apenas Title + Description. Uso informativo ou pré-visualização passiva.' } },
+    // Override de story: sem rodapé. O snippet do meta traz o par de ações, que
+    // é exatamente o que esta composição existe para NÃO ter.
+    docs: {
+      source: {
+        transform: dialogSourceCom({
+          triggerLabel: 'Sobre este recurso',
+          title: 'Sobre este recurso',
+          description: 'Detalhes técnicos exibidos para fins informativos. Sem ações.',
+          bodyText: 'O fechamento ocorre via X, Escape ou clique no overlay.',
+          footer: [],
+        }),
+      },
+      description: { story: 'Apenas Title + Description. Uso informativo ou pré-visualização passiva.' },
+    },
   },
   render: () =>
     abrirNaMontagem(
@@ -251,7 +295,22 @@ export const NoFooter: Story = {
 export const WithDestructiveAction: Story = {
   parameters: {
     covers: ['visual.item2'],
+    // Override de story: a ênfase da ação primária não passa por control nenhum,
+    // e o snippet do meta mostraria `default` onde a story renderiza a variante
+    // destrutiva — que é o único assunto desta composição.
     docs: {
+      source: {
+        transform: dialogSourceCom({
+          triggerLabel: 'Remover item',
+          title: 'Remover item da lista?',
+          description: 'O item sai desta lista, mas continua disponível na biblioteca.',
+          bodyText: 'Você poderá adicioná-lo novamente a qualquer momento.',
+          footer: [
+            { label: 'Cancelar', variant: 'outline' },
+            { label: 'Remover', variant: 'destructive' },
+          ],
+        }),
+      },
       description: {
         story:
           'Action destrutiva no Footer. Use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista). Para confirmação destrutiva primária use AlertDialog.',
@@ -289,7 +348,24 @@ export const WithDestructiveAction: Story = {
 export const CustomCloseInFooter: Story = {
   parameters: {
     covers: ['visual.item2'],
+    // Override de story: sem o X do canto e com uma terceira ação no rodapé. O
+    // snippet do meta mostraria o X ligado, que é o oposto do que esta
+    // composição demonstra.
     docs: {
+      source: {
+        transform: dialogSourceCom({
+          triggerLabel: 'Abrir guia',
+          title: 'Próximos passos',
+          description: 'Continue o fluxo ou volte ao início.',
+          bodyText: 'O guia continua disponível no menu de ajuda.',
+          footer: [
+            { label: 'Voltar', variant: 'outline' },
+            { label: 'Continuar' },
+            { label: 'Fechar', variant: 'ghost' },
+          ],
+          showCloseButton: false,
+        }),
+      },
       description: {
         story: 'showCloseButton=false no Content; o botão de fechar passa a acompanhar as ações do Footer.',
       },

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createResizablePanel } from './resizable';
+import { resizableSourceCom } from './resizable.source';
 import { createResizableDocs } from '@/components/docs/ResizableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -21,7 +22,12 @@ const meta: Meta<ResizableArgs> = {
   tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createResizableDocs) },
+    docs: {
+      page: withAutoDocsTab(createResizableDocs),
+      // Os três números dos controls viram os dois painéis do exemplo; o nome
+      // dos divisores não passa por control nenhum e vem fixo daqui.
+      source: { transform: resizableSourceCom({ 'aria-label': ROTULO_PUNHO }) },
+    },
   },
   argTypes: {
     direction: {

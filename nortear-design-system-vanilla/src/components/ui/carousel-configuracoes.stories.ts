@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCarousel } from './carousel';
+import { carouselSource, carouselSourceCom } from './carousel.source';
 import { createCard, createCardContent } from './card';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 
@@ -34,6 +35,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: carouselSource },
       description: {
         component:
           'Configuracoes do Carousel — um item por vez (padrão), conjuntos longos e avanço automático com parada na primeira interação.',
@@ -48,7 +50,10 @@ type Story = StoryObj;
 // ─── Um item por vez ──────────────────────────────────────────────────────────
 
 export const Single: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: carouselSourceCom({ slides: 4, ariaLabel: 'Um item por vez' }) } },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
@@ -156,6 +161,18 @@ export const MultiResponsive: Story = {
     // do motor compartilhado, `nds-md-basis-half` passou a valer aqui como vale
     // nas outras quatro, e o item passou a ser verificado em vez de declarado.
     covers: ['functional.item6', 'visual.item3'],
+    // Override de story: a base fracionária entra por `slideClass`, que não tem
+    // control — a fábrica é quem constrói o slide, então é o único lugar onde
+    // quem consome pendura a classe.
+    docs: {
+      source: {
+        transform: carouselSourceCom({
+          slides: 6,
+          ariaLabel: 'Conjunto longo de slides',
+          slideClass: 'nds-md-basis-half nds-lg-basis-third',
+        }),
+      },
+    },
   },
   render: () => {
     const wrap = document.createElement('div');
@@ -227,7 +244,22 @@ export const MultiResponsive: Story = {
 const aoTrocarSlide = fn();
 
 export const Autoplay: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item3'],
+    docs: {
+      source: {
+        transform: carouselSourceCom({
+          slides: 4,
+          ariaLabel: 'Destaques',
+          autoplay: true,
+          // Sem `autoplayInterval`: os 400ms daqui são velocidade de teste, e
+          // um snippet que os ensinasse recomendaria um carrossel que ninguém
+          // consegue ler. Sem a opção vale o padrão da fábrica, 3000ms.
+          onIndexChange: '(index, origem) => registrar(index, origem)',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
@@ -297,7 +329,10 @@ export const Autoplay: Story = {
  * final mudou, o que um clique na seta também faria.
  */
 export const DragGesture: Story = {
-  parameters: { covers: ['functional.item9'] },
+  parameters: {
+    covers: ['functional.item9'],
+    docs: { source: { transform: carouselSourceCom({ slides: 4, ariaLabel: 'Galeria com gesto de arrastar' }) } },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';

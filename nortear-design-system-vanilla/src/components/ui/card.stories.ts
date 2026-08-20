@@ -8,6 +8,7 @@ import {
   createCardContent,
   createCardFooter,
 } from './card';
+import { cardSource } from './card.source';
 import { createButton } from '@/components/ui/button';
 import { createCardDocs } from '@/components/docs/CardDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -26,7 +27,10 @@ const meta: Meta<CardArgs> = {
   title: 'UI/Card',
   tags: ['autodocs', 'layout'],
   parameters: {
-    docs: { page: withAutoDocsTab(createCardDocs) },
+    docs: {
+      page: withAutoDocsTab(createCardDocs),
+      source: { transform: cardSource },
+    },
   },
   argTypes: {
     size: {

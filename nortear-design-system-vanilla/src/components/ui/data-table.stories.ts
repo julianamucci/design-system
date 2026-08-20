@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, waitFor, expect, fn } from 'storybook/test';
 import { createDataTable, type DataTableLabels } from './data-table';
+import { dataTableSource } from './data-table.source';
 import { createDataTableDocs } from '@/components/docs/DataTableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { type Invoice, invoices, baseColumns, rotulosFatura } from './data-table.fixtures';
@@ -24,68 +25,20 @@ type PlaygroundArgs = {
   onTableReady: (table: unknown) => void;
 };
 
-/**
- * Não há componente para o Storybook introspectar aqui, então o `argTypes` é a
- * única fonte da aba API Reference — e o snippet vem do `outerHTML`, que não
- * muda quando a configuração vive só no closure da factory. O `transform`
- * devolve o uso real com o valor atual dos controls já resolvido.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<PlaygroundArgs> }): string {
-  const {
-    enableRowSelection = true,
-    enablePagination = true,
-    pageSize = 10,
-    caption = 'Faturas recentes',
-  } = ctx.args ?? {};
-  const flags = [
-    enableRowSelection ? '  enableRowSelection: true,' : null,
-    enablePagination ? null : '  enablePagination: false,',
-    pageSize === 10 ? null : `  pageSize: ${pageSize},`,
-  ]
-    .filter(Boolean)
-    .join('\n');
-
-  return `import { createDataTable, type DataTableColumn } from '@/components/ui/data-table';
-
-interface Invoice { id: string; customer: string; status: string; method: string; amount: number }
-
-// Definidas UMA vez, em escopo estável: recriar o array a cada render zeraria
-// ordenação, filtros e seleção.
-const columns: DataTableColumn<Invoice>[] = [
-  { accessorKey: 'id', header: 'Fatura', size: 110, meta: { headerLabel: 'Fatura' } },
-  { accessorKey: 'customer', header: 'Cliente', size: 200, meta: { headerLabel: 'Cliente' } },
-  { accessorKey: 'status', header: 'Status', size: 140, meta: { headerLabel: 'Status' } },
-  { accessorKey: 'method', header: 'Método', size: 200, meta: { headerLabel: 'Método' } },
-  { accessorKey: 'amount', header: 'Valor', size: 130, meta: { headerLabel: 'Valor' } },
-];
-
-const tabela = createDataTable<Invoice>({
-  columns,
-  data: invoices,
-${flags}
-  // Nome da grade para quem chega por leitor de tela. Vira <caption> fora da
-  // tela — não ocupa espaço e não some da árvore de acessibilidade.
-  caption: '${caption}',
-  // Identidade da linha. Sem isto ela é a POSIÇÃO, e ordenar levaria a marcação
-  // para quem ocupou o lugar.
-  rowKey: (fatura) => fatura.id,
-  // Sem \`rowLabel\`: o nome do controle de seleção cai no valor da primeira
-  // coluna, que é o mesmo texto que identifica a linha na leitura visual.
-  labels: {
-    selectAll: 'Selecionar todas as faturas',
-    selectRow: (fatura) => \`Selecionar fatura \${fatura}\`,
-  },
-  globalFilterPlaceholder: 'Buscar fatura, cliente, método...',
-});
-document.querySelector('#app')!.appendChild(tabela);`;
-}
-
 const meta: Meta = {
   title: 'UI/DataTable',
   tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createDataTableDocs) },
+    docs: {
+      page: withAutoDocsTab(createDataTableDocs),
+      // Não há componente para o Storybook introspectar aqui: o snippet vinha
+      // do `outerHTML`, que não muda quando a configuração vive só no closure
+      // da factory. A transform devolve o uso real com o valor atual dos
+      // controls já resolvido — ela mora em `data-table.source.ts`, tem teste
+      // unitário próprio e cascateia para todas as stories deste arquivo.
+      source: { transform: dataTableSource },
+    },
   },
 };
 
@@ -205,7 +158,6 @@ export const Playground: Story = {
       'accessibility.item6',
       'visual.item1',
     ],
-    docs: { source: { transform: playgroundSource } },
   },
   render: (args: Partial<PlaygroundArgs>) =>
     createDataTable<Invoice>({

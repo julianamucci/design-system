@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSkeleton } from './skeleton';
+import {
+  skeletonSource,
+  skeletonSourceCom,
+  skeletonSourceEmProporcao,
+} from './skeleton.source';
 import { caixaDesenhada } from '@shared/testing/skeleton-probe';
 
 const meta: Meta = {
@@ -11,6 +16,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: skeletonSource },
       description: {
         component:
           'Formas do esqueleto. Não há variante via opção de estilo: a forma vem de `data-shape` e a largura de `data-width`, e a folha de estilo continua dona das medidas.',
@@ -37,6 +43,9 @@ export const Rectangle: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
+      // `fill` preenche a caixa que o container estabelece — sem container ele
+      // nasce com altura zero, e o snippet mostra quem dá a caixa.
+      source: { transform: skeletonSourceEmProporcao({ regionLabel: 'Carregando bloco' }) },
       description: {
         story:
           '`data-shape="fill"` preenche a caixa que o container estabelece — aqui, uma proporção de mídia 16/9.',
@@ -67,6 +76,9 @@ export const Circle: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: {
+        transform: skeletonSourceCom({ shape: 'avatar', regionLabel: 'Carregando avatar' }),
+      },
       description: {
         story:
           '`data-shape="avatar"` é a exceção que a guideline 12 prevê: peça sem fluxo de texto tem medida, e ela vem da escada `--size-*`.',
@@ -99,6 +111,18 @@ export const Circle: Story = {
 export const TextLine: Story = {
   parameters: {
     docs: {
+      // Três linhas de larguras diferentes: uma peça só não mostraria o que faz
+      // o bloco parecer parágrafo.
+      source: {
+        transform: skeletonSourceCom({
+          regionLabel: 'Carregando linhas de texto',
+          linhas: [
+            { shape: 'text', width: 'full' },
+            { shape: 'text', width: '3-4' },
+            { shape: 'text', width: '1-2' },
+          ],
+        }),
+      },
       description: {
         story:
           'Altura derivada da escada de texto e largura em fração do container. Variar a largura entre linhas é o que faz o bloco parecer parágrafo.',

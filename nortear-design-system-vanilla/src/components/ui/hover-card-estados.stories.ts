@@ -9,6 +9,7 @@ import {
   razaoDeContraste,
 } from '@shared/testing/hover-card-probe';
 import { createHoverCard, type HoverCardElement } from './hover-card';
+import { hoverCardComComandosSource, hoverCardSource } from './hover-card.source';
 import { construirCartaoPerfil, construirLink, emFrase } from './hover-card.fixtures';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
@@ -27,6 +28,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: hoverCardSource },
       description: {
         component:
           'Fechado, aberto e controlado. O painel só existe no DOM enquanto o cartão está aberto — fechado, o portal não deixa resíduo nenhum.',
@@ -136,7 +138,15 @@ export const Open: Story = {
 export const Controlled: Story = {
   parameters: {
     covers: ['functional.item6'],
+    // Override de story: o assunto sai da chamada e vai para a RAIZ devolvida —
+    // os comandos `open()`/`close()` e o callback que devolve cada mudança. Um
+    // snippet só com a chamada esconderia os três.
     docs: {
+      source: {
+        transform: hoverCardComComandosSource({
+          onOpenChange: '(aberto) => sincronizarEstadoExterno(aberto)',
+        }),
+      },
       description: {
         story:
           'Estado vindo de fora. Numa factory não há propriedade reativa para observar: quem controla chama abrir()/fechar() na raiz e recebe cada mudança de volta pelo callback.',

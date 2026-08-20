@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createSlider } from './slider';
+import { sliderSource, sliderSourceCom } from './slider.source';
 import { apertarTecla, trilhoDoSlider, valorDaAlca } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
@@ -11,6 +12,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: sliderSource },
       description: {
         component:
           'Variantes do Slider: Single (uma alça, padrão), Range (composição de duas alças adjacentes com clamping mútuo — a factory controla um valor por instância) e Vertical (`orientation="vertical"`).',
@@ -137,6 +139,15 @@ export const Range: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // O assunto é o PAR de valores: é ele que pede as duas alças, e o snippet
+      // do meta mostraria uma alça só.
+      source: {
+        transform: sliderSourceCom({
+          value: [20, 80],
+          'aria-label': ['Faixa de preço — mínimo', 'Faixa de preço — máximo'],
+          onValueChange: '([minimo, maximo]) => mostrarFaixa(minimo, maximo)',
+        }),
+      },
       description: {
         story:
           'Faixa com mínimo e máximo. Um par de valores pede as duas alças na MESMA instância: ' +
@@ -225,6 +236,9 @@ export const Vertical: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: {
+        transform: sliderSourceCom({ orientation: 'vertical', value: 60, 'aria-label': 'Brilho' }),
+      },
       description: {
         story:
           '`orientation="vertical"` — o trilho fica em pé, a orientação é anunciada e as setas de cima e de baixo movem o valor. O componente traz altura mínima própria.',

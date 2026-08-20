@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createDrawer, type DrawerDirection } from './drawer';
+import { drawerSource, drawerSourceCom } from './drawer.source';
 import { createButton } from './button';
 import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
 
@@ -13,6 +14,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: drawerSource },
       description: {
         component:
           'Direção de entrada pela opção direction da factory. Bottom é o padrão mobile-first e a única direção em que a alça aparece; left e right servem a painéis laterais.',
@@ -101,7 +103,20 @@ export const Bottom: Story = {
 export const Top: Story = {
   parameters: {
     covers: ['visual.item4'],
+    // Override de story: a direção não passa por control neste arquivo, e o
+    // snippet do meta mostraria a borda padrão — a de baixo — onde a story
+    // renderiza a de cima.
     docs: {
+      source: {
+        transform: drawerSourceCom({
+          direction: 'top',
+          triggerLabel: 'Abrir',
+          title: 'Nova versão disponível',
+          description: 'Atualize agora para acessar as novidades.',
+          bodyText: 'Conteúdo do painel.',
+          footer: [{ label: 'Fechar', variant: 'outline', close: true }],
+        }),
+      },
       description: {
         story:
           'Entra por cima, com cantos arredondados embaixo. Serve a notificação rica e a seletor rápido — conteúdo curto e saída imediata.',
@@ -124,7 +139,19 @@ export const Top: Story = {
 export const Left: Story = {
   parameters: {
     covers: ['visual.item3'],
+    // Override de story: mesma razão do Top — a direção é o assunto e não tem
+    // control que a carregue.
     docs: {
+      source: {
+        transform: drawerSourceCom({
+          direction: 'left',
+          triggerLabel: 'Abrir',
+          title: 'Menu',
+          description: 'Navegue pelas seções do app.',
+          bodyText: 'Conteúdo do painel.',
+          footer: [{ label: 'Fechar', variant: 'outline', close: true }],
+        }),
+      },
       description: {
         story:
           'Painel lateral à esquerda — a direção do menu de navegação, que a pessoa espera encontrar onde o menu costuma ficar.',
@@ -147,7 +174,19 @@ export const Left: Story = {
 export const Right: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
+    // Override de story: mesma razão do Top — a direção é o assunto e não tem
+    // control que a carregue.
     docs: {
+      source: {
+        transform: drawerSourceCom({
+          direction: 'right',
+          triggerLabel: 'Abrir',
+          title: 'Filtros',
+          description: 'Refine sua busca por categoria, preço e disponibilidade.',
+          bodyText: 'Conteúdo do painel.',
+          footer: [{ label: 'Fechar', variant: 'outline', close: true }],
+        }),
+      },
       description: {
         story:
           'Painel lateral à direita — alternativa de desktop para edição e filtros, sem trocar de componente.',

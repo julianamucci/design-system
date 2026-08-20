@@ -7,6 +7,7 @@ import {
   formasDeDado,
 } from '@shared/testing/chart-probe';
 import { createChart, type ChartType } from './chart';
+import { chartSource } from './chart.source';
 import { createChartDocs } from '@/components/docs/ChartDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -31,42 +32,13 @@ type ChartArgs = {
   className: string;
 };
 
-/**
- * O painel Code de uma factory imprime a chamada gerada pelo renderer, que não
- * é o que a pessoa escreve. `transform` devolve o uso real e — o que importa
- * mais — acompanha os controls: código fixo mentiria assim que alguém mexesse
- * no primeiro seletor.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<ChartArgs> }): string {
-  const a = ctx.args ?? {};
-  const linhas = [
-    `  data: acessosMensais,`,
-    `  type: '${a.type ?? 'bar'}',`,
-    `  label: '${a.label ?? ''}',`,
-  ];
-  if (a.title) linhas.push(`  title: '${a.title}',`);
-  if (a.showLegend !== undefined) linhas.push(`  showLegend: ${a.showLegend},`);
-  if (a.height) linhas.push(`  height: ${a.height},`);
-  if (a.renderer && a.renderer !== 'svg') linhas.push(`  renderer: '${a.renderer}',`);
-  if (a.className) linhas.push(`  class: '${a.className}',`);
-
-  return `import { createChart } from '@/components/ui/chart';
-
-const acessosMensais = [
-  { label: 'Jan', value: 186 },
-  { label: 'Feb', value: 305 },
-  { label: 'Mar', value: 237 },
-  { label: 'Apr', value: 73 },
-  { label: 'May', value: 209 },
-  { label: 'Jun', value: 214 },
-];
-
-const grafico = createChart({
-${linhas.join('\n')}
-});
-
-document.body.appendChild(grafico);`;
-}
+// A `playgroundSource` que morava aqui virou `chartSource`, em `chart.source.ts`.
+//
+// Ela era uma função NÃO EXPORTADA: nenhum teste a alcançava, e os outros quatro
+// arquivos de story do componente não tinham como reaproveitá-la — cada um
+// seguia despejando o `outerHTML` no painel Code. O conteúdo bom dela (a chamada
+// real da fábrica, e o acompanhamento dos controls em vez de um snippet fixo)
+// está preservado no módulo novo, agora com teste unitário próprio.
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -77,7 +49,7 @@ const meta: Meta<ChartArgs> = {
   parameters: {
     docs: {
       page: withAutoDocsTab(createChartDocs),
-      source: { transform: playgroundSource },
+      source: { transform: chartSource },
     },
     layout: 'padded',
   },

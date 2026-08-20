@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { createCommand } from './command';
+import { commandSource, commandSourceCom } from './command.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -12,6 +13,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: commandSource },
       description: {
         component:
           'Os estados que a paleta assume sozinha (sem resultados) e os que cada comando ' +
@@ -51,7 +53,22 @@ async function zerarBusca(campo: HTMLElement): Promise<void> {
 // ─── Sem resultados ───────────────────────────────────────────────────────────
 
 export const EmptyState: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: {
+      source: {
+        transform: commandSourceCom({
+          placeholder: 'Buscar componente...',
+          emptyMessage: 'Nenhum resultado encontrado.',
+          items: [
+            { value: 'button', label: 'Button' },
+            { value: 'input', label: 'Input' },
+            { value: 'separator', label: 'Separator' },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = WRAPPER;
@@ -126,7 +143,23 @@ export const EmptyState: Story = {
 const aoEscolherComDesabilitado = fn();
 
 export const ItemDisabled: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item4', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item4', 'visual.item5'],
+    // `disabled` no item é o assunto: a lista canônica do meta não o tem.
+    docs: {
+      source: {
+        transform: commandSourceCom({
+          placeholder: 'Buscar comando...',
+          emptyMessage: 'Nenhum resultado encontrado.',
+          items: [
+            { value: 'novo', label: 'Novo' },
+            { value: 'arquivar', label: 'Arquivar', disabled: true },
+            { value: 'renomear', label: 'Renomear' },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = WRAPPER;
@@ -198,7 +231,30 @@ export const ItemDisabled: Story = {
 // ─── Comando marcado ──────────────────────────────────────────────────────────
 
 export const CheckedItem: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item5'],
+    // `checked` e `shortcut` são o assunto, e nenhum dos dois está na lista
+    // canônica do meta.
+    docs: {
+      source: {
+        transform: commandSourceCom({
+          placeholder: 'Buscar tema...',
+          emptyMessage: 'Nenhum resultado encontrado.',
+          items: [
+            { value: 'claro', label: 'Claro', group: 'Aparência', checked: true },
+            { value: 'escuro', label: 'Escuro', group: 'Aparência', checked: false },
+            {
+              value: 'sistema',
+              label: 'Sistema',
+              group: 'Aparência',
+              checked: true,
+              shortcut: '⌘S',
+            },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = WRAPPER;

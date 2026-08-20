@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSeparator } from './separator';
+import { separatorSource, separatorSourceCom } from './separator.source';
 
 const meta: Meta = {
   tags: ['layout'],
@@ -10,6 +11,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: separatorSource },
       description: {
         component:
           'Modos do Separator: decorativo (padrão, ignorado por leitores de tela) e semântico ' +
@@ -73,7 +75,20 @@ export const Decorative: Story = {
 };
 
 export const Semantic: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item4'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item4'],
+    // O modo semântico é o assunto: sem o override o snippet mostraria o
+    // decorativo, que é o padrão da fábrica.
+    docs: {
+      source: {
+        transform: separatorSourceCom({
+          decorative: false,
+          antes: 'Categoria: Layout',
+          depois: 'Categoria: Formulários',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';

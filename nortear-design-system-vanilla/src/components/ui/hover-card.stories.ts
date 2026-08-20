@@ -8,6 +8,7 @@ import {
   sairComPonteiro,
 } from '@shared/testing/hover-card-probe';
 import { createHoverCard } from './hover-card';
+import { hoverCardSource } from './hover-card.source';
 import { construirCartaoPerfil, construirLink, emFrase } from './hover-card.fixtures';
 import { createHoverCardDocs } from '@/components/docs/HoverCardDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -29,7 +30,7 @@ const meta: Meta<HoverCardArgs> = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createHoverCardDocs) },
+    docs: { page: withAutoDocsTab(createHoverCardDocs), source: { transform: hoverCardSource } },
   },
   argTypes: {
     triggerLabel: {

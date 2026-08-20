@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createProgress } from './progress';
+import { progressSource, progressSourceAnimado, progressSourceCom } from './progress.source';
 import {
   animacaoDoIndicador,
   indicadorDoProgresso,
@@ -15,6 +16,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: progressSource },
       description: {
         component:
           'Estados derivados do valor: default (0), loading (parcial), complete (100) e ' +
@@ -30,7 +32,12 @@ type Story = StoryObj;
 // ─── Default (value=0) ───────────────────────────────────────────────────────
 
 export const Default: Story = {
-  parameters: { covers: ['functional.item1', 'visual.item1'] },
+  parameters: {
+    covers: ['functional.item1', 'visual.item1'],
+    // Neste arquivo o VALOR é o assunto de cada story, e nenhum control o
+    // cobre: cada uma declara o seu.
+    docs: { source: { transform: progressSourceCom({ value: 0 }) } },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
@@ -59,7 +66,12 @@ export const Default: Story = {
 // ─── Loading (value=50) ──────────────────────────────────────────────────────
 
 export const Loading: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    docs: {
+      source: { transform: progressSourceCom({ value: 50, 'aria-label': 'Carregando dados' }) },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
@@ -88,7 +100,10 @@ export const Loading: Story = {
 // ─── Complete (value=100) ────────────────────────────────────────────────────
 
 export const Complete: Story = {
-  parameters: { covers: ['functional.item3', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item3', 'visual.item3'],
+    docs: { source: { transform: progressSourceCom({ value: 100, 'aria-label': 'Concluído' }) } },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
@@ -118,7 +133,12 @@ export const Complete: Story = {
 // ─── Indeterminate ───────────────────────────────────────────────────────────
 
 export const Indeterminate: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item4'],
+    docs: {
+      source: { transform: progressSourceCom({ value: null, 'aria-label': 'Processando…' }) },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-w-full nds-max-w-md';
@@ -164,6 +184,15 @@ export const Indeterminate: Story = {
 // ─── Animado (setInterval) ───────────────────────────────────────────────────
 
 export const Animated: Story = {
+  parameters: {
+    // Override de story: a fábrica desenha um valor, não uma animação — quem
+    // faz a barra andar é o código que reescreve `--value` e `aria-valuenow`.
+    docs: {
+      source: {
+        transform: progressSourceAnimado({ value: 0, 'aria-label': 'Progresso do upload' }),
+      },
+    },
+  },
   render: () => {
     const wrap = document.createElement('div');
     wrap.className = 'nds-stack nds-w-full nds-max-w-md';

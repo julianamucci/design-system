@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
+import { alertEmRegiaoVivaSourceCom, alertSource, alertSourceCom } from './alert.source';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -9,6 +10,7 @@ const meta: Meta = {
     design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: alertSource } },
   },
   title: 'UI/Alert/States',
 };
@@ -39,7 +41,12 @@ export const Complete: Story = {
 };
 
 export const WithoutTitle: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item3'] },
+  // Override de story: a ausência do título É o assunto, e o snippet do meta
+  // mostraria a composição completa.
+  parameters: {
+    covers: ['functional.item4', 'visual.item3'],
+    docs: { source: { transform: alertSourceCom({ title: '' }) } },
+  },
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertIcon('info'));
@@ -62,6 +69,10 @@ export const WithoutTitle: Story = {
 };
 
 export const WithoutIcon: Story = {
+  // Override de story: a ausência do ícone É o assunto.
+  parameters: {
+    docs: { source: { transform: alertSourceCom({ icon: false }) } },
+  },
   render: () => {
     const alert = createAlert();
     alert.appendChild(createAlertTitle({ text: 'Atenção' }));
@@ -84,6 +95,21 @@ export const WithoutIcon: Story = {
 };
 
 export const WithoutAnnouncement: Story = {
+  // Override de story: a semântica de anúncio é o assunto, e `role` não passa
+  // por control neste arquivo. O snippet mostra a nota estática — o alerta
+  // padrão ao lado dela é a comparação, e já é o que o meta produz.
+  parameters: {
+    docs: {
+      source: {
+        transform: alertSourceCom({
+          role: 'note',
+          title: 'Nota de implementação',
+          description:
+            'Conteúdo estático: o leitor de tela lê na ordem do documento, sem interromper.',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';
@@ -127,7 +153,20 @@ export const WithoutAnnouncement: Story = {
 };
 
 export const DynamicInsertion: Story = {
-  parameters: { covers: ['functional.item6'] },
+  // Override de story: aqui o assunto não é o alerta, é ONDE ele entra — a
+  // região viva é outra FORMA de snippet, não uma opção da fábrica.
+  parameters: {
+    covers: ['functional.item6'],
+    docs: {
+      source: {
+        transform: alertEmRegiaoVivaSourceCom({
+          icon: 'success',
+          title: 'Operação concluída',
+          description: 'O relatório foi gerado com sucesso.',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.setAttribute('aria-live', 'polite');

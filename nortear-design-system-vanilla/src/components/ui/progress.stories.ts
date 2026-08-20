@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createProgress } from './progress';
+import { progressSource } from './progress.source';
 import { createProgressDocs } from '@/components/docs/ProgressDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { percentualDesenhado } from '@shared/testing/progress-probe';
@@ -19,7 +20,7 @@ const meta: Meta<ProgressArgs> = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createProgressDocs) },
+    docs: { page: withAutoDocsTab(createProgressDocs), source: { transform: progressSource } },
   },
   argTypes: {
     value: {

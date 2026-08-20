@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn } from 'storybook/test';
 import { createSlider } from './slider';
+import { sliderSource } from './slider.source';
 import { createSliderDocs } from '@/components/docs/SliderDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
@@ -29,7 +30,7 @@ const meta: Meta<SliderArgs> = {
   title: 'UI/Slider',
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(createSliderDocs) },
+    docs: { page: withAutoDocsTab(createSliderDocs), source: { transform: sliderSource } },
   },
   argTypes: {
     min: {

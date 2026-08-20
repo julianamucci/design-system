@@ -8,6 +8,7 @@ import {
   formasDeDado,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
+import { chartSource, chartSourceCom } from './chart.source';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
@@ -30,6 +31,7 @@ const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: chartSource } },
   },
   title: 'UI/Chart/Settings',
 };
@@ -42,6 +44,15 @@ type Story = StoryObj;
 export const SeriesColor: Story = {
   parameters: {
     docs: {
+      // Override de story: a cor mora DENTRO do item de série, e é isso que o
+      // snippet precisa mostrar — não uma opção de topo.
+      source: {
+        transform: chartSourceCom({
+          dados: 'serieUnica',
+          color: ROXO,
+          label: 'Acessos mensais no desktop, em cor autoral',
+        }),
+      },
       description: {
         story: 'Cor autoral por série, informada no próprio item de `series`. Sobrescreve o token de paleta daquela série e só daquela — as demais continuam vindo do tema.',
       },
@@ -85,6 +96,13 @@ export const SeriesColor: Story = {
 export const CustomHeight: Story = {
   parameters: {
     docs: {
+      // Override de story: a altura é o assunto, e o valor dela é o da story.
+      source: {
+        transform: chartSourceCom({
+          height: ALTURA,
+          label: 'Acessos mensais, em bloco mais alto',
+        }),
+      },
       description: {
         story: 'Altura informada em pixels. Sem valor, vale o piso de altura do próprio bloco — a altura nunca vem de classe.',
       },

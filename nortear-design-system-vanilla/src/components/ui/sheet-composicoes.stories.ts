@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
+import { sheetSource, sheetSourceCom } from './sheet.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
@@ -16,6 +17,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: sheetSource },
       description: {
         component:
           'Composições reais do Sheet: filtros avançados (right), navegação secundária ' +
@@ -64,6 +66,9 @@ function makeFooter(cancelLabel: string, actionLabel: string): HTMLElement {
 export const AdvancedFilters: Story = {
   parameters: {
     docs: {
+      // O corpo é um formulário: `createFormField` é quem fecha o par rótulo ↔
+      // controle, e é ele que a composição ensina.
+      source: { transform: sheetSourceCom({ corpo: 'formulario' }) },
       description: {
         story: 'Filtros avançados no painel direito — caso de uso canônico do Sheet em desktop.',
       },
@@ -100,6 +105,17 @@ export const AdvancedFilters: Story = {
 export const SecondaryNavigation: Story = {
   parameters: {
     docs: {
+      source: {
+        transform: sheetSourceCom({
+          side: 'left',
+          corpo: 'navegacao',
+          triggerLabel: 'Abrir menu',
+          title: 'Menu',
+          description: 'Navegue entre as áreas do sistema.',
+          cancelLabel: false,
+          applyLabel: false,
+        }),
+      },
       description: {
         story: 'Navegação secundária deslizando da esquerda. Lista de links como conteúdo principal.',
       },
@@ -142,6 +158,17 @@ export const SecondaryNavigation: Story = {
 export const MobileBottomPanel: Story = {
   parameters: {
     docs: {
+      source: {
+        transform: sheetSourceCom({
+          side: 'bottom',
+          corpo: 'acoes',
+          triggerLabel: 'Mais opções',
+          title: 'Ações rápidas',
+          description: 'Escolha o que fazer com este item.',
+          cancelLabel: false,
+          applyLabel: false,
+        }),
+      },
       description: {
         story:
           'Painel de ações deslizando de baixo — o mesmo desenho do Drawer, sem o gesto de ' +
@@ -181,6 +208,17 @@ export const WithLongScrollContent: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // O corpo alto é o assunto: quem rola é `.nds-sheet-body`, e o rodapé fica
+      // onde está sem nenhuma opção extra.
+      source: {
+        transform: sheetSourceCom({
+          corpo: 'paragrafos',
+          triggerLabel: 'Ler termos',
+          title: 'Termos de uso',
+          description: 'Leia atentamente antes de aceitar.',
+          applyLabel: 'Aceitar termos',
+        }),
+      },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +

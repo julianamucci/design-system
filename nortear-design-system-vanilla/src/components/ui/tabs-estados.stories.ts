@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
+import { tabsSource, tabsSourceCom } from './tabs.source';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -8,6 +9,7 @@ const meta: Meta = {
   parameters: {
     actions: { disable: true },
     controls: { disable: true },
+    docs: { source: { transform: tabsSource } },
   },
 };
 
@@ -86,7 +88,10 @@ export const Default: Story = {
 export const Active: Story = {
   render: () => grupo('properties', baseItems()),
   parameters: {
-    docs: { description: { story: 'Aba ativa escolhida na montagem. O painel visível é o dela, e a seleção não depende de clique.' } },
+    docs: {
+      source: { transform: tabsSourceCom({ defaultValue: 'properties' }) },
+      description: { story: 'Aba ativa escolhida na montagem. O painel visível é o dela, e a seleção não depende de clique.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -141,6 +146,17 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item4', 'functional.item5', 'accessibility.item6'],
     docs: {
+      // A aba bloqueada é o assunto: sem o override o snippet mostraria três
+      // abas iguais.
+      source: {
+        transform: tabsSourceCom({
+          itens: [
+            { value: 'overview', label: 'Visão geral', content: 'Conteúdo ativo.' },
+            { value: 'properties', label: 'Propriedades', content: 'Conteúdo bloqueado.', disabled: true },
+            { value: 'examples', label: 'Exemplos', content: 'Outro conteúdo.' },
+          ],
+        }),
+      },
       description: {
         story:
           'Aba desabilitada: esmaecida e sem resposta ao ponteiro, mas ainda alcançável pela '

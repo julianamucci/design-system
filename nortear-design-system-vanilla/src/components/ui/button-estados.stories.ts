@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fn, userEvent, within, expect } from 'storybook/test';
 import { createButton, createButtonIcon } from './button';
+import { buttonSource, buttonSourceCom } from './button.source';
 import { falhasDeAnel } from '@shared/testing/button-probe';
 
 type EstadosArgs = { onClick: (e: MouseEvent) => void };
@@ -12,6 +13,7 @@ const meta: Meta<EstadosArgs> = {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: buttonSource } },
   },
   // Spy no meta, como nas outras três stacks. Antes o `fn()` nascia dentro do
   // `render` e era pendurado no próprio nó (`btn.__handler`) para o `play`
@@ -31,7 +33,11 @@ export const Disabled: Story = {
     createButton({ variant: 'default', label: 'Salvar', disabled: true, onClick: args.onClick }),
   parameters: {
     covers: ['functional.item2', 'visual.item4'],
-    docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } },
+    // Override de story: o estado desabilitado é o assunto, e não há control.
+    docs: {
+      source: { transform: buttonSourceCom({ disabled: true }) },
+      description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' },
+    },
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
@@ -64,7 +70,22 @@ export const Loading: Story = {
     btn.appendChild(label);
     return btn;
   },
-  parameters: { docs: { description: { story: 'Estado de carregamento. Use disabled + aria-busy e substitua o label por estado progressivo.' } } },
+  parameters: {
+    // Override de story: o par `disabled` + `aria-busy` e o ícone em rotação
+    // são o assunto, e o snippet do meta mostraria um botão comum.
+    docs: {
+      source: {
+        transform: buttonSourceCom({
+          label: 'Salvando…',
+          disabled: true,
+          ariaBusy: true,
+          icon: 'loader',
+          iconSpin: true,
+        }),
+      },
+      description: { story: 'Estado de carregamento. Use disabled + aria-busy e substitua o label por estado progressivo.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button');
@@ -112,7 +133,19 @@ export const FocusVisible: Story = {
 
 export const Invalid: Story = {
   render: () => createButton({ variant: 'outline', label: 'Formulário inválido', 'aria-invalid': true }),
-  parameters: { docs: { description: { story: 'Estado inválido. Use aria-invalid="true" para sinalizar problemas de validação.' } } },
+  parameters: {
+    // Override de story: a marca de inválido e a variante não têm control.
+    docs: {
+      source: {
+        transform: buttonSourceCom({
+          variant: 'outline',
+          label: 'Formulário inválido',
+          ariaInvalid: true,
+        }),
+      },
+      description: { story: 'Estado inválido. Use aria-invalid="true" para sinalizar problemas de validação.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button');

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { createInput } from './input';
+import { inputSource, inputSourceCom, inputSourcePrefixo } from './input.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -10,6 +11,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: inputSource },
       description: {
         component:
           'Composicoes do Input com rótulo externo, texto de apoio e mensagem de erro. ' +
@@ -122,6 +124,21 @@ export const WithLabel: Story = {
 };
 
 export const WithSupportText: Story = {
+  // O texto de apoio só chega ao leitor de tela pelo `aria-describedby`, que é
+  // marcação em volta do campo — nada disso aparece na chamada da fábrica.
+  parameters: {
+    docs: {
+      source: {
+        transform: inputSourceCom({
+          type: 'email',
+          id: 'email',
+          label: 'Email',
+          placeholder: 'ex: joao@empresa.com',
+          ajuda: 'Usaremos este email para envio de notificações.',
+        }),
+      },
+    },
+  },
   render: () =>
     createFormField({
       labelText: 'Email',
@@ -146,6 +163,20 @@ export const WithSupportText: Story = {
 };
 
 export const ErrorMessage: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: inputSourceCom({
+          type: 'email',
+          id: 'email',
+          label: 'Email',
+          placeholder: 'ex: joao@empresa.com',
+          ariaInvalid: true,
+          mensagem: 'Email inválido. Use o formato nome@dominio.com',
+        }),
+      },
+    },
+  },
   render: () => {
     const input = createInput({ type: 'email', placeholder: 'ex: joao@empresa.com' });
     input.setAttribute('aria-invalid', 'true');
@@ -184,6 +215,21 @@ export const ErrorMessage: Story = {
  * folha nenhuma. A play só checava o texto do prefixo, então o campo cru passou.
  */
 export const WithTextPrefix: Story = {
+  // Forma diferente de snippet: a moldura é do grupo, e o campo entra nu dentro
+  // dele. Um snippet de campo solto não ensinaria nada disso.
+  parameters: {
+    docs: {
+      source: {
+        transform: inputSourcePrefixo({
+          id: 'input-url',
+          label: 'URL do site',
+          type: 'url',
+          placeholder: 'meusite.com',
+          prefixo: 'https://',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack nds-w-full nds-max-w-sm';

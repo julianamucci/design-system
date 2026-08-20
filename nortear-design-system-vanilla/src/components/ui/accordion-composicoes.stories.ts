@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect , waitFor } from 'storybook/test';
 import DOMPurify from 'dompurify';
 import { createAccordion, type AccordionOptions } from './accordion';
+import {
+  accordionComConteudoRicoSourceCom,
+  accordionComGatilhoRicoSourceCom,
+  accordionSource,
+  accordionSourceCom,
+} from './accordion.source';
 import { createBadge } from './badge';
 import { Info, AlertTriangle, CheckCircle2 } from 'lucide';
 
@@ -12,6 +18,7 @@ const meta: Meta = {
     design: figmaDesign('accordionTrigger'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: accordionSource } },
   },
   title: 'UI/Accordion/Compositions',
 };
@@ -95,7 +102,16 @@ export const WithIconInTrigger: Story = {
   },
   parameters: {
     covers: ['functional.item1', 'visual.item4'],
+    // Override de story: a fábrica recebe o gatilho como texto, então o ícone
+    // entra depois da montagem — forma que o snippet do meta não tem como ter.
     docs: {
+      source: {
+        transform: accordionComGatilhoRicoSourceCom({
+          value: 'info',
+          rotulo: 'Informação',
+          comIcone: true,
+        }),
+      },
       description: {
         story: 'Ícones no trigger. Adicione aria-hidden="true" no ícone — o texto do trigger já descreve o item para leitores de tela.',
       },
@@ -155,7 +171,16 @@ export const WithBadgeInTrigger: Story = {
   },
   parameters: {
     covers: ['visual.item4'],
+    // Override de story: mesma forma da story acima — o gatilho ganha a
+    // etiqueta depois da montagem, porque `trigger` é texto na assinatura.
     docs: {
+      source: {
+        transform: accordionComGatilhoRicoSourceCom({
+          value: 'novo',
+          rotulo: 'Novidades da versão 3.0',
+          badge: 'Novo',
+        }),
+      },
       description: {
         story: 'Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.',
       },
@@ -222,7 +247,19 @@ export const RichContent: Story = {
   },
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
+    // Override de story: `content` é texto na assinatura, então tabela e lista
+    // entram no corpo do painel depois da montagem — e passam pelo sanitizador.
     docs: {
+      source: {
+        transform: accordionComConteudoRicoSourceCom({
+          type: 'multiple',
+          value: 'specs',
+          items: [
+            { value: 'specs', trigger: 'Especificações técnicas' },
+            { value: 'inclui', trigger: 'O que está incluso' },
+          ],
+        }),
+      },
       description: {
         story: 'AccordionContent aceita qualquer HTML. Use para tabelas de dados, parágrafos ou listas estruturadas.',
       },
@@ -269,7 +306,10 @@ export const FAQ: Story = {
   },
   parameters: {
     covers: ['functional.item1', 'functional.item3'],
+    // Override de story: são quatro perguntas, e o snippet do meta mostraria as
+    // três da demonstração.
     docs: {
+      source: { transform: accordionSourceCom({ items: FAQ_ITEMS }) },
       description: {
         story: 'Padrão FAQ canônico. Perguntas interrogativas completas no trigger. Respostas objetivas em 2–3 linhas no content.',
       },

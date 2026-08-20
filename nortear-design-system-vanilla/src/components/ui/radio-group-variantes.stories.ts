@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
+import {
+  radioGroupSource,
+  radioGroupSourceCom,
+  radioGroupSourceDescricao,
+} from './radio-group.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -10,6 +15,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: radioGroupSource },
       description: {
         component:
           'Variantes de layout do RadioGroup: Vertical (padrão do grupo), Horizontal (2–3 opções curtas, via `orientation`) e WithDescription (Label + texto auxiliar abaixo).',
@@ -82,7 +88,21 @@ export const Horizontal: Story = {
       ],
     }),
   parameters: {
+    // Override de story: `orientation` é o assunto, e o snippet do meta cai no
+    // empilhado, que é como o grupo já nasce.
     docs: {
+      source: {
+        transform: radioGroupSourceCom({
+          name: 'delivery',
+          legend: 'Forma de entrega',
+          orientation: 'horizontal',
+          items: [
+            { value: 'standard', label: 'Padrão (5 dias)' },
+            { value: 'express', label: 'Expressa (1 dia)' },
+            { value: 'pickup', label: 'Retirar na loja' },
+          ],
+        }),
+      },
       description: {
         story:
           'Layout em linha — para 2 a 3 opções curtas. Sai de `orientation: "horizontal"`, que escreve `aria-orientation` no grupo: o mesmo atributo anuncia a direção das setas e dispõe as opções lado a lado.',
@@ -178,7 +198,31 @@ export const WithDescription: Story = {
     return wrap;
   },
   parameters: {
+    // Override de story: a fábrica não tem campo de descrição, e a composição
+    // que a acrescenta é outra FORMA de snippet.
     docs: {
+      source: {
+        transform: radioGroupSourceDescricao(
+          [
+            {
+              value: 'standard',
+              label: 'Padrão',
+              description: 'Entrega em 5 dias úteis — frete grátis acima de R$ 199.',
+            },
+            {
+              value: 'express',
+              label: 'Expressa',
+              description: 'Receba em 1 dia útil — taxa adicional de R$ 19,90.',
+            },
+            {
+              value: 'pickup',
+              label: 'Retirar na loja',
+              description: 'Disponível em 2h — sem custo de frete.',
+            },
+          ],
+          { name: 'delivery', legend: 'Forma de entrega' },
+        ),
+      },
       description: {
         story:
           'Cada par item + Label acompanha um texto auxiliar abaixo, útil quando o nome da opção sozinho não comunica o critério de escolha. A descrição é acrescentada pela composição — a factory não expõe campo `description` por item.',

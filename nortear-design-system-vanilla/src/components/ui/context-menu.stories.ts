@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { createContextMenu, type ContextMenuItemDef } from './context-menu';
+import { contextMenuSource } from './context-menu.source';
 import { createContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
@@ -26,7 +27,12 @@ const meta: Meta<ContextMenuArgs> = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(createContextMenuDocs) },
+    docs: {
+      page: withAutoDocsTab(createContextMenuDocs),
+      // O painel Code mostra a chamada da fábrica, e não o `outerHTML` do
+      // wrapper. A transform cascateia para todas as stories deste arquivo.
+      source: { transform: contextMenuSource },
+    },
   },
   argTypes: {
     triggerLabel: {

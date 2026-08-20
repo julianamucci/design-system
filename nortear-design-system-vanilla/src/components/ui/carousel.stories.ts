@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCarousel } from './carousel';
+import { carouselSource } from './carousel.source';
 import { createCard, createCardContent } from './card';
 import { createCarouselDocs } from '@/components/docs/CarouselDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -41,7 +42,7 @@ const meta: Meta<CarouselArgs> = {
   tags: ['autodocs', 'display'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(createCarouselDocs) },
+    docs: { page: withAutoDocsTab(createCarouselDocs), source: { transform: carouselSource } },
   },
   argTypes: {
     slides: {

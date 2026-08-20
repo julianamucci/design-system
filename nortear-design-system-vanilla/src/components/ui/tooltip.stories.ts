@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
 import { createButton } from './button';
+import { tooltipSource } from './tooltip.source';
 import { createTooltipDocs } from '@/components/docs/TooltipDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -33,7 +34,7 @@ const meta: Meta<TooltipArgs> = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createTooltipDocs) },
+    docs: { page: withAutoDocsTab(createTooltipDocs), source: { transform: tooltipSource } },
   },
   argTypes: {
     triggerLabel: {

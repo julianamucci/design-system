@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCodeBlock } from './code-block';
+import {
+  codeBlockComRemocaoSource,
+  codeBlockSource,
+  codeBlockSourceCom,
+} from './code-block.source';
 import { createButton } from './button';
 import type { DestroyableElement } from '@/lib/destroy';
 import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
@@ -18,6 +23,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: codeBlockSource },
       description: {
         component:
           'Cada story fixa uma configuração do bloco e verifica o que ela muda no DOM.',
@@ -75,7 +81,12 @@ export const WithNumbering: Story = {
 };
 
 export const WithoutNumbering: Story = {
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    // A numeração desligada é o assunto: o snippet do meta a esconderia, porque
+    // ligada é o padrão da fábrica.
+    docs: { source: { transform: codeBlockSourceCom({ language: 'ts', showLineNumbers: false }) } },
+  },
   render: () =>
     createCodeBlock({ code: COMPOSITION_CODE, language: 'ts', showLineNumbers: false }),
   play: async ({ canvasElement, step }) => {
@@ -160,7 +171,12 @@ export const DoubleScroll: Story = {
 };
 
 export const UnknownLanguage: Story = {
-  parameters: { covers: ['functional.item7'] },
+  parameters: {
+    covers: ['functional.item7'],
+    // A linguagem que a classificação não conhece é o assunto: sem ela no
+    // snippet, a story deixaria de mostrar o que documenta.
+    docs: { source: { transform: codeBlockSourceCom({ language: 'cobol' }) } },
+  },
   render: () => createCodeBlock({ code: COMPOSITION_CODE, language: 'cobol' }),
   play: async ({ canvasElement, step }) => {
     await step('Linguagem desconhecida cai em texto simples sem quebrar o bloco', async () => {
@@ -193,6 +209,9 @@ export const RemovedBeforeFeedback: Story = {
     // valer, e declarar não-aplicável com motivo vencido é o mesmo defeito que
     // esta revisão persegue, ao contrário.
     covers: ['functional.item8'],
+    // Forma própria de snippet: o assunto desta story é o que acontece na
+    // SAÍDA do bloco, e a chamada sozinha não mostraria isso.
+    docs: { source: { transform: codeBlockComRemocaoSource({ language: 'ts' }) } },
   },
   render: () => {
     const wrap = document.createElement('div');

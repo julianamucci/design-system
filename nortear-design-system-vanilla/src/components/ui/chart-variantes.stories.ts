@@ -7,6 +7,7 @@ import {
   formasDeDado,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
+import { chartSource, chartSourceCom } from './chart.source';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
@@ -42,6 +43,7 @@ const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: chartSource } },
   },
   title: 'UI/Chart/Variants',
 };
@@ -109,6 +111,15 @@ export const Line: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
     docs: {
+      // Override de story: muda o tipo E a FORMA do dado — aqui entram `xAxis`
+      // e `series`, e não a lista simples de rótulo e valor.
+      source: {
+        transform: chartSourceCom({
+          type: 'line',
+          dados: 'multi',
+          label: 'Gráfico de linhas: acessos mensais por dispositivo, de janeiro a junho',
+        }),
+      },
       description: {
         story: 'Tipo line — tendência contínua ao longo do tempo. Uma linha por série, com ponto por dado.',
       },
@@ -157,6 +168,14 @@ export const Line: Story = {
 export const Area: Story = {
   parameters: {
     docs: {
+      // Override de story: tipo e forma do dado, como no traçado.
+      source: {
+        transform: chartSourceCom({
+          type: 'area',
+          dados: 'multi',
+          label: 'Gráfico de área: volume mensal de acessos por dispositivo',
+        }),
+      },
       description: {
         story: 'Tipo area — linha com a região preenchida embaixo. Enfatiza volume ao longo do tempo.',
       },
@@ -206,6 +225,16 @@ export const Pie: Story = {
   parameters: {
     covers: ['functional.item5'],
     docs: {
+      // Override de story: a rosca não tem eixo, então o dado volta a ser a
+      // lista de rótulo e valor — e são as fatias, não os meses.
+      source: {
+        transform: chartSourceCom({
+          type: 'pie',
+          dados: 'rosca',
+          height: 280,
+          label: 'Distribuição de acessos por dispositivo: desktop, mobile e tablet',
+        }),
+      },
       description: {
         story: 'Tipo pie (rosca) — composição de um total. Limite a cinco ou seis fatias para continuar legível.',
       },

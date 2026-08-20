@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createButton, createButtonIcon } from './button';
+import { buttonSource, buttonSourceCom } from './button.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -9,6 +10,7 @@ const meta: Meta = {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: buttonSource } },
   },
   title: 'UI/Button/Sizes',
 };
@@ -34,7 +36,13 @@ export const Default: Story = {
 
 export const ExtraSmall: Story = {
   render: () => createButton({ size: 'xs', label: 'Mínimo' }),
-  parameters: { docs: { description: { story: 'Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.' } } },
+  parameters: {
+    // Override de story: o tamanho não passa por control neste arquivo.
+    docs: {
+      source: { transform: buttonSourceCom({ size: 'xs', label: 'Mínimo' }) },
+      description: { story: 'Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /mínimo/i });
     await expect(btn).toHaveClass('nds-button-xs');
@@ -43,7 +51,13 @@ export const ExtraSmall: Story = {
 
 export const Small: Story = {
   render: () => createButton({ size: 'sm', label: 'Pequeno' }),
-  parameters: { docs: { description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' } } },
+  parameters: {
+    // Override de story: o tamanho não passa por control neste arquivo.
+    docs: {
+      source: { transform: buttonSourceCom({ size: 'sm', label: 'Pequeno' }) },
+      description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /pequeno/i });
@@ -53,7 +67,13 @@ export const Small: Story = {
 
 export const Large: Story = {
   render: () => createButton({ size: 'lg', label: 'Grande' }),
-  parameters: { docs: { description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' } } },
+  parameters: {
+    // Override de story: o tamanho não passa por control neste arquivo.
+    docs: {
+      source: { transform: buttonSourceCom({ size: 'lg', label: 'Grande' }) },
+      description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /grande/i });
@@ -73,7 +93,19 @@ export const Icon: Story = {
   },
   parameters: {
     covers: ['functional.item6', 'accessibility.item4'],
-    docs: { description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' } },
+    // Override de story: sem texto visível, o rótulo sai de `label` e entra em
+    // `aria-label` — e o conteúdo do botão passa a ser o ícone.
+    docs: {
+      source: {
+        transform: buttonSourceCom({
+          size: 'icon',
+          label: undefined,
+          ariaLabel: 'Adicionar item',
+          icon: 'plus',
+        }),
+      },
+      description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -95,7 +127,20 @@ export const IconExtraSmall: Story = {
     btn.appendChild(createButtonIcon('plus'));
     return btn;
   },
-  parameters: { docs: { description: { story: 'Botão ícone mínimo. Use em linhas de tabela e listas densas.' } } },
+  parameters: {
+    // Override de story: sem texto visível, o rótulo é o `aria-label`.
+    docs: {
+      source: {
+        transform: buttonSourceCom({
+          size: 'icon-xs',
+          label: undefined,
+          ariaLabel: 'Adicionar item',
+          icon: 'plus',
+        }),
+      },
+      description: { story: 'Botão ícone mínimo. Use em linhas de tabela e listas densas.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button', { name: 'Adicionar item' });
@@ -116,7 +161,20 @@ export const IconSmall: Story = {
     btn.appendChild(createButtonIcon('plus'));
     return btn;
   },
-  parameters: { docs: { description: { story: 'Botão ícone pequeno. Use em toolbars compactas.' } } },
+  parameters: {
+    // Override de story: sem texto visível, o rótulo é o `aria-label`.
+    docs: {
+      source: {
+        transform: buttonSourceCom({
+          size: 'icon-sm',
+          label: undefined,
+          ariaLabel: 'Adicionar item',
+          icon: 'plus',
+        }),
+      },
+      description: { story: 'Botão ícone pequeno. Use em toolbars compactas.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button', { name: 'Adicionar item' });
@@ -137,7 +195,20 @@ export const IconLarge: Story = {
     btn.appendChild(createButtonIcon('plus'));
     return btn;
   },
-  parameters: { docs: { description: { story: 'Botão ícone grande. Use como FAB ou CTAs visuais.' } } },
+  parameters: {
+    // Override de story: sem texto visível, o rótulo é o `aria-label`.
+    docs: {
+      source: {
+        transform: buttonSourceCom({
+          size: 'icon-lg',
+          label: undefined,
+          ariaLabel: 'Adicionar item',
+          icon: 'plus',
+        }),
+      },
+      description: { story: 'Botão ícone grande. Use como FAB ou CTAs visuais.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button', { name: 'Adicionar item' });

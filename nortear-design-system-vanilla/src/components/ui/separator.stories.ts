@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSeparator } from './separator';
+import { separatorSource } from './separator.source';
 import { createSeparatorDocs } from '@/components/docs/SeparatorDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -12,37 +13,18 @@ type SeparatorArgs = {
   emphasis: 'default' | 'strong';
 };
 
-/**
- * O painel Code do renderer HTML imprime o `outerHTML` do que a story montou —
- * um `<div class="nds-stack">` inteiro com os dois parágrafos de exemplo. É o
- * andaime, não o uso. O `transform` devolve a chamada real da factory com os
- * valores atuais dos controls resolvidos.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SeparatorArgs> }): string {
-  const { orientation = 'horizontal', decorative = true, emphasis = 'default' } = ctx.args ?? {};
-  // Só o que difere do padrão entra no snippet: documentação não deve ensinar a
-  // repetir o valor que já vem por default.
-  const opcoes = [
-    `orientation: '${orientation}'`,
-    decorative ? '' : 'decorative: false',
-    emphasis === 'strong' ? "emphasis: 'strong'" : '',
-  ].filter(Boolean).join(', ');
-
-  return `import { createSeparator } from '@/components/ui/separator';
-
-container.append(
-  topo,
-  createSeparator({ ${opcoes} }),
-  base,
-);`;
-}
+// O painel Code do renderer HTML imprime o `outerHTML` do que a story montou —
+// um `<div class="nds-stack">` inteiro com os dois parágrafos de exemplo. É o
+// andaime, não o uso. O `transform` vive em `separator.source.ts`, é função
+// exportada (logo, com teste unitário) e devolve a chamada real da fábrica com
+// os valores atuais dos controls resolvidos.
 
 const meta: Meta<SeparatorArgs> = {
   title: 'UI/Separator',
   tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createSeparatorDocs), source: { transform: playgroundSource } },
+    docs: { page: withAutoDocsTab(createSeparatorDocs), source: { transform: separatorSource } },
   },
   argTypes: {
     orientation: {

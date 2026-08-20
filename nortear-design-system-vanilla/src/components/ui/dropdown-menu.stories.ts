@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
+import { dropdownMenuSource } from './dropdown-menu.source';
 import { createButton } from './button';
 import { createDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -20,7 +21,10 @@ const meta: Meta<DropdownArgs> = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createDropdownMenuDocs) },
+    docs: {
+      page: withAutoDocsTab(createDropdownMenuDocs),
+      source: { transform: dropdownMenuSource },
+    },
   },
   argTypes: {
     triggerLabel: { control: 'text', description: 'Texto do DropdownMenuTrigger.' },

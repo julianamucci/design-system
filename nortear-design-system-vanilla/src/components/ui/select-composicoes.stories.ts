@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect, type SelectItem } from './select';
+import { selectSource, selectSourceCom, selectSourceEmFormulario } from './select.source';
 import { createButton } from './button';
 
 const meta: Meta = {
@@ -12,6 +13,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: selectSource },
       description: {
         component:
           'Composições de uso do Select: BrazilianState (lista plana), RegionWithGroups (categorias com cabeçalho) e InForm (integrado a um formulário com envio).',
@@ -160,6 +162,37 @@ export const RegionWithGroups: Story = {
   },
   parameters: {
     docs: {
+      // Aqui o nome do campo vem do rótulo VISÍVEL, por `aria-labelledby`: um
+      // texto só, e quem enxerga e quem ouve leem a mesma coisa.
+      source: {
+        transform: selectSourceCom({
+          id: 'regiao',
+          name: 'region',
+          labelText: 'Selecione a região',
+          'aria-labelledby': true,
+          items: [
+            {
+              type: 'group',
+              label: 'Sudeste',
+              items: [
+                { value: 'sp', label: 'São Paulo' },
+                { value: 'rj', label: 'Rio de Janeiro' },
+                { value: 'mg', label: 'Minas Gerais' },
+                { value: 'es', label: 'Espírito Santo' },
+              ],
+            },
+            {
+              type: 'group',
+              label: 'Sul',
+              items: [
+                { value: 'rs', label: 'Rio Grande do Sul' },
+                { value: 'sc', label: 'Santa Catarina' },
+                { value: 'pr', label: 'Paraná' },
+              ],
+            },
+          ],
+        }),
+      },
       description: {
         story:
           'Estados agrupados por região. O cabeçalho de cada grupo nomeia o conjunto para o leitor de tela, e não é escolhível. O nome do campo vem do rótulo visível.',
@@ -261,6 +294,18 @@ export const InForm: Story = {
   },
   parameters: {
     docs: {
+      // A serialização é o assunto: sem o formulário em volta não há o que
+      // provar, e é o campo escondido da fábrica que o `FormData` enxerga.
+      source: {
+        transform: selectSourceEmFormulario({
+          id: 'estado-do-formulario',
+          items: [
+            { value: 'sp', label: 'São Paulo' },
+            { value: 'rj', label: 'Rio de Janeiro' },
+            { value: 'mg', label: 'Minas Gerais' },
+          ],
+        }),
+      },
       description: {
         story:
           'Campo dentro de um formulário com nome definido — o valor participa da serialização nativa no envio. A exigência é anunciada no próprio campo.',

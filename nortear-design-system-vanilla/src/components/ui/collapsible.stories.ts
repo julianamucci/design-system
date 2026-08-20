@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, waitFor, within, expect, fn } from 'storybook/test';
 import { createCollapsible } from './collapsible';
+import { collapsibleSource } from './collapsible.source';
 import { createCollapsibleDocs } from '@/components/docs/CollapsibleDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -21,7 +22,12 @@ const meta: Meta<CollapsibleArgs> = {
   title: 'UI/Collapsible',
   tags: ['autodocs', 'disclosure'],
   parameters: {
-    docs: { page: withAutoDocsTab(createCollapsibleDocs) },
+    docs: {
+      page: withAutoDocsTab(createCollapsibleDocs),
+      // O painel Code mostra a chamada da fábrica, e não o `outerHTML` do
+      // wrapper. A transform cascateia para todas as stories deste arquivo.
+      source: { transform: collapsibleSource },
+    },
   },
   argTypes: {
     defaultOpen: {

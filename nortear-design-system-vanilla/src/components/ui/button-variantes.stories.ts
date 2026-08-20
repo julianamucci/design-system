@@ -1,6 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createButton } from './button';
+import { buttonSource, buttonSourceCom } from './button.source';
 import { within, expect } from 'storybook/test';
 import { falhasDeContrasteDeTexto } from '@shared/testing/button-probe';
 
@@ -10,6 +11,7 @@ const meta: Meta = {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: buttonSource } },
   },
   title: 'UI/Button/Variants',
 };
@@ -40,7 +42,14 @@ export const Default: Story = {
 
 export const Destructive: Story = {
   render: () => createButton({ variant: 'destructive', label: 'Excluir conta' }),
-  parameters: { docs: { description: { story: 'Variante destrutiva. Use para ações irreversíveis como excluir ou remover.' } } },
+  parameters: {
+    // Override de story: a variante não passa por control neste arquivo, e o
+    // snippet do meta mostraria a padrão onde a story renderiza a destrutiva.
+    docs: {
+      source: { transform: buttonSourceCom({ variant: 'destructive', label: 'Excluir conta' }) },
+      description: { story: 'Variante destrutiva. Use para ações irreversíveis como excluir ou remover.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /excluir conta/i });
@@ -58,7 +67,13 @@ export const Destructive: Story = {
 
 export const Outline: Story = {
   render: () => createButton({ variant: 'outline', label: 'Cancelar' }),
-  parameters: { docs: { description: { story: 'Variante secundária com borda. Use ao lado da ação primária em pares de ações.' } } },
+  parameters: {
+    // Override de story: a variante não passa por control neste arquivo.
+    docs: {
+      source: { transform: buttonSourceCom({ variant: 'outline', label: 'Cancelar' }) },
+      description: { story: 'Variante secundária com borda. Use ao lado da ação primária em pares de ações.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /cancelar/i });
@@ -76,7 +91,13 @@ export const Outline: Story = {
 
 export const Secondary: Story = {
   render: () => createButton({ variant: 'secondary', label: 'Ver detalhes' }),
-  parameters: { docs: { description: { story: 'Variante secundária sólida. Use para ações complementares de menor ênfase.' } } },
+  parameters: {
+    // Override de story: a variante não passa por control neste arquivo.
+    docs: {
+      source: { transform: buttonSourceCom({ variant: 'secondary', label: 'Ver detalhes' }) },
+      description: { story: 'Variante secundária sólida. Use para ações complementares de menor ênfase.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /ver detalhes/i });
@@ -94,7 +115,13 @@ export const Secondary: Story = {
 
 export const Ghost: Story = {
   render: () => createButton({ variant: 'ghost', label: 'Fechar' }),
-  parameters: { docs: { description: { story: 'Variante sem borda ou fundo. Use em toolbars e menus para reduzir ruído visual.' } } },
+  parameters: {
+    // Override de story: a variante não passa por control neste arquivo.
+    docs: {
+      source: { transform: buttonSourceCom({ variant: 'ghost', label: 'Fechar' }) },
+      description: { story: 'Variante sem borda ou fundo. Use em toolbars e menus para reduzir ruído visual.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /fechar/i });
@@ -112,7 +139,13 @@ export const Ghost: Story = {
 
 export const Link: Story = {
   render: () => createButton({ variant: 'link', label: 'Saiba mais' }),
-  parameters: { docs: { description: { story: 'Variante com aparência de link. Use quando a ação for navegacional em contexto textual.' } } },
+  parameters: {
+    // Override de story: a variante não passa por control neste arquivo.
+    docs: {
+      source: { transform: buttonSourceCom({ variant: 'link', label: 'Saiba mais' }) },
+      description: { story: 'Variante com aparência de link. Use quando a ação for navegacional em contexto textual.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /saiba mais/i });

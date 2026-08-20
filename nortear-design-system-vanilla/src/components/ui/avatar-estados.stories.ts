@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createAvatar, createAvatarFallback, createAvatarRoot } from './avatar';
+import { avatarGranularSourceCom, avatarSource, avatarSourceCom } from './avatar.source';
 
 const IMG_MARIA =
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
@@ -18,6 +19,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: avatarSource },
       description: {
         component:
           'Configuracoes do Avatar conforme o ciclo de carregamento da imagem: loaded, loading (com atraso), failed e noImage.',
@@ -67,7 +69,11 @@ export const Loading: Story = {
   name: 'Loading (600ms delay)',
   parameters: {
     covers: ['functional.item4'],
+    // Override de story: o atraso É o assunto, e ele não passa por control
+    // neste arquivo. O `src` quebrado fica de fora — ele existe para o teste
+    // alcançar o prazo, não é recomendação.
     docs: {
+      source: { transform: avatarSourceCom({ delayMs: 600, src: IMG_MARIA }) },
       description: {
         story:
           'Com atraso configurado, as iniciais só entram se o carregamento passar do prazo — é o que evita o piscar em imagem rápida.',
@@ -137,7 +143,10 @@ export const Failed: Story = {
 export const NoImage: Story = {
   parameters: {
     covers: ['functional.item3'],
+    // Override de story: sem foto não há o que reconciliar, e a story monta o
+    // avatar pelas fábricas granulares — outra FORMA, não outra opção.
     docs: {
+      source: { transform: avatarGranularSourceCom({ fallback: 'JP' }) },
       description: {
         story: 'Sem AvatarImage — apenas fallback, exibido imediatamente sem tentativa de carregamento.',
       },

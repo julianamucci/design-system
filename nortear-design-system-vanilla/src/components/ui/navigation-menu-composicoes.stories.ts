@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
 import { abrir, esperarPainel, esperarPainelSumir, painelAberto } from './navigation-menu.fixtures';
+import {
+  navigationMenuSource,
+  navigationMenuSourceCom,
+  navigationMenuSourceDestaque,
+  navigationMenuSourceMega,
+} from './navigation-menu.source';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -12,6 +18,7 @@ const meta: Meta = {
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     docs: {
+      source: { transform: navigationMenuSource },
       description: {
         component:
           'As quatro formas canônicas do painel, do mais simples ao mais denso: só destinos diretos, um item com lista vertical, um mega-menu em duas colunas com descrição e um painel com destino em destaque ao lado dos complementares.',
@@ -54,6 +61,22 @@ function impedirNavegacao(nav: HTMLElement): void {
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const SimpleLink: Story = {
+  // Sem hierarquia não há painel — e é justamente isso que a story afirma. O
+  // snippet do meta, que traz um item com filhos, diria o contrário.
+  parameters: {
+    docs: {
+      source: {
+        transform: navigationMenuSourceCom({
+          ariaLabel: 'Navegação institucional',
+          items: [
+            { label: 'Início', href: '#inicio', active: true },
+            { label: 'Preços', href: '#precos' },
+            { label: 'Contato', href: '#contato' },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início', href: '#inicio', active: true },
@@ -84,7 +107,27 @@ export const SimpleLink: Story = {
 };
 
 export const WithDropdown: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    docs: {
+      source: {
+        transform: navigationMenuSourceCom({
+          items: [
+            { label: 'Início', href: '#inicio' },
+            {
+              label: 'Planos',
+              children: [
+                { label: 'Plano Inicial', href: '#inicial' },
+                { label: 'Plano Profissional', href: '#profissional' },
+                { label: 'Plano Empresarial', href: '#empresarial' },
+              ],
+            },
+            { label: 'Contato', href: '#contato' },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início', href: '#inicio' },
@@ -128,7 +171,30 @@ export const WithDropdown: Story = {
 };
 
 export const MegaMenuGrid: Story = {
-  parameters: { covers: ['visual.item2'] },
+  // Forma diferente de snippet: as duas colunas são composição de quem usa, em
+  // cima do painel que a fábrica devolve em coluna única.
+  parameters: {
+    covers: ['visual.item2'],
+    docs: {
+      source: {
+        transform: navigationMenuSourceMega({
+          ariaLabel: 'Navegação de soluções',
+          items: [
+            { label: 'Início', href: '#inicio' },
+            {
+              label: 'Soluções',
+              children: [
+                { label: 'Para Marketing', href: '#marketing', description: 'Campanhas, automação e atribuição num lugar só.' },
+                { label: 'Para Vendas', href: '#vendas', description: 'Funil, previsão e histórico de cada negociação.' },
+                { label: 'Para Suporte', href: '#suporte', description: 'Fila de atendimento, base de conhecimento e métricas.' },
+                { label: 'Para Financeiro', href: '#financeiro', description: 'Cobrança recorrente, conciliação e relatórios fiscais.' },
+              ],
+            },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início', href: '#inicio' },
@@ -190,6 +256,27 @@ export const MegaMenuGrid: Story = {
 };
 
 export const WithHighlightedCard: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: navigationMenuSourceDestaque({
+          ariaLabel: 'Navegação de recursos',
+          items: [
+            { label: 'Início', href: '#inicio' },
+            {
+              label: 'Recursos',
+              children: [
+                { label: 'Comece agora', href: '#comece', description: 'Publique o primeiro projeto em menos de cinco minutos.' },
+                { label: 'Guias', href: '#guias' },
+                { label: 'Referência da API', href: '#api' },
+                { label: 'Novidades', href: '#changelog' },
+              ],
+            },
+          ],
+        }),
+      },
+    },
+  },
   render: () => {
     const nav = createNavigationMenu([
       { label: 'Início', href: '#inicio' },

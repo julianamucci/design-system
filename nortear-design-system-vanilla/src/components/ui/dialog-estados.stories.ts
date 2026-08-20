@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createDialog } from './dialog';
+import { dialogSource, dialogSourceCom } from './dialog.source';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 import {
@@ -24,6 +25,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: dialogSource },
       description: {
         component:
           'Configuracoes canônicas do Dialog: closed, open, sem botão Close e controlled (abertura programática via referência ao trigger).',
@@ -140,7 +142,18 @@ export const Open: Story = {
 export const WithCloseButtonHidden: Story = {
   parameters: {
     covers: ['visual.item3'],
+    // Override de story: o snippet do meta mostraria o X ligado, e é a AUSÊNCIA
+    // dele que esta configuração existe para mostrar.
     docs: {
+      source: {
+        transform: dialogSourceCom({
+          triggerLabel: 'Visualizar guia',
+          title: 'Próximos passos',
+          description: 'Acompanhe o fluxo de onboarding.',
+          bodyText: 'Conteúdo do diálogo.',
+          showCloseButton: false,
+        }),
+      },
       description: {
         story:
           'showCloseButton=false. Sem X no canto. Fechamento apenas por Escape, overlay ou ações do Footer.',
@@ -183,7 +196,20 @@ const espiaoControlado = fn();
 export const Controlled: Story = {
   parameters: {
     covers: ['functional.item7'],
+    // Override de story: o assunto é o callback que devolve cada mudança a quem
+    // é dono do estado, e ele não passa por control nenhum — sem isto o snippet
+    // mostraria um diálogo que ninguém acompanha de fora.
     docs: {
+      source: {
+        transform: dialogSourceCom({
+          triggerLabel: 'Abrir',
+          title: 'Controlado pelo pai',
+          description: 'Abertura programática via referência ao trigger.',
+          bodyText: 'Este diálogo é comandado por estado externo.',
+          footer: [{ label: 'Cancelar', variant: 'outline' }, { label: 'Confirmar' }],
+          onOpenChange: '(aberto) => sincronizarEstadoExterno(aberto)',
+        }),
+      },
       description: {
         story:
           'Abertura controlada externamente. O trigger interno do dialog fica escondido e a abertura acontece via `trigger.click()` a partir de um botão externo. `onOpenChange` rastreia o estado para o pai.',

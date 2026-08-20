@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { toggleSource, toggleSourceFileira, toggleSourceInvalido } from './toggle.source';
 import { within, expect, userEvent } from 'storybook/test';
 import { Bold, Italic } from 'lucide';
 import {
@@ -17,6 +18,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleSource },
       description: {
         component:
           'Estados do Toggle: off, on, foco por teclado, desabilitado e inválido (aria-invalid).',
@@ -99,7 +101,17 @@ export const Off: Story = {
 // ─── On ───────────────────────────────────────────────────────────────────────
 
 export const On: Story = {
-  parameters: { covers: ['visual.item2', 'accessibility.item2'] },
+  parameters: {
+    covers: ['visual.item2', 'accessibility.item2'],
+    docs: {
+      source: {
+        transform: toggleSourceFileira([
+          { icon: 'Bold', 'aria-label': 'Negrito inativo' },
+          { icon: 'Bold', 'aria-label': 'Negrito ativo', pressed: true },
+        ]),
+      },
+    },
+  },
   render: () =>
     cluster(
       makeToggle({ 'aria-label': 'Negrito inativo' }),
@@ -137,7 +149,17 @@ export const On: Story = {
 // ─── FocusVisible ─────────────────────────────────────────────────────────────
 
 export const FocusVisible: Story = {
-  parameters: { covers: ['accessibility.item3'] },
+  parameters: {
+    covers: ['accessibility.item3'],
+    docs: {
+      source: {
+        transform: toggleSourceFileira([
+          { icon: 'Bold', 'aria-label': 'Negrito' },
+          { icon: 'Italic', 'aria-label': 'Itálico', variant: 'outline' },
+        ]),
+      },
+    },
+  },
   render: () =>
     cluster(
       makeToggle({ 'aria-label': 'Negrito' }),
@@ -170,7 +192,17 @@ export const FocusVisible: Story = {
 // ─── Disabled ─────────────────────────────────────────────────────────────────
 
 export const Disabled: Story = {
-  parameters: { covers: ['visual.item4', 'functional.item4'] },
+  parameters: {
+    covers: ['visual.item4', 'functional.item4'],
+    docs: {
+      source: {
+        transform: toggleSourceFileira([
+          { icon: 'Bold', 'aria-label': 'Negrito', disabled: true },
+          { icon: 'Italic', 'aria-label': 'Itálico ativo e desabilitado', disabled: true, pressed: true },
+        ]),
+      },
+    },
+  },
   render: () =>
     cluster(
       makeToggle({ 'aria-label': 'Negrito', disabled: true }),
@@ -214,6 +246,11 @@ export const Disabled: Story = {
 // ─── Invalid ──────────────────────────────────────────────────────────────────
 
 export const Invalid: Story = {
+  parameters: {
+    // Override: `aria-invalid` e a mensagem descrita não são opções da fábrica
+    // — são marcação de quem consome, e é isso que o snippet ensina.
+    docs: { source: { transform: toggleSourceInvalido } },
+  },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';

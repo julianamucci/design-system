@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { toggleSource, toggleSourceFileira } from './toggle.source';
 import { within, expect } from 'storybook/test';
 import { Bold, Italic, Eye, List } from 'lucide';
 import { createToggle, type ToggleOptions } from './toggle';
@@ -12,6 +13,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleSource },
       description: {
         component:
           'Variantes visuais do Toggle: default (sem borda), outline (com borda), rótulo visível e a escada de tamanhos.',
@@ -109,7 +111,19 @@ export const Default: Story = {
 // ─── Outline ──────────────────────────────────────────────────────────────────
 
 export const Outline: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // Override: a story mostra o PAR (padrão ao lado de outline), e a variante
+    // não passa por control nenhum neste arquivo.
+    docs: {
+      source: {
+        transform: toggleSourceFileira([
+          { icon: 'Bold', 'aria-label': 'Negrito' },
+          { icon: 'Italic', 'aria-label': 'Itálico', variant: 'outline' },
+        ]),
+      },
+    },
+  },
   render: () =>
     cluster(
       iconToggle({ icon: Bold, 'aria-label': 'Negrito' }),
@@ -137,6 +151,18 @@ export const Outline: Story = {
 // ─── WithLabel ────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
+  parameters: {
+    // Override: com texto visível o nome acessível SAI — o conteúdo do botão já
+    // é o nome —, e o snippet precisa mostrar exatamente isso.
+    docs: {
+      source: {
+        transform: toggleSourceFileira([
+          { icon: 'Eye', label: 'Mostrar ocultos', variant: 'outline' },
+          { icon: 'List', label: 'Visão compacta', variant: 'outline', pressed: true },
+        ]),
+      },
+    },
+  },
   render: () =>
     cluster(
       iconToggle({ icon: Eye, texto: 'Mostrar ocultos', variant: 'outline' }),
@@ -169,6 +195,18 @@ export const WithLabel: Story = {
 // ─── Sizes ────────────────────────────────────────────────────────────────────
 
 export const Sizes: Story = {
+  parameters: {
+    // Override: a escada é o assunto da story — são três chamadas, não uma.
+    docs: {
+      source: {
+        transform: toggleSourceFileira([
+          { icon: 'Bold', 'aria-label': 'Negrito pequeno', size: 'sm', variant: 'outline' },
+          { icon: 'Bold', 'aria-label': 'Negrito padrão', variant: 'outline' },
+          { icon: 'Bold', 'aria-label': 'Negrito grande', size: 'lg', variant: 'outline' },
+        ]),
+      },
+    },
+  },
   render: () =>
     cluster(
       iconToggle({ icon: Bold, 'aria-label': 'Negrito pequeno', size: 'sm', variant: 'outline' }),

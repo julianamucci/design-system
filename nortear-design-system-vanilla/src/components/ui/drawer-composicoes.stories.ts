@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createDrawer } from './drawer';
+import { drawerComFormularioSource, drawerSource, drawerSourceCom } from './drawer.source';
 import { createButton } from './button';
 import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
 
@@ -13,6 +14,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: drawerSource },
       description: {
         component:
           'Combinações canônicas: formulário curto com confirmar/cancelar, confirmação reversível e corpo mais alto que o painel.',
@@ -86,7 +88,21 @@ async function abrirPeloGatilho(canvasElement: HTMLElement, nome: RegExp): Promi
 export const WithForm: Story = {
   parameters: {
     covers: ['visual.item5'],
+    // Override de story: o corpo deixa de ser um parágrafo e passa a ser uma
+    // composição de campos — a sub-fábrica que fecha o par rótulo ↔ controle é o
+    // assunto, e o snippet do meta a esconderia.
     docs: {
+      source: {
+        transform: drawerComFormularioSource({
+          triggerLabel: 'Editar perfil',
+          title: 'Editar perfil',
+          description: 'Atualize seu nome e e-mail.',
+          campos: [
+            { label: 'Nome', value: 'Maria Souza' },
+            { label: 'E-mail', type: 'email', value: 'maria@exemplo.com' },
+          ],
+        }),
+      },
       description: {
         story:
           'Formulário curto no corpo e par de ações no rodapé. Título e descrição dizem o que está sendo editado — juntos formam o nome e a descrição acessíveis do painel.',
@@ -138,7 +154,22 @@ export const WithForm: Story = {
 
 export const WithConfirmation: Story = {
   parameters: {
+    // Override de story: a ênfase da ação principal não passa por control
+    // nenhum, e o snippet do meta mostraria `default` onde a story renderiza a
+    // variante destrutiva.
     docs: {
+      source: {
+        transform: drawerSourceCom({
+          triggerLabel: 'Remover anexo',
+          title: 'Remover anexo?',
+          description: 'O anexo sai desta mensagem. Você pode adicioná-lo novamente depois.',
+          bodyText: 'O anexo sai desta mensagem e continua na biblioteca.',
+          footer: [
+            { label: 'Cancelar', variant: 'outline', close: true },
+            { label: 'Remover', variant: 'destructive' },
+          ],
+        }),
+      },
       description: {
         story:
           'Mensagem curta e par de ações, com a principal na variante destrutiva. Vale para confirmação reversível; se a ação for realmente bloqueante, o componente é o AlertDialog.',

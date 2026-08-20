@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createDialog } from './dialog';
+import { dialogComFormularioSource, dialogSource, dialogSourceCom } from './dialog.source';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
@@ -25,6 +26,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: dialogSource },
       description: {
         component:
           'Composicoes reais do Dialog: confirmação por e-mail, edição de perfil e pré-visualização de mídia.',
@@ -115,7 +117,17 @@ export const ConfirmEmail: Story = {
 
 export const ProfileEdit: Story = {
   parameters: {
+    // Override de story: o corpo é uma composição de campos, e é a sub-fábrica
+    // que fecha o par rótulo ↔ controle que esta composição existe para mostrar.
     docs: {
+      source: {
+        transform: dialogComFormularioSource({
+          campos: [
+            { label: 'Nome de exibição', value: 'Maria Souza' },
+            { label: 'Função', value: 'Designer' },
+          ],
+        }),
+      },
       description: {
         story:
           'Edição de perfil em formulário modal — caso de uso canônico do Dialog. Combina com Form.',
@@ -165,7 +177,19 @@ export const ProfileEdit: Story = {
 export const MediaPreview: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item6'],
+    // Override de story: sem rodapé, porque não há o que confirmar. O snippet do
+    // meta traz o par de ações, que aqui seria o contrário do que a composição
+    // recomenda.
     docs: {
+      source: {
+        transform: dialogSourceCom({
+          triggerLabel: 'Pré-visualizar',
+          title: 'Capa do post',
+          description: 'Pré-visualização em tamanho real.',
+          bodyText: 'Pré-visualização da mídia',
+          footer: [],
+        }),
+      },
       description: {
         story:
           'Pré-visualização de mídia com botão Close visível. Bom uso do Dialog quando a ação é apenas "ver".',

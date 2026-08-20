@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createInputOTP } from './input-otp';
 import { createButton } from './button';
+import { inputOtpSource, inputOtpSourceComposicao } from './input-otp.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -11,6 +12,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: inputOtpSource },
       description: {
         component:
           'Composicoes do InputOTP: WithLabel (rótulo visível associado), WithHelpText (origem + validade), WithErrorMessage (aria-describedby + aria-invalid) e WithResendButton (botão para reenviar o código).',
@@ -57,6 +59,18 @@ const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const WithLabel: Story = {
+  // O rótulo visível só vira nome do conjunto pelo `aria-labelledby`, que é
+  // marcação em volta do campo — não aparece na chamada da fábrica.
+  parameters: {
+    docs: {
+      source: {
+        transform: inputOtpSourceComposicao({
+          rotulo: 'Código de verificação',
+          ligarRotulo: true,
+        }),
+      },
+    },
+  },
   render: () => {
     const root = coluna();
     const otp = createInputOTP({ length: 6 });
@@ -77,6 +91,16 @@ export const WithLabel: Story = {
 };
 
 export const WithHelpText: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: inputOtpSourceComposicao({
+          rotulo: 'Código de verificação',
+          ajuda: 'Enviamos por SMS, expira em 5 min.',
+        }),
+      },
+    },
+  },
   render: () => {
     const root = coluna();
     const otp = createInputOTP({ length: 6, describedBy: 'comp-ajuda-texto' });
@@ -98,6 +122,18 @@ export const WithHelpText: Story = {
 
 export const WithErrorMessage: Story = {
   name: 'With error message',
+  parameters: {
+    docs: {
+      source: {
+        transform: inputOtpSourceComposicao({
+          rotulo: 'Código de verificação',
+          value: '482913',
+          invalid: true,
+          erro: 'Código incorreto. Verifique e tente novamente.',
+        }),
+      },
+    },
+  },
   render: () => {
     const root = coluna();
     const otp = createInputOTP({
@@ -127,6 +163,18 @@ export const WithErrorMessage: Story = {
 
 export const WithResendButton: Story = {
   name: 'With resend button',
+  // Outra fábrica entra na composição: o reenvio é um `createButton` depois do
+  // campo, e é a ORDEM do DOM que o põe no Tab seguinte ao último slot.
+  parameters: {
+    docs: {
+      source: {
+        transform: inputOtpSourceComposicao({
+          rotulo: 'Código de verificação',
+          reenvio: 'Reenviar código',
+        }),
+      },
+    },
+  },
   render: () => {
     const root = coluna();
     const otp = createInputOTP({ length: 6 });

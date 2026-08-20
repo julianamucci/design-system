@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fn, userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect } from './select';
+import { selectSource } from './select.source';
 import { createSelectDocs } from '@/components/docs/SelectDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { medirAnelDeFoco, ESTADOS } from '@shared/testing/select-probe';
@@ -21,7 +22,7 @@ const meta: Meta<SelectArgs> = {
   title: 'UI/Select',
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(createSelectDocs) },
+    docs: { page: withAutoDocsTab(createSelectDocs), source: { transform: selectSource } },
   },
   argTypes: {
     name: {

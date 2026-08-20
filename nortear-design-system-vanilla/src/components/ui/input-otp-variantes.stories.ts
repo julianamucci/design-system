@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createInputOTP } from './input-otp';
+import { inputOtpSource, inputOtpSourceCom } from './input-otp.source';
 
 /**
  * Formatos de código. Cada story afirma o RESULTADO do que a diferencia —
@@ -16,6 +17,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: inputOtpSource },
       description: {
         component:
           'Variantes do InputOTP: SixDigits (padrão SMS), FourDigits (PIN), WithSeparator (3+3) e Alphanumeric (código de autenticação). Divergência idiomática deste stack: o conjunto aceito vem da opção mode, e não de uma expressão regular passada de fora.',
@@ -80,6 +82,8 @@ export const SixDigits: Story = {
 
 export const FourDigits: Story = {
   name: 'Four digits (PIN)',
+  // `length` é o assunto da story: sem override o painel mostraria seis slots.
+  parameters: { docs: { source: { transform: inputOtpSourceCom({ length: 4 }) } } },
   render: () => wrap(withLabel('PIN do aplicativo', createInputOTP({ length: 4 }))),
   play: async ({ canvasElement, step }) => {
     await step('O comprimento pedido chega ao componente', async () => {
@@ -102,7 +106,10 @@ export const FourDigits: Story = {
 
 export const WithSeparator: Story = {
   name: 'With separator (3+3)',
-  parameters: { covers: ['accessibility.item4', 'visual.item5'] },
+  parameters: {
+    covers: ['accessibility.item4', 'visual.item5'],
+    docs: { source: { transform: inputOtpSourceCom({ separatorAt: [3] }) } },
+  },
   render: () =>
     wrap(
       withLabel(
@@ -147,6 +154,7 @@ export const WithSeparator: Story = {
 };
 
 export const Alphanumeric: Story = {
+  parameters: { docs: { source: { transform: inputOtpSourceCom({ mode: 'alphanumeric' }) } } },
   render: () =>
     wrap(
       withLabel(

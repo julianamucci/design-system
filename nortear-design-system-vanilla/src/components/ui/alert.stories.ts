@@ -2,6 +2,7 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, fn, waitFor } from 'storybook/test';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription, type AlertVariant, type AlertRole } from './alert';
+import { alertSource } from './alert.source';
 import { createAlertDocs } from '@/components/docs/AlertDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -25,7 +26,10 @@ const meta: Meta<AlertArgs> = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     design: figmaDesign('alert'),
-    docs: { page: withAutoDocsTab(createAlertDocs) },
+    docs: {
+      page: withAutoDocsTab(createAlertDocs),
+      source: { transform: alertSource },
+    },
   },
   // Esta stack não tem docgen (não há componente de framework para
   // introspectar): a aba "API Reference" sai só destes argTypes.
@@ -105,33 +109,11 @@ function buildAlert(args: AlertArgs): HTMLElement {
 
 export const Playground: Story = {
   // O renderer html monta o snippet a partir do outerHTML, que é um dump de DOM
-  // e não o que o consumidor escreve. Aqui vai a chamada real da factory,
-  // montada a partir dos args para acompanhar os controls.
+  // e não o que o consumidor escreve. A chamada real da factory vem da transform
+  // declarada no meta (`alertSource`), que lê estes controls — variante, papel,
+  // título, descrição e o botão de fechar.
   parameters: {
     covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
-    docs: {
-      source: {
-        transform: (_generated: string, ctx: { args?: Partial<AlertArgs> }) => {
-          const { variant = 'default', role = 'alert', title = '', description = '', dismissible = false } = ctx.args ?? {};
-          const icon = variant === 'destructive' ? 'error' : variant === 'default' ? 'info' : variant;
-          const opts = [
-            variant === 'default' ? '' : `variant: '${variant}'`,
-            role === 'alert' ? '' : `role: '${role}'`,
-            dismissible ? `dismissible: true, onDismiss: () => console.log('fechado')` : '',
-          ].filter(Boolean).join(', ');
-          const variantArg = opts ? `{ ${opts} }` : '';
-          const lines = [
-            "import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from '@/components/ui/alert';",
-            '',
-            `const alert = createAlert(${variantArg});`,
-            `alert.appendChild(createAlertIcon('${icon}'));`,
-          ];
-          if (title) lines.push(`alert.appendChild(createAlertTitle({ text: '${title}' }));`);
-          lines.push(`alert.appendChild(createAlertDescription({ text: '${description}' }));`);
-          return lines.join('\n');
-        },
-      },
-    },
   },
   render: (args) => buildAlert(args),
   play: async ({ canvasElement, step }) => {

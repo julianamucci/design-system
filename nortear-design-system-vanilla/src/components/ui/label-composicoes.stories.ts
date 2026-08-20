@@ -3,6 +3,12 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createLabel } from './label';
 import { createInput } from './input';
 import { createCheckbox } from './checkbox';
+import {
+  labelSource,
+  labelSourceCaixa,
+  labelSourceCom,
+  labelSourceObrigatorio,
+} from './label.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -14,6 +20,7 @@ const meta: Meta = {
     actions: { disable: true },
     controls: { disable: true },
     docs: {
+      source: { transform: labelSource },
       description: {
         component:
           'Composições do rótulo com outros elementos de formulário: campo de texto, caixa de seleção e campo obrigatório.',
@@ -35,7 +42,19 @@ function bloco(): HTMLDivElement {
 // ─── Com campo de texto ───────────────────────────────────────────────────────
 
 export const WithInput: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      source: {
+        transform: labelSourceCom({
+          text: 'Telefone',
+          htmlFor: 'telefone',
+          type: 'tel',
+          placeholder: '(11) 99999-9999',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrapper = bloco();
     const inputId = 'comp-input';
@@ -66,6 +85,18 @@ export const WithInput: Story = {
 // ─── Com caixa de seleção ─────────────────────────────────────────────────────
 
 export const WithCheckbox: Story = {
+  // Outra fábrica no par: sem override o painel mostraria `createInput` embaixo
+  // de uma caixa de seleção.
+  parameters: {
+    docs: {
+      source: {
+        transform: labelSourceCaixa({
+          text: 'Concordo com os termos de uso',
+          htmlFor: 'termos',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-cluster';
@@ -109,6 +140,18 @@ export const WithCheckbox: Story = {
 // ─── Campo obrigatório ────────────────────────────────────────────────────────
 
 export const RequiredField: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: labelSourceObrigatorio({
+          text: 'Email profissional',
+          htmlFor: 'email',
+          type: 'email',
+          placeholder: 'ex: joao@empresa.com',
+        }),
+      },
+    },
+  },
   render: () => {
     const wrapper = bloco();
     const inputId = 'comp-required';

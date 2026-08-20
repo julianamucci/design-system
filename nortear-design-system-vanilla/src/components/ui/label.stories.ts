@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createLabel } from './label';
 import { createInput } from './input';
+import { labelSource } from './label.source';
 import { createLabelDocs } from '@/components/docs/LabelDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -17,7 +18,7 @@ const meta: Meta<LabelArgs> = {
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(createLabelDocs) },
+    docs: { page: withAutoDocsTab(createLabelDocs), source: { transform: labelSource } },
   },
   argTypes: {
     text: {

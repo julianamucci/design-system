@@ -11,6 +11,7 @@ import {
   List,
 } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
+import { toggleGroupSource, toggleGroupSourceCom } from './toggle-group.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -20,6 +21,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      source: { transform: toggleGroupSource },
       description: {
         component:
           'Variantes do ToggleGroup: Single (seleção exclusiva — `value` é string), Multiple (seleção combinada — `value` é array) e Vertical (orientação empilhada). `aria-label` no grupo e em items icon-only é OBRIGATÓRIO e setado via `setAttribute` no elemento retornado.',
@@ -159,6 +161,16 @@ export const Multiple: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item2'],
     docs: {
+      source: { transform: toggleGroupSourceCom({
+          type: 'multiple',
+          'aria-label': 'Formatação',
+          defaultValue: ['bold', 'italic'],
+          items: [
+            { value: 'bold', icon: 'Bold', 'aria-label': 'Negrito' },
+            { value: 'italic', icon: 'Italic', 'aria-label': 'Itálico' },
+            { value: 'underline', icon: 'Underline', 'aria-label': 'Sublinhado' },
+          ],
+        }) },
       description: {
         story:
           'Variante `type="multiple"` — combinação livre de items pressionados. O callback `onValueChange` recebe **string[]** com todos os values ativos. Ideal para barras de formatação (Bold + Italic simultâneos).',
@@ -218,6 +230,15 @@ export const Vertical: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: toggleGroupSourceCom({
+          orientation: 'vertical',
+          'aria-label': 'Modo de visualização',
+          defaultValue: 'grid',
+          items: [
+            { value: 'grid', icon: 'LayoutGrid', 'aria-label': 'Grade' },
+            { value: 'list', icon: 'List', 'aria-label': 'Lista' },
+          ],
+        }) },
       description: {
         story:
           'Orientação vertical — items empilhados via `orientation: "vertical"`, que a factory traduz em `data-orientation` (lido pelo CSS compartilhado) e `aria-orientation`. As setas cima/baixo navegam pelo roving tabindex do grupo.',

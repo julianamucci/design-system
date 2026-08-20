@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { createInputOTP } from './input-otp';
+import { inputOtpSource } from './input-otp.source';
 import { createInputOTPDocs } from '@/components/docs/InputOTPDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -20,7 +21,7 @@ const meta: Meta<InputOTPArgs> = {
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createInputOTPDocs) },
+    docs: { page: withAutoDocsTab(createInputOTPDocs), source: { transform: inputOtpSource } },
   },
   argTypes: {
     length: {

@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createDrawer } from './drawer';
+import { drawerSource, drawerSourceCom } from './drawer.source';
 import { createButton } from './button';
 import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
@@ -14,6 +15,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: drawerSource },
       description: {
         component:
           'Estados canônicos do Drawer: fechado (padrão), aberto, controlado por estado externo e não dispensável.',
@@ -152,7 +154,18 @@ export const Open: Story = {
 export const Controlled: Story = {
   parameters: {
     covers: ['functional.item6'],
+    // Override de story: o assunto é o callback que devolve cada mudança a quem
+    // é dono do estado, e ele não passa por control nenhum neste arquivo.
     docs: {
+      source: {
+        transform: drawerSourceCom({
+          triggerLabel: 'Abrir',
+          title: 'Controlado pelo pai',
+          description: 'Abertura comandada de fora.',
+          bodyText: 'Drawer comandado por estado externo.',
+          onOpenChange: '(aberto) => sincronizarEstadoExterno(aberto)',
+        }),
+      },
       description: {
         story:
           'Estado do lado de fora: um botão externo comanda a abertura e recebe de volta cada mudança pelo callback, que é o que mantém os dois lados em sincronia.',
@@ -242,7 +255,18 @@ export const Controlled: Story = {
 
 export const NotDismissible: Story = {
   parameters: {
+    // Override de story: `dismissible: false` é o assunto, e o snippet do meta
+    // mostraria a gaveta que Escape e overlay dispensam — o oposto.
     docs: {
+      source: {
+        transform: drawerSourceCom({
+          triggerLabel: 'Abrir confirmação',
+          title: 'Confirmação obrigatória',
+          description: 'Use o botão do rodapé para sair deste painel.',
+          bodyText: 'Conteúdo do drawer.',
+          dismissible: false,
+        }),
+      },
       description: {
         story:
           'Sem dispensa por gesto: Escape e clique no overlay não fecham. A saída existe e é explícita — o botão do rodapé, alcançável por teclado.',

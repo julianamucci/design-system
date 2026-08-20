@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
+import { menubarSource, menubarSourceCom } from './menubar.source';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
@@ -16,6 +17,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: menubarSource },
       description: {
         component:
           'As duas ênfases de item dentro de um menu da barra. `default` é o item neutro; ' +
@@ -53,7 +55,20 @@ async function esperarPainel(canvasElement: HTMLElement): Promise<HTMLElement> {
 // ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
-  parameters: { covers: ['accessibility.item7'] },
+  parameters: {
+    covers: ['accessibility.item7'],
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            { label: 'Arquivo', items: ITENS_NEUTROS.map((i) => ({ label: i })) },
+            { label: 'Editar', items: [{ label: 'Desfazer' }] },
+          ],
+          defaultOpen: 0,
+        }),
+      },
+    },
+  },
   render: () =>
     embrulhar(
       createMenubar(
@@ -94,7 +109,28 @@ export const Default: Story = {
 // ─── Destructive ──────────────────────────────────────────────────────────────
 
 export const Destructive: Story = {
-  parameters: { covers: ['visual.item5'] },
+  // A variante é o assunto: sem override o painel mostraria itens neutros
+  // embaixo de um menu que pinta a ação irreversível.
+  parameters: {
+    covers: ['visual.item5'],
+    docs: {
+      source: {
+        transform: menubarSourceCom({
+          menus: [
+            {
+              label: 'Arquivo',
+              items: [
+                { label: ITENS_COM_PERIGO[0] },
+                { type: 'separator' },
+                { label: ITENS_COM_PERIGO[1], variant: 'destructive' },
+              ],
+            },
+          ],
+          defaultOpen: 0,
+        }),
+      },
+    },
+  },
   render: () =>
     embrulhar(
       createMenubar(

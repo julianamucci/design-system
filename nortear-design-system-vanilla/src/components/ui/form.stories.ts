@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createFormField } from './form';
+import { formSource } from './form.source';
 import { createInput } from './input';
 import { createFormDocs } from '@/components/docs/FormDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -20,7 +21,7 @@ const meta: Meta<FormArgs> = {
   title: 'UI/Form',
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(createFormDocs) },
+    docs: { page: withAutoDocsTab(createFormDocs), source: { transform: formSource } },
   },
   argTypes: {
     label: {

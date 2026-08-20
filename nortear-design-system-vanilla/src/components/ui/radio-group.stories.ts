@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createRadioGroup } from './radio-group';
+import { radioGroupSource } from './radio-group.source';
 import { createRadioGroupDocs } from '@/components/docs/RadioGroupDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -17,7 +18,7 @@ const meta: Meta<RadioGroupArgs> = {
   title: 'UI/RadioGroup',
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(createRadioGroupDocs) },
+    docs: { page: withAutoDocsTab(createRadioGroupDocs), source: { transform: radioGroupSource } },
   },
   argTypes: {
     name: {

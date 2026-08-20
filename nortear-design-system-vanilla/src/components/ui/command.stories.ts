@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { createCommand, type CommandItem } from './command';
+import { commandSource } from './command.source';
 import { createCommandDocs } from '@/components/docs/CommandDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -17,7 +18,12 @@ const meta: Meta<CommandArgs> = {
   title: 'UI/Command',
   tags: ['autodocs', 'overlay'],
   parameters: {
-    docs: { page: withAutoDocsTab(createCommandDocs) },
+    docs: {
+      page: withAutoDocsTab(createCommandDocs),
+      // O painel Code mostra a chamada da fábrica, e não o `outerHTML` da
+      // paleta. A transform cascateia para todas as stories deste arquivo.
+      source: { transform: commandSource },
+    },
   },
   argTypes: {
     placeholder: {

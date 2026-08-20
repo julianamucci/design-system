@@ -10,6 +10,12 @@ import {
   createAvatarGroupCount,
   createAvatarBadge,
 } from './avatar';
+import {
+  avatarEmGrupoSourceCom,
+  avatarGranularSourceCom,
+  avatarSource,
+  avatarSourceCom,
+} from './avatar.source';
 
 const IMG_MARIA = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
 const IMG_SECOND = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&h=160&fit=crop&crop=faces';
@@ -24,6 +30,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: avatarSource },
       description: {
         component:
           'Composicoes canônicas do Avatar: com imagem, com iniciais, com ícone, agrupamento e com indicador de status.',
@@ -100,7 +107,10 @@ export const WithImage: Story = {
 export const WithInitials: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+    // Override de story: sem `src` o composto monta só o fallback, e com ele
+    // saem também o `alt` — não há imagem para descrever.
     docs: {
+      source: { transform: avatarSourceCom({ src: '', fallback: 'JP' }) },
       description: {
         story: 'Avatar sem imagem — o fallback com iniciais é exibido imediatamente.',
       },
@@ -121,7 +131,10 @@ export const WithInitials: Story = {
 export const WithIcon: Story = {
   parameters: {
     covers: ['visual.item2'],
+    // Override de story: fallback que não é texto só existe pelas fábricas
+    // granulares — o composto recebe iniciais, não elementos.
     docs: {
+      source: { transform: avatarGranularSourceCom({ iconLabel: 'Usuário genérico' }) },
       description: {
         story: 'Fallback com ícone genérico (User) para usuário anônimo ou placeholder.',
       },
@@ -152,7 +165,10 @@ export const WithIcon: Story = {
 export const Group: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item4'],
+    // Override de story: a fila é composta por três fábricas, e o contador é o
+    // último item dela — outra FORMA de snippet.
     docs: {
+      source: { transform: avatarEmGrupoSourceCom({ label: 'Participantes', excedente: '+3' }) },
       description: {
         story:
           'Avatares sobrepostos com o contador do excedente fechando a fila. O recuo e a borda saem de <code>.nds-avatar-group</code>.',
@@ -198,7 +214,10 @@ export const Group: Story = {
 export const WithStatus: Story = {
   parameters: {
     covers: ['visual.item4'],
+    // Override de story: o ponto de status é uma sub-fábrica que entra como
+    // filho do root, e é ela o assunto.
     docs: {
+      source: { transform: avatarSourceCom({ status: 'Online', src: IMG_MARIA }) },
       description: {
         story:
           'Avatar com indicador de status. O ponto é filho do root — <code>.nds-avatar-badge</code> o posiciona no canto e acompanha o tamanho do avatar.',

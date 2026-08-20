@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createTooltip, createTooltipProvider } from './tooltip';
+import { tooltipSource, tooltipSourceCom, tooltipSourceLados } from './tooltip.source';
 import { createButton, createButtonIcon } from './button';
 
 // As composições que o conteúdo compartilhado documenta, mais os quatro lados de
@@ -36,6 +37,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: tooltipSource },
       description: {
         component:
           'Botão de ação rápida com atalho, ajuda ao lado do rótulo de um campo, definição de sigla no cabeçalho de uma métrica e os quatro lados de posicionamento. O Tooltip NÃO substitui o aria-label: em touch não há hover, e o nome do botão precisa existir sem ele.',
@@ -48,6 +50,20 @@ export default meta;
 type Story = StoryObj;
 
 export const IconButtonWithShortcut: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: tooltipSourceCom({
+          triggerVariant: 'ghost',
+          triggerSize: 'icon',
+          triggerLabel: '',
+          triggerAriaLabel: 'Salvar',
+          content: 'Salvar (Ctrl+S)',
+          side: 'bottom',
+        }),
+      },
+    },
+  },
   render: () => {
     const iconWrap = document.createElement('span');
     iconWrap.setAttribute('aria-hidden', 'true');
@@ -85,6 +101,20 @@ export const IconButtonWithShortcut: Story = {
 
 export const HelpInFormField: Story = {
   name: 'Form field with help',
+  parameters: {
+    docs: {
+      source: {
+        transform: tooltipSourceCom({
+          triggerVariant: 'ghost',
+          triggerSize: 'icon-sm',
+          triggerLabel: '?',
+          triggerAriaLabel: 'Onde encontrar o Token de API',
+          content: 'Gere em Configurações › Acesso › Tokens.',
+          side: 'right',
+        }),
+      },
+    },
+  },
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-stack';
@@ -151,6 +181,19 @@ export const HelpInFormField: Story = {
 };
 
 export const MetricDescription: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: tooltipSourceCom({
+          triggerVariant: 'ghost',
+          triggerSize: 'icon-sm',
+          triggerLabel: 'i',
+          triggerAriaLabel: 'O que é LCP',
+          content: 'LCP — Largest Contentful Paint',
+        }),
+      },
+    },
+  },
   render: () => {
     const root = document.createElement('div');
     root.className = 'nds-stack';
@@ -207,7 +250,11 @@ export const MetricDescription: Story = {
 };
 
 export const PlacementSides: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // Override: a story mostra os QUATRO lados, e um balão só não diria isso.
+    docs: { source: { transform: tooltipSourceLados } },
+  },
   render: () => {
     const grid = document.createElement('div');
     grid.style.contain = 'layout';
@@ -267,6 +314,15 @@ export const PlacementSides: Story = {
 export const ProviderWithMarkup: Story = {
   parameters: {
     docs: {
+      source: {
+        transform: tooltipSourceCom({
+          provider: { delayDuration: 3000, skipDelayDuration: 5000 },
+          triggerLabel: 'Copiar',
+          content: 'Copiar',
+          contentComMarcacao: true,
+          side: 'bottom',
+        }),
+      },
       description: {
         story:
           'Uma barra de ícones com espera própria: o provedor guarda o padrão do grupo, e o ' +

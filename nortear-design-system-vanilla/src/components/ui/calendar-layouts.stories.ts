@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createCalendar } from './calendar';
+import { calendarSource, calendarSourceCom } from './calendar.source';
 import { userEvent, within, expect } from 'storybook/test';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -15,6 +16,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: calendarSource },
       description: {
         component:
           'Legenda do mês e enquadramento do bloco. O calendário não desenha a própria moldura: ela vem das classes de quem o posiciona.',
@@ -95,6 +97,12 @@ export const Bordered: Story = {
     }),
   parameters: {
     docs: {
+      // Override de story: a moldura é o assunto, e ela entra por `class`.
+      source: {
+        transform: calendarSourceCom({
+          class: 'nds-rounded-md nds-border-default nds-shadow-sm',
+        }),
+      },
       description: {
         story:
           'Com borda e sombra — isola o calendário de um fundo uniforme, quando ele aparece direto na página.',
@@ -151,6 +159,8 @@ export const CaptionDropdown: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
+      // Override de story: a legenda com seletores é o assunto.
+      source: { transform: calendarSourceCom({ captionLayout: 'dropdown' }) },
       description: {
         story: 'Mês e ano viram seletores, para saltar de período sem passar mês a mês.',
       },
@@ -230,6 +240,13 @@ export const TwoMonths: Story = {
     }),
   parameters: {
     docs: {
+      // Override de story: a janela de dois meses é o assunto.
+      source: {
+        transform: calendarSourceCom({
+          numberOfMonths: 2,
+          value: 'new Date(2026, 3, 28)',
+        }),
+      },
       description: {
         story: 'Dois meses lado a lado, para escolher datas que atravessam a virada.',
       },

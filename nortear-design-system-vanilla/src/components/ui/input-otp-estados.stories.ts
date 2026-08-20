@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { razao } from '@shared/testing/cor';
 import { createInputOTP } from './input-otp';
+import { inputOtpSource, inputOtpSourceCom, inputOtpSourceComposicao } from './input-otp.source';
 
 const meta: Meta = {
   tags: ['form'],
@@ -11,6 +12,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     docs: {
+      source: { transform: inputOtpSource },
       description: {
         component:
           'Estados do InputOTP: Vazio, Preenchendo (3 de 6), Completo (todos), Desabilitado e Erro (aria-invalid).',
@@ -40,7 +42,10 @@ const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const Empty: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { source: { transform: inputOtpSourceCom({ autoFocus: true }) } },
+  },
   render: () => wrap(createInputOTP({ length: 6, autoFocus: true })),
   play: async ({ canvasElement, step }) => {
     await step('Nasce vazio com o primeiro slot pronto para receber', async () => {
@@ -53,7 +58,10 @@ export const Empty: Story = {
 
 export const Filling: Story = {
   name: 'Filling (3 of 6)',
-  parameters: { covers: ['visual.item2', 'accessibility.item6'] },
+  parameters: {
+    covers: ['visual.item2', 'accessibility.item6'],
+    docs: { source: { transform: inputOtpSourceCom({ value: '123' }) } },
+  },
   render: () => wrap(createInputOTP({ length: 6, value: '123' })),
   play: async ({ canvasElement, step }) => {
     await step('O valor inicial se distribui da esquerda para a direita', async () => {
@@ -74,7 +82,10 @@ export const Filling: Story = {
 };
 
 export const Complete: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: inputOtpSourceCom({ value: '482913' }) } },
+  },
   render: () => wrap(createInputOTP({ length: 6, value: '482913' })),
   play: async ({ canvasElement, step }) => {
     await step('Todos os slots preenchidos, na ordem do código', async () => {
@@ -85,7 +96,10 @@ export const Complete: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item6'] },
+  parameters: {
+    covers: ['functional.item6'],
+    docs: { source: { transform: inputOtpSourceCom({ value: '4829', disabled: true }) } },
+  },
   render: () => wrap(createInputOTP({ length: 6, value: '4829', disabled: true })),
   play: async ({ canvasElement, step }) => {
     await step('Nenhum slot aceita foco nem digitação', async () => {
@@ -106,7 +120,21 @@ export const Disabled: Story = {
 };
 
 export const Error: Story = {
-  parameters: { covers: ['functional.item7', 'accessibility.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item7', 'accessibility.item5', 'visual.item4'],
+    // A story monta DUAS instâncias só para comparar as bordas. O que se copia
+    // é a de erro — com a mensagem que `describedBy` aponta, senão o campo fica
+    // vermelho sem dizer o que houve.
+    docs: {
+      source: {
+        transform: inputOtpSourceComposicao({
+          value: '482913',
+          invalid: true,
+          erro: 'Código incorreto. Verifique e tente novamente.',
+        }),
+      },
+    },
+  },
   render: () => {
     const raiz = document.createElement('div');
     raiz.className = 'nds-stack';

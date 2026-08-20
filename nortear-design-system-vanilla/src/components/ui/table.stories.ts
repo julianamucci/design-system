@@ -10,6 +10,7 @@ import {
   createTableCell,
   createTableCaption,
 } from './table';
+import { tableSource } from './table.source';
 import { createTableDocs } from '@/components/docs/TableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { COLUNAS, INVOICES, TOTAL } from './table.fixtures';
@@ -26,7 +27,12 @@ const meta: Meta<TableArgs> = {
   tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(createTableDocs) },
+    docs: {
+      page: withAutoDocsTab(createTableDocs),
+      // O painel Code mostra a MONTAGEM das fábricas, e não o `outerHTML` da
+      // tabela. A transform cascateia para todas as stories deste arquivo.
+      source: { transform: tableSource },
+    },
   },
   argTypes: {
     captionVisivel: {

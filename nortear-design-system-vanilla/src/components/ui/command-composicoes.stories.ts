@@ -1,6 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createCommand, type CommandEntry, type CommandItem } from './command';
+import {
+  commandEmDialogSource,
+  commandEmPopoverSource,
+  commandSource,
+  commandSourceCom,
+} from './command.source';
 import { createPopover } from './popover';
 import { createDialog } from './dialog';
 import { createButton } from './button';
@@ -16,6 +22,7 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: commandSource },
       description: {
         component:
           'As composições da paleta: com grupos, com atalhos, com itens desabilitados, ' +
@@ -152,6 +159,20 @@ const ITENS_COM_TRACO: CommandEntry[] = [
 export const WithSeparator: Story = {
   parameters: {
     docs: {
+      // O traço declarado é uma ENTRADA da lista, e a lista canônica do meta
+      // não o tem: sem override o snippet esconderia o assunto da story.
+      source: {
+        transform: commandSourceCom({
+          placeholder: 'Buscar comando...',
+          emptyMessage: SEM_RESULTADO,
+          items: [
+            { value: 'novo', label: 'Novo arquivo' },
+            { value: 'abrir', label: 'Abrir recente' },
+            { type: 'separator' },
+            { value: 'sair', label: 'Sair' },
+          ],
+        }),
+      },
       description: {
         story:
           'Traço entre dois blocos de uma lista sem grupos. Ele é uma QUEBRA na sequência: ' +
@@ -195,6 +216,21 @@ export const WithSeparator: Story = {
 // ─── Com atalhos ──────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: commandSourceCom({
+          placeholder: 'Buscar comando...',
+          emptyMessage: SEM_RESULTADO,
+          items: [
+            { value: 'novo', label: 'Novo arquivo', group: 'Arquivo', shortcut: '⌘N' },
+            { value: 'salvar', label: 'Salvar', group: 'Arquivo', shortcut: '⌘S' },
+            { value: 'preferencias', label: 'Preferências', group: 'Aplicativo' },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     montarInline(
       [
@@ -259,6 +295,21 @@ export const WithShortcuts: Story = {
 const aoEscolherNaLista = fn();
 
 export const WithDisabledItems: Story = {
+  parameters: {
+    docs: {
+      source: {
+        transform: commandSourceCom({
+          placeholder: 'Buscar...',
+          emptyMessage: SEM_RESULTADO,
+          items: [
+            { value: 'button', label: 'Button', group: 'Componentes' },
+            { value: 'input', label: 'Input', group: 'Componentes', disabled: true },
+            { value: 'cn', label: 'cn()', group: 'Utilitários' },
+          ],
+        }),
+      },
+    },
+  },
   render: () =>
     montarInline(
       [
@@ -387,7 +438,20 @@ const VALOR_COMBOBOX = 'demo-combobox-valor';
  * contrário de `button`.
  */
 export const AsCombobox: Story = {
-  parameters: { covers: ['functional.item7', 'accessibility.item5', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item7', 'accessibility.item5', 'visual.item3'],
+    // Forma própria de snippet: a sub-fábrica que faz a paleta flutuar É o
+    // assunto, e a chamada sozinha a esconderia.
+    docs: {
+      source: {
+        transform: commandEmPopoverSource({
+          placeholder: 'Buscar item...',
+          emptyMessage: SEM_RESULTADO,
+          items: ITENS_COMBOBOX,
+        }),
+      },
+    },
+  },
   render: () => {
     const outer = document.createElement('div');
     outer.className = 'nds-stack';
@@ -525,6 +589,17 @@ const aoExecutarComando = fn();
 export const CommandPalette: Story = {
   parameters: {
     covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item4'],
+    // Forma própria de snippet: o Dialog e o atalho global são o assunto, e
+    // nenhum dos dois aparece na chamada da paleta sozinha.
+    docs: {
+      source: {
+        transform: commandEmDialogSource({
+          placeholder: 'Buscar componente...',
+          emptyMessage: SEM_RESULTADO,
+          items: ITENS_PALETA,
+        }),
+      },
+    },
   },
   render: () => {
     const outer = document.createElement('div');

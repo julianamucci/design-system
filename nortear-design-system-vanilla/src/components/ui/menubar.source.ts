@@ -1,0 +1,184 @@
+// Snippet do painel Code do Menubar — ver `@/lib/story-source`.
+//
+// A fábrica recebe os menus como PRIMEIRO ARGUMENTO POSICIONAL e as opções como
+// segundo — `createMenubar(menus, options)`. O `chamada()` compartilhado monta
+// `createX({ … })`, que é a forma das fábricas de argumento único; a montagem da
+// chamada com lista posicional é local a este módulo.
+
+import {
+  importar,
+  montar,
+  opcoes,
+  snippet,
+  texto,
+  type SourceTransform,
+} from '@/lib/story-source';
+import type { MenubarAlign, MenubarItemType, MenubarSide } from './menubar';
+
+/** Um item do painel, no que o snippet precisa mostrar. */
+export type MenubarItemSnippet = {
+  type?: MenubarItemType;
+  label?: string;
+  shortcut?: string;
+  disabled?: boolean;
+  variant?: 'default' | 'destructive';
+  inset?: boolean;
+  checked?: boolean;
+  indeterminate?: boolean;
+  /** `type: 'radio-group'` — valor escolhido. */
+  value?: string;
+  /** `type: 'radio-group'` — opções. */
+  options?: Array<{ value: string; label: string }>;
+  /** `type: 'submenu'` — itens do painel aninhado. */
+  items?: MenubarItemSnippet[];
+  /** Expressão mostrada no callback do item comum. */
+  onClick?: string;
+  /** `type: 'checkbox'` — expressão mostrada no callback de marcação. */
+  onCheckedChange?: string;
+  /** `type: 'radio-group'` — expressão mostrada no callback de escolha. */
+  onValueChange?: string;
+};
+
+export type MenubarMenuSnippet = { label: string; items: MenubarItemSnippet[] };
+
+/** O que as stories do Menubar usam. */
+export type MenubarSnippetOptions = {
+  /** Estrutura da barra. Sem ela vale o conjunto canônico de aplicação. */
+  menus?: MenubarMenuSnippet[];
+  loop?: boolean;
+  /** Índice do menu que nasce aberto; `true` abre o primeiro. */
+  defaultOpen?: number | boolean;
+  side?: MenubarSide;
+  align?: MenubarAlign;
+  class?: string;
+  /** Mostra a linha que solta os ouvintes da barra. */
+  destroy?: boolean;
+};
+
+/**
+ * A barra canônica de aplicação.
+ *
+ * Cada item leva o próprio `onClick`: um item de menu sem ação não faz nada, e
+ * o callback não tem padrão nenhum para herdar.
+ */
+const MENUS_PADRAO: MenubarMenuSnippet[] = [
+  {
+    label: 'Arquivo',
+    items: [
+      { label: 'Novo', shortcut: '⌘N', onClick: '() => novo()' },
+      { label: 'Abrir', shortcut: '⌘O', onClick: '() => abrir()' },
+      { label: 'Salvar', shortcut: '⌘S', onClick: '() => salvar()' },
+    ],
+  },
+  {
+    label: 'Editar',
+    items: [
+      { label: 'Desfazer', shortcut: '⌘Z', onClick: '() => desfazer()' },
+      { label: 'Refazer', shortcut: '⇧⌘Z', onClick: '() => refazer()' },
+    ],
+  },
+];
+
+/** `{ a: 1, b: 2 }` numa linha só. */
+function objeto(linhas: string[]): string {
+  if (linhas.length === 0) return '{}';
+  return `{ ${linhas.map((l) => l.replace(/,$/, '')).join(', ')} }`;
+}
+
+/** Um item serializado, já recuado. Submenu e escolha única abrem em bloco. */
+function serializarItem(item: MenubarItemSnippet, recuo: string): string {
+  const base = opcoes([
+    ['type', item.type && item.type !== 'item' ? texto(item.type) : undefined],
+    ['label', item.label ? texto(item.label) : undefined],
+    ['shortcut', item.shortcut ? texto(item.shortcut) : undefined],
+    ['variant', item.variant && item.variant !== 'default' ? texto(item.variant) : undefined],
+    ['inset', item.inset ? 'true' : undefined],
+    // Misto vale SOBRE o marcado: mostrar os dois juntos ensinaria um estado
+    // que a fábrica resolve por conta própria.
+    ['indeterminate', item.indeterminate ? 'true' : undefined],
+    ['checked', !item.indeterminate && item.checked ? 'true' : undefined],
+    ['value', item.value ? texto(item.value) : undefined],
+    ['disabled', item.disabled ? 'true' : undefined],
+    ['onClick', item.onClick],
+    ['onCheckedChange', item.onCheckedChange],
+    ['onValueChange', item.onValueChange],
+  ]);
+
+  if (item.options) {
+    const opcoesDoGrupo = item.options
+      .map((op) => `${recuo}    { value: ${texto(op.value)}, label: ${texto(op.label)} },`)
+      .join('\n');
+    return `${recuo}{
+${base.map((l) => `${recuo}  ${l}`).join('\n')}
+${recuo}  options: [
+${opcoesDoGrupo}
+${recuo}  ],
+${recuo}},`;
+  }
+
+  if (item.items) {
+    const filhos = item.items.map((f) => serializarItem(f, `${recuo}    `)).join('\n');
+    return `${recuo}{
+${base.map((l) => `${recuo}  ${l}`).join('\n')}
+${recuo}  items: [
+${filhos}
+${recuo}  ],
+${recuo}},`;
+  }
+
+  return `${recuo}${objeto(base)},`;
+}
+
+/** A lista de menus, do jeito que entra no primeiro argumento da fábrica. */
+function serializarMenus(menus: MenubarMenuSnippet[]): string {
+  const corpo = menus
+    .map(
+      (menu) => `  {
+    label: ${texto(menu.label)},
+    items: [
+${menu.items.map((i) => serializarItem(i, '      ')).join('\n')}
+    ],
+  },`,
+    )
+    .join('\n');
+  return `[\n${corpo}\n]`;
+}
+
+/** A chamada real de `createMenubar` com a estrutura e as opções da story. */
+export function menubarSnippet(o: MenubarSnippetOptions = {}): string {
+  const menus = o.menus ?? MENUS_PADRAO;
+
+  const linhas = opcoes([
+    // `loop` é ligado por padrão: só o desligamento merece uma linha.
+    ['loop', o.loop === false ? 'false' : undefined],
+    [
+      'defaultOpen',
+      o.defaultOpen === true ? '0' : typeof o.defaultOpen === 'number' ? String(o.defaultOpen) : undefined,
+    ],
+    ['side', o.side && o.side !== 'bottom' ? texto(o.side) : undefined],
+    ['align', o.align && o.align !== 'start' ? texto(o.align) : undefined],
+    ['class', o.class ? texto(o.class) : undefined],
+  ]);
+
+  const segundo = linhas.length ? `, ${objeto(linhas)}` : '';
+
+  return snippet(
+    importar('menubar', 'createMenubar'),
+    `const barra = createMenubar(${serializarMenus(menus)}${segundo});`,
+    montar('barra'),
+    // A barra registra ouvinte no documento. Sair da página dispara a limpeza
+    // sozinha; `destroy()` é o caminho de quem desmonta antes disso.
+    o.destroy ? `barra.destroy();` : undefined,
+  );
+}
+
+/** Transform do `meta` — vale para todas as stories do arquivo. */
+export const menubarSource: SourceTransform<MenubarSnippetOptions> = (_gerado, ctx) =>
+  menubarSnippet(ctx.args ?? {});
+
+/** Transform de story: mesma fábrica, estrutura e opções que os controls não cobrem. */
+export function menubarSourceCom(
+  fixas: MenubarSnippetOptions,
+): SourceTransform<MenubarSnippetOptions> {
+  return (_gerado, ctx) => menubarSnippet({ ...ctx.args, ...fixas });
+}
