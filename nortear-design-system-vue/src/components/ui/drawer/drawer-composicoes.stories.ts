@@ -15,6 +15,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
+import {
+  drawerComConfirmacaoSource,
+  drawerComFormularioSource,
+  drawerComRolagemSource,
+} from './drawer.source';
 
 const meta = {
   title: 'UI/Drawer/Compositions',
@@ -25,6 +30,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: drawerComFormularioSource },
       description: {
         component:
           'Combinações canônicas: formulário curto com confirmar/cancelar, confirmação de ação destrutiva e corpo mais alto que o painel.',
@@ -120,6 +126,9 @@ export const WithForm: Story = {
 export const WithConfirmation: Story = {
   parameters: {
     docs: {
+      // Sem corpo e com a ação principal na variante de perigo: o snippet do
+      // meta mostra o oposto dos dois.
+      source: { transform: drawerComConfirmacaoSource },
       description: {
         story:
           'Mensagem curta e par de ações, com a principal na variante destrutiva. Vale para confirmação reversível; se a ação for realmente bloqueante, o componente é o AlertDialog.',
@@ -168,6 +177,9 @@ export const WithConfirmation: Story = {
 export const WithScroll: Story = {
   parameters: {
     docs: {
+      // O corpo passa a receber uma lista, e é ele quem rola: outro miolo e
+      // outro estado no script.
+      source: { transform: drawerComRolagemSource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho dentro do teto de altura e o rodapé continua visível — é o que separa "conteúdo longo" de "ação fora de alcance".',

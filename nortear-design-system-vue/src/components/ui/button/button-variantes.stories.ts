@@ -3,6 +3,14 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, within } from 'storybook/test';
 import { Button } from './index';
 import { falhasDeContrasteDeTexto } from '@shared/testing/button-probe';
+import {
+  buttonDestrutivoSource,
+  buttonGhostSource,
+  buttonLinkSource,
+  buttonOutlineSource,
+  buttonPadraoSource,
+  buttonSecundarioSource,
+} from './button.source';
 
 const meta: Meta<any> = {
   title: 'UI/Button/Variants',
@@ -12,6 +20,7 @@ const meta: Meta<any> = {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: buttonPadraoSource } },
   },
 };
 
@@ -47,7 +56,11 @@ export const Destructive: Story = {
     template: '<Button variant="destructive">Excluir conta</Button>',
   }),
   parameters: {
-    docs: { description: { story: 'Variante destrutiva. Use para ações irreversíveis como excluir ou remover.' } },
+    // Outra variante e outro rótulo: os args não descrevem nada nesta story.
+    docs: {
+      source: { transform: buttonDestrutivoSource },
+      description: { story: 'Variante destrutiva. Use para ações irreversíveis como excluir ou remover.' },
+    },
   },
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /excluir conta/i });
@@ -69,7 +82,11 @@ export const Outline: Story = {
     template: '<Button variant="outline">Cancelar</Button>',
   }),
   parameters: {
-    docs: { description: { story: 'Variante secundária com borda. Use ao lado da ação primária em pares de ações.' } },
+    // Outra variante e outro rótulo: os args não descrevem nada nesta story.
+    docs: {
+      source: { transform: buttonOutlineSource },
+      description: { story: 'Variante secundária com borda. Use ao lado da ação primária em pares de ações.' },
+    },
   },
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /cancelar/i });
@@ -91,7 +108,11 @@ export const Secondary: Story = {
     template: '<Button variant="secondary">Ver detalhes</Button>',
   }),
   parameters: {
-    docs: { description: { story: 'Variante secundária sólida. Use para ações complementares de menor ênfase.' } },
+    // Outra variante e outro rótulo: os args não descrevem nada nesta story.
+    docs: {
+      source: { transform: buttonSecundarioSource },
+      description: { story: 'Variante secundária sólida. Use para ações complementares de menor ênfase.' },
+    },
   },
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /ver detalhes/i });
@@ -113,7 +134,11 @@ export const Ghost: Story = {
     template: '<Button variant="ghost">Fechar</Button>',
   }),
   parameters: {
-    docs: { description: { story: 'Variante sem borda ou fundo. Use em toolbars e menus para reduzir ruído visual.' } },
+    // Outra variante e outro rótulo: os args não descrevem nada nesta story.
+    docs: {
+      source: { transform: buttonGhostSource },
+      description: { story: 'Variante sem borda ou fundo. Use em toolbars e menus para reduzir ruído visual.' },
+    },
   },
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /fechar/i });
@@ -135,7 +160,11 @@ export const Link: Story = {
     template: '<Button variant="link">Saiba mais</Button>',
   }),
   parameters: {
-    docs: { description: { story: 'Variante com aparência de link. Use quando a ação for navegacional em contexto textual.' } },
+    // Outra variante e outro rótulo: os args não descrevem nada nesta story.
+    docs: {
+      source: { transform: buttonLinkSource },
+      description: { story: 'Variante com aparência de link. Use quando a ação for navegacional em contexto textual.' },
+    },
   },
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /saiba mais/i });

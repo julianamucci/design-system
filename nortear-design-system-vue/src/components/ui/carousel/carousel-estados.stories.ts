@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
+import { carouselPrimeiroSlideSource, carouselUltimoSlideSource } from './carousel.source';
 
 const meta = {
   title: 'UI/Carousel/States',
@@ -11,6 +12,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: carouselPrimeiroSlideSource },
       description: {
         component: 'Estados de extremo do Carousel — sem loop, o botão anterior ou próximo fica automaticamente desabilitado.',
       },
@@ -99,6 +101,8 @@ export const LastSlide: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
     docs: {
+      // O outro extremo da fila: o índice inicial é outro, e é ele o assunto.
+      source: { transform: carouselUltimoSlideSource },
       description: {
         story: 'No fim da sequência sem repetição, avançar deixa de ser possível e a seta seguinte fica desabilitada.',
       },

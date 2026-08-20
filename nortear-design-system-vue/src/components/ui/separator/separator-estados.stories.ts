@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Separator } from './index';
+import { separatorDecorativoSource, separatorSemanticoSource } from './separator.source';
 
 const meta: Meta<any> = {
   title: 'UI/Separator/States',
@@ -11,6 +12,7 @@ const meta: Meta<any> = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: separatorDecorativoSource },
       description: {
         component:
           'Modos do Separator: decorativo (padrão, ignorado por leitores de tela) e semântico (anunciado como divisor, com a própria orientação).',
@@ -53,7 +55,12 @@ export const Decorative: Story = {
 };
 
 export const Semantic: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item4'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item4'],
+    // A prop que desliga o modo decorativo é o assunto, e o padrão do meta é
+    // justamente não escrevê-la.
+    docs: { source: { transform: separatorSemanticoSource } },
+  },
   render: () => ({
     components: { Separator },
     template: `

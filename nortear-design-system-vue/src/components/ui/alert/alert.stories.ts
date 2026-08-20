@@ -5,6 +5,7 @@ import { Alert, AlertTitle, AlertDescription } from './index';
 import AlertDocs from '@/components/docs/AlertDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { Info } from 'lucide-vue-next';
+import { alertSource } from './alert.source';
 
 const meta = {
   title: 'UI/Alert',
@@ -12,7 +13,7 @@ const meta = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     design: figmaDesign('alert'),
-    docs: { page: withAutoDocsTab(AlertDocs) },
+    docs: { page: withAutoDocsTab(AlertDocs), source: { transform: alertSource } },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. O slot default
   // fica sem control porque o template da story fixa a composição.

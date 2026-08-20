@@ -24,13 +24,14 @@ import {
   overlay,
   painel,
 } from './dialog.fixtures';
+import { dialogSource } from './dialog.source';
 
 const meta = {
   title: 'UI/Dialog',
   component: Dialog,
   tags: ['autodocs', 'overlay'],
   parameters: {
-    docs: { page: withAutoDocsTab(DialogDocs) },
+    docs: { page: withAutoDocsTab(DialogDocs), source: { transform: dialogSource } },
   },
   argTypes: {
     defaultOpen: {

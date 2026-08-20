@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { TriangleAlert } from 'lucide-vue-next';
 import AlertDialogDocs from '@/components/docs/AlertDialogDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { alertDialogSource } from './alert-dialog.source';
 
 // Args da raiz + args que montam a composição. Os segundos ficam na categoria
 // "Demonstração" — mesmos nomes, ordem e valores nas 4 stacks, para o painel de
@@ -47,7 +48,7 @@ const meta = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     design: figmaDesign('alertDialog'),
-    docs: { page: withAutoDocsTab(AlertDialogDocs) },
+    docs: { page: withAutoDocsTab(AlertDialogDocs), source: { transform: alertDialogSource } },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. Props que o
   // template não encaminha ficam como documentação (control: false).

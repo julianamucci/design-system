@@ -7,6 +7,13 @@ import {
   Bold, Italic, Underline,
   LayoutGrid, List,
 } from 'lucide-vue-next';
+import {
+  toggleGroupBarraAlinhamentoSource,
+  toggleGroupBarraFormatacaoSource,
+  toggleGroupComEspacamentoSource,
+  toggleGroupTamanhosSource,
+  toggleGroupVerticalSource,
+} from './toggle-group.source';
 
 const meta = {
   title: 'UI/ToggleGroup/Compositions',
@@ -17,6 +24,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleGroupBarraAlinhamentoSource },
       description: {
         component:
           'Padrões de composição do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização vertical e variantes outline com spacing.',
@@ -69,6 +77,11 @@ export const AlignmentBar: Story = {
 };
 
 export const FormattingBar: Story = {
+  parameters: {
+    // Modo combinado: o valor é lista e nenhum contorno emenda os itens — a do
+    // meta mostraria a barra exclusiva com contorno no grupo.
+    docs: { source: { transform: toggleGroupBarraFormatacaoSource } },
+  },
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, Bold, Italic, Underline },
     setup() { return {}; },
@@ -101,6 +114,11 @@ export const FormattingBar: Story = {
 };
 
 export const VerticalViewMode: Story = {
+  parameters: {
+    // O eixo empilhado troca o conjunto de opções e a navegação por setas — a do
+    // meta mostraria a barra horizontal.
+    docs: { source: { transform: toggleGroupVerticalSource } },
+  },
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, LayoutGrid, List },
     setup() { return {}; },
@@ -134,7 +152,12 @@ export const VerticalViewMode: Story = {
 };
 
 export const WithSpacing: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    // Com espaçamento o contorno muda de dono: sai da raiz e vai para cada item.
+    // A do meta ensinaria justamente o contrário.
+    docs: { source: { transform: toggleGroupComEspacamentoSource } },
+  },
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, Bold, Italic, Underline },
     setup() { return {}; },
@@ -170,6 +193,11 @@ export const WithSpacing: Story = {
 };
 
 export const SizesCompared: Story = {
+  parameters: {
+    // São TRÊS grupos empilhados, e não um: a comparação é a composição, e o
+    // snippet do meta mostraria só um deles.
+    docs: { source: { transform: toggleGroupTamanhosSource } },
+  },
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, AlignLeft, AlignCenter, AlignRight },
     setup() { return {}; },

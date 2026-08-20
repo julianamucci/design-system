@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
 import { ChevronDown, Filter } from 'lucide-vue-next';
+import {
+  collapsibleComBotaoSource,
+  collapsibleComChevronSource,
+  collapsibleComIconeSource,
+} from './collapsible.source';
 
 // Mesmo markup do Playground e do Vanilla (referência cross-stack).
 const PAINEL_CLASSES =
@@ -17,6 +22,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: collapsibleComBotaoSource },
       description: {
         component: 'Composicoes do Collapsible: trigger estilizado como botão, ícone no trigger e chevron que gira ao abrir.',
       },
@@ -89,7 +95,12 @@ export const WithCustomButton: Story = {
 // ─── Com ícone no trigger ─────────────────────────────────────────────────────
 
 export const WithIconInTrigger: Story = {
-  parameters: { covers: ['accessibility.item4'] },
+  parameters: {
+    covers: ['accessibility.item4'],
+    // O ícone dentro do rótulo é a sub-composição em questão, e ele traz um
+    // import a mais — a do meta não mostra nenhum dos dois.
+    docs: { source: { transform: collapsibleComIconeSource } },
+  },
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown, Filter },
     setup() { return {}; },
@@ -137,7 +148,12 @@ export const WithIconInTrigger: Story = {
 // Nome anterior: `WithRotatingIconório`, identificador corrompido que aparecia
 // assim na barra lateral do Storybook. `WithRotatingChevron` é o nome do Vanilla.
 export const WithRotatingChevron: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // O painel traz pares rótulo/valor em vez de parágrafos soltos: é outra
+    // sub-composição, e é ela que a story fotografa.
+    docs: { source: { transform: collapsibleComChevronSource } },
+  },
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },

@@ -13,6 +13,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { painel } from './popover.fixtures';
+import {
+  popoverComTituloSource,
+  popoverConteudoLivreSource,
+  popoverFormularioSource,
+} from './popover.source';
 
 const meta = {
   title: 'UI/Popover/Variants',
@@ -23,6 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: popoverConteudoLivreSource },
       description: {
         component:
           'Conteúdo livre, cabeçalho com título e descrição, e formulário inline. O painel sempre precisa de nome acessível: com título ele vem do aria-labelledby, sem título ele herda o texto do gatilho.',
@@ -91,6 +97,9 @@ export const WithTitle: Story = {
       'visual.item2', 'accessibility.item5', 'accessibility.item3', 'functional.item4',
     ],
     docs: {
+      // Entram três peças que o meta não tem — Header, Title e Description —, e
+      // é o título que passa a nomear o painel.
+      source: { transform: popoverComTituloSource },
       description: {
         story: 'Header completo — PopoverHeader com Title + Description e botões de ação (Cancelar / Salvar).',
       },
@@ -162,6 +171,9 @@ export const Form: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // O painel passa a guardar conteúdo interativo com estado próprio: campos,
+      // rótulos e submit não aparecem em nenhuma outra story do arquivo.
+      source: { transform: popoverFormularioSource },
       description: {
         story: 'Formulário inline — Inputs e botão submit dentro do PopoverContent.',
       },

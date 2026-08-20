@@ -12,6 +12,7 @@ import {
 } from './index';
 import PaginationDocs from '@/components/docs/PaginationDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { paginationSource } from './pagination.source';
 
 /**
  * Args do Playground.
@@ -36,6 +37,7 @@ const meta = {
   parameters: {
     docs: {
       page: withAutoDocsTab(PaginationDocs),
+      source: { transform: paginationSource },
       description: {
         component:
           'Pagination — navegação entre páginas de um conjunto paginado. Renderiza um <nav> nomeado com PaginationContent (<ul>), PaginationItem (<li>), PaginationLink (numerado, aplica aria-current="page" quando isActive), PaginationPrevious/Next (direcionais com ícone) e PaginationEllipsis (decorativo, aria-hidden).',

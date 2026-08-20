@@ -10,6 +10,13 @@ import {
   TEXTOS,
   torradasNaTela,
 } from './sonner.fixtures';
+import {
+  sonnerPilhaSource,
+  sonnerPosicaoSource,
+  sonnerSaidaAutomaticaSource,
+  sonnerSemRegiaoSource,
+  sonnerTemaEscuroSource,
+} from './sonner.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -38,6 +45,7 @@ const meta = {
       },
     },
     docs: {
+      source: { transform: sonnerSaidaAutomaticaSource },
       description: {
         component: 'Prazo, pausa na leitura, empilhamento, posição e o caso sem Toaster montado.',
       },
@@ -131,6 +139,9 @@ export const PauseOnHover: Story = {
 export const Stacked: Story = {
   parameters: {
     docs: {
+      // Três chamadas e `expand` na região: o snippet do meta dispara uma só, e
+      // com uma só não há pilha a manter aberta.
+      source: { transform: sonnerPilhaSource },
       description: {
         story:
           'Três notificações na fila, com a pilha aberta. Mensagem ainda não lida não pode ser encoberta pela seguinte — por isso `expand` existe.',
@@ -176,6 +187,8 @@ export const PositionBottomCenter: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // O canto é o assunto e não vem de control nesta página.
+      source: { transform: sonnerPosicaoSource },
       description: {
         story:
           'A pilha no rodapé, centrada. A posição é escolha do projeto e vale para a aplicação inteira — misturar cantos faria a pessoa procurar a notificação a cada vez.',
@@ -213,6 +226,9 @@ export const WithoutToaster: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
+      // A AUSÊNCIA da região é o assunto: o snippet do meta a montaria de volta
+      // e apagaria a lição inteira.
+      source: { transform: sonnerSemRegiaoSource },
       description: {
         story:
           'Sem Toaster montado no root, `toast()` não desenha nada — e também não quebra. A fila existe independentemente de quem a desenha, então uma tela que ainda não montou a região não derruba o fluxo que a chamou.',
@@ -252,6 +268,9 @@ export const DarkTheme: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // A região declara o tema, e os cinco tipos entram juntos: nada disso
+      // existe na composição do meta.
+      source: { transform: sonnerTemaEscuroSource },
       description: {
         story:
           'Tema escuro, com os cinco tipos na tela. O tema da região acompanha a classe do documento.',

@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
+import {
+  tabsAbaAtivaSource,
+  tabsAbaDesabilitadaSource,
+  tabsPadraoSource,
+} from './tabs.source';
 
 const meta: Meta<any> = {
   title: 'UI/Tabs/States',
@@ -11,6 +16,9 @@ const meta: Meta<any> = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Foco e hover não se escrevem: o conjunto canônico serve para as stories
+      // cujo assunto é um estado que o navegador produz.
+      source: { transform: tabsPadraoSource },
       description: {
         component:
           'Estados visuais e interativos do Tabs: Default, Active, Hover, Focus e Disabled.',
@@ -86,6 +94,9 @@ export const Active: Story = {
   }),
   parameters: {
     docs: {
+      // Quem nasce ativa é outra aba, e é `default-value` que decide — a do meta
+      // parte da primeira e esconderia justamente a prop em questão.
+      source: { transform: tabsAbaAtivaSource },
       description: {
         story: 'Estado ativo — a aba selecionada ganha fundo próprio, texto em contraste cheio e sombra suave na variante default.',
       },
@@ -183,6 +194,9 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item4', 'functional.item5', 'accessibility.item6'],
     docs: {
+      // `disabled` é prop de UMA aba, não do conjunto: o snippet precisa mostrar
+      // em qual gatilho ela entra.
+      source: { transform: tabsAbaDesabilitadaSource },
       description: {
         story:
           'Aba desabilitada — esmaecida e fora do alcance do ponteiro, mas ainda alcançável '

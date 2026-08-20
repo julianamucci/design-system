@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import CardDocs from '@/components/docs/CardDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { cardSource } from './card.source';
 
 const meta = {
   title: 'UI/Card',
@@ -19,6 +20,7 @@ const meta = {
   parameters: {
     docs: {
       page: withAutoDocsTab(CardDocs),
+      source: { transform: cardSource },
       description: {
         component:
           'Card agrupa conteúdo relacionado em uma unidade visualmente delimitada. Composto por 7 partes (Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter) e um tamanho que propaga via data-size para ajustar padding e tipografia.',

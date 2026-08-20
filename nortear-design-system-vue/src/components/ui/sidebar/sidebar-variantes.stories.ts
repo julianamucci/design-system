@@ -17,6 +17,12 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { LayoutDashboard, Blocks, Palette, Settings, User } from 'lucide-vue-next';
+import {
+  sidebarLadoDireitoSource,
+  sidebarVarianteFloatingSource,
+  sidebarVarianteInsetSource,
+  sidebarVarianteSidebarSource,
+} from './sidebar.source';
 
 const meta = {
   title: 'UI/Sidebar/Variants',
@@ -27,6 +33,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sidebarVarianteSidebarSource },
       description: {
         component:
           'Três variantes visuais da Sidebar: **sidebar** (padrão), **floating** e **inset**. Cada uma altera o posicionamento e a aparência do container.',
@@ -150,6 +157,9 @@ export const VariantFloating: Story = {
   parameters: {
     covers: ['functional.item8', 'visual.item3'],
     docs: {
+      // A variante não vem de control nesta página: sem override, as três
+      // stories mostrariam o snippet da padrão.
+      source: { transform: sidebarVarianteFloatingSource },
       description: { story: 'Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.' },
     },
   },
@@ -177,6 +187,8 @@ export const VariantInset: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // Idem: a variante é o assunto e nenhum control a descreve.
+      source: { transform: sidebarVarianteInsetSource },
       description: { story: 'Sidebar integrada ao layout com o conteúdo em container arredondado adjacente.' },
     },
   },
@@ -199,6 +211,9 @@ export const SideRight: Story = {
   parameters: {
     covers: ['visual.item6'],
     docs: {
+      // Muda a ORDEM dos irmãos, não só o `side`: o conteúdo vem primeiro para
+      // que a leitura e a tabulação não comecem pela navegação.
+      source: { transform: sidebarLadoDireitoSource },
       description: { story: 'Sidebar posicionada na direita. Use em painéis de detalhes ou contexto.' },
     },
   },

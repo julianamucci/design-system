@@ -4,6 +4,7 @@ import { within, userEvent, expect } from 'storybook/test';
 import { Slider } from './index';
 import { Label } from '@/components/ui/label';
 import { alcasDoSlider, trilhoDoSlider, valorDaAlca } from '@shared/testing/slider-probe';
+import { sliderFaixaSource, sliderUnicoSource, sliderVerticalSource } from './slider.source';
 
 const meta = {
   title: 'UI/Slider/Variants',
@@ -14,6 +15,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sliderUnicoSource },
       description: {
         component:
           'Variantes do Slider: single (um thumb), range (dois thumbs) e vertical (orientation="vertical").',
@@ -60,7 +62,14 @@ export const Single: Story = {
 };
 
 export const Range: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: {
+      // A segunda alça vem do TAMANHO do array, e o snippet do meta traz um
+      // array de um valor só — não haveria como o leitor deduzir.
+      source: { transform: sliderFaixaSource },
+    },
+  },
   render: () => ({
     components: { Slider, Label },
     setup() {
@@ -101,7 +110,14 @@ export const Range: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: {
+      // Além da prop, entra o contêiner que centraliza: em pé o controle não
+      // ocupa a largura da coluna e encostaria na margem.
+      source: { transform: sliderVerticalSource },
+    },
+  },
   render: () => ({
     components: { Slider, Label },
     setup() {

@@ -6,6 +6,7 @@ import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
 import CalendarDocs from '@/components/docs/CalendarDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { calendarSource } from './calendar.source';
 
 const meta = {
   title: 'UI/Calendar',
@@ -14,6 +15,7 @@ const meta = {
   parameters: {
     docs: {
       page: withAutoDocsTab(CalendarDocs),
+      source: { transform: calendarSource },
       description: {
         component:
           'Seletor visual de datas com navegação por mês. Para intervalos, use o RangeCalendar dedicado. A seleção múltipla, a legenda do mês e os dias de fora do mês são controlados por `multiple`, `layout` e `disableDaysOutsideCurrentView`.',

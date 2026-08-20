@@ -3,6 +3,12 @@ import { within, expect, userEvent, waitFor } from 'storybook/test';
 import AutoplayPlugin from 'embla-carousel-autoplay';
 import type { CarouselApi } from './index';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
+import {
+  carouselArrastarSource,
+  carouselAutoplaySource,
+  carouselItemUnicoSource,
+  carouselMultiResponsivoSource,
+} from './carousel.source';
 
 const meta = {
   title: 'UI/Carousel/Settings',
@@ -13,6 +19,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: carouselItemUnicoSource },
       description: {
         component: 'Configuracoes principais do Carousel — quantos itens por vez, autoplay via plugin.',
       },
@@ -141,6 +148,9 @@ export const MultiResponsive: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
     docs: {
+      // A base responsiva mora no ITEM, e o conjunto de slides é maior: nada
+      // disso está nos args, e a do `meta` mostraria um item por vez.
+      source: { transform: carouselMultiResponsivoSource },
       description: {
         story: 'A base do slide muda com o breakpoint: um item em telas estreitas, dois a partir de 768px e três a partir de 1024px.',
       },
@@ -211,6 +221,8 @@ export const Autoplay: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item3'],
     docs: {
+      // O avanço automático entra por plugin do motor, com import próprio.
+      source: { transform: carouselAutoplaySource },
       description: {
         story: 'O avanço automático anda sozinho a cada intervalo e para assim que alguém toca no carrossel — quem tomou o controle não é atropelado pelo relógio.',
       },
@@ -354,6 +366,8 @@ export const DragGesture: Story = {
   parameters: {
     covers: ['functional.item9'],
     docs: {
+      // O gesto não liga prop nenhuma; o que muda é o conjunto de slides.
+      source: { transform: carouselArrastarSource },
       description: {
         story: 'Arrastar a área dos slides move o conteúdo junto com o ponteiro e assenta no slide mais próximo ao soltar.',
       },

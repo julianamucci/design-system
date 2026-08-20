@@ -23,6 +23,13 @@ import {
   REGRA_GUARDA_DE_FOCO,
   REGRA_ROLAGEM_DA_LISTA,
 } from '@/lib/wait-for-portal';
+import {
+  dropdownMenuComAtalhosSource,
+  dropdownMenuComEscolhaUnicaSource,
+  dropdownMenuComMarcacaoSource,
+  dropdownMenuComRotuloSource,
+  dropdownMenuComSubmenuSource,
+} from './dropdown-menu.source';
 
 const meta = {
   title: 'UI/DropdownMenu/Compositions',
@@ -34,6 +41,7 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: dropdownMenuComRotuloSource },
       description: {
         component:
           'As composições canônicas: grupos com rótulo, alternadores, escolha única, submenu e ' +
@@ -116,7 +124,12 @@ export const WithLabel: Story = {
 };
 
 export const WithCheckboxItems: Story = {
-  parameters: { covers: ['functional.item5', 'accessibility.item4', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item5', 'accessibility.item4', 'visual.item2'],
+    // A marcação exige estado ligado por `v-model` — dois `ref` no script, que
+    // o snippet do meta (só itens de ação) não tem.
+    docs: { source: { transform: dropdownMenuComMarcacaoSource } },
+  },
   render: () => ({
     components: componentes,
     setup() {
@@ -179,7 +192,12 @@ export const WithCheckboxItems: Story = {
 };
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
+    // Na escolha única o valor vive no GRUPO, não em cada item: outra peça e
+    // outro estado.
+    docs: { source: { transform: dropdownMenuComEscolhaUnicaSource } },
+  },
   render: () => ({
     components: componentes,
     setup() {
@@ -231,6 +249,9 @@ export const WithRadioGroup: Story = {
 export const WithSubmenu: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item4'],
+    // O segundo nível é a tríade Sub/SubTrigger/SubContent, que o snippet do
+    // meta esconderia por inteiro.
+    docs: { source: { transform: dropdownMenuComSubmenuSource } },
     // Com o submenu ABERTO — que é o estado que `visual.item4` documenta — o
     // primitivo recalcula a altura disponível do menu PAI e ele passa a rolar.
     // O axe então cobra foco na região rolável, e não tem como enxergar que num
@@ -309,6 +330,11 @@ export const WithSubmenu: Story = {
 };
 
 export const WithShortcuts: Story = {
+  parameters: {
+    // O atalho é uma peça a mais DENTRO do item, e é ela que completa o nome
+    // acessível — o snippet do meta não a mostra.
+    docs: { source: { transform: dropdownMenuComAtalhosSource } },
+  },
   render: () => ({
     components: componentes,
     template: `

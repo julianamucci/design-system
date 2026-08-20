@@ -7,6 +7,16 @@ import { Alert, AlertTitle, AlertDescription } from './index';
 // alias o ícone e o export colidem no mesmo escopo de módulo.
 import { AlertCircle, CheckCircle2, Info as InfoIcon, TriangleAlert } from 'lucide-vue-next';
 import { contrastePorTema, reprovasPorTema } from '@shared/testing/alert-probe';
+import {
+  alertContrasteSource,
+  alertDefaultSource,
+  alertDestructiveSource,
+  alertDismissivelPorTecladoSource,
+  alertDismissivelSource,
+  alertInfoSource,
+  alertSuccessSource,
+  alertWarningSource,
+} from './alert.source';
 
 const meta = {
   title: 'UI/Alert/Variants',
@@ -16,6 +26,7 @@ const meta = {
     design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: alertDefaultSource } },
   },
 } satisfies Meta<typeof Alert>;
 
@@ -44,7 +55,12 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ['functional.item2'] },
+  parameters: {
+    covers: ['functional.item2'],
+    // Sem controls, a variante e o par ícone/mensagem que a acompanham só
+    // existem no template — a do meta mostraria a variante padrão.
+    docs: { source: { transform: alertDestructiveSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, AlertCircle },
     setup() { return {}; },
@@ -64,7 +80,11 @@ export const Destructive: Story = {
 };
 
 export const Success: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    // Mesma razão da destructive: variante, ícone e mensagem vivem no template.
+    docs: { source: { transform: alertSuccessSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, CheckCircle2 },
     setup() { return {}; },
@@ -84,6 +104,10 @@ export const Success: Story = {
 };
 
 export const Warning: Story = {
+  parameters: {
+    // Mesma razão da destructive: variante, ícone e mensagem vivem no template.
+    docs: { source: { transform: alertWarningSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, TriangleAlert },
     setup() { return {}; },
@@ -103,6 +127,10 @@ export const Warning: Story = {
 };
 
 export const Info: Story = {
+  parameters: {
+    // Mesma razão da destructive: variante, ícone e mensagem vivem no template.
+    docs: { source: { transform: alertInfoSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, InfoIcon },
     setup() { return {}; },
@@ -128,7 +156,12 @@ const dismissSpy = fn();
 // remonta um alert NOVO via :key após o dismiss. A play mede o nó ORIGINAL, então
 // a prova da remoção continua válida.
 export const Dismissible: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item5'],
+    // A prop de fechar, o rótulo do botão e o evento não existem na do meta — e
+    // a remontagem por :key é andaime da story, que o snippet não reproduz.
+    docs: { source: { transform: alertDismissivelSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, CheckCircle2 },
     setup() {
@@ -228,6 +261,11 @@ export const Dismissible: Story = {
 const dismissKeyboardSpy = fn();
 
 export const DismissibleByKeyboard: Story = {
+  parameters: {
+    // O teclado não tem nada a configurar, e é isso que o snippet precisa
+    // mostrar: a mesma raiz fechável, sem handler de tecla nenhum.
+    docs: { source: { transform: alertDismissivelPorTecladoSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, InfoIcon },
     setup() {
@@ -284,6 +322,9 @@ export const Contrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
+      // São as cinco variantes empilhadas, e sem ícone: outra composição
+      // inteira, não uma raiz com atributo diferente.
+      source: { transform: alertContrasteSource },
       description: {
         story:
           'Título e texto de cada variante medidos contra o fundo composto, nos três temas de marca e nos dois modos. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.',

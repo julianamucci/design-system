@@ -3,37 +3,18 @@ import { expect } from 'storybook/test';
 import { Separator } from './index';
 import SeparatorDocs from '@/components/docs/SeparatorDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { separatorSource } from './separator.source';
 
+/**
+ * Os três controls, com valor sempre presente — o `meta` os declara em `args`.
+ * A transform do painel Code recebe os mesmos campos como opcionais, porque uma
+ * story sem `args` cai nos padrões do componente.
+ */
 type SeparatorArgs = {
   orientation: 'horizontal' | 'vertical';
   decorative: boolean;
   emphasis: 'default' | 'strong';
 };
-
-/**
- * O painel Code imprime o `template` da story como está escrito — com o ternário
- * que alterna os dois exemplos e os bindings ligados aos args. É o andaime, não
- * o uso. O `transform` devolve o uso real com os controls resolvidos.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SeparatorArgs> }): string {
-  const { orientation = 'horizontal', decorative = true, emphasis = 'default' } = ctx.args ?? {};
-  // Só o que difere do padrão entra no snippet.
-  const attrs = [
-    `orientation="${orientation}"`,
-    decorative ? '' : ':decorative="false"',
-    emphasis === 'strong' ? 'emphasis="strong"' : '',
-  ].filter(Boolean).join(' ');
-
-  return `<script setup lang="ts">
-import { Separator } from '@/components/ui/separator'
-</script>
-
-<template>
-  <p>Seção superior</p>
-  <Separator ${attrs} />
-  <p>Seção inferior</p>
-</template>`;
-}
 
 const meta: Meta<any> = {
   title: 'UI/Separator',
@@ -43,7 +24,7 @@ const meta: Meta<any> = {
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(SeparatorDocs),
-      source: { transform: playgroundSource },
+      source: { transform: separatorSource },
       description: {
         component:
           'Separator é um divisor de 1px que separa grupos de conteúdo em layouts horizontais ou verticais. Componente passivo, decorativo por padrão e semântico sob pedido.',

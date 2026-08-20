@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Separator } from './index';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  separatorEmCardSource,
+  separatorEmMenuSource,
+  separatorEnfaseForteSource,
+} from './separator.source';
 
 const meta: Meta<any> = {
   title: 'UI/Separator/Compositions',
@@ -12,6 +17,7 @@ const meta: Meta<any> = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: separatorEmCardSource },
       description: {
         component:
           'Composições do Separator: dentro de um Card, dentro de um menu vertical e com a ênfase forte.',
@@ -60,7 +66,12 @@ export const InCard: Story = {
 };
 
 export const InMenu: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // Aqui a divisão é estrutura e a linha deixa de ser decorativa — e o menu
+    // em volta é outra composição, sem nada do cartão do meta.
+    docs: { source: { transform: separatorEmMenuSource } },
+  },
   render: () => ({
     components: { Separator },
     // A divisão entre grupos de um menu FAZ parte da estrutura da informação:
@@ -94,7 +105,11 @@ export const InMenu: Story = {
 };
 
 export const EmphasisStrong: Story = {
-  parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item5', 'functional.item6', 'visual.item5'],
+    // São DUAS linhas lado a lado: a comparação entre os dois pesos é a story.
+    docs: { source: { transform: separatorEnfaseForteSource } },
+  },
   render: () => ({
     components: { Separator },
     // A classe extra entra junto com a ênfase: é o mesmo par que a docs page

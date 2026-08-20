@@ -4,13 +4,14 @@ import { alturaResultante, campoDe, contrasteDaBorda } from '@shared/testing/inp
 import { Input } from './index';
 import InputDocs from '@/components/docs/InputDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { inputSource } from './input.source';
 
 const meta = {
   title: 'UI/Input',
   component: Input,
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(InputDocs) },
+    docs: { page: withAutoDocsTab(InputDocs), source: { transform: inputSource } },
     layout: 'centered',
   },
   argTypes: {

@@ -12,6 +12,13 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { INVOICES, MESES, TOTAL } from './table.fixtures';
+import {
+  tableBasicaSource,
+  tableComAcoesSource,
+  tableComRodapeSource,
+  tableLegendaInvisivelSource,
+  tableRolagemHorizontalSource,
+} from './table.source';
 
 const meta: Meta = {
   title: 'UI/Table/Variants',
@@ -21,6 +28,7 @@ const meta: Meta = {
     // Sem argTypes: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: tableBasicaSource } },
   },
 };
 
@@ -111,7 +119,11 @@ export const Basic: Story = {
 };
 
 export const WithFooter: Story = {
-  parameters: { covers: ['functional.item3', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item3', 'visual.item3'],
+    // O `tfoot` e o `colspan` são uma seção inteira a mais, que a básica não tem.
+    docs: { source: { transform: tableComRodapeSource } },
+  },
   render: () => ({
     components: COMPONENTES,
     setup() {
@@ -175,7 +187,12 @@ export const WithFooter: Story = {
 };
 
 export const CaptionSrOnly: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item2'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item2'],
+    // A tabela entra sob um título visível, e é essa vizinhança que justifica a
+    // legenda invisível — sem ela no snippet, a classe pareceria gratuita.
+    docs: { source: { transform: tableLegendaInvisivelSource } },
+  },
   render: () => ({
     components: COMPONENTES,
     setup() {
@@ -228,7 +245,12 @@ export const CaptionSrOnly: Story = {
 };
 
 export const WithRowActions: Story = {
-  parameters: { covers: ['accessibility.item3', 'visual.item4'] },
+  parameters: {
+    covers: ['accessibility.item3', 'visual.item4'],
+    // Uma coluna a mais, com cabeçalho só para leitor de tela e um botão nomeado
+    // por registro — nada disso existe na básica.
+    docs: { source: { transform: tableComAcoesSource } },
+  },
   render: () => ({
     components: { ...COMPONENTES, Button },
     setup() {
@@ -290,7 +312,12 @@ export const WithRowActions: Story = {
 };
 
 export const HorizontalScroll: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    // As colunas passam a ser iteradas: o assunto é a tabela larga, e a básica
+    // de quatro colunas não a mostraria.
+    docs: { source: { transform: tableRolagemHorizontalSource } },
+  },
   render: () => ({
     components: COMPONENTES,
     setup() {

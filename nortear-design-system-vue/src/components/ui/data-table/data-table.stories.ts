@@ -5,66 +5,7 @@ import { DataTable } from './index';
 import { baseColumns, invoices, rotulosFatura, type Invoice } from './data-table.fixtures';
 import DataTableDocs from '@/components/docs/DataTableDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-/**
- * O painel Code imprime a story como está escrita — com a fixture do arquivo e
- * os spies das actions. O `transform` devolve o uso real, com o valor atual dos
- * controls já resolvido.
- */
-function playgroundSource(
-  _gerado: string,
-  ctx: { args?: Record<string, unknown> },
-): string {
-  const a = ctx.args ?? {};
-  const enableRowSelection = a.enableRowSelection !== false;
-  const enablePagination = a.enablePagination !== false;
-  const pageSize = (a.pageSize as number) ?? 10;
-  const flags = [
-    enableRowSelection ? '  :enable-row-selection="true"' : null,
-    enablePagination ? null : '  :enable-pagination="false"',
-    pageSize === 10 ? null : `  :page-size="${pageSize}"`,
-  ]
-    .filter(Boolean)
-    .join('\n');
-
-  const caption = (a.caption as string) ?? '';
-
-  return `<script setup lang="ts">
-import { DataTable, type DataTableColumn, type DataTableLabels } from '@/components/ui/data-table';
-
-interface Invoice { id: string; customer: string; status: string; method: string; amount: number }
-
-// Definidas UMA vez, em escopo estável: recriar o array a cada render zeraria
-// ordenação, filtros e seleção.
-const columns: DataTableColumn<Invoice>[] = [
-  { accessorKey: 'id', header: 'Fatura', size: 110 },
-  { accessorKey: 'customer', header: 'Cliente', size: 200 },
-  { accessorKey: 'status', header: 'Status', size: 140 },
-  { accessorKey: 'method', header: 'Método', size: 200 },
-  { accessorKey: 'amount', header: 'Valor', size: 130 },
-];
-
-// Só as chaves do domínio: o resto do texto continua no padrão do componente.
-const rotulos: Partial<DataTableLabels> = {
-  selectAll: 'Selecionar todas as faturas',
-  selectRow: (r) => \`Selecionar fatura \${r}\`,
-};
-
-// A identidade da linha é o número da fatura, e não a posição na tela.
-const chaveDaFatura = (f: Invoice) => f.id;
-<\/script>
-
-<template>
-  <DataTable
-    :columns="columns"
-    :data="invoices"
-${flags}
-    global-filter-placeholder="Buscar fatura, cliente, método..."${caption ? `\n    caption="${caption}"` : ''}
-    :labels="rotulos"
-    :row-key="chaveDaFatura"
-  />
-</template>`;
-}
+import { dataTableSource } from './data-table.source';
 
 const meta: Meta<Record<string, unknown>> = {
   title: 'UI/DataTable',
@@ -72,7 +13,7 @@ const meta: Meta<Record<string, unknown>> = {
   tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(DataTableDocs) },
+    docs: { page: withAutoDocsTab(DataTableDocs), source: { transform: dataTableSource } },
   },
   argTypes: {
     enableRowSelection: {
@@ -192,7 +133,6 @@ export const Playground: Story = {
       'accessibility.item6',
       'visual.item1',
     ],
-    docs: { source: { transform: playgroundSource } },
   },
   render: (args) => ({
     components: { DataTable },

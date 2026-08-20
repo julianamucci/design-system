@@ -9,6 +9,7 @@ import {
 } from './index';
 import AccordionDocs from '@/components/docs/AccordionDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { accordionSource } from './accordion.source';
 
 const meta = {
   title: 'UI/Accordion',
@@ -16,7 +17,7 @@ const meta = {
   tags: ['autodocs', 'disclosure'],
   parameters: {
     design: figmaDesign('accordion'),
-    docs: { page: withAutoDocsTab(AccordionDocs) },
+    docs: { page: withAutoDocsTab(AccordionDocs), source: { transform: accordionSource } },
   },
   // A aba "API Reference" combina o docgen com estes argTypes. Declarar a API
   // real evita que a tabela saia com duas linhas. Props sem control são

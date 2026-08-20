@@ -3,6 +3,11 @@ import { ref } from 'vue';
 import { within, userEvent, expect } from 'storybook/test';
 import { Toggle } from './index';
 import { Bold, Italic, Underline, List, Eye } from 'lucide-vue-next';
+import {
+  toggleBarraDeFormatacaoSource,
+  toggleControladoSource,
+  toggleListaDeFiltrosSource,
+} from './toggle.source';
 
 const meta = {
   title: 'UI/Toggle/Compositions',
@@ -14,6 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleBarraDeFormatacaoSource },
       description: {
         component:
           'As duas composições documentadas — toolbar de formatação e lista de filtros — mais o padrão controlado.',
@@ -84,6 +90,13 @@ export const FormattingToolbar: Story = {
 };
 
 export const FilterList: Story = {
+  parameters: {
+    docs: {
+      // Aqui os toggles têm texto visível e nenhum `role="group"`: cada filtro se
+      // nomeia sozinho, ao contrário da barra de ícones do meta.
+      source: { transform: toggleListaDeFiltrosSource },
+    },
+  },
   render: () => ({
     components: { Toggle, Eye, List },
     template: `
@@ -133,6 +146,13 @@ export const FilterList: Story = {
 };
 
 export const Controlled: Story = {
+  parameters: {
+    docs: {
+      // O estado sai do componente e vira `ref` na aplicação: o snippet precisa
+      // do bloco de script, que a barra do meta não tem.
+      source: { transform: toggleControladoSource },
+    },
+  },
   render: () => ({
     components: { Toggle, Bold },
     setup() {

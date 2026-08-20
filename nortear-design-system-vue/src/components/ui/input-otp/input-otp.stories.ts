@@ -10,6 +10,7 @@ import {
 import { campo } from './input-otp.fixtures';
 import InputOTPDocs from '@/components/docs/InputOTPDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { inputOtpSource } from './input-otp.source';
 
 const meta = {
   title: 'UI/InputOTP',
@@ -18,6 +19,7 @@ const meta = {
   parameters: {
     docs: {
       page: withAutoDocsTab(InputOTPDocs),
+      source: { transform: inputOtpSource },
       description: {
         component:
           'Campo de código de verificação (OTP/PIN) com uma caixa por dígito. Renderiza um input real recortado por trás das caixas e distribui nelas o que for digitado ou colado. Suporta o pedido de código de uso único ao sistema, navegação por setas e Backspace.',

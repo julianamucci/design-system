@@ -7,6 +7,11 @@ import {
   Bold, Italic, Underline,
   LayoutGrid, List,
 } from 'lucide-vue-next';
+import {
+  toggleGroupMultipleSource,
+  toggleGroupSingleSource,
+  toggleGroupVerticalSource,
+} from './toggle-group.source';
 
 const meta = {
   title: 'UI/ToggleGroup/Variants',
@@ -17,6 +22,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleGroupSingleSource },
       description: {
         component:
           'Variantes do ToggleGroup: single (seleção exclusiva), multiple (combinada) e vertical (orientação empilhada).',
@@ -92,7 +98,12 @@ export const Multiple: Story = {
       </ToggleGroup>
     `,
   }),
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    // O valor vira lista e o `default-value` passa a precisar de ligação — a do
+    // meta mostraria o modo exclusivo, em que o valor é um texto só.
+    docs: { source: { transform: toggleGroupMultipleSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const bold = canvas.getByRole('button', { name: 'Negrito' });
@@ -145,7 +156,12 @@ export const Vertical: Story = {
       </ToggleGroup>
     `,
   }),
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // O eixo troca, e com ele o contorno do grupo e o conjunto de opções — a do
+    // meta mostraria a barra horizontal de alinhamento.
+    docs: { source: { transform: toggleGroupVerticalSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const grid = canvas.getByRole('button', { name: 'Grade' });

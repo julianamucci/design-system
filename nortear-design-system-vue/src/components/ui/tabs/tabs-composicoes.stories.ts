@@ -5,6 +5,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 import { ativar } from './tabs.fixtures';
 import { Badge } from '@/components/ui/badge';
 import { Code2, Eye, Settings2, User, Shield } from 'lucide-vue-next';
+import {
+  tabsComContadorSource,
+  tabsComIconesSource,
+  tabsConfiguracoesVerticaisSource,
+  tabsControladoSource,
+  tabsModoManualSource,
+} from './tabs.source';
 
 const meta: Meta<any> = {
   title: 'UI/Tabs/Compositions',
@@ -15,6 +22,7 @@ const meta: Meta<any> = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: tabsControladoSource },
       description: {
         component:
           'Composicoes reais de Tabs: controlado com analytics, com ícones, com contador, vertical para configurações e modo manual.',
@@ -124,6 +132,9 @@ export const WithIcons: Story = {
   parameters: {
     covers: ['accessibility.item4'],
     docs: {
+      // O gatilho deixa de ser uma linha de texto e passa a ter ícone dentro —
+      // com ele, o import do conjunto de ícones e o `aria-hidden`.
+      source: { transform: tabsComIconesSource },
       description: {
         story: 'Abas com ícone à esquerda do rótulo. O ícone é decorativo — o texto do gatilho já descreve a aba para leitores de tela.',
       },
@@ -187,6 +198,9 @@ export const WithBadge: Story = {
   parameters: {
     covers: ['functional.item1'],
     docs: {
+      // O contador entra DENTRO do gatilho e vira parte do nome acessível: é a
+      // posição no markup que ensina isso, e o meta não a tem.
+      source: { transform: tabsComContadorSource },
       description: {
         story: 'Aba com contador — o número entra no nome acessível do gatilho e não vira um segundo alvo de foco. Use para caixas de mensagem e listas com pendências.',
       },
@@ -252,6 +266,9 @@ export const VerticalSettings: Story = {
   }),
   parameters: {
     docs: {
+      // Eixo vertical e painel com título próprio: a cor atenuada desce do
+      // painel para o parágrafo, e o respiro passa a ser lateral.
+      source: { transform: tabsConfiguracoesVerticaisSource },
       description: {
         story: 'Padrão clássico de tela de configurações — orientation="vertical" com lista lateral + conteúdo extenso à direita. ↑↓ navegam entre abas.',
       },
@@ -307,6 +324,9 @@ export const ManualMode: Story = {
   // aqui NÃO ativa). Declarar o item seria cobertura fantasma.
   parameters: {
     docs: {
+      // `activation-mode` é prop da raiz e não aparece na composição controlada
+      // que o meta mostra.
+      source: { transform: tabsModoManualSource },
       description: {
         story: 'Modo manual — setas movem apenas o foco; Enter/Space ativa a aba focada. Use quando trocar de painel tem custo (fetch, render pesado).',
       },

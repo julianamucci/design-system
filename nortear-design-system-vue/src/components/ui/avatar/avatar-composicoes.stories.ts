@@ -2,6 +2,13 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarBadge } from './index';
+import {
+  avatarComIconeSource,
+  avatarComImagemSource,
+  avatarComIniciaisSource,
+  avatarComStatusSource,
+  avatarGrupoSource,
+} from './avatar.source';
 
 const IMG_MARIA =
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
@@ -20,6 +27,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: avatarComImagemSource },
       description: {
         component:
           'Composicoes canônicas do Avatar: com imagem, com iniciais, com ícone, agrupamento e com indicador de status.',
@@ -76,6 +84,8 @@ export const WithImage: Story = {
 export const WithInitials: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+    // Sem imagem: some o subcomponente e some o import — a do meta traz os dois.
+    docs: { source: { transform: avatarComIniciaisSource } },
   },
   render: () => ({
     components: { Avatar, AvatarFallback },
@@ -95,7 +105,12 @@ export const WithInitials: Story = {
 };
 
 export const WithIcon: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    // O conteúdo de reserva deixa de ser texto e passa a carregar papel e
+    // rótulo próprios, com o ícone decorativo dentro.
+    docs: { source: { transform: avatarComIconeSource } },
+  },
   render: () => ({
     components: { Avatar, AvatarFallback },
     template: `
@@ -123,7 +138,12 @@ export const WithIcon: Story = {
 };
 
 export const Group: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item4'],
+    // Três avatares dentro de um agrupador, com texto alternativo vazio e um
+    // contador ao fim: composição inteira que a do meta não mostra.
+    docs: { source: { transform: avatarGrupoSource } },
+  },
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount },
     setup: () => ({ IMG_MARIA, IMG_SECOND, IMG_THIRD }),
@@ -168,7 +188,12 @@ export const Group: Story = {
 };
 
 export const WithStatus: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // Entra um terceiro filho, com papel e rótulo próprios — sub-composição
+    // que a do meta esconderia.
+    docs: { source: { transform: avatarComStatusSource } },
+  },
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback, AvatarBadge },
     setup: () => ({ IMG_MARIA }),

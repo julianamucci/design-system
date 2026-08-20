@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
+import {
+  radioGroupComDescricaoSource,
+  radioGroupHorizontalSource,
+  radioGroupVerticalSource,
+} from './radio-group.source';
 
 const meta = {
   title: 'UI/RadioGroup/Variants',
@@ -12,6 +17,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: radioGroupVerticalSource },
       description: {
         component:
           'Variantes do RadioGroup: vertical (padrão para 4+ opções), horizontal (2–3 opções curtas) e withDescription (cada item com descrição auxiliar).',
@@ -57,6 +63,11 @@ export const Vertical: Story = {
 };
 
 export const Horizontal: Story = {
+  parameters: {
+    // Troca o eixo E o conjunto de opções: a do meta mostraria o grupo vertical
+    // de pagamento, que é outra composição.
+    docs: { source: { transform: radioGroupHorizontalSource } },
+  },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
@@ -96,6 +107,11 @@ export const Horizontal: Story = {
 };
 
 export const WithDescription: Story = {
+  parameters: {
+    // A descrição por item acrescenta um nível de marcação e o
+    // `aria-describedby` — a linha simples do meta esconderia os dois.
+    docs: { source: { transform: radioGroupComDescricaoSource } },
+  },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },

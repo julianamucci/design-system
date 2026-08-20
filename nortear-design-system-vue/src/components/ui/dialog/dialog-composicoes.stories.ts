@@ -23,6 +23,11 @@ import {
   gatilho,
   painel,
 } from './dialog.fixtures';
+import {
+  dialogConfirmarEmailSource,
+  dialogEditarPerfilSource,
+  dialogPreviaDeMidiaSource,
+} from './dialog.source';
 
 const meta = {
   title: 'UI/Dialog/Compositions',
@@ -33,6 +38,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: dialogConfirmarEmailSource },
       description: {
         component:
           'Composicoes canônicas de uso real do Dialog: confirmação de email, edição de perfil e pré-visualização de mídia.',
@@ -116,6 +122,9 @@ export const ConfirmEmail: Story = {
 export const ProfileEdit: Story = {
   parameters: {
     docs: {
+      // Três campos dentro de um `form`, e não um campo solto: outra seção de
+      // corpo e outra ação primária.
+      source: { transform: dialogEditarPerfilSource },
       description: { story: 'Formulário de edição de perfil com múltiplos campos.' },
     },
   },
@@ -185,6 +194,9 @@ export const MediaPreview: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item6'],
     docs: {
+      // Sem rodapé e com o corpo carregando papel e nome próprios — nada disso
+      // está no snippet do meta.
+      source: { transform: dialogPreviaDeMidiaSource },
       description: { story: 'Pré-visualização de mídia em destaque sem footer (uso passivo).' },
     },
   },

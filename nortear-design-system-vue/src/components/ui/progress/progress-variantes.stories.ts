@@ -8,6 +8,12 @@ import {
   nomeAcessivel,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
+import {
+  progressComRotuloSource,
+  progressCorSemanticaSource,
+  progressDeterminadoSource,
+  progressIndeterminadoSource,
+} from './progress.source';
 
 const meta = {
   title: 'UI/Progress/Variants',
@@ -18,6 +24,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: progressDeterminadoSource },
       description: {
         component:
           'As formas de uso: valor conhecido, valor com rótulo e cor semântica. O indeterminate é estado, e mora na seção Estados.',
@@ -57,6 +64,13 @@ export const Determinate: Story = {
 };
 
 export const Indeterminate: Story = {
+  parameters: {
+    docs: {
+      // `null` não é um número menor: é a AUSÊNCIA de valor, e com ela some o
+      // `aria-valuenow` que a do meta publica.
+      source: { transform: progressIndeterminadoSource },
+    },
+  },
   render: () => ({
     components: { Progress },
     template: `
@@ -83,7 +97,14 @@ export const Indeterminate: Story = {
 };
 
 export const WithLabel: Story = {
-  parameters: { covers: ['accessibility.item5'] },
+  parameters: {
+    covers: ['accessibility.item5'],
+    docs: {
+      // A barra ganha rótulo e porcentagem em volta: a composição de texto é o
+      // assunto, e a do meta não tem texto nenhum.
+      source: { transform: progressComRotuloSource },
+    },
+  },
   render: () => ({
     components: { Progress },
     template: `
@@ -118,6 +139,13 @@ export const WithLabel: Story = {
 };
 
 export const SemanticColor: Story = {
+  parameters: {
+    docs: {
+      // Duas barras lado a lado: a variante só se lê CONTRA outra, e o atributo
+      // `data-variant` não aparece na do meta.
+      source: { transform: progressCorSemanticaSource },
+    },
+  },
   render: () => ({
     components: { Progress },
     template: `

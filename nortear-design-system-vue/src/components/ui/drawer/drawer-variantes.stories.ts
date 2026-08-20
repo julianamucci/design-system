@@ -13,6 +13,12 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
+import {
+  drawerBaixoSource,
+  drawerDireitaSource,
+  drawerEsquerdaSource,
+  drawerTopoSource,
+} from './drawer.source';
 
 const meta = {
   title: 'UI/Drawer/Variants',
@@ -23,6 +29,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: drawerBaixoSource },
       description: {
         component:
           'Direção de entrada pela prop direction da raiz. Bottom é o padrão mobile-first e a única direção em que a alça aparece; left e right servem a painéis laterais.',
@@ -111,6 +118,9 @@ export const Top: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // A direção é prop da raiz, e o snippet do meta mostra a padrão — que é
+      // justamente a que não se escreve.
+      source: { transform: drawerTopoSource },
       description: {
         story:
           'Entra por cima, com cantos arredondados embaixo. Serve a notificação rica e a seletor rápido — conteúdo curto e saída imediata.',
@@ -134,6 +144,8 @@ export const Left: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // Outra direção, e um painel de navegação: o texto e a prop mudam juntos.
+      source: { transform: drawerEsquerdaSource },
       description: {
         story:
           'Painel lateral à esquerda — a direção do menu de navegação, que a pessoa espera encontrar onde o menu costuma ficar.',
@@ -165,6 +177,8 @@ export const Right: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
     docs: {
+      // A quarta direção, com o painel de filtros que ela serve.
+      source: { transform: drawerDireitaSource },
       description: {
         story:
           'Painel lateral à direita — alternativa de desktop para edição e filtros, sem trocar de componente.',

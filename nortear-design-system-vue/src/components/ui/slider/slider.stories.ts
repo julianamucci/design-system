@@ -10,13 +10,14 @@ import {
   remendarCapturaDePonteiro,
   valorDaAlca,
 } from '@shared/testing/slider-probe';
+import { sliderPlaygroundSource } from './slider.source';
 
 const meta = {
   title: 'UI/Slider',
   component: Slider,
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(SliderDocs) },
+    docs: { page: withAutoDocsTab(SliderDocs), source: { transform: sliderPlaygroundSource } },
   },
   argTypes: {
     modelValue: {

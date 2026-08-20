@@ -3,6 +3,14 @@ import { expect } from 'storybook/test';
 import { toast } from 'vue-sonner';
 import { Toaster } from './index';
 import { esperarTorrada, limparTorradas, PERSISTENTE, TEXTOS, tipoDaTorrada } from './sonner.fixtures';
+import {
+  sonnerAvisoSource,
+  sonnerCarregandoSource,
+  sonnerErroSource,
+  sonnerInfoSource,
+  sonnerNeutraSource,
+  sonnerSucessoSource,
+} from './sonner.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -37,6 +45,7 @@ const meta = {
       },
     },
     docs: {
+      source: { transform: sonnerNeutraSource },
       description: {
         component:
           'Tipos semânticos da notificação. O ícone e a cor acompanham o tipo; o texto descreve o estado por extenso, para não depender só da cor.',
@@ -91,6 +100,9 @@ export const Success: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item1'],
     docs: {
+      // O tipo é o MÉTODO da fila: o snippet do meta chama a função neutra, que
+      // é justamente a que não tem tipo.
+      source: { transform: sonnerSucessoSource },
       description: {
         story: 'Confirmação de ação concluída. Ícone e cor verdes vêm de `richColors`.',
       },
@@ -138,6 +150,8 @@ export const Error: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
+      // Idem: outro método, e o texto que diz a causa é parte da lição.
+      source: { transform: sonnerErroSource },
       description: {
         story:
           'Falha de uma operação. O texto diz a causa e o caminho de saída — nunca culpa quem estava usando.',
@@ -162,6 +176,8 @@ export const Warning: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
+      // Idem: o aviso tem método próprio e não empresta o da falha.
+      source: { transform: sonnerAvisoSource },
       description: {
         story:
           'Aviso não crítico. Se a mensagem precisa continuar visível enquanto a pessoa age, o componente certo é o Alert.',
@@ -185,6 +201,8 @@ export const Info: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
+      // Idem: método próprio para o que não é êxito nem falha.
+      source: { transform: sonnerInfoSource },
       description: {
         story: 'Informação contextual ou novidade — nada aconteceu de errado nem de certo.',
       },
@@ -206,6 +224,9 @@ export const Info: Story = {
 export const Loading: Story = {
   parameters: {
     docs: {
+      // A ausência de prazo é o assunto, e ela é a ausência de um argumento —
+      // só um snippet do próprio tipo mostra isso.
+      source: { transform: sonnerCarregandoSource },
       description: {
         story:
           'Operação em curso. Não tem prazo: quem a encerra é o fim da operação — na prática, `toast.promise`.',

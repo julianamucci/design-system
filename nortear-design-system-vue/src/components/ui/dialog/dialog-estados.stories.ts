@@ -22,6 +22,12 @@ import {
   overlay,
   painel,
 } from './dialog.fixtures';
+import {
+  dialogAbertoSource,
+  dialogControladoSource,
+  dialogSemBotaoFecharSource,
+  dialogSource,
+} from './dialog.source';
 
 const meta = {
   title: 'UI/Dialog/States',
@@ -32,6 +38,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // O estado fechado é a forma canônica sem nenhuma prop de abertura — o
+      // mesmo snippet do Playground.
+      source: { transform: dialogSource },
       description: {
         component:
           'Estados canônicos do Dialog: closed, open, withCloseButtonHidden e controlled (controle externo via open + onUpdate:open).',
@@ -109,6 +118,9 @@ export const Open: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // Aqui a montagem já aberta É o assunto; nas outras stories a prop é só
+      // andaime da foto do Chromatic e fica fora do snippet.
+      source: { transform: dialogAbertoSource },
       description: { story: 'Diálogo aberto via defaultOpen. Captura visual no Chromatic.' },
     },
   },
@@ -161,6 +173,8 @@ export const WithCloseButtonHidden: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // A prop que apaga o X do canto não aparece no snippet do meta.
+      source: { transform: dialogSemBotaoFecharSource },
       description: {
         story:
           'showCloseButton={false} no Content. Sem X no canto — fechamento apenas por Escape, clique no overlay ou ação do Footer.',
@@ -217,6 +231,9 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
+      // Não há gatilho: quem abre é um botão comum, e o par prop+evento entra
+      // no lugar dele. Estrutura inteiramente outra.
+      source: { transform: dialogControladoSource },
       description: {
         story: 'Abertura controlada por estado externo via open + onUpdate:open.',
       },

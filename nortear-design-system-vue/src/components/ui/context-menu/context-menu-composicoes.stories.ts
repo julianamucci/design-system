@@ -19,6 +19,13 @@ import {
   ContextMenuLabel,
   ContextMenuShortcut,
 } from '@/components/ui/context-menu';
+import {
+  contextMenuComAtalhosSource,
+  contextMenuComEscolhaUnicaSource,
+  contextMenuComMarcacaoSource,
+  contextMenuComSubmenuSource,
+  contextMenuCompletoSource,
+} from './context-menu.source';
 
 const meta: Meta = {
   title: 'UI/ContextMenu/Compositions',
@@ -30,6 +37,7 @@ const meta: Meta = {
     layout: 'centered',
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: contextMenuComAtalhosSource },
       description: {
         component:
           'Composições do Context Menu: atalhos, marcação, escolha única, submenu e o menu completo.',
@@ -117,7 +125,12 @@ export const WithShortcut: Story = {
 
 export const WithCheckbox: Story = {
   name: 'With CheckboxItem',
-  parameters: { covers: ['functional.item7', 'accessibility.item4'] },
+  parameters: {
+    covers: ['functional.item7', 'accessibility.item4'],
+    // A marcação exige estado ligado por `v-model:checked` — um `ref` no script,
+    // que o snippet do meta (só itens de ação) não tem.
+    docs: { source: { transform: contextMenuComMarcacaoSource } },
+  },
   render: () => ({
     components: componentes,
     setup() {
@@ -191,7 +204,12 @@ export const WithCheckbox: Story = {
 // ── Com escolha única ─────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ['functional.item8', 'accessibility.item5'] },
+  parameters: {
+    covers: ['functional.item8', 'accessibility.item5'],
+    // Na escolha única o valor vive no GRUPO, não em cada item: outra peça e
+    // outro estado.
+    docs: { source: { transform: contextMenuComEscolhaUnicaSource } },
+  },
   render: () => ({
     components: componentes,
     setup() {
@@ -261,7 +279,12 @@ export const WithRadioGroup: Story = {
 // ── Com submenu ───────────────────────────────────────────────────────────────
 
 export const WithSubmenu: Story = {
-  parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item5', 'functional.item6', 'visual.item3'],
+    // O segundo nível é a tríade Sub/SubTrigger/SubContent, que o snippet do
+    // meta esconderia por inteiro.
+    docs: { source: { transform: contextMenuComSubmenuSource } },
+  },
   render: () => ({
     components: componentes,
     template: `
@@ -332,7 +355,12 @@ export const WithSubmenu: Story = {
 
 export const Complete: Story = {
   name: 'Complete — shortcut, checkbox, radio and submenu',
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // O assunto é a CONVIVÊNCIA das três famílias de item no mesmo menu — é o
+    // snippet mais longo do componente, e nenhum outro o cobre.
+    docs: { source: { transform: contextMenuCompletoSource } },
+  },
   render: () => ({
     components: componentes,
     setup() {

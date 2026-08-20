@@ -10,6 +10,7 @@ import {
 import { ChartContainer, buildBarOption } from './index';
 import ChartDocs from '@/components/docs/ChartDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { chartSource } from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
@@ -29,41 +30,6 @@ const ALTURA = 300;
  */
 const ROTULO = 'Acessos mensais no desktop, de janeiro a junho';
 
-/**
- * O painel Code de uma render function imprime a chamada de `h()`, que não é o
- * que ninguém escreve num template. Devolve o uso real — e por ser `transform`,
- * e não uma string fixa, acompanha os controls em vez de congelar um snippet.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Record<string, unknown> }): string {
-  const args = ctx.args ?? {};
-  const altura = Number(args.height ?? ALTURA);
-  const renderer = String(args.renderer ?? 'svg');
-  const emptyLabel = String(args.emptyLabel ?? '');
-
-  const atributos = [
-    '<ChartContainer',
-    '  :option="buildBarOption({ xAxis: meses, series: series })"',
-    `  :height="${altura}"`,
-    `  aria-label="${ROTULO}"`,
-  ];
-  if (renderer !== 'svg') atributos.push(`  renderer="${renderer}"`);
-  if (emptyLabel) atributos.push(`  empty-label="${emptyLabel}"`);
-  atributos.push('/>');
-
-  return [
-    '<script setup lang="ts">',
-    "import { ChartContainer, buildBarOption } from '@/components/ui/chart';",
-    '',
-    `const meses = ${JSON.stringify(MESES)};`,
-    `const series = ${JSON.stringify(SERIE_UNICA)};`,
-    '</script>',
-    '',
-    '<template>',
-    ...atributos.map((linha) => `  ${linha}`),
-    '</template>',
-  ].join('\n');
-}
-
 const meta = {
   title: 'UI/Chart',
   component: ChartContainer,
@@ -72,7 +38,7 @@ const meta = {
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(ChartDocs),
-      source: { transform: playgroundSource },
+      source: { transform: chartSource },
     },
   },
   argTypes: {

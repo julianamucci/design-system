@@ -11,6 +11,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { waitForPortal, waitForPortalGone, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
+import {
+  dropdownMenuAbertoSource,
+  dropdownMenuControladoSource,
+  dropdownMenuFechadoSource,
+  dropdownMenuItemDesabilitadoSource,
+  dropdownMenuMarcacaoMistaSource,
+} from './dropdown-menu.source';
 
 const meta = {
   title: 'UI/DropdownMenu/States',
@@ -22,6 +29,7 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: dropdownMenuFechadoSource },
       description: {
         component:
           'Fechado, aberto, controlado por fora e item desabilitado. Teclado, foco e bloqueio ' +
@@ -78,7 +86,12 @@ export const Closed: Story = {
 };
 
 export const Open: Story = {
-  parameters: { covers: ['functional.item2', 'accessibility.item3', 'accessibility.item4'] },
+  parameters: {
+    covers: ['functional.item2', 'accessibility.item3', 'accessibility.item4'],
+    // Aqui a montagem já aberta É o assunto — nas outras stories a prop é só
+    // andaime da foto do Chromatic.
+    docs: { source: { transform: dropdownMenuAbertoSource } },
+  },
   render: () => ({
     components: componentes,
     template: `
@@ -141,6 +154,11 @@ export const Open: Story = {
 };
 
 export const Controlled: Story = {
+  parameters: {
+    // Entram o par prop+evento e o botão de fora que lê o mesmo estado — nada
+    // disso está no snippet do meta.
+    docs: { source: { transform: dropdownMenuControladoSource } },
+  },
   render: () => ({
     components: componentes,
     setup() {
@@ -191,6 +209,10 @@ export const Controlled: Story = {
 };
 
 export const ItemDisabled: Story = {
+  parameters: {
+    // A prop que tira o item da navegação não aparece no snippet do meta.
+    docs: { source: { transform: dropdownMenuItemDesabilitadoSource } },
+  },
   render: () => ({
     components: componentes,
     template: `
@@ -241,7 +263,12 @@ export const ItemDisabled: Story = {
 // mesmo DOM. Sem clique, cada rodada mede exatamente o mesmo.
 
 export const CheckboxIndeterminate: Story = {
-  parameters: { covers: ['functional.item8'] },
+  parameters: {
+    covers: ['functional.item8'],
+    // Itens de MARCAÇÃO nos três estados, e não itens de ação: outra peça e
+    // outra prop.
+    docs: { source: { transform: dropdownMenuMarcacaoMistaSource } },
+  },
   render: () => ({
     components: componentes,
     template: `

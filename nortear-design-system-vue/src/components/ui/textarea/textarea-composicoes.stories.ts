@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
+import {
+  textareaComApoioSource,
+  textareaComContadorSource,
+  textareaComRotuloSource,
+  textareaInvalidoSource,
+  textareaObrigatorioSource,
+} from './textarea.source';
 
 const meta = {
   title: 'UI/Textarea/Compositions',
@@ -12,6 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: textareaComRotuloSource },
       description: {
         component:
           'O Textarea deve sempre ser acompanhado de um Label acessível. Composicoes comuns: com Label, com texto de apoio, com contador de caracteres e com mensagem de erro.',
@@ -50,6 +58,13 @@ export const WithLabel: Story = {
 };
 
 export const WithSupportText: Story = {
+  parameters: {
+    docs: {
+      // O texto de apoio é um parágrafo a mais e o vínculo que o alcança: nada
+      // disso existe no par mínimo do meta.
+      source: { transform: textareaComApoioSource },
+    },
+  },
   render: () => ({
     components: { Textarea, Label },
     template: `
@@ -81,6 +96,12 @@ export const WithSupportText: Story = {
 };
 
 export const WithCounter: Story = {
+  parameters: {
+    docs: {
+      // O contador traz estado, limite e um bloco abaixo do campo.
+      source: { transform: textareaComContadorSource },
+    },
+  },
   render: () => ({
     components: { Textarea, Label },
     data() {
@@ -128,6 +149,12 @@ export const WithCounter: Story = {
 };
 
 export const WithErrorMessage: Story = {
+  parameters: {
+    docs: {
+      // A mensagem de erro e o vínculo que a alcança são o assunto.
+      source: { transform: textareaInvalidoSource },
+    },
+  },
   render: () => ({
     components: { Textarea, Label },
     template: `
@@ -163,6 +190,13 @@ export const WithErrorMessage: Story = {
 };
 
 export const RequiredField: Story = {
+  parameters: {
+    docs: {
+      // O asterisco entra DENTRO do rótulo e sai da árvore de acessibilidade; é
+      // a posição no markup que ensina isso.
+      source: { transform: textareaObrigatorioSource },
+    },
+  },
   render: () => ({
     components: { Textarea, Label },
     template: `

@@ -6,6 +6,12 @@ import {
   indicadorDoProgresso,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
+import {
+  progressCarregandoSource,
+  progressConcluidoSource,
+  progressProcessandoSource,
+  progressZeroSource,
+} from './progress.source';
 
 const meta = {
   title: 'UI/Progress/States',
@@ -16,6 +22,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: progressZeroSource },
       description: {
         component:
           'Estados derivados do valor: Default (0), Loading (parcial), Complete (100) e Indeterminate (sem valor, com o traço em ciclo).',
@@ -56,7 +63,14 @@ export const Default: Story = {
 };
 
 export const Loading: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    docs: {
+      // O meio do caminho traz o par rótulo + porcentagem viva, que a barra nua
+      // do meta não tem — e é ele que repete o valor para quem enxerga a tela.
+      source: { transform: progressCarregandoSource },
+    },
+  },
   render: () => ({
     components: { Progress },
     template: `
@@ -88,7 +102,14 @@ export const Loading: Story = {
 };
 
 export const Complete: Story = {
-  parameters: { covers: ['functional.item3', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item3', 'visual.item3'],
+    docs: {
+      // Concluído é o único caso em que o número NÃO é região viva: ele não vai
+      // mudar mais, e uma região viva parada só ocupa o leitor de tela à toa.
+      source: { transform: progressConcluidoSource },
+    },
+  },
   render: () => ({
     components: { Progress },
     template: `
@@ -120,7 +141,14 @@ export const Complete: Story = {
 };
 
 export const Indeterminate: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item4'],
+    docs: {
+      // Sem valor não há porcentagem a mostrar: o rótulo passa a dizer o que
+      // está acontecendo, e some o número que as outras stories exibem.
+      source: { transform: progressProcessandoSource },
+    },
+  },
   render: () => ({
     components: { Progress },
     template: `

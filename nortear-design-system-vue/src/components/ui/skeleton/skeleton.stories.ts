@@ -4,6 +4,7 @@ import { Skeleton } from './index';
 import SkeletonDocs from '@/components/docs/SkeletonDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { FRACAO_DE_LARGURA, caixaDesenhada } from '@shared/testing/skeleton-probe';
+import { skeletonPlaygroundSource } from './skeleton.source';
 
 // A caixa do esqueleto vem de atributo, não de classe de dimensão nem de altura
 // cravada: `data-shape` escolhe a forma e `data-width` a fração da largura do
@@ -21,7 +22,7 @@ const meta: Meta<PlaygroundArgs> = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(SkeletonDocs) },
+    docs: { page: withAutoDocsTab(SkeletonDocs), source: { transform: skeletonPlaygroundSource } },
   },
   argTypes: {
     shape: {

@@ -9,6 +9,11 @@ import {
 } from '@shared/testing/calendar-probe';
 import { Calendar } from './index';
 import { RangeCalendar } from '@/components/ui/range-calendar';
+import {
+  calendarIntervaloSource,
+  calendarSource,
+  calendarVariasDatasSource,
+} from './calendar.source';
 
 const meta = {
   title: 'UI/Calendar/Modes',
@@ -19,6 +24,7 @@ const meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: calendarSource },
       description: {
         component:
           'Modos de seleção: uma data, várias datas ou um intervalo contínuo. O intervalo é um componente próprio, porque seleciona um par e não uma lista.',
@@ -112,7 +118,10 @@ export const Multiple: Story = {
     `,
   }),
   parameters: {
+    // O modelo deixa de ser uma data e vira LISTA — a do meta mostraria o
+    // estado errado ao lado da prop certa.
     docs: {
+      source: { transform: calendarVariasDatasSource },
       description: {
         story: 'Várias datas avulsas: cada escolha soma à lista, e escolher de novo remove.',
       },
@@ -164,7 +173,10 @@ export const Range: Story = {
   }),
   parameters: {
     covers: ['functional.item3'],
+    // É outro componente, com outro import e um modelo de par: a do meta
+    // mostraria o calendário de data única.
     docs: {
+      source: { transform: calendarIntervaloSource },
       description: {
         story: 'Intervalo contínuo: os extremos e todos os dias entre eles ficam marcados.',
       },

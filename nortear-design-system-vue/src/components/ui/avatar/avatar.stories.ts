@@ -4,6 +4,7 @@ import { expect, waitFor } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
 import AvatarDocs from '@/components/docs/AvatarDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { avatarSource } from './avatar.source';
 
 /** Diâmetro de cada preset, em px, com a densidade padrão. */
 const DIAMETRO = { sm: 24, md: 32, lg: 40, xl: 48, '2xl': 64 } as const;
@@ -17,6 +18,7 @@ const meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(AvatarDocs),
+      source: { transform: avatarSource },
       description: {
         component:
           'Avatar representa um usuário via foto, iniciais ou ícone. O diâmetro sai dos presets da prop size.',

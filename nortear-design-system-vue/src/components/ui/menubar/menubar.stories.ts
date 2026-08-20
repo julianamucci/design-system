@@ -11,6 +11,7 @@ import {
 import MenubarDocs from '@/components/docs/MenubarDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { menubarSource } from './menubar.source';
 
 // ─── Dados da barra ───────────────────────────────────────────────────────────
 //
@@ -55,7 +56,7 @@ const meta = {
   tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(MenubarDocs) },
+    docs: { page: withAutoDocsTab(MenubarDocs), source: { transform: menubarSource } },
   },
   argTypes: {
     defaultValue: {

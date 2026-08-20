@@ -6,6 +6,7 @@ import { Calendar } from './index';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { calendarSeletorDeDataSource } from './calendar.source';
 
 const meta = {
   title: 'UI/Calendar/Compositions',
@@ -16,6 +17,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: calendarSeletorDeDataSource },
       description: {
         component:
           'A composição canônica do calendário: ele quase nunca aparece solto na página. Mora dentro de um popover, atrás de um botão que mostra a data escolhida.',

@@ -4,6 +4,7 @@ import { Progress } from './index';
 import ProgressDocs from '@/components/docs/ProgressDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { percentualDesenhado } from '@shared/testing/progress-probe';
+import { progressSource } from './progress.source';
 
 const meta = {
   title: 'UI/Progress',
@@ -13,6 +14,7 @@ const meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(ProgressDocs),
+      source: { transform: progressSource },
       description: {
         component:
           'Progress é um indicador visual passivo para operações com duração mensurável. Aceita um valor de 0 a 100 ou nulo (indeterminate). role="progressbar" é aplicado pelo primitivo — o nome acessível é obrigatório e descreve a operação medida.',

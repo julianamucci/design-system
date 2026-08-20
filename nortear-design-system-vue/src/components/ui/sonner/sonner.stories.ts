@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { esperarTorrada, limparTorradas, TEXTOS, type ToastType } from './sonner.fixtures';
 import SonnerDocs from '@/components/docs/SonnerDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { sonnerPlaygroundSource } from './sonner.source';
 
 type SonnerArgs = {
   type: ToastType;
@@ -23,7 +24,7 @@ const meta = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(SonnerDocs) },
+    docs: { page: withAutoDocsTab(SonnerDocs), source: { transform: sonnerPlaygroundSource } },
     // A paleta de `richColors` é da lib externa e não passa pelos tokens do
     // tema, então o contraste dela não é auditável aqui — ver
     // PATCHES.md#sonner-rich-colors-contrast. `aria-prohibited-attr`: a lib

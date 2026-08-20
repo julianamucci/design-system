@@ -11,6 +11,12 @@ import {
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
 } from './index';
+import {
+  breadcrumbComReticenciasSource,
+  breadcrumbLinkCustomizadoSource,
+  breadcrumbSeparadorCustomizadoSource,
+  breadcrumbSimplesSource,
+} from './breadcrumb.source';
 
 const meta = {
   title: 'UI/Breadcrumb/States',
@@ -22,6 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: breadcrumbSimplesSource },
       description: {
         component:
           'Configuracoes estruturais do Breadcrumb: simples, com ellipsis, separador customizado e link customizado via as-child.',
@@ -97,6 +104,9 @@ export const WithEllipsis: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
     docs: {
+      // Um nível a mais e uma peça que a do meta não tem: as reticências
+      // ocupam um item da trilha e trazem o próprio import.
+      source: { transform: breadcrumbComReticenciasSource },
       description: {
         story:
           'Ellipsis colapsando níveis intermediários. Com rótulo, o indicador é anunciado; sem ele, fica decorativo.',
@@ -153,6 +163,9 @@ export const CustomSeparator: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
     docs: {
+      // O separador deixa de ser autofechado e passa a levar conteúdo no slot —
+      // a do meta mostraria o chevron padrão, que é justamente o que sai daqui.
+      source: { transform: breadcrumbSeparadorCustomizadoSource },
       description: {
         story:
           'Separador customizado via slot de BreadcrumbSeparator — mantém aria-hidden automaticamente.',
@@ -206,6 +219,9 @@ export const AsChildLink: Story = {
   parameters: {
     covers: ['functional.item3'],
     docs: {
+      // O link deixa de renderizar o próprio elemento e passa a vestir o de
+      // fora: sem o `as-child` e o filho, a composição não existe no snippet.
+      source: { transform: breadcrumbLinkCustomizadoSource },
       description: {
         story:
           'Link customizado via as-child — permite integração com routers como vue-router.',

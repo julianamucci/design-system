@@ -22,6 +22,14 @@ import {
   esperarFechado,
   overlay,
 } from './dialog.fixtures';
+import {
+  dialogAcaoDestrutivaSource,
+  dialogComFormularioSource,
+  dialogComRolagemSource,
+  dialogFecharNoRodapeSource,
+  dialogSemRodapeSource,
+  dialogSource,
+} from './dialog.source';
 
 const meta = {
   title: 'UI/Dialog/Variants',
@@ -32,6 +40,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // A composição padrão é a mesma do Playground: cabeçalho, saída e ação
+      // primária. As outras variantes trocam a estrutura e declaram a sua.
+      source: { transform: dialogSource },
       description: {
         component:
           'Composicoes estruturais recorrentes do Dialog. Não há prop variant — escolha a estrutura que melhor descreve o caso de uso.',
@@ -118,6 +129,9 @@ export const WithForm: Story = {
   parameters: {
     covers: ['visual.item2', 'visual.item4'],
     docs: {
+      // O corpo ganha um formulário com campos rotulados — dois imports a mais
+      // e uma seção que o snippet do meta não tem.
+      source: { transform: dialogComFormularioSource },
       description: { story: 'Body com formulário inline. Submissão dispara a ação primária do Footer.' },
     },
   },
@@ -182,6 +196,8 @@ export const WithScrollContent: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      // Outro painel: `DialogScrollContent` no lugar de `DialogContent`.
+      source: { transform: dialogComRolagemSource },
       description: {
         story:
           'Conteúdo longo demais para a janela: o painel sai do centro fixo e entra no fluxo do overlay, que passa a ser quem rola. Header e Footer continuam dentro do painel.',
@@ -242,6 +258,9 @@ export const NoFooter: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // A AUSÊNCIA do rodapé é o assunto: o snippet do meta o mostraria e
+      // ensinaria o contrário.
+      source: { transform: dialogSemRodapeSource },
       description: { story: 'Apenas Title + Description, sem Footer. Para uso informativo passivo.' },
     },
   },
@@ -286,6 +305,9 @@ export const WithDestructiveAction: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // A ação primária troca de variante — é uma prop que o snippet do meta,
+      // por ser o caso neutro, não escreve.
+      source: { transform: dialogAcaoDestrutivaSource },
       description: {
         story:
           'Footer com ação destrutiva. Use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista). Para confirmações irreversíveis principais, prefira AlertDialog.',
@@ -337,6 +359,8 @@ export const CustomCloseInFooter: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // Duas props que andam em par, e nenhuma delas está no snippet do meta.
+      source: { transform: dialogFecharNoRodapeSource },
       description: {
         story:
           '`showCloseButton: false` no Content e `showCloseButton` no Footer — o botão de fechar sai do canto e passa a acompanhar as ações.',

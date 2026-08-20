@@ -7,6 +7,12 @@ import {
 } from '@shared/testing/label-probe';
 import { Label } from './index';
 import { Input } from '@/components/ui/input';
+import {
+  labelDesabilitadoPeloGrupoSource,
+  labelDesabilitadoSource,
+  labelObrigatorioSource,
+  labelPadraoSource,
+} from './label.source';
 
 const meta = {
   title: 'UI/Label/States',
@@ -17,6 +23,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: labelPadraoSource },
       description: {
         component:
           'Estados do rótulo: padrão, desabilitado pelo controle irmão, desabilitado pelo bloco e obrigatório.',
@@ -63,6 +70,9 @@ export const Default: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item3'],
+    // O `nds-peer` no controle é o mecanismo inteiro do estado, e ele não
+    // existe na marcação do `meta`.
+    docs: { source: { transform: labelDesabilitadoSource } },
   },
   render: () => ({
     components: { Label, Input },
@@ -92,6 +102,9 @@ export const Disabled: Story = {
 export const DisabledViaGroup: Story = {
   parameters: {
     covers: ['functional.item4'],
+    // Aqui quem desliga é o `data-disabled` do CONTÊINER: outro caminho, outra
+    // marcação.
+    docs: { source: { transform: labelDesabilitadoPeloGrupoSource } },
   },
   render: () => ({
     components: { Label, Input },
@@ -117,6 +130,9 @@ export const DisabledViaGroup: Story = {
 export const Required: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+    // O asterisco dentro do rótulo e o `aria-required` no controle são um par,
+    // e nenhum dos dois está no `meta`.
+    docs: { source: { transform: labelObrigatorioSource } },
   },
   render: () => ({
     components: { Label, Input },

@@ -2,6 +2,13 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
+import {
+  avatarLgSource,
+  avatarMdSource,
+  avatarSmSource,
+  avatarTwoXlSource,
+  avatarXlSource,
+} from './avatar.source';
 
 const IMG_MARIA =
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
@@ -16,6 +23,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: avatarSmSource },
       description: {
         component:
           'Presets de tamanho da prop `size`: sm (24px), md (32px, padrão), lg (40px), xl (48px) e 2xl (64px).',
@@ -67,7 +75,12 @@ export const Sm: Story = {
 
 export const Md: Story = {
   name: 'md (32px · default)',
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    // A AUSÊNCIA da prop é o assunto: este preset é o padrão, e o snippet sai
+    // sem `size` nenhum — a do meta escreve `sm`.
+    docs: { source: { transform: avatarMdSource } },
+  },
   render: render(undefined),
   play: async ({ canvasElement }) => {
     // Sem passar size: o padrão do componente é o preset md, e não um valor
@@ -84,7 +97,11 @@ export const Md: Story = {
 
 export const Lg: Story = {
   name: 'lg (40px)',
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    // Sem controls, o preset só existe no template.
+    docs: { source: { transform: avatarLgSource } },
+  },
   render: render('lg'),
   play: async ({ canvasElement }) => {
     const { width, height } = caixaDo(canvasElement);
@@ -95,7 +112,11 @@ export const Lg: Story = {
 
 export const Xl: Story = {
   name: 'xl (48px)',
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    // Sem controls, o preset só existe no template.
+    docs: { source: { transform: avatarXlSource } },
+  },
   render: render('xl'),
   play: async ({ canvasElement }) => {
     const { width, height } = caixaDo(canvasElement);
@@ -106,7 +127,11 @@ export const Xl: Story = {
 
 export const TwoXl: Story = {
   name: '2xl (64px)',
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    // Sem controls, o preset só existe no template.
+    docs: { source: { transform: avatarTwoXlSource } },
+  },
   render: render('2xl'),
   play: async ({ canvasElement }) => {
     const { width, height } = caixaDo(canvasElement);

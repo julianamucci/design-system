@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { CodeBlock } from './index';
+import { codeBlockSource } from './code-block.source';
 
 /** Mesmo trecho base dos quatro arranjos da seção "Composições" da docs page. */
 const BASE_CODE = `const items = await load();
@@ -37,6 +38,7 @@ const meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: codeBlockSource } },
   },
   args: { code: BASE_CODE, language: 'ts' },
   render: (args) => ({

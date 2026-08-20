@@ -4,51 +4,11 @@ import { Toggle } from './index';
 import { Bold, Eye } from 'lucide-vue-next';
 import ToggleDocs from '@/components/docs/ToggleDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { toggleSource, type ToggleArgs as ToggleSourceArgs } from './toggle.source';
 
-type ToggleArgs = {
-  modelValue?: boolean;
-  defaultValue: boolean;
-  disabled: boolean;
-  variant: 'default' | 'outline';
-  size: 'default' | 'sm' | 'lg';
-  label: string;
-  iconOnly: boolean;
+type ToggleArgs = ToggleSourceArgs & {
   'onUpdate:modelValue'?: (value: boolean) => void;
 };
-
-/**
- * O painel Code imprime o `template` da story, com o `v-if` que alterna
- * icon-only e rótulo visível e o `v-bind="args"`. O `transform` devolve o uso
- * real, com os valores atuais dos controls.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleArgs> }): string {
-  const {
-    variant = 'default',
-    size = 'default',
-    defaultValue = false,
-    disabled = false,
-    label = 'Mostrar ocultos',
-    iconOnly = true,
-  } = ctx.args ?? {};
-
-  // Só o que difere do padrão entra no snippet: documentação que repete valor
-  // default ensina ruído.
-  const attrs = [
-    variant === 'default' ? '' : `variant="${variant}"`,
-    size === 'default' ? '' : `size="${size}"`,
-    defaultValue ? ':default-value="true"' : '',
-    disabled ? ':disabled="true"' : '',
-    // Toggle sem texto visível não tem nome acessível nenhum sem isto.
-    iconOnly ? `aria-label="${label || 'Alternar'}"` : '',
-  ].filter(Boolean);
-
-  const abertura = attrs.length ? `<Toggle ${attrs.join(' ')}>` : '<Toggle>';
-  const conteudo = iconOnly
-    ? '  <Bold aria-hidden="true" />'
-    : `  <Eye aria-hidden="true" />\n  ${label}`;
-
-  return `${abertura}\n${conteudo}\n</Toggle>`;
-}
 
 const meta: Meta<ToggleArgs> = {
   title: 'UI/Toggle',
@@ -57,7 +17,7 @@ const meta: Meta<ToggleArgs> = {
   parameters: {
     docs: {
       page: withAutoDocsTab(ToggleDocs),
-      source: { transform: playgroundSource },
+      source: { transform: toggleSource },
     },
   },
   argTypes: {

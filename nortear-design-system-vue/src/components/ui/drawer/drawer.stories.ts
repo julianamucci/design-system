@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import DrawerDocs from '@/components/docs/DrawerDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { drawerSource } from './drawer.source';
 
 const ROTULO = {
   gatilho: 'Abrir drawer',
@@ -32,6 +33,7 @@ const meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(DrawerDocs),
+      source: { transform: drawerSource },
       description: {
         component:
           'Painel deslizante mobile-first. Renderiza em portal com overlay, foco preso e role=dialog, em quatro direções de entrada.',

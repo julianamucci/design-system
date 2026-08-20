@@ -10,6 +10,7 @@ import {
   escalaSobMovimentoReduzido,
   descreverFalhas,
 } from '@shared/testing/carousel-probe';
+import { carouselHorizontalSource, carouselVerticalSource } from './carousel.source';
 
 const meta = {
   title: 'UI/Carousel/Variants',
@@ -20,6 +21,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: carouselHorizontalSource },
       description: {
         component: 'Orientações disponíveis do Carousel — horizontal (padrão) e vertical (o viewport precisa de altura definida).',
       },
@@ -125,6 +127,9 @@ export const Vertical: Story = {
   parameters: {
     covers: ['functional.item5', 'functional.item10', 'visual.item2'],
     docs: {
+      // O eixo troca a largura da moldura e exige altura definida no trilho —
+      // a do `meta` mostraria o horizontal, que é outra composição.
+      source: { transform: carouselVerticalSource },
       description: {
         story: 'Os slides empilham e as setas passam para cima e para baixo. O viewport precisa de altura definida — aqui ela vem de uma classe de proporção, nunca de style inline.',
       },

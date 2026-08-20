@@ -5,6 +5,12 @@ import { definir } from './switch.fixtures';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import {
+  switchEmFormularioSource,
+  switchItemDeMenuSource,
+  switchListaDePreferenciasSource,
+  switchPainelDeConfiguracoesSource,
+} from './switch.source';
 
 const meta = {
   title: 'UI/Switch/Compositions',
@@ -15,6 +21,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: switchPainelDeConfiguracoesSource },
       description: {
         component:
           'Padrões de composição do Switch: painel de configurações, lista de preferências, em formulário e item de menu compacto.',
@@ -81,6 +88,13 @@ export const SettingsPanel: Story = {
 };
 
 export const PreferenceList: Story = {
+  parameters: {
+    docs: {
+      // Três preferências relacionadas são uma lista de verdade: `ul`/`li` em
+      // vez das `div` empilhadas do painel, e sem texto de apoio.
+      source: { transform: switchListaDePreferenciasSource },
+    },
+  },
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },
@@ -124,6 +138,13 @@ export const PreferenceList: Story = {
 };
 
 export const InForm: Story = {
+  parameters: {
+    docs: {
+      // O `form` traz outros dois componentes e o `name`, que é o que faz o
+      // switch entrar no envio nativo — nada disso está no painel do meta.
+      source: { transform: switchEmFormularioSource },
+    },
+  },
   render: () => ({
     components: { Switch, Label, Input, Button },
     setup() { return {}; },
@@ -169,6 +190,13 @@ export const InForm: Story = {
 };
 
 export const CompactMenuItem: Story = {
+  parameters: {
+    docs: {
+      // Degrau `sm` em todas as linhas, sem texto de apoio e com o rótulo na
+      // escala de legenda: outra densidade, outra composição.
+      source: { transform: switchItemDeMenuSource },
+    },
+  },
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },

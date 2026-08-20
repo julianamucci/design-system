@@ -6,6 +6,7 @@ import {
   TRECHOS_DA_PALETA,
   laudoDeContraste,
 } from '@shared/testing/code-block-probe';
+import { codeBlockPaletaSource, codeBlockSource } from './code-block.source';
 
 /**
  * Uma story por linguagem classificada, com os mesmos literais da seção
@@ -23,6 +24,7 @@ const meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: codeBlockSource } },
   },
   args: { showLineNumbers: false },
   render: (args) => ({
@@ -150,7 +152,12 @@ const renderPaleta = () => ({
 });
 
 export const LightPalette: Story = {
-  parameters: { covers: ['accessibility.item4'] },
+  parameters: {
+    covers: ['accessibility.item4'],
+    // São vários blocos empilhados, um por linguagem, mais um com linha em
+    // destaque: a do meta mostraria um bloco só.
+    docs: { source: { transform: codeBlockPaletaSource } },
+  },
   args: { code: PALETA_CODE },
   render: renderPaleta,
   play: async ({ canvasElement, step }) => {
@@ -179,6 +186,9 @@ export const LightPalette: Story = {
 export const DarkPalette: Story = {
   parameters: {
     covers: ['accessibility.item4'],
+    // Mesma composição da paleta clara — o tema é do documento, e não algo que
+    // o snippet escreva.
+    docs: { source: { transform: codeBlockPaletaSource } },
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },

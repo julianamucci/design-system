@@ -19,6 +19,13 @@ import {
   MenubarTrigger,
 } from './index';
 import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import {
+  menubarComAtalhosSource,
+  menubarComCheckboxSource,
+  menubarComRadioSource,
+  menubarComSubmenuSource,
+  menubarEditorCompletoSource,
+} from './menubar.source';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -51,6 +58,7 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: menubarComAtalhosSource },
       description: {
         component:
           'As composições canônicas de um menu da barra: atalhos visíveis, submenu, alternadores independentes, escolha única e a barra completa de um editor.',
@@ -132,7 +140,14 @@ export const WithShortcuts: Story = {
 // ─── WithSubmenu ──────────────────────────────────────────────────────────────
 
 export const WithSubmenu: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item4'],
+    docs: {
+      // Sub-composição inteira dentro do painel: o trio Sub/SubTrigger/SubContent
+      // não aparece em nenhuma outra story do arquivo.
+      source: { transform: menubarComSubmenuSource },
+    },
+  },
   render: () => ({
     components: pecas,
     setup: () => ({ exportacoes: EXPORTACOES }),
@@ -205,7 +220,14 @@ export const WithSubmenu: Story = {
 // ─── WithCheckboxItems ────────────────────────────────────────────────────────
 
 export const WithCheckboxItems: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item3'],
+    docs: {
+      // Outro tipo de item, com estado próprio: `checked`/`@update:checked` sobre
+      // um objeto reativo, dentro de grupo rotulado.
+      source: { transform: menubarComCheckboxSource },
+    },
+  },
   render: () => ({
     components: pecas,
     setup() {
@@ -290,7 +312,14 @@ export const WithCheckboxItems: Story = {
 // ─── WithRadioGroup ───────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ['accessibility.item5'] },
+  parameters: {
+    covers: ['accessibility.item5'],
+    docs: {
+      // O valor mora no GRUPO, não no item: `v-model` no RadioGroup é a diferença
+      // estrutural entre escolha única e alternador.
+      source: { transform: menubarComRadioSource },
+    },
+  },
   render: () => ({
     components: pecas,
     setup() {
@@ -357,6 +386,13 @@ export const WithRadioGroup: Story = {
 // ─── EditorCompleto ───────────────────────────────────────────────────────────
 
 export const EditorCompleto: Story = {
+  parameters: {
+    docs: {
+      // Quatro menus, cada um com um tipo de conteúdo diferente: é a única story
+      // em que grupo, separador, atalho e alternador convivem na mesma barra.
+      source: { transform: menubarEditorCompletoSource },
+    },
+  },
   render: () => ({
     components: pecas,
     template: `

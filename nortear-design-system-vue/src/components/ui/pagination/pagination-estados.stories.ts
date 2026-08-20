@@ -9,6 +9,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from './index';
+import { paginationFaixaSource, paginationPrimeiraPaginaSource } from './pagination.source';
 
 const meta = {
   title: 'UI/Pagination/States',
@@ -19,6 +20,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Hover, Focus e Contrast não têm markup próprio: o que as separa é o
+      // gesto e a medição da play, e a faixa é a mesma do meta.
+      source: { transform: paginationFaixaSource },
       description: {
         component:
           'Estados canônicos do Pagination: Default, Hover, Active, Disabled (Previous na primeira página), Focus e Contrast.',
@@ -155,6 +159,9 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item4'],
     docs: {
+      // O bloqueio não é prop: é a faixa parada no extremo. Só o `:page` do
+      // snippet muda, e é justamente ele que produz o estado.
+      source: { transform: paginationPrimeiraPaginaSource },
       description: {
         story:
           'Na primeira página o controle Anterior fica desabilitado: opacidade reduzida, fora da tabulação e sem navegar.',

@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { Badge } from './index';
 import { Check, Bell } from 'lucide-vue-next';
+import {
+  badgeComIconeSource,
+  badgeComoBotaoSource,
+  badgeComoLinkSource,
+  badgeContadorSource,
+} from './badge.source';
 
 const meta = {
   title: 'UI/Badge/Compositions',
@@ -14,6 +20,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: badgeComIconeSource },
       description: {
         component:
           'Configuracoes contextuais do Badge: combinado com ícone, como contador numérico, envolvido em <a> para navegação ou em <button> para trigger clicável.',
@@ -60,7 +67,12 @@ export const WithIcon: Story = {
 };
 
 export const CountBadge: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // O assunto está FORA do badge: o contêiner com papel e rótulo que dá
+    // sentido ao número. A do meta mostra o badge sozinho.
+    docs: { source: { transform: badgeContadorSource } },
+  },
   render: () => ({
     components: { Badge, Bell },
     template: `
@@ -94,7 +106,12 @@ export const CountBadge: Story = {
 };
 
 export const AsLink: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
+    // Quem é focável é o elemento de FORA: o snippet precisa mostrar o link em
+    // volta, que a do meta não tem.
+    docs: { source: { transform: badgeComoLinkSource } },
+  },
   render: () => ({
     components: { Badge },
     template: `
@@ -121,7 +138,12 @@ export const AsLink: Story = {
 };
 
 export const AsButton: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
+    // Mesma divisão de papéis do link, com o botão por fora — e o snippet troca
+    // o rótulo de exemplo, que aqui cita o nome de outra stack.
+    docs: { source: { transform: badgeComoBotaoSource } },
+  },
   render: () => ({
     components: { Badge },
     template: `

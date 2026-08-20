@@ -15,6 +15,11 @@ import {
   REGRA_GUARDA_DE_FOCO,
   REGRA_ROLAGEM_DA_LISTA,
 } from '@/lib/wait-for-portal';
+import {
+  selectAgrupadoSource,
+  selectComIconeSource,
+  selectListaPlanaSource,
+} from './select.source';
 
 const REGIOES = {
   Sudeste: [
@@ -45,6 +50,7 @@ const meta = {
     // completo está em `wait-for-portal`.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: selectListaPlanaSource },
       description: {
         component:
           'Variantes do Select: lista plana, lista agrupada por categoria e opção com ícone inline antes do texto.',
@@ -128,6 +134,8 @@ export const WithGroups: Story = {
     // O motivo de a regra sair está em `wait-for-portal`.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_ROLAGEM_DA_LISTA] } },
     docs: {
+      // Grupo e cabeçalho são dois componentes a mais na composição.
+      source: { transform: selectAgrupadoSource },
       description: {
         story: 'SelectGroup + SelectLabel agrupam opções por categoria. Útil quando há mais de uma dimensão lógica (regiões, tipos, etc.).',
       },
@@ -192,6 +200,8 @@ export const WithGroups: Story = {
 export const WithIcon: Story = {
   parameters: {
     docs: {
+      // O item deixa de ser só texto: ícone decorativo mais rótulo em <span>.
+      source: { transform: selectComIconeSource },
       description: {
         story: 'SelectItem com ícone inline antes do texto — composição via children diretos do item.',
       },

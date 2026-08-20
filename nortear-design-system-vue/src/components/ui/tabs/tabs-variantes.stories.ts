@@ -5,6 +5,7 @@ import {
   medirCrescimentoDoTrilho,
 } from '@shared/testing/tabs-probe';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
+import { tabsLinhaSource, tabsPadraoSource, tabsVerticalSource } from './tabs.source';
 
 const TRANSPARENTE = 'rgba(0, 0, 0, 0)';
 
@@ -17,6 +18,7 @@ const meta: Meta<any> = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: tabsPadraoSource },
       description: {
         component:
           'Variantes visuais do Tabs: Default (trilho com fundo próprio), Line (indicador em linha, sem trilho) e Vertical (lista em coluna à esquerda do painel).',
@@ -121,6 +123,9 @@ export const Line: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // `variant="line"` mora na LISTA, não na raiz: o snippet do meta não tem
+      // onde mostrar isso sem apagar a diferença.
+      source: { transform: tabsLinhaSource },
       description: {
         story: 'Variante line — sem trilho, com uma linha sob a aba ativa. Útil para sub-navegação dentro de páginas.',
       },
@@ -171,6 +176,9 @@ export const Vertical: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // O eixo troca a largura da moldura e move o respiro do painel para o
+      // lado: outra composição, não outro valor de prop.
+      source: { transform: tabsVerticalSource },
       description: {
         story: 'Variante vertical — orientation="vertical" empilha as abas em coluna à esquerda e exibe o painel à direita. Setas ↑↓ navegam entre abas.',
       },

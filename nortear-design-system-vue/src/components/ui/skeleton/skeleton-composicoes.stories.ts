@@ -3,6 +3,12 @@ import { expect } from 'storybook/test';
 import { Skeleton } from './index';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { caixaDesenhada } from '@shared/testing/skeleton-probe';
+import {
+  skeletonCardPerfilSource,
+  skeletonImagemProporcaoSource,
+  skeletonListaSource,
+  skeletonParagrafoSource,
+} from './skeleton.source';
 
 const meta: Meta = {
   title: 'UI/Skeleton/Compositions',
@@ -13,6 +19,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: skeletonCardPerfilSource },
       description: {
         component:
           'Composições típicas — card de perfil, lista, imagem em proporção e parágrafo. Cada bloco é uma região `role="status"` com `aria-busy`, e cada placeholder fica fora da árvore de acessibilidade.',
@@ -79,6 +86,9 @@ export const ListWithAvatar: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // A região ocupada passa a ser a própria lista, com `v-for` no item — não
+      // é outro valor de atributo, é outra estrutura.
+      source: { transform: skeletonListaSource },
       description: {
         story: 'Cinco itens com avatar pequeno e duas linhas — padrão de carregamento de lista.',
       },
@@ -133,6 +143,9 @@ export const ImageInAspectRatio: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      // Entra outro componente do design system para dar a caixa ao `fill`; o
+      // snippet do meta não teria de onde tirar o import.
+      source: { transform: skeletonImagemProporcaoSource },
       description: {
         story:
           'Placeholder de imagem dentro de uma proporção 16/9 — quem define a caixa é o container.',
@@ -174,6 +187,8 @@ export const ImageInAspectRatio: Story = {
 export const Paragraph: Story = {
   parameters: {
     docs: {
+      // Só linhas, sem avatar: a lição é a queda de largura entre elas.
+      source: { transform: skeletonParagrafoSource },
       description: {
         story: 'Três linhas com larguras decrescentes — placeholder de parágrafo.',
       },

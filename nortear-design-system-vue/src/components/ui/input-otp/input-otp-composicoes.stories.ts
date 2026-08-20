@@ -8,6 +8,12 @@ import {
 } from './index';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import {
+  inputOtpComApoioSource,
+  inputOtpComErroSource,
+  inputOtpComReenvioSource,
+  inputOtpComRotuloSource,
+} from './input-otp.source';
 
 const meta = {
   title: 'UI/InputOTP/Compositions',
@@ -18,6 +24,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: inputOtpComRotuloSource },
       description: {
         component:
           'Composicoes reais de InputOTP: ComLabel (Label associada via for/id), ComHelpText (texto auxiliar via aria-describedby), ComErrorMessage (mensagem de erro com aria-invalid) e ComResendButton (botão para reenviar código).',
@@ -77,6 +84,9 @@ export const WithLabel: Story = {
 export const WithHelpText: Story = {
   parameters: {
     docs: {
+      // O `aria-describedby` e o parágrafo que ele aponta são a lição, e não
+      // existem na marcação do `meta`.
+      source: { transform: inputOtpComApoioSource },
       description: {
         story: 'Texto auxiliar conectado via aria-describedby — origem do código + tempo de validade.',
       },
@@ -120,6 +130,9 @@ export const WithHelpText: Story = {
 export const WithErrorMessage: Story = {
   parameters: {
     docs: {
+      // `aria-invalid` mais a mensagem conectada: a borda vermelha sozinha não
+      // alcança quem não enxerga cor.
+      source: { transform: inputOtpComErroSource },
       description: {
         story:
           'Mensagem de erro com aria-invalid=true e aria-describedby. Causa + ação corretiva.',
@@ -164,6 +177,9 @@ export const WithErrorMessage: Story = {
 export const WithResendButton: Story = {
   parameters: {
     docs: {
+      // O reenvio vem DEPOIS do campo na ordem do DOM, e é essa ordem que a
+      // story ensina — o `meta` termina no campo.
+      source: { transform: inputOtpComReenvioSource },
       description: {
         story:
           'Botão "Reenviar código" abaixo do input. Verbo no infinitivo + objeto. Útil quando SMS demora.',

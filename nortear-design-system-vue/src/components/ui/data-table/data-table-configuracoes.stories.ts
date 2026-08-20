@@ -2,12 +2,21 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { DataTable } from './index';
 import { type Invoice, invoices, baseColumns } from './data-table.fixtures';
+import {
+  dataTablePaginadaSource,
+  dataTableRotuloDeLinhaSource,
+  dataTableVirtualizadaSource,
+} from './data-table.source';
 
 const meta: Meta<Record<string, unknown>> = {
   title: 'UI/DataTable/Settings',
   component: DataTable as never,
   tags: ['tables'],
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: dataTablePaginadaSource } },
+  },
 };
 
 export default meta;
@@ -164,6 +173,9 @@ export const ExplicitRowLabel: Story = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    // Aqui entram DUAS props que a paginada não tem — a chave e o rótulo da
+    // linha —, e a paginação sai de cena.
+    docs: { source: { transform: dataTableRotuloDeLinhaSource } },
   },
   play: async ({ canvasElement, step }) => {
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
@@ -222,7 +234,12 @@ export const Virtualized1000Rows: Story = {
     covers: ['functional.item7', 'visual.item5'],
     controls: { disable: true },
     actions: { disable: true },
-    docs: { canvas: { sourceState: 'none' } },
+    // Mil linhas geradas e a janela de altura máxima: nada disso está no
+    // snippet da paginada, que parte das doze faturas escritas à mão.
+    docs: {
+      canvas: { sourceState: 'none' },
+      source: { transform: dataTableVirtualizadaSource },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const rolador = () => canvasElement.querySelector<HTMLElement>('.nds-data-table-scroll')!;

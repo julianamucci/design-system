@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import SheetDocs from '@/components/docs/SheetDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { sheetPlaygroundSource } from './sheet.source';
 
 const ROTULOS = {
   trigger: 'Abrir filtros',
@@ -38,7 +39,7 @@ const meta = {
   tags: ['autodocs', 'disclosure'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(SheetDocs) },
+    docs: { page: withAutoDocsTab(SheetDocs), source: { transform: sheetPlaygroundSource } },
   },
   argTypes: {
     side: {

@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { transbordo } from '@shared/testing/scroll-area-probe';
 import { ScrollArea, ScrollBar } from './index';
+import {
+  scrollAreaBidirecionalSource,
+  scrollAreaHorizontalSource,
+  scrollAreaVerticalSource,
+} from './scroll-area.source';
 
 const meta = {
   title: 'UI/ScrollArea/Variants',
@@ -12,6 +17,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: scrollAreaVerticalSource },
       description: {
         component:
           'Variantes do ScrollArea pela direção do scroll: vertical (padrão), horizontal (barra horizontal explícita, faixa com largura de conteúdo) e bidirecional (as duas barras mais o canto). A direção nasce do conteúdo — o eixo que transborda é o eixo que rola.',
@@ -89,6 +95,9 @@ export const Horizontal: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // A barra do eixo horizontal é declarada à mão, e a faixa passa a ser uma
+      // linha sem quebra: nada disso está no snippet vertical do meta.
+      source: { transform: scrollAreaHorizontalSource },
       description: {
         story:
           'Scroll horizontal apenas — faixa com largura de conteúdo, itens que não encolhem e barra horizontal explícita.',
@@ -142,6 +151,8 @@ export const Both: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // Conteúdo que transborda nos dois eixos é outra composição inteira.
+      source: { transform: scrollAreaBidirecionalSource },
       description: {
         story:
           'Scroll bidirecional — tabela ampla dentro de um container fixo; as duas barras são montadas e o canto aparece no encontro delas.',

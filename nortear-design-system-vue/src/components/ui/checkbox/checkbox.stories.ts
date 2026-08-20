@@ -3,13 +3,14 @@ import { within, fn, userEvent, expect, waitFor } from 'storybook/test';
 import { Checkbox } from './index';
 import CheckboxDocs from '@/components/docs/CheckboxDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { checkboxSource } from './checkbox.source';
 
 const meta = {
   title: 'UI/Checkbox',
   component: Checkbox,
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(CheckboxDocs) },
+    docs: { page: withAutoDocsTab(CheckboxDocs), source: { transform: checkboxSource } },
   },
   argTypes: {
     // Alias do wrapper para `defaultValue`: estado INICIAL, não controlado —

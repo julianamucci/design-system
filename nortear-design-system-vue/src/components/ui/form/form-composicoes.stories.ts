@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Fieldset as FieldsetRoot, FormField } from './index';
+import { formFieldsetSource, formMultiplosCamposSource } from './form.source';
 
 const meta: Meta = {
   title: 'UI/Form/Compositions',
@@ -12,6 +13,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: formFieldsetSource } },
   },
 };
 
@@ -73,7 +75,14 @@ export const Fieldset: Story = {
  * É onde a ordem de tabulação e a associação de uma `<textarea>` são o assunto.
  */
 export const MultipleFields: Story = {
-  parameters: { covers: ['functional.item6', 'functional.item8'] },
+  parameters: {
+    covers: ['functional.item6', 'functional.item8'],
+    docs: {
+      // O `<form>` em volta, três controles de tipos diferentes e o envio: a do
+      // `meta` mostra um grupo isolado, sem formulário nem submissão.
+      source: { transform: formMultiplosCamposSource },
+    },
+  },
   render: () => ({
     components: { FormField, Input, Textarea, Button },
     setup: () => ({ semEnvio: (e: Event) => e.preventDefault() }),

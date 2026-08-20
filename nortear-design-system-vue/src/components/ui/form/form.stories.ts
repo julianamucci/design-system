@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { Input } from '@/components/ui/input';
 import { FormField } from './index';
+import { formSource } from './form.source';
 
 type FormArgs = {
   label: string;
@@ -15,7 +16,10 @@ type FormArgs = {
 const meta: Meta<FormArgs> = {
   title: 'UI/Form',
   tags: ['autodocs', 'form'],
-  parameters: { layout: 'padded' },
+  parameters: {
+    layout: 'padded',
+    docs: { source: { transform: formSource } },
+  },
   argTypes: {
     label: {
       control: 'text',

@@ -3,6 +3,11 @@ import { userEvent, within, expect } from 'storybook/test';
 import { Label } from './index';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
+import {
+  labelComCaixaDeSelecaoSource,
+  labelComCampoSource,
+  labelObrigatorioSource,
+} from './label.source';
 
 const meta = {
   title: 'UI/Label/Compositions',
@@ -13,6 +18,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: labelComCampoSource },
       description: {
         component:
           'Composições do rótulo com outros elementos de formulário: campo de texto, caixa de seleção e campo obrigatório.',
@@ -54,6 +60,9 @@ export const WithInput: Story = {
 };
 
 export const WithCheckbox: Story = {
+  // A ordem se inverte e o bloco deita: o controle vem antes do texto, que é a
+  // forma que a caixa pede. A do `meta` empilha rótulo em cima do campo.
+  parameters: { docs: { source: { transform: labelComCaixaDeSelecaoSource } } },
   render: () => ({
     components: { Label, Checkbox },
     template: `
@@ -91,6 +100,9 @@ export const WithCheckbox: Story = {
 
 export const RequiredField: Story = {
   name: 'With required input',
+  // O asterisco decorativo dentro do rótulo mais o `aria-required` no controle:
+  // o par não existe na marcação do `meta`.
+  parameters: { docs: { source: { transform: labelObrigatorioSource } } },
   render: () => ({
     components: { Label, Input },
     template: `

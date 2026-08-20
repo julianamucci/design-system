@@ -5,6 +5,12 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from './index';
+import {
+  resizableAninhadoSource,
+  resizableComPegadorSource,
+  resizableHorizontalSource,
+  resizableVerticalSource,
+} from './resizable.source';
 
 const meta = {
   title: 'UI/Resizable/Variants',
@@ -15,6 +21,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: resizableHorizontalSource },
       description: {
         component:
           'Variantes do Resizable: Horizontal (split lateral com divisor vertical), Vertical (split empilhado com divisor deitado), Nested (grupo dentro de painel) e WithHandle (pegador visual centralizado).',
@@ -83,7 +90,12 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    // O eixo troca a proporção da moldura e a direção do grupo — a do meta
+    // mostraria o split lateral, que é outra composição.
+    docs: { source: { transform: resizableVerticalSource } },
+  },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
@@ -126,7 +138,11 @@ export const Vertical: Story = {
 };
 
 export const Nested: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // O segundo grupo dentro do painel é justamente o que a story ensina.
+    docs: { source: { transform: resizableAninhadoSource } },
+  },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
@@ -180,7 +196,11 @@ export const Nested: Story = {
 };
 
 export const WithHandle: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // A flag do pegador é o assunto, e o divisor do meta não a tem.
+    docs: { source: { transform: resizableComPegadorSource } },
+  },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `

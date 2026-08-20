@@ -15,6 +15,12 @@ import {
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
+import {
+  commandComAtalhosSource,
+  commandComGruposSource,
+  commandComoComboboxSource,
+  commandPaletteSource,
+} from './command.source';
 
 const meta = {
   title: 'UI/Command/Compositions',
@@ -26,6 +32,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: commandComGruposSource },
       description: {
         component:
           'Os arranjos da paleta: grupos nomeados com divisor, atalhos por comando, e os dois '
@@ -134,6 +141,9 @@ export const WithGroups: Story = {
 // ─── Atalhos por comando ──────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
+  // O atalho mora DENTRO do item, que é o que o faz entrar no nome acessível —
+  // a do meta mostra comandos sem atalho nenhum.
+  parameters: { docs: { source: { transform: commandComAtalhosSource } } },
   render: () => ({
     components: {
       Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
@@ -229,7 +239,12 @@ export const WithShortcuts: Story = {
 // ─── Combobox ─────────────────────────────────────────────────────────────────
 
 export const AsCombobox: Story = {
-  parameters: { covers: ['functional.item7', 'accessibility.item5', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item7', 'accessibility.item5', 'visual.item3'],
+    // A paleta entra dentro de um Popover, com gatilho, rótulo costurado e o
+    // fechamento ao escolher: é outra composição inteira.
+    docs: { source: { transform: commandComoComboboxSource } },
+  },
   render: () => ({
     components: {
       Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
@@ -394,6 +409,9 @@ export const AsCombobox: Story = {
 export const CommandPalette: Story = {
   parameters: {
     covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item4'],
+    // `CommandDialog` já traz a raiz por dentro, e o atalho de janela é código
+    // de quem consome — nada disso aparece na do meta.
+    docs: { source: { transform: commandPaletteSource } },
   },
   render: () => ({
     components: {

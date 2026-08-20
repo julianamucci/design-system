@@ -12,6 +12,13 @@ import {
 } from './index';
 import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
+import {
+  menubarAbertoSource,
+  menubarCheckboxMarcadoSource,
+  menubarCheckboxMistoSource,
+  menubarFechadoSource,
+  menubarItemBloqueadoSource,
+} from './menubar.source';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'];
 
@@ -35,6 +42,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: menubarFechadoSource },
       description: {
         component:
           'Os quatro estados que o conteúdo compartilhado descreve: barra fechada, menu aberto, item bloqueado e item marcado.',
@@ -109,6 +117,11 @@ export const Open: Story = {
   parameters: {
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     covers: ['accessibility.item4'],
+    docs: {
+      // Aberto na montagem é PRESENÇA de `default-value`; a do meta mostra a
+      // barra fechada, que é justamente a ausência dele.
+      source: { transform: menubarAbertoSource },
+    },
   },
   render: () => ({
     components: pecas,
@@ -167,6 +180,11 @@ export const Open: Story = {
 export const ItemDisabled: Story = {
   parameters: {
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    docs: {
+      // O bloqueio mora no ITEM, e por item: a do meta não tem `:disabled` em
+      // lugar nenhum.
+      source: { transform: menubarItemBloqueadoSource },
+    },
   },
   render: () => ({
     components: pecas,
@@ -222,6 +240,11 @@ export const CheckboxChecked: Story = {
   parameters: {
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     covers: ['functional.item7'],
+    docs: {
+      // Outro tipo de item e outra API: `checked`/`@update:checked` sobre estado
+      // reativo, que a composição de itens simples do meta não mostra.
+      source: { transform: menubarCheckboxMarcadoSource },
+    },
   },
   render: () => ({
     components: pecas,
@@ -293,6 +316,11 @@ export const CheckboxIndeterminate: Story = {
   parameters: {
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     covers: ['functional.item9'],
+    docs: {
+      // O misto é um TERCEIRO valor de `checked`, escrito como string literal —
+      // nenhuma outra story escreve `checked="indeterminate"`.
+      source: { transform: menubarCheckboxMistoSource },
+    },
   },
   render: () => ({
     components: pecas,

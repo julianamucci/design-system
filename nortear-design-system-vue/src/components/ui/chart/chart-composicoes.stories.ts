@@ -8,6 +8,7 @@ import {
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption } from './index';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { chartComCardSource, chartTituloNoDesenhoSource } from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
@@ -17,7 +18,11 @@ const TITULO_NO_DESENHO = 'Vendas mensais';
 
 const meta: Meta = {
   // Sem argTypes: sem isto o painel Controls abre vazio.
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: chartComCardSource } },
+  },
   title: 'UI/Chart/Compositions',
   tags: ['display'],
 };
@@ -74,7 +79,12 @@ export const WithCard: Story = {
  */
 export const InlineTitle: Story = {
   parameters: {
-    docs: { description: { story: 'Título dentro do desenho, para o gráfico que aparece sem card.' } },
+    // O card sai de cena e o rótulo autoral some junto — a ausência é o
+    // assunto, e a do meta a esconderia atrás do Card.
+    docs: {
+      source: { transform: chartTituloNoDesenhoSource },
+      description: { story: 'Título dentro do desenho, para o gráfico que aparece sem card.' },
+    },
   },
   render: () => h(ChartContainer, {
     option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA, title: TITULO_NO_DESENHO }),

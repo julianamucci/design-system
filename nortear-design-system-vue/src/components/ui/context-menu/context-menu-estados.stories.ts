@@ -14,6 +14,13 @@ import {
   ContextMenuLabel,
   ContextMenuCheckboxItem,
 } from '@/components/ui/context-menu';
+import {
+  contextMenuItemDesabilitadoSource,
+  contextMenuItemDestrutivoSource,
+  contextMenuItemRecuadoSource,
+  contextMenuMarcacaoMistaSource,
+  contextMenuPaletaEscuraSource,
+} from './context-menu.source';
 
 const meta: Meta = {
   title: 'UI/ContextMenu/States',
@@ -25,6 +32,7 @@ const meta: Meta = {
     layout: 'centered',
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: contextMenuItemDesabilitadoSource },
       description: {
         component:
           'Estados do Context Menu: item desabilitado, item recuado, item destrutivo e a paleta escura.',
@@ -116,6 +124,11 @@ export const ItemDisabled: Story = {
 
 export const ItemInset: Story = {
   name: 'Item with inset',
+  parameters: {
+    // O recuo é a prop `inset` no rótulo e no item — nada disso aparece no
+    // snippet do meta, que mostra o menu sem alinhamento de indicador.
+    docs: { source: { transform: contextMenuItemRecuadoSource } },
+  },
   render: () => ({
     components: componentes,
     template: `
@@ -164,6 +177,9 @@ export const ItemDestructive: Story = {
   name: 'Destructive item',
   parameters: {
     covers: ['functional.item10', 'visual.item2'],
+    // Aqui nenhum item está desabilitado: o assunto é só a ação perigosa, com o
+    // rótulo por extenso que ela pede.
+    docs: { source: { transform: contextMenuItemDestrutivoSource } },
   },
   render: () => ({
     components: componentes,
@@ -217,7 +233,12 @@ export const ItemDestructive: Story = {
 // estado anterior.
 
 export const CheckboxIndeterminate: Story = {
-  parameters: { covers: ['functional.item11'] },
+  parameters: {
+    covers: ['functional.item11'],
+    // Itens de MARCAÇÃO nos três estados, e não itens de ação: outra peça e
+    // outra prop.
+    docs: { source: { transform: contextMenuMarcacaoMistaSource } },
+  },
   render: () => ({
     components: componentes,
     template: `
@@ -272,6 +293,9 @@ export const CheckboxIndeterminate: Story = {
 export const DarkPalette: Story = {
   parameters: {
     covers: ['visual.item6'],
+    // Menu curto, sem grupo nem atalho: o que a story mostra é que a paleta
+    // troca sem uma linha de markup mudar.
+    docs: { source: { transform: contextMenuPaletaEscuraSource } },
     // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
     themes: { themeOverride: 'dark' },

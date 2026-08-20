@@ -33,7 +33,11 @@ export default defineConfig({
       include: ['src/components/ui/**/*.{ts,vue}'],
       exclude: [
         'src/components/ui/**/*.stories.{ts,tsx}',
+        'src/components/ui/**/*.test.ts',
         'src/components/ui/**/index.ts',
+        // Fixtures que só existem para as stories montarem: são andaime de
+        // teste, não superfície do design system.
+        'src/components/ui/**/*.fixtures.ts',
       ],
       thresholds: {
         statements: 90,
@@ -43,6 +47,18 @@ export default defineConfig({
       },
     },
     projects: [{
+      // Os `*.source.ts` são as transforms do painel Code: entra `ctx.args`,
+      // sai a string do snippet. A saída do painel NÃO chega ao DOM durante a
+      // `play`, então nenhuma suíte de browser a alcança — este projeto de node
+      // é a única guarda que elas têm. Os módulos são TS puro, sem import de
+      // `.vue`, justamente para rodar aqui.
+      extends: true,
+      test: {
+        name: 'unit',
+        environment: 'node',
+        include: ['src/**/*.test.ts'],
+      },
+    }, {
       extends: true,
       plugins: [
       // The plugin will run tests for the stories defined in your Storybook config

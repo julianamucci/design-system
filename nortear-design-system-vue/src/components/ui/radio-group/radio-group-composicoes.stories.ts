@@ -3,6 +3,12 @@ import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import {
+  radioGroupCartoesSource,
+  radioGroupEmFormularioSource,
+  radioGroupFieldsetSource,
+  radioGroupPagamentoSource,
+} from './radio-group.source';
 
 const meta = {
   title: 'UI/RadioGroup/Compositions',
@@ -13,6 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: radioGroupPagamentoSource },
       description: {
         component:
           'Padrões de composição do RadioGroup: forma de pagamento, fieldset+legend, em formulário e cartões selecionáveis.',
@@ -78,6 +85,11 @@ export const PaymentMethod: Story = {
 };
 
 export const WithFieldsetLegend: Story = {
+  parameters: {
+    // O fieldset com legend visível é a composição — o grupo solto do meta não
+    // mostra o título nem a moldura.
+    docs: { source: { transform: radioGroupFieldsetSource } },
+  },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
@@ -113,6 +125,10 @@ export const WithFieldsetLegend: Story = {
 };
 
 export const InForm: Story = {
+  parameters: {
+    // O assunto é o grupo convivendo com outros campos e com o envio.
+    docs: { source: { transform: radioGroupEmFormularioSource } },
+  },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label, Button },
     setup() { return {}; },
@@ -173,6 +189,11 @@ export const InForm: Story = {
 };
 
 export const SelectableCards: Story = {
+  parameters: {
+    // O rótulo passa a envolver o item, e o cartão inteiro vira alvo de clique:
+    // a linha item-ao-lado-do-rótulo do meta é outra estrutura.
+    docs: { source: { transform: radioGroupCartoesSource } },
+  },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },

@@ -3,6 +3,12 @@ import { userEvent, within, expect } from 'storybook/test';
 import { ref } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
+import {
+  calendarDoisMesesSource,
+  calendarLegendaComSeletoresSource,
+  calendarSeisSemanasSource,
+  calendarSource,
+} from './calendar.source';
 
 const meta = {
   title: 'UI/Calendar/Layouts',
@@ -13,6 +19,7 @@ const meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: calendarSource },
       description: {
         component:
           'Formato da legenda do mês e quantidade de meses visíveis ao mesmo tempo.',
@@ -94,7 +101,10 @@ export const CaptionDropdown: Story = {
   }),
   parameters: {
     covers: ['functional.item7'],
+    // A legenda deixa de ser texto e vira controle — é a prop `layout` que faz
+    // isso, e ela não está nos args deste arquivo.
     docs: {
+      source: { transform: calendarLegendaComSeletoresSource },
       description: {
         story: 'Mês e ano viram seletores, para saltar de período sem passar mês a mês.',
       },
@@ -178,7 +188,9 @@ export const TwoMonths: Story = {
     `,
   }),
   parameters: {
+    // São duas grades na tela, e o que as põe lá é uma prop que a do meta omite.
     docs: {
+      source: { transform: calendarDoisMesesSource },
       description: {
         story: 'Dois meses lado a lado, para escolher datas que atravessam a virada.',
       },
@@ -211,7 +223,10 @@ export const WithFixedWeeks: Story = {
     `,
   }),
   parameters: {
+    // A altura estável vem de uma prop, e sem ela o snippet não distinguiria
+    // esta story do layout padrão.
     docs: {
+      source: { transform: calendarSeisSemanasSource },
       description: {
         story:
           'Seis linhas de semana sempre: a altura do bloco não muda ao virar o mês, então nada abaixo dele salta.',

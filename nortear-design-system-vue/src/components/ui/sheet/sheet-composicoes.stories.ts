@@ -15,6 +15,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
+import {
+  sheetEdicaoPerfilSource,
+  sheetFiltrosAvancadosSource,
+  sheetFormularioLongoSource,
+  sheetNavegacaoSecundariaSource,
+} from './sheet.source';
 
 const meta = {
   title: 'UI/Sheet/Compositions',
@@ -27,6 +33,7 @@ const meta = {
     // Painel modal aberto: ver o motivo em wait-for-portal.ts.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: sheetFiltrosAvancadosSource },
       description: {
         component:
           'Composições reais do Sheet em fluxos de produto: filtros avançados, edição de ' +
@@ -111,6 +118,9 @@ export const AdvancedFilters: Story = {
 export const ProfileEdit: Story = {
   parameters: {
     docs: {
+      // O corpo é um `form` e a confirmação é o `submit` dele — o meta mostra
+      // filtros soltos, sem formulário em volta.
+      source: { transform: sheetEdicaoPerfilSource },
       description: { story: 'Edição de perfil com múltiplos campos no painel direito.' },
     },
   },
@@ -160,6 +170,9 @@ export const ProfileEdit: Story = {
 export const SecondaryNavigation: Story = {
   parameters: {
     docs: {
+      // Painel esquerdo e SEM rodapé: a ausência do rodapé é deliberada, porque
+      // a lista de links já é a ação. O snippet do meta o traria de volta.
+      source: { transform: sheetNavegacaoSecundariaSource },
       description: { story: 'Menu de navegação secundária no painel esquerdo.' },
     },
   },
@@ -197,6 +210,9 @@ export const LongFormScroll: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // O corpo mais alto que o painel é o assunto: sem os campos repetidos não
+      // há rolagem para o leitor ver de onde vem a separação corpo/rodapé.
+      source: { transform: sheetFormularioLongoSource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +

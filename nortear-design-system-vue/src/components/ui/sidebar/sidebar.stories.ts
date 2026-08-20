@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { userEvent, waitFor, within, expect } from 'storybook/test';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import SidebarDocs from '@/components/docs/SidebarDocs.vue';
+import { sidebarPlaygroundSource } from './sidebar.source';
 
 import {
   Sidebar,
@@ -49,6 +50,7 @@ const meta = {
           'Navegação principal persistente da aplicação com suporte a recolhimento, modo flutuante e overlay em mobile.',
       },
       page: withAutoDocsTab(SidebarDocs),
+      source: { transform: sidebarPlaygroundSource },
     },
   },
   argTypes: {

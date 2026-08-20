@@ -6,6 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { valorDaAlca } from '@shared/testing/slider-probe';
+import {
+  sliderFormularioSource,
+  sliderPassoGrossoSource,
+  sliderPrecoSource,
+  sliderVolumeSource,
+} from './slider.source';
 
 const meta = {
   title: 'UI/Slider/Compositions',
@@ -16,6 +22,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sliderVolumeSource },
       description: {
         component:
           'Padrões de composição do Slider: volume com valor adjacente, faixa de preço (range), em formulário e com step grosso.',
@@ -59,6 +66,13 @@ export const VolumeWithValue: Story = {
 };
 
 export const PriceRange: Story = {
+  parameters: {
+    docs: {
+      // Duas alças, faixa larga com passo grosso e a escala embaixo do trilho:
+      // três diferenças estruturais em relação ao snippet do meta.
+      source: { transform: sliderPrecoSource },
+    },
+  },
   render: () => ({
     components: { Slider, Label },
     setup() {
@@ -95,6 +109,13 @@ export const PriceRange: Story = {
 };
 
 export const InForm: Story = {
+  parameters: {
+    docs: {
+      // Dois controles no mesmo formulário, cada um com o próprio nome — é a
+      // repetição que ensina a regra, e o meta mostra um controle só.
+      source: { transform: sliderFormularioSource },
+    },
+  },
   render: () => ({
     components: { Slider, Label, Input, Button },
     setup() {
@@ -161,6 +182,13 @@ export const InForm: Story = {
 };
 
 export const ThickStep: Story = {
+  parameters: {
+    docs: {
+      // Faixa curta com escala visível: os limites saem do padrão e a escala
+      // não existe na composição do meta.
+      source: { transform: sliderPassoGrossoSource },
+    },
+  },
   render: () => ({
     components: { Slider, Label },
     setup() {

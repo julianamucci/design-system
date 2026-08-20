@@ -7,6 +7,7 @@ import {
   CardDescription,
   CardContent,
 } from './index';
+import { cardCompactoSource, cardSimplesSource } from './card.source';
 
 const meta = {
   title: 'UI/Card/Sizes',
@@ -17,6 +18,7 @@ const meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: cardSimplesSource },
       description: {
         component:
           'Tamanhos do Card: "default" para uso geral e "sm" para listas densas e dashboards. O tamanho propaga via data-size e ajusta padding e tamanho do título das partes internas.',
@@ -79,7 +81,12 @@ export const Default: Story = {
 };
 
 export const Small: Story = {
-  parameters: { covers: ['functional.item2'] },
+  // Outro tamanho, outro conteúdo e outra moldura: os args não descrevem nada
+  // nesta story, e a do meta mostraria o card no tamanho padrão.
+  parameters: {
+    covers: ['functional.item2'],
+    docs: { source: { transform: cardCompactoSource } },
+  },
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `

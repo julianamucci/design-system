@@ -9,6 +9,12 @@ import {
 } from './index';
 import { Badge } from '@/components/ui/badge';
 import { Info, AlertTriangle, CheckCircle } from 'lucide-vue-next';
+import {
+  accordionComBadgeSource,
+  accordionComIconeSource,
+  accordionConteudoRicoSource,
+  accordionFaqSource,
+} from './accordion.source';
 
 const meta = {
   title: 'UI/Accordion/Compositions',
@@ -17,6 +23,7 @@ const meta = {
     design: figmaDesign('accordionTrigger'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: accordionComIconeSource } },
   },
 } satisfies Meta;
 
@@ -131,6 +138,9 @@ export const WithBadgeInTrigger: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // Outra sub-composição no gatilho, com outro import: o selo entra depois
+      // do rótulo, e não um ícone antes.
+      source: { transform: accordionComBadgeSource },
       description: {
         story: 'Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.',
       },
@@ -196,6 +206,9 @@ export const RichContent: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
     docs: {
+      // O assunto está DENTRO do painel — tabela e lista —, e não no gatilho
+      // que a do meta compõe.
+      source: { transform: accordionConteudoRicoSource },
       description: {
         story: 'AccordionContent aceita qualquer conteúdo Vue. Use para tabelas de dados, parágrafos ou listas estruturadas.',
       },
@@ -245,6 +258,9 @@ export const FAQ: Story = {
   parameters: {
     covers: ['functional.item1', 'functional.item3'],
     docs: {
+      // Os itens vêm de dados e o acordeão ganha título em volta: é laço e
+      // script, não a marcação item a item da do meta.
+      source: { transform: accordionFaqSource },
       description: {
         story: 'Padrão FAQ canônico. Perguntas interrogativas completas no trigger. Respostas objetivas em 2–3 linhas no content.',
       },

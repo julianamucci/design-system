@@ -7,6 +7,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from './index';
+import {
+  accordionAbertoSource,
+  accordionDesabilitadoSource,
+  accordionFechadoSource,
+  accordionFocoVisivelSource,
+} from './accordion.source';
 
 const meta = {
   title: 'UI/Accordion/States',
@@ -15,6 +21,7 @@ const meta = {
     design: figmaDesign('accordionItem'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: accordionFechadoSource } },
   },
 } satisfies Meta;
 
@@ -93,6 +100,9 @@ export const Open: Story = {
   parameters: {
     covers: ['accessibility.item2', 'visual.item3'],
     docs: {
+      // O aberto não vem de clique: é o valor inicial na raiz, e é ele que a do
+      // meta (fechada, sem valor nenhum) não tem.
+      source: { transform: accordionAbertoSource },
       description: {
         story: 'Estado aberto. aria-expanded="true" no trigger. Conteúdo visível e acessível.',
       },
@@ -144,6 +154,9 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item5', 'visual.item5'],
     docs: {
+      // A prop mora no ITEM e o exemplo precisa do par habilitado/desabilitado
+      // lado a lado — um item só não mostra o contraste.
+      source: { transform: accordionDesabilitadoSource },
       description: {
         story: 'Estado disabled. Trigger não responde a cliques. Use para seções temporariamente indisponíveis.',
       },
@@ -183,6 +196,9 @@ export const FocusVisible: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
+      // O foco só se demonstra havendo para onde ir: são dois itens, e o
+      // primeiro já aberto — a do meta tem um só.
+      source: { transform: accordionFocoVisivelSource },
       description: {
         story: 'Navegação por teclado. Tab move entre triggers. Enter e Space abrem/fecham. Focus ring ring-[3px] visível.',
       },

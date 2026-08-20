@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { Toggle } from './index';
 import { Bold, Italic, Eye, List } from 'lucide-vue-next';
+import {
+  toggleComRotuloSource,
+  toggleContornoSource,
+  toggleIconeSource,
+  toggleTamanhosSource,
+} from './toggle.source';
 
 const meta = {
   title: 'UI/Toggle/Variants',
@@ -13,6 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleIconeSource },
       description: {
         component:
           'Variantes visuais do Toggle: default (sem borda), outline (com borda), rótulo visível e a escada de tamanhos.',
@@ -60,7 +67,11 @@ export const Default: Story = {
 };
 
 export const Outline: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // São DOIS toggles: a borda só se lê contra a variante sem borda ao lado.
+    docs: { source: { transform: toggleContornoSource } },
+  },
   render: () => ({
     components: { Toggle, Bold, Italic },
     template: `
@@ -94,6 +105,13 @@ export const Outline: Story = {
 };
 
 export const WithLabel: Story = {
+  parameters: {
+    docs: {
+      // Com texto visível o `aria-label` SAI de cena: a ausência dele é a lição,
+      // e o snippet do meta mostra justamente o contrário.
+      source: { transform: toggleComRotuloSource },
+    },
+  },
   render: () => ({
     components: { Toggle, Eye, List },
     template: `
@@ -134,6 +152,12 @@ export const WithLabel: Story = {
 };
 
 export const Sizes: Story = {
+  parameters: {
+    docs: {
+      // A escada só existe como conjunto; um degrau sozinho não mostra escada.
+      source: { transform: toggleTamanhosSource },
+    },
+  },
   render: () => ({
     components: { Toggle, Bold },
     template: `

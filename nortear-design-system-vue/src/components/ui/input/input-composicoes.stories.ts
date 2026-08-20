@@ -10,6 +10,14 @@ import {
   InputGroupButton,
   InputGroupText,
 } from '@/components/ui/input-group';
+import {
+  inputAddonComBotaoSource,
+  inputAlinhamentosSource,
+  inputComApoioSource,
+  inputComErroSource,
+  inputComRotuloSource,
+  inputObrigatorioSource,
+} from './input.source';
 
 const meta = {
   title: 'UI/Input/Compositions',
@@ -20,6 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: inputComRotuloSource },
       description: {
         component:
           'O Input deve ser sempre acompanhado de um rótulo acessível. Composicoes comuns: com Label, com texto de apoio, com mensagem de erro e dentro de um InputGroup, que envolve o campo com prefixos, sufixos e botões internos.',
@@ -69,6 +78,9 @@ export const WithLabel: Story = {
 };
 
 export const WithSupportText: Story = {
+  // O apoio visível não basta: o `aria-describedby` que o liga ao campo é a
+  // lição, e ele não existe na marcação do `meta`.
+  parameters: { docs: { source: { transform: inputComApoioSource } } },
   render: () => ({
     components: { Input, Label },
     template: `
@@ -98,6 +110,9 @@ export const WithSupportText: Story = {
 };
 
 export const ErrorMessage: Story = {
+  // `aria-invalid` mais a mensagem apontada por `aria-describedby`: a cor da
+  // borda sozinha não alcança quem não enxerga.
+  parameters: { docs: { source: { transform: inputComErroSource } } },
   render: () => ({
     components: { Input, Label },
     template: `
@@ -136,6 +151,9 @@ export const ErrorMessage: Story = {
 };
 
 export const RequiredField: Story = {
+  // O par `aria-required` + asterisco fora da leitura é o que a story ensina, e
+  // nenhum dos dois está no `meta`.
+  parameters: { docs: { source: { transform: inputObrigatorioSource } } },
   render: () => ({
     components: { Input, Label },
     template: `
@@ -170,7 +188,12 @@ export const RequiredField: Story = {
  * propriedade `order` no CSS, e um `align` no elemento errado passaria batido.
  */
 export const Alignments: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item4'],
+    // Outro componente em volta do campo (o grupo) e os três alinhamentos de
+    // acessório: nada disso aparece no snippet do `meta`.
+    docs: { source: { transform: inputAlinhamentosSource } },
+  },
   render: () => ({
     components: { Label, InputGroup, InputGroupAddon, InputGroupInput, InputGroupText },
     template: `
@@ -248,7 +271,11 @@ export const Alignments: Story = {
 
 /** Fecha `functional.item8`. */
 export const AddonClick: Story = {
-  parameters: { covers: ['functional.item8'] },
+  parameters: {
+    covers: ['functional.item8'],
+    // O botão dentro do acessório, com ícone e nome próprio, é a peça nova.
+    docs: { source: { transform: inputAddonComBotaoSource } },
+  },
   render: () => ({
     components: { Label, InputGroup, InputGroupAddon, InputGroupInput, InputGroupButton, InputGroupText, XIcon },
     // Ícone, e não a letra "x": o glifo sozinho dava um alvo de 19.8x21.5px e o

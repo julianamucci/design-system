@@ -11,6 +11,13 @@ import {
   contrasteAlcaTrilho,
   valorDaAlca,
 } from '@shared/testing/slider-probe';
+import {
+  sliderDesabilitadoSource,
+  sliderFocoSource,
+  sliderNoMaximoSource,
+  sliderNoMinimoSource,
+  sliderPadraoSource,
+} from './slider.source';
 
 const meta = {
   title: 'UI/Slider/States',
@@ -21,6 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sliderPadraoSource },
       description: {
         component:
           'Estados do Slider: default, focus, active (durante arrasto), disabled, no min e no max.',
@@ -70,6 +78,9 @@ export const FocusVisible: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
+      // Sem a linha de valor: a story é sobre o desenho do foco, e a leitura
+      // ao lado disputaria a atenção com ele.
+      source: { transform: sliderFocoSource },
       description: {
         story:
           'Foco via teclado: Tab leva ao thumb e setas/Home/End/PgUp/PgDn alteram o valor.',
@@ -115,7 +126,13 @@ export const FocusVisible: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: {
+      // A prop desligada é o assunto, e ela não vem de control nesta página.
+      source: { transform: sliderDesabilitadoSource },
+    },
+  },
   render: () => ({
     components: { Slider, Label },
     setup() {
@@ -147,6 +164,13 @@ export const Disabled: Story = {
 };
 
 export const NoMin: Story = {
+  parameters: {
+    docs: {
+      // O extremo é o assunto, e ele mora no valor inicial do estado — não em
+      // prop nenhuma do componente.
+      source: { transform: sliderNoMinimoSource },
+    },
+  },
   render: () => ({
     components: { Slider, Label },
     setup() {
@@ -176,6 +200,12 @@ export const NoMin: Story = {
 };
 
 export const NoMax: Story = {
+  parameters: {
+    docs: {
+      // Idem, no extremo oposto.
+      source: { transform: sliderNoMaximoSource },
+    },
+  },
   render: () => ({
     components: { Slider, Label },
     setup() {

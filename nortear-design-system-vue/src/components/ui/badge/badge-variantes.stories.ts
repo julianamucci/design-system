@@ -2,6 +2,13 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { Badge } from './index';
+import {
+  badgeDefaultSource,
+  badgeDestructiveSource,
+  badgeOutlineSource,
+  badgeSecondarySource,
+  badgeSemanticasSource,
+} from './badge.source';
 
 const meta = {
   title: 'UI/Badge/Variants',
@@ -13,6 +20,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: badgeDefaultSource },
       description: {
         component:
           'Cada variante do Badge reflete um nível de hierarquia visual: default destaca, secondary informa, destructive alerta e outline oferece baixa ênfase.',
@@ -62,7 +70,11 @@ export const Default: Story = {
 };
 
 export const Secondary: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    // Sem controls, a variante e o rótulo só existem no template.
+    docs: { source: { transform: badgeSecondarySource } },
+  },
   render: render('secondary', 'Beta'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -84,7 +96,11 @@ export const Secondary: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ['functional.item3', 'accessibility.item3', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+    // Sem controls, a variante e o rótulo só existem no template.
+    docs: { source: { transform: badgeDestructiveSource } },
+  },
   render: render('destructive', 'Urgente'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -107,7 +123,11 @@ export const Destructive: Story = {
 };
 
 export const Outline: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item2'],
+    // Sem controls, a variante e o rótulo só existem no template.
+    docs: { source: { transform: badgeOutlineSource } },
+  },
   render: render('outline', 'Rascunho'),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -131,6 +151,9 @@ export const Semantics: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item5', 'accessibility.item3'],
     docs: {
+      // São três badges lado a lado dentro de um agrupador: o assunto é o
+      // contraste ENTRE eles, e a do meta mostra um só.
+      source: { transform: badgeSemanticasSource },
       description: {
         story:
           'warning avisa, success confirma e info contextualiza. As três existiam no CSS como -high, -medium e -low, servindo só à tabela de prioridade das docs pages.',

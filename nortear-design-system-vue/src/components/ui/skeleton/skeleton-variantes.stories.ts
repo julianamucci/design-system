@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Skeleton } from './index';
 import { caixaDesenhada } from '@shared/testing/skeleton-probe';
+import {
+  skeletonCirculoSource,
+  skeletonLinhaTextoSource,
+  skeletonRetanguloSource,
+} from './skeleton.source';
 
 const meta: Meta = {
   title: 'UI/Skeleton/Variants',
@@ -12,6 +17,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: skeletonRetanguloSource },
       description: {
         component:
           'Formas do esqueleto. Não há variante via prop: a forma vem de `data-shape` e a largura de `data-width`, e a folha de estilo continua dona das medidas.',
@@ -60,6 +66,9 @@ export const Circle: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // Outra forma e sem container de proporção: `avatar` traz medida própria,
+      // ao contrário do `fill` que o meta mostra.
+      source: { transform: skeletonCirculoSource },
       description: {
         story:
           '`data-shape="avatar"` é a exceção que a guideline 12 prevê: peça sem fluxo de texto tem medida, e ela vem da escada `--size-*`.',
@@ -95,6 +104,9 @@ export const Circle: Story = {
 export const TextLine: Story = {
   parameters: {
     docs: {
+      // São três peças com larguras diferentes: a lição é a variação entre as
+      // linhas, e uma peça só não a mostra.
+      source: { transform: skeletonLinhaTextoSource },
       description: {
         story:
           'Altura derivada da escada de texto e largura em fração do container. Variar a largura entre linhas é o que faz o bloco parecer parágrafo.',

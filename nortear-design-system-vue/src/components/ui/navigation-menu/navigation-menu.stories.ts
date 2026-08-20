@@ -12,6 +12,7 @@ import {
 import { esperarPainel, esperarPainelSumir, painelAberto } from './navigation-menu.fixtures';
 import NavigationMenuDocs from '@/components/docs/NavigationMenuDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { navigationMenuSource } from './navigation-menu.source';
 
 const meta = {
   title: 'UI/NavigationMenu',
@@ -19,7 +20,7 @@ const meta = {
   tags: ['autodocs', 'navigation'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(NavigationMenuDocs) },
+    docs: { page: withAutoDocsTab(NavigationMenuDocs), source: { transform: navigationMenuSource } },
   },
   argTypes: {
     defaultValue: {

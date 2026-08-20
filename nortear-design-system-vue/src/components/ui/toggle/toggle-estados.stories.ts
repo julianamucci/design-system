@@ -7,6 +7,13 @@ import {
 } from '@shared/testing/toggle-probe';
 import { Toggle } from './index';
 import { Bold, Italic } from 'lucide-vue-next';
+import {
+  toggleAtivoSource,
+  toggleDesabilitadoSource,
+  toggleFocoSource,
+  toggleIconeSource,
+  toggleInvalidoSource,
+} from './toggle.source';
 
 const meta = {
   title: 'UI/Toggle/States',
@@ -18,6 +25,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleIconeSource },
       description: {
         component:
           'Estados do Toggle: off, on, foco por teclado, desabilitado e inválido (aria-invalid).',
@@ -57,7 +65,12 @@ export const Off: Story = {
 };
 
 export const On: Story = {
-  parameters: { covers: ['visual.item2', 'accessibility.item2'] },
+  parameters: {
+    covers: ['visual.item2', 'accessibility.item2'],
+    // O estado de partida é prop escrita à mão, e só se lê contra o desligado
+    // ao lado — o meta mostra apenas o desligado.
+    docs: { source: { transform: toggleAtivoSource } },
+  },
   render: () => ({
     components: { Toggle, Bold },
     template: `
@@ -101,7 +114,12 @@ export const On: Story = {
 };
 
 export const FocusVisible: Story = {
-  parameters: { covers: ['accessibility.item3'] },
+  parameters: {
+    covers: ['accessibility.item3'],
+    // O anel precisa ser visto nas DUAS variantes: a com borda já tem sombra em
+    // repouso, e é o par que mostra isso.
+    docs: { source: { transform: toggleFocoSource } },
+  },
   render: () => ({
     components: { Toggle, Bold, Italic },
     template: `
@@ -140,7 +158,11 @@ export const FocusVisible: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['visual.item4', 'functional.item4'] },
+  parameters: {
+    covers: ['visual.item4', 'functional.item4'],
+    // Desabilitado ligado e desligado desenham diferente: os dois entram.
+    docs: { source: { transform: toggleDesabilitadoSource } },
+  },
   render: () => ({
     components: { Toggle, Bold, Italic },
     template: `
@@ -185,6 +207,13 @@ export const Disabled: Story = {
 };
 
 export const Invalid: Story = {
+  parameters: {
+    docs: {
+      // O erro traz a mensagem e o vínculo que a alcança: uma composição
+      // inteira, não um atributo a mais no botão.
+      source: { transform: toggleInvalidoSource },
+    },
+  },
   render: () => ({
     components: { Toggle, Bold },
     template: `

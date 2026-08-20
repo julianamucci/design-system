@@ -11,6 +11,12 @@ import {
 } from './index';
 import { abrir, esperarPainel, esperarPainelSumir, painelAberto } from './navigation-menu.fixtures';
 import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import {
+  navigationMenuComDestaqueSource,
+  navigationMenuComPainelSource,
+  navigationMenuMegaMenuSource,
+  navigationMenuSomenteLinksSource,
+} from './navigation-menu.source';
 
 const meta = {
   title: 'UI/NavigationMenu/Compositions',
@@ -22,6 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: navigationMenuSomenteLinksSource },
       description: {
         component:
           'As quatro formas canônicas do painel, do mais simples ao mais denso: só destinos diretos, um item com lista vertical, um mega-menu em duas colunas com descrição e um painel com destino em destaque ao lado dos complementares.',
@@ -100,7 +107,12 @@ export const SimpleLink: Story = {
 export const WithDropdown: Story = {
   parameters: {
     covers: ['functional.item5'],
-    docs: { description: { story: 'Um gatilho com lista vertical de destinos — padrão comum para três a oito páginas relacionadas.' } },
+    docs: {
+      // Entra o par gatilho/painel, que a barra plana do meta não tem: é a
+      // diferença que decide se o componente vale a pena.
+      source: { transform: navigationMenuComPainelSource },
+      description: { story: 'Um gatilho com lista vertical de destinos — padrão comum para três a oito páginas relacionadas.' },
+    },
   },
   render: () => ({
     components: sharedComponents,
@@ -177,6 +189,9 @@ export const MegaMenuGrid: Story = {
     // Esta story termina com o painel ABERTO; ver a nota da regra.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      // Grade de duas colunas e descrição por destino: nenhuma outra story do
+      // arquivo mostra a linha de contexto dentro do bloco.
+      source: { transform: navigationMenuMegaMenuSource },
       description: {
         story:
           'Painel em duas colunas, com título e uma linha de contexto por destino — útil para apresentar soluções sem obrigar o leitor a adivinhar o que há do outro lado.',
@@ -274,6 +289,9 @@ export const WithHighlightedCard: Story = {
     // Esta story termina com o painel ABERTO; ver a nota da regra.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      // O destaque é um destino SOLTO na grade, irmão da lista de apoio — não
+      // há `<li>` em volta dele, e é isso que o deixa ocupar a coluna inteira.
+      source: { transform: navigationMenuComDestaqueSource },
       description: {
         story:
           'Um destino em destaque ao lado dos complementares — a hierarquia aparece pelo tamanho do bloco, não por cor.',

@@ -7,6 +7,13 @@ import {
   contrasteTextoFundo,
   resizeComputado,
 } from '@shared/testing/textarea-probe';
+import {
+  textareaComRotuloSource,
+  textareaDesabilitadoSource,
+  textareaInvalidoSource,
+  textareaPreenchidoSource,
+  textareaSomenteLeituraSource,
+} from './textarea.source';
 
 const meta = {
   title: 'UI/Textarea/States',
@@ -17,6 +24,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Foco não se escreve: o par mínimo serve para as stories cujo assunto é
+      // um estado que o navegador produz.
+      source: { transform: textareaComRotuloSource },
       description: {
         component:
           'O Textarea possui 6 estados visuais: default, focus, filled, disabled, invalid (aria-invalid) e read-only. Os estilos de cada estado são controlados por tokens de tema.',
@@ -83,7 +93,12 @@ export const Focus: Story = {
 };
 
 export const Filled: Story = {
-  parameters: { covers: ['accessibility.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['accessibility.item2', 'visual.item2'],
+    // O valor de partida é prop escrita à mão, e ela troca de lugar com o
+    // `placeholder` — os dois nunca aparecem juntos.
+    docs: { source: { transform: textareaPreenchidoSource } },
+  },
   render: () => ({
     components: { Textarea, Label },
     template: `
@@ -114,7 +129,11 @@ export const Filled: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    // `disabled` é a única diferença, e é o que o leitor precisa copiar.
+    docs: { source: { transform: textareaDesabilitadoSource } },
+  },
   render: () => ({
     components: { Textarea, Label },
     template: `
@@ -144,7 +163,12 @@ export const Disabled: Story = {
 };
 
 export const Invalid: Story = {
-  parameters: { covers: ['accessibility.item5', 'visual.item3'] },
+  parameters: {
+    covers: ['accessibility.item5', 'visual.item3'],
+    // O erro traz a mensagem e o vínculo por `aria-describedby`: sem eles o
+    // campo anunciaria "inválido" sem dizer por quê.
+    docs: { source: { transform: textareaInvalidoSource } },
+  },
   render: () => ({
     components: { Textarea, Label },
     template: `
@@ -190,7 +214,12 @@ export const Invalid: Story = {
 };
 
 export const ReadOnly: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    // Somente leitura só faz sentido com conteúdo: o par vem sempre com o valor
+    // de partida, nunca com placeholder.
+    docs: { source: { transform: textareaSomenteLeituraSource } },
+  },
   render: () => ({
     components: { Textarea, Label },
     template: `

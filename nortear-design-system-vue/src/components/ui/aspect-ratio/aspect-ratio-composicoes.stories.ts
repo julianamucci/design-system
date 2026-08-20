@@ -2,6 +2,14 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { AspectRatio } from './index';
+import {
+  aspectRatioComIframeSource,
+  aspectRatioComImagemSource,
+  aspectRatioComVideoSource,
+  aspectRatioDecorativaSource,
+  aspectRatioEmGradeSource,
+  aspectRatioPlaceholderSource,
+} from './aspect-ratio.source';
 
 const meta = {
   title: 'UI/AspectRatio/Compositions',
@@ -13,6 +21,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: aspectRatioComImagemSource },
       description: {
         component:
           'Composicoes típicas do AspectRatio com diferentes conteúdos filhos: imagens, iframes (mapas), vídeos e uso em grids responsivos.',
@@ -55,7 +64,12 @@ export const WithImage: Story = {
 };
 
 export const WithIframe: Story = {
-  parameters: { covers: ['accessibility.item3'] },
+  parameters: {
+    covers: ['accessibility.item3'],
+    // Outro filho, com outro contrato de nome acessível: o quadro pede `title`,
+    // e a imagem da do meta pede `alt`.
+    docs: { source: { transform: aspectRatioComIframeSource } },
+  },
   render: () => ({
     components: { AspectRatio },
     template: `
@@ -82,7 +96,12 @@ export const WithIframe: Story = {
 };
 
 export const WithVideo: Story = {
-  parameters: { covers: ['accessibility.item4', 'accessibility.item5'] },
+  parameters: {
+    covers: ['accessibility.item4', 'accessibility.item5'],
+    // O filho traz fonte, faixa de legendas e texto de reserva — sub-composição
+    // inteira que a do meta esconderia.
+    docs: { source: { transform: aspectRatioComVideoSource } },
+  },
   render: () => ({
     components: { AspectRatio },
     template: `
@@ -123,7 +142,12 @@ export const WithVideo: Story = {
 };
 
 export const InGrid: Story = {
-  parameters: { covers: ['functional.item4'] },
+  parameters: {
+    covers: ['functional.item4'],
+    // São várias caixas dentro de uma grade, e é a grade que dá a largura de
+    // cada uma: a do meta mostra uma caixa só.
+    docs: { source: { transform: aspectRatioEmGradeSource } },
+  },
   render: () => ({
     components: { AspectRatio },
     template: `
@@ -203,7 +227,12 @@ export const InGrid: Story = {
 };
 
 export const EmptyPlaceholder: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    // A ausência de mídia É o assunto, e o que entra no lugar dela é outro
+    // filho, com papel e rótulo próprios.
+    docs: { source: { transform: aspectRatioPlaceholderSource } },
+  },
   render: () => ({
     components: { AspectRatio },
     template: `
@@ -230,7 +259,12 @@ export const EmptyPlaceholder: Story = {
 };
 
 export const WithDecorativeImage: Story = {
-  parameters: { covers: ['accessibility.item2'] },
+  parameters: {
+    covers: ['accessibility.item2'],
+    // O texto alternativo VAZIO é o assunto; a do meta traz um descritivo, que
+    // é o caso oposto.
+    docs: { source: { transform: aspectRatioDecorativaSource } },
+  },
   render: () => ({
     components: { AspectRatio },
     template: `

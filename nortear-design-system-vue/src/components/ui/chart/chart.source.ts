@@ -1,0 +1,342 @@
+/**
+ * Transforms do painel Code do Chart.
+ *
+ * Módulo de TS puro, sem import de `.vue`: é o que deixa as funções rodarem no
+ * projeto `unit` do vitest. A saída do painel não chega ao DOM durante a `play`,
+ * então este é o único lugar em que elas têm guarda.
+ *
+ * O Chart é montado por `h()` em todas as stories — o painel imprimiria a
+ * chamada da render function, que ninguém escreve num template. O que sai daqui
+ * é o SFC equivalente: os dados como constantes do `script setup` e o container
+ * recebendo o `option` de um builder.
+ */
+import {
+  attr,
+  attrNum,
+  attrsMultilinha,
+  indentar,
+  vueSnippet,
+  type SourceTransform,
+} from '@/lib/story-source';
+import { CHART_EMPTY_LABEL } from './chart-state';
+
+export type ChartArgs = {
+  renderer: 'svg' | 'canvas';
+  height: number;
+  emptyLabel: string;
+};
+
+/** Altura pedida pelo Playground, a mesma que o control nasce trazendo. */
+export const ALTURA_PLAYGROUND = 300;
+
+/**
+ * Rótulo do desenho. `role="img"` sem nome acessível é violação de axe, e
+ * desenho mudo é conteúdo perdido — por isso ele aparece em quase todo snippet.
+ */
+const ROTULO_PLAYGROUND = 'Acessos mensais no desktop, de janeiro a junho';
+
+/** Import do design system, com os builders que cada exemplo usa. */
+function importar(...builders: string[]): string {
+  return `import { ChartContainer, ${builders.join(', ')} } from '@/components/ui/chart'`;
+}
+
+const MESES_SEMESTRE = `const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun']`;
+const MESES_QUADRIMESTRE = `const meses = ['Jan', 'Fev', 'Mar', 'Abr']`;
+
+const SERIE_SEMESTRE = `const series = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }]`;
+const SERIES_SEMESTRE = `const series = [
+  { name: 'Desktop', data: [186, 305, 237, 73, 209, 214] },
+  { name: 'Mobile', data: [80, 200, 120, 190, 130, 140] },
+]`;
+
+const SERIE_QUADRIMESTRE = `const series = [{ name: 'Desktop', data: [186, 305, 237, 73] }]`;
+const SERIES_QUADRIMESTRE_2 = `const series = [
+  { name: 'Desktop', data: [186, 305, 237, 73] },
+  { name: 'Mobile', data: [80, 200, 120, 190] },
+]`;
+const SERIES_QUADRIMESTRE_3 = `const series = [
+  { name: 'Desktop', data: [186, 305, 237, 73] },
+  { name: 'Mobile', data: [80, 200, 120, 190] },
+  { name: 'Tablet', data: [40, 90, 60, 100] },
+]`;
+
+const DISPOSITIVOS = `const dispositivos = [
+  { label: 'Desktop', value: 580 },
+  { label: 'Mobile', value: 420 },
+  { label: 'Tablet', value: 180 },
+]`;
+
+/**
+ * O container, com os atributos em uma linha cada quando a fila fica longa —
+ * atributo em linha comprida some na barra de rolagem do painel.
+ *
+ * `renderer` nasce em `svg` e `empty-label` na frase padrão: nenhum dos dois
+ * entra no snippet quando o valor bate com o padrão do componente.
+ */
+function container(opcoes: {
+  option: string;
+  altura?: unknown;
+  rotulo?: string;
+  classe?: string;
+  renderer?: unknown;
+  emptyLabel?: unknown;
+}): string {
+  const partes = attrsMultilinha([
+    `:option="${opcoes.option}"`,
+    attrNum('height', opcoes.altura),
+    attr('renderer', opcoes.renderer, 'svg'),
+    opcoes.rotulo ? attr('aria-label', opcoes.rotulo) : '',
+    attr('empty-label', opcoes.emptyLabel, CHART_EMPTY_LABEL),
+    opcoes.classe ? attr('class', opcoes.classe) : '',
+  ]);
+  return partes.startsWith('\n')
+    ? `<ChartContainer${partes}/>`
+    : `<ChartContainer${partes} />`;
+}
+
+/**
+ * Playground: barras de série única, com a altura, o desenhador e a frase de
+ * estado vazio saindo dos controls.
+ *
+ * Todo control passa por `attr`/`attrNum`: o Storybook troca arg de ação por um
+ * espião, e um valor que não é do tipo esperado interpolado direto vira ruído no
+ * painel — ou, no caso do número, um `NaN` escrito como se fosse exemplo.
+ */
+export const chartSource: SourceTransform<ChartArgs> = (_gerado, ctx) =>
+  vueSnippet(
+    `${importar('buildBarOption')}\n\n${MESES_SEMESTRE}\n${SERIE_SEMESTRE}`,
+    container({
+      option: 'buildBarOption({ xAxis: meses, series })',
+      altura: typeof ctx?.args?.height === 'number' ? ctx.args.height : ALTURA_PLAYGROUND,
+      renderer: ctx?.args?.renderer,
+      emptyLabel: ctx?.args?.emptyLabel,
+      rotulo: ROTULO_PLAYGROUND,
+    }),
+  );
+
+/** Barras: comparação entre categorias discretas, uma série. */
+export function chartBarSource(): string {
+  return vueSnippet(
+    `${importar('buildBarOption')}\n\n${MESES_SEMESTRE}\n${SERIE_SEMESTRE}`,
+    container({
+      option: 'buildBarOption({ xAxis: meses, series })',
+      altura: 240,
+      rotulo: 'Gráfico de barras: acessos mensais no desktop',
+    }),
+  );
+}
+
+/** Linhas: tendência contínua, e com duas séries a legenda entra sozinha. */
+export function chartLineSource(): string {
+  return vueSnippet(
+    `${importar('buildLineOption')}\n\n${MESES_SEMESTRE}\n${SERIES_SEMESTRE}`,
+    container({
+      option: 'buildLineOption({ xAxis: meses, series })',
+      altura: 260,
+      rotulo: 'Gráfico de linhas: acessos mensais por dispositivo',
+    }),
+  );
+}
+
+/** Área: a mesma linha com a região sob ela preenchida, para dar volume. */
+export function chartAreaSource(): string {
+  return vueSnippet(
+    `${importar('buildAreaOption')}\n\n${MESES_SEMESTRE}\n${SERIES_SEMESTRE}`,
+    container({
+      option: 'buildAreaOption({ xAxis: meses, series })',
+      altura: 260,
+      rotulo: 'Gráfico de área: volume mensal de acessos por dispositivo',
+    }),
+  );
+}
+
+/**
+ * Pizza (rosca): o builder recebe pontos rotulados, não eixo mais série — é
+ * participação no todo, e não evolução ao longo de uma categoria.
+ */
+export function chartPieSource(): string {
+  return vueSnippet(
+    `${importar('buildPieOption')}\n\n${DISPOSITIVOS}`,
+    container({
+      option: 'buildPieOption({ data: dispositivos })',
+      altura: 280,
+      rotulo: 'Distribuição de acessos por dispositivo',
+    }),
+  );
+}
+
+/**
+ * Gráfico dentro de Card — o arranjo mais comum em painel.
+ *
+ * O card é o componente Card, não um retângulo desenhado à mão: borda, sombra e
+ * tipografia escritas na composição ficam num lugar que o tema não alcança, e a
+ * peça deixa de acompanhar densidade, marca e modo escuro.
+ */
+export function chartComCardSource(): string {
+  const grafico = container({
+    option: 'buildBarOption({ xAxis: meses, series })',
+    altura: 200,
+    rotulo: 'Acessos mensais no desktop, de janeiro a junho',
+  });
+  return vueSnippet(
+    `${importar('buildBarOption')}
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+
+${MESES_SEMESTRE}
+${SERIE_SEMESTRE}`,
+    `<Card class="nds-w-sm">
+  <CardHeader>
+    <CardTitle>Acessos mensais</CardTitle>
+    <CardDescription>Janeiro a junho de 2024</CardDescription>
+  </CardHeader>
+  <CardContent>
+${indentar(grafico, 4)}
+  </CardContent>
+</Card>`,
+  );
+}
+
+/**
+ * Título no próprio option, para o gráfico que aparece sem card em volta.
+ *
+ * A ausência de `aria-label` é o assunto: o container encadeia rótulo autoral,
+ * título do option e palavra genérica, e aqui é o degrau do meio que nomeia o
+ * desenho.
+ */
+export function chartTituloNoDesenhoSource(): string {
+  return vueSnippet(
+    `${importar('buildBarOption')}\n\n${MESES_SEMESTRE}\n${SERIE_SEMESTRE}`,
+    container({
+      option: "buildBarOption({ xAxis: meses, series, title: 'Vendas mensais' })",
+      altura: 260,
+      classe: 'nds-max-w-lg',
+    }),
+  );
+}
+
+/**
+ * Dica sobre o ponto de dado: não há prop a ligar — os builders já declaram o
+ * `tooltip`, e o que o exemplo mostra é a forma canônica.
+ */
+export function chartComDicaSource(): string {
+  return vueSnippet(
+    `${importar('buildBarOption')}\n\n${MESES_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
+    container({
+      option: 'buildBarOption({ xAxis: meses, series })',
+      altura: 240,
+      rotulo: 'Acessos mensais no desktop',
+    }),
+  );
+}
+
+/** Três séries: a legenda entra sozinha assim que há mais de uma. */
+export function chartComLegendaSource(): string {
+  return vueSnippet(
+    `${importar('buildBarOption')}\n\n${MESES_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_3}`,
+    container({
+      option: 'buildBarOption({ xAxis: meses, series })',
+      altura: 280,
+      rotulo: 'Acessos mensais por dispositivo',
+    }),
+  );
+}
+
+/** Multi-série com título no próprio option — o caso típico de painel. */
+export function chartMultiSerieSource(): string {
+  return vueSnippet(
+    `${importar('buildBarOption')}\n\n${MESES_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_3}`,
+    container({
+      option: "buildBarOption({ xAxis: meses, series, title: 'Acessos por dispositivo' })",
+      altura: 300,
+      rotulo: 'Acessos mensais por dispositivo, de janeiro a abril',
+    }),
+  );
+}
+
+/**
+ * Estado vazio: nenhuma série com dado, e a frase entra no lugar do desenho.
+ *
+ * Sem rótulo de propósito — sem desenho não há imagem a nomear, e o container
+ * larga o `role="img"` para que a frase seja lida como conteúdo.
+ */
+export function chartVazioSource(): string {
+  return vueSnippet(
+    importar('buildBarOption'),
+    container({
+      option: 'buildBarOption({ data: [] })',
+      altura: 200,
+      emptyLabel: 'Nenhum dado disponível para o período selecionado.',
+    }),
+  );
+}
+
+/** Uma série só: a legenda não aparece, porque não há o que comparar. */
+export function chartSerieUnicaSource(): string {
+  return vueSnippet(
+    `${importar('buildBarOption')}\n\n${MESES_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
+    container({
+      option: 'buildBarOption({ xAxis: meses, series })',
+      altura: 240,
+      rotulo: 'Acessos mensais no desktop',
+    }),
+  );
+}
+
+/** Duas séries: legenda automática e trama por série (WCAG 1.4.1). */
+export function chartDuasSeriesSource(): string {
+  return vueSnippet(
+    `${importar('buildBarOption')}\n\n${MESES_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_2}`,
+    container({
+      option: 'buildBarOption({ xAxis: meses, series })',
+      altura: 280,
+      rotulo: 'Acessos mensais por dispositivo: desktop e mobile',
+    }),
+  );
+}
+
+/**
+ * Dois tipos lado a lado: cor e tipografia saem dos tokens do tema em vigor, e
+ * o container repinta sozinho quando a classe do documento muda. Não há prop de
+ * tema a passar — o que o exemplo ensina é que não é preciso passar nenhuma.
+ */
+export function chartTokensDeTemaSource(): string {
+  const barras = container({
+    option: 'buildBarOption({ xAxis: meses, series })',
+    altura: 260,
+    rotulo: 'Acessos mensais por dispositivo, em barras',
+  });
+  const linhas = container({
+    option: 'buildLineOption({ xAxis: meses, series })',
+    altura: 260,
+    rotulo: 'Acessos mensais por dispositivo, em linhas',
+  });
+  return vueSnippet(
+    `${importar('buildBarOption', 'buildLineOption')}\n\n${MESES_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_2}`,
+    `<div class="nds-stack">
+${indentar(barras, 2)}
+${indentar(linhas, 2)}
+</div>`,
+  );
+}
+
+/**
+ * Contraste de objeto gráfico: série única de propósito, para que tudo que
+ * houver na tela seja forma de dado. O contorno que sustenta os 3:1 da WCAG
+ * 1.4.11 vem do tema do container, não de nada escrito no option.
+ */
+export function chartContrasteSource(): string {
+  return vueSnippet(
+    `${importar('buildBarOption')}\n\n${MESES_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
+    container({
+      option: 'buildBarOption({ xAxis: meses, series })',
+      altura: 260,
+      rotulo: 'Acessos mensais no desktop',
+    }),
+  );
+}

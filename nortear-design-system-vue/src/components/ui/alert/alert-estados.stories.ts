@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { Alert, AlertTitle, AlertDescription } from './index';
 import { Info } from 'lucide-vue-next';
+import {
+  alertCompletoSource,
+  alertInsercaoDinamicaSource,
+  alertSemAnuncioSource,
+  alertSemIconeSource,
+  alertSemTituloSource,
+} from './alert.source';
 
 const meta = {
   title: 'UI/Alert/States',
@@ -12,6 +19,7 @@ const meta = {
     design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: alertCompletoSource } },
   },
 } satisfies Meta<typeof Alert>;
 
@@ -45,7 +53,12 @@ export const Complete: Story = {
 };
 
 export const WithoutTitle: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item3'],
+    // A ausência do título É o assunto, e com ela some também o import — a do
+    // meta traz os dois.
+    docs: { source: { transform: alertSemTituloSource } },
+  },
   render: () => ({
     components: { Alert, AlertDescription, Info },
     setup() { return {}; },
@@ -72,6 +85,10 @@ export const WithoutTitle: Story = {
 };
 
 export const WithoutIcon: Story = {
+  parameters: {
+    // A ausência do ícone É o assunto, e leva junto o import dele.
+    docs: { source: { transform: alertSemIconeSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription },
     setup() { return {}; },
@@ -103,6 +120,11 @@ export const WithoutIcon: Story = {
 // A story prova os dois lados no mesmo canvas — o valor explícito e o default
 // intacto para quem depende do anúncio.
 export const WithoutAnnouncement: Story = {
+  parameters: {
+    // O assunto é o CONTRASTE entre dois alertas, um com papel explícito e
+    // outro no padrão — a do meta mostra um só.
+    docs: { source: { transform: alertSemAnuncioSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return {}; },
@@ -143,7 +165,12 @@ export const WithoutAnnouncement: Story = {
 };
 
 export const DynamicInsertion: Story = {
-  parameters: { covers: ['functional.item6'] },
+  parameters: {
+    covers: ['functional.item6'],
+    // A lição está FORA do alerta: a região live que já precisa estar no
+    // documento antes de ele chegar.
+    docs: { source: { transform: alertInsercaoDinamicaSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, Info },
     setup() { return {}; },

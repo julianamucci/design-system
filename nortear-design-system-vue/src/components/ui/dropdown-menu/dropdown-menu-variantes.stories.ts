@@ -10,6 +10,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
+import {
+  dropdownMenuDestrutivoSource,
+  dropdownMenuPadraoSource,
+} from './dropdown-menu.source';
 
 const meta = {
   title: 'UI/DropdownMenu/Variants',
@@ -21,6 +25,7 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: dropdownMenuPadraoSource },
       description: {
         component:
           'As duas ênfases de item. `default` é o item neutro; `destructive` marca a ação ' +
@@ -95,7 +100,12 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    // A variante do item e o separador que a isola: o snippet do meta é o caso
+    // neutro, e por definição não escreve nenhum dos dois.
+    docs: { source: { transform: dropdownMenuDestrutivoSource } },
+  },
   render: () => ({
     components: componentes,
     template: `

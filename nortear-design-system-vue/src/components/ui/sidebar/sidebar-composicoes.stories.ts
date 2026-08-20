@@ -28,6 +28,11 @@ import {
   LayoutDashboard, Blocks, Palette, Settings, User,
   ChevronRight, Bell, Plus, MoreHorizontal, Search,
 } from 'lucide-vue-next';
+import {
+  sidebarBuscaSource,
+  sidebarGruposSource,
+  sidebarSubmenuSource,
+} from './sidebar.source';
 
 const meta = {
   title: 'UI/Sidebar/Compositions',
@@ -38,6 +43,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sidebarGruposSource },
       description: {
         component:
           'Composicoes avançadas da Sidebar: com grupos de navegação, com sub-menus, com badge e com campo de busca.',
@@ -212,6 +218,9 @@ export const WithSubmenu: Story = {
   name: 'With submenu',
   parameters: {
     docs: {
+      // A lista aninhada mora dentro do item pai, e o pai declara
+      // `aria-expanded` — nada disso existe na composição do meta.
+      source: { transform: sidebarSubmenuSource },
       description: { story: 'Sidebar com SidebarMenuSub: itens aninhados com linha de referência visual.' },
     },
   },
@@ -351,6 +360,9 @@ export const WithSearch: Story = {
   name: 'With search field',
   parameters: {
     docs: {
+      // O campo de busca troca o cabeçalho inteiro, e leva `aria-label` porque
+      // o placeholder some ao digitar.
+      source: { transform: sidebarBuscaSource },
       description: { story: 'Sidebar com SidebarInput no header para filtrar navegação inline.' },
     },
   },

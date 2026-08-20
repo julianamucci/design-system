@@ -4,6 +4,7 @@ import { transbordo } from '@shared/testing/scroll-area-probe';
 import { ScrollArea } from './index';
 import ScrollAreaDocs from '@/components/docs/ScrollAreaDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { scrollAreaSource } from './scroll-area.source';
 
 const meta = {
   title: 'UI/ScrollArea',
@@ -13,6 +14,7 @@ const meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(ScrollAreaDocs),
+      source: { transform: scrollAreaSource },
       description: {
         component:
           'ScrollArea provê scroll customizado dentro de um container com altura fixa, com scrollbar estilizada e suporte a scroll vertical, horizontal ou bidirecional. O scroll continua sendo o nativo do navegador, o que preserva gestos de swipe no celular.',

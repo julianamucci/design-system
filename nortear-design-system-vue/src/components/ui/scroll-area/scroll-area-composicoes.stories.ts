@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { transbordo } from '@shared/testing/scroll-area-probe';
 import { ScrollArea, ScrollBar } from './index';
+import {
+  scrollAreaGaleriaSource,
+  scrollAreaSidebarSource,
+  scrollAreaTabelaSource,
+} from './scroll-area.source';
 
 const meta = {
   title: 'UI/ScrollArea/Compositions',
@@ -12,6 +17,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: scrollAreaSidebarSource },
       description: {
         component:
           'Composicoes reais do ScrollArea: lista em sidebar fixa, galeria horizontal de cards e tabela ampla com scroll bidirecional.',
@@ -128,6 +134,9 @@ export const SidebarList: Story = {
 export const HorizontalGallery: Story = {
   parameters: {
     docs: {
+      // O eixo troca, a barra horizontal entra à mão e a faixa vira linha sem
+      // quebra — nada disso está no snippet de sidebar do meta.
+      source: { transform: scrollAreaGaleriaSource },
       description: {
         story:
           'Galeria horizontal de cards — faixa com largura de conteúdo, itens que não encolhem e barra horizontal explícita.',
@@ -187,6 +196,8 @@ export const HorizontalGallery: Story = {
 export const WideTable: Story = {
   parameters: {
     docs: {
+      // Tabela rolando nos dois eixos é outra composição inteira.
+      source: { transform: scrollAreaTabelaSource },
       description: {
         story:
           'Tabela ampla com scroll bidirecional — o cabeçalho acompanha o conteúdo, como no Vanilla; barra vertical e horizontal montadas.',

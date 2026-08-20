@@ -9,6 +9,12 @@ import {
   PERSISTENTE,
   TEXTOS,
 } from './sonner.fixtures';
+import {
+  sonnerComAcaoSource,
+  sonnerComDescricaoSource,
+  sonnerPersistenteSource,
+  sonnerPromessaSource,
+} from './sonner.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -43,6 +49,7 @@ const meta = {
       },
     },
     docs: {
+      source: { transform: sonnerComDescricaoSource },
       description: {
         component:
           'Descrição, ação, ciclo de promessa e prazo infinito. A ação oferecida dentro da notificação precisa existir em outro lugar da interface: a notificação some, e o que só existia nela some junto.',
@@ -94,6 +101,9 @@ export const WithAction: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item2', 'visual.item2'],
     docs: {
+      // A ação exige um segundo manipulador nomeado — o mesmo desfazer precisa
+      // existir fora da notificação, que some.
+      source: { transform: sonnerComAcaoSource },
       description: {
         story:
           'Ação embutida para operação reversível. O botão entra na sequência de foco enquanto a notificação está na tela, e some com ela — por isso desfazer também precisa existir fora daqui.',
@@ -140,6 +150,9 @@ export const PromiseResolved: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
     docs: {
+      // `toast.promise` é outra entrada da API: uma chamada para os três
+      // estados, e não três chamadas encadeadas.
+      source: { transform: sonnerPromessaSource },
       description: {
         story:
           'Uma notificação para a operação inteira: nasce em carregamento e vira êxito no mesmo lugar, sem piscar duas caixas.',
@@ -184,6 +197,9 @@ export const PromiseRejected: Story = {
   parameters: {
     covers: ['functional.item4'],
     docs: {
+      // Mesma chamada do caso resolvido: quem escolhe o desfecho é a promessa,
+      // não o código — e é isso que o snippet compartilhado mostra.
+      source: { transform: sonnerPromessaSource },
       description: {
         story:
           'O mesmo ciclo, com a operação falhando: o carregamento vira falha, com o texto que diz o caminho de saída.',
@@ -223,6 +239,9 @@ export const Persistent: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item2'],
     docs: {
+      // O prazo infinito é da CHAMADA e vence o da região, e o botão de fechar
+      // é da região — o par só aparece junto num snippet próprio.
+      source: { transform: sonnerPersistenteSource },
       description: {
         story:
           'Prazo infinito, reservado a falha crítica que exige decisão. Sempre com botão de fechar: uma notificação que não sai sozinha e não pode ser fechada vira obstáculo.',

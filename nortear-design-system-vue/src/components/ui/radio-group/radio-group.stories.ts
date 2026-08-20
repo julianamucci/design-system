@@ -4,13 +4,14 @@ import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 import RadioGroupDocs from '@/components/docs/RadioGroupDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { radioGroupSource } from './radio-group.source';
 
 const meta = {
   title: 'UI/RadioGroup',
   component: RadioGroup,
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(RadioGroupDocs) },
+    docs: { page: withAutoDocsTab(RadioGroupDocs), source: { transform: radioGroupSource } },
   },
   argTypes: {
     // Prop CONTROLADA: quem manda no valor é o v-model de quem compõe, e o

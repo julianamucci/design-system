@@ -10,6 +10,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from './index';
+import {
+  paginationComReticenciasSource,
+  paginationControladaSource,
+  paginationRodapeDeTabelaSource,
+  paginationSimplesSource,
+  paginationUltimaPaginaSource,
+} from './pagination.source';
 
 const meta = {
   title: 'UI/Pagination/Compositions',
@@ -20,6 +27,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: paginationSimplesSource },
       description: {
         component:
           'Composições típicas: Simple (5 páginas), WithEllipsis (12 páginas), LastPage (Próxima desabilitado), Controlled (estado externo) e CompleteTable (rodapé de tabela).',
@@ -103,6 +111,9 @@ export const WithEllipsis: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // Entra uma peça nova e um laço de tipo misto: a faixa deixa de ser uma
+      // lista de números e passa a intercalar marcadores.
+      source: { transform: paginationComReticenciasSource },
       description: {
         story:
           'Lista longa: primeira, última, atual e vizinhas ficam visíveis; o resto vira reticências decorativas.',
@@ -163,6 +174,9 @@ export const LastPage: Story = {
   parameters: {
     covers: ['functional.item3'],
     docs: {
+      // A faixa está parada no OUTRO extremo, e mostra um recorte final de
+      // páginas: nem o `:page` nem a lista são os do meta.
+      source: { transform: paginationUltimaPaginaSource },
       description: {
         story:
           'Na última página o controle Próxima fica desabilitado, pelo mesmo par de atributos usado em Anterior.',
@@ -220,6 +234,9 @@ export const LastPage: Story = {
 export const Controlled: Story = {
   parameters: {
     docs: {
+      // A faixa ganha estado externo e um contador irmão: o `ref` e o `irPara`
+      // não existem em nenhuma outra story do arquivo.
+      source: { transform: paginationControladaSource },
       description: {
         story:
           'O estado da página atual vive fora do componente. Cada clique reposiciona o destaque, o aria-current e o contador.',
@@ -301,6 +318,9 @@ export const Controlled: Story = {
 export const CompleteTable: Story = {
   parameters: {
     docs: {
+      // A faixa entra dentro de um rodapé: o invólucro de cluster e o
+      // `data-align` da faixa são o assunto, e não existem no meta.
+      source: { transform: paginationRodapeDeTabelaSource },
       description: {
         story:
           'Cenário canônico: rodapé de tabela com o contador de resultados à esquerda e a faixa encostada à direita, via data-align="end".',

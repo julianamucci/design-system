@@ -9,6 +9,13 @@ import {
 } from './index';
 import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { medirAnelDeFoco, ESTADOS, ESTADOS_POR_VALOR } from '@shared/testing/select-probe';
+import {
+  selectBloqueadoSource,
+  selectCompactoSource,
+  selectInvalidoSource,
+  selectPreenchidoSource,
+  selectVazioSource,
+} from './select.source';
 
 const meta = {
   title: 'UI/Select/States',
@@ -19,6 +26,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: selectVazioSource },
       description: {
         component:
           'Vazio, preenchido, aberto, bloqueado, inválido e compacto. Teclado, foco e posicionamento vêm do primitivo — o que estas stories provam é que a composição não desfaz nada disso.',
@@ -86,6 +94,9 @@ export const Selected: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // O valor inicial vem acompanhado do slot que resolve o rótulo antes da
+      // primeira abertura — duas coisas que o campo vazio do meta não tem.
+      source: { transform: selectPreenchidoSource },
       description: {
         story:
           'Valor pré-escolhido. O rótulo vem de um mapa local porque a lista ainda não foi aberta nenhuma vez — e é dela que o primitivo tira os rótulos. (Pré-selecionar serve para ver o estado; em formulário real, evite.)',
@@ -220,6 +231,8 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // O bloqueio aparece nos dois lugares — raiz e gatilho —, e é o assunto.
+      source: { transform: selectBloqueadoSource },
       description: { story: 'Campo bloqueado: não abre, não responde ao clique e sai do percurso do Tab.' },
     },
   },
@@ -261,6 +274,8 @@ export const Invalid: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      // O erro traz a marcação em volta: o aviso em texto ao lado do campo.
+      source: { transform: selectInvalidoSource },
       description: {
         story:
           'Campo reprovado pela validação. A borda de perigo acompanha `aria-invalid` — a cor não é o aviso, é o reforço dele.',
@@ -312,6 +327,8 @@ export const Invalid: Story = {
 export const Sm: Story = {
   parameters: {
     docs: {
+      // São DOIS campos lado a lado: a comparação é a story.
+      source: { transform: selectCompactoSource },
       description: { story: 'Densidade compacta para formulários densos: a altura menor vem do padding, não de um valor cravado.' },
     },
   },

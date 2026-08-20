@@ -11,12 +11,22 @@ import {
   statusVariant,
   baseColumns,
 } from './data-table.fixtures';
+import {
+  dataTableColunasRedimensionaveisSource,
+  dataTableEdicaoInlineSource,
+  dataTableFiltrosPorColunaSource,
+  dataTableReordenarEFixarSource,
+} from './data-table.source';
 
 const meta: Meta<Record<string, unknown>> = {
   title: 'UI/DataTable/Compositions',
   component: DataTable as never,
   tags: ['tables'],
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: dataTableFiltrosPorColunaSource } },
+  },
 };
 
 export default meta;
@@ -134,6 +144,9 @@ export const ResizableColumns: Story = {
     covers: ['visual.item3'],
     controls: { disable: true },
     actions: { disable: true },
+    // Colunas sem `meta.filter`, e a paginação de volta: o snippet do meta
+    // mostra o oposto dos dois.
+    docs: { source: { transform: dataTableColunasRedimensionaveisSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -186,6 +199,9 @@ export const ReorderableAndPinnable: Story = {
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     controls: { disable: true },
     actions: { disable: true },
+    // Duas flags que nenhuma outra story liga, e que andam em par: reordenar
+    // sem fixar deixa a coluna fixada saindo de lugar.
+    docs: { source: { transform: dataTableReordenarEFixarSource } },
   },
   play: async ({ canvasElement, step }) => {
     const cabecalhos = () => [
@@ -316,6 +332,9 @@ export const WithInlineEditing: Story = {
     covers: ['functional.item5', 'visual.item4'],
     controls: { disable: true },
     actions: { disable: true },
+    // A tabela não é dona do estado: o snippet precisa mostrar o array do
+    // consumidor e o handler que o atualiza — nada disso cabe no do meta.
+    docs: { source: { transform: dataTableEdicaoInlineSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

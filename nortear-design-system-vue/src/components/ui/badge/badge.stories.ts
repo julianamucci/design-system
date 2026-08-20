@@ -4,6 +4,7 @@ import { within, expect } from 'storybook/test';
 import { Badge } from './index';
 import BadgeDocs from '@/components/docs/BadgeDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { badgeSource } from './badge.source';
 
 const meta = {
   title: 'UI/Badge',
@@ -12,7 +13,7 @@ const meta = {
   parameters: {
     design: figmaDesign('badge'),
     layout: 'centered',
-    docs: { page: withAutoDocsTab(BadgeDocs) },
+    docs: { page: withAutoDocsTab(BadgeDocs), source: { transform: badgeSource } },
   },
   argTypes: {
     variant: {

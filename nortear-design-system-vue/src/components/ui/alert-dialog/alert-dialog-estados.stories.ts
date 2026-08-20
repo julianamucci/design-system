@@ -14,6 +14,13 @@ import {
   AlertDialogTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import {
+  alertDialogAbertoSource,
+  alertDialogCanceladoSource,
+  alertDialogConfirmadoSource,
+  alertDialogControladoSource,
+  alertDialogFechadoSource,
+} from './alert-dialog.source';
 
 const meta = {
   title: 'UI/AlertDialog/States',
@@ -25,6 +32,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: alertDialogFechadoSource },
       description: {
         component:
           'Cada estado canônico do AlertDialog: closed, open, confirmed, cancelled e controlled.',
@@ -118,6 +126,8 @@ export const Open: Story = {
     // a varredura axe (contraste incluído) do estado aberto.
     covers: ['functional.item6', 'accessibility.item6', 'accessibility.item7'],
     docs: {
+      // O painel nasce aberto: é o atributo na raiz que a do meta não tem.
+      source: { transform: alertDialogAbertoSource },
       description: {
         story: 'Diálogo aberto com `defaultOpen`. Captura visual no Chromatic.',
       },
@@ -217,6 +227,8 @@ export const Confirmed: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
+      // O handler do consumidor na ação é o assunto, e ele não existe na do meta.
+      source: { transform: alertDialogConfirmadoSource },
       description: { story: 'Clique em Action dispara o handler e fecha o diálogo.' },
     },
   },
@@ -284,6 +296,9 @@ export const Confirmed: Story = {
 export const Cancelled: Story = {
   parameters: {
     docs: {
+      // Duas saídas com handler cada uma, e sem gatilho: composição diferente
+      // da do meta em raiz e em rodapé.
+      source: { transform: alertDialogCanceladoSource },
       description: { story: 'Cancel é clicado — diálogo fecha sem executar ação.' },
     },
   },
@@ -345,6 +360,9 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
+      // O gatilho sai de dentro do componente e vira botão do consumidor, com
+      // o estado num `ref`: script e marcação que a do meta não tem.
+      source: { transform: alertDialogControladoSource },
       description: {
         story: 'Abertura controlada por estado externo via `open` + `onUpdate:open`.',
       },

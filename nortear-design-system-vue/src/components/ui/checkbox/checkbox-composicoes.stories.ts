@@ -4,6 +4,13 @@ import { Checkbox } from './index';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  checkboxComDescricaoSource,
+  checkboxComRotuloSource,
+  checkboxEmFormularioSource,
+  checkboxGrupoSource,
+  checkboxSelecionarTodosSource,
+} from './checkbox.source';
 
 const meta = {
   title: 'UI/Checkbox/Compositions',
@@ -14,6 +21,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: checkboxComRotuloSource },
       description: {
         component:
           'Padrões de composição do Checkbox: com label, com descrição auxiliar, grupo em fieldset e integração em formulário.',
@@ -68,6 +76,9 @@ export const WithLabel: Story = {
 };
 
 export const WithDescription: Story = {
+  // O texto auxiliar entra por `aria-describedby`, fora do rótulo, e o par muda
+  // de alinhamento por causa dele — a do meta mostraria só a caixa e o rótulo.
+  parameters: { docs: { source: { transform: checkboxComDescricaoSource } } },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -106,6 +117,9 @@ export const WithDescription: Story = {
 };
 
 export const FieldsetGroup: Story = {
+  // O `fieldset` com `legend` é o que nomeia o conjunto: sem ele no snippet, a
+  // lição do grupo se perde.
+  parameters: { docs: { source: { transform: checkboxGrupoSource } } },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -155,6 +169,9 @@ export const FieldsetGroup: Story = {
 };
 
 export const SelectAll: Story = {
+  // A caixa mestra separada dos itens por uma linha é a composição inteira —
+  // ela não existe em nenhuma outra story.
+  parameters: { docs: { source: { transform: checkboxSelecionarTodosSource } } },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -210,7 +227,12 @@ export const SelectAll: Story = {
 };
 
 export const InForm: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    // O formulário inteiro é a composição: `name`/`value` no submit, `required`
+    // e os outros componentes do design system em volta.
+    docs: { source: { transform: checkboxEmFormularioSource } },
+  },
   render: () => ({
     // Componentes reais do design system em vez de markup cru: reimplementar
     // <button>/<input> perde o que Button/Input já garantem (WCAG 1.4.4 — sem

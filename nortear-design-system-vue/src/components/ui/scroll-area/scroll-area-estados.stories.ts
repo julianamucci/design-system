@@ -7,6 +7,13 @@ import {
   transbordo,
 } from '@shared/testing/scroll-area-probe';
 import { ScrollArea } from './index';
+import {
+  scrollAreaAoRolarSource,
+  scrollAreaConteudoFocavelSource,
+  scrollAreaOciosoSource,
+  scrollAreaSemLimiteSource,
+  scrollAreaSempreSource,
+} from './scroll-area.source';
 
 const meta = {
   title: 'UI/ScrollArea/States',
@@ -17,6 +24,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: scrollAreaOciosoSource },
       description: {
         component:
           'Estados do ScrollArea: idle (padrão, barra só sob o ponteiro), always (barra sempre montada), scroll (barra durante a rolagem), focus (viewport na ordem de tabulação), conteúdo focável dentro da área e o caso em que o componente não rola — quando ninguém define altura no pai.',
@@ -108,6 +116,9 @@ export const Always: Story = {
   parameters: {
     covers: ['functional.item2', 'accessibility.item2'],
     docs: {
+      // Manter a barra montada é uma prop, e é a precondição da story: com o
+      // padrão do meta o pegador nem existe no DOM.
+      source: { transform: scrollAreaSempreSource },
       description: {
         story:
           'Barra sempre montada — é a condição para arrastar o pegador e para medir o contraste dele.',
@@ -232,6 +243,8 @@ export const ScrollOnScroll: Story = {
   name: 'Scroll (while scrolling)',
   parameters: {
     docs: {
+      // O modo em que a barra acende ao rolar é o assunto — o meta traz o padrão.
+      source: { transform: scrollAreaAoRolarSource },
       description: {
         story:
           'A barra aparece durante a rolagem e some depois do tempo de espera configurado.',
@@ -268,6 +281,9 @@ export const Focus: Story = {
   parameters: {
     covers: ['accessibility.item3', 'visual.item4'],
     docs: {
+      // Mesma marcação da story anterior: a barra fica montada para que o anel
+      // no viewport seja visto ao lado dela, e o meta traz o padrão sem barra.
+      source: { transform: scrollAreaSempreSource },
       description: {
         story:
           'Viewport na ordem de tabulação — é o que permite rolar sem mouse, e o anel de foco é o que torna essa parada visível.',
@@ -309,6 +325,8 @@ export const FocusableContent: Story = {
   parameters: {
     covers: ['accessibility.item4'],
     docs: {
+      // O conteúdo passa a ser uma navegação de links: outra composição.
+      source: { transform: scrollAreaConteudoFocavelSource },
       description: {
         story:
           'Conteúdo focável dentro da área rolável — o componente não reordena nem remove nada da ordem de tabulação, e o navegador traz para o campo visível o item focado.',
@@ -369,6 +387,9 @@ export const NoLimit: Story = {
   parameters: {
     covers: ['functional.item4'],
     docs: {
+      // A story é o par errado/certo lado a lado — a AUSÊNCIA da altura é o
+      // assunto, e um snippet com altura esconderia justamente isso.
+      source: { transform: scrollAreaSemLimiteSource },
       description: {
         story:
           'Pai sem altura definida — o conteúdo expande e não há rolagem. É o erro de uso mais comum: o componente aparenta estar quebrado quando ninguém disse até onde ele pode ir.',

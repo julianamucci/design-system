@@ -11,6 +11,7 @@ import {
 } from './index';
 import BreadcrumbDocs from '@/components/docs/BreadcrumbDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { breadcrumbSource } from './breadcrumb.source';
 import {
   descreverFalhasDeBreadcrumb,
   medirBreadcrumb,
@@ -25,6 +26,7 @@ const meta = {
     design: figmaDesign('breadcrumb'),
     docs: {
       page: withAutoDocsTab(BreadcrumbDocs),
+      source: { transform: breadcrumbSource },
       description: {
         component:
           'Breadcrumb exibe a hierarquia de navegação do site com <nav aria-label="breadcrumb"> + <ol>. O último item é sempre BreadcrumbPage com aria-current="page".',

@@ -5,13 +5,14 @@ import { Label } from '@/components/ui/label';
 import TextareaDocs from '@/components/docs/TextareaDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { resizeComputado } from '@shared/testing/textarea-probe';
+import { textareaSource } from './textarea.source';
 
 const meta = {
   title: 'UI/Textarea',
   component: Textarea,
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(TextareaDocs) },
+    docs: { page: withAutoDocsTab(TextareaDocs), source: { transform: textareaSource } },
     layout: 'centered',
   },
   argTypes: {

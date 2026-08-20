@@ -12,6 +12,7 @@ import {
   CommandSeparator,
   CommandShortcut,
 } from '@/components/ui/command';
+import { commandSource } from './command.source';
 
 type CommandArgs = {
   placeholder: string;
@@ -21,46 +22,6 @@ type CommandArgs = {
   onSelect: (value: string) => void;
 };
 
-/**
- * O painel Code imprime o `template` da story literalmente — com o
- * `args.showGroups ? … : ''` que alterna os cabeçalhos e com o espião ligado ao
- * `@select`. O `transform` devolve o uso real, montado a partir dos controls.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<CommandArgs> }): string {
-  const {
-    placeholder = 'Buscar componente...',
-    emptyMessage = 'Nenhum resultado encontrado.',
-    showGroups = true,
-  } = ctx.args ?? {};
-
-  const grupo = showGroups ? ' heading="Componentes"' : '';
-
-  return `<script setup lang="ts">
-import {
-  Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
-} from '@/components/ui/command';
-
-function executar(valor: string) {
-  // roda o comando e devolve o foco para onde ele age
-}
-</script>
-
-<template>
-  <Command>
-    <CommandInput placeholder="${placeholder}" />
-
-    <CommandList>
-      <CommandGroup${grupo}>
-        <CommandItem value="button" @select="executar('button')">Button</CommandItem>
-        <CommandItem value="input" @select="executar('input')">Input</CommandItem>
-      </CommandGroup>
-    </CommandList>
-
-    <CommandEmpty>${emptyMessage}</CommandEmpty>
-  </Command>
-</template>`;
-}
-
 const meta = {
   title: 'UI/Command',
   component: Command,
@@ -69,6 +30,7 @@ const meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(CommandDocs),
+      source: { transform: commandSource },
       description: {
         component:
           'Interface de busca e seleção rápida com filtro por texto integrado. Suporta padrões inline, combobox e command palette.',
@@ -116,7 +78,6 @@ type Story = StoryObj<CommandArgs>;
 
 export const Playground: Story = {
   parameters: {
-    docs: { source: { transform: playgroundSource } },
     covers: [
       'functional.item1',
       'functional.item2',

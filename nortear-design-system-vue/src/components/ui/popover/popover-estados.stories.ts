@@ -12,6 +12,13 @@ import {
 import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { painel } from './popover.fixtures';
+import {
+  popoverAbertoSource,
+  popoverAcimaSource,
+  popoverControladoSource,
+  popoverFechadoSource,
+  popoverModalSource,
+} from './popover.source';
 
 const meta = {
   title: 'UI/Popover/States',
@@ -22,6 +29,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: popoverFechadoSource },
       description: {
         component:
           'Estados canônicos do Popover: Fechado (painel fora do DOM), Aberto, ancorado acima, Controlado por fora e Modal (focus trap + scroll lock).',
@@ -99,6 +107,9 @@ export const Open: Story = {
     // Chromatic fotografa.
     covers: ['accessibility.item1', 'accessibility.item2'],
     docs: {
+      // Aberto é PRESENÇA de `default-open`; a do meta é justamente a ausência
+      // dele, e as duas se leem lado a lado.
+      source: { transform: popoverAbertoSource },
       description: {
         story: 'Popover aberto via defaultOpen — captura visual no Chromatic. Content com role=dialog.',
       },
@@ -140,6 +151,9 @@ export const SideTop: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // O painel muda de lado e ganha folga própria: `side` e `side-offset` não
+      // aparecem em nenhuma outra story do arquivo.
+      source: { transform: popoverAcimaSource },
       description: {
         story:
           'Posicionamento preferido side="top". Sem espaço acima, o painel faz auto-flip para baixo.',
@@ -195,6 +209,9 @@ export const SideTop: Story = {
 export const Controlled: Story = {
   parameters: {
     docs: {
+      // `v-model:open` e os dois botões de fora são composição nova: o estado
+      // sai do componente, e nenhuma outra story do arquivo o tem.
+      source: { transform: popoverControladoSource },
       description: {
         story: 'Abertura controlada por estado externo via open + @update:open.',
       },
@@ -261,6 +278,9 @@ export const Controlled: Story = {
 export const Modal: Story = {
   parameters: {
     docs: {
+      // `modal` é a prop que a story existe para mostrar, e ela vive na RAIZ —
+      // não no painel, onde ficam `side` e `align`.
+      source: { transform: popoverModalSource },
       description: {
         story: 'Modal=true — foco fica preso dentro do Popover e scroll do body é bloqueado.',
       },

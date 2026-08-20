@@ -2,6 +2,13 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { AspectRatio } from './index';
+import {
+  aspectRatioDezesseisNoveSource,
+  aspectRatioQuadradoSource,
+  aspectRatioQuatroTresSource,
+  aspectRatioTresQuatroSource,
+  aspectRatioUltraWideSource,
+} from './aspect-ratio.source';
 
 const meta = {
   title: 'UI/AspectRatio/Variants',
@@ -13,6 +20,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: aspectRatioDezesseisNoveSource },
       description: {
         component:
           'Cinco ratios canônicos adotados no design system: 16/9 (paisagem), 4/3 (produto), 1/1 (quadrado), 3/4 (retrato) e 21/9 (ultra-wide).',
@@ -55,7 +63,11 @@ export const SixteenNine: Story = {
 };
 
 export const FourThree: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    // Sem controls, a proporção só existe no template — a do meta mostra 16/9.
+    docs: { source: { transform: aspectRatioQuatroTresSource } },
+  },
   name: '4 / 3',
   render: () => ({
     components: { AspectRatio },
@@ -85,7 +97,12 @@ export const FourThree: Story = {
 };
 
 export const Square: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item3'],
+    // O quadrado é o PADRÃO do componente: o snippet sai sem proporção nenhuma,
+    // e é justamente isso que a do meta não mostraria.
+    docs: { source: { transform: aspectRatioQuadradoSource } },
+  },
   name: '1 / 1',
   render: () => ({
     components: { AspectRatio },
@@ -115,7 +132,11 @@ export const Square: Story = {
 };
 
 export const ThreeFour: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // Mesma razão da 4/3: a proporção vive no template.
+    docs: { source: { transform: aspectRatioTresQuatroSource } },
+  },
   name: '3 / 4',
   render: () => ({
     components: { AspectRatio },
@@ -145,7 +166,11 @@ export const ThreeFour: Story = {
 };
 
 export const UltraWide: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    // Mesma razão da 4/3: a proporção vive no template.
+    docs: { source: { transform: aspectRatioUltraWideSource } },
+  },
   name: '21 / 9',
   render: () => ({
     components: { AspectRatio },

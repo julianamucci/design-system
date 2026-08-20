@@ -3,6 +3,12 @@ import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { ref } from 'vue';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
 import { ChevronDown } from 'lucide-vue-next';
+import {
+  collapsibleAbertoPorPadraoSource,
+  collapsibleControladoSource,
+  collapsibleDesabilitadoSource,
+  collapsibleNaoControladoSource,
+} from './collapsible.source';
 
 // Mesmo markup do Playground e do Vanilla (referência cross-stack).
 const PAINEL_CLASSES =
@@ -20,6 +26,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: collapsibleNaoControladoSource },
       description: {
         component: 'Estados do Collapsible: não-controlado, aberto por padrão, controlado com estado externo e trigger desabilitado.',
       },
@@ -87,6 +94,9 @@ export const Uncontrolled: Story = {
 export const OpenByDefault: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item5', 'visual.item2'],
+    // `default-open` e o rótulo que o acompanha: a do meta mostraria o painel
+    // fechado, que é o estado oposto.
+    docs: { source: { transform: collapsibleAbertoPorPadraoSource } },
   },
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
@@ -127,7 +137,12 @@ export const OpenByDefault: Story = {
 };
 
 export const Controlled: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item3'],
+    // O estado externo e os botões que mandam nele são a composição inteira —
+    // sem eles não há modo controlado a mostrar.
+    docs: { source: { transform: collapsibleControladoSource } },
+  },
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() {
@@ -195,7 +210,12 @@ export const Controlled: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item6', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item5'],
+    // `disabled` nas duas pontas e o chevron sem rotação: nada disso está nos
+    // args desta story.
+    docs: { source: { transform: collapsibleDesabilitadoSource } },
+  },
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },

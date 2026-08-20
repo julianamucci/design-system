@@ -9,6 +9,11 @@ import {
   textosDoDesenho,
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption } from './index';
+import {
+  chartComDicaSource,
+  chartComLegendaSource,
+  chartMultiSerieSource,
+} from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
 const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73] }];
@@ -21,7 +26,11 @@ const TITULO = 'Acessos por dispositivo';
 
 const meta: Meta = {
   // Sem argTypes: sem isto o painel Controls abre vazio.
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: chartComDicaSource } },
+  },
   title: 'UI/Chart/Settings',
   tags: ['display'],
 };
@@ -78,7 +87,12 @@ export const WithTooltip: Story = {
 
 export const WithCaption: Story = {
   parameters: {
-    docs: { description: { story: 'Com mais de uma série, a legenda entra sozinha.' } },
+    // A legenda automática só aparece com mais de uma série: o dado literal do
+    // snippet É a lição, e a do meta traz uma série só.
+    docs: {
+      source: { transform: chartComLegendaSource },
+      description: { story: 'Com mais de uma série, a legenda entra sozinha.' },
+    },
   },
   render: () => h(ChartContainer, {
     option: buildBarOption({ xAxis: MESES, series: SERIES_MULTI }),
@@ -108,7 +122,12 @@ export const WithCaption: Story = {
 
 export const MultipleSeries: Story = {
   parameters: {
-    docs: { description: { story: 'Multi-série com título no próprio option — o caso típico de painel.' } },
+    // O título entra dentro do option, e não como elemento em volta: é a opção
+    // do builder que o snippet precisa mostrar.
+    docs: {
+      source: { transform: chartMultiSerieSource },
+      description: { story: 'Multi-série com título no próprio option — o caso típico de painel.' },
+    },
   },
   render: () => h(ChartContainer, {
     option: buildBarOption({ xAxis: MESES, series: SERIES_MULTI, title: TITULO }),

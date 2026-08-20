@@ -14,6 +14,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { painel } from './popover.fixtures';
+import {
+  popoverEditarPerfilSource,
+  popoverFiltroSource,
+  popoverPreferenciasSource,
+  popoverSeletorDeCorSource,
+} from './popover.source';
 
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
 // filtro de tabela, seletor de cor e configurações rápidas. Nenhuma acrescenta
@@ -28,6 +34,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: popoverEditarPerfilSource },
       description: {
         component:
           'Formulário curto, filtros combináveis, paleta restrita e preferências booleanas. Todo gatilho nomeia a ação e o objeto — nunca "Mais" ou "Clique aqui".',
@@ -100,6 +107,9 @@ export const EditProfile: Story = {
 export const TableFilter: Story = {
   parameters: {
     docs: {
+      // Escolha múltipla no lugar do formulário: o miolo do painel troca de
+      // campos de texto para caixas combináveis.
+      source: { transform: popoverFiltroSource },
       description: {
         story:
           'Filtros contextuais de uma listagem — status combináveis e o par Limpar / Aplicar ao final.',
@@ -164,6 +174,9 @@ export const TableFilter: Story = {
 export const ColorPicker: Story = {
   parameters: {
     docs: {
+      // O miolo vira uma fila de amostras sem texto visível: o nome acessível
+      // passa a vir de `aria-label`, o que nenhuma outra story do arquivo faz.
+      source: { transform: popoverSeletorDeCorSource },
       description: {
         story: 'Paleta restrita em grid — cada amostra tem nome acessível próprio.',
       },
@@ -225,6 +238,9 @@ export const ColorPicker: Story = {
 export const QuickSettings: Story = {
   parameters: {
     docs: {
+      // Rótulo e campo dividem a linha por `data-justify="between"`, e o painel
+      // fecha sem par de ações: não há o que confirmar numa preferência.
+      source: { transform: popoverPreferenciasSource },
       description: {
         story: 'Preferências booleanas independentes — alternativa leve ao Dialog para ajustes rápidos.',
       },

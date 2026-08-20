@@ -4,6 +4,7 @@ import { within, fn, userEvent, expect } from 'storybook/test';
 import { Button } from './index';
 import ButtonDocs from '@/components/docs/ButtonDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { buttonSource } from './button.source';
 
 const meta: Meta<any> = {
   title: 'UI/Button',
@@ -11,7 +12,7 @@ const meta: Meta<any> = {
   tags: ['autodocs', 'form'],
   parameters: {
     design: figmaDesign('button'),
-    docs: { page: withAutoDocsTab(ButtonDocs) },
+    docs: { page: withAutoDocsTab(ButtonDocs), source: { transform: buttonSource } },
   },
   argTypes: {
     variant: {

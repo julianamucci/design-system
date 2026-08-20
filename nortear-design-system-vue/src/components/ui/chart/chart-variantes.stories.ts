@@ -12,6 +12,12 @@ import {
   ChartContainer,
   buildBarOption, buildLineOption, buildAreaOption, buildPieOption,
 } from './index';
+import {
+  chartAreaSource,
+  chartBarSource,
+  chartLineSource,
+  chartPieSource,
+} from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
@@ -27,7 +33,11 @@ const DISPOSITIVOS = [
 
 const meta: Meta = {
   // Sem argTypes: sem isto o painel Controls abre vazio.
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: chartBarSource } },
+  },
   title: 'UI/Chart/Variants',
   tags: ['display'],
 };
@@ -69,7 +79,12 @@ export const Bar: Story = {
 export const Line: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
-    docs: { description: { story: 'Linhas — tendência contínua ao longo do tempo.' } },
+    // Outro builder e duas séries em vez de uma — a do meta mostraria barras
+    // com série única, que é outra composição.
+    docs: {
+      source: { transform: chartLineSource },
+      description: { story: 'Linhas — tendência contínua ao longo do tempo.' },
+    },
   },
   render: () => h(ChartContainer, {
     option: buildLineOption({ xAxis: MESES, series: SERIES_MULTI }),
@@ -107,7 +122,12 @@ export const Line: Story = {
 
 export const Area: Story = {
   parameters: {
-    docs: { description: { story: 'Área — a linha com a região sob ela preenchida, para dar volume.' } },
+    // `buildAreaOption` é o que preenche a região sob a linha; sem ele o
+    // snippet ensinaria o gráfico errado.
+    docs: {
+      source: { transform: chartAreaSource },
+      description: { story: 'Área — a linha com a região sob ela preenchida, para dar volume.' },
+    },
   },
   render: () => h(ChartContainer, {
     option: buildAreaOption({ xAxis: MESES, series: SERIES_MULTI }),
@@ -141,7 +161,12 @@ export const Area: Story = {
 export const Pie: Story = {
   parameters: {
     covers: ['functional.item5'],
-    docs: { description: { story: 'Pizza (rosca) — participação de cada parte no todo.' } },
+    // O builder de pizza recebe pontos rotulados, não eixo mais série: a forma
+    // do dado muda junto com o gráfico.
+    docs: {
+      source: { transform: chartPieSource },
+      description: { story: 'Pizza (rosca) — participação de cada parte no todo.' },
+    },
   },
   render: () => h(ChartContainer, {
     option: buildPieOption({ data: DISPOSITIVOS }),

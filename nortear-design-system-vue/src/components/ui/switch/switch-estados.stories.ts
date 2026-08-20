@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { Switch } from './index';
 import { Label } from '@/components/ui/label';
+import {
+  switchDesabilitadoSource,
+  switchDesligadoSource,
+  switchInvalidoSource,
+  switchLigadoSource,
+} from './switch.source';
 
 const meta = {
   title: 'UI/Switch/States',
@@ -12,6 +18,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: switchDesligadoSource },
       description: {
         component:
           'Estados do Switch: unchecked, checked, focus, disabled e invalid (aria-invalid).',
@@ -86,7 +93,12 @@ export const Unchecked: Story = {
 };
 
 export const Checked: Story = {
-  parameters: { covers: ['visual.item2', 'accessibility.item2'] },
+  parameters: {
+    covers: ['visual.item2', 'accessibility.item2'],
+    // O estado de partida é uma prop escrita à mão; a do meta mostra o repouso,
+    // onde não há nada a escrever.
+    docs: { source: { transform: switchLigadoSource } },
+  },
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },
@@ -158,7 +170,11 @@ export const FocusVisible: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item3'],
+    // `disabled` é prop, e é a única diferença que o leitor precisa copiar.
+    docs: { source: { transform: switchDesabilitadoSource } },
+  },
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },
@@ -191,6 +207,13 @@ export const Disabled: Story = {
 };
 
 export const Invalid: Story = {
+  parameters: {
+    docs: {
+      // O erro traz a mensagem, o vínculo por `aria-describedby` e a borda de
+      // alerta: é uma composição inteira, não um atributo a mais no par.
+      source: { transform: switchInvalidoSource },
+    },
+  },
   render: () => ({
     components: { Switch, Label },
     setup() { return {}; },

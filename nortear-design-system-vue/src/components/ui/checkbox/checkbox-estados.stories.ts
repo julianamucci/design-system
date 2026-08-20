@@ -2,6 +2,15 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
 import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
 import { Checkbox } from './index';
+import {
+  checkboxDesabilitadoMarcadoSource,
+  checkboxDesabilitadoSource,
+  checkboxDesmarcadoSource,
+  checkboxErroSource,
+  checkboxFocoSource,
+  checkboxMarcadoSource,
+  checkboxMistoSource,
+} from './checkbox.source';
 
 // Ferramentas de teclado/ponteiro entregues ao contrato compartilhado. Iguais
 // nas cinco stacks — o que muda entre elas é o componente, não a medição.
@@ -23,6 +32,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: checkboxDesmarcadoSource },
       description: {
         component:
           'Estados do Checkbox: unchecked (padrão), checked, indeterminate, disabled e error (aria-invalid). O indeterminado é o terceiro valor do próprio estado (checked="indeterminate"), não uma propriedade dedicada.',
@@ -67,7 +77,12 @@ export const Unchecked: Story = {
 // Story de estado visual — não interage; cobre functional.item6 (estado
 // inicial marcado sem controle externo) pela própria montagem.
 export const Checked: Story = {
-  parameters: { covers: ['visual.item2', 'functional.item6'] },
+  parameters: {
+    covers: ['visual.item2', 'functional.item6'],
+    // O estado inicial marcado é o assunto, e não há control que o descreva
+    // aqui: a do meta mostraria a caixa vazia.
+    docs: { source: { transform: checkboxMarcadoSource } },
+  },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -100,7 +115,12 @@ export const Checked: Story = {
 // asserção correta é aria-checked="mixed" (ou data-state), nunca
 // toHaveAttribute('indeterminate').
 export const Indeterminate: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // O misto é o terceiro valor do próprio estado: sem ele escrito, o snippet
+    // ensinaria que existe um atributo `indeterminate`.
+    docs: { source: { transform: checkboxMistoSource } },
+  },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -125,7 +145,12 @@ export const Indeterminate: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item6'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item6'],
+    // O `data-disabled` mora no contêiner do par, não na caixa — é sub-composição
+    // que a do meta esconderia.
+    docs: { source: { transform: checkboxDesabilitadoSource } },
+  },
   args: {
     'onUpdate:modelValue': fn(),
   } as never,
@@ -171,7 +196,12 @@ export const Disabled: Story = {
 // alterna em rodada nenhuma, então a foto do Chromatic continua sendo a do
 // estado marcado e a play sobrevive ao REPLAY sem par idempotente.
 export const DisabledChecked: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // Desabilitado E marcado ao mesmo tempo: os dois estados juntos é o que a
+    // story ensina, e nenhum control os descreve.
+    docs: { source: { transform: checkboxDesabilitadoMarcadoSource } },
+  },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -203,7 +233,12 @@ export const DisabledChecked: Story = {
 
 // Story de estado visual — não interage.
 export const Error: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    // A mensagem de erro e o `aria-describedby` que a liga à caixa são
+    // sub-composição: a do meta mostraria só o par.
+    docs: { source: { transform: checkboxErroSource } },
+  },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -243,7 +278,10 @@ export const Error: Story = {
 export const FocusVisible: Story = {
   parameters: {
     covers: ['accessibility.item4'],
+    // Mesma forma do meta, com o rótulo próprio da story — copiar o texto de
+    // outra caixa ensinaria um par que ninguém escreveu.
     docs: {
+      source: { transform: checkboxFocoSource },
       description: {
         story:
           'Estado de foco via teclado. Use Tab para navegar e verificar o ring de foco --ring.',

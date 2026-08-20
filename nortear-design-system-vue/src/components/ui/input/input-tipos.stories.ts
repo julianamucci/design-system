@@ -2,6 +2,14 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { alturaResultante, campoDe } from '@shared/testing/input-probe';
 import { Input } from './index';
+import {
+  inputTipoArquivoSource,
+  inputTipoBuscaSource,
+  inputTipoEmailSource,
+  inputTipoNumeroSource,
+  inputTipoSenhaSource,
+  inputTipoTextoSource,
+} from './input.source';
 
 const meta = {
   title: 'UI/Input/Types',
@@ -12,6 +20,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: inputTipoTextoSource },
       description: {
         component:
           'O Input não tem variantes via prop — a aparência e o comportamento mudam conforme o atributo `type` HTML. Use sempre o tipo semântico correto para cada campo.',
@@ -38,6 +47,9 @@ export const Text: Story = {
 };
 
 export const Email: Story = {
+  // Cada tipo troca teclado, papel implícito e validação nativa: é o atributo
+  // inteiro do exemplo, e a do `meta` mostra o tipo de texto.
+  parameters: { docs: { source: { transform: inputTipoEmailSource } } },
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="email" placeholder="ex: joao@empresa.com" /></div>',
@@ -52,6 +64,8 @@ export const Email: Story = {
 };
 
 export const Password: Story = {
+  // O tipo é o assunto: aqui ele muda o mascaramento e o gerenciador de senhas.
+  parameters: { docs: { source: { transform: inputTipoSenhaSource } } },
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="password" placeholder="••••••••" /></div>',
@@ -66,6 +80,8 @@ export const Password: Story = {
 };
 
 export const Number: Story = {
+  // O tipo é o assunto: aqui ele muda o teclado e traz os incrementos nativos.
+  parameters: { docs: { source: { transform: inputTipoNumeroSource } } },
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="number" placeholder="ex: 42" /></div>',
@@ -84,7 +100,12 @@ export const Number: Story = {
  * seção Variantes documenta e que o contrato pede em `visual.item3`.
  */
 export const Search: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    // O tipo troca o papel implícito para searchbox — nada no visual denuncia
+    // se estiver errado, então o snippet precisa mostrá-lo.
+    docs: { source: { transform: inputTipoBuscaSource } },
+  },
   render: () => ({
     components: { Input },
     template: `
@@ -115,7 +136,11 @@ export const Search: Story = {
 };
 
 export const File: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    // Único tipo sem marcador de exemplo: quem desenha o miolo é o navegador.
+    docs: { source: { transform: inputTipoArquivoSource } },
+  },
   render: () => ({
     components: { Input },
     template: `

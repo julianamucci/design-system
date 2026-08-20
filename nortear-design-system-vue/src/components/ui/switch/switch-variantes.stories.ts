@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { Switch } from './index';
 import { Label } from '@/components/ui/label';
+import {
+  switchComDescricaoSource,
+  switchCompactoSource,
+  switchPadraoSource,
+} from './switch.source';
 
 const meta = {
   title: 'UI/Switch/Variants',
@@ -12,6 +17,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: switchPadraoSource },
       description: {
         component:
           'Variantes do Switch: default (Label à direita), withDescription (painel com o texto à esquerda) e sm (compacto).',
@@ -74,6 +80,9 @@ export const WithDescription: Story = {
   }),
   parameters: {
     docs: {
+      // O par vira linha de painel, com um parágrafo de apoio ao lado do rótulo
+      // — a do meta mostraria só o par em linha, que é outra estrutura.
+      source: { transform: switchComDescricaoSource },
       description: {
         story: 'Switch em painel de configurações — texto à esquerda, controle à direita.',
       },
@@ -113,6 +122,9 @@ export const Sm: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // São DOIS switches lado a lado: a comparação entre os degraus é o assunto,
+      // e um snippet de um só esconderia justamente isso.
+      source: { transform: switchCompactoSource },
       description: {
         story:
           'Degrau compacto — trilho de 24×16px com thumb de 12px, ao lado do padrão para comparação.',

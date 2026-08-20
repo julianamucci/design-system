@@ -4,6 +4,11 @@ import { resolverCor } from '@shared/testing/cor';
 import { contrastesNosDoisModos } from '@shared/testing/form-probe';
 import { Input } from '@/components/ui/input';
 import { Fieldset, FormField } from './index';
+import {
+  formDesabilitadoSource,
+  formInvalidoSource,
+  formPaletaEscuraSource,
+} from './form.source';
 
 const meta: Meta = {
   title: 'UI/Form/States',
@@ -11,6 +16,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: formInvalidoSource } },
   },
 };
 
@@ -91,7 +97,14 @@ export const Invalid: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item7'] },
+  parameters: {
+    covers: ['functional.item7'],
+    docs: {
+      // Quem desliga é o controle, não o campo, e não há mensagem de erro — a do
+      // `meta` mostraria as duas coisas trocadas.
+      source: { transform: formDesabilitadoSource },
+    },
+  },
   render: () => ({
     components: { FormField, Input },
     template: `
@@ -139,6 +152,11 @@ export const Disabled: Story = {
 export const DarkPalette: Story = {
   parameters: {
     covers: ['visual.item5'],
+    docs: {
+      // Três campos e um grupo numa pilha: a composição não existe em nenhuma
+      // outra story, e a paleta vem do tema do documento, não da marcação.
+      source: { transform: formPaletaEscuraSource },
+    },
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },

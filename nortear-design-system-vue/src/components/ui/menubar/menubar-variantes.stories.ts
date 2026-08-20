@@ -9,6 +9,7 @@ import {
   MenubarTrigger,
 } from './index';
 import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { menubarItemDefaultSource, menubarItemDestrutivoSource } from './menubar.source';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
@@ -26,6 +27,7 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: menubarItemDefaultSource },
       description: {
         component:
           'As duas ênfases de item dentro de um menu da barra. `default` é o item neutro; `destructive` marca a ação irreversível com a cor de perigo, e existe para que "Descartar alterações" não pareça "Salvar".',
@@ -99,7 +101,14 @@ export const Default: Story = {
 // ─── Destructive ──────────────────────────────────────────────────────────────
 
 export const Destructive: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: {
+      // A ênfase de perigo traz junto o separador que a afasta do item vizinho:
+      // a do meta mostraria só a lista neutra, sem o par que é o assunto.
+      source: { transform: menubarItemDestrutivoSource },
+    },
+  },
   render: () => ({
     components: pecas,
     setup: () => ({ perigo: ITENS_COM_PERIGO }),

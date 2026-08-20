@@ -9,6 +9,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from './index';
+import {
+  paginationDirecionalSource,
+  paginationLinkAtivoSource,
+  paginationLinkInativoSource,
+} from './pagination.source';
 
 const meta = {
   title: 'UI/Pagination/Variants',
@@ -19,6 +24,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: paginationLinkInativoSource },
       description: {
         component:
           'Variantes do PaginationLink: Default (link inativo), Active (página atual, com aria-current=page) e Directional (Previous/Next com ícone e rótulo).',
@@ -72,7 +78,12 @@ export const Default: Story = {
 export const Active: Story = {
   parameters: {
     covers: ['accessibility.item4'],
-    docs: { description: { story: 'Página atual — destaque visual permanente e aria-current="page" para o leitor de tela.' } },
+    docs: {
+      // A marcação só se vê CONTRA um vizinho inativo: um link sozinho, como o
+      // do meta, não mostra o que `is-active` separa.
+      source: { transform: paginationLinkAtivoSource },
+      description: { story: 'Página atual — destaque visual permanente e aria-current="page" para o leitor de tela.' },
+    },
   },
   render: () => ({
     components: sharedComponents,
@@ -115,6 +126,9 @@ export const Directional: Story = {
   parameters: {
     covers: ['accessibility.item5', 'accessibility.item6'],
     docs: {
+      // Outras peças: os direcionais no lugar do link numerado, e nenhum número
+      // na faixa — a ausência é o assunto.
+      source: { transform: paginationDirecionalSource },
       description: {
         story:
           'Só os controles de direção. O rótulo textual some abaixo de 40rem e o ícone permanece — o nome acessível não muda.',

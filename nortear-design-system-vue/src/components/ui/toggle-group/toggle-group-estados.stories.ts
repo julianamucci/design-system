@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { ToggleGroup, ToggleGroupItem } from './index';
 import { AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next';
+import {
+  toggleGroupDesabilitadoSource,
+  toggleGroupItemDesabilitadoSource,
+  toggleGroupPadraoSource,
+  toggleGroupSelecionadoSource,
+} from './toggle-group.source';
 
 const meta = {
   title: 'UI/ToggleGroup/States',
@@ -12,6 +18,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: toggleGroupPadraoSource },
       description: {
         component:
           'Estados do ToggleGroup: default, selected (aria-pressed=true), hover, focus (roving tabindex) e disabled.',
@@ -57,7 +64,12 @@ export const Selected: Story = {
       </ToggleGroup>
     `,
   }),
-  parameters: { covers: ['accessibility.item2'] },
+  parameters: {
+    covers: ['accessibility.item2'],
+    // A seleção inicial é o assunto, e ela vem de `default-value` na raiz — a do
+    // meta nasce sem item nenhum ligado.
+    docs: { source: { transform: toggleGroupSelecionadoSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const center = canvas.getByRole('button', { name: 'Centralizar' });
@@ -143,6 +155,11 @@ export const Disabled: Story = {
       </ToggleGroup>
     `,
   }),
+  parameters: {
+    // A prop desce do grupo para todos os itens — a do meta mostraria o grupo
+    // vivo, que é o oposto do que a story documenta.
+    docs: { source: { transform: toggleGroupDesabilitadoSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });
@@ -169,6 +186,11 @@ export const ItemDisabled: Story = {
       </ToggleGroup>
     `,
   }),
+  parameters: {
+    // Aqui a prop mora no ITEM, não na raiz: é a diferença que a story existe
+    // para mostrar, e o snippet do meta a esconderia.
+    docs: { source: { transform: toggleGroupItemDesabilitadoSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const left = canvas.getByRole('button', { name: 'Alinhar à esquerda' });

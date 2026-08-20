@@ -12,6 +12,11 @@ import {
 } from './index';
 import { Skeleton } from '@/components/ui/skeleton';
 import { INVOICES } from './table.fixtures';
+import {
+  tableCarregandoSource,
+  tableLinhaSelecionadaSource,
+  tableVaziaSource,
+} from './table.source';
 
 const meta: Meta = {
   title: 'UI/Table/States',
@@ -21,6 +26,7 @@ const meta: Meta = {
     // Sem argTypes: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: tableVaziaSource } },
   },
 };
 
@@ -96,7 +102,12 @@ export const Empty: Story = {
 };
 
 export const SelectedRow: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item5'],
+    // Há registros e há estado de seleção por linha: o corpo volta a ser
+    // iterado, o oposto do vazio que o meta mostra.
+    docs: { source: { transform: tableLinhaSelecionadaSource } },
+  },
   render: () => ({
     components: COMPONENTES,
     setup() {
@@ -154,7 +165,12 @@ export const SelectedRow: Story = {
 const LINHAS_ESQUELETO = [1, 2, 3];
 
 export const Loading: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item6'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item6'],
+    // A tabela entra dentro de uma região com `aria-busy` e as células viram
+    // esqueleto: o invólucro é metade da lição e o meta não o tem.
+    docs: { source: { transform: tableCarregandoSource } },
+  },
   render: () => ({
     components: { ...COMPONENTES, Skeleton },
     setup() {

@@ -6,6 +6,7 @@ import {
   distincaoDoFundo,
   ligarMovimentoReduzido,
 } from '@shared/testing/skeleton-probe';
+import { skeletonMovimentoReduzidoSource, skeletonPulsandoSource } from './skeleton.source';
 
 const meta: Meta = {
   title: 'UI/Skeleton/States',
@@ -16,6 +17,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: skeletonPulsandoSource },
       description: {
         component:
           'Os dois estados que o conteúdo compartilhado documenta: o pulso padrão enquanto o conteúdo carrega, e o pulso desligado quando o sistema pede movimento reduzido.',
@@ -74,6 +76,9 @@ export const ReducedMotion: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item4'],
     docs: {
+      // A ausência é o assunto: não há prop nem atributo a escrever, e é isso
+      // que o snippet precisa deixar claro ao lado da story.
+      source: { transform: skeletonMovimentoReduzidoSource },
       description: {
         story:
           'Com movimento reduzido o pulso para. O esqueleto continua visível — o que some é a animação, não o placeholder.',

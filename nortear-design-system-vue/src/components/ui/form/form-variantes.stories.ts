@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, within } from 'storybook/test';
 import { Input } from '@/components/ui/input';
 import { FormField } from './index';
+import { formComDescricaoSource, formRotuloEControleSource } from './form.source';
 
 // O Form não tem variante por prop — o que muda é quais peças opcionais entram
 // no campo. As duas stories abaixo são exatamente as duas combinações que o
@@ -13,6 +14,7 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: formRotuloEControleSource } },
   },
 };
 
@@ -52,7 +54,14 @@ export const LabelAndControl: Story = {
 
 /** Rótulo, controle e um parágrafo de apoio que o leitor de tela também lê. */
 export const WithDescription: Story = {
-  parameters: { covers: ['functional.item3', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item3', 'visual.item2'],
+    docs: {
+      // A peça a mais É o assunto: a do `meta` mostra o campo sem descrição, que
+      // é exatamente a outra combinação.
+      source: { transform: formComDescricaoSource },
+    },
+  },
   render: () => ({
     components: { FormField, Input },
     template: `

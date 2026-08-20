@@ -14,6 +14,7 @@ import {
 } from './index';
 import HoverCardDocs from '@/components/docs/HoverCardDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { hoverCardSource } from './hover-card.source';
 
 type HoverCardArgs = {
   triggerLabel: string;
@@ -33,6 +34,7 @@ const meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(HoverCardDocs),
+      source: { transform: hoverCardSource },
       description: {
         component:
           'Cartão flutuante exibido ao passar o cursor ou focar um elemento. Renderiza em portal com role=dialog, espera configurável e abre tanto por ponteiro quanto por foco. Usar para previews opcionais — nunca para ações críticas, que ninguém alcança no toque.',

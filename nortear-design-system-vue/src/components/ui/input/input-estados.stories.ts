@@ -8,6 +8,12 @@ import {
   haloDeFoco,
 } from '@shared/testing/input-probe';
 import { Input } from './index';
+import {
+  inputComErroSource,
+  inputComRotuloSource,
+  inputDesabilitadoSource,
+  inputPaletaEscuraSource,
+} from './input.source';
 
 const meta = {
   title: 'UI/Input/States',
@@ -18,6 +24,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Serve também a Focus e a WithPlaceholder: focar é interação, não
+      // atributo, e o marcador já está nesta marcação.
+      source: { transform: inputComRotuloSource },
       description: {
         component:
           'Estados do Input: padrão, foco, desabilitado e erro (aria-invalid). Cada asserção afere a cor computada, nunca o nome da classe.',
@@ -165,7 +174,11 @@ export const WithPlaceholder: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    // O atributo que desliga o campo é a story inteira, e não existe no `meta`.
+    docs: { source: { transform: inputDesabilitadoSource } },
+  },
   render: () => ({
     components: { Input },
     template: `
@@ -202,6 +215,9 @@ export const Disabled: Story = {
 export const Error: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item3', 'accessibility.item4'],
+    // O par aria-invalid + aria-describedby e a mensagem apontada por ele são o
+    // assunto; nenhum dos três existe na marcação do `meta`.
+    docs: { source: { transform: inputComErroSource } },
   },
   render: () => ({
     components: { Input },
@@ -263,6 +279,9 @@ export const Error: Story = {
 export const DarkPalette: Story = {
   parameters: {
     covers: ['visual.item5'],
+    // Os três estados numa pilha só: a composição não existe em nenhuma outra
+    // story, e a paleta vem do tema do documento, não da marcação.
+    docs: { source: { transform: inputPaletaEscuraSource } },
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },

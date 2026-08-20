@@ -8,6 +8,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from './index';
+import {
+  accordionAbertoPorPadraoSource,
+  accordionControladoSource,
+  accordionFecharNoSegundoCliqueSource,
+  accordionMultipleSource,
+  accordionSingleSource,
+} from './accordion.source';
 
 const meta = {
   title: 'UI/Accordion/Variants',
@@ -16,6 +23,7 @@ const meta = {
     design: figmaDesign('accordion'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: accordionSingleSource } },
   },
 } satisfies Meta;
 
@@ -129,6 +137,9 @@ export const CloseOnSecondClick: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
+      // A ausência de configuração É o assunto: a raiz sai sem valor inicial e
+      // sem chave nenhuma, o que a do meta esconderia.
+      source: { transform: accordionFecharNoSegundoCliqueSource },
       description: {
         story: 'Modo único sem nenhuma configuração extra: clicar de novo no item aberto o fecha.',
       },
@@ -186,6 +197,9 @@ export const Multiple: Story = {
   parameters: {
     covers: ['functional.item4'],
     docs: {
+      // Outro modo na raiz e outro conjunto de itens — a do meta mostraria o
+      // modo único, que é o contrato oposto.
+      source: { transform: accordionMultipleSource },
       description: {
         story: 'Modo multiple. Múltiplos itens podem estar abertos ao mesmo tempo. Use para especificações técnicas comparáveis.',
       },
@@ -242,6 +256,9 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item6'],
     docs: {
+      // O estado sai do componente e vira `ref` de quem consome, com indicador
+      // em volta: é script e marcação que a do meta não tem.
+      source: { transform: accordionControladoSource },
       description: {
         story: 'Modo controlado. model-value e @update:model-value gerenciam o estado externamente. O indicador acima mostra o item ativo.',
       },
@@ -284,6 +301,9 @@ export const DefaultOpen: Story = {
   parameters: {
     covers: ['functional.item6'],
     docs: {
+      // O valor inicial é o assunto, e o par de itens contrasta aberto contra
+      // fechado — outra composição que a do meta não mostra.
+      source: { transform: accordionAbertoPorPadraoSource },
       description: {
         story: 'Prop default-value abre um item na montagem sem modo controlado. Use em documentação e onboarding.',
       },

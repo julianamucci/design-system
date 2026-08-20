@@ -12,6 +12,11 @@ import {
 } from './index';
 import { esperarPainel, painelAberto } from './navigation-menu.fixtures';
 import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import {
+  navigationMenuAbertoSource,
+  navigationMenuAtivoSource,
+  navigationMenuFechadoSource,
+} from './navigation-menu.source';
 
 const meta = {
   title: 'UI/NavigationMenu/States',
@@ -23,6 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: navigationMenuFechadoSource },
       description: {
         component:
           'Os três estados canônicos: Fechado (só a barra), Aberto (painel do item ativo) e Ativo (o destino da página atual).',
@@ -104,6 +110,9 @@ export const Open: Story = {
     // Esta story termina com o painel ABERTO; ver a nota da regra.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      // Aberto na montagem é PRESENÇA de `default-value`, e traz junto a seta
+      // indicadora — peça que a do meta, fechada, não tem por que mostrar.
+      source: { transform: navigationMenuAbertoSource },
       description: {
         story:
           'O item nasce aberto e a seta indicadora aponta para o gatilho. A story termina aberta de propósito: é o estado que a regressão visual precisa capturar.',
@@ -185,6 +194,9 @@ export const Active: Story = {
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
     docs: {
+      // A marca da página atual mora no DESTINO, e é uma barra plana: nenhum
+      // gatilho, nenhum painel — o oposto da composição do meta.
+      source: { transform: navigationMenuAtivoSource },
       description: {
         story:
           'O destino da página atual leva aria-current="page" — o leitor de tela anuncia "página atual" e o fundo muda, porque cor sozinha não informa quem não a distingue.',

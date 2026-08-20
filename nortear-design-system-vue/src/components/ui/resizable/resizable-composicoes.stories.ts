@@ -5,6 +5,11 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from './index';
+import {
+  resizableEditorSource,
+  resizableFaixasSource,
+  resizableSidebarConsoleSource,
+} from './resizable.source';
 
 const meta = {
   title: 'UI/Resizable/Compositions',
@@ -15,6 +20,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: resizableEditorSource },
       description: {
         component:
           'Composicoes reais do Resizable: layout de editor com sidebar + preview, layout vertical com cabeçalho/conteúdo/rodapé e três painéis em sequência.',
@@ -64,6 +70,10 @@ export const EditorWithPreview: Story = {
 };
 
 export const VerticalHeaderContentFooter: Story = {
+  parameters: {
+    // Eixo, proporção da moldura e papéis das faixas mudam de uma vez.
+    docs: { source: { transform: resizableFaixasSource } },
+  },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
@@ -109,6 +119,11 @@ export const VerticalHeaderContentFooter: Story = {
 };
 
 export const SidebarWithConsole: Story = {
+  parameters: {
+    // O grupo de dentro é a composição — em sequência os três painéis do meta
+    // não mostram o aninhamento.
+    docs: { source: { transform: resizableSidebarConsoleSource } },
+  },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `

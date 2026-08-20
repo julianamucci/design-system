@@ -14,6 +14,7 @@ import {
 import TableDocs from '@/components/docs/TableDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { INVOICES, TOTAL } from './table.fixtures';
+import { tableSource } from './table.source';
 
 interface TableArgs {
   captionVisivel: boolean;
@@ -26,7 +27,7 @@ const meta: Meta<TableArgs> = {
   tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(TableDocs) },
+    docs: { page: withAutoDocsTab(TableDocs), source: { transform: tableSource } },
   },
   argTypes: {
     captionVisivel: {

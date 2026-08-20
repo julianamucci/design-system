@@ -13,6 +13,12 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import {
+  drawerAbertoSource,
+  drawerControladoSource,
+  drawerFechadoSource,
+  drawerNaoDispensavelSource,
+} from './drawer.source';
 
 const meta = {
   title: 'UI/Drawer/States',
@@ -23,6 +29,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: drawerFechadoSource },
       description: {
         component:
           'Estados canônicos do Drawer: fechado (padrão), aberto, controlado por estado externo e não dispensável.',
@@ -101,6 +108,9 @@ export const Open: Story = {
   parameters: {
     covers: ['accessibility.item2'],
     docs: {
+      // Aqui a montagem já aberta É o assunto, e não há gatilho a clicar — nas
+      // outras stories a prop é só andaime da foto do Chromatic.
+      source: { transform: drawerAbertoSource },
       description: {
         story:
           'Aberto ao montar, sem estado externo. Overlay ativo, foco dentro do painel e contrato de markup completo.',
@@ -155,6 +165,9 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item6'],
     docs: {
+      // O gatilho sai de cena e entram o par prop+evento e os botões de fora:
+      // estrutura inteiramente outra.
+      source: { transform: drawerControladoSource },
       description: {
         story:
           'Estado do lado de fora: o componente não decide nada sozinho — abre quando o valor ligado diz que sim e avisa a cada mudança para que o dono do estado acompanhe.',
@@ -223,6 +236,9 @@ export const Controlled: Story = {
 export const NotDismissible: Story = {
   parameters: {
     docs: {
+      // Desligar a dispensa torna a saída do rodapé obrigatória — é o par que
+      // o snippet precisa mostrar junto, e que o do meta não tem.
+      source: { transform: drawerNaoDispensavelSource },
       description: {
         story:
           'Sem dispensa por gesto: Escape e clique no overlay não fecham. A saída existe e é explícita — o botão do rodapé, alcançável por teclado.',

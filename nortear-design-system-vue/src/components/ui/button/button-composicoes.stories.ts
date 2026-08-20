@@ -3,6 +3,14 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { Plus, Trash2, ChevronRight, Download } from 'lucide-vue-next';
 import { Button } from './index';
+import {
+  buttonComIconeFinalSource,
+  buttonComIconeInicialSource,
+  buttonComoLinkSource,
+  buttonDestrutivoComIconeSource,
+  buttonParDeAcoesSource,
+  buttonSoIconeSource,
+} from './button.source';
 
 const meta: Meta<any> = {
   title: 'UI/Button/Compositions',
@@ -12,6 +20,7 @@ const meta: Meta<any> = {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: buttonComIconeInicialSource } },
   },
 };
 
@@ -50,7 +59,13 @@ export const WithIconRight: Story = {
       </Button>
     `,
   }),
-  parameters: { docs: { description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' } } },
+  // A ordem dos filhos é o assunto — e ela não cabe em arg nenhum.
+  parameters: {
+    docs: {
+      source: { transform: buttonComIconeFinalSource },
+      description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: 'Próximo' });
     const svg = btn.querySelector('svg');
@@ -70,7 +85,13 @@ export const DestructiveIcon: Story = {
       </Button>
     `,
   }),
-  parameters: { docs: { description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' } } },
+  // Outro ícone e outra variante: o import muda junto com a composição.
+  parameters: {
+    docs: {
+      source: { transform: buttonDestrutivoComIconeSource },
+      description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: 'Excluir' });
     await expect(btn).toHaveClass('nds-button-destructive');
@@ -87,7 +108,13 @@ export const IconOnly: Story = {
       </Button>
     `,
   }),
-  parameters: { docs: { description: { story: 'Botão apenas com ícone. aria-label é obrigatório para acessibilidade.' } } },
+  // A ausência de texto é o assunto: sem rótulo acessível a ação fica sem nome.
+  parameters: {
+    docs: {
+      source: { transform: buttonSoIconeSource },
+      description: { story: 'Botão apenas com ícone. aria-label é obrigatório para acessibilidade.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -108,7 +135,13 @@ export const ActionPair: Story = {
       </div>
     `,
   }),
-  parameters: { docs: { description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' } } },
+  // São dois botões e o container que os espaça — a do meta mostraria um só.
+  parameters: {
+    docs: {
+      source: { transform: buttonParDeAcoesSource },
+      description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const cancelar = canvas.getByRole('button', { name: 'Cancelar' });
@@ -131,7 +164,12 @@ export const AsLink: Story = {
   }),
   parameters: {
     covers: ['functional.item5'],
-    docs: { description: { story: 'Usando asChild com reka-ui Primitive para renderizar um <a> com estilos de botão, preservando semântica de link.' } },
+    // O botão deixa de renderizar o próprio elemento e veste o <a> do
+    // consumidor: sem o filho, a composição não existe no snippet.
+    docs: {
+      source: { transform: buttonComoLinkSource },
+      description: { story: 'Usando asChild com reka-ui Primitive para renderizar um <a> com estilos de botão, preservando semântica de link.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

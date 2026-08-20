@@ -18,6 +18,12 @@ import {
   REGRA_GUARDA_DE_FOCO,
   REGRA_ROLAGEM_DA_LISTA,
 } from '@/lib/wait-for-portal';
+import {
+  selectComRotuloSource,
+  selectComSeparadorSource,
+  selectControladoSource,
+  selectEmFormularioSource,
+} from './select.source';
 
 const meta = {
   title: 'UI/Select/Compositions',
@@ -28,6 +34,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: selectComRotuloSource },
       description: {
         component:
           'Composicoes reais: ComLabel (label externo associado), Controlado (modelValue + @update:modelValue), EmFormulario (Select dentro de form) e ComSeparator (grupos divididos por SelectSeparator).',
@@ -95,6 +102,9 @@ export const WithLabel: Story = {
 export const Controlled: Story = {
   parameters: {
     docs: {
+      // O estado sai do componente: entram o `ref`, a prop de entrada e o
+      // evento de saída, nenhum deles no snippet do meta.
+      source: { transform: selectControladoSource },
       description: { story: 'Seleção controlada por estado externo via modelValue + @update:modelValue.' },
     },
   },
@@ -147,6 +157,8 @@ export const Controlled: Story = {
 export const InForm: Story = {
   parameters: {
     docs: {
+      // O formulário em volta e o `name` que leva o valor no envio.
+      source: { transform: selectEmFormularioSource },
       description: { story: 'Select integrado em form HTML — prop name expõe o valor no submit.' },
     },
   },
@@ -215,6 +227,8 @@ export const WithSeparator: Story = {
     // motivos das duas regras estão em `wait-for-portal`.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_ROLAGEM_DA_LISTA] } },
     docs: {
+      // Grupos, cabeçalhos e o traço entre eles — a lista inteira muda.
+      source: { transform: selectComSeparadorSource },
       description: { story: 'SelectSeparator entre grupos para divisão visual explícita — útil quando há muitas categorias.' },
     },
   },

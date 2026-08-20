@@ -7,6 +7,11 @@ import {
   preencherAte,
   resizeComputado,
 } from '@shared/testing/textarea-probe';
+import {
+  textareaComContadorSource,
+  textareaPadraoSource,
+  textareaSemRedimensionarSource,
+} from './textarea.source';
 
 const meta = {
   title: 'UI/Textarea/Variants',
@@ -17,6 +22,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: textareaPadraoSource },
       description: {
         component:
           'O Textarea expõe 3 variantes via classes .nds-*: padrão (redimensiona na vertical), com contador de caracteres e sem redimensionamento.',
@@ -61,6 +67,11 @@ export const Default: Story = {
 export const WithCounter: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item4'],
+    docs: {
+      // O contador traz estado, limite e um bloco de texto abaixo do campo: é
+      // uma composição inteira, não uma prop a mais na padrão.
+      source: { transform: textareaComContadorSource },
+    },
   },
   render: () => ({
     components: { Textarea, Label },
@@ -115,6 +126,13 @@ export const WithCounter: Story = {
 };
 
 export const NoResize: Story = {
+  parameters: {
+    docs: {
+      // A ausência da alça É o assunto, e ela mora numa classe que a padrão não
+      // tem — sem o override o snippet mostraria justamente o contrário.
+      source: { transform: textareaSemRedimensionarSource },
+    },
+  },
   render: () => ({
     components: { Textarea, Label },
     template: `

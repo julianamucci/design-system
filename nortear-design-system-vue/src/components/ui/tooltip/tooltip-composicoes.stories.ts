@@ -10,6 +10,12 @@ import { Button } from '@/components/ui/button';
 import { Kbd } from '@/components/ui/kbd';
 import { Save, Trash2, Share2, Copy, Pencil } from 'lucide-vue-next';
 import { balaoDe } from './tooltip.fixtures';
+import {
+  tooltipBarraDeAcoesSource,
+  tooltipBotaoIconeSource,
+  tooltipComAtalhoSource,
+  tooltipQuatroLadosSource,
+} from './tooltip.source';
 
 // As composições que o conteúdo compartilhado documenta. Todas repetem a mesma
 // regra: o Tooltip acrescenta contexto a um elemento que JÁ se explica sozinho —
@@ -35,6 +41,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: tooltipBotaoIconeSource },
       description: {
         component:
           'Botão icon-only com aria-label próprio e Tooltip de reforço, barra de ações com vários deles, atalho de teclado em Kbd e os quatro lados de posicionamento.',
@@ -88,6 +95,9 @@ export const IconOnlyButton: Story = {
 export const ActionBar: Story = {
   parameters: {
     docs: {
+      // São cinco unidades dentro de uma toolbar, servidas por um Provider só —
+      // a do meta mostraria um botão solto.
+      source: { transform: tooltipBarraDeAcoesSource },
       description: {
         story:
           'Toolbar com múltiplos botões icon-only — cada um com seu aria-label e Tooltip de reforço.',
@@ -165,6 +175,9 @@ export const ActionBar: Story = {
 export const KeyboardShortcut: Story = {
   parameters: {
     docs: {
+      // O balão ganha estrutura própria: o rótulo mais as teclas em Kbd, que a
+      // do meta esconderia numa linha de texto corrido.
+      source: { transform: tooltipComAtalhoSource },
       description: {
         story: 'Tooltip com atalho via Kbd — comunica a hotkey visualmente sem tirá-la do aria-label.',
       },
@@ -213,6 +226,9 @@ export const FourSides: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // Quatro unidades numa grade, uma por lado de posicionamento — a do meta
+      // mostraria uma só, e o assunto aqui é justamente a comparação.
+      source: { transform: tooltipQuatroLadosSource },
       description: {
         story:
           'Quatro tooltips abertos ao mesmo tempo mostrando side=top/right/bottom/left. O auto-flip por colisão pode trocar o lado quando falta espaço.',

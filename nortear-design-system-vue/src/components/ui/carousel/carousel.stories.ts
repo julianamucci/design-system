@@ -4,6 +4,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext
 import { slideEmFoco } from './carousel.fixtures';
 import CarouselDocs from '@/components/docs/CarouselDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { carouselSource } from './carousel.source';
 
 const meta = {
   title: 'UI/Carousel',
@@ -11,7 +12,7 @@ const meta = {
   tags: ['autodocs', 'display'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(CarouselDocs) },
+    docs: { page: withAutoDocsTab(CarouselDocs), source: { transform: carouselSource } },
   },
   argTypes: {
     orientation: {

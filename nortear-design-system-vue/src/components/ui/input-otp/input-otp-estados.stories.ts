@@ -8,6 +8,13 @@ import {
   InputOTPSlot,
 } from './index';
 import { campo } from './input-otp.fixtures';
+import {
+  inputOtpCompletoSource,
+  inputOtpComErroSource,
+  inputOtpDesabilitadoSource,
+  inputOtpPreenchendoSource,
+  inputOtpVazioSource,
+} from './input-otp.source';
 
 const meta = {
   title: 'UI/InputOTP/States',
@@ -18,6 +25,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: inputOtpVazioSource },
       description: {
         component:
           'Estados canônicos do InputOTP: Vazio, Preenchendo (3 de 6), Completo (6 de 6), Desabilitado e Erro.',
@@ -74,7 +82,12 @@ export const Empty: Story = {
 export const Filling: Story = {
   parameters: {
     covers: ['visual.item2', 'accessibility.item6'],
-    docs: { description: { story: 'Parcialmente preenchido — 3 de 6 caixas.' } },
+    docs: {
+      // O valor inicial É o estado, e ele mora no `ref`, não num atributo — a
+      // do `meta` nasce vazia.
+      source: { transform: inputOtpPreenchendoSource },
+      description: { story: 'Parcialmente preenchido — 3 de 6 caixas.' },
+    },
   },
   render: () => ({
     components: sharedComponents,
@@ -114,7 +127,11 @@ export const Filling: Story = {
 export const Complete: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { description: { story: 'Todas as 6 caixas preenchidas.' } },
+    docs: {
+      // Mesmo motivo do preenchendo: o que muda é o valor inicial do estado.
+      source: { transform: inputOtpCompletoSource },
+      description: { story: 'Todas as 6 caixas preenchidas.' },
+    },
   },
   render: () => ({
     components: sharedComponents,
@@ -145,7 +162,11 @@ export const Complete: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item6'],
-    docs: { description: { story: 'Bloqueado: não aceita foco nem digitação, e o campo esmaece.' } },
+    docs: {
+      // O atributo que bloqueia o campo é a story inteira.
+      source: { transform: inputOtpDesabilitadoSource },
+      description: { story: 'Bloqueado: não aceita foco nem digitação, e o campo esmaece.' },
+    },
   },
   render: () => ({
     components: sharedComponents,
@@ -188,6 +209,10 @@ export const Error: Story = {
   parameters: {
     covers: ['functional.item7', 'accessibility.item5', 'visual.item4'],
     docs: {
+      // O par aria-invalid + mensagem conectada é o assunto. A SEGUNDA
+      // instância que a story monta existe só para a play comparar bordas —
+      // andaime de medição, fora do snippet.
+      source: { transform: inputOtpComErroSource },
       description: {
         story:
           'Erro: aria-invalid marca o campo, a borda troca para a cor de erro e a mensagem vem conectada por aria-describedby.',

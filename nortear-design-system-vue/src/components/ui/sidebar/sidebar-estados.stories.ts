@@ -19,6 +19,13 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { LayoutDashboard, Blocks, Palette, Settings, User } from 'lucide-vue-next';
+import {
+  sidebarCarregandoSource,
+  sidebarExpandidaSource,
+  sidebarFixaSource,
+  sidebarGavetaMovelSource,
+  sidebarRecolhidaIconeSource,
+} from './sidebar.source';
 
 const meta = {
   title: 'UI/Sidebar/States',
@@ -29,6 +36,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: sidebarExpandidaSource },
       description: {
         component:
           'Estados da Sidebar: expandida (padrão), modo icon colapsado, offcanvas, fixo (none) e loading skeleton.',
@@ -127,6 +135,9 @@ export const CollapsedIcon: Story = {
   parameters: {
     covers: ['functional.item4', 'functional.item7', 'visual.item2'],
     docs: {
+      // O par é `collapsible="icon"` na barra com `:default-open="false"` no
+      // provider — o meta mostra a barra aberta e sem modo de ícone.
+      source: { transform: sidebarRecolhidaIconeSource },
       description: { story: 'collapsible="icon": sidebar reduz para 3rem. Apenas ícones visíveis; tooltips ao hover. data-state="collapsed"' },
     },
   },
@@ -260,6 +271,9 @@ export const CollapsibleNone: Story = {
   parameters: {
     covers: ['functional.item5'],
     docs: {
+      // A ausência do gatilho e da faixa é deliberada: sem recolhimento, os
+      // dois seriam controles que não fazem nada.
+      source: { transform: sidebarFixaSource },
       description: { story: 'collapsible="none": sidebar sempre visível. Sem toggle. Sem data-state de collapsed.' },
     },
   },
@@ -339,6 +353,9 @@ export const LoadingSkeleton: Story = {
   parameters: {
     covers: ['functional.item9'],
     docs: {
+      // O item de menu dá lugar ao placeholder — é outra composição, não outro
+      // valor de prop.
+      source: { transform: sidebarCarregandoSource },
       description: { story: 'SidebarMenuSkeleton com showIcon=true: placeholder de carregamento para itens de menu.' },
     },
   },
@@ -412,6 +429,9 @@ export const MobileOverlay: Story = {
     viewport: { defaultViewport: 'mobile1' },
     covers: ['functional.item3', 'visual.item5'],
     docs: {
+      // `mobile-query` é do provider e é o que força a gaveta; sem ela o
+      // snippet do meta ensinaria a coluna, que é o caminho oposto.
+      source: { transform: sidebarGavetaMovelSource },
       description: { story: 'Em largura de telefone a Sidebar sai do fluxo e vira gaveta sobreposta (18rem), aberta pelo SidebarTrigger e fechada por Escape, que devolve o foco ao gatilho.' },
     },
   },

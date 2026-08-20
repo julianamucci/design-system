@@ -11,6 +11,7 @@ import { Save } from 'lucide-vue-next';
 import { balaoDe } from './tooltip.fixtures';
 import TooltipDocs from '@/components/docs/TooltipDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { tooltipSource } from './tooltip.source';
 
 /** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
 function ladoDe(balao: HTMLElement | null): string | null {
@@ -30,6 +31,7 @@ const meta = {
   parameters: {
     docs: {
       page: withAutoDocsTab(TooltipDocs),
+      source: { transform: tooltipSource },
       description: {
         component:
           'Texto explicativo curto exibido em portal ao passar o cursor ou focar o Trigger. Requer o Provider no root (já incluído como decorator). Abre por hover ou foco (WCAG 1.4.13). NÃO substitui aria-label em botões icon-only — o Tooltip é complementar.',

@@ -4,6 +4,12 @@ import { within, fn, userEvent, expect } from 'storybook/test';
 import { Loader2 } from 'lucide-vue-next';
 import { Button } from './index';
 import { falhasDeAnel } from '@shared/testing/button-probe';
+import {
+  buttonCarregandoSource,
+  buttonDesabilitadoSource,
+  buttonFocoVisivelSource,
+  buttonInvalidoSource,
+} from './button.source';
 
 const meta: Meta<any> = {
   title: 'UI/Button/States',
@@ -16,6 +22,7 @@ const meta: Meta<any> = {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: buttonDesabilitadoSource } },
   },
 };
 
@@ -62,7 +69,14 @@ export const Loading: Story = {
       </Button>
     `,
   }),
-  parameters: { docs: { description: { story: 'Estado de carregamento. Use disabled + aria-busy e substitua o label por estado progressivo.' } } },
+  // O ícone que gira e o rótulo trocado são a lição: a do meta mostraria só o
+  // botão desabilitado, sem nada do progresso.
+  parameters: {
+    docs: {
+      source: { transform: buttonCarregandoSource },
+      description: { story: 'Estado de carregamento. Use disabled + aria-busy e substitua o label por estado progressivo.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button');
@@ -83,7 +97,14 @@ export const FocusVisible: Story = {
     template: '<Button>Foco visível</Button>',
   }),
   parameters: {
-    covers: ['accessibility.item3'], docs: { description: { story: 'Estado de foco por teclado. Navegue com Tab: o anel só aparece em :focus-visible, não no clique.' } } },
+    covers: ['accessibility.item3'],
+    // A ausência de prop É o assunto: o anel vem do componente, e a do meta
+    // mostraria um `disabled` que aqui não existe.
+    docs: {
+      source: { transform: buttonFocoVisivelSource },
+      description: { story: 'Estado de foco por teclado. Navegue com Tab: o anel só aparece em :focus-visible, não no clique.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button') as HTMLElement;
@@ -116,7 +137,13 @@ export const Invalid: Story = {
     components: { Button },
     template: '<Button variant="outline" aria-invalid="true">Formulário inválido</Button>',
   }),
-  parameters: { docs: { description: { story: 'Estado inválido. Use aria-invalid="true" para sinalizar problemas de validação.' } } },
+  // O atributo de validação e a variante com borda não estão nos args.
+  parameters: {
+    docs: {
+      source: { transform: buttonInvalidoSource },
+      description: { story: 'Estado inválido. Use aria-invalid="true" para sinalizar problemas de validação.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button');

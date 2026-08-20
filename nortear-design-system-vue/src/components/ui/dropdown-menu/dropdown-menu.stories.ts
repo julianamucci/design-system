@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import DropdownMenuDocs from '@/components/docs/DropdownMenuDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { dropdownMenuSource } from './dropdown-menu.source';
 
 const meta = {
   title: 'UI/DropdownMenu',
@@ -23,6 +24,7 @@ const meta = {
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
       page: withAutoDocsTab(DropdownMenuDocs),
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           'Menu suspenso acionado por botão. Renderiza em portal com role=menu, foco preso ' +

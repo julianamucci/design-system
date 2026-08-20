@@ -8,6 +8,7 @@ import {
 import { fracaoDoPrimeiro } from './resizable.fixtures';
 import ResizableDocs from '@/components/docs/ResizableDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { resizableSource } from './resizable.source';
 
 /**
  * Rótulo do punho repetido nas stories.
@@ -26,6 +27,7 @@ const meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(ResizableDocs),
+      source: { transform: resizableSource },
       description: {
         component:
           'Resizable agrupa painéis ajustáveis pelo usuário via arrasto ou teclado, com layouts horizontal, vertical e aninhado e suporte a WCAG 2.5.7 (Dragging Movements).',

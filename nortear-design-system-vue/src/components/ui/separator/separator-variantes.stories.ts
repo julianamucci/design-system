@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Separator } from './index';
+import { separatorHorizontalSource, separatorVerticalSource } from './separator.source';
 
 const meta: Meta<any> = {
   title: 'UI/Separator/Variants',
@@ -11,6 +12,7 @@ const meta: Meta<any> = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: separatorHorizontalSource },
       description: {
         component:
           'Orientações do Separator. A horizontal é uma linha de 1px de altura que ocupa a largura do contêiner; a vertical é uma linha de 1px de largura cuja altura vem do contêiner flex ou de grade, sem medida cravada.',
@@ -60,7 +62,12 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    // O eixo troca o contêiner junto: fora de um flex a linha vertical colapsa
+    // para zero, e o bloco empilhado do meta ensinaria justamente esse erro.
+    docs: { source: { transform: separatorVerticalSource } },
+  },
   render: () => ({
     components: { Separator },
     template: `

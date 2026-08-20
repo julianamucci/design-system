@@ -4,6 +4,7 @@ import { Label } from './index';
 import { Input } from '@/components/ui/input';
 import LabelDocs from '@/components/docs/LabelDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { labelSource } from './label.source';
 
 const meta = {
   title: 'UI/Label',
@@ -11,7 +12,7 @@ const meta = {
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(LabelDocs) },
+    docs: { page: withAutoDocsTab(LabelDocs), source: { transform: labelSource } },
   },
   argTypes: {
     for: {

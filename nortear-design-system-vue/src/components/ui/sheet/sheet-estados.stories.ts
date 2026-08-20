@@ -13,6 +13,12 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { REGRA_GUARDA_DE_FOCO, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import {
+  sheetAbertoSource,
+  sheetControladoSource,
+  sheetFechadoSource,
+  sheetSemBotaoFecharSource,
+} from './sheet.source';
 
 // Fechado e aberto são os dois extremos do ciclo. Fechado o painel nem existe
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
@@ -28,6 +34,7 @@ const meta = {
     // Painel modal aberto: ver o motivo em wait-for-portal.ts.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: sheetFechadoSource },
       description: {
         component:
           'Estados canônicos do Sheet: Closed (inicial), Open (defaultOpen), ' +
@@ -103,6 +110,8 @@ export const Closed: Story = {
 export const Open: Story = {
   parameters: {
     docs: {
+      // A do meta é a ausência de `default-open`; aqui a presença dela é o assunto.
+      source: { transform: sheetAbertoSource },
       description: {
         story:
           'Aberto por defaultOpen, sem estado externo nenhum. O foco entra no painel e o ' +
@@ -156,6 +165,9 @@ export const Open: Story = {
 export const WithCloseButtonHidden: Story = {
   parameters: {
     docs: {
+      // Sem gatilho e sem o botão do canto: a saída passa a ser o rodapé, e é o
+      // par (prop desligada + rodapé com saída) que precisa aparecer junto.
+      source: { transform: sheetSemBotaoFecharSource },
       description: {
         story:
           'Sem o botão do canto. Só faz sentido quando o rodapé já oferece uma saída ' +
@@ -203,6 +215,9 @@ export const WithCloseButtonHidden: Story = {
 export const Controlled: Story = {
   parameters: {
     docs: {
+      // Estado externo: entra `open` ligado e sai `update:open` — nada disso
+      // existe na composição não-controlada que o meta mostra.
+      source: { transform: sheetControladoSource },
       description: {
         story:
           'Estado do lado de fora. O componente não decide nada sozinho: abre quando o ' +

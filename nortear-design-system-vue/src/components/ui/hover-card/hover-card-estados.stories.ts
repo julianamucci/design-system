@@ -15,6 +15,7 @@ import {
   HoverCardTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
+import { hoverCardControladoSource, hoverCardPerfilSource } from './hover-card.source';
 
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
 // gatilho), aberto (painel no portal) e controlado (quem manda é o estado de
@@ -31,6 +32,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Fechado e aberto têm a MESMA marcação — abrir é interação, não
+      // atributo —, então a do `meta` serve às duas.
+      source: { transform: hoverCardPerfilSource },
       description: {
         component:
           'Fechado, aberto e controlado. O painel só existe no DOM enquanto o cartão está aberto — fechado, o portal não deixa resíduo nenhum.',
@@ -169,6 +173,9 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item6'],
     docs: {
+      // Quem manda é o estado de fora, e os dois botões que o movem fazem parte
+      // da lição — nada disso existe na marcação do `meta`.
+      source: { transform: hoverCardControladoSource },
       description: {
         story:
           'Estado vindo de fora. Útil quando outra parte da tela precisa saber que o cartão está aberto — para pausar um carrossel, por exemplo. O gatilho continua abrindo por ponteiro e por foco; cada mudança volta pelo callback.',

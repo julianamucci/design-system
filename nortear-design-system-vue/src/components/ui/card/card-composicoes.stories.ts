@@ -12,6 +12,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  cardComAcaoNoHeaderSource,
+  cardComImagemSource,
+  cardComRodapeSource,
+  cardDeMetricaSource,
+  cardDePerfilSource,
+  cardDeProdutoSource,
+} from './card.source';
 
 /**
  * Imagem em data URI, igual nas cinco stacks: a asserção de radius e de padding
@@ -29,6 +37,7 @@ const meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: cardComRodapeSource },
       description: {
         component:
           'Composições canônicas do Card: com footer, com action, com imagem e exemplos reais (ProductCard, MetricCard, ProfileCard) para catálogo, dashboard e listas de perfil.',
@@ -95,7 +104,10 @@ export const WithFooter: Story = {
 export const WithAction: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item5', 'visual.item3'],
+    // A ação entra DENTRO do cabeçalho e traz uma peça a mais no import: a do
+    // meta mostraria o rodapé, que é outro lugar do card.
     docs: {
+      source: { transform: cardComAcaoNoHeaderSource },
       description: {
         story:
           'Com CardAction o header vira grid de duas colunas e a ação encosta à direita. A ordem do DOM continua título → descrição → ação, então o leitor de tela lê na ordem lógica.',
@@ -143,7 +155,10 @@ export const WithAction: Story = {
 export const WithImage: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item5'],
+    // A imagem como primeiro filho é a composição inteira, e ela não aparece em
+    // nenhuma outra story deste arquivo com a mesma posição.
     docs: {
+      source: { transform: cardComImagemSource },
       description: {
         story:
           'Imagem como primeiro filho: o Card arredonda o topo dela e remove o próprio padding superior por CSS — não é preciso passar classe na imagem.',
@@ -198,7 +213,10 @@ export const WithImage: Story = {
 
 export const ProductCard: Story = {
   parameters: {
+    // Todas as sete peças de uma vez, mais o selo de status: nenhuma outra
+    // story deste arquivo monta a unidade completa.
     docs: {
+      source: { transform: cardDeProdutoSource },
       description: {
         story:
           'Exemplo real de catálogo: imagem + título + descrição + Badge de status na ação do header + rodapé com ações contextuais.',
@@ -262,7 +280,10 @@ export const ProductCard: Story = {
 
 export const MetricCard: Story = {
   parameters: {
+    // Tamanho compacto e outro conteúdo: o valor mora no corpo e o título
+    // nomeia a métrica.
     docs: {
+      source: { transform: cardDeMetricaSource },
       description: {
         story:
           'KPI em dashboard: tamanho sm para densidade, título curto, valor em destaque no corpo e a tendência em texto de apoio.',
@@ -307,7 +328,10 @@ export const MetricCard: Story = {
 
 export const ProfileCard: Story = {
   parameters: {
+    // O cabeçalho vira um agrupamento com o avatar ao lado do texto, e o card
+    // termina nele — a ausência do rodapé é parte da lição.
     docs: {
+      source: { transform: cardDePerfilSource },
       description: {
         story:
           'Card de perfil: avatar à esquerda do header, título (nome) e descrição (papel e localização). Sem footer — é a unidade semântica mínima.',

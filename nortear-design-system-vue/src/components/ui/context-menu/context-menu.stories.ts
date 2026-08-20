@@ -18,6 +18,7 @@ import {
   ContextMenuSeparator,
   ContextMenuShortcut,
 } from '@/components/ui/context-menu';
+import { contextMenuSource } from './context-menu.source';
 
 type ContextMenuArgs = {
   triggerLabel: string;
@@ -32,7 +33,7 @@ const meta: Meta<ContextMenuArgs> = {
   parameters: {
     layout: 'centered',
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
-    docs: { page: withAutoDocsTab(ContextMenuDocs) },
+    docs: { page: withAutoDocsTab(ContextMenuDocs), source: { transform: contextMenuSource } },
   },
   argTypes: {
     triggerLabel: {

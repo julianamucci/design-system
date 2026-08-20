@@ -13,6 +13,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
 import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
+import {
+  sheetLadoDireitoSource,
+  sheetLadoEsquerdoSource,
+  sheetLadoInferiorSource,
+  sheetLadoSuperiorSource,
+} from './sheet.source';
 
 // As quatro direções são a única variação visual do Sheet, e todas moram no
 // conteúdo (`side`), não na raiz. Cada uma nasce ABERTA e MODAL: é o estado que
@@ -32,6 +38,7 @@ const meta = {
     // contrário do que elas fazem. Ver o motivo completo em wait-for-portal.ts.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      source: { transform: sheetLadoDireitoSource },
       description: {
         component:
           'Direção do painel pela prop side do conteúdo. Right é o padrão de desktop; ' +
@@ -118,6 +125,9 @@ export const Left: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // O lado é o assunto da story, e nenhum control o descreve: a transform
+      // do meta mostraria o padrão, que é a direção oposta a esta.
+      source: { transform: sheetLadoEsquerdoSource },
       description: {
         story:
           'Desliza da esquerda. Mesma medida do right, do outro lado — é a direção da ' +
@@ -138,6 +148,8 @@ export const Left: Story = {
 export const Top: Story = {
   parameters: {
     docs: {
+      // Idem: o `side` do conteúdo é a única diferença, e ele não vem de control.
+      source: { transform: sheetLadoSuperiorSource },
       description: {
         story:
           'Desliza do topo e ocupa a largura inteira, com altura definida pelo conteúdo. ' +
@@ -159,6 +171,8 @@ export const Bottom: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // Idem: o `side` do conteúdo é a única diferença, e ele não vem de control.
+      source: { transform: sheetLadoInferiorSource },
       description: {
         story:
           'Desliza de baixo — o mesmo desenho do Drawer, sem o gesto de arrastar. ' +

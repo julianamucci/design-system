@@ -15,6 +15,14 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import { TriangleAlert } from 'lucide-vue-next';
+import {
+  alertDialogClasseExtraSource,
+  alertDialogComIconeSource,
+  alertDialogDescricaoLongaSource,
+  alertDialogDestrutivoSource,
+  alertDialogNeutroSource,
+  alertDialogSemDescricaoSource,
+} from './alert-dialog.source';
 
 const meta = {
   title: 'UI/AlertDialog/Compositions',
@@ -26,6 +34,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: alertDialogComIconeSource },
       description: {
         component:
           'Composicoes canônicas: confirmação destrutiva, confirmação neutra, descrição longa e layout responsivo.',
@@ -107,6 +116,9 @@ export const Destructive: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // A ausência do bloco de mídia É o assunto aqui: a severidade vem só das
+      // variantes do gatilho e da ação, e a do meta traz o ícone.
+      source: { transform: alertDialogDestrutivoSource },
       description: {
         story:
           'Action e trigger usam a variante destructive do Button. Use para ações irreversíveis.',
@@ -177,6 +189,9 @@ export const Neutral: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // Nenhuma variante destrutiva em lugar nenhum: é o contraste com a
+      // confirmação destrutiva que a story ensina.
+      source: { transform: alertDialogNeutroSource },
       description: {
         story:
           'Action com tokens padrão do Button. Use para confirmações não destrutivas (publicar, enviar, arquivar).',
@@ -230,6 +245,9 @@ export const LongDescription: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // O tamanho do texto É o assunto: um resumo de uma linha, como o da do
+      // meta, não mostraria o painel crescendo.
+      source: { transform: alertDialogDescricaoLongaSource },
       description: {
         story:
           'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
@@ -300,6 +318,9 @@ export const WithoutDescription: Story = {
   parameters: {
     covers: ['accessibility.item8'],
     docs: {
+      // A ausência deliberada da descrição É o assunto, e com ela some também
+      // o subcomponente do import.
+      source: { transform: alertDialogSemDescricaoSource },
       description: {
         story:
           'Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.',
@@ -369,6 +390,9 @@ export const Responsive: Story = {
     covers: ['visual.item5'],
     chromatic: { viewports: [375] },
     docs: {
+      // A marcação é a mesma da confirmação destrutiva — o que muda é a largura
+      // da tela, que não se escreve no snippet; a do meta traria o ícone a mais.
+      source: { transform: alertDialogDestrutivoSource },
       description: {
         story:
           'Abaixo de 40rem o footer empilha os botões em column-reverse e o header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.',
@@ -434,7 +458,9 @@ export const Responsive: Story = {
 // e ao bloco de mídia era a prosa da docs page.
 export const ExtraClass: Story = {
   parameters: {
-    docs: { description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' } },
+    // As classes no painel e no bloco de mídia SÃO o assunto; sem elas escritas
+    // o exemplo não mostra nada.
+    docs: { source: { transform: alertDialogClasseExtraSource }, description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' } },
   },
   render: () => ({
     components: sharedComponents,

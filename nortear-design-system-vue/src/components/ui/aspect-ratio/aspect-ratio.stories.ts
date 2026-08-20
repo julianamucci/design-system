@@ -9,6 +9,7 @@ import {
 } from '@shared/testing/aspect-ratio-probe';
 import AspectRatioDocs from '@/components/docs/AspectRatioDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { aspectRatioSource } from './aspect-ratio.source';
 
 const meta = {
   title: 'UI/AspectRatio',
@@ -19,6 +20,7 @@ const meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(AspectRatioDocs),
+      source: { transform: aspectRatioSource },
       description: {
         component:
           'AspectRatio preserva uma proporção fixa de largura-altura para mídia responsiva — imagens, vídeos, iframes e mapas. Container passivo e sem estado.',

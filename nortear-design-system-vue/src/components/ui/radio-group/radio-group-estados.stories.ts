@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
+import {
+  radioGroupDesabilitadoSource,
+  radioGroupInvalidoSource,
+  radioGroupItemDesabilitadoSource,
+  radioGroupMarcadoSource,
+  radioGroupPadraoSource,
+} from './radio-group.source';
 
 const meta = {
   title: 'UI/RadioGroup/States',
@@ -12,6 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: radioGroupPadraoSource },
       description: {
         component:
           'Estados do RadioGroup: default, checked, focus, disabled (grupo inteiro), itemDisabled (somente um item) e invalid (aria-invalid).',
@@ -86,7 +94,11 @@ export const Default: Story = {
 };
 
 export const Checked: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    // A escolha inicial é uma prop da raiz que o snippet do meta não tem.
+    docs: { source: { transform: radioGroupMarcadoSource } },
+  },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
@@ -168,7 +180,11 @@ export const FocusVisible: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item3'],
+    // O bloqueio do grupo inteiro é a prop na raiz — é o assunto da story.
+    docs: { source: { transform: radioGroupDesabilitadoSource } },
+  },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
@@ -201,6 +217,10 @@ export const Disabled: Story = {
 };
 
 export const ItemDisabled: Story = {
+  parameters: {
+    // Aqui a prop desce um nível: mora no item, e o rótulo diz por quê.
+    docs: { source: { transform: radioGroupItemDesabilitadoSource } },
+  },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
@@ -238,7 +258,12 @@ export const ItemDisabled: Story = {
 };
 
 export const Invalid: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // O erro traz fieldset, legend e a mensagem amarrada por aria-describedby:
+    // marcação inteira em volta do grupo, não uma prop a mais.
+    docs: { source: { transform: radioGroupInvalidoSource } },
+  },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },

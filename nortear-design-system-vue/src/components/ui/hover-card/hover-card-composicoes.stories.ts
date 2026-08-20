@@ -11,6 +11,14 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from './index';
+import {
+  hoverCardClasseExtraSource,
+  hoverCardDefinicaoSource,
+  hoverCardLadosSource,
+  hoverCardMetricaSource,
+  hoverCardPerfilSource,
+  hoverCardPreviaDeLinkSource,
+} from './hover-card.source';
 
 // Os padrões de conteúdo que o cartão hospeda. Todos seguem a mesma regra: o
 // que está aqui dentro é ENRIQUECIMENTO — existe outro caminho para a mesma
@@ -29,6 +37,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: hoverCardPerfilSource },
       description: {
         component:
           'Perfil, preview de link, definição de termo, métrica explicada, lados de abertura e classe extra no painel. O gatilho aparece sempre dentro de uma frase: é o uso real do componente e é o que mantém o alvo em linha dispensado do mínimo de 24px.',
@@ -98,6 +107,8 @@ export const LinkPreview: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      // Cabeçalho de origem, título e descrição: outro miolo, e é ele o assunto.
+      source: { transform: hoverCardPreviaDeLinkSource },
       description: {
         story:
           'Cabeçalho com a origem, título do destino e uma linha de descrição. Reduz o clique exploratório: quem lê decide antes de sair da página.',
@@ -147,6 +158,9 @@ export const TermDefinition: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      // O gatilho vira botão e o painel declara o próprio rótulo — as duas
+      // trocas somem no snippet do `meta`, que tem link e nome automático.
+      source: { transform: hoverCardDefinicaoSource },
       description: {
         story:
           'Sigla no meio da prosa abre o termo por extenso e a definição em uma frase. O gatilho é um botão, não um link: não há para onde navegar — o glossário continua sendo o caminho alternativo obrigatório.',
@@ -199,6 +213,9 @@ export const TermDefinition: Story = {
 export const ExplainedMetric: Story = {
   parameters: {
     docs: {
+      // Onde a cor semântica pode e não pode ficar: é regra de conteúdo do
+      // painel, e só aparece com este miolo à vista.
+      source: { transform: hoverCardMetricaSource },
       description: {
         story:
           'Valor de painel com o nome completo da métrica e os limiares. A cor semântica fica no número — texto corrido dentro do cartão continua na cor de corpo, que é o que garante o contraste independentemente do valor.',
@@ -245,6 +262,9 @@ export const Sides: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      // Quatro cartões num laço, um por lado: o snippet do `meta` mostra um só,
+      // e é o conjunto que ensina que o lado é preferência.
+      source: { transform: hoverCardLadosSource },
       description: {
         story:
           'Os quatro lados de abertura. O lado é uma PREFERÊNCIA: quando não cabe, o cartão vira para o lado oposto do mesmo eixo — por isso o painel publica o lado que de fato usou em data-side.',
@@ -307,6 +327,8 @@ export const ExtraPanelClass: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      // A classe extra no painel É o assunto, e ela não existe no `meta`.
+      source: { transform: hoverCardClasseExtraSource },
       description: {
         story:
           'A classe extra do painel é o caminho para o que a folha do cartão não define — e também para trocar a largura de UMA instância: as utilities entram por último no CSS compartilhado, então uma utilitária de largura vence a largura padrão de 20rem.',

@@ -11,6 +11,7 @@ import SelectDocs from '@/components/docs/SelectDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { medirAnelDeFoco, ESTADOS } from '@shared/testing/select-probe';
+import { selectSource } from './select.source';
 
 const meta = {
   title: 'UI/Select',
@@ -20,6 +21,7 @@ const meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(SelectDocs),
+      source: { transform: selectSource },
       description: {
         component:
           'Campo de seleção única: gatilho com role=combobox, lista em portal com role=listbox, itens, grupos e cabeçalhos. Use para 3–9 opções fixas — para listas longas com busca, prefira Combobox.',

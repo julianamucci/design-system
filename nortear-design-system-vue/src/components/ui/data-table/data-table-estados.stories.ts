@@ -2,12 +2,17 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { DataTable } from './index';
 import { baseColumns } from './data-table.fixtures';
+import { dataTableSemResultadosSource } from './data-table.source';
 
 const meta: Meta<Record<string, unknown>> = {
   title: 'UI/DataTable/States',
   component: DataTable as never,
   tags: ['tables'],
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: dataTableSemResultadosSource } },
+  },
 };
 
 export default meta;

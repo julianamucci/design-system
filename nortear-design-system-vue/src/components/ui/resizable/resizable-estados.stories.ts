@@ -6,6 +6,12 @@ import {
   ResizablePanelGroup,
 } from './index';
 import { fracaoDoPrimeiro } from './resizable.fixtures';
+import {
+  resizableArrastandoSource,
+  resizableFocoSource,
+  resizableLimitesSource,
+  resizableTravadoSource,
+} from './resizable.source';
 
 const meta = {
   title: 'UI/Resizable/States',
@@ -16,6 +22,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: resizableArrastandoSource },
       description: {
         component:
           'Estados do Resizable: Dragging (arrasto ajusta os painéis em tempo real), Limits (o painel para no mínimo e no máximo), Focus (divisor alcançado pelo Tab, com anel visível) e Disabled (divisor travado).',
@@ -119,7 +126,12 @@ export const Dragging: Story = {
 };
 
 export const Limits: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    // O piso e o teto moram no painel, e são o assunto: o snippet do meta traz
+    // painéis livres, onde não há em que parar.
+    docs: { source: { transform: resizableLimitesSource } },
+  },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: caixa(`
@@ -167,7 +179,12 @@ export const Limits: Story = {
 };
 
 export const Focus: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item3'],
+    // Aqui o divisor é a linha nua: o pegador do snippet do meta cobriria
+    // justamente o traço em volta do qual o anel de foco é desenhado.
+    docs: { source: { transform: resizableFocoSource } },
+  },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: caixa(`
@@ -212,6 +229,10 @@ export const Focus: Story = {
 };
 
 export const Disabled: Story = {
+  parameters: {
+    // A flag que trava o divisor é o assunto, e não está no snippet do meta.
+    docs: { source: { transform: resizableTravadoSource } },
+  },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: caixa(`

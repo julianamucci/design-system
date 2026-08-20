@@ -4,6 +4,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
 import CollapsibleDocs from '@/components/docs/CollapsibleDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { ChevronDown } from 'lucide-vue-next';
+import { collapsibleSource } from './collapsible.source';
 
 // Markup alinhado ao Vanilla, que é a referência cross-stack. As classes que
 // estavam aqui (`transition-transform`, `[[data-state=open]_&]:rotate-180`,
@@ -21,7 +22,7 @@ const meta = {
   component: Collapsible,
   tags: ['autodocs', 'disclosure'],
   parameters: {
-    docs: { page: withAutoDocsTab(CollapsibleDocs) },
+    docs: { page: withAutoDocsTab(CollapsibleDocs), source: { transform: collapsibleSource } },
     layout: 'centered',
   },
   argTypes: {

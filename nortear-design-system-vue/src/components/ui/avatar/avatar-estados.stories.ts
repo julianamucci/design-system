@@ -2,6 +2,11 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
+import {
+  avatarCarregadoSource,
+  avatarCarregandoSource,
+  avatarSemImagemSource,
+} from './avatar.source';
 
 const IMG_MARIA =
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
@@ -19,6 +24,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: avatarCarregadoSource },
       description: {
         component:
           'Configuracoes do Avatar conforme o ciclo de carregamento da imagem: loaded, loading (com atraso), failed e noImage.',
@@ -63,7 +69,11 @@ export const Loaded: Story = {
 
 export const Loading: Story = {
   name: 'Loading (600ms delay)',
-  parameters: { covers: ['functional.item4'] },
+  parameters: {
+    covers: ['functional.item4'],
+    // O prazo no conteúdo de reserva é o assunto, e a do meta não o tem.
+    docs: { source: { transform: avatarCarregandoSource } },
+  },
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback },
     setup: () => ({ IMG_BROKEN }),
@@ -85,6 +95,9 @@ export const Loading: Story = {
   },
 };
 
+// Sem override de source de propósito: a marcação da falha é IDÊNTICA à do
+// carregamento — quem decide entre foto e conteúdo de reserva é o componente,
+// não uma prop. A do meta é exatamente o que se escreve aqui.
 export const Failed: Story = {
   parameters: { covers: ['functional.item2', 'accessibility.item2'] },
   render: () => ({
@@ -124,7 +137,12 @@ export const Failed: Story = {
 };
 
 export const NoImage: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    // Não há imagem: some o subcomponente, some o import, e o conteúdo de
+    // reserva passa a carregar o papel e o rótulo do avatar.
+    docs: { source: { transform: avatarSemImagemSource } },
+  },
   render: () => ({
     components: { Avatar, AvatarFallback },
     template: `

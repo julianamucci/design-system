@@ -3,6 +3,11 @@ import { ref } from 'vue';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { CodeBlock } from './index';
 import { Button } from '@/components/ui/button';
+import {
+  codeBlockRemovidoSource,
+  codeBlockRolagemSource,
+  codeBlockSource,
+} from './code-block.source';
 
 /** Mesmo trecho base da seção "Composições" da docs page. */
 const BASE_CODE = `const items = await load();
@@ -28,6 +33,7 @@ const meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: codeBlockSource } },
   },
   args: { code: BASE_CODE, language: 'ts' },
   render: (args) => ({
@@ -108,7 +114,12 @@ export const Copied: Story = {
 };
 
 export const DoubleScroll: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    // O trecho é gerado, não colado: quarenta linhas literais no painel
+    // afogariam a lição, que é o bloco aguentar o que não cabe.
+    docs: { source: { transform: codeBlockRolagemSource } },
+  },
   args: { code: SCROLL_CODE, language: 'ts', showLineNumbers: true },
   play: async ({ canvasElement, step }) => {
     await step('A região rola nos dois eixos e aceita foco', async () => {
@@ -157,7 +168,12 @@ export const UnknownLanguage: Story = {
 };
 
 export const RemovedBeforeFeedback: Story = {
-  parameters: { covers: ['functional.item8'] },
+  parameters: {
+    covers: ['functional.item8'],
+    // O bloco convive com um botão que o monta e desmonta: é a composição
+    // inteira, e a do meta mostraria só o bloco.
+    docs: { source: { transform: codeBlockRemovidoSource } },
+  },
   args: { code: BASE_CODE },
   // Alterna em vez de só remover: o painel Interactions reexecuta a play no
   // MESMO DOM, e um botão que só sabe remover deixa a segunda rodada sem bloco

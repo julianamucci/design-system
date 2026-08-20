@@ -4,6 +4,12 @@ import { ref } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
 import { RangeCalendar } from '@/components/ui/range-calendar';
+import {
+  calendarDiasBloqueadosSource,
+  calendarHojeSource,
+  calendarIntervaloSource,
+  calendarSource,
+} from './calendar.source';
 
 const meta = {
   title: 'UI/Calendar/States',
@@ -14,6 +20,7 @@ const meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      source: { transform: calendarSource },
       description: {
         component:
           'Estados de célula: escolhida, bloqueada, o dia de hoje, os dias de fora do mês e o miolo de um intervalo.',
@@ -94,7 +101,12 @@ export const Disabled: Story = {
   }),
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
-    docs: { description: { story: 'Datas anteriores a um limite ficam bloqueadas e não podem ser escolhidas.' } },
+    // Quem bloqueia é uma função por data, e ela precisa aparecer inteira: a do
+    // meta mostraria um calendário sem regra nenhuma.
+    docs: {
+      source: { transform: calendarDiasBloqueadosSource },
+      description: { story: 'Datas anteriores a um limite ficam bloqueadas e não podem ser escolhidas.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -148,7 +160,10 @@ export const Today: Story = {
   }),
   parameters: {
     covers: ['functional.item1'],
+    // A ausência do modelo É o assunto: com um v-model no snippet, o exemplo
+    // deixaria de mostrar o que acontece sem data escolhida.
     docs: {
+      source: { transform: calendarHojeSource },
       description: {
         story: 'Sem data escolhida: o calendário abre no mês corrente e destaca o dia de hoje.',
       },
@@ -235,7 +250,9 @@ export const RangeWithMiddle: Story = {
   }),
   parameters: {
     covers: ['functional.item3'],
+    // É outro componente, com outro import e um modelo de par.
     docs: {
+      source: { transform: calendarIntervaloSource },
       description: {
         story: 'Intervalo com miolo: os dias entre início e fim também ficam marcados.',
       },

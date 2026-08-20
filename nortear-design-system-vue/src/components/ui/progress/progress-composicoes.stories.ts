@@ -10,6 +10,12 @@ import {
   percentualDesenhado,
   trilhaDoProgresso,
 } from '@shared/testing/progress-probe';
+import {
+  progressCoresNaListaSource,
+  progressListaSource,
+  progressProcessandoServidorSource,
+  progressUploadAnimadoSource,
+} from './progress.source';
 
 const meta = {
   title: 'UI/Progress/Compositions',
@@ -20,6 +26,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: progressUploadAnimadoSource },
       description: {
         component:
           'Composicoes reais do Progress: upload com porcentagem animada, vários progressos numa lista, cores semânticas e processamento sem progresso mensurável.',
@@ -83,6 +90,13 @@ export const AnimatedUpload: Story = {
 };
 
 export const ProgressList: Story = {
+  parameters: {
+    docs: {
+      // Várias barras num laço: o nome acessível passa a sair do DADO, porque
+      // repetir o mesmo rótulo nas três equivale a não nomear nenhuma.
+      source: { transform: progressListaSource },
+    },
+  },
   render: () => ({
     components: { Progress },
     setup() {
@@ -137,6 +151,13 @@ export const ProgressList: Story = {
 };
 
 export const CustomColor: Story = {
+  parameters: {
+    docs: {
+      // Três medidas com significados diferentes, e a do meio SEM variante:
+      // "em andamento" não é semântico, e é isso que a composição mostra.
+      source: { transform: progressCoresNaListaSource },
+    },
+  },
   render: () => ({
     components: { Progress },
     template: `
@@ -194,6 +215,13 @@ export const CustomColor: Story = {
 };
 
 export const IndeterminateProcessing: Story = {
+  parameters: {
+    docs: {
+      // Sem valor mensurável não há porcentagem nem relógio: some o estado
+      // reativo que a do meta ensina, e fica só o rótulo do que acontece.
+      source: { transform: progressProcessandoServidorSource },
+    },
+  },
   render: () => ({
     components: { Progress },
     template: `

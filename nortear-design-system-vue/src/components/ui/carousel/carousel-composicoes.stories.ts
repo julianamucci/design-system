@@ -5,6 +5,7 @@ import type { CarouselApi } from './index';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
 import { slideEmFoco } from './carousel.fixtures';
 import carouselTranslations from '@shared/content/carousel/translations.json';
+import { carouselComDotsSource, carouselGaleriaSource } from './carousel.source';
 
 /**
  * "Slide" é texto VISÍVEL dentro da pílula, então é conteúdo e não literal de
@@ -29,6 +30,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      source: { transform: carouselGaleriaSource },
       description: {
         component: 'Composicoes do Carousel — dots customizados via CarouselApi e galeria visual com conteúdo variado.',
       },
@@ -126,6 +128,9 @@ export const WithDots: Story = {
   parameters: {
     covers: ['functional.item8', 'accessibility.item6', 'visual.item5'],
     docs: {
+      // A fileira de pontos é uma sub-composição inteira, montada sobre a
+      // instância que o componente entrega — o snippet do `meta` a esconderia.
+      source: { transform: carouselComDotsSource },
       description: {
         story: 'A paginação traz posição e total no nome — "2" sozinho não diz para onde leva. O slide atual se anuncia por aria-current e ocupa a própria posição da fileira como pílula rotulada.',
       },

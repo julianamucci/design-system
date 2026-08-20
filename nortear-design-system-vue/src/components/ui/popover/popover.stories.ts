@@ -13,6 +13,7 @@ import PopoverDocs from '@/components/docs/PopoverDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { painel } from './popover.fixtures';
+import { popoverSource } from './popover.source';
 
 const meta = {
   title: 'UI/Popover',
@@ -21,6 +22,7 @@ const meta = {
   parameters: {
     docs: {
       page: withAutoDocsTab(PopoverDocs),
+      source: { transform: popoverSource },
       description: {
         component:
           'Popover é um overlay flutuante ativado por clique, renderizado em portal com role=dialog. Sempre forneça PopoverTitle para a11y. Use para conteúdo interativo curto — formulários, filtros, configurações contextuais.',

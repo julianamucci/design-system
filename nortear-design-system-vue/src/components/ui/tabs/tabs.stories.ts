@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 import { ativar } from './tabs.fixtures';
 import TabsDocs from '@/components/docs/TabsDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { tabsSource } from './tabs.source';
 
 const meta: Meta<any> = {
   title: 'UI/Tabs',
@@ -12,6 +13,7 @@ const meta: Meta<any> = {
   parameters: {
     docs: {
       page: withAutoDocsTab(TabsDocs),
+      source: { transform: tabsSource },
       description: {
         component:
           'Tabs (reka-ui) alterna entre views paralelas do mesmo nível hierárquico. role="tablist" automático, navegação por setas/Home/End, variantes default/line e orientação horizontal/vertical. aria-label no TabsList é obrigatório.',

@@ -4,6 +4,12 @@ import { within, expect, userEvent } from 'storybook/test';
 import { Alert, AlertAction, AlertTitle, AlertDescription } from './index';
 import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-vue-next';
+import {
+  alertClasseAdicionalSource,
+  alertComAcaoSource,
+  alertComIconeSource,
+  alertLayoutSemIconeSource,
+} from './alert.source';
 
 const meta = {
   title: 'UI/Alert/Compositions',
@@ -13,6 +19,7 @@ const meta = {
     design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: alertComIconeSource } },
   },
 } satisfies Meta<typeof Alert>;
 
@@ -41,6 +48,11 @@ export const WithIcon: Story = {
 };
 
 export const WithAction: Story = {
+  parameters: {
+    // Entra um subcomponente e um botão dentro dele: sub-composição que a do
+    // meta esconderia.
+    docs: { source: { transform: alertComAcaoSource } },
+  },
   render: () => ({
     components: { Alert, AlertAction, AlertTitle, AlertDescription, Button, Info },
     setup() { return {}; },
@@ -88,6 +100,11 @@ export const WithAction: Story = {
  * a composição de classes sem mexer no snapshot visual.
  */
 export const AdditionalClass: Story = {
+  parameters: {
+    // O assunto é a classe em CADA subcomponente — sem elas escritas, o
+    // exemplo não mostra nada.
+    docs: { source: { transform: alertClasseAdicionalSource } },
+  },
   render: () => ({
     components: { Alert, AlertAction, AlertTitle, AlertDescription, Button, Info },
     setup() { return {}; },
@@ -122,7 +139,11 @@ export const AdditionalClass: Story = {
 };
 
 export const WithoutIcon: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    // A ausência do ícone É o assunto: a do meta compõe justamente com ele.
+    docs: { source: { transform: alertLayoutSemIconeSource } },
+  },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription },
     setup() { return {}; },

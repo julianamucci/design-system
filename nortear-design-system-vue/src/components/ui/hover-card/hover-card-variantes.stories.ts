@@ -10,6 +10,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from './index';
+import { hoverCardEsperaCurtaSource, hoverCardPadraoSource } from './hover-card.source';
 
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
 // varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
@@ -27,6 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      source: { transform: hoverCardPadraoSource },
       description: {
         component:
           'As duas configurações de tempo. Padrão usa a espera do próprio componente; a segunda encurta a espera, o que só se justifica quando o cartão traz informação que o leitor está procurando ativamente.',
@@ -88,6 +90,9 @@ export const WithShortDelay: Story = {
   parameters: {
     covers: ['functional.item1'],
     docs: {
+      // Os atrasos aqui são ESCRITOS no markup; a do `meta` mostra justamente a
+      // marcação sem nenhum, que é a outra configuração de tempo.
+      source: { transform: hoverCardEsperaCurtaSource },
       description: {
         story:
           'Espera curta (150ms para abrir, 100ms para fechar) para previews que o leitor procura de propósito. Abaixo de ~300ms o cartão passa a abrir sozinho quando o cursor só atravessa o texto — é o que a diretriz de uso desaconselha.',
