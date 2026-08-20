@@ -2238,7 +2238,7 @@ decisão ou dívida separada.
       todo popover do Vanilla, que é a referência de markup das outras quatro,
       então o comportamento ficou idêntico e o motivo está no arquivo.
 
-- [ ] **O Vanilla tem nomes de opção rachados dentro de si.** `createButton`,
+- [x] **O Vanilla tinha nomes de opção rachados dentro de si.** RESOLVIDO em : eram TRÊS grafias, não duas, e o  consumia duas delas no mesmo arquivo. Antigas mantidas como apelido , com asserção provando que ainda funcionam. `createButton`,
       `createSlider`, `createCarousel`, `createInputOtp` e `createScrollArea` usam
       `ariaLabel` em camelCase; `createSwitch`, `createCheckbox`, `createSelect` e
       as seis desta rodada usam `aria-label`. As outras stacks usam a segunda
