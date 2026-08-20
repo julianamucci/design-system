@@ -131,10 +131,10 @@ export const Single: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel class="nds-w-full nds-max-w-sm" aria-label="Galeria de item único">
+      <Carousel class="nds-w-cap-sm" aria-label="Um item por vez">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <div class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+            <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
               <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
             </div>
           </CarouselItem>
@@ -156,8 +156,8 @@ export const Single: Story = {
       await expect(canvas.getAllByRole('group').length).toBeGreaterThan(1);
       // `canScrollNext` só vira verdadeiro no `init` do embla, agendado com
       // `setTimeout(…, 0)`.
-      await waitFor(() => expect(canvas.getByRole('button', { name: /próximo item/i })).toBeEnabled());
-      await expect(canvas.getByRole('region', { name: /galeria de item único/i })).toBeInTheDocument();
+      await waitFor(() => expect(canvas.getByRole('button', { name: /próximo item/i })).toBeEnabled(), { timeout: 4000 });
+      await expect(canvas.getByRole('region', { name: /um item por vez/i })).toBeInTheDocument();
     });
   },
 };
@@ -178,10 +178,10 @@ export const MultiResponsive: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { slides: [1, 2, 3, 4, 5, 6] }; },
     template: `
-      <Carousel class="nds-w-full nds-max-w-lg" aria-label="Galeria responsiva">
+      <Carousel class="nds-w-cap-lg" aria-label="Conjunto longo de slides">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n" class="nds-md-basis-half nds-lg-basis-third">
-            <div class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+            <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
               <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
             </div>
           </CarouselItem>
@@ -255,10 +255,10 @@ export const Autoplay: Story = {
       return { plugins, slides: [1, 2, 3, 4, 5], aoIniciar };
     },
     template: `
-      <Carousel :plugins="plugins" @init-api="aoIniciar" class="nds-w-full nds-max-w-sm" aria-label="Galeria com autoplay">
+      <Carousel :plugins="plugins" @init-api="aoIniciar" class="nds-w-cap-sm" aria-label="Destaques">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <div class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+            <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
               <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
             </div>
           </CarouselItem>
@@ -279,13 +279,13 @@ export const Autoplay: Story = {
     const relogio = () => apiAutoplay!.plugins().autoplay;
 
     await step('O carrossel avança sozinho', async () => {
-      await expect(canvas.getByRole('region', { name: /galeria com autoplay/i })).toBeInTheDocument();
+      await expect(canvas.getByRole('region', { name: /destaques/i })).toBeInTheDocument();
 
       // Precondição do próprio passo: numa montagem nova o plugin já está de pé
       // e `play()` só reagenda o mesmo intervalo; no replay do painel ele está
       // desligado desde a rodada anterior, e sem religar a espera abaixo
       // expiraria sem nada ter acontecido.
-      await waitFor(() => expect(apiAutoplay?.plugins().autoplay).toBeDefined());
+      await waitFor(() => expect(apiAutoplay?.plugins().autoplay).toBeDefined(), { timeout: 4000 });
       // Desestruturado de propósito: `relogio().play()` faz o `eslint-plugin-
       // storybook` ler a chamada como a play function de outra story. O método
       // do plugin é uma closure, não usa `this`, então soltá-lo do objeto é
@@ -341,7 +341,7 @@ export const Autoplay: Story = {
       // leria a geometria a meio caminho.
       await waitFor(async () => {
         await expect(apiAutoplay!.selectedScrollSnap()).toBe(0);
-      });
+      }, { timeout: 4000 });
     });
   },
 };
@@ -375,10 +375,10 @@ export const DragGesture: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { slides: [1, 2, 3, 4] }; },
     template: `
-      <Carousel class="nds-w-full nds-max-w-sm" aria-label="Galeria com gesto de arrastar">
+      <Carousel class="nds-w-cap-sm" aria-label="Galeria com gesto de arrastar">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <div class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+            <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
               <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
             </div>
           </CarouselItem>
@@ -437,7 +437,7 @@ export const DragGesture: Story = {
 
     // O motor só mede depois que a raiz entra no documento: esperar a seta de
     // avanço acordar é o portão de montagem, não uma folga arbitrária.
-    await waitFor(() => expect(proximo()).toBeEnabled());
+    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
 
     // ── A RÉGUA ───────────────────────────────────────────────────────────────
     //
@@ -468,7 +468,16 @@ export const DragGesture: Story = {
 
       await userEvent.click(anterior());
       await emPosicao(posZero);
-      await expect(anterior()).toBeDisabled();
+      // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
+      // encostou no alvo, mas quem desabilita a seta é a reconciliação do
+      // índice, e ela espera de propósito o silêncio do motor — sem isso um
+      // gesto com inércia emitiria uma troca de slide por quadro atravessado.
+      // Afirmar o botão no mesmo instante mede uma janela em que o componente
+      // ainda nem foi avisado de que parou: passa na máquina ociosa e reprova
+      // sob carga, que foi como esta reprovou no Angular e no Vanilla.
+      await waitFor(async () => {
+        await expect(anterior()).toBeDisabled();
+      }, { timeout: 4000 });
     });
 
     const caixa = viewport.getBoundingClientRect();
@@ -485,7 +494,7 @@ export const DragGesture: Story = {
       toque(viewport, 'touchmove', direita - 90, y);
       await waitFor(async () => {
         await expect(deslocamento()).toBeGreaterThan(posZero + 4);
-      });
+      }, { timeout: 4000 });
     });
 
     await step('Ao soltar, para onde a seta pararia', async () => {
@@ -498,7 +507,7 @@ export const DragGesture: Story = {
       await emPosicao(posUm);
       await waitFor(async () => {
         await expect(anterior()).toBeEnabled();
-      });
+      }, { timeout: 4000 });
     });
 
     await step('O MOUSE percorre o mesmo caminho, de volta ao primeiro slide', async () => {
@@ -516,7 +525,7 @@ export const DragGesture: Story = {
       // Já andou de volta junto com o cursor, antes de soltar.
       await waitFor(async () => {
         await expect(deslocamento()).toBeLessThan(posUm - 4);
-      });
+      }, { timeout: 4000 });
 
       mouse(viewport, 'mousemove', direita, y);
       mouse(viewport, 'mouseup', direita, y);
@@ -524,7 +533,7 @@ export const DragGesture: Story = {
       await emPosicao(posZero);
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
-      });
+      }, { timeout: 4000 });
     });
   },
 };

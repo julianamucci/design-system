@@ -194,7 +194,7 @@ export function accordionControladoSource(): string {
 import { ref } from 'vue'
 
 const aberto = ref('item-1')`,
-    `<div class="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
+    `<div class="nds-stack nds-w-cap-lg" data-spacing="sm">
   <p class="nds-text-caption nds-text-muted-foreground">
     Item aberto: <code>{{ aberto || 'nenhum' }}</code>
   </p>
@@ -450,7 +450,7 @@ const perguntas = [
     resposta: 'Você pode cancelar a qualquer momento em Configuracoes → Assinatura.',
   },
 ]`,
-    `<div class="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
+    `<div class="nds-stack nds-w-cap-lg" data-spacing="sm">
   <h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
   <Accordion type="single">
     <AccordionItem v-for="p in perguntas" :key="p.valor" :value="p.valor">

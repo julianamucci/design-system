@@ -33,7 +33,7 @@
   }: Props = $props();
 </script>
 
-<Card class="nds-w-full nds-max-w-sm">
+<Card class="nds-w-cap-sm">
   <CardHeader>
     <CardTitle>{title}</CardTitle>
     <CardDescription>{description}</CardDescription>

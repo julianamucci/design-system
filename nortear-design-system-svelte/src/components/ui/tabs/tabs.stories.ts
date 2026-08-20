@@ -98,7 +98,7 @@ export const Playground: Story = {
       activationMode: args.activationMode,
       defaultValue: 'overview',
       ariaLabel: 'Seções do componente',
-      class: 'nds-w-full nds-max-w-lg',
+      class: 'nds-w-cap-lg',
     },
   }),
   play: async ({ canvasElement, step, args }) => {

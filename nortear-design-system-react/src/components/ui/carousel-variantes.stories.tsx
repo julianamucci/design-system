@@ -51,7 +51,7 @@ export const Horizontal: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria na horizontal">
+    <Carousel className="nds-w-cap-md" aria-label="Slides na horizontal">
       <CarouselContent>
         {Array.from({ length: 5 }).map((_, i) => (
           <CarouselItem key={i}>
@@ -70,7 +70,7 @@ export const Horizontal: Story = {
 
     await step("A região se anuncia como carrossel e tem nome próprio", async () => {
       await expect(regiao).toHaveAttribute("aria-roledescription", "carousel");
-      await expect(regiao).toHaveAccessibleName("Galeria na horizontal");
+      await expect(regiao).toHaveAccessibleName("Slides na horizontal");
     });
 
     await step("O trilho deita os slides em linha", async () => {
@@ -102,7 +102,7 @@ export const Horizontal: Story = {
       // mede o ponto de partida e reprovaria por corrida.
       await waitFor(async () => {
         await expect(descreverFalhas(reprovasDeEscala(medirSlides(canvasElement), 0))).toBe("");
-      });
+      }, { timeout: 4000 });
     });
 
     await step("A escala não moveu o ponto de parada da rolagem", async () => {
@@ -154,8 +154,8 @@ export const Vertical: Story = {
   render: () => (
     <Carousel
       orientation="vertical"
-      className="nds-w-full nds-max-w-xs"
-      aria-label="Galeria na vertical"
+      className="nds-w-cap-xs"
+      aria-label="Slides na vertical"
     >
       {/* `nds-aspect-4-3` dá ao trilho a altura DEFINIDA que a base
           `flex: 0 0 100%` do slide precisa para resolver. Sem ela o carrossel

@@ -29,10 +29,10 @@ const slides = [1, 2, 3, 4, 5]
 </script>
 
 <template>
-  <Carousel class="nds-w-full nds-max-w-sm" aria-label="Galeria de exemplos">
+  <Carousel class="nds-w-cap-sm" aria-label="Galeria de exemplos">
     <CarouselContent>
       <CarouselItem v-for="n in slides" :key="n">
-        <div class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+        <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
           <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
         </div>
       </CarouselItem>
@@ -50,7 +50,7 @@ const slides = [1, 2, 3, 4, 5]
     // Sem altura DEFINIDA a base do slide não tem contra o que resolver e o
     // carrossel cresce em vez de recortar.
     expect(saida).toContain('<CarouselContent class="nds-aspect-4-3">');
-    expect(saida).not.toContain('nds-aspect-video');
+    expect(saida).not.toContain('nds-aspect-16-9');
   });
 
   it('não escreve a orientação padrão — repetir valor padrão ensina ruído', () => {
@@ -75,14 +75,14 @@ const slides = [1, 2, 3, 4, 5]
 
 describe('transforms das stories de variante e estado', () => {
   it('a horizontal é a canônica com o rótulo da própria story', () => {
-    expect(carouselHorizontalSource()).toContain('aria-label="Galeria na horizontal"');
+    expect(carouselHorizontalSource()).toContain('aria-label="Slides na horizontal"');
     expect(carouselHorizontalSource()).not.toContain('orientation=');
   });
 
   it('a vertical troca o eixo, a largura e a altura do trilho', () => {
     const saida = carouselVerticalSource();
     expect(saida).toContain('orientation="vertical"');
-    expect(saida).toContain('nds-max-w-xs');
+    expect(saida).toContain('nds-w-cap-xs');
     expect(saida).toContain('<CarouselContent class="nds-aspect-4-3">');
     expect(saida).toContain('nds-h-full');
   });
@@ -105,7 +105,7 @@ describe('transforms das stories de configuração', () => {
     expect(saida).not.toContain('nds-md-basis-half');
   });
 
-  it('vários itens por vez: a base responsiva mora no ITEM', () => {
+  it('conjunto longo de slides: a base responsiva mora no ITEM', () => {
     const saida = carouselMultiResponsivoSource();
     expect(saida).toContain('class="nds-md-basis-half nds-lg-basis-third"');
     expect(saida).toContain('const slides = [1, 2, 3, 4, 5, 6]');

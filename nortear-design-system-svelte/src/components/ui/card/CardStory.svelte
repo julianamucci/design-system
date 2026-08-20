@@ -45,7 +45,7 @@
     productPrice = 'R$ 1.299,00',
     onNavigate,
     onPrimaryAction,
-    class: className = 'nds-w-full nds-max-w-sm',
+    class: className = 'nds-w-cap-sm',
   }: Props = $props();
 
   /**
@@ -73,7 +73,7 @@
     </CardContent>
   </Card>
 {:else if variant === 'small'}
-  <Card class="nds-w-full nds-max-w-xs" size="sm">
+  <Card class="nds-w-cap-xs" size="sm">
     <CardHeader>
       <CardTitle as="h3">Assinantes ativos</CardTitle>
       <CardDescription>+12% no mês</CardDescription>
@@ -130,7 +130,7 @@
     <img
       src={imagemProduto}
       alt={`${title} vista de frente, em fundo neutro`}
-      class="nds-w-full nds-aspect-video"
+      class="nds-w-full nds-aspect-16-9"
       style="object-fit: cover"
     />
     <CardHeader>
@@ -145,7 +145,7 @@
   <a
     href="#produto-cadeira-gamer-pro"
     aria-label={`Abrir detalhes do produto ${title}`}
-    class="nds-block nds-w-full nds-max-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
+    class="nds-block nds-w-cap-sm nds-text-left nds-focus-ring nds-rounded-xl"
     onclick={navegar}
   >
     <Card {size}>
@@ -163,7 +163,7 @@
     <img
       src={imagemProduto}
       alt={`${title} vista de frente, em fundo neutro`}
-      class="nds-w-full nds-aspect-video"
+      class="nds-w-full nds-aspect-16-9"
       style="object-fit: cover"
     />
     <CardHeader>
@@ -196,7 +196,7 @@
     </CardHeader>
   </Card>
 {:else if variant === 'metric'}
-  <Card class="nds-w-full nds-max-w-xs" size="sm">
+  <Card class="nds-w-cap-xs" size="sm">
     <CardHeader>
       <CardTitle as="h3">Assinantes ativos</CardTitle>
       <CardDescription>Últimos 30 dias</CardDescription>

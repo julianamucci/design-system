@@ -31,7 +31,7 @@ const ROTULO_PADRAO = 'Clique com o botão direito aqui';
  * aumenta a fonte do navegador (WCAG 1.4.4).
  */
 const CLASSES_DA_AREA =
-  'nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default';
+  'nds-cluster nds-w-cap-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default';
 
 function area(rotulo: string): string {
   return `  <ContextMenuTrigger

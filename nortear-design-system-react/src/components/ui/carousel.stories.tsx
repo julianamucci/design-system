@@ -47,7 +47,7 @@ export const Playground: Story = {
     ],
   },
   render: (args) => (
-    <Carousel {...args} className="nds-w-full nds-max-w-md" aria-label="Galeria de exemplos">
+    <Carousel {...args} className="nds-w-cap-md" aria-label="Galeria de exemplos">
       {/* Em vertical o trilho precisa de altura DEFINIDA: sem ela a base
           `flex: 0 0 100%` do slide não tem contra o que resolver. A altura vem
           de uma classe de proporção, nunca de `style`. */}
@@ -155,7 +155,7 @@ export const Playground: Story = {
       // carrossel pode chegar aqui no meio, e `voltarAoInicio` o traz de volta.
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
-      });
+      }, { timeout: 4000 });
       await expect(proximo()).toBeEnabled();
     });
 
@@ -181,7 +181,7 @@ export const Playground: Story = {
       await voltarAoInicio();
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
-      });
+      }, { timeout: 4000 });
     });
   },
 };

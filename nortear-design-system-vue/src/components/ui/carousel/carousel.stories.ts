@@ -41,10 +41,10 @@ export const Playground: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { args, slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel v-bind="args" class="nds-w-full nds-max-w-sm" aria-label="Galeria de exemplos">
+      <Carousel v-bind="args" class="nds-w-cap-sm" aria-label="Galeria de exemplos">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <div class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+            <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
               <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
             </div>
           </CarouselItem>
@@ -65,7 +65,7 @@ export const Playground: Story = {
     const proximo = () => canvas.getByRole('button', { name: /próximo item/i }) as HTMLButtonElement;
 
     const emSlide = async (i: number) =>
-      waitFor(async () => { await expect(slideEmFoco(canvasElement, eixo)).toBe(i); });
+      waitFor(async () => { await expect(slideEmFoco(canvasElement, eixo)).toBe(i); }, { timeout: 4000 });
 
     /** Volta ao primeiro slide clicando ENQUANTO a seta de voltar estiver viva. */
     const voltarAoInicio = async () => {
@@ -107,7 +107,7 @@ export const Playground: Story = {
       // `canScrollNext` nasce falso e só vira verdadeiro quando o embla emite
       // `init` — que ele agenda com `setTimeout(…, 0)`. Ler no primeiro quadro
       // pegaria o valor de partida, não o estado do componente montado.
-      await waitFor(() => expect(proximo()).toBeEnabled());
+      await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
       await expect(anterior()).toBeDisabled();
     });
 

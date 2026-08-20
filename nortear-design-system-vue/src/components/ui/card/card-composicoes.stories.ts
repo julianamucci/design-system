@@ -61,7 +61,7 @@ export const WithFooter: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Button },
     template: `
-      <Card class="nds-w-full nds-max-w-sm">
+      <Card class="nds-w-cap-sm">
         <CardHeader>
           <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
           <CardDescription>Produto atualizado em 12/04.</CardDescription>
@@ -117,7 +117,7 @@ export const WithAction: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, Button },
     template: `
-      <Card class="nds-w-full nds-max-w-sm">
+      <Card class="nds-w-cap-sm">
         <CardHeader>
           <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
           <CardDescription>Em estoque</CardDescription>
@@ -169,11 +169,11 @@ export const WithImage: Story = {
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     setup() { return { imagem: DEMO_IMAGE_PRODUCT }; },
     template: `
-      <Card class="nds-w-full nds-max-w-sm">
+      <Card class="nds-w-cap-sm">
         <img
           :src="imagem"
           alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
-          class="nds-w-full nds-aspect-video"
+          class="nds-w-full nds-aspect-16-9"
           style="object-fit: cover"
         />
         <CardHeader>
@@ -227,11 +227,11 @@ export const ProductCard: Story = {
     components: { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, Button, Badge },
     setup() { return { imagem: DEMO_IMAGE_PRODUCT }; },
     template: `
-      <Card class="nds-w-full nds-max-w-sm">
+      <Card class="nds-w-cap-sm">
         <img
           :src="imagem"
           alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
-          class="nds-w-full nds-aspect-video"
+          class="nds-w-full nds-aspect-16-9"
           style="object-fit: cover"
         />
         <CardHeader>
@@ -293,7 +293,7 @@ export const MetricCard: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
-      <Card size="sm" class="nds-w-full nds-max-w-xs">
+      <Card size="sm" class="nds-w-cap-xs">
         <CardHeader>
           <CardTitle as="h3">Assinantes ativos</CardTitle>
           <CardDescription>Últimos 30 dias</CardDescription>
@@ -341,7 +341,7 @@ export const ProfileCard: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, Avatar, AvatarFallback },
     template: `
-      <Card class="nds-w-full nds-max-w-sm">
+      <Card class="nds-w-cap-sm">
         <CardHeader class="nds-cluster" data-align="center" data-spacing="sm">
           <Avatar>
             <AvatarFallback>MR</AvatarFallback>

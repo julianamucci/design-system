@@ -52,7 +52,7 @@ export const Playground: Story = {
     <Tabs
       key={`${args.orientation}-${String(args.defaultValue)}`}
       {...args}
-      className="nds-w-full nds-max-w-lg"
+      className="nds-w-cap-lg"
     >
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>

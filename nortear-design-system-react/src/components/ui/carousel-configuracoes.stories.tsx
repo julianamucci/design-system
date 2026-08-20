@@ -140,7 +140,7 @@ export const Single: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria de item único">
+    <Carousel className="nds-w-cap-md" aria-label="Um item por vez">
       <CarouselContent>
         {Array.from({ length: 3 }).map((_, i) => (
           <CarouselItem key={i} className="nds-basis-full">
@@ -167,7 +167,7 @@ export const Single: Story = {
       await expect(visivelNoViewport(slides[1], viewport)).toBe(false);
       await waitFor(async () => {
         await expect(canvas.getByRole("button", { name: /próximo item/i })).toBeEnabled();
-      });
+      }, { timeout: 4000 });
     });
   },
 };
@@ -186,7 +186,7 @@ export const MultiResponsive: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-full nds-max-w-lg" aria-label="Galeria de múltiplos itens">
+    <Carousel className="nds-w-cap-lg" aria-label="Conjunto longo de slides">
       <CarouselContent>
         {Array.from({ length: 6 }).map((_, i) => (
           <CarouselItem key={i} className="nds-md-basis-half nds-lg-basis-third">
@@ -253,8 +253,8 @@ export const Autoplay: Story = {
   },
   render: () => (
     <Carousel
-      className="nds-w-full nds-max-w-md"
-      aria-label="Galeria com autoplay"
+      className="nds-w-cap-md"
+      aria-label="Destaques"
       opts={{ loop: true }}
       setApi={(api) => {
         autoplayApi = api;
@@ -289,14 +289,14 @@ export const Autoplay: Story = {
       await expect(canvas.getAllByRole("group")).toHaveLength(5);
       await waitFor(async () => {
         await expect(canvas.getByRole("button", { name: /próximo item/i })).toBeEnabled();
-      });
+      }, { timeout: 4000 });
       await expect(canvas.getByRole("button", { name: /item anterior/i })).toBeEnabled();
     });
 
     await step("Precondição: o relógio do avanço automático está ligado", async () => {
       await waitFor(async () => {
         await expect(relogio()).toBeDefined();
-      });
+      }, { timeout: 4000 });
       // `play()` aqui é o método do plugin de autoplay do Embla, não o play de
       // outra story — a regra do lint casa pelo nome e não sabe distinguir.
       // eslint-disable-next-line storybook/context-in-play-function
@@ -317,7 +317,7 @@ export const Autoplay: Story = {
       await userEvent.click(viewport);
       await waitFor(async () => {
         await expect(relogio().isPlaying()).toBe(false);
-      });
+      }, { timeout: 4000 });
     });
 
     await step("E a story termina parada, para a captura e para o axe", async () => {
@@ -362,7 +362,7 @@ export const DragGesture: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria com gesto de arrastar">
+    <Carousel className="nds-w-cap-md" aria-label="Galeria com gesto de arrastar">
       <CarouselContent>
         {Array.from({ length: 4 }).map((_, i) => (
           <CarouselItem key={i}>
@@ -423,7 +423,7 @@ export const DragGesture: Story = {
 
     // O motor só mede depois que a raiz entra no documento: esperar a seta de
     // avanço acordar é o portão de montagem, não uma folga arbitrária.
-    await waitFor(() => expect(proximo()).toBeEnabled());
+    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
 
     // ── A RÉGUA ───────────────────────────────────────────────────────────────
     //
@@ -454,7 +454,16 @@ export const DragGesture: Story = {
 
       await userEvent.click(anterior());
       await emPosicao(posZero);
-      await expect(anterior()).toBeDisabled();
+      // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
+      // encostou no alvo, mas quem desabilita a seta é a reconciliação do
+      // índice, e ela espera de propósito o silêncio do motor — sem isso um
+      // gesto com inércia emitiria uma troca de slide por quadro atravessado.
+      // Afirmar o botão no mesmo instante mede uma janela em que o componente
+      // ainda nem foi avisado de que parou: passa na máquina ociosa e reprova
+      // sob carga, que foi como esta reprovou no Angular e no Vanilla.
+      await waitFor(async () => {
+        await expect(anterior()).toBeDisabled();
+      }, { timeout: 4000 });
     });
 
     const caixa = viewport.getBoundingClientRect();
@@ -471,7 +480,7 @@ export const DragGesture: Story = {
       toque(viewport, "touchmove", direita - 90, y);
       await waitFor(async () => {
         await expect(deslocamento()).toBeGreaterThan(posZero + 4);
-      });
+      }, { timeout: 4000 });
     });
 
     await step("Ao soltar, para onde a seta pararia", async () => {
@@ -484,7 +493,7 @@ export const DragGesture: Story = {
       await emPosicao(posUm);
       await waitFor(async () => {
         await expect(anterior()).toBeEnabled();
-      });
+      }, { timeout: 4000 });
     });
 
     await step("O MOUSE percorre o mesmo caminho, de volta ao primeiro slide", async () => {
@@ -502,7 +511,7 @@ export const DragGesture: Story = {
       // Já andou de volta junto com o cursor, antes de soltar.
       await waitFor(async () => {
         await expect(deslocamento()).toBeLessThan(posUm - 4);
-      });
+      }, { timeout: 4000 });
 
       mouse(viewport, "mousemove", direita, y);
       mouse(viewport, "mouseup", direita, y);
@@ -510,7 +519,7 @@ export const DragGesture: Story = {
       await emPosicao(posZero);
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
-      });
+      }, { timeout: 4000 });
     });
   },
 };

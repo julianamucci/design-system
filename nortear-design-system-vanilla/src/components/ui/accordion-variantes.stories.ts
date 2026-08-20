@@ -178,7 +178,7 @@ export const Multiple: Story = {
 export const Controlled: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack nds-w-full nds-max-w-lg';
+    wrapper.className = 'nds-stack nds-w-cap-lg';
     wrapper.dataset.spacing = 'sm';
 
     const indicator = document.createElement('p');

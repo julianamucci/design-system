@@ -28,7 +28,7 @@ import { Input } from '@/components/ui/input'
 </script>
 
 <template>
-  <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+  <div class="nds-stack nds-w-cap-xs" data-spacing="xs">
     <Label for="nome-completo">Nome completo</Label>
     <Input id="nome-completo" type="text" placeholder="ex: João da Silva" />
   </div>

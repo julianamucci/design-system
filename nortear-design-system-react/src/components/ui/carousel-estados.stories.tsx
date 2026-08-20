@@ -44,7 +44,7 @@ export const FirstSlide: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria no primeiro slide">
+    <Carousel className="nds-w-cap-md" aria-label="Slides no primeiro item">
       <CarouselContent>
         {SLIDES.map((n) => (
           <CarouselItem key={n}>
@@ -69,7 +69,7 @@ export const FirstSlide: Story = {
       // começa, daí a espera.
       await waitFor(async () => {
         await expect(proximo).toBeEnabled();
-      });
+      }, { timeout: 4000 });
     });
 
     await step("O extremo é visível, não só programático", async () => {
@@ -85,7 +85,7 @@ export const FirstSlide: Story = {
         const apagada = Number(getComputedStyle(anterior).opacity);
         const viva = Number(getComputedStyle(proximo).opacity);
         await expect(apagada).toBeLessThan(viva);
-      });
+      }, { timeout: 4000 });
     });
 
     await step("O trilho está no começo", async () => {
@@ -114,8 +114,8 @@ export const LastSlide: Story = {
   },
   render: () => (
     <Carousel
-      className="nds-w-full nds-max-w-md"
-      aria-label="Galeria no último slide"
+      className="nds-w-cap-md"
+      aria-label="Slides no último item"
       opts={{ startIndex: SLIDES.length - 1 }}
     >
       <CarouselContent>
@@ -140,7 +140,7 @@ export const LastSlide: Story = {
       // carrossel de um slide só, onde nada nunca avançou.
       await waitFor(async () => {
         await expect(proximo).toBeDisabled();
-      });
+      }, { timeout: 4000 });
       await expect(anterior).toBeEnabled();
     });
 
@@ -150,7 +150,7 @@ export const LastSlide: Story = {
         const apagada = Number(getComputedStyle(proximo).opacity);
         const viva = Number(getComputedStyle(anterior).opacity);
         await expect(apagada).toBeLessThan(viva);
-      });
+      }, { timeout: 4000 });
     });
 
     await step("O trilho chegou ao fim", async () => {
@@ -158,7 +158,7 @@ export const LastSlide: Story = {
       await expect(slides.length).toBe(SLIDES.length);
       await waitFor(async () => {
         await expect(visivelNoViewport(slides[slides.length - 1], viewport)).toBe(true);
-      });
+      }, { timeout: 4000 });
       await expect(visivelNoViewport(slides[0], viewport)).toBe(false);
     });
   },

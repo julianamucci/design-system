@@ -58,7 +58,7 @@ export const Uncontrolled: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },
     template: `
-      <Collapsible class="nds-w-full nds-max-w-sm">
+      <Collapsible class="nds-w-cap-sm">
         <CollapsibleTrigger class="${TRIGGER_CLASSES}" data-justify="between">
           <span>Exibir filtros avançados</span>
           <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
@@ -102,7 +102,7 @@ export const OpenByDefault: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },
     template: `
-      <Collapsible default-open class="nds-w-full nds-max-w-sm">
+      <Collapsible default-open class="nds-w-cap-sm">
         <CollapsibleTrigger class="${TRIGGER_CLASSES}" data-justify="between">
           <span>Ocultar filtros avançados</span>
           <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />
@@ -150,7 +150,7 @@ export const Controlled: Story = {
       return { isOpen };
     },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-sm" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">
           Estado externo: <strong>{{ isOpen ? 'aberto' : 'fechado' }}</strong>
         </p>
@@ -220,7 +220,7 @@ export const Disabled: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },
     template: `
-      <Collapsible disabled class="nds-w-full nds-max-w-sm">
+      <Collapsible disabled class="nds-w-cap-sm">
         <CollapsibleTrigger disabled class="${TRIGGER_CLASSES}" data-justify="between">
           <span>Filtros avançados (desabilitado)</span>
           <ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0" />

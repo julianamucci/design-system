@@ -38,7 +38,7 @@ const SLIDES = 'const slides = [1, 2, 3, 4, 5];';
  * A largura máxima faz parte da lição: o carrossel recorta o que passa do
  * contêiner, e sem largura definida não há o que recortar.
  */
-const LARGURA_MD = 'nds-w-full nds-max-w-md';
+const LARGURA_MD = 'nds-w-cap-md';
 
 /**
  * Miolo demonstrativo de um slide, já indentado para dentro do `CarouselItem`.
@@ -79,7 +79,7 @@ export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
   const vertical = ctx?.args?.orientation === 'vertical';
   const raiz = attrsMultilinha([
     propOpcao('orientation', ctx?.args?.orientation, ORIENTACOES, 'horizontal'),
-    `className="${vertical ? 'nds-w-full nds-max-w-xs' : LARGURA_MD}"`,
+    `className="${vertical ? 'nds-w-cap-xs' : LARGURA_MD}"`,
     'aria-label="Galeria de exemplos"',
   ]);
   // No eixo vertical o trilho precisa de altura DEFINIDA: sem ela a base
@@ -119,7 +119,7 @@ export function carouselVerticalSource(): string {
 export function carouselItemUnicoSource(): string {
   return jsxSnippet(
     `${IMPORT}\n\nconst slides = [1, 2, 3];`,
-    `<Carousel className="${LARGURA_MD}" aria-label="Galeria de item único">
+    `<Carousel className="${LARGURA_MD}" aria-label="Um item por vez">
   <CarouselContent>
     {slides.map((numero) => (
       <CarouselItem key={numero} className="nds-basis-full">
@@ -133,13 +133,13 @@ ${SETAS}
 }
 
 /**
- * Vários itens por vez: a base é responsiva e mora no item — um slide por tela
+ * Conjunto longo de slides: a base é responsiva e mora no item — um slide por tela
  * no estreito, dois no médio, três no largo. Nenhuma media query autoral.
  */
 export function carouselVariosItensSource(): string {
   return jsxSnippet(
     `${IMPORT}\n\nconst slides = [1, 2, 3, 4, 5, 6];`,
-    `<Carousel className="nds-w-full nds-max-w-lg" aria-label="Galeria de múltiplos itens">
+    `<Carousel className="nds-w-cap-lg" aria-label="Conjunto longo de slides">
   <CarouselContent>
     {slides.map((numero) => (
       <CarouselItem key={numero} className="nds-md-basis-half nds-lg-basis-third">
@@ -167,7 +167,7 @@ import Autoplay from "embla-carousel-autoplay";
 ${SLIDES}`,
     `<Carousel
   className="${LARGURA_MD}"
-  aria-label="Galeria com autoplay"
+  aria-label="Destaques"
   opts={{ loop: true }}
   plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
 >
@@ -193,7 +193,7 @@ export function carouselUltimoSlideSource(): string {
     `${IMPORT}\n\nconst slides = [1, 2, 3];`,
     `<Carousel
   className="${LARGURA_MD}"
-  aria-label="Galeria no último slide"
+  aria-label="Slides no último item"
   opts={{ startIndex: slides.length - 1 }}
 >
   <CarouselContent>
@@ -209,7 +209,7 @@ ${SETAS}
 }
 
 /**
- * Galeria de fotos: aqui a imagem É o conteúdo, então cada uma precisa do seu
+ * Galeria de fotos do produto: aqui a imagem É o conteúdo, então cada uma precisa do seu
  * próprio texto alternativo — repetir o mesmo em todas equivale a não ter
  * nenhum para quem navega de imagem em imagem. `object-fit` é mecânica de
  * recorte, não valor de design: não há classe `.nds-*` e nenhum tema o altera.

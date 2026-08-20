@@ -21,7 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 </script>
 
 <template>
-  <Tabs default-value="overview" class="nds-w-full nds-max-w-md">
+  <Tabs default-value="overview" class="nds-w-cap-md">
     <TabsList aria-label="Seções do componente">
       <TabsTrigger value="overview">Visão geral</TabsTrigger>
       <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -45,7 +45,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
   it('o eixo vertical troca a moldura e move o respiro do painel para o lado', () => {
     const saida = tabsSource('', { args: { orientation: 'vertical' } });
     expect(saida).toContain('orientation="vertical"');
-    expect(saida).toContain('nds-max-w-lg');
+    expect(saida).toContain('nds-w-cap-lg');
     expect(saida).toContain('nds-pl-4');
   });
 

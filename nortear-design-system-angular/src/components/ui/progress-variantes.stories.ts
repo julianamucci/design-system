@@ -38,7 +38,7 @@ export const Determinate: Story = {
   parameters: { covers: ['accessibility.item2'] },
   render: () => ({
     template: `
-      <div class="nds-w-full nds-max-w-md">
+      <div class="nds-w-cap-md">
         <div ndsProgress [value]="42" aria-label="Progresso do upload">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>
@@ -79,7 +79,7 @@ export const Indeterminate: Story = {
   },
   render: () => ({
     template: `
-      <div class="nds-w-full nds-max-w-md">
+      <div class="nds-w-cap-md">
         <div ndsProgress aria-label="Processando…">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>
@@ -108,7 +108,7 @@ export const WithLabel: Story = {
   parameters: { covers: ['accessibility.item5'] },
   render: () => ({
     template: `
-      <div class="nds-w-full nds-max-w-md">
+      <div class="nds-w-cap-md">
         <div ndsProgress [value]="42">
           <span ndsProgressLabel>Enviando arquivo</span>
           <span ndsProgressValue></span>
@@ -163,7 +163,7 @@ export const SemanticColor: Story = {
   },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <div ndsProgress [value]="100" data-variant="success" aria-label="Sincronização concluída">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>

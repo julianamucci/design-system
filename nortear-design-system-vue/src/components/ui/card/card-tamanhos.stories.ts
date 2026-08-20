@@ -53,7 +53,7 @@ export const Default: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
-      <Card class="nds-w-full nds-max-w-sm">
+      <Card class="nds-w-cap-sm">
         <CardHeader>
           <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
           <CardDescription>
@@ -90,7 +90,7 @@ export const Small: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
-      <Card size="sm" class="nds-w-full nds-max-w-xs">
+      <Card size="sm" class="nds-w-cap-xs">
         <CardHeader>
           <CardTitle as="h3">Assinantes ativos</CardTitle>
           <CardDescription>+12% no mês</CardDescription>

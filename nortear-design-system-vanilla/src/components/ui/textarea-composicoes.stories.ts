@@ -41,7 +41,7 @@ function createTextareaField(opts: {
   maxLength?: number;
 }): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+  wrapper.className = 'nds-stack nds-w-cap-md';
   wrapper.dataset.spacing = 'sm';
 
   const label = createLabel({ htmlFor: opts.labelFor, text: opts.labelText });
@@ -245,7 +245,7 @@ export const InForm: Story = {
   },
   render: () => {
     const form = document.createElement('form');
-    form.className = 'nds-stack nds-w-full nds-max-w-md';
+    form.className = 'nds-stack nds-w-cap-md';
     form.dataset.spacing = 'md';
     form.setAttribute('aria-label', 'Formulário de feedback');
 

@@ -23,8 +23,8 @@ const IMPORT_BUTTON = `import { Button } from '@/components/ui/button'`;
  * O card não tem largura própria: ele preenche o que o contexto der. Numa story
  * isolada isso significa a página inteira, então a moldura entra pela classe.
  */
-const LARGURA_SM = 'class="nds-w-full nds-max-w-sm"';
-const LARGURA_XS = 'class="nds-w-full nds-max-w-xs"';
+const LARGURA_SM = 'class="nds-w-cap-sm"';
+const LARGURA_XS = 'class="nds-w-cap-xs"';
 
 /** Raiz do card com os filhos já indentados. */
 function card(partes: Array<string | ''>, ...filhos: string[]): string {
@@ -130,7 +130,7 @@ export function cardClicavelSource(): string {
     `<a
   href="/produtos/cadeira-gamer-pro"
   aria-label="Abrir detalhes do produto ${PRODUTO}"
-  class="nds-block nds-w-full nds-max-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
+  class="nds-block nds-w-cap-sm nds-text-left nds-focus-ring nds-rounded-xl"
 >
 ${indentar(card([], cabecalho(PRODUTO, DESCRICAO_PRODUTO), PRECO), 2)}
 </a>`,
@@ -193,7 +193,7 @@ export function cardComImagemSource(): string {
       `<img
   src="/produtos/cadeira-gamer-pro.jpg"
   alt="${PRODUTO} vista de frente, em fundo neutro"
-  class="nds-w-full nds-aspect-video"
+  class="nds-w-full nds-aspect-16-9"
   style="object-fit: cover"
 />`,
       cabecalho(PRODUTO, DESCRICAO_PRODUTO),
@@ -216,7 +216,7 @@ import { Badge } from '@/components/ui/badge'`,
       `<img
   src="/produtos/cadeira-gamer-pro.jpg"
   alt="${PRODUTO} vista de frente, em fundo neutro"
-  class="nds-w-full nds-aspect-video"
+  class="nds-w-full nds-aspect-16-9"
   style="object-fit: cover"
 />`,
       cabecalho(PRODUTO, DESCRICAO_PRODUTO, `<Badge variant="secondary">Em estoque</Badge>`),

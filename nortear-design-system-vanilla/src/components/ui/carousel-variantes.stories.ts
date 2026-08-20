@@ -43,7 +43,7 @@ export const Horizontal: Story = {
   parameters: { covers: ['accessibility.item5', 'accessibility.item7', 'functional.item10', 'visual.item2', 'visual.item6'] },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.className = 'nds-w-cap-md';
     wrap.appendChild(
       createCarousel({ items: slidesDeExemplo(5), label: 'Slides na horizontal' }),
     );
@@ -103,7 +103,7 @@ export const Horizontal: Story = {
       // mede o ponto de partida e reprovaria por corrida.
       await waitFor(async () => {
         await expect(descreverFalhas(reprovasDeEscala(medirSlides(canvasElement), 0))).toBe('');
-      });
+      }, { timeout: 4000 });
     });
 
     await step('A escala não moveu o ponto de parada da rolagem', async () => {
@@ -159,7 +159,7 @@ export const Vertical: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-xs';
+    wrap.className = 'nds-w-cap-xs';
     wrap.appendChild(
       createCarousel({
         items: slidesDeExemplo(4, { medida: 'nds-h-full' }),
@@ -217,14 +217,14 @@ export const Vertical: Story = {
       regiao.focus();
       await expect(regiao).toHaveFocus();
       await userEvent.keyboard('{ArrowDown}');
-      await waitFor(() => expect(posicao()).toBeLessThan(antes));
+      await waitFor(() => expect(posicao()).toBeLessThan(antes), { timeout: 4000 });
 
       // Voltar deixa a story assentada para a foto do Chromatic e replayável no
       // painel Interactions.
       await userEvent.keyboard('{ArrowUp}');
       // Tolerância de um pixel: a caixa volta ao mesmo lugar, mas o retângulo é
       // medido em float e o arredondamento do compositor não é garantido.
-      await waitFor(() => expect(Math.abs(posicao() - antes)).toBeLessThan(1));
+      await waitFor(() => expect(Math.abs(posicao() - antes)).toBeLessThan(1), { timeout: 4000 });
     });
 
     await step('A seta girada também não sai do lugar sob o ponteiro', async () => {

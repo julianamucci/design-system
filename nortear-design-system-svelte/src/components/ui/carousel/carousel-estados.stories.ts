@@ -46,7 +46,7 @@ export const FirstSlide: Story = {
       slideCount: TOTAL,
       startIndex: 0,
       loop: false,
-      ariaLabel: 'Carrossel no primeiro slide',
+      ariaLabel: 'Slides no primeiro item',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
     },
@@ -62,7 +62,7 @@ export const FirstSlide: Story = {
 
     // `canScrollNext` nasce falso e só vira verdadeiro quando o Embla
     // inicializa: sem este portão os passos abaixo mediriam a montagem.
-    await waitFor(() => expect(proximo()).toBeEnabled());
+    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
 
     await step('No começo só a seta de avanço leva a algum lugar', async () => {
       await expect(anterior()).toBeDisabled();
@@ -87,7 +87,7 @@ export const FirstSlide: Story = {
         const apagada = Number(getComputedStyle(anterior()).opacity);
         const viva = Number(getComputedStyle(proximo()).opacity);
         await expect(apagada).toBeLessThan(viva);
-      });
+      }, { timeout: 4000 });
     });
 
     await step('O trilho está no início', async () => {
@@ -114,7 +114,7 @@ export const LastSlide: Story = {
       slideCount: TOTAL,
       startIndex: TOTAL - 1,
       loop: false,
-      ariaLabel: 'Carrossel no último slide',
+      ariaLabel: 'Slides no último item',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
     },
@@ -130,7 +130,7 @@ export const LastSlide: Story = {
 
     // A story monta JÁ no último slide (`startIndex`), sem navegar: o portão de
     // montagem aqui é a seta de voltar acordando.
-    await waitFor(() => expect(anterior()).toBeEnabled());
+    await waitFor(() => expect(anterior()).toBeEnabled(), { timeout: 4000 });
 
     await step('No fim a seta de avanço desabilita e a de voltar acorda', async () => {
       // O par importa: só "avançar desabilitado" também seria verdade num
@@ -149,7 +149,7 @@ export const LastSlide: Story = {
         const apagada = Number(getComputedStyle(proximo()).opacity);
         const viva = Number(getComputedStyle(anterior()).opacity);
         await expect(apagada).toBeLessThan(viva);
-      });
+      }, { timeout: 4000 });
     });
 
     await step('O trilho chegou ao fim', async () => {
@@ -160,7 +160,7 @@ export const LastSlide: Story = {
         const v = viewport.getBoundingClientRect();
         await expect(slides[0].getBoundingClientRect().right).toBeLessThan(v.left + 2);
         await expect(slides[TOTAL - 1].getBoundingClientRect().right).toBeGreaterThan(v.right - 2);
-      });
+      }, { timeout: 4000 });
     });
   },
 };

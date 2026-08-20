@@ -336,7 +336,7 @@ export function dialogComMidiaSource(): string {
       data-slot="dialog-body"
       role="img"
       aria-label="Imagem ilustrativa de pôr-do-sol"
-      className="nds-dialog-body nds-aspect-video nds-w-full nds-rounded-md nds-bg-muted nds-cluster nds-text-caption nds-text-muted-foreground"
+      className="nds-dialog-body nds-aspect-16-9 nds-w-full nds-rounded-md nds-bg-muted nds-cluster nds-text-caption nds-text-muted-foreground"
       data-align="center"
       data-justify="center"
     >

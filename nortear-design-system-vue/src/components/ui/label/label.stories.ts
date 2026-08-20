@@ -43,7 +43,7 @@ export const Playground: Story = {
     components: { Label, Input },
     setup() { return { args }; },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+      <div class="nds-stack nds-w-cap-xs" data-spacing="xs">
         <Label v-bind="args">Nome completo</Label>
         <Input id="playground-label" type="text" placeholder="ex: João da Silva" />
       </div>

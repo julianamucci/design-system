@@ -86,7 +86,7 @@ export const Playground: Story = {
   render: (args) => ({
     props: { ...args },
     template: `
-      <div class="nds-w-full nds-max-w-md">
+      <div class="nds-w-cap-md">
         <div
           ndsProgress
           [value]="value"

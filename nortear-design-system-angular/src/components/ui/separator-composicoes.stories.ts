@@ -98,7 +98,7 @@ export const EmphasisStrong: Story = {
     // documenta em Extensibilidade. Não existe input `class` aqui — o Angular
     // já mescla o `class` escrito no elemento com o que a diretiva declara.
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
+      <div class="nds-stack nds-w-cap-md" data-spacing="md">
         <p class="nds-text-body nds-text-muted-foreground">Fim da seção</p>
         <div ndsSeparator orientation="horizontal" data-testid="padrao"></div>
         <p class="nds-text-body nds-text-muted-foreground">Continuação do mesmo assunto</p>

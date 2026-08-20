@@ -71,7 +71,7 @@ export const WithFooter: Story = {
     },
   },
   render: () => {
-    const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+    const card = createCard({ className: 'nds-w-cap-sm' });
     const footer = createCardFooter({ className: 'nds-cluster' });
     footer.dataset.spacing = 'sm';
     footer.dataset.justify = 'end';
@@ -132,7 +132,7 @@ export const WithAction: Story = {
     },
   },
   render: () => {
-    const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+    const card = createCard({ className: 'nds-w-cap-sm' });
     const header = buildHeader('Cadeira Gamer Pro', 'Em estoque');
 
     const action = createCardAction();
@@ -184,12 +184,12 @@ export const WithImage: Story = {
     },
   },
   render: () => {
-    const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+    const card = createCard({ className: 'nds-w-cap-sm' });
 
     const img = document.createElement('img');
     img.src = DEMO_IMAGE_PRODUCT;
     img.alt = 'Cadeira Gamer Pro vista de frente, em fundo neutro';
-    img.className = 'nds-w-full nds-aspect-video';
+    img.className = 'nds-w-full nds-aspect-16-9';
     img.style.objectFit = 'cover';
 
     card.append(

@@ -115,7 +115,7 @@ export const EmphasisStrong: Story = {
     // A classe extra entra junto com a ênfase: é o mesmo par que a docs page
     // documenta em Extensibilidade, e prova que ela convive com a base.
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
+      <div class="nds-stack nds-w-cap-md" data-spacing="md">
         <p class="nds-text-body nds-text-muted-foreground">Fim da seção</p>
         <Separator orientation="horizontal" data-testid="padrao" />
         <p class="nds-text-body nds-text-muted-foreground">Continuação do mesmo assunto</p>

@@ -33,7 +33,7 @@ export const Default: Story = {
   parameters: { covers: ['accessibility.item1', 'visual.item1'] },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="est-default">Descrição</label>
         <textarea
           ndsTextarea
@@ -60,7 +60,7 @@ export const Focus: Story = {
   parameters: { covers: ['accessibility.item3'] },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="est-focus">Descrição</label>
         <textarea
           ndsTextarea
@@ -96,7 +96,7 @@ export const Filled: Story = {
   parameters: { covers: ['accessibility.item2', 'visual.item2'] },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="est-filled">Biografia</label>
         <textarea
           ndsTextarea
@@ -126,7 +126,7 @@ export const Disabled: Story = {
   parameters: { covers: ['visual.item5'] },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="est-disabled">Descrição</label>
         <textarea
           ndsTextarea
@@ -161,7 +161,7 @@ export const Invalid: Story = {
   parameters: { covers: ['accessibility.item5', 'visual.item3'] },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="est-invalid">Descrição</label>
         <textarea
           ndsTextarea
@@ -206,7 +206,7 @@ export const ReadOnly: Story = {
   parameters: { covers: ['visual.item5'] },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="est-readonly">Observações</label>
         <textarea
           ndsTextarea

@@ -360,7 +360,7 @@ export const CompleteTable: Story = {
     // e é ele que quebra a linha sozinho quando a largura aperta.
     const rodape = document.createElement('div');
     rodape.className =
-      'nds-cluster nds-w-full nds-max-w-prose nds-border-default nds-rounded-lg nds-p-4';
+      'nds-cluster nds-w-cap-prose nds-border-default nds-rounded-lg nds-p-4';
     rodape.dataset.spacing = 'sm';
     rodape.dataset.align = 'center';
     rodape.dataset.justify = 'between';

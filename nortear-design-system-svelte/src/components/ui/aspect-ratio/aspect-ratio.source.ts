@@ -110,12 +110,12 @@ export function aspectRatioSource(
     alt = 'Paisagem ao entardecer',
     title = 'Mapa do escritório',
     label = 'Carregando…',
-    width = 'nds-max-w-lg',
+    width = 'nds-w-cap-lg',
   } = ctx?.args ?? {};
 
   return svelteSnippet(
     IMPORT,
-    `<div class="${width} nds-w-full">
+    `<div class="${width}">
   <AspectRatio ratio={${proporcao(ratio)}}>
     ${filho({ child, alt, title, label })}
   </AspectRatio>
@@ -137,7 +137,7 @@ const imagens = [
   { src: "/midia/paisagem-3.jpg", alt: "Paisagem 3" },
 ];`,
     `<div
-  class="nds-grid nds-w-full nds-max-w-content nds-sm-grid-3"
+  class="nds-grid nds-w-cap-content nds-sm-grid-3"
   data-spacing="md"
   data-cols="2"
 >

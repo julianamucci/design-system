@@ -8,7 +8,7 @@
 <!-- Chevron rotativo: a rotação de 180° é 100% CSS. `.nds-chevron` gira sozinha
      quando o ancestral está em [aria-expanded="true"] — nenhum utilitário e
      nenhum style inline participam. -->
-<Collapsible bind:open class="nds-w-full nds-max-w-sm">
+<Collapsible bind:open class="nds-w-cap-sm">
   <CollapsibleTrigger
     class="nds-button nds-button-outline nds-cluster nds-w-full nds-px-4"
     data-justify="between"

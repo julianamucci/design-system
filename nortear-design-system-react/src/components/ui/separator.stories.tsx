@@ -54,7 +54,7 @@ export const Playground: Story = {
       return (
         <div
           key={args.orientation}
-          className="nds-cluster nds-docs-demo-row nds-w-full nds-max-w-md"
+          className="nds-cluster nds-docs-demo-row nds-w-cap-md"
           data-spacing="md"
         >
           <span className="nds-text-body">Item A</span>
@@ -64,7 +64,7 @@ export const Playground: Story = {
       )
     }
     return (
-      <div key={args.orientation} className="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
+      <div key={args.orientation} className="nds-stack nds-w-cap-md" data-spacing="md">
         <p className="nds-text-body">Seção superior</p>
         <Separator {...args} />
         <p className="nds-text-body">Seção inferior</p>

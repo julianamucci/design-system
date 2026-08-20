@@ -110,7 +110,7 @@ export function accordionControladoSource(): string {
     `${IMPORT}
 
 let itemAtivo = $state("item-1");`,
-    `<div class="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
+    `<div class="nds-stack nds-w-cap-lg" data-spacing="sm">
   <p class="nds-text-caption nds-text-muted-foreground">
     Item aberto: <code class="nds-font-mono">{itemAtivo || "nenhum"}</code>
   </p>
@@ -225,7 +225,7 @@ export function accordionComBadgeSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import { Badge } from "@/components/ui/badge";`,
-    `<div class="nds-w-full nds-max-w-lg">
+    `<div class="nds-w-cap-lg">
   <Accordion type="single">
     <AccordionItem value="novo">
       <AccordionTrigger>
@@ -297,7 +297,7 @@ export function accordionConteudoRicoSource(): string {
 export function accordionFaqSource(): string {
   return svelteSnippet(
     IMPORT,
-    `<div class="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
+    `<div class="nds-stack nds-w-cap-lg" data-spacing="sm">
   <h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
   <Accordion type="single">
     <AccordionItem value="senha">

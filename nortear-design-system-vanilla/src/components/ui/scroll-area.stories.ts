@@ -83,7 +83,7 @@ export const Playground: Story = {
   },
   render: (args) => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.className = 'nds-w-cap-md';
     wrap.appendChild(createScrollArea({
       size: args.size || undefined,
       width: args.width || undefined,

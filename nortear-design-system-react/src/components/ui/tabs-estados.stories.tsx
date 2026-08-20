@@ -28,7 +28,7 @@ export default meta;
 type Story = StoryObj;
 
 const TresAbas = ({ desabilitada = false }: { desabilitada?: boolean }) => (
-  <Tabs defaultValue="overview" className="nds-w-full nds-max-w-lg">
+  <Tabs defaultValue="overview" className="nds-w-cap-lg">
     <TabsList aria-label="Seções do componente">
       <TabsTrigger value="overview">Visão geral</TabsTrigger>
       <TabsTrigger value="properties" disabled={desabilitada}>

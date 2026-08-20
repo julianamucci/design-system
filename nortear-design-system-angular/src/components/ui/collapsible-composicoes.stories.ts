@@ -84,7 +84,7 @@ type Story = StoryObj;
 export const IconInTrigger: Story = {
   render: () => ({
     template: `
-      <div ndsCollapsible class="nds-w-full nds-max-w-sm">
+      <div ndsCollapsible class="nds-w-cap-sm">
         <button ndsCollapsibleTrigger ndsButton variant="outline">
           ${FILTRO}
           Filtros avançados
@@ -122,7 +122,7 @@ export const RotatingChevron: Story = {
   parameters: { covers: ['visual.item4', 'accessibility.item4'] },
   render: () => ({
     template: `
-      <div ndsCollapsible class="nds-w-full nds-max-w-sm">
+      <div ndsCollapsible class="nds-w-cap-sm">
         <button
           ndsCollapsibleTrigger
           ndsButton
@@ -182,7 +182,7 @@ export const RotatingChevron: Story = {
 export const RichContent: Story = {
   render: () => ({
     template: `
-      <div ndsCollapsible class="nds-w-full nds-max-w-sm">
+      <div ndsCollapsible class="nds-w-cap-sm">
         <button ndsCollapsibleTrigger ndsButton variant="outline">
           ${ENGRENAGEM}
           Configurações do sistema

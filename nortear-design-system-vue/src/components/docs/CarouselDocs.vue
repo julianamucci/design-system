@@ -524,7 +524,7 @@ function onDemoInit(payload: any) {
               :key="n"
             >
               <div
-                class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
+                class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg"
                 data-align="center"
                 data-justify="center"
               >
@@ -617,7 +617,7 @@ function onDemoInit(payload: any) {
                 :key="n"
               >
                 <div
-                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
+                  class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
                 >
@@ -647,7 +647,7 @@ function onDemoInit(payload: any) {
                 :key="n"
               >
                 <div
-                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
+                  class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
                 >
@@ -746,7 +746,7 @@ function onDemoInit(payload: any) {
                 :key="n"
               >
                 <div
-                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
+                  class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
                 >
@@ -777,7 +777,7 @@ function onDemoInit(payload: any) {
                 :key="n"
               >
                 <div
-                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
+                  class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
                 >
@@ -806,7 +806,7 @@ function onDemoInit(payload: any) {
                 :key="n"
               >
                 <div
-                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
+                  class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
                 >
@@ -836,7 +836,7 @@ function onDemoInit(payload: any) {
                 class="nds-md-basis-half nds-lg-basis-third"
               >
                 <div
-                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
+                  class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
                 >
@@ -866,7 +866,7 @@ function onDemoInit(payload: any) {
                 :key="n"
               >
                 <div
-                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
+                  class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
                 >
@@ -904,7 +904,7 @@ function onDemoInit(payload: any) {
                 :key="n"
               >
                 <div
-                  class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg"
+                  class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg"
                   data-align="center"
                   data-justify="center"
                 >

@@ -29,7 +29,7 @@ export const Decorative: Story = {
   render: () => ({
     components: { Separator },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <h3 class="nds-text-body nds-font-medium">Decorativo (padrão)</h3>
         <p class="nds-text-caption nds-text-muted-foreground">Ignorado por leitores de tela — a divisão é só visual.</p>
         <p class="nds-text-body">Conteúdo antes do separador.</p>
@@ -64,7 +64,7 @@ export const Semantic: Story = {
   render: () => ({
     components: { Separator },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <h3 class="nds-text-body nds-font-medium">Semântico</h3>
         <p class="nds-text-caption nds-text-muted-foreground">Anunciado como divisor, com a orientação da linha.</p>
         <p class="nds-text-body">Categoria: Layout</p>

@@ -75,7 +75,7 @@ function ComDotsCarousel() {
   }, [api]);
 
   return (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
       <Carousel setApi={setApi} className="nds-w-full" aria-label="Galeria com dots">
         <CarouselContent>
           {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
@@ -155,7 +155,7 @@ export const WithDots: Story = {
       if (dot(posicao).getAttribute("aria-current") !== "true") await userEvent.click(dot(posicao));
       await waitFor(async () => {
         await expect(dot(posicao)).toHaveAttribute("aria-current", "true");
-      });
+      }, { timeout: 4000 });
     };
 
     await step("Há um dot por slide, e o primeiro é o atual", async () => {
@@ -168,7 +168,7 @@ export const WithDots: Story = {
         await expect(canvas.getAllByRole("button", { name: /ir para o slide/i })).toHaveLength(
           slides.length,
         );
-      });
+      }, { timeout: 4000 });
       await irPara(1);
       await expect(dot(2).hasAttribute("aria-current")).toBe(false);
     });
@@ -184,7 +184,7 @@ export const WithDots: Story = {
       await waitFor(async () => {
         await expect(largura(rotulo(dot(2)))).toBeGreaterThan(0);
         await expect(largura(rotulo(dot(1)))).toBeLessThan(1);
-      });
+      }, { timeout: 4000 });
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
       await expect(rotulo(dot(2))).toHaveTextContent(rotuloVisivel(2));
@@ -221,7 +221,7 @@ export const WithDots: Story = {
       // Salto, não passo: a prova é o slide alvo entrar no enquadramento.
       await waitFor(async () => {
         await expect(visivelNoViewport(slides[2], viewport)).toBe(true);
-      });
+      }, { timeout: 4000 });
       await expect(visivelNoViewport(slides[0], viewport)).toBe(false);
       await expect(dot(1).hasAttribute("aria-current")).toBe(false);
     });
@@ -231,7 +231,7 @@ export const WithDots: Story = {
       await irPara(1);
       await waitFor(async () => {
         await expect(visivelNoViewport(slides[0], viewport)).toBe(true);
-      });
+      }, { timeout: 4000 });
       await expect(dot(3).hasAttribute("aria-current")).toBe(false);
     });
   },
@@ -249,7 +249,7 @@ export const Gallery: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-full nds-max-w-md" aria-label="Galeria de fotos do produto">
+    <Carousel className="nds-w-cap-md" aria-label="Galeria de fotos do produto">
       <CarouselContent>
         {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
           <CarouselItem key={i}>

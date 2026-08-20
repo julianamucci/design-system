@@ -564,7 +564,7 @@ export class NdsCarousel implements OnInit {
  * Em vertical o track ganha `.nds-h-full`: a base do slide é `flex: 0 0 100%`, e
  * porcentagem em `flex-basis` só resolve contra altura DEFINIDA. Sem isso o
  * carrossel vertical empilha tudo e nada é recortado. Quem usa dá a altura ao
- * host com uma classe de proporção (`nds-aspect-video`, `nds-aspect-4-3`) —
+ * host com uma classe de proporção (`nds-aspect-16-9`, `nds-aspect-4-3`) —
  * altura cravada em `style` violaria a convenção de medida desta stack.
  */
 @Component({

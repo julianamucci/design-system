@@ -31,8 +31,8 @@ const TAGS = 'const tags = Array.from({ length: 40 }, (_, i) => `Tag ${i + 1}`)'
  * A largura sai de `max-width`, que é a utilitária que existe — não há
  * utilitária para uma largura cravada em pixels.
  */
-function moldura(interno: string, largura = 'nds-max-w-xs'): string {
-  return `<div class="nds-w-full ${largura} nds-rounded-md nds-border-default nds-overflow-hidden">
+function moldura(interno: string, largura = 'nds-w-cap-xs'): string {
+  return `<div class="${largura} nds-rounded-md nds-border-default nds-overflow-hidden">
 ${indentar(interno)}
 </div>`;
 }
@@ -270,7 +270,7 @@ export function scrollAreaSemLimiteSource(): string {
 </div>`;
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS_30}`,
-    `<div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="lg">
+    `<div class="nds-stack nds-w-cap-xs" data-spacing="lg">
   <div class="nds-rounded-md nds-border-default">
 ${indentar(area(['class="nds-w-full"'], lista), 4)}
   </div>
@@ -298,7 +298,7 @@ const secoes = [
   'Acessibilidade',
   'Changelog',
 ]`,
-    `<div class="nds-row nds-w-full nds-max-w-lg" data-spacing="md">
+    `<div class="nds-row nds-w-cap-lg" data-spacing="md">
   <aside class="nds-w-xs nds-shrink-0 nds-rounded-md nds-border-default nds-overflow-hidden">
 ${indentar(
   area(
@@ -342,7 +342,7 @@ const imagens = Array.from({ length: 14 }, (_, i) => \`Imagem \${i + 1}\`)`,
     :key="imagem"
     class="nds-w-xs nds-shrink-0 nds-overflow-hidden nds-rounded-md nds-border-default"
   >
-    <div class="nds-aspect-video nds-bg-muted"></div>
+    <div class="nds-aspect-16-9 nds-bg-muted"></div>
     <figcaption class="nds-p-2 nds-text-caption">{{ imagem }}</figcaption>
   </figure>
 </div>

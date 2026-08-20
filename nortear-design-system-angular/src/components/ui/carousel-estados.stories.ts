@@ -33,7 +33,7 @@ const SLIDES = [1, 2, 3, 4];
 
 /** Mesmo markup nos dois extremos — o que muda é só onde a story para. */
 const TEMPLATE = `
-  <nds-carousel class="nds-w-full nds-max-w-md" label="Slides sem repetição" slideLabel="Slide {index} de {total}">
+  <nds-carousel class="nds-w-cap-md" label="Slides sem repetição" slideLabel="Slide {index} de {total}">
     <div ndsCarouselContent>
       @for (i of slides; track i) {
         <div ndsCarouselItem>
@@ -131,7 +131,7 @@ export const LastSlide: Story = {
         // que ainda está em movimento.
         const antes = viewport.scrollLeft;
         await userEvent.click(botao);
-        await waitFor(() => expect(viewport.scrollLeft).toBeGreaterThan(antes));
+        await waitFor(() => expect(viewport.scrollLeft).toBeGreaterThan(antes), { timeout: 4000 });
       }
     });
 
@@ -157,7 +157,7 @@ export const LastSlide: Story = {
         const apagada = Number(getComputedStyle(proximo()).opacity);
         const viva = Number(getComputedStyle(anterior).opacity);
         await expect(apagada).toBeLessThan(viva);
-      });
+      }, { timeout: 4000 });
     });
 
     await step('O viewport chegou ao fim do trilho', async () => {
@@ -166,7 +166,7 @@ export const LastSlide: Story = {
       await waitFor(async () => {
         const sobra = viewport.scrollWidth - viewport.clientWidth - viewport.scrollLeft;
         await expect(sobra).toBeLessThan(2);
-      });
+      }, { timeout: 4000 });
     });
   },
 };

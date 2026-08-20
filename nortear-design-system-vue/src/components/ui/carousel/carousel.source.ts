@@ -25,14 +25,14 @@ const SLIDES = `const slides = [1, 2, 3, 4, 5]`;
  * A largura máxima faz parte da lição: o carrossel recorta o que passa do
  * contêiner, e sem largura definida não há o que recortar.
  */
-const LARGURA_SM = 'nds-w-full nds-max-w-sm';
+const LARGURA_SM = 'nds-w-cap-sm';
 
 /**
  * Miolo demonstrativo de um slide, já indentado para dentro do `CarouselItem`.
  * O conteúdo é livre — o que o componente pede é só o item em volta.
  */
 function miolo(vertical: boolean, recuo = 6): string {
-  const forma = vertical ? 'nds-h-full' : 'nds-aspect-video';
+  const forma = vertical ? 'nds-h-full' : 'nds-aspect-16-9';
   const p = ' '.repeat(recuo);
   return `${p}<div class="nds-cluster ${forma} nds-bg-muted-soft nds-rounded-lg" data-justify="center">
 ${p}  <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
@@ -57,7 +57,7 @@ function carrossel(opcoes: {
     rotulo,
     laco = 'v-for="n in slides" :key="n"',
   } = opcoes;
-  const largura = vertical ? 'nds-w-full nds-max-w-xs' : LARGURA_SM;
+  const largura = vertical ? 'nds-w-cap-xs' : LARGURA_SM;
   return `<Carousel${attrs(raiz, `class="${largura}"`, `aria-label="${rotulo}"`)}>
   <CarouselContent${attrs(trilho)}>
     <CarouselItem ${attrs(laco, item).trim()}>
@@ -94,7 +94,7 @@ export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
 export function carouselHorizontalSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}`,
-    carrossel({ rotulo: 'Galeria na horizontal' }),
+    carrossel({ rotulo: 'Slides na horizontal' }),
   );
 }
 
@@ -106,7 +106,7 @@ export function carouselVerticalSource(): string {
       raiz: 'orientation="vertical"',
       trilho: 'class="nds-aspect-4-3"',
       vertical: true,
-      rotulo: 'Galeria na vertical',
+      rotulo: 'Slides na vertical',
     }),
   );
 }
@@ -118,7 +118,7 @@ export function carouselVerticalSource(): string {
 export function carouselPrimeiroSlideSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}\nconst opts = { startIndex: 0 }`,
-    carrossel({ raiz: ':opts="opts"', rotulo: 'Galeria no primeiro slide' }),
+    carrossel({ raiz: ':opts="opts"', rotulo: 'Slides no primeiro item' }),
   );
 }
 
@@ -126,7 +126,7 @@ export function carouselPrimeiroSlideSource(): string {
 export function carouselUltimoSlideSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}\nconst opts = { startIndex: slides.length - 1 }`,
-    carrossel({ raiz: ':opts="opts"', rotulo: 'Galeria no último slide' }),
+    carrossel({ raiz: ':opts="opts"', rotulo: 'Slides no último item' }),
   );
 }
 
@@ -134,21 +134,21 @@ export function carouselUltimoSlideSource(): string {
 export function carouselItemUnicoSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}`,
-    carrossel({ rotulo: 'Galeria de item único' }),
+    carrossel({ rotulo: 'Um item por vez' }),
   );
 }
 
 /**
- * Vários itens por vez: a base de largura mora no ITEM, e é responsiva — um
+ * Conjunto longo de slides: a base de largura mora no ITEM, e é responsiva — um
  * slide por tela no estreito, dois no médio, três no grande.
  */
 export function carouselMultiResponsivoSource(): string {
   return vueSnippet(
     `${IMPORT}\n\nconst slides = [1, 2, 3, 4, 5, 6]`,
-    `<Carousel class="nds-w-full nds-max-w-lg" aria-label="Galeria responsiva">
+    `<Carousel class="nds-w-cap-lg" aria-label="Conjunto longo de slides">
   <CarouselContent>
     <CarouselItem v-for="n in slides" :key="n" class="nds-md-basis-half nds-lg-basis-third">
-      <div class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+      <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
         <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
       </div>
     </CarouselItem>
@@ -170,7 +170,7 @@ import AutoplayPlugin from 'embla-carousel-autoplay'
 
 ${SLIDES}
 const plugins = [AutoplayPlugin({ delay: 4000, stopOnInteraction: true })]`,
-    carrossel({ raiz: ':plugins="plugins"', rotulo: 'Galeria com autoplay' }),
+    carrossel({ raiz: ':plugins="plugins"', rotulo: 'Destaques' }),
   );
 }
 
@@ -198,10 +198,10 @@ const slides = [
   'Lago entre montanhas',
   'Campo ao entardecer',
 ]`,
-    `<Carousel class="${LARGURA_SM}" aria-label="Galeria de fotos">
+    `<Carousel class="${LARGURA_SM}" aria-label="Galeria de fotos do produto">
   <CarouselContent>
     <CarouselItem v-for="(rotulo, i) in slides" :key="i">
-      <div class="nds-cluster nds-aspect-video nds-p-4 nds-bg-muted-soft nds-rounded-lg" data-align="end" data-justify="start">
+      <div class="nds-cluster nds-aspect-16-9 nds-p-4 nds-bg-muted-soft nds-rounded-lg" data-align="end" data-justify="start">
         <span class="nds-text-body nds-font-semibold nds-text-foreground">{{ rotulo }}</span>
       </div>
     </CarouselItem>

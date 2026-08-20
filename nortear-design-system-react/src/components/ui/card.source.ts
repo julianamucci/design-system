@@ -44,7 +44,7 @@ const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
  * ele acompanha a coluna inteira em que estiver. Vem de classe utilitária,
  * nunca de `style`.
  */
-const LARGURA = 'nds-w-full nds-max-w-sm';
+const LARGURA = 'nds-w-cap-sm';
 
 /**
  * Cabeçalho canônico: o título é um heading DE VERDADE por `as`, e não só um
@@ -124,7 +124,7 @@ export function cardCompactoSource(): string {
   return jsxSnippet(
     `${importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle')}
 import { TrendingUp } from "lucide-react";`,
-    `<Card size="sm" className="nds-w-full nds-max-w-xs">
+    `<Card size="sm" className="nds-w-cap-xs">
   <CardHeader>
     <CardTitle as="h3">Assinantes ativos</CardTitle>
     <CardDescription>Últimos 30 dias</CardDescription>
@@ -186,7 +186,7 @@ export function cardComImagemSource(): string {
   <img
     src="/produtos/cadeira-gamer-pro.jpg"
     alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
-    className="nds-w-full nds-aspect-video"
+    className="nds-w-full nds-aspect-16-9"
     style={{ objectFit: "cover" }}
   />
 ${CABECALHO}
@@ -209,7 +209,7 @@ ${importCard('CardAction', 'CardContent', 'CardDescription', 'CardFooter', 'Card
   <img
     src="/produtos/cadeira-gamer-pro.jpg"
     alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
-    className="nds-w-full nds-aspect-video"
+    className="nds-w-full nds-aspect-16-9"
     style={{ objectFit: "cover" }}
   />
   <CardHeader>
@@ -266,7 +266,7 @@ export function cardClicavelSource(): string {
     `<a
   href="/produtos/cadeira-gamer-pro"
   aria-label="Abrir detalhes do produto Cadeira Gamer Pro"
-  className="nds-block nds-w-full nds-max-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
+  className="nds-block nds-w-cap-sm nds-text-left nds-focus-ring nds-rounded-xl"
 >
   <Card>
 ${indentar(CABECALHO)}

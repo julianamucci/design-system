@@ -52,7 +52,7 @@ export const Default: Story = {
     docs: { source: { transform: cardSemRodapeSource } },
   },
   render: () => (
-    <Card className="nds-w-full nds-max-w-sm">
+    <Card className="nds-w-cap-sm">
       <CardHeader>
         <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
         <CardDescription>
@@ -104,7 +104,7 @@ export const Clickable: Story = {
     <a
       href="#produto-cadeira-gamer-pro"
       aria-label="Abrir detalhes do produto Cadeira Gamer Pro"
-      className="nds-block nds-w-full nds-max-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
+      className="nds-block nds-w-cap-sm nds-text-left nds-focus-ring nds-rounded-xl"
       onClick={(event) => {
         event.preventDefault();
         onNavigate({ event: "card_click", label: "Cadeira Gamer Pro" });
@@ -164,7 +164,7 @@ export const WithFooter: Story = {
     },
   },
   render: () => (
-    <Card className="nds-w-full nds-max-w-sm">
+    <Card className="nds-w-cap-sm">
       <CardHeader>
         <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
         <CardDescription>Produto atualizado em 12/04.</CardDescription>

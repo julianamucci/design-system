@@ -60,18 +60,11 @@ export const Playground: Story = {
 
     const region = canvas.getByRole('region', { name: 'Galeria de exemplos' });
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
-    const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
 
     // Embla NÃO rola o viewport: ele translada o track por `transform`, e
     // `scrollLeft` fica em zero o tempo todo. Medir a posição pela geometria do
     // track contra a do viewport é o que sobra — e é o que enxerga o movimento
     // nos dois eixos sem depender do eixo escolhido no control.
-    const posicao = () => {
-      const t = track.getBoundingClientRect();
-      const v = viewport.getBoundingClientRect();
-      return vertical ? t.top - v.top : t.left - v.left;
-    };
-
     const anterior = () =>
       canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
     const proximo = () =>
@@ -80,7 +73,7 @@ export const Playground: Story = {
     // Portão de montagem: `canScrollNext` nasce falso e só vira verdadeiro
     // quando o Embla inicializa e o primeiro `select` roda. Medir antes disso
     // leria um carrossel que ainda não existe.
-    await waitFor(() => expect(proximo()).toBeEnabled());
+    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
 
     /**
      * Índice do slide que ocupa a maior parte do viewport.
@@ -110,7 +103,7 @@ export const Playground: Story = {
     };
 
     const emSlide = async (i: number) =>
-      waitFor(async () => { await expect(slideEmFoco()).toBe(i); });
+      waitFor(async () => { await expect(slideEmFoco()).toBe(i); }, { timeout: 4000 });
 
     await step('A região tem papel, roledescription e nome acessível', async () => {
       // Sem nome a região não vira marco de navegação: o leitor anuncia

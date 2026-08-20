@@ -88,7 +88,7 @@ export const FileUpload: Story = {
   },
   render: () => {
     const card = document.createElement('div');
-    card.className = 'nds-stack nds-w-full nds-max-w-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground';
+    card.className = 'nds-stack nds-w-cap-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground';
     card.dataset.spacing = 'sm';
 
     const title = document.createElement('div');
@@ -148,7 +148,7 @@ export const WizardSteps: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.className = 'nds-stack nds-w-cap-md';
     wrap.dataset.spacing = 'sm';
 
     const row = document.createElement('div');
@@ -214,7 +214,7 @@ export const MultipleUploads: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.className = 'nds-stack nds-w-cap-md';
     wrap.dataset.spacing = 'md';
 
     wrap.append(
@@ -275,7 +275,7 @@ export const CustomColor: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.className = 'nds-stack nds-w-cap-md';
     wrap.dataset.spacing = 'md';
 
     wrap.append(
@@ -348,7 +348,7 @@ export const AriaBusyContainer: Story = {
     const status = document.createElement('div');
     status.setAttribute('role', 'status');
     status.setAttribute('aria-busy', 'true');
-    status.className = 'nds-stack nds-w-full nds-max-w-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground';
+    status.className = 'nds-stack nds-w-cap-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground';
     status.dataset.spacing = 'sm';
 
     const title = document.createElement('div');

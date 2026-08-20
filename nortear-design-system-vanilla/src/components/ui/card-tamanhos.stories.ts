@@ -48,7 +48,7 @@ function medirNoOutroTamanho(
 }
 
 function buildProductCard(): HTMLElement {
-  const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+  const card = createCard({ className: 'nds-w-cap-sm' });
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
   header.appendChild(
@@ -64,7 +64,7 @@ function buildProductCard(): HTMLElement {
 }
 
 function buildSmallCard(): HTMLElement {
-  const card = createCard({ size: 'sm', className: 'nds-w-full nds-max-w-xs' });
+  const card = createCard({ size: 'sm', className: 'nds-w-cap-xs' });
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: 'Assinantes ativos', level: 3 }));
   header.appendChild(createCardDescription({ text: '+12% no mês' }));

@@ -52,7 +52,7 @@ export const Default: Story = {
   render: () => {
     const root = createTabs({
       defaultValue: 'overview',
-      class: 'nds-w-full nds-max-w-md',
+      class: 'nds-w-cap-md',
       items: items(),
       'aria-label': 'Seções do componente',
     });
@@ -106,7 +106,7 @@ export const Line: Story = {
     const root = createTabs({
       defaultValue: 'overview',
       variant: 'line',
-      class: 'nds-w-full nds-max-w-md',
+      class: 'nds-w-cap-md',
       items: items(),
       'aria-label': 'Seções do componente',
     });
@@ -146,7 +146,7 @@ export const Vertical: Story = {
     const root = createTabs({
       defaultValue: 'overview',
       orientation: 'vertical',
-      class: 'nds-w-full nds-max-w-md',
+      class: 'nds-w-cap-md',
       items: items(),
       'aria-label': 'Seções do componente',
     });

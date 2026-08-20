@@ -46,7 +46,7 @@ export const Playground: Story = {
     covers: ["functional.item1", "accessibility.item2"],
   },
   render: (args) => (
-    <div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+    <div className="nds-stack nds-w-cap-xs" data-spacing="xs">
       <Label htmlFor="playground-label" {...args} />
       <Input id="playground-label" placeholder="ex: João da Silva" />
     </div>

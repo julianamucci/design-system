@@ -41,7 +41,7 @@ function atributos(args: Partial<SeparatorArgs>): string {
  * mas com a largura do que estiver em volta.
  */
 function empilhado(attrsDaLinha: string): string {
-  return `<div className="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
+  return `<div className="nds-stack nds-w-cap-md" data-spacing="md">
   <p className="nds-text-body">Seção superior</p>
   <Separator${attrsDaLinha} />
   <p className="nds-text-body">Seção inferior</p>
@@ -55,7 +55,7 @@ function empilhado(attrsDaLinha: string): string {
  * que o snippet precisa evitar ensinar.
  */
 function emLinha(attrsDaLinha: string): string {
-  return `<div className="nds-cluster nds-w-full nds-max-w-md" data-spacing="md">
+  return `<div className="nds-cluster nds-w-cap-md" data-spacing="md">
   <span className="nds-text-body">Item A</span>
   <Separator${attrsDaLinha} />
   <span className="nds-text-body nds-text-muted-foreground">Item B</span>
@@ -81,7 +81,7 @@ export const separatorSource: SourceTransform<SeparatorArgs> = (_gerado, ctx) =>
 export function separatorVerticalSource(): string {
   return jsxSnippet(
     IMPORT,
-    `<div className="nds-cluster nds-w-full nds-max-w-md" data-spacing="md">
+    `<div className="nds-cluster nds-w-cap-md" data-spacing="md">
   <span className="nds-text-body">Blog</span>
   <Separator orientation="vertical" />
   <span className="nds-text-body">Documentação</span>
@@ -99,7 +99,7 @@ export function separatorVerticalSource(): string {
 export function separatorSemanticoSource(): string {
   return jsxSnippet(
     IMPORT,
-    `<div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+    `<div className="nds-stack nds-w-cap-md" data-spacing="sm">
   <p className="nds-text-body">Categoria: Layout</p>
   <Separator decorative={false} />
   <p className="nds-text-body">Categoria: Formulários</p>
@@ -163,7 +163,7 @@ export function separatorEmMenuSource(): string {
 export function separatorEnfaseForteSource(): string {
   return jsxSnippet(
     IMPORT,
-    `<div className="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
+    `<div className="nds-stack nds-w-cap-md" data-spacing="md">
   <p className="nds-text-body nds-text-muted-foreground">Fim da seção</p>
   <Separator />
   <p className="nds-text-body nds-text-muted-foreground">Continuação do mesmo assunto</p>

@@ -30,7 +30,7 @@ export const WithLabel: Story = {
   parameters: { covers: ['accessibility.item4'] },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="comp-label">Descrição</label>
         <textarea
           ndsTextarea
@@ -59,7 +59,7 @@ export const WithLabel: Story = {
 export const WithSupportText: Story = {
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="comp-hint">Descrição</label>
         <textarea
           ndsTextarea
@@ -93,7 +93,7 @@ export const WithAccessibleCounter: Story = {
   render: () => ({
     props: { valor: '', max: 280 },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="comp-counter">Mensagem</label>
         <textarea
           ndsTextarea
@@ -135,7 +135,7 @@ export const WithAccessibleCounter: Story = {
 export const WithErrorMessage: Story = {
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="comp-error">Descrição</label>
         <textarea
           ndsTextarea
@@ -167,7 +167,7 @@ export const WithErrorMessage: Story = {
 export const ModalNoResize: Story = {
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <label ndsLabel for="comp-modal">Observações</label>
         <textarea
           ndsTextarea
@@ -202,7 +202,7 @@ export const InForm: Story = {
     },
     template: `
       <form
-        class="nds-stack nds-w-full nds-max-w-md"
+        class="nds-stack nds-w-cap-md"
         data-spacing="md"
         aria-label="Formulário de feedback"
         (submit)="enviar($event)"

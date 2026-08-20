@@ -30,7 +30,7 @@ describe('contextMenuSource', () => {
 
 <ContextMenu>
   <ContextMenuTrigger
-    class="nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
+    class="nds-cluster nds-w-cap-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default"
     data-align="center"
     data-justify="center"
   >

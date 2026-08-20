@@ -92,7 +92,7 @@ export function progressComRotuloSnippet(o: ProgressSnippetOptions = {}): string
   return snippet(
     importar('progress', 'createProgress'),
     `const bloco = document.createElement('div');
-bloco.className = 'nds-stack nds-w-full nds-max-w-md';
+bloco.className = 'nds-stack nds-w-cap-md';
 bloco.dataset.spacing = 'xs';
 
 const linha = document.createElement('div');
@@ -136,7 +136,7 @@ export function progressListaSnippet(itens: ProgressSnippetItem[]): string {
   return snippet(
     importar('progress', 'createProgress'),
     `const lista = document.createElement('div');
-lista.className = 'nds-stack nds-w-full nds-max-w-md';
+lista.className = 'nds-stack nds-w-cap-md';
 lista.dataset.spacing = 'md';
 
 // Um nome acessível DISTINTO por barra: quatro "Progresso do upload" numa
@@ -196,7 +196,7 @@ export function progressOcupadoSnippet(o: ProgressSnippetOptions = {}): string {
 cartao.setAttribute('role', 'status');
 // Enquanto a operação corre. Quem termina a operação apaga o atributo.
 cartao.setAttribute('aria-busy', 'true');
-cartao.className = 'nds-stack nds-w-full nds-max-w-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground';
+cartao.className = 'nds-stack nds-w-cap-md nds-p-4 nds-rounded-lg nds-border-default nds-bg-card nds-text-card-foreground';
 cartao.dataset.spacing = 'sm';
 
 const titulo = document.createElement('div');

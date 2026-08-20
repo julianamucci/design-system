@@ -28,7 +28,7 @@ import { Button } from '@/components/ui/button'
 </script>
 
 <template>
-  <Card class="nds-w-full nds-max-w-sm">
+  <Card class="nds-w-cap-sm">
     <CardHeader>
       <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
       <CardDescription>Estrutura ergonômica com ajuste de altura e apoio lombar.</CardDescription>
@@ -47,7 +47,7 @@ import { Button } from '@/components/ui/button'
 
   it('acompanha o control de tamanho, e omite o padrão', () => {
     expect(cardSource('', { args: { size: 'sm' } })).toContain(
-      '<Card size="sm" class="nds-w-full nds-max-w-sm">',
+      '<Card size="sm" class="nds-w-cap-sm">',
     );
     expect(cardSource('', { args: { size: 'default' } })).not.toContain('size=');
   });
@@ -84,7 +84,7 @@ describe('transforms das stories de tamanho e de estado', () => {
 
   it('o tamanho compacto propaga sozinho às partes internas', () => {
     const saida = cardCompactoSource();
-    expect(saida).toContain('<Card size="sm" class="nds-w-full nds-max-w-xs">');
+    expect(saida).toContain('<Card size="sm" class="nds-w-cap-xs">');
     // Não há prop de tamanho a repetir em cada peça.
     expect(saida).not.toContain('<CardHeader size=');
     expect(saida).not.toContain('<CardTitle size=');

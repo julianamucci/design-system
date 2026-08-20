@@ -45,7 +45,7 @@ describe('cardSource', () => {
 
   it('mantém a largura máxima quando o control é limpo — sem limite o card ocupa a coluna', () => {
     const saida = cardSource(undefined, { args: { className: '' } });
-    expect(saida).toContain('className="nds-w-full nds-max-w-sm"');
+    expect(saida).toContain('className="nds-w-cap-sm"');
   });
 
   it('respeita a largura escolhida no control', () => {

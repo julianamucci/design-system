@@ -24,4 +24,4 @@
  * reexporta esta constante para as stories.
  */
 export const AREA_CLICK_DIREITO =
-  'nds-cluster nds-w-full nds-max-w-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default';
+  'nds-cluster nds-w-cap-xs nds-p-8 nds-rounded-md nds-border-default nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default';

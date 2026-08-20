@@ -303,7 +303,7 @@ import {
 export function inputAlinhamentosSource(): string {
   return vueSnippet(
     IMPORT_GRUPO,
-    `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
+    `<div class="nds-stack nds-w-cap-md" data-spacing="lg">
   <div class="nds-stack" data-spacing="xs">
     <Label for="busca">Buscar</Label>
     <InputGroup>
@@ -354,7 +354,7 @@ import {
   InputGroupInput,
   InputGroupText,
 } from '@/components/ui/input-group'`,
-    `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
+    `<div class="nds-stack nds-w-cap-md" data-spacing="xs">
   <Label for="usuario">Usuário</Label>
   <InputGroup>
     <InputGroupAddon align="inline-start">

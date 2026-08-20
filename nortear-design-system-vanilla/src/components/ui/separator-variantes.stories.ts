@@ -30,7 +30,7 @@ export const Horizontal: Story = {
   parameters: { covers: ['functional.item1', 'visual.item1'] },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.className = 'nds-stack nds-w-cap-md';
     wrap.dataset.spacing = 'md';
 
     const top = document.createElement('div');
@@ -85,7 +85,7 @@ export const Vertical: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-cluster nds-docs-demo-row nds-w-full nds-max-w-md';
+    wrap.className = 'nds-cluster nds-docs-demo-row nds-w-cap-md';
     wrap.dataset.spacing = 'md';
 
     const a = document.createElement('span');

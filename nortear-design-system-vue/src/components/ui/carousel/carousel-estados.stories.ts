@@ -45,10 +45,10 @@ export const FirstSlide: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { opts: { startIndex: 0 }, slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel :opts="opts" class="nds-w-full nds-max-w-sm" aria-label="Galeria no primeiro slide">
+      <Carousel :opts="opts" class="nds-w-cap-sm" aria-label="Slides no primeiro item">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <div class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+            <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
               <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
             </div>
           </CarouselItem>
@@ -66,7 +66,7 @@ export const FirstSlide: Story = {
     await step('No começo só a seta de avanço leva a algum lugar', async () => {
       // `canScrollNext` nasce falso e só vira verdadeiro no `init` do embla,
       // agendado com `setTimeout(…, 0)` — daí a espera na seta viva.
-      await waitFor(() => expect(proximo).toBeEnabled());
+      await waitFor(() => expect(proximo).toBeEnabled(), { timeout: 4000 });
       await expect(anterior).toBeDisabled();
     });
 
@@ -84,7 +84,7 @@ export const FirstSlide: Story = {
         const apagada = Number(getComputedStyle(anterior).opacity);
         const viva = Number(getComputedStyle(proximo).opacity);
         await expect(apagada).toBeLessThan(viva);
-      });
+      }, { timeout: 4000 });
     });
 
     await step('É o primeiro slide que está à mostra', async () => {
@@ -112,10 +112,10 @@ export const LastSlide: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { opts: { startIndex: 4 }, slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel :opts="opts" class="nds-w-full nds-max-w-sm" aria-label="Galeria no último slide">
+      <Carousel :opts="opts" class="nds-w-cap-sm" aria-label="Slides no último item">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
-            <div class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+            <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
               <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
             </div>
           </CarouselItem>
@@ -133,7 +133,7 @@ export const LastSlide: Story = {
     await step('No fim a seta de avanço desabilita e a de voltar acorda', async () => {
       // O par importa: só "próximo desabilitado" também seria verdade num
       // carrossel de um slide só, onde nada nunca avançou.
-      await waitFor(() => expect(anterior).toBeEnabled());
+      await waitFor(() => expect(anterior).toBeEnabled(), { timeout: 4000 });
       await expect(proximo).toBeDisabled();
     });
 
@@ -143,7 +143,7 @@ export const LastSlide: Story = {
         const apagada = Number(getComputedStyle(proximo).opacity);
         const viva = Number(getComputedStyle(anterior).opacity);
         await expect(apagada).toBeLessThan(viva);
-      });
+      }, { timeout: 4000 });
     });
 
     await step('É o último slide que está à mostra', async () => {
@@ -154,7 +154,7 @@ export const LastSlide: Story = {
         const ultimo = s[s.length - 1];
         await expect(Math.abs(ultimo.right - v.right)).toBeLessThan(2);
         await expect(s[s.length - 2].right).toBeLessThan(v.left + 2);
-      });
+      }, { timeout: 4000 });
     });
   },
 };

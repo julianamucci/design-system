@@ -155,7 +155,7 @@ function marcacaoTabela(args: PaginationArgs): string {
   const ultimo = args.page * args.perPage;
 
   return `<div
-  class="nds-cluster nds-w-full nds-max-w-prose nds-border-default nds-rounded-lg nds-p-4"
+  class="nds-cluster nds-w-cap-prose nds-border-default nds-rounded-lg nds-p-4"
   data-spacing="sm"
   data-align="center"
   data-justify="between"

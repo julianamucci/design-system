@@ -37,7 +37,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
       <Label htmlFor="var-default">Biografia</Label>
       <Textarea
         id="var-default"
@@ -74,7 +74,7 @@ function WithCounterRender() {
   const [value, setValue] = useState("");
   const max = 500;
   return (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
       <Label htmlFor="var-counter">Descrição</Label>
       <Textarea
         id="var-counter"
@@ -138,7 +138,7 @@ export const WithCounter: Story = {
 
 export const NoResize: Story = {
   render: () => (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
       <Label htmlFor="var-noresize">Feedback</Label>
       <Textarea
         id="var-noresize"

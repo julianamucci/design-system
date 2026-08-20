@@ -59,7 +59,7 @@ function colapsavel(opcoes: {
 }): string {
   const {
     raiz = '',
-    classeRaiz = 'nds-w-full nds-max-w-sm',
+    classeRaiz = 'nds-w-cap-sm',
     gatilho = '',
     classeGatilho = GATILHO_GHOST,
     chevron = CHEVRON,
@@ -158,7 +158,7 @@ export function collapsibleControladoSource(): string {
 ${importar()}
 
 const aberto = ref(false)`,
-    `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
+    `<div class="nds-stack nds-w-cap-sm" data-spacing="sm">
   <p class="nds-text-caption nds-text-muted-foreground">
     Estado externo: <strong>{{ aberto ? 'aberto' : 'fechado' }}</strong>
   </p>

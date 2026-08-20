@@ -72,7 +72,7 @@ export function collapsibleSource(
 
   return svelteSnippet(
     IMPORT,
-    `<Collapsible class="nds-w-full nds-max-w-sm"${props}>
+    `<Collapsible class="nds-w-cap-sm"${props}>
 ${gatilho(rotulo)}
 ${painel('    <p>Filtro avançado 1 · Filtro avançado 2</p>')}
 </Collapsible>`,
@@ -101,7 +101,7 @@ import { Button } from "@/components/ui/button";
 import ChevronDown from "@lucide/svelte/icons/chevron-down";
 
 let aberto = $state(false);`,
-    `<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
+    `<div class="nds-stack nds-w-cap-sm" data-spacing="sm">
   <p class="nds-text-caption nds-text-muted-foreground">
     Estado externo: <strong>{aberto ? 'aberto' : 'fechado'}</strong>
   </p>
@@ -125,7 +125,7 @@ ${painel('    <p>Conteúdo colapsável controlado externamente.</p>')}
 export function collapsibleComBotaoSource(): string {
   return svelteSnippet(
     IMPORT,
-    `<Collapsible class="nds-w-full nds-max-w-sm">
+    `<Collapsible class="nds-w-cap-sm">
 ${gatilho('Exibir opções avançadas', GATILHO_CONTORNO)}
 ${painel(`    <p>Opção avançada 1</p>
     <p>Opção avançada 2</p>
@@ -143,7 +143,7 @@ ${painel(`    <p>Opção avançada 1</p>
 export function collapsibleComChevronSource(): string {
   return svelteSnippet(
     IMPORT,
-    `<Collapsible class="nds-w-full nds-max-w-sm">
+    `<Collapsible class="nds-w-cap-sm">
 ${gatilho('Configurações avançadas', GATILHO_CONTORNO)}
 ${painel(`    <div class="nds-cluster" data-justify="between">
       <span class="nds-text-muted-foreground">Notificações</span>

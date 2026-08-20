@@ -45,15 +45,15 @@ export const Horizontal: Story = {
       variant: 'single',
       orientation: 'horizontal',
       slideCount: 5,
-      widthClass: 'nds-w-full nds-max-w-md',
-      ariaLabel: 'Galeria horizontal',
+      widthClass: 'nds-w-cap-md',
+      ariaLabel: 'Slides na horizontal',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
     },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const region = canvas.getByRole('region', { name: 'Galeria horizontal' });
+    const region = canvas.getByRole('region', { name: 'Slides na horizontal' });
     const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
 
     await step('O trilho deita os slides em linha', async () => {
@@ -85,7 +85,7 @@ export const Horizontal: Story = {
       // mede o ponto de partida e reprovaria por corrida.
       await waitFor(async () => {
         await expect(descreverFalhas(reprovasDeEscala(medirSlides(canvasElement), 0))).toBe('');
-      });
+      }, { timeout: 4000 });
     });
 
     await step('A escala não moveu o ponto de parada da rolagem', async () => {
@@ -132,20 +132,20 @@ export const Vertical: Story = {
       variant: 'vertical',
       orientation: 'vertical',
       slideCount: 5,
-      widthClass: 'nds-w-full nds-max-w-xs',
+      widthClass: 'nds-w-cap-xs',
       // `nds-aspect-4-3` dá ao trilho — e por tabela ao viewport que o recorta
       // — a altura DEFINIDA que a base `flex: 0 0 100%` do slide precisa para
       // resolver. Sem ela o carrossel vertical empilha os slides e nada é
       // recortado. A altura vem de uma classe de proporção, nunca de `style`.
       heightClass: 'nds-aspect-4-3',
-      ariaLabel: 'Galeria vertical',
+      ariaLabel: 'Slides na vertical',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
     },
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const region = canvas.getByRole('region', { name: 'Galeria vertical' });
+    const region = canvas.getByRole('region', { name: 'Slides na vertical' });
     const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
 
@@ -177,7 +177,7 @@ export const Vertical: Story = {
           await expect(proporcao).toBeGreaterThan(0.98);
           await expect(proporcao).toBeLessThan(1.2);
         }
-      });
+      }, { timeout: 4000 });
     });
 
     await step('As setas ficam acima e abaixo do viewport', async () => {

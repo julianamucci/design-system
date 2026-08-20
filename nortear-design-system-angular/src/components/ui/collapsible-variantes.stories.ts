@@ -50,7 +50,7 @@ type Story = StoryObj;
 export const Uncontrolled: Story = {
   render: () => ({
     template: `
-      <div ndsCollapsible class="nds-w-full nds-max-w-sm" [defaultOpen]="false">
+      <div ndsCollapsible class="nds-w-cap-sm" [defaultOpen]="false">
         <button
           ndsCollapsibleTrigger
           ndsButton
@@ -91,7 +91,7 @@ export const Controlled: Story = {
   render: () => ({
     props: { aberto: false },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-sm" data-spacing="sm">
         <div class="nds-cluster" data-spacing="xs">
           <!-- Nomes próprios, e não os mesmos do trigger: dois botões com o
                mesmo nome acessível na tela são ambíguos para quem navega por
@@ -159,7 +159,7 @@ export const CustomButton: Story = {
   parameters: { covers: ['functional.item5'] },
   render: () => ({
     template: `
-      <div ndsCollapsible class="nds-w-full nds-max-w-sm">
+      <div ndsCollapsible class="nds-w-cap-sm">
         <button ndsCollapsibleTrigger ndsButton variant="outline">
           Exibir opções avançadas
         </button>

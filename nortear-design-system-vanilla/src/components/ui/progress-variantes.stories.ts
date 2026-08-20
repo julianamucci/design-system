@@ -44,7 +44,7 @@ export const Determinate: Story = {
   parameters: { covers: ['accessibility.item2'] },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.className = 'nds-w-cap-md';
     const bar = createProgress({ value: 42, 'aria-label': 'Progresso do upload' });
     wrap.appendChild(bar);
     return wrap;
@@ -80,7 +80,7 @@ export const Indeterminate: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.className = 'nds-w-cap-md';
     const bar = createProgress({ value: null, 'aria-label': 'Processando…' });
     wrap.appendChild(bar);
     return wrap;
@@ -122,7 +122,7 @@ export const WithLabel: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.className = 'nds-stack nds-w-cap-md';
     wrap.dataset.spacing = 'xs';
 
     const row = document.createElement('div');
@@ -188,7 +188,7 @@ export const SemanticColor: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.className = 'nds-stack nds-w-cap-md';
     wrap.dataset.spacing = 'sm';
 
     const ok = createProgress({

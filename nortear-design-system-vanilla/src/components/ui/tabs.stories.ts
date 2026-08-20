@@ -71,7 +71,7 @@ export const Playground: Story = {
   render: (args) => {
     const root = createTabs({
       defaultValue: args.defaultValue,
-      class: 'nds-w-full nds-max-w-lg',
+      class: 'nds-w-cap-lg',
       items: buildItems(),
       // ARIA: nome da lista de abas, OBRIGATÓRIO. A opção escreve no
       // `role="tablist"`, que é o elemento que o leitor de tela anuncia.

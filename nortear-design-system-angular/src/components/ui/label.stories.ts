@@ -100,7 +100,7 @@ export const Playground: Story = {
   render: (args) => ({
     props: { ...args },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+      <div class="nds-stack nds-w-cap-xs" data-spacing="xs">
         <label ndsLabel [attr.for]="htmlFor">
           {{ text }}
           @if (required) {

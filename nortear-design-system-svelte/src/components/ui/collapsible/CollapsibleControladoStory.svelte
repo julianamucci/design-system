@@ -24,7 +24,7 @@
   }
 </script>
 
-<div class="nds-stack nds-w-full nds-max-w-sm" data-spacing="sm">
+<div class="nds-stack nds-w-cap-sm" data-spacing="sm">
   <p class="nds-text-caption nds-text-muted-foreground">
     Estado externo: <strong>{open ? 'aberto' : 'fechado'}</strong>
   </p>

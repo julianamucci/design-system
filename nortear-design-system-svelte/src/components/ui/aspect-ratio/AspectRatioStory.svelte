@@ -22,7 +22,7 @@
     alt = 'Exemplo de imagem',
     title = 'Embedded content',
     poster = '',
-    width = 'nds-max-w-lg',
+    width = 'nds-w-cap-lg',
     class: className = '',
     label = '',
   }: Props = $props();
@@ -30,7 +30,7 @@
 
 <!-- Classe por expressão, e não interpolação dentro do atributo: o auditor de
      classe morta lê o que está entre aspas como nome de classe literal. -->
-<div class={`${width} nds-w-full ${className}`}>
+<div class={`${width} ${className}`}>
   <AspectRatio {ratio}>
     {#if child === 'img'}
       <img src={src} alt={alt} loading="lazy" decoding="async" class="nds-w-full nds-rounded-md" style="height: 100%; object-fit: cover" />

@@ -43,7 +43,7 @@ export const Default: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="estado-default">Descrição</Label>
         <Textarea id="estado-default" placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-30" />
       </div>
@@ -65,7 +65,7 @@ export const Focus: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="estado-focus">Descrição</Label>
         <Textarea id="estado-focus" placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-30" />
       </div>
@@ -102,7 +102,7 @@ export const Filled: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="estado-filled">Biografia</Label>
         <Textarea
           id="estado-filled"
@@ -137,7 +137,7 @@ export const Disabled: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="estado-disabled">Descrição</Label>
         <Textarea id="estado-disabled" placeholder="Não disponível" disabled class="nds-resize-y nds-min-h-30" />
       </div>
@@ -172,7 +172,7 @@ export const Invalid: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="estado-invalid">Descrição</Label>
         <Textarea
           id="estado-invalid"
@@ -223,7 +223,7 @@ export const ReadOnly: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="estado-readonly">Observações</Label>
         <Textarea
           id="estado-readonly"

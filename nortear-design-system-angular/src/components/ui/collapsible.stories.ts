@@ -49,7 +49,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CollapsibleArgs
 
   // Só o que difere do default entra no snippet — documentação que repete valor
   // padrão ensina ruído.
-  const raiz = ['<div ndsCollapsible class="nds-w-full nds-max-w-sm"', open ? '[defaultOpen]="true"' : '']
+  const raiz = ['<div ndsCollapsible class="nds-w-cap-sm"', open ? '[defaultOpen]="true"' : '']
     .filter(Boolean)
     .join(' ');
   const gatilho = [
@@ -157,7 +157,7 @@ export const Playground: Story = {
     template: `
       <div
         ndsCollapsible
-        class="nds-w-full nds-max-w-sm"
+        class="nds-w-cap-sm"
         [defaultOpen]="open"
         (openChange)="onOpenChange($event)"
       >

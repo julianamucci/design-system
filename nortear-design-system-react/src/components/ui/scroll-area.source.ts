@@ -173,7 +173,7 @@ import { Separator } from "@/components/ui/separator";`,
 }
 
 /**
- * Carrossel de cartões. A proporção da mídia vem de `nds-aspect-video`, e não de
+ * Carrossel de cartões. A proporção da mídia vem de `nds-aspect-16-9`, e não de
  * uma altura em pixel: a faixa continua correta quando o tema troca a densidade
  * ou quando o cartão muda de largura.
  */
@@ -189,7 +189,7 @@ export function scrollAreaCarrosselSource(): string {
   <div className="nds-cluster nds-p-4" data-spacing="md">
     {fotos.map((n) => (
       <figure key={n} className="nds-shrink-0 nds-w-xs">
-        <div className="nds-aspect-video nds-rounded-md nds-bg-muted" />
+        <div className="nds-aspect-16-9 nds-rounded-md nds-bg-muted" />
         <figcaption className="nds-text-caption nds-text-muted-foreground nds-pt-2">
           Foto {n}
         </figcaption>

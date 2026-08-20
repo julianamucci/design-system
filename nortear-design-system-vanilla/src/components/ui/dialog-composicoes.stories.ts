@@ -173,7 +173,7 @@ export const MediaPreview: Story = {
     // inline: valor de design cravado no elemento sai do tema e da escala.
     const wrap = document.createElement('div');
     wrap.className =
-      'nds-aspect-video nds-w-full nds-rounded-md nds-bg-muted nds-cluster nds-text-caption nds-text-muted-foreground';
+      'nds-aspect-16-9 nds-w-full nds-rounded-md nds-bg-muted nds-cluster nds-text-caption nds-text-muted-foreground';
     wrap.dataset.align = 'center';
     wrap.dataset.justify = 'center';
     wrap.setAttribute('role', 'img');

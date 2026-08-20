@@ -29,7 +29,7 @@ export const Horizontal: Story = {
   render: () => ({
     props: { slides: [1, 2, 3, 4, 5] },
     template: `
-      <nds-carousel class="nds-w-full nds-max-w-md" label="Slides na horizontal" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-cap-md" label="Slides na horizontal" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
           @for (i of slides; track i) {
             <div ndsCarouselItem>
@@ -75,7 +75,7 @@ export const Horizontal: Story = {
       // mede o ponto de partida e reprovaria por corrida.
       await waitFor(async () => {
         await expect(descreverFalhas(reprovasDeEscala(medirSlides(canvasElement), 0))).toBe('');
-      });
+      }, { timeout: 4000 });
     });
 
     await step('A escala não moveu o ponto de parada da rolagem', async () => {
@@ -123,7 +123,7 @@ export const Vertical: Story = {
     // `flex: 0 0 100%` do slide precisa para resolver. Sem ela o carrossel
     // vertical empilha os slides e nada é recortado.
     template: `
-      <nds-carousel class="nds-w-full nds-max-w-xs" orientation="vertical" label="Slides na vertical" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-cap-xs" orientation="vertical" label="Slides na vertical" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent class="nds-aspect-4-3">
           @for (i of slides; track i) {
             <div ndsCarouselItem>
@@ -171,7 +171,7 @@ export const Vertical: Story = {
       // O foco vai ao RECORTE, que é quem rola; a tecla sobe até a região.
       viewport.focus();
       await userEvent.keyboard('{ArrowDown}');
-      await waitFor(() => expect(viewport.scrollTop).toBeGreaterThan(0));
+      await waitFor(() => expect(viewport.scrollTop).toBeGreaterThan(0), { timeout: 4000 });
     });
 
     await step('E a pilha volta ao topo, parada', async () => {
@@ -181,7 +181,7 @@ export const Vertical: Story = {
       // topo e esperar o zero dá um estado assentado para a foto e deixa a
       // play replayável no painel Interactions.
       await userEvent.keyboard('{ArrowUp}');
-      await waitFor(() => expect(viewport.scrollTop).toBe(0));
+      await waitFor(() => expect(viewport.scrollTop).toBe(0), { timeout: 4000 });
     });
 
     await step('A seta girada também não sai do lugar sob o ponteiro', async () => {

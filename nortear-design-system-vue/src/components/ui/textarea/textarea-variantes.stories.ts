@@ -38,7 +38,7 @@ export const Default: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="var-default">Biografia</Label>
         <Textarea
           id="var-default"
@@ -79,7 +79,7 @@ export const WithCounter: Story = {
       return { value: '', max: 500 };
     },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="var-counter">Descrição</Label>
         <Textarea
           id="var-counter"
@@ -136,7 +136,7 @@ export const NoResize: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="var-noresize">Feedback</Label>
         <Textarea
           id="var-noresize"

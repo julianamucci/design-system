@@ -32,7 +32,7 @@ type Story = StoryObj;
 
 function labeled(id: string, labelText: string, textarea: HTMLTextAreaElement): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack nds-w-full nds-max-w-md';
+  wrapper.className = 'nds-stack nds-w-cap-md';
   wrapper.dataset.spacing = 'sm';
 
   textarea.id = id;

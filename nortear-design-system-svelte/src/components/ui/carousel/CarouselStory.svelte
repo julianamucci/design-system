@@ -44,7 +44,7 @@
     slideLabel = 'Slide',
     ofLabel = 'de',
     heightClass = '',
-    widthClass = 'nds-w-full nds-max-w-sm',
+    widthClass = 'nds-w-cap-sm',
     images = [],
   }: Props = $props();
 

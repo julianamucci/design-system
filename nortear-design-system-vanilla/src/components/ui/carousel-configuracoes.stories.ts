@@ -60,7 +60,7 @@ export const Single: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.className = 'nds-w-cap-md';
     wrap.appendChild(createCarousel({ items: slidesDeExemplo(4), label: 'Um item por vez' }));
     return wrap;
   },
@@ -178,7 +178,7 @@ export const MultiResponsive: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-lg';
+    wrap.className = 'nds-w-cap-lg';
     wrap.appendChild(
       createCarousel({
         items: slidesDeExemplo(6),
@@ -263,7 +263,7 @@ export const Autoplay: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.className = 'nds-w-cap-md';
     wrap.appendChild(
       createCarousel({
         items: slidesDeExemplo(4, { prefixo: 'Destaque' }),
@@ -336,7 +336,7 @@ export const DragGesture: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.className = 'nds-w-cap-md';
     wrap.appendChild(
       createCarousel({ items: slidesDeExemplo(4), label: 'Galeria com gesto de arrastar' }),
     );
@@ -391,7 +391,7 @@ export const DragGesture: Story = {
 
     // O motor só mede depois que a raiz entra no documento: esperar a seta de
     // avanço acordar é o portão de montagem, não uma folga arbitrária.
-    await waitFor(() => expect(proximo()).toBeEnabled());
+    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
 
     // ── A RÉGUA ───────────────────────────────────────────────────────────────
     //
@@ -422,7 +422,16 @@ export const DragGesture: Story = {
 
       await userEvent.click(anterior());
       await emPosicao(posZero);
-      await expect(anterior()).toBeDisabled();
+      // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
+      // encostou no alvo, mas quem desabilita a seta é a reconciliação do
+      // índice, e ela espera de propósito o silêncio do motor — sem isso um
+      // gesto com inércia emitiria uma troca de slide por quadro atravessado.
+      // Afirmar o botão no mesmo instante mede uma janela em que o componente
+      // ainda nem foi avisado de que parou: passa na máquina ociosa e reprova
+      // sob carga, que foi como esta reprovou no Angular e no Vanilla.
+      await waitFor(async () => {
+        await expect(anterior()).toBeDisabled();
+      }, { timeout: 4000 });
     });
 
     const caixa = recorte.getBoundingClientRect();
@@ -439,7 +448,7 @@ export const DragGesture: Story = {
       toque(recorte, 'touchmove', direita - 90, y);
       await waitFor(async () => {
         await expect(deslocamento()).toBeGreaterThan(posZero + 4);
-      });
+      }, { timeout: 4000 });
     });
 
     await step('Ao soltar, para onde a seta pararia', async () => {
@@ -452,7 +461,7 @@ export const DragGesture: Story = {
       await emPosicao(posUm);
       await waitFor(async () => {
         await expect(anterior()).toBeEnabled();
-      });
+      }, { timeout: 4000 });
     });
 
     await step('O MOUSE percorre o mesmo caminho, de volta ao primeiro slide', async () => {
@@ -470,7 +479,7 @@ export const DragGesture: Story = {
       // Já andou de volta junto com o cursor, antes de soltar.
       await waitFor(async () => {
         await expect(deslocamento()).toBeLessThan(posUm - 4);
-      });
+      }, { timeout: 4000 });
 
       mouse(recorte, 'mousemove', direita, y);
       mouse(recorte, 'mouseup', direita, y);
@@ -478,7 +487,7 @@ export const DragGesture: Story = {
       await emPosicao(posZero);
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
-      });
+      }, { timeout: 4000 });
     });
   },
 };

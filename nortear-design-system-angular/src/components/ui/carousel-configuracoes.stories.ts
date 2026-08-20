@@ -82,7 +82,7 @@ export const Single: Story = {
   render: () => ({
     props: { slides: [1, 2, 3] },
     template: `
-      <nds-carousel class="nds-w-full nds-max-w-md" label="Um item por vez" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-cap-md" label="Um item por vez" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
           @for (i of slides; track i) {
             <div ndsCarouselItem class="nds-basis-full">
@@ -121,7 +121,7 @@ export const MultiResponsive: Story = {
   render: () => ({
     props: { slides: [1, 2, 3, 4, 5, 6] },
     template: `
-      <nds-carousel class="nds-w-full nds-max-w-lg" label="Vários itens por vez" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-cap-lg" label="Conjunto longo de slides" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
           @for (i of slides; track i) {
             <div ndsCarouselItem class="nds-md-basis-half nds-lg-basis-third">
@@ -176,7 +176,7 @@ export const Autoplay: Story = {
       <div class="nds-stack" data-spacing="md">
         <nds-carousel
           #carrossel
-          class="nds-w-full nds-max-w-md"
+          class="nds-w-cap-md"
           label="Destaques"
           slideLabel="Slide {index} de {total}"
           [autoplay]="true"
@@ -217,8 +217,9 @@ export const Autoplay: Story = {
       // `stopOnInteraction`: quem tomou o controle não deve ser atropelado pelo
       // relógio. O rótulo do botão vira "Retomar", que é o estado observável.
       await userEvent.click(canvas.getByRole('button', { name: 'Próximo item' }));
-      await waitFor(() =>
-        expect(canvas.getByRole('button', { name: 'Retomar apresentação' })).toBeInTheDocument(),
+      await waitFor(
+        () => expect(canvas.getByRole('button', { name: 'Retomar apresentação' })).toBeInTheDocument(),
+        { timeout: 4000 },
       );
     });
 
@@ -291,7 +292,7 @@ export const DragGesture: Story = {
   render: () => ({
     props: { slides: [1, 2, 3, 4] },
     template: `
-      <nds-carousel class="nds-w-full nds-max-w-md" label="Galeria com gesto de arrastar" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-cap-md" label="Galeria com gesto de arrastar" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
           @for (i of slides; track i) {
             <div ndsCarouselItem>
@@ -370,7 +371,15 @@ export const DragGesture: Story = {
 
       await userEvent.click(anterior());
       await emPosicao(posZero);
-      await expect(anterior()).toBeDisabled();
+      // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
+      // encostou em zero, mas quem desabilita a seta é a reconciliação do
+      // índice, e ela espera de propósito o silêncio de 120ms — sem isso um
+      // gesto com inércia emitiria uma troca de slide por quadro atravessado.
+      // Afirmar o botão no mesmo instante mede uma janela onde o componente
+      // ainda nem foi avisado de que parou.
+      await waitFor(async () => {
+        await expect(anterior()).toBeDisabled();
+      }, { timeout: 4000 });
     });
 
     await step('O recorte está LIBERADO para o gesto, com onde parar', async () => {
@@ -437,7 +446,7 @@ export const DragGesture: Story = {
       // "mudou de slide".
       await waitFor(async () => {
         await expect(viewport.scrollLeft).toBeGreaterThan(posZero + 4);
-      });
+      }, { timeout: 4000 });
     });
 
     await step('Ao soltar, para onde a seta pararia', async () => {
@@ -450,14 +459,23 @@ export const DragGesture: Story = {
       await emPosicao(posUm);
       await waitFor(async () => {
         await expect(anterior()).toBeEnabled();
-      });
+      }, { timeout: 4000 });
     });
 
     await step('E a story termina no primeiro slide', async () => {
       // O Chromatic fotografa o quadro final e o axe varre a partir dele.
       await userEvent.click(anterior());
       await emPosicao(posZero);
-      await expect(anterior()).toBeDisabled();
+      // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
+      // encostou no alvo, mas quem desabilita a seta é a reconciliação do
+      // índice, e ela espera de propósito o silêncio do motor — sem isso um
+      // gesto com inércia emitiria uma troca de slide por quadro atravessado.
+      // Afirmar o botão no mesmo instante mede uma janela em que o componente
+      // ainda nem foi avisado de que parou: passa na máquina ociosa e reprova
+      // sob carga, que foi como esta reprovou no Angular e no Vanilla.
+      await waitFor(async () => {
+        await expect(anterior()).toBeDisabled();
+      }, { timeout: 4000 });
     });
   },
 };

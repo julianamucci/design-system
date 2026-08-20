@@ -96,8 +96,8 @@ function moldura(
   interno: string,
   opcoes: { largura?: string; proporcao?: string } = {},
 ): string {
-  const { largura = 'nds-max-w-lg', proporcao = 'nds-aspect-video' } = opcoes;
-  return `<div class="nds-w-full ${largura} ${proporcao} nds-rounded-md nds-border-default nds-overflow-hidden">
+  const { largura = 'nds-w-cap-lg', proporcao = 'nds-aspect-16-9' } = opcoes;
+  return `<div class="${largura} ${proporcao} nds-rounded-md nds-border-default nds-overflow-hidden">
 ${indentar(interno)}
 </div>`;
 }
@@ -163,7 +163,7 @@ export function resizableVerticalSource(): string {
         punho('Redimensionar as faixas — use setas para ajustar'),
         painel({ tamanho: 60, min: 20, rotulo: 'Rodapé', destaque: true }),
       ]),
-      { largura: 'nds-max-w-xs', proporcao: 'nds-aspect-4-3' },
+      { largura: 'nds-w-cap-xs', proporcao: 'nds-aspect-4-3' },
     ),
   );
 }
@@ -308,7 +308,7 @@ export function resizableFaixasSource(): string {
         punho('Redimensionar rodapé — use setas para ajustar', { pegador: true }),
         painel({ tamanho: 20, min: 10, max: 40, rotulo: 'Rodapé', destaque: true }),
       ]),
-      { largura: 'nds-max-w-xs', proporcao: 'nds-aspect-square' },
+      { largura: 'nds-w-cap-xs', proporcao: 'nds-aspect-square' },
     ),
   );
 }

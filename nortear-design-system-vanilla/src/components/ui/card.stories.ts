@@ -78,7 +78,7 @@ type Story = StoryObj<CardArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 function buildPlaygroundCard(args: CardArgs): HTMLElement {
-  const card = createCard({ size: args.size, className: 'nds-w-full nds-max-w-sm' });
+  const card = createCard({ size: args.size, className: 'nds-w-cap-sm' });
 
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: args.title, level: 3 }));

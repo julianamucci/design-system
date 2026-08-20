@@ -32,7 +32,7 @@
     orientation = 'horizontal',
     activationMode = 'automatic',
     ariaLabel = 'Seções do componente',
-    class: className = 'nds-w-full nds-max-w-lg',
+    class: className = 'nds-w-cap-lg',
     listClass = '',
     contentClass = '',
   }: Props = $props();

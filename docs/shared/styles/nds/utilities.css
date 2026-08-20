@@ -70,6 +70,37 @@
 .nds-max-w-prose { max-width: 48rem; }                 /* leitura confortável */
 .nds-max-w-content { max-width: 64rem; }
 .nds-max-w-docs  { max-width: 72rem; }                 /* shell da página de docs/foundations */
+
+/* ── Largura DEFINIDA, com teto na caixa disponível ─────────────────────────
+ *
+ * Existe porque `nds-w-full nds-max-w-*` não entrega a medida declarada quando
+ * o ancestral encolhe para o conteúdo — que é exatamente o que o
+ * `layout: 'centered'` do Storybook faz. Ali `width: 100%` não tem contra o que
+ * resolver: o ancestral já encolheu, e a caixa fica do tamanho do TEXTO que ela
+ * contém. Medido na story `Multi Responsive` do carousel: 448px declarados,
+ * 163px na tela.
+ *
+ * O que mascarava o defeito era o conteúdo. Uma demonstração com rótulos longos
+ * encolhe para além do teto e o `max-width` capa no valor certo — parece
+ * correta, e continua parecendo até alguém encurtar um rótulo. Foi assim que
+ * quatro stacks passaram e uma reprovou, com a mesma marcação.
+ *
+ * `width: Xrem; max-width: 100%` é IDÊNTICO a `width: 100%; max-width: Xrem` em
+ * qualquer pai de largura definida — com pai mais estreito que X as duas dão a
+ * largura do pai, com pai mais largo as duas dão X. A diferença aparece só no
+ * pai que encolhe, que é o caso quebrado. Por isso a troca foi mecânica e não
+ * mudou um pixel onde já estava certo.
+ *
+ * Os degraus são os mesmos de `.nds-max-w-*`, e de propósito NÃO os de
+ * `.nds-w-*`: as duas escadas usam as mesmas letras para números diferentes
+ * (`w-md` é 24rem, `max-w-md` é 28rem), e reaproveitar as letras erradas aqui
+ * teria encolhido cada caixa em um degrau sem ninguém notar. */
+.nds-w-cap-xs { width: 20rem; max-width: 100%; }       /* 320px — teto de nds-max-w-xs */
+.nds-w-cap-sm { width: 24rem; max-width: 100%; }       /* 384px — teto de nds-max-w-sm */
+.nds-w-cap-md { width: 28rem; max-width: 100%; }       /* 448px — teto de nds-max-w-md */
+.nds-w-cap-lg { width: 32rem; max-width: 100%; }       /* 512px — teto de nds-max-w-lg */
+.nds-w-cap-prose { width: 48rem; max-width: 100%; }    /* teto de nds-max-w-prose */
+.nds-w-cap-content { width: 64rem; max-width: 100%; }  /* teto de nds-max-w-content */
 .nds-min-w-0  { min-width: 0; }
 .nds-shrink-0 { flex-shrink: 0; }
 .nds-flex-1   { flex: 1 1 0%; }
@@ -425,8 +456,16 @@
 .nds-disabled-none[disabled],
 .nds-disabled-none[aria-disabled="true"] { pointer-events: none; }
 
-/* ── aspect-ratio ────────────────────────────────────────────────────────── */
-.nds-aspect-video  { aspect-ratio: 16 / 9; }
+/* ── aspect-ratio ──────────────────────────────────────────────────────────
+ *
+ * A proporção vai no NOME. Havia duas classes com a mesma regra — a antiga
+ * ".nds-aspect-video", vocabulário herdado do Tailwind, e ".nds-aspect-16-9" —
+ * e nada em nenhuma leitura revelava que eram idênticas: Vue e Svelte usavam
+ * uma, React e Vanilla a outra, e o mesmo slide de carrossel aparecia escrito
+ * de dois jeitos. Pior, "video" mentia sobre o conteúdo: quase todo consumidor
+ * era uma caixa com texto dentro, não mídia.
+ *
+ * Ficou a que diz a razão, que é a mesma forma de ".nds-aspect-4-3". */
 .nds-aspect-square { aspect-ratio: 1 / 1; }
 .nds-aspect-4-3    { aspect-ratio: 4 / 3; }
 .nds-aspect-16-9   { aspect-ratio: 16 / 9; }

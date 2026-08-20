@@ -21,7 +21,7 @@ const IMPORTS = `import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'`;
 
 /** Moldura do exemplo e o respiro entre o rótulo e o controle. */
-const MOLDURA = 'nds-stack nds-w-full nds-max-w-xs';
+const MOLDURA = 'nds-stack nds-w-cap-xs';
 
 /** Bloco vertical: rótulo em cima, controle embaixo. */
 function bloco(filhos: string[], moldura = MOLDURA, extra = ''): string {

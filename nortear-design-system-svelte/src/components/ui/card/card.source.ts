@@ -34,7 +34,7 @@ import { Button } from "@/components/ui/button";`;
  * A largura máxima faz parte da lição: o Card é um bloco fluido e, solto na
  * página, ele se estica de ponta a ponta.
  */
-const LARGURA = 'class="nds-w-full nds-max-w-sm"';
+const LARGURA = 'class="nds-w-cap-sm"';
 
 /** Playground: a unidade completa — cabeçalho, corpo e rodapé de ações. */
 export function cardSource(_gerado?: string, ctx?: { args?: Partial<CardArgs> }): string {
@@ -83,7 +83,7 @@ export function cardPadraoSource(): string {
 export function cardPequenoSource(): string {
   return svelteSnippet(
     IMPORT_BASE,
-    `<Card class="nds-w-full nds-max-w-xs" size="sm">
+    `<Card class="nds-w-cap-xs" size="sm">
   <CardHeader>
     <CardTitle as="h3">Assinantes ativos</CardTitle>
     <CardDescription>+12% no mês</CardDescription>
@@ -106,7 +106,7 @@ export function cardClicavelSource(): string {
     `<a
   href="/produtos/cadeira-gamer-pro"
   aria-label="Abrir detalhes do produto Cadeira Gamer Pro"
-  class="nds-block nds-w-full nds-max-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
+  class="nds-block nds-w-cap-sm nds-text-left nds-focus-ring nds-rounded-xl"
 >
   <Card>
     <CardHeader>
@@ -187,7 +187,7 @@ export function cardComImagemSource(): string {
   <img
     src="/produtos/cadeira-gamer-pro.jpg"
     alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
-    class="nds-w-full nds-aspect-video"
+    class="nds-w-full nds-aspect-16-9"
     style="object-fit: cover"
   />
   <CardHeader>
@@ -219,7 +219,7 @@ import { Button } from "@/components/ui/button";`,
   <img
     src="/produtos/cadeira-gamer-pro.jpg"
     alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
-    class="nds-w-full nds-aspect-video"
+    class="nds-w-full nds-aspect-16-9"
     style="object-fit: cover"
   />
   <CardHeader>
@@ -251,7 +251,7 @@ import { Button } from "@/components/ui/button";`,
 export function cardDeMetricaSource(): string {
   return svelteSnippet(
     IMPORT_BASE,
-    `<Card class="nds-w-full nds-max-w-xs" size="sm">
+    `<Card class="nds-w-cap-xs" size="sm">
   <CardHeader>
     <CardTitle as="h3">Assinantes ativos</CardTitle>
     <CardDescription>Últimos 30 dias</CardDescription>

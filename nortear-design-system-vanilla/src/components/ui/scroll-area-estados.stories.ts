@@ -60,7 +60,7 @@ export const Idle: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'nds-w-full nds-max-w-sm';
+    outer.className = 'nds-w-cap-sm';
     outer.appendChild(createScrollArea({
       size: 'md',
       label: 'Lista em repouso',
@@ -91,7 +91,7 @@ export const Scrolling: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'nds-w-full nds-max-w-sm';
+    outer.className = 'nds-w-cap-sm';
     const area = createScrollArea({
       size: 'md',
       label: 'Lista em rolagem',
@@ -125,7 +125,7 @@ export const Hover: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'nds-w-full nds-max-w-sm';
+    outer.className = 'nds-w-cap-sm';
     outer.appendChild(createScrollArea({
       size: 'md',
       label: 'Lista sob o ponteiro',
@@ -163,7 +163,7 @@ export const Focus: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'nds-w-full nds-max-w-sm';
+    outer.className = 'nds-w-cap-sm';
     outer.appendChild(createScrollArea({
       size: 'md',
       label: 'Lista rolável de itens',
@@ -218,7 +218,7 @@ export const FocusableContent: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'nds-w-full nds-max-w-sm';
+    outer.className = 'nds-w-cap-sm';
     outer.appendChild(createScrollArea({
       size: 'md',
       label: 'Lista de ações',
@@ -269,7 +269,7 @@ export const NoLimit: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'nds-stack nds-w-full nds-max-w-sm';
+    outer.className = 'nds-stack nds-w-cap-sm';
     outer.dataset.spacing = 'lg';
 
     outer.appendChild(createScrollArea({

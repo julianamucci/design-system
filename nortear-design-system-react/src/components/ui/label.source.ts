@@ -23,7 +23,7 @@ const IMPORT_CAMPO = `import { Input } from "@/components/ui/input";
 ${IMPORT_LABEL}`;
 
 /** A coluna que segura o par: respiro curto entre rótulo e controle. */
-const COLUNA = '<div className="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">';
+const COLUNA = '<div className="nds-stack nds-w-cap-xs" data-spacing="xs">';
 
 /**
  * Transform do `meta` — vale para todas as stories dos três arquivos do Label.
@@ -70,7 +70,7 @@ export function labelDesabilitadoPorBlocoSource(): string {
   return jsxSnippet(
     IMPORT_CAMPO,
     `<div
-  className="nds-stack nds-w-full nds-max-w-xs"
+  className="nds-stack nds-w-cap-xs"
   data-spacing="xs"
   data-disabled="true"
 >

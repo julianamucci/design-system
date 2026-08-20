@@ -34,7 +34,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CarouselArgs> }
   imports: [NDS_CAROUSEL],
   template: \`
     <nds-carousel
-      class="nds-w-full nds-max-w-md"
+      class="nds-w-cap-md"
       label="Galeria de exemplos"
       slideLabel="Slide {index} de {total}"${attrs ? `\n      ${attrs}` : ''}
     >
@@ -98,7 +98,7 @@ export const Playground: Story = {
     props: { ...args, vertical: args.orientation === 'vertical', slides: [1, 2, 3, 4, 5] },
     template: `
       <nds-carousel
-        class="nds-w-full nds-max-w-md"
+        class="nds-w-cap-md"
         label="Galeria de exemplos"
         slideLabel="Slide {index} de {total}"
         [orientation]="orientation"
@@ -154,7 +154,7 @@ export const Playground: Story = {
       await userEvent.click(canvas.getByRole('button', { name: 'Próximo item' }));
       // A rolagem é suave por padrão: espera o viewport chegar em vez de medir
       // no quadro do clique.
-      await waitFor(() => expect(viewport[eixo]).toBeGreaterThan(0));
+      await waitFor(() => expect(viewport[eixo]).toBeGreaterThan(0), { timeout: 4000 });
       await expect(canvas.getByRole('button', { name: 'Item anterior' })).toBeEnabled();
       await expect(args.onSlideChange).toHaveBeenCalled();
     });
@@ -171,7 +171,7 @@ export const Playground: Story = {
       await expect(viewport).toHaveFocus();
       await expect(regiao).toHaveAttribute('aria-roledescription', 'carousel');
       await userEvent.keyboard(args.orientation === 'vertical' ? '{ArrowDown}' : '{ArrowRight}');
-      await waitFor(() => expect(viewport[eixo]).toBeGreaterThan(antes));
+      await waitFor(() => expect(viewport[eixo]).toBeGreaterThan(antes), { timeout: 4000 });
     });
 
     await step('E a story termina onde diz que termina: no primeiro slide', async () => {
@@ -205,7 +205,7 @@ export const Playground: Story = {
       }
 
       await expect(anterior()).toBeDisabled();
-      await waitFor(() => expect(viewport[eixo]).toBe(0));
+      await waitFor(() => expect(viewport[eixo]).toBe(0), { timeout: 4000 });
     });
   },
 };

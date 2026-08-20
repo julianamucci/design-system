@@ -18,7 +18,7 @@
 </script>
 
 {#if cenario === 'alinhamentos'}
-  <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
+  <div class="nds-stack nds-w-cap-md" data-spacing="lg">
     <div class="nds-stack" data-spacing="xs">
       <Label for="ig-inicio">Buscar</Label>
       <InputGroup>
@@ -50,7 +50,7 @@
     </div>
   </div>
 {:else}
-  <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
+  <div class="nds-stack nds-w-cap-md" data-spacing="xs">
     <Label for="ig-clique">Usuário</Label>
     <InputGroup>
       <InputGroupAddon align="inline-start" data-testid="addon">

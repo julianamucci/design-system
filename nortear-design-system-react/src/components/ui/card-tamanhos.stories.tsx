@@ -57,7 +57,7 @@ export const Default: Story = {
     docs: { source: { transform: cardSemRodapeSource } },
   },
   render: () => (
-    <Card className="nds-w-full nds-max-w-sm">
+    <Card className="nds-w-cap-sm">
       <CardHeader>
         <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
         <CardDescription>
@@ -94,7 +94,7 @@ export const Small: Story = {
     docs: { source: { transform: cardCompactoSource } },
   },
   render: () => (
-    <Card size="sm" className="nds-w-full nds-max-w-xs">
+    <Card size="sm" className="nds-w-cap-xs">
       <CardHeader>
         <CardTitle as="h3">Assinantes ativos</CardTitle>
         <CardDescription>+12% no mês</CardDescription>

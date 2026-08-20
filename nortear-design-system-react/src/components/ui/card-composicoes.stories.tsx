@@ -62,7 +62,7 @@ export const WithFooter: Story = {
     },
   },
   render: () => (
-    <Card className="nds-w-full nds-max-w-sm">
+    <Card className="nds-w-cap-sm">
       <CardHeader>
         <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
         <CardDescription>Produto atualizado em 12/04.</CardDescription>
@@ -119,7 +119,7 @@ export const WithAction: Story = {
     },
   },
   render: () => (
-    <Card className="nds-w-full nds-max-w-sm">
+    <Card className="nds-w-cap-sm">
       <CardHeader>
         <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
         <CardDescription>Em estoque</CardDescription>
@@ -177,11 +177,11 @@ export const WithImage: Story = {
     },
   },
   render: () => (
-    <Card className="nds-w-full nds-max-w-sm">
+    <Card className="nds-w-cap-sm">
       <img
         src={DEMO_IMAGE_PRODUCT}
         alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
-        className="nds-w-full nds-aspect-video"
+        className="nds-w-full nds-aspect-16-9"
         style={{ objectFit: "cover" }}
       />
       <CardHeader>
@@ -231,11 +231,11 @@ export const ProductCard: Story = {
     },
   },
   render: () => (
-    <Card className="nds-w-full nds-max-w-sm">
+    <Card className="nds-w-cap-sm">
       <img
         src={DEMO_IMAGE_PRODUCT}
         alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
-        className="nds-w-full nds-aspect-video"
+        className="nds-w-full nds-aspect-16-9"
         style={{ objectFit: "cover" }}
       />
       <CardHeader>
@@ -300,7 +300,7 @@ export const MetricCard: Story = {
     },
   },
   render: () => (
-    <Card size="sm" className="nds-w-full nds-max-w-xs">
+    <Card size="sm" className="nds-w-cap-xs">
       <CardHeader>
         <CardTitle as="h3">Assinantes ativos</CardTitle>
         <CardDescription>Últimos 30 dias</CardDescription>
@@ -354,7 +354,7 @@ export const ProfileCard: Story = {
     },
   },
   render: () => (
-    <Card className="nds-w-full nds-max-w-sm">
+    <Card className="nds-w-cap-sm">
       <CardHeader className="nds-cluster" data-align="center" data-spacing="sm">
         <Avatar>
           <AvatarImage src={DEMO_IMAGE_AVATAR} alt="" />

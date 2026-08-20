@@ -163,3 +163,31 @@ Hoje o `lib/motion.ts` está em modo stub — sem dep instalada. Instale quando:
 
 1. Um componente real precisar de spring ou orquestração que CSS não dá. **Não** instale "para deixar pronto".
 2. Quando instalar: `npm install motion` na stack do componente, descomente o bloco no `lib/motion.ts`, atualize este guideline removendo a nota.
+
+## O prazo da espera acompanha o adiamento do componente
+
+`waitFor` do `storybook/test` desiste em 1s. Esse prazo serve para o que a
+interface faz no quadro seguinte — e reprova em silêncio para o que o componente
+adia DE PROPÓSITO.
+
+O carrossel é o caso: o motor de rolagem nativa só reconcilia o índice depois de
+120ms sem nenhum evento de rolagem, para que um gesto com inércia não emita uma
+troca de slide por quadro atravessado. Somando o adiamento, a detecção de
+mudança e o novo render, 1s fica no limite: passa na máquina ociosa e reprova
+sob carga. Foi assim em três stacks, sempre na story mais lenta da suíte, e cada
+vez num passo diferente — o que faz a falha parecer aleatória quando ela é
+apenas apertada.
+
+**Regra**: num componente que adia estado por desenho, TODA espera da story usa
+o mesmo prazo dos helpers de medição dele — hoje 4000ms —, e não o padrão.
+Prazo maior nunca mascara defeito: `waitFor` volta assim que a condição vale,
+então o único efeito é uma falha real demorar mais para ser reportada.
+
+O sinal de que a espera está apertada demais nunca é o teste vermelho isolado —
+é ele passar sozinho e reprovar na suíte cheia. Quando isso acontecer, o
+suspeito é o prazo, não a asserção.
+
+Cuidado com o passo seguinte: **a posição chega antes do estado**. Esperar a
+rolagem encostar no alvo não prova que o componente já sabe disso — quem
+desabilita a seta é a reconciliação adiada. Asserção de estado logo depois de
+uma espera de posição precisa da sua própria espera.

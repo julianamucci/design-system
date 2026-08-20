@@ -36,7 +36,7 @@ import { ${icones} } from "lucide-react";`;
 const IMPORTS = importes();
 
 /** Markup alinhado ao Vanilla, a referência cross-stack deste design system. */
-const RAIZ_CLASSES = 'nds-w-full nds-max-w-sm';
+const RAIZ_CLASSES = 'nds-w-cap-sm';
 const TRIGGER_CLASSES = 'nds-cluster nds-w-full nds-px-4';
 const PAINEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';

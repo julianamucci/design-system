@@ -183,6 +183,6 @@ describe('transforms das stories de composição', () => {
     expect(saida).not.toContain('DialogFooter');
     // Nenhum valor de design em `style`: a proporção e a largura são classes.
     expect(saida).not.toContain('style=');
-    expect(saida).toContain('nds-aspect-video nds-w-full');
+    expect(saida).toContain('nds-aspect-16-9 nds-w-full');
   });
 });

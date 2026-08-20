@@ -59,8 +59,8 @@ export const WithDots: Story = {
     props: {
       variant: 'withDots',
       slideCount: TOTAL_DOTS,
-      widthClass: 'nds-w-full nds-max-w-md',
-      ariaLabel: 'Carrossel com dots',
+      widthClass: 'nds-w-cap-md',
+      ariaLabel: 'Galeria com dots',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
       goToSlideLabel: CONTEUDO.goToSlide,
@@ -71,7 +71,6 @@ export const WithDots: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
-    const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
 
     /**
      * Índice do slide que ocupa a maior parte do viewport.
@@ -96,7 +95,7 @@ export const WithDots: Story = {
     };
 
     const emSlide = async (i: number) =>
-      waitFor(async () => { await expect(slideEmFoco()).toBe(i); });
+      waitFor(async () => { await expect(slideEmFoco()).toBe(i); }, { timeout: 4000 });
 
     // Posição E total no nome: "2" sozinho não diz para onde leva.
     const dot = (n: number) => canvas.getByRole('button', { name: nomeAcessivel(n, TOTAL_DOTS) });
@@ -138,14 +137,14 @@ export const WithDots: Story = {
       await irPara(2);
       await waitFor(async () => {
         await expect(dot(2)).toHaveAttribute('aria-current', 'true');
-      });
+      }, { timeout: 4000 });
 
       // `waitFor` porque a mudança de forma é ANIMADA: medida no primeiro
       // quadro, a pílula ainda está fechada e o ponto anterior ainda aberto.
       await waitFor(async () => {
         await expect(largura(rotulo(dot(2)))).toBeGreaterThan(0);
         await expect(largura(rotulo(dot(1)))).toBeLessThan(1);
-      });
+      }, { timeout: 4000 });
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
       await expect(rotulo(dot(2))).toHaveTextContent(rotuloVisivel(2));
@@ -183,7 +182,7 @@ export const WithDots: Story = {
       await waitFor(async () => {
         await expect(dot(3)).toHaveAttribute('aria-current', 'true');
         await expect(dot(1).hasAttribute('aria-current')).toBe(false);
-      });
+      }, { timeout: 4000 });
     });
 
     await step('E a story termina no começo, replayável', async () => {
@@ -212,7 +211,7 @@ export const Gallery: Story = {
     Component: CarouselStory,
     props: {
       variant: 'gallery',
-      widthClass: 'nds-w-full nds-max-w-md',
+      widthClass: 'nds-w-cap-md',
       ariaLabel: 'Galeria de fotos do produto',
       previousLabel: 'Foto anterior',
       nextLabel: 'Próxima foto',

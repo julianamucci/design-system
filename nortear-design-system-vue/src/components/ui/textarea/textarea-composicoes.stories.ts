@@ -36,7 +36,7 @@ export const WithLabel: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="comp-label">Descrição</Label>
         <Textarea id="comp-label" placeholder="ex: Descreva o produto..." class="nds-resize-y nds-min-h-30" />
       </div>
@@ -68,7 +68,7 @@ export const WithSupportText: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="comp-apoio">Biografia</Label>
         <Textarea
           id="comp-apoio"
@@ -108,7 +108,7 @@ export const WithCounter: Story = {
       return { value: '', max: 500 };
     },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="comp-counter">Descrição</Label>
         <Textarea
           id="comp-counter"
@@ -158,7 +158,7 @@ export const WithErrorMessage: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="comp-erro">Descrição</Label>
         <Textarea
           id="comp-erro"
@@ -200,7 +200,7 @@ export const RequiredField: Story = {
   render: () => ({
     components: { Textarea, Label },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="comp-obrig">
           Feedback
           <span class="nds-text-destructive" aria-hidden="true">*</span>

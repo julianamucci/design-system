@@ -121,7 +121,7 @@ export const EmphasisStrong: Story = {
     },
   },
   render: () => (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="md">
+    <div className="nds-stack nds-w-cap-md" data-spacing="md">
       <p className="nds-text-body nds-text-muted-foreground">Fim da seção</p>
       <Separator orientation="horizontal" data-testid="padrao" />
       <p className="nds-text-body nds-text-muted-foreground">Continuação do mesmo assunto</p>

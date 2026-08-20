@@ -69,7 +69,7 @@ const CarouselComDots = defineComponent({
       h(
         Carousel,
         {
-          class: 'nds-w-full nds-max-w-sm',
+          class: 'nds-w-cap-sm',
           'aria-label': 'Galeria com dots',
           onInitApi: this.onInitApi,
         },
@@ -80,7 +80,7 @@ const CarouselComDots = defineComponent({
                 h(
                   'div',
                   {
-                    class: 'nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg',
+                    class: 'nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg',
                     'data-justify': 'center',
                   },
                   [h('span', { class: 'nds-text-h3 nds-font-semibold nds-text-muted-foreground' }, `Slide ${n}`)],
@@ -156,7 +156,7 @@ export const WithDots: Story = {
     const largura = (el: Element) => el.getBoundingClientRect().width;
 
     const emSlide = async (i: number) =>
-      waitFor(async () => { await expect(slideEmFoco(canvasElement)).toBe(i); });
+      waitFor(async () => { await expect(slideEmFoco(canvasElement)).toBe(i); }, { timeout: 4000 });
 
     await step('Há um dot por slide, e o primeiro nasce como o atual', async () => {
       for (let i = 1; i <= total; i++) {
@@ -176,14 +176,14 @@ export const WithDots: Story = {
       if (dot(2).getAttribute('aria-current') !== 'true') await userEvent.click(dot(2));
       await waitFor(async () => {
         await expect(dot(2)).toHaveAttribute('aria-current', 'true');
-      });
+      }, { timeout: 4000 });
 
       // `waitFor` porque a mudança de forma é ANIMADA: medida no primeiro
       // quadro, a pílula ainda está fechada e o ponto anterior ainda aberto.
       await waitFor(async () => {
         await expect(largura(rotulo(dot(2)))).toBeGreaterThan(0);
         await expect(largura(rotulo(dot(1)))).toBeLessThan(1);
-      });
+      }, { timeout: 4000 });
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
       await expect(rotulo(dot(2))).toHaveTextContent(rotuloVisivel(2));
@@ -248,10 +248,10 @@ export const Gallery: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { slides: ROTULOS }; },
     template: `
-      <Carousel class="nds-w-full nds-max-w-sm" aria-label="Galeria de fotos">
+      <Carousel class="nds-w-cap-sm" aria-label="Galeria de fotos do produto">
         <CarouselContent>
           <CarouselItem v-for="(rotulo, i) in slides" :key="i">
-            <div class="nds-cluster nds-aspect-video nds-p-4 nds-bg-muted-soft nds-rounded-lg" data-align="end" data-justify="start">
+            <div class="nds-cluster nds-aspect-16-9 nds-p-4 nds-bg-muted-soft nds-rounded-lg" data-align="end" data-justify="start">
               <span class="nds-text-body nds-font-semibold nds-text-foreground">{{ rotulo }}</span>
             </div>
           </CarouselItem>
@@ -265,7 +265,7 @@ export const Gallery: Story = {
     const canvas = within(canvasElement);
 
     await step('A região se anuncia como carrossel e traz o nome da galeria', async () => {
-      const regiao = canvas.getByRole('region', { name: /galeria de fotos/i });
+      const regiao = canvas.getByRole('region', { name: /galeria de fotos do produto/i });
       await expect(regiao).toHaveAttribute('aria-roledescription', 'carousel');
     });
 

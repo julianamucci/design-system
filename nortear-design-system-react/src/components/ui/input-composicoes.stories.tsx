@@ -349,7 +349,7 @@ export const Alignments: Story = {
     docs: { source: { transform: inputGroupAlinhamentosSource } },
   },
   render: () => (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="lg">
+    <div className="nds-stack nds-w-cap-md" data-spacing="lg">
       <div className="nds-stack" data-spacing="xs">
         <label htmlFor="ig-inicio" className="nds-text-body nds-font-medium">Buscar</label>
         <InputGroup>
@@ -429,7 +429,7 @@ export const AddonClick: Story = {
     docs: { source: { transform: inputGroupCliqueNoAddonSource } },
   },
   render: () => (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="xs">
+    <div className="nds-stack nds-w-cap-md" data-spacing="xs">
       <label htmlFor="ig-clique" className="nds-text-body nds-font-medium">Usuário</label>
       <InputGroup>
         <InputGroupAddon align="inline-start" data-testid="addon">

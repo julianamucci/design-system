@@ -29,7 +29,7 @@ export const WithInput: Story = {
   parameters: { covers: ['visual.item4'] },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+      <div class="nds-stack nds-w-cap-xs" data-spacing="xs">
         <label ndsLabel for="comp-input">Telefone</label>
         <input class="nds-input" id="comp-input" type="tel" placeholder="(11) 99999-9999" />
       </div>
@@ -92,7 +92,7 @@ export const RequiredField: Story = {
   name: 'With required input',
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="xs">
+      <div class="nds-stack nds-w-cap-xs" data-spacing="xs">
         <label ndsLabel for="comp-required">
           Email profissional
           <span class="nds-text-destructive" aria-hidden="true">*</span>

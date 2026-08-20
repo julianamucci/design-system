@@ -67,7 +67,7 @@ export const Playground: Story = {
       return { value: '' };
     },
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <Label for="playground-textarea">Descrição</Label>
         <Textarea
           id="playground-textarea"

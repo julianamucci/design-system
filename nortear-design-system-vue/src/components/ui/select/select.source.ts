@@ -283,7 +283,7 @@ export function selectComRotuloSource(): string {
   return vueSnippet(
     `import { Label } from '@/components/ui/label'
 ${IMPORT_BASE}`,
-    `<div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+    `<div class="nds-stack nds-w-cap-xs" data-spacing="sm">
   <Label id="estado-rotulo" for="estado">Estado</Label>
 ${indentar(
   campo({
@@ -309,7 +309,7 @@ import { Label } from '@/components/ui/label'
 ${IMPORT_BASE}
 
 const estado = ref('')`,
-    `<div class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm">
+    `<div class="nds-stack nds-w-cap-xs" data-spacing="sm">
   <div class="nds-stack" data-spacing="sm">
     <Label for="estado">Estado</Label>
 ${indentar(
@@ -338,7 +338,7 @@ export function selectEmFormularioSource(): string {
     `import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 ${IMPORT_BASE}`,
-    `<form class="nds-stack nds-w-full nds-max-w-xs" data-spacing="sm" @submit.prevent>
+    `<form class="nds-stack nds-w-cap-xs" data-spacing="sm" @submit.prevent>
   <div class="nds-stack" data-spacing="sm">
     <Label for="estado">Estado</Label>
 ${indentar(

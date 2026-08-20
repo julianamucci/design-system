@@ -39,7 +39,7 @@ const tags = Array.from({ length: 40 }, (_, i) => \`Tag \${i + 1}\`)
 </script>
 
 <template>
-  <div class="nds-w-full nds-max-w-xs nds-rounded-md nds-border-default nds-overflow-hidden">
+  <div class="nds-w-cap-xs nds-rounded-md nds-border-default nds-overflow-hidden">
     <ScrollArea size="xl" class="nds-w-full">
       <div class="nds-p-4">
         <h4 class="nds-mb-2 nds-text-body nds-font-medium nds-leading-none">Tags</h4>
@@ -165,7 +165,7 @@ describe('transforms das stories de composição', () => {
 
   it('a miniatura da galeria tira a altura de uma proporção', () => {
     const saida = scrollAreaGaleriaSource();
-    expect(saida).toContain('<div class="nds-aspect-video nds-bg-muted"></div>');
+    expect(saida).toContain('<div class="nds-aspect-16-9 nds-bg-muted"></div>');
     expect(saida).toContain('<figcaption class="nds-p-2 nds-text-caption">{{ imagem }}</figcaption>');
   });
 

@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>;
 
 export const WithLabelAndDescription: Story = {
   render: () => (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
       <Label htmlFor="comp-desc">Descrição</Label>
       <Textarea
         id="comp-desc"
@@ -80,7 +80,7 @@ function ComContadorRender() {
   const [value, setValue] = useState("");
   const max = 280;
   return (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
       <Label htmlFor="comp-counter">Mensagem</Label>
       <Textarea
         id="comp-counter"
@@ -140,7 +140,7 @@ function EmFormularioRender() {
   const max = 500;
   return (
     <form
-      className="nds-stack nds-w-full nds-max-w-md" data-spacing="md"
+      className="nds-stack nds-w-cap-md" data-spacing="md"
       onSubmit={(e) => {
         e.preventDefault();
         setSubmitted(bio);
@@ -206,7 +206,7 @@ export const InForm: Story = {
 function ControladoRender() {
   const [value, setValue] = useState("Texto inicial controlado.");
   return (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
       <Label htmlFor="comp-controlled">Observações</Label>
       <Textarea
         id="comp-controlled"

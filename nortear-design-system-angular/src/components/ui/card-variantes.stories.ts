@@ -29,7 +29,7 @@ export const WithFooter: Story = {
   render: () => ({
     props: { onSave: () => onSave() },
     template: `
-      <div ndsCard class="nds-w-full nds-max-w-sm">
+      <div ndsCard class="nds-w-cap-sm">
         <div ndsCardHeader>
           <h3 ndsCardTitle>Cadeira Gamer Pro</h3>
           <p ndsCardDescription>Produto atualizado em 12/04.</p>
@@ -79,7 +79,7 @@ export const WithAction: Story = {
   parameters: { covers: ['functional.item3', 'accessibility.item5', 'visual.item3'] },
   render: () => ({
     template: `
-      <div ndsCard class="nds-w-full nds-max-w-sm">
+      <div ndsCard class="nds-w-cap-sm">
         <div ndsCardHeader>
           <h3 ndsCardTitle>Cadeira Gamer Pro</h3>
           <p ndsCardDescription>Em estoque</p>
@@ -116,11 +116,11 @@ export const WithImage: Story = {
   parameters: { covers: ['functional.item4', 'visual.item5'] },
   render: () => ({
     template: `
-      <div ndsCard class="nds-w-full nds-max-w-sm">
+      <div ndsCard class="nds-w-cap-sm">
         <img
           src="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='160'%3E%3Crect width='400' height='160' fill='%23cbd5e1'/%3E%3C/svg%3E"
           alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
-          class="nds-w-full nds-aspect-video" style="object-fit: cover"
+          class="nds-w-full nds-aspect-16-9" style="object-fit: cover"
         />
         <div ndsCardHeader>
           <h3 ndsCardTitle>Cadeira Gamer Pro</h3>

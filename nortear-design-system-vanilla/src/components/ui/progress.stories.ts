@@ -64,7 +64,7 @@ export const Playground: Story = {
   },
   render: (args) => {
     const container = document.createElement('div');
-    container.className = 'nds-w-full nds-max-w-md';
+    container.className = 'nds-w-cap-md';
     const bar = createProgress({
       value: args.value,
       max: args.max,

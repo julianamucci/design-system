@@ -36,6 +36,21 @@
  */
 
 .nds-carousel {
+  /*
+   * `display: block` NÃO é redundante, ainda que quatro stacks ponham esta
+   * classe num `<div>`, que já é bloco.
+   *
+   * No Angular a classe mora no HOST `<nds-carousel>`, um elemento que o
+   * navegador não conhece e trata como `inline` — e largura em elemento inline
+   * é ignorada. Medido: com `nds-w-cap-lg` (512px) declarado, o host media
+   * 1200px, a largura inteira do pai. Toda story de carrossel do Angular vinha
+   * larga demais, e as outras quatro respeitavam a medida.
+   *
+   * O sintoma que revelou isso foi um teste de arraste que reprovava sob carga
+   * afirmando `expected 1216 to be less than 2`: 1216 é 1200 + o respiro de
+   * 16px do trilho, ou seja exatamente um slide da largura errada.
+   */
+  display: block;
   position: relative;
 }
 

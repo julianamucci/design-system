@@ -35,7 +35,7 @@ const maximo = 500
 </script>
 
 <template>
-  <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+  <div class="nds-stack nds-w-cap-md" data-spacing="sm">
     <Label for="descricao">Descrição</Label>
     <Textarea
       id="descricao"

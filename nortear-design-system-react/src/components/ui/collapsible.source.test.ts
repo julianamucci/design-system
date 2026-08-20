@@ -38,7 +38,7 @@ describe('collapsibleSource', () => {
 
   it('fechado por padrão, sem prop nenhuma na raiz', () => {
     const saida = collapsibleSource();
-    expect(saida).toContain('<Collapsible className="nds-w-full nds-max-w-sm">');
+    expect(saida).toContain('<Collapsible className="nds-w-cap-sm">');
     expect(saida).not.toContain('defaultOpen');
     expect(saida).toContain('Exibir filtros avançados');
   });

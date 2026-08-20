@@ -45,7 +45,7 @@ function campo(atributos: Array<string | false | undefined>, recuo = 2): string 
 
 /** Moldura do formulário: rótulo, campo e o que mais a composição pedir. */
 function grupo(...linhas: string[]): string {
-  return `<div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+  return `<div class="nds-stack nds-w-cap-md" data-spacing="sm">
 ${linhas.join('\n')}
 </div>`;
 }

@@ -63,7 +63,7 @@ export const Playground: Story = {
   },
   render: (args) => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.className = 'nds-w-cap-md';
     wrap.appendChild(
       createCarousel({
         items: slidesDeExemplo(args.slides),
@@ -106,7 +106,7 @@ export const Playground: Story = {
 
     /** Espera o carrossel ASSENTAR no slide `i`, não apenas sair do anterior. */
     const emSlide = async (i: number) =>
-      waitFor(() => expect(Math.abs(deslocamento() - i * passo())).toBeLessThan(2));
+      waitFor(() => expect(Math.abs(deslocamento() - i * passo())).toBeLessThan(2), { timeout: 4000 });
 
     await step('A região tem papel, roledescription e nome', async () => {
       // Sem nome acessível a região não vira marco de navegação e o leitor

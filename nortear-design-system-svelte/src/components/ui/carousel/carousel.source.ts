@@ -25,7 +25,7 @@ const SLIDES = `const slides = [1, 2, 3, 4, 5];`;
  * A largura máxima faz parte da lição: o carrossel recorta o que passa do
  * contêiner, e sem largura definida não há o que recortar.
  */
-const LARGURA_MD = 'nds-w-full nds-max-w-md';
+const LARGURA_MD = 'nds-w-cap-md';
 
 /**
  * Miolo demonstrativo de um slide, já indentado para dentro do `CarouselItem`.
@@ -64,7 +64,7 @@ export function carouselSource(_gerado?: string, ctx?: { args?: Partial<Carousel
 
   return svelteSnippet(
     `${IMPORT}\n\n${SLIDES}`,
-    `<div class="${vertical ? 'nds-w-full nds-max-w-xs' : LARGURA_MD}">
+    `<div class="${vertical ? 'nds-w-cap-xs' : LARGURA_MD}">
   <Carousel${raiz}>
     <CarouselContent${trilho}>
       {#each slides as numero (numero)}
@@ -95,7 +95,7 @@ export function carouselUltimoSlideSource(): string {
     `<div class="${LARGURA_MD}">
   <Carousel
     opts={{ startIndex: slides.length - 1 }}
-    aria-label="Carrossel no último slide"
+    aria-label="Slides no último item"
   >
     <CarouselContent>
       {#each slides as numero (numero)}
@@ -112,7 +112,7 @@ ${miolo(false)}
 }
 
 /**
- * Vários itens por vez: a base de largura mora no ITEM, e é responsiva — um
+ * Conjunto longo de slides: a base de largura mora no ITEM, e é responsiva — um
  * slide por tela no celular, dois no médio, três no grande.
  */
 export function carouselVariosItensSource(): string {
@@ -120,7 +120,7 @@ export function carouselVariosItensSource(): string {
     `${IMPORT}
 
 const slides = [1, 2, 3, 4, 5, 6];`,
-    `<div class="nds-w-full nds-max-w-lg">
+    `<div class="nds-w-cap-lg">
   <Carousel aria-label="Carrossel com múltiplos itens">
     <CarouselContent>
       {#each slides as numero (numero)}
@@ -153,7 +153,7 @@ ${SLIDES}`,
   <Carousel
     opts={{ loop: true }}
     plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
-    aria-label="Carrossel com autoplay"
+    aria-label="Destaques"
   >
     <CarouselContent>
       {#each slides as numero (numero)}
@@ -170,7 +170,7 @@ ${miolo(false)}
 }
 
 /**
- * Galeria de fotos: aqui a imagem É o conteúdo, então cada uma precisa do seu
+ * Galeria de fotos do produto: aqui a imagem É o conteúdo, então cada uma precisa do seu
  * próprio texto alternativo — repetir o mesmo em todas equivale a não ter.
  */
 export function carouselGaleriaSource(): string {
@@ -232,7 +232,7 @@ function registrarApi(instancia?: CarouselAPI) {
   instancia.on("select", () => (atual = instancia.selectedScrollSnap()));
 }`,
     `<div class="${LARGURA_MD}">
-  <Carousel setApi={registrarApi} aria-label="Carrossel com dots">
+  <Carousel setApi={registrarApi} aria-label="Galeria com dots">
     <CarouselContent>
       {#each slides as numero (numero)}
         <CarouselItem aria-label="Slide {numero} de {slides.length}">

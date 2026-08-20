@@ -24,7 +24,7 @@ describe('carouselSource', () => {
   const slides = [1, 2, 3, 4, 5];
 </script>
 
-<div class="nds-w-full nds-max-w-md">
+<div class="nds-w-cap-md">
   <Carousel aria-label="Galeria de exemplos">
     <CarouselContent>
       {#each slides as numero (numero)}
@@ -87,7 +87,7 @@ describe('transforms das stories de variante e estado', () => {
 });
 
 describe('transforms das stories de configuração', () => {
-  it('vários itens por vez: a base responsiva mora no ITEM', () => {
+  it('conjunto longo de slides: a base responsiva mora no ITEM', () => {
     const saida = carouselVariosItensSource();
     expect(saida).toContain('class="nds-md-basis-half nds-lg-basis-third"');
     expect(saida).toContain('const slides = [1, 2, 3, 4, 5, 6];');

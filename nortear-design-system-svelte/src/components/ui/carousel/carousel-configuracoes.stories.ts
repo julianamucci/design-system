@@ -23,7 +23,7 @@ const meta: Meta = {
       source: { transform: carouselSource },
       description: {
         component:
-          'Configurações comuns: um item por vez, vários itens por vez com base responsiva e avanço automático com parada na interação.',
+          'Configurações comuns: um item por vez, conjunto longo de slides com base responsiva e avanço automático com parada na interação.',
       },
     },
   },
@@ -124,8 +124,8 @@ export const Single: Story = {
     props: {
       variant: 'single',
       slideCount: 5,
-      widthClass: 'nds-w-full nds-max-w-md',
-      ariaLabel: 'Carrossel com item único',
+      widthClass: 'nds-w-cap-md',
+      ariaLabel: 'Um item por vez',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
     },
@@ -138,7 +138,7 @@ export const Single: Story = {
 
     // `canScrollNext` nasce falso: esperar por ele é o portão de montagem do
     // Embla, e não uma folga arbitrária.
-    await waitFor(() => expect(proximo()).toBeEnabled());
+    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
 
     await step('O slide ocupa a largura inteira do viewport', async () => {
       const slide = canvas.getAllByRole('group')[0];
@@ -162,8 +162,8 @@ export const MultiResponsive: Story = {
     props: {
       variant: 'multi',
       slideCount: 6,
-      widthClass: 'nds-w-full nds-max-w-lg',
-      ariaLabel: 'Carrossel com múltiplos itens responsivos',
+      widthClass: 'nds-w-cap-lg',
+      ariaLabel: 'Conjunto longo de slides',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
     },
@@ -172,8 +172,9 @@ export const MultiResponsive: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    await waitFor(() =>
-      expect(canvas.getByRole('button', { name: 'Próximo item' })).toBeEnabled(),
+    await waitFor(
+      () => expect(canvas.getByRole('button', { name: 'Próximo item' })).toBeEnabled(),
+      { timeout: 4000 },
     );
 
     await step('A base do slide acompanha o breakpoint em vigor', async () => {
@@ -213,8 +214,8 @@ export const Autoplay: Story = {
     props: {
       variant: 'autoplay',
       slideCount: 5,
-      widthClass: 'nds-w-full nds-max-w-md',
-      ariaLabel: 'Carrossel com autoplay',
+      widthClass: 'nds-w-cap-md',
+      ariaLabel: 'Destaques',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
     },
@@ -303,8 +304,8 @@ export const DragGesture: Story = {
     props: {
       variant: 'single',
       slideCount: 4,
-      widthClass: 'nds-w-full nds-max-w-md',
-      ariaLabel: 'Carrossel com gesto de arrastar',
+      widthClass: 'nds-w-cap-md',
+      ariaLabel: 'Galeria com gesto de arrastar',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
     },
@@ -359,7 +360,7 @@ export const DragGesture: Story = {
 
     // O motor só mede depois que a raiz entra no documento: esperar a seta de
     // avanço acordar é o portão de montagem, não uma folga arbitrária.
-    await waitFor(() => expect(proximo()).toBeEnabled());
+    await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
 
     // ── A RÉGUA ───────────────────────────────────────────────────────────────
     //
@@ -390,7 +391,16 @@ export const DragGesture: Story = {
 
       await userEvent.click(anterior());
       await emPosicao(posZero);
-      await expect(anterior()).toBeDisabled();
+      // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
+      // encostou no alvo, mas quem desabilita a seta é a reconciliação do
+      // índice, e ela espera de propósito o silêncio do motor — sem isso um
+      // gesto com inércia emitiria uma troca de slide por quadro atravessado.
+      // Afirmar o botão no mesmo instante mede uma janela em que o componente
+      // ainda nem foi avisado de que parou: passa na máquina ociosa e reprova
+      // sob carga, que foi como esta reprovou no Angular e no Vanilla.
+      await waitFor(async () => {
+        await expect(anterior()).toBeDisabled();
+      }, { timeout: 4000 });
     });
 
     const caixa = viewport.getBoundingClientRect();
@@ -407,7 +417,7 @@ export const DragGesture: Story = {
       toque(viewport, 'touchmove', direita - 90, y);
       await waitFor(async () => {
         await expect(deslocamento()).toBeGreaterThan(posZero + 4);
-      });
+      }, { timeout: 4000 });
     });
 
     await step('Ao soltar, para onde a seta pararia', async () => {
@@ -420,7 +430,7 @@ export const DragGesture: Story = {
       await emPosicao(posUm);
       await waitFor(async () => {
         await expect(anterior()).toBeEnabled();
-      });
+      }, { timeout: 4000 });
     });
 
     await step('O MOUSE percorre o mesmo caminho, de volta ao primeiro slide', async () => {
@@ -438,7 +448,7 @@ export const DragGesture: Story = {
       // Já andou de volta junto com o cursor, antes de soltar.
       await waitFor(async () => {
         await expect(deslocamento()).toBeLessThan(posUm - 4);
-      });
+      }, { timeout: 4000 });
 
       mouse(viewport, 'mousemove', direita, y);
       mouse(viewport, 'mouseup', direita, y);
@@ -446,7 +456,7 @@ export const DragGesture: Story = {
       await emPosicao(posZero);
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
-      });
+      }, { timeout: 4000 });
     });
   },
 };

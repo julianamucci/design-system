@@ -32,7 +32,7 @@ export const Default: Story = {
   parameters: { covers: ['functional.item1', 'visual.item1'] },
   render: () => ({
     template: `
-      <div class="nds-w-full nds-max-w-md">
+      <div class="nds-w-cap-md">
         <div ndsProgress [value]="0" aria-label="Progresso do upload">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>
@@ -65,7 +65,7 @@ export const Loading: Story = {
   parameters: { covers: ['functional.item2', 'visual.item2'] },
   render: () => ({
     template: `
-      <div class="nds-w-full nds-max-w-md">
+      <div class="nds-w-cap-md">
         <div ndsProgress [value]="50" aria-label="Carregando dados">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>
@@ -98,7 +98,7 @@ export const Complete: Story = {
   parameters: { covers: ['functional.item3', 'visual.item3'] },
   render: () => ({
     template: `
-      <div class="nds-w-full nds-max-w-md">
+      <div class="nds-w-cap-md">
         <div ndsProgress [value]="100" aria-label="Concluído">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>
@@ -141,7 +141,7 @@ export const Indeterminate: Story = {
   },
   render: () => ({
     template: `
-      <div class="nds-w-full nds-max-w-md">
+      <div class="nds-w-cap-md">
         <div ndsProgress aria-label="Processando…">
           <div ndsProgressTrack>
             <div ndsProgressIndicator></div>

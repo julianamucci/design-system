@@ -228,7 +228,7 @@ export const RichContent: Story = {
 
 export const FAQ: Story = {
   render: () => (
-    <div className="nds-stack nds-w-full nds-max-w-lg" data-spacing="sm">
+    <div className="nds-stack nds-w-cap-lg" data-spacing="sm">
       <h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
       <Accordion>
         {[

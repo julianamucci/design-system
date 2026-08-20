@@ -72,7 +72,7 @@ export const WithDots: Story = {
     // pede que o movimento automático seja controlável — começar parado é a
     // forma mais direta disso.
     template: `
-      <div class="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
         <nds-carousel
           #comDots
           class="nds-w-full"
@@ -156,14 +156,14 @@ export const WithDots: Story = {
       // Par idempotente: o clique só sai quando o controle ainda não é o atual.
       // O painel Interactions reexecuta a play no MESMO DOM.
       if (dot(2).getAttribute('aria-current') !== 'true') await userEvent.click(dot(2));
-      await waitFor(() => expect(dot(2)).toHaveAttribute('aria-current', 'true'));
+      await waitFor(() => expect(dot(2)).toHaveAttribute('aria-current', 'true'), { timeout: 4000 });
 
       // `waitFor` porque a mudança de forma é ANIMADA: medida no primeiro
       // quadro, a pílula ainda está fechada e o ponto anterior ainda aberto.
       await waitFor(() => {
         expect(largura(rotulo(dot(2)))).toBeGreaterThan(0);
         expect(largura(rotulo(dot(1)))).toBeLessThan(1);
-      });
+      }, { timeout: 4000 });
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
       await expect(rotulo(dot(2))).toHaveTextContent(rotuloVisivel(2));
@@ -203,7 +203,7 @@ export const WithDots: Story = {
       await userEvent.click(terceiro);
       // Salto, não passo — e a espera é pelo fim da rolagem suave, não pelo
       // primeiro pixel: os passos seguintes medem a partir daqui.
-      await waitFor(() => expect(Math.abs(viewport.scrollLeft - esperado)).toBeLessThan(2));
+      await waitFor(() => expect(Math.abs(viewport.scrollLeft - esperado)).toBeLessThan(2), { timeout: 4000 });
       await expect(dot(3)).toHaveAttribute('aria-current', 'true');
       await expect(dot(1).hasAttribute('aria-current')).toBe(false);
     });
@@ -227,7 +227,7 @@ export const WithDots: Story = {
 
       const primeiro = dot(1);
       await userEvent.click(primeiro);
-      await waitFor(() => expect(viewport.scrollLeft).toBe(0));
+      await waitFor(() => expect(viewport.scrollLeft).toBe(0), { timeout: 4000 });
       await expect(dot(1)).toHaveAttribute('aria-current', 'true');
     });
   },
@@ -259,7 +259,7 @@ export const Gallery: Story = {
   render: () => ({
     props: { fotos: FOTOS },
     template: `
-      <nds-carousel class="nds-w-full nds-max-w-md" label="Galeria de fotos do produto" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-cap-md" label="Galeria de fotos do produto" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
           @for (foto of fotos; track foto.titulo) {
             <div ndsCarouselItem>
@@ -301,7 +301,7 @@ export const Gallery: Story = {
     });
 
     await step('As setas desta galeria falam de fotos, não de itens', async () => {
-      // O rótulo acompanha o conteúdo: "Próximo item" numa galeria de fotos
+      // O rótulo acompanha o conteúdo: "Próximo item" numa galeria de fotos do produto
       // obriga quem ouve a adivinhar o que é o item.
       await expect(canvas.getByRole('button', { name: 'Foto anterior' })).toBeDisabled();
       await expect(canvas.getByRole('button', { name: 'Próxima foto' })).toBeEnabled();

@@ -35,7 +35,7 @@ type Story = StoryObj;
 
 function montar(total: number, label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'nds-w-full nds-max-w-md';
+  wrap.className = 'nds-w-cap-md';
   wrap.appendChild(createCarousel({ items: slidesDeExemplo(total), label }));
   return wrap;
 }
@@ -111,7 +111,7 @@ export const LastSlide: Story = {
       // Assenta no último slide antes de medir qualquer estado.
       const ultimo = slides().length - 1;
       const alvo = ultimo * (slides()[1].offsetLeft - slides()[0].offsetLeft);
-      await waitFor(() => expect(Math.abs(deslocamento() - alvo)).toBeLessThan(2));
+      await waitFor(() => expect(Math.abs(deslocamento() - alvo)).toBeLessThan(2), { timeout: 4000 });
     });
 
     await step('No fim a seta de avanço desabilita e a de voltar acorda', async () => {
@@ -133,7 +133,7 @@ export const LastSlide: Story = {
         const apagada = Number(getComputedStyle(proximo()).opacity);
         const viva = Number(getComputedStyle(anterior).opacity);
         await expect(apagada).toBeLessThan(viva);
-      });
+      }, { timeout: 4000 });
     });
   },
 };

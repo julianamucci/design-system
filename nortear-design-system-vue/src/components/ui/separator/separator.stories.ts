@@ -78,8 +78,8 @@ export const Playground: Story = {
     template: `
       <div
         :class="args.orientation === 'vertical'
-          ? 'nds-cluster nds-docs-demo-row nds-w-full nds-max-w-md'
-          : 'nds-stack nds-w-full nds-max-w-md'"
+          ? 'nds-cluster nds-docs-demo-row nds-w-cap-md'
+          : 'nds-stack nds-w-cap-md'"
         data-spacing="md"
       >
         <p class="nds-text-body">{{ args.orientation === 'vertical' ? 'Item A' : 'Seção superior' }}</p>

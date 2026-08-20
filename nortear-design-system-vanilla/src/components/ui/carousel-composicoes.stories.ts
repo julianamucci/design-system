@@ -65,7 +65,7 @@ export const WithDots: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-full nds-max-w-md';
+    wrap.className = 'nds-stack nds-w-cap-md';
     wrap.dataset.spacing = 'sm';
 
     const dotsRow = document.createElement('div');
@@ -165,7 +165,7 @@ export const WithDots: Story = {
     const irPara = async (n: number) => {
       const alvo = dot(n);
       if (alvo.getAttribute('aria-current') !== 'true') await userEvent.click(alvo);
-      await waitFor(() => expect(dot(n)).toHaveAttribute('aria-current', 'true'));
+      await waitFor(() => expect(dot(n)).toHaveAttribute('aria-current', 'true'), { timeout: 4000 });
     };
 
     await step('Há um dot por slide, e o primeiro nasce como o atual', async () => {
@@ -187,7 +187,7 @@ export const WithDots: Story = {
       await waitFor(() => {
         expect(largura(rotulo(dot(2)))).toBeGreaterThan(0);
         expect(largura(rotulo(dot(1)))).toBeLessThan(1);
-      });
+      }, { timeout: 4000 });
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
       await expect(rotulo(dot(2))).toHaveTextContent(rotuloVisivel(2));
@@ -226,14 +226,14 @@ export const WithDots: Story = {
       const esperado = slides[2].offsetLeft - slides[0].offsetLeft;
 
       await irPara(3);
-      await waitFor(() => expect(Math.abs(deslocamento() - esperado)).toBeLessThan(2));
+      await waitFor(() => expect(Math.abs(deslocamento() - esperado)).toBeLessThan(2), { timeout: 4000 });
       await expect(dot(1).hasAttribute('aria-current')).toBe(false);
     });
 
     await step('E a story termina no começo', async () => {
       // Estado limpo para a próxima rodada e para a captura do Chromatic.
       await irPara(1);
-      await waitFor(() => expect(deslocamento()).toBeLessThan(2));
+      await waitFor(() => expect(deslocamento()).toBeLessThan(2), { timeout: 4000 });
       await expect(canvas.getByRole('button', { name: 'Item anterior' })).toBeDisabled();
     });
   },
@@ -254,7 +254,7 @@ export const Gallery: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-full nds-max-w-md';
+    wrap.className = 'nds-w-cap-md';
 
     const items = FOTOS.map((foto) => {
       const card = createCard({ className: 'nds-w-full nds-overflow-hidden' });

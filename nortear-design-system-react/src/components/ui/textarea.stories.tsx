@@ -77,7 +77,7 @@ function PlaygroundRender(args: React.ComponentProps<typeof Textarea>) {
   const [value, setValue] = useState("");
   const max = args.maxLength ?? 500;
   return (
-    <div className="nds-stack nds-w-full nds-max-w-md" data-spacing="sm">
+    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
       <Label htmlFor="playground-textarea">Descrição</Label>
       <Textarea
         id="playground-textarea"
