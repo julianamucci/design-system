@@ -9,7 +9,9 @@ import { cn } from '@/lib/utils';
 // apelido para não quebrar chamador; quando os dois vêm, `class` vence.
 
 export interface BreadcrumbOptions {
-  /** Accessible label for the nav landmark (default: "breadcrumb"). */
+  /** Nome acessível do landmark `<nav>` (padrão: "breadcrumb"). */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   label?: string;
   class?: string;
   /** @deprecated Apelido de `class`. */
@@ -62,6 +64,8 @@ export interface BreadcrumbEllipsisOptions {
    * são anunciadas; sem ele, ficam decorativas — que é o certo quando um
    * gatilho as envolve e já carrega o próprio nome.
    */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   label?: string;
   class?: string;
   /** @deprecated Apelido de `class`. */
@@ -99,8 +103,9 @@ function criarIconeLucide(nodes: LucideIconNode[]): SVGSVGElement {
 }
 
 export function createBreadcrumb(options: BreadcrumbOptions = {}): HTMLElement {
-  const { label = 'breadcrumb' } = options;
   const classe = options.class ?? options.className;
+  // `label` continua aceito como apelido do nome acessível; o canônico vence.
+  const label = options['aria-label'] ?? options.label ?? 'breadcrumb';
 
   const nav = document.createElement('nav');
   nav.dataset.slot = 'breadcrumb';
@@ -194,8 +199,9 @@ export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = 
  * o consumidor liga um click handler externo pra expandir.
  */
 export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}): HTMLElement {
-  const { label } = options;
   const classe = options.class ?? options.className;
+  // `label` continua aceito como apelido do nome acessível; o canônico vence.
+  const label = options['aria-label'] ?? options.label;
 
   const span = document.createElement('span');
   span.dataset.slot = 'breadcrumb-ellipsis';

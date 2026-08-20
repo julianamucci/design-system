@@ -1,7 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
-import type { AvatarSize } from './avatar';
+import { createAvatarBadge, createAvatarGroup, type AvatarSize } from './avatar';
 import { buildAvatar } from './avatar.fixtures';
 import { avatarSource } from './avatar.source';
 import { createAvatarDocs } from '@/components/docs/AvatarDocs';
@@ -101,6 +101,27 @@ export const Playground: Story = {
       // à do componente, sem substituir.
       await expect(root).toHaveClass('nds-avatar');
       await expect(root).toHaveClass('nds-shadow-sm');
+    });
+
+    await step('O apelido depreciado continua produzindo o atributo', async () => {
+      // A fila e o ponto de status nomeavam o acessível por `label` — a mesma
+      // chave que no button é TEXTO VISÍVEL. A unificação trouxe o canônico e
+      // manteve o antigo como apelido, porque apagá-lo quebraria chamador em
+      // silêncio. Compatibilidade sem asserção é promessa, não contrato.
+      const grupoAntigo = createAvatarGroup({ label: 'Participantes' });
+      await expect(grupoAntigo).toHaveAttribute('aria-label', 'Participantes');
+      await expect(grupoAntigo).toHaveAttribute('role', 'group');
+
+      const badgeAntigo = createAvatarBadge({ label: 'Online' });
+      await expect(badgeAntigo).toHaveAttribute('aria-label', 'Online');
+
+      // E o canônico vence quando os dois vierem — dois nomes disputando um
+      // atributo é o defeito que a unificação existe para fechar.
+      const grupoAmbos = createAvatarGroup({ label: 'Antigo', 'aria-label': 'Canônico' });
+      await expect(grupoAmbos).toHaveAttribute('aria-label', 'Canônico');
+
+      const badgeAmbos = createAvatarBadge({ label: 'Antigo', 'aria-label': 'Canônico' });
+      await expect(badgeAmbos).toHaveAttribute('aria-label', 'Canônico');
     });
   },
 };

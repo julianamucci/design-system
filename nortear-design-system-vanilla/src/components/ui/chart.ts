@@ -43,7 +43,7 @@ echarts.use([
  * `label.enabled: false` desliga a descrição gerada pela lib de propósito: ela
  * nasce em inglês e mora num elemento interno que o `role="img"` do container
  * poda da árvore de acessibilidade. Quem carrega a alternativa textual é o
- * `label` autoral, no idioma da página.
+ * `aria-label` autoral, no idioma da página.
  */
 const ARIA = { enabled: true, label: { enabled: false }, decal: { show: true } } as const;
 
@@ -80,18 +80,25 @@ export interface ChartOptions {
   height?: number;
   /** Renderer. Default 'svg' (alinha com o resto da stack standalone). */
   renderer?: 'svg' | 'canvas';
-  /** Título opcional acima do chart. */
+  /**
+   * Título VISÍVEL, desenhado acima dos eixos. Não confundir com o nome
+   * acessível: são conceitos distintos que coexistem nesta fábrica — o título
+   * é pixel dentro do desenho, e serve de último recurso para o `aria-label`
+   * quando ninguém descreve o gráfico.
+   */
   title?: string;
   /** Mostrar legenda (default: true se >1 série). */
   showLegend?: boolean;
   /** Classe extra no container. */
   class?: string;
   /**
-   * Descrição do gráfico: vira o `aria-label` do container.
+   * Descrição do gráfico: vira o nome acessível do container.
    *
    * Um desenho sem descrição é conteúdo perdido — a factory não emitia
    * `role`/`aria-label` nenhum, e cada consumidor colava os dois à mão.
    */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   label?: string;
   /** Frase mostrada no lugar do gráfico quando não há dado. */
   emptyLabel?: string;
@@ -205,7 +212,10 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
   // de tela, um SVG que ele não teria como narrar. A factory não emitia nenhum
   // dos dois, e cada docs page vinha colando os atributos à mão.
   el.setAttribute('role', 'img');
-  el.setAttribute('aria-label', opts.label ?? opts.title ?? 'Gráfico');
+  // `label` continua aceito como apelido do nome acessível; o canônico vence.
+  // `title` só entra depois dos dois: ele é texto visível, e serve de último
+  // recurso, não de sinônimo.
+  el.setAttribute('aria-label', opts['aria-label'] ?? opts.label ?? opts.title ?? 'Gráfico');
 
   // Init deferida — espera el estar conectado pra echarts.init() funcionar.
   const mountWhenReady = (cb: () => void) => {

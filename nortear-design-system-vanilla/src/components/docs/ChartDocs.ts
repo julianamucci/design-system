@@ -70,8 +70,8 @@ function priorityLabel(raw: string): string {
   return tNav(priorityKeyMap[raw] ?? 'common.high');
 }
 
-// Cada preview leva a SUA descrição: `label` vira o `role="img"` + `aria-label`
-// do container dentro da própria factory. Antes disso cada preview colava os
+// Cada preview leva a SUA descrição: a opção `'aria-label'` vira o `role="img"`
+// e o atributo do container dentro da própria factory. Antes disso cada preview colava os
 // dois atributos à mão — e os que esqueciam ficavam mudos para o leitor de tela.
 function buildBarPreview(): HTMLElement {
   return createChart({
@@ -79,7 +79,7 @@ function buildBarPreview(): HTMLElement {
     type: 'bar',
     height: 200,
     class: 'nds-w-full nds-max-w-md',
-    label: 'Gráfico de barras: acessos mensais de janeiro a junho',
+    'aria-label': 'Gráfico de barras: acessos mensais de janeiro a junho',
   });
 }
 
@@ -89,7 +89,7 @@ function buildLinePreview(): HTMLElement {
     type: 'line',
     height: 200,
     class: 'nds-w-full nds-max-w-md',
-    label: 'Gráfico de linhas: tendência dos acessos de janeiro a junho',
+    'aria-label': 'Gráfico de linhas: tendência dos acessos de janeiro a junho',
   });
 }
 
@@ -301,7 +301,7 @@ export function createChartDocs(): HTMLElement {
                 type: 'bar',
                 height: 160,
                 class: 'nds-w-full nds-max-w-sm',
-                label: 'Acessos mensais por dispositivo: desktop e mobile',
+                'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
               }),
               // Don't: as mesmas duas séries, mas com a legenda desligada — só a
               // cor separa uma da outra.
@@ -312,7 +312,7 @@ export function createChartDocs(): HTMLElement {
                 height: 160,
                 showLegend: false,
                 class: 'nds-w-full nds-max-w-sm',
-                label: 'Acessos mensais',
+                'aria-label': 'Acessos mensais',
               }),
             },
             {
@@ -325,7 +325,7 @@ export function createChartDocs(): HTMLElement {
                 type: 'bar',
                 height: 160,
                 class: 'nds-w-full nds-max-w-sm',
-                label: 'Gráfico de barras: acessos mensais de janeiro a junho',
+                'aria-label': 'Gráfico de barras: acessos mensais de janeiro a junho',
               }),
               // Don't: rótulo genérico. A factory sempre emite um, então o erro
               // que ainda dá para cometer não é ficar sem descrição — é escrever
@@ -335,7 +335,7 @@ export function createChartDocs(): HTMLElement {
                 type: 'bar',
                 height: 160,
                 class: 'nds-w-full nds-max-w-sm',
-                label: 'Gráfico',
+                'aria-label': 'Gráfico',
               }),
             },
           ],
@@ -358,7 +358,7 @@ const el = createChart({
   height: 200,
   // Vira o role="img" + aria-label do container. Sem ele, o desenho é
   // conteúdo perdido para quem usa leitor de tela.
-  label: 'Acessos mensais de janeiro a março',
+  'aria-label': 'Acessos mensais de janeiro a março',
 });
 document.body.appendChild(el);`,
         });
@@ -368,14 +368,14 @@ document.body.appendChild(el);`,
   data: chartData,
   type: 'bar',
   height: 200,
-  label: 'Gráfico de barras: acessos mensais de janeiro a junho',
+  'aria-label': 'Gráfico de barras: acessos mensais de janeiro a junho',
 });`;
 
         const codeLine = `const el = createChart({
   data: chartData,
   type: 'line',
   height: 200,
-  label: 'Gráfico de linhas: tendência dos acessos de janeiro a junho',
+  'aria-label': 'Gráfico de linhas: tendência dos acessos de janeiro a junho',
 });`;
 
         const codeSmallInline = `const wrap = document.createElement('div');
@@ -393,7 +393,7 @@ const spark = createChart({
   data: chartData,
   type: 'line',
   height: 48,
-  label: 'Tendência de acessos nos últimos seis meses',
+  'aria-label': 'Tendência de acessos nos últimos seis meses',
 });
 spark.style.width = '120px';
 wrap.appendChild(spark);`;
@@ -443,7 +443,7 @@ wrap.appendChild(spark);`;
                   data: chartData,
                   type: 'line',
                   height: 48,
-                  label: 'Tendência de acessos nos últimos seis meses',
+                  'aria-label': 'Tendência de acessos nos últimos seis meses',
                 });
                 spark.style.width = '120px';
                 wrap.appendChild(spark);
@@ -466,7 +466,7 @@ content.appendChild(createChart({
   data: chartData,
   type: 'bar',
   height: 200,
-  label: 'Acessos mensais de janeiro a junho',
+  'aria-label': 'Acessos mensais de janeiro a junho',
 }));
 
 card.appendChild(header);
@@ -492,7 +492,7 @@ card.appendChild(content);`;
                   data: chartData,
                   type: 'bar',
                   height: 200,
-                  label: 'Acessos mensais de janeiro a junho',
+                  'aria-label': 'Acessos mensais de janeiro a junho',
                 }));
                 card.appendChild(header);
                 card.appendChild(content);
@@ -546,14 +546,14 @@ export interface ChartOptions {
   height?: number;
   /** Tecnologia de desenho. */
   renderer?: 'svg' | 'canvas';
-  /** Título desenhado acima dos eixos. */
+  /** Título VISÍVEL, desenhado acima dos eixos. */
   title?: string;
   /** Mostrar a legenda. Sem valor, aparece com mais de uma série. */
   showLegend?: boolean;
   /** Classes adicionais no container. */
   class?: string;
-  /** Descrição do gráfico: vira o aria-label do container. */
-  label?: string;
+  /** Descrição do gráfico: vira o nome acessível do container. */
+  'aria-label'?: string;
   /** Frase exibida no lugar do desenho quando não há dado. */
   emptyLabel?: string;
 }`;
@@ -632,7 +632,7 @@ export interface ChartOptions {
                   description: toPlainText(t('props.table.renderer')),
                 },
                 {
-                  name: 'label',
+                  name: 'aria-label',
                   type: 'string',
                   defaultValue: "title, depois 'Gráfico'",
                   required: 'Não',

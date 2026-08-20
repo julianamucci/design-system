@@ -42,7 +42,7 @@ export const Simple: Story = {
         total: 5,
         current: 1,
         showPrevNext: true,
-        label: 'Paginação simples',
+        'aria-label': 'Paginação simples',
         onPageChange: () => {},
       }),
     ),
@@ -85,7 +85,7 @@ export const WithEllipsis: Story = {
         transform: paginationSourceCom({
           total: 12,
           current: 6,
-          label: 'Paginação com reticências',
+          'aria-label': 'Paginação com reticências',
         }),
       },
     },
@@ -96,7 +96,7 @@ export const WithEllipsis: Story = {
         total: 12,
         current: 6,
         showPrevNext: true,
-        label: 'Paginação com reticências',
+        'aria-label': 'Paginação com reticências',
         onPageChange: () => {},
       }),
     ),
@@ -140,7 +140,7 @@ export const LastPage: Story = {
         transform: paginationSourceCom({
           total: 10,
           current: 10,
-          label: 'Paginação na última página',
+          'aria-label': 'Paginação na última página',
         }),
       },
     },
@@ -151,7 +151,7 @@ export const LastPage: Story = {
         total: 10,
         current: 10,
         showPrevNext: true,
-        label: 'Paginação na última página',
+        'aria-label': 'Paginação na última página',
         onPageChange: () => {},
       }),
     ),
@@ -183,7 +183,7 @@ export const Interactive: Story = {
         transform: paginationComEstadoSourceCom({
           total: 8,
           current: 3,
-          label: 'Paginação interativa',
+          'aria-label': 'Paginação interativa',
         }),
       },
     },
@@ -209,7 +209,7 @@ export const Interactive: Story = {
           total,
           current,
           showPrevNext: true,
-          label: 'Paginação interativa',
+          'aria-label': 'Paginação interativa',
           onPageChange: (page) => {
             current = page;
             remontar();
@@ -274,7 +274,7 @@ export const WithRoute: Story = {
         transform: paginationSourceCom({
           total: 8,
           current: 3,
-          label: 'Paginação por rota',
+          'aria-label': 'Paginação por rota',
           hrefForPage: '(page) => `?page=${page}`',
         }),
       },
@@ -293,7 +293,7 @@ export const WithRoute: Story = {
     const nav = createPagination({
       total: 8,
       current: 3,
-      label: 'Paginação por rota',
+      'aria-label': 'Paginação por rota',
       hrefForPage: (page) => `?page=${page}`,
       onPageChange: (page) => {
         status.textContent = `Rota: ?page=${page}`;
@@ -350,7 +350,7 @@ export const CompleteTable: Story = {
           total: 12,
           current: 2,
           align: 'end',
-          label: 'Paginação do rodapé da tabela',
+          'aria-label': 'Paginação do rodapé da tabela',
         }),
       },
     },
@@ -376,7 +376,7 @@ export const CompleteTable: Story = {
         current: 2,
         showPrevNext: true,
         align: 'end',
-        label: 'Paginação do rodapé da tabela',
+        'aria-label': 'Paginação do rodapé da tabela',
         onPageChange: () => {},
       }),
     );

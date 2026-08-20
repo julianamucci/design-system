@@ -29,8 +29,8 @@ export type ChartSnippetDados = 'simples' | 'umPonto' | 'serieUnica' | 'multi' |
 /** O que as stories usam da `ChartOptions` e que o snippet precisa mostrar. */
 export type ChartSnippetOptions = {
   type?: ChartType;
-  /** Descrição do desenho: vira o `aria-label` do bloco, anunciado como imagem. */
-  label?: string;
+  /** Descrição do desenho: vira o nome acessível do bloco, anunciado como imagem. */
+  'aria-label'?: string;
   /** Título desenhado acima dos eixos. */
   title?: string;
   showLegend?: boolean;
@@ -50,7 +50,7 @@ const MESES = "const meses = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];";
 /** Uso canônico: uma série simples, descrita, num bloco de altura definida. */
 const PADRAO: ChartSnippetOptions = {
   dados: 'simples',
-  label: 'Acessos mensais no desktop, de janeiro a junho',
+  'aria-label': 'Acessos mensais no desktop, de janeiro a junho',
   height: 240,
   className: 'nds-max-w-md',
 };
@@ -134,7 +134,7 @@ export function chartSnippet(o: ChartSnippetOptions = {}): string {
   const linhas = opcoes([
     ...pares,
     ['type', o.type && o.type !== 'bar' ? texto(o.type) : undefined],
-    ['label', o.label ? texto(o.label) : undefined],
+    ['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined],
     ['title', o.title ? texto(o.title) : undefined],
     ['showLegend', o.showLegend === undefined ? undefined : String(o.showLegend)],
     ['height', o.height ? String(o.height) : undefined],
@@ -179,7 +179,7 @@ export type ChartEmCardSnippetOptions = ChartSnippetOptions & {
  * O título e o recorte temporal ficam no cabeçalho, em TEXTO de verdade —
  * desenhados dentro do gráfico eles seriam pixel, e nem a busca da página nem o
  * leitor de tela os alcançariam. O desenho fica no conteúdo, e a descrição dele
- * continua sendo o `label`.
+ * continua sendo o `aria-label`.
  */
 export function chartEmCardSnippet(o: ChartEmCardSnippetOptions = {}): string {
   const { bloco, pares } = dadosDoSnippet(o);
@@ -188,7 +188,7 @@ export function chartEmCardSnippet(o: ChartEmCardSnippetOptions = {}): string {
     ...pares,
     ['type', o.type && o.type !== 'bar' ? texto(o.type) : undefined],
     ['height', o.height ? String(o.height) : undefined],
-    ['label', o.label ? texto(o.label) : undefined],
+    ['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined],
   ]);
 
   return snippet(

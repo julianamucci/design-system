@@ -106,7 +106,7 @@ function buildGroupAvatar(): HTMLElement {
   // O grupo e o contador saem das factories: o recuo e a borda que separa um
   // avatar do outro são do .nds-avatar-group. Antes a demo reproduzia as duas
   // coisas com estilo inline, e a classe compartilhada não era exercitada.
-  const group = createAvatarGroup({ label: stripHtml(t('demonstration.labels.groupTitle')) });
+  const group = createAvatarGroup({ 'aria-label': stripHtml(t('demonstration.labels.groupTitle')) });
 
   group.appendChild(
     createAvatar({
@@ -139,7 +139,7 @@ function buildStatusAvatar(): HTMLElement {
     fallbackText: 'MR',
   });
   avatar.appendChild(
-    createAvatarBadge({ label: stripHtml(t('demonstration.labels.statusOnline')) }),
+    createAvatarBadge({ 'aria-label': stripHtml(t('demonstration.labels.statusOnline')) }),
   );
   return avatar;
 }
@@ -414,12 +414,12 @@ fallback.setAttribute('aria-label', 'Usuário genérico');
 // ...append User icon SVG
 root.appendChild(fallback);`;
 
-        const codeGroup = `const group = createAvatarGroup({ label: 'Participantes' });
+        const codeGroup = `const group = createAvatarGroup({ 'aria-label': 'Participantes' });
 group.appendChild(createAvatar({ src, alt: '', fallbackText: 'MR' }));
 group.appendChild(createAvatarGroupCount({ text: '+3' }));`;
 
         const codeStatus = `const avatar = createAvatar({ src, alt, fallbackText: 'MR' });
-avatar.appendChild(createAvatarBadge({ label: 'Online' }));`;
+avatar.appendChild(createAvatarBadge({ 'aria-label': 'Online' }));`;
 
         return createDocsVariants({
           title: t('variants.title'),

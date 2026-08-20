@@ -24,7 +24,7 @@ const chartData = MESES.map((label, i) => ({
 
 type ChartArgs = {
   type: ChartType;
-  label: string;
+  'aria-label': string;
   title: string;
   showLegend: boolean | undefined;
   height: number;
@@ -60,14 +60,14 @@ const meta: Meta<ChartArgs> = {
       description: 'Tipo do gráfico. Quem escolhe é o dado, não o estilo.',
       table: { type: { summary: "'bar' | 'line' | 'area' | 'pie'" }, defaultValue: { summary: "'bar'" } },
     },
-    label: {
+    'aria-label': {
       control: 'text',
-      description: 'Descrição do gráfico. Vira o aria-label do container, que é anunciado como imagem.',
+      description: 'Descrição do gráfico. Vira o nome acessível do container, que é anunciado como imagem. O apelido depreciado label continua aceito; quando os dois vêm, aria-label vence.',
       table: { type: { summary: 'string' }, defaultValue: { summary: "título do gráfico, ou 'Gráfico'" } },
     },
     title: {
       control: 'text',
-      description: 'Título desenhado acima dos eixos.',
+      description: 'Título VISÍVEL, desenhado acima dos eixos — outro conceito, e não sinônimo do nome acessível.',
       table: { type: { summary: 'string' }, defaultValue: { summary: '—' } },
     },
     showLegend: {
@@ -95,7 +95,7 @@ const meta: Meta<ChartArgs> = {
   },
   args: {
     type: 'bar',
-    label: 'Acessos mensais no desktop, de janeiro a junho',
+    'aria-label': 'Acessos mensais no desktop, de janeiro a junho',
     title: '',
     showLegend: undefined,
     height: 240,
@@ -123,7 +123,7 @@ export const Playground: Story = {
     createChart({
       data: chartData,
       type: args.type,
-      label: args.label,
+      'aria-label': args['aria-label'],
       title: args.title || undefined,
       showLegend: args.showLegend,
       height: args.height,
@@ -140,12 +140,37 @@ export const Playground: Story = {
       await expect(raiz.getAttribute('role')).toBe('img');
       // A descrição EXATA, não "existe o atributo": um aria-label vazio ou
       // genérico passaria pelo teste de presença e não descreveria nada.
-      await expect(raiz.getAttribute('aria-label')).toBe(args.label);
+      await expect(raiz.getAttribute('aria-label')).toBe(args['aria-label']);
     });
 
     await step('O desenho sai — e sai com forma, não como casca vazia', async () => {
       await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
       await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+    });
+
+    await step('O apelido depreciado continua produzindo o atributo', async () => {
+      // No chart `label` era o nome acessível e `title` é o texto VISÍVEL
+      // desenhado acima dos eixos: dois conceitos no mesmo arquivo. O canônico
+      // entrou para o primeiro, e o antigo ficou como apelido — apagá-lo
+      // quebraria chamador em silêncio, e sem asserção isso é só promessa.
+      const antigo = createChart({ data: chartData, label: 'Acessos mensais' });
+      await expect(antigo.getAttribute('aria-label')).toBe('Acessos mensais');
+
+      const ambos = createChart({
+        data: chartData,
+        label: 'Antigo',
+        'aria-label': 'Canônico',
+      });
+      await expect(ambos.getAttribute('aria-label')).toBe('Canônico');
+
+      // E `title` não disputa o nome acessível: ele é o ÚLTIMO recurso, não um
+      // sinônimo — quem descreve o desenho ganha dele.
+      const comTitulo = createChart({
+        data: chartData,
+        title: 'Título visível',
+        'aria-label': 'Descrição do desenho',
+      });
+      await expect(comTitulo.getAttribute('aria-label')).toBe('Descrição do desenho');
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {

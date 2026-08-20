@@ -53,7 +53,7 @@ export const WithCard: Story = {
       source: {
         transform: chartEmCardSourceCom({
           height: 220,
-          label: 'Acessos mensais de janeiro a junho de 2024',
+          'aria-label': 'Acessos mensais de janeiro a junho de 2024',
           cardTitle: TITULO_DO_CARD,
         }),
       },
@@ -75,7 +75,7 @@ export const WithCard: Story = {
         data: chartData,
         type: 'bar',
         height: 220,
-        label: 'Acessos mensais de janeiro a junho de 2024',
+        'aria-label': 'Acessos mensais de janeiro a junho de 2024',
       }),
     );
 
@@ -112,7 +112,7 @@ export const InlineTitle: Story = {
       // Override de story: o assunto é o título DESENHADO e a ausência de
       // descrição própria — é ela que faz o título virar a alternativa textual.
       source: {
-        transform: chartSourceCom({ title: TITULO_INLINE, height: 260, label: undefined }),
+        transform: chartSourceCom({ title: TITULO_INLINE, height: 260, 'aria-label': undefined }),
       },
       description: {
         story: 'Título desenhado acima dos eixos, para quando o gráfico aparece solto, sem moldura que o nomeie. Na falta de descrição própria, o título vira a alternativa textual.',

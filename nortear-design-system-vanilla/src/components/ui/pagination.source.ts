@@ -18,10 +18,10 @@ export type PaginationSnippetOptions = {
   /**
    * Nome acessível do landmark.
    *
-   * Nesta fábrica a opção se chama `label` e não tem apelido: não existe
-   * `aria-label` em `PaginationOptions`, então `label` É o nome canônico aqui.
+   * A opção canônica da fábrica é `'aria-label'`; `label` segue aceito como
+   * apelido depreciado, e o painel Code ensina o canônico.
    */
-  label?: string;
+  'aria-label'?: string;
   align?: 'start' | 'end';
   /** Expressão de `hrefForPage` — presença liga a paginação de rota. */
   hrefForPage?: string;
@@ -29,7 +29,7 @@ export type PaginationSnippetOptions = {
   onPageChange?: string;
 };
 
-/** Nome que a fábrica assume quando `label` não é passado. */
+/** Nome que a fábrica assume quando `'aria-label'` não é passado. */
 const ROTULO_PADRAO = 'Paginação';
 
 /** Callback mostrado quando a story não exercita um específico. */
@@ -54,7 +54,10 @@ function linhasComuns(o: PaginationSnippetOptions, current: string): Array<[stri
   return [
     ['total', String(o.total ?? 5)],
     ['current', current],
-    ['label', o.label && o.label !== ROTULO_PADRAO ? texto(o.label) : undefined],
+    [
+      'aria-label',
+      o['aria-label'] && o['aria-label'] !== ROTULO_PADRAO ? texto(o['aria-label']) : undefined,
+    ],
     ['align', o.align ? texto(o.align) : undefined],
     // `true` é o padrão da fábrica: só a supressão dos direcionais entra.
     ['showPrevNext', o.showPrevNext === false ? 'false' : undefined],

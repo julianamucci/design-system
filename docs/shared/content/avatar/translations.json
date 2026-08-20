@@ -34,7 +34,7 @@
         "react": "<Avatar size=\"md\">              {/* Container circular */}\n  <AvatarImage />              {/* Imagem com alt */}\n  <AvatarFallback />           {/* Iniciais ou ícone */}\n  <AvatarBadge />              {/* Status, opcional */}\n</Avatar>",
         "vue": "<Avatar size=\"md\">              <!-- Container circular -->\n  <AvatarImage />              <!-- Imagem com alt -->\n  <AvatarFallback />           <!-- Iniciais ou ícone -->\n  <AvatarBadge />              <!-- Status, opcional -->\n</Avatar>",
         "svelte": "<Avatar size=\"md\">              <!-- Container circular -->\n  <AvatarImage />              <!-- Imagem com alt -->\n  <AvatarFallback />           <!-- Iniciais ou ícone -->\n  <AvatarBadge />              <!-- Status, opcional -->\n</Avatar>",
-        "vanilla": "const avatar = createAvatar({      // container + imagem + fallback\n  src, alt, fallbackText, size: 'md',\n});\navatar.appendChild(                // status, opcional\n  createAvatarBadge({ label: 'Online' }),\n);",
+        "vanilla": "const avatar = createAvatar({      // container + imagem + fallback\n  src, alt, fallbackText, size: 'md',\n});\navatar.appendChild(                // status, opcional\n  createAvatarBadge({ 'aria-label': 'Online' }),\n);",
         "angular": "<nds-avatar size=\"md\">          <!-- Container circular -->\n  <img ndsAvatarImage />        <!-- Imagem com alt -->\n  <span ndsAvatarFallback></span>  <!-- Iniciais ou ícone -->\n  <span ndsAvatarBadge></span>  <!-- Status, opcional -->\n</nds-avatar>"
       },
       "item5": "<strong>AvatarGroup e AvatarGroupCount (opcional)</strong> — fila de avatares sobrepostos e o contador do excedente."
@@ -405,7 +405,7 @@
         "react": "<Avatar size=\"md\">              {/* Container circular */}\n  <AvatarImage />              {/* Imagem com alt */}\n  <AvatarFallback />           {/* Iniciais ou ícone */}\n  <AvatarBadge />              {/* Status, opcional */}\n</Avatar>",
         "vue": "<Avatar size=\"md\">              <!-- Container circular -->\n  <AvatarImage />              <!-- Imagem com alt -->\n  <AvatarFallback />           <!-- Iniciais ou ícone -->\n  <AvatarBadge />              <!-- Status, opcional -->\n</Avatar>",
         "svelte": "<Avatar size=\"md\">              <!-- Container circular -->\n  <AvatarImage />              <!-- Imagem com alt -->\n  <AvatarFallback />           <!-- Iniciais ou ícone -->\n  <AvatarBadge />              <!-- Status, opcional -->\n</Avatar>",
-        "vanilla": "const avatar = createAvatar({      // container + imagem + fallback\n  src, alt, fallbackText, size: 'md',\n});\navatar.appendChild(                // status, opcional\n  createAvatarBadge({ label: 'Online' }),\n);",
+        "vanilla": "const avatar = createAvatar({      // container + imagem + fallback\n  src, alt, fallbackText, size: 'md',\n});\navatar.appendChild(                // status, opcional\n  createAvatarBadge({ 'aria-label': 'Online' }),\n);",
         "angular": "<nds-avatar size=\"md\">          <!-- Circular container -->\n  <img ndsAvatarImage />        <!-- Image with alt -->\n  <span ndsAvatarFallback></span>  <!-- Initials or icon -->\n  <span ndsAvatarBadge></span>  <!-- Status, optional -->\n</nds-avatar>"
       },
       "item5": "<strong>AvatarGroup and AvatarGroupCount (optional)</strong> — a row of overlapping avatars and the overflow counter."
@@ -776,7 +776,7 @@
         "react": "<Avatar size=\"md\">              {/* Container circular */}\n  <AvatarImage />              {/* Imagem com alt */}\n  <AvatarFallback />           {/* Iniciais ou ícone */}\n  <AvatarBadge />              {/* Status, opcional */}\n</Avatar>",
         "vue": "<Avatar size=\"md\">              <!-- Container circular -->\n  <AvatarImage />              <!-- Imagem com alt -->\n  <AvatarFallback />           <!-- Iniciais ou ícone -->\n  <AvatarBadge />              <!-- Status, opcional -->\n</Avatar>",
         "svelte": "<Avatar size=\"md\">              <!-- Container circular -->\n  <AvatarImage />              <!-- Imagem com alt -->\n  <AvatarFallback />           <!-- Iniciais ou ícone -->\n  <AvatarBadge />              <!-- Status, opcional -->\n</Avatar>",
-        "vanilla": "const avatar = createAvatar({      // container + imagem + fallback\n  src, alt, fallbackText, size: 'md',\n});\navatar.appendChild(                // status, opcional\n  createAvatarBadge({ label: 'Online' }),\n);",
+        "vanilla": "const avatar = createAvatar({      // container + imagem + fallback\n  src, alt, fallbackText, size: 'md',\n});\navatar.appendChild(                // status, opcional\n  createAvatarBadge({ 'aria-label': 'Online' }),\n);",
         "angular": "<nds-avatar size=\"md\">          <!-- Contenedor circular -->\n  <img ndsAvatarImage />        <!-- Imagen con alt -->\n  <span ndsAvatarFallback></span>  <!-- Iniciales o icono -->\n  <span ndsAvatarBadge></span>  <!-- Estado, opcional -->\n</nds-avatar>"
       },
       "item5": "<strong>AvatarGroup y AvatarGroupCount (opcional)</strong> — fila de avatares superpuestos y el contador del excedente."

@@ -21,8 +21,13 @@ export interface ToasterOptions {
   /** Botão de fechar em todas as notificações. Cada `toast()` pode sobrepor. */
   closeButton?: boolean;
   /** Nome acessível da região. */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   label?: string;
-  /** Rótulo do botão de fechar — só ícone, então o nome vem daqui. */
+  /**
+   * Nome acessível do botão de fechar — só ícone, então o nome vem daqui.
+   * Alvo diferente do `aria-label` acima, e por isso um nome à parte.
+   */
   closeLabel?: string;
   class?: string;
 }
@@ -173,7 +178,8 @@ function montarRegiao(options: ToasterOptions): HTMLElement {
 
   const el = document.createElement('div');
   el.setAttribute('role', 'region');
-  el.setAttribute('aria-label', options.label ?? ROTULO_REGIAO);
+  // `label` continua aceito como apelido do nome acessível; o canônico vence.
+  el.setAttribute('aria-label', options['aria-label'] ?? options.label ?? ROTULO_REGIAO);
   el.setAttribute('data-sonner-toaster', '');
   el.dataset.slot = 'sonner-toaster';
   el.className = options.class ? `nds-toaster ${options.class}` : 'nds-toaster';

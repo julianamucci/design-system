@@ -92,7 +92,7 @@ function buildBreadcrumb(
 ): HTMLElement {
   // aria-label distinto por instância (landmark-unique): usa a string que já
   // intitula visivelmente o bloco onde o preview aparece.
-  const nav = createBreadcrumb(label ? { label } : {});
+  const nav = createBreadcrumb(label ? { 'aria-label': label } : {});
   const list = createBreadcrumbList();
 
   crumbs.forEach((crumb, index) => {
@@ -112,7 +112,7 @@ function buildBreadcrumb(
     } else if (crumb.type === 'page') {
       item.appendChild(createBreadcrumbPage({ text: crumb.text }));
     } else {
-      item.appendChild(createBreadcrumbEllipsis({ label: t('demonstration.labels.more') }));
+      item.appendChild(createBreadcrumbEllipsis({ 'aria-label': t('demonstration.labels.more') }));
     }
 
     list.appendChild(item);
@@ -456,7 +456,7 @@ list.appendChild(home);
 list.appendChild(createBreadcrumbSeparator());
 
 const ellipsis = createBreadcrumbItem();
-ellipsis.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));
+ellipsis.appendChild(createBreadcrumbEllipsis({ 'aria-label': 'Mais páginas' }));
 list.appendChild(ellipsis);
 
 list.appendChild(createBreadcrumbSeparator());
@@ -481,7 +481,7 @@ list.append(home, createBreadcrumbSeparator(), components, createBreadcrumbSepar
 nav.appendChild(list);`;
 
         const codeEllipsis = `const ellipsisItem = createBreadcrumbItem();
-ellipsisItem.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));
+ellipsisItem.appendChild(createBreadcrumbEllipsis({ 'aria-label': 'Mais páginas' }));
 list.append(homeItem, createBreadcrumbSeparator(), ellipsisItem, createBreadcrumbSeparator(), pageItem);`;
 
         const codeCustomSeparator = `// Separador customizado via option "content"
@@ -492,7 +492,7 @@ list.appendChild(createBreadcrumbSeparator({ content: svgIcon }));`;
         const codeResponsive = `// No mobile, envolva o ellipsis em um DropdownMenu
 // para expor os níveis ocultos ao clique.
 const ellipsisItem = createBreadcrumbItem();
-ellipsisItem.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));
+ellipsisItem.appendChild(createBreadcrumbEllipsis({ 'aria-label': 'Mais páginas' }));
 // attach DropdownMenu trigger behavior here`;
 
         return createDocsVariants({
@@ -552,7 +552,7 @@ ellipsisItem.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));
         // A opção de classe é `class` em todas as peças. `className` continua
         // aceito como apelido depreciado; quando os dois vêm, `class` vence.
         const interfaceCode = `export interface BreadcrumbOptions {
-  label?: string;      // aria-label do <nav> (default: "breadcrumb")
+  'aria-label'?: string;   // nome do landmark (default: "breadcrumb")
   class?: string;
 }
 
@@ -576,7 +576,7 @@ export interface BreadcrumbSeparatorOptions {
 }
 
 export interface BreadcrumbEllipsisOptions {
-  label?: string;      // sem rótulo, as reticências ficam decorativas
+  'aria-label'?: string;   // sem rótulo, as reticências ficam decorativas
   class?: string;
 }`;
 
@@ -595,7 +595,7 @@ export interface BreadcrumbEllipsisOptions {
               title: t('props.breadcrumbTitle'),
               cols: propsCols,
               items: [
-                { name: 'label', type: 'string', defaultValue: '"breadcrumb"', required: 'Não', description: 'aria-label do <nav>.' },
+                { name: 'aria-label', type: 'string', defaultValue: '"breadcrumb"', required: 'Não', description: 'Nome acessível do <nav>. Aceita também o apelido depreciado label; quando os dois vêm, aria-label vence.' },
                 { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.' },
               ],
             },
@@ -642,7 +642,7 @@ export interface BreadcrumbEllipsisOptions {
               title: t('props.ellipsisTitle'),
               cols: propsCols,
               items: [
-                { name: 'label', type: 'string', defaultValue: '—', required: 'Não', description: 'Nome acessível do indicador de níveis ocultos. Com rótulo, as reticências são anunciadas; sem ele, ficam decorativas — que é o certo quando um gatilho as envolve e já carrega o próprio nome.' },
+                { name: 'aria-label', type: 'string', defaultValue: '—', required: 'Não', description: 'Nome acessível do indicador de níveis ocultos. Com rótulo, as reticências são anunciadas; sem ele, ficam decorativas — que é o certo quando um gatilho as envolve e já carrega o próprio nome. Aceita também o apelido depreciado label; quando os dois vêm, aria-label vence.' },
                 { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.' },
               ],
             },

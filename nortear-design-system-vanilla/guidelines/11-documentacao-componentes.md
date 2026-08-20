@@ -580,7 +580,7 @@ Componentes como **Chart** são camada de theming sobre **Apache ECharts**: a fa
    - `xAxis` + `series`: forma multi-série (`ChartSeries[]`)
    - `height`: number (px); sem valor, vale o piso de `.nds-chart`
    - `renderer`: `'svg' | 'canvas'` (default `svg`)
-   - `title`, `showLegend`, `class`, `label` (vira o `aria-label`), `emptyLabel`
+   - `title` (texto VISÍVEL acima dos eixos), `showLegend`, `class`, `aria-label` (nome acessível do container; `label` segue aceito como apelido depreciado), `emptyLabel`
    Chave de título: `props.containerTitle` (`"createChart"` como título da tabela). `props.extensibilityTitle` cobre `buildChartOption`, para quem precisa ajustar o objeto antes de desenhar.
 
 3. **`DocsImport`** — usar apenas `import.vanilla`:
@@ -591,7 +591,7 @@ Componentes como **Chart** são camada de theming sobre **Apache ECharts**: a fa
 
 4. **`createDocsDemonstration`** — `demoFactory` retorna um container com alternância entre os tipos usando `labels.bar`, `labels.line` e `labels.area`. Dados hardcoded com 6 meses e `labels.chartTitle` como título.
 
-5. **`label` obrigatório nos previews** — o container é `role="img"`; sem `label` o desenho é conteúdo perdido. A frase diz o que o gráfico mostra, não que é um gráfico.
+5. **`aria-label` obrigatório nos previews** — o container é `role="img"`; sem ele o desenho é conteúdo perdido. A frase diz o que o gráfico mostra, não que é um gráfico. Não confundir com `title`, que é texto visível dentro do desenho.
 
 6. **`DocsStates`** — 4 estados: `empty`, `loading`, `singleSeries`, `multiSeries`. Sem `disabled`/`error`. Estado `loading` usa `Skeleton` (factory `createSkeleton`) com as mesmas dimensões do container. O estado vazio é frase completa com orientação para a próxima ação, nunca "Sem dados.".
 

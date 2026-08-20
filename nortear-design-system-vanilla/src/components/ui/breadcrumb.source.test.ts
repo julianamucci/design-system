@@ -18,11 +18,16 @@ describe('breadcrumbSnippet', () => {
   });
 
   it('usa o nome acessível da fábrica, e o omite quando é o padrão dela', () => {
-    // O Breadcrumb nomeia o landmark por `label`, e o padrão é "breadcrumb" —
-    // repeti-lo ensinaria a escrever o que a fábrica já assume.
-    expect(breadcrumbSnippet()).not.toContain('createBreadcrumb({ label');
-    expect(breadcrumbSnippet({ label: 'Trilha do produto' })).toContain(
-      "createBreadcrumb({ label: 'Trilha do produto' })",
+    // O Breadcrumb nomeia o landmark por `'aria-label'`, e o padrão é
+    // "breadcrumb" — repeti-lo ensinaria a escrever o que a fábrica já assume.
+    expect(breadcrumbSnippet()).not.toContain("createBreadcrumb({ 'aria-label'");
+    expect(breadcrumbSnippet({ 'aria-label': 'Trilha do produto' })).toContain(
+      "createBreadcrumb({ 'aria-label': 'Trilha do produto' })",
+    );
+    // E o apelido depreciado não vaza para o painel Code: quem copia dali
+    // adota o nome que leu.
+    expect(breadcrumbSnippet({ 'aria-label': 'Trilha do produto' })).not.toContain(
+      'createBreadcrumb({ label:',
     );
   });
 
@@ -51,7 +56,7 @@ describe('breadcrumbSnippet', () => {
 
   it('mostra as reticências e o separador próprio quando a story os usa', () => {
     const comReticencias = breadcrumbSnippet({ ellipsis: true, ellipsisLabel: 'Mais páginas' });
-    expect(comReticencias).toContain("createBreadcrumbEllipsis({ label: 'Mais páginas' })");
+    expect(comReticencias).toContain("createBreadcrumbEllipsis({ 'aria-label': 'Mais páginas' })");
     expect(comReticencias).toContain('createBreadcrumbEllipsis,');
 
     // Sem rótulo elas ficam decorativas, e a chamada sai vazia.

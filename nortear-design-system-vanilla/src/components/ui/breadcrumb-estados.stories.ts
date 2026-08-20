@@ -143,7 +143,7 @@ export const WithEllipsis: Story = {
     home.appendChild(createBreadcrumbLink({ href: '#', text: 'Início' }));
 
     const ellipsis = createBreadcrumbItem();
-    ellipsis.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));
+    ellipsis.appendChild(createBreadcrumbEllipsis({ 'aria-label': 'Mais páginas' }));
 
     const components = createBreadcrumbItem();
     components.appendChild(createBreadcrumbLink({ href: '#', text: 'Componentes' }));

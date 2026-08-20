@@ -54,7 +54,7 @@ export const Empty: Story = {
       source: {
         transform: chartSourceCom({
           dados: 'vazio',
-          label: undefined,
+          'aria-label': undefined,
           height: undefined,
           emptyLabel: FRASE_VAZIA,
         }),
@@ -117,7 +117,7 @@ export const SingleSeries: Story = {
     type: 'bar',
     height: 240,
     class: 'nds-max-w-md',
-    label: 'Acessos mensais no desktop, de janeiro a junho',
+    'aria-label': 'Acessos mensais no desktop, de janeiro a junho',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
@@ -149,7 +149,7 @@ export const MultiSeries: Story = {
       source: {
         transform: chartSourceCom({
           dados: 'multi',
-          label: 'Acessos mensais por dispositivo: desktop e mobile',
+          'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
         }),
       },
       description: {
@@ -163,7 +163,7 @@ export const MultiSeries: Story = {
     type: 'bar',
     height: 240,
     class: 'nds-max-w-md',
-    label: 'Acessos mensais por dispositivo: desktop e mobile',
+    'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
@@ -212,7 +212,7 @@ export const OnePoint: Story = {
       // Override de story: o caso de borda é o dado, e é ele que o snippet
       // precisa mostrar — um ponto só.
       source: {
-        transform: chartSourceCom({ dados: 'umPonto', label: 'Acessos de janeiro' }),
+        transform: chartSourceCom({ dados: 'umPonto', 'aria-label': 'Acessos de janeiro' }),
       },
       description: {
         story: 'Série com um único ponto. Caso de borda: o desenho continua com eixo, categoria escrita e uma forma de dado.',
@@ -224,7 +224,7 @@ export const OnePoint: Story = {
     type: 'bar',
     height: 240,
     class: 'nds-max-w-md',
-    label: 'Acessos de janeiro',
+    'aria-label': 'Acessos de janeiro',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
@@ -269,7 +269,7 @@ export const ThemeTokens: Story = {
       source: {
         transform: chartSourceCom({
           dados: 'multi',
-          label: 'Acessos mensais por dispositivo, no tema em vigor',
+          'aria-label': 'Acessos mensais por dispositivo, no tema em vigor',
         }),
       },
       description: {
@@ -283,7 +283,7 @@ export const ThemeTokens: Story = {
     type: 'bar',
     height: 240,
     class: 'nds-max-w-md',
-    label: 'Acessos mensais por dispositivo, no tema em vigor',
+    'aria-label': 'Acessos mensais por dispositivo, no tema em vigor',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
@@ -328,7 +328,7 @@ export const GraphicContrast: Story = {
       source: {
         transform: chartSourceCom({
           dados: 'multi',
-          label: 'Acessos mensais por dispositivo: desktop e mobile',
+          'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
         }),
       },
       description: {
@@ -342,7 +342,7 @@ export const GraphicContrast: Story = {
     type: 'bar',
     height: 240,
     class: 'nds-max-w-md',
-    label: 'Acessos mensais por dispositivo: desktop e mobile',
+    'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);

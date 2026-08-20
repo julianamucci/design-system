@@ -86,7 +86,7 @@ export const Bar: Story = {
     type: 'bar',
     height: 240,
     class: 'nds-max-w-md',
-    label: 'Gráfico de barras: acessos mensais no desktop, de janeiro a junho',
+    'aria-label': 'Gráfico de barras: acessos mensais no desktop, de janeiro a junho',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
@@ -117,7 +117,7 @@ export const Line: Story = {
         transform: chartSourceCom({
           type: 'line',
           dados: 'multi',
-          label: 'Gráfico de linhas: acessos mensais por dispositivo, de janeiro a junho',
+          'aria-label': 'Gráfico de linhas: acessos mensais por dispositivo, de janeiro a junho',
         }),
       },
       description: {
@@ -131,7 +131,7 @@ export const Line: Story = {
     type: 'line',
     height: 240,
     class: 'nds-max-w-md',
-    label: 'Gráfico de linhas: acessos mensais por dispositivo, de janeiro a junho',
+    'aria-label': 'Gráfico de linhas: acessos mensais por dispositivo, de janeiro a junho',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
@@ -173,7 +173,7 @@ export const Area: Story = {
         transform: chartSourceCom({
           type: 'area',
           dados: 'multi',
-          label: 'Gráfico de área: volume mensal de acessos por dispositivo',
+          'aria-label': 'Gráfico de área: volume mensal de acessos por dispositivo',
         }),
       },
       description: {
@@ -187,7 +187,7 @@ export const Area: Story = {
     type: 'area',
     height: 240,
     class: 'nds-max-w-md',
-    label: 'Gráfico de área: volume mensal de acessos por dispositivo',
+    'aria-label': 'Gráfico de área: volume mensal de acessos por dispositivo',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
@@ -232,7 +232,7 @@ export const Pie: Story = {
           type: 'pie',
           dados: 'rosca',
           height: 280,
-          label: 'Distribuição de acessos por dispositivo: desktop, mobile e tablet',
+          'aria-label': 'Distribuição de acessos por dispositivo: desktop, mobile e tablet',
         }),
       },
       description: {
@@ -245,7 +245,7 @@ export const Pie: Story = {
     type: 'pie',
     height: 280,
     class: 'nds-max-w-md',
-    label: 'Distribuição de acessos por dispositivo: desktop, mobile e tablet',
+    'aria-label': 'Distribuição de acessos por dispositivo: desktop, mobile e tablet',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);

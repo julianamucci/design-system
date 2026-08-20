@@ -3,7 +3,7 @@ import { chartEmCardSnippet, chartSnippet, chartSource, chartSourceCom } from '.
 
 describe('chartSnippet', () => {
   it('devolve a chamada da fábrica, e não o outerHTML do elemento', () => {
-    const código = chartSnippet({ label: 'Acessos mensais' });
+    const código = chartSnippet({ 'aria-label': 'Acessos mensais' });
     expect(código).toContain("import { createChart } from '@/components/ui/chart';");
     expect(código).toContain('createChart({');
     expect(código).not.toContain('data-slot=');
@@ -12,28 +12,31 @@ describe('chartSnippet', () => {
   });
 
   it('usa o nome da opção de descrição da fábrica', () => {
-    // Quem descreve o desenho aqui é `label`, e é ele que vira o `aria-label`
-    // do bloco. Um desenho sem descrição é conteúdo perdido.
-    const código = chartSnippet({ label: 'Acessos mensais no desktop' });
-    expect(código).toContain("label: 'Acessos mensais no desktop'");
+    // Quem descreve o desenho aqui é `'aria-label'`, e é ele que vira o
+    // atributo do bloco. Um desenho sem descrição é conteúdo perdido.
+    const código = chartSnippet({ 'aria-label': 'Acessos mensais no desktop' });
+    expect(código).toContain("'aria-label': 'Acessos mensais no desktop'");
     expect(código).not.toContain('ariaLabel');
-    expect(código).not.toContain("'aria-label'");
+    // O apelido depreciado não vaza para o painel Code: quem copia dali adota
+    // o nome que leu. A âncora de início de linha é o que separa a OPÇÃO da
+    // chamada do `label` de cada ponto do dado, que é outra coisa.
+    expect(código).not.toMatch(/\n {2}label: /);
   });
 
   it('omite o que já é padrão da fábrica', () => {
-    const código = chartSnippet({ label: 'X' });
+    const código = chartSnippet({ 'aria-label': 'X' });
     // `bar` e o renderer `svg` são o padrão; a legenda sem valor segue a
     // contagem de séries.
     expect(código).not.toContain('type:');
     expect(código).not.toContain('renderer:');
     expect(código).not.toContain('showLegend');
     expect(código).not.toContain('title:');
-    expect(chartSnippet({ label: 'X', type: 'bar', renderer: 'svg' })).toBe(código);
+    expect(chartSnippet({ 'aria-label': 'X', type: 'bar', renderer: 'svg' })).toBe(código);
   });
 
   it('mostra as opções quando a story as usa', () => {
     const código = chartSnippet({
-      label: 'X',
+      'aria-label': 'X',
       type: 'line',
       title: 'Vendas mensais',
       showLegend: false,
@@ -74,13 +77,13 @@ describe('chartSnippet', () => {
   it('no vazio a série chega sem dado, com a frase que explica a ausência', () => {
     const código = chartSnippet({
       dados: 'vazio',
-      label: undefined,
+      'aria-label': undefined,
       emptyLabel: 'Nenhum dado disponível para o período selecionado.',
     });
     expect(código).toContain('series: []');
     expect(código).toContain("emptyLabel: 'Nenhum dado disponível para o período selecionado.'");
     // Sem desenho não há imagem para narrar: a descrição some junto.
-    expect(código).not.toMatch(/\n {2}label: /);
+    expect(código).not.toMatch(/\n {2}'aria-label': /);
   });
 
   it('a cor autoral mora DENTRO do item de série', () => {
@@ -116,7 +119,7 @@ describe('chartSource', () => {
     // chamada e emitia `class` a partir do control `className`. As duas coisas
     // continuam valendo — o que mudou é que agora isto é testável.
     const código = chartSource('', {
-      args: { type: 'bar', label: 'Acessos mensais', height: 240, className: 'nds-max-w-md' },
+      args: { type: 'bar', 'aria-label': 'Acessos mensais', height: 240, className: 'nds-max-w-md' },
     });
     expect(código).toContain('const acessosMensais = [');
     expect(código).toContain('data: acessosMensais');
@@ -141,13 +144,13 @@ describe('chartSourceCom', () => {
     expect(código).toContain('height: 300');
   });
 
-  it('`label: undefined` apaga o padrão em vez de reintroduzi-lo', () => {
-    const código = chartSourceCom({ title: 'Vendas mensais', label: undefined })('', {});
+  it("`'aria-label': undefined` apaga o padrão em vez de reintroduzi-lo", () => {
+    const código = chartSourceCom({ title: 'Vendas mensais', 'aria-label': undefined })('', {});
     expect(código).toContain("title: 'Vendas mensais'");
     // A OPÇÃO da chamada, não o `label` de cada ponto do dado: o `{ label: 'Jan',
     // value: 186 }` do bloco de dados é outra coisa, e proibir a palavra
     // inteira mediria a linha errada.
-    expect(código).not.toMatch(/\n {2}label: /);
+    expect(código).not.toMatch(/\n {2}'aria-label': /);
   });
 });
 

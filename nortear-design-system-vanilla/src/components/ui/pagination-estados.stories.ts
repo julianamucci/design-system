@@ -40,7 +40,7 @@ const faixa = (label: string, current: number) => () =>
       total: 5,
       current,
       showPrevNext: true,
-      label,
+      'aria-label': label,
       onPageChange,
     }),
   );

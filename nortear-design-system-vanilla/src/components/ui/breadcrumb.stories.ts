@@ -8,6 +8,7 @@ import {
   createBreadcrumbLink,
   createBreadcrumbPage,
   createBreadcrumbSeparator,
+  createBreadcrumbEllipsis,
 } from './breadcrumb';
 import { breadcrumbSource } from './breadcrumb.source';
 import { createBreadcrumbDocs } from '@/components/docs/BreadcrumbDocs';
@@ -38,7 +39,7 @@ type Story = StoryObj;
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 function buildPlaygroundBreadcrumb(): HTMLElement {
-  const nav = createBreadcrumb({ label: 'breadcrumb' });
+  const nav = createBreadcrumb({ 'aria-label': 'breadcrumb' });
   const list = createBreadcrumbList();
 
   const home = createBreadcrumbItem();
@@ -133,6 +134,28 @@ export const Playground: Story = {
         falhas,
         falhas.length ? `\n${descreverFalhasDeBreadcrumb(falhas)}\n` : '',
       ).toEqual([]);
+    });
+
+    await step('O apelido depreciado continua produzindo o atributo', async () => {
+      // Aqui `label` nomeava DOIS alvos no mesmo arquivo — o landmark e as
+      // reticências. Os dois ganharam o canônico e mantiveram o antigo como
+      // apelido; sem esta asserção, a compatibilidade é promessa sem contrato.
+      const navAntigo = createBreadcrumb({ label: 'Trilha do produto' });
+      await expect(navAntigo).toHaveAttribute('aria-label', 'Trilha do produto');
+
+      const reticenciasAntigo = createBreadcrumbEllipsis({ label: 'Mais páginas' });
+      await expect(reticenciasAntigo).toHaveAttribute('aria-label', 'Mais páginas');
+      await expect(reticenciasAntigo).toHaveAttribute('role', 'img');
+
+      // E o canônico vence quando os dois vierem.
+      const navAmbos = createBreadcrumb({ label: 'Antigo', 'aria-label': 'Canônico' });
+      await expect(navAmbos).toHaveAttribute('aria-label', 'Canônico');
+
+      const reticenciasAmbos = createBreadcrumbEllipsis({
+        label: 'Antigo',
+        'aria-label': 'Canônico',
+      });
+      await expect(reticenciasAmbos).toHaveAttribute('aria-label', 'Canônico');
     });
   },
 };

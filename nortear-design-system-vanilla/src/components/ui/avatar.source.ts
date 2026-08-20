@@ -50,7 +50,9 @@ export function avatarSnippet(o: AvatarSnippetOptions = {}): string {
   return snippet(
     importar('avatar', ...nomes),
     `const avatar = ${chamada('createAvatar', linhas)};`,
-    o.status ? `avatar.appendChild(createAvatarBadge({ label: ${texto(o.status)} }));` : undefined,
+    o.status
+      ? `avatar.appendChild(createAvatarBadge({ 'aria-label': ${texto(o.status)} }));`
+      : undefined,
     montar('avatar'),
   );
 }
@@ -121,10 +123,10 @@ export function avatarGranularSourceCom(
 
 export type AvatarGrupoSnippetOptions = {
   /**
-   * Nome acessível da fila. A opção da fábrica chama-se `label` — é ela que
-   * emite `role="group"` e `aria-label` juntos; sem ela a fila é anônima.
+   * Nome acessível da fila. A opção da fábrica chama-se `'aria-label'` — é ela
+   * que emite `role="group"` e `aria-label` juntos; sem ela a fila é anônima.
    */
-  label?: string;
+  'aria-label'?: string;
   /** Texto do excedente, no formato `+N`. */
   excedente?: string;
 };
@@ -137,7 +139,7 @@ export function avatarEmGrupoSnippet(o: AvatarGrupoSnippetOptions = {}): string 
     importar('avatar', 'createAvatar', 'createAvatarGroup', 'createAvatarGroupCount'),
     `const fotos = ['/equipe/maria.jpg', '/equipe/joao.jpg', '/equipe/ana.jpg'];
 
-const grupo = createAvatarGroup({ label: ${texto(o.label ?? 'Participantes')} });
+const grupo = createAvatarGroup({ 'aria-label': ${texto(o['aria-label'] ?? 'Participantes')} });
 for (const src of fotos) {
   // Alt vazio: quem nomeia a fila é o rótulo do grupo, e repetir o nome de
   // cada pessoa faria o leitor de tela anunciar a lista duas vezes.

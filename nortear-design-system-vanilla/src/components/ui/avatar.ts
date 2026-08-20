@@ -94,7 +94,9 @@ export function createAvatarFallback(options: AvatarFallbackOptions = {}): HTMLE
 // projeto — o ponto do status renderizava sem tamanho e sem cor.
 
 export interface AvatarGroupOptions {
-  /** Nome acessível do grupo (`aria-label`). Sem ele o grupo é anônimo. */
+  /** Nome acessível do grupo. Sem ele o grupo é anônimo. */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   label?: string;
   className?: string;
 }
@@ -107,16 +109,20 @@ export interface AvatarGroupCountOptions {
 
 export interface AvatarBadgeOptions {
   /**
-   * Rótulo acessível do indicador. Um ponto colorido não diz nada sozinho —
+   * Nome acessível do indicador. Um ponto colorido não diz nada sozinho —
    * sem isto o estado só existe para quem enxerga.
    */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   label?: string;
   className?: string;
 }
 
 /** Fila de avatares sobrepostos. O recuo e a borda vêm de `.nds-avatar-group`. */
 export function createAvatarGroup(options: AvatarGroupOptions = {}): HTMLElement {
-  const { label, className } = options;
+  const { className } = options;
+  // `label` continua aceito como apelido do nome acessível; o canônico vence.
+  const label = options['aria-label'] ?? options.label;
 
   const el = document.createElement('div');
   el.dataset.slot = 'avatar-group';
@@ -151,7 +157,9 @@ export function createAvatarGroupCount(options: AvatarGroupCountOptions = {}): H
  * a cada renderização um ponto que não muda só atrapalha quem ouve.
  */
 export function createAvatarBadge(options: AvatarBadgeOptions = {}): HTMLElement {
-  const { label, className } = options;
+  const { className } = options;
+  // `label` continua aceito como apelido do nome acessível; o canônico vence.
+  const label = options['aria-label'] ?? options.label;
 
   const el = document.createElement('span');
   el.dataset.slot = 'avatar-badge';

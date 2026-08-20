@@ -125,13 +125,13 @@ export const Playground: Story = {
         richColors: args.richColors,
         closeButton: args.closeButton,
         duration: args.duration,
-        label: 'Notificações da demonstração',
+        'aria-label': 'Notificações da demonstração',
       }),
     );
 
     return wrapper;
   },
-  play: async ({ canvasElement, step }) => {
+  play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
 
     // Cada play estabelece a própria precondição: o painel Interactions
@@ -170,6 +170,34 @@ export const Playground: Story = {
       const icone = torrada.querySelector<HTMLElement>('.nds-toast-icon')!;
       await expect(icone).toHaveAttribute('aria-hidden', 'true');
       await expect(icone.querySelector('svg')).not.toBeNull();
+    });
+
+    await step('O apelido depreciado continua produzindo o atributo', async () => {
+      // `label` era o único nome da região. O canônico entrou e o antigo ficou
+      // como apelido — apagá-lo quebraria chamador em silêncio, e sem asserção
+      // a compatibilidade é promessa, não contrato.
+      const regiaoDaStory = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      const pai = regiaoDaStory.parentElement!;
+
+      const antigo = createSonnerToaster({ label: 'Região antiga' });
+      await expect(antigo).toHaveAttribute('aria-label', 'Região antiga');
+
+      // E o canônico vence quando os dois vierem.
+      const ambos = createSonnerToaster({ label: 'Antigo', 'aria-label': 'Canônico' });
+      await expect(ambos).toHaveAttribute('aria-label', 'Canônico');
+
+      // `createSonnerToaster` REGISTRA a região em vigor e desmonta a anterior:
+      // sem devolver a da story, a próxima rodada da play — o painel
+      // Interactions reexecuta no mesmo DOM — procuraria um nome que sumiu.
+      pai.appendChild(
+        createSonnerToaster({
+          position: args.position,
+          richColors: args.richColors,
+          closeButton: args.closeButton,
+          duration: args.duration,
+          'aria-label': 'Notificações da demonstração',
+        }),
+      );
     });
 
     // Termina com a tela limpa: uma notificação com prazo correndo estaria no

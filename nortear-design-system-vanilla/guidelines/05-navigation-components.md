@@ -111,7 +111,7 @@ nav (aria-label="Paginação dos resultados")
 | `onPageChange` | — | Avisado quando outra página é pedida. Opcional: uma paginação inteiramente de rota não precisa dele |
 | `hrefForPage` | — | Endereço real de cada página. Com ele o link é destino de verdade e o clique SEGUE — é o ponto de integração com roteador de cliente. Sem ele todo link nasce `#` e o clique é anulado |
 | `showPrevNext` | `true` | Exibe os controles Anterior/Próxima |
-| `label` | `'Paginação'` | Nome acessível do landmark |
+| `aria-label` | `'Paginação'` | Nome acessível do landmark. `label` segue aceito como apelido depreciado; quando os dois vêm, `aria-label` vence |
 | `align` | — | `start`/`end` encolhem a faixa e a encostam na ponta; sem valor ela ocupa a linha e fica centrada |
 | `class` | — | Classes adicionais |
 

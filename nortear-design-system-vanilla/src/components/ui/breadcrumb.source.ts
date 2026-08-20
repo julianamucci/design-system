@@ -31,9 +31,9 @@ export type BreadcrumbSnippetOptions = {
   atual?: string;
   /**
    * Nome acessível do landmark de navegação. A opção da fábrica se chama
-   * `label`, e sem valor vale o padrão dela.
+   * `'aria-label'`, e sem valor vale o padrão dela.
    */
-  label?: string;
+  'aria-label'?: string;
   /** Reticências entre o primeiro nível e os seguintes. */
   ellipsis?: boolean;
   /** Nome acessível das reticências. Sem ele, elas ficam decorativas. */
@@ -94,7 +94,10 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
   ];
   if (o.ellipsis) nomes.push('createBreadcrumbEllipsis');
 
-  const raiz = chamada('createBreadcrumb', opcoes([['label', o.label ? texto(o.label) : undefined]]));
+  const raiz = chamada(
+    'createBreadcrumb',
+    opcoes([['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined]]),
+  );
 
   const corpoDoNivel =
     o.onNavigate || o.linkSetup
@@ -128,7 +131,7 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
     ? `const oculto = createBreadcrumbItem();
 oculto.appendChild(${chamada(
         'createBreadcrumbEllipsis',
-        opcoes([['label', o.ellipsisLabel ? texto(o.ellipsisLabel) : undefined]]),
+        opcoes([['aria-label', o.ellipsisLabel ? texto(o.ellipsisLabel) : undefined]]),
       )});`
     : undefined;
 

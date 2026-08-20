@@ -168,7 +168,7 @@ export const Group: Story = {
     // Override de story: a fila é composta por três fábricas, e o contador é o
     // último item dela — outra FORMA de snippet.
     docs: {
-      source: { transform: avatarEmGrupoSourceCom({ label: 'Participantes', excedente: '+3' }) },
+      source: { transform: avatarEmGrupoSourceCom({ 'aria-label': 'Participantes', excedente: '+3' }) },
       description: {
         story:
           'Avatares sobrepostos com o contador do excedente fechando a fila. O recuo e a borda saem de <code>.nds-avatar-group</code>.',
@@ -176,7 +176,7 @@ export const Group: Story = {
     },
   },
   render: () => {
-    const grupo = createAvatarGroup({ label: 'Participantes' });
+    const grupo = createAvatarGroup({ 'aria-label': 'Participantes' });
 
     for (const src of [IMG_MARIA, IMG_SECOND, IMG_THIRD]) {
       const av = createAvatar({ src, alt: '', fallbackText: '' });
@@ -230,7 +230,7 @@ export const WithStatus: Story = {
       alt: 'Foto de perfil de Maria Rodrigues',
       fallbackText: 'MR',
     });
-    avatar.appendChild(createAvatarBadge({ label: 'Online' }));
+    avatar.appendChild(createAvatarBadge({ 'aria-label': 'Online' }));
     return avatar;
   },
   play: async ({ canvasElement }) => {

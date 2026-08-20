@@ -57,6 +57,11 @@ function buildDemoPagination(total: number, current: number, label?: string): HT
   const nav = createPagination({
     total,
     current,
+    // aria-label distinto por instância (landmark-unique): usa a string que já
+    // intitula visivelmente o bloco onde o preview aparece. Pela OPÇÃO da
+    // fábrica, e não por um setAttribute depois de construir — o retoque some
+    // na primeira refatoração.
+    ...(label ? { 'aria-label': label } : {}),
     onPageChange: (page) => {
       track('page_change', {
         component: 'pagination',
@@ -66,9 +71,6 @@ function buildDemoPagination(total: number, current: number, label?: string): HT
       });
     },
   });
-  // aria-label distinto por instância (landmark-unique): usa a string que já
-  // intitula visivelmente o bloco onde o preview aparece.
-  if (label) nav.setAttribute('aria-label', label);
   return nav;
 }
 
@@ -354,7 +356,7 @@ export function createPaginationDocs(): HTMLElement {
   hrefForPage: (page) => \`?page=\${page}\`,
   onPageChange: (page) => track('pagination_change', { page }),
   align: 'end',
-  label: 'Paginação de resultados',
+  'aria-label': 'Paginação de resultados',
 });`,
         });
 
@@ -560,7 +562,7 @@ export type PaginationOptions = {
   onPageChange?: (page: number) => void;   // avisado quando outra página é pedida
   hrefForPage?: (page: number) => string;  // endereço real de cada página
   showPrevNext?: boolean;                  // exibe Previous e Next (default true)
-  label?: string;                          // nome do landmark (default 'Paginação')
+  'aria-label'?: string;                   // nome do landmark (default 'Paginação')
   align?: 'start' | 'end';                 // encosta a faixa numa das pontas
   class?: string;                          // classes .nds-* extras no <nav>
 };
@@ -587,7 +589,7 @@ export function createPagination(options: PaginationOptions): HTMLElement;`;
                 { name: 'onPageChange',  type: '(page: number) => void',    defaultValue: '—',            required: 'Não', description: 'Avisado quando outra página é pedida — clique numa página, no anterior ou no próximo. Continua sendo chamado junto com hrefForPage: é por ele que passam a analítica e o estado da tela.' },
                 { name: 'hrefForPage',   type: '(page: number) => string',  defaultValue: '—',            required: 'Não', description: 'Endereço real de cada página. Sem ele todo link nasce href="#" e o clique é anulado, o que serve à paginação que vive só na memória; com ele o link é um destino de verdade e o clique SEGUE — quem usa roteador de cliente o intercepta como faria com qualquer link.' },
                 { name: 'showPrevNext',  type: 'boolean',                   defaultValue: 'true',         required: 'Não', description: 'Exibe controles Previous/Next nas extremidades.' },
-                { name: 'label',         type: 'string',                    defaultValue: "'Paginação'",  required: 'Não', description: 'Nome acessível do landmark de navegação.' },
+                { name: 'aria-label',    type: 'string',                    defaultValue: "'Paginação'",  required: 'Não', description: 'Nome acessível do landmark de navegação. Aceita também o apelido depreciado label; quando os dois vêm, aria-label vence.' },
                 { name: 'align',         type: "'start' | 'end'",           defaultValue: '—',            required: 'Não', description: 'Sem valor, a faixa ocupa a linha inteira e fica centrada; start e end a encolhem e a encostam na ponta — o caso do rodapé de tabela.' },
                 { name: 'class',         type: 'string',                    defaultValue: '—',            required: 'Não', description: 'Classes .nds-* extras no <nav>.' },
               ],

@@ -17,11 +17,15 @@ describe('paginationSnippet', () => {
   });
 
   it('usa o nome acessível pelo nome que a fábrica dá a ele', () => {
-    // Nesta fábrica a opção se chama `label` e não tem apelido: `PaginationOptions`
-    // não declara `aria-label` nem `ariaLabel`, então inventar um seria API falsa.
-    const código = paginationSnippet({ label: 'Paginação de resultados' });
-    expect(código).toContain("label: 'Paginação de resultados'");
+    // A opção canônica é `'aria-label'`; `label` segue aceito como apelido
+    // depreciado, e o painel Code ensina o canônico — quem copia dali adota o
+    // nome que leu.
+    const código = paginationSnippet({ 'aria-label': 'Paginação de resultados' });
+    expect(código).toContain("'aria-label': 'Paginação de resultados'");
     expect(código).not.toContain('ariaLabel');
+    // O espaço à frente separa a CHAVE `label:` do sufixo de `'aria-label':`,
+    // que contém a mesma sequência de letras.
+    expect(código).not.toContain(' label:');
   });
 
   it('omite o que já é padrão da fábrica', () => {
@@ -30,6 +34,7 @@ describe('paginationSnippet', () => {
     // links nascem `#`.
     expect(código).not.toContain('showPrevNext');
     expect(código).not.toContain('label:');
+    expect(código).not.toContain("'aria-label':");
     expect(código).not.toContain('hrefForPage');
     expect(código).not.toContain('align');
   });
@@ -102,9 +107,9 @@ describe('paginationSourceCom', () => {
 
 describe('paginationComEstadoSourceCom', () => {
   it('sobrepõe os args e mantém a forma com estado', () => {
-    const transform = paginationComEstadoSourceCom({ current: 3, label: 'Paginação interativa' });
+    const transform = paginationComEstadoSourceCom({ current: 3, 'aria-label': 'Paginação interativa' });
     const código = transform('', { args: { current: 9 } });
     expect(código).toContain('let paginaAtual = 3;');
-    expect(código).toContain("label: 'Paginação interativa'");
+    expect(código).toContain("'aria-label': 'Paginação interativa'");
   });
 });

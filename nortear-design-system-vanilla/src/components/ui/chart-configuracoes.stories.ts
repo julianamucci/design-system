@@ -50,7 +50,7 @@ export const SeriesColor: Story = {
         transform: chartSourceCom({
           dados: 'serieUnica',
           color: ROXO,
-          label: 'Acessos mensais no desktop, em cor autoral',
+          'aria-label': 'Acessos mensais no desktop, em cor autoral',
         }),
       },
       description: {
@@ -64,7 +64,7 @@ export const SeriesColor: Story = {
     type: 'bar',
     height: 240,
     class: 'nds-max-w-md',
-    label: 'Acessos mensais no desktop, em cor autoral',
+    'aria-label': 'Acessos mensais no desktop, em cor autoral',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);
@@ -100,7 +100,7 @@ export const CustomHeight: Story = {
       source: {
         transform: chartSourceCom({
           height: ALTURA,
-          label: 'Acessos mensais, em bloco mais alto',
+          'aria-label': 'Acessos mensais, em bloco mais alto',
         }),
       },
       description: {
@@ -113,7 +113,7 @@ export const CustomHeight: Story = {
     type: 'bar',
     height: ALTURA,
     class: 'nds-max-w-md',
-    label: 'Acessos mensais, em bloco mais alto',
+    'aria-label': 'Acessos mensais, em bloco mais alto',
   }),
   play: async ({ canvasElement, step }) => {
     const raiz = exigirRaiz(canvasElement);

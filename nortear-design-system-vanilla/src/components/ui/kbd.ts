@@ -14,7 +14,9 @@ export interface KbdOptions {
   children?: string | HTMLElement | Array<string | HTMLElement>;
   /** Alias para `children: string`. */
   text?: string;
-  /** Atalho como aria-label legível (ex.: "Command", "Shift"). */
+  /** Nome acessível: o atalho em forma legível (ex.: "Command", "Shift"). */
+  'aria-label'?: string;
+  /** @deprecated Apelido de `aria-label`. */
   label?: string;
   /** Classes adicionais. */
   className?: string;
@@ -25,12 +27,14 @@ export interface KbdGroupOptions {
 }
 
 export function createKbd(options: KbdOptions = {}): HTMLElement {
-  const { children, text, label, className } = options;
+  const { children, text, className } = options;
+  // `label` continua aceito como apelido do nome acessível; o canônico vence.
+  const ariaLabel = options['aria-label'] ?? options.label;
 
   const el = document.createElement('kbd');
   el.setAttribute('data-slot', 'kbd');
   el.className = cn('nds-kbd', className);
-  if (label) el.setAttribute('aria-label', label);
+  if (ariaLabel) el.setAttribute('aria-label', ariaLabel);
 
   const content = children ?? text;
   if (content !== undefined && content !== null) {

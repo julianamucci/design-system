@@ -11,7 +11,7 @@ type PaginationArgs = {
   total: number;
   current: number;
   showPrevNext: boolean;
-  label: string;
+  'aria-label': string;
 };
 
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
@@ -43,16 +43,16 @@ const meta: Meta<PaginationArgs> = {
       control: 'boolean',
       description: 'Exibe os controles de página anterior e próxima nas extremidades.',
     },
-    label: {
+    'aria-label': {
       control: 'text',
-      description: 'Nome acessível do landmark de navegação.',
+      description: 'Nome acessível do landmark de navegação. O apelido depreciado label continua aceito; quando os dois vêm, aria-label vence.',
     },
   },
   args: {
     total: 5,
     current: 1,
     showPrevNext: true,
-    label: 'Paginação',
+    'aria-label': 'Paginação',
   },
 };
 
@@ -86,7 +86,7 @@ export const Playground: Story = {
           total: args.total,
           current: atual,
           showPrevNext: args.showPrevNext,
-          label: args.label,
+          'aria-label': args['aria-label'],
           onPageChange: (page) => {
             atual = page;
             onPageChange(page);
@@ -105,7 +105,7 @@ export const Playground: Story = {
     await step('A paginação é um landmark de navegação nomeado', async () => {
       // accessibility.item1 — sem nome o leitor de tela anuncia só "navegação",
       // e o axe acusa `landmark-unique` quando a página mostra mais de uma.
-      const nav = canvas.getByRole('navigation', { name: args.label });
+      const nav = canvas.getByRole('navigation', { name: args['aria-label'] });
       await expect(nav.tagName).toBe('NAV');
       await expect(nav).toHaveAttribute('data-slot', 'pagination');
       await expect(nav).toHaveClass('nds-pagination');
@@ -158,6 +158,23 @@ export const Playground: Story = {
       await expect(
         canvas.getByRole('link', { name: `Ir para página ${args.current}` }),
       ).toHaveAttribute('aria-current', 'page');
+    });
+
+    await step('O apelido depreciado continua produzindo o atributo', async () => {
+      // `label` era o único nome do landmark aqui. O canônico entrou e o antigo
+      // ficou como apelido: apagá-lo quebraria chamador em silêncio, e sem
+      // asserção a compatibilidade é promessa, não contrato.
+      const antigo = createPagination({ total: 3, current: 1, label: 'Paginação antiga' });
+      await expect(antigo).toHaveAttribute('aria-label', 'Paginação antiga');
+
+      // E o canônico vence quando os dois vierem.
+      const ambos = createPagination({
+        total: 3,
+        current: 1,
+        label: 'Antigo',
+        'aria-label': 'Canônico',
+      });
+      await expect(ambos).toHaveAttribute('aria-label', 'Canônico');
     });
   },
 };

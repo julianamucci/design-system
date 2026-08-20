@@ -48,7 +48,7 @@ describe('avatarSnippet', () => {
   it('o ponto de status entra como filho do root, pela sub-fábrica', () => {
     const com = avatarSnippet({ status: 'Online' });
     expect(com).toContain('createAvatarBadge');
-    expect(com).toContain("avatar.appendChild(createAvatarBadge({ label: 'Online' }));");
+    expect(com).toContain("avatar.appendChild(createAvatarBadge({ 'aria-label': 'Online' }));");
 
     const sem = avatarSnippet();
     expect(sem).not.toContain('createAvatarBadge');
@@ -106,9 +106,12 @@ describe('avatarGranularSnippet', () => {
 
 describe('avatarEmGrupoSnippet', () => {
   it('compõe a fila com as três fábricas, e o contador fecha a lista', () => {
-    const código = avatarEmGrupoSnippet({ label: 'Participantes', excedente: '+3' });
+    const código = avatarEmGrupoSnippet({ 'aria-label': 'Participantes', excedente: '+3' });
     expect(código).toContain('createAvatarGroup');
-    expect(código).toContain("createAvatarGroup({ label: 'Participantes' })");
+    // O snippet ensina o nome canônico: o painel Code é onde alguém copia a
+    // chamada, e um apelido depreciado ali vira o nome que o produto adota.
+    expect(código).toContain("createAvatarGroup({ 'aria-label': 'Participantes' })");
+    expect(código).not.toContain('createAvatarGroup({ label:');
     expect(código).toContain("createAvatarGroupCount({ text: '+3' })");
     expect(código).toContain("contador.setAttribute('aria-hidden', 'true');");
     expect(código).toContain('grupo.appendChild(contador);');
