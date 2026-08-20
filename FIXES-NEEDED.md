@@ -2393,16 +2393,21 @@ a `play`. Nenhuma suíte de browser a alcança, então quatro stacks quebraram s
 nada acusar. A correção só tem guarda porque as transforms são funções exportadas
 e testáveis — hoje são ~3.500 testes unitários somando as três stacks fechadas.
 
-- [ ] **O vão do portão no Vue continua aberto.** A guarda de snippet do auditor
-      trata toda crase como "trecho exibido", e markup de story no Vue vive em
-      `template:`. São **260 declarações de valor de design em 54 arquivos**
-      invisíveis a `inline_style_design_value`, que reporta 26 na stack.
+- [x] **O vão do portão no Vue — FECHADO.** A guarda de snippet do auditor
+      tratava toda crase como "trecho exibido", e markup de story no Vue vive
+      em `template:`. Eram **260 declarações de valor de design em 54
+      arquivos** invisíveis a `inline_style_design_value`, que reportava 26 na
+      stack.
 
-      O conserto está escrito e medido (desmascarar as regiões de `template:`
-      eleva os achados de 122 para 176 arquivos), mas foi segurado para não mudar
-      a régua no meio do trabalho dos agentes. Aplicar quando o React fechar.
+      Desmascarar as regiões de `template:` levou os achados de 122 para 176
+      arquivos (vue: 26 → 80). Conferido nos dois sentidos: `aspect-ratio.
+      stories.ts` passa a acusar o `style="width: 480px"` que a story
+      REALMENTE renderiza, e os `code:` de `BadgeDocs`/`CheckboxDocs`
+      continuam mudos — as linhas citadas ali são as do `<template>` do SFC,
+      não as do snippet exibido.
 
-      O que distingue é a chave, não a crase: `code:` ensina, `template:` executa.
+      O que distingue é a chave, não a crase: `code:` ensina, `template:`
+      executa.
 
 - [ ] **Utilitárias que os relatórios pediram três vezes, de agentes
       independentes**: `object-fit: cover` (não existe; hoje só cravado dentro de

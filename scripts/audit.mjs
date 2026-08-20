@@ -2441,6 +2441,22 @@ function inlineStyleDecls(content) {
   const src = stripMarkupComments(stripComments(content));
   const mask = snippetMask(src);
 
+  // `template: `…`` do Vue é markup APLICADO, não trecho exibido.
+  //
+  // A guarda de snippet marca tudo entre crases como "mostrado ao leitor", e
+  // acerta na maioria — foi ela que separou 29% de falso positivo. Mas a story
+  // do Vue declara o markup que RENDERIZA numa template string, e a máscara o
+  // escondia: 260 declarações em 54 arquivos, invisíveis ao portão, enquanto o
+  // relatório mostrava 3 na stack inteira.
+  //
+  // O que distingue é a chave, não a crase: `code:` ensina, `template:` executa.
+  for (const m of src.matchAll(/\btemplate:\s*`/g)) {
+    const ini = src.indexOf('`', m.index);
+    const fim = src.indexOf('`', ini + 1);
+    if (fim < 0) continue;
+    for (let i = ini; i <= fim; i++) mask[i] = 0;
+  }
+
   // Posição absoluta -> linha. Necessário porque um objeto de estilo pode estar
   // quebrado em várias linhas, e o achado tem que ser reportado onde ele está.
   const inicioDaLinha = [0];
