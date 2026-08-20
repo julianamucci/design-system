@@ -178,11 +178,11 @@ export const MultiResponsive: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { slides: [1, 2, 3, 4, 5, 6] }; },
     template: `
-      <Carousel class="nds-w-full nds-max-w-md" aria-label="Galeria responsiva">
+      <Carousel class="nds-w-full nds-max-w-lg" aria-label="Galeria responsiva">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n" class="nds-md-basis-half nds-lg-basis-third">
-            <div class="nds-cluster nds-aspect-square nds-bg-muted-soft nds-rounded-lg" data-justify="center">
-              <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">{{ n }}</span>
+            <div class="nds-cluster nds-aspect-video nds-bg-muted-soft nds-rounded-lg" data-justify="center">
+              <span class="nds-text-h3 nds-font-semibold nds-text-muted-foreground">Slide {{ n }}</span>
             </div>
           </CarouselItem>
         </CarouselContent>

@@ -2409,6 +2409,42 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       O que distingue é a chave, não a crase: `code:` ensina, `template:`
       executa.
 
+- [ ] **`nds-w-full` não preenche nada sob `layout: 'centered'`, e 329 demos
+      dependem disso.** Medido, não suposto: a story `Multi Responsive` do
+      carousel no Vue mede 448px no runner e **163px** assim que o ancestral
+      vira contêiner flex centralizado — que é o que o `layout: 'centered'`
+      faz no Storybook real e o runner do vitest não faz. O ancestral encolhe
+      para o conteúdo, e `width: 100%` passa a resolver contra a caixa já
+      encolhida.
+
+      163 é exatamente o número que a asserção quebrada implicava
+      (`16 / 0,098159509202454`), então a causa está fechada.
+
+      **As outras quatro stacks só parecem certas por acidente.** O React mede
+      512 → 512 no mesmo teste, e não porque o `w-full` funcione: os rótulos
+      dele são `Slide 1`…`Slide 6`, o encolhe-para-o-conteúdo dá ~680px e o
+      `max-w-lg` capa em 512, que por sorte é a medida pretendida. Encurte os
+      rótulos e o React colapsa igual. O Vue colapsava porque os dele eram só
+      o número — foi o rótulo curto que revelou o defeito, não uma diferença
+      de stack.
+
+      Radius: **329 ocorrências de `nds-w-full nds-max-w-*` em stories** (react
+      75, vue 78, svelte 20, vanilla 85, angular 71), 51 delas no carousel.
+      Trocar o idioma por uma largura definida (`nds-w-lg` = 32rem = o mesmo
+      valor de `nds-max-w-lg`) resolve de vez, mas muda o render de 329 caixas
+      de demonstração — é decisão da dona, não conserto de manutenção.
+
+- [ ] **O mesmo carrossel tem quatro nomes acessíveis diferentes.** Na story
+      `Multi Responsive`: `Conjunto longo de slides` (vanilla), `Galeria de
+      múltiplos itens` (react), `Vários itens por vez` (angular), `Galeria
+      responsiva` (vue). Mesma demonstração, mesmo conteúdo — o nome da região
+      devia ser um só. Não alinhei junto porque há `play` que consulta a região
+      pelo nome, e renomear atravessa suíte de outras stacks.
+
+- [ ] **`nds-aspect-video` e `nds-aspect-16-9` são a mesma regra** —
+      `aspect-ratio: 16 / 9` declarado duas vezes em `utilities.css` (linhas
+      429 e 432). Vue e Svelte usam a primeira, React e Vanilla a segunda, e
+      nenhuma leitura revela que são idênticas. Uma das duas devia sair.
 - [ ] **Utilitárias que os relatórios pediram três vezes, de agentes
       independentes**: `object-fit: cover` (não existe; hoje só cravado dentro de
       `avatar.css` e `item.css`) e um degrau de `min-height` entre 120 e 200px.
