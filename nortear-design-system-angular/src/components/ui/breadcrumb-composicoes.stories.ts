@@ -12,6 +12,7 @@ import {
   NdsBreadcrumbSeparator,
 } from './breadcrumb';
 import { NdsButton } from './button';
+import { navegacaoEspionada } from './breadcrumb.fixtures';
 import { NDS_DROPDOWN_MENU } from './dropdown-menu';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -50,15 +51,10 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-/** Espiões de escopo de módulo: dentro do `render`, a play não os alcançaria. */
-const onNavigate = fn();
+const { onNavigate, aoNavegar } = navegacaoEspionada();
+
+/** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
 const onEllipsisOpen = fn();
-
-function aoNavegar(event: Event): void {
-  event.preventDefault();
-  onNavigate({ label: (event.currentTarget as HTMLElement).textContent?.trim() });
-}
-
 // ─── Trilha completa ──────────────────────────────────────────────────────────
 
 export const CompleteTrail: Story = {

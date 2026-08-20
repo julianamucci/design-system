@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NdsCodeBlock } from './code-block';
+import { root } from './code-block.fixtures';
 import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -28,11 +29,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-/** Raiz do bloco renderizado pela story. */
-function root(canvasElement: HTMLElement): HTMLElement {
-  return canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
-}
 
 /** Números 1-based das linhas marcadas. */
 function linhasMarcadas(canvasElement: HTMLElement): number[] {

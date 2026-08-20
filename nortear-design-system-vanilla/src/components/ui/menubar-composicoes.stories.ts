@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
-import { embrulhar, gatilhosDe } from './menubar.fixtures';
+import { embrulhar, esperarPainel, gatilhosDe } from './menubar.fixtures';
 import { menubarSource, menubarSourceCom } from './menubar.source';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
@@ -52,16 +52,6 @@ type Story = StoryObj;
 
 // A altura da moldura vai explícita em cada chamada de `embrulhar`: o padrão da
 // fixture (260px) serve à barra comum, e cada composição aqui pede a sua.
-
-async function esperarPainel(canvasElement: HTMLElement): Promise<HTMLElement> {
-  return await waitFor(() => {
-    const p = canvasElement.querySelector<HTMLElement>(
-      '[data-slot="menubar-content"]:not([hidden])',
-    );
-    if (!p) throw new Error('painel não abriu');
-    return p;
-  });
-}
 
 // ─── WithShortcuts ────────────────────────────────────────────────────────────
 

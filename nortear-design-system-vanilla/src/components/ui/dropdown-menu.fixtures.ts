@@ -1,3 +1,4 @@
+import { userEvent, waitFor, within } from 'storybook/test';
 import { createDropdownMenu, type DropdownMenuItemDef } from './dropdown-menu';
 import { createButton } from './button';
 
@@ -53,4 +54,19 @@ export function montar(
   const menu = createDropdownMenu({ trigger, items });
   queueMicrotask(() => trigger.click());
   return wrap(menu, alturaMinima);
+}
+
+/**
+ * Fecha o menu pelo Escape e espera ele sair do DOM.
+ *
+ * Vai no fim das plays que deixam o menu aberto: o painel vive num portal no
+ * `body` e sobreviveria à story seguinte. Estava copiada nas composições e nas
+ * variantes, idêntica nas duas.
+ */
+export async function fecharNoFim(): Promise<void> {
+  const body = within(document.body);
+  await userEvent.keyboard('{Escape}');
+  await waitFor(() => {
+    if (body.queryByRole('menu')) throw new Error('menu ainda aberto');
+  });
 }

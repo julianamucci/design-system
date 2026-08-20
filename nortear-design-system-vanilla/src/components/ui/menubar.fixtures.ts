@@ -1,3 +1,5 @@
+import { waitFor } from 'storybook/test';
+
 // Fixture compartilhada pelas stories do Menubar.
 //
 // Fica fora do arquivo de story porque no CSF todo export nomeado é lido como
@@ -40,4 +42,19 @@ export function embrulhar(filho: HTMLElement, alturaMinima = '260px'): HTMLEleme
 /** O painel é ancorado por CSS, não portalizado: mora dentro do canvas. */
 export function painelAberto(canvasElement: HTMLElement): HTMLElement | null {
   return canvasElement.querySelector<HTMLElement>('[data-slot="menubar-content"]:not([hidden])');
+}
+
+/**
+ * Espera o painel do menu aberto aparecer dentro do canvas.
+ *
+ * Estava copiada nas composições e nas variantes, com o mesmo seletor e sem
+ * timeout próprio — passa a ser o `waitFor` em cima de `painelAberto`, para
+ * haver UM caminho até o painel e não dois livres para divergir.
+ */
+export async function esperarPainel(canvasElement: HTMLElement): Promise<HTMLElement> {
+  return await waitFor(() => {
+    const p = painelAberto(canvasElement);
+    if (!p) throw new Error('painel não abriu');
+    return p;
+  });
 }

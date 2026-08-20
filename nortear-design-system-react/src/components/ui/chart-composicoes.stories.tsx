@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, waitFor } from 'storybook/test';
+import { expect } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './chart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
-import { desenhoEscreve, desenhoPintado, exigirRaiz } from '@shared/testing/chart-probe';
+import { desenhoEscreve } from '@shared/testing/chart-probe';
+import { desenhoPronto } from './chart.fixtures';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const seriesMulti = [
@@ -20,13 +21,6 @@ const meta: Meta = {
 };
 export default meta;
 type Story = StoryObj;
-
-/** Espera o desenho existir e devolve a raiz — precondição de qualquer medida. */
-async function desenhoPronto(canvasElement: HTMLElement): Promise<HTMLElement> {
-  const raiz = exigirRaiz(canvasElement);
-  await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-  return raiz;
-}
 
 export const WithCard: Story = {
   parameters: {

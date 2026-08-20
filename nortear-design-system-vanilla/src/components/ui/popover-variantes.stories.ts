@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, waitFor, userEvent } from 'storybook/test';
+import { within, expect, userEvent } from 'storybook/test';
 import {
   createPopover,
   createPopoverDescription,
   createPopoverHeader,
   createPopoverTitle,
 } from './popover';
-import { centralizar, painel } from './popover.fixtures';
+import { abrir, centralizar, painel } from './popover.fixtures';
 import { popoverSource, popoverSourceCom, popoverSourceFormulario } from './popover.source';
 import { createButton } from './button';
 import { createInput } from './input';
@@ -33,16 +33,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
-  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-  await waitFor(() => {
-    if (!painel()) throw new Error('popover ainda fechado');
-  }, { timeout: 1500 });
-  return painel()!;
-}
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 

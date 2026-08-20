@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
+import { abrirPorGesto } from './context-menu.fixtures';
 import { NdsContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
@@ -12,20 +13,6 @@ type ContextMenuArgs = {
   areaClasse: string;
   onSelect: (item: string) => void;
 };
-
-/**
- * Abre o menu pelo gesto real, no centro da área.
- *
- * `userEvent.pointer` com botão secundário: um `dispatchEvent('contextmenu')`
- * à mão não carrega as coordenadas do ponteiro, e é justamente delas que o
- * primitivo tira a posição do popup.
- */
-async function abrirPorGesto(area: HTMLElement): Promise<HTMLElement> {
-  const caixa = area.getBoundingClientRect();
-  const coords = { clientX: caixa.left + caixa.width / 2, clientY: caixa.top + caixa.height / 2 };
-  await userEvent.pointer({ keys: '[MouseRight]', target: area, coords });
-  return await esperarPortal('menu');
-}
 
 /** Ver a nota em separator.stories.ts. */
 function playgroundSource(_gerado: string, ctx: { args?: Partial<ContextMenuArgs> }): string {

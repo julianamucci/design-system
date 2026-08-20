@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
-import { montar } from './dropdown-menu.fixtures';
+import { fecharNoFim, montar } from './dropdown-menu.fixtures';
 
 const meta: Meta = {
   tags: ['overlay'],
@@ -30,14 +30,6 @@ type Story = StoryObj;
 
 /** As listas daqui são as mais longas do componente — a moldura acompanha. */
 const ALTURA_DA_MOLDURA = '220px';
-
-async function fecharNoFim(): Promise<void> {
-  const body = within(document.body);
-  await userEvent.keyboard('{Escape}');
-  await waitFor(() => {
-    if (body.queryByRole('menu')) throw new Error('menu ainda aberto');
-  });
-}
 
 // ─── Com Label ────────────────────────────────────────────────────────────────
 

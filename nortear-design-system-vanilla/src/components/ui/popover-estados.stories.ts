@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPopover } from './popover';
-import { empilharCentrado, painel } from './popover.fixtures';
+import { abrir, empilharCentrado, painel } from './popover.fixtures';
 import { popoverSource, popoverSourceAcoes, popoverSourceCom } from './popover.source';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
@@ -47,15 +47,6 @@ function buildSimpleContent(text: string): HTMLElement {
 
   c.append(title, p);
   return c;
-}
-
-/** Abre só se estiver fechado — a play REEXECUTA no mesmo DOM. */
-async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
-  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-  await waitFor(() => {
-    if (!painel()) throw new Error('popover ainda fechado');
-  }, { timeout: 1500 });
-  return painel()!;
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────

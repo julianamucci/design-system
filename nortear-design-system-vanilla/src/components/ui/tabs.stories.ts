@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
-import { makePanel } from './tabs.fixtures';
+import { ativar, makePanel } from './tabs.fixtures';
 import { tabsSource } from './tabs.source';
 import { createTabsDocs } from '@/components/docs/TabsDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -53,16 +53,6 @@ function buildItems(): TabsItemDef[] {
     { value: 'properties', label: ROTULOS.properties, content: makePanel('Lista de propriedades.') },
     { value: 'examples',   label: ROTULOS.examples,   content: makePanel('Exemplos de uso.') },
   ];
-}
-
-/**
- * Ativar é idempotente: o painel Interactions reexecuta a play no MESMO DOM, e
- * um clique cego inverteria o estado no replay. Só clica quando a aba ainda não
- * está selecionada, e espera o estado assentar.
- */
-async function ativar(aba: HTMLElement): Promise<void> {
-  if (aba.getAttribute('aria-selected') !== 'true') await userEvent.click(aba);
-  await waitFor(() => expect(aba).toHaveAttribute('aria-selected', 'true'));
 }
 
 // ─── Playground ───────────────────────────────────────────────────────────────

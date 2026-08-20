@@ -1,3 +1,5 @@
+import { userEvent, waitFor, expect } from 'storybook/test';
+
 /**
  * Painel de exemplo do Tabs — um construtor, quatro arquivos de story.
  *
@@ -20,4 +22,16 @@ export function makePanel(text: string): HTMLElement {
     'nds-text-body nds-text-muted-foreground nds-p-4 nds-rounded-md nds-border-default nds-bg-card';
   p.textContent = text;
   return p;
+}
+
+/**
+ * Ativa uma aba de forma idempotente: só clica quando ela ainda não está ativa.
+ *
+ * O painel Interactions reexecuta a play no mesmo DOM — clique cego inverteria
+ * o estado a cada rodada. Estava copiada em três arquivos de story, idêntica no
+ * corpo; só o comentário variava de tamanho.
+ */
+export async function ativar(aba: HTMLElement): Promise<void> {
+  if (aba.getAttribute('aria-selected') !== 'true') await userEvent.click(aba);
+  await waitFor(() => expect(aba).toHaveAttribute('aria-selected', 'true'));
 }

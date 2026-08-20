@@ -6,6 +6,7 @@ import {
   LayoutGrid, List,
 } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
+import { definir } from "./toggle-group.fixtures";
 
 const meta = {
   title: "UI/ToggleGroup/Variants",
@@ -25,17 +26,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-/**
- * Clica só quando o estado atual não é o desejado. Reexecutar a play no painel
- * Interactions parte do estado que a rodada anterior deixou; um clique cego
- * inverteria o resultado a cada rodada.
- */
-async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
-  if ((botao.getAttribute("aria-pressed") === "true") !== ligado) {
-    await userEvent.click(botao);
-  }
-}
 
 export const Single: Story = {
   render: () => (

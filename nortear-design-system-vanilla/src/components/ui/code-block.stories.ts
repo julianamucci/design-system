@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createCodeBlock } from './code-block';
+import { withClipboardStub } from './code-block.fixtures';
 import { codeBlockSource } from './code-block.source';
 import { createCodeBlockDocs } from '@/components/docs/CodeBlockDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -31,27 +32,6 @@ const block = createCodeBlock({
 });
 
 document.querySelector('#app')?.append(block);`;
-
-/**
- * Roda `run` com `navigator.clipboard.writeText` substituído.
- *
- * O clipboard real não funciona no browser de teste: a Clipboard API rejeita por
- * permissão e o fallback via `execCommand` exige user activation, que evento
- * sintético não tem. Sem o stub, `copyText` devolve `false` e o componente —
- * corretamente — não confirma nada.
- */
-async function withClipboardStub(run: () => Promise<void>): Promise<void> {
-  const original = navigator.clipboard;
-  Object.defineProperty(navigator, 'clipboard', {
-    value: { writeText: () => Promise.resolve() },
-    configurable: true,
-  });
-  try {
-    await run();
-  } finally {
-    Object.defineProperty(navigator, 'clipboard', { value: original, configurable: true });
-  }
-}
 
 const meta: Meta<CodeBlockArgs> = {
   title: 'UI/CodeBlock',
@@ -203,29 +183,17 @@ export const Playground: Story = {
     });
 
     await step('Copiar coloca no clipboard só o código, sem os números de linha', async () => {
-      // Stub do writeText: o clipboard real não funciona no browser de teste
-      // (rejeita por permissão, e o fallback via execCommand exige user
-      // activation, que evento sintético não tem). O que interessa verificar é
-      // nosso lado — o que é copiado e o feedback — não a API do browser.
+      // Este passo é o único que precisa LER o que foi copiado, então passa o
+      // próprio espião ao stub. O motivo de o stub existir está em
+      // `code-block.fixtures.ts`.
       const writeText = fn((text: string) => Promise.resolve(text));
-      const original = navigator.clipboard;
-      Object.defineProperty(navigator, 'clipboard', {
-        value: { writeText },
-        configurable: true,
-      });
-
-      try {
+      await withClipboardStub(async () => {
         await userEvent.click(canvas.getByRole('button', { name: /copiar código/i }));
         await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1));
         await expect(writeText).toHaveBeenCalledWith(args.code);
         // A numeração é 1..N; se tivesse vazado, apareceria no texto copiado.
         await expect(writeText).not.toHaveBeenCalledWith(expect.stringMatching(/^1import/));
-      } finally {
-        Object.defineProperty(navigator, 'clipboard', {
-          value: original,
-          configurable: true,
-        });
-      }
+      }, writeText);
     });
 
     await step('O feedback aparece e é anunciado por aria-live', async () => {

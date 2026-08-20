@@ -5,8 +5,9 @@ import {
   buildBarOption, buildLineOption, buildAreaOption, buildPieOption,
 } from './index';
 import {
-  desenhoEscreve, desenhoPintado, exigirRaiz, formasDeDado,
+  desenhoEscreve, exigirRaiz, formasDeDado,
 } from '@shared/testing/chart-probe';
+import { aguardarDesenho } from './chart.fixtures';
 import {
   chartAreaSource,
   chartBarrasSource,
@@ -45,11 +46,6 @@ const meta: Meta = {
 };
 export default meta;
 type Story = StoryObj;
-
-/** Espera o desenho sair antes de qualquer medição. */
-async function aguardarDesenho(raiz: HTMLElement) {
-  await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-}
 
 /**
  * Alturas das colunas de barra, na ordem do eixo.

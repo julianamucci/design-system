@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createPopover } from './popover';
-import { painel } from './popover.fixtures';
+import { abrir, painel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 import { createButton } from './button';
 import { createPopoverDocs } from '@/components/docs/PopoverDocs';
@@ -113,15 +113,6 @@ function buildContent(args: PopoverArgs): HTMLElement {
 
   content.append(header, actions);
   return content;
-}
-
-/** Abre só se estiver fechado — a play REEXECUTA no mesmo DOM. */
-async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
-  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-  await waitFor(() => {
-    if (!painel()) throw new Error('popover ainda fechado');
-  }, { timeout: 1500 });
-  return painel()!;
 }
 
 /** Fecha só se estiver aberto. */

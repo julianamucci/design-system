@@ -1,21 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, waitFor, within, expect, fn } from 'storybook/test';
 import { createSwitch, type SwitchSize } from './switch';
+import { definir } from './switch.fixtures';
 import { switchSource } from './switch.source';
 import { createSwitchDocs } from '@/components/docs/SwitchDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-/**
- * Leva o switch ao estado desejado, clicando SÓ quando ele ainda não está lá.
- *
- * O painel Interactions reexecuta a play no MESMO DOM, sem remontar. Um clique
- * cego alterna a partir do que a rodada anterior deixou e inverte o resultado —
- * a suíte fica verde (o vitest remonta a cada teste) e o painel falha.
- */
-async function definir(sw: HTMLElement, ligado: boolean, alvo: HTMLElement = sw): Promise<void> {
-  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(alvo);
-  await waitFor(() => expect(sw).toHaveAttribute('aria-checked', String(ligado)));
-}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 

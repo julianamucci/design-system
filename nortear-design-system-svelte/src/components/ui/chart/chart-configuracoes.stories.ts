@@ -2,8 +2,9 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, fireEvent, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './index';
 import {
-  desenhoEscreve, desenhoPintado, exigirRaiz, formasDeDado,
+  desenhoEscreve, exigirRaiz, formasDeDado,
 } from '@shared/testing/chart-probe';
+import { aguardarDesenho } from './chart.fixtures';
 import {
   chartBarrasSource,
   chartComLegendaSource,
@@ -37,10 +38,6 @@ const meta: Meta = {
 };
 export default meta;
 type Story = StoryObj;
-
-async function aguardarDesenho(raiz: HTMLElement) {
-  await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-}
 
 /**
  * Centro de cada coluna de barra, na ordem do eixo — ou seja, na ordem das

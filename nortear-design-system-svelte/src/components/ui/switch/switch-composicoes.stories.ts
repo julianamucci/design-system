@@ -1,18 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
-import { userEvent, waitFor, within, expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import SwitchStory from './SwitchStory.svelte';
+import { definir } from './switch.fixtures';
 import { switchSource } from './switch.source';
-
-/**
- * Leva o switch ao estado desejado, clicando SÓ quando ele ainda não está lá.
- * Ver a nota longa em `switch.stories.ts`: o painel Interactions reexecuta a
- * play no mesmo DOM, e clique cego inverte o resultado no replay.
- */
-async function definir(sw: HTMLElement, ligado: boolean, alvo: HTMLElement = sw): Promise<void> {
-  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(alvo);
-  await waitFor(() => expect(sw).toHaveAttribute('aria-checked', String(ligado)));
-}
 
 const meta: Meta = {
   title: 'UI/Switch/Compositions',

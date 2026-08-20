@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect, waitFor } from 'storybook/test';
+import { within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
 import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
 import { createButton } from './button';
-import { montar } from './dropdown-menu.fixtures';
+import { fecharNoFim, montar } from './dropdown-menu.fixtures';
 import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
 
 const meta: Meta = {
@@ -27,16 +27,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-async function fecharNoFim(): Promise<void> {
-  const body = within(document.body);
-  await userEvent.keyboard('{Escape}');
-  await waitFor(() => {
-    if (body.queryByRole('menu')) throw new Error('menu ainda aberto');
-  });
-}
 
 // ─── Default ──────────────────────────────────────────────────────────────────
 

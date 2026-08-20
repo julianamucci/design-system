@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { NDS_TOOLTIP } from './tooltip';
+import { balaoDe } from './tooltip.fixtures';
 import { NdsButton } from './button';
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
@@ -24,11 +25,6 @@ const ICONE_SALVAR = `<svg
           <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
           <path d="M7 3v4a1 1 0 0 0 1 1h7" />
         </svg>`;
-
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  return id ? document.getElementById(id) : null;
-}
 
 /** Luminância relativa da WCAG a partir de um `rgb(r, g, b)` computado. */
 function luminancia(cor: string): number {

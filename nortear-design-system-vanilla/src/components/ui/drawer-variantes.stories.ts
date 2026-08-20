@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { expect } from 'storybook/test';
 import { createDrawer, type DrawerDirection } from './drawer';
 import { drawerSource, drawerSourceCom } from './drawer.source';
 import { createButton } from './button';
-import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
+import { abrirPeloGatilho } from './drawer.fixtures';
 
 const meta: Meta = {
   tags: ['disclosure'],
@@ -57,15 +56,6 @@ function buildVariant(direction: DrawerDirection, titulo: string, descricao: str
   wrapper.dataset.justify = 'center';
   wrapper.appendChild(drawer);
   return wrapper;
-}
-
-/** Abre pelo gatilho, e só se ainda estiver fechado (a play é reexecutável). */
-async function abrirPeloGatilho(canvasElement: HTMLElement): Promise<HTMLElement> {
-  limparPortaisDoDrawer();
-  if (within(document.body).queryAllByRole('dialog').length === 0) {
-    await userEvent.click(within(canvasElement).getByRole('button', { name: /^abrir$/i }));
-  }
-  return await waitForPortal('dialog');
 }
 
 // A asserção de direção está escrita story a story, e não extraída para um

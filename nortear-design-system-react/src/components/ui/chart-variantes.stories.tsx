@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, waitFor } from 'storybook/test';
+import { expect } from 'storybook/test';
 import {
   ChartContainer,
   buildBarOption,
@@ -9,10 +9,9 @@ import {
 } from './chart';
 import {
   desenhoEscreve,
-  desenhoPintado,
-  exigirRaiz,
   formasDeDado,
 } from '@shared/testing/chart-probe';
+import { desenhoPronto } from './chart.fixtures';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const serieUnica = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
@@ -35,18 +34,6 @@ const meta: Meta = {
 };
 export default meta;
 type Story = StoryObj;
-
-/**
- * Espera o desenho existir e devolve a raiz do gráfico.
- *
- * É a precondição de qualquer medida, e cada story a repõe por conta própria —
- * o painel Interactions reexecuta a play no MESMO DOM.
- */
-async function desenhoPronto(canvasElement: HTMLElement): Promise<HTMLElement> {
-  const raiz = exigirRaiz(canvasElement);
-  await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-  return raiz;
-}
 
 /**
  * Os traçados de série: caminho sem preenchimento e com traço grosso.

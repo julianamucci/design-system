@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createCodeBlock } from './code-block';
+import { withClipboardStub } from './code-block.fixtures';
 import {
   codeBlockComRemocaoSource,
   codeBlockSource,
@@ -34,27 +35,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-/**
- * Roda `run` com `navigator.clipboard.writeText` substituído.
- *
- * O clipboard real não funciona no browser de teste: a Clipboard API rejeita por
- * permissão e o fallback via `execCommand` exige user activation, que evento
- * sintético não tem. Sem o stub, `copyText` devolve `false` e o componente —
- * corretamente — não confirma nada.
- */
-async function withClipboardStub(run: () => Promise<void>): Promise<void> {
-  const original = navigator.clipboard;
-  Object.defineProperty(navigator, 'clipboard', {
-    value: { writeText: () => Promise.resolve() },
-    configurable: true,
-  });
-  try {
-    await run();
-  } finally {
-    Object.defineProperty(navigator, 'clipboard', { value: original, configurable: true });
-  }
-}
 
 /** Código comprido nos dois eixos: 60 linhas e uma delas bem larga. */
 const LONG_CODE = Array.from({ length: 60 }, (_, i) =>

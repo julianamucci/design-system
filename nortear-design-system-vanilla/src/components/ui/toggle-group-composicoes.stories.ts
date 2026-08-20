@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, userEvent } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import {
   AlignLeft,
   AlignCenter,
@@ -12,7 +12,7 @@ import {
   Eye,
 } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
-import { buildLucideSvg, injectIcons } from './toggle-group.fixtures';
+import { buildLucideSvg, definir, injectIcons } from './toggle-group.fixtures';
 import { toggleGroupSource, toggleGroupSourceCom } from './toggle-group.source';
 
 const meta: Meta = {
@@ -52,17 +52,6 @@ function injectIconsAndText(group: HTMLElement, entries: Array<{ icon: unknown; 
     wrap.appendChild(t);
     btn.appendChild(wrap);
   });
-}
-
-/**
- * Clica só quando o estado atual não é o desejado. Reexecutar a play no painel
- * Interactions parte do estado que a rodada anterior deixou; um clique cego
- * inverteria o resultado a cada rodada.
- */
-async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
-  if ((botao.getAttribute('aria-pressed') === 'true') !== ligado) {
-    await userEvent.click(botao);
-  }
 }
 
 // ─── BarraDeAlinhamento (single) ──────────────────────────────────────────────

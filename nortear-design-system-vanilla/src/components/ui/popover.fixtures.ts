@@ -1,3 +1,5 @@
+import { userEvent, waitFor } from 'storybook/test';
+
 /**
  * Andaimes de demonstração do Popover — um módulo, quatro arquivos de story.
  *
@@ -51,4 +53,20 @@ export function empilharCentrado(children: HTMLElement[], alturaMinima = '280px'
 /** O painel aberto — `null` quando fechado, porque fechado ele não existe no DOM. */
 export function painel(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
+}
+
+/**
+ * Abre pelo gatilho, e só se ele ainda não estiver expandido.
+ *
+ * O painel Interactions REEXECUTA a play no mesmo DOM, sem remontar: um clique
+ * cego partiria do estado que a rodada anterior deixou e fecharia o popover em
+ * vez de abri-lo. Estava copiada byte a byte em três arquivos de story — mesmo
+ * `timeout`, mesmo `painel()`, que os três já importavam daqui.
+ */
+export async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
+  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
+  await waitFor(() => {
+    if (!painel()) throw new Error('popover ainda fechado');
+  }, { timeout: 1500 });
+  return painel()!;
 }

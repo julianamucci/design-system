@@ -3,6 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { signal } from '@angular/core';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { NdsCodeBlock } from './code-block';
+import { root, withClipboardStub } from './code-block.fixtures';
 import { NdsButton } from './button';
 import { COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 
@@ -31,33 +32,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-/** Raiz do bloco renderizado pela story. */
-function root(canvasElement: HTMLElement): HTMLElement {
-  return canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
-}
-
-/**
- * Roda `run` com `navigator.clipboard.writeText` substituído.
- *
- * O clipboard real não funciona no browser de teste: a Clipboard API rejeita
- * por permissão e o fallback via `execCommand` exige user activation, que
- * evento sintético não tem. Sem o stub, `copyText` devolve `false` e o
- * componente — corretamente — não confirma nada. O que se verifica aqui é o
- * feedback visível e o anúncio, nunca o conteúdo da área de transferência.
- */
-async function withClipboardStub(run: () => Promise<void>): Promise<void> {
-  const original = navigator.clipboard;
-  Object.defineProperty(navigator, 'clipboard', {
-    value: { writeText: () => Promise.resolve() },
-    configurable: true,
-  });
-  try {
-    await run();
-  } finally {
-    Object.defineProperty(navigator, 'clipboard', { value: original, configurable: true });
-  }
-}
 
 /** Código comprido nos dois eixos: 60 linhas e uma delas bem larga. */
 const LONG_CODE = Array.from({ length: 60 }, (_, i) =>

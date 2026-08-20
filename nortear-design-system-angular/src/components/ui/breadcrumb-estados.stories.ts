@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, userEvent, within } from 'storybook/test';
 import {
   NdsBreadcrumb,
   NdsBreadcrumbEllipsis,
@@ -11,6 +11,7 @@ import {
   NdsBreadcrumbPage,
   NdsBreadcrumbSeparator,
 } from './breadcrumb';
+import { navegacaoEspionada } from './breadcrumb.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -50,14 +51,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-/** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
-const onNavigate = fn();
-
-/** Impede a navegação de verdade e registra o clique, como um handler real faria. */
-function aoNavegar(event: Event): void {
-  event.preventDefault();
-  onNavigate({ label: (event.currentTarget as HTMLElement).textContent?.trim() });
-}
+const { onNavigate, aoNavegar } = navegacaoEspionada();
 
 // ─── Simples ──────────────────────────────────────────────────────────────────
 

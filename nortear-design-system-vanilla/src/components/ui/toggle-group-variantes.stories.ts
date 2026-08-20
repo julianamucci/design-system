@@ -11,7 +11,7 @@ import {
   List,
 } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
-import { injectIcons } from './toggle-group.fixtures';
+import { definir, injectIcons } from './toggle-group.fixtures';
 import { toggleGroupSource, toggleGroupSourceCom } from './toggle-group.source';
 
 const meta: Meta = {
@@ -35,17 +35,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers locais ───────────────────────────────────────────────────────────
-
-/**
- * Clica só quando o estado atual não é o desejado. Reexecutar a play no painel
- * Interactions parte do estado que a rodada anterior deixou; um clique cego
- * inverteria o resultado a cada rodada.
- */
-async function definir(botao: HTMLElement, ligado: boolean): Promise<void> {
-  if ((botao.getAttribute('aria-pressed') === 'true') !== ligado) {
-    await userEvent.click(botao);
-  }
-}
 
 // ─── Single ───────────────────────────────────────────────────────────────────
 

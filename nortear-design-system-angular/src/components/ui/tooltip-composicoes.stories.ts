@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { NDS_TOOLTIP } from './tooltip';
+import { balaoDe } from './tooltip.fixtures';
 import { NdsButton } from './button';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
@@ -58,11 +59,6 @@ const ICONE_INFO = `<svg
           <path d="M12 16v-4" />
           <path d="M12 8h.01" />
         </svg>`;
-
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  return id ? document.getElementById(id) : null;
-}
 
 const meta: Meta = {
   title: 'UI/Tooltip/Compositions',

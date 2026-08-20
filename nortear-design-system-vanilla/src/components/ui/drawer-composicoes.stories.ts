@@ -1,10 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
-import { waitForPortal } from '@/lib/wait-for-portal';
+import { within, expect } from 'storybook/test';
 import { createDrawer } from './drawer';
 import { drawerComFormularioSource, drawerSource, drawerSourceCom } from './drawer.source';
 import { createButton } from './button';
-import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
+import { abrirPeloGatilho } from './drawer.fixtures';
 
 const meta: Meta = {
   tags: ['disclosure'],
@@ -72,15 +71,6 @@ function buildWrapper(child: HTMLElement): HTMLElement {
   wrapper.dataset.justify = 'center';
   wrapper.appendChild(child);
   return wrapper;
-}
-
-/** Abre pelo gatilho, e só se ainda estiver fechado (a play é reexecutável). */
-async function abrirPeloGatilho(canvasElement: HTMLElement, nome: RegExp): Promise<HTMLElement> {
-  limparPortaisDoDrawer();
-  if (within(document.body).queryAllByRole('dialog').length === 0) {
-    await userEvent.click(within(canvasElement).getByRole('button', { name: nome }));
-  }
-  return await waitForPortal('dialog');
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────

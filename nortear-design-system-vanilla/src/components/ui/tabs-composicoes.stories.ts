@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
-import { makePanel } from './tabs.fixtures';
+import { ativar, makePanel } from './tabs.fixtures';
 import {
   tabsSource,
   tabsSourceCom,
@@ -65,12 +65,6 @@ function makeRichPanel(title: string, description: string): HTMLElement {
   p.textContent = description;
   wrap.append(h, p);
   return wrap;
-}
-
-/** Só clica quando a aba ainda não está selecionada — a play reexecuta no mesmo DOM. */
-async function ativar(aba: HTMLElement): Promise<void> {
-  if (aba.getAttribute('aria-selected') !== 'true') await userEvent.click(aba);
-  await waitFor(() => expect(aba).toHaveAttribute('aria-selected', 'true'));
 }
 
 function configItems(): TabsItemDef[] {

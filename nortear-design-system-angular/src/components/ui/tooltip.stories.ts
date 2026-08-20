@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import { NDS_TOOLTIP } from './tooltip';
+import { balaoDe } from './tooltip.fixtures';
 import { NdsButton } from './button';
 import { NdsTooltipDocs } from '@/components/docs/TooltipDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -37,12 +38,6 @@ const ICONE_SALVAR = `<svg
           <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
           <path d="M7 3v4a1 1 0 0 0 1 1h7" />
         </svg>`;
-
-/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  return id ? document.getElementById(id) : null;
-}
 
 /**
  * Ver a nota em separator.stories.ts: o painel Code imprime o `template` da

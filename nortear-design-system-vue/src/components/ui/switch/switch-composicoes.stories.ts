@@ -1,19 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
-import { within, userEvent, waitFor, expect } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { Switch } from './index';
+import { definir } from './switch.fixtures';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
-/**
- * Leva o switch ao estado desejado, clicando SÓ quando ele ainda não está lá.
- * Ver a nota longa em `switch.stories.ts`: o painel Interactions reexecuta a
- * play no mesmo DOM, e clique cego inverte o resultado no replay.
- */
-async function definir(sw: HTMLElement, ligado: boolean, alvo: HTMLElement = sw): Promise<void> {
-  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(alvo);
-  await waitFor(() => expect(sw).toHaveAttribute('aria-checked', String(ligado)));
-}
 
 const meta = {
   title: 'UI/Switch/Compositions',

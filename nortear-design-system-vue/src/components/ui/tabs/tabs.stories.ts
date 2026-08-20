@@ -1,18 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
+import { ativar } from './tabs.fixtures';
 import TabsDocs from '@/components/docs/TabsDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-/**
- * Ativa uma aba de forma idempotente: só clica quando ela ainda não está ativa.
- * O painel Interactions reexecuta a play no mesmo DOM — clique cego inverteria
- * o estado a cada rodada.
- */
-async function ativar(aba: HTMLElement) {
-  if (aba.getAttribute('aria-selected') !== 'true') await userEvent.click(aba);
-  await waitFor(() => expect(aba).toHaveAttribute('aria-selected', 'true'));
-}
 
 const meta: Meta<any> = {
   title: 'UI/Tabs',

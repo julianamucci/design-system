@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, screen } from 'storybook/test';
 import { NDS_POPOVER } from './popover';
+import { abrir, painel } from './popover.fixtures';
 import { NdsButton } from './button';
 import { NdsCheckbox } from './checkbox';
 import { NdsInput } from './input';
@@ -37,23 +38,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
-
-async function abrir(gatilho: HTMLElement): Promise<void> {
-  if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-  // Esperar pela VISIBILIDADE, não pela presença no DOM: o positioner nasce
-  // com visibility hidden e só aparece depois que o floating-ui mede a posição.
-  // Nesse intervalo o painel existe mas está fora da árvore de acessibilidade —
-  // getByRole('dialog') não o acha e nada dentro dele recebe foco.
-  await waitFor(() => expect(screen.getByRole('dialog')).toBeVisible());
-  // E esperar o foco assentar DENTRO do painel: a abertura o move no quadro
-  // seguinte ao da medição, e mexer no foco antes disso disputaria com o
-  // próprio componente — a ordem de tabulação medida sairia invertida.
-  await waitFor(() => expect(painel()!.contains(document.activeElement)).toBe(true));
-}
 
 /**
  * Marca e desmarca em par idempotente, como `abrir`/`fechar`.

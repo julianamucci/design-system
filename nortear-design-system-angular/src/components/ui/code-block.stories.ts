@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { NdsCodeBlock } from './code-block';
+import { withClipboardStub } from './code-block.fixtures';
 import { NdsCodeBlockDocs } from '@/components/docs/CodeBlockDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -36,32 +37,6 @@ const DEMO_CODE = [
   "  readonly source = 'const total = items.length;';",
   '}',
 ].join('\n');
-
-/**
- * Roda `run` com `navigator.clipboard.writeText` substituído por `spy`.
- *
- * O clipboard real não funciona no browser de teste: a Clipboard API rejeita
- * por permissão e o fallback via `execCommand` exige user activation, que
- * evento sintético não tem. Sem o stub, `copyText` devolve `false` e o
- * componente — corretamente — não confirma nada, e o teste mediria o browser em
- * vez do componente. Nada aqui LÊ a área de transferência: o que se verifica é
- * o feedback visível e o anúncio por região de status.
- */
-async function withClipboardStub(
-  spy: (text: string) => Promise<void>,
-  run: () => Promise<void>,
-): Promise<void> {
-  const original = navigator.clipboard;
-  Object.defineProperty(navigator, 'clipboard', {
-    value: { writeText: spy },
-    configurable: true,
-  });
-  try {
-    await run();
-  } finally {
-    Object.defineProperty(navigator, 'clipboard', { value: original, configurable: true });
-  }
-}
 
 /**
  * Ver a nota em separator.stories.ts: o renderer Angular imprime no painel Code
@@ -255,7 +230,7 @@ export const Playground: Story = {
       // O spy observa o que o COMPONENTE entrega à Clipboard API; a área de
       // transferência do browser de teste não é lida em momento nenhum.
       const writeText = fn((_texto: string) => Promise.resolve());
-      await withClipboardStub(writeText, async () => {
+      await withClipboardStub(async () => {
         await userEvent.click(root.querySelector<HTMLElement>('[data-slot="code-block-copy"]')!);
         await waitFor(() => expect(writeText).toHaveBeenCalledTimes(1));
         await expect(writeText).toHaveBeenCalledWith(args.code);
@@ -285,7 +260,7 @@ export const Playground: Story = {
           const rotulo = root.querySelector<HTMLElement>('.nds-code-block-copy-label')!;
           await expect(rotulo).toBeVisible();
         });
-      });
+      }, writeText);
     });
 
     await step('Depois de 2s o botão volta ao rótulo inicial', async () => {

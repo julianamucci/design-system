@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect, userEvent, waitFor } from 'storybook/test';
+import { within, expect } from 'storybook/test';
 import { createSwitch } from './switch';
 import {
   switchSource,
@@ -7,16 +7,7 @@ import {
   switchSourcePainel,
 } from './switch.source';
 import { createButton } from './button';
-
-/**
- * Leva o switch ao estado desejado, clicando SÓ quando ele ainda não está lá.
- * Ver a nota longa em `switch.stories.ts`: o painel Interactions reexecuta a
- * play no mesmo DOM, e clique cego inverte o resultado no replay.
- */
-async function definir(sw: HTMLElement, ligado: boolean, alvo: HTMLElement = sw): Promise<void> {
-  if ((sw.getAttribute('aria-checked') === 'true') !== ligado) await userEvent.click(alvo);
-  await waitFor(() => expect(sw).toHaveAttribute('aria-checked', String(ligado)));
-}
+import { definir } from './switch.fixtures';
 
 const meta: Meta = {
   tags: ['form'],

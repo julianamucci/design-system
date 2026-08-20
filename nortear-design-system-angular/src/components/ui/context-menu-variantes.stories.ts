@@ -2,7 +2,8 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
-import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { abrirPorGesto } from './context-menu.fixtures';
+import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -21,17 +22,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-/** Abre pelo gesto real: é das coordenadas que o primitivo tira a posição. */
-async function abrirPorGesto(area: HTMLElement): Promise<HTMLElement> {
-  const caixa = area.getBoundingClientRect();
-  await userEvent.pointer({
-    keys: '[MouseRight]',
-    target: area,
-    coords: { clientX: caixa.left + caixa.width / 2, clientY: caixa.top + caixa.height / 2 },
-  });
-  return await esperarPortal('menu');
-}
 
 export const WithSubmenu: Story = {
   parameters: {

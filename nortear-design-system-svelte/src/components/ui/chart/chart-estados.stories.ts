@@ -8,6 +8,7 @@ import {
   corDoToken, desenhoEscreve, desenhoPintado, exigirRaiz, formasDeDado,
   fundoOpacoAtras, textosDoDesenho, tramasAplicadas,
 } from '@shared/testing/chart-probe';
+import { aguardarDesenho } from './chart.fixtures';
 import {
   chartBarrasSource,
   chartDoisTiposSource,
@@ -43,10 +44,6 @@ const meta: Meta = {
 };
 export default meta;
 type Story = StoryObj;
-
-async function aguardarDesenho(raiz: HTMLElement) {
-  await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-}
 
 export const Empty: Story = {
   parameters: {
