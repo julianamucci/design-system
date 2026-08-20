@@ -4,6 +4,14 @@ import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
+import {
+  checkboxComErroSource,
+  checkboxDesabilitadoMarcadoSource,
+  checkboxDesabilitadoSource,
+  checkboxMarcadoComRotuloSource,
+  checkboxSelecionarTodosSource,
+  checkboxSource,
+} from './checkbox.source';
 
 // Ferramentas de teclado/ponteiro entregues ao contrato compartilhado. Iguais
 // nas cinco stacks — o que muda entre elas é o componente, não a medição.
@@ -25,6 +33,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: checkboxSource },
       description: {
         component:
           'Estados do Checkbox: unchecked, checked, indeterminate (seleção parcial de grupo), disabled, foco visível via teclado e error (aria-invalid).',
@@ -66,6 +77,7 @@ export const Unchecked: Story = {
 export const Checked: Story = {
   parameters: {
     covers: ['visual.item2', 'functional.item6'],
+    docs: { source: { transform: checkboxMarcadoComRotuloSource } },
   },
   render: () => ({
     Component: CheckboxStory,
@@ -93,6 +105,7 @@ export const Checked: Story = {
 export const Indeterminate: Story = {
   parameters: {
     covers: ['visual.item3'],
+    docs: { source: { transform: checkboxSelecionarTodosSource } },
   },
   render: () => ({
     Component: CheckboxStory,
@@ -119,6 +132,7 @@ const disabledOnCheckedChange = fn();
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item6'],
+    docs: { source: { transform: checkboxDesabilitadoSource } },
   },
   render: () => ({
     Component: CheckboxStory,
@@ -156,6 +170,7 @@ export const Disabled: Story = {
 export const DisabledChecked: Story = {
   parameters: {
     covers: ['visual.item4'],
+    docs: { source: { transform: checkboxDesabilitadoMarcadoSource } },
   },
   render: () => ({
     Component: CheckboxStory,
@@ -225,6 +240,7 @@ export const FocusVisible: Story = {
 export const Error: Story = {
   parameters: {
     covers: ['visual.item5'],
+    docs: { source: { transform: checkboxComErroSource } },
   },
   render: () => ({
     Component: CheckboxStory,

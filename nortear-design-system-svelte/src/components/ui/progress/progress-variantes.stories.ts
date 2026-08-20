@@ -10,6 +10,7 @@ import {
   nomeAcessivel,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
+import { progressSource } from './progress.source';
 
 const meta: Meta = {
   title: 'UI/Progress/Variants',
@@ -20,6 +21,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: valor, rótulo e cor
+      // semântica saem dos `args` de cada uma.
+      source: { transform: progressSource },
       description: {
         component:
           'As formas de uso: valor conhecido, valor com rótulo e cor semântica. O indeterminate é estado, e mora na seção Estados.',

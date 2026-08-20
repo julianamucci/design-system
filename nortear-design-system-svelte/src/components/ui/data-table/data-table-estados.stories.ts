@@ -1,13 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import DataTable from './data-table.svelte';
+import { dataTableSemResultadosSource, dataTableSource } from './data-table.source';
 import { baseColumns } from './data-table.fixtures';
 
 const meta: Meta = {
   title: 'UI/DataTable/States',
   component: DataTable,
   tags: ['tables'],
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: { source: { transform: dataTableSource } },
+  },
 };
 
 export default meta;
@@ -20,7 +25,10 @@ export const NoResults: Story = {
     enableRowSelection: true,
     emptyMessage: 'Nenhuma fatura encontrada.',
   },
-  parameters: { covers: ['visual.item6'] },
+  parameters: {
+    covers: ['visual.item6'],
+    docs: { source: { transform: dataTableSemResultadosSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 

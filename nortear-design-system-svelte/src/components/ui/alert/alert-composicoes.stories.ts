@@ -6,12 +6,23 @@ import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertAcaoStory from './AlertAcaoStory.svelte';
 import AlertClasseAdicionalStory from './AlertClasseAdicionalStory.svelte';
+import {
+  alertClasseAdicionalSource,
+  alertComAcaoSource,
+  alertSemIconeSource,
+  alertSource,
+} from './alert.source';
 
 const meta: Meta = {
   parameters: {
     design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; a composição que aninha
+      // outro componente sobrescreve com a própria marcação logo abaixo.
+      source: { transform: alertSource },
+    },
   },
   title: 'UI/Alert/Compositions',
   component: Alert,
@@ -42,6 +53,9 @@ export const WithIcon: Story = {
 };
 
 export const WithAction: Story = {
+  parameters: {
+    docs: { source: { transform: alertComAcaoSource } },
+  },
   render: () => ({ Component: AlertAcaoStory }),
 
   play: async ({ canvasElement, step }) => {
@@ -73,6 +87,9 @@ export const WithAction: Story = {
  * consumidor, e ela SOMA às do design system — não substitui.
  */
 export const AdditionalClass: Story = {
+  parameters: {
+    docs: { source: { transform: alertClasseAdicionalSource } },
+  },
   render: () => ({ Component: AlertClasseAdicionalStory }),
 
   play: async ({ canvasElement, step }) => {
@@ -95,7 +112,10 @@ export const AdditionalClass: Story = {
 };
 
 export const WithoutIcon: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: { source: { transform: alertSemIconeSource } },
+  },
   render: () => ({
     Component: AlertStory,
     props: {

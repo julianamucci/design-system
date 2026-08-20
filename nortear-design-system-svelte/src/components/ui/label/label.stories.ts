@@ -5,13 +5,17 @@ import { Label } from './index';
 import LabelStory from './LabelStory.svelte';
 import LabelDocs from '@/components/docs/LabelDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { labelSource } from './label.source';
 
 const meta: Meta = {
   title: 'UI/Label',
   component: Label,
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(LabelDocs) },
+    docs: {
+      page: withAutoDocsTab(LabelDocs),
+      source: { transform: labelSource },
+    },
     layout: 'centered',
   },
   argTypes: {

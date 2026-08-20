@@ -6,6 +6,7 @@ import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogDocs from '@/components/docs/AlertDialogDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { alertDialogSource } from './alert-dialog.source';
 
 // Args que montam a composição ficam na categoria "Demonstração" — mesmos nomes,
 // ordem e valores nas 4 stacks, para o painel de controls ser o mesmo em
@@ -18,7 +19,13 @@ const meta: Meta = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     design: figmaDesign('alertDialog'),
-    docs: { page: withAutoDocsTab(AlertDialogDocs) },
+    // Sem docgen, o gerador de source monta a tag a partir do nome interno da
+    // função compilada. O snippet vai explícito, montado a partir dos args para
+    // acompanhar os controls — e cascateia para as stories deste arquivo.
+    docs: {
+      page: withAutoDocsTab(AlertDialogDocs),
+      source: { transform: alertDialogSource },
+    },
   },
   // O docgen do Svelte está desligado no .storybook/main.ts: a aba
   // "API Reference" sai só destes argTypes. Props que o wrapper da story não
@@ -99,9 +106,6 @@ const playgroundConfirm = fn();
 const playgroundCancel = fn();
 
 export const Playground: Story = {
-  // Sem docgen, o gerador de source monta a tag a partir do nome interno da
-  // função compilada (`<wrapper …/>`). O snippet vai explícito, montado a
-  // partir dos args para acompanhar os controls.
   parameters: {
     // Contrato de teste (docs/shared/content/alert-dialog/translations.json →
     // testes.*). Só entra aqui o que os steps abaixo realmente asseveram.
@@ -116,65 +120,6 @@ export const Playground: Story = {
       'accessibility.item5',
       'visual.item1',
     ],
-    docs: {
-      source: {
-        transform: (_generated: string, ctx: { args?: Record<string, unknown> }) => {
-          const a = (ctx.args ?? {}) as {
-            open?: boolean;
-            tone?: string;
-            showMedia?: boolean;
-            triggerLabel?: string;
-            title?: string;
-            description?: string;
-            cancelLabel?: string;
-            actionLabel?: string;
-          };
-          const tone = a.tone ?? 'destructive';
-          const media = a.showMedia
-            ? `
-      <AlertDialogMedia>
-        <TriangleAlert aria-hidden="true" />
-      </AlertDialogMedia>`
-            : '';
-          return `<script lang="ts">
-  import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,${a.showMedia ? '\n    AlertDialogMedia,' : ''}
-    AlertDialogTitle,
-    AlertDialogTrigger,
-  } from "@/components/ui/alert-dialog";
-  import { Button } from "@/components/ui/button";${
-    a.showMedia ? '\n  import TriangleAlert from "@lucide/svelte/icons/triangle-alert";' : ''
-  }
-
-  let open = $state(${a.open ?? false});
-</script>
-
-<AlertDialog bind:open>
-  <AlertDialogTrigger>
-    {#snippet child({ props })}
-      <Button {...props} variant="${tone}">${a.triggerLabel ?? ''}</Button>
-    {/snippet}
-  </AlertDialogTrigger>
-  <AlertDialogContent>
-    <AlertDialogHeader>${media}
-      <AlertDialogTitle>${a.title ?? ''}</AlertDialogTitle>
-      <AlertDialogDescription>${a.description ?? ''}</AlertDialogDescription>
-    </AlertDialogHeader>
-    <AlertDialogFooter>
-      <AlertDialogCancel>${a.cancelLabel ?? ''}</AlertDialogCancel>
-      <AlertDialogAction variant="${tone}">${a.actionLabel ?? ''}</AlertDialogAction>
-    </AlertDialogFooter>
-  </AlertDialogContent>
-</AlertDialog>`;
-        },
-      },
-    },
   },
   render: (args) => ({
     Component: AlertDialogStory,

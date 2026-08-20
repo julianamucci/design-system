@@ -8,6 +8,13 @@ import {
   corDoToken, desenhoEscreve, desenhoPintado, exigirRaiz, formasDeDado,
   fundoOpacoAtras, textosDoDesenho, tramasAplicadas,
 } from '@shared/testing/chart-probe';
+import {
+  chartBarrasSource,
+  chartDoisTiposSource,
+  chartMultiSerieSource,
+  chartSource,
+  chartVazioSource,
+} from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
 const SERIE_UNICA = [{ name: 'Vendas', data: [186, 305, 237, 73] }];
@@ -21,7 +28,15 @@ const FRASE_VAZIA = 'Nenhum dado disponível para o período selecionado.';
 
 const meta: Meta = {
   // Sem argTypes: sem isto o painel Controls abre vazio.
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada estado sobrescreve com
+      // a própria composição logo abaixo.
+      source: { transform: chartSource },
+    },
+  },
   title: 'UI/Chart/States',
   component: ChartContainer,
   tags: ['display'],
@@ -36,7 +51,10 @@ async function aguardarDesenho(raiz: HTMLElement) {
 export const Empty: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item3'],
-    docs: { description: { story: 'Sem série com dado, o desenho dá lugar a uma frase que orienta a próxima ação.' } },
+    docs: {
+      source: { transform: chartVazioSource },
+      description: { story: 'Sem série com dado, o desenho dá lugar a uma frase que orienta a próxima ação.' },
+    },
   },
   args: {
     option: buildBarOption({ data: [] }),
@@ -71,7 +89,10 @@ export const Empty: Story = {
 
 export const SingleSeries: Story = {
   parameters: {
-    docs: { description: { story: 'Uma série só: a legenda não aparece, porque não há o que comparar.' } },
+    docs: {
+      source: { transform: chartBarrasSource },
+      description: { story: 'Uma série só: a legenda não aparece, porque não há o que comparar.' },
+    },
   },
   args: {
     option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
@@ -100,7 +121,10 @@ export const SingleSeries: Story = {
 export const MultiSeries: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
-    docs: { description: { story: 'Mais de uma série: legenda automática e trama própria por série.' } },
+    docs: {
+      source: { transform: chartMultiSerieSource },
+      description: { story: 'Mais de uma série: legenda automática e trama própria por série.' },
+    },
   },
   args: {
     option: buildBarOption({ xAxis: MESES, series: SERIES_MULTI }),
@@ -153,7 +177,10 @@ export const ThemeTokens: Story = {
       'functional.item6': 'montar ou alternar o tema com o gráfico da lib vivo fecha a aba nesta stack — verificação em aberto',
       'visual.item4': 'a foto no tema escuro depende do mesmo caminho — verificação em aberto',
     },
-    docs: { description: { story: 'Cor e tipografia do desenho saem dos tokens do tema em vigor, não de valores cravados.' } },
+    docs: {
+      source: { transform: chartDoisTiposSource },
+      description: { story: 'Cor e tipografia do desenho saem dos tokens do tema em vigor, não de valores cravados.' },
+    },
   },
   render: () => ({
     Component: ChartDualStory,
@@ -209,7 +236,10 @@ export const ThemeTokens: Story = {
 export const GraphicContrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
-    docs: { description: { story: 'Contorno das formas e texto dos eixos medidos contra o fundo da página.' } },
+    docs: {
+      source: { transform: chartMultiSerieSource },
+      description: { story: 'Contorno das formas e texto dos eixos medidos contra o fundo da página.' },
+    },
   },
   args: {
     option: buildBarOption({ xAxis: MESES, series: SERIES_MULTI }),

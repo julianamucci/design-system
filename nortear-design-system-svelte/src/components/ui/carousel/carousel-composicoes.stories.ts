@@ -4,6 +4,11 @@ import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
 import carouselTranslations from '@shared/content/carousel/translations.json';
+import {
+  carouselComDotsSource,
+  carouselGaleriaSource,
+  carouselSource,
+} from './carousel.source';
 
 /**
  * "Slide" é texto VISÍVEL dentro da pílula, então é conteúdo e não literal de
@@ -28,6 +33,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: carouselSource },
       description: {
         component:
           'Composições do Carousel: dots que levam direto a um slide, montados sobre a instância exposta pelo componente, e galeria de imagens.',
@@ -42,7 +50,10 @@ type Story = StoryObj;
 const TOTAL_DOTS = 5;
 
 export const WithDots: Story = {
-  parameters: { covers: ['functional.item8', 'accessibility.item6', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item8', 'accessibility.item6', 'visual.item5'],
+    docs: { source: { transform: carouselComDotsSource } },
+  },
   render: () => ({
     Component: CarouselStory,
     props: {
@@ -194,6 +205,9 @@ const FOTOS = [
 ];
 
 export const Gallery: Story = {
+  parameters: {
+    docs: { source: { transform: carouselGaleriaSource } },
+  },
   render: () => ({
     Component: CarouselStory,
     props: {

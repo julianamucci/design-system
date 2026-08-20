@@ -5,6 +5,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
 import DropdownMenuDocs from '@/components/docs/DropdownMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { dropdownMenuSource } from './dropdown-menu.source';
 
 const meta: Meta = {
   title: 'UI/DropdownMenu',
@@ -14,6 +15,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(DropdownMenuDocs),
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           'DropdownMenu construído sobre bits-ui. Menu suspenso com items, checkbox-items, radio-group, submenus, separators e shortcuts em popup acessível com role=menu, focus trap e navegação por teclado.',

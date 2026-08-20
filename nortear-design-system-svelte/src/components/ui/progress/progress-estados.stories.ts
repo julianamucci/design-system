@@ -7,6 +7,7 @@ import {
   indicadorDoProgresso,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
+import { progressSource } from './progress.source';
 
 const meta: Meta = {
   title: 'UI/Progress/States',
@@ -17,6 +18,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: cada estado é um valor de
+      // `args`, inclusive o `null` do indeterminado.
+      source: { transform: progressSource },
       description: {
         component:
           'Estados derivados do valor: default (0), loading (parcial), complete (100) e indeterminate (sem valor, com o traço em ciclo).',

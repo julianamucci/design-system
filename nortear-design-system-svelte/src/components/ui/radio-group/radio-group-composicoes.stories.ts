@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
+import {
+  radioGroupEntregaComDescricaoSource,
+  radioGroupEntregaHorizontalSource,
+  radioGroupSource,
+  radioGroupVerticalSource,
+} from './radio-group.source';
 
 const meta: Meta = {
   title: 'UI/RadioGroup/Compositions',
@@ -12,6 +18,9 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: radioGroupSource },
       description: {
         component:
           'Padrões de composição do RadioGroup: forma de pagamento (vertical), forma de entrega (horizontal) e com descrição auxiliar por item.',
@@ -24,6 +33,9 @@ export default meta;
 type Story = StoryObj;
 
 export const PaymentMethod: Story = {
+  parameters: {
+    docs: { source: { transform: radioGroupVerticalSource } },
+  },
   render: () => ({
     Component: RadioGroupStory,
     props: {
@@ -61,6 +73,9 @@ export const PaymentMethod: Story = {
 };
 
 export const DeliveryMethodHorizontal: Story = {
+  parameters: {
+    docs: { source: { transform: radioGroupEntregaHorizontalSource } },
+  },
   render: () => ({
     Component: RadioGroupStory,
     props: {
@@ -90,6 +105,9 @@ export const DeliveryMethodHorizontal: Story = {
 };
 
 export const WithDescription: Story = {
+  parameters: {
+    docs: { source: { transform: radioGroupEntregaComDescricaoSource } },
+  },
   render: () => ({
     Component: RadioGroupStory,
     props: {

@@ -7,6 +7,7 @@ import SelectStory from './SelectStory.svelte';
 import SelectDocs from '@/components/docs/SelectDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { medirAnelDeFoco, ESTADOS } from '@shared/testing/select-probe';
+import { selectSource } from './select.source';
 
 const meta: Meta = {
   title: 'UI/Select',
@@ -15,6 +16,7 @@ const meta: Meta = {
   parameters: {
     docs: {
       page: withAutoDocsTab(SelectDocs),
+      source: { transform: selectSource },
       description: {
         component:
           'Campo de seleção única: gatilho com role=combobox, lista em portal com role=listbox, navegação por teclado, busca por digitação e agrupamento por categoria.',

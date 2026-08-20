@@ -4,6 +4,14 @@ import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 import CheckboxFormStory from './CheckboxFormStory.svelte';
+import {
+  checkboxComDescricaoSource,
+  checkboxEmFormularioSource,
+  checkboxManterSessaoSource,
+  checkboxSelecionarTodosSource,
+  checkboxSemRotuloSource,
+  checkboxSource,
+} from './checkbox.source';
 
 const meta: Meta = {
   title: 'UI/Checkbox/Compositions',
@@ -14,6 +22,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: checkboxSource },
       description: {
         component:
           'Composicoes do Checkbox com Label, descrição auxiliar e uso em grupo com fieldset.',
@@ -26,6 +37,9 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  parameters: {
+    docs: { source: { transform: checkboxSemRotuloSource } },
+  },
   render: () => ({
     Component: CheckboxStory,
     props: {
@@ -91,6 +105,9 @@ export const WithLabel: Story = {
 };
 
 export const WithDescription: Story = {
+  parameters: {
+    docs: { source: { transform: checkboxComDescricaoSource } },
+  },
   render: () => ({
     Component: CheckboxStory,
     props: {
@@ -128,6 +145,9 @@ export const WithDescription: Story = {
 };
 
 export const WithLabelChecked: Story = {
+  parameters: {
+    docs: { source: { transform: checkboxManterSessaoSource } },
+  },
   render: () => ({
     Component: CheckboxStory,
     props: {
@@ -153,6 +173,9 @@ export const WithLabelChecked: Story = {
 };
 
 export const Indeterminate: Story = {
+  parameters: {
+    docs: { source: { transform: checkboxSelecionarTodosSource } },
+  },
   render: () => ({
     Component: CheckboxStory,
     props: {
@@ -184,6 +207,7 @@ export const InForm: Story = {
   parameters: {
     covers: ['functional.item5'],
     docs: {
+      source: { transform: checkboxEmFormularioSource },
       description: {
         story:
           'Checkbox marcado dentro de um formulário nativo. O bits-ui renderiza um input escondido quando há `name`, então o valor participa do FormData no submit.',

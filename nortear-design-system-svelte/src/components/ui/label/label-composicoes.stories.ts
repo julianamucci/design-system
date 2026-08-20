@@ -4,6 +4,12 @@ import { userEvent, within, expect } from 'storybook/test';
 import LabelWithInputStory from './LabelWithInputStory.svelte';
 import LabelWithCheckboxStory from './LabelWithCheckboxStory.svelte';
 import LabelCampoObrigatorioStory from './LabelCampoObrigatorioStory.svelte';
+import {
+  labelComCaixaSource,
+  labelComCampoSource,
+  labelObrigatorioSource,
+  labelSource,
+} from './label.source';
 
 /**
  * Composições do rótulo com outros elementos de formulário.
@@ -20,6 +26,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: labelSource },
       description: {
         component:
           'Composições do rótulo com outros elementos de formulário: campo de texto, caixa de seleção e campo obrigatório.',
@@ -32,7 +41,10 @@ export default meta;
 type Story = StoryObj;
 
 export const WithInput: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: { source: { transform: labelComCampoSource } },
+  },
   render: () => ({ Component: LabelWithInputStory, props: {} }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -53,6 +65,7 @@ export const WithInput: Story = {
 };
 
 export const WithCheckbox: Story = {
+  parameters: { docs: { source: { transform: labelComCaixaSource } } },
   render: () => ({ Component: LabelWithCheckboxStory, props: {} }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -82,6 +95,7 @@ export const WithCheckbox: Story = {
 
 export const RequiredField: Story = {
   name: 'With required input',
+  parameters: { docs: { source: { transform: labelObrigatorioSource } } },
   render: () => ({ Component: LabelCampoObrigatorioStory, props: {} }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

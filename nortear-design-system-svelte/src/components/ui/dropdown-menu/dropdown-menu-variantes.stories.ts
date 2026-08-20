@@ -4,6 +4,11 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
+import {
+  dropdownMenuDestrutivoSource,
+  dropdownMenuPadraoSource,
+  dropdownMenuSource,
+} from './dropdown-menu.source';
 
 const meta: Meta = {
   title: 'UI/DropdownMenu/Variants',
@@ -14,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           'As duas ênfases de item. `default` é o item neutro; `destructive` marca a ação ' +
@@ -29,7 +37,10 @@ type Story = StoryObj;
 
 export const Default: Story = {
   args: { defaultOpen: true, variant: 'default', triggerLabel: 'Mais ações' },
-  parameters: { covers: ['accessibility.item4', 'accessibility.item6'] },
+  parameters: {
+    covers: ['accessibility.item4', 'accessibility.item6'],
+    docs: { source: { transform: dropdownMenuPadraoSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const itens = within(menu).getAllByRole('menuitem');
@@ -65,7 +76,10 @@ export const Default: Story = {
 
 export const Destructive: Story = {
   args: { defaultOpen: true, variant: 'destructive', triggerLabel: 'Ações da conta' },
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: { source: { transform: dropdownMenuDestrutivoSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);

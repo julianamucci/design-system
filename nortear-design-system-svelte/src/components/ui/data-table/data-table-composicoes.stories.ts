@@ -4,13 +4,26 @@ import DataTable from './data-table.svelte';
 import DataTableEditStory from './DataTableEditStory.svelte';
 import type { DataTableColumn } from './index';
 import { waitForPortal, waitForPortalGone, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import {
+  dataTableColunasRedimensionaveisSource,
+  dataTableEdicaoInlineSource,
+  dataTableFiltrosPorColunaSource,
+  dataTableReordenarEFixarSource,
+  dataTableSource,
+} from './data-table.source';
 import { invoices, baseColumns, currency, statusVariant, type Invoice } from './data-table.fixtures';
 
 const meta: Meta = {
   title: 'UI/DataTable/Compositions',
   component: DataTable,
   tags: ['tables'],
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+    // própria configuração de colunas logo abaixo.
+    docs: { source: { transform: dataTableSource } },
+  },
 };
 
 export default meta;
@@ -61,7 +74,10 @@ export const WithColumnFilters: Story = {
     enableColumnFilters: true,
     enablePagination: false,
   },
-  parameters: { covers: ['functional.item2', 'accessibility.item4', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'accessibility.item4', 'visual.item2'],
+    docs: { source: { transform: dataTableFiltrosPorColunaSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const linhas = () => linhasDeDado(canvasElement);
@@ -114,7 +130,10 @@ export const ResizableColumns: Story = {
     data: invoices,
     enableColumnResizing: true,
   },
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: dataTableColunasRedimensionaveisSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alca = () => canvas.getByRole('separator', { name: 'Redimensionar coluna Cliente' });
@@ -162,6 +181,7 @@ export const ReorderableAndPinnable: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    docs: { source: { transform: dataTableReordenarEFixarSource } },
   },
   play: async ({ canvasElement, step }) => {
     const cabecalhos = () => [
@@ -243,7 +263,10 @@ const aoEditar = fn();
 
 export const WithInlineEditing: Story = {
   render: () => ({ Component: DataTableEditStory, props: { onEdit: aoEditar } }),
-  parameters: { covers: ['functional.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item4'],
+    docs: { source: { transform: dataTableEdicaoInlineSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 

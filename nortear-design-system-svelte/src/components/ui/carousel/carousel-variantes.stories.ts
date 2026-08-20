@@ -12,6 +12,7 @@ import {
   escalaSobMovimentoReduzido,
   descreverFalhas,
 } from '@shared/testing/carousel-probe';
+import { carouselSource, carouselVerticalSource } from './carousel.source';
 
 const meta: Meta = {
   title: 'UI/Carousel/Variants',
@@ -22,6 +23,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; a vertical sobrescreve com
+      // a sua logo abaixo.
+      source: { transform: carouselSource },
       description: {
         component:
           'Orientações disponíveis: horizontal (padrão) e vertical. A orientação controla o eixo de deslizamento e a posição dos botões de navegação.',
@@ -118,7 +122,10 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ['functional.item5', 'functional.item10', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item5', 'functional.item10', 'visual.item2'],
+    docs: { source: { transform: carouselVerticalSource } },
+  },
   render: () => ({
     Component: CarouselStory,
     props: {

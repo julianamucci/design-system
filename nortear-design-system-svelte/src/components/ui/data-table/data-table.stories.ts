@@ -4,73 +4,11 @@ import { medirRolagem } from '@shared/testing/data-table-probe';
 import DataTable from './data-table.svelte';
 import DataTableDocs from '@/components/docs/DataTableDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { dataTableSource } from './data-table.source';
 import { invoices, baseColumns, rotulosFatura, type Invoice } from './data-table.fixtures';
 
 /** Legenda da tabela — o nome que o leitor de tela anuncia ao entrar na grade. */
 const LEGENDA = 'Faturas recentes';
-
-/**
- * No Svelte o docgen está desligado: o `argTypes` é a única fonte da aba API
- * Reference, e sem `docs.source.transform` o snippet sai como `<wrapper …/>`,
- * o nome interno da função compilada.
- */
-function playgroundSource(
-  _gerado: string,
-  ctx: { args?: Record<string, unknown> },
-): string {
-  const a = ctx.args ?? {};
-  const enableRowSelection = a.enableRowSelection !== false;
-  const enablePagination = a.enablePagination !== false;
-  const pageSize = (a.pageSize as number) ?? 10;
-  const caption = (a.caption as string) ?? LEGENDA;
-  const flags = [
-    enableRowSelection ? '  enableRowSelection' : null,
-    enablePagination ? null : '  enablePagination={false}',
-    pageSize === 10 ? null : `  pageSize={${pageSize}}`,
-  ]
-    .filter(Boolean)
-    .join('\n');
-
-  return `<script lang="ts">
-  import DataTable from '@/components/ui/data-table/data-table.svelte';
-  import type { DataTableColumn, DataTableLabels } from '@/components/ui/data-table';
-
-  interface Invoice { id: string; customer: string; status: string; method: string; amount: number }
-
-  // Definidas UMA vez, em escopo estável: recriar o array a cada render zeraria
-  // ordenação, filtros e seleção.
-  const columns: DataTableColumn<Invoice>[] = [
-    { accessorKey: 'id', header: 'Fatura', size: 110 },
-    { accessorKey: 'customer', header: 'Cliente', size: 200 },
-    { accessorKey: 'status', header: 'Status', size: 140 },
-    { accessorKey: 'method', header: 'Método', size: 200 },
-    { accessorKey: 'amount', header: 'Valor', size: 130 },
-  ];
-
-  // Só as chaves informadas mudam; o resto continua no padrão do componente.
-  const rotulos: Partial<DataTableLabels> = {
-    selectAll: 'Selecionar todas as faturas',
-    selectRow: (r) => \`Selecionar fatura \${r}\`,
-    rowsSelected: (s, n) => \`\${s} de \${n} fatura(s) selecionada(s).\`,
-  };
-
-  // A identidade da linha é o número da fatura, e não a posição na tela.
-  const chaveDaFatura = (f: Invoice) => f.id;
-<\/script>
-
-<DataTable
-  {columns}
-  data={invoices}
-${flags}
-  caption="${caption}"
-  labels={rotulos}
-  rowKey={chaveDaFatura}
-  globalFilterPlaceholder="Buscar fatura, cliente, método..."
-/>
-
-<!-- Sem \`rowLabel\`: o identificador do controle de seleção sai da primeira
-     coluna, que é a mesma que identifica a linha para quem enxerga. -->`;
-}
 
 const meta: Meta = {
   title: 'UI/DataTable',
@@ -78,7 +16,10 @@ const meta: Meta = {
   tags: ['autodocs', 'tables'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(DataTableDocs) },
+    docs: {
+      page: withAutoDocsTab(DataTableDocs),
+      source: { transform: dataTableSource },
+    },
   },
   argTypes: {
     enableRowSelection: {
@@ -204,7 +145,6 @@ export const Playground: Story = {
       'accessibility.item6',
       'visual.item1',
     ],
-    docs: { source: { transform: playgroundSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
+import {
+  resizableAninhadoSource,
+  resizableComPegadorSource,
+  resizableHorizontalSource,
+  resizableSource,
+  resizableVerticalSource,
+} from './resizable.source';
 
 const meta: Meta = {
   title: 'UI/Resizable/Variants',
@@ -12,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com o
+      // seu próprio arranjo de painéis logo abaixo.
+      source: { transform: resizableSource },
       description: {
         component:
           'Variantes do Resizable: Horizontal (split lateral), Vertical (split empilhado), Nested (grupo dentro de painel) e WithHandle (pegador visual centralizado).',
@@ -38,7 +48,10 @@ function paineisDiretos(grupo: Element): HTMLElement[] {
 const SEL_GRUPO = '[data-slot="resizable-pane-group"]';
 
 export const Horizontal: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { source: { transform: resizableHorizontalSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: {
@@ -72,7 +85,10 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: resizableVerticalSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: {
@@ -105,7 +121,10 @@ export const Vertical: Story = {
 };
 
 export const Nested: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: resizableAninhadoSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: {
@@ -150,7 +169,10 @@ export const Nested: Story = {
 };
 
 export const WithHandle: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: { source: { transform: resizableComPegadorSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: {

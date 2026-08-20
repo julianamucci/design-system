@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect } from 'storybook/test';
 import SeparatorStory from './SeparatorStory.svelte';
+import {
+  separatorHorizontalSource,
+  separatorSource,
+  separatorVerticalSource,
+} from './separator.source';
 
 const meta: Meta = {
   title: 'UI/Separator/Variants',
@@ -12,6 +17,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: separatorSource },
       description: {
         component:
           'Orientações do Separator. A horizontal é uma linha de 1px de altura que ocupa a largura do contêiner; a vertical é uma linha de 1px de largura cuja altura vem do contêiner flex ou de grade, sem medida cravada.',
@@ -24,7 +32,10 @@ export default meta;
 type Story = StoryObj;
 
 export const Horizontal: Story = {
-  parameters: { covers: ['functional.item1', 'visual.item1'] },
+  parameters: {
+    covers: ['functional.item1', 'visual.item1'],
+    docs: { source: { transform: separatorHorizontalSource } },
+  },
   render: () => ({
     Component: SeparatorStory,
     props: { caso: 'variantes', orientation: 'horizontal' },
@@ -49,7 +60,10 @@ export const Horizontal: Story = {
 };
 
 export const Vertical: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    docs: { source: { transform: separatorVerticalSource } },
+  },
   render: () => ({
     Component: SeparatorStory,
     props: { caso: 'variantes', orientation: 'vertical' },

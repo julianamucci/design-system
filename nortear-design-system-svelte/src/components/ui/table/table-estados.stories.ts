@@ -5,6 +5,12 @@ import { Table } from './index';
 import TableEstadoEmpty from './TableEstadoEmpty.svelte';
 import TableEstadoLinhaSelecionada from './TableEstadoLinhaSelecionada.svelte';
 import TableEstadoCarregando from './TableEstadoCarregando.svelte';
+import {
+  tableCarregandoSource,
+  tableLinhaSelecionadaSource,
+  tableSource,
+  tableVaziaSource,
+} from './table.source';
 
 const meta: Meta = {
   title: 'UI/Table/States',
@@ -14,6 +20,11 @@ const meta: Meta = {
     // Sem argTypes: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: tableSource },
+    },
   },
 };
 
@@ -21,7 +32,10 @@ export default meta;
 type Story = StoryObj;
 
 export const Empty: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    docs: { source: { transform: tableVaziaSource } },
+  },
   render: () => ({
     Component: TableEstadoEmpty,
     props: {},
@@ -58,7 +72,10 @@ export const Empty: Story = {
 };
 
 export const SelectedRow: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item5'],
+    docs: { source: { transform: tableLinhaSelecionadaSource } },
+  },
   render: () => ({
     Component: TableEstadoLinhaSelecionada,
     props: {},
@@ -87,7 +104,10 @@ export const SelectedRow: Story = {
 };
 
 export const Loading: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item6'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item6'],
+    docs: { source: { transform: tableCarregandoSource } },
+  },
   render: () => ({
     Component: TableEstadoCarregando,
     props: {},

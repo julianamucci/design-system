@@ -6,6 +6,13 @@ import CommandEstadoEmptyStory from './CommandEstadoEmptyStory.svelte';
 import CommandEstadoLoadingStory from './CommandEstadoLoadingStory.svelte';
 import CommandEstadoDisabledStory from './CommandEstadoDisabledStory.svelte';
 import CommandEstadoCheckedStory from './CommandEstadoCheckedStory.svelte';
+import {
+  commandCarregandoSource,
+  commandItemDesabilitadoSource,
+  commandItemMarcadoSource,
+  commandSemResultadosSource,
+  commandSource,
+} from './command.source';
 
 // Espião de escopo de MÓDULO: criado dentro do `render` ele seria inalcançável
 // pela play, e a aba Actions nasceria vazia.
@@ -20,6 +27,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: commandSource },
       description: {
         component:
           'Os estados que a paleta assume sozinha (sem resultados, carregando) e os que ' +
@@ -35,7 +45,10 @@ type Story = StoryObj;
 // ─── Sem resultados ───────────────────────────────────────────────────────────
 
 export const EmptyState: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: commandSemResultadosSource } },
+  },
   render: () => ({
     Component: CommandEstadoEmptyStory,
     props: {},
@@ -78,6 +91,9 @@ export const EmptyState: Story = {
 
 export const LoadingState: Story = {
   name: 'Loading (CommandLoading)',
+  parameters: {
+    docs: { source: { transform: commandCarregandoSource } },
+  },
   render: () => ({
     Component: CommandEstadoLoadingStory,
     props: {},
@@ -105,7 +121,10 @@ export const LoadingState: Story = {
 // ─── Comando desabilitado ─────────────────────────────────────────────────────
 
 export const ItemDisabled: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item4', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item4', 'visual.item5'],
+    docs: { source: { transform: commandItemDesabilitadoSource } },
+  },
   render: () => ({
     Component: CommandEstadoDisabledStory,
     props: { onItemSelect: aoEscolher },
@@ -163,7 +182,10 @@ export const ItemDisabled: Story = {
 // ─── Comando marcado ──────────────────────────────────────────────────────────
 
 export const CheckedItem: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item5'],
+    docs: { source: { transform: commandItemMarcadoSource } },
+  },
   render: () => ({
     Component: CommandEstadoCheckedStory,
     props: {},

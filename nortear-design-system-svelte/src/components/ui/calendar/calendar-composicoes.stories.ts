@@ -4,6 +4,7 @@ import { fn, userEvent, waitFor, within, expect } from 'storybook/test';
 import { Calendar } from './index';
 import CalendarDatePickerStory from './CalendarDatePickerStory.svelte';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { calendarEmPopoverSource, calendarSource } from './calendar.source';
 
 const meta: Meta = {
   title: 'UI/Calendar/Compositions',
@@ -14,6 +15,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; a composição sobrescreve
+      // com a sua logo abaixo.
+      source: { transform: calendarSource },
       description: {
         component:
           'A composição canônica do calendário: ele quase nunca aparece solto na página. Mora dentro de um popover, atrás de um botão que mostra a data escolhida.',
@@ -32,6 +36,7 @@ export const DatePicker: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      source: { transform: calendarEmPopoverSource },
       description: {
         story:
           'O botão carrega a data escolhida; escolher uma nova atualiza o rótulo e fecha o popover.',

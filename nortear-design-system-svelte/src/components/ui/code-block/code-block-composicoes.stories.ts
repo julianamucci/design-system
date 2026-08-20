@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect } from 'storybook/test';
 import { CodeBlock } from './index';
+import { codeBlockSource } from './code-block.source';
 
 /** Mesmo trecho base da seção Composições da docs page. */
 const BASE_CODE = `const items = await load();
@@ -37,6 +38,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      // Todas as stories do arquivo são declaradas por `args`, então a mesma
+      // transform serve o arquivo inteiro.
+      source: { transform: codeBlockSource },
       description: {
         component:
           'Arranjos canônicos sobre o mesmo trecho: com rótulo de arquivo, sem numeração, com linha destacada, com intervalo destacado, com e sem rodapé.',

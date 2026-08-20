@@ -4,6 +4,14 @@ import { within, userEvent, expect } from 'storybook/test';
 import { Input } from './index';
 import InputWithLabelStory from './InputWithLabelStory.svelte';
 import InputGroupStory from './InputGroupStory.svelte';
+import {
+  inputComErroSource,
+  inputComTextoDeApoioSource,
+  inputEmGrupoComBotaoSource,
+  inputEmGrupoSource,
+  inputSenhaComApoioSource,
+  inputSource,
+} from './input.source';
 
 const meta: Meta = {
   title: 'UI/Input/Compositions',
@@ -14,6 +22,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; a de rótulo simples já é a
+      // forma canônica, as demais sobrescrevem logo abaixo.
+      source: { transform: inputSource },
       description: {
         component:
           'O Input deve ser sempre acompanhado de um rótulo acessível. Composicoes comuns: com Label, com texto de apoio, com mensagem de erro e dentro de um InputGroup, que envolve o campo com prefixos, sufixos e botões internos.',
@@ -58,6 +69,7 @@ export const WithLabel: Story = {
 };
 
 export const WithLabelAndHint: Story = {
+  parameters: { docs: { source: { transform: inputComTextoDeApoioSource } } },
   render: () => ({
     Component: InputWithLabelStory,
     props: {
@@ -86,6 +98,7 @@ export const WithLabelAndHint: Story = {
 };
 
 export const ErrorMessage: Story = {
+  parameters: { docs: { source: { transform: inputComErroSource } } },
   render: () => ({
     Component: InputWithLabelStory,
     props: {
@@ -117,6 +130,7 @@ export const ErrorMessage: Story = {
 };
 
 export const Password: Story = {
+  parameters: { docs: { source: { transform: inputSenhaComApoioSource } } },
   render: () => ({
     Component: InputWithLabelStory,
     props: {
@@ -146,7 +160,10 @@ export const Password: Story = {
  * propriedade `order` no CSS, e um `align` no elemento errado passaria batido.
  */
 export const Alignments: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item4'],
+    docs: { source: { transform: inputEmGrupoSource } },
+  },
   render: () => ({ Component: InputGroupStory, props: { cenario: 'alinhamentos' } }),
   play: async ({ canvasElement, step }) => {
     const q = <T extends HTMLElement>(sel: string) => canvasElement.querySelector<T>(sel)!;
@@ -189,7 +206,10 @@ export const Alignments: Story = {
 
 /** Fecha `functional.item8`. */
 export const AddonClick: Story = {
-  parameters: { covers: ['functional.item8'] },
+  parameters: {
+    covers: ['functional.item8'],
+    docs: { source: { transform: inputEmGrupoComBotaoSource } },
+  },
   render: () => ({ Component: InputGroupStory, props: { cenario: 'clique' } }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

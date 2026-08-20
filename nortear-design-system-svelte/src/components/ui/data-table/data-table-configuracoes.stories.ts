@@ -1,13 +1,25 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, userEvent, waitFor, expect } from 'storybook/test';
 import DataTable from './data-table.svelte';
+import {
+  dataTablePaginadaSource,
+  dataTableRotuloDeLinhaSource,
+  dataTableSource,
+  dataTableVirtualizadaSource,
+} from './data-table.source';
 import { invoices, baseColumns, type Invoice } from './data-table.fixtures';
 
 const meta: Meta = {
   title: 'UI/DataTable/Settings',
   component: DataTable,
   tags: ['tables'],
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    // Cascateia para todas as stories do arquivo; cada configuração sobrescreve
+    // com a própria composição logo abaixo.
+    docs: { source: { transform: dataTableSource } },
+  },
 };
 
 export default meta;
@@ -30,7 +42,10 @@ export const Paginated: Story = {
     // dizendo "10" numa tabela que mostra cinco.
     pageSizeOptions: [TAMANHO_DE_PAGINA, 10],
   },
-  parameters: { covers: ['functional.item8'] },
+  parameters: {
+    covers: ['functional.item8'],
+    docs: { source: { transform: dataTablePaginadaSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
@@ -143,6 +158,7 @@ export const ExplicitRowLabel: Story = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
+    docs: { source: { transform: dataTableRotuloDeLinhaSource } },
   },
   play: async ({ canvasElement, step }) => {
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
@@ -193,7 +209,10 @@ export const Virtualized1000Rows: Story = {
   },
   parameters: {
     covers: ['functional.item7', 'visual.item5'],
-    docs: { canvas: { sourceState: 'none' } },
+    docs: {
+      canvas: { sourceState: 'none' },
+      source: { transform: dataTableVirtualizadaSource },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const rolador = () => canvasElement.querySelector<HTMLElement>('.nds-data-table-scroll')!;

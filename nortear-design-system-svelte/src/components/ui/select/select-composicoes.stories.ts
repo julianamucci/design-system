@@ -4,6 +4,12 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
+import {
+  selectComGruposSource,
+  selectComIconeSource,
+  selectCompactoSource,
+  selectSource,
+} from './select.source';
 
 const meta: Meta = {
   title: 'UI/Select/Compositions',
@@ -13,6 +19,9 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: selectSource },
       description: {
         component:
           'Composicoes do Select: tamanho compacto (sm) para formulários densos, seleção por região com grupos e Select com ícones por item.',
@@ -35,6 +44,7 @@ export const CompactSize: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: selectCompactoSource },
       description: {
         story:
           'Densidade compacta (`size="sm"`) — para formulários densos e toolbars. A altura menor vem do `padding-block`, não de um valor cravado.',
@@ -69,7 +79,9 @@ export const RegionSelection: Story = {
     },
   }),
   parameters: {
+    // Mesma composição da variante agrupada — é o uso real dela.
     docs: {
+      source: { transform: selectComGruposSource },
       description: {
         story:
           'Lista de estados agrupada por região via SelectGroup + SelectGroupHeading. Útil para listas médias (8–15 itens) com categorias naturais.',
@@ -104,6 +116,7 @@ export const WithIcons: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: selectComIconeSource },
       description: {
         story:
           'SelectItem com ícone (MapPin) inline antes do label. O ícone fica decorativo (aria-hidden).',

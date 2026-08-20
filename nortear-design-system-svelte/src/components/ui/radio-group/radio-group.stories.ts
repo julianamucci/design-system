@@ -5,13 +5,18 @@ import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
 import RadioGroupDocs from '@/components/docs/RadioGroupDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { radioGroupSource } from './radio-group.source';
 
 const meta: Meta = {
   title: 'UI/RadioGroup',
   component: RadioGroup,
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(RadioGroupDocs) },
+    docs: {
+      page: withAutoDocsTab(RadioGroupDocs),
+      // Monta o grupo a partir dos `args` do Playground.
+      source: { transform: radioGroupSource },
+    },
     layout: 'centered',
   },
   argTypes: {

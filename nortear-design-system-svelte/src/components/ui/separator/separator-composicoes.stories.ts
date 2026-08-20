@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect } from 'storybook/test';
 import SeparatorStory from './SeparatorStory.svelte';
+import {
+  separatorEmCardSource,
+  separatorEmMenuSource,
+  separatorEnfaseForteSource,
+  separatorSource,
+} from './separator.source';
 
 const meta: Meta = {
   title: 'UI/Separator/Compositions',
@@ -12,6 +18,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: separatorSource },
       description: {
         component:
           'Composições do Separator: dentro de um Card, dentro de um menu vertical e com a ênfase forte.',
@@ -24,7 +33,10 @@ export default meta;
 type Story = StoryObj;
 
 export const InCard: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: separatorEmCardSource } },
+  },
   render: () => ({ Component: SeparatorStory, props: { caso: 'card' } }),
   play: async ({ canvasElement, step }) => {
     const card = canvasElement.querySelector<HTMLElement>('.nds-card')!;
@@ -46,7 +58,10 @@ export const InCard: Story = {
 };
 
 export const InMenu: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: { source: { transform: separatorEmMenuSource } },
+  },
   render: () => ({ Component: SeparatorStory, props: { caso: 'menu' } }),
   play: async ({ canvasElement, step }) => {
     const menu = canvasElement.querySelector<HTMLElement>('.nds-stack')!;
@@ -68,7 +83,10 @@ export const InMenu: Story = {
 };
 
 export const EmphasisStrong: Story = {
-  parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item5', 'functional.item6', 'visual.item5'],
+    docs: { source: { transform: separatorEnfaseForteSource } },
+  },
   render: () => ({ Component: SeparatorStory, props: { caso: 'emphasis' } }),
   play: async ({ canvasElement, step }) => {
     const padrao = canvasElement.querySelector<HTMLElement>('[data-testid="padrao"]')!;

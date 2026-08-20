@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
+import { avatarCarregandoSource, avatarIconeSource, avatarSource } from './avatar.source';
 
 const IMG_MARIA =
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
@@ -21,6 +22,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para as stories cuja marcação é a canônica (imagem +
+      // fallback); as que mudam a composição sobrescrevem logo abaixo.
+      source: { transform: avatarSource },
       description: {
         component:
           'Configuracoes do Avatar conforme o ciclo de carregamento da imagem: loaded, loading (com atraso), failed e noImage.',
@@ -64,7 +68,10 @@ export const Loaded: Story = {
 
 export const Loading: Story = {
   name: 'Loading (600ms delay)',
-  parameters: { covers: ['functional.item4'] },
+  parameters: {
+    covers: ['functional.item4'],
+    docs: { source: { transform: avatarCarregandoSource } },
+  },
   render: () => ({
     Component: AvatarStory,
     props: {
@@ -124,7 +131,10 @@ export const Failed: Story = {
 };
 
 export const NoImage: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    docs: { source: { transform: avatarIconeSource } },
+  },
   render: () => ({
     Component: AvatarStory,
     props: { variant: 'icon' },

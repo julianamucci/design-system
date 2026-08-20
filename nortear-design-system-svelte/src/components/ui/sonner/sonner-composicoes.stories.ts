@@ -10,6 +10,13 @@ import {
   PERSISTENTE,
   TEXTOS,
 } from './sonner.fixtures';
+import {
+  sonnerComAcaoSource,
+  sonnerComDescricaoSource,
+  sonnerPersistenteSource,
+  sonnerPromessaSource,
+  sonnerSource,
+} from './sonner.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -39,6 +46,9 @@ const meta: Meta = {
       },
     },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria chamada logo abaixo.
+      source: { transform: sonnerSource },
       description: {
         component:
           'Descrição, ação, ciclo de promessa e prazo infinito. A ação oferecida dentro da notificação precisa existir em outro lugar da interface: a notificação some, e o que só existia nela some junto.',
@@ -57,6 +67,7 @@ export const WithDescription: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: { transform: sonnerComDescricaoSource },
       description: {
         story:
           'Título mais descrição, para quando o título sozinho não orienta. A descrição é uma frase completa — se precisar de três linhas, o lugar da mensagem não é uma notificação.',
@@ -90,6 +101,7 @@ export const WithAction: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item2', 'visual.item2'],
     docs: {
+      source: { transform: sonnerComAcaoSource },
       description: {
         story:
           'Ação embutida para operação reversível. O botão entra na sequência de foco enquanto a notificação está na tela, e some com ela — por isso desfazer também precisa existir fora daqui.',
@@ -136,6 +148,7 @@ export const PromiseResolved: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
     docs: {
+      source: { transform: sonnerPromessaSource },
       description: {
         story:
           'Uma notificação para a operação inteira: nasce em carregamento e vira êxito no mesmo lugar, sem piscar duas caixas.',
@@ -180,6 +193,9 @@ export const PromiseRejected: Story = {
   parameters: {
     covers: ['functional.item4'],
     docs: {
+      // Mesma API do caso resolvido: o que muda é o desfecho da promessa, e não
+      // a chamada. Duplicar o snippet só faria duas cópias para divergirem.
+      source: { transform: sonnerPromessaSource },
       description: {
         story:
           'O mesmo ciclo, com a operação falhando: o carregamento vira falha, com o texto que diz o caminho de saída.',
@@ -219,6 +235,7 @@ export const Persistent: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item2'],
     docs: {
+      source: { transform: sonnerPersistenteSource },
       description: {
         story:
           'Prazo infinito, reservado a falha crítica que exige decisão. Sempre com botão de fechar: uma notificação que não sai sozinha e não pode ser fechada vira obstáculo.',

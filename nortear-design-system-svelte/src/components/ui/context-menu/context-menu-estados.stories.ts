@@ -6,6 +6,14 @@ import ContextMenuEstadoStory from './ContextMenuEstadoStory.svelte';
 import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
 import { abrirPorGesto, brilho } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
+import {
+  contextMenuItemDesabilitadoSource,
+  contextMenuItemDestrutivoSource,
+  contextMenuItemRecuadoSource,
+  contextMenuMarcacaoMistaSource,
+  contextMenuPaletaEscuraSource,
+  contextMenuSource,
+} from './context-menu.source';
 
 const meta: Meta = {
   title: 'UI/ContextMenu/States',
@@ -17,6 +25,9 @@ const meta: Meta = {
     layout: 'centered',
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: contextMenuSource },
       description: {
         component:
           'Estados do Context Menu: item desabilitado, item recuado, item destrutivo e a paleta escura.',
@@ -35,6 +46,7 @@ const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="
 export const ItemDisabled: Story = {
   parameters: {
     covers: ['functional.item9', 'accessibility.item6', 'visual.item5'],
+    docs: { source: { transform: contextMenuItemDesabilitadoSource } },
   },
   render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'disabled' } }),
   play: async ({ canvasElement, step }) => {
@@ -73,6 +85,9 @@ export const ItemDisabled: Story = {
 
 export const ItemInset: Story = {
   name: 'Item with inset',
+  parameters: {
+    docs: { source: { transform: contextMenuItemRecuadoSource } },
+  },
   render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'inset' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
@@ -103,6 +118,7 @@ export const ItemDestructive: Story = {
   name: 'Destructive item',
   parameters: {
     covers: ['functional.item10', 'visual.item2'],
+    docs: { source: { transform: contextMenuItemDestrutivoSource } },
   },
   render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'destructive' } }),
   play: async ({ canvasElement, step }) => {
@@ -133,7 +149,10 @@ export const ItemDestructive: Story = {
 // estado anterior.
 
 export const CheckboxIndeterminate: Story = {
-  parameters: { covers: ['functional.item11'] },
+  parameters: {
+    covers: ['functional.item11'],
+    docs: { source: { transform: contextMenuMarcacaoMistaSource } },
+  },
   render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'indeterminate' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
@@ -176,6 +195,7 @@ export const DarkPalette: Story = {
     // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
     themes: { themeOverride: 'dark' },
+    docs: { source: { transform: contextMenuPaletaEscuraSource } },
   },
   render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'dark' } }),
   play: async ({ canvasElement, step }) => {

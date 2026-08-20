@@ -6,6 +6,7 @@ import { ScrollArea } from './index';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 import ScrollAreaDocs from '@/components/docs/ScrollAreaDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { scrollAreaSource } from './scroll-area.source';
 
 const meta: Meta = {
   title: 'UI/ScrollArea',
@@ -15,6 +16,7 @@ const meta: Meta = {
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(ScrollAreaDocs),
+      source: { transform: scrollAreaSource },
       description: {
         component:
           'ScrollArea — viewport com scroll customizado. Suporta scroll vertical, horizontal ou ambos, com scrollbar estilizada; a rolagem continua sendo a nativa do navegador, o que preserva teclado e gestos de toque (WCAG 2.2).',

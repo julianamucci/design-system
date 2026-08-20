@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
+import {
+  checkboxComDescricaoSource,
+  checkboxIndeterminadoSource,
+  checkboxMarcadoSource,
+  checkboxSemRotuloSource,
+  checkboxSource,
+} from './checkbox.source';
 
 const meta: Meta = {
   title: 'UI/Checkbox/Variants',
@@ -13,6 +20,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: checkboxSource },
       description: {
         component:
           'Composicoes visuais do Checkbox. Não possui variantes cva — as composições abaixo representam os padrões de uso mais comuns.',
@@ -35,6 +45,7 @@ export const Default: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: checkboxSemRotuloSource },
       description: {
         story: 'Estado desmarcado padrão. Borda `--input`, fundo transparente. Pronto para interação.',
       },
@@ -67,6 +78,7 @@ export const Checked: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: checkboxMarcadoSource },
       description: {
         story: 'Estado marcado. Fundo `--primary`, ícone `CheckIcon` em `--primary-foreground`.',
       },
@@ -100,6 +112,7 @@ export const Indeterminate: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: checkboxIndeterminadoSource },
       description: {
         story:
           'Seleção parcial de grupo. Fundo `--primary`, ícone `MinusIcon`, `aria-checked="mixed"`.',
@@ -169,6 +182,7 @@ export const WithDescription: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: checkboxComDescricaoSource },
       description: {
         story:
           'Checkbox + Label + texto auxiliar abaixo. Para contexto adicional sobre a opção selecionada.',

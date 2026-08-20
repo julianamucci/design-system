@@ -4,6 +4,12 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
+import {
+  selectComGruposSource,
+  selectComIconeSource,
+  selectListaPlanaSource,
+  selectSource,
+} from './select.source';
 
 const GRUPOS = [
   {
@@ -33,6 +39,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: selectSource },
       description: {
         component:
           'Variantes do Select: lista plana, lista agrupada por categoria (com divisão entre grupos) e opção com ícone inline antes do texto. As três terminam abertas — é a lista que muda entre elas.',
@@ -55,6 +64,7 @@ export const Default: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: selectListaPlanaSource },
       description: { story: 'Lista plana — apenas opções, sem cabeçalho nem divisão.' },
     },
   },
@@ -97,6 +107,7 @@ export const WithGroups: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: selectComGruposSource },
       description: {
         story:
           'Cabeçalho por categoria e divisão entre grupos. O cabeçalho nomeia o grupo — o leitor de tela anuncia "Sudeste, grupo" antes das opções.',
@@ -150,6 +161,7 @@ export const WithIcon: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: selectComIconeSource },
       description: { story: 'Opção com ícone inline antes do texto. Ele é decorativo: o nome acessível continua sendo só o rótulo.' },
     },
   },

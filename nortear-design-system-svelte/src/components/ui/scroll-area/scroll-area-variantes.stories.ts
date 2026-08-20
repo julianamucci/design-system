@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect } from 'storybook/test';
 import { transbordo } from '@shared/testing/scroll-area-probe';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
+import {
+  scrollAreaBothSource,
+  scrollAreaHorizontalSource,
+  scrollAreaSource,
+  scrollAreaVerticalSource,
+} from './scroll-area.source';
 
 const meta: Meta = {
   title: 'UI/ScrollArea/Variants',
@@ -13,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: scrollAreaSource },
       description: {
         component:
           'Variantes do ScrollArea — vertical (lista longa), horizontal (cards inline) e both (bidirecional para tabelas/matrizes). A direção nasce do conteúdo: o eixo que transborda é o eixo que rola.',
@@ -32,7 +41,10 @@ function barras(raiz: HTMLElement, orientation: 'vertical' | 'horizontal') {
 }
 
 export const Vertical: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { source: { transform: scrollAreaVerticalSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {
@@ -68,7 +80,10 @@ export const Vertical: Story = {
 };
 
 export const Horizontal: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: scrollAreaHorizontalSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {
@@ -105,7 +120,10 @@ export const Horizontal: Story = {
 };
 
 export const Both: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: scrollAreaBothSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {

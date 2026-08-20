@@ -3,6 +3,7 @@ import { expect, userEvent, within } from 'storybook/test';
 import { ordemDeTabulacao } from '@shared/testing/form-probe';
 import FormGroupStory from './FormGroupStory.svelte';
 import FormMultipleStory from './FormMultipleStory.svelte';
+import { formFieldsetSource, formVariosCamposSource } from './form.source';
 
 const meta: Meta = {
   title: 'UI/Form/Compositions',
@@ -11,6 +12,11 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // As duas composições são estruturalmente diferentes entre si; cada uma
+      // declara a sua própria transform logo abaixo.
+      source: { transform: formFieldsetSource },
+    },
   },
 };
 
@@ -24,6 +30,7 @@ type Story = StoryObj;
 export const Fieldset: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item4', 'visual.item4'],
+    docs: { source: { transform: formFieldsetSource } },
   },
   render: () => ({ Component: FormGroupStory }),
   play: async ({ canvasElement, step }) => {
@@ -60,7 +67,10 @@ export const Fieldset: Story = {
  * É onde a ordem de tabulação e a associação de uma `<textarea>` são o assunto.
  */
 export const MultipleFields: Story = {
-  parameters: { covers: ['functional.item6', 'functional.item8'] },
+  parameters: {
+    covers: ['functional.item6', 'functional.item8'],
+    docs: { source: { transform: formVariosCamposSource } },
+  },
   render: () => ({ Component: FormMultipleStory }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
+import {
+  toggleGroupBarraDeAlinhamentoSource,
+  toggleGroupFormatacaoSource,
+  toggleGroupSource,
+  toggleGroupVisualizacaoVerticalSource,
+} from './toggle-group.source';
 
 /**
  * O estado do item é anunciado por `aria-checked` no modo exclusivo (a lib
@@ -27,6 +33,9 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; as que trocam o conjunto de
+      // opções sobrescrevem com a sua própria marcação logo abaixo.
+      source: { transform: toggleGroupSource },
       description: {
         component:
           'Composicoes do ToggleGroup: barra de alinhamento (single), formatação de texto (multiple) e modo de visualização (vertical).',
@@ -52,6 +61,7 @@ export const AlignmentBar: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: toggleGroupBarraDeAlinhamentoSource },
       description: {
         story: 'Barra de alinhamento clássica — 4 opções mutuamente exclusivas (type=single).',
       },
@@ -85,6 +95,7 @@ export const FormattingToolbar: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: toggleGroupFormatacaoSource },
       description: {
         story: 'Barra de formatação Bold/Italic/Underline — combinações independentes (type=multiple).',
       },
@@ -121,6 +132,7 @@ export const VerticalViewMode: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: toggleGroupVisualizacaoVerticalSource },
       description: {
         story: 'Modo de visualização Grade/Lista vertical com variante outline. ArrowDown navega.',
       },

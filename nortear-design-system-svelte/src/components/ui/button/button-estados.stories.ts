@@ -5,12 +5,24 @@ import { userEvent, within, expect, fn } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 import { falhasDeAnel } from '@shared/testing/button-probe';
+import {
+  buttonCarregandoSource,
+  buttonDesabilitadoSource,
+  buttonFocoVisivelSource,
+  buttonInvalidoSource,
+  buttonSource,
+} from './button.source';
 
 const meta: Meta = {
   parameters: {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada estado sobrescreve
+      // com a sua própria marcação logo abaixo.
+      source: { transform: buttonSource },
+    },
   },
   title: 'UI/Button/States',
   component: Button,
@@ -34,7 +46,12 @@ export const Disabled: Story = {
     },
   }),
   parameters: {
-    covers: ['functional.item2', 'visual.item4'], docs: { description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' } } },
+    covers: ['functional.item2', 'visual.item4'],
+    docs: {
+      source: { transform: buttonDesabilitadoSource },
+      description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' },
+    },
+  },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button');
@@ -69,7 +86,12 @@ export const Loading: Story = {
       spinIcon: true,
     },
   }),
-  parameters: { docs: { description: { story: 'Estado de carregamento. Use disabled + aria-busy e substitua o label por estado progressivo.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonCarregandoSource },
+      description: { story: 'Estado de carregamento. Use disabled + aria-busy e substitua o label por estado progressivo.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button');
@@ -90,7 +112,12 @@ export const FocusVisible: Story = {
     props: { variant: 'default', label: 'Foco visível' },
   }),
   parameters: {
-    covers: ['accessibility.item3'], docs: { description: { story: 'Estado de foco por teclado. Navegue com Tab: o anel só aparece em :focus-visible, não no clique.' } } },
+    covers: ['accessibility.item3'],
+    docs: {
+      source: { transform: buttonFocoVisivelSource },
+      description: { story: 'Estado de foco por teclado. Navegue com Tab: o anel só aparece em :focus-visible, não no clique.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button') as HTMLElement;
@@ -123,7 +150,12 @@ export const Invalid: Story = {
     Component: ButtonStory,
     props: { variant: 'outline', label: 'Formulário inválido', ariaInvalid: true },
   }),
-  parameters: { docs: { description: { story: 'Estado inválido. Use aria-invalid="true" para sinalizar problemas de validação.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonInvalidoSource },
+      description: { story: 'Estado inválido. Use aria-invalid="true" para sinalizar problemas de validação.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button');

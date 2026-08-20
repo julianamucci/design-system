@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TabsStory from './TabsStory.svelte';
+import {
+  tabsAtivacaoManualSource,
+  tabsConfiguracoesSource,
+  tabsNavegacaoVerticalSource,
+  tabsPreviewCodigoSource,
+  tabsSource,
+} from './tabs.source';
 
 const meta: Meta = {
   title: 'UI/Tabs/Compositions',
@@ -11,6 +18,11 @@ const meta: Meta = {
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: tabsSource },
+    },
   },
 };
 
@@ -50,6 +62,7 @@ export const SettingsPanel: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: tabsConfiguracoesSource },
       description: {
         story:
           'Painel de configurações com 3 seções paralelas: Perfil, Conta e Segurança. Rótulos ' +
@@ -107,6 +120,7 @@ export const CodePreviewLine: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: tabsPreviewCodigoSource },
       description: {
         story:
           'Alternância Preview/Código com a variante `line`. Padrão comum em documentação ' +
@@ -165,6 +179,7 @@ export const VerticalNavigation: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: tabsNavegacaoVerticalSource },
       description: {
         story:
           'Layout vertical para navegação lateral em painéis amplos. As setas de cima e de baixo ' +
@@ -223,6 +238,7 @@ export const ManualActivation: Story = {
   // seria cobertura fantasma, com o auditor verde sobre uma prova invertida.
   parameters: {
     docs: {
+      source: { transform: tabsAtivacaoManualSource },
       description: {
         story:
           'Modo manual: as setas movem o foco sem trocar de aba, e Enter ou Espaço confirmam. ' +

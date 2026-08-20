@@ -6,6 +6,7 @@ import {
   painelAberto,
 } from '@shared/testing/hover-card-probe';
 import HoverCardStory from './HoverCardStory.svelte';
+import { hoverCardEsperaPadraoSource, hoverCardSource } from './hover-card.source';
 
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
 // varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
@@ -23,6 +24,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; a espera curta é exatamente
+      // o que os args declaram, e a padrão sobrescreve logo abaixo.
+      source: { transform: hoverCardSource },
       description: {
         component:
           'As duas configurações de tempo. Padrão usa a espera do próprio componente; a segunda encurta a espera, o que só se justifica quando o cartão traz informação que o leitor está procurando ativamente.',
@@ -43,6 +47,7 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: hoverCardEsperaPadraoSource },
       description: {
         story:
           'Espera padrão: 600ms para abrir, 300ms para fechar. Nenhum atraso é escrito no markup — o cartão nasce aberto aqui só para a captura visual, e no uso real responde ao ponteiro e ao foco.',

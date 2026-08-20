@@ -6,6 +6,7 @@ import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
 import CalendarDocs from '@/components/docs/CalendarDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { calendarSource } from './calendar.source';
 
 const meta: Meta = {
   title: 'UI/Calendar',
@@ -14,6 +15,7 @@ const meta: Meta = {
   parameters: {
     docs: {
       page: withAutoDocsTab(CalendarDocs),
+      source: { transform: calendarSource },
       description: {
         component:
           'Calendar é um seletor visual de datas baseado em bits-ui. Aceita type="single" ou type="multiple", locale para rótulos traduzidos, captionLayout label/dropdown e datas desabilitadas via isDateDisabled. Na stack Svelte a API usa @internationalized/date (DateValue) em vez do Date nativo.',

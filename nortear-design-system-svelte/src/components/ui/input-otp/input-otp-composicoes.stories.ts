@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, userEvent, expect } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
+import {
+  inputOtpComErroSource,
+  inputOtpComReenvioSource,
+  inputOtpComTextoDeApoioSource,
+  inputOtpSource,
+} from './input-otp.source';
 
 const meta: Meta = {
   title: 'UI/InputOTP/Compositions',
@@ -12,6 +18,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; a de rótulo visível já é a
+      // forma canônica, as demais sobrescrevem logo abaixo.
+      source: { transform: inputOtpSource },
       description: {
         component:
           'Composicoes do InputOTP: WithLabel (rótulo visível associado), WithHelpText (origem + validade), WithErrorMessage (aria-describedby + aria-invalid) e WithResendButton (botão para reenviar o código).',
@@ -47,6 +56,7 @@ export const WithLabel: Story = {
 };
 
 export const WithHelpText: Story = {
+  parameters: { docs: { source: { transform: inputOtpComTextoDeApoioSource } } },
   args: {
     maxLength: 6,
     label: 'Código de verificação',
@@ -63,6 +73,7 @@ export const WithHelpText: Story = {
 };
 
 export const WithErrorMessage: Story = {
+  parameters: { docs: { source: { transform: inputOtpComErroSource } } },
   args: {
     maxLength: 6,
     hasError: true,
@@ -84,6 +95,7 @@ export const WithErrorMessage: Story = {
 };
 
 export const WithResendButton: Story = {
+  parameters: { docs: { source: { transform: inputOtpComReenvioSource } } },
   args: {
     maxLength: 6,
     label: 'Código de verificação',

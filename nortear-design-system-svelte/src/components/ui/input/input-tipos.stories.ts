@@ -4,6 +4,15 @@ import { within, userEvent, expect } from 'storybook/test';
 import { alturaResultante, campoDe } from '@shared/testing/input-probe';
 import InputStory from './InputStory.svelte';
 import InputWithLabelStory from './InputWithLabelStory.svelte';
+import {
+  inputSource,
+  inputTipoArquivoSource,
+  inputTipoBuscaSource,
+  inputTipoEmailSource,
+  inputTipoNumeroSource,
+  inputTipoSenhaSource,
+  inputTipoTextoSource,
+} from './input.source';
 
 const meta: Meta = {
   title: 'UI/Input/Types',
@@ -14,6 +23,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com o
+      // seu próprio tipo logo abaixo.
+      source: { transform: inputSource },
       description: {
         component: 'Variações de tipo HTML do Input. Use sempre o tipo semântico correto para melhor UX mobile e validação nativa do browser.',
       },
@@ -25,6 +37,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Text: Story = {
+  parameters: { docs: { source: { transform: inputTipoTextoSource } } },
   render: () => ({
     Component: InputStory,
     props: { type: 'text', placeholder: 'ex: João da Silva' },
@@ -39,6 +52,7 @@ export const Text: Story = {
 };
 
 export const Email: Story = {
+  parameters: { docs: { source: { transform: inputTipoEmailSource } } },
   render: () => ({
     Component: InputStory,
     props: { type: 'email', placeholder: 'ex: joao@empresa.com' },
@@ -53,6 +67,7 @@ export const Email: Story = {
 };
 
 export const Password: Story = {
+  parameters: { docs: { source: { transform: inputTipoSenhaSource } } },
   render: () => ({
     Component: InputStory,
     props: { type: 'password', placeholder: '••••••••' },
@@ -67,6 +82,7 @@ export const Password: Story = {
 };
 
 export const Number: Story = {
+  parameters: { docs: { source: { transform: inputTipoNumeroSource } } },
   render: () => ({
     Component: InputStory,
     props: { type: 'number', placeholder: '0' },
@@ -85,7 +101,10 @@ export const Number: Story = {
  * seção Variantes documenta e que o contrato pede em `visual.item3`.
  */
 export const Search: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: inputTipoBuscaSource } },
+  },
   render: () => ({
     Component: InputWithLabelStory,
     props: { labelText: 'Buscar', id: 'tipo-search', type: 'search', placeholder: 'Buscar componentes...' },
@@ -111,7 +130,10 @@ export const Search: Story = {
 };
 
 export const File: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    docs: { source: { transform: inputTipoArquivoSource } },
+  },
   render: () => ({
     Component: InputWithLabelStory,
     props: { labelText: 'Arquivo', id: 'tipo-file', type: 'file', placeholder: '' },

@@ -4,6 +4,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect } from 'storybook/test';
 import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
+import {
+  avatarSource,
+  avatarTamanho2xlSource,
+  avatarTamanhoLgSource,
+  avatarTamanhoSmSource,
+  avatarTamanhoXlSource,
+} from './avatar.source';
 
 const meta: Meta = {
   title: 'UI/Avatar/Sizes',
@@ -15,6 +22,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada preset diferente do
+      // padrão sobrescreve com o seu logo abaixo.
+      source: { transform: avatarSource },
       description: {
         component:
           'Presets de tamanho da prop `size`: sm (24px), md (32px, padrão), lg (40px), xl (48px) e 2xl (64px).',
@@ -47,7 +57,10 @@ const caixaDo = (canvasElement: HTMLElement) => {
 
 export const Sm: Story = {
   name: 'sm (24px)',
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    docs: { source: { transform: avatarTamanhoSmSource } },
+  },
   render: () => ({ Component: AvatarStory, props: { ...baseProps, size: 'sm' } }),
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('[data-slot="avatar"]')).toHaveAttribute(
@@ -79,7 +92,10 @@ export const Md: Story = {
 
 export const Lg: Story = {
   name: 'lg (40px)',
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    docs: { source: { transform: avatarTamanhoLgSource } },
+  },
   render: () => ({ Component: AvatarStory, props: { ...baseProps, size: 'lg' } }),
   play: async ({ canvasElement }) => {
     const { width, height } = caixaDo(canvasElement);
@@ -90,7 +106,10 @@ export const Lg: Story = {
 
 export const Xl: Story = {
   name: 'xl (48px)',
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    docs: { source: { transform: avatarTamanhoXlSource } },
+  },
   render: () => ({ Component: AvatarStory, props: { ...baseProps, size: 'xl' } }),
   play: async ({ canvasElement }) => {
     const { width, height } = caixaDo(canvasElement);
@@ -101,7 +120,10 @@ export const Xl: Story = {
 
 export const TwoXl: Story = {
   name: '2xl (64px)',
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    docs: { source: { transform: avatarTamanho2xlSource } },
+  },
   render: () => ({ Component: AvatarStory, props: { ...baseProps, size: '2xl' } }),
   play: async ({ canvasElement }) => {
     const { width, height } = caixaDo(canvasElement);

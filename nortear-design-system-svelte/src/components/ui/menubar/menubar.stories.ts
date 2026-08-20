@@ -4,6 +4,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
 import MenubarDocs from '@/components/docs/MenubarDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { menubarSource } from './menubar.source';
 
 // As mesmas quatro categorias que o `MenubarStory` monta na demonstração
 // padrão: a contagem do play sai daqui, nunca de um número escrito à mão.
@@ -22,6 +23,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(MenubarDocs),
+      source: { transform: menubarSource },
       description: {
         component:
           'Barra horizontal de menus estilo desktop: gatilhos na barra, painéis com itens, marcação, escolha única, submenu, separadores e atalhos; a seta horizontal anda entre os menus e a vertical, dentro do menu aberto.',

@@ -3,6 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
 import TooltipDocs from '@/components/docs/TooltipDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { tooltipSource } from './tooltip.source';
 
 /** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
 function balaoDe(gatilho: HTMLElement): HTMLElement | null {
@@ -24,6 +25,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(TooltipDocs),
+      source: { transform: tooltipSource },
       description: {
         component:
           'Texto explicativo curto exibido em hover OU foco (WCAG 1.4.13). O Provider é obrigatório no root. O Tooltip não substitui aria-label em botões icon-only — é complementar.',

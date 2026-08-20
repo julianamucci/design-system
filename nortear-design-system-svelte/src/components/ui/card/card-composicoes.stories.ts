@@ -3,6 +3,15 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { Card } from './index';
 import CardStory from './CardStory.svelte';
+import {
+  cardComAcaoSource,
+  cardComImagemSource,
+  cardComRodapeSource,
+  cardDeMetricaSource,
+  cardDePerfilSource,
+  cardDeProdutoSource,
+  cardPadraoSource,
+} from './card.source';
 
 const meta: Meta = {
   title: 'UI/Card/Compositions',
@@ -13,6 +22,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: cardPadraoSource },
       description: {
         component:
           'Composições canônicas do Card: com footer, com action, com imagem e exemplos reais (ProductCard, MetricCard, ProfileCard) para catálogo, dashboard e listas de perfil.',
@@ -27,6 +39,7 @@ type Story = StoryObj;
 export const WithFooter: Story = {
   parameters: {
     docs: {
+      source: { transform: cardComRodapeSource },
       description: {
         story:
           'O CardFooter ganha borda superior e fundo soft; o Card zera o próprio padding inferior ao detectar o rodapé como filho direto, para a borda encostar na base.',
@@ -66,6 +79,7 @@ export const WithAction: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item5', 'visual.item3'],
     docs: {
+      source: { transform: cardComAcaoSource },
       description: {
         story:
           'Com CardAction o header vira grid de duas colunas e a ação encosta à direita. A ordem do DOM continua título → descrição → ação, então o leitor de tela lê na ordem lógica.',
@@ -101,6 +115,7 @@ export const WithImage: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item5'],
     docs: {
+      source: { transform: cardComImagemSource },
       description: {
         story:
           'Imagem como primeiro filho: o Card arredonda o topo dela e remove o próprio padding superior por CSS — não é preciso passar classe na imagem.',
@@ -137,6 +152,7 @@ export const WithImage: Story = {
 export const ProductCard: Story = {
   parameters: {
     docs: {
+      source: { transform: cardDeProdutoSource },
       description: {
         story:
           'Exemplo real de catálogo: imagem + título + descrição + Badge de status na ação do header + rodapé com ações contextuais.',
@@ -177,6 +193,7 @@ export const ProductCard: Story = {
 export const MetricCard: Story = {
   parameters: {
     docs: {
+      source: { transform: cardDeMetricaSource },
       description: {
         story:
           'KPI em dashboard: tamanho sm para densidade, título curto, valor em destaque no corpo e a tendência em texto de apoio.',
@@ -211,6 +228,7 @@ export const MetricCard: Story = {
 export const ProfileCard: Story = {
   parameters: {
     docs: {
+      source: { transform: cardDePerfilSource },
       description: {
         story:
           'Card de perfil: avatar à esquerda do header, título (nome) e descrição (papel e localização). Sem footer — é a unidade semântica mínima.',

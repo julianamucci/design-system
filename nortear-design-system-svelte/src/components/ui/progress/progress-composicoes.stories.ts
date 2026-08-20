@@ -11,6 +11,7 @@ import {
   nomeAcessivel,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
+import { progressSource } from './progress.source';
 
 const meta: Meta = {
   title: 'UI/Progress/Compositions',
@@ -21,6 +22,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: rótulo, porcentagem e o
+      // relógio do upload animado saem dos `args` de cada uma.
+      source: { transform: progressSource },
       description: {
         component:
           'Composicoes comuns: upload animado com label/valor, loading simples, conclusão em cor de sucesso e processamento indeterminate.',

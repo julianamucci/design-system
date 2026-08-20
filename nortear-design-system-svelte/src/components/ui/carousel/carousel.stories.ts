@@ -5,6 +5,7 @@ import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
 import CarouselDocs from '@/components/docs/CarouselDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { carouselSource } from './carousel.source';
 
 const meta: Meta = {
   title: 'UI/Carousel',
@@ -12,7 +13,10 @@ const meta: Meta = {
   tags: ['autodocs', 'display'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(CarouselDocs) },
+    docs: {
+      page: withAutoDocsTab(CarouselDocs),
+      source: { transform: carouselSource },
+    },
   },
   argTypes: {
     orientation: {

@@ -3,6 +3,12 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { expect, within } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
+import {
+  sheetEdicaoDePerfilSource,
+  sheetFiltrosAvancadosSource,
+  sheetSource,
+  sheetTermosComRolagemSource,
+} from './sheet.source';
 
 const meta: Meta = {
   title: 'UI/Sheet/Compositions',
@@ -13,6 +19,10 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo — as três têm corpo, e o corpo é a
+      // peça que muda entre elas.
+      source: { transform: sheetSource },
       description: {
         component:
           'Composições reais do Sheet em fluxos de produto: filtros avançados, edição de ' +
@@ -38,6 +48,7 @@ export const AdvancedFilters: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: sheetFiltrosAvancadosSource },
       description: {
         story:
           'Painel lateral direito com formulário de filtros. O rodapé mantém a saída e a ' +
@@ -67,6 +78,7 @@ export const ProfileEdit: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: sheetEdicaoDePerfilSource },
       description: {
         story:
           'Edição de perfil em painel lateral. Os campos participam do foco preso; Escape ' +
@@ -96,6 +108,7 @@ export const TermsWithScroll: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: sheetTermosComRolagemSource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +

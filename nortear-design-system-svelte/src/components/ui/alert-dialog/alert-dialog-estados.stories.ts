@@ -5,6 +5,13 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogControlledStory from './AlertDialogControlledStory.svelte';
+import {
+  alertDialogAbertoSource,
+  alertDialogCanceladoSource,
+  alertDialogConfirmadoSource,
+  alertDialogControladoSource,
+  alertDialogSource,
+} from './alert-dialog.source';
 
 const meta: Meta = {
   title: 'UI/AlertDialog/States',
@@ -16,6 +23,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada estado que muda a
+      // marcação sobrescreve com a própria composição logo abaixo.
+      source: { transform: alertDialogSource },
       description: {
         component:
           'Cada estado canônico do AlertDialog: closed, open, confirmed, cancelled e controlled.',
@@ -70,6 +80,7 @@ export const Open: Story = {
     // a varredura axe (contraste incluído) do estado aberto.
     covers: ['functional.item6', 'accessibility.item6', 'accessibility.item7'],
     docs: {
+      source: { transform: alertDialogAbertoSource },
       description: {
         story: 'Diálogo aberto com `open`. Captura visual no Chromatic.',
       },
@@ -116,6 +127,7 @@ export const Confirmed: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
+      source: { transform: alertDialogConfirmadoSource },
       description: { story: 'Clique em Action dispara o handler e fecha o diálogo.' },
     },
   },
@@ -187,6 +199,7 @@ export const Cancelled: Story = {
   parameters: {
     covers: ['functional.item3'],
     docs: {
+      source: { transform: alertDialogCanceladoSource },
       description: { story: 'Cancel é clicado — diálogo fecha sem executar ação.' },
     },
   },
@@ -243,6 +256,7 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
+      source: { transform: alertDialogControladoSource },
       description: {
         story: 'Abertura controlada por estado externo via `bind:open`.',
       },

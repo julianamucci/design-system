@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import SwitchStory from './SwitchStory.svelte';
+import { switchSource } from './switch.source';
 
 const meta: Meta = {
   title: 'UI/Switch/Variants',
@@ -12,6 +13,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // As três variantes são args do MESMO controle — a cascata já entrega o
+      // snippet certo em cada uma, sem override.
+      source: { transform: switchSource },
       description: {
         component:
           'Variantes do Switch: default (Label à direita), withDescription (painel com o texto à esquerda) e sm (compacto).',

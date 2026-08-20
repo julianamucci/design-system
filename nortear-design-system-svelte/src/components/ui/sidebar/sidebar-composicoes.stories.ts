@@ -4,6 +4,12 @@ import { userEvent, waitFor, within, expect } from 'storybook/test';
 import SidebarNavGroupsStory from './SidebarNavGroupsStory.svelte';
 import SidebarSubMenuStory from './SidebarSubMenuStory.svelte';
 import SidebarSkeletonStory from './SidebarSkeletonStory.svelte';
+import {
+  sidebarEsqueletoSource,
+  sidebarGruposDeNavegacaoSource,
+  sidebarSource,
+  sidebarSubmenuSource,
+} from './sidebar.source';
 
 const meta: Meta = {
   title: 'UI/Sidebar/Compositions',
@@ -14,6 +20,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: sidebarSource },
       description: {
         component:
           'Composicoes avançadas da Sidebar: múltiplos grupos de navegação, sub-menus expansíveis e estado de carregamento com skeleton.',
@@ -27,7 +36,10 @@ type Story = StoryObj;
 
 export const WithNavGroups: StoryObj<Record<string, never>> = {
   name: 'With nav groups',
-  parameters: { covers: ['accessibility.item6'] },
+  parameters: {
+    covers: ['accessibility.item6'],
+    docs: { source: { transform: sidebarGruposDeNavegacaoSource } },
+  },
   render: () => ({
     Component: SidebarNavGroupsStory,
     props: {},
@@ -76,6 +88,9 @@ export const WithNavGroups: StoryObj<Record<string, never>> = {
 
 // Wrapper sem props: o Args generico nao e atribuivel a Record<string, never>.
 export const WithSubmenu: StoryObj<Record<string, never>> = {
+  parameters: {
+    docs: { source: { transform: sidebarSubmenuSource } },
+  },
   render: () => ({
     Component: SidebarSubMenuStory,
     props: {},
@@ -118,7 +133,10 @@ export const WithSubmenu: StoryObj<Record<string, never>> = {
 
 export const WithSkeleton: StoryObj<Record<string, never>> = {
   name: 'Loading state (Skeleton)',
-  parameters: { covers: ['functional.item9'] },
+  parameters: {
+    covers: ['functional.item9'],
+    docs: { source: { transform: sidebarEsqueletoSource } },
+  },
   render: () => ({
     Component: SidebarSkeletonStory,
     props: {},

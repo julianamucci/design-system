@@ -3,6 +3,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
+import {
+  carouselAutoplaySource,
+  carouselSource,
+  carouselVariosItensSource,
+} from './carousel.source';
 
 const meta: Meta = {
   title: 'UI/Carousel/Settings',
@@ -13,6 +18,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; as que mudam a chamada
+      // sobrescrevem com a sua logo abaixo.
+      source: { transform: carouselSource },
       description: {
         component:
           'Configurações comuns: um item por vez, vários itens por vez com base responsiva e avanço automático com parada na interação.',
@@ -128,7 +136,10 @@ export const Single: Story = {
 };
 
 export const MultiResponsive: Story = {
-  parameters: { covers: ['functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item3'],
+    docs: { source: { transform: carouselVariosItensSource } },
+  },
   render: () => ({
     Component: CarouselStory,
     props: {
@@ -178,7 +189,10 @@ export const MultiResponsive: Story = {
 };
 
 export const Autoplay: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item3'],
+    docs: { source: { transform: carouselAutoplaySource } },
+  },
   render: () => ({
     Component: CarouselStory,
     props: {

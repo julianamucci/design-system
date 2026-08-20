@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
 import { esperarPainel, painelAberto } from './navigation-menu.fixtures';
+import { navigationMenuSource } from './navigation-menu.source';
 import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
@@ -15,6 +16,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; a composição de cada uma
+      // sai dos próprios `args`, que são os mesmos que a demonstração usa.
+      source: { transform: navigationMenuSource },
       description: {
         component:
           'Os três estados canônicos: Fechado (só a barra), Aberto (painel do item ativo) e Ativo (o destino da página atual).',

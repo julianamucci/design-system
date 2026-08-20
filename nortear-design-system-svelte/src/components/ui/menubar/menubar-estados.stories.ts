@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
+import { menubarSource } from './menubar.source';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'];
@@ -26,6 +27,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; a composição de cada uma
+      // sai dos próprios `args`, que são os mesmos que a demonstração usa.
+      source: { transform: menubarSource },
       description: {
         component:
           'Os quatro estados que o conteúdo compartilhado descreve: barra fechada, menu aberto, item bloqueado e item marcado.',

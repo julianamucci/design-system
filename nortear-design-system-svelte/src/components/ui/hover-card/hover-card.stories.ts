@@ -10,6 +10,7 @@ import {
 import HoverCardStory from './HoverCardStory.svelte';
 import HoverCardDocs from '@/components/docs/HoverCardDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { hoverCardSource } from './hover-card.source';
 
 const meta: Meta = {
   title: 'UI/HoverCard',
@@ -19,6 +20,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(HoverCardDocs),
+      source: { transform: hoverCardSource },
       description: {
         component:
           'Cartão flutuante exibido em hover ou foco, com espera configurável, posicionamento side/align e role=dialog. Usar para previews opcionais — nunca para ações críticas, que ninguém alcança no toque.',

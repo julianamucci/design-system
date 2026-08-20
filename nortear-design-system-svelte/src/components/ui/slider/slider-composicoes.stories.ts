@@ -4,6 +4,12 @@ import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
 import SliderFormStory from './SliderFormStory.svelte';
 import { valorDaAlca } from '@shared/testing/slider-probe';
+import {
+  sliderEmFormularioSource,
+  sliderEscalaCurtaSource,
+  sliderFaixaDePrecoSource,
+  sliderSource,
+} from './slider.source';
 
 const meta: Meta = {
   title: 'UI/Slider/Compositions',
@@ -14,6 +20,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para VolumeWithValue, que é a forma canônica; as outras três
+      // sobrescrevem com a sua própria composição logo abaixo.
+      source: { transform: sliderSource },
       description: {
         component:
           'Padrões de composição do Slider: volume com valor adjacente, faixa de preço (range), em formulário e com step grosso.',
@@ -75,6 +84,7 @@ export const PriceRange: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: sliderFaixaDePrecoSource },
       description: {
         story:
           'Range slider para min/max — dois thumbs com valor textual no formato "R$ 100 — R$ 400".',
@@ -101,6 +111,7 @@ export const InForm: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: sliderEmFormularioSource },
       description: {
         story:
           'Múltiplos sliders dentro de um formulário (Brilho + Opacidade) com campo de texto e submit.',
@@ -146,6 +157,7 @@ export const ThickStep: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: sliderEscalaCurtaSource },
       description: {
         story:
           'step=1 numa faixa pequena (1–5) — útil para escalas discretas como avaliação.',

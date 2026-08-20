@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect } from 'storybook/test';
 import AspectRatioStory from './AspectRatioStory.svelte';
 import AspectRatioGridStory from './AspectRatioGridStory.svelte';
+import { aspectRatioEmGradeSource, aspectRatioSource } from './aspect-ratio.source';
 
 const meta: Meta = {
   title: 'UI/AspectRatio/Compositions',
@@ -15,6 +16,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; o tipo de filho vem dos
+      // `args` de cada uma, e a grade sobrescreve com a própria composição.
+      source: { transform: aspectRatioSource },
       description: {
         component:
           'Composicoes comuns do AspectRatio com diferentes tipos de filho: imagem, iframe, vídeo e em grid responsivo.',
@@ -104,6 +108,7 @@ export const InGrid: Story = {
   parameters: {
     covers: ['functional.item4'],
     layout: 'padded',
+    docs: { source: { transform: aspectRatioEmGradeSource } },
   },
 
   play: async ({ canvasElement }) => {

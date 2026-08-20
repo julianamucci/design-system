@@ -5,6 +5,7 @@ import { ROTULO_REGIAO } from './rotulos';
 import { esperarTorrada, limparTorradas, TEXTOS } from './sonner.fixtures';
 import SonnerDocs from '@/components/docs/SonnerDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { sonnerSource } from './sonner.source';
 
 const meta: Meta = {
   title: 'UI/Sonner',
@@ -12,7 +13,10 @@ const meta: Meta = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     layout: 'padded',
-    docs: { page: withAutoDocsTab(SonnerDocs) },
+    docs: {
+      page: withAutoDocsTab(SonnerDocs),
+      source: { transform: sonnerSource },
+    },
     // A paleta de `richColors` é da lib externa e não passa pelos tokens do
     // tema, então o contraste dela não é auditável aqui — ver
     // PATCHES.md#sonner-rich-colors-contrast. `aria-prohibited-attr`: a lib

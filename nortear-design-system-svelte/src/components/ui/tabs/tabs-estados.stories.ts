@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TabsStory from './TabsStory.svelte';
+import {
+  tabsAbaInicialSource,
+  tabsDesabilitadaSource,
+  tabsSource,
+} from './tabs.source';
 
 const meta: Meta = {
   title: 'UI/Tabs/States',
@@ -11,6 +16,11 @@ const meta: Meta = {
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; Active e FocusVisible não
+      // têm marcação própria e ficam com a forma canônica.
+      source: { transform: tabsSource },
+    },
   },
 };
 
@@ -35,6 +45,7 @@ export const Default: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: tabsAbaInicialSource },
       description: {
         story:
           'Aba inativa: texto em tom apagado, sem fundo próprio e fora da ordem de tabulação. ' +
@@ -126,6 +137,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item4', 'functional.item5', 'accessibility.item6'],
     docs: {
+      source: { transform: tabsDesabilitadaSource },
       description: {
         story:
           'Aba desabilitada: aparece esmaecida e não responde ao clique, mas continua ' +

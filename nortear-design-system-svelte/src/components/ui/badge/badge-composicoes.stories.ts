@@ -4,6 +4,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
+import {
+  badgeComIconeSource,
+  badgeContadorSource,
+  badgeEmBotaoSource,
+  badgeEmLinkSource,
+  badgeSource,
+} from './badge.source';
 
 const meta: Meta = {
   title: 'UI/Badge/Compositions',
@@ -15,6 +22,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia como piso; as quatro composições sobrescrevem com a marcação
+      // que cada uma ensina.
+      source: { transform: badgeSource },
       description: {
         component:
           'Configuracoes contextuais do Badge: combinado com ícone, como contador numérico, envolvido em <a> para navegação ou em <button> para trigger clicável.',
@@ -27,7 +37,10 @@ export default meta;
 type Story = StoryObj;
 
 export const WithIcon: Story = {
-  parameters: { covers: ['functional.item5', 'accessibility.item2', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item5', 'accessibility.item2', 'visual.item3'],
+    docs: { source: { transform: badgeComIconeSource } },
+  },
   render: () => ({
     Component: BadgeStory,
     props: { caso: 'comIcone', variant: 'default', label: 'Ativo' },
@@ -56,7 +69,10 @@ export const WithIcon: Story = {
 };
 
 export const CountBadge: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: badgeContadorSource } },
+  },
   render: () => ({
     Component: BadgeStory,
     props: {
@@ -85,7 +101,10 @@ export const CountBadge: Story = {
 };
 
 export const AsLink: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
+    docs: { source: { transform: badgeEmLinkSource } },
+  },
   render: () => ({
     Component: BadgeStory,
     props: {
@@ -109,7 +128,10 @@ export const AsLink: Story = {
 };
 
 export const AsButton: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
+    docs: { source: { transform: badgeEmBotaoSource } },
+  },
   render: () => ({
     Component: BadgeStory,
     props: {

@@ -9,6 +9,12 @@ import {
 import LabelStory from './LabelStory.svelte';
 import LabelDisabledPeerStory from './LabelDisabledPeerStory.svelte';
 import LabelDisabledGroupStory from './LabelDisabledGroupStory.svelte';
+import {
+  labelDesabilitadoIrmaoSource,
+  labelDesabilitadoNoBlocoSource,
+  labelObrigatorioSource,
+  labelSource,
+} from './label.source';
 
 /**
  * Estados do rótulo.
@@ -26,6 +32,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; a de estado padrão já é a
+      // forma canônica, as demais sobrescrevem logo abaixo.
+      source: { transform: labelSource },
       description: {
         component:
           'Estados do rótulo: padrão, desabilitado pelo controle irmão, desabilitado pelo bloco e obrigatório.',
@@ -67,6 +76,7 @@ export const Default: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item3'],
+    docs: { source: { transform: labelDesabilitadoIrmaoSource } },
   },
   render: () => ({ Component: LabelDisabledPeerStory, props: {} }),
   play: async ({ canvasElement, step }) => {
@@ -88,6 +98,7 @@ export const Disabled: Story = {
 export const DisabledViaGroup: Story = {
   parameters: {
     covers: ['functional.item4'],
+    docs: { source: { transform: labelDesabilitadoNoBlocoSource } },
   },
   render: () => ({ Component: LabelDisabledGroupStory, props: {} }),
   play: async ({ canvasElement, step }) => {
@@ -105,6 +116,7 @@ export const DisabledViaGroup: Story = {
 export const Required: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+    docs: { source: { transform: labelObrigatorioSource } },
   },
   render: () => ({
     Component: LabelStory,

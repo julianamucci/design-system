@@ -5,6 +5,7 @@ import { PaneGroup } from './index';
 import ResizableStory from './ResizableStory.svelte';
 import ResizableDocs from '@/components/docs/ResizableDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { resizableSource } from './resizable.source';
 
 /**
  * Rótulo do punho repetido nas stories.
@@ -32,6 +33,8 @@ const meta: Meta = {
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(ResizableDocs),
+      // Monta o grupo a partir dos `args` do Playground.
+      source: { transform: resizableSource },
       description: {
         component:
           'Resizable — painéis redimensionáveis com layouts horizontal, vertical e aninhado, ajustáveis por arrasto e por teclado (WCAG 2.5.7).',

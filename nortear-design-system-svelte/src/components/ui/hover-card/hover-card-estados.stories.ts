@@ -9,6 +9,7 @@ import {
   razaoDeContraste,
 } from '@shared/testing/hover-card-probe';
 import HoverCardStory from './HoverCardStory.svelte';
+import { hoverCardSource } from './hover-card.source';
 
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
 // gatilho), aberto (painel no portal) e controlado (quem manda é o estado de
@@ -25,6 +26,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: aqui o estado É o assunto,
+      // e cada uma o declara inteiro em `args` — nenhuma precisa sobrescrever.
+      source: { transform: hoverCardSource },
       description: {
         component:
           'Fechado, aberto e controlado. O painel só existe no DOM enquanto o cartão está aberto — fechado, o portal não deixa resíduo nenhum.',

@@ -4,6 +4,12 @@ import DialogConfirmEmailStory from './DialogConfirmEmailStory.svelte';
 import DialogProfileEditStory from './DialogProfileEditStory.svelte';
 import DialogMediaPreviewStory from './DialogMediaPreviewStory.svelte';
 import {
+  dialogConfirmarEmailSource,
+  dialogEditarPerfilSource,
+  dialogPreviaDeMidiaSource,
+  dialogSource,
+} from './dialog.source';
+import {
   abrir,
   botaoFecharDoCanto,
   conferirNomeEDescricao,
@@ -25,6 +31,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cada fluxo tem marcação própria e sobrescreve logo abaixo; o meta
+      // garante que nenhuma story do arquivo caia no andaime.
+      source: { transform: dialogSource },
       description: {
         component:
           'Composicoes reais do Dialog em fluxos de produto: confirmar email, edição de perfil e pré-visualização de mídia.',
@@ -39,6 +48,7 @@ type Story = StoryObj;
 export const ConfirmEmail: Story = {
   parameters: {
     docs: {
+      source: { transform: dialogConfirmarEmailSource },
       description: {
         story:
           'Dialog usado para confirmar troca de email. Title nomeia a ação, Description orienta o usuário, Footer com Cancelar + Enviar confirmação.',
@@ -73,6 +83,7 @@ export const ConfirmEmail: Story = {
 export const ProfileEdit: Story = {
   parameters: {
     docs: {
+      source: { transform: dialogEditarPerfilSource },
       description: {
         story:
           'Edição de perfil em formulário modal — caso de uso canônico do Dialog. O rodapé fica dentro do formulário para que o envio seja um submit de verdade.',
@@ -113,6 +124,7 @@ export const MediaPreview: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item6'],
     docs: {
+      source: { transform: dialogPreviaDeMidiaSource },
       description: {
         story:
           'Pré-visualização de mídia em destaque, sem Footer. Fechamento via X, Escape ou clique no overlay.',

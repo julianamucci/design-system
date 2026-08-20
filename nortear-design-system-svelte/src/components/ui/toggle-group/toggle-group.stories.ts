@@ -5,13 +5,17 @@ import { ToggleGroup } from './index';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
 import ToggleGroupDocs from '@/components/docs/ToggleGroupDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { toggleGroupSource } from './toggle-group.source';
 
 const meta: Meta = {
   title: 'UI/ToggleGroup',
   component: ToggleGroup,
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(ToggleGroupDocs) },
+    docs: {
+      page: withAutoDocsTab(ToggleGroupDocs),
+      source: { transform: toggleGroupSource },
+    },
     layout: 'centered',
   },
   argTypes: {

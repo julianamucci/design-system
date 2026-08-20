@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
+import { tooltipSource } from './tooltip.source';
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
 // com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
@@ -37,6 +38,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: a variante, o texto e o
+      // rótulo do gatilho já vêm dos args de cada uma.
+      source: { transform: tooltipSource },
       description: {
         component:
           'Default é texto curto. Com atalho acrescenta a tecla em <kbd>, que a folha compartilhada reconhece e usa para encurtar o respiro à direita. Texto longo quebra dentro do limite de largura do balão — passou disso, o caso é de Popover.',

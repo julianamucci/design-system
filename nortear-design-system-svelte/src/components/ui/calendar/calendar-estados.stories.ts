@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
+import {
+  calendarBloqueadoSource,
+  calendarHojeSource,
+  calendarSemanasFixasSource,
+  calendarSource,
+} from './calendar.source';
 
 const meta: Meta = {
   title: 'UI/Calendar/States',
@@ -13,6 +19,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      // Cascateia para todas as stories do arquivo; as que mudam a chamada
+      // sobrescrevem com a sua logo abaixo.
+      source: { transform: calendarSource },
       description: {
         component:
           'Estados de célula: escolhida, bloqueada, o dia de hoje e os dias de fora do mês.',
@@ -68,7 +77,10 @@ export const Disabled: Story = {
   }),
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
-    docs: { description: { story: 'Datas anteriores a um limite ficam bloqueadas e não podem ser escolhidas.' } },
+    docs: {
+      source: { transform: calendarBloqueadoSource },
+      description: { story: 'Datas anteriores a um limite ficam bloqueadas e não podem ser escolhidas.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     await step('A regra bloqueia exatamente o intervalo que ela descreve', async () => {
@@ -115,6 +127,7 @@ export const Today: Story = {
   parameters: {
     covers: ['functional.item1'],
     docs: {
+      source: { transform: calendarHojeSource },
       description: {
         story: 'Sem data escolhida: o calendário abre no mês corrente e destaca o dia de hoje.',
       },
@@ -142,6 +155,7 @@ export const WithOutsideDays: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: calendarSemanasFixasSource },
       description: {
         story:
           'Seis linhas de semana sempre, completadas com os dias do mês vizinho — a altura do bloco não muda ao virar o mês.',

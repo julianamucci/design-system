@@ -11,6 +11,14 @@ import {
   TEXTOS,
   torradasNaTela,
 } from './sonner.fixtures';
+import {
+  sonnerEmpilhadoSource,
+  sonnerPosicaoSource,
+  sonnerPrazoSource,
+  sonnerSemRegiaoSource,
+  sonnerSource,
+  sonnerTemaEscuroSource,
+} from './sonner.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -40,6 +48,9 @@ const meta: Meta = {
       },
     },
     docs: {
+      // Cascateia para PauseOnHover, cuja pausa é comportamento da região e não
+      // tem marcação própria; as demais sobrescrevem logo abaixo.
+      source: { transform: sonnerSource },
       description: {
         component: 'Prazo, pausa na leitura, empilhamento, posição e o caso sem Toaster montado.',
       },
@@ -62,6 +73,7 @@ export const AutoDismiss: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
+      source: { transform: sonnerPrazoSource },
       description: {
         story:
           'A notificação sai sozinha quando o prazo vence. É o que a separa do Alert: aqui a mensagem é passageira, e nada fica esperando uma decisão.',
@@ -125,6 +137,7 @@ export const PauseOnHover: Story = {
 export const Stacked: Story = {
   parameters: {
     docs: {
+      source: { transform: sonnerEmpilhadoSource },
       description: {
         story:
           'Três notificações na fila, com a pilha aberta. Mensagem ainda não lida não pode ser encoberta pela seguinte — por isso `expand` existe.',
@@ -170,6 +183,7 @@ export const PositionBottomCenter: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: sonnerPosicaoSource },
       description: {
         story:
           'A pilha no rodapé, centrada. A posição é escolha do projeto e vale para a aplicação inteira — misturar cantos faria a pessoa procurar a notificação a cada vez.',
@@ -207,6 +221,7 @@ export const WithoutToaster: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
+      source: { transform: sonnerSemRegiaoSource },
       description: {
         story:
           'Sem Toaster montado no root, `toast()` não desenha nada — e também não quebra. A fila existe independentemente de quem a desenha, então uma tela que ainda não montou a região não derruba o fluxo que a chamou.',
@@ -240,6 +255,7 @@ export const DarkTheme: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: sonnerTemaEscuroSource },
       description: {
         story:
           'Tema escuro, com os cinco tipos na tela. O tema da região acompanha a classe do documento.',

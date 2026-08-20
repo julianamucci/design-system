@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
+import {
+  calendarDoisMesesSource,
+  calendarLegendaSeletoresSource,
+  calendarLegendaTextoSource,
+  calendarSource,
+} from './calendar.source';
 
 const meta: Meta = {
   title: 'UI/Calendar/Layouts',
@@ -13,6 +19,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria chamada logo abaixo.
+      source: { transform: calendarSource },
       description: {
         component: 'Formato da legenda do mês e quantidade de meses visíveis ao mesmo tempo.',
       },
@@ -30,7 +39,10 @@ export const CaptionLabel: Story = {
   }),
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
-    docs: { description: { story: 'Legenda em texto com mês e ano no idioma configurado.' } },
+    docs: {
+      source: { transform: calendarLegendaTextoSource },
+      description: { story: 'Legenda em texto com mês e ano no idioma configurado.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     await step('A legenda traz mês e ano no idioma pedido', async () => {
@@ -61,6 +73,7 @@ export const CaptionDropdown: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
+      source: { transform: calendarLegendaSeletoresSource },
       description: {
         story: 'Mês e ano viram seletores, para saltar de período sem passar mês a mês.',
       },
@@ -162,6 +175,7 @@ export const TwoMonths: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: calendarDoisMesesSource },
       description: {
         story: 'Dois meses lado a lado, para escolher datas que atravessam a virada.',
       },

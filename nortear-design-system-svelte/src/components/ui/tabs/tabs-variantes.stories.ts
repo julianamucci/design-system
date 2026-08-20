@@ -6,6 +6,7 @@ import {
   medirCrescimentoDoTrilho,
 } from '@shared/testing/tabs-probe';
 import TabsStory from './TabsStory.svelte';
+import { tabsLineSource, tabsSource, tabsVerticalSource } from './tabs.source';
 
 const meta: Meta = {
   title: 'UI/Tabs/Variants',
@@ -16,6 +17,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; Line e Vertical sobrescrevem
+      // com a própria composição, e Default fica com a forma canônica.
+      source: { transform: tabsSource },
       description: {
         component:
           'Estilo da lista (`variant`) e direção (`orientation`). A variante decide se há ' +
@@ -117,6 +121,7 @@ export const Line: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: { transform: tabsLineSource },
       description: {
         story:
           'Variante line: sem trilho, com uma linha sob a aba ativa. Útil para sub-navegação ' +
@@ -165,6 +170,7 @@ export const Vertical: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: tabsVerticalSource },
       description: {
         story:
           'Orientação vertical: lista à esquerda e conteúdo à direita. As setas de cima e de ' +

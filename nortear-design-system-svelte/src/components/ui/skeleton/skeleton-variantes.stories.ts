@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect } from 'storybook/test';
 import SkeletonVarianteStory from './SkeletonVarianteStory.svelte';
 import { caixaDesenhada } from '@shared/testing/skeleton-probe';
+import {
+  skeletonCirculoSource,
+  skeletonLinhasDeTextoSource,
+  skeletonRetanguloSource,
+  skeletonSource,
+} from './skeleton.source';
 
 const meta: Meta = {
   title: 'UI/Skeleton/Variants',
@@ -13,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: skeletonSource },
       description: {
         component:
           'Formas do esqueleto. Não há variante via prop: a forma vem de `data-shape` e a largura de `data-width`, e a folha de estilo continua dona das medidas.',
@@ -29,6 +38,7 @@ export const Rectangle: Story = {
   parameters: {
     covers: ['visual.item1'],
     docs: {
+      source: { transform: skeletonRetanguloSource },
       description: {
         story:
           '`data-shape="fill"` preenche a caixa que o container estabelece — aqui, uma proporção de mídia 16/9.',
@@ -55,6 +65,7 @@ export const Circle: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: { transform: skeletonCirculoSource },
       description: {
         story:
           '`data-shape="avatar"` é a exceção que a guideline 12 prevê: peça sem fluxo de texto tem medida, e ela vem da escada `--size-*`.',
@@ -83,6 +94,7 @@ export const TextLine: Story = {
   args: { variant: 'textLine' },
   parameters: {
     docs: {
+      source: { transform: skeletonLinhasDeTextoSource },
       description: {
         story:
           'Altura derivada da escada de texto e largura em fração do container. Variar a largura entre linhas é o que faz o bloco parecer parágrafo.',

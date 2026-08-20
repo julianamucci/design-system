@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
+import { tooltipAbertoSource, tooltipControladoSource, tooltipSource } from './tooltip.source';
 
 // Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
 // aberto por hover (depois do delay do provider) e aberto por foco (na hora). A
@@ -31,6 +32,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; as duas que ensinam a
+      // abertura sobrescrevem com a sua própria marcação logo abaixo.
+      source: { transform: tooltipSource },
       description: {
         component:
           'Fechado é o padrão e o balão nem existe no DOM. Aberto pode vir do estado externo, do hover (depois do delay) ou do foco (imediato). Levar o mouse do gatilho até o balão não fecha nada — é a persistência que a WCAG 1.4.13 exige.',
@@ -73,6 +77,7 @@ export const Closed: Story = {
 export const Open: Story = {
   name: 'Open (defaultOpen)',
   args: { ...baseArgs, defaultOpen: true, delayDuration: 0 },
+  parameters: { docs: { source: { transform: tooltipAbertoSource } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('button', { name: /salvar/i });
@@ -186,6 +191,7 @@ export const PersistenceInBubble: Story = {
 export const Controlled: Story = {
   name: 'Controlled (open prop)',
   args: { ...baseArgs, open: true, delayDuration: 0 },
+  parameters: { docs: { source: { transform: tooltipControladoSource } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('button', { name: /salvar/i });

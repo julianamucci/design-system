@@ -5,63 +5,17 @@ import { Tabs } from './index';
 import TabsStory from './TabsStory.svelte';
 import TabsDocs from '@/components/docs/TabsDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type TabsArgs = {
-  orientation: 'horizontal' | 'vertical';
-  activationMode: 'automatic' | 'manual';
-};
-
-/**
- * O gerador de source do @storybook/svelte monta a tag a partir de
- * `component.__docgen.name` e, sem docgen, cai em `component.name` — o nome
- * interno da função compilada. Daí saía `<wrapper orientation="horizontal" …/>`,
- * que não é um componente que alguém possa importar, e ainda serializava os
- * `args` da raiz sobre o componente-wrapper da story. Enquanto o docgen estiver
- * desligado, o snippet vai explícito.
- *
- * `transform` e não `code`: um snippet fixo deixaria de acompanhar os controls —
- * trocar a orientação não mudaria nada na caixa de código.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<TabsArgs> }): string {
-  const { orientation = 'horizontal', activationMode = 'automatic' } = ctx.args ?? {};
-
-  // Só o que difere do padrão entra: snippet que repete valor padrão ensina
-  // ruído a quem copia.
-  const attrs = ['bind:value']
-    .concat(orientation === 'horizontal' ? [] : [`orientation="${orientation}"`])
-    .concat(activationMode === 'automatic' ? [] : [`activationMode="${activationMode}"`])
-    .concat('class="nds-max-w-lg"')
-    .join(' ');
-
-  return `<script lang="ts">
-  import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-  } from "@/components/ui/tabs";
-
-  let value = $state("overview");
-</script>
-
-<Tabs ${attrs}>
-  <TabsList aria-label="Seções do componente">
-    <TabsTrigger value="overview">Visão geral</TabsTrigger>
-    <TabsTrigger value="properties">Propriedades</TabsTrigger>
-    <TabsTrigger value="examples">Exemplos</TabsTrigger>
-  </TabsList>
-  <TabsContent value="overview">Conteúdo da visão geral</TabsContent>
-  <TabsContent value="properties">Lista de propriedades</TabsContent>
-  <TabsContent value="examples">Exemplos de uso</TabsContent>
-</Tabs>`;
-}
+import { tabsSource } from './tabs.source';
 
 const meta: Meta = {
   title: 'UI/Tabs',
   component: Tabs,
   tags: ['autodocs', 'navigation'],
   parameters: {
-    docs: { page: withAutoDocsTab(TabsDocs) },
+    docs: {
+      page: withAutoDocsTab(TabsDocs),
+      source: { transform: tabsSource },
+    },
   },
   // A aba "API Reference" é montada só a partir destes argTypes: o docgen do
   // Svelte está desligado no .storybook/main.ts. Props com `control: false` são
@@ -136,7 +90,6 @@ export const Playground: Story = {
       'accessibility.item4',
       'accessibility.item5',
     ],
-    docs: { source: { transform: playgroundSource } },
   },
   render: (args) => ({
     Component: TabsStory,

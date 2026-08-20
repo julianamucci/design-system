@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect } from 'storybook/test';
 import SeparatorStory from './SeparatorStory.svelte';
+import {
+  separatorDecorativoSource,
+  separatorSemanticoSource,
+  separatorSource,
+} from './separator.source';
 
 const meta: Meta = {
   title: 'UI/Separator/States',
@@ -12,6 +17,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: separatorSource },
       description: {
         component:
           'Modos do Separator: decorativo (padrão, ignorado por leitores de tela) e semântico (anunciado como divisor, com a própria orientação).',
@@ -24,7 +32,10 @@ export default meta;
 type Story = StoryObj;
 
 export const Decorative: Story = {
-  parameters: { covers: ['functional.item3', 'accessibility.item2', 'accessibility.item3'] },
+  parameters: {
+    covers: ['functional.item3', 'accessibility.item2', 'accessibility.item3'],
+    docs: { source: { transform: separatorDecorativoSource } },
+  },
   render: () => ({
     Component: SeparatorStory,
     props: { caso: 'estados', decorative: true },
@@ -46,7 +57,10 @@ export const Decorative: Story = {
 };
 
 export const Semantic: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item4'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item4'],
+    docs: { source: { transform: separatorSemanticoSource } },
+  },
   render: () => ({
     Component: SeparatorStory,
     props: { caso: 'estados', decorative: false },

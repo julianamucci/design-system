@@ -11,6 +11,7 @@ import {
 } from '@shared/testing/aspect-ratio-probe';
 import AspectRatioDocs from '@/components/docs/AspectRatioDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { aspectRatioSource } from './aspect-ratio.source';
 
 const meta: Meta = {
   title: 'UI/AspectRatio',
@@ -21,6 +22,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(AspectRatioDocs),
+      source: { transform: aspectRatioSource },
       description: {
         component:
           'Container passivo que preserva uma proporção fixa de largura-altura para mídia responsiva — imagens, vídeos e iframes.',

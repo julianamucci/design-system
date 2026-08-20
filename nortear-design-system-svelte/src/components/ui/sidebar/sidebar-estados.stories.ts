@@ -5,6 +5,14 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import SidebarStory from './SidebarStory.svelte';
 import SidebarIconStory from './SidebarIconStory.svelte';
 import SidebarFixedStory from './SidebarFixedStory.svelte';
+import {
+  sidebarExpandidaSource,
+  sidebarFixaSource,
+  sidebarGavetaSource,
+  sidebarModoIconeSource,
+  sidebarOffcanvasFechadaSource,
+  sidebarSource,
+} from './sidebar.source';
 
 const meta: Meta = {
   title: 'UI/Sidebar/States',
@@ -15,6 +23,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: sidebarSource },
       description: {
         component:
           'Estados operacionais da Sidebar: expandido, recolhido em modo icon, offcanvas fechado e fixo (collapsible none).',
@@ -27,6 +38,9 @@ export default meta;
 type Story = StoryObj;
 
 export const Expanded: Story = {
+  parameters: {
+    docs: { source: { transform: sidebarExpandidaSource } },
+  },
   render: () => ({
     Component: SidebarStory,
     props: {
@@ -59,6 +73,7 @@ export const IconMode: StoryObj<Record<string, never>> = {
   name: 'Icon mode (collapsed)',
   parameters: {
     covers: ['functional.item4', 'functional.item7', 'visual.item2'],
+    docs: { source: { transform: sidebarModoIconeSource } },
   },
   render: () => ({
     Component: SidebarIconStory,
@@ -118,6 +133,9 @@ export const IconMode: StoryObj<Record<string, never>> = {
 };
 
 export const OffcanvasClosed: Story = {
+  parameters: {
+    docs: { source: { transform: sidebarOffcanvasFechadaSource } },
+  },
   render: () => ({
     Component: SidebarStory,
     props: {
@@ -141,7 +159,10 @@ export const OffcanvasClosed: Story = {
 
 export const Fixed: Story = {
   name: 'Fixed (collapsible none)',
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    docs: { source: { transform: sidebarFixaSource } },
+  },
   render: () => ({
     Component: SidebarFixedStory,
     props: {},
@@ -183,6 +204,7 @@ export const Mobile: Story = {
   parameters: {
     viewport: { defaultViewport: 'mobile1' },
     covers: ['functional.item3', 'visual.item5'],
+    docs: { source: { transform: sidebarGavetaSource } },
   },
   render: () => ({
     Component: SidebarStory,

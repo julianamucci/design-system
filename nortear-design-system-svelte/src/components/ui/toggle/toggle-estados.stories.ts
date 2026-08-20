@@ -7,6 +7,13 @@ import {
   medirAnelDeFoco,
 } from '@shared/testing/toggle-probe';
 import ToggleScenarioStory from './ToggleScenarioStory.svelte';
+import {
+  toggleAtivoSource,
+  toggleDesabilitadoSource,
+  toggleInvalidoSource,
+  toggleParDeVariantesSource,
+  toggleSource,
+} from './toggle.source';
 
 const meta = {
   title: 'UI/Toggle/States',
@@ -18,6 +25,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; as que compõem mais de um
+      // toggle sobrescrevem com a sua própria marcação logo abaixo.
+      source: { transform: toggleSource },
       description: {
         component:
           'Estados do Toggle: off, on, foco por teclado, desabilitado e inválido (aria-invalid).',
@@ -50,7 +60,10 @@ export const Off: Story = {
 };
 
 export const On: Story = {
-  parameters: { covers: ['visual.item2', 'accessibility.item2'] },
+  parameters: {
+    covers: ['visual.item2', 'accessibility.item2'],
+    docs: { source: { transform: toggleAtivoSource } },
+  },
   args: { cenario: 'on' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -82,7 +95,11 @@ export const On: Story = {
 };
 
 export const FocusVisible: Story = {
-  parameters: { covers: ['accessibility.item3'] },
+  parameters: {
+    covers: ['accessibility.item3'],
+    // O foco é estado de execução: a marcação é a mesma do par de variantes.
+    docs: { source: { transform: toggleParDeVariantesSource } },
+  },
   args: { cenario: 'focus' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -109,7 +126,10 @@ export const FocusVisible: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['visual.item4', 'functional.item4'] },
+  parameters: {
+    covers: ['visual.item4', 'functional.item4'],
+    docs: { source: { transform: toggleDesabilitadoSource } },
+  },
   args: { cenario: 'disabled' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -142,6 +162,7 @@ export const Disabled: Story = {
 };
 
 export const Invalid: Story = {
+  parameters: { docs: { source: { transform: toggleInvalidoSource } } },
   args: { cenario: 'invalid' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

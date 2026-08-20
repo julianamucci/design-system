@@ -6,6 +6,7 @@ import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
 import BadgeDocs from '@/components/docs/BadgeDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { badgeSource } from './badge.source';
 
 const meta: Meta = {
   title: 'UI/Badge',
@@ -14,7 +15,10 @@ const meta: Meta = {
   parameters: {
     design: figmaDesign('badge'),
     layout: 'centered',
-    docs: { page: withAutoDocsTab(BadgeDocs) },
+    docs: {
+      page: withAutoDocsTab(BadgeDocs),
+      source: { transform: badgeSource },
+    },
   },
   argTypes: {
     variant: {

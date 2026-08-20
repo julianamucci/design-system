@@ -4,6 +4,7 @@ import { userEvent, expect, fn, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 import InputOTPDocs from '@/components/docs/InputOTPDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
   title: 'UI/InputOTP',
@@ -13,6 +14,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(InputOTPDocs),
+      source: { transform: inputOtpSource },
       description: {
         component:
           'Campo de código de verificação (OTP/PIN) com uma caixa por dígito. Renderiza um input real recortado por trás das caixas e distribui nelas o que for digitado ou colado, com pedido de código de uso único ao sistema e suporte a colar.',

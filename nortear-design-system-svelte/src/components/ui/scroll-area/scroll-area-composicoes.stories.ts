@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { transbordo } from '@shared/testing/scroll-area-probe';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
+import {
+  scrollAreaHorizontalSource,
+  scrollAreaListaEmSidebarSource,
+  scrollAreaSource,
+  scrollAreaTabelaAmplaSource,
+} from './scroll-area.source';
 
 const meta: Meta = {
   title: 'UI/ScrollArea/Compositions',
@@ -13,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: scrollAreaSource },
       description: {
         component:
           'Composicoes reais do ScrollArea — lista em sidebar, galeria horizontal de cards e tabela ampla com scroll bidirecional.',
@@ -25,6 +34,9 @@ export default meta;
 type Story = StoryObj;
 
 export const SidebarList: Story = {
+  parameters: {
+    docs: { source: { transform: scrollAreaListaEmSidebarSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {
@@ -61,6 +73,10 @@ export const SidebarList: Story = {
 };
 
 export const HorizontalGallery: Story = {
+  parameters: {
+    // Mesma faixa da variante horizontal — a galeria é o uso real dela.
+    docs: { source: { transform: scrollAreaHorizontalSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {
@@ -102,6 +118,9 @@ export const HorizontalGallery: Story = {
 };
 
 export const WideTable: Story = {
+  parameters: {
+    docs: { source: { transform: scrollAreaTabelaAmplaSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {

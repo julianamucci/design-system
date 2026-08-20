@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect } from 'storybook/test';
 import AspectRatioStory from './AspectRatioStory.svelte';
+import { aspectRatioSource } from './aspect-ratio.source';
 
 const meta: Meta = {
   title: 'UI/AspectRatio/Variants',
@@ -14,6 +15,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma declara em `args` a
+      // proporção e o filho que o snippet deve mostrar.
+      source: { transform: aspectRatioSource },
       description: {
         component:
           'Cinco ratios canônicos adotados no design system: 16/9, 4/3, 1/1, 3/4 e 21/9.',

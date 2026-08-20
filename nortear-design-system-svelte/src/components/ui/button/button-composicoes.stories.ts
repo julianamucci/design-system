@@ -5,12 +5,29 @@ import { userEvent, within, expect } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 import ButtonPairStory from './ButtonPairStory.svelte';
+import {
+  buttonComIconeFinalSource,
+  buttonComIconeInicialSource,
+  buttonComoLinkSource,
+  buttonDestinoInseguroSource,
+  buttonDestinoMalformadoSource,
+  buttonDestrutivoComIconeSource,
+  buttonLinkDesabilitadoSource,
+  buttonParDeAcoesSource,
+  buttonSoIconeSource,
+  buttonSource,
+} from './button.source';
 
 const meta: Meta = {
   parameters: {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia como piso; cada composição sobrescreve com a marcação que
+      // ela ensina logo abaixo.
+      source: { transform: buttonSource },
+    },
   },
   title: 'UI/Button/Compositions',
   component: Button,
@@ -27,7 +44,10 @@ export const WithIconLeft: Story = {
   }),
   parameters: {
     covers: ['visual.item5'],
-    docs: { description: { story: 'Ícone à esquerda do label. O SVG deve ter aria-hidden="true" para não poluir leitores de tela.' } },
+    docs: {
+      source: { transform: buttonComIconeInicialSource },
+      description: { story: 'Ícone à esquerda do label. O SVG deve ter aria-hidden="true" para não poluir leitores de tela.' },
+    },
   },
 
   play: async ({ canvasElement }) => {
@@ -43,7 +63,12 @@ export const WithIconRight: Story = {
     Component: ButtonStory,
     props: { variant: 'outline', label: 'Próximo', iconEnd: 'chevron-right' },
   }),
-  parameters: { docs: { description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonComIconeFinalSource },
+      description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: 'Próximo' });
@@ -59,7 +84,12 @@ export const DestructiveIcon: Story = {
     Component: ButtonStory,
     props: { variant: 'destructive', label: 'Excluir', iconStart: 'trash' },
   }),
-  parameters: { docs: { description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonDestrutivoComIconeSource },
+      description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: 'Excluir' });
@@ -73,7 +103,12 @@ export const IconOnly: Story = {
     Component: ButtonStory,
     props: { size: 'icon', iconOnly: 'download', ariaLabel: 'Baixar arquivo' },
   }),
-  parameters: { docs: { description: { story: 'Botão apenas com ícone. aria-label é obrigatório para acessibilidade.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonSoIconeSource },
+      description: { story: 'Botão apenas com ícone. aria-label é obrigatório para acessibilidade.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -89,7 +124,12 @@ export const ActionPair: Story = {
     Component: ButtonPairStory,
     props: { primaryLabel: 'Confirmar', secondaryLabel: 'Cancelar' },
   }),
-  parameters: { docs: { description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonParDeAcoesSource },
+      description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -109,7 +149,10 @@ export const AsLink: Story = {
   }),
   parameters: {
     covers: ['functional.item5'],
-    docs: { description: { story: 'Button renderizado como <a> via prop href. Preserva semântica de link.' } },
+    docs: {
+      source: { transform: buttonComoLinkSource },
+      description: { story: 'Button renderizado como <a> via prop href. Preserva semântica de link.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -145,7 +188,9 @@ export const DisabledLink: Story = {
     props: { variant: 'link', label: 'Ver documentação', href: '#docs', disabled: true },
   }),
   parameters: {
-    docs: { description: { story: 'Link desabilitado: perde o href para não navegar, e ganha role e tabindex que o tiram da ordem de foco — um <a> sem href deixaria de ser link para o leitor de tela.' } },
+    docs: {
+      source: { transform: buttonLinkDesabilitadoSource },
+      description: { story: 'Link desabilitado: perde o href para não navegar, e ganha role e tabindex que o tiram da ordem de foco — um <a> sem href deixaria de ser link para o leitor de tela.' } },
   },
   play: async ({ canvasElement, step }) => {
     const link = within(canvasElement).getByRole('link', { name: 'Ver documentação' });
@@ -169,7 +214,9 @@ export const HrefWithUnsafeProtocol: Story = {
     props: { variant: 'link', label: 'Ver documentação', href: 'javascript:window.__xss = true' },
   }),
   parameters: {
-    docs: { description: { story: 'Protocolo fora da lista permitida (http, https, mailto, tel, âncora e caminho relativo) é descartado: o elemento renderiza sem href em vez de virar um vetor de execução.' } },
+    docs: {
+      source: { transform: buttonDestinoInseguroSource },
+      description: { story: 'Protocolo fora da lista permitida (http, https, mailto, tel, âncora e caminho relativo) é descartado: o elemento renderiza sem href em vez de virar um vetor de execução.' } },
   },
   play: async ({ canvasElement, step }) => {
     // Sem href o <a> perde o role de link — por isso a busca é pelo texto, não
@@ -195,7 +242,9 @@ export const MalformedHref: Story = {
     props: { variant: 'link', label: 'Ver documentação', href: 'http://[' },
   }),
   parameters: {
-    docs: { description: { story: 'URL malformada não vira href: quando a validação não consegue nem interpretar o valor, ele é descartado em vez de ir para o DOM na dúvida.' } },
+    docs: {
+      source: { transform: buttonDestinoMalformadoSource },
+      description: { story: 'URL malformada não vira href: quando a validação não consegue nem interpretar o valor, ele é descartado em vez de ir para o DOM na dúvida.' } },
   },
   play: async ({ canvasElement }) => {
     const el = canvasElement.querySelector('[data-slot="button"]');

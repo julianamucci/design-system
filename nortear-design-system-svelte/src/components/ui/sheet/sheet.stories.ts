@@ -5,6 +5,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 import SheetDocs from '@/components/docs/SheetDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { sheetSource } from './sheet.source';
 
 const meta: Meta = {
   title: 'UI/Sheet',
@@ -14,6 +15,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(SheetDocs),
+      source: { transform: sheetSource },
       description: {
         component:
           'Painel deslizante com quatro direções, foco preso enquanto está aberto, ' +

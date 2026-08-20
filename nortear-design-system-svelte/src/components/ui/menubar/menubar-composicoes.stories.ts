@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
+import { menubarSource } from './menubar.source';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -34,6 +35,9 @@ const meta: Meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      // Cascateia para todas as stories do arquivo; a composição de cada uma
+      // sai dos próprios `args`, que são os mesmos que a demonstração usa.
+      source: { transform: menubarSource },
       description: {
         component:
           'As composições canônicas de um menu da barra: atalhos visíveis, submenu, alternadores independentes, escolha única e a barra completa de um editor.',

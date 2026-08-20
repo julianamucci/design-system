@@ -7,12 +7,26 @@ import AlertStory from './AlertStory.svelte';
 import AlertDismissivelStory from './AlertDismissivelStory.svelte';
 import { contrastePorTema, reprovasPorTema } from '@shared/testing/alert-probe';
 import AlertContrasteStory from './AlertContrasteStory.svelte';
+import {
+  alertAvisoSource,
+  alertContrasteSource,
+  alertDestrutivoSource,
+  alertDismissivelSource,
+  alertInformativoSource,
+  alertSource,
+  alertSucessoSource,
+} from './alert.source';
 
 const meta: Meta = {
   parameters: {
     design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada variante sobrescreve
+      // com a própria composição logo abaixo.
+      source: { transform: alertSource },
+    },
   },
   title: 'UI/Alert/Variants',
   component: Alert,
@@ -44,7 +58,10 @@ export const Default: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ['functional.item2'] },
+  parameters: {
+    covers: ['functional.item2'],
+    docs: { source: { transform: alertDestrutivoSource } },
+  },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -64,7 +81,10 @@ export const Destructive: Story = {
 };
 
 export const Success: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    docs: { source: { transform: alertSucessoSource } },
+  },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -84,6 +104,9 @@ export const Success: Story = {
 };
 
 export const Warning: Story = {
+  parameters: {
+    docs: { source: { transform: alertAvisoSource } },
+  },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -103,6 +126,9 @@ export const Warning: Story = {
 };
 
 export const Info: Story = {
+  parameters: {
+    docs: { source: { transform: alertInformativoSource } },
+  },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -125,7 +151,10 @@ export const Info: Story = {
 // remonta um novo em seguida, então o canvas nunca fica vazio (Chromatic
 // fotografava a story vazia). A prova da remoção mede o nó ORIGINAL.
 export const Dismissible: Story = {
-  parameters: { covers: ['functional.item7', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item5'],
+    docs: { source: { transform: alertDismissivelSource } },
+  },
   args: {
     dismissible: true,
     onDismiss: fn(),
@@ -217,6 +246,9 @@ export const Dismissible: Story = {
 };
 
 export const DismissibleByKeyboard: Story = {
+  parameters: {
+    docs: { source: { transform: alertDismissivelSource } },
+  },
   args: {
     dismissible: true,
     onDismiss: fn(),
@@ -269,6 +301,7 @@ export const Contrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
+      source: { transform: alertContrasteSource },
       description: {
         story:
           'Título e texto de cada variante medidos contra o fundo composto, nos três temas de marca e nos dois modos. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.',

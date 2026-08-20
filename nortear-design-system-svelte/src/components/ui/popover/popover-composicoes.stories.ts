@@ -3,6 +3,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
+import { popoverSource } from './popover.source';
 
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
 // filtro de tabela, seletor de cor e configurações rápidas. Nenhuma acrescenta
@@ -17,6 +18,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: cada composição é um valor
+      // de `args`, e a transform monta o arranjo interno correspondente.
+      source: { transform: popoverSource },
       description: {
         component:
           'Formulário curto, filtros combináveis, paleta restrita e preferências booleanas. Todo gatilho nomeia a ação e o objeto — nunca "Mais" ou "Clique aqui".',

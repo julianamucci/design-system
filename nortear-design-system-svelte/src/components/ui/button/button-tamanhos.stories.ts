@@ -4,12 +4,28 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
+import {
+  buttonIconeLgSource,
+  buttonIconeSmSource,
+  buttonIconeSource,
+  buttonIconeXsSource,
+  buttonSource,
+  buttonTamanhoLgSource,
+  buttonTamanhoPadraoSource,
+  buttonTamanhoSmSource,
+  buttonTamanhoXsSource,
+} from './button.source';
 
 const meta: Meta = {
   parameters: {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada tamanho sobrescreve
+      // com o seu logo abaixo.
+      source: { transform: buttonSource },
+    },
   },
   title: 'UI/Button/Sizes',
   component: Button,
@@ -23,7 +39,10 @@ export const Default: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'default', label: 'Padrão' } }),
   parameters: {
     covers: ['visual.item3'],
-    docs: { description: { story: 'Tamanho padrão. Use em formulários e diálogos como default.' } },
+    docs: {
+      source: { transform: buttonTamanhoPadraoSource },
+      description: { story: 'Tamanho padrão. Use em formulários e diálogos como default.' },
+    },
   },
 
   play: async ({ canvasElement }) => {
@@ -37,7 +56,12 @@ export const Default: Story = {
 
 export const ExtraSmall: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'xs', label: 'Mínimo' } }),
-  parameters: { docs: { description: { story: 'Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonTamanhoXsSource },
+      description: { story: 'Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.' },
+    },
+  },
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /mínimo/i });
     await expect(btn).toHaveClass('nds-button-xs');
@@ -46,7 +70,12 @@ export const ExtraSmall: Story = {
 
 export const Small: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'sm', label: 'Pequeno' } }),
-  parameters: { docs: { description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonTamanhoSmSource },
+      description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /pequeno/i });
@@ -56,7 +85,12 @@ export const Small: Story = {
 
 export const Large: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'lg', label: 'Grande' } }),
-  parameters: { docs: { description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonTamanhoLgSource },
+      description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' },
+    },
+  },
 
   play: async ({ canvasElement }) => {
     const btn = within(canvasElement).getByRole('button', { name: /grande/i });
@@ -72,7 +106,10 @@ export const Icon: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
   parameters: {
     covers: ['functional.item6', 'accessibility.item4'],
-    docs: { description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' } },
+    docs: {
+      source: { transform: buttonIconeSource },
+      description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -90,7 +127,12 @@ export const Icon: Story = {
 
 export const IconExtraSmall: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-xs', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
-  parameters: { docs: { description: { story: 'Botão ícone mínimo. Use em linhas de tabela e listas densas.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonIconeXsSource },
+      description: { story: 'Botão ícone mínimo. Use em linhas de tabela e listas densas.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button', { name: 'Adicionar item' });
@@ -107,7 +149,12 @@ export const IconExtraSmall: Story = {
 
 export const IconSmall: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-sm', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
-  parameters: { docs: { description: { story: 'Botão ícone pequeno. Use em toolbars compactas.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonIconeSmSource },
+      description: { story: 'Botão ícone pequeno. Use em toolbars compactas.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button', { name: 'Adicionar item' });
@@ -124,7 +171,12 @@ export const IconSmall: Story = {
 
 export const IconLarge: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-lg', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
-  parameters: { docs: { description: { story: 'Botão ícone grande. Use como FAB ou CTAs visuais.' } } },
+  parameters: {
+    docs: {
+      source: { transform: buttonIconeLgSource },
+      description: { story: 'Botão ícone grande. Use como FAB ou CTAs visuais.' },
+    },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const button = canvas.getByRole('button', { name: 'Adicionar item' });

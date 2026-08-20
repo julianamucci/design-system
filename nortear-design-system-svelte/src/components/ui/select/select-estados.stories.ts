@@ -5,6 +5,12 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
 import { medirAnelDeFoco, ESTADOS } from '@shared/testing/select-probe';
+import {
+  selectBloqueadoSource,
+  selectInvalidoSource,
+  selectSelecionadoSource,
+  selectSource,
+} from './select.source';
 
 const meta: Meta = {
   title: 'UI/Select/States',
@@ -15,6 +21,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo — Default e Open partem da
+      // mesma composição, e as demais sobrescrevem logo abaixo.
+      source: { transform: selectSource },
       description: {
         component:
           'Vazio, preenchido, aberto, bloqueado, inválido e compacto. Teclado, foco e posicionamento vêm do primitivo — o que estas stories provam é que a composição não desfaz nada disso.',
@@ -62,6 +71,7 @@ export const Selected: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: { transform: selectSelecionadoSource },
       description: {
         story:
           'Valor pré-escolhido. O rótulo vem da lista de opções que a composição já tem em mãos — o primitivo desmonta a lista ao fechar e não teria de onde tirá-lo. (Pré-selecionar serve para ver o estado; em formulário real, evite.)',
@@ -159,6 +169,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: selectBloqueadoSource },
       description: { story: 'Campo bloqueado: não abre, não responde ao clique e sai do percurso do Tab.' },
     },
   },
@@ -187,6 +198,7 @@ export const Invalid: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      source: { transform: selectInvalidoSource },
       description: {
         story:
           'Campo reprovado pela validação. A borda de perigo acompanha `aria-invalid` — a cor não é o aviso, é o reforço dele.',

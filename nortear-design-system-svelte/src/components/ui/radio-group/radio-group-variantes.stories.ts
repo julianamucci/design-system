@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
+import {
+  radioGroupComDescricaoSource,
+  radioGroupHorizontalSource,
+  radioGroupSource,
+  radioGroupVerticalSource,
+} from './radio-group.source';
 
 const meta: Meta = {
   title: 'UI/RadioGroup/Variants',
@@ -12,6 +18,9 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria lista de opções logo abaixo.
+      source: { transform: radioGroupSource },
       description: {
         component:
           'Variantes do RadioGroup: vertical (padrão para 4+ opções), horizontal (2–3 opções curtas) e withDescription (cada item com descrição auxiliar).',
@@ -39,6 +48,7 @@ export const Vertical: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: radioGroupVerticalSource },
       description: {
         story: 'Vertical — empilhamento padrão do grupo, recomendado para 4+ opções.',
       },
@@ -81,6 +91,7 @@ export const Horizontal: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: radioGroupHorizontalSource },
       description: {
         story:
           'Horizontal — sai de `aria-orientation="horizontal"` no grupo: o mesmo atributo anuncia a direção das setas e dispõe as opções lado a lado. Recomendado para 2–3 opções curtas.',
@@ -122,6 +133,7 @@ export const WithDescription: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: radioGroupComDescricaoSource },
       description: {
         story: 'Cada item com Label e descrição auxiliar abaixo. Item recebe `aria-describedby`.',
       },

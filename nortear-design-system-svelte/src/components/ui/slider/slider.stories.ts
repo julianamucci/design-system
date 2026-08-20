@@ -6,6 +6,7 @@ import SliderStory from './SliderStory.svelte';
 import SliderDocs from '@/components/docs/SliderDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { limitesDaAlca, valorDaAlca } from '@shared/testing/slider-probe';
+import { sliderSource } from './slider.source';
 
 const meta: Meta = {
   title: 'UI/Slider',
@@ -15,6 +16,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(SliderDocs),
+      source: { transform: sliderSource },
       description: {
         component:
           'Slider para seleção de valor numérico em faixa contínua. Suporta single (1 thumb), range (2 thumbs) e orientação vertical. value sempre array.',

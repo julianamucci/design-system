@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import TextareaStory from './TextareaStory.svelte';
 import { resizeComputado } from '@shared/testing/textarea-probe';
+import {
+  textareaComApoioSource,
+  textareaComErroSource,
+  textareaContadorAcessivelSource,
+  textareaEmModalSource,
+  textareaSource,
+} from './textarea.source';
 
 const meta: Meta = {
   title: 'UI/Textarea/Compositions',
@@ -13,6 +20,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: textareaSource },
       description: {
         component:
           'Composicoes do Textarea com Label, texto de apoio, contador acessível e mensagem de erro.',
@@ -25,7 +35,10 @@ export default meta;
 type Story = StoryObj;
 
 export const WithLabelAndHelp: Story = {
-  parameters: { covers: ['accessibility.item4'] },
+  parameters: {
+    covers: ['accessibility.item4'],
+    docs: { source: { transform: textareaComApoioSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -53,6 +66,9 @@ export const WithLabelAndHelp: Story = {
 };
 
 export const WithAccessibleCounter: Story = {
+  parameters: {
+    docs: { source: { transform: textareaContadorAcessivelSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -84,6 +100,9 @@ export const WithAccessibleCounter: Story = {
 };
 
 export const WithError: Story = {
+  parameters: {
+    docs: { source: { transform: textareaComErroSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -112,6 +131,9 @@ export const WithError: Story = {
 };
 
 export const ModalNoResize: Story = {
+  parameters: {
+    docs: { source: { transform: textareaEmModalSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {

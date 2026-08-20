@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect } from 'storybook/test';
 import SkeletonComposicaoStory from './SkeletonComposicaoStory.svelte';
 import { caixaDesenhada } from '@shared/testing/skeleton-probe';
+import {
+  skeletonCardDePerfilSource,
+  skeletonImagemEmProporcaoSource,
+  skeletonListaComAvatarSource,
+  skeletonParagrafoSource,
+  skeletonSource,
+} from './skeleton.source';
 
 const meta: Meta = {
   title: 'UI/Skeleton/Compositions',
@@ -13,6 +20,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: skeletonSource },
       description: {
         component:
           'Composições típicas — card de perfil, lista, imagem em proporção e parágrafo. Cada bloco é uma região de carregamento com `aria-busy`, e cada placeholder fica fora da árvore de acessibilidade.',
@@ -29,6 +39,7 @@ export const ProfileCard: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: skeletonCardDePerfilSource },
       description: {
         story: 'Avatar circular + 2 linhas de texto — padrão de carregamento de card de perfil.',
       },
@@ -62,6 +73,7 @@ export const ListWithAvatar: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: skeletonListaComAvatarSource },
       description: {
         story: 'Cinco itens com avatar pequeno e duas linhas — padrão de carregamento de lista.',
       },
@@ -97,6 +109,7 @@ export const ImageInAspectRatio: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      source: { transform: skeletonImagemEmProporcaoSource },
       description: {
         story:
           'Placeholder de imagem dentro de uma proporção 16/9 — quem define a caixa é o container.',
@@ -129,6 +142,7 @@ export const Paragraph: Story = {
   args: { variant: 'paragrafo' },
   parameters: {
     docs: {
+      source: { transform: skeletonParagrafoSource },
       description: {
         story: 'Três linhas com larguras decrescentes — placeholder de parágrafo.',
       },

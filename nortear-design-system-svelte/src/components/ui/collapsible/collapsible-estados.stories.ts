@@ -4,6 +4,12 @@ import { userEvent, waitFor, within, expect, fn } from 'storybook/test';
 import { Collapsible } from './index';
 import CollapsibleStory from './CollapsibleStory.svelte';
 import CollapsibleControladoStory from './CollapsibleControladoStory.svelte';
+import {
+  collapsibleAbertoPorPadraoSource,
+  collapsibleControladoSource,
+  collapsibleDesabilitadoSource,
+  collapsibleSource,
+} from './collapsible.source';
 
 const meta: Meta = {
   title: 'UI/Collapsible/States',
@@ -14,6 +20,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma que muda a marcação
+      // sobrescreve com a sua própria logo abaixo.
+      source: { transform: collapsibleSource },
       description: {
         component:
           'Estados operacionais do Collapsible: não-controlado, aberto por padrão, controlado e desabilitado.',
@@ -72,6 +81,7 @@ export const Uncontrolled: Story = {
 export const OpenByDefault: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item5', 'visual.item2'],
+    docs: { source: { transform: collapsibleAbertoPorPadraoSource } },
   },
   render: () => ({
     Component: CollapsibleStory,
@@ -104,7 +114,10 @@ export const OpenByDefault: Story = {
 };
 
 export const Controlled: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item3'],
+    docs: { source: { transform: collapsibleControladoSource } },
+  },
   render: () => ({
     Component: CollapsibleControladoStory,
     props: {
@@ -146,7 +159,10 @@ export const Controlled: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item6', 'visual.item5'] },
+  parameters: {
+    covers: ['functional.item6', 'visual.item5'],
+    docs: { source: { transform: collapsibleDesabilitadoSource } },
+  },
   render: () => ({
     Component: CollapsibleStory,
     props: {

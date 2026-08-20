@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
+import { inputOtpComSeparadorSource, inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
   title: 'UI/InputOTP/Variants',
@@ -12,6 +13,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: comprimento, teclado e
+      // padrão aceito saem dos args. Só o bloco partido muda a marcação.
+      source: { transform: inputOtpSource },
       description: {
         component:
           'Variantes do InputOTP: SixDigits (padrão SMS), FourDigits (PIN), WithSeparator (3+3) e Alphanumeric (código de autenticação).',
@@ -87,7 +91,10 @@ export const FourDigits: Story = {
 
 export const WithSeparator: Story = {
   name: 'With separator (3+3)',
-  parameters: { covers: ['accessibility.item4', 'visual.item5'] },
+  parameters: {
+    covers: ['accessibility.item4', 'visual.item5'],
+    docs: { source: { transform: inputOtpComSeparadorSource } },
+  },
   args: {
     maxLength: 6,
     inputmode: 'numeric',

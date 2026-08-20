@@ -5,12 +5,23 @@ import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 import AccordionControlledStory from './AccordionControlledStory.svelte';
+import {
+  accordionControladoSource,
+  accordionFechaNoSegundoCliqueSource,
+  accordionMultiploSource,
+  accordionSource,
+} from './accordion.source';
 
 const meta: Meta = {
   parameters: {
     design: figmaDesign('accordion'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada modo que muda a
+      // marcação sobrescreve com a própria composição logo abaixo.
+      source: { transform: accordionSource },
+    },
   },
   title: 'UI/Accordion/Variants',
   component: Accordion,
@@ -109,6 +120,7 @@ export const CloseOnSecondClick: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
+      source: { transform: accordionFechaNoSegundoCliqueSource },
       description: {
         story: 'Modo único sem nenhuma configuração extra: clicar de novo no item aberto o fecha.',
       },
@@ -145,6 +157,7 @@ export const Multiple: Story = {
   parameters: {
     covers: ['functional.item4'],
     docs: {
+      source: { transform: accordionMultiploSource },
       description: {
         story: 'Modo multiple. Múltiplos itens podem estar abertos ao mesmo tempo. Use para especificações técnicas comparáveis.',
       },
@@ -175,6 +188,7 @@ export const Controlled: StoryObj<Record<string, never>> = {
   parameters: {
     covers: ['functional.item6'],
     docs: {
+      source: { transform: accordionControladoSource },
       description: {
         story: 'Modo controlado. value e onValueChange gerenciam o estado externamente. O indicador acima mostra o item ativo.',
       },

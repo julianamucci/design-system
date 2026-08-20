@@ -3,6 +3,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { expect } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
+import { drawerSource } from './drawer.source';
 
 const meta: Meta = {
   title: 'UI/Drawer/Variants',
@@ -13,6 +14,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // As quatro direções são o mesmo painel com um valor diferente na raiz:
+      // a transform lê `direction` dos args e nenhuma story precisa de override.
+      source: { transform: drawerSource },
       description: {
         component:
           'Direção de entrada pela prop direction da raiz. Bottom é o padrão mobile-first e a única direção em que a alça aparece; left e right servem a painéis laterais.',

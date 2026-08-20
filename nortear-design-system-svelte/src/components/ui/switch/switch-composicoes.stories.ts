@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, waitFor, within, expect } from 'storybook/test';
 import SwitchStory from './SwitchStory.svelte';
+import { switchSource } from './switch.source';
 
 /**
  * Leva o switch ao estado desejado, clicando SÓ quando ele ainda não está lá.
@@ -22,6 +23,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // As composições deste arquivo são args do MESMO controle — a cascata já
+      // entrega o snippet certo em cada uma, sem override.
+      source: { transform: switchSource },
       description: {
         component:
           'Composicoes do Switch com Label, descrição auxiliar e padrões de uso em painel de configurações.',

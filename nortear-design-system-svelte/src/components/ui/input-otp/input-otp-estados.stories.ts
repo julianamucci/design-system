@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, expect } from 'storybook/test';
 import { razao, resolverCor } from '@shared/testing/cor';
 import InputOTPStory from './InputOTPStory.svelte';
+import { inputOtpComErroSource, inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
   title: 'UI/InputOTP/States',
@@ -13,6 +14,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: vazio, preenchendo,
+      // completo e desabilitado só mudam args. O erro traz mensagem junto.
+      source: { transform: inputOtpSource },
       description: {
         component:
           'Estados canônicos do InputOTP: Vazio, Preenchendo (3 de 6), Completo (6 de 6), Desabilitado e Erro.',
@@ -126,7 +130,10 @@ export const Disabled: Story = {
 
 export const Error: Story = {
   name: 'Error (aria-invalid)',
-  parameters: { covers: ['functional.item7', 'accessibility.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item7', 'accessibility.item5', 'visual.item4'],
+    docs: { source: { transform: inputOtpComErroSource } },
+  },
   args: {
     maxLength: 6,
     hasError: true,

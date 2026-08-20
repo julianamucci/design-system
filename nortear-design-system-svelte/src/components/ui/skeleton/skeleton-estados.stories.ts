@@ -7,6 +7,7 @@ import {
   distincaoDoFundo,
   ligarMovimentoReduzido,
 } from '@shared/testing/skeleton-probe';
+import { skeletonEstadoSource } from './skeleton.source';
 
 const meta: Meta = {
   title: 'UI/Skeleton/States',
@@ -17,6 +18,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // As duas stories deste arquivo compartilham a MESMA marcação: o pulso e
+      // o seu desligamento sob movimento reduzido vivem na folha, não em prop.
+      source: { transform: skeletonEstadoSource },
       description: {
         component:
           'Os dois estados que o conteúdo compartilhado documenta: o pulso padrão enquanto o conteúdo carrega, e o pulso desligado quando o sistema pede movimento reduzido.',

@@ -3,6 +3,14 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
+import {
+  dropdownMenuComAtalhosSource,
+  dropdownMenuComCheckboxSource,
+  dropdownMenuComRadioSource,
+  dropdownMenuComRotuloSource,
+  dropdownMenuComSubmenuSource,
+  dropdownMenuSource,
+} from './dropdown-menu.source';
 
 const meta: Meta = {
   title: 'UI/DropdownMenu/Compositions',
@@ -13,6 +21,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           'As composições canônicas: grupos com rótulo, alternadores, escolha única, submenu e ' +
@@ -28,7 +39,10 @@ type Story = StoryObj;
 
 export const WithLabel: Story = {
   args: { defaultOpen: true, variant: 'withLabel', triggerLabel: 'Conta' },
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { source: { transform: dropdownMenuComRotuloSource } },
+  },
   play: async () => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
@@ -50,7 +64,10 @@ export const WithLabel: Story = {
 
 export const WithCheckboxItems: Story = {
   args: { defaultOpen: true, variant: 'withCheckbox', triggerLabel: 'Visualização' },
-  parameters: { covers: ['functional.item5', 'accessibility.item4', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item5', 'accessibility.item4', 'visual.item2'],
+    docs: { source: { transform: dropdownMenuComCheckboxSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
@@ -90,7 +107,10 @@ export const WithCheckboxItems: Story = {
 
 export const WithRadioGroup: Story = {
   args: { defaultOpen: true, variant: 'withRadio', triggerLabel: 'Posição' },
-  parameters: { covers: ['functional.item6', 'accessibility.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
+    docs: { source: { transform: dropdownMenuComRadioSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);
@@ -117,7 +137,10 @@ export const WithRadioGroup: Story = {
 
 export const WithSubmenu: Story = {
   args: { defaultOpen: true, variant: 'withSubmenu', triggerLabel: 'Arquivo' },
-  parameters: { covers: ['functional.item7', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item7', 'visual.item4'],
+    docs: { source: { transform: dropdownMenuComSubmenuSource } },
+  },
   play: async ({ step }) => {
     const corpo = within(document.body);
     const menu = await waitForPortal('menu');
@@ -157,6 +180,9 @@ export const WithSubmenu: Story = {
 
 export const WithShortcuts: Story = {
   args: { defaultOpen: true, variant: 'withShortcuts', triggerLabel: 'Editar' },
+  parameters: {
+    docs: { source: { transform: dropdownMenuComAtalhosSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);

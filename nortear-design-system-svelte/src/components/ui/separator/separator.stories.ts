@@ -4,40 +4,7 @@ import { expect } from 'storybook/test';
 import SeparatorStory from './SeparatorStory.svelte';
 import SeparatorDocs from '@/components/docs/SeparatorDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type SeparatorArgs = {
-  orientation: 'horizontal' | 'vertical';
-  decorative: boolean;
-  emphasis: 'default' | 'strong';
-};
-
-/**
- * O docgen está desligado neste stack, então sem `transform` o painel Code sai
- * como `<SeparatorStory …/>` — o nome do andaime da story, que ninguém escreve.
- * O `transform` devolve o uso real com os controls resolvidos.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<SeparatorArgs> }): string {
-  const { orientation = 'horizontal', decorative = true, emphasis = 'default' } = ctx.args ?? {};
-  // Só o que difere do padrão entra no snippet.
-  const attrs = [
-    `orientation="${orientation}"`,
-    decorative ? '' : 'decorative={false}',
-    emphasis === 'strong' ? 'emphasis="strong"' : '',
-  ].filter(Boolean).join(' ');
-
-  // A tag de fechamento vai concatenada: escapar a barra (`<\\/script>`) é
-  // hábito de string dentro de HTML, e aqui o arquivo é um módulo TS — o
-  // escape vira `no-useless-escape` no lint.
-  const fechaScript = '</' + 'script>';
-
-  return `<script lang="ts">
-  import { Separator } from '@/components/ui/separator';
-${fechaScript}
-
-<p>Seção superior</p>
-<Separator ${attrs} />
-<p>Seção inferior</p>`;
-}
+import { separatorSource } from './separator.source';
 
 const meta: Meta = {
   title: 'UI/Separator',
@@ -47,7 +14,7 @@ const meta: Meta = {
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(SeparatorDocs),
-      source: { transform: playgroundSource },
+      source: { transform: separatorSource },
       description: {
         component:
           'Divisor de 1px que separa grupos de conteúdo em layouts horizontais ou verticais. Decorativo por padrão e semântico sob pedido.',

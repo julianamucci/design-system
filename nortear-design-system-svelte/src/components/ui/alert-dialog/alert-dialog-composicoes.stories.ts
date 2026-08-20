@@ -5,6 +5,14 @@ import { within, expect, waitFor } from 'storybook/test';
 import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogSemDescricaoStory from './AlertDialogSemDescricaoStory.svelte';
+import {
+  alertDialogClasseExtraSource,
+  alertDialogComMidiaSource,
+  alertDialogDescricaoLongaSource,
+  alertDialogNeutroSource,
+  alertDialogSemDescricaoSource,
+  alertDialogSource,
+} from './alert-dialog.source';
 
 const meta: Meta = {
   title: 'UI/AlertDialog/Compositions',
@@ -16,6 +24,10 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; a confirmação destrutiva e o
+      // layout responsivo usam a forma canônica, e as demais sobrescrevem logo
+      // abaixo com a própria composição.
+      source: { transform: alertDialogSource },
       description: {
         component:
           'Composicoes canônicas: confirmação destrutiva, confirmação neutra, descrição longa e layout responsivo.',
@@ -31,6 +43,7 @@ export const WithIcon: Story = {
   parameters: {
     covers: ['visual.item6'],
     docs: {
+      source: { transform: alertDialogComMidiaSource },
       description: {
         story:
           'Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.',
@@ -113,6 +126,7 @@ export const Neutral: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: alertDialogNeutroSource },
       description: {
         story:
           'Action com tokens padrão do Button. Use para confirmações não destrutivas (publicar, enviar, arquivar).',
@@ -151,6 +165,7 @@ export const LongDescription: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: alertDialogDescricaoLongaSource },
       description: {
         story:
           'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
@@ -206,6 +221,7 @@ export const WithoutDescription: Story = {
   parameters: {
     covers: ['accessibility.item8'],
     docs: {
+      source: { transform: alertDialogSemDescricaoSource },
       description: {
         story:
           'Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.',
@@ -313,7 +329,10 @@ export const Responsive: Story = {
 // e ao bloco de mídia era a prosa da docs page.
 export const ExtraClass: Story = {
   parameters: {
-    docs: { description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' } },
+    docs: {
+      source: { transform: alertDialogClasseExtraSource },
+      description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' },
+    },
   },
   render: () => ({
     Component: AlertDialogStory,

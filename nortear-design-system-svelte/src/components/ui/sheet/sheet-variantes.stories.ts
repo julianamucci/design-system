@@ -4,6 +4,7 @@ import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
 
 import { expect } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
+import { sheetSource } from './sheet.source';
 
 // As quatro direções são a única variação visual do Sheet, e todas moram no
 // conteúdo (`side`). Cada uma nasce ABERTA: é o estado que a regressão visual
@@ -18,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para as quatro direções: cada story declara os próprios args,
+      // e é deles que o snippet sai — lado, textos e o estado inicial aberto.
+      source: { transform: sheetSource },
       description: {
         component:
           'Direção do painel pela prop side do conteúdo. Right é o padrão de desktop; ' +

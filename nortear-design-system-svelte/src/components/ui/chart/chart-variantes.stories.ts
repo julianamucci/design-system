@@ -7,6 +7,13 @@ import {
 import {
   desenhoEscreve, desenhoPintado, exigirRaiz, formasDeDado,
 } from '@shared/testing/chart-probe';
+import {
+  chartAreaSource,
+  chartBarrasSource,
+  chartLinhasSource,
+  chartPizzaSource,
+  chartSource,
+} from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
 const VALORES = [186, 305, 237, 73];
@@ -23,7 +30,15 @@ const DADOS_DISPOSITIVO = [
 
 const meta: Meta = {
   // Sem argTypes: sem isto o painel Controls abre vazio.
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada tipo de desenho
+      // sobrescreve com o próprio montador logo abaixo.
+      source: { transform: chartSource },
+    },
+  },
   title: 'UI/Chart/Variants',
   component: ChartContainer,
   tags: ['display'],
@@ -56,7 +71,10 @@ function alturasPorCategoria(raiz: HTMLElement): number[] {
 export const Bar: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item1'],
-    docs: { description: { story: 'Barras — comparação entre categorias discretas.' } },
+    docs: {
+      source: { transform: chartBarrasSource },
+      description: { story: 'Barras — comparação entre categorias discretas.' },
+    },
   },
   args: {
     option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
@@ -94,7 +112,10 @@ export const Bar: Story = {
 export const Line: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
-    docs: { description: { story: 'Linhas — tendência ao longo de uma sequência contínua.' } },
+    docs: {
+      source: { transform: chartLinhasSource },
+      description: { story: 'Linhas — tendência ao longo de uma sequência contínua.' },
+    },
   },
   args: {
     option: buildLineOption({ xAxis: MESES, series: SERIES_MULTI }),
@@ -130,7 +151,10 @@ export const Line: Story = {
 
 export const Area: Story = {
   parameters: {
-    docs: { description: { story: 'Área — linha com a região sob ela preenchida, para volume acumulado.' } },
+    docs: {
+      source: { transform: chartAreaSource },
+      description: { story: 'Área — linha com a região sob ela preenchida, para volume acumulado.' },
+    },
   },
   args: {
     option: buildAreaOption({ xAxis: MESES, series: SERIES_MULTI }),
@@ -168,7 +192,10 @@ export const Area: Story = {
 export const Pie: Story = {
   parameters: {
     covers: ['functional.item5'],
-    docs: { description: { story: 'Pizza (rosca) — composição de um total entre poucas partes.' } },
+    docs: {
+      source: { transform: chartPizzaSource },
+      description: { story: 'Pizza (rosca) — composição de um total entre poucas partes.' },
+    },
   },
   args: {
     option: buildPieOption({ data: DADOS_DISPOSITIVO }),

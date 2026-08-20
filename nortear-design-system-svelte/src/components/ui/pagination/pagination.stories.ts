@@ -4,6 +4,7 @@ import { fn, userEvent, within, expect } from 'storybook/test';
 import PaginationStory from './PaginationStory.svelte';
 import PaginationDocs from '@/components/docs/PaginationDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { paginationSource } from './pagination.source';
 
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
 const ROTULO_PROXIMA = 'Ir para a próxima página';
@@ -19,6 +20,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(PaginationDocs),
+      source: { transform: paginationSource },
       description: {
         component:
           'Pagination — navegação entre páginas de um conjunto paginado. Renderiza um <nav> nomeado com PaginationContent (<ul>), PaginationItem (<li>), PaginationLink (numerado, aplica aria-current="page" quando isActive), PaginationPrevious/Next (direcionais com ícone) e PaginationEllipsis (decorativo, aria-hidden).',

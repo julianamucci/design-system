@@ -4,6 +4,7 @@ import { expect } from 'storybook/test';
 import { CodeBlock } from './index';
 import CodeBlockPaletaStory from './CodeBlockPaletaStory.svelte';
 import { MINIMO_DE_CONTRASTE, laudoDeContraste } from '@shared/testing/code-block-probe';
+import { codeBlockPaletaSource, codeBlockSource } from './code-block.source';
 
 /**
  * "Variantes" aqui são as linguagens suportadas — o componente não tem variantes
@@ -42,6 +43,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      // Cascateia para todas as stories do arquivo; as duas de paleta
+      // sobrescrevem com a própria composição logo abaixo.
+      source: { transform: codeBlockSource },
       description: {
         component:
           'Linguagens suportadas pela classificação de sintaxe. Sem numeração: os trechos têm uma linha só.',
@@ -132,7 +136,10 @@ export const Text: Story = {
 // destaque) e nos dois modos.
 
 export const LightPalette: StoryObj<ComponentProps<typeof CodeBlockPaletaStory>> = {
-  parameters: { covers: ['accessibility.item4'] },
+  parameters: {
+    covers: ['accessibility.item4'],
+    docs: { source: { transform: codeBlockPaletaSource } },
+  },
   render: (args) => ({ Component: CodeBlockPaletaStory, props: args }),
   args: { code: PALETA_CODE },
   play: async ({ canvasElement, step }) => {
@@ -164,6 +171,7 @@ export const DarkPalette: StoryObj<ComponentProps<typeof CodeBlockPaletaStory>> 
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },
+    docs: { source: { transform: codeBlockPaletaSource } },
   },
   render: (args) => ({ Component: CodeBlockPaletaStory, props: args }),
   args: { code: PALETA_CODE },

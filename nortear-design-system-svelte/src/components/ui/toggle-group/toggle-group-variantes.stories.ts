@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
+import {
+  toggleGroupFormatacaoSource,
+  toggleGroupSource,
+  toggleGroupVerticalSource,
+} from './toggle-group.source';
 
 /**
  * O estado do item é anunciado por `aria-checked` no modo exclusivo (a lib
@@ -27,6 +32,9 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; as que trocam o conjunto de
+      // opções sobrescrevem com a sua própria marcação logo abaixo.
+      source: { transform: toggleGroupSource },
       description: {
         component:
           'Variantes do ToggleGroup: single (escolha exclusiva), multiple (combinação) e vertical (items empilhados).',
@@ -88,6 +96,7 @@ export const Multiple: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item2', 'accessibility.item4'],
     docs: {
+      source: { transform: toggleGroupFormatacaoSource },
       description: {
         story:
           'Seleção combinada — o valor é um array de strings. Ideal para formatação Bold/Italic/Underline. No modo combinado cada item é um botão com aria-pressed.',
@@ -135,6 +144,7 @@ export const Vertical: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: toggleGroupVerticalSource },
       description: {
         story: 'orientation="vertical" — items empilhados; navegação por ArrowUp/ArrowDown.',
       },

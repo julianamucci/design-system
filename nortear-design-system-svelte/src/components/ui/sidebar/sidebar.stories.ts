@@ -5,6 +5,7 @@ import { Root as Sidebar } from './index';
 import SidebarStory from './SidebarStory.svelte';
 import SidebarDocs from '@/components/docs/SidebarDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { sidebarSource } from './sidebar.source';
 
 const meta: Meta = {
   title: 'UI/Sidebar',
@@ -12,7 +13,10 @@ const meta: Meta = {
   tags: ['autodocs', 'layout'],
   parameters: {
     layout: 'fullscreen',
-    docs: { page: withAutoDocsTab(SidebarDocs) },
+    docs: {
+      page: withAutoDocsTab(SidebarDocs),
+      source: { transform: sidebarSource },
+    },
   },
   argTypes: {
     side: {

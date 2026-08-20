@@ -8,6 +8,11 @@ import {
 } from '@shared/testing/calendar-probe';
 import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
+import {
+  calendarIntervaloSource,
+  calendarMultiploSource,
+  calendarSource,
+} from './calendar.source';
 
 const meta: Meta = {
   title: 'UI/Calendar/Modes',
@@ -18,6 +23,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      // Cascateia para todas as stories do arquivo; as que mudam de modo
+      // sobrescrevem com a sua logo abaixo.
+      source: { transform: calendarSource },
       description: {
         component:
           'Modos de seleção: uma data por vez, várias datas avulsas, ou um intervalo contínuo.',
@@ -75,6 +83,7 @@ export const Multiple: Story = {
   }),
   parameters: {
     docs: {
+      source: { transform: calendarMultiploSource },
       description: {
         story: 'Várias datas avulsas: cada escolha soma à lista, e escolher de novo remove.',
       },
@@ -113,6 +122,7 @@ export const Range: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
     docs: {
+      source: { transform: calendarIntervaloSource },
       description: {
         story:
           'Intervalo contínuo: a primeira escolha abre o período, a segunda o fecha, e os dias entre as duas ficam marcados junto.',

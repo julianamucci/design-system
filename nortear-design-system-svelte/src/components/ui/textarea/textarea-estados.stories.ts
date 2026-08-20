@@ -7,6 +7,13 @@ import {
   contrasteTextoFundo,
   resizeComputado,
 } from '@shared/testing/textarea-probe';
+import {
+  textareaDesabilitadoSource,
+  textareaInvalidoSource,
+  textareaPreenchidoSource,
+  textareaSomenteLeituraSource,
+  textareaSource,
+} from './textarea.source';
 
 const meta: Meta = {
   title: 'UI/Textarea/States',
@@ -17,6 +24,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; Default e Focus não têm
+      // marcação própria e ficam com a forma canônica.
+      source: { transform: textareaSource },
       description: {
         component:
           'Estados do Textarea: default, focus, filled, disabled, invalid (aria-invalid) e read-only.',
@@ -81,7 +91,10 @@ export const Focus: Story = {
 };
 
 export const Filled: Story = {
-  parameters: { covers: ['accessibility.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['accessibility.item2', 'visual.item2'],
+    docs: { source: { transform: textareaPreenchidoSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -107,7 +120,10 @@ export const Filled: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: { source: { transform: textareaDesabilitadoSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -137,7 +153,10 @@ export const Disabled: Story = {
 };
 
 export const Invalid: Story = {
-  parameters: { covers: ['accessibility.item5', 'visual.item3'] },
+  parameters: {
+    covers: ['accessibility.item5', 'visual.item3'],
+    docs: { source: { transform: textareaInvalidoSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -178,7 +197,10 @@ export const Invalid: Story = {
 };
 
 export const ReadOnly: Story = {
-  parameters: { covers: ['visual.item5'] },
+  parameters: {
+    covers: ['visual.item5'],
+    docs: { source: { transform: textareaSomenteLeituraSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {

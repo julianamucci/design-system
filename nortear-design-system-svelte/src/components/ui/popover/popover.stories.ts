@@ -5,6 +5,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
 import PopoverDocs from '@/components/docs/PopoverDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { popoverSource } from './popover.source';
 
 const meta: Meta = {
   title: 'UI/Popover',
@@ -14,6 +15,9 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(PopoverDocs),
+      // Cascateia para todas as stories do arquivo, e monta a composição a
+      // partir dos `args` de cada uma.
+      source: { transform: popoverSource },
       description: {
         component:
           'Overlay flutuante ativado por clique, com auto-flip por colisão, role=dialog e foco gerenciado. Sempre forneça PopoverTitle para acessibilidade.',

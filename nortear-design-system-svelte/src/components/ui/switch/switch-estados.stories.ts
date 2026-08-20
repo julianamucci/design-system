@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
 import SwitchStory from './SwitchStory.svelte';
+import { switchSource } from './switch.source';
 
 const meta: Meta = {
   title: 'UI/Switch/States',
@@ -12,6 +13,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Todos os estados deste arquivo são args do MESMO controle — a cascata
+      // já entrega o snippet certo em cada um, sem override.
+      source: { transform: switchSource },
       description: {
         component:
           'Estados do Switch: unchecked, checked, focus, disabled, disabled-checked e invalid (aria-invalid).',

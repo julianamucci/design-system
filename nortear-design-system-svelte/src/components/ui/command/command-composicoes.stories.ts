@@ -8,6 +8,14 @@ import CommandComposicaoShortcutsStory from './CommandComposicaoShortcutsStory.s
 import CommandComposicaoLinkItemStory from './CommandComposicaoLinkItemStory.svelte';
 import CommandComposicaoComboboxStory from './CommandComposicaoComboboxStory.svelte';
 import CommandComposicaoPaletteStory from './CommandComposicaoPaletteStory.svelte';
+import {
+  commandComAtalhosSource,
+  commandComGruposSource,
+  commandComLinkItemSource,
+  commandComoComboboxSource,
+  commandPaletaSource,
+  commandSource,
+} from './command.source';
 
 // Espiões de escopo de MÓDULO: dentro do `render` seriam inalcançáveis pela
 // play, e a aba Actions nasceria vazia.
@@ -23,6 +31,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: commandSource },
       description: {
         component:
           'Padrões de composição do Command: com grupos e separadores, com atalhos, com ' +
@@ -40,7 +51,10 @@ type Story = StoryObj;
 // ─── Com grupos ───────────────────────────────────────────────────────────────
 
 export const WithGroups: Story = {
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { source: { transform: commandComGruposSource } },
+  },
   render: () => ({
     Component: CommandComposicaoGruposStory,
     props: {},
@@ -103,6 +117,9 @@ export const WithGroups: Story = {
 // ─── Com atalhos ──────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
+  parameters: {
+    docs: { source: { transform: commandComAtalhosSource } },
+  },
   render: () => ({
     Component: CommandComposicaoShortcutsStory,
     props: {},
@@ -155,6 +172,9 @@ export const WithShortcuts: Story = {
 
 export const WithLinkItem: Story = {
   name: 'With CommandLinkItem',
+  parameters: {
+    docs: { source: { transform: commandComLinkItemSource } },
+  },
   render: () => ({
     Component: CommandComposicaoLinkItemStory,
     props: {},
@@ -208,7 +228,10 @@ export const WithLinkItem: Story = {
 // ─── Combobox (Command dentro de Popover) ─────────────────────────────────────
 
 export const AsCombobox: Story = {
-  parameters: { covers: ['functional.item7', 'accessibility.item5', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item7', 'accessibility.item5', 'visual.item3'],
+    docs: { source: { transform: commandComoComboboxSource } },
+  },
   render: () => ({
     Component: CommandComposicaoComboboxStory,
     props: { onValueChange: aoEscolherNoCombobox },
@@ -285,6 +308,7 @@ export const AsCombobox: Story = {
 export const CommandPalette: Story = {
   parameters: {
     covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item4'],
+    docs: { source: { transform: commandPaletaSource } },
   },
   render: () => ({
     Component: CommandComposicaoPaletteStory,

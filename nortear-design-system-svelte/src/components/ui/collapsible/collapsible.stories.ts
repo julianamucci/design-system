@@ -5,6 +5,7 @@ import { Collapsible } from './index';
 import CollapsibleStory from './CollapsibleStory.svelte';
 import CollapsibleDocs from '@/components/docs/CollapsibleDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { collapsibleSource } from './collapsible.source';
 
 const meta: Meta = {
   title: 'UI/Collapsible',
@@ -12,7 +13,10 @@ const meta: Meta = {
   tags: ['autodocs', 'disclosure'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(CollapsibleDocs) },
+    docs: {
+      page: withAutoDocsTab(CollapsibleDocs),
+      source: { transform: collapsibleSource },
+    },
   },
   argTypes: {
     // Docgen está desligado nesta stack: `argTypes` é a ÚNICA fonte da aba

@@ -4,6 +4,11 @@ import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { Collapsible } from './index';
 import CollapsibleComButtonStory from './CollapsibleComButtonStory.svelte';
 import CollapsibleComIconeStory from './CollapsibleComIconeStory.svelte';
+import {
+  collapsibleComBotaoSource,
+  collapsibleComChevronSource,
+  collapsibleSource,
+} from './collapsible.source';
 
 const meta: Meta = {
   title: 'UI/Collapsible/Compositions',
@@ -14,6 +19,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: collapsibleSource },
       description: {
         component:
           'Composicoes do Collapsible: trigger estilizado como botão e trigger com chevron que gira ao abrir.',
@@ -38,7 +46,10 @@ const fechar = async (t: HTMLElement) => {
 // Nome anterior: `WithButton`. `WithCustomButton` é o nome do Vanilla, que é a
 // referência cross-stack.
 export const WithCustomButton: StoryObj<Record<string, never>> = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    docs: { source: { transform: collapsibleComBotaoSource } },
+  },
   render: () => ({
     Component: CollapsibleComButtonStory,
     props: {},
@@ -70,7 +81,10 @@ export const WithCustomButton: StoryObj<Record<string, never>> = {
 
 // Nome anterior: `WithRotatingIcon`. `WithRotatingChevron` é o nome do Vanilla.
 export const WithRotatingChevron: StoryObj<Record<string, never>> = {
-  parameters: { covers: ['accessibility.item4', 'visual.item4'] },
+  parameters: {
+    covers: ['accessibility.item4', 'visual.item4'],
+    docs: { source: { transform: collapsibleComChevronSource } },
+  },
   render: () => ({
     Component: CollapsibleComIconeStory,
     props: {},

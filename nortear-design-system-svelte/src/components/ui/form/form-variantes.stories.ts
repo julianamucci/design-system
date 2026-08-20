@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, within } from 'storybook/test';
 import FormFieldStory from './FormFieldStory.svelte';
+import {
+  formComDescricaoSource,
+  formRotuloEControleSource,
+  formSource,
+} from './form.source';
 
 // O Form não tem variante por prop — o que muda é quais peças opcionais entram
 // no campo. As duas stories abaixo são exatamente as duas combinações que o
@@ -13,6 +18,11 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria combinação de peças logo abaixo.
+      source: { transform: formSource },
+    },
   },
 };
 
@@ -24,7 +34,10 @@ export const LabelAndControl: Story = {
   // `visual.item1` é "Padrão — label + input", e é ESTA a foto: o Playground
   // nasce com descrição nos args, então o que o Chromatic captura lá tem três
   // peças, não duas.
-  parameters: { covers: ['visual.item1'] },
+  parameters: {
+    covers: ['visual.item1'],
+    docs: { source: { transform: formRotuloEControleSource } },
+  },
   render: () => ({
     Component: FormFieldStory,
     props: { label: 'Nome completo', type: 'text', placeholder: 'ex: João da Silva' },
@@ -48,7 +61,10 @@ export const LabelAndControl: Story = {
 
 /** Rótulo, controle e um parágrafo de apoio que o leitor de tela também lê. */
 export const WithDescription: Story = {
-  parameters: { covers: ['functional.item3', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item3', 'visual.item2'],
+    docs: { source: { transform: formComDescricaoSource } },
+  },
   render: () => ({
     Component: FormFieldStory,
     props: {

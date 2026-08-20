@@ -7,6 +7,14 @@ import TableVarianteComRodape from './TableVarianteComRodape.svelte';
 import TableVarianteCaptionSrOnly from './TableVarianteCaptionSrOnly.svelte';
 import TableVarianteComAcoes from './TableVarianteComAcoes.svelte';
 import TableVarianteRolagemHorizontal from './TableVarianteRolagemHorizontal.svelte';
+import {
+  tableBasicaSource,
+  tableComAcoesSource,
+  tableComRodapeSource,
+  tableLegendaOcultaSource,
+  tableRolagemHorizontalSource,
+  tableSource,
+} from './table.source';
 
 const meta: Meta = {
   title: 'UI/Table/Variants',
@@ -16,6 +24,11 @@ const meta: Meta = {
     // Sem argTypes: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: tableSource },
+    },
   },
 };
 
@@ -23,7 +36,10 @@ export default meta;
 type Story = StoryObj;
 
 export const Basic: Story = {
-  parameters: { covers: ['functional.item1', 'visual.item1'] },
+  parameters: {
+    covers: ['functional.item1', 'visual.item1'],
+    docs: { source: { transform: tableBasicaSource } },
+  },
   render: () => ({
     Component: TableVarianteBasica,
     props: {},
@@ -77,7 +93,10 @@ export const Basic: Story = {
 };
 
 export const WithFooter: Story = {
-  parameters: { covers: ['functional.item3', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item3', 'visual.item3'],
+    docs: { source: { transform: tableComRodapeSource } },
+  },
   render: () => ({
     Component: TableVarianteComRodape,
     props: {},
@@ -111,7 +130,10 @@ export const WithFooter: Story = {
 };
 
 export const CaptionSrOnly: Story = {
-  parameters: { covers: ['functional.item6', 'accessibility.item2'] },
+  parameters: {
+    covers: ['functional.item6', 'accessibility.item2'],
+    docs: { source: { transform: tableLegendaOcultaSource } },
+  },
   render: () => ({
     Component: TableVarianteCaptionSrOnly,
     props: {},
@@ -140,7 +162,10 @@ export const CaptionSrOnly: Story = {
 };
 
 export const WithRowActions: Story = {
-  parameters: { covers: ['accessibility.item3', 'visual.item4'] },
+  parameters: {
+    covers: ['accessibility.item3', 'visual.item4'],
+    docs: { source: { transform: tableComAcoesSource } },
+  },
   render: () => ({
     Component: TableVarianteComAcoes,
     props: {},
@@ -171,7 +196,10 @@ export const WithRowActions: Story = {
 };
 
 export const HorizontalScroll: Story = {
-  parameters: { covers: ['functional.item5'] },
+  parameters: {
+    covers: ['functional.item5'],
+    docs: { source: { transform: tableRolagemHorizontalSource } },
+  },
   render: () => ({
     Component: TableVarianteRolagemHorizontal,
     props: {},

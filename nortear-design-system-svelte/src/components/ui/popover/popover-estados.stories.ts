@@ -3,6 +3,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
+import { popoverSource } from './popover.source';
 
 const meta: Meta = {
   title: 'UI/Popover/States',
@@ -13,6 +14,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: o estado aberto, o lado e o
+      // deslocamento saem dos `args` de cada uma.
+      source: { transform: popoverSource },
       description: {
         component:
           'Estados do Popover: fechado (painel fora do DOM), aberto, ancorado acima e controlado por estado externo.',

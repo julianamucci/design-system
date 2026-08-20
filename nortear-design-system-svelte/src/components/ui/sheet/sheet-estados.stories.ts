@@ -3,6 +3,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
+import { sheetSource } from './sheet.source';
 
 // Fechado e aberto são os dois extremos do ciclo. Fechado o painel nem existe
 // no DOM; aberto, o foco entra e fica preso até o fechamento.
@@ -16,6 +17,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para os quatro estados: cada story declara os próprios args, e
+      // é deles que sai o snippet — inclusive o `open` que a torna controlada.
+      source: { transform: sheetSource },
       description: {
         component:
           'Estados canônicos do Sheet: Closed (inicial), Open, WithCloseButtonHidden ' +

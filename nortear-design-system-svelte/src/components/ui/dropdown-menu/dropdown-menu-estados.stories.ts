@@ -4,6 +4,12 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
+import {
+  dropdownMenuControladoSource,
+  dropdownMenuIndeterminadoSource,
+  dropdownMenuItemDesabilitadoSource,
+  dropdownMenuSource,
+} from './dropdown-menu.source';
 
 const meta: Meta = {
   title: 'UI/DropdownMenu/States',
@@ -14,6 +20,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo. Fechado e aberto são
+      // exatamente o que os args declaram; os outros dois sobrescrevem abaixo.
+      source: { transform: dropdownMenuSource },
       description: {
         component:
           'Fechado, aberto, controlado por fora e item desabilitado. Teclado, foco e bloqueio ' +
@@ -93,7 +102,10 @@ export const Open: Story = {
 export const Controlled: Story = {
   args: { open: false, variant: 'default', triggerLabel: 'Abrir via estado externo' },
   parameters: {
-    docs: { description: { story: 'Abertura controlada via open + onOpenChange (bind:open).' } },
+    docs: {
+      source: { transform: dropdownMenuControladoSource },
+      description: { story: 'Abertura controlada via open + onOpenChange (bind:open).' },
+    },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -121,6 +133,9 @@ export const Controlled: Story = {
 
 export const ItemDisabled: Story = {
   args: { defaultOpen: true, variant: 'itemDisabled', triggerLabel: 'Ações' },
+  parameters: {
+    docs: { source: { transform: dropdownMenuItemDesabilitadoSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const itens = within(menu).getAllByRole('menuitem');
@@ -155,7 +170,10 @@ export const ItemDisabled: Story = {
 
 export const CheckboxIndeterminate: Story = {
   args: { defaultOpen: true, variant: 'indeterminate', triggerLabel: 'Colunas' },
-  parameters: { covers: ['functional.item8'] },
+  parameters: {
+    covers: ['functional.item8'],
+    docs: { source: { transform: dropdownMenuIndeterminadoSource } },
+  },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
     const canvas = within(menu);

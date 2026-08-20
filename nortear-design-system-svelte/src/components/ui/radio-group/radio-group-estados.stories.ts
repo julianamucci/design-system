@@ -3,6 +3,15 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
+import {
+  radioGroupDesabilitadoSource,
+  radioGroupFocoSource,
+  radioGroupInvalidoSource,
+  radioGroupItemDesabilitadoSource,
+  radioGroupPadraoSource,
+  radioGroupSelecionadoSource,
+  radioGroupSource,
+} from './radio-group.source';
 
 const meta: Meta = {
   title: 'UI/RadioGroup/States',
@@ -12,6 +21,9 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com o
+      // seu próprio estado logo abaixo.
+      source: { transform: radioGroupSource },
       description: {
         component:
           'Estados do RadioGroup: default, checked, focus, disabled (grupo inteiro), itemDisabled (somente um item) e invalid (aria-invalid).',
@@ -49,7 +61,10 @@ const defaultOptions = [
 ];
 
 export const Default: Story = {
-  parameters: { covers: ['visual.item1', 'accessibility.item2'] },
+  parameters: {
+    covers: ['visual.item1', 'accessibility.item2'],
+    docs: { source: { transform: radioGroupPadraoSource } },
+  },
   render: () => ({
     Component: RadioGroupStory,
     props: {
@@ -83,7 +98,10 @@ export const Default: Story = {
 };
 
 export const Checked: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: radioGroupSelecionadoSource } },
+  },
   render: () => ({
     Component: RadioGroupStory,
     props: {
@@ -114,6 +132,7 @@ export const FocusVisible: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
+      source: { transform: radioGroupFocoSource },
       description: {
         story:
           'Foco por teclado: Tab entra no grupo e as setas movem entre os itens, com a seleção acompanhando o foco no desktop. O anel sai de `:focus-visible`.',
@@ -149,7 +168,10 @@ export const FocusVisible: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item3'],
+    docs: { source: { transform: radioGroupDesabilitadoSource } },
+  },
   render: () => ({
     Component: RadioGroupStory,
     props: {
@@ -175,6 +197,9 @@ export const Disabled: Story = {
 };
 
 export const ItemDisabled: Story = {
+  parameters: {
+    docs: { source: { transform: radioGroupItemDesabilitadoSource } },
+  },
   render: () => ({
     Component: RadioGroupStory,
     props: {
@@ -216,6 +241,7 @@ export const Invalid: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
+      source: { transform: radioGroupInvalidoSource },
       description: {
         story:
           'Grupo com `aria-invalid="true"`; o mesmo atributo em cada item é o que troca a cor da borda para `--destructive` no CSS compartilhado.',

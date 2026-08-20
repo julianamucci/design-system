@@ -5,6 +5,13 @@ import { within, expect } from 'storybook/test';
 import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
 import BadgeSemanticasStory from './BadgeSemanticasStory.svelte';
+import {
+  badgeDestrutivoSource,
+  badgeOutlineSource,
+  badgeSecundarioSource,
+  badgeSemanticasSource,
+  badgeSource,
+} from './badge.source';
 
 const meta: Meta = {
   title: 'UI/Badge/Variants',
@@ -16,6 +23,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; cada variante sobrescreve
+      // com o próprio par de variante e rótulo logo abaixo.
+      source: { transform: badgeSource },
       description: {
         component:
           'Cada variante do Badge reflete um nível de hierarquia visual: default destaca, secondary informa, destructive alerta e outline oferece baixa ênfase.',
@@ -59,7 +69,10 @@ export const Default: Story = {
 };
 
 export const Secondary: Story = {
-  parameters: { covers: ['functional.item2', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'visual.item2'],
+    docs: { source: { transform: badgeSecundarioSource } },
+  },
   render: () => ({ Component: BadgeStory, props: { variant: 'secondary', label: 'Beta' } }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -81,7 +94,10 @@ export const Secondary: Story = {
 };
 
 export const Destructive: Story = {
-  parameters: { covers: ['functional.item3', 'accessibility.item3', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+    docs: { source: { transform: badgeDestrutivoSource } },
+  },
   render: () => ({ Component: BadgeStory, props: { variant: 'destructive', label: 'Urgente' } }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -104,7 +120,10 @@ export const Destructive: Story = {
 };
 
 export const Outline: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item2'],
+    docs: { source: { transform: badgeOutlineSource } },
+  },
   render: () => ({ Component: BadgeStory, props: { variant: 'outline', label: 'Rascunho' } }),
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -128,6 +147,7 @@ export const Semantics: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item5', 'accessibility.item3'],
     docs: {
+      source: { transform: badgeSemanticasSource },
       description: {
         story:
           'warning avisa, success confirma e info contextualiza. As três existiam no CSS como -high, -medium e -low, servindo só à tabela de prioridade das docs pages.',

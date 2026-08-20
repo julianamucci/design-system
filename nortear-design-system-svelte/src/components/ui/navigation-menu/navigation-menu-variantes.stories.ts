@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
 import { abrir, fechar } from './navigation-menu.fixtures';
+import { navigationMenuSource } from './navigation-menu.source';
 
 const meta: Meta = {
   title: 'UI/NavigationMenu/Variants',
@@ -14,6 +15,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; a composição de cada uma
+      // sai dos próprios `args`, que são os mesmos que a demonstração usa.
+      source: { transform: navigationMenuSource },
       description: {
         component:
           'As duas direções da barra. Horizontal é o cabeçalho de site, com os itens em linha; vertical é a coluna de uma barra lateral ou gaveta, com os itens empilhados.',

@@ -3,6 +3,7 @@ import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './index';
 import ChartCardStory from './ChartCardStory.svelte';
 import { desenhoEscreve, desenhoPintado, exigirRaiz } from '@shared/testing/chart-probe';
+import { chartEmCardSource, chartSource, chartTituloNoDesenhoSource } from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
 const SERIE_UNICA = [{ name: 'Vendas', data: [186, 305, 237, 73] }];
@@ -12,7 +13,15 @@ const TITULO_NO_DESENHO = 'Vendas mensais';
 
 const meta: Meta = {
   // Sem argTypes: sem isto o painel Controls abre vazio.
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada composição sobrescreve
+      // com a própria marcação logo abaixo.
+      source: { transform: chartSource },
+    },
+  },
   title: 'UI/Chart/Compositions',
   component: ChartContainer,
   tags: ['display'],
@@ -22,7 +31,10 @@ type Story = StoryObj;
 
 export const WithCard: Story = {
   parameters: {
-    docs: { description: { story: 'Dentro de um Card: o título e o apoio ficam no cabeçalho do card, e o desenho no corpo.' } },
+    docs: {
+      source: { transform: chartEmCardSource },
+      description: { story: 'Dentro de um Card: o título e o apoio ficam no cabeçalho do card, e o desenho no corpo.' },
+    },
   },
   render: () => ({
     Component: ChartCardStory,
@@ -52,7 +64,10 @@ export const WithCard: Story = {
 
 export const InlineTitle: Story = {
   parameters: {
-    docs: { description: { story: 'Título no próprio desenho: para quando o gráfico é servido sozinho, sem card em volta.' } },
+    docs: {
+      source: { transform: chartTituloNoDesenhoSource },
+      description: { story: 'Título no próprio desenho: para quando o gráfico é servido sozinho, sem card em volta.' },
+    },
   },
   args: {
     option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA, title: TITULO_NO_DESENHO }),

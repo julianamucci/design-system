@@ -6,6 +6,7 @@ import TextareaStory from './TextareaStory.svelte';
 import TextareaDocs from '@/components/docs/TextareaDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { resizeComputado } from '@shared/testing/textarea-probe';
+import { textareaSource } from './textarea.source';
 
 const meta: Meta = {
   title: 'UI/Textarea',
@@ -13,7 +14,10 @@ const meta: Meta = {
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(TextareaDocs) },
+    docs: {
+      page: withAutoDocsTab(TextareaDocs),
+      source: { transform: textareaSource },
+    },
   },
   argTypes: {
     placeholder: {

@@ -7,6 +7,12 @@ import {
   preencherAte,
   resizeComputado,
 } from '@shared/testing/textarea-probe';
+import {
+  textareaComContadorSource,
+  textareaPadraoSource,
+  textareaSemRedimensionarSource,
+  textareaSource,
+} from './textarea.source';
 
 const meta: Meta = {
   title: 'UI/Textarea/Variants',
@@ -17,6 +23,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: textareaSource },
       description: {
         component:
           'Variantes do Textarea: padrão (redimensiona na vertical), com contador de caracteres e sem redimensionamento.',
@@ -29,6 +38,9 @@ export default meta;
 type Story = StoryObj;
 
 export const Default: Story = {
+  parameters: {
+    docs: { source: { transform: textareaPadraoSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -55,7 +67,10 @@ export const Default: Story = {
 };
 
 export const WithCounter: Story = {
-  parameters: { covers: ['functional.item3', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item3', 'visual.item4'],
+    docs: { source: { transform: textareaComContadorSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {
@@ -93,6 +108,9 @@ export const WithCounter: Story = {
 };
 
 export const NoResize: Story = {
+  parameters: {
+    docs: { source: { transform: textareaSemRedimensionarSource } },
+  },
   render: () => ({
     Component: TextareaStory,
     props: {

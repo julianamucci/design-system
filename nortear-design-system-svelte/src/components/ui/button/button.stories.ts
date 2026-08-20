@@ -6,6 +6,7 @@ import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 import ButtonDocs from '@/components/docs/ButtonDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { buttonSource } from './button.source';
 
 const meta: Meta = {
   title: 'UI/Button',
@@ -13,7 +14,10 @@ const meta: Meta = {
   tags: ['autodocs', 'form'],
   parameters: {
     design: figmaDesign('button'),
-    docs: { page: withAutoDocsTab(ButtonDocs) },
+    docs: {
+      page: withAutoDocsTab(ButtonDocs),
+      source: { transform: buttonSource },
+    },
   },
   argTypes: {
     variant: {

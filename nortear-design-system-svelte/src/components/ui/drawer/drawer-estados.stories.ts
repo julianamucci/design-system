@@ -3,6 +3,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
+import { drawerSource } from './drawer.source';
 
 const meta: Meta = {
   title: 'UI/Drawer/States',
@@ -13,6 +14,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Os quatro estados diferem no valor inicial do estado ligado e em
+      // `dismissible` — os dois já saem dos args que a transform lê.
+      source: { transform: drawerSource },
       description: {
         component:
           'Estados canônicos do Drawer: fechado (padrão), aberto, controlado por estado externo e não dispensável.',

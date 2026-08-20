@@ -3,6 +3,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, userEvent } from 'storybook/test';
 import PopoverStory from './PopoverStory.svelte';
+import { popoverSource } from './popover.source';
 
 const meta: Meta = {
   title: 'UI/Popover/Variants',
@@ -13,6 +14,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: cada uma declara a sua
+      // composição em `args`, e a transform monta o snippet a partir deles.
+      source: { transform: popoverSource },
       description: {
         component:
           'Conteúdo livre, cabeçalho com título e descrição, e formulário inline. O painel sempre precisa de nome acessível: com título ele vem do aria-labelledby, sem título ele herda o texto do gatilho.',

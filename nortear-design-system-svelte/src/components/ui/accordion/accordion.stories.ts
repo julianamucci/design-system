@@ -6,12 +6,7 @@ import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 import AccordionDocs from '@/components/docs/AccordionDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-type AccordionArgs = {
-  type: 'single' | 'multiple';
-  disabled: boolean;
-  loop: boolean;
-};
+import { accordionSource } from './accordion.source';
 
 const meta: Meta = {
   title: 'UI/Accordion',
@@ -19,7 +14,15 @@ const meta: Meta = {
   tags: ['autodocs', 'disclosure'],
   parameters: {
     design: figmaDesign('accordion'),
-    docs: { page: withAutoDocsTab(AccordionDocs) },
+    // O gerador de source do @storybook/svelte monta a tag a partir de
+    // `component.__docgen.name` e, sem docgen, cai em `component.name` — o nome
+    // interno da função compilada, que não é um componente que alguém possa
+    // importar. `transform` e não `code`: um snippet fixo deixaria de acompanhar
+    // os controls. Cascateia para as stories deste arquivo.
+    docs: {
+      page: withAutoDocsTab(AccordionDocs),
+      source: { transform: accordionSource },
+    },
   },
   // A aba "API Reference" é montada só a partir destes argTypes: o docgen do
   // Svelte está desligado no .storybook/main.ts (analisar ~447 .svelte custava
@@ -78,54 +81,12 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
-  // O gerador de source do @storybook/svelte monta a tag a partir de
-  // `component.__docgen.name` e, sem docgen, cai em `component.name` — o nome
-  // interno da função compilada. Daí saía `<wrapper type="single" …/>`, que não
-  // é um componente que alguém possa importar. Além disso ele serializa os
-  // `args` da raiz sobre o componente-wrapper da story, misturando duas coisas.
-  // Enquanto o docgen estiver desligado, o snippet vai explícito.
-  // `transform` e não `code`: um snippet fixo deixaria de acompanhar os
-  // controls (trocar type para multiple não mudaria nada na caixa de código).
   parameters: {
     covers: [
       'functional.item1', 'functional.item3',
       'accessibility.item1', 'accessibility.item2', 'accessibility.item4', 'accessibility.item6',
       'visual.item1',
     ],
-    docs: {
-      source: {
-        transform: (_generated: string, ctx: { args?: Partial<AccordionArgs> }) => {
-          const { type = 'single', disabled = false, loop = true } = ctx.args ?? {};
-          const multiple = type === 'multiple';
-          const attrs = [
-            `type="${type}"`,
-            'bind:value',
-            disabled ? 'disabled' : '',
-            loop ? '' : 'loop={false}',
-            'class="nds-max-w-lg"',
-          ].filter(Boolean).join(' ');
-          return `<script lang="ts">
-  import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-  } from "@/components/ui/accordion";
-
-  let value = $state(${multiple ? '["item-1"]' : '"item-1"'});
-</script>
-
-<Accordion ${attrs}>
-  <AccordionItem value="item-1">
-    <AccordionTrigger>Como faço para redefinir minha senha?</AccordionTrigger>
-    <AccordionContent>
-      Acesse a tela de login e clique em "Esqueci minha senha".
-    </AccordionContent>
-  </AccordionItem>
-</Accordion>`;
-        },
-      },
-    },
   },
   render: (args) => ({
     Component: AccordionStory,

@@ -5,6 +5,14 @@ import { Root as ContextMenu } from './index';
 import ContextMenuComposicaoStory from './ContextMenuComposicaoStory.svelte';
 import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
 import { abrirPorGesto } from '@shared/testing/context-menu-area';
+import {
+  contextMenuComAtalhosSource,
+  contextMenuComEscolhaUnicaSource,
+  contextMenuComMarcacaoSource,
+  contextMenuComSubmenuSource,
+  contextMenuCompletoSource,
+  contextMenuSource,
+} from './context-menu.source';
 
 const meta: Meta = {
   title: 'UI/ContextMenu/Compositions',
@@ -16,6 +24,9 @@ const meta: Meta = {
     layout: 'centered',
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: contextMenuSource },
       description: {
         component:
           'Composições do Context Menu: atalhos, marcação, escolha única, submenu e o menu completo.',
@@ -32,6 +43,9 @@ const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="
 // ── Com atalhos ───────────────────────────────────────────────────────────────
 
 export const WithShortcut: Story = {
+  parameters: {
+    docs: { source: { transform: contextMenuComAtalhosSource } },
+  },
   render: () => ({ Component: ContextMenuComposicaoStory, props: { composition: 'shortcut' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
@@ -61,7 +75,10 @@ export const WithShortcut: Story = {
 // ── Com marcação ──────────────────────────────────────────────────────────────
 
 export const WithCheckbox: Story = {
-  parameters: { covers: ['functional.item7', 'accessibility.item4'] },
+  parameters: {
+    covers: ['functional.item7', 'accessibility.item4'],
+    docs: { source: { transform: contextMenuComMarcacaoSource } },
+  },
   render: () => ({ Component: ContextMenuComposicaoStory, props: { composition: 'checkbox' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
@@ -110,7 +127,10 @@ export const WithCheckbox: Story = {
 // ── Com escolha única ─────────────────────────────────────────────────────────
 
 export const WithRadioGroup: Story = {
-  parameters: { covers: ['functional.item8', 'accessibility.item5'] },
+  parameters: {
+    covers: ['functional.item8', 'accessibility.item5'],
+    docs: { source: { transform: contextMenuComEscolhaUnicaSource } },
+  },
   render: () => ({ Component: ContextMenuComposicaoStory, props: { composition: 'radio' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
@@ -157,7 +177,10 @@ export const WithRadioGroup: Story = {
 // ── Com submenu ───────────────────────────────────────────────────────────────
 
 export const WithSubmenu: Story = {
-  parameters: { covers: ['functional.item5', 'functional.item6', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item5', 'functional.item6', 'visual.item3'],
+    docs: { source: { transform: contextMenuComSubmenuSource } },
+  },
   render: () => ({ Component: ContextMenuComposicaoStory, props: { composition: 'submenu' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
@@ -207,7 +230,10 @@ export const WithSubmenu: Story = {
 // ── Composição completa ───────────────────────────────────────────────────────
 
 export const CompleteComposition: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: { source: { transform: contextMenuCompletoSource } },
+  },
   render: () => ({ Component: ContextMenuComposicaoStory, props: { composition: 'complete' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');

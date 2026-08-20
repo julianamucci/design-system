@@ -5,13 +5,17 @@ import { Table } from './index';
 import TableStory from './TableStory.svelte';
 import TableDocs from '@/components/docs/TableDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { tableSource } from './table.source';
 
 const meta: Meta = {
   title: 'UI/Table',
   component: Table,
   tags: ['autodocs', 'tables'],
   parameters: {
-    docs: { page: withAutoDocsTab(TableDocs) },
+    docs: {
+      page: withAutoDocsTab(TableDocs),
+      source: { transform: tableSource },
+    },
   },
   argTypes: {
     caption: {

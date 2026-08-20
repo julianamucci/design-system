@@ -5,24 +5,12 @@ import SkeletonStory from './SkeletonStory.svelte';
 import SkeletonDocs from '@/components/docs/SkeletonDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { FRACAO_DE_LARGURA, caixaDesenhada } from '@shared/testing/skeleton-probe';
+import { skeletonSource, type SkeletonArgs } from './skeleton.source';
 
 // O docgen está desligado neste stack: `argTypes` é a única fonte da aba API
-// Reference, e sem `docs.source.transform` o snippet sai como `<wrapper …/>`.
-type PlaygroundArgs = {
-  shape: 'text' | 'heading' | 'avatar' | 'fill';
-  width: 'full' | '3-4' | '2-3' | '1-2' | '1-3';
-  loading: boolean;
-};
-
-function playgroundSource(_gerado: string, ctx: { args?: Partial<PlaygroundArgs> }): string {
-  const { shape = 'text', width = '3-4' } = ctx.args ?? {};
-  const largura = shape === 'text' || shape === 'heading' ? ` data-width="${width}"` : '';
-  return `<div role="status" aria-busy={isLoading} aria-label="Carregando conteúdo">
-  <Skeleton data-shape="${shape}"${largura} />
-</div>`;
-}
-
-const meta: Meta<PlaygroundArgs> = {
+// Reference, e sem `docs.source.transform` o snippet sai com o nome interno da
+// função compilada, que ninguém pode importar.
+const meta: Meta<SkeletonArgs> = {
   title: 'UI/Skeleton',
   component: SkeletonStory,
   tags: ['autodocs', 'feedback'],
@@ -30,7 +18,7 @@ const meta: Meta<PlaygroundArgs> = {
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(SkeletonDocs),
-      source: { transform: playgroundSource },
+      source: { transform: skeletonSource },
     },
   },
   argTypes: {
@@ -60,7 +48,7 @@ const meta: Meta<PlaygroundArgs> = {
 };
 
 export default meta;
-type Story = StoryObj<PlaygroundArgs>;
+type Story = StoryObj<SkeletonArgs>;
 
 export const Playground: Story = {
   parameters: {

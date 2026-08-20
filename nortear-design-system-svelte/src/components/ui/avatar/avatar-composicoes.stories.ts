@@ -4,6 +4,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
+import {
+  avatarComStatusSource,
+  avatarGrupoSource,
+  avatarIconeSource,
+  avatarIniciaisSource,
+  avatarSource,
+} from './avatar.source';
 
 const meta: Meta = {
   title: 'UI/Avatar/Compositions',
@@ -15,6 +22,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para a story de imagem, que é a composição canônica; as
+      // outras quatro sobrescrevem com a sua própria marcação.
+      source: { transform: avatarSource },
       description: {
         component:
           'Composicoes do Avatar: imagem, iniciais, ícone, agrupamento e com indicador de status.',
@@ -67,7 +77,10 @@ export const WithImage: Story = {
 };
 
 export const WithInitials: Story = {
-  parameters: { covers: ['functional.item3', 'accessibility.item3', 'visual.item2'] },
+  parameters: {
+    covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
+    docs: { source: { transform: avatarIniciaisSource } },
+  },
   render: () => ({
     Component: AvatarStory,
     props: {
@@ -86,7 +99,10 @@ export const WithInitials: Story = {
 };
 
 export const WithIcon: Story = {
-  parameters: { covers: ['visual.item2'] },
+  parameters: {
+    covers: ['visual.item2'],
+    docs: { source: { transform: avatarIconeSource } },
+  },
   render: () => ({
     Component: AvatarStory,
     props: {
@@ -106,7 +122,10 @@ export const WithIcon: Story = {
 };
 
 export const Group: Story = {
-  parameters: { covers: ['functional.item5', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item5', 'visual.item4'],
+    docs: { source: { transform: avatarGrupoSource } },
+  },
   render: () => ({
     Component: AvatarStory,
     props: {
@@ -137,7 +156,10 @@ export const Group: Story = {
 };
 
 export const WithStatus: Story = {
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: { source: { transform: avatarComStatusSource } },
+  },
   render: () => ({
     Component: AvatarStory,
     props: {

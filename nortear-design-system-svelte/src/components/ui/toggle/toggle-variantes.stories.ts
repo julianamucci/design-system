@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import ToggleScenarioStory from './ToggleScenarioStory.svelte';
+import {
+  toggleComRotuloSource,
+  toggleParDeVariantesSource,
+  toggleSource,
+  toggleTamanhosSource,
+} from './toggle.source';
 
 const meta = {
   title: 'UI/Toggle/Variants',
@@ -13,6 +19,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; as que compõem mais de um
+      // toggle sobrescrevem com a sua própria marcação logo abaixo.
+      source: { transform: toggleSource },
       description: {
         component:
           'Variantes visuais do Toggle: default (sem borda), outline (com borda), rótulo visível e a escada de tamanhos.',
@@ -53,7 +62,10 @@ export const Default: Story = {
 };
 
 export const Outline: Story = {
-  parameters: { covers: ['visual.item3'] },
+  parameters: {
+    covers: ['visual.item3'],
+    docs: { source: { transform: toggleParDeVariantesSource } },
+  },
   args: { cenario: 'variants' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -75,6 +87,7 @@ export const Outline: Story = {
 };
 
 export const WithLabel: Story = {
+  parameters: { docs: { source: { transform: toggleComRotuloSource } } },
   args: { cenario: 'labels' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -101,6 +114,7 @@ export const WithLabel: Story = {
 };
 
 export const Sizes: Story = {
+  parameters: { docs: { source: { transform: toggleTamanhosSource } } },
   args: { cenario: 'sizes' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

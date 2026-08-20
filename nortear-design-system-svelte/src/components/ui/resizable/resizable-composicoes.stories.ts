@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
+import {
+  resizableDivisaoVerticalSource,
+  resizableEditorPreviewSource,
+  resizableIdeSource,
+  resizableSidebarSource,
+  resizableSource,
+} from './resizable.source';
 
 const meta: Meta = {
   title: 'UI/Resizable/Compositions',
@@ -12,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: resizableSource },
       description: {
         component:
           'Composicoes reais do Resizable — Sidebar + Conteúdo, Editor + Preview, Lista + Detalhe empilhados e layout aninhado tipo IDE (Sidebar | Editor / Console).',
@@ -34,6 +44,9 @@ function fracoes(canvasElement: HTMLElement, horizontal: boolean): number[] {
 }
 
 export const SidebarLayout: Story = {
+  parameters: {
+    docs: { source: { transform: resizableSidebarSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: {
@@ -64,6 +77,9 @@ export const SidebarLayout: Story = {
 };
 
 export const EditorPreview: Story = {
+  parameters: {
+    docs: { source: { transform: resizableEditorPreviewSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: {
@@ -91,6 +107,9 @@ export const EditorPreview: Story = {
 };
 
 export const VerticalSplit: Story = {
+  parameters: {
+    docs: { source: { transform: resizableDivisaoVerticalSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: {
@@ -126,6 +145,9 @@ export const VerticalSplit: Story = {
 };
 
 export const IDELayout: Story = {
+  parameters: {
+    docs: { source: { transform: resizableIdeSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: {

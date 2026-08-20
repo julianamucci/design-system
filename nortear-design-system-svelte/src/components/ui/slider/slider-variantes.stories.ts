@@ -3,6 +3,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
 import { alcasDoSlider, trilhoDoSlider, valorDaAlca } from '@shared/testing/slider-probe';
+import {
+  sliderFaixaSource,
+  sliderSource,
+  sliderUnicoSource,
+  sliderVerticalSource,
+} from './slider.source';
 
 const meta: Meta = {
   title: 'UI/Slider/Variants',
@@ -13,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: sliderSource },
       description: {
         component:
           'Variantes do Slider: single (um thumb), range (dois thumbs) e vertical (orientation="vertical").',
@@ -37,6 +46,7 @@ export const Single: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: sliderUnicoSource },
       description: {
         story: 'value=[50] — um único thumb controlando um valor numérico.',
       },
@@ -74,6 +84,7 @@ export const Range: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: { transform: sliderFaixaSource },
       description: {
         story: 'value=[20, 80] — dois thumbs controlando min e max de uma faixa.',
       },
@@ -115,6 +126,7 @@ export const Vertical: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
+      source: { transform: sliderVerticalSource },
       description: {
         story:
           'orientation="vertical" — o componente já traz altura mínima própria em pé.',

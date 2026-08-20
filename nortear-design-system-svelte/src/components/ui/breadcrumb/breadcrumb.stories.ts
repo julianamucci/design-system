@@ -11,6 +11,7 @@ import {
   medirBreadcrumb,
   reprovasDeBreadcrumb,
 } from '@shared/testing/breadcrumb-probe';
+import { breadcrumbSource } from './breadcrumb.source';
 
 const meta: Meta = {
   title: 'UI/Breadcrumb',
@@ -18,7 +19,10 @@ const meta: Meta = {
   tags: ['autodocs', 'navigation'],
   parameters: {
     design: figmaDesign('breadcrumb'),
-    docs: { page: withAutoDocsTab(BreadcrumbDocs) },
+    docs: {
+      page: withAutoDocsTab(BreadcrumbDocs),
+      source: { transform: breadcrumbSource },
+    },
   },
 };
 

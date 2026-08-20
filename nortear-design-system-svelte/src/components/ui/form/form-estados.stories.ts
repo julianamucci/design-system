@@ -4,6 +4,12 @@ import { resolverCor } from '@shared/testing/cor';
 import { contrastesNosDoisModos } from '@shared/testing/form-probe';
 import FormFieldStory from './FormFieldStory.svelte';
 import FormDarkPaletteStory from './FormDarkPaletteStory.svelte';
+import {
+  formDesabilitadoSource,
+  formInvalidoSource,
+  formPaletaEscuraSource,
+  formSource,
+} from './form.source';
 
 const meta: Meta = {
   title: 'UI/Form/States',
@@ -12,6 +18,11 @@ const meta: Meta = {
     layout: 'padded',
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com o
+      // seu próprio estado logo abaixo.
+      source: { transform: formSource },
+    },
   },
 };
 
@@ -31,6 +42,7 @@ export const Invalid: Story = {
       'accessibility.item5',
       'visual.item3',
     ],
+    docs: { source: { transform: formInvalidoSource } },
   },
   render: () => ({
     Component: FormFieldStory,
@@ -90,7 +102,10 @@ export const Invalid: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item7'] },
+  parameters: {
+    covers: ['functional.item7'],
+    docs: { source: { transform: formDesabilitadoSource } },
+  },
   render: () => ({
     Component: FormFieldStory,
     props: {
@@ -139,6 +154,7 @@ export const DarkPalette: Story = {
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },
+    docs: { source: { transform: formPaletaEscuraSource } },
   },
   render: () => ({ Component: FormDarkPaletteStory }),
   play: async ({ canvasElement, step }) => {

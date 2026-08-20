@@ -8,6 +8,14 @@ import {
   transbordo,
 } from '@shared/testing/scroll-area-probe';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
+import {
+  scrollAreaConteudoFocavelSource,
+  scrollAreaDuranteRolagemSource,
+  scrollAreaOciosoSource,
+  scrollAreaSemTetoSource,
+  scrollAreaSempreVisivelSource,
+  scrollAreaSource,
+} from './scroll-area.source';
 
 const meta: Meta = {
   title: 'UI/ScrollArea/States',
@@ -18,6 +26,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: scrollAreaSource },
       description: {
         component:
           'Estados do ScrollArea — idle (padrão), always (barra sempre montada), scroll (barra durante a rolagem), focus (viewport na ordem de tabulação), conteúdo focável dentro da área e o caso em que o componente não rola por falta de teto no pai.',
@@ -58,6 +69,9 @@ async function esperarBarra(
 }
 
 export const Idle: Story = {
+  parameters: {
+    docs: { source: { transform: scrollAreaOciosoSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {
@@ -83,7 +97,10 @@ export const Idle: Story = {
 };
 
 export const Always: Story = {
-  parameters: { covers: ['functional.item2', 'accessibility.item2'] },
+  parameters: {
+    covers: ['functional.item2', 'accessibility.item2'],
+    docs: { source: { transform: scrollAreaSempreVisivelSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {
@@ -204,6 +221,9 @@ export const Always: Story = {
 };
 
 export const ScrollOnly: Story = {
+  parameters: {
+    docs: { source: { transform: scrollAreaDuranteRolagemSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {
@@ -239,7 +259,12 @@ export const ScrollOnly: Story = {
 };
 
 export const Focus: Story = {
-  parameters: { covers: ['accessibility.item3', 'visual.item4'] },
+  parameters: {
+    covers: ['accessibility.item3', 'visual.item4'],
+    // Mesma composição da Always: o viewport entra na ordem de tabulação por
+    // conta do componente, sem nenhuma prop no ponto de uso.
+    docs: { source: { transform: scrollAreaSempreVisivelSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {
@@ -275,7 +300,10 @@ export const Focus: Story = {
 };
 
 export const FocusableContent: Story = {
-  parameters: { covers: ['accessibility.item4'] },
+  parameters: {
+    covers: ['accessibility.item4'],
+    docs: { source: { transform: scrollAreaConteudoFocavelSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {
@@ -318,7 +346,10 @@ export const FocusableContent: Story = {
 };
 
 export const NoLimit: Story = {
-  parameters: { covers: ['functional.item4'] },
+  parameters: {
+    covers: ['functional.item4'],
+    docs: { source: { transform: scrollAreaSemTetoSource } },
+  },
   render: () => ({
     Component: ScrollAreaStory,
     props: {

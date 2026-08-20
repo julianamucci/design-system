@@ -4,6 +4,12 @@ import { ChartContainer, buildBarOption } from './index';
 import {
   desenhoEscreve, desenhoPintado, exigirRaiz, formasDeDado,
 } from '@shared/testing/chart-probe';
+import {
+  chartBarrasSource,
+  chartComLegendaSource,
+  chartComTituloSource,
+  chartSource,
+} from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
 const VALORES = [186, 305, 237, 73];
@@ -16,7 +22,15 @@ const SERIES_MULTI = [
 
 const meta: Meta = {
   // Sem argTypes: sem isto o painel Controls abre vazio.
-  parameters: { controls: { disable: true }, actions: { disable: true } },
+  parameters: {
+    controls: { disable: true },
+    actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada configuração
+      // sobrescreve com o próprio objeto de configuração logo abaixo.
+      source: { transform: chartSource },
+    },
+  },
   title: 'UI/Chart/Settings',
   component: ChartContainer,
   tags: ['display'],
@@ -47,7 +61,10 @@ function centrosPorCategoria(raiz: HTMLElement): Array<{ x: number; y: number }>
 export const WithTooltip: Story = {
   parameters: {
     covers: ['functional.item4'],
-    docs: { description: { story: 'O ponteiro sobre uma coluna abre a dica com a categoria e o valor daquele ponto.' } },
+    docs: {
+      source: { transform: chartBarrasSource },
+      description: { story: 'O ponteiro sobre uma coluna abre a dica com a categoria e o valor daquele ponto.' },
+    },
   },
   args: {
     option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
@@ -90,7 +107,10 @@ export const WithTooltip: Story = {
 
 export const WithCaption: Story = {
   parameters: {
-    docs: { description: { story: 'Legenda forçada: com uma série ela some por padrão, e a configuração traz de volta.' } },
+    docs: {
+      source: { transform: chartComLegendaSource },
+      description: { story: 'Legenda forçada: com uma série ela some por padrão, e a configuração traz de volta.' },
+    },
   },
   args: {
     option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA, showLegend: true }),
@@ -120,7 +140,10 @@ export const WithCaption: Story = {
 
 export const MultipleSeries: Story = {
   parameters: {
-    docs: { description: { story: 'Multi-séries com título no próprio desenho — o painel típico de um relatório.' } },
+    docs: {
+      source: { transform: chartComTituloSource },
+      description: { story: 'Multi-séries com título no próprio desenho — o painel típico de um relatório.' },
+    },
   },
   args: {
     option: buildBarOption({

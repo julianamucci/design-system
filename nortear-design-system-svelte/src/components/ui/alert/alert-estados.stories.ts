@@ -5,12 +5,24 @@ import { within, expect } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertSemAnuncioStory from './AlertSemAnuncioStory.svelte';
+import {
+  alertInsercaoDinamicaSource,
+  alertSemAnuncioSource,
+  alertSemIconeSource,
+  alertSemTituloSource,
+  alertSource,
+} from './alert.source';
 
 const meta: Meta = {
   parameters: {
     design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada estado que muda a
+      // marcação sobrescreve com a própria composição logo abaixo.
+      source: { transform: alertSource },
+    },
   },
   title: 'UI/Alert/States',
   component: Alert,
@@ -46,7 +58,10 @@ export const Complete: Story = {
 };
 
 export const WithoutTitle: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item3'],
+    docs: { source: { transform: alertSemTituloSource } },
+  },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -73,6 +88,9 @@ export const WithoutTitle: Story = {
 };
 
 export const WithoutIcon: Story = {
+  parameters: {
+    docs: { source: { transform: alertSemIconeSource } },
+  },
   render: () => ({
     Component: AlertStory,
     props: {
@@ -101,6 +119,9 @@ export const WithoutIcon: Story = {
 // de tela interrompe a leitura e salta para o alert no carregamento da página.
 // `role="note"` remove o anúncio sem mexer no visual — e o default segue `alert`.
 export const WithoutAnnouncement: Story = {
+  parameters: {
+    docs: { source: { transform: alertSemAnuncioSource } },
+  },
   render: () => ({
     Component: AlertSemAnuncioStory,
   }),
@@ -122,7 +143,10 @@ export const WithoutAnnouncement: Story = {
 };
 
 export const DynamicInsertion: Story = {
-  parameters: { covers: ['functional.item6'] },
+  parameters: {
+    covers: ['functional.item6'],
+    docs: { source: { transform: alertInsercaoDinamicaSource } },
+  },
   render: () => ({
     Component: AlertStory,
     props: {

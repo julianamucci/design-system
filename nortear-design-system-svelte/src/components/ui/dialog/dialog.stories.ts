@@ -4,6 +4,7 @@ import { Dialog } from './index';
 import DialogStory from './DialogStory.svelte';
 import DialogDocs from '@/components/docs/DialogDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { dialogSource } from './dialog.source';
 import {
   abrir,
   botaoFecharDoCanto,
@@ -21,7 +22,10 @@ const meta: Meta = {
   component: Dialog,
   tags: ['autodocs', 'overlay'],
   parameters: {
-    docs: { page: withAutoDocsTab(DialogDocs) },
+    docs: {
+      page: withAutoDocsTab(DialogDocs),
+      source: { transform: dialogSource },
+    },
   },
   argTypes: {
     open: {

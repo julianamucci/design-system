@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
+import { tooltipSource } from './tooltip.source';
 
 // As composições que o conteúdo compartilhado documenta, mais os quatro lados de
 // posicionamento. Em todas, o Tooltip acrescenta contexto a um elemento que JÁ
@@ -27,6 +28,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo: o lado, a variante e o
+      // texto do balão já vêm dos args de cada uma.
+      source: { transform: tooltipSource },
       description: {
         component:
           'Atalho de teclado em botão icon-only, descrição curta de ação e os quatro lados de posicionamento (top/right/bottom/left), um por story para a regressão visual isolar cada um.',

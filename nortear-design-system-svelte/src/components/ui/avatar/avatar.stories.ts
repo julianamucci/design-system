@@ -6,6 +6,7 @@ import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
 import AvatarDocs from '@/components/docs/AvatarDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { avatarSource } from './avatar.source';
 
 /** Diâmetro de cada preset, em px, com a densidade padrão. */
 const DIAMETRO: Record<string, number> = { sm: 24, md: 32, lg: 40, xl: 48, '2xl': 64 };
@@ -17,7 +18,10 @@ const meta: Meta = {
   parameters: {
     design: figmaDesign('avatar'),
     layout: 'centered',
-    docs: { page: withAutoDocsTab(AvatarDocs) },
+    docs: {
+      page: withAutoDocsTab(AvatarDocs),
+      source: { transform: avatarSource },
+    },
   },
   argTypes: {
     class: {

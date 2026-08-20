@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
+import {
+  resizableArrastoSource,
+  resizableDesabilitadoSource,
+  resizableFocoSource,
+  resizableLimitesSource,
+  resizableSource,
+} from './resizable.source';
 
 const meta: Meta = {
   title: 'UI/Resizable/States',
@@ -12,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com o
+      // seu próprio estado logo abaixo.
+      source: { transform: resizableSource },
       description: {
         component:
           'Estados do Resizable: Dragging (arrasto ajusta os painéis em tempo real), Limits (o painel para no mínimo e no máximo), Focus (divisor alcançado pelo Tab, com anel visível) e Disabled (divisor travado).',
@@ -55,7 +65,10 @@ const base = {
 };
 
 export const Dragging: Story = {
-  parameters: { covers: ['functional.item1', 'accessibility.item2'] },
+  parameters: {
+    covers: ['functional.item1', 'accessibility.item2'],
+    docs: { source: { transform: resizableArrastoSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: { ...base, withHandle: true, defaultSize: 50, minSize: 10 },
@@ -106,7 +119,10 @@ export const Dragging: Story = {
 };
 
 export const Limits: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    docs: { source: { transform: resizableLimitesSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: { ...base, defaultSize: 50, minSize: 30, maxSize: 60, labelA: 'Limitado', labelB: 'Livre' },
@@ -144,7 +160,10 @@ export const Limits: Story = {
 };
 
 export const Focus: Story = {
-  parameters: { covers: ['functional.item4', 'accessibility.item3'] },
+  parameters: {
+    covers: ['functional.item4', 'accessibility.item3'],
+    docs: { source: { transform: resizableFocoSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: { ...base, withHandle: true, defaultSize: 50, minSize: 20, labelA: 'Um', labelB: 'Dois' },
@@ -179,6 +198,9 @@ export const Focus: Story = {
 };
 
 export const Disabled: Story = {
+  parameters: {
+    docs: { source: { transform: resizableDesabilitadoSource } },
+  },
   render: () => ({
     Component: ResizableStory,
     props: { ...base, withHandle: true, disabled: true, defaultSize: 50, minSize: 20, labelA: 'Fixo', labelB: 'Fixo' },

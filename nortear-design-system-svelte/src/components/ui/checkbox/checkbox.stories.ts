@@ -5,13 +5,17 @@ import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 import CheckboxDocs from '@/components/docs/CheckboxDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { checkboxSource } from './checkbox.source';
 
 const meta: Meta = {
   title: 'UI/Checkbox',
   component: Checkbox,
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(CheckboxDocs) },
+    docs: {
+      page: withAutoDocsTab(CheckboxDocs),
+      source: { transform: checkboxSource },
+    },
     layout: 'centered',
   },
   argTypes: {

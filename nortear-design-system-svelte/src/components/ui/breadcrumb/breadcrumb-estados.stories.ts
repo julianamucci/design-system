@@ -4,6 +4,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, fn, userEvent, within } from 'storybook/test';
 import { Breadcrumb } from './index';
 import BreadcrumbStory from './BreadcrumbStory.svelte';
+import {
+  breadcrumbComReticenciasSource,
+  breadcrumbLinkCustomizadoSource,
+  breadcrumbSeparadorCustomizadoSource,
+  breadcrumbSimplesSource,
+  breadcrumbSource,
+} from './breadcrumb.source';
 
 const meta: Meta = {
   title: 'UI/Breadcrumb/States',
@@ -15,6 +22,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: breadcrumbSource },
       description: {
         component:
           'Configuracoes estruturais do Breadcrumb: simples, com ellipsis, separador customizado e link customizado.',
@@ -33,6 +43,7 @@ export const Simple: Story = {
   parameters: {
     covers: ['functional.item3', 'functional.item6', 'accessibility.item5'],
     docs: {
+      source: { transform: breadcrumbSimplesSource },
       description: { story: 'Composição básica com 2 níveis — link inicial + BreadcrumbPage.' },
     },
   },
@@ -69,6 +80,7 @@ export const WithEllipsis: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item2'],
     docs: {
+      source: { transform: breadcrumbComReticenciasSource },
       description: {
         story:
           'Ellipsis colapsando níveis intermediários. Com rótulo, o indicador é anunciado; sem ele, fica decorativo.',
@@ -102,6 +114,7 @@ export const CustomSeparator: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
     docs: {
+      source: { transform: breadcrumbSeparadorCustomizadoSource },
       description: {
         story:
           'Separador customizado via children de BreadcrumbSeparator — mantém aria-hidden automaticamente.',
@@ -136,6 +149,7 @@ export const AsChildLink: Story = {
   parameters: {
     covers: ['functional.item3'],
     docs: {
+      source: { transform: breadcrumbLinkCustomizadoSource },
       description: {
         story:
           'Link com atributos do consumidor — os data-* do router passam direto para o <a> do componente.',

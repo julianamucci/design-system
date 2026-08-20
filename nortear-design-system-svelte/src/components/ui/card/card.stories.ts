@@ -5,6 +5,7 @@ import { Card } from './index';
 import CardStory from './CardStory.svelte';
 import CardDocs from '@/components/docs/CardDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { cardSource } from './card.source';
 
 const meta: Meta = {
   title: 'UI/Card',
@@ -13,6 +14,7 @@ const meta: Meta = {
   parameters: {
     docs: {
       page: withAutoDocsTab(CardDocs),
+      source: { transform: cardSource },
       description: {
         component:
           'Card é o container estrutural que agrupa conteúdo relacionado. 2 tamanhos (default, sm) e 7 partes (Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter).',

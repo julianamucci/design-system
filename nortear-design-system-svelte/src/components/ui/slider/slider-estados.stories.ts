@@ -10,6 +10,7 @@ import {
   contrasteAlcaTrilho,
   valorDaAlca,
 } from '@shared/testing/slider-probe';
+import { sliderSource } from './slider.source';
 
 const meta: Meta = {
   title: 'UI/Slider/States',
@@ -20,6 +21,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Todos os estados deste arquivo são args do MESMO controle — a cascata
+      // já entrega o snippet certo em cada um, sem override.
+      source: { transform: sliderSource },
       description: {
         component:
           'Estados do Slider: default, focus (foco visível), disabled, no min e no max.',

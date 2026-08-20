@@ -5,61 +5,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import CommandDocs from '@/components/docs/CommandDocs.svelte';
 import { Root as Command } from '@/components/ui/command';
 import CommandStory from './CommandStory.svelte';
-
-type CommandArgs = {
-  placeholder: string;
-  emptyMessage: string;
-  loop: boolean;
-  shouldFilter: boolean;
-  onItemSelect: (value: string) => void;
-};
-
-/**
- * Sem `transform` o painel Code imprime `<CommandStory … />` — o nome do
- * andaime da story, que não existe para quem consome. Aqui ele devolve o uso
- * real, montado a partir dos controls.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<CommandArgs> }): string {
-  const {
-    placeholder = 'Buscar componente...',
-    emptyMessage = 'Nenhum resultado encontrado.',
-    loop = false,
-    shouldFilter = true,
-  } = ctx.args ?? {};
-
-  const props = [loop ? ' loop' : '', shouldFilter ? '' : ' shouldFilter={false}'].join('');
-
-  return `<script lang="ts">
-  import {
-    Command,
-    CommandInput,
-    CommandList,
-    CommandEmpty,
-    CommandGroup,
-    CommandItem,
-    CommandSeparator,
-  } from '@/components/ui/command';
-
-  function executar(value: string) {
-    // roda o comando e devolve o foco para onde ele age
-  }
-</script>
-
-<Command${props}>
-  <CommandInput placeholder="${placeholder}" />
-  <CommandList>
-    <CommandEmpty>${emptyMessage}</CommandEmpty>
-    <CommandGroup heading="Componentes">
-      <CommandItem value="button" onSelect={() => executar('button')}>Button</CommandItem>
-      <CommandItem value="input" onSelect={() => executar('input')}>Input</CommandItem>
-    </CommandGroup>
-    <CommandSeparator />
-    <CommandGroup heading="Utilitários">
-      <CommandItem value="cn" onSelect={() => executar('cn')}>cn()</CommandItem>
-    </CommandGroup>
-  </CommandList>
-</Command>`;
-}
+import { commandSource } from './command.source';
 
 const meta: Meta = {
   title: 'UI/Command',
@@ -69,7 +15,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(CommandDocs),
-      source: { transform: playgroundSource },
+      source: { transform: commandSource },
       description: {
         component:
           'Interface de busca e seleção rápida com filtro fuzzy integrado. Suporta uso inline, combobox e command palette.',

@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
 import {
+  dialogAcaoDestrutivaSource,
+  dialogComFormularioSource,
+  dialogComRolagemSource,
+  dialogSemRodapeSource,
+  dialogSource,
+} from './dialog.source';
+import {
   abrir,
   botaoFecharDoCanto,
   conferirNomeEDescricao,
@@ -18,6 +25,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; as que mudam de estrutura
+      // sobrescrevem com a própria composição logo abaixo.
+      source: { transform: dialogSource },
       description: {
         component:
           'Composicoes estruturais do Dialog. Não há prop `variant` no componente — cada item abaixo é um padrão de uso recorrente, e a diferença está em quais partes existem.',
@@ -72,6 +82,7 @@ export const WithForm: Story = {
   parameters: {
     covers: ['visual.item2', 'visual.item4'],
     docs: {
+      source: { transform: dialogComFormularioSource },
       description: { story: 'Body com formulário inline. Submit dispara a ação primária.' },
     },
   },
@@ -114,6 +125,7 @@ export const WithScrollContent: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      source: { transform: dialogComRolagemSource },
       description: {
         story:
           'Body longo com rolagem própria: o painel fica parado e centralizado, e header e rodapé continuam visíveis.',
@@ -157,6 +169,7 @@ export const NoFooter: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: { transform: dialogSemRodapeSource },
       description: { story: 'Apenas Title + Description, sem Footer. Para uso informativo.' },
     },
   },
@@ -191,6 +204,7 @@ export const WithDestructiveAction: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
+      source: { transform: dialogAcaoDestrutivaSource },
       description: {
         story:
           'Footer com ação primária destrutiva. Diferente de AlertDialog — use só quando a destrutividade é secundária ao fluxo.',

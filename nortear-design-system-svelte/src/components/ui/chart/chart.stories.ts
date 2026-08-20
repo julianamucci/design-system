@@ -6,42 +6,12 @@ import {
 } from '@shared/testing/chart-probe';
 import ChartDocs from '@/components/docs/ChartDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { chartSource } from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const SERIE_UNICA = [{ name: 'Vendas', data: [186, 305, 237, 73, 209, 214] }];
 
 const ROTULO = 'Acessos mensais no desktop, de janeiro a junho';
-
-/**
- * O painel Code não tem docgen no Svelte (desligado no `.storybook/main.ts`), e
- * sem `transform` o gerador monta a tag a partir do nome interno da função
- * compilada — sai `<wrapper …/>`, que ninguém consegue escrever. O snippet vai
- * montado a partir dos args, para acompanhar os controls.
- */
-function playgroundSource(
-  _gerado: string,
-  ctx: { args?: { renderer?: string; height?: number; class?: string; emptyLabel?: string; 'aria-label'?: string } },
-): string {
-  const a = ctx.args ?? {};
-  const linhas = ['  option={buildBarOption({ xAxis: meses, series })}'];
-  if (a.height !== undefined) linhas.push(`  height={${a.height}}`);
-  if (a.class) linhas.push(`  class="${a.class}"`);
-  if (a.renderer && a.renderer !== 'svg') linhas.push(`  renderer="${a.renderer}"`);
-  if (a.emptyLabel && a.emptyLabel !== CHART_EMPTY_LABEL) linhas.push(`  emptyLabel="${a.emptyLabel}"`);
-  // O rótulo é o contrato de acessibilidade do componente: o snippet mostra sempre.
-  linhas.push(`  aria-label="${a['aria-label'] ?? ROTULO}"`);
-
-  return `<script lang="ts">
-  import { ChartContainer, buildBarOption } from "@/components/ui/chart";
-
-  const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
-  const series = [{ name: 'Vendas', data: [186, 305, 237, 73, 209, 214] }];
-</script>
-
-<ChartContainer
-${linhas.join('\n')}
-/>`;
-}
 
 const meta: Meta = {
   title: 'UI/Chart',
@@ -53,7 +23,11 @@ const meta: Meta = {
     layout: 'padded',
     docs: {
       page: withAutoDocsTab(ChartDocs),
-      source: { transform: playgroundSource },
+      // O painel Code não tem docgen no Svelte (desligado no
+      // `.storybook/main.ts`), e sem `transform` o gerador monta a tag a partir
+      // do nome interno da função compilada. O snippet vai montado a partir dos
+      // args, para acompanhar os controls.
+      source: { transform: chartSource },
     },
   },
   // O docgen do Svelte está desligado no .storybook/main.ts: a aba

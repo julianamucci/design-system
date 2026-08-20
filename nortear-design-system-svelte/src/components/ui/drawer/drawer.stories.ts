@@ -5,6 +5,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 import DrawerDocs from '@/components/docs/DrawerDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { drawerSource } from './drawer.source';
 
 const ROTULO = {
   gatilho: 'Abrir drawer',
@@ -22,6 +23,7 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(DrawerDocs),
+      source: { transform: drawerSource },
       description: {
         component:
           'Painel deslizante mobile-first. Renderiza em portal com overlay, foco preso e role=dialog, em quatro direções de entrada.',

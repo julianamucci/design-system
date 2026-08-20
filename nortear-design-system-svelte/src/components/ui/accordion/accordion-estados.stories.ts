@@ -4,12 +4,23 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
+import {
+  accordionAbertoSource,
+  accordionFechadoSource,
+  accordionItemDesabilitadoSource,
+  accordionSource,
+} from './accordion.source';
 
 const meta: Meta = {
   parameters: {
     design: figmaDesign('accordionItem'),
     controls: { disable: true },
     actions: { disable: true },
+    docs: {
+      // Cascateia para todas as stories do arquivo; cada estado que muda a
+      // marcação sobrescreve com a própria composição logo abaixo.
+      source: { transform: accordionSource },
+    },
   },
   title: 'UI/Accordion/States',
   component: Accordion,
@@ -45,6 +56,7 @@ export const Closed: Story = {
   parameters: {
     covers: ['accessibility.item2', 'accessibility.item7', 'visual.item3'],
     docs: {
+      source: { transform: accordionFechadoSource },
       description: {
         story: 'Estado fechado. aria-expanded="false" no trigger. Chevron aponta para baixo.',
       },
@@ -92,6 +104,7 @@ export const Open: Story = {
   parameters: {
     covers: ['accessibility.item2', 'visual.item3'],
     docs: {
+      source: { transform: accordionAbertoSource },
       description: {
         story: 'Estado aberto. aria-expanded="true" no trigger. Conteúdo visível e acessível.',
       },
@@ -133,6 +146,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item5', 'visual.item5'],
     docs: {
+      source: { transform: accordionItemDesabilitadoSource },
       description: {
         story: 'Estado disabled. Trigger não responde a cliques. Use para seções temporariamente indisponíveis.',
       },

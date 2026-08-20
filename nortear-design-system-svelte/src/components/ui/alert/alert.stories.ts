@@ -6,6 +6,7 @@ import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertDocs from '@/components/docs/AlertDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { alertSource } from './alert.source';
 
 const meta: Meta = {
   title: 'UI/Alert',
@@ -13,7 +14,13 @@ const meta: Meta = {
   tags: ['autodocs', 'feedback'],
   parameters: {
     design: figmaDesign('alert'),
-    docs: { page: withAutoDocsTab(AlertDocs) },
+    // Sem docgen, o gerador de source monta a tag a partir do nome interno da
+    // função compilada. O snippet vai explícito, montado a partir dos args para
+    // acompanhar os controls — e cascateia para as stories deste arquivo.
+    docs: {
+      page: withAutoDocsTab(AlertDocs),
+      source: { transform: alertSource },
+    },
   },
   // O docgen do Svelte está desligado no .storybook/main.ts: a aba
   // "API Reference" sai só destes argTypes.
@@ -69,32 +76,8 @@ export default meta;
 type Story = StoryObj;
 
 export const Playground: Story = {
-  // Sem docgen, o gerador de source monta a tag a partir do nome interno da
-  // função compilada (`<wrapper …/>`). O snippet vai explícito, montado a
-  // partir dos args para acompanhar os controls.
   parameters: {
     covers: ['accessibility.item1', 'accessibility.item4', 'visual.item1'],
-    docs: {
-      source: {
-        transform: (_generated: string, ctx: { args?: { variant?: string; role?: string; dismissible?: boolean } }) => {
-          const variant = ctx.args?.variant ?? 'default';
-          const variantAttr = variant === 'default' ? '' : ` variant="${variant}"`;
-          const role = ctx.args?.role ?? 'alert';
-          const roleAttr = role === 'alert' ? '' : ` role="${role}"`;
-          const dismissAttr = ctx.args?.dismissible ? ' dismissible onDismiss={() => console.log("fechado")}' : '';
-          return `<script lang="ts">
-  import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-  import Info from "@lucide/svelte/icons/info";
-</script>
-
-<Alert${variantAttr}${roleAttr}${dismissAttr}>
-  <Info class="nds-icon" aria-hidden="true" />
-  <AlertTitle>Atenção</AlertTitle>
-  <AlertDescription>Suas alterações serão aplicadas na próxima sessão.</AlertDescription>
-</Alert>`;
-        },
-      },
-    },
   },
   render: (args) => ({
     Component: AlertStory,

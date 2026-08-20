@@ -6,6 +6,7 @@ import { Input } from './index';
 import InputWithLabelStory from './InputWithLabelStory.svelte';
 import InputDocs from '@/components/docs/InputDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { inputSource } from './input.source';
 
 const meta: Meta = {
   title: 'UI/Input',
@@ -13,7 +14,10 @@ const meta: Meta = {
   tags: ['autodocs', 'form'],
   parameters: {
     layout: 'centered',
-    docs: { page: withAutoDocsTab(InputDocs) },
+    docs: {
+      page: withAutoDocsTab(InputDocs),
+      source: { transform: inputSource },
+    },
   },
   argTypes: {
     type: {

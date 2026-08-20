@@ -4,6 +4,7 @@ import type { ComponentProps } from 'svelte';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { CodeBlock } from './index';
 import CodeBlockRemovivelStory from './CodeBlockRemovivelStory.svelte';
+import { codeBlockRemovivelSource, codeBlockSource } from './code-block.source';
 
 /** Mesmo trecho base da seção Composições da docs page. */
 const BASE_CODE = `const items = await load();
@@ -25,6 +26,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
+      // Cascateia para todas as stories do arquivo; a de remoção sobrescreve
+      // com a própria composição logo abaixo.
+      source: { transform: codeBlockSource },
       description: {
         component:
           'Configurações do bloco: numeração ligada e desligada, confirmação de cópia, rolagem nos dois eixos, linguagem não reconhecida e o bloco removido antes do fim do feedback.',
@@ -156,7 +160,10 @@ export const UnknownLanguage: Story = {
 };
 
 export const RemovedBeforeFeedback: StoryObj<ComponentProps<typeof CodeBlockRemovivelStory>> = {
-  parameters: { covers: ['functional.item8'] },
+  parameters: {
+    covers: ['functional.item8'],
+    docs: { source: { transform: codeBlockRemovivelSource } },
+  },
   render: (args) => ({ Component: CodeBlockRemovivelStory, props: args }),
   args: { code: BASE_CODE },
   play: async ({ canvasElement, step }) => {

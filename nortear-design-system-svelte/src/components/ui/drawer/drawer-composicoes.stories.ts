@@ -3,6 +3,12 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
+import {
+  drawerComConfirmacaoSource,
+  drawerComFormularioSource,
+  drawerComRolagemSource,
+  drawerSource,
+} from './drawer.source';
 
 const meta: Meta = {
   title: 'UI/Drawer/Compositions',
@@ -13,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cada composição traz um corpo próprio e sobrescreve logo abaixo; o meta
+      // garante que nenhuma story do arquivo caia no andaime.
+      source: { transform: drawerSource },
       description: {
         component:
           'Combinações canônicas: formulário curto com confirmar/cancelar, confirmação reversível e corpo mais alto que o painel.',
@@ -37,6 +46,7 @@ export const WithForm: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
+      source: { transform: drawerComFormularioSource },
       description: {
         story:
           'Formulário curto no corpo e par de ações no rodapé. Título e descrição dizem o que está sendo editado — juntos formam o nome e a descrição acessíveis do painel.',
@@ -78,6 +88,7 @@ export const WithConfirmation: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: drawerComConfirmacaoSource },
       description: {
         story:
           'Mensagem curta e par de ações. Vale para confirmação reversível; se a ação for realmente bloqueante, o componente é o AlertDialog.',
@@ -113,6 +124,7 @@ export const WithScroll: Story = {
   },
   parameters: {
     docs: {
+      source: { transform: drawerComRolagemSource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho dentro do teto de altura e o rodapé continua visível — é o que separa "conteúdo longo" de "ação fora de alcance".',

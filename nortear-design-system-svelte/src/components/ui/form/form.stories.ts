@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import FormFieldStory from './FormFieldStory.svelte';
+import { formSource } from './form.source';
 
 type FormArgs = {
   label: string;
@@ -15,7 +16,10 @@ const meta: Meta<FormArgs> = {
   title: 'UI/Form',
   component: FormFieldStory,
   tags: ['autodocs', 'form'],
-  parameters: { layout: 'padded' },
+  parameters: {
+    layout: 'padded',
+    docs: { source: { transform: formSource } },
+  },
   argTypes: {
     label: {
       control: 'text',

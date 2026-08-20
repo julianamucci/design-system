@@ -5,6 +5,7 @@ import { Toggle } from './index';
 import ToggleStory from './ToggleStory.svelte';
 import ToggleDocs from '@/components/docs/ToggleDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { toggleSource } from './toggle.source';
 
 type ToggleArgs = {
   pressed?: boolean;
@@ -19,41 +20,6 @@ type ToggleArgs = {
   onPressedChange?: (pressed: boolean) => void;
 };
 
-/**
- * O docgen está desligado neste stack, e sem `transform` o painel Code imprime
- * `<wrapper …/>` — o nome interno da função compilada. Aqui devolvemos o uso
- * real, com os valores atuais dos controls.
- */
-function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleArgs> }): string {
-  const {
-    variant = 'default',
-    size = 'default',
-    pressed = false,
-    disabled = false,
-    label = 'Negrito',
-    ariaLabel,
-    withLabel = false,
-  } = ctx.args ?? {};
-
-  // Só o que difere do padrão entra no snippet: documentação que repete valor
-  // default ensina ruído.
-  const attrs = [
-    variant === 'default' ? '' : `variant="${variant}"`,
-    size === 'default' ? '' : `size="${size}"`,
-    pressed ? 'pressed' : '',
-    disabled ? 'disabled' : '',
-    // Toggle sem texto visível não tem nome acessível nenhum sem isto.
-    withLabel ? '' : `aria-label="${ariaLabel || label || 'Alternar'}"`,
-  ].filter(Boolean);
-
-  const abertura = attrs.length ? `<Toggle ${attrs.join(' ')}>` : '<Toggle>';
-  const conteudo = withLabel
-    ? `  <Bold aria-hidden="true" />\n  ${label}`
-    : '  <Bold aria-hidden="true" />';
-
-  return `${abertura}\n${conteudo}\n</Toggle>`;
-}
-
 const meta: Meta<ToggleArgs> = {
   title: 'UI/Toggle',
   component: Toggle,
@@ -61,7 +27,7 @@ const meta: Meta<ToggleArgs> = {
   parameters: {
     docs: {
       page: withAutoDocsTab(ToggleDocs),
-      source: { transform: playgroundSource },
+      source: { transform: toggleSource },
     },
     layout: 'centered',
   },

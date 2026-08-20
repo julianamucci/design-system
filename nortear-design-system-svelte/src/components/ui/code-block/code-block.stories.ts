@@ -3,6 +3,7 @@ import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { CodeBlock } from './index';
 import CodeBlockDocs from '@/components/docs/CodeBlockDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { codeBlockSource } from './code-block.source';
 
 /** Snippet canônico das stories e da docs page nas 4 stacks. */
 const DEMO_CODE = `<script lang="ts">
@@ -18,15 +19,6 @@ const DEMO_CODE = `<script lang="ts">
   highlightLines={marked}
 />`;
 
-type CodeBlockArgs = {
-  code: string;
-  language: string;
-  title: string;
-  showLineNumbers: boolean;
-  highlightLines: string;
-  footer: string;
-};
-
 // Única story do arquivo renderiza o CodeBlock direto (não um wrapper de
 // fixture), então aqui Meta<typeof Componente> é o tipo certo: os args SÃO as
 // props do componente.
@@ -35,7 +27,12 @@ const meta = {
   component: CodeBlock,
   tags: ['autodocs', 'display'],
   parameters: {
-    docs: { page: withAutoDocsTab(CodeBlockDocs) },
+    docs: {
+      page: withAutoDocsTab(CodeBlockDocs),
+      // Sem docgen, o gerador de source monta a tag a partir do nome interno da
+      // função compilada. O snippet vai explícito, montado a partir dos args.
+      source: { transform: codeBlockSource },
+    },
   },
   // O docgen do Svelte está desligado no .storybook/main.ts: a aba
   // "API Reference" sai só destes argTypes.
@@ -101,8 +98,6 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Playground: Story = {
-  // Sem docgen, o gerador de source monta a tag a partir do nome interno da
-  // função compilada. O snippet vai explícito, montado a partir dos args.
   parameters: {
     // accessibility.item5 é 'sem violações axe-core': o addon-a11y roda em toda
     // story, mas o audit só enxerga o critério se alguma story o declarar.
@@ -111,29 +106,6 @@ export const Playground: Story = {
       'accessibility.item1', 'accessibility.item2', 'accessibility.item3', 'accessibility.item5',
       'visual.item1',
     ],
-    docs: {
-      source: {
-        transform: (_generated: string, ctx: { args?: Partial<CodeBlockArgs> }) => {
-          const a = ctx.args ?? {};
-          const attrs = [
-            'code={source}',
-            `language="${a.language ?? 'text'}"`,
-            a.title ? `title="${a.title}"` : '',
-            a.showLineNumbers === false ? 'showLineNumbers={false}' : '',
-            a.highlightLines ? `highlightLines="${a.highlightLines}"` : '',
-            a.footer ? `footer="${a.footer}"` : '',
-          ].filter(Boolean).join('\n  ');
-          return `<script lang="ts">
-  import { CodeBlock } from "@/components/ui/code-block";
-  const source = "…";
-</script>
-
-<CodeBlock
-  ${attrs}
-/>`;
-        },
-      },
-    },
   },
   render: (args) => ({ Component: CodeBlock, props: args }),
   play: async ({ canvasElement, step, args }) => {

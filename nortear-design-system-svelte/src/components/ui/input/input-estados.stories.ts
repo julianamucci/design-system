@@ -11,6 +11,13 @@ import {
 import InputStory from './InputStory.svelte';
 import InputWithLabelStory from './InputWithLabelStory.svelte';
 import InputDarkPaletteStory from './InputDarkPaletteStory.svelte';
+import {
+  inputComErroSource,
+  inputComPlaceholderSource,
+  inputDesabilitadoSource,
+  inputPaletaEscuraSource,
+  inputSource,
+} from './input.source';
 
 const meta: Meta = {
   title: 'UI/Input/States',
@@ -21,6 +28,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo. Padrão e Foco compartilham
+      // a marcação canônica: o foco é estado, não muda uma linha do snippet.
+      source: { transform: inputSource },
       description: {
         component:
           'Estados do Input: padrão, foco, desabilitado e erro (aria-invalid). Cada asserção afere a cor computada, nunca o nome da classe.',
@@ -131,6 +141,7 @@ export const Focus: Story = {
 };
 
 export const WithPlaceholder: Story = {
+  parameters: { docs: { source: { transform: inputComPlaceholderSource } } },
   render: () => ({
     Component: InputWithLabelStory,
     props: { labelText: 'Email', id: 'estado-placeholder', type: 'email', placeholder: 'ex: joao@empresa.com' },
@@ -153,7 +164,10 @@ export const WithPlaceholder: Story = {
 };
 
 export const Disabled: Story = {
-  parameters: { covers: ['functional.item3'] },
+  parameters: {
+    covers: ['functional.item3'],
+    docs: { source: { transform: inputDesabilitadoSource } },
+  },
   render: () => ({
     Component: InputWithLabelStory,
     props: { labelText: 'Campo desabilitado', id: 'estado-disabled', type: 'text', placeholder: 'Não disponível', disabled: true },
@@ -185,6 +199,7 @@ export const Disabled: Story = {
 export const Error: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item3', 'accessibility.item4'],
+    docs: { source: { transform: inputComErroSource } },
   },
   render: () => ({
     Component: InputWithLabelStory,
@@ -239,6 +254,7 @@ export const Error: Story = {
 export const DarkPalette: Story = {
   parameters: {
     covers: ['visual.item5'],
+    docs: { source: { transform: inputPaletaEscuraSource } },
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },

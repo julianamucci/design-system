@@ -2,6 +2,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import SidebarStory from './SidebarStory.svelte';
+import {
+  sidebarLadoDireitoSource,
+  sidebarSource,
+  sidebarVarianteFloatingSource,
+  sidebarVarianteInsetSource,
+  sidebarVarianteSidebarSource,
+} from './sidebar.source';
 
 const meta: Meta = {
   title: 'UI/Sidebar/Variants',
@@ -12,6 +19,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
+      // sua própria composição logo abaixo.
+      source: { transform: sidebarSource },
       description: {
         component:
           'Variantes visuais da Sidebar: sidebar (padrão), floating e inset. Cada variante altera o posicionamento e a aparência do container.',
@@ -27,6 +37,9 @@ const raizDe = (el: HTMLElement) => el.querySelector<HTMLElement>('[data-slot="s
 
 export const VariantSidebar: Story = {
   name: 'sidebar (default)',
+  parameters: {
+    docs: { source: { transform: sidebarVarianteSidebarSource } },
+  },
   render: () => ({
     Component: SidebarStory,
     props: {
@@ -48,7 +61,10 @@ export const VariantSidebar: Story = {
 
 export const VariantFloating: Story = {
   name: 'floating',
-  parameters: { covers: ['functional.item8', 'visual.item3'] },
+  parameters: {
+    covers: ['functional.item8', 'visual.item3'],
+    docs: { source: { transform: sidebarVarianteFloatingSource } },
+  },
   render: () => ({
     Component: SidebarStory,
     props: {
@@ -77,7 +93,10 @@ export const VariantFloating: Story = {
 
 export const VariantInset: Story = {
   name: 'inset',
-  parameters: { covers: ['visual.item4'] },
+  parameters: {
+    covers: ['visual.item4'],
+    docs: { source: { transform: sidebarVarianteInsetSource } },
+  },
   render: () => ({
     Component: SidebarStory,
     props: {
@@ -100,7 +119,10 @@ export const VariantInset: Story = {
 };
 
 export const SideRight: Story = {
-  parameters: { covers: ['visual.item6'] },
+  parameters: {
+    covers: ['visual.item6'],
+    docs: { source: { transform: sidebarLadoDireitoSource } },
+  },
   render: () => ({
     Component: SidebarStory,
     props: {

@@ -2,6 +2,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
+import {
+  toggleGroupItemDesabilitadoSource,
+  toggleGroupSelecaoMultiplaSource,
+  toggleGroupSource,
+} from './toggle-group.source';
 
 const meta: Meta = {
   title: 'UI/ToggleGroup/States',
@@ -11,6 +16,9 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; as que trocam o conjunto de
+      // opções sobrescrevem com a sua própria marcação logo abaixo.
+      source: { transform: toggleGroupSource },
       description: {
         component:
           'Estados do ToggleGroup: default, selected (aria-pressed=true), disabled (no grupo) e disabled item individual.',
@@ -125,6 +133,9 @@ export const MultipleSelected: Story = {
     kind: 'formatting',
     ariaLabel: 'Formatação',
   },
+  parameters: {
+    docs: { source: { transform: toggleGroupSelecaoMultiplaSource } },
+  },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const items = canvas.getAllByRole('button');
@@ -172,6 +183,9 @@ export const DisabledItem: Story = {
       { value: 'center', ariaLabel: 'Centralizar', icon: 'alignCenter', disabled: true },
       { value: 'right', ariaLabel: 'Alinhar à direita', icon: 'alignRight' },
     ],
+  },
+  parameters: {
+    docs: { source: { transform: toggleGroupItemDesabilitadoSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

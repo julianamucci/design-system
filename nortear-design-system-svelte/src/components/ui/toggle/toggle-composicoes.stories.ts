@@ -2,6 +2,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
 import ToggleScenarioStory from './ToggleScenarioStory.svelte';
+import {
+  toggleBarraDeFormatacaoSource,
+  toggleControladoSource,
+  toggleFiltrosSource,
+  toggleSource,
+} from './toggle.source';
 
 const meta = {
   title: 'UI/Toggle/Compositions',
@@ -13,6 +19,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; cada composição sobrescreve
+      // com a sua própria marcação logo abaixo.
+      source: { transform: toggleSource },
       description: {
         component:
           'As duas composições documentadas — toolbar de formatação e lista de filtros — mais o padrão controlado.',
@@ -35,6 +44,7 @@ async function definir(btn: HTMLElement, alvo: boolean) {
 }
 
 export const FormattingToolbar: Story = {
+  parameters: { docs: { source: { transform: toggleBarraDeFormatacaoSource } } },
   args: { cenario: 'toolbar' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -67,6 +77,7 @@ export const FormattingToolbar: Story = {
 };
 
 export const FilterList: Story = {
+  parameters: { docs: { source: { transform: toggleFiltrosSource } } },
   args: { cenario: 'filters' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -99,6 +110,7 @@ export const FilterList: Story = {
 };
 
 export const Controlled: Story = {
+  parameters: { docs: { source: { transform: toggleControladoSource } } },
   args: { cenario: 'controlled' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

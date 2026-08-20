@@ -6,6 +6,7 @@ import ProgressStory from './ProgressStory.svelte';
 import ProgressDocs from '@/components/docs/ProgressDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { percentualDesenhado } from '@shared/testing/progress-probe';
+import { progressSource } from './progress.source';
 
 const meta: Meta = {
   title: 'UI/Progress',
@@ -15,6 +16,9 @@ const meta: Meta = {
     layout: 'centered',
     docs: {
       page: withAutoDocsTab(ProgressDocs),
+      // Cascateia para todas as stories do arquivo, e monta o exemplo a partir
+      // dos `args` de cada uma.
+      source: { transform: progressSource },
       description: {
         component:
           'Indicador visual de progresso de operações com duração mensurável. Suporta modo determinate (value 0–100) e indeterminate (value=null).',

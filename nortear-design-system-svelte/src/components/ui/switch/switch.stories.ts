@@ -5,6 +5,7 @@ import { Switch } from './index';
 import SwitchStory from './SwitchStory.svelte';
 import SwitchDocs from '@/components/docs/SwitchDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
+import { switchSource } from './switch.source';
 
 /**
  * Leva o switch ao estado desejado, clicando SÓ quando ele ainda não está lá.
@@ -23,7 +24,10 @@ const meta: Meta = {
   component: Switch,
   tags: ['autodocs', 'form'],
   parameters: {
-    docs: { page: withAutoDocsTab(SwitchDocs) },
+    docs: {
+      page: withAutoDocsTab(SwitchDocs),
+      source: { transform: switchSource },
+    },
     layout: 'centered',
   },
   // O docgen está desligado neste stack: `argTypes` é a ÚNICA fonte da aba

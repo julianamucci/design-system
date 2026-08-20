@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import { alvosAbaixoDoMinimo } from '@shared/testing/pagination-probe';
 import PaginationStory from './PaginationStory.svelte';
+import { paginationSource } from './pagination.source';
 
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
 const ROTULO_PROXIMA = 'Ir para a próxima página';
@@ -16,6 +17,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para todas as stories do arquivo; a composição de cada uma
+      // sai dos próprios `args`, que são os mesmos que a demonstração usa.
+      source: { transform: paginationSource },
       description: {
         component:
           'Variantes do PaginationLink: Default (link inativo), Active (página atual, com aria-current=page) e Directional (Previous/Next com ícone e rótulo).',

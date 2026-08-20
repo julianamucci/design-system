@@ -6,6 +6,7 @@ import ContextMenuDocs from '@/components/docs/ContextMenuDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { REGRA_GUARDA_DE_FOCO, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { abrirPorGesto, clicarFora, fecharMenu } from '@shared/testing/context-menu-area';
+import { contextMenuSource } from './context-menu.source';
 
 const meta: Meta = {
   title: 'UI/ContextMenu',
@@ -14,7 +15,10 @@ const meta: Meta = {
   parameters: {
     layout: 'centered',
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
-    docs: { page: withAutoDocsTab(ContextMenuDocs) },
+    docs: {
+      page: withAutoDocsTab(ContextMenuDocs),
+      source: { transform: contextMenuSource },
+    },
   },
   argTypes: {
     triggerLabel: {

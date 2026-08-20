@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
+import { userEvent, expect, waitFor, fn } from 'storybook/test';
 import DialogStory from './DialogStory.svelte';
+import { dialogSource } from './dialog.source';
 import {
   abrir,
   botaoFecharDoCanto,
@@ -21,6 +22,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Os quatro estados saem dos mesmos args que a transform já lê: o que
+      // muda entre eles é o valor inicial do estado ligado e o botão do canto.
+      source: { transform: dialogSource },
       description: {
         component:
           'Cada configuração canônica do Dialog: closed, open, withCloseButtonHidden e controlled.',

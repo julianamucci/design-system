@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
+import { carouselSource, carouselUltimoSlideSource } from './carousel.source';
 
 // Os dois extremos de um carrossel sem repetição. Sem `loop` a navegação tem
 // começo e fim, e é a seta desabilitada que conta isso a quem chegou lá: um
@@ -20,6 +21,9 @@ const meta: Meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
+      // Cascateia para todas as stories do arquivo; a do último slide
+      // sobrescreve com a sua logo abaixo.
+      source: { transform: carouselSource },
       description: {
         component:
           'Estados dos extremos sem loop: primeiro slide (seta de voltar desabilitada) e último slide (seta de avançar desabilitada). O componente calcula o estado sozinho.',
@@ -99,7 +103,10 @@ export const FirstSlide: Story = {
 };
 
 export const LastSlide: Story = {
-  parameters: { covers: ['functional.item4', 'visual.item4'] },
+  parameters: {
+    covers: ['functional.item4', 'visual.item4'],
+    docs: { source: { transform: carouselUltimoSlideSource } },
+  },
   render: () => ({
     Component: CarouselStory,
     props: {

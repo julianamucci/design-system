@@ -4,6 +4,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { Breadcrumb } from './index';
 import BreadcrumbStory from './BreadcrumbStory.svelte';
+import { breadcrumbResponsivoSource, breadcrumbSource } from './breadcrumb.source';
 
 const meta: Meta = {
   title: 'UI/Breadcrumb/Compositions',
@@ -15,6 +16,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
+      // Cascateia para a trilha completa, que é a composição canônica; a
+      // responsiva sobrescreve com a sua logo abaixo.
+      source: { transform: breadcrumbSource },
       description: {
         component:
           'Composicoes canônicas do Breadcrumb: trilha completa com evento de navegação e trilha responsiva com DropdownMenu expondo os níveis ocultos.',
@@ -70,6 +74,7 @@ export const Responsive: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item4'],
     docs: {
+      source: { transform: breadcrumbResponsivoSource },
       description: {
         story:
           'Composição responsiva: BreadcrumbEllipsis envolvido em DropdownMenu para expor níveis ocultos em mobile.',
