@@ -35,7 +35,13 @@ export type HoverCardOptions = {
  * evento, não o estado.
  */
 export type HoverCardElement = HTMLElement & Destroyable & {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  isOpen: () => boolean;
+  /** @deprecated Apelido de `open`. */
   abrir: () => void;
+  /** @deprecated Apelido de `close`. */
   fechar: () => void;
 };
 
@@ -201,6 +207,17 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
   trigger.addEventListener('focus', scheduleShow);
   trigger.addEventListener('blur', scheduleHide);
 
+  // `panelEl` É o estado: o painel existe enquanto o cartão está aberto e é
+  // removido ao fechar. Não há sinalizador paralelo a dessincronizar.
+  wrapper.open = show;
+  wrapper.close = hide;
+  wrapper.toggle = () => { if (panelEl) hide(); else show(); };
+  wrapper.isOpen = () => panelEl !== null;
+
+  // As duas em português eram a API original desta fábrica, e eram a única do
+  // repositório assim — sidebar, drawer, popover e dropdown expõem
+  // `open`/`close`/`toggle`. Ficam como apelido em vez de sumir: apagá-las
+  // quebraria chamador em silêncio, e o apelido custa duas linhas.
   wrapper.abrir = show;
   wrapper.fechar = hide;
 

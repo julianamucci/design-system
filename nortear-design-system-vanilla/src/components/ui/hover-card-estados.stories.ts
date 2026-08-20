@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { userEvent, within, expect } from 'storybook/test';
+import { userEvent, within, expect, waitFor } from 'storybook/test';
 import {
   entrarNoPainel,
   esperarAberto,
@@ -168,8 +168,8 @@ export const Controlled: Story = {
     // nome acessível são ambíguos em leitor de tela.
     const abrir = createButton({ variant: 'outline', size: 'sm', label: 'Abrir pelo estado externo' });
     const fechar = createButton({ variant: 'outline', size: 'sm', label: 'Fechar pelo estado externo' });
-    abrir.addEventListener('click', () => cartao.abrir());
-    fechar.addEventListener('click', () => cartao.fechar());
+    abrir.addEventListener('click', () => cartao.open());
+    fechar.addEventListener('click', () => cartao.close());
 
     const controles = document.createElement('div');
     controles.className = 'nds-cluster';
@@ -199,6 +199,31 @@ export const Controlled: Story = {
       await esperarFechado();
       await expect(painelAberto()).toBeNull();
       await expect(espelho).toHaveTextContent('fechado');
+    });
+
+    await step('Os apelidos em português continuam abrindo e fechando', async () => {
+      // Esta fábrica era a única do repositório com comandos em português;
+      // sidebar, drawer, popover e dropdown expõem `open`/`close`/`toggle`.
+      // Os nomes antigos viraram apelido em vez de sumir — apagá-los quebraria
+      // chamador em silêncio, e sem esta asserção a compatibilidade seria
+      // promessa: alguém removeria a linha e nada acusaria.
+      //
+      // O elemento vem do DOM, e não do closure do `render`: a play roda noutro
+      // escopo, e é a raiz montada que carrega os comandos.
+      const cartao = canvasElement.querySelector<HoverCardElement>('[data-slot="hover-card"]')!;
+      await expect(cartao).not.toBeNull();
+
+      cartao.abrir();
+      await waitFor(() => expect(painelAberto()).not.toBeNull());
+      cartao.fechar();
+      await esperarFechado();
+      await expect(painelAberto()).toBeNull();
+
+      // E `toggle` alterna a partir do estado real, não de um sinalizador à parte.
+      cartao.toggle();
+      await waitFor(() => expect(cartao.isOpen()).toBe(true));
+      cartao.toggle();
+      await waitFor(() => expect(cartao.isOpen()).toBe(false));
     });
   },
 };
