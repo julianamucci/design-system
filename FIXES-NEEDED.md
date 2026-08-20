@@ -2227,7 +2227,7 @@ nestes pontos a referência é quem oferece menos.
 Apareceram ao completar as fábricas do Vanilla. Nenhum é bloqueio; todos são
 decisão ou dívida separada.
 
-- [ ] **`createHoverCard` expõe `abrir`/`fechar` em português**, enquanto sidebar,
+- [x] **`createHoverCard` expunha `abrir`/`fechar` em português.** RESOLVIDO em `63624c19`: ganhou `open`/`close`/`toggle`/`isOpen`, com as antigas de apelido `@deprecated` e asserção provando que ainda funcionam. Era, enquanto sidebar,
       drawer, popover e dropdown usam `open`/`close`/`toggle`. Não renomeado de
       propósito: é API pública e quebraria chamador em silêncio.
 
@@ -2251,12 +2251,20 @@ decisão ou dívida separada.
       É o que mantém `width: 18rem` cravado no slider — 40 ocorrências no
       repositório, já listadas na dívida de dimensão.
 
-- [ ] **`slider/translations.json` carrega literal de API em chave descritiva**:
+- [x] **`slider/translations.json` carregava literal de API em chave descritiva.** RESOLVIDO em `e97c490e` — e havia mais: "thumb" em frase portuguesa, e `notes.item2` afirmando que o valor é "sempre array", o que é FALSO no Vanilla. Era:
       `styles.single` e `styles.range` mostram `value={[20, 80]}`, que é JSX dentro
       de texto que deveria ser neutro de API. É o que `audit-translation-literals`
       cobra, e não foi pego porque a chave não termina em `Code`.
 
-- [ ] **Toggle, ToggleGroup, RadioGroup e Resizable não têm seção nas guidelines
-      do Vanilla.** As tabelas de opções desses quatro não existem para atualizar —
+- [x] **Toggle, ToggleGroup, RadioGroup e Resizable não tinham seção nas guidelines do Vanilla.** RESOLVIDO em `fd1ebdd0`, com a mesma classificação do Angular. Era As tabelas de opções desses quatro não existem para atualizar —
       lacuna anterior a esta rodada, e o único lugar onde a documentação de
       opções da stack deveria viver.
+
+## O auditor de literais não reconhece fragmento de código (2026-08-19)
+
+- [ ] **`audit-translation-literals --only literais` procura NOME DE PROP em texto
+      descritivo e não reconhece sintaxe de código.** Por isso
+      `<code>value={[50]}</code>` sobreviveu em `variants.styles.*` do slider até
+      alguém ler a página: o relatório dizia zero. Chave descritiva com fragmento
+      de JSX, de template Vue ou de chamada de fábrica é literal de API pelo mesmo
+      motivo que um nome de prop é — amarra o texto compartilhado a uma stack.
