@@ -137,3 +137,63 @@ Separator (<hr> | <div role="separator">)
 **Acessibilidade**:
 - Conteúdo rolável deve ser alcançável por teclado (foco em elementos internos rola o container)
 - Não capturar foco no wrapper — só nos elementos internos
+
+
+## Resizable
+
+**Propósito**: painéis com divisória arrastável, para quem consome ajustar a
+proporção da área de trabalho.
+
+**Stack**: factory `createResizablePanel(opts)` em `src/components/ui/resizable.ts`.
+Sem lib: o arraste, o teclado e o limite de cada painel são desta fábrica.
+
+**Estrutura**:
+
+```
+[data-slot="resizable-panel-group"]        (eixo do arraste)
+├── [data-slot="resizable-panel"]
+├── [data-slot="resizable-handle"]         (role="separator", focável)
+└── [data-slot="resizable-panel"]
+```
+
+**Opções do grupo**:
+
+| Opção | Tipo | Função |
+|---|---|---|
+| `panels` | `ResizablePanel[]` | Painéis, em ordem. Os divisores são implícitos: um entre cada par |
+| `direction` | `'horizontal' \| 'vertical'` | Eixo do arraste. Default `horizontal` |
+| `withHandle` | `boolean` | Mostra o pegador visual centralizado no divisor |
+| `aria-label` | `string \| string[]` | **Obrigatório.** Nome dos divisores — ver Acessibilidade |
+
+**Opções de cada painel**:
+
+| Opção | Tipo | Função |
+|---|---|---|
+| `content` | `HTMLElement` | Conteúdo do painel |
+| `defaultSize` | `number` | Proporção inicial em % do grupo. Sem valor, o espaço se divide igualmente |
+| `minSize` | `number` | Mínimo em % — é o que impede o painel de sumir |
+| `maxSize` | `number` | Máximo em % |
+
+**Regras**:
+- Os divisores não são elementos que quem consome receba: eles nascem entre os
+  painéis. Configuração de divisor entra pelo grupo, nunca por percurso no DOM
+  depois de construir — num grupo aninhado esse percurso alcança também os
+  divisores do grupo de dentro.
+- `minSize` em todo painel que possa ficar vazio. Sem ele o arraste leva o painel
+  a zero e o conteúdo fica inalcançável sem desfazer.
+- A altura do grupo é responsabilidade de quem o coloca na página. Nas docs e nas
+  stories isso é andaime, e usa `.nds-demo-box` com `data-min` — piso, e não
+  altura fixa, porque um painel que se redimensiona brigaria com moldura travada.
+- A fábrica NÃO persiste a proporção entre sessões e NÃO emite callback de layout.
+  Quem precisa disso observa as mudanças por fora.
+
+**Acessibilidade**:
+- Divisor é `role="separator"` com `aria-orientation` e é focável — sem foco não
+  há como redimensionar por teclado (WCAG 2.1.1).
+- **O nome do divisor é obrigatório.** Sem ele o leitor de tela anuncia apenas
+  "separador, 30", e não há como saber o que aquele número redimensiona. Uma
+  string nomeia todos os divisores do grupo; um array nomeia um a um, que é o que
+  um grupo de três painéis ou mais exige — dois separadores homônimos são dois
+  controles indistinguíveis na lista do leitor (WCAG 4.1.2).
+- `aria-valuenow` acompanha a proporção do painel anterior ao divisor, para que o
+  valor anunciado corresponda ao que a seta muda.

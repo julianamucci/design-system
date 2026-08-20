@@ -170,3 +170,115 @@ label[for=id]           (irmão, fora da raiz — quem monta é quem compõe)
   alcançável para quem navega lendo a tela.
 - Clicar no texto do rótulo move o foco para a caixa E alterna o estado — os
   dois eixos, verificados por story, não por presença de atributo.
+
+
+## Radio Group
+
+**Propósito**: escolha única entre opções visíveis ao mesmo tempo. Quando as
+opções não cabem na tela, o componente certo é o Select.
+
+**Stack**: factory `createRadioGroup(opts)` em `src/components/ui/radio-group.ts`.
+Renderiza `<fieldset>` com `role="radiogroup"` e `<input type="radio">` nativos —
+o agrupamento por `name` e a navegação por setas são do navegador.
+
+**Estrutura**:
+
+```
+fieldset[data-slot="radio-group"]      (role="radiogroup")
+├── legend                             (quando há rótulo visível)
+└── div[data-slot="radio-group-item"]
+    ├── input[type="radio"]
+    └── label
+```
+
+**Opções**:
+
+| Opção | Tipo | Função |
+|---|---|---|
+| `name` | `string` | **Obrigatório.** É o que agrupa os botões para o navegador |
+| `items` | `RadioGroupItem[]` | `{ value, label, disabled? }` |
+| `defaultValue` | `string` | Opção marcada na montagem |
+| `legend` | `string` | Rótulo VISÍVEL do grupo. Preferido — ver Acessibilidade |
+| `aria-label` | `string` | Nome do grupo sem rótulo visível. Alternativa a `legend` |
+| `disabled` | `boolean` | Desabilita o grupo inteiro |
+| `orientation` | `'horizontal' \| 'vertical'` | Eixo do arranjo. Escreve `aria-orientation`, que a folha lê |
+
+**Regras**:
+- `name` único por grupo na página. Dois grupos com o mesmo `name` viram um só
+  para o navegador, e marcar num desmarca no outro.
+- Escolha única SEMPRE tem uma opção marcada por padrão, salvo quando "nenhuma"
+  for resposta legítima — e aí "nenhuma" é uma opção da lista, não a ausência delas.
+- `orientation` é o caminho para o arranjo em linha. Cravar o layout por fora
+  produz um grupo que PARECE horizontal e é anunciado como vertical.
+
+**Acessibilidade**:
+- **`legend` é preferido a `aria-label`**: um grupo visível sem rótulo visível
+  falha WCAG 3.3.2 mesmo com o nome acessível correto. `aria-label` serve quando
+  o rótulo já está na página por outro caminho.
+- Como o `role` sobrescreve o do `<fieldset>`, o nome vai por `aria-labelledby`
+  apontando para a `legend` — a associação implícita entre `fieldset` e `legend`
+  não sobrevive ao role trocado.
+- Navegação por setas dentro do grupo e uma única parada de Tab: é o
+  comportamento nativo do rádio, e é por isso que a fábrica não o reimplementa.
+
+
+## Toggle · Toggle Group
+
+**Propósito**: botão de dois estados (Toggle) e conjunto deles com escolha única
+ou múltipla (Toggle Group). Diferente do Checkbox: aqui o efeito é imediato sobre
+algo visível, não uma resposta a ser enviada depois.
+
+**Stack**: factories `createToggle(opts)` e `createToggleGroup(opts)` em
+`src/components/ui/toggle.ts` e `toggle-group.ts`. Um `<button>` com
+`aria-pressed`, sem lib.
+
+**Estrutura**:
+
+```
+div[data-slot="toggle-group"]          (role="toolbar", aria-orientation)
+├── button[data-slot="toggle"]         (aria-pressed)
+└── button[data-slot="toggle"]
+```
+
+**Opções do Toggle**:
+
+| Opção | Tipo | Função |
+|---|---|---|
+| `pressed` | `boolean` | Estado inicial |
+| `variant` · `size` | — | Aparência |
+| `disabled` | `boolean` | Desabilita |
+| `onClick` | `(pressed) => void` | Recebe o estado JÁ alternado |
+| `children` | `ToggleChild \| ToggleChild[]` | Ícone, texto, ou os dois lado a lado |
+| `aria-label` | `string` | **Obrigatório no botão só de ícone** |
+
+**Opções do Toggle Group**:
+
+| Opção | Tipo | Função |
+|---|---|---|
+| `items` | `ToggleGroupItem[]` | `{ value, label?, children?, disabled?, 'aria-label'? }` |
+| `type` | `'single' \| 'multiple'` | Escolha única ou múltipla |
+| `defaultValue` | `string \| string[]` | Selecionado na montagem |
+| `orientation` | `ToggleGroupOrientation` | Eixo do arranjo |
+| `spacing` | `number` | Espaço entre itens, em degraus da escala |
+| `onValueChange` | `(value) => void` | Muda a seleção |
+| `aria-label` | `string` | Nome do grupo |
+
+**Regras**:
+- Use Toggle quando o efeito é imediato e reversível. Se a mudança só vale depois
+  de um "Salvar", o componente é Checkbox ou Switch.
+- `children` aceita lista porque o caso com rótulo é ícone MAIS texto lado a lado,
+  e os dois precisam ser filhos DIRETOS: o espaço entre eles vem do `gap` do
+  próprio `.nds-toggle`, e a medida do ícone da regra `.nds-toggle > svg`.
+  Embrulhar os dois num `<span>` desliga os dois efeitos.
+- `type: 'single'` não força uma opção marcada. Se o estado "nenhuma" não fizer
+  sentido no seu caso, garanta `defaultValue`.
+
+**Acessibilidade**:
+- `aria-pressed` no botão, e não `aria-checked`: pressionado é estado de botão;
+  marcado é de caixa de seleção, e o leitor de tela anuncia papéis diferentes.
+- **Item só de ícone exige nome**, no grupo e fora dele. É o caso mais comum
+  (alinhamento, formatação, modo de visualização), e é o que a opção
+  `aria-label` do item resolve — nomear percorrendo o DOM depois de construir
+  depende da ordem e some numa refatoração.
+- O grupo é `role="toolbar"` com `aria-orientation`, e carrega nome próprio: um
+  grupo anônimo entre outros controles não diz o que reúne.
