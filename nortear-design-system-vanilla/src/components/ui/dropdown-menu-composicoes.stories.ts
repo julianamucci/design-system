@@ -1,8 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { createDropdownMenu, type DropdownMenuItemDef } from './dropdown-menu';
 import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
-import { createButton } from './button';
+import { montar } from './dropdown-menu.fixtures';
 
 const meta: Meta = {
   tags: ['overlay'],
@@ -29,27 +28,8 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = '220px';
-  wrapper.appendChild(child);
-  return wrapper;
-}
-
-/**
- * Monta o menu e o abre pelo gatilho. A abertura fica no `queueMicrotask` para
- * a foto do Chromatic sair com o painel na tela; as `play` que dependem de foco
- * abrem de novo pelo clique real, que é o caminho de quem usa.
- */
-function montar(rotulo: string, items: DropdownMenuItemDef[]): HTMLElement {
-  const trigger = createButton({ variant: 'outline', label: rotulo });
-  const menu = createDropdownMenu({ trigger, items });
-  queueMicrotask(() => trigger.click());
-  return wrap(menu);
-}
+/** As listas daqui são as mais longas do componente — a moldura acompanha. */
+const ALTURA_DA_MOLDURA = '220px';
 
 async function fecharNoFim(): Promise<void> {
   const body = within(document.body);
@@ -84,15 +64,19 @@ export const WithLabel: Story = {
     },
   },
   render: () =>
-    montar('Conta', [
-      { type: 'label', label: 'Conta' },
-      { type: 'item', label: 'Perfil', value: 'profile' },
-      { type: 'item', label: 'Configuracoes', value: 'settings' },
-      { type: 'separator' },
-      { type: 'label', label: 'Suporte' },
-      { type: 'item', label: 'Documentação', value: 'docs' },
-      { type: 'item', label: 'Sair', value: 'logout' },
-    ]),
+    montar(
+      'Conta',
+      [
+        { type: 'label', label: 'Conta' },
+        { type: 'item', label: 'Perfil', value: 'profile' },
+        { type: 'item', label: 'Configuracoes', value: 'settings' },
+        { type: 'separator' },
+        { type: 'label', label: 'Suporte' },
+        { type: 'item', label: 'Documentação', value: 'docs' },
+        { type: 'item', label: 'Sair', value: 'logout' },
+      ],
+      ALTURA_DA_MOLDURA,
+    ),
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
     const canvas = within(menu);
@@ -138,12 +122,16 @@ export const WithCheckboxItems: Story = {
     },
   },
   render: () =>
-    montar('Colunas', [
-      { type: 'label', label: 'Colunas visíveis' },
-      { type: 'checkbox', label: 'Nome', value: 'nome', checked: true },
-      { type: 'checkbox', label: 'E-mail', value: 'email', checked: false },
-      { type: 'checkbox', label: 'Função', value: 'funcao', checked: false },
-    ]),
+    montar(
+      'Colunas',
+      [
+        { type: 'label', label: 'Colunas visíveis' },
+        { type: 'checkbox', label: 'Nome', value: 'nome', checked: true },
+        { type: 'checkbox', label: 'E-mail', value: 'email', checked: false },
+        { type: 'checkbox', label: 'Função', value: 'funcao', checked: false },
+      ],
+      ALTURA_DA_MOLDURA,
+    ),
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
     const canvas = within(menu);
@@ -208,12 +196,16 @@ export const WithRadioGroup: Story = {
     },
   },
   render: () =>
-    montar('Tema', [
-      { type: 'label', label: 'Aparência' },
-      { type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true },
-      { type: 'radio', label: 'Escuro', value: 'dark', group: 'tema' },
-      { type: 'radio', label: 'Sistema', value: 'system', group: 'tema' },
-    ]),
+    montar(
+      'Tema',
+      [
+        { type: 'label', label: 'Aparência' },
+        { type: 'radio', label: 'Claro', value: 'light', group: 'tema', checked: true },
+        { type: 'radio', label: 'Escuro', value: 'dark', group: 'tema' },
+        { type: 'radio', label: 'Sistema', value: 'system', group: 'tema' },
+      ],
+      ALTURA_DA_MOLDURA,
+    ),
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
     const canvas = within(menu);
@@ -266,12 +258,16 @@ export const WithShortcuts: Story = {
     },
   },
   render: () =>
-    montar('Editar', [
-      { type: 'item', label: 'Desfazer', value: 'undo', shortcut: 'Ctrl Z' },
-      { type: 'item', label: 'Copiar', value: 'copy', shortcut: 'Ctrl C' },
-      { type: 'separator' },
-      { type: 'item', label: 'Colar', value: 'paste', shortcut: 'Ctrl V' },
-    ]),
+    montar(
+      'Editar',
+      [
+        { type: 'item', label: 'Desfazer', value: 'undo', shortcut: 'Ctrl Z' },
+        { type: 'item', label: 'Copiar', value: 'copy', shortcut: 'Ctrl C' },
+        { type: 'separator' },
+        { type: 'item', label: 'Colar', value: 'paste', shortcut: 'Ctrl V' },
+      ],
+      ALTURA_DA_MOLDURA,
+    ),
   play: async ({ step }) => {
     const menu = await within(document.body).findByRole('menu');
     const canvas = within(menu);

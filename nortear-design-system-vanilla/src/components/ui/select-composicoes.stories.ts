@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect, type SelectItem } from './select';
+import { abridor, comRotulo } from './select.fixtures';
 import { selectSource, selectSourceCom, selectSourceEmFormulario } from './select.source';
 import { createButton } from './button';
 
@@ -24,38 +25,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function comRotulo(
-  id: string,
-  rotulo: string,
-  opcoes: Parameters<typeof createSelect>[0],
-): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-stack nds-w-sm';
-  wrap.dataset.spacing = 'sm';
-
-  const label = document.createElement('label');
-  label.htmlFor = id;
-  label.className = 'nds-text-body nds-font-semibold';
-  label.textContent = rotulo;
-
-  wrap.append(label, createSelect({ ...opcoes, id, 'aria-label': rotulo }));
-  return wrap;
-}
-
-/** Abre a lista partindo sempre de fechada — o par garante clique real na rodada. */
-function abridor(gatilho: HTMLElement) {
-  return async () => {
-    if (gatilho.getAttribute('aria-expanded') === 'true') {
-      await userEvent.keyboard('{Escape}');
-      await waitForPortalGone('listbox');
-    }
-    await userEvent.click(gatilho);
-    return await waitForPortal('listbox');
-  };
-}
 
 // ─── BrazilianState ───────────────────────────────────────────────────────────
 

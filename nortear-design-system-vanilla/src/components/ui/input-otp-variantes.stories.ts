@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createInputOTP } from './input-otp';
+import { wrap } from './input-otp.fixtures';
 import { inputOtpSource, inputOtpSourceCom } from './input-otp.source';
 
 /**
@@ -30,15 +31,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-min-h-30';
-  wrapper.dataset.justify = 'center';
-  wrapper.appendChild(child);
-  return wrapper;
-}
 
 function withLabel(label: string, child: HTMLElement): HTMLElement {
   const col = document.createElement('div');

@@ -8,14 +8,15 @@ import {
   dialogSourceCom,
 } from './dialog.source';
 import { createButton } from './button';
-import { createInput } from './input';
-import { createLabel } from './label';
 import {
   abrir,
+  abrirNaMontagem,
   botaoFecharDoCanto,
+  buildField,
   conferirNomeEDescricao,
   esperarAberto,
   esperarFechado,
+  makeFooter,
 } from './dialog.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -42,42 +43,11 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/**
- * As ações do rodapé saem como LISTA, não embrulhadas num `<div>`: quem faz o
- * arranjo (empilhar ao contrário no estreito, alinhar à direita no largo) é o
- * `.nds-dialog-footer`, e para isso os botões precisam ser filhos diretos dele.
- */
-function makeFooter(cancelLabel: string, actionLabel: string, destructive = false): HTMLElement[] {
-  return [
-    createButton({ variant: 'outline', label: cancelLabel }),
-    createButton({ variant: destructive ? 'destructive' : 'default', label: actionLabel }),
-  ];
-}
-
-function buildField(id: string, labelText: string, type: string, value: string): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack';
-  wrapper.dataset.spacing = 'xs';
-  // Factories do sistema em vez de `<input>` cru com `style`: o cru trazia
-  // padding inline, que sai do tema, da densidade e da escala.
-  wrapper.append(
-    createLabel({ text: labelText, htmlFor: id }),
-    createInput({ id, type, value }),
-  );
-  return wrapper;
-}
-
 function makeBody(text: string): HTMLElement {
   const body = document.createElement('div');
   body.className = 'nds-text-body nds-text-muted-foreground';
   body.textContent = text;
   return body;
-}
-
-/** Abre pelo gatilho depois da montagem — a factory não tem `defaultOpen`. */
-function abrirNaMontagem(dialog: HTMLElement): HTMLElement {
-  queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
-  return dialog;
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────

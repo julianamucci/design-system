@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
+import { embrulhar, gatilhosDe, painelAberto } from './menubar.fixtures';
 import { menubarSource, menubarSourceCom } from './menubar.source';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
@@ -37,31 +38,8 @@ const meta: Meta = {
   },
 };
 
-/** Só os gatilhos da barra: nesta stack o painel mora DENTRO da raiz, então
- *  procurar por papel na barra devolveria também os itens do menu aberto. */
-function gatilhosDe(barra: HTMLElement): HTMLElement[] {
-  return Array.from(barra.querySelectorAll<HTMLElement>('[data-slot="menubar-trigger"]'));
-}
-
 export default meta;
 type Story = StoryObj;
-
-function embrulhar(filho: HTMLElement, alturaMinima = '260px'): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.alignItems = 'flex-start';
-  wrapper.style.minHeight = alturaMinima;
-  wrapper.appendChild(filho);
-  return wrapper;
-}
-
-function painelAberto(canvasElement: HTMLElement): HTMLElement | null {
-  return canvasElement.querySelector<HTMLElement>(
-    '[data-slot="menubar-content"]:not([hidden])',
-  );
-}
 
 // ─── Closed ───────────────────────────────────────────────────────────────────
 //

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPopover } from './popover';
+import { empilharCentrado, painel } from './popover.fixtures';
 import { popoverSource, popoverSourceAcoes, popoverSourceCom } from './popover.source';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
@@ -28,21 +29,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(...children: HTMLElement[]): HTMLElement {
-  const w = document.createElement('div');
-  w.style.contain = 'layout';
-  w.className = 'nds-stack nds-w-full';
-  w.dataset.spacing = 'sm';
-  w.dataset.align = 'center';
-  w.style.minHeight = '280px';
-  w.append(...children);
-  return w;
-}
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
 
 function buildSimpleContent(text: string): HTMLElement {
   const c = document.createElement('div');
@@ -78,7 +64,7 @@ export const Closed: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
     const el = createPopover({ trigger, content: buildSimpleContent('Conteúdo desmontado enquanto fechado.') });
-    return wrap(el);
+    return empilharCentrado([el]);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -107,7 +93,7 @@ export const Open: Story = {
     const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
     const el = createPopover({ trigger, content: buildSimpleContent('Ajuste a aparência do conteúdo da página.') });
     queueMicrotask(() => trigger.click());
-    return wrap(el);
+    return empilharCentrado([el]);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -149,7 +135,7 @@ export const SideTop: Story = {
       side: 'top',
     });
     queueMicrotask(() => trigger.click());
-    const w = wrap(el);
+    const w = empilharCentrado([el]);
     // Espaço acima do gatilho, senão o painel não caberia e a story mediria o
     // recurso oposto ao que documenta.
     w.style.paddingTop = 'var(--spacing-8)';
@@ -212,7 +198,7 @@ export const Controlled: Story = {
 
     externalBtn.addEventListener('click', () => trigger.click());
 
-    return wrap(status, externalBtn, el, externo);
+    return empilharCentrado([status, externalBtn, el, externo]);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -280,7 +266,7 @@ export const Focused: Story = {
     // montado põe o foco num painel que o Storybook ainda vai reposicionar, e a
     // medição não veria a política, veria a corrida.
     const el = createPopover({ trigger, content });
-    return wrap(el);
+    return empilharCentrado([el]);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

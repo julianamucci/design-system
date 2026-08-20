@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, within } from 'storybook/test';
 import { createResizablePanel } from './resizable';
+import { frame, painelRotulado } from './resizable.fixtures';
 import {
   resizableSource,
   resizableSourceAninhado,
@@ -29,38 +30,17 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function panelContent(label: string, extraClass = ''): HTMLElement {
-  const el = document.createElement('div');
-  el.className = `nds-cluster nds-w-full nds-p-4 nds-text-body nds-font-medium ${extraClass}`.trim();
-  el.dataset.justify = 'center';
-  el.style.height = '100%';
-  const span = document.createElement('span');
-  span.textContent = label;
-  el.appendChild(span);
-  return el;
-}
-
-function frame(child: HTMLElement, altura = '220px'): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.style.contain = 'layout';
-  // ALTURA DEFINIDA, e não só `min-height`: um grupo vertical distribui a
-  // ALTURA livre entre os painéis, e não existe altura livre dentro de um
-  // contêiner de altura automática — os painéis colapsavam para zero. Com
-  // `min-height` no invólucro, o `height: 100%` do grupo resolvia para `auto`.
-  // A suíte só viu isso quando a asserção passou a medir a geometria.
-  wrap.style.height = altura;
-  wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
-  wrap.appendChild(child);
-  return wrap;
-}
-
 /**
- * Fração do eixo principal que o painel realmente ocupa na tela.
+ * Fração do eixo principal que CADA painel de um grupo ocupa na tela.
  *
  * A medida é `getBoundingClientRect`, e nunca `style.width`: a folha
  * compartilhada dá `flex-basis: 0` ao painel, então largura inline não decide
  * nada. As stories afirmavam `style.width === '30%'` e passavam com os painéis
  * desenhados 50/50 — a asserção guardava o defeito em vez de pegá-lo.
+ *
+ * Só aqui: as stories deste arquivo comparam grupos ANINHADOS, e cada um traz
+ * a própria lista de painéis. O `fracaoDoPrimeiro` do fixture mede o canvas
+ * inteiro, que juntaria os dois grupos numa conta só.
  */
 function fracao(paineis: HTMLElement[], horizontal: boolean): number[] {
   const medida = (p: HTMLElement) =>
@@ -83,8 +63,8 @@ export const Horizontal: Story = {
       direction: 'horizontal',
       'aria-label': 'Redimensionar Sidebar e Conteúdo — use setas para ajustar',
       panels: [
-        { defaultSize: 30, minSize: 15, content: panelContent('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
-        { defaultSize: 70, minSize: 30, content: panelContent('Conteúdo principal') },
+        { defaultSize: 30, minSize: 15, content: painelRotulado('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 70, minSize: 30, content: painelRotulado('Conteúdo principal') },
       ],
     });
     return frame(root, '220px');
@@ -133,8 +113,8 @@ export const Vertical: Story = {
       direction: 'vertical',
       'aria-label': 'Redimensionar Topo e Rodapé — use setas para ajustar',
       panels: [
-        { defaultSize: 40, minSize: 20, content: panelContent('Topo') },
-        { defaultSize: 60, minSize: 20, content: panelContent('Rodapé', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 40, minSize: 20, content: painelRotulado('Topo') },
+        { defaultSize: 60, minSize: 20, content: painelRotulado('Rodapé', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
     return frame(root, '280px');
@@ -193,8 +173,8 @@ export const Nested: Story = {
       direction: 'vertical',
       'aria-label': 'Redimensionar Editor e Console — use setas para ajustar',
       panels: [
-        { defaultSize: 60, minSize: 20, content: panelContent('Editor') },
-        { defaultSize: 40, minSize: 20, content: panelContent('Console', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 60, minSize: 20, content: painelRotulado('Editor') },
+        { defaultSize: 40, minSize: 20, content: painelRotulado('Console', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
     const innerWrap = document.createElement('div');
@@ -206,7 +186,7 @@ export const Nested: Story = {
       direction: 'horizontal',
       'aria-label': 'Redimensionar Sidebar e área principal — use setas para ajustar',
       panels: [
-        { defaultSize: 30, minSize: 15, content: panelContent('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 30, minSize: 15, content: painelRotulado('Sidebar', 'nds-bg-muted nds-text-muted-foreground') },
         { defaultSize: 70, minSize: 30, content: innerWrap },
       ],
     });
@@ -265,8 +245,8 @@ export const WithHandle: Story = {
       withHandle: true,
       'aria-label': 'Redimensionar painéis — use setas para ajustar',
       panels: [
-        { defaultSize: 50, minSize: 20, content: panelContent('Antes') },
-        { defaultSize: 50, minSize: 20, content: panelContent('Depois', 'nds-bg-muted nds-text-muted-foreground') },
+        { defaultSize: 50, minSize: 20, content: painelRotulado('Antes') },
+        { defaultSize: 50, minSize: 20, content: painelRotulado('Depois', 'nds-bg-muted nds-text-muted-foreground') },
       ],
     });
     return frame(root, '220px');

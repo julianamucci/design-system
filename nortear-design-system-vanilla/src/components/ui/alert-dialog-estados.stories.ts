@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog } from './alert-dialog';
+import { buildDemo } from './alert-dialog.fixtures';
 import { alertDialogSource, alertDialogSourceCom } from './alert-dialog.source';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
@@ -40,52 +41,11 @@ const onConfirmSpy = fn();
 const onCancelSpy = fn();
 const onOpenChangeSpy = fn();
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-type DemoOptions = {
-  triggerLabel: string;
-  title: string;
-  description: string;
-  cancelLabel: string;
-  actionLabel: string;
-  tone: 'destructive' | 'default';
-  onConfirm?: () => void;
-  onCancel?: () => void;
-  openInitially?: boolean;
-};
-
-function buildDemo(opts: DemoOptions): HTMLElement {
-  const trigger = createButton({
-    variant: opts.tone === 'destructive' ? 'destructive' : 'default',
-    label: opts.triggerLabel,
-  });
-  const cancelButton = createButton({
-    variant: 'outline',
-    label: opts.cancelLabel,
-    onClick: opts.onCancel,
-  });
-  // Variante do Button, não classe de fundo crua: bg-destructive e
-  // text-destructive-foreground saíram com o Tailwind e não têm CSS.
-  const actionButton = createButton({
-    variant: opts.tone === 'destructive' ? 'destructive' : 'default',
-    label: opts.actionLabel,
-    onClick: opts.onConfirm,
-  });
-  const dialog = createAlertDialog({
-    trigger,
-    title: opts.title,
-    description: opts.description,
-    cancelButton,
-    actionButton,
-    // Estado inicial aberto, como o defaultOpen das outras stacks — é o que as
-    // capturas visuais precisam.
-    defaultOpen: opts.openInitially,
-  });
-
-  return dialog;
-}
-
 // ─── Stories ──────────────────────────────────────────────────────────────────
+//
+// O construtor da demonstração vem de `alert-dialog.fixtures.ts`. Aqui a
+// variante do trigger acompanha o `tone` (o padrão do construtor), e cada story
+// declara o seu `defaultOpen` — o que antes se chamava `openInitially`.
 
 /**
  * Garante o diálogo aberto sem depender do estado de montagem.
@@ -161,7 +121,7 @@ export const Open: Story = {
       cancelLabel: 'Cancelar',
       actionLabel: 'Excluir',
       tone: 'destructive',
-      openInitially: true,
+      defaultOpen: true,
     }),
   play: async ({ step }) => {
 
@@ -212,7 +172,7 @@ export const Confirmed: Story = {
       actionLabel: 'Excluir',
       tone: 'destructive',
       onConfirm: onConfirmSpy,
-      openInitially: true,
+      defaultOpen: true,
     }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -275,7 +235,7 @@ export const Cancelled: Story = {
       actionLabel: 'Excluir',
       tone: 'destructive',
       onCancel: onCancelSpy,
-      openInitially: true,
+      defaultOpen: true,
     }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

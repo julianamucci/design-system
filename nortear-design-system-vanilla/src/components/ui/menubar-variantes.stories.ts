@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
+import { embrulhar } from './menubar.fixtures';
 import { menubarSource, menubarSourceCom } from './menubar.source';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
@@ -31,16 +32,8 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-function embrulhar(filho: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.alignItems = 'flex-start';
-  wrapper.style.minHeight = '240px';
-  wrapper.appendChild(filho);
-  return wrapper;
-}
+// A altura da moldura vai explícita em cada chamada de `embrulhar`: aqui era um
+// valor cravado no corpo da cópia local, e o padrão da fixture é outro.
 
 async function esperarPainel(canvasElement: HTMLElement): Promise<HTMLElement> {
   return await waitFor(() => {
@@ -78,6 +71,7 @@ export const Default: Story = {
         ],
         { defaultOpen: 0 },
       ),
+      '240px',
     ),
   play: async ({ canvasElement, step }) => {
     const painel = await esperarPainel(canvasElement);
@@ -146,6 +140,7 @@ export const Destructive: Story = {
         ],
         { defaultOpen: 0 },
       ),
+      '240px',
     ),
   play: async ({ canvasElement, step }) => {
     const painel = await esperarPainel(canvasElement);

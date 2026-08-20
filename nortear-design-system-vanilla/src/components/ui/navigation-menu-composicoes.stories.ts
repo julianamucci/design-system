@@ -1,7 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
-import { abrir, esperarPainel, esperarPainelSumir, painelAberto } from './navigation-menu.fixtures';
+import {
+  abrir,
+  esperarPainel,
+  esperarPainelSumir,
+  painelAberto,
+  wrap,
+} from './navigation-menu.fixtures';
 import {
   navigationMenuSource,
   navigationMenuSourceCom,
@@ -32,16 +38,8 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function wrap(child: HTMLElement, minHeight = 300): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.alignItems = 'flex-start';
-  wrapper.style.minHeight = `${minHeight}px`;
-  wrapper.appendChild(child);
-  return wrapper;
-}
+// A altura da moldura vai explícita em cada chamada de `wrap`: o padrão da
+// fixture (240) serve à barra comum, e o painel destas composições é mais alto.
 
 /**
  * Impede a navegação de verdade, como um roteador de cliente faria.
@@ -143,7 +141,7 @@ export const WithDropdown: Story = {
     ]);
     nav.setAttribute('aria-label', 'Navegação principal');
     impedirNavegacao(nav);
-    return wrap(nav);
+    return wrap(nav, 300);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

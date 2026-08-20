@@ -1,6 +1,7 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAspectRatio } from './aspect-ratio';
+import { boxed, buildImage } from './aspect-ratio.fixtures';
 import { aspectRatioSource, aspectRatioSourceCom } from './aspect-ratio.source';
 import { expect } from 'storybook/test';
 
@@ -26,29 +27,10 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Helper ───────────────────────────────────────────────────────────────────
-
-function buildImage(src: string, alt: string): HTMLImageElement {
-  const img = document.createElement('img');
-  img.src = src;
-  img.alt = alt;
-  img.loading = 'lazy';
-  img.decoding = 'async';
-  img.className = 'nds-w-full nds-rounded-md';
-  img.style.objectFit = 'cover';
-  img.style.height = '100%';
-  return img;
-}
-
-function boxed(el: HTMLElement, maxWidth = '36rem'): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-w-full';
-  wrap.style.maxWidth = maxWidth;
-  wrap.appendChild(el);
-  return wrap;
-}
-
 // ─── Stories ──────────────────────────────────────────────────────────────────
+//
+// `boxed` e `buildImage` vêm de `aspect-ratio.fixtures.ts`. Aqui nenhuma story
+// passa `extraClass`, e sem ela a classe da imagem é a mesma de sempre.
 
 export const SixteenNine: Story = {
   // A proporção é a única coisa que muda entre as stories deste arquivo, e ela

@@ -2,36 +2,10 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { Bold, Eye } from 'lucide';
 import { createToggle } from './toggle';
+import { buildLucideSvg } from './toggle.fixtures';
 import { toggleSource } from './toggle.source';
 import { createToggleDocs } from '@/components/docs/ToggleDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-// ─── Lucide → SVG (vanilla) ───────────────────────────────────────────────────
-
-type LucideIconNode = [string, Record<string, string>];
-
-function buildLucideSvg(icon: unknown, className?: string): SVGSVGElement {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '2');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  // O ícone reforça o rótulo, nunca o substitui: quem compõe dá o nome
-  // acessível no `aria-label` do botão ou no texto visível.
-  svg.setAttribute('aria-hidden', 'true');
-  // Sem classe por padrão: a medida do ícone já vive em `.nds-toggle > svg`, e
-  // uma classe aqui competiria com ela.
-  if (className) svg.setAttribute('class', className);
-  for (const [tag, attrs] of icon as unknown as LucideIconNode[]) {
-    const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
-    svg.appendChild(child);
-  }
-  return svg;
-}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 

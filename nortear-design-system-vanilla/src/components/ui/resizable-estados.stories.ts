@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { createResizablePanel } from './resizable';
+import { fracaoDoPrimeiro, frame, painelRotulado } from './resizable.fixtures';
 import { resizableSource, resizableSourceCom } from './resizable.source';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
@@ -27,38 +28,10 @@ type Story = StoryObj;
 const ROTULO = 'Redimensionar painéis — use setas para ajustar';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function panelContent(label: string, extraClass = ''): HTMLElement {
-  const el = document.createElement('div');
-  el.className = `nds-cluster nds-w-full nds-p-4 nds-text-body nds-font-medium ${extraClass}`.trim();
-  el.dataset.justify = 'center';
-  el.style.height = '100%';
-  const span = document.createElement('span');
-  span.textContent = label;
-  el.appendChild(span);
-  return el;
-}
-
-function frame(child: HTMLElement, altura = '220px'): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.style.contain = 'layout';
-  // ALTURA DEFINIDA, e não só `min-height`: um grupo vertical distribui a
-  // ALTURA livre entre os painéis, e não existe altura livre dentro de um
-  // contêiner de altura automática — os painéis colapsavam para zero. Com
-  // `min-height` no invólucro, o `height: 100%` do grupo resolvia para `auto`.
-  // A suíte só viu isso quando a asserção passou a medir a geometria.
-  wrap.style.height = altura;
-  wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
-  wrap.appendChild(child);
-  return wrap;
-}
-
-/** Geometria real, e nunca `style.width` — ver a nota em `resizable-variantes`. */
-function fracaoDoPrimeiro(canvasElement: HTMLElement): number {
-  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const larguras = paineis.map((p) => p.getBoundingClientRect().width);
-  return larguras[0] / larguras.reduce((a, b) => a + b, 0);
-}
+//
+// As stories deste arquivo são todas HORIZONTAIS, por isso `fracaoDoPrimeiro`
+// vem do fixture no padrão — quem varia o eixo é a story raiz, que passa o
+// parâmetro.
 
 function grupo(opcoes: {
   disabled?: boolean;
@@ -78,9 +51,9 @@ function grupo(opcoes: {
         defaultSize: 50,
         minSize: opcoes.minA ?? 20,
         maxSize: opcoes.maxA,
-        content: panelContent('Painel A', 'nds-bg-muted nds-text-muted-foreground'),
+        content: painelRotulado('Painel A', 'nds-bg-muted nds-text-muted-foreground'),
       },
-      { defaultSize: 50, minSize: opcoes.minA ?? 20, content: panelContent('Painel B') },
+      { defaultSize: 50, minSize: opcoes.minA ?? 20, content: painelRotulado('Painel B') },
     ],
   });
   return frame(root);

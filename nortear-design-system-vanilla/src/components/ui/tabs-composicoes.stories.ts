@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { createTabs, type TabsItemDef } from './tabs';
+import { makePanel } from './tabs.fixtures';
 import {
   tabsSource,
   tabsSourceCom,
@@ -50,13 +51,6 @@ function createIcon(nodes: LucideIconNode[]): SVGSVGElement {
     svg.appendChild(child);
   }
   return svg;
-}
-
-function makePanel(text: string): HTMLElement {
-  const p = document.createElement('div');
-  p.className = 'nds-text-body nds-p-4 nds-rounded-md nds-border-default nds-bg-card';
-  p.textContent = text;
-  return p;
 }
 
 function makeRichPanel(title: string, description: string): HTMLElement {

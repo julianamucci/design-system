@@ -3,6 +3,7 @@ import { toggleSource, toggleSourceFileira } from './toggle.source';
 import { within, expect } from 'storybook/test';
 import { Bold, Italic, Eye, List } from 'lucide';
 import { createToggle, type ToggleOptions } from './toggle';
+import { buildLucideSvg, cluster } from './toggle.fixtures';
 
 const meta: Meta = {
   tags: ['form'],
@@ -27,27 +28,6 @@ type Story = StoryObj;
 
 // ─── Helpers locais ───────────────────────────────────────────────────────────
 
-type LucideIconNode = [string, Record<string, string>];
-
-function buildLucideSvg(icon: unknown): SVGSVGElement {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '2');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  // O ícone reforça o rótulo, nunca o substitui.
-  svg.setAttribute('aria-hidden', 'true');
-  for (const [tag, attrs] of icon as unknown as LucideIconNode[]) {
-    const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
-    svg.appendChild(child);
-  }
-  return svg;
-}
-
 function iconToggle(opts: {
   icon: unknown;
   'aria-label'?: string;
@@ -69,14 +49,6 @@ function iconToggle(opts: {
     // Texto visível dispensa aria-label — o leitor usa o conteúdo do botão.
     'aria-label': opts['aria-label'],
   });
-}
-
-function cluster(...filhos: HTMLElement[]): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-cluster';
-  wrap.dataset.spacing = 'sm';
-  wrap.append(...filhos);
-  return wrap;
 }
 
 // ─── Default ──────────────────────────────────────────────────────────────────

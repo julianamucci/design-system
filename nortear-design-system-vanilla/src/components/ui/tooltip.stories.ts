@@ -1,24 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
+import { balaoDe, limparPortal } from './tooltip.fixtures';
 import { createButton } from './button';
 import { tooltipSource } from './tooltip.source';
 import { createTooltipDocs } from '@/components/docs/TooltipDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
-}
-
-/** Tira do DOM qualquer balão que tenha sobrado antes do axe varrer a página. */
-function limparPortal(): void {
-  document.querySelectorAll('[data-slot="tooltip-content"]').forEach((n) => n.remove());
-}
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 

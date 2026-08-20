@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { anelDeFocoDeclarado, transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea } from './scroll-area';
+import { buildList } from './scroll-area.fixtures';
 import {
   scrollAreaSource,
   scrollAreaSourceCom,
@@ -31,19 +32,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function buildList(count: number): HTMLElement {
-  const ul = document.createElement('ul');
-  ul.className = 'nds-stack nds-list-none nds-p-2 nds-m-0';
-  ul.dataset.spacing = 'sm';
-  for (let i = 1; i <= count; i++) {
-    const li = document.createElement('li');
-    li.className = 'nds-text-body nds-border-b-soft nds-pb-2';
-    li.textContent = `Item ${i}`;
-    ul.appendChild(li);
-  }
-  return ul;
-}
 
 function buildLinkList(count: number): HTMLElement {
   const nav = document.createElement('nav');

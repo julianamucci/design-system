@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
-import { createSelect, type SelectItem } from './select';
+import type { SelectItem } from './select';
+import { abridor, comRotulo } from './select.fixtures';
 import { selectSource, selectSourceCom } from './select.source';
 
 const meta: Meta = {
@@ -50,44 +51,6 @@ const ICONES = {
     'M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384',
   chat: 'M7.9 20A9 9 0 1 0 4 16.1L2 22Z',
 } as const;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function comRotulo(
-  id: string,
-  rotulo: string,
-  opcoes: Parameters<typeof createSelect>[0],
-): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-stack nds-w-sm';
-  wrap.dataset.spacing = 'sm';
-
-  const label = document.createElement('label');
-  label.htmlFor = id;
-  label.className = 'nds-text-body nds-font-semibold';
-  label.textContent = rotulo;
-
-  wrap.append(label, createSelect({ ...opcoes, id, 'aria-label': rotulo }));
-  return wrap;
-}
-
-/**
- * Abre a lista partindo sempre de fechada.
- *
- * Fechar antes de clicar garante um clique REAL nesta rodada — o painel
- * Interactions reexecuta a play no mesmo DOM, e um clique cego alternaria o
- * estado em vez de estabelecê-lo.
- */
-function abridor(gatilho: HTMLElement) {
-  return async () => {
-    if (gatilho.getAttribute('aria-expanded') === 'true') {
-      await userEvent.keyboard('{Escape}');
-      await waitForPortalGone('listbox');
-    }
-    await userEvent.click(gatilho);
-    return await waitForPortal('listbox');
-  };
-}
 
 // ─── Default ──────────────────────────────────────────────────────────────────
 

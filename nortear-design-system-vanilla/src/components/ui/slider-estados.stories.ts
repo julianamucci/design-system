@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
-import { createSlider } from './slider';
+import { withLabel } from './slider.fixtures';
 import { sliderSource, sliderSourceCom } from './slider.source';
 import {
   alcaDesabilitada,
@@ -31,64 +31,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function withLabel(opts: {
-  idPrefix: string;
-  labelText: string;
-  'aria-label': string;
-  min?: number;
-  max?: number;
-  step?: number;
-  value?: number;
-  disabled?: boolean;
-  unit?: string;
-}): HTMLElement {
-  const { idPrefix, labelText, 'aria-label': ariaLabel, min = 0, max = 100, step = 1, value = 0, disabled = false, unit = '' } = opts;
-
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-stack nds-w-sm';
-  wrap.dataset.spacing = 'sm';
-
-  const row = document.createElement('div');
-  row.className = 'nds-cluster';
-  row.dataset.justify = 'between';
-
-  const label = document.createElement('label');
-  label.id = `${idPrefix}-label`;
-  label.className = 'nds-text-body nds-font-medium';
-  label.textContent = labelText;
-
-  const valueText = document.createElement('span');
-  valueText.id = `${idPrefix}-value`;
-  valueText.className = 'nds-text-body nds-text-muted-foreground nds-tabular-nums';
-  valueText.setAttribute('aria-live', 'polite');
-  valueText.textContent = `${value}${unit}`;
-
-  row.append(label, valueText);
-
-  const slider = createSlider({
-    min,
-    max,
-    step,
-    value,
-    disabled,
-    'aria-label': ariaLabel,
-    onValueChange: (v) => {
-      valueText.textContent = `${v}${unit}`;
-    },
-  });
-
-  const input = slider.querySelector('input[type="range"]') as HTMLInputElement | null;
-  if (input) {
-    input.setAttribute('aria-describedby', `${idPrefix}-value`);
-    input.id = `${idPrefix}-input`;
-  }
-
-  wrap.append(row, slider);
-  return wrap;
-}
 
 // ─── Default ──────────────────────────────────────────────────────────────────
 

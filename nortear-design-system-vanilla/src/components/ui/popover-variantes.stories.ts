@@ -6,6 +6,7 @@ import {
   createPopoverHeader,
   createPopoverTitle,
 } from './popover';
+import { centralizar, painel } from './popover.fixtures';
 import { popoverSource, popoverSourceCom, popoverSourceFormulario } from './popover.source';
 import { createButton } from './button';
 import { createInput } from './input';
@@ -34,20 +35,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
-  const w = document.createElement('div');
-  w.style.contain = 'layout';
-  w.className = 'nds-cluster nds-w-full';
-  w.dataset.justify = 'center';
-  w.style.minHeight = '300px';
-  w.appendChild(child);
-  return w;
-}
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
-}
 
 async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
   if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
@@ -82,7 +69,7 @@ export const Default: Story = {
 
     const el = createPopover({ trigger, content });
     queueMicrotask(() => trigger.click());
-    return wrap(el);
+    return centralizar(el);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -119,7 +106,7 @@ export const WithTitle: Story = {
 
     const el = createPopover({ trigger, content });
     queueMicrotask(() => trigger.click());
-    return wrap(el);
+    return centralizar(el);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -195,7 +182,7 @@ export const Form: Story = {
 
     const el = createPopover({ trigger, content });
     queueMicrotask(() => trigger.click());
-    return wrap(el);
+    return centralizar(el);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

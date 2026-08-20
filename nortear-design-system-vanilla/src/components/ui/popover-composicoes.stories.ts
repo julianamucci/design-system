@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPopover } from './popover';
+import { centralizar } from './popover.fixtures';
 import { popoverSource, popoverSourceFormulario } from './popover.source';
 import { createButton } from './button';
 import { createInput } from './input';
@@ -27,16 +28,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
-  const w = document.createElement('div');
-  w.style.contain = 'layout';
-  w.className = 'nds-cluster nds-w-full';
-  w.dataset.justify = 'center';
-  w.style.minHeight = '300px';
-  w.appendChild(child);
-  return w;
-}
 
 async function waitForOpen(): Promise<void> {
   await waitFor(() => {
@@ -90,7 +81,7 @@ export const EditProfile: Story = {
 
     const el = createPopover({ trigger, content: form });
     queueMicrotask(() => trigger.click());
-    return wrap(el);
+    return centralizar(el);
   },
   play: async ({ step }) => {
     await step('Form de perfil aberto com valores pré-preenchidos', async () => {
@@ -147,7 +138,7 @@ export const TableFilter: Story = {
 
     const el = createPopover({ trigger, content });
     queueMicrotask(() => trigger.click());
-    return wrap(el);
+    return centralizar(el);
   },
   play: async ({ step }) => {
     await step('Filtro mostra checkboxes e botões de ação', async () => {
@@ -200,7 +191,7 @@ export const ColorPicker: Story = {
 
     const el = createPopover({ trigger, content });
     queueMicrotask(() => trigger.click());
-    return wrap(el);
+    return centralizar(el);
   },
   play: async ({ step }) => {
     await step('Grid de swatches com aria-label por cor', async () => {
@@ -262,7 +253,7 @@ export const QuickSettings: Story = {
 
     const el = createPopover({ trigger, content });
     queueMicrotask(() => trigger.click());
-    return wrap(el);
+    return centralizar(el);
   },
   play: async ({ step }) => {
     await step('Toggles renderizam com estados iniciais', async () => {

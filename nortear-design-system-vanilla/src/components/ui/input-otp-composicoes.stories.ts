@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import { createInputOTP } from './input-otp';
 import { createButton } from './button';
+import { wrap } from './input-otp.fixtures';
 import { inputOtpSource, inputOtpSourceComposicao } from './input-otp.source';
 
 const meta: Meta = {
@@ -26,15 +27,12 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = '180px';
-  wrapper.appendChild(child);
-  return wrapper;
-}
+/**
+ * Aqui a coluna tem rótulo, campo e mensagem — não cabe nos 120px de
+ * `nds-min-h-30`, que é a medida das outras stories. Não há utilitário nesta
+ * altura, então ela vai por `style`, pela porta que `wrap` abre para isso.
+ */
+const ALTURA_DA_MOLDURA = '180px';
 
 function coluna(): HTMLElement {
   const root = document.createElement('div');
@@ -77,7 +75,7 @@ export const WithLabel: Story = {
     otp.removeAttribute('aria-label');
     otp.setAttribute('aria-labelledby', 'comp-label-texto');
     root.append(rotulo('Código de verificação', 'comp-label-texto'), otp);
-    return wrap(root);
+    return wrap(root, ALTURA_DA_MOLDURA);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -109,7 +107,7 @@ export const WithHelpText: Story = {
     help.className = 'nds-text-caption nds-text-muted-foreground';
     help.textContent = 'Enviamos por SMS, expira em 5 min.';
     root.append(rotulo('Código de verificação'), otp, help);
-    return wrap(root);
+    return wrap(root, ALTURA_DA_MOLDURA);
   },
   play: async ({ canvasElement, step }) => {
     await step('A ajuda é lida junto com o campo', async () => {
@@ -147,7 +145,7 @@ export const WithErrorMessage: Story = {
     err.className = 'nds-text-caption nds-text-destructive';
     err.textContent = 'Código incorreto. Verifique e tente novamente.';
     root.append(rotulo('Código de verificação'), otp, err);
-    return wrap(root);
+    return wrap(root, ALTURA_DA_MOLDURA);
   },
   play: async ({ canvasElement, step }) => {
     await step('Causa e ação corretiva chegam pelo mesmo caminho do erro', async () => {
@@ -190,7 +188,7 @@ export const WithResendButton: Story = {
 
     row.append(note, createButton({ variant: 'link', size: 'sm', label: 'Reenviar código' }));
     root.append(rotulo('Código de verificação'), otp, row);
-    return wrap(root);
+    return wrap(root, ALTURA_DA_MOLDURA);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

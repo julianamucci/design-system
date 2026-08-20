@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect, type SelectItem } from './select';
+import { abridor, comRotulo } from './select.fixtures';
 import { selectSource, selectSourceCom } from './select.source';
 import { medirAnelDeFoco } from '@shared/testing/select-probe';
 
@@ -32,30 +33,6 @@ const BASIC_ITEMS: SelectItem[] = [
   { value: 'rj', label: 'Rio de Janeiro' },
   { value: 'mg', label: 'Minas Gerais' },
 ];
-
-/**
- * Campo com rótulo externo associado por `for`/`id`.
- *
- * O nome acessível vem do `aria-label`: `role="combobox"` não aceita nome vindo
- * do próprio conteúdo, e o conteúdo do gatilho é o valor exibido.
- */
-function comRotulo(
-  id: string,
-  rotulo: string,
-  opcoes: Parameters<typeof createSelect>[0],
-): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.className = 'nds-stack nds-w-sm';
-  wrap.dataset.spacing = 'sm';
-
-  const label = document.createElement('label');
-  label.htmlFor = id;
-  label.className = 'nds-text-body nds-font-semibold';
-  label.textContent = rotulo;
-
-  wrap.append(label, createSelect({ ...opcoes, id, 'aria-label': rotulo }));
-  return wrap;
-}
 
 // ─── Default ──────────────────────────────────────────────────────────────────
 
@@ -340,15 +317,6 @@ export const DisabledItem: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const [gatilho, gatilhoVazio] = canvas.getAllByRole('combobox');
-
-    const abridor = (alvo: HTMLElement) => async () => {
-      if (alvo.getAttribute('aria-expanded') === 'true') {
-        await userEvent.keyboard('{Escape}');
-        await waitForPortalGone('listbox');
-      }
-      await userEvent.click(alvo);
-      return await waitForPortal('listbox');
-    };
     const abrir = abridor(gatilho);
 
     await step('A opção indisponível se anuncia bloqueada', async () => {

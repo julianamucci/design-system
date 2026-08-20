@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import { alturaResultante, campoDe } from '@shared/testing/input-probe';
-import { createInput } from './input';
+import { campoRotulado } from './input.fixtures';
 import { inputSource, inputSourceCom } from './input.source';
 
 const meta: Meta = {
@@ -22,22 +22,14 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-function campoRotulado(id: string, rotulo: string, type: string, placeholder?: string): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack nds-w-xs';
-  wrapper.dataset.spacing = 'xs';
-
-  const label = document.createElement('label');
-  label.htmlFor = id;
-  label.className = 'nds-text-body nds-font-medium';
-  label.textContent = rotulo;
-
-  wrapper.append(label, createInput({ type, placeholder, id }));
-  return wrapper;
-}
-
 export const Text: Story = {
-  render: () => campoRotulado('tipo-text', 'Nome completo', 'text', 'ex: João da Silva'),
+  render: () =>
+    campoRotulado({
+      id: 'tipo-text',
+      rotulo: 'Nome completo',
+      type: 'text',
+      placeholder: 'ex: João da Silva',
+    }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Input do tipo text renderizado', async () => {
@@ -62,7 +54,13 @@ export const Email: Story = {
       },
     },
   },
-  render: () => campoRotulado('tipo-email', 'Email', 'email', 'ex: joao@empresa.com'),
+  render: () =>
+    campoRotulado({
+      id: 'tipo-email',
+      rotulo: 'Email',
+      type: 'email',
+      placeholder: 'ex: joao@empresa.com',
+    }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Input do tipo email renderizado', async () => {
@@ -85,7 +83,13 @@ export const Password: Story = {
       },
     },
   },
-  render: () => campoRotulado('tipo-password', 'Senha', 'password', '••••••••'),
+  render: () =>
+    campoRotulado({
+      id: 'tipo-password',
+      rotulo: 'Senha',
+      type: 'password',
+      placeholder: '••••••••',
+    }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Input do tipo password renderizado', async () => {
@@ -108,7 +112,8 @@ export const Number: Story = {
       },
     },
   },
-  render: () => campoRotulado('tipo-number', 'Quantidade', 'number', '0'),
+  render: () =>
+    campoRotulado({ id: 'tipo-number', rotulo: 'Quantidade', type: 'number', placeholder: '0' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Input do tipo number renderizado', async () => {
@@ -136,7 +141,13 @@ export const Search: Story = {
       },
     },
   },
-  render: () => campoRotulado('tipo-search', 'Buscar', 'search', 'Buscar componentes...'),
+  render: () =>
+    campoRotulado({
+      id: 'tipo-search',
+      rotulo: 'Buscar',
+      type: 'search',
+      placeholder: 'Buscar componentes...',
+    }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -166,7 +177,7 @@ export const File: Story = {
       },
     },
   },
-  render: () => campoRotulado('tipo-file', 'Arquivo', 'file'),
+  render: () => campoRotulado({ id: 'tipo-file', rotulo: 'Arquivo', type: 'file' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 

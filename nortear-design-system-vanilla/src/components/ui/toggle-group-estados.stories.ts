@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { AlignLeft, AlignCenter, AlignRight } from 'lucide';
 import { createToggleGroup, type ToggleGroupItem } from './toggle-group';
+import { injectIcons } from './toggle-group.fixtures';
 import { toggleGroupSource, toggleGroupSourceCom } from './toggle-group.source';
 
 const meta: Meta = {
@@ -24,38 +25,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Lucide → SVG (vanilla) ───────────────────────────────────────────────────
-
-type LucideIconNode = [string, Record<string, string>];
-
-function buildLucideSvg(icon: unknown, className = 'nds-icon-sm'): SVGSVGElement {
-  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-  svg.setAttribute('viewBox', '0 0 24 24');
-  svg.setAttribute('fill', 'none');
-  svg.setAttribute('stroke', 'currentColor');
-  svg.setAttribute('stroke-width', '2');
-  svg.setAttribute('stroke-linecap', 'round');
-  svg.setAttribute('stroke-linejoin', 'round');
-  svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('class', className);
-  for (const [tag, attrs] of icon as unknown as LucideIconNode[]) {
-    const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
-    for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
-    svg.appendChild(child);
-  }
-  return svg;
-}
-
-function injectIcons(group: HTMLElement, icons: unknown[]): void {
-  group.querySelectorAll<HTMLButtonElement>('[data-slot="toggle"]').forEach((btn, i) => {
-    btn.textContent = '';
-    const wrap = document.createElement('span');
-    wrap.style.display = 'inline-flex';
-    wrap.appendChild(buildLucideSvg(icons[i]));
-    btn.appendChild(wrap);
-  });
-}
+// ─── Helpers locais ───────────────────────────────────────────────────────────
 
 function makeAlignmentGroup(opts: {
   defaultValue?: string;

@@ -5,6 +5,7 @@ import {
   medirCrescimentoDoTrilho,
 } from '@shared/testing/tabs-probe';
 import { createTabs, type TabsItemDef } from './tabs';
+import { makePanel } from './tabs.fixtures';
 import { tabsSource, tabsSourceCom } from './tabs.source';
 
 const meta: Meta = {
@@ -30,13 +31,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function makePanel(text: string): HTMLElement {
-  const p = document.createElement('div');
-  p.className = 'nds-text-body nds-text-muted-foreground nds-p-4 nds-rounded-md nds-border-default nds-bg-card';
-  p.textContent = text;
-  return p;
-}
 
 function items(): TabsItemDef[] {
   return [

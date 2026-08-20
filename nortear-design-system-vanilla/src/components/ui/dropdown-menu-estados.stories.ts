@@ -3,6 +3,7 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createDropdownMenu } from './dropdown-menu';
 import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
 import { createButton } from './button';
+import { wrap } from './dropdown-menu.fixtures';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -27,16 +28,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = '180px';
-  wrapper.appendChild(child);
-  return wrapper;
-}
 
 function buildBase(opts: {
   triggerLabel: string;

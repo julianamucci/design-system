@@ -1,11 +1,8 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
-import { createAvatar, type AvatarSize } from './avatar';
+import { AVATAR_EXEMPLO, IMG_MARIA, buildAvatar } from './avatar.fixtures';
 import { avatarSource, avatarSourceCom } from './avatar.source';
-
-const IMG_MARIA =
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
 
 const meta: Meta = {
   tags: ['display'],
@@ -29,16 +26,9 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function buildAvatar(size?: AvatarSize): HTMLElement {
-  const av = createAvatar({
-    src: IMG_MARIA,
-    alt: 'Foto de perfil de Maria Rodrigues',
-    fallbackText: 'MR',
-    size,
-  });
-  return av;
-}
+//
+// `buildAvatar` e a pessoa de exemplo vêm de `avatar.fixtures.ts`. Aqui só o
+// preset muda: o resto é sempre a mesma Maria.
 
 /**
  * O diâmetro é o contrato do preset. Medir o elemento renderizado prova que
@@ -64,7 +54,7 @@ export const Sm: Story = {
       description: { story: 'Tamanho compacto (24px) — listas densas.' },
     },
   },
-  render: () => buildAvatar('sm'),
+  render: () => buildAvatar({ ...AVATAR_EXEMPLO, size: 'sm' }),
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('[data-slot="avatar"]')).toHaveAttribute(
       'data-size',
@@ -88,7 +78,7 @@ export const Md: Story = {
     },
   },
   // Sem passar size: o padrão da factory é o preset md.
-  render: () => buildAvatar(),
+  render: () => buildAvatar({ ...AVATAR_EXEMPLO }),
   play: async ({ canvasElement }) => {
     const { width, height } = caixaDo(canvasElement);
     await expect(Math.abs(width - 32)).toBeLessThan(0.5);
@@ -105,7 +95,7 @@ export const Lg: Story = {
       description: { story: 'Tamanho médio-grande (40px).' },
     },
   },
-  render: () => buildAvatar('lg'),
+  render: () => buildAvatar({ ...AVATAR_EXEMPLO, size: 'lg' }),
   play: async ({ canvasElement }) => {
     const { width, height } = caixaDo(canvasElement);
     await expect(Math.abs(width - 40)).toBeLessThan(0.5);
@@ -122,7 +112,7 @@ export const Xl: Story = {
       description: { story: 'Tamanho grande (48px) — headers de perfil.' },
     },
   },
-  render: () => buildAvatar('xl'),
+  render: () => buildAvatar({ ...AVATAR_EXEMPLO, size: 'xl' }),
   play: async ({ canvasElement }) => {
     const { width, height } = caixaDo(canvasElement);
     await expect(Math.abs(width - 48)).toBeLessThan(0.5);
@@ -139,7 +129,7 @@ export const TwoXl: Story = {
       description: { story: 'Maior preset (64px) — página de perfil.' },
     },
   },
-  render: () => buildAvatar('2xl'),
+  render: () => buildAvatar({ ...AVATAR_EXEMPLO, size: '2xl' }),
   play: async ({ canvasElement }) => {
     const { width, height } = caixaDo(canvasElement);
     await expect(Math.abs(width - 64)).toBeLessThan(0.5);

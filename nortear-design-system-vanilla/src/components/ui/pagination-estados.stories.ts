@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fireEvent, fn, userEvent, within, expect } from 'storybook/test';
 import { alvosAbaixoDoMinimo, contrastesDaFaixa } from '@shared/testing/pagination-probe';
 import { createPagination } from './pagination';
+import { wrap } from './pagination.fixtures';
 import { paginationSource, paginationSourceCom } from './pagination.source';
 
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
@@ -31,15 +32,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2 nds-min-h-24';
-  wrapper.dataset.justify = 'center';
-  wrapper.dataset.align = 'center';
-  wrapper.appendChild(child);
-  return wrapper;
-}
 
 /** Faixa de 5 páginas com a página atual parametrizada. */
 const faixa = (label: string, current: number) => () =>

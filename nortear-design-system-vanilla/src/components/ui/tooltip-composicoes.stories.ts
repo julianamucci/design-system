@@ -1,33 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createTooltip, createTooltipProvider } from './tooltip';
+import { balaoDe, limparPortal, wrap } from './tooltip.fixtures';
 import { tooltipSource, tooltipSourceCom, tooltipSourceLados } from './tooltip.source';
 import { createButton, createButtonIcon } from './button';
 
 // As composições que o conteúdo compartilhado documenta, mais os quatro lados de
 // posicionamento. Em todas, o Tooltip acrescenta contexto a um elemento que JÁ
 // se explica sozinho — nunca é o único portador da informação.
-
-/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
-}
-
-function limparPortal(): void {
-  document.querySelectorAll('[data-slot="tooltip-content"]').forEach((n) => n.remove());
-}
-
-function wrap(child: HTMLElement, minHeight = '200px'): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.style.minHeight = minHeight;
-  wrapper.className = 'nds-cluster nds-w-full';
-  wrapper.dataset.justify = 'center';
-  wrapper.appendChild(child);
-  return wrapper;
-}
+//
+// A moldura destas composições reserva 200px: são maiores que as stories de
+// estados e variantes, que ficam no padrão de 180px do `wrap`.
+const ALTURA_DA_COMPOSICAO = '200px';
 
 const meta: Meta = {
   tags: ['overlay'],
@@ -78,7 +62,7 @@ export const IconButtonWithShortcut: Story = {
 
     const el = createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });
     queueMicrotask(() => trigger.focus());
-    return wrap(el);
+    return wrap(el, ALTURA_DA_COMPOSICAO);
   },
   play: async ({ canvasElement, step }) => {
     const gatilho = within(canvasElement).getByRole('button', { name: /salvar/i });
@@ -153,7 +137,7 @@ export const HelpInFormField: Story = {
 
     root.append(labelRow, input);
     queueMicrotask(() => help.focus());
-    return wrap(root);
+    return wrap(root, ALTURA_DA_COMPOSICAO);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -229,7 +213,7 @@ export const MetricDescription: Story = {
 
     root.append(headerRow, value);
     queueMicrotask(() => help.focus());
-    return wrap(root);
+    return wrap(root, ALTURA_DA_COMPOSICAO);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -354,7 +338,7 @@ export const ProviderWithMarkup: Story = {
       barra.appendChild(grupo.createTooltip({ trigger, content: conteudo, side: 'bottom' }));
     }
 
-    return wrap(barra);
+    return wrap(barra, ALTURA_DA_COMPOSICAO);
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

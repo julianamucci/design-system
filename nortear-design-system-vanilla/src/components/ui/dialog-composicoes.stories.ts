@@ -3,16 +3,17 @@ import { within, expect, userEvent } from 'storybook/test';
 import { createDialog } from './dialog';
 import { dialogComFormularioSource, dialogSource, dialogSourceCom } from './dialog.source';
 import { createButton } from './button';
-import { createInput } from './input';
-import { createLabel } from './label';
 import {
   abrir,
+  abrirNaMontagem,
   botaoFecharDoCanto,
+  buildField,
   conferirNomeEDescricao,
   esperarAberto,
   esperarFechado,
   fechar,
   gatilho,
+  makeFooter,
   painel,
 } from './dialog.fixtures';
 
@@ -37,35 +38,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-/** Factories do sistema em vez de `<input>`/`<textarea>` crus com `style`. */
-function buildField(id: string, labelText: string, type: string, value: string): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack';
-  wrapper.dataset.spacing = 'xs';
-  wrapper.append(createLabel({ text: labelText, htmlFor: id }), createInput({ id, type, value }));
-  return wrapper;
-}
-
-/**
- * As ações do rodapé saem como LISTA, não embrulhadas num `<div>`: quem faz o
- * arranjo é o `.nds-dialog-footer`, e para isso os botões precisam ser filhos
- * diretos dele.
- */
-function makeFooter(cancelLabel: string, actionLabel: string): HTMLElement[] {
-  return [
-    createButton({ variant: 'outline', label: cancelLabel }),
-    createButton({ variant: 'default', label: actionLabel }),
-  ];
-}
-
-/** Abre pelo gatilho depois da montagem — a factory não tem `defaultOpen`. */
-function abrirNaMontagem(dialog: HTMLElement): HTMLElement {
-  queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
-  return dialog;
-}
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 

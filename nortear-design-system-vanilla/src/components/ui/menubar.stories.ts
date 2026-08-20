@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createMenubar, type MenubarAlign, type MenubarSide } from './menubar';
+import { embrulhar, gatilhosDe, painelAberto } from './menubar.fixtures';
 import { menubarSource } from './menubar.source';
 import { createMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -95,32 +96,8 @@ const meta: Meta<MenubarArgs> = {
   },
 };
 
-/** Só os gatilhos da barra: nesta stack o painel mora DENTRO da raiz, então
- *  procurar por papel na barra devolveria também os itens do menu aberto. */
-function gatilhosDe(barra: HTMLElement): HTMLElement[] {
-  return Array.from(barra.querySelectorAll<HTMLElement>('[data-slot="menubar-trigger"]'));
-}
-
 export default meta;
 type Story = StoryObj<MenubarArgs>;
-
-function embrulhar(filho: HTMLElement, alturaMinima = '280px'): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.alignItems = 'flex-start';
-  wrapper.style.minHeight = alturaMinima;
-  wrapper.appendChild(filho);
-  return wrapper;
-}
-
-/** O painel é ancorado por CSS, não portalizado: mora dentro do canvas. */
-function painelAberto(canvasElement: HTMLElement): HTMLElement | null {
-  return canvasElement.querySelector<HTMLElement>(
-    '[data-slot="menubar-content"]:not([hidden])',
-  );
-}
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 

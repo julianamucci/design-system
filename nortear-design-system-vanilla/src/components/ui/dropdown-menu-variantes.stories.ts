@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
-import { createDropdownMenu, type DropdownMenuItemDef } from './dropdown-menu';
+import { createDropdownMenu } from './dropdown-menu';
 import { dropdownMenuSource, dropdownMenuSourceCom } from './dropdown-menu.source';
 import { createButton } from './button';
+import { montar } from './dropdown-menu.fixtures';
 import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
 
 const meta: Meta = {
@@ -28,23 +29,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = '180px';
-  wrapper.appendChild(child);
-  return wrapper;
-}
-
-function montar(rotulo: string, items: DropdownMenuItemDef[]): HTMLElement {
-  const trigger = createButton({ variant: 'outline', label: rotulo });
-  const menu = createDropdownMenu({ trigger, items });
-  queueMicrotask(() => trigger.click());
-  return wrap(menu);
-}
 
 async function fecharNoFim(): Promise<void> {
   const body = within(document.body);

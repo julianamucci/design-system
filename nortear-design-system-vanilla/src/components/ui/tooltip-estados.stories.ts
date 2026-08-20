@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
+import { balaoDe, limparPortal, wrap } from './tooltip.fixtures';
 import { tooltipSource, tooltipSourceCom } from './tooltip.source';
 import { createButton } from './button';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
@@ -12,13 +13,6 @@ import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSon
 
 /** Espera interna da factory antes de abrir no hover, em ms. */
 const ESPERA_DO_HOVER = 300;
-
-/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
-}
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function espera(ms: number): Promise<void> {
@@ -32,20 +26,6 @@ function mover(alvo: HTMLElement): { x: number; y: number } {
   const y = r.top + r.height / 2;
   document.dispatchEvent(new MouseEvent('mousemove', { clientX: x, clientY: y, bubbles: true }));
   return { x, y };
-}
-
-function limparPortal(): void {
-  document.querySelectorAll('[data-slot="tooltip-content"]').forEach((n) => n.remove());
-}
-
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = '180px';
-  wrapper.appendChild(child);
-  return wrapper;
 }
 
 const meta: Meta = {

@@ -3,6 +3,7 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createLabel } from './label';
 import { createInput } from './input';
 import { createCheckbox } from './checkbox';
+import { bloco } from './label.fixtures';
 import {
   labelSource,
   labelSourceCaixa,
@@ -31,13 +32,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-function bloco(): HTMLDivElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack nds-w-full nds-max-w-xs';
-  wrapper.dataset.spacing = 'xs';
-  return wrapper;
-}
 
 // ─── Com campo de texto ───────────────────────────────────────────────────────
 

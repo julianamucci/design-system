@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor, fn } from 'storybook/test';
 import { createPopover } from './popover';
+import { painel } from './popover.fixtures';
 import { popoverSource } from './popover.source';
 import { createButton } from './button';
 import { createPopoverDocs } from '@/components/docs/PopoverDocs';
@@ -112,10 +113,6 @@ function buildContent(args: PopoverArgs): HTMLElement {
 
   content.append(header, actions);
   return content;
-}
-
-function painel(): HTMLElement | null {
-  return document.querySelector<HTMLElement>('[data-slot="popover-content"]');
 }
 
 /** Abre só se estiver fechado — a play REEXECUTA no mesmo DOM. */

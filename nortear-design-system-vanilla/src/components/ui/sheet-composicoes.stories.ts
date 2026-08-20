@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createSheet } from './sheet';
+import { makeFooter } from './sheet.fixtures';
 import { sheetSource, sheetSourceCom } from './sheet.source';
 import { createButton } from './button';
 import { createInput } from './input';
@@ -45,22 +46,6 @@ function buildInputField(labelText: string, id: string, type: string, value: str
   return campo;
 }
 
-function makeFooter(cancelLabel: string, actionLabel: string): HTMLElement {
-  const cancel = createButton({ variant: 'outline', label: cancelLabel });
-  const action = createButton({ variant: 'default', label: actionLabel });
-  const footer = document.createElement('div');
-  footer.className = 'nds-cluster';
-  footer.dataset.spacing = 'sm';
-  footer.append(cancel, action);
-  // A factory não expõe SheetClose: quem fecha por fora é o overlay.
-  const fecharPorAcao = () => {
-    document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]')?.click();
-  };
-  cancel.addEventListener('click', fecharPorAcao);
-  action.addEventListener('click', fecharPorAcao);
-  return footer;
-}
-
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
 export const AdvancedFilters: Story = {
@@ -90,7 +75,8 @@ export const AdvancedFilters: Story = {
       title: 'Filtros avançados',
       description: 'Configure os filtros para refinar os resultados.',
       content: form,
-      footer: makeFooter('Cancelar', 'Aplicar filtros'),
+      // `true`: nesta composição os dois botões do rodapé fecham o painel.
+      footer: makeFooter('Cancelar', 'Aplicar filtros', true),
     });
     queueMicrotask(() => trigger.click());
     return sheet;
@@ -244,7 +230,7 @@ export const WithLongScrollContent: Story = {
       title: 'Termos de uso',
       description: 'Leia atentamente antes de aceitar.',
       content: longo,
-      footer: makeFooter('Cancelar', 'Aceitar termos'),
+      footer: makeFooter('Cancelar', 'Aceitar termos', true),
     });
     queueMicrotask(() => trigger.click());
     return sheet;

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
+import { embrulhar, gatilhosDe } from './menubar.fixtures';
 import { menubarSource, menubarSourceCom } from './menubar.source';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
@@ -46,25 +47,11 @@ const meta: Meta = {
   },
 };
 
-/** Só os gatilhos da barra: nesta stack o painel mora DENTRO da raiz, então
- *  procurar por papel na barra devolveria também os itens do menu aberto. */
-function gatilhosDe(barra: HTMLElement): HTMLElement[] {
-  return Array.from(barra.querySelectorAll<HTMLElement>('[data-slot="menubar-trigger"]'));
-}
-
 export default meta;
 type Story = StoryObj;
 
-function embrulhar(filho: HTMLElement, alturaMinima = '300px'): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.alignItems = 'flex-start';
-  wrapper.style.minHeight = alturaMinima;
-  wrapper.appendChild(filho);
-  return wrapper;
-}
+// A altura da moldura vai explícita em cada chamada de `embrulhar`: o padrão da
+// fixture (260px) serve à barra comum, e cada composição aqui pede a sua.
 
 async function esperarPainel(canvasElement: HTMLElement): Promise<HTMLElement> {
   return await waitFor(() => {
@@ -101,6 +88,7 @@ export const WithShortcuts: Story = {
         [{ label: 'Editar', items: ATALHOS.map((a) => ({ label: a.label, shortcut: a.shortcut })) }],
         { defaultOpen: 0 },
       ),
+      '300px',
     ),
   play: async ({ canvasElement, step }) => {
     const painel = await esperarPainel(canvasElement);
@@ -264,6 +252,7 @@ export const WithCheckboxItems: Story = {
         ],
         { defaultOpen: 0 },
       ),
+      '300px',
     ),
   play: async ({ canvasElement, step }) => {
     const painel = await esperarPainel(canvasElement);
@@ -342,6 +331,7 @@ export const WithRadioGroup: Story = {
         ],
         { defaultOpen: 0 },
       ),
+      '300px',
     ),
   play: async ({ canvasElement, step }) => {
     const painel = await esperarPainel(canvasElement);

@@ -2,10 +2,8 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
-import { createAlertDialog, createAlertDialogMedia } from './alert-dialog';
+import { buildDemo } from './alert-dialog.fixtures';
 import { alertDialogSource } from './alert-dialog.source';
-import { createAlertIcon } from './alert';
-import { createButton } from './button';
 import { createAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -109,47 +107,6 @@ const meta: Meta<AlertDialogArgs> = {
 export default meta;
 type Story = StoryObj<AlertDialogArgs>;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function buildDemo(args: AlertDialogArgs, onConfirm?: () => void, onCancel?: () => void): HTMLElement {
-  const trigger = createButton({
-    variant: args.tone === 'destructive' ? 'destructive' : 'default',
-    label: args.triggerLabel,
-  });
-  const cancelButton = createButton({
-    variant: 'outline',
-    label: args.cancelLabel,
-    onClick: onCancel,
-  });
-  // Variante do Button, não classe de fundo crua: bg-destructive e
-  // text-destructive-foreground saíram com o Tailwind e não têm CSS.
-  const actionButton = createButton({
-    variant: args.tone === 'destructive' ? 'destructive' : 'default',
-    label: args.actionLabel,
-    onClick: onConfirm,
-  });
-
-  // createAlertIcon já devolve o svg com aria-hidden; o CSS do media dimensiona
-  // qualquer svg filho em 24px.
-  let media: HTMLElement | undefined;
-  if (args.showMedia) {
-    media = createAlertDialogMedia();
-    media.appendChild(createAlertIcon('warning'));
-  }
-
-  return createAlertDialog({
-    trigger,
-    title: args.title,
-    description: args.description,
-    media,
-    cancelButton,
-    actionButton,
-    defaultOpen: args.defaultOpen,
-    class: args.class,
-    onOpenChange: args.onOpenChange,
-  });
-}
-
 // ─── Playground ───────────────────────────────────────────────────────────────
 
 export const Playground: Story = {
@@ -171,7 +128,9 @@ export const Playground: Story = {
       'visual.item1',
     ],
   },
-  render: (args) => buildDemo(args, fn(), fn()),
+  // Os args do painel de controls têm os mesmos nomes das opções do construtor:
+  // o spread é a passagem literal do que o leitor mexe na tela.
+  render: (args) => buildDemo({ ...args, onConfirm: fn(), onCancel: fn() }),
   play: async ({ args, canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = within(document.body);

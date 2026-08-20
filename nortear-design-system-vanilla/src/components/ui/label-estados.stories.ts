@@ -7,6 +7,7 @@ import {
 } from '@shared/testing/label-probe';
 import { createLabel } from './label';
 import { createInput } from './input';
+import { bloco } from './label.fixtures';
 import { labelSource, labelSourceBloco, labelSourceCom, labelSourceObrigatorio } from './label.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -30,13 +31,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-function bloco(): HTMLDivElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack nds-w-full nds-max-w-xs';
-  wrapper.dataset.spacing = 'xs';
-  return wrapper;
-}
 
 // ─── Default ──────────────────────────────────────────────────────────────────
 

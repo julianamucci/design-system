@@ -7,7 +7,7 @@ import {
   corDoToken,
   haloDeFoco,
 } from '@shared/testing/input-probe';
-import { createInput } from './input';
+import { campoRotulado } from './input.fixtures';
 import { inputSource, inputSourceCom } from './input.source';
 
 const meta: Meta = {
@@ -28,48 +28,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Andaime ──────────────────────────────────────────────────────────────────
-
-function campoRotulado(opts: {
-  id: string;
-  rotulo: string;
-  type?: string;
-  placeholder?: string;
-  disabled?: boolean;
-  invalido?: boolean;
-  mensagem?: string;
-}): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack nds-w-xs';
-  wrapper.dataset.spacing = 'xs';
-
-  const label = document.createElement('label');
-  label.htmlFor = opts.id;
-  label.className = 'nds-text-body nds-font-medium';
-  label.textContent = opts.rotulo;
-
-  const input = createInput({
-    type: opts.type ?? 'text',
-    placeholder: opts.placeholder,
-    disabled: opts.disabled,
-    id: opts.id,
-  });
-  if (opts.invalido) input.setAttribute('aria-invalid', 'true');
-
-  wrapper.append(label, input);
-
-  if (opts.mensagem) {
-    const msg = document.createElement('p');
-    msg.id = `${opts.id}-msg`;
-    msg.className = 'nds-text-body nds-text-destructive';
-    msg.textContent = opts.mensagem;
-    input.setAttribute('aria-describedby', msg.id);
-    wrapper.append(msg);
-  }
-
-  return wrapper;
-}
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 

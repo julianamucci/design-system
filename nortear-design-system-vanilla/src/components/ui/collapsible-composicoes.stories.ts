@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, waitFor, within, expect } from 'storybook/test';
 import { createCollapsible } from './collapsible';
+import { PAINEL_CLASSES, makeContent } from './collapsible.fixtures';
 import { collapsibleComGatilhoSource, collapsibleSource } from './collapsible.source';
 import { ChevronDown, Filter, Settings } from 'lucide';
 
@@ -19,10 +20,11 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
+// `makeContent` e `PAINEL_CLASSES` vêm de `collapsible.fixtures.ts` — as duas
+// stories de conteúdo rico abaixo montam o painel na mão e reusam a constante.
+
 type LucideIconNode = [string, Record<string, string>];
 
-const PAINEL_CLASSES =
-  'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
 // `nds-icon` (16px) e não `nds-icon-sm` (14px): é a medida que as outras quatro
 // stacks renderizam neste componente.
 const ICONE_CLASSES = 'nds-icon nds-shrink-0';
@@ -54,18 +56,6 @@ function makeTriggerWithIcon(nodes: LucideIconNode[], label: string): HTMLElemen
   text.textContent = label;
   span.appendChild(text);
   return span;
-}
-
-function makeContent(items: string[]): HTMLElement {
-  const div = document.createElement('div');
-  div.className = PAINEL_CLASSES;
-  div.dataset.spacing = 'sm';
-  for (const text of items) {
-    const p = document.createElement('p');
-    p.textContent = text;
-    div.appendChild(p);
-  }
-  return div;
 }
 
 // Idempotentes — ver a nota em collapsible.stories.ts.

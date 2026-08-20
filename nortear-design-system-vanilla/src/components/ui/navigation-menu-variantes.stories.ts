@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
-import { abrir, fechar } from './navigation-menu.fixtures';
+import { abrir, fechar, wrap } from './navigation-menu.fixtures';
 import { navigationMenuSource, navigationMenuSourceCom } from './navigation-menu.source';
 
 const meta: Meta = {
@@ -24,19 +24,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement, minHeight = 240): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.alignItems = 'flex-start';
-  wrapper.style.minHeight = `${minHeight}px`;
-  wrapper.appendChild(child);
-  return wrapper;
-}
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 

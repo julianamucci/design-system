@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { createInputOTP } from './input-otp';
+import { wrap } from './input-otp.fixtures';
 import { inputOtpSource } from './input-otp.source';
 import { createInputOTPDocs } from '@/components/docs/InputOTPDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -70,15 +71,6 @@ export default meta;
 type Story = StoryObj<InputOTPArgs>;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-min-h-30';
-  wrapper.dataset.justify = 'center';
-  wrapper.appendChild(child);
-  return wrapper;
-}
 
 const slotsDe = (raiz: HTMLElement): HTMLInputElement[] => [
   ...raiz.querySelectorAll<HTMLInputElement>('[data-slot="input-otp-slot"]'),

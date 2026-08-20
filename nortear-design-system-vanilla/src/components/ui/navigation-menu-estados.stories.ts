@@ -6,6 +6,7 @@ import {
   esperarPainel,
   esperarPainelSumir,
   painelAberto,
+  wrap,
 } from './navigation-menu.fixtures';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 import {
@@ -34,19 +35,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement, minHeight = 240): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.alignItems = 'flex-start';
-  wrapper.style.minHeight = `${minHeight}px`;
-  wrapper.appendChild(child);
-  return wrapper;
-}
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 

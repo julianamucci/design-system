@@ -1,19 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createTooltip } from './tooltip';
+import { balaoDe, limparPortal, wrap } from './tooltip.fixtures';
 import { tooltipSource, tooltipSourceCom } from './tooltip.source';
 import { createButton } from './button';
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
 // com atalho e texto longo. Todas nascem abertas: é o único jeito de a regressão
 // visual capturar o balão, que só existe no DOM enquanto está aberto.
-
-/** O balão vive num portal no `body` — o caminho até ele é o aria-describedby. */
-function balaoDe(gatilho: HTMLElement): HTMLElement | null {
-  const id = gatilho.getAttribute('aria-describedby');
-  const alvo = id ? document.getElementById(id) : null;
-  return alvo?.closest<HTMLElement>('[data-slot="tooltip-content"]') ?? null;
-}
 
 /** Luminância relativa da WCAG a partir de um `rgb(r, g, b)` computado. */
 function luminancia(cor: string): number {
@@ -28,20 +22,6 @@ function luminancia(cor: string): number {
 function contraste(a: string, b: string): number {
   const [claro, escuro] = [luminancia(a), luminancia(b)].sort((x, y) => y - x);
   return (claro + 0.05) / (escuro + 0.05);
-}
-
-function limparPortal(): void {
-  document.querySelectorAll('[data-slot="tooltip-content"]').forEach((n) => n.remove());
-}
-
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.style.contain = 'layout';
-  wrapper.className = 'nds-cluster nds-w-full';
-  wrapper.dataset.justify = 'center';
-  wrapper.style.minHeight = '180px';
-  wrapper.appendChild(child);
-  return wrapper;
 }
 
 const meta: Meta = {

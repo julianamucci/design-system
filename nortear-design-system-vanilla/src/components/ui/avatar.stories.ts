@@ -1,7 +1,8 @@
 import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
-import { createAvatar, type AvatarSize } from './avatar';
+import type { AvatarSize } from './avatar';
+import { buildAvatar } from './avatar.fixtures';
 import { avatarSource } from './avatar.source';
 import { createAvatarDocs } from '@/components/docs/AvatarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -56,22 +57,21 @@ type Story = StoryObj<AvatarArgs>;
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
-function buildAvatar(args: AvatarArgs): HTMLElement {
-  return createAvatar({
-    src: args.src || undefined,
-    alt: args.alt,
-    fallbackText: args.fallback,
-    size: args.size,
-    className: args.className,
-  });
-}
-
 /** Diâmetro de cada preset, em px, com a densidade padrão. */
 const DIAMETRO: Record<AvatarSize, number> = { sm: 24, md: 32, lg: 40, xl: 48, '2xl': 64 };
 
 export const Playground: Story = {
   parameters: { covers: ['accessibility.item4', 'visual.item1'] },
-  render: (args) => buildAvatar(args),
+  // `args.src || undefined` e não `args.src`: o control de texto vazio é como o
+  // leitor pede o fallback, e a fábrica só o mostra quando não recebe imagem.
+  render: (args) =>
+    buildAvatar({
+      src: args.src || undefined,
+      alt: args.alt,
+      fallback: args.fallback,
+      size: args.size,
+      className: args.className,
+    }),
   play: async ({ canvasElement, args, step }) => {
     const root = canvasElement.querySelector('[data-slot="avatar"]');
 

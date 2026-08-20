@@ -10,6 +10,7 @@ import {
   createAvatarGroupCount,
   createAvatarBadge,
 } from './avatar';
+import { IMG_MARIA } from './avatar.fixtures';
 import {
   avatarEmGrupoSourceCom,
   avatarGranularSourceCom,
@@ -17,7 +18,6 @@ import {
   avatarSourceCom,
 } from './avatar.source';
 
-const IMG_MARIA = 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
 const IMG_SECOND = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=160&h=160&fit=crop&crop=faces';
 const IMG_THIRD = 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=160&h=160&fit=crop&crop=faces';
 

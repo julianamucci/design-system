@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { createSkeleton } from './skeleton';
+import { regiaoDeCarregamento } from './skeleton.fixtures';
 import {
   skeletonSource,
   skeletonSourceCom,
@@ -30,15 +31,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-function regiaoDeCarregamento(label: string, className = ''): HTMLElement {
-  const wrap = document.createElement('div');
-  if (className) wrap.className = className;
-  wrap.setAttribute('role', 'status');
-  wrap.setAttribute('aria-busy', 'true');
-  wrap.setAttribute('aria-label', label);
-  return wrap;
-}
 
 function bloco(className: string, spacing: string): HTMLElement {
   const el = document.createElement('div');

@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { createAlertDialog, createAlertDialogMedia } from './alert-dialog';
+import { buildDemo } from './alert-dialog.fixtures';
 import { alertDialogSource, alertDialogSourceCom } from './alert-dialog.source';
 import { createAlertIcon } from './alert';
 import { createButton } from './button';
@@ -30,41 +31,12 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-type Options = {
-  triggerLabel: string;
-  triggerVariant: 'destructive' | 'default' | 'outline';
-  title: string;
-  description: string;
-  cancelLabel: string;
-  actionLabel: string;
-  tone: 'destructive' | 'default';
-};
-
-function buildDemo(opts: Options): HTMLElement {
-  const trigger = createButton({ variant: opts.triggerVariant, label: opts.triggerLabel });
-  const cancelButton = createButton({ variant: 'outline', label: opts.cancelLabel });
-  // Variante do Button, não classe de fundo crua: bg-destructive e
-  // text-destructive-foreground saíram com o Tailwind e não têm CSS.
-  const actionButton = createButton({
-    variant: opts.tone === 'destructive' ? 'destructive' : 'default',
-    label: opts.actionLabel,
-  });
-  const dialog = createAlertDialog({
-    trigger,
-    title: opts.title,
-    description: opts.description,
-    cancelButton,
-    actionButton,
-    // Estado inicial aberto, como o defaultOpen das outras stacks — é o que as
-    // capturas visuais precisam.
-    defaultOpen: true,
-  });
-  return dialog;
-}
-
 // ─── Stories ──────────────────────────────────────────────────────────────────
+//
+// O construtor da demonstração vem de `alert-dialog.fixtures.ts`. Todas as
+// composições deste arquivo passam `defaultOpen: true` — é o estado que as
+// capturas visuais precisam — e a variante do trigger explicitamente, porque
+// aqui ela é parte do assunto (a confirmação neutra usa `outline`).
 
 export const Destructive: Story = {
   parameters: {
@@ -89,6 +61,7 @@ export const Destructive: Story = {
       cancelLabel: 'Cancelar',
       actionLabel: 'Excluir',
       tone: 'destructive',
+      defaultOpen: true,
     }),
   play: async ({ canvasElement }) => {
     const dialog = await waitForPortal('alertdialog');
@@ -202,6 +175,7 @@ export const Neutral: Story = {
       cancelLabel: 'Cancelar',
       actionLabel: 'Sair',
       tone: 'default',
+      defaultOpen: true,
     }),
   play: async () => {
     const dialog = await waitForPortal('alertdialog');
@@ -238,6 +212,7 @@ export const LongDescription: Story = {
       cancelLabel: 'Cancelar',
       actionLabel: 'Excluir',
       tone: 'destructive',
+      defaultOpen: true,
     }),
   play: async () => {
     const dialog = await waitForPortal('alertdialog');
@@ -348,6 +323,7 @@ export const Responsive: Story = {
       cancelLabel: 'Cancelar',
       actionLabel: 'Excluir',
       tone: 'destructive',
+      defaultOpen: true,
     }),
   play: async () => {
     const dialog = await waitForPortal('alertdialog');

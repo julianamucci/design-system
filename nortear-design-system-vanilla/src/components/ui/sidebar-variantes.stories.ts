@@ -10,6 +10,7 @@ import {
   createSidebarGroup,
   type SidebarVariant,
 } from './sidebar';
+import { envolverEmNav } from './sidebar.fixtures';
 import { sidebarSource, sidebarSourceCom } from './sidebar.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -35,19 +36,6 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
-
-/**
- * A barra é a navegação principal da aplicação, e navegação precisa de marco
- * nomeado: sem o `<nav aria-label>` o leitor de tela não a lista como região, e
- * quem navega por marcos não tem como chegar até ela. A fábrica não impõe o
- * elemento — quem compõe é que decide o rótulo —, então é aqui que ele entra.
- */
-function envolverEmNav(sidebar: HTMLElement, rotulo = 'Navegação principal'): HTMLElement {
-  const nav = document.createElement('nav');
-  nav.setAttribute('aria-label', rotulo);
-  nav.appendChild(sidebar);
-  return nav;
-}
 
 function buildVariantDemo(variant: SidebarVariant): HTMLElement {
   const instance = createSidebar({ defaultOpen: true, variant });

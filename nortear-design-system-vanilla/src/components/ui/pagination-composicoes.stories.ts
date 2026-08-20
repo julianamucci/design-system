@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createPagination } from './pagination';
+import { wrap } from './pagination.fixtures';
 import {
   paginationComEstadoSourceCom,
   paginationSource,
@@ -29,17 +30,6 @@ const meta: Meta = {
 
 export default meta;
 type Story = StoryObj;
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function wrap(child: HTMLElement): HTMLElement {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'nds-cluster nds-w-full nds-p-2 nds-min-h-24';
-  wrapper.dataset.justify = 'center';
-  wrapper.dataset.align = 'center';
-  wrapper.appendChild(child);
-  return wrapper;
-}
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 

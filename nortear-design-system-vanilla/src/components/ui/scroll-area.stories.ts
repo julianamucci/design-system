@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea, type ScrollAreaSize } from './scroll-area';
+import { buildList } from './scroll-area.fixtures';
 import { scrollAreaSource } from './scroll-area.source';
 import { createScrollAreaDocs } from '@/components/docs/ScrollAreaDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -61,21 +62,6 @@ const meta: Meta<ScrollAreaArgs> = {
 
 export default meta;
 type Story = StoryObj<ScrollAreaArgs>;
-
-// ─── Helper ───────────────────────────────────────────────────────────────────
-
-function buildList(count: number): HTMLElement {
-  const ul = document.createElement('ul');
-  ul.className = 'nds-stack nds-list-none nds-p-2 nds-m-0';
-  ul.dataset.spacing = 'sm';
-  for (let i = 1; i <= count; i++) {
-    const li = document.createElement('li');
-    li.className = 'nds-text-body nds-border-b-soft nds-pb-2';
-    li.textContent = `Item ${i}`;
-    ul.appendChild(li);
-  }
-  return ul;
-}
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 

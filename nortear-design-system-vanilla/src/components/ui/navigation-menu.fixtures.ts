@@ -73,3 +73,29 @@ export async function fechar(gatilho: HTMLElement, escopo?: ParentNode): Promise
   if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
   await esperarPainelSumir(escopo);
 }
+
+// ─── Moldura das stories ──────────────────────────────────────────────────────
+//
+// Havia três cópias de `wrap` — composições, estados e variantes — com o mesmo
+// corpo e padrões diferentes de altura. O corpo desce para cá; a altura fica
+// onde sempre pertenceu, no call site, porque quem sabe de quanto o painel
+// precisa é a story e não o helper.
+
+/**
+ * Moldura da story, com espaço reservado para o painel aberto.
+ *
+ * `minHeight` é da story: um painel de quatro destinos em duas colunas ocupa
+ * bem mais que uma barra sem hierarquia nenhuma. Sem a reserva o canvas
+ * encolhe e o painel sai da foto da regressão visual.
+ */
+export function wrap(child: HTMLElement, minHeight = 240): HTMLElement {
+  const wrapper = document.createElement('div');
+  // `contain` é mecânica de layout, não valor de design.
+  wrapper.style.contain = 'layout';
+  wrapper.className = 'nds-cluster nds-w-full nds-p-2';
+  wrapper.dataset.justify = 'center';
+  wrapper.style.alignItems = 'flex-start';
+  wrapper.style.minHeight = `${minHeight}px`;
+  wrapper.appendChild(child);
+  return wrapper;
+}

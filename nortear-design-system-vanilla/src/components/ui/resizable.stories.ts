@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createResizablePanel } from './resizable';
+import { fracaoDoPrimeiro, frame, painelComApoio } from './resizable.fixtures';
 import { resizableSourceCom } from './resizable.source';
 import { createResizableDocs } from '@/components/docs/ResizableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -69,46 +70,10 @@ const meta: Meta<ResizableArgs> = {
 export default meta;
 type Story = StoryObj<ResizableArgs>;
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function panelContent(titulo: string, apoio: string): HTMLElement {
-  const el = document.createElement('div');
-  el.className = 'nds-stack nds-p-4';
-  el.dataset.spacing = 'xs';
-  const h = document.createElement('p');
-  h.className = 'nds-text-body nds-font-semibold';
-  h.textContent = titulo;
-  const p = document.createElement('p');
-  p.className = 'nds-text-caption nds-text-muted-foreground';
-  p.textContent = apoio;
-  el.append(h, p);
-  return el;
-}
-
-function frame(child: HTMLElement, altura: string): HTMLElement {
-  const wrap = document.createElement('div');
-  wrap.style.contain = 'layout';
-  // ALTURA DEFINIDA, e não só `min-height`: um grupo vertical distribui a
-  // ALTURA livre entre os painéis, e não existe altura livre dentro de um
-  // contêiner de altura automática — os painéis colapsavam para zero. Com
-  // `min-height` no invólucro, o `height: 100%` do grupo resolvia para `auto`.
-  // A suíte só viu isso quando a asserção passou a medir a geometria.
-  wrap.style.height = altura;
-  wrap.className = 'nds-w-full nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background';
-  wrap.appendChild(child);
-  return wrap;
-}
-
-/** Geometria real: `flex-basis: 0` faz `style.width` não decidir nada. */
-function fracaoDoPrimeiro(canvasElement: HTMLElement, horizontal: boolean): number {
-  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const medidas = paineis.map((p) =>
-    horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height,
-  );
-  return medidas[0] / medidas.reduce((a, b) => a + b, 0);
-}
-
 // ─── Playground ───────────────────────────────────────────────────────────────
+//
+// Andaimes em `resizable.fixtures`: aqui o eixo segue o control `direction`, e
+// por isso `fracaoDoPrimeiro` e `frame` recebem os dois valores explicitamente.
 
 export const Playground: Story = {
   parameters: {
@@ -129,12 +94,12 @@ export const Playground: Story = {
           defaultSize: args.defaultSize,
           minSize: args.minSize,
           maxSize: args.maxSize,
-          content: panelContent('Sidebar', 'Navegação do projeto'),
+          content: painelComApoio('Sidebar', 'Navegação do projeto'),
         },
         {
           defaultSize: 100 - args.defaultSize,
           minSize: args.minSize,
-          content: panelContent('Conteúdo principal', 'Arraste o divisor ou use as setas com ele focado.'),
+          content: painelComApoio('Conteúdo principal', 'Arraste o divisor ou use as setas com ele focado.'),
         },
       ],
     });

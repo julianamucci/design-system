@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, waitFor, within, expect } from 'storybook/test';
 import { createCollapsible } from './collapsible';
+import { makeContent } from './collapsible.fixtures';
 import {
   collapsibleControladoSource,
   collapsibleSource,
@@ -21,21 +22,8 @@ export default meta;
 type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const PAINEL_CLASSES =
-  'nds-stack nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-mt-2';
-
-function makeContent(items: string[]): HTMLElement {
-  const div = document.createElement('div');
-  div.className = PAINEL_CLASSES;
-  div.dataset.spacing = 'sm';
-  for (const text of items) {
-    const p = document.createElement('p');
-    p.textContent = text;
-    div.appendChild(p);
-  }
-  return div;
-}
+//
+// `makeContent` vem de `collapsible.fixtures.ts`.
 
 // Idempotentes — ver a nota em collapsible.stories.ts.
 const abrir = async (t: HTMLElement) => {

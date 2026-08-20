@@ -1,13 +1,18 @@
 import { expect, userEvent, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { createButton } from './button';
+import { createInput } from './input';
+import { createLabel } from './label';
 
 // Helpers compartilhados pelas quatro stories de Dialog.
 //
 // Arquivo à parte porque num `*.stories.ts` TODO export nomeado vira uma story:
 // um helper exportado apareceria na sidebar como se fosse um exemplo.
 //
-// Tudo aqui procura pelo CONTRATO de markup (`data-slot`) — o mesmo contrato
-// que as outras quatro stacks copiam desta.
+// Duas seções. As CONSULTAS E PASSOS da play, aqui em cima, procuram sempre
+// pelo CONTRATO de markup (`data-slot`) — o mesmo contrato que as outras quatro
+// stacks copiam desta. As FIXTURES DE MONTAGEM, no fim do arquivo, são o que as
+// stories constroem.
 
 /** O painel vive no `<body>`, fora do `canvasElement` — o portal é o ponto. */
 export const painel = (): HTMLElement | null =>
@@ -124,4 +129,55 @@ export async function conferirFocusTrap(p: HTMLElement): Promise<void> {
   await waitFor(async () => {
     await expect(p.contains(document.activeElement)).toBe(true);
   });
+}
+
+// ─── Fixtures de montagem ─────────────────────────────────────────────────────
+//
+// O que as stories MONTAM, e não o que elas conferem. As três estavam copiadas
+// em `dialog-variantes` e `dialog-composicoes`; `buildField` e `abrirNaMontagem`
+// eram idênticas, e `makeFooter` divergia só na ação destrutiva — que agora
+// entra por parâmetro, com o padrão neutro que as composições usam.
+
+/**
+ * Um campo do formulário: rótulo e controle, ligados por `for`/`id`.
+ *
+ * Fábricas do sistema em vez de `<input>`/`<textarea>` crus com `style`: o cru
+ * trazia padding inline, que sai do tema, da densidade e da escala.
+ */
+export function buildField(
+  id: string,
+  labelText: string,
+  type: string,
+  value: string,
+): HTMLElement {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'nds-stack';
+  wrapper.dataset.spacing = 'xs';
+  wrapper.append(createLabel({ text: labelText, htmlFor: id }), createInput({ id, type, value }));
+  return wrapper;
+}
+
+/**
+ * As ações do rodapé saem como LISTA, não embrulhadas num `<div>`: quem faz o
+ * arranjo (empilhar ao contrário no estreito, alinhar à direita no largo) é o
+ * `.nds-dialog-footer`, e para isso os botões precisam ser filhos diretos dele.
+ *
+ * `destructive` fica em `false` por padrão porque só a composição da ação
+ * irreversível troca a ênfase da primária; todo o resto é neutro.
+ */
+export function makeFooter(
+  cancelLabel: string,
+  actionLabel: string,
+  destructive = false,
+): HTMLElement[] {
+  return [
+    createButton({ variant: 'outline', label: cancelLabel }),
+    createButton({ variant: destructive ? 'destructive' : 'default', label: actionLabel }),
+  ];
+}
+
+/** Abre pelo gatilho depois da montagem — a factory não tem `defaultOpen`. */
+export function abrirNaMontagem(dialog: HTMLElement): HTMLElement {
+  queueMicrotask(() => dialog.querySelector<HTMLElement>('button')?.click());
+  return dialog;
 }

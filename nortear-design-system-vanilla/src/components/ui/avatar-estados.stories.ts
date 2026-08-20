@@ -2,10 +2,8 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createAvatar, createAvatarFallback, createAvatarRoot } from './avatar';
+import { IMG_MARIA } from './avatar.fixtures';
 import { avatarGranularSourceCom, avatarSource, avatarSourceCom } from './avatar.source';
-
-const IMG_MARIA =
-  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
 
 // src garantidamente inválido para forçar o estado failed
 const IMG_BROKEN = 'https://example.invalid/broken-avatar.jpg';
