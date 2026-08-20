@@ -2550,6 +2550,84 @@ function inlineStyleDecls(content) {
  * Severidade por dano: docs page e primitivo são **high** (o leitor copia um,
  * o produto usa o outro); andaime de story é **medium**.
  */
+/**
+ * Fixture de story copiada entre arquivos do mesmo componente.
+ *
+ * Um componente tem quatro ou cinco arquivos de story, e cada um costuma
+ * precisar do mesmo andaime — montar o slide, embrulhar o campo, medir o painel.
+ * A saída fácil é copiar a função, e o custo só aparece muito depois: quem
+ * conserta uma cópia acredita ter resolvido, e as outras continuam erradas.
+ *
+ * Foi exatamente assim que o slide do carousel no Vanilla ficou branco em quatro
+ * arquivos depois de eu corrigir o quinto — a dona viu na tela o que nenhuma
+ * regra media. A varredura que investigou aquilo achou 182 cópias no repositório.
+ *
+ * DUAS SEVERIDADES, porque são dois problemas:
+ *  · cópias com corpos DIFERENTES são o caso grave — mesmo nome, comportamento
+ *    divergente, e nenhum sinal de que divergiram;
+ *  · cópias idênticas são dívida mecânica, e entram como `low`.
+ *
+ * O que NÃO conta: função de uma linha (`const x = () => …` não é andaime),
+ * e nome que aparece uma vez só por arquivo do slug.
+ */
+function auditFixtureDuplicada(slug) {
+  const violations = [];
+  const normalizar = (s) => s.replace(/\/\/[^\n]*/g, '').replace(/\s+/g, ' ').trim();
+
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    const stories = ui.filter((f) => /\.stories\.[jt]sx?$/.test(f));
+    if (stories.length < 2) continue;
+
+    const porNome = {};
+    for (const file of stories) {
+      const src = readFile(file);
+      if (!src) continue;
+      const re = /^(?:export\s+)?function\s+(\w+)\s*\(/gm;
+      let m;
+      while ((m = re.exec(src))) {
+        // Pula a lista de parâmetros ANTES de procurar o corpo. Sem isto, o
+        // primeiro `{` de `function X({ label }: Props)` é a desestruturação, e
+        // a comparação passa a ser entre ASSINATURAS — foi o que fez a varredura
+        // que motivou esta regra reportar divergência onde os corpos eram iguais.
+        let p = src.indexOf('(', m.index), prof = 0;
+        for (; p < src.length; p++) {
+          if (src[p] === '(') prof++;
+          else if (src[p] === ')') { prof--; if (prof === 0) { p++; break; } }
+        }
+        const abre = src.indexOf('{', p);
+        if (abre < 0) continue;
+        let chaves = 0, i = abre;
+        for (; i < src.length; i++) {
+          if (src[i] === '{') chaves++;
+          else if (src[i] === '}') { chaves--; if (chaves === 0) { i++; break; } }
+        }
+        const corpo = normalizar(src.slice(abre, i));
+        // Corpo de uma linha não é andaime — é atalho local, e extrair custaria
+        // mais leitura do que economiza.
+        if (corpo.length < 80) continue;
+        (porNome[m[1]] ??= []).push({ file: basename(file), corpo });
+      }
+    }
+
+    for (const [nome, usos] of Object.entries(porNome)) {
+      if (usos.length < 2) continue;
+      const divergiu = new Set(usos.map((u) => u.corpo)).size > 1;
+      violations.push({
+        category: 'quality',
+        severity: divergiu ? 'high' : 'low',
+        slug, stack,
+        file: relative(ROOT, stories[0]),
+        rule: 'fixture_duplicada_entre_stories',
+        message: divergiu
+          ? `\`${nome}\` existe em ${usos.length} arquivos de story com CORPOS DIFERENTES (${usos.map((u) => u.file).join(', ')}) — mesmo nome, comportamento divergente; corrigir um não corrige os outros. Extraia para \`${slug}.fixtures.*\` com a variação em parâmetro`
+          : `\`${nome}\` está copiada em ${usos.length} arquivos de story (${usos.map((u) => u.file).join(', ')}) — extraia para \`${slug}.fixtures.*\``,
+      });
+    }
+  }
+  return violations;
+}
+
 function auditInlineStyle(slug) {
   const violations = [];
   for (const stack of STACKS) {
@@ -3587,6 +3665,7 @@ function runAudit(slug, category) {
     ...auditI18nKeys(slug),
     ...auditComponentVars(slug),
     ...auditInlineStyle(slug),
+    ...auditFixtureDuplicada(slug),
     ...auditGuardrails(slug),
     ...auditSidebarVocab(slug),
     ...auditPromessaDeCustomizacao(slug),
