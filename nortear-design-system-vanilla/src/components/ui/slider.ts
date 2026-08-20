@@ -1,20 +1,46 @@
 // ─── Slider — Vanilla factory standalone ────────────────────────────────────
 // Visual: classes .nds-slider-* (standalone).
 // Native <input type="range"> sobreposto à track; CSS controla aparência.
+//
+// ─── Uma alça ou duas ────────────────────────────────────────────────────────
+//
+// O que separa os dois modos é a FORMA do valor: um número é uma alça, um par é
+// um intervalo. Mesma leitura que as outras quatro stacks fazem, e o mesmo
+// motivo — não existe intervalo sem os dois extremos, então o par já é a
+// declaração completa e não sobra prop nenhuma para inventar.
+//
+// Cada alça é um `<input type="range">` de verdade, sobreposto ao trilho
+// inteiro. Duas caixas sobrepostas disputam o ponteiro, e quem ganha é sempre a
+// última pintada — o que deixaria a alça de baixo inalcançável no meio do
+// trilho. A disputa se resolve por proximidade: enquanto o ponteiro passeia, a
+// alça mais perto sobe. Para o teclado não há disputa: cada input é uma parada
+// de tabulação com o próprio `role="slider"` e o próprio nome.
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 import { cn } from '@/lib/utils';
 
-export type SliderOptions = {
+type SliderBaseOptions = {
   min?: number;
   max?: number;
   step?: number;
-  value?: number;
   disabled?: boolean;
   orientation?: 'horizontal' | 'vertical';
-  /** Nome acessível da alça. É `role="slider"` sem nome que o leitor de tela não sabe ler. */
-  ariaLabel?: string;
+  /**
+   * Nome acessível da alça. É `role="slider"` sem nome que o leitor de tela não
+   * sabe ler.
+   *
+   * No intervalo são DUAS alças e dois nomes: passe um par
+   * (`['Preço mínimo', 'Preço máximo']`). Um nome só é repetido nas duas, o que
+   * deixa quem ouve sem saber qual extremo está mexendo.
+   */
+  ariaLabel?: string | string[];
+  class?: string;
+};
+
+export type SliderSingleOptions = SliderBaseOptions & {
+  /** Valor inicial da alça única. */
+  value?: number;
   /** Durante o arrasto e a cada tecla — um evento por movimento. */
   onValueChange?: (value: number) => void;
   /**
@@ -25,11 +51,23 @@ export type SliderOptions = {
    * para analytics e submit; usar o contínuo enche o GA4 de um evento por pixel.
    */
   onValueCommitted?: (value: number) => void;
-  class?: string;
 };
+
+export type SliderRangeOptions = SliderBaseOptions & {
+  /** Extremos do intervalo, em ordem. O par é o que pede as duas alças. */
+  value: number[];
+  /** Durante o arrasto e a cada tecla — um evento por movimento. */
+  onValueChange?: (value: number[]) => void;
+  /** Ao soltar o arrasto ou largar a tecla — um evento por interação. */
+  onValueCommitted?: (value: number[]) => void;
+};
+
+export type SliderOptions = SliderSingleOptions | SliderRangeOptions;
 
 // ─── createSlider ─────────────────────────────────────────────────────────────
 
+export function createSlider(options?: SliderSingleOptions): HTMLElement;
+export function createSlider(options: SliderRangeOptions): HTMLElement;
 export function createSlider(options: SliderOptions = {}): HTMLElement {
   const {
     min = 0,
@@ -38,10 +76,12 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
     disabled = false,
     orientation = 'horizontal',
     ariaLabel,
-    onValueChange,
-    onValueCommitted,
   } = options;
-  let value = options.value ?? min;
+
+  const ehIntervalo = Array.isArray(options.value);
+  const valores: number[] = ehIntervalo
+    ? [...(options.value as number[])]
+    : [(options.value as number | undefined) ?? min];
   const vertical = orientation === 'vertical';
 
   const root = document.createElement('div');
@@ -56,26 +96,18 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
   const range = document.createElement('div');
   range.className = 'nds-slider-range';
   range.dataset.slot = 'slider-range';
+  track.appendChild(range);
 
-  const thumb = document.createElement('span');
-  thumb.className = 'nds-slider-thumb';
-  thumb.dataset.slot = 'slider-thumb';
+  const nomes = Array.isArray(ariaLabel) ? ariaLabel : ariaLabel ? [ariaLabel] : [];
+  const thumbs: HTMLElement[] = [];
+  const inputs: HTMLInputElement[] = [];
 
-  // Real range input — handles all interaction natively (sobreposto à track via CSS).
-  const nativeInput = document.createElement('input');
-  nativeInput.type = 'range';
-  nativeInput.min = String(min);
-  nativeInput.max = String(max);
-  nativeInput.step = String(step);
-  nativeInput.value = String(value);
-  nativeInput.disabled = disabled;
-  if (ariaLabel) nativeInput.setAttribute('aria-label', ariaLabel);
-  // `<input type="range">` é horizontal por definição na árvore de
-  // acessibilidade; em pé, a orientação precisa ser dita.
-  if (vertical) nativeInput.setAttribute('aria-orientation', 'vertical');
+  function pct(v: number): number {
+    return max === min ? 0 : ((v - min) / (max - min)) * 100;
+  }
 
   /**
-   * Posiciona preenchimento e alça a partir do valor.
+   * Posiciona preenchimento e alças a partir dos valores.
    *
    * O `- 0.75rem` é METADE DA ALÇA — ela mede 24px (o alvo de toque da WCAG
    * 2.5.8), e sem descontar a metade o centro dela não cairia sobre a posição
@@ -84,34 +116,110 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
    * enquanto era 16, o desconto era 0.5rem. Se a dimensão da alça mudar, este
    * número muda com ela.
    */
-  function updateVisuals(v: number): void {
-    const pct = max === min ? 0 : ((v - min) / (max - min)) * 100;
+  function updateVisuals(): void {
+    // Com uma alça o preenchimento nasce no mínimo; com duas, no primeiro
+    // extremo — é o trecho ENTRE as alças que fica pintado.
+    const inicio = ehIntervalo ? pct(valores[0]) : 0;
+    const fim = ehIntervalo ? pct(valores[1]) : pct(valores[0]);
+
     if (vertical) {
       // Em pé o preenchimento cresce de baixo para cima, e a alça anda no
       // mesmo eixo — `left`/`width` posicionariam no eixo errado e deixariam a
       // alça parada no topo com o valor mudando.
-      range.style.height = `${pct}%`;
-      range.style.bottom = '0';
-      thumb.style.bottom = `calc(${pct}% - 0.75rem)`;
+      range.style.bottom = `${inicio}%`;
+      range.style.height = `${fim - inicio}%`;
     } else {
-      range.style.width = `${pct}%`;
-      thumb.style.left = `calc(${pct}% - 0.75rem)`;
+      range.style.left = `${inicio}%`;
+      range.style.width = `${fim - inicio}%`;
     }
+
+    valores.forEach((v, i) => {
+      const thumb = thumbs[i];
+      if (!thumb) return;
+      if (vertical) thumb.style.bottom = `calc(${pct(v)}% - 0.75rem)`;
+      else thumb.style.left = `calc(${pct(v)}% - 0.75rem)`;
+    });
   }
 
-  updateVisuals(value);
+  function emitirMudanca(): void {
+    if (ehIntervalo) (options as SliderRangeOptions).onValueChange?.([...valores]);
+    else (options as SliderSingleOptions).onValueChange?.(valores[0]);
+  }
 
-  nativeInput.addEventListener('input', () => {
-    value = Number(nativeInput.value);
-    updateVisuals(value);
-    onValueChange?.(value);
+  function emitirCommit(): void {
+    if (ehIntervalo) (options as SliderRangeOptions).onValueCommitted?.([...valores]);
+    else (options as SliderSingleOptions).onValueCommitted?.(valores[0]);
+  }
+
+  valores.forEach((valorInicial, indice) => {
+    const thumb = document.createElement('span');
+    thumb.className = 'nds-slider-thumb';
+    thumb.dataset.slot = 'slider-thumb';
+    thumbs.push(thumb);
+    track.appendChild(thumb);
+
+    // Real range input — handles all interaction natively (sobreposto à track via CSS).
+    const nativeInput = document.createElement('input');
+    nativeInput.type = 'range';
+    nativeInput.min = String(min);
+    nativeInput.max = String(max);
+    nativeInput.step = String(step);
+    nativeInput.value = String(valorInicial);
+    nativeInput.disabled = disabled;
+    const nome = nomes[indice] ?? nomes[0];
+    if (nome) nativeInput.setAttribute('aria-label', nome);
+    // `<input type="range">` é horizontal por definição na árvore de
+    // acessibilidade; em pé, a orientação precisa ser dita.
+    if (vertical) nativeInput.setAttribute('aria-orientation', 'vertical');
+    inputs.push(nativeInput);
+    track.appendChild(nativeInput);
+
+    nativeInput.addEventListener('input', () => {
+      const bruto = Number(nativeInput.value);
+      // Os extremos não se cruzam: o mínimo para no máximo e vice-versa. Sem
+      // isto o arrasto passa por cima do irmão e o intervalo sai invertido —
+      // e ninguém que lê `[80, 20]` sabe o que fazer com ele.
+      const preso = ehIntervalo
+        ? indice === 0
+          ? Math.min(bruto, valores[1])
+          : Math.max(bruto, valores[0])
+        : bruto;
+      if (preso !== bruto) nativeInput.value = String(preso);
+      valores[indice] = preso;
+      updateVisuals();
+      emitirMudanca();
+    });
+
+    nativeInput.addEventListener('change', () => {
+      emitirCommit();
+    });
   });
 
-  nativeInput.addEventListener('change', () => {
-    onValueCommitted?.(Number(nativeInput.value));
-  });
+  if (ehIntervalo) {
+    /**
+     * Quem recebe o ponteiro é a alça mais próxima dele.
+     *
+     * Os dois inputs cobrem o trilho inteiro e um está por cima do outro: sem
+     * esta escolha, a alça de baixo só seria arrastável quando a de cima
+     * estivesse longe. A decisão acontece no MOVIMENTO, antes do aperto — no
+     * `pointerdown` já é tarde, porque o evento foi despachado para o alvo que
+     * estava por cima naquele instante.
+     */
+    const escolherAlca = (e: PointerEvent): void => {
+      const caixa = track.getBoundingClientRect();
+      const razao = vertical
+        ? caixa.height === 0 ? 0 : (caixa.bottom - e.clientY) / caixa.height
+        : caixa.width === 0 ? 0 : (e.clientX - caixa.left) / caixa.width;
+      const alvo = min + razao * (max - min);
+      const perto = Math.abs(alvo - valores[0]) <= Math.abs(alvo - valores[1]) ? 0 : 1;
+      inputs[perto].style.zIndex = '2';
+      inputs[perto === 0 ? 1 : 0].style.zIndex = '1';
+    };
+    track.addEventListener('pointermove', escolherAlca);
+  }
 
-  track.append(range, thumb, nativeInput);
+  updateVisuals();
+
   root.appendChild(track);
 
   return root;

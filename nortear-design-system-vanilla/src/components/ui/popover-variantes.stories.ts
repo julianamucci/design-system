@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
-import { createPopover } from './popover';
+import {
+  createPopover,
+  createPopoverDescription,
+  createPopoverHeader,
+  createPopoverTitle,
+} from './popover';
 import { createButton } from './button';
 import { createInput } from './input';
 import { createLabel } from './label';
@@ -88,21 +93,15 @@ export const WithTitle: Story = {
   render: () => {
     const trigger = createButton({ variant: 'outline', label: 'Configuracoes de exibição' });
 
-    const content = document.createElement('div');
-    content.className = 'nds-stack';
-    content.dataset.spacing = 'xs';
-
-    const title = document.createElement('h4');
-    title.className = 'nds-popover-title';
-    title.dataset.slot = 'popover-title';
-    title.textContent = 'Configuracoes de exibição';
-
-    const desc = document.createElement('p');
-    desc.className = 'nds-popover-description';
-    desc.dataset.slot = 'popover-description';
-    desc.textContent = 'Ajuste a aparência do conteúdo da página.';
-
-    content.append(title, desc);
+    // Cabeçalho, título e descrição saem das sub-fábricas. Montar a `<div>` e
+    // escrever `.nds-popover-title` à mão era o contorno de quando elas não
+    // existiam — e nesse caminho o `data-slot` documentado dependia de quem
+    // compunha lembrar de escrevê-lo.
+    const content = createPopoverHeader();
+    content.append(
+      createPopoverTitle({ text: 'Configuracoes de exibição' }),
+      createPopoverDescription({ text: 'Ajuste a aparência do conteúdo da página.' }),
+    );
 
     const el = createPopover({ trigger, content });
     queueMicrotask(() => trigger.click());
@@ -126,6 +125,15 @@ export const WithTitle: Story = {
       const desc = painel()!.querySelector('[data-slot="popover-description"]')!;
       await expect(desc).toHaveClass(/nds-popover-description/);
       await expect(desc.textContent).toMatch(/Ajuste a aparência/);
+    });
+
+    await step('O cabeçalho é uma peça, não uma div com classe escrita à mão', async () => {
+      const cabecalho = painel()!.querySelector('[data-slot="popover-header"]')!;
+      await expect(cabecalho).toHaveClass(/nds-popover-header/);
+      // Título e descrição moram DENTRO dele: é o cabeçalho que dá o respiro
+      // entre os dois, e a folha compartilhada só o entrega nesse aninhamento.
+      await expect(cabecalho.querySelector('[data-slot="popover-title"]')).not.toBeNull();
+      await expect(cabecalho.querySelector('[data-slot="popover-description"]')).not.toBeNull();
     });
   },
 };

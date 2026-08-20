@@ -57,14 +57,12 @@ function priorityLabel(raw: string): string {
 
 /**
  * Constrói um Slider rotulado:
- * - <label> textual (id) associado via aria-labelledby ao input range nativo interno
+ * - <label> textual (id) associado via aria-labelledby à alça
  * - <span aria-live="polite"> que mostra o valor textualmente
- * - aria-label OBRIGATÓRIO no nativeInput (também aplicado, em adição ao labelledby)
+ * - `ariaLabel` vai direto na opção da factory, que o escreve na alça
  *
- * NOTA Nortear: o factory custom é wrapper de <input type="range"> nativo —
- * portanto ARIA (role="slider", aria-valuenow/min/max, navegação Arrow/Home/End/PgUp/PgDn)
- * é provido pelo browser. Não há suporte nativo a range (2 thumbs) nem orientação vertical
- * acessível — divergências documentadas em notes/DocsProps/composições.
+ * A alça é um <input type="range"> de verdade, então role="slider",
+ * aria-valuenow/min/max e a navegação Arrow/Home/End/PgUp/PgDn vêm do navegador.
  */
 function buildLabeledSlider(opts: {
   idPrefix: string;
@@ -77,6 +75,7 @@ function buildLabeledSlider(opts: {
   disabled?: boolean;
   unit?: string;
   onValueChange?: (value: number) => void;
+  onValueCommitted?: (value: number) => void;
 }): HTMLElement {
   const {
     idPrefix,
@@ -89,6 +88,7 @@ function buildLabeledSlider(opts: {
     disabled = false,
     unit = '',
     onValueChange,
+    onValueCommitted,
   } = opts;
 
   const wrap = document.createElement('div');
@@ -120,16 +120,18 @@ function buildLabeledSlider(opts: {
     step,
     value,
     disabled,
+    ariaLabel,
     onValueChange: (v) => {
       valueText.textContent = `${v}${unit}`;
       onValueChange?.(v);
     },
+    onValueCommitted,
   });
 
-  // Aplica ARIA explicitamente — aria-label obrigatório
+  // O nome acessível já veio pela opção `ariaLabel`; aqui só se amarra o rótulo
+  // visível e o texto de valor à alça.
   const input = slider.querySelector('input[type="range"]') as HTMLInputElement | null;
   if (input) {
-    input.setAttribute('aria-label', ariaLabel);
     input.setAttribute('aria-labelledby', `${idPrefix}-label`);
     input.setAttribute('aria-describedby', `${idPrefix}-value`);
     input.id = `${idPrefix}-input`;
@@ -252,21 +254,18 @@ export function createSliderDocs(): HTMLElement {
             wrap.className = 'nds-stack';
             wrap.dataset.spacing = 'xl';
 
-            // Factory não expõe onValueCommitted — debounce manual para emitir
-            // apenas o valor commitado (fim do arrasto/teclado), sem spam.
-            const debounceIds: Record<string, ReturnType<typeof setTimeout>> = {};
+            // `onValueCommitted` dispara uma vez por interação — ao soltar o
+            // arrasto ou largar a tecla. É ele que alimenta a analítica; o
+            // contínuo enviaria um evento por pixel.
             const trackCommitted = (fieldName: string, min: number, max: number) => (v: number) => {
-              if (debounceIds[fieldName]) clearTimeout(debounceIds[fieldName]);
-              debounceIds[fieldName] = setTimeout(() => {
-                track('slider_change', {
-                  component: 'slider',
-                  field_name: fieldName,
-                  value: v,
-                  min,
-                  max,
-                  location: 'docs_demo',
-                });
-              }, 300);
+              track('slider_change', {
+                component: 'slider',
+                field_name: fieldName,
+                value: v,
+                min,
+                max,
+                location: 'docs_demo',
+              });
             };
 
             // Volume — single
@@ -279,7 +278,7 @@ export function createSliderDocs(): HTMLElement {
               step: 1,
               value: 50,
               unit: '%',
-              onValueChange: trackCommitted('volume', 0, 100),
+              onValueCommitted: trackCommitted('volume', 0, 100),
             });
             wrap.appendChild(volume);
 
@@ -293,7 +292,7 @@ export function createSliderDocs(): HTMLElement {
               step: 5,
               value: 75,
               unit: '%',
-              onValueChange: trackCommitted('brightness', 0, 100),
+              onValueCommitted: trackCommitted('brightness', 0, 100),
             });
             wrap.appendChild(brightness);
 
@@ -372,13 +371,15 @@ export function createSliderDocs(): HTMLElement {
             unit: '%',
           });
         const buildDontNoValue = () => {
-          // Slider sem label nem texto de valor adjacente — usuário não sabe onde está.
-          // O anti-padrão é visual: o <input type="range"> interno ainda recebe
-          // aria-label (sem ele o axe acusa `label` na página inteira).
-          const slider = createSlider({ min: 0, max: 100, value: 60 });
-          const input = slider.querySelector('input[type="range"]');
-          input?.setAttribute('aria-label', t('demonstration.labels.volume'));
-          return slider;
+          // Slider sem rótulo visível nem texto de valor ao lado — quem olha não
+          // sabe onde está. O anti-padrão é visual: a alça continua nomeada por
+          // `ariaLabel` (sem nome, o axe acusa a página inteira).
+          return createSlider({
+            min: 0,
+            max: 100,
+            value: 60,
+            ariaLabel: t('demonstration.labels.volume'),
+          });
         };
         const buildDoAriaLabel = () =>
           buildLabeledSlider({
@@ -428,20 +429,33 @@ export function createSliderDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          description: 'Importação do factory custom (Nortear):',
-          code: `import { createSlider, type SliderOptions } from '@/components/ui/slider';`,
-          secondaryDescription: 'Uso básico:',
+          description: 'Importação da fábrica:',
+          code: `import {
+  createSlider,
+  type SliderOptions,
+  type SliderSingleOptions,
+  type SliderRangeOptions,
+} from '@/components/ui/slider';`,
+          secondaryDescription: 'Uso básico — uma alça:',
           secondaryCode: `const slider = createSlider({
   min: 0,
   max: 100,
   step: 1,
   value: 50,
-  onValueChange: (value) => console.log('value:', value),
+  ariaLabel: 'Volume',
+  onValueChange: (value) => console.log('arrastando:', value),
+  onValueCommitted: (value) => console.log('soltou em:', value),
 });
 
-// aria-label OBRIGATÓRIO no <input type="range"> interno
-const input = slider.querySelector('input[type="range"]') as HTMLInputElement;
-input.setAttribute('aria-label', 'Volume');`,
+// Intervalo: o valor é um PAR, e os callbacks recebem um par de volta
+const intervalo = createSlider({
+  min: 0,
+  max: 1000,
+  step: 10,
+  value: [100, 400],
+  ariaLabel: ['Preço mínimo', 'Preço máximo'],
+  onValueCommitted: ([minimo, maximo]) => console.log(minimo, maximo),
+});`,
         });
 
       case 'variantes': {
@@ -454,7 +468,7 @@ input.setAttribute('aria-label', 'Volume');`,
             {
               name: stripHtml(t('variants.items.single')),
               description: stripHtml(t('variants.styles.single')),
-              code: `createSlider({ min: 0, max: 100, value: 50 });`,
+              code: `createSlider({ min: 0, max: 100, value: 50, ariaLabel: 'Volume' });`,
               previewFactory: () =>
                 buildLabeledSlider({
                   idPrefix: 'v-single',
@@ -470,102 +484,79 @@ input.setAttribute('aria-label', 'Volume');`,
               name: stripHtml(t('variants.items.range')),
               description:
                 stripHtml(t('variants.styles.range')) +
-                ' Não suportado pelo factory custom — composto manualmente com dois sliders adjacentes.',
-              code: `// Factory não suporta 2 thumbs — composição com dois createSlider() adjacentes\nconst minSlider = createSlider({ min: 0, max: 1000, value: 100 });\nconst maxSlider = createSlider({ min: 0, max: 1000, value: 400 });`,
+                ' O que pede as duas alças é a forma do valor: um par vira intervalo, e os callbacks passam a devolver um par.',
+              code: `const intervalo = createSlider({
+  min: 0, max: 1000, step: 10,
+  value: [100, 400],
+  ariaLabel: ['Preço mínimo', 'Preço máximo'],
+  onValueChange: ([minimo, maximo]) => { … },
+});`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack';
-  wrap.dataset.spacing = 'xs';
-  wrap.style.width = '18rem';
+                wrap.dataset.spacing = 'xs';
+                wrap.style.width = '18rem';
 
                 const row = document.createElement('div');
                 row.className = 'nds-cluster';
-  row.dataset.justify = 'between';
-                const label = document.createElement('label');
+                row.dataset.justify = 'between';
+                const label = document.createElement('span');
                 label.id = 'v-range-label';
                 label.className = 'nds-text-body nds-font-medium';
                 label.textContent = t('demonstration.labels.priceRange');
                 const valueText = document.createElement('span');
                 valueText.id = 'v-range-value';
                 valueText.className = 'nds-text-body nds-text-muted-foreground';
-  valueText.style.fontVariantNumeric = 'tabular-nums';
+                valueText.style.fontVariantNumeric = 'tabular-nums';
                 valueText.setAttribute('aria-live', 'polite');
-                let minV = 100;
-                let maxV = 400;
-                const fmt = () => {
-                  valueText.textContent = `R$ ${minV} — R$ ${maxV}`;
+                const fmt = (par: number[]) => {
+                  valueText.textContent = `R$ ${par[0]} — R$ ${par[1]}`;
                 };
-                fmt();
+                fmt([100, 400]);
                 row.append(label, valueText);
 
-                const minSlider = createSlider({
+                // Uma chamada, duas alças: os extremos não se cruzam e cada um
+                // carrega o próprio nome acessível.
+                const intervalo = createSlider({
                   min: 0,
                   max: 1000,
                   step: 10,
-                  value: minV,
-                  onValueChange: (v) => {
-                    if (v > maxV) {
-                      minV = maxV;
-                      const i = minSlider.querySelector('input[type="range"]') as HTMLInputElement;
-                      if (i) i.value = String(maxV);
-                    } else {
-                      minV = v;
-                    }
-                    fmt();
-                  },
+                  value: [100, 400],
+                  ariaLabel: [
+                    `${t('demonstration.labels.priceRange')} — mínimo`,
+                    `${t('demonstration.labels.priceRange')} — máximo`,
+                  ],
+                  onValueChange: fmt,
                 });
-                const minInput = minSlider.querySelector('input[type="range"]') as HTMLInputElement;
-                if (minInput) {
-                  minInput.setAttribute('aria-label', `${t('demonstration.labels.priceRange')} — min`);
-                  minInput.setAttribute('aria-labelledby', 'v-range-label');
-                }
 
-                const maxSlider = createSlider({
-                  min: 0,
-                  max: 1000,
-                  step: 10,
-                  value: maxV,
-                  onValueChange: (v) => {
-                    if (v < minV) {
-                      maxV = minV;
-                      const i = maxSlider.querySelector('input[type="range"]') as HTMLInputElement;
-                      if (i) i.value = String(minV);
-                    } else {
-                      maxV = v;
-                    }
-                    fmt();
-                  },
-                });
-                const maxInput = maxSlider.querySelector('input[type="range"]') as HTMLInputElement;
-                if (maxInput) {
-                  maxInput.setAttribute('aria-label', `${t('demonstration.labels.priceRange')} — max`);
-                  maxInput.setAttribute('aria-labelledby', 'v-range-label');
-                }
-
-                wrap.append(row, minSlider, maxSlider);
+                wrap.append(row, intervalo);
                 return wrap;
               },
             },
             {
               name: stripHtml(t('variants.items.vertical')),
-              description:
-                stripHtml(t('variants.styles.vertical')) +
-                // tags escapadas: a descrição é renderizada como HTML — um
-                // <input type="range"> literal virava campo real sem nome (axe: label)
-                ' Não suportado de forma acessível pelo &lt;input type="range"&gt; nativo — divergência documentada.',
-              code: `// Não suportado — <input type="range"> nativo não tem orientação vertical acessível.\n// Workaround visual via CSS rotate, mas ARIA não acompanha.`,
+              description: stripHtml(t('variants.styles.vertical')),
+              code: `createSlider({
+  orientation: 'vertical',
+  min: 0, max: 100, value: 60,
+  ariaLabel: 'Volume',
+});`,
               previewFactory: () => {
                 const wrap = document.createElement('div');
-                wrap.className = 'nds-stack';
-                wrap.dataset.spacing = 'xs';
-                wrap.style.alignItems = 'center';
-                const note = document.createElement('p');
-                note.className = 'nds-text-caption nds-text-muted-foreground nds-italic';
-                note.style.maxWidth = '12rem';
-                note.style.textAlign = 'center';
-                note.textContent =
-                  'Variante "vertical" não suportada de forma acessível no Nortear — use a versão horizontal.';
-                wrap.appendChild(note);
+                wrap.className = 'nds-cluster';
+                wrap.dataset.justify = 'center';
+                // Em pé a alça anda no eixo vertical e o campo nativo declara
+                // `aria-orientation="vertical"`, que é o que o leitor de tela
+                // precisa para anunciar a direção certa das setas.
+                wrap.appendChild(
+                  createSlider({
+                    orientation: 'vertical',
+                    min: 0,
+                    max: 100,
+                    value: 60,
+                    ariaLabel: t('demonstration.labels.volume'),
+                  }),
+                );
                 return wrap;
               },
             },
@@ -604,11 +595,11 @@ input.setAttribute('aria-label', 'Volume');`,
               name: stripHtml(t('variants.compositions.volume.name')),
               description: stripHtml(t('variants.compositions.volume.description')),
               useWhen: stripHtml(t('variants.compositions.volume.use')),
-              code: `const slider = createSlider({ min: 0, max: 100, value: 50,
+              code: `const slider = createSlider({
+  min: 0, max: 100, value: 50,
+  ariaLabel: 'Volume',
   onValueChange: (v) => { valueText.textContent = v + '%'; },
-});
-const input = slider.querySelector('input[type="range"]');
-input.setAttribute('aria-label', 'Volume');`,
+});`,
               previewFactory: () =>
                 buildLabeledSlider({
                   idPrefix: 'comp-volume',
@@ -624,14 +615,13 @@ input.setAttribute('aria-label', 'Volume');`,
               name: stripHtml(t('variants.compositions.form.name')),
               description: stripHtml(t('variants.compositions.form.description')),
               useWhen: stripHtml(t('variants.compositions.form.use')),
-              code: `// Factory nao expoe onValueCommitted — debounce manual de 300ms
-let debounceId = null;
-const slider = createSlider({ min: 0, max: 100, value: 60,
-  onValueChange: (v) => {
-    if (debounceId) clearTimeout(debounceId);
-    debounceId = setTimeout(() => {
-      track('slider_change', { component: 'slider', field_name: 'volume', value: v });
-    }, 300);
+              code: `// O contínuo pinta a tela; o commitado alimenta a analítica.
+const slider = createSlider({
+  min: 0, max: 100, value: 60,
+  ariaLabel: 'Volume',
+  onValueChange: (v) => { valueText.textContent = v + '%'; },
+  onValueCommitted: (v) => {
+    track('slider_change', { component: 'slider', field_name: 'volume', value: v });
   },
 });`,
               previewFactory: () => {
@@ -641,13 +631,12 @@ const slider = createSlider({ min: 0, max: 100, value: 60,
                 form.style.width = '18rem';
                 form.setAttribute('aria-label', 'Configurações de áudio');
 
-                let debounceId: ReturnType<typeof setTimeout> | null = null;
                 let lastCommitted = 60;
 
                 const status = document.createElement('p');
                 status.className = 'nds-text-caption nds-text-muted-foreground';
                 status.setAttribute('aria-live', 'polite');
-                status.textContent = 'Último commit: 60%';
+                status.textContent = 'Último valor confirmado: 60%';
 
                 const slider = buildLabeledSlider({
                   idPrefix: 'comp-form-volume',
@@ -657,12 +646,9 @@ const slider = createSlider({ min: 0, max: 100, value: 60,
                   max: 100,
                   value: lastCommitted,
                   unit: '%',
-                  onValueChange: (v) => {
-                    if (debounceId) clearTimeout(debounceId);
-                    debounceId = setTimeout(() => {
-                      lastCommitted = v;
-                      status.textContent = `Último commit: ${v}%`;
-                    }, 300);
+                  onValueCommitted: (v) => {
+                    lastCommitted = v;
+                    status.textContent = `Último valor confirmado: ${v}%`;
                   },
                 });
 
@@ -708,16 +694,34 @@ const slider = createSlider({ min: 0, max: 100, value: 60,
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createSlider(options) — Nortear
-export type SliderOptions = {
+        const interfaceCode = `// createSlider(options)
+// A FORMA do valor escolhe o modo: número = uma alça, par = intervalo.
+type SliderBaseOptions = {
   min?: number;          // default 0
   max?: number;          // default 100
   step?: number;         // default 1
-  value?: number;        // default min — note: number, não number[]
   disabled?: boolean;    // default false
-  onValueChange?: (value: number) => void;
+  orientation?: 'horizontal' | 'vertical';   // default 'horizontal'
+  ariaLabel?: string | string[];             // par de nomes no intervalo
   class?: string;
-};`;
+};
+
+export type SliderSingleOptions = SliderBaseOptions & {
+  value?: number;                            // default min
+  onValueChange?: (value: number) => void;
+  onValueCommitted?: (value: number) => void;
+};
+
+export type SliderRangeOptions = SliderBaseOptions & {
+  value: number[];                           // os dois extremos, em ordem
+  onValueChange?: (value: number[]) => void;
+  onValueCommitted?: (value: number[]) => void;
+};
+
+export type SliderOptions = SliderSingleOptions | SliderRangeOptions;
+
+export function createSlider(options?: SliderSingleOptions): HTMLElement;
+export function createSlider(options: SliderRangeOptions): HTMLElement;`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -731,23 +735,26 @@ export type SliderOptions = {
           title: t('props.title'),
           tables: [
             {
-              title: 'createSlider(options) — Nortear',
+              title: 'createSlider(options)',
               cols: propsCols,
               items: [
-                { name: 'value',         type: 'number',                       defaultValue: 'min',     required: 'Não', description: 'Valor inicial. NOTA Nortear: é `number` (não `number[]` como nas libs upstream) — sem suporte a range.' },
-                { name: 'onValueChange', type: '(value: number) => void',      defaultValue: '—',       required: 'Não', description: 'Callback disparado durante o arrasto e em cada tecla. NOTA Nortear: não existe `onValueCommitted` separado — debounce ou ouça `change` no input nativo.' },
-                { name: 'min',           type: 'number',                       defaultValue: '0',       required: 'Não', description: toPlainText(t('props.table.min.description')) },
-                { name: 'max',           type: 'number',                       defaultValue: '100',     required: 'Não', description: toPlainText(t('props.table.max.description')) },
-                { name: 'step',          type: 'number',                       defaultValue: '1',       required: 'Não', description: toPlainText(t('props.table.step.description')) },
-                { name: 'disabled',      type: 'boolean',                      defaultValue: 'false',   required: 'Não', description: toPlainText(t('props.table.disabled.description')) },
-                { name: 'class',         type: 'string',                       defaultValue: '—',      required: 'Não', description: 'Classes .nds-* adicionais no `<div>` raiz.' },
+                { name: 'value',            type: 'number | number[]',                          defaultValue: 'min',          required: 'Não', description: 'Valor inicial. Um número cria uma alça; um par (`[min, max]`) cria o intervalo, e é a única declaração que o modo exige.' },
+                { name: 'onValueChange',    type: '(value: number | number[]) => void',         defaultValue: '—',            required: 'Não', description: 'Avisado durante o arrasto e a cada tecla — um evento por movimento. Recebe um par quando o valor é um par.' },
+                { name: 'onValueCommitted', type: '(value: number | number[]) => void',         defaultValue: '—',            required: 'Não', description: 'Avisado ao soltar o arrasto ou largar a tecla — um evento por interação. É o callback para analítica e envio de formulário.' },
+                { name: 'orientation',      type: `'horizontal' | 'vertical'`,                  defaultValue: `'horizontal'`, required: 'Não', description: 'Direção do trilho. Em pé, a alça declara `aria-orientation="vertical"` para o leitor de tela.' },
+                { name: 'ariaLabel',        type: 'string | string[]',                          defaultValue: '—',            required: 'Não', description: 'Nome acessível da alça. No intervalo, passe um par de nomes: um nome só repetido nas duas deixa quem ouve sem saber qual extremo está mexendo.' },
+                { name: 'min',              type: 'number',                                     defaultValue: '0',            required: 'Não', description: toPlainText(t('props.table.min.description')) },
+                { name: 'max',              type: 'number',                                     defaultValue: '100',          required: 'Não', description: toPlainText(t('props.table.max.description')) },
+                { name: 'step',             type: 'number',                                     defaultValue: '1',            required: 'Não', description: toPlainText(t('props.table.step.description')) },
+                { name: 'disabled',         type: 'boolean',                                    defaultValue: 'false',        required: 'Não', description: toPlainText(t('props.table.disabled.description')) },
+                { name: 'class',            type: 'string',                                     defaultValue: '—',            required: 'Não', description: 'Classes .nds-* adicionais no `<div>` raiz.' },
               ],
             },
           ],
           interfaceCode,
-          extensibilityTitle: 'Divergências da factory custom (Nortear)',
+          extensibilityTitle: 'O que ainda diverge',
           extensibilityNotes:
-            'O factory custom é um wrapper de &lt;input type="range"&gt; nativo e diverge das libs upstream nos seguintes pontos: (1) Sem suporte a range (2 thumbs) — `value` é `number`, não `number[]`. Componha 2 sliders adjacentes para selecionar min/max. (2) Sem prop `orientation` — &lt;input type="range"&gt; nativo não suporta orientação vertical acessível; use horizontal. (3) Sem prop `defaultValue` — use `value` (não-controlado por padrão). (4) Sem `onValueCommitted` — `onValueChange` dispara em cada tecla/passo do arrasto; debounce manualmente para evitar spam de analytics. (5) aria-label NÃO é prop — aplique manualmente no &lt;input type="range"&gt; interno após criação. Em todos os outros pontos (role="slider", aria-valuenow/min/max, navegação Arrow/Home/End/PgUp/PgDn) o comportamento é equivalente — provido pelo browser via input nativo.',
+            'O componente não tem modo controlado: <code>value</code> é o valor INICIAL e a partir daí quem manda é a interação. Não existe, portanto, uma opção <code>defaultValue</code> separada — ela seria o mesmo que <code>value</code>. Para refletir um valor vindo de fora, escreva no campo nativo interno. O resto do contrato vem pronto do navegador: <code>role="slider"</code>, <code>aria-valuenow</code>/<code>aria-valuemin</code>/<code>aria-valuemax</code> e a navegação por Arrow, Home, End, PageUp e PageDown.',
         });
       }
 
@@ -822,7 +829,13 @@ export type SliderOptions = {
             {
               title: '',
               content: DOMPurify.sanitize(
-                '<strong>Divergências Nortear</strong> — o factory é wrapper de <code>&lt;input type="range"&gt;</code> nativo. Não suporta <strong>range (2 thumbs)</strong> nem <strong>orientação vertical</strong> acessível; <code>value</code> é <code>number</code> (não array). Não há <code>onValueCommitted</code> — use debounce sobre <code>onValueChange</code> para analytics. <code>aria-label</code> precisa ser aplicado manualmente no <code>&lt;input&gt;</code> interno.',
+                '<strong>Uma alça ou duas</strong> — o que separa os dois modos é a forma do valor: <code>value: 50</code> desenha uma alça, <code>value: [100, 400]</code> desenha o intervalo, e aí <code>onValueChange</code> e <code>onValueCommitted</code> passam a devolver um par. Cada alça é um <code>&lt;input type="range"&gt;</code> de verdade — parada de tabulação própria, nome próprio por <code>ariaLabel</code>, e os extremos não se cruzam. Para o ponteiro, a alça mais perto sobe: duas caixas sobrepostas disputariam o clique, e sem isso a de baixo ficaria inalcançável no meio do trilho.',
+              ),
+            },
+            {
+              title: '',
+              content: DOMPurify.sanitize(
+                '<strong>Dois callbacks, dois propósitos</strong> — <code>onValueChange</code> dispara a cada movimento e serve para pintar a tela; <code>onValueCommitted</code> dispara uma vez por interação, quando o arrasto é solto ou a tecla é largada, e é o que alimenta analítica e envio. Trocar um pelo outro enche o GA4 de um evento por pixel.',
               ),
             },
           ],
@@ -837,7 +850,7 @@ export type SliderOptions = {
             payload: t('analytics.table.payload'),
           },
           items: [
-            { event: 'slider_change',        trigger: stripHtml(t('analytics.table.slider_change.trigger')) + ' (Nortear: debounce manual sobre onValueChange)', payload: stripHtml(t('analytics.table.slider_change.payload')) },
+            { event: 'slider_change',        trigger: stripHtml(t('analytics.table.slider_change.trigger')) + ' (via onValueCommitted — um evento por interação)', payload: stripHtml(t('analytics.table.slider_change.payload')) },
             { event: 'docs_page_view',      trigger: 'Carregamento da docs page',  payload: '{ component_name, locale, page_title }' },
             { event: 'docs_section_viewed', trigger: 'Seção visível no viewport',  payload: '{ section_id, component_name, locale }' },
           ],

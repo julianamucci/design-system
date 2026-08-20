@@ -295,6 +295,22 @@ export function createDropdownMenuDocs(): HTMLElement {
           title: t('import.title'),
           code: `import { createDropdownMenu } from '@/components/ui/dropdown-menu';
 import { createButton } from '@/components/ui/button';`,
+          secondaryDescription: 'Posição, modalidade e abertura por código:',
+          secondaryCode: `const menu = createDropdownMenu({
+  trigger: createButton({ variant: 'outline', label: 'Abrir menu' }),
+  items: [{ type: 'item', label: 'Editar', value: 'edit' }],
+  side: 'right',        // borda do gatilho por onde o menu sai
+  align: 'end',         // encosto no eixo perpendicular
+  sideOffset: 4,        // vão em px
+  modal: true,          // false deixa o resto da página utilizável
+  defaultOpen: false,
+  onOpenChange: (aberto) => console.log(aberto),
+});
+
+// O elemento devolvido abre e fecha por código.
+menu.open();
+menu.toggle();
+menu.setOpen(false);`,
         });
 
       case 'variantes': {
@@ -557,21 +573,42 @@ const menu = createDropdownMenu({
       case 'propriedades': {
         const interfaceCode = `// createDropdownMenu(options)
 export type DropdownMenuItemDef = {
-  type?: 'item' | 'separator' | 'label';
+  type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio';
   value?: string;
   label?: string;
   disabled?: boolean;
+  variant?: 'default' | 'destructive';
+  shortcut?: string;
+  checked?: boolean;          // só em checkbox e radio
+  indeterminate?: boolean;    // só em checkbox
+  group?: string;             // só em radio
   onClick?: () => void;
+  onCheckedChange?: (checked: boolean) => void;
+  onIndeterminateChange?: (indeterminate: boolean) => void;
 };
 
 export type DropdownMenuOptions = {
   trigger: HTMLElement;
   items: DropdownMenuItemDef[];
+  side?: 'top' | 'bottom' | 'left' | 'right';   // default 'bottom'
+  align?: 'start' | 'center' | 'end';           // default 'start'
+  sideOffset?: number;                          // default 4
+  modal?: boolean;                              // default true
+  open?: boolean;                               // presente = modo controlado
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   class?: string;
 };
 
-export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement;`;
+// O elemento devolvido abre e fecha por código.
+export type DropdownMenuElement = DestroyableElement & {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  setOpen: (open: boolean) => void;
+};
+
+export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuElement;`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -589,14 +626,15 @@ export function createDropdownMenu(options: DropdownMenuOptions): HTMLElement;`;
               cols: propsCols,
               items: [
                 { name: 'trigger',      type: 'HTMLElement',                 defaultValue: '—',     required: 'Sim', description: 'Elemento que abre o menu ao receber click.' },
-                { name: 'items',        type: 'DropdownMenuItemDef[]',       defaultValue: '—',     required: 'Sim', description: 'Lista de itens, separadores e labels do menu.' },
+                { name: 'items',        type: 'DropdownMenuItemDef[]',       defaultValue: '—',     required: 'Sim', description: 'Lista de itens, separadores, rótulos, alternadores e escolha única.' },
                 { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
                 { name: 'class',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao painel.' },
-                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.open.description')) + ' (controle externo via .click() no trigger no Nortear).' },
-                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.defaultOpen.description')) + ' NOTA: factory Nortear não tem prop nativa.' },
-                { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.modal.description')) },
-                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.side.description')) + ' NOTA: factory Nortear fixa bottom-start.' },
-                { name: 'align',        type: "'start' | 'center' | 'end'",  defaultValue: "'start'", required: 'Não', description: toPlainText(t('props.table.align.description')) },
+                { name: 'open',         type: 'boolean',                     defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.open.description')) + ' Definida, o menu passa ao modo controlado: clique, Escape, Tab e clique fora só anunciam a intenção por onOpenChange, e quem move o menu é setOpen().' },
+                { name: 'defaultOpen',  type: 'boolean',                     defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.defaultOpen.description')) },
+                { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.modal.description')) + ' Com true, o clique de fora dispensa o menu sem chegar ao que está embaixo e a página não rola; com false, o clique também acerta o alvo.' },
+                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.side.description')) + ' Sai no markup como data-side.' },
+                { name: 'align',        type: "'start' | 'center' | 'end'",  defaultValue: "'start'", required: 'Não', description: toPlainText(t('props.table.align.description')) + ' Sai no markup como data-align.' },
+                { name: 'sideOffset',   type: 'number',                      defaultValue: '4',     required: 'Não', description: 'Vão entre gatilho e menu, em px.' },
               ],
             },
           ],

@@ -178,58 +178,33 @@ export const PriceRange: Story = {
     valueText.className = 'nds-text-body nds-text-muted-foreground nds-tabular-nums';
     valueText.setAttribute('aria-live', 'polite');
 
-    let minV = 100;
-    let maxV = 400;
-    const fmt = () => {
+    const fmt = ([minV, maxV]: number[]) => {
       valueText.textContent = `R$ ${minV} — R$ ${maxV}`;
     };
-    fmt();
+    fmt([100, 400]);
     row.append(label, valueText);
 
-    const minSlider = createSlider({
+    // O par de valores é o que pede as duas alças. O clamping mútuo é da
+    // fábrica: cada extremo para no outro, sem nada escrito aqui.
+    const faixa = createSlider({
       min: 0,
       max: 1000,
       step: 10,
-      value: minV,
-      ariaLabel: 'Faixa de preço — mínimo',
-      onValueChange: (v) => {
-        if (v > maxV) {
-          minV = maxV;
-          const i = minSlider.querySelector('input[type="range"]') as HTMLInputElement;
-          if (i) i.value = String(maxV);
-        } else {
-          minV = v;
-        }
-        fmt();
-      },
+      value: [100, 400],
+      ariaLabel: ['Faixa de preço — mínimo', 'Faixa de preço — máximo'],
+      onValueChange: fmt,
     });
 
-    const maxSlider = createSlider({
-      min: 0,
-      max: 1000,
-      step: 10,
-      value: maxV,
-      ariaLabel: 'Faixa de preço — máximo',
-      onValueChange: (v) => {
-        if (v < minV) {
-          maxV = minV;
-          const i = maxSlider.querySelector('input[type="range"]') as HTMLInputElement;
-          if (i) i.value = String(minV);
-        } else {
-          maxV = v;
-        }
-        fmt();
-      },
-    });
-
-    wrap.append(row, minSlider, maxSlider);
+    wrap.append(row, faixa);
     return wrap;
   },
   parameters: {
     docs: {
       description: {
         story:
-          'Faixa de preço com clamping mútuo: o mínimo nunca passa do máximo e vice-versa. Cada alça recebe o seu nome acessível — "mínimo" e "máximo".',
+          'Faixa de preço numa instância só: um par de valores pede as duas alças, e o limite ' +
+          'mútuo é da própria fábrica — o mínimo nunca passa do máximo e vice-versa. Cada alça ' +
+          'recebe o seu nome acessível: "mínimo" e "máximo".',
       },
     },
   },

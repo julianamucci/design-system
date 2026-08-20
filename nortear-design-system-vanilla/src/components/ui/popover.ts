@@ -6,18 +6,100 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import {
+  positionFloating,
+  type FloatingAlign,
+  type FloatingSide,
+} from '@/lib/floating';
 
-export type PopoverSide = 'top' | 'bottom' | 'left' | 'right';
-export type PopoverAlign = 'start' | 'center' | 'end';
+export type PopoverSide = FloatingSide;
+export type PopoverAlign = FloatingAlign;
 
 export type PopoverOptions = {
   trigger: HTMLElement;
   content: HTMLElement | string;
   side?: PopoverSide;
   align?: PopoverAlign;
+  /** Vão entre gatilho e painel, em px. Mesmo nome e mesmo padrão das outras stacks. */
+  sideOffset?: number;
+  /**
+   * Estado CONTROLADO. Definido, quem manda no painel é quem chama: o clique no
+   * gatilho, o Escape e o clique fora passam a apenas ANUNCIAR a intenção por
+   * `onOpenChange`, e o painel só se move quando `setOpen()` for chamado.
+   *
+   * Sem esta opção o popover se governa (não-controlado), que é o modo em que
+   * ele nasceu e continua sendo o padrão.
+   */
+  open?: boolean;
+  /** Estado inicial no modo não-controlado. */
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   class?: string;
 };
+
+/**
+ * O que a fábrica devolve.
+ *
+ * Os três verbos em INGLÊS, como no Sidebar desta stack — que é a forma que o
+ * repositório passou a adotar. (`createHoverCard` ainda expõe `abrir`/`fechar`;
+ * renomear ali é mudança de API pública e tem dono.)
+ */
+export type PopoverElement = DestroyableElement & {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  /** Move o painel para o estado pedido. É por aqui que o modo controlado anda. */
+  setOpen: (open: boolean) => void;
+};
+
+// ─── Sub-fábricas de conteúdo ────────────────────────────────────────────────
+//
+// Cabeçalho, título e descrição existem no CSS compartilhado
+// (`.nds-popover-header`, `.nds-popover-title`, `.nds-popover-description`) e
+// nas outras quatro stacks como componentes. Aqui não existiam: quem compunha
+// montava a `<div>` e escrevia a classe à mão — e o `data-slot` documentado não
+// saía em lugar nenhum.
+
+export type PopoverPartOptions = {
+  text?: string;
+  class?: string;
+};
+
+function criarParte(
+  tag: keyof HTMLElementTagNameMap,
+  slot: string,
+  classe: string,
+  options: PopoverPartOptions,
+): HTMLElement {
+  const el = document.createElement(tag);
+  el.dataset.slot = slot;
+  el.className = cn(classe, options.class);
+  if (options.text) el.textContent = options.text;
+  return el;
+}
+
+export function createPopoverHeader(options: PopoverPartOptions = {}): HTMLElement {
+  return criarParte('div', 'popover-header', 'nds-popover-header', options);
+}
+
+/**
+ * Título do painel.
+ *
+ * Sai como `<h4>` por padrão: o painel é um `role="dialog"`, e é este elemento
+ * que o `aria-labelledby` do painel encontra sozinho — a fábrica procura um
+ * cabeçalho antes de cair no nome do gatilho. `level` troca a profundidade para
+ * quem precisa encaixar na hierarquia da página.
+ */
+export type PopoverTitleOptions = PopoverPartOptions & { level?: 1 | 2 | 3 | 4 | 5 | 6 };
+
+export function createPopoverTitle(options: PopoverTitleOptions = {}): HTMLElement {
+  const { level = 4 } = options;
+  return criarParte(`h${level}` as keyof HTMLElementTagNameMap, 'popover-title', 'nds-popover-title', options);
+}
+
+export function createPopoverDescription(options: PopoverPartOptions = {}): HTMLElement {
+  return criarParte('p', 'popover-description', 'nds-popover-description', options);
+}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -43,61 +125,19 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
     .filter((el) => !el.closest('[hidden]'));
 }
 
-function positionFloating(
-  anchor: HTMLElement,
-  panel: HTMLElement,
-  side: PopoverSide,
-  align: PopoverAlign
-): void {
-  const rect = anchor.getBoundingClientRect();
-  const scrollX = window.scrollX;
-  const scrollY = window.scrollY;
-  const gap = 8;
-
-  // Temporarily make visible to measure
-  panel.style.visibility = 'hidden';
-  panel.style.display = 'block';
-  const pw = panel.offsetWidth;
-  const ph = panel.offsetHeight;
-  panel.style.visibility = '';
-
-  let top = 0;
-  let left = 0;
-
-  if (side === 'bottom') {
-    top = rect.bottom + scrollY + gap;
-  } else if (side === 'top') {
-    top = rect.top + scrollY - ph - gap;
-  } else if (side === 'left') {
-    left = rect.left + scrollX - pw - gap;
-  } else if (side === 'right') {
-    left = rect.right + scrollX + gap;
-  }
-
-  if (side === 'bottom' || side === 'top') {
-    if (align === 'start') left = rect.left + scrollX;
-    else if (align === 'end') left = rect.right + scrollX - pw;
-    else left = rect.left + scrollX + rect.width / 2 - pw / 2;
-  } else {
-    if (align === 'start') top = rect.top + scrollY;
-    else if (align === 'end') top = rect.bottom + scrollY - ph;
-    else top = rect.top + scrollY + rect.height / 2 - ph / 2;
-  }
-
-  panel.style.top = `${top}px`;
-  panel.style.left = `${left}px`;
-}
-
 // ─── createPopover ────────────────────────────────────────────────────────────
 
-export function createPopover(options: PopoverOptions): DestroyableElement {
+export function createPopover(options: PopoverOptions): PopoverElement {
   const {
     trigger,
     content,
     side = 'bottom',
     align = 'center',
+    sideOffset = 8,
     onOpenChange,
   } = options;
+
+  const controlado = options.open !== undefined;
 
   const id = ++_popoverCounter;
   const contentId = `popover-content-${id}`;
@@ -125,11 +165,17 @@ export function createPopover(options: PopoverOptions): DestroyableElement {
   // references a non-existent element, which fails axe aria-valid-attr-value).
 
   function open(): void {
+    if (isOpen) return;
+
     panelEl = document.createElement('div');
     panelEl.id = contentId;
     panelEl.className = cn('nds-popover-content', options.class);
     panelEl.dataset.slot = 'popover-content';
     panelEl.dataset.state = 'open';
+    // O lado e o encosto escolhidos ficam legíveis no markup, como nas outras
+    // stacks — é o que permite a uma story provar que a opção chegou ao painel.
+    panelEl.dataset.side = side;
+    panelEl.dataset.align = align;
     panelEl.setAttribute('role', 'dialog');
     // O painel recebe foco quando não há nada focável dentro: é o que faz o
     // leitor de tela anunciar o diálogo mesmo num painel só de texto.
@@ -158,7 +204,7 @@ export function createPopover(options: PopoverOptions): DestroyableElement {
     }
 
     document.body.appendChild(panelEl);
-    positionFloating(trigger, panelEl, side, align);
+    positionFloating(trigger, panelEl, side, align, sideOffset);
 
     trigger.setAttribute('aria-expanded', 'true');
     trigger.setAttribute('aria-controls', contentId);
@@ -181,10 +227,12 @@ export function createPopover(options: PopoverOptions): DestroyableElement {
       document.addEventListener('click', handleOutsideClick);
     }, 0);
 
-    onOpenChange?.(true);
+    notificar(true);
   }
 
   function close(): void {
+    if (!isOpen) return;
+
     // Se o foco estava dentro do painel — ou já se perdeu para o <body> —, ele
     // volta ao gatilho. Fechar removendo o elemento focado sem devolver o foco
     // manda quem navega por teclado de volta ao início da página (WCAG 2.4.3).
@@ -210,7 +258,37 @@ export function createPopover(options: PopoverOptions): DestroyableElement {
 
     if (focoEstavaDentro) trigger.focus();
 
-    onOpenChange?.(false);
+    notificar(false);
+  }
+
+  function setOpen(proximo: boolean): void {
+    if (proximo) open();
+    else close();
+  }
+
+  /**
+   * Anuncia a mudança de estado.
+   *
+   * Controlado, o painel não anuncia o que ele próprio aplicou: quem pediu foi
+   * quem chama, e o aviso já saiu na intenção. Sem esta cerca, um
+   * `onOpenChange` que responde com `setOpen()` receberia o evento duas vezes.
+   */
+  function notificar(aberto: boolean): void {
+    if (!controlado) onOpenChange?.(aberto);
+  }
+
+  /**
+   * Intenção de mudança vinda de uma INTERAÇÃO (clique, Escape, clique fora).
+   *
+   * Controlado, ela só é anunciada: quem manda no estado é quem chama. Não
+   * controlado, ela é executada — e `open`/`close` anunciam por conta própria.
+   */
+  function pedirMudanca(proximo: boolean): void {
+    if (controlado) {
+      onOpenChange?.(proximo);
+      return;
+    }
+    setOpen(proximo);
   }
 
   function handleKeydown(e: KeyboardEvent): void {
@@ -218,27 +296,55 @@ export function createPopover(options: PopoverOptions): DestroyableElement {
       e.preventDefault();
       // `close()` já devolve o foco ao gatilho quando ele estava dentro do
       // painel, que é sempre o caso vindo do Escape.
-      close();
+      pedirMudanca(false);
     }
   }
 
   function handleOutsideClick(e: MouseEvent): void {
     const target = e.target as Node;
     if (!panelEl?.contains(target) && !trigger.contains(target)) {
-      close();
+      pedirMudanca(false);
     }
   }
 
   trigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (isOpen) close(); else open();
+    pedirMudanca(!isOpen);
   });
 
   // O painel mora em portal no body: quando o wrapper sai do DOM — troca de
   // story no Storybook, desmonte de página — nada removeria o painel, e ele
   // sobreviveria por cima do conteúdo seguinte junto com o `keydown` e o
   // `click` de fora. Mesma forma do dialog e do sheet.
-  return tornarDestruivel(wrapper, wrapper, () => {
-    if (isOpen) close();
-  });
+  // `Object.assign` e não um `as`: os verbos entram no tipo do próprio alvo, e
+  // `tornarDestruivel` devolve exatamente `PopoverElement` sem conversão. Uma
+  // asserção aqui teria de passar por `unknown` — o wrapper é `HTMLDivElement` e
+  // o tipo declarado parte de `HTMLElement`, e nenhum dos dois cobre o outro.
+  const instancia = tornarDestruivel(
+    wrapper,
+    Object.assign(wrapper, {
+      open,
+      close,
+      toggle: () => setOpen(!isOpen),
+      setOpen,
+    }),
+    () => {
+      if (isOpen) close();
+    },
+  );
+
+  // Estado inicial. No modo controlado quem manda é `open`; fora dele,
+  // `defaultOpen`. Adiado uma volta do laço de eventos, e não um microtique: a
+  // raiz ainda não entrou no documento quando a fábrica retorna, e posicionar o
+  // painel exige medir um gatilho já no layout.
+  const comecaAberto = controlado ? options.open === true : options.defaultOpen === true;
+  if (comecaAberto) {
+    setTimeout(() => {
+      // A raiz pode ter sido descartada antes deste tique. Abrir aqui portaria
+      // um painel para o `body` sem ninguém com referência para fechá-lo.
+      if (wrapper.isConnected) open();
+    }, 0);
+  }
+
+  return instancia;
 }

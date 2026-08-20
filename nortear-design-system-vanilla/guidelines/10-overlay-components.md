@@ -101,7 +101,19 @@ div wrapper (relative inline-block)
 | Nome | Default | Função |
 |---|---|---|
 | `trigger` | — | Elemento que abre o menu |
-| `items` | — | Array `{ label, onClick, destructive? }` ou `'separator'` |
+| `items` | — | Itens por `type`: `item`, `separator`, `label`, `checkbox`, `radio` |
+| `side` | `'bottom'` | Borda do gatilho por onde o menu sai |
+| `align` | `'start'` | Encosto do menu no eixo perpendicular ao lado |
+| `sideOffset` | `4` | Vão entre gatilho e menu, em px |
+| `modal` | `true` | Bloqueia a interação com o resto da página: o clique de fora dispensa o menu sem chegar ao que está embaixo, e a página não rola |
+| `open` | — | Estado controlado. Definido, a interação só ANUNCIA por `onOpenChange` e o menu se move em `setOpen()` |
+| `defaultOpen` | `false` | Estado inicial no modo não-controlado |
+| `onOpenChange` | — | Avisado a cada abertura e fechamento |
+| `class` | — | Classes adicionais aplicadas ao painel |
+
+O elemento devolvido aceita `open()`, `close()`, `toggle()`, `setOpen(boolean)` e `destroy()`. `side` e `align` também saem no markup do painel, como `data-side` e `data-align`.
+
+A conta de posição é a mesma do Popover e do Tooltip, e mora num lugar só (`src/lib/floating.ts`). Duas cópias divergem: enquanto o menu tinha a sua, ele ficou anos sem `side` enquanto a story anunciava o controle.
 
 **Regras**:
 - Trigger com `aria-haspopup="true"` + `aria-expanded` atualizado
@@ -144,6 +156,9 @@ div wrapper (relative inline-block)
 - Tokens: `bg-popover text-popover-foreground`, `border-border`, `text-xs`
 - Posição padrão: acima do trigger (`bottom-full mb-2`)
 - Z-index `50`
+- A espera de abertura é POR CHAMADA (`delayDuration`, padrão 300ms) — nunca uma constante de módulo, que obrigaria a página inteira ao mesmo tempo
+- Um conjunto de balões (barra de ícones, régua de ações) compartilha a espera por um provedor: dentro da janela de `skipDelayDuration` o balão seguinte abre na hora, porque quem já parou uma vez não precisa provar de novo
+- Marcação dentro do balão — um atalho em `<kbd>`, uma palavra em `<strong>` — entra como ELEMENTO já montado, nunca como HTML em string (guideline 09)
 
 **Acessibilidade**:
 - `role="tooltip"` obrigatório

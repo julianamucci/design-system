@@ -49,12 +49,15 @@ Card (bg-card text-card-foreground border-border rounded-lg shadow-sm)
 
 **Opts da factory**:
 
+O Card é composto por sub-fábricas (`createCardHeader`, `createCardTitle`, `createCardDescription`, `createCardAction`, `createCardContent`, `createCardFooter`), e não por um objeto com título e rodapé dentro.
+
 | Nome | Default | Função |
 |---|---|---|
-| `title` | — | Título no header |
-| `description` | — | Descrição no header |
-| `content` | — | Corpo (HTMLElement ou string) |
-| `footer` | — | Rodapé com `border-t` |
+| `size` | `'default'` | `default` ou `sm`. Sai como `data-size` na raiz e propaga padding e tipografia aos filhos pelo CSS |
+| `class` | — | Classes adicionais |
+| `className` | — | Apelido depreciado de `class`. Aceito para não quebrar chamador; `class` vence quando os dois vêm |
+
+Sub-fábricas: todas aceitam `class` (e o mesmo apelido). `createCardTitle` aceita ainda `text` e `level` (1 a 6, padrão 3); `createCardDescription` aceita `text`.
 
 **Regras**:
 - Tokens obrigatórios: `bg-card text-card-foreground border-border`

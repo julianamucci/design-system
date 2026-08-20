@@ -6,6 +6,14 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import {
+  positionFloating,
+  type FloatingAlign,
+  type FloatingSide,
+} from '@/lib/floating';
+
+export type DropdownMenuSide = FloatingSide;
+export type DropdownMenuAlign = FloatingAlign;
 
 export type DropdownMenuItemDef = {
   type?: 'item' | 'separator' | 'label' | 'checkbox' | 'radio';
@@ -37,8 +45,43 @@ export type DropdownMenuItemDef = {
 export type DropdownMenuOptions = {
   trigger: HTMLElement;
   items: DropdownMenuItemDef[];
+  /** Borda do gatilho por onde o menu sai. */
+  side?: DropdownMenuSide;
+  /** Encosto do menu no eixo perpendicular ao `side`. */
+  align?: DropdownMenuAlign;
+  /** Vão entre gatilho e menu, em px. */
+  sideOffset?: number;
+  /**
+   * Enquanto aberto, a interação com o resto da página é bloqueada: o clique de
+   * fora DISPENSA o menu e não chega ao que está embaixo, e a página não rola.
+   *
+   * `false` deixa a página utilizável — o menu continua fechando no clique de
+   * fora, mas o clique também acerta o alvo.
+   */
+  modal?: boolean;
+  /**
+   * Estado CONTROLADO. Definido, quem manda no menu é quem chama: clique,
+   * Escape, Tab e clique fora passam a apenas ANUNCIAR a intenção por
+   * `onOpenChange`, e o menu só se move em `setOpen()`.
+   */
+  open?: boolean;
+  /** Estado inicial no modo não-controlado. */
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   class?: string;
+};
+
+/**
+ * O que a fábrica devolve.
+ *
+ * Verbos em INGLÊS, como no Sidebar desta stack — a forma que o repositório
+ * adotou para abrir e fechar por código.
+ */
+export type DropdownMenuElement = DestroyableElement & {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  setOpen: (open: boolean) => void;
 };
 
 /** Papel ARIA de cada tipo de item que se comporta como item de menu. */
@@ -113,18 +156,24 @@ function criarIndicador(estado: EstadoDeMarcacao, slot: string): HTMLSpanElement
 
 let _dropdownCounter = 0;
 
-function positionDropdown(anchor: HTMLElement, panel: HTMLElement): void {
-  const rect = anchor.getBoundingClientRect();
-  const scrollX = window.scrollX;
-  const scrollY = window.scrollY;
-  panel.style.top = `${rect.bottom + scrollY + 4}px`;
-  panel.style.left = `${rect.left + scrollX}px`;
-}
+// A conta de posição mora em `@/lib/floating`, compartilhada com o popover e o
+// tooltip. Aqui havia uma cópia que cravava bottom/start a 4px — e foi
+// exatamente por ela que `side` e `align` viraram controles mortos na story.
 
 // ─── createDropdownMenu ───────────────────────────────────────────────────────
 
-export function createDropdownMenu(options: DropdownMenuOptions): DestroyableElement {
-  const { trigger, items, onOpenChange } = options;
+export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuElement {
+  const {
+    trigger,
+    items,
+    side = 'bottom',
+    align = 'start',
+    sideOffset = 4,
+    modal = true,
+    onOpenChange,
+  } = options;
+
+  const controlado = options.open !== undefined;
 
   const id = ++_dropdownCounter;
   const menuId = `dropdown-menu-${id}`;
@@ -132,6 +181,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
   let panelEl: HTMLElement | null = null;
   let isOpen = false;
   let timerCliqueFora: ReturnType<typeof setTimeout> | null = null;
+  let overflowAnterior = '';
 
   const wrapper = document.createElement('div');
   wrapper.dataset.slot = 'dropdown-menu';
@@ -148,6 +198,11 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
     menu.setAttribute('role', 'menu');
     menu.className = cn('nds-dropdown-menu-content', options.class);
     menu.dataset.slot = 'dropdown-menu-content';
+    // Lado e encosto escolhidos ficam legíveis no markup, como nas outras
+    // stacks. É por eles que uma story prova que a opção chegou ao painel sem
+    // depender de medir pixels.
+    menu.dataset.side = side;
+    menu.dataset.align = align;
 
     items.forEach((item) => {
       const type = item.type ?? 'item';
@@ -262,7 +317,9 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
             return;
           }
           item.onClick?.();
-          close();
+          // Escolher fecha — mas quem fecha é o mesmo caminho de qualquer outra
+          // interação: controlado, isto só anuncia a intenção.
+          pedirMudanca(false);
         };
         li.addEventListener('click', ativar);
         li.addEventListener('keydown', (e) => {
@@ -319,9 +376,11 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
   }
 
   function open(): void {
+    if (isOpen) return;
+
     panelEl = buildMenu();
     document.body.appendChild(panelEl);
-    positionDropdown(trigger, panelEl);
+    positionFloating(trigger, panelEl, side, align, sideOffset);
 
     trigger.setAttribute('aria-expanded', 'true');
     isOpen = true;
@@ -331,18 +390,36 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
     menuItems[0]?.focus();
 
     document.addEventListener('keydown', handleKeydown);
-    // Adiado para o clique que ABRIU não fechar em seguida. O timer é guardado
-    // porque o fechamento pode chegar antes dele: sem cancelar, o ouvinte era
-    // registrado DEPOIS da limpeza e ficava para sempre.
-    timerCliqueFora = setTimeout(() => {
-      timerCliqueFora = null;
-      document.addEventListener('click', handleOutsideClick);
-    }, 0);
 
-    onOpenChange?.(true);
+    if (modal) {
+      // Modal: a interação de fora é CONSUMIDA na captura, antes de chegar a
+      // quem quer que esteja embaixo. Os três tipos do gesto são interceptados
+      // porque um clique real é uma sequência — deixar o último passar faria o
+      // botão de baixo disparar depois de o menu já ter fechado.
+      //
+      // Não há ouvinte de bolha aqui: quem dispensa é o próprio bloqueador, e
+      // o gesto que ABRIU já passou pela captura antes deste registro.
+      document.addEventListener('pointerdown', bloquearForaModal, true);
+      document.addEventListener('mousedown', bloquearForaModal, true);
+      document.addEventListener('click', bloquearForaModal, true);
+      overflowAnterior = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Adiado para o clique que ABRIU não fechar em seguida. O timer é guardado
+      // porque o fechamento pode chegar antes dele: sem cancelar, o ouvinte era
+      // registrado DEPOIS da limpeza e ficava para sempre.
+      timerCliqueFora = setTimeout(() => {
+        timerCliqueFora = null;
+        document.addEventListener('click', handleOutsideClick);
+      }, 0);
+    }
+
+    notificar(true);
   }
 
   function close(): void {
+    if (!isOpen) return;
+
     panelEl?.remove();
     panelEl = null;
     trigger.setAttribute('aria-expanded', 'false');
@@ -359,8 +436,52 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
     buscaTypeahead = '';
     document.removeEventListener('keydown', handleKeydown);
     document.removeEventListener('click', handleOutsideClick);
+    document.removeEventListener('pointerdown', bloquearForaModal, true);
+    document.removeEventListener('mousedown', bloquearForaModal, true);
+    document.removeEventListener('click', bloquearForaModal, true);
+    if (modal) document.body.style.overflow = overflowAnterior;
 
-    onOpenChange?.(false);
+    notificar(false);
+  }
+
+  function setOpen(proximo: boolean): void {
+    if (proximo) open();
+    else close();
+  }
+
+  /**
+   * Anuncia a mudança de estado.
+   *
+   * Controlado, o menu não anuncia o que ele próprio aplicou: quem pediu foi
+   * quem chama, e o aviso já saiu na intenção. Sem esta cerca, um
+   * `onOpenChange` que responde com `setOpen()` receberia o evento duas vezes.
+   */
+  function notificar(aberto: boolean): void {
+    if (!controlado) onOpenChange?.(aberto);
+  }
+
+  /**
+   * Intenção vinda de uma INTERAÇÃO (clique, Escape, Tab, clique fora).
+   *
+   * Controlada, ela só é anunciada — quem manda no estado é quem chama. Fora do
+   * modo controlado, ela é executada, e `open`/`close` anunciam por conta.
+   */
+  function pedirMudanca(proximo: boolean): void {
+    if (controlado) {
+      onOpenChange?.(proximo);
+      return;
+    }
+    setOpen(proximo);
+  }
+
+  function bloquearForaModal(e: Event): void {
+    const alvo = e.target as Node;
+    if (panelEl?.contains(alvo) || wrapper.contains(alvo)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    // A dispensa sai no `click`, o último do gesto: dispensar antes desmontaria
+    // os bloqueadores no meio da sequência e soltaria o resto dela na página.
+    if (e.type === 'click') pedirMudanca(false);
   }
 
   function handleKeydown(e: KeyboardEvent): void {
@@ -368,8 +489,11 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
 
     if (e.key === 'Escape') {
       e.preventDefault();
-      close();
-      trigger.focus();
+      pedirMudanca(false);
+      // O foco só volta se o menu de fato saiu: no modo controlado quem fecha é
+      // quem chama, e devolver o foco antes disso o tiraria de dentro de um
+      // menu que continua na tela.
+      if (!isOpen) trigger.focus();
       return;
     }
 
@@ -391,7 +515,7 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
       e.preventDefault();
       menuItems[menuItems.length - 1]?.focus();
     } else if (e.key === 'Tab') {
-      close();
+      pedirMudanca(false);
     } else if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey && /\S/.test(e.key)) {
       e.preventDefault();
       typeahead(e.key, menuItems);
@@ -401,20 +525,48 @@ export function createDropdownMenu(options: DropdownMenuOptions): DestroyableEle
   function handleOutsideClick(e: MouseEvent): void {
     const target = e.target as Node;
     if (!panelEl?.contains(target) && !trigger.contains(target)) {
-      close();
+      pedirMudanca(false);
     }
   }
 
   trigger.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (isOpen) close(); else open();
+    pedirMudanca(!isOpen);
   });
 
   // O menu mora em portal no `body`, e os ouvintes de `keydown`/`click` vivem no
   // `document` só enquanto ele está aberto. Quem removia o wrapper com o menu
   // ABERTO — troca de story, desmonte de tela — deixava painel órfão no body e
   // dois ouvintes presos a um nó que já não estava em lugar nenhum.
-  return tornarDestruivel(wrapper, wrapper, () => {
-    if (isOpen) close();
-  });
+  // `Object.assign` e não um `as`: os verbos entram no tipo do próprio alvo, e
+  // `tornarDestruivel` devolve exatamente `DropdownMenuElement` sem conversão.
+  // Uma asserção aqui teria de passar por `unknown` — o wrapper é
+  // `HTMLDivElement` e o tipo declarado parte de `HTMLElement`, e nenhum dos
+  // dois cobre o outro.
+  const instancia = tornarDestruivel(
+    wrapper,
+    Object.assign(wrapper, {
+      open,
+      close,
+      toggle: () => setOpen(!isOpen),
+      setOpen,
+    }),
+    () => {
+      if (isOpen) close();
+    },
+  );
+
+  // Estado inicial. Adiado uma volta do laço de eventos, e não um microtique: a
+  // raiz ainda não entrou no documento quando a fábrica retorna, e posicionar o
+  // menu exige medir um gatilho já no layout.
+  const comecaAberto = controlado ? options.open === true : options.defaultOpen === true;
+  if (comecaAberto) {
+    setTimeout(() => {
+      // A raiz pode ter sido descartada antes deste tique. Abrir aqui portaria
+      // um painel para o `body` sem ninguém com referência para fechá-lo.
+      if (wrapper.isConnected) open();
+    }, 0);
+  }
+
+  return instancia;
 }

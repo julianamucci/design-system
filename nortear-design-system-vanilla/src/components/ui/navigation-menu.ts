@@ -38,6 +38,14 @@ export type NavigationMenuItem = {
   href?: string;
   children?: NavigationMenuChild[];
   /**
+   * Identificador do item no valor da barra.
+   *
+   * É o que `value`/`defaultValue`/`onValueChange` trocam entre si. Sem ele o
+   * rótulo serve de identidade — o que basta enquanto ninguém traduz a barra,
+   * e deixa de bastar no dia em que alguém traduzir.
+   */
+  value?: string;
+  /**
    * Marca o destino como a página atual.
    *
    * Escreve `aria-current="page"` — o que o leitor de tela anuncia E o que a
@@ -55,6 +63,34 @@ export type NavigationMenuOptions = {
   orientation?: NavigationMenuOrientation;
   /** Espera em ms antes de abrir o painel quando o ponteiro entra no gatilho. */
   delayDuration?: number;
+  /**
+   * Janela, depois de um painel fechar, em que o PRÓXIMO abre sem esperar.
+   *
+   * Quem acabou de percorrer a barra não precisa provar de novo a cada gatilho:
+   * a espera existe para separar o ponteiro que atravessa do que para, e isso
+   * já foi decidido uma vez. `0` desliga e toda abertura volta a esperar.
+   */
+  skipDelayDuration?: number;
+  /**
+   * Painel aberto, em modo CONTROLADO.
+   *
+   * Definido, a barra deixa de se governar: ponteiro, teclado e clique passam a
+   * apenas ANUNCIAR a intenção por `onValueChange`, e nada se move até
+   * `setValue()`. String vazia quer dizer "nenhum painel aberto".
+   */
+  value?: string;
+  /** Painel aberto na montagem, em modo não-controlado. */
+  defaultValue?: string;
+  /** Avisado a cada mudança do painel aberto. Vazio quer dizer fechado. */
+  onValueChange?: (value: string) => void;
+};
+
+/** O que a fábrica devolve. */
+export type NavigationMenuElement = DestroyableElement & {
+  /** Move a barra para o painel pedido. Vazio fecha tudo. */
+  setValue: (value: string) => void;
+  /** Painel aberto agora. Vazio quer dizer fechado. */
+  getValue: () => string;
 };
 
 // ─── Chevron SVG (anexado via createElementNS) ───────────────────────────────
@@ -85,11 +121,13 @@ let _navCounter = 0;
 export function createNavigationMenu(
   items: NavigationMenuItem[],
   options?: NavigationMenuOptions
-): DestroyableElement {
+): NavigationMenuElement {
   const id = ++_navCounter;
   const orientation: NavigationMenuOrientation = options?.orientation ?? 'horizontal';
   const vertical = orientation === 'vertical';
   const delayDuration = options?.delayDuration ?? 200;
+  const skipDelayDuration = options?.skipDelayDuration ?? 300;
+  const controlado = options?.value !== undefined;
 
   const nav = document.createElement('nav');
   nav.dataset.slot = 'navigation-menu';
@@ -107,8 +145,14 @@ export function createNavigationMenu(
     : 'nds-navigation-menu-list';
   if (vertical) ul.dataset.spacing = 'xs';
 
-  let openItem: { content: HTMLElement; trigger: HTMLElement } | null = null;
+  type Painel = { content: HTMLElement; trigger: HTMLElement; value: string };
+
+  let openItem: Painel | null = null;
   let timerAbertura: ReturnType<typeof setTimeout> | null = null;
+  /** Quando o último painel saiu da tela — é o relógio do `skipDelayDuration`. */
+  let fechadoEm = 0;
+  /** Painéis por valor, para `setValue()` alcançar qualquer um pelo nome. */
+  const paineis = new Map<string, Painel>();
 
   function cancelarAbertura(): void {
     if (timerAbertura !== null) {
@@ -124,15 +168,49 @@ export function createNavigationMenu(
     openItem.trigger.setAttribute('aria-expanded', 'false');
     openItem.trigger.dataset.state = 'closed';
     openItem = null;
+    fechadoEm = Date.now();
   }
 
-  function open(trigger: HTMLElement, content: HTMLElement): void {
-    if (openItem?.trigger === trigger) return;
+  /** Abertura pedida por uma interação sobre um gatilho. */
+  function open(trigger: HTMLElement): void {
+    const painel = [...paineis.values()].find((p) => p.trigger === trigger);
+    if (painel) pedirValor(painel.value);
+  }
+
+  /** Move a barra. É o único caminho que mexe no DOM dos painéis. */
+  function aplicarValor(valor: string): void {
+    // `?? ''` porque "nenhum painel aberto" é a string vazia, e sem ela um
+    // `setValue('')` numa barra já fechada anunciaria um fechamento que não
+    // aconteceu.
+    if ((openItem?.value ?? '') === valor) return;
     closeAll();
-    content.hidden = false;
-    trigger.setAttribute('aria-expanded', 'true');
-    trigger.dataset.state = 'open';
-    openItem = { content, trigger };
+    const painel = valor ? paineis.get(valor) : undefined;
+    if (painel) {
+      painel.content.hidden = false;
+      painel.trigger.setAttribute('aria-expanded', 'true');
+      painel.trigger.dataset.state = 'open';
+      openItem = painel;
+    }
+    // Controlada, a barra não anuncia o que ela própria aplicou: quem pediu a
+    // mudança foi quem chama, e o aviso já saiu na intenção. Sem esta cerca, um
+    // `onValueChange` que responde com `setValue()` receberia o mesmo evento
+    // duas vezes.
+    if (!controlado) options?.onValueChange?.(openItem?.value ?? '');
+  }
+
+  /**
+   * Intenção vinda de uma INTERAÇÃO (ponteiro, clique, teclado).
+   *
+   * Controlada, ela só é anunciada — quem manda na barra é quem chama. Fora do
+   * modo controlado, ela é aplicada na hora.
+   */
+  function pedirValor(valor: string): void {
+    if ((openItem?.value ?? '') === valor) return;
+    if (controlado) {
+      options?.onValueChange?.(valor);
+      return;
+    }
+    aplicarValor(valor);
   }
 
   /** Os elementos focáveis da BARRA — gatilhos e destinos diretos, em ordem. */
@@ -203,6 +281,13 @@ export function createNavigationMenu(
       content.dataset.slot = 'navigation-menu-content';
       content.hidden = true;
 
+      const valorDoItem = item.value ?? item.label;
+      paineis.set(valorDoItem, { trigger, content, value: valorDoItem });
+      // O valor fica legível no markup: é como uma story prova que a barra
+      // abriu o painel PEDIDO, e não um painel qualquer.
+      trigger.dataset.value = valorDoItem;
+      content.dataset.value = valorDoItem;
+
       item.children.forEach((child) => {
         const childA = document.createElement('a');
         childA.href = child.href;
@@ -225,32 +310,37 @@ export function createNavigationMenu(
         // pendurado sobre a página seguinte. Não olha `defaultPrevented` de
         // propósito — quem usa roteador de cliente chama `preventDefault()` e
         // continua querendo o painel fechado.
-        childA.addEventListener('click', () => closeAll());
+        childA.addEventListener('click', () => pedirValor(''));
 
         content.appendChild(childA);
       });
 
       trigger.addEventListener('click', () => {
         const isOpen = trigger.dataset.state === 'open';
-        if (isOpen) closeAll();
-        else open(trigger, content);
+        if (isOpen) pedirValor('');
+        else open(trigger);
       });
 
       const itemWrapper = document.createElement('div');
       itemWrapper.className = 'nds-navigation-menu-item';
       itemWrapper.dataset.slot = 'navigation-menu-item';
 
-      // Abertura por ponteiro, com espera. Quando JÁ existe um painel aberto a
-      // troca é instantânea: reesperar entre dois gatilhos vizinhos faz o painel
-      // piscar, que é o que `skipDelayDuration` evita nas demais stacks.
+      // Abertura por ponteiro, com espera. Duas situações a dispensam: já haver
+      // um painel aberto (reesperar entre dois gatilhos vizinhos faz o painel
+      // piscar) e o painel anterior ter fechado há pouco — a janela do
+      // `skipDelayDuration`, que é o que as demais stacks chamam pelo mesmo
+      // nome.
       itemWrapper.addEventListener('pointerenter', (e) => {
         if (e.pointerType !== 'mouse') return;
         cancelarAbertura();
-        if (openItem && openItem.trigger !== trigger) {
-          open(trigger, content);
+        const trocaDePainel = !!openItem && openItem.trigger !== trigger;
+        const dentroDaJanela =
+          skipDelayDuration > 0 && !openItem && Date.now() - fechadoEm < skipDelayDuration;
+        if (trocaDePainel || dentroDaJanela) {
+          open(trigger);
           return;
         }
-        timerAbertura = setTimeout(() => open(trigger, content), delayDuration);
+        timerAbertura = setTimeout(() => open(trigger), delayDuration);
       });
       itemWrapper.addEventListener('pointerleave', (e) => {
         if (e.pointerType !== 'mouse') return;
@@ -260,7 +350,7 @@ export function createNavigationMenu(
       trigger.addEventListener('keydown', (e) => {
         if (navegarPelaBarra(e)) return;
         if (e.key === 'Escape') {
-          closeAll();
+          pedirValor('');
           trigger.focus();
           return;
         }
@@ -270,7 +360,7 @@ export function createNavigationMenu(
         if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
           if (e.key === 'ArrowDown' && trigger.dataset.state !== 'open') return;
           e.preventDefault();
-          open(trigger, content);
+          open(trigger);
           content.querySelector<HTMLElement>('.nds-navigation-menu-child')?.focus();
         }
       });
@@ -285,7 +375,7 @@ export function createNavigationMenu(
           e.preventDefault();
           links[(focused - 1 + links.length) % links.length]?.focus();
         } else if (e.key === 'Escape') {
-          closeAll();
+          pedirValor('');
           trigger.focus();
         }
       });
@@ -312,14 +402,14 @@ export function createNavigationMenu(
    */
   function aoClicarFora(e: MouseEvent): void {
     if (!nav.isConnected) return;
-    if (openItem && !nav.contains(e.target as Node)) closeAll();
+    if (openItem && !nav.contains(e.target as Node)) pedirValor('');
   }
 
   function aoTeclarNoDocumento(e: KeyboardEvent): void {
     if (!nav.isConnected) return;
     if (e.key === 'Escape' && openItem) {
       const triggerToFocus = openItem.trigger;
-      closeAll();
+      pedirValor('');
       triggerToFocus.focus();
     }
   }
@@ -329,9 +419,24 @@ export function createNavigationMenu(
 
   nav.appendChild(ul);
 
-  return tornarDestruivel(nav, nav, () => {
-    closeAll();
-    document.removeEventListener('click', aoClicarFora);
-    document.removeEventListener('keydown', aoTeclarNoDocumento);
-  });
+  // `Object.assign` e não um `as`: os dois verbos entram no tipo do próprio
+  // alvo, e `tornarDestruivel` devolve exatamente `NavigationMenuElement`.
+  const instancia = tornarDestruivel(
+    nav,
+    Object.assign(nav, {
+      setValue: aplicarValor,
+      getValue: () => openItem?.value ?? '',
+    }),
+    () => {
+      closeAll();
+      document.removeEventListener('click', aoClicarFora);
+      document.removeEventListener('keydown', aoTeclarNoDocumento);
+    },
+  );
+
+  // Estado inicial. Controlada, quem manda é `value`; fora disso, `defaultValue`.
+  const valorInicial = controlado ? options?.value ?? '' : options?.defaultValue ?? '';
+  if (valorInicial) aplicarValor(valorInicial);
+
+  return instancia;
 }

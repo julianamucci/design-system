@@ -7,7 +7,26 @@ import { cn } from '@/lib/utils';
 export type PaginationOptions = {
   total: number;
   current: number;
-  onPageChange: (page: number) => void;
+  /**
+   * Avisado quando outra página é pedida.
+   *
+   * Continua sendo chamado com `hrefForPage`: é por ele que passam a analítica
+   * e o estado da tela. Opcional porque uma paginação inteiramente de rota não
+   * precisa de mais nada além dos endereços.
+   */
+  onPageChange?: (page: number) => void;
+  /**
+   * Endereço real de cada página.
+   *
+   * Sem ele todo link nasce `href="#"` e o clique é anulado — o que serve à
+   * paginação que vive só na memória, e deixa de servir no dia em que a página
+   * precisa ser compartilhável, indexável ou aberta em nova aba. Com ele o link
+   * é um destino de verdade e o clique SEGUE: quem usa roteador de cliente o
+   * intercepta como faria com qualquer link da página.
+   *
+   *     createPagination({ …, hrefForPage: (p) => `?page=${p}` })
+   */
+  hrefForPage?: (page: number) => string;
   showPrevNext?: boolean;
   /** Nome acessível do landmark. Padrão: `Paginação`. */
   label?: string;
@@ -64,7 +83,18 @@ function getPages(total: number, current: number): (number | 'ellipsis')[] {
 // ─── createPagination ──────────────────────────────────────────────────────
 
 export function createPagination(options: PaginationOptions): HTMLElement {
-  const { total, current, onPageChange, showPrevNext = true, label, align } = options;
+  const { total, current, onPageChange, hrefForPage, showPrevNext = true, label, align } = options;
+
+  /**
+   * Endereço do link e o que fazer com o clique.
+   *
+   * `#` só existe quando não há rota: é âncora vazia, e deixá-la seguir levaria
+   * a rolagem ao topo sem trocar página nenhuma. Com rota, anular o clique
+   * seria pior — apagaria o "abrir em nova aba" e o roteador de cliente junto.
+   */
+  function enderecoDaPagina(page: number): string {
+    return hrefForPage ? hrefForPage(page) : '#';
+  }
 
   const nav = document.createElement('nav');
   nav.dataset.slot = 'pagination';
@@ -86,7 +116,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
 
   function makeLink(page: number, isCurrent: boolean): HTMLAnchorElement {
     const a = document.createElement('a');
-    a.href = '#';
+    a.href = enderecoDaPagina(page);
     a.dataset.slot = 'pagination-link';
     a.className = 'nds-pagination-link';
 
@@ -102,8 +132,8 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     a.textContent = String(page);
 
     a.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!isCurrent) onPageChange(page);
+      if (!hrefForPage) e.preventDefault();
+      if (!isCurrent) onPageChange?.(page);
     });
     return a;
   }
@@ -120,10 +150,13 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     rotulo: string,
     slot: string,
     desabilitado: boolean,
+    destino: number,
     aoClicar: () => void,
   ): HTMLAnchorElement {
     const a = document.createElement('a');
-    a.href = '#';
+    // Nos extremos o controle não leva a lugar nenhum: `#` ali é honesto, e um
+    // endereço válido convidaria a abrir em nova aba uma página que não existe.
+    a.href = desabilitado ? '#' : enderecoDaPagina(destino);
     a.dataset.slot = slot;
     a.setAttribute('aria-label', rotulo);
     a.className = 'nds-pagination-link nds-pagination-icon';
@@ -133,7 +166,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     }
     a.appendChild(createChevronSvg(direcao));
     a.addEventListener('click', (e) => {
-      e.preventDefault();
+      if (!hrefForPage || desabilitado) e.preventDefault();
       if (!desabilitado) aoClicar();
     });
     return a;
@@ -142,8 +175,8 @@ export function createPagination(options: PaginationOptions): HTMLElement {
   // Prev
   if (showPrevNext) {
     addItem(
-      makeDirecional('left', ROTULOS.anterior, 'pagination-previous', current <= 1, () =>
-        onPageChange(current - 1),
+      makeDirecional('left', ROTULOS.anterior, 'pagination-previous', current <= 1, current - 1, () =>
+        onPageChange?.(current - 1),
       ),
     );
   }
@@ -169,8 +202,8 @@ export function createPagination(options: PaginationOptions): HTMLElement {
   // Next
   if (showPrevNext) {
     addItem(
-      makeDirecional('right', ROTULOS.proxima, 'pagination-next', current >= total, () =>
-        onPageChange(current + 1),
+      makeDirecional('right', ROTULOS.proxima, 'pagination-next', current >= total, current + 1, () =>
+        onPageChange?.(current + 1),
       ),
     );
   }

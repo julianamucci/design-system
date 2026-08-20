@@ -30,7 +30,23 @@ import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 export type DrawerDirection = 'bottom' | 'top' | 'left' | 'right';
 
 /** Caminho que fechou o painel — o vocabulário que o analytics do produto usa. */
-export type DrawerCloseReason = 'escape' | 'overlay' | 'close-button';
+export type DrawerCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
+
+/**
+ * O que a fábrica devolve.
+ *
+ * Abrir por código é o que faltava: a gaveta só nascia do clique no gatilho,
+ * enquanto `createHoverCard` e `createSidebar` já abriam por chamada — e por
+ * nomes diferentes um do outro. Aqui os verbos são os do Sidebar, em inglês,
+ * que é a forma que o repositório adotou.
+ */
+export type DrawerElement = DestroyableElement & {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  /** Está aberta agora? */
+  isOpen: () => boolean;
+};
 
 export type DrawerOptions = {
   trigger: HTMLElement;
@@ -70,7 +86,7 @@ function getFocusable(container: HTMLElement): HTMLElement[] {
 
 // ─── createDrawer ─────────────────────────────────────────────────────────────
 
-export function createDrawer(options: DrawerOptions): DestroyableElement {
+export function createDrawer(options: DrawerOptions): DrawerElement {
   const {
     trigger,
     direction = 'bottom',
@@ -273,9 +289,28 @@ export function createDrawer(options: DrawerOptions): DestroyableElement {
    * agora preso a um nó fora do documento. Não havia nada a chamar: esta era a
    * única fábrica de sobreposição portalada sem guarda de saída.
    */
-  return tornarDestruivel(wrapper, wrapper, () => {
-    const estavaAberta = isOpen();
-    desmontarPainel();
-    if (estavaAberta) onOpenChange?.(false);
-  });
+  // `Object.assign` e não um `as`: os verbos entram no tipo do próprio alvo, e
+  // `tornarDestruivel` devolve exatamente `DrawerElement` sem conversão. Uma
+  // asserção aqui teria de passar por `unknown` — o wrapper é `HTMLDivElement` e
+  // o tipo declarado parte de `HTMLElement`, e nenhum dos dois cobre o outro.
+  return tornarDestruivel(
+    wrapper,
+    Object.assign(wrapper, {
+      open,
+      // Fechar por código informa o motivo `'api'`: quem escuta `onClose` separa
+      // a gaveta que a pessoa dispensou da que o programa recolheu — e no
+      // analytics essas duas nunca foram a mesma coisa.
+      close: () => closeWithReason('api'),
+      toggle: () => {
+        if (isOpen()) closeWithReason('api');
+        else open();
+      },
+      isOpen,
+    }),
+    () => {
+      const estavaAberta = isOpen();
+      desmontarPainel();
+      if (estavaAberta) onOpenChange?.(false);
+    },
+  );
 }

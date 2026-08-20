@@ -346,7 +346,28 @@ export function createTooltipDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          code: `import { createTooltip } from '@/components/ui/tooltip';`,
+          code: `import { createTooltip, createTooltipProvider } from '@/components/ui/tooltip';`,
+          secondaryDescription: 'Espera compartilhada por grupo e marcação no conteúdo:',
+          secondaryCode: `// Uma barra de ícones: quem já parou uma vez não espera de novo no vizinho.
+const { createTooltip: comEspera } = createTooltipProvider({
+  delayDuration: 300,
+  skipDelayDuration: 300,
+});
+
+comEspera({ trigger: botaoCopiar, content: 'Copiar' });
+comEspera({ trigger: botaoColar,  content: 'Colar'  });
+
+// Marcação entra como ELEMENTO já montado, nunca como HTML em string.
+const atalho = document.createElement('span');
+atalho.append('Salvar (', Object.assign(document.createElement('kbd'), { textContent: 'Ctrl S' }), ')');
+
+createTooltip({
+  trigger: botaoSalvar,
+  content: atalho,
+  side: 'bottom',
+  delayDuration: 0,          // este abre na hora
+  onShow: () => track('tooltip_show', { component: 'tooltip' }),
+});`,
         });
 
       case 'variantes': {
@@ -627,17 +648,30 @@ createTooltip({
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createTooltip(options) — factory custom Nortear
+        const interfaceCode = `// createTooltip(options)
 export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
 
 export type TooltipOptions = {
   trigger: HTMLElement;
-  content: string;
-  side?: TooltipSide;
+  /** String vira textContent; marcação entra como elemento já montado. */
+  content: string | HTMLElement;
+  side?: TooltipSide;          // default 'top'
+  delayDuration?: number;      // default 300 (ou o do grupo)
+  onShow?: () => void;         // depois da espera, quando o balão aparece
   class?: string;
 };
 
-export function createTooltip(options: TooltipOptions): HTMLElement;`;
+export function createTooltip(options: TooltipOptions): DestroyableElement;
+
+// ─── Grupo com espera compartilhada ─────────────────────────────────────────
+export type TooltipProviderOptions = {
+  delayDuration?: number;      // default 300 — padrão de todos do grupo
+  skipDelayDuration?: number;  // default 300 — janela sem nova espera; 0 desliga
+};
+
+export function createTooltipProvider(
+  options?: TooltipProviderOptions,
+): { createTooltip: (options: TooltipOptions) => DestroyableElement };`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -654,22 +688,28 @@ export function createTooltip(options: TooltipOptions): HTMLElement;`;
               title: 'createTooltip(options)',
               cols: propsCols,
               items: [
-                { name: 'trigger', type: 'HTMLElement',                         defaultValue: '—',     required: 'Sim', description: 'Elemento que ativa o tooltip por hover ou foco. aria-describedby é setado automaticamente.' },
-                { name: 'content', type: 'string',                              defaultValue: '—',     required: 'Sim', description: 'Texto do tooltip. Renderizado via textContent (sem HTML).' },
-                { name: 'side',    type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'top'", required: 'Não', description: toPlainText(t('props.table.side.description')) + ' NOTA: factory Nortear NÃO faz auto-flip por colisão.' },
-                { name: 'class',   type: 'string',                              defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.className.description')) },
-                { name: 'delay',        type: 'number',                       defaultValue: '300',   required: 'Não', description: toPlainText(t('props.table.delay.description')) + ' NOTA: factory Nortear usa SHOW_DELAY interno fixo de 300 ms; não é configurável via prop nem via Provider compartilhado.' },
-                { name: 'align',        type: "'start' | 'center' | 'end'",   defaultValue: "'center'", required: 'Não', description: toPlainText(t('props.table.align.description')) + ' NOTA: factory Nortear só aplica center implícito; align não é suportado.' },
-                { name: 'sideOffset',   type: 'number',                       defaultValue: '6',     required: 'Não', description: toPlainText(t('props.table.sideOffset.description')) + ' NOTA: factory Nortear usa gap fixo (6px).' },
-                { name: 'open',         type: 'boolean',                      defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.open.description')) + ' NOTA: factory Nortear é uncontrolled-only.' },
-                { name: 'defaultOpen',  type: 'boolean',                      defaultValue: 'false', required: 'Não', description: toPlainText(t('props.table.defaultOpen.description')) + ' NOTA: não suportado pela factory Nortear.' },
-                { name: 'onOpenChange', type: '(open: boolean) => void',      defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) + ' NOTA: não exposto pela factory Nortear.' },
+                { name: 'trigger',       type: 'HTMLElement',                         defaultValue: '—',     required: 'Sim', description: 'Elemento que ativa o balão por ponteiro ou foco. O aria-describedby é escrito enquanto o balão existe e retirado quando ele sai.' },
+                { name: 'content',       type: 'string | HTMLElement',                defaultValue: '—',     required: 'Sim', description: 'Texto do balão. String vira textContent — o caminho seguro para dado de fora; marcação (uma tecla em <kbd>, uma palavra em <strong>) entra como elemento já montado.' },
+                { name: 'side',          type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'top'", required: 'Não', description: toPlainText(t('props.table.side.description')) + ' Sai no markup como data-side. A posição é fixa: não há reposicionamento automático por colisão.' },
+                { name: 'delayDuration', type: 'number',                              defaultValue: '300',   required: 'Não', description: toPlainText(t('props.table.delay.description')) + ' Ajusta um balão em particular; dentro de um grupo, o padrão vem do provedor. O foco abre na hora, sem espera: quem chega por teclado não tem como parar em cima.' },
+                { name: 'onShow',        type: '() => void',                          defaultValue: '—',     required: 'Não', description: 'Avisado quando o balão é de fato exibido, depois da espera. É o gancho de analítica: contar a intenção de hover contaria também quem só atravessou o gatilho.' },
+                { name: 'class',         type: 'string',                              defaultValue: '—',     required: 'Não', description: toPlainText(t('props.table.className.description')) },
+              ],
+            },
+            {
+              title: 'createTooltipProvider(options?)',
+              cols: propsCols,
+              items: [
+                { name: 'delayDuration',     type: 'number', defaultValue: '300', required: 'Não', description: 'Espera padrão de todos os balões criados pelo grupo. Cada balão pode sobrescrevê-la na própria chamada.' },
+                { name: 'skipDelayDuration', type: 'number', defaultValue: '300', required: 'Não', description: 'Janela, depois de um balão fechar, em que o próximo do grupo abre na hora. É o que faz percorrer uma barra de ícones parecer um movimento só. Zero desliga.' },
               ],
             },
           ],
           interfaceCode,
           extensibilityTitle: t('props.extensibilityTitle'),
-          extensibilityNotes: t('props.extensibilityCode'),
+          extensibilityNotes:
+            t('props.extensibilityCode') +
+            '\n\n// O balão não tem estado controlado nem seta apontando para o gatilho, e\n// a posição escolhida em `side` é a final — não há reposicionamento\n// automático quando falta espaço na tela.',
         });
       }
 
@@ -705,7 +745,7 @@ export function createTooltip(options: TooltipOptions): HTMLElement;`;
           keyboardTitle: t('accessibility.keyboard.title'),
           keyboardItems: [
             { key: 'Tab',       description: toPlainText(t('accessibility.keyboard.tab'))      },
-            { key: 'Esc',       description: toPlainText(t('accessibility.keyboard.escape'))   + ' NOTA: factory Nortear não implementa Escape — apenas blur fecha.' },
+            { key: 'Esc',       description: toPlainText(t('accessibility.keyboard.escape'))   + ' O foco fica onde está: sair do gatilho é papel do Tab, não do Escape.' },
             { key: 'Shift+Tab', description: toPlainText(t('accessibility.keyboard.shiftTab')) },
           ],
         });
@@ -723,10 +763,10 @@ export function createTooltip(options: TooltipOptions): HTMLElement;`;
 
       case 'notas': {
         const extraNote = getLocale() === 'en'
-          ? '<strong>Nortear divergences</strong>: custom factory has no TooltipProvider — delay is per-instance and fixed at 300ms. No auto-flip on collision, no Arrow, no Escape handler, no align/sideOffset/open/onOpenChange props. Content is plain text (no <code>&lt;kbd&gt;</code> children).'
+          ? '<strong>What the balloon does not do</strong>: there is no controlled state and no arrow pointing back at the trigger, and the chosen <code>side</code> is final — nothing repositions the balloon when the screen runs out of room, so pick a side that fits. Everything else is here: per-call <code>delayDuration</code>, a shared wait across a group through <code>createTooltipProvider</code>, Escape to dismiss without moving the focus, and markup in <code>content</code> as a ready-made element (a key inside <code>&lt;kbd&gt;</code>, a word inside <code>&lt;strong&gt;</code>).'
           : getLocale() === 'es'
-          ? '<strong>Divergencias Nortear</strong>: la factory custom no tiene TooltipProvider — el delay es por instancia y fijo en 300 ms. Sin auto-flip por colisión, sin Arrow, sin handler de Escape, sin props align/sideOffset/open/onOpenChange. Content es texto plano (sin children <code>&lt;kbd&gt;</code>).'
-          : '<strong>Divergências Nortear</strong>: a factory custom não possui TooltipProvider — o delay é por instância e fixo em 300ms. Sem auto-flip por colisão, sem Arrow, sem handler de Escape, sem props align/sideOffset/open/onOpenChange. Content é texto plano (sem children <code>&lt;kbd&gt;</code>).';
+          ? '<strong>Lo que el globo no hace</strong>: no hay estado controlado ni flecha apuntando al disparador, y el <code>side</code> elegido es el definitivo — nada reposiciona el globo cuando falta espacio en pantalla, así que elija un lado que quepa. Todo lo demás está: <code>delayDuration</code> por llamada, espera compartida por grupo con <code>createTooltipProvider</code>, Escape para descartar sin mover el foco, y marcado en <code>content</code> como elemento ya montado (una tecla en <code>&lt;kbd&gt;</code>, una palabra en <code>&lt;strong&gt;</code>).'
+          : '<strong>O que o balão não faz</strong>: não há estado controlado nem seta apontando para o gatilho, e o <code>side</code> escolhido é o final — nada reposiciona o balão quando falta espaço na tela, então escolha um lado que caiba. O resto está aqui: <code>delayDuration</code> por chamada, espera compartilhada por grupo com <code>createTooltipProvider</code>, Escape para dispensar sem tirar o foco do lugar, e marcação em <code>content</code> como elemento já montado (uma tecla em <code>&lt;kbd&gt;</code>, uma palavra em <code>&lt;strong&gt;</code>).';
 
         return createDocsNotes({
           title: t('notes.title'),

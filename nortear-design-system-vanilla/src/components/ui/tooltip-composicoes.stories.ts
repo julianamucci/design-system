@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
-import { createTooltip } from './tooltip';
+import { createTooltip, createTooltipProvider } from './tooltip';
 import { createButton, createButtonIcon } from './button';
 
 // As composições que o conteúdo compartilhado documenta, mais os quatro lados de
@@ -250,6 +250,90 @@ export const PlacementSides: Story = {
         await expect(balaoDe(gatilho)).toHaveAttribute('data-side', lado);
         await expect(balaoDe(gatilho)!.textContent).toBe(`Tooltip ${lado}`);
       }
+    });
+
+    await step('Cleanup', async () => { limparPortal(); });
+  },
+};
+
+// ─── Grupo com espera compartilhada e conteúdo com marcação ───────────────────
+//
+// Duas faltas de uma vez. A espera era constante de MÓDULO: a página inteira
+// tinha de concordar com 300ms, e ajustar a barra de ícones significava ajustar
+// todo balão do produto. E `content` era só `string`, então um atalho em `<kbd>`
+// não tinha como entrar — a alternativa seria HTML em string, que a guideline
+// 09 fecha.
+
+export const ProviderWithMarkup: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Uma barra de ícones com espera própria: o provedor guarda o padrão do grupo, e o ' +
+          'balão seguinte abre na hora enquanto a janela de dispensa dura. O conteúdo entra ' +
+          'como elemento, que é como a tecla do atalho ganha desenho próprio.',
+      },
+    },
+  },
+  render: () => {
+    const barra = document.createElement('div');
+    barra.className = 'nds-cluster';
+    barra.dataset.spacing = 'xs';
+
+    // Espera longa de propósito: é ela que torna a dispensa MENSURÁVEL. Sem a
+    // janela do grupo, o segundo balão levaria três segundos para aparecer, e a
+    // asserção da play falha por tempo. Uma espera por chamada é justamente o
+    // que a constante de módulo não permitia.
+    const grupo = createTooltipProvider({ delayDuration: 3000, skipDelayDuration: 5000 });
+
+    for (const [acao, tecla] of [['Copiar', 'C'], ['Colar', 'V']] as const) {
+      const trigger = createButton({ variant: 'outline', label: acao, ariaLabel: acao });
+
+      const conteudo = document.createElement('span');
+      conteudo.append(`${acao} `);
+      const kbd = document.createElement('kbd');
+      kbd.textContent = `Ctrl+${tecla}`;
+      conteudo.appendChild(kbd);
+
+      barra.appendChild(grupo.createTooltip({ trigger, content: conteudo, side: 'bottom' }));
+    }
+
+    return wrap(barra);
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const copiar = canvas.getByRole('button', { name: 'Copiar' });
+    const colar = canvas.getByRole('button', { name: 'Colar' });
+
+    await step('A marcação chega ao balão como marcação, não como texto', async () => {
+      copiar.focus();
+      await waitFor(async () => {
+        await expect(balaoDe(copiar)).not.toBeNull();
+      });
+      const balao = balaoDe(copiar)!;
+      // Uma string teria virado o literal "<kbd>Ctrl+C</kbd>" na tela.
+      await expect(balao.querySelector('kbd')?.textContent).toBe('Ctrl+C');
+      await expect(balao.textContent).toMatch(/Copiar Ctrl\+C/);
+    });
+
+    await step('Dentro da janela do grupo, o balão seguinte abre sem esperar', async () => {
+      copiar.blur();
+      await waitFor(async () => {
+        await expect(balaoDe(copiar)).toBeNull();
+      });
+      // `mouseenter` e não `focus`: o foco já abria na hora antes de existir
+      // grupo nenhum, e provaria a coisa errada. Quem espera é o ponteiro.
+      //
+      // O prazo é a prova: a espera do grupo é de 3s, então um balão que
+      // aparece dentro de 1s só pode ter pulado a fila.
+      colar.dispatchEvent(new MouseEvent('mouseenter', { bubbles: true }));
+      await waitFor(
+        async () => {
+          await expect(balaoDe(colar)).not.toBeNull();
+        },
+        { timeout: 1000 },
+      );
+      await expect(balaoDe(colar)!.querySelector('kbd')?.textContent).toBe('Ctrl+V');
     });
 
     await step('Cleanup', async () => { limparPortal(); });

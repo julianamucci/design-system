@@ -72,7 +72,7 @@ function priorityLabel(raw: string): string {
 //   - Imagem first/last child ganha radius + `pt-0` automático via classes do Card.
 
 function buildProductCardPreview(): HTMLElement {
-  const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+  const card = createCard({ class: 'nds-w-full nds-max-w-sm' });
 
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: t('demonstration.labels.productTitle'), level: 3 }));
@@ -87,7 +87,7 @@ function buildProductCardPreview(): HTMLElement {
   stock.textContent = t('demonstration.labels.productStock');
   content.append(price, stock);
 
-  const footer = createCardFooter({ className: 'nds-cluster' });
+  const footer = createCardFooter({ class: 'nds-cluster' });
   footer.dataset.justify = 'end';
   footer.dataset.spacing = 'sm';
   footer.appendChild(
@@ -116,7 +116,7 @@ const DEMO_IMAGE_AVATAR =
   'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=160&h=160&fit=crop&crop=faces';
 
 function buildProfileCardPreview(): HTMLElement {
-  const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+  const card = createCard({ class: 'nds-w-full nds-max-w-sm' });
   const header = createCardHeader();
 
   // Row: Avatar + (title + description)
@@ -143,7 +143,7 @@ function buildProfileCardPreview(): HTMLElement {
 }
 
 function buildMetricCardPreview(): HTMLElement {
-  const card = createCard({ className: 'nds-w-full nds-max-w-xs' });
+  const card = createCard({ class: 'nds-w-full nds-max-w-xs' });
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: t('demonstration.labels.metricTitle'), level: 3 }));
   const content = createCardContent();
@@ -159,7 +159,7 @@ function buildMetricCardPreview(): HTMLElement {
 }
 
 function buildSmallCardPreview(): HTMLElement {
-  const card = createCard({ size: 'sm', className: 'nds-w-full nds-max-w-xs' });
+  const card = createCard({ size: 'sm', class: 'nds-w-full nds-max-w-xs' });
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: t('demonstration.labels.metricTitle'), level: 4 }));
   const content = createCardContent();
@@ -180,7 +180,7 @@ function buildWithFooterPreview(): HTMLElement {
 }
 
 function buildWithActionPreview(): HTMLElement {
-  const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+  const card = createCard({ class: 'nds-w-full nds-max-w-sm' });
 
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: t('demonstration.labels.metricTitle'), level: 3 }));
@@ -209,7 +209,7 @@ function buildWithActionPreview(): HTMLElement {
 }
 
 function buildWithImagePreview(): HTMLElement {
-  const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+  const card = createCard({ class: 'nds-w-full nds-max-w-sm' });
   const img = document.createElement('img');
   img.src = 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80';
   img.alt = t('demonstration.labels.productTitle');
@@ -427,8 +427,8 @@ export function createCardDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair1.dont')),
               doPreviewFactory: () => buildProductCardPreview(),
               dontPreviewFactory: () => {
-                const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
-                const content = createCardContent({ className: 'nds-p-4' });
+                const card = createCard({ class: 'nds-w-full nds-max-w-sm' });
+                const content = createCardContent({ class: 'nds-p-4' });
                 const p = document.createElement('p');
                 p.className = 'nds-text-body';
                 p.textContent = '—';
@@ -444,10 +444,10 @@ export function createCardDocs(): HTMLElement {
               dontCaption: toPlainText(t('doDont.pair2.dont')),
               doPreviewFactory: () => buildProductCardPreview(),
               dontPreviewFactory: () => {
-                const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+                const card = createCard({ class: 'nds-w-full nds-max-w-sm' });
                 const header = createCardHeader();
                 header.appendChild(createCardTitle({ text: t('demonstration.labels.productTitle'), level: 3 }));
-                const footer = createCardFooter({ className: 'nds-cluster' });
+                const footer = createCardFooter({ class: 'nds-cluster' });
                 footer.dataset.justify = 'end';
                 footer.dataset.spacing = 'sm';
                 footer.appendChild(createButton({ variant: 'outline', label: t('demonstration.labels.actionEdit') }));
@@ -473,7 +473,7 @@ export function createCardDocs(): HTMLElement {
   createCardFooter,
 } from '@/components/ui/card';`,
           secondaryDescription: t('import.full'),
-          secondaryCode: `const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+          secondaryCode: `const card = createCard({ class: 'nds-w-full nds-max-w-sm' });
 
 const header = createCardHeader();
 header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
@@ -491,7 +491,7 @@ card.append(header, content, footer);`,
 
       case 'variantes': {
         // DocsVariants title: "Tamanhos e Composições" conforme translations.
-        const codeDefault = `const card = createCard({ className: 'nds-w-full nds-max-w-sm' });
+        const codeDefault = `const card = createCard({ class: 'nds-w-full nds-max-w-sm' });
 const header = createCardHeader();
 header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
 header.appendChild(createCardDescription({ text: 'Descrição curta.' }));
@@ -500,7 +500,7 @@ content.textContent = 'R$ 1.299,00';
 card.append(header, content);`;
 
         const codeSm = `// size: 'sm' propaga data-size="sm"; subcomponentes reagem via group-data.
-const card = createCard({ size: 'sm', className: 'nds-w-full nds-max-w-xs' });
+const card = createCard({ size: 'sm', class: 'nds-w-full nds-max-w-xs' });
 const header = createCardHeader();
 header.appendChild(createCardTitle({ text: 'Compacto', level: 4 }));
 const content = createCardContent();
@@ -509,7 +509,7 @@ card.append(header, content);`;
         const codeWithFooter = `// Card detecta o footer via has-data-[slot=card-footer]:pb-0.
 // O pb do Card é removido automaticamente para alinhar a borda superior.
 const card = createCard();
-const footer = createCardFooter({ className: 'nds-cluster' });
+const footer = createCardFooter({ class: 'nds-cluster' });
 footer.dataset.spacing = 'sm';
 footer.dataset.justify = 'end';
 card.append(header, content, footer);`;
@@ -598,13 +598,15 @@ card.append(img, header);`;
       case 'propriedades': {
         const interfaceCode = `export type CardSize = 'default' | 'sm';
 
-export interface CardOptions            { size?: CardSize; className?: string; }
-export interface CardHeaderOptions      { className?: string; }
-export interface CardTitleOptions       { text?: string; level?: 1|2|3|4|5|6; className?: string; }
-export interface CardDescriptionOptions { text?: string; className?: string; }
-export interface CardActionOptions      { className?: string; }
-export interface CardContentOptions     { className?: string; }
-export interface CardFooterOptions      { className?: string; }`;
+// A opção de classe é \`class\`. \`className\` continua aceito como apelido
+// depreciado; quando os dois vêm, \`class\` vence.
+export interface CardOptions            { size?: CardSize; class?: string; }
+export interface CardHeaderOptions      { class?: string; }
+export interface CardTitleOptions       { text?: string; level?: 1|2|3|4|5|6; class?: string; }
+export interface CardDescriptionOptions { text?: string; class?: string; }
+export interface CardActionOptions      { class?: string; }
+export interface CardContentOptions     { class?: string; }
+export interface CardFooterOptions      { class?: string; }`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -614,12 +616,14 @@ export interface CardFooterOptions      { className?: string; }`;
           description: t('props.table.description'),
         };
 
+        // `class` é o nome da opção em todas as peças do Card. `className`
+        // continua aceito como apelido depreciado, para não quebrar chamador.
         const classNameItem = {
-          name: 'className',
+          name: 'class',
           type: 'string',
           defaultValue: '—',
           required: 'Não',
-          description: t('props.table.className'),
+          description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.',
         };
 
         return createDocsProps({

@@ -341,7 +341,7 @@ export function createCommandDocs(): HTMLElement {
       case 'variantes': {
         const codeInline = `const cmd = createCommand({\n  placeholder: 'Buscar componente...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes' },\n    { value: 'input',  label: 'Input',  group: 'Componentes' },\n  ],\n  onSelect: (value) => console.log('selected:', value),\n});`;
         const codeCombobox = `// Command inline como combobox dentro de Popover\nconst cmd = createCommand({\n  placeholder: 'Buscar item...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: listItems,\n  onSelect: (value) => {\n    setSelected(value);\n    closePopover();\n  },\n});`;
-        const codePalette = `// Command dentro de Dialog para command palette\nconst cmd = createCommand({\n  placeholder: 'Buscar comando ou ação...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes', shortcut: '⌘B' },\n  ],\n  onSelect: (value) => {\n    executeAction(value);\n    closeDialog();\n  },\n});\n\n// Atalho global Cmd+K\nwindow.addEventListener('keydown', (e) => {\n  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n    e.preventDefault();\n    openDialog();\n  }\n});`;
+        const codePalette = `// Command dentro de Dialog para command palette\nconst cmd = createCommand({\n  placeholder: 'Buscar comando ou ação...',\n  emptyMessage: 'Nenhum resultado encontrado.',\n  items: [\n    { value: 'button', label: 'Button', group: 'Componentes', shortcut: '⌘B' },\n    // O traço quebra a sequência: o que vem antes e o que vem depois passam\n    // a contar como blocos distintos, e é a fronteira que o CSS desenha.\n    { type: 'separator' },\n    { value: 'novo', label: 'Novo arquivo', group: 'Ações', shortcut: '⌘N' },\n  ],\n  onSelect: (value) => {\n    executeAction(value);\n    closeDialog();\n  },\n});\n\n// Atalho global Cmd+K\nwindow.addEventListener('keydown', (e) => {\n  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {\n    e.preventDefault();\n    openDialog();\n  }\n});`;
 
         const codeWithGroups = `const wrap = document.createElement('div');
 wrap.className = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
@@ -434,6 +434,9 @@ wrap.appendChild(
                     items: [
                       { value: 'button', label: t('demonstration.labels.itemButton'), group: t('demonstration.labels.groupComponents'), shortcut: '⌘B' },
                       { value: 'input',  label: t('demonstration.labels.itemInput'),  group: t('demonstration.labels.groupComponents'), shortcut: '⌘I' },
+                      // O traço fecha o bloco de componentes e abre o de utilitários.
+                      { type: 'separator' },
+                      { value: 'cn', label: 'cn()', group: t('demonstration.labels.groupUtils') },
                     ],
                   })
                 );
@@ -516,20 +519,27 @@ wrap.appendChild(
 export type CommandOptions = {
   placeholder?: string;
   emptyMessage?: string;
-  items: CommandItem[];
+  items: CommandEntry[];
   onSelect?: (value: string) => void;
   class?: string;
 };
 
+// A lista aceita comandos e traços, em união discriminada por \`type\`.
+export type CommandEntry = CommandItem | CommandSeparator;
+
 // CommandItem
 export type CommandItem = {
+  type?: 'item';        // ausente vale por 'item'
   value: string;
   label: string;
   group?: string;
   disabled?: boolean;
   checked?: boolean;
   shortcut?: string;
-};`;
+};
+
+// Traço entre dois blocos de comandos.
+export type CommandSeparator = { type: 'separator' };`;
 
         const propsCols = {
           prop:        t('props.table.prop'),
@@ -551,7 +561,7 @@ export type CommandItem = {
               items: [
                 { name: 'placeholder',  type: 'string',                 defaultValue: '"Search…"',           required: 'Não', description: toPlainText(t('props.table.inputPlaceholder')) },
                 { name: 'emptyMessage', type: 'string',                 defaultValue: '"No results found."', required: 'Não', description: 'Frase anunciada pela região viva quando a busca não encontra nada.' },
-                { name: 'items',        type: 'CommandItem[]',          defaultValue: '—',                   required: 'Sim', description: 'Lista de itens renderizados e filtrados.' },
+                { name: 'items',        type: 'CommandEntry[]',         defaultValue: '—',                   required: 'Sim', description: 'Comandos e traços, na ordem em que aparecem. O traço é uma quebra na sequência: os comandos de um lado e os do outro passam a contar como blocos distintos.' },
                 { name: 'onSelect',     type: '(value: string) => void', defaultValue: '—',                  required: 'Não', description: toPlainText(t('props.table.itemOnSelect')) },
                 { name: 'class',        type: 'string',                 defaultValue: '—',                   required: 'Não', description: toPlainText(t('props.table.className')) },
               ],
@@ -560,6 +570,7 @@ export type CommandItem = {
               title: t('props.commandItemTitle'),
               cols: propsCols,
               items: [
+                { name: 'type',     type: "'item' | 'separator'", defaultValue: "'item'", required: 'Não', description: 'Discriminante da lista. Com `separator`, a entrada é só o traço e não leva rótulo nem valor. Um traço cujos vizinhos sumiram no filtro desaparece com eles, porque não sobrou fronteira para marcar.' },
                 { name: 'value',    type: 'string',  defaultValue: '—',     required: 'Sim', description: toPlainText(t('props.table.itemValue'))    },
                 { name: 'label',    type: 'string',  defaultValue: '—',     required: 'Sim', description: 'Texto exibido no item.'                  },
                 { name: 'group',    type: 'string',  defaultValue: '—',     required: 'Não', description: 'Nome do grupo para agrupar itens.'        },

@@ -27,18 +27,17 @@ const meta: Meta<DropdownArgs> = {
     side: {
       control: { type: 'inline-radio' },
       options: ['top', 'bottom', 'left', 'right'],
-      description:
-        'Lado de abertura. NOTA: factory Vanilla fixa bottom; documenta o argType para manter paridade conceitual com outras stacks.',
+      description: 'Borda do gatilho por onde o menu sai.',
     },
     align: {
       control: { type: 'inline-radio' },
       options: ['start', 'center', 'end'],
-      description: 'Alinhamento do Content.',
+      description: 'Encosto do menu no eixo perpendicular ao lado.',
     },
     modal: {
       control: 'boolean',
       description:
-        'Bloqueia interação fora. NOTA: factory Vanilla sempre permite click fora (não-modal de fato).',
+        'Bloqueia a interação com o resto da página: o clique de fora dispensa o menu sem chegar ao que está embaixo, e a página não rola.',
     },
     defaultOpen: { control: 'boolean', description: 'Abre o menu ao montar.' },
   },
@@ -67,6 +66,9 @@ function buildMenuEl(args: DropdownArgs): { el: HTMLElement; trigger: HTMLButton
       { type: 'separator' },
       { type: 'item', label: 'Sair', value: 'logout' },
     ],
+    side: args.side,
+    align: args.align,
+    modal: args.modal,
   });
   el.dataset.slot = 'dropdown-menu';
   return { el, trigger };
@@ -83,9 +85,8 @@ export const Playground: Story = {
       'accessibility.item2',
       'accessibility.item5',
     ],
-    // A fábrica não tem submenu aninhado nem posicionamento por `side`: o que
-    // ela entrega é o menu plano. Declarar cobertura desses itens aqui seria
-    // fazer o auditor mentir.
+    // A fábrica não tem submenu aninhado: o que ela entrega é o menu plano.
+    // Declarar cobertura desses itens aqui seria fazer o auditor mentir.
     coversNotApplicable: {
       'functional.item7': 'a fábrica não expõe submenu aninhado — não há SubTrigger para abrir',
       'visual.item4': 'sem submenu na fábrica, não existe estado para o Chromatic fotografar',
@@ -134,6 +135,17 @@ export const Playground: Story = {
       await expect(menu).toBeVisible();
       await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
       await expect(within(menu).getAllByRole('menuitem')).toHaveLength(3);
+    });
+
+    await step('Os controles de posição e de modal chegam ao menu', async () => {
+      const menu = await body.findByRole('menu');
+      // O lado e o encosto escolhidos ficam no markup: é o que liga o controle
+      // do painel ao painel de verdade. A prova de que eles MOVEM o menu está
+      // na story Variants/Placement, que mede a caixa.
+      await expect(menu.dataset.side).toBe(args.side);
+      await expect(menu.dataset.align).toBe(args.align);
+      // Modal trava a rolagem da página enquanto o menu está aberto.
+      await expect(document.body.style.overflow).toBe(args.modal ? 'hidden' : '');
     });
 
     await step('Enter escolhe o item, fecha o menu e devolve o foco ao gatilho', async () => {

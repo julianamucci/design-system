@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
-import { createDrawer, type DrawerDirection } from './drawer';
+import { createDrawer, type DrawerDirection, type DrawerElement } from './drawer';
 import { createButton } from './button';
 import { limparPortaisDoDrawer } from './drawer-portal-cleanup';
 import { createDrawerDocs } from '@/components/docs/DrawerDocs';
@@ -214,6 +214,23 @@ export const Playground: Story = {
         }
       });
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
+    });
+
+    await step('6. Abrir e fechar por código, sem passar pelo gatilho', async () => {
+      // A gaveta só nascia de um clique: quem precisava abri-la a partir de um
+      // atalho, de uma rota ou de uma resposta do servidor tinha de sintetizar
+      // um `.click()` no gatilho. Os verbos são os mesmos do Sidebar desta
+      // stack, em inglês.
+      const gaveta = canvasElement.querySelector('[data-slot="drawer"]') as DrawerElement;
+      await expect(gaveta.isOpen()).toBe(false);
+
+      gaveta.open();
+      await waitForPortal('dialog');
+      await expect(gaveta.isOpen()).toBe(true);
+
+      gaveta.toggle();
+      await waitForPortalGone('dialog');
+      await expect(gaveta.isOpen()).toBe(false);
     });
 
     // O control `defaultOpen` decide o estado FINAL — que é o que o Chromatic

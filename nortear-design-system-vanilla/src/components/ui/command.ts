@@ -39,6 +39,8 @@ import { cn } from '@/lib/utils';
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type CommandItem = {
+  /** Discriminante da união com o separador. Ausente vale por `'item'`. */
+  type?: 'item';
   value: string;
   label: string;
   group?: string;
@@ -56,11 +58,27 @@ export type CommandItem = {
   shortcut?: string;
 };
 
+/**
+ * Traço entre dois blocos de comandos.
+ *
+ * União DISCRIMINADA, na mesma forma que `createSelect` usa nesta stack — e
+ * pelo mesmo motivo: com tudo opcional num objeto só, cada leitura de `value` e
+ * de `label` precisaria de um `??` defensivo que a API pública nunca alcança.
+ *
+ * O traço é uma QUEBRA na sequência, não um enfeite: os comandos de um lado e
+ * os do outro passam a contar como blocos distintos, e é a fronteira entre
+ * blocos que o CSS desenha. Um traço cujos vizinhos sumiram no filtro
+ * desaparece com eles, porque não sobrou fronteira para marcar.
+ */
+export type CommandSeparator = { type: 'separator' };
+
+export type CommandEntry = CommandItem | CommandSeparator;
+
 export type CommandOptions = {
   placeholder?: string;
   /** Frase anunciada quando a busca não encontra nada. */
   emptyMessage?: string;
-  items: CommandItem[];
+  items: CommandEntry[];
   onSelect?: (value: string) => void;
   class?: string;
 };
@@ -135,9 +153,11 @@ export function createCommand(options: CommandOptions): HTMLElement {
 
   // Id estável por item (índice na lista ORIGINAL, não na filtrada): é o que o
   // `aria-activedescendant` aponta, e ele não pode mudar de dono a cada filtro.
-  const idDoItem = new Map<CommandItem, string>(
-    items.map((item, i) => [item, `${_cmdId}-opt-${i}`]),
-  );
+  const idDoItem = new Map<CommandItem, string>();
+  items.forEach((entrada, i) => {
+    if (entrada.type === 'separator') return;
+    idDoItem.set(entrada, `${_cmdId}-opt-${i}`);
+  });
 
   // Search input wrapper
   const inputWrapper = document.createElement('div');
@@ -181,14 +201,44 @@ export function createCommand(options: CommandOptions): HTMLElement {
   /** Só os que o teclado alcança — o desabilitado nunca é destino. */
   let navigableItems: HTMLElement[] = [];
 
-  function agrupar(filtrados: CommandItem[]): Map<string, CommandItem[]> {
-    const mapa = new Map<string, CommandItem[]>();
-    for (const item of filtrados) {
-      const chave = item.group ?? '';
-      if (!mapa.has(chave)) mapa.set(chave, []);
-      mapa.get(chave)!.push(item);
+  /** Um item já filtrado, com o bloco a que ele pertence. */
+  type ItemFiltrado = { item: CommandItem; bloco: number };
+  /** O que vira uma caixa `.nds-command-group` na tela. */
+  type GrupoRenderizado = { titulo: string; itens: CommandItem[] };
+
+  /**
+   * Junta os itens em grupos, na ordem em que eles aparecem na tela.
+   *
+   * O agrupamento acontece DENTRO de cada bloco: dois comandos sem grupo,
+   * separados por um traço, precisam cair em caixas diferentes — é isso que faz
+   * o traço aparecer entre eles. Sem separador nenhum existe um bloco só, e o
+   * resultado é o de sempre: uma caixa por nome de grupo.
+   *
+   * Dois mapas aninhados, e não uma chave de texto juntando bloco e nome: o
+   * nome do grupo é texto de quem consome, e qualquer junta que se escolhesse
+   * seria um caractere que alguém um dia pode digitar.
+   */
+  function agrupar(filtrados: ItemFiltrado[]): GrupoRenderizado[] {
+    const porBloco = new Map<number, Map<string, GrupoRenderizado>>();
+    const ordem: GrupoRenderizado[] = [];
+
+    for (const { item, bloco } of filtrados) {
+      let doBloco = porBloco.get(bloco);
+      if (!doBloco) {
+        doBloco = new Map<string, GrupoRenderizado>();
+        porBloco.set(bloco, doBloco);
+      }
+      const titulo = item.group ?? '';
+      let grupo = doBloco.get(titulo);
+      if (!grupo) {
+        grupo = { titulo, itens: [] };
+        doBloco.set(titulo, grupo);
+        ordem.push(grupo);
+      }
+      grupo.itens.push(item);
     }
-    return mapa;
+
+    return ordem;
   }
 
   /**
@@ -216,9 +266,17 @@ export function createCommand(options: CommandOptions): HTMLElement {
     input.removeAttribute('aria-activedescendant');
 
     const q = query.toLowerCase();
-    const filtrados = items.filter(
-      (item) => !q || item.label.toLowerCase().includes(q) || item.value.toLowerCase().includes(q)
-    );
+    const filtrados: ItemFiltrado[] = [];
+    let bloco = 0;
+    for (const entrada of items) {
+      if (entrada.type === 'separator') {
+        bloco += 1;
+        continue;
+      }
+      const casa =
+        !q || entrada.label.toLowerCase().includes(q) || entrada.value.toLowerCase().includes(q);
+      if (casa) filtrados.push({ item: entrada, bloco });
+    }
 
     const semResultado = filtrados.length === 0;
     empty.textContent = semResultado ? emptyMessage : '';
@@ -235,7 +293,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
     let primeiro = true;
     let indiceDoGrupo = 0;
 
-    grupos.forEach((itensDoGrupo, nomeDoGrupo) => {
+    grupos.forEach(({ titulo: nomeDoGrupo, itens: itensDoGrupo }) => {
       if (!primeiro) list.appendChild(criarSeparador());
       primeiro = false;
 

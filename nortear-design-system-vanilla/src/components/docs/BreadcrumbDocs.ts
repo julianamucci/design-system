@@ -54,15 +54,15 @@ function screenReaderItems(): string[] {
 const { t, subscribe } = createTranslation(breadcrumbTranslations as Record<string, unknown>, {
   'pt-BR': {
     'props.extensibility':
-      '<code>className</code> — todos os subcomponentes aceitam <code>className</code> para customização. Para integração com roteadores, a factory do link já devolve um <code>&lt;a&gt;</code> com o <code>href</code> que você passou: intercepte o clique nele e delegue ao roteador, mantendo o endereço real no atributo para abrir em nova aba e para o menu de contexto.',
+      '<code>class</code> — todas as peças aceitam <code>class</code> para customização (<code>className</code> segue aceito como apelido depreciado). Para integração com roteadores, a fábrica do link já devolve um <code>&lt;a&gt;</code> com o <code>href</code> que você passou: intercepte o clique nele e delegue ao roteador, mantendo o endereço real no atributo para abrir em nova aba e para o menu de contexto.',
   },
   en: {
     'props.extensibility':
-      '<code>className</code> — all subcomponents accept <code>className</code> for customization. For router integration, the link factory already returns an <code>&lt;a&gt;</code> with the <code>href</code> you passed: intercept the click on it and delegate to the router, keeping the real address in the attribute so open-in-new-tab and the context menu keep working.',
+      '<code>class</code> — every part accepts <code>class</code> for customization (<code>className</code> is still accepted as a deprecated alias). For router integration, the link factory already returns an <code>&lt;a&gt;</code> with the <code>href</code> you passed: intercept the click on it and delegate to the router, keeping the real address in the attribute so open-in-new-tab and the context menu keep working.',
   },
   es: {
     'props.extensibility':
-      '<code>className</code> — todos los subcomponentes aceptan <code>className</code> para personalización. Para integración con enrutadores, la factory del enlace ya devuelve un <code>&lt;a&gt;</code> con el <code>href</code> que pasaste: intercepta el clic y delega al enrutador, manteniendo la dirección real en el atributo para abrir en pestaña nueva y para el menú contextual.',
+      '<code>class</code> — todas las piezas aceptan <code>class</code> para personalización (<code>className</code> sigue aceptado como alias obsoleto). Para integración con enrutadores, la factory del enlace ya devuelve un <code>&lt;a&gt;</code> con el <code>href</code> que pasaste: intercepta el clic y delega al enrutador, manteniendo la dirección real en el atributo para abrir en pestaña nueva y para el menú contextual.',
   },
 });
 
@@ -549,30 +549,35 @@ ellipsisItem.appendChild(createBreadcrumbEllipsis({ label: 'Mais páginas' }));
         });
 
       case 'propriedades': {
+        // A opção de classe é `class` em todas as peças. `className` continua
+        // aceito como apelido depreciado; quando os dois vêm, `class` vence.
         const interfaceCode = `export interface BreadcrumbOptions {
   label?: string;      // aria-label do <nav> (default: "breadcrumb")
-  className?: string;
+  class?: string;
 }
+
+export interface BreadcrumbListOptions { class?: string; }
+export interface BreadcrumbItemOptions { class?: string; }
 
 export interface BreadcrumbLinkOptions {
   href: string;        // obrigatório
   text?: string;
-  className?: string;
+  class?: string;
 }
 
 export interface BreadcrumbPageOptions {
   text?: string;
-  className?: string;
+  class?: string;
 }
 
 export interface BreadcrumbSeparatorOptions {
   content?: string | HTMLElement; // default: ChevronRight
-  className?: string;
+  class?: string;
 }
 
 export interface BreadcrumbEllipsisOptions {
-  label?: string;      // aria-label (default: "More pages")
-  className?: string;
+  label?: string;      // sem rótulo, as reticências ficam decorativas
+  class?: string;
 }`;
 
         const propsCols = {
@@ -591,21 +596,21 @@ export interface BreadcrumbEllipsisOptions {
               cols: propsCols,
               items: [
                 { name: 'label', type: 'string', defaultValue: '"breadcrumb"', required: 'Não', description: 'aria-label do <nav>.' },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+                { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.' },
               ],
             },
             {
               title: t('props.listTitle'),
               cols: propsCols,
               items: [
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+                { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.' },
               ],
             },
             {
               title: t('props.itemTitle'),
               cols: propsCols,
               items: [
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+                { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.' },
               ],
             },
             {
@@ -614,7 +619,7 @@ export interface BreadcrumbEllipsisOptions {
               items: [
                 { name: 'href', type: 'string', defaultValue: '—', required: 'Sim', description: toPlainText(t('props.table.href')) },
                 { name: 'text', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+                { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.' },
               ],
             },
             {
@@ -622,7 +627,7 @@ export interface BreadcrumbEllipsisOptions {
               cols: propsCols,
               items: [
                 { name: 'text', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.children') },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+                { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.' },
               ],
             },
             {
@@ -630,15 +635,15 @@ export interface BreadcrumbEllipsisOptions {
               cols: propsCols,
               items: [
                 { name: 'content', type: 'string | HTMLElement', defaultValue: 'ChevronRight', required: 'Não', description: 'Conteúdo do separador (texto ou ícone).' },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+                { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.' },
               ],
             },
             {
               title: t('props.ellipsisTitle'),
               cols: propsCols,
               items: [
-                { name: 'label', type: 'string', defaultValue: '"More pages"', required: 'Não', description: 'aria-label do ellipsis.' },
-                { name: 'className', type: 'string', defaultValue: '—', required: 'Não', description: t('props.table.className') },
+                { name: 'label', type: 'string', defaultValue: '—', required: 'Não', description: 'Nome acessível do indicador de níveis ocultos. Com rótulo, as reticências são anunciadas; sem ele, ficam decorativas — que é o certo quando um gatilho as envolve e já carrega o próprio nome.' },
+                { name: 'class', type: 'string', defaultValue: '—', required: 'Não', description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.' },
               ],
             },
           ],
@@ -656,7 +661,7 @@ export interface BreadcrumbEllipsisOptions {
   --ring: 221 83% 53%;               /* focus ring */
 }
 
-/* Customize apenas o separador via className */
+/* Customize apenas o separador via class */
 .my-breadcrumb-separator {
   color: hsl(var(--border));
 }`;

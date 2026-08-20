@@ -363,7 +363,7 @@ export function createLabelDocs(): HTMLElement {
         });
 
       case 'propriedades': {
-        const interfaceCode = `export interface LabelOptions {\n  text?: string;\n  /** The id of the form control this label describes. */\n  htmlFor?: string;\n  /** Additional CSS classes to append. */\n  className?: string;\n}\n\nexport function createLabel(options: LabelOptions = {}): HTMLLabelElement`;
+        const interfaceCode = `export interface LabelOptions {\n  text?: string;\n  /** id do controle associado (input, select, etc.). */\n  htmlFor?: string;\n  /** Classes .nds-* adicionais. \`className\` é apelido depreciado desta opção. */\n  class?: string;\n}\n\nexport function createLabel(options: LabelOptions = {}): HTMLLabelElement`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -382,7 +382,7 @@ export function createLabelDocs(): HTMLElement {
               items: [
                 { name: 'text',      type: 'string', defaultValue: '""',  required: 'Não', description: t('props.table.children') },
                 { name: 'htmlFor',   type: 'string', defaultValue: '—',   required: 'Não', description: toPlainText(t('props.table.htmlFor')) },
-                { name: 'className', type: 'string', defaultValue: '—',   required: 'Não', description: t('props.table.className') },
+                { name: 'class',     type: 'string', defaultValue: '—',   required: 'Não', description: toPlainText(t('props.table.className')) + ' Aceita também o apelido depreciado className; quando os dois vêm, class vence.' },
               ],
             },
           ],

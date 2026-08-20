@@ -3,7 +3,12 @@ import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
 import DOMPurify from 'dompurify';
 import { createActiveSectionObserver } from '@/lib/use-active-section';
-import { createPopover } from '@/components/ui/popover';
+import {
+  createPopover,
+  createPopoverHeader,
+  createPopoverTitle,
+  createPopoverDescription,
+} from '@/components/ui/popover';
 import { createButton } from '@/components/ui/button';
 import { createInput } from '@/components/ui/input';
 import { createLabel } from '@/components/ui/label';
@@ -97,16 +102,14 @@ function buildWithTitlePopover(): HTMLElement {
   content.className = 'nds-stack';
   content.dataset.spacing = 'sm';
 
-  const header = document.createElement('div');
-  header.className = 'nds-stack';
-  header.dataset.spacing = 'xs';
-  const title = document.createElement('h4');
-  title.className = 'nds-text-body nds-font-medium nds-leading-none';
-  title.textContent = t('demonstration.labels.title');
-  const desc = document.createElement('p');
-  desc.className = 'nds-text-caption nds-text-muted-foreground';
-  desc.textContent = t('demonstration.labels.description');
-  header.append(title, desc);
+  // Cabeçalho, título e descrição vêm das sub-fábricas: são elas que escrevem
+  // as classes `.nds-popover-*` e os `data-slot` documentados na anatomia. O
+  // título também é o que o painel usa como nome acessível.
+  const header = createPopoverHeader();
+  header.append(
+    createPopoverTitle({ text: t('demonstration.labels.title') }),
+    createPopoverDescription({ text: t('demonstration.labels.description') }),
+  );
 
   const actions = document.createElement('div');
   actions.className = 'nds-cluster';
@@ -404,7 +407,31 @@ export function createPopoverDocs(): HTMLElement {
       case 'importacao':
         return createDocsImport({
           title: t('import.title'),
-          code: `import { createPopover } from '@/components/ui/popover';`,
+          code: `import {
+  createPopover,
+  createPopoverHeader,
+  createPopoverTitle,
+  createPopoverDescription,
+} from '@/components/ui/popover';`,
+          secondaryDescription: 'Estado controlado e abertura por código:',
+          secondaryCode: `let aberto = false;
+
+const popover = createPopover({
+  trigger,
+  content,
+  side: 'bottom',
+  align: 'start',
+  sideOffset: 8,
+  open: aberto,                     // presente = quem manda é quem chama
+  onOpenChange: (proximo) => {
+    aberto = proximo;
+    popover.setOpen(proximo);       // nada se move sem esta linha
+  },
+});
+
+// Sem \`open\`, o painel se governa e os verbos continuam disponíveis:
+popover.open();
+popover.toggle();`,
         });
 
       case 'variantes': {
@@ -418,13 +445,12 @@ createPopover({ trigger, content, side: 'bottom', align: 'center' });`;
         const codeWithTitle = `const trigger = createButton({ variant: 'outline', label: 'Abrir popover' });
 
 const content = document.createElement('div');
-const title = document.createElement('h4');
-title.className = 'nds-text-body nds-font-medium';
-title.textContent = 'Configurações de exibição';
-const desc = document.createElement('p');
-desc.className = 'nds-text-caption nds-text-muted-foreground';
-desc.textContent = 'Ajuste a aparência do conteúdo.';
-content.append(title, desc);
+const header = createPopoverHeader();
+header.append(
+  createPopoverTitle({ text: 'Configurações de exibição' }),
+  createPopoverDescription({ text: 'Ajuste a aparência do conteúdo.' }),
+);
+content.append(header);
 
 createPopover({ trigger, content });`;
 
@@ -801,20 +827,40 @@ createPopover({ trigger, content });`;
         });
 
       case 'propriedades': {
-        const interfaceCode = `// createPopover(options) — factory custom Nortear
+        const interfaceCode = `// createPopover(options)
 export type PopoverSide = 'top' | 'bottom' | 'left' | 'right';
 export type PopoverAlign = 'start' | 'center' | 'end';
 
 export type PopoverOptions = {
   trigger: HTMLElement;
   content: HTMLElement | string;
-  side?: PopoverSide;
-  align?: PopoverAlign;
+  side?: PopoverSide;          // default 'bottom'
+  align?: PopoverAlign;        // default 'center'
+  sideOffset?: number;         // default 8
+  open?: boolean;              // presente = modo controlado
+  defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   class?: string;
 };
 
-export function createPopover(options: PopoverOptions): HTMLElement;`;
+// O elemento devolvido abre e fecha por código.
+export type PopoverElement = DestroyableElement & {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  setOpen: (open: boolean) => void;
+};
+
+export function createPopover(options: PopoverOptions): PopoverElement;
+
+// ─── Partes do painel ───────────────────────────────────────────────────────
+export type PopoverPartOptions = { text?: string; class?: string };
+
+export function createPopoverHeader(options?: PopoverPartOptions): HTMLElement;
+export function createPopoverTitle(
+  options?: PopoverPartOptions & { level?: 1 | 2 | 3 | 4 | 5 | 6 },  // default 4
+): HTMLElement;
+export function createPopoverDescription(options?: PopoverPartOptions): HTMLElement;`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -833,13 +879,22 @@ export function createPopover(options: PopoverOptions): HTMLElement;`;
               items: [
                 { name: 'trigger',      type: 'HTMLElement',                         defaultValue: '—',         required: 'Sim', description: 'Elemento que abre o popover ao clicar (geralmente Button).' },
                 { name: 'content',      type: 'HTMLElement | string',                defaultValue: '—',         required: 'Sim', description: 'Conteúdo do painel. String é renderizada via textContent.' },
-                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'",  required: 'Não', description: toPlainText(t('props.table.side.description')) + ' NOTA: factory Nortear não faz auto-flip por colisão.' },
-                { name: 'align',        type: "'start' | 'center' | 'end'",          defaultValue: "'center'",  required: 'Não', description: toPlainText(t('props.table.align.description')) },
+                { name: 'side',         type: "'top' | 'bottom' | 'left' | 'right'", defaultValue: "'bottom'",  required: 'Não', description: toPlainText(t('props.table.side.description')) + ' Sai no markup como data-side. A posição é fixa: não há reposicionamento automático por colisão.' },
+                { name: 'align',        type: "'start' | 'center' | 'end'",          defaultValue: "'center'",  required: 'Não', description: toPlainText(t('props.table.align.description')) + ' Sai no markup como data-align.' },
+                { name: 'sideOffset',   type: 'number',                              defaultValue: '8',         required: 'Não', description: toPlainText(t('props.table.sideOffset.description')) },
+                { name: 'open',         type: 'boolean',                             defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.open.description')) + ' Definida, o painel passa ao modo controlado: clique, Escape e clique fora só anunciam a intenção por onOpenChange, e quem move o painel é setOpen().' },
+                { name: 'defaultOpen',  type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: 'Estado inicial no modo não-controlado.' },
                 { name: 'onOpenChange', type: '(open: boolean) => void',             defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.onOpenChange.description')) },
                 { name: 'class',        type: 'string',                              defaultValue: '—',         required: 'Não', description: 'Classes adicionais aplicadas ao painel flutuante.' },
-                { name: 'open',         type: 'boolean',                             defaultValue: '—',         required: 'Não', description: toPlainText(t('props.table.open.description')) + ' NOTA: factory Nortear só suporta estado uncontrolled — observe via onOpenChange.' },
-                { name: 'modal',        type: 'boolean',                             defaultValue: 'false',     required: 'Não', description: toPlainText(t('props.table.modal.description')) + ' NOTA: factory Nortear não implementa focus trap nem scroll lock.' },
-                { name: 'sideOffset',   type: 'number',                              defaultValue: '8',         required: 'Não', description: toPlainText(t('props.table.sideOffset.description')) + ' NOTA: factory Nortear usa gap fixo (8px).' },
+              ],
+            },
+            {
+              title: 'createPopoverHeader / createPopoverTitle / createPopoverDescription',
+              cols: propsCols,
+              items: [
+                { name: 'text',  type: 'string',                    defaultValue: '—', required: 'Não', description: 'Texto da parte, escrito por textContent.' },
+                { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6',     defaultValue: '4', required: 'Não', description: 'Só no título: profundidade do cabeçalho. O painel é um diálogo e usa este elemento como nome acessível; trocar o nível encaixa o título na hierarquia da página.' },
+                { name: 'class', type: 'string',                    defaultValue: '—', required: 'Não', description: 'Classes .nds-* adicionais na parte.' },
               ],
             },
           ],

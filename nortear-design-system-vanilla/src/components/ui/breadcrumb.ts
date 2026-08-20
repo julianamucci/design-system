@@ -3,29 +3,43 @@ import { cn } from '@/lib/utils';
 // ─── Breadcrumb — Vanilla factories standalone ──────────────────────────────
 //
 // Visual: classes .nds-breadcrumb-* (standalone).
+//
+// A opção de classe é `class`, como nas outras fábricas desta stack.
+// `className` — o nome herdado do primitivo React — continua aceito como
+// apelido para não quebrar chamador; quando os dois vêm, `class` vence.
 
 export interface BreadcrumbOptions {
   /** Accessible label for the nav landmark (default: "breadcrumb"). */
   label?: string;
+  class?: string;
+  /** @deprecated Apelido de `class`. */
   className?: string;
 }
 
 export interface BreadcrumbListOptions {
+  class?: string;
+  /** @deprecated Apelido de `class`. */
   className?: string;
 }
 
 export interface BreadcrumbItemOptions {
+  class?: string;
+  /** @deprecated Apelido de `class`. */
   className?: string;
 }
 
 export interface BreadcrumbLinkOptions {
   href: string;
   text?: string;
+  class?: string;
+  /** @deprecated Apelido de `class`. */
   className?: string;
 }
 
 export interface BreadcrumbPageOptions {
   text?: string;
+  class?: string;
+  /** @deprecated Apelido de `class`. */
   className?: string;
 }
 
@@ -37,6 +51,8 @@ export interface BreadcrumbSeparatorOptions {
    * elemento para trocar.
    */
   content?: string | HTMLElement;
+  class?: string;
+  /** @deprecated Apelido de `class`. */
   className?: string;
 }
 
@@ -47,6 +63,8 @@ export interface BreadcrumbEllipsisOptions {
    * gatilho as envolve e já carrega o próprio nome.
    */
   label?: string;
+  class?: string;
+  /** @deprecated Apelido de `class`. */
   className?: string;
 }
 
@@ -81,50 +99,53 @@ function criarIconeLucide(nodes: LucideIconNode[]): SVGSVGElement {
 }
 
 export function createBreadcrumb(options: BreadcrumbOptions = {}): HTMLElement {
-  const { label = 'breadcrumb', className } = options;
+  const { label = 'breadcrumb' } = options;
+  const classe = options.class ?? options.className;
 
   const nav = document.createElement('nav');
   nav.dataset.slot = 'breadcrumb';
   nav.setAttribute('aria-label', label);
-  nav.className = cn('nds-breadcrumb', className);
+  nav.className = cn('nds-breadcrumb', classe);
 
   return nav;
 }
 
 export function createBreadcrumbList(options: BreadcrumbListOptions = {}): HTMLElement {
-  const { className } = options;
+  const classe = options.class ?? options.className;
 
   const ol = document.createElement('ol');
   ol.dataset.slot = 'breadcrumb-list';
-  ol.className = cn('nds-breadcrumb-list', className);
+  ol.className = cn('nds-breadcrumb-list', classe);
 
   return ol;
 }
 
 export function createBreadcrumbItem(options: BreadcrumbItemOptions = {}): HTMLElement {
-  const { className } = options;
+  const classe = options.class ?? options.className;
 
   const li = document.createElement('li');
   li.dataset.slot = 'breadcrumb-item';
-  li.className = cn('nds-breadcrumb-item', className);
+  li.className = cn('nds-breadcrumb-item', classe);
 
   return li;
 }
 
 export function createBreadcrumbLink(options: BreadcrumbLinkOptions): HTMLAnchorElement {
-  const { href, text = '', className } = options;
+  const { href, text = '' } = options;
+  const classe = options.class ?? options.className;
 
   const a = document.createElement('a');
   a.dataset.slot = 'breadcrumb-link';
   a.href = href;
-  a.className = cn('nds-breadcrumb-link', className);
+  a.className = cn('nds-breadcrumb-link', classe);
   if (text) a.textContent = text;
 
   return a;
 }
 
 export function createBreadcrumbPage(options: BreadcrumbPageOptions = {}): HTMLElement {
-  const { text = '', className } = options;
+  const { text = '' } = options;
+  const classe = options.class ?? options.className;
 
   const span = document.createElement('span');
   span.dataset.slot = 'breadcrumb-page';
@@ -134,20 +155,21 @@ export function createBreadcrumbPage(options: BreadcrumbPageOptions = {}): HTMLE
   // navegável. Quem marca a página atual é o aria-current, e ele vale em
   // qualquer elemento.
   span.setAttribute('aria-current', 'page');
-  span.className = cn('nds-breadcrumb-page', className);
+  span.className = cn('nds-breadcrumb-page', classe);
   if (text) span.textContent = text;
 
   return span;
 }
 
 export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = {}): HTMLElement {
-  const { content, className } = options;
+  const { content } = options;
+  const classe = options.class ?? options.className;
 
   const li = document.createElement('li');
   li.dataset.slot = 'breadcrumb-separator';
   li.setAttribute('role', 'presentation');
   li.setAttribute('aria-hidden', 'true');
-  li.className = cn('nds-breadcrumb-separator', className);
+  li.className = cn('nds-breadcrumb-separator', classe);
 
   // O default era o caractere `›`, e era o único dos cinco. A anatomia
   // compartilhada diz "padrão é ChevronRight", o CSS dimensiona
@@ -172,7 +194,8 @@ export function createBreadcrumbSeparator(options: BreadcrumbSeparatorOptions = 
  * o consumidor liga um click handler externo pra expandir.
  */
 export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}): HTMLElement {
-  const { label, className } = options;
+  const { label } = options;
+  const classe = options.class ?? options.className;
 
   const span = document.createElement('span');
   span.dataset.slot = 'breadcrumb-ellipsis';
@@ -186,7 +209,7 @@ export function createBreadcrumbEllipsis(options: BreadcrumbEllipsisOptions = {}
   } else {
     span.setAttribute('aria-hidden', 'true');
   }
-  span.className = cn('nds-breadcrumb-ellipsis', className);
+  span.className = cn('nds-breadcrumb-ellipsis', classe);
 
   span.appendChild(criarIconeLucide(MoreHorizontal as unknown as LucideIconNode[]));
 

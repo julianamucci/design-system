@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
-import { createCommand, type CommandItem } from './command';
+import { createCommand, type CommandEntry, type CommandItem } from './command';
 import { createPopover } from './popover';
 import { createDialog } from './dialog';
 import { createButton } from './button';
@@ -59,7 +59,7 @@ async function zerarBusca(campo: HTMLElement): Promise<void> {
   await userEvent.clear(campo);
 }
 
-function montarInline(items: CommandItem[], placeholder: string, onSelect?: (v: string) => void) {
+function montarInline(items: CommandEntry[], placeholder: string, onSelect?: (v: string) => void) {
   const wrap = document.createElement('div');
   wrap.className = WRAPPER;
   wrap.appendChild(
@@ -131,6 +131,63 @@ export const WithGroups: Story = {
     await step('A story termina no estado padrão, com os 7 comandos', async () => {
       await userEvent.clear(campo);
       await expect(canvas.getAllByRole('option')).toHaveLength(7);
+    });
+  },
+};
+
+// ─── Com traço declarado ──────────────────────────────────────────────────────
+//
+// Até aqui o traço só aparecia entre GRUPOS, e uma lista plana não tinha como
+// separar "o que se faz com o arquivo" de "o que encerra a sessão" sem inventar
+// um nome de grupo para cada bloco. O traço agora é uma entrada da lista, na
+// mesma forma discriminada que o Select desta stack já usava.
+
+const ITENS_COM_TRACO: CommandEntry[] = [
+  { value: 'novo', label: 'Novo arquivo' },
+  { value: 'abrir', label: 'Abrir recente' },
+  { type: 'separator' },
+  { value: 'sair', label: 'Sair' },
+];
+
+export const WithSeparator: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Traço entre dois blocos de uma lista sem grupos. Ele é uma QUEBRA na sequência: ' +
+          'some junto com os comandos quando o filtro esvazia um dos lados, porque não sobra ' +
+          'fronteira para marcar.',
+      },
+    },
+  },
+  render: () => montarInline(ITENS_COM_TRACO, 'Buscar comando...'),
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const campo = canvas.getByRole('combobox');
+
+    await userEvent.clear(campo);
+
+    await step('O traço declarado divide a lista plana em dois blocos', async () => {
+      await expect(canvas.getAllByRole('option')).toHaveLength(3);
+      await expect(separadores(canvasElement)).toHaveLength(1);
+      // Dentro de um listbox a linha é decorativa: só `option` e `group` são
+      // filhos permitidos.
+      await expect(separadores(canvasElement)[0]).toHaveAttribute('aria-hidden', 'true');
+      await expect(canvas.queryAllByRole('separator')).toHaveLength(0);
+      // Nenhum cabeçalho: a divisão aqui não veio de grupo nomeado.
+      await expect(canvasElement.querySelectorAll('.nds-command-group-heading')).toHaveLength(0);
+    });
+
+    await step('Filtrando até sobrar um lado só, o traço vai junto', async () => {
+      await userEvent.type(campo, 'sair');
+      await expect(canvas.getAllByRole('option')).toHaveLength(1);
+      await expect(separadores(canvasElement)).toHaveLength(0);
+    });
+
+    await step('A story termina no estado padrão', async () => {
+      await userEvent.clear(campo);
+      await expect(canvas.getAllByRole('option')).toHaveLength(3);
+      await expect(separadores(canvasElement)).toHaveLength(1);
     });
   },
 };

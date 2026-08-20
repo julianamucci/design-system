@@ -5,21 +5,69 @@
 
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
+import { positionFloating, type FloatingSide } from '@/lib/floating';
 
-export type TooltipSide = 'top' | 'bottom' | 'left' | 'right';
+export type TooltipSide = FloatingSide;
 
 export type TooltipOptions = {
   trigger: HTMLElement;
-  content: string;
+  /**
+   * Texto do balão, ou um elemento quando o texto tem marcação.
+   *
+   * String vira `textContent` — o caminho seguro para dado de fora. Marcação
+   * (`<kbd>Ctrl</kbd>` num atalho, `<strong>` numa palavra) entra como
+   * ELEMENTO já montado, e não como HTML em string: é a mesma decisão da
+   * guideline 09 em todas as fábricas desta stack.
+   */
+  content: string | HTMLElement;
   side?: TooltipSide;
+  /**
+   * Espera em ms entre o ponteiro entrar no gatilho e o balão aparecer.
+   *
+   * Era constante de módulo: todo balão da página tinha de usar 300ms. Num
+   * grupo, o padrão vem do Provider; aqui se ajusta um balão em particular.
+   */
+  delayDuration?: number;
   // PATCH: api — callback de exibição real para analytics (ver PATCHES.md#vanilla-tooltip-onshow)
   /** Chamado quando o tooltip é de fato exibido (após o delay interno). */
   onShow?: () => void;
   class?: string;
 };
 
+export type TooltipProviderOptions = {
+  /** Espera padrão de todos os balões do grupo. */
+  delayDuration?: number;
+  /**
+   * Janela em que o PRÓXIMO balão do grupo abre na hora, sem esperar de novo.
+   *
+   * É o que faz percorrer uma barra de ícones parecer um movimento só: a espera
+   * separa quem atravessa de quem para, e quem já parou uma vez não precisa
+   * provar de novo a cada ícone. `0` desliga.
+   */
+  skipDelayDuration?: number;
+};
+
+/**
+ * Grupo de balões que compartilham espera.
+ *
+ * As outras quatro stacks têm um `TooltipProvider` de contexto; sem framework o
+ * equivalente é uma fábrica que já vem com o padrão do grupo amarrado, e um
+ * estado comum onde o último fechamento fica anotado.
+ */
+export type TooltipProvider = {
+  createTooltip: (options: TooltipOptions) => DestroyableElement;
+};
+
+type EstadoDoGrupo = {
+  delayDuration: number;
+  skipDelayDuration: number;
+  /** Quando o último balão do grupo saiu da tela. */
+  fechadoEm: number;
+};
+
 let _tooltipCounter = 0;
 const SHOW_DELAY = 300;
+const SKIP_DELAY = 300;
 
 /**
  * Janela em que o balão sobrevive ao ponteiro que saiu do gatilho.
@@ -32,45 +80,44 @@ const SHOW_DELAY = 300;
  */
 const GRACE_MS = 200;
 
-function positionTooltip(
-  anchor: HTMLElement,
-  panel: HTMLElement,
-  side: TooltipSide
-): void {
-  const rect = anchor.getBoundingClientRect();
-  const scrollX = window.scrollX;
-  const scrollY = window.scrollY;
-  const gap = 6;
+/**
+ * Vão entre gatilho e balão, em px.
+ *
+ * A conta de posição saiu daqui para `@/lib/floating`, onde popover e dropdown
+ * também a usam — era a mesma aritmética escrita três vezes, e o balão sempre
+ * centrado é o `align: 'center'` de lá.
+ */
+const GAP = 6;
 
-  panel.style.visibility = 'hidden';
-  panel.style.display = 'block';
-  const pw = panel.offsetWidth;
-  const ph = panel.offsetHeight;
-  panel.style.visibility = '';
+/**
+ * Cria um grupo com o padrão do próprio balão avulso.
+ *
+ * Sem Provider não há espera compartilhada: `skipDelayDuration` fica zerado,
+ * porque dois balões sem grupo não têm por que saber um do outro.
+ */
+function grupoAvulso(delayDuration: number): EstadoDoGrupo {
+  return { delayDuration, skipDelayDuration: 0, fechadoEm: 0 };
+}
 
-  let top: number;
-  let left: number;
+export function createTooltipProvider(options: TooltipProviderOptions = {}): TooltipProvider {
+  const grupo: EstadoDoGrupo = {
+    delayDuration: options.delayDuration ?? SHOW_DELAY,
+    skipDelayDuration: options.skipDelayDuration ?? SKIP_DELAY,
+    fechadoEm: 0,
+  };
 
-  if (side === 'top') {
-    top = rect.top + scrollY - ph - gap;
-    left = rect.left + scrollX + rect.width / 2 - pw / 2;
-  } else if (side === 'bottom') {
-    top = rect.bottom + scrollY + gap;
-    left = rect.left + scrollX + rect.width / 2 - pw / 2;
-  } else if (side === 'left') {
-    top = rect.top + scrollY + rect.height / 2 - ph / 2;
-    left = rect.left + scrollX - pw - gap;
-  } else {
-    top = rect.top + scrollY + rect.height / 2 - ph / 2;
-    left = rect.right + scrollX + gap;
-  }
-
-  panel.style.top = `${top}px`;
-  panel.style.left = `${left}px`;
+  return {
+    createTooltip: (opcoes: TooltipOptions) => montarTooltip(opcoes, grupo),
+  };
 }
 
 export function createTooltip(options: TooltipOptions): DestroyableElement {
+  return montarTooltip(options, grupoAvulso(options.delayDuration ?? SHOW_DELAY));
+}
+
+function montarTooltip(options: TooltipOptions, grupo: EstadoDoGrupo): DestroyableElement {
   const { trigger, content, side = 'top' } = options;
+  const delayDuration = options.delayDuration ?? grupo.delayDuration;
 
   const id = ++_tooltipCounter;
   const tooltipId = `tooltip-${id}`;
@@ -122,10 +169,11 @@ export function createTooltip(options: TooltipOptions): DestroyableElement {
     panelEl.dataset.slot = 'tooltip-content';
     panelEl.dataset.state = 'open';
     panelEl.dataset.side = side;
-    panelEl.textContent = content;
+    if (typeof content === 'string') panelEl.textContent = content;
+    else panelEl.appendChild(content);
 
     document.body.appendChild(panelEl);
-    positionTooltip(trigger, panelEl, side);
+    positionFloating(trigger, panelEl, side, 'center', GAP);
 
     // `aria-describedby` só enquanto o balão EXISTE. Escrevê-lo na montagem
     // deixa o gatilho apontando para um id ausente o tempo todo — violação de
@@ -145,6 +193,10 @@ export function createTooltip(options: TooltipOptions): DestroyableElement {
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     document.removeEventListener('mousemove', aoMover);
     document.removeEventListener('keydown', aoTeclar);
+    // O grupo só é avisado quando havia mesmo um balão na tela: `hide()` também
+    // é chamado por caminhos que nunca chegaram a exibir nada, e anotar ali
+    // daria ao balão seguinte uma abertura instantânea que ninguém mereceu.
+    if (panelEl) grupo.fechadoEm = Date.now();
     panelEl?.remove();
     panelEl = null;
     trigger.removeAttribute('aria-describedby');
@@ -153,9 +205,15 @@ export function createTooltip(options: TooltipOptions): DestroyableElement {
   function scheduleShow(): void {
     cancelarFechamento();
     if (panelEl || showTimer) return;
+    // Dentro da janela do grupo a espera é dispensada: quem já parou uma vez
+    // não precisa provar de novo no ícone vizinho.
+    const espera =
+      grupo.skipDelayDuration > 0 && Date.now() - grupo.fechadoEm < grupo.skipDelayDuration
+        ? 0
+        : delayDuration;
     // Arrow literal explícito — clarifica pro SAST que setTimeout recebe
     // função, não string evaluada. Comportamento idêntico a setTimeout(show, …).
-    showTimer = setTimeout(() => { showTimer = null; show(); }, SHOW_DELAY);
+    showTimer = setTimeout(() => { showTimer = null; show(); }, espera);
   }
 
   function cancelarFechamento(): void {

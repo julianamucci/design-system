@@ -326,6 +326,16 @@ export function createDrawerDocs(): HTMLElement {
           title: t('import.title'),
           code: `import { createDrawer } from '@/components/ui/drawer';
 import { createButton } from '@/components/ui/button';`,
+          secondaryDescription: 'Abrir e fechar por código:',
+          secondaryCode: `const drawer = createDrawer({ trigger, title: 'Filtros', content });
+
+drawer.open();
+drawer.toggle();
+drawer.isOpen();   // true enquanto o painel está na tela
+
+// Fechar por código informa o motivo 'api' em onClose — é o que separa a
+// gaveta que a pessoa dispensou da que o programa recolheu.
+drawer.close();`,
         });
 
       case 'variantes': {
@@ -610,11 +620,22 @@ export type DrawerOptions = {
   dismissible?: boolean;
   modal?: boolean;
   onOpenChange?: (open: boolean) => void;
-  onClose?: (reason: 'escape' | 'overlay' | 'close-button') => void;
+  onClose?: (reason: DrawerCloseReason) => void;
   class?: string;
 };
 
-export function createDrawer(options: DrawerOptions): HTMLElement;`;
+/** Caminho que fechou o painel. 'api' é o fechamento por código. */
+export type DrawerCloseReason = 'escape' | 'overlay' | 'close-button' | 'api';
+
+// O elemento devolvido abre e fecha por código.
+export type DrawerElement = DestroyableElement & {
+  open: () => void;
+  close: () => void;
+  toggle: () => void;
+  isOpen: () => boolean;
+};
+
+export function createDrawer(options: DrawerOptions): DrawerElement;`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -638,7 +659,7 @@ export function createDrawer(options: DrawerOptions): HTMLElement;`;
                 { name: 'footer',       type: 'HTMLElement',                 defaultValue: '—',     required: 'Não', description: 'Container das ações.' },
                 { name: 'onOpenChange', type: '(open: boolean) => void',     defaultValue: '—',     required: 'Não', description: t('props.table.onOpenChange.description') },
                 { name: 'class',        type: 'string',                      defaultValue: '—',     required: 'Não', description: 'Classes adicionais aplicadas ao painel.' },
-                { name: 'onClose',      type: "(reason) => void",            defaultValue: '—',     required: 'Não', description: 'Chamado no fechamento com o caminho que o causou: escape, overlay ou close-button.' },
+                { name: 'onClose',      type: '(reason: DrawerCloseReason) => void', defaultValue: '—', required: 'Não', description: 'Chamado no fechamento com o caminho que o causou: escape, overlay, close-button ou api. Quem escuta separa a gaveta que a pessoa dispensou da que o programa recolheu — no analytics essas duas nunca foram a mesma coisa.' },
                 { name: 'direction',    type: "'bottom' | 'top' | 'left' | 'right'", defaultValue: "'bottom'", required: 'Não', description: toPlainText(t('props.table.direction.description')) },
                 { name: 'modal',        type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.modal.description')) },
                 { name: 'dismissible',  type: 'boolean',                     defaultValue: 'true',  required: 'Não', description: toPlainText(t('props.table.dismissible.description')) },

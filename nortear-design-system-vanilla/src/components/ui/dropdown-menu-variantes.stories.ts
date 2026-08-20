@@ -141,3 +141,80 @@ export const Destructive: Story = {
     });
   },
 };
+
+// ─── Placement ────────────────────────────────────────────────────────────────
+//
+// `side` e `align` eram controles MORTOS: a story os declarava e a fábrica
+// cravava bottom/start a 4px. Esta story existe para que voltar àquilo doa —
+// ela não lê atributo nenhum para provar o efeito, ela MEDE a caixa. Um
+// controle que não faz nada e uma asserção que não falha são o mesmo defeito
+// visto de dois lados.
+
+export const Placement: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'O menu sai pela borda escolhida (`side`) e encosta na ponta escolhida (`align`). ' +
+          'Aqui ele abre para CIMA e encostado à direita — o oposto do padrão, que é para ' +
+          'baixo e à esquerda.',
+      },
+    },
+  },
+  render: () => {
+    const trigger = createButton({ variant: 'outline', label: 'Abrir para cima' });
+    const menu = createDropdownMenu({
+      trigger,
+      items: [
+        { type: 'item', label: 'Renomear', value: 'rename' },
+        { type: 'item', label: 'Mover', value: 'move' },
+        { type: 'item', label: 'Arquivar', value: 'archive' },
+      ],
+      side: 'top',
+      align: 'end',
+      // Não modal: a página em volta continua utilizável, e a medida não passa
+      // a depender de nada que o bloqueio faça.
+      modal: false,
+    });
+    // Caixa alta e gatilho centrado: é o respiro que o painel precisa para
+    // caber ACIMA dele sem encostar no topo da tela. `nds-min-h-100` em vez de
+    // uma altura em `style`, que sairia do tema e da densidade.
+    const wrapper = document.createElement('div');
+    wrapper.style.contain = 'layout';
+    wrapper.className = 'nds-cluster nds-w-full nds-min-h-100';
+    wrapper.dataset.justify = 'center';
+    wrapper.appendChild(menu);
+    queueMicrotask(() => trigger.click());
+    return wrapper;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /abrir para cima/i });
+    const menu = await within(document.body).findByRole('menu');
+
+    await step('Com side="top" o menu fica ACIMA do gatilho', async () => {
+      const caixaDoMenu = menu.getBoundingClientRect();
+      const caixaDoGatilho = gatilho.getBoundingClientRect();
+      // Com o `bottom` cravado da versão anterior, o menu nascia ABAIXO e esta
+      // asserção falharia por toda a altura do gatilho mais o vão.
+      await expect(caixaDoMenu.bottom).toBeLessThanOrEqual(caixaDoGatilho.top);
+    });
+
+    await step('Com align="end" as bordas direitas coincidem', async () => {
+      const caixaDoMenu = menu.getBoundingClientRect();
+      const caixaDoGatilho = gatilho.getBoundingClientRect();
+      // Um pixel de folga porque a medida é fracionária; `start` juntaria as
+      // bordas ESQUERDAS, e a diferença aqui seria a largura inteira do menu.
+      await expect(Math.abs(caixaDoMenu.right - caixaDoGatilho.right)).toBeLessThanOrEqual(1);
+    });
+
+    await step('O markup declara o que a medida mostrou', async () => {
+      await expect(menu.dataset.side).toBe('top');
+      await expect(menu.dataset.align).toBe('end');
+    });
+
+    await step('Limpa via ESC', async () => {
+      await fecharNoFim();
+    });
+  },
+};

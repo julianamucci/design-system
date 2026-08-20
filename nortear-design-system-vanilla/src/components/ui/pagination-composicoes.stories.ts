@@ -223,6 +223,75 @@ export const Interactive: Story = {
   },
 };
 
+// ─── Integrada a rota ─────────────────────────────────────────────────────────
+//
+// Sem `hrefForPage` todo link nasce `#` e o clique é anulado: serve à paginação
+// que vive só na memória, e para de servir quando a página precisa ser
+// compartilhável, indexável ou aberta em nova aba. Com ele o link é um destino
+// de verdade e o clique SEGUE — quem usa roteador de cliente o intercepta como
+// interceptaria qualquer link da página.
+
+export const WithRoute: Story = {
+  name: 'Integrated with routing',
+  render: () => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'nds-stack nds-w-full nds-p-2 nds-min-h-24';
+    wrapper.dataset.spacing = 'sm';
+
+    const status = document.createElement('p');
+    status.className = 'nds-text-body nds-text-muted-foreground';
+    status.dataset.slot = 'rota-atual';
+    status.textContent = 'Rota: ?page=3';
+
+    const nav = createPagination({
+      total: 8,
+      current: 3,
+      label: 'Paginação por rota',
+      hrefForPage: (page) => `?page=${page}`,
+      onPageChange: (page) => {
+        status.textContent = `Rota: ?page=${page}`;
+      },
+    });
+
+    // O papel do roteador de cliente: ele assume a navegação e impede a ida
+    // real. Numa aplicação seria `router.push(href)`; aqui basta que a story
+    // não recarregue o iframe.
+    nav.addEventListener('click', (e) => {
+      const alvo = (e.target as HTMLElement).closest('a');
+      if (!alvo) return;
+      // Antes de o roteador assumir, o clique tem de estar VIVO — se a fábrica
+      // o tivesse anulado, `defaultPrevented` já viria verdadeiro e nenhum
+      // roteador do mundo saberia que houve navegação.
+      status.dataset.interceptado = String(!e.defaultPrevented);
+      e.preventDefault();
+    });
+
+    wrapper.append(status, nav);
+    return wrapper;
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const status = () => canvasElement.querySelector<HTMLElement>('[data-slot="rota-atual"]')!;
+
+    await step('Cada link carrega o endereço real da sua página', async () => {
+      const pagina4 = canvas.getByRole('link', { name: 'Ir para página 4' });
+      await expect(pagina4.getAttribute('href')).toBe('?page=4');
+      await expect(
+        canvas.getByRole('link', { name: ROTULO_PROXIMA }).getAttribute('href'),
+      ).toBe('?page=4');
+      await expect(
+        canvas.getByRole('link', { name: ROTULO_ANTERIOR }).getAttribute('href'),
+      ).toBe('?page=2');
+    });
+
+    await step('O clique chega vivo ao roteador, e ainda avisa quem escuta', async () => {
+      await userEvent.click(canvas.getByRole('link', { name: 'Ir para página 4' }));
+      await waitFor(() => expect(status().dataset.interceptado).toBe('true'));
+      await expect(status()).toHaveTextContent('Rota: ?page=4');
+    });
+  },
+};
+
 export const CompleteTable: Story = {
   name: 'Complete table footer',
   render: () => {

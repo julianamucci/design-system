@@ -139,7 +139,9 @@ export const Range: Story = {
     docs: {
       description: {
         story:
-          'Faixa com mínimo e máximo. A factory controla um valor por instância, então a faixa é composta por duas alças adjacentes com clamping mútuo — cada uma com o seu nome acessível.',
+          'Faixa com mínimo e máximo. Um par de valores pede as duas alças na MESMA instância: ' +
+          'o preenchimento fica entre elas, cada uma tem o seu nome acessível, e nenhuma passa ' +
+          'da outra.',
       },
     },
   },
@@ -160,52 +162,26 @@ export const Range: Story = {
     valueText.className = 'nds-text-body nds-text-muted-foreground nds-tabular-nums';
     valueText.setAttribute('aria-live', 'polite');
 
-    let minV = 20;
-    let maxV = 80;
-    const fmt = () => {
+    const fmt = ([minV, maxV]: number[]) => {
       valueText.textContent = `R$ ${minV} — R$ ${maxV}`;
     };
-    fmt();
+    fmt([20, 80]);
 
     row.append(label, valueText);
 
-    const minSlider = createSlider({
+    // Um par de valores, uma instância. Antes eram dois sliders adjacentes com
+    // clamping escrito à mão em cada `onValueChange` — o contorno de quando a
+    // fábrica só sabia carregar um número.
+    const faixa = createSlider({
       min: 0,
       max: 100,
       step: 1,
-      value: minV,
-      ariaLabel: 'Faixa de preço — mínimo',
-      onValueChange: (v) => {
-        if (v > maxV) {
-          minV = maxV;
-          const i = minSlider.querySelector('input[type="range"]') as HTMLInputElement;
-          if (i) i.value = String(maxV);
-        } else {
-          minV = v;
-        }
-        fmt();
-      },
+      value: [20, 80],
+      ariaLabel: ['Faixa de preço — mínimo', 'Faixa de preço — máximo'],
+      onValueChange: fmt,
     });
 
-    const maxSlider = createSlider({
-      min: 0,
-      max: 100,
-      step: 1,
-      value: maxV,
-      ariaLabel: 'Faixa de preço — máximo',
-      onValueChange: (v) => {
-        if (v < minV) {
-          maxV = minV;
-          const i = maxSlider.querySelector('input[type="range"]') as HTMLInputElement;
-          if (i) i.value = String(minV);
-        } else {
-          maxV = v;
-        }
-        fmt();
-      },
-    });
-
-    wrap.append(row, minSlider, maxSlider);
+    wrap.append(row, faixa);
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
@@ -223,6 +199,15 @@ export const Range: Story = {
 
     await step('Valor formatado como faixa', async () => {
       await expect(canvas.getByText(/R\$ 20 — R\$ 80/)).toBeVisible();
+    });
+
+    await step('O preenchimento cobre só o trecho ENTRE as alças', async () => {
+      // É o que separa um intervalo de duas alças soltas: a barra pintada não
+      // começa no mínimo do trilho, começa na primeira alça.
+      const preenchimento = canvasElement.querySelector<HTMLElement>('.nds-slider-range');
+      await expect(preenchimento).not.toBeNull();
+      await expect(preenchimento!.style.left).toBe('20%');
+      await expect(preenchimento!.style.width).toBe('60%');
     });
 
     await step('O mínimo não passa do máximo', async () => {

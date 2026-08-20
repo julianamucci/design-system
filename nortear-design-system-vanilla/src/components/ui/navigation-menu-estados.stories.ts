@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { within, expect } from 'storybook/test';
-import { createNavigationMenu } from './navigation-menu';
-import { abrir, esperarPainel, painelAberto } from './navigation-menu.fixtures';
+import { userEvent, within, expect } from 'storybook/test';
+import { createNavigationMenu, type NavigationMenuElement } from './navigation-menu';
+import {
+  abrir,
+  esperarPainel,
+  esperarPainelSumir,
+  painelAberto,
+} from './navigation-menu.fixtures';
 import { sondarOuvintes, hospedeiroDeSonda, conferirLimpeza, type ResultadoDaSonda } from './leak-probe';
 
 const meta: Meta = {
@@ -161,6 +166,95 @@ export const Active: Story = {
       await expect(getComputedStyle(atual).backgroundColor).not.toBe(
         getComputedStyle(outro).backgroundColor,
       );
+    });
+  },
+};
+
+// ─── Valor controlado ─────────────────────────────────────────────────────────
+//
+// A barra se governava sozinha e não havia como perguntar — nem dizer — qual
+// painel estava aberto. Um menu que precisa acompanhar a rota, ou fechar quando
+// outra coisa da tela abre, não tinha por onde. Controlada, a barra não mexe em
+// nada por conta própria: a interação ANUNCIA por `onValueChange`, e quem manda
+// responde com `setValue()`.
+
+export const ControlledValue: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'A barra não decide nada sozinha: o clique só avisa qual painel foi pedido, e o ' +
+          'painel só abre quando quem controla mandar. É o que permite manter a barra em ' +
+          'sincronia com a rota ou com o resto da tela.',
+      },
+    },
+  },
+  render: () => {
+    const coluna = document.createElement('div');
+    coluna.className = 'nds-stack nds-w-full';
+    coluna.dataset.spacing = 'sm';
+
+    const registro = document.createElement('p');
+    registro.className = 'nds-text-body nds-text-muted-foreground';
+    registro.dataset.slot = 'valor-pedido';
+    registro.textContent = 'Nenhum painel pedido ainda';
+
+    const nav = createNavigationMenu(
+      [
+        { label: 'Início', href: '#inicio' },
+        {
+          label: 'Produtos',
+          value: 'produtos',
+          children: [
+            { label: 'Plano Inicial', href: '#inicial' },
+            { label: 'Plano Profissional', href: '#profissional' },
+          ],
+        },
+      ],
+      {
+        // Definir `value` é o que troca o modo. Vazio quer dizer "fechado".
+        value: '',
+        onValueChange: (valor) => {
+          registro.textContent = valor ? `Pedido: ${valor}` : 'Pedido: fechar';
+          registro.dataset.pedido = valor;
+        },
+      },
+    );
+    nav.setAttribute('aria-label', 'Navegação principal');
+
+    coluna.append(registro, nav);
+    return wrap(coluna, 320);
+  },
+  play: async ({ canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    const gatilho = canvas.getByRole('button', { name: /Produtos/ });
+    const registro = canvasElement.querySelector<HTMLElement>('[data-slot="valor-pedido"]')!;
+    const barra = canvasElement.querySelector(
+      '[data-slot="navigation-menu"]',
+    ) as NavigationMenuElement;
+
+    await step('O clique anuncia o pedido e NÃO abre nada', async () => {
+      // O clique aqui é idempotente por construção: controlada, a barra não se
+      // move com ele, então a segunda rodada parte do mesmo lugar que a
+      // primeira. É essa imobilidade que a story existe para provar.
+      await userEvent.click(gatilho);
+      await expect(registro.dataset.pedido).toBe('produtos');
+      // Fora do modo controlado, este clique já teria aberto o painel.
+      await expect(painelAberto(canvasElement)).toBeNull();
+    });
+
+    await step('Quem controla manda, e aí o painel abre', async () => {
+      barra.setValue('produtos');
+      const painel = await esperarPainel(canvasElement);
+      await expect(painel.dataset.value).toBe('produtos');
+      await expect(barra.getValue()).toBe('produtos');
+      await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
+    });
+
+    await step('E fecha pela mesma porta', async () => {
+      barra.setValue('');
+      await esperarPainelSumir(canvasElement);
+      await expect(barra.getValue()).toBe('');
     });
   },
 };

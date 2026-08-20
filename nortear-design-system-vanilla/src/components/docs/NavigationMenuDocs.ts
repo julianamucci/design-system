@@ -332,6 +332,30 @@ export function createNavigationMenuDocs(): HTMLElement {
         return createDocsImport({
           title: t('import.title'),
           code: `import { createNavigationMenu } from '@/components/ui/navigation-menu';`,
+          secondaryDescription: 'Espera do ponteiro, painel controlado e página atual:',
+          secondaryCode: `let aberto = '';
+
+const nav = createNavigationMenu(
+  [
+    { label: 'Início', href: '/', active: true },
+    {
+      label: 'Produtos',
+      value: 'produtos',
+      children: [{ label: 'Plano Inicial', href: '/produtos/inicial' }],
+    },
+  ],
+  {
+    delayDuration: 200,       // espera do ponteiro antes de abrir
+    skipDelayDuration: 300,   // janela em que o próximo abre sem esperar
+    value: aberto,            // presente = quem manda é quem chama
+    onValueChange: (proximo) => {
+      aberto = proximo;
+      nav.setValue(proximo);  // nada se move sem esta linha
+    },
+  },
+);
+
+nav.getValue();   // painel aberto agora; vazio quer dizer fechado`,
         });
 
       case 'variantes': {
@@ -348,19 +372,17 @@ export function createNavigationMenuDocs(): HTMLElement {
 ]);
 nav.setAttribute('aria-label', 'Navegação principal');`;
 
-        const codeVertical = `// DIVERGÊNCIA IDIOMÁTICA:
-// O factory Nortear fixa orientação horizontal — para vertical,
-// aplicamos estilos inline e nds-stack manualmente.
-const nav = createNavigationMenu([
-  { label: 'Início',      href: '/' },
-  { label: 'Dashboard',   href: '/dashboard' },
-  { label: 'Configurações', href: '/configuracoes' },
-]);
-nav.setAttribute('aria-label', 'Navegação lateral');
-nav.classList.add('nds-stack');
-const ul = nav.querySelector('ul[role="menubar"]') as HTMLElement | null;
-ul?.setAttribute('aria-orientation', 'vertical');
-if (ul) { ul.classList.add('nds-stack'); ul.style.alignItems = 'stretch'; }`;
+        const codeVertical = `// A coluna é uma opção: \`orientation\` também vira o eixo das setas,
+// que numa barra em pé passam a ser ArrowUp e ArrowDown.
+const nav = createNavigationMenu(
+  [
+    { label: 'Início',        href: '/' },
+    { label: 'Dashboard',     href: '/dashboard' },
+    { label: 'Configurações', href: '/configuracoes' },
+  ],
+  { orientation: 'vertical' },
+);
+nav.setAttribute('aria-label', 'Navegação lateral');`;
 
         function buildLinkSimples(): HTMLElement {
           const wrap = document.createElement('div');
@@ -578,9 +600,7 @@ content.insertBefore(card, content.firstChild);`;
             },
             {
               name: t('variants.items.vertical'),
-              description:
-                stripHtml(t('variants.styles.vertical')) +
-                ' (Não suportado nativamente pelo factory Nortear — composição manual.)',
+              description: stripHtml(t('variants.styles.vertical')),
               code: codeVertical,
               previewFactory: () => {
                 const wrap = document.createElement('div');
@@ -589,22 +609,16 @@ content.insertBefore(card, content.firstChild);`;
                 wrap.dataset.align = 'start';
                 wrap.dataset.justify = 'center';
                 wrap.style.minHeight = '200px';
-                const nav = createNavigationMenu([
-                  { label: 'Início',     href: '/' },
-                  { label: 'Dashboard',  href: '/dashboard' },
-                  { label: 'Configurações', href: '/configuracoes' },
-                ]);
+                const nav = createNavigationMenu(
+                  [
+                    { label: 'Início', href: '/' },
+                    { label: 'Dashboard', href: '/dashboard' },
+                    { label: 'Configurações', href: '/configuracoes' },
+                  ],
+                  { orientation: 'vertical' },
+                );
                 nav.setAttribute('aria-label', 'Navegação lateral');
-                nav.classList.add('nds-stack');
-                const ul = nav.querySelector<HTMLElement>('ul[role="menubar"]');
-                if (ul) {
-                  ul.setAttribute('aria-orientation', 'vertical');
-                  ul.className =
-                    'nds-stack nds-list-none nds-w-full';
-                  ul.dataset.spacing = 'xs';
-                  ul.style.alignItems = 'stretch';
-                  ul.style.maxWidth = '220px';
-                }
+                nav.classList.add('nds-max-w-xs');
                 wrap.appendChild(nav);
                 return wrap;
               },
@@ -672,12 +686,30 @@ export type NavigationMenuItem = {
   label: string;
   href?: string;
   children?: NavigationMenuChild[];
+  value?: string;      // identidade do item; sem ele, o rótulo serve
+  active?: boolean;    // escreve aria-current="page"
+};
+
+export type NavigationMenuOptions = {
+  class?: string;
+  orientation?: 'horizontal' | 'vertical';   // default 'horizontal'
+  delayDuration?: number;                    // default 200
+  skipDelayDuration?: number;                // default 300
+  value?: string;                            // presente = modo controlado
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
+};
+
+// O elemento devolvido move a barra por código.
+export type NavigationMenuElement = DestroyableElement & {
+  setValue: (value: string) => void;   // vazio fecha tudo
+  getValue: () => string;
 };
 
 export function createNavigationMenu(
   items: NavigationMenuItem[],
-  options?: { class?: string },
-): HTMLElement;`;
+  options?: NavigationMenuOptions,
+): NavigationMenuElement;`;
 
         const propsCols = {
           prop: t('props.table.prop'),
@@ -694,14 +726,16 @@ export function createNavigationMenu(
               title: 'createNavigationMenu(items, options?)',
               cols: propsCols,
               items: [
-                { name: 'items',         type: 'NavigationMenuItem[]',                defaultValue: '—',          required: 'Sim', description: 'Lista de items (label + href ou children) renderizados na barra.' },
-                { name: 'options.class', type: 'string',                              defaultValue: '—',          required: 'Não', description: 'Classes adicionais no Root <nav>.' },
-                { name: 'value',         type: 'string',                              defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.value.description'))         + ' NOTA: factory Nortear não tem controle externo nativo.' },
-                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) + ' NOTA: factory Nortear não emite (use child.onClick manual).' },
-                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.defaultValue.description'))  + ' NOTA: factory Nortear sempre inicia fechado.' },
-                { name: 'delayDuration',     type: 'number',                          defaultValue: '200',        required: 'Não', description: toPlainText(t('props.table.delayDuration.description'))     + ' NOTA: factory Nortear abre apenas em click; hover delay não implementado.' },
-                { name: 'skipDelayDuration', type: 'number',                          defaultValue: '300',        required: 'Não', description: toPlainText(t('props.table.skipDelayDuration.description')) + ' NOTA: factory Nortear não implementa.' },
-                { name: 'orientation',       type: "'horizontal' | 'vertical'",        defaultValue: "'horizontal'", required: 'Não', description: toPlainText(t('props.table.orientation.description'))       + ' NOTA: factory Nortear fixa horizontal; vertical via composição manual.' },
+                { name: 'items',         type: 'NavigationMenuItem[]',                defaultValue: '—',          required: 'Sim', description: 'Lista de itens (rótulo + endereço, ou rótulo + filhos) desenhados na barra.' },
+                { name: 'items[].value', type: 'string',                              defaultValue: 'label',      required: 'Não', description: 'Identidade do item no valor da barra. Sem ele o rótulo serve de identidade — o que basta enquanto ninguém traduz a barra.' },
+                { name: 'items[].active', type: 'boolean',                            defaultValue: 'false',      required: 'Não', description: 'Marca o destino como a página atual: escreve aria-current="page", que é o que o leitor de tela anuncia e o que a folha usa para pintar o destaque.' },
+                { name: 'options.class', type: 'string',                              defaultValue: '—',          required: 'Não', description: 'Classes adicionais no <nav> raiz.' },
+                { name: 'value',         type: 'string',                              defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.value.description'))         + ' Definida, a barra passa ao modo controlado: ponteiro, teclado e clique só anunciam a intenção por onValueChange, e quem move a barra é setValue(). String vazia quer dizer nenhum painel aberto.' },
+                { name: 'defaultValue',  type: 'string',                              defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.defaultValue.description')) },
+                { name: 'onValueChange', type: '(value: string) => void',             defaultValue: '—',          required: 'Não', description: toPlainText(t('props.table.onValueChange.description')) + ' Vazio quer dizer fechado.' },
+                { name: 'delayDuration',     type: 'number',                          defaultValue: '200',        required: 'Não', description: toPlainText(t('props.table.delayDuration.description')) },
+                { name: 'skipDelayDuration', type: 'number',                          defaultValue: '300',        required: 'Não', description: toPlainText(t('props.table.skipDelayDuration.description')) + ' Zero desliga e toda abertura volta a esperar.' },
+                { name: 'orientation',       type: "'horizontal' | 'vertical'",        defaultValue: "'horizontal'", required: 'Não', description: toPlainText(t('props.table.orientation.description')) + ' O eixo das setas acompanha: numa coluna são ArrowUp e ArrowDown.' },
               ],
             },
           ],
@@ -709,7 +743,7 @@ export function createNavigationMenu(
           extensibilityTitle: t('props.extensibilityTitle'),
           extensibilityNotes:
             t('props.extensibilityCode') +
-            '\n\n// NOTA Nortear: o factory custom NÃO possui Viewport compartilhado nem\n// NavigationMenuIndicator. Cada Content abre em <div> próprio relativo ao\n// Trigger (semelhante a um DropdownMenu). Para Viewport animado e indicador,\n// utilize as stacks React/Vue/Svelte que possuem base-ui/reka-ui/bits-ui.',
+            '\n\n// Cada painel abre numa <div> própria, ancorada ao seu gatilho — não há\n// um viewport único compartilhado entre eles, nem indicador deslizante\n// acompanhando qual gatilho está aberto. A transição é a do painel, e não a\n// de uma caixa que muda de tamanho entre um gatilho e o vizinho.',
         });
       }
 
