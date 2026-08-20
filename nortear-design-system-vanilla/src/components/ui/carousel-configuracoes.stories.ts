@@ -29,6 +29,28 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
+/**
+ * A base do slide, medida contra a TRILHA e não contra o recorte.
+ *
+ * `flex-basis` resolve contra o contêiner flex, e a trilha é 16px MAIS
+ * larga que o recorte de propósito: a margem negativa dela puxa o
+ * `padding-left` do primeiro slide para fora, que é o que encosta o
+ * primeiro slide na borda.
+ *
+ * Dividir pelo recorte devolvia `1 + 16/largura`, que não é a base de nada:
+ * a conta só passava enquanto o carrossel fosse largo o bastante para o
+ * gutter caber na tolerância. Com 163px de recorte ela dá 1,098 e reprova —
+ * e é essa a largura no painel Interactions, que nenhuma suíte reproduz.
+ *
+ * Contra a trilha o gutter cancela, e a razão passa a ser exatamente a
+ * fração do `flex-basis` — por isso a tolerância pôde fechar de 0,05 para
+ * 0,005.
+ */
+function baseDoSlide(canvasElement: HTMLElement, slide: HTMLElement): number {
+  const trilha = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
+  return slide.getBoundingClientRect().width / trilha.getBoundingClientRect().width;
+}
+
 // ─── Um item por vez ──────────────────────────────────────────────────────────
 
 export const Single: Story = {
@@ -44,12 +66,10 @@ export const Single: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const recorte = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
 
     await step('O slide ocupa a largura inteira do recorte', async () => {
       const slide = canvas.getAllByRole('group')[0];
-      const proporcao = slide.getBoundingClientRect().width / recorte.clientWidth;
-      await expect(proporcao).toBeCloseTo(1, 1);
+      await expect(baseDoSlide(canvasElement, slide)).toBeCloseTo(1, 2);
     });
 
     await step('Há mais slides do que cabem, e a seta de avanço está viva', async () => {
@@ -185,8 +205,7 @@ export const MultiResponsive: Story = {
 
     await step('A base do slide acompanha o breakpoint em vigor', async () => {
       const slide = canvas.getAllByRole('group')[0];
-      const proporcao = slide.getBoundingClientRect().width / recorte.clientWidth;
-      await expect(proporcao).toBeCloseTo(1 / porTela, 1);
+      await expect(baseDoSlide(canvasElement, slide)).toBeCloseTo(1 / porTela, 2);
     });
 
     await step('Vários slides ficam enquadrados ao mesmo tempo', async () => {

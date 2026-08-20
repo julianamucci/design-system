@@ -15,6 +15,28 @@ export default meta;
 type Story = StoryObj;
 
 /**
+ * A base do slide, medida contra a TRILHA e não contra o recorte.
+ *
+ * `flex-basis` resolve contra o contêiner flex, e a trilha é 16px MAIS
+ * larga que o recorte de propósito: a margem negativa dela puxa o
+ * `padding-left` do primeiro slide para fora, que é o que encosta o
+ * primeiro slide na borda.
+ *
+ * Dividir pelo recorte devolvia `1 + 16/largura`, que não é a base de nada:
+ * a conta só passava enquanto o carrossel fosse largo o bastante para o
+ * gutter caber na tolerância. Com 163px de recorte ela dá 1,098 e reprova —
+ * e é essa a largura no painel Interactions, que nenhuma suíte reproduz.
+ *
+ * Contra a trilha o gutter cancela, e a razão passa a ser exatamente a
+ * fração do `flex-basis` — por isso a tolerância pôde fechar de 0,05 para
+ * 0,005.
+ */
+function baseDoSlide(canvasElement: HTMLElement, slide: HTMLElement): number {
+  const trilha = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
+  return slide.getBoundingClientRect().width / trilha.getBoundingClientRect().width;
+}
+
+/**
  * Um passo de arraste por PONTEIRO, com o evento que o componente assina.
  *
  * O arraste por mouse desta stack escuta `pointerdown`/`pointermove`/
@@ -79,14 +101,10 @@ export const Single: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
 
     await step('O slide ocupa a largura inteira do viewport', async () => {
       const slide = canvas.getAllByRole('group')[0];
-      const proporcao = slide.getBoundingClientRect().width / viewport.clientWidth;
-      // Um pouco maior que 1: a margem negativa do track puxa o padding do
-      // primeiro slide para fora, e é ele que dá o respiro entre os slides.
-      await expect(proporcao).toBeGreaterThan(0.98);
+      await expect(baseDoSlide(canvasElement, slide)).toBeCloseTo(1, 2);
     });
 
     await step('Há mais slides do que cabem, e a seta de avanço está viva', async () => {
@@ -122,7 +140,6 @@ export const MultiResponsive: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
 
     await step('A base do slide acompanha o breakpoint em vigor', async () => {
       // A classe é responsiva por definição: afirmar "metade" sem consultar a
@@ -133,8 +150,7 @@ export const MultiResponsive: Story = {
       const medio = janela.matchMedia('(min-width: 768px)').matches;
       const esperado = grande ? 1 / 3 : medio ? 1 / 2 : 1;
       const slide = canvas.getAllByRole('group')[0];
-      const proporcao = slide.getBoundingClientRect().width / viewport.clientWidth;
-      await expect(proporcao).toBeCloseTo(esperado, 1);
+      await expect(baseDoSlide(canvasElement, slide)).toBeCloseTo(esperado, 2);
     });
 
     await step('Todos os slides continuam anunciáveis com posição e total', async () => {
@@ -383,7 +399,14 @@ export const DragGesture: Story = {
       // script. O que o dedo deixa para trás é esta posição, e é ela que o
       // componente precisa ler.
       viewport.scrollLeft = posUm;
-      await waitFor(() => expect(anterior()).toBeEnabled());
+      // Prazo explícito, como em toda outra espera deste arquivo. A rolagem
+      // programática só vira `scroll` no quadro seguinte, e o componente espera
+      // o SILÊNCIO de 120ms antes de reconciliar o índice — de propósito, para
+      // um gesto com inércia não emitir uma troca de slide por quadro. Somando
+      // a detecção de mudança e o novo render, o padrão de 1s da testing-library
+      // fica no limite: passa na máquina ociosa e reprova sob carga, que foi
+      // como esta reprovou uma vez em três rodadas.
+      await waitFor(() => expect(anterior()).toBeEnabled(), { timeout: 4000 });
     });
 
     const caixa = viewport.getBoundingClientRect();

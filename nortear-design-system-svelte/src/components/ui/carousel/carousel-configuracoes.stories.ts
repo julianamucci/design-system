@@ -33,6 +33,28 @@ export default meta;
 type Story = StoryObj;
 
 /**
+ * A base do slide, medida contra a TRILHA e não contra o recorte.
+ *
+ * `flex-basis` resolve contra o contêiner flex, e a trilha é 16px MAIS
+ * larga que o recorte de propósito: a margem negativa dela puxa o
+ * `padding-left` do primeiro slide para fora, que é o que encosta o
+ * primeiro slide na borda.
+ *
+ * Dividir pelo recorte devolvia `1 + 16/largura`, que não é a base de nada:
+ * a conta só passava enquanto o carrossel fosse largo o bastante para o
+ * gutter caber na tolerância. Com 163px de recorte ela dá 1,098 e reprova —
+ * e é essa a largura no painel Interactions, que nenhuma suíte reproduz.
+ *
+ * Contra a trilha o gutter cancela, e a razão passa a ser exatamente a
+ * fração do `flex-basis` — por isso a tolerância pôde fechar de 0,05 para
+ * 0,005.
+ */
+function baseDoSlide(canvasElement: HTMLElement, slide: HTMLElement): number {
+  const trilha = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
+  return slide.getBoundingClientRect().width / trilha.getBoundingClientRect().width;
+}
+
+/**
  * Um passo de gesto de TOQUE, com o evento que o motor de fato assina.
  *
  * Medido, não suposto: o motor registra `touchstart`/`touchmove`/`touchend` e
@@ -111,7 +133,6 @@ export const Single: Story = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
     const proximo = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
 
@@ -121,11 +142,7 @@ export const Single: Story = {
 
     await step('O slide ocupa a largura inteira do viewport', async () => {
       const slide = canvas.getAllByRole('group')[0];
-      const proporcao = slide.getBoundingClientRect().width / viewport.clientWidth;
-      // Um pouco maior que 1: a margem negativa do trilho puxa o respiro do
-      // primeiro slide para fora, e é ele que separa um slide do outro.
-      await expect(proporcao).toBeGreaterThan(0.98);
-      await expect(proporcao).toBeLessThan(1.2);
+      await expect(baseDoSlide(canvasElement, slide)).toBeCloseTo(1, 2);
     });
 
     await step('Há mais slides do que cabem, e a seta de avanço está viva', async () => {
@@ -154,7 +171,6 @@ export const MultiResponsive: Story = {
 
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
 
     await waitFor(() =>
       expect(canvas.getByRole('button', { name: 'Próximo item' })).toBeEnabled(),
@@ -170,8 +186,7 @@ export const MultiResponsive: Story = {
       const esperado = grande ? 1 / 3 : medio ? 1 / 2 : 1;
 
       const slide = canvas.getAllByRole('group')[0];
-      const proporcao = slide.getBoundingClientRect().width / viewport.clientWidth;
-      await expect(proporcao).toBeCloseTo(esperado, 1);
+      await expect(baseDoSlide(canvasElement, slide)).toBeCloseTo(esperado, 2);
     });
 
     await step('Todos os slides continuam anunciáveis como grupo', async () => {
