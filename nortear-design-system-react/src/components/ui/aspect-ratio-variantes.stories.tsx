@@ -46,7 +46,7 @@ type Story = StoryObj<typeof meta>;
 export const SixteenNine: Story = {
   parameters: { covers: ["functional.item1", "visual.item1"] },
   render: () => (
-    <div className="" style={{maxWidth: "100%", width: "480px" }} >
+    <div className="" style={{maxWidth: "100%", width: "480px" }}>
       <AspectRatio ratio={16 / 9}>
         <ImageWithFallback
           src={LANDSCAPE_SRC}
@@ -77,7 +77,7 @@ export const FourThree: Story = {
     docs: { source: { transform: aspectRatioQuatroTercosSource } },
   },
   render: () => (
-    <div className="" style={{maxWidth: "100%", width: "420px" }} >
+    <div className="" style={{maxWidth: "100%", width: "420px" }}>
       <AspectRatio ratio={4 / 3}>
         <ImageWithFallback
           src={PRODUCT_SRC}
@@ -137,7 +137,7 @@ export const ThreeFour: Story = {
     docs: { source: { transform: aspectRatioTresQuartosSource } },
   },
   render: () => (
-    <div className="" style={{ width: "320px" }}>
+    <div className="nds-w-xs">
       <AspectRatio ratio={3 / 4}>
         <ImageWithFallback
           src={PORTRAIT_SRC}
@@ -167,7 +167,7 @@ export const UltraWide: Story = {
     docs: { source: { transform: aspectRatioUltraWideSource } },
   },
   render: () => (
-    <div className="" style={{maxWidth: "100%", width: "640px" }} >
+    <div className="nds-w-xl" style={{ maxWidth: "100%" }}>
       <AspectRatio ratio={21 / 9}>
         <ImageWithFallback
           src={LANDSCAPE_SRC}

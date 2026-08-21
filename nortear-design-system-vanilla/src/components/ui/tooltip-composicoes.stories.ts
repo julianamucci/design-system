@@ -245,7 +245,7 @@ export const PlacementSides: Story = {
     grid.className = 'nds-grid nds-w-full nds-p-8';
     grid.dataset.cols = '2';
     grid.dataset.spacing = 'xl';
-    grid.style.minHeight = '240px';
+    grid.classList.add('nds-min-h-60');
 
     const lados: Array<'top' | 'right' | 'bottom' | 'left'> = ['top', 'right', 'bottom', 'left'];
 

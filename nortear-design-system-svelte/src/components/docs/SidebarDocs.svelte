@@ -279,7 +279,7 @@ interface SidebarMenuButtonProps {
 
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
-    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default" style="contain: layout; min-height: 400px">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-min-h-100" style="contain: layout">
       <SidebarProvider defaultOpen={true} bind:open={demoSidebarOpen}>
         <nav aria-label={$tStore('demonstration.labels.mainNav')}>
           <Sidebar side="left" variant="sidebar" collapsible="offcanvas">
@@ -436,7 +436,7 @@ interface SidebarMenuButtonProps {
   />
 
   {#snippet doPair1()}
-    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption" style="contain: layout; min-height: 200px">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption nds-min-h-50" style="contain: layout">
       <SidebarProvider defaultOpen={true}>
         <!-- aria-label por instância (legenda do bloco): vários <nav> com o mesmo rótulo acusam landmark-unique no axe -->
         <nav aria-label={stripHtml($tStore('doDont.pair1.do'))}>
@@ -464,7 +464,7 @@ interface SidebarMenuButtonProps {
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption nds-text-muted-foreground nds-p-4" style="min-height: 200px">
+    <div class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-text-caption nds-text-muted-foreground nds-p-4 nds-min-h-50">
       <div class="nds-p-2" style="border-right: 1px solid hsl(var(--border)); height: 100%; float: left; width: 8rem">
         <div class="nds-font-medium nds-text-foreground">Dashboard</div>
         <div>Componentes</div>
@@ -499,7 +499,7 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="nds-p-2" style="min-height: 120px">
+        <SidebarInset class="nds-p-2 nds-min-h-30">
           <p class="nds-text-caption nds-text-muted-foreground">aria-current + tooltip no modo icon</p>
         </SidebarInset>
       </SidebarProvider>
@@ -526,7 +526,7 @@ interface SidebarMenuButtonProps {
             </SidebarContent>
           </Sidebar>
         </nav>
-        <SidebarInset class="nds-p-2" style="min-height: 120px">
+        <SidebarInset class="nds-p-2 nds-min-h-30">
           <p class="nds-text-caption nds-text-muted-foreground">Sem tooltip — inacessível no modo colapsado</p>
         </SidebarInset>
       </SidebarProvider>

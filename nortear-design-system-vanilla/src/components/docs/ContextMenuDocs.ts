@@ -211,7 +211,7 @@ export function createContextMenuDocs(): HTMLElement {
             wrap.className = 'nds-cluster nds-p-8';
             wrap.dataset.align = 'center';
             wrap.dataset.justify = 'center';
-            wrap.style.minHeight = '200px';
+            wrap.classList.add('nds-min-h-50');
             wrap.appendChild(buildDemoMenu());
             return wrap;
           },
@@ -418,7 +418,7 @@ export function createContextMenuDocs(): HTMLElement {
           secondaryDescription: t('import.withCheckbox'),
           secondaryCode: `// Com radio/checkbox — monte o menu manualmente e adicione os atributos ARIA
 // role="menuitemcheckbox" + aria-checked para CheckboxItem
-// role="menuitemradio"    + aria-checked para RadioItem`,
+// role="menuitemradio"  + aria-checked para RadioItem`,
         });
 
       // ── 6. Variantes ─────────────────────────────────────────────────────

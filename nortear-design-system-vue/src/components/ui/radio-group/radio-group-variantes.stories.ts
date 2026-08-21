@@ -34,7 +34,7 @@ export const Vertical: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 18rem">
+      <RadioGroup aria-label="Forma de pagamento" class="nds-grid nds-w-2xs" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="vert-cartao" />
           <Label :for="'vert-cartao'">Cartão de crédito</Label>
@@ -116,7 +116,7 @@ export const WithDescription: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 20rem">
+      <RadioGroup aria-label="Forma de pagamento" class="nds-grid nds-w-xs" data-spacing="sm">
         <div class="nds-cluster" data-align="start" data-spacing="sm">
           <RadioGroupItem value="cartao" id="wd-cartao" class="nds-mt-1" aria-describedby="wd-cartao-desc" />
           <div class="nds-stack" data-spacing="xs">

@@ -220,7 +220,7 @@ export function createMenubarDocs(): HTMLElement {
             wrap.className = 'nds-cluster nds-w-full';
             wrap.dataset.align = 'start';
             wrap.dataset.justify = 'center';
-            wrap.style.minHeight = '200px';
+            wrap.classList.add('nds-min-h-50');
             wrap.style.padding = 'var(--spacing-2)';
             wrap.appendChild(buildDemoMenubar());
             return wrap;

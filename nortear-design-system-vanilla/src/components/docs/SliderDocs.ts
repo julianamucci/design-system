@@ -94,7 +94,7 @@ function buildLabeledSlider(opts: {
   const wrap = document.createElement('div');
   wrap.className = 'nds-stack';
   wrap.dataset.spacing = 'xs';
-  wrap.style.width = '18rem';
+  wrap.classList.add('nds-w-2xs');
 
   const row = document.createElement('div');
   row.className = 'nds-cluster';
@@ -495,7 +495,7 @@ const intervalo = createSlider({
                 const wrap = document.createElement('div');
                 wrap.className = 'nds-stack';
                 wrap.dataset.spacing = 'xs';
-                wrap.style.width = '18rem';
+                wrap.classList.add('nds-w-2xs');
 
                 const row = document.createElement('div');
                 row.className = 'nds-cluster';
@@ -628,7 +628,7 @@ const slider = createSlider({
                 const form = document.createElement('form');
                 form.className = 'nds-stack';
                 form.dataset.spacing = 'md';
-                form.style.width = '18rem';
+                form.classList.add('nds-w-2xs');
                 form.setAttribute('aria-label', 'Configurações de áudio');
 
                 let lastCommitted = 60;

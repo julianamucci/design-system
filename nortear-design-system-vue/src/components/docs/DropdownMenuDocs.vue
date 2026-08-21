@@ -589,8 +589,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #do-preview-1>
         <div
-          style="contain: layout; min-height: 200px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-50"
         >
           <DropdownMenu
             :default-open="true"
@@ -611,8 +611,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-1>
         <div
-          style="contain: layout; min-height: 200px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-50"
         >
           <DropdownMenu
             :default-open="true"
@@ -646,8 +646,8 @@ const a11yCritCols = computed(() => ({
     >
       <template #variant-preview-0>
         <div
-          style="contain: layout; min-height: 200px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-50"
         >
           <DropdownMenu
             :default-open="true"
@@ -666,8 +666,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-1>
         <div
-          style="contain: layout; min-height: 200px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-50"
         >
           <DropdownMenu
             :default-open="true"
@@ -688,8 +688,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <div
-          style="contain: layout; min-height: 240px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-60"
         >
           <DropdownMenu
             :default-open="true"
@@ -720,8 +720,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-3>
         <div
-          style="contain: layout; min-height: 200px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-50"
         >
           <DropdownMenu
             :default-open="true"
@@ -755,8 +755,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-4>
         <div
-          style="contain: layout; min-height: 200px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-50"
         >
           <DropdownMenu
             :default-open="true"

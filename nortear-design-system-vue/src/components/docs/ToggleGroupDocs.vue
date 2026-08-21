@@ -270,7 +270,7 @@ const codeViewMode = `<ToggleGroup type="single" variant="outline" default-value
   </ToggleGroupItem>
 </ToggleGroup>`;
 
-const codeFilterWithText = `<div class="nds-stack" data-spacing="sm" style="width: 18rem">
+const codeFilterWithText = `<div class="nds-stack nds-w-2xs" data-spacing="sm">
   <span>Filtros de exibição</span>
   <ToggleGroup type="multiple" variant="outline" :default-value="['compact']" aria-label="Filtros de exibição">
     <ToggleGroupItem value="hidden">
@@ -902,9 +902,9 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-2>
         <div
-          class="nds-stack"
+          class="nds-stack nds-w-2xs"
           data-spacing="sm"
-          style="width: 18rem"
+          
         >
           <span>Filtros de exibição</span>
           <ToggleGroup

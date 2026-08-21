@@ -444,7 +444,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 `const fieldset = document.createElement('fieldset');\n` +
                 `fieldset.className = 'nds-border-default nds-rounded-lg nds-p-4 nds-stack';\n` +
                 `fieldset.dataset.spacing = 'sm';\n` +
-                `fieldset.style.width = '18rem';\n` +
+                `fieldset.classList.add('nds-w-2xs');\n` +
                 `const legend = document.createElement('legend');\n` +
                 `legend.className = 'nds-text-body nds-font-semibold nds-px-1';\n` +
                 `legend.textContent = 'Notificações';\n` +
@@ -470,7 +470,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 const fieldset = document.createElement('fieldset');
                 fieldset.className = 'nds-border-default nds-rounded-lg nds-p-4 nds-stack';
                 fieldset.dataset.spacing = 'sm';
-                fieldset.style.width = '18rem';
+                fieldset.classList.add('nds-w-2xs');
                 const legend = document.createElement('legend');
                 legend.className = 'nds-text-body nds-font-semibold nds-px-1';
                 legend.textContent = 'Notificações';
@@ -503,7 +503,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 `const wrapper = document.createElement('div');\n` +
                 `wrapper.className = 'nds-stack';\n` +
                 `wrapper.dataset.spacing = 'sm';\n` +
-                `wrapper.style.width = '18rem';\n` +
+                `wrapper.classList.add('nds-w-2xs');\n` +
                 `const allRow = document.createElement('div');\n` +
                 `allRow.className = 'nds-cluster nds-border-b nds-pb-2';\n` +
                 `allRow.dataset.spacing = 'xs';\n` +
@@ -544,7 +544,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 const wrapper = document.createElement('div');
                 wrapper.className = 'nds-stack';
                 wrapper.dataset.spacing = 'sm';
-                wrapper.style.width = '18rem';
+                wrapper.classList.add('nds-w-2xs');
                 const allRow = document.createElement('div');
                 allRow.className = 'nds-cluster nds-border-b nds-pb-2';
                 allRow.dataset.spacing = 'xs';
@@ -592,7 +592,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 `const wrapper = document.createElement('div');\n` +
                 `wrapper.className = 'nds-stack';\n` +
                 `wrapper.dataset.spacing = 'xs';\n` +
-                `wrapper.style.width = '20rem';\n` +
+                `wrapper.classList.add('nds-w-xs');\n` +
                 `const title = document.createElement('p');\n` +
                 `title.className = 'nds-text-body nds-font-semibold nds-mb-2';\n` +
                 `title.textContent = 'Preferências de contato';\n` +
@@ -623,7 +623,7 @@ label.textContent = 'Aceito os termos e condições';`,
                 const wrapper = document.createElement('div');
                 wrapper.className = 'nds-stack';
                 wrapper.dataset.spacing = 'xs';
-                wrapper.style.width = '20rem';
+                wrapper.classList.add('nds-w-xs');
                 const title = document.createElement('p');
                 title.className = 'nds-text-body nds-font-semibold nds-mb-2';
                 title.textContent = 'Preferências de contato';

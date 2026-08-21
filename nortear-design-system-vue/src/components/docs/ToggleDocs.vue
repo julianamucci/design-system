@@ -219,7 +219,7 @@ const codeSizes = `<div class="nds-cluster" data-spacing="sm">
   <Toggle variant="outline" size="lg" aria-label="Negrito (lg)"><Bold class="nds-icon" aria-hidden="true" /></Toggle>
 </div>`;
 
-const codeFilterList = `<div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+const codeFilterList = `<div class="nds-stack nds-w-2xs" data-spacing="sm">
   <span class="nds-text-body nds-font-medium">Filtros de exibição</span>
   <div class="nds-cluster" data-spacing="sm">
     <Toggle variant="outline">
@@ -691,9 +691,9 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-1>
         <div
-          class="nds-stack"
+          class="nds-stack nds-w-2xs"
           data-spacing="sm"
-          style="width: 18rem;"
+          
         >
           <span class="nds-text-body nds-font-medium">Filtros de exibição</span>
           <div

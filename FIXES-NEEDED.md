@@ -2477,6 +2477,22 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       snippet; prop que existe e ninguém exercita é o mesmo estado de
       "especificado e não entregue" que o `export_sem_story` cobra das peças —
       ou ganha story, ou sai do snippet.
+- [ ] **`inline_style_design_value`: 176 → 142 arquivos, 877 → 643 declarações.**
+      A escada completa absorveu **234 declarações** com degrau EXATO — nenhuma
+      arredondada, porque arredondar seria mudar o desenho por conta própria.
+
+      O que sobrou, por família, e o que cada uma precisa:
+
+      | o que | quanto | o que falta |
+      |---|---|---|
+      | valor sem degrau | ~300 | 220px (30×), 260px (18×), 60px (21×), 140px, 180px, 300px, 340px — todos fora da grade de 8. Ou ganham degrau (contra a preferência recém-decidida) ou o sítio vai para o vizinho, que é decisão de desenho |
+      | `padding` composto | 83 | `padding: 8px 12px` precisa de DUAS utilitárias (`nds-py-2 nds-px-3`) e o meio-degrau de 12px não existe de propósito |
+      | `height` | 64 | não tem utilitária, e é deliberado: altura fixa em elemento com texto é o que a WCAG 1.4.4 proíbe. Container pode — mas é caso a caso |
+      | elemento sem atributo de classe | ~80 | a conversão exigiria CRIAR o atributo, e aí não é mais troca mecânica |
+      | `gap`, `font-size`, `line-height`, `min-width`, `max-height` | ~64 | famílias de utilitária que não existem |
+
+      A conversão foi mecânica e verificada: auditor de 176 para 142 arquivos,
+      cinco builds limpos, cinco suítes completas verdes.
 - [ ] **Utilitárias que os relatórios pediram três vezes, de agentes
       independentes**: `object-fit: cover` (não existe; hoje só cravado dentro de
       `avatar.css` e `item.css`) e um degrau de `min-height` entre 120 e 200px.

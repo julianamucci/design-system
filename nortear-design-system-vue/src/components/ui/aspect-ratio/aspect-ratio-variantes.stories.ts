@@ -107,7 +107,7 @@ export const Square: Story = {
   render: () => ({
     components: { AspectRatio },
     template: `
-      <div class="" style="width: 320px">
+      <div class="nds-w-xs">
         <AspectRatio :ratio="1">
           <img
             src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format"
@@ -141,7 +141,7 @@ export const ThreeFour: Story = {
   render: () => ({
     components: { AspectRatio },
     template: `
-      <div class="" style="width: 320px">
+      <div class="nds-w-xs">
         <AspectRatio :ratio="3 / 4">
           <img
             src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&auto=format"

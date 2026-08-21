@@ -100,7 +100,7 @@ export const Playground: Story = {
     // O prazo vem da região, e não de cada `toast()`: é o mesmo caminho que o
     // teste usa para encurtar o tempo sem depender do relógio real.
     template: `
-      <div class="nds-stack" data-spacing="md" style="contain: layout; position: relative; min-height: 120px;">
+      <div class="nds-stack nds-min-h-30" data-spacing="md" style="contain: layout; position: relative">
         <Button variant="outline" @click="disparar">Disparar notificação</Button>
 
         <Toaster

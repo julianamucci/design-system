@@ -68,7 +68,7 @@ export const SimpleLink: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 120px;" class="nds-cluster nds-w-full" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-30" data-justify="center">
         <NavigationMenu aria-label="Navegação institucional">
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -120,7 +120,7 @@ export const WithDropdown: Story = {
       return { aoNavegar };
     },
     template: `
-      <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-70" data-justify="center">
         <NavigationMenu aria-label="Navegação principal">
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -201,7 +201,7 @@ export const MegaMenuGrid: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 360px;" class="nds-cluster nds-w-full" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-90" data-justify="center">
         <NavigationMenu aria-label="Navegação de soluções" default-value="solucoes">
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -301,7 +301,7 @@ export const WithHighlightedCard: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 360px;" class="nds-cluster nds-w-full" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-90" data-justify="center">
         <NavigationMenu aria-label="Navegação de recursos">
           <NavigationMenuList>
             <NavigationMenuItem>

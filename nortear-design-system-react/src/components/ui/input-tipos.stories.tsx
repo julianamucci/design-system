@@ -37,7 +37,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Text: Story = {
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="tipo-text" className="nds-text-body nds-font-medium">
         Nome completo
       </label>
@@ -58,7 +58,7 @@ export const Email: Story = {
   // desligados neste arquivo.
   parameters: { docs: { source: { transform: inputEmailSource } } },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="tipo-email" className="nds-text-body nds-font-medium">
         Email
       </label>
@@ -78,7 +78,7 @@ export const Password: Story = {
   // Idem: o `type="password"` é o que a story documenta.
   parameters: { docs: { source: { transform: inputSenhaSource } } },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="tipo-password" className="nds-text-body nds-font-medium">
         Senha
       </label>
@@ -98,7 +98,7 @@ export const Number: Story = {
   // Idem: o `type="number"` troca o papel implícito para spinbutton.
   parameters: { docs: { source: { transform: inputNumeroSource } } },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="tipo-number" className="nds-text-body nds-font-medium">
         Quantidade
       </label>

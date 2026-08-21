@@ -531,8 +531,8 @@ const visualTestItems = computed(() => [
     >
       <template #do-preview-0>
         <div
-          style="contain: layout; position: relative; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-20"
         >
           <Button
             variant="outline"
@@ -545,8 +545,8 @@ const visualTestItems = computed(() => [
       </template>
       <template #dont-preview-0>
         <div
-          style="contain: layout; position: relative; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-20"
         >
           <Button
             variant="outline"
@@ -559,8 +559,8 @@ const visualTestItems = computed(() => [
       </template>
       <template #do-preview-1>
         <div
-          style="contain: layout; position: relative; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-20"
         >
           <Button
             variant="outline"
@@ -573,8 +573,8 @@ const visualTestItems = computed(() => [
       </template>
       <template #dont-preview-1>
         <div
-          style="contain: layout; position: relative; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-20"
         >
           <Button
             variant="outline"
@@ -601,8 +601,8 @@ const visualTestItems = computed(() => [
     >
       <template #variant-preview-0>
         <div
-          style="contain: layout; position: relative; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-20"
         >
           <Button
             variant="outline"
@@ -615,8 +615,8 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-1>
         <div
-          style="contain: layout; position: relative; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-20"
         >
           <Button
             variant="outline"
@@ -629,8 +629,8 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-2>
         <div
-          style="contain: layout; position: relative; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-20"
         >
           <Button
             variant="outline"
@@ -643,8 +643,8 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-3>
         <div
-          style="contain: layout; position: relative; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-20"
         >
           <Button
             variant="outline"
@@ -657,8 +657,8 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-4>
         <div
-          style="contain: layout; position: relative; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout; position: relative"
+          class="nds-w-full nds-min-h-20"
         >
           <Button
             variant="outline"

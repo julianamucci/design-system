@@ -353,7 +353,7 @@ interface ContextMenuCheckboxItemProps
     >
       {/* ── Demonstração ───────────────────────────────────────────── */}
       <DocsDemonstration title={tContent("demonstration.title")}>
-        <div className="nds-cluster nds-p-8" data-align="center" data-justify="center" style={{ minHeight: "200px" }}>
+        <div className="nds-cluster nds-p-8 nds-min-h-50" data-align="center" data-justify="center">
           <DemonstracaoPreview tContent={tContent} />
         </div>
       </DocsDemonstration>

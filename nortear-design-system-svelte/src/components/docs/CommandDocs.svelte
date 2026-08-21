@@ -263,12 +263,12 @@ import uiTranslations from '@/i18n/ui.json';
 <Popover bind:open>
   <PopoverTrigger>
     {#snippet child({ props })}
-      <Button variant="outline" role="combobox" aria-expanded={open} aria-label="Selecione..." class="nds-cluster" data-justify="between" style="width: 14rem" {...props}>
+      <Button variant="outline" role="combobox" aria-expanded={open} aria-label="Selecione..." class="nds-cluster nds-w-3xs" data-justify="between" {...props}>
         {selected ? items.find(i => i.value === selected)?.label : 'Selecione...'}
       </Button>
     {/snippet}
   </PopoverTrigger>
-  <PopoverContent class="nds-p-0" style="width: 14rem">
+  <PopoverContent class="nds-p-0 nds-w-3xs">
     <Command.Root>
       <Command.Input placeholder="Buscar item..." />
       <Command.List>
@@ -674,9 +674,9 @@ interface CommandLoadingProps {
             role="combobox"
             aria-expanded={comboboxOpen}
             aria-label={$tStore('demonstration.labels.selectPlaceholder')}
-            class="nds-cluster"
+            class="nds-cluster nds-w-3xs"
             data-justify="between"
-            style="width: 14rem"
+            
             {...props}
           >
             {comboboxValue ? comboboxItems.find(i => i.value === comboboxValue)?.label : $tStore('demonstration.labels.selectPlaceholder')}
@@ -684,7 +684,7 @@ interface CommandLoadingProps {
           </Button>
         {/snippet}
       </PopoverTrigger>
-      <PopoverContent class="nds-p-0" style="width: 14rem">
+      <PopoverContent class="nds-p-0 nds-w-3xs">
         <Command.Root>
           <Command.Input placeholder={$tStore('demonstration.labels.comboboxSearch')} />
           <Command.List>

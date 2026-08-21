@@ -186,7 +186,7 @@ import { Label } from "@/components/ui/label";`;
   let compInListSms = $state(false);
   let compInListNewsletter = $state(true);
 
-  const codeCompFieldset = `<fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style="width: 18rem">
+  const codeCompFieldset = `<fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack nds-w-2xs" data-spacing="sm">
   <legend class="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>
   <div class="nds-cluster" data-spacing="xs">
     <Checkbox id="notif-email" bind:checked={email} />
@@ -219,7 +219,7 @@ import { Label } from "@/components/ui/label";`;
   function toggleAll(v: boolean) { c1 = v; c2 = v; c3 = v; }
 <\/script>
 
-<div class="nds-stack" data-spacing="sm" style="width: 18rem">
+<div class="nds-stack nds-w-2xs" data-spacing="sm">
   <div class="nds-cluster" data-spacing="xs">
     <Checkbox id="sa-parent" checked={parent} {indeterminate} onCheckedChange={toggleAll} />
     <Label for="sa-parent">Selecionar todos</Label>
@@ -231,7 +231,7 @@ import { Label } from "@/components/ui/label";`;
   </div>
 </div>`;
 
-  const codeCompInList = `<div class="nds-stack" data-spacing="xs" style="width: 20rem">
+  const codeCompInList = `<div class="nds-stack nds-w-xs" data-spacing="xs">
   <h3 class="nds-text-body nds-font-semibold">Preferências de contato</h3>
   <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="xs">
     <Checkbox id="list-email" bind:checked={email} />
@@ -497,7 +497,7 @@ import { Label } from "@/components/ui/label";`;
   />
 
   {#snippet compFieldset()}
-    <fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style="width: 18rem">
+    <fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack nds-w-2xs" data-spacing="sm">
       <legend class="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>
       <div class="nds-cluster" data-spacing="xs">
         <Checkbox id="notif-email" bind:checked={compFieldsetEmail} />
@@ -515,7 +515,7 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   {#snippet compSelectAll()}
-    <div class="nds-stack" data-spacing="sm" style="width: 18rem">
+    <div class="nds-stack nds-w-2xs" data-spacing="sm">
       <div class="nds-cluster" data-spacing="xs">
         <Checkbox
           id="sa-parent"
@@ -543,7 +543,7 @@ import { Label } from "@/components/ui/label";`;
   {/snippet}
 
   {#snippet compInList()}
-    <div class="nds-stack" data-spacing="xs" style="width: 20rem">
+    <div class="nds-stack nds-w-xs" data-spacing="xs">
       <h3 class="nds-text-body nds-font-semibold">Preferências de contato</h3>
       <div class="nds-cluster nds-rounded-md nds-border-default nds-p-4" data-spacing="xs">
         <Checkbox id="list-email" bind:checked={compInListEmail} />

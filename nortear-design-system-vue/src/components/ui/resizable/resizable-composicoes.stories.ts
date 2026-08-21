@@ -42,7 +42,7 @@ export const EditorWithPreview: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="nds-rounded-md nds-border-default" style="width: 640px; height: 300px">
+      <div class="nds-rounded-md nds-border-default nds-w-xl" style="height: 300px">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel :default-size="25" :min-size="15" :max-size="40">
             <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Arquivos</div>
@@ -127,7 +127,7 @@ export const SidebarWithConsole: Story = {
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     template: `
-      <div class="nds-rounded-md nds-border-default" style="width: 640px; height: 360px">
+      <div class="nds-rounded-md nds-border-default nds-w-xl" style="height: 360px">
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel :default-size="30" :min-size="20" :max-size="50">
             <div class="nds-cluster nds-p-4 nds-text-body nds-bg-muted" data-align="center" data-justify="center" style="height: 100%">Sidebar</div>

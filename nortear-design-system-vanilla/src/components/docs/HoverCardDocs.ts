@@ -265,7 +265,7 @@ export function createHoverCardDocs(): HTMLElement {
             wrap.dataset.cols = '2';
             wrap.dataset.spacing = 'lg';
             wrap.dataset.min = '16rem';
-            wrap.style.minHeight = '160px';
+            wrap.classList.add('nds-min-h-40');
 
             const cells: Array<{ labelKey: string; build: () => HTMLElement }> = [
               { labelKey: 'demonstration.labels.userProfile',       build: buildProfilePreview    },
@@ -280,7 +280,7 @@ export function createHoverCardDocs(): HTMLElement {
               col.dataset.spacing = 'sm';
               col.style.contain = 'layout';
               col.style.position = 'relative';
-              col.style.minHeight = '100px';
+              col.classList.add('nds-min-h-25');
 
               const label = document.createElement('p');
               label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';

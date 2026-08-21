@@ -114,7 +114,7 @@ export const Open: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
@@ -171,7 +171,7 @@ export const Hover: Story = {
     // Provider próprio: o delay do decorator é 0, e sem espera não há o que medir.
     template: `
       <TooltipProvider :delay-duration="atraso">
-        <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
+        <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
           <Tooltip>
             <TooltipTrigger as-child>
               <Button variant="outline" size="icon" aria-label="Salvar">
@@ -226,7 +226,7 @@ export const WithFocus: Story = {
     // cima", então esperar aqui esconderia a informação de quem não usa mouse.
     template: `
       <TooltipProvider :delay-duration="atraso">
-        <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
+        <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
           <Tooltip>
             <TooltipTrigger as-child>
               <Button variant="outline" size="icon" aria-label="Salvar">
@@ -278,7 +278,7 @@ export const PersistenceInBubble: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
         <Tooltip>
           <TooltipTrigger as-child>
             <Button variant="outline">Compartilhar</Button>
@@ -332,7 +332,7 @@ export const Controlled: Story = {
     // dispensa o balão ANTES do `click`, então um toggle leria o estado já
     // invertido pela lib e reabriria o que acabou de fechar.
     template: `
-      <div class="nds-stack" data-align="center" data-spacing="sm" style="contain: layout; min-height: 200px;">
+      <div class="nds-stack nds-min-h-50" data-align="center" data-spacing="sm" style="contain: layout">
         <div class="nds-cluster" data-spacing="sm">
           <Button variant="secondary" @click="open = true">Abrir externamente</Button>
           <Button variant="outline" @click="open = false">Fechar externamente</Button>

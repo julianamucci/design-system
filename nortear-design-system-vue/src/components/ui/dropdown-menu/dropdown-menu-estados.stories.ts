@@ -166,7 +166,7 @@ export const Controlled: Story = {
       return { aberto };
     },
     template: `
-      <div class="nds-stack" data-spacing="sm" style="contain: layout; min-height: 280px;">
+      <div class="nds-stack nds-min-h-70" data-spacing="sm" style="contain: layout">
         <Button @click="aberto = !aberto">
           {{ aberto ? 'Fechar pelo estado' : 'Abrir pelo estado' }}
         </Button>

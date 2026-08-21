@@ -48,7 +48,7 @@ type Story = StoryObj<typeof meta>;
 
 export const AddonIconLeft: Story = {
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-icon-left" className="nds-text-body nds-font-medium">
         Buscar
       </label>
@@ -84,7 +84,7 @@ export const AddonIconRight: Story = {
   // O lado do addon é o assunto: muda o `align` E a ordem das peças no JSX.
   parameters: { docs: { source: { transform: inputGroupIconeFimSource } } },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-icon-right" className="nds-text-body nds-font-medium">
         Email
       </label>
@@ -114,7 +114,7 @@ export const AddonTextLeft: Story = {
   // `InputGroupText` é a peça que o snippet do ícone nu não mostra.
   parameters: { docs: { source: { transform: inputGroupPrefixoTextoSource } } },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-text-left" className="nds-text-body nds-font-medium">
         Usuário
       </label>
@@ -142,7 +142,7 @@ export const AddonTextRight: Story = {
   // Dois addons no mesmo grupo, com uma moldura só: é o que a story prova.
   parameters: { docs: { source: { transform: inputGroupPrefixoESufixoSource } } },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-text-right" className="nds-text-body nds-font-medium">
         Preço
       </label>
@@ -175,7 +175,7 @@ export const InnerButton: Story = {
   // só de ícone é mudo sem o `aria-label`.
   parameters: { docs: { source: { transform: inputGroupBotaoInternoSource } } },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-btn-search" className="nds-text-body nds-font-medium">
         Buscar
       </label>
@@ -217,7 +217,7 @@ export const PasswordWithToggle: Story = {
   render: function SenhaComToggleRender() {
     const [show, setShow] = useState(false);
     return (
-      <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+      <div className="nds-stack nds-w-2xs" data-spacing="xs">
         <label htmlFor="comp-password-toggle" className="nds-text-body nds-font-medium">
           Senha
         </label>
@@ -268,7 +268,7 @@ export const Disabled: Story = {
   // O `disabled` vai no CONTROLE, não no contêiner: é a lição da story.
   parameters: { docs: { source: { transform: inputGroupDesabilitadoSource } } },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-disabled" className="nds-text-body nds-font-medium">
         Campo desabilitado
       </label>
@@ -300,7 +300,7 @@ export const WithError: Story = {
   // o snippet do grupo padrão não tem.
   parameters: { docs: { source: { transform: inputGroupComErroSource } } },
   render: () => (
-    <div className="nds-stack" data-spacing="xs" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-error" className="nds-text-body nds-font-medium">
         Email
       </label>

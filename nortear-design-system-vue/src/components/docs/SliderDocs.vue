@@ -177,7 +177,7 @@ const value = ref<number[]>([50]);
 <\/script>
 
 <template>
-  <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+  <div class="nds-stack nds-w-2xs" data-spacing="sm">
     <div class="nds-cluster" data-justify="between">
       <span class="nds-text-body nds-font-medium">Volume</span>
       <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{{ value[0] }}%</span>
@@ -199,7 +199,7 @@ const value = ref<number[]>([100, 400]);
 <\/script>
 
 <template>
-  <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+  <div class="nds-stack nds-w-2xs" data-spacing="sm">
     <div class="nds-cluster" data-justify="between">
       <span class="nds-text-body nds-font-medium">Faixa de preço</span>
       <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">
@@ -276,7 +276,7 @@ const value = ref<number[]>([50]);
 <\/script>
 
 <template>
-  <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+  <div class="nds-stack nds-w-2xs" data-spacing="sm">
     <div class="nds-cluster" data-justify="between">
       <Label>Volume</Label>
       <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{{ value[0] }}%</span>
@@ -776,9 +776,9 @@ const visualTestItems = computed(() => [
       </template>
       <template #variant-preview-3>
         <div
-          class="nds-stack"
+          class="nds-stack nds-w-2xs"
           data-spacing="sm"
-          style="width: 18rem;"
+          
         >
           <div
             class="nds-cluster"
@@ -811,9 +811,9 @@ const visualTestItems = computed(() => [
     >
       <template #variant-preview-0>
         <div
-          class="nds-stack"
+          class="nds-stack nds-w-2xs"
           data-spacing="sm"
-          style="width: 18rem;"
+          
         >
           <div
             class="nds-cluster"
@@ -838,9 +838,9 @@ const visualTestItems = computed(() => [
       <template #variant-preview-1>
         <form
           aria-label="Configurações de áudio"
-          class="nds-stack"
+          class="nds-stack nds-w-2xs"
           data-spacing="md"
-          style="width: 18rem;"
+          
           @submit="onCompFormSubmit"
         >
           <div

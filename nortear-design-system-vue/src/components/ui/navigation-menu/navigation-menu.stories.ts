@@ -86,7 +86,7 @@ export const Playground: Story = {
     // `defaultValue` só é lido na montagem: sem a chave, mexer no control não
     // muda nada na tela e o control parece quebrado.
     template: `
-      <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-80" data-justify="center">
         <NavigationMenu
           :key="String(args.defaultValue) + String(args.orientation)"
           v-bind="args"

@@ -532,7 +532,7 @@ import { Bold } from "lucide-react";`;
             name: tContent("variants.compositions.filterList.name"),
             description: tContent("variants.compositions.filterList.description"),
             useWhen: tContent("variants.compositions.filterList.use"),
-            code: `<div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+            code: `<div className="nds-stack nds-w-2xs" data-spacing="sm">
   <p className="nds-text-body nds-font-semibold nds-mb-1">Filtros de exibição</p>
   <div className="nds-cluster" data-spacing="sm">
     <Toggle variant="outline">
@@ -546,7 +546,7 @@ import { Bold } from "lucide-react";`;
   </div>
 </div>`,
             preview: (
-              <div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+              <div className="nds-stack nds-w-2xs" data-spacing="sm">
                 <p className="nds-text-body nds-font-semibold nds-mb-1">Filtros de exibição</p>
                 <div className="nds-cluster" data-spacing="sm">
                   <Toggle variant="outline">

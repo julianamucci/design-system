@@ -412,7 +412,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
             description: tContent("variants.items.sixteenNine"),
             code: codeSixteenNine,
             preview: (
-              <div className="nds-w-full" style={{ maxWidth: "28rem" }}>
+              <div className="nds-w-full nds-max-w-md">
                 {renderRatioDemo(16 / 9, LANDSCAPE_SRC, "Paisagem ao entardecer")}
               </div>
             ),
@@ -422,7 +422,7 @@ interface AspectRatioProps extends React.HTMLAttributes<HTMLDivElement> {
             description: tContent("variants.items.fourThree"),
             code: codeFourThree,
             preview: (
-              <div className="nds-w-full" style={{ maxWidth: "24rem" }}>
+              <div className="nds-w-full nds-max-w-sm">
                 {renderRatioDemo(4 / 3, PRODUCT_SRC, "Tênis de corrida")}
               </div>
             ),

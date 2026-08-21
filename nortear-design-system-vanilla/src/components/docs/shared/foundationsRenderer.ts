@@ -89,7 +89,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
   const container = document.createElement('main');
   container.className = 'nds-p-8 nds-stack';
   container.dataset.spacing = 'xl';
-  container.style.maxWidth = '72rem';
+  container.classList.add('nds-max-w-docs');
   container.style.marginInline = 'auto';
   container.tabIndex = -1;
   container.setAttribute('aria-labelledby', DOCS_PAGE_TITLE_ID);
@@ -126,7 +126,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
   // ── Header ─────────────────────────────────────────────────────────────────
   const header = document.createElement('header');
   header.className = 'nds-stack nds-pb-8';
-  header.style.paddingBottom = '2rem';
+  header.classList.add('nds-pb-8');
 
   const topRow = document.createElement('div');
   topRow.className = 'nds-cluster nds-w-full';
@@ -152,7 +152,7 @@ export function createFoundationsDocs(opts: FoundationsRendererOptions): HTMLEle
 
   const desc = document.createElement('p');
   desc.className = 'nds-text-muted-foreground nds-leading-relaxed';
-  desc.style.maxWidth = '48rem';
+  desc.classList.add('nds-max-w-prose');
 
   header.append(topRow, h1, desc);
   container.appendChild(header);

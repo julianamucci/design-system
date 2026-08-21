@@ -425,11 +425,11 @@ const a11yCritCols = computed(() => ({
       <!-- ── Demonstração ─────────────────────────────────────────── -->
       <DocsDemonstration :title="tContent('demonstration.title')">
         <div
-          class="nds-cluster nds-w-full"
+          class="nds-cluster nds-w-full nds-min-h-30"
           data-justify="center"
           data-align="center"
           data-spacing="lg"
-          style="contain: layout; min-height: 120px; position: relative;"
+          style="contain: layout; position: relative"
         >
           <Tooltip @update:open="(open: boolean) => handleDemoTooltipOpenChange('demo-save', open)">
             <TooltipTrigger as-child>
@@ -559,8 +559,8 @@ const a11yCritCols = computed(() => ({
       >
         <template #do-preview-0>
           <div
-            style="contain: layout; min-height: 80px;"
-            class="nds-cluster nds-w-full"
+            style="contain: layout"
+            class="nds-cluster nds-w-full nds-min-h-20"
             data-justify="center"
             data-align="center"
           >
@@ -582,8 +582,8 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #dont-preview-0>
           <div
-            style="contain: layout; min-height: 80px;"
-            class="nds-cluster nds-w-full"
+            style="contain: layout"
+            class="nds-cluster nds-w-full nds-min-h-20"
             data-justify="center"
             data-align="center"
           >
@@ -607,8 +607,8 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #do-preview-1>
           <div
-            style="contain: layout; min-height: 80px;"
-            class="nds-cluster nds-w-full"
+            style="contain: layout"
+            class="nds-cluster nds-w-full nds-min-h-20"
             data-justify="center"
             data-align="center"
           >
@@ -635,8 +635,8 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #dont-preview-1>
           <div
-            style="contain: layout; min-height: 80px;"
-            class="nds-cluster nds-w-full"
+            style="contain: layout"
+            class="nds-cluster nds-w-full nds-min-h-20"
             data-justify="center"
             data-align="center"
           >
@@ -666,8 +666,8 @@ const a11yCritCols = computed(() => ({
       >
         <template #variant-preview-0>
           <div
-            style="contain: layout; min-height: 80px;"
-            class="nds-cluster nds-w-full"
+            style="contain: layout"
+            class="nds-cluster nds-w-full nds-min-h-20"
             data-justify="center"
             data-align="center"
           >
@@ -689,8 +689,8 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #variant-preview-1>
           <div
-            style="contain: layout; min-height: 80px;"
-            class="nds-cluster nds-w-full"
+            style="contain: layout"
+            class="nds-cluster nds-w-full nds-min-h-20"
             data-justify="center"
             data-align="center"
           >
@@ -717,8 +717,8 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #variant-preview-2>
           <div
-            style="contain: layout; min-height: 80px;"
-            class="nds-cluster nds-w-full"
+            style="contain: layout"
+            class="nds-cluster nds-w-full nds-min-h-20"
             data-justify="center"
             data-align="center"
           >
@@ -743,8 +743,8 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #variant-preview-3>
           <div
-            style="contain: layout; min-height: 160px; place-items: center; gap: 2rem;"
-            class="nds-grid nds-w-full"
+            style="contain: layout; place-items: center; gap: 2rem"
+            class="nds-grid nds-w-full nds-min-h-40"
           >
             <Tooltip>
               <TooltipTrigger as-child>
@@ -799,8 +799,8 @@ const a11yCritCols = computed(() => ({
       >
         <template #variant-preview-0>
           <div
-            style="contain: layout; min-height: 100px;"
-            class="nds-cluster nds-w-full"
+            style="contain: layout"
+            class="nds-cluster nds-w-full nds-min-h-25"
             data-justify="center"
             data-align="center"
           >
@@ -827,8 +827,8 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #variant-preview-1>
           <div
-            style="contain: layout; min-height: 120px;"
-            class="nds-cluster nds-w-full"
+            style="contain: layout"
+            class="nds-cluster nds-w-full nds-min-h-30"
             data-justify="center"
             data-align="start"
           >
@@ -875,8 +875,8 @@ const a11yCritCols = computed(() => ({
         </template>
         <template #variant-preview-2>
           <div
-            style="contain: layout; min-height: 120px;"
-            class="nds-cluster nds-w-full"
+            style="contain: layout"
+            class="nds-cluster nds-w-full nds-min-h-30"
             data-justify="center"
             data-align="start"
           >

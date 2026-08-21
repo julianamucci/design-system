@@ -388,21 +388,21 @@ toast.promise(promise, {
   />
 
   {#snippet doPair1()}
-    <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
+    <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
       <Button variant="outline" onclick={() => toast.success('Alterações salvas.')}>
         toast.success
       </Button>
     </div>
   {/snippet}
   {#snippet dontPair1()}
-    <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
+    <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
       <Button variant="outline" onclick={() => toast.error('Erro crítico! O sistema falhou completamente.')}>
         toast.error (erro crítico)
       </Button>
     </div>
   {/snippet}
   {#snippet doPair2()}
-    <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
+    <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
       <Button variant="outline" onclick={() => {
         const p = new Promise<void>((r) => setTimeout(r, 1500));
         toast.promise(p, { loading: 'Salvando...', success: 'Salvo.', error: 'Erro.' });
@@ -412,7 +412,7 @@ toast.promise(promise, {
     </div>
   {/snippet}
   {#snippet dontPair2()}
-    <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
+    <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
       <Button variant="outline" onclick={() => toast.error('Campo obrigatório não preenchido.')}>
         toast (erro de campo)
       </Button>
@@ -440,27 +440,27 @@ toast.promise(promise, {
   />
 
   {#snippet variantDefault()}
-    <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
+    <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
       <Button variant="outline" onclick={() => toast('Código copiado.')}>Disparar</Button>
     </div>
   {/snippet}
   {#snippet variantSuccess()}
-    <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
+    <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
       <Button variant="outline" onclick={() => toast.success('Alterações salvas.')}>Disparar</Button>
     </div>
   {/snippet}
   {#snippet variantError()}
-    <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
+    <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
       <Button variant="outline" onclick={() => toast.error('Não foi possível salvar. Tente novamente.')}>Disparar</Button>
     </div>
   {/snippet}
   {#snippet variantWarning()}
-    <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
+    <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
       <Button variant="outline" onclick={() => toast.warning('Sua sessão expira em 5 minutos.')}>Disparar</Button>
     </div>
   {/snippet}
   {#snippet variantInfo()}
-    <div style="contain: layout; position: relative; min-height: 4rem;" class="nds-cluster" data-justify="center">
+    <div style="contain: layout; position: relative" class="nds-cluster nds-min-h-16" data-justify="center">
       <Button variant="outline" onclick={() => toast.info('Nova versão disponível.')}>Disparar</Button>
     </div>
   {/snippet}

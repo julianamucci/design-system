@@ -543,7 +543,7 @@ interface NavigationMenuLinkProps {
 
   <!-- ── Composições ──────────────────────────────────────────────── -->
   {#snippet variantLinkSimples()}
-    <div style="contain: layout; min-height: 200px;" class="nds-cluster nds-w-full" data-justify="center">
+    <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-50" data-justify="center">
       <NavigationMenuRoot delayDuration={80} aria-label={$tStore('variants.items.linkSimples.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="home"><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
@@ -555,7 +555,7 @@ interface NavigationMenuLinkProps {
   {/snippet}
 
   {#snippet variantComDropdown()}
-    <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="center">
+    <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-70" data-justify="center">
       <NavigationMenuRoot delayDuration={80} aria-label={$tStore('variants.items.comDropdown.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="home"><NavigationMenuLink href="#">Início</NavigationMenuLink></NavigationMenuItem>
@@ -576,7 +576,7 @@ interface NavigationMenuLinkProps {
   {/snippet}
 
   {#snippet variantMegaMenuGrid()}
-    <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
+    <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-80" data-justify="center">
       <NavigationMenuRoot delayDuration={80} aria-label={$tStore('variants.items.megaMenuGrid.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="solucoes">
@@ -598,7 +598,7 @@ interface NavigationMenuLinkProps {
   {/snippet}
 
   {#snippet variantComCardDestacado()}
-    <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
+    <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-80" data-justify="center">
       <NavigationMenuRoot delayDuration={80} aria-label={$tStore('variants.items.comCardDestacado.name')}>
         <NavigationMenuList>
           <NavigationMenuItem value="recursos">

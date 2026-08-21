@@ -149,7 +149,7 @@ export const HorizontalCards: Story = {
 
     products.forEach(p => {
       const card = createCard({ className: 'nds-shrink-0' });
-      card.style.width = '14rem';
+      card.classList.add('nds-w-3xs');
       const header = createCardHeader();
       header.appendChild(createCardTitle({ text: p.title, level: 3, className: 'nds-text-base' }));
       header.appendChild(createCardDescription({ text: p.desc }));
@@ -389,7 +389,7 @@ export const Sidebar: Story = {
     outer.className = 'nds-cluster nds-w-full';
     outer.dataset.spacing = 'md';
     outer.dataset.align = 'stretch';
-    outer.style.maxWidth = '48rem';
+    outer.classList.add('nds-max-w-prose');
 
     const nav = document.createElement('nav');
     nav.setAttribute('aria-label', 'Componentes do design system');
@@ -426,7 +426,7 @@ export const Sidebar: Story = {
       class: 'nds-rounded-md nds-border-default',
       children: nav,
     });
-    sidebar.style.width = '14rem';
+    sidebar.classList.add('nds-w-3xs');
 
     const content = document.createElement('div');
     content.className = 'nds-flex-1 nds-rounded-md nds-border-default nds-text-body nds-text-muted-foreground nds-p-4';

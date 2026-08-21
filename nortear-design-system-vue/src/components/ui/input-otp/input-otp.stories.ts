@@ -89,7 +89,7 @@ export const Playground: Story = {
       return { args, value };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-20" data-spacing="sm">
         <label for="otp-playground" class="nds-text-label">Código de verificação</label>
         <InputOTP
           :key="String(args.maxLength) + String(args.disabled) + String(args.autoFocus)"

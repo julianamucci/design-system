@@ -54,7 +54,7 @@ export const WithLabel: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 100px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-25" data-spacing="sm">
         <Label for="otp-with-label">Código de verificação</Label>
         <InputOTP
           id="otp-with-label"
@@ -99,7 +99,7 @@ export const WithHelpText: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 120px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-30" data-spacing="sm">
         <Label for="otp-help">Código SMS</Label>
         <InputOTP
           id="otp-help"
@@ -146,7 +146,7 @@ export const WithErrorMessage: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 120px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-30" data-spacing="sm">
         <Label for="otp-error">Código de verificação</Label>
         <InputOTP
           id="otp-error"

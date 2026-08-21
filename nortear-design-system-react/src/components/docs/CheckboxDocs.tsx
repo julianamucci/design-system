@@ -88,7 +88,7 @@ function SelectAllPreview() {
     setC(v);
   };
   return (
-    <div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+    <div className="nds-stack nds-w-2xs" data-spacing="sm">
       <div className="nds-cluster nds-border-b nds-pb-2" data-spacing="xs">
         <Checkbox
           id="cb-select-all"
@@ -505,7 +505,7 @@ export function CheckboxDocs() {
                 name: tContent("variants.compositions.fieldset.name"),
                 description: tContent("variants.compositions.fieldset.description"),
                 useWhen: tContent("variants.compositions.fieldset.use"),
-                code: `<fieldset className="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+                code: `<fieldset className="nds-border-default nds-rounded-lg nds-p-4 nds-stack nds-w-2xs" data-spacing="sm">
   <legend className="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>
   <div className="nds-cluster" data-spacing="xs">
     <Checkbox id="notif-email" />
@@ -521,7 +521,7 @@ export function CheckboxDocs() {
   </div>
 </fieldset>`,
                 preview: (
-                  <fieldset className="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+                  <fieldset className="nds-border-default nds-rounded-lg nds-p-4 nds-stack nds-w-2xs" data-spacing="sm">
                     <legend className="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>
                     <div className="nds-cluster" data-spacing="xs">
                       <Checkbox id="notif-email" />
@@ -548,7 +548,7 @@ const [c, setC] = useState(false);
 const allChecked = a && b && c;
 const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
 
-<div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+<div className="nds-stack nds-w-2xs" data-spacing="sm">
   <div className="nds-cluster nds-border-b nds-pb-2" data-spacing="xs">
     <Checkbox
       id="cb-select-all"
@@ -569,7 +569,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
                 name: tContent("variants.compositions.inList.name"),
                 description: tContent("variants.compositions.inList.description"),
                 useWhen: tContent("variants.compositions.inList.use"),
-                code: `<div className="nds-stack" data-spacing="xs" style={{ width: "20rem" }}>
+                code: `<div className="nds-stack nds-w-xs" data-spacing="xs">
   <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>
   <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">
     <div className="nds-cluster" data-spacing="xs">
@@ -586,7 +586,7 @@ const toggleAll = (v: boolean) => { setA(v); setB(v); setC(v); };
   {/* …demais linhas */}
 </div>`,
                 preview: (
-                  <div className="nds-stack" data-spacing="xs" style={{ width: "20rem" }}>
+                  <div className="nds-stack nds-w-xs" data-spacing="xs">
                     <p className="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>
                     <div className="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">
                       <div className="nds-cluster" data-spacing="xs">

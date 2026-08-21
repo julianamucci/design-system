@@ -85,7 +85,7 @@ function wrapSidebar(instance: ReturnType<typeof createSidebar>, main: HTMLEleme
 
   const container = document.createElement('div');
   container.className = 'nds-w-full nds-border-default nds-rounded-lg nds-overflow-hidden';
-  container.style.minHeight = '400px';
+  container.classList.add('nds-min-h-100');
   container.appendChild(wrapper);
   return container;
 }

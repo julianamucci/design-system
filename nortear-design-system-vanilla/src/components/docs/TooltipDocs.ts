@@ -232,7 +232,7 @@ export function createTooltipDocs(): HTMLElement {
               col.dataset.spacing = 'xs';
               col.style.contain = 'layout';
               col.style.position = 'relative';
-              col.style.minHeight = '120px';
+              col.classList.add('nds-min-h-30');
 
               const label = document.createElement('p');
               label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';
@@ -405,7 +405,7 @@ createTooltip({ trigger, content: 'Salvar (Ctrl+S)', side: 'bottom' });`;
         function buildSidesPreview(): HTMLElement {
           const grid = document.createElement('div');
           grid.style.contain = 'layout';
-          grid.style.minHeight = '160px';
+          grid.classList.add('nds-min-h-40');
           grid.className = 'nds-grid nds-w-full';
           grid.dataset.cols = '4';
           grid.dataset.spacing = 'xl';

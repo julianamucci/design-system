@@ -62,7 +62,7 @@ export const SixDigits: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-20" data-spacing="sm">
         <label for="otp-six" class="nds-text-label">Código enviado por SMS</label>
         <InputOTP id="otp-six" :max-length="6" v-model="value"
                   autocomplete="one-time-code" inputmode="numeric">
@@ -110,7 +110,7 @@ export const FourDigits: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-20" data-spacing="sm">
         <label for="otp-four" class="nds-text-label">PIN do aplicativo</label>
         <InputOTP id="otp-four" :max-length="4" v-model="value"
                   autocomplete="one-time-code" inputmode="numeric">
@@ -161,7 +161,7 @@ export const WithSeparator: Story = {
       return { value };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-20" data-spacing="sm">
         <label for="otp-sep" class="nds-text-label">Código de recuperação</label>
         <InputOTP id="otp-sep" :max-length="6" v-model="value"
                   autocomplete="one-time-code" inputmode="numeric">
@@ -232,7 +232,7 @@ export const Alphanumeric: Story = {
       return { value, pattern: REGEXP_ONLY_DIGITS_AND_CHARS };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-20" data-spacing="sm">
         <label for="otp-alpha" class="nds-text-label">Código de autenticação</label>
         <InputOTP id="otp-alpha" :max-length="6" :pattern="pattern" v-model="value"
                   autocomplete="one-time-code" inputmode="text">

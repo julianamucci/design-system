@@ -40,7 +40,7 @@ export const SingleAlignment: Story = {
   render: function AlinhamentoSingleRender() {
     const [alignment, setAlignment] = useState<string>("left");
     return (
-      <div className="nds-stack" data-align="start" data-spacing="sm" style={{ width: "18rem" }}>
+      <div className="nds-stack nds-w-2xs" data-align="start" data-spacing="sm">
         <ToggleGroup
           variant="outline"
           value={alignment}
@@ -113,7 +113,7 @@ export const MultipleFormatting: Story = {
   render: function FormatacaoMultipleRender() {
     const [formats, setFormats] = useState<string[]>(["bold"]);
     return (
-      <div className="nds-stack" data-align="start" data-spacing="sm" style={{ width: "18rem" }}>
+      <div className="nds-stack nds-w-2xs" data-align="start" data-spacing="sm">
         <ToggleGroup
           type="multiple"
           value={formats}

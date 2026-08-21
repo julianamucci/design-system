@@ -447,8 +447,8 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="nds-w-full"
-        style="contain: layout; min-height: 320px;"
+        class="nds-w-full nds-min-h-80"
+        style="contain: layout"
       >
         <Menubar>
           <MenubarMenu value="file">
@@ -589,8 +589,8 @@ const a11yCritCols = computed(() => ({
     >
       <template #do-preview-0>
         <div
-          style="contain: layout; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-20"
         >
           <Menubar>
             <MenubarMenu value="file">
@@ -607,8 +607,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-0>
         <div
-          style="contain: layout; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-20"
         >
           <Menubar>
             <MenubarMenu value="single">

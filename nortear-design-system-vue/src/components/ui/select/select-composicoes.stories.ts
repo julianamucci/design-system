@@ -69,7 +69,7 @@ export const WithLabel: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout; min-height: 280px;">
-        <div class="nds-grid" data-spacing="sm" style="width: 18rem">
+        <div class="nds-grid nds-w-2xs" data-spacing="sm">
           <!-- O aria-labelledby apontava para "comp-estado-label", um id que
                não existia em lugar nenhum: referência quebrada deixa o campo
                anônimo para o leitor de tela, sem erro nenhum na tela. -->
@@ -115,7 +115,7 @@ export const Controlled: Story = {
       return { value };
     },
     template: `
-      <div class="nds-grid" data-spacing="sm" style="width: 18rem; contain: layout; min-height: 320px;" >
+      <div class="nds-grid nds-min-h-80 nds-w-2xs" data-spacing="sm" style="contain: layout">
         <div class="nds-stack" data-spacing="sm">
           <Label for="ctrl-estado">Estado</Label>
           <Select :model-value="value" @update:model-value="(v) => value = v">
@@ -166,7 +166,7 @@ export const InForm: Story = {
     components: sharedComponents,
     template: `
       <div style="contain: layout; min-height: 320px;">
-        <form class="nds-grid" data-spacing="sm" style="width: 18rem" @submit.prevent>
+        <form class="nds-grid nds-w-2xs" data-spacing="sm" @submit.prevent>
           <div class="nds-stack" data-spacing="sm">
             <Label for="form-estado">Estado</Label>
             <Select name="estado">
@@ -237,7 +237,7 @@ export const WithSeparator: Story = {
     template: `
       <div style="contain: layout; min-height: 400px;">
         <Select>
-          <SelectTrigger aria-label="Selecionar estado" class="" style="width: 14rem">
+          <SelectTrigger aria-label="Selecionar estado" class="nds-w-3xs">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>

@@ -176,7 +176,7 @@ export function createPaginationDocs(): HTMLElement {
             wrap.style.contain = 'layout';
             wrap.className = 'nds-cluster nds-w-full nds-p-2';
             wrap.dataset.justify = 'center';
-            wrap.style.minHeight = '120px';
+            wrap.classList.add('nds-min-h-30');
             wrap.appendChild(buildDemoPagination(10, 3, t('demonstration.title')));
             return wrap;
           },
@@ -249,7 +249,7 @@ export function createPaginationDocs(): HTMLElement {
                 wrap.style.contain = 'layout';
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '80px';
+                wrap.classList.add('nds-min-h-20');
                 wrap.appendChild(buildDemoPagination(12, 6, stripHtml(t('doDont.pair1.do'))));
                 return wrap;
               },
@@ -258,7 +258,7 @@ export function createPaginationDocs(): HTMLElement {
                 wrap.style.contain = 'layout';
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '80px';
+                wrap.classList.add('nds-min-h-20');
                 // Don't: muitos números seguidos sem ellipsis (composição manual).
                 const nav = document.createElement('nav');
                 nav.setAttribute('role', 'navigation');
@@ -302,7 +302,7 @@ export function createPaginationDocs(): HTMLElement {
                 wrap.style.contain = 'layout';
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '80px';
+                wrap.classList.add('nds-min-h-20');
                 wrap.appendChild(buildDemoPagination(5, 2, stripHtml(t('doDont.pair2.do'))));
                 return wrap;
               },
@@ -311,7 +311,7 @@ export function createPaginationDocs(): HTMLElement {
                 wrap.style.contain = 'layout';
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '80px';
+                wrap.classList.add('nds-min-h-20');
                 // Don't: setas sem aria-label (composição manual).
                 const nav = document.createElement('nav');
                 nav.setAttribute('role', 'navigation');
@@ -392,7 +392,7 @@ const nav = createPagination({
                 wrap.style.contain = 'layout';
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '80px';
+                wrap.classList.add('nds-min-h-20');
                 wrap.appendChild(buildDemoPagination(5, 2, t('variants.items.default')));
                 return wrap;
               },
@@ -406,7 +406,7 @@ const nav = createPagination({
                 wrap.style.contain = 'layout';
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '80px';
+                wrap.classList.add('nds-min-h-20');
                 wrap.appendChild(buildDemoPagination(10, 1, t('variants.items.directional')));
                 return wrap;
               },
@@ -428,7 +428,7 @@ const nav = createPagination({
                 wrap.style.contain = 'layout';
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '80px';
+                wrap.classList.add('nds-min-h-20');
                 const nav = createPagination({
                   total: 5,
                   current: 1,
@@ -457,7 +457,7 @@ const nav = createPagination({
                 wrap.style.contain = 'layout';
                 wrap.className = 'nds-cluster';
                 wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '80px';
+                wrap.classList.add('nds-min-h-20');
                 const nav = createPagination({
                   total: 12,
                   current: 6,
@@ -499,7 +499,7 @@ const nav = createPagination({
                 wrap.style.contain = 'layout';
                 wrap.className = 'nds-cluster';
             wrap.dataset.justify = 'center';
-            wrap.style.minHeight = '120px';
+            wrap.classList.add('nds-min-h-30');
 
                 const wrapper = document.createElement('div');
                 wrapper.className = 'nds-stack';

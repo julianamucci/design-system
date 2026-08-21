@@ -299,7 +299,7 @@ export const WithVisibleFilter: Story = {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'sm';
-    wrapper.style.width = '18rem';
+    wrapper.classList.add('nds-w-2xs');
 
     const title = document.createElement('p');
     title.className = 'nds-text-body nds-font-semibold nds-mb-1';

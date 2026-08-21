@@ -42,7 +42,7 @@ export const PaymentMethod: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 18rem">
+      <RadioGroup aria-label="Forma de pagamento" class="nds-grid nds-w-2xs" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="cp-cartao" />
           <Label :for="'cp-cartao'">Cartão de crédito</Label>
@@ -94,7 +94,7 @@ export const WithFieldsetLegend: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <fieldset class="nds-border-default nds-rounded-lg nds-p-4" data-spacing="sm" style="width: 20rem">
+      <fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-w-xs" data-spacing="sm">
         <legend class="nds-text-body nds-font-semibold nds-px-1">Forma de entrega</legend>
         <RadioGroup aria-label="Forma de entrega" class="nds-stack" data-spacing="sm">
           <div class="nds-cluster" data-spacing="sm">
@@ -133,7 +133,7 @@ export const InForm: Story = {
     components: { RadioGroup, RadioGroupItem, Label, Button },
     setup() { return {}; },
     template: `
-      <form class="nds-stack" data-spacing="md" style="width: 20rem" @submit.prevent>
+      <form class="nds-stack nds-w-xs" data-spacing="md" @submit.prevent>
         <div class="nds-stack" data-spacing="sm">
           <label class="nds-text-body nds-font-medium" for="form-email">Email</label>
           <input
@@ -198,7 +198,7 @@ export const SelectableCards: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Plano" class="nds-grid" data-spacing="sm" style="width: 20rem">
+      <RadioGroup aria-label="Plano" class="nds-grid nds-w-xs" data-spacing="sm">
         <label for="card-basic" class="nds-radio-card nds-cluster" data-align="start" data-spacing="sm">
           <RadioGroupItem value="basic" id="card-basic" class="nds-mt-1" />
           <div class="nds-stack" data-spacing="xs">

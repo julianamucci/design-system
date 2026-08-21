@@ -40,7 +40,7 @@ export function hospedeiroDeSonda(legenda: string): HTMLElement {
 
   const host = document.createElement('div');
   host.dataset.testid = 'cleanup-host';
-  host.style.minHeight = '96px';
+  host.classList.add('nds-min-h-24');
 
   raiz.append(texto, host);
   return raiz;

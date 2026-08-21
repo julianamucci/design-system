@@ -284,7 +284,7 @@ export const Sides: Story = {
       };
     },
     template: `
-      <div class="nds-grid" data-cols="2" data-spacing="lg" style="max-width: 32rem;">
+      <div class="nds-grid nds-max-w-lg" data-cols="2" data-spacing="lg">
         <p v-for="l in lados" :key="l.side" class="nds-text-body nds-p-8">
           Abre
           <HoverCard :default-open="true">

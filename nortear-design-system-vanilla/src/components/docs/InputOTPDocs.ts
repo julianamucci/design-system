@@ -202,7 +202,7 @@ export function createInputOTPDocs(): HTMLElement {
             wrap.className = 'nds-grid nds-w-full';
             wrap.dataset.spacing = 'lg';
             wrap.dataset.min = '18rem';
-            wrap.style.minHeight = '160px';
+            wrap.classList.add('nds-min-h-40');
             wrap.appendChild(buildDemoCell('demonstration.labels.sixDigits',     buildSixDigits));
             wrap.appendChild(buildDemoCell('demonstration.labels.fourDigits',    buildFourDigits));
             wrap.appendChild(buildDemoCell('demonstration.labels.withSeparator', buildWithSeparator));

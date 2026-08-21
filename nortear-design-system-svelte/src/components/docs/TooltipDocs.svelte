@@ -237,7 +237,7 @@ interface TooltipTriggerProps {
   <!-- ── Demonstração ───────────────────────────────────────────── -->
   <DocsDemonstration title={$tStore('demonstration.title')}>
     <TooltipProvider delayDuration={200}>
-      <div class="nds-cluster nds-w-full" data-justify="center" data-align="center" data-spacing="lg" style="contain: layout; min-height: 120px; position: relative;">
+      <div class="nds-cluster nds-w-full nds-min-h-30" data-justify="center" data-align="center" data-spacing="lg" style="contain: layout; position: relative">
         <Tooltip onOpenChange={(o: boolean) => { if (o) track('tooltip_view', { component: 'tooltip', trigger_id: 'save', location: 'docs_demo' }); }}>
           <TooltipTrigger>
             {#snippet child({ props })}
@@ -666,7 +666,7 @@ interface TooltipTriggerProps {
 
   {#snippet variantPositioningSides()}
     <TooltipProvider delayDuration={0}>
-      <div class="nds-grid nds-w-full" style="contain: layout; min-height: 160px; place-items: center; gap: 2rem;">
+      <div class="nds-grid nds-w-full nds-min-h-40" style="contain: layout; place-items: center; gap: 2rem">
         <Tooltip>
           <TooltipTrigger>
             {#snippet child({ props })}

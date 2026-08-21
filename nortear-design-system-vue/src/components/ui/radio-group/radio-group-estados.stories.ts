@@ -57,7 +57,7 @@ export const Default: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 18rem">
+      <RadioGroup aria-label="Forma de pagamento" class="nds-grid nds-w-2xs" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="est-def-cartao" />
           <Label :for="'est-def-cartao'">Cartão de crédito</Label>
@@ -103,7 +103,7 @@ export const Checked: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup default-value="pix" aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 18rem">
+      <RadioGroup default-value="pix" aria-label="Forma de pagamento" class="nds-grid nds-w-2xs" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="est-chk-cartao" />
           <Label :for="'est-chk-cartao'">Cartão de crédito</Label>
@@ -147,7 +147,7 @@ export const FocusVisible: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 18rem">
+      <RadioGroup aria-label="Forma de pagamento" class="nds-grid nds-w-2xs" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="est-foc-cartao" />
           <Label :for="'est-foc-cartao'">Cartão de crédito</Label>
@@ -189,7 +189,7 @@ export const Disabled: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup :disabled="true" aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 18rem">
+      <RadioGroup :disabled="true" aria-label="Forma de pagamento" class="nds-grid nds-w-2xs" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="est-dis-cartao" />
           <Label :for="'est-dis-cartao'">Cartão de crédito</Label>
@@ -225,7 +225,7 @@ export const ItemDisabled: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <RadioGroup aria-label="Forma de pagamento" class="nds-grid" data-spacing="sm" style="width: 18rem">
+      <RadioGroup aria-label="Forma de pagamento" class="nds-grid nds-w-2xs" data-spacing="sm">
         <div class="nds-cluster" data-spacing="sm">
           <RadioGroupItem value="cartao" id="est-itd-cartao" />
           <Label :for="'est-itd-cartao'">Cartão de crédito</Label>
@@ -268,7 +268,7 @@ export const Invalid: Story = {
     components: { RadioGroup, RadioGroupItem, Label },
     setup() { return {}; },
     template: `
-      <div class="nds-stack" data-spacing="sm" style="width: 20rem">
+      <div class="nds-stack nds-w-xs" data-spacing="sm">
         <fieldset class="nds-stack" data-spacing="sm">
           <legend class="nds-text-body nds-font-semibold">Forma de pagamento *</legend>
           <RadioGroup aria-label="Forma de pagamento" aria-invalid="true" aria-describedby="est-inv-err" class="nds-stack" data-spacing="sm">

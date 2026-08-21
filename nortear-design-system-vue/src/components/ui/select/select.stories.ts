@@ -97,7 +97,7 @@ export const Playground: Story = {
     // `:key` no valor inicial: `defaultValue` só age na MONTAGEM, então sem o
     // re-mount o control mudaria o arg e nada aconteceria na tela.
     template: `
-      <div style="contain: layout; min-height: 280px;" class="nds-cluster" data-align="start" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-70" data-align="start" data-justify="center">
         <Select v-bind="args" :key="String(args.defaultValue)">
           <SelectTrigger aria-label="Selecionar estado" style="width: 14rem" :disabled="args.disabled">
             <SelectValue placeholder="Selecione..." />

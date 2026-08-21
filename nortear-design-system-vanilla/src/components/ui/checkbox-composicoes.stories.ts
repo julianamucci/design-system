@@ -123,7 +123,7 @@ export const InFieldsetGroup: Story = {
     const fieldset = document.createElement('fieldset');
     fieldset.className = 'nds-stack nds-border-default nds-rounded-lg nds-p-4';
     fieldset.dataset.spacing = 'sm';
-    fieldset.style.width = '18rem';
+    fieldset.classList.add('nds-w-2xs');
 
     const legend = document.createElement('legend');
     legend.className = 'nds-text-body nds-font-semibold nds-px-1';
@@ -244,7 +244,7 @@ export const SelectAll: Story = {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'sm';
-    wrapper.style.width = '18rem';
+    wrapper.classList.add('nds-w-2xs');
 
     const items = [
       { id: 'item-1', label: 'Manter sessão ativa' },
@@ -353,7 +353,7 @@ export const InItemList: Story = {
     const wrapper = document.createElement('div');
     wrapper.className = 'nds-stack';
     wrapper.dataset.spacing = 'sm';
-    wrapper.style.width = '20rem';
+    wrapper.classList.add('nds-w-xs');
 
     const title = document.createElement('p');
     title.className = 'nds-text-body nds-font-semibold';

@@ -777,7 +777,7 @@ interface SidebarMenuButtonProps extends React.ComponentProps<"button">,
               <SidebarDemoPreview variant="sidebar" collapsible="offcanvas" defaultOpen={true} navLabel={stripHtml(tContent("doDont.pair1.do"))} />
             ),
             dontPreview: (
-              <div className="nds-cluster nds-rounded-lg nds-border-destructive-soft nds-bg-destructive-soft nds-p-4" data-align="center" data-justify="center" style={{ minHeight: "200px" }}>
+              <div className="nds-cluster nds-rounded-lg nds-border-destructive-soft nds-bg-destructive-soft nds-p-4 nds-min-h-50" data-align="center" data-justify="center">
                 <p className="nds-text-caption nds-text-destructive" style={{ textAlign: "center" }}>
                   <span dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(tContent("doDont.pair1.dont")) }} />
                 </p>

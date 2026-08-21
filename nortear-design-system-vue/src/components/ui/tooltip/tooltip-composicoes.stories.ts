@@ -67,7 +67,7 @@ export const IconOnlyButton: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
@@ -107,7 +107,7 @@ export const ActionBar: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 120px;" class="nds-cluster" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-30" data-align="center" data-justify="center">
         <div role="toolbar" aria-label="Ações do documento" class="nds-cluster nds-rounded-md nds-border-default nds-bg-card nds-p-1" data-align="center" data-spacing="xs">
           <Tooltip>
             <TooltipTrigger as-child>
@@ -186,7 +186,7 @@ export const KeyboardShortcut: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 160px;" class="nds-cluster" data-align="center" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-min-h-40" data-align="center" data-justify="center">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="icon" aria-label="Salvar">
@@ -238,7 +238,7 @@ export const FourSides: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 280px;" class="nds-grid nds-p-8" data-spacing="xl" data-cols="2">
+      <div style="contain: layout" class="nds-grid nds-p-8 nds-min-h-70" data-spacing="xl" data-cols="2">
         <Tooltip :default-open="true">
           <TooltipTrigger as-child>
             <Button variant="outline" size="sm" aria-label="top">top</Button>

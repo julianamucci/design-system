@@ -390,7 +390,7 @@ nav.setAttribute('aria-label', 'Navegação lateral');`;
           wrap.className = 'nds-cluster nds-w-full nds-p-2';
           wrap.dataset.align = 'start';
           wrap.dataset.justify = 'center';
-          wrap.style.minHeight = '200px';
+          wrap.classList.add('nds-min-h-50');
           const nav = createNavigationMenu([
             { label: 'Início',  href: '/' },
             { label: 'Preços',  href: '/precos' },
@@ -407,7 +407,7 @@ nav.setAttribute('aria-label', 'Navegação lateral');`;
           wrap.className = 'nds-cluster nds-w-full nds-p-2';
           wrap.dataset.align = 'start';
           wrap.dataset.justify = 'center';
-          wrap.style.minHeight = '280px';
+          wrap.classList.add('nds-min-h-70');
           const nav = createNavigationMenu([
             { label: 'Início', href: '/' },
             {
@@ -431,7 +431,7 @@ nav.setAttribute('aria-label', 'Navegação lateral');`;
           wrap.className = 'nds-cluster nds-w-full nds-p-2';
           wrap.dataset.align = 'start';
           wrap.dataset.justify = 'center';
-          wrap.style.minHeight = '320px';
+          wrap.classList.add('nds-min-h-80');
           const nav = createNavigationMenu([
             { label: 'Início', href: '/' },
             {
@@ -462,7 +462,7 @@ nav.setAttribute('aria-label', 'Navegação lateral');`;
           wrap.className = 'nds-cluster nds-w-full nds-p-2';
           wrap.dataset.align = 'start';
           wrap.dataset.justify = 'center';
-          wrap.style.minHeight = '320px';
+          wrap.classList.add('nds-min-h-80');
           const nav = createNavigationMenu([
             { label: 'Início', href: '/' },
             {
@@ -608,7 +608,7 @@ content.insertBefore(card, content.firstChild);`;
                 wrap.className = 'nds-cluster';
                 wrap.dataset.align = 'start';
                 wrap.dataset.justify = 'center';
-                wrap.style.minHeight = '200px';
+                wrap.classList.add('nds-min-h-50');
                 const nav = createNavigationMenu(
                   [
                     { label: 'Início', href: '/' },

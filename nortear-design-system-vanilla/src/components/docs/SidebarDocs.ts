@@ -573,7 +573,7 @@ export function createSidebarDocs(): HTMLElement {
           const subList = document.createElement('ul');
           subList.className = 'nds-mt-1 nds-stack nds-pl-4';
           subList.dataset.spacing = 'xs';
-          subList.style.marginLeft = '1rem';
+          subList.classList.add('nds-ml-4');
           subList.style.borderLeft = '1px solid var(--sidebar-border)';
           subList.setAttribute('data-sidebar', 'menu-sub');
           subList.style.display = 'none';

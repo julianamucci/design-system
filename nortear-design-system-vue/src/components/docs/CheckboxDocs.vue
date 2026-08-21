@@ -245,19 +245,19 @@ const compositionItems = computed(() => [
     name: tContent('variants.compositions.fieldset.name'),
     description: stripHtml(tContent('variants.compositions.fieldset.description')),
     useWhen: stripHtml(tContent('variants.compositions.fieldset.use')),
-    code: `<fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm" style="width: 18rem">\n  <legend class="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>\n  <div class="nds-cluster" data-spacing="xs">\n    <Checkbox id="notif-email" />\n    <Label for="notif-email">Receber novidades por email</Label>\n  </div>\n  <div class="nds-cluster" data-spacing="xs">\n    <Checkbox id="notif-push" />\n    <Label for="notif-push">Receber notificações push</Label>\n  </div>\n  <div class="nds-cluster" data-spacing="xs">\n    <Checkbox id="notif-sms" />\n    <Label for="notif-sms">Alertas por SMS</Label>\n  </div>\n</fieldset>`,
+    code: `<fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack nds-w-2xs" data-spacing="sm">\n  <legend class="nds-text-body nds-font-semibold nds-px-1">Notificações</legend>\n  <div class="nds-cluster" data-spacing="xs">\n    <Checkbox id="notif-email" />\n    <Label for="notif-email">Receber novidades por email</Label>\n  </div>\n  <div class="nds-cluster" data-spacing="xs">\n    <Checkbox id="notif-push" />\n    <Label for="notif-push">Receber notificações push</Label>\n  </div>\n  <div class="nds-cluster" data-spacing="xs">\n    <Checkbox id="notif-sms" />\n    <Label for="notif-sms">Alertas por SMS</Label>\n  </div>\n</fieldset>`,
   },
   {
     name: tContent('variants.compositions.selectAll.name'),
     description: stripHtml(tContent('variants.compositions.selectAll.description')),
     useWhen: stripHtml(tContent('variants.compositions.selectAll.use')),
-    code: `<script setup lang="ts">\nimport { ref, computed } from 'vue';\nconst c1 = ref(true); const c2 = ref(false); const c3 = ref(true);\nconst all = computed<boolean | 'indeterminate'>({\n  get() {\n    const allChecked = c1.value && c2.value && c3.value;\n    const noneChecked = !c1.value && !c2.value && !c3.value;\n    if (allChecked) return true;\n    if (noneChecked) return false;\n    return 'indeterminate';\n  },\n  set(v) { const n = v === true; c1.value = n; c2.value = n; c3.value = n; },\n});\n<\/script>\n\n<template>\n  <div class="nds-stack" data-spacing="sm" style="width: 18rem">\n    <div class="nds-cluster nds-border-b nds-pb-2" data-spacing="xs">\n      <Checkbox id="cb-select-all" v-model:checked="all" />\n      <Label for="cb-select-all" class="nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer">\n        Selecionar todos os itens\n      </Label>\n    </div>\n    <div class="nds-cluster nds-pl-2" data-spacing="xs">\n      <Checkbox id="cb-item-1" v-model:checked="c1" />\n      <Label for="cb-item-1">Item 1</Label>\n    </div>\n    <!-- demais filhos -->\n  </div>\n<\/template>`,
+    code: `<script setup lang="ts">\nimport { ref, computed } from 'vue';\nconst c1 = ref(true); const c2 = ref(false); const c3 = ref(true);\nconst all = computed<boolean | 'indeterminate'>({\n  get() {\n    const allChecked = c1.value && c2.value && c3.value;\n    const noneChecked = !c1.value && !c2.value && !c3.value;\n    if (allChecked) return true;\n    if (noneChecked) return false;\n    return 'indeterminate';\n  },\n  set(v) { const n = v === true; c1.value = n; c2.value = n; c3.value = n; },\n});\n<\/script>\n\n<template>\n  <div class="nds-stack nds-w-2xs" data-spacing="sm">\n    <div class="nds-cluster nds-border-b nds-pb-2" data-spacing="xs">\n      <Checkbox id="cb-select-all" v-model:checked="all" />\n      <Label for="cb-select-all" class="nds-text-body nds-font-semibold nds-leading-none nds-cursor-pointer">\n        Selecionar todos os itens\n      </Label>\n    </div>\n    <div class="nds-cluster nds-pl-2" data-spacing="xs">\n      <Checkbox id="cb-item-1" v-model:checked="c1" />\n      <Label for="cb-item-1">Item 1</Label>\n    </div>\n    <!-- demais filhos -->\n  </div>\n<\/template>`,
   },
   {
     name: tContent('variants.compositions.inList.name'),
     description: stripHtml(tContent('variants.compositions.inList.description')),
     useWhen: stripHtml(tContent('variants.compositions.inList.use')),
-    code: `<div class="nds-stack" data-spacing="xs" style="width: 20rem">\n  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>\n  <div class="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">\n    <div class="nds-cluster" data-spacing="xs">\n      <Checkbox id="list-email" :checked="true" />\n      <Label for="list-email">Receber novidades por email</Label>\n    </div>\n  </div>\n  <!-- demais linhas -->\n</div>`,
+    code: `<div class="nds-stack nds-w-xs" data-spacing="xs">\n  <p class="nds-text-body nds-font-semibold nds-mb-2">Preferências de contato</p>\n  <div class="nds-cluster nds-rounded-md nds-border-default nds-py-2 nds-px-4" data-justify="between">\n    <div class="nds-cluster" data-spacing="xs">\n      <Checkbox id="list-email" :checked="true" />\n      <Label for="list-email">Receber novidades por email</Label>\n    </div>\n  </div>\n  <!-- demais linhas -->\n</div>`,
   },
 ]);
 
@@ -709,9 +709,9 @@ const visualTestItems = computed(() => [
       <!-- 0: fieldset -->
       <template #variant-preview-0>
         <fieldset
-          class="nds-border-default nds-rounded-lg nds-p-4 nds-stack"
+          class="nds-border-default nds-rounded-lg nds-p-4 nds-stack nds-w-2xs"
           data-spacing="sm"
-          style="width: 18rem"
+          
         >
           <legend class="nds-text-body nds-font-semibold nds-px-1">
             Notificações
@@ -743,9 +743,9 @@ const visualTestItems = computed(() => [
       <!-- 1: selectAll -->
       <template #variant-preview-1>
         <div
-          class="nds-stack"
+          class="nds-stack nds-w-2xs"
           data-spacing="sm"
-          style="width: 18rem"
+          
         >
           <div
             class="nds-cluster nds-border-b nds-pb-2"
@@ -798,9 +798,9 @@ const visualTestItems = computed(() => [
       <!-- 2: inList -->
       <template #variant-preview-2>
         <div
-          class="nds-stack"
+          class="nds-stack nds-w-xs"
           data-spacing="xs"
-          style="width: 20rem"
+          
         >
           <p class="nds-text-body nds-font-semibold nds-mb-2">
             Preferências de contato

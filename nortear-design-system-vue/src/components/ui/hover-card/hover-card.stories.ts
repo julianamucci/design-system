@@ -113,7 +113,7 @@ export const Playground: Story = {
     // `:key`: `default-open` só é lido na montagem, então trocar o control sem
     // remontar não mudaria nada na tela.
     template: `
-      <p class="nds-text-body" style="contain: layout; min-height: 250px; max-width: 24rem;">
+      <p class="nds-text-body nds-max-w-sm" style="contain: layout; min-height: 250px">
         Comentário de
         <HoverCard
           :key="String(args.defaultOpen)"

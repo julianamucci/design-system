@@ -283,7 +283,7 @@ export function createPopoverDocs(): HTMLElement {
               col.dataset.spacing = 'xs';
               col.style.contain = 'layout';
               col.style.position = 'relative';
-              col.style.minHeight = '120px';
+              col.classList.add('nds-min-h-30');
 
               const label = document.createElement('p');
               label.className = 'nds-text-caption nds-font-medium nds-text-muted-foreground';

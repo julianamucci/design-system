@@ -59,7 +59,7 @@ export const Closed: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 120px;" class="nds-cluster nds-w-full" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-30" data-justify="center">
         <NavigationMenu aria-label="Navegação principal">
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -122,7 +122,7 @@ export const Open: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 320px;" class="nds-cluster nds-w-full" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-80" data-justify="center">
         <NavigationMenu aria-label="Navegação principal" default-value="produtos">
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -206,7 +206,7 @@ export const Active: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 120px;" class="nds-cluster nds-w-full" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-30" data-justify="center">
         <NavigationMenu aria-label="Navegação principal">
           <NavigationMenuList>
             <NavigationMenuItem>

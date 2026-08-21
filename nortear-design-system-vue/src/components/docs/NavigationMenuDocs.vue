@@ -440,9 +440,9 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="nds-cluster nds-w-full"
+        class="nds-cluster nds-w-full nds-min-h-80"
         data-justify="center"
-        style="contain: layout; min-height: 320px;"
+        style="contain: layout"
       >
         <NavigationMenu
           :aria-label="tContent('demonstration.title')"
@@ -606,8 +606,8 @@ const a11yCritCols = computed(() => ({
     >
       <template #do-preview-0>
         <div
-          style="contain: layout; min-height: 80px;"
-          class="nds-cluster nds-w-full"
+          style="contain: layout"
+          class="nds-cluster nds-w-full nds-min-h-20"
           data-justify="center"
         >
           <NavigationMenu
@@ -634,8 +634,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-0>
         <div
-          style="contain: layout; min-height: 80px;"
-          class="nds-cluster nds-w-full"
+          style="contain: layout"
+          class="nds-cluster nds-w-full nds-min-h-20"
           data-justify="center"
         >
           <NavigationMenu
@@ -841,8 +841,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-2>
         <div
-          style="contain: layout; min-height: 200px;"
-          class="nds-cluster nds-w-full"
+          style="contain: layout"
+          class="nds-cluster nds-w-full nds-min-h-50"
           data-justify="center"
         >
           <NavigationMenu
@@ -871,8 +871,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-3>
         <div
-          style="contain: layout; min-height: 280px;"
-          class="nds-cluster nds-w-full"
+          style="contain: layout"
+          class="nds-cluster nds-w-full nds-min-h-70"
           data-justify="center"
         >
           <NavigationMenu
@@ -923,8 +923,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-4>
         <div
-          style="contain: layout; min-height: 320px;"
-          class="nds-cluster nds-w-full"
+          style="contain: layout"
+          class="nds-cluster nds-w-full nds-min-h-80"
           data-justify="center"
         >
           <NavigationMenu
@@ -1005,8 +1005,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #variant-preview-5>
         <div
-          style="contain: layout; min-height: 320px;"
-          class="nds-cluster nds-w-full"
+          style="contain: layout"
+          class="nds-cluster nds-w-full nds-min-h-80"
           data-justify="center"
         >
           <NavigationMenu

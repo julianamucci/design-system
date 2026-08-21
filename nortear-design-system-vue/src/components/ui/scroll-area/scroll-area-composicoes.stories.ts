@@ -87,7 +87,7 @@ export const SidebarList: Story = {
     // do design system — não pintava nada. A sidebar passa a ser uma caixa
     // própria com borda, como no Vanilla, que é a referência de markup.
     template: `
-      <div class="nds-cluster" data-spacing="md" data-align="stretch" style="width: 640px">
+      <div class="nds-cluster nds-w-xl" data-spacing="md" data-align="stretch">
         <aside class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 200px">
           <ScrollArea size="xl" class="nds-w-full">
             <nav aria-label="Seções da documentação" class="nds-p-2">

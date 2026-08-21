@@ -600,9 +600,9 @@ import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";`;
             name: tContent("variants.compositions.filterWithText.name"),
             description: tContent("variants.compositions.filterWithText.description"),
             useWhen: tContent("variants.compositions.filterWithText.use"),
-            code: `<div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>\n  <p className="nds-text-body nds-font-medium">Filtros de exibição</p>\n  <ToggleGroup type="multiple" variant="outline" defaultValue={["compact"]} aria-label="Filtros de exibição">\n    <ToggleGroupItem value="hidden">\n      <Eye aria-hidden="true" />\n      Ocultos\n    </ToggleGroupItem>\n    <ToggleGroupItem value="compact">\n      <List aria-hidden="true" />\n      Compacto\n    </ToggleGroupItem>\n  </ToggleGroup>\n</div>`,
+            code: `<div className="nds-stack nds-w-2xs" data-spacing="sm">\n  <p className="nds-text-body nds-font-medium">Filtros de exibição</p>\n  <ToggleGroup type="multiple" variant="outline" defaultValue={["compact"]} aria-label="Filtros de exibição">\n    <ToggleGroupItem value="hidden">\n      <Eye aria-hidden="true" />\n      Ocultos\n    </ToggleGroupItem>\n    <ToggleGroupItem value="compact">\n      <List aria-hidden="true" />\n      Compacto\n    </ToggleGroupItem>\n  </ToggleGroup>\n</div>`,
             preview: (
-              <div className="nds-stack" data-spacing="sm" style={{ width: "18rem" }}>
+              <div className="nds-stack nds-w-2xs" data-spacing="sm">
                 <p className="nds-text-body nds-font-medium">Filtros de exibição</p>
                 <ToggleGroup type="multiple" variant="outline" defaultValue={["compact"]} aria-label="Filtros de exibição">
                   <ToggleGroupItem value="hidden">

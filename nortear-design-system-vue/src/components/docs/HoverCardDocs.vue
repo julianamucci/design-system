@@ -402,16 +402,16 @@ const a11yCritCols = computed(() => ({
     <!-- ── Demonstração ─────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="nds-grid nds-w-full"
+        class="nds-grid nds-w-full nds-min-h-40"
         data-cols="2"
         data-spacing="lg"
-        style="--grid-min: 16rem; contain: layout; min-height: 160px;"
+        style="--grid-min: 16rem; contain: layout"
       >
         <!-- User profile -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-25"
           data-spacing="sm"
-          style="contain: layout; min-height: 100px; position: relative;"
+          style="contain: layout; position: relative"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
@@ -455,9 +455,9 @@ const a11yCritCols = computed(() => ({
 
         <!-- Link preview -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-25"
           data-spacing="sm"
-          style="contain: layout; min-height: 100px; position: relative;"
+          style="contain: layout; position: relative"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
@@ -499,9 +499,9 @@ const a11yCritCols = computed(() => ({
 
         <!-- Definition -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-25"
           data-spacing="sm"
-          style="contain: layout; min-height: 100px; position: relative;"
+          style="contain: layout; position: relative"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
@@ -531,9 +531,9 @@ const a11yCritCols = computed(() => ({
 
         <!-- Metric -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-25"
           data-spacing="sm"
-          style="contain: layout; min-height: 100px; position: relative;"
+          style="contain: layout; position: relative"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
@@ -646,8 +646,8 @@ const a11yCritCols = computed(() => ({
     >
       <template #do-preview-0>
         <div
-          style="contain: layout; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-20"
         >
           <div
             class="nds-text-body nds-stack"
@@ -666,8 +666,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-0>
         <div
-          style="contain: layout; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-20"
         >
           <div class="nds-text-body">
             <div

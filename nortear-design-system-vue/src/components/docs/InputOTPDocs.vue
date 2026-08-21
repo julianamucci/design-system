@@ -411,9 +411,9 @@ const a11yCritCols = computed(() => ({
       >
         <!-- 6 dígitos -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-25"
           data-spacing="sm"
-          style="contain: layout; min-height: 100px;"
+          style="contain: layout"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
@@ -440,9 +440,9 @@ const a11yCritCols = computed(() => ({
 
         <!-- 4 dígitos -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-25"
           data-spacing="sm"
-          style="contain: layout; min-height: 100px;"
+          style="contain: layout"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
@@ -468,9 +468,9 @@ const a11yCritCols = computed(() => ({
 
         <!-- Com Separator -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-25"
           data-spacing="sm"
-          style="contain: layout; min-height: 100px;"
+          style="contain: layout"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"
@@ -500,9 +500,9 @@ const a11yCritCols = computed(() => ({
 
         <!-- Alfanumérico -->
         <div
-          class="nds-stack"
+          class="nds-stack nds-min-h-25"
           data-spacing="sm"
-          style="contain: layout; min-height: 100px;"
+          style="contain: layout"
         >
           <p
             class="nds-text-caption nds-font-medium nds-text-muted-foreground"

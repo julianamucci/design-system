@@ -570,8 +570,8 @@ const compositionItems = computed(() => [
     <!-- ── Demonstração ───────────────────────────────────────────────── -->
     <DocsDemonstration :title="tContent('demonstration.title')">
       <div
-        class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default"
-        style="contain: layout; min-height: 400px; display: flex"
+        class="nds-w-full nds-overflow-hidden nds-rounded-lg nds-border-default nds-min-h-100"
+        style="contain: layout; display: flex"
       >
         <SidebarProvider @update:open="handleSidebarOpenChange">
           <nav :aria-label="tContent('demonstration.labels.mainNav')">
@@ -778,10 +778,10 @@ const compositionItems = computed(() => [
       </template>
       <template #dont-preview-0>
         <div
-          class="nds-cluster nds-rounded-lg nds-border-destructive-soft nds-bg-destructive-soft nds-p-4"
+          class="nds-cluster nds-rounded-lg nds-border-destructive-soft nds-bg-destructive-soft nds-p-4 nds-min-h-50"
           data-align="center"
           data-justify="center"
-          style="min-height: 200px"
+          
         >
           <p
             class="nds-text-caption nds-text-destructive"
@@ -845,8 +845,8 @@ const compositionItems = computed(() => [
       <!-- variant: sidebar -->
       <template #variant-preview-0>
         <div
-          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
-          style="contain: layout; min-height: 200px; display: flex"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default nds-min-h-50"
+          style="contain: layout; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="sidebar">
@@ -900,8 +900,8 @@ const compositionItems = computed(() => [
       <!-- variant: floating -->
       <template #variant-preview-1>
         <div
-          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
-          style="contain: layout; min-height: 200px; display: flex"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default nds-min-h-50"
+          style="contain: layout; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="floating">
@@ -955,8 +955,8 @@ const compositionItems = computed(() => [
       <!-- variant: inset -->
       <template #variant-preview-2>
         <div
-          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
-          style="contain: layout; min-height: 200px; display: flex"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default nds-min-h-50"
+          style="contain: layout; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="inset">
@@ -1010,8 +1010,8 @@ const compositionItems = computed(() => [
       <!-- collapsible: icon -->
       <template #variant-preview-3>
         <div
-          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
-          style="contain: layout; min-height: 200px; display: flex"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default nds-min-h-50"
+          style="contain: layout; display: flex"
         >
           <SidebarProvider :default-open="false">
             <nav aria-label="icon">
@@ -1071,8 +1071,8 @@ const compositionItems = computed(() => [
       <!-- collapsible: none -->
       <template #variant-preview-4>
         <div
-          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
-          style="contain: layout; min-height: 200px; display: flex"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default nds-min-h-50"
+          style="contain: layout; display: flex"
         >
           <SidebarProvider>
             <nav aria-label="none">
@@ -1125,8 +1125,8 @@ const compositionItems = computed(() => [
       <!-- side: right -->
       <template #variant-preview-5>
         <div
-          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default"
-          style="contain: layout; min-height: 200px; display: flex"
+          class="nds-w-full nds-overflow-hidden nds-rounded nds-border-default nds-min-h-50"
+          style="contain: layout; display: flex"
         >
           <SidebarProvider>
             <SidebarInset>

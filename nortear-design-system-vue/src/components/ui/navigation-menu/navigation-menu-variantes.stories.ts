@@ -55,7 +55,7 @@ export const Horizontal: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="center">
+      <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-70" data-justify="center">
         <NavigationMenu aria-label="Navegação principal">
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -154,7 +154,7 @@ export const Vertical: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <div style="contain: layout; min-height: 280px;" class="nds-cluster nds-w-full" data-justify="start">
+      <div style="contain: layout" class="nds-cluster nds-w-full nds-min-h-70" data-justify="start">
         <NavigationMenu orientation="vertical" aria-label="Navegação da conta">
           <NavigationMenuList class="nds-stack nds-w-sm" data-spacing="xs">
             <NavigationMenuItem>

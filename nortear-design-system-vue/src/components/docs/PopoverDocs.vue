@@ -695,8 +695,8 @@ const a11yCritCols = computed(() => ({
     >
       <template #do-preview-0>
         <div
-          style="contain: layout; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-20"
         >
           <div
             class="nds-text-body nds-stack"
@@ -713,8 +713,8 @@ const a11yCritCols = computed(() => ({
       </template>
       <template #dont-preview-0>
         <div
-          style="contain: layout; min-height: 80px;"
-          class="nds-w-full"
+          style="contain: layout"
+          class="nds-w-full nds-min-h-20"
         >
           <div class="nds-text-body">
             <div class="nds-text-caption nds-text-muted-foreground nds-italic">

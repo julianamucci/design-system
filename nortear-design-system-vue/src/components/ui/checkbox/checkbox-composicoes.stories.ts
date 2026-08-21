@@ -240,7 +240,7 @@ export const InForm: Story = {
     components: { Checkbox, Button, Input, Label },
     setup() { return {}; },
     template: `
-      <form class="nds-stack" data-spacing="md" style="width: 18rem" @submit.prevent>
+      <form class="nds-stack nds-w-2xs" data-spacing="md" @submit.prevent>
         <div class="nds-stack" data-spacing="sm">
           <Label for="form-name">Nome</Label>
           <Input id="form-name" type="text" placeholder="Seu nome" />

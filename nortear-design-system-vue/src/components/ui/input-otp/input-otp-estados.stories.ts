@@ -57,7 +57,7 @@ export const Empty: Story = {
       return { value: ref('') };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-20" data-spacing="sm">
         <label for="otp-empty" class="nds-text-label">Código de verificação</label>
         <InputOTP id="otp-empty" :max-length="6" v-model="value" :auto-focus="true"
                   autocomplete="one-time-code" inputmode="numeric">
@@ -95,7 +95,7 @@ export const Filling: Story = {
       return { value: ref('123') };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-20" data-spacing="sm">
         <label for="otp-filling" class="nds-text-label">Código de verificação</label>
         <InputOTP id="otp-filling" :max-length="6" v-model="value"
                   autocomplete="one-time-code" inputmode="numeric">
@@ -139,7 +139,7 @@ export const Complete: Story = {
       return { value: ref('482913') };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-20" data-spacing="sm">
         <label for="otp-complete" class="nds-text-label">Código de verificação</label>
         <InputOTP id="otp-complete" :max-length="6" v-model="value"
                   autocomplete="one-time-code" inputmode="numeric">
@@ -174,7 +174,7 @@ export const Disabled: Story = {
       return { value: ref('4829') };
     },
     template: `
-      <div style="contain: layout; min-height: 80px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-20" data-spacing="sm">
         <label for="otp-disabled" class="nds-text-label">Código de verificação</label>
         <InputOTP id="otp-disabled" :max-length="6" :disabled="true" v-model="value"
                   autocomplete="one-time-code" inputmode="numeric">
@@ -225,7 +225,7 @@ export const Error: Story = {
       return { comErro: ref('482913'), semErro: ref('482913') };
     },
     template: `
-      <div style="contain: layout; min-height: 160px;" class="nds-stack" data-spacing="sm">
+      <div style="contain: layout" class="nds-stack nds-min-h-40" data-spacing="sm">
         <label for="otp-error" class="nds-text-label">Código de verificação</label>
         <div data-testid="com-erro">
           <InputOTP id="otp-error" :max-length="6" v-model="comErro"

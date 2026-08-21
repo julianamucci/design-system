@@ -158,8 +158,8 @@ export const Controlled: Story = {
     raiz.className = 'nds-stack';
     raiz.dataset.spacing = 'md';
     raiz.style.contain = 'layout';
-    raiz.style.minHeight = '280px';
-    raiz.style.maxWidth = '24rem';
+    raiz.classList.add('nds-min-h-70');
+    raiz.classList.add('nds-max-w-sm');
 
     const espelho = document.createElement('p');
     espelho.className = 'nds-text-caption nds-text-muted-foreground';

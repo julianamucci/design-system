@@ -87,7 +87,7 @@ export const Default: Story = {
     template: `
       <div style="contain: layout; min-height: 260px;">
         <Select>
-          <SelectTrigger aria-label="Selecionar estado" class="" style="width: 14rem">
+          <SelectTrigger aria-label="Selecionar estado" class="nds-w-3xs">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
@@ -146,7 +146,7 @@ export const WithGroups: Story = {
     template: `
       <div style="contain: layout; min-height: 360px;">
         <Select>
-          <SelectTrigger aria-label="Selecionar estado por região" class="" style="width: 14rem">
+          <SelectTrigger aria-label="Selecionar estado por região" class="nds-w-3xs">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
@@ -212,7 +212,7 @@ export const WithIcon: Story = {
     template: `
       <div style="contain: layout; min-height: 280px;">
         <Select>
-          <SelectTrigger aria-label="Selecionar idioma" class="" style="width: 14rem">
+          <SelectTrigger aria-label="Selecionar idioma" class="nds-w-3xs">
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>

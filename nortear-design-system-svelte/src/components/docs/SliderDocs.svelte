@@ -147,7 +147,7 @@
   let value = $state([50]);
 <\/script>
 
-<div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+<div class="nds-stack nds-w-2xs" data-spacing="sm">
   <div class="nds-cluster" data-justify="between">
     <Label>Volume</Label>
     <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{value[0]}%</span>
@@ -471,7 +471,7 @@ interface SliderProps {
   />
 
   {#snippet compVolumePreview()}
-    <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+    <div class="nds-stack nds-w-2xs" data-spacing="sm">
       <div class="nds-cluster" data-justify="between">
         <Label>Volume</Label>
         <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{compVolume[0]}%</span>
@@ -481,7 +481,7 @@ interface SliderProps {
   {/snippet}
 
   {#snippet variantBrightness()}
-    <div class="nds-stack" data-spacing="sm" style="width: 18rem;">
+    <div class="nds-stack nds-w-2xs" data-spacing="sm">
       <div class="nds-cluster" data-justify="between">
         <Label>Brilho</Label>
         <span aria-live="polite" class="nds-text-body" style="font-variant-numeric: tabular-nums;">{compBrightness[0]}%</span>
@@ -493,7 +493,7 @@ interface SliderProps {
   {#snippet compFormPreview()}
     <form
       aria-label="Configurações de áudio"
-      class="nds-stack" data-spacing="md" style="width: 18rem;"
+      class="nds-stack nds-w-2xs" data-spacing="md" 
       onsubmit={onCompFormSubmit}
     >
       <div class="nds-stack" data-spacing="sm">
