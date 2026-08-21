@@ -2449,6 +2449,34 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       antigo ainda mentia sobre o conteúdo — quase todo consumidor é uma caixa
       com texto, não mídia.
 
+- [ ] **42 achados de `snippet_sem_lastro`, a regra nova.** Ela compara o
+      snippet do conteúdo compartilhado com o CÓDIGO REAL da stack. Os achados
+      são de duas famílias, e nenhuma é falso positivo — triei os 42 um a um.
+
+      **15 classes com forma de Tailwind** (`high`), em `hover-card`,
+      `navigation-menu`, `radio-group`, `switch` e `drawer` — todas no React:
+      `flex`, `items-center`, `space-x-2`, `space-y-3`, `space-y-0.5`,
+      `justify-between`, `gap-3`, `grid`, `p-4`, `w-72`, `w-[400px]`,
+      `max-w-md`, `font-medium`, `text-sm`, `text-muted-foreground`. A lib saiu
+      do projeto e a folha compartilhada não define nenhuma delas: quem copiar
+      recebe markup sem estilo. O conserto exige julgamento — `nds-cluster`
+      substitui `flex items-center`, mas cada caso precisa da utilitária certa.
+
+      **27 props sem lastro** (`medium`), 12 distintas:
+
+      | prop | onde | o que é |
+      |---|---|---|
+      | `control` | input, radio-group, select (react) | `FormField` daqui é um wrapper de `<div>` e não aceita — é vocabulário do react-hook-form |
+      | `delayDuration`, `skipDelayDuration` | navigation-menu (react, vue, svelte) | o componente do React registra no próprio comentário que "a tipagem daqui anunciava `delayDuration`"; o real é `delay` |
+      | `side`, `open` | menubar (react, vue) | existem na lib, nada na stack usa |
+      | `getAriaValueText` | progress (react, vue) | existe no base-ui (`ProgressRoot.d.ts:29`), nenhuma story exercita |
+      | `autoSaveId`, `onLayoutChange` | resizable (vue, svelte) | existem no paneforge, nenhuma story exercita |
+      | `orientation` | scroll-area (vanilla) | `ScrollAreaOptions` não declara — a fábrica ignora em silêncio |
+
+      As duas causas pedem ação diferente: prop que NÃO existe se conserta no
+      snippet; prop que existe e ninguém exercita é o mesmo estado de
+      "especificado e não entregue" que o `export_sem_story` cobra das peças —
+      ou ganha story, ou sai do snippet.
 - [ ] **Utilitárias que os relatórios pediram três vezes, de agentes
       independentes**: `object-fit: cover` (não existe; hoje só cravado dentro de
       `avatar.css` e `item.css`) e um degrau de `min-height` entre 120 e 200px.

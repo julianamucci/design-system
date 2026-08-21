@@ -2170,6 +2170,318 @@ function auditNonexistentLibProps(slug) {
   return violations;
 }
 
+// ─── Apoio de `snippet_sem_lastro` ──────────────────────────────────────────
+
+/** Cada chave que termina em `Code`, com o caminho até ela. */
+function chavesDeCodigo(obj, cam = '', out = []) {
+  for (const [k, v] of Object.entries(obj ?? {})) {
+    const c = cam ? `${cam}.${k}` : k;
+    if (k.endsWith('Code')) out.push([c, v]);
+    else if (v && typeof v === 'object' && !Array.isArray(v)) chavesDeCodigo(v, c, out);
+  }
+  return out;
+}
+
+/** Variante da stack, com a mesma queda `web` -> `react` do `code-variants.ts`. */
+function varianteDoStack(valor, stack) {
+  if (typeof valor === 'string') return valor;
+  if (!valor || typeof valor !== 'object') return null;
+  if (typeof valor[stack] === 'string') return valor[stack];
+  if (typeof valor.web === 'string') return valor.web;
+  if (typeof valor.react === 'string') return valor.react;
+  return null;
+}
+
+/**
+ * Comentário de código e de markup, inclusive o de fim de linha.
+ *
+ * A guarda de `:` antes do `//` existe porque sem ela `https://` vira
+ * comentário e leva o resto da linha junto.
+ */
+function semComentariosDeSnippet(src) {
+  return src
+    .replace(/\{\s*\/\*[\s\S]*?\*\/\s*\}/g, ' ')
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    .replace(/(^|[^:"'`\w])\/\/.*$/gm, '$1 ')
+    .replace(/<!--[\s\S]*?-->/g, ' ');
+}
+
+let _slugsPascal = null;
+/** `AlertDialogTrigger` -> `alert-dialog`. Prefixo Pascal mais longo que casa. */
+function slugDeComponente(tag) {
+  if (!_slugsPascal) {
+    _slugsPascal = slugsDoConteudo()
+      .map((s) => [s.split('-').map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join(''), s])
+      .sort((a, b) => b[0].length - a[0].length);
+  }
+  const nome = tag.replace(/^(nds|create)/, '');
+  for (const [P, s] of _slugsPascal) if (nome.startsWith(P)) return s;
+  return null;
+}
+
+function tagsDeComponente(codigo) {
+  const out = new Set();
+  for (const m of codigo.matchAll(/<([A-Z][\w.]*)/g)) out.add(m[1]);
+  for (const m of codigo.matchAll(/\b(nds[A-Z][\w]*)/g)) out.add(m[1]);
+  for (const m of codigo.matchAll(/\b(create[A-Z][\w]*)\(/g)) out.add(m[1]);
+  return out;
+}
+
+/**
+ * Mantém as CHAVES de `argTypes` e apaga a configuração de dentro.
+ *
+ * A chave é nome de prop de verdade — é assim que o `onValueChange` do tabs no
+ * Svelte se prova. O que mora DENTRO dela é vocabulário do Storybook:
+ * `control: { type: 'boolean' }` fazia o `type` do accordion e o `control` do
+ * form se corroborarem sozinhos, absolvendo exatamente os defeitos que esta
+ * regra existe para achar.
+ */
+function semConfiguracaoDeArgTypes(src) {
+  let out = src;
+  for (;;) {
+    const i = out.indexOf('argTypes:');
+    if (i < 0) break;
+    const abre = out.indexOf('{', i);
+    if (abre < 0) break;
+    const fim = fimDoObjeto(out, abre);
+    if (fim < 0) break;
+    let nivel = 0;
+    let plano = '';
+    for (const ch of out.slice(abre + 1, fim)) {
+      if (ch === '{' || ch === '[' || ch === '(') nivel++;
+      else if (ch === '}' || ch === ']' || ch === ')') nivel--;
+      plano += nivel === 0 ? ch : ' ';
+    }
+    // `argTipos` no lugar de `argTypes` para o laço não reencontrar o bloco.
+    out = out.slice(0, i) + 'argTipos: {' + plano + '}' + out.slice(fim + 1);
+  }
+  return out;
+}
+
+const _corpusCache = new Map();
+/** Componente + stories + transforms do painel Code. A docs page fica de fora. */
+function corpusDaStack(slug, stack) {
+  const k = `${slug}|${stack}`;
+  if (!_corpusCache.has(k)) {
+    const { ui } = filesForSlug(slug, stack);
+    const bruto = ui.map((f) => readFile(f) || '').join('\n');
+    _corpusCache.set(k, semConfiguracaoDeArgTypes(semComentariosDeSnippet(bruto)));
+  }
+  return _corpusCache.get(k);
+}
+
+const DIRETIVA_DE_FRAMEWORK = /^(v-|bind:|on:|use:|transition:|in:|out:|animate:|let:|class:|style:|slot|key|ref|is|xmlns|ng[A-Z*]|\*ng|#)/;
+/**
+ * Passagem livre, e a lista é curta DE PROPÓSITO.
+ *
+ * Só entram aqui os atributos que todo componente encaminha sem que isso diga
+ * nada sobre a API dele. `type`, `value`, `open`, `disabled` e companhia ficaram
+ * de FORA: num componente elas são prop de verdade, e mantê-las na lista foi o
+ * que fez a primeira versão desta regra passar batido justamente no defeito que
+ * a originou — o `type="single"` do accordion. O portão só tem dentes se a
+ * exceção for a mínima.
+ *
+ * `aria-*` e `data-*` saem por prefixo, logo abaixo.
+ */
+const ATRIBUTO_NATIVO = new Set(['class', 'className', 'style', 'id', 'key', 'ref']);
+
+/** Fecha a chave aberta em `abre`, contando aninhamento. */
+function fimDoObjeto(s, abre) {
+  let n = 0;
+  for (let i = abre; i < s.length; i++) {
+    if (s[i] === '{') n++;
+    else if (s[i] === '}') { n--; if (n === 0) return i; }
+  }
+  return -1;
+}
+
+/**
+ * Props que o snippet ensina, lidas só de dentro de tag de componente do design
+ * system. Fora da tag há prosa; dentro não — por isso o booleano solto
+ * (`asChild`) é seguro de ler aqui.
+ */
+function propsDoSnippet(codigo, stack) {
+  const props = new Set();
+
+  if (stack === 'vanilla') {
+    for (const m of codigo.matchAll(/create[A-Z]\w*\(\s*\{/g)) {
+      const abre = codigo.indexOf('{', m.index);
+      const fim = fimDoObjeto(codigo, abre);
+      if (fim < 0) continue;
+      let nivel = 0;
+      let plano = '';
+      for (const ch of codigo.slice(abre + 1, fim)) {
+        if (ch === '{' || ch === '[' || ch === '(') nivel++;
+        else if (ch === '}' || ch === ']' || ch === ')') nivel--;
+        plano += nivel === 0 ? ch : ' ';
+      }
+      for (const k of plano.matchAll(/(?:^|,)\s*([a-zA-Z][\w]*)\s*:/g)) props.add(k[1]);
+    }
+    return [...props];
+  }
+
+  for (const m of codigo.matchAll(/<([A-Z][\w.]*)((?:[^<>]|=>)*?)\/?>/g)) {
+    if (!slugDeComponente(m[1])) continue;
+    const dentro = m[2];
+    for (const a of dentro.matchAll(/(?:^|\s)[:@]?([a-zA-Z][\w-]*)\s*=/g)) props.add(a[1]);
+    const semValores = dentro
+      .replace(/=\s*"[^"]*"/g, ' ')
+      .replace(/=\s*'[^']*'/g, ' ')
+      .replace(/\{[\s\S]*?\}/g, ' ');
+    for (const a of semValores.matchAll(/(?:^|\s)([a-z][\w]*)(?=\s|$)/g)) props.add(a[1]);
+  }
+  return [...props].filter((p) =>
+    !DIRETIVA_DE_FRAMEWORK.test(p) && !ATRIBUTO_NATIVO.has(p)
+    && !p.startsWith('aria-') && !p.startsWith('data-'));
+}
+
+function classesDoSnippet(codigo) {
+  const out = new Set();
+  for (const m of codigo.matchAll(/(?:class|className)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)) {
+    for (const c of (m[1] || m[2] || '').split(/\s+/)) if (c) out.add(c);
+  }
+  return out;
+}
+
+/** Forma de utilitária do Tailwind — a lib que saiu do projeto. */
+const FORMA_TAILWIND = /^-?(flex|grid|block|inline|hidden|absolute|relative|fixed|sticky|container|items-|justify-|self-|content-|place-|gap-|space-[xy]-|p[xytblrse]?-|m[xytblrse]?-|w-|h-|min-|max-|text-|font-|leading-|tracking-|bg-|border|rounded|shadow|opacity-|z-|overflow-|cursor-|select-|transition|duration-|ease-|animate-|ring|outline|truncate|sr-only|aspect-|object-|col-|row-|order-|basis-|grow|shrink)/;
+
+/** A prop aparece, em alguma forma de uso ou declaração, no código da stack? */
+function lastroNoCodigo(prop, corpus) {
+  const camel = prop.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+  const kebab = prop.replace(/[A-Z]/g, (c) => '-' + c.toLowerCase());
+  for (const forma of new Set([prop, camel, kebab])) {
+    const p = forma.replace(/[.*+?^${}()|[\]\\]/g, '\\function auditTaxonomy(slug) {');
+    // Fronteira que rejeita o hifen, e nao `\b`: o hifen É fronteira de palavra,
+    // entao `\btype` casava dentro de `data-type={mode}` e o accordion se
+    // auto-absolvia do proprio defeito. O mesmo valeria para `label` dentro de
+    // `aria-label`.
+    const antes = '(?<![\\w-])';
+    const re = new RegExp([
+      `${antes}${p}\\s*=`,        // uso com valor, ou default de destructuring
+      `${antes}${p}\\s*\\?\\s*:`, // declaração opcional de tipo
+      `${antes}${p}\\s*:`,        // chave de objeto: membro obrigatório de
+                                    // tipo, default de `withDefaults`, chave de `argTypes`
+      `${antes}${p}\\s*[,}]`,     // destructuring
+      `${antes}${p}\\s*\\/?>`,    // atributo BOOLEANO: `<DrawerTrigger asChild>`
+      `['"\`]${p}['"\`]`,    // lista de inputs do Angular
+      `\\{\\s*${p}\\s*\\}`,  // forma abreviada do Svelte
+    ].join('|'));
+    if (re.test(corpus)) return true;
+  }
+  return false;
+}
+
+/**
+ * `snippet_sem_lastro` — o snippet do conteúdo compartilhado ensina uma prop
+ * ou uma classe que o código daquela stack não conhece.
+ *
+ * O defeito que a criou: a Anatomia do Accordion mostrava
+ * `<Accordion type="single">` enquanto o painel Code da mesma página mostrava
+ * `<Accordion defaultValue={["item-1"]}>`. O painel estava certo — ele é gerado
+ * a partir da story, que renderiza o componente de verdade. O snippet do JSON é
+ * uma string que ninguém executa, e por isso `type` sobreviveu à migração
+ * inteira: é vocabulário do Radix, e o `@base-ui/react` expõe `multiple`.
+ *
+ * ── Contra o quê comparar ───────────────────────────────────────────────────
+ *
+ * Nem a API declarada nem o Playground sozinhos servem:
+ *
+ * - Contra a API do WRAPPER: o `multiple` do accordion vem do tipo da lib
+ *   (`AccordionPrimitive.Root.Props`), não do wrapper. Um auditor de grep não
+ *   resolve tipo, e reprovaria prop válida.
+ * - Contra o snippet do PLAYGROUND: a anatomia documenta legitimamente o que o
+ *   Playground não exercita — `delay={400}` no `TooltipProvider` é anatomia, não
+ *   control.
+ *
+ * O que sobra, e é o que pegou os três defeitos: a prop aparece em ALGUM lugar
+ * do código real daquela stack para aquele slug? O corpo de evidência é o
+ * componente + as stories + as transforms do painel Code, o que SUBSUME o
+ * Playground sem depender de tipo.
+ *
+ * A docs page fica FORA do corpo de propósito: ela renderiza o próprio JSON, e
+ * corroborar ali seria circular.
+ *
+ * ── O que um achado significa ───────────────────────────────────────────────
+ *
+ * Duas causas, e as duas pedem ação:
+ *
+ * 1. A prop não existe (o `type` do accordion, o `asChild` do tooltip, o
+ *    `delayDuration` do navigation-menu — cujo próprio componente registra que
+ *    "a tipagem daqui anunciava `delayDuration`"). O leitor copia e não
+ *    funciona.
+ * 2. A prop existe na lib mas NADA nesta stack a usa (o `getAriaValueText` do
+ *    progress existe no base-ui; o `autoSaveId` do resizable existe no
+ *    paneforge). Aí o snippet promete o que o design system não demonstra — o
+ *    mesmo estado de "especificado e não entregue" que o `export_sem_story`
+ *    cobra das peças.
+ *
+ * ── O que NÃO é achado ──────────────────────────────────────────────────────
+ *
+ * Cada exceção abaixo nasceu de um falso positivo medido nesta base:
+ *
+ * - Tag que não é do design system: `<FiltersForm onConfirm={…}>` é o
+ *   formulário do leitor, e `onConfirm` não tem por que existir aqui.
+ * - Sintaxe de framework (`v-model`, `bind:`, `#`, `*ngIf`): erro ali é do
+ *   compilador, não do design system.
+ * - Atributo nativo de HTML (`id`, `src`, `htmlFor`, `placeholder`…).
+ * - Comentário: `// Raiz: borda…` dentro de uma chamada de fábrica dava as
+ *   "props" `Raiz` e `caixa`. O corte de `//` guarda o `:` anterior, senão
+ *   `https://` engole o resto da linha.
+ * - Objeto aninhado numa chamada de fábrica: `index:` num payload de evento não
+ *   é opção de componente. Só o primeiro nível do objeto de opções conta.
+ * - Forma kebab × camel: `side-offset` no Vue é `sideOffset` no código.
+ */
+function auditSnippetSemLastro(slug) {
+  const violations = [];
+  const arq = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
+  if (!existsSync(arq)) return violations;
+
+  let json;
+  try { json = JSON.parse(readFile(arq) || '{}'); } catch { return violations; }
+  const pt = json['pt-BR'];
+  if (!pt) return violations;
+
+  const rel = relative(ROOT, arq);
+  const conhecidas = ndsClasses();
+
+  for (const [caminho, valor] of chavesDeCodigo(pt)) {
+    for (const stack of STACKS) {
+      const cru = varianteDoStack(valor, stack);
+      if (!cru) continue;
+      const codigo = semComentariosDeSnippet(cru);
+
+      const slugs = new Set([slug]);
+      for (const tag of tagsDeComponente(codigo)) {
+        const s = slugDeComponente(tag);
+        if (s) slugs.add(s);
+      }
+      let corpus = '';
+      for (const s of slugs) corpus += corpusDaStack(s, stack) + '\n';
+      if (!corpus.trim()) continue;
+
+      for (const prop of propsDoSnippet(codigo, stack)) {
+        if (lastroNoCodigo(prop, corpus)) continue;
+        violations.push({
+          category: 'quality', severity: 'medium', slug, stack,
+          file: rel, rule: 'snippet_sem_lastro',
+          message: `${caminho} ensina "${prop}", que nada no código desta stack usa — ou a prop não existe, ou existe e nenhuma story a exercita`,
+        });
+      }
+
+      for (const cls of classesDoSnippet(codigo)) {
+        if (cls.startsWith('nds-') || !FORMA_TAILWIND.test(cls)) continue;
+        violations.push({
+          category: 'quality', severity: 'high', slug, stack,
+          file: rel, rule: 'snippet_sem_lastro',
+          message: `${caminho} ensina a classe "${cls}", que tem forma de Tailwind — a lib saiu do projeto e a folha compartilhada não a define, então quem copiar recebe markup sem estilo`,
+        });
+      }
+    }
+  }
+  return violations;
+}
+
 function auditTaxonomy(slug) {
   const violations = [];
   const file = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
@@ -3691,6 +4003,7 @@ function runAudit(slug, category) {
     ...auditPerformance(slug),
     ...auditAnalytics(slug),
     ...auditQuality(slug),
+    ...auditSnippetSemLastro(slug),
     ...auditTaxonomy(slug),
     ...auditI18nKeys(slug),
     ...auditComponentVars(slug),
