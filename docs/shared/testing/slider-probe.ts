@@ -181,6 +181,28 @@ export function contrasteAlcaTrilho(raiz: ParentNode): number {
 }
 
 /**
+ * As cores CRUAS que a razão acima resumiu, mais o estado global que as decide.
+ *
+ * Existe porque uma razão sozinha não diz o que houve. `expected 1.46 to be
+ * greater than or equal to 3` foi visto uma vez, numa suíte de 3191 testes, e
+ * não voltou — e sem as cores e sem a classe do `<html>` não dá para separar
+ * "paleta errada" de "tema herdado de outro arquivo" de "elemento em transição".
+ * Passe o retorno como MENSAGEM da asserção: ele só é lido quando ela reprova.
+ */
+export function contextoAlcaTrilho(raiz: ParentNode): string {
+  const alca = alcasDoSlider(raiz)[0];
+  if (!alca) return 'SONDA::slider: nenhuma alça';
+  const trilho = trilhoDoSlider(raiz);
+  const partes = [
+    `borda=${discoDaAlca(alca).borderTopColor}`,
+    `trilho=${getComputedStyle(trilho).backgroundColor}`,
+    `base=rgb(${fundoOpaco(trilho.parentElement ?? trilho).join(", ")})`,
+    `html="${raiz.ownerDocument?.documentElement.className ?? '?'}"`,
+  ];
+  return partes.join(' ');
+}
+
+/**
  * O estilo do DISCO — o que a pessoa enxerga da alça.
  *
  * A alça tem duas caixas com papéis distintos: o ELEMENTO é o alvo de toque

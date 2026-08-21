@@ -4,7 +4,7 @@ import { expect, userEvent, within } from 'storybook/test';
 import { NdsSlider } from './slider';
 import { NdsSliderDocs } from '@/components/docs/SliderDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { contrasteAlcaTrilho } from '@shared/testing/slider-probe';
+import { contextoAlcaTrilho, contrasteAlcaTrilho } from '@shared/testing/slider-probe';
 
 type SliderArgs = {
   value: number[];
@@ -138,7 +138,10 @@ export const Playground: Story = {
       // ancestral opaco antes da divisão. A conta que vivia aqui ignorava as
       // duas coisas — lia a borda no elemento errado e achatava o trilho contra
       // um branco fixo.
-      await expect(contrasteAlcaTrilho(canvasElement)).toBeGreaterThanOrEqual(3);
+      await expect(
+        contrasteAlcaTrilho(canvasElement),
+        contextoAlcaTrilho(canvasElement),
+      ).toBeGreaterThanOrEqual(3);
     });
 
     await step('A classe .nds-slider fica no control, como nas outras stacks', async () => {

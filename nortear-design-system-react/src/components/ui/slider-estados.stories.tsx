@@ -12,6 +12,7 @@ import {
   alcasDoSlider,
   anelDeFocoAssentado,
   anelEmRepouso,
+  contextoAlcaTrilho,
   contrasteAlcaTrilho,
   valorDaAlca,
 } from "@shared/testing/slider-probe";
@@ -62,7 +63,10 @@ export const Default: Story = {
     await step("A borda da alça alcança 3:1 contra o trilho", async () => {
       // WCAG 1.4.11. O miolo da alça é da cor do fundo de propósito, então quem
       // a separa do trilho é a borda — é essa razão que a norma cobra.
-      await expect(contrasteAlcaTrilho(canvasElement)).toBeGreaterThanOrEqual(3);
+      await expect(
+        contrasteAlcaTrilho(canvasElement),
+        contextoAlcaTrilho(canvasElement),
+      ).toBeGreaterThanOrEqual(3);
     });
   },
 };

@@ -2573,19 +2573,34 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       máquina limpa, `--no-isolate` roda a suíte inteira do Angular e do React
       sem derrubar a aba nenhuma vez.
 
-      **O que sobra como obstáculo é VAZAMENTO DE TEMA entre arquivos.** Numa
-      das duas rodadas limpas do React, `slider-estados > Default` reprovou com
-      contraste 1,47 onde exige 3 — o valor de quem mediu no tema escuro.
-      `sonner-estados.stories.tsx` declara `globals: { theme: "dark" }`, e no
-      modo compartilhado a classe fica no `<html>` para o próximo arquivo do
-      mesmo worker. Depende da ordem em que os workers pegam os arquivos: falhou
-      1 de 2 rodadas, e o par isolado dos dois arquivos não reproduz.
+      **O que sobra é uma reprovação sem causa estabelecida.** Numa das duas
+      rodadas limpas do React, `slider-estados > Default` reprovou com contraste
+      1,47 onde exige 3.
 
-      A correção é aplicar as classes de tema a CADA render de story, e não só
-      quando o global muda. Hoje o `preview.ts` assina `GLOBALS_UPDATED` /
-      `SET_GLOBALS` no nível do módulo — o que resolveu o bug de não voltar ao
-      Default, mas não cobre "página nova, tema herdado do arquivo anterior".
-      Enquanto isso não existir, `isolate: false` não é seguro.
+      Minha primeira hipótese — vazamento da classe `dark` entre arquivos, vinda
+      do `globals: { theme: "dark" }` do `sonner-estados` — está DESMENTIDA, em
+      dois testes:
+
+      1. Forçando `theme: dark` na própria story do slider, ela PASSA. O tema
+         escuro vira borda e trilho juntos, e a razão se mantém.
+      2. Uma sonda de dois arquivos sob `--no-isolate --no-file-parallelism`
+         (um suja o `<html>` com `dark` e não limpa, o outro afirma que a classe
+         não sobreviveu) passa TAMBÉM SEM correção nenhuma: o
+         `withThemeByClassName` já remove a classe a cada render de story.
+
+      Cheguei a implementar a posse da classe `dark` pelo `applyClasses` nas
+      cinco `preview.ts` e revertí: portão sem dentes é pior que portão nenhum.
+
+      **A pista boa veio da instrumentação.** O trilho é a MESMA cor da borda a
+      20% de alfa (`borda=rgb(23,23,23)`, `trilho=rgba(23,23,23,0.2)`), então a
+      razão inteira depende do FUNDO sobre o qual o alfa compõe: sobre branco dá
+      11,7; sobre um fundo escuro colapsa para perto de 1 — que é a faixa do
+      1,47 observado. Ou seja, o suspeito não é o tema, é um ANCESTRAL de fundo
+      escuro herdado de outro arquivo (portal ou overlay que sobrou), que o
+      `fundoOpaco` da sonda encontra ao subir a árvore.
+
+      Na próxima reprovação a mensagem da asserção traz borda, trilho, fundo e a
+      classe do `<html>` — é o que fecha o diagnóstico.
 
       O `@storybook/addon-vitest` 10.6.0-alpha.7 não muda nada do caminho de
       isolamento: `setup-file.js`, `setup-file-with-project-annotations.js`,
