@@ -383,9 +383,27 @@ export const DragGesture: Story = {
     };
 
     /** Espera a posição chegar a uma coordenada já conhecida. */
-    const emPosicao = async (alvo: number) => {
+    /*
+     * O rótulo NÃO é enfeite. Esta story chama `emPosicao` de três lugares —
+     * volta pela seta, soltura do dedo, soltura do mouse — e a reprovação
+     * intermitente só diz a linha do helper, que é a mesma para os três. Sem
+     * saber QUAL passo, sobra a distância: 4,1px é resíduo de encaixe e 288px é
+     * um slide inteiro, e os dois são defeitos diferentes. Já perdi três
+     * medições desta falha por não registrar isso.
+     */
+    /*
+     * Desabilitada nos DOIS idiomas: o React usa a propriedade nativa e o
+     * Vanilla escreve `aria-disabled`. Ler só um deles devolvia `null` numa das
+     * stacks — diagnóstico que não diagnostica.
+     */
+    const desligada = (el: Element) => el.matches('[disabled], [aria-disabled="true"]');
+
+    const emPosicao = async (alvo: number, onde: string) => {
       await waitFor(async () => {
-        await expect(Math.abs(deslocamento() - alvo)).toBeLessThan(2);
+        await expect(
+          Math.abs(deslocamento() - alvo),
+          `${onde}: posição=${deslocamento()} alvo=${alvo} setas=[ant:${desligada(anterior())} prox:${desligada(proximo())}]`,
+        ).toBeLessThan(2);
       }, { timeout: 4000 });
     };
 
@@ -421,7 +439,7 @@ export const DragGesture: Story = {
       await expect(posUm).toBeGreaterThan(posZero);
 
       await userEvent.click(anterior());
-      await emPosicao(posZero);
+      await emPosicao(posZero, 'volta pela seta');
       // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
       // encostou no alvo, mas quem desabilita a seta é a reconciliação do
       // índice, e ela espera de propósito o silêncio do motor — sem isso um
@@ -458,7 +476,7 @@ export const DragGesture: Story = {
       // Assentou EM UM SLIDE, e no MESMO ponto que a seta alcança — não onde o
       // dedo largou. Um carrossel de rolagem livre pararia no meio, e é isto
       // que este passo reprova.
-      await emPosicao(posUm);
+      await emPosicao(posUm, 'soltura do dedo');
       await waitFor(async () => {
         await expect(anterior()).toBeEnabled();
       }, { timeout: 4000 });
@@ -484,7 +502,7 @@ export const DragGesture: Story = {
       mouse(recorte, 'mousemove', direita, y);
       mouse(recorte, 'mouseup', direita, y);
 
-      await emPosicao(posZero);
+      await emPosicao(posZero, 'soltura do mouse');
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
       }, { timeout: 4000 });
