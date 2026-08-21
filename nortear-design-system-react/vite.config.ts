@@ -69,7 +69,13 @@ export default defineConfig({
         name: 'storybook',
         // Docs pages inteiras passam por axe após a play (suíte de fumaça);
         // páginas pesadas (Icons, Input) estouravam os 15s default sob carga.
-        testTimeout: 60000,
+        //
+        // 120s, e não 60s, porque a página que o comentário acima nomeia passou
+        // a estourar: `Icons` roda axe sobre o catálogo inteiro e, sob a carga
+        // da suíte cheia, cruza o minuto — isolada, fecha em folga. As outras
+        // quatro stacks já orçavam 120s para esta mesma classe de teste; o
+        // React era o destoante, com um valor que ninguém tinha medido.
+        testTimeout: 120_000,
         browser: {
           enabled: true,
           headless: true,
