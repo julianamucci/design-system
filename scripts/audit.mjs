@@ -2432,6 +2432,132 @@ function lastroNoCodigo(prop, corpus) {
  *   é opção de componente. Só o primeiro nível do objeto de opções conta.
  * - Forma kebab × camel: `side-offset` no Vue é `sideOffset` no código.
  */
+/**
+ * `largura_fluida_sob_centered` — `nds-w-full nds-max-w-*` numa story cujo
+ * `layout` é `centered`.
+ *
+ * Sob `layout: 'centered'` o Storybook encolhe o ancestral para o conteúdo, e
+ * `width: 100%` não tem contra o que resolver: a caixa fica do tamanho do TEXTO
+ * que ela contém. Medido na story `Multi Responsive` do carousel — 448px
+ * declarados, 163px na tela.
+ *
+ * O que fez isso sobreviver: as outras stacks pareciam certas por ACIDENTE. Com
+ * rótulos longos o encolhe-para-o-conteúdo passa do teto e o `max-width` capa
+ * no valor pretendido; encurte um rótulo e a mesma marcação colapsa. Nenhuma
+ * suíte alcança isso, porque o runner do vitest não aplica `layout`.
+ *
+ * A forma correta é `.nds-w-cap-*`, que declara a largura. As duas são
+ * EQUIVALENTES em qualquer pai de largura definida — só diferem no pai que
+ * encolhe, que é o caso quebrado.
+ */
+function auditLarguraFluidaSobCentered(slug) {
+  const violations = [];
+  for (const stack of STACKS) {
+    const { ui } = filesForSlug(slug, stack);
+    for (const file of ui) {
+      if (!/\.stories\./.test(file)) continue;
+      const content = readFile(file);
+      if (!content) continue;
+      // O `layout` do `meta` vale para o arquivo inteiro.
+      if (!/layout:\s*['"]centered['"]/.test(content)) continue;
+
+      const achadas = new Set();
+      for (const m of content.matchAll(/nds-w-full\s+nds-max-w-([a-z]+)/g)) achadas.add(m[1]);
+      if (!achadas.size) continue;
+
+      violations.push({
+        category: 'quality', severity: 'high', slug, stack,
+        file: relative(ROOT, file), rule: 'largura_fluida_sob_centered',
+        message: `\`nds-w-full nds-max-w-${[...achadas].join('/')}\` sob \`layout: 'centered'\`: o ancestral encolhe para o conteúdo e \`width: 100%\` não resolve contra nada — a caixa fica do tamanho do texto. Use \`nds-w-cap-${[...achadas][0]}\`, que declara a largura`,
+      });
+    }
+  }
+  return violations;
+}
+
+/**
+ * `host_inline_com_largura` — host de componente Angular cuja classe não
+ * declara `display`, recebendo classe de largura de quem o consome.
+ *
+ * `<nds-carousel>` é elemento que o navegador não conhece: sem `display` na
+ * folha, ele é `inline`, e largura em elemento inline é IGNORADA. Medido: com
+ * `nds-w-cap-lg` (512px) declarado, o host media 1200px — a largura inteira do
+ * pai. Toda story de carrossel do Angular vinha larga demais desde sempre, e as
+ * outras quatro respeitavam a medida.
+ *
+ * Só vale para o Angular porque só lá a classe mora no HOST; nas outras quatro
+ * ela vai num `<div>`, que já é bloco. Por isso o conserto (`display: block` em
+ * `.nds-carousel`) não muda um pixel nas outras.
+ */
+function auditHostInlineComLargura(slug) {
+  const violations = [];
+  const arquivos = filesForSlug(slug, 'angular').all;
+  if (!arquivos.length) return violations;
+
+  const comDisplay = classesComDisplay();
+  const corpo = arquivos.map((f) => readFile(f) || '').join('\n');
+
+  for (const f of arquivos) {
+    const src = readFile(f);
+    if (!src || /\.stories\./.test(f)) continue;
+    for (const m of src.matchAll(/class:\s*'(nds-[\w-]+)'/g)) {
+      const classe = m[1];
+      if (comDisplay.has(classe)) continue;
+      const sel = [...src.slice(0, m.index).matchAll(/selector:\s*'([\w[\]-]+)'/g)].pop();
+      if (!sel) continue;
+      // Só seletor de ELEMENTO. Um seletor entre colchetes é diretiva de
+      // ATRIBUTO: o host é o elemento que a carrega, que já é bloco, e o
+      // problema de `inline` não existe. Foi o falso positivo do
+      // `[ndsNavigationMenuPanel]`.
+      if (/[[\]]/.test(sel[1])) continue;
+      const tag = sel[1];
+      const comoTag = new RegExp(`<${tag}\\b[^>]*\\bclass="[^"]*nds-(w-|max-w-|w-cap-)`);
+      if (!comoTag.test(corpo)) continue;
+
+      violations.push({
+        category: 'quality', severity: 'high', slug, stack: 'angular',
+        file: relative(ROOT, f), rule: 'host_inline_com_largura',
+        message: `\`<${tag}>\` recebe classe de largura, mas \`.${classe}\` não declara \`display\` — elemento customizado é \`inline\` por padrão, e largura em inline é ignorada. Declare \`display\` na folha compartilhada`,
+      });
+    }
+  }
+  return violations;
+}
+
+let _classesComDisplay;
+/**
+ * Classes `.nds-*` que declaram `display` em alguma folha compartilhada.
+ *
+ * Varre BLOCO a bloco, casando chaves. Uma regex única erra: basta um bloco
+ * anterior desalinhar o casamento para uma classe que declara `display` sair
+ * como se não declarasse — foi o que fez este portão acusar o `.nds-carousel`
+ * no dia seguinte ao conserto dele.
+ */
+function classesComDisplay() {
+  if (_classesComDisplay) return _classesComDisplay;
+  _classesComDisplay = new Set();
+  for (const f of walkDir(join(ROOT, 'docs', 'shared', 'styles'), ['.css'])) {
+    const css = (readFile(f) || '').replace(/\/\*[\s\S]*?\*\//g, ' ');
+    let i = 0;
+    let anterior = 0;
+    while ((i = css.indexOf('{', i)) >= 0) {
+      const seletor = css.slice(anterior, i);
+      let n = 0;
+      let j = i;
+      for (; j < css.length; j++) {
+        if (css[j] === '{') n++;
+        else if (css[j] === '}') { n--; if (n === 0) break; }
+      }
+      if (/(^|[;\s])display\s*:/.test(css.slice(i + 1, j))) {
+        for (const m of seletor.matchAll(/\.(nds-[\w-]+)/g)) _classesComDisplay.add(m[1]);
+      }
+      i = j + 1;
+      anterior = i;
+    }
+  }
+  return _classesComDisplay;
+}
+
 function auditSnippetSemLastro(slug) {
   const violations = [];
   const arq = join(ROOT, 'docs', 'shared', 'content', slug, 'translations.json');
@@ -4003,6 +4129,8 @@ function runAudit(slug, category) {
     ...auditPerformance(slug),
     ...auditAnalytics(slug),
     ...auditQuality(slug),
+    ...auditLarguraFluidaSobCentered(slug),
+    ...auditHostInlineComLargura(slug),
     ...auditSnippetSemLastro(slug),
     ...auditTaxonomy(slug),
     ...auditI18nKeys(slug),

@@ -68,6 +68,8 @@ Em qualquer um dos casos, é este scan que decide se a skill é acionada pelo pi
 | `document_lang_so_no_pai` · `document_lang_ausente` | `useSeoEffect` escreve `documentElement.lang` só no documento pai (ou não escreve). Sai sob `_infra`: é regra de presença, e o alvo é o hook, não a página. O leitor de tela lê o iframe — sem isso, o idioma anunciado é o do template do Storybook |
 | `export_sem_story` | peça exportada que **nada** renderiza: nem story, nem outro componente, nem docs page. É a assinatura de "especificado e não entregue" |
 | `snippet_sem_lastro` | o snippet do `translations.json` ensina prop ou classe que o CÓDIGO daquela stack não conhece. A comparação NÃO é contra a API declarada (o `multiple` do accordion vem do tipo da lib, e grep não resolve tipo) nem contra o Playground (a anatomia documenta o que ele não exercita): é contra componente + stories + transforms do painel Code, que subsume o Playground. Achado tem duas causas, ambas acionáveis — ou a prop não existe, ou existe e nenhuma story a exercita. Classe com forma de Tailwind entra como `high`: quem copiar recebe markup sem estilo |
+| `largura_fluida_sob_centered` | `nds-w-full nds-max-w-*` numa story cujo `layout` é `centered`. Ali o ancestral encolhe para o conteúdo e `width: 100%` não resolve contra nada: a caixa fica do tamanho do TEXTO. Medido — 448px declarados, 163px na tela. Nenhuma suíte alcança, porque o runner não aplica `layout`. A forma correta é `.nds-w-cap-*` |
+| `host_inline_com_largura` | host de componente Angular recebendo classe de largura cuja classe `.nds-*` não declara `display`. Elemento customizado é `inline`, e largura em inline é ignorada: o carrossel media 1200px com 512px declarados, em TODA story da stack. Só vale para o Angular, onde a classe mora no host |
 | `arg_without_argtype` | prop em `args` sem entrada em `argTypes` — fica fora da aba API Reference |
 | `argtype_without_arg` | argType com control mas sem valor inicial — control aparece vazio |
 | `static_source_code` | `docs.source.code` fixo — snippet não acompanha os controls |
@@ -284,6 +286,23 @@ Os checks acima rodam por stack e passam isoladamente mesmo quando uma stack tes
 | ConteudoRico | 5 | 1 | 1 | 1 | 1 | ← divergência: as 4 são placeholder |
 
 Regra: uma mesma story com `expect` ≤1 numa stack e ≥3 em outra é bug, não diferença de estilo. O comportamento demonstrado é o mesmo nas 5 — a verificação também deve ser.
+
+**2f0b. Nome acessível: rode a medição pronta antes de escrever sonda.**
+
+```bash
+node scripts/paridade-nome-acessivel.mjs <slug>
+```
+
+A mesma story tem de anunciar o mesmo nome nas cinco. A `Multi Responsive` do
+carrossel tinha CINCO — `Galeria de múltiplos itens`, `Galeria responsiva`,
+`Carrossel com múltiplos itens responsivos`, `Conjunto longo de slides` e
+`Vários itens por vez` — e dez stories do componente estavam assim. Nada
+acusava: nome acessível não quebra teste, só chega em quem ouve a tela.
+
+É INSTRUMENTO, não portão: `--all` devolve ~117 linhas e uma parte é diferença
+de forma (uma stack nomeia o grupo, outra nomeia cada item, e as duas estão
+certas). Por componente são 2 a 3 linhas, e a triagem é de relance. O cabeçalho
+do script lista as formas de falso positivo já conhecidas.
 
 **2f1. SONDA: meça as cinco de uma vez, antes de corrigir qualquer uma.**
 

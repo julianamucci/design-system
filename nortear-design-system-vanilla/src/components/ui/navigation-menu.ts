@@ -59,6 +59,19 @@ export type NavigationMenuOrientation = 'horizontal' | 'vertical';
 
 export type NavigationMenuOptions = {
   class?: string;
+  /**
+   * Nome acessível do landmark de navegação.
+   *
+   * Era cravado, e em INGLÊS (`'Main navigation'`), num design system escrito em
+   * português — quem ouvia a tela recebia o nome numa língua e o conteúdo em
+   * outra. As outras quatro stacks passam `Navegação principal` pela story, e
+   * nenhuma podia ser seguida aqui porque a fábrica não aceitava o nome.
+   *
+   * O padrão continua servindo à barra principal de uma página, que é o caso
+   * comum; uma segunda barra na mesma página precisa de nome próprio, senão as
+   * duas ficam indistinguíveis na lista de landmarks.
+   */
+  'aria-label'?: string;
   /** Direção da barra. Vertical serve a colunas laterais e gavetas móveis. */
   orientation?: NavigationMenuOrientation;
   /** Espera em ms antes de abrir o painel quando o ponteiro entra no gatilho. */
@@ -132,7 +145,7 @@ export function createNavigationMenu(
   const nav = document.createElement('nav');
   nav.dataset.slot = 'navigation-menu';
   nav.dataset.orientation = orientation;
-  nav.setAttribute('aria-label', 'Main navigation');
+  nav.setAttribute('aria-label', options?.['aria-label'] ?? 'Navegação principal');
   nav.className = cn('nds-navigation-menu', options?.class);
 
   const ul = document.createElement('ul');
