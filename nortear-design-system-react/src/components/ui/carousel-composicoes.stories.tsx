@@ -232,7 +232,11 @@ export const WithDots: Story = {
       await waitFor(async () => {
         await expect(visivelNoViewport(slides[0], viewport)).toBe(true);
       }, { timeout: 4000 });
-      await expect(dot(3).hasAttribute("aria-current")).toBe(false);
+      // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
+      // muda o controle é a reconciliação do índice, adiada até o motor silenciar.
+      await waitFor(async () => {
+        await expect(dot(3).hasAttribute("aria-current")).toBe(false);
+      }, { timeout: 4000 });
     });
   },
 };

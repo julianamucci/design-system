@@ -290,7 +290,11 @@ export const Autoplay: Story = {
       await waitFor(async () => {
         await expect(canvas.getByRole("button", { name: /próximo item/i })).toBeEnabled();
       }, { timeout: 4000 });
-      await expect(canvas.getByRole("button", { name: /item anterior/i })).toBeEnabled();
+      // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
+      // muda o controle é a reconciliação do índice, adiada até o motor silenciar.
+      await waitFor(async () => {
+        await expect(canvas.getByRole("button", { name: /item anterior/i })).toBeEnabled();
+      }, { timeout: 4000 });
     });
 
     await step("Precondição: o relógio do avanço automático está ligado", async () => {

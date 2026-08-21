@@ -235,7 +235,11 @@ export const WithDots: Story = {
       const primeiro = dot(1);
       await userEvent.click(primeiro);
       await waitFor(() => expect(viewport.scrollLeft).toBe(0), { timeout: 4000 });
-      await expect(dot(1)).toHaveAttribute('aria-current', 'true');
+      // A POSIÇÃO chega antes do ESTADO: a rolagem encostou em zero, mas quem
+      // marca o dot é a reconciliação do índice, adiada até o motor silenciar.
+      await waitFor(async () => {
+        await expect(dot(1)).toHaveAttribute('aria-current', 'true');
+      }, { timeout: 4000 });
     });
   },
 };

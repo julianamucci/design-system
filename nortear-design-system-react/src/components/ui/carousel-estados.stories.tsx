@@ -141,7 +141,11 @@ export const LastSlide: Story = {
       await waitFor(async () => {
         await expect(proximo).toBeDisabled();
       }, { timeout: 4000 });
-      await expect(anterior).toBeEnabled();
+      // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
+      // muda o controle é a reconciliação do índice, adiada até o motor silenciar.
+      await waitFor(async () => {
+        await expect(anterior).toBeEnabled();
+      }, { timeout: 4000 });
     });
 
     await step("O extremo é visível, não só programático", async () => {

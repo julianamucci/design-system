@@ -238,7 +238,11 @@ export const WithDots: Story = {
       // Estado limpo para a próxima rodada e para a captura do Chromatic.
       await irPara(1);
       await waitFor(() => expect(deslocamento()).toBeLessThan(2), { timeout: 4000 });
-      await expect(canvas.getByRole('button', { name: 'Item anterior' })).toBeDisabled();
+      // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
+      // muda o controle é a reconciliação do índice, adiada até o motor silenciar.
+      await waitFor(async () => {
+        await expect(canvas.getByRole('button', { name: 'Item anterior' })).toBeDisabled();
+      }, { timeout: 4000 });
     });
   },
 };

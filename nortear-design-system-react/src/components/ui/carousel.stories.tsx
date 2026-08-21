@@ -156,7 +156,11 @@ export const Playground: Story = {
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
       }, { timeout: 4000 });
-      await expect(proximo()).toBeEnabled();
+      // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
+      // muda o controle é a reconciliação do índice, adiada até o motor silenciar.
+      await waitFor(async () => {
+        await expect(proximo()).toBeEnabled();
+      }, { timeout: 4000 });
     });
 
     await step("Clicar em avançar leva ao segundo slide e acorda a seta de voltar", async () => {
