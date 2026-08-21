@@ -74,8 +74,8 @@ let regiaoDoConsumidor = false;
 let pausado = false;
 
 /** Rótulos em português — o design system é escrito em pt-BR. */
-export const ROTULO_REGIAO = 'Notificações';
-export const ROTULO_FECHAR = 'Fechar notificação';
+export const REGION_LABEL = 'Notificações';
+export const CLOSE_LABEL = 'Fechar notificação';
 
 /**
  * Defaults em vigor — a região montada manda, como o input `duration` do
@@ -87,7 +87,7 @@ const padroesDoSistema = (): Padroes => ({
   richColors: false,
   duration: DURACAO_PADRAO,
   closeButton: false,
-  closeLabel: ROTULO_FECHAR,
+  closeLabel: CLOSE_LABEL,
 });
 
 let padroes: Padroes = padroesDoSistema();
@@ -166,7 +166,7 @@ export function createSonnerToaster(options: ToasterOptions = {}): HTMLElement {
     richColors: options.richColors ?? false,
     duration: options.duration ?? DURACAO_PADRAO,
     closeButton: options.closeButton ?? false,
-    closeLabel: options.closeLabel ?? ROTULO_FECHAR,
+    closeLabel: options.closeLabel ?? CLOSE_LABEL,
   };
   return el;
 }
@@ -179,7 +179,7 @@ function montarRegiao(options: ToasterOptions): HTMLElement {
   const el = document.createElement('div');
   el.setAttribute('role', 'region');
   // `label` continua aceito como apelido do nome acessível; o canônico vence.
-  el.setAttribute('aria-label', options['aria-label'] ?? options.label ?? ROTULO_REGIAO);
+  el.setAttribute('aria-label', options['aria-label'] ?? options.label ?? REGION_LABEL);
   el.setAttribute('data-sonner-toaster', '');
   el.dataset.slot = 'sonner-toaster';
   el.className = options.class ? `nds-toaster ${options.class}` : 'nds-toaster';

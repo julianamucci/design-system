@@ -11,7 +11,7 @@
  *    Ele existe para prender uma região `position: fixed` dentro do canvas do
  *    Storybook — é andaime de documentação. Quem consome monta o `Toaster` uma
  *    vez, na raiz da aplicação, e nunca precisa desse quadro.
- * 2. Tudo que vem de `sonner.fixtures.ts` — os textos, o `PERSISTENTE`, as
+ * 2. Tudo que vem de `sonner.fixtures.ts` — os textos, o `PERSISTENT`, as
  *    esperas. O snippet traz o literal que quem consome escreveria.
  *
  * `toast` vem de `vue-sonner` porque o pacote do design system exporta a REGIÃO
@@ -53,25 +53,25 @@ export type SonnerArgs = {
  * no painel. A aspa simples é escapada porque o literal é escrito com ela.
  */
 function literal(valor: unknown, padrao = ''): string {
-  const bruto = comoCodigo(valor) ?? padrao;
-  return bruto.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  const raw = comoCodigo(valor) ?? padrao;
+  return raw.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
 /** A região da pilha. É montada UMA vez, na raiz — não uma por tela. */
-function regiao(extras = ' position="top-right" rich-colors'): string {
+function region(extras = ' position="top-right" rich-colors'): string {
   return `<Toaster${extras} />`;
 }
 
 /** Chamada da fila: o tipo é o MÉTODO, e não um argumento de configuração. */
-function chamada(tipo: string, titulo: string, opcoes: string[] = []): string {
-  const fn = tipo === 'default' ? 'toast' : `toast.${tipo}`;
-  if (!opcoes.length) return `${fn}('${titulo}')`;
-  return `${fn}('${titulo}', {\n${opcoes.map((linha) => `  ${linha}`).join('\n')}\n})`;
+function call(type: string, title: string, options: string[] = []): string {
+  const fn = type === 'default' ? 'toast' : `toast.${type}`;
+  if (!options.length) return `${fn}('${title}')`;
+  return `${fn}('${title}', {\n${options.map((linha) => `  ${linha}`).join('\n')}\n})`;
 }
 
 /** O corpo do manipulador que o botão dispara. */
-function manipulador(corpo: string, nome = 'notificar'): string {
-  return `function ${nome}() {\n${indentar(corpo)}\n}`;
+function handler(body: string, nome = 'notificar'): string {
+  return `function ${nome}() {\n${indentar(body)}\n}`;
 }
 
 /**
@@ -81,14 +81,14 @@ function manipulador(corpo: string, nome = 'notificar'): string {
  * aplicação para mostrar. `null` é para a story que prova o caso sem região
  * montada — lá a ausência é o assunto.
  */
-function pagina(opcoes: {
+function page(options: {
   script: string;
-  rotulo?: string;
-  regiao?: string | null;
+  label?: string;
+  region?: string | null;
   extras?: string;
 }): string {
-  const rotulo = opcoes.rotulo ?? 'Disparar notificação';
-  const area = opcoes.regiao === null ? null : (opcoes.regiao ?? regiao(opcoes.extras));
+  const label = options.label ?? 'Disparar notificação';
+  const area = options.region === null ? null : (options.region ?? region(options.extras));
   const imports = [
     `import { toast } from 'vue-sonner'`,
     area && `import { Toaster } from '@/components/ui/sonner'`,
@@ -97,10 +97,10 @@ function pagina(opcoes: {
     .filter(Boolean)
     .join('\n');
   const template = [
-    `<Button variant="outline" @click="notificar">${rotulo}</Button>`,
+    `<Button variant="outline" @click="notificar">${label}</Button>`,
     area ? `\n${area}` : '',
   ].join('\n');
-  return vueSnippet(`${imports}\n\n${opcoes.script}`, template);
+  return vueSnippet(`${imports}\n\n${options.script}`, template);
 }
 
 /**
@@ -111,20 +111,20 @@ function pagina(opcoes: {
  */
 export const sonnerPlaygroundSource: SourceTransform<SonnerArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const tipo = comoCodigo(args.type) ?? 'success';
-  const descricao = literal(args.description);
-  const rotuloAcao = literal(args.actionLabel);
-  const opcoes = [
-    descricao && `description: '${descricao}',`,
-    rotuloAcao && `action: { label: '${rotuloAcao}', onClick: desfazer },`,
+  const type = comoCodigo(args.type) ?? 'success';
+  const description = literal(args.description);
+  const actionLabel = literal(args.actionLabel);
+  const options = [
+    description && `description: '${description}',`,
+    actionLabel && `action: { label: '${actionLabel}', onClick: desfazer },`,
   ].filter((linha): linha is string => Boolean(linha));
-  const corpo = manipulador(chamada(tipo, literal(args.title, 'Alterações salvas.'), opcoes));
+  const body = handler(call(type, literal(args.title, 'Alterações salvas.'), options));
   // A ação precisa existir em algum lugar: a notificação some, e com ela o
   // botão. O manipulador nomeado é o que deixa isso visível no exemplo.
-  const script = rotuloAcao
-    ? `${corpo}\n\nfunction desfazer() {\n  toast.success('Item restaurado.')\n}`
-    : corpo;
-  return pagina({
+  const script = actionLabel
+    ? `${body}\n\nfunction desfazer() {\n  toast.success('Item restaurado.')\n}`
+    : body;
+  return page({
     script,
     extras: attrs(
       attr('position', args.position, 'bottom-right'),
@@ -136,44 +136,44 @@ export const sonnerPlaygroundSource: SourceTransform<SonnerArgs> = (_gerado, ctx
 };
 
 /** Uma chamada só, sem opções: o caso mais comum de cada tipo. */
-function tipoSimples(tipo: string, titulo: string): string {
-  return pagina({ script: manipulador(chamada(tipo, titulo)) });
+function simpleType(type: string, title: string): string {
+  return page({ script: handler(call(type, title)) });
 }
 
 /**
  * Neutra: sem tipo semântico não há ícone nem cor a aplicar. É a função direta,
  * e não um tipo chamado "default" — ele não existe na API.
  */
-export function sonnerNeutraSource(): string {
-  return tipoSimples('default', 'Código copiado.');
+export function sonnerNeutralSource(): string {
+  return simpleType('default', 'Código copiado.');
 }
 
 /** Êxito: confirmação de operação concluída. */
-export function sonnerSucessoSource(): string {
-  return tipoSimples('success', 'Alterações salvas.');
+export function sonnerSuccessSource(): string {
+  return simpleType('success', 'Alterações salvas.');
 }
 
 /** Falha: o texto diz a causa e o caminho de saída, nunca só a cor (WCAG 1.4.1). */
-export function sonnerErroSource(): string {
-  return tipoSimples('error', 'Não foi possível salvar. Tente novamente.');
+export function sonnerErrorSource(): string {
+  return simpleType('error', 'Não foi possível salvar. Tente novamente.');
 }
 
 /** Aviso não crítico: tipo próprio, para não pedir emprestada a cor da falha. */
-export function sonnerAvisoSource(): string {
-  return tipoSimples('warning', 'Sua sessão expira em 5 minutos.');
+export function sonnerWarningSource(): string {
+  return simpleType('warning', 'Sua sessão expira em 5 minutos.');
 }
 
 /** Informação: nada deu certo nem errado, e o tipo diz isso. */
 export function sonnerInfoSource(): string {
-  return tipoSimples('info', 'Nova versão disponível.');
+  return simpleType('info', 'Nova versão disponível.');
 }
 
 /**
  * Carregamento: nasce SEM prazo, e quem a encerra é o fim da operação. Fechá-la
  * por relógio deixaria a pessoa sem saber se a operação terminou.
  */
-export function sonnerCarregandoSource(): string {
-  return tipoSimples('loading', 'Enviando arquivo...');
+export function sonnerLoadingSource(): string {
+  return simpleType('loading', 'Enviando arquivo...');
 }
 
 /**
@@ -181,23 +181,23 @@ export function sonnerCarregandoSource(): string {
  * separa a notificação do Alert — a mensagem é passageira e nada fica esperando
  * uma decisão.
  */
-export function sonnerSaidaAutomaticaSource(): string {
-  return tipoSimples('error', 'Não foi possível salvar. Tente novamente.');
+export function sonnerAutoDismissSource(): string {
+  return simpleType('error', 'Não foi possível salvar. Tente novamente.');
 }
 
 /**
  * Pilha aberta: `expand` mantém as anteriores visíveis. Sem ele a mais nova
  * cobre as outras, e uma mensagem ainda não lida some por baixo da seguinte.
  */
-export function sonnerPilhaSource(): string {
-  return pagina({
-    rotulo: 'Disparar três notificações',
+export function sonnerStackSource(): string {
+  return page({
+    label: 'Disparar três notificações',
     extras: ' position="top-right" rich-colors expand',
-    script: manipulador(
+    script: handler(
       [
-        chamada('success', 'Alterações salvas.'),
-        chamada('warning', 'Sua sessão expira em 5 minutos.'),
-        chamada('info', 'Nova versão disponível.'),
+        call('success', 'Alterações salvas.'),
+        call('warning', 'Sua sessão expira em 5 minutos.'),
+        call('info', 'Nova versão disponível.'),
       ].join('\n'),
     ),
   });
@@ -207,10 +207,10 @@ export function sonnerPilhaSource(): string {
  * Canto da tela: a posição é escolha do projeto e vale para a aplicação
  * inteira. Misturar cantos faria a pessoa procurar a notificação a cada vez.
  */
-export function sonnerPosicaoSource(): string {
-  return pagina({
+export function sonnerPositionSource(): string {
+  return page({
     extras: ' position="bottom-center" rich-colors',
-    script: manipulador(chamada('success', 'Alterações salvas.')),
+    script: handler(call('success', 'Alterações salvas.')),
   });
 }
 
@@ -221,25 +221,25 @@ export function sonnerPosicaoSource(): string {
  *
  * A ausência do `Toaster` é o assunto — por isso ele não aparece aqui.
  */
-export function sonnerSemRegiaoSource(): string {
-  return pagina({
-    regiao: null,
-    script: manipulador(chamada('success', 'Alterações salvas.')),
+export function sonnerNoRegionSource(): string {
+  return page({
+    region: null,
+    script: handler(call('success', 'Alterações salvas.')),
   });
 }
 
 /** Tema escuro: a região declara o tema para a própria cascata. */
-export function sonnerTemaEscuroSource(): string {
-  return pagina({
-    rotulo: 'Disparar as notificações',
+export function sonnerDarkThemeSource(): string {
+  return page({
+    label: 'Disparar as notificações',
     extras: ' position="top-right" rich-colors expand theme="dark"',
-    script: manipulador(
+    script: handler(
       [
-        chamada('default', 'Código copiado.'),
-        chamada('success', 'Alterações salvas.'),
-        chamada('error', 'Não foi possível salvar. Tente novamente.'),
-        chamada('warning', 'Sua sessão expira em 5 minutos.'),
-        chamada('info', 'Nova versão disponível.'),
+        call('default', 'Código copiado.'),
+        call('success', 'Alterações salvas.'),
+        call('error', 'Não foi possível salvar. Tente novamente.'),
+        call('warning', 'Sua sessão expira em 5 minutos.'),
+        call('info', 'Nova versão disponível.'),
       ].join('\n'),
     ),
   });
@@ -249,10 +249,10 @@ export function sonnerTemaEscuroSource(): string {
  * Título mais descrição: a descrição é uma frase completa. Se a mensagem
  * precisa de três linhas, o lugar dela não é uma notificação.
  */
-export function sonnerComDescricaoSource(): string {
-  return pagina({
-    script: manipulador(
-      chamada('success', 'Preferências atualizadas.', [
+export function sonnerWithDescriptionSource(): string {
+  return page({
+    script: handler(
+      call('success', 'Preferências atualizadas.', [
         `description: 'Suas configurações foram salvas e entrarão em vigor na próxima sessão.',`,
       ]),
     ),
@@ -266,11 +266,11 @@ export function sonnerComDescricaoSource(): string {
  * enquanto a notificação está na tela e SOME com ela, então o mesmo desfazer
  * precisa existir em outro lugar da interface.
  */
-export function sonnerComAcaoSource(): string {
-  return pagina({
-    rotulo: 'Excluir item',
-    script: `${manipulador(
-      chamada('default', 'Item excluído.', [
+export function sonnerWithActionSource(): string {
+  return page({
+    label: 'Excluir item',
+    script: `${handler(
+      call('default', 'Item excluído.', [
         `action: { label: 'Desfazer', onClick: desfazer },`,
       ]),
       'notificar',
@@ -287,10 +287,10 @@ function desfazer() {
  * carregamento e vira êxito ou falha no MESMO nó — trocar o nó faria o leitor
  * de tela anunciar duas notificações para um evento só.
  */
-export function sonnerPromessaSource(): string {
-  return pagina({
-    rotulo: 'Enviar arquivo',
-    script: `${manipulador(
+export function sonnerPromiseSource(): string {
+  return page({
+    label: 'Enviar arquivo',
+    script: `${handler(
       `toast.promise(enviarArquivo(), {
   loading: 'Enviando arquivo...',
   success: 'Arquivo enviado com sucesso.',
@@ -310,12 +310,12 @@ function enviarArquivo(): Promise<void> {
  * Sempre com botão de fechar: uma notificação que não sai sozinha e não pode
  * ser fechada vira obstáculo. O prazo é DA CHAMADA, e vence o da região.
  */
-export function sonnerPersistenteSource(): string {
-  return pagina({
-    rotulo: 'Simular falha crítica',
+export function sonnerPersistentSource(): string {
+  return page({
+    label: 'Simular falha crítica',
     extras: ' position="top-right" rich-colors close-button',
-    script: manipulador(
-      chamada('error', 'Falha crítica no servidor.', [
+    script: handler(
+      call('error', 'Falha crítica no servidor.', [
         'duration: Number.POSITIVE_INFINITY,',
       ]),
     ),

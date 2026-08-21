@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NdsToaster, toast } from './sonner';
-import { esperarTorrada, limparTorradas, PERSISTENTE, TEXTOS } from './sonner.fixtures';
+import { waitForToast, clearToasts, PERSISTENT, TEXTS } from './sonner.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -52,23 +52,23 @@ export const Default: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('A notificação neutra não carrega ícone nenhum', async () => {
-      toast(TEXTOS.padrao, PERSISTENTE);
-      const torrada = await esperarTorrada({ tipo: 'default' });
+      toast(TEXTS.padrao, PERSISTENT);
+      const toastEl = await waitForToast({ type: 'default' });
 
       // Sem tipo semântico não há o que ilustrar: um ícone genérico só ocuparia
       // a coluna e sugeriria uma severidade que a mensagem não tem.
-      await expect(torrada.querySelector('.nds-toast-icon')).toBeNull();
-      await expect(torrada.querySelector('.nds-toast-title')).toHaveTextContent(TEXTOS.padrao);
-      await expect(torrada).toHaveAttribute('data-type', 'default');
+      await expect(toastEl.querySelector('.nds-toast-icon')).toBeNull();
+      await expect(toastEl.querySelector('.nds-toast-title')).toHaveTextContent(TEXTS.padrao);
+      await expect(toastEl).toHaveAttribute('data-type', 'default');
     });
 
     await step('A pilha nasce no canto pedido', async () => {
-      const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
-      await expect(regiao).toHaveAttribute('data-position', 'top-right');
-      await expect(regiao.querySelectorAll('.nds-toast').length).toBe(1);
+      const region = canvasElement.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      await expect(region).toHaveAttribute('data-position', 'top-right');
+      await expect(region.querySelectorAll('.nds-toast').length).toBe(1);
     });
   },
 };
@@ -83,7 +83,7 @@ export const Success: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('O tipo chega ao markup, junto do sinal de cores do tema', async () => {
       // functional.item1 — é `data-type` + `data-rich-colors` que o CSS lê; sem
@@ -92,24 +92,24 @@ export const Success: Story = {
       // descreve é exercido pela story AutoDismiss (functional.item2): aqui a
       // notificação é persistente de propósito, para o axe e o Chromatic
       // medirem sempre o mesmo estado.
-      toast.success(TEXTOS.sucesso, PERSISTENTE);
-      const torrada = await esperarTorrada({ tipo: 'success' });
-      await expect(torrada).toHaveAttribute('data-type', 'success');
-      await expect(torrada).toHaveAttribute('data-rich-colors', 'true');
-      await expect(torrada.querySelector('.nds-toast-icon > svg')).not.toBeNull();
+      toast.success(TEXTS.sucesso, PERSISTENT);
+      const toastEl = await waitForToast({ type: 'success' });
+      await expect(toastEl).toHaveAttribute('data-type', 'success');
+      await expect(toastEl).toHaveAttribute('data-rich-colors', 'true');
+      await expect(toastEl.querySelector('.nds-toast-icon > svg')).not.toBeNull();
 
-      const regiao = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
-      await expect(regiao).toHaveAttribute('data-position', 'top-right');
+      const region = document.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      await expect(region).toHaveAttribute('data-position', 'top-right');
     });
 
     await step('A cor semântica fica no ícone; o texto corrido não muda de cor', async () => {
       // Regra de projeto medida, não presumida: em contêiner colorido, ícone e
       // título curto podem carregar a cor (3:1), texto corrido não — ele fica em
       // `--foreground` para alcançar 4.5:1 em qualquer variante.
-      const torrada = await esperarTorrada({ tipo: 'success' });
-      const icone = torrada.querySelector<HTMLElement>('.nds-toast-icon')!;
-      const titulo = torrada.querySelector<HTMLElement>('.nds-toast-title')!;
-      await expect(getComputedStyle(icone).color).not.toBe(getComputedStyle(titulo).color);
+      const toastEl = await waitForToast({ type: 'success' });
+      const icon = toastEl.querySelector<HTMLElement>('.nds-toast-icon')!;
+      const title = toastEl.querySelector<HTMLElement>('.nds-toast-title')!;
+      await expect(getComputedStyle(icon).color).not.toBe(getComputedStyle(title).color);
     });
   },
 };
@@ -125,15 +125,15 @@ export const Error: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('A falha se anuncia pelo texto, não só pela cor', async () => {
-      toast.error(TEXTOS.erro, PERSISTENTE);
-      const torrada = await esperarTorrada({ tipo: 'error' });
-      await expect(torrada).toHaveAttribute('data-type', 'error');
+      toast.error(TEXTS.erro, PERSISTENT);
+      const toastEl = await waitForToast({ type: 'error' });
+      await expect(toastEl).toHaveAttribute('data-type', 'error');
       // WCAG 1.4.1: quem não distingue vermelho de verde precisa da frase.
-      await expect(torrada).toHaveTextContent(TEXTOS.erro);
-      await expect(torrada.querySelector('.nds-toast-icon > svg')).not.toBeNull();
+      await expect(toastEl).toHaveTextContent(TEXTS.erro);
+      await expect(toastEl.querySelector('.nds-toast-icon > svg')).not.toBeNull();
     });
   },
 };
@@ -149,14 +149,14 @@ export const Warning: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('O aviso usa o tipo próprio, e não a falha', async () => {
-      toast.warning(TEXTOS.aviso, PERSISTENTE);
-      const torrada = await esperarTorrada({ tipo: 'warning' });
-      await expect(torrada).toHaveAttribute('data-type', 'warning');
-      await expect(torrada).not.toHaveAttribute('data-type', 'error');
-      await expect(torrada).toHaveTextContent(TEXTOS.aviso);
+      toast.warning(TEXTS.aviso, PERSISTENT);
+      const toastEl = await waitForToast({ type: 'warning' });
+      await expect(toastEl).toHaveAttribute('data-type', 'warning');
+      await expect(toastEl).not.toHaveAttribute('data-type', 'error');
+      await expect(toastEl).toHaveTextContent(TEXTS.aviso);
     });
   },
 };
@@ -171,14 +171,14 @@ export const Info: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('A informação tem tipo próprio e ícone próprio', async () => {
-      toast.info(TEXTOS.info, PERSISTENTE);
-      const torrada = await esperarTorrada({ tipo: 'info' });
-      await expect(torrada).toHaveAttribute('data-type', 'info');
-      await expect(torrada).toHaveTextContent(TEXTOS.info);
-      await expect(torrada.querySelector('.nds-toast-icon > svg')).not.toBeNull();
+      toast.info(TEXTS.info, PERSISTENT);
+      const toastEl = await waitForToast({ type: 'info' });
+      await expect(toastEl).toHaveAttribute('data-type', 'info');
+      await expect(toastEl).toHaveTextContent(TEXTS.info);
+      await expect(toastEl.querySelector('.nds-toast-icon > svg')).not.toBeNull();
     });
   },
 };
@@ -193,18 +193,18 @@ export const Loading: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('O carregamento gira e não tem prazo para sair', async () => {
       // Sem `duration` de propósito: o tipo `loading` nasce sem prazo. Fechá-lo
       // sozinho deixaria a pessoa sem saber se a operação terminou.
-      toast.loading(TEXTOS.carregando);
-      const torrada = await esperarTorrada({ tipo: 'loading' });
-      await expect(torrada).toHaveAttribute('data-type', 'loading');
+      toast.loading(TEXTS.loading);
+      const toastEl = await waitForToast({ type: 'loading' });
+      await expect(toastEl).toHaveAttribute('data-type', 'loading');
 
-      const icone = torrada.querySelector<HTMLElement>('.nds-toast-icon')!;
-      await expect(icone).toHaveClass('nds-toast-icon-spin');
-      await expect(torrada).toHaveTextContent(TEXTOS.carregando);
+      const icon = toastEl.querySelector<HTMLElement>('.nds-toast-icon')!;
+      await expect(icon).toHaveClass('nds-toast-icon-spin');
+      await expect(toastEl).toHaveTextContent(TEXTS.loading);
     });
   },
 };

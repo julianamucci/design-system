@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sonnerPilhaSnippet,
-  sonnerPromessaSnippet,
-  sonnerSemRegiaoSnippet,
+  sonnerStackSnippet,
+  sonnerPromiseSnippet,
+  sonnerNoRegionSnippet,
   sonnerSnippet,
   sonnerSource,
-  sonnerSourceCom,
+  sonnerSourceWith,
 } from './sonner.source';
 
 describe('sonnerSnippet', () => {
@@ -45,9 +45,9 @@ describe('sonnerSnippet', () => {
   it('o tipo escolhe o método da fila; o neutro é a própria função', () => {
     expect(sonnerSnippet({ type: 'error' })).toContain('toast.error(');
     expect(sonnerSnippet({ type: 'warning' })).toContain('toast.warning(');
-    const neutro = sonnerSnippet({ type: 'default', title: 'Código copiado.' });
-    expect(neutro).toContain("toast('Código copiado.');");
-    expect(neutro).not.toContain('toast.default(');
+    const neutral = sonnerSnippet({ type: 'default', title: 'Código copiado.' });
+    expect(neutral).toContain("toast('Código copiado.');");
+    expect(neutral).not.toContain('toast.default(');
   });
 
   it('descrição e ação entram como opções da notificação', () => {
@@ -69,25 +69,25 @@ describe('sonnerSnippet', () => {
 
   it('não vaza as fixtures nem os prazos de teste das stories', () => {
     const código = sonnerSnippet({ type: 'success' });
-    expect(código).not.toContain('PERSISTENTE');
-    expect(código).not.toContain('montarToaster');
-    expect(código).not.toContain('esperarTorrada');
+    expect(código).not.toContain('PERSISTENT');
+    expect(código).not.toContain('mountToaster');
+    expect(código).not.toContain('waitForToast');
     expect(código).not.toContain('400');
   });
 });
 
-describe('sonnerSemRegiaoSnippet', () => {
+describe('sonnerNoRegionSnippet', () => {
   it('dispara sem região montada — a fila cria a dela sob demanda', () => {
-    const código = sonnerSemRegiaoSnippet({ type: 'success' });
+    const código = sonnerNoRegionSnippet({ type: 'success' });
     expect(código).toContain("import { toast } from '@/components/ui/sonner';");
     expect(código).not.toContain('createSonnerToaster');
     expect(código).toContain('toast.success(');
   });
 });
 
-describe('sonnerPilhaSnippet', () => {
+describe('sonnerStackSnippet', () => {
   it('uma chamada por notificação, na ordem em que entram na pilha', () => {
-    const código = sonnerPilhaSnippet(
+    const código = sonnerStackSnippet(
       [
         { type: 'success', title: 'Alterações salvas.' },
         { type: 'warning', title: 'Sua sessão expira em 5 minutos.' },
@@ -101,9 +101,9 @@ describe('sonnerPilhaSnippet', () => {
   });
 });
 
-describe('sonnerPromessaSnippet', () => {
+describe('sonnerPromiseSnippet', () => {
   it('uma notificação para a operação inteira, com as três mensagens', () => {
-    const código = sonnerPromessaSnippet();
+    const código = sonnerPromiseSnippet();
     expect(código).toContain('toast.promise(');
     expect(código).toContain("loading: 'Enviando arquivo...'");
     expect(código).toContain("success: 'Arquivo enviado com sucesso.'");
@@ -115,12 +115,12 @@ describe('sonnerPromessaSnippet', () => {
 describe('sonnerSource', () => {
   it('acompanha os controls em vez de congelar um snippet fixo', () => {
     const padrão = sonnerSource('<div data-sonner-toast>', {});
-    const outro = sonnerSource('<div data-sonner-toast>', {
+    const other = sonnerSource('<div data-sonner-toast>', {
       args: { type: 'error', title: 'Não foi possível salvar.', richColors: true },
     });
-    expect(padrão).not.toBe(outro);
-    expect(outro).toContain('toast.error(');
-    expect(outro).toContain('richColors: true');
+    expect(padrão).not.toBe(other);
+    expect(other).toContain('toast.error(');
+    expect(other).toContain('richColors: true');
   });
 
   it('ignora o HTML gerado pelo renderer', () => {
@@ -130,9 +130,9 @@ describe('sonnerSource', () => {
   });
 });
 
-describe('sonnerSourceCom', () => {
+describe('sonnerSourceWith', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const código = sonnerSourceCom({ type: 'warning' })('', { args: { type: 'success' } });
+    const código = sonnerSourceWith({ type: 'warning' })('', { args: { type: 'success' } });
     expect(código).toContain('toast.warning(');
     expect(código).not.toContain('toast.success(');
   });

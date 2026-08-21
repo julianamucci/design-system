@@ -35,20 +35,20 @@ import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";`;
 
 /** A região, com o comentário que diz onde ela mora. */
-function regiao(props: string): string {
+function region(props: string): string {
   return `<!-- Uma vez, na raiz da aplicação -->
 <Toaster${props} />`;
 }
 
 /** Botão de disparo + região, na ordem em que a pessoa lê. */
-function quadro(script: string, rotulo: string, gatilho: string, props: string): string {
+function quadro(script: string, label: string, gatilho: string, props: string): string {
   return svelteSnippet(
     script,
     `<Button variant="outline" onclick={${gatilho}}>
-  ${rotulo}
+  ${label}
 </Button>
 
-${regiao(props)}`,
+${region(props)}`,
   );
 }
 
@@ -68,7 +68,7 @@ export function sonnerSource(_gerado?: string, ctx?: { args?: Partial<SonnerArgs
     duration = 4000,
   } = ctx?.args ?? {};
 
-  const chamada = type === 'default' ? 'toast' : `toast.${type}`;
+  const call = type === 'default' ? 'toast' : `toast.${type}`;
   const props = attrs(
     `position="${position}"`,
     richColors ? 'richColors' : '',
@@ -76,20 +76,20 @@ export function sonnerSource(_gerado?: string, ctx?: { args?: Partial<SonnerArgs
     duration !== 4000 ? `duration={${duration}}` : '',
   );
 
-  const opcoes = [
+  const options = [
     description ? `    description: "${description}",` : '',
     actionLabel ? `    action: { label: "${actionLabel}", onClick: desfazer },` : '',
   ].filter(Boolean);
 
   // Chamada com opções vira função nomeada: um objeto dentro de `onclick` em
   // linha única rola para fora do painel e deixa de ser copiável.
-  if (opcoes.length) {
+  if (options.length) {
     return quadro(
       `${IMPORTS}
 
 function avisar() {
-  ${chamada}("${title}", {
-${opcoes.join('\n')}
+  ${call}("${title}", {
+${options.join('\n')}
   });
 }`,
       'Disparar notificação',
@@ -98,40 +98,40 @@ ${opcoes.join('\n')}
     );
   }
 
-  return quadro(IMPORTS, 'Disparar notificação', `() => ${chamada}("${title}")`, props);
+  return quadro(IMPORTS, 'Disparar notificação', `() => ${call}("${title}")`, props);
 }
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-const REGIAO_PADRAO = ' position="top-right" richColors';
+const DEFAULT_REGION = ' position="top-right" richColors';
 
 /** Tipo Default: confirmação neutra — sem ícone e sem cor semântica. */
-export function sonnerPadraoSource(): string {
-  return quadro(IMPORTS, 'Copiar código', '() => toast("Código copiado.")', REGIAO_PADRAO);
+export function sonnerDefaultSource(): string {
+  return quadro(IMPORTS, 'Copiar código', '() => toast("Código copiado.")', DEFAULT_REGION);
 }
 
 /** Tipo Success: a ação pedida foi concluída. */
-export function sonnerSucessoSource(): string {
-  return quadro(IMPORTS, 'Salvar', '() => toast.success("Alterações salvas.")', REGIAO_PADRAO);
+export function sonnerSuccessSource(): string {
+  return quadro(IMPORTS, 'Salvar', '() => toast.success("Alterações salvas.")', DEFAULT_REGION);
 }
 
 /** Tipo Error: a operação falhou, e o texto diz o caminho de saída. */
-export function sonnerErroSource(): string {
+export function sonnerErrorSource(): string {
   return quadro(
     IMPORTS,
     'Salvar',
     '() => toast.error("Não foi possível salvar. Tente novamente.")',
-    REGIAO_PADRAO,
+    DEFAULT_REGION,
   );
 }
 
 /** Tipo Warning: aviso não crítico, que não exige decisão imediata. */
-export function sonnerAvisoSource(): string {
+export function sonnerWarningSource(): string {
   return quadro(
     IMPORTS,
     'Renovar sessão',
     '() => toast.warning("Sua sessão expira em 5 minutos.")',
-    REGIAO_PADRAO,
+    DEFAULT_REGION,
   );
 }
 
@@ -141,17 +141,17 @@ export function sonnerInfoSource(): string {
     IMPORTS,
     'Procurar atualização',
     '() => toast.info("Nova versão disponível.")',
-    REGIAO_PADRAO,
+    DEFAULT_REGION,
   );
 }
 
 /** Tipo Loading: operação em curso, sem prazo — quem a encerra é o fim dela. */
-export function sonnerCarregandoSource(): string {
+export function sonnerLoadingSource(): string {
   return quadro(
     IMPORTS,
     'Enviar arquivo',
     '() => toast.loading("Enviando arquivo...")',
-    REGIAO_PADRAO,
+    DEFAULT_REGION,
   );
 }
 
@@ -161,7 +161,7 @@ export function sonnerCarregandoSource(): string {
  * Estado AutoDismiss: o prazo é da REGIÃO, e não de cada chamada — é o que
  * mantém o mesmo tempo de leitura em toda a aplicação.
  */
-export function sonnerPrazoSource(): string {
+export function sonnerDurationSource(): string {
   return quadro(
     IMPORTS,
     'Salvar',
@@ -174,7 +174,7 @@ export function sonnerPrazoSource(): string {
  * Estado Stacked: três notificações na fila com a pilha aberta. Sem `expand`,
  * a mensagem ainda não lida fica encoberta pela seguinte.
  */
-export function sonnerEmpilhadoSource(): string {
+export function sonnerStackedSource(): string {
   return quadro(
     `${IMPORTS}
 
@@ -190,7 +190,7 @@ function avisarTudo() {
 }
 
 /** Estado PositionBottomCenter: a posição vale para a aplicação inteira. */
-export function sonnerPosicaoSource(): string {
+export function sonnerPositionSource(): string {
   return quadro(
     IMPORTS,
     'Salvar',
@@ -203,7 +203,7 @@ export function sonnerPosicaoSource(): string {
  * Estado WithoutToaster: sem a região montada, `toast()` não desenha nada — e
  * também não quebra. A fila existe independentemente de quem a desenha.
  */
-export function sonnerSemRegiaoSource(): string {
+export function sonnerNoRegionSource(): string {
   return svelteSnippet(
     `import { toast } from "svelte-sonner";
 import { Button } from "@/components/ui/button";`,
@@ -218,7 +218,7 @@ import { Button } from "@/components/ui/button";`,
  * Estado DarkTheme: a região acompanha o tema do documento sozinha; `theme`
  * está aqui porque é justamente o assunto desta story.
  */
-export function sonnerTemaEscuroSource(): string {
+export function sonnerDarkThemeSource(): string {
   return quadro(
     `${IMPORTS}
 
@@ -238,7 +238,7 @@ function avisarTudo() {
 // ─── Composições ──────────────────────────────────────────────────────────────
 
 /** Composição WithDescription: título mais uma frase completa de complemento. */
-export function sonnerComDescricaoSource(): string {
+export function sonnerWithDescriptionSource(): string {
   return quadro(
     `${IMPORTS}
 
@@ -250,7 +250,7 @@ function avisar() {
 }`,
     'Salvar preferências',
     'avisar',
-    REGIAO_PADRAO,
+    DEFAULT_REGION,
   );
 }
 
@@ -258,7 +258,7 @@ function avisar() {
  * Composição WithAction: a ação embutida é um `<button>` de verdade, no fluxo
  * de foco. Ela precisa existir em outro lugar também — a notificação some.
  */
-export function sonnerComAcaoSource(): string {
+export function sonnerWithActionSource(): string {
   return quadro(
     `${IMPORTS}
 
@@ -269,7 +269,7 @@ function excluir() {
 }`,
     'Excluir item',
     'excluir',
-    REGIAO_PADRAO,
+    DEFAULT_REGION,
   );
 }
 
@@ -277,7 +277,7 @@ function excluir() {
  * Composições PromiseResolved e PromiseRejected: uma notificação para a
  * operação inteira. O mesmo nó vira êxito ou falha, sem piscar duas caixas.
  */
-export function sonnerPromessaSource(): string {
+export function sonnerPromiseSource(): string {
   return quadro(
     `${IMPORTS}
 
@@ -290,7 +290,7 @@ function enviar() {
 }`,
     'Enviar arquivo',
     'enviar',
-    REGIAO_PADRAO,
+    DEFAULT_REGION,
   );
 }
 
@@ -298,7 +298,7 @@ function enviar() {
  * Composição Persistent: prazo infinito, reservado a falha crítica. Sempre com
  * botão de fechar — o que não sai sozinho e não pode ser fechado vira obstáculo.
  */
-export function sonnerPersistenteSource(): string {
+export function sonnerPersistentSource(): string {
   return quadro(
     `${IMPORTS}
 

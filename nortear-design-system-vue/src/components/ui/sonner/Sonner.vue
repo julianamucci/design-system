@@ -22,8 +22,8 @@ import 'vue-sonner/style.css'
  * Rótulos em português — o design system é escrito em pt-BR, e os defaults da
  * lib ("Notifications", "Close toast") chegariam à tela em inglês.
  */
-const ROTULO_REGIAO = 'Notificações'
-const ROTULO_FECHAR = 'Fechar notificação'
+const REGION_LABEL = 'Notificações'
+const CLOSE_LABEL = 'Fechar notificação'
 
 const props = defineProps<ToasterProps>()
 
@@ -32,11 +32,11 @@ const props = defineProps<ToasterProps>()
  * apagar o rótulo do botão de fechar.
  */
 const toastOptions = computed(() => ({
-  closeButtonAriaLabel: ROTULO_FECHAR,
+  closeButtonAriaLabel: CLOSE_LABEL,
   ...(props.toastOptions ?? {}),
 }))
 
-const containerAriaLabel = computed(() => props.containerAriaLabel ?? ROTULO_REGIAO)
+const containerAriaLabel = computed(() => props.containerAriaLabel ?? REGION_LABEL)
 </script>
 
 <template>

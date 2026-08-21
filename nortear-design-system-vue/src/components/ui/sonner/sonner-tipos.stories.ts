@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { toast } from 'vue-sonner';
 import { Toaster } from './index';
-import { esperarTorrada, limparTorradas, PERSISTENTE, TEXTOS, tipoDaTorrada } from './sonner.fixtures';
+import { waitForToast, clearToasts, PERSISTENT, TEXTS, toastType } from './sonner.fixtures';
 import {
-  sonnerAvisoSource,
-  sonnerCarregandoSource,
-  sonnerErroSource,
+  sonnerWarningSource,
+  sonnerLoadingSource,
+  sonnerErrorSource,
   sonnerInfoSource,
-  sonnerNeutraSource,
-  sonnerSucessoSource,
+  sonnerNeutralSource,
+  sonnerSuccessSource,
 } from './sonner.source';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -21,7 +21,7 @@ import {
 // infinito: é o que o Chromatic fotografa e o que o axe mede — sempre no mesmo
 // estado, nunca no meio de uma transição.
 
-const QUADRO = `
+const FRAME = `
   <div style="contain: layout; position: relative; min-height: 120px;">
     <Toaster position="top-right" rich-colors />
   </div>
@@ -45,14 +45,14 @@ const meta = {
       },
     },
     docs: {
-      source: { transform: sonnerNeutraSource },
+      source: { transform: sonnerNeutralSource },
       description: {
         component:
           'Tipos semânticos da notificação. O ícone e a cor acompanham o tipo; o texto descreve o estado por extenso, para não depender só da cor.',
       },
     },
   },
-  render: () => ({ components: { Toaster }, template: QUADRO }),
+  render: () => ({ components: { Toaster }, template: FRAME }),
 } satisfies Meta;
 
 export default meta;
@@ -71,27 +71,27 @@ export const Default: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('A notificação neutra não carrega ícone nenhum', async () => {
-      toast(TEXTOS.padrao, PERSISTENTE);
-      const torrada = await esperarTorrada({ tipo: 'default' });
+      toast(TEXTS.padrao, PERSISTENT);
+      const toastEl = await waitForToast({ type: 'default' });
 
       // Sem tipo semântico não há o que ilustrar: um ícone genérico só ocuparia
       // a coluna e sugeriria uma severidade que a mensagem não tem.
-      await expect(torrada.querySelector('[data-icon]')).toBeNull();
-      await expect(torrada.querySelector('[data-title]')).toHaveTextContent(TEXTOS.padrao);
+      await expect(toastEl.querySelector('[data-icon]')).toBeNull();
+      await expect(toastEl.querySelector('[data-title]')).toHaveTextContent(TEXTS.padrao);
       // Cada lib escreve a ausência de tipo à sua maneira: uma omite `data-type`,
       // outra escreve `default`. O FATO é o mesmo — não há tipo semântico — e é
       // ele que o helper normaliza, em vez de a story afirmar o detalhe de uma.
-      await expect(tipoDaTorrada(torrada)).toBe('default');
+      await expect(toastType(toastEl)).toBe('default');
     });
 
     await step('A pilha nasce no canto pedido', async () => {
-      const lista = document.querySelector<HTMLElement>('[data-sonner-toaster]')!;
-      await expect(lista).toHaveAttribute('data-y-position', 'top');
-      await expect(lista).toHaveAttribute('data-x-position', 'right');
-      await expect(lista.querySelectorAll('[data-sonner-toast]').length).toBe(1);
+      const list = document.querySelector<HTMLElement>('[data-sonner-toaster]')!;
+      await expect(list).toHaveAttribute('data-y-position', 'top');
+      await expect(list).toHaveAttribute('data-x-position', 'right');
+      await expect(list.querySelectorAll('[data-sonner-toast]').length).toBe(1);
     });
   },
 };
@@ -102,14 +102,14 @@ export const Success: Story = {
     docs: {
       // O tipo é o MÉTODO da fila: o snippet do meta chama a função neutra, que
       // é justamente a que não tem tipo.
-      source: { transform: sonnerSucessoSource },
+      source: { transform: sonnerSuccessSource },
       description: {
         story: 'Confirmação de ação concluída. Ícone e cor verdes vêm de `richColors`.',
       },
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('O tipo chega ao markup, junto do sinal de cores do tema', async () => {
       // functional.item1 — é `data-type` + `data-rich-colors` que o CSS lê; sem
@@ -118,15 +118,15 @@ export const Success: Story = {
       // descreve é exercido pela story AutoDismiss (functional.item2): aqui a
       // notificação é persistente de propósito, para o axe e o Chromatic medirem
       // sempre o mesmo estado.
-      toast.success(TEXTOS.sucesso, PERSISTENTE);
-      const torrada = await esperarTorrada({ tipo: 'success' });
-      await expect(torrada).toHaveAttribute('data-type', 'success');
-      await expect(torrada).toHaveAttribute('data-rich-colors', 'true');
-      await expect(torrada.querySelector('[data-icon] svg')).not.toBeNull();
+      toast.success(TEXTS.sucesso, PERSISTENT);
+      const toastEl = await waitForToast({ type: 'success' });
+      await expect(toastEl).toHaveAttribute('data-type', 'success');
+      await expect(toastEl).toHaveAttribute('data-rich-colors', 'true');
+      await expect(toastEl.querySelector('[data-icon] svg')).not.toBeNull();
 
-      const lista = document.querySelector<HTMLElement>('[data-sonner-toaster]')!;
-      await expect(lista).toHaveAttribute('data-y-position', 'top');
-      await expect(lista).toHaveAttribute('data-x-position', 'right');
+      const list = document.querySelector<HTMLElement>('[data-sonner-toaster]')!;
+      await expect(list).toHaveAttribute('data-y-position', 'top');
+      await expect(list).toHaveAttribute('data-x-position', 'right');
     });
 
     await step('A paleta semântica chega ao fundo e ao texto da notificação', async () => {
@@ -138,10 +138,10 @@ export const Success: Story = {
       // estar desligado aqui (PATCHES.md#sonner-rich-colors-contrast). O que
       // esta stack controla, e o que se afirma, é que `richColors` de fato
       // recolore a notificação em vez de cair no neutro.
-      const torrada = await esperarTorrada({ tipo: 'success' });
-      const neutro = getComputedStyle(document.body).backgroundColor;
-      await expect(getComputedStyle(torrada).backgroundColor).not.toBe(neutro);
-      await expect(getComputedStyle(torrada).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
+      const toastEl = await waitForToast({ type: 'success' });
+      const neutral = getComputedStyle(document.body).backgroundColor;
+      await expect(getComputedStyle(toastEl).backgroundColor).not.toBe(neutral);
+      await expect(getComputedStyle(toastEl).backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
     });
   },
 };
@@ -151,7 +151,7 @@ export const Error: Story = {
     covers: ['visual.item1'],
     docs: {
       // Idem: outro método, e o texto que diz a causa é parte da lição.
-      source: { transform: sonnerErroSource },
+      source: { transform: sonnerErrorSource },
       description: {
         story:
           'Falha de uma operação. O texto diz a causa e o caminho de saída — nunca culpa quem estava usando.',
@@ -159,15 +159,15 @@ export const Error: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('A falha se anuncia pelo texto, não só pela cor', async () => {
-      toast.error(TEXTOS.erro, PERSISTENTE);
-      const torrada = await esperarTorrada({ tipo: 'error' });
-      await expect(torrada).toHaveAttribute('data-type', 'error');
+      toast.error(TEXTS.erro, PERSISTENT);
+      const toastEl = await waitForToast({ type: 'error' });
+      await expect(toastEl).toHaveAttribute('data-type', 'error');
       // WCAG 1.4.1: quem não distingue vermelho de verde precisa da frase.
-      await expect(torrada).toHaveTextContent(TEXTOS.erro);
-      await expect(torrada.querySelector('[data-icon] svg')).not.toBeNull();
+      await expect(toastEl).toHaveTextContent(TEXTS.erro);
+      await expect(toastEl.querySelector('[data-icon] svg')).not.toBeNull();
     });
   },
 };
@@ -177,7 +177,7 @@ export const Warning: Story = {
     covers: ['visual.item1'],
     docs: {
       // Idem: o aviso tem método próprio e não empresta o da falha.
-      source: { transform: sonnerAvisoSource },
+      source: { transform: sonnerWarningSource },
       description: {
         story:
           'Aviso não crítico. Se a mensagem precisa continuar visível enquanto a pessoa age, o componente certo é o Alert.',
@@ -185,14 +185,14 @@ export const Warning: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('O aviso usa o tipo próprio, e não a falha', async () => {
-      toast.warning(TEXTOS.aviso, PERSISTENTE);
-      const torrada = await esperarTorrada({ tipo: 'warning' });
-      await expect(torrada).toHaveAttribute('data-type', 'warning');
-      await expect(torrada).not.toHaveAttribute('data-type', 'error');
-      await expect(torrada).toHaveTextContent(TEXTOS.aviso);
+      toast.warning(TEXTS.aviso, PERSISTENT);
+      const toastEl = await waitForToast({ type: 'warning' });
+      await expect(toastEl).toHaveAttribute('data-type', 'warning');
+      await expect(toastEl).not.toHaveAttribute('data-type', 'error');
+      await expect(toastEl).toHaveTextContent(TEXTS.aviso);
     });
   },
 };
@@ -209,14 +209,14 @@ export const Info: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('A informação tem tipo próprio e ícone próprio', async () => {
-      toast.info(TEXTOS.info, PERSISTENTE);
-      const torrada = await esperarTorrada({ tipo: 'info' });
-      await expect(torrada).toHaveAttribute('data-type', 'info');
-      await expect(torrada).toHaveTextContent(TEXTOS.info);
-      await expect(torrada.querySelector('[data-icon] svg')).not.toBeNull();
+      toast.info(TEXTS.info, PERSISTENT);
+      const toastEl = await waitForToast({ type: 'info' });
+      await expect(toastEl).toHaveAttribute('data-type', 'info');
+      await expect(toastEl).toHaveTextContent(TEXTS.info);
+      await expect(toastEl.querySelector('[data-icon] svg')).not.toBeNull();
     });
   },
 };
@@ -226,7 +226,7 @@ export const Loading: Story = {
     docs: {
       // A ausência de prazo é o assunto, e ela é a ausência de um argumento —
       // só um snippet do próprio tipo mostra isso.
-      source: { transform: sonnerCarregandoSource },
+      source: { transform: sonnerLoadingSource },
       description: {
         story:
           'Operação em curso. Não tem prazo: quem a encerra é o fim da operação — na prática, `toast.promise`.',
@@ -234,18 +234,18 @@ export const Loading: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('O carregamento gira e não tem prazo para sair', async () => {
       // Sem `duration` de propósito: o tipo `loading` nasce sem prazo. Fechá-lo
       // sozinho deixaria a pessoa sem saber se a operação terminou.
-      toast.loading(TEXTOS.carregando);
-      const torrada = await esperarTorrada({ tipo: 'loading' });
-      await expect(torrada).toHaveAttribute('data-type', 'loading');
+      toast.loading(TEXTS.loading);
+      const toastEl = await waitForToast({ type: 'loading' });
+      await expect(toastEl).toHaveAttribute('data-type', 'loading');
 
-      const icone = torrada.querySelector<SVGSVGElement>('[data-icon] svg')!;
-      await expect(icone).toHaveClass('nds-toast-icon-spin');
-      await expect(torrada).toHaveTextContent(TEXTOS.carregando);
+      const icon = toastEl.querySelector<SVGSVGElement>('[data-icon] svg')!;
+      await expect(icon).toHaveClass('nds-toast-icon-spin');
+      await expect(toastEl).toHaveTextContent(TEXTS.loading);
     });
   },
 };

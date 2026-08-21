@@ -3,12 +3,12 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, spyOn, userEvent, waitFor } from 'storybook/test';
 import { NdsToaster, toast } from './sonner';
 import {
-  esperarSemTorradas,
-  esperarTorrada,
-  limparTorradas,
-  PERSISTENTE,
-  TEXTOS,
-  torradasNaTela,
+  waitForNoToasts,
+  waitForToast,
+  clearToasts,
+  PERSISTENT,
+  TEXTS,
+  toastsOnScreen,
 } from './sonner.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -41,7 +41,7 @@ export default meta;
 type Story = StoryObj;
 
 /** Espera fixa — usada só onde a prova é a AUSÊNCIA de mudança no intervalo. */
-function esperar(ms: number): Promise<void> {
+function sleep(ms: number): Promise<void> {
   return new Promise<void>((resolve) => setTimeout(resolve, ms));
 }
 
@@ -61,7 +61,7 @@ export const AutoDismiss: Story = {
     template: `<div ndsToaster position="top-right" [richColors]="true" [duration]="1200"></div>`,
   }),
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('A falha aparece com o tipo, o ícone e a cor do tema', async () => {
       // functional.item2 — sem `duration` na chamada: quem manda é o prazo do
@@ -69,20 +69,20 @@ export const AutoDismiss: Story = {
       //
       // 1200ms, e não 400: a torrada entra e sai com transição de 200ms cada
       // (`--duration-base`), então com 400 a janela em que ela fica TOTALMENTE
-      // opaca era de ~200ms — e `esperarTorrada` rejeita qualquer opacidade
+      // opaca era de ~200ms — e `waitForToast` rejeita qualquer opacidade
       // abaixo de 0,99, de propósito, para não asserir sobre elemento em fade.
       // Sob carga de suíte cheia, um polling de 30ms erra uma janela dessas: a
       // story reprovava sozinha, sem regressão nenhuma no componente.
-      toast.error(TEXTOS.erro);
-      const torrada = await esperarTorrada({ tipo: 'error' });
-      await expect(torrada).toHaveAttribute('data-type', 'error');
-      await expect(torrada).toHaveAttribute('data-rich-colors', 'true');
-      await expect(torrada.querySelector('.nds-toast-icon > svg')).not.toBeNull();
+      toast.error(TEXTS.erro);
+      const toastEl = await waitForToast({ type: 'error' });
+      await expect(toastEl).toHaveAttribute('data-type', 'error');
+      await expect(toastEl).toHaveAttribute('data-rich-colors', 'true');
+      await expect(toastEl.querySelector('.nds-toast-icon > svg')).not.toBeNull();
     });
 
     await step('E sai sozinha quando o prazo vence, sem ninguém fechar', async () => {
-      await esperarSemTorradas();
-      await expect(torradasNaTela().length).toBe(0);
+      await waitForNoToasts();
+      await expect(toastsOnScreen().length).toBe(0);
     });
   },
 };
@@ -100,24 +100,24 @@ export const PauseOnHover: Story = {
     template: `<div ndsToaster position="top-right" [richColors]="true" [duration]="1200"></div>`,
   }),
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('Com o ponteiro dentro, a notificação sobrevive ao próprio prazo', async () => {
-      toast.info(TEXTOS.info);
-      const torrada = await esperarTorrada({ tipo: 'info' });
+      toast.info(TEXTS.info);
+      const toastEl = await waitForToast({ type: 'info' });
 
-      await userEvent.hover(torrada);
+      await userEvent.hover(toastEl);
       // Três vezes o prazo: se o cronômetro não tivesse congelado, ela já teria
       // saído — e a asserção abaixo falharia por ausência, não por atraso.
-      await esperar(1200);
-      await expect(document.body.contains(torrada)).toBe(true);
-      await expect(torrada).toHaveAttribute('data-visible', 'true');
+      await sleep(1200);
+      await expect(document.body.contains(toastEl)).toBe(true);
+      await expect(toastEl).toHaveAttribute('data-visible', 'true');
     });
 
     await step('Ao sair o ponteiro, o restante do prazo volta a correr', async () => {
       await userEvent.unhover(document.querySelector<HTMLElement>('.nds-toast')!);
-      await esperarSemTorradas();
-      await expect(torradasNaTela().length).toBe(0);
+      await waitForNoToasts();
+      await expect(toastsOnScreen().length).toBe(0);
     });
   },
 };
@@ -135,18 +135,18 @@ export const Stacked: Story = {
     template: `<div ndsToaster position="top-right" [richColors]="true"></div>`,
   }),
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('As três ficam na tela ao mesmo tempo', async () => {
-      toast.success(TEXTOS.sucesso, PERSISTENTE);
-      toast.warning(TEXTOS.aviso, PERSISTENTE);
-      toast.info(TEXTOS.info, PERSISTENTE);
+      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.info(TEXTS.info, PERSISTENT);
 
       await waitFor(() => {
-        if (torradasNaTela().length !== 3) throw new Error('a pilha ainda não tem três itens');
+        if (toastsOnScreen().length !== 3) throw new Error('a pilha ainda não tem três itens');
       });
-      await esperarTorrada({ tipo: 'info' });
-      await expect(torradasNaTela().map((el) => el.getAttribute('data-type'))).toEqual([
+      await waitForToast({ type: 'info' });
+      await expect(toastsOnScreen().map((el) => el.getAttribute('data-type'))).toEqual([
         'success', 'warning', 'info',
       ]);
     });
@@ -155,10 +155,10 @@ export const Stacked: Story = {
       // Medida geométrica, e não classe presente: `position: absolute` numa
       // regressão de CSS empilharia as três no mesmo ponto sem tirar classe
       // nenhuma do markup, e a story passaria contando elementos.
-      const caixas = torradasNaTela().map((el) => el.getBoundingClientRect());
-      await expect(caixas[1].top).toBeGreaterThanOrEqual(caixas[0].bottom);
-      await expect(caixas[2].top).toBeGreaterThanOrEqual(caixas[1].bottom);
-      await expect(caixas.every((c) => c.height > 0)).toBe(true);
+      const boxes = toastsOnScreen().map((el) => el.getBoundingClientRect());
+      await expect(boxes[1].top).toBeGreaterThanOrEqual(boxes[0].bottom);
+      await expect(boxes[2].top).toBeGreaterThanOrEqual(boxes[1].bottom);
+      await expect(boxes.every((c) => c.height > 0)).toBe(true);
     });
   },
 };
@@ -177,24 +177,24 @@ export const PositionBottomCenter: Story = {
     template: `<div ndsToaster position="bottom-center" [richColors]="true"></div>`,
   }),
   play: async ({ canvasElement, step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('A região declara o canto escolhido', async () => {
-      toast.success(TEXTOS.sucesso, PERSISTENTE);
-      await esperarTorrada({ tipo: 'success' });
+      toast.success(TEXTS.sucesso, PERSISTENT);
+      await waitForToast({ type: 'success' });
 
-      const regiao = canvasElement.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
-      await expect(regiao).toHaveAttribute('data-position', 'bottom-center');
-      await expect(getComputedStyle(regiao).position).toBe('fixed');
+      const region = canvasElement.querySelector<HTMLElement>('[data-slot="sonner-toaster"]')!;
+      await expect(region).toHaveAttribute('data-position', 'bottom-center');
+      await expect(getComputedStyle(region).position).toBe('fixed');
     });
 
     await step('E a notificação chega mesmo no rodapé, centrada', async () => {
       // A posição é atributo + CSS: afirmar só o atributo passaria com a regra
       // de posicionamento apagada.
-      const caixa = document.querySelector<HTMLElement>('.nds-toast')!.getBoundingClientRect();
-      const meioDaTela = window.innerWidth / 2;
-      await expect(Math.abs((caixa.left + caixa.right) / 2 - meioDaTela)).toBeLessThan(4);
-      await expect(window.innerHeight - caixa.bottom).toBeLessThan(64);
+      const box = document.querySelector<HTMLElement>('.nds-toast')!.getBoundingClientRect();
+      const screenCenter = window.innerWidth / 2;
+      await expect(Math.abs((box.left + box.right) / 2 - screenCenter)).toBeLessThan(4);
+      await expect(window.innerHeight - box.bottom).toBeLessThan(64);
     });
   },
 };
@@ -217,24 +217,24 @@ export const WithoutToaster: Story = {
     `,
   }),
   play: async ({ step }) => {
-    await limparTorradas();
-    const espiaoDeErro = spyOn(console, 'error');
+    await clearToasts();
+    const errorSpy = spyOn(console, 'error');
 
     await step('Nada é desenhado e nada estoura no console', async () => {
       // functional.item7 — a garantia é dupla: nenhum nó e nenhum erro. Só a
       // primeira metade passaria com uma exceção engolida em algum lugar.
-      toast.success(TEXTOS.sucesso, PERSISTENTE);
-      await esperar(120);
+      toast.success(TEXTS.sucesso, PERSISTENT);
+      await sleep(120);
 
-      await expect(torradasNaTela().length).toBe(0);
+      await expect(toastsOnScreen().length).toBe(0);
       await expect(document.querySelector('[data-slot="sonner-toaster"]')).toBeNull();
-      await expect(espiaoDeErro).not.toHaveBeenCalled();
+      await expect(errorSpy).not.toHaveBeenCalled();
     });
 
-    espiaoDeErro.mockRestore();
+    errorSpy.mockRestore();
     // A notificação entrou na fila sem nó no DOM: sem esta limpeza, a próxima
     // story montaria o Toaster a tempo de desenhá-la.
-    await limparTorradas();
+    await clearToasts();
   },
 };
 
@@ -253,37 +253,37 @@ export const DarkTheme: Story = {
     template: `<div ndsToaster position="top-right" [richColors]="true"></div>`,
   }),
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('Os cinco tipos são desenhados com os tokens do tema em vigor', async () => {
       // visual.item4 fala em "todos os tipos com richColors": com uma só na
       // tela, a foto do Chromatic cobriria um quinto do que o item promete.
-      toast(TEXTOS.padrao, PERSISTENTE);
-      toast.success(TEXTOS.sucesso, PERSISTENTE);
-      toast.error(TEXTOS.erro, PERSISTENTE);
-      toast.warning(TEXTOS.aviso, PERSISTENTE);
-      toast.info(TEXTOS.info, PERSISTENTE);
+      toast(TEXTS.padrao, PERSISTENT);
+      toast.success(TEXTS.sucesso, PERSISTENT);
+      toast.error(TEXTS.erro, PERSISTENT);
+      toast.warning(TEXTS.aviso, PERSISTENT);
+      toast.info(TEXTS.info, PERSISTENT);
 
-      await esperarTorrada({ tipo: 'info' });
-      await expect(torradasNaTela().length).toBe(5);
-      await expect(torradasNaTela().every((el) => el.dataset.richColors === 'true')).toBe(true);
+      await waitForToast({ type: 'info' });
+      await expect(toastsOnScreen().length).toBe(5);
+      await expect(toastsOnScreen().every((el) => el.dataset.richColors === 'true')).toBe(true);
     });
 
     await step('Trocar o tema recolore os mesmos nós, sem remontar', async () => {
-      const torrada = document.querySelector<HTMLElement>('.nds-toast[data-type="success"]')!;
+      const toastEl = document.querySelector<HTMLElement>('.nds-toast[data-type="success"]')!;
       const html = document.documentElement;
-      const eraEscuro = html.classList.contains('dark');
+      const wasDark = html.classList.contains('dark');
 
       html.classList.remove('dark');
-      const claro = getComputedStyle(torrada).backgroundColor;
+      const light = getComputedStyle(toastEl).backgroundColor;
       html.classList.add('dark');
-      const escuro = getComputedStyle(torrada).backgroundColor;
+      const dark = getComputedStyle(toastEl).backgroundColor;
 
-      await expect(escuro).not.toBe(claro);
+      await expect(dark).not.toBe(light);
       // Mesmo nó: nada foi recriado, só a cascata resolveu outro token.
-      await expect(document.querySelector('.nds-toast[data-type="success"]')).toBe(torrada);
+      await expect(document.querySelector('.nds-toast[data-type="success"]')).toBe(toastEl);
 
-      if (!eraEscuro) html.classList.remove('dark');
+      if (!wasDark) html.classList.remove('dark');
     });
   },
 };

@@ -1,7 +1,7 @@
 import { applySeo } from '@/lib/use-seo';
 import { track } from '@/lib/analytics';
 import { getLocale, onLocaleChange, createTranslation } from '@/lib/i18n';
-import { toast, createSonnerToaster, ROTULO_FECHAR } from '@/components/ui/sonner';
+import { toast, createSonnerToaster, CLOSE_LABEL } from '@/components/ui/sonner';
 import { createButton } from '@/components/ui/button';
 import uiTranslations from '@/i18n/ui.json';
 import sonnerTranslations from '@shared/content/sonner/translations.json';
@@ -139,7 +139,7 @@ function buildLocalToast(type: string, message: string, opts: LocalToastOpts = {
   const closeBtn = document.createElement('button');
   closeBtn.type = 'button';
   closeBtn.setAttribute('data-close-button', '');
-  closeBtn.setAttribute('aria-label', ROTULO_FECHAR);
+  closeBtn.setAttribute('aria-label', CLOSE_LABEL);
   closeBtn.className = 'nds-toast-close';
   closeBtn.innerHTML = DOMPurify.sanitize('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>');
   closeBtn.addEventListener('click', () => toastEl.remove());

@@ -15,5 +15,5 @@ export {
   toast,
   createSonnerToaster,
   injectToastStyles,
-  ROTULO_FECHAR,
+  CLOSE_LABEL,
 } from './toast-utils';

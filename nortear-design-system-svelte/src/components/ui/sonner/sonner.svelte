@@ -6,23 +6,23 @@
 	import OctagonXIcon from '@lucide/svelte/icons/octagon-x';
 	import InfoIcon from '@lucide/svelte/icons/info';
 	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
-	import { ROTULO_FECHAR, ROTULO_REGIAO } from './rotulos';
+	import { CLOSE_LABEL, REGION_LABEL } from './rotulos';
 
-	let { containerAriaLabel, toastOptions, ...restProps }: SonnerProps = $props();
+	let { containerAriaLabel, toastOptions: toastOptionsProp, ...restProps }: SonnerProps = $props();
 
 	// `toastOptions` é MESCLADO, e não substituído: passar só `classes` não pode
 	// apagar o rótulo do botão de fechar.
-	const opcoesDaTorrada = $derived({
-		closeButtonAriaLabel: ROTULO_FECHAR,
-		...(toastOptions ?? {}),
+	const toastOptions = $derived({
+		closeButtonAriaLabel: CLOSE_LABEL,
+		...(toastOptionsProp ?? {}),
 	});
 </script>
 
 <Sonner
 	theme={mode.current}
 	style="--normal-bg: var(--color-popover); --normal-text: var(--color-popover-foreground); --normal-border: var(--color-border);"
-	containerAriaLabel={containerAriaLabel ?? ROTULO_REGIAO}
-	toastOptions={opcoesDaTorrada}
+	containerAriaLabel={containerAriaLabel ?? REGION_LABEL}
+	{toastOptions}
 	{...restProps}
 >
 	{#snippet loadingIcon()}

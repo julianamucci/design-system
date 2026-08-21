@@ -6,5 +6,5 @@
  * valor para afirmar sobre ele: importar de um componente Svelte arrastaria o
  * runtime do componente para dentro do arquivo de teste.
  */
-export const ROTULO_REGIAO = 'Notificações';
-export const ROTULO_FECHAR = 'Fechar notificação';
+export const REGION_LABEL = 'Notificações';
+export const CLOSE_LABEL = 'Fechar notificação';

@@ -56,10 +56,10 @@ export interface ToastPromiseMessages {
  *
  * `visivel` é um signal por item, e não um campo comum: a entrada nasce
  * invisível e só vira visível no quadro seguinte, que é o que faz a transição
- * de opacidade acontecer de verdade (ver `criar`). Um campo comum não avisaria
+ * de opacidade acontecer de verdade (ver `create`). Um campo comum não avisaria
  * o template da virada.
  */
-interface Torrada {
+interface Toast {
   id: number;
   type: ToastType;
   title: string;
@@ -79,57 +79,57 @@ interface Torrada {
 // a entrada entra na fila e ninguém a renderiza.
 
 /** Padrão do projeto, e o mesmo que o conteúdo compartilhado documenta. */
-const DURACAO_PADRAO = 4000;
+const DEFAULT_DURATION = 4000;
 
 /** Espelha a transição de saída de `.nds-toast` — remover antes cortaria o fade. */
-const DURACAO_SAIDA = 200;
+const EXIT_DURATION = 200;
 
-const fila = signal<Torrada[]>([]);
+const queue = signal<Toast[]>([]);
 
-let proximoId = 0;
+let nextId = 0;
 
 /**
  * Cronômetro de cada torrada, guardado fora do signal porque `restante` muda a
  * cada pausa e não tem nada a dizer ao template.
  */
-interface Cronometro {
+interface Timer {
   restante: number;
   retomadoEm: number;
   handle?: ReturnType<typeof setTimeout>;
 }
 
-const cronometros = new Map<number, Cronometro>();
-const saidas = new Map<number, ReturnType<typeof setTimeout>>();
+const timers = new Map<number, Timer>();
+const exits = new Map<number, ReturnType<typeof setTimeout>>();
 
 /** Duração default em vigor — o Toaster montado manda, via input `duration`. */
-let duracaoPadraoAtual = DURACAO_PADRAO;
+let currentDefaultDuration = DEFAULT_DURATION;
 
 /** Ponteiro/foco dentro do Toaster congela todos os cronômetros (WCAG 2.2.1). */
-let pausado = false;
+let paused = false;
 
-function iniciarCronometro(id: number): void {
-  const c = cronometros.get(id);
-  if (!c || pausado || !Number.isFinite(c.restante)) return;
+function startTimer(id: number): void {
+  const c = timers.get(id);
+  if (!c || paused || !Number.isFinite(c.restante)) return;
   c.retomadoEm = performance.now();
-  c.handle = setTimeout(() => dispensar(id), c.restante);
+  c.handle = setTimeout(() => dismiss(id), c.restante);
 }
 
-function pararCronometro(id: number): void {
-  const c = cronometros.get(id);
+function stopTimer(id: number): void {
+  const c = timers.get(id);
   if (!c?.handle) return;
   clearTimeout(c.handle);
   c.handle = undefined;
   c.restante -= performance.now() - c.retomadoEm;
 }
 
-function agendar(id: number, duracao: number): void {
-  pararCronometro(id);
-  if (!Number.isFinite(duracao)) {
-    cronometros.delete(id);
+function schedule(id: number, duration: number): void {
+  stopTimer(id);
+  if (!Number.isFinite(duration)) {
+    timers.delete(id);
     return;
   }
-  cronometros.set(id, { restante: duracao, retomadoEm: performance.now() });
-  iniciarCronometro(id);
+  timers.set(id, { restante: duration, retomadoEm: performance.now() });
+  startTimer(id);
 }
 
 /**
@@ -140,24 +140,24 @@ function agendar(id: number, duracao: number): void {
  * perde. Pausar no hover e no foco é o que dá tempo suficiente sem tirar o
  * fechamento automático de quem só passou o olho.
  */
-function pausarCronometros(): void {
-  if (pausado) return;
-  pausado = true;
-  for (const id of cronometros.keys()) pararCronometro(id);
+function pauseTimers(): void {
+  if (paused) return;
+  paused = true;
+  for (const id of timers.keys()) stopTimer(id);
 }
 
-function retomarCronometros(): void {
-  if (!pausado) return;
-  pausado = false;
-  for (const id of cronometros.keys()) iniciarCronometro(id);
+function resumeTimers(): void {
+  if (!paused) return;
+  paused = false;
+  for (const id of timers.keys()) startTimer(id);
 }
 
-function criar(type: ToastType, title: string, opts: ToastOptions = {}): number {
-  const id = ++proximoId;
+function create(type: ToastType, title: string, opts: ToastOptions = {}): number {
+  const id = ++nextId;
   // `loading` não tem prazo: quem o encerra é a promise que o originou.
-  const duracao = opts.duration ?? (type === 'loading' ? Number.POSITIVE_INFINITY : duracaoPadraoAtual);
+  const duration = opts.duration ?? (type === 'loading' ? Number.POSITIVE_INFINITY : currentDefaultDuration);
 
-  const entrada: Torrada = {
+  const enter: Toast = {
     id,
     type,
     title,
@@ -167,51 +167,51 @@ function criar(type: ToastType, title: string, opts: ToastOptions = {}): number 
     visivel: signal(false),
   };
 
-  fila.update((atual) => [...atual, entrada]);
+  queue.update((atual) => [...atual, enter]);
 
   // Dois quadros: o elemento precisa existir com `data-visible="false"` para
   // que a virada para `true` seja uma TRANSIÇÃO, e não o estado inicial. Sem
   // isso a torrada aparece seca — e, pior, os testes que medem opacidade não
   // teriam como distinguir "ainda entrando" de "assentada".
-  requestAnimationFrame(() => entrada.visivel.set(true));
+  requestAnimationFrame(() => enter.visivel.set(true));
 
-  agendar(id, duracao);
+  schedule(id, duration);
   return id;
 }
 
 /** Troca tipo e texto de uma torrada viva, mantendo o mesmo nó no DOM. */
-function atualizar(id: number, patch: Partial<Torrada>, duracao: number): void {
-  const alvo = fila().find((t) => t.id === id);
+function update(id: number, patch: Partial<Toast>, duration: number): void {
+  const alvo = queue().find((t) => t.id === id);
   if (!alvo) return;
-  fila.update((atual) => atual.map((t) => (t.id === id ? { ...t, ...patch } : t)));
-  agendar(id, duracao);
+  queue.update((atual) => atual.map((t) => (t.id === id ? { ...t, ...patch } : t)));
+  schedule(id, duration);
 }
 
-function dispensar(id: number): void {
-  const alvo = fila().find((t) => t.id === id);
-  if (!alvo || saidas.has(id)) return;
+function dismiss(id: number): void {
+  const alvo = queue().find((t) => t.id === id);
+  if (!alvo || exits.has(id)) return;
 
-  pararCronometro(id);
-  cronometros.delete(id);
+  stopTimer(id);
+  timers.delete(id);
   alvo.visivel.set(false);
 
-  saidas.set(
+  exits.set(
     id,
     setTimeout(() => {
-      saidas.delete(id);
-      fila.update((atual) => atual.filter((t) => t.id !== id));
-    }, DURACAO_SAIDA),
+      exits.delete(id);
+      queue.update((atual) => atual.filter((t) => t.id !== id));
+    }, EXIT_DURATION),
   );
 }
 
 /** Esvazia a fila na hora, sem fade — usado quando o Toaster é destruído. */
-function esvaziar(): void {
-  for (const id of cronometros.keys()) pararCronometro(id);
-  cronometros.clear();
-  for (const handle of saidas.values()) clearTimeout(handle);
-  saidas.clear();
-  pausado = false;
-  fila.set([]);
+function drain(): void {
+  for (const id of timers.keys()) stopTimer(id);
+  timers.clear();
+  for (const handle of exits.values()) clearTimeout(handle);
+  exits.clear();
+  paused = false;
+  queue.set([]);
 }
 
 // ─── API pública ──────────────────────────────────────────────────────────────
@@ -224,21 +224,21 @@ function esvaziar(): void {
  * estoura, que é o comportamento documentado.
  */
 export const toast = Object.assign(
-  (message: string, opts?: ToastOptions) => criar('default', message, opts),
+  (message: string, opts?: ToastOptions) => create('default', message, opts),
   {
-    success: (message: string, opts?: ToastOptions) => criar('success', message, opts),
-    error: (message: string, opts?: ToastOptions) => criar('error', message, opts),
-    warning: (message: string, opts?: ToastOptions) => criar('warning', message, opts),
-    info: (message: string, opts?: ToastOptions) => criar('info', message, opts),
-    loading: (message: string, opts?: ToastOptions) => criar('loading', message, opts),
+    success: (message: string, opts?: ToastOptions) => create('success', message, opts),
+    error: (message: string, opts?: ToastOptions) => create('error', message, opts),
+    warning: (message: string, opts?: ToastOptions) => create('warning', message, opts),
+    info: (message: string, opts?: ToastOptions) => create('info', message, opts),
+    loading: (message: string, opts?: ToastOptions) => create('loading', message, opts),
 
     /** Sem `id`, dispensa todas — cada uma com o próprio fade. */
     dismiss: (id?: number) => {
       if (id !== undefined) {
-        dispensar(id);
+        dismiss(id);
         return;
       }
-      for (const t of fila()) dispensar(t.id);
+      for (const t of queue()) dismiss(t.id);
     },
 
     /**
@@ -256,11 +256,11 @@ export const toast = Object.assign(
       msgs: ToastPromiseMessages,
       opts?: ToastOptions,
     ): void => {
-      const id = criar('loading', msgs.loading, { ...opts, duration: Number.POSITIVE_INFINITY });
-      const prazo = opts?.duration ?? duracaoPadraoAtual;
+      const id = create('loading', msgs.loading, { ...opts, duration: Number.POSITIVE_INFINITY });
+      const duration = opts?.duration ?? currentDefaultDuration;
       void promessa.then(
-        () => atualizar(id, { type: 'success', title: msgs.success }, prazo),
-        () => atualizar(id, { type: 'error', title: msgs.error }, prazo),
+        () => update(id, { type: 'success', title: msgs.success }, duration),
+        () => update(id, { type: 'error', title: msgs.error }, duration),
       );
     },
   },
@@ -322,9 +322,9 @@ export class NdsToastIcon {
       const svg = this.hostRef.nativeElement;
       svg.replaceChildren();
       for (const [tag, attrs] of TOAST_ICON_MAP[this.kind()]) {
-        const filho = document.createElementNS('http://www.w3.org/2000/svg', tag);
-        for (const [k, v] of Object.entries(attrs)) filho.setAttribute(k, v);
-        svg.appendChild(filho);
+        const child = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (const [k, v] of Object.entries(attrs)) child.setAttribute(k, v);
+        svg.appendChild(child);
       }
     });
   }
@@ -377,7 +377,7 @@ export class NdsToastIcon {
     '(keydown.escape)': 'aoEscape($event)',
   },
   template: `
-    @for (t of torradas(); track t.id) {
+    @for (t of toastEls(); track t.id) {
       <div
         class="nds-toast"
         data-sonner-toast
@@ -400,9 +400,9 @@ export class NdsToastIcon {
             <p class="nds-toast-description">{{ t.description }}</p>
           }
 
-          @if (t.action; as acao) {
-            <button type="button" class="nds-toast-action" (click)="acionar(t.id, acao)">
-              {{ acao.label }}
+          @if (t.action; as action) {
+            <button type="button" class="nds-toast-action" (click)="acionar(t.id, action)">
+              {{ action.label }}
             </button>
           }
         </div>
@@ -413,7 +413,7 @@ export class NdsToastIcon {
             class="nds-toast-close"
             data-close-button
             [attr.aria-label]="closeLabel()"
-            (click)="fechar(t.id)"
+            (click)="close(t.id)"
           >
             <svg ndsToastIcon kind="close"></svg>
           </button>
@@ -433,7 +433,7 @@ export class NdsToaster implements OnDestroy {
   readonly expand = input(false, { transform: booleanAttribute });
 
   /** Prazo default das torradas disparadas enquanto este Toaster está montado. */
-  readonly duration = input(DURACAO_PADRAO, { transform: numberAttribute });
+  readonly duration = input(DEFAULT_DURATION, { transform: numberAttribute });
 
   /** Botão de fechar em todas as torradas. Cada `toast()` pode sobrepor. */
   readonly closeButton = input(false, { transform: booleanAttribute });
@@ -444,7 +444,7 @@ export class NdsToaster implements OnDestroy {
   /** Rótulo do botão de fechar — só ícone, então o nome vem daqui. */
   readonly closeLabel = input('Fechar notificação');
 
-  protected readonly torradas = fila.asReadonly();
+  protected readonly toastEls = queue.asReadonly();
 
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -454,27 +454,27 @@ export class NdsToaster implements OnDestroy {
     // (armadilha 9 do CLAUDE.md). O efeito ainda ganha o caso reativo — mudar o
     // control no painel passa a valer para a próxima torrada.
     effect(() => {
-      duracaoPadraoAtual = this.duration();
+      currentDefaultDuration = this.duration();
     });
   }
 
   protected pausar(): void {
-    pausarCronometros();
+    pauseTimers();
   }
 
   protected retomar(): void {
-    retomarCronometros();
+    resumeTimers();
   }
 
-  protected acionar(id: number, acao: ToastAction): void {
-    acao.onClick();
+  protected acionar(id: number, action: ToastAction): void {
+    action.onClick();
     // A torrada existia para oferecer essa ação; cumprida, ela sai na hora em
     // vez de esperar o prazo.
-    dispensar(id);
+    dismiss(id);
   }
 
-  protected fechar(id: number): void {
-    dispensar(id);
+  protected close(id: number): void {
+    dismiss(id);
   }
 
   /**
@@ -492,15 +492,15 @@ export class NdsToaster implements OnDestroy {
   protected aoEscape(evento: Event): void {
     const alvo = (evento.target as HTMLElement | null)?.closest<HTMLElement>('.nds-toast');
     if (!alvo) return;
-    const indice = Array.prototype.indexOf.call(this.hostRef.nativeElement.children, alvo);
-    const entrada = this.torradas()[indice];
-    if (entrada) dispensar(entrada.id);
+    const index = Array.prototype.indexOf.call(this.hostRef.nativeElement.children, alvo);
+    const enter = this.toastEls()[index];
+    if (enter) dismiss(enter.id);
   }
 
   ngOnDestroy(): void {
     // Sem isto a fila sobrevive à troca de story/rota e o próximo Toaster nasce
     // desenhando notificação de outra tela — com o cronômetro dela já vencido.
-    esvaziar();
-    duracaoPadraoAtual = DURACAO_PADRAO;
+    drain();
+    currentDefaultDuration = DEFAULT_DURATION;
   }
 }

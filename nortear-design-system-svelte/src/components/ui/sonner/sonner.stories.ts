@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import SonnerPlaygroundStory from './SonnerPlaygroundStory.svelte';
-import { ROTULO_REGIAO } from './rotulos';
-import { esperarTorrada, limparTorradas, TEXTOS } from './sonner.fixtures';
+import { REGION_LABEL } from './rotulos';
+import { waitForToast, clearToasts, TEXTS } from './sonner.fixtures';
 import SonnerDocs from '@/components/docs/SonnerDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { sonnerSource } from './sonner.source';
@@ -58,7 +58,7 @@ const meta: Meta = {
   },
   args: {
     type: 'success',
-    title: TEXTOS.sucesso,
+    title: TEXTS.sucesso,
     description: '',
     actionLabel: '',
     position: 'top-right',
@@ -80,15 +80,15 @@ export const Playground: Story = {
 
     // Cada play estabelece a própria precondição: o painel Interactions
     // reexecuta a função no mesmo DOM, sem remontar.
-    await limparTorradas();
+    await clearToasts();
 
     await step('O disparo desenha a notificação na região do Toaster', async () => {
       await userEvent.click(canvas.getByRole('button', { name: 'Disparar notificação' }));
-      const torrada = await esperarTorrada({ tipo: 'success', texto: TEXTOS.sucesso });
-      const lista = document.querySelector<HTMLElement>('[data-sonner-toaster]')!;
-      await expect(lista.contains(torrada)).toBe(true);
-      await expect(lista).toHaveAttribute('data-y-position', 'top');
-      await expect(lista).toHaveAttribute('data-x-position', 'right');
+      const toastEl = await waitForToast({ type: 'success', text: TEXTS.sucesso });
+      const list = document.querySelector<HTMLElement>('[data-sonner-toaster]')!;
+      await expect(list.contains(toastEl)).toBe(true);
+      await expect(list).toHaveAttribute('data-y-position', 'top');
+      await expect(list).toHaveAttribute('data-x-position', 'right');
     });
 
     await step('A notificação é mensagem de estado, anunciada sem interromper', async () => {
@@ -96,32 +96,32 @@ export const Playground: Story = {
       // além da região viva em volta da pilha. `polite` é a escolha, não o
       // default: `assertive` cortaria a leitura em curso para avisar que algo
       // deu certo, o que é hostil justamente com quem depende do leitor de tela.
-      const torrada = await esperarTorrada({ tipo: 'success' });
-      await expect(torrada).toHaveAttribute('aria-live', 'polite');
-      await expect(torrada.getAttribute('aria-live')).not.toBe('assertive');
+      const toastEl = await waitForToast({ type: 'success' });
+      await expect(toastEl).toHaveAttribute('aria-live', 'polite');
+      await expect(toastEl.getAttribute('aria-live')).not.toBe('assertive');
     });
 
     await step('A região tem nome acessível e é alcançável a qualquer momento', async () => {
       // Um marco de página nomeado: o leitor de tela chega até as notificações
       // pela lista de regiões, e não só no instante em que elas são anunciadas.
       // A lib acrescenta o atalho ao nome, então a comparação é por prefixo.
-      const torrada = await esperarTorrada({ tipo: 'success' });
-      const regiaoViva = torrada.parentElement!.closest<HTMLElement>('[aria-label]')!;
-      await expect(regiaoViva.getAttribute('aria-label')).toContain(ROTULO_REGIAO);
+      const toastEl = await waitForToast({ type: 'success' });
+      const liveRegion = toastEl.parentElement!.closest<HTMLElement>('[aria-label]')!;
+      await expect(liveRegion.getAttribute('aria-label')).toContain(REGION_LABEL);
     });
 
     await step('O ícone é decorativo — o texto já descreve o estado', async () => {
       // accessibility.item3 — o tipo e o título dizem tudo; anunciar o ícone
       // faria o leitor ler "imagem" antes de cada notificação.
-      const torrada = await esperarTorrada({ tipo: 'success' });
-      const icone = torrada.querySelector<SVGSVGElement>('[data-icon] svg')!;
-      await expect(icone).toHaveAttribute('aria-hidden', 'true');
-      await expect(icone.childElementCount).toBeGreaterThan(0);
+      const toastEl = await waitForToast({ type: 'success' });
+      const icon = toastEl.querySelector<SVGSVGElement>('[data-icon] svg')!;
+      await expect(icon).toHaveAttribute('aria-hidden', 'true');
+      await expect(icon.childElementCount).toBeGreaterThan(0);
     });
 
     // Termina com a tela limpa: uma notificação com prazo correndo estaria no
     // meio do fade quando o axe medisse contraste, e ~1.0 num elemento em
     // transição parece paleta ruim sem ser.
-    await limparTorradas();
+    await clearToasts();
   },
 };

@@ -34,9 +34,9 @@ export type SonnerSnippetOptions = {
 };
 
 /** Padrão do design system, e o que a região assume quando ninguém diz outro. */
-const DURACAO_PADRAO = 4000;
+const DEFAULT_DURATION = 4000;
 
-const TITULO_PADRAO: Record<ToastType, string> = {
+const DEFAULT_TITLE: Record<ToastType, string> = {
   default: 'Código copiado.',
   success: 'Alterações salvas.',
   error: 'Não foi possível salvar. Tente novamente.',
@@ -51,41 +51,41 @@ const TITULO_PADRAO: Record<ToastType, string> = {
  * Só o que difere do padrão entra: o canto é `bottom-right`, as cores
  * semânticas vêm desligadas e o prazo é de 4000ms.
  */
-function blocoDaRegiao(o: SonnerSnippetOptions): string {
-  const linhas = opcoes([
+function regionBlock(o: SonnerSnippetOptions): string {
+  const lines = opcoes([
     ['position', o.position && o.position !== 'bottom-right' ? texto(o.position) : undefined],
     ['richColors', o.richColors ? 'true' : undefined],
     ['closeButton', o.closeButton && !o.persistente ? 'true' : undefined],
     [
       'duration',
-      o.duration !== undefined && o.duration !== DURACAO_PADRAO ? String(o.duration) : undefined,
+      o.duration !== undefined && o.duration !== DEFAULT_DURATION ? String(o.duration) : undefined,
     ],
   ]);
 
-  const corpo =
-    linhas.length === 0
+  const body =
+    lines.length === 0
       ? 'createSonnerToaster()'
-      : `createSonnerToaster({ ${linhas.map((l) => l.replace(/,$/, '')).join(', ')} })`;
+      : `createSonnerToaster({ ${lines.map((l) => l.replace(/,$/, '')).join(', ')} })`;
 
-  return corpo.length <= 78
-    ? `const regiao = ${corpo};\n${montar('regiao')}`
-    : `const regiao = createSonnerToaster({\n${linhas.map((l) => `  ${l}`).join('\n')}\n});\n${montar('regiao')}`;
+  return body.length <= 78
+    ? `const regiao = ${body};\n${montar('regiao')}`
+    : `const regiao = createSonnerToaster({\n${lines.map((l) => `  ${l}`).join('\n')}\n});\n${montar('regiao')}`;
 }
 
 /** `toast('…')` / `toast.success('…', { … })`, quebrando quando não couber. */
-function chamadaDaFila(tipo: ToastType, mensagem: string, linhas: string[]): string {
-  const fila = tipo === 'default' ? 'toast' : `toast.${tipo}`;
-  if (linhas.length === 0) return `${fila}(${texto(mensagem)});`;
+function queueCall(type: ToastType, mensagem: string, lines: string[]): string {
+  const queue = type === 'default' ? 'toast' : `toast.${type}`;
+  if (lines.length === 0) return `${queue}(${texto(mensagem)});`;
 
-  const umaLinha = `${fila}(${texto(mensagem)}, { ${linhas
+  const singleLine = `${queue}(${texto(mensagem)}, { ${lines
     .map((l) => l.replace(/,$/, ''))
     .join(', ')} });`;
-  if (umaLinha.length <= 78 && !umaLinha.includes('\n')) return umaLinha;
+  if (singleLine.length <= 78 && !singleLine.includes('\n')) return singleLine;
 
-  return `${fila}(${texto(mensagem)}, {\n${linhas.map((l) => `  ${l}`).join('\n')}\n});`;
+  return `${queue}(${texto(mensagem)}, {\n${lines.map((l) => `  ${l}`).join('\n')}\n});`;
 }
 
-function opcoesDaNotificacao(o: SonnerSnippetOptions): string[] {
+function notificationOptions(o: SonnerSnippetOptions): string[] {
   return opcoes([
     ['description', o.description ? texto(o.description) : undefined],
     [
@@ -101,12 +101,12 @@ function opcoesDaNotificacao(o: SonnerSnippetOptions): string[] {
 
 /** A região montada uma vez, mais a chamada da fila que a story dispara. */
 export function sonnerSnippet(o: SonnerSnippetOptions = {}): string {
-  const tipo = o.type ?? 'success';
+  const type = o.type ?? 'success';
 
   return snippet(
     importar('sonner', 'createSonnerToaster', 'toast'),
-    blocoDaRegiao(o),
-    chamadaDaFila(tipo, o.title || TITULO_PADRAO[tipo], opcoesDaNotificacao(o)),
+    regionBlock(o),
+    queueCall(type, o.title || DEFAULT_TITLE[type], notificationOptions(o)),
   );
 }
 
@@ -117,29 +117,29 @@ export function sonnerSnippet(o: SonnerSnippetOptions = {}): string {
  * contrato desta stack, e o que permite chamá-lo de um `catch` numa tela que
  * ainda não montou nada.
  */
-export function sonnerSemRegiaoSnippet(o: SonnerSnippetOptions = {}): string {
-  const tipo = o.type ?? 'success';
+export function sonnerNoRegionSnippet(o: SonnerSnippetOptions = {}): string {
+  const type = o.type ?? 'success';
 
   return snippet(
     importar('sonner', 'toast'),
-    chamadaDaFila(tipo, o.title || TITULO_PADRAO[tipo], opcoesDaNotificacao(o)),
+    queueCall(type, o.title || DEFAULT_TITLE[type], notificationOptions(o)),
   );
 }
 
 /** Uma pilha: várias notificações vivas ao mesmo tempo, uma por chamada. */
-export function sonnerPilhaSnippet(
+export function sonnerStackSnippet(
   itens: Array<{ type?: ToastType; title?: string }>,
   o: SonnerSnippetOptions = {},
 ): string {
-  const chamadas = itens.map((item) => {
-    const tipo = item.type ?? 'default';
-    return chamadaDaFila(tipo, item.title || TITULO_PADRAO[tipo], []);
+  const calls = itens.map((item) => {
+    const type = item.type ?? 'default';
+    return queueCall(type, item.title || DEFAULT_TITLE[type], []);
   });
 
   return snippet(
     importar('sonner', 'createSonnerToaster', 'toast'),
-    blocoDaRegiao(o),
-    chamadas.join('\n'),
+    regionBlock(o),
+    calls.join('\n'),
   );
 }
 
@@ -150,10 +150,10 @@ export function sonnerPilhaSnippet(
  * Não devolve nada e não repropaga a rejeição — quem chamou já tem a promessa
  * original para tratar o erro.
  */
-export function sonnerPromessaSnippet(o: SonnerSnippetOptions = {}): string {
+export function sonnerPromiseSnippet(o: SonnerSnippetOptions = {}): string {
   return snippet(
     importar('sonner', 'createSonnerToaster', 'toast'),
-    blocoDaRegiao(o),
+    regionBlock(o),
     `toast.promise(enviarArquivo(), {
   loading: 'Enviando arquivo...',
   success: 'Arquivo enviado com sucesso.',
@@ -163,25 +163,25 @@ export function sonnerPromessaSnippet(o: SonnerSnippetOptions = {}): string {
 }
 
 /** Transform de story para a pilha de notificações. */
-export function sonnerSourcePilha(
+export function sonnerSourceStack(
   itens: Array<{ type?: ToastType; title?: string }>,
   o: SonnerSnippetOptions = {},
 ): SourceTransform<SonnerSnippetOptions> {
-  return () => sonnerPilhaSnippet(itens, o);
+  return () => sonnerStackSnippet(itens, o);
 }
 
 /** Transform de story para o ciclo de uma promessa. */
-export function sonnerSourcePromessa(
+export function sonnerSourcePromise(
   o: SonnerSnippetOptions = {},
 ): SourceTransform<SonnerSnippetOptions> {
-  return () => sonnerPromessaSnippet(o);
+  return () => sonnerPromiseSnippet(o);
 }
 
 /** Transform de story para o caso sem região montada. */
-export function sonnerSourceSemRegiao(
+export function sonnerSourceNoRegion(
   o: SonnerSnippetOptions = {},
 ): SourceTransform<SonnerSnippetOptions> {
-  return () => sonnerSemRegiaoSnippet(o);
+  return () => sonnerNoRegionSnippet(o);
 }
 
 /** Transform do `meta` — vale para todas as stories do arquivo. */
@@ -189,6 +189,6 @@ export const sonnerSource: SourceTransform<SonnerSnippetOptions> = (_gerado, ctx
   sonnerSnippet(ctx.args ?? {});
 
 /** Transform de story: mesma API, opções fixas que os controls não cobrem. */
-export function sonnerSourceCom(fixas: SonnerSnippetOptions): SourceTransform<SonnerSnippetOptions> {
+export function sonnerSourceWith(fixas: SonnerSnippetOptions): SourceTransform<SonnerSnippetOptions> {
   return (_gerado, ctx) => sonnerSnippet({ ...ctx.args, ...fixas });
 }

@@ -1,21 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sonnerAvisoSource,
-  sonnerCarregandoSource,
-  sonnerComAcaoSource,
-  sonnerComDescricaoSource,
-  sonnerEmpilhadoSource,
-  sonnerErroSource,
+  sonnerWarningSource,
+  sonnerLoadingSource,
+  sonnerWithActionSource,
+  sonnerWithDescriptionSource,
+  sonnerStackedSource,
+  sonnerErrorSource,
   sonnerInfoSource,
-  sonnerPadraoSource,
-  sonnerPersistenteSource,
-  sonnerPosicaoSource,
-  sonnerPrazoSource,
-  sonnerPromessaSource,
-  sonnerSemRegiaoSource,
+  sonnerDefaultSource,
+  sonnerPersistentSource,
+  sonnerPositionSource,
+  sonnerDurationSource,
+  sonnerPromiseSource,
+  sonnerNoRegionSource,
   sonnerSource,
-  sonnerSucessoSource,
-  sonnerTemaEscuroSource,
+  sonnerSuccessSource,
+  sonnerDarkThemeSource,
 } from './sonner.source';
 
 describe('sonnerSource', () => {
@@ -47,12 +47,12 @@ describe('sonnerSource', () => {
   });
 
   it('descrição e ação viram objeto de opções numa função nomeada', () => {
-    const comAmbos = sonnerSource('', {
+    const withBoth = sonnerSource('', {
       args: { description: 'Detalhes.', actionLabel: 'Desfazer' },
     });
-    expect(comAmbos).toContain('function avisar()');
-    expect(comAmbos).toContain('description: "Detalhes.",');
-    expect(comAmbos).toContain('action: { label: "Desfazer", onClick: desfazer },');
+    expect(withBoth).toContain('function avisar()');
+    expect(withBoth).toContain('description: "Detalhes.",');
+    expect(withBoth).toContain('action: { label: "Desfazer", onClick: desfazer },');
     // Sem opções não há função: o gatilho é a própria chamada, em linha.
     expect(sonnerSource()).not.toContain('function avisar()');
   });
@@ -74,73 +74,73 @@ describe('sonnerSource', () => {
 
 describe('transforms dos tipos', () => {
   it('o tipo neutro chama a função nua', () => {
-    expect(sonnerPadraoSource()).toContain('toast("Código copiado.")');
+    expect(sonnerDefaultSource()).toContain('toast("Código copiado.")');
   });
 
   it('cada tipo semântico chama o seu próprio método', () => {
-    expect(sonnerSucessoSource()).toContain('toast.success("Alterações salvas.")');
-    expect(sonnerErroSource()).toContain('toast.error(');
-    expect(sonnerAvisoSource()).toContain('toast.warning(');
+    expect(sonnerSuccessSource()).toContain('toast.success("Alterações salvas.")');
+    expect(sonnerErrorSource()).toContain('toast.error(');
+    expect(sonnerWarningSource()).toContain('toast.warning(');
     expect(sonnerInfoSource()).toContain('toast.info(');
-    expect(sonnerCarregandoSource()).toContain('toast.loading(');
+    expect(sonnerLoadingSource()).toContain('toast.loading(');
   });
 
   it('o aviso não se disfarça de falha', () => {
-    expect(sonnerAvisoSource()).not.toContain('toast.error(');
+    expect(sonnerWarningSource()).not.toContain('toast.error(');
   });
 });
 
 describe('transforms dos estados', () => {
   it('o prazo é escrito na REGIÃO, e não na chamada', () => {
-    const saida = sonnerPrazoSource();
-    expect(saida).toContain('<Toaster position="top-right" richColors duration={4000} />');
-    expect(saida).not.toContain('duration:');
+    const exit = sonnerDurationSource();
+    expect(exit).toContain('<Toaster position="top-right" richColors duration={4000} />');
+    expect(exit).not.toContain('duration:');
   });
 
   it('a pilha aberta pede expand, com três chamadas na mesma função', () => {
-    const saida = sonnerEmpilhadoSource();
-    expect(saida).toContain('expand');
-    expect(saida.match(/ {2}toast/g)).toHaveLength(3);
+    const exit = sonnerStackedSource();
+    expect(exit).toContain('expand');
+    expect(exit.match(/ {2}toast/g)).toHaveLength(3);
   });
 
   it('a posição escolhida chega à região', () => {
-    expect(sonnerPosicaoSource()).toContain('position="bottom-center"');
+    expect(sonnerPositionSource()).toContain('position="bottom-center"');
   });
 
   it('o caso sem região não monta Toaster nenhum', () => {
-    const saida = sonnerSemRegiaoSource();
-    expect(saida).not.toContain('<Toaster');
-    expect(saida).toContain('toast.success(');
+    const exit = sonnerNoRegionSource();
+    expect(exit).not.toContain('<Toaster');
+    expect(exit).toContain('toast.success(');
   });
 
   it('o tema escuro põe os cinco tipos na tela, com a pilha aberta', () => {
-    const saida = sonnerTemaEscuroSource();
-    expect(saida).toContain('theme="dark"');
-    expect(saida).toContain('expand');
-    expect(saida.match(/ {2}toast/g)).toHaveLength(5);
+    const exit = sonnerDarkThemeSource();
+    expect(exit).toContain('theme="dark"');
+    expect(exit).toContain('expand');
+    expect(exit.match(/ {2}toast/g)).toHaveLength(5);
   });
 });
 
 describe('transforms das composições', () => {
   it('a descrição entra como opção da chamada', () => {
-    expect(sonnerComDescricaoSource()).toContain('description:');
+    expect(sonnerWithDescriptionSource()).toContain('description:');
   });
 
   it('a ação embutida carrega rótulo e callback', () => {
-    expect(sonnerComAcaoSource()).toContain('action: { label: "Desfazer", onClick: desfazer },');
+    expect(sonnerWithActionSource()).toContain('action: { label: "Desfazer", onClick: desfazer },');
   });
 
   it('a promessa declara os três desfechos numa chamada só', () => {
-    const saida = sonnerPromessaSource();
-    expect(saida).toContain('toast.promise(');
-    expect(saida).toContain('loading:');
-    expect(saida).toContain('success:');
-    expect(saida).toContain('error:');
+    const exit = sonnerPromiseSource();
+    expect(exit).toContain('toast.promise(');
+    expect(exit).toContain('loading:');
+    expect(exit).toContain('success:');
+    expect(exit).toContain('error:');
   });
 
   it('a persistente junta prazo infinito e botão de fechar', () => {
-    const saida = sonnerPersistenteSource();
-    expect(saida).toContain('duration: Number.POSITIVE_INFINITY,');
-    expect(saida).toContain('closeButton');
+    const exit = sonnerPersistentSource();
+    expect(exit).toContain('duration: Number.POSITIVE_INFINITY,');
+    expect(exit).toContain('closeButton');
   });
 });

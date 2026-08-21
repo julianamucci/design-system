@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, fn, userEvent } from 'storybook/test';
-import { toast, ROTULO_FECHAR } from './sonner';
-import { sonnerSource, sonnerSourceCom, sonnerSourcePromessa } from './sonner.source';
+import { toast, CLOSE_LABEL } from './sonner';
+import { sonnerSource, sonnerSourceWith, sonnerSourcePromise } from './sonner.source';
 import {
-  esperarSemTorradas,
-  esperarTorrada,
-  limparTorradas,
-  montarToaster,
-  PERSISTENTE,
-  TEXTOS,
+  waitForNoToasts,
+  waitForToast,
+  clearToasts,
+  mountToaster,
+  PERSISTENT,
+  TEXTS,
 } from './sonner.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -18,7 +18,7 @@ import {
 // todas na mesma notificação faria uma caixa de diálogo flutuante, que é
 // exatamente o que este componente não é.
 
-const espiaoDesfazer = fn();
+const undoSpy = fn();
 
 const meta: Meta = {
   title: 'UI/Sonner/Compositions',
@@ -36,7 +36,7 @@ const meta: Meta = {
       },
     },
   },
-  render: () => montarToaster(),
+  render: () => mountToaster(),
 };
 
 export default meta;
@@ -47,7 +47,7 @@ type Story = StoryObj;
  * snippet: ali ele existe para o Chromatic e o axe medirem sempre o mesmo
  * estado, e só a story Persistent o usa como assunto.
  */
-const REGIAO = { position: 'top-right', richColors: true } as const;
+const REGION = { position: 'top-right', richColors: true } as const;
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
@@ -56,11 +56,11 @@ export const WithDescription: Story = {
     covers: ['visual.item2'],
     docs: {
       source: {
-        transform: sonnerSourceCom({
-          ...REGIAO,
+        transform: sonnerSourceWith({
+          ...REGION,
           type: 'success',
-          title: TEXTOS.comDescricao,
-          description: TEXTOS.comDescricaoDetalhe,
+          title: TEXTS.comDescricao,
+          description: TEXTS.comDescricaoDetalhe,
         }),
       },
       description: {
@@ -70,24 +70,24 @@ export const WithDescription: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('Título e descrição vivem no mesmo bloco de conteúdo', async () => {
-      toast.success(TEXTOS.comDescricao, {
-        ...PERSISTENTE,
-        description: TEXTOS.comDescricaoDetalhe,
+      toast.success(TEXTS.comDescricao, {
+        ...PERSISTENT,
+        description: TEXTS.comDescricaoDetalhe,
       });
-      const torrada = await esperarTorrada({ tipo: 'success' });
+      const toastEl = await waitForToast({ type: 'success' });
 
-      const titulo = torrada.querySelector<HTMLElement>('.nds-toast-title')!;
-      const descricao = torrada.querySelector<HTMLElement>('.nds-toast-description')!;
-      await expect(titulo).toHaveTextContent(TEXTOS.comDescricao);
-      await expect(descricao).toHaveTextContent(TEXTOS.comDescricaoDetalhe);
+      const title = toastEl.querySelector<HTMLElement>('.nds-toast-title')!;
+      const description = toastEl.querySelector<HTMLElement>('.nds-toast-description')!;
+      await expect(title).toHaveTextContent(TEXTS.comDescricao);
+      await expect(description).toHaveTextContent(TEXTS.comDescricaoDetalhe);
 
       // Os dois dentro do mesmo `.nds-toast-content`: é isso que faz o leitor de
       // tela anunciar a notificação como uma coisa só, e não como dois avisos.
-      const conteudo = torrada.querySelector<HTMLElement>('.nds-toast-content')!;
-      await expect(conteudo.contains(titulo) && conteudo.contains(descricao)).toBe(true);
+      const content = toastEl.querySelector<HTMLElement>('.nds-toast-content')!;
+      await expect(content.contains(title) && content.contains(description)).toBe(true);
     });
   },
 };
@@ -97,11 +97,11 @@ export const WithAction: Story = {
     covers: ['functional.item5', 'accessibility.item2', 'visual.item2'],
     docs: {
       source: {
-        transform: sonnerSourceCom({
-          ...REGIAO,
+        transform: sonnerSourceWith({
+          ...REGION,
           type: 'default',
-          title: TEXTOS.comAcao,
-          actionLabel: TEXTOS.comAcaoRotulo,
+          title: TEXTS.comAcao,
+          actionLabel: TEXTS.comAcaoRotulo,
         }),
       },
       description: {
@@ -111,55 +111,55 @@ export const WithAction: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
     // O espião é de módulo e sobrevive ao replay da play no painel Interactions;
     // zerá-lo aqui é o que mantém a contagem abaixo verdadeira nas duas rodadas.
-    espiaoDesfazer.mockClear();
+    undoSpy.mockClear();
 
     await step('O botão de ação é alcançável por Tab enquanto a notificação está na tela', async () => {
       // accessibility.item2 — o `<button>` é de verdade e está no fluxo de foco.
       // Sem isso, quem navega por teclado veria a ação e não teria como chegar
       // até ela antes de o prazo vencer (WCAG 2.1.1).
-      toast(TEXTOS.comAcao, {
-        ...PERSISTENTE,
-        action: { label: TEXTOS.comAcaoRotulo, onClick: () => espiaoDesfazer() },
+      toast(TEXTS.comAcao, {
+        ...PERSISTENT,
+        action: { label: TEXTS.comAcaoRotulo, onClick: () => undoSpy() },
       });
-      const torrada = await esperarTorrada({ tipo: 'default' });
-      const acao = torrada.querySelector<HTMLButtonElement>('.nds-toast-action')!;
+      const toastEl = await waitForToast({ type: 'default' });
+      const action = toastEl.querySelector<HTMLButtonElement>('.nds-toast-action')!;
 
-      await expect(acao.tagName).toBe('BUTTON');
-      await expect(acao).toHaveTextContent(TEXTOS.comAcaoRotulo);
+      await expect(action.tagName).toBe('BUTTON');
+      await expect(action).toHaveTextContent(TEXTS.comAcaoRotulo);
 
       // Zera o foco antes de tabular: no replay do painel Interactions ele parte
       // de onde a rodada anterior o deixou, e o primeiro Tab cairia noutro lugar.
       (document.activeElement as HTMLElement | null)?.blur();
       await userEvent.tab();
-      await expect(acao).toHaveFocus();
+      await expect(action).toHaveFocus();
     });
 
     await step('Escape fecha a notificação em foco, sem acionar a ação', async () => {
       // Quem chegou até aqui por teclado precisa de uma saída que não seja o
       // mouse: sair "pelo lado" deixaria a notificação ocupando a tela.
       await userEvent.keyboard('{Escape}');
-      await esperarSemTorradas();
-      await expect(espiaoDesfazer).not.toHaveBeenCalled();
+      await waitForNoToasts();
+      await expect(undoSpy).not.toHaveBeenCalled();
     });
 
     await step('Enter dispara a ação e retira a notificação', async () => {
       // functional.item5 — a notificação existia para oferecer a ação; cumprida,
       // ela sai na hora em vez de continuar ocupando a pilha.
-      toast(TEXTOS.comAcao, {
-        ...PERSISTENTE,
-        action: { label: TEXTOS.comAcaoRotulo, onClick: () => espiaoDesfazer() },
+      toast(TEXTS.comAcao, {
+        ...PERSISTENT,
+        action: { label: TEXTS.comAcaoRotulo, onClick: () => undoSpy() },
       });
-      await esperarTorrada({ tipo: 'default' });
+      await waitForToast({ type: 'default' });
 
       (document.activeElement as HTMLElement | null)?.blur();
       await userEvent.tab();
       await userEvent.keyboard('{Enter}');
 
-      await expect(espiaoDesfazer).toHaveBeenCalledTimes(1);
-      await esperarSemTorradas();
+      await expect(undoSpy).toHaveBeenCalledTimes(1);
+      await waitForNoToasts();
       await expect(document.querySelectorAll('.nds-toast').length).toBe(0);
     });
   },
@@ -170,7 +170,7 @@ export const PromiseResolved: Story = {
     covers: ['functional.item3', 'visual.item2'],
     docs: {
       // Forma diferente de chamada: uma promessa e três mensagens, não um título.
-      source: { transform: sonnerSourcePromessa(REGIAO) },
+      source: { transform: sonnerSourcePromise(REGION) },
       description: {
         story:
           'Uma notificação para a operação inteira: nasce em carregamento e vira êxito no mesmo lugar, sem piscar duas caixas.',
@@ -178,37 +178,37 @@ export const PromiseResolved: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('O carregamento vira êxito no MESMO nó do DOM', async () => {
       // functional.item3 — a promessa é resolvida À MÃO, e não por temporizador.
       // Com prazo fixo, a resolução chegava antes de o carregamento terminar de
       // entrar (a notificação leva um fade para assentar) e o estado
       // intermediário ficava inobservável — o teste falharia por corrida.
-      let concluir: () => void = () => undefined;
-      const operacao = new Promise<void>((resolve) => {
-        concluir = resolve;
+      let resolve: () => void = () => undefined;
+      const operation = new Promise<void>((res) => {
+        resolve = res;
       });
       toast.promise(
-        operacao,
+        operation,
         {
-          loading: TEXTOS.promessaCarregando,
-          success: TEXTOS.promessaSucesso,
-          error: TEXTOS.promessaErro,
+          loading: TEXTS.promessaCarregando,
+          success: TEXTS.promessaSucesso,
+          error: TEXTS.promessaErro,
         },
-        PERSISTENTE,
+        PERSISTENT,
       );
 
-      const carregando = await esperarTorrada({ tipo: 'loading' });
-      await expect(carregando).toHaveTextContent(TEXTOS.promessaCarregando);
+      const loading = await waitForToast({ type: 'loading' });
+      await expect(loading).toHaveTextContent(TEXTS.promessaCarregando);
 
-      concluir();
-      const concluida = await esperarTorrada({ tipo: 'success' });
-      await expect(concluida).toHaveTextContent(TEXTOS.promessaSucesso);
+      resolve();
+      const resolved = await waitForToast({ type: 'success' });
+      await expect(resolved).toHaveTextContent(TEXTS.promessaSucesso);
 
       // Mesmo elemento: trocar o nó faria o leitor de tela anunciar duas
       // notificações para um evento só.
-      await expect(concluida).toBe(carregando);
+      await expect(resolved).toBe(loading);
       await expect(document.querySelectorAll('.nds-toast').length).toBe(1);
     });
   },
@@ -218,7 +218,7 @@ export const PromiseRejected: Story = {
   parameters: {
     covers: ['functional.item4'],
     docs: {
-      source: { transform: sonnerSourcePromessa(REGIAO) },
+      source: { transform: sonnerSourcePromise(REGION) },
       description: {
         story:
           'O mesmo ciclo, com a operação falhando: o carregamento vira falha, com o texto que diz o caminho de saída.',
@@ -226,33 +226,33 @@ export const PromiseRejected: Story = {
     },
   },
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('O carregamento vira falha quando a operação rejeita', async () => {
       // functional.item4 — `toast.promise` não repropaga a rejeição, então não
       // há rejeição não tratada aqui; quem precisa do erro trata na promessa
       // original. A falha é provocada à mão pelo mesmo motivo do caso resolvido.
-      let falhar: () => void = () => undefined;
-      const operacao = new Promise<void>((_resolve, reject) => {
-        falhar = () => reject(new Error('falha simulada'));
+      let fail: () => void = () => undefined;
+      const operation = new Promise<void>((_resolve, reject) => {
+        fail = () => reject(new Error('falha simulada'));
       });
       toast.promise(
-        operacao,
+        operation,
         {
-          loading: TEXTOS.promessaCarregando,
-          success: TEXTOS.promessaSucesso,
-          error: TEXTOS.promessaErro,
+          loading: TEXTS.promessaCarregando,
+          success: TEXTS.promessaSucesso,
+          error: TEXTS.promessaErro,
         },
-        PERSISTENTE,
+        PERSISTENT,
       );
 
-      const carregando = await esperarTorrada({ tipo: 'loading' });
-      await expect(carregando).toHaveAttribute('data-type', 'loading');
+      const loading = await waitForToast({ type: 'loading' });
+      await expect(loading).toHaveAttribute('data-type', 'loading');
 
-      falhar();
-      const falhou = await esperarTorrada({ tipo: 'error' });
-      await expect(falhou).toHaveTextContent(TEXTOS.promessaErro);
-      await expect(falhou).toBe(carregando);
+      fail();
+      const failed = await waitForToast({ type: 'error' });
+      await expect(failed).toHaveTextContent(TEXTS.promessaErro);
+      await expect(failed).toBe(loading);
     });
   },
 };
@@ -264,10 +264,10 @@ export const Persistent: Story = {
       // Aqui o prazo infinito É o assunto — e nunca vai sozinho: sem botão de
       // fechar, a notificação que não sai vira obstáculo.
       source: {
-        transform: sonnerSourceCom({
-          ...REGIAO,
+        transform: sonnerSourceWith({
+          ...REGION,
           type: 'error',
-          title: TEXTOS.persistente,
+          title: TEXTS.persistente,
           persistente: true,
         }),
       },
@@ -279,27 +279,27 @@ export const Persistent: Story = {
   },
   // Prazo default curtíssimo de propósito: é o que prova que o `Infinity` desta
   // notificação é dela, e não do relógio da página.
-  render: () => montarToaster({ duration: 300 }),
+  render: () => mountToaster({ duration: 300 }),
   play: async ({ step }) => {
-    await limparTorradas();
+    await clearToasts();
 
     await step('A notificação sobrevive ao prazo que valeria para as outras', async () => {
       // functional.item6 — 700ms com prazo default de 300ms: se o `Infinity`
       // fosse ignorado, ela já teria saído duas vezes. `setTimeout(fn, Infinity)`
       // vira delay 0 no navegador, então este é o teste que segura a regressão.
-      toast.error(TEXTOS.persistente, { ...PERSISTENTE, closeButton: true });
-      const torrada = await esperarTorrada({ tipo: 'error' });
+      toast.error(TEXTS.persistente, { ...PERSISTENT, closeButton: true });
+      const toastEl = await waitForToast({ type: 'error' });
 
       await new Promise<void>((resolve) => setTimeout(resolve, 700));
-      await expect(document.body.contains(torrada)).toBe(true);
-      await expect(torrada).toHaveAttribute('data-visible', 'true');
+      await expect(document.body.contains(toastEl)).toBe(true);
+      await expect(toastEl).toHaveAttribute('data-visible', 'true');
     });
 
     await step('Fechar manualmente é o único caminho de saída', async () => {
-      const fechar = document.querySelector<HTMLButtonElement>('.nds-toast-close')!;
-      await expect(fechar).toHaveAttribute('aria-label', ROTULO_FECHAR);
-      await userEvent.click(fechar);
-      await esperarSemTorradas();
+      const close = document.querySelector<HTMLButtonElement>('.nds-toast-close')!;
+      await expect(close).toHaveAttribute('aria-label', CLOSE_LABEL);
+      await userEvent.click(close);
+      await waitForNoToasts();
       await expect(document.querySelectorAll('.nds-toast').length).toBe(0);
     });
   },

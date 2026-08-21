@@ -9,9 +9,9 @@ import { toast, createSonnerToaster, type ToastOptions, type ToastType, type Son
  * fade de saída no instante em que o axe mede contraste — e uma razão perto de
  * 1.0 num elemento em transição parece paleta ruim sem ser. Prazo infinito
  * torna o estado final determinístico; a limpeza fica por conta do
- * `limparTorradas()` no início da próxima rodada.
+ * `clearToasts()` no início da próxima rodada.
  */
-export const PERSISTENTE: ToastOptions = { duration: Number.POSITIVE_INFINITY };
+export const PERSISTENT: ToastOptions = { duration: Number.POSITIVE_INFINITY };
 
 /**
  * Apoio das stories do Sonner.
@@ -26,11 +26,11 @@ export const PERSISTENTE: ToastOptions = { duration: Number.POSITIVE_INFINITY };
  * 2. A fila é global ao módulo, e o contêiner é portalizado em `document.body`.
  *    Uma story que empilha notificações e não limpa entrega lixo para a rodada
  *    seguinte — e o painel Interactions REEXECUTA a play no mesmo DOM, sem
- *    remontar. Por isso toda play começa por `limparTorradas()`.
+ *    remontar. Por isso toda play começa por `clearToasts()`.
  */
 
 /** Monta a região da story e devolve o wrapper que o `render` entrega. */
-export function montarToaster(options: SonnerToasterOptions = {}): HTMLElement {
+export function mountToaster(options: SonnerToasterOptions = {}): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-min-h-30';
   wrapper.style.cssText = 'contain: layout; position: relative;';
@@ -39,33 +39,33 @@ export function montarToaster(options: SonnerToasterOptions = {}): HTMLElement {
 }
 
 /** Todas as notificações presentes no documento, na ordem da pilha. */
-export function torradasNaTela(): HTMLElement[] {
+export function toastsOnScreen(): HTMLElement[] {
   return Array.from(document.querySelectorAll<HTMLElement>('.nds-toast'));
 }
 
 /** Espera a notificação aparecer E assentar. */
-export async function esperarTorrada(
-  filtro: { tipo?: ToastType; texto?: string | RegExp } = {},
+export async function waitForToast(
+  filtro: { type?: ToastType; text?: string | RegExp } = {},
   timeout = 4000,
 ): Promise<HTMLElement> {
   return await waitFor(
     () => {
-      const achadas = torradasNaTela().filter((el) => {
-        if (filtro.tipo && el.getAttribute('data-type') !== filtro.tipo) return false;
-        if (filtro.texto === undefined) return true;
-        const texto = el.textContent ?? '';
-        return typeof filtro.texto === 'string'
-          ? texto.includes(filtro.texto)
-          : filtro.texto.test(texto);
+      const found = toastsOnScreen().filter((el) => {
+        if (filtro.type && el.getAttribute('data-type') !== filtro.type) return false;
+        if (filtro.text === undefined) return true;
+        const text = el.textContent ?? '';
+        return typeof filtro.text === 'string'
+          ? text.includes(filtro.text)
+          : filtro.text.test(text);
       });
 
-      const el = achadas[0];
+      const el = found[0];
       if (!el) throw new Error(`nenhuma torrada ${JSON.stringify(filtro)} na tela`);
       if (el.getAttribute('data-visible') !== 'true') {
         throw new Error('torrada ainda entrando (data-visible=false)');
       }
-      const opacidade = Number.parseFloat(getComputedStyle(el).opacity);
-      if (opacidade < 0.99) throw new Error(`torrada em fade: opacity=${opacidade}`);
+      const opacity = Number.parseFloat(getComputedStyle(el).opacity);
+      if (opacity < 0.99) throw new Error(`torrada em fade: opacity=${opacity}`);
       return el;
     },
     { timeout, interval: 30 },
@@ -73,20 +73,20 @@ export async function esperarTorrada(
 }
 
 /** Espera a tela ficar sem notificação nenhuma — inclusive as que estão saindo. */
-export async function esperarSemTorradas(timeout = 4000): Promise<void> {
+export async function waitForNoToasts(timeout = 4000): Promise<void> {
   await waitFor(
     () => {
-      const restantes = torradasNaTela().length;
-      if (restantes > 0) throw new Error(`ainda há ${restantes} torrada(s) na tela`);
+      const remaining = toastsOnScreen().length;
+      if (remaining > 0) throw new Error(`ainda há ${remaining} torrada(s) na tela`);
     },
     { timeout, interval: 30 },
   );
 }
 
 /** Precondição de toda play: fila vazia e nada em transição. */
-export async function limparTorradas(): Promise<void> {
+export async function clearToasts(): Promise<void> {
   toast.dismiss();
-  await esperarSemTorradas();
+  await waitForNoToasts();
   await new Promise<void>((resolve) => setTimeout(resolve, 260));
 }
 
@@ -95,13 +95,13 @@ export async function limparTorradas(): Promise<void> {
 // Um lugar só: os mesmos textos aparecem nos quatro arquivos de story, e três
 // cópias divergiriam na primeira revisão de conteúdo.
 
-export const TEXTOS = {
+export const TEXTS = {
   padrao: 'Código copiado.',
   sucesso: 'Alterações salvas.',
   erro: 'Não foi possível salvar. Tente novamente.',
   aviso: 'Sua sessão expira em 5 minutos.',
   info: 'Nova versão disponível.',
-  carregando: 'Enviando arquivo...',
+  loading: 'Enviando arquivo...',
   comDescricao: 'Preferências atualizadas.',
   comDescricaoDetalhe:
     'Suas configurações foram salvas e entrarão em vigor na próxima sessão.',

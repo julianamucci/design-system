@@ -52,9 +52,9 @@ export type SonnerArgs = {
   duration: number;
 };
 
-const TIPOS = ['default', 'success', 'error', 'warning', 'info', 'loading'] as const;
+const TYPES = ['default', 'success', 'error', 'warning', 'info', 'loading'] as const;
 
-const POSICOES = [
+const POSITIONS = [
   'top-right',
   'top-center',
   'top-left',
@@ -64,18 +64,18 @@ const POSICOES = [
 ] as const;
 
 /** Canto e prazo que a lib já usa sozinha — repeti-los ensinaria ruído. */
-const POSICAO_PADRAO = 'bottom-right';
-const PRAZO_PADRAO = 4000;
+const DEFAULT_POSITION = 'bottom-right';
+const DEFAULT_DURATION = 4000;
 
 const IMPORT_TOAST = 'import { toast } from "sonner";';
 const IMPORT_TOASTER = 'import { Toaster } from "@/components/ui/sonner";';
-const IMPORT_BOTAO = 'import { Button } from "@/components/ui/button";';
+const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
 
 const IMPORTS_BASE = `${IMPORT_TOAST}
 ${IMPORT_TOASTER}`;
 
-const IMPORTS_COM_BOTAO = `${IMPORT_TOAST}
-${IMPORT_BOTAO}
+const IMPORTS_WITH_BUTTON = `${IMPORT_TOAST}
+${IMPORT_BUTTON}
 ${IMPORT_TOASTER}`;
 
 /**
@@ -86,26 +86,26 @@ ${IMPORT_TOASTER}`;
  * comentário viaja junto com a marcação: é a única parte do uso que não se
  * escreve onde a notificação nasce.
  */
-function regiao(atributos = ''): string {
+function region(tagAttrs = ''): string {
   return `// A região que desenha a fila. Vai UMA VEZ, na raiz da aplicação.
-<Toaster${atributos} />`;
+<Toaster${tagAttrs} />`;
 }
 
 /** Chamada da fila: `toast()` para a neutra, `toast.<tipo>()` para as demais. */
-function chamada(tipo: string, titulo: string, opcoes: string[] = []): string {
-  const alvo = tipo === 'default' ? 'toast' : `toast.${tipo}`;
-  if (!opcoes.length) return `${alvo}("${titulo}");`;
-  return `${alvo}("${titulo}", {
-${opcoes.map((opcao) => `  ${opcao}`).join('\n')}
+function call(type: string, title: string, options: string[] = []): string {
+  const alvo = type === 'default' ? 'toast' : `toast.${type}`;
+  if (!options.length) return `${alvo}("${title}");`;
+  return `${alvo}("${title}", {
+${options.map((opcao) => `  ${opcao}`).join('\n')}
 });`;
 }
 
 /** Região + comentário + chamada, que é a forma de todo exemplo deste arquivo. */
-function usoDaFila(atributosDaRegiao: string, comentario: string, corpo: string): string {
-  return `${regiao(atributosDaRegiao)}
+function queueUsage(regionTagAttrs: string, comentario: string, body: string): string {
+  return `${region(regionTagAttrs)}
 
 // ${comentario}
-${corpo}`;
+${body}`;
 }
 
 /**
@@ -123,37 +123,37 @@ ${corpo}`;
 export const sonnerSource: SourceTransform<SonnerArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
 
-  const atributosRegiao = attrs(
-    propOpcao('position', args.position, POSICOES, POSICAO_PADRAO),
+  const regionAttrs = attrs(
+    propOpcao('position', args.position, POSITIONS, DEFAULT_POSITION),
     propBool('richColors', args.richColors),
     propBool('closeButton', args.closeButton),
-    typeof args.duration === 'number' && args.duration !== PRAZO_PADRAO
+    typeof args.duration === 'number' && args.duration !== DEFAULT_DURATION
       ? propNumero('duration', args.duration)
       : undefined,
   );
 
-  const tipo =
-    typeof args.type === 'string' && (TIPOS as readonly string[]).includes(args.type)
+  const type =
+    typeof args.type === 'string' && (TYPES as readonly string[]).includes(args.type)
       ? args.type
       : 'success';
-  const titulo = filhoTexto(args.title, 'Alterações salvas.');
+  const title = filhoTexto(args.title, 'Alterações salvas.');
 
-  const opcoes: string[] = [];
-  const descricao = texto(args.description);
-  if (descricao) opcoes.push(`description: "${descricao}",`);
-  const rotuloAcao = texto(args.actionLabel);
-  if (rotuloAcao) {
-    opcoes.push(
-      `action: { label: "${rotuloAcao}", onClick: () => toast.success("Feito.") },`,
+  const options: string[] = [];
+  const description = texto(args.description);
+  if (description) options.push(`description: "${description}",`);
+  const actionLabel = texto(args.actionLabel);
+  if (actionLabel) {
+    options.push(
+      `action: { label: "${actionLabel}", onClick: () => toast.success("Feito.") },`,
     );
   }
 
-  const disparo = chamada(tipo, titulo, opcoes);
-  const corpoDoBotao = opcoes.length
+  const fired = call(type, title, options);
+  const buttonBody = options.length
     ? `<Button
   variant="outline"
   onClick={() => {
-${disparo
+${fired
   .split('\n')
   .map((linha) => `    ${linha}`)
   .join('\n')}
@@ -161,16 +161,16 @@ ${disparo
 >
   Salvar alterações
 </Button>`
-    : `<Button variant="outline" onClick={() => ${disparo.replace(/;$/, '')}}>
+    : `<Button variant="outline" onClick={() => ${fired.replace(/;$/, '')}}>
   Salvar alterações
 </Button>`;
 
   return jsxSnippet(
-    IMPORTS_COM_BOTAO,
-    usoDaFila(
-      atributosRegiao,
+    IMPORTS_WITH_BUTTON,
+    queueUsage(
+      regionAttrs,
       'E a notificação nasce no evento que termina a operação.',
-      corpoDoBotao,
+      buttonBody,
     ),
   );
 };
@@ -181,28 +181,28 @@ ${disparo
 // Nenhum arg descreve o tipo nesse arquivo, então cada uma precisa do próprio
 // snippet — sem override, todas imprimiriam a mesma notificação de êxito.
 
-const REGIAO_TIPOS = ' position="top-right" richColors';
+const REGION_TYPES = ' position="top-right" richColors';
 
 /** Notificação neutra: sem tipo semântico, e por isso sem ícone. */
-export function sonnerNeutroSource(): string {
+export function sonnerNeutralSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
-      REGIAO_TIPOS,
+    queueUsage(
+      REGION_TYPES,
       'Sem tipo semântico: nada aconteceu de certo nem de errado.',
-      chamada('default', 'Código copiado.'),
+      call('default', 'Código copiado.'),
     ),
   );
 }
 
 /** Êxito. `richColors` é o que leva a cor semântica do tema até a caixa. */
-export function sonnerSucessoSource(): string {
+export function sonnerSuccessSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
-      REGIAO_TIPOS,
+    queueUsage(
+      REGION_TYPES,
       'Confirmação de ação concluída.',
-      chamada('success', 'Alterações salvas.'),
+      call('success', 'Alterações salvas.'),
     ),
   );
 }
@@ -211,13 +211,13 @@ export function sonnerSucessoSource(): string {
  * Falha. O texto diz a causa E o caminho de saída — a cor sozinha não chega a
  * quem não distingue vermelho de verde (WCAG 1.4.1).
  */
-export function sonnerErroSource(): string {
+export function sonnerErrorSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
-      REGIAO_TIPOS,
+    queueUsage(
+      REGION_TYPES,
       'Falha da operação: a frase diz a causa e o caminho de saída.',
-      chamada('error', 'Não foi possível salvar. Tente novamente.'),
+      call('error', 'Não foi possível salvar. Tente novamente.'),
     ),
   );
 }
@@ -226,13 +226,13 @@ export function sonnerErroSource(): string {
  * Aviso não crítico. Se a mensagem precisa continuar visível enquanto a pessoa
  * age, o componente certo é o Alert — este some sozinho.
  */
-export function sonnerAvisoSource(): string {
+export function sonnerWarningSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
-      REGIAO_TIPOS,
+    queueUsage(
+      REGION_TYPES,
       'Aviso não crítico, que não exige decisão para sair da tela.',
-      chamada('warning', 'Sua sessão expira em 5 minutos.'),
+      call('warning', 'Sua sessão expira em 5 minutos.'),
     ),
   );
 }
@@ -241,10 +241,10 @@ export function sonnerAvisoSource(): string {
 export function sonnerInfoSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
-      REGIAO_TIPOS,
+    queueUsage(
+      REGION_TYPES,
       'Informação contextual ou novidade.',
-      chamada('info', 'Nova versão disponível.'),
+      call('info', 'Nova versão disponível.'),
     ),
   );
 }
@@ -254,13 +254,13 @@ export function sonnerInfoSource(): string {
  * operação. Fechá-la sozinha deixaria a pessoa sem saber se terminou — e é por
  * isso que na prática este tipo aparece por `toast.promise`.
  */
-export function sonnerCarregandoSource(): string {
+export function sonnerLoadingSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
-      REGIAO_TIPOS,
+    queueUsage(
+      REGION_TYPES,
       'Operação em curso: sem prazo, quem a encerra é o fim da operação.',
-      chamada('loading', 'Enviando arquivo...'),
+      call('loading', 'Enviando arquivo...'),
     ),
   );
 }
@@ -272,13 +272,13 @@ export function sonnerCarregandoSource(): string {
  * tempos de leitura diferentes ensina a pessoa a não confiar em nenhum. O valor
  * aparece por extenso aqui porque o prazo é o assunto da story.
  */
-export function sonnerPrazoSource(): string {
+export function sonnerDurationSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
+    queueUsage(
       ' position="top-right" richColors duration={4000}',
       'A chamada não repete o prazo: quem manda é o da região.',
-      chamada('error', 'Não foi possível salvar. Tente novamente.'),
+      call('error', 'Não foi possível salvar. Tente novamente.'),
     ),
   );
 }
@@ -289,13 +289,13 @@ export function sonnerPrazoSource(): string {
  * essa a informação — o tempo de leitura não é o mesmo para todo mundo, e o
  * componente já trata disso (WCAG 2.2.1).
  */
-export function sonnerPausaSource(): string {
+export function sonnerPauseSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
+    queueUsage(
       ' position="top-right" richColors duration={4000}',
       'Com o ponteiro dentro da região, o prazo acima para de correr.',
-      chamada('info', 'Nova versão disponível.'),
+      call('info', 'Nova versão disponível.'),
     ),
   );
 }
@@ -305,15 +305,15 @@ export function sonnerPausaSource(): string {
  * encobre as anteriores, e uma mensagem ainda não lida sai de cena sem ter sido
  * lida. Cada chamada é uma notificação — nada precisa ser agrupado à mão.
  */
-export function sonnerEmpilhadoSource(): string {
+export function sonnerStackedSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
+    queueUsage(
       ' position="top-right" richColors expand',
       'Cada chamada entra na fila; a pilha aberta mantém todas legíveis.',
-      `${chamada('success', 'Alterações salvas.')}
-${chamada('warning', 'Sua sessão expira em 5 minutos.')}
-${chamada('info', 'Nova versão disponível.')}`,
+      `${call('success', 'Alterações salvas.')}
+${call('warning', 'Sua sessão expira em 5 minutos.')}
+${call('info', 'Nova versão disponível.')}`,
     ),
   );
 }
@@ -323,13 +323,13 @@ ${chamada('info', 'Nova versão disponível.')}`,
  * região é montada uma vez só, a posição se decide uma vez só — misturar cantos
  * faria a pessoa procurar a notificação a cada vez.
  */
-export function sonnerRodapeCentradoSource(): string {
+export function sonnerCenteredFooterSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
+    queueUsage(
       ' position="bottom-center" richColors',
       'A chamada não muda: o canto é decisão da região, não da mensagem.',
-      chamada('success', 'Alterações salvas.'),
+      call('success', 'Alterações salvas.'),
     ),
   );
 }
@@ -340,12 +340,12 @@ export function sonnerRodapeCentradoSource(): string {
  * A fila existe independentemente de quem a desenha: uma tela que ainda não
  * montou a região não desenha nada e também não derruba o fluxo que chamou.
  */
-export function sonnerSemRegiaoSource(): string {
+export function sonnerNoRegionSource(): string {
   return jsxSnippet(
     IMPORT_TOAST,
     `// Sem o Toaster montado na raiz, a chamada não desenha nada — e também não
 // quebra: a fila existe independentemente de quem a desenha.
-${chamada('success', 'Alterações salvas.')}`,
+${call('success', 'Alterações salvas.')}`,
   );
 }
 
@@ -354,15 +354,15 @@ ${chamada('success', 'Alterações salvas.')}`,
  * prop, a região acompanha o tema do documento, que é o que se quer em quase
  * todo caso.
  */
-export function sonnerTemaEscuroSource(): string {
+export function sonnerDarkThemeSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
+    queueUsage(
       ' position="top-right" richColors expand theme="dark"',
       'Sem a prop theme, a região acompanha sozinha o tema do documento.',
-      `${chamada('success', 'Alterações salvas.')}
-${chamada('error', 'Não foi possível salvar. Tente novamente.')}
-${chamada('info', 'Nova versão disponível.')}`,
+      `${call('success', 'Alterações salvas.')}
+${call('error', 'Não foi possível salvar. Tente novamente.')}
+${call('info', 'Nova versão disponível.')}`,
     ),
   );
 }
@@ -374,13 +374,13 @@ ${chamada('info', 'Nova versão disponível.')}`,
  * é uma frase completa: se precisar de três linhas, o lugar da mensagem não é
  * uma notificação.
  */
-export function sonnerComDescricaoSource(): string {
+export function sonnerWithDescriptionSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
-      REGIAO_TIPOS,
+    queueUsage(
+      REGION_TYPES,
       'A descrição complementa o título, e vai na mesma chamada.',
-      chamada('success', 'Preferências atualizadas.', [
+      call('success', 'Preferências atualizadas.', [
         'description: "Suas configurações entrarão em vigor na próxima sessão.",',
       ]),
     ),
@@ -395,11 +395,11 @@ export function sonnerComDescricaoSource(): string {
  * lugar da interface também — a notificação some, e o que só existia nela some
  * junto.
  */
-export function sonnerComAcaoSource(): string {
+export function sonnerWithActionSource(): string {
   return jsxSnippet(
-    IMPORTS_COM_BOTAO,
-    usoDaFila(
-      REGIAO_TIPOS,
+    IMPORTS_WITH_BUTTON,
+    queueUsage(
+      REGION_TYPES,
       'Desfazer também precisa existir fora daqui: a notificação some.',
       `<Button
   variant="outline"
@@ -426,10 +426,10 @@ export function sonnerComAcaoSource(): string {
  * snippet serve aos dois desfechos: o que muda é a promessa resolver ou
  * rejeitar, e não uma linha do código.
  */
-export function sonnerPromessaSource(): string {
+export function sonnerPromiseSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    `${regiao(REGIAO_TIPOS)}
+    `${region(REGION_TYPES)}
 
 async function enviarArquivo(dados: FormData) {
   const resposta = await fetch("/api/arquivos", { method: "POST", body: dados });
@@ -454,13 +454,13 @@ function enviar(dados: FormData) {
  * Sempre com `closeButton`: uma notificação que não sai sozinha e não pode ser
  * fechada deixa de ser aviso e vira obstáculo. Os dois andam juntos.
  */
-export function sonnerPersistenteSource(): string {
+export function sonnerPersistentSource(): string {
   return jsxSnippet(
     IMPORTS_BASE,
-    usoDaFila(
+    queueUsage(
       ' position="top-right" richColors closeButton',
       'Prazo infinito: fechar à mão passa a ser o único caminho de saída.',
-      chamada('error', 'Falha crítica no servidor.', [
+      call('error', 'Falha crítica no servidor.', [
         'duration: Number.POSITIVE_INFINITY,',
       ]),
     ),

@@ -6,8 +6,8 @@ import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon
  * Rótulos em português — o design system é escrito em pt-BR, e os defaults da
  * lib ("Notifications", "Close toast") chegariam à tela em inglês.
  */
-export const ROTULO_REGIAO = "Notificações"
-export const ROTULO_FECHAR = "Fechar notificação"
+export const REGION_LABEL = "Notificações"
+export const CLOSE_LABEL = "Fechar notificação"
 
 /**
  * A região que desenha a fila. Vai UMA VEZ no root da aplicação.
@@ -49,8 +49,8 @@ const Toaster = ({ containerAriaLabel, toastOptions, ...props }: ToasterProps) =
         } as React.CSSProperties
       }
       {...props}
-      containerAriaLabel={containerAriaLabel ?? ROTULO_REGIAO}
-      toastOptions={{ closeButtonAriaLabel: ROTULO_FECHAR, ...toastOptions }}
+      containerAriaLabel={containerAriaLabel ?? REGION_LABEL}
+      toastOptions={{ closeButtonAriaLabel: CLOSE_LABEL, ...toastOptions }}
     />
   )
 }
