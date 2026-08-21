@@ -2522,3 +2522,31 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
 - [ ] **Prosa vazando nome de lib headless em texto visível**: a story `AsLink` do
       button no Vue tem `description.story` dizendo "Usando asChild com reka-ui
       Primitive". Não é snippet, então nenhuma regra o alcança.
+
+## Da atualização de dependências (2026-08-21)
+
+- [ ] **TypeScript 7 não é aproveitável em nenhuma das cinco, e cada uma barra
+      por um motivo diferente** — medido, não estimado. `vue-tsc` pede
+      `typescript/lib/tsc`, que o 7 não exporta; `svelte-check` declara peer
+      `^5 || ^6` e exige instalação lado a lado com flag `--tsgo`;
+      `@angular/compiler-cli@22` fixa `typescript >=6.0 <6.1`; e
+      `typescript-eslint` não suporta o 7 de forma alguma, o que derruba o lint
+      no React e no Vanilla, onde o `tsc` puro compilaria. Revisitar quando o
+      `typescript-eslint` fechar
+      https://github.com/typescript-eslint/typescript-eslint/issues/10940.
+
+- [ ] **`carousel-configuracoes > Drag Gesture` — intermitente, agora COM a
+      asserção em mãos.** Reprova com `expected 4.1099853515625 to be less than 2`
+      em `emPosicao`, ou seja, o trilho assenta a ~4,1px do ponto que a seta
+      alcança e fica lá: a janela de 4s expira sem convergir. Só sob carga de
+      suíte cheia; isolada passa. Visto no Vanilla e no Svelte. A hipótese a
+      testar é o alvo do encaixe ser calculado a partir de uma medida colhida
+      COM transform aplicado durante o arrasto — o caminho da seta não tem esse
+      resíduo. Não fechar como "não reproduz": medir em par no mesmo commit.
+
+- [ ] **Falha de infra do dev server sob carga**, no Vanilla e no Vue:
+      `Failed to fetch dynamically imported module: …/@storybook/addon-vitest/…/
+      setup-file-with-project-annotations.js`. Chega a derrubar 7 arquivos de
+      uma vez, sempre na COLETA (zero testes reprovados; os arquivos nem
+      carregam). Não é do produto nem das stories — é o servidor do Vite não
+      servindo o arquivo de setup. Some ao repetir.
