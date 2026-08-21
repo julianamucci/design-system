@@ -79,6 +79,26 @@ const config: StorybookConfig = {
       '@': path.resolve(dirname, '../src'),
       '@shared': path.resolve(dirname, '../../docs/shared'),
     };
+    // `vitest/browser` é MÓDULO VIRTUAL do plugin do Vitest, e o build de
+    // PRODUÇÃO do Storybook não carrega esse plugin. O
+    // `docs/shared/testing/slider-probe.ts` o importa por `await import()`
+    // literal de propósito — o especificador precisa chegar ao plugin durante o
+    // teste — e conta com o `catch` para cair no DOM fora do modo browser.
+    //
+    // Sem o plugin, o Rolldown REPROVA a build em vez de deixar o import falhar
+    // em runtime. Foi o que derrubou o CI das cinco stacks. Externo, o
+    // especificador sobrevive até o navegador, o `import()` rejeita, e o
+    // `catch` assume.
+    viteConfig.build = viteConfig.build ?? {};
+    const rollup = (viteConfig.build.rollupOptions = viteConfig.build.rollupOptions ?? {});
+    const externoAnterior = rollup.external;
+    rollup.external = (id, ...resto) => {
+      if (id === 'vitest/browser') return true;
+      if (typeof externoAnterior === 'function') return externoAnterior(id, ...resto);
+      if (Array.isArray(externoAnterior)) return externoAnterior.includes(id);
+      return false;
+    };
+
     return viteConfig;
   },
 };

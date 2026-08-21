@@ -32,11 +32,27 @@ import { cn } from "@/lib/utils"
 const ESPERA_PADRAO_ABRIR = 600
 const ESPERA_PADRAO_FECHAR = 300
 
+/**
+ * O gatilho entra e sai por FUNÇÃO, não por ref exposto no contexto.
+ *
+ * A forma anterior publicava o próprio `triggerRef` e o gatilho escrevia
+ * `contexto.triggerRef.current = el`. Isso é mutação de propriedade de um valor
+ * que veio de hook (`useContext` sobre um objeto de `useMemo`), e a regra
+ * `react-hooks/immutability` reprova — corretamente: o compilador não tem como
+ * saber que aquele campo é um ref, que é a única coisa que o React permite
+ * mutar. Era o único erro de lint do repositório, e derrubava o CI do React
+ * inteiro.
+ *
+ * Com um par registrar/ler, quem muta é o dono do ref, dentro do componente
+ * que o criou. O consumidor só chama.
+ */
 type HoverCardContextValue = {
   openDelay: number
   closeDelay: number
-  /** Gatilho deste cartão — é dele que sai o nome acessível do painel. */
-  triggerRef: React.MutableRefObject<HTMLElement | null>
+  /** Guarda o gatilho deste cartão — é dele que sai o nome acessível do painel. */
+  registrarGatilho: (el: HTMLElement | null) => void
+  /** Texto do gatilho no momento da leitura, ou `null` se ainda não montou. */
+  textoDoGatilho: () => string | null
 }
 
 const HoverCardContext = React.createContext<HoverCardContextValue | null>(null)
@@ -58,9 +74,16 @@ function HoverCard({
   ...props
 }: HoverCardProps) {
   const triggerRef = React.useRef<HTMLElement | null>(null)
+  const registrarGatilho = React.useCallback((el: HTMLElement | null) => {
+    triggerRef.current = el
+  }, [])
+  const textoDoGatilho = React.useCallback(
+    () => triggerRef.current?.textContent?.trim() || null,
+    []
+  )
   const contexto = React.useMemo(
-    () => ({ openDelay, closeDelay, triggerRef }),
-    [openDelay, closeDelay]
+    () => ({ openDelay, closeDelay, registrarGatilho, textoDoGatilho }),
+    [openDelay, closeDelay, registrarGatilho, textoDoGatilho]
   )
 
   return (
@@ -83,7 +106,7 @@ function HoverCardTrigger({ asChild, children, ...props }: HoverCardTriggerProps
 
   const registrar = React.useCallback(
     (el: HTMLElement | null) => {
-      if (contexto) contexto.triggerRef.current = el
+      contexto?.registrarGatilho(el)
     },
     [contexto]
   )
@@ -142,10 +165,7 @@ function HoverCardContent({
     (el: HTMLDivElement | null) => {
       if (!el) return
       if (el.getAttribute("aria-label") || el.getAttribute("aria-labelledby")) return
-      el.setAttribute(
-        "aria-label",
-        contexto?.triggerRef.current?.textContent?.trim() || "Prévia"
-      )
+      el.setAttribute("aria-label", contexto?.textoDoGatilho() || "Prévia")
     },
     [contexto]
   )
