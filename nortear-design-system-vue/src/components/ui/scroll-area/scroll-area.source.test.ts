@@ -39,7 +39,7 @@ const tags = Array.from({ length: 40 }, (_, i) => \`Tag \${i + 1}\`)
 </script>
 
 <template>
-  <div class="nds-w-cap-xs nds-rounded-md nds-border-default nds-overflow-hidden">
+  <div class="nds-w-xs nds-rounded-md nds-border-default nds-overflow-hidden">
     <ScrollArea size="xl" class="nds-w-full">
       <div class="nds-p-4">
         <h4 class="nds-mb-2 nds-text-body nds-font-medium nds-leading-none">Tags</h4>

@@ -388,12 +388,12 @@ export const ExtraPanelClass: Story = {
     });
 
     await step('E a largura customizada vence a largura padrão do cartão', async () => {
-      // 24rem da utilitária contra os 20rem que `.nds-hover-card-content`
+      // 28rem da utilitária contra os 20rem que `.nds-hover-card-content`
       // define. É o que prova que a customização de largura funciona de fato,
       // e não só que a classe está no atributo.
       const painel = await esperarAberto();
       const raiz = parseFloat(getComputedStyle(document.documentElement).fontSize);
-      await expect(painel.getBoundingClientRect().width).toBeCloseTo(24 * raiz, 0);
+      await expect(painel.getBoundingClientRect().width).toBeCloseTo(28 * raiz, 0);
     });
   },
 };

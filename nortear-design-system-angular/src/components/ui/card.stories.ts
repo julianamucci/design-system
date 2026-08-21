@@ -124,7 +124,7 @@ export const Playground: Story = {
   render: (args) => ({
     props: { ...args },
     template: `
-      <div ndsCard [size]="size" class="nds-w-cap-sm">
+      <div ndsCard [size]="size" class="nds-w-sm">
         <div ndsCardHeader>
           <h3 ndsCardTitle>{{ title }}</h3>
           <p ndsCardDescription>{{ description }}</p>

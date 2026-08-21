@@ -49,7 +49,7 @@ function campo(partes: Array<string | false | null | undefined>, recuo = '  '): 
 
 /** Contêiner do campo: rótulo, campo e o que vier depois, empilhados. */
 function bloco(rotulo: string, id: string, corpo: string): string {
-  return `<div className="nds-stack nds-w-cap-md" data-spacing="sm">
+  return `<div className="nds-stack nds-w-md" data-spacing="sm">
   <Label htmlFor="${id}">${rotulo}</Label>
 ${corpo}
 </div>`;
@@ -315,7 +315,7 @@ export function textareaEmFormularioSource(): string {
   return jsxSnippet(
     cabecalhoControlado('import { Button } from "@/components/ui/button";'),
     `<form
-  className="nds-stack nds-w-cap-md"
+  className="nds-stack nds-w-md"
   data-spacing="md"
   onSubmit={(e) => e.preventDefault()}
 >

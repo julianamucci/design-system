@@ -222,7 +222,7 @@ export const Controlled: Story = {
     // o atalho de duas vias já cobre input e output.
     props: { valor: 'item-1' },
     template: `
-      <div class="nds-stack nds-w-cap-lg" data-spacing="sm">
+      <div class="nds-stack nds-w-lg" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">
           Item aberto: <code>{{ valor || 'nenhum' }}</code>
         </p>

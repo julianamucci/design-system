@@ -71,7 +71,7 @@ export const Playground: Story = {
     };
 
     if (args.orientation === 'horizontal') {
-      wrapper.className = 'nds-stack nds-w-cap-md';
+      wrapper.className = 'nds-stack nds-w-md';
       wrapper.dataset.spacing = 'md';
 
       const top = document.createElement('p');
@@ -86,7 +86,7 @@ export const Playground: Story = {
     } else {
       // Sem altura cravada: o `align-self: stretch` da folha faz a linha
       // acompanhar a linha do flex. Cravar altura aqui esconderia o contrato.
-      wrapper.className = 'nds-cluster nds-docs-demo-row nds-w-cap-md';
+      wrapper.className = 'nds-cluster nds-docs-demo-row nds-w-md';
       wrapper.dataset.spacing = 'md';
 
       const left = document.createElement('span');

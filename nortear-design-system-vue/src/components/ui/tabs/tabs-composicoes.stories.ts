@@ -44,7 +44,7 @@ export const Controlled: Story = {
       return { value };
     },
     template: `
-      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
+      <div class="nds-stack nds-w-md" data-spacing="sm">
         <p class="nds-text-caption nds-text-muted-foreground">
           Tab ativa: <code>{{ value }}</code>
         </p>
@@ -102,7 +102,7 @@ export const WithIcons: Story = {
   render: () => ({
     components: { ...sharedComponents, Code2, Eye, Settings2 },
     template: `
-      <Tabs default-value="preview" class="nds-w-cap-md">
+      <Tabs default-value="preview" class="nds-w-md">
         <TabsList variant="line" aria-label="Modos de visualização">
           <TabsTrigger value="preview">
             <Eye class="nds-size-4" aria-hidden="true" />
@@ -171,7 +171,7 @@ export const WithBadge: Story = {
   render: () => ({
     components: { ...sharedComponents, Badge },
     template: `
-      <Tabs default-value="inbox" class="nds-w-cap-md">
+      <Tabs default-value="inbox" class="nds-w-md">
         <TabsList aria-label="Caixas de mensagem">
           <TabsTrigger value="inbox">
             Caixa de entrada
@@ -234,7 +234,7 @@ export const VerticalSettings: Story = {
   render: () => ({
     components: { ...sharedComponents, User, Settings2, Shield },
     template: `
-      <Tabs default-value="profile" orientation="vertical" class="nds-w-cap-lg">
+      <Tabs default-value="profile" orientation="vertical" class="nds-w-lg">
         <TabsList aria-label="Configuracoes da conta">
           <TabsTrigger value="profile">
             <User class="nds-size-4" aria-hidden="true" />
@@ -302,7 +302,7 @@ export const ManualMode: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="overview" activation-mode="manual" class="nds-w-cap-md">
+      <Tabs default-value="overview" activation-mode="manual" class="nds-w-md">
         <TabsList aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties">Propriedades</TabsTrigger>

@@ -41,7 +41,7 @@ import {
 </script>
 
 <template>
-  <div class="nds-w-cap-lg nds-aspect-16-9 nds-rounded-md nds-border-default nds-overflow-hidden">
+  <div class="nds-w-lg nds-aspect-16-9 nds-rounded-md nds-border-default nds-overflow-hidden">
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel :default-size="30" :min-size="20" :max-size="60">
         <div class="nds-stack nds-p-4" data-spacing="xs">
@@ -94,7 +94,7 @@ describe('a moldura de tamanho definido', () => {
     // Sem tamanho no pai não há o que dividir: o grupo vertical empilharia os
     // painéis no tamanho do conteúdo e nada se ajustaria.
     for (const saida of TODAS) {
-      expect(saida).toMatch(/<div class="nds-w-cap-\w+ nds-aspect-[\w-]+ /);
+      expect(saida).toMatch(/<div class="nds-w-\w+ nds-aspect-[\w-]+ /);
     }
   });
 

@@ -50,7 +50,7 @@ export const Closed: Story = {
   parameters: { covers: ['accessibility.item5'] },
   render: () => ({
     template: `
-      <div ndsCollapsible class="nds-w-cap-sm">
+      <div ndsCollapsible class="nds-w-sm">
         <button
           ndsCollapsibleTrigger
           ndsButton
@@ -93,7 +93,7 @@ export const Open: Story = {
   render: () => ({
     props: { aberto: true },
     template: `
-      <div ndsCollapsible class="nds-w-cap-sm" [open]="aberto" (openChange)="aberto = $event">
+      <div ndsCollapsible class="nds-w-sm" [open]="aberto" (openChange)="aberto = $event">
         <button
           ndsCollapsibleTrigger
           ndsButton
@@ -143,7 +143,7 @@ export const OpenByDefault: Story = {
   parameters: { covers: ['functional.item3', 'visual.item2'] },
   render: () => ({
     template: `
-      <div ndsCollapsible class="nds-w-cap-sm" [defaultOpen]="true">
+      <div ndsCollapsible class="nds-w-sm" [defaultOpen]="true">
         <button
           ndsCollapsibleTrigger
           ndsButton
@@ -191,7 +191,7 @@ export const Disabled: Story = {
   parameters: { covers: ['functional.item6', 'visual.item5'] },
   render: () => ({
     template: `
-      <div ndsCollapsible class="nds-w-cap-sm">
+      <div ndsCollapsible class="nds-w-sm">
         <button
           ndsCollapsibleTrigger
           ndsButton

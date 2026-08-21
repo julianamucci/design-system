@@ -42,7 +42,7 @@ export const Default: Story = {
   render: () => ({
     components: { Label, Input },
     template: `
-      <div class="nds-stack nds-w-cap-xs" data-spacing="xs">
+      <div class="nds-stack nds-w-xs" data-spacing="xs">
         <Label for="estado-padrao">Nome completo</Label>
         <Input id="estado-padrao" type="text" placeholder="ex: João da Silva" />
       </div>
@@ -77,7 +77,7 @@ export const Disabled: Story = {
   render: () => ({
     components: { Label, Input },
     template: `
-      <div class="nds-stack nds-w-cap-xs" data-spacing="xs">
+      <div class="nds-stack nds-w-xs" data-spacing="xs">
         <Label for="estado-disabled">CPF</Label>
         <Input id="estado-disabled" type="text" class="nds-peer" placeholder="000.000.000-00" disabled />
       </div>
@@ -109,7 +109,7 @@ export const DisabledViaGroup: Story = {
   render: () => ({
     components: { Label, Input },
     template: `
-      <div class="nds-stack nds-w-cap-xs" data-spacing="xs" data-disabled="true">
+      <div class="nds-stack nds-w-xs" data-spacing="xs" data-disabled="true">
         <Label for="estado-grupo-disabled">Documento</Label>
         <Input id="estado-grupo-disabled" type="text" placeholder="ex: 000.000.000-00" disabled />
       </div>
@@ -137,7 +137,7 @@ export const Required: Story = {
   render: () => ({
     components: { Label, Input },
     template: `
-      <div class="nds-stack nds-w-cap-xs" data-spacing="xs">
+      <div class="nds-stack nds-w-xs" data-spacing="xs">
         <Label for="estado-required">
           Email profissional
           <span class="nds-text-destructive" aria-hidden="true">*</span>

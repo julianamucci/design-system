@@ -12,7 +12,7 @@
  * - O campo nunca aparece sem rótulo programático. `placeholder` some ao
  *   primeiro caractere e não é nome acessível — um exemplo com o placeholder
  *   fazendo as vezes do rótulo ensina o defeito.
- * - A largura vem de utilitário (`nds-w-cap-xs`), nunca de um
+ * - A largura vem de utilitário (`nds-w-xs`), nunca de um
  *   `style` com valor de design. E nada de `height`: a altura do campo é
  *   resultado de `padding-block` + `line-height`, que é o que o deixa crescer
  *   com a fonte do navegador (WCAG 1.4.4).
@@ -54,7 +54,7 @@ const IMPORT_PAR = `${IMPORT_CAMPO}
 ${IMPORT_LABEL}`;
 
 /** A coluna que segura rótulo e campo, com o respiro curto entre os dois. */
-const COLUNA = '<div className="nds-stack nds-w-cap-xs" data-spacing="xs">';
+const COLUNA = '<div className="nds-stack nds-w-xs" data-spacing="xs">';
 
 /**
  * Rótulo + campo: a unidade mínima que se copia de uma vez.
@@ -192,7 +192,7 @@ export function inputComErroSource(): string {
 export function inputPaletaEscuraSource(): string {
   return jsxSnippet(
     IMPORT_PAR,
-    `<div className="dark nds-stack nds-w-cap-xs" data-spacing="md">
+    `<div className="dark nds-stack nds-w-xs" data-spacing="md">
   <div className="nds-stack" data-spacing="xs">
     <Label htmlFor="dk-padrao">Padrão</Label>
     <Input id="dk-padrao" placeholder="ex: João da Silva" />
@@ -437,7 +437,7 @@ export function inputGroupAlinhamentosSource(): string {
     `${importGrupo('InputGroup', 'InputGroupAddon', 'InputGroupInput', 'InputGroupText')}
 ${IMPORT_LABEL}
 import { Search } from "lucide-react";`,
-    `<div className="nds-stack nds-w-cap-md" data-spacing="lg">
+    `<div className="nds-stack nds-w-md" data-spacing="lg">
   <div className="nds-stack" data-spacing="xs">
     <Label htmlFor="ig-inicio">Buscar</Label>
     <InputGroup>

@@ -37,7 +37,7 @@ export const WithCard: Story = {
   render: () => ({
     props: { meses: MESES, series: SERIES_TRIO },
     template: `
-      <div ndsCard class="nds-w-cap-lg">
+      <div ndsCard class="nds-w-lg">
         <div ndsCardHeader>
           <p ndsCardTitle>Acessos mensais</p>
           <p ndsCardDescription>Total de acessos</p>

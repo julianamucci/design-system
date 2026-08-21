@@ -40,7 +40,7 @@ export const Default: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
     const bar = createProgress({ value: 0, 'aria-label': 'Progresso do upload' });
     wrap.appendChild(bar);
     return wrap;
@@ -74,7 +74,7 @@ export const Loading: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
     const bar = createProgress({ value: 50, 'aria-label': 'Carregando dados' });
     wrap.appendChild(bar);
     return wrap;
@@ -106,7 +106,7 @@ export const Complete: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
     const bar = createProgress({ value: 100, 'aria-label': 'Concluído' });
     wrap.appendChild(bar);
     return wrap;
@@ -141,7 +141,7 @@ export const Indeterminate: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
     const bar = createProgress({ value: null, 'aria-label': 'Processando…' });
     wrap.appendChild(bar);
     return wrap;
@@ -195,7 +195,7 @@ export const Animated: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-cap-md';
+    wrap.className = 'nds-stack nds-w-md';
     wrap.dataset.spacing = 'xs';
 
     const row = document.createElement('div');

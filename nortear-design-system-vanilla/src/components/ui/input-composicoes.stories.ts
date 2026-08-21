@@ -45,7 +45,7 @@ function createFormField(opts: {
   errorText?: string;
 }): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack nds-w-cap-sm';
+  wrapper.className = 'nds-stack nds-w-sm';
   wrapper.dataset.spacing = 'xs';
 
   const label = document.createElement('label');
@@ -232,7 +232,7 @@ export const WithTextPrefix: Story = {
   },
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack nds-w-cap-sm';
+    wrapper.className = 'nds-stack nds-w-sm';
     wrapper.dataset.spacing = 'xs';
 
     const label = document.createElement('label');

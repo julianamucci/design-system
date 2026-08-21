@@ -41,7 +41,7 @@ const ROTULO_LISTA = 'Seções do componente';
 function grupo(defaultValue: string, items: TabsItemDef[]): HTMLElement {
   return createTabs({
     defaultValue,
-    class: 'nds-w-cap-md',
+    class: 'nds-w-md',
     items,
     'aria-label': ROTULO_LISTA,
   });

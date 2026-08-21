@@ -82,7 +82,7 @@ export const Single: Story = {
   render: () => ({
     props: { slides: [1, 2, 3] },
     template: `
-      <nds-carousel class="nds-w-cap-md" label="Um item por vez" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-md" label="Um item por vez" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
           @for (i of slides; track i) {
             <div ndsCarouselItem class="nds-basis-full">
@@ -121,7 +121,7 @@ export const MultiResponsive: Story = {
   render: () => ({
     props: { slides: [1, 2, 3, 4, 5, 6] },
     template: `
-      <nds-carousel class="nds-w-cap-lg" label="Conjunto longo de slides" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-lg" label="Conjunto longo de slides" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
           @for (i of slides; track i) {
             <div ndsCarouselItem class="nds-md-basis-half nds-lg-basis-third">
@@ -176,7 +176,7 @@ export const Autoplay: Story = {
       <div class="nds-stack" data-spacing="md">
         <nds-carousel
           #carrossel
-          class="nds-w-cap-md"
+          class="nds-w-md"
           label="Destaques"
           slideLabel="Slide {index} de {total}"
           [autoplay]="true"
@@ -292,7 +292,7 @@ export const DragGesture: Story = {
   render: () => ({
     props: { slides: [1, 2, 3, 4] },
     template: `
-      <nds-carousel class="nds-w-cap-md" label="Galeria com gesto de arrastar" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-md" label="Galeria com gesto de arrastar" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
           @for (i of slides; track i) {
             <div ndsCarouselItem>

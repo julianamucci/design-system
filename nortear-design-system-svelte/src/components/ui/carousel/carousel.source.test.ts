@@ -24,7 +24,7 @@ describe('carouselSource', () => {
   const slides = [1, 2, 3, 4, 5];
 </script>
 
-<div class="nds-w-cap-md">
+<div class="nds-w-md">
   <Carousel aria-label="Galeria de exemplos">
     <CarouselContent>
       {#each slides as numero (numero)}

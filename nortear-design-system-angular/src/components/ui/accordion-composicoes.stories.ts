@@ -254,7 +254,7 @@ export const FAQ: Story = {
   },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-cap-lg" data-spacing="xs">
+      <div class="nds-stack nds-w-lg" data-spacing="xs">
         <h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
         <div ndsAccordion>
           <div ndsAccordionItem value="senha">

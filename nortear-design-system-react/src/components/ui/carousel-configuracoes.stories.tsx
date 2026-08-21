@@ -140,7 +140,7 @@ export const Single: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-cap-md" aria-label="Um item por vez">
+    <Carousel className="nds-w-md" aria-label="Um item por vez">
       <CarouselContent>
         {Array.from({ length: 3 }).map((_, i) => (
           <CarouselItem key={i} className="nds-basis-full">
@@ -186,7 +186,7 @@ export const MultiResponsive: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-cap-lg" aria-label="Conjunto longo de slides">
+    <Carousel className="nds-w-lg" aria-label="Conjunto longo de slides">
       <CarouselContent>
         {Array.from({ length: 6 }).map((_, i) => (
           <CarouselItem key={i} className="nds-md-basis-half nds-lg-basis-third">
@@ -253,7 +253,7 @@ export const Autoplay: Story = {
   },
   render: () => (
     <Carousel
-      className="nds-w-cap-md"
+      className="nds-w-md"
       aria-label="Destaques"
       opts={{ loop: true }}
       setApi={(api) => {
@@ -362,7 +362,7 @@ export const DragGesture: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-cap-md" aria-label="Galeria com gesto de arrastar">
+    <Carousel className="nds-w-md" aria-label="Galeria com gesto de arrastar">
       <CarouselContent>
         {Array.from({ length: 4 }).map((_, i) => (
           <CarouselItem key={i}>

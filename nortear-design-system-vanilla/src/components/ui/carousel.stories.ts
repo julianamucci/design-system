@@ -63,7 +63,7 @@ export const Playground: Story = {
   },
   render: (args) => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
     wrap.appendChild(
       createCarousel({
         items: slidesDeExemplo(args.slides),

@@ -74,7 +74,7 @@ function makeIconTrigger(nodes: LucideIconNode[], text: string, tone: string): H
 export const WithIconInTrigger: Story = {
   render: () => {
     const root = document.createElement('div');
-    root.className = 'nds-w-cap-lg';
+    root.className = 'nds-w-lg';
 
     const iconItems = [
       { value: 'info',    nodes: Info as unknown as LucideIconNode[],          tone: 'nds-text-info',    label: 'Informação',   content: 'Ícones facilitam a identificação rápida do tipo de conteúdo. Adicione aria-hidden="true" no ícone.' },
@@ -140,7 +140,7 @@ export const WithIconInTrigger: Story = {
 export const WithBadgeInTrigger: Story = {
   render: () => {
     const root = document.createElement('div');
-    root.className = 'nds-w-cap-lg';
+    root.className = 'nds-w-lg';
 
     const badgeItems = [
       { value: 'novo',  label: 'Novidades da versão 3.0',  badge: 'Novo',  variant: 'default' as const,    content: 'Conteúdo das novidades. Use badges para sinalizar status sem alterar o trigger textual.' },
@@ -207,7 +207,7 @@ export const WithBadgeInTrigger: Story = {
 export const RichContent: Story = {
   render: () => {
     const root = document.createElement('div');
-    root.className = 'nds-w-cap-lg';
+    root.className = 'nds-w-lg';
 
     const accordion = createAccordion({
       type: 'multiple',
@@ -294,7 +294,7 @@ const FAQ_ITEMS: AccordionOptions['items'] = [
 export const FAQ: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack nds-w-cap-lg';
+    wrapper.className = 'nds-stack nds-w-lg';
     wrapper.dataset.spacing = 'sm';
 
     const heading = document.createElement('h2');

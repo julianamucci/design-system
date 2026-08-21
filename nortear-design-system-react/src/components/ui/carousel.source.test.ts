@@ -60,7 +60,7 @@ describe('carouselSource', () => {
   it('no eixo horizontal o eixo não é escrito — é o padrão do componente', () => {
     const saida = carouselSource(undefined, { args: { orientation: 'horizontal' } });
     expect(saida).not.toContain('orientation=');
-    expect(saida).toContain('className="nds-w-cap-md"');
+    expect(saida).toContain('className="nds-w-md"');
   });
 
   it('no eixo vertical o trilho ganha altura DEFINIDA, e por classe de proporção', () => {

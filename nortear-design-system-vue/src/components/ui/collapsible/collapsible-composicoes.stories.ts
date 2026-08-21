@@ -51,7 +51,7 @@ export const WithCustomButton: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },
     template: `
-      <Collapsible class="nds-w-cap-sm">
+      <Collapsible class="nds-w-sm">
         <CollapsibleTrigger
           class="nds-button nds-button-outline nds-cluster nds-w-full nds-px-4"
           data-justify="between"
@@ -105,7 +105,7 @@ export const WithIconInTrigger: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown, Filter },
     setup() { return {}; },
     template: `
-      <Collapsible class="nds-w-cap-sm">
+      <Collapsible class="nds-w-sm">
         <CollapsibleTrigger
           class="nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4"
           data-justify="between"
@@ -158,7 +158,7 @@ export const WithRotatingChevron: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return {}; },
     template: `
-      <Collapsible class="nds-w-cap-sm">
+      <Collapsible class="nds-w-sm">
         <CollapsibleTrigger
           class="nds-button nds-button-outline nds-cluster nds-w-full nds-px-4"
           data-justify="between"

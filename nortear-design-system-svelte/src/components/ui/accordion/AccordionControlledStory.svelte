@@ -14,7 +14,7 @@
   ];
 </script>
 
-<div class="nds-stack nds-w-cap-lg" data-spacing="sm">
+<div class="nds-stack nds-w-lg" data-spacing="sm">
   <p class="nds-text-caption nds-text-muted-foreground">
     Item aberto: <code class="nds-font-mono">{activeItem || 'nenhum'}</code>
   </p>

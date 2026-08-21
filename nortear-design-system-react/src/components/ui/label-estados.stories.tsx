@@ -49,7 +49,7 @@ export const Default: Story = {
     },
   },
   render: () => (
-    <div className="nds-stack nds-w-cap-xs" data-spacing="xs">
+    <div className="nds-stack nds-w-xs" data-spacing="xs">
       <Label htmlFor="estado-padrao">Nome completo</Label>
       <Input id="estado-padrao" placeholder="ex: João da Silva" />
     </div>
@@ -89,7 +89,7 @@ export const Disabled: Story = {
     },
   },
   render: () => (
-    <div className="nds-stack nds-w-cap-xs" data-spacing="xs">
+    <div className="nds-stack nds-w-xs" data-spacing="xs">
       <Label htmlFor="estado-disabled">CPF</Label>
       <Input id="estado-disabled" disabled className="nds-peer" placeholder="000.000.000-00" />
     </div>
@@ -128,7 +128,7 @@ export const DisabledViaGroup: Story = {
   },
   render: () => (
     <div
-      className="nds-stack nds-w-cap-xs"
+      className="nds-stack nds-w-xs"
       data-spacing="xs"
       data-disabled="true"
     >
@@ -162,7 +162,7 @@ export const Required: Story = {
     },
   },
   render: () => (
-    <div className="nds-stack nds-w-cap-xs" data-spacing="xs">
+    <div className="nds-stack nds-w-xs" data-spacing="xs">
       <Label htmlFor="estado-required">
         Email profissional
         <span className="nds-text-destructive" aria-hidden="true">*</span>

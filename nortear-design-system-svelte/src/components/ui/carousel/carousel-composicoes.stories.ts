@@ -59,7 +59,7 @@ export const WithDots: Story = {
     props: {
       variant: 'withDots',
       slideCount: TOTAL_DOTS,
-      widthClass: 'nds-w-cap-md',
+      widthClass: 'nds-w-md',
       ariaLabel: 'Galeria com dots',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
@@ -211,7 +211,7 @@ export const Gallery: Story = {
     Component: CarouselStory,
     props: {
       variant: 'gallery',
-      widthClass: 'nds-w-cap-md',
+      widthClass: 'nds-w-md',
       ariaLabel: 'Galeria de fotos do produto',
       previousLabel: 'Foto anterior',
       nextLabel: 'Próxima foto',

@@ -199,7 +199,7 @@ describe('transforms das stories de composição', () => {
     const saida = paginationRodapeDeTabelaSource();
     // Só o cluster tem `data-align`/`data-justify`, e é ele que quebra a linha
     // sozinho quando a largura aperta.
-    expect(saida).toContain('class="nds-cluster nds-w-cap-prose nds-border-default nds-rounded-lg nds-p-4"');
+    expect(saida).toContain('class="nds-cluster nds-w-prose nds-border-default nds-rounded-lg nds-p-4"');
     expect(saida).toContain('data-justify="between"');
     expect(saida).toContain('data-align="end"');
     // Com duas faixas na mesma página, "Paginação" nas duas deixa o leitor de

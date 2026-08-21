@@ -61,7 +61,7 @@ export const WithIcons: Story = {
     },
   },
   render: () => (
-    <Tabs defaultValue="profile" className="nds-w-cap-lg">
+    <Tabs defaultValue="profile" className="nds-w-lg">
       <TabsList aria-label="Configurações da conta">
         <TabsTrigger value="profile">
           <User aria-hidden="true" />
@@ -137,7 +137,7 @@ export const WithBadge: Story = {
     },
   },
   render: () => (
-    <Tabs defaultValue="overview" className="nds-w-cap-lg">
+    <Tabs defaultValue="overview" className="nds-w-lg">
       <TabsList aria-label="Painel do projeto">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="inbox">
@@ -183,7 +183,7 @@ export const WithBadge: Story = {
 function ControlledTabs() {
   const [value, setValue] = useState("overview");
   return (
-    <div className="nds-stack nds-w-cap-lg" data-spacing="sm">
+    <div className="nds-stack nds-w-lg" data-spacing="sm">
       <p className="nds-text-caption nds-text-muted-foreground">
         Tab ativa: <code>{value}</code>
       </p>
@@ -251,7 +251,7 @@ export const ManualActivation: Story = {
     },
   },
   render: () => (
-    <Tabs defaultValue="overview" className="nds-w-cap-lg">
+    <Tabs defaultValue="overview" className="nds-w-lg">
       <TabsList aria-label="Seções do componente" activationMode="manual">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties">Propriedades</TabsTrigger>

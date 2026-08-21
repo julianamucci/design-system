@@ -92,7 +92,7 @@ export const Vertical: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'nds-w-cap-sm';
+    outer.className = 'nds-w-sm';
     outer.appendChild(createScrollArea({
       size: 'lg',
       label: 'Lista vertical de itens',
@@ -148,7 +148,7 @@ export const Horizontal: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'nds-w-cap-lg';
+    outer.className = 'nds-w-lg';
     outer.appendChild(createScrollArea({
       width: '100%',
       label: 'Fila horizontal de cards',
@@ -202,7 +202,7 @@ export const Both: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'nds-w-cap-lg';
+    outer.className = 'nds-w-lg';
     outer.appendChild(createScrollArea({
       size: 'lg',
       width: '100%',

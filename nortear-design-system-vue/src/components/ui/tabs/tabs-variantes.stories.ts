@@ -36,7 +36,7 @@ export const Default: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="overview" class="nds-w-cap-md">
+      <Tabs default-value="overview" class="nds-w-md">
         <TabsList aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -102,7 +102,7 @@ export const Line: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="overview" class="nds-w-cap-md">
+      <Tabs default-value="overview" class="nds-w-md">
         <TabsList variant="line" aria-label="Seções do componente">
           <TabsTrigger value="overview">Visão geral</TabsTrigger>
           <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -155,7 +155,7 @@ export const Vertical: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <Tabs default-value="profile" orientation="vertical" class="nds-w-cap-lg">
+      <Tabs default-value="profile" orientation="vertical" class="nds-w-lg">
         <TabsList aria-label="Configuracoes da conta">
           <TabsTrigger value="profile">Perfil</TabsTrigger>
           <TabsTrigger value="account">Conta</TabsTrigger>

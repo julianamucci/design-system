@@ -69,7 +69,7 @@ const CarouselComDots = defineComponent({
       h(
         Carousel,
         {
-          class: 'nds-w-cap-sm',
+          class: 'nds-w-sm',
           'aria-label': 'Galeria com dots',
           onInitApi: this.onInitApi,
         },
@@ -248,7 +248,7 @@ export const Gallery: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { slides: ROTULOS }; },
     template: `
-      <Carousel class="nds-w-cap-sm" aria-label="Galeria de fotos do produto">
+      <Carousel class="nds-w-sm" aria-label="Galeria de fotos do produto">
         <CarouselContent>
           <CarouselItem v-for="(rotulo, i) in slides" :key="i">
             <div class="nds-cluster nds-aspect-16-9 nds-p-4 nds-bg-muted-soft nds-rounded-lg" data-align="end" data-justify="start">

@@ -25,7 +25,7 @@ const SLIDES = `const slides = [1, 2, 3, 4, 5];`;
  * A largura máxima faz parte da lição: o carrossel recorta o que passa do
  * contêiner, e sem largura definida não há o que recortar.
  */
-const LARGURA_MD = 'nds-w-cap-md';
+const LARGURA_MD = 'nds-w-md';
 
 /**
  * Miolo demonstrativo de um slide, já indentado para dentro do `CarouselItem`.
@@ -64,7 +64,7 @@ export function carouselSource(_gerado?: string, ctx?: { args?: Partial<Carousel
 
   return svelteSnippet(
     `${IMPORT}\n\n${SLIDES}`,
-    `<div class="${vertical ? 'nds-w-cap-xs' : LARGURA_MD}">
+    `<div class="${vertical ? 'nds-w-xs' : LARGURA_MD}">
   <Carousel${raiz}>
     <CarouselContent${trilho}>
       {#each slides as numero (numero)}
@@ -120,7 +120,7 @@ export function carouselVariosItensSource(): string {
     `${IMPORT}
 
 const slides = [1, 2, 3, 4, 5, 6];`,
-    `<div class="nds-w-cap-lg">
+    `<div class="nds-w-lg">
   <Carousel aria-label="Carrossel com múltiplos itens">
     <CarouselContent>
       {#each slides as numero (numero)}

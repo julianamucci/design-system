@@ -105,7 +105,7 @@ export const tabsSource: SourceTransform<TabsArgs> = (_gerado, ctx) => {
         attr('default-value', args.defaultValue) || 'default-value="overview"',
         attr('orientation', args.orientation, 'horizontal'),
         attr('activation-mode', args.activationMode, 'automatic'),
-        `class="nds-w-cap-${vertical ? 'lg' : 'md'}"`,
+        `class="nds-w-${vertical ? 'lg' : 'md'}"`,
       ).trim(),
       rotuloLista: 'Seções do componente',
       abas: SECOES,
@@ -122,7 +122,7 @@ export function tabsPadraoSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="overview" class="nds-w-cap-md"',
+      raiz: 'default-value="overview" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
       abas: SECOES,
     }),
@@ -134,7 +134,7 @@ export function tabsLinhaSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="overview" class="nds-w-cap-md"',
+      raiz: 'default-value="overview" class="nds-w-md"',
       lista: 'variant="line"',
       rotuloLista: 'Seções do componente',
       abas: SECOES,
@@ -150,7 +150,7 @@ export function tabsVerticalSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="profile" orientation="vertical" class="nds-w-cap-lg"',
+      raiz: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
       rotuloLista: 'Configurações da conta',
       classePainel: CLASSE_PAINEL_VERTICAL,
       abas: [
@@ -182,7 +182,7 @@ export function tabsAbaAtivaSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="properties" class="nds-w-cap-md"',
+      raiz: 'default-value="properties" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
       abas: SECOES,
     }),
@@ -198,7 +198,7 @@ export function tabsAbaDesabilitadaSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="overview" class="nds-w-cap-md"',
+      raiz: 'default-value="overview" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
       abas: [
         SECOES[0],
@@ -243,7 +243,7 @@ export function tabsControladoSource(): string {
 import { ref } from 'vue'
 
 const aba = ref('overview')`,
-    `<div class="nds-stack nds-w-cap-md" data-spacing="sm">
+    `<div class="nds-stack nds-w-md" data-spacing="sm">
   <p class="nds-text-caption nds-text-muted-foreground">
     Aba ativa: <code>{{ aba }}</code>
   </p>
@@ -263,7 +263,7 @@ export function tabsComIconesSource(): string {
     `${IMPORT}
 import { Code2, Eye, Settings2 } from 'lucide-vue-next'`,
     tabs({
-      raiz: 'default-value="preview" class="nds-w-cap-md"',
+      raiz: 'default-value="preview" class="nds-w-md"',
       lista: 'variant="line"',
       rotuloLista: 'Modos de visualização',
       abas: [
@@ -297,7 +297,7 @@ export function tabsComContadorSource(): string {
     `${IMPORT}
 import { Badge } from '@/components/ui/badge'`,
     tabs({
-      raiz: 'default-value="inbox" class="nds-w-cap-md"',
+      raiz: 'default-value="inbox" class="nds-w-md"',
       rotuloLista: 'Caixas de mensagem',
       abas: [
         {
@@ -329,7 +329,7 @@ export function tabsConfiguracoesVerticaisSource(): string {
     `${IMPORT}
 import { Settings2, Shield, User } from 'lucide-vue-next'`,
     tabs({
-      raiz: 'default-value="profile" orientation="vertical" class="nds-w-cap-lg"',
+      raiz: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
       rotuloLista: 'Configurações da conta',
       classePainel: 'nds-text-body nds-pl-4',
       abas: [
@@ -362,7 +362,7 @@ export function tabsModoManualSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
-      raiz: 'default-value="overview" activation-mode="manual" class="nds-w-cap-md"',
+      raiz: 'default-value="overview" activation-mode="manual" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
       abas: [
         {

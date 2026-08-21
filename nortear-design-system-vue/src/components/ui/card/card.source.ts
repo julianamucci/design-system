@@ -23,8 +23,8 @@ const IMPORT_BUTTON = `import { Button } from '@/components/ui/button'`;
  * O card não tem largura própria: ele preenche o que o contexto der. Numa story
  * isolada isso significa a página inteira, então a moldura entra pela classe.
  */
-const LARGURA_SM = 'class="nds-w-cap-sm"';
-const LARGURA_XS = 'class="nds-w-cap-xs"';
+const LARGURA_SM = 'class="nds-w-sm"';
+const LARGURA_XS = 'class="nds-w-xs"';
 
 /** Raiz do card com os filhos já indentados. */
 function card(partes: Array<string | ''>, ...filhos: string[]): string {
@@ -130,7 +130,7 @@ export function cardClicavelSource(): string {
     `<a
   href="/produtos/cadeira-gamer-pro"
   aria-label="Abrir detalhes do produto ${PRODUTO}"
-  class="nds-block nds-w-cap-sm nds-text-left nds-focus-ring nds-rounded-xl"
+  class="nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
 >
 ${indentar(card([], cabecalho(PRODUTO, DESCRICAO_PRODUTO), PRECO), 2)}
 </a>`,

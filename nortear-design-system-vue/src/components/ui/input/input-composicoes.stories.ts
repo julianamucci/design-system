@@ -197,7 +197,7 @@ export const Alignments: Story = {
   render: () => ({
     components: { Label, InputGroup, InputGroupAddon, InputGroupInput, InputGroupText },
     template: `
-      <div class="nds-stack nds-w-cap-md" data-spacing="lg">
+      <div class="nds-stack nds-w-md" data-spacing="lg">
         <div class="nds-stack" data-spacing="xs">
           <Label for="ig-inicio">Buscar</Label>
           <InputGroup>
@@ -282,7 +282,7 @@ export const AddonClick: Story = {
     // axe reprovava por target-size (WCAG 2.5.8, mínimo 24x24). O `.nds-button`
     // dimensiona pelo ícone, como nas demais stacks.
     template: `
-      <div class="nds-stack nds-w-cap-md" data-spacing="xs">
+      <div class="nds-stack nds-w-md" data-spacing="xs">
         <Label for="ig-clique">Usuário</Label>
         <InputGroup>
           <InputGroupAddon align="inline-start" data-testid="addon">

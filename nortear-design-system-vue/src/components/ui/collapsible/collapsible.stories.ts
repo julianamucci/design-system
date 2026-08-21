@@ -90,7 +90,7 @@ export const Playground: Story = {
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },
     setup() { return { args }; },
     template: `
-      <Collapsible :key="String(args.defaultOpen)" v-bind="args" class="nds-w-cap-sm">
+      <Collapsible :key="String(args.defaultOpen)" v-bind="args" class="nds-w-sm">
         <CollapsibleTrigger :disabled="args.disabled" class="${TRIGGER_CLASSES}" data-justify="between">
           <span>Exibir filtros avançados</span>
           <ChevronDown aria-hidden="true" class="${CHEVRON_CLASSES}" />

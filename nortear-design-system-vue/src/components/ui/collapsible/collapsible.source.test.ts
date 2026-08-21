@@ -23,7 +23,7 @@ import {
 </script>
 
 <template>
-  <Collapsible class="nds-w-cap-sm">
+  <Collapsible class="nds-w-sm">
     <CollapsibleTrigger
       class="nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4"
       data-justify="between"
@@ -45,13 +45,13 @@ import {
 
   it('o estado inicial acompanha o control', () => {
     expect(collapsibleSource('', { args: { defaultOpen: true } })).toContain(
-      '<Collapsible default-open class="nds-w-cap-sm">',
+      '<Collapsible default-open class="nds-w-sm">',
     );
   });
 
   it('desabilitado chega às duas pontas: a raiz guarda o estado, o gatilho é o botão', () => {
     const saida = collapsibleSource('', { args: { disabled: true } });
-    expect(saida).toContain('<Collapsible disabled class="nds-w-cap-sm">');
+    expect(saida).toContain('<Collapsible disabled class="nds-w-sm">');
     expect(saida).toMatch(/<CollapsibleTrigger\n {6}disabled\n/);
   });
 

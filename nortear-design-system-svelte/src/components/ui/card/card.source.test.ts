@@ -27,7 +27,7 @@ describe('cardSource', () => {
   import { Button } from "@/components/ui/button";
 </script>
 
-<Card class="nds-w-cap-sm">
+<Card class="nds-w-sm">
   <CardHeader>
     <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
     <CardDescription>Estrutura ergonômica com ajuste de altura e apoio lombar.</CardDescription>
@@ -45,7 +45,7 @@ describe('cardSource', () => {
 
   it('só escreve size quando o valor difere do padrão', () => {
     expect(cardSource('', { args: { size: 'default' } })).not.toContain('size=');
-    expect(cardSource('', { args: { size: 'sm' } })).toContain('<Card class="nds-w-cap-sm" size="sm">');
+    expect(cardSource('', { args: { size: 'sm' } })).toContain('<Card class="nds-w-sm" size="sm">');
   });
 
   it('o rodapé é filho DIRETO do Card — é o que aciona a borda superior', () => {
@@ -68,7 +68,7 @@ describe('transforms das stories de tamanho, estado e composição', () => {
   it('o tamanho pequeno escreve a prop e aperta a largura máxima', () => {
     const saida = cardPequenoSource();
     expect(saida).toContain('size="sm"');
-    expect(saida).toContain('nds-w-cap-xs');
+    expect(saida).toContain('nds-w-xs');
   });
 
   it('o card clicável ativa pelo link em volta, nunca pelo Card', () => {

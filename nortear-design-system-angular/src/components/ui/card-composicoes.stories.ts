@@ -40,7 +40,7 @@ export const ClickableCard: Story = {
       <a
         href="#produto-cadeira-gamer-pro"
         aria-label="Abrir detalhes do produto Cadeira Gamer Pro"
-        class="nds-block nds-w-cap-sm nds-text-left nds-focus-ring nds-rounded-xl"
+        class="nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
         (click)="navegar($event)"
       >
         <div ndsCard>
@@ -93,7 +93,7 @@ export const DescriptionContrast: Story = {
   parameters: { covers: ['accessibility.item2'] },
   render: () => ({
     template: `
-      <div ndsCard class="nds-w-cap-sm">
+      <div ndsCard class="nds-w-sm">
         <div ndsCardHeader>
           <h3 ndsCardTitle>Pedido #4821</h3>
           <p ndsCardDescription>Entregue em 12 de agosto</p>

@@ -71,7 +71,7 @@ export const WithFooter: Story = {
     },
   },
   render: () => {
-    const card = createCard({ className: 'nds-w-cap-sm' });
+    const card = createCard({ className: 'nds-w-sm' });
     const footer = createCardFooter({ className: 'nds-cluster' });
     footer.dataset.spacing = 'sm';
     footer.dataset.justify = 'end';
@@ -132,7 +132,7 @@ export const WithAction: Story = {
     },
   },
   render: () => {
-    const card = createCard({ className: 'nds-w-cap-sm' });
+    const card = createCard({ className: 'nds-w-sm' });
     const header = buildHeader('Cadeira Gamer Pro', 'Em estoque');
 
     const action = createCardAction();
@@ -184,7 +184,7 @@ export const WithImage: Story = {
     },
   },
   render: () => {
-    const card = createCard({ className: 'nds-w-cap-sm' });
+    const card = createCard({ className: 'nds-w-sm' });
 
     const img = document.createElement('img');
     img.src = DEMO_IMAGE_PRODUCT;

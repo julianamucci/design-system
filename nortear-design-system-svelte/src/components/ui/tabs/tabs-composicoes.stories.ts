@@ -57,7 +57,7 @@ export const SettingsPanel: Story = {
       defaultValue: 'profile',
       variant: 'default',
       ariaLabel: 'Configurações',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   parameters: {
@@ -115,7 +115,7 @@ export const CodePreviewLine: Story = {
       defaultValue: 'preview',
       variant: 'line',
       ariaLabel: 'Modos de visualização',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   parameters: {
@@ -174,7 +174,7 @@ export const VerticalNavigation: Story = {
       orientation: 'vertical',
       variant: 'default',
       ariaLabel: 'Documentação',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   parameters: {
@@ -230,7 +230,7 @@ export const ManualActivation: Story = {
       defaultValue: 'overview',
       activationMode: 'manual',
       ariaLabel: 'Seções do componente',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   // Sem `covers`: `functional.item2` documenta que a seta ANDA E ATIVA, e esta

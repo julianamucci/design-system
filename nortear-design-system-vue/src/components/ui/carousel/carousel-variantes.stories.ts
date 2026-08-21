@@ -45,7 +45,7 @@ export const Horizontal: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel class="nds-w-cap-sm" aria-label="Slides na horizontal">
+      <Carousel class="nds-w-sm" aria-label="Slides na horizontal">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
@@ -142,7 +142,7 @@ export const Vertical: Story = {
     // `flex: 0 0 100%` do slide resolve. Sem ela o carrossel vertical empilha
     // os slides no tamanho do conteúdo e nada é recortado.
     template: `
-      <Carousel orientation="vertical" class="nds-w-cap-xs" aria-label="Slides na vertical">
+      <Carousel orientation="vertical" class="nds-w-xs" aria-label="Slides na vertical">
         <CarouselContent class="nds-aspect-4-3">
           <CarouselItem v-for="n in slides" :key="n">
             <div class="nds-cluster nds-h-full nds-bg-muted-soft nds-rounded-lg" data-justify="center">

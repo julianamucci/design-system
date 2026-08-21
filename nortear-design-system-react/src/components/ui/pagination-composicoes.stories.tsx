@@ -358,7 +358,7 @@ export const CompleteTable: Story = {
     // anterior usava um stack com atributos que nenhuma regra lê, mais três
     // classes de força de um framework que saiu — o rodapé nunca virou linha.
     <div
-      className="nds-cluster nds-w-cap-prose nds-border-default nds-rounded-lg nds-p-4"
+      className="nds-cluster nds-w-prose nds-border-default nds-rounded-lg nds-p-4"
       data-spacing="sm"
       data-align="center"
       data-justify="between"

@@ -27,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 export const Decorative: Story = {
   parameters: { covers: ["functional.item3", "accessibility.item2", "accessibility.item3"] },
   render: () => (
-    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
+    <div className="nds-stack nds-w-md" data-spacing="sm">
       <h3 className="nds-text-body nds-font-medium">Decorativo (padrão)</h3>
       <p className="nds-text-caption nds-text-muted-foreground">
         Ignorado por leitores de tela — a divisão é só visual.
@@ -63,7 +63,7 @@ export const Semantic: Story = {
     },
   },
   render: () => (
-    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
+    <div className="nds-stack nds-w-md" data-spacing="sm">
       <h3 className="nds-text-body nds-font-medium">Semântico</h3>
       <p className="nds-text-caption nds-text-muted-foreground">
         Anunciado como divisor, com a orientação da linha.

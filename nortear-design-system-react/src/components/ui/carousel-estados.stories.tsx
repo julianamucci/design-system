@@ -44,7 +44,7 @@ export const FirstSlide: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-cap-md" aria-label="Slides no primeiro item">
+    <Carousel className="nds-w-md" aria-label="Slides no primeiro item">
       <CarouselContent>
         {SLIDES.map((n) => (
           <CarouselItem key={n}>
@@ -114,7 +114,7 @@ export const LastSlide: Story = {
   },
   render: () => (
     <Carousel
-      className="nds-w-cap-md"
+      className="nds-w-md"
       aria-label="Slides no último item"
       opts={{ startIndex: SLIDES.length - 1 }}
     >

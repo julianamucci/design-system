@@ -97,7 +97,7 @@ export const Playground: Story = {
       defaultOpen: args.defaultOpen,
       disabled: args.disabled,
       onOpenChange: args.onOpenChange,
-      class: 'nds-w-cap-sm',
+      class: 'nds-w-sm',
     });
   },
   play: async ({ canvasElement, step, args }) => {

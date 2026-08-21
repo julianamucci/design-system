@@ -45,7 +45,7 @@ export const FirstSlide: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { opts: { startIndex: 0 }, slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel :opts="opts" class="nds-w-cap-sm" aria-label="Slides no primeiro item">
+      <Carousel :opts="opts" class="nds-w-sm" aria-label="Slides no primeiro item">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
@@ -112,7 +112,7 @@ export const LastSlide: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { opts: { startIndex: 4 }, slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel :opts="opts" class="nds-w-cap-sm" aria-label="Slides no último item">
+      <Carousel :opts="opts" class="nds-w-sm" aria-label="Slides no último item">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">

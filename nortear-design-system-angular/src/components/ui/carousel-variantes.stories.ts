@@ -29,7 +29,7 @@ export const Horizontal: Story = {
   render: () => ({
     props: { slides: [1, 2, 3, 4, 5] },
     template: `
-      <nds-carousel class="nds-w-cap-md" label="Slides na horizontal" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-md" label="Slides na horizontal" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
           @for (i of slides; track i) {
             <div ndsCarouselItem>
@@ -123,7 +123,7 @@ export const Vertical: Story = {
     // `flex: 0 0 100%` do slide precisa para resolver. Sem ela o carrossel
     // vertical empilha os slides e nada é recortado.
     template: `
-      <nds-carousel class="nds-w-cap-xs" orientation="vertical" label="Slides na vertical" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-xs" orientation="vertical" label="Slides na vertical" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent class="nds-aspect-4-3">
           @for (i of slides; track i) {
             <div ndsCarouselItem>

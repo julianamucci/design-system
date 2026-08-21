@@ -27,7 +27,7 @@ type Story = StoryObj<typeof meta>;
 export const Horizontal: Story = {
   parameters: { covers: ["functional.item1", "visual.item1"] },
   render: () => (
-    <div className="nds-stack nds-w-cap-md" data-spacing="md">
+    <div className="nds-stack nds-w-md" data-spacing="md">
       <div className="nds-text-body">
         <p className="nds-font-medium">Configurações da conta</p>
         <p className="nds-text-muted-foreground">Gerencie seu nome e e-mail.</p>
@@ -68,7 +68,7 @@ export const Vertical: Story = {
     },
   },
   render: () => (
-    <div className="nds-cluster nds-docs-demo-row nds-w-cap-md" data-spacing="md">
+    <div className="nds-cluster nds-docs-demo-row nds-w-md" data-spacing="md">
       <span className="nds-text-body">Blog</span>
       <Separator orientation="vertical" />
       <span className="nds-text-body">Documentação</span>

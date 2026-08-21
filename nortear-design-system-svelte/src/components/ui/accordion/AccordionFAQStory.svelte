@@ -14,7 +14,7 @@
   ];
 </script>
 
-<div class="nds-stack nds-w-cap-lg" data-spacing="sm">
+<div class="nds-stack nds-w-lg" data-spacing="sm">
   <h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
   <Accordion type="single">
     {#each items as item (item.value)}

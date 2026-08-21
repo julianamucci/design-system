@@ -61,7 +61,7 @@ const fechar = async (t: HTMLElement) => {
 
 export const Uncontrolled: Story = {
   render: () => (
-    <Collapsible defaultOpen={false} className="nds-w-cap-sm">
+    <Collapsible defaultOpen={false} className="nds-w-sm">
       <CollapsibleTrigger
         className={cn(buttonVariants({ variant: "ghost" }), TRIGGER_CLASSES)}
         data-justify="between"
@@ -107,7 +107,7 @@ export const OpenByDefault: Story = {
     docs: { source: { transform: collapsibleAbertoPorPadraoSource } },
   },
   render: () => (
-    <Collapsible defaultOpen className="nds-w-cap-sm">
+    <Collapsible defaultOpen className="nds-w-sm">
       <CollapsibleTrigger
         className={cn(buttonVariants({ variant: "ghost" }), TRIGGER_CLASSES)}
         data-justify="between"
@@ -151,7 +151,7 @@ export const OpenByDefault: Story = {
 function ControlledExample() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="nds-stack nds-w-cap-sm" data-spacing="sm">
+    <div className="nds-stack nds-w-sm" data-spacing="sm">
       <p className="nds-text-caption nds-text-muted-foreground">
         Estado externo: <strong>{open ? "aberto" : "fechado"}</strong>
       </p>
@@ -232,7 +232,7 @@ export const Disabled: Story = {
     docs: { source: { transform: collapsibleDesabilitadoSource } },
   },
   render: () => (
-    <Collapsible className="nds-w-cap-sm">
+    <Collapsible className="nds-w-sm">
       <CollapsibleTrigger
         className={cn(buttonVariants({ variant: "ghost" }), TRIGGER_CLASSES)}
         data-justify="between"

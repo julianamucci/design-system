@@ -32,7 +32,7 @@ type Story = StoryObj;
 export const Default: Story = {
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
+      <div class="nds-stack nds-w-md" data-spacing="sm">
         <label ndsLabel for="var-default">Biografia</label>
         <textarea
           ndsTextarea
@@ -62,7 +62,7 @@ export const WithCounter: Story = {
   render: () => ({
     props: { valor: '', max: 500 },
     template: `
-      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
+      <div class="nds-stack nds-w-md" data-spacing="sm">
         <label ndsLabel for="var-counter">Descrição</label>
         <textarea
           ndsTextarea
@@ -111,7 +111,7 @@ export const WithCounter: Story = {
 export const NoResize: Story = {
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
+      <div class="nds-stack nds-w-md" data-spacing="sm">
         <label ndsLabel for="var-noresize">Feedback</label>
         <textarea
           ndsTextarea

@@ -7,10 +7,22 @@
  *   0    = 0
  *   0-5  = 2px  (--spacing-0-5)
  *   1    = 4px  (--spacing-1)
- *   2    = 8px  (--spacing-2)
- *   4    = 16px (--spacing-4)
- *   6    = 24px (--spacing-6)
- *   8    = 32px (--spacing-8)
+ *   2    = 8px  (--spacing-2)     ← preferir
+ *   4    = 16px (--spacing-4)     ← preferir
+ *   6    = 24px (--spacing-6)     ← preferir
+ *   8    = 32px (--spacing-8)     ← preferir
+ *
+ * MÚLTIPLOS DE 8 TÊM PREFERÊNCIA em componente ou página nova. `0-5` (2px) e
+ * `1` (4px) existem para ajuste ótico — alinhar um ícone, encostar um
+ * indicador — e não para compor respiro. Se um deles é a resposta para
+ * "quanto de espaço entre estas duas coisas", quase sempre a resposta certa é
+ * `2` ou `4`.
+ *
+ * Os SETE degraus valem em TODOS os eixos. Antes não valiam: `pr` tinha dois
+ * (2 e 4), `ml` tinha um, `mr` não existia, e `px` parava no 4. A assimetria
+ * era acidente de demanda — cada degrau nasceu quando alguém precisou — e
+ * empurrava para `style` inline quem precisava de um lado que ninguém tinha
+ * precisado antes.
  *
  * O vocabulário de UTILITY é deliberadamente menor que a escala de tokens: aqui
  * a restrição a múltiplos de 8 é boa, porque utility é escrita em marcação
@@ -35,6 +47,8 @@
 .nds-px-1    { padding-inline: var(--spacing-1); }
 .nds-px-2    { padding-inline: var(--spacing-2); }
 .nds-px-4    { padding-inline: var(--spacing-4); }
+.nds-px-6    { padding-inline: var(--spacing-6); }
+.nds-px-8    { padding-inline: var(--spacing-8); }
 
 /* ── Padding block (py) ────────────────────────────────────────────────────── */
 .nds-py-0    { padding-block: 0; }
@@ -42,11 +56,17 @@
 .nds-py-1    { padding-block: var(--spacing-1); }
 .nds-py-2    { padding-block: var(--spacing-2); }
 .nds-py-4    { padding-block: var(--spacing-4); }
+.nds-py-6    { padding-block: var(--spacing-6); }
 .nds-py-8    { padding-block: var(--spacing-8); }
 
 /* ── Padding inline-end (pr) ───────────────────────────────────────────────── */
+.nds-pr-0    { padding-inline-end: 0; }
+.nds-pr-0-5  { padding-inline-end: var(--spacing-0-5); }
+.nds-pr-1    { padding-inline-end: var(--spacing-1); }
 .nds-pr-2    { padding-inline-end: var(--spacing-2); }
 .nds-pr-4    { padding-inline-end: var(--spacing-4); }
+.nds-pr-6    { padding-inline-end: var(--spacing-6); }
+.nds-pr-8    { padding-inline-end: var(--spacing-8); }
 
 /*
  * ── Padding block-start (pt) e inline-start (pl) ────────────────────────────
@@ -59,12 +79,16 @@
  * Só degraus PERMITIDOS pela convenção do topo deste arquivo. O meio-degrau de
  * 12px continua fora, de propósito.
  */
+.nds-pt-0    { padding-block-start: 0; }
+.nds-pt-0-5  { padding-block-start: var(--spacing-0-5); }
 .nds-pt-1    { padding-block-start: var(--spacing-1); }
 .nds-pt-2    { padding-block-start: var(--spacing-2); }
 .nds-pt-4    { padding-block-start: var(--spacing-4); }
 .nds-pt-6    { padding-block-start: var(--spacing-6); }
 .nds-pt-8    { padding-block-start: var(--spacing-8); }
 
+.nds-pl-0    { padding-inline-start: 0; }
+.nds-pl-0-5  { padding-inline-start: var(--spacing-0-5); }
 .nds-pl-1    { padding-inline-start: var(--spacing-1); }
 .nds-pl-2    { padding-inline-start: var(--spacing-2); }
 .nds-pl-4    { padding-inline-start: var(--spacing-4); }
@@ -73,14 +97,34 @@
 
 /* ── Margin-bottom (mb) ────────────────────────────────────────────────────── */
 .nds-mb-0    { margin-bottom: 0; }
+.nds-mb-0-5  { margin-bottom: var(--spacing-0-5); }
 .nds-mb-1    { margin-bottom: var(--spacing-1); }
 .nds-mb-2    { margin-bottom: var(--spacing-2); }
 .nds-mb-4    { margin-bottom: var(--spacing-4); }
 .nds-mb-6    { margin-bottom: var(--spacing-6); }
 .nds-mb-8    { margin-bottom: var(--spacing-8); }
 
-/* ── Margin-left (ml) ──────────────────────────────────────────────────────── */
-.nds-ml-2    { margin-left: var(--spacing-2); }   /* ícone após texto (sort, chevron) */
+/* ── Margin inline-start (ml) e inline-end (mr) ────────────────────────────────
+ *
+ * Lógicas, como `pl`/`pr`. `ml` era `margin-left` físico e tinha UM degrau — o
+ * ícone depois do texto — enquanto `mr` não existia. Em escrita horizontal a
+ * troca não muda nada hoje, e passa a acompanhar a direção quando alguém
+ * traduzir para um idioma que não é da esquerda para a direita. */
+.nds-ml-0    { margin-inline-start: 0; }
+.nds-ml-0-5  { margin-inline-start: var(--spacing-0-5); }
+.nds-ml-1    { margin-inline-start: var(--spacing-1); }
+.nds-ml-2    { margin-inline-start: var(--spacing-2); }  /* ícone após texto */
+.nds-ml-4    { margin-inline-start: var(--spacing-4); }
+.nds-ml-6    { margin-inline-start: var(--spacing-6); }
+.nds-ml-8    { margin-inline-start: var(--spacing-8); }
+
+.nds-mr-0    { margin-inline-end: 0; }
+.nds-mr-0-5  { margin-inline-end: var(--spacing-0-5); }
+.nds-mr-1    { margin-inline-end: var(--spacing-1); }
+.nds-mr-2    { margin-inline-end: var(--spacing-2); }
+.nds-mr-4    { margin-inline-end: var(--spacing-4); }
+.nds-mr-6    { margin-inline-end: var(--spacing-6); }
+.nds-mr-8    { margin-inline-end: var(--spacing-8); }
 
 /* ── Margin-top (mt) ───────────────────────────────────────────────────────── */
 .nds-mt-0    { margin-top: 0; }
@@ -89,6 +133,7 @@
 .nds-mt-2    { margin-top: var(--spacing-2); }
 .nds-mt-4    { margin-top: var(--spacing-4); }
 .nds-mt-6    { margin-top: var(--spacing-6); }
+.nds-mt-8    { margin-top: var(--spacing-8); }
 
 /* ── Padding-bottom (pb) ───────────────────────────────────────────────────── */
 /* `padding-block-end`, não `padding-bottom`: `pr` já era lógica e `pb` era
@@ -96,6 +141,8 @@
  * mesma coisa, então a troca não muda nada hoje — e passa a acompanhar a
  * direção quando alguém traduzir para um idioma que não é da esquerda para a
  * direita. */
+.nds-pb-0    { padding-block-end: 0; }
+.nds-pb-0-5  { padding-block-end: var(--spacing-0-5); }
 .nds-pb-1    { padding-block-end: var(--spacing-1); }
 .nds-pb-2    { padding-block-end: var(--spacing-2); }
 .nds-pb-4    { padding-block-end: var(--spacing-4); }

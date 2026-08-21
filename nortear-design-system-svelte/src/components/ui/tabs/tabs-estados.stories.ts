@@ -40,7 +40,7 @@ export const Default: Story = {
       items: ITEMS,
       defaultValue: 'properties',
       ariaLabel: 'Seções do componente',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   parameters: {
@@ -84,7 +84,7 @@ export const Active: Story = {
       items: ITEMS,
       defaultValue: 'overview',
       ariaLabel: 'Seções do componente',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   parameters: {
@@ -131,7 +131,7 @@ export const Disabled: Story = {
       ],
       defaultValue: 'overview',
       ariaLabel: 'Seções do componente',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   parameters: {
@@ -218,7 +218,7 @@ export const FocusVisible: Story = {
       items: ITEMS,
       defaultValue: 'overview',
       ariaLabel: 'Seções do componente',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   parameters: {

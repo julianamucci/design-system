@@ -8,7 +8,7 @@ describe('aspectRatioSource', () => {
   import { AspectRatio } from "@/components/ui/aspect-ratio";
 </script>
 
-<div class="nds-w-cap-lg">
+<div class="nds-w-lg">
   <AspectRatio ratio={16 / 9}>
     <img
       src="/midia/paisagem.jpg"
@@ -37,8 +37,8 @@ describe('aspectRatioSource', () => {
   });
 
   it('o control de largura máxima chega ao contêiner que envolve a caixa', () => {
-    expect(aspectRatioSource('', { args: { width: 'nds-w-cap-xs' } })).toContain(
-      '<div class="nds-w-cap-xs">',
+    expect(aspectRatioSource('', { args: { width: 'nds-w-xs' } })).toContain(
+      '<div class="nds-w-xs">',
     );
   });
 

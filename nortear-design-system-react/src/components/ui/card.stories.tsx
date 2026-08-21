@@ -44,7 +44,7 @@ const meta = {
   },
   args: {
     size: "default",
-    className: "nds-w-cap-sm",
+    className: "nds-w-sm",
   },
 } satisfies Meta<typeof Card>;
 
@@ -65,7 +65,7 @@ export const Playground: Story = {
   },
   args: {
     size: "default",
-    className: "nds-w-cap-sm",
+    className: "nds-w-sm",
   },
   render: (args) => (
     <Card {...args}>

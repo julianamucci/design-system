@@ -21,7 +21,7 @@
     disabled = false,
     contentText = 'Conteúdo colapsável visível quando aberto.',
     onOpenChange,
-    class: className = 'nds-w-cap-sm',
+    class: className = 'nds-w-sm',
   }: Props = $props();
 
   let internalOpen = $state(untrack(() => (defaultOpen || open)));

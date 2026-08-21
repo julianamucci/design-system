@@ -37,7 +37,7 @@ export const WithImage: Story = {
     child: 'img',
     src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format&fit=crop&q=60',
     alt: 'Paisagem com object-cover',
-    width: 'nds-w-cap-lg',
+    width: 'nds-w-lg',
   },
 
   play: async ({ canvasElement }) => {
@@ -59,7 +59,7 @@ export const WithIframe: Story = {
     child: 'iframe',
     src: 'https://www.openstreetmap.org/export/embed.html?bbox=-46.66%2C-23.56%2C-46.62%2C-23.54&layer=mapnik',
     title: 'Mapa do escritório em São Paulo',
-    width: 'nds-w-cap-lg',
+    width: 'nds-w-lg',
   },
 
   play: async ({ canvasElement }) => {
@@ -79,7 +79,7 @@ export const WithVideo: Story = {
     child: 'video',
     src: 'https://cdn.coverr.co/videos/coverr-a-quiet-beach-7103/1080p.mp4',
     poster: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1200&auto=format&fit=crop&q=60',
-    width: 'nds-w-cap-lg',
+    width: 'nds-w-lg',
   },
 
   play: async ({ canvasElement }) => {
@@ -134,7 +134,7 @@ export const EmptyPlaceholder: Story = {
     ratio: 16 / 9,
     child: 'placeholder',
     label: 'Carregando…',
-    width: 'nds-w-cap-lg',
+    width: 'nds-w-lg',
   },
 
   play: async ({ canvasElement }) => {
@@ -153,7 +153,7 @@ export const WithDecorativeImage: Story = {
     child: 'img',
     src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format&fit=crop&q=60',
     alt: '',
-    width: 'nds-w-cap-lg',
+    width: 'nds-w-lg',
   },
 
   play: async ({ canvasElement }) => {

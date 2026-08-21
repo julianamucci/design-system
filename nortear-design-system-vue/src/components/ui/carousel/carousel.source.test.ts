@@ -29,7 +29,7 @@ const slides = [1, 2, 3, 4, 5]
 </script>
 
 <template>
-  <Carousel class="nds-w-cap-sm" aria-label="Galeria de exemplos">
+  <Carousel class="nds-w-sm" aria-label="Galeria de exemplos">
     <CarouselContent>
       <CarouselItem v-for="n in slides" :key="n">
         <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
@@ -82,7 +82,7 @@ describe('transforms das stories de variante e estado', () => {
   it('a vertical troca o eixo, a largura e a altura do trilho', () => {
     const saida = carouselVerticalSource();
     expect(saida).toContain('orientation="vertical"');
-    expect(saida).toContain('nds-w-cap-xs');
+    expect(saida).toContain('nds-w-xs');
     expect(saida).toContain('<CarouselContent class="nds-aspect-4-3">');
     expect(saida).toContain('nds-h-full');
   });

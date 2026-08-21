@@ -63,7 +63,7 @@ export const Default: Story = {
       defaultValue: 'overview',
       variant: 'default',
       ariaLabel: 'Seções do componente',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   // Sem interação de propósito: esta é a story que registra o estado de
@@ -136,7 +136,7 @@ export const Line: Story = {
       defaultValue: 'overview',
       variant: 'line',
       ariaLabel: 'Seções do componente',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   play: async ({ canvasElement, step }) => {
@@ -186,7 +186,7 @@ export const Vertical: Story = {
       variant: 'default',
       orientation: 'vertical',
       ariaLabel: 'Seções do componente',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
     },
   }),
   play: async ({ canvasElement, step }) => {

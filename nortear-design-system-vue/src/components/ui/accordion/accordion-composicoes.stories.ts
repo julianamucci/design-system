@@ -244,7 +244,7 @@ export const FAQ: Story = {
       return { items };
     },
     template: `
-      <div class="nds-stack nds-w-cap-lg" data-spacing="sm">
+      <div class="nds-stack nds-w-lg" data-spacing="sm">
         <h2 class="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
         <Accordion type="single">
           <AccordionItem v-for="item in items" :key="item.value" :value="item.value">

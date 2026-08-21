@@ -13,7 +13,7 @@ import { CollapsibleDocs } from "@/components/docs/CollapsibleDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 
 // Markup alinhado ao Vanilla, que é a referência cross-stack: raiz
-// `nds-w-cap-sm`, trigger em `nds-cluster` com `data-justify` e
+// `nds-w-sm`, trigger em `nds-cluster` com `data-justify` e
 // painel `nds-p-4` sobre `nds-bg-muted-soft`. As classes utilitárias do
 // Tailwind que estavam aqui (`flex w-full items-center justify-between px-4`)
 // não existem mais no CSS e não pintavam nada.
@@ -103,7 +103,7 @@ export const Playground: Story = {
       // payload, e dentro do eventDetails vem `event.view`, que é o Window do
       // iframe e estoura SecurityError na serialização.
       onOpenChange={(open) => (args.onOpenChange as (o: boolean) => void)?.(open)}
-      className="nds-w-cap-sm"
+      className="nds-w-sm"
     >
       <CollapsibleTrigger
         className={cn(buttonVariants({ variant: "ghost" }), TRIGGER_CLASSES)}

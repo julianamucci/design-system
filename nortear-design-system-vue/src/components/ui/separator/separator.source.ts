@@ -44,7 +44,7 @@ function linha(o: SeparatorArgs & { classe?: string } = {}): string {
  */
 function secao(vertical: boolean, filhos: string): string {
   const eixo = vertical ? 'nds-cluster' : 'nds-stack';
-  return `<div class="${eixo} nds-w-cap-md" data-spacing="md">
+  return `<div class="${eixo} nds-w-md" data-spacing="md">
 ${indentar(filhos)}
 </div>`;
 }
@@ -122,7 +122,7 @@ ${linha({ orientation: 'vertical' })}
 export function separatorDecorativoSource(): string {
   return vueSnippet(
     IMPORT,
-    `<div class="nds-stack nds-w-cap-md" data-spacing="sm">
+    `<div class="nds-stack nds-w-md" data-spacing="sm">
   <p class="nds-text-body">Conteúdo antes do separador.</p>
 ${indentar(linha())}
   <p class="nds-text-body">Conteúdo depois do separador.</p>
@@ -138,7 +138,7 @@ ${indentar(linha())}
 export function separatorSemanticoSource(): string {
   return vueSnippet(
     IMPORT,
-    `<div class="nds-stack nds-w-cap-md" data-spacing="sm">
+    `<div class="nds-stack nds-w-md" data-spacing="sm">
   <p class="nds-text-body">Categoria: Layout</p>
 ${indentar(linha({ decorative: false }))}
   <p class="nds-text-body">Categoria: Formulários</p>

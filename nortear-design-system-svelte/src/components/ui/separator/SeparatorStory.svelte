@@ -31,13 +31,13 @@
 
 {#if caso === 'playground'}
   {#if orientation === 'vertical'}
-    <div class="nds-cluster nds-docs-demo-row nds-w-cap-md" data-spacing="md">
+    <div class="nds-cluster nds-docs-demo-row nds-w-md" data-spacing="md">
       <p class="nds-text-body">Item A</p>
       <Separator {orientation} {decorative} {emphasis} />
       <p class="nds-text-body">Item B</p>
     </div>
   {:else}
-    <div class="nds-stack nds-w-cap-md" data-spacing="md">
+    <div class="nds-stack nds-w-md" data-spacing="md">
       <p class="nds-text-body">Seção superior</p>
       <Separator {orientation} {decorative} {emphasis} />
       <p class="nds-text-body">Seção inferior</p>
@@ -46,7 +46,7 @@
 
 {:else if caso === 'variantes'}
   {#if orientation === 'vertical'}
-    <div class="nds-cluster nds-docs-demo-row nds-w-cap-md" data-spacing="md">
+    <div class="nds-cluster nds-docs-demo-row nds-w-md" data-spacing="md">
       <span class="nds-text-body">Blog</span>
       <Separator orientation="vertical" />
       <span class="nds-text-body">Documentação</span>
@@ -54,7 +54,7 @@
       <span class="nds-text-body">Contato</span>
     </div>
   {:else}
-    <div class="nds-stack nds-w-cap-md" data-spacing="md">
+    <div class="nds-stack nds-w-md" data-spacing="md">
       <div class="nds-text-body">
         <p class="nds-font-medium">Configurações da conta</p>
         <p class="nds-text-muted-foreground">Gerencie seu nome e e-mail.</p>
@@ -68,7 +68,7 @@
   {/if}
 
 {:else if caso === 'estados'}
-  <div class="nds-stack nds-w-cap-md" data-spacing="sm">
+  <div class="nds-stack nds-w-md" data-spacing="sm">
     <h3 class="nds-text-body nds-font-medium">{decorative ? 'Decorativo (padrão)' : 'Semântico'}</h3>
     <p class="nds-text-caption nds-text-muted-foreground">
       {decorative
@@ -106,7 +106,7 @@
   </div>
 
 {:else}
-  <div class="nds-stack nds-w-cap-md" data-spacing="md">
+  <div class="nds-stack nds-w-md" data-spacing="md">
     <p class="nds-text-body nds-text-muted-foreground">Fim da seção</p>
     <Separator orientation="horizontal" data-testid="padrao" />
     <p class="nds-text-body nds-text-muted-foreground">Continuação do mesmo assunto</p>

@@ -20,7 +20,7 @@ describe('collapsibleSource', () => {
   import ChevronDown from "@lucide/svelte/icons/chevron-down";
 </script>
 
-<Collapsible class="nds-w-cap-sm">
+<Collapsible class="nds-w-sm">
   <CollapsibleTrigger
     class="nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4"
     data-justify="between"
@@ -43,7 +43,7 @@ describe('collapsibleSource', () => {
 
   it('escreve `open`, e nunca o nome do control, quando o painel nasce aberto', () => {
     const saida = collapsibleSource('', { args: { defaultOpen: true } });
-    expect(saida).toContain('<Collapsible class="nds-w-cap-sm" open>');
+    expect(saida).toContain('<Collapsible class="nds-w-sm" open>');
     // `defaultOpen` é o rótulo do control; a prop publicada é `open`.
     expect(saida).not.toContain('defaultOpen');
     // Aberto, o gatilho promete o inverso do que faz fechado.
@@ -53,7 +53,7 @@ describe('collapsibleSource', () => {
   it('só escreve disabled quando o valor difere do padrão', () => {
     expect(collapsibleSource('', { args: { disabled: false } })).not.toContain('disabled');
     expect(collapsibleSource('', { args: { disabled: true } })).toContain(
-      '<Collapsible class="nds-w-cap-sm" disabled>',
+      '<Collapsible class="nds-w-sm" disabled>',
     );
   });
 

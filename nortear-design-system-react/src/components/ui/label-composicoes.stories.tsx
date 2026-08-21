@@ -43,7 +43,7 @@ export const WithInput: Story = {
     },
   },
   render: () => (
-    <div className="nds-stack nds-w-cap-xs" data-spacing="xs">
+    <div className="nds-stack nds-w-xs" data-spacing="xs">
       <Label htmlFor="comp-input">Telefone</Label>
       <Input id="comp-input" type="tel" placeholder="(11) 99999-9999" />
     </div>
@@ -123,7 +123,7 @@ export const RequiredField: Story = {
     },
   },
   render: () => (
-    <div className="nds-stack nds-w-cap-xs" data-spacing="xs">
+    <div className="nds-stack nds-w-xs" data-spacing="xs">
       <Label htmlFor="comp-required">
         Email profissional
         <span className="nds-text-destructive" aria-hidden="true">*</span>

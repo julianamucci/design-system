@@ -72,7 +72,7 @@ export const WithDots: Story = {
     // pede que o movimento automático seja controlável — começar parado é a
     // forma mais direta disso.
     template: `
-      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
+      <div class="nds-stack nds-w-md" data-spacing="sm">
         <nds-carousel
           #comDots
           class="nds-w-full"
@@ -204,8 +204,15 @@ export const WithDots: Story = {
       // Salto, não passo — e a espera é pelo fim da rolagem suave, não pelo
       // primeiro pixel: os passos seguintes medem a partir daqui.
       await waitFor(() => expect(Math.abs(viewport.scrollLeft - esperado)).toBeLessThan(2), { timeout: 4000 });
-      await expect(dot(3)).toHaveAttribute('aria-current', 'true');
-      await expect(dot(1).hasAttribute('aria-current')).toBe(false);
+      // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
+      // marca o dot é a reconciliação do índice, adiada de propósito até o
+      // silêncio do motor. Afirmar aqui mede uma janela em que o componente
+      // ainda não foi avisado de que parou — passa na máquina ociosa e reprova
+      // sob carga.
+      await waitFor(async () => {
+        await expect(dot(3)).toHaveAttribute('aria-current', 'true');
+        await expect(dot(1).hasAttribute('aria-current')).toBe(false);
+      }, { timeout: 4000 });
     });
 
     await step('O comando de apresentação liga o avanço automático', async () => {
@@ -259,7 +266,7 @@ export const Gallery: Story = {
   render: () => ({
     props: { fotos: FOTOS },
     template: `
-      <nds-carousel class="nds-w-cap-md" label="Galeria de fotos do produto" slideLabel="Slide {index} de {total}">
+      <nds-carousel class="nds-w-md" label="Galeria de fotos do produto" slideLabel="Slide {index} de {total}">
         <div ndsCarouselContent>
           @for (foto of fotos; track foto.titulo) {
             <div ndsCarouselItem>

@@ -84,7 +84,7 @@ export const WithCustomButton: Story = {
     return createCollapsible({
       trigger: btn,
       content: makeContent(['Opção avançada 1', 'Opção avançada 2', 'Opção avançada 3']),
-      class: 'nds-w-cap-sm',
+      class: 'nds-w-sm',
     });
   },
   parameters: {
@@ -134,7 +134,7 @@ export const WithIconInTrigger: Story = {
     return createCollapsible({
       trigger: triggerEl,
       content: makeContent(['Filtro por categoria', 'Filtro por data', 'Filtro por status']),
-      class: 'nds-w-cap-sm',
+      class: 'nds-w-sm',
     });
   },
   parameters: {
@@ -214,7 +214,7 @@ export const WithRotatingChevron: Story = {
     return createCollapsible({
       trigger: btn,
       content,
-      class: 'nds-w-cap-sm',
+      class: 'nds-w-sm',
     });
   },
   parameters: {
@@ -300,7 +300,7 @@ export const WithSettingsIcon: Story = {
     return createCollapsible({
       trigger: triggerEl,
       content,
-      class: 'nds-w-cap-sm',
+      class: 'nds-w-sm',
     });
   },
   parameters: {

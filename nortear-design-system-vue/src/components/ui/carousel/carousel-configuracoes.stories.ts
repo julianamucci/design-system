@@ -131,7 +131,7 @@ export const Single: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { slides: [1, 2, 3, 4, 5] }; },
     template: `
-      <Carousel class="nds-w-cap-sm" aria-label="Um item por vez">
+      <Carousel class="nds-w-sm" aria-label="Um item por vez">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
@@ -178,7 +178,7 @@ export const MultiResponsive: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { slides: [1, 2, 3, 4, 5, 6] }; },
     template: `
-      <Carousel class="nds-w-cap-lg" aria-label="Conjunto longo de slides">
+      <Carousel class="nds-w-lg" aria-label="Conjunto longo de slides">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n" class="nds-md-basis-half nds-lg-basis-third">
             <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
@@ -255,7 +255,7 @@ export const Autoplay: Story = {
       return { plugins, slides: [1, 2, 3, 4, 5], aoIniciar };
     },
     template: `
-      <Carousel :plugins="plugins" @init-api="aoIniciar" class="nds-w-cap-sm" aria-label="Destaques">
+      <Carousel :plugins="plugins" @init-api="aoIniciar" class="nds-w-sm" aria-label="Destaques">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">
@@ -375,7 +375,7 @@ export const DragGesture: Story = {
     components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
     setup() { return { slides: [1, 2, 3, 4] }; },
     template: `
-      <Carousel class="nds-w-cap-sm" aria-label="Galeria com gesto de arrastar">
+      <Carousel class="nds-w-sm" aria-label="Galeria com gesto de arrastar">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">

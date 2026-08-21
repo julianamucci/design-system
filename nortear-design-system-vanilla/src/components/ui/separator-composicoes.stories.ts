@@ -149,7 +149,7 @@ export const EmphasisStrong: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-cap-md';
+    wrap.className = 'nds-stack nds-w-md';
     wrap.dataset.spacing = 'md';
 
     const padrao = createSeparator({ orientation: 'horizontal' });

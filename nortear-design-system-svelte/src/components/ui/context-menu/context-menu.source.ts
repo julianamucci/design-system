@@ -24,7 +24,7 @@ export type ContextMenuArgs = {
  * altura: ele nasce do `nds-p-8` e cresce junto com a fonte do navegador.
  */
 const AREA =
-  'nds-cluster nds-w-cap-xs nds-p-8 nds-rounded-md nds-border-default ' +
+  'nds-cluster nds-w-xs nds-p-8 nds-rounded-md nds-border-default ' +
   'nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default';
 
 /** Ordem canônica das peças no bloco de import. */

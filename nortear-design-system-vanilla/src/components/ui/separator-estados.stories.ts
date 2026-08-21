@@ -30,7 +30,7 @@ export const Decorative: Story = {
   parameters: { covers: ['functional.item3', 'accessibility.item2', 'accessibility.item3'] },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-cap-md';
+    wrap.className = 'nds-stack nds-w-md';
     wrap.dataset.spacing = 'sm';
 
     const heading = document.createElement('h3');
@@ -91,7 +91,7 @@ export const Semantic: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-cap-md';
+    wrap.className = 'nds-stack nds-w-md';
     wrap.dataset.spacing = 'sm';
 
     const heading = document.createElement('h3');

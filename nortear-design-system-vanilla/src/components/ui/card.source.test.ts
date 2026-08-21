@@ -17,7 +17,7 @@ describe('cardSnippet', () => {
     // As stories ainda chamam `className`, que a fábrica aceita como apelido; o
     // snippet ensina `class`, que é o nome.
     const código = cardSnippet();
-    expect(código).toContain("class: 'nds-w-cap-sm'");
+    expect(código).toContain("class: 'nds-w-sm'");
     // A OPÇÃO da fábrica, não a propriedade do DOM: `valor.className = …` é
     // outra coisa, e proibir a palavra inteira mediria a linha errada.
     expect(código).not.toContain('className:');
@@ -116,6 +116,6 @@ describe('cardClicavelSnippet', () => {
   it('a largura fica no destino, não no Card de dentro', () => {
     const código = cardClicavelSnippet();
     expect(código).toContain("createCard({ class: 'nds-w-full' })");
-    expect(código).toContain('nds-w-cap-sm');
+    expect(código).toContain('nds-w-sm');
   });
 });

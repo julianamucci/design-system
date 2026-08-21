@@ -92,13 +92,13 @@ export const Playground: Story = {
     props: { ...args, isHorizontal: args.orientation === 'horizontal' },
     template: `
       @if (isHorizontal) {
-        <div class="nds-stack nds-w-cap-md" data-spacing="md">
+        <div class="nds-stack nds-w-md" data-spacing="md">
           <p class="nds-text-body">Seção superior</p>
           <div ndsSeparator [orientation]="orientation" [decorative]="decorative" [emphasis]="emphasis"></div>
           <p class="nds-text-body">Seção inferior</p>
         </div>
       } @else {
-        <div class="nds-cluster nds-docs-demo-row nds-w-cap-md" data-spacing="md">
+        <div class="nds-cluster nds-docs-demo-row nds-w-md" data-spacing="md">
           <span class="nds-text-body">Item A</span>
           <div ndsSeparator [orientation]="orientation" [decorative]="decorative" [emphasis]="emphasis"></div>
           <span class="nds-text-body nds-text-muted-foreground">Item B</span>

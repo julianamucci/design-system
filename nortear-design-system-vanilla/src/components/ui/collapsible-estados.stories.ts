@@ -46,7 +46,7 @@ export const Uncontrolled: Story = {
       trigger: 'Exibir filtros avançados',
       content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
       defaultOpen: false,
-      class: 'nds-w-cap-sm',
+      class: 'nds-w-sm',
     }),
   parameters: {
     docs: {
@@ -83,7 +83,7 @@ export const OpenByDefault: Story = {
       trigger: 'Ocultar filtros avançados',
       content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
       defaultOpen: true,
-      class: 'nds-w-cap-sm',
+      class: 'nds-w-sm',
     }),
   parameters: {
     covers: ['functional.item3', 'accessibility.item5', 'visual.item2'],
@@ -126,7 +126,7 @@ export const OpenByDefault: Story = {
 export const Controlled: Story = {
   render: () => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack nds-w-cap-sm';
+    wrapper.className = 'nds-stack nds-w-sm';
     wrapper.dataset.spacing = 'sm';
 
     const indicador = document.createElement('p');
@@ -226,7 +226,7 @@ export const Disabled: Story = {
       trigger: 'Filtros avançados (desabilitado)',
       content: makeContent(['Filtro avançado 1', 'Filtro avançado 2']),
       disabled: true,
-      class: 'nds-w-cap-sm',
+      class: 'nds-w-sm',
     }),
   parameters: {
     covers: ['functional.item6', 'visual.item5'],

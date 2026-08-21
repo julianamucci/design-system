@@ -65,7 +65,7 @@ export const WithDots: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-stack nds-w-cap-md';
+    wrap.className = 'nds-stack nds-w-md';
     wrap.dataset.spacing = 'sm';
 
     const dotsRow = document.createElement('div');
@@ -227,7 +227,11 @@ export const WithDots: Story = {
 
       await irPara(3);
       await waitFor(() => expect(Math.abs(deslocamento() - esperado)).toBeLessThan(2), { timeout: 4000 });
-      await expect(dot(1).hasAttribute('aria-current')).toBe(false);
+      // A POSIÇÃO chega antes do ESTADO: quem desmarca o dot é a reconciliação
+      // do índice, e ela espera o motor silenciar. Ver a irmã no Angular.
+      await waitFor(async () => {
+        await expect(dot(1).hasAttribute('aria-current')).toBe(false);
+      }, { timeout: 4000 });
     });
 
     await step('E a story termina no começo', async () => {
@@ -254,7 +258,7 @@ export const Gallery: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
 
     const items = FOTOS.map((foto) => {
       const card = createCard({ className: 'nds-w-full nds-overflow-hidden' });

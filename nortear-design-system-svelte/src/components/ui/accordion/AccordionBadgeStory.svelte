@@ -13,7 +13,7 @@
   ];
 </script>
 
-<div class="nds-w-cap-lg">
+<div class="nds-w-lg">
   <Accordion type="single">
     {#each items as item (item.value)}
       <AccordionItem value={item.value}>

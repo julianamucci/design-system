@@ -62,7 +62,7 @@ export const Playground: Story = {
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, Button },
     setup() { return { args }; },
     template: `
-      <Card v-bind="args" class="nds-w-cap-sm">
+      <Card v-bind="args" class="nds-w-sm">
         <CardHeader>
           <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
           <CardDescription>

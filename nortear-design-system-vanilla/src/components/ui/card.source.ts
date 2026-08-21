@@ -42,7 +42,7 @@ export type CardSnippetOptions = {
 const TITULO_PADRAO = 'Cadeira Gamer Pro';
 const DESCRICAO_PADRAO = 'Estrutura ergonômica com ajuste de altura e apoio lombar.';
 const PRECO_PADRAO = 'R$ 1.299,00';
-const LARGURA_PADRAO = 'nds-w-cap-sm';
+const LARGURA_PADRAO = 'nds-w-sm';
 
 /**
  * Os blocos do Card, na ordem do DOM.
@@ -209,7 +209,7 @@ export function cardClicavelSnippet(o: CardSnippetOptions = {}): string {
     ...blocos,
     `const destino = document.createElement('a');
 destino.href = '/produtos/cadeira-gamer-pro';
-destino.className = 'nds-block nds-w-cap-sm nds-text-left nds-focus-ring nds-rounded-xl';
+destino.className = 'nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl';
 destino.setAttribute('aria-label', ${texto(`Abrir detalhes do produto ${titulo}`)});
 destino.appendChild(card);`,
     montar('destino'),

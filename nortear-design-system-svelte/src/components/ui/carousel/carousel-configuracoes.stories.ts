@@ -124,7 +124,7 @@ export const Single: Story = {
     props: {
       variant: 'single',
       slideCount: 5,
-      widthClass: 'nds-w-cap-md',
+      widthClass: 'nds-w-md',
       ariaLabel: 'Um item por vez',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
@@ -162,7 +162,7 @@ export const MultiResponsive: Story = {
     props: {
       variant: 'multi',
       slideCount: 6,
-      widthClass: 'nds-w-cap-lg',
+      widthClass: 'nds-w-lg',
       ariaLabel: 'Conjunto longo de slides',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
@@ -214,7 +214,7 @@ export const Autoplay: Story = {
     props: {
       variant: 'autoplay',
       slideCount: 5,
-      widthClass: 'nds-w-cap-md',
+      widthClass: 'nds-w-md',
       ariaLabel: 'Destaques',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
@@ -304,7 +304,7 @@ export const DragGesture: Story = {
     props: {
       variant: 'single',
       slideCount: 4,
-      widthClass: 'nds-w-cap-md',
+      widthClass: 'nds-w-md',
       ariaLabel: 'Galeria com gesto de arrastar',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',

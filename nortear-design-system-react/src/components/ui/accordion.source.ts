@@ -346,7 +346,7 @@ export function accordionFaqSource(): string {
 const perguntas = [
 ${dados}
 ];`,
-    `<div className="nds-stack nds-w-cap-lg" data-spacing="sm">
+    `<div className="nds-stack nds-w-lg" data-spacing="sm">
   <h2 className="nds-text-base nds-font-semibold">Perguntas frequentes</h2>
   <Accordion>
     {perguntas.map(({ value, pergunta, resposta }) => (

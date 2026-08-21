@@ -49,7 +49,7 @@ export const Playground: Story = {
   },
   render: (args) => {
     const wrapper = document.createElement('div');
-    wrapper.className = 'nds-stack nds-w-cap-xs';
+    wrapper.className = 'nds-stack nds-w-xs';
     wrapper.dataset.spacing = 'xs';
 
     const inputId = 'playground-label';

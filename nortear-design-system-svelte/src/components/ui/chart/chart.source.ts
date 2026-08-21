@@ -223,7 +223,7 @@ export function chartEmCardSource(): string {
   CardTitle,
 } from "@/components/ui/card";
 ${script(['buildBarOption'], DADOS_SERIE_UNICA)}`,
-    `<Card class="nds-w-cap-sm">
+    `<Card class="nds-w-sm">
   <CardHeader>
     <CardTitle>Acessos mensais</CardTitle>
     <CardDescription>Janeiro a abril, acessos no desktop.</CardDescription>

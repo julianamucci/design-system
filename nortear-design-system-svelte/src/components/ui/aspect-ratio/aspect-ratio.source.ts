@@ -110,7 +110,7 @@ export function aspectRatioSource(
     alt = 'Paisagem ao entardecer',
     title = 'Mapa do escritório',
     label = 'Carregando…',
-    width = 'nds-w-cap-lg',
+    width = 'nds-w-lg',
   } = ctx?.args ?? {};
 
   return svelteSnippet(
@@ -137,7 +137,7 @@ const imagens = [
   { src: "/midia/paisagem-3.jpg", alt: "Paisagem 3" },
 ];`,
     `<div
-  class="nds-grid nds-w-cap-content nds-sm-grid-3"
+  class="nds-grid nds-w-content nds-sm-grid-3"
   data-spacing="md"
   data-cols="2"
 >

@@ -45,7 +45,7 @@ export const Horizontal: Story = {
       variant: 'single',
       orientation: 'horizontal',
       slideCount: 5,
-      widthClass: 'nds-w-cap-md',
+      widthClass: 'nds-w-md',
       ariaLabel: 'Slides na horizontal',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
@@ -132,7 +132,7 @@ export const Vertical: Story = {
       variant: 'vertical',
       orientation: 'vertical',
       slideCount: 5,
-      widthClass: 'nds-w-cap-xs',
+      widthClass: 'nds-w-xs',
       // `nds-aspect-4-3` dá ao trilho — e por tabela ao viewport que o recorta
       // — a altura DEFINIDA que a base `flex: 0 0 100%` do slide precisa para
       // resolver. Sem ela o carrossel vertical empilha os slides e nada é

@@ -50,7 +50,7 @@ export const Default: Story = {
     },
   },
   render: () => (
-    <Tabs defaultValue="overview" className="nds-w-cap-lg">
+    <Tabs defaultValue="overview" className="nds-w-lg">
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -127,7 +127,7 @@ export const Line: Story = {
     },
   },
   render: () => (
-    <Tabs defaultValue="overview" className="nds-w-cap-lg">
+    <Tabs defaultValue="overview" className="nds-w-lg">
       <TabsList aria-label="Seções do componente" variant="line">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>
         <TabsTrigger value="properties">Propriedades</TabsTrigger>
@@ -184,7 +184,7 @@ export const Vertical: Story = {
     <Tabs
       orientation="vertical"
       defaultValue="overview"
-      className="nds-w-cap-lg"
+      className="nds-w-lg"
     >
       <TabsList aria-label="Seções do componente">
         <TabsTrigger value="overview">Visão geral</TabsTrigger>

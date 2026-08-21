@@ -41,7 +41,7 @@ function buildLabeled(opts: {
   maxLength?: number;
 }): HTMLElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack nds-w-cap-md';
+  wrapper.className = 'nds-stack nds-w-md';
   wrapper.dataset.spacing = 'sm';
 
   const label = createLabel({ htmlFor: opts.id, text: opts.labelText });

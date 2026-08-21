@@ -2417,7 +2417,7 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       encolhe-para-o-conteúdo passa de 680px e o `max-width` capa no valor
       pretendido.
 
-      Entrou `.nds-w-cap-{xs,sm,md,lg,prose,content}` — largura DEFINIDA nos
+      Entrou `.nds-w-{xs,sm,md,lg,prose,content}` — largura DEFINIDA nos
       mesmos degraus de `.nds-max-w-*`, com `max-width: 100%`. A troca foi
       mecânica porque é equivalente: `width: Xrem; max-width: 100%` dá o mesmo
       resultado que `width: 100%; max-width: Xrem` em QUALQUER pai de largura

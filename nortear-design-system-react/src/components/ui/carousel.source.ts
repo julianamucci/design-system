@@ -38,7 +38,7 @@ const SLIDES = 'const slides = [1, 2, 3, 4, 5];';
  * A largura máxima faz parte da lição: o carrossel recorta o que passa do
  * contêiner, e sem largura definida não há o que recortar.
  */
-const LARGURA_MD = 'nds-w-cap-md';
+const LARGURA_MD = 'nds-w-md';
 
 /**
  * Miolo demonstrativo de um slide, já indentado para dentro do `CarouselItem`.
@@ -79,7 +79,7 @@ export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
   const vertical = ctx?.args?.orientation === 'vertical';
   const raiz = attrsMultilinha([
     propOpcao('orientation', ctx?.args?.orientation, ORIENTACOES, 'horizontal'),
-    `className="${vertical ? 'nds-w-cap-xs' : LARGURA_MD}"`,
+    `className="${vertical ? 'nds-w-xs' : LARGURA_MD}"`,
     'aria-label="Galeria de exemplos"',
   ]);
   // No eixo vertical o trilho precisa de altura DEFINIDA: sem ela a base
@@ -139,7 +139,7 @@ ${SETAS}
 export function carouselVariosItensSource(): string {
   return jsxSnippet(
     `${IMPORT}\n\nconst slides = [1, 2, 3, 4, 5, 6];`,
-    `<Carousel className="nds-w-cap-lg" aria-label="Conjunto longo de slides">
+    `<Carousel className="nds-w-lg" aria-label="Conjunto longo de slides">
   <CarouselContent>
     {slides.map((numero) => (
       <CarouselItem key={numero} className="nds-md-basis-half nds-lg-basis-third">

@@ -291,3 +291,63 @@ Se algum match aparecer fora dos casos aceitáveis acima, tokenize.
   do `audit.mjs` deixou de varrer só primitivo e passou a incluir stories e docs
   pages, com guarda de snippet (`snippetMask`) e leitura de `style.cssText`.
 - **2026-04-21**: tokens de dimensão introduzidos junto com os 7 temas de densidade (Nova, Vega, Maia, Lyra, Mira, Luma, Sera). Patches aplicados em Button, Input, Select, Toggle, Badge. Registrado em [PATCHES.md](../../../PATCHES.md#button-dimension-tokens).
+
+## A escada, e a preferência por múltiplos de 8
+
+As utilitárias de dimensão têm escada **fechada** e **uniforme**. Antes não
+tinham: cada degrau nascia quando alguém precisava, um eixo de cada vez, e o
+resultado era `pr` com dois degraus, `ml` com um, `mr` inexistente e cinco
+`min-height` avulsos em dois blocos do mesmo arquivo. Enquanto isso o
+repositório cravava `min-height` em **22 valores diferentes, 257 vezes**. A
+dispersão não era gente inventando: era gente sem degrau.
+
+**Ao construir componente ou página nova, prefira múltiplos de 8.**
+
+| família | degraus (px na densidade padrão) |
+|---|---|
+| espaçamento (`p`, `px`, `py`, `pt`, `pb`, `pl`, `pr`, `m*`) | 0 · 2 · 4 · **8 · 16 · 24 · 32** |
+| `nds-min-h-*` | **64 · 80 · 96** · 100 · **120 · 160 · 200 · 240 · 280 · 320 · 360 · 400 · 480** |
+| `nds-w-*` e `nds-max-w-*` | **224 · 288 · 320 · 384 · 448 · 512 · 640 · 768 · 1024 · 1152** |
+| `nds-size-*` (quadrado) | **8 · 16 · 24 · 32 · 40 · 48 · 64** |
+| `--box-height-*` | **120 · 160 · 200 · 240** · 300 |
+
+Os degraus em negrito são múltiplos de 8. Os dois que não são existem por
+motivo registrado: `nds-min-h-25` (100px) é herdado, e `--box-height-xl`
+(300px) é o teto de painel que a escada de caixa já usava.
+
+Nos eixos de espaçamento, `2px` e `4px` existem para **ajuste ótico** — alinhar
+um ícone, encostar um indicador — e não para compor respiro. Se um deles é a
+resposta para "quanto de espaço entre estas duas coisas", quase sempre a
+resposta certa é 8 ou 16.
+
+### `nds-w-*` e `nds-max-w-*`: mesma letra, mesmo número
+
+As duas famílias usavam as MESMAS letras para números diferentes — `w-md` era
+24rem e `max-w-md` era 28rem. Quem lia uma e escrevia a outra errava um degrau
+sem nada acusar. Hoje a letra significa o mesmo nas duas; o que muda é só o
+comportamento quando sobra espaço:
+
+- **`nds-w-X`** — a caixa TEM aquela largura. É a forma para demonstração e para
+  caixa que precisa da medida declarada, inclusive sob um ancestral que encolhe
+  para o conteúdo. Largura declarada, sem teto: num pai mais estreito ela
+  transborda, e é assim de propósito.
+- **`nds-max-w-X`** — a caixa é FLUIDA e para de crescer ali. É a forma para
+  conteúdo em fluxo de bloco, como uma docs page, e para quando o pai pode ser
+  mais estreito que o degrau.
+
+A família de largura **não** carrega `max-width: 100%` como rede. A primeira
+versão carregava, e colapsou o painel do hover-card de 384px para 34px: painel
+portalizado é absoluto, e o bloco de contenção dele é o invólucro do popper, que
+tem largura zero — `100%` de zero é zero. Overlay é metade deste design system,
+então a rede custava mais do que protegia.
+
+Não use `nds-w-full nds-max-w-X`: sob ancestral que encolhe, `width: 100%` não
+tem contra o que resolver e a caixa fica do tamanho do texto. O portão
+`largura_fluida_sob_centered` cobra isso.
+
+### E quando o degrau não existe?
+
+Não crave o valor. Ou o vizinho serve, ou aquilo quer virar componente — que é
+onde meio-degrau é legítimo, porque tem dono e revisão. A régua de
+`--spacing-*` é contínua e tem os meios-degraus (`1-5`, `2-5`, `3`, `5`, `7`);
+o vocabulário de **utility** é deliberadamente menor que ela.

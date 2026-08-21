@@ -43,7 +43,7 @@ export const Horizontal: Story = {
   parameters: { covers: ['accessibility.item5', 'accessibility.item7', 'functional.item10', 'visual.item2', 'visual.item6'] },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
     wrap.appendChild(
       createCarousel({ items: slidesDeExemplo(5), label: 'Slides na horizontal' }),
     );
@@ -159,7 +159,7 @@ export const Vertical: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-xs';
+    wrap.className = 'nds-w-xs';
     wrap.appendChild(
       createCarousel({
         items: slidesDeExemplo(4, { medida: 'nds-h-full' }),

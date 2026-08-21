@@ -27,7 +27,7 @@ export const Horizontal: Story = {
   parameters: { covers: ['functional.item1', 'visual.item1'] },
   render: () => ({
     template: `
-      <div class="nds-stack nds-w-cap-md" data-spacing="md">
+      <div class="nds-stack nds-w-md" data-spacing="md">
         <div class="nds-text-body">
           <p class="nds-font-medium">Configurações da conta</p>
           <p class="nds-text-muted-foreground">Gerencie seu nome e e-mail.</p>
@@ -63,7 +63,7 @@ export const Vertical: Story = {
   parameters: { covers: ['functional.item2', 'visual.item2'] },
   render: () => ({
     template: `
-      <div class="nds-cluster nds-docs-demo-row nds-w-cap-md" data-spacing="md">
+      <div class="nds-cluster nds-docs-demo-row nds-w-md" data-spacing="md">
         <span class="nds-text-body">Blog</span>
         <div ndsSeparator orientation="vertical"></div>
         <span class="nds-text-body">Documentação</span>

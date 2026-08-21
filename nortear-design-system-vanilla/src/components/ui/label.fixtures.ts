@@ -11,7 +11,7 @@
 /** A coluna rótulo + controle: é o par que toda story do Label monta. */
 export function bloco(): HTMLDivElement {
   const wrapper = document.createElement('div');
-  wrapper.className = 'nds-stack nds-w-cap-xs';
+  wrapper.className = 'nds-stack nds-w-xs';
   wrapper.dataset.spacing = 'xs';
   return wrapper;
 }

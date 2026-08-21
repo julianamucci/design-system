@@ -257,7 +257,7 @@ cabecalho.append(
 );`,
     `const corpo = createCardContent({ class: 'nds-p-0' });
 corpo.appendChild(area);`,
-    `const cartao = createCard({ class: 'nds-w-cap-md' });
+    `const cartao = createCard({ class: 'nds-w-md' });
 // O cabeçalho fica FORA da área rolável: ele é a referência do que rola.
 cartao.append(cabecalho, corpo);`,
     montar('cartao'),

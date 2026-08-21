@@ -64,7 +64,7 @@ export const TagList: Story = {
   },
   render: () => {
     const outer = document.createElement('div');
-    outer.className = 'nds-w-cap-sm';
+    outer.className = 'nds-w-sm';
 
     const list = document.createElement('div');
     list.style.display = 'flex';
@@ -296,7 +296,7 @@ export const InsideCard: Story = {
     },
   },
   render: () => {
-    const card = createCard({ className: 'nds-w-cap-md' });
+    const card = createCard({ className: 'nds-w-md' });
 
     const header = createCardHeader();
     header.appendChild(createCardTitle({ text: 'Histórico de atividades', level: 3 }));
@@ -339,7 +339,7 @@ export const InsideCard: Story = {
     card.append(header, content);
 
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
     wrap.appendChild(card);
     return wrap;
   },

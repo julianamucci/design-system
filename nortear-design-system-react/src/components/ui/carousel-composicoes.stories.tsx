@@ -75,7 +75,7 @@ function ComDotsCarousel() {
   }, [api]);
 
   return (
-    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
+    <div className="nds-stack nds-w-md" data-spacing="sm">
       <Carousel setApi={setApi} className="nds-w-full" aria-label="Galeria com dots">
         <CarouselContent>
           {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
@@ -249,7 +249,7 @@ export const Gallery: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-cap-md" aria-label="Galeria de fotos do produto">
+    <Carousel className="nds-w-md" aria-label="Galeria de fotos do produto">
       <CarouselContent>
         {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
           <CarouselItem key={i}>

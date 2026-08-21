@@ -41,13 +41,55 @@
 .nds-whitespace-nowrap { white-space: nowrap; }
 .nds-whitespace-normal { white-space: normal; }
 
-/* ── Sizing ────────────────────────────────────────────────────────────────── */
+/* ── Sizing ──────────────────────────────────────────────────────────────────
+ *
+ * MÚLTIPLOS DE 8 TÊM PREFERÊNCIA. Ao construir componente ou página nova,
+ * escolha o degrau de 8 mais próximo antes de pedir um valor novo: a escada
+ * inteira abaixo é de múltiplos de 8, e o que não é dela vira valor cravado que
+ * sai do tema, da densidade e da escala de tipo. Precisou de um degrau que não
+ * existe? É sinal de que aquilo quer virar componente — ou de que o vizinho
+ * servia.
+ *
+ * ── Uma família de largura, não duas ────────────────────────────────────────
+ *
+ * `.nds-w-*` e `.nds-max-w-*` usavam as MESMAS letras para números diferentes
+ * (`w-md` era 24rem, `max-w-md` era 28rem). Quem lia uma e escrevia a outra
+ * errava um degrau sem nada acusar. Agora a letra significa o mesmo número nas
+ * duas, e os números são os que o `max-w` já tinha.
+ *
+ * Largura DEFINIDA, e só. É ela que resolve o colapso sob um ancestral que
+ * encolhe para o conteúdo (o `layout: 'centered'` do Storybook): ali
+ * `width: 100%` não tem contra o que resolver e a caixa fica do tamanho do
+ * TEXTO — medido, 448 declarados e 163 na tela. Uma largura declarada contribui
+ * com os 448 para o cálculo de max-content do ancestral, e o ancestral passa a
+ * ter 448.
+ *
+ * SEM `max-width: 100%`, e isto foi aprendido reprovando: a primeira versão
+ * desta família o trazia como rede de proteção contra pai estreito, e ele
+ * colapsou o painel do hover-card de 384px para 34px. Painel portalizado é
+ * absoluto, e o bloco de contenção dele é o invólucro do popper, que tem
+ * largura zero — `100%` de zero é zero. Overlay é metade deste design system
+ * (popover, tooltip, hover-card, dropdown, select, menubar, context-menu), então
+ * a rede custava mais do que protegia.
+ *
+ * Precisa de "fluido até um teto"? É `.nds-max-w-*`, logo abaixo, que é
+ * exatamente isso e não tem o problema.
+ *
+ * Os três degraus de baixo (`3xs`, `2xs`, `xl`) entraram por demanda medida:
+ * 224px aparecia 25 vezes cravado, 288px 37 vezes e 640px 9. Não são invenção
+ * de simetria. */
 .nds-w-full   { width: 100%; }
 .nds-w-auto   { width: auto; }
-.nds-w-xs     { width: 16rem; }                        /* 256px */
-.nds-w-sm     { width: 20rem; }                        /* 320px */
-.nds-w-md     { width: 24rem; }                        /* 384px */
-.nds-w-lg     { width: 32rem; }                        /* 512px */
+.nds-w-3xs     { width: 14rem; }                       /* 224px */
+.nds-w-2xs     { width: 18rem; }                       /* 288px */
+.nds-w-xs      { width: 20rem; }                       /* 320px */
+.nds-w-sm      { width: 24rem; }                       /* 384px — formulários */
+.nds-w-md      { width: 28rem; }                       /* 448px */
+.nds-w-lg      { width: 32rem; }                       /* 512px */
+.nds-w-xl      { width: 40rem; }                       /* 640px */
+.nds-w-prose   { width: 48rem; }                       /* leitura confortável */
+.nds-w-content { width: 64rem; }                       /* 1024px */
+.nds-w-docs    { width: 72rem; }                       /* 1152px — shell de docs */
 
 /* Square sizing (grid 8) — para elementos que precisam de width+height iguais */
 .nds-size-2   { width: 0.5rem;   height: 0.5rem;  }    /* 8px — marcador/bullet */
@@ -63,44 +105,20 @@
  * Substitui o padrão "wrap inner cluster + justify-between" quando há
  * apenas um item à direita. */
 .nds-spacer-start { margin-inline-start: auto; }
+/* Teto de elemento FLUIDO. Mesma letra, mesmo número de `.nds-w-*` — a
+ * diferença é só o que acontece quando sobra espaço: aqui a caixa acompanha o
+ * pai até o teto; lá ela tem a largura declarada. */
+.nds-max-w-3xs   { max-width: 14rem; }                 /* 224px */
+.nds-max-w-2xs   { max-width: 18rem; }                 /* 288px */
 .nds-max-w-xs    { max-width: 20rem; }                 /* 320px */
 .nds-max-w-sm    { max-width: 24rem; }                 /* 384px — formulários */
 .nds-max-w-md    { max-width: 28rem; }                 /* 448px */
 .nds-max-w-lg    { max-width: 32rem; }                 /* 512px */
+.nds-max-w-xl    { max-width: 40rem; }                 /* 640px */
 .nds-max-w-prose { max-width: 48rem; }                 /* leitura confortável */
-.nds-max-w-content { max-width: 64rem; }
-.nds-max-w-docs  { max-width: 72rem; }                 /* shell da página de docs/foundations */
+.nds-max-w-content { max-width: 64rem; }               /* 1024px */
+.nds-max-w-docs  { max-width: 72rem; }                 /* 1152px — shell de docs */
 
-/* ── Largura DEFINIDA, com teto na caixa disponível ─────────────────────────
- *
- * Existe porque `nds-w-full nds-max-w-*` não entrega a medida declarada quando
- * o ancestral encolhe para o conteúdo — que é exatamente o que o
- * `layout: 'centered'` do Storybook faz. Ali `width: 100%` não tem contra o que
- * resolver: o ancestral já encolheu, e a caixa fica do tamanho do TEXTO que ela
- * contém. Medido na story `Multi Responsive` do carousel: 448px declarados,
- * 163px na tela.
- *
- * O que mascarava o defeito era o conteúdo. Uma demonstração com rótulos longos
- * encolhe para além do teto e o `max-width` capa no valor certo — parece
- * correta, e continua parecendo até alguém encurtar um rótulo. Foi assim que
- * quatro stacks passaram e uma reprovou, com a mesma marcação.
- *
- * `width: Xrem; max-width: 100%` é IDÊNTICO a `width: 100%; max-width: Xrem` em
- * qualquer pai de largura definida — com pai mais estreito que X as duas dão a
- * largura do pai, com pai mais largo as duas dão X. A diferença aparece só no
- * pai que encolhe, que é o caso quebrado. Por isso a troca foi mecânica e não
- * mudou um pixel onde já estava certo.
- *
- * Os degraus são os mesmos de `.nds-max-w-*`, e de propósito NÃO os de
- * `.nds-w-*`: as duas escadas usam as mesmas letras para números diferentes
- * (`w-md` é 24rem, `max-w-md` é 28rem), e reaproveitar as letras erradas aqui
- * teria encolhido cada caixa em um degrau sem ninguém notar. */
-.nds-w-cap-xs { width: 20rem; max-width: 100%; }       /* 320px — teto de nds-max-w-xs */
-.nds-w-cap-sm { width: 24rem; max-width: 100%; }       /* 384px — teto de nds-max-w-sm */
-.nds-w-cap-md { width: 28rem; max-width: 100%; }       /* 448px — teto de nds-max-w-md */
-.nds-w-cap-lg { width: 32rem; max-width: 100%; }       /* 512px — teto de nds-max-w-lg */
-.nds-w-cap-prose { width: 48rem; max-width: 100%; }    /* teto de nds-max-w-prose */
-.nds-w-cap-content { width: 64rem; max-width: 100%; }  /* teto de nds-max-w-content */
 .nds-min-w-0  { min-width: 0; }
 .nds-shrink-0 { flex-shrink: 0; }
 .nds-flex-1   { flex: 1 1 0%; }
@@ -291,9 +309,33 @@
  * Don't precisa dela para MOSTRAR o redimensionamento livre que desaconselha —
  * sem a regra, o exemplo "não faça" renderizava idêntico ao "faça". */
 .nds-resize      { resize: both; }
-.nds-min-h-25 { min-height: 6.25rem; }  /* 100px */
-.nds-min-h-30 { min-height: 7.5rem; }   /* 120px */
+/* ── Altura mínima ───────────────────────────────────────────────────────────
+ *
+ * O número é o valor em px dividido por 4, como em `.nds-size-*` e como na
+ * régua de `--spacing-*`.
+ *
+ * MÚLTIPLOS DE 8 TÊM PREFERÊNCIA: a escada abaixo é toda de múltiplos de 8, com
+ * uma exceção herdada (`25` = 100px, marcada). Precisou de 220px? O degrau é
+ * `55` e ele não existe de propósito — use `50` (200) ou `60` (240).
+ *
+ * Antes eram CINCO degraus avulsos, nascidos um a um em dois blocos separados
+ * deste arquivo (96, 100, 120, 200 e 400px), enquanto o repositório cravava
+ * `min-height` em 22 valores diferentes, 257 vezes. A dispersão não era gente
+ * inventando: era gente sem degrau. Os degraus novos saíram da contagem — 80px
+ * aparecia 33 vezes cravado, 200px 22, 120px 20, 320px 17, 280px 16, 160px 13. */
+.nds-min-h-16  { min-height: 4rem; }    /* 64px */
+.nds-min-h-20  { min-height: 5rem; }    /* 80px */
+.nds-min-h-24  { min-height: 6rem; }    /* 96px */
+.nds-min-h-25  { min-height: 6.25rem; } /* 100px — herdado, fora da grade de 8 */
+.nds-min-h-30  { min-height: 7.5rem; }  /* 120px */
+.nds-min-h-40  { min-height: 10rem; }   /* 160px */
+.nds-min-h-50  { min-height: 12.5rem; } /* 200px */
+.nds-min-h-60  { min-height: 15rem; }   /* 240px */
+.nds-min-h-70  { min-height: 17.5rem; } /* 280px */
+.nds-min-h-80  { min-height: 20rem; }   /* 320px */
+.nds-min-h-90  { min-height: 22.5rem; } /* 360px */
 .nds-min-h-100 { min-height: 25rem; }   /* 400px */
+.nds-min-h-120 { min-height: 30rem; }   /* 480px */
 
 /* ── numérico / tipografia ───────────────────────────────────────────────── */
 .nds-tabular-nums   { font-variant-numeric: tabular-nums; }
@@ -470,9 +512,9 @@
 .nds-aspect-4-3    { aspect-ratio: 4 / 3; }
 .nds-aspect-16-9   { aspect-ratio: 16 / 9; }
 
-/* ── min-height extra ────────────────────────────────────────────────────── */
-.nds-min-h-50 { min-height: 12.5rem; }  /* 200px */
-.nds-min-h-24 { min-height: 6rem; }     /* 96px */
+/* Os dois degraus de `min-height` que moravam aqui foram para a escada única,
+ * lá em cima. Nasceram avulsos, longe dos outros três, e essa distância é
+ * exatamente por que a escada tinha buraco: ninguém via os cinco juntos. */
 
 /* ── grids responsivos (sm=640, md=768, lg=1024) ─────────────────────────── */
 .nds-grid-responsive-2, .nds-grid-responsive-3 { display: grid; gap: var(--spacing-4); grid-template-columns: 1fr; }

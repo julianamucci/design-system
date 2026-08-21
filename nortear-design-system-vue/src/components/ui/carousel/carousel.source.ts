@@ -25,7 +25,7 @@ const SLIDES = `const slides = [1, 2, 3, 4, 5]`;
  * A largura máxima faz parte da lição: o carrossel recorta o que passa do
  * contêiner, e sem largura definida não há o que recortar.
  */
-const LARGURA_SM = 'nds-w-cap-sm';
+const LARGURA_SM = 'nds-w-sm';
 
 /**
  * Miolo demonstrativo de um slide, já indentado para dentro do `CarouselItem`.
@@ -57,7 +57,7 @@ function carrossel(opcoes: {
     rotulo,
     laco = 'v-for="n in slides" :key="n"',
   } = opcoes;
-  const largura = vertical ? 'nds-w-cap-xs' : LARGURA_SM;
+  const largura = vertical ? 'nds-w-xs' : LARGURA_SM;
   return `<Carousel${attrs(raiz, `class="${largura}"`, `aria-label="${rotulo}"`)}>
   <CarouselContent${attrs(trilho)}>
     <CarouselItem ${attrs(laco, item).trim()}>
@@ -145,7 +145,7 @@ export function carouselItemUnicoSource(): string {
 export function carouselMultiResponsivoSource(): string {
   return vueSnippet(
     `${IMPORT}\n\nconst slides = [1, 2, 3, 4, 5, 6]`,
-    `<Carousel class="nds-w-cap-lg" aria-label="Conjunto longo de slides">
+    `<Carousel class="nds-w-lg" aria-label="Conjunto longo de slides">
   <CarouselContent>
     <CarouselItem v-for="n in slides" :key="n" class="nds-md-basis-half nds-lg-basis-third">
       <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">

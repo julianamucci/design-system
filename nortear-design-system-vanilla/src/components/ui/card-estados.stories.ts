@@ -42,7 +42,7 @@ type Story = StoryObj;
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function buildBasicCard(): HTMLElement {
-  const card = createCard({ className: 'nds-w-cap-sm' });
+  const card = createCard({ className: 'nds-w-sm' });
   const header = createCardHeader();
   header.appendChild(createCardTitle({ text: 'Cadeira Gamer Pro', level: 3 }));
   header.appendChild(
@@ -105,7 +105,7 @@ export const Clickable: Story = {
   render: () => {
     const link = document.createElement('a');
     link.href = '#produto-cadeira-gamer-pro';
-    link.className = 'nds-block nds-w-cap-sm nds-text-left nds-focus-ring nds-rounded-xl';
+    link.className = 'nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl';
     link.setAttribute('aria-label', 'Abrir detalhes do produto Cadeira Gamer Pro');
     link.addEventListener('click', (event) => {
       event.preventDefault();

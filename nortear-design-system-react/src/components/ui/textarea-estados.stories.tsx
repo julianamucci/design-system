@@ -38,7 +38,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
-    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
+    <div className="nds-stack nds-w-md" data-spacing="sm">
       <Label htmlFor="state-default">Descrição</Label>
       <Textarea
         id="state-default"
@@ -68,7 +68,7 @@ export const Default: Story = {
 
 export const Focus: Story = {
   render: () => (
-    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
+    <div className="nds-stack nds-w-md" data-spacing="sm">
       <Label htmlFor="state-focus">Descrição</Label>
       <Textarea
         id="state-focus"
@@ -109,7 +109,7 @@ export const Focus: Story = {
 
 export const Filled: Story = {
   render: () => (
-    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
+    <div className="nds-stack nds-w-md" data-spacing="sm">
       <Label htmlFor="state-filled">Biografia</Label>
       <Textarea
         id="state-filled"
@@ -147,7 +147,7 @@ export const Filled: Story = {
 
 export const Disabled: Story = {
   render: () => (
-    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
+    <div className="nds-stack nds-w-md" data-spacing="sm">
       <Label htmlFor="state-disabled">Descrição</Label>
       <Textarea
         id="state-disabled"
@@ -189,7 +189,7 @@ export const Disabled: Story = {
 
 export const Invalid: Story = {
   render: () => (
-    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
+    <div className="nds-stack nds-w-md" data-spacing="sm">
       <Label htmlFor="state-invalid">Descrição</Label>
       <Textarea
         id="state-invalid"
@@ -242,7 +242,7 @@ export const Invalid: Story = {
 
 export const ReadOnly: Story = {
   render: () => (
-    <div className="nds-stack nds-w-cap-md" data-spacing="sm">
+    <div className="nds-stack nds-w-md" data-spacing="sm">
       <Label htmlFor="state-readonly">Observações</Label>
       <Textarea
         id="state-readonly"

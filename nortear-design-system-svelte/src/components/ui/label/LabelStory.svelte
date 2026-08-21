@@ -22,7 +22,7 @@
   } = $props();
 </script>
 
-<div class="nds-stack nds-w-cap-xs" data-spacing="xs">
+<div class="nds-stack nds-w-xs" data-spacing="xs">
   <Label for={htmlFor} class={className} {...rest}>
     {@html DOMPurify.sanitize(labelText)}
     {#if required}

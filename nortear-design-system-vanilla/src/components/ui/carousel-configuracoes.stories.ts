@@ -60,7 +60,7 @@ export const Single: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
     wrap.appendChild(createCarousel({ items: slidesDeExemplo(4), label: 'Um item por vez' }));
     return wrap;
   },
@@ -178,7 +178,7 @@ export const MultiResponsive: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-lg';
+    wrap.className = 'nds-w-lg';
     wrap.appendChild(
       createCarousel({
         items: slidesDeExemplo(6),
@@ -263,7 +263,7 @@ export const Autoplay: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
     wrap.appendChild(
       createCarousel({
         items: slidesDeExemplo(4, { prefixo: 'Destaque' }),
@@ -336,7 +336,7 @@ export const DragGesture: Story = {
   },
   render: () => {
     const wrap = document.createElement('div');
-    wrap.className = 'nds-w-cap-md';
+    wrap.className = 'nds-w-md';
     wrap.appendChild(
       createCarousel({ items: slidesDeExemplo(4), label: 'Galeria com gesto de arrastar' }),
     );

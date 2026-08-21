@@ -22,7 +22,7 @@
     alt = 'Exemplo de imagem',
     title = 'Embedded content',
     poster = '',
-    width = 'nds-w-cap-lg',
+    width = 'nds-w-lg',
     class: className = '',
     label = '',
   }: Props = $props();

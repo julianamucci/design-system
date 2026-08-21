@@ -60,7 +60,7 @@ export const WithCustomButton: Story = {
     docs: { source: { transform: collapsibleComBotaoSource } },
   },
   render: () => (
-    <Collapsible className="nds-w-cap-sm">
+    <Collapsible className="nds-w-sm">
       <CollapsibleTrigger
         className={cn(buttonVariants({ variant: "outline" }), TRIGGER_CLASSES)}
         data-justify="between"
@@ -110,7 +110,7 @@ export const WithIconInTrigger: Story = {
     docs: { source: { transform: collapsibleComIconeSource } },
   },
   render: () => (
-    <Collapsible className="nds-w-cap-sm">
+    <Collapsible className="nds-w-sm">
       <CollapsibleTrigger
         className={cn(buttonVariants({ variant: "ghost" }), TRIGGER_CLASSES)}
         data-justify="between"
@@ -170,7 +170,7 @@ export const WithStructuredContent: Story = {
     docs: { source: { transform: collapsibleEstruturadoSource } },
   },
   render: () => (
-    <Collapsible className="nds-stack nds-w-cap-sm" data-spacing="sm">
+    <Collapsible className="nds-stack nds-w-sm" data-spacing="sm">
       <div
         className="nds-cluster nds-rounded-md nds-border-default nds-bg-card nds-px-4 nds-py-2"
         data-align="center"

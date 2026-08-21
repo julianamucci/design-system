@@ -3,7 +3,7 @@
   import { Input } from '@/components/ui/input';
 </script>
 
-<div class="nds-stack nds-w-cap-xs" data-spacing="xs">
+<div class="nds-stack nds-w-xs" data-spacing="xs">
   <Label for="comp-required">
     Email profissional
     <span class="nds-text-destructive" aria-hidden="true">*</span>

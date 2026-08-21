@@ -34,7 +34,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CarouselArgs> }
   imports: [NDS_CAROUSEL],
   template: \`
     <nds-carousel
-      class="nds-w-cap-md"
+      class="nds-w-md"
       label="Galeria de exemplos"
       slideLabel="Slide {index} de {total}"${attrs ? `\n      ${attrs}` : ''}
     >
@@ -98,7 +98,7 @@ export const Playground: Story = {
     props: { ...args, vertical: args.orientation === 'vertical', slides: [1, 2, 3, 4, 5] },
     template: `
       <nds-carousel
-        class="nds-w-cap-md"
+        class="nds-w-md"
         label="Galeria de exemplos"
         slideLabel="Slide {index} de {total}"
         [orientation]="orientation"

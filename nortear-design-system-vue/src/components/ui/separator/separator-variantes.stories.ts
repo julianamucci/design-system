@@ -29,7 +29,7 @@ export const Horizontal: Story = {
   render: () => ({
     components: { Separator },
     template: `
-      <div class="nds-stack nds-w-cap-md" data-spacing="md">
+      <div class="nds-stack nds-w-md" data-spacing="md">
         <div class="nds-text-body">
           <p class="nds-font-medium">Configurações da conta</p>
           <p class="nds-text-muted-foreground">Gerencie seu nome e e-mail.</p>
@@ -71,7 +71,7 @@ export const Vertical: Story = {
   render: () => ({
     components: { Separator },
     template: `
-      <div class="nds-cluster nds-docs-demo-row nds-w-cap-md" data-spacing="md">
+      <div class="nds-cluster nds-docs-demo-row nds-w-md" data-spacing="md">
         <span class="nds-text-body">Blog</span>
         <Separator orientation="vertical" />
         <span class="nds-text-body">Documentação</span>

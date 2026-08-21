@@ -110,7 +110,7 @@ export const WithIconsInTrigger: Story = {
 
     const root = createTabs({
       defaultValue: 'profile',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
       items,
       'aria-label': 'Configurações',
     });
@@ -195,7 +195,7 @@ export const WithBadgeInTrigger: Story = {
 
     const root = createTabs({
       defaultValue: 'inbox',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
       items,
       'aria-label': 'Caixas de mensagem',
     });
@@ -271,7 +271,7 @@ export const Vertical: Story = {
     createTabs({
       defaultValue: 'profile',
       orientation: 'vertical',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
       items: configItems(),
       'aria-label': 'Configurações',
     }),
@@ -333,7 +333,7 @@ export const SubNavigationLine: Story = {
     return createTabs({
       defaultValue: 'all',
       variant: 'line',
-      class: 'nds-w-cap-lg',
+      class: 'nds-w-lg',
       items,
       'aria-label': 'Filtros de listagem',
     });

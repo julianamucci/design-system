@@ -49,7 +49,7 @@ export const Default: Story = {
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
     template: `
-      <Card class="nds-w-cap-sm">
+      <Card class="nds-w-sm">
         <CardHeader>
           <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
           <CardDescription>
@@ -107,7 +107,7 @@ export const Clickable: Story = {
       <a
         href="#produto-cadeira-gamer-pro"
         aria-label="Abrir detalhes do produto Cadeira Gamer Pro"
-        class="nds-block nds-w-cap-sm nds-text-left nds-focus-ring nds-rounded-xl"
+        class="nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
         @click="handleClick"
       >
         <Card>
@@ -172,7 +172,7 @@ export const WithFooter: Story = {
       return { handleSave: () => onSave() };
     },
     template: `
-      <Card class="nds-w-cap-sm">
+      <Card class="nds-w-sm">
         <CardHeader>
           <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
           <CardDescription>Produto atualizado em 12/04.</CardDescription>

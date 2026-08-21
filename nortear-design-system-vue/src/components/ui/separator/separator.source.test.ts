@@ -29,7 +29,7 @@ import { Separator } from '@/components/ui/separator'
 </script>
 
 <template>
-  <div class="nds-stack nds-w-cap-md" data-spacing="md">
+  <div class="nds-stack nds-w-md" data-spacing="md">
     <p class="nds-text-body">Seção superior</p>
     <Separator />
     <p class="nds-text-body">Seção inferior</p>
@@ -55,7 +55,7 @@ import { Separator } from '@/components/ui/separator'
   // entregava um exemplo que não desenha linha nenhuma.
   it('o eixo vertical troca o contêiner para uma linha de flex', () => {
     const saida = separatorSource('', { args: { orientation: 'vertical' } });
-    expect(saida).toContain('<div class="nds-cluster nds-w-cap-md" data-spacing="md">');
+    expect(saida).toContain('<div class="nds-cluster nds-w-md" data-spacing="md">');
     expect(saida).toContain('<Separator orientation="vertical" />');
     expect(saida).not.toContain('nds-stack');
   });

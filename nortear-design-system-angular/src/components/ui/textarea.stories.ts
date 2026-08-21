@@ -123,7 +123,7 @@ export const Playground: Story = {
   render: (args) => ({
     props: { ...args, valor: '' },
     template: `
-      <div class="nds-stack nds-w-cap-md" data-spacing="sm">
+      <div class="nds-stack nds-w-md" data-spacing="sm">
         <label ndsLabel for="pg-textarea">{{ label }}</label>
         <textarea
           ndsTextarea

@@ -8,7 +8,7 @@
 <!-- Trigger estilizado como botão do design system: as classes do Button moram
      no PRÓPRIO trigger, então é ele quem carrega aria-expanded e aria-controls.
      Markup igual ao do Vanilla, a referência cross-stack. -->
-<Collapsible bind:open class="nds-w-cap-sm">
+<Collapsible bind:open class="nds-w-sm">
   <CollapsibleTrigger
     class="nds-button nds-button-outline nds-cluster nds-w-full nds-px-4"
     data-justify="between"

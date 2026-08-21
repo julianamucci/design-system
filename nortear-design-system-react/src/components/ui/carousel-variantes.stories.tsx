@@ -51,7 +51,7 @@ export const Horizontal: Story = {
     },
   },
   render: () => (
-    <Carousel className="nds-w-cap-md" aria-label="Slides na horizontal">
+    <Carousel className="nds-w-md" aria-label="Slides na horizontal">
       <CarouselContent>
         {Array.from({ length: 5 }).map((_, i) => (
           <CarouselItem key={i}>
@@ -154,7 +154,7 @@ export const Vertical: Story = {
   render: () => (
     <Carousel
       orientation="vertical"
-      className="nds-w-cap-xs"
+      className="nds-w-xs"
       aria-label="Slides na vertical"
     >
       {/* `nds-aspect-4-3` dá ao trilho a altura DEFINIDA que a base

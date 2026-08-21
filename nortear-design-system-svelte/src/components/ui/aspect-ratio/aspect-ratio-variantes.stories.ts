@@ -36,7 +36,7 @@ export const SixteenNine: Story = {
     child: 'img',
     src: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format&fit=crop&q=60',
     alt: 'Paisagem 16:9',
-    width: 'nds-w-cap-lg',
+    width: 'nds-w-lg',
   },
 
   play: async ({ canvasElement }) => {
@@ -57,7 +57,7 @@ export const FourThree: Story = {
     child: 'img',
     src: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=900&auto=format&fit=crop&q=60',
     alt: 'Imagem de produto 4:3',
-    width: 'nds-w-cap-md',
+    width: 'nds-w-md',
   },
 
   play: async ({ canvasElement }) => {
@@ -78,7 +78,7 @@ export const Square: Story = {
     child: 'img',
     src: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&auto=format&fit=crop&q=60',
     alt: 'Avatar quadrado 1:1',
-    width: 'nds-w-cap-xs',
+    width: 'nds-w-xs',
   },
 
   play: async ({ canvasElement }) => {
@@ -99,7 +99,7 @@ export const ThreeFour: Story = {
     child: 'img',
     src: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=600&auto=format&fit=crop&q=60',
     alt: 'Retrato 3:4',
-    width: 'nds-w-cap-xs',
+    width: 'nds-w-xs',
   },
 
   play: async ({ canvasElement }) => {
@@ -120,7 +120,7 @@ export const UltraWide: Story = {
     child: 'img',
     src: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&auto=format&fit=crop&q=60',
     alt: 'Hero panorâmico 21:9',
-    width: 'nds-w-cap-prose',
+    width: 'nds-w-prose',
   },
 
   play: async ({ canvasElement }) => {

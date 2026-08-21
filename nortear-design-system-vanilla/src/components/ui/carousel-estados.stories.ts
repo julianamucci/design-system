@@ -35,7 +35,7 @@ type Story = StoryObj;
 
 function montar(total: number, label: string): HTMLElement {
   const wrap = document.createElement('div');
-  wrap.className = 'nds-w-cap-md';
+  wrap.className = 'nds-w-md';
   wrap.appendChild(createCarousel({ items: slidesDeExemplo(total), label }));
   return wrap;
 }
