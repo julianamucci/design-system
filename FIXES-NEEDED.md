@@ -2550,3 +2550,35 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       uma vez, sempre na COLETA (zero testes reprovados; os arquivos nem
       carregam). Não é do produto nem das stories — é o servidor do Vite não
       servindo o arquivo de setup. Some ao repetir.
+
+      **Suspeito medido:** processos ÓRFÃOS de rodadas anteriores. Em
+      2026-08-21 havia um `vitest run --project=storybook` do Vanilla de pé
+      desde as 12:08 (morto pelo timeout da ferramenta, nunca encerrado) com
+      **14 `chrome-headless-shell` presos a ele**, mais um `storybook dev -p
+      6010` do Angular do dia anterior consumindo 2,2 GB. O órfão segurava a
+      porta 63315, e toda corrida nova abria com "Port 63315 is in use".
+      Verificar isto ANTES de tratar a falha como carga: a máquina estava
+      genuinamente ocupada por lixo, e parte do que foi anotado como
+      "sensível a carga" pode ser isso.
+
+- [x] ~~Verificar se versão mais nova do Storybook torna `setupGlobalFocusEvents`
+      idempotente~~ — **a premissa estava errada, e a verificação encerra o
+      item.** A função JÁ é idempotente na 10.5.10: é código do `react-aria` no
+      bundle do manager e abre com `if (… || hasSetupGlobalListeners.get(window))
+      return`, uma guarda de WeakMap por janela. O trecho é BYTE A BYTE igual na
+      10.6.0-alpha.7. Não há bug de biblioteca aqui e não há issue a abrir.
+
+      O que de fato impede `isolate: false` é outra coisa, do lado do
+      `@vitest/browser`: `Browser connection was closed while running tests. Was
+      the page closed unexpectedly?` — a aba morre quando muitos arquivos de
+      story dividem a mesma página. E não é limiar de contagem: 20 arquivos
+      passam, 40 morrem, 80 passam. Medição feita com os órfãos acima de pé, o
+      que a torna inconclusiva — refazer com a máquina limpa antes de investir
+      mais.
+
+      O `@storybook/addon-vitest` 10.6.0-alpha.7 não muda nada do caminho de
+      isolamento: `setup-file.js`, `setup-file-with-project-annotations.js`,
+      `setup-file.browser.3.js`, `setup-file.browser.4.js` e `test-utils.js` são
+      idênticos aos da 10.5.10; `index.js` e `global-setup.js` diferem só em hash
+      de chunk e num `parse` renomeado para `parse3` pelo bundler. Subir para a
+      alpha não traria ganho nenhum aqui.
