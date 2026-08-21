@@ -121,15 +121,30 @@ modos. Um tema que não passe nele não entra.
 
 ## Onde o tema precisa ser registrado
 
-São **20 arquivos** — 19 existentes mais o do tema. Faltar um deixa o tema
-invisível na toolbar, ou com o nome errado na página de cores, ou sem reverter
-ao trocar de volta.
+São **21 arquivos** — 20 existentes mais o do tema. Faltar um deixa o tema
+invisível na toolbar, com o nome errado na página de cores, sem reverter ao
+trocar de volta, ou com a página de fundamentos afirmando que os temas são três.
 
-Conferência rápida no fim: `git grep -l "tema-<id>"` tem de devolver a mesma
-lista de `git grep -l "tema-warm"`, MENOS quatro arquivos que só citam o `warm`
-de passagem e não são registro — `themes/default.css` e `themes/densities.css`
-(comentários sobre cascade e combinação), `angular/.../SonnerDocs.ts` (um
-snippet de exemplo) e `vue/src/App.vue` (o sandbox, que tem seletor próprio).
+**Nenhum `grep` sozinho encontra os 20**, e vale saber por quê antes de confiar
+num. O tema é citado de três formas, e cada busca vê só uma parte:
+
+```bash
+git grep -l "tema-warm"       # pela classe  — 21 arquivos, 4 deles não são registro
+git grep -lE "['\"]warm['\"]" # pelo ID entre aspas — 15 arquivos
+```
+
+O `subdomainThemeMap` só aparece na segunda. E a página de fundamentos
+`sistema-de-temas` **não aparece em nenhuma das duas**: lá o tema é citado em
+prosa (`default · warm · cold` e `<code>warm</code>`), sem aspas e sem a classe.
+Foi exatamente esse arquivo que a primeira versão desta guideline perdeu — e é
+o pior de perder, porque texto corrido não tem portão que o cobre. Confira as
+duas buscas **e** abra a página de fundamentos.
+
+Cinco arquivos aparecem nas buscas e NÃO são registro: `themes/default.css`
+e `themes/densities.css` (comentários sobre cascade e combinação),
+`angular/.../SonnerDocs.ts` (um snippet de exemplo),
+`content/foundations/densidades/translations.json` (um exemplo de classe em
+prosa) e `vue/src/App.vue` (o sandbox, que tem seletor próprio).
 
 ### Conteúdo compartilhado (3)
 
@@ -147,25 +162,30 @@ snippet de exemplo) e `vue/src/App.vue` (o sandbox, que tem seletor próprio).
    `items` do `globalTypes.brand` (a toolbar).
 5. `.storybook/preview-head.html` — a constante `BRAND_CLASSES`.
 
-### Página de fundamentos (1 + 1)
+### Páginas de fundamentos (1 + 2)
 
 6. `src/components/docs/ThemeColorsDocs.*` nas cinco stacks — a lista de temas
    que a página varre, e a lista de detecção de classe.
 7. `docs/shared/content/theme-colors/translations.json` — o rótulo em
    `brand.themes.<id>`, nas três línguas (pt-BR, en, es).
+8. `docs/shared/content/foundations/sistema-de-temas/translations.json` — nas
+   três línguas: `toolbar.items.brand.values`, que ENUMERA os valores da
+   toolbar (`default · warm · cold`), e `subdomain.items.map`, que enumera quem
+   aponta para tema. Os dois são texto corrido que vira mentira se o tema novo
+   não entrar — e nenhuma regra de auditoria os alcança, porque é prosa.
 
 ### Verificação (1)
 
-8. `docs/shared/testing/cor.ts` — a constante `TEMAS`. **Este é o mais
+9. `docs/shared/testing/cor.ts` — a constante `TEMAS`. **Este é o mais
    importante**: toda sonda de contraste do repositório itera essa lista, então
    acrescentar o tema ali faz seis stories de portão passarem a medi-lo
    automaticamente, nos dois modos.
 
 ### Opcional (1)
 
-9. `nortear-design-system-vue/src/App.vue` — o sandbox do Vue tem seletor de
-   tema próprio. Não é interface de produto (o Storybook é), então só mexa se
-   quiser o tema disponível ali também.
+10. `nortear-design-system-vue/src/App.vue` — o sandbox do Vue tem seletor de
+    tema próprio. Não é interface de produto (o Storybook é), então só mexa se
+    quiser o tema disponível ali também.
 
 ---
 
