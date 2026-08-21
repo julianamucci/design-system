@@ -1,8 +1,9 @@
-<script setup lang="ts" generic="TData">
-import type { Table as TanstackTable } from '@tanstack/vue-table';
+<script setup lang="ts" generic="TData extends RowData">
+import type { RowData, Table as TanstackTable } from '@tanstack/vue-table';
+import { computed } from 'vue';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import type { DataTableLabels } from './data-table.vue';
+import type { DataTableFeatures, DataTableLabels } from './data-table.vue';
 
 /*
  * Os rótulos chegam por PROP, já mesclados com o padrão lá em cima.
@@ -14,11 +15,27 @@ import type { DataTableLabels } from './data-table.vue';
  * outra armadilha — dois pontos de mescla divergem no dia em que só um mudar.
  */
 const props = defineProps<{
-  table: TanstackTable<TData>;
+  table: TanstackTable<DataTableFeatures, TData>;
   pageSizeOptions: number[];
   enableRowSelection: boolean;
   labels: DataTableLabels;
 }>();
+
+/*
+ * O estado da paginação sai de um ÁTOMO, não mais de `getState()`.
+ *
+ * No TanStack 9 cada fatia do estado é um átomo próprio, e é assim que a
+ * reatividade do Vue enxerga a mudança: `getState()` devolvia um objeto inteiro
+ * a cada leitura, e o adaptador não tinha como saber que só a página mudou.
+ *
+ * A chave é opcional de propósito na tipagem da lib — código de recurso pode ler
+ * fatias que não são dele. Aqui ela existe sempre, porque o conjunto de recursos
+ * deste rodapé é o que registra a paginação; o padrão é a rede de segurança que
+ * a assinatura pede, não um caso esperado.
+ */
+const paginacao = computed(
+  () => props.table.atoms.pagination?.get() ?? { pageIndex: 0, pageSize: 10 },
+);
 </script>
 
 <template>
@@ -39,7 +56,7 @@ const props = defineProps<{
         <span>{{ props.labels.rowsPerPage }}</span>
         <select
           :aria-label="props.labels.rowsPerPage"
-          :value="props.table.getState().pagination.pageSize"
+          :value="paginacao.pageSize"
           class="nds-data-table-page-size-select"
           @change="(e) => props.table.setPageSize(Number((e.target as HTMLSelectElement).value))"
         >
@@ -53,7 +70,7 @@ const props = defineProps<{
         </select>
       </div>
       <div class="nds-data-table-pagination-count">
-        {{ props.labels.page }} {{ props.table.getState().pagination.pageIndex + 1 }} {{ props.labels.pageOf }}
+        {{ props.labels.page }} {{ paginacao.pageIndex + 1 }} {{ props.labels.pageOf }}
         {{ Math.max(props.table.getPageCount(), 1) }}
       </div>
       <div class="nds-data-table-pagination-nav">

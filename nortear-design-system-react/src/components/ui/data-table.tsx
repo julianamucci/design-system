@@ -6,18 +6,31 @@ import {
   type ColumnOrderState,
   type ColumnPinningState,
   type ColumnSizingState,
+  type ColumnVisibilityState,
+  type ReactTable,
   type Row,
   type RowData,
   type RowSelectionState,
   type SortingState,
   type Table as TanstackTable,
-  type VisibilityState,
+  columnFilteringFeature,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFns,
   flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+  useTable,
 } from "@tanstack/react-table"
 import { useVirtualizer } from "@tanstack/react-virtual"
 import {
@@ -58,21 +71,70 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-declare module "@tanstack/react-table" {
-  // TData/TValue precisam casar com a assinatura original do TanStack pra
-  // module augmentation funcionar — não são "não usados" do ponto de vista do TS.
-  /* eslint-disable unused-imports/no-unused-vars */
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filter?: { type: "text" | "select"; options?: string[]; placeholder?: string }
-    editable?: boolean
-  }
-  interface TableMeta<TData extends RowData> {
-    updateData?: (rowIndex: number, columnId: string, value: unknown) => void
-  }
-  /* eslint-enable unused-imports/no-unused-vars */
+// ─── Os RECURSOS que esta tabela usa ──────────────────────────────────────────
+//
+// No TanStack 9 os recursos deixam de vir todos ligados: cada um é registrado
+// aqui, e só o que está nesta lista entra no pacote. É por isso que o bloco
+// existe — e por isso que ele é a fonte de verdade sobre o que o DataTable faz.
+//
+// Os dois `meta` também mudaram de lugar, e para melhor. Antes era
+// `declare module "@tanstack/react-table"`: augmentação GLOBAL, que vazava os
+// nossos campos para qualquer outra tabela do projeto que importasse a lib, e
+// exigia repetir `TData`/`TValue` só para casar a assinatura. Agora são slots
+// de tipo dentro do próprio conjunto — o escopo é este componente, e acabou.
+type DataTableColumnMeta = {
+  filter?: { type: "text" | "select"; options?: string[]; placeholder?: string }
+  editable?: boolean
 }
 
-export type DataTableColumn<TData, TValue = unknown> = ColumnDef<TData, TValue>
+type DataTableTableMeta = {
+  updateData?: (rowIndex: number, columnId: string, value: unknown) => void
+}
+
+const RECURSOS_BASE = {
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowSelectionFeature,
+  columnVisibilityFeature,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
+  columnMeta: {} as DataTableColumnMeta,
+  tableMeta: {} as DataTableTableMeta,
+}
+
+/**
+ * Dois conjuntos, e não um com a paginação desligada por opção.
+ *
+ * O modelo de linhas paginado é um RECURSO no 9, não mais um `get*RowModel`
+ * passado por chamada — e recurso registrado é recurso ativo. Como a tabela
+ * virtualizada entrega todas as linhas de propósito (quem recorta é o
+ * virtualizador, não a paginação), ela precisa de um conjunto que simplesmente
+ * não tenha o recurso. Registrar e desligar por opção deixaria o código do
+ * recurso no pacote de quem nunca pagina.
+ */
+const RECURSOS_COM_PAGINACAO = tableFeatures({
+  ...RECURSOS_BASE,
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
+
+const RECURSOS_SEM_PAGINACAO = tableFeatures(RECURSOS_BASE)
+
+/** O conjunto completo — é ele que tipa tudo que sai deste módulo. */
+export type DataTableFeatures = typeof RECURSOS_COM_PAGINACAO
+
+export type DataTableColumn<TData extends RowData, TValue = unknown> = ColumnDef<
+  DataTableFeatures,
+  TData,
+  TValue
+>
 
 /**
  * Todo texto que o componente escreve na tela ou entrega ao leitor de tela.
@@ -140,7 +202,7 @@ export const DATA_TABLE_LABELS_PADRAO: DataTableLabels = {
   allOption: "Todos",
 }
 
-export interface DataTableProps<TData> {
+export interface DataTableProps<TData extends RowData> {
   columns: DataTableColumn<TData>[]
   data: TData[]
   enableGlobalFilter?: boolean
@@ -168,12 +230,12 @@ export interface DataTableProps<TData> {
   /** Textos da interface. Só as chaves informadas mudam. */
   labels?: Partial<DataTableLabels>
   className?: string
-  onTableReady?: (table: TanstackTable<TData>) => void
+  onTableReady?: (table: TanstackTable<DataTableFeatures, TData>) => void
   /** Recebe alteração de célula editável. O caller é responsável por atualizar `data`. */
   onCellEdit?: (rowIndex: number, columnId: string, value: unknown) => void
 }
 
-function DataTable<TData>({
+function DataTable<TData extends RowData>({
   columns,
   data,
   enableGlobalFilter = true,
@@ -214,13 +276,13 @@ function DataTable<TData>({
     []
   )
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
+    React.useState<ColumnVisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
   const [globalFilter, setGlobalFilter] = React.useState("")
   const [columnOrder, setColumnOrder] = React.useState<ColumnOrderState>([])
   const [columnPinning, setColumnPinning] = React.useState<ColumnPinningState>({
-    left: [],
-    right: [],
+    start: [],
+    end: [],
   })
   const [columnSizing, setColumnSizing] = React.useState<ColumnSizingState>({})
   const [draggedColumnId, setDraggedColumnId] = React.useState<string | null>(
@@ -241,7 +303,7 @@ function DataTable<TData>({
    * mesmo que nome nenhum (WCAG 4.1.2), e era exatamente o defeito daqui.
    */
   const rotuloDaLinha = React.useCallback(
-    (row: Row<TData>): string => {
+    (row: Row<DataTableFeatures, TData>): string => {
       if (rowLabel) return rowLabel(row.original)
       const primeira = row.getAllCells().find((c) => c.column.id !== "__select__")
       const bruto = primeira?.getValue()
@@ -293,10 +355,23 @@ function DataTable<TData>({
     enableColumnFilters &&
     allColumns.some((c) => !!c.meta?.filter)
 
-  // TanStack Table useReactTable é a API headless oficial; o objeto config
-  // é estável entre renders. React Compiler não consegue inferir memoização.
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const table = useReactTable({
+  // `useTable` é a API headless oficial do TanStack 9. Ao contrário do
+  // `useReactTable` do 8, ele não precisa mais da supressão de
+  // `react-hooks/incompatible-library`: o React Compiler consegue analisá-lo, e
+  // o lint passou a acusar a diretiva como inútil.
+  const table = useTable({
+    /*
+     * O elenco é escolhido em tempo de execução, e os dois têm tipos
+     * diferentes — o sem paginação é subconjunto do outro. O TS não estreita
+     * uma união de conjuntos de recursos, então a asserção declara o que o
+     * guarda logo acima já garante: nenhum caminho chama API de paginação
+     * quando o recurso não está registrado. É a mesma promessa que o 8 fazia
+     * em silêncio, quando `getPaginationRowModel` podia ser `undefined` e os
+     * métodos continuavam tipados como presentes.
+     */
+    features: (enablePagination && !virtualized
+      ? RECURSOS_COM_PAGINACAO
+      : RECURSOS_SEM_PAGINACAO) as DataTableFeatures,
     data,
     columns: allColumns,
     state: {
@@ -338,16 +413,11 @@ function DataTable<TData>({
     onColumnOrderChange: setColumnOrder,
     onColumnPinningChange: setColumnPinning,
     onColumnSizingChange: setColumnSizing,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel:
-      enablePagination && !virtualized ? getPaginationRowModel() : undefined,
     meta: {
       updateData: onCellEdit,
     },
     initialState: {
-      pagination: { pageSize },
+      pagination: { pageIndex: 0, pageSize },
     },
   })
 
@@ -406,8 +476,8 @@ function DataTable<TData>({
     if (!pinned) return {}
     return {
       position: "sticky" as const,
-      left: pinned === "left" ? column.getStart("left") : undefined,
-      right: pinned === "right" ? column.getAfter("right") : undefined,
+      left: pinned === "start" ? column.getStart("start") : undefined,
+      right: pinned === "end" ? column.getAfter("end") : undefined,
       zIndex: 1,
     }
   }
@@ -482,21 +552,21 @@ function DataTable<TData>({
                               <button
                                 type="button"
                                 aria-label={
-                                  pinned === "left"
+                                  pinned === "start"
                                     ? L.unpin(label)
                                     : L.pinLeft(label)
                                 }
                                 onClick={() =>
                                   column.pin(
-                                    pinned === "left" ? false : "left"
+                                    pinned === "start" ? false : "start"
                                   )
                                 }
                                 className={cn(
                                   "nds-data-table-pin-btn",
-                                  pinned === "left" && "is-active"
+                                  pinned === "start" && "is-active"
                                 )}
                               >
-                                {pinned === "left" ? (
+                                {pinned === "start" ? (
                                   <PinOff
                                     aria-hidden="true"
                                     className="nds-dt-icon"
@@ -796,13 +866,17 @@ function DataTable<TData>({
   )
 }
 
-interface ColumnFilterProps<TData, TValue> {
-  column: import("@tanstack/react-table").Column<TData, TValue>
+interface ColumnFilterProps<TData extends RowData, TValue> {
+  column: import("@tanstack/react-table").Column<
+    DataTableFeatures,
+    TData,
+    TValue
+  >
   meta: NonNullable<NonNullable<DataTableColumn<TData>["meta"]>["filter"]>
   labels?: DataTableLabels
 }
 
-function ColumnFilter<TData, TValue>({
+function ColumnFilter<TData extends RowData, TValue>({
   column,
   meta,
   labels = DATA_TABLE_LABELS_PADRAO,
@@ -842,13 +916,13 @@ function ColumnFilter<TData, TValue>({
   )
 }
 
-interface EditableCellProps<TData, TValue> {
-  context: CellContext<TData, TValue>
+interface EditableCellProps<TData extends RowData, TValue> {
+  context: CellContext<DataTableFeatures, TData, TValue>
   editable: boolean
   labels?: DataTableLabels
 }
 
-function EditableCell<TData, TValue>({
+function EditableCell<TData extends RowData, TValue>({
   context,
   labels = DATA_TABLE_LABELS_PADRAO,
 }: EditableCellProps<TData, TValue>) {
@@ -925,21 +999,26 @@ function EditableCell<TData, TValue>({
   )
 }
 
-interface DataTablePaginationProps<TData> {
-  table: TanstackTable<TData>
+interface DataTablePaginationProps<TData extends RowData> {
+  /*
+   * `ReactTable`, e não o `Table` do core: no 9 quem publica `state` é o
+   * adaptador do React, e o core expõe o mesmo dado por átomos. Aqui a leitura
+   * é de render, então o tipo do adaptador é o certo.
+   */
+  table: ReactTable<DataTableFeatures, TData>
   pageSizeOptions: number[]
   enableRowSelection: boolean
   /** Já vem mesclado com o padrão quando quem renderiza é o DataTable. */
   labels?: DataTableLabels
 }
 
-function DataTablePagination<TData>({
+function DataTablePagination<TData extends RowData>({
   table,
   pageSizeOptions,
   enableRowSelection,
   labels = DATA_TABLE_LABELS_PADRAO,
 }: DataTablePaginationProps<TData>) {
-  const pageIndex = table.getState().pagination.pageIndex
+  const pageIndex = table.state.pagination.pageIndex
   const pageCount = table.getPageCount()
   const selected = table.getFilteredSelectedRowModel().rows.length
   const total = table.getFilteredRowModel().rows.length
@@ -959,7 +1038,7 @@ function DataTablePagination<TData>({
           <span>{labels.rowsPerPage}</span>
           <select
             aria-label={labels.rowsPerPage}
-            value={table.getState().pagination.pageSize}
+            value={table.state.pagination.pageSize}
             onChange={(e) => table.setPageSize(Number(e.target.value))}
             className="nds-data-table-page-size-select"
           >

@@ -1,17 +1,87 @@
 <script lang="ts">
 import type { ColumnDef, RowData } from '@tanstack/vue-table';
+import {
+  columnFilteringFeature,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFns,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+} from '@tanstack/vue-table';
 
-declare module '@tanstack/vue-table' {
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filter?: { type: 'text' | 'select'; options?: string[]; placeholder?: string };
-    editable?: boolean;
-  }
-  interface TableMeta<TData extends RowData> {
-    updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
-  }
-}
+// ─── Os RECURSOS que esta tabela usa ──────────────────────────────────────────
+//
+// No TanStack 9 os recursos deixam de vir todos ligados: cada um é registrado
+// aqui, e só o que está nesta lista entra no pacote. É por isso que o bloco
+// existe — e por isso que ele é a fonte de verdade sobre o que o DataTable faz.
+//
+// Os dois `meta` também mudaram de lugar, e para melhor. Antes era
+// `declare module '@tanstack/vue-table'`: augmentação GLOBAL, que vazava os
+// nossos campos para qualquer outra tabela do projeto que importasse a lib.
+// Agora são slots de tipo dentro do próprio conjunto — o escopo é este
+// componente, e acabou.
+type DataTableColumnMeta = {
+  filter?: { type: 'text' | 'select'; options?: string[]; placeholder?: string };
+  editable?: boolean;
+};
 
-export type DataTableColumn<TData, TValue = unknown> = ColumnDef<TData, TValue>;
+type DataTableTableMeta = {
+  updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
+};
+
+const RECURSOS_BASE = {
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowSelectionFeature,
+  columnVisibilityFeature,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
+  columnMeta: {} as DataTableColumnMeta,
+  tableMeta: {} as DataTableTableMeta,
+};
+
+/**
+ * Dois conjuntos, e não um com a paginação desligada por opção.
+ *
+ * O modelo de linhas paginado é um RECURSO no 9, não mais um `get*RowModel`
+ * passado por chamada — e recurso registrado é recurso ativo. Como a tabela
+ * virtualizada entrega todas as linhas de propósito (quem recorta é o
+ * virtualizador, não a paginação), ela precisa de um conjunto que simplesmente
+ * não tenha o recurso.
+ */
+export const RECURSOS_COM_PAGINACAO = tableFeatures({
+  ...RECURSOS_BASE,
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+});
+
+export const RECURSOS_SEM_PAGINACAO = tableFeatures(RECURSOS_BASE);
+
+/** O conjunto completo — é ele que tipa tudo que sai deste módulo. */
+export type DataTableFeatures = typeof RECURSOS_COM_PAGINACAO;
+
+export type DataTableColumn<TData extends RowData, TValue = unknown> = ColumnDef<
+  DataTableFeatures,
+  TData,
+  TValue
+>;
 
 /**
  * Todo texto que a tabela escreve na tela ou entrega ao leitor.
@@ -77,7 +147,7 @@ export const DATA_TABLE_LABELS_PADRAO: DataTableLabels = {
   allOption: 'Todos',
 };
 
-export interface DataTableProps<TData> {
+export interface DataTableProps<TData extends RowData> {
   columns: DataTableColumn<TData>[];
   data: TData[];
   enableGlobalFilter?: boolean;
@@ -114,15 +184,11 @@ export interface DataTableProps<TData> {
 }
 </script>
 
-<script setup lang="ts" generic="TData">
+<script setup lang="ts" generic="TData extends RowData">
 import { computed, defineComponent, h, ref, watch, onMounted } from 'vue';
 import {
   FlexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useVueTable,
+  useTable,
   type Column,
   type ColumnFiltersState,
   type ColumnOrderState,
@@ -132,7 +198,7 @@ import {
   type RowSelectionState,
   type SortingState,
   type Table as TanstackTable,
-  type VisibilityState,
+  type ColumnVisibilityState,
 } from '@tanstack/vue-table';
 import { useVirtualizer } from '@tanstack/vue-virtual';
 import {
@@ -187,7 +253,7 @@ const props = withDefaults(defineProps<DataTableProps<TData>>(), {
 });
 
 const emit = defineEmits<{
-  (e: 'tableReady', table: TanstackTable<TData>): void;
+  (e: 'tableReady', table: TanstackTable<DataTableFeatures, TData>): void;
   (e: 'cellEdit', rowIndex: number, columnId: string, value: unknown): void;
 }>();
 
@@ -217,7 +283,7 @@ const rotulos = computed<DataTableLabels>(() => ({
  * Nunca cai em "Selecionar linha" puro: nome repetido em dez controles é o
  * mesmo que nome nenhum (WCAG 4.1.2), e era exatamente o defeito daqui.
  */
-function rotuloDaLinha(row: Row<TData>): string {
+function rotuloDaLinha(row: Row<DataTableFeatures, TData>): string {
   if (props.rowLabel) return props.rowLabel(row.original);
   const primeira = row.getAllCells().find((c) => c.column.id !== '__select__');
   const bruto = primeira?.getValue();
@@ -226,11 +292,11 @@ function rotuloDaLinha(row: Row<TData>): string {
 
 const sorting = ref<SortingState>([]);
 const columnFilters = ref<ColumnFiltersState>([]);
-const columnVisibility = ref<VisibilityState>({});
+const columnVisibility = ref<ColumnVisibilityState>({});
 const rowSelection = ref<RowSelectionState>({});
 const globalFilter = ref('');
 const columnOrder = ref<ColumnOrderState>([]);
-const columnPinning = ref<ColumnPinningState>({ left: [], right: [] });
+const columnPinning = ref<ColumnPinningState>({ start: [], end: [] });
 const columnSizing = ref<ColumnSizingState>({});
 const draggedColumnId = ref<string | null>(null);
 
@@ -278,7 +344,16 @@ const hasColumnFilters = computed(
   () => props.enableColumnFilters && allColumns.value.some((c) => !!c.meta?.filter),
 );
 
-const table = useVueTable<TData>({
+const table = useTable({
+  /*
+   * O elenco é escolhido em tempo de execução, e os dois têm tipos diferentes —
+   * o sem paginação é subconjunto do outro. O TS não estreita uma união de
+   * conjuntos de recursos, então a asserção declara o que o guarda já garante:
+   * nenhum caminho chama API de paginação quando o recurso não está registrado.
+   */
+  features: (props.enablePagination && !props.virtualized
+    ? RECURSOS_COM_PAGINACAO
+    : RECURSOS_SEM_PAGINACAO) as DataTableFeatures,
   get data() {
     return props.data;
   },
@@ -371,23 +446,16 @@ const table = useVueTable<TData>({
     columnSizing.value =
       typeof updater === 'function' ? updater(columnSizing.value) : updater;
   },
-  getCoreRowModel: getCoreRowModel(),
-  getSortedRowModel: getSortedRowModel(),
-  getFilteredRowModel: getFilteredRowModel(),
-  getPaginationRowModel:
-    props.enablePagination && !props.virtualized
-      ? getPaginationRowModel()
-      : undefined,
   meta: {
     updateData: (rowIndex, columnId, value) => emit('cellEdit', rowIndex, columnId, value),
   },
   initialState: {
-    pagination: { pageSize: props.pageSize },
+    pagination: { pageIndex: 0, pageSize: props.pageSize },
   },
 });
 
 onMounted(() => {
-  emit('tableReady', table as unknown as TanstackTable<TData>);
+  emit('tableReady', table as unknown as TanstackTable<DataTableFeatures, TData>);
 });
 
 const scrollRef = ref<HTMLDivElement | null>(null);
@@ -448,14 +516,14 @@ function handleDrop(targetColumnId: string) {
   draggedColumnId.value = null;
 }
 
-function pinStyle(column: Column<TData, unknown> | undefined) {
+function pinStyle(column: Column<DataTableFeatures, TData, unknown> | undefined) {
   if (!column) return {} as Record<string, unknown>;
   const pinned = column.getIsPinned();
   if (!pinned) return {};
   return {
     position: 'sticky' as const,
-    left: pinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    right: pinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+    left: pinned === 'start' ? `${column.getStart('start')}px` : undefined,
+    right: pinned === 'end' ? `${column.getAfter('end')}px` : undefined,
     zIndex: 1,
   };
 }
@@ -465,19 +533,19 @@ function flexHeaderLabel(header: unknown): string | undefined {
 }
 
 /** Rótulo da coluna como a pessoa lê no cabeçalho — nunca o id de dados. */
-function nomeDaColuna(column: Column<TData, unknown>): string {
+function nomeDaColuna(column: Column<DataTableFeatures, TData, unknown>): string {
   return flexHeaderLabel(column.columnDef.header) ?? column.id;
 }
 
-function pinLabel(column: Column<TData, unknown>): string {
+function pinLabel(column: Column<DataTableFeatures, TData, unknown>): string {
   const label = nomeDaColuna(column);
-  return column.getIsPinned() === 'left'
+  return column.getIsPinned() === 'start'
     ? rotulos.value.unpin(label)
     : rotulos.value.pinLeft(label);
 }
 
-function togglePin(column: Column<TData, unknown>) {
-  column.pin(column.getIsPinned() === 'left' ? false : 'left');
+function togglePin(column: Column<DataTableFeatures, TData, unknown>) {
+  column.pin(column.getIsPinned() === 'start' ? false : 'start');
 }
 
 // EditableCell — local subcomponent for inline cell editing
@@ -669,11 +737,11 @@ watch(
                   <button
                     type="button"
                     :aria-label="pinLabel(column)"
-                    :class="cn( 'nds-data-table-pin-btn', column.getIsPinned() === 'left' && 'is-active', )"
+                    :class="cn( 'nds-data-table-pin-btn', column.getIsPinned() === 'start' && 'is-active', )"
                     @click="togglePin(column)"
                   >
                     <PinOff
-                      v-if="column.getIsPinned() === 'left'"
+                      v-if="column.getIsPinned() === 'start'"
                       aria-hidden="true"
                       class="nds-dt-icon"
                     />
@@ -947,7 +1015,7 @@ watch(
 
     <DataTablePagination
       v-if="enablePagination && !virtualized"
-      :table="(table as unknown as TanstackTable<TData>)"
+      :table="(table as unknown as TanstackTable<DataTableFeatures, TData>)"
       :page-size-options="pageSizeOptions"
       :enable-row-selection="enableRowSelection"
       :labels="rotulos"

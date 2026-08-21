@@ -18,7 +18,7 @@
   "dependencies": {
     "@grafana/faro-web-sdk": "^2.9.0",
     "@grafana/faro-web-tracing": "^2.9.0",
-    "@tanstack/table-core": "^8.21.3",
+    "@tanstack/table-core": "^9.1.2",
     "@tanstack/virtual-core": "^3.17.6",
     "clsx": "^2.1.1",
     "dompurify": "^3.4.12",

@@ -7,24 +7,38 @@
 import { cn } from '@/lib/utils';
 import { tornarDestruivel, type DestroyableElement } from '@/lib/destroy';
 import {
-  createTable as createTanstackTable,
+  constructTable,
   type ColumnDef,
   type ColumnFiltersState,
   type ColumnOrderState,
   type ColumnPinningState,
-  type ColumnSizingInfoState,
   type ColumnSizingState,
+  type ColumnVisibilityState,
   type RowData,
   type RowSelectionState,
   type SortingState,
   type Table as TanstackTable,
   type Updater,
-  type VisibilityState,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
+  type columnResizingState,
+  columnFilteringFeature,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFns,
+  globalFilteringFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
 } from '@tanstack/table-core';
+import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings';
+import type { TableReactivityBindings } from '@tanstack/table-core/reactivity';
 import { Virtualizer, observeElementRect, observeElementOffset, elementScroll } from '@tanstack/virtual-core';
 
 import {
@@ -41,26 +55,97 @@ import DOMPurify from 'dompurify';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-declare module '@tanstack/table-core' {
-  // TData/TValue precisam casar com a assinatura original do TanStack pra
-  // module augmentation funcionar — não são "não usados" do ponto de vista do TS.
-  /* eslint-disable unused-imports/no-unused-vars */
-  interface ColumnMeta<TData extends RowData, TValue> {
-    filter?: { type: 'text' | 'select'; options?: string[]; placeholder?: string };
-    editable?: boolean;
-    headerLabel?: string;
-    /** Renderiza conteúdo customizado para a célula (string ou HTMLElement). */
-    renderCell?: (ctx: { value: unknown; row: TData; rowIndex: number }) => string | HTMLElement;
-  }
-  interface TableMeta<TData extends RowData> {
-    updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
-  }
-  /* eslint-enable unused-imports/no-unused-vars */
+// ─── Os RECURSOS que esta tabela usa ──────────────────────────────────────────
+//
+// No TanStack 9 os recursos deixam de vir todos ligados: cada um é registrado
+// aqui, e só o que está nesta lista entra no pacote. É por isso que o bloco
+// existe — e por isso que ele é a fonte de verdade sobre o que o DataTable faz.
+//
+// Os dois `meta` também mudaram de lugar, e para melhor. Antes era
+// `declare module '@tanstack/table-core'`: augmentação GLOBAL, que vazava os
+// nossos campos para qualquer outra tabela do projeto que importasse a lib, e
+// exigia repetir `TData`/`TValue` só para casar a assinatura. Agora são slots
+// de tipo dentro do próprio conjunto — o escopo é este componente, e acabou.
+type DataTableColumnMeta<TData extends RowData> = {
+  filter?: { type: 'text' | 'select'; options?: string[]; placeholder?: string };
+  editable?: boolean;
+  headerLabel?: string;
+  /** Renderiza conteúdo customizado para a célula (string ou HTMLElement). */
+  renderCell?: (ctx: { value: unknown; row: TData; rowIndex: number }) => string | HTMLElement;
+};
+
+type DataTableTableMeta = {
+  updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
+};
+
+const RECURSOS_BASE = {
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowSelectionFeature,
+  columnVisibilityFeature,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
+  columnMeta: {} as DataTableColumnMeta<RowData>,
+  tableMeta: {} as DataTableTableMeta,
+};
+
+/**
+ * O conjunto COMPLETO, com paginação. É esta função que dá nome ao tipo — e ela
+ * é chamada de verdade, no caminho paginado da fábrica abaixo. Antes o nome saía
+ * de uma função que ninguém chamava, e o lint cobrou, com razão.
+ */
+function recursosCompletos(reatividade: TableReactivityBindings) {
+  return tableFeatures({
+    ...RECURSOS_BASE,
+    coreReactivityFeature: reatividade,
+    rowPaginationFeature,
+    paginatedRowModel: createPaginatedRowModel(),
+  });
 }
 
-export type DataTableColumn<TData, TValue = unknown> = ColumnDef<TData, TValue>;
+/** O conjunto completo — é ele que tipa tudo que sai deste módulo. */
+export type DataTableFeatures = ReturnType<typeof recursosCompletos>;
 
-export interface DataTableOptions<TData> {
+/**
+ * Uma FÁBRICA, e não uma constante de módulo.
+ *
+ * `constructTable` — o construtor agnóstico de framework — exige que alguém
+ * forneça as ligações de reatividade. React e Vue recebem as do adaptador; aqui
+ * não há adaptador, então usamos as que o próprio core publica para uso vanilla.
+ * E elas guardam estado por instância (assinaturas, desmontagem): compartilhar
+ * um conjunto entre tabelas misturaria as assinaturas de todas elas. Por isso o
+ * conjunto nasce a cada tabela.
+ *
+ * O parâmetro escolhe o elenco. O modelo de linhas paginado é um RECURSO no 9,
+ * não mais um `get*RowModel` passado por chamada — e recurso registrado é
+ * recurso ativo. Como a tabela virtualizada entrega todas as linhas de propósito
+ * (quem recorta é o virtualizador, não a paginação), ela precisa de um conjunto
+ * que simplesmente não tenha o recurso.
+ */
+function criarRecursos(comPaginacao: boolean): DataTableFeatures {
+  const reatividade = storeReactivityBindings();
+  return comPaginacao
+    ? recursosCompletos(reatividade)
+    : (tableFeatures({
+        ...RECURSOS_BASE,
+        coreReactivityFeature: reatividade,
+      }) as DataTableFeatures);
+}
+
+export type DataTableColumn<TData extends RowData, TValue = unknown> = ColumnDef<
+  DataTableFeatures,
+  TData,
+  TValue
+>;
+
+export interface DataTableOptions<TData extends RowData> {
   columns: DataTableColumn<TData>[];
   data: TData[];
   enableGlobalFilter?: boolean;
@@ -98,7 +183,7 @@ export interface DataTableOptions<TData> {
   /** Labels e textos i18n. */
   labels?: Partial<DataTableLabels>;
   className?: string;
-  onTableReady?: (table: TanstackTable<TData>) => void;
+  onTableReady?: (table: TanstackTable<DataTableFeatures, TData>) => void;
   onCellEdit?: (rowIndex: number, columnId: string, value: unknown) => void;
 }
 
@@ -192,16 +277,16 @@ function svgEl(html: string): SVGSVGElement {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function headerLabel<TData>(col: ColumnDef<TData>, fallback: string): string {
+function headerLabel<TData extends RowData>(col: DataTableColumn<TData>, fallback: string): string {
   if (col.meta?.headerLabel) return col.meta.headerLabel;
   if (typeof col.header === 'string') return col.header;
   return fallback;
 }
 
-function appendCellContent<TData>(
+function appendCellContent<TData extends RowData>(
   td: HTMLTableCellElement,
   value: unknown,
-  col: ColumnDef<TData>,
+  col: DataTableColumn<TData>,
   row: TData,
   rowIndex: number,
 ): void {
@@ -254,18 +339,18 @@ export function createDataTable<TData extends RowData>(
   // ── State (mantido no closure; passado ao TanStack via state + onChange) ──
   let sorting: SortingState = [];
   let columnFilters: ColumnFiltersState = [];
-  let columnVisibility: VisibilityState = {};
+  let columnVisibility: ColumnVisibilityState = {};
   let rowSelection: RowSelectionState = {};
   let globalFilter = '';
   let columnOrder: ColumnOrderState = [];
-  let columnPinning: ColumnPinningState = { left: [], right: [] };
+  let columnPinning: ColumnPinningState = { start: [], end: [] };
   let columnSizing: ColumnSizingState = {};
   let pagination = { pageIndex: 0, pageSize };
-  // O arrasto da alça acumula o delta em `columnSizingInfo`. Sem este estado
+  // O arrasto da alça acumula o delta em `columnResizing`. Sem este estado
   // controlado E o handler correspondente, o `onStateChange` vazio engolia cada
   // atualização e o redimensionamento não movia um pixel — a alça existia, o
   // ponteiro arrastava e a coluna ficava parada.
-  let columnSizingInfo: ColumnSizingInfoState = {
+  let columnResizing: columnResizingState = {
     startOffset: null,
     startSize: null,
     deltaOffset: null,
@@ -367,7 +452,8 @@ export function createDataTable<TData extends RowData>(
   root.appendChild(pagFooter);
 
   // ── TanStack table instance ──────────────────────────────────────────────
-  const table = createTanstackTable<TData>({
+  const table = constructTable({
+    features: criarRecursos(enablePagination && !virtualized),
     data,
     columns: allColumns,
     state: {
@@ -401,7 +487,7 @@ export function createDataTable<TData extends RowData>(
     columnResizeMode: 'onChange',
     onSortingChange: (u: Updater<SortingState>) => { sorting = resolveUpdater(sorting, u); sync(); rerender(); },
     onColumnFiltersChange: (u: Updater<ColumnFiltersState>) => { columnFilters = resolveUpdater(columnFilters, u); sync(); rerenderSemCabecalho(); },
-    onColumnVisibilityChange: (u: Updater<VisibilityState>) => { columnVisibility = resolveUpdater(columnVisibility, u); sync(); rerender(); },
+    onColumnVisibilityChange: (u: Updater<ColumnVisibilityState>) => { columnVisibility = resolveUpdater(columnVisibility, u); sync(); rerender(); },
     onRowSelectionChange: (u: Updater<RowSelectionState>) => { rowSelection = resolveUpdater(rowSelection, u); sync(); rerender(); },
     onGlobalFilterChange: (u: Updater<string>) => { globalFilter = resolveUpdater(globalFilter, u); sync(); rerenderSemCabecalho(); },
     onColumnOrderChange: (u: Updater<ColumnOrderState>) => { columnOrder = resolveUpdater(columnOrder, u); sync(); rerender(); },
@@ -411,23 +497,29 @@ export function createDataTable<TData extends RowData>(
     // sob o cursor — o arrasto parava no primeiro movimento. Só as larguras
     // mudam, e é só elas que este caminho escreve.
     onColumnSizingChange: (u: Updater<ColumnSizingState>) => { columnSizing = resolveUpdater(columnSizing, u); sync(); atualizarLarguras(); },
-    onColumnSizingInfoChange: (u: Updater<ColumnSizingInfoState>) => { columnSizingInfo = resolveUpdater(columnSizingInfo, u); sync(); },
+    onColumnResizingChange: (u: Updater<columnResizingState>) => { columnResizing = resolveUpdater(columnResizing, u); sync(); },
     // Trocar de página também NÃO reconstrói o cabeçalho. E não é só economia:
     // filtrar zera a página automaticamente (`autoResetPageIndex`), então cada
     // tecla digitada num filtro por coluna passava por aqui e reconstruía o
     // `thead` — o campo com foco saía do DOM e a segunda letra caía fora dele.
     onPaginationChange: (u: Updater<{ pageIndex: number; pageSize: number }>) => { pagination = resolveUpdater(pagination, u); sync(); rerenderSemCabecalho(); },
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel:
-      enablePagination && !virtualized ? getPaginationRowModel() : undefined,
     meta: {
       updateData: onCellEdit,
     },
     renderFallbackValue: null,
-    onStateChange: () => {},
-  } as Parameters<typeof createTanstackTable<TData>>[0]);
+  } as Parameters<typeof constructTable<DataTableFeatures, TData>>[0]);
+
+  /*
+   * O estado da paginação sai de um ÁTOMO, não mais de `getState()`.
+   *
+   * No TanStack 9 cada fatia do estado é um átomo próprio. A chave é opcional na
+   * tipagem da lib de propósito — código de recurso pode ler fatias que não são
+   * dele. Aqui ela existe sempre que a paginação está registrada; o padrão é a
+   * rede que a assinatura pede, não um caso esperado.
+   */
+  function paginacaoAtual() {
+    return table.atoms.pagination?.get() ?? pagination;
+  }
 
   function sync() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -442,7 +534,7 @@ export function createDataTable<TData extends RowData>(
         columnOrder,
         columnPinning,
         columnSizing,
-        columnSizingInfo,
+        columnResizing,
         pagination,
       },
     }));
@@ -476,8 +568,8 @@ export function createDataTable<TData extends RowData>(
     if (!pinned) return {};
     return {
       position: 'sticky',
-      left: pinned === 'left' ? `${col.getStart('left')}px` : '',
-      right: pinned === 'right' ? `${col.getAfter('right')}px` : '',
+      left: pinned === 'start' ? `${col.getStart('start')}px` : '',
+      right: pinned === 'end' ? `${col.getAfter('end')}px` : '',
       zIndex: '1',
     } as Partial<CSSStyleDeclaration>;
   }
@@ -603,15 +695,15 @@ export function createDataTable<TData extends RowData>(
             const pinBtn = document.createElement('button');
             pinBtn.type = 'button';
             pinBtn.className = 'nds-data-table-pin-btn';
-            if (pinned === 'left') pinBtn.classList.add('is-active');
+            if (pinned === 'start') pinBtn.classList.add('is-active');
             pinBtn.setAttribute(
               'aria-label',
-              pinned === 'left' ? L.unpin(lbl) : L.pinLeft(lbl),
+              pinned === 'start' ? L.unpin(lbl) : L.pinLeft(lbl),
             );
-            pinBtn.appendChild(svgEl(pinned === 'left' ? ICONS.pinOff : ICONS.pin));
+            pinBtn.appendChild(svgEl(pinned === 'start' ? ICONS.pinOff : ICONS.pin));
             pinBtn.addEventListener('click', (e) => {
               e.stopPropagation();
-              column.pin(pinned === 'left' ? false : 'left');
+              column.pin(pinned === 'start' ? false : 'start');
             });
             row.appendChild(pinBtn);
           }
@@ -904,7 +996,7 @@ export function createDataTable<TData extends RowData>(
     label: string,
     rowIndex: number,
     columnId: string,
-    col: ColumnDef<TData>,
+    col: DataTableColumn<TData>,
   ): HTMLElement {
     const container = document.createElement('div');
     container.className = 'nds-data-table-editable';
@@ -1037,7 +1129,7 @@ export function createDataTable<TData extends RowData>(
     }
     pagFooter.style.display = '';
 
-    const pageIndex = table.getState().pagination.pageIndex;
+    const pageIndex = paginacaoAtual().pageIndex;
     const pageCount = table.getPageCount();
     const totalRows = table.getFilteredRowModel().rows.length;
     const selected = table.getFilteredSelectedRowModel().rows.length;
@@ -1063,7 +1155,7 @@ export function createDataTable<TData extends RowData>(
       const o = document.createElement('option');
       o.value = String(opt);
       o.textContent = String(opt);
-      if (opt === table.getState().pagination.pageSize) o.selected = true;
+      if (opt === paginacaoAtual().pageSize) o.selected = true;
       psSelect.appendChild(o);
     }
     psSelect.addEventListener('change', () => {
@@ -1157,7 +1249,7 @@ export function createDataTable<TData extends RowData>(
   onTableReady?.(table);
 
   // Expose table on root for play functions / advanced consumers.
-  (root as HTMLElement & { __table?: TanstackTable<TData> }).__table = table;
+  (root as HTMLElement & { __table?: TanstackTable<DataTableFeatures, TData> }).__table = table;
 
   return tornarDestruivel(root, root, () => {
     soltarCliqueForaDoMenu?.();

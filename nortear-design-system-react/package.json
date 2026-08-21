@@ -23,7 +23,7 @@
     "@grafana/faro-web-sdk": "^2.9.0",
     "@grafana/faro-web-tracing": "^2.9.0",
     "@hookform/resolvers": "^5.5.7",
-    "@tanstack/react-table": "^8.21.3",
+    "@tanstack/react-table": "^9.1.2",
     "@tanstack/react-virtual": "^3.14.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

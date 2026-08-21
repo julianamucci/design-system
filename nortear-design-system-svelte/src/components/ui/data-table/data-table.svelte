@@ -1,11 +1,7 @@
-<script lang="ts" generics="TData">
+<script lang="ts" generics="TData extends RowData">
   import { untrack } from 'svelte';
   import {
-    createTable,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    getSortedRowModel,
+    constructTable,
     type ColumnDef,
     type ColumnFiltersState,
     type ColumnOrderState,
@@ -15,8 +11,10 @@
     type SortingState,
     type Table as TanstackTable,
     type Updater,
-    type VisibilityState,
+    type ColumnVisibilityState,
+    type RowData,
   } from '@tanstack/table-core';
+  import { criarRecursos, type DataTableFeatures } from './data-table-features';
   import { createVirtualizer } from '@tanstack/svelte-virtual';
   import ArrowDown from '@lucide/svelte/icons/arrow-down';
   import ArrowUp from '@lucide/svelte/icons/arrow-up';
@@ -54,8 +52,8 @@
   import EditableCell from './data-table-editable-cell.svelte';
   import { DATA_TABLE_LABELS_PADRAO, type DataTableLabels } from './data-table-labels';
 
-  type Column = ColumnDef<TData, unknown>;
-  type Row = ReturnType<TanstackTable<TData>['getRowModel']>['rows'][number];
+  type Column = ColumnDef<DataTableFeatures, TData, unknown>;
+  type Row = ReturnType<TanstackTable<DataTableFeatures, TData>['getRowModel']>['rows'][number];
 
   const {
     columns,
@@ -112,7 +110,7 @@
     /** Só as chaves informadas mudam; o resto continua no padrão. */
     labels?: Partial<DataTableLabels>;
     class?: string;
-    onTableReady?: (table: TanstackTable<TData>) => void;
+    onTableReady?: (table: TanstackTable<DataTableFeatures, TData>) => void;
     onCellEdit?: (rowIndex: number, columnId: string, value: unknown) => void;
   } = $props();
 
@@ -125,13 +123,13 @@
   // ── State (Svelte 5 runes) ───────────────────────────────────────────────
   let sorting = $state<SortingState>([]);
   let columnFilters = $state<ColumnFiltersState>([]);
-  let columnVisibility = $state<VisibilityState>({});
+  let columnVisibility = $state<ColumnVisibilityState>({});
   let rowSelection = $state<RowSelectionState>({});
   let globalFilter = $state('');
   let columnOrder = $state<ColumnOrderState>([]);
-  let columnPinning = $state<ColumnPinningState>({ left: [], right: [] });
+  let columnPinning = $state<ColumnPinningState>({ start: [], end: [] });
   let columnSizing = $state<ColumnSizingState>({});
-  let columnSizingInfo = $state<Record<string, unknown>>({
+  let columnResizing = $state<Record<string, unknown>>({
     startOffset: null,
     startSize: null,
     deltaOffset: null,
@@ -171,13 +169,21 @@
   );
 
   // ── Table engine ─────────────────────────────────────────────────────────
-  let table = $state.raw<TanstackTable<TData>>(undefined as unknown as TanstackTable<TData>);
+  let table = $state.raw<TanstackTable<DataTableFeatures, TData>>(undefined as unknown as TanstackTable<DataTableFeatures, TData>);
 
   $effect.pre(() => {
     // Reactivity dependencies for re-creation on data/columns change
     void data;
     void allColumns;
-    const t = createTable<TData>({
+    const t = constructTable({
+      /*
+       * O elenco é escolhido em tempo de execução, e os dois têm tipos
+       * diferentes — o sem paginação é subconjunto do outro. O TS não estreita
+       * uma união de conjuntos de recursos, então a asserção declara o que o
+       * guarda já garante: nenhum caminho chama API de paginação quando o
+       * recurso não está registrado.
+       */
+      features: criarRecursos(enablePagination && !virtualized),
       data,
       columns: allColumns,
       state: {
@@ -190,7 +196,7 @@
         columnPinning,
         columnSizing,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        columnSizingInfo: columnSizingInfo as any,
+        columnResizing: columnResizing as any,
         pagination,
       },
       enableRowSelection,
@@ -202,7 +208,7 @@
        * dado — trocar a fonte de dados por outra lista marcaria "a terceira
        * linha", qualquer que fosse ela. Com `rowKey` a identidade é do registro.
        */
-      getRowId: rowKey ? (row, index) => rowKey(row, index) : undefined,
+      getRowId: rowKey ? (row: TData, index: number) => rowKey(row, index) : undefined,
       /*
        * O primeiro clique ordena ASCENDENTE em qualquer coluna.
        *
@@ -213,9 +219,6 @@
        */
       sortDescFirst: false,
       columnResizeMode: 'onChange',
-      onStateChange: () => {
-        /* state lives in runes — see onChange handlers below */
-      },
       renderFallbackValue: null,
       onSortingChange: (u) => (sorting = apply(sorting, u)),
       onColumnFiltersChange: (u) => (columnFilters = apply(columnFilters, u)),
@@ -226,18 +229,13 @@
       onColumnPinningChange: (u) => (columnPinning = apply(columnPinning, u)),
       onColumnSizingChange: (u) => (columnSizing = apply(columnSizing, u)),
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      onColumnSizingInfoChange: ((u: any) => (columnSizingInfo = apply(columnSizingInfo, u))) as any,
+      onColumnResizingChange: ((u: any) => (columnResizing = apply(columnResizing, u))) as any,
       onPaginationChange: (u) => (pagination = apply(pagination, u)),
-      getCoreRowModel: getCoreRowModel(),
-      getSortedRowModel: getSortedRowModel(),
-      getFilteredRowModel: getFilteredRowModel(),
-      getPaginationRowModel:
-        enablePagination && !virtualized ? getPaginationRowModel() : undefined,
       meta: {
         updateData: onCellEdit,
       },
       initialState: {
-        pagination: { pageSize },
+        pagination: { pageIndex: 0, pageSize },
       },
     });
     table = t;
@@ -354,7 +352,7 @@
     const current =
       columnOrder.length > 0
         ? columnOrder
-        : table.getAllLeafColumns().map((c) => c.id);
+        : table.getAllLeafColumns().map((c: { id: string }) => c.id);
     const next = [...current];
     const from = next.indexOf(draggedColumnId);
     const to = next.indexOf(targetColumnId);
@@ -365,12 +363,12 @@
     draggedColumnId = null;
   }
 
-  function pinStyle(col: ReturnType<TanstackTable<TData>['getColumn']>): string {
+  function pinStyle(col: ReturnType<TanstackTable<DataTableFeatures, TData>['getColumn']>): string {
     if (!col) return '';
     const pinned = col.getIsPinned();
     if (!pinned) return '';
-    const left = pinned === 'left' ? `left: ${col.getStart('left')}px;` : '';
-    const right = pinned === 'right' ? `right: ${col.getAfter('right')}px;` : '';
+    const left = pinned === 'start' ? `left: ${col.getStart('start')}px;` : '';
+    const right = pinned === 'end' ? `right: ${col.getAfter('end')}px;` : '';
     return `position: sticky; ${left} ${right} z-index: 1;`;
   }
 
@@ -462,14 +460,14 @@
                       <div class="nds-data-table-pin-wrap">
                         <button
                           type="button"
-                          aria-label={pinned === 'left' ? rotulos.unpin(label) : rotulos.pinLeft(label)}
-                          onclick={() => column.pin(pinned === 'left' ? false : 'left')}
+                          aria-label={pinned === 'start' ? rotulos.unpin(label) : rotulos.pinLeft(label)}
+                          onclick={() => column.pin(pinned === 'start' ? false : 'start')}
                           class={cn(
                             'nds-data-table-pin-btn',
-                            pinned === 'left' && 'is-active',
+                            pinned === 'start' && 'is-active',
                           )}
                         >
-                          {#if pinned === 'left'}
+                          {#if pinned === 'start'}
                             <PinOff aria-hidden="true" class="nds-dt-icon" />
                           {:else}
                             <Pin aria-hidden="true" class="nds-dt-icon nds-dt-icon-pin" />

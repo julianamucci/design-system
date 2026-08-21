@@ -1,5 +1,6 @@
-<script lang="ts" generics="TData">
-  import type { Table as TanstackTable } from '@tanstack/table-core';
+<script lang="ts" generics="TData extends RowData">
+  import type { RowData, Table as TanstackTable } from '@tanstack/table-core';
+  import type { DataTableFeatures } from './data-table-features';
   import { Button } from '@/components/ui/button';
   import ChevronLeft from '@lucide/svelte/icons/chevron-left';
   import ChevronRight from '@lucide/svelte/icons/chevron-right';
@@ -13,7 +14,7 @@
     enableRowSelection,
     labels,
   }: {
-    table: TanstackTable<TData>;
+    table: TanstackTable<DataTableFeatures, TData>;
     pageSizeOptions: number[];
     enableRowSelection: boolean;
     /**
@@ -27,11 +28,22 @@
 
   const rotulos = $derived<DataTableLabels>(labels ?? DATA_TABLE_LABELS_PADRAO);
 
-  const pageIndex = $derived(table.getState().pagination.pageIndex);
+  /*
+   * O estado da paginação sai de um ÁTOMO, não mais de `getState()`.
+   *
+   * No TanStack 9 cada fatia do estado é um átomo próprio. A chave é opcional na
+   * tipagem da lib de propósito — código de recurso pode ler fatias que não são
+   * dele. Aqui ela existe sempre, porque o conjunto de recursos deste rodapé é o
+   * que registra a paginação; o padrão é a rede que a assinatura pede, não um
+   * caso esperado.
+   */
+  const paginacao = $derived(table.atoms.pagination?.get() ?? { pageIndex: 0, pageSize: 10 });
+
+  const pageIndex = $derived(paginacao.pageIndex);
   const pageCount = $derived(table.getPageCount());
   const selected = $derived(table.getFilteredSelectedRowModel().rows.length);
   const total = $derived(table.getFilteredRowModel().rows.length);
-  const currentPageSize = $derived(table.getState().pagination.pageSize);
+  const currentPageSize = $derived(paginacao.pageSize);
 </script>
 
 <div

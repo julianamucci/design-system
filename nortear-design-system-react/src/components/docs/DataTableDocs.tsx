@@ -195,15 +195,19 @@ export function DataTableDocs() {
 
   const codeImportBasic = `import { DataTable, type DataTableColumn } from "@/components/ui/data-table";`;
   const codeImportWithMeta = `import { DataTable, type DataTableColumn } from "@/components/ui/data-table";
-import type { ColumnDef } from "@tanstack/react-table";
 
-// Estende ColumnMeta com filter e editable
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData, TValue> {
-    filter?: { type: "text" | "select"; options?: string[] };
-    editable?: boolean;
-  }
-}`;
+// meta.filter e meta.editable já vêm tipados em DataTableColumn: os metadados
+// moram no conjunto de recursos do próprio componente. Não é preciso declarar
+// nada sobre a biblioteca — e é melhor assim, porque a declaração global valia
+// para toda tabela do projeto, não só para esta.
+const columns: DataTableColumn<Invoice>[] = [
+  {
+    accessorKey: "cliente",
+    header: "Cliente",
+    meta: { filter: { type: "text" } },
+  },
+  { accessorKey: "valor", header: "Valor", meta: { editable: true } },
+];`;
 
   const codeGlobalFilter = `<DataTable
   columns={columns}
@@ -320,16 +324,14 @@ declare module "@tanstack/react-table" {
   rowLabel?: (row: TData) => string
   labels?: Partial<DataTableLabels>
   className?: string
-  onTableReady?: (table: Table<TData>) => void
+  onTableReady?: (table: Table<DataTableFeatures, TData>) => void
   onCellEdit?: (rowIndex: number, columnId: string, value: unknown) => void
 }
 
-// Extensão de ColumnMeta
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData, TValue> {
-    filter?: { type: "text" | "select"; options?: string[]; placeholder?: string }
-    editable?: boolean
-  }
+// O meta de coluna, já embutido em DataTableColumn
+type DataTableColumnMeta = {
+  filter?: { type: "text" | "select"; options?: string[]; placeholder?: string }
+  editable?: boolean
 }`;
 
   // ─── Previews reutilizáveis ─────────────────────────────────────────────────
