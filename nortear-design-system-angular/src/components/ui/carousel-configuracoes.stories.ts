@@ -248,15 +248,23 @@ export const Autoplay: Story = {
       // instante do clique compararia contra um número ainda em movimento —
       // a mesma corrida do contraste ~1.0 em elemento a meio do fade.
       // `NaN` na semente não é descuido, é o que obriga a espera a comparar
-      // duas amostras SEPARADAS NO TEMPO. Semeando com a posição atual, a
-      // primeira verificação — que roda no mesmo quadro — compararia o valor
-      // consigo mesmo, daria "assentou" e a espera sairia sem provar nada.
+      // amostras SEPARADAS NO TEMPO. Semeando com a posição atual, a primeira
+      // verificação — que roda no mesmo quadro — compararia o valor consigo
+      // mesmo, daria "assentou" e a espera sairia sem provar nada.
+      //
+      // QUATRO leituras, não duas — o mesmo número que o `assentar` do gesto
+      // de arrastar usa algumas centenas de linhas abaixo, e pelo mesmo motivo
+      // escrito lá: a rolagem suave desacelera até encostar, e no fim da curva
+      // ela anda menos de meio pixel entre duas leituras enquanto ainda falta
+      // caminho. Este ponto era o único do arquivo com duas, e reprovava sob
+      // carga afirmando que a posição mudara 37px depois de "parada".
+      let estaveis = 0;
       let anterior = NaN;
       await waitFor(async () => {
         const agora = viewport.scrollLeft;
-        const assentou = agora === anterior;
+        estaveis = agora === anterior ? estaveis + 1 : 0;
         anterior = agora;
-        await expect(assentou).toBe(true);
+        await expect(estaveis).toBeGreaterThanOrEqual(3);
       }, { timeout: 3000 });
       const parado = anterior;
 

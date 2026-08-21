@@ -80,13 +80,20 @@ export const AutoDismiss: Story = {
       },
     },
   },
-  args: { position: 'top-right', richColors: true, duration: 400 },
+  args: { position: 'top-right', richColors: true, duration: 1200 },
   play: async ({ step }) => {
     await limparTorradas();
 
     await step('A falha aparece com o tipo, o ícone e a cor do tema', async () => {
       // functional.item2 — sem `duration` na chamada: quem manda é o prazo da
-      // região, encurtado nesta story para 400ms.
+      // região, encurtado nesta story.
+      //
+      // 1200ms, e não 400: a torrada entra e sai com transição de 200ms cada
+      // (`--duration-base`), então com 400 a janela em que ela fica TOTALMENTE
+      // opaca era de ~200ms — e `esperarTorrada` rejeita qualquer opacidade
+      // abaixo de 0,99, de propósito, para não asserir sobre elemento em fade.
+      // Sob carga de suíte cheia, um polling de 30ms erra uma janela dessas: a
+      // story reprovava sozinha, sem regressão nenhuma no componente.
       toast.error(TEXTOS.erro);
       const torrada = await esperarTorrada({ tipo: 'error' });
       await expect(torrada).toHaveAttribute('data-type', 'error');
@@ -110,7 +117,7 @@ export const PauseOnHover: Story = {
       },
     },
   },
-  args: { position: 'top-right', richColors: true, duration: 400 },
+  args: { position: 'top-right', richColors: true, duration: 1200 },
   play: async ({ step }) => {
     await limparTorradas();
 

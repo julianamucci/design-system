@@ -2493,6 +2493,28 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
 
       A conversão foi mecânica e verificada: auditor de 176 para 142 arquivos,
       cinco builds limpos, cinco suítes completas verdes.
+- [ ] **A suíte cheia é intermitente, e a família tem nome.** Rodando as cinco
+      suítes completas várias vezes seguidas, seis stories diferentes
+      reprovaram ao menos uma vez — todas de TEMPO, todas só sob carga, e cada
+      uma passando sozinha:
+
+      | story | stack | causa |
+      |---|---|---|
+      | `sonner-estados > Auto Dismiss` | angular | **corrigida** — `duration=400` deixava ~200ms de janela totalmente opaca, e o helper rejeita opacidade < 0,99; agora 1200ms nas cinco |
+      | `carousel-configuracoes > Autoplay` | angular | **corrigida** — detector de "assentou" com DUAS leituras num arquivo em que todo o resto usa quatro |
+      | `carousel-composicoes > With Dots` | angular | **corrigida** — a posição chega antes do estado |
+      | `carousel-configuracoes > Drag Gesture` | angular | **corrigida** — mesma família |
+      | `carousel-variantes > Horizontal` | vue | aberta — não capturei o detalhe |
+      | `hover-card-variantes > With Short Delay` | vanilla | aberta — não capturei o detalhe |
+
+      As duas abertas passam isoladas e o arquivo não estava no diff da rodada
+      em que reprovaram. **Por regra, não fecham como "não reproduz"** — ficam
+      aqui até alguém capturar a saída completa de uma rodada vermelha.
+
+      O padrão vale registrar: em todas as quatro fechadas o defeito era a
+      MEDIÇÃO, não o componente — janela curta demais, amostra de menos, ou
+      estado afirmado antes da reconciliação. E nenhuma delas é alcançável por
+      uma passada de `/quality` por componente, que roda a suíte de um só.
 - [ ] **Utilitárias que os relatórios pediram três vezes, de agentes
       independentes**: `object-fit: cover` (não existe; hoje só cravado dentro de
       `avatar.css` e `item.css`) e um degrau de `min-height` entre 120 e 200px.

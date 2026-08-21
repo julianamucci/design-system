@@ -8,7 +8,7 @@
  * O que as stories montam em volta é andaime e não entra no snippet: o quadro
  * com `contain: layout`, `position: relative` e `minHeight` existe só porque a
  * região é POSICIONADA e precisa de um contêiner contra o qual se fixar dentro
- * do Storybook; os prazos de 300ms e 400ms existem para a suíte não depender do
+ * do Storybook; os prazos encurtados existem para a suíte não depender do
  * relógio real; o `Infinity` das stories fotografadas existe para o axe e o
  * Chromatic medirem sempre o mesmo estado, e não porque a notificação seja
  * persistente. Nada disso é do componente.
