@@ -2568,13 +2568,24 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       return`, uma guarda de WeakMap por janela. O trecho é BYTE A BYTE igual na
       10.6.0-alpha.7. Não há bug de biblioteca aqui e não há issue a abrir.
 
-      O que de fato impede `isolate: false` é outra coisa, do lado do
-      `@vitest/browser`: `Browser connection was closed while running tests. Was
-      the page closed unexpectedly?` — a aba morre quando muitos arquivos de
-      story dividem a mesma página. E não é limiar de contagem: 20 arquivos
-      passam, 40 morrem, 80 passam. Medição feita com os órfãos acima de pé, o
-      que a torna inconclusiva — refazer com a máquina limpa antes de investir
-      mais.
+      O `Browser connection was closed while running tests` que eu tinha
+      apontado como o obstáculo real também não era: era **os órfãos**. Com a
+      máquina limpa, `--no-isolate` roda a suíte inteira do Angular e do React
+      sem derrubar a aba nenhuma vez.
+
+      **O que sobra como obstáculo é VAZAMENTO DE TEMA entre arquivos.** Numa
+      das duas rodadas limpas do React, `slider-estados > Default` reprovou com
+      contraste 1,47 onde exige 3 — o valor de quem mediu no tema escuro.
+      `sonner-estados.stories.tsx` declara `globals: { theme: "dark" }`, e no
+      modo compartilhado a classe fica no `<html>` para o próximo arquivo do
+      mesmo worker. Depende da ordem em que os workers pegam os arquivos: falhou
+      1 de 2 rodadas, e o par isolado dos dois arquivos não reproduz.
+
+      A correção é aplicar as classes de tema a CADA render de story, e não só
+      quando o global muda. Hoje o `preview.ts` assina `GLOBALS_UPDATED` /
+      `SET_GLOBALS` no nível do módulo — o que resolveu o bug de não voltar ao
+      Default, mas não cobre "página nova, tema herdado do arquivo anterior".
+      Enquanto isso não existir, `isolate: false` não é seguro.
 
       O `@storybook/addon-vitest` 10.6.0-alpha.7 não muda nada do caminho de
       isolamento: `setup-file.js`, `setup-file-with-project-annotations.js`,
@@ -2582,3 +2593,22 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       idênticos aos da 10.5.10; `index.js` e `global-setup.js` diferem só em hash
       de chunk e num `parse` renomeado para `parse3` pelo bundler. Subir para a
       alpha não traria ganho nenhum aqui.
+
+- [ ] **Processo órfão de teste é custo permanente, e ninguém vigia.** Medido em
+      2026-08-21, com a máquina limpa contra a mesma máquina carregando um
+      `storybook dev -p 6010` de 3,5 GB e 14 `chrome-headless-shell` presos a um
+      `vitest run` morto pelo timeout:
+
+      | suíte | com os órfãos | máquina limpa |
+      |---|---|---|
+      | react (219 arq., 3191 testes) | ~290s | **162,6s** |
+
+      Quarenta e quatro por cento do relógio, sem tocar em uma linha de código.
+      É mais do que o `isolate: false` economizaria. E parte do que foi anotado
+      nesta rodada como "intermitência sensível a carga" foi medida nesse
+      estado — as reincidências precisam ser reconfirmadas na máquina limpa
+      antes de virarem defeito.
+
+      Vale um passo de higiene antes de suíte longa: conferir se sobrou
+      `node`/`chrome-headless-shell` de rodada anterior. O sintoma barato de
+      reconhecer é `Port 63315 is in use, trying another one...` na abertura.
