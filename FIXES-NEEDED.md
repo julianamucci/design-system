@@ -2535,14 +2535,37 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       `typescript-eslint` fechar
       https://github.com/typescript-eslint/typescript-eslint/issues/10940.
 
-- [ ] **`carousel-configuracoes > Drag Gesture` — intermitente, agora COM a
-      asserção em mãos.** Reprova com `expected 4.1099853515625 to be less than 2`
-      em `emPosicao`, ou seja, o trilho assenta a ~4,1px do ponto que a seta
-      alcança e fica lá: a janela de 4s expira sem convergir. Só sob carga de
-      suíte cheia; isolada passa. Visto no Vanilla e no Svelte. A hipótese a
-      testar é o alvo do encaixe ser calculado a partir de uma medida colhida
-      COM transform aplicado durante o arrasto — o caminho da seta não tem esse
-      resíduo. Não fechar como "não reproduz": medir em par no mesmo commit.
+- [ ] **`carousel-configuracoes > Drag Gesture` — caracterizado, causa ainda
+      aberta.** Com a asserção rotulada (commit `e5885b76`), a reincidência no
+      React entregou:
+
+          soltura do dedo: posição=480 alvo=448.97 setas=[ant:false prox:false]
+
+      Três coisas que esse retrato diz, e que a hipótese anterior errava:
+
+      1. **O passo é a SOLTURA DO DEDO**, não a volta pela seta.
+      2. **O estado está CERTO e a posição errada** — as duas setas já
+         reconciliaram para um slide do meio. É o inverso do "a posição chega
+         antes do estado" que a story documenta, e por isso esperar mais não
+         resolve: aos 4s o motor já parou, no lugar errado.
+      3. **As distâncias não formam padrão**: 4,11px (Vanilla), 31,03px e
+         288,02px (React). Um encaixe com resíduo fixo daria sempre o mesmo
+         desvio. Distância variável é a assinatura de "parou onde estava", não
+         de "encaixou torto".
+
+      O alvo 448,97 é uma largura de container (`nds-w-md`, 28rem) — os pontos
+      de encaixe são múltiplos dele, e 480 não é um deles. Ou seja: o carrossel
+      terminou o gesto FORA de qualquer ponto de encaixe e ficou lá. A suspeita
+      passa a ser o `touchend`/`pointerup` sintético não sendo honrado pelo
+      motor em algumas execuções, deixando o trilho onde o último `touchmove` o
+      largou.
+
+      Atenção ao investigar: o React roda `embla-carousel-react` e o Vanilla tem
+      motor próprio. "A mesma falha nas duas" pode ser duas causas diferentes com
+      o mesmo sintoma — medir cada uma na sua stack.
+
+      Taxa medida no React sob `--no-isolate`: 2 reprovações em 9 rodadas da
+      suíte cheia. Não fechar como "não reproduz".
 
 - [ ] **Falha de infra do dev server sob carga**, no Vanilla e no Vue:
       `Failed to fetch dynamically imported module: …/@storybook/addon-vitest/…/
