@@ -703,7 +703,18 @@
   overflow: hidden;
 
   padding-inline: var(--spacing-2);
-  padding-block: var(--spacing-1);
+  /*
+   * `--spacing-2`, e não `--spacing-1`: com o respiro de 4px o subitem parava em
+   * 20,8px de altura (12,8px de linha + 8px de padding) e reprovava em
+   * `target-size` — o mínimo do WCAG 2.5.8 é 24px, e o vão de 4px entre os itens
+   * não fecha a diferença. Com 8px a altura vai a 28,8px, que é EXATAMENTE a do
+   * `.nds-sidebar-menu-button` pai: os dois usam o mesmo `--text-control` e o
+   * mesmo respiro, e o subitem era o único fora.
+   *
+   * Não entra `height` aqui: a altura continua sendo resultado de padding mais
+   * entrelinha, para o item crescer junto com a fonte do navegador (WCAG 1.4.4).
+   */
+  padding-block: var(--spacing-2);
   transform: translateX(-1px);
 
   border-radius: var(--radius-md);

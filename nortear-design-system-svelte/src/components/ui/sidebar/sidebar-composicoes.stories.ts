@@ -108,6 +108,33 @@ export const WithSubmenu: StoryObj<Record<string, never>> = {
       await waitFor(() => expect(pai()).toHaveAttribute('aria-expanded', String(aberto)));
     };
 
+    /**
+     * Espera a ALTURA parar de mudar: duas leituras idênticas.
+     *
+     * O submenu entra com transição de altura, e `sub()` deixa de ser nulo já no
+     * primeiro quadro dela. O axe roda logo depois da play, e mediu o subitem com
+     * 7,6px de altura — reprovando em `target-size` um elemento que termina bem
+     * acima dos 24px exigidos. Não é o alvo que é pequeno: é a régua que chegou
+     * cedo demais, e é isso que esta espera conserta.
+     *
+     * Igualdade exata, e não "maior que N": enquanto anima, a altura muda a cada
+     * quadro e duas leituras não coincidem; ao terminar, ela para de mudar.
+     */
+    const waitForSubmenuToSettle = async () => {
+      let previous = Number.NaN;
+      await waitFor(
+        () => {
+          const current = sub()?.getBoundingClientRect().height ?? 0;
+          const settled = current > 0 && current === previous;
+          previous = current;
+          expect(settled).toBe(true);
+        },
+        { timeout: 4000 },
+      );
+    };
+
+    await waitForSubmenuToSettle();
+
     await step('O submenu é uma lista aninhada de verdade', async () => {
       await expect(sub()!.tagName).toBe('UL');
       await expect(sub()!.closest('[data-slot="sidebar-menu-item"]')).not.toBeNull();
@@ -127,6 +154,8 @@ export const WithSubmenu: StoryObj<Record<string, never>> = {
 
       await definir(true);
       await waitFor(() => expect(sub()).not.toBeNull());
+      // A story termina com o submenu ABERTO, e é neste estado que o axe mede.
+      await waitForSubmenuToSettle();
     });
   },
 };
