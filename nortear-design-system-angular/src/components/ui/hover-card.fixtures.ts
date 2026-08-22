@@ -1,7 +1,7 @@
 // Fixture compartilhada pelas stories do HoverCard.
 //
 // Fica fora do arquivo de story porque no CSF todo export nomeado é lido como
-// story: `export function painelAberto()` dentro de um `*.stories.ts` viraria
+// story: `export function waitForOpen()` dentro de um `*.stories.ts` viraria
 // uma story "PainelAberto" que não renderiza nada.
 //
 // O grosso das consultas ao PORTAL mora agora em

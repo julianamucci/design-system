@@ -1886,7 +1886,22 @@ function auditExportSemStory(slug) {
     for (const file of ui) {
       const nome = basename(file);
       if (/\.stories\./.test(nome) || /story\.svelte$/i.test(nome)) continue;
-      const content = readFile(file);
+      // Comentário não declara export — e a assimetria custou 8 achados falsos.
+      //
+      // O lado do USO já passava por `stripComments` em três lugares (stories,
+      // arquivo de definição, consumidores); o lado da DECLARAÇÃO lia o arquivo
+      // cru. Toda `*.fixtures.ts` abre com uma nota explicando por que a fixture
+      // mora fora do arquivo de story, e a nota cita o próprio padrão:
+      //
+      //     // story: `export function waitForPanel()` dentro de um
+      //     // `*.stories.tsx` viraria uma story que não renderiza nada.
+      //
+      // O extrator colhia dali um símbolo que não existe e o procurava em vão
+      // pelo grafo — "exportado e nada o renderiza" sobre um export imaginário.
+      // Enquanto o nome citado coincidia com um export real, o falso positivo
+      // ficava escondido; a tradução dos identificadores renomeou o export, a
+      // prosa ficou para trás, e os oito apareceram de uma vez.
+      const content = stripComments(readFile(file) || '');
       if (!content) continue;
 
       // `export { A, B }` — o index.ts de vue/svelte e o rodapé do react

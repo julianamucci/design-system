@@ -1,7 +1,7 @@
 // Fixture compartilhada pelas stories do Table.
 //
 // Fica fora do arquivo de story porque no CSF todo export nomeado é lido como
-// story: `export const FATURAS` dentro de um `*.stories.ts` viraria uma story
+// story: `export const INVOICES` dentro de um `*.stories.ts` viraria uma story
 // "Faturas" que não renderiza nada.
 //
 // São cinco faturas com a mesma FORMA das outras stacks (mesmos identificadores,

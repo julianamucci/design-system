@@ -1,7 +1,7 @@
 // Fixture compartilhada pelas stories do NavigationMenu.
 //
 // Fica fora do arquivo de story porque no CSF todo export nomeado é lido como
-// story: `export function esperarPainel()` dentro de um `*.stories.ts` viraria
+// story: `export function waitForPanel()` dentro de um `*.stories.ts` viraria
 // uma story "EsperarPainel" que não renderiza nada.
 //
 // Não reaproveita `waitForPortal` de `@/lib/wait-for-portal`: aquele helper

@@ -18,7 +18,7 @@ import {
 // Fixture compartilhada pelas stories do DataTable.
 //
 // Fica fora do arquivo de story porque no CSF todo export nomeado é lido como
-// story: `export const FATURAS_DT` dentro de um `*.stories.ts` viraria uma story
+// story: `export const INVOICES_DT` dentro de um `*.stories.ts` viraria uma story
 // "Faturas Dt" que não renderiza nada.
 //
 // As faturas são as mesmas cinco das outras stacks nas cinco primeiras posições
