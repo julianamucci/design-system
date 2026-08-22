@@ -1,8 +1,8 @@
 diff --git a/node_modules/svelte-sonner/dist/Toast.svelte b/node_modules/svelte-sonner/dist/Toast.svelte
-index a7f08ad..e8e35ac 100644
+index a15126a..f8806a2 100644
 --- a/node_modules/svelte-sonner/dist/Toast.svelte
 +++ b/node_modules/svelte-sonner/dist/Toast.svelte
-@@ -333,7 +333,7 @@ const icon = $derived.by(() => {
+@@ -519,7 +519,7 @@
  
  <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
  <li
