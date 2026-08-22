@@ -66,7 +66,16 @@ for (const [caminho, fonte] of Object.entries(fontes)) {
 const dependencias = new Set(Object.keys(pkg.dependencies ?? {}));
 
 /** Regra do repositório: nada de nome de outra stack no que o leitor vê. */
-const OUTRA_STACK = /\b(Vue|Svelte|Angular|Vanilla|reka-ui|bits-ui|@radix-ng|radix-vue)\b/i;
+const OTHER_STACK = /\b(Vue|Svelte|Angular|Vanilla|reka-ui|bits-ui|@radix-ng|radix-vue)\b/i;
+
+/**
+ * Exports que legitimamente NÃO constroem snippet: helper de atributo, que
+ * devolve um pedaço e não um trecho copiável.
+ *
+ * Lista fechada de propósito. Acrescentar um nome aqui é declarar a exceção;
+ * deixar de fora é reprovar — que é o que dá dentes à convenção.
+ */
+const HELPERS = new Set(['ratioExpr']);
 
 /** Andaime de story por forma do nome — pega o que ainda não foi escrito. */
 const FORMA_SCAFFOLD =
@@ -159,6 +168,23 @@ describe('transforms do painel Code', () => {
         expect(exportadas.length).toBeGreaterThan(0);
       });
 
+      // Esta varredura não filtra por sufixo, então ela não perde teste quando
+      // um nome sai da convenção — mas a convenção é cross-stack, e no Vue a
+      // varredura FILTRA. Lá, a tradução dos identificadores moveu o sufixo
+      // para o meio (`buttonParDeAcoesSource` -> `actionsSourceButtonPair`) e
+      // apagou 28 testes com a suíte verde. O nome fica consistente na
+      // declaração e em todo uso, então nenhum dos três portões reclama: quem
+      // cobra a forma do nome é este check.
+      it('todo export é construtor de snippet ou helper declarado', () => {
+        const fora = Object.keys(modulo).filter(
+          (nome) => !/(?:Source|Snippet)$/.test(nome) && !HELPERS.has(nome),
+        );
+        expect(
+          fora,
+          `${caminho}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
+        ).toEqual([]);
+      });
+
       for (const [nome, fn] of exportadas) {
         it(`${nome} devolve um snippet honesto`, () => {
           const saida = fn();
@@ -167,7 +193,7 @@ describe('transforms do painel Code', () => {
           expect(texto.trim().length).toBeGreaterThan(0);
 
           // Docs de cada stack são consumidas isoladamente.
-          expect(texto).not.toMatch(OUTRA_STACK);
+          expect(texto).not.toMatch(OTHER_STACK);
           // A lib headless é detalhe de implementação: quem lê importa do
           // design system, nunca dela.
           expect(texto).not.toContain('@base-ui');

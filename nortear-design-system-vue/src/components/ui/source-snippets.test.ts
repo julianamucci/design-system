@@ -18,10 +18,19 @@ const caminhos = Object.keys(modulos).sort();
  * módulo de fixtures, de onde as stories importam helpers de medição e massa de
  * dados. Nada disso é importável por quem consome o design system.
  */
-const ANDAIME = /\b[A-Z][A-Za-z0-9]*Story\b|\bwrapper\b|\bcaso\b|\.fixtures\b/;
+const SCAFFOLD = /\b[A-Z][A-Za-z0-9]*Story\b|\bwrapper\b|\bcaso\b|\.fixtures\b/;
+
+/**
+ * Exports que legitimamente NÃO constroem snippet: constante de medida e
+ * helpers de atributo, que devolvem um pedaço e não um trecho copiável.
+ *
+ * Lista fechada de propósito. Acrescentar um nome aqui é declarar a exceção;
+ * deixar de fora é reprovar — que é como o portão volta a ter dentes.
+ */
+const HELPERS = new Set(['HEIGHT_PLAYGROUND', 'attrRatio', 'ratioExpression']);
 
 /** Regra do repositório: nada de nome de outra stack no que o leitor vê. */
-const OUTRA_STACK = /\b(React|Svelte|Angular|Vanilla|bits-ui|base-ui|radix)\b/i;
+const OTHER_STACK = /\b(React|Svelte|Angular|Vanilla|bits-ui|base-ui|radix)\b/i;
 
 /**
  * Valor de design cravado em `style` inline — a regra `inline_style_design_value`
@@ -51,7 +60,7 @@ const QUANTIDADE = /(^|[\s(])-?\d*\.?\d+(px|rem|em|ch|vh|vw|%)|^#[0-9a-f]{3,8}$|
 
 /** Declarações de design cravadas em `style="…"` dentro do snippet. */
 function designStyles(snippet: string): string[] {
-  const achados: string[] = [];
+  const findings: string[] = [];
   for (const m of snippet.matchAll(/(?<!:)style="([^"]*)"/g)) {
     for (const decl of m[1].split(';')) {
       const [prop, ...resto] = decl.split(':');
@@ -62,10 +71,10 @@ function designStyles(snippet: string): string[] {
       if (VALUE_MECANICO.test(valor)) continue;
       if (valor.includes('var(')) continue; // token, não valor cravado
       if (!QUANTIDADE.test(valor)) continue;
-      achados.push(`${nome}: ${valor}`);
+      findings.push(`${nome}: ${valor}`);
     }
   }
-  return achados;
+  return findings;
 }
 
 describe('transforms do painel Code', () => {
@@ -92,6 +101,24 @@ describe('transforms do painel Code', () => {
       // carrega o que qualquer helper produziu.
       const construtores = exportadas.filter(([nome]) => /(?:Source|Snippet)$/.test(nome));
 
+      // O filtro acima EXCLUI em silêncio, e silêncio aqui custou 28 testes: a
+      // tradução dos identificadores moveu o sufixo para o meio do nome
+      // (`buttonParDeAcoesSource` -> `actionsSourceButtonPair`), o export saiu
+      // da varredura e a suíte seguiu verde medindo menos. Nenhum dos três
+      // portões podia pegar — o nome estava consistente na declaração e em todo
+      // uso, então `lint`, `build` e `build-storybook` não tinham do que
+      // reclamar. Contagem gerada some sem deixar rastro; quem não é construtor
+      // precisa se declarar.
+      it('todo export é construtor de snippet ou helper declarado', () => {
+        const fora = Object.keys(modulo).filter(
+          (nome) => !/(?:Source|Snippet)$/.test(nome) && !HELPERS.has(nome),
+        );
+        expect(
+          fora,
+          `${caminho}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
+        ).toEqual([]);
+      });
+
       for (const [nome, fn] of construtores) {
         it(`${nome} devolve um snippet honesto`, () => {
           const saida = fn();
@@ -99,9 +126,9 @@ describe('transforms do painel Code', () => {
           const texto = saida as string;
           expect(texto.trim().length).toBeGreaterThan(0);
           // O andaime da story não é parte do design system.
-          expect(texto).not.toMatch(ANDAIME);
+          expect(texto).not.toMatch(SCAFFOLD);
           // Docs de cada stack são consumidas isoladamente.
-          expect(texto).not.toMatch(OUTRA_STACK);
+          expect(texto).not.toMatch(OTHER_STACK);
           // `reka-ui` é a lib headless por baixo; o leitor importa do design
           // system, nunca dela.
           expect(texto).not.toContain('reka-ui');
