@@ -7,10 +7,10 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { dialogSource } from './dialog.source';
 import {
   abrir,
-  botaoFecharDoCanto,
-  conferirFocusTrap,
-  conferirNomeEDescricao,
-  esperarFechado,
+  cantoButtonClose,
+  checkFocusTrap,
+  checkNameEDescricao,
+  waitForClosed,
   fechar,
   gatilho,
   overlay,
@@ -119,7 +119,7 @@ export const Playground: Story = {
       const p = painel()!;
       await expect(p).toHaveAttribute('role', 'dialog');
       await expect(p).toHaveAttribute('aria-modal', 'true');
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step('O foco entra no painel ao abrir', async () => {
@@ -130,12 +130,12 @@ export const Playground: Story = {
     });
 
     await step('Tab não sai do painel', async () => {
-      await conferirFocusTrap(painel()!);
+      await checkFocusTrap(painel()!);
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
       await userEvent.keyboard('{Escape}');
-      await esperarFechado();
+      await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
@@ -147,7 +147,7 @@ export const Playground: Story = {
       // no `pointerdown` de fora, e o `.click()` programático dispara só o
       // evento de clique — o diálogo continuava aberto.
       await userEvent.click(overlay()!);
-      await esperarFechado();
+      await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
@@ -155,10 +155,10 @@ export const Playground: Story = {
 
     await step('O botão X fecha, tem nome acessível e devolve o foco', async () => {
       const p = await abrir(canvasElement);
-      const x = botaoFecharDoCanto(p)!;
+      const x = cantoButtonClose(p)!;
       await expect(x).toHaveAccessibleName();
       await userEvent.click(x);
-      await esperarFechado();
+      await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
@@ -166,13 +166,13 @@ export const Playground: Story = {
 
     await step('O Cancelar do rodapé fecha e avisa o callback', async () => {
       const p = await abrir(canvasElement);
-      const chamadasAntes = spyCancelar.mock.calls.length;
+      const callsBefore = spyCancelar.mock.calls.length;
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       // A ação primária é a última do DOM; o Cancelar é a primeira.
       const botoes = rodape.querySelectorAll<HTMLElement>('button');
       await userEvent.click(botoes[0]);
-      await esperarFechado();
-      await expect(spyCancelar.mock.calls.length).toBe(chamadasAntes + 1);
+      await waitForClosed();
+      await expect(spyCancelar.mock.calls.length).toBe(callsBefore + 1);
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });

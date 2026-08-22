@@ -54,8 +54,8 @@ describe('sheetSnippet', () => {
     expect(formulario).toContain("import { createFormField } from '@/components/ui/form';");
     expect(formulario).toContain('createFormField({ label:');
 
-    const navegacao = sheetSnippet({ corpo: 'navegacao' });
-    expect(navegacao).toContain("corpo.setAttribute('aria-label', 'Seções');");
+    const navigation = sheetSnippet({ corpo: 'navegacao' });
+    expect(navigation).toContain("corpo.setAttribute('aria-label', 'Seções');");
 
     const paragrafos = sheetSnippet({ corpo: 'paragrafos', paragrafos: 8 });
     expect(paragrafos).toContain('i <= 8');

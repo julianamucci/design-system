@@ -29,8 +29,8 @@ import { cn } from "@/lib/utils"
 // do Vanilla. Escrever `aria-modal="false"` seria redundância que nenhuma outra
 // stack tem.
 
-const ESPERA_PADRAO_ABRIR = 600
-const ESPERA_PADRAO_FECHAR = 300
+const WAIT_DEFAULT_OPEN = 600
+const WAIT_DEFAULT_CLOSE = 300
 
 /**
  * O gatilho entra e sai por FUNÇÃO, não por ref exposto no contexto.
@@ -69,8 +69,8 @@ type HoverCardProps = PreviewCardPrimitive.Root.Props & {
 }
 
 function HoverCard({
-  openDelay = ESPERA_PADRAO_ABRIR,
-  closeDelay = ESPERA_PADRAO_FECHAR,
+  openDelay = WAIT_DEFAULT_OPEN,
+  closeDelay = WAIT_DEFAULT_CLOSE,
   ...props
 }: HoverCardProps) {
   const triggerRef = React.useRef<HTMLElement | null>(null)
@@ -114,8 +114,8 @@ function HoverCardTrigger({ asChild, children, ...props }: HoverCardTriggerProps
   // `delay`/`closeDelay` são os nomes do primitivo; `openDelay`/`closeDelay`
   // são os do design system. A tradução acontece aqui, uma vez.
   const atrasos = {
-    delay: contexto?.openDelay ?? ESPERA_PADRAO_ABRIR,
-    closeDelay: contexto?.closeDelay ?? ESPERA_PADRAO_FECHAR,
+    delay: contexto?.openDelay ?? WAIT_DEFAULT_OPEN,
+    closeDelay: contexto?.closeDelay ?? WAIT_DEFAULT_CLOSE,
   }
 
   if (asChild && React.isValidElement(children)) {

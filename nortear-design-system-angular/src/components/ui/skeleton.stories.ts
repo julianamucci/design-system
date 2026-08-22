@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { NdsSkeleton } from './skeleton';
 import { NdsSkeletonDocs } from '@/components/docs/SkeletonDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { FRACAO_DE_LARGURA, caixaDesenhada } from '@shared/testing/skeleton-probe';
+import { WIDTH_FRACTION, boxDesenhada } from '@shared/testing/skeleton-probe';
 
 // O CSS do .nds-skeleton não traz forma nem dimensão de propósito — quem usa
 // define a caixa que o conteúdo real vai ocupar.
@@ -110,11 +110,11 @@ export const Playground: Story = {
       // outras quatro stacks, onde `h-4 w-[250px]` era texto inerte e o
       // Playground renderizava altura zero.
       await expect(sk).toHaveClass(/nds-skeleton/);
-      const caixa = caixaDesenhada(sk, regiao);
+      const caixa = boxDesenhada(sk, regiao);
       await expect(caixa.altura).toBeGreaterThan(0);
       if (args.shape === 'text' || args.shape === 'heading') {
         await expect(
-          Math.abs(caixa.fracaoDoContainer - FRACAO_DE_LARGURA[args.width]),
+          Math.abs(caixa.fracaoDoContainer - WIDTH_FRACTION[args.width]),
         ).toBeLessThan(0.02);
       }
     });

@@ -12,10 +12,10 @@ import {
   BreadcrumbEllipsis,
 } from './index';
 import {
-  breadcrumbComReticenciasSource,
+  breadcrumbWithEllipsisSource,
   breadcrumbLinkCustomizadoSource,
-  breadcrumbSeparadorCustomizadoSource,
-  breadcrumbSimplesSource,
+  breadcrumbSeparatorCustomizadoSource,
+  breadcrumbSimpleSource,
 } from './breadcrumb.source';
 
 const meta = {
@@ -28,7 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: breadcrumbSimplesSource },
+      source: { transform: breadcrumbSimpleSource },
       description: {
         component:
           'Configuracoes estruturais do Breadcrumb: simples, com ellipsis, separador customizado e link customizado via as-child.',
@@ -106,7 +106,7 @@ export const WithEllipsis: Story = {
     docs: {
       // Um nível a mais e uma peça que a do meta não tem: as reticências
       // ocupam um item da trilha e trazem o próprio import.
-      source: { transform: breadcrumbComReticenciasSource },
+      source: { transform: breadcrumbWithEllipsisSource },
       description: {
         story:
           'Ellipsis colapsando níveis intermediários. Com rótulo, o indicador é anunciado; sem ele, fica decorativo.',
@@ -165,7 +165,7 @@ export const CustomSeparator: Story = {
     docs: {
       // O separador deixa de ser autofechado e passa a levar conteúdo no slot —
       // a do meta mostraria o chevron padrão, que é justamente o que sai daqui.
-      source: { transform: breadcrumbSeparadorCustomizadoSource },
+      source: { transform: breadcrumbSeparatorCustomizadoSource },
       description: {
         story:
           'Separador customizado via slot de BreadcrumbSeparator — mantém aria-hidden automaticamente.',

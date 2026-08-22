@@ -16,7 +16,7 @@ import { within, waitFor } from 'storybook/test';
  * A correção é da lib — desligar a regra é o que mantém as outras valendo
  * enquanto isso. Mesma decisão já tomada no stack Angular, pelo mesmo motivo.
  */
-export const REGRA_GUARDA_DE_FOCO = { id: 'aria-hidden-focus', enabled: false } as const;
+export const FOCUS_RULE_GUARDA = { id: 'aria-hidden-focus', enabled: false } as const;
 
 export async function waitForPortal(
   role: 'tooltip' | 'dialog' | 'listbox' | 'menu' | 'menuitem' | 'option',

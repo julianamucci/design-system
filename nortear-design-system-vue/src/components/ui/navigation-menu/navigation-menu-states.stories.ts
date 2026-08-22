@@ -10,11 +10,11 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from './index';
-import { esperarPainel, painelAberto } from './navigation-menu.fixtures';
-import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPanel, panelOpen } from './navigation-menu.fixtures';
+import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import {
-  navigationMenuAbertoSource,
-  navigationMenuAtivoSource,
+  navigationMenuOpenSource,
+  navigationMenuActiveSource,
   navigationMenuClosedSource,
 } from './navigation-menu.source';
 
@@ -92,7 +92,7 @@ export const Closed: Story = {
       // O miolo do painel é DESMONTADO ao fechar. Não é um bloco escondido:
       // quem navega com leitor de tela não o encontra, e nenhum destino dele
       // entra na ordem de tabulação.
-      await expect(painelAberto()).toBeNull();
+      await expect(panelOpen()).toBeNull();
       await expect(canvas.queryByRole('link', { name: 'Plano Inicial' })).toBeNull();
     });
 
@@ -108,11 +108,11 @@ export const Open: Story = {
   parameters: {
     covers: ['accessibility.item3', 'accessibility.item6', 'visual.item4'],
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       // Aberto na montagem é PRESENÇA de `default-value`, e traz junto a seta
       // indicadora — peça que a do meta, fechada, não tem por que mostrar.
-      source: { transform: navigationMenuAbertoSource },
+      source: { transform: navigationMenuOpenSource },
       description: {
         story:
           'O item nasce aberto e a seta indicadora aponta para o gatilho. A story termina aberta de propósito: é o estado que a regressão visual precisa capturar.',
@@ -159,7 +159,7 @@ export const Open: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('button', { name: /Produtos/ });
-    const conteudo = await esperarPainel();
+    const conteudo = await waitForPanel();
     const painel = conteudo.closest<HTMLElement>('.nds-navigation-menu-viewport-panel');
 
     await step('O item nasce aberto e o gatilho reflete o estado', async () => {
@@ -196,7 +196,7 @@ export const Active: Story = {
     docs: {
       // A marca da página atual mora no DESTINO, e é uma barra plana: nenhum
       // gatilho, nenhum painel — o oposto da composição do meta.
-      source: { transform: navigationMenuAtivoSource },
+      source: { transform: navigationMenuActiveSource },
       description: {
         story:
           'O destino da página atual leva aria-current="page" — o leitor de tela anuncia "página atual" e o fundo muda, porque cor sozinha não informa quem não a distingue.',

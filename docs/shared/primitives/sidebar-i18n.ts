@@ -14,16 +14,16 @@
  */
 
 import { negociarLocale, type Locale } from './locale-negotiation';
-import { rotuloDaSidebar } from './sidebar-labels';
+import { sidebarLabel } from './sidebar-labels';
 
 const CHAVE = 'ds-locale';
 
-type Ouvinte = () => void;
+type Listener = () => void;
 
 /** Store mínima: valor + assinatura, no formato que `useSyncExternalStore` pede. */
-function criarLoja() {
+function createLoja() {
   let atual: Locale = negociarLocale(undefined, undefined, CHAVE);
-  const ouvintes = new Set<Ouvinte>();
+  const ouvintes = new Set<Listener>();
 
   if (typeof window !== 'undefined') {
     window.addEventListener('storage', (e) => {
@@ -37,7 +37,7 @@ function criarLoja() {
 
   return {
     ler: () => atual,
-    assinar: (o: Ouvinte) => {
+    assinar: (o: Listener) => {
       ouvintes.add(o);
       return () => ouvintes.delete(o);
     },
@@ -55,10 +55,10 @@ function criarLoja() {
  * instalado pelo Storybook, não compilava; os outros passavam só porque lá o
  * `React` já chegava como `any`.
  */
-type ReactMinimo = {
+type ReactMinimum = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   createElement: (tipo: any, props?: any, ...filhos: any[]) => unknown;
-  useSyncExternalStore: <T>(assinar: (o: Ouvinte) => () => void, ler: () => T) => T;
+  useSyncExternalStore: <T>(assinar: (o: Listener) => () => void, ler: () => T) => T;
 };
 
 /**
@@ -68,14 +68,14 @@ type ReactMinimo = {
  * se redesenha sozinho na troca de idioma. Devolver string exigiria redesenhar
  * a sidebar inteira, e o manager não expõe gatilho para isso.
  */
-export function criarRenderLabel(React: ReactMinimo) {
-  const loja = criarLoja();
+export function createRenderLabel(React: ReactMinimum) {
+  const loja = createLoja();
 
-  function Rotulo({ nome }: { nome: string }) {
+  function Label({ nome }: { nome: string }) {
     const locale = React.useSyncExternalStore(loja.assinar, loja.ler);
-    return rotuloDaSidebar(nome, locale) as unknown as null;
+    return sidebarLabel(nome, locale) as unknown as null;
   }
 
   return (item: { name?: string }) =>
-    React.createElement(Rotulo, { nome: item?.name ?? '', key: item?.name });
+    React.createElement(Label, { nome: item?.name ?? '', key: item?.name });
 }

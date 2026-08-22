@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sliderEmFormularioSource,
+  formSliderSource,
   sliderEscalaCurtaSource,
-  precoSourceSliderRange,
-  sliderFaixaSource,
+  precoSliderRangeSource,
+  sliderRangeSource,
   sliderSource,
   sliderUnicoSource,
   sliderVerticalSource,
@@ -74,7 +74,7 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('a faixa nomeia cada alça — sem isso as duas seriam anunciadas igual', () => {
-    const saida = sliderFaixaSource();
+    const saida = sliderRangeSource();
     expect(saida).toContain('$state([20, 80])');
     expect(saida).toContain('thumbAriaLabels={["Preço mínimo", "Preço máximo"]}');
   });
@@ -86,14 +86,14 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('a faixa de preço carrega o passo grosso e a escala maior', () => {
-    const saida = precoSourceSliderRange();
+    const saida = precoSliderRangeSource();
     expect(saida).toContain('max={500}');
     expect(saida).toContain('step={10}');
     expect(saida).toContain('$state([100, 400])');
   });
 
   it('no formulário cada faixa tem nome acessível próprio', () => {
-    const saida = sliderEmFormularioSource();
+    const saida = formSliderSource();
     expect(saida).toContain('<form');
     expect(saida).toContain('aria-label="Brilho"');
     expect(saida).toContain('aria-label="Opacidade"');

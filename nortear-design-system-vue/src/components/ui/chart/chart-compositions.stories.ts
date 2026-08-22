@@ -2,19 +2,19 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor } from 'storybook/test';
 import { h } from 'vue';
 import {
-  desenhoEscreve,
-  desenhoPintado,
-  exigirRaiz,
+  designEscreve,
+  designPintado,
+  exigirRoot,
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption } from './index';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { chartWithCardSource, chartTituloNoDesenhoSource } from './chart.source';
+import { chartWithCardSource, designChartTitleSource } from './chart.source';
 
-const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
 
-const TITULO_DO_CARD = 'Acessos mensais';
-const TITULO_NO_DESENHO = 'Vendas mensais';
+const CARD_TITLE = 'Acessos mensais';
+const DESIGN_TITLE = 'Vendas mensais';
 
 const meta: Meta = {
   // Sem argTypes: sem isto o painel Controls abre vazio.
@@ -42,11 +42,11 @@ export const WithCard: Story = {
   },
   render: () => h(Card, { class: 'nds-w-sm' }, () => [
     h(CardHeader, null, () => [
-      h(CardTitle, null, () => TITULO_DO_CARD),
+      h(CardTitle, null, () => CARD_TITLE),
       h(CardDescription, null, () => 'Janeiro a junho de 2024'),
     ]),
     h(CardContent, null, () => h(ChartContainer, {
-      option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
+      option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA }),
       height: 200,
       'aria-label': 'Acessos mensais no desktop, de janeiro a junho',
     })),
@@ -56,7 +56,7 @@ export const WithCard: Story = {
       const card = canvasElement.querySelector<HTMLElement>('[data-slot="card"]');
       await expect(card).not.toBeNull();
       await expect(card!.querySelector('[data-slot="card-title"]')?.textContent?.trim())
-        .toBe(TITULO_DO_CARD);
+        .toBe(CARD_TITLE);
     });
 
     await step('E o gráfico mora dentro dele', async () => {
@@ -67,8 +67,8 @@ export const WithCard: Story = {
       );
       await expect(dentro).not.toBeNull();
 
-      const raiz = exigirRaiz(canvasElement);
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      const raiz = exigirRoot(canvasElement);
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
     });
   },
 };
@@ -82,21 +82,21 @@ export const InlineTitle: Story = {
     // O card sai de cena e o rótulo autoral some junto — a ausência é o
     // assunto, e a do meta a esconderia atrás do Card.
     docs: {
-      source: { transform: chartTituloNoDesenhoSource },
+      source: { transform: designChartTitleSource },
       description: { story: 'Título dentro do desenho, para o gráfico que aparece sem card.' },
     },
   },
   render: () => h(ChartContainer, {
-    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA, title: TITULO_NO_DESENHO }),
+    option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA, title: DESIGN_TITLE }),
     height: 260,
     class: 'nds-max-w-lg',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O título do option é desenhado junto do gráfico', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(desenhoEscreve(raiz, TITULO_NO_DESENHO)).toBe(true), {
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designEscreve(raiz, DESIGN_TITLE)).toBe(true), {
         timeout: 3000,
       });
     });
@@ -105,7 +105,7 @@ export const InlineTitle: Story = {
       // A ordem do container é: rótulo passado, título do option, palavra
       // genérica. A story não passa rótulo, então o degrau do meio é o que vale
       // — e um desenho nunca fica mudo para leitor de tela.
-      await expect(raiz.getAttribute('aria-label')).toBe(TITULO_NO_DESENHO);
+      await expect(raiz.getAttribute('aria-label')).toBe(DESIGN_TITLE);
     });
   },
 };

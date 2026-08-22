@@ -5,9 +5,9 @@ import { Info } from "lucide-react";
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 import {
   alertInsercaoDinamicaSource,
-  alertSemAnuncioSource,
-  alertSemIconeSource,
-  alertSemTituloSource,
+  alertNoAnnouncementSource,
+  alertNoIconSource,
+  alertNoTitleSource,
   alertSource,
 } from "./alert.source";
 
@@ -50,7 +50,7 @@ export const Complete: Story = {
 
 export const WithoutTitle: Story = {
   // A ausência do título é o assunto; o snippet do meta o traria de volta.
-  parameters: { docs: { source: { transform: alertSemTituloSource } } },
+  parameters: { docs: { source: { transform: alertNoTitleSource } } },
   render: () => (
     <Alert>
       <Info aria-hidden="true" className="nds-icon" />
@@ -76,7 +76,7 @@ export const WithoutTitle: Story = {
 
 export const WithoutIcon: Story = {
   // Idem para o ícone: o layout de coluna única vem da ausência, não de prop.
-  parameters: { docs: { source: { transform: alertSemIconeSource } } },
+  parameters: { docs: { source: { transform: alertNoIconSource } } },
   render: () => (
     <Alert>
       <AlertTitle>Atenção</AlertTitle>
@@ -105,7 +105,7 @@ export const WithoutAnnouncement: Story = {
     covers: ["functional.item4", "visual.item3"],
     controls: { disable: true },
     // O par note × padrão é o assunto: um alerta só não mostra a diferença.
-    docs: { source: { transform: alertSemAnuncioSource } },
+    docs: { source: { transform: alertNoAnnouncementSource } },
   },
   render: () => (
     <div className="nds-stack" data-spacing="sm">

@@ -105,8 +105,8 @@ ${nome}
  */
 function tag(partes: Array<string | false | null | undefined>): string {
   const lista = partes.filter((p): p is string => Boolean(p));
-  const emLinha = lista.join(' ');
-  if (emLinha.length <= 52) return `  <Slider ${emLinha} />`;
+  const inLine = lista.join(' ');
+  if (inLine.length <= 52) return `  <Slider ${inLine} />`;
   return `  <Slider\n${lista.map((p) => `    ${p}`).join('\n')}\n  />`;
 }
 
@@ -162,7 +162,7 @@ ${controle}`,
  * número que o primitivo emite, em vez do array, era o que fazia uma segunda
  * alça brotar no meio da interação.
  */
-export function sliderFaixaSource(): string {
+export function sliderRangeSource(): string {
   return jsxSnippet(
     estado('faixaDePreco', 'setFaixaDePreco', '[20, 80]'),
     deitado(
@@ -217,7 +217,7 @@ export function sliderNotControlledSource(): string {
  * classe — que tira o controle da ordem de tabulação e marca `data-disabled`
  * para a folha pintar.
  */
-export function sliderDesabilitadoSource(): string {
+export function sliderDisabledSource(): string {
   return jsxSnippet(
     IMPORT,
     `<div className="nds-w-sm">
@@ -282,7 +282,7 @@ export function sliderStepSource(): string {
  * `aria-label` deixam quem navega por teclado sem saber qual está mexendo, e é
  * o erro mais comum quando o rótulo visível é a única identificação.
  */
-export function sliderEmFormularioSource(): string {
+export function formSliderSource(): string {
   return jsxSnippet(
     `${IMPORT_STATE}
 ${IMPORT}

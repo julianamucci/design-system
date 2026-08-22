@@ -25,7 +25,7 @@ const SLIDES = `const slides = [1, 2, 3, 4, 5];`;
  * A largura máxima faz parte da lição: o carrossel recorta o que passa do
  * contêiner, e sem largura definida não há o que recortar.
  */
-const LARGURA_MD = 'nds-w-md';
+const WIDTH_MD = 'nds-w-md';
 
 /**
  * Miolo demonstrativo de um slide, já indentado para dentro do `CarouselItem`.
@@ -64,7 +64,7 @@ export function carouselSource(_gerado?: string, ctx?: { args?: Partial<Carousel
 
   return svelteSnippet(
     `${IMPORT}\n\n${SLIDES}`,
-    `<div class="${vertical ? 'nds-w-xs' : LARGURA_MD}">
+    `<div class="${vertical ? 'nds-w-xs' : WIDTH_MD}">
   <Carousel${raiz}>
     <CarouselContent${trilho}>
       {#each slides as numero (numero)}
@@ -89,10 +89,10 @@ export function carouselVerticalSource(): string {
  * Estado de fim de fila: montar já no último slide é uma opção do motor, e a
  * seta de avanço desabilita sozinha — o componente calcula os extremos.
  */
-export function carouselUltimoSlideSource(): string {
+export function carouselLastSlideSource(): string {
   return svelteSnippet(
     `${IMPORT}\n\n${SLIDES}`,
-    `<div class="${LARGURA_MD}">
+    `<div class="${WIDTH_MD}">
   <Carousel
     opts={{ startIndex: slides.length - 1 }}
     aria-label="Slides no último item"
@@ -115,7 +115,7 @@ ${miolo(false)}
  * Conjunto longo de slides: a base de largura mora no ITEM, e é responsiva — um
  * slide por tela no celular, dois no médio, três no grande.
  */
-export function carouselVariosItensSource(): string {
+export function carouselMultipleItemsSource(): string {
   return svelteSnippet(
     `${IMPORT}
 
@@ -149,7 +149,7 @@ export function carouselAutoplaySource(): string {
 import Autoplay from "embla-carousel-autoplay";
 
 ${SLIDES}`,
-    `<div class="${LARGURA_MD}">
+    `<div class="${WIDTH_MD}">
   <Carousel
     opts={{ loop: true }}
     plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
@@ -182,7 +182,7 @@ const fotos = [
   { src: "/fotos/lago-entre-montanhas.jpg", alt: "Lago cercado por montanhas nevadas" },
   { src: "/fotos/campo-ao-entardecer.jpg", alt: "Campo aberto com o sol se pondo atrás das nuvens" },
 ];`,
-    `<div class="${LARGURA_MD}">
+    `<div class="${WIDTH_MD}">
   <Carousel aria-label="Galeria de fotos do produto">
     <CarouselContent>
       {#each fotos as foto, i (foto.src)}
@@ -215,7 +215,7 @@ const fotos = [
  * marca com `aria-current`, e o inativo NÃO carrega o atributo — a string
  * "false" ainda casaria com um seletor de presença.
  */
-export function carouselComDotsSource(): string {
+export function carouselWithDotsSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import type { CarouselAPI } from "@/components/ui/carousel/context";
@@ -231,7 +231,7 @@ function registrarApi(instancia?: CarouselAPI) {
   atual = instancia.selectedScrollSnap();
   instancia.on("select", () => (atual = instancia.selectedScrollSnap()));
 }`,
-    `<div class="${LARGURA_MD}">
+    `<div class="${WIDTH_MD}">
   <Carousel setApi={registrarApi} aria-label="Galeria com dots">
     <CarouselContent>
       {#each slides as numero (numero)}

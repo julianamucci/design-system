@@ -43,10 +43,10 @@ const DISTANCIA_DEFAULT = 4;
 const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importingPopover(...pecas: string[]): string {
-  const lista = [...pecas].sort();
+function importingPopover(...parts: string[]): string {
+  const lista = [...parts].sort();
   return `import {\n${lista
-    .map((peca) => `  ${peca},`)
+    .map((part) => `  ${part},`)
     .join('\n')}\n} from "@/components/ui/popover";`;
 }
 
@@ -130,7 +130,7 @@ ${ACTIONS_DEFAULT}`,
  * herda o nome acessível do gatilho, que é como o Vanilla (referência de
  * markup) resolve o caso: um diálogo anônimo reprovaria no axe.
  */
-export function popoverConteudoLivreSource(): string {
+export function popoverContentLivreSource(): string {
   return jsxSnippet(
     `${importingPopover('Popover', 'PopoverContent', 'PopoverTrigger')}
 ${IMPORT_BUTTON}`,
@@ -150,7 +150,7 @@ ${IMPORT_BUTTON}`,
  * conteúdo é interativo, então o foco entra nele ao abrir e o Tab caminha pelos
  * campos sem sair do painel.
  */
-export function popoverFormularioSource(): string {
+export function popoverFormSource(): string {
   return jsxSnippet(
     `${importingPopover(
       'Popover',
@@ -183,7 +183,7 @@ import { Label } from "@/components/ui/label";`,
  * `aria-controls` — e o painel só existe no DOM nesse intervalo, o que é
  * justamente o estado que a regressão visual precisa alcançar.
  */
-export function popoverAbertoSource(): string {
+export function popoverOpenSource(): string {
   return jsxSnippet(
     `${importingPopover(
       'Popover',
@@ -208,7 +208,7 @@ ${IMPORT_BUTTON}`,
  * clique fora dispensa o painel ANTES do `click`, então um alternador leria o
  * estado já invertido pela lib e reabriria o que acabou de fechar.
  */
-export function popoverControladoSource(): string {
+export function popoverControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${importingPopover(
@@ -317,7 +317,7 @@ import { Label } from "@/components/ui/label";`,
  * obrigaria a reabrir o painel para cada critério —, e o par Limpar / Aplicar
  * fica no fim, na ordem em que a decisão acontece.
  */
-export function popoverFiltroSource(): string {
+export function popoverFilterSource(): string {
   const opcao = (rotulo: string, marcada = false) => `      <label className="nds-cluster" data-spacing="sm">
         <input type="checkbox" className="nds-size-4"${marcada ? ' defaultChecked' : ''} />
         <span>${rotulo}</span>
@@ -433,7 +433,7 @@ ${preferencia('Modo compacto')}
  * vira para baixo sozinho — a troca é sempre de LADO no mesmo eixo, nunca de
  * eixo. `sideOffset` é a distância entre o gatilho e o painel.
  */
-export function popoverAcimaSource(): string {
+export function popoverAboveSource(): string {
   return jsxSnippet(
     `${importingPopover(
       'Popover',

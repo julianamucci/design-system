@@ -17,10 +17,10 @@ export type ContextMenuArgs = {
 };
 
 /** Rótulo da moldura quando o control não trouxer texto. */
-const ROTULO_PADRAO = 'Clique com o botão direito aqui';
+const LABEL_DEFAULT = 'Clique com o botão direito aqui';
 
 /** Ordem canônica das peças no bloco de import. */
-const ORDEM = [
+const ORDER = [
   'ContextMenu',
   'ContextMenuTrigger',
   'ContextMenuContent',
@@ -38,10 +38,10 @@ const ORDEM = [
 ];
 
 /** Bloco de import, sempre na ordem canônica e só com as peças usadas. */
-function importar(pecas: string[]): string {
-  const usadas = ORDEM.filter((peca) => pecas.includes(peca));
+function importing(parts: string[]): string {
+  const usadas = ORDER.filter((part) => parts.includes(part));
   return `import {
-${usadas.map((peca) => `  ${peca},`).join('\n')}
+${usadas.map((part) => `  ${part},`).join('\n')}
 } from '@/components/ui/context-menu'`;
 }
 
@@ -70,7 +70,7 @@ ${recuo}</ContextMenuItem>`;
  * O conteúdo já chega indentado com quatro espaços.
  */
 function menu(conteudo: string, opcoes: { rotulo?: string; raiz?: string } = {}): string {
-  const { rotulo = ROTULO_PADRAO, raiz = '' } = opcoes;
+  const { rotulo = LABEL_DEFAULT, raiz = '' } = opcoes;
   return `<ContextMenu${attrs(raiz)}>
   <ContextMenuTrigger
     class="${AREA_CLICK_DIREITO}"
@@ -92,9 +92,9 @@ ${conteudo}
  * `modal` nasce ligado na raiz — só a desativação entra no snippet.
  */
 export const contextMenuSource: SourceTransform<ContextMenuArgs> = (_gerado, ctx) => {
-  const rotulo = texto(ctx?.args?.triggerLabel, ROTULO_PADRAO);
+  const rotulo = texto(ctx?.args?.triggerLabel, LABEL_DEFAULT);
   return vueSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -116,9 +116,9 @@ ${item('Excluir', { atalho: '⌫', props: ' variant="destructive"' })}`,
 };
 
 /** Estado ItemDisabled: o item indisponível não recebe ponteiro nem Enter. */
-export function contextMenuItemDesabilitadoSource(): string {
+export function contextMenuItemDisabledSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -145,7 +145,7 @@ ${item('Editar', { atalho: '⌘E', recuo: '      ' })}
  */
 export function contextMenuItemRecuadoSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -165,9 +165,9 @@ export function contextMenuItemRecuadoSource(): string {
 }
 
 /** Estado ItemDestructive: a ação perigosa se declara por prop, não por cor. */
-export function contextMenuItemDestrutivoSource(): string {
+export function contextMenuItemDestructiveSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -195,9 +195,9 @@ ${item('Excluir permanentemente', { atalho: '⌫', props: ' variant="destructive
  * A prop é `checked`, e não o `model-value` da lib por baixo: é ela que a tabela
  * de props documenta e a única que o item realmente lê.
  */
-export function contextMenuMarcacaoMistaSource(): string {
+export function contextMenuMarkupMistaSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -217,9 +217,9 @@ export function contextMenuMarcacaoMistaSource(): string {
  * A troca de tema é global (classe no documento) e não muda uma linha do menu —
  * é exatamente isso que a story mostra.
  */
-export function contextMenuPaletaEscuraSource(): string {
+export function contextMenuPaletteDarkSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -234,9 +234,9 @@ export function contextMenuPaletaEscuraSource(): string {
 }
 
 /** Composição WithShortcut: o atalho mora dentro do item e é lido junto dele. */
-export function contextMenuComAtalhosSource(): string {
+export function contextMenuWithShortcutsSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -257,9 +257,9 @@ ${item('Excluir', { atalho: '⌫', props: ' variant="destructive"' })}`),
  * `v-model:checked` é o par completo — a prop entra e o evento volta. Ligar só
  * `:checked` deixaria o item preso ao valor inicial.
  */
-export function contextMenuComMarcacaoSource(): string {
+export function contextMenuWithMarkupSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -284,9 +284,9 @@ const mostrarReguas = ref(true)`,
 }
 
 /** Composição WithRadioGroup: escolha única, o valor vive no grupo. */
-export function contextMenuComEscolhaUnicaSource(): string {
+export function contextMenuWithChoiceUnicaSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -310,9 +310,9 @@ const layout = ref('grid')`,
 }
 
 /** Composição WithSubmenu: o segundo nível abre ao lado do item que o dispara. */
-export function contextMenuComSubmenuSource(): string {
+export function contextMenuWithSubmenuSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -341,7 +341,7 @@ export function contextMenuComSubmenuSource(): string {
  */
 export function contextMenuCompletoSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',

@@ -6,8 +6,8 @@ import TableEstadoEmpty from './TableEstadoEmpty.svelte';
 import TableEstadoLinhaSelecionada from './TableEstadoLinhaSelecionada.svelte';
 import TableEstadoCarregando from './TableEstadoCarregando.svelte';
 import {
-  tableCarregandoSource,
-  tableLinhaSelecionadaSource,
+  tableLoadingSource,
+  tableLineSelecionadaSource,
   tableSource,
   tableVaziaSource,
 } from './table.source';
@@ -74,7 +74,7 @@ export const Empty: Story = {
 export const SelectedRow: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item5'],
-    docs: { source: { transform: tableLinhaSelecionadaSource } },
+    docs: { source: { transform: tableLineSelecionadaSource } },
   },
   render: () => ({
     Component: TableEstadoLinhaSelecionada,
@@ -106,7 +106,7 @@ export const SelectedRow: Story = {
 export const Loading: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item6'],
-    docs: { source: { transform: tableCarregandoSource } },
+    docs: { source: { transform: tableLoadingSource } },
   },
   render: () => ({
     Component: TableEstadoCarregando,

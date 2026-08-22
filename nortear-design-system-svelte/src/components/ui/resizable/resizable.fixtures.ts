@@ -2,7 +2,7 @@
 //
 // Medir o Resizable é uma coisa só — a fatia que cada painel ocupa do grupo —,
 // e mesmo assim havia QUATRO funções para isso, duas com o nome `fracoes` e
-// duas com o nome `fracaoDoPrimeiro`, cada par com corpos diferentes. As
+// duas com o nome `firstFraction`, cada par com corpos diferentes. As
 // divergências não eram de propósito, eram de FORMA, e cada uma tinha um motivo
 // real:
 //
@@ -15,7 +15,7 @@
 //     tem dois grupos e precisa apontar para um deles. Vira um alvo único que
 //     aceita as duas formas.
 //
-// E `fracaoDoPrimeiro` passa a ser `fracoes(...)[0]`, e não uma segunda
+// E `firstFraction` passa a ser `fracoes(...)[0]`, e não uma segunda
 // travessia do DOM: eram duas medidas independentes do mesmo número, livres
 // para discordar.
 //
@@ -23,10 +23,10 @@
 // helper exportado apareceria na sidebar como se fosse um exemplo.
 
 /** O grupo — o contrato de markup que as plays procuram, nunca uma classe. */
-export const SEL_GRUPO = '[data-slot="resizable-pane-group"]';
+export const SEL_GROUP = '[data-slot="resizable-pane-group"]';
 
 /** Um painel do grupo. */
-export const SEL_PAINEL = '[data-slot="resizable-panel"]';
+export const SEL_PANEL = '[data-slot="resizable-panel"]';
 
 export type Eixo = 'horizontal' | 'vertical';
 
@@ -38,8 +38,8 @@ export type Eixo = 'horizontal' | 'vertical';
  * primeiro painel encolher sozinha — a medida sairia errada sem nada de errado
  * na tela.
  */
-export function paineisDiretos(grupo: Element): HTMLElement[] {
-  return [...grupo.querySelectorAll<HTMLElement>(`:scope > ${SEL_PAINEL}`)];
+export function panelsDiretos(grupo: Element): HTMLElement[] {
+  return [...grupo.querySelectorAll<HTMLElement>(`:scope > ${SEL_PANEL}`)];
 }
 
 /**
@@ -53,9 +53,9 @@ export type MeasurementTarget = HTMLElement | HTMLElement[];
 
 function resolvePanels(alvo: MeasurementTarget): HTMLElement[] {
   if (Array.isArray(alvo)) return alvo;
-  const grupo = alvo.matches(SEL_GRUPO) ? alvo : alvo.querySelector(SEL_GRUPO);
+  const grupo = alvo.matches(SEL_GROUP) ? alvo : alvo.querySelector(SEL_GROUP);
   if (!grupo) throw new Error('grupo de painéis não encontrado');
-  return paineisDiretos(grupo);
+  return panelsDiretos(grupo);
 }
 
 /**
@@ -68,16 +68,16 @@ function resolvePanels(alvo: MeasurementTarget): HTMLElement[] {
  * o eixo trocado e com os dois painéis do mesmo tamanho.
  */
 export function fracoes(alvo: MeasurementTarget, eixo: Eixo = 'horizontal'): number[] {
-  const paineis = resolvePanels(alvo);
+  const panels = resolvePanels(alvo);
   const medida = (p: HTMLElement) => {
     const r = p.getBoundingClientRect();
     return eixo === 'horizontal' ? r.width : r.height;
   };
-  const total = paineis.reduce((a, p) => a + medida(p), 0);
-  return paineis.map((p) => medida(p) / total);
+  const total = panels.reduce((a, p) => a + medida(p), 0);
+  return panels.map((p) => medida(p) / total);
 }
 
 /** A fatia do primeiro painel — o que `defaultSize` e `aria-valuenow` dizem. */
-export function fracaoDoPrimeiro(alvo: MeasurementTarget, eixo: Eixo = 'horizontal'): number {
+export function firstFraction(alvo: MeasurementTarget, eixo: Eixo = 'horizontal'): number {
   return fracoes(alvo, eixo)[0];
 }

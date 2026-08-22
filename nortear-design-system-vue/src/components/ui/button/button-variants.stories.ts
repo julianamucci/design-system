@@ -2,13 +2,13 @@ import { figmaDesign } from '@shared/figma/design-links';
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, within } from 'storybook/test';
 import { Button } from './index';
-import { falhasDeContrasteDeTexto } from '@shared/testing/button-probe';
+import { contrastDeTextFailures } from '@shared/testing/button-probe';
 import {
-  buttonDestrutivoSource,
+  buttonDestructiveSource,
   buttonGhostSource,
   buttonLinkSource,
   buttonOutlineSource,
-  buttonPadraoSource,
+  buttonDefaultSource,
   buttonSecundarioSource,
 } from './button.source';
 
@@ -20,7 +20,7 @@ const meta: Meta<any> = {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: buttonPadraoSource } },
+    docs: { source: { transform: buttonDefaultSource } },
   },
 };
 
@@ -46,7 +46,7 @@ export const Default: Story = {
     // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
     // nunca foram verificados. A sonda varre os tres temas nos dois modos e
     // compoe o alfa do fundo antes de dividir.
-    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
+    await expect(contrastDeTextFailures(canvasElement, 4.5)).toEqual([]);
   },
 };
 
@@ -58,7 +58,7 @@ export const Destructive: Story = {
   parameters: {
     // Outra variante e outro rótulo: os args não descrevem nada nesta story.
     docs: {
-      source: { transform: buttonDestrutivoSource },
+      source: { transform: buttonDestructiveSource },
       description: { story: 'Variante destrutiva. Use para ações irreversíveis como excluir ou remover.' },
     },
   },
@@ -72,7 +72,7 @@ export const Destructive: Story = {
     // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
     // nunca foram verificados. A sonda varre os tres temas nos dois modos e
     // compoe o alfa do fundo antes de dividir.
-    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
+    await expect(contrastDeTextFailures(canvasElement, 4.5)).toEqual([]);
   },
 };
 
@@ -98,7 +98,7 @@ export const Outline: Story = {
     // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
     // nunca foram verificados. A sonda varre os tres temas nos dois modos e
     // compoe o alfa do fundo antes de dividir.
-    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
+    await expect(contrastDeTextFailures(canvasElement, 4.5)).toEqual([]);
   },
 };
 
@@ -124,7 +124,7 @@ export const Secondary: Story = {
     // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
     // nunca foram verificados. A sonda varre os tres temas nos dois modos e
     // compoe o alfa do fundo antes de dividir.
-    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
+    await expect(contrastDeTextFailures(canvasElement, 4.5)).toEqual([]);
   },
 };
 
@@ -150,7 +150,7 @@ export const Ghost: Story = {
     // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
     // nunca foram verificados. A sonda varre os tres temas nos dois modos e
     // compoe o alfa do fundo antes de dividir.
-    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
+    await expect(contrastDeTextFailures(canvasElement, 4.5)).toEqual([]);
   },
 };
 
@@ -176,6 +176,6 @@ export const Link: Story = {
     // tela esta sempre no tema claro padrao — cinco sextos das combinacoes
     // nunca foram verificados. A sonda varre os tres temas nos dois modos e
     // compoe o alfa do fundo antes de dividir.
-    await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
+    await expect(contrastDeTextFailures(canvasElement, 4.5)).toEqual([]);
   },
 };

@@ -35,7 +35,7 @@ import { Input } from '@/components/ui/input'`;
  * A moldura do exemplo: sem largura máxima o campo estica até a borda da página
  * e a linha do rótulo deixa de ser lida como um par com o controle.
  */
-const LARGURA = 'class="nds-max-w-sm"';
+const WIDTH = 'class="nds-max-w-sm"';
 
 /**
  * Control de texto com o padrão do `meta`.
@@ -71,7 +71,7 @@ export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
     IMPORTS,
     campo(
       [
-        LARGURA,
+        WIDTH,
         attr('label', withDefault(args.label, 'Email')),
         attr('description', withDefault(args.description, 'Usaremos apenas para contato.')),
         attr('error', erro),
@@ -87,10 +87,10 @@ export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
 };
 
 /** Combinação mínima: rótulo e controle, nada abaixo. */
-export function formRotuloEControleSource(): string {
+export function formLabelEControleSource(): string {
   return vueSnippet(
     IMPORTS,
-    campo([LARGURA, 'label="Nome completo"'], '<Input type="text" placeholder="ex: João da Silva" />'),
+    campo([WIDTH, 'label="Nome completo"'], '<Input type="text" placeholder="ex: João da Silva" />'),
   );
 }
 
@@ -98,11 +98,11 @@ export function formRotuloEControleSource(): string {
  * A peça a mais é o parágrafo de apoio — e ele não é só exibido: o campo o
  * aponta no `aria-describedby` do controle, então é lido junto com o rótulo.
  */
-export function formComDescricaoSource(): string {
+export function formWithDescriptionSource(): string {
   return vueSnippet(
     IMPORTS,
     campo(
-      [LARGURA, 'label="Senha"', 'description="Use pelo menos 8 caracteres, com letras e números."'],
+      [WIDTH, 'label="Senha"', 'description="Use pelo menos 8 caracteres, com letras e números."'],
       '<Input type="password" autocomplete="new-password" />',
     ),
   );
@@ -120,7 +120,7 @@ ${IMPORTS}
 const senha = ref('123')`,
     campo(
       [
-        LARGURA,
+        WIDTH,
         'label="Senha"',
         'description="Use pelo menos 8 caracteres, com letras e números."',
         'error="A senha precisa ter pelo menos 8 caracteres."',
@@ -134,14 +134,14 @@ const senha = ref('123')`,
  * Campo desabilitado: quem desliga é o CONTROLE, não o campo. O rótulo segue
  * visível e associado — escondê-lo tira a referência do valor que está ali.
  */
-export function formDesabilitadoSource(): string {
+export function formDisabledSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
 ${IMPORTS}
 
 const cpf = ref('000.000.000-00')`,
     campo(
-      [LARGURA, 'label="CPF"', 'description="Preenchido pelo cadastro da empresa."'],
+      [WIDTH, 'label="CPF"', 'description="Preenchido pelo cadastro da empresa."'],
       '<Input v-model="cpf" type="text" disabled />',
     ),
   );
@@ -152,7 +152,7 @@ const cpf = ref('000.000.000-00')`,
  * markup. O que o exemplo mostra é o conjunto onde o contraste costuma cair
  * primeiro — rótulo, texto de apoio e mensagem de erro juntos.
  */
-export function formPaletaEscuraSource(): string {
+export function formPaletteDarkSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
 import { Fieldset, FormField } from '@/components/ui/form'

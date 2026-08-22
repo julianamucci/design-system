@@ -11,13 +11,13 @@ import {
   TableRow,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { INVOICES, MESES, TOTAL } from './table.fixtures';
+import { INVOICES, MONTHS, TOTAL } from './table.fixtures';
 import {
   tableBasicaSource,
-  tableComAcoesSource,
-  tableComRodapeSource,
+  tableWithActionsSource,
+  tableWithFooterSource,
   tableCaptionInvisivelSource,
-  tableRolagemHorizontalSource,
+  tableScrollHorizontalSource,
 } from './table.source';
 
 const meta: Meta = {
@@ -103,8 +103,8 @@ export const Basic: Story = {
       const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
       await expect(ths[3]).toHaveTextContent('Valor');
       await expect(getComputedStyle(ths[3]).textAlign).toBe('right');
-      const valorTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
-      await expect(getComputedStyle(valorTd).textAlign).toBe('right');
+      const valueTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
+      await expect(getComputedStyle(valueTd).textAlign).toBe('right');
       // A coluna descritiva continua à esquerda: o alinhamento é escolha por
       // coluna, não estilo da tabela.
       await expect(getComputedStyle(ths[0]).textAlign).toBe('left');
@@ -122,7 +122,7 @@ export const WithFooter: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item3'],
     // O `tfoot` e o `colspan` são uma seção inteira a mais, que a básica não tem.
-    docs: { source: { transform: tableComRodapeSource } },
+    docs: { source: { transform: tableWithFooterSource } },
   },
   render: () => ({
     components: COMPONENTES,
@@ -166,8 +166,8 @@ export const WithFooter: Story = {
       const tabela = canvasElement.querySelector<HTMLElement>('table')!;
       const tfoot = tabela.querySelector<HTMLElement>('tfoot')!;
       await expect(tfoot).toHaveAttribute('data-slot', 'table-footer');
-      const posicao = tabela.querySelector('tbody')!.compareDocumentPosition(tfoot);
-      await expect(posicao & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      const position = tabela.querySelector('tbody')!.compareDocumentPosition(tfoot);
+      await expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
       await expect(tfoot.querySelector('td')).toHaveAttribute('colspan', '3');
       await expect(tfoot).toHaveTextContent(TOTAL);
       // O total não é registro: o corpo continua com as mesmas cinco linhas.
@@ -177,10 +177,10 @@ export const WithFooter: Story = {
     await step('O rodapé se distingue do corpo por fundo próprio', async () => {
       // visual.item3 — `.nds-table tfoot tr` pinta hsl(var(--muted) / 0.5). Sem
       // a distinção o sumário some no meio dos registros.
-      const linhaRodape = canvasElement.querySelector<HTMLElement>('tfoot tr')!;
-      const linhaCorpo = canvasElement.querySelector<HTMLElement>('tbody tr')!;
-      await expect(getComputedStyle(linhaRodape).backgroundColor).not.toBe(
-        getComputedStyle(linhaCorpo).backgroundColor,
+      const lineFooter = canvasElement.querySelector<HTMLElement>('tfoot tr')!;
+      const lineBody = canvasElement.querySelector<HTMLElement>('tbody tr')!;
+      await expect(getComputedStyle(lineFooter).backgroundColor).not.toBe(
+        getComputedStyle(lineBody).backgroundColor,
       );
     });
   },
@@ -249,7 +249,7 @@ export const WithRowActions: Story = {
     covers: ['accessibility.item3', 'visual.item4'],
     // Uma coluna a mais, com cabeçalho só para leitor de tela e um botão nomeado
     // por registro — nada disso existe na básica.
-    docs: { source: { transform: tableComAcoesSource } },
+    docs: { source: { transform: tableWithActionsSource } },
   },
   render: () => ({
     components: { ...COMPONENTES, Button },
@@ -316,7 +316,7 @@ export const HorizontalScroll: Story = {
     covers: ['functional.item5'],
     // As colunas passam a ser iteradas: o assunto é a tabela larga, e a básica
     // de quatro colunas não a mostraria.
-    docs: { source: { transform: tableRolagemHorizontalSource } },
+    docs: { source: { transform: tableScrollHorizontalSource } },
   },
   render: () => ({
     components: COMPONENTES,
@@ -324,7 +324,7 @@ export const HorizontalScroll: Story = {
       // Dois anos de competência, não um: com doze colunas a tabela ainda cabe
       // num canvas largo, e a story provaria a rolagem só nos viewports
       // estreitos.
-      return { invoices: INVOICES.slice(0, 3), meses: MESES };
+      return { invoices: INVOICES.slice(0, 3), meses: MONTHS };
     },
     template: `
       <Table>

@@ -25,13 +25,13 @@ export type PaginationArgs = {
 };
 
 /** Rótulos que os controles direcionais já trazem de fábrica. */
-const TEXTO_ANTERIOR = 'Anterior';
-const TEXTO_PROXIMA = 'Próxima';
+const TEXT_PREVIOUS = 'Anterior';
+const TEXT_NEXT = 'Próxima';
 
 /** Import do design system, uma peça por linha e em ordem alfabética. */
-function importa(...pecas: string[]): string {
-  const lista = [...new Set(pecas)].sort();
-  return `import {\n${lista.map((peca) => `  ${peca},`).join('\n')}\n} from '@/components/ui/pagination'`;
+function importa(...parts: string[]): string {
+  const lista = [...new Set(parts)].sort();
+  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/pagination'`;
 }
 
 /** Número de control, com o padrão de volta quando o control não trouxe um. */
@@ -49,7 +49,7 @@ function numero(valor: unknown, padrao: number): number {
  * O `aria-label` com o número por extenso também não é enfeite: "3" sozinho não
  * diz nada em voz alta.
  */
-function linkNumerado(opcoes: { ativo: string; recuo: number; aoClicar?: string; valor?: string }): string {
+function numberedLink(opcoes: { ativo: string; recuo: number; aoClicar?: string; valor?: string }): string {
   const { ativo, recuo, aoClicar = '@click.prevent', valor = 'n' } = opcoes;
   const p = ' '.repeat(recuo);
   return `${p}<PaginationLink
@@ -73,8 +73,8 @@ export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) 
   const total = numero(ctx?.args?.total, 50);
   const byPage = numero(ctx?.args?.itemsPerPage, 10);
   const inicial = numero(ctx?.args?.defaultPage, 1);
-  const anterior = attrs(attr('text', ctx?.args?.textoAnterior, TEXTO_ANTERIOR));
-  const proxima = attrs(attr('text', ctx?.args?.textoProxima, TEXTO_PROXIMA));
+  const anterior = attrs(attr('text', ctx?.args?.textoAnterior, TEXT_PREVIOUS));
+  const next = attrs(attr('text', ctx?.args?.textoProxima, TEXT_NEXT));
 
   return vueSnippet(
     `${importa(
@@ -105,10 +105,10 @@ function irPara(n: number) {
       <PaginationPrevious${anterior} @click="irPara(atual - 1)" />
     </PaginationItem>
     <PaginationItem v-for="n in paginas" :key="n">
-${linkNumerado({ ativo: 'atual === n', recuo: 6, aoClicar: '@click.prevent="irPara(n)"' })}
+${numberedLink({ ativo: 'atual === n', recuo: 6, aoClicar: '@click.prevent="irPara(n)"' })}
     </PaginationItem>
     <PaginationItem>
-      <PaginationNext${proxima} @click="irPara(atual + 1)" />
+      <PaginationNext${next} @click="irPara(atual + 1)" />
     </PaginationItem>
   </PaginationContent>
 </Pagination>`,
@@ -136,7 +136,7 @@ const paginas = [1, 2, 3, 4, 5]`,
   <PaginationContent>
     <PaginationItem><PaginationPrevious /></PaginationItem>
     <PaginationItem v-for="n in paginas" :key="n">
-${linkNumerado({ ativo: `n === ${atual}`, recuo: 6 })}
+${numberedLink({ ativo: `n === ${atual}`, recuo: 6 })}
     </PaginationItem>
     <PaginationItem><PaginationNext /></PaginationItem>
   </PaginationContent>
@@ -161,7 +161,7 @@ export function paginationFirstPageSource(): string {
 }
 
 /** Link inativo: a ênfase padrão de toda página que não é a atual. */
-export function paginationLinkInativoSource(): string {
+export function paginationLinkInactiveSource(): string {
   return vueSnippet(
     importa('Pagination', 'PaginationContent', 'PaginationItem', 'PaginationLink'),
     `<Pagination :total="50" :items-per-page="10" :page="1">
@@ -178,7 +178,7 @@ export function paginationLinkInativoSource(): string {
  * Página atual: `is-active` é o que vira `aria-current="page"` no markup, e o
  * destaque vem junto. Um só link por faixa pode carregá-lo.
  */
-export function paginationLinkAtivoSource(): string {
+export function paginationLinkActiveSource(): string {
   return vueSnippet(
     importa('Pagination', 'PaginationContent', 'PaginationItem', 'PaginationLink'),
     `<Pagination :total="50" :items-per-page="10" :page="2">
@@ -228,7 +228,7 @@ const paginas = [1, 2, 3, 4, 5]`,
   <PaginationContent>
     <PaginationItem><PaginationPrevious /></PaginationItem>
     <PaginationItem v-for="n in paginas" :key="n">
-${linkNumerado({ ativo: 'n === 1', recuo: 6 })}
+${numberedLink({ ativo: 'n === 1', recuo: 6 })}
     </PaginationItem>
     <PaginationItem><PaginationNext /></PaginationItem>
   </PaginationContent>
@@ -285,7 +285,7 @@ const trechos: Trecho[] = [1, 'ellipsis', 5, 6, 7, 'ellipsis', 12]`,
  * primeira — `:page` batendo no extremo que `:total` e `:items-per-page`
  * definem.
  */
-export function paginationUltimaPaginaSource(): string {
+export function paginationLastPageSource(): string {
   return vueSnippet(
     `${importa(
       'Pagination',
@@ -301,7 +301,7 @@ const paginas = [8, 9, 10]`,
   <PaginationContent>
     <PaginationItem><PaginationPrevious /></PaginationItem>
     <PaginationItem v-for="n in paginas" :key="n">
-${linkNumerado({ ativo: 'n === 10', recuo: 6 })}
+${numberedLink({ ativo: 'n === 10', recuo: 6 })}
     </PaginationItem>
     <PaginationItem><PaginationNext /></PaginationItem>
   </PaginationContent>
@@ -342,7 +342,7 @@ function irPara(n: number) {
         <PaginationPrevious @click="irPara(atual - 1)" />
       </PaginationItem>
       <PaginationItem v-for="n in paginas" :key="n">
-${linkNumerado({ ativo: 'atual === n', recuo: 8, aoClicar: '@click.prevent="irPara(n)"' })}
+${numberedLink({ ativo: 'atual === n', recuo: 8, aoClicar: '@click.prevent="irPara(n)"' })}
       </PaginationItem>
       <PaginationItem>
         <PaginationNext @click="irPara(atual + 1)" />
@@ -363,7 +363,7 @@ ${linkNumerado({ ativo: 'atual === n', recuo: 8, aoClicar: '@click.prevent="irPa
  * Aqui o nome do landmark FICA: com duas faixas na mesma página, "Paginação" em
  * ambas deixa o leitor de tela sem como distingui-las.
  */
-export function paginationRodapeDeTabelaSource(): string {
+export function tablePaginationFooterSource(): string {
   return vueSnippet(
     `${importa(
       'Pagination',

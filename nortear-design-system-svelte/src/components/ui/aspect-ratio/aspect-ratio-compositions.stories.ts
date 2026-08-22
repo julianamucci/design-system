@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect } from 'storybook/test';
 import AspectRatioStory from './AspectRatioStory.svelte';
 import AspectRatioGridStory from './AspectRatioGridStory.svelte';
-import { aspectRatioEmGradeSource, aspectRatioSource } from './aspect-ratio.source';
+import { gridAspectRatioSource, aspectRatioSource } from './aspect-ratio.source';
 
 const meta: Meta = {
   title: 'UI/AspectRatio/Compositions',
@@ -108,7 +108,7 @@ export const InGrid: Story = {
   parameters: {
     covers: ['functional.item4'],
     layout: 'padded',
-    docs: { source: { transform: aspectRatioEmGradeSource } },
+    docs: { source: { transform: gridAspectRatioSource } },
   },
 
   play: async ({ canvasElement }) => {

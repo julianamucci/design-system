@@ -39,8 +39,8 @@ export function texto(valor: string): string {
  * A chave é citada quando não é um identificador simples, que é o caso do nome
  * acessível canônico: `'aria-label'`.
  */
-export function opcoes(pares: Array<[string, string | undefined]>): string[] {
-  return pares
+export function opcoes(pairs: Array<[string, string | undefined]>): string[] {
+  return pairs
     .filter((par): par is [string, string] => par[1] !== undefined)
     .map(([chave, valor]) => `${/^[A-Za-z_$][\w$]*$/.test(chave) ? chave : texto(chave)}: ${valor},`);
 }
@@ -52,13 +52,13 @@ export function opcoes(pares: Array<[string, string | undefined]>): string[] {
  */
 export function chamada(fabrica: string, linhas: string[]): string {
   if (linhas.length === 0) return `${fabrica}({})`;
-  const umaLinha = `${fabrica}({ ${linhas.map((l) => l.replace(/,$/, '')).join(', ')} })`;
-  if (umaLinha.length <= 72 && !umaLinha.includes('\n')) return umaLinha;
+  const umaLine = `${fabrica}({ ${linhas.map((l) => l.replace(/,$/, '')).join(', ')} })`;
+  if (umaLine.length <= 72 && !umaLine.includes('\n')) return umaLine;
   return `${fabrica}({\n${linhas.map((l) => `  ${l}`).join('\n')}\n})`;
 }
 
 /** `import { a, b } from '@/components/ui/<slug>';` */
-export function importar(slug: string, ...nomes: string[]): string {
+export function importing(slug: string, ...nomes: string[]): string {
   return `import { ${nomes.join(', ')} } from '@/components/ui/${slug}';`;
 }
 

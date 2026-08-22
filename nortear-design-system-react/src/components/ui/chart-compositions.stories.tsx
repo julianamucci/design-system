@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './chart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
-import { desenhoEscreve } from '@shared/testing/chart-probe';
+import { designEscreve } from '@shared/testing/chart-probe';
 import { designPronto } from './chart.fixtures';
 import { chartEmCardSource, chartSource, chartTitleNoLabelSource } from './chart.source';
 
@@ -12,8 +12,8 @@ const seriesMulti = [
   { name: 'Mobile', data: [80, 200, 120, 190, 130, 140] },
 ];
 
-const TITULO_DO_CARD = 'Acessos por mês';
-const TITULO_NO_DESENHO = 'Vendas mensais';
+const CARD_TITLE = 'Acessos por mês';
+const DESIGN_TITLE = 'Vendas mensais';
 
 const meta: Meta = {
   title: 'UI/Chart/Compositions',
@@ -42,7 +42,7 @@ export const WithCard: Story = {
   render: () => (
     <Card className="nds-max-w-lg">
       <CardHeader>
-        <CardTitle>{TITULO_DO_CARD}</CardTitle>
+        <CardTitle>{CARD_TITLE}</CardTitle>
         <CardDescription>Janeiro a junho</CardDescription>
       </CardHeader>
       <CardContent>
@@ -61,7 +61,7 @@ export const WithCard: Story = {
       const card = canvasElement.querySelector('[data-slot="card"]');
       await expect(card).not.toBeNull();
       await expect(card!.querySelector('[data-slot="card-title"]')?.textContent?.trim()).toBe(
-        TITULO_DO_CARD,
+        CARD_TITLE,
       );
     });
 
@@ -71,7 +71,7 @@ export const WithCard: Story = {
     });
 
     await step('O desenho traz o dado das duas séries', async () => {
-      for (const serie of seriesMulti) await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+      for (const serie of seriesMulti) await expect(designEscreve(raiz, serie.name)).toBe(true);
     });
   },
 };
@@ -89,7 +89,7 @@ export const InlineTitle: Story = {
   },
   render: () => (
     <ChartContainer
-      option={buildBarOption({ xAxis: meses, series: seriesMulti, title: TITULO_NO_DESENHO })}
+      option={buildBarOption({ xAxis: meses, series: seriesMulti, title: DESIGN_TITLE })}
       className="nds-max-w-lg"
       height={280}
     />
@@ -98,14 +98,14 @@ export const InlineTitle: Story = {
     const raiz = await designPronto(canvasElement);
 
     await step('O título da configuração é escrito acima dos eixos', async () => {
-      await expect(desenhoEscreve(raiz, TITULO_NO_DESENHO)).toBe(true);
+      await expect(designEscreve(raiz, DESIGN_TITLE)).toBe(true);
     });
 
     await step('Sem rótulo autoral, o título vira a descrição do desenho', async () => {
       // A rede de segurança do container: um gráfico sem `aria-label` não fica
       // mudo, cai no título que já está na tela.
       await expect(raiz).toHaveAttribute('role', 'img');
-      await expect(raiz.getAttribute('aria-label')).toBe(TITULO_NO_DESENHO);
+      await expect(raiz.getAttribute('aria-label')).toBe(DESIGN_TITLE);
     });
   },
 };

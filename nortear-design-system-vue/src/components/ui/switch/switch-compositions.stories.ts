@@ -6,10 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
-  formSourceSwitch,
+  formSwitchSource,
   switchItemDeMenuSource,
-  preferenciasSourceSwitchList,
-  configSourceSwitchPanel,
+  preferenciasSwitchListSource,
+  configSwitchPanelSource,
 } from './switch.source';
 
 const meta = {
@@ -21,7 +21,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: configSourceSwitchPanel },
+      source: { transform: configSwitchPanelSource },
       description: {
         component:
           'Padrões de composição do Switch: painel de configurações, lista de preferências, em formulário e item de menu compacto.',
@@ -92,7 +92,7 @@ export const PreferenceList: Story = {
     docs: {
       // Três preferências relacionadas são uma lista de verdade: `ul`/`li` em
       // vez das `div` empilhadas do painel, e sem texto de apoio.
-      source: { transform: preferenciasSourceSwitchList },
+      source: { transform: preferenciasSwitchListSource },
     },
   },
   render: () => ({
@@ -142,7 +142,7 @@ export const InForm: Story = {
     docs: {
       // O `form` traz outros dois componentes e o `name`, que é o que faz o
       // switch entrar no envio nativo — nada disso está no painel do meta.
-      source: { transform: formSourceSwitch },
+      source: { transform: formSwitchSource },
     },
   },
   render: () => ({

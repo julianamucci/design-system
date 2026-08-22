@@ -24,9 +24,9 @@ const EXECUTAR = `function executar(value: string) {
 }`;
 
 /** Monta o bloco de imports achatados do próprio Command. */
-function importar(...pecas: string[]): string {
+function importing(...parts: string[]): string {
   return `import {
-${pecas.map((peca) => `  ${peca},`).join('\n')}
+${parts.map((part) => `  ${part},`).join('\n')}
 } from '@/components/ui/command';`;
 }
 
@@ -49,7 +49,7 @@ export function commandSource(
   const props = attrs(loop ? 'loop' : '', shouldFilter ? '' : 'shouldFilter={false}');
 
   return svelteSnippet(
-    `${importar(
+    `${importing(
       'Command',
       'CommandInput',
       'CommandList',
@@ -80,7 +80,7 @@ ${EXECUTAR}`,
 /** Estado EmptyState: a frase de vazio ocupa o lugar da lista quando nada casa. */
 export function commandNoResultsSource(): string {
   return svelteSnippet(
-    importar(
+    importing(
       'Command',
       'CommandInput',
       'CommandList',
@@ -109,7 +109,7 @@ export function commandNoResultsSource(): string {
  */
 export function commandLoadingSource(): string {
   return svelteSnippet(
-    `${importar('Command', 'CommandInput', 'CommandList', 'CommandEmpty', 'CommandLoading')}
+    `${importing('Command', 'CommandInput', 'CommandList', 'CommandEmpty', 'CommandLoading')}
 import LoaderCircle from '@lucide/svelte/icons/loader-circle';`,
     `<Command>
   <CommandInput placeholder="Buscar componente..." />
@@ -132,9 +132,9 @@ import LoaderCircle from '@lucide/svelte/icons/loader-circle';`,
 }
 
 /** Estado ItemDisabled: o comando indisponível não recebe clique nem seta. */
-export function commandItemDesabilitadoSource(): string {
+export function commandItemDisabledSource(): string {
   return svelteSnippet(
-    `${importar(
+    `${importing(
       'Command',
       'CommandInput',
       'CommandList',
@@ -168,9 +168,9 @@ ${EXECUTAR}`,
  * Sem a prop o comando não ganha marca nenhuma; com ela, `true` e `false` são
  * os dois estados de um mesmo comando — por isso o `false` aparece explícito.
  */
-export function commandItemMarcadoSource(): string {
+export function commandItemCheckedSource(): string {
   return svelteSnippet(
-    importar(
+    importing(
       'Command',
       'CommandInput',
       'CommandList',
@@ -197,9 +197,9 @@ export function commandItemMarcadoSource(): string {
 }
 
 /** Composição WithGroups: o cabeçalho nomeia o bloco e o divisor só desenha. */
-export function commandComGruposSource(): string {
+export function commandWithGroupsSource(): string {
   return svelteSnippet(
-    importar(
+    importing(
       'Command',
       'CommandInput',
       'CommandList',
@@ -234,9 +234,9 @@ export function commandComGruposSource(): string {
  *
  * É lido junto do rótulo e não entra no filtro, que roda sobre o `value`.
  */
-export function commandComAtalhosSource(): string {
+export function commandWithShortcutsSource(): string {
   return svelteSnippet(
-    importar(
+    importing(
       'Command',
       'CommandInput',
       'CommandList',
@@ -287,7 +287,7 @@ export function commandComAtalhosSource(): string {
 /** Composição WithLinkItem: o comando que navega é uma âncora de verdade. */
 export function commandWithLinkItemSource(): string {
   return svelteSnippet(
-    `${importar(
+    `${importing(
       'Command',
       'CommandInput',
       'CommandList',
@@ -340,10 +340,10 @@ import ExternalLink from '@lucide/svelte/icons/external-link';`,
  * nome vindo do conteúdo: o nome é costurado por `aria-labelledby` juntando o
  * rótulo invisível ao valor que está na tela (WCAG 2.5.3).
  */
-export function commandComoComboboxSource(): string {
+export function commandAsComboboxSource(): string {
   return svelteSnippet(
     `import { Button } from '@/components/ui/button';
-${importar(
+${importing(
   'Command',
   'CommandInput',
   'CommandList',
@@ -420,10 +420,10 @@ function escolher(value: string) {
  * O `title` e a `description` nomeiam o diálogo para quem não vê a tela; o
  * componente já os mantém fora da tela por dentro.
  */
-export function commandPaletaSource(): string {
+export function commandPaletteSource(): string {
   return svelteSnippet(
     `import { Button } from '@/components/ui/button';
-${importar(
+${importing(
   'CommandDialog',
   'CommandInput',
   'CommandList',

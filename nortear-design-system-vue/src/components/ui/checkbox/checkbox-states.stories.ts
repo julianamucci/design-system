@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
-import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
+import { disabledReprovas } from '@shared/testing/checkbox-probe';
 import { Checkbox } from './index';
 import {
-  checkboxDesabilitadoMarcadoSource,
-  checkboxDesabilitadoSource,
+  checkboxDisabledCheckedSource,
+  checkboxDisabledSource,
   checkboxDesmarcadoSource,
-  checkboxErroSource,
+  checkboxErrorSource,
   checkboxFocusSource,
-  checkboxMarcadoSource,
+  checkboxCheckedSource,
   checkboxMistoSource,
 } from './checkbox.source';
 
@@ -81,7 +81,7 @@ export const Checked: Story = {
     covers: ['visual.item2', 'functional.item6'],
     // O estado inicial marcado é o assunto, e não há control que o descreva
     // aqui: a do meta mostraria a caixa vazia.
-    docs: { source: { transform: checkboxMarcadoSource } },
+    docs: { source: { transform: checkboxCheckedSource } },
   },
   render: () => ({
     components: { Checkbox },
@@ -149,7 +149,7 @@ export const Disabled: Story = {
     covers: ['functional.item4', 'accessibility.item6'],
     // O `data-disabled` mora no contêiner do par, não na caixa — é sub-composição
     // que a do meta esconderia.
-    docs: { source: { transform: checkboxDesabilitadoSource } },
+    docs: { source: { transform: checkboxDisabledSource } },
   },
   args: {
     'onUpdate:modelValue': fn(),
@@ -182,7 +182,7 @@ export const Disabled: Story = {
         // afirmaria o contrário da decisão (peça fora da tabulação) e a forma
         // negada nem poderia falhar.
         onUpdate.mockClear();
-        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+        await expect(await disabledReprovas(checkbox, FERRAMENTAS)).toEqual([]);
       },
     );
 
@@ -200,7 +200,7 @@ export const DisabledChecked: Story = {
     covers: ['visual.item4'],
     // Desabilitado E marcado ao mesmo tempo: os dois estados juntos é o que a
     // story ensina, e nenhum control os descreve.
-    docs: { source: { transform: checkboxDesabilitadoMarcadoSource } },
+    docs: { source: { transform: checkboxDisabledCheckedSource } },
   },
   render: () => ({
     components: { Checkbox },
@@ -221,7 +221,7 @@ export const DisabledChecked: Story = {
     await step(
       'Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam',
       async () => {
-        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+        await expect(await disabledReprovas(checkbox, FERRAMENTAS)).toEqual([]);
       },
     );
 
@@ -237,7 +237,7 @@ export const Error: Story = {
     covers: ['visual.item5'],
     // A mensagem de erro e o `aria-describedby` que a liga à caixa são
     // sub-composição: a do meta mostraria só o par.
-    docs: { source: { transform: checkboxErroSource } },
+    docs: { source: { transform: checkboxErrorSource } },
   },
   render: () => ({
     components: { Checkbox },

@@ -3,11 +3,11 @@ import { within, userEvent, expect } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 import {
-  radioGroupDesabilitadoSource,
+  radioGroupDisabledSource,
   radioGroupInvalidoSource,
-  radioGroupItemDesabilitadoSource,
-  radioGroupMarcadoSource,
-  radioGroupPadraoSource,
+  radioGroupItemDisabledSource,
+  radioGroupCheckedSource,
+  radioGroupDefaultSource,
 } from './radio-group.source';
 
 const meta = {
@@ -19,7 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: radioGroupPadraoSource },
+      source: { transform: radioGroupDefaultSource },
       description: {
         component:
           'Estados do RadioGroup: default, checked, focus, disabled (grupo inteiro), itemDisabled (somente um item) e invalid (aria-invalid).',
@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>;
  * Razão de contraste da WCAG entre duas cores computadas opacas. Comparar nome
  * de token não responde a pergunta do critério — a razão responde.
  */
-function razaoContraste(a: string, b: string): number {
+function ratioContrast(a: string, b: string): number {
   const luminancia = (cor: string): number => {
     const [r, g, bl] = cor
       .match(/[\d.]+/g)!
@@ -79,15 +79,15 @@ export const Default: Story = {
     await step('Borda contra fundo e rótulo contra fundo passam na WCAG', async () => {
       // 3:1 é o piso de componente de interface (1.4.11); 4.5:1 é o de texto
       // normal (1.4.3) — o rótulo tem 14px, não é texto grande.
-      const estiloItem = getComputedStyle(radios[0]);
+      const styleItem = getComputedStyle(radios[0]);
       await expect(
-        razaoContraste(estiloItem.borderTopColor, estiloItem.backgroundColor),
+        ratioContrast(styleItem.borderTopColor, styleItem.backgroundColor),
       ).toBeGreaterThanOrEqual(3);
 
       const rotulo = canvas.getByText('Cartão de crédito');
-      const fundoPagina = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
+      const backgroundPage = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
       await expect(
-        razaoContraste(getComputedStyle(rotulo).color, fundoPagina),
+        ratioContrast(getComputedStyle(rotulo).color, backgroundPage),
       ).toBeGreaterThanOrEqual(4.5);
     });
   },
@@ -97,7 +97,7 @@ export const Checked: Story = {
   parameters: {
     covers: ['visual.item2'],
     // A escolha inicial é uma prop da raiz que o snippet do meta não tem.
-    docs: { source: { transform: radioGroupMarcadoSource } },
+    docs: { source: { transform: radioGroupCheckedSource } },
   },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
@@ -183,7 +183,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
     // O bloqueio do grupo inteiro é a prop na raiz — é o assunto da story.
-    docs: { source: { transform: radioGroupDesabilitadoSource } },
+    docs: { source: { transform: radioGroupDisabledSource } },
   },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },
@@ -219,7 +219,7 @@ export const Disabled: Story = {
 export const ItemDisabled: Story = {
   parameters: {
     // Aqui a prop desce um nível: mora no item, e o rótulo diz por quê.
-    docs: { source: { transform: radioGroupItemDesabilitadoSource } },
+    docs: { source: { transform: radioGroupItemDisabledSource } },
   },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },

@@ -38,7 +38,7 @@ export const invoices: Invoice[] = [
  * story dizer coisas diferentes em cada uma. O que ela precisa provar é a
  * FORMA — dois números, na ordem que o idioma pedir.
  */
-export const rotulosFatura: Partial<DataTableLabels> = {
+export const labelsInvoice: Partial<DataTableLabels> = {
   selectAll: 'Selecionar todas as faturas',
   selectRow: (r) => `Selecionar fatura ${r}`,
   rowsSelected: (s, n) => `${s} de ${n} linha(s) selecionada(s).`,

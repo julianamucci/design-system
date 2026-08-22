@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import {
-  checkboxComDescricaoSource,
+  checkboxWithDescriptionSource,
   checkboxWithLabelSource,
-  checkboxDesabilitadoMarcadoSource,
-  checkboxDesabilitadoSource,
+  checkboxDisabledCheckedSource,
+  checkboxDisabledSource,
   checkboxDesmarcadoSource,
-  checkboxEmFormularioSource,
-  checkboxErroSource,
+  formCheckboxSource,
+  checkboxErrorSource,
   checkboxFocusSource,
-  checkboxGrupoSource,
-  checkboxMarcadoSource,
+  checkboxGroupSource,
+  checkboxCheckedSource,
   checkboxMistoSource,
-  checkboxSelecionarTodosSource,
+  checkboxSelectAllSource,
   checkboxSource,
 } from './checkbox.source';
 
@@ -65,9 +65,9 @@ import { Checkbox } from '@/components/ui/checkbox'
   });
 
   it('ignora control que não é do tipo esperado — o espião de ação vira ruído no painel', () => {
-    const espiao = (() => {}) as never;
+    const spy = (() => {}) as never;
     const saida = checkboxSource('', {
-      args: { checked: espiao, disabled: espiao, required: espiao, name: espiao, value: espiao },
+      args: { checked: spy, disabled: spy, required: spy, name: spy, value: spy },
     });
     expect(saida).toBe(checkboxSource());
     expect(saida).not.toContain('function');
@@ -82,14 +82,14 @@ describe('transforms das stories de estado', () => {
   });
 
   it('marcado e misto diferem só no valor do estado — e não em um atributo próprio', () => {
-    expect(checkboxMarcadoSource()).toContain(':checked="true"');
+    expect(checkboxCheckedSource()).toContain(':checked="true"');
     expect(checkboxMistoSource()).toContain(`:checked="'indeterminate'"`);
     // Não existe prop `indeterminate`: escrevê-la ensinaria uma API que não há.
     expect(checkboxMistoSource()).not.toContain('indeterminate="');
   });
 
   it('o desabilitado marca o contêiner do par, e não só a caixa', () => {
-    const saida = checkboxDesabilitadoSource();
+    const saida = checkboxDisabledSource();
     // A raiz da caixa não é um `<input>`: nenhum seletor de irmão desabilitado
     // alcançaria o rótulo, então o esmaecimento mora no contêiner.
     expect(saida).toContain('<div class="nds-cluster" data-spacing="sm" data-disabled="true">');
@@ -97,13 +97,13 @@ describe('transforms das stories de estado', () => {
   });
 
   it('desabilitado e marcado convivem — desabilitado não é o mesmo que vazio', () => {
-    expect(checkboxDesabilitadoMarcadoSource()).toContain(
+    expect(checkboxDisabledCheckedSource()).toContain(
       '<Checkbox id="notificacoes" disabled :checked="true" />',
     );
   });
 
   it('o erro se anuncia por atributo e a frase chega pela descrição', () => {
-    const saida = checkboxErroSource();
+    const saida = checkboxErrorSource();
     expect(saida).toContain('aria-invalid="true"');
     expect(saida).toContain('aria-describedby="termos-erro"');
     expect(saida).toContain('<p id="termos-erro"');
@@ -124,7 +124,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a descrição fica fora do rótulo e chega pelo aria-describedby', () => {
-    const saida = checkboxComDescricaoSource();
+    const saida = checkboxWithDescriptionSource();
     expect(saida).toContain('aria-describedby="novidades-ajuda"');
     expect(saida).toContain('<p id="novidades-ajuda" class="nds-text-body">');
     // Alinhamento pelo topo e recuo de dois pixels: sem eles a caixa flutua no
@@ -134,7 +134,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o grupo nasce de um fieldset com legend, e os itens saem de um v-for', () => {
-    const saida = checkboxGrupoSource();
+    const saida = checkboxGroupSource();
     expect(saida).toContain('<legend class="nds-text-body nds-font-semibold nds-px-1">');
     expect(saida).toContain('v-for="preferencia in preferencias"');
     expect(saida).toContain(':key="preferencia.id"');
@@ -144,14 +144,14 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o selecionar-todos fica separado da lista que ele comanda', () => {
-    const saida = checkboxSelecionarTodosSource();
+    const saida = checkboxSelectAllSource();
     expect(saida).toContain('<Checkbox id="selecionar-todos" />');
     expect(saida).toContain('class="nds-cluster nds-border-b nds-pb-2"');
     expect(saida).toContain('v-for="preferencia in preferencias"');
   });
 
   it('o formulário leva name, value e required — é o que chega ao submit', () => {
-    const saida = checkboxEmFormularioSource();
+    const saida = formCheckboxSource();
     expect(saida).toContain('<Checkbox id="termos" name="terms" value="accepted" required');
     expect(saida).toContain('<form class="nds-stack nds-w-sm" data-spacing="md" @submit.prevent>');
     // Componentes do design system, não marcação crua: um `<button>` escrito à
@@ -165,10 +165,10 @@ describe('transforms das stories de composição', () => {
   it('nenhum snippet carrega valor de design em style inline', () => {
     for (const saida of [
       checkboxSource(),
-      checkboxComDescricaoSource(),
-      checkboxEmFormularioSource(),
-      checkboxGrupoSource(),
-      checkboxSelecionarTodosSource(),
+      checkboxWithDescriptionSource(),
+      formCheckboxSource(),
+      checkboxGroupSource(),
+      checkboxSelectAllSource(),
     ]) {
       // O snippet é o markup que alguém COPIA: um valor cravado aqui sai do
       // alcance do tema no primeiro colar.

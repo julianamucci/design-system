@@ -29,8 +29,8 @@ import {
   ChevronRight, Bell, Plus, MoreHorizontal, Search,
 } from 'lucide-vue-next';
 import {
-  sidebarBuscaSource,
-  sidebarGruposSource,
+  sidebarSearchSource,
+  sidebarGroupsSource,
   sidebarSubmenuSource,
 } from './sidebar.source';
 
@@ -43,7 +43,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: sidebarGruposSource },
+      source: { transform: sidebarGroupsSource },
       description: {
         component:
           'Composicoes avançadas da Sidebar: com grupos de navegação, com sub-menus, com badge e com campo de busca.',
@@ -362,7 +362,7 @@ export const WithSearch: Story = {
     docs: {
       // O campo de busca troca o cabeçalho inteiro, e leva `aria-label` porque
       // o placeholder some ao digitar.
-      source: { transform: sidebarBuscaSource },
+      source: { transform: sidebarSearchSource },
       description: { story: 'Sidebar com SidebarInput no header para filtrar navegação inline.' },
     },
   },

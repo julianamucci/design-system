@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  resizableAninhadoSource,
+  resizableNestedSource,
   resizableArrastoSource,
-  resizableComPegadorSource,
+  resizableWithGrabberSource,
   resizableDisabledSource,
   resizableDivisaoVerticalSource,
   resizableEditorPreviewSource,
-  resizableFocoSource,
+  resizableFocusSource,
   resizableHorizontalSource,
   resizableIdeSource,
   resizableLimitesSource,
@@ -88,7 +88,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a variante aninhada põe um grupo no eixo oposto dentro do segundo painel', () => {
-    const saida = resizableAninhadoSource();
+    const saida = resizableNestedSource();
     expect(saida.match(/<ResizablePaneGroup /g)).toHaveLength(2);
     expect(saida).toContain('<ResizablePaneGroup direction="vertical">');
     // Cada grupo tem o seu divisor, com nome próprio.
@@ -96,7 +96,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a variante com pegador divide ao meio e mostra o controle', () => {
-    const saida = resizableComPegadorSource();
+    const saida = resizableWithGrabberSource();
     expect(saida).toContain('<ResizableHandle withHandle');
     expect(saida).toContain('<ResizablePane defaultSize={50} minSize={20}>');
   });
@@ -110,7 +110,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o estado de foco não muda a marcação — o anel é comportamento', () => {
-    expect(resizableFocoSource()).toContain('<span class="nds-text-body">Dois</span>');
+    expect(resizableFocusSource()).toContain('<span class="nds-text-body">Dois</span>');
   });
 
   it('o divisor travado escreve a prop, e continua nomeado', () => {

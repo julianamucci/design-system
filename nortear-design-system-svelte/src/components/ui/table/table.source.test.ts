@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
   tableBasicaSource,
-  tableCarregandoSource,
-  tableComAcoesSource,
-  tableComRodapeSource,
-  tableLegendaOcultaSource,
-  tableLinhaSelecionadaSource,
-  tableRolagemHorizontalSource,
+  tableLoadingSource,
+  tableWithActionsSource,
+  tableWithFooterSource,
+  tableCaptionOcultaSource,
+  tableLineSelecionadaSource,
+  tableScrollHorizontalSource,
   tableSource,
   tableVaziaSource,
 } from './table.source';
@@ -100,13 +100,13 @@ describe('transforms das stories de variação e estado', () => {
   });
 
   it('a variante com rodapé fecha o total das cinco linhas', () => {
-    const saida = tableComRodapeSource();
+    const saida = tableWithFooterSource();
     expect(saida).toContain('<TableCell colspan={3}>Total</TableCell>');
     expect(saida).toContain('R$ 1.400,00');
   });
 
   it('a legenda oculta convive com um título visível acima da tabela', () => {
-    const saida = tableLegendaOcultaSource();
+    const saida = tableCaptionOcultaSource();
     expect(saida).toContain('<h3 class="nds-text-body nds-font-medium nds-mb-2">Faturas recentes');
     expect(saida).toContain('<TableCaption class="nds-sr-only">');
     // A tabela recuada mora dentro do bloco do título.
@@ -114,14 +114,14 @@ describe('transforms das stories de variação e estado', () => {
   });
 
   it('a coluna de ações nomeia o botão pela fatura da linha', () => {
-    const saida = tableComAcoesSource();
+    const saida = tableWithActionsSource();
     expect(saida).toContain('from "@/components/ui/button"');
     expect(saida).toContain('aria-label="Ações para fatura {fatura.id}"');
     expect(saida).toContain('variant="ghost"');
   });
 
   it('a rolagem horizontal nasce de muitas colunas, não de uma classe', () => {
-    const saida = tableRolagemHorizontalSource();
+    const saida = tableScrollHorizontalSource();
     expect(saida).toContain('{#each meses as mes (mes)}');
     expect(saida).not.toContain('overflow');
   });
@@ -135,13 +135,13 @@ describe('transforms das stories de variação e estado', () => {
   });
 
   it('a linha selecionada carrega o data-state, e as outras não', () => {
-    const saida = tableLinhaSelecionadaSource();
+    const saida = tableLineSelecionadaSource();
     expect(saida).toContain('<TableRow data-state={fatura.selecionada ? "selected" : null}>');
     expect(saida).toContain('selecionada: true');
   });
 
   it('o carregamento anuncia pela região e esconde o esqueleto', () => {
-    const saida = tableCarregandoSource();
+    const saida = tableLoadingSource();
     expect(saida).toContain('role="status" aria-busy="true" aria-label="Carregando faturas"');
     expect(saida).toContain('from "@/components/ui/skeleton"');
     expect(saida.match(/<Skeleton/g)).toHaveLength(4);

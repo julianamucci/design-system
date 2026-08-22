@@ -11,8 +11,8 @@ import {
   CommandShortcut,
 } from '@/components/ui/command';
 import {
-  commandItemDesabilitadoSource,
-  commandItemMarcadoSource,
+  commandItemDisabledSource,
+  commandItemCheckedSource,
   commandEmptySource,
 } from './command.source';
 
@@ -131,7 +131,7 @@ export const ItemDisabled: Story = {
     covers: ['functional.item4', 'accessibility.item4', 'visual.item5'],
     // `disabled` no item e o estado externo que prova que ele não executa: a do
     // meta mostraria uma paleta sem comando desabilitado nenhum.
-    docs: { source: { transform: commandItemDesabilitadoSource } },
+    docs: { source: { transform: commandItemDisabledSource } },
   },
   render: () => ({
     components: { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList },
@@ -222,7 +222,7 @@ export const CheckedItem: Story = {
     covers: ['functional.item5', 'visual.item5'],
     // `checked` ausente e `checked` falso são coisas diferentes, e é isso que a
     // story ensina — a do meta não escreve a prop em item nenhum.
-    docs: { source: { transform: commandItemMarcadoSource } },
+    docs: { source: { transform: commandItemCheckedSource } },
   },
   render: () => ({
     components: {

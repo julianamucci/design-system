@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -48,7 +48,7 @@ export function avatarSnippet(o: AvatarSnippetOptions = {}): string {
   if (o.status) nomes.push('createAvatarBadge');
 
   return snippet(
-    importar('avatar', ...nomes),
+    importing('avatar', ...nomes),
     `const avatar = ${chamada('createAvatar', linhas)};`,
     o.status
       ? `avatar.appendChild(createAvatarBadge({ 'aria-label': ${texto(o.status)} }));`
@@ -92,7 +92,7 @@ export function avatarGranularSnippet(o: AvatarGranularSnippetOptions = {}): str
 
   if (o.iconLabel) {
     return snippet(
-      importar('avatar', ...nomes),
+      importing('avatar', ...nomes),
       `const avatar = ${raiz.length ? chamada('createAvatarRoot', raiz) : 'createAvatarRoot()'};`,
       `// \`icone\` é um SVG do seu conjunto, decorativo: aria-hidden="true".
 // O papel de imagem é o que deixa o fallback receber um nome acessível.
@@ -106,7 +106,7 @@ avatar.appendChild(fallback);`,
   }
 
   return snippet(
-    importar('avatar', ...nomes),
+    importing('avatar', ...nomes),
     `const avatar = ${raiz.length ? chamada('createAvatarRoot', raiz) : 'createAvatarRoot()'};`,
     `avatar.appendChild(createAvatarFallback({ text: ${texto(o.fallback ?? 'JP')} }));`,
     montar('avatar'),
@@ -134,9 +134,9 @@ export type AvatarGroupSnippetOptions = {
 /**
  * FORMA diferente: três fábricas compõem a fila, e o contador é o último item.
  */
-export function groupSnippetAvatar(o: AvatarGroupSnippetOptions = {}): string {
+export function groupAvatarSnippet(o: AvatarGroupSnippetOptions = {}): string {
   return snippet(
-    importar('avatar', 'createAvatar', 'createAvatarGroup', 'createAvatarGroupCount'),
+    importing('avatar', 'createAvatar', 'createAvatarGroup', 'createAvatarGroupCount'),
     `const fotos = ['/equipe/maria.jpg', '/equipe/joao.jpg', '/equipe/ana.jpg'];
 
 const grupo = createAvatarGroup({ 'aria-label': ${texto(o['aria-label'] ?? 'Participantes')} });
@@ -155,5 +155,5 @@ grupo.appendChild(contador);`,
 export function groupSourceWithAvatar(
   fixas: AvatarGroupSnippetOptions,
 ): SourceTransform<AvatarGroupSnippetOptions> {
-  return (_gerado, ctx) => groupSnippetAvatar({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => groupAvatarSnippet({ ...ctx.args, ...fixas });
 }

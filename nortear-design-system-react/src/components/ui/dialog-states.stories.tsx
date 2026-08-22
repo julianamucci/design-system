@@ -3,10 +3,10 @@ import { useState } from "react";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
 import {
   abrir,
-  botaoFecharDoCanto,
-  conferirNomeEDescricao,
-  esperarAberto,
-  esperarFechado,
+  cantoButtonClose,
+  checkNameEDescricao,
+  waitForOpen,
+  waitForClosed,
   gatilho,
   overlay,
   painel,
@@ -22,9 +22,9 @@ import {
   DialogTrigger,
 } from "./dialog";
 import {
-  dialogAbertoSource,
-  dialogControladoSource,
-  dialogSemBotaoFecharSource,
+  dialogOpenSource,
+  dialogControlledSource,
+  dialogNoButtonCloseSource,
   dialogSource,
 } from "./dialog.source";
 import { Button } from "./button";
@@ -114,7 +114,7 @@ export const Open: Story = {
     docs: {
       // `defaultOpen` é o assunto da story, e o arquivo desliga os controls: o
       // snippet do `meta` cairia no padrão e não mostraria a prop.
-      source: { transform: dialogAbertoSource },
+      source: { transform: dialogOpenSource },
       description: {
         story:
           "Diálogo aberto via `defaultOpen`. Overlay com blur, focus trap ativo, scroll-lock no body.",
@@ -147,17 +147,17 @@ export const Open: Story = {
     );
   },
   play: async ({ step }) => {
-    // `esperarAberto` e não o helper idempotente: esta story tem que provar que
+    // `waitForOpen` e não o helper idempotente: esta story tem que provar que
     // `defaultOpen` MONTA aberta. Abrir por clique aqui passaria mesmo com a
     // prop sendo ignorada em silêncio.
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("Monta já aberto, sem estado externo nenhum", async () => {
       await expect(p).toBeVisible();
       await expect(overlay()).toBeVisible();
       await expect(p).toHaveAttribute("role", "dialog");
       await expect(p).toHaveAttribute("aria-modal", "true");
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step("E o foco já está dentro do painel", async () => {
@@ -174,7 +174,7 @@ export const WithCloseButtonHidden: Story = {
     docs: {
       // A prop vive no Content, não na raiz — o snippet do `meta` esconderia
       // justamente onde ela entra.
-      source: { transform: dialogSemBotaoFecharSource },
+      source: { transform: dialogNoButtonCloseSource },
       description: {
         story:
           "`showCloseButton={false}` no Content. Sem X no canto — fechamento apenas por Escape, clique no overlay ou ação do Footer.",
@@ -207,17 +207,17 @@ export const WithCloseButtonHidden: Story = {
     );
   },
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("Sem X no canto", async () => {
-      await expect(botaoFecharDoCanto(p)).toBeNull();
+      await expect(cantoButtonClose(p)).toBeNull();
     });
 
     await step("Escape continua fechando — nunca se tira toda saída", async () => {
       // Sem o X, Escape e o Cancelar do rodapé são as saídas que restam.
       // Retirar todas de uma vez deixaria o diálogo sem fechamento acessível.
       await userEvent.keyboard("{Escape}");
-      await esperarFechado();
+      await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final, e o que esta story existe
       // para mostrar é o painel SEM o X no canto.
       await expect(await abrir(canvasElement)).toBeVisible();
@@ -228,7 +228,7 @@ export const WithCloseButtonHidden: Story = {
 // Espião do modo controlado. Vive fora do `render` para que a play alcance as
 // chamadas — spy criado dentro do render é inalcançável e deixa a aba Actions
 // vazia. `mockClear()` no início da play zera o que a execução anterior deixou.
-const espiaoControlado = fn();
+const spyControlled = fn();
 
 export const Controlled: Story = {
   parameters: {
@@ -236,7 +236,7 @@ export const Controlled: Story = {
     docs: {
       // Sem gatilho e com estado externo: `open` + `onOpenChange` é outra
       // composição, não a padrão com `DialogTrigger`.
-      source: { transform: dialogControladoSource },
+      source: { transform: dialogControlledSource },
       description: {
         story:
           "Abertura controlada por estado externo via `open` + `onOpenChange`. Útil quando o pai precisa abrir o diálogo a partir de outro fluxo (ex.: confirmação assíncrona).",
@@ -253,7 +253,7 @@ export const Controlled: Story = {
           <Button
             onClick={() => {
               setOpen(true);
-              espiaoControlado(true);
+              spyControlled(true);
             }}
           >
             Open programmatically
@@ -262,7 +262,7 @@ export const Controlled: Story = {
             open={open}
             onOpenChange={(value) => {
               setOpen(value);
-              espiaoControlado(value);
+              spyControlled(value);
             }}
           >
             <DialogContent>
@@ -289,7 +289,7 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    espiaoControlado.mockClear();
+    spyControlled.mockClear();
 
     await step("Nasce fechado, porque o valor externo diz que sim", async () => {
       await expect(painel()).toBeNull();
@@ -298,16 +298,16 @@ export const Controlled: Story = {
     await step("Interagir avisa o dono do estado, e o painel segue o valor", async () => {
       const externo = canvas.getByRole("button", { name: /Open programmatically/i });
       await userEvent.click(externo);
-      await expect(await esperarAberto()).toBeVisible();
-      await expect(espiaoControlado).toHaveBeenLastCalledWith(true);
+      await expect(await waitForOpen()).toBeVisible();
+      await expect(spyControlled).toHaveBeenLastCalledWith(true);
     });
 
     await step("Escape também passa pelo dono do estado", async () => {
       await userEvent.keyboard("{Escape}");
-      await esperarFechado();
+      await waitForClosed();
       // O valor externo é quem fecha: se o callback não disparasse, o painel
       // teria sumido por conta própria e o estado do pai ficaria mentindo.
-      await expect(espiaoControlado).toHaveBeenLastCalledWith(false);
+      await expect(spyControlled).toHaveBeenLastCalledWith(false);
       await expect(painel()).toBeNull();
     });
   },

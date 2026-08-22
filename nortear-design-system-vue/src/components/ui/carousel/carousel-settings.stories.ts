@@ -274,7 +274,7 @@ export const Autoplay: Story = {
     const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
     // O embla translada o TRILHO; a matriz calculada é a posição observável de
     // fora, e comparar a string é exato — não tem margem de subpixel.
-    const posicao = () => getComputedStyle(track).transform;
+    const position = () => getComputedStyle(track).transform;
 
     const relogio = () => apiAutoplay!.plugins().autoplay;
 
@@ -294,8 +294,8 @@ export const Autoplay: Story = {
       ligarRelogio();
       await expect(relogio().isPlaying()).toBe(true);
 
-      const partida = posicao();
-      await waitFor(() => expect(posicao()).not.toBe(partida), { timeout: 4000 });
+      const partida = position();
+      await waitFor(() => expect(position()).not.toBe(partida), { timeout: 4000 });
     });
 
     await step('Tocar no carrossel desliga o relógio', async () => {
@@ -416,7 +416,7 @@ export const DragGesture: Story = {
      * motor reescreve a posição a cada quadro e duas leituras nunca coincidem; ao
      * terminar, ele escreve o valor final e para de escrever.
      */
-    const assentar = async () => {
+    const settle = async () => {
       let estaveis = 0;
       let ultimo = Number.NaN;
       await waitFor(async () => {
@@ -429,7 +429,7 @@ export const DragGesture: Story = {
     };
 
     /** Espera a posição chegar a uma coordenada já conhecida. */
-    const emPosicao = async (alvo: number) => {
+    const inPosition = async (alvo: number) => {
       await waitFor(async () => {
         await expect(Math.abs(deslocamento() - alvo)).toBeLessThan(2);
       }, { timeout: 4000 });
@@ -459,16 +459,16 @@ export const DragGesture: Story = {
         if (botao.disabled) break;
         await userEvent.click(botao);
       }
-      posZero = await assentar();
+      posZero = await settle();
       await expect(anterior()).toBeDisabled();
 
       await userEvent.click(proximo());
-      posUm = await assentar();
+      posUm = await settle();
       await expect(posUm).toBeGreaterThan(posZero);
 
       await userEvent.click(anterior());
-      await emPosicao(posZero);
-      // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
+      await inPosition(posZero);
+      // A POSIÇÃO chega antes do ESTADO. `inPosition` prova que a rolagem
       // encostou no alvo, mas quem desabilita a seta é a reconciliação do
       // índice, e ela espera de propósito o silêncio do motor — sem isso um
       // gesto com inércia emitiria uma troca de slide por quadro atravessado.
@@ -504,7 +504,7 @@ export const DragGesture: Story = {
       // Assentou EM UM SLIDE, e no MESMO ponto que a seta alcança — não onde o
       // dedo largou. Um carrossel de rolagem livre pararia no meio, e é isto
       // que este passo reprova.
-      await emPosicao(posUm);
+      await inPosition(posUm);
       await waitFor(async () => {
         await expect(anterior()).toBeEnabled();
       }, { timeout: 4000 });
@@ -530,7 +530,7 @@ export const DragGesture: Story = {
       mouse(viewport, 'mousemove', direita, y);
       mouse(viewport, 'mouseup', direita, y);
 
-      await emPosicao(posZero);
+      await inPosition(posZero);
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
       }, { timeout: 4000 });

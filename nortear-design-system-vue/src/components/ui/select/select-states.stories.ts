@@ -7,8 +7,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from './index';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
-import { medirAnelDeFoco, ESTADOS, ESTADOS_POR_VALOR } from '@shared/testing/select-probe';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { focusMeasureRing, STATES, VALUE_STATES } from '@shared/testing/select-probe';
 import {
   selectBloqueadoSource,
   selectCompactoSource,
@@ -55,7 +55,7 @@ export const Default: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: ESTADOS }; },
+    setup() { return { estados: STATES }; },
     template: `
       <div style="contain: layout">
         <Select>
@@ -105,7 +105,7 @@ export const Selected: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: ESTADOS, rotulos: ESTADOS_POR_VALOR }; },
+    setup() { return { estados: STATES, rotulos: VALUE_STATES }; },
     template: `
       <div style="contain: layout">
         <Select default-value="rj">
@@ -155,7 +155,7 @@ export const Open: Story = {
     // regressão visual precisa fotografar. Com a lista aberta o primitivo
     // marca o resto da página como escondido para o leitor de tela, e o axe lê
     // a combinação como armadilha de foco: ver o motivo em `wait-for-portal`.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {
         story: 'Lista aberta, em portal. As setas andam item a item e o destaque acompanha.',
@@ -164,7 +164,7 @@ export const Open: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: ESTADOS }; },
+    setup() { return { estados: STATES }; },
     template: `
       <div style="contain: layout; min-height: 280px;">
         <Select>
@@ -192,7 +192,7 @@ export const Open: Story = {
       const listbox = await abrir();
       await expect(listbox).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-      await expect(within(listbox).getAllByRole('option')).toHaveLength(ESTADOS.length);
+      await expect(within(listbox).getAllByRole('option')).toHaveLength(STATES.length);
     });
 
     await step('A seta para baixo anda um item por vez, e a de cima volta', async () => {
@@ -238,7 +238,7 @@ export const Disabled: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: ESTADOS }; },
+    setup() { return { estados: STATES }; },
     template: `
       <div style="contain: layout">
         <Select disabled>
@@ -284,7 +284,7 @@ export const Invalid: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: ESTADOS }; },
+    setup() { return { estados: STATES }; },
     template: `
       <div class="nds-stack" data-spacing="sm" style="contain: layout">
         <Select>
@@ -319,7 +319,7 @@ export const Invalid: Story = {
       // `:focus-visible` com a mesma especificidade: sem a regra de
       // aninhamento, focar um campo inválido não mudava nada na tela.
       // `boxShadow !== 'none'` passaria mesmo assim — só a MUDANÇA reprova.
-      await expect(medirAnelDeFoco(trigger).mudou).toBe(true);
+      await expect(focusMeasureRing(trigger).mudou).toBe(true);
     });
   },
 };
@@ -334,7 +334,7 @@ export const Sm: Story = {
   },
   render: () => ({
     components: sharedComponents,
-    setup() { return { estados: ESTADOS }; },
+    setup() { return { estados: STATES }; },
     template: `
       <div class="nds-stack" data-spacing="sm" style="contain: layout">
         <Select>

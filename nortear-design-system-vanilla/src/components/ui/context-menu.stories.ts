@@ -5,11 +5,11 @@ import { contextMenuSource } from './context-menu.source';
 import { createContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
-  abrirPorGesto,
-  clicarFora,
-  criarAreaDeClique,
-  fecharMenu,
-  menuAberto,
+  gestoOpen,
+  clickOutside,
+  clickCreateArea,
+  closeMenu,
+  menuOpen,
 } from '@shared/testing/context-menu-area';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -110,7 +110,7 @@ export const Playground: Story = {
     }
 
     return createContextMenu({
-      trigger: criarAreaDeClique(args.triggerLabel),
+      trigger: clickCreateArea(args.triggerLabel),
       items: itens,
       onOpenChange: args.onOpenChange,
     });
@@ -121,7 +121,7 @@ export const Playground: Story = {
     await step('O menu do navegador não aparece por cima do nosso', async () => {
       // `defaultPrevented` é a única prova possível aqui: o menu nativo não
       // existe no DOM. Sem esta chamada barrada, os dois menus se sobrepõem.
-      await fecharMenu();
+      await closeMenu();
       const evento = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
       area().dispatchEvent(evento);
       await waitFor(() => expect(evento.defaultPrevented).toBe(true));
@@ -130,20 +130,20 @@ export const Playground: Story = {
     await step('O botão direito abre o menu ONDE o ponteiro estava', async () => {
       // O popup não é ancorado no gatilho: ele nasce no ponto do gesto. É a
       // única diferença real em relação ao DropdownMenu.
-      const menu = await abrirPorGesto(area());
-      const caixaArea = area().getBoundingClientRect();
-      const caixaMenu = menu.getBoundingClientRect();
+      const menu = await gestoOpen(area());
+      const boxArea = area().getBoundingClientRect();
+      const boxMenu = menu.getBoundingClientRect();
       await expect(
-        Math.abs(caixaMenu.left - (caixaArea.left + caixaArea.width / 2)),
+        Math.abs(boxMenu.left - (boxArea.left + boxArea.width / 2)),
       ).toBeLessThan(24);
       await expect(
-        Math.abs(caixaMenu.top - (caixaArea.top + caixaArea.height / 2)),
+        Math.abs(boxMenu.top - (boxArea.top + boxArea.height / 2)),
       ).toBeLessThan(24);
       await expect(args.onOpenChange).toHaveBeenCalled();
     });
 
     await step('Os itens são itens de menu de verdade', async () => {
-      const menu = menuAberto()!;
+      const menu = menuOpen()!;
       await expect(menu.getAttribute('role')).toBe('menu');
       const itens = [...menu.querySelectorAll('[data-slot="context-menu-item"]')];
       await expect(itens.length).toBe(3);
@@ -156,7 +156,7 @@ export const Playground: Story = {
     await step('O atalho é lido junto do item, não escondido', async () => {
       // "Excluir, ⌫" é o nome útil. Com `aria-hidden` no atalho a pessoa ouviria
       // só "Excluir" e o atalho não ensinaria nada.
-      const atalho = menuAberto()!.querySelector<HTMLElement>(
+      const atalho = menuOpen()!.querySelector<HTMLElement>(
         '[data-slot="context-menu-shortcut"]',
       )!;
       await expect(atalho.hasAttribute('aria-hidden')).toBe(false);
@@ -167,7 +167,7 @@ export const Playground: Story = {
       // O foco parte de um item conhecido: assim o passo vale igual na primeira
       // rodada e no replay, e não depende de onde a abertura deixou o foco.
       const itens = [
-        ...menuAberto()!.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]'),
+        ...menuOpen()!.querySelectorAll<HTMLElement>('[data-slot="context-menu-item"]'),
       ];
       itens[0].focus();
       await userEvent.keyboard('{ArrowDown}');
@@ -177,22 +177,22 @@ export const Playground: Story = {
     });
 
     await step('Escape fecha e devolve o foco à área', async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await userEvent.keyboard('{Escape}');
-      await waitFor(() => expect(menuAberto()).toBeNull());
+      await waitFor(() => expect(menuOpen()).toBeNull());
       await waitFor(() => expect(document.activeElement).toBe(area()));
     });
 
     await step('Clique fora fecha', async () => {
-      await abrirPorGesto(area());
-      await clicarFora();
-      await expect(menuAberto()).toBeNull();
+      await gestoOpen(area());
+      await clickOutside();
+      await expect(menuOpen()).toBeNull();
     });
 
     await step('A story termina com o menu ABERTO', async () => {
       // É o estado que o Chromatic fotografa e o axe varre — `visual.item1`
       // descreve o menu aberto, não a área vazia.
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       await expect(menu).toBeVisible();
     });
   },

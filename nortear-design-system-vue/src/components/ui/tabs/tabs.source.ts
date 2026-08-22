@@ -68,7 +68,7 @@ function tabs(opcoes: {
       ),
     )
     .join('\n');
-  const paineis = abas
+  const panels = abas
     .map((aba) =>
       bloco('TabsContent', attrs(`value="${aba.valor}"`, `class="${classePainel}"`), aba.painel, 2),
     )
@@ -77,12 +77,12 @@ function tabs(opcoes: {
   <TabsList${attrs(lista, `aria-label="${rotuloLista}"`)}>
 ${gatilhos}
   </TabsList>
-${paineis}
+${panels}
 </Tabs>`;
 }
 
 /** As três seções que servem de exemplo na maioria das stories. */
-const SECOES: Aba[] = [
+const SECTIONS: Aba[] = [
   { valor: 'overview', gatilho: 'Visão geral', painel: 'Conteúdo da visão geral.' },
   { valor: 'properties', gatilho: 'Propriedades', painel: 'Lista de propriedades.' },
   { valor: 'examples', gatilho: 'Exemplos', painel: 'Exemplos de uso.' },
@@ -108,7 +108,7 @@ export const tabsSource: SourceTransform<TabsArgs> = (_gerado, ctx) => {
         `class="nds-w-${vertical ? 'lg' : 'md'}"`,
       ).trim(),
       rotuloLista: 'Seções do componente',
-      abas: SECOES,
+      abas: SECTIONS,
       classePainel: vertical ? VERTICAL_CLASSNAME_PANEL : CLASSNAME_PANEL,
     }),
   );
@@ -124,20 +124,20 @@ export function tabsDefaultSource(): string {
     tabs({
       raiz: 'default-value="overview" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
-      abas: SECOES,
+      abas: SECTIONS,
     }),
   );
 }
 
 /** Variante em linha: sem trilho, com o indicador sob a aba ativa. */
-export function tabsLinhaSource(): string {
+export function tabsLineSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
       raiz: 'default-value="overview" class="nds-w-md"',
       lista: 'variant="line"',
       rotuloLista: 'Seções do componente',
-      abas: SECOES,
+      abas: SECTIONS,
     }),
   );
 }
@@ -184,7 +184,7 @@ export function tabsAbaAtivaSource(): string {
     tabs({
       raiz: 'default-value="properties" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
-      abas: SECOES,
+      abas: SECTIONS,
     }),
   );
 }
@@ -201,9 +201,9 @@ export function tabsAbaDesabilitadaSource(): string {
       raiz: 'default-value="overview" class="nds-w-md"',
       rotuloLista: 'Seções do componente',
       abas: [
-        SECOES[0],
-        { ...SECOES[1], desabilitada: true },
-        SECOES[2],
+        SECTIONS[0],
+        { ...SECTIONS[1], desabilitada: true },
+        SECTIONS[2],
       ],
     }),
   );
@@ -216,7 +216,7 @@ export function tabsAbaDesabilitadaSource(): string {
  * O evento entrega o valor cru; `String()` fecha a porta do tipo, porque o
  * `value` de uma aba também aceita número.
  */
-export function tabsControladoSource(): string {
+export function tabsControlledSource(): string {
   const conjunto = tabs({
     raiz: ':model-value="aba" class="nds-w-full" @update:model-value="aba = String($event)"',
     rotuloLista: 'Seções do componente',
@@ -257,7 +257,7 @@ ${indentar(conjunto)}
  * e o texto do gatilho continua sendo o nome acessível inteiro da aba. Um ícone
  * anunciado viraria um segundo pedaço de nome, sem acrescentar informação.
  */
-export function tabsComIconesSource(): string {
+export function tabsWithIconsSource(): string {
   const icone = (nome: string) => `<${nome} class="nds-size-4" aria-hidden="true" />`;
   return vueSnippet(
     `${IMPORT}

@@ -5,7 +5,7 @@ import { addons } from 'storybook/manager-api';
 import { create } from 'storybook/theming';
 // @ts-expect-error — Storybook manager builder serve SVG como URL string em runtime
 import brandImage from './brand-logo.svg';
-import { criarRenderLabel } from '../../docs/shared/primitives/sidebar-i18n';
+import { createRenderLabel } from '../../docs/shared/primitives/sidebar-i18n';
 
 const nortear = create({
   base: 'light',
@@ -19,7 +19,7 @@ const nortear = create({
 // componente e de story ficam em inglês: são 607 nomes distintos, e o dicionário
 // por palavra não economiza nada (as 200 palavras mais comuns cobrem 70% dos
 // usos). O idioma vem do mesmo `ds-locale` que as docs pages usam.
-addons.setConfig({ theme: nortear, sidebar: { renderLabel: criarRenderLabel(React) } });
+addons.setConfig({ theme: nortear, sidebar: { renderLabel: createRenderLabel(React) } });
 
 // Botão "Chromatic" na toolbar — ver ./chromatic-link.ts para o porquê de não
 // ser o painel do addon oficial.

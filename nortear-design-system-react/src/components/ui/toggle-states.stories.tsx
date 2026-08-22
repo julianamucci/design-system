@@ -2,15 +2,15 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
 import { Bold, Italic } from "lucide-react";
 import {
-  contrasteDoToggleNosDoisTemas,
-  descreverFalhasDeContraste,
-  medirAnelDeFoco,
+  toggleNosDoisThemesContrast,
+  contrastDescribeFailures,
+  focusMeasureRing,
 } from "@shared/testing/toggle-probe";
 import { Toggle } from "./toggle";
 import {
-  toggleAtivoSource,
-  toggleDesabilitadoSource,
-  toggleFocoSource,
+  toggleActiveSource,
+  toggleDisabledSource,
+  toggleFocusSource,
   toggleInvalidoSource,
   toggleSource,
 } from "./toggle.source";
@@ -64,7 +64,7 @@ export const On: Story = {
   parameters: {
     covers: ["visual.item2", "accessibility.item2"],
     // Override: o par ligado/desligado — o meta imprime um toggle só.
-    docs: { source: { transform: toggleAtivoSource } },
+    docs: { source: { transform: toggleActiveSource } },
   },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
@@ -87,9 +87,9 @@ export const On: Story = {
     });
 
     await step("O estado ativo tem fundo próprio, não só atributo", async () => {
-      const fundoOn = getComputedStyle(on).backgroundColor;
-      await expect(fundoOn).not.toBe(getComputedStyle(off).backgroundColor);
-      await expect(fundoOn).not.toMatch(/rgba\(0, 0, 0, 0\)|transparent/);
+      const backgroundOn = getComputedStyle(on).backgroundColor;
+      await expect(backgroundOn).not.toBe(getComputedStyle(off).backgroundColor);
+      await expect(backgroundOn).not.toMatch(/rgba\(0, 0, 0, 0\)|transparent/);
     });
 
     await step("O contraste do estado ATIVO passa de 4.5:1 nos DOIS temas", async () => {
@@ -98,9 +98,9 @@ export const On: Story = {
       // contrato ficava declarado e nunca verificado. Mede só o estado ativo —
       // é o único par de cores que o componente define; em repouso ele herda
       // as da página.
-      const falhas = contrasteDoToggleNosDoisTemas(canvasElement);
+      const failures = toggleNosDoisThemesContrast(canvasElement);
       await expect(
-        falhas.length === 0 ? "" : `\n${descreverFalhasDeContraste(falhas)}`,
+        failures.length === 0 ? "" : `\n${contrastDescribeFailures(failures)}`,
       ).toBe("");
     });
   },
@@ -110,7 +110,7 @@ export const FocusVisible: Story = {
   parameters: {
     covers: ["accessibility.item3"],
     // Override: as duas variantes juntas, que é o que a story compara.
-    docs: { source: { transform: toggleFocoSource } },
+    docs: { source: { transform: toggleFocusSource } },
   },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
@@ -140,7 +140,7 @@ export const FocusVisible: Story = {
       // outline tem sombra de elevação o tempo todo, e a asserção passava com
       // zero anel. O que prova o anel é a sombra MUDAR ao focar.
       for (const btn of [padrao, contorno]) {
-        await expect(medirAnelDeFoco(btn).mudou).toBe(true);
+        await expect(focusMeasureRing(btn).mudou).toBe(true);
       }
     });
   },
@@ -150,7 +150,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ["visual.item4", "functional.item4"],
     // Override: `disabled` afirmado no `render`, e nas duas posições.
-    docs: { source: { transform: toggleDesabilitadoSource } },
+    docs: { source: { transform: toggleDisabledSource } },
   },
   render: () => (
     <div className="nds-cluster" data-spacing="sm">
@@ -227,7 +227,7 @@ export const Invalid: Story = {
       // O anel destrutivo é declarado DEPOIS do `:focus-visible` e com a mesma
       // especificidade: sem a regra de restauração, focar um toggle inválido
       // não mudava nada na tela.
-      await expect(medirAnelDeFoco(toggle).mudou).toBe(true);
+      await expect(focusMeasureRing(toggle).mudou).toBe(true);
     });
   },
 };

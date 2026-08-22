@@ -253,10 +253,10 @@ export const WithLongScrollContent: Story = {
     });
 
     await step("O rodapé continua visível com o corpo cheio", async () => {
-      const caixaRodape = rodape.getBoundingClientRect();
-      const caixaPainel = painel.getBoundingClientRect();
-      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
-      await expect(caixaRodape.height).toBeGreaterThan(0);
+      const boxFooter = rodape.getBoundingClientRect();
+      const boxPanel = painel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

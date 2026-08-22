@@ -53,10 +53,10 @@ function snippet(markup: string, estado = '', extra = ''): string {
  * Toggle sem texto: o ícone é decorativo (`aria-hidden`) e quem nomeia o
  * controle é o `aria-label`. Sem ele o botão não tem nome acessível nenhum.
  */
-function iconOnly(icone: string, rotulo: string, atributos = '', umaLinha = false): string {
+function iconOnly(icone: string, rotulo: string, atributos = '', umaLine = false): string {
   const abertura = `<Toggle${attrs(atributos, `aria-label="${rotulo}"`)}>`;
   const miolo = `<${icone} aria-hidden="true" />`;
-  return umaLinha ? `${abertura}${miolo}</Toggle>` : `${abertura}\n  ${miolo}\n</Toggle>`;
+  return umaLine ? `${abertura}${miolo}</Toggle>` : `${abertura}\n  ${miolo}\n</Toggle>`;
 }
 
 /**
@@ -120,7 +120,7 @@ export function toggleContornoSource(): string {
  * Com texto visível: o rótulo entra no corpo do botão e o `aria-label` sai de
  * cena. O segundo já nasce ligado, por `default-value`.
  */
-export function toggleComRotuloSource(): string {
+export function toggleWithLabelSource(): string {
   return snippet(
     fila(
       comRotulo('Eye', 'Mostrar ocultos', 'variant="outline"'),
@@ -133,7 +133,7 @@ export function toggleComRotuloSource(): string {
  * A escada de degraus. O do meio não escreve `size`: o padrão é a ausência do
  * atributo, e escrevê-lo ensinaria ruído.
  */
-export function toggleTamanhosSource(): string {
+export function toggleSizesSource(): string {
   return snippet(
     fila(
       iconOnly('Bold', 'Negrito pequeno', 'variant="outline" size="sm"'),
@@ -148,7 +148,7 @@ export function toggleTamanhosSource(): string {
  * PARTIDA do controle não-controlado; quem precisa dirigir o estado depois usa
  * `v-model`.
  */
-export function toggleAtivoSource(): string {
+export function toggleActiveSource(): string {
   return snippet(
     fila(
       iconOnly('Bold', 'Negrito inativo'),
@@ -162,7 +162,7 @@ export function toggleAtivoSource(): string {
  * CSS do componente. O que o exemplo mostra é que o par precisa existir para se
  * comparar: na variante com borda, a sombra de elevação já está lá em repouso.
  */
-export function toggleFocoSource(): string {
+export function toggleFocusSource(): string {
   return snippet(
     fila(iconOnly('Bold', 'Negrito'), iconOnly('Italic', 'Itálico', 'variant="outline"')),
   );
@@ -173,7 +173,7 @@ export function toggleFocoSource(): string {
  * botão da ordem de tabulação — um `aria-disabled` sozinho deixaria o foco
  * entrar num controle que não responde.
  */
-export function toggleDesabilitadoSource(): string {
+export function toggleDisabledSource(): string {
   return snippet(
     fila(
       iconOnly('Bold', 'Negrito', 'disabled'),
@@ -204,7 +204,7 @@ ${indentar(iconOnly('Bold', 'Negrito', 'aria-invalid="true" aria-describedby="fo
  * Cada toggle é independente: aqui não há escolha única, e por isso não é um
  * grupo de rádio.
  */
-export function toggleBarraDeFormatacaoSource(): string {
+export function formattingToggleBarSource(): string {
   const botoes = [
     ['Bold', 'Negrito'],
     ['Italic', 'Itálico'],
@@ -229,7 +229,7 @@ ${botoes.map(([icone, rotulo]) => indentar(iconOnly(icone, rotulo, '', true))).j
  * entre si. O título da seção não é o nome dos controles — cada um se nomeia
  * pelo próprio texto visível.
  */
-export function filtersSourceToggleList(): string {
+export function filtersToggleListSource(): string {
   return snippet(
     `<div class="nds-stack" data-spacing="sm">
   <p class="nds-text-body nds-font-semibold">Filtros de exibição</p>
@@ -247,7 +247,7 @@ ${indentar(
  * Controlado: o estado sai do componente e passa a viver na aplicação, por
  * `v-model`. É o caminho de quem precisa reagir à troca em outro lugar da tela.
  */
-export function toggleControladoSource(): string {
+export function toggleControlledSource(): string {
   return snippet(
     `<div class="nds-stack" data-spacing="sm">
 ${indentar(iconOnly('Bold', 'Negrito', 'v-model="negrito"'))}

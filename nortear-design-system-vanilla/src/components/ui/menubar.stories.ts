@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createMenubar, type MenubarAlign, type MenubarSide } from './menubar';
-import { embrulhar, gatilhosDe, painelAberto } from './menubar.fixtures';
+import { embrulhar, triggersOf, panelOpen } from './menubar.fixtures';
 import { menubarSource } from './menubar.source';
 import { createMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -138,7 +138,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
-    const gatilhos = gatilhosDe(barra);
+    const gatilhos = triggersOf(barra);
     const [arquivo, editar] = gatilhos;
 
     await step('A barra é um menubar, e cada gatilho anuncia o menu que abre', async () => {
@@ -171,7 +171,7 @@ export const Playground: Story = {
         await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
       });
 
-      const painel = painelAberto(canvasElement)!;
+      const painel = panelOpen(canvasElement)!;
       await expect(painel.getAttribute('role')).toBe('menu');
       const itens = within(painel).getAllByRole('menuitem');
       await expect(itens).toHaveLength(MENUS[0].itens.length);
@@ -181,7 +181,7 @@ export const Playground: Story = {
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {
-      const painel = painelAberto(canvasElement)!;
+      const painel = panelOpen(canvasElement)!;
       const itens = within(painel).getAllByRole('menuitem');
 
       await userEvent.keyboard('{ArrowDown}');
@@ -234,13 +234,13 @@ export const Playground: Story = {
     await step('Clicar no gatilho de um menu aberto fecha o menu', async () => {
       if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
       await waitFor(async () => {
-        await expect(painelAberto(canvasElement)).not.toBeNull();
+        await expect(panelOpen(canvasElement)).not.toBeNull();
       });
 
       await userEvent.click(arquivo);
       await waitFor(async () => {
         await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
-        await expect(painelAberto(canvasElement)).toBeNull();
+        await expect(panelOpen(canvasElement)).toBeNull();
       });
     });
   },

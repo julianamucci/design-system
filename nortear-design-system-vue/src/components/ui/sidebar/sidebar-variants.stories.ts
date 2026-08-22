@@ -18,10 +18,10 @@ import {
 } from '@/components/ui/sidebar';
 import { LayoutDashboard, Blocks, Palette, Settings, User } from 'lucide-vue-next';
 import {
-  sidebarLadoDireitoSource,
-  sidebarVarianteFloatingSource,
-  sidebarVarianteInsetSource,
-  sidebarVarianteSidebarSource,
+  sidebarSideDireitoSource,
+  sidebarVariantFloatingSource,
+  sidebarVariantInsetSource,
+  sidebarVariantSidebarSource,
 } from './sidebar.source';
 
 const meta = {
@@ -33,7 +33,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: sidebarVarianteSidebarSource },
+      source: { transform: sidebarVariantSidebarSource },
       description: {
         component:
           'Três variantes visuais da Sidebar: **sidebar** (padrão), **floating** e **inset**. Cada uma altera o posicionamento e a aparência do container.',
@@ -132,7 +132,7 @@ function makeStory(variant: 'sidebar' | 'floating' | 'inset'): Story {
 
 // ─── Variante: sidebar (padrão) ───────────────────────────────────────────────
 
-const raizDe = (el: HTMLElement) => el.querySelector<HTMLElement>('[data-slot="sidebar"]')!;
+const rootOf = (el: HTMLElement) => el.querySelector<HTMLElement>('[data-slot="sidebar"]')!;
 
 export const VariantSidebar: Story = {
   parameters: {
@@ -143,7 +143,7 @@ export const VariantSidebar: Story = {
   ...makeStory('sidebar'),
   play: async ({ canvasElement, step }) => {
     await step('A variante padrão não arredonda o painel interno', async () => {
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz.getAttribute('data-variant')).toBe('sidebar');
       const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
       await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBe(0);
@@ -159,7 +159,7 @@ export const VariantFloating: Story = {
     docs: {
       // A variante não vem de control nesta página: sem override, as três
       // stories mostrariam o snippet da padrão.
-      source: { transform: sidebarVarianteFloatingSource },
+      source: { transform: sidebarVariantFloatingSource },
       description: { story: 'Sidebar com borda arredondada e sombra, flutuando sobre um pequeno padding. Não empurra o conteúdo.' },
     },
   },
@@ -169,7 +169,7 @@ export const VariantFloating: Story = {
       // Afirma o pixel, e não só o atributo: a regra é
       // `[data-variant="floating"] .nds-sidebar-inner`, e um atributo no lugar
       // errado passaria despercebido.
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz.getAttribute('data-variant')).toBe('floating');
 
       const interno = raiz.querySelector<HTMLElement>('.nds-sidebar-inner')!;
@@ -188,14 +188,14 @@ export const VariantInset: Story = {
     covers: ['visual.item4'],
     docs: {
       // Idem: a variante é o assunto e nenhum control a descreve.
-      source: { transform: sidebarVarianteInsetSource },
+      source: { transform: sidebarVariantInsetSource },
       description: { story: 'Sidebar integrada ao layout com o conteúdo em container arredondado adjacente.' },
     },
   },
   ...makeStory('inset'),
   play: async ({ canvasElement, step }) => {
     await step('inset marca a variante que arredonda o conteúdo adjacente', async () => {
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz.getAttribute('data-variant')).toBe('inset');
       // A regra que arredonda o conteúdo é `[data-variant="inset"] ~ .nds-sidebar-inset`
       // — depende de a barra e o conteúdo serem irmãos, e é isso que se perde
@@ -213,7 +213,7 @@ export const SideRight: Story = {
     docs: {
       // Muda a ORDEM dos irmãos, não só o `side`: o conteúdo vem primeiro para
       // que a leitura e a tabulação não comecem pela navegação.
-      source: { transform: sidebarLadoDireitoSource },
+      source: { transform: sidebarSideDireitoSource },
       description: { story: 'Sidebar posicionada na direita. Use em painéis de detalhes ou contexto.' },
     },
   },
@@ -221,7 +221,7 @@ export const SideRight: Story = {
     const canvas = within(canvasElement);
 
     await step('A barra encosta na direita', async () => {
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz.getAttribute('data-side')).toBe('right');
       // Medida, não atributo: a regra que posiciona é
       // `[data-side="right"] .nds-sidebar-panel { right: 0 }`.

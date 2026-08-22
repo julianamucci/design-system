@@ -14,7 +14,7 @@ import {
 } from './table';
 import { NdsBadge } from './badge';
 import { NdsButton, NdsButtonIcon } from './button';
-import { FATURAS, TOTAL, STATUS_VARIANT } from './table.fixtures';
+import { INVOICES, TOTAL, STATUS_VARIANT } from './table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -78,7 +78,7 @@ export const Basic: Story = {
     },
   },
   render: () => ({
-    props: { faturas: FATURAS },
+    props: { faturas: INVOICES },
     template: `
       <div ndsTableWrapper>
         <table ndsTable>
@@ -112,11 +112,11 @@ export const Basic: Story = {
       // functional.item1 — a conta sai da fixture, nunca de um número escrito à
       // mão: um dado a menos deixaria a asserção verde e a tabela errada.
       const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(FATURAS.length);
+      await expect(linhas.length).toBe(INVOICES.length);
       for (const [i, linha] of linhas.entries()) {
         await expect(linha).toHaveAttribute('data-slot', 'table-row');
         await expect(linha.querySelectorAll('td').length).toBe(4);
-        await expect(linha).toHaveTextContent(FATURAS[i].id);
+        await expect(linha).toHaveTextContent(INVOICES[i].id);
       }
     });
 
@@ -129,8 +129,8 @@ export const Basic: Story = {
       const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
       await expect(ths[3]).toHaveTextContent('Valor');
       await expect(getComputedStyle(ths[3]).textAlign).toBe('right');
-      const valorTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
-      await expect(getComputedStyle(valorTd).textAlign).toBe('right');
+      const valueTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
+      await expect(getComputedStyle(valueTd).textAlign).toBe('right');
       // A coluna descritiva continua à esquerda: o alinhamento é escolha por
       // coluna, não estilo da tabela.
       await expect(getComputedStyle(ths[0]).textAlign).toBe('left');
@@ -157,7 +157,7 @@ export const WithFooter: Story = {
     },
   },
   render: () => ({
-    props: { faturas: FATURAS, total: TOTAL },
+    props: { faturas: INVOICES, total: TOTAL },
     template: `
       <div ndsTableWrapper>
         <table ndsTable>
@@ -197,21 +197,21 @@ export const WithFooter: Story = {
       const tabela = canvasElement.querySelector<HTMLElement>('table')!;
       const tfoot = tabela.querySelector<HTMLElement>('tfoot')!;
       await expect(tfoot).toHaveAttribute('data-slot', 'table-footer');
-      const posicao = tabela.querySelector('tbody')!.compareDocumentPosition(tfoot);
-      await expect(posicao & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      const position = tabela.querySelector('tbody')!.compareDocumentPosition(tfoot);
+      await expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
       await expect(tfoot.querySelector('td')).toHaveAttribute('colspan', '3');
       await expect(tfoot).toHaveTextContent(TOTAL);
       // O total não é registro: o corpo continua com as mesmas cinco linhas.
-      await expect(tabela.querySelectorAll('tbody tr').length).toBe(FATURAS.length);
+      await expect(tabela.querySelectorAll('tbody tr').length).toBe(INVOICES.length);
     });
 
     await step('O rodapé se distingue do corpo por fundo próprio', async () => {
       // visual.item3 — `.nds-table tfoot tr` pinta hsl(var(--muted) / 0.5). Sem
       // a distinção o sumário some no meio dos registros.
-      const linhaRodape = canvasElement.querySelector<HTMLElement>('tfoot tr')!;
-      const linhaCorpo = canvasElement.querySelector<HTMLElement>('tbody tr')!;
-      await expect(getComputedStyle(linhaRodape).backgroundColor).not.toBe(
-        getComputedStyle(linhaCorpo).backgroundColor,
+      const lineFooter = canvasElement.querySelector<HTMLElement>('tfoot tr')!;
+      const lineBody = canvasElement.querySelector<HTMLElement>('tbody tr')!;
+      await expect(getComputedStyle(lineFooter).backgroundColor).not.toBe(
+        getComputedStyle(lineBody).backgroundColor,
       );
     });
   },
@@ -230,7 +230,7 @@ export const CaptionSrOnly: Story = {
     },
   },
   render: () => ({
-    props: { faturas: FATURAS },
+    props: { faturas: INVOICES },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <h2 class="nds-text-h3 nds-m-0">Faturas recentes</h2>
@@ -292,7 +292,7 @@ export const WithRowActions: Story = {
     },
   },
   render: () => ({
-    props: { faturas: FATURAS, varianteDe: STATUS_VARIANT },
+    props: { faturas: INVOICES, varianteDe: STATUS_VARIANT },
     template: `
       <div ndsTableWrapper>
         <table ndsTable>
@@ -341,11 +341,11 @@ export const WithRowActions: Story = {
       // accessibility.item3 — cinco botões chamados "Editar" seriam cinco
       // controles indistinguíveis na lista de elementos do leitor de tela.
       const botoes = canvas.getAllByRole('button');
-      await expect(botoes.length).toBe(FATURAS.length);
+      await expect(botoes.length).toBe(INVOICES.length);
       for (const [i, botao] of botoes.entries()) {
-        await expect(botao).toHaveAccessibleName(`Editar fatura ${FATURAS[i].id}`);
+        await expect(botao).toHaveAccessibleName(`Editar fatura ${INVOICES[i].id}`);
         // O botão mora dentro da própria linha do registro que ele edita.
-        await expect(botao.closest('tr')).toHaveTextContent(FATURAS[i].id);
+        await expect(botao.closest('tr')).toHaveTextContent(INVOICES[i].id);
       }
     });
 
@@ -353,7 +353,7 @@ export const WithRowActions: Story = {
       // visual.item4 — o badge é o indicador compacto que o conteúdo
       // compartilhado documenta para status em célula.
       const badges = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="badge"]')];
-      await expect(badges.length).toBe(FATURAS.length);
+      await expect(badges.length).toBe(INVOICES.length);
       await expect(badges[0]).toHaveAttribute('data-variant', 'success');
       await expect(badges[2]).toHaveAttribute('data-variant', 'destructive');
     });
@@ -364,7 +364,7 @@ export const WithRowActions: Story = {
 
 // Dois anos de competência, não um: com doze colunas a tabela ainda cabe num
 // canvas largo, e a story provaria a rolagem só nos viewports estreitos.
-const MESES = ['2025', '2026'].flatMap((ano) =>
+const MONTHS = ['2025', '2026'].flatMap((ano) =>
   ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'].map(
     (mes) => `${mes}/${ano}`,
   ),
@@ -381,7 +381,7 @@ export const HorizontalScroll: Story = {
     },
   },
   render: () => ({
-    props: { meses: MESES, faturas: FATURAS },
+    props: { meses: MONTHS, faturas: INVOICES },
     template: `
       <div ndsTableWrapper>
         <table ndsTable>

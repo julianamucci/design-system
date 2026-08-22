@@ -14,24 +14,24 @@
  * contraste.
  */
 
-import { contraste, ligarTemaEscuro } from './alert-probe';
+import { contraste, darkLigarTheme } from './alert-probe';
 
-export { contraste, ligarTemaEscuro };
+export { contraste, darkLigarTheme };
 
 /** O container do gráfico, do jeito que o CSS compartilhado o define. */
-export function raizDoChart(dentroDe: HTMLElement): HTMLElement | null {
-  return dentroDe.querySelector<HTMLElement>('.nds-chart');
+export function chartRoot(insideOf: HTMLElement): HTMLElement | null {
+  return insideOf.querySelector<HTMLElement>('.nds-chart');
 }
 
 /** Idem, mas explode com mensagem útil em vez de devolver `null`. */
-export function exigirRaiz(dentroDe: HTMLElement): HTMLElement {
-  const raiz = raizDoChart(dentroDe);
+export function exigirRoot(insideOf: HTMLElement): HTMLElement {
+  const raiz = chartRoot(insideOf);
   if (!raiz) throw new Error('nenhum .nds-chart no canvas da story');
   return raiz;
 }
 
 /** O desenho já saiu? `svg` no renderer padrão, `canvas` no alternativo. */
-export function desenhoRenderizado(raiz: HTMLElement): Element | null {
+export function designRenderizado(raiz: HTMLElement): Element | null {
   return raiz.querySelector('svg, canvas');
 }
 
@@ -48,9 +48,9 @@ export function desenhoRenderizado(raiz: HTMLElement): Element | null {
  *
  * Por isso o marco é a primeira FORMA DE DADO, não o primeiro pixel.
  */
-export function desenhoPintado(raiz: HTMLElement): boolean {
+export function designPintado(raiz: HTMLElement): boolean {
   if (raiz.querySelector('canvas')) return true;
-  return formasDeDado(raiz).length > 0;
+  return datumFormas(raiz).length > 0;
 }
 
 /**
@@ -60,15 +60,15 @@ export function desenhoPintado(raiz: HTMLElement): boolean {
  * É a sonda mais estável que um gráfico tem — não depende de como a lib nomeia
  * seus grupos, e é literalmente o que a pessoa lê na tela.
  */
-export function textosDoDesenho(raiz: HTMLElement): string[] {
+export function designTexts(raiz: HTMLElement): string[] {
   return [...raiz.querySelectorAll('svg text')]
     .map((t) => (t.textContent ?? '').trim())
     .filter(Boolean);
 }
 
 /** O desenho escreve este texto em algum lugar? */
-export function desenhoEscreve(raiz: HTMLElement, texto: string): boolean {
-  return textosDoDesenho(raiz).some((t) => t.includes(texto));
+export function designEscreve(raiz: HTMLElement, texto: string): boolean {
+  return designTexts(raiz).some((t) => t.includes(texto));
 }
 
 /**
@@ -134,12 +134,12 @@ export function corDoToken(token: string, perto: HTMLElement): string {
  * realmente pintado. É o mesmo princípio do replay — cada passo estabelece o
  * estado de que precisa em vez de herdar o que a tela anterior deixou.
  */
-export async function assentarTema(doc: Document = document): Promise<void> {
+export async function settleTheme(doc: Document = document): Promise<void> {
   const html = doc.documentElement;
-  const eraEscuro = html.classList.contains('dark');
-  html.classList.toggle('dark', !eraEscuro);
+  const darkEra = html.classList.contains('dark');
+  html.classList.toggle('dark', !darkEra);
   await new Promise((r) => setTimeout(r, 60));
-  html.classList.toggle('dark', eraEscuro);
+  html.classList.toggle('dark', darkEra);
   await new Promise((r) => setTimeout(r, 150));
 }
 
@@ -150,7 +150,7 @@ export async function assentarTema(doc: Document = document): Promise<void> {
  * `fill: none`, e por isso ficam de fora sem precisar saber o nome que cada
  * implementação dá aos seus grupos.
  */
-export function formasDeDado(raiz: HTMLElement): SVGGraphicsElement[] {
+export function datumFormas(raiz: HTMLElement): SVGGraphicsElement[] {
   return [...raiz.querySelectorAll<SVGGraphicsElement>('svg path, svg rect')].filter((el) => {
     const s = getComputedStyle(el);
     return s.fill !== 'none' && s.stroke !== 'none' && parseFloat(s.strokeWidth || '0') > 0;
@@ -163,7 +163,7 @@ export function formasDeDado(raiz: HTMLElement): SVGGraphicsElement[] {
  * Sobe até achar uma cor opaca: fundo semitransparente devolve uma cor que
  * ninguém vê, e dividir por ela dá um número que não existe na tela.
  */
-export function fundoOpacoAtras(el: Element): string {
+export function backgroundOpacoAtras(el: Element): string {
   let atual: Element | null = el;
   while (atual) {
     const cor = getComputedStyle(atual).backgroundColor;

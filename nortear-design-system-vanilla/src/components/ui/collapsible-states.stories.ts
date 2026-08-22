@@ -3,7 +3,7 @@ import { userEvent, waitFor, within, expect } from 'storybook/test';
 import { createCollapsible } from './collapsible';
 import { makeContent } from './collapsible.fixtures';
 import {
-  collapsibleControladoSource,
+  collapsibleControlledSource,
   collapsibleSource,
   collapsibleSourceWith,
 } from './collapsible.source';
@@ -35,7 +35,7 @@ const fechar = async (t: HTMLElement) => {
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
 };
 
-const painelDe = (canvasElement: HTMLElement) =>
+const panelOf = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]')!;
 
 // ─── Uncontrolled ─────────────────────────────────────────────────────────────
@@ -58,7 +58,7 @@ export const Uncontrolled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button');
-    const painel = painelDe(canvasElement);
+    const painel = panelOf(canvasElement);
 
     await step('O estado nasce e vive dentro do componente', async () => {
       await fechar(trigger);
@@ -101,7 +101,7 @@ export const OpenByDefault: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button');
-    const painel = painelDe(canvasElement);
+    const painel = panelOf(canvasElement);
 
     await step('Monta já expandido, sem estado externo nenhum', async () => {
       // Asserção de MONTAGEM: por isso o passo anterior não interage. No replay
@@ -180,7 +180,7 @@ export const Controlled: Story = {
     docs: {
       // Forma própria de snippet: no modo controlado a posse do estado muda de
       // lado, e a chamada sozinha não mostraria o `setOpen` do outro lado.
-      source: { transform: collapsibleControladoSource() },
+      source: { transform: collapsibleControlledSource() },
       description: {
         story: 'Modo controlado: a factory recebe <code>open</code> e devolve <code>setOpen</code>. O clique no trigger apenas emite o novo valor — quem escreve no DOM é o estado externo.',
       },
@@ -191,7 +191,7 @@ export const Controlled: Story = {
     const trigger = canvasElement.querySelector<HTMLButtonElement>(
       '[data-slot="collapsible-trigger"]',
     )!;
-    const painel = painelDe(canvasElement);
+    const painel = panelOf(canvasElement);
 
     await step('O painel obedece ao estado externo', async () => {
       // Nenhum clique no trigger: quem manda é o estado de fora.
@@ -245,7 +245,7 @@ export const Disabled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('button');
-    const painel = painelDe(canvasElement);
+    const painel = panelOf(canvasElement);
 
     await step('O botão é desabilitado de verdade, não só na aparência', async () => {
       await expect(trigger).toBeDisabled();

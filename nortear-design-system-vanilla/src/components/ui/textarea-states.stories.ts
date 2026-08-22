@@ -4,8 +4,8 @@ import { createTextarea } from './textarea';
 import { textareaSource, textareaSourceWith } from './textarea.source';
 import { createLabel } from './label';
 import {
-  anelDeFocoAssentado,
-  contrasteTextoFundo,
+  focusAssentadoRing,
+  contrastTextBackground,
   resizeComputado,
 } from '@shared/testing/textarea-probe';
 
@@ -87,7 +87,7 @@ export const Focus: Story = {
       // Medido DEPOIS da transição: lido no primeiro quadro, o computado
       // devolve `rgba(0,0,0,0) 0px 0px 0px 0px` e um anel pintado passa por
       // inexistente.
-      const { boxShadow, corDaBorda } = anelDeFocoAssentado(ta);
+      const { boxShadow, corDaBorda } = focusAssentadoRing(ta);
       await expect(boxShadow).not.toBe('none');
       await expect(boxShadow).toMatch(/2px/);
       await expect(corDaBorda).not.toBe('rgba(0, 0, 0, 0)');
@@ -128,9 +128,9 @@ export const Filled: Story = {
     });
 
     await step('Texto digitado tem contraste de pelo menos 4.5:1', async () => {
-      const razao = contrasteTextoFundo(ta);
-      await expect(razao).not.toBeNull();
-      await expect(razao!).toBeGreaterThanOrEqual(4.5);
+      const ratio = contrastTextBackground(ta);
+      await expect(ratio).not.toBeNull();
+      await expect(ratio!).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

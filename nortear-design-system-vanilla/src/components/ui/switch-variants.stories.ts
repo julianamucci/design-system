@@ -193,10 +193,10 @@ export const Sm: Story = {
     });
 
     await step('O thumb acompanha o degrau do trilho', async () => {
-      const thumbPadrao = padrao.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+      const thumbDefault = padrao.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       const thumbCompacto = compacto.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       await expect(thumbCompacto.getBoundingClientRect().width).toBeLessThan(
-        thumbPadrao.getBoundingClientRect().width,
+        thumbDefault.getBoundingClientRect().width,
       );
     });
   },

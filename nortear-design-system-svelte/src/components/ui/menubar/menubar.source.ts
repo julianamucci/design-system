@@ -28,7 +28,7 @@ export type MenubarArgs = {
 };
 
 /** Ordem estável dos nomes no bloco de import, independente da composição. */
-const ORDEM = [
+const ORDER = [
   'Menubar',
   'MenubarMenu',
   'MenubarTrigger',
@@ -47,8 +47,8 @@ const ORDEM = [
   'MenubarSubContent',
 ];
 
-function importar(pecas: string[]): string {
-  const usadas = ORDEM.filter((nome) => pecas.includes(nome));
+function importing(parts: string[]): string {
+  const usadas = ORDER.filter((nome) => parts.includes(nome));
   return `import {
 ${usadas.map((nome) => `  ${nome},`).join('\n')}
 } from "@/components/ui/menubar";`;
@@ -64,14 +64,14 @@ ${corpo}
   </MenubarMenu>`;
 }
 
-type Composicao = { pecas: string[]; estado: string[]; menus: string };
+type Composition = { parts: string[]; estado: string[]; menus: string };
 
 const BASE = ['Menubar', 'MenubarMenu', 'MenubarTrigger', 'MenubarContent'];
 
-function composicao(
+function composition(
   demonstration: MenubarArgs['demonstration'],
   variant: MenubarArgs['variant'],
-): Composicao {
+): Composition {
   if (demonstration === 'shortcuts') {
     const itens = [
       ['Desfazer', '⌘Z'],
@@ -87,7 +87,7 @@ function composicao(
       .join('\n');
 
     return {
-      pecas: [...BASE, 'MenubarItem', 'MenubarShortcut'],
+      parts: [...BASE, 'MenubarItem', 'MenubarShortcut'],
       estado: [],
       menus: menu('edit', 'Editar', itens),
     };
@@ -95,7 +95,7 @@ function composicao(
 
   if (demonstration === 'submenu') {
     return {
-      pecas: [...BASE, 'MenubarItem', 'MenubarSub', 'MenubarSubTrigger', 'MenubarSubContent'],
+      parts: [...BASE, 'MenubarItem', 'MenubarSub', 'MenubarSubTrigger', 'MenubarSubContent'],
       estado: [],
       menus: menu(
         'file',
@@ -115,7 +115,7 @@ function composicao(
 
   if (demonstration === 'checkbox') {
     return {
-      pecas: [...BASE, 'MenubarGroup', 'MenubarGroupHeading', 'MenubarCheckboxItem'],
+      parts: [...BASE, 'MenubarGroup', 'MenubarGroupHeading', 'MenubarCheckboxItem'],
       estado: [
         'let regua = $state(true);',
         'let barraLateral = $state(false);',
@@ -138,7 +138,7 @@ function composicao(
 
   if (demonstration === 'indeterminate') {
     return {
-      pecas: [...BASE, 'MenubarLabel', 'MenubarCheckboxItem'],
+      parts: [...BASE, 'MenubarLabel', 'MenubarCheckboxItem'],
       estado: [],
       menus: menu(
         'view',
@@ -153,7 +153,7 @@ function composicao(
 
   if (demonstration === 'radio') {
     return {
-      pecas: [...BASE, 'MenubarGroupHeading', 'MenubarRadioGroup', 'MenubarRadioItem'],
+      parts: [...BASE, 'MenubarGroupHeading', 'MenubarRadioGroup', 'MenubarRadioItem'],
       estado: ['let tema = $state("light");'],
       menus: menu(
         'theme',
@@ -170,7 +170,7 @@ function composicao(
 
   if (demonstration === 'itemDisabled') {
     return {
-      pecas: [...BASE, 'MenubarItem'],
+      parts: [...BASE, 'MenubarItem'],
       estado: [],
       menus: menu(
         'file',
@@ -184,7 +184,7 @@ function composicao(
 
   if (demonstration === 'destructive') {
     return {
-      pecas: [...BASE, 'MenubarItem', 'MenubarSeparator'],
+      parts: [...BASE, 'MenubarItem', 'MenubarSeparator'],
       estado: [],
       menus: menu(
         'file',
@@ -198,7 +198,7 @@ function composicao(
 
   if (demonstration === 'editor') {
     return {
-      pecas: [
+      parts: [
         ...BASE,
         'MenubarItem',
         'MenubarGroup',
@@ -255,7 +255,7 @@ function composicao(
   ];
 
   return {
-    pecas: [...BASE, 'MenubarItem'],
+    parts: [...BASE, 'MenubarItem'],
     estado: [],
     menus: categorias
       .map(([valor, rotulo, itens]) =>
@@ -283,7 +283,7 @@ export function menubarSource(_gerado?: string, ctx?: { args?: Partial<MenubarAr
     demonstration = 'default',
   } = ctx?.args ?? {};
 
-  const { pecas, estado, menus } = composicao(demonstration, variant);
+  const { parts, estado, menus } = composition(demonstration, variant);
 
   // Nesta stack o menu aberto é o `value` da raiz, vinculável: a mesma prop
   // serve de valor inicial e de leitura do estado.
@@ -298,7 +298,7 @@ export function menubarSource(_gerado?: string, ctx?: { args?: Partial<MenubarAr
   ];
 
   return svelteSnippet(
-    declaracoes.length ? `${importar(pecas)}\n\n${declaracoes.join('\n')}` : importar(pecas),
+    declaracoes.length ? `${importing(parts)}\n\n${declaracoes.join('\n')}` : importing(parts),
     `<Menubar${props}>
 ${menus}
 </Menubar>`,

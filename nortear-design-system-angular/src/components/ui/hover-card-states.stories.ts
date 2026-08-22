@@ -6,11 +6,11 @@ import { NDS_AVATAR } from './avatar';
 import { NdsButton } from './button';
 import {
   CARTAO_PERFIL,
-  entrarNoPainel,
-  esperarAberto,
-  esperarFechado,
-  painelAberto,
-  razaoDeContraste,
+  panelEntrar,
+  waitForOpen,
+  waitForClosed,
+  panelOpen,
+  contrastRatio,
 } from './hover-card.fixtures';
 
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
@@ -68,8 +68,8 @@ export const Closed: Story = {
     const gatilho = canvas.getByRole('link');
 
     await step('Fechado, o portal está vazio', async () => {
-      await esperarFechado();
-      await expect(painelAberto()).toBeNull();
+      await waitForClosed();
+      await expect(panelOpen()).toBeNull();
     });
 
     await step('O gatilho não anuncia estado de expansão', async () => {
@@ -121,9 +121,9 @@ export const Open: Story = {
 
     // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
     await userEvent.keyboard('{Escape}');
-    await esperarFechado();
+    await waitForClosed();
     await userEvent.hover(gatilho);
-    const painel = await esperarAberto();
+    const painel = await waitForOpen();
 
     await step('O painel é um dialog não-modal', async () => {
       await expect(painel).toHaveAttribute('role', 'dialog');
@@ -139,11 +139,11 @@ export const Open: Story = {
     await step('Levar o cursor para dentro do painel mantém o cartão aberto', async () => {
       // O caminho completo: sai do gatilho (o que agenda o fechamento) e entra
       // no painel (o que o cancela). Só a entrada, sem a saída, provaria nada.
-      await entrarNoPainel(gatilho, painel);
+      await panelEntrar(gatilho, painel);
       // Espera deliberada, maior que o closeDelay de 80ms: o que se prova aqui
       // é a AUSÊNCIA de fechamento, e ausência não tem evento para aguardar.
       await new Promise((resolve) => setTimeout(resolve, 300));
-      await expect(painelAberto()).toBe(painel);
+      await expect(panelOpen()).toBe(painel);
       await expect(painel).toBeVisible();
     });
 
@@ -152,7 +152,7 @@ export const Open: Story = {
       // --popover), e não deduzido do token: é o valor que o navegador aplicou.
       const estilo = getComputedStyle(painel);
       await waitFor(async () => {
-        await expect(razaoDeContraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+        await expect(contrastRatio(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
       });
     });
   },
@@ -213,15 +213,15 @@ export const Controlled: Story = {
       // Nenhum hover e nenhum foco no gatilho: quem abre é a propriedade, e é
       // isso que distingue o modo controlado.
       await userEvent.click(abrir);
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(espelho).toHaveTextContent('aberto');
     });
 
     await step('E fecha pelo mesmo caminho', async () => {
       await userEvent.click(fechar);
-      await esperarFechado();
-      await expect(painelAberto()).toBeNull();
+      await waitForClosed();
+      await expect(panelOpen()).toBeNull();
       await expect(espelho).toHaveTextContent('fechado');
     });
   },

@@ -15,7 +15,7 @@
  * Armadilhas evitadas aqui:
  *
  *   - `console.log` não chega ao terminal (o addon instrumenta o console dentro
- *     da play). O canal é a exceção — ver `reportarSonda`.
+ *     da play). O canal é a exceção — ver `reportProbe`.
  *   - **Geometria computada, nunca `style.width`.** O CSS compartilhado dá
  *     `flex-basis: 0` ao painel, e com isso `width` inline é ignorado no eixo
  *     principal: uma stack pode escrever `width: 35%` no elemento, a asserção
@@ -30,14 +30,14 @@
  *   - O foco muda o estado medido; a sonda devolve o foco a quem o tinha.
  */
 
-import { fundoEfetivo, ligarTemaEscuro, razao, semTransicao } from './cor';
+import { backgroundEffective, darkLigarTheme, ratio, noTransicao } from './cor';
 
 export type { Contraste } from './cor';
-export { ligarTemaEscuro };
+export { darkLigarTheme };
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export interface MedidaDePainel {
+export interface PanelMeasurement {
   /** A classe do contrato. `false` é a stack não vestir o painel. */
   temClasseDoContrato: boolean;
   dataSlot: string | null;
@@ -47,7 +47,7 @@ export interface MedidaDePainel {
   larguraPx: number;
   alturaPx: number;
   /** Fração do eixo principal do grupo — é o número que a pessoa vê. */
-  fracao: number | null;
+  fraction: number | null;
   /** O que a stack escreveu, para comparar com o que o navegador aplicou. */
   styleWidth: string;
   styleHeight: string;
@@ -56,7 +56,7 @@ export interface MedidaDePainel {
   flexBasis: string;
 }
 
-export interface MedidaDePunho {
+export interface HandleMeasurement {
   role: string | null;
   nomeAcessivel: string | null;
   ariaOrientation: string | null;
@@ -74,20 +74,20 @@ export interface MedidaDePunho {
   alturaPx: number;
   cursor: string;
   fundo: string;
-  contrasteNoFundo: ReturnType<typeof razao>;
+  contrasteNoFundo: ReturnType<typeof ratio>;
   temGripDePontos: boolean;
   temGripBar: boolean;
   /** Seis pontinhos não têm nada a dizer a um leitor de tela. */
   gripAriaHidden: string | null;
 }
 
-export interface MedidaDeTeclado {
+export interface KeyboardMeasurement {
   /** `false` é o achado maior: alça inalcançável ou inerte sem mouse. */
   respondeAsSetas: boolean;
   fracaoAntes: number | null;
   fracaoDepois: number | null;
-  valuenowAntes: string | null;
-  valuenowDepois: string | null;
+  valuenowBefore: string | null;
+  valuenowAfter: string | null;
   /** O que um painel ganha o vizinho perde — a soma não pode escorrer. */
   somaPreservada: boolean;
   /** Setas do outro eixo não podem mover nada (nem roubar a rolagem). */
@@ -101,7 +101,7 @@ export interface MedidaDeTeclado {
   respondeEnter: boolean;
 }
 
-export interface MedidaDeGrupo {
+export interface GroupMeasurement {
   presente: boolean;
   tag: string | null;
   temClasseDoContrato: boolean;
@@ -109,25 +109,25 @@ export interface MedidaDeGrupo {
   ariaOrientation: string | null;
   dataPanelGroupDirection: string | null;
   flexDirection: string;
-  paineis: MedidaDePainel[];
-  punhos: MedidaDePunho[];
-  teclado: MedidaDeTeclado | null;
+  panels: PanelMeasurement[];
+  punhos: HandleMeasurement[];
+  teclado: KeyboardMeasurement | null;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const SEL_GRUPO = '.nds-resizable, [data-slot="resizable"], [data-slot="resizable-panel-group"], [data-slot="resizable-pane-group"]';
-const SEL_PAINEL = '[data-slot="resizable-panel"], [data-slot="resizable-pane"], .nds-resizable-panel';
-const SEL_PUNHO = '[data-slot="resizable-handle"], .nds-resizable-handle';
+const SEL_GROUP = '.nds-resizable, [data-slot="resizable"], [data-slot="resizable-panel-group"], [data-slot="resizable-pane-group"]';
+const SEL_PANEL = '[data-slot="resizable-panel"], [data-slot="resizable-pane"], .nds-resizable-panel';
+const SEL_HANDLE = '[data-slot="resizable-handle"], .nds-resizable-handle';
 
 const num = (v: number): number => Math.round(v * 100) / 100;
 
 /** Nome acessível pela ordem que o leitor usa. `null` é controle sem nome. */
 function nomeAcessivel(el: Element | null | undefined): string | null {
   if (!el) return null;
-  const rotulado = el.getAttribute('aria-labelledby');
-  if (rotulado) {
-    const alvo = el.ownerDocument.getElementById(rotulado.split(/\s+/)[0]);
+  const labelled = el.getAttribute('aria-labelledby');
+  if (labelled) {
+    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
     if (alvo?.textContent?.trim()) return alvo.textContent.trim();
   }
   const rotulo = el.getAttribute('aria-label');
@@ -136,11 +136,11 @@ function nomeAcessivel(el: Element | null | undefined): string | null {
 }
 
 /** Filhos DIRETOS: num layout aninhado, o grupo de dentro não é do de fora. */
-function filhosDiretos(grupo: HTMLElement, seletor: string): HTMLElement[] {
+function childrenDiretos(grupo: HTMLElement, seletor: string): HTMLElement[] {
   return [...grupo.children].filter((c): c is HTMLElement => c instanceof HTMLElement && c.matches(seletor));
 }
 
-function ehHorizontal(grupo: HTMLElement): boolean {
+function horizontalEh(grupo: HTMLElement): boolean {
   return getComputedStyle(grupo).flexDirection.startsWith('row');
 }
 
@@ -151,7 +151,7 @@ function medida(el: HTMLElement, horizontal: boolean): number {
 
 // ─── Medição estática ─────────────────────────────────────────────────────────
 
-function medirPainel(p: HTMLElement, horizontal: boolean, total: number): MedidaDePainel {
+function measurePanel(p: HTMLElement, horizontal: boolean, total: number): PanelMeasurement {
   const cs = getComputedStyle(p);
   const r = p.getBoundingClientRect();
   return {
@@ -161,7 +161,7 @@ function medirPainel(p: HTMLElement, horizontal: boolean, total: number): Medida
     overflow: cs.overflow,
     larguraPx: num(r.width),
     alturaPx: num(r.height),
-    fracao: total > 0 ? num(medida(p, horizontal) / total) : null,
+    fraction: total > 0 ? num(medida(p, horizontal) / total) : null,
     styleWidth: p.style.width,
     styleHeight: p.style.height,
     panelSizeVar: p.style.getPropertyValue('--panel-size') || null,
@@ -170,11 +170,11 @@ function medirPainel(p: HTMLElement, horizontal: boolean, total: number): Medida
   };
 }
 
-function medirPunho(h: HTMLElement): MedidaDePunho {
+function measureHandle(h: HTMLElement): HandleMeasurement {
   const cs = getComputedStyle(h);
   const r = h.getBoundingClientRect();
   const fundo = cs.backgroundColor;
-  const atras = fundoEfetivo(h.parentElement) ?? 'rgb(255, 255, 255)';
+  const atras = backgroundEffective(h.parentElement) ?? 'rgb(255, 255, 255)';
   const grip = h.querySelector('.nds-resizable-grip');
   return {
     role: h.getAttribute('role'),
@@ -193,7 +193,7 @@ function medirPunho(h: HTMLElement): MedidaDePunho {
     alturaPx: num(r.height),
     cursor: cs.cursor,
     fundo,
-    contrasteNoFundo: razao(fundo, atras),
+    contrasteNoFundo: ratio(fundo, atras),
     temGripDePontos: !!grip,
     temGripBar: !!h.querySelector('.nds-resizable-grip-bar'),
     gripAriaHidden: grip?.querySelector('svg')?.getAttribute('aria-hidden') ?? null,
@@ -212,7 +212,7 @@ function medirPunho(h: HTMLElement): MedidaDePunho {
  */
 async function teclar(h: HTMLElement, key: string): Promise<void> {
   h.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
-  await assentar();
+  await settle();
 }
 
 /**
@@ -224,70 +224,70 @@ async function teclar(h: HTMLElement, key: string): Promise<void> {
  * desta sonda media no mesmo instante da tecla e relatou "não responde às setas"
  * em TODAS as stacks — um defeito que não existia, dito por uma medição cega.
  */
-function assentar(): Promise<void> {
+function settle(): Promise<void> {
   return new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
 }
 
-function fracoes(paineis: HTMLElement[], horizontal: boolean, total: number): number[] {
-  return total > 0 ? paineis.map((p) => medida(p, horizontal) / total) : [];
+function fracoes(panels: HTMLElement[], horizontal: boolean, total: number): number[] {
+  return total > 0 ? panels.map((p) => medida(p, horizontal) / total) : [];
 }
 
-async function medirTeclado(
+async function measureKeyboard(
   grupo: HTMLElement,
-  paineis: HTMLElement[],
+  panels: HTMLElement[],
   punho: HTMLElement,
-): Promise<MedidaDeTeclado | null> {
-  if (paineis.length < 2) return null;
-  const horizontal = ehHorizontal(grupo);
+): Promise<KeyboardMeasurement | null> {
+  if (panels.length < 2) return null;
+  const horizontal = horizontalEh(grupo);
   const total = medida(grupo, horizontal);
   const cresce = horizontal ? 'ArrowRight' : 'ArrowDown';
   const encolhe = horizontal ? 'ArrowLeft' : 'ArrowUp';
-  const outroEixo = horizontal ? 'ArrowDown' : 'ArrowRight';
+  const otherEixo = horizontal ? 'ArrowDown' : 'ArrowRight';
 
   const anterior = grupo.ownerDocument.activeElement as HTMLElement | null;
   punho.focus();
 
   try {
-    const antes = fracoes(paineis, horizontal, total);
-    const valuenowAntes = punho.getAttribute('aria-valuenow');
+    const antes = fracoes(panels, horizontal, total);
+    const valuenowBefore = punho.getAttribute('aria-valuenow');
 
     for (let i = 0; i < 5; i++) await teclar(punho, cresce);
-    const depois = fracoes(paineis, horizontal, total);
-    const valuenowDepois = punho.getAttribute('aria-valuenow');
+    const depois = fracoes(panels, horizontal, total);
+    const valuenowAfter = punho.getAttribute('aria-valuenow');
 
     const soma = depois.reduce((a, b) => a + b, 0);
-    const somaAntes = antes.reduce((a, b) => a + b, 0);
+    const sumBefore = antes.reduce((a, b) => a + b, 0);
 
     // Outro eixo: mede a partir do estado corrente, e não do inicial.
-    const base = fracoes(paineis, horizontal, total);
-    for (let i = 0; i < 3; i++) await teclar(punho, outroEixo);
-    const aposOutroEixo = fracoes(paineis, horizontal, total);
+    const base = fracoes(panels, horizontal, total);
+    for (let i = 0; i < 3; i++) await teclar(punho, otherEixo);
+    const aposOtherEixo = fracoes(panels, horizontal, total);
 
     // Piso: insistir na seta contrária tem que parar no mínimo declarado.
     for (let i = 0; i < 40; i++) await teclar(punho, encolhe);
-    const noPiso = fracoes(paineis, horizontal, total);
+    const noPiso = fracoes(panels, horizontal, total);
     const valuenowNoPiso = punho.getAttribute('aria-valuenow');
 
     const mede = (a: number[], b: number[]) => a.some((v, i) => Math.abs(v - (b[i] ?? v)) > 0.005);
 
-    const antesDoEnd = fracoes(paineis, horizontal, total);
+    const endBefore = fracoes(panels, horizontal, total);
     await teclar(punho, 'End');
-    const respondeEnd = mede(antesDoEnd, fracoes(paineis, horizontal, total));
-    const antesDoHome = fracoes(paineis, horizontal, total);
+    const respondeEnd = mede(endBefore, fracoes(panels, horizontal, total));
+    const homeBefore = fracoes(panels, horizontal, total);
     await teclar(punho, 'Home');
-    const respondeHome = mede(antesDoHome, fracoes(paineis, horizontal, total));
-    const antesDoEnter = fracoes(paineis, horizontal, total);
+    const respondeHome = mede(homeBefore, fracoes(panels, horizontal, total));
+    const enterBefore = fracoes(panels, horizontal, total);
     await teclar(punho, 'Enter');
-    const respondeEnter = mede(antesDoEnter, fracoes(paineis, horizontal, total));
+    const respondeEnter = mede(enterBefore, fracoes(panels, horizontal, total));
 
     return {
       respondeAsSetas: mede(antes, depois),
       fracaoAntes: antes[0] !== undefined ? num(antes[0]) : null,
       fracaoDepois: depois[0] !== undefined ? num(depois[0]) : null,
-      valuenowAntes,
-      valuenowDepois,
-      somaPreservada: Math.abs(soma - somaAntes) < 0.02,
-      ignoraOutroEixo: !mede(base, aposOutroEixo),
+      valuenowBefore,
+      valuenowAfter,
+      somaPreservada: Math.abs(soma - sumBefore) < 0.02,
+      ignoraOutroEixo: !mede(base, aposOtherEixo),
       fracaoNoPiso: noPiso[0] !== undefined ? num(noPiso[0]) : null,
       valuenowNoPiso,
       respondeHome,
@@ -305,8 +305,8 @@ async function medirTeclado(
  * Mede um grupo. `comTeclado: false` para os cenários em que a interação
  * envenenaria a medida seguinte (o grupo desabilitado, por exemplo).
  */
-export async function medirGrupo(raiz: HTMLElement, comTeclado = true): Promise<MedidaDeGrupo> {
-  const grupo = raiz.matches(SEL_GRUPO) ? raiz : raiz.querySelector<HTMLElement>(SEL_GRUPO);
+export async function measureGroup(raiz: HTMLElement, comTeclado = true): Promise<GroupMeasurement> {
+  const grupo = raiz.matches(SEL_GROUP) ? raiz : raiz.querySelector<HTMLElement>(SEL_GROUP);
   if (!grupo) {
     return {
       presente: false,
@@ -316,18 +316,18 @@ export async function medirGrupo(raiz: HTMLElement, comTeclado = true): Promise<
       ariaOrientation: null,
       dataPanelGroupDirection: null,
       flexDirection: '',
-      paineis: [],
+      panels: [],
       punhos: [],
       teclado: null,
     };
   }
 
-  const horizontal = ehHorizontal(grupo);
+  const horizontal = horizontalEh(grupo);
   const total = medida(grupo, horizontal);
-  const paineis = filhosDiretos(grupo, SEL_PAINEL);
-  const punhos = filhosDiretos(grupo, SEL_PUNHO);
+  const panels = childrenDiretos(grupo, SEL_PANEL);
+  const punhos = childrenDiretos(grupo, SEL_HANDLE);
 
-  const estatico: MedidaDeGrupo = {
+  const estatico: GroupMeasurement = {
     presente: true,
     tag: grupo.tagName.toLowerCase(),
     temClasseDoContrato: grupo.classList.contains('nds-resizable'),
@@ -335,12 +335,12 @@ export async function medirGrupo(raiz: HTMLElement, comTeclado = true): Promise<
     ariaOrientation: grupo.getAttribute('aria-orientation'),
     dataPanelGroupDirection: grupo.getAttribute('data-panel-group-direction'),
     flexDirection: getComputedStyle(grupo).flexDirection,
-    paineis: paineis.map((p) => medirPainel(p, horizontal, total)),
-    punhos: punhos.map(medirPunho),
+    panels: panels.map((p) => measurePanel(p, horizontal, total)),
+    punhos: punhos.map(measureHandle),
     teclado: null,
   };
 
-  if (comTeclado && punhos[0]) estatico.teclado = await medirTeclado(grupo, paineis, punhos[0]);
+  if (comTeclado && punhos[0]) estatico.teclado = await measureKeyboard(grupo, panels, punhos[0]);
   return estatico;
 }
 
@@ -349,17 +349,17 @@ export async function medirGrupo(raiz: HTMLElement, comTeclado = true): Promise<
  * nunca vê, porque a tela está sempre no claro. A classe sai no `finally`:
  * deixá-la posta envenena a story seguinte e a foto do Chromatic.
  */
-export function medirNoEscuro(raiz: HTMLElement) {
-  const punho = raiz.querySelector<HTMLElement>(SEL_PUNHO);
+export function darkMeasure(raiz: HTMLElement) {
+  const punho = raiz.querySelector<HTMLElement>(SEL_HANDLE);
   if (!punho) return null;
-  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(raiz.ownerDocument);
   try {
     // `background-color` do punho está em transição; sem desligá-la a sonda
     // leria a cor do tema CLARO e relataria um divisor que não escurece.
-    return semTransicao(punho, () => {
+    return noTransicao(punho, () => {
       const cs = getComputedStyle(punho);
-      const atras = fundoEfetivo(punho.parentElement) ?? 'rgb(0, 0, 0)';
-      return { fundo: cs.backgroundColor, contrasteNoFundo: razao(cs.backgroundColor, atras) };
+      const atras = backgroundEffective(punho.parentElement) ?? 'rgb(0, 0, 0)';
+      return { fundo: cs.backgroundColor, contrasteNoFundo: ratio(cs.backgroundColor, atras) };
     });
   } finally {
     desfazer();
@@ -375,27 +375,27 @@ export function medirNoEscuro(raiz: HTMLElement) {
  * existe em regra nenhuma. Conferir a tabela contra a folha lida a olho foi
  * exatamente o que deixou isso passar; aqui a fonte é `getComputedStyle`.
  */
-export function medirTokens(raiz: HTMLElement) {
-  const punho = raiz.querySelector<HTMLElement>(SEL_PUNHO);
-  const painel = raiz.querySelector<HTMLElement>(SEL_PAINEL);
+export function measureTokens(raiz: HTMLElement) {
+  const punho = raiz.querySelector<HTMLElement>(SEL_HANDLE);
+  const painel = raiz.querySelector<HTMLElement>(SEL_PANEL);
   if (!punho) return null;
   const grip = punho.querySelector<HTMLElement>('.nds-resizable-grip');
   const bar = punho.querySelector<HTMLElement>('.nds-resizable-grip-bar');
   const cs = getComputedStyle(punho);
   const anterior = raiz.ownerDocument.activeElement as HTMLElement | null;
   punho.focus();
-  const comFoco = getComputedStyle(punho).boxShadow;
+  const withFocus = getComputedStyle(punho).boxShadow;
   anterior?.focus?.();
-  const depoisDaLinha = getComputedStyle(punho, '::after');
+  const lineAfter = getComputedStyle(punho, '::after');
 
   return {
     punho: {
       fundo: cs.backgroundColor,
       transicao: cs.transitionDuration,
-      boxShadowComFoco: comFoco,
+      boxShadowComFoco: withFocus,
       focusVisible: punho.matches(':focus-visible'),
     },
-    areaDeToque: { largura: depoisDaLinha.width, altura: depoisDaLinha.height },
+    areaDeToque: { largura: lineAfter.width, altura: lineAfter.height },
     grip: grip
       ? {
           fundo: getComputedStyle(grip).backgroundColor,
@@ -432,13 +432,13 @@ export function medirTokens(raiz: HTMLElement) {
  * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
  * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
  */
-export async function medirCenarios(raiz: HTMLElement, cenarios: string[]) {
+export async function measureCenarios(raiz: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
     const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
     // O cenário desabilitado TAMBÉM passa pelo teclado: o achado ali é o
     // divisor travado que mesmo assim se mexe.
-    registro[cenario] = alvo ? await medirGrupo(alvo, true) : null;
+    registro[cenario] = alvo ? await measureGroup(alvo, true) : null;
   }
   return registro;
 }
@@ -449,11 +449,11 @@ export async function medirCenarios(raiz: HTMLElement, cenarios: string[]) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export async function reportarSonda(stack: string, raiz: HTMLElement, cenarios: string[]) {
+export async function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
   const registro = {
-    tokens: medirTokens(raiz),
-    claro: await medirCenarios(raiz, cenarios),
-    escuro: medirNoEscuro(raiz),
+    tokens: measureTokens(raiz),
+    claro: await measureCenarios(raiz, cenarios),
+    escuro: darkMeasure(raiz),
     persistencia: Object.keys(localStorage).filter((k) => /resiz|panel|split|pane/i.test(k)),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);

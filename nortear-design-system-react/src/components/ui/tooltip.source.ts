@@ -46,7 +46,7 @@ import { Save } from "lucide-react";`;
  * do próprio `aria-label` — quem chega pelo toque nunca vê o balão, então o
  * tooltip não pode ser o único portador do nome.
  */
-function gatilhoIcone(rotulo = 'Salvar'): string {
+function triggerIcon(rotulo = 'Salvar'): string {
   return `    <TooltipTrigger
       render={(props) => (
         <Button {...props} variant="ghost" size="icon" aria-label="${rotulo}">
@@ -57,7 +57,7 @@ function gatilhoIcone(rotulo = 'Salvar'): string {
 }
 
 /** Envolve a composição no provider, que é quem governa o atraso de abertura. */
-function comProvider(miolo: string, delay?: number): string {
+function withProvider(miolo: string, delay?: number): string {
   const abertura = delay === undefined ? '<TooltipProvider>' : `<TooltipProvider delay={${delay}}>`;
   return `${abertura}\n${miolo}\n</TooltipProvider>`;
 }
@@ -72,7 +72,7 @@ function comProvider(miolo: string, delay?: number): string {
  */
 export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const posicao = attrs(
+  const position = attrs(
     propOption('side', args.side, LADOS, 'top'),
     propOption('align', args.align, ALINHAMENTOS, 'center'),
     typeof args.sideOffset === 'number' && args.sideOffset !== 4
@@ -83,10 +83,10 @@ export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
 
   return jsxSnippet(
     IMPORT_DEFAULT,
-    comProvider(
+    withProvider(
       `  <Tooltip${raiz}>
-${gatilhoIcone()}
-    <TooltipContent${posicao}>Salvar (Ctrl+S)</TooltipContent>
+${triggerIcon()}
+    <TooltipContent${position}>Salvar (Ctrl+S)</TooltipContent>
   </Tooltip>`,
     ),
   );
@@ -99,9 +99,9 @@ ${gatilhoIcone()}
 export function tooltipCurtoSource(): string {
   return jsxSnippet(
     IMPORT_DEFAULT,
-    comProvider(
+    withProvider(
       `  <Tooltip defaultOpen>
-${gatilhoIcone()}
+${triggerIcon()}
     <TooltipContent>Salvar</TooltipContent>
   </Tooltip>`,
     ),
@@ -113,12 +113,12 @@ ${gatilhoIcone()}
  * `.nds-tooltip-content:has([data-slot="kbd"])`, que encurta o respiro à
  * direita do balão. Sem ele a tecla fica com folga a mais de um lado só.
  */
-export function tooltipComAtalhoSource(): string {
+export function tooltipWithShortcutSource(): string {
   return jsxSnippet(
     IMPORT_DEFAULT,
-    comProvider(
+    withProvider(
       `  <Tooltip defaultOpen>
-${gatilhoIcone()}
+${triggerIcon()}
     <TooltipContent>
       <span>Salvar</span>
       <kbd className="nds-kbd" data-slot="kbd">Ctrl</kbd>
@@ -133,12 +133,12 @@ ${gatilhoIcone()}
  * Texto longo: quebra dentro do limite de largura do balão, que é do próprio
  * componente. Passou disso, o caso deixou de ser tooltip e virou popover.
  */
-export function tooltipTextoLongoSource(): string {
+export function tooltipTextLongSource(): string {
   return jsxSnippet(
     IMPORT_DEFAULT,
-    comProvider(
+    withProvider(
       `  <Tooltip defaultOpen>
-${gatilhoIcone()}
+${triggerIcon()}
     <TooltipContent>
       Salva as alterações do documento atual e mantém você na mesma tela.
     </TooltipContent>
@@ -152,12 +152,12 @@ ${gatilhoIcone()}
  * `aria-describedby` apontando para ele — e só enquanto ABERTO, porque um
  * `aria-describedby` apontando para id ausente é atributo inválido.
  */
-export function tooltipAbertoSource(): string {
+export function tooltipOpenSource(): string {
   return jsxSnippet(
     IMPORT_DEFAULT,
-    comProvider(
+    withProvider(
       `  <Tooltip defaultOpen>
-${gatilhoIcone()}
+${triggerIcon()}
     <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
   </Tooltip>`,
     ),
@@ -173,7 +173,7 @@ ${gatilhoIcone()}
 export function tooltipWithDelaySource(): string {
   return jsxSnippet(
     IMPORT_DEFAULT,
-    comProvider(
+    withProvider(
       `  <Tooltip>
     <TooltipTrigger
       delay={600}
@@ -199,7 +199,7 @@ export function tooltipWithDelaySource(): string {
 export function tooltipPersistenteSource(): string {
   return jsxSnippet(
     IMPORT_TOOLTIP,
-    comProvider(
+    withProvider(
       `  <Tooltip>
     <TooltipTrigger
       render={(props) => <Button {...props} variant="outline">Compartilhar</Button>}
@@ -217,7 +217,7 @@ export function tooltipPersistenteSource(): string {
  * clique fora dispensa o balão ANTES do `click`, então um alternador leria o
  * estado já invertido pela lib e reabriria o que acabou de fechar.
  */
-export function tooltipControladoSource(): string {
+export function tooltipControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORT_DEFAULT}`,
@@ -233,7 +233,7 @@ ${IMPORT_DEFAULT}`,
     </div>
 
     <Tooltip open={aberto} onOpenChange={setAberto}>
-${gatilhoIcone()}
+${triggerIcon()}
       <TooltipContent>Salvar (Ctrl+S)</TooltipContent>
     </Tooltip>
   </div>
@@ -246,7 +246,7 @@ ${gatilhoIcone()}
  * repete a mesma palavra. Quem usa toque nunca vê o balão, e é o rótulo do
  * botão que sustenta o nome acessível sozinho.
  */
-export function iconsSourceTooltipBar(): string {
+export function iconsTooltipBarSource(): string {
   const acao = (rotulo: string, icone: string) => `    <Tooltip>
       <TooltipTrigger
         render={(props) => (
@@ -261,7 +261,7 @@ export function iconsSourceTooltipBar(): string {
   return jsxSnippet(
     `${IMPORT_TOOLTIP}
 import { Save, Share2, Trash2 } from "lucide-react";`,
-    comProvider(
+    withProvider(
       `  <div
     className="nds-cluster nds-rounded-md nds-border-default nds-p-1 nds-bg-card"
     data-align="center"
@@ -281,13 +281,13 @@ ${acao('Excluir', 'Trash2')}
  * Atalho ao lado de uma barra de ferramentas: o nome acessível continua sendo o
  * do botão, e a tecla é conveniência — nunca a informação que faltava.
  */
-export function barSourceTooltipShortcut(): string {
+export function barTooltipShortcutSource(): string {
   return jsxSnippet(
     IMPORT_DEFAULT,
-    comProvider(
+    withProvider(
       `  <div className="nds-cluster" data-align="center" data-spacing="xs">
     <Tooltip>
-${gatilhoIcone()}
+${triggerIcon()}
       <TooltipContent side="bottom">
         <span>Salvar</span>
         <kbd className="nds-kbd" data-slot="kbd">Ctrl</kbd>
@@ -309,7 +309,7 @@ export function tooltipLadosSource(): string {
     `${IMPORT_TOOLTIP}
 
 const lados = ["top", "right", "bottom", "left"] as const;`,
-    comProvider(
+    withProvider(
       `  <div className="nds-grid nds-p-8" data-spacing="xl" data-cols="2">
     {lados.map((lado) => (
       <Tooltip key={lado} defaultOpen>

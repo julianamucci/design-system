@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { createDialog } from './dialog';
-import { dialogComFormularioSource, dialogSource, dialogSourceWith } from './dialog.source';
+import { dialogWithFormSource, dialogSource, dialogSourceWith } from './dialog.source';
 import { createButton } from './button';
 import {
   abrir,
   mountOpen,
-  botaoFecharDoCanto,
+  cantoButtonClose,
   buildField,
-  conferirNomeEDescricao,
-  esperarAberto,
-  esperarFechado,
+  checkNameEDescricao,
+  waitForOpen,
+  waitForClosed,
   fechar,
   gatilho,
   makeFooter,
@@ -65,10 +65,10 @@ export const ConfirmEmail: Story = {
     );
   },
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('O diálogo se anuncia com o nome e a descrição do fluxo', async () => {
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step('O endereço confirmado aparece no corpo, não só no título', async () => {
@@ -93,7 +93,7 @@ export const ProfileEdit: Story = {
     // que fecha o par rótulo ↔ controle que esta composição existe para mostrar.
     docs: {
       source: {
-        transform: dialogComFormularioSource({
+        transform: dialogWithFormSource({
           campos: [
             { label: 'Nome de exibição', value: 'Maria Souza' },
             { label: 'Função', value: 'Designer' },
@@ -125,7 +125,7 @@ export const ProfileEdit: Story = {
     );
   },
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Os campos estão rotulados e trazem o valor inicial', async () => {
       const nome = p.querySelector<HTMLInputElement>('#profile-name')!;
@@ -190,7 +190,7 @@ export const MediaPreview: Story = {
     );
   },
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('A mídia tem descrição textual', async () => {
       // O bloco carrega a informação do diálogo — sem nome acessível o conteúdo
@@ -211,10 +211,10 @@ export const MediaPreview: Story = {
       // provar.
       await fechar();
       await abrir(canvasElement);
-      const x = botaoFecharDoCanto(painel()!)!;
+      const x = cantoButtonClose(painel()!)!;
       await expect(x).toHaveAccessibleName();
       await userEvent.click(x);
-      await esperarFechado();
+      await waitForClosed();
       await expect(document.activeElement).toBe(trigger);
       // Reabre: o Chromatic fotografa o estado final, e é o painel ABERTO que o
       // axe precisa varrer — `accessibility.item6` é declarado nesta story.

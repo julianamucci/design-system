@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -138,7 +138,7 @@ frase.append(${antes}, cartao, ${depois});`;
 /** A chamada real de `createHoverCard` com as opções da story. */
 export function hoverCardSnippet(o: HoverCardSnippetOptions = {}): string {
   return snippet(
-    importar('hover-card', 'createHoverCard'),
+    importing('hover-card', 'createHoverCard'),
     triggerBlock(o),
     contentBlock(o),
     `const cartao = ${chamada('createHoverCard', callLines(o))};`,
@@ -182,7 +182,7 @@ export function hoverCardWithComandosSnippet(o: HoverCardWithComandosSnippetOpti
   const closeLabel = texto(o.closeLabel ?? 'Fechar pelo estado externo');
 
   return snippet(
-    [importar('hover-card', 'createHoverCard'), importar('button', 'createButton')].join('\n'),
+    [importing('hover-card', 'createHoverCard'), importing('button', 'createButton')].join('\n'),
     triggerBlock(o),
     contentBlock(o),
     `const cartao = ${chamada('createHoverCard', callLines(o))};`,

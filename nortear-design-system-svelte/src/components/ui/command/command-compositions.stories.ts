@@ -9,11 +9,11 @@ import CommandComposicaoLinkItemStory from './CommandComposicaoLinkItemStory.sve
 import CommandComposicaoComboboxStory from './CommandComposicaoComboboxStory.svelte';
 import CommandComposicaoPaletteStory from './CommandComposicaoPaletteStory.svelte';
 import {
-  commandComAtalhosSource,
-  commandComGruposSource,
+  commandWithShortcutsSource,
+  commandWithGroupsSource,
   commandWithLinkItemSource,
-  commandComoComboboxSource,
-  commandPaletaSource,
+  commandAsComboboxSource,
+  commandPaletteSource,
   commandSource,
 } from './command.source';
 
@@ -53,7 +53,7 @@ type Story = StoryObj;
 export const WithGroups: Story = {
   parameters: {
     covers: ['visual.item1'],
-    docs: { source: { transform: commandComGruposSource } },
+    docs: { source: { transform: commandWithGroupsSource } },
   },
   render: () => ({
     Component: CommandComposicaoGruposStory,
@@ -118,7 +118,7 @@ export const WithGroups: Story = {
 
 export const WithShortcuts: Story = {
   parameters: {
-    docs: { source: { transform: commandComAtalhosSource } },
+    docs: { source: { transform: commandWithShortcutsSource } },
   },
   render: () => ({
     Component: CommandComposicaoShortcutsStory,
@@ -146,10 +146,10 @@ export const WithShortcuts: Story = {
 
     await step('O atalho fica encostado à direita do comando', async () => {
       const atalho = novo.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
-      const caixaItem = novo.getBoundingClientRect();
-      const caixaAtalho = atalho.getBoundingClientRect();
-      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(
-        caixaAtalho.left - caixaItem.left,
+      const boxItem = novo.getBoundingClientRect();
+      const boxShortcut = atalho.getBoundingClientRect();
+      await expect(boxItem.right - boxShortcut.right).toBeLessThan(
+        boxShortcut.left - boxItem.left,
       );
     });
 
@@ -216,10 +216,10 @@ export const WithLinkItem: Story = {
       // certa sair de novo.
       const docs = canvas.getByRole('option', { name: /Button — Docs/ });
       const saida = docs.querySelector<HTMLElement>('.nds-spacer-start')!;
-      const caixaItem = docs.getBoundingClientRect();
+      const boxItem = docs.getBoundingClientRect();
       const boxOutput = saida.getBoundingClientRect();
-      await expect(caixaItem.right - boxOutput.right).toBeLessThan(
-        boxOutput.left - caixaItem.left,
+      await expect(boxItem.right - boxOutput.right).toBeLessThan(
+        boxOutput.left - boxItem.left,
       );
     });
   },
@@ -230,7 +230,7 @@ export const WithLinkItem: Story = {
 export const AsCombobox: Story = {
   parameters: {
     covers: ['functional.item7', 'accessibility.item5', 'visual.item3'],
-    docs: { source: { transform: commandComoComboboxSource } },
+    docs: { source: { transform: commandAsComboboxSource } },
   },
   render: () => ({
     Component: CommandComposicaoComboboxStory,
@@ -308,7 +308,7 @@ export const AsCombobox: Story = {
 export const CommandPalette: Story = {
   parameters: {
     covers: ['functional.item3', 'functional.item6', 'accessibility.item3', 'visual.item4'],
-    docs: { source: { transform: commandPaletaSource } },
+    docs: { source: { transform: commandPaletteSource } },
   },
   render: () => ({
     Component: CommandComposicaoPaletteStory,
@@ -340,7 +340,7 @@ export const CommandPalette: Story = {
     await fechar();
 
     const gatilho = canvas.getByRole('button', { name: /Buscar/ });
-    const abrirPorBotao = async (): Promise<HTMLElement> => {
+    const buttonOpen = async (): Promise<HTMLElement> => {
       if (!domPanel()) await userEvent.click(gatilho);
       return await waitForPortal('dialog');
     };
@@ -354,11 +354,11 @@ export const CommandPalette: Story = {
     });
 
     await step('O diálogo é nomeado por um título que só o leitor de tela vê', async () => {
-      const painel = await abrirPorBotao();
-      const idTitulo = painel.getAttribute('aria-labelledby');
-      await expect(idTitulo).toBeTruthy();
+      const painel = await buttonOpen();
+      const idTitle = painel.getAttribute('aria-labelledby');
+      await expect(idTitle).toBeTruthy();
 
-      const titulo = document.getElementById(idTitulo!)!;
+      const titulo = document.getElementById(idTitle!)!;
       await expect(titulo).toHaveTextContent('Command Palette');
       // DENTRO do painel: fora dele o título ficava no fluxo da página o tempo
       // todo, mesmo com a paleta fechada.
@@ -371,7 +371,7 @@ export const CommandPalette: Story = {
     });
 
     await step('O foco vai direto para a busca', async () => {
-      const painel = await abrirPorBotao();
+      const painel = await buttonOpen();
       const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
         await expect(busca).toHaveFocus();
@@ -409,12 +409,12 @@ export const CommandPalette: Story = {
         '[data-value="dashboard"] [data-slot="command-shortcut"]',
       )!;
       await expect(atalho).toHaveTextContent('⌘D');
-      const caixaItem = atalho
+      const boxItem = atalho
         .closest<HTMLElement>('[data-slot="command-item"]')!
         .getBoundingClientRect();
-      const caixaAtalho = atalho.getBoundingClientRect();
-      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(
-        caixaAtalho.left - caixaItem.left,
+      const boxShortcut = atalho.getBoundingClientRect();
+      await expect(boxItem.right - boxShortcut.right).toBeLessThan(
+        boxShortcut.left - boxItem.left,
       );
     });
 

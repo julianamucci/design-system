@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
-import { ESTADOS_POR_VALOR } from "@shared/testing/select-probe";
+import { VALUE_STATES } from "@shared/testing/select-probe";
 import { useState } from "react";
 import {
   Select,
@@ -13,9 +13,9 @@ import {
   SelectValue,
 } from "./select";
 import {
-  selectComRotuloSource,
-  selectControladoSource,
-  selectEmFormularioSource,
+  selectWithLabelSource,
+  selectControlledSource,
+  formSelectSource,
   selectSource,
 } from "./select.source";
 import { Label } from "./label";
@@ -46,7 +46,7 @@ export const Controlled: Story = {
     docs: {
       // Estado controlado por useState — composição que o snippet do meta,
       // não controlado, esconderia.
-      source: { transform: selectControladoSource },
+      source: { transform: selectControlledSource },
       description: {
         story:
           "Versão controlada via useState. value + onValueChange refletem a seleção do usuário e podem ser persistidos ou validados externamente.",
@@ -63,7 +63,7 @@ export const Controlled: Story = {
         >
           <Select
             value={value}
-            items={ESTADOS_POR_VALOR}
+            items={VALUE_STATES}
             onValueChange={(v) => setValue((v ?? "") as string)}
           >
             <SelectTrigger aria-label="Selecionar estado">
@@ -110,7 +110,7 @@ export const InForm: Story = {
   parameters: {
     docs: {
       // Dentro de formulário, com Label e botão de envio: sub-composição.
-      source: { transform: selectEmFormularioSource },
+      source: { transform: formSelectSource },
       description: {
         story:
           "Integração com <form>. Select recebe name para serializar no submit. Botão fica desabilitado até uma opção ser escolhida.",
@@ -131,7 +131,7 @@ export const InForm: Story = {
             <Select
               name="state"
               value={value}
-              items={{ ...ESTADOS_POR_VALOR, rs: "Rio Grande do Sul", sc: "Santa Catarina" }}
+              items={{ ...VALUE_STATES, rs: "Rio Grande do Sul", sc: "Santa Catarina" }}
               onValueChange={(v) => setValue((v ?? "") as string)}
             >
               <SelectTrigger id="form-state" aria-label="Selecionar estado">
@@ -197,7 +197,7 @@ export const WithLabel: Story = {
     docs: {
       // O par Label + id no gatilho é o assunto, e o meta imprime o campo só
       // com aria-label.
-      source: { transform: selectComRotuloSource },
+      source: { transform: selectWithLabelSource },
       description: {
         story:
           "Select com Label externo associado via htmlFor/id. Quando há Label visível, o aria-label do trigger pode ser dispensado, mas o exemplo mantém ambos para acessibilidade redundante.",
@@ -215,7 +215,7 @@ export const WithLabel: Story = {
           <Label htmlFor="labeled-state">Estado de residência</Label>
           <Select
             value={value}
-            items={{ ...ESTADOS_POR_VALOR, es: "Espírito Santo" }}
+            items={{ ...VALUE_STATES, es: "Espírito Santo" }}
             onValueChange={(v) => setValue((v ?? "") as string)}
           >
             <SelectTrigger id="labeled-state" aria-label="Estado de residência">

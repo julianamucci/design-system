@@ -18,7 +18,7 @@ import {
   MenubarSubTrigger,
   MenubarTrigger,
 } from './index';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import {
   menubarWithShortcutsSource,
   menubarWithCheckboxSource,
@@ -56,7 +56,7 @@ const meta = {
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       source: { transform: menubarWithShortcutsSource },
       description: {
@@ -70,7 +70,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const pecas = {
+const parts = {
   Menubar,
   MenubarCheckboxItem,
   MenubarContent,
@@ -93,7 +93,7 @@ const pecas = {
 export const WithShortcuts: Story = {
   parameters: { covers: ['visual.item2'] },
   render: () => ({
-    components: pecas,
+    components: parts,
     setup: () => ({ atalhos: ATALHOS }),
     template: `
       <div style="contain: layout; min-height: 280px;">
@@ -149,7 +149,7 @@ export const WithSubmenu: Story = {
     },
   },
   render: () => ({
-    components: pecas,
+    components: parts,
     setup: () => ({ exportacoes: EXPORTACOES }),
     template: `
       <div style="contain: layout; min-height: 320px;">
@@ -173,32 +173,32 @@ export const WithSubmenu: Story = {
   play: async ({ step }) => {
     const corpo = within(document.body);
     const menu = await waitForPortal('menu');
-    const subGatilho = within(menu).getByRole('menuitem', { name: 'Exportar' });
+    const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre outro menu', async () => {
-      await expect(subGatilho.getAttribute('aria-haspopup')).toBe('menu');
-      await expect(subGatilho.getAttribute('data-slot')).toBe('menubar-sub-trigger');
+      await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
+      await expect(subTrigger.getAttribute('data-slot')).toBe('menubar-sub-trigger');
     });
 
     await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu', async () => {
       // Idempotente: só navega e abre quando ainda está fechado.
-      if (subGatilho.getAttribute('aria-expanded') !== 'true') {
+      if (subTrigger.getAttribute('aria-expanded') !== 'true') {
         // Quantas setas até o sub-gatilho depende de onde a lib deixou o realce
         // ao abrir — cravar o número é o que quebra quando um item muda de
         // lugar. Anda até chegar, e falha se não chegar.
         const itens = menu.querySelectorAll('[role="menuitem"]');
         for (let i = 0; i < itens.length + 1; i++) {
-          if (document.activeElement === subGatilho) break;
+          if (document.activeElement === subTrigger) break;
           await userEvent.keyboard('{ArrowDown}');
         }
         await waitFor(async () => {
-          await expect(document.activeElement).toBe(subGatilho);
+          await expect(document.activeElement).toBe(subTrigger);
         });
         await userEvent.keyboard('{ArrowRight}');
       }
 
       await waitFor(async () => {
-        await expect(subGatilho.getAttribute('aria-expanded')).toBe('true');
+        await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
         // Dois painéis abertos ao mesmo tempo: o pai continua no lugar, é o que
         // distingue submenu de troca de menu.
         await expect(corpo.getAllByRole('menu')).toHaveLength(2);
@@ -229,7 +229,7 @@ export const WithCheckboxItems: Story = {
     },
   },
   render: () => ({
-    components: pecas,
+    components: parts,
     setup() {
       // Reativo de verdade: com um objeto solto o clique emitiria a mudança e
       // nada re-renderizaria — o item ficaria preso no estado inicial.
@@ -321,7 +321,7 @@ export const WithRadioGroup: Story = {
     },
   },
   render: () => ({
-    components: pecas,
+    components: parts,
     setup() {
       const tema = ref('light');
       return { temas: TEMAS, tema };
@@ -394,7 +394,7 @@ export const EditorCompleto: Story = {
     },
   },
   render: () => ({
-    components: pecas,
+    components: parts,
     template: `
       <div style="contain: layout; min-height: 200px;">
         <Menubar>

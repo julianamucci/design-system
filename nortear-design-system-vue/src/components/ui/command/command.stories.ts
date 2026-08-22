@@ -132,7 +132,7 @@ export const Playground: Story = {
     const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
     const campo = canvas.getByRole('combobox') as HTMLInputElement;
     const lista = canvas.getByRole('listbox');
-    const espiao = args.onSelect as ReturnType<typeof fn>;
+    const spy = args.onSelect as ReturnType<typeof fn>;
 
     // A busca começa sempre vazia: a play REEXECUTA no mesmo DOM.
     await userEvent.clear(campo);
@@ -274,13 +274,13 @@ export const Playground: Story = {
     });
 
     await step('Enter escolhe o comando em destaque e zera a busca', async () => {
-      const antes = espiao.mock.calls.length;
+      const antes = spy.mock.calls.length;
       await userEvent.keyboard('{Enter}');
 
       await waitFor(async () => {
-        await expect(espiao.mock.calls.length).toBe(antes + 1);
+        await expect(spy.mock.calls.length).toBe(antes + 1);
       });
-      await expect(espiao.mock.calls[antes][0]).toBe('button');
+      await expect(spy.mock.calls[antes][0]).toBe('button');
       // A busca volta ao zero para o próximo comando — o campo não pode virar
       // o nome do que acabou de rodar.
       await waitFor(async () => {
@@ -292,13 +292,13 @@ export const Playground: Story = {
     });
 
     await step('Clicar num comando também o escolhe', async () => {
-      const antes = espiao.mock.calls.length;
+      const antes = spy.mock.calls.length;
       await userEvent.click(canvas.getByRole('option', { name: 'cn()' }));
 
       await waitFor(async () => {
-        await expect(espiao.mock.calls.length).toBe(antes + 1);
+        await expect(spy.mock.calls.length).toBe(antes + 1);
       });
-      await expect(espiao.mock.calls[antes][0]).toBe('cn');
+      await expect(spy.mock.calls[antes][0]).toBe('cn');
       await waitFor(async () => {
         await expect(campo).toHaveValue('');
       });

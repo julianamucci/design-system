@@ -3,10 +3,10 @@ import {
   tabsAbaAtivaSource,
   tabsAbaDesabilitadaSource,
   tabsWithCounterSource,
-  tabsComIconesSource,
+  tabsWithIconsSource,
   tabsConfigVerticaisSource,
-  tabsControladoSource,
-  tabsLinhaSource,
+  tabsControlledSource,
+  tabsLineSource,
   tabsModeManualSource,
   tabsDefaultSource,
   tabsSource,
@@ -76,7 +76,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a variante line mora na LISTA, não na raiz', () => {
-    const saida = tabsLinhaSource();
+    const saida = tabsLineSource();
     expect(saida).toContain('<TabsList variant="line" aria-label="Seções do componente">');
     expect(saida).not.toContain('<Tabs variant');
   });
@@ -109,7 +109,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o controlado liga valor e evento, e fecha o tipo do valor recebido', () => {
-    const saida = tabsControladoSource();
+    const saida = tabsControlledSource();
     expect(saida).toContain(':model-value="aba"');
     expect(saida).toContain('@update:model-value="aba = String($event)"');
     expect(saida).toContain(`const aba = ref('overview')`);
@@ -118,7 +118,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o ícone é decorativo e vem do conjunto de ícones, não do design system', () => {
-    const saida = tabsComIconesSource();
+    const saida = tabsWithIconsSource();
     expect(saida).toContain(`import { Code2, Eye, Settings2 } from 'lucide-vue-next'`);
     expect([...saida.matchAll(/aria-hidden="true"/g)]).toHaveLength(3);
     expect(saida).toContain('<Eye class="nds-size-4" aria-hidden="true" />');

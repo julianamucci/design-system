@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { resolverCor } from '@shared/testing/cor';
+import { resolveColor } from '@shared/testing/cor';
 import { contrastesNosDoisModos } from '@shared/testing/form-probe';
 import FormFieldStory from './FormFieldStory.svelte';
 import FormDarkPaletteStory from './FormDarkPaletteStory.svelte';
 import {
-  formDesabilitadoSource,
+  formDisabledSource,
   formInvalidoSource,
-  formPaletaEscuraSource,
+  formPaletteDarkSource,
   formSource,
 } from './form.source';
 
@@ -73,7 +73,7 @@ export const Invalid: Story = {
       // o literal quebraria a cada ajuste de paleta e não valeria nos temas de
       // marca. É a metade do item de contrato que ninguém verificava.
       await expect(getComputedStyle(mensagem).color).toBe(
-        resolverCor(campo, 'hsl(var(--destructive))'),
+        resolveColor(campo, 'hsl(var(--destructive))'),
       );
     });
 
@@ -104,7 +104,7 @@ export const Invalid: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item7'],
-    docs: { source: { transform: formDesabilitadoSource } },
+    docs: { source: { transform: formDisabledSource } },
   },
   render: () => ({
     Component: FormFieldStory,
@@ -154,7 +154,7 @@ export const DarkPalette: Story = {
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },
-    docs: { source: { transform: formPaletaEscuraSource } },
+    docs: { source: { transform: formPaletteDarkSource } },
   },
   render: () => ({ Component: FormDarkPaletteStory }),
   play: async ({ canvasElement, step }) => {

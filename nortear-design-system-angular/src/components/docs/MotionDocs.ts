@@ -323,14 +323,14 @@ export class NdsMotionDocs implements OnDestroy {
 
   // ─── Mola física com gesto de arrastar ────────────────────────────────────
 
-  private readonly deslocamentoX = signal(0);
-  private readonly deslocamentoY = signal(0);
+  private readonly offsetX = signal(0);
+  private readonly offsetY = signal(0);
   private readonly escala = signal(1);
 
   // O CSS lê custom properties, não `transform` inline: o valor é escolha de
   // quem arrasta (como `--ratio` no AspectRatio), a forma é do CSS compartilhado.
-  protected readonly deslocamentoXcss = computed(() => `${this.deslocamentoX()}px`);
-  protected readonly deslocamentoYcss = computed(() => `${this.deslocamentoY()}px`);
+  protected readonly deslocamentoXcss = computed(() => `${this.offsetX()}px`);
+  protected readonly deslocamentoYcss = computed(() => `${this.offsetY()}px`);
   protected readonly escalaCss = computed(() => String(this.escala()));
 
   private arrastando = false;
@@ -352,8 +352,8 @@ export class NdsMotionDocs implements OnDestroy {
 
   protected aoMover(evento: PointerEvent): void {
     if (!this.arrastando) return;
-    this.deslocamentoX.update((x) => x + evento.movementX);
-    this.deslocamentoY.update((y) => y + evento.movementY);
+    this.offsetX.update((x) => x + evento.movementX);
+    this.offsetY.update((y) => y + evento.movementY);
 
     const agora = performance.now();
     const dt = Math.max(agora - this.instanteAnterior, 1);
@@ -392,8 +392,8 @@ export class NdsMotionDocs implements OnDestroy {
     const dt = Math.min((agora - this.instanteAnterior) / 1000, STEP_MAXIMO);
     this.instanteAnterior = agora;
 
-    const x = this.deslocamentoX();
-    const y = this.deslocamentoY();
+    const x = this.offsetX();
+    const y = this.offsetY();
     // Massa 1: a aceleração é a própria força.
     this.velocidadeX += (-RIGIDEZ * x - AMORTECIMENTO * this.velocidadeX) * dt;
     this.velocidadeY += (-RIGIDEZ * y - AMORTECIMENTO * this.velocidadeY) * dt;
@@ -411,15 +411,15 @@ export class NdsMotionDocs implements OnDestroy {
       return;
     }
 
-    this.deslocamentoX.set(nextX);
-    this.deslocamentoY.set(nextY);
+    this.offsetX.set(nextX);
+    this.offsetY.set(nextY);
     this.quadro = requestAnimationFrame(this.passoDaMola);
   };
 
   /** Zera posição e velocidade — o elemento volta exatamente ao centro. */
   private repousar(): void {
-    this.deslocamentoX.set(0);
-    this.deslocamentoY.set(0);
+    this.offsetX.set(0);
+    this.offsetY.set(0);
     this.velocidadeX = 0;
     this.velocidadeY = 0;
     this.quadro = undefined;

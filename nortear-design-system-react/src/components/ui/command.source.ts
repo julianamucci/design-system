@@ -40,7 +40,7 @@ import { LayoutIcon, MinusIcon, TypeIcon } from "lucide-react";`;
  * posiciona a paleta na página. Dentro de um Popover ou de um CommandDialog o
  * painel já traz as três, e por isso a moldura some das duas composições.
  */
-const MOLDURA = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
+const FRAME = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
 
 /**
  * O que o comando faz é decisão do call site: a paleta só entrega o `value` do
@@ -69,7 +69,7 @@ export const commandSource: SourceTransform<CommandArgs> = (_gerado, ctx) => {
     `${IMPORT_PALETTE}
 
 ${ON_CHOOSE}`,
-    `<div className="${MOLDURA}">
+    `<div className="${FRAME}">
   <Command${props}>
     <CommandInput placeholder="Buscar componente..." />
     <CommandList>
@@ -104,7 +104,7 @@ ${ON_CHOOSE}`,
  * Atalho escondido do leitor de tela é atalho que só quem enxerga descobre — o
  * nome acessível do comando passa a ser "Button ⌘B", que é a informação útil.
  */
-export function commandComAtalhosSource(): string {
+export function commandWithShortcutsSource(): string {
   return jsxSnippet(
     `import {
   Command,
@@ -116,7 +116,7 @@ export function commandComAtalhosSource(): string {
   CommandShortcut,
 } from "@/components/ui/command";
 import { LayoutIcon, TypeIcon } from "lucide-react";`,
-    `<div className="${MOLDURA}">
+    `<div className="${FRAME}">
   <Command>
     <CommandInput placeholder="Buscar componente..." />
     <CommandList>
@@ -144,7 +144,7 @@ import { LayoutIcon, TypeIcon } from "lucide-react";`,
  * sozinha não é anunciada, e a navegação por seta PULA o comando — quem usa
  * teclado nunca para no que não pode executar.
  */
-export function commandItemDesabilitadoSource(): string {
+export function commandItemDisabledSource(): string {
   return jsxSnippet(
     `import {
   Command,
@@ -154,7 +154,7 @@ export function commandItemDesabilitadoSource(): string {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";`,
-    `<div className="${MOLDURA}">
+    `<div className="${FRAME}">
   <Command>
     <CommandInput placeholder="Buscar comando..." />
     <CommandList>
@@ -179,7 +179,7 @@ export function commandItemDesabilitadoSource(): string {
  * a mesma borda: a folha esconde a marca quando há atalho, então a regra é
  * escolher um dos dois por comando.
  */
-export function commandItemMarcadoSource(): string {
+export function commandItemCheckedSource(): string {
   return jsxSnippet(
     `import {
   Command,
@@ -189,7 +189,7 @@ export function commandItemMarcadoSource(): string {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";`,
-    `<div className="${MOLDURA}">
+    `<div className="${FRAME}">
   <Command>
     <CommandInput placeholder="Buscar tema..." />
     <CommandList>
@@ -215,7 +215,7 @@ export function commandItemMarcadoSource(): string {
  *
  * A moldura sai daqui: o painel do Popover já traz borda, sombra e largura.
  */
-export function commandComoComboboxSource(): string {
+export function commandAsComboboxSource(): string {
   return jsxSnippet(
     `import {
   Command,
@@ -301,7 +301,7 @@ function SeletorDeSituacao() {
  * quem consome, e o cleanup impede que ele sobreviva à desmontagem abrindo uma
  * paleta que já saiu da tela.
  */
-export function commandPaletaSource(): string {
+export function commandPaletteSource(): string {
   return jsxSnippet(
     `import {
   Command,

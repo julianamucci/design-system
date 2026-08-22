@@ -44,12 +44,12 @@ import {
   TOLERANCIA_PX,
   baseEmPx,
   degrausDeclarados,
-  descreverMedida,
-  medirPorDensidade,
-  porAlvo,
-  porDensidade,
-  resolverEmPx,
-  type AlvoDeEspaco,
+  describeMeasurement,
+  densityMeasure,
+  byTarget,
+  byDensity,
+  pxResolve,
+  type EspacoTarget,
 } from '@shared/testing/espacamento';
 import { createInput } from './input';
 
@@ -67,7 +67,7 @@ export default meta;
 type Story = StoryObj;
 
 /** WCAG 2.5.8 — Target Size (Minimum). */
-const ALVO_MINIMO_PX = 24;
+const TARGET_MINIMUM_PX = 24;
 
 /**
  * Um consumidor de cada degrau que estava preso ao literal, mais dois controles.
@@ -112,7 +112,7 @@ function cenario(): HTMLElement {
  * densidade passou a alcançar: `n × 3.2px` no condensado e `n × 5px` no
  * confortável, contra `n × 4px` no padrão.
  */
-const TARGETS: AlvoDeEspaco[] = [
+const TARGETS: EspacoTarget[] = [
   // ── Controle: degrau que já existia e já seguia a densidade ──────────────
   { nome: 'input · degrau 2 (controle)', seletor: '.nds-input', prop: 'padding-block-start',
     esperado: { condensado: 6.4, default: 8, confortavel: 10 } },
@@ -167,11 +167,11 @@ export const BaseEachDegrauEhMultiplo: Story = {
 
     await expect(degraus.length, 'nenhum degrau --spacing-* encontrado em :root').toBeGreaterThan(10);
 
-    const problemas = porDensidade(raiz, (densidade) => {
+    const problemas = byDensity(raiz, (densidade) => {
       const base = baseEmPx(raiz);
       if (base === null) return [`${densidade}: --spacing-base não resolve para comprimento`];
       return degraus.flatMap(({ token, multiplicador }) => {
-        const px = resolverEmPx(raiz, `var(${token})`);
+        const px = pxResolve(raiz, `var(${token})`);
         if (px === null) {
           return [`${densidade}: ${token} não resolve para comprimento — o token não existe e a declaração é descartada`];
         }
@@ -200,15 +200,15 @@ export const LiteralConsumidoresNotResolvem: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const medidas = medirPorDensidade(raiz, TARGETS);
+    const medidas = densityMeasure(raiz, TARGETS);
 
     await expect(medidas).toHaveLength(TARGETS.length * DENSIDADES.length);
 
     const ausentes = medidas.filter((m) => !m.presente || m.px === null);
-    await expect(ausentes.map(descreverMedida)).toEqual([]);
+    await expect(ausentes.map(describeMeasurement)).toEqual([]);
 
     const congelados: string[] = [];
-    for (const [chave, lista] of porAlvo(medidas)) {
+    for (const [chave, lista] of byTarget(medidas)) {
       const valores = lista.map((m) => m.px!);
       if (new Set(valores.map((v) => v.toFixed(2))).size === 1) {
         congelados.push(`${chave}: ${valores[0]}px idêntico nas três densidades — valor literal, não token da escala`);
@@ -217,7 +217,7 @@ export const LiteralConsumidoresNotResolvem: Story = {
     await expect(congelados).toEqual([]);
 
     const tableOutside = medidas.filter((m) => Math.abs(m.px! - m.esperado) > TOLERANCIA_PX);
-    await expect(tableOutside.map(descreverMedida)).toEqual([]);
+    await expect(tableOutside.map(describeMeasurement)).toEqual([]);
   },
 };
 
@@ -235,24 +235,24 @@ export const TouchTargetSurvivesCondensed: Story = {
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
     const touchTargets = TARGETS.filter((a) => a.alvoDeToque);
-    const medidas = medirPorDensidade(raiz, touchTargets);
+    const medidas = densityMeasure(raiz, touchTargets);
 
-    const pequenos = medidas.filter((m) => (m.px ?? 0) < ALVO_MINIMO_PX);
+    const pequenos = medidas.filter((m) => (m.px ?? 0) < TARGET_MINIMUM_PX);
     await expect(
-      pequenos.map((m) => `${m.alvo} em ${m.densidade}: ${m.px}px < ${ALVO_MINIMO_PX}px (WCAG 2.5.8)`),
+      pequenos.map((m) => `${m.alvo} em ${m.densidade}: ${m.px}px < ${TARGET_MINIMUM_PX}px (WCAG 2.5.8)`),
     ).toEqual([]);
 
     // O campo de texto não tem altura fixa: ela sai de padding + line-height, e
     // os dois encolhem no condensado. É o caso em que a densidade poderia
     // recortar texto sem ninguém notar.
     const campo = raiz.querySelector<HTMLElement>('.nds-input')!;
-    const alturas = porDensidade(raiz, (densidade) => ({
+    const alturas = byDensity(raiz, (densidade) => ({
       densidade,
       altura: campo.getBoundingClientRect().height,
     }));
-    const baixos = alturas.filter((a) => a.altura < ALVO_MINIMO_PX);
+    const baixos = alturas.filter((a) => a.altura < TARGET_MINIMUM_PX);
     await expect(
-      baixos.map((a) => `input em ${a.densidade}: ${a.altura}px < ${ALVO_MINIMO_PX}px`),
+      baixos.map((a) => `input em ${a.densidade}: ${a.altura}px < ${TARGET_MINIMUM_PX}px`),
     ).toEqual([]);
     // E encolhe de verdade: altura travada seria o mesmo defeito noutro lugar.
     await expect(

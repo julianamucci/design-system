@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { resolverCor } from '@shared/testing/cor';
+import { resolveColor } from '@shared/testing/cor';
 import { contrastesNosDoisModos } from '@shared/testing/form-probe';
 import { NDS_FORM } from './form';
 import { NdsInput } from './input';
@@ -100,7 +100,7 @@ export const Invalid: Story = {
       // asserção válida nos três temas de marca.
       const mensagem = canvasElement.querySelector<HTMLElement>('[data-slot="field-error"]')!;
       await expect(getComputedStyle(mensagem).color).toBe(
-        resolverCor(campo, 'hsl(var(--destructive))'),
+        resolveColor(campo, 'hsl(var(--destructive))'),
       );
     });
 

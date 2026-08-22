@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import {
-  esperarAberto,
-  esperarFechado,
-  painelAberto,
+  waitForOpen,
+  waitForClosed,
+  panelOpen,
 } from '@shared/testing/hover-card-probe';
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from './index';
-import { hoverCardEsperaCurtaSource, hoverCardDefaultSource } from './hover-card.source';
+import { hoverCardWaitCurtaSource, hoverCardDefaultSource } from './hover-card.source';
 
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
 // varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
@@ -78,7 +78,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     await step('Sem atraso escrito no markup, o cartão usa o padrão do componente', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(within(painel).getByText(/600ms/)).toBeVisible();
       await expect(canvas.getByRole('link')).toHaveAttribute('data-slot', 'hover-card-trigger');
@@ -92,7 +92,7 @@ export const WithShortDelay: Story = {
     docs: {
       // Os atrasos aqui são ESCRITOS no markup; a do `meta` mostra justamente a
       // marcação sem nenhum, que é a outra configuração de tempo.
-      source: { transform: hoverCardEsperaCurtaSource },
+      source: { transform: hoverCardWaitCurtaSource },
       description: {
         story:
           'Espera curta (150ms para abrir, 100ms para fechar) para previews que o leitor procura de propósito. Abaixo de ~300ms o cartão passa a abrir sozinho quando o cursor só atravessa o texto — é o que a diretriz de uso desaconselha.',
@@ -127,13 +127,13 @@ export const WithShortDelay: Story = {
 
     // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
     await userEvent.keyboard('{Escape}');
-    await esperarFechado();
+    await waitForClosed();
 
     await step('O cartão abre depois da espera pedida na raiz', async () => {
-      await expect(painelAberto()).toBeNull();
+      await expect(panelOpen()).toBeNull();
       const inicio = performance.now();
       await userEvent.hover(gatilho);
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
 

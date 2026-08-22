@@ -40,7 +40,7 @@ const GROUP_UNICO = `      <InputOTPGroup>
  * `apoio` é a marcação que vem depois do campo (ajuda, erro, reenvio), já
  * indentada na coluna do bloco.
  */
-function campoOtp(opcoes: {
+function fieldOtp(opcoes: {
   label: string;
   atributos: Array<string | false | null | undefined>;
   celulas?: string;
@@ -83,7 +83,7 @@ export function inputOtpSource(_gerado?: string, ctx?: { args?: Partial<InputOTP
 
   return svelteSnippet(
     `${IMPORT}${estado(defaultValue)}`,
-    campoOtp({
+    fieldOtp({
       label,
       atributos: [
         'inputId="codigo"',
@@ -104,7 +104,7 @@ export function inputOtpSource(_gerado?: string, ctx?: { args?: Partial<InputOTP
  * Variante com separador: dois blocos de três caixas. O separador tem papel
  * próprio, e é ele que informa que o código vem partido em dois.
  */
-export function inputOtpComSeparadorSource(): string {
+export function inputOtpWithSeparatorSource(): string {
   return svelteSnippet(
     `import {
   InputOTP,
@@ -113,7 +113,7 @@ export function inputOtpComSeparadorSource(): string {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";${estado()}`,
-    campoOtp({
+    fieldOtp({
       label: 'Código de recuperação',
       atributos: [
         'inputId="codigo"',
@@ -141,10 +141,10 @@ import { Label } from "@/components/ui/label";${estado()}`,
  * Texto de apoio: a origem e a validade do código são lidas junto com o campo,
  * por `aria-describedby`.
  */
-export function helperSourceInputOtpWithText(): string {
+export function helperInputOtpWithTextSource(): string {
   return svelteSnippet(
     `${IMPORT}${estado()}`,
-    campoOtp({
+    fieldOtp({
       label: 'Código de verificação',
       atributos: [
         'inputId="codigo"',
@@ -165,10 +165,10 @@ export function helperSourceInputOtpWithText(): string {
  * Estado de erro: `aria-invalid` marca o campo e a mensagem chega pelo mesmo
  * caminho da descrição. Serve a story de estado e a de composição.
  */
-export function inputOtpComErroSource(): string {
+export function inputOtpWithErrorSource(): string {
   return svelteSnippet(
     `${IMPORT}${estado('482913')}`,
-    campoOtp({
+    fieldOtp({
       label: 'Código de verificação',
       atributos: [
         'inputId="codigo"',
@@ -190,11 +190,11 @@ export function inputOtpComErroSource(): string {
 }
 
 /** Composição com reenvio: o botão vem depois do campo na ordem do documento. */
-export function inputOtpComReenvioSource(): string {
+export function inputOtpWithReenvioSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import { Button } from "@/components/ui/button";${estado()}`,
-    campoOtp({
+    fieldOtp({
       label: 'Código de verificação',
       atributos: [
         'inputId="codigo"',

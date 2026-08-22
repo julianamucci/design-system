@@ -8,11 +8,11 @@ import {
   DropdownMenuTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
-import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { itemContrast } from '@shared/testing/dropdown-menu-probe';
 import {
-  dropdownMenuDestrutivoSource,
-  dropdownMenuPadraoSource,
+  dropdownMenuDestructiveSource,
+  dropdownMenuDefaultSource,
 } from './dropdown-menu.source';
 
 const meta = {
@@ -23,9 +23,9 @@ const meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
-      source: { transform: dropdownMenuPadraoSource },
+      source: { transform: dropdownMenuDefaultSource },
       description: {
         component:
           'As duas ênfases de item. `default` é o item neutro; `destructive` marca a ação ' +
@@ -82,19 +82,19 @@ export const Default: Story = {
     await step('O item neutro herda a cor do popup, sem cor semântica', async () => {
       // O item destacado troca de cor de propósito — a comparação tem que ser
       // com um item em repouso, senão ela mede o realce e não a variante.
-      const emRepouso = itens.filter((i) => !i.hasAttribute('data-highlighted'));
-      await expect(emRepouso.length).toBeGreaterThan(0);
-      await expect(getComputedStyle(emRepouso[0]).color).toBe(getComputedStyle(menu).color);
+      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      await expect(inRest.length).toBeGreaterThan(0);
+      await expect(getComputedStyle(inRest[0]).color).toBe(getComputedStyle(menu).color);
     });
 
     await step('O texto do item atinge 4.5:1 sobre o fundo do popup', async () => {
       // O item de contrato dizia "verificar por axe-core" — verificação que
       // ninguém rodava. A razão é aritmética, e é ela que responde. 14px em peso
       // normal é texto normal pela WCAG: o limite é 4.5, não 3.
-      const emRepouso = itens.filter((i) => !i.hasAttribute('data-highlighted'));
-      const medida = contrasteDoItem(emRepouso[0]);
+      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      const medida = itemContrast(inRest[0]);
       await expect(medida).not.toBeNull();
-      await expect(medida!.razao).toBeGreaterThanOrEqual(4.5);
+      await expect(medida!.ratio).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -104,7 +104,7 @@ export const Destructive: Story = {
     covers: ['visual.item5'],
     // A variante do item e o separador que a isola: o snippet do meta é o caso
     // neutro, e por definição não escreve nenhum dos dois.
-    docs: { source: { transform: dropdownMenuDestrutivoSource } },
+    docs: { source: { transform: dropdownMenuDestructiveSource } },
   },
   render: () => ({
     components: componentes,

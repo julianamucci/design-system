@@ -3,14 +3,14 @@ import { userEvent, within, expect } from 'storybook/test';
 import { withLabel } from './slider.fixtures';
 import { sliderSource, sliderSourceWith } from './slider.source';
 import {
-  alcaDesabilitada,
+  handleDesabilitada,
   alcasDoSlider,
-  anelDeFocoAssentado,
-  anelEmRepouso,
+  focusAssentadoRing,
+  restRing,
   apertarTecla,
-  contextoAlcaTrilho,
-  contrasteAlcaTrilho,
-  valorDaAlca,
+  contextoHandleTrack,
+  contrastHandleTrack,
+  handleValue,
 } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
@@ -57,15 +57,15 @@ export const Default: Story = {
 
     // Story sem interação: é aqui que o valor de montagem pode ser afirmado.
     await step('Alça no valor inicial', async () => {
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(50);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(50);
     });
 
     await step('A borda da alça alcança 3:1 contra o trilho', async () => {
       // WCAG 1.4.11. O miolo da alça é da cor do fundo de propósito, então quem
       // a separa do trilho é a borda.
       await expect(
-        contrasteAlcaTrilho(canvasElement),
-        contextoAlcaTrilho(canvasElement),
+        contrastHandleTrack(canvasElement),
+        contextoHandleTrack(canvasElement),
       ).toBeGreaterThanOrEqual(3);
     });
   },
@@ -93,7 +93,7 @@ export const Focus: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alca = () => alcasDoSlider(canvasElement)[0];
-    const repouso = await anelEmRepouso(alca());
+    const repouso = await restRing(alca());
 
     await step('A alça recebe foco por teclado', async () => {
       await userEvent.tab();
@@ -102,7 +102,7 @@ export const Focus: Story = {
 
     await step('A alça focada fica visivelmente diferente da alça em repouso', async () => {
       // Alça focada idêntica à alça parada é 2.4.7 reprovado com o teste verde.
-      const focada = await anelDeFocoAssentado(alca(), repouso);
+      const focada = await focusAssentadoRing(alca(), repouso);
       await expect(focada.sombra !== repouso.sombra || focada.borda !== repouso.borda).toBe(true);
       await expect(focada.sombra).not.toBe('none');
     });
@@ -137,24 +137,24 @@ export const Active: Story = {
     // pelo navegador. Com o userEvent do DOM a seta não movia nada e o valor
     // saía `NaN`: `expect(NaN).toBe(NaN)` passa, e o passo inteiro era inerte.
     await step('A seta incrementa e o texto adjacente acompanha', async () => {
-      const antes = valorDaAlca(canvas.getByRole('slider'));
+      const antes = handleValue(canvas.getByRole('slider'));
       await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
       const depois = Math.min(100, antes + 1);
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(depois);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(depois);
       await expect(live).toHaveTextContent(`${depois}%`);
     });
 
     await step('A seta contrária decrementa', async () => {
-      const antes = valorDaAlca(canvas.getByRole('slider'));
+      const antes = handleValue(canvas.getByRole('slider'));
       await apertarTecla(canvas.getByRole('slider'), '{ArrowLeft}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.max(0, antes - 1));
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.max(0, antes - 1));
     });
 
     await step('Home e End alcançam os extremos', async () => {
       await apertarTecla(canvas.getByRole('slider'), '{Home}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(0);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(0);
       await apertarTecla(canvas.getByRole('slider'), '{End}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(100);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(100);
     });
   },
 };
@@ -184,13 +184,13 @@ export const Disabled: Story = {
     const canvas = within(canvasElement);
 
     await step('A alça está marcada como desabilitada', async () => {
-      await expect(alcaDesabilitada(alcasDoSlider(canvasElement)[0])).toBe(true);
+      await expect(handleDesabilitada(alcasDoSlider(canvasElement)[0])).toBe(true);
     });
 
     await step('O teclado não move o valor', async () => {
-      const antes = valorDaAlca(canvas.getByRole('slider'));
+      const antes = handleValue(canvas.getByRole('slider'));
       await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(antes);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(antes);
     });
   },
 };
@@ -220,7 +220,7 @@ export const MaxValue: Story = {
     await step('O preenchimento cobre o trilho inteiro no máximo', async () => {
       // A story já nasce no máximo: o End que havia aqui não estabelecia nada
       // e só servia para ler o desenho depois de mexer nele.
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(100);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(100);
       // Afirma o desenho, não o dado: no máximo o preenchimento é o trilho.
       const trilho = canvasElement.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
       const faixa = canvasElement.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
@@ -231,7 +231,7 @@ export const MaxValue: Story = {
 
     await step('ArrowRight não ultrapassa o máximo', async () => {
       await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(100);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(100);
     });
   },
 };

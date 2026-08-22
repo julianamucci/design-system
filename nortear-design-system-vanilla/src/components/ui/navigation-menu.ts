@@ -165,7 +165,7 @@ export function createNavigationMenu(
   /** Quando o último painel saiu da tela — é o relógio do `skipDelayDuration`. */
   let closedIn = 0;
   /** Painéis por valor, para `setValue()` alcançar qualquer um pelo nome. */
-  const paineis = new Map<string, Painel>();
+  const panels = new Map<string, Painel>();
 
   function cancelarAbertura(): void {
     if (timerAbertura !== null) {
@@ -186,7 +186,7 @@ export function createNavigationMenu(
 
   /** Abertura pedida por uma interação sobre um gatilho. */
   function open(trigger: HTMLElement): void {
-    const painel = [...paineis.values()].find((p) => p.trigger === trigger);
+    const painel = [...panels.values()].find((p) => p.trigger === trigger);
     if (painel) pedirValue(painel.value);
   }
 
@@ -197,7 +197,7 @@ export function createNavigationMenu(
     // aconteceu.
     if ((openItem?.value ?? '') === valor) return;
     closeAll();
-    const painel = valor ? paineis.get(valor) : undefined;
+    const painel = valor ? panels.get(valor) : undefined;
     if (painel) {
       painel.content.hidden = false;
       painel.trigger.setAttribute('aria-expanded', 'true');
@@ -295,7 +295,7 @@ export function createNavigationMenu(
       content.hidden = true;
 
       const itemValue = item.value ?? item.label;
-      paineis.set(itemValue, { trigger, content, value: itemValue });
+      panels.set(itemValue, { trigger, content, value: itemValue });
       // O valor fica legível no markup: é como uma story prova que a barra
       // abriu o painel PEDIDO, e não um painel qualquer.
       trigger.dataset.value = itemValue;

@@ -136,7 +136,7 @@ export const Playground: Story = {
     const gatilho = canvas.getByRole('button', { name: /Abrir popover/i });
     // O tipo dos args de uma story com `Meta<any>` chega vazio; o espião é
     // declarado no meta e existe em runtime.
-    const espiao = (args as { onOpenChange: ReturnType<typeof fn> }).onOpenChange;
+    const spy = (args as { onOpenChange: ReturnType<typeof fn> }).onOpenChange;
 
     const abrir = async () => {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
@@ -159,13 +159,13 @@ export const Playground: Story = {
 
     await step('Clicar no gatilho abre o painel com role=dialog', async () => {
       await fechar();
-      const antes = espiao.mock.calls.length;
+      const antes = spy.mock.calls.length;
       const p = await abrir();
       await expect(p).toBeVisible();
       await expect(p).toHaveClass(/nds-popover-content/);
       await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
       await expect(
-        espiao.mock.calls.length,
+        spy.mock.calls.length,
       ).toBe(antes + 1);
     });
 

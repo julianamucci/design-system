@@ -9,8 +9,8 @@ import {
 import { Label } from "./label";
 import { Button } from "./button";
 import {
-  inputOtpComErroSource,
-  inputOtpComReenvioSource,
+  inputOtpWithErrorSource,
+  inputOtpWithReenvioSource,
   inputOtpWithTextAuxiliarSource,
   inputOtpSource,
 } from "./input-otp.source";
@@ -147,7 +147,7 @@ export const WithErrorMessage: Story = {
     // Mesma composição da story Error dos estados: `aria-invalid` no campo mais
     // a mensagem ligada por `aria-describedby`.
     docs: {
-      source: { transform: inputOtpComErroSource },
+      source: { transform: inputOtpWithErrorSource },
       description: {
         story:
           "aria-invalid=true + mensagem de erro associada via aria-describedby (causa + ação corretiva).",
@@ -203,7 +203,7 @@ export const WithResendButton: Story = {
     docs: {
       // O botão é peça de outro componente, e a ORDEM dele no DOM é a lição:
       // depois do campo, para cair no próximo Tab de quem terminou de digitar.
-      source: { transform: inputOtpComReenvioSource },
+      source: { transform: inputOtpWithReenvioSource },
       description: {
         story:
           "InputOTP + Button 'Reenviar código' — fluxo típico de verificação 2FA.",

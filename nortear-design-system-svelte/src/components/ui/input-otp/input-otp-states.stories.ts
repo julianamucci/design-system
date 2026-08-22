@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, expect } from 'storybook/test';
-import { razao, resolverCor } from '@shared/testing/cor';
+import { ratio, resolveColor } from '@shared/testing/cor';
 import InputOTPStory from './InputOTPStory.svelte';
 import { campo } from './input-otp.fixtures';
-import { inputOtpComErroSource, inputOtpSource } from './input-otp.source';
+import { inputOtpWithErrorSource, inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
   title: 'UI/InputOTP/States',
@@ -71,8 +71,8 @@ export const Filling: Story = {
       // palavra em volta para compensar pelo contexto. Conta WCAG do colhedor
       // compartilhado, não olhômetro nem nome de token.
       const cs = getComputedStyle(caixas(canvasElement)[0]);
-      const medida = razao(cs.color, cs.backgroundColor);
-      await expect(medida?.razao ?? 0).toBeGreaterThanOrEqual(4.5);
+      const medida = ratio(cs.color, cs.backgroundColor);
+      await expect(medida?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -122,7 +122,7 @@ export const Error: Story = {
   name: 'Error (aria-invalid)',
   parameters: {
     covers: ['functional.item7', 'accessibility.item5', 'visual.item4'],
-    docs: { source: { transform: inputOtpComErroSource } },
+    docs: { source: { transform: inputOtpWithErrorSource } },
   },
   args: {
     maxLength: 6,
@@ -150,7 +150,7 @@ export const Error: Story = {
       // stack monta uma por story): a cor de erro é resolvida PELO NAVEGADOR a
       // partir do token, dentro da mesma árvore, e comparada com a computada.
       // Continua podendo falhar — se a regra sumir, a borda volta a `--input`.
-      const esperada = resolverCor(canvasElement, 'hsl(var(--destructive))');
+      const esperada = resolveColor(canvasElement, 'hsl(var(--destructive))');
       const medida = getComputedStyle(caixas(canvasElement)[0]).borderTopColor;
       await expect(medida).toBe(esperada);
     });

@@ -16,9 +16,9 @@
  * controle, precisa medir altura quando o grupo vira vertical. O padrão é o
  * eixo que a maioria das stories usa; quem varia de eixo passa o argumento.
  */
-export function fracaoDoPrimeiro(canvasElement: HTMLElement, horizontal = true): number {
-  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const medidas = paineis.map((p) =>
+export function firstFraction(canvasElement: HTMLElement, horizontal = true): number {
+  const panels = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
+  const medidas = panels.map((p) =>
     horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height,
   );
   return medidas[0] / medidas.reduce((a, b) => a + b, 0);

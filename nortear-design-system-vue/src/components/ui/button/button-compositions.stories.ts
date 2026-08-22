@@ -4,12 +4,12 @@ import { userEvent, within, expect } from 'storybook/test';
 import { Plus, Trash2, ChevronRight, Download } from 'lucide-vue-next';
 import { Button } from './index';
 import {
-  buttonComIconeFinalSource,
-  buttonComIconeInicialSource,
-  buttonComoLinkSource,
-  buttonDestrutivoComIconeSource,
-  buttonParDeAcoesSource,
-  buttonSoIconeSource,
+  buttonWithIconFinalSource,
+  buttonWithIconInitialSource,
+  buttonAsLinkSource,
+  buttonDestructiveWithIconSource,
+  actionsButtonPairSource,
+  buttonSoIconSource,
 } from './button.source';
 
 const meta: Meta<any> = {
@@ -20,7 +20,7 @@ const meta: Meta<any> = {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: buttonComIconeInicialSource } },
+    docs: { source: { transform: buttonWithIconInitialSource } },
   },
 };
 
@@ -62,7 +62,7 @@ export const WithIconRight: Story = {
   // A ordem dos filhos é o assunto — e ela não cabe em arg nenhum.
   parameters: {
     docs: {
-      source: { transform: buttonComIconeFinalSource },
+      source: { transform: buttonWithIconFinalSource },
       description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' },
     },
   },
@@ -88,7 +88,7 @@ export const DestructiveIcon: Story = {
   // Outro ícone e outra variante: o import muda junto com a composição.
   parameters: {
     docs: {
-      source: { transform: buttonDestrutivoComIconeSource },
+      source: { transform: buttonDestructiveWithIconSource },
       description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' },
     },
   },
@@ -111,7 +111,7 @@ export const IconOnly: Story = {
   // A ausência de texto é o assunto: sem rótulo acessível a ação fica sem nome.
   parameters: {
     docs: {
-      source: { transform: buttonSoIconeSource },
+      source: { transform: buttonSoIconSource },
       description: { story: 'Botão apenas com ícone. aria-label é obrigatório para acessibilidade.' },
     },
   },
@@ -138,7 +138,7 @@ export const ActionPair: Story = {
   // São dois botões e o container que os espaça — a do meta mostraria um só.
   parameters: {
     docs: {
-      source: { transform: buttonParDeAcoesSource },
+      source: { transform: actionsButtonPairSource },
       description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' },
     },
   },
@@ -167,7 +167,7 @@ export const AsLink: Story = {
     // O botão deixa de renderizar o próprio elemento e veste o <a> do
     // consumidor: sem o filho, a composição não existe no snippet.
     docs: {
-      source: { transform: buttonComoLinkSource },
+      source: { transform: buttonAsLinkSource },
       description: { story: 'Usando asChild com reka-ui Primitive para renderizar um <a> com estilos de botão, preservando semântica de link.' },
     },
   },

@@ -60,7 +60,7 @@ let value = $state(${inicial});`,
  * Fechar clicando de novo no item aberto, sem nenhuma configuração extra: a
  * raiz nasce só com o modo, sem valor inicial e sem mais nenhuma chave.
  */
-export function segundoClickSourceAccordionFecha(): string {
+export function segundoClickAccordionFechaSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Accordion type="single" class="nds-max-w-lg">
@@ -105,7 +105,7 @@ let value = $state<string[]>([]);`,
  * Modo controlado: quem manda no item aberto é o estado de fora, e a mudança
  * chega pelo callback — dá para sincronizar com a URL ou com outro estado.
  */
-export function accordionControladoSource(): string {
+export function accordionControlledSource(): string {
   return svelteSnippet(
     `${IMPORT}
 
@@ -137,7 +137,7 @@ let itemAtivo = $state("item-1");`,
 }
 
 /** Estado fechado: sem valor inicial, todo item nasce colapsado. */
-export function accordionFechadoSource(): string {
+export function accordionClosedSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Accordion type="single" class="nds-max-w-lg">
@@ -150,7 +150,7 @@ export function accordionFechadoSource(): string {
 }
 
 /** Estado aberto: o valor inicial expande o item já na montagem. */
-export function accordionAbertoSource(): string {
+export function accordionOpenSource(): string {
   return svelteSnippet(
     `${IMPORT}
 
@@ -165,7 +165,7 @@ let value = $state("item-1");`,
 }
 
 /** Item desabilitado: a prop vai no item, e só ele para de responder. */
-export function accordionItemDesabilitadoSource(): string {
+export function accordionItemDisabledSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Accordion type="single" class="nds-max-w-lg">
@@ -185,7 +185,7 @@ export function accordionItemDesabilitadoSource(): string {
  * Ícone no gatilho: o texto continua sendo o nome acessível, então o ícone vai
  * com `aria-hidden` para não vazar para a árvore de acessibilidade.
  */
-export function accordionComIconeSource(): string {
+export function accordionWithIconSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import Info from "@lucide/svelte/icons/info";
@@ -221,7 +221,7 @@ import AlertTriangle from "@lucide/svelte/icons/triangle-alert";`,
  * Badge no gatilho: sinaliza status sem alterar o texto, que continua
  * autoexplicativo por si só.
  */
-export function accordionComBadgeSource(): string {
+export function accordionWithBadgeSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import { Badge } from "@/components/ui/badge";`,
@@ -255,7 +255,7 @@ import { Badge } from "@/components/ui/badge";`,
 }
 
 /** Conteúdo rico: o painel aceita tabela, lista, qualquer marcação. */
-export function accordionConteudoRicoSource(): string {
+export function accordionContentRichSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Accordion type="multiple" class="nds-max-w-lg nds-text-body">

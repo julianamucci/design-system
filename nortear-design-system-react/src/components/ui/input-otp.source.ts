@@ -137,7 +137,7 @@ export function inputOtpQuatroDigitosSource(): string {
  * contínuas. O separador tem `role="separator"` próprio, que é o que informa a
  * quebra a quem usa leitor de tela.
  */
-export function inputOtpComSeparadorSource(): string {
+export function inputOtpWithSeparatorSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 import {
@@ -220,7 +220,7 @@ import { Label } from "@/components/ui/label";`,
  * existe para receber o código — numa tela com outros campos ele roubaria o
  * foco de quem navega por teclado.
  */
-export function inputOtpVazioSource(): string {
+export function inputOtpEmptySource(): string {
   return otpSnippet({
     id: 'codigo-vazio',
     rotulo: 'Código de verificação',
@@ -255,7 +255,7 @@ export function inputOtpCompletoSource(): string {
 }
 
 /** Bloqueado: `disabled` recusa foco e digitação, e esmaece o campo inteiro. */
-export function inputOtpDesabilitadoSource(): string {
+export function inputOtpDisabledSource(): string {
   return otpSnippet({
     id: 'codigo-bloqueado',
     rotulo: 'Código de verificação',
@@ -272,7 +272,7 @@ export function inputOtpDesabilitadoSource(): string {
  * carrega, e uma live region em conteúdo estático faz o leitor anunciar um erro
  * sem que nada tenha acontecido.
  */
-export function inputOtpComErroSource(): string {
+export function inputOtpWithErrorSource(): string {
   return otpSnippet({
     id: 'codigo-erro',
     rotulo: 'Código de verificação',
@@ -315,7 +315,7 @@ export function inputOtpWithTextAuxiliarSource(): string {
  * digitar encontra o reenvio no próximo Tab, sem voltar pelo caminho. É ordem
  * de marcação, não de posição na tela.
  */
-export function inputOtpComReenvioSource(): string {
+export function inputOtpWithReenvioSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 import { Button } from "@/components/ui/button";

@@ -60,8 +60,8 @@ export function attrsMultilinha(
 ): string {
   const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
   if (!lista.length) return '';
-  const emLinha = lista.join(' ');
-  if (emLinha.length <= limite) return ` ${emLinha}`;
+  const inLine = lista.join(' ');
+  if (inLine.length <= limite) return ` ${inLine}`;
   return `\n${lista.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
 }
 

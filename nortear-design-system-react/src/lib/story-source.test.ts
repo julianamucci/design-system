@@ -19,7 +19,7 @@ import {
 } from './story-source';
 
 /** Como o Storybook entrega uma prop de callback: função, não string. */
-const espiao = () => 'CORPO_DO_MOCK';
+const spy = () => 'CORPO_DO_MOCK';
 
 describe('jsxSnippet', () => {
   it('separa cabeçalho e marcação por uma linha em branco', () => {
@@ -68,10 +68,10 @@ describe('texto', () => {
   });
 
   it('recusa espião de control — ele chega como FUNÇÃO', () => {
-    expect(texto(espiao)).toBeUndefined();
+    expect(texto(spy)).toBeUndefined();
     // E o corpo do mock, que é o que apareceria no painel, não sobra em lugar
     // nenhum da montagem.
-    expect(attrs(propText('onClick', espiao))).toBe('');
+    expect(attrs(propText('onClick', spy))).toBe('');
   });
 
   it('recusa string vazia, número, objeto e nulo', () => {
@@ -87,7 +87,7 @@ describe('propTexto', () => {
   });
 
   it('some quando o arg não é string', () => {
-    expect(propText('aria-label', espiao)).toBeUndefined();
+    expect(propText('aria-label', spy)).toBeUndefined();
   });
 });
 
@@ -118,7 +118,7 @@ describe('propBool', () => {
   });
 
   it('some quando o arg não é booleano', () => {
-    expect(propBool('disabled', espiao)).toBeUndefined();
+    expect(propBool('disabled', spy)).toBeUndefined();
   });
 });
 
@@ -132,7 +132,7 @@ describe('propOpcao', () => {
 
   it('não inventa atributo com valor fora da união', () => {
     expect(propOption('variant', 'roxo', variantes, 'default')).toBeUndefined();
-    expect(propOption('variant', espiao, variantes, 'default')).toBeUndefined();
+    expect(propOption('variant', spy, variantes, 'default')).toBeUndefined();
   });
 });
 
@@ -144,7 +144,7 @@ describe('indentar', () => {
 
 describe('filhoTexto', () => {
   it('cai no padrão quando o control entrega um espião', () => {
-    expect(childText(espiao, 'Salvar')).toBe('Salvar');
+    expect(childText(spy, 'Salvar')).toBe('Salvar');
     expect(childText('Enviar', 'Salvar')).toBe('Enviar');
   });
 });

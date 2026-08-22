@@ -5,9 +5,9 @@ import { NdsCodeBlock } from './code-block';
 import { root } from './code-block.fixtures';
 import { LANGUAGE_ITEMS, COMPOSITION_CODE } from '@/components/docs/CodeBlockDocs';
 import {
-  MINIMO_DE_CONTRASTE,
+  CONTRAST_MINIMUM,
   TRECHOS_DA_PALETA,
-  laudoDeContraste,
+  contrastLaudo,
 } from '@shared/testing/code-block-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -66,7 +66,7 @@ function renderLanguage(key: string) {
  * alcançava cinco cores das onze — as outras seis nunca tinham sido medidas
  * contra fundo nenhum.
  */
-const renderPaleta = () => ({
+const renderPalette = () => ({
   props: { trechos: TRECHOS_DA_PALETA, destacado: COMPOSITION_CODE, destaque: [2] },
   template: `
     <div class="nds-stack" data-spacing="md">
@@ -162,14 +162,14 @@ export const Text: Story = {
 
 export const LightPalette: Story = {
   parameters: { covers: ['accessibility.item4'] },
-  render: renderPaleta,
+  render: renderPalette,
   play: async ({ canvasElement, step }) => {
     await step('No claro, nenhuma cor da paleta fica abaixo de 4.5:1', async () => {
       // A varredura roda nos três temas e devolve a PIOR razão; o fundo do
       // destaque é semitransparente e é composto antes da conta, senão a medida
       // mentiria para o alfa.
-      await expect(laudoDeContraste(canvasElement, 'claro')).toContain(
-        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
+      await expect(contrastLaudo(canvasElement, 'claro')).toContain(
+        `abaixo de ${CONTRAST_MINIMUM}: false`,
       );
     });
 
@@ -192,7 +192,7 @@ export const DarkPalette: Story = {
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },
   },
-  render: renderPaleta,
+  render: renderPalette,
   play: async ({ canvasElement, step }) => {
     await step('O tema escuro está aplicado no documento', async () => {
       await expect(document.documentElement.classList.contains('dark')).toBe(true);
@@ -202,8 +202,8 @@ export const DarkPalette: Story = {
       // O escuro é metade do produto e o axe do test-runner nunca o vê: a tela
       // do runner está sempre no claro. Aqui a classe é posta e retirada pela
       // varredura, que restaura o className da raiz no finally.
-      await expect(laudoDeContraste(canvasElement, 'escuro')).toContain(
-        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
+      await expect(contrastLaudo(canvasElement, 'escuro')).toContain(
+        `abaixo de ${CONTRAST_MINIMUM}: false`,
       );
     });
   },

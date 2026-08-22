@@ -185,11 +185,11 @@ export const Playground: Story = {
         // É o teclado que o primitivo entrega e que o Vanilla precisa
         // reimplementar — a asserção confirma que a composição funcionou.
         const antes = cb.getAttribute('aria-checked');
-        const chamadasAntes = spy.mock.calls.length;
+        const callsBefore = spy.mock.calls.length;
         cb.focus();
         await userEvent.keyboard(' ');
         await expect(cb.getAttribute('aria-checked')).not.toBe(antes);
-        await expect(spy.mock.calls.length).toBe(chamadasAntes + 1);
+        await expect(spy.mock.calls.length).toBe(callsBefore + 1);
       });
     }
   },

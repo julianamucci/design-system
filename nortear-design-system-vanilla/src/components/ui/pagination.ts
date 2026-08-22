@@ -41,10 +41,10 @@ export type PaginationOptions = {
 };
 
 /** Rótulos em português — o idioma da documentação que cerca o componente. */
-const ROTULOS = {
-  navegacao: 'Paginação',
+const LABELS = {
+  navigation: 'Paginação',
   anterior: 'Ir para a página anterior',
-  proxima: 'Ir para a próxima página',
+  next: 'Ir para a próxima página',
   pagina: (n: number) => `Ir para página ${n}`,
 } as const;
 
@@ -87,7 +87,7 @@ function getPages(total: number, current: number): (number | 'ellipsis')[] {
 export function createPagination(options: PaginationOptions): HTMLElement {
   const { total, current, onPageChange, hrefForPage, showPrevNext = true, align } = options;
   // `label` continua aceito como apelido do nome acessível; o canônico vence.
-  const landmarkName = options['aria-label'] ?? options.label ?? ROTULOS.navegacao;
+  const landmarkName = options['aria-label'] ?? options.label ?? LABELS.navigation;
 
   /**
    * Endereço do link e o que fazer com o clique.
@@ -127,7 +127,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     // Todo link numerado tem rótulo com contexto — inclusive o da página atual:
     // "3" sozinho não diz nada em voz alta. Quem anuncia que é a página atual é
     // o `aria-current`, nativamente e em qualquer idioma.
-    a.setAttribute('aria-label', ROTULOS.pagina(page));
+    a.setAttribute('aria-label', LABELS.pagina(page));
     if (isCurrent) {
       a.setAttribute('aria-current', 'page');
       a.dataset.active = 'true';
@@ -179,7 +179,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
   // Prev
   if (showPrevNext) {
     addItem(
-      makeDirecional('left', ROTULOS.anterior, 'pagination-previous', current <= 1, current - 1, () =>
+      makeDirecional('left', LABELS.anterior, 'pagination-previous', current <= 1, current - 1, () =>
         onPageChange?.(current - 1),
       ),
     );
@@ -206,7 +206,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
   // Next
   if (showPrevNext) {
     addItem(
-      makeDirecional('right', ROTULOS.proxima, 'pagination-next', current >= total, current + 1, () =>
+      makeDirecional('right', LABELS.next, 'pagination-next', current >= total, current + 1, () =>
         onPageChange?.(current + 1),
       ),
     );

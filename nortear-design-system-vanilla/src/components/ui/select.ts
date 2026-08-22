@@ -214,16 +214,16 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   } = options;
 
   const seq = ++_selectCounter;
-  const idDaLista = `nds-select-content-${seq}`;
+  const listId = `nds-select-content-${seq}`;
 
   /** Uma opção montada: o nó, o que ele vale e se aceita ser escolhido. */
-  type Opcao = { el: HTMLElement; value: string; label: string; disabled: boolean };
+  type Option = { el: HTMLElement; value: string; label: string; disabled: boolean };
 
   let valor = defaultValue ?? '';
   let aberto = false;
   let posicionador: HTMLElement | null = null;
   let conteudo: HTMLElement | null = null;
-  let opcoes: Opcao[] = [];
+  let opcoes: Option[] = [];
   let ativo = -1;
 
   let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
@@ -346,7 +346,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     const { value, label } = def;
 
     const el = document.createElement('div');
-    el.id = `${idDaLista}-opcao-${indice}`;
+    el.id = `${listId}-opcao-${indice}`;
     el.className = 'nds-select-item';
     el.dataset.slot = 'select-item';
     el.dataset.value = value;
@@ -380,7 +380,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
   function mountContent(): HTMLElement {
     const painel = document.createElement('div');
-    painel.id = idDaLista;
+    painel.id = listId;
     painel.className = 'nds-select-content';
     painel.dataset.slot = 'select-content';
     painel.dataset.state = 'open';
@@ -424,7 +424,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
         grupo.setAttribute('role', 'group');
 
         const rotulo = document.createElement('div');
-        rotulo.id = `${idDaLista}-grupo-${painel.childElementCount}`;
+        rotulo.id = `${listId}-grupo-${painel.childElementCount}`;
         rotulo.className = 'nds-select-label';
         rotulo.dataset.slot = 'select-label';
         rotulo.textContent = entrada.label;
@@ -567,8 +567,8 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     const ordem = candidatos
       .slice(partida + 1)
       .concat(candidatos.slice(0, Math.max(partida + 1, 0)));
-    const achado = ordem.find(([, rotulo]) => rotulo.toLowerCase().startsWith(busca));
-    if (achado && achado[0] !== valor) definirValue(achado[0]);
+    const finding = ordem.find(([, rotulo]) => rotulo.toLowerCase().startsWith(busca));
+    if (finding && finding[0] !== valor) definirValue(finding[0]);
   }
 
   // ── Abrir / fechar ─────────────────────────────────────────────────────────
@@ -606,7 +606,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
     aberto = true;
     gatilho.setAttribute('aria-expanded', 'true');
-    gatilho.setAttribute('aria-controls', idDaLista);
+    gatilho.setAttribute('aria-controls', listId);
     gatilho.dataset.state = 'open';
 
     // O gatilho é quem comanda o teclado, então ele tem de estar com o foco —
@@ -780,8 +780,8 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
     if (ehImprimivel(e)) {
       e.preventDefault();
-      const achado = procurar(e.key);
-      if (achado !== -1) destacar(achado);
+      const finding = procurar(e.key);
+      if (finding !== -1) destacar(finding);
     }
   });
 

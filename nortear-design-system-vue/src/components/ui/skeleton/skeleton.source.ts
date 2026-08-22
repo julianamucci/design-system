@@ -53,7 +53,7 @@ function regiao(opcoes: {
 }
 
 /** Uma peça: a forma sempre aparece, a largura só onde a folha a lê. */
-function peca(shape: string, width?: string, classe?: string): string {
+function part(shape: string, width?: string, classe?: string): string {
   const partes = [
     `data-shape="${shape}"`,
     width && HAS_WIDTH.has(shape) ? `data-width="${width}"` : '',
@@ -64,7 +64,7 @@ function peca(shape: string, width?: string, classe?: string): string {
 
 /** Duas ou três linhas de larguras decrescentes — o desenho de um parágrafo. */
 function linhas(larguras: string[]): string {
-  return larguras.map((largura) => peca('text', largura)).join('\n');
+  return larguras.map((largura) => part('text', largura)).join('\n');
 }
 
 /**
@@ -82,7 +82,7 @@ export const skeletonPlaygroundSource: SourceTransform<SkeletonArgs> = (_gerado,
   // `fill` não traz caixa própria: ele preenche a que o container estabelece, e
   // sem container com medida o bloco nasce com altura zero.
   const miolo =
-    shape === 'fill' ? peca('fill', undefined, 'nds-docs-skeleton-media') : peca(shape, width);
+    shape === 'fill' ? part('fill', undefined, 'nds-docs-skeleton-media') : part(shape, width);
   return vueSnippet(
     IMPORT,
     regiao({
@@ -100,7 +100,7 @@ export function skeletonRetanguloSource(): string {
     regiao({
       rotulo: 'Carregando bloco',
       classe: 'nds-w-sm',
-      miolo: peca('fill', undefined, 'nds-docs-skeleton-media'),
+      miolo: part('fill', undefined, 'nds-docs-skeleton-media'),
     }),
   );
 }
@@ -112,7 +112,7 @@ export function skeletonRetanguloSource(): string {
 export function skeletonCirculoSource(): string {
   return vueSnippet(
     IMPORT,
-    regiao({ rotulo: 'Carregando avatar', miolo: peca('avatar') }),
+    regiao({ rotulo: 'Carregando avatar', miolo: part('avatar') }),
   );
 }
 
@@ -160,7 +160,7 @@ export function skeletonMovimentoReduzidoSource(): string {
       rotulo: 'Carregando conteúdo',
       classe: 'nds-stack nds-w-sm',
       espaco: 'sm',
-      miolo: peca('text', '3-4'),
+      miolo: part('text', '3-4'),
     }),
   );
 }
@@ -173,7 +173,7 @@ export function skeletonCardPerfilSource(): string {
       rotulo: 'Carregando card de perfil',
       classe: 'nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm',
       espaco: 'md',
-      miolo: `${peca('avatar')}
+      miolo: `${part('avatar')}
 <div class="nds-stack nds-flex-1" data-spacing="sm">
 ${indentar(linhas(['2-3', '1-2']))}
 </div>`,
@@ -185,7 +185,7 @@ ${indentar(linhas(['2-3', '1-2']))}
  * Lista: a região ocupada é a própria `ul`, e não uma `div` em volta — assim o
  * leitor de tela recebe a contagem de itens junto com o estado de carregando.
  */
-export function skeletonListaSource(): string {
+export function skeletonListSource(): string {
   return vueSnippet(
     IMPORT,
     regiao({
@@ -216,7 +216,7 @@ export function skeletonImageRatioSource(): string {
       rotulo: 'Carregando imagem',
       classe: 'nds-w-sm',
       miolo: `<AspectRatio :ratio="16 / 9">
-  ${peca('fill')}
+  ${part('fill')}
 </AspectRatio>`,
     }),
   );

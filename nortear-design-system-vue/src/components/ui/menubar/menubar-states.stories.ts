@@ -10,10 +10,10 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from './index';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
-  menubarAbertoSource,
+  menubarOpenSource,
   menubarCheckboxCheckedSource,
   menubarCheckboxMistoSource,
   menubarClosedSource,
@@ -30,7 +30,7 @@ const ITENS_COM_BLOQUEIO = [
 
 // Espião de escopo de MÓDULO: criado dentro do `render` ele seria inalcançável
 // pelo `play`, e a aba Actions abriria vazia.
-const espiaoDeSelecao = fn();
+const selectionSpy = fn();
 
 const meta = {
   title: 'UI/Menubar/States',
@@ -54,7 +54,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const pecas = {
+const parts = {
   Menubar,
   MenubarCheckboxItem,
   MenubarContent,
@@ -73,7 +73,7 @@ const pecas = {
 export const Closed: Story = {
   parameters: { covers: ['accessibility.item1', 'accessibility.item2', 'visual.item1'] },
   render: () => ({
-    components: pecas,
+    components: parts,
     setup: () => ({ menus: MENUS_FECHADOS }),
     template: `
       <div style="contain: layout; min-height: 120px;">
@@ -115,16 +115,16 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['accessibility.item4'],
     docs: {
       // Aberto na montagem é PRESENÇA de `default-value`; a do meta mostra a
       // barra fechada, que é justamente a ausência dele.
-      source: { transform: menubarAbertoSource },
+      source: { transform: menubarOpenSource },
     },
   },
   render: () => ({
-    components: pecas,
+    components: parts,
     template: `
       <div style="contain: layout; min-height: 260px;">
         <Menubar default-value="file">
@@ -167,9 +167,9 @@ export const Open: Story = {
       await waitFor(async () => {
         // O positioner mede DEPOIS de o painel entrar no DOM: no primeiro
         // quadro o retângulo ainda é (0,0), e ler daí é corrida.
-        const barraRect = barra.getBoundingClientRect();
+        const barRect = barra.getBoundingClientRect();
         const menuRect = menu.getBoundingClientRect();
-        await expect(menuRect.top).toBeGreaterThanOrEqual(barraRect.bottom - 1);
+        await expect(menuRect.top).toBeGreaterThanOrEqual(barRect.bottom - 1);
       });
     });
   },
@@ -179,7 +179,7 @@ export const Open: Story = {
 
 export const ItemDisabled: Story = {
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       // O bloqueio mora no ITEM, e por item: a do meta não tem `:disabled` em
       // lugar nenhum.
@@ -187,8 +187,8 @@ export const ItemDisabled: Story = {
     },
   },
   render: () => ({
-    components: pecas,
-    setup: () => ({ itens: ITENS_COM_BLOQUEIO, aoEscolher: espiaoDeSelecao }),
+    components: parts,
+    setup: () => ({ itens: ITENS_COM_BLOQUEIO, aoEscolher: selectionSpy }),
     template: `
       <div style="contain: layout; min-height: 240px;">
         <Menubar default-value="file">
@@ -229,7 +229,7 @@ export const ItemDisabled: Story = {
 
     await step('Escolher o item bloqueado não executa nada', async () => {
       await userEvent.click(bloqueado, { pointerEventsCheck: 0 });
-      await expect(espiaoDeSelecao).not.toHaveBeenCalledWith(bloqueado.textContent?.trim());
+      await expect(selectionSpy).not.toHaveBeenCalledWith(bloqueado.textContent?.trim());
     });
   },
 };
@@ -238,7 +238,7 @@ export const ItemDisabled: Story = {
 
 export const CheckboxChecked: Story = {
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['functional.item7'],
     docs: {
       // Outro tipo de item e outra API: `checked`/`@update:checked` sobre estado
@@ -247,7 +247,7 @@ export const CheckboxChecked: Story = {
     },
   },
   render: () => ({
-    components: pecas,
+    components: parts,
     setup() {
       // Reativo de verdade: com um objeto solto o clique emitiria a mudança e
       // nada re-renderizaria — o item ficaria preso no estado inicial.
@@ -314,7 +314,7 @@ export const CheckboxChecked: Story = {
 
 export const CheckboxIndeterminate: Story = {
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['functional.item9'],
     docs: {
       // O misto é um TERCEIRO valor de `checked`, escrito como string literal —
@@ -323,7 +323,7 @@ export const CheckboxIndeterminate: Story = {
     },
   },
   render: () => ({
-    components: pecas,
+    components: parts,
     template: `
       <div style="contain: layout; min-height: 240px;">
         <Menubar default-value="view">

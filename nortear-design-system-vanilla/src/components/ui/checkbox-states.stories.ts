@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
-import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
+import { disabledReprovas } from '@shared/testing/checkbox-probe';
 import { createCheckbox } from './checkbox';
 import { checkboxSource, checkboxSourceWith } from './checkbox.source';
 
@@ -179,7 +179,7 @@ export const DisabledUnchecked: Story = {
         // aceitava foco programático e mesmo assim o Tab passava reto por ela,
         // o que na prática reproduzia o `disabled` nativo que se quer evitar.
         onDisabledUncheckedChange.mockClear();
-        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+        await expect(await disabledReprovas(checkbox, FERRAMENTAS)).toEqual([]);
       },
     );
 
@@ -219,7 +219,7 @@ export const DisabledChecked: Story = {
     await step(
       'Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam',
       async () => {
-        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+        await expect(await disabledReprovas(checkbox, FERRAMENTAS)).toEqual([]);
       },
     );
 

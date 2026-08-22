@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  collapsibleAbertoPorPadraoSource,
-  collapsibleComBotaoSource,
-  collapsibleComChevronSource,
-  collapsibleControladoSource,
-  collapsibleDesabilitadoSource,
+  defaultCollapsibleOpenSource,
+  collapsibleWithButtonSource,
+  collapsibleWithChevronSource,
+  collapsibleControlledSource,
+  collapsibleDisabledSource,
   collapsibleSource,
 } from './collapsible.source';
 
@@ -66,19 +66,19 @@ describe('collapsibleSource', () => {
 
 describe('transforms das stories de estado e composição', () => {
   it('aberto por padrão é a forma canônica com open', () => {
-    expect(collapsibleAbertoPorPadraoSource()).toBe(
+    expect(defaultCollapsibleOpenSource()).toBe(
       collapsibleSource('', { args: { defaultOpen: true } }),
     );
   });
 
   it('desabilitado é a forma canônica com disabled', () => {
-    expect(collapsibleDesabilitadoSource()).toBe(
+    expect(collapsibleDisabledSource()).toBe(
       collapsibleSource('', { args: { disabled: true } }),
     );
   });
 
   it('o modo controlado mostra o estado externo e o vínculo de duas vias', () => {
-    const saida = collapsibleControladoSource();
+    const saida = collapsibleControlledSource();
     expect(saida).toContain('let aberto = $state(false);');
     expect(saida).toContain('bind:open={aberto}');
     expect(saida).toContain('from "@/components/ui/button"');
@@ -87,13 +87,13 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('a composição com botão veste o gatilho de contorno', () => {
-    const saida = collapsibleComBotaoSource();
+    const saida = collapsibleWithButtonSource();
     expect(saida).toContain('nds-button nds-button-outline');
     expect(saida).toContain('<p>Opção avançada 3</p>');
   });
 
   it('a composição do chevron mantém a classe que o CSS gira', () => {
-    const saida = collapsibleComChevronSource();
+    const saida = collapsibleWithChevronSource();
     expect(saida).toContain('nds-transition-transform nds-chevron');
     // A rotação é 100% CSS: nada de ângulo, medida ou style no markup.
     expect(saida).not.toContain('rotate');

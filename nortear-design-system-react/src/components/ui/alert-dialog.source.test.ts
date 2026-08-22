@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
-  alertDialogAbertoSource,
+  alertDialogOpenSource,
   alertDialogCanceladoSource,
-  alertDialogClasseExtraSource,
-  alertDialogComIconeSource,
+  alertDialogClassNameExtraSource,
+  alertDialogWithIconSource,
   alertDialogConfirmadoSource,
-  alertDialogControladoSource,
-  alertDialogNeutroSource,
-  alertDialogSemDescricaoSource,
+  alertDialogControlledSource,
+  alertDialogNeutralSource,
+  alertDialogNoDescriptionSource,
   alertDialogSource,
 } from './alert-dialog.source';
 
@@ -20,7 +20,7 @@ describe('alertDialogSource', () => {
 
   it('monta a confirmação inteira: gatilho, painel e as DUAS saídas', () => {
     const saida = alertDialogSource();
-    for (const peca of [
+    for (const part of [
       '<AlertDialogTrigger',
       '<AlertDialogContent>',
       '<AlertDialogHeader>',
@@ -30,7 +30,7 @@ describe('alertDialogSource', () => {
       '<AlertDialogCancel',
       '<AlertDialogAction',
     ]) {
-      expect(saida).toContain(peca);
+      expect(saida).toContain(part);
     }
   });
 
@@ -83,9 +83,9 @@ describe('alertDialogSource', () => {
   });
 
   it('cai nos rótulos padrão quando o control entrega um espião no lugar da string', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
+    const spy = () => 'CORPO_DO_MOCK';
     const saida = alertDialogSource(undefined, {
-      args: { triggerLabel: espiao as never, title: espiao as never },
+      args: { triggerLabel: spy as never, title: spy as never },
     });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).toContain('<AlertDialogTitle>Excluir conta</AlertDialogTitle>');
@@ -94,7 +94,7 @@ describe('alertDialogSource', () => {
 
 describe('estados', () => {
   it('o aberto declara defaultOpen, que é o que a story mede', () => {
-    expect(alertDialogAbertoSource()).toContain('<AlertDialog defaultOpen>');
+    expect(alertDialogOpenSource()).toContain('<AlertDialog defaultOpen>');
   });
 
   it('confirmar recebe onClick e o handler é declarado no próprio snippet', () => {
@@ -112,11 +112,11 @@ describe('estados', () => {
   it('só a story do aberto declara defaultOpen — nas outras ele é andaime de captura', () => {
     for (const fn of [
       alertDialogCanceladoSource,
-      alertDialogClasseExtraSource,
-      alertDialogComIconeSource,
+      alertDialogClassNameExtraSource,
+      alertDialogWithIconSource,
       alertDialogConfirmadoSource,
-      alertDialogNeutroSource,
-      alertDialogSemDescricaoSource,
+      alertDialogNeutralSource,
+      alertDialogNoDescriptionSource,
     ]) {
       expect(fn()).toContain('<AlertDialog>');
       expect(fn()).not.toContain('defaultOpen');
@@ -124,7 +124,7 @@ describe('estados', () => {
   });
 
   it('o controlado não tem Trigger: o gatilho vive fora da raiz', () => {
-    const saida = alertDialogControladoSource();
+    const saida = alertDialogControlledSource();
     expect(saida).toContain('import { useState } from "react";');
     expect(saida).toContain('<AlertDialog open={aberto} onOpenChange={setAberto}>');
     expect(saida).not.toContain('AlertDialogTrigger');
@@ -133,25 +133,25 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('a mídia entra com o ícone fora da árvore de acessibilidade', () => {
-    const saida = alertDialogComIconeSource();
+    const saida = alertDialogWithIconSource();
     expect(saida).toContain('<AlertDialogMedia>');
     expect(saida).toContain('aria-hidden="true"');
   });
 
   it('a confirmação neutra não carrega severidade nenhuma', () => {
-    const saida = alertDialogNeutroSource();
+    const saida = alertDialogNeutralSource();
     expect(saida).not.toContain('destructive');
     expect(saida).toContain('>Sair</AlertDialogAction>');
   });
 
   it('sem descrição o snippet nem importa a peça — a ausência é o assunto', () => {
-    const saida = alertDialogSemDescricaoSource();
+    const saida = alertDialogNoDescriptionSource();
     expect(saida).not.toContain('AlertDialogDescription');
     expect(saida).toContain('<AlertDialogTitle>Descartar rascunho</AlertDialogTitle>');
   });
 
   it('a extensibilidade é por classe de layout, no painel e no bloco de mídia', () => {
-    const saida = alertDialogClasseExtraSource();
+    const saida = alertDialogClassNameExtraSource();
     expect(saida).toContain('<AlertDialogContent className="nds-overflow-hidden">');
     expect(saida).toContain('<AlertDialogMedia className="nds-shrink-0">');
   });
@@ -159,14 +159,14 @@ describe('composições', () => {
   it('nenhum snippet ensina o andaime da story', () => {
     for (const fn of [
       alertDialogSource,
-      alertDialogAbertoSource,
+      alertDialogOpenSource,
       alertDialogCanceladoSource,
-      alertDialogClasseExtraSource,
-      alertDialogComIconeSource,
+      alertDialogClassNameExtraSource,
+      alertDialogWithIconSource,
       alertDialogConfirmadoSource,
-      alertDialogControladoSource,
-      alertDialogNeutroSource,
-      alertDialogSemDescricaoSource,
+      alertDialogControlledSource,
+      alertDialogNeutralSource,
+      alertDialogNoDescriptionSource,
     ]) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');

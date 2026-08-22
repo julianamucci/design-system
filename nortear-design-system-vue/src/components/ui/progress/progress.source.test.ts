@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  progressCarregandoSource,
-  progressComRotuloSource,
+  progressLoadingSource,
+  progressWithLabelSource,
   progressConcluidoSource,
-  progressCorSemanticaSource,
-  listSourceProgressColors,
+  progressColorSemanticaSource,
+  listProgressColorsSource,
   progressDeterminadoSource,
   progressIndeterminadoSource,
   progressListSource,
@@ -83,7 +83,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a barra com rótulo repete o valor para quem enxerga a tela', () => {
-    const saida = progressComRotuloSource();
+    const saida = progressWithLabelSource();
     expect(saida).toContain('>42%</span>');
     expect(saida).toContain('aria-live="polite"');
     // `assertive` interromperia o leitor de tela a cada avanço.
@@ -93,7 +93,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a cor semântica sai de atributo, e a trilha continua neutra', () => {
-    const saida = progressCorSemanticaSource();
+    const saida = progressColorSemanticaSource();
     expect(saida).toContain('data-variant="success"');
     expect(saida).toContain('data-variant="destructive"');
     // Classe montada em runtime não é auditável, e o contraste de 3:1 não pode
@@ -110,7 +110,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('no meio do caminho o número ao lado bate com o valor da barra', () => {
-    const saida = progressCarregandoSource();
+    const saida = progressLoadingSource();
     expect(saida).toContain(':model-value="50"');
     expect(saida).toContain('>50%</span>');
   });
@@ -155,7 +155,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('das três medidas, só as semânticas levam variante', () => {
-    const saida = listSourceProgressColors();
+    const saida = listProgressColorsSource();
     expect(saida.match(/data-variant=/g)).toHaveLength(2);
     // "Em andamento" não é semântico: a barra do meio fica sem variante.
     expect(saida).toContain('<Progress :model-value="72" aria-label="Progresso do backup" />');
@@ -174,15 +174,15 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     progressSource,
     progressDeterminadoSource,
     progressIndeterminadoSource,
-    progressComRotuloSource,
-    progressCorSemanticaSource,
+    progressWithLabelSource,
+    progressColorSemanticaSource,
     progressZeroSource,
-    progressCarregandoSource,
+    progressLoadingSource,
     progressConcluidoSource,
     progressProcessandoSource,
     progressUploadAnimadoSource,
     progressListSource,
-    listSourceProgressColors,
+    listProgressColorsSource,
     progressProcessandoServidorSource,
   ];
 

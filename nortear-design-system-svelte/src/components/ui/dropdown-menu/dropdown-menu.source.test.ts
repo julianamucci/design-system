@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dropdownMenuComAtalhosSource,
-  dropdownMenuComCheckboxSource,
-  dropdownMenuComRadioSource,
-  dropdownMenuComRotuloSource,
-  dropdownMenuComSubmenuSource,
-  dropdownMenuControladoSource,
-  dropdownMenuDestrutivoSource,
+  dropdownMenuWithShortcutsSource,
+  dropdownMenuWithCheckboxSource,
+  dropdownMenuWithRadioSource,
+  dropdownMenuWithLabelSource,
+  dropdownMenuWithSubmenuSource,
+  dropdownMenuControlledSource,
+  dropdownMenuDestructiveSource,
   dropdownMenuIndeterminadoSource,
-  dropdownMenuItemDesabilitadoSource,
-  dropdownMenuPadraoSource,
+  dropdownMenuItemDisabledSource,
+  dropdownMenuDefaultSource,
   dropdownMenuSource,
 } from './dropdown-menu.source';
 
@@ -106,40 +106,40 @@ describe('dropdownMenuSource', () => {
 describe('transforms das stories de variação, estado e composição', () => {
   it('nenhum override abre o menu na montagem — isso é andaime da captura', () => {
     for (const fn of [
-      dropdownMenuPadraoSource,
-      dropdownMenuDestrutivoSource,
-      dropdownMenuItemDesabilitadoSource,
+      dropdownMenuDefaultSource,
+      dropdownMenuDestructiveSource,
+      dropdownMenuItemDisabledSource,
       dropdownMenuIndeterminadoSource,
-      dropdownMenuComRotuloSource,
-      dropdownMenuComCheckboxSource,
-      dropdownMenuComRadioSource,
-      dropdownMenuComSubmenuSource,
-      dropdownMenuComAtalhosSource,
+      dropdownMenuWithLabelSource,
+      dropdownMenuWithCheckboxSource,
+      dropdownMenuWithRadioSource,
+      dropdownMenuWithSubmenuSource,
+      dropdownMenuWithShortcutsSource,
     ]) {
       expect(fn(), fn.name).not.toContain('bind:open');
     }
   });
 
   it('a variante padrão mostra o item neutro, sem cor semântica', () => {
-    expect(dropdownMenuPadraoSource()).not.toContain('variant="destructive"');
+    expect(dropdownMenuDefaultSource()).not.toContain('variant="destructive"');
   });
 
   it('a variante destrutiva marca só a ação irreversível', () => {
-    const saida = dropdownMenuDestrutivoSource();
+    const saida = dropdownMenuDestructiveSource();
     expect(saida).toContain('<DropdownMenuItem>Editar</DropdownMenuItem>');
     expect(saida).toContain('<DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>');
     expect(saida).toContain('>Ações da conta</Button>');
   });
 
   it('o override controlado liga o estado externo por bind:open', () => {
-    const saida = dropdownMenuControladoSource();
+    const saida = dropdownMenuControlledSource();
     expect(saida).toContain('let aberto = $state(false);');
     expect(saida).toContain('<DropdownMenu bind:open={aberto}>');
     expect(saida).toContain('>Abrir via estado externo</Button>');
   });
 
   it('o item desabilitado continua no menu, escrito como tal', () => {
-    expect(dropdownMenuItemDesabilitadoSource()).toContain(
+    expect(dropdownMenuItemDisabledSource()).toContain(
       '<DropdownMenuItem disabled>Arquivar (indisponível)</DropdownMenuItem>',
     );
   });
@@ -152,32 +152,32 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o grupo com rótulo usa GroupHeading, que é quem nomeia o agrupamento', () => {
-    const saida = dropdownMenuComRotuloSource();
+    const saida = dropdownMenuWithLabelSource();
     expect(saida).toContain('<DropdownMenuGroupHeading>Conta</DropdownMenuGroupHeading>');
     expect(saida).toContain('<DropdownMenuGroupHeading>Suporte</DropdownMenuGroupHeading>');
   });
 
   it('os alternadores ligam cada item ao seu próprio estado', () => {
-    const saida = dropdownMenuComCheckboxSource();
+    const saida = dropdownMenuWithCheckboxSource();
     expect(saida).toContain('let mostrarBarraDeStatus = $state(true);');
     expect(saida).toContain('<DropdownMenuCheckboxItem bind:checked={mostrarBarraDeAtividade}>');
   });
 
   it('a escolha única compartilha um valor só entre os itens', () => {
-    const saida = dropdownMenuComRadioSource();
+    const saida = dropdownMenuWithRadioSource();
     expect(saida).toContain('let posicao = $state("bottom");');
     expect(saida).toContain('<DropdownMenuRadioGroup bind:value={posicao}>');
     expect(saida.match(/<DropdownMenuRadioItem value="/g)).toHaveLength(3);
   });
 
   it('o submenu aninha conteúdo dentro do próprio item', () => {
-    const saida = dropdownMenuComSubmenuSource();
+    const saida = dropdownMenuWithSubmenuSource();
     expect(saida).toContain('<DropdownMenuSub>');
     expect(saida).toContain('<DropdownMenuSubContent>');
   });
 
   it('o atalho é filho do item, não texto solto ao lado dele', () => {
-    const saida = dropdownMenuComAtalhosSource();
+    const saida = dropdownMenuWithShortcutsSource();
     expect(saida).toContain('<DropdownMenuShortcut>⌘D</DropdownMenuShortcut>');
     expect(saida).toContain('>Editar</Button>');
   });

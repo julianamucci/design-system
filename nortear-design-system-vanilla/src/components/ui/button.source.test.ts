@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   buttonAsLinkSnippet,
-  actionsSnippetButtonPair,
+  actionsButtonPairSnippet,
   buttonPlaygroundSource,
   buttonSnippet,
   buttonSource,
@@ -127,14 +127,14 @@ describe('buttonSource', () => {
 
 describe('buttonPlaygroundSource', () => {
   it('nos tamanhos de ícone, o texto do control vira o nome acessível', () => {
-    const comTexto = buttonPlaygroundSource('', { args: { size: 'sm', label: 'Salvar' } });
-    expect(comTexto).toContain("label: 'Salvar'");
-    expect(comTexto).not.toContain('aria-label');
+    const withText = buttonPlaygroundSource('', { args: { size: 'sm', label: 'Salvar' } });
+    expect(withText).toContain("label: 'Salvar'");
+    expect(withText).not.toContain('aria-label');
 
-    const soIcone = buttonPlaygroundSource('', { args: { size: 'icon', label: 'Adicionar' } });
-    expect(soIcone).toContain("'aria-label': 'Adicionar'");
-    expect(soIcone).not.toContain("label: 'Adicionar'");
-    expect(soIcone).toContain("createButtonIcon('plus')");
+    const soIcon = buttonPlaygroundSource('', { args: { size: 'icon', label: 'Adicionar' } });
+    expect(soIcon).toContain("'aria-label': 'Adicionar'");
+    expect(soIcon).not.toContain("label: 'Adicionar'");
+    expect(soIcon).toContain("createButtonIcon('plus')");
   });
 });
 
@@ -157,7 +157,7 @@ describe('buttonSourceCom', () => {
 
 describe('buttonParDeAcoesSnippet', () => {
   it('mostra os dois botões e o contêiner que fixa a ordem', () => {
-    const código = actionsSnippetButtonPair();
+    const código = actionsButtonPairSnippet();
     expect(código).toContain("variant: 'outline', label: 'Cancelar'");
     expect(código).toContain("createButton({ label: 'Confirmar' })");
     expect(código).toContain("acoes.className = 'nds-cluster';");

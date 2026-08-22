@@ -15,8 +15,8 @@ import { jsxSnippet, type SourceTransform } from '@/lib/story-source';
 export type BreadcrumbArgs = Record<string, never>;
 
 /** Import montado sob medida: só as peças que o snippet realmente usa. */
-function importDe(...pecas: string[]): string {
-  return `import {\n${pecas.map((peca) => `  ${peca},`).join('\n')}\n} from "@/components/ui/breadcrumb";`;
+function importDe(...parts: string[]): string {
+  return `import {\n${parts.map((part) => `  ${part},`).join('\n')}\n} from "@/components/ui/breadcrumb";`;
 }
 
 const TRACK_COMPLETA = importDe(
@@ -63,7 +63,7 @@ export const breadcrumbSource: SourceTransform<BreadcrumbArgs> = () =>
  * afirma — que com dois níveis existe UM único ponto focável, porque a página
  * atual nunca é navegável.
  */
-export function breadcrumbSimplesSource(): string {
+export function breadcrumbSimpleSource(): string {
   return jsxSnippet(
     importDe(
       'Breadcrumb',
@@ -136,7 +136,7 @@ export function breadcrumbWithEllipsisSource(): string {
  * `role="presentation"` e o `aria-hidden` continuam vindo do componente, e por
  * isso o ícone entra sem `aria-hidden` próprio.
  */
-export function breadcrumbSeparadorCustomizadoSource(): string {
+export function breadcrumbSeparatorCustomizadoSource(): string {
   return jsxSnippet(
     `${importDe(
       'Breadcrumb',

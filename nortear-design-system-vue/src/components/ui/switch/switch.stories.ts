@@ -91,7 +91,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const sw = canvas.getByRole('switch');
-    const espiao = args['onUpdate:modelValue'] as ReturnType<typeof fn>;
+    const spy = args['onUpdate:modelValue'] as ReturnType<typeof fn>;
 
     await step('O controle é anunciado como switch e nomeado pelo rótulo', async () => {
       await expect(sw).toHaveAttribute('data-slot', 'switch');
@@ -114,11 +114,11 @@ export const Playground: Story = {
       // então contar a partir de um estado desconhecido daria 1 ou 2 conforme a
       // rodada. Fixado o ponto de partida, o par abaixo são sempre dois cliques.
       await definir(sw, false);
-      const chamadasAntes = espiao.mock.calls.length;
+      const callsBefore = spy.mock.calls.length;
       await definir(sw, true);
       await definir(sw, false);
-      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 2);
-      await expect(espiao).toHaveBeenLastCalledWith(false);
+      await expect(spy.mock.calls.length).toBe(callsBefore + 2);
+      await expect(spy).toHaveBeenLastCalledWith(false);
     });
 
     await step('Space com o controle focado alterna o estado', async () => {

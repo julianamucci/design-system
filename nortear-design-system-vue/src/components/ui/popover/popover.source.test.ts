@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import {
-  popoverAbertoSource,
-  popoverAcimaSource,
+  popoverOpenSource,
+  popoverAboveSource,
   popoverWithTitleSource,
-  popoverConteudoLivreSource,
-  popoverControladoSource,
+  popoverContentLivreSource,
+  popoverControlledSource,
   popoverEditarPerfilSource,
   popoverClosedSource,
-  popoverFiltroSource,
-  popoverFormularioSource,
+  popoverFilterSource,
+  popoverFormSource,
   popoverModalSource,
   popoverPreferenciasSource,
-  colorSourcePopoverSelector,
+  colorPopoverSelectorSource,
   popoverSource,
 } from './popover.source';
 
@@ -102,7 +102,7 @@ import { Button } from '@/components/ui/button'
 
 describe('transforms das stories de variante', () => {
   it('o conteúdo livre não tem título — e a ausência é o assunto', () => {
-    const saida = popoverConteudoLivreSource();
+    const saida = popoverContentLivreSource();
     expect(saida).not.toContain('PopoverTitle');
     expect(saida).not.toContain('PopoverHeader');
     // Sem título o painel herda o nome do gatilho, então o gatilho precisa
@@ -120,7 +120,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o formulário devolve o que o campo recebe — nunca só exibe', () => {
-    const saida = popoverFormularioSource();
+    const saida = popoverFormSource();
     expect(saida).toContain('v-model="nome"');
     expect(saida).toContain('v-model="email"');
     // Valor entrando sem voltar: o campo aceita digitação e perde o digitado no
@@ -139,18 +139,18 @@ describe('transforms das stories de estado', () => {
   });
 
   it('aberto na montagem é presença de `default-open`', () => {
-    expect(popoverAbertoSource()).toContain('<Popover :default-open="true">');
+    expect(popoverOpenSource()).toContain('<Popover :default-open="true">');
   });
 
   it('o painel acima pede lado e folga próprios', () => {
-    const saida = popoverAcimaSource();
+    const saida = popoverAboveSource();
     expect(saida).toContain('<PopoverContent side="top" :side-offset="12">');
     // `align="center"` é o padrão do painel — repeti-lo ensinaria ruído.
     expect(saida).not.toContain('align=');
   });
 
   it('o controlado entrega o estado a quem consome, com dois botões separados', () => {
-    const saida = popoverControladoSource();
+    const saida = popoverControlledSource();
     expect(saida).toContain('<Popover v-model:open="aberto">');
     expect(saida).toContain('const aberto = ref(false)');
     // Um alternador FORA do painel dispararia a dispensa por clique-fora antes
@@ -176,7 +176,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o filtro é escolha múltipla, com o campo dentro do próprio rótulo', () => {
-    const saida = popoverFiltroSource();
+    const saida = popoverFilterSource();
     expect(saida).toContain('<label v-for="(marcado, nome) in status"');
     expect(saida).toContain('v-model="status[nome]"');
     // Campo dentro do `<label>`: a associação não depende de `for`/`id` casados
@@ -185,7 +185,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('cada amostra de cor tem nome próprio, escrita uma a uma', () => {
-    const saida = colorSourcePopoverSelector();
+    const saida = colorPopoverSelectorSource();
     const nomes = [...saida.matchAll(/aria-label="([^"]+)"/g)].map((m) => m[1]);
     expect(nomes).toHaveLength(6);
     // A cor não é o nome: repetir o mesmo rótulo equivale a não ter nenhum.
@@ -208,17 +208,17 @@ describe('transforms das stories de composição', () => {
 describe('o snippet ensina o design system, não o andaime da story', () => {
   const todas = [
     popoverSource,
-    popoverConteudoLivreSource,
+    popoverContentLivreSource,
     popoverWithTitleSource,
-    popoverFormularioSource,
+    popoverFormSource,
     popoverClosedSource,
-    popoverAbertoSource,
-    popoverAcimaSource,
-    popoverControladoSource,
+    popoverOpenSource,
+    popoverAboveSource,
+    popoverControlledSource,
     popoverModalSource,
     popoverEditarPerfilSource,
-    popoverFiltroSource,
-    colorSourcePopoverSelector,
+    popoverFilterSource,
+    colorPopoverSelectorSource,
     popoverPreferenciasSource,
   ];
 

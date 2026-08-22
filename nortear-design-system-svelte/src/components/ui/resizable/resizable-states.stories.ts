@@ -3,12 +3,12 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
 // Sem eixo: todas as stories deste arquivo são horizontais, e o padrão de
-// `fracaoDoPrimeiro` é justamente esse.
-import { fracaoDoPrimeiro } from './resizable.fixtures';
+// `firstFraction` é justamente esse.
+import { firstFraction } from './resizable.fixtures';
 import {
   resizableArrastoSource,
   resizableDisabledSource,
-  resizableFocoSource,
+  resizableFocusSource,
   resizableLimitesSource,
   resizableSource,
 } from './resizable.source';
@@ -38,7 +38,7 @@ type Story = StoryObj;
 
 const ROTULO = 'Redimensionar painéis — use setas para ajustar';
 
-function razaoDeContraste(frente: string, fundo: string): number {
+function contrastRatio(frente: string, fundo: string): number {
   const luminancia = (cor: string): number => {
     const [r = 0, g = 0, b = 0] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
     const canal = (c: number) => {
@@ -80,7 +80,7 @@ export const Dragging: Story = {
       const c = punho.getBoundingClientRect();
       const x = c.left + c.width / 2;
       const y = c.top + c.height / 2;
-      const antes = fracaoDoPrimeiro(canvasElement);
+      const antes = firstFraction(canvasElement);
 
       await userEvent.pointer([
         { keys: '[MouseLeft>]', target: punho, coords: { clientX: x, clientY: y } },
@@ -88,13 +88,13 @@ export const Dragging: Story = {
         { keys: '[/MouseLeft]' },
       ]);
 
-      await waitFor(() => expect(fracaoDoPrimeiro(canvasElement)).toBeGreaterThan(antes + 0.05));
+      await waitFor(() => expect(firstFraction(canvasElement)).toBeGreaterThan(antes + 0.05));
     });
 
     await step('O tamanho anunciado acompanha o arrasto', async () => {
       await waitFor(() =>
         expect(Number(punho.getAttribute('aria-valuenow'))).toBeCloseTo(
-          fracaoDoPrimeiro(canvasElement) * 100,
+          firstFraction(canvasElement) * 100,
           0,
         ),
       );
@@ -105,11 +105,11 @@ export const Dragging: Story = {
       // para arrastar, então a régua é a de componente de interface (WCAG
       // 1.4.11) e não a de decoração. O olho não distingue 1,25 de 3,0 numa
       // linha de 1px — por isso a conta fica aqui.
-      const razao = razaoDeContraste(
+      const ratio = contrastRatio(
         getComputedStyle(punho).backgroundColor,
         getComputedStyle(document.body).backgroundColor,
       );
-      await expect(razao).toBeGreaterThanOrEqual(3);
+      await expect(ratio).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -135,21 +135,21 @@ export const Limits: Story = {
       // o conteúdo dentro dele com ele.
       punho.focus();
       await userEvent.keyboard('{Home}');
-      await waitFor(() => expect(fracaoDoPrimeiro(canvasElement)).toBeCloseTo(0.3, 1));
+      await waitFor(() => expect(firstFraction(canvasElement)).toBeCloseTo(0.3, 1));
       await expect(punho).toHaveAttribute('aria-valuemin', '30');
       await expect(Number(punho.getAttribute('aria-valuenow'))).toBeCloseTo(30, 0);
     });
 
     await step('Insistir na seta não passa do piso', async () => {
       for (let i = 0; i < 10; i++) await userEvent.keyboard('{ArrowLeft}');
-      await expect(fracaoDoPrimeiro(canvasElement)).toBeCloseTo(0.3, 1);
+      await expect(firstFraction(canvasElement)).toBeCloseTo(0.3, 1);
     });
 
     await step('E para no máximo declarado', async () => {
       await userEvent.keyboard('{End}');
-      await waitFor(() => expect(fracaoDoPrimeiro(canvasElement)).toBeCloseTo(0.6, 1));
+      await waitFor(() => expect(firstFraction(canvasElement)).toBeCloseTo(0.6, 1));
       for (let i = 0; i < 10; i++) await userEvent.keyboard('{ArrowRight}');
-      await expect(fracaoDoPrimeiro(canvasElement)).toBeCloseTo(0.6, 1);
+      await expect(firstFraction(canvasElement)).toBeCloseTo(0.6, 1);
       await expect(punho).toHaveAttribute('aria-valuemax', '60');
     });
   },
@@ -158,7 +158,7 @@ export const Limits: Story = {
 export const Focus: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item3'],
-    docs: { source: { transform: resizableFocoSource } },
+    docs: { source: { transform: resizableFocusSource } },
   },
   render: () => ({
     Component: ResizableStory,
@@ -221,9 +221,9 @@ export const Disabled: Story = {
     });
 
     await step('E as setas não movem nada', async () => {
-      const antes = fracaoDoPrimeiro(canvasElement);
+      const antes = firstFraction(canvasElement);
       await userEvent.keyboard('{ArrowRight}{ArrowRight}{Home}{End}');
-      await expect(fracaoDoPrimeiro(canvasElement)).toBeCloseTo(antes, 2);
+      await expect(firstFraction(canvasElement)).toBeCloseTo(antes, 2);
     });
   },
 };

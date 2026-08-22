@@ -11,9 +11,9 @@ import {
 } from "./navigation-menu";
 import {
   abrir,
-  esperarPainel,
-  esperarPainelSumir,
-  popupAberto,
+  waitForPanel,
+  waitForPanelVanish,
+  popupOpen,
 } from "./navigation-menu.fixtures";
 import {
   navigationMenuHighlightSource,
@@ -21,7 +21,7 @@ import {
   navigationMenuSomenteTargetsSource,
   navigationMenuSource,
 } from "./navigation-menu.source";
-import { REGRA_GUARDA_DE_FOCO } from "@/lib/wait-for-portal";
+import { FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal";
 
 const meta = {
   title: "UI/NavigationMenu/Compositions",
@@ -176,14 +176,14 @@ export const WithDropdown: Story = {
     await step("Escolher um destino fecha o painel", async () => {
       // Navegar É sair da página: um painel que sobrevive ao clique fica
       // pendurado sobre a página seguinte.
-      const painel = await esperarPainel();
+      const painel = await waitForPanel();
       await userEvent.click(within(painel).getByRole("link", { name: "Plano Profissional" }));
-      await esperarPainelSumir();
+      await waitForPanelVanish();
       await expect(gatilho).toHaveAttribute("aria-expanded", "false");
     });
 
     await step("O foco volta a ser alcançável na barra", async () => {
-      await expect(popupAberto()).toBeNull();
+      await expect(popupOpen()).toBeNull();
       await expect(canvas.getAllByRole("link")).toHaveLength(2);
     });
   },
@@ -193,7 +193,7 @@ export const MegaMenuGrid: Story = {
   parameters: {
     covers: ["visual.item2"],
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       // Grade de duas colunas com uma linha de contexto por destino: a
       // descrição é o que atende ao propósito do link, e o meta não a tem.
@@ -261,7 +261,7 @@ export const MegaMenuGrid: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const painel = await esperarPainel();
+    const painel = await waitForPanel();
 
     await step("Quatro destinos em duas colunas", async () => {
       const destinos = [...painel.querySelectorAll<HTMLElement>("a")];
@@ -286,7 +286,7 @@ export const MegaMenuGrid: Story = {
       await expect(gatilho).toHaveAttribute("aria-expanded", "true");
       // Esta story termina ABERTA de propósito: é o estado que a regressão
       // visual precisa capturar.
-      await expect(popupAberto()).not.toBeNull();
+      await expect(popupOpen()).not.toBeNull();
     });
   },
 };
@@ -294,7 +294,7 @@ export const MegaMenuGrid: Story = {
 export const WithHighlightedCard: Story = {
   parameters: {
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       // Destino em destaque ao lado de uma lista de apoio: a hierarquia vem do
       // tamanho do bloco, e some se o snippet mostrar só a lista.

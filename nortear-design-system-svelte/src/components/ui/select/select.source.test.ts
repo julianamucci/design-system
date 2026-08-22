@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
   selectBloqueadoSource,
-  selectComGruposSource,
-  selectComIconeSource,
+  selectWithGroupsSource,
+  selectWithIconSource,
   selectCompactoSource,
   selectInvalidoSource,
-  selectListaPlanaSource,
-  selectSelecionadoSource,
+  selectListPlanaSource,
+  selectSelectedSource,
   selectSource,
 } from './select.source';
 
@@ -66,26 +66,26 @@ describe('selectSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('a lista plana não traz cabeçalho nem divisão', () => {
-    const saida = selectListaPlanaSource();
+    const saida = selectListPlanaSource();
     expect(saida).not.toContain('SelectGroupHeading');
     expect(saida).not.toContain('SelectSeparator');
   });
 
   it('a lista agrupada nomeia cada grupo e divide entre eles', () => {
-    const saida = selectComGruposSource();
+    const saida = selectWithGroupsSource();
     expect(saida).toContain('<SelectGroupHeading>{regiao.label}</SelectGroupHeading>');
     expect(saida).toContain('<SelectSeparator />');
     expect(saida).toContain('aria-label="Selecionar região"');
   });
 
   it('a opção com ícone importa o ícone e mantém o rótulo em texto', () => {
-    const saida = selectComIconeSource();
+    const saida = selectWithIconSource();
     expect(saida).toContain('import MapPinIcon from "@lucide/svelte/icons/map-pin";');
     expect(saida).toContain('<span>{estado.label}</span>');
   });
 
   it('o estado preenchido nasce com um valor escolhido', () => {
-    expect(selectSelecionadoSource()).toContain('let value = $state("rj");');
+    expect(selectSelectedSource()).toContain('let value = $state("rj");');
   });
 
   it('o estado bloqueado declara disabled na raiz', () => {

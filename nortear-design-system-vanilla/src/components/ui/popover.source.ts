@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -53,7 +53,7 @@ function recuar(bloco: string, espacos: string): string {
 }
 
 const TITLE_DEFAULT = 'Configurações de exibição';
-const DESCRICAO_PADRAO = 'Ajuste a aparência do conteúdo da página.';
+const DESCRIPTION_DEFAULT = 'Ajuste a aparência do conteúdo da página.';
 
 /** O botão que abre o painel. Todas as formas de snippet começam por ele. */
 function blockTrigger(o: PopoverSnippetOptions): string {
@@ -98,19 +98,19 @@ painel.destroy();`;
 
 /** A chamada real de `createPopover` com as opções da story. */
 export function popoverSnippet(o: PopoverSnippetOptions = {}): string {
-  const soTexto = typeof o.text === 'string';
+  const soText = typeof o.text === 'string';
 
-  const importes = soTexto
-    ? [importar('popover', 'createPopover'), importar('button', 'createButton')]
+  const importes = soText
+    ? [importing('popover', 'createPopover'), importing('button', 'createButton')]
     : [
-        importar(
+        importing(
           'popover',
           'createPopover',
           'createPopoverDescription',
           'createPopoverHeader',
           'createPopoverTitle',
         ),
-        importar('button', 'createButton'),
+        importing('button', 'createButton'),
       ];
 
   const cabecalho = `// Cabeçalho, título e descrição são peças do próprio Popover: são elas que
@@ -129,7 +129,7 @@ conteudo.append(
     '  ',
   )},
   ${recuar(
-    chamada('createPopoverDescription', opcoes([['text', texto(o.description ?? DESCRICAO_PADRAO)]])),
+    chamada('createPopoverDescription', opcoes([['text', texto(o.description ?? DESCRIPTION_DEFAULT)]])),
     '  ',
   )},
 );`;
@@ -137,10 +137,10 @@ conteudo.append(
   return snippet(
     importes.join('\n'),
     blockTrigger(o),
-    soTexto ? undefined : cabecalho,
+    soText ? undefined : cabecalho,
     `const painel = ${chamada(
       'createPopover',
-      panelLines(o, soTexto ? texto(o.text as string) : 'conteudo'),
+      panelLines(o, soText ? texto(o.text as string) : 'conteudo'),
     )};`,
     blockFinal(o),
   );
@@ -166,10 +166,10 @@ export function popoverSourceWith(
 export function popoverWithFormSnippet(o: PopoverSnippetOptions = {}): string {
   return snippet(
     [
-      importar('popover', 'createPopover', 'createPopoverTitle'),
-      importar('button', 'createButton'),
-      importar('input', 'createInput'),
-      importar('label', 'createLabel'),
+      importing('popover', 'createPopover', 'createPopoverTitle'),
+      importing('button', 'createButton'),
+      importing('input', 'createInput'),
+      importing('label', 'createLabel'),
     ].join('\n'),
     blockTrigger({ ...o, triggerLabel: o.triggerLabel ?? 'Editar perfil' }),
     `const formulario = document.createElement('form');
@@ -214,7 +214,7 @@ export function popoverSourceForm(
  */
 export function popoverWithActionsSnippet(o: PopoverSnippetOptions = {}): string {
   return snippet(
-    [importar('popover', 'createPopover', 'createPopoverTitle'), importar('button', 'createButton')].join('\n'),
+    [importing('popover', 'createPopover', 'createPopoverTitle'), importing('button', 'createButton')].join('\n'),
     blockTrigger(o),
     `const conteudo = document.createElement('div');
 conteudo.className = 'nds-stack';

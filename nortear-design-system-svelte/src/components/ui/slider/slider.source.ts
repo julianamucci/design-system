@@ -106,7 +106,7 @@ let volume = $state([50]);`,
  * Variante Range: duas alças na mesma lista, e um nome acessível para cada uma
  * — sem `thumbAriaLabels` as duas seriam anunciadas com o mesmo texto.
  */
-export function sliderFaixaSource(): string {
+export function sliderRangeSource(): string {
   return svelteSnippet(
     `${IMPORT}
 
@@ -144,7 +144,7 @@ let brilho = $state([60]);`,
 }
 
 /** Composição PriceRange: faixa de preço com passo grosso e prefixo de moeda. */
-export function precoSourceSliderRange(): string {
+export function precoSliderRangeSource(): string {
   return svelteSnippet(
     `${IMPORT}
 
@@ -170,7 +170,7 @@ let preco = $state([100, 400]);`,
  * próprio nome acessível — repetir "Valor" faria o leitor de tela anunciar dois
  * controles idênticos.
  */
-export function sliderEmFormularioSource(): string {
+export function formSliderSource(): string {
   return svelteSnippet(
     `import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";

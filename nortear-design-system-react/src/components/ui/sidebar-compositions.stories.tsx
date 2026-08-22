@@ -36,8 +36,8 @@ import {
   SidebarTrigger,
 } from "./sidebar";
 import {
-  sidebarBuscaSource,
-  sidebarGruposSource,
+  sidebarSearchSource,
+  sidebarGroupsSource,
   sidebarSource,
   sidebarSubmenuSource,
 } from "./sidebar.source";
@@ -337,7 +337,7 @@ export const WithNavGroups: Story = {
     docs: {
       // Sub-composição que o meta esconderia: contador ao lado do destino e ação
       // de grupo com nome próprio, duas peças a mais na mesma estrutura.
-      source: { transform: sidebarGruposSource },
+      source: { transform: sidebarGroupsSource },
     },
   },
   render: () => <SidebarWithNavGroups />,
@@ -432,7 +432,7 @@ export const WithSearch: Story = {
     docs: {
       // Sub-composição com campo no cabeçalho e lista filtrada por estado — a
       // busca é o assunto, e ela não cabe na composição do meta.
-      source: { transform: sidebarBuscaSource },
+      source: { transform: sidebarSearchSource },
     },
   },
   render: () => <SidebarWithSearch />,

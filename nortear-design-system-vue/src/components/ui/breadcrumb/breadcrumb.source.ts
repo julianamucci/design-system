@@ -16,7 +16,7 @@ const IMPORT = `import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'`;
 
-const IMPORT_COM_RETICENCIAS = `import {
+const IMPORT_WITH_ELLIPSIS = `import {
   Breadcrumb,
   BreadcrumbEllipsis,
   BreadcrumbItem,
@@ -73,7 +73,7 @@ export function breadcrumbSource(): string {
 }
 
 /** Trilha de dois níveis: o mínimo que ainda é um caminho. */
-export function breadcrumbSimplesSource(): string {
+export function breadcrumbSimpleSource(): string {
   return vueSnippet(IMPORT, trilha([link('Início', '/'), pagina('Componentes')]));
 }
 
@@ -82,9 +82,9 @@ export function breadcrumbSimplesSource(): string {
  * imagem nomeada; sem ele, ficam decorativas — que é o certo quando um gatilho
  * as envolve e já carrega o próprio nome.
  */
-export function breadcrumbComReticenciasSource(): string {
+export function breadcrumbWithEllipsisSource(): string {
   return vueSnippet(
-    IMPORT_COM_RETICENCIAS,
+    IMPORT_WITH_ELLIPSIS,
     trilha([
       link('Início', '/'),
       '<BreadcrumbEllipsis label="Mais páginas" />',
@@ -99,7 +99,7 @@ export function breadcrumbComReticenciasSource(): string {
  * continua fora da árvore de acessibilidade — trocar o chevron não devolve o
  * separador à leitura.
  */
-export function breadcrumbSeparadorCustomizadoSource(): string {
+export function breadcrumbSeparatorCustomizadoSource(): string {
   return vueSnippet(
     `${IMPORT}
 import { Slash } from 'lucide-vue-next'`,
@@ -138,7 +138,7 @@ import { RouterLink } from 'vue-router'`,
  */
 export function breadcrumbResponsivoSource(): string {
   return vueSnippet(
-    `${IMPORT_COM_RETICENCIAS}
+    `${IMPORT_WITH_ELLIPSIS}
 import {
   DropdownMenu,
   DropdownMenuContent,

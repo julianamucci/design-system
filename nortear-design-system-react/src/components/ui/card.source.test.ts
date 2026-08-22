@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-  cardClicavelSource,
-  cardComAcaoSource,
-  cardComImagemSource,
+  cardClickableSource,
+  cardWithActionSource,
+  cardWithImageSource,
   cardCompactoSource,
   cardPerfilSource,
   cardProductSource,
@@ -14,11 +14,11 @@ const TODAS = [
   cardSource,
   cardNoFooterSource,
   cardCompactoSource,
-  cardComAcaoSource,
-  cardComImagemSource,
+  cardWithActionSource,
+  cardWithImageSource,
   cardProductSource,
   cardPerfilSource,
-  cardClicavelSource,
+  cardClickableSource,
 ];
 
 describe('cardSource', () => {
@@ -89,7 +89,7 @@ describe('composições', () => {
   });
 
   it('a ação mora DENTRO do header, que é de onde vem o alinhamento', () => {
-    const saida = cardComAcaoSource();
+    const saida = cardWithActionSource();
     const header = saida.indexOf('<CardHeader>');
     const acao = saida.indexOf('<CardAction>');
     const endHeader = saida.indexOf('</CardHeader>');
@@ -103,7 +103,7 @@ describe('composições', () => {
   });
 
   it('a imagem é o primeiro filho do Card, e informa — logo tem alternativa textual', () => {
-    const saida = cardComImagemSource();
+    const saida = cardWithImageSource();
     const card = saida.indexOf('<Card ');
     const img = saida.indexOf('<img');
     expect(img).toBeGreaterThan(card);
@@ -127,7 +127,7 @@ describe('composições', () => {
   });
 
   it('o card clicável entrega foco e nome à âncora, nunca ao Card', () => {
-    const saida = cardClicavelSource();
+    const saida = cardClickableSource();
     expect(saida).toContain('<a');
     expect(saida).toContain('aria-label="Abrir detalhes do produto Cadeira Gamer Pro"');
     expect(saida).toContain('nds-focus-ring');

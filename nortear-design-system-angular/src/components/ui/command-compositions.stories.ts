@@ -6,7 +6,7 @@ import { NDS_COMMAND, type CommandSelectDetails } from './command';
 import { NDS_POPOVER } from './popover';
 import { NDS_DIALOG } from './dialog';
 import { NdsButton } from './button';
-import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 // ─── Combobox ─────────────────────────────────────────────────────────────────
 
@@ -174,7 +174,7 @@ const meta: Meta = {
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {
         component:
@@ -281,7 +281,7 @@ export const CommandPalette: Story = {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('button', { name: /Buscar/ });
 
-    const abrirPorBotao = async (): Promise<HTMLElement> => {
+    const buttonOpen = async (): Promise<HTMLElement> => {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
       return await waitForPortal('dialog');
     };
@@ -295,11 +295,11 @@ export const CommandPalette: Story = {
     });
 
     await step('O diálogo é nomeado por um título que só o leitor de tela vê', async () => {
-      const painel = await abrirPorBotao();
-      const idTitulo = painel.getAttribute('aria-labelledby');
-      await expect(idTitulo).toBeTruthy();
+      const painel = await buttonOpen();
+      const idTitle = painel.getAttribute('aria-labelledby');
+      await expect(idTitle).toBeTruthy();
 
-      const titulo = document.getElementById(idTitulo!)!;
+      const titulo = document.getElementById(idTitle!)!;
       await expect(titulo).toHaveTextContent('Command Palette');
       await expect(titulo).toHaveClass(/nds-sr-only/);
       // Fora da tela, mas dentro da árvore de acessibilidade: `display: none`
@@ -308,7 +308,7 @@ export const CommandPalette: Story = {
     });
 
     await step('O foco vai direto para a busca', async () => {
-      const painel = await abrirPorBotao();
+      const painel = await buttonOpen();
       const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
         await expect(busca).toHaveFocus();
@@ -317,7 +317,7 @@ export const CommandPalette: Story = {
     });
 
     await step('Escape fecha o diálogo e devolve o foco ao gatilho', async () => {
-      await abrirPorBotao();
+      await buttonOpen();
       await userEvent.keyboard('{Escape}');
 
       await waitForPortalVanish('dialog');
@@ -340,11 +340,11 @@ export const CommandPalette: Story = {
         '[data-value="button"] [data-slot="command-shortcut"]',
       )!;
       await expect(atalho).toHaveTextContent('⌘B');
-      const caixaItem = atalho.closest<HTMLElement>('[data-slot="command-item"]')!
+      const boxItem = atalho.closest<HTMLElement>('[data-slot="command-item"]')!
         .getBoundingClientRect();
-      const caixaAtalho = atalho.getBoundingClientRect();
-      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(
-        caixaAtalho.left - caixaItem.left,
+      const boxShortcut = atalho.getBoundingClientRect();
+      await expect(boxItem.right - boxShortcut.right).toBeLessThan(
+        boxShortcut.left - boxItem.left,
       );
     });
 

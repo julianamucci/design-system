@@ -10,7 +10,7 @@ import {
   skeletonSourcePerfil,
 } from './skeleton.source';
 import { createAspectRatio } from './aspect-ratio';
-import { caixaDesenhada } from '@shared/testing/skeleton-probe';
+import { boxDesenhada } from '@shared/testing/skeleton-probe';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -71,7 +71,7 @@ export const ProfileCard: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+    const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step('A região tem papel, estado e nome', async () => {
       await expect(regiao).toHaveAttribute('aria-busy', 'true');
@@ -79,14 +79,14 @@ export const ProfileCard: Story = {
     });
 
     await step('Avatar + duas linhas, todos fora da árvore de acessibilidade', async () => {
-      await expect(pecas).toHaveLength(3);
-      for (const p of pecas) await expect(p).toHaveAttribute('aria-hidden', 'true');
+      await expect(parts).toHaveLength(3);
+      for (const p of parts) await expect(p).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('O avatar é circular e as linhas têm larguras diferentes', async () => {
-      await expect(caixaDesenhada(pecas[0]).quadrado).toBe(true);
-      await expect(pecas[1].getBoundingClientRect().width).toBeGreaterThan(
-        pecas[2].getBoundingClientRect().width,
+      await expect(boxDesenhada(parts[0]).quadrado).toBe(true);
+      await expect(parts[1].getBoundingClientRect().width).toBeGreaterThan(
+        parts[2].getBoundingClientRect().width,
       );
     });
   },
@@ -130,7 +130,7 @@ export const ListWithAvatar: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const lista = canvasElement.querySelector<HTMLElement>('ul')!;
-    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+    const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step('A lista inteira é uma região ocupada, com nome', async () => {
       await expect(lista).toHaveAttribute('aria-busy', 'true');
@@ -139,14 +139,14 @@ export const ListWithAvatar: Story = {
     });
 
     await step('Cinco itens de três peças, todas ocultas ao leitor', async () => {
-      await expect(pecas).toHaveLength(15);
-      for (const p of pecas) await expect(p).toHaveAttribute('aria-hidden', 'true');
+      await expect(parts).toHaveLength(15);
+      for (const p of parts) await expect(p).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('O avatar pequeno continua quadrado e com medida do tema', async () => {
       // `data-size="sm"` só entrega se a folha responder: sem isso o item da
       // lista sai com o mesmo bloco do card de perfil.
-      const caixa = caixaDesenhada(pecas[0]);
+      const caixa = boxDesenhada(parts[0]);
       await expect(caixa.quadrado).toBe(true);
       await expect(caixa.largura).toBeGreaterThan(0);
     });

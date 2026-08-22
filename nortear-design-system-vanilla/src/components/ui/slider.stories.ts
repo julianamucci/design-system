@@ -6,9 +6,9 @@ import { createSliderDocs } from '@/components/docs/SliderDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
   apertarTecla,
-  clicarNoCentro,
-  limitesDaAlca,
-  valorDaAlca,
+  centerClick,
+  handleLimites,
+  handleValue,
 } from '@shared/testing/slider-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -178,7 +178,7 @@ export const Playground: Story = {
     });
 
     await step('Os limites da faixa chegam à árvore de acessibilidade', async () => {
-      const { min, max } = limitesDaAlca(canvas.getByRole('slider'));
+      const { min, max } = handleLimites(canvas.getByRole('slider'));
       await expect(min).toBe(0);
       await expect(max).toBe(100);
     });
@@ -193,19 +193,19 @@ export const Playground: Story = {
 
       // Limpa DEPOIS do preparo: o `{Home}` acima também dispara os callbacks, e
       // sem o clear a asserção passaria por causa dele em vez do ponteiro.
-      const espiaoMudanca = args.onValueChange as unknown as ReturnType<typeof fn>;
-      const espiaoCommit = args.onValueCommitted as unknown as ReturnType<typeof fn>;
-      espiaoMudanca.mockClear();
-      espiaoCommit.mockClear();
+      const spyChange = args.onValueChange as unknown as ReturnType<typeof fn>;
+      const spyCommit = args.onValueCommitted as unknown as ReturnType<typeof fn>;
+      spyChange.mockClear();
+      spyCommit.mockClear();
 
       // Ponteiro de VERDADE, no centro do trilho. O alvo aqui é um
       // `<input type="range">` nativo: só evento trusted o move, e o ponteiro
       // sintético deixava este passo verde sem nada ter acontecido.
-      await clicarNoCentro(trilho);
+      await centerClick(trilho);
 
-      await expect(espiaoMudanca).toHaveBeenCalled();
+      await expect(spyChange).toHaveBeenCalled();
       // O centro do trilho é 50% da faixa — número exato, não faixa de tolerância.
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(50);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(50);
 
       // E o desenho acompanha o dado: a asserção é sobre a geometria da própria
       // alça, não sobre o valor que acabamos de escrever.
@@ -223,16 +223,16 @@ export const Playground: Story = {
     });
 
     await step('ArrowRight incrementa em step', async () => {
-      const antes = valorDaAlca(canvas.getByRole('slider'));
+      const antes = handleValue(canvas.getByRole('slider'));
       await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
     });
 
     await step('Home vai para o mínimo e End para o máximo', async () => {
       await apertarTecla(canvas.getByRole('slider'), '{Home}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(0);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(0);
       await apertarTecla(canvas.getByRole('slider'), '{End}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(100);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(100);
     });
   },
 };

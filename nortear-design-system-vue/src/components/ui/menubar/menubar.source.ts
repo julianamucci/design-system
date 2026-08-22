@@ -21,9 +21,9 @@ export type MenubarArgs = {
  * forma do `index.ts` do componente. Quem copia o snippet copia um import que
  * resolve.
  */
-function importa(...pecas: string[]): string {
-  const lista = [...new Set(pecas)].sort();
-  return `import {\n${lista.map((peca) => `  ${peca},`).join('\n')}\n} from '@/components/ui/menubar'`;
+function importa(...parts: string[]): string {
+  const lista = [...new Set(parts)].sort();
+  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/menubar'`;
 }
 
 /** Massa do Playground: quatro categorias clássicas de barra de aplicação. */
@@ -133,7 +133,7 @@ const itens = ['Novo', 'Abrir', 'Salvar']`,
  * separador a afasta do item que se parece com ela — "Descartar alterações"
  * não pode ficar encostado em "Salvar".
  */
-export function menubarItemDestrutivoSource(): string {
+export function menubarItemDestructiveSource(): string {
   return vueSnippet(
     importa(
       'Menubar',
@@ -182,7 +182,7 @@ const menus = ['Arquivo', 'Editar', 'Exibir', 'Ajuda']`,
  * menus. É a única forma não-controlada de a barra abrir sozinha, e é o
  * assunto da story.
  */
-export function menubarAbertoSource(): string {
+export function menubarOpenSource(): string {
   return vueSnippet(
     importa('Menubar', 'MenubarContent', 'MenubarItem', 'MenubarMenu', 'MenubarTrigger'),
     `<Menubar default-value="file">

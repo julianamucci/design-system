@@ -51,7 +51,7 @@ const EMPTY_DEFAULT = 'Sem resultados.';
  * sobre um conjunto conhecido — é andaime de teste. O painel Code ensina o
  * design system, não o andaime.
  */
-const DADOS = [
+const DATA = [
   'interface Invoice {',
   '  id: string;',
   '  customer: string;',
@@ -172,7 +172,7 @@ export function dataTableSnippet(o: DataTableSnippetOptions = {}): string {
 
   return snippet(
     IMPORTACAO,
-    DADOS,
+    DATA,
     colunas(o.colunas ?? 'base'),
     [
       '// `caption` é o nome da grade para quem chega por leitor de tela: vira',

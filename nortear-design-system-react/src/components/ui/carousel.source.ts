@@ -38,7 +38,7 @@ const SLIDES = 'const slides = [1, 2, 3, 4, 5];';
  * A largura máxima faz parte da lição: o carrossel recorta o que passa do
  * contêiner, e sem largura definida não há o que recortar.
  */
-const LARGURA_MD = 'nds-w-md';
+const WIDTH_MD = 'nds-w-md';
 
 /**
  * Miolo demonstrativo de um slide, já indentado para dentro do `CarouselItem`.
@@ -65,7 +65,7 @@ function miolo(vertical: boolean): string {
 }
 
 /** As duas setas, sempre nomeadas: o chevron sozinho não diz para onde leva. */
-const SETAS = `  <CarouselPrevious aria-label="Item anterior" />
+const ARROWS = `  <CarouselPrevious aria-label="Item anterior" />
   <CarouselNext aria-label="Próximo item" />`;
 
 /**
@@ -79,7 +79,7 @@ export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
   const vertical = ctx?.args?.orientation === 'vertical';
   const raiz = attrsMultilinha([
     propOption('orientation', ctx?.args?.orientation, ORIENTACOES, 'horizontal'),
-    `className="${vertical ? 'nds-w-xs' : LARGURA_MD}"`,
+    `className="${vertical ? 'nds-w-xs' : WIDTH_MD}"`,
     'aria-label="Galeria de exemplos"',
   ]);
   // No eixo vertical o trilho precisa de altura DEFINIDA: sem ela a base
@@ -98,7 +98,7 @@ ${miolo(vertical)}
       </CarouselItem>
     ))}
   </CarouselContent>
-${SETAS}
+${ARROWS}
 </Carousel>`,
   );
 };
@@ -119,7 +119,7 @@ export function carouselVerticalSource(): string {
 export function carouselItemUnicoSource(): string {
   return jsxSnippet(
     `${IMPORT}\n\nconst slides = [1, 2, 3];`,
-    `<Carousel className="${LARGURA_MD}" aria-label="Um item por vez">
+    `<Carousel className="${WIDTH_MD}" aria-label="Um item por vez">
   <CarouselContent>
     {slides.map((numero) => (
       <CarouselItem key={numero} className="nds-basis-full">
@@ -127,7 +127,7 @@ ${miolo(false)}
       </CarouselItem>
     ))}
   </CarouselContent>
-${SETAS}
+${ARROWS}
 </Carousel>`,
   );
 }
@@ -136,7 +136,7 @@ ${SETAS}
  * Conjunto longo de slides: a base é responsiva e mora no item — um slide por tela
  * no estreito, dois no médio, três no largo. Nenhuma media query autoral.
  */
-export function carouselVariosItensSource(): string {
+export function carouselMultipleItemsSource(): string {
   return jsxSnippet(
     `${IMPORT}\n\nconst slides = [1, 2, 3, 4, 5, 6];`,
     `<Carousel className="nds-w-lg" aria-label="Conjunto longo de slides">
@@ -147,7 +147,7 @@ ${miolo(false)}
       </CarouselItem>
     ))}
   </CarouselContent>
-${SETAS}
+${ARROWS}
 </Carousel>`,
   );
 }
@@ -166,7 +166,7 @@ import Autoplay from "embla-carousel-autoplay";
 
 ${SLIDES}`,
     `<Carousel
-  className="${LARGURA_MD}"
+  className="${WIDTH_MD}"
   aria-label="Destaques"
   opts={{ loop: true }}
   plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
@@ -178,7 +178,7 @@ ${miolo(false)}
       </CarouselItem>
     ))}
   </CarouselContent>
-${SETAS}
+${ARROWS}
 </Carousel>`,
   );
 }
@@ -188,11 +188,11 @@ ${SETAS}
  * componente que calcula os extremos — a seta de avanço desabilita sozinha, sem
  * nenhum estado autoral.
  */
-export function carouselUltimoSlideSource(): string {
+export function carouselLastSlideSource(): string {
   return jsxSnippet(
     `${IMPORT}\n\nconst slides = [1, 2, 3];`,
     `<Carousel
-  className="${LARGURA_MD}"
+  className="${WIDTH_MD}"
   aria-label="Slides no último item"
   opts={{ startIndex: slides.length - 1 }}
 >
@@ -203,7 +203,7 @@ ${miolo(false)}
       </CarouselItem>
     ))}
   </CarouselContent>
-${SETAS}
+${ARROWS}
 </Carousel>`,
   );
 }
@@ -224,7 +224,7 @@ const fotos = [
   { src: "/fotos/lago-entre-montanhas.jpg", alt: "Lago cercado por montanhas nevadas" },
   { src: "/fotos/campo-ao-entardecer.jpg", alt: "Campo aberto com o sol se pondo" },
 ];`,
-    `<Carousel className="${LARGURA_MD}" aria-label="Galeria de fotos do produto">
+    `<Carousel className="${WIDTH_MD}" aria-label="Galeria de fotos do produto">
   <CarouselContent>
     {fotos.map((foto) => (
       <CarouselItem key={foto.src}>
@@ -266,7 +266,7 @@ const fotos = [
  * auditor como export de verdade deste módulo — foi assim que `GaleriaComPaginacao`
  * virou achado de `export_sem_story` num símbolo que nunca existiu.
  */
-export function carouselComDotsSource(): string {
+export function carouselWithDotsSource(): string {
   return jsxSnippet(
     `import {
   Carousel,
@@ -294,7 +294,7 @@ ${SLIDES}`,
   }, [api]);
 
   return (
-    <div className="nds-stack ${LARGURA_MD}" data-spacing="sm">
+    <div className="nds-stack ${WIDTH_MD}" data-spacing="sm">
       <Carousel setApi={setApi} className="nds-w-full" aria-label="Galeria com dots">
         <CarouselContent>
           {slides.map((numero) => (
@@ -303,7 +303,7 @@ ${indentar(miolo(false), '      ')}
             </CarouselItem>
           ))}
         </CarouselContent>
-${indentar(SETAS, '      ')}
+${indentar(ARROWS, '      ')}
       </Carousel>
 
       <div className="nds-cluster" data-justify="center" data-spacing="sm">

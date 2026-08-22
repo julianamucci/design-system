@@ -1,8 +1,8 @@
 /**
  * Colhedor de COR COMPUTADA — o que o navegador realmente pinta.
  *
- * Nasceu dentro de `textarea-probe.ts`, onde `luminancia`, `razao`,
- * `fundoEfetivo` e `semTransicao` eram privados. A rodada de foundations que
+ * Nasceu dentro de `textarea-probe.ts`, onde `luminancia`, `ratio`,
+ * `backgroundEffective` e `noTransicao` eram privados. A rodada de foundations que
  * escureceu `--input` até 3:1 precisou das mesmas quatro funções fora do
  * textarea, e copiá-las teria criado um segundo colhedor com a MESMA armadilha
  * para descobrir de novo — a de medir o primeiro quadro da transição. O
@@ -14,14 +14,14 @@
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
 export interface Contraste {
-  razao: number;
+  ratio: number;
   frente: string;
   fundo: string;
 }
 
 export type Lado = 'borda' | 'preenchimento';
 
-export interface AlvoDeCor {
+export interface ColorTarget {
   /** Nome que aparece no relatório de falha. */
   nome: string;
   seletor: string;
@@ -29,7 +29,7 @@ export interface AlvoDeCor {
   lado?: Lado;
 }
 
-export interface MedidaDeCor {
+export interface ColorMeasurement {
   tema: string;
   modo: 'claro' | 'escuro';
   alvo: string;
@@ -38,7 +38,7 @@ export interface MedidaDeCor {
   presente: boolean;
   frente: string | null;
   fundo: string | null;
-  razao: number | null;
+  ratio: number | null;
 }
 
 // ─── Primitivas de cor ────────────────────────────────────────────────────────
@@ -83,17 +83,17 @@ export function compor(frente: string, fundo: string): string {
 }
 
 /** Razão WCAG entre duas cores computadas. Compõe a frente translúcida antes. */
-export function razao(frente: string, fundo: string): Contraste | null {
+export function ratio(frente: string, fundo: string): Contraste | null {
   const opaca = compor(frente, fundo);
   const a = luminancia(opaca);
   const b = luminancia(fundo);
   if (a === null || b === null) return null;
   const [claro, escuro] = a > b ? [a, b] : [b, a];
-  return { razao: Math.round(((claro + 0.05) / (escuro + 0.05)) * 100) / 100, frente: opaca, fundo };
+  return { ratio: Math.round(((claro + 0.05) / (escuro + 0.05)) * 100) / 100, frente: opaca, fundo };
 }
 
 /** Primeiro fundo OPACO acima do elemento — `backgroundColor` com alfa mente. */
-export function fundoEfetivo(el: Element | null): string | null {
+export function backgroundEffective(el: Element | null): string | null {
   let atual: Element | null = el;
   while (atual) {
     const cor = getComputedStyle(atual).backgroundColor;
@@ -115,7 +115,7 @@ export function fundoEfetivo(el: Element | null): string | null {
  * inexistente. Mesma armadilha do "contraste ~1.0 = elemento em fade"
  * registrada no CLAUDE.md.
  */
-export function semTransicao<T>(el: HTMLElement, fn: () => T): T {
+export function noTransicao<T>(el: HTMLElement, fn: () => T): T {
   const antes = el.style.transition;
   el.style.transition = 'none';
   void el.offsetHeight;
@@ -133,9 +133,9 @@ export function semTransicao<T>(el: HTMLElement, fn: () => T): T {
  * tokens em `.tema-*`, que mora mais abaixo na árvore e vence para tudo que
  * está dentro. Por isso a classe entra também em quem carrega `tema-*`.
  */
-export function ligarTemaEscuro(doc: Document): () => void {
-  const alvos = [doc.documentElement, ...doc.querySelectorAll<HTMLElement>('[class*="tema-"]')];
-  const postos = alvos.filter((el) => !el.classList.contains('dark'));
+export function darkLigarTheme(doc: Document): () => void {
+  const targets = [doc.documentElement, ...doc.querySelectorAll<HTMLElement>('[class*="tema-"]')];
+  const postos = targets.filter((el) => !el.classList.contains('dark'));
   postos.forEach((el) => el.classList.add('dark'));
   return () => postos.forEach((el) => el.classList.remove('dark'));
 }
@@ -146,17 +146,17 @@ export const TEMAS = ['default', 'warm', 'cold'] as const;
 export const MODOS = ['claro', 'escuro'] as const;
 
 /** Cor de frente do lado pedido, e o fundo contra o qual ela é vista. */
-function medirUm(el: HTMLElement, lado: Lado): { frente: string; fundo: string } | null {
+function measureUm(el: HTMLElement, lado: Lado): { frente: string; fundo: string } | null {
   const cs = getComputedStyle(el);
   if (lado === 'preenchimento') {
-    const fundo = fundoEfetivo(el.parentElement);
+    const fundo = backgroundEffective(el.parentElement);
     return fundo ? { frente: cs.backgroundColor, fundo } : null;
   }
   // A borda do campo é vista contra DOIS vizinhos: o interior do campo e a
   // página. Nos três temas os dois são o mesmo token (--input-background ==
   // --background), então o interior opaco do próprio campo responde pelos dois.
-  const proprio = fundoEfetivo(el);
-  const fundo = proprio ?? fundoEfetivo(el.parentElement);
+  const own = backgroundEffective(el);
+  const fundo = own ?? backgroundEffective(el.parentElement);
   return fundo ? { frente: cs.borderTopColor, fundo } : null;
 }
 
@@ -173,29 +173,29 @@ function medirUm(el: HTMLElement, lado: Lado): { frente: string; fundo: string }
  * em transição nos campos, e medir logo após trocar a classe devolveria a cor
  * do tema anterior.
  */
-export function porTema<T>(
+export function byTheme<T>(
   raiz: HTMLElement,
   fn: (tema: (typeof TEMAS)[number], modo: (typeof MODOS)[number]) => T,
 ): T[] {
-  const classeOriginal = raiz.className;
+  const classNameOriginal = raiz.className;
   const saida: T[] = [];
   try {
     for (const tema of TEMAS) {
       for (const modo of MODOS) {
-        raiz.className = `${classeOriginal} tema-${tema}${modo === 'escuro' ? ' dark' : ''}`.trim();
+        raiz.className = `${classNameOriginal} tema-${tema}${modo === 'escuro' ? ' dark' : ''}`.trim();
         void raiz.offsetHeight;
         saida.push(fn(tema, modo));
       }
     }
   } finally {
-    raiz.className = classeOriginal;
+    raiz.className = classNameOriginal;
     void raiz.offsetHeight;
   }
   return saida;
 }
 
-export function medirCorPorTema(raiz: HTMLElement, alvos: AlvoDeCor[]): MedidaDeCor[] {
-  const elementos = alvos.map((a) => ({ alvo: a, el: raiz.querySelector<HTMLElement>(a.seletor) }));
+export function themeMeasureColor(raiz: HTMLElement, targets: ColorTarget[]): ColorMeasurement[] {
+  const elementos = targets.map((a) => ({ alvo: a, el: raiz.querySelector<HTMLElement>(a.seletor) }));
 
   const transicoesOriginais = elementos.map(({ el }) => el?.style.transition ?? null);
   elementos.forEach(({ el }) => {
@@ -203,14 +203,14 @@ export function medirCorPorTema(raiz: HTMLElement, alvos: AlvoDeCor[]): MedidaDe
   });
 
   try {
-    return porTema(raiz, (tema, modo) =>
-      elementos.map(({ alvo, el }): MedidaDeCor => {
+    return byTheme(raiz, (tema, modo) =>
+      elementos.map(({ alvo, el }): ColorMeasurement => {
         const lado = alvo.lado ?? 'borda';
         if (!el) {
-          return { tema, modo, alvo: alvo.nome, lado, presente: false, frente: null, fundo: null, razao: null };
+          return { tema, modo, alvo: alvo.nome, lado, presente: false, frente: null, fundo: null, ratio: null };
         }
-        const par = medirUm(el, lado);
-        const r = par ? razao(par.frente, par.fundo) : null;
+        const par = measureUm(el, lado);
+        const r = par ? ratio(par.frente, par.fundo) : null;
         return {
           tema,
           modo,
@@ -219,7 +219,7 @@ export function medirCorPorTema(raiz: HTMLElement, alvos: AlvoDeCor[]): MedidaDe
           presente: true,
           frente: r?.frente ?? par?.frente ?? null,
           fundo: par?.fundo ?? null,
-          razao: r?.razao ?? null,
+          ratio: r?.ratio ?? null,
         };
       }),
     ).flat();
@@ -242,7 +242,7 @@ export function medirCorPorTema(raiz: HTMLElement, alvos: AlvoDeCor[]): MedidaDe
  * resolvendo-a aqui, a medida continua sendo do navegador (é ele quem expande
  * o `var` e compõe o alfa), sem depender de CDP.
  */
-export function resolverCor(raiz: HTMLElement, valor: string): string | null {
+export function resolveColor(raiz: HTMLElement, valor: string): string | null {
   const sonda = raiz.ownerDocument.createElement('span');
   sonda.style.color = valor;
   sonda.style.position = 'absolute';
@@ -263,7 +263,7 @@ export function resolverCor(raiz: HTMLElement, valor: string): string | null {
  * Percorre as folhas recursivamente porque `@media` e `@supports` embrulham
  * regras. `null` quer dizer que a regra sumiu da folha — o que já é o achado.
  */
-export function declaracaoDaRegra(
+export function ruleDeclaration(
   doc: Document,
   filtro: (seletor: string) => boolean,
   prop: string,
@@ -276,8 +276,8 @@ export function declaracaoDaRegra(
       }
       const aninhadas = (regra as CSSGroupingRule).cssRules;
       if (aninhadas) {
-        const achado = visitar(aninhadas);
-        if (achado) return achado;
+        const finding = visitar(aninhadas);
+        if (finding) return finding;
       }
     }
     return null;
@@ -285,8 +285,8 @@ export function declaracaoDaRegra(
 
   for (const folha of Array.from(doc.styleSheets)) {
     try {
-      const achado = visitar(folha.cssRules);
-      if (achado) return achado;
+      const finding = visitar(folha.cssRules);
+      if (finding) return finding;
     } catch {
       // Folha de outra origem: inacessível por CORS, e nenhuma do design
       // system entra assim. Segue para a próxima.
@@ -312,14 +312,14 @@ export function declaracaoDaRegra(
  * (`--alert-body-fg: hsl(var(--info-foreground))`). O `cssText` serializa a
  * declaração inteira, custom properties incluídas.
  */
-export function seletoresQueLeem(doc: Document, token: string): string[] {
+export function selectorsQueLeem(doc: Document, token: string): string[] {
   const alvo = `var(--${token})`;
-  const achados: string[] = [];
+  const findings: string[] = [];
 
   const visitar = (regras: CSSRuleList) => {
     for (const regra of Array.from(regras)) {
       if (regra instanceof CSSStyleRule) {
-        if (regra.cssText.includes(alvo)) achados.push(regra.selectorText);
+        if (regra.cssText.includes(alvo)) findings.push(regra.selectorText);
       }
       const aninhadas = (regra as CSSGroupingRule).cssRules;
       if (aninhadas) visitar(aninhadas);
@@ -334,11 +334,11 @@ export function seletoresQueLeem(doc: Document, token: string): string[] {
       // system entra assim. Segue para a próxima.
     }
   }
-  return achados;
+  return findings;
 }
 
 /** Linha legível de uma medida — o que a falha da story precisa mostrar. */
-export function descreverMedida(m: MedidaDeCor): string {
+export function describeMeasurement(m: ColorMeasurement): string {
   if (!m.presente) return `${m.tema}/${m.modo} · ${m.alvo}: seletor não casou`;
-  return `${m.tema}/${m.modo} · ${m.alvo} (${m.lado}) ${m.frente} sobre ${m.fundo} = ${m.razao}:1`;
+  return `${m.tema}/${m.modo} · ${m.alvo} (${m.lado}) ${m.frente} sobre ${m.fundo} = ${m.ratio}:1`;
 }

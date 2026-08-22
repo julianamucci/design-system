@@ -47,7 +47,7 @@ export type AlertVariant = 'default' | 'destructive' | 'success' | 'warning' | '
 export type AlertRole = 'alert' | 'status' | 'note';
 
 // Tabela em vez de cadeia de ternários — mesma decisão do badge e do Vanilla.
-const CLASSE_POR_VARIANTE: Record<AlertVariant, string> = {
+const VARIANT_CLASSNAME: Record<AlertVariant, string> = {
   default: '',
   destructive: 'nds-alert-destructive',
   success: 'nds-alert-success',
@@ -185,7 +185,7 @@ export class NdsAlert implements OnDestroy {
   protected readonly hostClass = computed(() =>
     cn(
       'nds-alert',
-      CLASSE_POR_VARIANTE[this.variant()],
+      VARIANT_CLASSNAME[this.variant()],
       // Fechar antes de a entrada terminar deixaria as duas classes no
       // elemento — a saída sempre substitui a entrada.
       this.saindo() ? 'nds-animate-out' : this.entrando() && 'nds-animate-in',

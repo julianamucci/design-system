@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  formSnippetSelect,
+  formSelectSnippet,
   selectSnippet,
   selectSource,
   selectSourceWith,
@@ -122,7 +122,7 @@ describe('selectSourceCom', () => {
 
 describe('selectEmFormularioSnippet', () => {
   it('mostra a serialização nativa, que é o assunto da composição', () => {
-    const código = formSnippetSelect();
+    const código = formSelectSnippet();
     expect(código).toContain("import { createButton } from '@/components/ui/button';");
     expect(código).toContain("name: 'state'");
     expect(código).toContain('required: true');

@@ -3,9 +3,9 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { parseDate } from '@internationalized/date';
 import {
-  ESTADOS_COM_TEXTO_LEGIVEL,
-  descreverContraste,
-  medirContrasteDoCalendario,
+  STATES_WITH_TEXT_LEGIVEL,
+  describeContrast,
+  calendarMeasureContrast,
 } from '@shared/testing/calendar-probe';
 import { NdsCalendar } from './calendar';
 
@@ -88,11 +88,11 @@ export const Single: Story = {
       // accessibility.item6 — o item prometia 4.5:1 e a verificação declarada era
       // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
       // sexto do produto. O escuro é a outra metade, e nunca era medido.
-      const medidas = medirContrasteDoCalendario(canvasElement).filter(
-        (m) => m.presente && (ESTADOS_COM_TEXTO_LEGIVEL as readonly string[]).includes(m.estado),
+      const medidas = calendarMeasureContrast(canvasElement).filter(
+        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
       );
       await expect(medidas.length).toBeGreaterThan(0);
-      const reprovadas = medidas.filter((m) => (m.razao ?? 0) < 4.5).map(descreverContraste);
+      const reprovadas = medidas.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
       await expect(reprovadas).toEqual([]);
     });
   },
@@ -200,14 +200,14 @@ export const CaptionDropdown: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const seletorDeMes = () => canvas.getByRole('combobox', { name: 'Selecionar mês' });
-    const seletorDeAno = () => canvas.getByRole('combobox', { name: 'Selecionar ano' });
+    const monthSelector = () => canvas.getByRole('combobox', { name: 'Selecionar mês' });
+    const yearSelector = () => canvas.getByRole('combobox', { name: 'Selecionar ano' });
 
     await step('Mês e ano viram controles operáveis', async () => {
       // functional.item7 — a story existe pelo salto de período: verificar que o
       // calendário renderizou não a distingue da legenda de texto.
-      await expect(seletorDeMes()).toBeInTheDocument();
-      await expect(seletorDeAno()).toBeInTheDocument();
+      await expect(monthSelector()).toBeInTheDocument();
+      await expect(yearSelector()).toBeInTheDocument();
     });
 
     await step('O clique chega aos seletores', async () => {
@@ -227,7 +227,7 @@ export const CaptionDropdown: Story = {
       // Uma janela curta em torno do ano em vista prendia a rolagem: para passar
       // do último ano era preciso escolhê-lo e reabrir o seletor. Quem limita o
       // que aparece é a altura do painel — onze itens, no CSS.
-      const anos = Array.from(seletorDeAno().querySelectorAll('option')).map((o) => Number(o.value));
+      const anos = Array.from(yearSelector().querySelectorAll('option')).map((o) => Number(o.value));
       await expect(anos.length).toBe(201);
       await expect(anos).toContain(2026);
       await expect(2026 - Math.min(...anos)).toBe(Math.max(...anos) - 2026);
@@ -237,18 +237,18 @@ export const CaptionDropdown: Story = {
       // Busca a cada vez: a legenda é reconstruída na troca, e uma referência
       // guardada agiria num nó fora da tela, sem erro e sem efeito. Volta para
       // abril no fim, porque o painel reexecuta a play no mesmo DOM.
-      await userEvent.selectOptions(seletorDeMes(), '5');
+      await userEvent.selectOptions(monthSelector(), '5');
       await expect(canvasElement.querySelector('[data-value="2026-06-01"]')).not.toBeNull();
 
-      await userEvent.selectOptions(seletorDeMes(), '3');
+      await userEvent.selectOptions(monthSelector(), '3');
       await expect(canvasElement.querySelector('[data-value="2026-04-01"]')).not.toBeNull();
     });
 
     await step('Trocar o ano no seletor leva o grid junto', async () => {
-      await userEvent.selectOptions(seletorDeAno(), '2028');
+      await userEvent.selectOptions(yearSelector(), '2028');
       await expect(canvasElement.querySelector('[data-value^="2028-04-"]')).not.toBeNull();
 
-      await userEvent.selectOptions(seletorDeAno(), '2026');
+      await userEvent.selectOptions(yearSelector(), '2026');
       await expect(canvasElement.querySelector('[data-value="2026-04-01"]')).not.toBeNull();
     });
   },

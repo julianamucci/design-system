@@ -65,7 +65,7 @@ export const Simple: Story = {
       // profundidade da trilha nem o callback passam por control.
       source: {
         transform: breadcrumbSourceWith({
-          niveis: ['Início'],
+          levels: ['Início'],
           atual: 'Componentes',
           onNavigate: 'registrarNavegacao(text);',
         }),

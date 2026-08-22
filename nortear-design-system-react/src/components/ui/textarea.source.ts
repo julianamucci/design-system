@@ -140,7 +140,7 @@ ${contador('Descreva o produto com clareza.', limite)}`,
  * trava a alça — o que vale dentro de um modal ou de uma grade, onde arrastar a
  * borda empurraria o resto do layout.
  */
-export function textareaSemRedimensionarSource(): string {
+export function textareaNoRedimensionarSource(): string {
   return jsxSnippet(
     IMPORTS,
     bloco(
@@ -159,7 +159,7 @@ export function textareaSemRedimensionarSource(): string {
  * Contagem de caracteres. `maxLength` sozinho só bloqueia a digitação no
  * limite; é o par com a contagem visível que transforma o bloqueio em aviso.
  */
-export function textareaComContadorSource(): string {
+export function textareaWithCounterSource(): string {
   return jsxSnippet(
     IMPORTS_CONTROLLED,
     bloco(
@@ -202,7 +202,7 @@ export function textareaPreenchidoSource(): string {
  * do teclado e o valor do envio do formulário. Quando o texto precisa continuar
  * legível e enviável, o estado certo é o somente leitura.
  */
-export function textareaDesabilitadoSource(): string {
+export function textareaDisabledSource(): string {
   return jsxSnippet(
     IMPORTS,
     bloco(
@@ -287,7 +287,7 @@ export function textareaWithDescriptionSource(): string {
  * contagem mais importa: quem escreve precisa saber quanto falta antes de
  * perder a frase no bloqueio.
  */
-export function textareaContadorAcessivelSource(): string {
+export function textareaCounterAccessibleSource(): string {
   return jsxSnippet(
     IMPORTS_CONTROLLED,
     bloco(
@@ -311,7 +311,7 @@ ${contador('Limite: 280 caracteres.', 280)}`,
  * o que a validação nativa lê — sem eles o campo aparece no formulário sem
  * participar dele.
  */
-export function formSourceTextarea(): string {
+export function formTextareaSource(): string {
   return jsxSnippet(
     headerControlled('import { Button } from "@/components/ui/button";'),
     `<form

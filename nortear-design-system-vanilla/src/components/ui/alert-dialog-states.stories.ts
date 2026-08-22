@@ -54,7 +54,7 @@ const onOpenChangeSpy = fn();
  * reexecuta a play no MESMO DOM: na segunda rodada o diálogo já foi fechado
  * pelos passos anteriores e o passo de abertura media o vazio.
  */
-async function garantirAberto(canvas: ReturnType<typeof within>, rotuloTrigger: RegExp) {
+async function ensureOpen(canvas: ReturnType<typeof within>, rotuloTrigger: RegExp) {
   // querySelector e não queryByRole: numa rodada do arquivo inteiro sobra o
   // portal da story anterior por alguns quadros, e queryByRole estoura em
   // "multiple elements" antes de a limpeza acontecer.
@@ -181,7 +181,7 @@ export const Confirmed: Story = {
 
     await step('Clique em Excluir dispara a ação e fecha o diálogo', async () => {
       // Trigger e action têm rótulo "Excluir" — desambigua via scope do dialog.
-      const dialog = await garantirAberto(canvas, /^Excluir$/i);
+      const dialog = await ensureOpen(canvas, /^Excluir$/i);
       const action = within(dialog).getByRole('button', { name: /^Excluir$/i });
       await userEvent.click(action);
       await expect(onConfirmSpy).toHaveBeenCalledTimes(1);
@@ -244,7 +244,7 @@ export const Cancelled: Story = {
     onConfirmSpy.mockClear();
 
     await step('Clique em Cancelar fecha sem executar a ação', async () => {
-      await garantirAberto(canvas, /^Excluir$/i);
+      await ensureOpen(canvas, /^Excluir$/i);
       const cancel = await body.findByRole('button', { name: /Cancelar/i });
       await userEvent.click(cancel);
       await expect(onCancelSpy).toHaveBeenCalledTimes(1);

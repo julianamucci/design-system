@@ -28,7 +28,7 @@ const AREA =
   'nds-border-dashed nds-text-body nds-text-muted-foreground nds-cursor-default';
 
 /** Ordem canônica das peças no bloco de import. */
-const ORDEM = [
+const ORDER = [
   'ContextMenu',
   'ContextMenuTrigger',
   'ContextMenuContent',
@@ -47,10 +47,10 @@ const ORDEM = [
 ];
 
 /** Bloco de import, sempre na ordem canônica e só com as peças usadas. */
-function importar(pecas: string[]): string {
-  const usadas = ORDEM.filter((peca) => pecas.includes(peca));
+function importing(parts: string[]): string {
+  const usadas = ORDER.filter((part) => parts.includes(part));
   return `import {
-${usadas.map((peca) => `  ${peca},`).join('\n')}
+${usadas.map((part) => `  ${part},`).join('\n')}
 } from "@/components/ui/context-menu";`;
 }
 
@@ -119,7 +119,7 @@ export function contextMenuSource(
     );
   }
 
-  const pecas = [
+  const parts = [
     'ContextMenu',
     'ContextMenuTrigger',
     'ContextMenuContent',
@@ -129,13 +129,13 @@ export function contextMenuSource(
     ...(showShortcuts ? ['ContextMenuShortcut'] : []),
   ];
 
-  return svelteSnippet(importar(pecas), menu(linhas.join('\n'), triggerLabel));
+  return svelteSnippet(importing(parts), menu(linhas.join('\n'), triggerLabel));
 }
 
 /** Estado ItemDisabled: o item indisponível não recebe ponteiro nem Enter. */
-export function contextMenuItemDesabilitadoSource(): string {
+export function contextMenuItemDisabledSource(): string {
   return svelteSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -161,7 +161,7 @@ export function contextMenuItemDesabilitadoSource(): string {
  */
 export function contextMenuItemRecuadoSource(): string {
   return svelteSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -178,9 +178,9 @@ export function contextMenuItemRecuadoSource(): string {
 }
 
 /** Estado ItemDestructive: a ação perigosa se declara por prop, não por cor. */
-export function contextMenuItemDestrutivoSource(): string {
+export function contextMenuItemDestructiveSource(): string {
   return svelteSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -202,9 +202,9 @@ ${item('Excluir permanentemente', { atalho: '⌫', props: ' variant="destructive
  * Sem `indeterminate` os dois sairiam com o mesmo glifo e significados
  * diferentes.
  */
-export function contextMenuMarcacaoMistaSource(): string {
+export function contextMenuMarkupMistaSource(): string {
   return svelteSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -224,9 +224,9 @@ export function contextMenuMarcacaoMistaSource(): string {
  * A troca de tema é global (classe no documento) e não muda uma linha do menu —
  * é exatamente isso que a story mostra.
  */
-export function contextMenuPaletaEscuraSource(): string {
+export function contextMenuPaletteDarkSource(): string {
   return svelteSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -241,9 +241,9 @@ export function contextMenuPaletaEscuraSource(): string {
 }
 
 /** Composição WithShortcut: o atalho mora dentro do item e é lido junto dele. */
-export function contextMenuComAtalhosSource(): string {
+export function contextMenuWithShortcutsSource(): string {
   return svelteSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -259,9 +259,9 @@ ${item('Excluir', { atalho: '⌫', props: ' variant="destructive"' })}`),
 }
 
 /** Composição WithCheckbox: cada item guarda a própria marcação. */
-export function contextMenuComMarcacaoSource(): string {
+export function contextMenuWithMarkupSource(): string {
   return svelteSnippet(
-    `${importar([
+    `${importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -282,9 +282,9 @@ let mostrarReguas = $state(true);`,
 }
 
 /** Composição WithRadioGroup: escolha única, o valor vive no grupo. */
-export function contextMenuComEscolhaUnicaSource(): string {
+export function contextMenuWithChoiceUnicaSource(): string {
   return svelteSnippet(
-    `${importar([
+    `${importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -304,9 +304,9 @@ let layout = $state('grid');`,
 }
 
 /** Composição WithSubmenu: o segundo nível abre ao lado do item que o dispara. */
-export function contextMenuComSubmenuSource(): string {
+export function contextMenuWithSubmenuSource(): string {
   return svelteSnippet(
-    importar([
+    importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',
@@ -337,7 +337,7 @@ export function contextMenuComSubmenuSource(): string {
  */
 export function contextMenuCompletoSource(): string {
   return svelteSnippet(
-    `${importar([
+    `${importing([
       'ContextMenu',
       'ContextMenuTrigger',
       'ContextMenuContent',

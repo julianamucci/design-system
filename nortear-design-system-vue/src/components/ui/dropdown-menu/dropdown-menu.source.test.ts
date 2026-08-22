@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import {
   dropdownMenuOpenSource,
-  dropdownMenuComAtalhosSource,
+  dropdownMenuWithShortcutsSource,
   dropdownMenuWithChoiceUnicaSource,
   dropdownMenuWithMarkupSource,
-  dropdownMenuComRotuloSource,
-  dropdownMenuComSubmenuSource,
-  dropdownMenuControladoSource,
-  dropdownMenuDestrutivoSource,
+  dropdownMenuWithLabelSource,
+  dropdownMenuWithSubmenuSource,
+  dropdownMenuControlledSource,
+  dropdownMenuDestructiveSource,
   dropdownMenuClosedSource,
-  dropdownMenuItemDesabilitadoSource,
+  dropdownMenuItemDisabledSource,
   dropdownMenuMarkupMistaSource,
-  dropdownMenuPadraoSource,
+  dropdownMenuDefaultSource,
   dropdownMenuSource,
 } from './dropdown-menu.source';
 
@@ -91,12 +91,12 @@ import { Button } from '@/components/ui/button'
 
 describe('transforms das stories de variante', () => {
   it('o item neutro não escreve a variante padrão', () => {
-    expect(dropdownMenuPadraoSource()).not.toContain('variant="default"');
-    expect(dropdownMenuPadraoSource()).not.toContain('DropdownMenuSeparator');
+    expect(dropdownMenuDefaultSource()).not.toContain('variant="default"');
+    expect(dropdownMenuDefaultSource()).not.toContain('DropdownMenuSeparator');
   });
 
   it('a ação irreversível se declara por prop e vem separada das demais', () => {
-    const saida = dropdownMenuDestrutivoSource();
+    const saida = dropdownMenuDestructiveSource();
     expect(saida).toContain('<DropdownMenuSeparator />');
     expect(saida).toContain('<DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>');
   });
@@ -107,12 +107,12 @@ describe('transforms das stories de estado', () => {
     expect(dropdownMenuOpenSource()).toContain('<DropdownMenu default-open>');
     // Nas demais a prop é andaime da foto do Chromatic.
     expect(dropdownMenuClosedSource()).not.toContain('default-open');
-    expect(dropdownMenuItemDesabilitadoSource()).not.toContain('default-open');
-    expect(dropdownMenuComRotuloSource()).not.toContain('default-open');
+    expect(dropdownMenuItemDisabledSource()).not.toContain('default-open');
+    expect(dropdownMenuWithLabelSource()).not.toContain('default-open');
   });
 
   it('o controlado mantém o gatilho e liga o par prop+evento', () => {
-    const saida = dropdownMenuControladoSource();
+    const saida = dropdownMenuControlledSource();
     expect(saida).toContain('const aberto = ref(false)');
     expect(saida).toContain('<DropdownMenu :open="aberto" @update:open="aberto = $event">');
     // O gatilho continua ali: o que muda é quem manda na abertura.
@@ -122,7 +122,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o item indisponível continua no menu, declarado por prop', () => {
-    const saida = dropdownMenuItemDesabilitadoSource();
+    const saida = dropdownMenuItemDisabledSource();
     expect(saida).toContain('<DropdownMenuItem disabled>Arquivar</DropdownMenuItem>');
     // Pular a seta e barrar o ponteiro vêm da prop; escrever `tabindex` ou
     // `pointer-events` aqui ensinaria API que não existe.
@@ -143,7 +143,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('cada grupo é nomeado pelo próprio rótulo, e o separador os divide', () => {
-    const saida = dropdownMenuComRotuloSource();
+    const saida = dropdownMenuWithLabelSource();
     expect([...saida.matchAll(/<DropdownMenuGroup>/g)].length).toBe(2);
     expect(saida).toContain('<DropdownMenuLabel>Conta</DropdownMenuLabel>');
     expect(saida).toContain('<DropdownMenuLabel>Suporte</DropdownMenuLabel>');
@@ -172,7 +172,7 @@ describe('transforms das stories de composição', () => {
     // A indentação é de seis espaços porque o submenu mora DENTRO de
     // `DropdownMenuContent` — a asserção media quatro e reprovava um snippet
     // correto por causa do próprio recuo que ela esperava errado.
-    expect(dropdownMenuComSubmenuSource()).toContain(`      <DropdownMenuSub>
+    expect(dropdownMenuWithSubmenuSource()).toContain(`      <DropdownMenuSub>
         <DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>
         <DropdownMenuSubContent>
           <DropdownMenuItem>PDF</DropdownMenuItem>
@@ -182,7 +182,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o atalho mora dentro do item e não se esconde do leitor de tela', () => {
-    const saida = dropdownMenuComAtalhosSource();
+    const saida = dropdownMenuWithShortcutsSource();
     expect(saida).toContain('Copiar<DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>');
     // Escondido, a pessoa ouviria só "Copiar" e nunca saberia da tecla.
     expect(saida).not.toContain('aria-hidden');

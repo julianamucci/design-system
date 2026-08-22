@@ -22,7 +22,7 @@ export { AREA_CLICK_DIREITO };
  * `*.stories.ts` é indexada como story pelo Storybook: um helper exportado dali
  * viraria uma entrada quebrada no menu lateral.
  */
-export function criarAreaDeClique(rotulo: string): HTMLElement {
+export function clickCreateArea(rotulo: string): HTMLElement {
   const el = document.createElement('div');
   el.className = AREA_CLICK_DIREITO;
   el.dataset.align = 'center';
@@ -33,16 +33,16 @@ export function criarAreaDeClique(rotulo: string): HTMLElement {
 }
 
 /** O painel do menu raiz, se estiver montado. */
-export function menuAberto(): HTMLElement | null {
+export function menuOpen(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[data-slot="context-menu-content"]');
 }
 
 /** Fecha o menu se estiver aberto — precondição própria, sobrevive ao replay. */
-export async function fecharMenu(): Promise<void> {
-  if (!menuAberto()) return;
+export async function closeMenu(): Promise<void> {
+  if (!menuOpen()) return;
   await userEvent.keyboard('{Escape}');
   await waitFor(() => {
-    if (menuAberto()) throw new Error('o menu continua aberto depois do Escape');
+    if (menuOpen()) throw new Error('o menu continua aberto depois do Escape');
   });
 }
 
@@ -57,8 +57,8 @@ export async function fecharMenu(): Promise<void> {
  * Fecha antes de abrir para que cada chamada seja um clique de verdade nesta
  * rodada, e não herança da anterior.
  */
-export async function abrirPorGesto(area: HTMLElement): Promise<HTMLElement> {
-  await fecharMenu();
+export async function gestoOpen(area: HTMLElement): Promise<HTMLElement> {
+  await closeMenu();
   const caixa = area.getBoundingClientRect();
   await userEvent.pointer({
     keys: '[MouseRight]',
@@ -66,7 +66,7 @@ export async function abrirPorGesto(area: HTMLElement): Promise<HTMLElement> {
     coords: { clientX: caixa.left + caixa.width / 2, clientY: caixa.top + caixa.height / 2 },
   });
   await waitFor(() => {
-    const menu = menuAberto();
+    const menu = menuOpen();
     if (!menu) throw new Error('o menu não abriu com o botão direito');
     // Espera a animação de entrada terminar. Sem este portão, `toBeVisible()` e
     // qualquer medida de geometria leem o painel a meio caminho: o `toBeVisible`
@@ -75,7 +75,7 @@ export async function abrirPorGesto(area: HTMLElement): Promise<HTMLElement> {
     const opacidade = parseFloat(getComputedStyle(menu).opacity);
     if (opacidade < 0.9) throw new Error(`o menu ainda está animando (${opacidade})`);
   });
-  return menuAberto()!;
+  return menuOpen()!;
 }
 
 /**
@@ -90,14 +90,14 @@ export async function abrirPorGesto(area: HTMLElement): Promise<HTMLElement> {
  * numa lib, `mousedown` noutra e `click` na factory do Vanilla. Despachar só o
  * `click` foi a causa da falha antiga do Sheet.
  */
-export async function clicarFora(): Promise<void> {
+export async function clickOutside(): Promise<void> {
   for (const tipo of ['pointerdown', 'mousedown', 'click'] as const) {
     document.body.dispatchEvent(
       new MouseEvent(tipo, { bubbles: true, cancelable: true, button: 0 }),
     );
   }
   await waitFor(() => {
-    if (menuAberto()) throw new Error('o menu continua aberto depois do clique fora');
+    if (menuOpen()) throw new Error('o menu continua aberto depois do clique fora');
   });
 }
 

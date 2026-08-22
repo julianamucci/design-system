@@ -16,10 +16,10 @@ import {
 } from "./alert-dialog";
 import { Button } from "./button";
 import {
-  alertDialogAbertoSource,
+  alertDialogOpenSource,
   alertDialogCanceladoSource,
   alertDialogConfirmadoSource,
-  alertDialogControladoSource,
+  alertDialogControlledSource,
   alertDialogSource,
 } from "./alert-dialog.source";
 
@@ -52,7 +52,7 @@ type Story = StoryObj<typeof meta>;
  * reexecuta a play no MESMO DOM: na segunda rodada o diálogo já foi fechado
  * pelos passos anteriores e o passo de abertura media o vazio.
  */
-async function garantirAberto(canvas: ReturnType<typeof within>) {
+async function ensureOpen(canvas: ReturnType<typeof within>) {
     // querySelector e não queryByRole: numa rodada do arquivo inteiro sobra o
   // portal da story anterior por alguns quadros, e queryByRole estoura em
   // "multiple elements" antes de a limpeza acontecer.
@@ -132,7 +132,7 @@ export const Open: Story = {
     docs: {
       // `defaultOpen` é o assunto, e o arquivo desliga os controls: sem override
       // o painel mostraria a forma fechada.
-      source: { transform: alertDialogAbertoSource },
+      source: { transform: alertDialogOpenSource },
       description: {
         story:
           "Diálogo aberto com `defaultOpen`. Usado para captura visual no Chromatic.",
@@ -227,7 +227,7 @@ export const Confirmed: Story = {
     const canvas = within(canvasElement);
 
     await step("Diálogo está aberto", async () => {
-      const dialog = await garantirAberto(canvas);
+      const dialog = await ensureOpen(canvas);
       await expect(dialog).toBeVisible();
     });
 
@@ -318,7 +318,7 @@ export const Cancelled: Story = {
     const canvas = within(canvasElement);
 
     await step("Cancel é clicado, dispara o callback e o diálogo fecha", async () => {
-      await garantirAberto(canvas);
+      await ensureOpen(canvas);
       const cancel = await waitForPortal("button", { name: /Cancelar/i });
       await userEvent.click(cancel);
       await waitFor(() => expect(onCancel).toHaveBeenCalledTimes(1), {
@@ -357,7 +357,7 @@ export const Controlled: Story = {
     docs: {
       // Composição diferente da do `meta`: estado do pai, gatilho FORA da raiz
       // e nenhum AlertDialogTrigger.
-      source: { transform: alertDialogControladoSource },
+      source: { transform: alertDialogControlledSource },
       description: {
         story:
           "Abertura controlada via `open` + `onOpenChange` — pai decide quando abrir e fechar.",

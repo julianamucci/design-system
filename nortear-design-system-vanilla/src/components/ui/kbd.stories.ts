@@ -51,8 +51,8 @@ export const NameAccessible: Story = {
 
       // E o canônico vence quando os dois vierem — dois nomes disputando um
       // atributo é o defeito que a unificação existe para fechar.
-      const ambos = createKbd({ text: '⌘', label: 'Antigo', 'aria-label': 'Command' });
-      await expect(ambos).toHaveAttribute('aria-label', 'Command');
+      const both = createKbd({ text: '⌘', label: 'Antigo', 'aria-label': 'Command' });
+      await expect(both).toHaveAttribute('aria-label', 'Command');
     });
   },
 };

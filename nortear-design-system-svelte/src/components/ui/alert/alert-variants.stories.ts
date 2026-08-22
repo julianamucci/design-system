@@ -5,12 +5,12 @@ import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { Alert } from './index';
 import AlertStory from './AlertStory.svelte';
 import AlertDismissivelStory from './AlertDismissivelStory.svelte';
-import { contrastePorTema, reprovasPorTema } from '@shared/testing/alert-probe';
+import { themeContrast, themeReprovas } from '@shared/testing/alert-probe';
 import AlertContrasteStory from './AlertContrasteStory.svelte';
 import {
   alertAvisoSource,
-  alertContrasteSource,
-  alertDestrutivoSource,
+  alertContrastSource,
+  alertDestructiveSource,
   alertDismissivelSource,
   alertInformativoSource,
   alertSource,
@@ -60,7 +60,7 @@ export const Default: Story = {
 export const Destructive: Story = {
   parameters: {
     covers: ['functional.item2'],
-    docs: { source: { transform: alertDestrutivoSource } },
+    docs: { source: { transform: alertDestructiveSource } },
   },
   render: () => ({
     Component: AlertStory,
@@ -301,7 +301,7 @@ export const Contrast: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
-      source: { transform: alertContrasteSource },
+      source: { transform: alertContrastSource },
       description: {
         story:
           'Título e texto de cada variante medidos contra o fundo composto, nos três temas de marca e nos dois modos. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.',
@@ -316,7 +316,7 @@ export const Contrast: Story = {
     // raiz da story, porque quem pinta por baixo do alert translúcido é o
     // `body` — com a classe só na raiz ele ficava no claro e toda variante
     // acusava ~1:1 no escuro, defeito que não existe.
-    const reprovas = reprovasPorTema(contrastePorTema(canvasElement));
+    const reprovas = themeReprovas(themeContrast(canvasElement));
     await expect(reprovas, reprovas.length ? `\n${reprovas.join('\n')}\n` : '').toEqual([]);
   },
 };

@@ -10,8 +10,8 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import {
   inputOtpWithHelperSource,
-  inputOtpComErroSource,
-  inputOtpComReenvioSource,
+  inputOtpWithErrorSource,
+  inputOtpWithReenvioSource,
   inputOtpWithLabelSource,
 } from './input-otp.source';
 
@@ -132,7 +132,7 @@ export const WithErrorMessage: Story = {
     docs: {
       // `aria-invalid` mais a mensagem conectada: a borda vermelha sozinha não
       // alcança quem não enxerga cor.
-      source: { transform: inputOtpComErroSource },
+      source: { transform: inputOtpWithErrorSource },
       description: {
         story:
           'Mensagem de erro com aria-invalid=true e aria-describedby. Causa + ação corretiva.',
@@ -179,7 +179,7 @@ export const WithResendButton: Story = {
     docs: {
       // O reenvio vem DEPOIS do campo na ordem do DOM, e é essa ordem que a
       // story ensina — o `meta` termina no campo.
-      source: { transform: inputOtpComReenvioSource },
+      source: { transform: inputOtpWithReenvioSource },
       description: {
         story:
           'Botão "Reenviar código" abaixo do input. Verbo no infinitivo + objeto. Útil quando SMS demora.',

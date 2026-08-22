@@ -5,15 +5,15 @@ import { within, expect } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 import {
-  buttonIconeLgSource,
-  buttonIconeSmSource,
-  buttonIconeSource,
-  buttonIconeXsSource,
+  buttonIconLgSource,
+  buttonIconSmSource,
+  buttonIconSource,
+  buttonIconXsSource,
   buttonSource,
-  buttonTamanhoLgSource,
-  buttonTamanhoPadraoSource,
-  buttonTamanhoSmSource,
-  buttonTamanhoXsSource,
+  buttonSizeLgSource,
+  buttonSizeDefaultSource,
+  buttonSizeSmSource,
+  buttonSizeXsSource,
 } from './button.source';
 
 const meta: Meta = {
@@ -40,7 +40,7 @@ export const Default: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
-      source: { transform: buttonTamanhoPadraoSource },
+      source: { transform: buttonSizeDefaultSource },
       description: { story: 'Tamanho padrão. Use em formulários e diálogos como default.' },
     },
   },
@@ -58,7 +58,7 @@ export const ExtraSmall: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'xs', label: 'Mínimo' } }),
   parameters: {
     docs: {
-      source: { transform: buttonTamanhoXsSource },
+      source: { transform: buttonSizeXsSource },
       description: { story: 'Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.' },
     },
   },
@@ -72,7 +72,7 @@ export const Small: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'sm', label: 'Pequeno' } }),
   parameters: {
     docs: {
-      source: { transform: buttonTamanhoSmSource },
+      source: { transform: buttonSizeSmSource },
       description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' },
     },
   },
@@ -87,7 +87,7 @@ export const Large: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'lg', label: 'Grande' } }),
   parameters: {
     docs: {
-      source: { transform: buttonTamanhoLgSource },
+      source: { transform: buttonSizeLgSource },
       description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' },
     },
   },
@@ -107,7 +107,7 @@ export const Icon: Story = {
   parameters: {
     covers: ['functional.item6', 'accessibility.item4'],
     docs: {
-      source: { transform: buttonIconeSource },
+      source: { transform: buttonIconSource },
       description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' },
     },
   },
@@ -129,7 +129,7 @@ export const IconExtraSmall: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-xs', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
   parameters: {
     docs: {
-      source: { transform: buttonIconeXsSource },
+      source: { transform: buttonIconXsSource },
       description: { story: 'Botão ícone mínimo. Use em linhas de tabela e listas densas.' },
     },
   },
@@ -151,7 +151,7 @@ export const IconSmall: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-sm', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
   parameters: {
     docs: {
-      source: { transform: buttonIconeSmSource },
+      source: { transform: buttonIconSmSource },
       description: { story: 'Botão ícone pequeno. Use em toolbars compactas.' },
     },
   },
@@ -173,7 +173,7 @@ export const IconLarge: Story = {
   render: () => ({ Component: ButtonStory, props: { size: 'icon-lg', iconOnly: 'plus', ariaLabel: 'Adicionar item' } }),
   parameters: {
     docs: {
-      source: { transform: buttonIconeLgSource },
+      source: { transform: buttonIconLgSource },
       description: { story: 'Botão ícone grande. Use como FAB ou CTAs visuais.' },
     },
   },

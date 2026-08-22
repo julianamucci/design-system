@@ -13,10 +13,10 @@
  * de uma vez, e ainda cobre variação de caixa.
  */
 
-export type VarianteDePrioridade = 'destructive' | 'warning' | 'info' | 'outline';
+export type PrioridadeVariant = 'destructive' | 'warning' | 'info' | 'outline';
 
 /** alta · média · baixa, nos três idiomas do design system. */
-const VARIANTE_POR_ROTULO: Record<string, VarianteDePrioridade> = {
+const LABEL_VARIANT: Record<string, PrioridadeVariant> = {
   alta: 'destructive',
   high: 'destructive',
   media: 'warning',
@@ -39,6 +39,6 @@ function normalizar(rotulo: string): string {
   return rotulo.trim().toLowerCase().normalize('NFD').replace(DIACRITICOS, '');
 }
 
-export function varianteDaPrioridade(rotulo: string): VarianteDePrioridade {
-  return VARIANTE_POR_ROTULO[normalizar(rotulo)] ?? 'outline';
+export function varianteDaPrioridade(rotulo: string): PrioridadeVariant {
+  return LABEL_VARIANT[normalizar(rotulo)] ?? 'outline';
 }

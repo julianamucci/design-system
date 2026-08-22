@@ -4,14 +4,14 @@ import { expect, within } from 'storybook/test';
 import { Plus } from 'lucide-vue-next';
 import { Button } from './index';
 import {
-  buttonIconeLgSource,
-  buttonIconeSmSource,
-  buttonIconeSource,
-  buttonIconeXsSource,
-  buttonTamanhoLgSource,
-  buttonTamanhoPadraoSource,
-  buttonTamanhoSmSource,
-  buttonTamanhoXsSource,
+  buttonIconLgSource,
+  buttonIconSmSource,
+  buttonIconSource,
+  buttonIconXsSource,
+  buttonSizeLgSource,
+  buttonSizeDefaultSource,
+  buttonSizeSmSource,
+  buttonSizeXsSource,
 } from './button.source';
 
 const meta: Meta<any> = {
@@ -22,7 +22,7 @@ const meta: Meta<any> = {
     design: figmaDesign('button'),
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: buttonTamanhoPadraoSource } },
+    docs: { source: { transform: buttonSizeDefaultSource } },
   },
 };
 
@@ -55,7 +55,7 @@ export const ExtraSmall: Story = {
   // Outro tamanho e outro rótulo: os args não descrevem nada nesta story.
   parameters: {
     docs: {
-      source: { transform: buttonTamanhoXsSource },
+      source: { transform: buttonSizeXsSource },
       description: { story: 'Tamanho mínimo. Use em densidades máximas: chips de filtro e ações dentro de linha de tabela.' },
     },
   },
@@ -73,7 +73,7 @@ export const Small: Story = {
   // Outro tamanho e outro rótulo: os args não descrevem nada nesta story.
   parameters: {
     docs: {
-      source: { transform: buttonTamanhoSmSource },
+      source: { transform: buttonSizeSmSource },
       description: { story: 'Tamanho pequeno. Use em toolbars e áreas densas.' },
     },
   },
@@ -91,7 +91,7 @@ export const Large: Story = {
   // Outro tamanho e outro rótulo: os args não descrevem nada nesta story.
   parameters: {
     docs: {
-      source: { transform: buttonTamanhoLgSource },
+      source: { transform: buttonSizeLgSource },
       description: { story: 'Tamanho grande. Use em CTAs de destaque e hero sections.' },
     },
   },
@@ -119,7 +119,7 @@ export const Icon: Story = {
     // Sem texto dentro: o ícone e o rótulo acessível são a composição, e a do
     // meta mostraria um botão de texto.
     docs: {
-      source: { transform: buttonIconeSource },
+      source: { transform: buttonIconSource },
       description: { story: 'Botão ícone padrão. Sempre forneça aria-label descritivo.' },
     },
   },
@@ -149,7 +149,7 @@ export const IconExtraSmall: Story = {
   // Sem texto dentro: o ícone e o rótulo acessível são a composição.
   parameters: {
     docs: {
-      source: { transform: buttonIconeXsSource },
+      source: { transform: buttonIconXsSource },
       description: { story: 'Botão ícone mínimo. Use em linhas de tabela e listas densas.' },
     },
   },
@@ -179,7 +179,7 @@ export const IconSmall: Story = {
   // Sem texto dentro: o ícone e o rótulo acessível são a composição.
   parameters: {
     docs: {
-      source: { transform: buttonIconeSmSource },
+      source: { transform: buttonIconSmSource },
       description: { story: 'Botão ícone pequeno. Use em toolbars compactas.' },
     },
   },
@@ -209,7 +209,7 @@ export const IconLarge: Story = {
   // Sem texto dentro: o ícone e o rótulo acessível são a composição.
   parameters: {
     docs: {
-      source: { transform: buttonIconeLgSource },
+      source: { transform: buttonIconLgSource },
       description: { story: 'Botão ícone grande. Use como FAB ou CTAs visuais.' },
     },
   },

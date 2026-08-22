@@ -4,7 +4,7 @@ import { Switch } from "./switch";
 import { Label } from "./label";
 import {
   switchDisabledLigadoSource,
-  switchDesabilitadoSource,
+  switchDisabledSource,
   switchInvalidoSource,
   switchLigadoSource,
   switchSource,
@@ -36,7 +36,7 @@ type Story = StoryObj<typeof meta>;
 // não olhômetro — e é o que o item de contraste do contrato exige.
 
 /** Primeira cor de fundo opaca subindo a árvore — o "ambiente" do controle. */
-function fundoDoAmbiente(el: HTMLElement): string {
+function environmentBackground(el: HTMLElement): string {
   let atual: HTMLElement | null = el.parentElement;
   while (atual) {
     const cor = getComputedStyle(atual).backgroundColor;
@@ -132,8 +132,8 @@ export const Checked: Story = {
     });
 
     await step("O trilho ligado tem pelo menos 3:1 contra o ambiente", async () => {
-      const corTrilho = getComputedStyle(switchEl).backgroundColor;
-      await expect(contraste(corTrilho, fundoDoAmbiente(switchEl))).toBeGreaterThanOrEqual(3);
+      const colorTrack = getComputedStyle(switchEl).backgroundColor;
+      await expect(contraste(colorTrack, environmentBackground(switchEl))).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -178,7 +178,7 @@ export const Disabled: Story = {
     covers: ["functional.item4", "visual.item3"],
     docs: {
       // `disabled` só existe no render desta story.
-      source: { transform: switchDesabilitadoSource },
+      source: { transform: switchDisabledSource },
       description: {
         story:
           "Switch desabilitado: opacidade reduzida, cursor bloqueado e clique sem efeito.",

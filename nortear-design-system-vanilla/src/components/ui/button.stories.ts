@@ -139,12 +139,12 @@ export const Playground: Story = {
 
       // E o canônico vence quando os dois vierem — dois nomes disputando um
       // atributo é o defeito que a unificação existe para fechar.
-      const ambos = createButton({
+      const both = createButton({
         size: 'icon',
         ariaLabel: 'Antigo',
         'aria-label': 'Canônico',
       });
-      await expect(ambos).toHaveAttribute('aria-label', 'Canônico');
+      await expect(both).toHaveAttribute('aria-label', 'Canônico');
     });
 
     await step('Tab leva o foco ao botão', async () => {

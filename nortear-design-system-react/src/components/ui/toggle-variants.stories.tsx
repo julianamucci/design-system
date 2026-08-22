@@ -3,10 +3,10 @@ import { within, expect } from "storybook/test";
 import { Bold, Italic, Eye, List } from "lucide-react";
 import { Toggle } from "./toggle";
 import {
-  toggleComRotuloSource,
+  toggleWithLabelSource,
   toggleContornoSource,
   toggleSource,
-  toggleTamanhosSource,
+  toggleSizesSource,
 } from "./toggle.source";
 
 const meta = {
@@ -107,7 +107,7 @@ export const WithLabel: Story = {
   parameters: {
     docs: {
       // A AUSÊNCIA de aria-label é o assunto: o texto visível já nomeia o botão.
-      source: { transform: toggleComRotuloSource },
+      source: { transform: toggleWithLabelSource },
     },
   },
   render: () => (
@@ -149,7 +149,7 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       // A escada só significa alguma coisa com os três degraus juntos.
-      source: { transform: toggleTamanhosSource },
+      source: { transform: toggleSizesSource },
     },
   },
   render: () => (

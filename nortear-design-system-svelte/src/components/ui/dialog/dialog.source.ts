@@ -34,7 +34,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`;
 
 /** Sem rodapé não há o que fechar por botão: as duas peças saem do import. */
-const IMPORT_SEM_RODAPE = `import {
+const IMPORT_NO_FOOTER = `import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -44,7 +44,7 @@ const IMPORT_SEM_RODAPE = `import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";`;
 
-type Moldura = {
+type Frame = {
   imports?: string;
   estado?: string;
   aberto?: boolean;
@@ -73,7 +73,7 @@ function dialogo({
   description,
   corpo = '',
   rodape = '',
-}: Moldura): string {
+}: Frame): string {
   const panelProps = attrs(
     contentClass ? `class="${contentClass}"` : '',
     showCloseButton ? '' : 'showCloseButton={false}',
@@ -84,7 +84,7 @@ function dialogo({
   const miolo = partes.length ? `\n${partes.join('\n')}` : '';
 
   return svelteSnippet(
-    `${imports ?? (rodape ? IMPORT_BASE : IMPORT_SEM_RODAPE)}
+    `${imports ?? (rodape ? IMPORT_BASE : IMPORT_NO_FOOTER)}
 
 let open = $state(${aberto});`,
     `<Dialog bind:open>
@@ -104,7 +104,7 @@ let open = $state(${aberto});`,
 }
 
 /** Rodapé canônico: a saída à esquerda, a ação primária por último no DOM. */
-function rodapePadrao(cancelLabel: string, actionLabel: string, destrutiva = false): string {
+function footerDefault(cancelLabel: string, actionLabel: string, destrutiva = false): string {
   const actionVariant = destrutiva ? ' variant="destructive"' : '';
   return `    <DialogFooter>
       <DialogClose>
@@ -134,12 +134,12 @@ export function dialogSource(_gerado?: string, ctx?: { args?: Partial<DialogArgs
     triggerLabel,
     title,
     description,
-    rodape: rodapePadrao(cancelLabel, actionLabel),
+    rodape: footerDefault(cancelLabel, actionLabel),
   });
 }
 
 /** Composição com formulário no corpo: o envio dispara a ação primária. */
-export function dialogComFormularioSource(): string {
+export function dialogWithFormSource(): string {
   return svelteSnippet(
     `${IMPORT_WITH_FIELDS}
 
@@ -169,7 +169,7 @@ function salvar(evento: SubmitEvent) {
         <Input id="dialog-email" type="email" value="maria@exemplo.com" />
       </div>
     </form>
-${rodapePadrao('Cancelar', 'Salvar')}
+${footerDefault('Cancelar', 'Salvar')}
   </DialogContent>
 </Dialog>`,
   );
@@ -179,7 +179,7 @@ ${rodapePadrao('Cancelar', 'Salvar')}
  * Corpo mais alto que o painel: a rolagem é do corpo, e o cabeçalho e o rodapé
  * ficam parados. A região rolável precisa de `tabindex` e de nome acessível.
  */
-export function dialogComRolagemSource(): string {
+export function dialogWithScrollSource(): string {
   return dialogo({
     aberto: true,
     triggerLabel: 'Termos de uso',
@@ -196,12 +196,12 @@ export function dialogComRolagemSource(): string {
       <p>Parágrafo 1: conteúdo extenso o bastante para o corpo passar da altura disponível.</p>
       <p>Parágrafo 2: a rolagem é do corpo, e não da página atrás do painel.</p>
     </div>`,
-    rodape: rodapePadrao('Recusar', 'Aceitar'),
+    rodape: footerDefault('Recusar', 'Aceitar'),
   });
 }
 
 /** Sem rodapé: painel informativo, cuja única saída visível é o botão do canto. */
-export function dialogSemRodapeSource(): string {
+export function dialogNoFooterSource(): string {
   return dialogo({
     aberto: true,
     triggerLabel: 'Sobre o produto',
@@ -212,13 +212,13 @@ export function dialogSemRodapeSource(): string {
 }
 
 /** Ação primária destrutiva, para destrutividade secundária ao fluxo. */
-export function dialogAcaoDestrutivaSource(): string {
+export function dialogActionDestructiveSource(): string {
   return dialogo({
     aberto: true,
     triggerLabel: 'Remover item',
     title: 'Remover item da lista',
     description: 'Você pode adicioná-lo novamente depois, mas perderá os ajustes feitos.',
-    rodape: rodapePadrao('Cancelar', 'Remover item', true),
+    rodape: footerDefault('Cancelar', 'Remover item', true),
   });
 }
 
@@ -245,7 +245,7 @@ let open = $state(true);`,
       <Label for="confirm-new-email">Novo email</Label>
       <Input id="confirm-new-email" type="email" placeholder="voce@example.com" />
     </div>
-${rodapePadrao('Cancelar', 'Enviar confirmação')}
+${footerDefault('Cancelar', 'Enviar confirmação')}
   </DialogContent>
 </Dialog>`,
   );

@@ -21,7 +21,7 @@ export type DrawerArgs = {
 };
 
 /** Ordem canônica das peças no bloco de import — a mesma do `index.ts`. */
-const ORDEM = [
+const ORDER = [
   'Drawer',
   'DrawerBody',
   'DrawerClose',
@@ -34,11 +34,11 @@ const ORDEM = [
 ];
 
 /** Bloco de import: as peças do drawer, depois o Button, que é gatilho e ação. */
-function importar(pecas: string[], comCampos = false): string {
-  const usadas = ORDEM.filter((peca) => pecas.includes(peca));
+function importing(parts: string[], comCampos = false): string {
+  const usadas = ORDER.filter((part) => parts.includes(part));
   const linhas = [
     `import {`,
-    ...usadas.map((peca) => `  ${peca},`),
+    ...usadas.map((part) => `  ${part},`),
     `} from '@/components/ui/drawer'`,
     `import { Button } from '@/components/ui/button'`,
   ];
@@ -49,7 +49,7 @@ function importar(pecas: string[], comCampos = false): string {
   return linhas.join('\n');
 }
 
-type Moldura = {
+type Frame = {
   /** Props da raiz: `direction`, `default-open`, `:dismissible="false"`… */
   raiz?: string;
   /** Rótulo do gatilho. Vazio significa sem gatilho — quem abre está fora. */
@@ -69,7 +69,7 @@ type Moldura = {
  * botão DENTRO de outro botão. O título e a descrição não são decoração — é
  * deles que saem o nome e a descrição acessíveis do painel.
  */
-function drawer(m: Moldura): string {
+function drawer(m: Frame): string {
   const { raiz = '', gatilho = '', corpo = '' } = m;
   const disparo = gatilho
     ? `  <DrawerTrigger as-child>
@@ -127,7 +127,7 @@ const PARTS_COMPLETAS = [
   'DrawerTrigger',
 ];
 
-const PARTS_NO_BODY = PARTS_COMPLETAS.filter((peca) => peca !== 'DrawerBody');
+const PARTS_NO_BODY = PARTS_COMPLETAS.filter((part) => part !== 'DrawerBody');
 
 /**
  * Forma canônica: gatilho, cabeçalho, corpo rolável e o par de ações.
@@ -138,7 +138,7 @@ const PARTS_NO_BODY = PARTS_COMPLETAS.filter((peca) => peca !== 'DrawerBody');
 export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
   const { direction, defaultOpen, dismissible, modal } = ctx?.args ?? {};
   return vueSnippet(
-    importar(PARTS_COMPLETAS),
+    importing(PARTS_COMPLETAS),
     drawer({
       raiz: attrs(
         attr('direction', direction, 'bottom'),
@@ -158,14 +158,14 @@ export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
 };
 
 /** Molde das quatro direções: só a prop da raiz e o texto mudam. */
-function porDirecao(
+function byDirection(
   direction: DrawerArgs['direction'],
   titulo: string,
   descricao: string,
   gatilho: string,
 ): string {
   return vueSnippet(
-    importar(PARTS_COMPLETAS),
+    importing(PARTS_COMPLETAS),
     drawer({
       raiz: attr('direction', direction, 'bottom'),
       gatilho,
@@ -184,7 +184,7 @@ function porDirecao(
  * aparece. A prop fica de fora — é o valor padrão da raiz.
  */
 export function drawerBaixoSource(): string {
-  return porDirecao(
+  return byDirection(
     'bottom',
     'Detalhes do pedido',
     'Pedido #4287 confirmado em 15 de março.',
@@ -194,7 +194,7 @@ export function drawerBaixoSource(): string {
 
 /** Variante Top: entra por cima. Serve a conteúdo curto e saída imediata. */
 export function drawerTopoSource(): string {
-  return porDirecao(
+  return byDirection(
     'top',
     'Nova versão disponível',
     'Atualize agora para acessar as novidades.',
@@ -204,12 +204,12 @@ export function drawerTopoSource(): string {
 
 /** Variante Left: a direção do menu, onde a pessoa espera encontrá-lo. */
 export function drawerEsquerdaSource(): string {
-  return porDirecao('left', 'Menu', 'Navegue pelas seções do app.', 'Abrir menu');
+  return byDirection('left', 'Menu', 'Navegue pelas seções do app.', 'Abrir menu');
 }
 
 /** Variante Right: alternativa de desktop para edição e filtros. */
 export function drawerDireitaSource(): string {
-  return porDirecao(
+  return byDirection(
     'right',
     'Filtros',
     'Refine sua busca por categoria, preço e disponibilidade.',
@@ -225,7 +225,7 @@ export function drawerDireitaSource(): string {
  */
 export function drawerClosedSource(): string {
   return vueSnippet(
-    importar(PARTS_NO_BODY),
+    importing(PARTS_NO_BODY),
     drawer({
       gatilho: 'Abrir drawer',
       titulo: 'Editar perfil',
@@ -241,9 +241,9 @@ export function drawerClosedSource(): string {
  * Aqui `default-open` É o assunto. Sem gatilho, porque não há o que clicar: o
  * painel já está na tela quando a página monta.
  */
-export function drawerAbertoSource(): string {
+export function drawerOpenSource(): string {
   return vueSnippet(
-    importar(PARTS_NO_BODY.filter((peca) => peca !== 'DrawerTrigger')),
+    importing(PARTS_NO_BODY.filter((part) => part !== 'DrawerTrigger')),
     drawer({
       raiz: 'default-open',
       titulo: 'Editar perfil',
@@ -260,9 +260,9 @@ export function drawerAbertoSource(): string {
  * evento de volta, fechar por dentro deixaria o valor de fora em `true` e o
  * painel reabriria no ciclo seguinte.
  */
-export function drawerControladoSource(): string {
+export function drawerControlledSource(): string {
   return vueSnippet(
-    `${importar(PARTS_NO_BODY.filter((peca) => peca !== 'DrawerTrigger'))}
+    `${importing(PARTS_NO_BODY.filter((part) => part !== 'DrawerTrigger'))}
 import { ref } from 'vue'
 
 const aberto = ref(false)`,
@@ -295,9 +295,9 @@ const aberto = ref(false)`,
  * rodapé é obrigatória. Sem ela o painel ficaria sem nenhum fechamento
  * alcançável por teclado.
  */
-export function drawerNaoDispensavelSource(): string {
+export function drawerNotDispensavelSource(): string {
   return vueSnippet(
-    importar(PARTS_NO_BODY.filter((peca) => peca !== 'DrawerTrigger')),
+    importing(PARTS_NO_BODY.filter((part) => part !== 'DrawerTrigger')),
     drawer({
       raiz: ':dismissible="false"',
       titulo: 'Aceitar termos',
@@ -313,9 +313,9 @@ export function drawerNaoDispensavelSource(): string {
  * Cada campo mora num bloco com o próprio rótulo — é o `for`/`id` que liga os
  * dois, e sem ele o campo chega ao leitor sem nome.
  */
-export function drawerComFormularioSource(): string {
+export function drawerWithFormSource(): string {
   return vueSnippet(
-    importar(PARTS_COMPLETAS, true),
+    importing(PARTS_COMPLETAS, true),
     drawer({
       gatilho: 'Editar perfil',
       titulo: 'Editar perfil',
@@ -348,9 +348,9 @@ export function drawerComFormularioSource(): string {
  * A consequência fica escrita na descrição, não subentendida. Vale para
  * confirmação reversível — ação bloqueante de verdade é outro componente.
  */
-export function drawerComConfirmacaoSource(): string {
+export function drawerWithConfirmSource(): string {
   return vueSnippet(
-    importar(PARTS_NO_BODY),
+    importing(PARTS_NO_BODY),
     drawer({
       gatilho: 'Remover anexo',
       titulo: 'Remover anexo?',
@@ -367,9 +367,9 @@ export function drawerComConfirmacaoSource(): string {
  * ações continua na tela — é o que separa "conteúdo longo" de "ação fora de
  * alcance". O corpo já nasce alcançável por teclado (WCAG 2.1.1).
  */
-export function drawerComRolagemSource(): string {
+export function drawerWithScrollSource(): string {
   return vueSnippet(
-    `${importar(PARTS_COMPLETAS)}
+    `${importing(PARTS_COMPLETAS)}
 
 const clausulas = [
   'Do objeto: os serviços são fornecidos no estado em que se encontram, e esta cláusula descreve o alcance de cada um deles.',

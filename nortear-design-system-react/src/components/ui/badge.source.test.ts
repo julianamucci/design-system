@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  badgeComIconeSource,
-  badgeComoBotaoSource,
-  badgeComoLinkSource,
-  badgeContadorSource,
+  badgeWithIconSource,
+  badgeAsButtonSource,
+  badgeAsLinkSource,
+  badgeCounterSource,
   badgeDefaultSource,
-  badgeDestrutivoSource,
+  badgeDestructiveSource,
   badgeOutlineSource,
   badgeSecundarioSource,
   badgeSemanticasSource,
@@ -35,8 +35,8 @@ describe('badgeSource', () => {
   });
 
   it('cai no texto padrão quando o control entrega um espião no lugar da string', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = badgeSource(undefined, { args: { children: espiao as never } });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = badgeSource(undefined, { args: { children: spy as never } });
     expect(saida).toContain('<Badge>Novo</Badge>');
     expect(saida).not.toContain('CORPO_DO_MOCK');
   });
@@ -46,7 +46,7 @@ describe('variantes', () => {
   it('cada uma diz a sua, porque o arquivo desliga os controls', () => {
     expect(badgeDefaultSource()).toContain('<Badge>Novo</Badge>');
     expect(badgeSecundarioSource()).toContain('<Badge variant="secondary">Beta</Badge>');
-    expect(badgeDestrutivoSource()).toContain('<Badge variant="destructive">Urgente</Badge>');
+    expect(badgeDestructiveSource()).toContain('<Badge variant="destructive">Urgente</Badge>');
     expect(badgeOutlineSource()).toContain('<Badge variant="outline">Rascunho</Badge>');
   });
 
@@ -60,30 +60,30 @@ describe('variantes', () => {
 
 describe('composições', () => {
   it('o ícone sai da árvore de acessibilidade e o texto nomeia', () => {
-    const saida = badgeComIconeSource();
+    const saida = badgeWithIconSource();
     expect(saida).toContain('import { Check } from "lucide-react";');
     expect(saida).toContain('aria-hidden="true"');
     expect(saida).toContain('data-icon="inline-start"');
   });
 
   it('o contador ganha significado do contêiner, não do número', () => {
-    const saida = badgeContadorSource();
+    const saida = badgeCounterSource();
     expect(saida).toContain('role="status"');
     expect(saida).toContain('aria-label="12 notificações não lidas"');
   });
 
   it('quem recebe o foco é o elemento que envolve — o badge não ganha tabindex', () => {
-    for (const saida of [badgeComoLinkSource(), badgeComoBotaoSource()]) {
+    for (const saida of [badgeAsLinkSource(), badgeAsButtonSource()]) {
       expect(saida).toContain('nds-focus-ring-inset');
       expect(saida).not.toContain('tabindex');
       expect(saida).not.toContain('tabIndex');
     }
-    expect(badgeComoLinkSource()).toContain('<a');
-    expect(badgeComoBotaoSource()).toContain('type="button"');
+    expect(badgeAsLinkSource()).toContain('<a');
+    expect(badgeAsButtonSource()).toContain('type="button"');
   });
 
   it('nenhum snippet ensina o andaime da story', () => {
-    for (const fn of [badgeComIconeSource, badgeContadorSource, badgeComoLinkSource, badgeComoBotaoSource]) {
+    for (const fn of [badgeWithIconSource, badgeCounterSource, badgeAsLinkSource, badgeAsButtonSource]) {
       expect(fn()).not.toContain('fixtures');
     }
   });

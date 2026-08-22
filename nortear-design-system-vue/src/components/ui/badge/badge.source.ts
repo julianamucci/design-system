@@ -80,7 +80,7 @@ ${indentar(etiquetas.join('\n'))}
  * `data-icon` diz de que lado o ícone está para que o preenchimento daquele
  * lado encurte. Margem escrita à mão somaria ao respiro e o dobraria.
  */
-export function badgeComIconeSource(): string {
+export function badgeWithIconSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Check')}`,
     `<Badge>
@@ -95,7 +95,7 @@ export function badgeComIconeSource(): string {
  * significado é o rótulo do contêiner. O badge fica ao lado do ícone, e não
  * sobreposto a ele.
  */
-export function badgeContadorSource(): string {
+export function badgeCounterSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Bell')}`,
     `<span
@@ -114,7 +114,7 @@ export function badgeContadorSource(): string {
  * Badge dentro de link: quem é focável e clicável é o LINK — o badge não vira
  * controle. É por isso que o anel de foco mora no elemento de fora.
  */
-export function badgeComoLinkSource(): string {
+export function badgeAsLinkSource(): string {
   return vueSnippet(
     IMPORT,
     `<a
@@ -131,7 +131,7 @@ export function badgeComoLinkSource(): string {
  * Badge dentro de botão: mesma divisão de papéis do link. O badge continua
  * decorativo, sem tabulação própria, e o botão é quem recebe o foco.
  */
-export function badgeComoBotaoSource(): string {
+export function badgeAsButtonSource(): string {
   return vueSnippet(
     IMPORT,
     `<button

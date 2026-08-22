@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
   commandLoadingSource,
-  commandComAtalhosSource,
-  commandComGruposSource,
+  commandWithShortcutsSource,
+  commandWithGroupsSource,
   commandWithLinkItemSource,
-  commandComoComboboxSource,
-  commandItemDesabilitadoSource,
-  commandItemMarcadoSource,
-  commandPaletaSource,
+  commandAsComboboxSource,
+  commandItemDisabledSource,
+  commandItemCheckedSource,
+  commandPaletteSource,
   commandNoResultsSource,
   commandSource,
 } from './command.source';
@@ -92,13 +92,13 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o comando desabilitado escreve a prop no item, não na raiz', () => {
-    const saida = commandItemDesabilitadoSource();
+    const saida = commandItemDisabledSource();
     expect(saida).toContain('<CommandItem value="arquivar" disabled');
     expect(saida).toContain('<Command>');
   });
 
   it('o comando marcável escreve os dois estados de checked', () => {
-    const saida = commandItemMarcadoSource();
+    const saida = commandItemCheckedSource();
     expect(saida).toContain('checked={true}');
     expect(saida).toContain('checked={false}');
     expect(saida).toContain('<CommandShortcut>⌘S</CommandShortcut>');
@@ -107,13 +107,13 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('com grupos, dois cabeçalhos e um divisor entre eles', () => {
-    const saida = commandComGruposSource();
+    const saida = commandWithGroupsSource();
     expect(saida.match(/<CommandGroup heading=/g)).toHaveLength(2);
     expect(saida).toContain('<CommandSeparator />');
   });
 
   it('o atalho mora dentro do comando', () => {
-    const saida = commandComAtalhosSource();
+    const saida = commandWithShortcutsSource();
     expect(saida).toContain(`<CommandItem value="new-file">
         Novo arquivo
         <CommandShortcut>⌘N</CommandShortcut>
@@ -127,14 +127,14 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o combobox põe a paleta dentro do Popover e nomeia o gatilho', () => {
-    const saida = commandComoComboboxSource();
+    const saida = commandAsComboboxSource();
     expect(saida).toContain("from '@/components/ui/popover'");
     expect(saida).toContain('aria-labelledby="combobox-rotulo combobox-valor"');
     expect(saida).toContain('let aberto = $state(false);');
   });
 
   it('a paleta usa o CommandDialog e o atalho global', () => {
-    const saida = commandPaletaSource();
+    const saida = commandPaletteSource();
     expect(saida).toContain('<CommandDialog');
     expect(saida).toContain('title="Command Palette"');
     expect(saida).toContain("evento.key.toLowerCase() === 'k'");

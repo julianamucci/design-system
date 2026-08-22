@@ -16,9 +16,9 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import {
-  commandComAtalhosSource,
-  commandComGruposSource,
-  commandComoComboboxSource,
+  commandWithShortcutsSource,
+  commandWithGroupsSource,
+  commandAsComboboxSource,
   commandPaletteSource,
 } from './command.source';
 
@@ -32,7 +32,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: commandComGruposSource },
+      source: { transform: commandWithGroupsSource },
       description: {
         component:
           'Os arranjos da paleta: grupos nomeados com divisor, atalhos por comando, e os dois '
@@ -143,7 +143,7 @@ export const WithGroups: Story = {
 export const WithShortcuts: Story = {
   // O atalho mora DENTRO do item, que é o que o faz entrar no nome acessível —
   // a do meta mostra comandos sem atalho nenhum.
-  parameters: { docs: { source: { transform: commandComAtalhosSource } } },
+  parameters: { docs: { source: { transform: commandWithShortcutsSource } } },
   render: () => ({
     components: {
       Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,
@@ -212,12 +212,12 @@ export const WithShortcuts: Story = {
     await step('O atalho fica encostado na borda direita do comando', async () => {
       const salvar = canvas.getByRole('option', { name: 'Salvar ⌘S' });
       const atalho = salvar.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
-      const caixaItem = salvar.getBoundingClientRect();
-      const caixaAtalho = atalho.getBoundingClientRect();
+      const boxItem = salvar.getBoundingClientRect();
+      const boxShortcut = atalho.getBoundingClientRect();
       // A distância até a borda direita é menor que até a esquerda: é o
       // `margin-left: auto` da folha empurrando o atalho para o fim da linha.
-      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(
-        caixaAtalho.left - caixaItem.left,
+      await expect(boxItem.right - boxShortcut.right).toBeLessThan(
+        boxShortcut.left - boxItem.left,
       );
     });
 
@@ -243,7 +243,7 @@ export const AsCombobox: Story = {
     covers: ['functional.item7', 'accessibility.item5', 'visual.item3'],
     // A paleta entra dentro de um Popover, com gatilho, rótulo costurado e o
     // fechamento ao escolher: é outra composição inteira.
-    docs: { source: { transform: commandComoComboboxSource } },
+    docs: { source: { transform: commandAsComboboxSource } },
   },
   render: () => ({
     components: {
@@ -490,7 +490,7 @@ export const CommandPalette: Story = {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('button', { name: /Buscar/ });
 
-    const abrirPorBotao = async (): Promise<HTMLElement> => {
+    const buttonOpen = async (): Promise<HTMLElement> => {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
       return await waitForPortal('dialog');
     };
@@ -505,11 +505,11 @@ export const CommandPalette: Story = {
     });
 
     await step('O diálogo é nomeado por um título que só o leitor de tela vê', async () => {
-      const painel = await abrirPorBotao();
-      const idTitulo = painel.getAttribute('aria-labelledby');
-      await expect(idTitulo).toBeTruthy();
+      const painel = await buttonOpen();
+      const idTitle = painel.getAttribute('aria-labelledby');
+      await expect(idTitle).toBeTruthy();
 
-      const titulo = document.getElementById(idTitulo!)!;
+      const titulo = document.getElementById(idTitle!)!;
       await expect(titulo).toHaveTextContent('Command Palette');
       // Fora da tela, mas dentro da árvore de acessibilidade: `display: none`
       // apagaria o nome do diálogo.
@@ -518,7 +518,7 @@ export const CommandPalette: Story = {
     });
 
     await step('O foco vai direto para a busca', async () => {
-      const painel = await abrirPorBotao();
+      const painel = await buttonOpen();
       const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
         await expect(busca).toHaveFocus();
@@ -527,7 +527,7 @@ export const CommandPalette: Story = {
     });
 
     await step('Escape fecha o diálogo e devolve o foco ao gatilho', async () => {
-      await abrirPorBotao();
+      await buttonOpen();
       await userEvent.keyboard('{Escape}');
 
       await waitForPortalGone('dialog');
@@ -550,11 +550,11 @@ export const CommandPalette: Story = {
         '[data-value="button"] [data-slot="command-shortcut"]',
       )!;
       await expect(atalho).toHaveTextContent('⌘B');
-      const caixaItem = atalho.closest<HTMLElement>('[data-slot="command-item"]')!
+      const boxItem = atalho.closest<HTMLElement>('[data-slot="command-item"]')!
         .getBoundingClientRect();
-      const caixaAtalho = atalho.getBoundingClientRect();
-      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(
-        caixaAtalho.left - caixaItem.left,
+      const boxShortcut = atalho.getBoundingClientRect();
+      await expect(boxItem.right - boxShortcut.right).toBeLessThan(
+        boxShortcut.left - boxItem.left,
       );
     });
 

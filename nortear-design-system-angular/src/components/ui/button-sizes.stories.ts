@@ -10,7 +10,7 @@ const TEXTS: { size: ButtonSize; label: string }[] = [
   { size: 'lg',      label: 'Grande'        },
 ];
 
-const ICONES: { size: ButtonSize; label: string }[] = [
+const ICONS: { size: ButtonSize; label: string }[] = [
   { size: 'icon-xs', label: 'Adicionar (xs)' },
   { size: 'icon-sm', label: 'Adicionar (sm)' },
   { size: 'icon',    label: 'Adicionar'      },
@@ -29,7 +29,7 @@ type Story = StoryObj;
 export const Sizes: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
-    props: { textos: TEXTS, icones: ICONES },
+    props: { textos: TEXTS, icones: ICONS },
     template: `
       <div class="nds-stack" data-spacing="lg">
         <div class="nds-cluster" data-spacing="sm">
@@ -78,7 +78,7 @@ export const Sizes: Story = {
     await step('Os botões icon-only são quadrados', async () => {
       // Peça sem texto tem medida (guideline 12): a escada --size-* dá largura
       // e altura iguais. Um retângulo aqui denuncia padding de texto vazando.
-      for (const { label } of ICONES) {
+      for (const { label } of ICONS) {
         const btn = canvas.getByRole('button', { name: label });
         const { width, height } = btn.getBoundingClientRect();
         await expect(Math.abs(width - height)).toBeLessThan(2);
@@ -86,7 +86,7 @@ export const Sizes: Story = {
     });
 
     await step('Todo botão icon-only tem nome acessível', async () => {
-      for (const { label } of ICONES) {
+      for (const { label } of ICONS) {
         await expect(canvas.getByRole('button', { name: label })).toBeTruthy();
       }
     });

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, fn } from 'storybook/test';
 import { NdsButton, NdsButtonIcon } from './button';
-import { falhasDeAnel } from '@shared/testing/button-probe';
+import { ringFailures } from '@shared/testing/button-probe';
 
 const meta: Meta<ButtonStatesArgs> = {
   title: 'UI/Button/States',
@@ -96,7 +96,7 @@ export const Keyboard: Story = {
       // rodada, a banda colorida compunha 1.87:1 a 2.42:1 contra a superfície
       // do app nos seis pares tema×modo — a meia opacidade de `--ring` comia
       // o indicador inteiro. WCAG 1.4.11 (Non-text Contrast, AA) pede 3:1.
-      await expect(falhasDeAnel(canvasElement, 3)).toEqual([]);
+      await expect(ringFailures(canvasElement, 3)).toEqual([]);
     });
   },
 };

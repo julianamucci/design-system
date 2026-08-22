@@ -14,8 +14,8 @@ type PaginationArgs = {
   'aria-label': string;
 };
 
-const ROTULO_ANTERIOR = 'Ir para a página anterior';
-const ROTULO_PROXIMA = 'Ir para a próxima página';
+const LABEL_PREVIOUS = 'Ir para a página anterior';
+const LABEL_NEXT = 'Ir para a próxima página';
 
 /** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
 const onPageChange = fn();
@@ -119,11 +119,11 @@ export const Playground: Story = {
         const link = canvas.getByRole('link', { name: `Ir para página ${n}` });
         await expect(link).toHaveAttribute('data-slot', 'pagination-link');
       }
-      await expect(canvas.getByRole('link', { name: ROTULO_ANTERIOR })).toHaveAttribute(
+      await expect(canvas.getByRole('link', { name: LABEL_PREVIOUS })).toHaveAttribute(
         'data-slot',
         'pagination-previous',
       );
-      await expect(canvas.getByRole('link', { name: ROTULO_PROXIMA })).toHaveAttribute(
+      await expect(canvas.getByRole('link', { name: LABEL_NEXT })).toHaveAttribute(
         'data-slot',
         'pagination-next',
       );
@@ -135,7 +135,7 @@ export const Playground: Story = {
       await expect(ativo).toHaveAttribute('aria-current', 'page');
       await expect(ativo).toHaveAttribute('data-active', 'true');
 
-      const anterior = canvas.getByRole('link', { name: ROTULO_ANTERIOR });
+      const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
       await expect(anterior).toHaveAttribute('aria-disabled', 'true');
       await expect(anterior).toHaveAttribute('tabindex', '-1');
     });
@@ -168,13 +168,13 @@ export const Playground: Story = {
       await expect(antigo).toHaveAttribute('aria-label', 'Paginação antiga');
 
       // E o canônico vence quando os dois vierem.
-      const ambos = createPagination({
+      const both = createPagination({
         total: 3,
         current: 1,
         label: 'Antigo',
         'aria-label': 'Canônico',
       });
-      await expect(ambos).toHaveAttribute('aria-label', 'Canônico');
+      await expect(both).toHaveAttribute('aria-label', 'Canônico');
     });
   },
 };

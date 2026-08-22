@@ -2,15 +2,15 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption, buildLineOption } from './chart';
 import {
-  assentarTema,
+  settleTheme,
   contraste,
   corDoToken,
-  desenhoEscreve,
-  desenhoPintado,
-  exigirRaiz,
-  formasDeDado,
-  fundoOpacoAtras,
-  textosDoDesenho,
+  designEscreve,
+  designPintado,
+  exigirRoot,
+  datumFormas,
+  backgroundOpacoAtras,
+  designTexts,
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
 import { designPronto } from './chart.fixtures';
@@ -19,7 +19,7 @@ import {
   chartMultiSerieSource,
   chartSerieUnicaSource,
   chartSource,
-  chartVazioSource,
+  chartEmptySource,
 } from './chart.source';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
@@ -52,7 +52,7 @@ export const Empty: Story = {
     docs: {
       // Série vazia, frase própria e NENHUMA altura: o que segura o bloco aqui
       // é o piso de altura, e um `height` no snippet apagaria a lição.
-      source: { transform: chartVazioSource },
+      source: { transform: chartEmptySource },
       description: {
         story: 'Sem série com dado o container troca o desenho por uma frase que orienta a próxima ação.',
       },
@@ -66,7 +66,7 @@ export const Empty: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('Sem dado não há desenho — há uma frase', async () => {
       await expect(raiz.querySelector('svg')).toBeNull();
@@ -121,7 +121,7 @@ export const SingleSeries: Story = {
     });
 
     await step('Com uma série a legenda some — o nome não é escrito em lugar nenhum', async () => {
-      await expect(textosDoDesenho(raiz)).not.toContain(serieUnica[0].name);
+      await expect(designTexts(raiz)).not.toContain(serieUnica[0].name);
     });
   },
 };
@@ -148,7 +148,7 @@ export const MultiSeries: Story = {
     const raiz = await designPronto(canvasElement);
 
     await step('A legenda escreve o nome de cada série', async () => {
-      for (const serie of seriesMulti) await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+      for (const serie of seriesMulti) await expect(designEscreve(raiz, serie.name)).toBe(true);
     });
 
     await step('E cada série carrega uma trama própria — a cor não é o único sinal', async () => {
@@ -164,7 +164,7 @@ export const MultiSeries: Story = {
     });
 
     await step('E uma cor própria por série, sobre uma forma por categoria', async () => {
-      const formas = formasDeDado(raiz);
+      const formas = datumFormas(raiz);
       await expect(formas.length).toBeGreaterThanOrEqual(meses.length * seriesMulti.length);
       const preenchimentos = new Set(formas.map((f) => getComputedStyle(f).fill));
       await expect(preenchimentos.size).toBeGreaterThanOrEqual(seriesMulti.length);
@@ -223,7 +223,7 @@ export const ThemeTokens: Story = {
       // metade dele sem ninguém fotografando.
       await expect(graficos).toHaveLength(2);
       await waitFor(
-        () => graficos.forEach((g) => expect(desenhoPintado(g)).toBe(true)),
+        () => graficos.forEach((g) => expect(designPintado(g)).toBe(true)),
         { timeout: 3000 },
       );
     });
@@ -277,20 +277,20 @@ export const GraphicContrast: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const raiz = await designPronto(canvasElement);
-    // Precondição da medida: ver o comentário de `assentarTema`.
-    await assentarTema(document);
-    const fundo = fundoOpacoAtras(raiz);
+    // Precondição da medida: ver o comentário de `settleTheme`.
+    await settleTheme(document);
+    const fundo = backgroundOpacoAtras(raiz);
 
     await step('O contorno de toda forma de dado passa de 3:1 contra o fundo', async () => {
-      const formas = formasDeDado(raiz);
+      const formas = datumFormas(raiz);
       // Sem esta linha o laço abaixo seria vácuo: lista vazia passa em tudo.
       await expect(formas.length).toBeGreaterThan(0);
       const fracos = formas
         .map((forma) => {
           const traco = getComputedStyle(forma).stroke;
-          return { traco, razao: contraste(traco, fundo) };
+          return { traco, ratio: contraste(traco, fundo) };
         })
-        .filter((m) => m.razao < 3);
+        .filter((m) => m.ratio < 3);
       await expect(fracos).toEqual([]);
     });
 

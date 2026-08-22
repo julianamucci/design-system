@@ -6,10 +6,10 @@ import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogControlledStory from './AlertDialogControlledStory.svelte';
 import {
-  alertDialogAbertoSource,
+  alertDialogOpenSource,
   alertDialogCanceladoSource,
   alertDialogConfirmadoSource,
-  alertDialogControladoSource,
+  alertDialogControlledSource,
   alertDialogSource,
 } from './alert-dialog.source';
 
@@ -80,7 +80,7 @@ export const Open: Story = {
     // a varredura axe (contraste incluído) do estado aberto.
     covers: ['functional.item6', 'accessibility.item6', 'accessibility.item7'],
     docs: {
-      source: { transform: alertDialogAbertoSource },
+      source: { transform: alertDialogOpenSource },
       description: {
         story: 'Diálogo aberto com `open`. Captura visual no Chromatic.',
       },
@@ -256,7 +256,7 @@ export const Controlled: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
-      source: { transform: alertDialogControladoSource },
+      source: { transform: alertDialogControlledSource },
       description: {
         story: 'Abertura controlada por estado externo via `bind:open`.',
       },

@@ -7,10 +7,10 @@ import { createDialogDocs } from '@/components/docs/DialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
   abrir,
-  botaoFecharDoCanto,
-  conferirFocusTrap,
-  conferirNomeEDescricao,
-  esperarFechado,
+  cantoButtonClose,
+  checkFocusTrap,
+  checkNameEDescricao,
+  waitForClosed,
   fechar,
   gatilho,
   overlay,
@@ -112,7 +112,7 @@ export const Playground: Story = {
   render: (args) => buildPlayground(args),
   play: async ({ canvasElement, step, args }) => {
     const trigger = gatilho(canvasElement)!;
-    const espiao = args.onOpenChange as unknown as ReturnType<typeof fn>;
+    const spy = args.onOpenChange as unknown as ReturnType<typeof fn>;
 
     await step('O markup é o contrato que as outras stacks copiam', async () => {
       const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]')!;
@@ -134,20 +134,20 @@ export const Playground: Story = {
     });
 
     await step('Clicar no gatilho abre o diálogo com overlay', async () => {
-      const chamadasAntes = espiao.mock.calls.length;
+      const callsBefore = spy.mock.calls.length;
       const p = await abrir(canvasElement);
       await expect(p).toBeVisible();
       await expect(overlay()).toBeInTheDocument();
       await expect(p).toHaveAttribute('data-state', 'open');
       await expect(overlay()).toHaveAttribute('data-state', 'open');
-      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 1);
+      await expect(spy.mock.calls.length).toBe(callsBefore + 1);
     });
 
     await step('O painel se anuncia como diálogo modal, com nome e descrição', async () => {
       const p = painel()!;
       await expect(p).toHaveAttribute('role', 'dialog');
       await expect(p).toHaveAttribute('aria-modal', 'true');
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step('O foco entra no painel ao abrir', async () => {
@@ -158,14 +158,14 @@ export const Playground: Story = {
     });
 
     await step('Tab não sai do painel', async () => {
-      await conferirFocusTrap(painel()!);
+      await checkFocusTrap(painel()!);
     });
 
     await step('Escape fecha, avisa o callback e devolve o foco ao gatilho', async () => {
-      const chamadasAntes = espiao.mock.calls.length;
+      const callsBefore = spy.mock.calls.length;
       await userEvent.keyboard('{Escape}');
-      await esperarFechado();
-      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 1);
+      await waitForClosed();
+      await expect(spy.mock.calls.length).toBe(callsBefore + 1);
       // Sem `waitFor`: a factory devolve o foco de forma síncrona, e envolver a
       // asserção mascararia um bug de foco real.
       await expect(document.activeElement).toBe(trigger);
@@ -174,17 +174,17 @@ export const Playground: Story = {
     await step('Clique no overlay fecha e devolve o foco', async () => {
       await abrir(canvasElement);
       overlay()!.click();
-      await esperarFechado();
+      await waitForClosed();
       await expect(document.activeElement).toBe(trigger);
     });
 
     if (args.showCloseButton) {
       await step('O botão X fecha, tem nome acessível e devolve o foco', async () => {
         const p = await abrir(canvasElement);
-        const x = botaoFecharDoCanto(p)!;
+        const x = cantoButtonClose(p)!;
         await expect(x).toHaveAccessibleName();
         await userEvent.click(x);
-        await esperarFechado();
+        await waitForClosed();
         await expect(document.activeElement).toBe(trigger);
       });
     }
@@ -197,7 +197,7 @@ export const Playground: Story = {
       await expect(botoes.length).toBe(2);
       await expect(botoes[0].parentElement).toBe(rodape);
       await userEvent.click(botoes[0]);
-      await esperarFechado();
+      await waitForClosed();
     });
 
     await step('A story termina aberta', async () => {

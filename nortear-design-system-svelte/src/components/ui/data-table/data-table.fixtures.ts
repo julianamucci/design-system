@@ -33,7 +33,7 @@ export const invoices: Invoice[] = [
  * de fora de propósito — é o objeto PARCIAL que prova a mesclagem chave a
  * chave contra o padrão.
  */
-export const rotulosFatura: Partial<DataTableLabels> = {
+export const labelsInvoice: Partial<DataTableLabels> = {
   selectAll: 'Selecionar todas as faturas',
   selectRow: (r) => `Selecionar fatura ${r}`,
   rowsSelected: (s, n) => `${s} de ${n} fatura(s) selecionada(s).`,

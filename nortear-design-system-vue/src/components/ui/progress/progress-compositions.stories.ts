@@ -4,14 +4,14 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import { Progress } from './index';
 import {
   barrasDeProgresso,
-  contrasteBarraTrilha,
+  contrastBarTrack,
   indicadorDoProgresso,
   nomeAcessivel,
   percentualDesenhado,
-  trilhaDoProgresso,
+  progressoTrack,
 } from '@shared/testing/progress-probe';
 import {
-  listSourceProgressColors,
+  listProgressColorsSource,
   progressListSource,
   progressProcessandoServidorSource,
   progressUploadAnimadoSource,
@@ -155,7 +155,7 @@ export const CustomColor: Story = {
     docs: {
       // Três medidas com significados diferentes, e a do meio SEM variante:
       // "em andamento" não é semântico, e é isso que a composição mostra.
-      source: { transform: listSourceProgressColors },
+      source: { transform: listProgressColorsSource },
     },
   },
   render: () => ({
@@ -202,7 +202,7 @@ export const CustomColor: Story = {
 
     await step('Nenhuma variante abre mão dos 3:1 contra a trilha', async () => {
       for (const raiz of canvas.getAllByRole('progressbar')) {
-        await expect(contrasteBarraTrilha(raiz)).toBeGreaterThanOrEqual(3);
+        await expect(contrastBarTrack(raiz)).toBeGreaterThanOrEqual(3);
       }
     });
 
@@ -250,7 +250,7 @@ export const IndeterminateProcessing: Story = {
       // dizer. A largura de 40% vem do CSS compartilhado. Mede-se a LARGURA, e
       // não a posição: com a animação em curso o traço está sempre em outro
       // lugar, e uma asserção de posição seria racy por construção.
-      const trilha = trilhaDoProgresso(canvasElement);
+      const trilha = progressoTrack(canvasElement);
       const indicador = indicadorDoProgresso(canvasElement);
       const proporcao =
         indicador.getBoundingClientRect().width / trilha.getBoundingClientRect().width;

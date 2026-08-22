@@ -12,7 +12,7 @@ import {
 } from './table';
 import { createButton } from '@/components/ui/button';
 import { tableSource, tableSourceWith } from './table.source';
-import { COLUNAS, INVOICES, MESES, totalDe, type Invoice } from './table.fixtures';
+import { COLUMNS, INVOICES, MONTHS, totalOf, type Invoice } from './table.fixtures';
 
 const meta: Meta = {
   tags: ['tables'],
@@ -31,7 +31,7 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const LINHAS = INVOICES.slice(0, 3);
+const LINES = INVOICES.slice(0, 3);
 
 /**
  * Cabeçalho padrão. A última coluna é numérica e recebe `nds-text-right`: o
@@ -74,7 +74,7 @@ export const Basic: Story = {
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Lista de faturas recentes'));
-    buildHeader(table, COLUNAS);
+    buildHeader(table, COLUMNS);
     buildBodyRows(table, INVOICES);
     return wrapper;
   },
@@ -99,8 +99,8 @@ export const Basic: Story = {
       const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
       await expect(ths[3]).toHaveTextContent('Valor');
       await expect(getComputedStyle(ths[3]).textAlign).toBe('right');
-      const valorTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
-      await expect(getComputedStyle(valorTd).textAlign).toBe('right');
+      const valueTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
+      await expect(getComputedStyle(valueTd).textAlign).toBe('right');
       // A coluna descritiva continua à esquerda: o alinhamento é escolha por
       // coluna, não estilo da tabela.
       await expect(getComputedStyle(ths[0]).textAlign).toBe('left');
@@ -128,15 +128,15 @@ export const WithFooter: Story = {
   render: () => {
     const { wrapper, table } = createTable();
     table.appendChild(createTableCaption('Faturas recentes com total', 'nds-sr-only'));
-    buildHeader(table, COLUNAS);
-    buildBodyRows(table, LINHAS);
+    buildHeader(table, COLUMNS);
+    buildBodyRows(table, LINES);
 
     const tfoot = createTableFooter();
     const footerRow = createTableRow();
     const totalLabel = createTableCell('Total');
     totalLabel.setAttribute('colspan', '3');
     footerRow.appendChild(totalLabel);
-    footerRow.appendChild(createTableCell(totalDe(LINHAS), 'nds-text-right'));
+    footerRow.appendChild(createTableCell(totalOf(LINES), 'nds-text-right'));
     tfoot.appendChild(footerRow);
     table.appendChild(tfoot);
 
@@ -148,22 +148,22 @@ export const WithFooter: Story = {
       // largura das colunas descritivas e o valor cair sob a coluna certa.
       const tabela = canvasElement.querySelector<HTMLElement>('table')!;
       const tfoot = tabela.querySelector<HTMLElement>('tfoot')!;
-      const posicao = tabela.querySelector('tbody')!.compareDocumentPosition(tfoot);
-      await expect(posicao & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      const position = tabela.querySelector('tbody')!.compareDocumentPosition(tfoot);
+      await expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
       await expect(tfoot.querySelector('td')).toHaveAttribute('colspan', '3');
       // O total é derivado das linhas exibidas — número fixo continuaria verde
       // depois de alguém acrescentar uma linha.
-      await expect(tfoot).toHaveTextContent(totalDe(LINHAS));
-      await expect(tabela.querySelectorAll('tbody tr').length).toBe(LINHAS.length);
+      await expect(tfoot).toHaveTextContent(totalOf(LINES));
+      await expect(tabela.querySelectorAll('tbody tr').length).toBe(LINES.length);
     });
 
     await step('O rodapé se distingue do corpo por fundo próprio', async () => {
       // visual.item3 — `.nds-table tfoot tr` pinta hsl(var(--muted) / 0.5). Sem
       // a distinção o sumário some no meio dos registros.
-      const linhaRodape = canvasElement.querySelector<HTMLElement>('tfoot tr')!;
-      const linhaCorpo = canvasElement.querySelector<HTMLElement>('tbody tr')!;
-      await expect(getComputedStyle(linhaRodape).backgroundColor).not.toBe(
-        getComputedStyle(linhaCorpo).backgroundColor,
+      const lineFooter = canvasElement.querySelector<HTMLElement>('tfoot tr')!;
+      const lineBody = canvasElement.querySelector<HTMLElement>('tbody tr')!;
+      await expect(getComputedStyle(lineFooter).backgroundColor).not.toBe(
+        getComputedStyle(lineBody).backgroundColor,
       );
     });
   },
@@ -188,8 +188,8 @@ export const CaptionSrOnly: Story = {
     // `nds-sr-only`, com prefixo: `sr-only` não existe no CSS deste projeto, e
     // a legenda ficava VISÍVEL, duplicando o título logo acima.
     table.appendChild(createTableCaption('Lista de faturas recentes', 'nds-sr-only'));
-    buildHeader(table, COLUNAS);
-    buildBodyRows(table, LINHAS);
+    buildHeader(table, COLUMNS);
+    buildBodyRows(table, LINES);
     bloco.appendChild(wrapper);
 
     return bloco;
@@ -236,7 +236,7 @@ export const WithRowActions: Story = {
 
     const thead = createTableHeader();
     const headerRow = createTableRow();
-    for (const col of COLUNAS) {
+    for (const col of COLUMNS) {
       headerRow.appendChild(createTableHead(col, col === 'Valor' ? 'nds-text-right' : undefined));
     }
     // O cabeçalho da coluna de ações não é decorativo: sem ele a coluna existe
@@ -252,7 +252,7 @@ export const WithRowActions: Story = {
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
-    const tbody = buildBodyRows(table, LINHAS);
+    const tbody = buildBodyRows(table, LINES);
     for (const [i, tr] of [...tbody.rows].entries()) {
       const actionCell = createTableCell('', 'nds-text-right');
       actionCell.appendChild(
@@ -260,7 +260,7 @@ export const WithRowActions: Story = {
           variant: 'ghost',
           size: 'sm',
           label: 'Ações',
-          'aria-label': `Ações para fatura ${LINHAS[i].id}`,
+          'aria-label': `Ações para fatura ${LINES[i].id}`,
         }),
       );
       tr.appendChild(actionCell);
@@ -275,11 +275,11 @@ export const WithRowActions: Story = {
       // accessibility.item3 — três botões chamados "Ações" seriam três
       // controles indistinguíveis na lista de elementos do leitor de tela.
       const botoes = canvas.getAllByRole('button');
-      await expect(botoes.length).toBe(LINHAS.length);
+      await expect(botoes.length).toBe(LINES.length);
       for (const [i, botao] of botoes.entries()) {
-        await expect(botao).toHaveAccessibleName(`Ações para fatura ${LINHAS[i].id}`);
+        await expect(botao).toHaveAccessibleName(`Ações para fatura ${LINES[i].id}`);
         // O botão mora dentro da própria linha do registro que ele opera.
-        await expect(botao.closest('tr')).toHaveTextContent(LINHAS[i].id);
+        await expect(botao.closest('tr')).toHaveTextContent(LINES[i].id);
       }
     });
 
@@ -305,15 +305,15 @@ export const HorizontalScroll: Story = {
     const thead = createTableHeader();
     const headerRow = createTableRow();
     headerRow.appendChild(createTableHead('Fatura'));
-    for (const mes of MESES) headerRow.appendChild(createTableHead(mes));
+    for (const mes of MONTHS) headerRow.appendChild(createTableHead(mes));
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
     const tbody = createTableBody();
-    for (const inv of LINHAS) {
+    for (const inv of LINES) {
       const tr = createTableRow();
       tr.appendChild(createTableCell(inv.id, 'nds-font-medium'));
-      for (const _mes of MESES) tr.appendChild(createTableCell(inv.amount, 'nds-text-right'));
+      for (const _month of MONTHS) tr.appendChild(createTableCell(inv.amount, 'nds-text-right'));
       tbody.appendChild(tr);
     }
     table.appendChild(tbody);

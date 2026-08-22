@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, fireEvent, fn, userEvent } from "storybook/test";
-import { alvosAbaixoDoMinimo, contrastesDaFaixa } from "@shared/testing/pagination-probe";
+import { minimumTargetsBelow, rangeContrastes } from "@shared/testing/pagination-probe";
 import {
   Pagination,
   PaginationContent,
@@ -200,10 +200,10 @@ export const Disabled: Story = {
     });
 
     await step("Próxima continua ativo", async () => {
-      const proxima = canvas.getByRole("link", { name: "Ir para a próxima página" });
-      await expect(proxima.hasAttribute("aria-disabled")).toBe(false);
+      const next = canvas.getByRole("link", { name: "Ir para a próxima página" });
+      await expect(next.hasAttribute("aria-disabled")).toBe(false);
       onPageChange.mockClear();
-      await userEvent.click(proxima);
+      await userEvent.click(next);
       await expect(onPageChange).toHaveBeenLastCalledWith(2);
     });
   },
@@ -259,15 +259,15 @@ export const Contrast: Story = {
     await step("Todo link passa dos 4.5:1 exigidos para texto", async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela
       // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
-      const medidas = contrastesDaFaixa(canvasElement);
+      const medidas = rangeContrastes(canvasElement);
       await expect(medidas.length).toBe(7);
-      const reprovados = medidas.filter((m) => m.razao < 4.5);
+      const reprovados = medidas.filter((m) => m.ratio < 4.5);
       await expect(JSON.stringify(reprovados)).toBe("[]");
     });
 
     await step("Todo controle alcança o alvo de toque mínimo", async () => {
       // accessibility.item6
-      await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe("[]");
+      await expect(JSON.stringify(minimumTargetsBelow(canvasElement))).toBe("[]");
     });
   },
 };

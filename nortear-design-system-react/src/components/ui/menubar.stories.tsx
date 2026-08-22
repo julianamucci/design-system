@@ -3,7 +3,7 @@ import { userEvent, within, expect, fn, waitFor } from "storybook/test"
 import {
   waitForPortal,
   waitForPortalGone,
-  REGRA_GUARDA_DE_FOCO,
+  FOCUS_RULE_GUARDA,
 } from "@/lib/wait-for-portal"
 import {
   Menubar,
@@ -62,7 +62,7 @@ const meta = {
   tags: ["autodocs", "navigation"],
   parameters: {
     layout: "centered",
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       page: withAutoDocsTab(MenubarDocs),
       // O painel imprimia a árvore do `render`, que monta a barra a partir de

@@ -6,9 +6,9 @@ import { Label } from '@/components/ui/label';
 import SliderDocs from '@/components/docs/SliderDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
-  limitesDaAlca,
-  remendarCapturaDePonteiro,
-  valorDaAlca,
+  handleLimites,
+  pointerRemendarCaptura,
+  handleValue,
 } from '@shared/testing/slider-probe';
 import { sliderPlaygroundSource } from './slider.source';
 
@@ -146,7 +146,7 @@ export const Playground: Story = {
     });
 
     await step('Os limites da faixa chegam à árvore de acessibilidade', async () => {
-      const { min, max } = limitesDaAlca(canvas.getByRole('slider'));
+      const { min, max } = handleLimites(canvas.getByRole('slider'));
       await expect(min).toBe(0);
       await expect(max).toBe(100);
     });
@@ -159,10 +159,10 @@ export const Playground: Story = {
 
       // Limpa antes de medir: no replay o espião chega com as chamadas da
       // rodada anterior e a asserção passaria sem o arrasto ter movido nada.
-      const espiaoMudanca = args['onUpdate:modelValue'] as unknown as ReturnType<typeof fn>;
-      const espiaoCommit = args.onValueCommit as unknown as ReturnType<typeof fn>;
-      espiaoMudanca.mockClear();
-      espiaoCommit.mockClear();
+      const spyChange = args['onUpdate:modelValue'] as unknown as ReturnType<typeof fn>;
+      const spyCommit = args.onValueCommit as unknown as ReturnType<typeof fn>;
+      spyChange.mockClear();
+      spyCommit.mockClear();
 
       // Três coisas que um arrasto sintético não tem de graça, todas medidas:
       //
@@ -177,7 +177,7 @@ export const Playground: Story = {
       //    dentro da alça a pessoa pegou. Com um movimento só, esse era o
       //    único, e a alça ficava exatamente onde o clique a pusera — o que a
       //    suíte lia como geometria errada do componente.
-      const desfazer = remendarCapturaDePonteiro();
+      const desfazer = pointerRemendarCaptura();
       try {
         await userEvent.pointer([
           { keys: '[MouseLeft>]', target: control, coords: { clientX: caixa.left + caixa.width * 0.2, clientY: y } },
@@ -190,7 +190,7 @@ export const Playground: Story = {
         desfazer();
       }
 
-      await expect(espiaoMudanca).toHaveBeenCalled();
+      await expect(spyChange).toHaveBeenCalled();
       // Gateado na geometria da própria alça, não no valor recém-escrito.
       const alca = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
       const centro = alca.getBoundingClientRect().left + alca.getBoundingClientRect().width / 2;
@@ -204,18 +204,18 @@ export const Playground: Story = {
 
     await step('ArrowRight incrementa em step', async () => {
       const alca = canvas.getByRole('slider');
-      const antes = valorDaAlca(alca);
+      const antes = handleValue(alca);
       (alca as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
     });
 
     await step('Home vai para o mínimo e End para o máximo', async () => {
       (canvas.getByRole('slider') as HTMLElement).focus();
       await userEvent.keyboard('{Home}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(0);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(0);
       await userEvent.keyboard('{End}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(100);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(100);
     });
   },
 };

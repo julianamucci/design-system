@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -34,7 +34,7 @@ export function badgeSnippet(o: BadgeSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    importar('badge', 'createBadge'),
+    importing('badge', 'createBadge'),
     o.comIcone
       ? `// \`icone\` é um SVG do seu conjunto, decorativo: aria-hidden="true".
 // O tamanho vem de \`.nds-badge > svg\` e o respiro do gap da etiqueta —
@@ -82,7 +82,7 @@ export function badgeEmGrupoSnippet(o: BadgeGrupoSnippetOptions = {}): string {
     .join('\n');
 
   return snippet(
-    importar('badge', 'createBadge'),
+    importing('badge', 'createBadge'),
     `const grupo = document.createElement('div');
 grupo.className = 'nds-cluster';
 grupo.dataset.spacing = 'sm';
@@ -127,7 +127,7 @@ alvo.type = 'button';`
 alvo.href = ${texto(o.href ?? '#design')};`;
 
   return snippet(
-    importar('badge', 'createBadge'),
+    importing('badge', 'createBadge'),
     `${alvo}
 alvo.className = 'nds-cluster nds-rounded-md nds-focus-ring-inset';
 alvo.setAttribute('aria-label', ${texto(nome)});

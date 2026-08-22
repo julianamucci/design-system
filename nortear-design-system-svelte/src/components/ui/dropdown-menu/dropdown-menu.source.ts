@@ -36,7 +36,7 @@ export type DropdownMenuArgs = {
 };
 
 /** Miolo do `Content` de uma composição, com o que ele exige de import e de estado. */
-type Composicao = {
+type Composition = {
   /** Peças além da tríade raiz + gatilho + conteúdo. */
   nomes: string[];
   /** Linhas de `$state` que a composição precisa no bloco `<script>`. */
@@ -47,7 +47,7 @@ type Composicao = {
 const PACOTE = '@/components/ui/dropdown-menu';
 
 /** Bloco de import com as peças usadas, em ordem alfabética. */
-function importar(nomes: string[]): string {
+function importing(nomes: string[]): string {
   const lista = [
     ...new Set(['DropdownMenu', 'DropdownMenuTrigger', 'DropdownMenuContent', ...nomes]),
   ].sort();
@@ -68,7 +68,7 @@ function indentar(markup: string, nivel: number): string {
     .join('\n');
 }
 
-const COMPOSITIONS: Record<DropdownMenuVariant, Composicao> = {
+const COMPOSITIONS: Record<DropdownMenuVariant, Composition> = {
   default: {
     nomes: ['DropdownMenuGroup', 'DropdownMenuItem'],
     markup: `<DropdownMenuGroup>
@@ -214,7 +214,7 @@ export function dropdownMenuSource(
     variant = 'default',
   } = ctx?.args ?? {};
 
-  const composicao = COMPOSITIONS[variant] ?? COMPOSITIONS.default;
+  const composition = COMPOSITIONS[variant] ?? COMPOSITIONS.default;
   const aberto = open ?? defaultOpen;
 
   const contentProps = attrs(
@@ -225,11 +225,11 @@ export function dropdownMenuSource(
 
   const estado = [
     ...(aberto ? ['let aberto = $state(true);'] : []),
-    ...(composicao.estado ?? []),
+    ...(composition.estado ?? []),
   ];
 
   return svelteSnippet(
-    [importar(composicao.nomes), estado.join('\n')].filter(Boolean).join('\n\n'),
+    [importing(composition.nomes), estado.join('\n')].filter(Boolean).join('\n\n'),
     `<DropdownMenu${aberto ? ' bind:open={aberto}' : ''}>
   <DropdownMenuTrigger>
     {#snippet child({ props })}
@@ -237,7 +237,7 @@ export function dropdownMenuSource(
     {/snippet}
   </DropdownMenuTrigger>
   <DropdownMenuContent${contentProps}>
-${indentar(composicao.markup, 4)}
+${indentar(composition.markup, 4)}
   </DropdownMenuContent>
 </DropdownMenu>`,
   );
@@ -251,19 +251,19 @@ ${indentar(composicao.markup, 4)}
 // reaproveitam a mesma transform sem o estado de abertura.
 
 /** Variants/Default — o item neutro, sem cor semântica. */
-export function dropdownMenuPadraoSource(): string {
+export function dropdownMenuDefaultSource(): string {
   return dropdownMenuSource('', { args: { variant: 'default' } });
 }
 
 /** Variants/Destructive — a ação irreversível marcada pela cor de perigo. */
-export function dropdownMenuDestrutivoSource(): string {
+export function dropdownMenuDestructiveSource(): string {
   return dropdownMenuSource('', { args: { variant: 'destructive', triggerLabel: 'Ações da conta' } });
 }
 
 /** States/Controlled — a abertura mandada de fora, por `bind:open`. */
-export function dropdownMenuControladoSource(): string {
+export function dropdownMenuControlledSource(): string {
   return svelteSnippet(
-    `${importar(['DropdownMenuGroup', 'DropdownMenuItem'])}
+    `${importing(['DropdownMenuGroup', 'DropdownMenuItem'])}
 
 let aberto = $state(false);`,
     `<DropdownMenu bind:open={aberto}>
@@ -284,7 +284,7 @@ let aberto = $state(false);`,
 }
 
 /** States/ItemDisabled — o item indisponível continua no menu, e é pulado. */
-export function dropdownMenuItemDesabilitadoSource(): string {
+export function dropdownMenuItemDisabledSource(): string {
   return dropdownMenuSource('', { args: { variant: 'itemDisabled', triggerLabel: 'Ações' } });
 }
 
@@ -294,26 +294,26 @@ export function dropdownMenuIndeterminadoSource(): string {
 }
 
 /** Compositions/WithLabel — grupos nomeados pelo próprio cabeçalho. */
-export function dropdownMenuComRotuloSource(): string {
+export function dropdownMenuWithLabelSource(): string {
   return dropdownMenuSource('', { args: { variant: 'withLabel', triggerLabel: 'Conta' } });
 }
 
 /** Compositions/WithCheckboxItems — alternadores independentes entre si. */
-export function dropdownMenuComCheckboxSource(): string {
+export function dropdownMenuWithCheckboxSource(): string {
   return dropdownMenuSource('', { args: { variant: 'withCheckbox', triggerLabel: 'Visualização' } });
 }
 
 /** Compositions/WithRadioGroup — escolha única dentro do menu. */
-export function dropdownMenuComRadioSource(): string {
+export function dropdownMenuWithRadioSource(): string {
   return dropdownMenuSource('', { args: { variant: 'withRadio', triggerLabel: 'Posição' } });
 }
 
 /** Compositions/WithSubmenu — um segundo nível que abre ao lado. */
-export function dropdownMenuComSubmenuSource(): string {
+export function dropdownMenuWithSubmenuSource(): string {
   return dropdownMenuSource('', { args: { variant: 'withSubmenu', triggerLabel: 'Arquivo' } });
 }
 
 /** Compositions/WithShortcuts — o atalho encostado na borda direita do item. */
-export function dropdownMenuComAtalhosSource(): string {
+export function dropdownMenuWithShortcutsSource(): string {
   return dropdownMenuSource('', { args: { variant: 'withShortcuts', triggerLabel: 'Editar' } });
 }

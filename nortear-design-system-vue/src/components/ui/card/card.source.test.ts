@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
-  cardClicavelSource,
-  headerSourceCardWithAction,
-  cardComImagemSource,
-  cardComRodapeSource,
+  cardClickableSource,
+  headerCardWithActionSource,
+  cardWithImageSource,
+  cardWithFooterSource,
   cardCompactoSource,
   cardDeMetricaSource,
   cardDePerfilSource,
-  cardDeProdutoSource,
+  productCardSource,
   cardSimpleSource,
   cardSource,
 } from './card.source';
@@ -91,7 +91,7 @@ describe('transforms das stories de tamanho e de estado', () => {
   });
 
   it('o card clicável põe o destino no elemento de fora, não no card', () => {
-    const saida = cardClicavelSource();
+    const saida = cardClickableSource();
     expect(saida).toContain('href="/produtos/cadeira-gamer-pro"');
     expect(saida).toContain('aria-label="Abrir detalhes do produto Cadeira Gamer Pro"');
     expect(saida).toContain('nds-focus-ring');
@@ -101,7 +101,7 @@ describe('transforms das stories de tamanho e de estado', () => {
   });
 
   it('o rodapé é filho direto do card, e vem depois do corpo', () => {
-    const saida = cardComRodapeSource();
+    const saida = cardWithFooterSource();
     const raiz = saida.slice(saida.indexOf('<Card '));
     expect(raiz.indexOf('</CardContent>')).toBeLessThan(raiz.indexOf('<CardFooter'));
     // Um invólucro entre os dois mataria a regra que zera o respiro de baixo.
@@ -111,7 +111,7 @@ describe('transforms das stories de tamanho e de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('a ação vive dentro do cabeçalho, depois do título e da descrição', () => {
-    const saida = headerSourceCardWithAction();
+    const saida = headerCardWithActionSource();
     expect(saida).toContain('  CardAction,');
     const cabecalho = saida.slice(saida.indexOf('<CardHeader>'), saida.indexOf('</CardHeader>'));
     expect(cabecalho.indexOf('<CardTitle')).toBeLessThan(cabecalho.indexOf('<CardDescription'));
@@ -119,7 +119,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a imagem é o primeiro filho, e o canto vem do card, não de classe nela', () => {
-    const saida = cardComImagemSource();
+    const saida = cardWithImageSource();
     const raiz = saida.slice(saida.indexOf('<Card '));
     expect(raiz.indexOf('<img')).toBeLessThan(raiz.indexOf('<CardHeader>'));
     expect(saida).not.toContain('nds-rounded-t');
@@ -128,9 +128,9 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o card de produto monta as sete peças, com o status na ação do cabeçalho', () => {
-    const saida = cardDeProdutoSource();
-    for (const peca of ['CardAction', 'CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle']) {
-      expect(saida).toContain(`  ${peca},`);
+    const saida = productCardSource();
+    for (const part of ['CardAction', 'CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle']) {
+      expect(saida).toContain(`  ${part},`);
     }
     const cabecalho = saida.slice(saida.indexOf('<CardHeader>'), saida.indexOf('</CardHeader>'));
     expect(cabecalho).toContain('<Badge variant="secondary">Em estoque</Badge>');

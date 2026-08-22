@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  aspectRatioComIframeSource,
+  aspectRatioWithIframeSource,
   aspectRatioWithImageSource,
-  aspectRatioComVideoSource,
+  aspectRatioWithVideoSource,
   aspectRatioDecorativaSource,
   aspectRatioDezesseisNoveSource,
-  aspectRatioEmGradeSource,
+  gridAspectRatioSource,
   aspectRatioPlaceholderSource,
   aspectRatioQuadradoSource,
   aspectRatioQuatroTresSource,
@@ -13,7 +13,7 @@ import {
   aspectRatioTresQuatroSource,
   aspectRatioUltraWideSource,
   attrRatio,
-  expressaoDeProporcao,
+  ratioExpression,
 } from './aspect-ratio.source';
 
 describe('aspectRatioSource', () => {
@@ -41,12 +41,12 @@ import { AspectRatio } from '@/components/ui/aspect-ratio'
   });
 
   it('a proporção vira fração, não decimal infinito', () => {
-    expect(expressaoDeProporcao(16 / 9)).toBe('16 / 9');
-    expect(expressaoDeProporcao(21 / 9)).toBe('21 / 9');
+    expect(ratioExpression(16 / 9)).toBe('16 / 9');
+    expect(ratioExpression(21 / 9)).toBe('21 / 9');
     expect(aspectRatioSource('', { args: { ratio: 4 / 3 } })).toContain(':ratio="4 / 3"');
     // Fora das proporções conhecidas o número é arredondado: `1.7777777777777777`
     // no painel ensina a copiar um decimal infinito.
-    expect(expressaoDeProporcao(1.234567)).toBe('1.23');
+    expect(ratioExpression(1.234567)).toBe('1.23');
   });
 
   it('o quadrado é o padrão do componente e não é escrito', () => {
@@ -106,13 +106,13 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o quadro embutido é nomeado por title', () => {
-    const saida = aspectRatioComIframeSource();
+    const saida = aspectRatioWithIframeSource();
     expect(saida).toContain('title="Mapa do escritório em São Paulo"');
     expect(saida).not.toContain('alt=');
   });
 
   it('o vídeo traz controle de teclado e faixa de legendas', () => {
-    const saida = aspectRatioComVideoSource();
+    const saida = aspectRatioWithVideoSource();
     expect(saida).toContain('  controls\n');
     expect(saida).toContain('<track kind="captions"');
     expect(saida).toContain('label="Português" default');
@@ -123,7 +123,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a grade dá a largura, e cada caixa deriva a própria altura', () => {
-    const saida = aspectRatioEmGradeSource();
+    const saida = gridAspectRatioSource();
     expect(saida).toContain('<div class="nds-grid nds-max-w-prose" data-spacing="md">');
     expect(saida.match(/<AspectRatio>/g)).toHaveLength(6);
     // Nenhuma altura cravada: é o recálculo a partir da largura que a story ensina.

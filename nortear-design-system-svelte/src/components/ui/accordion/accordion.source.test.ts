@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
-  accordionAbertoSource,
-  accordionComBadgeSource,
-  accordionComIconeSource,
-  accordionConteudoRicoSource,
-  accordionControladoSource,
+  accordionOpenSource,
+  accordionWithBadgeSource,
+  accordionWithIconSource,
+  accordionContentRichSource,
+  accordionControlledSource,
   accordionFaqSource,
-  segundoClickSourceAccordionFecha,
-  accordionFechadoSource,
-  accordionItemDesabilitadoSource,
+  segundoClickAccordionFechaSource,
+  accordionClosedSource,
+  accordionItemDisabledSource,
   accordionMultiploSource,
   accordionSource,
 } from './accordion.source';
@@ -66,7 +66,7 @@ describe('accordionSource', () => {
 
 describe('transforms das stories de modo', () => {
   it('o fechar-no-segundo-clique nasce sem valor inicial e sem chave extra', () => {
-    const saida = segundoClickSourceAccordionFecha();
+    const saida = segundoClickAccordionFechaSource();
     expect(saida).toContain('<Accordion type="single" class="nds-max-w-lg">');
     expect(saida).not.toContain('bind:value');
     expect(saida).not.toContain('$state');
@@ -79,7 +79,7 @@ describe('transforms das stories de modo', () => {
   });
 
   it('o modo controlado passa value e o callback de mudança', () => {
-    const saida = accordionControladoSource();
+    const saida = accordionControlledSource();
     expect(saida).toContain('value={itemAtivo}');
     expect(saida).toContain('onValueChange=');
     expect(saida).not.toContain('bind:value');
@@ -88,19 +88,19 @@ describe('transforms das stories de modo', () => {
 
 describe('transforms das stories de estado', () => {
   it('o estado fechado não traz valor inicial nenhum', () => {
-    const saida = accordionFechadoSource();
+    const saida = accordionClosedSource();
     expect(saida).not.toContain('bind:value');
     expect(saida).toContain('Item fechado (estado padrão)');
   });
 
   it('o estado aberto expande pelo valor inicial', () => {
-    const saida = accordionAbertoSource();
+    const saida = accordionOpenSource();
     expect(saida).toContain('let value = $state("item-1");');
     expect(saida).toContain('bind:value');
   });
 
   it('a prop disabled vai no item, e só ele para de responder', () => {
-    const saida = accordionItemDesabilitadoSource();
+    const saida = accordionItemDisabledSource();
     expect(saida).toContain('<AccordionItem value="item-2" disabled>');
     expect(saida).toContain('<AccordionItem value="item-1">');
   });
@@ -108,20 +108,20 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o ícone do gatilho vai com aria-hidden — o texto é o nome acessível', () => {
-    const saida = accordionComIconeSource();
+    const saida = accordionWithIconSource();
     expect(saida).toContain('aria-hidden="true"');
     expect(saida).toContain('@lucide/svelte/icons/info');
   });
 
   it('o badge do gatilho vem do próprio design system', () => {
-    const saida = accordionComBadgeSource();
+    const saida = accordionWithBadgeSource();
     expect(saida).toContain('from "@/components/ui/badge"');
     expect(saida).toContain('<Badge>Novo</Badge>');
     expect(saida).toContain('<Badge variant="secondary">Beta</Badge>');
   });
 
   it('o conteúdo rico mostra que o painel aceita qualquer marcação', () => {
-    const saida = accordionConteudoRicoSource();
+    const saida = accordionContentRichSource();
     expect(saida).toContain('type="multiple"');
     expect(saida).toContain('<table');
     expect(saida).toContain('<ul');

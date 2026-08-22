@@ -9,14 +9,14 @@ import {
 } from "./progress";
 import {
   barrasDeProgresso,
-  contrasteBarraTrilha,
+  contrastBarTrack,
   indicadorDoProgresso,
   nomeAcessivel,
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
 import {
-  progressComRotuloSource,
-  progressCorSemanticaSource,
+  progressWithLabelSource,
+  progressColorSemanticaSource,
   progressIndeterminadoSource,
   progressSource,
 } from "./progress.source";
@@ -66,7 +66,7 @@ export const Determinate: Story = {
 
     await step("Indicador e trilha se distinguem com pelo menos 3:1", async () => {
       // WCAG 1.4.11: a barra só informa se for possível ver onde ela termina.
-      await expect(contrasteBarraTrilha(canvasElement)).toBeGreaterThanOrEqual(3);
+      await expect(contrastBarTrack(canvasElement)).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -107,7 +107,7 @@ export const WithLabel: Story = {
     docs: {
       // Composição de quatro peças: quem declara a própria trilha declara o
       // indicador junto, e o meta imprime só a barra sozinha.
-      source: { transform: progressComRotuloSource },
+      source: { transform: progressWithLabelSource },
     },
   },
   render: () => (
@@ -154,7 +154,7 @@ export const SemanticColor: Story = {
   parameters: {
     docs: {
       // Duas barras com `data-variant` — a cor só se lê em comparação.
-      source: { transform: progressCorSemanticaSource },
+      source: { transform: progressColorSemanticaSource },
     },
   },
   render: () => (
@@ -176,16 +176,16 @@ export const SemanticColor: Story = {
 
     await step("Cada variante pinta a barra de uma cor diferente", async () => {
       const [ok, critico] = canvas.getAllByRole("progressbar");
-      const corDe = (raiz: HTMLElement) =>
+      const colorOf = (raiz: HTMLElement) =>
         getComputedStyle(indicadorDoProgresso(raiz)).backgroundColor;
-      await expect(corDe(ok)).not.toBe(corDe(critico));
+      await expect(colorOf(ok)).not.toBe(colorOf(critico));
     });
 
     await step("As duas variantes mantêm 3:1 contra a trilha", async () => {
       // O contraste não pode depender de qual variante alguém escolheu — é o
       // motivo de a trilha continuar neutra em vez de acompanhar a cor.
       for (const raiz of canvas.getAllByRole("progressbar")) {
-        await expect(contrasteBarraTrilha(raiz)).toBeGreaterThanOrEqual(3);
+        await expect(contrastBarTrack(raiz)).toBeGreaterThanOrEqual(3);
       }
     });
 

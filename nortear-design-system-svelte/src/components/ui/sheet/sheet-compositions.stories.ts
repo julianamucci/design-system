@@ -4,8 +4,8 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { expect, within } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
 import {
-  perfilSourceSheetEdit,
-  sheetFiltrosAvancadosSource,
+  perfilSheetEditSource,
+  sheetFiltersAvancadosSource,
   sheetSource,
   sheetTermosWithScrollSource,
 } from './sheet.source';
@@ -48,7 +48,7 @@ export const AdvancedFilters: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: sheetFiltrosAvancadosSource },
+      source: { transform: sheetFiltersAvancadosSource },
       description: {
         story:
           'Painel lateral direito com formulário de filtros. O rodapé mantém a saída e a ' +
@@ -78,7 +78,7 @@ export const ProfileEdit: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: perfilSourceSheetEdit },
+      source: { transform: perfilSheetEditSource },
       description: {
         story:
           'Edição de perfil em painel lateral. Os campos participam do foco preso; Escape ' +
@@ -135,10 +135,10 @@ export const TermsWithScroll: Story = {
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
-      const caixaRodape = rodape.getBoundingClientRect();
-      const caixaPainel = painel.getBoundingClientRect();
-      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
-      await expect(caixaRodape.height).toBeGreaterThan(0);
+      const boxFooter = rodape.getBoundingClientRect();
+      const boxPanel = painel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

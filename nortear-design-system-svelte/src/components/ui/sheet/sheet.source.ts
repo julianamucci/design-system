@@ -22,7 +22,7 @@ export type SheetArgs = {
 /** Corpo entre cabeçalho e rodapé. `nenhum` é o painel só de decisão. */
 type Corpo = 'nenhum' | 'formulario' | 'rolagem';
 
-type Opcoes = Partial<SheetArgs> & { corpo?: Corpo };
+type Options = Partial<SheetArgs> & { corpo?: Corpo };
 
 const PADRAO: SheetArgs & { corpo: Corpo } = {
   side: 'right',
@@ -37,7 +37,7 @@ const PADRAO: SheetArgs & { corpo: Corpo } = {
 
 /** Peças do design system que a composição usa, na ordem em que se lê o painel. */
 function imports(corpo: Corpo): string {
-  const pecas = [
+  const parts = [
     'Sheet',
     corpo !== 'nenhum' ? 'SheetBody' : '',
     'SheetClose',
@@ -56,7 +56,7 @@ function imports(corpo: Corpo): string {
   }
 
   return `import {
-${pecas.map((p) => `  ${p},`).join('\n')}
+${parts.map((p) => `  ${p},`).join('\n')}
 } from "@/components/ui/sheet";
 ${extras.join('\n')}`;
 }
@@ -94,7 +94,7 @@ function panelBody(corpo: Corpo): string {
 }
 
 /** Composição completa do painel. */
-function painel(o: Opcoes): string {
+function painel(o: Options): string {
   const {
     open,
     side,
@@ -156,7 +156,7 @@ export function sheetSource(_gerado?: string, ctx?: { args?: Partial<SheetArgs> 
 }
 
 /** Composição: filtros avançados, com formulário no corpo do painel. */
-export function sheetFiltrosAvancadosSource(): string {
+export function sheetFiltersAvancadosSource(): string {
   return painel({
     open: true,
     corpo: 'formulario',
@@ -167,7 +167,7 @@ export function sheetFiltrosAvancadosSource(): string {
 }
 
 /** Composição: edição de perfil — mesmo formulário, outra decisão no rodapé. */
-export function perfilSourceSheetEdit(): string {
+export function perfilSheetEditSource(): string {
   return painel({
     open: true,
     corpo: 'formulario',

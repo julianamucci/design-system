@@ -60,7 +60,7 @@ function script(opcoes: { kbd?: boolean; icones?: string[]; estado?: string } = 
  * toque não há hover que o abra. O ícone entra `aria-hidden` para não competir
  * com esse nome.
  */
-function gatilhoIcone(opcoes: { rotulo: string; icone: string; variante?: string }): string {
+function triggerIcon(opcoes: { rotulo: string; icone: string; variante?: string }): string {
   const variante = opcoes.variante ?? 'outline';
   return `<TooltipTrigger as-child>
   <Button variant="${variante}" size="icon" aria-label="${opcoes.rotulo}">
@@ -106,7 +106,7 @@ ${indentar(conteudo)}
  * Sem atributo ele já entrega a espera padrão do design system — declarar o
  * valor padrão aqui ensinaria que a prop é obrigatória.
  */
-function comProvider(miolo: string, ...atributos: Array<string | false>): string {
+function withProvider(miolo: string, ...atributos: Array<string | false>): string {
   return `<TooltipProvider${attrs(...atributos)}>\n${indentar(miolo)}\n</TooltipProvider>`;
 }
 
@@ -127,10 +127,10 @@ export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return vueSnippet(
     script({ icones: ['Save'] }),
-    comProvider(
+    withProvider(
       balao({
         raiz: [attrBool('default-open', args.defaultOpen, false)],
-        gatilho: gatilhoIcone({ rotulo: 'Salvar', icone: 'Save' }),
+        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
         content: [attr('side', args.side, 'top'), attr('align', args.align, 'center')],
         conteudo: 'Salvar (Ctrl+S)',
       }),
@@ -142,10 +142,10 @@ export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
 export function tooltipTextCurtoSource(): string {
   return vueSnippet(
     script({ icones: ['Save'] }),
-    comProvider(
+    withProvider(
       balao({
         raiz: ['default-open'],
-        gatilho: gatilhoIcone({ rotulo: 'Salvar', icone: 'Save' }),
+        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
         content: ['side="bottom"'],
         conteudo: 'Salvar',
       }),
@@ -157,13 +157,13 @@ export function tooltipTextCurtoSource(): string {
  * Atalho de teclado: a tecla vai em `Kbd`, e não solta no texto — a folha
  * compartilhada reconhece a tecla pelo componente e ajusta o respiro do balão.
  */
-export function tooltipComAtalhoSource(): string {
+export function tooltipWithShortcutSource(): string {
   return vueSnippet(
     script({ kbd: true, icones: ['Save'] }),
-    comProvider(
+    withProvider(
       balao({
         raiz: ['default-open'],
-        gatilho: gatilhoIcone({ rotulo: 'Salvar', icone: 'Save' }),
+        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
         content: ['side="bottom"'],
         conteudo: `<span>Salvar</span>
 <Kbd>Ctrl</Kbd>
@@ -177,10 +177,10 @@ export function tooltipComAtalhoSource(): string {
  * Texto longo: quebra dentro do limite de largura do balão. Passou de uma
  * definição curta, o caso deixa de ser de Tooltip.
  */
-export function tooltipTextoLongoSource(): string {
+export function tooltipTextLongSource(): string {
   return vueSnippet(
     script(),
-    comProvider(
+    withProvider(
       balao({
         raiz: ['default-open'],
         gatilho: triggerText('Compartilhar'),
@@ -195,9 +195,9 @@ export function tooltipTextoLongoSource(): string {
 export function tooltipClosedSource(): string {
   return vueSnippet(
     script({ icones: ['Save'] }),
-    comProvider(
+    withProvider(
       balao({
-        gatilho: gatilhoIcone({ rotulo: 'Salvar', icone: 'Save' }),
+        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
         conteudo: 'Salvar',
       }),
     ),
@@ -205,13 +205,13 @@ export function tooltipClosedSource(): string {
 }
 
 /** Aberto de saída: o estado inicial vem da raiz, sem interação nenhuma. */
-export function tooltipAbertoSource(): string {
+export function tooltipOpenSource(): string {
   return vueSnippet(
     script({ icones: ['Save'] }),
-    comProvider(
+    withProvider(
       balao({
         raiz: ['default-open'],
-        gatilho: gatilhoIcone({ rotulo: 'Salvar', icone: 'Save' }),
+        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
         content: ['side="bottom"'],
         conteudo: 'Salvar (Ctrl+S)',
       }),
@@ -229,9 +229,9 @@ export function tooltipAbertoSource(): string {
 export function tooltipWithWaitSource(): string {
   return vueSnippet(
     script({ icones: ['Save'] }),
-    comProvider(
+    withProvider(
       balao({
-        gatilho: gatilhoIcone({ rotulo: 'Salvar', icone: 'Save' }),
+        gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
         content: ['side="bottom"'],
         conteudo: 'Salvar (Ctrl+S)',
       }),
@@ -247,7 +247,7 @@ export function tooltipWithWaitSource(): string {
 export function tooltipPersistenteSource(): string {
   return vueSnippet(
     script(),
-    comProvider(
+    withProvider(
       balao({
         gatilho: triggerText('Compartilhar'),
         content: ['side="bottom"'],
@@ -264,10 +264,10 @@ export function tooltipPersistenteSource(): string {
  * balão ANTES do `click`, então um alternador leria o estado já invertido e
  * reabriria o que acabou de fechar.
  */
-export function tooltipControladoSource(): string {
+export function tooltipControlledSource(): string {
   return vueSnippet(
     script({ icones: ['Save'], estado: 'const aberto = ref(false)' }),
-    comProvider(
+    withProvider(
       blockWith(
         'div',
         ['class="nds-stack"', 'data-align="center"', 'data-spacing="sm"'],
@@ -278,7 +278,7 @@ export function tooltipControladoSource(): string {
 
 ${balao({
   raiz: [':open="aberto"', '@update:open="(valor) => (aberto = valor)"'],
-  gatilho: gatilhoIcone({ rotulo: 'Salvar', icone: 'Save' }),
+  gatilho: triggerIcon({ rotulo: 'Salvar', icone: 'Save' }),
   content: ['side="bottom"'],
   conteudo: 'Salvar (Ctrl+S)',
 })}`,
@@ -300,7 +300,7 @@ export function tooltipButtonIconSource(): string {
  * Barra de ações: vários botões icon-only, cada um com nome próprio e balão de
  * reforço. Um Provider só serve a todos — a espera é compartilhada.
  */
-export function actionsSourceTooltipBar(): string {
+export function actionsTooltipBarSource(): string {
   const acoes: Array<{ rotulo: string; icone: string }> = [
     { rotulo: 'Salvar', icone: 'Save' },
     { rotulo: 'Copiar', icone: 'Copy' },
@@ -310,7 +310,7 @@ export function actionsSourceTooltipBar(): string {
   ];
   return vueSnippet(
     script({ icones: acoes.map((acao) => acao.icone) }),
-    comProvider(
+    withProvider(
       blockWith(
         'div',
         [
@@ -323,7 +323,7 @@ export function actionsSourceTooltipBar(): string {
         acoes
           .map((acao) =>
             balao({
-              gatilho: gatilhoIcone({ ...acao, variante: 'ghost' }),
+              gatilho: triggerIcon({ ...acao, variante: 'ghost' }),
               content: ['side="bottom"'],
               conteudo: acao.rotulo,
             }),
@@ -345,7 +345,7 @@ export function tooltipQuatroLadosSource(): string {
   const lados = ['top', 'right', 'bottom', 'left'];
   return vueSnippet(
     script(),
-    comProvider(
+    withProvider(
       blockWith(
         'div',
         ['class="nds-grid nds-p-8"', 'data-spacing="xl"', 'data-cols="2"'],

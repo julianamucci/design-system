@@ -8,8 +8,8 @@ import {
   buildPieOption,
 } from './chart';
 import {
-  desenhoEscreve,
-  formasDeDado,
+  designEscreve,
+  datumFormas,
 } from '@shared/testing/chart-probe';
 import { designPronto } from './chart.fixtures';
 import {
@@ -86,11 +86,11 @@ export const Bar: Story = {
     const raiz = await designPronto(canvasElement);
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
-      for (const mes of meses) await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      for (const mes of meses) await expect(designEscreve(raiz, mes)).toBe(true);
     });
 
     await step('As barras existem e têm área — o desenho não é casca vazia', async () => {
-      const formas = formasDeDado(raiz);
+      const formas = datumFormas(raiz);
       await expect(formas.length).toBeGreaterThan(0);
       for (const forma of formas) {
         await expect(forma.getBoundingClientRect().width).toBeGreaterThan(0);
@@ -131,11 +131,11 @@ export const Line: Story = {
     });
 
     await step('A legenda nomeia cada série por escrito', async () => {
-      for (const serie of seriesMulti) await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+      for (const serie of seriesMulti) await expect(designEscreve(raiz, serie.name)).toBe(true);
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
-      for (const mes of meses) await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      for (const mes of meses) await expect(designEscreve(raiz, mes)).toBe(true);
     });
   },
 };
@@ -175,7 +175,7 @@ export const Area: Story = {
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
-      for (const mes of meses) await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      for (const mes of meses) await expect(designEscreve(raiz, mes)).toBe(true);
     });
   },
 };
@@ -203,12 +203,12 @@ export const Pie: Story = {
 
     await step('A legenda escreve o nome de cada fatia', async () => {
       for (const ponto of dadosDispositivo) {
-        await expect(desenhoEscreve(raiz, ponto.label)).toBe(true);
+        await expect(designEscreve(raiz, ponto.label)).toBe(true);
       }
     });
 
     await step('Cada fatia tem preenchimento próprio — a cor não se repete', async () => {
-      const formas = formasDeDado(raiz);
+      const formas = datumFormas(raiz);
       await expect(formas.length).toBeGreaterThanOrEqual(dadosDispositivo.length);
       const preenchimentos = new Set(formas.map((f) => getComputedStyle(f).fill));
       await expect(preenchimentos.size).toBeGreaterThanOrEqual(dadosDispositivo.length);

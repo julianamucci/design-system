@@ -6,7 +6,7 @@ import LabelWithCheckboxStory from './LabelWithCheckboxStory.svelte';
 import LabelCampoObrigatorioStory from './LabelCampoObrigatorioStory.svelte';
 import {
   labelWithBoxSource,
-  labelComCampoSource,
+  labelWithFieldSource,
   labelObrigatorioSource,
   labelSource,
 } from './label.source';
@@ -43,7 +43,7 @@ type Story = StoryObj;
 export const WithInput: Story = {
   parameters: {
     covers: ['visual.item4'],
-    docs: { source: { transform: labelComCampoSource } },
+    docs: { source: { transform: labelWithFieldSource } },
   },
   render: () => ({ Component: LabelWithInputStory, props: {} }),
   play: async ({ canvasElement, step }) => {

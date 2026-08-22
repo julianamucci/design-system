@@ -4,9 +4,9 @@ import { userEvent, within, expect } from 'storybook/test';
 import TextareaStory from './TextareaStory.svelte';
 import { resizeComputado } from '@shared/testing/textarea-probe';
 import {
-  textareaComApoioSource,
+  textareaWithHelperSource,
   textareaWithErrorSource,
-  textareaContadorAcessivelSource,
+  textareaCounterAccessibleSource,
   textareaEmModalSource,
   textareaSource,
 } from './textarea.source';
@@ -37,7 +37,7 @@ type Story = StoryObj;
 export const WithLabelAndHelp: Story = {
   parameters: {
     covers: ['accessibility.item4'],
-    docs: { source: { transform: textareaComApoioSource } },
+    docs: { source: { transform: textareaWithHelperSource } },
   },
   render: () => ({
     Component: TextareaStory,
@@ -67,7 +67,7 @@ export const WithLabelAndHelp: Story = {
 
 export const WithAccessibleCounter: Story = {
   parameters: {
-    docs: { source: { transform: textareaContadorAcessivelSource } },
+    docs: { source: { transform: textareaCounterAccessibleSource } },
   },
   render: () => ({
     Component: TextareaStory,

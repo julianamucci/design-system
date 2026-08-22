@@ -28,8 +28,8 @@ export default meta;
 type Story = StoryObj;
 
 /** Doze faturas em páginas de cinco: três páginas, a última incompleta. */
-const TAMANHO_DE_PAGINA = 5;
-const TOTAL_DE_PAGINAS = Math.ceil(INVOICES_DT.length / TAMANHO_DE_PAGINA);
+const PAGE_SIZE = 5;
+const TOTAL_PAGES = Math.ceil(INVOICES_DT.length / PAGE_SIZE);
 
 // ─── Paginação ────────────────────────────────────────────────────────────────
 
@@ -48,7 +48,7 @@ export const Paginated: Story = {
       colunas: COLUMNS_INVOICES,
       faturas: INVOICES_DT,
       rotulos: LABELS_DT,
-      tamanho: TAMANHO_DE_PAGINA,
+      tamanho: PAGE_SIZE,
     },
     template: `
       <div
@@ -66,24 +66,24 @@ export const Paginated: Story = {
     const canvas = within(canvasElement);
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
     /** Identificador da primeira linha da página — o que prova qual fatia está na tela. */
-    const primeiraFatura = () => linhas()[0].textContent!.trim();
+    const firstInvoice = () => linhas()[0].textContent!.trim();
 
     const primeira = () => canvas.getByRole('button', { name: 'Primeira página' }) as HTMLButtonElement;
     const anterior = () => canvas.getByRole('button', { name: 'Página anterior' }) as HTMLButtonElement;
-    const proxima = () => canvas.getByRole('button', { name: 'Próxima página' }) as HTMLButtonElement;
+    const next = () => canvas.getByRole('button', { name: 'Próxima página' }) as HTMLButtonElement;
     const ultima = () => canvas.getByRole('button', { name: 'Última página' }) as HTMLButtonElement;
 
     await step('A tabela abre na primeira página, com os dois botões de volta apagados', async () => {
       // Clicar num botão desabilitado é impossível para quem usa — o CSS lhe
       // tira o `pointer-events`. Então o teste AFIRMA a propriedade em vez de
       // tentar o clique: um clique forçado provaria algo que ninguém consegue.
-      await expect(linhas().length).toBe(TAMANHO_DE_PAGINA);
-      await expect(primeiraFatura()).toContain('#INV-001');
-      await expect(canvas.getByText(`Página 1 de ${TOTAL_DE_PAGINAS}`)).toBeInTheDocument();
+      await expect(linhas().length).toBe(PAGE_SIZE);
+      await expect(firstInvoice()).toContain('#INV-001');
+      await expect(canvas.getByText(`Página 1 de ${TOTAL_PAGES}`)).toBeInTheDocument();
 
       await expect(primeira()).toBeDisabled();
       await expect(anterior()).toBeDisabled();
-      await expect(proxima()).toBeEnabled();
+      await expect(next()).toBeEnabled();
       await expect(ultima()).toBeEnabled();
     });
 
@@ -91,13 +91,13 @@ export const Paginated: Story = {
       // functional.item8 — o número da página mudar não bastaria: um rodapé
       // pode contar errado e mostrar sempre as mesmas linhas. A prova é a
       // primeira fatura da página ser outra.
-      const botao = proxima();
+      const botao = next();
       await userEvent.click(botao);
 
       await waitFor(async () => {
-        await expect(primeiraFatura()).toContain('#INV-006');
+        await expect(firstInvoice()).toContain('#INV-006');
       });
-      await expect(canvas.getByText(`Página 2 de ${TOTAL_DE_PAGINAS}`)).toBeInTheDocument();
+      await expect(canvas.getByText(`Página 2 de ${TOTAL_PAGES}`)).toBeInTheDocument();
       // No meio do caminho os quatro estão vivos: há para onde ir dos dois lados.
       await expect(primeira()).toBeEnabled();
       await expect(anterior()).toBeEnabled();
@@ -109,15 +109,15 @@ export const Paginated: Story = {
       await userEvent.click(botao);
 
       await waitFor(async () => {
-        await expect(primeiraFatura()).toContain('#INV-011');
+        await expect(firstInvoice()).toContain('#INV-011');
       });
       // Doze faturas em páginas de cinco deixam duas na última — número
       // derivado da fixture, nunca escrito à mão.
-      await expect(linhas().length).toBe(INVOICES_DT.length % TAMANHO_DE_PAGINA);
-      await expect(canvas.getByText(`Página ${TOTAL_DE_PAGINAS} de ${TOTAL_DE_PAGINAS}`))
+      await expect(linhas().length).toBe(INVOICES_DT.length % PAGE_SIZE);
+      await expect(canvas.getByText(`Página ${TOTAL_PAGES} de ${TOTAL_PAGES}`))
         .toBeInTheDocument();
 
-      await expect(proxima()).toBeDisabled();
+      await expect(next()).toBeDisabled();
       await expect(ultima()).toBeDisabled();
       await expect(anterior()).toBeEnabled();
     });
@@ -127,9 +127,9 @@ export const Paginated: Story = {
       await userEvent.click(botao);
 
       await waitFor(async () => {
-        await expect(primeiraFatura()).toContain('#INV-006');
+        await expect(firstInvoice()).toContain('#INV-006');
       });
-      await expect(canvas.getByText(`Página 2 de ${TOTAL_DE_PAGINAS}`)).toBeInTheDocument();
+      await expect(canvas.getByText(`Página 2 de ${TOTAL_PAGES}`)).toBeInTheDocument();
     });
 
     await step('O salto para a primeira página devolve o estado de entrada', async () => {
@@ -139,7 +139,7 @@ export const Paginated: Story = {
       await userEvent.click(botao);
 
       await waitFor(async () => {
-        await expect(primeiraFatura()).toContain('#INV-001');
+        await expect(firstInvoice()).toContain('#INV-001');
       });
       await expect(primeira()).toBeDisabled();
       await expect(anterior()).toBeDisabled();
@@ -188,7 +188,7 @@ export const ExplicitRowLabel: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-    const caixaDaLinha = (linha: HTMLElement) =>
+    const lineBox = (linha: HTMLElement) =>
       linha.querySelector<HTMLElement>('button[role="checkbox"]')!;
     /** Terceira célula: a coluna "Cliente", de onde `rowLabel` tira o texto. */
     const cliente = (linha: HTMLElement) =>
@@ -199,7 +199,7 @@ export const ExplicitRowLabel: Story = {
       // cairia no identificador da primeira coluna ("#INV-001") e a asserção
       // seguinte reprovaria.
       for (const linha of linhas()) {
-        await expect(caixaDaLinha(linha)).toHaveAttribute(
+        await expect(lineBox(linha)).toHaveAttribute(
           'aria-label',
           `Selecionar fatura ${cliente(linha)}`,
         );
@@ -207,7 +207,7 @@ export const ExplicitRowLabel: Story = {
     });
 
     await step('Nenhuma linha repete o nome de outra', async () => {
-      const nomes = linhas().map((l) => caixaDaLinha(l).getAttribute('aria-label') ?? '');
+      const nomes = linhas().map((l) => lineBox(l).getAttribute('aria-label') ?? '');
       await expect(nomes.length).toBe(INVOICES_DT.length);
       await expect(new Set(nomes).size).toBe(nomes.length);
     });

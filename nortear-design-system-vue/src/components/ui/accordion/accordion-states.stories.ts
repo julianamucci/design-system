@@ -8,9 +8,9 @@ import {
   AccordionTrigger,
 } from './index';
 import {
-  accordionAbertoSource,
+  accordionOpenSource,
   accordionDisabledSource,
-  accordionFechadoSource,
+  accordionClosedSource,
   accordionFocusVisibleSource,
 } from './accordion.source';
 
@@ -21,7 +21,7 @@ const meta = {
     design: figmaDesign('accordionItem'),
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: accordionFechadoSource } },
+    docs: { source: { transform: accordionClosedSource } },
   },
 } satisfies Meta;
 
@@ -102,7 +102,7 @@ export const Open: Story = {
     docs: {
       // O aberto não vem de clique: é o valor inicial na raiz, e é ele que a do
       // meta (fechada, sem valor nenhum) não tem.
-      source: { transform: accordionAbertoSource },
+      source: { transform: accordionOpenSource },
       description: {
         story: 'Estado aberto. aria-expanded="true" no trigger. Conteúdo visível e acessível.',
       },

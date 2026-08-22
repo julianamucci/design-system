@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import {
-  esperarAberto,
-  esperarQuantidade,
+  waitForOpen,
+  waitForQuantidade,
   nomeAcessivel,
-  paineisAbertos,
+  panelsAbertos,
 } from '@shared/testing/hover-card-probe';
 import {
   HoverCard,
@@ -12,7 +12,7 @@ import {
   HoverCardTrigger,
 } from './index';
 import {
-  hoverCardClasseExtraSource,
+  hoverCardClassNameExtraSource,
   hoverCardDefinicaoSource,
   hoverCardLadosSource,
   hoverCardMetricaSource,
@@ -91,7 +91,7 @@ export const UserProfile: Story = {
     const canvas = within(canvasElement);
 
     await step('O cartão traz avatar, nome e uma métrica curta', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(within(painel).getByText('Joana Silva')).toBeVisible();
       await expect(within(painel).getByText(/142 seguidores/)).toBeVisible();
@@ -145,7 +145,7 @@ export const LinkPreview: Story = {
     const canvas = within(canvasElement);
 
     await step('O cartão mostra origem, título e descrição do destino', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(within(painel).getByText(/design-system\.dev\/overlays/)).toBeVisible();
       await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
@@ -201,7 +201,7 @@ export const TermDefinition: Story = {
     });
 
     await step('O nome acessível do painel vem do rótulo declarado', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       // Sem `aria-label`, o nome cairia no texto do gatilho ("WCAG 2.2 AA"),
       // que repetiria a sigla sem dizer o que o cartão traz.
       await expect(nomeAcessivel(painel)).toBe('Definição de WCAG 2.2 AA');
@@ -249,7 +249,7 @@ export const ExplainedMetric: Story = {
   }),
   play: async ({ step }) => {
     await step('O número carrega a cor semântica; o texto corrido, não', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       const valor = within(painel).getByText('1.8s');
       await expect(valor).toHaveClass(/nds-text-success/);
       const descricao = within(painel).getByText(/Tempo até o maior elemento/);
@@ -302,10 +302,10 @@ export const Sides: Story = {
   }),
   play: async ({ step }) => {
     await step('Os quatro cartões abrem e cada um declara o lado que usou', async () => {
-      const paineis = await esperarQuantidade(4);
-      await expect(paineis).toHaveLength(4);
+      const panels = await waitForQuantidade(4);
+      await expect(panels).toHaveLength(4);
 
-      const lados = paineis.map((p) => p.getAttribute('data-side'));
+      const lados = panels.map((p) => p.getAttribute('data-side'));
       for (const lado of lados) {
         await expect(lado).toBeTruthy();
       }
@@ -328,7 +328,7 @@ export const ExtraPanelClass: Story = {
     covers: ['visual.item5'],
     docs: {
       // A classe extra no painel É o assunto, e ela não existe no `meta`.
-      source: { transform: hoverCardClasseExtraSource },
+      source: { transform: hoverCardClassNameExtraSource },
       description: {
         story:
           'A classe extra do painel é o caminho para o que a folha do cartão não define — e também para trocar a largura de UMA instância: as utilities entram por último no CSS compartilhado, então uma utilitária de largura vence a largura padrão de 20rem.',
@@ -359,20 +359,20 @@ export const ExtraPanelClass: Story = {
   }),
   play: async ({ step }) => {
     await step('A classe extra convive com a classe do componente', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       // As duas coexistem: a classe do design system não é substituída pela do
       // consumidor, é acrescida.
       await expect(painel).toHaveClass(/nds-hover-card-content/);
       await expect(painel).toHaveClass(/nds-w-md/);
       await expect(getComputedStyle(painel).textAlign).toBe('center');
-      await expect(paineisAbertos()).toHaveLength(1);
+      await expect(panelsAbertos()).toHaveLength(1);
     });
 
     await step('E a largura customizada vence a largura padrão do cartão', async () => {
       // 28rem da utilitária contra os 20rem que `.nds-hover-card-content`
       // define. É o que prova que a customização de largura funciona de fato,
       // e não só que a classe está no atributo.
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       const raiz = parseFloat(getComputedStyle(document.documentElement).fontSize);
       await expect(painel.getBoundingClientRect().width).toBeCloseTo(28 * raiz, 0);
     });

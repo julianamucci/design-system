@@ -31,7 +31,7 @@ export function badgeSecundarioSource(): string {
 }
 
 /** Variante destrutiva: fundo suave, borda colorida e texto neutro. */
-export function badgeDestrutivoSource(): string {
+export function badgeDestructiveSource(): string {
   return etiqueta('destructive', 'Urgente');
 }
 
@@ -56,7 +56,7 @@ export function badgeSemanticasSource(): string {
  * Composição com ícone: o respiro entre desenho e texto é do componente
  * (`gap` do container + `data-icon`), nunca uma margem posta à mão.
  */
-export function badgeComIconeSource(): string {
+export function badgeWithIconSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import Check from "@lucide/svelte/icons/check";`,
@@ -68,7 +68,7 @@ import Check from "@lucide/svelte/icons/check";`,
 }
 
 /** Composição de contador: quem nomeia a contagem é o container. */
-export function badgeContadorSource(): string {
+export function badgeCounterSource(): string {
   const props = attrsMultilinha([
     'class="nds-cluster"',
     'data-spacing="sm"',
@@ -103,7 +103,7 @@ export function badgeEmLinkSource(): string {
 }
 
 /** Composição clicável: quem recebe o foco é o botão que envolve a etiqueta. */
-export function buttonSourceBadge(): string {
+export function buttonBadgeSource(): string {
   const props = attrsMultilinha([
     'type="button"',
     'aria-label="Filtrar por acessibilidade"',

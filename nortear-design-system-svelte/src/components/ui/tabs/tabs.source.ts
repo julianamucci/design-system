@@ -23,7 +23,7 @@ type Aba = {
   desabilitada?: boolean;
 };
 
-type Composicao = {
+type Composition = {
   abas: Aba[];
   /** Aba ativa na montagem — é o valor inicial do `$state`. */
   ativa: string;
@@ -58,7 +58,7 @@ function montar({
   variante,
   orientacao,
   ativacao,
-}: Composicao): string {
+}: Composition): string {
   const raiz = attrs(
     'bind:value',
     orientacao ? `orientation="${orientacao}"` : '',
@@ -77,7 +77,7 @@ function montar({
     )
     .join('\n');
 
-  const paineis = abas
+  const panels = abas
     .map((aba) => `  <TabsContent value="${aba.valor}">${aba.conteudo}</TabsContent>`)
     .join('\n');
 
@@ -89,7 +89,7 @@ let value = $state("${ativa}");`,
   <TabsList${lista}>
 ${gatilhos}
   </TabsList>
-${paineis}
+${panels}
 </Tabs>`,
   );
 }

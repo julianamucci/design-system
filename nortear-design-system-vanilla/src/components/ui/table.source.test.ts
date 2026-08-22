@@ -41,7 +41,7 @@ describe('tableSnippet', () => {
     const withActions = tableSnippet({ withActions: true });
     expect(withActions).toContain("variant: 'ghost'");
     expect(withActions).toContain("'aria-label': `Ações para fatura ${fatura.id}`");
-    expect(tableSnippet({ linhaSelecionada: true })).toContain(
+    expect(tableSnippet({ lineSelecionada: true })).toContain(
       "linha.setAttribute('data-state', 'selected')",
     );
     expect(tableSnippet()).not.toContain('data-state');

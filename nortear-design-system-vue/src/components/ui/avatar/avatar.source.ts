@@ -140,7 +140,7 @@ export function avatarCarregadoSource(): string {
  * pisca-pisca de letras em conexão lenta — e o prazo é do conteúdo de reserva,
  * não da imagem.
  */
-export function avatarCarregandoSource(): string {
+export function avatarLoadingSource(): string {
   return vueSnippet(
     IMPORT,
     avatar([], [
@@ -190,7 +190,7 @@ export function avatarWithIniciaisSource(): string {
 }
 
 /** Ícone no lugar das iniciais, para quem ainda não tem nome nem foto. */
-export function avatarComIconeSource(): string {
+export function avatarWithIconSource(): string {
   return avatarNoImageSource();
 }
 
@@ -202,7 +202,7 @@ export function avatarComIconeSource(): string {
  * conjunto é o rótulo do grupo, e um nome por avatar faria o leitor de tela
  * recitar a lista inteira. Pela mesma razão o contador fica fora da árvore.
  */
-export function avatarGrupoSource(): string {
+export function avatarGroupSource(): string {
   const pessoas: Array<[string, string]> = [
     [FOTO_MARIA, 'MR'],
     [FOTO_JOAO, 'JP'],
@@ -233,7 +233,7 @@ ${indentar(membros)}
  * inferior direito. Ele carrega o próprio rótulo, porque a cor sozinha não diz
  * nada a quem não a vê.
  */
-export function avatarComStatusSource(): string {
+export function avatarWithStatusSource(): string {
   return vueSnippet(
     `import {
   Avatar,

@@ -56,8 +56,8 @@ let _hoverCardCounter = 0;
  * passada de cursor; 300ms para fechar dá tempo de o ponteiro atravessar o vão
  * entre o gatilho e o painel.
  */
-const ESPERA_PADRAO_ABRIR = 600;
-const ESPERA_PADRAO_FECHAR = 300;
+const WAIT_DEFAULT_OPEN = 600;
+const WAIT_DEFAULT_CLOSE = 300;
 
 function positionHoverCard(
   anchor: HTMLElement,
@@ -115,8 +115,8 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     content,
     side = 'bottom',
     align = 'center',
-    openDelay = ESPERA_PADRAO_ABRIR,
-    closeDelay = ESPERA_PADRAO_FECHAR,
+    openDelay = WAIT_DEFAULT_OPEN,
+    closeDelay = WAIT_DEFAULT_CLOSE,
     defaultOpen = false,
     onOpenChange,
   } = options;

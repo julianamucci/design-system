@@ -4,9 +4,9 @@ import { within, expect } from 'storybook/test';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 import {
-  checkboxComDescricaoSource,
+  checkboxWithDescriptionSource,
   checkboxIndeterminadoSource,
-  checkboxMarcadoSource,
+  checkboxCheckedSource,
   checkboxNoLabelSource,
   checkboxSource,
 } from './checkbox.source';
@@ -78,7 +78,7 @@ export const Checked: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: checkboxMarcadoSource },
+      source: { transform: checkboxCheckedSource },
       description: {
         story: 'Estado marcado. Fundo `--primary`, ícone `CheckIcon` em `--primary-foreground`.',
       },
@@ -182,7 +182,7 @@ export const WithDescription: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: checkboxComDescricaoSource },
+      source: { transform: checkboxWithDescriptionSource },
       description: {
         story:
           'Checkbox + Label + texto auxiliar abaixo. Para contexto adicional sobre a opção selecionada.',

@@ -41,7 +41,7 @@ type Story = StoryObj<typeof meta>;
  * inline na própria story e depois conferiam esse mesmo estilo, então passavam
  * mesmo com o preset quebrado.
  */
-const caixaDo = (canvasElement: HTMLElement) => {
+const boxOf = (canvasElement: HTMLElement) => {
   const root = canvasElement.querySelector('[data-slot="avatar"]');
   if (!root) throw new Error('avatar não renderizou');
   return root.getBoundingClientRect();
@@ -65,7 +65,7 @@ export const Sm: Story = {
     await expect(
       canvasElement.querySelector('[data-slot="avatar"]'),
     ).toHaveAttribute("data-size", "sm");
-    const { width, height } = caixaDo(canvasElement);
+    const { width, height } = boxOf(canvasElement);
     await expect(Math.abs(width - 24)).toBeLessThan(0.5);
     await expect(Math.abs(height - 24)).toBeLessThan(0.5);
   },
@@ -86,7 +86,7 @@ export const Md: Story = {
     await expect(
       canvasElement.querySelector('[data-slot="avatar"]'),
     ).toHaveAttribute("data-size", "md");
-    const { width, height } = caixaDo(canvasElement);
+    const { width, height } = boxOf(canvasElement);
     await expect(Math.abs(width - 32)).toBeLessThan(0.5);
     await expect(Math.abs(height - 32)).toBeLessThan(0.5);
   },
@@ -106,7 +106,7 @@ export const Lg: Story = {
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
-    const { width, height } = caixaDo(canvasElement);
+    const { width, height } = boxOf(canvasElement);
     await expect(Math.abs(width - 40)).toBeLessThan(0.5);
     await expect(Math.abs(height - 40)).toBeLessThan(0.5);
   },
@@ -126,7 +126,7 @@ export const Xl: Story = {
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
-    const { width, height } = caixaDo(canvasElement);
+    const { width, height } = boxOf(canvasElement);
     await expect(Math.abs(width - 48)).toBeLessThan(0.5);
     await expect(Math.abs(height - 48)).toBeLessThan(0.5);
   },
@@ -146,7 +146,7 @@ export const TwoXl: Story = {
     </Avatar>
   ),
   play: async ({ canvasElement }) => {
-    const { width, height } = caixaDo(canvasElement);
+    const { width, height } = boxOf(canvasElement);
     await expect(Math.abs(width - 64)).toBeLessThan(0.5);
     await expect(Math.abs(height - 64)).toBeLessThan(0.5);
   },

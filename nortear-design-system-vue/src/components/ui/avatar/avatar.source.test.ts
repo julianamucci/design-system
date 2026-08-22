@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
   avatarCarregadoSource,
-  avatarCarregandoSource,
-  avatarComIconeSource,
+  avatarLoadingSource,
+  avatarWithIconSource,
   avatarWithImageSource,
   avatarWithIniciaisSource,
-  avatarComStatusSource,
-  avatarGrupoSource,
+  avatarWithStatusSource,
+  avatarGroupSource,
   avatarLgSource,
   avatarMdSource,
   avatarNoImageSource,
@@ -89,7 +89,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a espera com atraso põe o prazo no conteúdo de RESERVA, não na imagem', () => {
-    const saida = avatarCarregandoSource();
+    const saida = avatarLoadingSource();
     expect(saida).toContain('<AvatarFallback :delay-ms="600">MR</AvatarFallback>');
     expect(saida).not.toContain('<AvatarImage :delay-ms');
     // O src quebrado da story existe para forçar o desfecho; ninguém escreve um.
@@ -120,11 +120,11 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o ícone é o mesmo caso de sem-imagem, e sai idêntico', () => {
-    expect(avatarComIconeSource()).toBe(avatarNoImageSource());
+    expect(avatarWithIconSource()).toBe(avatarNoImageSource());
   });
 
   it('no grupo, quem nomeia é o conjunto — cada foto vai com alt vazio', () => {
-    const saida = avatarGrupoSource();
+    const saida = avatarGroupSource();
     expect(saida).toContain('<AvatarGroup role="group" aria-label="Participantes">');
     expect(saida.match(/<Avatar>/g)).toHaveLength(3);
     // Um nome por avatar faria o leitor de tela recitar a lista inteira.
@@ -135,7 +135,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o selo de situação carrega o próprio rótulo, e é o último filho', () => {
-    const saida = avatarComStatusSource();
+    const saida = avatarWithStatusSource();
     expect(saida).toContain('<AvatarBadge role="img" aria-label="Online" />');
     // Cor sozinha não diz nada a quem não a vê.
     expect(saida.indexOf('<AvatarBadge')).toBeGreaterThan(saida.indexOf('<AvatarFallback'));

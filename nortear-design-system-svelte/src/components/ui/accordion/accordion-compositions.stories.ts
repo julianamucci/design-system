@@ -8,9 +8,9 @@ import AccordionBadgeStory from './AccordionBadgeStory.svelte';
 import AccordionRichStory from './AccordionRichStory.svelte';
 import AccordionFAQStory from './AccordionFAQStory.svelte';
 import {
-  accordionComBadgeSource,
-  accordionComIconeSource,
-  accordionConteudoRicoSource,
+  accordionWithBadgeSource,
+  accordionWithIconSource,
+  accordionContentRichSource,
   accordionFaqSource,
   accordionSource,
 } from './accordion.source';
@@ -47,7 +47,7 @@ export const WithIconInTrigger: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item4'],
     docs: {
-      source: { transform: accordionComIconeSource },
+      source: { transform: accordionWithIconSource },
       description: {
         story: 'Ícones no trigger. Adicione aria-hidden="true" no ícone — o texto do trigger já descreve o item para leitores de tela.',
       },
@@ -76,7 +76,7 @@ export const WithBadgeInTrigger: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
-      source: { transform: accordionComBadgeSource },
+      source: { transform: accordionWithBadgeSource },
       description: {
         story: 'Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.',
       },
@@ -103,7 +103,7 @@ export const RichContent: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
     docs: {
-      source: { transform: accordionConteudoRicoSource },
+      source: { transform: accordionContentRichSource },
       description: {
         story: 'AccordionContent aceita qualquer conteúdo Svelte. Use para tabelas de dados, parágrafos ou listas estruturadas.',
       },

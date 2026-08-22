@@ -154,13 +154,13 @@ export const IDELayout: Story = {
     await step("A sidebar nasce estreita e o editor domina a altura", async () => {
       const grupos = [...canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]')];
       const fatia = (grupo: Element, horizontal: boolean) => {
-        const paineis = [
+        const panels = [
           ...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]'),
         ];
         const medida = (p: HTMLElement) =>
           horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
-        const total = paineis.reduce((a, p) => a + medida(p), 0);
-        return medida(paineis[0]) / total;
+        const total = panels.reduce((a, p) => a + medida(p), 0);
+        return medida(panels[0]) / total;
       };
       await expect(fatia(grupos[0], true)).toBeCloseTo(0.2, 1);
       await expect(fatia(grupos[1], false)).toBeCloseTo(0.7, 1);

@@ -1,29 +1,29 @@
 import { describe, expect, it } from 'vitest';
 import {
-  tooltipAbertoSource,
-  barSourceTooltipShortcut,
-  iconsSourceTooltipBar,
-  tooltipComAtalhoSource,
+  tooltipOpenSource,
+  barTooltipShortcutSource,
+  iconsTooltipBarSource,
+  tooltipWithShortcutSource,
   tooltipWithDelaySource,
-  tooltipControladoSource,
+  tooltipControlledSource,
   tooltipCurtoSource,
   tooltipLadosSource,
   tooltipPersistenteSource,
   tooltipSource,
-  tooltipTextoLongoSource,
+  tooltipTextLongSource,
 } from './tooltip.source';
 
 const TODAS = [
   tooltipSource,
   tooltipCurtoSource,
-  tooltipComAtalhoSource,
-  tooltipTextoLongoSource,
-  tooltipAbertoSource,
+  tooltipWithShortcutSource,
+  tooltipTextLongSource,
+  tooltipOpenSource,
   tooltipWithDelaySource,
   tooltipPersistenteSource,
-  tooltipControladoSource,
-  iconsSourceTooltipBar,
-  barSourceTooltipShortcut,
+  tooltipControlledSource,
+  iconsTooltipBarSource,
+  barTooltipShortcutSource,
   tooltipLadosSource,
 ];
 
@@ -68,8 +68,8 @@ describe('tooltipSource', () => {
   });
 
   it('o espião de onOpenChange nunca vira código no painel', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = tooltipSource(undefined, { args: { onOpenChange: espiao } as never });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = tooltipSource(undefined, { args: { onOpenChange: spy } as never });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).not.toContain('onOpenChange');
   });
@@ -84,7 +84,7 @@ describe('o gatilho é o botão de verdade', () => {
   });
 
   it('o botão só-ícone carrega o próprio nome — o balão não é o único portador', () => {
-    for (const fn of [tooltipSource, tooltipCurtoSource, tooltipAbertoSource, tooltipWithDelaySource]) {
+    for (const fn of [tooltipSource, tooltipCurtoSource, tooltipOpenSource, tooltipWithDelaySource]) {
       const saida = fn();
       expect(saida).toContain('aria-label="Salvar"');
       expect(saida).toContain('<Save aria-hidden="true" />');
@@ -94,14 +94,14 @@ describe('o gatilho é o botão de verdade', () => {
 
 describe('variantes', () => {
   it('a de atalho traz o gancho que encurta o respiro do balão', () => {
-    for (const saida of [tooltipComAtalhoSource(), barSourceTooltipShortcut()]) {
+    for (const saida of [tooltipWithShortcutSource(), barTooltipShortcutSource()]) {
       expect(saida).toContain('<kbd className="nds-kbd" data-slot="kbd">Ctrl</kbd>');
       expect(saida).toContain('<kbd className="nds-kbd" data-slot="kbd">S</kbd>');
     }
   });
 
   it('as três variantes visuais nascem abertas, porque o balão só existe aberto', () => {
-    for (const fn of [tooltipCurtoSource, tooltipComAtalhoSource, tooltipTextoLongoSource]) {
+    for (const fn of [tooltipCurtoSource, tooltipWithShortcutSource, tooltipTextLongSource]) {
       expect(fn()).toContain('<Tooltip defaultOpen>');
     }
   });
@@ -123,7 +123,7 @@ describe('estados', () => {
   });
 
   it('o controlado ensina o par de estado, e não um invólucro de story', () => {
-    const saida = tooltipControladoSource();
+    const saida = tooltipControlledSource();
     expect(saida).toContain('import { useState } from "react";');
     expect(saida).toContain('const [aberto, setAberto] = useState(false);');
     expect(saida).toContain('<Tooltip open={aberto} onOpenChange={setAberto}>');
@@ -137,7 +137,7 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('a barra repete o par rótulo do botão + texto do balão em cada ação', () => {
-    const saida = iconsSourceTooltipBar();
+    const saida = iconsTooltipBarSource();
     for (const rotulo of ['Salvar', 'Compartilhar', 'Excluir']) {
       expect(saida).toContain(`aria-label="${rotulo}"`);
       expect(saida).toContain(`<TooltipContent>${rotulo}</TooltipContent>`);

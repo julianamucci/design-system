@@ -41,12 +41,12 @@ export type ToggleArgs = {
 };
 
 const VARIANTES = ['default', 'outline'] as const;
-const TAMANHOS = ['sm', 'default', 'lg'] as const;
+const SIZES = ['sm', 'default', 'lg'] as const;
 
 const IMPORT_TOGGLE = 'import { Toggle } from "@/components/ui/toggle";';
 
 /** Import dos ícones, sempre em ordem alfabética como o lint do projeto pede. */
-function importarIcones(...icones: string[]): string {
+function importingIcons(...icones: string[]): string {
   return `import { ${[...new Set(icones)].sort().join(', ')} } from "lucide-react";`;
 }
 
@@ -55,15 +55,15 @@ function importarIcones(...icones: string[]): string {
  * texto, e sem rótulo quem nomeia o botão é o `aria-label` — nos dois casos
  * anunciar o desenho diria a mesma coisa duas vezes.
  */
-function toggle(atributos: string, icone: string, rotuloVisivel?: string): string {
-  const corpo = rotuloVisivel
-    ? `  <${icone} aria-hidden="true" />\n  ${rotuloVisivel}`
+function toggle(atributos: string, icone: string, labelVisible?: string): string {
+  const corpo = labelVisible
+    ? `  <${icone} aria-hidden="true" />\n  ${labelVisible}`
     : `  <${icone} aria-hidden="true" />`;
   return `<Toggle${atributos}>\n${corpo}\n</Toggle>`;
 }
 
 /** Indenta um toggle para dentro de um contêiner. */
-function dentroDe(conteudo: string): string {
+function insideOf(conteudo: string): string {
   return conteudo
     .split('\n')
     .map((linha) => (linha.trim() ? `  ${linha}` : linha))
@@ -83,22 +83,22 @@ function dentroDe(conteudo: string): string {
  */
 export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const soIcone = args.iconOnly ?? true;
-  const rotulo = texto(args.label) ?? (soIcone ? 'Negrito' : 'Mostrar ocultos');
-  const icone = soIcone ? 'Bold' : 'Eye';
+  const soIcon = args.iconOnly ?? true;
+  const rotulo = texto(args.label) ?? (soIcon ? 'Negrito' : 'Mostrar ocultos');
+  const icone = soIcon ? 'Bold' : 'Eye';
 
   const atributos = attrs(
     propOption('variant', args.variant, VARIANTES, 'default'),
-    propOption('size', args.size, TAMANHOS, 'default'),
+    propOption('size', args.size, SIZES, 'default'),
     propBool('defaultPressed', args.defaultPressed),
     propBool('disabled', args.disabled),
     // Sem texto visível não há nome acessível nenhum sem isto.
-    soIcone ? `aria-label="${rotulo}"` : undefined,
+    soIcon ? `aria-label="${rotulo}"` : undefined,
   );
 
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importarIcones(icone)}`,
-    toggle(atributos, icone, soIcone ? undefined : rotulo),
+    `${IMPORT_TOGGLE}\n${importingIcons(icone)}`,
+    toggle(atributos, icone, soIcon ? undefined : rotulo),
   );
 };
 
@@ -109,7 +109,7 @@ export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
  */
 export function toggleContornoSource(): string {
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importarIcones('Italic')}`,
+    `${IMPORT_TOGGLE}\n${importingIcons('Italic')}`,
     toggle(' variant="outline" aria-label="Itálico"', 'Italic'),
   );
 }
@@ -119,12 +119,12 @@ export function toggleContornoSource(): string {
  * — dois nomes para o mesmo botão fazem o leitor de tela anunciar um e a busca
  * por voz procurar o outro. O segundo botão nasce ligado por `defaultPressed`.
  */
-export function toggleComRotuloSource(): string {
+export function toggleWithLabelSource(): string {
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importarIcones('Eye', 'List')}`,
+    `${IMPORT_TOGGLE}\n${importingIcons('Eye', 'List')}`,
     `<div className="nds-cluster" data-spacing="sm">
-${dentroDe(toggle(' variant="outline"', 'Eye', 'Mostrar ocultos'))}
-${dentroDe(toggle(' variant="outline" defaultPressed', 'List', 'Visão compacta'))}
+${insideOf(toggle(' variant="outline"', 'Eye', 'Mostrar ocultos'))}
+${insideOf(toggle(' variant="outline" defaultPressed', 'List', 'Visão compacta'))}
 </div>`,
   );
 }
@@ -134,13 +134,13 @@ ${dentroDe(toggle(' variant="outline" defaultPressed', 'List', 'Visão compacta'
  * alguma coisa em comparação — e porque o piso de 24px do alvo de toque
  * (WCAG 2.5.8) vale para o menor deles, que é onde a regra aperta.
  */
-export function toggleTamanhosSource(): string {
+export function toggleSizesSource(): string {
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importarIcones('Bold')}`,
+    `${IMPORT_TOGGLE}\n${importingIcons('Bold')}`,
     `<div className="nds-cluster" data-spacing="sm">
-${dentroDe(toggle(' variant="outline" size="sm" aria-label="Negrito pequeno"', 'Bold'))}
-${dentroDe(toggle(' variant="outline" aria-label="Negrito padrão"', 'Bold'))}
-${dentroDe(toggle(' variant="outline" size="lg" aria-label="Negrito grande"', 'Bold'))}
+${insideOf(toggle(' variant="outline" size="sm" aria-label="Negrito pequeno"', 'Bold'))}
+${insideOf(toggle(' variant="outline" aria-label="Negrito padrão"', 'Bold'))}
+${insideOf(toggle(' variant="outline" size="lg" aria-label="Negrito grande"', 'Bold'))}
 </div>`,
   );
 }
@@ -157,7 +157,7 @@ export function toggleBarFormattingSource(): string {
   const rotulos = ['Negrito', 'Itálico', 'Sublinhado', 'Lista'];
 
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importarIcones(...botoes)}`,
+    `${IMPORT_TOGGLE}\n${importingIcons(...botoes)}`,
     `<div
   role="group"
   aria-label="Formatação de texto"
@@ -165,7 +165,7 @@ export function toggleBarFormattingSource(): string {
   data-align="center"
   data-spacing="xs"
 >
-${botoes.map((icone, i) => dentroDe(toggle(` aria-label="${rotulos[i]}"`, icone))).join('\n')}
+${botoes.map((icone, i) => insideOf(toggle(` aria-label="${rotulos[i]}"`, icone))).join('\n')}
 </div>`,
   );
 }
@@ -175,14 +175,14 @@ ${botoes.map((icone, i) => dentroDe(toggle(` aria-label="${rotulos[i]}"`, icone)
  * mesmo tempo — por isso são toggles, e não um grupo em que escolher um
  * cancela o outro. O título acima nomeia o conjunto para quem vê.
  */
-export function toggleFiltrosSource(): string {
+export function toggleFiltersSource(): string {
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importarIcones('Eye', 'List')}`,
+    `${IMPORT_TOGGLE}\n${importingIcons('Eye', 'List')}`,
     `<div className="nds-stack" data-spacing="sm">
   <p className="nds-text-body nds-font-semibold">Filtros de exibição</p>
   <div className="nds-cluster" data-spacing="sm">
-${dentroDe(dentroDe(toggle(' variant="outline"', 'Eye', 'Mostrar ocultos')))}
-${dentroDe(dentroDe(toggle(' variant="outline" defaultPressed', 'List', 'Visão compacta')))}
+${insideOf(insideOf(toggle(' variant="outline"', 'Eye', 'Mostrar ocultos')))}
+${insideOf(insideOf(toggle(' variant="outline" defaultPressed', 'List', 'Visão compacta')))}
   </div>
 </div>`,
   );
@@ -194,15 +194,15 @@ ${dentroDe(dentroDe(toggle(' variant="outline" defaultPressed', 'List', 'Visão 
  * aplicar o efeito de verdade (formatar o texto, filtrar a lista) em vez de
  * apenas acender o botão.
  */
-export function toggleControladoSource(): string {
+export function toggleControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORT_TOGGLE}
-${importarIcones('Bold')}
+${importingIcons('Bold')}
 
 const [negrito, setNegrito] = useState(false);`,
     `<div className="nds-stack" data-spacing="sm">
-${dentroDe(toggle(' pressed={negrito} onPressedChange={setNegrito} aria-label="Negrito"', 'Bold'))}
+${insideOf(toggle(' pressed={negrito} onPressedChange={setNegrito} aria-label="Negrito"', 'Bold'))}
   <p className="nds-text-caption nds-text-muted-foreground">
     Estado atual: <code className="nds-font-mono">{String(negrito)}</code>
   </p>
@@ -216,12 +216,12 @@ ${dentroDe(toggle(' pressed={negrito} onPressedChange={setNegrito} aria-label="N
  * dali. O par existe porque "ligado" só se lê em comparação — sozinho, o botão
  * aceso parece apenas um botão.
  */
-export function toggleAtivoSource(): string {
+export function toggleActiveSource(): string {
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importarIcones('Bold')}`,
+    `${IMPORT_TOGGLE}\n${importingIcons('Bold')}`,
     `<div className="nds-cluster" data-spacing="sm">
-${dentroDe(toggle(' aria-label="Negrito inativo"', 'Bold'))}
-${dentroDe(toggle(' defaultPressed aria-label="Negrito ativo"', 'Bold'))}
+${insideOf(toggle(' aria-label="Negrito inativo"', 'Bold'))}
+${insideOf(toggle(' defaultPressed aria-label="Negrito ativo"', 'Bold'))}
 </div>`,
   );
 }
@@ -232,12 +232,12 @@ ${dentroDe(toggle(' defaultPressed aria-label="Negrito ativo"', 'Bold'))}
  * vale igual na variante padrão e na de contorno — a segunda já tem borda em
  * repouso, e mesmo assim o foco precisa se distinguir dela.
  */
-export function toggleFocoSource(): string {
+export function toggleFocusSource(): string {
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importarIcones('Bold', 'Italic')}`,
+    `${IMPORT_TOGGLE}\n${importingIcons('Bold', 'Italic')}`,
     `<div className="nds-cluster" data-spacing="sm">
-${dentroDe(toggle(' aria-label="Negrito"', 'Bold'))}
-${dentroDe(toggle(' variant="outline" aria-label="Itálico"', 'Italic'))}
+${insideOf(toggle(' aria-label="Negrito"', 'Bold'))}
+${insideOf(toggle(' variant="outline" aria-label="Itálico"', 'Italic'))}
 </div>`,
   );
 }
@@ -248,12 +248,12 @@ ${dentroDe(toggle(' variant="outline" aria-label="Itálico"', 'Italic'))}
  * tabulação. O segundo mostra que desabilitar não apaga o estado — o botão
  * continua pressionado, apenas não muda mais.
  */
-export function toggleDesabilitadoSource(): string {
+export function toggleDisabledSource(): string {
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importarIcones('Bold', 'Italic')}`,
+    `${IMPORT_TOGGLE}\n${importingIcons('Bold', 'Italic')}`,
     `<div className="nds-cluster" data-spacing="sm">
-${dentroDe(toggle(' disabled aria-label="Negrito"', 'Bold'))}
-${dentroDe(toggle(' disabled defaultPressed aria-label="Itálico ativo e desabilitado"', 'Italic'))}
+${insideOf(toggle(' disabled aria-label="Negrito"', 'Bold'))}
+${insideOf(toggle(' disabled defaultPressed aria-label="Itálico ativo e desabilitado"', 'Italic'))}
 </div>`,
   );
 }
@@ -266,9 +266,9 @@ ${dentroDe(toggle(' disabled defaultPressed aria-label="Itálico ativo e desabil
  */
 export function toggleInvalidoSource(): string {
   return jsxSnippet(
-    `${IMPORT_TOGGLE}\n${importarIcones('Bold')}`,
+    `${IMPORT_TOGGLE}\n${importingIcons('Bold')}`,
     `<div className="nds-stack" data-spacing="xs">
-${dentroDe(
+${insideOf(
   toggle(
     ' aria-invalid="true" aria-describedby="toggle-invalid-msg" aria-label="Negrito"',
     'Bold',

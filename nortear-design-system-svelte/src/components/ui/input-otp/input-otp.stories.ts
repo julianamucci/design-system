@@ -99,7 +99,7 @@ const caixas = (raiz: HTMLElement): HTMLElement[] => [
 const textos = (raiz: HTMLElement): string[] =>
   caixas(raiz).map((c) => c.textContent?.trim() ?? '');
 
-const caixaAtiva = (raiz: HTMLElement): number =>
+const boxAtiva = (raiz: HTMLElement): number =>
   caixas(raiz).findIndex(
     (c) => c.hasAttribute('data-active') && c.getAttribute('data-active') !== 'false',
   );
@@ -134,15 +134,15 @@ export const Playground: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, '12');
       await waitFor(() => expect(textos(canvasElement).slice(0, 2)).toEqual(['1', '2']));
-      await expect(caixaAtiva(canvasElement)).toBe(2);
+      await expect(boxAtiva(canvasElement)).toBe(2);
     });
 
     await step('Setas movem o cursor sem alterar o valor', async () => {
       await userEvent.keyboard('{ArrowLeft}');
-      await waitFor(() => expect(caixaAtiva(canvasElement)).toBe(1));
+      await waitFor(() => expect(boxAtiva(canvasElement)).toBe(1));
       await expect(input).toHaveValue('12');
       await userEvent.keyboard('{ArrowRight}');
-      await waitFor(() => expect(caixaAtiva(canvasElement)).toBe(2));
+      await waitFor(() => expect(boxAtiva(canvasElement)).toBe(2));
     });
 
     await step('Backspace apaga a última caixa preenchida', async () => {

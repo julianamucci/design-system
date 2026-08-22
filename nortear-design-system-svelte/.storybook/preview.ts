@@ -2,7 +2,7 @@
 // desde o carregamento. No-op silencioso sem STORYBOOK_FARO_URL.
 import { getWebInstrumentations, initializeFaro } from '@grafana/faro-web-sdk';
 import { TracingInstrumentation } from '@grafana/faro-web-tracing';
-import { iniciarFaro, marcarStory } from '@shared/primitives/faro';
+import { startFaro, marcarStory } from '@shared/primitives/faro';
 import '../src/lib/reload-on-chunk-error';
 import { getThemeFromSubdomain } from '@shared/themes/theme-config';
 import type { Preview } from '@storybook/svelte-vite';
@@ -13,7 +13,7 @@ import { setMode } from 'mode-watcher';
 import '../src/styles/globals.css';
 import '../src/styles/storybook-docs.css';
 
-iniciarFaro(
+startFaro(
   { initializeFaro, getWebInstrumentations, TracingInstrumentation },
   { stack: 'svelte', env: import.meta.env },
 );

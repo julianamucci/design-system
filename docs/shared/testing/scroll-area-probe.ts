@@ -19,7 +19,7 @@
  * o chamam de dentro das próprias `play`, cada uma com o seu `waitFor`.
  */
 
-import { contraste, fundoEfetivo } from './alert-probe';
+import { contraste, backgroundEffective } from './alert-probe';
 
 /**
  * Contraste do pegador contra o que está de fato atrás dele.
@@ -27,13 +27,13 @@ import { contraste, fundoEfetivo } from './alert-probe';
  * A composição começa no PAI: iniciada no próprio pegador, a primeira camada
  * opaca encontrada seria a cor dele mesmo e a razão daria 1.
  */
-export function contrasteDoPegador(pegador: HTMLElement): number {
+export function grabberContrast(pegador: HTMLElement): number {
   const frente = getComputedStyle(pegador).backgroundColor;
-  const fundo = fundoEfetivo(pegador.parentElement ?? pegador);
+  const fundo = backgroundEffective(pegador.parentElement ?? pegador);
   return contraste(frente, fundo);
 }
 
-export interface ProporcaoDaBarra {
+export interface BarRatio {
   /** Fração da trilha ocupada pelo pegador. */
   fracaoDoPegador: number;
   /** Fração do conteúdo visível no viewport. */
@@ -51,29 +51,29 @@ export interface ProporcaoDaBarra {
  * mede altura — deduzir pelo `data-orientation` esconderia o erro do dia em que
  * o atributo divergisse do desenho.
  */
-export function medirProporcao(
+export function measureRatio(
   trilha: HTMLElement,
   pegador: HTMLElement,
   viewport: HTMLElement,
   eixo: 'vertical' | 'horizontal',
-): ProporcaoDaBarra {
+): BarRatio {
   const vertical = eixo === 'vertical';
-  const caixaTrilha = trilha.getBoundingClientRect();
-  const caixaPegador = pegador.getBoundingClientRect();
+  const boxTrack = trilha.getBoundingClientRect();
+  const boxGrabber = pegador.getBoundingClientRect();
 
-  const tamanhoTrilha = vertical ? caixaTrilha.height : caixaTrilha.width;
-  const tamanhoPegador = vertical ? caixaPegador.height : caixaPegador.width;
+  const sizeTrack = vertical ? boxTrack.height : boxTrack.width;
+  const sizeGrabber = vertical ? boxGrabber.height : boxGrabber.width;
   const visivel = vertical ? viewport.clientHeight : viewport.clientWidth;
   const total = vertical ? viewport.scrollHeight : viewport.scrollWidth;
 
-  const inicioTrilha = vertical ? caixaTrilha.top : caixaTrilha.left;
-  const inicioPegador = vertical ? caixaPegador.top : caixaPegador.left;
+  const startTrack = vertical ? boxTrack.top : boxTrack.left;
+  const startGrabber = vertical ? boxGrabber.top : boxGrabber.left;
 
   return {
-    fracaoDoPegador: tamanhoTrilha > 0 ? tamanhoPegador / tamanhoTrilha : 0,
+    fracaoDoPegador: sizeTrack > 0 ? sizeGrabber / sizeTrack : 0,
     fracaoVisivel: total > 0 ? visivel / total : 0,
-    deslocamento: inicioPegador - inicioTrilha,
-    deslocamentoMaximo: Math.max(0, tamanhoTrilha - tamanhoPegador),
+    deslocamento: startGrabber - startTrack,
+    deslocamentoMaximo: Math.max(0, sizeTrack - sizeGrabber),
   };
 }
 
@@ -99,7 +99,7 @@ export function transbordo(viewport: HTMLElement): { x: boolean; y: boolean } {
  * `box-shadow`. O anel é `inset` de propósito (a raiz recorta), e é por isso
  * que a propriedade medida é `box-shadow` e não `outline`.
  */
-export function anelDeFocoDeclarado(doc: Document = document): boolean {
+export function focusDeclaradoRing(doc: Document = document): boolean {
   const varre = (folha: CSSStyleSheet): boolean => {
     let regras: CSSRuleList;
     try {

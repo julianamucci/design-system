@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { createResizablePanel } from './resizable';
-import { fracaoDoPrimeiro, frame, panelLabelled } from './resizable.fixtures';
+import { firstFraction, frame, panelLabelled } from './resizable.fixtures';
 import { resizableSource, resizableSourceWith } from './resizable.source';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 
@@ -29,7 +29,7 @@ const ROTULO = 'Redimensionar painéis — use setas para ajustar';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 //
-// As stories deste arquivo são todas HORIZONTAIS, por isso `fracaoDoPrimeiro`
+// As stories deste arquivo são todas HORIZONTAIS, por isso `firstFraction`
 // vem do fixture no padrão — quem varia o eixo é a story raiz, que passa o
 // parâmetro.
 
@@ -96,7 +96,7 @@ export const Dragging: Story = {
       const caixa = punho.getBoundingClientRect();
       const x = caixa.left + caixa.width / 2;
       const y = caixa.top + caixa.height / 2;
-      const antes = fracaoDoPrimeiro(canvasElement);
+      const antes = firstFraction(canvasElement);
 
       await userEvent.pointer([
         { keys: '[MouseLeft>]', target: punho, coords: { clientX: x, clientY: y } },
@@ -104,14 +104,14 @@ export const Dragging: Story = {
         { keys: '[/MouseLeft]' },
       ]);
 
-      await waitFor(() => expect(fracaoDoPrimeiro(canvasElement)).toBeGreaterThan(antes + 0.05));
+      await waitFor(() => expect(firstFraction(canvasElement)).toBeGreaterThan(antes + 0.05));
     });
 
     await step('O vizinho devolve exatamente o que o outro ganhou', async () => {
       // O arrasto de um divisor move DOIS painéis; nunca empurra o layout
       // inteiro nem deixa a soma escorrer.
-      const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-      const soma = paineis.reduce((a, p) => a + Number(p.style.getPropertyValue('--panel-size')), 0);
+      const panels = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
+      const soma = panels.reduce((a, p) => a + Number(p.style.getPropertyValue('--panel-size')), 0);
       await expect(soma).toBeCloseTo(100, 1);
     });
 
@@ -141,9 +141,9 @@ export const Dragging: Story = {
         };
         return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
       };
-      const doPunho = luminancia(getComputedStyle(punho).backgroundColor);
-      const doFundo = luminancia(getComputedStyle(document.body).backgroundColor);
-      const [claro, escuro] = doPunho > doFundo ? [doPunho, doFundo] : [doFundo, doPunho];
+      const ofHandle = luminancia(getComputedStyle(punho).backgroundColor);
+      const ofBackground = luminancia(getComputedStyle(document.body).backgroundColor);
+      const [claro, escuro] = ofHandle > ofBackground ? [ofHandle, ofBackground] : [ofBackground, ofHandle];
       await expect((claro + 0.05) / (escuro + 0.05)).toBeGreaterThanOrEqual(3);
     });
   },
@@ -181,7 +181,7 @@ export const Limits: Story = {
       for (let i = 0; i < 30; i++) await userEvent.keyboard('{ArrowLeft}');
       await waitFor(() => expect(punho).toHaveAttribute('aria-valuenow', '30'));
       await expect(punho).toHaveAttribute('aria-valuemin', '30');
-      await expect(fracaoDoPrimeiro(canvasElement)).toBeCloseTo(0.3, 1);
+      await expect(firstFraction(canvasElement)).toBeCloseTo(0.3, 1);
     });
 
     await step('E para no máximo, que é o menor entre o teto e o piso do vizinho', async () => {
@@ -191,7 +191,7 @@ export const Limits: Story = {
       for (let i = 0; i < 40; i++) await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(punho).toHaveAttribute('aria-valuenow', '60'));
       await expect(punho).toHaveAttribute('aria-valuemax', '60');
-      await expect(fracaoDoPrimeiro(canvasElement)).toBeCloseTo(0.6, 1);
+      await expect(firstFraction(canvasElement)).toBeCloseTo(0.6, 1);
     });
 
     await step('Home e End vão direto aos extremos', async () => {
@@ -289,9 +289,9 @@ export const Disabled: Story = {
     });
 
     await step('E as setas não movem nada', async () => {
-      const antes = fracaoDoPrimeiro(canvasElement);
+      const antes = firstFraction(canvasElement);
       await userEvent.keyboard('{ArrowRight}{ArrowRight}{Home}{End}');
-      await expect(fracaoDoPrimeiro(canvasElement)).toBeCloseTo(antes, 2);
+      await expect(firstFraction(canvasElement)).toBeCloseTo(antes, 2);
     });
   },
 };

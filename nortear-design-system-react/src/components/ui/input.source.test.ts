@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import {
   inputFileSource,
   inputSearchSource,
-  inputComErroSource,
-  inputDesabilitadoSource,
+  inputWithErrorSource,
+  inputDisabledSource,
   inputEmailSource,
   inputGroupAlinhamentosSource,
   inputGroupButtonInternoSource,
-  addonSourceInputGroupClick,
+  addonInputGroupClickSource,
   inputGroupWithErrorSource,
   inputGroupDisabledSource,
   inputGroupIconEndSource,
@@ -16,7 +16,7 @@ import {
   inputGroupSenhaSource,
   inputGroupSource,
   inputNumberSource,
-  inputPaletaEscuraSource,
+  inputPaletteDarkSource,
   inputSenhaSource,
   inputSource,
 } from './input.source';
@@ -28,9 +28,9 @@ const SIMPLE_FIELD = [
   inputNumberSource,
   inputSearchSource,
   inputFileSource,
-  inputDesabilitadoSource,
-  inputComErroSource,
-  inputPaletaEscuraSource,
+  inputDisabledSource,
+  inputWithErrorSource,
+  inputPaletteDarkSource,
 ];
 
 const GRUPO = [
@@ -43,7 +43,7 @@ const GRUPO = [
   inputGroupDisabledSource,
   inputGroupWithErrorSource,
   inputGroupAlinhamentosSource,
-  addonSourceInputGroupClick,
+  addonInputGroupClickSource,
 ];
 
 const TODAS = [...SIMPLE_FIELD, ...GRUPO];
@@ -75,8 +75,8 @@ describe('inputSource', () => {
   });
 
   it('cai no placeholder padrão quando o control entrega um espião', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = inputSource(undefined, { args: { placeholder: espiao as never } });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = inputSource(undefined, { args: { placeholder: spy as never } });
     expect(saida).toContain('placeholder="ex: João da Silva"');
     expect(saida).not.toContain('CORPO_DO_MOCK');
   });
@@ -117,18 +117,18 @@ describe('tipos', () => {
 
 describe('estados', () => {
   it('o desabilitado é atributo do campo, e não classe de apagamento', () => {
-    expect(inputDesabilitadoSource()).toMatch(/<Input[^>]*disabled/);
+    expect(inputDisabledSource()).toMatch(/<Input[^>]*disabled/);
   });
 
   it('o erro liga a mensagem ao campo pelas duas pontas', () => {
-    const saida = inputComErroSource();
+    const saida = inputWithErrorSource();
     expect(saida).toContain('aria-invalid="true"');
     expect(saida).toContain('aria-describedby="email-erro-msg"');
     expect(saida).toContain('<p id="email-erro-msg"');
   });
 
   it('a paleta escura mostra os três estados sob o mesmo ancestral', () => {
-    const saida = inputPaletaEscuraSource();
+    const saida = inputPaletteDarkSource();
     expect(saida).toContain('className="dark');
     expect(saida).toContain('aria-invalid="true"');
     expect(saida).toMatch(/<Input[^>]*disabled/);
@@ -177,7 +177,7 @@ describe('InputGroup', () => {
   });
 
   it('o botão só de ícone ganha nome acessível', () => {
-    for (const fn of [inputGroupButtonInternoSource, addonSourceInputGroupClick]) {
+    for (const fn of [inputGroupButtonInternoSource, addonInputGroupClickSource]) {
       expect(fn()).toMatch(/<InputGroupButton[\s\S]*?aria-label="/);
     }
   });
@@ -208,9 +208,9 @@ describe('regras que valem para todo snippet', () => {
   it('todo campo tem rótulo programático, e o for aponta para um id que existe', () => {
     for (const fn of TODAS) {
       const saida = fn();
-      const alvos = [...saida.matchAll(/<Label htmlFor="([a-z0-9-]+)"/g)].map(([, id]) => id);
-      expect(alvos.length, `${fn.name} não tem rótulo`).toBeGreaterThan(0);
-      for (const alvo of alvos) {
+      const targets = [...saida.matchAll(/<Label htmlFor="([a-z0-9-]+)"/g)].map(([, id]) => id);
+      expect(targets.length, `${fn.name} não tem rótulo`).toBeGreaterThan(0);
+      for (const alvo of targets) {
         expect(saida, `${fn.name}: for="${alvo}" sem campo`).toContain(`id="${alvo}"`);
       }
     }

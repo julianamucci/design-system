@@ -65,7 +65,7 @@ export function codeBlockSource(_gerado?: string, ctx?: { args?: Partial<CodeBlo
  * linguagem, mais um com linha em destaque — os dois fundos que a paleta de
  * sintaxe precisa atravessar.
  */
-export function codeBlockPaletaSource(): string {
+export function codeBlockPaletteSource(): string {
   return svelteSnippet(
     `${IMPORT}
 

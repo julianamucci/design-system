@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import {
   abrir,
-  botaoFecharDoCanto,
-  conferirNomeEDescricao,
-  esperarAberto,
-  esperarFechado,
+  cantoButtonClose,
+  checkNameEDescricao,
+  waitForOpen,
+  waitForClosed,
   fechar,
   gatilho,
   painel,
@@ -84,10 +84,10 @@ export const ConfirmEmail: Story = {
     );
   },
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("O diálogo se anuncia com o nome e a descrição do fluxo", async () => {
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step("O endereço confirmado aparece na descrição, não só no título", async () => {
@@ -159,7 +159,7 @@ export const ProfileEdit: Story = {
     );
   },
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("Os campos estão rotulados e trazem o valor inicial", async () => {
       // O valor entra na asserção junto com o rótulo: um campo que renderiza
@@ -232,7 +232,7 @@ export const MediaPreview: Story = {
     );
   },
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("A mídia tem descrição textual", async () => {
       // O bloco carrega a informação do diálogo — sem nome acessível o
@@ -254,10 +254,10 @@ export const MediaPreview: Story = {
       // provar.
       await fechar();
       await abrir(canvasElement);
-      const x = botaoFecharDoCanto(painel()!)!;
+      const x = cantoButtonClose(painel()!)!;
       await expect(x).toHaveAccessibleName();
       await userEvent.click(x);
-      await esperarFechado();
+      await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });

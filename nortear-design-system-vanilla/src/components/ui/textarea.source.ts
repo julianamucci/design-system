@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -46,7 +46,7 @@ const RESIZE_CLASSNAME: Record<NonNullable<TextareaSnippetOptions['resize']>, st
 };
 
 const ID_DEFAULT = 'descricao';
-const ROTULO_PADRAO = 'Descrição';
+const LABEL_DEFAULT = 'Descrição';
 const PLACEHOLDER_DEFAULT = 'ex: Descreva o produto...';
 
 /**
@@ -121,7 +121,7 @@ grupo.append(rodape);`,
  */
 export function textareaSnippet(o: TextareaSnippetOptions = {}): string {
   return snippet(
-    [importar('textarea', 'createTextarea'), importar('label', 'createLabel')].join('\n'),
+    [importing('textarea', 'createTextarea'), importing('label', 'createLabel')].join('\n'),
     ...fieldBlocks(o),
     montar('grupo'),
   );
@@ -130,7 +130,7 @@ export function textareaSnippet(o: TextareaSnippetOptions = {}): string {
 /** Os blocos do campo, sem import nem montagem — reaproveitados no formulário. */
 function fieldBlocks(o: TextareaSnippetOptions): string[] {
   const id = o.id ?? ID_DEFAULT;
-  const rotulo = o.label ?? ROTULO_PADRAO;
+  const rotulo = o.label ?? LABEL_DEFAULT;
 
   const linhas = opcoes([
     ['id', texto(id)],
@@ -174,9 +174,9 @@ export function textareaFormSnippet(o: TextareaSnippetOptions = {}): string {
 
   return snippet(
     [
-      importar('textarea', 'createTextarea'),
-      importar('label', 'createLabel'),
-      importar('button', 'createButton'),
+      importing('textarea', 'createTextarea'),
+      importing('label', 'createLabel'),
+      importing('button', 'createButton'),
     ].join('\n'),
     // O grupo do campo entra no formulário, e não direto na página.
     ...fieldBlocks({

@@ -53,7 +53,7 @@ const CAIXAS = `<template #default="{ slots }">
  * que faz o sistema operacional oferecer o código recebido, o segundo é o
  * teclado que aparece no celular.
  */
-function campoOtp(opcoes: {
+function fieldOtp(opcoes: {
   id: string;
   rotulo: string;
   modelo: string;
@@ -63,7 +63,7 @@ function campoOtp(opcoes: {
   desabilitado?: boolean;
   foco?: boolean;
   invalido?: boolean;
-  descritoPor?: string;
+  describedBy?: string;
   miolo?: string;
   depois?: string[];
   espaco?: string;
@@ -78,7 +78,7 @@ function campoOtp(opcoes: {
     desabilitado = false,
     foco = false,
     invalido = false,
-    descritoPor,
+    describedBy,
     miolo = CAIXAS,
     depois = [],
     espaco = 'sm',
@@ -93,7 +93,7 @@ function campoOtp(opcoes: {
       attrBool('disabled', desabilitado, false),
       attrBool('auto-focus', foco, false),
       invalido && 'aria-invalid="true"',
-      descritoPor && `aria-describedby="${descritoPor}"`,
+      describedBy && `aria-describedby="${describedBy}"`,
       'autocomplete="one-time-code"',
       `inputmode="${teclado}"`,
     ],
@@ -135,7 +135,7 @@ export const inputOtpSource: SourceTransform<InputOTPArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return vueSnippet(
     script(`const codigo = ref('')`),
-    campoOtp({
+    fieldOtp({
       id: 'codigo-verificacao',
       rotulo: 'Código de verificação',
       modelo: 'codigo',
@@ -150,7 +150,7 @@ export const inputOtpSource: SourceTransform<InputOTPArgs> = (_gerado, ctx) => {
 export function inputOtpSeisDigitosSource(): string {
   return vueSnippet(
     script(`const codigo = ref('')`),
-    campoOtp({
+    fieldOtp({
       id: 'codigo-sms',
       rotulo: 'Código enviado por SMS',
       modelo: 'codigo',
@@ -162,7 +162,7 @@ export function inputOtpSeisDigitosSource(): string {
 export function inputOtpQuatroDigitosSource(): string {
   return vueSnippet(
     script(`const pin = ref('')`),
-    campoOtp({
+    fieldOtp({
       id: 'pin',
       rotulo: 'PIN do aplicativo',
       modelo: 'pin',
@@ -179,7 +179,7 @@ export function inputOtpQuatroDigitosSource(): string {
  * separação em grupos que pede isso, e o índice é o que liga cada caixa à sua
  * posição no valor.
  */
-export function inputOtpComSeparadorSource(): string {
+export function inputOtpWithSeparatorSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
 import {
@@ -191,7 +191,7 @@ import {
 import { Label } from '@/components/ui/label'
 
 const codigo = ref('')`,
-    campoOtp({
+    fieldOtp({
       id: 'codigo-recuperacao',
       rotulo: 'Código de recuperação',
       modelo: 'codigo',
@@ -221,7 +221,7 @@ const codigo = ref('')`,
 export function inputOtpAlfanumericoSource(): string {
   return vueSnippet(
     script(`const codigo = ref('')`),
-    campoOtp({
+    fieldOtp({
       id: 'codigo-autenticacao',
       rotulo: 'Código de autenticação',
       modelo: 'codigo',
@@ -232,10 +232,10 @@ export function inputOtpAlfanumericoSource(): string {
 }
 
 /** Vazio, com o campo já em foco: o estado de quem acabou de chegar na tela. */
-export function inputOtpVazioSource(): string {
+export function inputOtpEmptySource(): string {
   return vueSnippet(
     script(`const codigo = ref('')`),
-    campoOtp({
+    fieldOtp({
       id: 'codigo-verificacao',
       rotulo: 'Código de verificação',
       modelo: 'codigo',
@@ -251,7 +251,7 @@ export function inputOtpVazioSource(): string {
 export function inputOtpPreenchendoSource(): string {
   return vueSnippet(
     script(`const codigo = ref('123')`),
-    campoOtp({
+    fieldOtp({
       id: 'codigo-verificacao',
       rotulo: 'Código de verificação',
       modelo: 'codigo',
@@ -263,7 +263,7 @@ export function inputOtpPreenchendoSource(): string {
 export function inputOtpCompletoSource(): string {
   return vueSnippet(
     script(`const codigo = ref('482913')`),
-    campoOtp({
+    fieldOtp({
       id: 'codigo-verificacao',
       rotulo: 'Código de verificação',
       modelo: 'codigo',
@@ -272,10 +272,10 @@ export function inputOtpCompletoSource(): string {
 }
 
 /** Bloqueado: não aceita foco nem digitação, e o campo inteiro esmaece. */
-export function inputOtpDesabilitadoSource(): string {
+export function inputOtpDisabledSource(): string {
   return vueSnippet(
     script(`const codigo = ref('4829')`),
-    campoOtp({
+    fieldOtp({
       id: 'codigo-verificacao',
       rotulo: 'Código de verificação',
       modelo: 'codigo',
@@ -289,15 +289,15 @@ export function inputOtpDesabilitadoSource(): string {
  * liga o campo à mensagem — a borda vermelha sozinha não alcança quem não
  * enxerga cor. A mensagem diz a causa e a ação corretiva.
  */
-export function inputOtpComErroSource(): string {
+export function inputOtpWithErrorSource(): string {
   return vueSnippet(
     script(`const codigo = ref('482913')`),
-    campoOtp({
+    fieldOtp({
       id: 'codigo-verificacao',
       rotulo: 'Código de verificação',
       modelo: 'codigo',
       invalido: true,
-      descritoPor: 'codigo-erro',
+      describedBy: 'codigo-erro',
       depois: [
         `<p id="codigo-erro" class="nds-text-caption nds-text-destructive">
   Código incorreto. Verifique e tente novamente.
@@ -311,7 +311,7 @@ export function inputOtpComErroSource(): string {
 export function inputOtpWithLabelSource(): string {
   return vueSnippet(
     script(`const codigo = ref('')`),
-    campoOtp({
+    fieldOtp({
       id: 'codigo-verificacao',
       rotulo: 'Código de verificação',
       modelo: 'codigo',
@@ -326,11 +326,11 @@ export function inputOtpWithLabelSource(): string {
 export function inputOtpWithHelperSource(): string {
   return vueSnippet(
     script(`const codigo = ref('')`),
-    campoOtp({
+    fieldOtp({
       id: 'codigo-sms',
       rotulo: 'Código SMS',
       modelo: 'codigo',
-      descritoPor: 'codigo-sms-apoio',
+      describedBy: 'codigo-sms-apoio',
       depois: [
         '<p id="codigo-sms-apoio" class="nds-text-caption nds-text-muted-foreground">Enviamos por SMS, expira em 5 min.</p>',
       ],
@@ -343,14 +343,14 @@ export function inputOtpWithHelperSource(): string {
  * código encontra o reenvio no Tab seguinte, sem voltar pelo caminho. O rótulo
  * é verbo no infinitivo mais objeto, e não "clique aqui".
  */
-export function inputOtpComReenvioSource(): string {
+export function inputOtpWithReenvioSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
 ${IMPORT}
 import { Button } from '@/components/ui/button'
 
 const codigo = ref('')`,
-    campoOtp({
+    fieldOtp({
       id: 'codigo-verificacao',
       rotulo: 'Código de verificação',
       modelo: 'codigo',

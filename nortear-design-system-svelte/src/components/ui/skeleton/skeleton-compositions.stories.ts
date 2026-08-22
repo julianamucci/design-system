@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { expect } from 'storybook/test';
 import SkeletonComposicaoStory from './SkeletonComposicaoStory.svelte';
-import { caixaDesenhada } from '@shared/testing/skeleton-probe';
+import { boxDesenhada } from '@shared/testing/skeleton-probe';
 import {
   skeletonCardDePerfilSource,
-  skeletonImagemEmProporcaoSource,
+  ratioSkeletonImageSource,
   skeletonListWithAvatarSource,
   skeletonParagrafoSource,
   skeletonSource,
@@ -47,7 +47,7 @@ export const ProfileCard: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const regiao = canvasElement.querySelector('[role="status"]') as HTMLElement;
-    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+    const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step('A região tem papel, estado e nome', async () => {
       await expect(regiao).toHaveAttribute('aria-busy', 'true');
@@ -55,14 +55,14 @@ export const ProfileCard: Story = {
     });
 
     await step('Avatar + duas linhas, todos fora da árvore de acessibilidade', async () => {
-      await expect(pecas).toHaveLength(3);
-      for (const p of pecas) await expect(p).toHaveAttribute('aria-hidden', 'true');
+      await expect(parts).toHaveLength(3);
+      for (const p of parts) await expect(p).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('O avatar é circular e as linhas têm larguras diferentes', async () => {
-      await expect(caixaDesenhada(pecas[0]).quadrado).toBe(true);
-      await expect(pecas[1].getBoundingClientRect().width).toBeGreaterThan(
-        pecas[2].getBoundingClientRect().width,
+      await expect(boxDesenhada(parts[0]).quadrado).toBe(true);
+      await expect(parts[1].getBoundingClientRect().width).toBeGreaterThan(
+        parts[2].getBoundingClientRect().width,
       );
     });
   },
@@ -81,7 +81,7 @@ export const ListWithAvatar: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const lista = canvasElement.querySelector('ul') as HTMLElement;
-    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+    const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step('A lista inteira é uma região ocupada, com nome', async () => {
       await expect(lista).toHaveAttribute('aria-busy', 'true');
@@ -90,14 +90,14 @@ export const ListWithAvatar: Story = {
     });
 
     await step('Cinco itens de três peças, todas ocultas ao leitor', async () => {
-      await expect(pecas).toHaveLength(15);
-      for (const p of pecas) await expect(p).toHaveAttribute('aria-hidden', 'true');
+      await expect(parts).toHaveLength(15);
+      for (const p of parts) await expect(p).toHaveAttribute('aria-hidden', 'true');
     });
 
     await step('O avatar pequeno continua quadrado e com medida do tema', async () => {
       // `data-size="sm"` só entrega se a folha responder: sem isso o item da
       // lista sai com o mesmo bloco do card de perfil.
-      const caixa = caixaDesenhada(pecas[0]);
+      const caixa = boxDesenhada(parts[0]);
       await expect(caixa.quadrado).toBe(true);
       await expect(caixa.largura).toBeGreaterThan(0);
     });
@@ -109,7 +109,7 @@ export const ImageInAspectRatio: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
-      source: { transform: skeletonImagemEmProporcaoSource },
+      source: { transform: ratioSkeletonImageSource },
       description: {
         story:
           'Placeholder de imagem dentro de uma proporção 16/9 — quem define a caixa é o container.',

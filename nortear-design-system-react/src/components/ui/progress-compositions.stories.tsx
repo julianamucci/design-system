@@ -10,7 +10,7 @@ import {
 } from "./progress";
 import {
   barrasDeProgresso,
-  contrasteBarraTrilha,
+  contrastBarTrack,
   nomeAcessivel,
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
@@ -132,7 +132,7 @@ export const CustomColor: Story = {
 
     await step("Nenhuma variante abre mão dos 3:1 contra a trilha", async () => {
       for (const raiz of canvas.getAllByRole("progressbar")) {
-        await expect(contrasteBarraTrilha(raiz)).toBeGreaterThanOrEqual(3);
+        await expect(contrastBarTrack(raiz)).toBeGreaterThanOrEqual(3);
       }
     });
 

@@ -500,13 +500,13 @@ export const WithSubmenu: Story = {
     subList.setAttribute('aria-label', 'Componentes');
     subList.style.display = 'none';
 
-    const subItens: SidebarMenuSubButtonOptions[] = [
+    const subItems: SidebarMenuSubButtonOptions[] = [
       { label: 'Alert',  href: '#' },
       { label: 'Button', href: '#', active: true },
       { label: 'Card',   href: '#' },
       { label: 'Dialog', disabled: true },
     ];
-    subItens.forEach((sub) => {
+    subItems.forEach((sub) => {
       const li = createSidebarMenuSubItem();
       li.appendChild(createSidebarMenuSubButton({ ...sub, size: 'sm' }));
       subList.appendChild(li);

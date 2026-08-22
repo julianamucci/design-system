@@ -25,25 +25,25 @@
  * número que ninguém vê.
  */
 
-import { porTema, razao } from './cor';
-import { fundoEfetivo } from './alert-probe';
+import { byTheme, ratio } from './cor';
+import { backgroundEffective } from './alert-probe';
 
-export interface AlcanceDoClique {
-  achado: boolean;
+export interface ClickReach {
+  finding: boolean;
   /** O elemento no topo do ponto central é ele mesmo (ou filho dele)? */
-  clicavel: boolean;
+  clickable: boolean;
   /** Quem está por cima, quando não é ele. */
   porCima: string | null;
 }
 
-export interface CaixaMedida {
+export interface BoxMeasurement {
   largura: number;
   altura: number;
   raioTopoEsquerda: number;
   raioTopoDireita: number;
   fundo: string;
   cor: string;
-  larguraDaBorda: number;
+  borderWidth: number;
   alinhamento: string;
   justificacao: string;
   padding: string;
@@ -56,7 +56,7 @@ export interface CaixaMedida {
  * PROMETE: se o dia desabilitado é anunciado, se ele recebe foco, se o clique é
  * bloqueado de verdade. Uma caixa cinza não responde nada disso.
  */
-export interface EstadoDoDia {
+export interface DayState {
   existe: boolean;
   /** Qual das formas aceitas casou — a divergência de vocabulário é o achado. */
   seletorQueCasou: string | null;
@@ -72,13 +72,13 @@ export interface EstadoDoDia {
   tabIndex: number | null;
   pointerEvents: string;
   opacidade: number;
-  caixa: CaixaMedida | null;
-  alcance: AlcanceDoClique;
+  caixa: BoxMeasurement | null;
+  alcance: ClickReach;
   /** Data em ISO, seja qual for o atributo que a stack usa para carregá-la. */
   iso: string | null;
 }
 
-export interface ContrasteDoDia {
+export interface DayContrast {
   tema: string;
   modo: string;
   estado: string;
@@ -86,10 +86,10 @@ export interface ContrasteDoDia {
   presente: boolean;
   frente: string | null;
   fundo: string | null;
-  razao: number | null;
+  ratio: number | null;
 }
 
-export interface MedidaDeDensidade {
+export interface DensityMeasurement {
   densidade: string;
   larguraDaRaiz: number | null;
   celula: number | null;
@@ -100,7 +100,7 @@ export interface MedidaDeDensidade {
 
 // ─── Primitivas ───────────────────────────────────────────────────────────────
 
-function caixa(el: HTMLElement | null): CaixaMedida | null {
+function caixa(el: HTMLElement | null): BoxMeasurement | null {
   if (!el) return null;
   const cs = getComputedStyle(el);
   const r = el.getBoundingClientRect();
@@ -111,7 +111,7 @@ function caixa(el: HTMLElement | null): CaixaMedida | null {
     raioTopoDireita: Math.round(parseFloat(cs.borderTopRightRadius) || 0),
     fundo: cs.backgroundColor,
     cor: cs.color,
-    larguraDaBorda: Math.round(parseFloat(cs.borderTopWidth) || 0),
+    borderWidth: Math.round(parseFloat(cs.borderTopWidth) || 0),
     alinhamento: cs.alignItems,
     justificacao: cs.justifyContent,
     padding: cs.padding,
@@ -124,12 +124,12 @@ function descreve(el: Element | null): string | null {
   return `${el.tagName.toLowerCase()}${classes.length ? '.' + classes.slice(0, 2).join('.') : ''}`;
 }
 
-function alcance(el: HTMLElement | null): AlcanceDoClique {
-  if (!el) return { achado: false, clicavel: false, porCima: null };
+function alcance(el: HTMLElement | null): ClickReach {
+  if (!el) return { finding: false, clickable: false, porCima: null };
   const r = el.getBoundingClientRect();
   const noTopo = el.ownerDocument.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-  const clicavel = noTopo === el || el.contains(noTopo);
-  return { achado: true, clicavel, porCima: clicavel ? null : descreve(noTopo) };
+  const clickable = noTopo === el || el.contains(noTopo);
+  return { finding: true, clickable, porCima: clickable ? null : descreve(noTopo) };
 }
 
 /**
@@ -139,7 +139,7 @@ function alcance(el: HTMLElement | null): AlcanceDoClique {
  * stacks faz o seletor não casar e o campo vir `null`, e é justamente essa
  * divergência o achado mais valioso da sonda.
  */
-function primeiroQueCasar(
+function firstQueCasar(
   raiz: HTMLElement,
   seletores: string[],
 ): { el: HTMLElement | null; seletor: string | null } {
@@ -158,24 +158,24 @@ function primeiroQueCasar(
  * `data-value` ou no `data-day` do próprio botão. Sem normalizar, comparar
  * "onde o foco foi parar" entre stacks é comparar formatos diferentes.
  */
-export function isoDoDia(el: Element | null): string | null {
+export function dayIso(el: Element | null): string | null {
   if (!el) return null;
-  const doBotao = el.getAttribute('data-value') ?? el.getAttribute('data-day');
-  if (doBotao && /^\d{4}-\d{2}-\d{2}$/.test(doBotao)) return doBotao;
-  const daCelula = el.closest('[role=gridcell], td')?.getAttribute('data-day');
-  if (daCelula && /^\d{4}-\d{2}-\d{2}$/.test(daCelula)) return daCelula;
+  const ofButton = el.getAttribute('data-value') ?? el.getAttribute('data-day');
+  if (ofButton && /^\d{4}-\d{2}-\d{2}$/.test(ofButton)) return ofButton;
+  const ofCell = el.closest('[role=gridcell], td')?.getAttribute('data-day');
+  if (ofCell && /^\d{4}-\d{2}-\d{2}$/.test(ofCell)) return ofCell;
   return null;
 }
 
 /** ISO do dia que está com o foco AGORA — o que a navegação por teclado move. */
-export function isoDoFoco(doc: Document): string | null {
+export function focusIso(doc: Document): string | null {
   const ativo = doc.activeElement as HTMLElement | null;
   if (!ativo) return null;
-  return isoDoDia(ativo);
+  return dayIso(ativo);
 }
 
-function estadoDoDia(raiz: HTMLElement, seletores: string[]): EstadoDoDia {
-  const { el, seletor } = primeiroQueCasar(raiz, seletores);
+function dayState(raiz: HTMLElement, seletores: string[]): DayState {
+  const { el, seletor } = firstQueCasar(raiz, seletores);
   if (!el) {
     return {
       existe: false,
@@ -191,7 +191,7 @@ function estadoDoDia(raiz: HTMLElement, seletores: string[]): EstadoDoDia {
       pointerEvents: 'n/a',
       opacidade: 1,
       caixa: null,
-      alcance: { achado: false, clicavel: false, porCima: null },
+      alcance: { finding: false, clickable: false, porCima: null },
       iso: null,
     };
   }
@@ -212,7 +212,7 @@ function estadoDoDia(raiz: HTMLElement, seletores: string[]): EstadoDoDia {
     opacidade: parseFloat(cs.opacity) || 1,
     caixa: caixa(el),
     alcance: alcance(el),
-    iso: isoDoDia(el),
+    iso: dayIso(el),
   };
 }
 
@@ -223,7 +223,7 @@ function estadoDoDia(raiz: HTMLElement, seletores: string[]): EstadoDoDia {
 // libs emitem `data-range-middle="false"` em TODOS os dias, e sem a guarda a
 // sonda mede o primeiro da grade e relata um defeito que não existe.
 
-const SELETORES: Record<string, string[]> = {
+const SELECTORS: Record<string, string[]> = {
   selecionado: [
     '.nds-calendar-day-btn[data-selected]:not([data-selected="false"])',
     '.nds-calendar-day-btn[data-selected-single="true"]',
@@ -269,28 +269,28 @@ const SELETORES: Record<string, string[]> = {
   ],
 };
 
-export const ESTADOS_DO_DIA = Object.keys(SELETORES);
+export const DAY_STATES = Object.keys(SELECTORS);
 
 // ─── Medição principal ────────────────────────────────────────────────────────
 
-export function medirCalendario(raiz: HTMLElement) {
+export function measureCalendar(raiz: HTMLElement) {
   const um = <T extends HTMLElement>(sel: string) => raiz.querySelector<T>(sel);
   const todos = (sel: string) => Array.from(raiz.querySelectorAll<HTMLElement>(sel));
   const conta = (sel: string) => raiz.querySelectorAll(sel).length;
 
   // O Vanilla nomeava a raiz, a paginação e o dia com uma família de classes
   // diferente da das outras. A sonda aceita as duas e registra qual casou.
-  const raizDoCalendario = um('.nds-calendar-root') ?? um('.nds-calendar');
+  const calendarRoot = um('.nds-calendar-root') ?? um('.nds-calendar');
   const familiaDeClasses = um('.nds-calendar-root') ? 'root' : um('.nds-calendar') ? 'calendar' : 'nenhuma';
-  const diaBotao = um('.nds-calendar-day-btn') ?? um('.nds-calendar-day');
+  const dayButton = um('.nds-calendar-day-btn') ?? um('.nds-calendar-day');
   const legenda = um('.nds-calendar-caption') ?? um('.nds-calendar-caption-dropdown') ?? um('.nds-calendar-month-label');
   const semana = um('thead');
   const seletores = todos('.nds-calendar-select');
   const tabela = um('table');
 
-  const botaoAnterior =
+  const buttonPrevious =
     todos('button').find((b) => /previous|anterior|mês anterior/i.test(b.getAttribute('aria-label') ?? '')) ?? null;
-  const botaoProximo =
+  const buttonNext =
     todos('button').find((b) => /next|próximo|proximo|siguiente/i.test(b.getAttribute('aria-label') ?? '')) ?? null;
 
   const respiro =
@@ -301,18 +301,18 @@ export function medirCalendario(raiz: HTMLElement) {
   const cabecalhos = Array.from(raiz.querySelectorAll<HTMLElement>('thead th, thead td'));
   const diasDaSemana = cabecalhos.map((th) => th.textContent?.trim() ?? '');
 
-  const estados: Record<string, EstadoDoDia> = {};
-  for (const [nome, lista] of Object.entries(SELETORES)) estados[nome] = estadoDoDia(raiz, lista);
+  const estados: Record<string, DayState> = {};
+  for (const [nome, lista] of Object.entries(SELECTORS)) estados[nome] = dayState(raiz, lista);
 
-  const diasNoDom = todos('.nds-calendar-day-btn, .nds-calendar-day');
-  const tabulaveis = diasNoDom.filter((d) => d.tabIndex >= 0);
+  const domDays = todos('.nds-calendar-day-btn, .nds-calendar-day');
+  const tabulaveis = domDays.filter((d) => d.tabIndex >= 0);
 
-  const meio = primeiroQueCasar(raiz, SELETORES.intervaloMeio).el;
+  const meio = firstQueCasar(raiz, SELECTORS.intervaloMeio).el;
 
   return {
     familiaDeClasses,
     estrutura: {
-      raiz: descreve(raizDoCalendario),
+      raiz: descreve(calendarRoot),
       temMonths: conta('.nds-calendar-months'),
       temMonth: conta('.nds-calendar-month'),
       temNavOverlay: conta('.nds-calendar-nav-overlay'),
@@ -321,7 +321,7 @@ export function medirCalendario(raiz: HTMLElement) {
       temCaptionDropdown: conta('.nds-calendar-caption-dropdown'),
       seletores: seletores.length,
       celulas: conta('.nds-calendar-day-cell'),
-      dias: diasNoDom.length,
+      dias: domDays.length,
       semanas: conta('.nds-calendar-week'),
       tabela: descreve(tabela),
     },
@@ -339,9 +339,9 @@ export function medirCalendario(raiz: HTMLElement) {
         cabecalhos[0]?.getAttribute('aria-label') ??
         cabecalhos[0]?.getAttribute('title') ??
         null,
-      rotuloAnterior: botaoAnterior?.getAttribute('aria-label') ?? null,
-      rotuloProximo: botaoProximo?.getAttribute('aria-label') ?? null,
-      rotuloDoDia: diaBotao?.getAttribute('aria-label') ?? null,
+      rotuloAnterior: buttonPrevious?.getAttribute('aria-label') ?? null,
+      rotuloProximo: buttonNext?.getAttribute('aria-label') ?? null,
+      rotuloDoDia: dayButton?.getAttribute('aria-label') ?? null,
       // Onde mora o estado de seleção: a célula é quem tem papel de gridcell, e
       // é dela que o leitor de tela lê ao percorrer a grade.
       ondeFicaAriaSelected: um('[role=gridcell][aria-selected], td[aria-selected]')
@@ -358,13 +358,13 @@ export function medirCalendario(raiz: HTMLElement) {
       textoDaLegenda: legenda?.textContent?.trim().replace(/\s+/g, ' ') ?? null,
     },
     geometria: {
-      larguraDaRaiz: raizDoCalendario ? Math.round(raizDoCalendario.getBoundingClientRect().width) : null,
-      larguraDoPai: raizDoCalendario?.parentElement
-        ? Math.round(raizDoCalendario.parentElement.getBoundingClientRect().width)
+      larguraDaRaiz: calendarRoot ? Math.round(calendarRoot.getBoundingClientRect().width) : null,
+      larguraDoPai: calendarRoot?.parentElement
+        ? Math.round(calendarRoot.parentElement.getBoundingClientRect().width)
         : null,
       respiroLegendaSemana: respiro,
-      dia: caixa(diaBotao),
-      navAnterior: caixa(botaoAnterior),
+      dia: caixa(dayButton),
+      navAnterior: caixa(buttonPrevious),
       seletor: caixa(seletores[0] ?? null),
     },
     estados,
@@ -376,12 +376,12 @@ export function medirCalendario(raiz: HTMLElement) {
           dataDoBotao: JSON.stringify({ ...meio.dataset }),
         }
       : null,
-    alcanceDoClique: {
-      navAnterior: alcance(botaoAnterior),
-      navProximo: alcance(botaoProximo),
-      seletorDeMes: alcance(seletores[0] ?? null),
-      seletorDeAno: alcance(seletores[1] ?? null),
-      dia: alcance(diaBotao),
+    clickReach: {
+      navAnterior: alcance(buttonPrevious),
+      navProximo: alcance(buttonNext),
+      monthSelector: alcance(seletores[0] ?? null),
+      yearSelector: alcance(seletores[1] ?? null),
+      dia: alcance(dayButton),
     },
     listas: {
       opcoesDeMes: seletores[0] ? (seletores[0] as HTMLSelectElement).options.length : null,
@@ -393,7 +393,7 @@ export function medirCalendario(raiz: HTMLElement) {
 
 // ─── Teclado ──────────────────────────────────────────────────────────────────
 
-export interface PassoDeTeclado {
+export interface KeyboardStep {
   tecla: string;
   /** Onde o foco parou. `null` = saiu da grade (o defeito clássico). */
   iso: string | null;
@@ -414,23 +414,23 @@ export interface PassoDeTeclado {
  * que funciona, se a asserção olhar só a legenda. Foi assim que a navegação por
  * setas passou anos "verde" numa stack em que ela não movia foco nenhum.
  */
-export async function medirTeclado(
+export async function measureKeyboard(
   raiz: HTMLElement,
   apertar: (tecla: string) => Promise<void>,
   teclas: string[] = ['ArrowRight', 'ArrowDown', 'Home', 'End', 'PageDown', 'PageUp'],
-): Promise<{ inicial: PassoDeTeclado; passos: PassoDeTeclado[] }> {
+): Promise<{ inicial: KeyboardStep; passos: KeyboardStep[] }> {
   const doc = raiz.ownerDocument;
   const legenda = () =>
     raiz.querySelector('.nds-calendar-caption')?.textContent?.trim().replace(/\s+/g, ' ') ?? null;
-  const instantaneo = (tecla: string): PassoDeTeclado => ({
+  const instantaneo = (tecla: string): KeyboardStep => ({
     tecla,
-    iso: isoDoFoco(doc),
+    iso: focusIso(doc),
     ativo: descreve(doc.activeElement),
     legenda: legenda(),
   });
 
   const inicial = instantaneo('(inicial)');
-  const passos: PassoDeTeclado[] = [];
+  const passos: KeyboardStep[] = [];
   for (const tecla of teclas) {
     await apertar(`{${tecla}}`);
     passos.push(instantaneo(tecla));
@@ -448,7 +448,7 @@ export async function medirTeclado(
  * subir: uma célula meio-transparente dentro de um bloco meio-transparente
  * apaga duas vezes.
  */
-function frenteComOpacidade(el: HTMLElement): string {
+function frenteWithOpacity(el: HTMLElement): string {
   const cs = getComputedStyle(el);
   let opacidade = parseFloat(cs.opacity);
   if (Number.isNaN(opacidade)) opacidade = 1;
@@ -462,8 +462,8 @@ function frenteComOpacidade(el: HTMLElement): string {
   if (opacidade >= 0.999) return cor;
   const n = (cor.match(/-?[\d.]+/g) ?? []).map(Number);
   if (n.length < 3) return cor;
-  const alfaProprio = n.length > 3 ? n[3] : 1;
-  return `rgba(${n[0]}, ${n[1]}, ${n[2]}, ${alfaProprio * opacidade})`;
+  const alfaOwn = n.length > 3 ? n[3] : 1;
+  return `rgba(${n[0]}, ${n[1]}, ${n[2]}, ${alfaOwn * opacidade})`;
 }
 
 /**
@@ -474,30 +474,30 @@ function frenteComOpacidade(el: HTMLElement): string {
  * e o dia desabilitado são exatamente os três lugares onde a cor muda, e nunca
  * foram medidos no escuro.
  *
- * `raiz` é quem recebe a classe de tema; `porTema` a devolve no `finally` —
+ * `raiz` é quem recebe a classe de tema; `byTheme` a devolve no `finally` —
  * deixá-la posta envenena a story seguinte e a foto do Chromatic.
  */
-export function medirContrasteDoCalendario(raiz: HTMLElement): ContrasteDoDia[] {
-  const alvos = ESTADOS_DO_DIA.map((estado) => ({
+export function calendarMeasureContrast(raiz: HTMLElement): DayContrast[] {
+  const targets = DAY_STATES.map((estado) => ({
     estado,
-    el: primeiroQueCasar(raiz, SELETORES[estado]).el,
+    el: firstQueCasar(raiz, SELECTORS[estado]).el,
   }));
 
   // As transições morrem ANTES da troca de tema: o dia declara
   // `transition: background-color, color`, e medir logo depois de trocar a
   // classe devolveria a cor do tema anterior — a armadilha do "contraste ~1.0
   // = elemento em fade", com outra origem.
-  const originais = alvos.map(({ el }) => el?.style.transition ?? null);
-  alvos.forEach(({ el }) => {
+  const originais = targets.map(({ el }) => el?.style.transition ?? null);
+  targets.forEach(({ el }) => {
     if (el) el.style.transition = 'none';
   });
 
   try {
-    return porTema(raiz, (tema, modo) =>
-      alvos.map(({ estado, el }): ContrasteDoDia => {
-        if (!el) return { tema, modo, estado, presente: false, frente: null, fundo: null, razao: null };
-        const fundo = fundoEfetivo(el);
-        const r = razao(frenteComOpacidade(el), fundo);
+    return byTheme(raiz, (tema, modo) =>
+      targets.map(({ estado, el }): DayContrast => {
+        if (!el) return { tema, modo, estado, presente: false, frente: null, fundo: null, ratio: null };
+        const fundo = backgroundEffective(el);
+        const r = ratio(frenteWithOpacity(el), fundo);
         return {
           tema,
           modo,
@@ -505,12 +505,12 @@ export function medirContrasteDoCalendario(raiz: HTMLElement): ContrasteDoDia[] 
           presente: true,
           frente: r?.frente ?? null,
           fundo,
-          razao: r?.razao ?? null,
+          ratio: r?.ratio ?? null,
         };
       }),
     ).flat();
   } finally {
-    alvos.forEach(({ el }, i) => {
+    targets.forEach(({ el }, i) => {
       if (!el) return;
       const antes = originais[i];
       if (antes) el.style.transition = antes;
@@ -520,9 +520,9 @@ export function medirContrasteDoCalendario(raiz: HTMLElement): ContrasteDoDia[] 
 }
 
 /** Linha legível de uma medida — o que a falha da story precisa mostrar. */
-export function descreverContraste(m: ContrasteDoDia): string {
+export function describeContrast(m: DayContrast): string {
   if (!m.presente) return `${m.tema}/${m.modo} · ${m.estado}: estado ausente na tela`;
-  return `${m.tema}/${m.modo} · ${m.estado}: ${m.frente} sobre ${m.fundo} = ${m.razao}:1`;
+  return `${m.tema}/${m.modo} · ${m.estado}: ${m.frente} sobre ${m.fundo} = ${m.ratio}:1`;
 }
 
 /**
@@ -531,7 +531,7 @@ export function descreverContraste(m: ContrasteDoDia): string {
  * O dia bloqueado fica de fora: é texto de interface inativa, isento pela WCAG
  * 1.4.3 — cobrá-lo aqui obrigaria a apagar menos o que precisa parecer apagado.
  */
-export const ESTADOS_COM_TEXTO_LEGIVEL = [
+export const STATES_WITH_TEXT_LEGIVEL = [
   'selecionado',
   'hoje',
   'foraDoMes',
@@ -559,13 +559,13 @@ export const DENSIDADES = ['densidade-default', 'densidade-condensado', 'densida
  * A classe original volta no `finally`: deixá-la posta envenena a story seguinte
  * e a foto do Chromatic.
  */
-export function medirDensidadeDoCalendario(raiz: HTMLElement): MedidaDeDensidade[] {
+export function calendarMeasureDensity(raiz: HTMLElement): DensityMeasurement[] {
   const html = raiz.ownerDocument.documentElement;
-  const classeOriginal = html.className;
-  const saida: MedidaDeDensidade[] = [];
+  const classNameOriginal = html.className;
+  const saida: DensityMeasurement[] = [];
   try {
     for (const densidade of DENSIDADES) {
-      html.className = `${classeOriginal} ${densidade}`.trim();
+      html.className = `${classNameOriginal} ${densidade}`.trim();
       void raiz.offsetHeight;
       const alvo = raiz.querySelector<HTMLElement>('.nds-calendar-root') ?? raiz;
       const dia = raiz.querySelector<HTMLElement>('.nds-calendar-day-btn, .nds-calendar-day');
@@ -585,7 +585,7 @@ export function medirDensidadeDoCalendario(raiz: HTMLElement): MedidaDeDensidade
       });
     }
   } finally {
-    html.className = classeOriginal;
+    html.className = classNameOriginal;
     void raiz.offsetHeight;
   }
   return saida;
@@ -600,6 +600,6 @@ export function medirDensidadeDoCalendario(raiz: HTMLElement): MedidaDeDensidade
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest. A
  * mensagem de erro chega — é o único canal de saída disponível daqui.
  */
-export function reportarSonda(stack: string, cenario: string, dados: unknown): never {
+export function reportProbe(stack: string, cenario: string, dados: unknown): never {
   throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
 }

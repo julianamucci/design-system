@@ -4,8 +4,8 @@ import { Label } from './index';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
-  selectionSourceLabelWithBox,
-  labelComCampoSource,
+  selectionLabelWithBoxSource,
+  labelWithFieldSource,
   labelObrigatorioSource,
 } from './label.source';
 
@@ -18,7 +18,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: labelComCampoSource },
+      source: { transform: labelWithFieldSource },
       description: {
         component:
           'Composições do rótulo com outros elementos de formulário: campo de texto, caixa de seleção e campo obrigatório.',
@@ -62,7 +62,7 @@ export const WithInput: Story = {
 export const WithCheckbox: Story = {
   // A ordem se inverte e o bloco deita: o controle vem antes do texto, que é a
   // forma que a caixa pede. A do `meta` empilha rótulo em cima do campo.
-  parameters: { docs: { source: { transform: selectionSourceLabelWithBox } } },
+  parameters: { docs: { source: { transform: selectionLabelWithBoxSource } } },
   render: () => ({
     components: { Label, Checkbox },
     template: `

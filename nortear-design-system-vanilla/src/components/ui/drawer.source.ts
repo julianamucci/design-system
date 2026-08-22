@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -49,19 +49,19 @@ export type DrawerSnippetOptions = {
 };
 
 const IMPORTS_BASE = [
-  importar('drawer', 'createDrawer'),
-  importar('button', 'createButton'),
+  importing('drawer', 'createDrawer'),
+  importing('button', 'createButton'),
 ].join('\n');
 
 /** Um botão em UMA linha — ele é sempre argumento, nunca a chamada principal. */
 function botao(acao: DrawerSnippetAction): string {
-  const pares = opcoes([
+  const pairs = opcoes([
     ['variant', acao.variant && acao.variant !== 'default' ? texto(acao.variant) : undefined],
     ['label', texto(acao.label)],
   ])
     .map((linha) => linha.replace(/,$/, ''))
     .join(', ');
-  return `createButton({ ${pares} })`;
+  return `createButton({ ${pairs} })`;
 }
 
 function actionsOf(o: DrawerSnippetOptions): DrawerSnippetAction[] {
@@ -217,8 +217,8 @@ export function drawerWithFormSnippet(o: DrawerWithFormSnippetOptions = {}): str
   return snippet(
     [
       IMPORTS_BASE,
-      importar('form', 'createFormField'),
-      importar('input', 'createInput'),
+      importing('form', 'createFormField'),
+      importing('input', 'createInput'),
     ].join('\n'),
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack';
@@ -234,7 +234,7 @@ ${campos.map(campo).join('\n')}
 }
 
 /** Transform de story para a forma com formulário. */
-export function drawerComFormularioSource(
+export function drawerWithFormSource(
   fixas: DrawerWithFormSnippetOptions,
 ): SourceTransform<DrawerWithFormSnippetOptions> {
   return (_gerado, ctx) => drawerWithFormSnippet({ ...ctx.args, ...fixas });

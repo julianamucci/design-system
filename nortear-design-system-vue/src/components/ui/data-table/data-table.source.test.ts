@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dataTableColunasRedimensionaveisSource,
-  dataTableEdicaoInlineSource,
-  dataTableFiltrosPorColunaSource,
+  dataTableColumnsRedimensionaveisSource,
+  dataTableEditInlineSource,
+  columnDataTableFiltersSource,
   dataTablePaginadaSource,
   dataTableReordenarEFixarSource,
-  dataTableRotuloDeLinhaSource,
-  dataTableSemResultadosSource,
+  lineDataTableLabelSource,
+  dataTableNoResultsSource,
   dataTableSource,
   dataTableVirtualizadaSource,
 } from './data-table.source';
@@ -162,7 +162,7 @@ const chaveDaFatura = (f: Invoice) => f.id
 
 describe('transforms das stories de estado e configuração', () => {
   it('o vazio é uma lista vazia, e a grade continua montada', () => {
-    const saida = dataTableSemResultadosSource();
+    const saida = dataTableNoResultsSource();
     expect(saida).toContain('const invoices: Invoice[] = []');
     expect(saida).toContain('empty-message="Nenhuma fatura encontrada."');
     // As colunas ficam: quem esvaziou o resultado com um filtro precisa saber
@@ -178,7 +178,7 @@ describe('transforms das stories de estado e configuração', () => {
   });
 
   it('o rótulo de linha explícito vem acompanhado da chave, e vence a primeira coluna', () => {
-    const saida = dataTableRotuloDeLinhaSource();
+    const saida = lineDataTableLabelSource();
     expect(saida).toContain('const rotuloDaFatura = (f: Invoice) => f.customer');
     expect(saida).toContain(':row-label="rotuloDaFatura"');
     expect(saida).toContain(':row-key="chaveDaFatura"');
@@ -195,7 +195,7 @@ describe('transforms das stories de estado e configuração', () => {
 
 describe('transforms das stories de composição', () => {
   it('o filtro de cada coluna é declarado na própria coluna', () => {
-    const saida = dataTableFiltrosPorColunaSource();
+    const saida = columnDataTableFiltersSource();
     expect(saida).toContain(`meta: { filter: { type: 'text' } }`);
     expect(saida).toContain(`type: 'select', options: ['Pago', 'Pendente', 'Cancelado']`);
     // A coluna de valor fica SEM filtro: é ela que exercita a célula que anuncia
@@ -205,14 +205,14 @@ describe('transforms das stories de composição', () => {
   });
 
   it('redimensionar e reordenar são flags distintas, e a fixação anda em par com a ordem', () => {
-    expect(dataTableColunasRedimensionaveisSource()).toContain('enable-column-resizing');
+    expect(dataTableColumnsRedimensionaveisSource()).toContain('enable-column-resizing');
     const columnsPair = dataTableReordenarEFixarSource();
     expect(columnsPair).toContain('enable-column-ordering');
     expect(columnsPair).toContain('enable-column-pinning');
   });
 
   it('na edição inline o array é do consumidor, e o evento é quem avisa', () => {
-    const saida = dataTableEdicaoInlineSource();
+    const saida = dataTableEditInlineSource();
     expect(saida).toContain(`import { h, ref } from 'vue'`);
     expect(saida).toContain('const data = ref<Invoice[]>(invoices.slice(0, 6))');
     // O payload tem os três campos; sem eles quem consome não sabe o que mudou.
@@ -224,7 +224,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a coluna editável se declara na coluna, e não numa lista de fora', () => {
-    const saida = dataTableEdicaoInlineSource();
+    const saida = dataTableEditInlineSource();
     expect(saida).toContain(`{ accessorKey: 'customer', header: 'Cliente', meta: { editable: true } }`);
     // A primeira coluna continua não editável: o identificador da linha não é
     // campo de digitação.

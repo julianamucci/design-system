@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { ordemDeTabulacao } from '@shared/testing/form-probe';
+import { tabulacaoOrder } from '@shared/testing/form-probe';
 import FormGroupStory from './FormGroupStory.svelte';
 import FormMultipleStory from './FormMultipleStory.svelte';
 import { formFieldsetSource, formMultipleFieldsSource } from './form.source';
@@ -96,7 +96,7 @@ export const MultipleFields: Story = {
     await step('Os controles focalizáveis estão na ordem do DOM', async () => {
       // Medido pela ordem que o teclado visita, e por NOME acessível: uma ordem
       // certa de campos anônimos não seria uma ordem útil.
-      await expect(ordemDeTabulacao(canvasElement).map((c) => c.nome)).toEqual([
+      await expect(tabulacaoOrder(canvasElement).map((c) => c.nome)).toEqual([
         'Nome completo',
         'Email',
         'Biografia',

@@ -230,14 +230,14 @@ export const Playground: Story = {
       // REEXECUTA a play no mesmo DOM, e um clique absoluto partiria do estado
       // que a rodada anterior deixou, invertendo o resultado.
       await fechar(trigger);
-      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
       await abrir(trigger);
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(trigger).toHaveAttribute('data-state', 'open');
       await expect(painel()).toBeInTheDocument();
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
-      ).toBe(chamadasAntes + 1);
+      ).toBe(callsBefore + 1);
     });
 
     await step('Aberto, aria-controls aponta para o id real do painel', async () => {

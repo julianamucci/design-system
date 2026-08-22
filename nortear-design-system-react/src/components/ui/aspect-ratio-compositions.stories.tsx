@@ -4,9 +4,9 @@ import { expect } from "storybook/test";
 import { AspectRatio } from "./aspect-ratio";
 import { ImageWithFallback } from "@/components/figma/ImageWithFallback";
 import {
-  aspectRatioComIframeSource,
-  aspectRatioComVideoSource,
-  aspectRatioEmGradeSource,
+  aspectRatioWithIframeSource,
+  aspectRatioWithVideoSource,
+  gridAspectRatioSource,
   aspectRatioImageDecorativaSource,
   aspectRatioPlaceholderSource,
   aspectRatioSource,
@@ -82,7 +82,7 @@ export const WithIframe: Story = {
     covers: ["accessibility.item3"],
     docs: {
       // Filho de outro tipo: o iframe traz `title`, que a imagem não tem.
-      source: { transform: aspectRatioComIframeSource },
+      source: { transform: aspectRatioWithIframeSource },
       description: {
         story:
           "Iframe de mapa com `title` obrigatório descrevendo o conteúdo embedado (requisito WCAG 2.2 — 4.1.2).",
@@ -117,7 +117,7 @@ export const WithVideo: Story = {
     docs: {
       // A faixa de legendas e o `controls` são o contrato aqui, e nenhum dos
       // dois aparece num exemplo de imagem.
-      source: { transform: aspectRatioComVideoSource },
+      source: { transform: aspectRatioWithVideoSource },
       description: {
         story:
           "Elemento `<video>` nativo. Para produção, inclua `<track kind=\"captions\">` com legendas sincronizadas (WCAG 2.2 AA — 1.2.2).",
@@ -207,7 +207,7 @@ export const InGrid: Story = {
     docs: {
       // A grade em volta é o que resolve o problema; um AspectRatio sozinho
       // não mostraria alturas iguais em larguras diferentes.
-      source: { transform: aspectRatioEmGradeSource },
+      source: { transform: gridAspectRatioSource },
       description: {
         story:
           "Grid de cards em que todos os itens preservam a mesma proporção — resolve o problema de alturas desiguais em listagens com imagens de dimensões variáveis.",

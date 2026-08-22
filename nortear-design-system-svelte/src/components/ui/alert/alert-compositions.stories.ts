@@ -7,9 +7,9 @@ import AlertStory from './AlertStory.svelte';
 import AlertAcaoStory from './AlertAcaoStory.svelte';
 import AlertClasseAdicionalStory from './AlertClasseAdicionalStory.svelte';
 import {
-  alertClasseAdicionalSource,
-  alertComAcaoSource,
-  alertSemIconeSource,
+  alertClassNameAdicionalSource,
+  alertWithActionSource,
+  alertNoIconSource,
   alertSource,
 } from './alert.source';
 
@@ -54,7 +54,7 @@ export const WithIcon: Story = {
 
 export const WithAction: Story = {
   parameters: {
-    docs: { source: { transform: alertComAcaoSource } },
+    docs: { source: { transform: alertWithActionSource } },
   },
   render: () => ({ Component: AlertAcaoStory }),
 
@@ -88,7 +88,7 @@ export const WithAction: Story = {
  */
 export const AdditionalClass: Story = {
   parameters: {
-    docs: { source: { transform: alertClasseAdicionalSource } },
+    docs: { source: { transform: alertClassNameAdicionalSource } },
   },
   render: () => ({ Component: AlertClasseAdicionalStory }),
 
@@ -114,7 +114,7 @@ export const AdditionalClass: Story = {
 export const WithoutIcon: Story = {
   parameters: {
     covers: ['visual.item4'],
-    docs: { source: { transform: alertSemIconeSource } },
+    docs: { source: { transform: alertNoIconSource } },
   },
   render: () => ({
     Component: AlertStory,

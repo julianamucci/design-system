@@ -8,7 +8,7 @@
 import { attrs, attrsMultilinha, svelteSnippet } from '@/lib/story-source';
 
 /** Nome do componente e caminho do módulo de cada ícone usado nas stories. */
-const ICONES = {
+const ICONS = {
   alignLeft: ['AlignLeft', 'text-align-start'],
   alignCenter: ['AlignCenter', 'text-align-center'],
   alignRight: ['AlignRight', 'text-align-end'],
@@ -20,7 +20,7 @@ const ICONES = {
   list: ['List', 'list'],
 } as const;
 
-type IconKey = keyof typeof ICONES;
+type IconKey = keyof typeof ICONS;
 
 export type ToggleGroupArgs = {
   type: 'single' | 'multiple';
@@ -45,7 +45,7 @@ const ALINHAMENTO: readonly Item[] = [
   { value: 'right', rotulo: 'Alinhar à direita', icone: 'alignRight' },
 ];
 
-const FORMATACAO: readonly Item[] = [
+const FORMATTING: readonly Item[] = [
   { value: 'bold', rotulo: 'Negrito', icone: 'bold' },
   { value: 'italic', rotulo: 'Itálico', icone: 'italic' },
   { value: 'underline', rotulo: 'Sublinhado', icone: 'underline' },
@@ -59,11 +59,11 @@ const VISUALIZACAO: readonly Item[] = [
 const IMPORT = `import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";`;
 
 /** Bloco de imports: o componente do design system mais os ícones do exemplo. */
-function importar(itens: readonly Item[]): string {
+function importing(itens: readonly Item[]): string {
   return [
     IMPORT,
     ...itens.map((item) => {
-      const [nome, caminho] = ICONES[item.icone];
+      const [nome, caminho] = ICONS[item.icone];
       return `import ${nome} from "@lucide/svelte/icons/${caminho}";`;
     }),
   ].join('\n');
@@ -79,7 +79,7 @@ function marcarItems(itens: readonly Item[]): string {
         // Item só de ícone: sem isto ele fica anônimo para quem lê a tela.
         `aria-label="${item.rotulo}"`,
       );
-      return `  <ToggleGroupItem${props}>\n    <${ICONES[item.icone][0]} aria-hidden="true" />\n  </ToggleGroupItem>`;
+      return `  <ToggleGroupItem${props}>\n    <${ICONS[item.icone][0]} aria-hidden="true" />\n  </ToggleGroupItem>`;
     })
     .join('\n');
 }
@@ -89,10 +89,10 @@ function mountGroup(opcoes: {
   itens: readonly Item[];
   rotulo: string;
   estado: string;
-  declaracao: string;
+  declaration: string;
   props: string[];
 }): string {
-  const { itens, rotulo, estado, declaracao, props } = opcoes;
+  const { itens, rotulo, estado, declaration, props } = opcoes;
   const abertura = attrsMultilinha([
     ...props,
     `bind:value={${estado}}`,
@@ -101,7 +101,7 @@ function mountGroup(opcoes: {
   ]);
 
   return svelteSnippet(
-    `${importar(itens)}\n\n${declaracao}`,
+    `${importing(itens)}\n\n${declaration}`,
     `<ToggleGroup${abertura}>\n${marcarItems(itens)}\n</ToggleGroup>`,
   );
 }
@@ -123,7 +123,7 @@ export function toggleGroupSource(
 
   const combinado = type === 'multiple';
   const lista = Array.isArray(value) ? value : [];
-  const declaracao = combinado
+  const declaration = combinado
     ? lista.length
       ? `let alinhamento = $state([${lista.map((v) => `"${v}"`).join(', ')}]);`
       : 'let alinhamento: string[] = $state([]);'
@@ -133,7 +133,7 @@ export function toggleGroupSource(
     itens: ALINHAMENTO,
     rotulo: 'Alinhamento do texto',
     estado: 'alinhamento',
-    declaracao,
+    declaration,
     props: [
       // `type` é o assunto do componente: fica explícito mesmo no valor padrão.
       `type="${type}"`,
@@ -152,10 +152,10 @@ export function toggleGroupSource(
  */
 export function toggleGroupFormattingSource(): string {
   return mountGroup({
-    itens: FORMATACAO,
+    itens: FORMATTING,
     rotulo: 'Formatação',
     estado: 'formatacao',
-    declaracao: 'let formatacao: string[] = $state([]);',
+    declaration: 'let formatacao: string[] = $state([]);',
     props: ['type="multiple"'],
   });
 }
@@ -163,10 +163,10 @@ export function toggleGroupFormattingSource(): string {
 /** MultipleSelected (States): duas opções já combinadas na montagem. */
 export function toggleGroupSelectionMultiplaSource(): string {
   return mountGroup({
-    itens: FORMATACAO,
+    itens: FORMATTING,
     rotulo: 'Formatação',
     estado: 'formatacao',
-    declaracao: 'let formatacao = $state(["bold", "italic"]);',
+    declaration: 'let formatacao = $state(["bold", "italic"]);',
     props: ['type="multiple"'],
   });
 }
@@ -177,7 +177,7 @@ export function toggleGroupVerticalSource(): string {
     itens: VISUALIZACAO,
     rotulo: 'Modo de visualização',
     estado: 'visualizacao',
-    declaracao: 'let visualizacao = $state("");',
+    declaration: 'let visualizacao = $state("");',
     props: ['type="single"', 'orientation="vertical"'],
   });
 }
@@ -188,29 +188,29 @@ export function toggleGroupVisualizacaoVerticalSource(): string {
     itens: VISUALIZACAO,
     rotulo: 'Modo de visualização',
     estado: 'visualizacao',
-    declaracao: 'let visualizacao = $state("");',
+    declaration: 'let visualizacao = $state("");',
     props: ['type="single"', 'variant="outline"', 'orientation="vertical"'],
   });
 }
 
 /** AlignmentBar (Compositions): a barra clássica, com a quarta opção. */
-export function alignmentSourceToggleGroupBar(): string {
+export function alignmentToggleGroupBarSource(): string {
   return mountGroup({
     itens: [...ALINHAMENTO, { value: 'justify', rotulo: 'Justificar', icone: 'alignJustify' }],
     rotulo: 'Alinhamento do texto',
     estado: 'alinhamento',
-    declaracao: 'let alinhamento = $state("");',
+    declaration: 'let alinhamento = $state("");',
     props: ['type="single"'],
   });
 }
 
 /** DisabledItem (States): uma opção fora de uso sem derrubar o grupo inteiro. */
-export function toggleGroupItemDesabilitadoSource(): string {
+export function toggleGroupItemDisabledSource(): string {
   return mountGroup({
     itens: [ALINHAMENTO[0], { ...ALINHAMENTO[1], disabled: true }, ALINHAMENTO[2]],
     rotulo: 'Alinhamento do texto',
     estado: 'alinhamento',
-    declaracao: 'let alinhamento = $state("");',
+    declaration: 'let alinhamento = $state("");',
     props: ['type="single"'],
   });
 }

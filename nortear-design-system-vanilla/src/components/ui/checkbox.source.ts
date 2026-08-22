@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -71,7 +71,7 @@ export function checkboxSnippet(o: CheckboxSnippetOptions = {}): string {
   const caixa = `const caixa = ${chamada('createCheckbox', boxOptions(o, id))};`;
 
   if (noLabelVisible) {
-    return snippet(importar('checkbox', 'createCheckbox'), caixa, montar('caixa'));
+    return snippet(importing('checkbox', 'createCheckbox'), caixa, montar('caixa'));
   }
 
   const errorMarca = o.invalid
@@ -97,7 +97,7 @@ linha.append(caixa, rotulo);`;
 
   if (!o.invalid) {
     return snippet(
-      importar('checkbox', 'createCheckbox'),
+      importing('checkbox', 'createCheckbox'),
       linha,
       `${caixa}${errorMarca}`,
       rotulo,
@@ -106,7 +106,7 @@ linha.append(caixa, rotulo);`;
   }
 
   return snippet(
-    importar('checkbox', 'createCheckbox'),
+    importing('checkbox', 'createCheckbox'),
     linha,
     `${caixa}${errorMarca}`,
     rotulo,
@@ -156,7 +156,7 @@ export function checkboxWithDescriptionSnippet(o: CheckboxWithDescriptionSnippet
   const id = 'novidades-email';
 
   return snippet(
-    importar('checkbox', 'createCheckbox'),
+    importing('checkbox', 'createCheckbox'),
     `const linha = document.createElement('div');
 linha.className = 'nds-cluster';
 linha.dataset.spacing = 'sm';
@@ -209,7 +209,7 @@ export type GroupSnippetOptionsCheckbox = {
 };
 
 // Anotado, e não inferido: sem o tipo, `checked` some da forma do padrão e o
-// destructuring de `groupSnippetCheckbox` deixa de compilar quando ninguém
+// destructuring de `groupCheckboxSnippet` deixa de compilar quando ninguém
 // passa `itens`.
 const ITEMS_DEFAULT: NonNullable<GroupSnippetOptionsCheckbox['itens']> = [
   { id: 'notif-email', label: 'Receber novidades por email' },
@@ -224,7 +224,7 @@ const ITEMS_DEFAULT: NonNullable<GroupSnippetOptionsCheckbox['itens']> = [
  * opções soltas na página — é o que a WCAG 1.3.1 pede quando a relação entre
  * elas só existe visualmente.
  */
-export function groupSnippetCheckbox(o: GroupSnippetOptionsCheckbox = {}): string {
+export function groupCheckboxSnippet(o: GroupSnippetOptionsCheckbox = {}): string {
   const itens = o.itens ?? ITEMS_DEFAULT;
   const linhas = itens
     .map(
@@ -259,7 +259,7 @@ grupo.appendChild(titulo);`;
     : "'nds-cluster nds-border-default nds-rounded-md nds-p-2'";
 
   return snippet(
-    importar('checkbox', 'createCheckbox'),
+    importing('checkbox', 'createCheckbox'),
     `const opcoes = [\n${linhas}\n];`,
     raiz,
     `for (const { id, label, checked } of opcoes) {
@@ -283,7 +283,7 @@ grupo.appendChild(titulo);`;
 export function groupSourceWithCheckbox(
   fixas: GroupSnippetOptionsCheckbox = {},
 ): SourceTransform<GroupSnippetOptionsCheckbox> {
-  return (_gerado, ctx) => groupSnippetCheckbox({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => groupCheckboxSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Selecionar todos ─────────────────────────────────────────────────────────
@@ -298,7 +298,7 @@ export function groupSourceWithCheckbox(
  */
 export function checkboxSelectAllSnippet(): string {
   return snippet(
-    importar('checkbox', 'createCheckbox'),
+    importing('checkbox', 'createCheckbox'),
     `const opcoes = [
   { id: 'item-1', label: 'Manter sessão ativa' },
   { id: 'item-2', label: 'Receber novidades por email' },
@@ -379,5 +379,5 @@ lista.append(cabecalho, sublista);`,
 }
 
 /** Transform de story para o padrão "selecionar todos". */
-export const checkboxSelecionarTodosSource: SourceTransform = () =>
+export const checkboxSelectAllSource: SourceTransform = () =>
   checkboxSelectAllSnippet();

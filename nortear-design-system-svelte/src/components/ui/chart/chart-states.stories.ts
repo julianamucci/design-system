@@ -3,10 +3,10 @@ import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption, buildLineOption } from './index';
 import ChartDualStory from './ChartDualStory.svelte';
 import {
-  assentarTema,
+  settleTheme,
   contraste,
-  corDoToken, desenhoEscreve, desenhoPintado, exigirRaiz, formasDeDado,
-  fundoOpacoAtras, textosDoDesenho, tramasAplicadas,
+  corDoToken, designEscreve, designPintado, exigirRoot, datumFormas,
+  backgroundOpacoAtras, designTexts, tramasAplicadas,
 } from '@shared/testing/chart-probe';
 import { waitForDesign } from './chart.fixtures';
 import {
@@ -14,10 +14,10 @@ import {
   chartDoisTypesSource,
   chartMultiSerieSource,
   chartSource,
-  chartVazioSource,
+  chartEmptySource,
 } from './chart.source';
 
-const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
+const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr'];
 const SERIE_UNICA = [{ name: 'Vendas', data: [186, 305, 237, 73] }];
 const SERIES_MULTI = [
   { name: 'Desktop', data: [186, 305, 237, 73] },
@@ -49,7 +49,7 @@ export const Empty: Story = {
   parameters: {
     covers: ['functional.item1', 'visual.item3'],
     docs: {
-      source: { transform: chartVazioSource },
+      source: { transform: chartEmptySource },
       description: { story: 'Sem série com dado, o desenho dá lugar a uma frase que orienta a próxima ação.' },
     },
   },
@@ -60,7 +60,7 @@ export const Empty: Story = {
     emptyLabel: FRASE_VAZIA,
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('Sem dado não há desenho — há uma frase', async () => {
       await expect(raiz.querySelector('svg')).toBeNull();
@@ -92,25 +92,25 @@ export const SingleSeries: Story = {
     },
   },
   args: {
-    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
+    option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA }),
     height: 240,
     class: 'nds-w-full',
     'aria-label': 'Gráfico de barras: acessos mensais no desktop',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
     await waitForDesign(raiz);
 
     await step('O desenho saiu de verdade — controle da medição negativa abaixo', async () => {
       await waitFor(() => {
-        for (const mes of MESES) expect(desenhoEscreve(raiz, mes)).toBe(true);
+        for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
       }, { timeout: 3000 });
     });
 
     await step('Com uma série a legenda some — o nome da série não é escrito', async () => {
-      await expect(textosDoDesenho(raiz)).not.toContain(SERIE_UNICA[0].name);
+      await expect(designTexts(raiz)).not.toContain(SERIE_UNICA[0].name);
       // E some só a legenda: as formas de dado continuam todas lá.
-      await expect(formasDeDado(raiz).length).toBeGreaterThanOrEqual(MESES.length);
+      await expect(datumFormas(raiz).length).toBeGreaterThanOrEqual(MONTHS.length);
     });
   },
 };
@@ -124,18 +124,18 @@ export const MultiSeries: Story = {
     },
   },
   args: {
-    option: buildBarOption({ xAxis: MESES, series: SERIES_MULTI }),
+    option: buildBarOption({ xAxis: MONTHS, series: SERIES_MULTI }),
     height: 280,
     class: 'nds-w-full',
     'aria-label': 'Acessos mensais por dispositivo: desktop, mobile e tablet',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
     await waitForDesign(raiz);
 
     await step('A legenda escreve o nome de cada série', async () => {
       await waitFor(() => {
-        for (const serie of SERIES_MULTI) expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+        for (const serie of SERIES_MULTI) expect(designEscreve(raiz, serie.name)).toBe(true);
       }, { timeout: 3000 });
     });
 
@@ -182,8 +182,8 @@ export const ThemeTokens: Story = {
   render: () => ({
     Component: ChartDualStory,
     props: {
-      optionBar: buildBarOption({ xAxis: MESES, series: SERIES_MULTI }),
-      optionLine: buildLineOption({ xAxis: MESES, series: SERIES_MULTI }),
+      optionBar: buildBarOption({ xAxis: MONTHS, series: SERIES_MULTI }),
+      optionLine: buildLineOption({ xAxis: MONTHS, series: SERIES_MULTI }),
       labelBar: 'Acessos mensais por dispositivo, em barras',
       labelLine: 'Acessos mensais por dispositivo, em linhas',
     },
@@ -196,7 +196,7 @@ export const ThemeTokens: Story = {
       // metade dele sem ninguém fotografando.
       await expect(graficos).toHaveLength(2);
       await waitFor(
-        () => graficos.forEach((g) => expect(desenhoPintado(g)).toBe(true)),
+        () => graficos.forEach((g) => expect(designPintado(g)).toBe(true)),
         { timeout: 3000 },
       );
     });
@@ -239,22 +239,22 @@ export const GraphicContrast: Story = {
     },
   },
   args: {
-    option: buildBarOption({ xAxis: MESES, series: SERIES_MULTI }),
+    option: buildBarOption({ xAxis: MONTHS, series: SERIES_MULTI }),
     height: 280,
     class: 'nds-w-full',
     'aria-label': 'Acessos mensais por dispositivo',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
     await waitForDesign(raiz);
-    // Precondição da medida: ver o comentário de `assentarTema`.
-    await assentarTema(document);
-    const fundo = fundoOpacoAtras(raiz);
+    // Precondição da medida: ver o comentário de `settleTheme`.
+    await settleTheme(document);
+    const fundo = backgroundOpacoAtras(raiz);
 
     await step('Todo objeto gráfico passa de 3:1 pelo contorno', async () => {
-      const formas = formasDeDado(raiz);
+      const formas = datumFormas(raiz);
       // Uma forma de cor e uma de trama por barra desenhada, mais as da legenda.
-      await expect(formas.length).toBeGreaterThanOrEqual(MESES.length * SERIES_MULTI.length);
+      await expect(formas.length).toBeGreaterThanOrEqual(MONTHS.length * SERIES_MULTI.length);
       for (const forma of formas) {
         await expect(contraste(getComputedStyle(forma).stroke, fundo)).toBeGreaterThanOrEqual(3);
       }

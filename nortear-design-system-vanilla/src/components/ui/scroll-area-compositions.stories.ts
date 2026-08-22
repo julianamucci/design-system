@@ -98,12 +98,12 @@ export const TagList: Story = {
     });
 
     await step('A lista rola sem mover a página', async () => {
-      const paginaAntes = document.scrollingElement?.scrollTop ?? 0;
+      const pageBefore = document.scrollingElement?.scrollTop ?? 0;
       await expect(transbordo(viewport).y).toBe(true);
       viewport.scrollTop = 0;
       viewport.scrollTop = 120;
       await expect(viewport.scrollTop).toBe(120);
-      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(paginaAntes);
+      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(pageBefore);
     });
   },
 };

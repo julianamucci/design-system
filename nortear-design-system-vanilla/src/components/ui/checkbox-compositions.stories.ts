@@ -4,7 +4,7 @@ import { createCheckbox } from './checkbox';
 import {
   checkboxWithDescriptionSourceWith,
   groupSourceWithCheckbox,
-  checkboxSelecionarTodosSource,
+  checkboxSelectAllSource,
   checkboxSource,
 } from './checkbox.source';
 
@@ -326,7 +326,7 @@ export const SelectAll: Story = {
     docs: {
       // Override de story: a forma do snippet é outra — o pai é RECRIADO a cada
       // mudança de filho, e é essa engrenagem que a story ensina.
-      source: { transform: checkboxSelecionarTodosSource },
+      source: { transform: checkboxSelectAllSource },
       description: {
         story: 'Padrão "selecionar todos" com checkbox pai que controla os filhos, recuados com `.nds-checkbox-sublist`. Com seleção parcial dos filhos o pai fica indeterminado; com todos marcados, o pai marca; com nenhum, o pai desmarca.',
       },

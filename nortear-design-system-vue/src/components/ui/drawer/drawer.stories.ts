@@ -159,8 +159,8 @@ export const Playground: Story = {
     await fechar();
 
     await step('1. Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
-      const espiao = args['onUpdate:open'] as ReturnType<typeof fn>;
-      const chamadasAntes = espiao.mock.calls.length;
+      const spy = args['onUpdate:open'] as ReturnType<typeof fn>;
+      const callsBefore = spy.mock.calls.length;
       const painel = await abrir(trigger);
 
       await expect(painel).toBeVisible();
@@ -173,7 +173,7 @@ export const Playground: Story = {
       await expect(painel).toHaveAccessibleDescription(ROTULO.descricao);
       await expect(painel).toHaveAttribute('data-vaul-drawer-direction', args.direction!);
       await expect(painel).toHaveClass(/nds-drawer-content/);
-      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 1);
+      await expect(spy.mock.calls.length).toBe(callsBefore + 1);
     });
 
     await step('2. O painel é portalizado para fora da story', async () => {

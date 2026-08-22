@@ -17,7 +17,7 @@ import { NdsButton, NdsButtonIcon } from './button';
 import { NdsCheckbox } from './checkbox';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
-import { FATURAS, type Fatura } from './table.fixtures';
+import { INVOICES, type Fatura } from './table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -88,8 +88,8 @@ export const FilterToolbar: Story = {
     const termo = signal('');
     const filtradas = computed(() => {
       const t = termo().trim().toLowerCase();
-      if (!t) return FATURAS;
-      return FATURAS.filter((f) =>
+      if (!t) return INVOICES;
+      return INVOICES.filter((f) =>
         `${f.id} ${f.status} ${f.metodo}`.toLowerCase().includes(t),
       );
     });
@@ -155,13 +155,13 @@ export const FilterToolbar: Story = {
     const campo = canvas.getByLabelText('Buscar fatura');
 
     await step('Sem filtro, a tabela mostra o conjunto inteiro', async () => {
-      await expect(canvasElement.querySelectorAll('tbody tr').length).toBe(FATURAS.length);
+      await expect(canvasElement.querySelectorAll('tbody tr').length).toBe(INVOICES.length);
     });
 
     await step('O filtro reduz as linhas sem tocar no cabeçalho', async () => {
       await userEvent.type(campo, 'Pix');
       const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(FATURAS.filter((f) => f.metodo === 'Pix').length);
+      await expect(linhas.length).toBe(INVOICES.filter((f) => f.metodo === 'Pix').length);
       for (const linha of linhas) await expect(linha).toHaveTextContent('Pix');
       // As colunas continuam declaradas: o filtro mexe nos dados, não na grade.
       await expect(canvasElement.querySelectorAll('th').length).toBe(4);
@@ -192,7 +192,7 @@ export const SortableHeaders: Story = {
     const direcao = signal<TableSortDirection>('ascending');
     const ordenadas = computed(() => {
       const sinal = direcao() === 'ascending' ? 1 : -1;
-      return [...FATURAS].sort((a, b) => (valueNumerico(a) - valueNumerico(b)) * sinal);
+      return [...INVOICES].sort((a, b) => (valueNumerico(a) - valueNumerico(b)) * sinal);
     });
 
     return {
@@ -276,12 +276,12 @@ export const RowSelection: Story = {
   },
   render: () => {
     const selecionadas = signal<ReadonlySet<string>>(new Set());
-    const todas = computed(() => selecionadas().size === FATURAS.length);
+    const todas = computed(() => selecionadas().size === INVOICES.length);
     const algumas = computed(() => selecionadas().size > 0 && !todas());
 
     return {
       props: {
-        faturas: FATURAS,
+        faturas: INVOICES,
         selecionadas,
         todas,
         algumas,
@@ -292,7 +292,7 @@ export const RowSelection: Story = {
           selecionadas.set(proximo);
         },
         alternarTodas: (marcado: boolean) =>
-          selecionadas.set(marcado ? new Set(FATURAS.map((f) => f.id)) : new Set()),
+          selecionadas.set(marcado ? new Set(INVOICES.map((f) => f.id)) : new Set()),
       },
       template: `
         <div ndsTableWrapper>
@@ -344,14 +344,14 @@ export const RowSelection: Story = {
     await step('Cada checkbox diz qual fatura marca', async () => {
       // "Selecionar" sozinho, repetido cinco vezes, é indistinguível na lista de
       // controles do leitor de tela.
-      for (const fatura of FATURAS) {
+      for (const fatura of INVOICES) {
         await expect(canvas.getByLabelText(`Selecionar fatura ${fatura.id}`)).toBeTruthy();
       }
       await expect(selecionadas().length).toBe(0);
     });
 
     await step('Marcar uma linha destaca só ela, e deixa o mestre misto', async () => {
-      await userEvent.click(canvas.getByLabelText(`Selecionar fatura ${FATURAS[0].id}`));
+      await userEvent.click(canvas.getByLabelText(`Selecionar fatura ${INVOICES[0].id}`));
       await expect(selecionadas().length).toBe(1);
       await expect(linhas()[0]).toHaveAttribute('data-state', 'selected');
       const mestre = canvas.getByLabelText('Selecionar todas as faturas');
@@ -361,7 +361,7 @@ export const RowSelection: Story = {
     await step('O mestre marca e desmarca o conjunto inteiro', async () => {
       const mestre = canvas.getByLabelText('Selecionar todas as faturas');
       await userEvent.click(mestre);
-      await expect(selecionadas().length).toBe(FATURAS.length);
+      await expect(selecionadas().length).toBe(INVOICES.length);
       await userEvent.click(mestre);
       await expect(selecionadas().length).toBe(0);
     });

@@ -4,12 +4,12 @@ import { fn, userEvent, within, expect } from "storybook/test";
 import { Loader2 } from "lucide-react";
 import { Button } from "./button";
 import {
-  buttonCarregandoSource,
-  buttonDesabilitadoSource,
+  buttonLoadingSource,
+  buttonDisabledSource,
   buttonInvalidoSource,
   buttonSource,
 } from "./button.source";
-import { falhasDeAnel } from "@shared/testing/button-probe";
+import { ringFailures } from "@shared/testing/button-probe";
 
 const meta = {
   title: "UI/Button/States",
@@ -40,7 +40,7 @@ export const Disabled: Story = {
     docs: {
       // O `disabled` do render não passa pelos args do `meta`, e é ele — o
       // atributo nativo — que tira o botão da tabulação e mata o clique.
-      source: { transform: buttonDesabilitadoSource },
+      source: { transform: buttonDisabledSource },
       description: {
         story: "Estado desabilitado. Previne cliques e reduz opacidade para 50%.",
       },
@@ -81,7 +81,7 @@ export const Loading: Story = {
     docs: {
       // Carregar é disabled + aria-busy + rótulo em progresso, com o ícone
       // girando por `.nds-spin`: nada disso cabe nos args do `meta`.
-      source: { transform: buttonCarregandoSource },
+      source: { transform: buttonLoadingSource },
       description: {
         story: "Estado de carregamento. Use disabled + aria-busy e substitua o label por estado progressivo.",
       },
@@ -135,7 +135,7 @@ export const FocusVisible: Story = {
       // do app nos seis pares tema×modo — a meia opacidade de `--ring` comia
       // o indicador inteiro. WCAG 1.4.11 (Non-text Contrast, AA) pede 3:1.
       // `matches(:focus-visible)` sozinho passava com o anel invisível.
-      await expect(falhasDeAnel(canvasElement, 3)).toEqual([]);
+      await expect(ringFailures(canvasElement, 3)).toEqual([]);
     });
   },
 };

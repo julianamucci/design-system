@@ -11,9 +11,9 @@ import { Kbd } from '@/components/ui/kbd';
 import { Save } from 'lucide-vue-next';
 import { balaoDe } from './tooltip.fixtures';
 import {
-  tooltipComAtalhoSource,
+  tooltipWithShortcutSource,
   tooltipTextCurtoSource,
-  tooltipTextoLongoSource,
+  tooltipTextLongSource,
 } from './tooltip.source';
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
@@ -119,7 +119,7 @@ export const WithShortcut: Story = {
     docs: {
       // O balão deixa de ser texto corrido e ganha estrutura própria — o rótulo
       // e as teclas em Kbd, que a do meta esconderia numa linha só.
-      source: { transform: tooltipComAtalhoSource },
+      source: { transform: tooltipWithShortcutSource },
       description: {
         story: 'Tooltip com atalho de teclado via componente Kbd. Útil para botões com hotkeys.',
       },
@@ -174,7 +174,7 @@ export const LongText: Story = {
     docs: {
       // O gatilho troca de forma: botão com rótulo visível em vez de icon-only,
       // e é o texto longo dele que a story existe para medir.
-      source: { transform: tooltipTextoLongoSource },
+      source: { transform: tooltipTextLongSource },
       description: {
         story:
           'Tooltip com texto que quebra dentro do limite de largura do balão — útil para definições curtas.',

@@ -5,7 +5,7 @@ import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 import { Button } from "./button";
-import { calendarComPopoverSource, calendarSource } from "./calendar.source";
+import { calendarWithPopoverSource, calendarSource } from "./calendar.source";
 import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
 
 const meta = {
@@ -73,7 +73,7 @@ export const DatePicker: Story = {
       // São três peças e dois estados; o painel imprimia tudo isso como um
       // componente que só existe neste arquivo, e o calendário solto do `meta`
       // esconderia a composição inteira.
-      source: { transform: calendarComPopoverSource },
+      source: { transform: calendarWithPopoverSource },
       description: {
         story:
           "O botão carrega a data escolhida; escolher uma nova atualiza o rótulo e fecha o popover.",

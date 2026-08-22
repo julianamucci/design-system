@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  perfilSourceSheetEdit,
-  sheetFiltrosAvancadosSource,
+  perfilSheetEditSource,
+  sheetFiltersAvancadosSource,
   sheetSource,
   sheetTermosWithScrollSource,
 } from './sheet.source';
@@ -91,14 +91,14 @@ describe('sheetSource', () => {
 
 describe('transforms das stories de composição', () => {
   it('os filtros avançados trazem o formulário no corpo do painel', () => {
-    const saida = sheetFiltrosAvancadosSource();
+    const saida = sheetFiltersAvancadosSource();
     expect(saida).toContain('<SheetBody>');
     expect(saida).toContain('import { Input } from "@/components/ui/input";');
     expect(saida).toContain('<Label for="sheet-nome">Nome</Label>');
   });
 
   it('a edição de perfil muda a decisão do rodapé, não a estrutura', () => {
-    const saida = perfilSourceSheetEdit();
+    const saida = perfilSheetEditSource();
     expect(saida).toContain('<SheetTitle>Editar perfil</SheetTitle>');
     expect(saida).toContain('<Button>Salvar alterações</Button>');
   });

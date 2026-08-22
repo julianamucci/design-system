@@ -52,7 +52,7 @@ function cabecalho(titulo: string, descricao: string, acao = ''): string {
   return `<CardHeader>\n${corpo.join('\n')}\n</CardHeader>`;
 }
 
-const PRODUTO = 'Cadeira Gamer Pro';
+const PRODUCT = 'Cadeira Gamer Pro';
 const DESCRIPTION_PRODUCT = 'Estrutura ergonômica com ajuste de altura e apoio lombar.';
 
 const PRECO = `<CardContent>
@@ -80,11 +80,11 @@ export const cardSource: SourceTransform<CardArgs> = (_gerado, ctx) => {
 ${IMPORT_BUTTON}`,
     card(
       [attr('size', ctx?.args?.size, 'default'), WIDTH_SM],
-      cabecalho(PRODUTO, DESCRIPTION_PRODUCT),
+      cabecalho(PRODUCT, DESCRIPTION_PRODUCT),
       PRECO,
       rodape(
-        `<Button variant="outline" aria-label="Editar produto ${PRODUTO}">Editar</Button>`,
-        `<Button variant="destructive" aria-label="Excluir produto ${PRODUTO}">Excluir</Button>`,
+        `<Button variant="outline" aria-label="Editar produto ${PRODUCT}">Editar</Button>`,
+        `<Button variant="destructive" aria-label="Excluir produto ${PRODUCT}">Excluir</Button>`,
       ),
     ),
   );
@@ -97,7 +97,7 @@ ${IMPORT_BUTTON}`,
 export function cardSimpleSource(): string {
   return vueSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
-    card([WIDTH_SM], cabecalho(PRODUTO, DESCRIPTION_PRODUCT), PRECO),
+    card([WIDTH_SM], cabecalho(PRODUCT, DESCRIPTION_PRODUCT), PRECO),
   );
 }
 
@@ -124,15 +124,15 @@ export function cardCompactoSource(): string {
  * que carrega o destino, o nome acessível e o anel de foco — assim o Tab
  * alcança um destino único, em vez de um card mudo com handler no clique.
  */
-export function cardClicavelSource(): string {
+export function cardClickableSource(): string {
   return vueSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
     `<a
   href="/produtos/cadeira-gamer-pro"
-  aria-label="Abrir detalhes do produto ${PRODUTO}"
+  aria-label="Abrir detalhes do produto ${PRODUCT}"
   class="nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
 >
-${indentar(card([], cabecalho(PRODUTO, DESCRIPTION_PRODUCT), PRECO), 2)}
+${indentar(card([], cabecalho(PRODUCT, DESCRIPTION_PRODUCT), PRECO), 2)}
 </a>`,
   );
 }
@@ -142,17 +142,17 @@ ${indentar(card([], cabecalho(PRODUTO, DESCRIPTION_PRODUCT), PRECO), 2)}
  * ao detectá-lo ali, e a borda superior do rodapé encosta na base — um
  * invólucro entre os dois mataria a regra sem mudar nada visível de imediato.
  */
-export function cardComRodapeSource(): string {
+export function cardWithFooterSource(): string {
   return vueSnippet(
     `${importCard('CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle')}
 ${IMPORT_BUTTON}`,
     card(
       [WIDTH_SM],
-      cabecalho(PRODUTO, 'Produto atualizado em 12/04.'),
+      cabecalho(PRODUCT, 'Produto atualizado em 12/04.'),
       PRECO,
       rodape(
-        `<Button variant="outline" aria-label="Cancelar edição de ${PRODUTO}">Cancelar</Button>`,
-        `<Button aria-label="Salvar alterações em ${PRODUTO}">Salvar</Button>`,
+        `<Button variant="outline" aria-label="Cancelar edição de ${PRODUCT}">Cancelar</Button>`,
+        `<Button aria-label="Salvar alterações em ${PRODUCT}">Salvar</Button>`,
       ),
     ),
   );
@@ -162,16 +162,16 @@ ${IMPORT_BUTTON}`,
  * Ação no cabeçalho: com ela o cabeçalho vira grade de duas colunas e a ação
  * encosta à direita. A ordem do DOM continua título, descrição e ação.
  */
-export function headerSourceCardWithAction(): string {
+export function headerCardWithActionSource(): string {
   return vueSnippet(
     `${importCard('CardAction', 'CardContent', 'CardDescription', 'CardHeader', 'CardTitle')}
 ${IMPORT_BUTTON}`,
     card(
       [WIDTH_SM],
       cabecalho(
-        PRODUTO,
+        PRODUCT,
         'Em estoque',
-        `<Button variant="ghost" size="sm" aria-label="Editar produto ${PRODUTO}">Editar</Button>`,
+        `<Button variant="ghost" size="sm" aria-label="Editar produto ${PRODUCT}">Editar</Button>`,
       ),
       `<CardContent>
   <p class="nds-text-body">R$ 1.299,00</p>
@@ -185,18 +185,18 @@ ${IMPORT_BUTTON}`,
  * respiro de cima, tudo por CSS — não é preciso passar classe de canto na
  * imagem. O texto alternativo descreve o produto, porque a imagem informa.
  */
-export function cardComImagemSource(): string {
+export function cardWithImageSource(): string {
   return vueSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
     card(
       [WIDTH_SM],
       `<img
   src="/produtos/cadeira-gamer-pro.jpg"
-  alt="${PRODUTO} vista de frente, em fundo neutro"
+  alt="${PRODUCT} vista de frente, em fundo neutro"
   class="nds-w-full nds-aspect-16-9"
   style="object-fit: cover"
 />`,
-      cabecalho(PRODUTO, DESCRIPTION_PRODUCT),
+      cabecalho(PRODUCT, DESCRIPTION_PRODUCT),
       PRECO,
     ),
   );
@@ -206,7 +206,7 @@ export function cardComImagemSource(): string {
  * Catálogo: a unidade completa. O status é a AÇÃO do cabeçalho, e não texto
  * solto no corpo, e cada ação do rodapé diz sobre qual produto age.
  */
-export function cardDeProdutoSource(): string {
+export function productCardSource(): string {
   return vueSnippet(
     `${importCard('CardAction', 'CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle')}
 ${IMPORT_BUTTON}
@@ -215,15 +215,15 @@ import { Badge } from '@/components/ui/badge'`,
       [WIDTH_SM],
       `<img
   src="/produtos/cadeira-gamer-pro.jpg"
-  alt="${PRODUTO} vista de frente, em fundo neutro"
+  alt="${PRODUCT} vista de frente, em fundo neutro"
   class="nds-w-full nds-aspect-16-9"
   style="object-fit: cover"
 />`,
-      cabecalho(PRODUTO, DESCRIPTION_PRODUCT, `<Badge variant="secondary">Em estoque</Badge>`),
+      cabecalho(PRODUCT, DESCRIPTION_PRODUCT, `<Badge variant="secondary">Em estoque</Badge>`),
       PRECO,
       rodape(
-        `<Button variant="outline" size="sm" aria-label="Editar produto ${PRODUTO}">Editar</Button>`,
-        `<Button variant="destructive" size="sm" aria-label="Excluir produto ${PRODUTO}">Excluir</Button>`,
+        `<Button variant="outline" size="sm" aria-label="Editar produto ${PRODUCT}">Editar</Button>`,
+        `<Button variant="destructive" size="sm" aria-label="Excluir produto ${PRODUCT}">Excluir</Button>`,
       ),
     ),
   );

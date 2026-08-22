@@ -86,8 +86,8 @@ function gatilho(rotulo: string): string {
 </DrawerTrigger>`;
 }
 
-function painel(propsRaiz: string, miolo: string, comGatilho: string): string {
-  const partes = [comGatilho, `<DrawerContent>\n${indentar(miolo)}\n</DrawerContent>`]
+function painel(propsRaiz: string, miolo: string, withTrigger: string): string {
+  const partes = [withTrigger, `<DrawerContent>\n${indentar(miolo)}\n</DrawerContent>`]
     .filter(Boolean)
     .join('\n');
   return `<Drawer${propsRaiz}>
@@ -173,7 +173,7 @@ export function drawerDireitaSource(): string {
  * Aberto na montagem. Aqui `defaultOpen` É o assunto — nas outras stories ele
  * só existe para a captura visual, e por isso fica de fora daqueles snippets.
  */
-export function drawerAbertoSource(): string {
+export function drawerOpenSource(): string {
   const miolo = [
     cabecalho('Editar perfil', 'Atualize seus dados.'),
     `<DrawerFooter>
@@ -194,7 +194,7 @@ export function drawerAbertoSource(): string {
  * Sem `DrawerTrigger`: quem abre é o botão de fora, e é isso que o modo
  * controlado torna possível.
  */
-export function drawerControladoSource(): string {
+export function drawerControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 import {
@@ -243,7 +243,7 @@ import { Button } from "@/components/ui/button";`,
  * A saída então PRECISA ser explícita e alcançável por teclado — `dismissible`
  * desligado sem um botão de fechar prende quem navega sem ponteiro.
  */
-export function drawerNaoDispensavelSource(): string {
+export function drawerNotDispensavelSource(): string {
   const miolo = [
     cabecalho('Confirmação obrigatória', 'Use o botão Confirmar para prosseguir.'),
     `<DrawerFooter>
@@ -261,7 +261,7 @@ export function drawerNaoDispensavelSource(): string {
  * pelo RÓTULO, e é o `htmlFor` casando com o `id` que sustenta isso: sem o par,
  * o campo fica sem nome acessível dentro de um painel modal.
  */
-export function drawerComFormularioSource(): string {
+export function drawerWithFormSource(): string {
   const miolo = [
     cabecalho('Editar perfil', 'Atualize seu nome e e-mail.'),
     `<DrawerBody>
@@ -297,7 +297,7 @@ import { Label } from "@/components/ui/label";`,
  * na variante destrutiva. Se a ação for realmente bloqueante, o componente é
  * outro — o AlertDialog.
  */
-export function drawerComConfirmacaoSource(): string {
+export function drawerWithConfirmSource(): string {
   const miolo = [
     cabecalho(
       'Remover anexo?',
@@ -321,7 +321,7 @@ export function drawerComConfirmacaoSource(): string {
  * ações dentro — para fora da tela. O `tabIndex` da região rolável vem do
  * próprio componente, então quem navega por teclado alcança a rolagem.
  */
-export function drawerComRolagemSource(): string {
+export function drawerWithScrollSource(): string {
   const miolo = [
     cabecalho('Lista de itens', '30 itens — role o conteúdo para ver mais.'),
     `<DrawerBody className="nds-text-body">

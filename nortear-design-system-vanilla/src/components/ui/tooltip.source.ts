@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -63,8 +63,8 @@ export function tooltipSnippet(o: TooltipSnippetOptions = {}): string {
 
   return snippet(
     [
-      importar('tooltip', withProvider ? 'createTooltipProvider' : 'createTooltip'),
-      importar('button', 'createButton'),
+      importing('tooltip', withProvider ? 'createTooltipProvider' : 'createTooltip'),
+      importing('button', 'createButton'),
     ].join('\n'),
     withProvider
       ? `// O provedor guarda a espera do grupo: o balão seguinte abre na hora\n// enquanto a janela de dispensa dura.\nconst grupo = ${chamada('createTooltipProvider', linesProvider)};`
@@ -103,7 +103,7 @@ export function tooltipSourceWith(fixas: TooltipSnippetOptions): SourceTransform
  */
 export function tooltipLadosSnippet(): string {
   return snippet(
-    [importar('tooltip', 'createTooltip'), importar('button', 'createButton')].join('\n'),
+    [importing('tooltip', 'createTooltip'), importing('button', 'createButton')].join('\n'),
     `const grade = document.createElement('div');
 grade.className = 'nds-cluster';
 grade.dataset.spacing = 'lg';

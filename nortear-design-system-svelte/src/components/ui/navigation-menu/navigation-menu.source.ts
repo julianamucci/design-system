@@ -21,9 +21,9 @@ export type NavigationMenuArgs = {
   indicator: boolean;
 };
 
-function importar(pecas: string[]): string {
+function importing(parts: string[]): string {
   return `import {
-${pecas.map((peca) => `  ${peca},`).join('\n')}
+${parts.map((part) => `  ${part},`).join('\n')}
 } from "@/components/ui/navigation-menu";`;
 }
 
@@ -36,7 +36,7 @@ function destino(valor: string, href: string, rotulo: string, ativo: boolean): s
 }
 
 /** Item com painel: o gatilho é botão porque abre conteúdo, e não navega. */
-function comPainel(valor: string, rotulo: string, corpo: string): string {
+function withPanel(valor: string, rotulo: string, corpo: string): string {
   return `    <NavigationMenuItem value="${valor}">
       <NavigationMenuTrigger>${rotulo}</NavigationMenuTrigger>
       <NavigationMenuContent>
@@ -140,7 +140,7 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
   if (demonstration === 'withDropdown') {
     return [
       destino('inicio', '#inicio', 'Início', ativo('#inicio')),
-      comPainel('planos', 'Planos', targetsList(PLANOS)),
+      withPanel('planos', 'Planos', targetsList(PLANOS)),
       destino('contato', '#contato', 'Contato', ativo('#contato')),
     ].join('\n');
   }
@@ -148,7 +148,7 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
   if (demonstration === 'megaMenuGrid') {
     return [
       destino('inicio', '#inicio', 'Início', ativo('#inicio')),
-      comPainel(
+      withPanel(
         'solucoes',
         'Soluções',
         targetsGrid([
@@ -164,15 +164,15 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
   if (demonstration === 'withFeatured') {
     return [
       destino('inicio', '#inicio', 'Início', ativo('#inicio')),
-      comPainel('recursos', 'Recursos', HIGHLIGHT_PANEL),
+      withPanel('recursos', 'Recursos', HIGHLIGHT_PANEL),
     ].join('\n');
   }
 
   if (demonstration === 'bar') {
     return [
       destino('inicio', '#inicio', 'Início', ativo('#inicio')),
-      comPainel('produtos', 'Produtos', targetsList(PLANOS.slice(0, 2))),
-      comPainel('recursos', 'Recursos', targetsList(RECURSOS)),
+      withPanel('produtos', 'Produtos', targetsList(PLANOS.slice(0, 2))),
+      withPanel('recursos', 'Recursos', targetsList(RECURSOS)),
       destino('precos', '#precos', 'Preços', ativo('#precos')),
       destino('sobre', '#sobre', 'Sobre', ativo('#sobre')),
     ].join('\n');
@@ -180,8 +180,8 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
 
   return [
     destino('inicio', '#inicio', 'Início', ativo('#inicio')),
-    comPainel('produtos', 'Produtos', targetsList(PLANOS)),
-    comPainel('solucoes', 'Soluções', targetsList(SOLUCOES)),
+    withPanel('produtos', 'Produtos', targetsList(PLANOS)),
+    withPanel('solucoes', 'Soluções', targetsList(SOLUCOES)),
     destino('sobre', '#sobre', 'Sobre', ativo('#sobre')),
   ].join('\n');
 }
@@ -207,7 +207,7 @@ export function navigationMenuSource(
   } = ctx?.args ?? {};
 
   const hasPanel = demonstration !== 'simpleLink';
-  const pecas = [
+  const parts = [
     'NavigationMenuRoot',
     'NavigationMenuList',
     'NavigationMenuItem',
@@ -235,10 +235,10 @@ export function navigationMenuSource(
 
   return svelteSnippet(
     defaultValue
-      ? `${importar(pecas)}
+      ? `${importing(parts)}
 
 let aberto = $state("${defaultValue}");`
-      : importar(pecas),
+      : importing(parts),
     `<NavigationMenuRoot${props}>
   <NavigationMenuList${listProps}>
 ${itens(demonstration, activeHref)}${seta}

@@ -5,7 +5,7 @@ import { NdsScrollArea } from './scroll-area';
 import { NdsButton } from './button';
 // O anel de foco vivia numa cópia local desta varredura. Ele agora é do colhedor
 // compartilhado: a mesma pergunta é feita nas cinco stacks, com a mesma conta.
-import { anelDeFocoDeclarado } from '@shared/testing/scroll-area-probe';
+import { focusDeclaradoRing } from '@shared/testing/scroll-area-probe';
 
 // Os estados do ScrollArea são todos do NAVEGADOR — a barra é nativa, então
 // hover e "rolando" não têm elemento próprio no DOM para provar. Sobram os dois
@@ -33,7 +33,7 @@ export default meta;
 type Story = StoryObj;
 
 const TAGS = Array.from({ length: 24 }, (_, i) => `Tag ${i + 1}`);
-const ACOES = Array.from({ length: 20 }, (_, i) => `Ação ${i + 1}`);
+const ACTIONS = Array.from({ length: 20 }, (_, i) => `Ação ${i + 1}`);
 
 export const Focus: Story = {
   parameters: { covers: ['accessibility.item3', 'visual.item4'] },
@@ -65,7 +65,7 @@ export const Focus: Story = {
     });
 
     await step('O design system declara o anel de foco do viewport', async () => {
-      await expect(anelDeFocoDeclarado()).toBe(true);
+      await expect(focusDeclaradoRing()).toBe(true);
     });
   },
 };
@@ -73,7 +73,7 @@ export const Focus: Story = {
 export const FocusableContent: Story = {
   parameters: { covers: ['accessibility.item4'] },
   render: () => ({
-    props: { acoes: ACOES },
+    props: { acoes: ACTIONS },
     template: `
       <div ndsScrollArea size="md" label="Lista de ações" class="nds-w-sm nds-rounded-md nds-border-default">
         <div class="nds-stack nds-p-4" data-spacing="sm">

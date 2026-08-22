@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
-  textareaComApoioSource,
-  textareaComContadorSource,
+  textareaWithHelperSource,
+  textareaWithCounterSource,
   textareaWithLabelSource,
-  textareaDesabilitadoSource,
+  textareaDisabledSource,
   textareaInvalidoSource,
   textareaObrigatorioSource,
-  textareaPadraoSource,
+  textareaDefaultSource,
   textareaPreenchidoSource,
-  textareaSemRedimensionarSource,
+  textareaNoRedimensionarSource,
   textareaSomenteLeituraSource,
   textareaSource,
 } from './textarea.source';
@@ -105,13 +105,13 @@ describe('o par mínimo', () => {
 
 describe('transforms das stories de variante', () => {
   it('a padrão é o par mínimo num campo de texto livre', () => {
-    const saida = textareaPadraoSource();
+    const saida = textareaDefaultSource();
     expect(saida).toContain('<Label for="biografia">Biografia</Label>');
     expect(saida).toContain('nds-resize-y');
   });
 
   it('o contador anda junto com o limite, e é anunciado por extenso', () => {
-    const saida = textareaComContadorSource();
+    const saida = textareaWithCounterSource();
     expect(saida).toContain(':maxlength="maximo"');
     expect(saida).toContain('aria-live="polite"');
     // Lido cru, "123/500" vira "cento e vinte e três barra quinhentos".
@@ -120,7 +120,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('sem alça, a troca é de classe — não existe prop de redimensionamento', () => {
-    const saida = textareaSemRedimensionarSource();
+    const saida = textareaNoRedimensionarSource();
     expect(saida).toContain('class="nds-resize-none nds-min-h-30"');
     expect(saida).not.toContain('nds-resize-y');
     expect(saida).not.toContain('resize=');
@@ -136,7 +136,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o desabilitado escreve só o bloqueio', () => {
-    const saida = textareaDesabilitadoSource();
+    const saida = textareaDisabledSource();
     expect(saida).toContain('  disabled\n');
     expect(saida).not.toContain('readonly');
   });
@@ -158,7 +158,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o texto de apoio usa o mesmo vínculo do erro, e fica fora do rótulo', () => {
-    const saida = textareaComApoioSource();
+    const saida = textareaWithHelperSource();
     expect(saida).toContain('aria-describedby="biografia-apoio"');
     expect(saida).toContain('<p id="biografia-apoio" class="nds-text-body">');
     // Dentro do Label, a orientação viraria parte do nome acessível do campo.

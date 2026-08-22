@@ -3,9 +3,9 @@ import { within, userEvent, waitFor, expect } from 'storybook/test';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './index';
 import { ChevronDown, Filter } from 'lucide-vue-next';
 import {
-  collapsibleComBotaoSource,
-  collapsibleComChevronSource,
-  collapsibleComIconeSource,
+  collapsibleWithButtonSource,
+  collapsibleWithChevronSource,
+  collapsibleWithIconSource,
 } from './collapsible.source';
 
 // Mesmo markup do Playground e do Vanilla (referência cross-stack).
@@ -22,7 +22,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: collapsibleComBotaoSource },
+      source: { transform: collapsibleWithButtonSource },
       description: {
         component: 'Composicoes do Collapsible: trigger estilizado como botão, ícone no trigger e chevron que gira ao abrir.',
       },
@@ -99,7 +99,7 @@ export const WithIconInTrigger: Story = {
     covers: ['accessibility.item4'],
     // O ícone dentro do rótulo é a sub-composição em questão, e ele traz um
     // import a mais — a do meta não mostra nenhum dos dois.
-    docs: { source: { transform: collapsibleComIconeSource } },
+    docs: { source: { transform: collapsibleWithIconSource } },
   },
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown, Filter },
@@ -152,7 +152,7 @@ export const WithRotatingChevron: Story = {
     covers: ['visual.item4'],
     // O painel traz pares rótulo/valor em vez de parágrafos soltos: é outra
     // sub-composição, e é ela que a story fotografa.
-    docs: { source: { transform: collapsibleComChevronSource } },
+    docs: { source: { transform: collapsibleWithChevronSource } },
   },
   render: () => ({
     components: { Collapsible, CollapsibleTrigger, CollapsibleContent, ChevronDown },

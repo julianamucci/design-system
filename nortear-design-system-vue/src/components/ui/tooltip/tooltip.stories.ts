@@ -14,7 +14,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { tooltipSource } from './tooltip.source';
 
 /** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
-function ladoDe(balao: HTMLElement | null): string | null {
+function sideOf(balao: HTMLElement | null): string | null {
   return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
 }
 
@@ -122,7 +122,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('button', { name: /Salvar/i });
-    const espiao = args['onUpdate:open'] as ReturnType<typeof fn>;
+    const spy = args['onUpdate:open'] as ReturnType<typeof fn>;
 
     await step('O gatilho é um botão nativo, alcançável por teclado', async () => {
       // A raiz da lib não tem elemento próprio (é só contexto), então o
@@ -151,13 +151,13 @@ export const Playground: Story = {
       // `blur()` antes do `focus()`: no replay o gatilho já está focado (o
       // Escape do último passo não tira o foco), e `focus()` num elemento já
       // focado não dispara evento nenhum — o balão nunca reabriria.
-      const chamadasAntes = espiao.mock.calls.length;
+      const callsBefore = spy.mock.calls.length;
       gatilho.blur();
       gatilho.focus();
       await waitFor(async () => {
         await expect(balaoDe(gatilho)).not.toBeNull();
       });
-      await expect(espiao.mock.calls.length).toBeGreaterThan(chamadasAntes);
+      await expect(spy.mock.calls.length).toBeGreaterThan(callsBefore);
     });
 
     await step('Aberto, o balão é um role=tooltip ligado ao gatilho', async () => {
@@ -178,9 +178,9 @@ export const Playground: Story = {
       const oposto = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' } as const;
       const lado = ((args as { side?: keyof typeof oposto }).side ?? 'top');
       await waitFor(async () => {
-        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
       });
-      await expect([lado, oposto[lado]]).toContain(ladoDe(balaoDe(gatilho)));
+      await expect([lado, oposto[lado]]).toContain(sideOf(balaoDe(gatilho)));
     });
 
     await step('Escape fecha e o foco fica onde estava', async () => {

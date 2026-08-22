@@ -11,7 +11,7 @@ import {
 import { campo } from "./input-otp.fixtures";
 import {
   inputOtpAlfanumericoSource,
-  inputOtpComSeparadorSource,
+  inputOtpWithSeparatorSource,
   inputOtpQuatroDigitosSource,
   inputOtpSource,
 } from "./input-otp.source";
@@ -162,7 +162,7 @@ export const WithSeparator: Story = {
     docs: {
       // Dois grupos e um separador: uma sub-composição que o snippet de grupo
       // único esconde, com os índices explícitos em vez do laço.
-      source: { transform: inputOtpComSeparadorSource },
+      source: { transform: inputOtpWithSeparatorSource },
       description: {
         story:
           "Dois grupos de 3 caixas com um separador entre eles — formato xxx-xxx de códigos de recuperação.",

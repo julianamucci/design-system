@@ -3,10 +3,10 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NdsChart } from './chart';
 import {
-  MESES,
+  MONTHS,
   SERIE_UNICA,
   SERIES_MULTI,
-  DADOS_DISPOSITIVO,
+  DATA_DISPOSITIVO,
   rgbColor,
   rgbToken,
 } from './chart.fixtures';
@@ -26,7 +26,7 @@ export const Bar: Story = {
     covers: ['functional.item2', 'functional.item4', 'visual.item1'],
   },
   render: () => ({
-    props: { meses: MESES, series: SERIE_UNICA },
+    props: { meses: MONTHS, series: SERIE_UNICA },
     template: `
       <div ndsChart
         type="bar"
@@ -41,14 +41,14 @@ export const Bar: Story = {
 
     await step('Uma barra por mês, com altura proporcional ao valor', async () => {
       const barras = [...chart.querySelectorAll<SVGRectElement>('rect[data-series]')];
-      await expect(barras).toHaveLength(MESES.length);
+      await expect(barras).toHaveLength(MONTHS.length);
       const alturas = barras.map((b) => b.getBoundingClientRect().height);
       const valores = SERIE_UNICA[0].data;
       // Maior valor → maior barra. Compara ordem, não pixel: o desenho é
       // responsivo e o número absoluto muda com a largura do container.
       const maiorHeight = alturas.indexOf(Math.max(...alturas));
-      const maiorValor = valores.indexOf(Math.max(...valores));
-      await expect(maiorHeight).toBe(maiorValor);
+      const maiorValue = valores.indexOf(Math.max(...valores));
+      await expect(maiorHeight).toBe(maiorValue);
     });
 
     await step('Cada forma carrega categoria e valor em texto', async () => {
@@ -57,7 +57,7 @@ export const Bar: Story = {
       const barras = [...chart.querySelectorAll<SVGRectElement>('rect[data-series]')];
       barras.forEach((barra, i) => {
         const titulo = barra.querySelector('title')?.textContent ?? '';
-        expect(titulo).toContain(MESES[i]);
+        expect(titulo).toContain(MONTHS[i]);
         expect(titulo).toContain(String(SERIE_UNICA[0].data[i]));
       });
 
@@ -80,7 +80,7 @@ export const Line: Story = {
     covers: ['functional.item3', 'visual.item2'],
   },
   render: () => ({
-    props: { meses: MESES, series: SERIES_MULTI },
+    props: { meses: MONTHS, series: SERIES_MULTI },
     template: `
       <div ndsChart
         type="line"
@@ -150,7 +150,7 @@ export const Line: Story = {
 export const Area: Story = {
   parameters: { controls: { disable: true } },
   render: () => ({
-    props: { meses: MESES, series: SERIES_MULTI },
+    props: { meses: MONTHS, series: SERIES_MULTI },
     template: `
       <div ndsChart
         type="area"
@@ -177,7 +177,7 @@ export const Area: Story = {
 export const Pie: Story = {
   parameters: { controls: { disable: true } },
   render: () => ({
-    props: { dados: DADOS_DISPOSITIVO },
+    props: { dados: DATA_DISPOSITIVO },
     template: `
       <div ndsChart
         type="pie"
@@ -191,12 +191,12 @@ export const Pie: Story = {
 
     await step('Uma fatia por item', async () => {
       const fatias = [...chart.querySelectorAll<SVGPathElement>('path[data-series]')];
-      await expect(fatias).toHaveLength(DADOS_DISPOSITIVO.length);
+      await expect(fatias).toHaveLength(DATA_DISPOSITIVO.length);
     });
 
     await step('A legenda traz nome, valor e participação — não só a cor', async () => {
       const textos = [...chart.querySelectorAll('svg text')].map((t) => t.textContent ?? '');
-      for (const ponto of DADOS_DISPOSITIVO) {
+      for (const ponto of DATA_DISPOSITIVO) {
         await expect(textos.some((texto) => texto.includes(ponto.label)
           && texto.includes(String(ponto.value))
           && texto.includes('%'))).toBe(true);

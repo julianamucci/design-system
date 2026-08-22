@@ -4,7 +4,7 @@ import { ChartContainer, buildBarOption, CHART_EMPTY_LABEL } from './chart';
 import { chartSource } from './chart.source';
 import { ChartDocs } from '@/components/docs/ChartDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { desenhoEscreve, desenhoPintado, exigirRaiz } from '@shared/testing/chart-probe';
+import { designEscreve, designPintado, exigirRoot } from '@shared/testing/chart-probe';
 
 // Dados do Playground. Ficam sem `export` de propósito: em CSF todo export
 // nomeado do arquivo vira story, e uma constante de dados apareceria na sidebar
@@ -88,7 +88,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, args, step }) => {
     // Procura pela classe do CSS compartilhado, não pelo `data-slot`: é o que o
     // design system define, e o mesmo seletor serve nas cinco stacks.
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho é anunciado como imagem, com a descrição autoral', async () => {
       await expect(raiz).toHaveAttribute('data-slot', 'chart');
@@ -101,13 +101,13 @@ export const Playground: Story = {
     await step('O desenho sai — o container não é casca vazia', async () => {
       // Gráfico tem dimensão calculada: medir antes de o desenho existir é o
       // caminho mais curto para um teste intermitente.
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
     });
 
     await step('O eixo escreve todas as categorias do dado', async () => {
       await waitFor(
         () => {
-          for (const mes of meses) expect(desenhoEscreve(raiz, mes)).toBe(true);
+          for (const mes of meses) expect(designEscreve(raiz, mes)).toBe(true);
         },
         { timeout: 3000 },
       );

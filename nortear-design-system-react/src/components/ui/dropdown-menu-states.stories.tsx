@@ -4,7 +4,7 @@ import { userEvent, within, expect, waitFor } from "storybook/test";
 import {
   waitForPortal,
   waitForPortalGone,
-  REGRA_GUARDA_DE_FOCO,
+  FOCUS_RULE_GUARDA,
 } from "@/lib/wait-for-portal";
 import {
   DropdownMenu,
@@ -13,8 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import {
-  dropdownMenuControladoSource,
-  dropdownMenuItemDesabilitadoSource,
+  dropdownMenuControlledSource,
+  dropdownMenuItemDisabledSource,
   dropdownMenuSource,
 } from "./dropdown-menu.source";
 import { Button } from "./button";
@@ -27,7 +27,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       // Fechado é o padrão do componente, e abrir por clique ou por seta não é
       // markup: esta transform serve tanto a Closed quanto a Open.
@@ -156,7 +156,7 @@ export const Controlled: Story = {
   parameters: {
     // Composição diferente: estado de fora, com um botão da página comandando
     // o mesmo menu que o gatilho abre.
-    docs: { source: { transform: dropdownMenuControladoSource } },
+    docs: { source: { transform: dropdownMenuControlledSource } },
   },
   render: () => {
     const ControlledDemo = () => {
@@ -209,7 +209,7 @@ export const Controlled: Story = {
 export const ItemDisabled: Story = {
   parameters: {
     // `disabled` é prop do ITEM, e nenhum control do arquivo a descreve.
-    docs: { source: { transform: dropdownMenuItemDesabilitadoSource } },
+    docs: { source: { transform: dropdownMenuItemDisabledSource } },
   },
   render: () => (
     <div style={wrapperStyle}>

@@ -18,7 +18,7 @@
  * bundler ainda pode servir este código dentro de uma página, e a tag fechando
  * cedo é um erro caro de achar.
  */
-export const FIM_SCRIPT = '</' + 'script>';
+export const END_SCRIPT = '</' + 'script>';
 
 /** Indenta cada linha não vazia com `n` espaços. */
 export function indentar(texto: string, n = 2): string {
@@ -44,7 +44,7 @@ export function vueSnippet(script: string, template: string): string {
   const marcacao = indentar(template.trim());
   const bloco = `<template>\n${marcacao}\n</template>`;
   if (!corpo) return bloco;
-  return `<script setup lang="ts">\n${corpo}\n${FIM_SCRIPT}\n\n${bloco}`;
+  return `<script setup lang="ts">\n${corpo}\n${END_SCRIPT}\n\n${bloco}`;
 }
 
 /**
@@ -72,8 +72,8 @@ export function attrsMultilinha(
 ): string {
   const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
   if (!lista.length) return '';
-  const emLinha = lista.join(' ');
-  if (emLinha.length <= limite) return ` ${emLinha}`;
+  const inLine = lista.join(' ');
+  if (inLine.length <= limite) return ` ${inLine}`;
   return `\n${lista.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
 }
 

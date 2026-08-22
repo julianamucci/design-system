@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
-  contextMenuComAtalhosSource,
-  contextMenuComEscolhaUnicaSource,
-  contextMenuComMarcacaoSource,
-  contextMenuComSubmenuSource,
+  contextMenuWithShortcutsSource,
+  contextMenuWithChoiceUnicaSource,
+  contextMenuWithMarkupSource,
+  contextMenuWithSubmenuSource,
   contextMenuCompletoSource,
-  contextMenuItemDesabilitadoSource,
-  contextMenuItemDestrutivoSource,
+  contextMenuItemDisabledSource,
+  contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
-  contextMenuMarcacaoMistaSource,
-  contextMenuPaletaEscuraSource,
+  contextMenuMarkupMistaSource,
+  contextMenuPaletteDarkSource,
   contextMenuSource,
 } from './context-menu.source';
 
@@ -90,7 +90,7 @@ import {
 
 describe('transforms das stories de estado', () => {
   it('o item indisponível se declara por prop, e a ação perigosa também pode estar', () => {
-    const saida = contextMenuItemDesabilitadoSource();
+    const saida = contextMenuItemDisabledSource();
     expect(saida).toContain('<ContextMenuItem disabled>Duplicar</ContextMenuItem>');
     expect(saida).toContain('<ContextMenuItem variant="destructive" disabled>Excluir</ContextMenuItem>');
   });
@@ -105,13 +105,13 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o item neutro não escreve a variante padrão', () => {
-    const saida = contextMenuItemDestrutivoSource();
+    const saida = contextMenuItemDestructiveSource();
     expect(saida).toContain('<ContextMenuItem variant="destructive">');
     expect(saida).not.toContain('variant="default"');
   });
 
   it('os três estados da marcação aparecem lado a lado', () => {
-    const saida = contextMenuMarcacaoMistaSource();
+    const saida = contextMenuMarkupMistaSource();
     // Misto é um valor entregue, não um booleano: uma comparação frouxa o leria
     // como marcado.
     expect(saida).toContain('<ContextMenuCheckboxItem checked="indeterminate">Colunas');
@@ -122,7 +122,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a paleta escura não muda uma linha do markup', () => {
-    const saida = contextMenuPaletaEscuraSource();
+    const saida = contextMenuPaletteDarkSource();
     // A troca é global, por classe no documento: nada de prop de tema no menu.
     expect(saida).not.toContain('dark');
     expect(saida).not.toContain('theme');
@@ -132,7 +132,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o atalho mora DENTRO do item, e não ao lado dele', () => {
-    const saida = contextMenuComAtalhosSource();
+    const saida = contextMenuWithShortcutsSource();
     expect(saida).toContain(`      <ContextMenuItem>
         Desfazer
         <ContextMenuShortcut>⌘Z</ContextMenuShortcut>
@@ -140,7 +140,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a marcação liga o par completo: prop de entrada e evento de volta', () => {
-    const saida = contextMenuComMarcacaoSource();
+    const saida = contextMenuWithMarkupSource();
     expect(saida).toContain(`import { ref } from 'vue'`);
     expect(saida).toContain('const mostrarReguas = ref(true)');
     // Só `:checked` prenderia o item ao valor inicial.
@@ -149,14 +149,14 @@ describe('transforms das stories de composição', () => {
   });
 
   it('na escolha única o valor vive no grupo, e cada item traz o seu `value`', () => {
-    const saida = contextMenuComEscolhaUnicaSource();
+    const saida = contextMenuWithChoiceUnicaSource();
     expect(saida).toContain(`const layout = ref('grid')`);
     expect(saida).toContain('<ContextMenuRadioGroup v-model="layout">');
     expect(saida).toContain('<ContextMenuRadioItem value="columns">Colunas</ContextMenuRadioItem>');
   });
 
   it('o submenu é a tríade completa, com o conteúdo dentro dela', () => {
-    const saida = contextMenuComSubmenuSource();
+    const saida = contextMenuWithSubmenuSource();
     expect(saida).toContain(`      <ContextMenuSub>
         <ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>
         <ContextMenuSubContent>

@@ -11,9 +11,9 @@ import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save } from "lucide-react";
 import {
-  tooltipAbertoSource,
+  tooltipOpenSource,
   tooltipWithDelaySource,
-  tooltipControladoSource,
+  tooltipControlledSource,
   tooltipPersistenteSource,
   tooltipSource,
 } from "./tooltip.source";
@@ -24,7 +24,7 @@ import {
 // pode depender do mouse.
 
 /** Espera em ms que o hover do provider precisa vencer nas stories de delay. */
-const DELAY_LONGO = 600;
+const LONG_DELAY = 600;
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function espera(ms: number): Promise<void> {
@@ -114,7 +114,7 @@ export const Open: Story = {
           "Tooltip aberto via defaultOpen — Content visível com role=tooltip e aria-describedby ligando trigger ao conteúdo.",
       },
       // O estado inicial aberto é o assunto, e não cabe nos args deste arquivo.
-      source: { transform: tooltipAbertoSource },
+      source: { transform: tooltipOpenSource },
     },
   },
   render: () => (
@@ -169,11 +169,11 @@ export const Hover: Story = {
   },
   render: () => (
     // Provider próprio: o delay do decorator é 0, e sem espera não há o que medir.
-    <TooltipProvider delay={DELAY_LONGO}>
+    <TooltipProvider delay={LONG_DELAY}>
       <div style={wrapperStyle}>
         <Tooltip>
           <TooltipTrigger
-            delay={DELAY_LONGO}
+            delay={LONG_DELAY}
             render={(props) => (
               <Button {...props} variant="ghost" size="icon" aria-label="Salvar">
                 <Save aria-hidden="true" />
@@ -199,7 +199,7 @@ export const Hover: Story = {
         async () => {
           await expect(balaoDe(gatilho)).not.toBeNull();
         },
-        { timeout: DELAY_LONGO * 5 },
+        { timeout: LONG_DELAY * 5 },
       );
       await expect(balaoDe(gatilho)).toHaveAttribute("role", "tooltip");
     });
@@ -221,11 +221,11 @@ export const Focused: Story = {
   render: () => (
     // Delay longo de propósito: quem chega por teclado não tem como "parar em
     // cima", então esperar aqui esconderia a informação de quem não usa mouse.
-    <TooltipProvider delay={DELAY_LONGO}>
+    <TooltipProvider delay={LONG_DELAY}>
       <div style={wrapperStyle}>
         <Tooltip>
           <TooltipTrigger
-            delay={DELAY_LONGO}
+            delay={LONG_DELAY}
             render={(props) => (
               <Button {...props} variant="ghost" size="icon" aria-label="Salvar">
                 <Save aria-hidden="true" />
@@ -319,7 +319,7 @@ export const Controlled: Story = {
           "Estado controlado via open + onOpenChange. Botões externos abrem e fecham programaticamente.",
       },
       // O painel imprimia `<ControlledDemo />`, que não existe fora da story.
-      source: { transform: tooltipControladoSource },
+      source: { transform: tooltipControlledSource },
     },
   },
   render: () => {

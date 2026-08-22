@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, expect, userEvent, waitFor } from "storybook/test"
 import {
   waitForPortal,
-  REGRA_GUARDA_DE_FOCO,
+  FOCUS_RULE_GUARDA,
   MENU_RULE_CHILDREN,
 } from "@/lib/wait-for-portal"
 import {
@@ -23,7 +23,7 @@ import {
   MenubarTrigger,
 } from "./menubar"
 import {
-  selectionSourceMenubarBoxes,
+  selectionMenubarBoxesSource,
   menubarEditorSource,
   menubarChoiceUnicaSource,
   menubarSource,
@@ -37,7 +37,7 @@ import {
 // `wait-for-portal.ts`. A story que termina FECHADA não as desliga: é lá que
 // "sem violações no estado padrão" vale inteiro.
 const AXE_WITH_MENU_OPEN = {
-  config: { rules: [REGRA_GUARDA_DE_FOCO, MENU_RULE_CHILDREN] },
+  config: { rules: [FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN] },
 } as const
 
 const ATALHOS = [
@@ -83,7 +83,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 /** Itens do nível raiz do menu, sem os que já vieram do submenu aberto. */
-const itensDoMenu = (menu: HTMLElement) =>
+const menuItems = (menu: HTMLElement) =>
   Array.from(menu.querySelectorAll<HTMLElement>('[role="menuitem"]'))
 
 const wrapperStyle: React.CSSProperties = {
@@ -180,33 +180,33 @@ export const WithSubmenu: Story = {
   play: async ({ step }) => {
     const corpo = within(document.body)
     const menu = await waitForPortal("menu")
-    const subGatilho = within(menu).getByRole("menuitem", { name: "Exportar" })
+    const subTrigger = within(menu).getByRole("menuitem", { name: "Exportar" })
 
     await step("O sub-gatilho anuncia que abre outro menu", async () => {
-      await expect(subGatilho.getAttribute("aria-haspopup")).toBe("menu")
-      await expect(subGatilho.getAttribute("data-slot")).toBe(
+      await expect(subTrigger.getAttribute("aria-haspopup")).toBe("menu")
+      await expect(subTrigger.getAttribute("data-slot")).toBe(
         "menubar-sub-trigger"
       )
     })
 
     await step("Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu", async () => {
       // Idempotente: só navega e abre quando ainda está fechado.
-      if (subGatilho.getAttribute("aria-expanded") !== "true") {
+      if (subTrigger.getAttribute("aria-expanded") !== "true") {
         // Quantas setas até o sub-gatilho depende de onde a lib deixou o
         // realce ao abrir — cravar o número é o que quebra quando muda um
         // item de lugar. Anda até chegar, e falha se não chegar.
-        for (let i = 0; i < itensDoMenu(menu).length + 1; i++) {
-          if (document.activeElement === subGatilho) break
+        for (let i = 0; i < menuItems(menu).length + 1; i++) {
+          if (document.activeElement === subTrigger) break
           await userEvent.keyboard("{ArrowDown}")
         }
         await waitFor(async () => {
-          await expect(document.activeElement).toBe(subGatilho)
+          await expect(document.activeElement).toBe(subTrigger)
         })
         await userEvent.keyboard("{ArrowRight}")
       }
 
       await waitFor(async () => {
-        await expect(subGatilho.getAttribute("aria-expanded")).toBe("true")
+        await expect(subTrigger.getAttribute("aria-expanded")).toBe("true")
         // Dois painéis abertos ao mesmo tempo: o pai continua no lugar, é o que
         // distingue submenu de troca de menu.
         await expect(corpo.getAllByRole("menu")).toHaveLength(2)
@@ -235,7 +235,7 @@ export const WithCheckboxItems: Story = {
     covers: ["functional.item7", "visual.item3"],
     // Alternadores dentro de grupo rotulado — peças que o meta não usa, e a
     // independência entre as linhas só aparece com três delas juntas.
-    docs: { source: { transform: selectionSourceMenubarBoxes } },
+    docs: { source: { transform: selectionMenubarBoxesSource } },
   },
   render: () => (
     <div style={wrapperStyle}>

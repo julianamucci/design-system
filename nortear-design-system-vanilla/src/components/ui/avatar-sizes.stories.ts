@@ -35,7 +35,7 @@ type Story = StoryObj;
  * `data-size` chegou ao CSS — antes as plays contavam botões, que não existem
  * em avatar nenhum, e passavam com a tela vazia.
  */
-const caixaDo = (canvasElement: HTMLElement) => {
+const boxOf = (canvasElement: HTMLElement) => {
   const root = canvasElement.querySelector('[data-slot="avatar"]');
   if (!root) throw new Error('avatar não renderizou');
   return root.getBoundingClientRect();
@@ -60,7 +60,7 @@ export const Sm: Story = {
       'data-size',
       'sm',
     );
-    const { width, height } = caixaDo(canvasElement);
+    const { width, height } = boxOf(canvasElement);
     await expect(Math.abs(width - 24)).toBeLessThan(0.5);
     await expect(Math.abs(height - 24)).toBeLessThan(0.5);
   },
@@ -80,7 +80,7 @@ export const Md: Story = {
   // Sem passar size: o padrão da factory é o preset md.
   render: () => buildAvatar({ ...AVATAR_EXEMPLO }),
   play: async ({ canvasElement }) => {
-    const { width, height } = caixaDo(canvasElement);
+    const { width, height } = boxOf(canvasElement);
     await expect(Math.abs(width - 32)).toBeLessThan(0.5);
     await expect(Math.abs(height - 32)).toBeLessThan(0.5);
   },
@@ -97,7 +97,7 @@ export const Lg: Story = {
   },
   render: () => buildAvatar({ ...AVATAR_EXEMPLO, size: 'lg' }),
   play: async ({ canvasElement }) => {
-    const { width, height } = caixaDo(canvasElement);
+    const { width, height } = boxOf(canvasElement);
     await expect(Math.abs(width - 40)).toBeLessThan(0.5);
     await expect(Math.abs(height - 40)).toBeLessThan(0.5);
   },
@@ -114,7 +114,7 @@ export const Xl: Story = {
   },
   render: () => buildAvatar({ ...AVATAR_EXEMPLO, size: 'xl' }),
   play: async ({ canvasElement }) => {
-    const { width, height } = caixaDo(canvasElement);
+    const { width, height } = boxOf(canvasElement);
     await expect(Math.abs(width - 48)).toBeLessThan(0.5);
     await expect(Math.abs(height - 48)).toBeLessThan(0.5);
   },
@@ -131,7 +131,7 @@ export const TwoXl: Story = {
   },
   render: () => buildAvatar({ ...AVATAR_EXEMPLO, size: '2xl' }),
   play: async ({ canvasElement }) => {
-    const { width, height } = caixaDo(canvasElement);
+    const { width, height } = boxOf(canvasElement);
     await expect(Math.abs(width - 64)).toBeLessThan(0.5);
     await expect(Math.abs(height - 64)).toBeLessThan(0.5);
   },

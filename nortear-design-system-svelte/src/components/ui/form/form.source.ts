@@ -25,10 +25,10 @@ export type FormArgs = {
   autocomplete: string;
 };
 
-const IMPORT_CAMPO = `import { FormField } from "@/components/ui/form";
+const IMPORT_FIELD = `import { FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";`;
 
-const IMPORT_GRUPO = `import { Fieldset, FormField } from "@/components/ui/form";
+const IMPORT_GROUP = `import { Fieldset, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";`;
 
 /** Forma canônica: um campo com rótulo, controle e texto de apoio. */
@@ -66,7 +66,7 @@ export function formSource(_gerado?: string, ctx?: { args?: Partial<FormArgs> })
   );
 
   return svelteSnippet(
-    IMPORT_CAMPO,
+    IMPORT_FIELD,
     `<FormField${fieldProps}>
   <Input${controlProps} />
 </FormField>`,
@@ -74,7 +74,7 @@ export function formSource(_gerado?: string, ctx?: { args?: Partial<FormArgs> })
 }
 
 /** Variants/LabelAndControl — a combinação mínima: rótulo e controle, nada abaixo. */
-export function formRotuloEControleSource(): string {
+export function formLabelEControleSource(): string {
   return formSource('', {
     args: {
       label: 'Nome completo',
@@ -86,7 +86,7 @@ export function formRotuloEControleSource(): string {
 }
 
 /** Variants/WithDescription — o parágrafo de apoio que o leitor de tela também lê. */
-export function formComDescricaoSource(): string {
+export function formWithDescriptionSource(): string {
   return formSource('', {
     args: {
       label: 'Senha',
@@ -114,7 +114,7 @@ export function formInvalidoSource(): string {
 }
 
 /** States/Disabled — o controle bloqueado com rótulo e apoio ainda em pé. */
-export function formDesabilitadoSource(): string {
+export function formDisabledSource(): string {
   return formSource('', {
     args: {
       label: 'CPF',
@@ -128,9 +128,9 @@ export function formDesabilitadoSource(): string {
 }
 
 /** States/DarkPalette — os três estados juntos, para comparar as cores da paleta. */
-export function formPaletaEscuraSource(): string {
+export function formPaletteDarkSource(): string {
   return svelteSnippet(
-    IMPORT_GRUPO,
+    IMPORT_GROUP,
     `<div class="nds-stack">
   <FormField label="Nome completo">
     <Input type="text" placeholder="ex: João da Silva" />
@@ -154,7 +154,7 @@ export function formPaletaEscuraSource(): string {
 /** Compositions/Fieldset — a legenda que dá contexto a rótulos ambíguos sozinhos. */
 export function formFieldsetSource(): string {
   return svelteSnippet(
-    IMPORT_GRUPO,
+    IMPORT_GROUP,
     `<Fieldset legend="Endereço de entrega">
   <FormField label="Rua">
     <Input type="text" placeholder="ex: Av. Paulista, 1000" />

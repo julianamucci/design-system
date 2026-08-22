@@ -32,10 +32,10 @@ const IMPORTS = `import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'`;
 
 /** Moldura do exemplo e o respiro entre o rótulo e o campo. */
-const LARGURA = 'nds-w-xs';
+const WIDTH = 'nds-w-xs';
 
 /** Empilha rótulo, campo e o que vier depois (apoio, mensagem de erro). */
-function empilhado(filhos: string[], largura = LARGURA, espaco = 'xs'): string {
+function empilhado(filhos: string[], largura = WIDTH, espaco = 'xs'): string {
   const classe = ['nds-stack', largura].filter(Boolean).join(' ');
   return `<div class="${classe}" data-spacing="${espaco}">
 ${indentar(filhos.join('\n'))}
@@ -99,22 +99,22 @@ function tipo(id: string, rotulo: string, tipoHtml: string, marcador?: string): 
 }
 
 /** Texto livre: o tipo padrão, escrito à vista porque aqui ele é o assunto. */
-export function inputTipoTextoSource(): string {
+export function inputTypeTextSource(): string {
   return tipo('nome', 'Nome completo', 'text', 'ex: João da Silva');
 }
 
 /** Email: teclado com arroba no celular e validação nativa de formato. */
-export function inputTipoEmailSource(): string {
+export function inputTypeEmailSource(): string {
   return tipo('email', 'Email', 'email', 'ex: joao@empresa.com');
 }
 
 /** Senha: o navegador mascara o valor e oferece o gerenciador de senhas. */
-export function inputTipoSenhaSource(): string {
+export function inputTypeSenhaSource(): string {
   return tipo('senha', 'Senha', 'password', '••••••••');
 }
 
 /** Número: teclado numérico e os controles de incremento do navegador. */
-export function inputTipoNumeroSource(): string {
+export function inputTypeNumberSource(): string {
   return tipo('quantidade', 'Quantidade', 'number', 'ex: 42');
 }
 
@@ -122,7 +122,7 @@ export function inputTipoNumeroSource(): string {
  * Busca: o papel implícito passa a `searchbox`, e é isso que o leitor de tela
  * anuncia. Nada no visual denuncia se o tipo estiver errado.
  */
-export function inputTipoBuscaSource(): string {
+export function inputTypeSearchSource(): string {
   return tipo('busca', 'Buscar', 'search', 'Buscar componentes...');
 }
 
@@ -130,7 +130,7 @@ export function inputTipoBuscaSource(): string {
  * Arquivo: sem marcador de exemplo — quem desenha o miolo é o navegador. O
  * botão nativo recebe estilo próprio do design system pela folha do componente.
  */
-export function inputTipoArquivoSource(): string {
+export function inputTypeFileSource(): string {
   return tipo('arquivo', 'Arquivo', 'file');
 }
 
@@ -153,7 +153,7 @@ export function inputWithLabelSource(): string {
  * Desabilitado. O rótulo continua visível e associado — escondê-lo tira a
  * referência do que aquele valor significa.
  */
-export function inputDesabilitadoSource(): string {
+export function inputDisabledSource(): string {
   return vueSnippet(
     IMPORTS,
     campo({
@@ -170,7 +170,7 @@ export function inputDesabilitadoSource(): string {
  * O alvo do `describedby` precisa EXISTIR — um id que não aponta para nada
  * passa em checagem de atributo e não é lido por ninguém.
  */
-export function inputComErroSource(): string {
+export function inputWithErrorSource(): string {
   const id = 'email';
   const idMessage = 'email-erro';
   return vueSnippet(
@@ -246,7 +246,7 @@ export function inputObrigatorioSource(): string {
  * A mesma marcação sob a paleta escura: a troca é de tema no documento, não de
  * markup. Os três estados juntos são o que precisa continuar distinguível.
  */
-export function inputPaletaEscuraSource(): string {
+export function inputPaletteDarkSource(): string {
   return vueSnippet(
     IMPORTS,
     empilhado(
@@ -278,13 +278,13 @@ export function inputPaletaEscuraSource(): string {
           largura: '',
         }),
       ],
-      LARGURA,
+      WIDTH,
       'md',
     ),
   );
 }
 
-const IMPORT_GRUPO = `import { Label } from '@/components/ui/label'
+const IMPORT_GROUP = `import { Label } from '@/components/ui/label'
 import {
   InputGroup,
   InputGroupAddon,
@@ -302,7 +302,7 @@ import {
  */
 export function inputAlinhamentosSource(): string {
   return vueSnippet(
-    IMPORT_GRUPO,
+    IMPORT_GROUP,
     `<div class="nds-stack nds-w-md" data-spacing="lg">
   <div class="nds-stack" data-spacing="xs">
     <Label for="busca">Buscar</Label>

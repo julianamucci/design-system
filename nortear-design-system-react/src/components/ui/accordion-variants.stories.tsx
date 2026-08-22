@@ -9,7 +9,7 @@ import {
   AccordionTrigger,
 } from "./accordion";
 import {
-  accordionControladoSource,
+  accordionControlledSource,
   accordionMultiploSource,
   accordionNoConfigSource,
   accordionSource,
@@ -246,7 +246,7 @@ export const Controlled: Story = {
     covers: ['functional.item6'],
     docs: {
       // O estado externo vive no andaime da story; o snippet precisa mostrá-lo.
-      source: { transform: accordionControladoSource },
+      source: { transform: accordionControlledSource },
       description: {
         story:
           "Modo controlado. value e onValueChange gerenciam o estado externamente. O indicador acima mostra o item ativo.",

@@ -16,11 +16,11 @@
  * Nenhuma função afirma nada: todas devolvem valor. A asserção é da story.
  */
 
-import { compor, razao, resolverCor, seletoresQueLeem, TEMAS, MODOS } from './cor';
+import { compor, ratio, resolveColor, selectorsQueLeem, TEMAS, MODOS } from './cor';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export interface MedidaDeSwatch {
+export interface SwatchMeasurement {
   tema: string;
   modo: string;
   /** Nome do token lido do próprio rótulo, sem o `--`. */
@@ -30,12 +30,12 @@ export interface MedidaDeSwatch {
   /** Cor computada do chip. `null` quando nada foi pintado — o achado. */
   pintado: string | null;
   /** O que o rótulo exibido produz quando o navegador o resolve. */
-  doRotulo: string | null;
+  ofLabel: string | null;
   /** `false` quando exibido e pintado discordam. */
   bate: boolean;
 }
 
-export interface MedidaDePar {
+export interface PairMeasurement {
   tema: string;
   modo: string;
   /** `primary` para o par `--primary` / `--primary-foreground`. */
@@ -43,7 +43,7 @@ export interface MedidaDePar {
   fundo: string | null;
   frente: string | null;
   /** `null` quando um dos dois tokens não existe — o achado. */
-  razao: number | null;
+  ratio: number | null;
 }
 
 // ─── Troca de tema NO DOCUMENTO ───────────────────────────────────────────────
@@ -51,7 +51,7 @@ export interface MedidaDePar {
 /**
  * Roda `fn` em cada tema e modo, com as classes no `<html>`.
  *
- * Tem de ser no `<html>`, e não num contêiner como faz `porTema` de `cor.ts`: a
+ * Tem de ser no `<html>`, e não num contêiner como faz `byTheme` de `cor.ts`: a
  * página lê os tokens com `getComputedStyle(document.documentElement)` e reage a
  * uma `MutationObserver` presa ao `<html>`. Marcar um contêiner pintaria os
  * chips (que herdam) e deixaria os rótulos parados — uma divergência inventada
@@ -60,13 +60,13 @@ export interface MedidaDePar {
  * `fn` é assíncrona porque o retorno da `MutationObserver` é um microtask: sem
  * ceder o turno, a leitura pega o texto do tema anterior.
  */
-export async function porTemaNoDocumento<T>(
+export async function documentByTheme<T>(
   doc: Document,
   fn: (tema: string, modo: string) => Promise<T>,
 ): Promise<T[]> {
   const html = doc.documentElement;
-  const classeOriginal = html.className;
-  const base = classeOriginal
+  const classNameOriginal = html.className;
+  const base = classNameOriginal
     .split(/\s+/)
     .filter((c) => c && !c.startsWith('tema-') && c !== 'dark')
     .join(' ');
@@ -84,7 +84,7 @@ export async function porTemaNoDocumento<T>(
       }
     }
   } finally {
-    html.className = classeOriginal;
+    html.className = classNameOriginal;
     void html.offsetHeight;
   }
   return saida;
@@ -98,12 +98,12 @@ function texto(el: Element | null): string | null {
 }
 
 /** Mede todos os `.nds-swatch` da página, nos três temas e nos dois modos. */
-export async function medirSwatches(raiz: HTMLElement): Promise<MedidaDeSwatch[]> {
+export async function measureSwatches(raiz: HTMLElement): Promise<SwatchMeasurement[]> {
   const swatches = [...raiz.querySelectorAll<HTMLElement>('.nds-swatch')];
 
   return (
-    await porTemaNoDocumento(raiz.ownerDocument, async (tema, modo) =>
-      swatches.map((sw): MedidaDeSwatch => {
+    await documentByTheme(raiz.ownerDocument, async (tema, modo) =>
+      swatches.map((sw): SwatchMeasurement => {
         const nome = texto(sw.querySelector('.nds-swatch-token'))?.replace(/^--/, '') ?? '(sem nome)';
         const rotulo = texto(sw.querySelector('.nds-swatch-value'));
         const chip = sw.querySelector<HTMLElement>('.nds-swatch-color');
@@ -111,10 +111,10 @@ export async function medirSwatches(raiz: HTMLElement): Promise<MedidaDeSwatch[]
         // `rgba(0, 0, 0, 0)` é o que sobra quando `hsl(var(--x))` não resolve:
         // a declaração inteira é descartada e o chip fica sem pintura.
         const pintado = cru && cru !== 'rgba(0, 0, 0, 0)' ? cru : null;
-        const doRotulo = rotulo ? resolverCor(raiz, `hsl(${rotulo})`) : null;
+        const ofLabel = rotulo ? resolveColor(raiz, `hsl(${rotulo})`) : null;
         return {
-          tema, modo, token: nome, rotulo, pintado, doRotulo,
-          bate: !!pintado && !!doRotulo && pintado === doRotulo,
+          tema, modo, token: nome, rotulo, pintado, ofLabel,
+          bate: !!pintado && !!ofLabel && pintado === ofLabel,
         };
       }),
     )
@@ -122,13 +122,13 @@ export async function medirSwatches(raiz: HTMLElement): Promise<MedidaDeSwatch[]
 }
 
 /** Linhas legíveis das medidas que reprovam. `[]` quando tudo casa. */
-export function falhasDeSwatch(medidas: MedidaDeSwatch[]): string[] {
+export function swatchFailures(medidas: SwatchMeasurement[]): string[] {
   return medidas
     .filter((m) => !m.bate)
     .map((m) => {
       if (!m.rotulo) return `${m.tema}/${m.modo} · --${m.token}: sem valor exibido`;
       if (!m.pintado) return `${m.tema}/${m.modo} · --${m.token}: chip sem cor (token inexistente)`;
-      return `${m.tema}/${m.modo} · --${m.token}: exibido ${m.rotulo} (${m.doRotulo}) ≠ pintado ${m.pintado}`;
+      return `${m.tema}/${m.modo} · --${m.token}: exibido ${m.rotulo} (${m.ofLabel}) ≠ pintado ${m.pintado}`;
     });
 }
 
@@ -141,7 +141,7 @@ export function falhasDeSwatch(medidas: MedidaDeSwatch[]): string[] {
  * par removido não deixe uma asserção apontando para o vazio. É a mesma escolha
  * de `degrausDeclarados` em `espacamento.ts`.
  */
-export function paresDaPagina(raiz: HTMLElement): string[] {
+export function pagePairs(raiz: HTMLElement): string[] {
   const tokens = new Set(
     [...raiz.querySelectorAll('.nds-swatch-token')]
       .map((el) => texto(el)?.replace(/^--/, ''))
@@ -161,26 +161,26 @@ export function paresDaPagina(raiz: HTMLElement): string[] {
  * que está pintado na tela, e a página exibe amostras, não texto sobre cada
  * fundo. A promessa é sobre a PALETA, então quem responde é a paleta.
  */
-export async function medirPares(raiz: HTMLElement, pares: string[]): Promise<MedidaDePar[]> {
+export async function measurePairs(raiz: HTMLElement, pairs: string[]): Promise<PairMeasurement[]> {
   return (
-    await porTemaNoDocumento(raiz.ownerDocument, async (tema, modo) =>
-      pares.map((par): MedidaDePar => {
-        const fundo = resolverCor(raiz, `hsl(var(--${par}))`);
-        const frente = resolverCor(raiz, `hsl(var(--${par}-foreground))`);
-        const r = fundo && frente ? razao(frente, fundo) : null;
-        return { tema, modo, par, fundo, frente, razao: r?.razao ?? null };
+    await documentByTheme(raiz.ownerDocument, async (tema, modo) =>
+      pairs.map((par): PairMeasurement => {
+        const fundo = resolveColor(raiz, `hsl(var(--${par}))`);
+        const frente = resolveColor(raiz, `hsl(var(--${par}-foreground))`);
+        const r = fundo && frente ? ratio(frente, fundo) : null;
+        return { tema, modo, par, fundo, frente, ratio: r?.ratio ?? null };
       }),
     )
   ).flat();
 }
 
-export function falhasDePar(medidas: MedidaDePar[], minimo: number): string[] {
+export function pairFailures(medidas: PairMeasurement[], minimum: number): string[] {
   return medidas
-    .filter((m) => m.razao === null || m.razao < minimo)
+    .filter((m) => m.ratio === null || m.ratio < minimum)
     .map((m) =>
-      m.razao === null
+      m.ratio === null
         ? `${m.tema}/${m.modo} · --${m.par}: token do par não resolve`
-        : `${m.tema}/${m.modo} · --${m.par} / --${m.par}-foreground: ${m.razao}:1 (mínimo ${minimo})`,
+        : `${m.tema}/${m.modo} · --${m.par} / --${m.par}-foreground: ${m.ratio}:1 (mínimo ${minimum})`,
     );
 }
 
@@ -200,9 +200,9 @@ export function falhasDePar(medidas: MedidaDePar[], minimo: number): string[] {
  *   0.18  badge warning/success/info (escuro) — o mais forte em uso hoje
  *   0.25  folga: é o hover destrutivo do button no escuro, o teto da folha
  */
-export const ALFAS_DE_FUNDO_SUAVE = [0.08, 0.1, 0.12, 0.15, 0.18, 0.25] as const;
+export const BACKGROUND_SMOOTH_ALFAS = [0.08, 0.1, 0.12, 0.15, 0.18, 0.25] as const;
 
-export interface MedidaDeParSuave {
+export interface PairSmoothMeasurement {
   tema: string;
   modo: string;
   /** `destructive` para o par `--destructive` / `--destructive-foreground`. */
@@ -212,13 +212,13 @@ export interface MedidaDeParSuave {
   fundo: string | null;
   frente: string | null;
   /** `null` quando um dos dois tokens não existe — o achado. */
-  razao: number | null;
+  ratio: number | null;
 }
 
 /**
  * Contraste do par de feedback COMO A TELA O FORMA.
  *
- * `medirPares` mede o par clássico — texto sobre a cor CHEIA — e nenhuma regra
+ * `measurePairs` mede o par clássico — texto sobre a cor CHEIA — e nenhuma regra
  * do sistema escreve assim: a cor semântica pinta um fundo suave
  * (`hsl(var(--destructive) / 0.1)`) e o texto corrido por cima é
  * `--destructive-foreground`. Medir contra a cor cheia dá 3.09:1 no claro do
@@ -230,34 +230,34 @@ export interface MedidaDeParSuave {
  * sai de um rgba translúcido que ninguém vê — foi assim que a sonda do badge
  * devolveu ~1.0 em cinco variantes de seis.
  */
-export async function medirParesSuaves(
+export async function measurePairsSuaves(
   raiz: HTMLElement,
-  pares: string[],
-  alfas: readonly number[] = ALFAS_DE_FUNDO_SUAVE,
-): Promise<MedidaDeParSuave[]> {
+  pairs: string[],
+  alfas: readonly number[] = BACKGROUND_SMOOTH_ALFAS,
+): Promise<PairSmoothMeasurement[]> {
   return (
-    await porTemaNoDocumento(raiz.ownerDocument, async (tema, modo) => {
-      const superficie = resolverCor(raiz, 'hsl(var(--background))');
-      return pares.flatMap((par) => {
-        const frente = resolverCor(raiz, `hsl(var(--${par}-foreground))`);
-        return alfas.map((alfa): MedidaDeParSuave => {
-          const tinta = resolverCor(raiz, `hsl(var(--${par}) / ${alfa})`);
+    await documentByTheme(raiz.ownerDocument, async (tema, modo) => {
+      const superficie = resolveColor(raiz, 'hsl(var(--background))');
+      return pairs.flatMap((par) => {
+        const frente = resolveColor(raiz, `hsl(var(--${par}-foreground))`);
+        return alfas.map((alfa): PairSmoothMeasurement => {
+          const tinta = resolveColor(raiz, `hsl(var(--${par}) / ${alfa})`);
           const fundo = tinta && superficie ? compor(tinta, superficie) : null;
-          const r = fundo && frente ? razao(frente, fundo) : null;
-          return { tema, modo, par, alfa, fundo, frente, razao: r?.razao ?? null };
+          const r = fundo && frente ? ratio(frente, fundo) : null;
+          return { tema, modo, par, alfa, fundo, frente, ratio: r?.ratio ?? null };
         });
       });
     })
   ).flat();
 }
 
-export function falhasDeParSuave(medidas: MedidaDeParSuave[], minimo: number): string[] {
+export function pairSmoothFailures(medidas: PairSmoothMeasurement[], minimum: number): string[] {
   return medidas
-    .filter((m) => m.razao === null || m.razao < minimo)
+    .filter((m) => m.ratio === null || m.ratio < minimum)
     .map((m) =>
-      m.razao === null
+      m.ratio === null
         ? `${m.tema}/${m.modo} · --${m.par}-foreground sobre --${m.par}/${m.alfa}: token não resolve`
-        : `${m.tema}/${m.modo} · --${m.par}-foreground (${m.frente}) sobre --${m.par}/${m.alfa} (${m.fundo}): ${m.razao}:1 (mínimo ${minimo})`,
+        : `${m.tema}/${m.modo} · --${m.par}-foreground (${m.frente}) sobre --${m.par}/${m.alfa} (${m.fundo}): ${m.ratio}:1 (mínimo ${minimum})`,
     );
 }
 
@@ -269,29 +269,29 @@ export function falhasDeParSuave(medidas: MedidaDeParSuave[], minimo: number): s
  * formava, e nenhuma medida de cor pegava isso — cor que ninguém aplica passa em
  * qualquer limite. Aqui a pergunta é outra: alguma regra LÊ o token?
  */
-export function paresSemConsumidor(doc: Document, pares: string[]): string[] {
-  return pares.filter((par) => seletoresQueLeem(doc, `${par}-foreground`).length === 0);
+export function pairsNoConsumidor(doc: Document, pairs: string[]): string[] {
+  return pairs.filter((par) => selectorsQueLeem(doc, `${par}-foreground`).length === 0);
 }
 
 // ─── Canal de saída ───────────────────────────────────────────────────────────
 
-export async function reportar(stack: string, raiz: HTMLElement): Promise<never> {
-  const swatches = await medirSwatches(raiz);
-  const pares = paresDaPagina(raiz);
-  const medidasDePar = await medirPares(raiz, pares);
-  const suaves = await medirParesSuaves(raiz, pares);
+export async function report(stack: string, raiz: HTMLElement): Promise<never> {
+  const swatches = await measureSwatches(raiz);
+  const pairs = pagePairs(raiz);
+  const pairMeasurements = await measurePairs(raiz, pairs);
+  const suaves = await measurePairsSuaves(raiz, pairs);
   throw new Error(
     `SONDA::${stack}::` +
       JSON.stringify({
         totalDeSwatches: swatches.length / (TEMAS.length * MODOS.length),
-        pares,
-        semConsumidor: paresSemConsumidor(raiz.ownerDocument, pares),
-        falhasDeSwatch: falhasDeSwatch(swatches),
-        parLimite4_5: falhasDePar(medidasDePar, 4.5),
-        parLimite3: falhasDePar(medidasDePar, 3),
-        razoes: medidasDePar.map((m) => `${m.tema}/${m.modo} ${m.par}=${m.razao}`),
-        suaveLimite4_5: falhasDeParSuave(suaves, 4.5),
-        razoesSuaves: suaves.map((m) => `${m.tema}/${m.modo} ${m.par}@${m.alfa}=${m.razao}`),
+        pairs,
+        semConsumidor: pairsNoConsumidor(raiz.ownerDocument, pairs),
+        swatchFailures: swatchFailures(swatches),
+        parLimite4_5: pairFailures(pairMeasurements, 4.5),
+        parLimite3: pairFailures(pairMeasurements, 3),
+        razoes: pairMeasurements.map((m) => `${m.tema}/${m.modo} ${m.par}=${m.ratio}`),
+        suaveLimite4_5: pairSmoothFailures(suaves, 4.5),
+        razoesSuaves: suaves.map((m) => `${m.tema}/${m.modo} ${m.par}@${m.alfa}=${m.ratio}`),
       }),
   );
 }

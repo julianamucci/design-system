@@ -8,8 +8,8 @@ import {
   paginationSourceWith,
 } from './pagination.source';
 
-const ROTULO_ANTERIOR = 'Ir para a página anterior';
-const ROTULO_PROXIMA = 'Ir para a próxima página';
+const LABEL_PREVIOUS = 'Ir para a página anterior';
+const LABEL_NEXT = 'Ir para a próxima página';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -51,9 +51,9 @@ export const Simple: Story = {
 
     await step('A faixa mostra todos os números, sem reticências', async () => {
       // visual.item1 — é o estado que o Chromatic fotografa como "default".
-      const numerados = canvasElement.querySelectorAll('[data-slot="pagination-link"]');
-      await expect(numerados.length).toBe(5);
-      await expect([...numerados].map((l) => l.textContent?.trim())).toEqual([
+      const numbered = canvasElement.querySelectorAll('[data-slot="pagination-link"]');
+      await expect(numbered.length).toBe(5);
+      await expect([...numbered].map((l) => l.textContent?.trim())).toEqual([
         '1', '2', '3', '4', '5',
       ]);
       await expect(
@@ -66,7 +66,7 @@ export const Simple: Story = {
         'aria-current',
         'page',
       );
-      await expect(canvas.getByRole('link', { name: ROTULO_ANTERIOR })).toHaveAttribute(
+      await expect(canvas.getByRole('link', { name: LABEL_PREVIOUS })).toHaveAttribute(
         'aria-disabled',
         'true',
       );
@@ -166,9 +166,9 @@ export const LastPage: Story = {
     });
 
     await step('Próxima está desabilitado e fora da tabulação', async () => {
-      const proxima = canvas.getByRole('link', { name: ROTULO_PROXIMA });
-      await expect(proxima).toHaveAttribute('aria-disabled', 'true');
-      await expect(proxima).toHaveAttribute('tabindex', '-1');
+      const next = canvas.getByRole('link', { name: LABEL_NEXT });
+      await expect(next).toHaveAttribute('aria-disabled', 'true');
+      await expect(next).toHaveAttribute('tabindex', '-1');
     });
   },
 };
@@ -324,10 +324,10 @@ export const WithRoute: Story = {
       const pagina4 = canvas.getByRole('link', { name: 'Ir para página 4' });
       await expect(pagina4.getAttribute('href')).toBe('?page=4');
       await expect(
-        canvas.getByRole('link', { name: ROTULO_PROXIMA }).getAttribute('href'),
+        canvas.getByRole('link', { name: LABEL_NEXT }).getAttribute('href'),
       ).toBe('?page=4');
       await expect(
-        canvas.getByRole('link', { name: ROTULO_ANTERIOR }).getAttribute('href'),
+        canvas.getByRole('link', { name: LABEL_PREVIOUS }).getAttribute('href'),
       ).toBe('?page=2');
     });
 

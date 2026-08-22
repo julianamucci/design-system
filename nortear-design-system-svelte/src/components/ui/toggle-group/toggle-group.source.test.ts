@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-  alignmentSourceToggleGroupBar,
+  alignmentToggleGroupBarSource,
   toggleGroupFormattingSource,
-  toggleGroupItemDesabilitadoSource,
+  toggleGroupItemDisabledSource,
   toggleGroupSelectionMultiplaSource,
   toggleGroupSource,
   toggleGroupVerticalSource,
@@ -98,13 +98,13 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a barra de alinhamento completa tem a quarta opção', () => {
-    const saida = alignmentSourceToggleGroupBar();
+    const saida = alignmentToggleGroupBarSource();
     expect(saida.match(/<ToggleGroupItem /g)).toHaveLength(4);
     expect(saida).toContain('aria-label="Justificar"');
   });
 
   it('o item desabilitado é um só, e o grupo continua de pé', () => {
-    const saida = toggleGroupItemDesabilitadoSource();
+    const saida = toggleGroupItemDisabledSource();
     expect(saida).toContain('<ToggleGroupItem value="center" disabled aria-label="Centralizar">');
     expect(saida.match(/disabled/g)).toHaveLength(1);
   });

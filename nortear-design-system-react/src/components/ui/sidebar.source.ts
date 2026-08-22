@@ -59,7 +59,7 @@ const VARIANTES = ['sidebar', 'floating', 'inset'] as const;
 const RECOLHIMENTOS = ['offcanvas', 'icon', 'none'] as const;
 
 /** Ponto de virada padrão do Provider — igual ao padrão não entra no snippet. */
-const CONSULTA_PADRAO = '(max-width: 767px)';
+const QUERY_DEFAULT = '(max-width: 767px)';
 
 /** Peças que toda composição usa, mesmo a mais curta. */
 const NUCLEO = [
@@ -86,15 +86,15 @@ function nivel(conteudo: string, n: number): string {
 }
 
 /** Bloco de import do componente, em ordem alfabética e sem repetição. */
-function importingSidebar(pecas: string[]): string {
-  const lista = [...new Set(pecas)].sort();
+function importingSidebar(parts: string[]): string {
+  const lista = [...new Set(parts)].sort();
   return `import {
-${lista.map((peca) => `  ${peca},`).join('\n')}
+${lista.map((part) => `  ${part},`).join('\n')}
 } from "@/components/ui/sidebar";`;
 }
 
 /** Import dos ícones usados, quando há algum. */
-function importarIcones(icones: string[]): string {
+function importingIcons(icones: string[]): string {
   const lista = [...new Set(icones)].sort();
   return lista.length ? `import { ${lista.join(', ')} } from "lucide-react";` : '';
 }
@@ -146,7 +146,7 @@ function menuDefault(): string[] {
 }
 
 /** Rodapé com o perfil — o item que fica no fim da coluna, longe do menu. */
-const RODAPE = `<SidebarFooter>
+const FOOTER = `<SidebarFooter>
   <SidebarMenu>
 ${nivel(destino('User', 'Perfil'), 2)}
   </SidebarMenu>
@@ -158,7 +158,7 @@ const BAR_HEADER = `<SidebarHeader className="nds-p-2">
   </span>
 </SidebarHeader>`;
 
-type Composicao = {
+type Composition = {
   /** Atributos do `SidebarProvider`. */
   provider?: string;
   /** Atributos da `Sidebar`. */
@@ -168,14 +168,14 @@ type Composicao = {
   /** Grupos já montados, na ordem em que aparecem. */
   grupos: string[];
   /** Peças além do núcleo (rodapé, faixa, separador, distintivo…). */
-  pecas?: string[];
+  parts?: string[];
   icones?: string[];
   /** Linhas de estado antes da marcação — só o uso controlado precisa. */
   estado?: string;
   comRodape?: boolean;
   comFaixa?: boolean;
   /** O gatilho some quando não há o que alternar (`collapsible="none"`). */
-  comGatilho?: boolean;
+  withTrigger?: boolean;
 };
 
 /**
@@ -183,20 +183,20 @@ type Composicao = {
  * conteúdo adjacente com o gatilho no cabeçalho. É o menor exemplo que
  * realmente desenha uma sidebar.
  */
-function pagina(c: Composicao): string {
-  const comGatilho = c.comGatilho !== false;
-  const pecas = [
+function pagina(c: Composition): string {
+  const withTrigger = c.withTrigger !== false;
+  const parts = [
     ...NUCLEO,
-    ...(c.pecas ?? []),
+    ...(c.parts ?? []),
     ...(c.comRodape !== false ? ['SidebarFooter'] : []),
     ...(c.comFaixa ? ['SidebarRail'] : []),
-    ...(comGatilho ? ['SidebarTrigger'] : []),
+    ...(withTrigger ? ['SidebarTrigger'] : []),
   ];
 
   const importHeader = [
     c.estado ? 'import { useState } from "react";' : '',
-    importingSidebar(pecas),
-    importarIcones(c.icones ?? ['LayoutDashboard', 'Blocks', 'Coins', 'User']),
+    importingSidebar(parts),
+    importingIcons(c.icones ?? ['LayoutDashboard', 'Blocks', 'Coins', 'User']),
   ]
     .filter(Boolean)
     .join('\n');
@@ -206,14 +206,14 @@ function pagina(c: Composicao): string {
     `<SidebarContent>
 ${nivel(c.grupos.join('\n'), 1)}
 </SidebarContent>`,
-    ...(c.comRodape !== false ? [RODAPE] : []),
+    ...(c.comRodape !== false ? [FOOTER] : []),
     ...(c.comFaixa ? ['<SidebarRail />'] : []),
   ].join('\n');
 
   // Sem recolhimento não há o que alternar, e um botão que não muda nada é uma
   // parada de teclado prometendo uma ação inexistente. O conteúdo adjacente
   // continua ali — vazio no exemplo porque a página é de quem consome.
-  const conteudo = comGatilho
+  const conteudo = withTrigger
     ? `<SidebarInset>
     <header className="nds-cluster nds-p-4 nds-border-b" data-spacing="sm">
       <SidebarTrigger />
@@ -235,7 +235,7 @@ ${nivel(barBody, 3)}
 }
 
 /** Composição de referência: um menu, um rodapé, e nada além disso. */
-function barWith(provider: string, barra: string, extras: Partial<Composicao> = {}): string {
+function barWith(provider: string, barra: string, extras: Partial<Composition> = {}): string {
   return pagina({
     provider,
     barra,
@@ -261,7 +261,7 @@ export const sidebarSource: SourceTransform<SidebarArgs> = (_gerado, ctx) => {
   return pagina({
     provider: attrs(
       propBool('defaultOpen', args.defaultOpen, true),
-      consulta && consulta !== CONSULTA_PADRAO ? `mobileQuery="${consulta}"` : undefined,
+      consulta && consulta !== QUERY_DEFAULT ? `mobileQuery="${consulta}"` : undefined,
     ),
     barra: attrs(
       propOption('side', args.side, LADOS, 'left'),
@@ -273,7 +273,7 @@ export const sidebarSource: SourceTransform<SidebarArgs> = (_gerado, ctx) => {
       '<SidebarSeparator />',
       grupo('Sistema', [destino('Bell', 'Notificações'), destino('Settings', 'Configurações')]),
     ],
-    pecas: ['SidebarSeparator'],
+    parts: ['SidebarSeparator'],
     icones: ['LayoutDashboard', 'Blocks', 'Coins', 'Bell', 'Settings', 'User'],
     comFaixa: true,
   });
@@ -331,7 +331,7 @@ export function sidebarRecolhivelIconSource(): string {
  * coluna.
  */
 export function sidebarNoRecolhimentoSource(): string {
-  return barWith('', ' collapsible="none"', { comGatilho: false });
+  return barWith('', ' collapsible="none"', { withTrigger: false });
 }
 
 /** Barra à esquerda — o lado padrão, escrito para a galeria poder compará-lo. */
@@ -344,7 +344,7 @@ export function sidebarSideEsquerdoSource(): string {
  * são regras diferentes lendo o mesmo `data-side`, e é por isso que o lado não
  * se resolve com uma classe de alinhamento por fora.
  */
-export function sidebarLadoDireitoSource(): string {
+export function sidebarSideDireitoSource(): string {
   return barWith('', ' side="right"');
 }
 
@@ -362,7 +362,7 @@ export function sidebarExpandidaSource(): string {
  * é o que estreita o painel para a largura de um ícone em vez de tirá-lo da
  * tela — recolhida ela continua navegável.
  */
-export function iconsSourceSidebarRecolhida(): string {
+export function iconsSidebarRecolhidaSource(): string {
   return barWith(' defaultOpen={false}', ' collapsible="icon"');
 }
 
@@ -380,7 +380,7 @@ export function sidebarRecolhidaOffcanvasSource(): string {
  * `SidebarMenuItem`: trocar a lista inteira por um bloco cinza faria a navegação
  * saltar quando os itens chegassem.
  */
-export function sidebarCarregandoSource(): string {
+export function sidebarLoadingSource(): string {
   const item = `<SidebarMenuItem key={posicao}>
   <SidebarMenuSkeleton showIcon />
 </SidebarMenuItem>`;
@@ -398,7 +398,7 @@ ${nivel(item, 4)}
   </SidebarGroupContent>
 </SidebarGroup>`,
     ],
-    pecas: ['SidebarMenuSkeleton'],
+    parts: ['SidebarMenuSkeleton'],
     icones: [],
     comRodape: false,
   });
@@ -425,7 +425,7 @@ export function sidebarMovelSource(): string {
  * ele entraria no nome acessível e o destino passaria a se chamar
  * "Componentes 12".
  */
-export function sidebarGruposSource(): string {
+export function sidebarGroupsSource(): string {
   return pagina({
     grupos: [
       grupo('Aplicação', [
@@ -445,7 +445,7 @@ export function sidebarGruposSource(): string {
 </SidebarGroupAction>`,
       ),
     ],
-    pecas: ['SidebarGroupAction', 'SidebarMenuBadge', 'SidebarSeparator'],
+    parts: ['SidebarGroupAction', 'SidebarMenuBadge', 'SidebarSeparator'],
     icones: ['LayoutDashboard', 'Blocks', 'Coins', 'Bell', 'Settings', 'User', 'Plus'],
   });
 }
@@ -482,7 +482,7 @@ ${nivel([subitem('Button', true), subitem('Input'), subitem('Select')].join('\n'
   )}
 </SidebarMenuItem>`;
 
-  const comAcao = destino('Settings', 'Configurações', {
+  const withAction = destino('Settings', 'Configurações', {
     depois: `<SidebarMenuAction showOnHover aria-label="Mais opções de configurações">
   <ChevronRight aria-hidden="true" />
 </SidebarMenuAction>`,
@@ -491,9 +491,9 @@ ${nivel([subitem('Button', true), subitem('Input'), subitem('Select')].join('\n'
   return pagina({
     barra: ' collapsible="icon"',
     grupos: [
-      grupo('Menu', [destino('LayoutDashboard', 'Dashboard', { ativo: true }), pai, comAcao]),
+      grupo('Menu', [destino('LayoutDashboard', 'Dashboard', { ativo: true }), pai, withAction]),
     ],
-    pecas: [
+    parts: [
       'SidebarMenuAction',
       'SidebarMenuSub',
       'SidebarMenuSubButton',
@@ -512,7 +512,7 @@ ${nivel([subitem('Button', true), subitem('Input'), subitem('Select')].join('\n'
  * precisa ser dito, não só desenhado: quem não vê a lista encolher só percebe o
  * filtro se o número mudar num texto.
  */
-export function sidebarBuscaSource(): string {
+export function sidebarSearchSource(): string {
   const menu = `<SidebarMenu>
   {visiveis.map((rotulo) => (
     <SidebarMenuItem key={rotulo}>
@@ -546,7 +546,7 @@ ${nivel(menu, 2)}
   </SidebarGroupContent>
 </SidebarGroup>`,
     ],
-    pecas: ['SidebarInput'],
+    parts: ['SidebarInput'],
     icones: [],
     comRodape: false,
     estado: `const DESTINOS = ["Dashboard", "Componentes", "Tokens", "Notificações", "Perfil"];

@@ -66,8 +66,8 @@ describe('comoCodigo', () => {
   it('barra o espião de ação — control de handler chega como FUNÇÃO', () => {
     // Sem esta guarda o corpo do mock do Storybook aparece no painel como se
     // fosse o exemplo que o leitor deve copiar.
-    const espiao = Object.assign(() => {}, { isAction: true });
-    expect(asCode(espiao)).toBeUndefined();
+    const spy = Object.assign(() => {}, { isAction: true });
+    expect(asCode(spy)).toBeUndefined();
   });
 
   it('barra objeto, número e string em branco', () => {

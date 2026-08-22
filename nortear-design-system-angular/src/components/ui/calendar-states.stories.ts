@@ -219,11 +219,11 @@ export const KeyboardNavigation: Story = {
       //
       // O `outline: 0` da base mata o anel nativo, então este realce é a única
       // coisa que diz onde o teclado está (WCAG 2.4.7).
-      const emFoco = dia(raiz, '2026-04-23');
+      const inFocus = dia(raiz, '2026-04-23');
       const vizinho = dia(raiz, '2026-04-24');
-      await expect(document.activeElement).toBe(emFoco);
+      await expect(document.activeElement).toBe(inFocus);
 
-      const focusRing = getComputedStyle(emFoco).boxShadow;
+      const focusRing = getComputedStyle(inFocus).boxShadow;
       const neighbourRing = getComputedStyle(vizinho).boxShadow;
       await expect(focusRing).not.toBe('none');
       await expect(focusRing).not.toBe(neighbourRing);

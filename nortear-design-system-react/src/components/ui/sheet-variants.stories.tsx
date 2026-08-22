@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
-import { esperarEncostarNaBorda } from "@shared/testing/sheet-geometry";
+import { borderWaitForEncostar } from "@shared/testing/sheet-geometry";
 import {
   Sheet,
   SheetClose,
@@ -13,9 +13,9 @@ import {
   SheetTrigger,
 } from "./sheet";
 import {
-  sheetLadoEsquerdoSource,
-  sheetLadoInferiorSource,
-  sheetLadoSuperiorSource,
+  sheetSideEsquerdoSource,
+  sheetSideInferiorSource,
+  sheetSideSuperiorSource,
   sheetSource,
 } from "./sheet.source";
 import { Button } from "./button";
@@ -107,7 +107,7 @@ export const Right: Story = {
     await expect(painel).toHaveClass(/nds-sheet-content/);
     await expect(painel).toHaveAccessibleName();
     // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
-    await esperarEncostarNaBorda(painel, "right");
+    await borderWaitForEncostar(painel, "right");
   },
 };
 
@@ -116,7 +116,7 @@ export const Left: Story = {
     covers: ["visual.item2"],
     docs: {
       // A direção é afirmada no `render` e não há control neste arquivo.
-      source: { transform: sheetLadoEsquerdoSource },
+      source: { transform: sheetSideEsquerdoSource },
       description: {
         story:
           "Desliza da esquerda. Mesma medida do right, do outro lado — é a direção da " +
@@ -130,7 +130,7 @@ export const Left: Story = {
     await expect(painel).toHaveAttribute("data-side", "left");
     await expect(painel).toHaveClass(/nds-sheet-content/);
     await expect(painel).toHaveAccessibleName();
-    await esperarEncostarNaBorda(painel, "left");
+    await borderWaitForEncostar(painel, "left");
   },
 };
 
@@ -138,7 +138,7 @@ export const Top: Story = {
   parameters: {
     docs: {
       // A direção é afirmada no `render` e não há control neste arquivo.
-      source: { transform: sheetLadoSuperiorSource },
+      source: { transform: sheetSideSuperiorSource },
       description: {
         story:
           "Desliza do topo e ocupa a largura inteira, com altura definida pelo conteúdo. " +
@@ -152,7 +152,7 @@ export const Top: Story = {
     await expect(painel).toHaveAttribute("data-side", "top");
     await expect(painel).toHaveClass(/nds-sheet-content/);
     await expect(painel).toHaveAccessibleName();
-    await esperarEncostarNaBorda(painel, "top");
+    await borderWaitForEncostar(painel, "top");
   },
 };
 
@@ -161,7 +161,7 @@ export const Bottom: Story = {
     covers: ["visual.item3"],
     docs: {
       // A direção é afirmada no `render` e não há control neste arquivo.
-      source: { transform: sheetLadoInferiorSource },
+      source: { transform: sheetSideInferiorSource },
       description: {
         story:
           "Desliza de baixo — o mesmo desenho do Drawer, sem o gesto de arrastar. " +
@@ -175,6 +175,6 @@ export const Bottom: Story = {
     await expect(painel).toHaveAttribute("data-side", "bottom");
     await expect(painel).toHaveClass(/nds-sheet-content/);
     await expect(painel).toHaveAccessibleName();
-    await esperarEncostarNaBorda(painel, "bottom");
+    await borderWaitForEncostar(painel, "bottom");
   },
 };

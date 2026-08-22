@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
-  contextMenuComAtalhosSource,
-  contextMenuComEscolhaUnicaSource,
-  contextMenuComMarcacaoSource,
-  contextMenuComSubmenuSource,
+  contextMenuWithShortcutsSource,
+  contextMenuWithChoiceUnicaSource,
+  contextMenuWithMarkupSource,
+  contextMenuWithSubmenuSource,
   contextMenuCompletoSource,
-  contextMenuItemDesabilitadoSource,
-  contextMenuItemDestrutivoSource,
+  contextMenuItemDisabledSource,
+  contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
-  contextMenuMarcacaoMistaSource,
-  contextMenuPaletaEscuraSource,
+  contextMenuMarkupMistaSource,
+  contextMenuPaletteDarkSource,
   contextMenuSource,
 } from './context-menu.source';
 
@@ -82,7 +82,7 @@ describe('contextMenuSource', () => {
 
 describe('transforms das stories de estado', () => {
   it('o item desabilitado escreve a prop no item, e o destrutivo pode acumular', () => {
-    const saida = contextMenuItemDesabilitadoSource();
+    const saida = contextMenuItemDisabledSource();
     expect(saida).toContain('<ContextMenuItem disabled>Duplicar</ContextMenuItem>');
     expect(saida).toContain('<ContextMenuItem variant="destructive" disabled>Excluir</ContextMenuItem>');
   });
@@ -96,20 +96,20 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o item destrutivo se declara por prop', () => {
-    const saida = contextMenuItemDestrutivoSource();
+    const saida = contextMenuItemDestructiveSource();
     expect(saida).toContain('<ContextMenuItem variant="destructive">');
     expect(saida).toContain('Excluir permanentemente');
   });
 
   it('a marcação mista separa os três estados', () => {
-    const saida = contextMenuMarcacaoMistaSource();
+    const saida = contextMenuMarkupMistaSource();
     expect(saida).toContain('<ContextMenuCheckboxItem indeterminate>Colunas</ContextMenuCheckboxItem>');
     expect(saida).toContain('<ContextMenuCheckboxItem checked>Régua</ContextMenuCheckboxItem>');
     expect(saida).toContain('<ContextMenuCheckboxItem>Grade</ContextMenuCheckboxItem>');
   });
 
   it('a paleta escura não muda uma linha do markup', () => {
-    const saida = contextMenuPaletaEscuraSource();
+    const saida = contextMenuPaletteDarkSource();
     // A troca de tema é global; nada de classe de tema no menu.
     expect(saida).not.toContain('dark');
     expect(saida).toContain('<ContextMenuItem variant="destructive">Excluir</ContextMenuItem>');
@@ -118,7 +118,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('cada atalho mora dentro do seu item', () => {
-    const saida = contextMenuComAtalhosSource();
+    const saida = contextMenuWithShortcutsSource();
     expect(saida.match(/<ContextMenuShortcut>/g)).toHaveLength(3);
     expect(saida).toContain(`<ContextMenuItem>
       Desfazer
@@ -127,19 +127,19 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a marcação leva o estado por vínculo de duas vias', () => {
-    const saida = contextMenuComMarcacaoSource();
+    const saida = contextMenuWithMarkupSource();
     expect(saida).toContain('let mostrarGrade = $state(false);');
     expect(saida).toContain('<ContextMenuCheckboxItem bind:checked={mostrarReguas}>');
   });
 
   it('a escolha única guarda o valor no grupo, não no item', () => {
-    const saida = contextMenuComEscolhaUnicaSource();
+    const saida = contextMenuWithChoiceUnicaSource();
     expect(saida).toContain('<ContextMenuRadioGroup bind:value={layout}>');
     expect(saida.match(/<ContextMenuRadioItem value="/g)).toHaveLength(3);
   });
 
   it('o submenu tem gatilho e conteúdo próprios', () => {
-    const saida = contextMenuComSubmenuSource();
+    const saida = contextMenuWithSubmenuSource();
     expect(saida).toContain('<ContextMenuSubTrigger>Compartilhar</ContextMenuSubTrigger>');
     expect(saida).toContain('<ContextMenuSubContent>');
   });

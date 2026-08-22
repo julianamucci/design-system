@@ -8,8 +8,8 @@ import CommandEstadoDisabledStory from './CommandEstadoDisabledStory.svelte';
 import CommandEstadoCheckedStory from './CommandEstadoCheckedStory.svelte';
 import {
   commandLoadingSource,
-  commandItemDesabilitadoSource,
-  commandItemMarcadoSource,
+  commandItemDisabledSource,
+  commandItemCheckedSource,
   commandNoResultsSource,
   commandSource,
 } from './command.source';
@@ -123,7 +123,7 @@ export const LoadingState: Story = {
 export const ItemDisabled: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item4', 'visual.item5'],
-    docs: { source: { transform: commandItemDesabilitadoSource } },
+    docs: { source: { transform: commandItemDisabledSource } },
   },
   render: () => ({
     Component: CommandEstadoDisabledStory,
@@ -184,7 +184,7 @@ export const ItemDisabled: Story = {
 export const CheckedItem: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item5'],
-    docs: { source: { transform: commandItemMarcadoSource } },
+    docs: { source: { transform: commandItemCheckedSource } },
   },
   render: () => ({
     Component: CommandEstadoCheckedStory,

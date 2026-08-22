@@ -306,7 +306,7 @@ export const WithoutToggle: Story = {
     docs: {
       // "Sem toggle" aqui é não montar o gatilho: é a única forma que a fábrica
       // oferece, e o snippet mostra exatamente ela.
-      source: { transform: sidebarSourceWith({ comGatilho: false }) },
+      source: { transform: sidebarSourceWith({ withTrigger: false }) },
       description: {
         story: 'Sidebar sempre visível com <code>collapsible="none"</code>. Sem botão de toggle. Usada em dashboards fixos.',
       },

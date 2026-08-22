@@ -4,7 +4,7 @@ import { ref } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
 import {
-  calendarDoisMesesSource,
+  calendarDoisMonthsSource,
   calendarCaptionWithSelectorsSource,
   calendarSeisWeeksSource,
   calendarSource,
@@ -163,10 +163,10 @@ export const CaptionDropdown: Story = {
     });
 
     await step('Trocar o ano no seletor leva o grid junto', async () => {
-      const seletorDeAno = () => canvas.getByRole('combobox', { name: 'Selecionar ano' });
-      await userEvent.selectOptions(seletorDeAno(), '2028');
+      const yearSelector = () => canvas.getByRole('combobox', { name: 'Selecionar ano' });
+      await userEvent.selectOptions(yearSelector(), '2028');
       await expect(canvasElement.querySelector('[data-value^="2028-04-"]')).not.toBeNull();
-      await userEvent.selectOptions(seletorDeAno(), '2026');
+      await userEvent.selectOptions(yearSelector(), '2026');
       await expect(canvasElement.querySelector('[data-value^="2026-04-"]')).not.toBeNull();
     });
   },
@@ -190,7 +190,7 @@ export const TwoMonths: Story = {
   parameters: {
     // São duas grades na tela, e o que as põe lá é uma prop que a do meta omite.
     docs: {
-      source: { transform: calendarDoisMesesSource },
+      source: { transform: calendarDoisMonthsSource },
       description: {
         story: 'Dois meses lado a lado, para escolher datas que atravessam a virada.',
       },

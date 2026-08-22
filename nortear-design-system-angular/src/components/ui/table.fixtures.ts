@@ -17,7 +17,7 @@ export interface Fatura {
   valor: string;
 }
 
-export const FATURAS: Fatura[] = [
+export const INVOICES: Fatura[] = [
   { id: '#INV-001', status: 'Pago',      metodo: 'Cartão de crédito',      valor: 'R$ 250,00' },
   { id: '#INV-002', status: 'Pendente',  metodo: 'Transferência bancária', valor: 'R$ 150,00' },
   { id: '#INV-003', status: 'Cancelado', metodo: 'Pix',                    valor: 'R$ 350,00' },

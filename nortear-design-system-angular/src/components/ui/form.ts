@@ -318,7 +318,7 @@ export class NdsFormField implements AfterContentInit {
     this.aplicar();
   }
 
-  private acharControle(): HTMLElement | null {
+  private findControl(): HTMLElement | null {
     const raiz = this.hostRef.nativeElement;
     for (const seletor of SELETORES_CONTROLE) {
       const encontrado = raiz.querySelector<HTMLElement>(seletor);
@@ -334,7 +334,7 @@ export class NdsFormField implements AfterContentInit {
     const invalido = this.invalido();
     const gerenciaValidade = this.gerenciaValidade();
 
-    const controle = this.acharControle();
+    const controle = this.findControl();
     const rotulo = raiz.querySelector<HTMLLabelElement>('label');
 
     if (rotulo) {

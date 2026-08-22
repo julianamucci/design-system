@@ -41,14 +41,14 @@ const LADOS = ['top', 'right', 'bottom', 'left'] as const;
 const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importingSheet(...pecas: string[]): string {
-  const lista = [...pecas].sort();
+function importingSheet(...parts: string[]): string {
+  const lista = [...parts].sort();
   return `import {\n${lista
-    .map((peca) => `  ${peca},`)
+    .map((part) => `  ${part},`)
     .join('\n')}\n} from "@/components/ui/sheet";`;
 }
 
-const PECAS_BASE = [
+const PARTS_BASE = [
   'Sheet',
   'SheetClose',
   'SheetContent',
@@ -59,15 +59,15 @@ const PECAS_BASE = [
   'SheetTrigger',
 ];
 
-const TITULO = 'Filtros avançados';
-const DESCRICAO = 'Configure os filtros para refinar os resultados.';
+const TITLE = 'Filtros avançados';
+const DESCRIPTION = 'Configure os filtros para refinar os resultados.';
 
 /**
  * Cabeçalho com título E descrição. Os dois não são decoração: é deles que saem
  * o `aria-labelledby` e o `aria-describedby` do painel, e um diálogo modal sem
  * nome chega ao leitor de tela como uma região anônima.
  */
-function cabecalho(titulo = TITULO, descricao = DESCRICAO): string {
+function cabecalho(titulo = TITLE, descricao = DESCRIPTION): string {
   return `    <SheetHeader>
       <SheetTitle>${titulo}</SheetTitle>
       <SheetDescription>
@@ -120,7 +120,7 @@ export const sheetSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
     propBool('showCloseButton', args.showCloseButton, true),
   );
   return jsxSnippet(
-    `${importingSheet(...PECAS_BASE)}\n${IMPORT_BUTTON}`,
+    `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
     sheet(
       raiz,
       painel,
@@ -139,7 +139,7 @@ export const sheetSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
  */
 function bySide(lado: string, titulo: string): string {
   return jsxSnippet(
-    `${importingSheet(...PECAS_BASE)}\n${IMPORT_BUTTON}`,
+    `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
     sheet('', ` side="${lado}"`, `${cabecalho(titulo)}\n${rodape()}`, 'Abrir filtros'),
   );
 }
@@ -148,7 +148,7 @@ function bySide(lado: string, titulo: string): string {
  * Esquerda: a direção é o assunto e nenhum control a descreve neste arquivo. É
  * o lado da navegação secundária — onde a pessoa espera encontrar o menu.
  */
-export function sheetLadoEsquerdoSource(): string {
+export function sheetSideEsquerdoSource(): string {
   return bySide('left', 'Painel esquerdo');
 }
 
@@ -156,7 +156,7 @@ export function sheetLadoEsquerdoSource(): string {
  * Topo: ocupa a largura inteira e a altura vem do conteúdo. Serve a filtros
  * horizontais e avisos ricos demais para caber num Alert.
  */
-export function sheetLadoSuperiorSource(): string {
+export function sheetSideSuperiorSource(): string {
   return bySide('top', 'Painel superior');
 }
 
@@ -164,7 +164,7 @@ export function sheetLadoSuperiorSource(): string {
  * Base: o mesmo desenho do Drawer, sem o gesto de arrastar. Quando o gesto
  * importa, o componente é o Drawer.
  */
-export function sheetLadoInferiorSource(): string {
+export function sheetSideInferiorSource(): string {
   return bySide('bottom', 'Painel inferior');
 }
 
@@ -172,9 +172,9 @@ export function sheetLadoInferiorSource(): string {
  * Aberto na montagem. `defaultOpen` é o caminho NÃO controlado: quem abre e
  * fecha continua sendo o componente, e o valor só diz por onde começar.
  */
-export function sheetAbertoSource(): string {
+export function sheetOpenSource(): string {
   return jsxSnippet(
-    `${importingSheet(...PECAS_BASE)}\n${IMPORT_BUTTON}`,
+    `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
     sheet(' defaultOpen', '', `${cabecalho()}\n${rodape()}`, 'Abrir filtros'),
   );
 }
@@ -184,9 +184,9 @@ export function sheetAbertoSource(): string {
  * oferece outra saída: Escape continua fechando, mas tirar a saída visível de um
  * painel sem rodapé deixaria quem usa ponteiro sem caminho nenhum.
  */
-export function sheetSemBotaoFecharSource(): string {
+export function sheetNoButtonCloseSource(): string {
   return jsxSnippet(
-    `${importingSheet(...PECAS_BASE)}\n${IMPORT_BUTTON}`,
+    `${importingSheet(...PARTS_BASE)}\n${IMPORT_BUTTON}`,
     sheet(
       '',
       ' showCloseButton={false}',
@@ -205,7 +205,7 @@ export function sheetSemBotaoFecharSource(): string {
  * do estado — sem isso o fechamento por Escape ou pelo overlay não chega até
  * ele, e o painel reabre no render seguinte.
  */
-export function sheetControladoSource(): string {
+export function sheetControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${importingSheet(
@@ -228,9 +228,9 @@ const [aberto, setAberto] = useState(false);`,
   <Sheet open={aberto} onOpenChange={setAberto}>
     <SheetContent>
       <SheetHeader>
-        <SheetTitle>${TITULO}</SheetTitle>
+        <SheetTitle>${TITLE}</SheetTitle>
         <SheetDescription>
-          ${DESCRICAO}
+          ${DESCRIPTION}
         </SheetDescription>
       </SheetHeader>
       <SheetFooter>
@@ -249,14 +249,14 @@ const [aberto, setAberto] = useState(false);`,
  */
 export function sheetFiltersSource(): string {
   return jsxSnippet(
-    `${importingSheet(...PECAS_BASE, 'SheetBody')}
+    `${importingSheet(...PARTS_BASE, 'SheetBody')}
 ${IMPORT_BUTTON}
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`,
     sheet(
       '',
       '',
-      `${cabecalho(TITULO, 'Refine os resultados por categoria, preço e disponibilidade.')}
+      `${cabecalho(TITLE, 'Refine os resultados por categoria, preço e disponibilidade.')}
     <SheetBody>
       <form
         className="nds-stack"
@@ -334,7 +334,7 @@ const SECOES = ["Dashboard", "Projetos", "Equipe", "Configurações"];`,
  */
 export function sheetPanelInferiorSource(): string {
   return jsxSnippet(
-    `${importingSheet(...PECAS_BASE, 'SheetBody')}
+    `${importingSheet(...PARTS_BASE, 'SheetBody')}
 ${IMPORT_BUTTON}`,
     sheet(
       '',
@@ -362,7 +362,7 @@ ${IMPORT_BUTTON}`,
  */
 export function sheetContentLongSource(): string {
   return jsxSnippet(
-    `${importingSheet(...PECAS_BASE, 'SheetBody')}
+    `${importingSheet(...PARTS_BASE, 'SheetBody')}
 ${IMPORT_BUTTON}
 
 const PARAGRAFOS = Array.from({ length: 24 }, (_, i) => i + 1);`,

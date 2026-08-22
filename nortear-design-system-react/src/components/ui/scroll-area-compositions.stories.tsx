@@ -4,10 +4,10 @@ import { transbordo } from "@shared/testing/scroll-area-probe";
 import { ScrollArea, ScrollBar } from "./scroll-area";
 import {
   scrollAreaCarrosselSource,
-  tagsSourceScrollAreaList,
+  tagsScrollAreaListSource,
   scrollAreaMenuLateralSource,
   scrollAreaSource,
-  scrollAreaTabelaSource,
+  scrollAreaTableSource,
 } from "./scroll-area.source";
 import { Separator } from "./separator";
 
@@ -39,7 +39,7 @@ export const TagList: Story = {
     docs: {
       // Sub-composição com Separator entre os itens — o snippet do meta traz a
       // lista sem divisor.
-      source: { transform: tagsSourceScrollAreaList },
+      source: { transform: tagsScrollAreaListSource },
       description: {
         story:
           "Lista vertical com Separator entre itens — padrão clássico para tags, versões ou changelog.",
@@ -75,11 +75,11 @@ export const TagList: Story = {
 
     await step("A lista rola sem mover a página", async () => {
       await expect(transbordo(viewport).y).toBe(true);
-      const paginaAntes = document.scrollingElement?.scrollTop ?? 0;
+      const pageBefore = document.scrollingElement?.scrollTop ?? 0;
       viewport.scrollTop = 0;
       viewport.scrollTop = 120;
       await expect(viewport.scrollTop).toBe(120);
-      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(paginaAntes);
+      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(pageBefore);
     });
   },
 };
@@ -140,7 +140,7 @@ export const DataMatrix: Story = {
   parameters: {
     docs: {
       // Dois eixos ao mesmo tempo: a mesma composição da variante Both.
-      source: { transform: scrollAreaTabelaSource },
+      source: { transform: scrollAreaTableSource },
       description: {
         story:
           "Matriz de dados ampla — tabela 15×15 dentro de um container fixo. Scroll bidirecional automático e canto no encontro das barras.",

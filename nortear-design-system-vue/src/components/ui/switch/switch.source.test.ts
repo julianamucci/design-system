@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
-  switchComDescricaoSource,
+  switchWithDescriptionSource,
   switchCompactoSource,
-  switchDesabilitadoSource,
+  switchDisabledSource,
   switchDesligadoSource,
-  formSourceSwitch,
+  formSwitchSource,
   switchInvalidoSource,
   switchItemDeMenuSource,
   switchLigadoSource,
-  preferenciasSourceSwitchList,
+  preferenciasSwitchListSource,
   switchDefaultSource,
-  configSourceSwitchPanel,
+  configSwitchPanelSource,
   switchSource,
 } from './switch.source';
 
@@ -70,7 +70,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('com descrição, o parágrafo fica FORA do rótulo', () => {
-    const saida = switchComDescricaoSource();
+    const saida = switchWithDescriptionSource();
     // Dentro do Label, o parágrafo viraria parte do nome acessível do controle.
     expect(saida).toContain('<Label for="marketing">Emails de marketing</Label>');
     expect(saida).toContain(
@@ -102,7 +102,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o desabilitado escreve só `disabled`', () => {
-    expect(switchDesabilitadoSource()).toContain('<Switch id="notificacoes" disabled />');
+    expect(switchDisabledSource()).toContain('<Switch id="notificacoes" disabled />');
   });
 
   it('o inválido aponta para a mensagem, e a mensagem tem o id apontado', () => {
@@ -115,7 +115,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o painel dá a cada linha um id próprio — ids repetidos quebram o vínculo', () => {
-    const saida = configSourceSwitchPanel();
+    const saida = configSwitchPanelSource();
     const ids = [...saida.matchAll(/<Switch id="([^"]+)"/g)].map((m) => m[1]);
     expect(ids).toHaveLength(3);
     expect(new Set(ids).size).toBe(ids.length);
@@ -124,7 +124,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a lista de preferências é lista de verdade, e só as linhas seguintes têm régua', () => {
-    const saida = preferenciasSourceSwitchList();
+    const saida = preferenciasSwitchListSource();
     expect(saida).toContain('<ul class="nds-w-sm nds-rounded-lg nds-border-default">');
     expect([...saida.matchAll(/<li /g)]).toHaveLength(3);
     // A régua separa; acima da primeira linha não há o que separar.
@@ -133,7 +133,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('no formulário é o `name` que faz o campo ser enviado', () => {
-    const saida = formSourceSwitch();
+    const saida = formSwitchSource();
     expect(saida).toContain('name="perfil-publico"');
     expect(saida).toContain(`import { Input } from '@/components/ui/input'`);
     expect(saida).toContain(`import { Button } from '@/components/ui/button'`);

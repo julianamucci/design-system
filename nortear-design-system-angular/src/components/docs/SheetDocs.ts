@@ -765,11 +765,11 @@ export class NdsSheetDocs implements AfterViewInit, OnDestroy {
 
   protected readonly doDontPairs = computed(() => {
     dict();
-    const pares: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
+    const pairs: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
       [this.tplDoDont1Do(), this.tplDoDont1Dont()],
       [this.tplDoDont2Do(), this.tplDoDont2Dont()],
     ];
-    return pares.map(([doTpl, dontTpl], i) => ({
+    return pairs.map(([doTpl, dontTpl], i) => ({
       doLabel: tNav('common.do'),
       dontLabel: tNav('common.dont'),
       doCaption: toPlainText(t(`doDont.pair${i + 1}.do`)),

@@ -146,7 +146,7 @@ export const Playground: Story = {
         // volta ao ponto de partida, então o replay do painel Interactions dá
         // o mesmo resultado saindo de qualquer estado.
         const antes = sw.getAttribute('aria-checked');
-        const chamadasAntes = (args.onCheckedChange as ReturnType<typeof fn>).mock.calls.length;
+        const callsBefore = (args.onCheckedChange as ReturnType<typeof fn>).mock.calls.length;
 
         await userEvent.click(sw);
         await expect(sw.getAttribute('aria-checked')).not.toBe(antes);
@@ -158,12 +158,12 @@ export const Playground: Story = {
         await expect(sw.getAttribute('aria-checked')).toBe(antes);
         await expect(
           (args.onCheckedChange as ReturnType<typeof fn>).mock.calls.length,
-        ).toBe(chamadasAntes + 2);
+        ).toBe(callsBefore + 2);
       });
 
       await step('Space alterna o estado e dispara o callback de mudança', async () => {
         const antes = sw.getAttribute('aria-checked');
-        const chamadasAntes = (args.onCheckedChange as ReturnType<typeof fn>).mock.calls.length;
+        const callsBefore = (args.onCheckedChange as ReturnType<typeof fn>).mock.calls.length;
         sw.focus();
         await userEvent.keyboard(' ');
         await expect(sw.getAttribute('aria-checked')).not.toBe(antes);
@@ -172,7 +172,7 @@ export const Playground: Story = {
         );
         await expect(
           (args.onCheckedChange as ReturnType<typeof fn>).mock.calls.length,
-        ).toBe(chamadasAntes + 1);
+        ).toBe(callsBefore + 1);
       });
     }
   },

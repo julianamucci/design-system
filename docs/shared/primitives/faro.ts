@@ -36,7 +36,7 @@
  */
 
 /** Ruído de navegador que não é defeito de ninguém. */
-const ERROS_IGNORADOS = [
+const ERRORS_IGNORADOS = [
   // Quirk de layout, não erro
   /^ResizeObserver loop limit exceeded$/,
   /^ResizeObserver loop completed with undelivered notifications$/,
@@ -57,7 +57,7 @@ const URLS_IGNORADAS = [
   /www\.google-analytics\.com/,
 ];
 
-type FaroMinimo = {
+type FaroMinimum = {
   api?: {
     setView?: (v: { name: string }) => void;
     startUserAction?: (
@@ -88,7 +88,7 @@ type FaroMinimo = {
  * onde correlacionar com erro e latência tem valor — que é justamente o que o
  * GA4 não faz.
  */
-const FORA_DO_FARO = new Set([
+const FARO_OUTSIDE = new Set([
   'page_view',
   'docs_page_view',
   'docs_section_viewed',
@@ -106,15 +106,15 @@ const FORA_DO_FARO = new Set([
  * passavam porque o valor chegava como `any`. Mesma armadilha já resolvida no
  * `sidebar-i18n`.
  */
-export type PecasDoFaro = {
+export type FaroParts = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  initializeFaro: (config: any) => FaroMinimo;
+  initializeFaro: (config: any) => FaroMinimum;
   getWebInstrumentations: () => unknown[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   TracingInstrumentation: new (...args: any[]) => unknown;
 };
 
-export type OpcoesFaro = {
+export type OptionsFaro = {
   /** Nome da stack, para separar os dados: "nortear DS · react". */
   stack: string;
   /** `import.meta.env` de quem chama — só o preview enxerga as vars do Storybook. */
@@ -122,12 +122,12 @@ export type OpcoesFaro = {
   versao?: string;
 };
 
-let instancia: FaroMinimo | null = null;
+let instancia: FaroMinimum | null = null;
 
-export function iniciarFaro(
-  { initializeFaro, getWebInstrumentations, TracingInstrumentation }: PecasDoFaro,
-  { stack, env, versao = '1.0.0' }: OpcoesFaro,
-): FaroMinimo | null {
+export function startFaro(
+  { initializeFaro, getWebInstrumentations, TracingInstrumentation }: FaroParts,
+  { stack, env, versao = '1.0.0' }: OptionsFaro,
+): FaroMinimum | null {
   if (instancia) return instancia;
   if (typeof window === 'undefined') return null;
 
@@ -147,7 +147,7 @@ export function iniciarFaro(
       // Ponta a ponta nas requisições HTTP.
       new TracingInstrumentation(),
     ],
-    ignoreErrors: ERROS_IGNORADOS,
+    ignoreErrors: ERRORS_IGNORADOS,
     ignoreUrls: URLS_IGNORADAS,
     // Sem isto `startUserAction` não tem instrumentação por trás e a janela de
     // atividade nunca fecha. 100ms é o padrão do Faro.
@@ -176,8 +176,8 @@ export function marcarStory(id: string): void {
  * `startUserAction` aceita só `Record<string, string>`, então número e booleano
  * são convertidos; `undefined` é descartado em vez de virar a string "undefined".
  */
-export function registrarAcao(evento: string, params?: Record<string, unknown>): void {
-  if (FORA_DO_FARO.has(evento)) return;
+export function registrarAction(evento: string, params?: Record<string, unknown>): void {
+  if (FARO_OUTSIDE.has(evento)) return;
   const api = instancia?.api;
   if (!api?.startUserAction) return;
 

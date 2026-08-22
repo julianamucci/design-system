@@ -6,8 +6,8 @@ import {
   ResizablePanelGroup,
 } from './index';
 import {
-  resizableAninhadoSource,
-  resizableComPegadorSource,
+  resizableNestedSource,
+  resizableWithGrabberSource,
   resizableHorizontalSource,
   resizableVerticalSource,
 } from './resizable.source';
@@ -41,14 +41,14 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
-function fracoes(paineis: HTMLElement[], horizontal: boolean): number[] {
+function fracoes(panels: HTMLElement[], horizontal: boolean): number[] {
   const medida = (p: HTMLElement) =>
     horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
-  const total = paineis.reduce((a, p) => a + medida(p), 0);
-  return paineis.map((p) => medida(p) / total);
+  const total = panels.reduce((a, p) => a + medida(p), 0);
+  return panels.map((p) => medida(p) / total);
 }
 
-function paineisDiretos(grupo: Element): HTMLElement[] {
+function panelsDiretos(grupo: Element): HTMLElement[] {
   return [...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
 }
 
@@ -84,7 +84,7 @@ export const Horizontal: Story = {
 
     await step('Os painéis dividem a LARGURA na proporção declarada', async () => {
       const grupo = canvasElement.querySelector('[data-slot="resizable-panel-group"]')!;
-      await expect(fracoes(paineisDiretos(grupo), true)[0]).toBeCloseTo(0.3, 1);
+      await expect(fracoes(panelsDiretos(grupo), true)[0]).toBeCloseTo(0.3, 1);
     });
   },
 };
@@ -132,7 +132,7 @@ export const Vertical: Story = {
 
     await step('Os painéis dividem a ALTURA, e não a largura', async () => {
       const grupo = canvasElement.querySelector('[data-slot="resizable-panel-group"]')!;
-      await expect(fracoes(paineisDiretos(grupo), false)[0]).toBeCloseTo(0.4, 1);
+      await expect(fracoes(panelsDiretos(grupo), false)[0]).toBeCloseTo(0.4, 1);
     });
   },
 };
@@ -141,7 +141,7 @@ export const Nested: Story = {
   parameters: {
     covers: ['visual.item3'],
     // O segundo grupo dentro do painel é justamente o que a story ensina.
-    docs: { source: { transform: resizableAninhadoSource } },
+    docs: { source: { transform: resizableNestedSource } },
   },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
@@ -175,7 +175,7 @@ export const Nested: Story = {
       // conta do de fora, senão um ajuste move os dois layouts ao mesmo tempo.
       const grupos = [...canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]')];
       await expect(grupos).toHaveLength(2);
-      for (const g of grupos) await expect(paineisDiretos(g)).toHaveLength(2);
+      for (const g of grupos) await expect(panelsDiretos(g)).toHaveLength(2);
     });
 
     await step('O divisor de dentro tem o eixo do grupo de dentro', async () => {
@@ -189,8 +189,8 @@ export const Nested: Story = {
 
     await step('E as proporções de cada grupo são independentes', async () => {
       const grupos = [...canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]')];
-      await expect(fracoes(paineisDiretos(grupos[0]), true)[0]).toBeCloseTo(0.3, 1);
-      await expect(fracoes(paineisDiretos(grupos[1]), false)[0]).toBeCloseTo(0.6, 1);
+      await expect(fracoes(panelsDiretos(grupos[0]), true)[0]).toBeCloseTo(0.3, 1);
+      await expect(fracoes(panelsDiretos(grupos[1]), false)[0]).toBeCloseTo(0.6, 1);
     });
   },
 };
@@ -199,7 +199,7 @@ export const WithHandle: Story = {
   parameters: {
     covers: ['visual.item4'],
     // A flag do pegador é o assunto, e o divisor do meta não a tem.
-    docs: { source: { transform: resizableComPegadorSource } },
+    docs: { source: { transform: resizableWithGrabberSource } },
   },
   render: () => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },

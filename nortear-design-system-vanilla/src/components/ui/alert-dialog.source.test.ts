@@ -76,8 +76,8 @@ describe('alertDialogSnippet', () => {
   });
 
   it('ignora o callback que a story passa como função de verdade', () => {
-    const espiao = alertDialogSnippet({ onOpenChange: (() => {}) as unknown as string });
-    expect(espiao).not.toContain('onOpenChange');
+    const spy = alertDialogSnippet({ onOpenChange: (() => {}) as unknown as string });
+    expect(spy).not.toContain('onOpenChange');
     expect(alertDialogSnippet({ onOpenChange: '(aberto) => sincronizar(aberto)' })).toContain(
       'onOpenChange: (aberto) => sincronizar(aberto)',
     );

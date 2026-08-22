@@ -17,8 +17,8 @@ import { createActiveSectionObserver } from '@/lib/use-active-section';
 import { stripHtml, toPlainText } from '@/lib/strip-html';
 import { NdsChart } from '@/components/ui/chart';
 import {
-  DADOS_DISPOSITIVO,
-  MESES,
+  DATA_DISPOSITIVO,
+  MONTHS,
   SERIES_MULTI,
   SERIES_TRIO,
   SERIE_UNICA,
@@ -638,11 +638,11 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
   // Os mesmos dados das stories: a regressão visual compara o mesmo gráfico na
   // docs page e na story, e um número diferente aqui viraria diferença de pixel
   // sem causa.
-  protected readonly meses = MESES;
+  protected readonly meses = MONTHS;
   protected readonly serieUnica = SERIE_UNICA;
   protected readonly seriesMulti = SERIES_MULTI;
   protected readonly seriesTrio = SERIES_TRIO;
-  protected readonly dadosDispositivo = DADOS_DISPOSITIVO;
+  protected readonly dadosDispositivo = DATA_DISPOSITIVO;
   protected readonly tendencia = TENDENCIA;
 
   /** Total do mini gráfico — derivado da série, nunca escrito à mão. */
@@ -735,11 +735,11 @@ export class NdsChartDocs implements AfterViewInit, OnDestroy {
 
   protected readonly doDontPairs = computed(() => {
     dict();
-    const pares: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
+    const pairs: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
       [this.tplDoDont1Do(), this.tplDoDont1Dont()],
       [this.tplDoDont2Do(), this.tplDoDont2Dont()],
     ];
-    return pares.map(([doTpl, dontTpl], i) => ({
+    return pairs.map(([doTpl, dontTpl], i) => ({
       doLabel: tNav('common.do'),
       dontLabel: tNav('common.dont'),
       doCaption: toPlainText(t(`doDont.pair${i + 1}.do`)),

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   scrollAreaAoRolarSource,
   scrollAreaBidirecionalSource,
-  scrollAreaConteudoFocavelSource,
+  scrollAreaContentFocavelSource,
   scrollAreaGaleriaSource,
   scrollAreaHorizontalSource,
   scrollAreaOciosoSource,
@@ -10,7 +10,7 @@ import {
   scrollAreaSempreSource,
   scrollAreaSidebarSource,
   scrollAreaSource,
-  scrollAreaTabelaSource,
+  scrollAreaTableSource,
   scrollAreaVerticalSource,
 } from './scroll-area.source';
 
@@ -22,11 +22,11 @@ const TODAS = [
   scrollAreaOciosoSource(),
   scrollAreaSempreSource(),
   scrollAreaAoRolarSource(),
-  scrollAreaConteudoFocavelSource(),
+  scrollAreaContentFocavelSource(),
   scrollAreaNoLimitSource(),
   scrollAreaSidebarSource(),
   scrollAreaGaleriaSource(),
-  scrollAreaTabelaSource(),
+  scrollAreaTableSource(),
 ];
 
 describe('scrollAreaSource', () => {
@@ -147,7 +147,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o conteúdo focável é uma navegação nomeada dentro da área', () => {
-    const saida = scrollAreaConteudoFocavelSource();
+    const saida = scrollAreaContentFocavelSource();
     expect(saida).toContain('<nav aria-label="Ações" class="nds-p-4">');
     expect(saida).toContain('<ul class="nds-stack nds-list-none" data-spacing="xs">');
     // `nds-list-none` já zera marcador, padding e margem da lista.
@@ -170,7 +170,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a tabela ampla percorre colunas e células em vez de repetir a marcação', () => {
-    const saida = scrollAreaTabelaSource();
+    const saida = scrollAreaTableSource();
     expect(saida).toContain('v-for="(pessoa, i) in pessoas"');
     expect(saida).toContain('v-for="(celula, c) in pessoa"');
     // Uma linha por célula seria sete <td> quase iguais no painel.

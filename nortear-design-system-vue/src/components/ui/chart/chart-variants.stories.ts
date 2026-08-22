@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor } from 'storybook/test';
 import { h } from 'vue';
 import {
-  desenhoEscreve,
-  desenhoPintado,
-  exigirRaiz,
-  formasDeDado,
-  textosDoDesenho,
+  designEscreve,
+  designPintado,
+  exigirRoot,
+  datumFormas,
+  designTexts,
 } from '@shared/testing/chart-probe';
 import {
   ChartContainer,
@@ -19,7 +19,7 @@ import {
   chartPieSource,
 } from './chart.source';
 
-const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
 const SERIES_MULTI = [
   { name: 'Desktop', data: [186, 305, 237, 73, 209, 214] },
@@ -50,25 +50,25 @@ export const Bar: Story = {
     docs: { description: { story: 'Barras — comparação entre categorias discretas.' } },
   },
   render: () => h(ChartContainer, {
-    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
+    option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA }),
     height: 240,
     'aria-label': 'Gráfico de barras: acessos mensais no desktop',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho sai com forma de dado, não só eixo', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      // `formasDeDado` recorta o que é preenchido E contornado: linha de grade e
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      // `datumFormas` recorta o que é preenchido E contornado: linha de grade e
       // eixo têm `fill: none` e ficam de fora sem precisar saber como a lib
       // nomeia seus grupos.
-      await expect(formasDeDado(raiz).length).toBeGreaterThan(0);
+      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
     });
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
       await waitFor(
         () => {
-          for (const mes of MESES) expect(desenhoEscreve(raiz, mes)).toBe(true);
+          for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
         },
         { timeout: 3000 },
       );
@@ -87,15 +87,15 @@ export const Line: Story = {
     },
   },
   render: () => h(ChartContainer, {
-    option: buildLineOption({ xAxis: MESES, series: SERIES_MULTI }),
+    option: buildLineOption({ xAxis: MONTHS, series: SERIES_MULTI }),
     height: 260,
     'aria-label': 'Gráfico de linhas: acessos mensais por dispositivo',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('Uma linha traçada por série', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
       // O traçado é o caminho SEM preenchimento e com espessura própria (2px do
       // tema). Eixo, marca e linha de grade também são `fill: none`, mas ficam
       // na espessura 1 — é a espessura que separa dado de moldura aqui.
@@ -111,10 +111,10 @@ export const Line: Story = {
 
     await step('A legenda nomeia cada série e o eixo mantém as categorias', async () => {
       for (const serie of SERIES_MULTI) {
-        await expect(textosDoDesenho(raiz)).toContain(serie.name);
+        await expect(designTexts(raiz)).toContain(serie.name);
       }
-      for (const mes of MESES) {
-        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      for (const mes of MONTHS) {
+        await expect(designEscreve(raiz, mes)).toBe(true);
       }
     });
   },
@@ -130,15 +130,15 @@ export const Area: Story = {
     },
   },
   render: () => h(ChartContainer, {
-    option: buildAreaOption({ xAxis: MESES, series: SERIES_MULTI }),
+    option: buildAreaOption({ xAxis: MONTHS, series: SERIES_MULTI }),
     height: 260,
     'aria-label': 'Gráfico de área: volume mensal de acessos por dispositivo',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('Cada série ganha uma região preenchida além do traçado', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
       // A região vem com preenchimento translúcido — é o que a distingue do
       // traçado, que é `fill: none`.
       const areas = [...raiz.querySelectorAll<SVGPathElement>('svg path[fill-opacity]')].filter(
@@ -150,7 +150,7 @@ export const Area: Story = {
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
       await waitFor(
         () => {
-          for (const mes of MESES) expect(desenhoEscreve(raiz, mes)).toBe(true);
+          for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
         },
         { timeout: 3000 },
       );
@@ -174,11 +174,11 @@ export const Pie: Story = {
     'aria-label': 'Distribuição de acessos por dispositivo',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('As fatias saem desenhadas', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await expect(formasDeDado(raiz).length).toBeGreaterThan(0);
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
     });
 
     await step('Cada fatia é nomeada por escrito — não só pela cor', async () => {
@@ -186,7 +186,7 @@ export const Pie: Story = {
       // some para quem não separa as cores da paleta.
       await waitFor(
         () => {
-          for (const ponto of DISPOSITIVOS) expect(desenhoEscreve(raiz, ponto.label)).toBe(true);
+          for (const ponto of DISPOSITIVOS) expect(designEscreve(raiz, ponto.label)).toBe(true);
         },
         { timeout: 3000 },
       );

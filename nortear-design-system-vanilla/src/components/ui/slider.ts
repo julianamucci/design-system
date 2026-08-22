@@ -211,10 +211,10 @@ export function createSlider(options: SliderOptions = {}): HTMLElement {
      */
     const chooseHandle = (e: PointerEvent): void => {
       const caixa = track.getBoundingClientRect();
-      const razao = vertical
+      const ratio = vertical
         ? caixa.height === 0 ? 0 : (caixa.bottom - e.clientY) / caixa.height
         : caixa.width === 0 ? 0 : (e.clientX - caixa.left) / caixa.width;
-      const alvo = min + razao * (max - min);
+      const alvo = min + ratio * (max - min);
       const perto = Math.abs(alvo - valores[0]) <= Math.abs(alvo - valores[1]) ? 0 : 1;
       inputs[perto].style.zIndex = '2';
       inputs[perto === 0 ? 1 : 0].style.zIndex = '1';

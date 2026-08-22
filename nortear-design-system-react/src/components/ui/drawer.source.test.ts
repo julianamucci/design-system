@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
-  drawerAbertoSource,
-  drawerComConfirmacaoSource,
-  drawerComFormularioSource,
-  drawerComRolagemSource,
-  drawerControladoSource,
+  drawerOpenSource,
+  drawerWithConfirmSource,
+  drawerWithFormSource,
+  drawerWithScrollSource,
+  drawerControlledSource,
   drawerDireitaSource,
   drawerEsquerdaSource,
-  drawerNaoDispensavelSource,
+  drawerNotDispensavelSource,
   drawerSource,
   drawerTopoSource,
 } from './drawer.source';
@@ -17,12 +17,12 @@ const TODAS = [
   drawerTopoSource,
   drawerEsquerdaSource,
   drawerDireitaSource,
-  drawerAbertoSource,
-  drawerControladoSource,
-  drawerNaoDispensavelSource,
-  drawerComFormularioSource,
-  drawerComConfirmacaoSource,
-  drawerComRolagemSource,
+  drawerOpenSource,
+  drawerControlledSource,
+  drawerNotDispensavelSource,
+  drawerWithFormSource,
+  drawerWithConfirmSource,
+  drawerWithScrollSource,
 ];
 
 describe('drawerSource', () => {
@@ -73,8 +73,8 @@ describe('drawerSource', () => {
   });
 
   it('não deixa o espião de onOpenChange virar código', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = drawerSource(undefined, { args: { onOpenChange: espiao } as never });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = drawerSource(undefined, { args: { onOpenChange: spy } as never });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).not.toContain('onOpenChange');
   });
@@ -96,11 +96,11 @@ describe('direções', () => {
 
 describe('estados', () => {
   it('abrir na montagem só é escrito onde É o assunto', () => {
-    expect(drawerAbertoSource()).toContain('<Drawer defaultOpen>');
+    expect(drawerOpenSource()).toContain('<Drawer defaultOpen>');
   });
 
   it('o modo controlado ensina o par open + onOpenChange e dispensa o gatilho', () => {
-    const saida = drawerControladoSource();
+    const saida = drawerControlledSource();
     expect(saida).toContain('import { useState } from "react";');
     expect(saida).toContain('const [aberto, setAberto] = useState(false);');
     expect(saida).toContain('<Drawer open={aberto} onOpenChange={setAberto}>');
@@ -109,7 +109,7 @@ describe('estados', () => {
   });
 
   it('sem dispensa por gesto, a saída explícita é obrigatória', () => {
-    const saida = drawerNaoDispensavelSource();
+    const saida = drawerNotDispensavelSource();
     expect(saida).toContain('<Drawer dismissible={false}>');
     // Escape e overlay deixam de fechar; sem o botão do rodapé quem navega por
     // teclado ficaria preso no painel.
@@ -120,7 +120,7 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('o formulário casa htmlFor com id em cada campo', () => {
-    const saida = drawerComFormularioSource();
+    const saida = drawerWithFormSource();
     expect(saida).toContain('import { Label } from "@/components/ui/label";');
     expect(saida).toContain('<Label htmlFor="drawer-name">');
     expect(saida).toContain('<Input id="drawer-name"');
@@ -129,13 +129,13 @@ describe('composições', () => {
   });
 
   it('a confirmação põe a ação principal na variante destrutiva', () => {
-    const saida = drawerComConfirmacaoSource();
+    const saida = drawerWithConfirmSource();
     expect(saida).toContain('<Button variant="destructive">Remover</Button>');
     expect(saida).toContain('<Button variant="outline">Cancelar</Button>');
   });
 
   it('a rolagem mora no corpo, e o rodapé fica fora dele', () => {
-    const saida = drawerComRolagemSource();
+    const saida = drawerWithScrollSource();
     expect(saida).toContain('<DrawerBody className="nds-text-body">');
     // O `tabIndex` da região rolável vem do próprio componente — escrevê-lo
     // aqui ensinaria a repetir à mão o que ele já faz.

@@ -5,7 +5,7 @@ import { PaneGroup } from './index';
 import ResizableStory from './ResizableStory.svelte';
 import ResizableDocs from '@/components/docs/ResizableDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { fracaoDoPrimeiro, type Eixo } from './resizable.fixtures';
+import { firstFraction, type Eixo } from './resizable.fixtures';
 import { resizableSource } from './resizable.source';
 
 /**
@@ -15,7 +15,7 @@ import { resizableSource } from './resizable.source';
  * leitor de tela anuncia "separador" e nada mais. E ele diz o ATALHO, porque a
  * alternativa ao arrasto não tem nenhuma pista visual.
  */
-const ROTULO_PUNHO = 'Redimensionar painéis — use setas para ajustar';
+const LABEL_HANDLE = 'Redimensionar painéis — use setas para ajustar';
 
 const meta: Meta = {
   title: 'UI/Resizable',
@@ -87,13 +87,13 @@ export const Playground: Story = {
       maxSize: 60,
       labelA: 'Sidebar',
       labelB: 'Conteúdo principal',
-      ariaLabel: ROTULO_PUNHO,
+      ariaLabel: LABEL_HANDLE,
       height: '260px',
     },
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO_PUNHO });
+    const punho = canvas.getByRole('separator', { name: LABEL_HANDLE });
     const eixo = args.direction as Eixo;
     const horizontal = eixo === 'horizontal';
 
@@ -107,7 +107,7 @@ export const Playground: Story = {
       );
       await expect(punho).toHaveAttribute('aria-valuemin', String(args.minSize));
       await expect(Number(punho.getAttribute('aria-valuenow'))).toBeCloseTo(
-        fracaoDoPrimeiro(canvasElement, eixo) * 100,
+        firstFraction(canvasElement, eixo) * 100,
         0,
       );
     });
@@ -116,7 +116,7 @@ export const Playground: Story = {
       // Os painéis não tinham nem `data-slot` nem a classe do contrato: a sonda
       // procurou e achou ZERO nesta stack. Os testes contavam grupos e punhos,
       // nunca painéis — e por isso a ausência atravessou todas as auditorias.
-      await expect(fracaoDoPrimeiro(canvasElement, eixo)).toBeCloseTo(
+      await expect(firstFraction(canvasElement, eixo)).toBeCloseTo(
         args.defaultSize / 100,
         1,
       );
@@ -129,7 +129,7 @@ export const Playground: Story = {
       // O par cresce/encolhe é de saldo ZERO: o painel Interactions reexecuta a
       // play no mesmo DOM, e um passo que só cresce iria encostando no limite
       // até a asserção inverter de sentido numa rodada qualquer.
-      const antes = fracaoDoPrimeiro(canvasElement, eixo);
+      const antes = firstFraction(canvasElement, eixo);
       punho.focus();
       await expect(punho).toHaveFocus();
 
@@ -138,21 +138,21 @@ export const Playground: Story = {
 
       await userEvent.keyboard(cresce);
       await waitFor(() =>
-        expect(fracaoDoPrimeiro(canvasElement, eixo)).toBeGreaterThan(antes + 0.01),
+        expect(firstFraction(canvasElement, eixo)).toBeGreaterThan(antes + 0.01),
       );
 
       await userEvent.keyboard(encolhe);
       await waitFor(() =>
-        expect(fracaoDoPrimeiro(canvasElement, eixo)).toBeCloseTo(antes, 2),
+        expect(firstFraction(canvasElement, eixo)).toBeCloseTo(antes, 2),
       );
     });
 
     await step('A seta do outro eixo não é sequestrada', async () => {
       // Um separator vertical que consumisse ArrowUp roubaria a rolagem de quem
       // só está de passagem pelo foco.
-      const antes = fracaoDoPrimeiro(canvasElement, eixo);
+      const antes = firstFraction(canvasElement, eixo);
       await userEvent.keyboard(horizontal ? '{ArrowUp}' : '{ArrowLeft}');
-      await expect(fracaoDoPrimeiro(canvasElement, eixo)).toBeCloseTo(antes, 2);
+      await expect(firstFraction(canvasElement, eixo)).toBeCloseTo(antes, 2);
     });
   },
 };

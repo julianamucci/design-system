@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
 import {
-  desenhoEscreve,
-  desenhoPintado,
-  exigirRaiz,
-  formasDeDado,
+  designEscreve,
+  designPintado,
+  exigirRoot,
+  datumFormas,
 } from '@shared/testing/chart-probe';
 import { createChart, type ChartType } from './chart';
 import { chartSource } from './chart.source';
@@ -13,9 +13,9 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
-const MESES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
-const chartData = MESES.map((label, i) => ({
+const chartData = MONTHS.map((label, i) => ({
   label,
   value: [186, 305, 237, 73, 209, 214][i],
 }));
@@ -133,7 +133,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     // Procura pela classe, e não pelo data-slot: `.nds-chart` é o que o CSS
     // compartilhado define, e é o contrato que as cinco stacks têm em comum.
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho é anunciado como imagem, com a descrição da story', async () => {
       await expect(raiz.dataset.slot).toBe('chart');
@@ -144,8 +144,8 @@ export const Playground: Story = {
     });
 
     await step('O desenho sai — e sai com forma, não como casca vazia', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('O apelido depreciado continua produzindo o atributo', async () => {
@@ -156,12 +156,12 @@ export const Playground: Story = {
       const antigo = createChart({ data: chartData, label: 'Acessos mensais' });
       await expect(antigo.getAttribute('aria-label')).toBe('Acessos mensais');
 
-      const ambos = createChart({
+      const both = createChart({
         data: chartData,
         label: 'Antigo',
         'aria-label': 'Canônico',
       });
-      await expect(ambos.getAttribute('aria-label')).toBe('Canônico');
+      await expect(both.getAttribute('aria-label')).toBe('Canônico');
 
       // E `title` não disputa o nome acessível: ele é o ÚLTIMO recurso, não um
       // sinônimo — quem descreve o desenho ganha dele.
@@ -176,8 +176,8 @@ export const Playground: Story = {
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
       // A marca de eixo é a alternativa textual do valor: categoria que o
       // desenho não escreve é dado que só existe como pixel.
-      for (const mes of MESES) {
-        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      for (const mes of MONTHS) {
+        await expect(designEscreve(raiz, mes)).toBe(true);
       }
     });
   },

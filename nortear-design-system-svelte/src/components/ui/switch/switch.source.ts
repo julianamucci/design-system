@@ -30,8 +30,8 @@ export type SwitchArgs = {
  * quando não couber — fila longa demais some na barra de rolagem do painel.
  */
 function tagDoSwitch(props: string[], indentacao: string): string {
-  const emLinha = `${indentacao}<Switch ${props.join(' ')} />`;
-  if (emLinha.length <= 78) return emLinha;
+  const inLine = `${indentacao}<Switch ${props.join(' ')} />`;
+  if (inLine.length <= 78) return inLine;
   return `${indentacao}<Switch\n${props
     .map((prop) => `${indentacao}  ${prop}`)
     .join('\n')}\n${indentacao}/>`;

@@ -31,7 +31,7 @@ const meta: Meta = {
 };
 export default meta;
 
-export const SemRolagemHorizontal: StoryObj = {
+export const HorizontalNoScroll: StoryObj = {
   globals: { viewport: { value: 'mobile1' } },
   render: () => (
     <div data-moldura className="nds-p-4 nds-border-default nds-rounded-lg">

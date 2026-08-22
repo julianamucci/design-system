@@ -3,11 +3,11 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NdsChart } from './chart';
 import {
-  MESES,
+  MONTHS,
   SERIE_UNICA,
   SERIES_MULTI,
   rgbColor,
-  razaoDeContraste,
+  contrastRatio,
   rgbToken,
 } from './chart.fixtures';
 
@@ -54,7 +54,7 @@ export const Empty: Story = {
 
 export const SingleSeries: Story = {
   render: () => ({
-    props: { meses: MESES, series: SERIE_UNICA },
+    props: { meses: MONTHS, series: SERIE_UNICA },
     template: `
       <div ndsChart
         type="bar"
@@ -94,7 +94,7 @@ export const SingleSeries: Story = {
 export const MultiSeries: Story = {
   parameters: { covers: ['functional.item5'] },
   render: () => ({
-    props: { meses: MESES, series: SERIES_MULTI },
+    props: { meses: MONTHS, series: SERIES_MULTI },
     template: `
       <div ndsChart
         type="bar"
@@ -116,7 +116,7 @@ export const MultiSeries: Story = {
 
     await step('Cada série usa um token de cor distinto', async () => {
       const barras = [...chart.querySelectorAll<SVGRectElement>('rect[data-series]')];
-      await expect(barras).toHaveLength(MESES.length * SERIES_MULTI.length);
+      await expect(barras).toHaveLength(MONTHS.length * SERIES_MULTI.length);
       const cores = new Set(barras.map((b) => getComputedStyle(b).fill));
       await expect(cores.size).toBe(SERIES_MULTI.length);
     });
@@ -149,7 +149,7 @@ export const DarkTheme: Story = {
   parameters: { covers: ['functional.item6', 'visual.item4'], controls: { disable: true } },
   globals: { theme: 'dark' },
   render: () => ({
-    props: { meses: MESES, series: SERIES_MULTI },
+    props: { meses: MONTHS, series: SERIES_MULTI },
     template: `
       <div ndsChart
         type="bar"
@@ -169,7 +169,7 @@ export const DarkTheme: Story = {
     const graficos = [...canvasElement.querySelectorAll<HTMLElement>('.nds-chart')];
     const chart = graficos[0];
     const html = document.documentElement;
-    const eraEscuro = html.classList.contains('dark');
+    const darkEra = html.classList.contains('dark');
     const barra = chart.querySelector<SVGRectElement>('rect[data-series="0"]')!;
     // A sonda da recolorização é o TEXTO do eixo, não a barra: a paleta de
     // série (--chart-1 a --chart-5) é a mesma nos dois modos de propósito —
@@ -199,7 +199,7 @@ export const DarkTheme: Story = {
         // deixa o escuro posto, e é ele que o Chromatic fotografa; na suíte, em
         // que as stories dividem o mesmo documento, repor evita envenenar a
         // próxima.
-        html.classList.toggle('dark', eraEscuro);
+        html.classList.toggle('dark', darkEra);
       }
     });
   },
@@ -216,7 +216,7 @@ export const DarkTheme: Story = {
 export const GraphicContrast: Story = {
   parameters: { covers: ['accessibility.item3'], controls: { disable: true } },
   render: () => ({
-    props: { meses: MESES, series: SERIES_MULTI },
+    props: { meses: MONTHS, series: SERIES_MULTI },
     template: `
       <div ndsChart
         type="bar"
@@ -234,7 +234,7 @@ export const GraphicContrast: Story = {
       const contornos = [...chart.querySelectorAll<SVGRectElement>('svg > rect')]
         .filter((r) => r.getAttribute('fill')?.startsWith('url('));
       // Uma camada de contorno por barra desenhada, mais a da legenda.
-      await expect(contornos.length).toBeGreaterThanOrEqual(MESES.length * SERIES_MULTI.length);
+      await expect(contornos.length).toBeGreaterThanOrEqual(MONTHS.length * SERIES_MULTI.length);
       for (const contorno of contornos) {
         await expect(contorno.getAttribute('stroke-width')).toBe('1');
       }
@@ -244,13 +244,13 @@ export const GraphicContrast: Story = {
       const contorno = [...chart.querySelectorAll<SVGRectElement>('svg > rect')]
         .find((r) => r.getAttribute('fill')?.startsWith('url('))!;
       const cor = rgbColor(getComputedStyle(contorno).stroke)!;
-      await expect(razaoDeContraste(cor, fundo)).toBeGreaterThanOrEqual(3);
+      await expect(contrastRatio(cor, fundo)).toBeGreaterThanOrEqual(3);
     });
 
     await step('O texto dos eixos passa de 4.5:1', async () => {
       const rotulo = chart.querySelector<SVGTextElement>('svg text')!;
       const cor = rgbColor(getComputedStyle(rotulo).fill)!;
-      await expect(razaoDeContraste(cor, fundo)).toBeGreaterThanOrEqual(4.5);
+      await expect(contrastRatio(cor, fundo)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };

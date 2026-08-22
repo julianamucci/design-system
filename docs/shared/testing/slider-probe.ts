@@ -17,7 +17,7 @@
  *
  * Asserção escrita contra UMA das formas reprova a outra sem que nada esteja
  * quebrado — foi o que derrubou a Playground do stack que usa input nativo,
- * afirmando `aria-valuemin` num elemento que expõe `min`. `limitesDaAlca` lê a
+ * afirmando `aria-valuemin` num elemento que expõe `min`. `handleLimites` lê a
  * superfície que existir e devolve números; é sobre o número que a asserção
  * deve falar.
  *
@@ -38,7 +38,7 @@ function achar(raiz: ParentNode, slot: string): HTMLElement | null {
 }
 
 /** O trilho — a caixa por onde o preenchimento corre. */
-export function trilhoDoSlider(raiz: ParentNode): HTMLElement {
+export function sliderTrack(raiz: ParentNode): HTMLElement {
   const el = achar(raiz, 'slider-track');
   if (!el) throw new Error('SONDA::slider: nenhum [data-slot="slider-track"] no canvas');
   return el;
@@ -67,7 +67,7 @@ export function alcasDoSlider(raiz: ParentNode): HTMLElement[] {
  * `max` e `value` saíam `NaN`, e `expect(NaN).toBe(NaN)` passa por
  * `Object.is` — a asserção existia e não podia reprovar.
  */
-export function controleDaAlca(alca: HTMLElement): HTMLElement {
+export function handleControl(alca: HTMLElement): HTMLElement {
   const dentro = alca.querySelector<HTMLInputElement>('input[type="range"]');
   if (dentro) return dentro;
   if (alca instanceof HTMLInputElement && alca.type === 'range') return alca;
@@ -77,7 +77,7 @@ export function controleDaAlca(alca: HTMLElement): HTMLElement {
 
 // ─── Valor e limites ─────────────────────────────────────────────────────────
 
-export type LimitesDaAlca = { min: number; max: number; agora: number };
+export type HandleLimites = { min: number; max: number; agora: number };
 
 /**
  * Lê valor e limites de uma alça, seja qual for a superfície que os expõe.
@@ -85,8 +85,8 @@ export type LimitesDaAlca = { min: number; max: number; agora: number };
  * `elemento` pode ser a alça, o input de dentro dela ou o próprio nó com
  * `role="slider"` — as três chamadas aparecem nas stories.
  */
-export function limitesDaAlca(elemento: HTMLElement): LimitesDaAlca {
-  const controle = controleDaAlca(elemento);
+export function handleLimites(elemento: HTMLElement): HandleLimites {
+  const controle = handleControl(elemento);
   const numero = (aria: string, nativo: string): number => {
     const doAria = controle.getAttribute(aria);
     if (doAria !== null && doAria !== '') return Number(doAria);
@@ -110,8 +110,8 @@ export function limitesDaAlca(elemento: HTMLElement): LimitesDaAlca {
 }
 
 /** Atalho para o valor corrente da alça. */
-export function valorDaAlca(elemento: HTMLElement): number {
-  return limitesDaAlca(elemento).agora;
+export function handleValue(elemento: HTMLElement): number {
+  return handleLimites(elemento).agora;
 }
 
 /**
@@ -123,8 +123,8 @@ export function valorDaAlca(elemento: HTMLElement): number {
  * exigi-la reprovava, com o componente correto, as stacks cuja alça não é um
  * input.
  */
-export function alcaDesabilitada(alca: HTMLElement): boolean {
-  const controle = controleDaAlca(alca);
+export function handleDesabilitada(alca: HTMLElement): boolean {
+  const controle = handleControl(alca);
   const dataDisabled = (el: HTMLElement) => {
     const v = el.getAttribute('data-disabled');
     return v !== null && v !== 'false';
@@ -150,7 +150,7 @@ function luminancia(cor: string, fundo: [number, number, number]): number {
 }
 
 /** Primeiro ancestral com fundo opaco — o que o olho realmente vê por baixo. */
-function fundoOpaco(el: HTMLElement): [number, number, number] {
+function backgroundOpaco(el: HTMLElement): [number, number, number] {
   let atual: HTMLElement | null = el;
   while (atual) {
     const [r = 0, g = 0, b = 0, a = 0] =
@@ -168,13 +168,13 @@ function fundoOpaco(el: HTMLElement): [number, number, number] {
  * aparece na tela: ela é composta sobre o primeiro ancestral opaco antes da
  * conta. Sem isso o número sai errado e para o lado errado.
  */
-export function contrasteAlcaTrilho(raiz: ParentNode): number {
+export function contrastHandleTrack(raiz: ParentNode): number {
   const alca = alcasDoSlider(raiz)[0];
   if (!alca) throw new Error('SONDA::slider: nenhuma [data-slot="slider-thumb"] no canvas');
-  const trilho = trilhoDoSlider(raiz);
-  const base = fundoOpaco(trilho.parentElement ?? trilho);
+  const trilho = sliderTrack(raiz);
+  const base = backgroundOpaco(trilho.parentElement ?? trilho);
 
-  const a = luminancia(discoDaAlca(alca).borderTopColor, base);
+  const a = luminancia(handleDisco(alca).borderTopColor, base);
   const b = luminancia(getComputedStyle(trilho).backgroundColor, base);
   const [claro, escuro] = a >= b ? [a, b] : [b, a];
   return (claro + 0.05) / (escuro + 0.05);
@@ -189,14 +189,14 @@ export function contrasteAlcaTrilho(raiz: ParentNode): number {
  * "paleta errada" de "tema herdado de outro arquivo" de "elemento em transição".
  * Passe o retorno como MENSAGEM da asserção: ele só é lido quando ela reprova.
  */
-export function contextoAlcaTrilho(raiz: ParentNode): string {
+export function contextoHandleTrack(raiz: ParentNode): string {
   const alca = alcasDoSlider(raiz)[0];
   if (!alca) return 'SONDA::slider: nenhuma alça';
-  const trilho = trilhoDoSlider(raiz);
+  const trilho = sliderTrack(raiz);
   const partes = [
-    `borda=${discoDaAlca(alca).borderTopColor}`,
+    `borda=${handleDisco(alca).borderTopColor}`,
     `trilho=${getComputedStyle(trilho).backgroundColor}`,
-    `base=rgb(${fundoOpaco(trilho.parentElement ?? trilho).join(", ")})`,
+    `base=rgb(${backgroundOpaco(trilho.parentElement ?? trilho).join(", ")})`,
     `html="${raiz.ownerDocument?.documentElement.className ?? '?'}"`,
   ];
   return partes.join(' ');
@@ -211,7 +211,7 @@ export function contextoAlcaTrilho(raiz: ParentNode): string {
  * lidos no elemento voltariam `rgba(0, 0, 0, 0)` e `none`, e a conta de
  * contraste passaria a comparar transparente com transparente.
  */
-function discoDaAlca(alca: HTMLElement): CSSStyleDeclaration {
+function handleDisco(alca: HTMLElement): CSSStyleDeclaration {
   return getComputedStyle(alca, '::before');
 }
 
@@ -225,9 +225,9 @@ function discoDaAlca(alca: HTMLElement): CSSStyleDeclaration {
  * das duas mudar em relação ao repouso para o anel existir — o que a regra
  * proíbe é a alça focada ficar idêntica à alça em repouso.
  */
-export function aneisDeFoco(alca: HTMLElement): { sombra: string; borda: string } {
-  // No `::before`, que é onde a borda e a sombra moram — ver `discoDaAlca`.
-  const estilo = discoDaAlca(alca);
+export function focusAneis(alca: HTMLElement): { sombra: string; borda: string } {
+  // No `::before`, que é onde a borda e a sombra moram — ver `handleDisco`.
+  const estilo = handleDisco(alca);
   return { sombra: estilo.boxShadow, borda: estilo.borderTopColor };
 }
 
@@ -240,16 +240,16 @@ export function aneisDeFoco(alca: HTMLElement): { sombra: string; borda: string 
  * compara o anel consigo mesmo e reprova. Solta o foco e espera duas amostras
  * iguais antes de devolver.
  */
-export async function anelEmRepouso(
+export async function restRing(
   alca: HTMLElement,
   tempoMax = 2000,
 ): Promise<{ sombra: string; borda: string }> {
   (alca.ownerDocument.activeElement as HTMLElement | null)?.blur();
   const limite = Date.now() + tempoMax;
-  let anterior = aneisDeFoco(alca);
+  let anterior = focusAneis(alca);
   while (Date.now() < limite) {
     await new Promise((r) => setTimeout(r, 32));
-    const agora = aneisDeFoco(alca);
+    const agora = focusAneis(alca);
     if (agora.sombra === anterior.sombra && agora.borda === anterior.borda) return agora;
     anterior = agora;
   }
@@ -267,21 +267,21 @@ export async function anelEmRepouso(
  * Não é afrouxar a asserção: continua exigindo que a alça focada difira da
  * alça parada. Só espera o desenho parar de se mexer antes de fotografá-lo.
  */
-export async function anelDeFocoAssentado(
+export async function focusAssentadoRing(
   alca: HTMLElement,
   repouso: { sombra: string; borda: string },
   tempoMax = 2000,
 ): Promise<{ sombra: string; borda: string }> {
   const limite = Date.now() + tempoMax;
-  let atual = aneisDeFoco(alca);
+  let atual = focusAneis(alca);
   while (Date.now() < limite) {
     if (atual.sombra !== repouso.sombra || atual.borda !== repouso.borda) {
       // Mudou: deixa a transição terminar para não fotografar o meio dela.
       await new Promise((r) => setTimeout(r, 60));
-      return aneisDeFoco(alca);
+      return focusAneis(alca);
     }
     await new Promise((r) => setTimeout(r, 16));
-    atual = aneisDeFoco(alca);
+    atual = focusAneis(alca);
   }
   return atual;
 }
@@ -305,7 +305,7 @@ export async function anelDeFocoAssentado(
  */
 export async function apertarTecla(elemento: HTMLElement, tecla: string): Promise<void> {
   elemento.focus();
-  const real = await tecladoDoNavegador();
+  const real = await navegadorKeyboard();
   if (real) {
     await real(tecla);
     return;
@@ -343,7 +343,7 @@ export async function apertarTecla(elemento: HTMLElement, tecla: string): Promis
  * Fora do modo browser (painel Interactions do Storybook) o import falha ou o
  * módulo lança — as duas coisas caem no `catch`, e o chamador usa o DOM.
  */
-async function tecladoDoNavegador(): Promise<((s: string) => Promise<void>) | null> {
+async function navegadorKeyboard(): Promise<((s: string) => Promise<void>) | null> {
   try {
     // @ts-expect-error -- ver a nota do import de storybook/test acima.
     const mod = (await import('vitest/browser')) as {
@@ -382,8 +382,8 @@ async function tecladoDoNavegador(): Promise<((s: string) => Promise<void>) | nu
  * determinístico, e a asserção pode falar de um número exato em vez de uma
  * faixa de tolerância.
  */
-export async function clicarNoCentro(elemento: HTMLElement): Promise<void> {
-  const real = await ponteiroDoNavegador();
+export async function centerClick(elemento: HTMLElement): Promise<void> {
+  const real = await navegadorPointer();
   if (real) {
     await real(elemento);
     return;
@@ -397,7 +397,7 @@ export async function clicarNoCentro(elemento: HTMLElement): Promise<void> {
   await userEvent.click(elemento);
 }
 
-async function ponteiroDoNavegador(): Promise<((el: Element) => Promise<void>) | null> {
+async function navegadorPointer(): Promise<((el: Element) => Promise<void>) | null> {
   try {
     // @ts-expect-error -- ver a nota do import de storybook/test acima.
     const mod = (await import('vitest/browser')) as {
@@ -430,7 +430,7 @@ async function ponteiroDoNavegador(): Promise<((el: Element) => Promise<void>) |
  *
  * Devolve a função que desfaz o remendo — chame-a no `finally`.
  */
-export function remendarCapturaDePonteiro(): () => void {
+export function pointerRemendarCaptura(): () => void {
   const proto = Element.prototype;
   const originais = {
     set: proto.setPointerCapture,

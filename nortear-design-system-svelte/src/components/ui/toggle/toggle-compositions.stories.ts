@@ -3,9 +3,9 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import ToggleScenarioStory from './ToggleScenarioStory.svelte';
 import {
-  toggleBarraDeFormatacaoSource,
-  toggleControladoSource,
-  toggleFiltrosSource,
+  formattingToggleBarSource,
+  toggleControlledSource,
+  toggleFiltersSource,
   toggleSource,
 } from './toggle.source';
 
@@ -44,7 +44,7 @@ async function definir(btn: HTMLElement, alvo: boolean) {
 }
 
 export const FormattingToolbar: Story = {
-  parameters: { docs: { source: { transform: toggleBarraDeFormatacaoSource } } },
+  parameters: { docs: { source: { transform: formattingToggleBarSource } } },
   args: { cenario: 'toolbar' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -77,7 +77,7 @@ export const FormattingToolbar: Story = {
 };
 
 export const FilterList: Story = {
-  parameters: { docs: { source: { transform: toggleFiltrosSource } } },
+  parameters: { docs: { source: { transform: toggleFiltersSource } } },
   args: { cenario: 'filters' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -110,7 +110,7 @@ export const FilterList: Story = {
 };
 
 export const Controlled: Story = {
-  parameters: { docs: { source: { transform: toggleControladoSource } } },
+  parameters: { docs: { source: { transform: toggleControlledSource } } },
   args: { cenario: 'controlled' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

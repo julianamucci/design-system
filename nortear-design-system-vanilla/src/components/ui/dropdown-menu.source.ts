@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -60,7 +60,7 @@ const ITEMS_DEFAULT: DropdownMenuSnippetItem[] = [
 ];
 
 function item(i: DropdownMenuSnippetItem): string {
-  const pares = opcoes([
+  const pairs = opcoes([
     ['type', i.type && i.type !== 'item' ? texto(i.type) : undefined],
     ['label', i.label !== undefined ? texto(i.label) : undefined],
     ['value', i.value !== undefined ? texto(i.value) : undefined],
@@ -73,7 +73,7 @@ function item(i: DropdownMenuSnippetItem): string {
   ])
     .map((linha) => linha.replace(/,$/, ''))
     .join(', ');
-  return `{ ${pares} }`;
+  return `{ ${pairs} }`;
 }
 
 /**
@@ -102,7 +102,7 @@ export function dropdownMenuSnippet(o: DropdownMenuSnippetOptions = {}): string 
   ]);
 
   return snippet(
-    [importar('dropdown-menu', 'createDropdownMenu'), importar('button', 'createButton')].join('\n'),
+    [importing('dropdown-menu', 'createDropdownMenu'), importing('button', 'createButton')].join('\n'),
     `const menu = ${chamada('createDropdownMenu', linhas)};`,
     montar('menu'),
   );

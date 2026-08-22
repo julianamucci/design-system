@@ -17,25 +17,25 @@
  */
 
 /** Seletores do contrato `.nds-*` da galeria. */
-const GRADE = '.nds-icon-grid';
+const GRID = '.nds-icon-grid';
 const ITEM = '.nds-icon-grid-item';
 const TILE = '.nds-icon-tile';
 const VAZIO = '.nds-icon-empty-state';
-const BUSCA = 'input[type="search"]';
+const SEARCH = 'input[type="search"]';
 
 function texto(el: Element | null): string {
   return (el?.textContent ?? '').trim();
 }
 
 /** Item visível = está no DOM e não carrega `is-hidden`. */
-export function itensVisiveis(raiz: HTMLElement): HTMLElement[] {
+export function itemsVisiveis(raiz: HTMLElement): HTMLElement[] {
   return Array.from(raiz.querySelectorAll<HTMLElement>(ITEM)).filter(
     (item) => !item.classList.contains('is-hidden')
   );
 }
 
-export function campoDeBusca(raiz: HTMLElement): HTMLInputElement {
-  const campo = raiz.querySelector<HTMLInputElement>(BUSCA);
+export function searchField(raiz: HTMLElement): HTMLInputElement {
+  const campo = raiz.querySelector<HTMLInputElement>(SEARCH);
   if (!campo) throw new Error('contrato: a galeria não tem campo de busca (input[type="search"])');
   return campo;
 }
@@ -49,8 +49,8 @@ export function campoDeBusca(raiz: HTMLElement): HTMLInputElement {
  * já escutam. Uma única emissão por consulta, em vez de uma por tecla — com
  * dois mil tiles no DOM, a diferença é de segundos por story.
  */
-export function digitarNaBusca(raiz: HTMLElement, consulta: string): HTMLInputElement {
-  const campo = campoDeBusca(raiz);
+export function searchDigitar(raiz: HTMLElement, consulta: string): HTMLInputElement {
+  const campo = searchField(raiz);
   const setter = Object.getOwnPropertyDescriptor(
     Object.getPrototypeOf(campo) as object,
     'value'
@@ -65,13 +65,13 @@ export function textoDaContagem(raiz: HTMLElement): string {
   return texto(raiz.querySelector('[aria-live="polite"]'));
 }
 
-export function estadoVazioVisivel(raiz: HTMLElement): boolean {
+export function stateEmptyVisible(raiz: HTMLElement): boolean {
   const vazio = raiz.querySelector(VAZIO);
   return !!vazio && vazio.classList.contains('is-visible');
 }
 
-export function gradeEscondida(raiz: HTMLElement): boolean {
-  const grade = raiz.querySelector(GRADE);
+export function gridEscondida(raiz: HTMLElement): boolean {
+  const grade = raiz.querySelector(GRID);
   return !!grade && grade.classList.contains('is-hidden');
 }
 
@@ -82,15 +82,15 @@ export function gradeEscondida(raiz: HTMLElement): boolean {
  * usa. Bater o número prova que a grade nasce INTEIRA (a filtragem é por
  * classe, não por remoção de nó) e que nenhuma stack perdeu ícone no caminho.
  */
-export function auditarEstruturaDaGaleria(
+export function galeriaAuditarStructure(
   raiz: HTMLElement,
   totalEsperado: number
 ): string[] {
   const problemas: string[] = [];
 
-  const grade = raiz.querySelector<HTMLElement>(GRADE);
+  const grade = raiz.querySelector<HTMLElement>(GRID);
   if (!grade) {
-    problemas.push(`sem ${GRADE} na página`);
+    problemas.push(`sem ${GRID} na página`);
     return problemas;
   }
   if (grade.tagName !== 'UL') {
@@ -105,9 +105,9 @@ export function auditarEstruturaDaGaleria(
     problemas.push(`a grade tem ${itens.length} itens, e o catálogo tem ${totalEsperado}`);
   }
 
-  const semNome = itens.filter((item) => !item.dataset.iconName).length;
-  if (semNome > 0) {
-    problemas.push(`${semNome} itens sem data-icon-name — a sonda não consegue endereçá-los`);
+  const noName = itens.filter((item) => !item.dataset.iconName).length;
+  if (noName > 0) {
+    problemas.push(`${noName} itens sem data-icon-name — a sonda não consegue endereçá-los`);
   }
 
   const vazio = raiz.querySelector(VAZIO);
@@ -187,8 +187,8 @@ export function auditarTile(raiz: HTMLElement, nomeDoIcone: string): string[] {
  * era o caso do `.nds-icon-search-input` antes de virar modificador do
  * `.nds-input`.
  */
-export function auditarAlturaDoCampo(raiz: HTMLElement): string[] {
-  const campo = campoDeBusca(raiz);
+export function fieldAuditarHeight(raiz: HTMLElement): string[] {
+  const campo = searchField(raiz);
   const fonteOriginal = campo.style.fontSize;
   const antes = campo.getBoundingClientRect().height;
   try {

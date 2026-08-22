@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
-import { alturaResultante, campoDe } from '@shared/testing/input-probe';
+import { heightResultante, fieldOf } from '@shared/testing/input-probe';
 import { Input } from './index';
 import {
-  inputTipoArquivoSource,
-  inputTipoBuscaSource,
-  inputTipoEmailSource,
-  inputTipoNumeroSource,
-  inputTipoSenhaSource,
-  inputTipoTextoSource,
+  inputTypeFileSource,
+  inputTypeSearchSource,
+  inputTypeEmailSource,
+  inputTypeNumberSource,
+  inputTypeSenhaSource,
+  inputTypeTextSource,
 } from './input.source';
 
 const meta = {
@@ -20,7 +20,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: inputTipoTextoSource },
+      source: { transform: inputTypeTextSource },
       description: {
         component:
           'O Input não tem variantes via prop — a aparência e o comportamento mudam conforme o atributo `type` HTML. Use sempre o tipo semântico correto para cada campo.',
@@ -49,7 +49,7 @@ export const Text: Story = {
 export const Email: Story = {
   // Cada tipo troca teclado, papel implícito e validação nativa: é o atributo
   // inteiro do exemplo, e a do `meta` mostra o tipo de texto.
-  parameters: { docs: { source: { transform: inputTipoEmailSource } } },
+  parameters: { docs: { source: { transform: inputTypeEmailSource } } },
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="email" placeholder="ex: joao@empresa.com" /></div>',
@@ -65,7 +65,7 @@ export const Email: Story = {
 
 export const Password: Story = {
   // O tipo é o assunto: aqui ele muda o mascaramento e o gerenciador de senhas.
-  parameters: { docs: { source: { transform: inputTipoSenhaSource } } },
+  parameters: { docs: { source: { transform: inputTypeSenhaSource } } },
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="password" placeholder="••••••••" /></div>',
@@ -81,7 +81,7 @@ export const Password: Story = {
 
 export const Number: Story = {
   // O tipo é o assunto: aqui ele muda o teclado e traz os incrementos nativos.
-  parameters: { docs: { source: { transform: inputTipoNumeroSource } } },
+  parameters: { docs: { source: { transform: inputTypeNumberSource } } },
   render: () => ({
     components: { Input },
     template: '<div class="nds-w-xs"><Input type="number" placeholder="ex: 42" /></div>',
@@ -104,7 +104,7 @@ export const Search: Story = {
     covers: ['visual.item3'],
     // O tipo troca o papel implícito para searchbox — nada no visual denuncia
     // se estiver errado, então o snippet precisa mostrá-lo.
-    docs: { source: { transform: inputTipoBuscaSource } },
+    docs: { source: { transform: inputTypeSearchSource } },
   },
   render: () => ({
     components: { Input },
@@ -139,7 +139,7 @@ export const File: Story = {
   parameters: {
     covers: ['functional.item5'],
     // Único tipo sem marcador de exemplo: quem desenha o miolo é o navegador.
-    docs: { source: { transform: inputTipoArquivoSource } },
+    docs: { source: { transform: inputTypeFileSource } },
   },
   render: () => ({
     components: { Input },
@@ -162,13 +162,13 @@ export const File: Story = {
       // `::file-selector-button` é a única parte do campo que o navegador
       // desenha sozinho; sem a regra do design system ele sai com o cinza do
       // sistema operacional e o exemplo mente sobre o resultado.
-      const botao = getComputedStyle(campoDe(canvasElement)!, '::file-selector-button');
+      const botao = getComputedStyle(fieldOf(canvasElement)!, '::file-selector-button');
       await expect(botao.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
       await expect(parseFloat(botao.borderTopLeftRadius)).toBeGreaterThan(0);
     });
 
     await step('A altura continua saindo do respiro, não de um valor cravado', async () => {
-      const medida = alturaResultante(campoDe(canvasElement)!);
+      const medida = heightResultante(fieldOf(canvasElement)!);
       await expect(medida.alturaCravada).toBe(false);
       await expect(parseFloat(medida.paddingBloco[0])).toBeGreaterThan(0);
     });

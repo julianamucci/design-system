@@ -139,7 +139,7 @@ export const Playground: Story = {
     const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
     const campo = canvas.getByRole('combobox');
     const lista = canvas.getByRole('listbox');
-    const espiao = args.onItemSelect as ReturnType<typeof fn>;
+    const spy = args.onItemSelect as ReturnType<typeof fn>;
 
     // A busca começa sempre vazia: a play REEXECUTA no mesmo DOM.
     await userEvent.clear(campo);
@@ -227,7 +227,7 @@ export const Playground: Story = {
     await step('As setas percorrem TODOS os comandos, sem tirar o foco do campo', async () => {
       campo.focus();
 
-      const emDestaque = async (texto: string) => {
+      const inHighlight = async (texto: string) => {
         await waitFor(async () => {
           const id = campo.getAttribute('aria-activedescendant');
           await expect(id).toBeTruthy();
@@ -242,7 +242,7 @@ export const Playground: Story = {
 
       for (const texto of ordem) {
         await userEvent.keyboard('{ArrowDown}');
-        await emDestaque(texto);
+        await inHighlight(texto);
       }
 
       const ultimo = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
@@ -255,7 +255,7 @@ export const Playground: Story = {
       // E de volta, na ordem inversa, até o primeiro.
       for (const texto of ['cn()', 'Separator', 'Input', 'Button']) {
         await userEvent.keyboard('{ArrowUp}');
-        await emDestaque(texto);
+        await inHighlight(texto);
       }
 
       // Um destaque por vez: quem estava marcado no fim da descida não está
@@ -268,13 +268,13 @@ export const Playground: Story = {
     });
 
     await step('Enter escolhe o comando em destaque e zera a busca', async () => {
-      const antes = espiao.mock.calls.length;
+      const antes = spy.mock.calls.length;
       await userEvent.keyboard('{Enter}');
 
       await waitFor(async () => {
-        await expect(espiao.mock.calls.length).toBe(antes + 1);
+        await expect(spy.mock.calls.length).toBe(antes + 1);
       });
-      await expect(espiao.mock.calls[antes][0]).toEqual({ value: 'button', label: 'Button' });
+      await expect(spy.mock.calls[antes][0]).toEqual({ value: 'button', label: 'Button' });
       // A busca volta ao zero para o próximo comando — o campo não pode virar
       // o nome do que acabou de rodar.
       await waitFor(async () => {
@@ -286,13 +286,13 @@ export const Playground: Story = {
     });
 
     await step('Clicar num comando também o escolhe', async () => {
-      const antes = espiao.mock.calls.length;
+      const antes = spy.mock.calls.length;
       await userEvent.click(canvas.getByRole('option', { name: 'cn()' }));
 
       await waitFor(async () => {
-        await expect(espiao.mock.calls.length).toBe(antes + 1);
+        await expect(spy.mock.calls.length).toBe(antes + 1);
       });
-      await expect(espiao.mock.calls[antes][0]).toEqual({ value: 'cn', label: 'cn()' });
+      await expect(spy.mock.calls[antes][0]).toEqual({ value: 'cn', label: 'cn()' });
       await waitFor(async () => {
         await expect(campo).toHaveValue('');
       });

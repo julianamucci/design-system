@@ -38,13 +38,13 @@ const OPEN_DEFAULT = 600;
 const CLOSE_DEFAULT = 300;
 
 /** Aparência do gatilho quando ele é um link de verdade. */
-const GATILHO_LINK = 'nds-text-primary nds-font-medium nds-hover-underline';
+const TRIGGER_LINK = 'nds-text-primary nds-font-medium nds-hover-underline';
 
 /**
  * Gatilho que NÃO navega — sigla, métrica. Botão, e não link: não há para onde
  * ir. As classes zeram a aparência de botão e devolvem a do texto em volta.
  */
-const GATILHO_BOTAO =
+const TRIGGER_BUTTON =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
 const CARTAO_PERFIL = `<div class="nds-cluster" data-spacing="sm" data-align="start">
@@ -56,13 +56,13 @@ const CARTAO_PERFIL = `<div class="nds-cluster" data-spacing="sm" data-align="st
 </div>`;
 
 function link(href: string, rotulo: string): string {
-  return `<a href="${href}" class="${GATILHO_LINK}">${rotulo}</a>`;
+  return `<a href="${href}" class="${TRIGGER_LINK}">${rotulo}</a>`;
 }
 
 function botao(rotulo: string): string {
   // Sem `type="button"`, o mesmo gatilho dentro de um formulário o enviaria ao
   // ser ativado por Enter.
-  return `<button type="button" class="${GATILHO_BOTAO}">${rotulo}</button>`;
+  return `<button type="button" class="${TRIGGER_BUTTON}">${rotulo}</button>`;
 }
 
 /** O cartão no meio de uma frase: o texto antes, o gatilho, o texto depois. */
@@ -151,7 +151,7 @@ export function hoverCardDefaultSource(): string {
  * Espera curta, para prévia que o leitor procura de propósito. Abaixo de ~300ms
  * o cartão passa a abrir quando o cursor só atravessa o texto.
  */
-export function hoverCardEsperaCurtaSource(): string {
+export function hoverCardWaitCurtaSource(): string {
   return vueSnippet(
     IMPORT,
     frase({
@@ -195,7 +195,7 @@ export function hoverCardPerfilSource(): string {
  * cartão está aberto. O gatilho continua abrindo por ponteiro e por foco, e
  * cada mudança volta pela mesma ligação.
  */
-export function hoverCardControladoSource(): string {
+export function hoverCardControlledSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
 ${IMPORT}
@@ -319,7 +319,7 @@ const lados = [
     Abre
     <HoverCard>
       <HoverCardTrigger as-child>
-        <button type="button" class="${GATILHO_BOTAO}">{{ l.rotulo }}</button>
+        <button type="button" class="${TRIGGER_BUTTON}">{{ l.rotulo }}</button>
       </HoverCardTrigger>
       <HoverCardContent :side="l.side" :aria-label="'Cartão ' + l.rotulo + ' do gatilho'">
         <p class="nds-text-caption">Lado preferido: {{ l.rotulo }}.</p>
@@ -336,7 +336,7 @@ const lados = [
  * e também para trocar a largura de UMA instância — as utilitárias entram por
  * último no CSS compartilhado, então a de largura vence a largura padrão.
  */
-export function hoverCardClasseExtraSource(): string {
+export function hoverCardClassNameExtraSource(): string {
   return vueSnippet(
     IMPORT,
     frase({

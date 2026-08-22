@@ -12,7 +12,7 @@ import {
 import { Button } from '@/components/ui/button';
 import DropdownMenuDocs from '@/components/docs/DropdownMenuDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { waitForPortal, waitForPortalGone, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { dropdownMenuSource } from './dropdown-menu.source';
 
 const meta = {
@@ -21,7 +21,7 @@ const meta = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       page: withAutoDocsTab(DropdownMenuDocs),
       source: { transform: dropdownMenuSource },

@@ -5,8 +5,8 @@ import { within, expect, waitFor } from 'storybook/test';
 import { Avatar } from './index';
 import AvatarStory from './AvatarStory.svelte';
 import {
-  avatarComStatusSource,
-  avatarGrupoSource,
+  avatarWithStatusSource,
+  avatarGroupSource,
   avatarIconSource,
   avatarIniciaisSource,
   avatarSource,
@@ -66,12 +66,12 @@ export const WithImage: Story = {
     // nas stacks cujo fallback tem delayMs — ainda nem existia no DOM.
     await waitFor(async () => {
       const fallback = canvasElement.querySelector<HTMLElement>('[data-slot="avatar-fallback"]');
-      const foraDaArvore =
+      const arvoreOutside =
         !fallback ||
         getComputedStyle(fallback).display === 'none' ||
         getComputedStyle(fallback).visibility === 'hidden' ||
         fallback.getBoundingClientRect().height === 0;
-      await expect(foraDaArvore).toBe(true);
+      await expect(arvoreOutside).toBe(true);
     }, { timeout: 5000 });
   },
 };
@@ -124,7 +124,7 @@ export const WithIcon: Story = {
 export const Group: Story = {
   parameters: {
     covers: ['functional.item5', 'visual.item4'],
-    docs: { source: { transform: avatarGrupoSource } },
+    docs: { source: { transform: avatarGroupSource } },
   },
   render: () => ({
     Component: AvatarStory,
@@ -158,7 +158,7 @@ export const Group: Story = {
 export const WithStatus: Story = {
   parameters: {
     covers: ['visual.item4'],
-    docs: { source: { transform: avatarComStatusSource } },
+    docs: { source: { transform: avatarWithStatusSource } },
   },
   render: () => ({
     Component: AvatarStory,

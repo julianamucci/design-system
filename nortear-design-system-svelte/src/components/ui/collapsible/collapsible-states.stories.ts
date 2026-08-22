@@ -5,9 +5,9 @@ import { Collapsible } from './index';
 import CollapsibleStory from './CollapsibleStory.svelte';
 import CollapsibleControladoStory from './CollapsibleControladoStory.svelte';
 import {
-  collapsibleAbertoPorPadraoSource,
-  collapsibleControladoSource,
-  collapsibleDesabilitadoSource,
+  defaultCollapsibleOpenSource,
+  collapsibleControlledSource,
+  collapsibleDisabledSource,
   collapsibleSource,
 } from './collapsible.source';
 
@@ -47,7 +47,7 @@ const fechar = async (t: HTMLElement) => {
 // bits-ui NÃO desmonta o painel ao fechar: mantém o nó com `hidden` e
 // `data-state="closed"` — o mesmo contrato do Vanilla. Por isso as asserções de
 // "fechado" olham VISIBILIDADE, não ausência do nó.
-const painelDe = (canvasElement: HTMLElement) =>
+const panelOf = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]');
 
 export const Uncontrolled: Story = {
@@ -65,15 +65,15 @@ export const Uncontrolled: Story = {
 
     await step('o estado nasce e vive dentro do componente', async () => {
       await fechar(trigger);
-      await expect(painelDe(canvasElement)).not.toBeVisible();
+      await expect(panelOf(canvasElement)).not.toBeVisible();
       await abrir(trigger);
-      await expect(painelDe(canvasElement)).toBeInTheDocument();
+      await expect(panelOf(canvasElement)).toBeInTheDocument();
       await expect(canvas.getByText(/Filtro avançado 1/)).toBeVisible();
     });
 
     await step('e continua alternando sem controle externo', async () => {
       await fechar(trigger);
-      await waitFor(() => expect(painelDe(canvasElement)).not.toBeVisible());
+      await waitFor(() => expect(panelOf(canvasElement)).not.toBeVisible());
     });
   },
 };
@@ -81,7 +81,7 @@ export const Uncontrolled: Story = {
 export const OpenByDefault: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item5', 'visual.item2'],
-    docs: { source: { transform: collapsibleAbertoPorPadraoSource } },
+    docs: { source: { transform: defaultCollapsibleOpenSource } },
   },
   render: () => ({
     Component: CollapsibleStory,
@@ -99,7 +99,7 @@ export const OpenByDefault: Story = {
       // Asserção de MONTAGEM: por isso o passo anterior não interage. No replay
       // o DOM não remonta, e o passo seguinte devolve o estado aberto.
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-      await expect(painelDe(canvasElement)).toBeInTheDocument();
+      await expect(panelOf(canvasElement)).toBeInTheDocument();
       await expect(canvas.getByText(/Filtro avançado 1/)).toBeVisible();
     });
 
@@ -108,7 +108,7 @@ export const OpenByDefault: Story = {
       await abrir(trigger);
       // Termina aberto de propósito: é o quadro que o Chromatic fotografa e o
       // estado que o axe varre nesta story (visual.item2).
-      await expect(painelDe(canvasElement)).toBeInTheDocument();
+      await expect(panelOf(canvasElement)).toBeInTheDocument();
     });
   },
 };
@@ -116,7 +116,7 @@ export const OpenByDefault: Story = {
 export const Controlled: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
-    docs: { source: { transform: collapsibleControladoSource } },
+    docs: { source: { transform: collapsibleControlledSource } },
   },
   render: () => ({
     Component: CollapsibleControladoStory,
@@ -139,14 +139,14 @@ export const Controlled: Story = {
         await userEvent.click(canvas.getByRole('button', { name: /Abrir pelo estado externo/i }));
       }
       await waitFor(() => expect(trigger).toHaveAttribute('aria-expanded', 'true'));
-      await expect(painelDe(canvasElement)).toBeInTheDocument();
+      await expect(panelOf(canvasElement)).toBeInTheDocument();
       await expect(trigger).toHaveTextContent('Ocultar filtros avançados');
     });
 
     await step('o trigger devolve a mudança para o estado externo', async () => {
       await fechar(trigger);
       await expect(trigger).toHaveTextContent('Exibir filtros avançados');
-      await waitFor(() => expect(painelDe(canvasElement)).not.toBeVisible());
+      await waitFor(() => expect(panelOf(canvasElement)).not.toBeVisible());
     });
 
     await step('e o botão externo fecha de volta', async () => {
@@ -161,7 +161,7 @@ export const Controlled: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item5'],
-    docs: { source: { transform: collapsibleDesabilitadoSource } },
+    docs: { source: { transform: collapsibleDisabledSource } },
   },
   render: () => ({
     Component: CollapsibleStory,
@@ -184,7 +184,7 @@ export const Disabled: Story = {
       // estado em rodada nenhuma.
       await userEvent.click(trigger, { pointerEventsCheck: 0 });
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await expect(painelDe(canvasElement)).not.toBeVisible();
+      await expect(panelOf(canvasElement)).not.toBeVisible();
     });
 
     await step('teclado também não', async () => {

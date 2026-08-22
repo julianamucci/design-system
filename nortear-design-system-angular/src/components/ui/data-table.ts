@@ -758,7 +758,7 @@ export class NdsDataTable<TData> implements OnInit {
     const colunas = this.colunasVisiveis();
     const todas = this.columns();
     const keyOf = this.rowKey();
-    const rotuloDe = this.rowLabel();
+    const labelOf = this.rowLabel();
     const modeloSelection = this.rotulos().selectRow;
     const modeloEdit = this.rotulos().edit;
 
@@ -773,7 +773,7 @@ export class NdsDataTable<TData> implements OnInit {
       // mesmo que nome nenhum (WCAG 4.1.2).
       const ofFirstColumn = todas.length > 0 ? this.texto(todas[0], row) : CELL_VAZIA;
       const rotulo =
-        rotuloDe?.(row) || (ofFirstColumn === CELL_VAZIA ? chave : ofFirstColumn);
+        labelOf?.(row) || (ofFirstColumn === CELL_VAZIA ? chave : ofFirstColumn);
       return {
         chave,
         indice,

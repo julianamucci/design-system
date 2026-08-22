@@ -14,10 +14,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
+import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
 import {
   sheetEditPerfilSource,
-  sheetFiltrosAvancadosSource,
+  sheetFiltersAvancadosSource,
   sheetFormLongSource,
   sheetNavigationSecundariaSource,
 } from './sheet.source';
@@ -31,9 +31,9 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     // Painel modal aberto: ver o motivo em wait-for-portal.ts.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
-      source: { transform: sheetFiltrosAvancadosSource },
+      source: { transform: sheetFiltersAvancadosSource },
       description: {
         component:
           'Composições reais do Sheet em fluxos de produto: filtros avançados, edição de ' +
@@ -266,10 +266,10 @@ export const LongFormScroll: Story = {
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
-      const caixaRodape = rodape.getBoundingClientRect();
-      const caixaPainel = painel.getBoundingClientRect();
-      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
-      await expect(caixaRodape.height).toBeGreaterThan(0);
+      const boxFooter = rodape.getBoundingClientRect();
+      const boxPanel = painel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

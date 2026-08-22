@@ -3,7 +3,7 @@ import { within, userEvent, waitFor, expect } from 'storybook/test';
 import DataTable from './data-table.svelte';
 import {
   dataTablePaginadaSource,
-  dataTableRotuloDeLinhaSource,
+  lineDataTableLabelSource,
   dataTableSource,
   dataTableVirtualizadaSource,
 } from './data-table.source';
@@ -28,19 +28,19 @@ type Story = StoryObj;
 // Paginação ─────────────────────────────────────────────────────────────────
 
 /** Doze faturas em páginas de cinco: três páginas, a última incompleta. */
-const TAMANHO_DE_PAGINA = 5;
-const TOTAL_DE_PAGINAS = Math.ceil(invoices.length / TAMANHO_DE_PAGINA);
+const PAGE_SIZE = 5;
+const TOTAL_PAGES = Math.ceil(invoices.length / PAGE_SIZE);
 
 export const Paginated: Story = {
   args: {
     columns: baseColumns as never,
     data: invoices,
     enableGlobalFilter: false,
-    pageSize: TAMANHO_DE_PAGINA,
+    pageSize: PAGE_SIZE,
     // O tamanho inicial precisa existir entre as opções do seletor: fora da
     // lista, o `select` não tem opção marcada e passa a exibir a primeira,
     // dizendo "10" numa tabela que mostra cinco.
-    pageSizeOptions: [TAMANHO_DE_PAGINA, 10],
+    pageSizeOptions: [PAGE_SIZE, 10],
   },
   parameters: {
     covers: ['functional.item8'],
@@ -50,11 +50,11 @@ export const Paginated: Story = {
     const canvas = within(canvasElement);
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
     /** Identificador da primeira linha — o que prova qual fatia está na tela. */
-    const primeiraFatura = () => linhas()[0].textContent!.trim();
+    const firstInvoice = () => linhas()[0].textContent!.trim();
 
     const primeira = () => canvas.getByRole('button', { name: 'Primeira página' }) as HTMLButtonElement;
     const anterior = () => canvas.getByRole('button', { name: 'Página anterior' }) as HTMLButtonElement;
-    const proxima = () => canvas.getByRole('button', { name: 'Próxima página' }) as HTMLButtonElement;
+    const next = () => canvas.getByRole('button', { name: 'Próxima página' }) as HTMLButtonElement;
     const ultima = () => canvas.getByRole('button', { name: 'Última página' }) as HTMLButtonElement;
 
     // Precondição do passo, e não herança do anterior: o replay reexecuta a play
@@ -64,14 +64,14 @@ export const Paginated: Story = {
     await step('Voltar ao começo deixa os dois botões de volta apagados', async () => {
       if (!primeira().disabled) await userEvent.click(primeira());
       await waitFor(async () => {
-        await expect(primeiraFatura()).toContain('INV-001');
+        await expect(firstInvoice()).toContain('INV-001');
       });
-      await expect(linhas().length).toBe(TAMANHO_DE_PAGINA);
-      await expect(canvas.getByText(`Página 1 de ${TOTAL_DE_PAGINAS}`)).toBeInTheDocument();
+      await expect(linhas().length).toBe(PAGE_SIZE);
+      await expect(canvas.getByText(`Página 1 de ${TOTAL_PAGES}`)).toBeInTheDocument();
 
       await expect(primeira()).toBeDisabled();
       await expect(anterior()).toBeDisabled();
-      await expect(proxima()).toBeEnabled();
+      await expect(next()).toBeEnabled();
       await expect(ultima()).toBeEnabled();
     });
 
@@ -79,11 +79,11 @@ export const Paginated: Story = {
       // functional.item8 — o número da página mudar não bastaria: um rodapé
       // pode contar errado e mostrar sempre as mesmas linhas. A prova é a
       // primeira fatura da página ser outra.
-      await userEvent.click(proxima());
+      await userEvent.click(next());
       await waitFor(async () => {
-        await expect(primeiraFatura()).toContain('INV-006');
+        await expect(firstInvoice()).toContain('INV-006');
       });
-      await expect(canvas.getByText(`Página 2 de ${TOTAL_DE_PAGINAS}`)).toBeInTheDocument();
+      await expect(canvas.getByText(`Página 2 de ${TOTAL_PAGES}`)).toBeInTheDocument();
       await expect(primeira()).toBeEnabled();
       await expect(anterior()).toBeEnabled();
       await expect(ultima()).toBeEnabled();
@@ -92,16 +92,16 @@ export const Paginated: Story = {
     await step('O salto para a última página respeita a fatia incompleta', async () => {
       await userEvent.click(ultima());
       await waitFor(async () => {
-        await expect(primeiraFatura()).toContain('INV-011');
+        await expect(firstInvoice()).toContain('INV-011');
       });
       // Doze faturas em páginas de cinco deixam duas na última — número
       // derivado da fixture, nunca escrito à mão.
-      await expect(linhas().length).toBe(invoices.length % TAMANHO_DE_PAGINA);
+      await expect(linhas().length).toBe(invoices.length % PAGE_SIZE);
       await expect(
-        canvas.getByText(`Página ${TOTAL_DE_PAGINAS} de ${TOTAL_DE_PAGINAS}`),
+        canvas.getByText(`Página ${TOTAL_PAGES} de ${TOTAL_PAGES}`),
       ).toBeInTheDocument();
 
-      await expect(proxima()).toBeDisabled();
+      await expect(next()).toBeDisabled();
       await expect(ultima()).toBeDisabled();
       await expect(anterior()).toBeEnabled();
     });
@@ -109,9 +109,9 @@ export const Paginated: Story = {
     await step('Retroceder uma página é o caminho inverso do avanço', async () => {
       await userEvent.click(anterior());
       await waitFor(async () => {
-        await expect(primeiraFatura()).toContain('INV-006');
+        await expect(firstInvoice()).toContain('INV-006');
       });
-      await expect(canvas.getByText(`Página 2 de ${TOTAL_DE_PAGINAS}`)).toBeInTheDocument();
+      await expect(canvas.getByText(`Página 2 de ${TOTAL_PAGES}`)).toBeInTheDocument();
     });
 
     await step('O seletor de tamanho remonta a fatia', async () => {
@@ -126,13 +126,13 @@ export const Paginated: Story = {
 
       // Fecha o ciclo: a rodada seguinte — e a captura de regressão visual —
       // partem da fatia de cinco, na página 1.
-      await userEvent.selectOptions(seletor, String(TAMANHO_DE_PAGINA));
+      await userEvent.selectOptions(seletor, String(PAGE_SIZE));
       await waitFor(async () => {
-        await expect(linhas().length).toBe(TAMANHO_DE_PAGINA);
+        await expect(linhas().length).toBe(PAGE_SIZE);
       });
       if (!primeira().disabled) await userEvent.click(primeira());
       await waitFor(async () => {
-        await expect(primeiraFatura()).toContain('INV-001');
+        await expect(firstInvoice()).toContain('INV-001');
       });
     });
   },
@@ -158,11 +158,11 @@ export const ExplicitRowLabel: Story = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: dataTableRotuloDeLinhaSource } },
+    docs: { source: { transform: lineDataTableLabelSource } },
   },
   play: async ({ canvasElement, step }) => {
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-    const caixaDaLinha = (linha: HTMLElement) =>
+    const lineBox = (linha: HTMLElement) =>
       linha.querySelector<HTMLElement>("[role='checkbox']")!;
     /** Terceira célula: a coluna "Cliente", de onde `rowLabel` tira o texto. */
     const cliente = (linha: HTMLElement) =>
@@ -173,7 +173,7 @@ export const ExplicitRowLabel: Story = {
       // cairia no identificador da primeira coluna ("INV-001") e a asserção
       // seguinte reprovaria.
       for (const linha of linhas()) {
-        await expect(caixaDaLinha(linha)).toHaveAttribute(
+        await expect(lineBox(linha)).toHaveAttribute(
           'aria-label',
           `Selecionar linha ${cliente(linha)}`,
         );
@@ -181,7 +181,7 @@ export const ExplicitRowLabel: Story = {
     });
 
     await step('Nenhuma linha repete o nome de outra', async () => {
-      const nomes = linhas().map((l) => caixaDaLinha(l).getAttribute('aria-label') ?? '');
+      const nomes = linhas().map((l) => lineBox(l).getAttribute('aria-label') ?? '');
       await expect(nomes.length).toBe(invoices.length);
       await expect(new Set(nomes).size).toBe(nomes.length);
     });
@@ -216,7 +216,7 @@ export const Virtualized1000Rows: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const rolador = () => canvasElement.querySelector<HTMLElement>('.nds-data-table-scroll')!;
-    const linhasDeDado = () =>
+    const datumLines = () =>
       [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')].filter(
         (tr) => !tr.hasAttribute('aria-hidden'),
       );
@@ -230,9 +230,9 @@ export const Virtualized1000Rows: Story = {
       // contêiner, e a medição chega no layout seguinte à montagem. Sem o
       // `waitFor` a leitura pega o estado anterior à medição.
       await waitFor(async () => {
-        await expect(linhasDeDado().length).toBeGreaterThan(0);
+        await expect(datumLines().length).toBeGreaterThan(0);
       });
-      await expect(linhasDeDado().length).toBeLessThan(100);
+      await expect(datumLines().length).toBeLessThan(100);
       await expect(rolador()).toHaveClass('nds-data-table-scroll-virtual');
       // Sem paginação: virtualizar e paginar ao mesmo tempo não faria sentido.
       await expect(canvasElement.querySelector('.nds-data-table-pagination')).toBeNull();
@@ -249,16 +249,16 @@ export const Virtualized1000Rows: Story = {
       // visual.item5 — a story termina com o scroll no meio, que é o estado
       // que o item documenta.
       const alvo = rolador();
-      const primeiraAntes = linhasDeDado()[0].textContent!.trim();
+      const firstBefore = datumLines()[0].textContent!.trim();
       alvo.scrollTop = 0;
       alvo.scrollTop = 4000;
       alvo.dispatchEvent(new Event('scroll'));
 
       await waitFor(async () => {
-        await expect(linhasDeDado()[0].textContent!.trim()).not.toBe(primeiraAntes);
+        await expect(datumLines()[0].textContent!.trim()).not.toBe(firstBefore);
       });
       await expect(alvo.scrollTop).toBe(4000);
-      await expect(linhasDeDado().length).toBeLessThan(100);
+      await expect(datumLines().length).toBeLessThan(100);
     });
   },
 };

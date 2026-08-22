@@ -1,30 +1,30 @@
 import { describe, expect, it } from 'vitest';
 import {
-  checkboxComDescricaoSource,
-  checkboxDesabilitadoMarcadoSource,
-  checkboxDesabilitadoSource,
+  checkboxWithDescriptionSource,
+  checkboxDisabledCheckedSource,
+  checkboxDisabledSource,
   checkboxEmCardSource,
-  checkboxEmFormularioSource,
-  checkboxErroSource,
-  checkboxGrupoSource,
+  formCheckboxSource,
+  checkboxErrorSource,
+  checkboxGroupSource,
   checkboxIndeterminadoSource,
-  checkboxMarcadoSource,
-  checkboxSelecionarTodosSource,
+  checkboxCheckedSource,
+  checkboxSelectAllSource,
   checkboxSource,
 } from './checkbox.source';
 
 const TODAS = [
   checkboxSource,
-  checkboxMarcadoSource,
+  checkboxCheckedSource,
   checkboxIndeterminadoSource,
-  checkboxDesabilitadoSource,
-  checkboxDesabilitadoMarcadoSource,
-  checkboxErroSource,
-  checkboxComDescricaoSource,
-  checkboxGrupoSource,
-  checkboxSelecionarTodosSource,
+  checkboxDisabledSource,
+  checkboxDisabledCheckedSource,
+  checkboxErrorSource,
+  checkboxWithDescriptionSource,
+  checkboxGroupSource,
+  checkboxSelectAllSource,
   checkboxEmCardSource,
-  checkboxEmFormularioSource,
+  formCheckboxSource,
 ];
 
 describe('checkboxSource', () => {
@@ -83,8 +83,8 @@ describe('checkboxSource', () => {
   });
 
   it('não deixa o espião do control virar atributo', () => {
-    const espiao = (() => 'CORPO_DO_MOCK') as never;
-    const saida = checkboxSource(undefined, { args: { name: espiao, value: espiao } });
+    const spy = (() => 'CORPO_DO_MOCK') as never;
+    const saida = checkboxSource(undefined, { args: { name: spy, value: spy } });
     expect(saida).toContain('<Checkbox id="termos" />');
     expect(saida).not.toContain('CORPO_DO_MOCK');
   });
@@ -92,7 +92,7 @@ describe('checkboxSource', () => {
 
 describe('estados', () => {
   it('marcada nasce de defaultChecked, sem controle externo', () => {
-    expect(checkboxMarcadoSource()).toContain('<Checkbox id="sessao" defaultChecked />');
+    expect(checkboxCheckedSource()).toContain('<Checkbox id="sessao" defaultChecked />');
   });
 
   it('o estado misto é propriedade dedicada, não um terceiro valor de checked', () => {
@@ -103,16 +103,16 @@ describe('estados', () => {
   });
 
   it('o esmaecimento do desabilitado é do grupo, e o rótulo apaga junto', () => {
-    for (const saida of [checkboxDesabilitadoSource(), checkboxDesabilitadoMarcadoSource()]) {
+    for (const saida of [checkboxDisabledSource(), checkboxDisabledCheckedSource()]) {
       expect(saida).toContain('data-disabled="true"');
       expect(saida).toContain('disabled');
       expect(saida).toContain('className="nds-label"');
     }
-    expect(checkboxDesabilitadoMarcadoSource()).toContain('defaultChecked');
+    expect(checkboxDisabledCheckedSource()).toContain('defaultChecked');
   });
 
   it('o erro é sinalizado por aria-invalid, com a mensagem fora do rótulo', () => {
-    const saida = checkboxErroSource();
+    const saida = checkboxErrorSource();
     expect(saida).toContain('aria-invalid="true"');
     expect(saida).toContain('nds-text-destructive');
     expect(saida).toContain('Você precisa aceitar os termos para continuar.');
@@ -123,20 +123,20 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('o texto auxiliar alinha o par pelo topo', () => {
-    const saida = checkboxComDescricaoSource();
+    const saida = checkboxWithDescriptionSource();
     expect(saida).toContain('data-align="start"');
     expect(saida).toContain('Enviaremos no máximo 2 emails por semana.');
   });
 
   it('o grupo existe por fieldset + legend, e não por proximidade visual', () => {
-    const saida = checkboxGrupoSource();
+    const saida = checkboxGroupSource();
     expect(saida).toContain('<fieldset');
     expect(saida).toContain('<legend');
     expect(saida).toContain('Preferências de contato');
   });
 
   it('a seleção em massa ensina o modo controlado que produz o estado misto', () => {
-    const saida = checkboxSelecionarTodosSource();
+    const saida = checkboxSelectAllSource();
     expect(saida).toContain('import { useState } from "react";');
     expect(saida).toContain('const [marcados, setMarcados] = useState<string[]>([]);');
     expect(saida).toContain('checked={todos}');
@@ -152,7 +152,7 @@ describe('composições', () => {
   });
 
   it('no formulário o estado que vale é o do FormData', () => {
-    const saida = checkboxEmFormularioSource();
+    const saida = formCheckboxSource();
     expect(saida).toContain('name="termos"');
     expect(saida).toContain('value="aceito"');
     expect(saida).toContain('new FormData(evento.currentTarget)');

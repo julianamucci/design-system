@@ -1,17 +1,17 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, userEvent, expect } from 'storybook/test';
-import { alturaResultante, campoDe } from '@shared/testing/input-probe';
+import { heightResultante, fieldOf } from '@shared/testing/input-probe';
 import InputStory from './InputStory.svelte';
 import InputWithLabelStory from './InputWithLabelStory.svelte';
 import {
   inputSource,
-  inputTipoArquivoSource,
-  inputTipoBuscaSource,
-  inputTipoEmailSource,
-  inputTipoNumeroSource,
-  inputTipoSenhaSource,
-  inputTipoTextoSource,
+  inputTypeFileSource,
+  inputTypeSearchSource,
+  inputTypeEmailSource,
+  inputTypeNumberSource,
+  inputTypeSenhaSource,
+  inputTypeTextSource,
 } from './input.source';
 
 const meta: Meta = {
@@ -37,7 +37,7 @@ export default meta;
 type Story = StoryObj;
 
 export const Text: Story = {
-  parameters: { docs: { source: { transform: inputTipoTextoSource } } },
+  parameters: { docs: { source: { transform: inputTypeTextSource } } },
   render: () => ({
     Component: InputStory,
     props: { type: 'text', placeholder: 'ex: João da Silva' },
@@ -52,7 +52,7 @@ export const Text: Story = {
 };
 
 export const Email: Story = {
-  parameters: { docs: { source: { transform: inputTipoEmailSource } } },
+  parameters: { docs: { source: { transform: inputTypeEmailSource } } },
   render: () => ({
     Component: InputStory,
     props: { type: 'email', placeholder: 'ex: joao@empresa.com' },
@@ -67,7 +67,7 @@ export const Email: Story = {
 };
 
 export const Password: Story = {
-  parameters: { docs: { source: { transform: inputTipoSenhaSource } } },
+  parameters: { docs: { source: { transform: inputTypeSenhaSource } } },
   render: () => ({
     Component: InputStory,
     props: { type: 'password', placeholder: '••••••••' },
@@ -82,7 +82,7 @@ export const Password: Story = {
 };
 
 export const Number: Story = {
-  parameters: { docs: { source: { transform: inputTipoNumeroSource } } },
+  parameters: { docs: { source: { transform: inputTypeNumberSource } } },
   render: () => ({
     Component: InputStory,
     props: { type: 'number', placeholder: '0' },
@@ -103,7 +103,7 @@ export const Number: Story = {
 export const Search: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { source: { transform: inputTipoBuscaSource } },
+    docs: { source: { transform: inputTypeSearchSource } },
   },
   render: () => ({
     Component: InputWithLabelStory,
@@ -132,7 +132,7 @@ export const Search: Story = {
 export const File: Story = {
   parameters: {
     covers: ['functional.item5'],
-    docs: { source: { transform: inputTipoArquivoSource } },
+    docs: { source: { transform: inputTypeFileSource } },
   },
   render: () => ({
     Component: InputWithLabelStory,
@@ -150,13 +150,13 @@ export const File: Story = {
       // `::file-selector-button` é a única parte do campo que o navegador
       // desenha sozinho; sem a regra do design system ele sai com o cinza do
       // sistema operacional e o exemplo mente sobre o resultado.
-      const botao = getComputedStyle(campoDe(canvasElement)!, '::file-selector-button');
+      const botao = getComputedStyle(fieldOf(canvasElement)!, '::file-selector-button');
       await expect(botao.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
       await expect(parseFloat(botao.borderTopLeftRadius)).toBeGreaterThan(0);
     });
 
     await step('A altura continua saindo do respiro, não de um valor cravado', async () => {
-      const medida = alturaResultante(campoDe(canvasElement)!);
+      const medida = heightResultante(fieldOf(canvasElement)!);
       await expect(medida.alturaCravada).toBe(false);
       await expect(parseFloat(medida.paddingBloco[0])).toBeGreaterThan(0);
     });

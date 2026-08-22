@@ -114,7 +114,7 @@ function buildPlayground(args: SheetArgs): HTMLElement {
 }
 
 /** Espera o `body` voltar a aceitar ponteiro depois de um fechamento. */
-async function esperarPonteiroLiberado(): Promise<void> {
+async function waitForPointerLiberado(): Promise<void> {
   await waitFor(() => {
     if (getComputedStyle(document.body).pointerEvents === 'none') {
       throw new Error('o overlay ainda bloqueia o ponteiro');
@@ -132,7 +132,7 @@ async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
   // O ponteiro volta DEPOIS do nó sair: enquanto o painel é modal a lib deixa
   // `pointer-events: none` no `body` e só o devolve depois de remover o painel.
   // Sem esta espera o clique de reabertura falha no intervalo — medido.
-  await esperarPonteiroLiberado();
+  await waitForPointerLiberado();
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(trigger);
   }
@@ -164,7 +164,7 @@ export const Playground: Story = {
     await fechar();
 
     await step('Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
-      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
       const painel = await abrir(trigger);
 
       await expect(painel).toBeVisible();
@@ -178,7 +178,7 @@ export const Playground: Story = {
       await expect(painel).toHaveClass(/nds-sheet-content/);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
-      ).toBe(chamadasAntes + 1);
+      ).toBe(callsBefore + 1);
     });
 
     await step('O painel é portalizado para fora da story', async () => {
@@ -234,8 +234,8 @@ export const Playground: Story = {
 
     await step('O botão do canto fecha o painel', async () => {
       const painel = await abrir(trigger);
-      const fecharBtn = within(painel).getByRole('button', { name: /fechar/i });
-      await userEvent.click(fecharBtn);
+      const closeBtn = within(painel).getByRole('button', { name: /fechar/i });
+      await userEvent.click(closeBtn);
       await waitForPortalGone('dialog');
     });
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import TooltipStory from './TooltipStory.svelte';
 import { balaoDe } from './tooltip.fixtures';
-import { tooltipAbertoSource, tooltipControladoSource, tooltipSource } from './tooltip.source';
+import { tooltipOpenSource, tooltipControlledSource, tooltipSource } from './tooltip.source';
 
 // Os estados que o conteúdo compartilhado descreve: fechado (o inicial), aberto,
 // aberto por hover (depois do delay do provider) e aberto por foco (na hora). A
@@ -10,7 +10,7 @@ import { tooltipAbertoSource, tooltipControladoSource, tooltipSource } from './t
 // pode depender do mouse.
 
 /** Espera em ms que o hover do provider precisa vencer nas stories de delay. */
-const DELAY_LONGO = 600;
+const LONG_DELAY = 600;
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function espera(ms: number): Promise<void> {
@@ -71,7 +71,7 @@ export const Closed: Story = {
 export const Open: Story = {
   name: 'Open (defaultOpen)',
   args: { ...baseArgs, defaultOpen: true, delayDuration: 0 },
-  parameters: { docs: { source: { transform: tooltipAbertoSource } } },
+  parameters: { docs: { source: { transform: tooltipOpenSource } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('button', { name: /salvar/i });
@@ -96,7 +96,7 @@ export const Open: Story = {
 };
 
 export const Hover: Story = {
-  args: { ...baseArgs, defaultOpen: false, delayDuration: DELAY_LONGO },
+  args: { ...baseArgs, defaultOpen: false, delayDuration: LONG_DELAY },
   parameters: { covers: ['functional.item1'] },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -112,7 +112,7 @@ export const Hover: Story = {
         async () => {
           await expect(balaoDe(gatilho)).not.toBeNull();
         },
-        { timeout: DELAY_LONGO * 5 },
+        { timeout: LONG_DELAY * 5 },
       );
       await expect(balaoDe(gatilho)).toHaveAttribute('role', 'tooltip');
     });
@@ -121,7 +121,7 @@ export const Hover: Story = {
 
 export const KeyboardFocus: Story = {
   name: 'Keyboard focus (no delay)',
-  args: { ...baseArgs, defaultOpen: false, delayDuration: DELAY_LONGO },
+  args: { ...baseArgs, defaultOpen: false, delayDuration: LONG_DELAY },
   parameters: { covers: ['functional.item2'] },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -185,7 +185,7 @@ export const PersistenceInBubble: Story = {
 export const Controlled: Story = {
   name: 'Controlled (open prop)',
   args: { ...baseArgs, open: true, delayDuration: 0 },
-  parameters: { docs: { source: { transform: tooltipControladoSource } } },
+  parameters: { docs: { source: { transform: tooltipControlledSource } } },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('button', { name: /salvar/i });

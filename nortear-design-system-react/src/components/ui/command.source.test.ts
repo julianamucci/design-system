@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  commandComAtalhosSource,
-  commandComoComboboxSource,
-  commandItemDesabilitadoSource,
-  commandItemMarcadoSource,
-  commandPaletaSource,
+  commandWithShortcutsSource,
+  commandAsComboboxSource,
+  commandItemDisabledSource,
+  commandItemCheckedSource,
+  commandPaletteSource,
   commandSource,
 } from './command.source';
 
@@ -52,8 +52,8 @@ describe('commandSource', () => {
   });
 
   it('não deixa o espião do onSelect virar código', () => {
-    const espiao = (() => 'CORPO_DO_MOCK') as never;
-    const saida = commandSource(undefined, { args: { loop: espiao, shouldFilter: espiao } });
+    const spy = (() => 'CORPO_DO_MOCK') as never;
+    const saida = commandSource(undefined, { args: { loop: spy, shouldFilter: spy } });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).toContain('<Command>');
   });
@@ -61,13 +61,13 @@ describe('commandSource', () => {
 
 describe('estados de cada comando', () => {
   it('o desabilitado carrega a prop no ITEM, não na paleta', () => {
-    const saida = commandItemDesabilitadoSource();
+    const saida = commandItemDisabledSource();
     expect(saida).toContain('<CommandItem value="arquivar" disabled>');
     expect(saida).not.toContain('<Command disabled');
   });
 
   it('o marcado publica os dois valores, e não mistura marca com atalho', () => {
-    const saida = commandItemMarcadoSource();
+    const saida = commandItemCheckedSource();
     expect(saida).toContain('<CommandItem value="claro" checked>');
     expect(saida).toContain('checked={false}');
     // Marca e atalho disputam a mesma borda: um por comando.
@@ -75,7 +75,7 @@ describe('estados de cada comando', () => {
   });
 
   it('o atalho mora dentro do comando e não sai da árvore de acessibilidade', () => {
-    const saida = commandComAtalhosSource();
+    const saida = commandWithShortcutsSource();
     expect(saida).toContain('<CommandShortcut>⌘B</CommandShortcut>');
     expect(saida).not.toContain('aria-hidden');
   });
@@ -83,7 +83,7 @@ describe('estados de cada comando', () => {
 
 describe('composições', () => {
   it('o combobox escreve o papel à mão, porque o gatilho é um botão comum', () => {
-    const saida = commandComoComboboxSource();
+    const saida = commandAsComboboxSource();
     expect(saida).toContain('role="combobox"');
     expect(saida).toContain('aria-haspopup="listbox"');
     expect(saida).toContain('aria-label="Selecionar situação"');
@@ -93,13 +93,13 @@ describe('composições', () => {
   });
 
   it('o combobox fecha ao escolher, e a escolha volta marcada', () => {
-    const saida = commandComoComboboxSource();
+    const saida = commandAsComboboxSource();
     expect(saida).toContain('setAberto(false);');
     expect(saida).toContain('checked={valor === situacao.value}');
   });
 
   it('a paleta nomeia o diálogo por title e description', () => {
-    const saida = commandPaletaSource();
+    const saida = commandPaletteSource();
     expect(saida).toContain('title="Command Palette"');
     expect(saida).toContain('description="Busque por um comando ou ação..."');
   });
@@ -107,7 +107,7 @@ describe('composições', () => {
   it('o atalho global é listener de janela, com cleanup', () => {
     // Sem o cleanup o listener sobrevive à desmontagem e passa a abrir uma
     // paleta que já saiu da tela.
-    const saida = commandPaletaSource();
+    const saida = commandPaletteSource();
     expect(saida).toContain('window.addEventListener("keydown", aoTeclar);');
     expect(saida).toContain('return () => window.removeEventListener("keydown", aoTeclar);');
     expect(saida).toContain('evento.preventDefault();');
@@ -116,11 +116,11 @@ describe('composições', () => {
   it('nenhum snippet ensina o andaime da story', () => {
     for (const fn of [
       commandSource,
-      commandComAtalhosSource,
-      commandComoComboboxSource,
-      commandItemDesabilitadoSource,
-      commandItemMarcadoSource,
-      commandPaletaSource,
+      commandWithShortcutsSource,
+      commandAsComboboxSource,
+      commandItemDisabledSource,
+      commandItemCheckedSource,
+      commandPaletteSource,
     ]) {
       const saida = fn();
       expect(saida).not.toContain('Demo');

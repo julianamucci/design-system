@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect, waitFor } from "storybook/test";
 import { waitForPortal, waitForPortalGone } from "@/lib/wait-for-portal";
-import { medirAnelDeFoco, ESTADOS, ESTADOS_POR_VALOR } from "@shared/testing/select-probe";
+import { focusMeasureRing, STATES, VALUE_STATES } from "@shared/testing/select-probe";
 import { useState } from "react";
 import {
   Select,
@@ -77,7 +77,7 @@ export const Playground: Story = {
           // Sem este mapa o campo fechado exibe o VALOR cru ("rj") no lugar do
           // rótulo: o primitivo desmonta a lista ao fechar e não tem de onde
           // tirar o texto da opção escolhida.
-          items={ESTADOS_POR_VALOR}
+          items={VALUE_STATES}
           value={value}
           onValueChange={(v) => {
             setValue((v ?? "") as string);
@@ -93,7 +93,7 @@ export const Playground: Story = {
             <SelectValue placeholder="Selecione..." />
           </SelectTrigger>
           <SelectContent>
-            {ESTADOS.map((estado) => (
+            {STATES.map((estado) => (
               <SelectItem key={estado.value} value={estado.value}>
                 {estado.label}
               </SelectItem>
@@ -139,14 +139,14 @@ export const Playground: Story = {
       // `outline: 0` na folha é intencional — o anel é `box-shadow`. Medir a
       // MUDANÇA, e não `boxShadow !== 'none'`, é o que distingue anel de foco
       // de anel de erro, que já existe sem foco.
-      await expect(medirAnelDeFoco(trigger).mudou).toBe(true);
+      await expect(focusMeasureRing(trigger).mudou).toBe(true);
     });
 
     await step("Abrir mostra a lista, e a seta anda pelas opções", async () => {
       const listbox = await abrir();
       await expect(trigger).toHaveAttribute("aria-expanded", "true");
       const opcoes = within(listbox).getAllByRole("option");
-      await expect(opcoes).toHaveLength(ESTADOS.length);
+      await expect(opcoes).toHaveLength(STATES.length);
       // Onde o teclado fica ao abrir varia por lib: umas movem o foco para
       // dentro do painel, outras o mantêm no campo e comandam a lista por
       // "aria-activedescendant". O que NÃO varia é a seta andar pela lista em
@@ -183,13 +183,13 @@ export const Playground: Story = {
 
     await step("Escape fecha sem trocar a escolha e devolve o foco", async () => {
       await abrir();
-      const chamadasAntes = (args.onValueChange as unknown as { mock: { calls: unknown[] } })
+      const callsBefore = (args.onValueChange as unknown as { mock: { calls: unknown[] } })
         .mock.calls.length;
       await userEvent.keyboard("{Escape}");
       await waitForPortalGone("listbox");
       await expect(
         (args.onValueChange as unknown as { mock: { calls: unknown[] } }).mock.calls.length,
-      ).toBe(chamadasAntes);
+      ).toBe(callsBefore);
       await expect(trigger).toHaveTextContent("Minas Gerais");
       await waitFor(async () => {
         await expect(trigger).toHaveFocus();

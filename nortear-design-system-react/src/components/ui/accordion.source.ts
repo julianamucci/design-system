@@ -144,7 +144,7 @@ export function accordionMultiploSource(): string {
  * para tipar o `useState`, e a árvore do `render` não mostrava o estado, só o
  * andaime que o guardava.
  */
-export function accordionControladoSource(): string {
+export function accordionControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORT}
@@ -177,7 +177,7 @@ const [abertos, setAbertos] = useState<string[]>(["item-1"]);`,
  * o snippet do `meta` abre o primeiro item e mostraria o oposto do que a story
  * documenta.
  */
-export function accordionFechadoSource(): string {
+export function accordionClosedSource(): string {
   return jsxSnippet(
     IMPORT,
     raiz(
@@ -198,7 +198,7 @@ export function accordionFechadoSource(): string {
  * mas o que a story documenta é a seção temporariamente indisponível ao lado de
  * outra que funciona — recorte que o snippet do `meta` não alcança.
  */
-export function accordionItemDesabilitadoSource(): string {
+export function accordionItemDisabledSource(): string {
   const habilitado = item({
     value: 'item-1',
     pergunta: 'Item habilitado',
@@ -223,7 +223,7 @@ export function accordionItemDesabilitadoSource(): string {
  * gatilho é o texto — o nome acessível tem que continuar sendo só o rótulo. O
  * respiro entre os dois é do `.nds-cluster`, nunca uma margem no ícone.
  */
-export function accordionComIconeSource(): string {
+export function accordionWithIconSource(): string {
   const linhas = [
     { value: 'info', icone: 'Info', cor: 'nds-text-info', rotulo: 'Informação',
       resposta: 'Ícones facilitam a identificação rápida do tipo de conteúdo.' },
@@ -259,7 +259,7 @@ ${IMPORT}`,
  * texto do gatilho continua autoexplicativo sozinho. Outra composição fora do
  * alcance dos args.
  */
-export function accordionComBadgeSource(): string {
+export function accordionWithBadgeSource(): string {
   const corpo = [
     { value: 'novo', rotulo: 'Novidades da versão 3.0', variante: 'default', badge: 'Novo',
       resposta: 'Use badges para sinalizar status sem alterar o gatilho textual.' },
@@ -294,7 +294,7 @@ ${IMPORT}`,
  * coluna e colapsa dentro do accordion. É o detalhe que só se aprende vendo a
  * marcação, e o snippet do `meta` mostraria um parágrafo.
  */
-export function accordionConteudoRicoSource(): string {
+export function accordionContentRichSource(): string {
   const corpo = [
     '  <AccordionItem value="specs">',
     '    <AccordionTrigger>Especificações técnicas</AccordionTrigger>',

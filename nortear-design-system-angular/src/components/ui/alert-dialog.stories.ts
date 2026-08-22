@@ -5,7 +5,7 @@ import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsButton } from './button';
 import { NdsAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 type AlertDialogArgs = {
   triggerLabel: string;
@@ -106,7 +106,7 @@ export const Playground: Story = {
       'accessibility.item7',
       'visual.item1', 'visual.item2',
     ],
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
   },
   render: (args) => ({
     props: { ...args },
@@ -145,9 +145,9 @@ export const Playground: Story = {
     await step('Título e descrição são o nome e a explicação do painel', async () => {
       const painel = await waitForPortal('alertdialog');
       const rotuladoPor = painel.getAttribute('aria-labelledby');
-      const descritoPor = painel.getAttribute('aria-describedby');
+      const describedBy = painel.getAttribute('aria-describedby');
       await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe(args.title);
-      await expect(document.getElementById(descritoPor!)?.textContent?.trim()).toBe(
+      await expect(document.getElementById(describedBy!)?.textContent?.trim()).toBe(
         args.description,
       );
     });

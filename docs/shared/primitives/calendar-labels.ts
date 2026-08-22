@@ -15,14 +15,14 @@
  * usuário final ouve: três cópias divergem na primeira revisão de conteúdo.
  */
 
-export interface RotulosDoCalendario {
+export interface CalendarLabels {
   mesAnterior: string;
   proximoMes: string;
   selecionarMes: string;
   selecionarAno: string;
 }
 
-const ROTULOS: Record<string, RotulosDoCalendario> = {
+const LABELS: Record<string, CalendarLabels> = {
   'pt-BR': {
     mesAnterior: 'Ir para o mês anterior',
     proximoMes: 'Ir para o próximo mês',
@@ -48,7 +48,7 @@ const ROTULOS: Record<string, RotulosDoCalendario> = {
  * região não tem entrada própria. Idioma desconhecido usa inglês, que é o
  * padrão das libs.
  */
-export function rotulosDoCalendario(locale: string | undefined): RotulosDoCalendario {
-  if (!locale) return ROTULOS.en;
-  return ROTULOS[locale] ?? ROTULOS[locale.split('-')[0]] ?? ROTULOS.en;
+export function rotulosDoCalendario(locale: string | undefined): CalendarLabels {
+  if (!locale) return LABELS.en;
+  return LABELS[locale] ?? LABELS[locale.split('-')[0]] ?? LABELS.en;
 }

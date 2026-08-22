@@ -35,7 +35,7 @@ export type FormArgs = {
   disabled: boolean;
 };
 
-const IMPORT_CAMPO = `import { FormField } from "@/components/ui/form";
+const IMPORT_FIELD = `import { FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";`;
 
 /**
@@ -66,7 +66,7 @@ export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
   );
 
   return jsxSnippet(
-    IMPORT_CAMPO,
+    IMPORT_FIELD,
     `<FormField${campo}>
   <Input${controle} />
 </FormField>`,
@@ -78,9 +78,9 @@ export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
  * o assunto — sem ela o controle não pode ganhar um `aria-describedby` vazio,
  * o atributo tem que sumir.
  */
-export function formRotuloEControleSource(): string {
+export function formLabelEControleSource(): string {
   return jsxSnippet(
-    IMPORT_CAMPO,
+    IMPORT_FIELD,
     `<FormField label="Nome completo">
   <Input type="text" placeholder="ex: João da Silva" />
 </FormField>`,
@@ -93,9 +93,9 @@ export function formRotuloEControleSource(): string {
  * campo a liga ao controle por `aria-describedby`, então ela é LIDA junto, não
  * só exibida.
  */
-export function formComDescricaoSource(): string {
+export function formWithDescriptionSource(): string {
   return jsxSnippet(
-    IMPORT_CAMPO,
+    IMPORT_FIELD,
     `<FormField
   label="Senha"
   description="Use pelo menos 8 caracteres, com letras e números."
@@ -113,7 +113,7 @@ export function formComDescricaoSource(): string {
  */
 export function formInvalidoSource(): string {
   return jsxSnippet(
-    IMPORT_CAMPO,
+    IMPORT_FIELD,
     `<FormField
   label="Senha"
   description="Use pelo menos 8 caracteres, com letras e números."
@@ -130,9 +130,9 @@ export function formInvalidoSource(): string {
  * rótulo é o padrão que faz a pessoa perder a referência do que aquele valor
  * significa.
  */
-export function formDesabilitadoSource(): string {
+export function formDisabledSource(): string {
   return jsxSnippet(
-    IMPORT_CAMPO,
+    IMPORT_FIELD,
     `<FormField label="CPF" description="Preenchido pelo cadastro da empresa.">
   <Input type="text" defaultValue="000.000.000-00" disabled />
 </FormField>`,
@@ -178,7 +178,7 @@ import { Input } from "@/components/ui/input";`,
  * cima parece igual e não anuncia nada — e a legenda precisa ser o PRIMEIRO
  * filho, o que o componente garante.
  */
-export function formComFieldsetSource(): string {
+export function formWithFieldsetSource(): string {
   return jsxSnippet(
     `import { Fieldset, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";`,
@@ -199,7 +199,7 @@ import { Input } from "@/components/ui/input";`,
  * texto de apoio (ids gerados sem colisão entre campos irmãos) e a ordem de
  * tabulação é a ordem do DOM, sem `tabIndex` em lugar nenhum.
  */
-export function formComVariosCamposSource(): string {
+export function formWithMultipleFieldsSource(): string {
   return jsxSnippet(
     `import { FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";

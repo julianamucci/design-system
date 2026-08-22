@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -48,7 +48,7 @@ const PANELS_DEFAULT: ResizableSnippetPanel[] = [
   { titulo: 'Conteúdo principal', defaultSize: 70, minSize: 30 },
 ];
 
-const ROTULO_PADRAO = 'Redimensionar Sidebar e Conteúdo — use setas para ajustar';
+const LABEL_DEFAULT = 'Redimensionar Sidebar e Conteúdo — use setas para ajustar';
 
 /**
  * O bloco que preenche um painel.
@@ -68,22 +68,22 @@ function bloco(titulo) {
 
 /** O valor de `aria-label`: uma string, ou um nome por divisor. */
 function labelValue(rotulo: string | string[] | undefined): string {
-  const valor = rotulo ?? ROTULO_PADRAO;
+  const valor = rotulo ?? LABEL_DEFAULT;
   if (!Array.isArray(valor)) return texto(valor);
   return `[\n${valor.map((r) => `    ${texto(r)},`).join('\n')}\n  ]`;
 }
 
 /** `panels: [ … ]`, um painel por linha, já recuado para dentro da chamada. */
-function blockPanels(paineis: ResizableSnippetPanel[]): string {
-  const linhas = paineis.map((p) => {
-    const pares = opcoes([
+function blockPanels(panels: ResizableSnippetPanel[]): string {
+  const linhas = panels.map((p) => {
+    const pairs = opcoes([
       ['defaultSize', p.defaultSize !== undefined ? String(p.defaultSize) : undefined],
       // 10 é o piso que a fábrica assume; 100 é o teto.
       ['minSize', p.minSize !== undefined && p.minSize !== 10 ? String(p.minSize) : undefined],
       ['maxSize', p.maxSize !== undefined && p.maxSize !== 100 ? String(p.maxSize) : undefined],
       ['content', `bloco(${texto(p.titulo)})`],
     ]);
-    return `    { ${pares.map((par) => par.replace(/,$/, '')).join(', ')} },`;
+    return `    { ${pairs.map((par) => par.replace(/,$/, '')).join(', ')} },`;
   });
   return `[\n${linhas.join('\n')}\n  ]`;
 }
@@ -107,7 +107,7 @@ function panelsOf(o: ResizableSnippetOptions): ResizableSnippetPanel[] {
 }
 
 /** As opções da fábrica. Só o que difere do padrão entra. */
-function groupLines(o: ResizableSnippetOptions, paineis: ResizableSnippetPanel[]): string[] {
+function groupLines(o: ResizableSnippetOptions, panels: ResizableSnippetPanel[]): string[] {
   return opcoes([
     // `horizontal` é o padrão da fábrica.
     ['direction', o.direction === 'vertical' ? texto('vertical') : undefined],
@@ -117,7 +117,7 @@ function groupLines(o: ResizableSnippetOptions, paineis: ResizableSnippetPanel[]
     // não há como saber o que aquele número redimensiona.
     ['aria-label', labelValue(o['aria-label'])],
     ['onLayout', o.onLayout],
-    ['panels', blockPanels(paineis)],
+    ['panels', blockPanels(panels)],
   ]);
 }
 
@@ -144,11 +144,11 @@ const HEIGHT_NOTA = `// O grupo reparte o espaço do contêiner: ele precisa de 
 
 /** A chamada real de `createResizablePanel` com as opções da story. */
 export function resizableSnippet(o: ResizableSnippetOptions = {}): string {
-  const paineis = panelsOf(o);
+  const panels = panelsOf(o);
   return snippet(
-    importar('resizable', 'createResizablePanel'),
+    importing('resizable', 'createResizablePanel'),
     CONTENT_BLOCK,
-    `${HEIGHT_NOTA}const grupo = ${chamada('createResizablePanel', groupLines(o, paineis))};`,
+    `${HEIGHT_NOTA}const grupo = ${chamada('createResizablePanel', groupLines(o, panels))};`,
     blockFinal(o, 'grupo'),
   );
 }
@@ -198,7 +198,7 @@ export function resizableNestedSnippet(groupOptions: {
   ]);
 
   return snippet(
-    importar('resizable', 'createResizablePanel'),
+    importing('resizable', 'createResizablePanel'),
     CONTENT_BLOCK,
     `// O grupo de dentro é outro grupo, com nome de divisor próprio: percorrer os
 // divisores a partir da raiz do de fora alcançaria também os dele.

@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -91,7 +91,7 @@ export function tabsSnippet(o: TabsSnippetOptions = {}): string {
   const itens = o.itens ?? ITEMS_DEFAULT;
 
   return snippet(
-    importar('tabs', 'createTabs'),
+    importing('tabs', 'createTabs'),
     PANEL_FABRICA,
     `const abas = ${chamada('createTabs', conjuntoLines(o, itens))};`,
     montar('abas'),
@@ -112,7 +112,7 @@ export function tabsWithIconsSnippet(
   const icones = [...new Set(itens.map((i) => i.icon))].sort();
 
   return snippet(
-    [importar('tabs', 'createTabs'), `import { ${[...icones, 'createElement'].join(', ')} } from 'lucide';`].join('\n'),
+    [importing('tabs', 'createTabs'), `import { ${[...icones, 'createElement'].join(', ')} } from 'lucide';`].join('\n'),
     PANEL_FABRICA,
     `const abas = ${chamada('createTabs', conjuntoLines(o, itens))};`,
     `const icones = {
@@ -151,14 +151,14 @@ export function tabsWithBadgeSnippet(
   itens: Array<TabsSnippetItem & { badge?: { text: string; variant?: string } }>,
   o: TabsSnippetOptions = {},
 ): string {
-  const comBadge = itens.filter((i) => i.badge);
+  const withBadge = itens.filter((i) => i.badge);
 
   return snippet(
-    [importar('tabs', 'createTabs'), importar('badge', 'createBadge')].join('\n'),
+    [importing('tabs', 'createTabs'), importing('badge', 'createBadge')].join('\n'),
     PANEL_FABRICA,
     `const abas = ${chamada('createTabs', conjuntoLines(o, itens))};`,
     `const contadores = [
-${comBadge
+${withBadge
   .map(
     (i) =>
       `  { value: ${texto(i.value)}, text: ${texto(i.badge!.text)}${

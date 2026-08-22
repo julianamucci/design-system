@@ -123,7 +123,7 @@ export function carouselFirstSlideSource(): string {
 }
 
 /** Estado de fim de fila: mesmo mecanismo, o extremo oposto. */
-export function carouselUltimoSlideSource(): string {
+export function carouselLastSlideSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}\nconst opts = { startIndex: slides.length - 1 }`,
     carrossel({ raiz: ':opts="opts"', rotulo: 'Slides no último item' }),
@@ -220,7 +220,7 @@ const slides = [
  * marca com `aria-current`, e o inativo NÃO carrega o atributo — a string
  * "false" ainda casaria com um seletor de presença.
  */
-export function carouselComDotsSource(): string {
+export function carouselWithDotsSource(): string {
   return vueSnippet(
     `${IMPORT}
 import { ref } from 'vue'

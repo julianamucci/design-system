@@ -31,7 +31,7 @@
  * control lê o eixo do DOM renderizado (`data-orientation` do trilho) e passa
  * aqui, porque é o trilho que decide para onde o carrossel anda — não o arg.
  */
-export function slideEmFoco(canvasElement: HTMLElement, eixo: 'x' | 'y' = 'x'): number {
+export function focusSlide(canvasElement: HTMLElement, eixo: 'x' | 'y' = 'x'): number {
   const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
   const slides = Array.from(
     canvasElement.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'),

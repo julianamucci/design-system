@@ -16,9 +16,9 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { painel } from './popover.fixtures';
 import {
   popoverEditarPerfilSource,
-  popoverFiltroSource,
+  popoverFilterSource,
   popoverPreferenciasSource,
-  colorSourcePopoverSelector,
+  colorPopoverSelectorSource,
 } from './popover.source';
 
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
@@ -109,7 +109,7 @@ export const TableFilter: Story = {
     docs: {
       // Escolha múltipla no lugar do formulário: o miolo do painel troca de
       // campos de texto para caixas combináveis.
-      source: { transform: popoverFiltroSource },
+      source: { transform: popoverFilterSource },
       description: {
         story:
           'Filtros contextuais de uma listagem — status combináveis e o par Limpar / Aplicar ao final.',
@@ -176,7 +176,7 @@ export const ColorPicker: Story = {
     docs: {
       // O miolo vira uma fila de amostras sem texto visível: o nome acessível
       // passa a vir de `aria-label`, o que nenhuma outra story do arquivo faz.
-      source: { transform: colorSourcePopoverSelector },
+      source: { transform: colorPopoverSelectorSource },
       description: {
         story: 'Paleta restrita em grid — cada amostra tem nome acessível próprio.',
       },

@@ -43,7 +43,7 @@ import {
 // declaradas em `.nds-sidebar-wrapper` no CSS compartilhado — o React as repete
 // em `style` inline sem precisar.
 
-const ATALHO = 'b';
+const SHORTCUT = 'b';
 const COOKIE = 'sidebar_state';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // uma semana
 /** Abaixo disto a sidebar vira gaveta sobreposta em vez de coluna. */
@@ -97,7 +97,7 @@ export class NdsSidebarStore {
     // Ctrl/Cmd+B. No `document` e não no elemento: o atalho vale de qualquer
     // lugar da página, inclusive com o foco no conteúdo principal.
     const aoTeclar = (e: KeyboardEvent) => {
-      if (e.key === ATALHO && (e.metaKey || e.ctrlKey)) {
+      if (e.key === SHORTCUT && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         this.alternar();
       }
@@ -279,7 +279,7 @@ export class NdsSidebar {
   );
 
   /** Quem tinha o foco quando a gaveta móvel abriu. */
-  private focoAntesDaGaveta: HTMLElement | null = null;
+  private gavetaFocusBefore: HTMLElement | null = null;
 
   constructor() {
     // Devolver o foco é trabalho de quem abriu.
@@ -291,11 +291,11 @@ export class NdsSidebar {
     effect(() => {
       const aberta = this.store.openMobile();
       if (aberta) {
-        this.focoAntesDaGaveta = document.activeElement as HTMLElement | null;
+        this.gavetaFocusBefore = document.activeElement as HTMLElement | null;
         return;
       }
-      const alvo = this.focoAntesDaGaveta;
-      this.focoAntesDaGaveta = null;
+      const alvo = this.gavetaFocusBefore;
+      this.gavetaFocusBefore = null;
       // Adiado de propósito: o painel ainda está saindo, e o gerenciador de
       // foco do primitivo mexe no foco durante a animação de saída.
       if (alvo?.isConnected) setTimeout(() => alvo.focus());

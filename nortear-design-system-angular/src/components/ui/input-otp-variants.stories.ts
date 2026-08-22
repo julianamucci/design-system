@@ -107,8 +107,8 @@ export const WithSeparator: Story = {
 
     await step('O separador fica entre o terceiro e o quarto slot', async () => {
       const filhos = [...canvasElement.querySelectorAll('nds-input-otp > *')];
-      const posicao = filhos.findIndex((el) => el.matches('[data-slot="input-otp-separator"]'));
-      await expect(posicao).toBe(3);
+      const position = filhos.findIndex((el) => el.matches('[data-slot="input-otp-separator"]'));
+      await expect(position).toBe(3);
       await expect(slotsDe(canvasElement)).toHaveLength(6);
     });
 

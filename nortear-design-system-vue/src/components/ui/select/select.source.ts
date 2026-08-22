@@ -20,13 +20,13 @@ export type SelectArgs = {
 };
 
 /** Os nomes que a composição usa, um por linha, do design system. */
-function importar(...nomes: string[]): string {
+function importing(...nomes: string[]): string {
   return `import {
 ${nomes.map((nome) => `  ${nome},`).join('\n')}
 } from '@/components/ui/select'`;
 }
 
-const IMPORT_BASE = importar(
+const IMPORT_BASE = importing(
   'Select',
   'SelectContent',
   'SelectItem',
@@ -34,7 +34,7 @@ const IMPORT_BASE = importar(
   'SelectValue',
 );
 
-const ESTADOS = `const estados = [
+const STATES = `const estados = [
   { value: 'sp', label: 'São Paulo' },
   { value: 'rj', label: 'Rio de Janeiro' },
   { value: 'mg', label: 'Minas Gerais' },
@@ -85,7 +85,7 @@ export const selectSource: SourceTransform<SelectArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const bloqueado = args.disabled === true;
   return vueSnippet(
-    `${IMPORT_BASE}\n\n${ESTADOS}`,
+    `${IMPORT_BASE}\n\n${STATES}`,
     campo({
       raiz: [
         attr('default-value', args.defaultValue),
@@ -106,7 +106,7 @@ const QUATRO_STATES = `<SelectItem value="sp">São Paulo</SelectItem>
 <SelectItem value="es">Espírito Santo</SelectItem>`;
 
 /** Lista plana: só itens dentro do conteúdo, sem cabeçalho de grupo. */
-export function selectListaPlanaSource(): string {
+export function selectListPlanaSource(): string {
   return vueSnippet(
     IMPORT_BASE,
     campo({
@@ -122,7 +122,7 @@ export function selectListaPlanaSource(): string {
  */
 export function selectAgrupadoSource(): string {
   return vueSnippet(
-    importar(
+    importing(
       'Select',
       'SelectContent',
       'SelectGroup',
@@ -154,7 +154,7 @@ export function selectAgrupadoSource(): string {
  * Ícone na opção: ele entra como filho direto do item, antes do texto, e é
  * DECORATIVO — `aria-hidden` mantém o nome acessível igual ao rótulo, sem eco.
  */
-export function selectComIconeSource(): string {
+export function selectWithIconSource(): string {
   return vueSnippet(
     `import { Globe } from 'lucide-vue-next'
 ${IMPORT_BASE}`,
@@ -179,7 +179,7 @@ ${IMPORT_BASE}`,
 /** Estado vazio: o campo mostra o placeholder, e a lista nem existe no DOM. */
 export function selectEmptySource(): string {
   return vueSnippet(
-    `${IMPORT_BASE}\n\n${ESTADOS}`,
+    `${IMPORT_BASE}\n\n${STATES}`,
     campo({
       gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
       itens: LACO_ITEMS,
@@ -197,7 +197,7 @@ export function selectPreenchidoSource(): string {
   return vueSnippet(
     `${IMPORT_BASE}
 
-${ESTADOS}
+${STATES}
 
 const rotulos = Object.fromEntries(estados.map((estado) => [estado.value, estado.label]))`,
     campo({
@@ -220,7 +220,7 @@ const rotulos = Object.fromEntries(estados.map((estado) => [estado.value, estado
  */
 export function selectBloqueadoSource(): string {
   return vueSnippet(
-    `${IMPORT_BASE}\n\n${ESTADOS}`,
+    `${IMPORT_BASE}\n\n${STATES}`,
     campo({
       raiz: ['disabled'],
       gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD, 'disabled'],
@@ -235,7 +235,7 @@ export function selectBloqueadoSource(): string {
  */
 export function selectInvalidoSource(): string {
   return vueSnippet(
-    `${IMPORT_BASE}\n\n${ESTADOS}`,
+    `${IMPORT_BASE}\n\n${STATES}`,
     `<div class="nds-stack" data-spacing="sm">
 ${indentar(
   campo({
@@ -255,7 +255,7 @@ ${indentar(
  */
 export function selectCompactoSource(): string {
   return vueSnippet(
-    `${IMPORT_BASE}\n\n${ESTADOS}`,
+    `${IMPORT_BASE}\n\n${STATES}`,
     `<div class="nds-stack" data-spacing="sm">
 ${indentar(
   campo({
@@ -279,7 +279,7 @@ ${indentar(
  * `aria-labelledby` fecha o par do lado do campo. É o padrão de formulário —
  * um rótulo visível diz o que o campo quer antes de ele ter valor.
  */
-export function selectComRotuloSource(): string {
+export function selectWithLabelSource(): string {
   return vueSnippet(
     `import { Label } from '@/components/ui/label'
 ${IMPORT_BASE}`,
@@ -302,7 +302,7 @@ ${indentar(
  * declaradas — a que entra (`:model-value`) e a que sai (`@update:model-value`)
  * —, e é assim que o estado externo passa a mandar no campo.
  */
-export function selectControladoSource(): string {
+export function selectControlledSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
 import { Label } from '@/components/ui/label'
@@ -333,7 +333,7 @@ ${indentar(
  * o componente mantém um campo escondido com esse nome, e é ele que a
  * serialização nativa enxerga.
  */
-export function selectEmFormularioSource(): string {
+export function formSelectSource(): string {
   return vueSnippet(
     `import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -363,7 +363,7 @@ ${indentar(
  */
 export function selectWithSeparatorSource(): string {
   return vueSnippet(
-    importar(
+    importing(
       'Select',
       'SelectContent',
       'SelectGroup',

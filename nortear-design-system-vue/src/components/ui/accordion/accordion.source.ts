@@ -33,7 +33,7 @@ const IMPORT = `import {
  * A largura máxima faz parte da lição: o item ocupa a linha inteira, e sem um
  * teto a pergunta e a resposta esticam até a borda da tela.
  */
-const LARGURA = 'class="nds-max-w-lg"';
+const WIDTH = 'class="nds-max-w-lg"';
 
 /** Corpo de várias linhas dentro de uma tag que abre na coluna `recuo - 2`. */
 function bloco(conteudo: string, recuo: number): string {
@@ -96,7 +96,7 @@ export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) =>
         attrBool('disabled', args.disabled, false),
         attrBool('unmount-on-hide', args.unmountOnHide, false),
         'default-value="item-1"',
-        LARGURA,
+        WIDTH,
       ],
       PERGUNTAS.map((p) => item(p.valor, p.q, p.a)),
     ),
@@ -127,7 +127,7 @@ export function accordionSingleSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
-      ['type="single"', 'default-value="item-1"', LARGURA],
+      ['type="single"', 'default-value="item-1"', WIDTH],
       RESPOSTAS_CURTAS.map((p) => item(p.valor, p.q, p.a)),
     ),
   );
@@ -139,11 +139,11 @@ export function accordionSingleSource(): string {
  * A ausência é o assunto: não há chave a ligar. Escrever uma prop aqui ensinaria
  * que o comportamento depende dela, e é justamente o contrário.
  */
-export function segundoClickSourceAccordionClose(): string {
+export function segundoClickAccordionCloseSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
-      ['type="single"', LARGURA],
+      ['type="single"', WIDTH],
       [
         item(
           'item-1',
@@ -165,7 +165,7 @@ export function accordionMultipleSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
-      ['type="multiple"', LARGURA],
+      ['type="multiple"', WIDTH],
       [
         item(
           'especificacoes',
@@ -188,7 +188,7 @@ export function accordionMultipleSource(): string {
  * componente só avisa da mudança. É o par `model-value` + `@update:model-value`
  * — o mesmo que `v-model`, escrito aberto para o vínculo ficar visível.
  */
-export function accordionControladoSource(): string {
+export function accordionControlledSource(): string {
   return vueSnippet(
     `${IMPORT}
 import { ref } from 'vue'
@@ -221,11 +221,11 @@ const aberto = ref('item-1')`,
  * Valor inicial sem modo controlado: `default-value` só vale na montagem, e
  * daí em diante o estado é do próprio componente.
  */
-export function defaultSourceAccordionOpen(): string {
+export function defaultAccordionOpenSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
-      ['type="single"', 'default-value="item-1"', LARGURA],
+      ['type="single"', 'default-value="item-1"', WIDTH],
       [
         item(
           'item-1',
@@ -246,22 +246,22 @@ Não é modo controlado — o estado interno assume depois da montagem.`,
  * navegador achá-lo e abrir o item. Não há atributo a escrever — vem do
  * componente.
  */
-export function accordionFechadoSource(): string {
+export function accordionClosedSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
-      ['type="single"', LARGURA],
+      ['type="single"', WIDTH],
       [item('item-1', 'Item fechado (estado padrão)', 'Conteúdo oculto.')],
     ),
   );
 }
 
 /** Estado aberto: o valor inicial da raiz aponta para o item. */
-export function accordionAbertoSource(): string {
+export function accordionOpenSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
-      ['type="single"', 'default-value="item-1"', LARGURA],
+      ['type="single"', 'default-value="item-1"', WIDTH],
       [
         item(
           'item-1',
@@ -281,7 +281,7 @@ export function accordionDisabledSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
-      ['type="single"', LARGURA],
+      ['type="single"', WIDTH],
       [
         item('item-1', 'Item habilitado', 'Este item funciona normalmente.'),
         item('item-2', 'Item desabilitado', 'Este conteúdo não pode ser acessado.', 'disabled'),
@@ -298,7 +298,7 @@ export function accordionFocusVisibleSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
-      ['type="single"', 'default-value="item-1"', LARGURA],
+      ['type="single"', 'default-value="item-1"', WIDTH],
       [
         item(
           'item-1',
@@ -316,7 +316,7 @@ export function accordionFocusVisibleSource(): string {
  * o nome do gatilho já é o texto ao lado. Um ícone anunciado repetiria a
  * categoria em toda leitura.
  */
-export function accordionComIconeSource(): string {
+export function accordionWithIconSource(): string {
   const comIcone = (icone: string, cor: string, rotulo: string) =>
     `<span class="nds-cluster" data-spacing="sm">
   <${icone} class="nds-icon ${cor} nds-shrink-0" aria-hidden="true" />
@@ -326,7 +326,7 @@ export function accordionComIconeSource(): string {
     `${IMPORT}
 import { AlertTriangle, CheckCircle, Info } from 'lucide-vue-next'`,
     acordeao(
-      ['type="single"', LARGURA],
+      ['type="single"', WIDTH],
       [
         item(
           'info',
@@ -352,8 +352,8 @@ import { AlertTriangle, CheckCircle, Info } from 'lucide-vue-next'`,
  * Selo no gatilho: sinaliza situação sem mudar o rótulo. O texto do gatilho
  * continua autoexplicativo sem ele.
  */
-export function accordionComBadgeSource(): string {
-  const comBadge = (rotulo: string, variante: string, selo: string) =>
+export function accordionWithBadgeSource(): string {
+  const withBadge = (rotulo: string, variante: string, selo: string) =>
     `<span class="nds-cluster" data-spacing="sm">
   ${rotulo}
   <Badge${attrs(attr('variant', variante, 'default'))}>${selo}</Badge>
@@ -362,16 +362,16 @@ export function accordionComBadgeSource(): string {
     `${IMPORT}
 import { Badge } from '@/components/ui/badge'`,
     acordeao(
-      ['type="single"', LARGURA],
+      ['type="single"', WIDTH],
       [
         item(
           'novo',
-          comBadge('Novidades da versão 3.0', 'default', 'Novo'),
+          withBadge('Novidades da versão 3.0', 'default', 'Novo'),
           'Use selos para sinalizar situação sem alterar o rótulo do gatilho.',
         ),
         item(
           'beta',
-          comBadge('Funcionalidades em beta', 'secondary', 'Beta'),
+          withBadge('Funcionalidades em beta', 'secondary', 'Beta'),
           'Funcionalidades em beta podem mudar. Comentários são bem-vindos.',
         ),
       ],
@@ -385,7 +385,7 @@ import { Badge } from '@/components/ui/badge'`,
  * A tabela é tabela de verdade, e não grade: `.nds-grid[data-cols="2"]` pede
  * 18rem por coluna e colapsa dentro da largura do acordeão.
  */
-export function accordionConteudoRicoSource(): string {
+export function accordionContentRichSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(

@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
 import { within, userEvent, expect } from 'storybook/test';
 import {
-  entrarNoPainel,
-  esperarAberto,
-  esperarFechado,
+  panelEntrar,
+  waitForOpen,
+  waitForClosed,
   nomeAcessivel,
-  painelAberto,
-  razaoDeContraste,
+  panelOpen,
+  contrastRatio,
 } from '@shared/testing/hover-card-probe';
 import {
   HoverCard,
@@ -15,7 +15,7 @@ import {
   HoverCardTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { hoverCardControladoSource, hoverCardPerfilSource } from './hover-card.source';
+import { hoverCardControlledSource, hoverCardPerfilSource } from './hover-card.source';
 
 // Os três estados que o conteúdo compartilhado descreve: fechado (só o
 // gatilho), aberto (painel no portal) e controlado (quem manda é o estado de
@@ -88,9 +88,9 @@ export const Closed: Story = {
     const gatilho = canvas.getByRole('link', { name: /@joana/i });
 
     await step('Fechado, o portal está vazio', async () => {
-      await esperarFechado();
+      await waitForClosed();
       await expect(gatilho).toBeVisible();
-      await expect(painelAberto()).toBeNull();
+      await expect(panelOpen()).toBeNull();
     });
 
     await step('O gatilho não anuncia estado de expansão', async () => {
@@ -134,9 +134,9 @@ export const Open: Story = {
 
     // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
     await userEvent.keyboard('{Escape}');
-    await esperarFechado();
+    await waitForClosed();
     await userEvent.hover(gatilho);
-    const painel = await esperarAberto();
+    const painel = await waitForOpen();
 
     await step('O painel é um dialog não-modal', async () => {
       await expect(painel).toHaveAttribute('role', 'dialog');
@@ -152,11 +152,11 @@ export const Open: Story = {
     await step('Levar o cursor para dentro do painel mantém o cartão aberto', async () => {
       // O caminho completo: sai do gatilho (o que agenda o fechamento) e entra
       // no painel (o que o cancela). Só a entrada, sem a saída, provaria nada.
-      await entrarNoPainel(gatilho, painel);
+      await panelEntrar(gatilho, painel);
       // Espera deliberada, maior que o closeDelay de 80ms: o que se prova aqui
       // é a AUSÊNCIA de fechamento, e ausência não tem evento para aguardar.
       await new Promise((resolve) => setTimeout(resolve, 300));
-      await expect(painelAberto()).toBe(painel);
+      await expect(panelOpen()).toBe(painel);
       await expect(painel).toBeVisible();
     });
 
@@ -164,7 +164,7 @@ export const Open: Story = {
       // Medido do par que o design system promete (--popover-foreground sobre
       // --popover), e não deduzido do token: é o valor que o navegador aplicou.
       const estilo = getComputedStyle(painel);
-      await expect(razaoDeContraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+      await expect(contrastRatio(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -175,7 +175,7 @@ export const Controlled: Story = {
     docs: {
       // Quem manda é o estado de fora, e os dois botões que o movem fazem parte
       // da lição — nada disso existe na marcação do `meta`.
-      source: { transform: hoverCardControladoSource },
+      source: { transform: hoverCardControlledSource },
       description: {
         story:
           'Estado vindo de fora. Útil quando outra parte da tela precisa saber que o cartão está aberto — para pausar um carrossel, por exemplo. O gatilho continua abrindo por ponteiro e por foco; cada mudança volta pelo callback.',
@@ -224,15 +224,15 @@ export const Controlled: Story = {
       // Nenhum hover e nenhum foco no gatilho: quem abre é a propriedade, e é
       // isso que distingue o modo controlado.
       await userEvent.click(abrir);
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(espelho).toHaveTextContent('aberto');
     });
 
     await step('E fecha pelo mesmo caminho', async () => {
       await userEvent.click(fechar);
-      await esperarFechado();
-      await expect(painelAberto()).toBeNull();
+      await waitForClosed();
+      await expect(panelOpen()).toBeNull();
       await expect(espelho).toHaveTextContent('fechado');
     });
   },

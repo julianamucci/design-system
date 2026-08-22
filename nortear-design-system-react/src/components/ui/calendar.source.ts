@@ -48,20 +48,20 @@ type Modo = (typeof MODOS)[number];
  */
 const ESTADO: Record<
   Modo,
-  { declaracao: string; valor: string; handler: string; precisaDeTipo?: boolean }
+  { declaration: string; valor: string; handler: string; precisaDeTipo?: boolean }
 > = {
   single: {
-    declaracao: 'const [data, setData] = useState(new Date());',
+    declaration: 'const [data, setData] = useState(new Date());',
     valor: 'data',
     handler: 'onSelect={(escolhida) => escolhida && setData(escolhida)}',
   },
   multiple: {
-    declaracao: 'const [datas, setDatas] = useState([new Date()]);',
+    declaration: 'const [datas, setDatas] = useState([new Date()]);',
     valor: 'datas',
     handler: 'onSelect={(escolhidas) => setDatas(escolhidas ?? [])}',
   },
   range: {
-    declaracao: 'const [intervalo, setIntervalo] = useState<DateRange>({ from: new Date() });',
+    declaration: 'const [intervalo, setIntervalo] = useState<DateRange>({ from: new Date() });',
     valor: 'intervalo',
     handler: 'onSelect={(escolhido) => escolhido && setIntervalo(escolhido)}',
     precisaDeTipo: true,
@@ -100,7 +100,7 @@ function calendarControlled(
     .join('\n');
   // O estado entra no mesmo bloco do cabeçalho, separado por uma linha em
   // branco: é declaração de componente, e não marcação.
-  const cabecalho = `${imports}\n\n${estado.declaracao}`;
+  const cabecalho = `${imports}\n\n${estado.declaration}`;
 
   return jsxSnippet(
     cabecalho,
@@ -197,7 +197,7 @@ export function calendarHojeSource(): string {
  * para nomear a prop, e um snippet que a omitisse deixaria o leitor sem saber
  * como desligar as bordas do mês (`showOutsideDays={false}`).
  */
-export function outsideSourceCalendarDays(): string {
+export function outsideCalendarDaysSource(): string {
   return calendarControlled('single', ['showOutsideDays']);
 }
 
@@ -214,7 +214,7 @@ export function calendarIntervaloWithMioloSource(): string {
  * motivo de `showOutsideDays`: a story existe para nomear o formato da legenda,
  * e o par com a story de seletores é o que dá sentido aos dois.
  */
-export function calendarLegendaTextoSource(): string {
+export function calendarCaptionTextSource(): string {
   return calendarControlled('single', ['captionLayout="label"']);
 }
 
@@ -223,7 +223,7 @@ export function calendarLegendaTextoSource(): string {
  * período sem passar mês a mês. O `<select>` é o próprio controle — não há
  * rótulo desenhado por cima dele.
  */
-export function calendarLegendaSeletoresSource(): string {
+export function calendarCaptionSelectorsSource(): string {
   return calendarControlled('single', ['captionLayout="dropdown"']);
 }
 
@@ -232,7 +232,7 @@ export function calendarLegendaSeletoresSource(): string {
  * justifica — é escolhendo datas que atravessam a virada do mês que os dois
  * painéis deixam de ser enfeite.
  */
-export function calendarDoisMesesSource(): string {
+export function calendarDoisMonthsSource(): string {
   return calendarControlled('range', ['numberOfMonths={2}']);
 }
 
@@ -257,7 +257,7 @@ export function calendarNumberWeekSource(): string {
  * saber o que escolheu) e escolher fecha o painel, porque depois disso não
  * sobra nada para oferecer ali.
  */
-export function calendarComPopoverSource(): string {
+export function calendarWithPopoverSource(): string {
   return jsxSnippet(
     `import { Button } from "@/components/ui/button";
 ${IMPORT_CALENDAR}

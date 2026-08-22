@@ -21,10 +21,10 @@ export type SidebarArgs = {
 };
 
 /** O mesmo valor de `SIDEBAR_MOBILE_QUERY`: abaixo dele a barra vira gaveta. */
-const CONSULTA_PADRAO = '(max-width: 767px)';
+const QUERY_DEFAULT = '(max-width: 767px)';
 
 /** Catálogo do que o pacote exporta e o snippet pode usar. */
-const PECAS = [
+const PARTS = [
   'Sidebar',
   'SidebarContent',
   'SidebarFooter',
@@ -51,7 +51,7 @@ const PECAS = [
 ];
 
 /** Os ícones são decorativos, mas precisam existir no script para o template. */
-const ICONES = [
+const ICONS = [
   'Bell',
   'Blocks',
   'ChevronRight',
@@ -76,10 +76,10 @@ function usada(nome: string, template: string): boolean {
  * escrita à parte desencontra da composição no primeiro ajuste.
  */
 function montar(template: string): string {
-  const pecas = PECAS.filter((peca) => usada(peca, template));
-  const icones = ICONES.filter((icone) => usada(icone, template));
+  const parts = PARTS.filter((part) => usada(part, template));
+  const icones = ICONS.filter((icone) => usada(icone, template));
   const blocos = [
-    `import {\n${pecas.map((peca) => `  ${peca},`).join('\n')}\n} from '@/components/ui/sidebar'`,
+    `import {\n${parts.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/sidebar'`,
   ];
   if (icones.length) blocos.push(`import { ${icones.join(', ')} } from 'lucide-vue-next'`);
   return vueSnippet(blocos.join('\n'), template);
@@ -222,7 +222,7 @@ export const sidebarPlaygroundSource: SourceTransform<SidebarArgs> = (_gerado, c
   const args = ctx?.args ?? {};
   return montar(
     moldura({
-      provider: attrs(attr('mobile-query', args.mobileQuery, CONSULTA_PADRAO)),
+      provider: attrs(attr('mobile-query', args.mobileQuery, QUERY_DEFAULT)),
       barra: attrs(
         attr('side', args.side, 'left'),
         attr('variant', args.variant, 'sidebar'),
@@ -270,17 +270,17 @@ ${indentar(menu([{ icone: 'User', rotulo: 'Perfil' }]), 2)}
 }
 
 /** Variante padrão: painel colado na borda, sem cantos nem sombra. */
-export function sidebarVarianteSidebarSource(): string {
+export function sidebarVariantSidebarSource(): string {
   return variante('sidebar');
 }
 
 /** Flutuante: o painel ganha cantos, borda e sombra sobre um respiro. */
-export function sidebarVarianteFloatingSource(): string {
+export function sidebarVariantFloatingSource(): string {
   return variante('floating');
 }
 
 /** Encaixada: quem ganha cantos é o conteúdo adjacente, não a barra. */
-export function sidebarVarianteInsetSource(): string {
+export function sidebarVariantInsetSource(): string {
   return variante('inset');
 }
 
@@ -289,7 +289,7 @@ export function sidebarVarianteInsetSource(): string {
  * primeiro e a navegação depois, senão a barra aparece à direita mas a ordem de
  * leitura e de tabulação continua começando por ela.
  */
-export function sidebarLadoDireitoSource(): string {
+export function sidebarSideDireitoSource(): string {
   return montar(
     `<SidebarProvider>
   <SidebarInset>
@@ -383,7 +383,7 @@ export function sidebarFixaSource(): string {
  * também o quadrado do ícone, para que a lista não salte quando os dados
  * chegarem.
  */
-export function sidebarCarregandoSource(): string {
+export function sidebarLoadingSource(): string {
   return montar(
     moldura({
       cabecalho: MARCA,
@@ -435,7 +435,7 @@ export function sidebarGavetaMovelSource(): string {
  * `SidebarMenuBadge` é texto de apoio do item, e por isso fica FORA do botão:
  * dentro, o contador entraria no nome acessível do item.
  */
-export function sidebarGruposSource(): string {
+export function sidebarGroupsSource(): string {
   return montar(
     moldura({
       cabecalho: MARCA,
@@ -511,7 +511,7 @@ export function sidebarSubmenuSource(): string {
  * Busca no cabeçalho: `SidebarInput` leva `aria-label` porque o `placeholder`
  * some assim que a pessoa digita — e com ele iria embora o único nome do campo.
  */
-export function sidebarBuscaSource(): string {
+export function sidebarSearchSource(): string {
   return montar(
     moldura({
       cabecalho: `<SidebarHeader class="nds-p-2" data-spacing="sm">

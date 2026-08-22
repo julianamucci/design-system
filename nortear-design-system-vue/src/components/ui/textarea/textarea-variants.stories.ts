@@ -3,14 +3,14 @@ import { within, userEvent, expect } from 'storybook/test';
 import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
 import {
-  alturaMinimaPx,
+  heightMinimaPx,
   preencherAte,
   resizeComputado,
 } from '@shared/testing/textarea-probe';
 import {
-  textareaComContadorSource,
-  textareaPadraoSource,
-  textareaSemRedimensionarSource,
+  textareaWithCounterSource,
+  textareaDefaultSource,
+  textareaNoRedimensionarSource,
 } from './textarea.source';
 
 const meta = {
@@ -22,7 +22,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: textareaPadraoSource },
+      source: { transform: textareaDefaultSource },
       description: {
         component:
           'O Textarea expõe 3 variantes via classes .nds-*: padrão (redimensiona na vertical), com contador de caracteres e sem redimensionamento.',
@@ -59,7 +59,7 @@ export const Default: Story = {
     });
 
     await step('Altura mínima de 120px', async () => {
-      await expect(alturaMinimaPx(textarea)).toBe(120);
+      await expect(heightMinimaPx(textarea)).toBe(120);
     });
   },
 };
@@ -70,7 +70,7 @@ export const WithCounter: Story = {
     docs: {
       // O contador traz estado, limite e um bloco de texto abaixo do campo: é
       // uma composição inteira, não uma prop a mais na padrão.
-      source: { transform: textareaComContadorSource },
+      source: { transform: textareaWithCounterSource },
     },
   },
   render: () => ({
@@ -130,7 +130,7 @@ export const NoResize: Story = {
     docs: {
       // A ausência da alça É o assunto, e ela mora numa classe que a padrão não
       // tem — sem o override o snippet mostraria justamente o contrário.
-      source: { transform: textareaSemRedimensionarSource },
+      source: { transform: textareaNoRedimensionarSource },
     },
   },
   render: () => ({

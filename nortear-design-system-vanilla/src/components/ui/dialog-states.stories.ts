@@ -6,10 +6,10 @@ import { createButton } from './button';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import {
   abrir,
-  botaoFecharDoCanto,
-  conferirNomeEDescricao,
-  esperarAberto,
-  esperarFechado,
+  cantoButtonClose,
+  checkNameEDescricao,
+  waitForOpen,
+  waitForClosed,
   gatilho,
   overlay,
   painel,
@@ -120,7 +120,7 @@ export const Open: Story = {
       openInitially: true,
     }),
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Aberto, o painel se anuncia como diálogo modal', async () => {
       await expect(p).toBeVisible();
@@ -128,7 +128,7 @@ export const Open: Story = {
       await expect(p).toHaveAttribute('aria-modal', 'true');
       await expect(p).toHaveAttribute('data-state', 'open');
       await expect(overlay()).toBeVisible();
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step('E o foco já está dentro do painel', async () => {
@@ -169,10 +169,10 @@ export const WithCloseButtonHidden: Story = {
       openInitially: true,
     }),
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Sem X no canto', async () => {
-      await expect(botaoFecharDoCanto(p)).toBeNull();
+      await expect(cantoButtonClose(p)).toBeNull();
     });
 
     await step('Escape continua fechando — nunca se tira toda saída', async () => {
@@ -180,7 +180,7 @@ export const WithCloseButtonHidden: Story = {
       // restam. Retirar todas de uma vez deixaria o diálogo sem fechamento
       // acessível.
       await userEvent.keyboard('{Escape}');
-      await esperarFechado();
+      await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final, e o que esta story existe
       // para mostrar é o painel SEM o X no canto.
       await expect(await abrir(canvasElement)).toBeVisible();
@@ -191,7 +191,7 @@ export const WithCloseButtonHidden: Story = {
 // Espião do modo controlado. Vive fora do `render` para que a play alcance as
 // chamadas — spy criado dentro do render é inalcançável e deixa a aba Actions
 // vazia. `mockClear()` no início da play zera o que a execução anterior deixou.
-const espiaoControlado = fn();
+const spyControlled = fn();
 
 export const Controlled: Story = {
   parameters: {
@@ -247,7 +247,7 @@ export const Controlled: Story = {
       onOpenChange: (open) => {
         isOpen = open;
         externalBtn.dataset.open = String(open);
-        espiaoControlado(open);
+        spyControlled(open);
       },
     });
 
@@ -264,7 +264,7 @@ export const Controlled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const externo = canvas.getByRole('button', { name: /Open programmatically/i });
-    espiaoControlado.mockClear();
+    spyControlled.mockClear();
 
     await step('Nasce fechado, porque o valor externo diz que sim', async () => {
       await expect(painel()).toBeNull();
@@ -282,15 +282,15 @@ export const Controlled: Story = {
 
     await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {
       if (!painel()) await userEvent.click(externo);
-      await expect(await esperarAberto()).toBeVisible();
-      await expect(espiaoControlado).toHaveBeenLastCalledWith(true);
+      await expect(await waitForOpen()).toBeVisible();
+      await expect(spyControlled).toHaveBeenLastCalledWith(true);
       await expect(externo).toHaveAttribute('data-open', 'true');
     });
 
     await step('Escape também passa pelo dono do estado', async () => {
       await userEvent.keyboard('{Escape}');
-      await esperarFechado();
-      await expect(espiaoControlado).toHaveBeenLastCalledWith(false);
+      await waitForClosed();
+      await expect(spyControlled).toHaveBeenLastCalledWith(false);
       await expect(externo).toHaveAttribute('data-open', 'false');
     });
   },

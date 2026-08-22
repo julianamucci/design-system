@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { Skeleton } from './index';
-import { caixaDesenhada } from '@shared/testing/skeleton-probe';
+import { boxDesenhada } from '@shared/testing/skeleton-probe';
 import {
   skeletonCirculoSource,
   skeletonLineTextSource,
@@ -51,7 +51,7 @@ export const Rectangle: Story = {
     const sk = canvasElement.querySelector('[data-slot="skeleton"]') as HTMLElement;
 
     await step('Preenche a caixa do container na proporção de mídia', async () => {
-      const caixa = caixaDesenhada(sk);
+      const caixa = boxDesenhada(sk);
       await expect(caixa.largura).toBeGreaterThan(0);
       await expect(Math.abs(caixa.largura / caixa.altura - 16 / 9)).toBeLessThan(0.05);
     });
@@ -89,14 +89,14 @@ export const Circle: Story = {
     await step('Quadrado com medida vinda do tema', async () => {
       // Sem número mágico: a medida sai de `--size-*`, que muda por densidade.
       // Afirmar "40px" amarraria o teste ao tema padrão.
-      const caixa = caixaDesenhada(sk);
+      const caixa = boxDesenhada(sk);
       await expect(caixa.largura).toBeGreaterThan(0);
       await expect(caixa.quadrado).toBe(true);
     });
 
     await step('O raio é circular, não o raio padrão do sistema', async () => {
       // Comportamento, não classe: o que importa é o círculo desenhado.
-      await expect(caixaDesenhada(sk).circular).toBe(true);
+      await expect(boxDesenhada(sk).circular).toBe(true);
     });
   },
 };

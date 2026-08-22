@@ -14,9 +14,9 @@ import {
   CommandSeparator,
 } from "./command";
 import {
-  commandComAtalhosSource,
-  commandComoComboboxSource,
-  commandPaletaSource,
+  commandWithShortcutsSource,
+  commandAsComboboxSource,
+  commandPaletteSource,
   commandSource,
 } from "./command.source";
 import {
@@ -166,7 +166,7 @@ export const WithShortcuts: Story = {
   // O atalho dentro do comando é a peça do exemplo, e o snippet do `meta` não
   // a mostra.
   parameters: {
-    docs: { source: { transform: commandComAtalhosSource } },
+    docs: { source: { transform: commandWithShortcutsSource } },
   },
   render: () => (
     <div className="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
@@ -224,9 +224,9 @@ export const WithShortcuts: Story = {
       const boxComando = atalho
         .closest<HTMLElement>('[data-slot="command-item"]')!
         .getBoundingClientRect();
-      const caixaAtalho = atalho.getBoundingClientRect();
-      await expect(boxComando.right - caixaAtalho.right).toBeLessThan(
-        caixaAtalho.left - boxComando.left,
+      const boxShortcut = atalho.getBoundingClientRect();
+      await expect(boxComando.right - boxShortcut.right).toBeLessThan(
+        boxShortcut.left - boxComando.left,
       );
     });
   },
@@ -318,7 +318,7 @@ export const AsCombobox: Story = {
     a11y: { test: 'off' },
     // Paleta dentro de Popover, com estado e o papel de combobox escrito à mão:
     // é outra composição, não a paleta solta do `meta`.
-    docs: { source: { transform: commandComoComboboxSource } },
+    docs: { source: { transform: commandAsComboboxSource } },
   },
   render: () => <ComboboxDemo />,
   play: async ({ canvasElement, step }) => {
@@ -474,7 +474,7 @@ export const CommandPalette: Story = {
     ],
     // Paleta dentro do CommandDialog, com o atalho global registrado por quem
     // consome: nada disso cabe no snippet da paleta solta.
-    docs: { source: { transform: commandPaletaSource } },
+    docs: { source: { transform: commandPaletteSource } },
   },
   render: () => <CommandPaletteDemo />,
   play: async ({ canvasElement, step }) => {
@@ -483,7 +483,7 @@ export const CommandPalette: Story = {
 
     const aberta = () => within(document.body).queryByRole("dialog");
     // Idempotente: só clica se a paleta não estiver aberta.
-    const abrirPorBotao = async (): Promise<HTMLElement> => {
+    const buttonOpen = async (): Promise<HTMLElement> => {
       if (!aberta()) await userEvent.click(gatilho);
       return await waitForPortal("dialog");
     };
@@ -503,11 +503,11 @@ export const CommandPalette: Story = {
     });
 
     await step("O diálogo é nomeado por um título que só o leitor de tela vê", async () => {
-      const painel = await abrirPorBotao();
-      const idTitulo = painel.getAttribute("aria-labelledby");
-      await expect(idTitulo).toBeTruthy();
+      const painel = await buttonOpen();
+      const idTitle = painel.getAttribute("aria-labelledby");
+      await expect(idTitle).toBeTruthy();
 
-      const titulo = document.getElementById(idTitulo!)!;
+      const titulo = document.getElementById(idTitle!)!;
       await expect(titulo).toHaveTextContent("Command Palette");
       // O título mora DENTRO do painel: fora dele ficaria no fluxo da página
       // mesmo com a paleta fechada.
@@ -518,7 +518,7 @@ export const CommandPalette: Story = {
     });
 
     await step("O foco vai direto para a busca", async () => {
-      const painel = await abrirPorBotao();
+      const painel = await buttonOpen();
       const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
         await expect(busca).toHaveFocus();
@@ -531,7 +531,7 @@ export const CommandPalette: Story = {
     });
 
     await step("Escape fecha o diálogo e devolve o foco ao gatilho", async () => {
-      await abrirPorBotao();
+      await buttonOpen();
       await userEvent.keyboard("{Escape}");
 
       await waitForPortalGone("dialog");

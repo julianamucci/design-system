@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -33,7 +33,7 @@ export type AlertSnippetOptions = {
 };
 
 const TITLE_DEFAULT = 'Atenção';
-const DESCRICAO_PADRAO = 'Suas alterações serão aplicadas na próxima sessão.';
+const DESCRIPTION_DEFAULT = 'Suas alterações serão aplicadas na próxima sessão.';
 
 /**
  * O ícone que acompanha cada variante. `default` não tem cor semântica, então
@@ -56,7 +56,7 @@ type PartesDoAlerta = {
 function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
   const variant = o.variant ?? 'default';
   const title = o.title ?? TITLE_DEFAULT;
-  const description = o.description ?? DESCRICAO_PADRAO;
+  const description = o.description ?? DESCRIPTION_DEFAULT;
   const icone = o.icon === undefined ? variantIcon(variant) : o.icon;
 
   const linhas = opcoes([
@@ -94,7 +94,7 @@ function partesDoAlerta(o: AlertSnippetOptions): PartesDoAlerta {
 /** A chamada real de `createAlert` e a composição que a story monta em cima. */
 export function alertSnippet(o: AlertSnippetOptions = {}): string {
   const { nomes, criacao, corpo } = partesDoAlerta(o);
-  return snippet(importar('alert', ...nomes), [criacao, ...corpo].join('\n'), montar('alerta'));
+  return snippet(importing('alert', ...nomes), [criacao, ...corpo].join('\n'), montar('alerta'));
 }
 
 /**
@@ -126,7 +126,7 @@ export function alertWithActionSnippet(o: AlertWithActionSnippetOptions = {}): s
   const { nomes, criacao, corpo } = partesDoAlerta(o);
 
   return snippet(
-    [importar('alert', ...nomes, 'createAlertAction'), importar('button', 'createButton')].join(
+    [importing('alert', ...nomes, 'createAlertAction'), importing('button', 'createButton')].join(
       '\n',
     ),
     [criacao, ...corpo].join('\n'),
@@ -154,7 +154,7 @@ export function alertEmRegiaoVivaSnippet(o: AlertSnippetOptions = {}): string {
   const { nomes, criacao, corpo } = partesDoAlerta(o);
 
   return snippet(
-    importar('alert', ...nomes),
+    importing('alert', ...nomes),
     `const regiao = document.createElement('div');
 regiao.setAttribute('aria-live', 'polite');
 document.querySelector('#app')?.append(regiao);`,

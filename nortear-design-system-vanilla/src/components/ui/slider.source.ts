@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -76,7 +76,7 @@ export function sliderSnippet(o: SliderSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    importar('slider', 'createSlider'),
+    importing('slider', 'createSlider'),
     `const controle = ${chamada('createSlider', linhas)};`,
     montar('controle'),
   );

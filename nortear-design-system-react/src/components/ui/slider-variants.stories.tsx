@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, within, expect } from "storybook/test";
 import { Slider } from "./slider";
-import { sliderFaixaSource, sliderSource, sliderVerticalSource } from "./slider.source";
-import { alcasDoSlider, trilhoDoSlider, valorDaAlca } from "@shared/testing/slider-probe";
+import { sliderRangeSource, sliderSource, sliderVerticalSource } from "./slider.source";
+import { alcasDoSlider, sliderTrack, handleValue } from "@shared/testing/slider-probe";
 
 const meta = {
   title: "UI/Slider/Variants",
@@ -52,7 +52,7 @@ export const Single: Story = {
     await step("Um único thumb com aria-valuenow=50", async () => {
       const thumbs = canvas.getAllByRole("slider");
       await expect(thumbs).toHaveLength(1);
-      await expect(valorDaAlca(thumbs[0])).toBe(50);
+      await expect(handleValue(thumbs[0])).toBe(50);
     });
   },
 };
@@ -63,7 +63,7 @@ export const Range: Story = {
     docs: {
       // A segunda alça não vem de prop: vem do `value` chegar com DOIS números,
       // e o meta imprime o array de um elemento do Playground.
-      source: { transform: sliderFaixaSource },
+      source: { transform: sliderRangeSource },
     },
   },
   render: function RangeRender() {
@@ -92,14 +92,14 @@ export const Range: Story = {
     await step("Dois thumbs com valores 20 e 80", async () => {
       const thumbs = canvas.getAllByRole("slider");
       await expect(thumbs).toHaveLength(2);
-      await expect(valorDaAlca(thumbs[0])).toBe(20);
-      await expect(valorDaAlca(thumbs[1])).toBe(80);
+      await expect(handleValue(thumbs[0])).toBe(20);
+      await expect(handleValue(thumbs[1])).toBe(80);
     });
 
     await step("O preenchimento é o miolo entre as duas alças", async () => {
       // Afirma o desenho, não o dado: 80 − 20 do trilho, com folga de 1pt para
       // o arredondamento de subpixel.
-      const trilho = trilhoDoSlider(canvasElement);
+      const trilho = sliderTrack(canvasElement);
       const faixa = canvasElement.querySelector<HTMLElement>('[data-slot="slider-range"]')!;
       const pct =
         (faixa.getBoundingClientRect().width / trilho.getBoundingClientRect().width) * 100;
@@ -145,16 +145,16 @@ export const Vertical: Story = {
     await step("O trilho fica em pé", async () => {
       // A orientação não pode ser só um atributo: a geometria tem que virar
       // junto, senão o controle continua deitado dizendo que está de pé.
-      const caixa = trilhoDoSlider(canvasElement).getBoundingClientRect();
+      const caixa = sliderTrack(canvasElement).getBoundingClientRect();
       await expect(caixa.height).toBeGreaterThan(caixa.width);
     });
 
     await step("ArrowUp incrementa no eixo vertical", async () => {
       const alca = alcasDoSlider(canvasElement)[0];
-      const antes = valorDaAlca(alca);
+      const antes = handleValue(alca);
       canvas.getByRole("slider").focus();
       await userEvent.keyboard("{ArrowUp}");
-      await expect(valorDaAlca(alcasDoSlider(canvasElement)[0])).toBe(Math.min(100, antes + 1));
+      await expect(handleValue(alcasDoSlider(canvasElement)[0])).toBe(Math.min(100, antes + 1));
     });
   },
 };

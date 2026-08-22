@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/sidebar';
 import { LayoutDashboard, Blocks, Palette, Settings, User } from 'lucide-vue-next';
 import {
-  sidebarCarregandoSource,
+  sidebarLoadingSource,
   sidebarExpandidaSource,
   sidebarFixaSource,
   sidebarGavetaMovelSource,
@@ -355,7 +355,7 @@ export const LoadingSkeleton: Story = {
     docs: {
       // O item de menu dá lugar ao placeholder — é outra composição, não outro
       // valor de prop.
-      source: { transform: sidebarCarregandoSource },
+      source: { transform: sidebarLoadingSource },
       description: { story: 'SidebarMenuSkeleton com showIcon=true: placeholder de carregamento para itens de menu.' },
     },
   },

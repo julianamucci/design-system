@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
   radioGroupCartoesSource,
-  radioGroupComDescricaoSource,
-  radioGroupDesabilitadoSource,
-  radioGroupEmFormularioSource,
+  radioGroupWithDescriptionSource,
+  radioGroupDisabledSource,
+  formRadioGroupSource,
   radioGroupFieldsetSource,
   radioGroupHorizontalSource,
   radioGroupInvalidoSource,
-  radioGroupItemDesabilitadoSource,
-  radioGroupMarcadoSource,
-  radioGroupPadraoSource,
+  radioGroupItemDisabledSource,
+  radioGroupCheckedSource,
+  radioGroupDefaultSource,
   radioGroupPagamentoSource,
   radioGroupSource,
   radioGroupVerticalSource,
@@ -98,7 +98,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a descrição fica fora do rótulo e chega ao item por aria-describedby', () => {
-    const saida = radioGroupComDescricaoSource();
+    const saida = radioGroupWithDescriptionSource();
     expect(saida).toContain('aria-describedby="pagamento-pix-desc"');
     expect(saida).toContain('<p id="pagamento-pix-desc" class="nds-text-caption nds-text-muted-foreground">');
     // Dentro do <Label> a descrição entraria no nome acessível do rádio.
@@ -108,13 +108,13 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('o padrão não marca nada', () => {
-    const saida = radioGroupPadraoSource();
+    const saida = radioGroupDefaultSource();
     expect(saida).not.toContain('default-value');
     expect(saida).not.toContain('Boleto bancário');
   });
 
   it('o marcado sai de um valor inicial que casa com o value de um item', () => {
-    const saida = radioGroupMarcadoSource();
+    const saida = radioGroupCheckedSource();
     expect(saida).toContain('<RadioGroup default-value="pix" aria-label="Forma de pagamento">');
     expect(saida).toContain('<RadioGroupItem value="pix"');
     // Não há atributo de "marcado" no item: quem marca é a raiz.
@@ -122,10 +122,10 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o bloqueio do grupo mora na raiz e o do item mora no item', () => {
-    expect(radioGroupDesabilitadoSource()).toContain(
+    expect(radioGroupDisabledSource()).toContain(
       '<RadioGroup disabled aria-label="Forma de pagamento">',
     );
-    const item = radioGroupItemDesabilitadoSource();
+    const item = radioGroupItemDisabledSource();
     expect(item).not.toContain('<RadioGroup disabled');
     expect(item).toContain('<RadioGroupItem value="pix" id="pagamento-pix" disabled />');
     // A opção apagada precisa dizer por que está apagada.
@@ -156,7 +156,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('no formulário o grupo é obrigatório e o envio é interceptado', () => {
-    const saida = radioGroupEmFormularioSource();
+    const saida = formRadioGroupSource();
     expect(saida).toContain('@submit.prevent');
     expect(saida).toContain('required');
     expect(saida).toContain(`import { Button } from '@/components/ui/button'`);
@@ -180,15 +180,15 @@ describe('largura de canvas não entra no snippet', () => {
       radioGroupSource(),
       radioGroupVerticalSource(),
       radioGroupHorizontalSource(),
-      radioGroupComDescricaoSource(),
-      radioGroupPadraoSource(),
-      radioGroupMarcadoSource(),
-      radioGroupDesabilitadoSource(),
-      radioGroupItemDesabilitadoSource(),
+      radioGroupWithDescriptionSource(),
+      radioGroupDefaultSource(),
+      radioGroupCheckedSource(),
+      radioGroupDisabledSource(),
+      radioGroupItemDisabledSource(),
       radioGroupInvalidoSource(),
       radioGroupPagamentoSource(),
       radioGroupFieldsetSource(),
-      radioGroupEmFormularioSource(),
+      formRadioGroupSource(),
       radioGroupCartoesSource(),
     ];
     for (const saida of todas) expect(saida).not.toContain('style=');

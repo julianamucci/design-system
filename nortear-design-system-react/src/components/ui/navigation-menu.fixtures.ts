@@ -12,14 +12,14 @@
 import { userEvent, waitFor } from "storybook/test";
 
 /** O popup compartilhado — um só para a barra inteira, portalizado no body. */
-export const SELETOR_POPUP = ".nds-navigation-menu-popup";
+export const SELECTOR_POPUP = ".nds-navigation-menu-popup";
 
 /** A raiz visual do painel do item ativo, instanciada dentro do viewport. */
-export const SELETOR_PAINEL = ".nds-navigation-menu-popup-content";
+export const SELECTOR_PANEL = ".nds-navigation-menu-popup-content";
 
 /** O popup aberto, ou `null`. Consulta o documento inteiro, não o canvas. */
-export function popupAberto(): HTMLElement | null {
-  return document.body.querySelector<HTMLElement>(SELETOR_POPUP);
+export function popupOpen(): HTMLElement | null {
+  return document.body.querySelector<HTMLElement>(SELECTOR_POPUP);
 }
 
 /**
@@ -36,10 +36,10 @@ export function popupAberto(): HTMLElement | null {
  *   · o conteúdo é instanciado pelo viewport num segundo passo, então o popup
  *     pode existir com o painel ainda vazio.
  */
-export async function esperarPainel(timeout = 4000): Promise<HTMLElement> {
+export async function waitForPanel(timeout = 4000): Promise<HTMLElement> {
   return await waitFor(
     () => {
-      const popup = popupAberto();
+      const popup = popupOpen();
       if (!popup) throw new Error("painel: o popup ainda não montou");
       if (!popup.hasAttribute("data-side")) {
         throw new Error("painel: ainda sem data-side, o floating-ui não mediu");
@@ -49,7 +49,7 @@ export async function esperarPainel(timeout = 4000): Promise<HTMLElement> {
       if (opacidade !== "1" && Number.parseFloat(opacidade) < 0.9) {
         throw new Error(`painel: opacity=${opacidade}, ainda animando`);
       }
-      const painel = popup.querySelector<HTMLElement>(SELETOR_PAINEL);
+      const painel = popup.querySelector<HTMLElement>(SELECTOR_PANEL);
       if (!painel) throw new Error("painel: o viewport ainda não instanciou o conteúdo");
       return painel;
     },
@@ -58,10 +58,10 @@ export async function esperarPainel(timeout = 4000): Promise<HTMLElement> {
 }
 
 /** Espera o painel sumir — prova Escape, clique fora e escolha de destino. */
-export async function esperarPainelSumir(timeout = 3000): Promise<void> {
+export async function waitForPanelVanish(timeout = 3000): Promise<void> {
   await waitFor(
     () => {
-      if (popupAberto()) throw new Error("painel ainda aberto");
+      if (popupOpen()) throw new Error("painel ainda aberto");
     },
     { timeout, interval: 50 },
   );
@@ -76,10 +76,10 @@ export async function esperarPainelSumir(timeout = 3000): Promise<void> {
  */
 export async function abrir(gatilho: HTMLElement): Promise<HTMLElement> {
   if (gatilho.getAttribute("aria-expanded") !== "true") await userEvent.click(gatilho);
-  return await esperarPainel();
+  return await waitForPanel();
 }
 
 export async function fechar(gatilho: HTMLElement): Promise<void> {
   if (gatilho.getAttribute("aria-expanded") === "true") await userEvent.click(gatilho);
-  await esperarPainelSumir();
+  await waitForPanelVanish();
 }

@@ -88,7 +88,7 @@ export const Playground: Story = {
      * Qual slide está à vista não depende do alinhamento do Embla, nem do
      * respiro entre slides, nem da cauda da animação — e é o que a story diz.
      */
-    const slideEmFoco = () => {
+    const focusSlide = () => {
       const v = viewport.getBoundingClientRect();
       let melhor = 0;
       let maior = -Infinity;
@@ -103,7 +103,7 @@ export const Playground: Story = {
     };
 
     const emSlide = async (i: number) =>
-      waitFor(async () => { await expect(slideEmFoco()).toBe(i); }, { timeout: 4000 });
+      waitFor(async () => { await expect(focusSlide()).toBe(i); }, { timeout: 4000 });
 
     await step('A região tem papel, roledescription e nome acessível', async () => {
       // Sem nome a região não vira marco de navegação: o leitor anuncia

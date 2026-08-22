@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
 import {
-  radioGroupComDescricaoSource,
+  radioGroupWithDescriptionSource,
   radioGroupHorizontalSource,
   radioGroupSource,
   radioGroupVerticalSource,
@@ -133,7 +133,7 @@ export const WithDescription: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: radioGroupComDescricaoSource },
+      source: { transform: radioGroupWithDescriptionSource },
       description: {
         story: 'Cada item com Label e descrição auxiliar abaixo. Item recebe `aria-describedby`.',
       },

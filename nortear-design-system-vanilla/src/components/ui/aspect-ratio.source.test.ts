@@ -3,7 +3,7 @@ import {
   aspectRatioSnippet,
   aspectRatioSource,
   aspectRatioSourceWith,
-  expressaoDeProporcao,
+  ratioExpressao,
 } from './aspect-ratio.source';
 
 describe('aspectRatioSnippet', () => {
@@ -27,7 +27,7 @@ describe('aspectRatioSnippet', () => {
 
   it('não arredonda a proporção que veio do control', () => {
     // Arredondar mudaria a caixa: o valor sai como entrou.
-    expect(expressaoDeProporcao(1.85)).toBe('1.85');
+    expect(ratioExpressao(1.85)).toBe('1.85');
     expect(aspectRatioSnippet({ ratio: 1.85 })).toContain('ratio: 1.85');
   });
 

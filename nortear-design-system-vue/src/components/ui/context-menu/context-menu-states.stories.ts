@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
-import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
-import { AREA_CLICK_DIREITO, abrirPorGesto, brilho } from '@shared/testing/context-menu-area';
+import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
+import { AREA_CLICK_DIREITO, gestoOpen, brilho } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
   ContextMenu,
@@ -15,11 +15,11 @@ import {
   ContextMenuCheckboxItem,
 } from '@/components/ui/context-menu';
 import {
-  contextMenuItemDesabilitadoSource,
-  contextMenuItemDestrutivoSource,
+  contextMenuItemDisabledSource,
+  contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
-  contextMenuMarcacaoMistaSource,
-  contextMenuPaletaEscuraSource,
+  contextMenuMarkupMistaSource,
+  contextMenuPaletteDarkSource,
 } from './context-menu.source';
 
 const meta: Meta = {
@@ -30,9 +30,9 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
-      source: { transform: contextMenuItemDesabilitadoSource },
+      source: { transform: contextMenuItemDisabledSource },
       description: {
         component:
           'Estados do Context Menu: item desabilitado, item recuado, item destrutivo e a paleta escura.',
@@ -92,7 +92,7 @@ export const ItemDisabled: Story = {
     const area = () => within(canvasElement).getByTestId('area');
 
     await step('O item desabilitado é anunciado como tal', async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo('off').getAttribute('aria-disabled')).toBe('true');
       await expect(alvo('perigo-off').getAttribute('aria-disabled')).toBe('true');
     });
@@ -155,7 +155,7 @@ export const ItemInset: Story = {
       // O que o recuo entrega é o alinhamento com itens que têm indicador à
       // esquerda. Afirmar o nome da classe não protegeria isso: a classe pode
       // continuar aplicada com a regra vazia.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       const recuo = parseFloat(getComputedStyle(alvo('recuado')).paddingLeft);
       const normal = parseFloat(getComputedStyle(alvo('normal')).paddingLeft);
       await expect(recuo).toBeGreaterThan(normal);
@@ -179,7 +179,7 @@ export const ItemDestructive: Story = {
     covers: ['functional.item10', 'visual.item2'],
     // Aqui nenhum item está desabilitado: o assunto é só a ação perigosa, com o
     // rótulo por extenso que ela pede.
-    docs: { source: { transform: contextMenuItemDestrutivoSource } },
+    docs: { source: { transform: contextMenuItemDestructiveSource } },
   },
   render: () => ({
     components: componentes,
@@ -211,7 +211,7 @@ export const ItemDestructive: Story = {
     await step('O item destrutivo se declara pelo atributo, não só pela cor', async () => {
       // `data-variant` é o que o CSS lê e o que a auditoria compara entre
       // stacks; a cor é consequência dele.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo('perigo').getAttribute('data-variant')).toBe('destructive');
       await expect(alvo('normal').getAttribute('data-variant')).toBe('default');
     });
@@ -229,7 +229,7 @@ export const ItemDestructive: Story = {
 // Story SEM interação, de propósito. O que ela declara vale na montagem, e o
 // primeiro clique num item misto o resolve para marcado — uma play que clicasse
 // aqui mediria outro estado no REPLAY do painel Interactions, que reexecuta no
-// mesmo DOM. Abrir o menu é idempotente: `abrirPorGesto` parte da área, não do
+// mesmo DOM. Abrir o menu é idempotente: `gestoOpen` parte da área, não do
 // estado anterior.
 
 export const CheckboxIndeterminate: Story = {
@@ -237,7 +237,7 @@ export const CheckboxIndeterminate: Story = {
     covers: ['functional.item11'],
     // Itens de MARCAÇÃO nos três estados, e não itens de ação: outra peça e
     // outra prop.
-    docs: { source: { transform: contextMenuMarcacaoMistaSource } },
+    docs: { source: { transform: contextMenuMarkupMistaSource } },
   },
   render: () => ({
     components: componentes,
@@ -257,7 +257,7 @@ export const CheckboxIndeterminate: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
-    const menu = await abrirPorGesto(area());
+    const menu = await gestoOpen(area());
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
     const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
@@ -295,7 +295,7 @@ export const DarkPalette: Story = {
     covers: ['visual.item6'],
     // Menu curto, sem grupo nem atalho: o que a story mostra é que a paleta
     // troca sem uma linha de markup mudar.
-    docs: { source: { transform: contextMenuPaletaEscuraSource } },
+    docs: { source: { transform: contextMenuPaletteDarkSource } },
     // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
     themes: { themeOverride: 'dark' },
@@ -328,7 +328,7 @@ export const DarkPalette: Story = {
     await step('O menu é mais escuro que o texto que ele recebe', async () => {
       // Prova que a paleta trocou de verdade: com os tokens do claro esta
       // relação se inverte, e a asserção acusa.
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       const cs = getComputedStyle(menu);
       await expect(brilho(cs.backgroundColor)).toBeLessThan(brilho(cs.color));
     });

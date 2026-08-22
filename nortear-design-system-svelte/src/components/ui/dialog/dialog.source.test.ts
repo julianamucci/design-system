@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dialogAcaoDestrutivaSource,
-  dialogComFormularioSource,
-  dialogComRolagemSource,
+  dialogActionDestructiveSource,
+  dialogWithFormSource,
+  dialogWithScrollSource,
   dialogConfirmarEmailSource,
   dialogEditarPerfilSource,
   dialogPreviaDeMidiaSource,
-  dialogSemRodapeSource,
+  dialogNoFooterSource,
   dialogSource,
 } from './dialog.source';
 
@@ -85,27 +85,27 @@ describe('dialogSource', () => {
 
 describe('transforms das stories de composição', () => {
   it('a composição com formulário traz os campos rotulados e o envio da ação primária', () => {
-    const saida = dialogComFormularioSource();
+    const saida = dialogWithFormSource();
     expect(saida).toContain('from "@/components/ui/input"');
     expect(saida).toContain('<Label for="dialog-name">Nome</Label>');
     expect(saida).toContain('onsubmit={salvar}');
   });
 
   it('a composição com rolagem marca a região rolável como alcançável e nomeada', () => {
-    const saida = dialogComRolagemSource();
+    const saida = dialogWithScrollSource();
     expect(saida).toContain('nds-dialog-body-scroll');
     expect(saida).toContain('tabindex="0"');
     expect(saida).toContain('aria-label="Conteúdo rolável"');
   });
 
   it('a composição sem rodapé não importa nem escreve as peças de rodapé', () => {
-    const saida = dialogSemRodapeSource();
+    const saida = dialogNoFooterSource();
     expect(saida).not.toContain('DialogFooter');
     expect(saida).not.toContain('DialogClose');
   });
 
   it('a ação destrutiva sai na variante destrutiva, e só ela', () => {
-    const saida = dialogAcaoDestrutivaSource();
+    const saida = dialogActionDestructiveSource();
     expect(saida).toContain('<Button variant="destructive">Remover item</Button>');
     expect(saida.match(/variant="destructive"/g)).toHaveLength(1);
   });

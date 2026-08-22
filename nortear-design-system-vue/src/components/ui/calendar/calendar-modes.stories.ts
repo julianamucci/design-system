@@ -3,9 +3,9 @@ import { userEvent, within, expect } from 'storybook/test';
 import { ref } from 'vue';
 import { CalendarDate } from '@internationalized/date';
 import {
-  ESTADOS_COM_TEXTO_LEGIVEL,
-  descreverContraste,
-  medirContrasteDoCalendario,
+  STATES_WITH_TEXT_LEGIVEL,
+  describeContrast,
+  calendarMeasureContrast,
 } from '@shared/testing/calendar-probe';
 import { Calendar } from './index';
 import { RangeCalendar } from '@/components/ui/range-calendar';
@@ -222,11 +222,11 @@ export const Range: Story = {
       // `aria-pressed`, e `.dark .nds-button-ghost[aria-pressed="true"]` vencia o
       // fundo `--primary` por especificidade. O número do dia sumia — no escuro,
       // que o axe não vê.
-      const medidas = medirContrasteDoCalendario(canvasElement).filter(
-        (m) => m.presente && (ESTADOS_COM_TEXTO_LEGIVEL as readonly string[]).includes(m.estado),
+      const medidas = calendarMeasureContrast(canvasElement).filter(
+        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
       );
       await expect(medidas.length).toBeGreaterThan(0);
-      const reprovadas = medidas.filter((m) => (m.razao ?? 0) < 4.5).map(descreverContraste);
+      const reprovadas = medidas.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
       await expect(reprovadas).toEqual([]);
     });
   },

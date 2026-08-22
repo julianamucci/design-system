@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  breadcrumbComReticenciasSource,
+  breadcrumbWithEllipsisSource,
   breadcrumbLinkCustomizadoSource,
   breadcrumbResponsivoSource,
-  breadcrumbSeparadorCustomizadoSource,
-  breadcrumbSimplesSource,
+  breadcrumbSeparatorCustomizadoSource,
+  breadcrumbSimpleSource,
   breadcrumbSource,
 } from './breadcrumb.source';
 
@@ -68,14 +68,14 @@ import {
 
 describe('transforms das stories de configuração', () => {
   it('a trilha simples tem dois níveis e um separador só', () => {
-    const saida = breadcrumbSimplesSource();
+    const saida = breadcrumbSimpleSource();
     expect(saida.split('<BreadcrumbSeparator />').length - 1).toBe(1);
     expect(saida).toContain('<BreadcrumbPage>Componentes</BreadcrumbPage>');
     expect(saida).not.toContain('/componentes');
   });
 
   it('as reticências ocupam um item e trazem o próprio import', () => {
-    const saida = breadcrumbComReticenciasSource();
+    const saida = breadcrumbWithEllipsisSource();
     expect(saida).toContain('  BreadcrumbEllipsis,');
     expect(saida).toContain(`      <BreadcrumbEllipsis label="Mais páginas" />`);
     // Quatro níveis: início, o colapsado, o intermediário e a página atual.
@@ -83,7 +83,7 @@ describe('transforms das stories de configuração', () => {
   });
 
   it('o separador customizado leva conteúdo no slot, e não fecha em si mesmo', () => {
-    const saida = breadcrumbSeparadorCustomizadoSource();
+    const saida = breadcrumbSeparatorCustomizadoSource();
     expect(saida).toContain(`import { Slash } from 'lucide-vue-next'`);
     expect(saida).toContain('<BreadcrumbSeparator><Slash /></BreadcrumbSeparator>');
     // O chevron padrão é justamente o que sai daqui.

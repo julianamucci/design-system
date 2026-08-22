@@ -34,12 +34,12 @@ import { Button } from "@/components/ui/button";`;
  * A largura máxima faz parte da lição: o Card é um bloco fluido e, solto na
  * página, ele se estica de ponta a ponta.
  */
-const LARGURA = 'class="nds-w-sm"';
+const WIDTH = 'class="nds-w-sm"';
 
 /** Playground: a unidade completa — cabeçalho, corpo e rodapé de ações. */
 export function cardSource(_gerado?: string, ctx?: { args?: Partial<CardArgs> }): string {
   const { size = 'default' } = ctx?.args ?? {};
-  const props = attrs(LARGURA, size === 'sm' ? 'size="sm"' : '');
+  const props = attrs(WIDTH, size === 'sm' ? 'size="sm"' : '');
 
   return svelteSnippet(
     IMPORT_WITH_FOOTER,
@@ -67,7 +67,7 @@ export function cardSource(_gerado?: string, ctx?: { args?: Partial<CardArgs> })
 export function cardDefaultSource(): string {
   return svelteSnippet(
     IMPORT_BASE,
-    `<Card ${LARGURA}>
+    `<Card ${WIDTH}>
   <CardHeader>
     <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
     <CardDescription>Estrutura ergonômica com ajuste de altura e apoio lombar.</CardDescription>
@@ -100,7 +100,7 @@ export function cardPequenoSource(): string {
  * foco e a ativação por teclado vêm do elemento nativo, e o Tab acha um destino
  * só.
  */
-export function cardClicavelSource(): string {
+export function cardClickableSource(): string {
   return svelteSnippet(
     IMPORT_BASE,
     `<a
@@ -125,10 +125,10 @@ export function cardClicavelSource(): string {
  * Com rodapé: ele precisa ser filho DIRETO do Card — é o que aciona a borda
  * superior e a retirada do padding inferior.
  */
-export function cardComRodapeSource(): string {
+export function cardWithFooterSource(): string {
   return svelteSnippet(
     IMPORT_WITH_FOOTER,
-    `<Card ${LARGURA}>
+    `<Card ${WIDTH}>
   <CardHeader>
     <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
     <CardDescription>Produto atualizado em 12/04.</CardDescription>
@@ -148,7 +148,7 @@ export function cardComRodapeSource(): string {
  * Com ação no cabeçalho: a ação mora DENTRO do CardHeader, depois da descrição.
  * O alinhamento à direita vem da grade do cabeçalho, não de classe própria.
  */
-export function cardComAcaoSource(): string {
+export function cardWithActionSource(): string {
   return svelteSnippet(
     `import {
   Card,
@@ -159,7 +159,7 @@ export function cardComAcaoSource(): string {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";`,
-    `<Card ${LARGURA}>
+    `<Card ${WIDTH}>
   <CardHeader>
     <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
     <CardDescription>Em estoque</CardDescription>
@@ -180,10 +180,10 @@ import { Button } from "@/components/ui/button";`,
  * Com imagem: primeiro filho do Card. O raio do topo e a retirada do padding
  * superior saem do CSS — não é preciso passar classe nenhuma para isso.
  */
-export function cardComImagemSource(): string {
+export function cardWithImageSource(): string {
   return svelteSnippet(
     IMPORT_BASE,
-    `<Card ${LARGURA}>
+    `<Card ${WIDTH}>
   <img
     src="/produtos/cadeira-gamer-pro.jpg"
     alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
@@ -202,7 +202,7 @@ export function cardComImagemSource(): string {
 }
 
 /** Exemplo de catálogo: imagem, status na ação do cabeçalho e ações no rodapé. */
-export function cardDeProdutoSource(): string {
+export function productCardSource(): string {
   return svelteSnippet(
     `import {
   Card,
@@ -215,7 +215,7 @@ export function cardDeProdutoSource(): string {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";`,
-    `<Card ${LARGURA}>
+    `<Card ${WIDTH}>
   <img
     src="/produtos/cadeira-gamer-pro.jpg"
     alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
@@ -277,7 +277,7 @@ export function cardDePerfilSource(): string {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";`,
-    `<Card ${LARGURA}>
+    `<Card ${WIDTH}>
   <CardHeader class="nds-cluster" data-align="center" data-spacing="sm">
     <Avatar>
       <AvatarFallback>MR</AvatarFallback>

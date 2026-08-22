@@ -3,9 +3,9 @@ import { userEvent, within, expect } from "storybook/test";
 import { AlignLeft, AlignCenter, AlignRight } from "lucide-react";
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 import {
-  toggleGroupDesabilitadoSource,
+  toggleGroupDisabledSource,
   toggleGroupExclusivoSource,
-  toggleGroupItemDesabilitadoSource,
+  toggleGroupItemDisabledSource,
   toggleGroupSource,
   toggleGroupEmptySource,
 } from "./toggle-group.source";
@@ -66,8 +66,8 @@ export const Default: Story = {
     await step("Mesmo sem seleção, um item entra na ordem de tabulação", async () => {
       // Roving tabindex não depende de haver item ativo: sem isto o grupo
       // inteiro sairia da navegação por Tab.
-      const naOrdem = canvas.getAllByRole("button").filter((b) => b.tabIndex === 0);
-      await expect(naOrdem).toHaveLength(1);
+      const inOrder = canvas.getAllByRole("button").filter((b) => b.tabIndex === 0);
+      await expect(inOrder).toHaveLength(1);
     });
   },
 };
@@ -190,7 +190,7 @@ export const Disabled: Story = {
           'Grupo desabilitado via disabled — todos os items ficam disabled, opacity-50 e pointer-events-none. Clique não altera aria-pressed.',
       },
       // A prop mora no grupo e desce por herança até cada item.
-      source: { transform: toggleGroupDesabilitadoSource },
+      source: { transform: toggleGroupDisabledSource },
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -234,7 +234,7 @@ export const DisabledItem: Story = {
           "Item individual desabilitado — apenas 'Centralizar' está disabled, enquanto os demais permanecem interativos.",
       },
       // A prop desce para o ITEM: é o oposto de desabilitar o grupo.
-      source: { transform: toggleGroupItemDesabilitadoSource },
+      source: { transform: toggleGroupItemDisabledSource },
     },
   },
   play: async ({ canvasElement, step }) => {

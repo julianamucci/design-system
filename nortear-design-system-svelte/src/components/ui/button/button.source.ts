@@ -25,7 +25,7 @@ function texto(rotulo: string, ...partes: Array<string | ''>): string {
  * genérica de ícone: é a única que acompanha o tamanho do botão pelos
  * modificadores. Sem o rótulo, a ação fica sem nome acessível.
  */
-function soIcone(icone: string, modulo: string, size: string, rotulo: string): string {
+function soIcon(icone: string, modulo: string, size: string, rotulo: string): string {
   return svelteSnippet(
     `${IMPORT}
 import ${icone} from "@lucide/svelte/icons/${modulo}";`,
@@ -50,12 +50,12 @@ export function buttonSource(_gerado?: string, ctx?: { args?: Partial<ButtonArgs
 /* ---------------------------------------------------------------- variantes */
 
 /** Variante primária: a ação principal da seção. */
-export function buttonPadraoSource(): string {
+export function buttonDefaultSource(): string {
   return texto('Salvar');
 }
 
 /** Variante destrutiva: ação irreversível. */
-export function buttonDestrutivoSource(): string {
+export function buttonDestructiveSource(): string {
   return texto('Excluir conta', 'variant="destructive"');
 }
 
@@ -82,49 +82,49 @@ export function buttonLinkSource(): string {
 /* ----------------------------------------------------------------- tamanhos */
 
 /** Tamanho padrão: nenhuma prop de tamanho é preciso escrever. */
-export function buttonTamanhoPadraoSource(): string {
+export function buttonSizeDefaultSource(): string {
   return texto('Padrão');
 }
 
 /** Tamanho mínimo: linha de tabela e chips de filtro. */
-export function buttonTamanhoXsSource(): string {
+export function buttonSizeXsSource(): string {
   return texto('Mínimo', 'size="xs"');
 }
 
 /** Tamanho pequeno: barras de ferramentas e áreas densas. */
-export function buttonTamanhoSmSource(): string {
+export function buttonSizeSmSource(): string {
   return texto('Pequeno', 'size="sm"');
 }
 
 /** Tamanho grande: chamadas de ação em destaque. */
-export function buttonTamanhoLgSource(): string {
+export function buttonSizeLgSource(): string {
   return texto('Grande', 'size="lg"');
 }
 
 /** Botão de ícone no tamanho padrão. */
-export function buttonIconeSource(): string {
-  return soIcone('Plus', 'plus', 'icon', 'Adicionar item');
+export function buttonIconSource(): string {
+  return soIcon('Plus', 'plus', 'icon', 'Adicionar item');
 }
 
 /** Botão de ícone mínimo. */
-export function buttonIconeXsSource(): string {
-  return soIcone('Plus', 'plus', 'icon-xs', 'Adicionar item');
+export function buttonIconXsSource(): string {
+  return soIcon('Plus', 'plus', 'icon-xs', 'Adicionar item');
 }
 
 /** Botão de ícone pequeno. */
-export function buttonIconeSmSource(): string {
-  return soIcone('Plus', 'plus', 'icon-sm', 'Adicionar item');
+export function buttonIconSmSource(): string {
+  return soIcon('Plus', 'plus', 'icon-sm', 'Adicionar item');
 }
 
 /** Botão de ícone grande. */
-export function buttonIconeLgSource(): string {
-  return soIcone('Plus', 'plus', 'icon-lg', 'Adicionar item');
+export function buttonIconLgSource(): string {
+  return soIcon('Plus', 'plus', 'icon-lg', 'Adicionar item');
 }
 
 /* ------------------------------------------------------------------ estados */
 
 /** Estado desabilitado: sem clique e fora da ordem de tabulação. */
-export function buttonDesabilitadoSource(): string {
+export function buttonDisabledSource(): string {
   return texto('Salvar', 'disabled');
 }
 
@@ -133,7 +133,7 @@ export function buttonDesabilitadoSource(): string {
  * trocado pelo progresso. O giro usa a classe do componente, que tem guarda de
  * movimento reduzido.
  */
-export function buttonCarregandoSource(): string {
+export function buttonLoadingSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import Loader from "@lucide/svelte/icons/loader-circle";`,
@@ -145,7 +145,7 @@ import Loader from "@lucide/svelte/icons/loader-circle";`,
 }
 
 /** Estado de foco por teclado: o anel é do componente, sem prop nenhuma. */
-export function buttonFocoVisivelSource(): string {
+export function buttonFocusVisibleSource(): string {
   return texto('Foco visível');
 }
 
@@ -157,7 +157,7 @@ export function buttonInvalidoSource(): string {
 /* -------------------------------------------------------------- composições */
 
 /** Composição com ícone antes do rótulo. */
-export function buttonComIconeInicialSource(): string {
+export function buttonWithIconInitialSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import Plus from "@lucide/svelte/icons/plus";`,
@@ -169,7 +169,7 @@ import Plus from "@lucide/svelte/icons/plus";`,
 }
 
 /** Composição com ícone depois do rótulo: navegação progressiva. */
-export function buttonComIconeFinalSource(): string {
+export function buttonWithIconFinalSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import ChevronRight from "@lucide/svelte/icons/chevron-right";`,
@@ -181,7 +181,7 @@ import ChevronRight from "@lucide/svelte/icons/chevron-right";`,
 }
 
 /** Composição de variante destrutiva com ícone. */
-export function buttonDestrutivoComIconeSource(): string {
+export function buttonDestructiveWithIconSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import Trash2 from "@lucide/svelte/icons/trash-2";`,
@@ -193,12 +193,12 @@ import Trash2 from "@lucide/svelte/icons/trash-2";`,
 }
 
 /** Composição só com ícone: o rótulo acessível é obrigatório. */
-export function buttonSoIconeSource(): string {
-  return soIcone('Download', 'download', 'icon', 'Baixar arquivo');
+export function buttonSoIconSource(): string {
+  return soIcon('Download', 'download', 'icon', 'Baixar arquivo');
 }
 
 /** Par de ações: a primária fica à direita, e o respiro vem do container. */
-export function buttonParDeAcoesSource(): string {
+export function actionsButtonPairSource(): string {
   return svelteSnippet(
     IMPORT,
     `<div class="nds-cluster" data-spacing="sm">
@@ -209,7 +209,7 @@ export function buttonParDeAcoesSource(): string {
 }
 
 /** Composição navegacional: com destino, o componente renderiza um link. */
-export function buttonComoLinkSource(): string {
+export function buttonAsLinkSource(): string {
   return texto('Ver documentação', 'variant="link"', 'href="#docs"');
 }
 

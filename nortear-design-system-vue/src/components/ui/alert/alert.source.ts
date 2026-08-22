@@ -173,7 +173,7 @@ const avisoVisivel = ref(true)`,
  * então o Tab chega nele e Enter e Espaço o acionam. Escrever um handler de
  * tecla aqui ensinaria um remendo que o componente não precisa.
  */
-export function keyboardSourceAlertDismissivel(): string {
+export function keyboardAlertDismissivelSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Info')}`,
     alerta(
@@ -188,7 +188,7 @@ export function keyboardSourceAlertDismissivel(): string {
  * exemplo é só título e texto corrido: nenhum ícone competindo pela atenção,
  * nenhuma cor no texto corrido.
  */
-export function alertContrasteSource(): string {
+export function alertContrastSource(): string {
   const variantes = ['default', 'destructive', 'success', 'warning', 'info'];
   const blocos = variantes.map((v) =>
     alerta(
@@ -216,7 +216,7 @@ export function alertCompletoSource(): string {
  * Sem título: a descrição sozinha basta para uma frase curta. Não há prop a
  * desligar — o título simplesmente não é escrito.
  */
-export function alertSemTituloSource(): string {
+export function alertNoTitleSource(): string {
   return vueSnippet(
     `${IMPORT.replace(', AlertTitle', '')}\n${importIcon('Info')}`,
     alerta([], corpo('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
@@ -224,7 +224,7 @@ export function alertSemTituloSource(): string {
 }
 
 /** Sem ícone: o alerta passa a coluna única, e o título assume a identificação. */
-export function alertSemIconeSource(): string {
+export function alertNoIconSource(): string {
   return vueSnippet(
     IMPORT,
     alerta([], corpo(null, 'Atenção', 'Suas alterações serão aplicadas na próxima sessão.')),
@@ -238,7 +238,7 @@ export function alertSemIconeSource(): string {
  * a página carrega. O padrão continua sendo `alert`, assertivo, para a mensagem
  * que SURGE — e é o contraste entre os dois que o exemplo mostra.
  */
-export function alertSemAnuncioSource(): string {
+export function alertNoAnnouncementSource(): string {
   return vueSnippet(
     `${IMPORT}\n${importIcon('Info')}`,
     `<div class="nds-stack" data-spacing="md">
@@ -294,7 +294,7 @@ export function alertWithIconSource(): string {
  * Ação dentro do alerta: ela vive num slot próprio, que é quem a posiciona.
  * O botão é secundário de propósito — o assunto do alerta é a mensagem.
  */
-export function alertComAcaoSource(): string {
+export function alertWithActionSource(): string {
   return vueSnippet(
     `${IMPORT_WITH_ACTION}
 import { Button } from '@/components/ui/button'
@@ -315,7 +315,7 @@ ${importIcon('Info')}`,
  * Classe do consumidor: ela SOMA às do design system em qualquer subcomponente,
  * nunca substitui. É o que permite ajustar o encaixe sem reescrever o alerta.
  */
-export function alertClasseAdicionalSource(): string {
+export function alertClassNameAdicionalSource(): string {
   return vueSnippet(
     `${IMPORT_WITH_ACTION}
 import { Button } from '@/components/ui/button'

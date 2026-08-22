@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  badgeComIconeSource,
-  badgeContadorSource,
-  badgeDestrutivoSource,
-  buttonSourceBadge,
+  badgeWithIconSource,
+  badgeCounterSource,
+  badgeDestructiveSource,
+  buttonBadgeSource,
   badgeEmLinkSource,
   badgeOutlineSource,
   badgeSecundarioSource,
@@ -33,7 +33,7 @@ describe('badgeSource', () => {
 describe('transforms das stories de variante', () => {
   it('cada variante leva o próprio rótulo, e não o do playground', () => {
     expect(badgeSecundarioSource()).toContain('<Badge variant="secondary">Beta</Badge>');
-    expect(badgeDestrutivoSource()).toContain('<Badge variant="destructive">Urgente</Badge>');
+    expect(badgeDestructiveSource()).toContain('<Badge variant="destructive">Urgente</Badge>');
     expect(badgeOutlineSource()).toContain('<Badge variant="outline">Rascunho</Badge>');
   });
 
@@ -49,13 +49,13 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de composição', () => {
   it('o ícone entra decorativo e marcado para o ajuste de padding', () => {
-    const saida = badgeComIconeSource();
+    const saida = badgeWithIconSource();
     expect(saida).toContain('@lucide/svelte/icons/check');
     expect(saida).toContain('<Check aria-hidden="true" data-icon="inline-start" />');
   });
 
   it('o contador é nomeado pelo container, e não pelo número solto', () => {
-    const saida = badgeContadorSource();
+    const saida = badgeCounterSource();
     expect(saida).toContain('role="status"');
     expect(saida).toContain('aria-label="12 notificações não lidas"');
     expect(saida).toContain('<Badge variant="destructive">12</Badge>');
@@ -70,7 +70,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('no clique, quem recebe o foco é o botão que envolve a etiqueta', () => {
-    const saida = buttonSourceBadge();
+    const saida = buttonBadgeSource();
     expect(saida).toContain('type="button"');
     expect(saida).toContain('<Badge variant="outline">Acessibilidade</Badge>');
   });

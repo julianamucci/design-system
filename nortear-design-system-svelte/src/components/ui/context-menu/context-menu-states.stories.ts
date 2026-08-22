@@ -3,15 +3,15 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import { Root as ContextMenu } from './index';
 import ContextMenuEstadoStory from './ContextMenuEstadoStory.svelte';
-import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
-import { abrirPorGesto, brilho } from '@shared/testing/context-menu-area';
+import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
+import { gestoOpen, brilho } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
-  contextMenuItemDesabilitadoSource,
-  contextMenuItemDestrutivoSource,
+  contextMenuItemDisabledSource,
+  contextMenuItemDestructiveSource,
   contextMenuItemRecuadoSource,
-  contextMenuMarcacaoMistaSource,
-  contextMenuPaletaEscuraSource,
+  contextMenuMarkupMistaSource,
+  contextMenuPaletteDarkSource,
   contextMenuSource,
 } from './context-menu.source';
 
@@ -23,7 +23,7 @@ const meta: Meta = {
     controls: { disable: true },
     actions: { disable: true },
     layout: 'centered',
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       // Cascateia para todas as stories do arquivo; cada uma sobrescreve com a
       // sua própria composição logo abaixo.
@@ -46,14 +46,14 @@ const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="
 export const ItemDisabled: Story = {
   parameters: {
     covers: ['functional.item9', 'accessibility.item6', 'visual.item5'],
-    docs: { source: { transform: contextMenuItemDesabilitadoSource } },
+    docs: { source: { transform: contextMenuItemDisabledSource } },
   },
   render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'disabled' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
 
     await step('O item desabilitado é anunciado como tal', async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo('off').getAttribute('aria-disabled')).toBe('true');
       await expect(alvo('perigo-off').getAttribute('aria-disabled')).toBe('true');
     });
@@ -96,7 +96,7 @@ export const ItemInset: Story = {
       // O que o recuo entrega é o alinhamento com itens que têm indicador à
       // esquerda. Afirmar o nome da classe não protegeria isso: a classe pode
       // continuar aplicada com a regra vazia.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       const recuo = parseFloat(getComputedStyle(alvo('recuado')).paddingLeft);
       const normal = parseFloat(getComputedStyle(alvo('normal')).paddingLeft);
       await expect(recuo).toBeGreaterThan(normal);
@@ -118,7 +118,7 @@ export const ItemDestructive: Story = {
   name: 'Destructive item',
   parameters: {
     covers: ['functional.item10', 'visual.item2'],
-    docs: { source: { transform: contextMenuItemDestrutivoSource } },
+    docs: { source: { transform: contextMenuItemDestructiveSource } },
   },
   render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'destructive' } }),
   play: async ({ canvasElement, step }) => {
@@ -127,7 +127,7 @@ export const ItemDestructive: Story = {
     await step('O item destrutivo se declara pelo atributo, não só pela cor', async () => {
       // `data-variant` é o que o CSS lê e o que a auditoria compara entre
       // stacks; a cor é consequência dele.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo('perigo').getAttribute('data-variant')).toBe('destructive');
       await expect(alvo('normal').getAttribute('data-variant')).toBe('default');
     });
@@ -145,18 +145,18 @@ export const ItemDestructive: Story = {
 // Story SEM interação, de propósito. O que ela declara vale na montagem, e o
 // primeiro clique num item misto o resolve para marcado — uma play que clicasse
 // aqui mediria outro estado no REPLAY do painel Interactions, que reexecuta no
-// mesmo DOM. Abrir o menu é idempotente: `abrirPorGesto` parte da área, não do
+// mesmo DOM. Abrir o menu é idempotente: `gestoOpen` parte da área, não do
 // estado anterior.
 
 export const CheckboxIndeterminate: Story = {
   parameters: {
     covers: ['functional.item11'],
-    docs: { source: { transform: contextMenuMarcacaoMistaSource } },
+    docs: { source: { transform: contextMenuMarkupMistaSource } },
   },
   render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'indeterminate' } }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
-    const menu = await abrirPorGesto(area());
+    const menu = await gestoOpen(area());
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
     const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
@@ -195,7 +195,7 @@ export const DarkPalette: Story = {
     // `themeOverride` é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, sem precisar de limpeza manual que envenenaria a foto vizinha.
     themes: { themeOverride: 'dark' },
-    docs: { source: { transform: contextMenuPaletaEscuraSource } },
+    docs: { source: { transform: contextMenuPaletteDarkSource } },
   },
   render: () => ({ Component: ContextMenuEstadoStory, props: { estado: 'dark' } }),
   play: async ({ canvasElement, step }) => {
@@ -210,7 +210,7 @@ export const DarkPalette: Story = {
     await step('O menu é mais escuro que o texto que ele recebe', async () => {
       // Prova que a paleta trocou de verdade: com os tokens do claro esta
       // relação se inverte, e a asserção acusa.
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       const cs = getComputedStyle(menu);
       await expect(brilho(cs.backgroundColor)).toBeLessThan(brilho(cs.color));
     });

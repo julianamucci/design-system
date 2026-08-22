@@ -14,7 +14,7 @@ import {
 } from './table';
 import { NdsTableDocs } from '@/components/docs/TableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { FATURAS, TOTAL } from './table.fixtures';
+import { INVOICES, TOTAL } from './table.fixtures';
 
 type TableArgs = {
   captionVisivel: boolean;
@@ -147,7 +147,7 @@ export const Playground: Story = {
     docs: { source: { transform: playgroundSource } },
   },
   render: (args) => ({
-    props: { ...args, faturas: FATURAS },
+    props: { ...args, faturas: INVOICES },
     template: `
       <div ndsTableWrapper>
         <table ndsTable>
@@ -197,7 +197,7 @@ export const Playground: Story = {
       await expect(tabela).toHaveAttribute('data-slot', 'table');
       await expect(tabela.querySelector('thead')).toHaveAttribute('data-slot', 'table-header');
       await expect(tabela.querySelector('tbody')).toHaveAttribute('data-slot', 'table-body');
-      await expect(tabela.querySelectorAll('tbody tr').length).toBe(FATURAS.length);
+      await expect(tabela.querySelectorAll('tbody tr').length).toBe(INVOICES.length);
     });
 
     await step('A região rolável é alcançável por teclado', async () => {

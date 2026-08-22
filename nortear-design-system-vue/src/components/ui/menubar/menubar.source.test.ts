@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  menubarAbertoSource,
+  menubarOpenSource,
   menubarCheckboxCheckedSource,
   menubarCheckboxMistoSource,
   menubarWithShortcutsSource,
@@ -11,7 +11,7 @@ import {
   menubarClosedSource,
   menubarItemBloqueadoSource,
   menubarItemDefaultSource,
-  menubarItemDestrutivoSource,
+  menubarItemDestructiveSource,
   menubarSource,
 } from './menubar.source';
 
@@ -120,7 +120,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o item de perigo declara a ênfase e ganha um separador antes', () => {
-    const saida = menubarItemDestrutivoSource();
+    const saida = menubarItemDestructiveSource();
     expect(saida).toContain('<MenubarSeparator />');
     expect(saida).toContain('<MenubarItem variant="destructive">Descartar alterações</MenubarItem>');
     // O item vizinho continua neutro: a ênfase é do item, não do menu.
@@ -137,7 +137,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('aberto na montagem é presença de `default-value` casando com o menu', () => {
-    const saida = menubarAbertoSource();
+    const saida = menubarOpenSource();
     expect(saida).toContain('<Menubar default-value="file">');
     expect(saida).toContain('<MenubarMenu value="file">');
   });
@@ -218,9 +218,9 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
   const todas = [
     menubarSource,
     menubarItemDefaultSource,
-    menubarItemDestrutivoSource,
+    menubarItemDestructiveSource,
     menubarClosedSource,
-    menubarAbertoSource,
+    menubarOpenSource,
     menubarItemBloqueadoSource,
     menubarCheckboxCheckedSource,
     menubarCheckboxMistoSource,

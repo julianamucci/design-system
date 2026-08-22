@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  groupSnippetAvatar,
+  groupAvatarSnippet,
   avatarGranularSnippet,
   avatarSnippet,
   avatarSource,
@@ -106,7 +106,7 @@ describe('avatarGranularSnippet', () => {
 
 describe('avatarEmGrupoSnippet', () => {
   it('compõe a fila com as três fábricas, e o contador fecha a lista', () => {
-    const código = groupSnippetAvatar({ 'aria-label': 'Participantes', excedente: '+3' });
+    const código = groupAvatarSnippet({ 'aria-label': 'Participantes', excedente: '+3' });
     expect(código).toContain('createAvatarGroup');
     // O snippet ensina o nome canônico: o painel Code é onde alguém copia a
     // chamada, e um apelido depreciado ali vira o nome que o produto adota.

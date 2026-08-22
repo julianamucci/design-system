@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
-  alertDialogAbertoSource,
+  alertDialogOpenSource,
   alertDialogCanceladoSource,
-  alertDialogClasseExtraSource,
-  alertDialogComIconeSource,
+  alertDialogClassNameExtraSource,
+  alertDialogWithIconSource,
   alertDialogConfirmadoSource,
-  alertDialogControladoSource,
-  alertDialogDescricaoLongaSource,
+  alertDialogControlledSource,
+  alertDialogDescriptionLongaSource,
   alertDialogDestructiveSource,
   alertDialogClosedSource,
-  alertDialogNeutroSource,
-  alertDialogSemDescricaoSource,
+  alertDialogNeutralSource,
+  alertDialogNoDescriptionSource,
   alertDialogSource,
 } from './alert-dialog.source';
 
@@ -125,7 +125,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o aberto vem de um atributo na raiz, não de clique na play', () => {
-    expect(alertDialogAbertoSource()).toContain('<AlertDialog default-open>');
+    expect(alertDialogOpenSource()).toContain('<AlertDialog default-open>');
   });
 
   it('o confirmado põe o handler na ação, e o fechamento não é escrito', () => {
@@ -146,7 +146,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o controlado leva o estado e o gatilho para fora do componente', () => {
-    const saida = alertDialogControladoSource();
+    const saida = alertDialogControlledSource();
     expect(saida).toContain(`import { ref } from 'vue'`);
     expect(saida).toContain('const aberto = ref(false)');
     expect(saida).toContain(':open="aberto"');
@@ -160,11 +160,11 @@ describe('transforms das stories de estado', () => {
 describe('transforms das stories de composição', () => {
   it('a ordem do rodapé é Cancelar antes da ação em toda composição', () => {
     const funcoes = [
-      alertDialogComIconeSource,
+      alertDialogWithIconSource,
       alertDialogDestructiveSource,
-      alertDialogNeutroSource,
-      alertDialogSemDescricaoSource,
-      alertDialogClasseExtraSource,
+      alertDialogNeutralSource,
+      alertDialogNoDescriptionSource,
+      alertDialogClassNameExtraSource,
     ];
     for (const fn of funcoes) {
       const saida = fn();
@@ -184,14 +184,14 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a confirmação neutra não pinta nada de destrutivo', () => {
-    const saida = alertDialogNeutroSource();
+    const saida = alertDialogNeutralSource();
     expect(saida).not.toContain('destructive');
     expect(saida).toContain('<Button variant="outline">Sair da conta</Button>');
     expect(saida).toContain('<AlertDialogAction>Sair</AlertDialogAction>');
   });
 
   it('a descrição longa quebra em bloco, e não numa linha só', () => {
-    const saida = alertDialogDescricaoLongaSource();
+    const saida = alertDialogDescriptionLongaSource();
     expect(saida).toContain(
       `        <AlertDialogDescription>
           Todos os seus dados, arquivos enviados, integrações ativas e o histórico`,
@@ -200,7 +200,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('sem descrição, o subcomponente some do import junto com a marcação', () => {
-    const saida = alertDialogSemDescricaoSource();
+    const saida = alertDialogNoDescriptionSource();
     expect(saida).not.toContain('AlertDialogDescription');
     // Nada de atributo escrito à mão para compensar: o painel deixa de anunciar
     // descrição sozinho.
@@ -209,7 +209,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a classe extra é de LAYOUT, no painel e no bloco de mídia', () => {
-    const saida = alertDialogClasseExtraSource();
+    const saida = alertDialogClassNameExtraSource();
     expect(saida).toContain('<AlertDialogContent class="nds-overflow-hidden">');
     expect(saida).toContain('<AlertDialogMedia class="nds-shrink-0">');
     // Largura máxima e espaçamento do painel não são extensíveis por classe: o
@@ -218,7 +218,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o ícone da mídia é decorativo — quem nomeia o painel é o título', () => {
-    const saida = alertDialogComIconeSource();
+    const saida = alertDialogWithIconSource();
     expect(saida).toContain('<TriangleAlert aria-hidden="true" />');
     expect(saida).not.toContain('aria-label');
   });

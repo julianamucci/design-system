@@ -4,10 +4,10 @@ import { within, expect } from 'storybook/test';
 import { Badge } from './index';
 import { Check, Bell } from 'lucide-vue-next';
 import {
-  badgeComIconeSource,
-  badgeComoBotaoSource,
-  badgeComoLinkSource,
-  badgeContadorSource,
+  badgeWithIconSource,
+  badgeAsButtonSource,
+  badgeAsLinkSource,
+  badgeCounterSource,
 } from './badge.source';
 
 const meta = {
@@ -20,7 +20,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: badgeComIconeSource },
+      source: { transform: badgeWithIconSource },
       description: {
         component:
           'Configuracoes contextuais do Badge: combinado com ícone, como contador numérico, envolvido em <a> para navegação ou em <button> para trigger clicável.',
@@ -71,7 +71,7 @@ export const CountBadge: Story = {
     covers: ['visual.item3'],
     // O assunto está FORA do badge: o contêiner com papel e rótulo que dá
     // sentido ao número. A do meta mostra o badge sozinho.
-    docs: { source: { transform: badgeContadorSource } },
+    docs: { source: { transform: badgeCounterSource } },
   },
   render: () => ({
     components: { Badge, Bell },
@@ -110,7 +110,7 @@ export const AsLink: Story = {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
     // Quem é focável é o elemento de FORA: o snippet precisa mostrar o link em
     // volta, que a do meta não tem.
-    docs: { source: { transform: badgeComoLinkSource } },
+    docs: { source: { transform: badgeAsLinkSource } },
   },
   render: () => ({
     components: { Badge },
@@ -142,7 +142,7 @@ export const AsButton: Story = {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
     // Mesma divisão de papéis do link, com o botão por fora — e o snippet troca
     // o rótulo de exemplo, que aqui cita o nome de outra stack.
-    docs: { source: { transform: badgeComoBotaoSource } },
+    docs: { source: { transform: badgeAsButtonSource } },
   },
   render: () => ({
     components: { Badge },

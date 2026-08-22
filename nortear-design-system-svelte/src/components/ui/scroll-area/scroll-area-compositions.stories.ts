@@ -5,7 +5,7 @@ import { transbordo } from '@shared/testing/scroll-area-probe';
 import ScrollAreaStory from './ScrollAreaStory.svelte';
 import {
   scrollAreaHorizontalSource,
-  sidebarSourceScrollAreaList,
+  sidebarScrollAreaListSource,
   scrollAreaSource,
   scrollAreaTableAmplaSource,
 } from './scroll-area.source';
@@ -35,7 +35,7 @@ type Story = StoryObj;
 
 export const SidebarList: Story = {
   parameters: {
-    docs: { source: { transform: sidebarSourceScrollAreaList } },
+    docs: { source: { transform: sidebarScrollAreaListSource } },
   },
   render: () => ({
     Component: ScrollAreaStory,

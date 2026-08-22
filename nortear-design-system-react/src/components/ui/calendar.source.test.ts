@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
   calendarBloqueadoSource,
-  calendarComPopoverSource,
-  outsideSourceCalendarDays,
-  calendarDoisMesesSource,
+  calendarWithPopoverSource,
+  outsideCalendarDaysSource,
+  calendarDoisMonthsSource,
   calendarHojeSource,
   calendarIntervaloWithMioloSource,
   calendarIntervaloSource,
-  calendarLegendaSeletoresSource,
-  calendarLegendaTextoSource,
+  calendarCaptionSelectorsSource,
+  calendarCaptionTextSource,
   calendarMultiplasSource,
   calendarNumberWeekSource,
   calendarSource,
@@ -22,13 +22,13 @@ const TODOS: Array<() => string> = [
   calendarIntervaloSource,
   calendarBloqueadoSource,
   calendarHojeSource,
-  outsideSourceCalendarDays,
+  outsideCalendarDaysSource,
   calendarIntervaloWithMioloSource,
-  calendarLegendaTextoSource,
-  calendarLegendaSeletoresSource,
-  calendarDoisMesesSource,
+  calendarCaptionTextSource,
+  calendarCaptionSelectorsSource,
+  calendarDoisMonthsSource,
   calendarNumberWeekSource,
-  calendarComPopoverSource,
+  calendarWithPopoverSource,
 ];
 
 describe('calendarSource', () => {
@@ -109,8 +109,8 @@ describe('calendarSource', () => {
   });
 
   it('não deixa o espião de onSelect virar código no painel', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
-    const args = { onSelect: espiao } as unknown as Partial<CalendarArgs>;
+    const spy = () => 'CORPO_DO_MOCK';
+    const args = { onSelect: spy } as unknown as Partial<CalendarArgs>;
     const saida = calendarSource(undefined, { args });
     expect(saida).toContain('setData(escolhida)');
     expect(saida).not.toContain('CORPO_DO_MOCK');
@@ -145,7 +145,7 @@ describe('estados', () => {
   });
 
   it('a prop de dias de fora aparece porque é o assunto da story', () => {
-    expect(outsideSourceCalendarDays()).toContain('showOutsideDays');
+    expect(outsideCalendarDaysSource()).toContain('showOutsideDays');
   });
 
   it('o intervalo com miolo cabe num mês só', () => {
@@ -157,12 +157,12 @@ describe('estados', () => {
 
 describe('layouts', () => {
   it('as duas formas de legenda são escritas por extenso, e se contrastam', () => {
-    expect(calendarLegendaTextoSource()).toContain('captionLayout="label"');
-    expect(calendarLegendaSeletoresSource()).toContain('captionLayout="dropdown"');
+    expect(calendarCaptionTextSource()).toContain('captionLayout="label"');
+    expect(calendarCaptionSelectorsSource()).toContain('captionLayout="dropdown"');
   });
 
   it('dois meses só fazem sentido com o modo de intervalo', () => {
-    const saida = calendarDoisMesesSource();
+    const saida = calendarDoisMonthsSource();
     expect(saida).toContain('numberOfMonths={2}');
     expect(saida).toContain('mode="range"');
   });
@@ -174,7 +174,7 @@ describe('layouts', () => {
 
 describe('composição com popover', () => {
   it('as três peças vêm do design system, e nenhuma é andaime da story', () => {
-    const saida = calendarComPopoverSource();
+    const saida = calendarWithPopoverSource();
     expect(saida).toContain('from "@/components/ui/popover"');
     expect(saida).toContain('from "@/components/ui/button"');
     expect(saida).toContain('from "@/components/ui/calendar"');
@@ -184,7 +184,7 @@ describe('composição com popover', () => {
   });
 
   it('o rótulo do gatilho acompanha a escolha, e escolher fecha o painel', () => {
-    const saida = calendarComPopoverSource();
+    const saida = calendarWithPopoverSource();
     expect(saida).toContain('const [aberto, setAberto] = useState(false);');
     expect(saida).toContain('open={aberto}');
     expect(saida).toContain('onOpenChange={setAberto}');

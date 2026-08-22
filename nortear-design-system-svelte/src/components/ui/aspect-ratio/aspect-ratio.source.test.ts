@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { aspectRatioEmGradeSource, aspectRatioSource } from './aspect-ratio.source';
+import { gridAspectRatioSource, aspectRatioSource } from './aspect-ratio.source';
 
 describe('aspectRatioSource', () => {
   it('sem args, entrega a forma canônica com a proporção escrita como fração', () => {
@@ -74,7 +74,7 @@ describe('aspectRatioSource', () => {
 
 describe('aspectRatioEmGradeSource', () => {
   it('a grade repete a mesma proporção em larguras diferentes', () => {
-    const saida = aspectRatioEmGradeSource();
+    const saida = gridAspectRatioSource();
     expect(saida).toContain('nds-grid');
     expect(saida).toContain('<AspectRatio ratio={4 / 3}>');
     expect(saida).toContain('{#each imagens as imagem (imagem.src)}');

@@ -35,7 +35,7 @@ export type AlertDialogArgs = {
  * `Cancelar` vem ANTES da ação no documento: é a ordem que o rodapé empilha em
  * tela estreita e a que o teclado percorre primeiro.
  */
-type Composicao = {
+type Composition = {
   raiz?: Array<string | false>;
   gatilho?: { rotulo: string; variante?: string };
   painel?: string;
@@ -47,7 +47,7 @@ type Composicao = {
 };
 
 /** Import do design system, com só os subcomponentes que a composição usa. */
-function importDialog(c: Composicao): string {
+function importDialog(c: Composition): string {
   const nomes = [
     'AlertDialog',
     'AlertDialogAction',
@@ -65,7 +65,7 @@ function importDialog(c: Composicao): string {
 }
 
 /** Texto de bloco quebra em linhas próprias; frase curta fica na mesma linha. */
-function comTexto(tag: string, atributos: string, conteudo: string, recuo: number): string {
+function withText(tag: string, atributos: string, conteudo: string, recuo: number): string {
   const p = ' '.repeat(recuo);
   if (!conteudo.includes('\n')) {
     return `${p}<${tag}${atributos}>${conteudo}</${tag}>`;
@@ -73,7 +73,7 @@ function comTexto(tag: string, atributos: string, conteudo: string, recuo: numbe
   return `${p}<${tag}${atributos}>\n${indentar(conteudo, recuo + 2)}\n${p}</${tag}>`;
 }
 
-function dialogo(c: Composicao): string {
+function dialogo(c: Composition): string {
   const linhas: string[] = [`<AlertDialog${attrs(...(c.raiz ?? []))}>`];
 
   if (c.gatilho) {
@@ -98,8 +98,8 @@ function dialogo(c: Composicao): string {
     );
   }
 
-  linhas.push(comTexto('AlertDialogTitle', '', c.titulo, 6));
-  if (c.descricao) linhas.push(comTexto('AlertDialogDescription', '', c.descricao, 6));
+  linhas.push(withText('AlertDialogTitle', '', c.titulo, 6));
+  if (c.descricao) linhas.push(withText('AlertDialogDescription', '', c.descricao, 6));
 
   linhas.push(
     '    </AlertDialogHeader>',
@@ -115,7 +115,7 @@ function dialogo(c: Composicao): string {
 }
 
 /** Monta o SFC a partir da composição, somando os imports de fora do módulo. */
-function snippet(c: Composicao, extras: string[] = [], estado = ''): string {
+function snippet(c: Composition, extras: string[] = [], estado = ''): string {
   const imports = [importDialog(c)];
   if (c.gatilho) imports.push(`import { Button } from '@/components/ui/button'`);
   if (c.midia) imports.push(`import { TriangleAlert } from 'lucide-vue-next'`);
@@ -124,7 +124,7 @@ function snippet(c: Composicao, extras: string[] = [], estado = ''): string {
   return vueSnippet(script, dialogo(c));
 }
 
-const DESCRICAO_PADRAO =
+const DESCRIPTION_DEFAULT =
   'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.';
 
 /**
@@ -146,7 +146,7 @@ export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx
     gatilho: { rotulo: asCode(args.triggerLabel) ?? 'Excluir conta', variante: tom },
     midia: args.showMedia === true ? {} : undefined,
     titulo: asCode(args.title) ?? 'Excluir conta',
-    descricao: asCode(args.description) ?? DESCRICAO_PADRAO,
+    descricao: asCode(args.description) ?? DESCRIPTION_DEFAULT,
     cancelar: { rotulo: asCode(args.cancelLabel) ?? 'Cancelar' },
     acao: { rotulo: asCode(args.actionLabel) ?? 'Excluir', variante: tom },
   });
@@ -173,7 +173,7 @@ export function alertDialogClosedSource(): string {
  * O foco inicial vai para Cancelar, não para a ação destrutiva — é decisão do
  * componente, e não há prop a escrever para obtê-la.
  */
-export function alertDialogAbertoSource(): string {
+export function alertDialogOpenSource(): string {
   return snippet({
     raiz: ['default-open'],
     gatilho: { rotulo: 'Excluir item', variante: 'destructive' },
@@ -233,8 +233,8 @@ function excluirItem() {
  * consome. O par escrito aberto — `:open` mais o evento — mostra os dois lados
  * do vínculo, e é o mesmo que `v-model:open`.
  */
-export function alertDialogControladoSource(): string {
-  const composicao: Composicao = {
+export function alertDialogControlledSource(): string {
+  const composition: Composition = {
     raiz: [':open="aberto"', '@update:open="aberto = $event"'],
     titulo: 'Controlado pelo pai',
     descricao: 'Este diálogo é comandado por estado externo.',
@@ -242,14 +242,14 @@ export function alertDialogControladoSource(): string {
     acao: { rotulo: 'Confirmar', variante: 'destructive', evento: '@click="aberto = false"' },
   };
   return vueSnippet(
-    `${importDialog(composicao)}
+    `${importDialog(composition)}
 import { Button } from '@/components/ui/button'
 import { ref } from 'vue'
 
 const aberto = ref(false)`,
     `<div class="nds-stack" data-spacing="sm">
   <Button variant="destructive" @click="aberto = true">Abrir via estado externo</Button>
-${indentar(dialogo(composicao))}
+${indentar(dialogo(composition))}
 </div>`,
   );
 }
@@ -258,13 +258,13 @@ ${indentar(dialogo(composicao))}
  * Bloco de mídia no topo do cabeçalho. O ícone é decorativo: quem nomeia o
  * painel é o título, por `aria-labelledby`.
  */
-export function alertDialogComIconeSource(): string {
+export function alertDialogWithIconSource(): string {
   return snippet({
     raiz: ['default-open'],
     gatilho: { rotulo: 'Excluir conta', variante: 'destructive' },
     midia: {},
     titulo: 'Excluir conta',
-    descricao: DESCRICAO_PADRAO,
+    descricao: DESCRIPTION_DEFAULT,
     cancelar: { rotulo: 'Cancelar' },
     acao: { rotulo: 'Excluir', variante: 'destructive' },
   });
@@ -280,7 +280,7 @@ export function alertDialogDestructiveSource(): string {
     raiz: ['default-open'],
     gatilho: { rotulo: 'Excluir conta', variante: 'destructive' },
     titulo: 'Excluir conta',
-    descricao: DESCRICAO_PADRAO,
+    descricao: DESCRIPTION_DEFAULT,
     cancelar: { rotulo: 'Cancelar' },
     acao: { rotulo: 'Excluir', variante: 'destructive' },
   });
@@ -290,7 +290,7 @@ export function alertDialogDestructiveSource(): string {
  * Confirmação neutra: nada é irreversível, então a ação fica na variante padrão.
  * Pintar de vermelho uma saída de conta ensinaria alarme onde não há.
  */
-export function alertDialogNeutroSource(): string {
+export function alertDialogNeutralSource(): string {
   return snippet({
     raiz: ['default-open'],
     gatilho: { rotulo: 'Sair da conta', variante: 'outline' },
@@ -305,7 +305,7 @@ export function alertDialogNeutroSource(): string {
  * Descrição longa: o painel cresce em altura e ela continua sendo a descrição
  * acessível. Não há prop de tamanho a ajustar.
  */
-export function alertDialogDescricaoLongaSource(): string {
+export function alertDialogDescriptionLongaSource(): string {
   return snippet({
     raiz: ['default-open'],
     gatilho: { rotulo: 'Excluir conta', variante: 'destructive' },
@@ -326,7 +326,7 @@ fica disponível depois da confirmação.`,
  * não é renderizado, e o painel deixa de anunciar descrição em vez de apontar
  * para um parágrafo que não existe.
  */
-export function alertDialogSemDescricaoSource(): string {
+export function alertDialogNoDescriptionSource(): string {
   return snippet({
     raiz: ['default-open'],
     gatilho: { rotulo: 'Descartar rascunho', variante: 'destructive' },
@@ -343,14 +343,14 @@ export function alertDialogSemDescricaoSource(): string {
  * utilitária — o CSS do componente é carregado depois e vence no empate de
  * especificidade. Por isso o exemplo se limita a recorte e a encolhimento.
  */
-export function alertDialogClasseExtraSource(): string {
+export function alertDialogClassNameExtraSource(): string {
   return snippet({
     raiz: ['default-open'],
     gatilho: { rotulo: 'Excluir conta', variante: 'destructive' },
     painel: 'class="nds-overflow-hidden"',
     midia: { classe: 'class="nds-shrink-0"' },
     titulo: 'Excluir conta',
-    descricao: DESCRICAO_PADRAO,
+    descricao: DESCRIPTION_DEFAULT,
     cancelar: { rotulo: 'Cancelar' },
     acao: { rotulo: 'Excluir', variante: 'destructive' },
   });

@@ -45,10 +45,10 @@ const LADOS = ['top', 'bottom', 'left', 'right'] as const;
 const ALINHAMENTOS = ['start', 'center', 'end'] as const;
 
 /** Import base: só as peças que o snippet correspondente usa. */
-function importDe(...pecas: string[]): string {
-  const lista = ['DropdownMenu', ...pecas].sort();
+function importDe(...parts: string[]): string {
+  const lista = ['DropdownMenu', ...parts].sort();
   return `import {
-${lista.map((peca) => `  ${peca},`).join('\n')}
+${lista.map((part) => `  ${part},`).join('\n')}
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";`;
 }
@@ -163,7 +163,7 @@ export function dropdownMenuItemDestructiveSource(): string {
  * ponteiro no CSS — a seta ainda pousa nele, para que seja anunciado, mas ele
  * não executa. É o padrão de menu da WAI-ARIA.
  */
-export function dropdownMenuItemDesabilitadoSource(): string {
+export function dropdownMenuItemDisabledSource(): string {
   return jsxSnippet(
     importDe('DropdownMenuContent', 'DropdownMenuItem', 'DropdownMenuTrigger'),
     menu(
@@ -182,7 +182,7 @@ export function dropdownMenuItemDesabilitadoSource(): string {
  * nunca voltaria a `false`, e o menu reabriria a cada tentativa de fechar —
  * inclusive pelo Escape.
  */
-export function dropdownMenuControladoSource(): string {
+export function dropdownMenuControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${importDe('DropdownMenuContent', 'DropdownMenuItem', 'DropdownMenuTrigger')}`,
@@ -215,7 +215,7 @@ ${importDe('DropdownMenuContent', 'DropdownMenuItem', 'DropdownMenuTrigger')}`,
  * anuncia "grupo" e a pessoa não sabe de qual bloco se trata —, e não é item de
  * menu: a seta não pousa nele e o typeahead não o traz como resultado.
  */
-export function dropdownMenuComRotuloSource(): string {
+export function dropdownMenuWithLabelSource(): string {
   return jsxSnippet(
     importDe(
       'DropdownMenuContent',
@@ -249,7 +249,7 @@ export function dropdownMenuComRotuloSource(): string {
  * não mexe no outro e o menu NÃO fecha — quem marca uma coluna costuma marcar a
  * próxima. O estado vive fora do componente, que só o reflete.
  */
-export function dropdownMenuComCheckboxSource(): string {
+export function dropdownMenuWithCheckboxSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${importDe(
@@ -290,7 +290,7 @@ ${importDe(
  * o anterior sozinho. O rótulo fica DENTRO do `DropdownMenuRadioGroup`, que
  * também é um grupo para efeito do contexto do primitivo.
  */
-export function dropdownMenuComRadioSource(): string {
+export function dropdownMenuWithRadioSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${importDe(
@@ -327,7 +327,7 @@ ${importDe(
  * AO LADO do primeiro e responder à seta para a direita. A seta indicadora do
  * gatilho vem do próprio componente — não se acrescenta ícone aqui.
  */
-export function dropdownMenuComSubmenuSource(): string {
+export function dropdownMenuWithSubmenuSource(): string {
   return jsxSnippet(
     importDe(
       'DropdownMenuContent',
@@ -358,7 +358,7 @@ export function dropdownMenuComSubmenuSource(): string {
  * item, entra no nome acessível ("Copiar Ctrl C") e por isso nunca leva
  * `aria-hidden`. Quem o empurra para a borda direita é o próprio componente.
  */
-export function dropdownMenuComAtalhosSource(): string {
+export function dropdownMenuWithShortcutsSource(): string {
   return jsxSnippet(
     importDe(
       'DropdownMenuContent',

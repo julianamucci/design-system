@@ -7,7 +7,7 @@ import { Button } from "./button";
 import {
   radioGroupCartoesSource,
   radioGroupControlledSource,
-  radioGroupEmFormularioSource,
+  formRadioGroupSource,
   radioGroupSource,
 } from "./radio-group.source";
 
@@ -98,7 +98,7 @@ export const InForm: Story = {
   parameters: {
     docs: {
       // Sub-composição dentro de <form>, com botão preso à escolha.
-      source: { transform: radioGroupEmFormularioSource },
+      source: { transform: formRadioGroupSource },
       description: {
         story:
           "Integração com <form>. RadioGroup recebe name para serializar no submit. Botão fica desabilitado até uma opção ser escolhida.",

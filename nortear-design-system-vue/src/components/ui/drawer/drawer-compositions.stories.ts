@@ -16,9 +16,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import {
-  drawerComConfirmacaoSource,
-  drawerComFormularioSource,
-  drawerComRolagemSource,
+  drawerWithConfirmSource,
+  drawerWithFormSource,
+  drawerWithScrollSource,
 } from './drawer.source';
 
 const meta = {
@@ -30,7 +30,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: drawerComFormularioSource },
+      source: { transform: drawerWithFormSource },
       description: {
         component:
           'Combinações canônicas: formulário curto com confirmar/cancelar, confirmação de ação destrutiva e corpo mais alto que o painel.',
@@ -128,7 +128,7 @@ export const WithConfirmation: Story = {
     docs: {
       // Sem corpo e com a ação principal na variante de perigo: o snippet do
       // meta mostra o oposto dos dois.
-      source: { transform: drawerComConfirmacaoSource },
+      source: { transform: drawerWithConfirmSource },
       description: {
         story:
           'Mensagem curta e par de ações, com a principal na variante destrutiva. Vale para confirmação reversível; se a ação for realmente bloqueante, o componente é o AlertDialog.',
@@ -179,7 +179,7 @@ export const WithScroll: Story = {
     docs: {
       // O corpo passa a receber uma lista, e é ele quem rola: outro miolo e
       // outro estado no script.
-      source: { transform: drawerComRolagemSource },
+      source: { transform: drawerWithScrollSource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho dentro do teto de altura e o rodapé continua visível — é o que separa "conteúdo longo" de "ação fora de alcance".',
@@ -242,10 +242,10 @@ export const WithScroll: Story = {
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
-      const caixaRodape = rodape.getBoundingClientRect();
-      const caixaPainel = painel.getBoundingClientRect();
-      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
-      await expect(caixaRodape.height).toBeGreaterThan(0);
+      const boxFooter = rodape.getBoundingClientRect();
+      const boxPanel = painel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

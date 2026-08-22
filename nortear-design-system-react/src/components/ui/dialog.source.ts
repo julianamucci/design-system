@@ -30,8 +30,8 @@ const IMPORT_BASE = `import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";`;
 
-const TITULO = 'Editar perfil';
-const DESCRICAO =
+const TITLE = 'Editar perfil';
+const DESCRIPTION =
   'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.';
 
 /**
@@ -41,10 +41,10 @@ const DESCRICAO =
  * `aria-describedby` do painel. Um diálogo sem descrição chega ao leitor de
  * tela como um nome solto, e a pessoa decide sem saber o que está decidindo.
  */
-const CABECALHO = `    <DialogHeader>
-      <DialogTitle>${TITULO}</DialogTitle>
+const HEADER = `    <DialogHeader>
+      <DialogTitle>${TITLE}</DialogTitle>
       <DialogDescription>
-        ${DESCRICAO}
+        ${DESCRIPTION}
       </DialogDescription>
     </DialogHeader>`;
 
@@ -55,13 +55,13 @@ const CABECALHO = `    <DialogHeader>
  * a ordem de leitura e de foco continua sendo a do markup — inverter aqui
  * mudaria o que o teclado alcança primeiro.
  */
-const RODAPE = `    <DialogFooter>
+const FOOTER = `    <DialogFooter>
       <DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>
       <Button>Salvar alterações</Button>
     </DialogFooter>`;
 
 const GATILHO = `  <DialogTrigger render={<Button variant="outline" />}>
-    ${TITULO}
+    ${TITLE}
   </DialogTrigger>`;
 
 function dialogSnippet(
@@ -95,7 +95,7 @@ export const dialogSource: SourceTransform<DialogArgs> = (_gerado, ctx) => {
     propBool('defaultOpen', args.defaultOpen, false),
     propBool('modal', args.modal, true),
   );
-  return dialogSnippet(raiz, '', `${CABECALHO}\n${RODAPE}`);
+  return dialogSnippet(raiz, '', `${HEADER}\n${FOOTER}`);
 };
 
 /**
@@ -105,8 +105,8 @@ export const dialogSource: SourceTransform<DialogArgs> = (_gerado, ctx) => {
  * valor só diz por onde começar. Para abrir a partir de outro fluxo, o caminho
  * é `open` + `onOpenChange`.
  */
-export function dialogAbertoSource(): string {
-  return dialogSnippet(' defaultOpen', '', `${CABECALHO}\n${RODAPE}`);
+export function dialogOpenSource(): string {
+  return dialogSnippet(' defaultOpen', '', `${HEADER}\n${FOOTER}`);
 }
 
 /**
@@ -116,11 +116,11 @@ export function dialogAbertoSource(): string {
  * vez deixaria o diálogo sem fechamento acessível — por isso a prop mora no
  * Content, e não na raiz: ela esconde UM caminho, não todos.
  */
-export function dialogSemBotaoFecharSource(): string {
+export function dialogNoButtonCloseSource(): string {
   return dialogSnippet(
     ' defaultOpen',
     ' showCloseButton={false}',
-    `${CABECALHO}\n${RODAPE}`,
+    `${HEADER}\n${FOOTER}`,
   );
 }
 
@@ -130,11 +130,11 @@ export function dialogSemBotaoFecharSource(): string {
  * `showCloseButton` existe nos dois lugares e faz coisas diferentes — no
  * Content é o X do canto, no Footer é um botão rotulado, abaixo das ações.
  */
-export function dialogFecharNoRodapeSource(): string {
+export function footerDialogCloseSource(): string {
   return dialogSnippet(
     ' defaultOpen',
     ' showCloseButton={false}',
-    `${CABECALHO}
+    `${HEADER}
     <DialogFooter showCloseButton>
       <Button>Salvar alterações</Button>
     </DialogFooter>`,
@@ -148,7 +148,7 @@ export function dialogFecharNoRodapeSource(): string {
  * O X do canto — que o Content traz por padrão — passa a ser a saída visível, e
  * é por isso que ele não pode ser escondido junto.
  */
-export function dialogSemRodapeSource(): string {
+export function dialogNoFooterSource(): string {
   return jsxSnippet(
     IMPORT_BASE.replace('  DialogClose,\n', '').replace('  DialogFooter,\n', ''),
     `<Dialog defaultOpen>
@@ -206,13 +206,13 @@ import { Label } from "@/components/ui/label";`;
  * Cancelar precisa de `type="button"`: dentro de um `<form>` o padrão do
  * navegador é `submit`, então o botão que deveria descartar passaria a enviar.
  */
-export function dialogComFormularioSource(): string {
+export function dialogWithFormSource(): string {
   return jsxSnippet(
     IMPORT_FORM,
     `<Dialog defaultOpen>
 ${GATILHO}
   <DialogContent>
-${CABECALHO}
+${HEADER}
 ${formulario([
   { id: 'dialog-name', rotulo: 'Nome', valor: 'Maria Silva' },
   { id: 'dialog-email', rotulo: 'E-mail', valor: 'maria@exemplo.com', tipo: 'email' },
@@ -234,7 +234,7 @@ export function dialogPerfilSource(): string {
     `<Dialog defaultOpen>
 ${GATILHO}
   <DialogContent className="nds-sm-max-w-md">
-${CABECALHO}
+${HEADER}
 ${formulario([
   { id: 'profile-name', rotulo: 'Nome completo', valor: 'Maria Silva' },
   { id: 'profile-username', rotulo: 'Nome de usuário', valor: '@mariasilva' },
@@ -251,7 +251,7 @@ ${formulario([
  * quem navega só por teclado não consegue rolar a caixa — e precisa de nome,
  * porque `role="region"` sem nome não é anunciada como região nenhuma.
  */
-export function dialogComRolagemSource(): string {
+export function dialogWithScrollSource(): string {
   return jsxSnippet(
     IMPORT_BASE,
     `<Dialog defaultOpen>
@@ -354,7 +354,7 @@ export function dialogWithMidiaSource(): string {
  * mais fecha, porque Escape, overlay e X passam TODOS pelo dono do estado. Sem
  * gatilho próprio: quem abre é outro fluxo da página.
  */
-export function dialogControladoSource(): string {
+export function dialogControlledSource(): string {
   return jsxSnippet(
     `${IMPORT_BASE.replace('  DialogTrigger,\n', '')}
 import { useState } from "react";`,
@@ -367,9 +367,9 @@ import { useState } from "react";`,
       <Dialog open={aberto} onOpenChange={setAberto}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>${TITULO}</DialogTitle>
+            <DialogTitle>${TITLE}</DialogTitle>
             <DialogDescription>
-              ${DESCRICAO}
+              ${DESCRIPTION}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>

@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback } from './index';
 import {
   avatarCarregadoSource,
-  avatarCarregandoSource,
+  avatarLoadingSource,
   avatarNoImageSource,
 } from './avatar.source';
 
@@ -72,7 +72,7 @@ export const Loading: Story = {
   parameters: {
     covers: ['functional.item4'],
     // O prazo no conteúdo de reserva é o assunto, e a do meta não o tem.
-    docs: { source: { transform: avatarCarregandoSource } },
+    docs: { source: { transform: avatarLoadingSource } },
   },
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback },

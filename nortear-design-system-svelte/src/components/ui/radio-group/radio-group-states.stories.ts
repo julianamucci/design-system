@@ -4,11 +4,11 @@ import { userEvent, within, expect } from 'storybook/test';
 import { RadioGroup } from './index';
 import RadioGroupStory from './RadioGroupStory.svelte';
 import {
-  radioGroupDesabilitadoSource,
+  radioGroupDisabledSource,
   radioGroupFocusSource,
   radioGroupInvalidoSource,
-  radioGroupItemDesabilitadoSource,
-  radioGroupPadraoSource,
+  radioGroupItemDisabledSource,
+  radioGroupDefaultSource,
   radioGroupSelectedSource,
   radioGroupSource,
 } from './radio-group.source';
@@ -39,7 +39,7 @@ type Story = StoryObj;
  * Razão de contraste da WCAG entre duas cores computadas opacas. Comparar nome
  * de token não responde a pergunta do critério — a razão responde.
  */
-function razaoContraste(a: string, b: string): number {
+function ratioContrast(a: string, b: string): number {
   const luminancia = (cor: string): number => {
     const [r, g, bl] = cor
       .match(/[\d.]+/g)!
@@ -63,7 +63,7 @@ const defaultOptions = [
 export const Default: Story = {
   parameters: {
     covers: ['visual.item1', 'accessibility.item2'],
-    docs: { source: { transform: radioGroupPadraoSource } },
+    docs: { source: { transform: radioGroupDefaultSource } },
   },
   render: () => ({
     Component: RadioGroupStory,
@@ -83,15 +83,15 @@ export const Default: Story = {
     await step('Borda contra fundo e rótulo contra fundo passam na WCAG', async () => {
       // 3:1 é o piso de componente de interface (1.4.11); 4.5:1 é o de texto
       // normal (1.4.3) — o rótulo tem 14px, não é texto grande.
-      const estiloItem = getComputedStyle(radios[0] as HTMLElement);
+      const styleItem = getComputedStyle(radios[0] as HTMLElement);
       await expect(
-        razaoContraste(estiloItem.borderTopColor, estiloItem.backgroundColor),
+        ratioContrast(styleItem.borderTopColor, styleItem.backgroundColor),
       ).toBeGreaterThanOrEqual(3);
 
       const rotulo = canvas.getByText('Cartão de crédito');
-      const fundoPagina = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
+      const backgroundPage = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
       await expect(
-        razaoContraste(getComputedStyle(rotulo).color, fundoPagina),
+        ratioContrast(getComputedStyle(rotulo).color, backgroundPage),
       ).toBeGreaterThanOrEqual(4.5);
     });
   },
@@ -170,7 +170,7 @@ export const FocusVisible: Story = {
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
-    docs: { source: { transform: radioGroupDesabilitadoSource } },
+    docs: { source: { transform: radioGroupDisabledSource } },
   },
   render: () => ({
     Component: RadioGroupStory,
@@ -198,7 +198,7 @@ export const Disabled: Story = {
 
 export const ItemDisabled: Story = {
   parameters: {
-    docs: { source: { transform: radioGroupItemDesabilitadoSource } },
+    docs: { source: { transform: radioGroupItemDisabledSource } },
   },
   render: () => ({
     Component: RadioGroupStory,

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
-import { slideEmFoco } from './carousel.fixtures';
+import { focusSlide } from './carousel.fixtures';
 import CarouselDocs from '@/components/docs/CarouselDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { carouselSource } from './carousel.source';
@@ -65,10 +65,10 @@ export const Playground: Story = {
     const proximo = () => canvas.getByRole('button', { name: /próximo item/i }) as HTMLButtonElement;
 
     const emSlide = async (i: number) =>
-      waitFor(async () => { await expect(slideEmFoco(canvasElement, eixo)).toBe(i); }, { timeout: 4000 });
+      waitFor(async () => { await expect(focusSlide(canvasElement, eixo)).toBe(i); }, { timeout: 4000 });
 
     /** Volta ao primeiro slide clicando ENQUANTO a seta de voltar estiver viva. */
-    const voltarAoInicio = async () => {
+    const startVoltar = async () => {
       const total = canvas.getAllByRole('group').length;
       for (let passo = 0; passo < total; passo++) {
         const botao = anterior();
@@ -102,7 +102,7 @@ export const Playground: Story = {
       // roda de novo sobre o MESMO DOM, que a rodada anterior deixou no
       // primeiro slide — mas quem estiver navegando à mão pode ter deixado em
       // qualquer outro.
-      await voltarAoInicio();
+      await startVoltar();
 
       // `canScrollNext` nasce falso e só vira verdadeiro quando o embla emite
       // `init` — que ele agenda com `setTimeout(…, 0)`. Ler no primeiro quadro
@@ -129,7 +129,7 @@ export const Playground: Story = {
     await step('E a story termina no primeiro slide', async () => {
       // O Chromatic fotografa o último quadro e o axe varre o que sobrou na
       // tela: a story precisa terminar no estado que `visual.item1` promete.
-      await voltarAoInicio();
+      await startVoltar();
       await expect(anterior()).toBeDisabled();
     });
   },

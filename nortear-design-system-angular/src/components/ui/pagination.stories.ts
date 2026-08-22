@@ -23,8 +23,8 @@ type PaginationArgs = {
 };
 
 /** Rótulos acessíveis fixos — não são controls, então ficam fora dos `args`. */
-const ROTULO_ANTERIOR = 'Ir para a página anterior';
-const ROTULO_PROXIMA = 'Ir para a próxima página';
+const LABEL_PREVIOUS = 'Ir para a página anterior';
+const LABEL_NEXT = 'Ir para a próxima página';
 const LABEL_PAGE = 'Ir para página';
 
 /**
@@ -60,7 +60,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<PaginationArgs>
             ndsPaginationPrevious
             href="#"
             text="${textoAnterior}"
-            label="${ROTULO_ANTERIOR}"
+            label="${LABEL_PREVIOUS}"
             [disabled]="atual() === 1"
             (click)="irPara($event, atual() - 1)"
           ></a>
@@ -81,7 +81,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<PaginationArgs>
             ndsPaginationNext
             href="#"
             text="${textoProxima}"
-            label="${ROTULO_PROXIMA}"
+            label="${LABEL_NEXT}"
             [disabled]="atual() === total"
             (click)="irPara($event, atual() + 1)"
           ></a>
@@ -177,8 +177,8 @@ export const Playground: Story = {
       // Derivado do arg, nunca escrito à mão: uma lista literal deixaria de
       // acompanhar o control `total` e a story mentiria em silêncio.
       paginas: Array.from({ length: args.total }, (_, i) => i + 1),
-      rotuloAnterior: ROTULO_ANTERIOR,
-      rotuloProxima: ROTULO_PROXIMA,
+      rotuloAnterior: LABEL_PREVIOUS,
+      rotuloProxima: LABEL_NEXT,
       rotuloPagina: LABEL_PAGE,
       irPara: (evento: Event, pagina: number) => {
         evento.preventDefault();
@@ -252,11 +252,11 @@ export const Playground: Story = {
       }
       // Previous e Next também: o rótulo visível encurta em tela estreita, o
       // nome acessível não.
-      await expect(canvas.getByRole('link', { name: ROTULO_ANTERIOR })).toHaveAttribute(
+      await expect(canvas.getByRole('link', { name: LABEL_PREVIOUS })).toHaveAttribute(
         'data-slot',
         'pagination-previous',
       );
-      await expect(canvas.getByRole('link', { name: ROTULO_PROXIMA })).toHaveAttribute(
+      await expect(canvas.getByRole('link', { name: LABEL_NEXT })).toHaveAttribute(
         'data-slot',
         'pagination-next',
       );
@@ -277,18 +277,18 @@ export const Playground: Story = {
     });
 
     await step('O rótulo visível de Previous e Next vem do input', async () => {
-      const anterior = canvas.getByRole('link', { name: ROTULO_ANTERIOR });
-      const proxima = canvas.getByRole('link', { name: ROTULO_PROXIMA });
+      const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+      const next = canvas.getByRole('link', { name: LABEL_NEXT });
       await expect(anterior.querySelector('.nds-pagination-label')).toHaveTextContent(
         args.textoAnterior,
       );
-      await expect(proxima.querySelector('.nds-pagination-label')).toHaveTextContent(
+      await expect(next.querySelector('.nds-pagination-label')).toHaveTextContent(
         args.textoProxima,
       );
       // O ícone direcional continua no DOM mesmo quando o rótulo some no
       // breakpoint estreito — é o que sobra para orientar.
       await expect(anterior.querySelector('svg')).not.toBeNull();
-      await expect(proxima.querySelector('svg')).not.toBeNull();
+      await expect(next.querySelector('svg')).not.toBeNull();
     });
 
     await step('Clicar numa página numerada avisa quem controla o estado', async () => {
@@ -305,11 +305,11 @@ export const Playground: Story = {
       // functional.item4 — a ordem de foco é a do DOM, e o DOM é a ordem em que
       // a faixa é lida: anterior, 1..N, próxima.
       const esperados = [
-        canvas.getByRole('link', { name: ROTULO_ANTERIOR }),
+        canvas.getByRole('link', { name: LABEL_PREVIOUS }),
         ...Array.from({ length: args.total }, (_, i) =>
           canvas.getByRole('link', { name: `${LABEL_PAGE} ${i + 1}` }),
         ),
-        canvas.getByRole('link', { name: ROTULO_PROXIMA }),
+        canvas.getByRole('link', { name: LABEL_NEXT }),
       ];
       (document.activeElement as HTMLElement | null)?.blur();
       for (const alvo of esperados) {

@@ -19,7 +19,7 @@ export type SwitchArgs = {
   size: 'default' | 'sm';
 };
 
-const IMPORT_PAR = `import { Switch } from '@/components/ui/switch'
+const IMPORT_PAIR = `import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'`;
 
 /**
@@ -69,7 +69,7 @@ function panelLine(opcoes: {
 export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     linePair(
       'notificacoes',
       'Receber notificações por email',
@@ -86,16 +86,16 @@ export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
 
 /** Variante padrão: o par mínimo, sem nenhum atributo além do vínculo do id. */
 export function switchDefaultSource(): string {
-  return vueSnippet(IMPORT_PAR, linePair('notificacoes', 'Receber notificações por email'));
+  return vueSnippet(IMPORT_PAIR, linePair('notificacoes', 'Receber notificações por email'));
 }
 
 /**
  * Com texto de apoio: o par vira linha de painel, e a descrição ganha um
  * parágrafo próprio ao lado do rótulo.
  */
-export function switchComDescricaoSource(): string {
+export function switchWithDescriptionSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     panelLine({
       id: 'marketing',
       rotulo: 'Emails de marketing',
@@ -116,7 +116,7 @@ export function switchCompactoSource(): string {
   <Label for="tamanho-compacto" class="nds-text-caption">Tamanho compacto</Label>
 </div>`;
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     `<div class="nds-stack" data-spacing="sm">
 ${indentar(linePair('tamanho-padrao', 'Tamanho padrão'))}
 ${indentar(compacto)}
@@ -129,20 +129,20 @@ ${indentar(compacto)}
  * `:default-value="false"` ensinaria uma prop que não faz nada.
  */
 export function switchDesligadoSource(): string {
-  return vueSnippet(IMPORT_PAR, linePair('notificacoes', 'Receber notificações'));
+  return vueSnippet(IMPORT_PAIR, linePair('notificacoes', 'Receber notificações'));
 }
 
 /** Estado ligado na montagem: `default-value` é a prop de partida, não o estado. */
 export function switchLigadoSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     linePair('notificacoes', 'Receber notificações', 'default-value'),
   );
 }
 
 /** Desabilitado: o controle sai da ordem de tabulação e não responde ao clique. */
-export function switchDesabilitadoSource(): string {
-  return vueSnippet(IMPORT_PAR, linePair('notificacoes', 'Receber notificações', 'disabled'));
+export function switchDisabledSource(): string {
+  return vueSnippet(IMPORT_PAIR, linePair('notificacoes', 'Receber notificações', 'disabled'));
 }
 
 /**
@@ -151,7 +151,7 @@ export function switchDesabilitadoSource(): string {
  */
 export function switchInvalidoSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     `<div class="nds-stack nds-w-sm" data-spacing="sm">
 ${indentar(
   panelLine({
@@ -171,7 +171,7 @@ ${indentar(
  * Painel de configurações: uma linha por preferência, cada controle com o seu
  * próprio estado de partida e o seu próprio rótulo.
  */
-export function configSourceSwitchPanel(): string {
+export function configSwitchPanelSource(): string {
   const linhas = [
     {
       id: 'marketing',
@@ -192,7 +192,7 @@ export function configSourceSwitchPanel(): string {
     },
   ];
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     `<div class="nds-stack nds-w-md" data-spacing="sm">
 ${linhas.map((linha) => indentar(panelLine(linha))).join('\n\n')}
 </div>`,
@@ -203,7 +203,7 @@ ${linhas.map((linha) => indentar(panelLine(linha))).join('\n\n')}
  * Lista de preferências: a mesma ideia sem o texto de apoio, e a estrutura vira
  * lista de verdade — três itens relacionados são uma `ul`, não três `div`.
  */
-export function preferenciasSourceSwitchList(): string {
+export function preferenciasSwitchListSource(): string {
   const itens = [
     { id: 'push', rotulo: 'Notificações push', atributos: 'default-value' },
     { id: 'email', rotulo: 'Notificações por email', atributos: '' },
@@ -219,7 +219,7 @@ export function preferenciasSourceSwitchList(): string {
     })
     .join('\n');
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     `<ul class="nds-w-sm nds-rounded-lg nds-border-default">
 ${linhas}
 </ul>`,
@@ -230,9 +230,9 @@ ${linhas}
  * Em formulário: o `name` é o que faz o switch entrar no envio nativo — sem ele
  * o campo simplesmente não é enviado, e nada no visual denuncia.
  */
-export function formSourceSwitch(): string {
+export function formSwitchSource(): string {
   return vueSnippet(
-    `${IMPORT_PAR}
+    `${IMPORT_PAIR}
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'`,
     `<form class="nds-stack nds-w-md" data-spacing="sm" @submit.prevent>
@@ -275,7 +275,7 @@ export function switchItemDeMenuSource(): string {
     )
     .join('\n');
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     `<div class="nds-stack nds-w-xs nds-rounded-md nds-border-default nds-p-2" data-spacing="xs">
 ${linhas}
 </div>`,

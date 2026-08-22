@@ -14,7 +14,7 @@ export type TableSnippetOptions = {
   /** Coluna de ação por linha. */
   withActions?: boolean;
   /** Marca uma linha com `data-state="selected"`. */
-  linhaSelecionada?: boolean;
+  lineSelecionada?: boolean;
 };
 
 const CAPTION_DEFAULT = 'Lista de faturas recentes';
@@ -26,7 +26,7 @@ const CAPTION_DEFAULT = 'Lista de faturas recentes';
  * número escrito à mão — é andaime de teste, e o painel Code ensina o design
  * system, não o andaime.
  */
-const DADOS = [
+const DATA = [
   "const colunas = ['Fatura', 'Status', 'Método', 'Valor'];",
   '',
   'const faturas = [',
@@ -36,7 +36,7 @@ const DADOS = [
 ].join('\n');
 
 /** Nomes que a montagem importa do primitivo, em import de várias linhas. */
-function importarPecas(...nomes: string[]): string {
+function importingParts(...nomes: string[]): string {
   return `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/table';`;
 }
 
@@ -84,7 +84,7 @@ function cabecalho(o: TableSnippetOptions = {}): string {
 function corpo(o: TableSnippetOptions): string {
   const linhas = ['const corpo = createTableBody();', 'for (const fatura of faturas) {', '  const linha = createTableRow();'];
 
-  if (o.linhaSelecionada) {
+  if (o.lineSelecionada) {
     linhas.push(
       '  // Só o atributo: quem pinta a linha marcada é o próprio componente,',
       '  // pela regra `.nds-table tbody tr[data-state="selected"]`.',
@@ -137,7 +137,7 @@ function rodape(): string {
 
 /** A montagem canônica da tabela, com as peças que a story usa. */
 export function tableSnippet(o: TableSnippetOptions = {}): string {
-  const pecas = [
+  const parts = [
     'createTable',
     'createTableBody',
     'createTableCaption',
@@ -146,15 +146,15 @@ export function tableSnippet(o: TableSnippetOptions = {}): string {
     'createTableHeader',
     'createTableRow',
   ];
-  if (o.comRodape) pecas.splice(4, 0, 'createTableFooter');
+  if (o.comRodape) parts.splice(4, 0, 'createTableFooter');
 
   const importacoes = o.withActions
-    ? [importarPecas(...pecas), "import { createButton } from '@/components/ui/button';"].join('\n')
-    : importarPecas(...pecas);
+    ? [importingParts(...parts), "import { createButton } from '@/components/ui/button';"].join('\n')
+    : importingParts(...parts);
 
   return snippet(
     importacoes,
-    DADOS,
+    DATA,
     [
       '// O wrapper é quem rola na horizontal, e ele nasce com `tabindex="0"`:',
       '// sem isso as colunas fora da caixa ficam inalcançáveis por teclado.',
@@ -171,7 +171,7 @@ export function tableSnippet(o: TableSnippetOptions = {}): string {
 /** Estado vazio: uma célula que atravessa a tabela inteira. */
 export function tableVaziaSnippet(o: TableSnippetOptions = {}): string {
   return snippet(
-    importarPecas(
+    importingParts(
       'createTable',
       'createTableBody',
       'createTableCaption',
@@ -180,7 +180,7 @@ export function tableVaziaSnippet(o: TableSnippetOptions = {}): string {
       'createTableHeader',
       'createTableRow',
     ),
-    DADOS.split('\n').slice(0, 1).join('\n'),
+    DATA.split('\n').slice(0, 1).join('\n'),
     'const { wrapper, table } = createTable();',
     legenda(o),
     cabecalho(),
@@ -203,7 +203,7 @@ export function tableVaziaSnippet(o: TableSnippetOptions = {}): string {
 export function tableLoadingSnippet(o: TableSnippetOptions = {}): string {
   return snippet(
     [
-      importarPecas(
+      importingParts(
         'createTable',
         'createTableBody',
         'createTableCaption',
@@ -214,7 +214,7 @@ export function tableLoadingSnippet(o: TableSnippetOptions = {}): string {
       ),
       "import { createSkeleton } from '@/components/ui/skeleton';",
     ].join('\n'),
-    DADOS.split('\n').slice(0, 1).join('\n'),
+    DATA.split('\n').slice(0, 1).join('\n'),
     [
       '// `aria-busy` na REGIÃO, e não na célula: o esqueleto é `aria-hidden`, e',
       '// sem a região quem usa leitor de tela ouve uma tabela vazia sem saber',
@@ -266,7 +266,7 @@ export function tableVaziaSource(
 }
 
 /** Transform de story para o estado carregando. */
-export function tableCarregandoSource(
+export function tableLoadingSource(
   fixas: TableSnippetOptions = {},
 ): SourceTransform<TableSnippetOptions> {
   return (_gerado, ctx) => tableLoadingSnippet({ ...ctx.args, ...fixas });

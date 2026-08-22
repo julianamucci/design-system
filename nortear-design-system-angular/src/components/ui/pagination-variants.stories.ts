@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { signal } from '@angular/core';
 import { expect, userEvent, within } from 'storybook/test';
-import { alvosAbaixoDoMinimo } from '@shared/testing/pagination-probe';
+import { minimumTargetsBelow } from '@shared/testing/pagination-probe';
 import {
   NdsPagination,
   NdsPaginationContent,
@@ -51,8 +51,8 @@ export default meta;
 type Story = StoryObj;
 
 const LABEL_PAGE = 'Ir para página';
-const ROTULO_ANTERIOR = 'Ir para a página anterior';
-const ROTULO_PROXIMA = 'Ir para a próxima página';
+const LABEL_PREVIOUS = 'Ir para a página anterior';
+const LABEL_NEXT = 'Ir para a próxima página';
 
 // ─── Simples (até 7 páginas) ──────────────────────────────────────────────────
 
@@ -72,8 +72,8 @@ export const Simple: Story = {
       // Derivado, não literal: a faixa e as asserções leem a mesma fonte.
       paginas: [1, 2, 3, 4, 5],
       rotuloPagina: LABEL_PAGE,
-      rotuloAnterior: ROTULO_ANTERIOR,
-      rotuloProxima: ROTULO_PROXIMA,
+      rotuloAnterior: LABEL_PREVIOUS,
+      rotuloProxima: LABEL_NEXT,
       semNavegar: (evento: Event) => evento.preventDefault(),
     },
     template: `
@@ -106,9 +106,9 @@ export const Simple: Story = {
     await step('A faixa mostra todos os números, sem reticências', async () => {
       // visual.item1 — é o estado que o Chromatic fotografa como "default".
       const nav = canvas.getByRole('navigation', { name: 'Paginação simples' });
-      const numerados = nav.querySelectorAll('[data-slot="pagination-link"]');
-      await expect(numerados.length).toBe(5);
-      await expect([...numerados].map((l) => l.textContent?.trim())).toEqual([
+      const numbered = nav.querySelectorAll('[data-slot="pagination-link"]');
+      await expect(numbered.length).toBe(5);
+      await expect([...numbered].map((l) => l.textContent?.trim())).toEqual([
         '1', '2', '3', '4', '5',
       ]);
       await expect(nav.querySelectorAll('[data-slot="pagination-ellipsis"]').length).toBe(0);
@@ -120,7 +120,7 @@ export const Simple: Story = {
       // compartilhado mede TODO controle da faixa, não só o primeiro.
       const primeiro = canvas.getByRole('link', { name: `${LABEL_PAGE} 1` });
       await expect(primeiro).toHaveClass('nds-button-icon');
-      await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe('[]');
+      await expect(JSON.stringify(minimumTargetsBelow(canvasElement))).toBe('[]');
     });
   },
 };
@@ -143,8 +143,8 @@ export const WithEllipsis: Story = {
       trechos: [1, 'ellipsis', 5, 6, 7, 'ellipsis', 12] as (number | string)[],
       atual: 6,
       rotuloPagina: LABEL_PAGE,
-      rotuloAnterior: ROTULO_ANTERIOR,
-      rotuloProxima: ROTULO_PROXIMA,
+      rotuloAnterior: LABEL_PREVIOUS,
+      rotuloProxima: LABEL_NEXT,
       semNavegar: (evento: Event) => evento.preventDefault(),
     },
     template: `
@@ -217,8 +217,8 @@ export const Directional: Story = {
   },
   render: () => ({
     props: {
-      rotuloAnterior: ROTULO_ANTERIOR,
-      rotuloProxima: ROTULO_PROXIMA,
+      rotuloAnterior: LABEL_PREVIOUS,
+      rotuloProxima: LABEL_NEXT,
       semNavegar: (evento: Event) => evento.preventDefault(),
     },
     template: `
@@ -241,12 +241,12 @@ export const Directional: Story = {
       // accessibility.item5 — "Anterior" some no breakpoint estreito; se o nome
       // acessível viesse do texto visível, o link ficaria mudo justamente em
       // tela pequena.
-      const anterior = canvas.getByRole('link', { name: ROTULO_ANTERIOR });
-      const proxima = canvas.getByRole('link', { name: ROTULO_PROXIMA });
+      const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+      const next = canvas.getByRole('link', { name: LABEL_NEXT });
       await expect(anterior.querySelector('.nds-pagination-label')).toHaveTextContent('Anterior');
-      await expect(proxima.querySelector('.nds-pagination-label')).toHaveTextContent('Próxima');
+      await expect(next.querySelector('.nds-pagination-label')).toHaveTextContent('Próxima');
       await expect(anterior).toHaveClass('nds-pagination-prev');
-      await expect(proxima).toHaveClass('nds-pagination-next');
+      await expect(next).toHaveClass('nds-pagination-next');
     });
 
     await step('O ícone é decoração, não conteúdo', async () => {
@@ -282,8 +282,8 @@ export const Interactive: Story = {
         total,
         paginas: Array.from({ length: total }, (_, i) => i + 1),
         rotuloPagina: LABEL_PAGE,
-        rotuloAnterior: ROTULO_ANTERIOR,
-        rotuloProxima: ROTULO_PROXIMA,
+        rotuloAnterior: LABEL_PREVIOUS,
+        rotuloProxima: LABEL_NEXT,
         irPara: (evento: Event, pagina: number) => {
           evento.preventDefault();
           atual.set(pagina);

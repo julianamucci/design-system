@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -87,7 +87,7 @@ function itemsLiteral(itens: SelectEntrySnippet[], recuo = '  '): string {
   return `[\n${itens.map((i) => entryLiteral(i, `${recuo}  `)).join('\n')}\n${recuo}]`;
 }
 
-function idDoCampo(o: SelectSnippetOptions): string {
+function fieldId(o: SelectSnippetOptions): string {
   return o.id ?? 'campo-estado';
 }
 
@@ -100,7 +100,7 @@ function idDoCampo(o: SelectSnippetOptions): string {
  * texto só, e quem enxerga e quem ouve leem a mesma coisa.
  */
 function fieldLines(o: SelectSnippetOptions, recuo = '  '): string[] {
-  const id = idDoCampo(o);
+  const id = fieldId(o);
   const nome = o['aria-label'] ?? o.labelText ?? 'Estado';
   return opcoes([
     ['id', texto(id)],
@@ -129,7 +129,7 @@ function fieldLines(o: SelectSnippetOptions, recuo = '  '): string[] {
 
 /** O rótulo visível, associado ao gatilho por `for`/`id`. */
 function rotulo(o: SelectSnippetOptions): string {
-  const id = idDoCampo(o);
+  const id = fieldId(o);
   return `const rotulo = document.createElement('label');
 ${o['aria-labelledby'] ? `rotulo.id = ${texto(`${id}-rotulo`)};\n` : ''}rotulo.htmlFor = ${texto(id)};
 rotulo.className = 'nds-text-body nds-font-semibold';
@@ -140,7 +140,7 @@ rotulo.textContent = ${texto(o.labelText ?? 'Estado')};`;
 function mensagem(o: SelectSnippetOptions): string | undefined {
   if (!o.mensagemDeErro) return undefined;
   return `const erro = document.createElement('p');
-erro.id = ${texto(`${idDoCampo(o)}-erro`)};
+erro.id = ${texto(`${fieldId(o)}-erro`)};
 erro.className = 'nds-text-body nds-text-destructive';
 erro.textContent = ${texto(o.mensagemDeErro)};`;
 }
@@ -149,7 +149,7 @@ erro.textContent = ${texto(o.mensagemDeErro)};`;
 export function selectSnippet(o: SelectSnippetOptions = {}): string {
   const erro = mensagem(o);
   return snippet(
-    importar('select', 'createSelect'),
+    importing('select', 'createSelect'),
     rotulo(o),
     `const campo = ${chamada('createSelect', fieldLines(o))};`,
     erro,
@@ -164,10 +164,10 @@ export function selectSnippet(o: SelectSnippetOptions = {}): string {
  * `<input type="hidden">` com o `name`, e é ele que o `FormData` nativo enxerga
  * — sem código de quem consome. Sem o formulário em volta, não há o que provar.
  */
-export function formSnippetSelect(o: SelectSnippetOptions = {}): string {
+export function formSelectSnippet(o: SelectSnippetOptions = {}): string {
   const withName: SelectSnippetOptions = { name: 'state', required: true, ...o };
   return snippet(
-    [importar('select', 'createSelect'), importar('button', 'createButton')].join('\n'),
+    [importing('select', 'createSelect'), importing('button', 'createButton')].join('\n'),
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack nds-border-default nds-rounded-lg nds-w-sm nds-p-4';
 formulario.dataset.spacing = 'md';`,
@@ -202,5 +202,5 @@ export function selectSourceWith(fixas: SelectSnippetOptions): SourceTransform<S
 export function formSelectSource(
   fixas: SelectSnippetOptions = {},
 ): SourceTransform<SelectSnippetOptions> {
-  return (_gerado, ctx) => formSnippetSelect({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => formSelectSnippet({ ...ctx.args, ...fixas });
 }

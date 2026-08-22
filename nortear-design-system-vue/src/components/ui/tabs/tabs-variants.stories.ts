@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, waitFor, expect } from 'storybook/test';
 import {
-  desviosDaCaixaDoTrilho,
-  medirCrescimentoDoTrilho,
+  boxDoTrackDesvios,
+  trackMeasureCrescimento,
 } from '@shared/testing/tabs-probe';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
-import { tabsLinhaSource, tabsDefaultSource, tabsVerticalSource } from './tabs.source';
+import { tabsLineSource, tabsDefaultSource, tabsVerticalSource } from './tabs.source';
 
 const TRANSPARENTE = 'rgba(0, 0, 0, 0)';
 
@@ -92,8 +92,8 @@ export const Default: Story = {
       // separa gaiola de resultado é EMPURRAR o conteúdo para além da caixa:
       // com altura cravada o trilho fica parado e o gatilho vaza para fora do
       // fundo arredondado. O colhedor devolve a fonte e o gatilho ao original.
-      const m = medirCrescimentoDoTrilho(canvasElement);
-      await expect(desviosDaCaixaDoTrilho(m), JSON.stringify(m)).toEqual([]);
+      const m = trackMeasureCrescimento(canvasElement);
+      await expect(boxDoTrackDesvios(m), JSON.stringify(m)).toEqual([]);
     });
   },
 };
@@ -125,7 +125,7 @@ export const Line: Story = {
     docs: {
       // `variant="line"` mora na LISTA, não na raiz: o snippet do meta não tem
       // onde mostrar isso sem apagar a diferença.
-      source: { transform: tabsLinhaSource },
+      source: { transform: tabsLineSource },
       description: {
         story: 'Variante line — sem trilho, com uma linha sob a aba ativa. Útil para sub-navegação dentro de páginas.',
       },

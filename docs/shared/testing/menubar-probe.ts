@@ -34,7 +34,7 @@ export type RetratoDoMenubar = {
   gatilhos: RetratoDeElemento[];
   /** Quantos gatilhos são alcançáveis pelo Tab — o menubar exige exatamente 1. */
   gatilhosTabulaveis: number;
-  paineis: Array<{
+  panels: Array<{
     role: string | null;
     slot: string | null;
     classes: string;
@@ -78,7 +78,7 @@ export function radiografarMenubar(barra: HTMLElement | null): RetratoDoMenubar 
     ? Array.from(barra.querySelectorAll<HTMLElement>('[aria-haspopup], button'))
     : [];
 
-  const paineis = Array.from(document.querySelectorAll<HTMLElement>('[role="menu"]'));
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('[role="menu"]'));
 
   const itens: RetratoDeElemento[] = [];
   const marcacoes: RetratoDeElemento[] = [];
@@ -87,7 +87,7 @@ export function radiografarMenubar(barra: HTMLElement | null): RetratoDoMenubar 
     classes: null,
   };
 
-  for (const painel of paineis) {
+  for (const painel of panels) {
     for (const el of painel.querySelectorAll<HTMLElement>('[role="menuitem"]')) {
       itens.push(retratar(el));
     }
@@ -119,7 +119,7 @@ export function radiografarMenubar(barra: HTMLElement | null): RetratoDoMenubar 
       : null,
     gatilhos: gatilhos.map(retratar),
     gatilhosTabulaveis: gatilhos.filter((g) => g.tabIndex === 0).length,
-    paineis: paineis.map((p) => ({
+    panels: panels.map((p) => ({
       role: p.getAttribute('role'),
       slot: p.getAttribute('data-slot'),
       classes: p.getAttribute('class') ?? '',
@@ -133,6 +133,6 @@ export function radiografarMenubar(barra: HTMLElement | null): RetratoDoMenubar 
 }
 
 /** Único canal que atravessa o instrumentador do Storybook até o terminal. */
-export function lancarSonda(stack: string, cenario: string, dados: unknown): never {
+export function lancarProbe(stack: string, cenario: string, dados: unknown): never {
   throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
 }

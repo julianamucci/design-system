@@ -14,10 +14,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import {
-  drawerAbertoSource,
-  drawerControladoSource,
+  drawerOpenSource,
+  drawerControlledSource,
   drawerClosedSource,
-  drawerNaoDispensavelSource,
+  drawerNotDispensavelSource,
 } from './drawer.source';
 
 const meta = {
@@ -110,7 +110,7 @@ export const Open: Story = {
     docs: {
       // Aqui a montagem já aberta É o assunto, e não há gatilho a clicar — nas
       // outras stories a prop é só andaime da foto do Chromatic.
-      source: { transform: drawerAbertoSource },
+      source: { transform: drawerOpenSource },
       description: {
         story:
           'Aberto ao montar, sem estado externo. Overlay ativo, foco dentro do painel e contrato de markup completo.',
@@ -167,7 +167,7 @@ export const Controlled: Story = {
     docs: {
       // O gatilho sai de cena e entram o par prop+evento e os botões de fora:
       // estrutura inteiramente outra.
-      source: { transform: drawerControladoSource },
+      source: { transform: drawerControlledSource },
       description: {
         story:
           'Estado do lado de fora: o componente não decide nada sozinho — abre quando o valor ligado diz que sim e avisa a cada mudança para que o dono do estado acompanhe.',
@@ -204,19 +204,19 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const abrirBtn = canvas.getByRole('button', { name: /Abrir via estado externo/i });
-    const fecharBtn = canvas.getByRole('button', { name: /Fechar via estado externo/i });
+    const openBtn = canvas.getByRole('button', { name: /Abrir via estado externo/i });
+    const closeBtn = canvas.getByRole('button', { name: /Fechar via estado externo/i });
 
     await step('Sem gatilho interno, o painel nasce fechado', async () => {
       if (within(document.body).queryAllByRole('dialog').length > 0) {
-        await userEvent.click(fecharBtn);
+        await userEvent.click(closeBtn);
         await waitForPortalGone('dialog');
       }
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
 
     await step('O estado externo abre o painel', async () => {
-      await userEvent.click(abrirBtn);
+      await userEvent.click(openBtn);
       const painel = await waitForPortal('dialog');
       await expect(painel).toBeVisible();
       await expect(painel).toHaveAccessibleName('Controlado pelo pai');
@@ -238,7 +238,7 @@ export const NotDismissible: Story = {
     docs: {
       // Desligar a dispensa torna a saída do rodapé obrigatória — é o par que
       // o snippet precisa mostrar junto, e que o do meta não tem.
-      source: { transform: drawerNaoDispensavelSource },
+      source: { transform: drawerNotDispensavelSource },
       description: {
         story:
           'Sem dispensa por gesto: Escape e clique no overlay não fecham. A saída existe e é explícita — o botão do rodapé, alcançável por teclado.',

@@ -10,8 +10,8 @@ import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save, Trash2, Share2 } from "lucide-react";
 import {
-  barSourceTooltipShortcut,
-  iconsSourceTooltipBar,
+  barTooltipShortcutSource,
+  iconsTooltipBarSource,
   tooltipLadosSource,
   tooltipSource,
 } from "./tooltip.source";
@@ -27,7 +27,7 @@ import {
  * `data-side` no POSICIONADOR (`.nds-tooltip-positioner`), enquanto reka-ui,
  * bits-ui, radix-ng e a factory do Vanilla publicam no próprio balão.
  */
-function ladoDe(balao: HTMLElement | null): string | null {
+function sideOf(balao: HTMLElement | null): string | null {
   return balao?.closest("[data-side]")?.getAttribute("data-side") ?? null;
 }
 
@@ -73,7 +73,7 @@ export const IconBarToolbar: Story = {
           "Toolbar de ações icon-only — cada Button tem aria-label próprio (mobile sem hover) e Tooltip complementar com a mesma label.",
       },
       // Três gatilhos numa barra: a repetição é a lição, não o balão sozinho.
-      source: { transform: iconsSourceTooltipBar },
+      source: { transform: iconsTooltipBarSource },
     },
   },
   render: () => (
@@ -136,7 +136,7 @@ export const WithKeyboardShortcut: Story = {
           "Botão de ação rápida com hotkey — o aria-label sozinho já diz o que o botão faz; o Tooltip acrescenta a tecla, que é conveniência.",
       },
       // O par de <kbd> dentro do balão é composição, não argumento.
-      source: { transform: barSourceTooltipShortcut },
+      source: { transform: barTooltipShortcutSource },
     },
   },
   render: () => (
@@ -229,11 +229,11 @@ export const PlacementSides: Story = {
         // Esperar o `data-side`, e não só o elemento: o balão entra no DOM
         // antes de o posicionador medir, e nesse intervalo o atributo é nulo.
         await waitFor(async () => {
-          await expect(ladoDe(balao!)).toBeTruthy();
+          await expect(sideOf(balao!)).toBeTruthy();
         });
         // O auto-flip por colisão é comportamento documentado: perto da borda o
         // balão troca para o lado oposto em vez de sair da tela.
-        await expect([lado, oposto[lado]]).toContain(ladoDe(balao!));
+        await expect([lado, oposto[lado]]).toContain(sideOf(balao!));
       }
     });
   },

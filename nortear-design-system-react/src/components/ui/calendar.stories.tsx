@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState, type ComponentProps } from "react";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
-import { isoDoFoco } from "@shared/testing/calendar-probe";
+import { focusIso } from "@shared/testing/calendar-probe";
 import { Calendar } from "./calendar";
 import { calendarSource } from "./calendar.source";
 import { CalendarDocs } from "@/components/docs/CalendarDocs";
@@ -157,10 +157,10 @@ export const Playground: Story = {
       await expect(Math.round(respiro)).toBe(16);
 
       const vizinho = canvasElement.querySelector<HTMLElement>(".nds-calendar-outside .nds-calendar-day-btn")!;
-      const doMes = canvasElement.querySelector<HTMLElement>(
+      const ofMonth = canvasElement.querySelector<HTMLElement>(
         ".nds-calendar-day-cell:not(.nds-calendar-outside) .nds-calendar-day-btn",
       )!;
-      await expect(getComputedStyle(vizinho).color).not.toBe(getComputedStyle(doMes).color);
+      await expect(getComputedStyle(vizinho).color).not.toBe(getComputedStyle(ofMonth).color);
     });
 
     await step("O clique nos botões de mês chega neles", async () => {
@@ -200,8 +200,8 @@ export const Playground: Story = {
       // Tab, não .focus(): o critério é o dia entrar na navegação por teclado.
       // Forçar o foco passaria mesmo com o grid inteiro fora da ordem.
       (canvasElement.ownerDocument.activeElement as HTMLElement | null)?.blur();
-      for (let i = 0; i < 20 && !isoDoFoco(doc); i += 1) await userEvent.tab();
-      await expect(isoDoFoco(doc)).not.toBeNull();
+      for (let i = 0; i < 20 && !focusIso(doc); i += 1) await userEvent.tab();
+      await expect(focusIso(doc)).not.toBeNull();
     });
 
     await step("Seta move o foco para o dia seguinte", async () => {
@@ -209,15 +209,15 @@ export const Playground: Story = {
       // passava mesmo quando a lib não movia foco nenhum. O que o item promete
       // é percorrer o grid: então o teste compara a data de origem com a de
       // destino, e só passa se ela andou exatamente um dia.
-      const origem = isoDoFoco(doc);
+      const origem = focusIso(doc);
       await expect(origem).not.toBeNull();
       await userEvent.keyboard("{ArrowRight}");
-      const destino = isoDoFoco(doc);
+      const destino = focusIso(doc);
       await expect(destino).not.toBe(origem);
-      const umDia = 24 * 60 * 60 * 1000;
+      const umDay = 24 * 60 * 60 * 1000;
       await expect(
         new Date(destino!).getTime() - new Date(origem!).getTime(),
-      ).toBe(umDia);
+      ).toBe(umDay);
     });
 
     await step("A grade é UMA parada de tabulação", async () => {
@@ -252,31 +252,31 @@ export const Playground: Story = {
         canvasElement.querySelectorAll<HTMLElement>(".nds-calendar-day-btn"),
       ).find((d) => d.tabIndex >= 0)!;
       partida.focus();
-      const origem = isoDoFoco(doc);
+      const origem = focusIso(doc);
       await expect(origem).not.toBeNull();
       const emUtc = (iso: string) => new Date(`${iso}T00:00:00Z`);
 
       await userEvent.keyboard("{Home}");
-      await waitFor(() => expect(emUtc(isoDoFoco(doc)!).getUTCDay()).toBe(0));
-      const domingo = isoDoFoco(doc)!;
+      await waitFor(() => expect(emUtc(focusIso(doc)!).getUTCDay()).toBe(0));
+      const domingo = focusIso(doc)!;
 
       await userEvent.keyboard("{End}");
-      await waitFor(() => expect(emUtc(isoDoFoco(doc)!).getUTCDay()).toBe(6));
+      await waitFor(() => expect(emUtc(focusIso(doc)!).getUTCDay()).toBe(6));
       // Mesma semana: seis dias depois do domingo em que Home parou.
       await expect(
-        (emUtc(isoDoFoco(doc)!).getTime() - emUtc(domingo).getTime()) / 86_400_000,
+        (emUtc(focusIso(doc)!).getTime() - emUtc(domingo).getTime()) / 86_400_000,
       ).toBe(6);
-      const sabado = isoDoFoco(doc)!;
+      const sabado = focusIso(doc)!;
 
       await userEvent.keyboard("{PageDown}");
       await waitFor(() =>
-        expect(emUtc(isoDoFoco(doc)!).getUTCMonth()).toBe(
+        expect(emUtc(focusIso(doc)!).getUTCMonth()).toBe(
           (emUtc(sabado).getUTCMonth() + 1) % 12,
         ),
       );
 
       await userEvent.keyboard("{PageUp}");
-      await waitFor(() => expect(isoDoFoco(doc)).toBe(sabado));
+      await waitFor(() => expect(focusIso(doc)).toBe(sabado));
     });
   },
 };

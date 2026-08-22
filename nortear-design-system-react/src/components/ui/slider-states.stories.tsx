@@ -3,18 +3,18 @@ import { useState } from "react";
 import { userEvent, within, expect } from "storybook/test";
 import { Slider } from "./slider";
 import {
-  sliderDesabilitadoSource,
+  sliderDisabledSource,
   sliderNotControlledSource,
   sliderSource,
 } from "./slider.source";
 import {
-  alcaDesabilitada,
+  handleDesabilitada,
   alcasDoSlider,
-  anelDeFocoAssentado,
-  anelEmRepouso,
-  contextoAlcaTrilho,
-  contrasteAlcaTrilho,
-  valorDaAlca,
+  focusAssentadoRing,
+  restRing,
+  contextoHandleTrack,
+  contrastHandleTrack,
+  handleValue,
 } from "@shared/testing/slider-probe";
 
 const meta = {
@@ -57,15 +57,15 @@ export const Default: Story = {
 
     // Story sem interação: é aqui que o valor de montagem pode ser afirmado.
     await step("Alça no valor inicial", async () => {
-      await expect(valorDaAlca(canvas.getByRole("slider"))).toBe(50);
+      await expect(handleValue(canvas.getByRole("slider"))).toBe(50);
     });
 
     await step("A borda da alça alcança 3:1 contra o trilho", async () => {
       // WCAG 1.4.11. O miolo da alça é da cor do fundo de propósito, então quem
       // a separa do trilho é a borda — é essa razão que a norma cobra.
       await expect(
-        contrasteAlcaTrilho(canvasElement),
-        contextoAlcaTrilho(canvasElement),
+        contrastHandleTrack(canvasElement),
+        contextoHandleTrack(canvasElement),
       ).toBeGreaterThanOrEqual(3);
     });
   },
@@ -88,7 +88,7 @@ export const Focus: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alca = () => alcasDoSlider(canvasElement)[0];
-    const repouso = await anelEmRepouso(alca());
+    const repouso = await restRing(alca());
 
     await step("A alça recebe foco por teclado", async () => {
       await userEvent.tab();
@@ -98,7 +98,7 @@ export const Focus: Story = {
     await step("A alça focada fica visivelmente diferente da alça em repouso", async () => {
       // O anel de foco é o critério, não o foco em si: alça focada idêntica à
       // alça parada é 2.4.7 reprovado com o teste verde.
-      const focada = await anelDeFocoAssentado(alca(), repouso);
+      const focada = await focusAssentadoRing(alca(), repouso);
       await expect(focada.sombra !== repouso.sombra || focada.borda !== repouso.borda).toBe(true);
       await expect(focada.sombra).not.toBe("none");
     });
@@ -128,22 +128,22 @@ export const KeyboardInteraction: Story = {
 
     await step("ArrowRight incrementa", async () => {
       const alca = canvas.getByRole("slider");
-      const antes = valorDaAlca(alca);
+      const antes = handleValue(alca);
       alca.focus();
       await userEvent.keyboard("{ArrowRight}");
-      await expect(valorDaAlca(canvas.getByRole("slider"))).toBe(Math.min(100, antes + 1));
+      await expect(handleValue(canvas.getByRole("slider"))).toBe(Math.min(100, antes + 1));
     });
 
     await step("ArrowLeft decrementa", async () => {
-      const antes = valorDaAlca(canvas.getByRole("slider"));
+      const antes = handleValue(canvas.getByRole("slider"));
       await userEvent.keyboard("{ArrowLeft}");
-      await expect(valorDaAlca(canvas.getByRole("slider"))).toBe(Math.max(0, antes - 1));
+      await expect(handleValue(canvas.getByRole("slider"))).toBe(Math.max(0, antes - 1));
     });
 
     await step("PageUp anda mais que uma seta", async () => {
-      const antes = valorDaAlca(canvas.getByRole("slider"));
+      const antes = handleValue(canvas.getByRole("slider"));
       await userEvent.keyboard("{PageUp}");
-      await expect(valorDaAlca(canvas.getByRole("slider"))).toBeGreaterThan(antes + 1);
+      await expect(handleValue(canvas.getByRole("slider"))).toBeGreaterThan(antes + 1);
     });
   },
 };
@@ -154,7 +154,7 @@ export const Disabled: Story = {
     docs: {
       // Estado que só existe no `render`: `disabled` desliga todas as alças de
       // uma vez, e não há control que o descreva neste arquivo.
-      source: { transform: sliderDesabilitadoSource },
+      source: { transform: sliderDisabledSource },
     },
   },
   render: () => (
@@ -174,15 +174,15 @@ export const Disabled: Story = {
     await step("A alça está marcada como desabilitada", async () => {
       // Três marcas legítimas para o mesmo estado (`disabled` nativo,
       // `aria-disabled`, `data-disabled`); a sonda aceita qualquer uma.
-      await expect(alcaDesabilitada(alcasDoSlider(canvasElement)[0])).toBe(true);
+      await expect(handleDesabilitada(alcasDoSlider(canvasElement)[0])).toBe(true);
     });
 
     await step("O teclado não move o valor", async () => {
       const alca = canvas.getByRole("slider");
-      const antes = valorDaAlca(alca);
+      const antes = handleValue(alca);
       alca.focus();
       await userEvent.keyboard("{ArrowRight}");
-      await expect(valorDaAlca(canvas.getByRole("slider"))).toBe(antes);
+      await expect(handleValue(canvas.getByRole("slider"))).toBe(antes);
     });
   },
 };

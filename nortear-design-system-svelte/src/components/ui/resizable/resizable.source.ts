@@ -73,7 +73,7 @@ function simpleGroup(o: Grupo = {}): string {
   const minSize = o.minSize ?? 20;
   const rotulo = o.ariaLabel ?? 'Redimensionar painéis — use setas para ajustar';
 
-  const painelA = attrs(
+  const panelA = attrs(
     `defaultSize={${primeiro}}`,
     `minSize={${minSize}}`,
     o.maxSize === undefined ? '' : `maxSize={${o.maxSize}}`,
@@ -84,7 +84,7 @@ function simpleGroup(o: Grupo = {}): string {
     envolver(
       o.height ?? '240px',
       `  <ResizablePaneGroup direction="${direction}">
-    <ResizablePane${painelA}>
+    <ResizablePane${panelA}>
 ${conteudo(o.labelA ?? 'Sidebar', '      ', true)}
     </ResizablePane>
 ${punho(o, rotulo, '    ')}
@@ -96,7 +96,7 @@ ${conteudo(o.labelB ?? 'Conteúdo principal', '      ')}
   );
 }
 
-type Aninhado = Grupo & {
+type Nested = Grupo & {
   innerTop?: string;
   innerBottom?: string;
   innerAriaLabel?: string;
@@ -106,7 +106,7 @@ type Aninhado = Grupo & {
  * Um grupo dentro do segundo painel do outro. Cada grupo governa só os
  * próprios painéis, e o de dentro corre no eixo oposto.
  */
-function groupNested(o: Aninhado = {}): string {
+function groupNested(o: Nested = {}): string {
   const direction = o.direction ?? 'horizontal';
   const interno = direction === 'horizontal' ? 'vertical' : 'horizontal';
   const primeiro = o.defaultSize ?? 30;
@@ -174,12 +174,12 @@ export function resizableVerticalSource(): string {
 }
 
 /** Variante Nested: um grupo dentro de um painel, no eixo oposto. */
-export function resizableAninhadoSource(): string {
+export function resizableNestedSource(): string {
   return groupNested({ direction: 'horizontal', defaultSize: 30 });
 }
 
 /** Variante WithHandle: o pegador que anuncia que ali existe um controle. */
-export function resizableComPegadorSource(): string {
+export function resizableWithGrabberSource(): string {
   return simpleGroup({
     withHandle: true,
     defaultSize: 50,
@@ -216,7 +216,7 @@ export function resizableLimitesSource(): string {
 }
 
 /** Estado Focus: mesma marcação; o anel é comportamento, não markup. */
-export function resizableFocoSource(): string {
+export function resizableFocusSource(): string {
   return simpleGroup({
     withHandle: true,
     defaultSize: 50,

@@ -16,7 +16,7 @@ export type RadioGroupArgs = {
   name?: string;
 };
 
-type Opcao = {
+type Option = {
   value: string;
   label: string;
   description?: string;
@@ -30,10 +30,10 @@ type Grupo = {
   name?: string;
   ariaInvalid?: boolean;
   ariaLabel?: string;
-  options?: Opcao[];
+  options?: Option[];
 };
 
-const PAGAMENTO: Opcao[] = [
+const PAGAMENTO: Option[] = [
   { value: 'cartao', label: 'Cartão de crédito' },
   { value: 'pix', label: 'Pix' },
   { value: 'boleto', label: 'Boleto bancário' },
@@ -46,7 +46,7 @@ const PAGAMENTO: Opcao[] = [
  * ligado pelo `for`. É essa ligação que dá nome acessível ao rádio e torna o
  * texto parte do alvo de clique.
  */
-function item(opt: Opcao): string {
+function item(opt: Option): string {
   const atributos = attrs(
     `value="${opt.value}"`,
     `id="${opt.value}"`,
@@ -137,7 +137,7 @@ export function radioGroupHorizontalSource(): string {
 }
 
 /** Variante WithDescription: texto auxiliar ligado por `aria-describedby`. */
-export function radioGroupComDescricaoSource(): string {
+export function radioGroupWithDescriptionSource(): string {
   return grupo({
     ariaLabel: 'Forma de pagamento',
     options: [
@@ -150,13 +150,13 @@ export function radioGroupComDescricaoSource(): string {
 
 /* ─── Estados ───────────────────────────────────────────────────────────── */
 
-const DUAS: Opcao[] = [
+const DUAS: Option[] = [
   { value: 'cartao', label: 'Cartão de crédito' },
   { value: 'pix', label: 'Pix' },
 ];
 
 /** Estado Default: nenhuma opção escolhida — o estado inicial é vazio. */
-export function radioGroupPadraoSource(): string {
+export function radioGroupDefaultSource(): string {
   return grupo({ options: DUAS });
 }
 
@@ -171,12 +171,12 @@ export function radioGroupSelectedSource(): string {
 }
 
 /** Estado Disabled: a prop no grupo bloqueia todas as opções de uma vez. */
-export function radioGroupDesabilitadoSource(): string {
+export function radioGroupDisabledSource(): string {
   return grupo({ disabled: true, options: DUAS });
 }
 
 /** Estado ItemDisabled: só a opção indisponível sai da ordem de tabulação. */
-export function radioGroupItemDesabilitadoSource(): string {
+export function radioGroupItemDisabledSource(): string {
   return grupo({
     options: [
       { value: 'cartao', label: 'Cartão de crédito' },

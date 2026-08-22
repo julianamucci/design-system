@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  commandComAtalhosSource,
-  commandComGruposSource,
-  commandComoComboboxSource,
-  commandItemDesabilitadoSource,
-  commandItemMarcadoSource,
+  commandWithShortcutsSource,
+  commandWithGroupsSource,
+  commandAsComboboxSource,
+  commandItemDisabledSource,
+  commandItemCheckedSource,
   commandPaletteSource,
   commandSource,
   commandEmptySource,
@@ -92,9 +92,9 @@ function executar(valor: string) {
   });
 
   it('ignora control que não é do tipo esperado — o espião de ação vira ruído no painel', () => {
-    const espiao = (() => {}) as never;
+    const spy = (() => {}) as never;
     const saida = commandSource('', {
-      args: { placeholder: espiao, emptyMessage: espiao, highlightOnHover: espiao },
+      args: { placeholder: spy, emptyMessage: spy, highlightOnHover: spy },
     });
     expect(saida).toBe(commandSource());
     expect(saida).not.toContain('function (');
@@ -110,7 +110,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o comando desabilitado leva a prop no item, não na raiz', () => {
-    const saida = commandItemDesabilitadoSource();
+    const saida = commandItemDisabledSource();
     expect(saida).toContain('<CommandItem value="arquivar" disabled @select="ultimo = \'arquivar\'">');
     expect(saida).toContain('<Command>');
     expect(saida).toContain(`const ultimo = ref('')`);
@@ -119,7 +119,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('marcável desmarcado é escrito, porque não é o mesmo que não marcável', () => {
-    const saida = commandItemMarcadoSource();
+    const saida = commandItemCheckedSource();
     expect(saida).toContain('<CommandItem value="claro" :checked="true">Claro</CommandItem>');
     expect(saida).toContain('<CommandItem value="escuro" :checked="false">Escuro</CommandItem>');
     // Um por item: marca e atalho disputariam a borda direita.
@@ -129,7 +129,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('os grupos são separados por um divisor que não é comando', () => {
-    const saida = commandComGruposSource();
+    const saida = commandWithGroupsSource();
     expect(saida.match(/<CommandGroup heading=/g)).toHaveLength(2);
     expect(saida).toContain('<CommandSeparator />');
     // O componente é quem esconde o divisor da árvore: nada a escrever aqui.
@@ -137,13 +137,13 @@ describe('transforms das stories de composição', () => {
   });
 
   it('cada atalho mora dentro do item, que é o que o põe no nome acessível', () => {
-    const saida = commandComAtalhosSource();
+    const saida = commandWithShortcutsSource();
     expect(saida).toMatch(/Salvar\n\s+<CommandShortcut>⌘S<\/CommandShortcut>/);
     expect(saida.match(/<CommandShortcut>/g)).toHaveLength(5);
   });
 
   it('o combobox costura rótulo invisível e valor visível no mesmo nome', () => {
-    const saida = commandComoComboboxSource();
+    const saida = commandAsComboboxSource();
     expect(saida).toContain('aria-labelledby="componente-rotulo componente-valor"');
     expect(saida).toContain('<span id="componente-rotulo" class="nds-sr-only">Componente</span>');
     expect(saida).toContain('role="combobox"');
@@ -170,8 +170,8 @@ describe('transforms das stories de composição', () => {
   it('nenhum snippet carrega valor de design em style inline', () => {
     for (const saida of [
       commandSource(),
-      commandItemDesabilitadoSource(),
-      commandComoComboboxSource(),
+      commandItemDisabledSource(),
+      commandAsComboboxSource(),
       commandPaletteSource(),
     ]) {
       expect(saida).not.toContain('style="');

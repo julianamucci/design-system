@@ -4,9 +4,9 @@ import { within, expect } from 'storybook/test';
 import { createAspectRatio } from './aspect-ratio';
 import { aspectRatioSource } from './aspect-ratio.source';
 import {
-  descreverFalhasDeProporcao,
-  medirProporcao,
-  reprovasDeProporcao,
+  ratioDescribeFailures,
+  measureRatio,
+  ratioReprovas,
 } from '@shared/testing/aspect-ratio-probe';
 import { createAspectRatioDocs } from '@/components/docs/AspectRatioDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -94,13 +94,13 @@ export const Playground: Story = {
       // (e não de um truque de padding embutido por uma lib), que não há altura
       // cravada e que o filho direto está sendo esticado para cobrir a caixa.
       // Medir só a razão aprovava as duas stacks que não tinham a classe.
-      const falhas = reprovasDeProporcao(
-        [medirProporcao(canvasElement, 'playground')],
+      const failures = ratioReprovas(
+        [measureRatio(canvasElement, 'playground')],
         args.ratio,
       );
       await expect(
-        falhas,
-        falhas.length ? `\n${descreverFalhasDeProporcao(falhas)}\n` : '',
+        failures,
+        failures.length ? `\n${ratioDescribeFailures(failures)}\n` : '',
       ).toEqual([]);
     });
 

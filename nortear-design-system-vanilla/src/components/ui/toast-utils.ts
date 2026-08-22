@@ -124,7 +124,7 @@ function startCronometro(entry: ToastEntry): void {
   entry.timer = setTimeout(() => removeToast(entry.id), entry.restante);
 }
 
-function agendar(entry: ToastEntry, duracao: number): void {
+function schedule(entry: ToastEntry, duracao: number): void {
   stopCronometro(entry);
   entry.restante = duracao;
   startCronometro(entry);
@@ -369,7 +369,7 @@ function atualizar(id: number, type: ToastType, message: string, duracao: number
   entry.iconWrap = newIcon;
   if (newIcon) entry.el.insertBefore(newIcon, entry.el.firstChild);
 
-  agendar(entry, duracao);
+  schedule(entry, duracao);
 }
 
 // ─── API pública ──────────────────────────────────────────────────────────────

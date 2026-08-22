@@ -9,8 +9,8 @@ import {
   fechar as fecharDialogo,
   painel,
   overlay,
-  esperarFechado,
-  conferirNomeEDescricao,
+  waitForClosed,
+  checkNameEDescricao,
 } from './dialog.fixtures';
 import { NdsDialogDocs } from '@/components/docs/DialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -171,7 +171,7 @@ export const Playground: Story = {
     // está aberto o resto da página fica inerte, e uma consulta por papel
     // depende de como a biblioteca de teste trata `inert`.
     const trigger = canvasElement.querySelector<HTMLElement>('[data-slot="dialog-trigger"]')!;
-    const espiao = args.onOpenChange as unknown as ReturnType<typeof fn>;
+    const spy = args.onOpenChange as unknown as ReturnType<typeof fn>;
 
     // Abrir só se estiver fechado: o painel Interactions REEXECUTA a play no
     // mesmo DOM, e um clique absoluto partiria do estado que a rodada anterior
@@ -217,7 +217,7 @@ export const Playground: Story = {
       const p = painel()!;
       await expect(p).toHaveAttribute('role', 'dialog');
       if (args.modal) await expect(p).toHaveAttribute('aria-modal', 'true');
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
       await expect(p).toHaveAccessibleName(LABELS.title);
       await expect(p).toHaveAccessibleDescription(LABELS.description);
     });
@@ -244,10 +244,10 @@ export const Playground: Story = {
     });
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
-      const chamadasAntes = espiao.mock.calls.length;
+      const callsBefore = spy.mock.calls.length;
       await userEvent.keyboard('{Escape}');
-      await esperarFechado();
-      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 1);
+      await waitForClosed();
+      await expect(spy.mock.calls.length).toBe(callsBefore + 1);
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
@@ -256,7 +256,7 @@ export const Playground: Story = {
     await step('Clique no overlay fecha', async () => {
       await abrir();
       await userEvent.click(overlay()!);
-      await esperarFechado();
+      await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
@@ -268,7 +268,7 @@ export const Playground: Story = {
         const x = p.querySelector<HTMLElement>('[data-slot="dialog-close"]')!;
         await expect(x).toHaveAccessibleName(LABELS.close);
         await userEvent.click(x);
-        await esperarFechado();
+        await waitForClosed();
         // A devolução do foco faz parte do item de contrato do botão X, não só
         // do Escape: sem ela quem navega por teclado volta para o começo da
         // página depois de fechar.
@@ -285,7 +285,7 @@ export const Playground: Story = {
       // de host binding no mesmo atributo.
       const cancelar = within(p).getByRole('button', { name: LABELS.cancel });
       await userEvent.click(cancelar);
-      await esperarFechado();
+      await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });

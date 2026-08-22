@@ -3,10 +3,10 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import ToggleScenarioStory from './ToggleScenarioStory.svelte';
 import {
-  toggleComRotuloSource,
-  variantsSourceTogglePair,
+  toggleWithLabelSource,
+  variantsTogglePairSource,
   toggleSource,
-  toggleTamanhosSource,
+  toggleSizesSource,
 } from './toggle.source';
 
 const meta = {
@@ -64,7 +64,7 @@ export const Default: Story = {
 export const Outline: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { source: { transform: variantsSourceTogglePair } },
+    docs: { source: { transform: variantsTogglePairSource } },
   },
   args: { cenario: 'variants' },
   play: async ({ canvasElement, step }) => {
@@ -87,7 +87,7 @@ export const Outline: Story = {
 };
 
 export const WithLabel: Story = {
-  parameters: { docs: { source: { transform: toggleComRotuloSource } } },
+  parameters: { docs: { source: { transform: toggleWithLabelSource } } },
   args: { cenario: 'labels' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -114,7 +114,7 @@ export const WithLabel: Story = {
 };
 
 export const Sizes: Story = {
-  parameters: { docs: { source: { transform: toggleTamanhosSource } } },
+  parameters: { docs: { source: { transform: toggleSizesSource } } },
   args: { cenario: 'sizes' },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

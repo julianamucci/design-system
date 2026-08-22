@@ -119,7 +119,7 @@ export function sliderUnicoSource(): string {
  * array é a única coisa que muda, e o preenchimento passa a ser o miolo entre
  * as duas alças em vez do começo do trilho.
  */
-export function sliderFaixaSource(): string {
+export function sliderRangeSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst faixa = ref([20, 80])`,
     bloco({
@@ -178,7 +178,7 @@ export function sliderFocusSource(): string {
  * Desabilitado: a prop mora na RAIZ e alcança todas as alças de uma vez — não
  * há como desabilitar uma alça só de uma faixa.
  */
-export function sliderDesabilitadoSource(): string {
+export function sliderDisabledSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst volume = ref([50])`,
     bloco({
@@ -193,7 +193,7 @@ export function sliderDesabilitadoSource(): string {
  * No mínimo: o limite é do componente, não do exemplo. A seta para trás não
  * passa do piso — não há nada a escrever para que isso aconteça.
  */
-export function minimumSourceSlider(): string {
+export function minimumSliderSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst volume = ref([0])`,
     bloco({

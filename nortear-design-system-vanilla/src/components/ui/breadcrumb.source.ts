@@ -1,7 +1,7 @@
 // Snippet do painel Code do Breadcrumb — ver `@/lib/story-source`.
 
 import {
-  importar,
+  importing,
   montar,
   opcoes,
   chamada,
@@ -14,19 +14,19 @@ import {
  * `import` de muitos nomes, quebrado em linhas.
  *
  * O Breadcrumb é uma família de sete fábricas, e a linha única passaria de 150
- * colunas dentro de um painel estreito. `importar` continua valendo para os
+ * colunas dentro de um painel estreito. `importing` continua valendo para os
  * módulos de um nome só.
  */
 function multipleImporting(slug: string, nomes: string[]): string {
   return nomes.length <= 3
-    ? importar(slug, ...nomes)
+    ? importing(slug, ...nomes)
     : `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/${slug}';`;
 }
 
 /** O que as stories usam das opções do Breadcrumb e o snippet precisa mostrar. */
 export type BreadcrumbSnippetOptions = {
   /** Rótulos dos níveis navegáveis, na ordem em que aparecem. */
-  niveis?: string[];
+  levels?: string[];
   /** Texto do último item — a página atual, que nunca é link. */
   atual?: string;
   /**
@@ -81,7 +81,7 @@ function separador(o: BreadcrumbSnippetOptions): string {
  * repetição em vez do componente.
  */
 export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
-  const niveis = o.niveis ?? LEVELS_DEFAULT;
+  const levels = o.levels ?? LEVELS_DEFAULT;
   const atual = o.atual ?? CURRENT_DEFAULT;
 
   const nomes = [
@@ -116,16 +116,16 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
           .join('\n')
       : '  item.appendChild(createBreadcrumbLink({ href, text }));';
 
-  const pecas: string[] = [];
-  niveis.forEach((rotulo, i) => {
-    pecas.push(`  nivel(${texto(rotulo)}, ${texto(destino(rotulo, i))}),`);
-    pecas.push(`  ${separador(o)},`);
+  const parts: string[] = [];
+  levels.forEach((rotulo, i) => {
+    parts.push(`  nivel(${texto(rotulo)}, ${texto(destino(rotulo, i))}),`);
+    parts.push(`  ${separador(o)},`);
     if (o.ellipsis && i === 0) {
-      pecas.push('  oculto,');
-      pecas.push(`  ${separador(o)},`);
+      parts.push('  oculto,');
+      parts.push(`  ${separador(o)},`);
     }
   });
-  pecas.push('  atual,');
+  parts.push('  atual,');
 
   const ellipsisBlock = o.ellipsis
     ? `const oculto = createBreadcrumbItem();
@@ -148,7 +148,7 @@ ${levelBody}
     ellipsisBlock,
     `const atual = createBreadcrumbItem();
 atual.appendChild(createBreadcrumbPage({ text: ${texto(atual)} }));`,
-    `lista.append(\n${pecas.join('\n')}\n);\ntrilha.appendChild(lista);`,
+    `lista.append(\n${parts.join('\n')}\n);\ntrilha.appendChild(lista);`,
     montar('trilha'),
   );
 }
@@ -207,8 +207,8 @@ export function breadcrumbWithMenuSnippet(o: BreadcrumbWithMenuSnippetOptions = 
         'createBreadcrumbPage',
         'createBreadcrumbSeparator',
       ]),
-      importar('button', 'createButton'),
-      importar('dropdown-menu', 'createDropdownMenu'),
+      importing('button', 'createButton'),
+      importing('dropdown-menu', 'createDropdownMenu'),
     ].join('\n'),
     `// Quem nomeia e quem recebe o foco é o gatilho; as reticências dentro dele
 // ficam decorativas, senão o controle teria dois nomes.

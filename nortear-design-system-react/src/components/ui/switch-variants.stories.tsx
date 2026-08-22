@@ -3,7 +3,7 @@ import { within, expect } from "storybook/test";
 import { Switch } from "./switch";
 import { Label } from "./label";
 import {
-  switchComDescricaoSource,
+  switchWithDescriptionSource,
   switchCompactoSource,
   switchSource,
 } from "./switch.source";
@@ -77,7 +77,7 @@ export const WithDescription: Story = {
     docs: {
       // O painel com descrição auxiliar é composição do render, e o snippet do
       // meta imprimiria só o par rótulo ↔ controle.
-      source: { transform: switchComDescricaoSource },
+      source: { transform: switchWithDescriptionSource },
       description: {
         story:
           "Switch em painel de configurações — texto à esquerda, controle à direita.",
@@ -147,10 +147,10 @@ export const Sm: Story = {
     });
 
     await step("O thumb acompanha o degrau do trilho", async () => {
-      const thumbPadrao = padrao.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+      const thumbDefault = padrao.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       const thumbCompacto = compacto.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       await expect(thumbCompacto.getBoundingClientRect().width).toBeLessThan(
-        thumbPadrao.getBoundingClientRect().width,
+        thumbDefault.getBoundingClientRect().width,
       );
     });
   },

@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -35,13 +35,13 @@ const CALLBACK_DEFAULT = '(pressed) => alternar(pressed)';
 
 /** A chamada real de `createToggle` com as opções da story. */
 export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
-  const comTexto = Boolean(o.label);
+  const withText = Boolean(o.label);
   // O ícone segue o caso: com texto visível o par canônico é ícone + rótulo.
-  const icone = o.icon ?? (comTexto ? 'Eye' : 'Bold');
+  const icone = o.icon ?? (withText ? 'Eye' : 'Bold');
 
   // Ícone e texto são filhos DIRETOS — o espaço entre eles é o `gap` do próprio
   // `.nds-toggle`, e a medida do ícone vem da regra `.nds-toggle > svg`.
-  const children = comTexto
+  const children = withText
     ? `[createElement(${icone}), ${texto(o.label as string)}]`
     : `createElement(${icone})`;
 
@@ -49,7 +49,7 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
     ['children', children],
     // Sem texto visível o nome acessível é obrigatório: `aria-pressed` sozinho
     // faz o leitor anunciar "pressionado" sem dizer o quê.
-    ['aria-label', comTexto ? undefined : texto(o['aria-label'] || 'Negrito')],
+    ['aria-label', withText ? undefined : texto(o['aria-label'] || 'Negrito')],
     ['variant', o.variant && o.variant !== 'default' ? texto(o.variant) : undefined],
     ['size', o.size && o.size !== 'default' ? texto(o.size) : undefined],
     ['pressed', o.pressed ? 'true' : undefined],
@@ -59,7 +59,7 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    [importar('toggle', 'createToggle'), `import { ${icone}, createElement } from 'lucide';`].join('\n'),
+    [importing('toggle', 'createToggle'), `import { ${icone}, createElement } from 'lucide';`].join('\n'),
     `const alternador = ${chamada('createToggle', linhas)};`,
     montar('alternador'),
   );
@@ -73,17 +73,17 @@ export function toggleSnippet(o: ToggleSnippetOptions = {}): string {
 export function toggleRowSnippet(variacoes: ToggleSnippetOptions[]): string {
   const icones = new Set<string>(['createElement']);
   const chamadas = variacoes.map((v) => {
-    const comTexto = Boolean(v.label);
-    const icone = v.icon ?? (comTexto ? 'Eye' : 'Bold');
+    const withText = Boolean(v.label);
+    const icone = v.icon ?? (withText ? 'Eye' : 'Bold');
     icones.add(icone);
     const linhas = opcoes([
       [
         'children',
-        comTexto
+        withText
           ? `[createElement(${icone}), ${texto(v.label as string)}]`
           : `createElement(${icone})`,
       ],
-      ['aria-label', comTexto ? undefined : texto(v['aria-label'] || 'Negrito')],
+      ['aria-label', withText ? undefined : texto(v['aria-label'] || 'Negrito')],
       ['variant', v.variant && v.variant !== 'default' ? texto(v.variant) : undefined],
       ['size', v.size && v.size !== 'default' ? texto(v.size) : undefined],
       ['pressed', v.pressed ? 'true' : undefined],
@@ -95,7 +95,7 @@ export function toggleRowSnippet(variacoes: ToggleSnippetOptions[]): string {
   const nomes = [...icones].filter((n) => n !== 'createElement').sort();
   return snippet(
     [
-      importar('toggle', 'createToggle'),
+      importing('toggle', 'createToggle'),
       `import { ${[...nomes, 'createElement'].join(', ')} } from 'lucide';`,
     ].join('\n'),
     `const fileira = document.createElement('div');
@@ -132,7 +132,7 @@ export function toggleBarSnippet(itens: ToggleSnippetOptions[], nomeDoGrupo: str
 
   return snippet(
     [
-      importar('toggle', 'createToggle'),
+      importing('toggle', 'createToggle'),
       `import { ${[...new Set(icones)].join(', ')}, createElement } from 'lucide';`,
     ].join('\n'),
     `const barra = document.createElement('div');
@@ -163,7 +163,7 @@ export function toggleSourceBar(
  */
 export function toggleInvalidoSnippet(): string {
   return snippet(
-    [importar('toggle', 'createToggle'), `import { Bold, createElement } from 'lucide';`].join('\n'),
+    [importing('toggle', 'createToggle'), `import { Bold, createElement } from 'lucide';`].join('\n'),
     `const alternador = createToggle({
   children: createElement(Bold),
   'aria-label': 'Negrito',

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   checkboxWithDescriptionSnippet,
-  groupSnippetCheckbox,
+  groupCheckboxSnippet,
   checkboxSelectAllSnippet,
   checkboxSnippet,
   checkboxSource,
@@ -128,7 +128,7 @@ describe('checkboxComDescricaoSnippet', () => {
 
 describe('checkboxEmGrupoSnippet', () => {
   it('com fieldset, a legenda nomeia o conjunto', () => {
-    const código = groupSnippetCheckbox({ fieldset: true });
+    const código = groupCheckboxSnippet({ fieldset: true });
     expect(código).toContain("document.createElement('fieldset')");
     expect(código).toContain("document.createElement('legend')");
     expect(código).toContain("legenda.textContent = 'Notificações';");
@@ -136,7 +136,7 @@ describe('checkboxEmGrupoSnippet', () => {
   });
 
   it('sem fieldset, as opções viram linhas com borda', () => {
-    const código = groupSnippetCheckbox({
+    const código = groupCheckboxSnippet({
       legenda: 'Preferências de contato',
       itens: [
         { id: 'pref-email', label: 'Receber novidades por email', checked: true },

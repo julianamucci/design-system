@@ -206,8 +206,8 @@ export const Playground: Story = {
       ];
       await expect(classificados.length).toBeGreaterThan(0);
       // A cor sai de --code-token-*, não da cor de corpo herdada.
-      const corDeCorpo = getComputedStyle(root).color;
-      const proprias = classificados.filter((el) => getComputedStyle(el).color !== corDeCorpo);
+      const bodyColor = getComputedStyle(root).color;
+      const proprias = classificados.filter((el) => getComputedStyle(el).color !== bodyColor);
       await expect(proprias.length).toBeGreaterThan(0);
     });
 

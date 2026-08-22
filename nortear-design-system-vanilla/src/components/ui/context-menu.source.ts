@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -66,10 +66,10 @@ function itemsDefault(o: ContextMenuSnippetOptions): ContextMenuEntrySnippet[] {
 
 /** Uma entrada por linha, com o submenu recuado dentro da entrada que o abre. */
 function entriesLines(
-  entradas: ContextMenuEntrySnippet[],
+  entries: ContextMenuEntrySnippet[],
   recuo: string,
 ): string[] {
-  return entradas.flatMap((entrada) => {
+  return entries.flatMap((entrada) => {
     const partes: string[] = [];
     if (entrada.type && entrada.type !== 'item') partes.push(`type: ${texto(entrada.type)}`);
     if (entrada.label !== undefined) partes.push(`label: ${texto(entrada.label)}`);
@@ -95,8 +95,8 @@ function entriesLines(
 }
 
 /** O array já indentado para caber dentro da chamada. */
-function entriesLiteral(entradas: ContextMenuEntrySnippet[]): string {
-  return `[\n${entriesLines(entradas, '    ').join('\n')}\n  ]`;
+function entriesLiteral(entries: ContextMenuEntrySnippet[]): string {
+  return `[\n${entriesLines(entries, '    ').join('\n')}\n  ]`;
 }
 
 /** O texto do callback só entra quando é texto: nos args ele chega como função. */
@@ -119,7 +119,7 @@ export function contextMenuSnippet(o: ContextMenuSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    importar('context-menu', 'createContextMenu'),
+    importing('context-menu', 'createContextMenu'),
     [
       '// A área é de quem consome. A fábrica só garante a parada de tabulação',
       '// nela, para que a tecla Menu abra o menu de quem não usa mouse.',

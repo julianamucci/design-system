@@ -19,7 +19,7 @@ export type CommandArgs = {
 };
 
 /** Import do design system, com as peças que cada arranjo usa. */
-function importar(...nomes: string[]): string {
+function importing(...nomes: string[]): string {
   return `import {
 ${nomes.map((nome) => `  ${nome},`).join('\n')}
 } from '@/components/ui/command'`;
@@ -78,11 +78,11 @@ export const commandSource: SourceTransform<CommandArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const placeholder = texto(asCode(args.placeholder), 'Buscar componente...');
   const vazio = asCode(args.emptyMessage) ?? 'Nenhum resultado encontrado.';
-  const comGrupos = args.showGroups !== false;
-  const titulo = (nome: string) => (comGrupos ? ` heading="${nome}"` : '');
+  const withGroups = args.showGroups !== false;
+  const titulo = (nome: string) => (withGroups ? ` heading="${nome}"` : '');
 
   return vueSnippet(
-    `${importar(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut')}
+    `${importing(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut')}
 
 function executar(valor: string) {
   // roda o comando escolhido e devolve o foco para onde ele age
@@ -119,7 +119,7 @@ function executar(valor: string) {
  */
 export function commandEmptySource(): string {
   return vueSnippet(
-    importar(...PARTS_BASICAS),
+    importing(...PARTS_BASICAS),
     moldura(
       paleta({
         placeholder: 'Buscar componente...',
@@ -137,10 +137,10 @@ export function commandEmptySource(): string {
  * antes que ele chegue a quem consome — as setas também pulam o comando, sem
  * nada escrito aqui.
  */
-export function commandItemDesabilitadoSource(): string {
+export function commandItemDisabledSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
-${importar(...PARTS_BASICAS)}
+${importing(...PARTS_BASICAS)}
 
 const ultimo = ref('')`,
     `<div class="nds-stack" data-spacing="sm">
@@ -171,9 +171,9 @@ ${indentar(
  * O item com atalho não leva marca: os dois disputariam a borda direita, e a
  * regra é escolher um dos dois por comando.
  */
-export function commandItemMarcadoSource(): string {
+export function commandItemCheckedSource(): string {
   return vueSnippet(
-    importar(...PARTS_BASICAS, 'CommandShortcut'),
+    importing(...PARTS_BASICAS, 'CommandShortcut'),
     moldura(
       paleta({
         placeholder: 'Buscar tema...',
@@ -195,9 +195,9 @@ export function commandItemMarcadoSource(): string {
  * lista para a árvore de acessibilidade — o componente o esconde dela, porque
  * um listbox só admite `option` e `group`.
  */
-export function commandComGruposSource(): string {
+export function commandWithGroupsSource(): string {
   return vueSnippet(
-    importar(...PARTS_BASICAS, 'CommandSeparator'),
+    importing(...PARTS_BASICAS, 'CommandSeparator'),
     moldura(
       paleta({
         placeholder: 'Buscar componente...',
@@ -223,9 +223,9 @@ export function commandComGruposSource(): string {
  * Atalho por comando. Ele fica DENTRO do item de propósito: assim entra no nome
  * acessível, e quem ouve a lista descobre a tecla junto com o comando.
  */
-export function commandComAtalhosSource(): string {
+export function commandWithShortcutsSource(): string {
   return vueSnippet(
-    importar(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut'),
+    importing(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut'),
     moldura(
       paleta({
         placeholder: 'Buscar ação...',
@@ -272,11 +272,11 @@ export function commandComAtalhosSource(): string {
  * Fechar ao escolher é parte do arranjo: sem isso o painel fica por cima do
  * valor que a pessoa acabou de selecionar.
  */
-export function commandComoComboboxSource(): string {
+export function commandAsComboboxSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
 import { Button } from '@/components/ui/button'
-${importar(...PARTS_BASICAS)}
+${importing(...PARTS_BASICAS)}
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 const aberto = ref(false)
@@ -348,7 +348,7 @@ export function commandPaletteSource(): string {
   return vueSnippet(
     `import { onMounted, onUnmounted, ref } from 'vue'
 import { Button } from '@/components/ui/button'
-${importar('CommandDialog', 'CommandEmpty', 'CommandGroup', 'CommandInput', 'CommandItem', 'CommandList', 'CommandSeparator', 'CommandShortcut')}
+${importing('CommandDialog', 'CommandEmpty', 'CommandGroup', 'CommandInput', 'CommandItem', 'CommandList', 'CommandSeparator', 'CommandShortcut')}
 
 const aberto = ref(false)
 const ultimo = ref('')

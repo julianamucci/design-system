@@ -8,7 +8,7 @@
 import { attrs, svelteSnippet } from '@/lib/story-source';
 
 /** Nome do componente e caminho do módulo de cada ícone usado nas stories. */
-const ICONES = {
+const ICONS = {
   bold: ['Bold', 'bold'],
   italic: ['Italic', 'italic'],
   underline: ['Underline', 'underline'],
@@ -17,7 +17,7 @@ const ICONES = {
   layout: ['LayoutGrid', 'layout-grid'],
 } as const;
 
-type IconKey = keyof typeof ICONES;
+type IconKey = keyof typeof ICONS;
 
 export type ToggleArgs = {
   pressed: boolean;
@@ -34,11 +34,11 @@ export type ToggleArgs = {
 const IMPORT = `import { Toggle } from "@/components/ui/toggle";`;
 
 /** Bloco de imports: o componente do design system mais os ícones do exemplo. */
-function importar(...icones: IconKey[]): string {
+function importing(...icones: IconKey[]): string {
   return [
     IMPORT,
     ...icones.map((chave) => {
-      const [nome, caminho] = ICONES[chave];
+      const [nome, caminho] = ICONS[chave];
       return `import ${nome} from "@lucide/svelte/icons/${caminho}";`;
     }),
   ].join('\n');
@@ -46,7 +46,7 @@ function importar(...icones: IconKey[]): string {
 
 /** Um toggle só de ícone, numa linha — a forma que as comparações repetem. */
 function toggleLine(icone: IconKey, ...props: string[]): string {
-  return `<Toggle${attrs(...props)}><${ICONES[icone][0]} aria-hidden="true" /></Toggle>`;
+  return `<Toggle${attrs(...props)}><${ICONS[icone][0]} aria-hidden="true" /></Toggle>`;
 }
 
 /** Playground: um toggle só, com os valores atuais dos controls. */
@@ -73,21 +73,21 @@ export function toggleSource(_gerado?: string, ctx?: { args?: Partial<ToggleArgs
     withLabel ? '' : `aria-label="${ariaLabel || label || 'Alternar'}"`,
   );
 
-  const icone = ICONES[icon][0];
+  const icone = ICONS[icon][0];
   const corpo = withLabel
     ? `  <${icone} aria-hidden="true" />\n  ${label}`
     : `  <${icone} aria-hidden="true" />`;
 
-  return svelteSnippet(importar(icon), `<Toggle${props}>\n${corpo}\n</Toggle>`);
+  return svelteSnippet(importing(icon), `<Toggle${props}>\n${corpo}\n</Toggle>`);
 }
 
 /**
  * Serve a Outline (Variants) e a FocusVisible (States): o mesmo par de
  * variantes lado a lado. O foco é estado de execução, não muda a marcação.
  */
-export function variantsSourceTogglePair(): string {
+export function variantsTogglePairSource(): string {
   return svelteSnippet(
-    importar('bold', 'italic'),
+    importing('bold', 'italic'),
     `<div class="nds-cluster" data-spacing="sm">
   ${toggleLine('bold', 'aria-label="Negrito"')}
   ${toggleLine('italic', 'variant="outline"', 'aria-label="Itálico"')}
@@ -96,9 +96,9 @@ export function variantsSourceTogglePair(): string {
 }
 
 /** Sizes (Variants): a escada de densidade, com o degrau padrão sem atributo. */
-export function toggleTamanhosSource(): string {
+export function toggleSizesSource(): string {
   return svelteSnippet(
-    importar('bold'),
+    importing('bold'),
     `<div class="nds-cluster" data-spacing="sm">
   ${toggleLine('bold', 'variant="outline"', 'size="sm"', 'aria-label="Negrito pequeno"')}
   ${toggleLine('bold', 'variant="outline"', 'aria-label="Negrito padrão"')}
@@ -108,9 +108,9 @@ export function toggleTamanhosSource(): string {
 }
 
 /** WithLabel (Variants): com texto visível o aria-label vira ruído. */
-export function toggleComRotuloSource(): string {
+export function toggleWithLabelSource(): string {
   return svelteSnippet(
-    `${importar('eye', 'list')}
+    `${importing('eye', 'list')}
 
 let compacta = $state(true);`,
     `<div class="nds-cluster" data-spacing="sm">
@@ -127,9 +127,9 @@ let compacta = $state(true);`,
 }
 
 /** On (States): o inativo ao lado do ativo — é o contraste que se documenta. */
-export function toggleAtivoSource(): string {
+export function toggleActiveSource(): string {
   return svelteSnippet(
-    `${importar('bold')}
+    `${importing('bold')}
 
 let ativo = $state(true);`,
     `<div class="nds-cluster" data-spacing="sm">
@@ -140,9 +140,9 @@ let ativo = $state(true);`,
 }
 
 /** Disabled (States): o desabilitado nativo, ligado e desligado. */
-export function toggleDesabilitadoSource(): string {
+export function toggleDisabledSource(): string {
   return svelteSnippet(
-    `${importar('bold', 'italic')}
+    `${importing('bold', 'italic')}
 
 let ativo = $state(true);`,
     `<div class="nds-cluster" data-spacing="sm">
@@ -155,7 +155,7 @@ let ativo = $state(true);`,
 /** Invalid (States): o erro é o par aria-invalid + aria-describedby. */
 export function toggleInvalidoSource(): string {
   return svelteSnippet(
-    importar('bold'),
+    importing('bold'),
     `<div class="nds-stack" data-spacing="xs">
   <Toggle aria-invalid="true" aria-describedby="toggle-invalid-msg" aria-label="Negrito">
     <Bold aria-hidden="true" />
@@ -168,9 +168,9 @@ export function toggleInvalidoSource(): string {
 }
 
 /** FormattingToolbar (Compositions): os toggles independentes num grupo nomeado. */
-export function toggleBarraDeFormatacaoSource(): string {
+export function formattingToggleBarSource(): string {
   return svelteSnippet(
-    importar('bold', 'italic', 'underline', 'list'),
+    importing('bold', 'italic', 'underline', 'list'),
     `<div
   role="group"
   aria-label="Formatação de texto"
@@ -187,9 +187,9 @@ export function toggleBarraDeFormatacaoSource(): string {
 }
 
 /** FilterList (Compositions): cada filtro é uma escolha booleana isolada. */
-export function toggleFiltrosSource(): string {
+export function toggleFiltersSource(): string {
   return svelteSnippet(
-    `${importar('eye', 'list')}
+    `${importing('eye', 'list')}
 
 let compacta = $state(true);`,
     `<div class="nds-stack" data-spacing="sm">
@@ -209,9 +209,9 @@ let compacta = $state(true);`,
 }
 
 /** Controlled (Compositions): o estado externo acompanha o toggle nos dois sentidos. */
-export function toggleControladoSource(): string {
+export function toggleControlledSource(): string {
   return svelteSnippet(
-    `${importar('bold')}
+    `${importing('bold')}
 
 let ativo = $state(false);`,
     `<div class="nds-stack" data-spacing="sm">

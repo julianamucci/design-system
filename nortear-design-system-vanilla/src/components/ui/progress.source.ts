@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -35,7 +35,7 @@ export type ProgressSnippetItem = {
   'aria-label': string;
 };
 
-const ROTULO_PADRAO = 'Progresso do upload';
+const LABEL_DEFAULT = 'Progresso do upload';
 
 /**
  * Reindenta as linhas seguintes de um bloco já montado.
@@ -64,14 +64,14 @@ function linhasDaBarra(o: ProgressSnippetOptions): string[] {
     ['variant', o.variant ? texto(o.variant) : undefined],
     // Um `role="progressbar"` sem nome é anunciado como "barra de progresso,
     // 40%": o leitor diz quanto, nunca de quê.
-    ['aria-label', texto(o['aria-label'] ?? ROTULO_PADRAO)],
+    ['aria-label', texto(o['aria-label'] ?? LABEL_DEFAULT)],
   ]);
 }
 
 /** A chamada real de `createProgress` com as opções da story. */
 export function progressSnippet(o: ProgressSnippetOptions = {}): string {
   return snippet(
-    importar('progress', 'createProgress'),
+    importing('progress', 'createProgress'),
     o.value === null ? NOTA_INDETERMINADO : undefined,
     `const barra = ${chamada('createProgress', linhasDaBarra(o))};`,
     montar('barra'),
@@ -90,7 +90,7 @@ export function progressComRotuloSnippet(o: ProgressSnippetOptions = {}): string
   const anunciado = o.valueText ?? `${o.value ?? 42}%`;
 
   return snippet(
-    importar('progress', 'createProgress'),
+    importing('progress', 'createProgress'),
     `const bloco = document.createElement('div');
 bloco.className = 'nds-stack nds-w-md';
 bloco.dataset.spacing = 'xs';
@@ -134,7 +134,7 @@ export function progressListaSnippet(itens: ProgressSnippetItem[]): string {
   );
 
   return snippet(
-    importar('progress', 'createProgress'),
+    importing('progress', 'createProgress'),
     `const lista = document.createElement('div');
 lista.className = 'nds-stack nds-w-md';
 lista.dataset.spacing = 'md';
@@ -162,7 +162,7 @@ export function progressSourceLista(itens: ProgressSnippetItem[]): SourceTransfo
  */
 export function progressAnimadoSnippet(o: ProgressSnippetOptions = {}): string {
   return snippet(
-    importar('progress', 'createProgress'),
+    importing('progress', 'createProgress'),
     `const barra = ${chamada('createProgress', linhasDaBarra({ ...o, value: o.value ?? 0 }))};
 const indicador = barra.querySelector('[data-slot="progress-indicator"]');
 
@@ -191,7 +191,7 @@ export function progressSourceAnimado(
  */
 export function progressOcupadoSnippet(o: ProgressSnippetOptions = {}): string {
   return snippet(
-    importar('progress', 'createProgress'),
+    importing('progress', 'createProgress'),
     `const cartao = document.createElement('div');
 cartao.setAttribute('role', 'status');
 // Enquanto a operação corre. Quem termina a operação apaga o atributo.

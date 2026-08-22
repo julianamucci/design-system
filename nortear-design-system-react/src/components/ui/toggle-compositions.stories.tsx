@@ -5,8 +5,8 @@ import { Bold, Italic, Underline, List, Eye } from "lucide-react";
 import { Toggle } from "./toggle";
 import {
   toggleBarFormattingSource,
-  toggleControladoSource,
-  toggleFiltrosSource,
+  toggleControlledSource,
+  toggleFiltersSource,
   toggleSource,
 } from "./toggle.source";
 
@@ -105,7 +105,7 @@ export const FilterList: Story = {
   parameters: {
     docs: {
       // Dois filtros combináveis com rótulo visível — sub-composição do render.
-      source: { transform: toggleFiltrosSource },
+      source: { transform: toggleFiltersSource },
     },
   },
   render: () => (
@@ -157,7 +157,7 @@ export const Controlled: Story = {
   parameters: {
     docs: {
       // O estado externo vive num `useState` que o meta não imprime.
-      source: { transform: toggleControladoSource },
+      source: { transform: toggleControlledSource },
     },
   },
   render: function ControlledRender() {

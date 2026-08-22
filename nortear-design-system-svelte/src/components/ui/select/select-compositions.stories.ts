@@ -5,8 +5,8 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
 import {
-  selectComGruposSource,
-  selectComIconeSource,
+  selectWithGroupsSource,
+  selectWithIconSource,
   selectCompactoSource,
   selectSource,
 } from './select.source';
@@ -81,7 +81,7 @@ export const RegionSelection: Story = {
   parameters: {
     // Mesma composição da variante agrupada — é o uso real dela.
     docs: {
-      source: { transform: selectComGruposSource },
+      source: { transform: selectWithGroupsSource },
       description: {
         story:
           'Lista de estados agrupada por região via SelectGroup + SelectGroupHeading. Útil para listas médias (8–15 itens) com categorias naturais.',
@@ -116,7 +116,7 @@ export const WithIcons: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: selectComIconeSource },
+      source: { transform: selectWithIconSource },
       description: {
         story:
           'SelectItem com ícone (MapPin) inline antes do label. O ícone fica decorativo (aria-hidden).',

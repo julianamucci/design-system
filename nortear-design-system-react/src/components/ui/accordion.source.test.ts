@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  accordionComBadgeSource,
-  accordionComIconeSource,
-  accordionControladoSource,
-  accordionConteudoRicoSource,
+  accordionWithBadgeSource,
+  accordionWithIconSource,
+  accordionControlledSource,
+  accordionContentRichSource,
   accordionFaqSource,
-  accordionFechadoSource,
-  accordionItemDesabilitadoSource,
+  accordionClosedSource,
+  accordionItemDisabledSource,
   accordionMultiploSource,
   accordionNoConfigSource,
   accordionSource,
@@ -17,8 +17,8 @@ describe('accordionSource', () => {
     const saida = accordionSource();
     expect(saida).toContain('from "@/components/ui/accordion"');
     // As quatro peças juntas: sem o Item, o par gatilho/painel não tem dono.
-    for (const peca of ['Accordion,', 'AccordionContent,', 'AccordionItem,', 'AccordionTrigger,']) {
-      expect(saida).toContain(peca);
+    for (const part of ['Accordion,', 'AccordionContent,', 'AccordionItem,', 'AccordionTrigger,']) {
+      expect(saida).toContain(part);
     }
   });
 
@@ -50,9 +50,9 @@ describe('accordionSource', () => {
   });
 
   it('o espião de control não vira código no painel', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
+    const spy = () => 'CORPO_DO_MOCK';
     const saida = accordionSource(undefined, {
-      args: { multiple: espiao as never, orientation: espiao as never },
+      args: { multiple: spy as never, orientation: spy as never },
     });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).not.toContain('undefined');
@@ -72,7 +72,7 @@ describe('modos', () => {
   });
 
   it('controlado mostra o estado, que era o que o andaime da story escondia', () => {
-    const saida = accordionControladoSource();
+    const saida = accordionControlledSource();
     expect(saida).toContain('import { useState } from "react";');
     // Array inclusive no modo único: sem isso quem lê tipa o useState errado.
     expect(saida).toContain('useState<string[]>(["item-1"])');
@@ -81,11 +81,11 @@ describe('modos', () => {
   });
 
   it('fechado não abre item nenhum', () => {
-    expect(accordionFechadoSource()).not.toContain('defaultValue');
+    expect(accordionClosedSource()).not.toContain('defaultValue');
   });
 
   it('desabilitado é do ITEM, ao lado de um item que funciona', () => {
-    const saida = accordionItemDesabilitadoSource();
+    const saida = accordionItemDisabledSource();
     expect(saida).toContain('<AccordionItem value="item-2" disabled>');
     expect(saida).toContain('<AccordionItem value="item-1">');
     // A raiz continua habilitada: o recorte da story é a seção indisponível.
@@ -95,7 +95,7 @@ describe('modos', () => {
 
 describe('composições', () => {
   it('o ícone do gatilho sai da árvore de acessibilidade e o texto nomeia', () => {
-    const saida = accordionComIconeSource();
+    const saida = accordionWithIconSource();
     expect(saida).toContain('from "lucide-react"');
     expect(saida).toContain('aria-hidden="true"');
     // O respiro é do contêiner, nunca margem no ícone.
@@ -104,13 +104,13 @@ describe('composições', () => {
   });
 
   it('o badge no gatilho vem do design system, não de markup solto', () => {
-    const saida = accordionComBadgeSource();
+    const saida = accordionWithBadgeSource();
     expect(saida).toContain('import { Badge } from "@/components/ui/badge";');
     expect(saida).toContain('<Badge variant="secondary">Beta</Badge>');
   });
 
   it('conteúdo rico usa tabela de verdade — o grid colapsa dentro do painel', () => {
-    const saida = accordionConteudoRicoSource();
+    const saida = accordionContentRichSource();
     expect(saida).toContain('<table className="nds-w-full nds-text-body nds-border-collapse">');
     expect(saida).not.toContain('nds-grid');
   });
@@ -128,12 +128,12 @@ describe('composições', () => {
       accordionSource,
       accordionNoConfigSource,
       accordionMultiploSource,
-      accordionControladoSource,
-      accordionFechadoSource,
-      accordionItemDesabilitadoSource,
-      accordionComIconeSource,
-      accordionComBadgeSource,
-      accordionConteudoRicoSource,
+      accordionControlledSource,
+      accordionClosedSource,
+      accordionItemDisabledSource,
+      accordionWithIconSource,
+      accordionWithBadgeSource,
+      accordionContentRichSource,
       accordionFaqSource,
     ]) {
       const saida = fn();

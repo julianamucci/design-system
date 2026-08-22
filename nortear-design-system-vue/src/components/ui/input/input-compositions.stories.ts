@@ -14,7 +14,7 @@ import {
   inputAddonWithButtonSource,
   inputAlinhamentosSource,
   inputWithHelperSource,
-  inputComErroSource,
+  inputWithErrorSource,
   inputWithLabelSource,
   inputObrigatorioSource,
 } from './input.source';
@@ -112,7 +112,7 @@ export const WithSupportText: Story = {
 export const ErrorMessage: Story = {
   // `aria-invalid` mais a mensagem apontada por `aria-describedby`: a cor da
   // borda sozinha não alcança quem não enxerga.
-  parameters: { docs: { source: { transform: inputComErroSource } } },
+  parameters: { docs: { source: { transform: inputWithErrorSource } } },
   render: () => ({
     components: { Input, Label },
     template: `

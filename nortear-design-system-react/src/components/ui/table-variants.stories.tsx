@@ -14,10 +14,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { INVOICES, TOTAL } from "./table.fixtures";
 import {
-  lineSourceTableActions,
+  lineTableActionsSource,
   tableBasicaSource,
-  tableLegendaOcultaSource,
-  tableRolagemHorizontalSource,
+  tableCaptionOcultaSource,
+  tableScrollHorizontalSource,
   tableSource,
 } from "./table.source";
 
@@ -100,8 +100,8 @@ export const Basic: Story = {
       const ths = [...canvasElement.querySelectorAll<HTMLElement>("thead th")];
       await expect(ths[3]).toHaveTextContent("Valor");
       await expect(getComputedStyle(ths[3]).textAlign).toBe("right");
-      const valorTd = canvasElement.querySelector<HTMLElement>("tbody tr td:last-child")!;
-      await expect(getComputedStyle(valorTd).textAlign).toBe("right");
+      const valueTd = canvasElement.querySelector<HTMLElement>("tbody tr td:last-child")!;
+      await expect(getComputedStyle(valueTd).textAlign).toBe("right");
       // A coluna descritiva continua à esquerda: o alinhamento é escolha por
       // coluna, não estilo da tabela.
       await expect(getComputedStyle(ths[0]).textAlign).toBe("left");
@@ -155,8 +155,8 @@ export const WithFooter: Story = {
       const tabela = canvasElement.querySelector<HTMLElement>("table")!;
       const tfoot = tabela.querySelector<HTMLElement>("tfoot")!;
       await expect(tfoot).toHaveAttribute("data-slot", "table-footer");
-      const posicao = tabela.querySelector("tbody")!.compareDocumentPosition(tfoot);
-      await expect(posicao & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      const position = tabela.querySelector("tbody")!.compareDocumentPosition(tfoot);
+      await expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
       await expect(tfoot.querySelector("td")).toHaveAttribute("colspan", "3");
       await expect(tfoot).toHaveTextContent(TOTAL);
       // O total não é registro: o corpo continua com as mesmas cinco linhas.
@@ -166,10 +166,10 @@ export const WithFooter: Story = {
     await step("O rodapé se distingue do corpo por fundo próprio", async () => {
       // visual.item3 — `.nds-table tfoot tr` pinta hsl(var(--muted) / 0.5). Sem
       // a distinção o sumário some no meio dos registros.
-      const linhaRodape = canvasElement.querySelector<HTMLElement>("tfoot tr")!;
-      const linhaCorpo = canvasElement.querySelector<HTMLElement>("tbody tr")!;
-      await expect(getComputedStyle(linhaRodape).backgroundColor).not.toBe(
-        getComputedStyle(linhaCorpo).backgroundColor,
+      const lineFooter = canvasElement.querySelector<HTMLElement>("tfoot tr")!;
+      const lineBody = canvasElement.querySelector<HTMLElement>("tbody tr")!;
+      await expect(getComputedStyle(lineFooter).backgroundColor).not.toBe(
+        getComputedStyle(lineBody).backgroundColor,
       );
     });
   },
@@ -182,7 +182,7 @@ export const CaptionSrOnly: Story = {
     covers: ["functional.item6", "accessibility.item2"],
     docs: {
       // O título visível ao lado da legenda invisível é o par que a story ensina.
-      source: { transform: tableLegendaOcultaSource },
+      source: { transform: tableCaptionOcultaSource },
     },
   },
   render: () => (
@@ -240,7 +240,7 @@ export const WithRowActions: Story = {
     covers: ["accessibility.item3", "visual.item4"],
     docs: {
       // A coluna de ações é composição do render, com Button e ícone mudo.
-      source: { transform: lineSourceTableActions },
+      source: { transform: lineTableActionsSource },
     },
   },
   render: () => (
@@ -312,7 +312,7 @@ export const WithRowActions: Story = {
 
 // Dois anos de competência, não um: com doze colunas a tabela ainda cabe num
 // canvas largo, e a story provaria a rolagem só nos viewports estreitos.
-const MESES = ["2025", "2026"].flatMap((ano) =>
+const MONTHS = ["2025", "2026"].flatMap((ano) =>
   ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"].map(
     (mes) => `${mes}/${ano}`,
   ),
@@ -323,7 +323,7 @@ export const HorizontalScroll: Story = {
     covers: ["functional.item5"],
     docs: {
       // As 24 colunas que provocam a rolagem só existem no render.
-      source: { transform: tableRolagemHorizontalSource },
+      source: { transform: tableScrollHorizontalSource },
     },
   },
   render: () => (
@@ -332,7 +332,7 @@ export const HorizontalScroll: Story = {
       <TableHeader>
         <TableRow>
           <TableHead>Fatura</TableHead>
-          {MESES.map((mes) => (
+          {MONTHS.map((mes) => (
             <TableHead key={mes}>{mes}</TableHead>
           ))}
         </TableRow>
@@ -341,7 +341,7 @@ export const HorizontalScroll: Story = {
         {INVOICES.slice(0, 3).map((invoice) => (
           <TableRow key={invoice.id}>
             <TableCell className="nds-font-medium">{invoice.id}</TableCell>
-            {MESES.map((mes) => (
+            {MONTHS.map((mes) => (
               <TableCell key={mes} className="nds-text-right">
                 {invoice.amount}
               </TableCell>

@@ -5,7 +5,7 @@ import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
 import carouselTranslations from '@shared/content/carousel/translations.json';
 import {
-  carouselComDotsSource,
+  carouselWithDotsSource,
   carouselGaleriaSource,
   carouselSource,
 } from './carousel.source';
@@ -17,12 +17,12 @@ import {
  * — quem resolve o idioma de quem lê é a docs page, e uma play que dependesse
  * do seletor de idioma procuraria um nome diferente a cada rodada.
  */
-const CONTEUDO = carouselTranslations['pt-BR'].demonstration.labels;
+const CONTENT = carouselTranslations['pt-BR'].demonstration.labels;
 /** Nome acessível: posição E total. "Slide 2" sozinho não diz para onde leva. */
-const nomeAcessivel = (posicao: number, total: number) =>
-  `${CONTEUDO.goToSlide} ${posicao} ${CONTEUDO.of} ${total}`;
+const nomeAcessivel = (position: number, total: number) =>
+  `${CONTENT.goToSlide} ${position} ${CONTENT.of} ${total}`;
 /** Texto visível da pílula — um PEDAÇO do nome acessível (WCAG 2.5.3). */
-const rotuloVisivel = (posicao: number) => `${CONTEUDO.slide} ${posicao}`;
+const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
 
 const meta: Meta = {
   title: 'UI/Carousel/Compositions',
@@ -52,7 +52,7 @@ const TOTAL_DOTS = 5;
 export const WithDots: Story = {
   parameters: {
     covers: ['functional.item8', 'accessibility.item6', 'visual.item5'],
-    docs: { source: { transform: carouselComDotsSource } },
+    docs: { source: { transform: carouselWithDotsSource } },
   },
   render: () => ({
     Component: CarouselStory,
@@ -63,9 +63,9 @@ export const WithDots: Story = {
       ariaLabel: 'Galeria com dots',
       previousLabel: 'Item anterior',
       nextLabel: 'Próximo item',
-      goToSlideLabel: CONTEUDO.goToSlide,
-      slideLabel: CONTEUDO.slide,
-      ofLabel: CONTEUDO.of,
+      goToSlideLabel: CONTENT.goToSlide,
+      slideLabel: CONTENT.slide,
+      ofLabel: CONTENT.of,
     },
   }),
   play: async ({ canvasElement, step }) => {
@@ -82,7 +82,7 @@ export const WithDots: Story = {
      * acontecido. Qual slide está à vista não tem esse ruído — e é o que a
      * story afirma.
      */
-    const slideEmFoco = () => {
+    const focusSlide = () => {
       const v = viewport.getBoundingClientRect();
       let melhor = 0;
       let maior = -Infinity;
@@ -95,7 +95,7 @@ export const WithDots: Story = {
     };
 
     const emSlide = async (i: number) =>
-      waitFor(async () => { await expect(slideEmFoco()).toBe(i); }, { timeout: 4000 });
+      waitFor(async () => { await expect(focusSlide()).toBe(i); }, { timeout: 4000 });
 
     // Posição E total no nome: "2" sozinho não diz para onde leva.
     const dot = (n: number) => canvas.getByRole('button', { name: nomeAcessivel(n, TOTAL_DOTS) });
@@ -147,9 +147,9 @@ export const WithDots: Story = {
       }, { timeout: 4000 });
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
-      await expect(rotulo(dot(2))).toHaveTextContent(rotuloVisivel(2));
+      await expect(rotulo(dot(2))).toHaveTextContent(labelVisible(2));
       await expect(nomeAcessivel(2, TOTAL_DOTS).toLowerCase()).toContain(
-        rotuloVisivel(2).toLowerCase(),
+        labelVisible(2).toLowerCase(),
       );
 
       // A forma mudou, não só a cor: a pílula é mais larga que o ponto vizinho.
@@ -158,9 +158,9 @@ export const WithDots: Story = {
       // E os DEMAIS continuam pontos: nenhum outro rótulo à vista, e um único
       // `aria-current` na fileira inteira.
       const demais = Array.from({ length: TOTAL_DOTS }, (_, k) => k + 1).filter((p) => p !== 2);
-      for (const posicao of demais) {
-        await expect(largura(rotulo(dot(posicao)))).toBeLessThan(1);
-        await expect(dot(posicao).hasAttribute('aria-current')).toBe(false);
+      for (const position of demais) {
+        await expect(largura(rotulo(dot(position)))).toBeLessThan(1);
+        await expect(dot(position).hasAttribute('aria-current')).toBe(false);
       }
     });
 
@@ -168,8 +168,8 @@ export const WithDots: Story = {
       // Medido na densidade padrão do preview. O ponto tem marca de 8px e a
       // pílula tem texto de 12px: sem o piso, os dois ficariam abaixo dos 24px
       // que a WCAG 2.5.8 cobra — foi o defeito que criou `.nds-carousel-dot`.
-      for (let posicao = 1; posicao <= TOTAL_DOTS; posicao++) {
-        const caixa = dot(posicao).getBoundingClientRect();
+      for (let position = 1; position <= TOTAL_DOTS; position++) {
+        const caixa = dot(position).getBoundingClientRect();
         await expect(caixa.width).toBeGreaterThanOrEqual(24);
         await expect(caixa.height).toBeGreaterThanOrEqual(24);
       }
@@ -234,12 +234,12 @@ export const Gallery: Story = {
       // Numa galeria a imagem É o conteúdo: sem alt o slide não existe para
       // quem não vê. Repetir o mesmo texto em todas seria o mesmo que nenhum,
       // então os alts também precisam ser distintos entre si.
-      const imagens = Array.from(canvasElement.querySelectorAll('img'));
-      await expect(imagens.length).toBe(FOTOS.length);
-      for (const img of imagens) {
+      const images = Array.from(canvasElement.querySelectorAll('img'));
+      await expect(images.length).toBe(FOTOS.length);
+      for (const img of images) {
         await expect(img.alt.trim().length).toBeGreaterThan(0);
       }
-      const distintos = new Set(imagens.map((img) => img.alt.trim()));
+      const distintos = new Set(images.map((img) => img.alt.trim()));
       await expect(distintos.size).toBe(FOTOS.length);
     });
   },

@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  formComDescricaoSource,
-  formDesabilitadoSource,
+  formWithDescriptionSource,
+  formDisabledSource,
   formFieldsetSource,
   formInvalidoSource,
   formMultiplosFieldsSource,
-  formPaletaEscuraSource,
-  formRotuloEControleSource,
+  formPaletteDarkSource,
+  formLabelEControleSource,
   formSource,
 } from './form.source';
 
@@ -81,14 +81,14 @@ import { Input } from '@/components/ui/input'
 
 describe('transforms das stories de variante', () => {
   it('a combinação mínima não traz apoio nem erro', () => {
-    const saida = formRotuloEControleSource();
+    const saida = formLabelEControleSource();
     expect(saida).toContain('label="Nome completo"');
     expect(saida).not.toContain('description=');
     expect(saida).not.toContain('error=');
   });
 
   it('a variante com apoio troca o tipo do controle e traz o autocomplete', () => {
-    const saida = formComDescricaoSource();
+    const saida = formWithDescriptionSource();
     expect(saida).toContain('description="Use pelo menos 8 caracteres, com letras e números."');
     expect(saida).toContain('<Input type="password" autocomplete="new-password" />');
   });
@@ -105,7 +105,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o desabilitado mantém rótulo e apoio, e não vira erro', () => {
-    const saida = formDesabilitadoSource();
+    const saida = formDisabledSource();
     expect(saida).toContain('label="CPF"');
     expect(saida).toContain('description="Preenchido pelo cadastro da empresa."');
     expect(saida).toContain('disabled');
@@ -114,7 +114,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a paleta escura é tema do documento, não classe na marcação', () => {
-    const saida = formPaletaEscuraSource();
+    const saida = formPaletteDarkSource();
     // Escrever `.dark` no snippet ensinaria a prender a paleta ao componente.
     expect(saida).not.toContain('dark');
     expect(saida).toContain('<Fieldset legend="Endereço de entrega">');

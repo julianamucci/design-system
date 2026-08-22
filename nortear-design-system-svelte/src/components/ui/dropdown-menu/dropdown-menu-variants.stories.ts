@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
 
 import { within, expect, userEvent, waitFor } from 'storybook/test';
-import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
+import { itemContrast } from '@shared/testing/dropdown-menu-probe';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
 import {
-  dropdownMenuDestrutivoSource,
-  dropdownMenuPadraoSource,
+  dropdownMenuDestructiveSource,
+  dropdownMenuDefaultSource,
   dropdownMenuSource,
 } from './dropdown-menu.source';
 
@@ -39,7 +39,7 @@ export const Default: Story = {
   args: { defaultOpen: true, variant: 'default', triggerLabel: 'Mais ações' },
   parameters: {
     covers: ['accessibility.item4', 'accessibility.item6'],
-    docs: { source: { transform: dropdownMenuPadraoSource } },
+    docs: { source: { transform: dropdownMenuDefaultSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
@@ -56,9 +56,9 @@ export const Default: Story = {
     await step('O item neutro herda a cor do popup, sem cor semântica', async () => {
       // O item destacado troca de cor de propósito — a comparação tem que ser
       // com um item em repouso, senão ela mede o realce e não a variante.
-      const emRepouso = itens.filter((i) => !i.hasAttribute('data-highlighted'));
-      await expect(emRepouso.length).toBeGreaterThan(0);
-      await expect(getComputedStyle(emRepouso[0]).color).toBe(getComputedStyle(menu).color);
+      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      await expect(inRest.length).toBeGreaterThan(0);
+      await expect(getComputedStyle(inRest[0]).color).toBe(getComputedStyle(menu).color);
     });
 
     await step('O texto do item atinge 4.5:1 sobre o fundo do popup', async () => {
@@ -66,10 +66,10 @@ export const Default: Story = {
       // ninguém rodava: o axe do test-runner mede o que está na tela, e comparar
       // nome de token não responde a pergunta. A razão é aritmética. 14px em
       // peso normal é texto normal pela WCAG: o limite é 4.5, não 3.
-      const emRepouso = itens.filter((i) => !i.hasAttribute('data-highlighted'));
-      const medida = contrasteDoItem(emRepouso[0]);
+      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      const medida = itemContrast(inRest[0]);
       await expect(medida).not.toBeNull();
-      await expect(medida!.razao).toBeGreaterThanOrEqual(4.5);
+      await expect(medida!.ratio).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -78,7 +78,7 @@ export const Destructive: Story = {
   args: { defaultOpen: true, variant: 'destructive', triggerLabel: 'Ações da conta' },
   parameters: {
     covers: ['visual.item5'],
-    docs: { source: { transform: dropdownMenuDestrutivoSource } },
+    docs: { source: { transform: dropdownMenuDestructiveSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');

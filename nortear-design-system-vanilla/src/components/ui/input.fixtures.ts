@@ -5,7 +5,7 @@ import { createInput } from './input';
 // Arquivo à parte porque num `*.stories.ts` TODO export nomeado vira uma story:
 // um helper exportado apareceria na sidebar como se fosse um exemplo.
 //
-// `campoRotulado` estava copiada em `input-estados` e `input-tipos`. A cópia dos
+// `fieldLabelled` estava copiada em `input-estados` e `input-tipos`. A cópia dos
 // estados tinha crescido um objeto de opções (`disabled`, `invalido`,
 // `mensagem`); a dos tipos ficara na assinatura posicional antiga, com só o
 // essencial. A árvore montada é a MESMA quando os extras não vêm, então a versão
@@ -27,7 +27,7 @@ export interface FieldLabelledOptions {
 }
 
 /** Rótulo e campo, ligados por `for`/`id`, com a mensagem de erro quando há. */
-export function campoRotulado(opts: FieldLabelledOptions): HTMLElement {
+export function fieldLabelled(opts: FieldLabelledOptions): HTMLElement {
   const wrapper = document.createElement('div');
   wrapper.className = 'nds-stack nds-w-xs';
   wrapper.dataset.spacing = 'xs';

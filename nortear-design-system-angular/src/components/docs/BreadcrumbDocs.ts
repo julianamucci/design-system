@@ -160,7 +160,7 @@ const IMPORT_BASICO = `import {
   NdsBreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';`;
 
-const IMPORT_COM_RETICENCIAS = `import {
+const IMPORT_WITH_ELLIPSIS = `import {
   NdsBreadcrumb,
   NdsBreadcrumbList,
   NdsBreadcrumbItem,
@@ -603,7 +603,7 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly importBasico = IMPORT_BASICO;
-  protected readonly importComReticencias = IMPORT_COM_RETICENCIAS;
+  protected readonly importComReticencias = IMPORT_WITH_ELLIPSIS;
   protected readonly customizationCode = CODE_CUSTOMIZACAO;
 
   protected readonly activeSection = signal<string | undefined>(undefined);

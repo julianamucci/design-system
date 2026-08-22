@@ -1,30 +1,30 @@
 import { describe, expect, it } from 'vitest';
 import {
   inputOtpAlfanumericoSource,
-  inputOtpComErroSource,
-  inputOtpComReenvioSource,
-  inputOtpComSeparadorSource,
+  inputOtpWithErrorSource,
+  inputOtpWithReenvioSource,
+  inputOtpWithSeparatorSource,
   inputOtpWithTextAuxiliarSource,
   inputOtpCompletoSource,
-  inputOtpDesabilitadoSource,
+  inputOtpDisabledSource,
   inputOtpPreenchendoSource,
   inputOtpQuatroDigitosSource,
   inputOtpSource,
-  inputOtpVazioSource,
+  inputOtpEmptySource,
 } from './input-otp.source';
 
 const TODAS = [
   inputOtpSource,
   inputOtpQuatroDigitosSource,
-  inputOtpComSeparadorSource,
+  inputOtpWithSeparatorSource,
   inputOtpAlfanumericoSource,
-  inputOtpVazioSource,
+  inputOtpEmptySource,
   inputOtpPreenchendoSource,
   inputOtpCompletoSource,
-  inputOtpDesabilitadoSource,
-  inputOtpComErroSource,
+  inputOtpDisabledSource,
+  inputOtpWithErrorSource,
   inputOtpWithTextAuxiliarSource,
-  inputOtpComReenvioSource,
+  inputOtpWithReenvioSource,
 ];
 
 describe('inputOtpSource', () => {
@@ -46,8 +46,8 @@ describe('inputOtpSource', () => {
   it('o espião de onComplete não vira código no painel', () => {
     // O Storybook entrega `onComplete` como FUNÇÃO; interpolá-la despejaria o
     // corpo do mock como se fosse API do design system.
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = inputOtpSource(undefined, { args: { onComplete: espiao as never } });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = inputOtpSource(undefined, { args: { onComplete: spy as never } });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).toContain('onComplete={(valor) => verificarCodigo(valor)}');
   });
@@ -112,7 +112,7 @@ describe('variantes', () => {
   });
 
   it('o separador divide a LEITURA, e o campo continua sendo um só', () => {
-    const saida = inputOtpComSeparadorSource();
+    const saida = inputOtpWithSeparatorSource();
     expect(saida).toContain('<InputOTPSeparator />');
     expect(saida).toContain('maxLength={6}');
     // Índices explícitos e contínuos entre os dois grupos: é o que mostra que a
@@ -133,7 +133,7 @@ describe('variantes', () => {
 
 describe('estados', () => {
   it('o vazio nasce com o cursor posto', () => {
-    const saida = inputOtpVazioSource();
+    const saida = inputOtpEmptySource();
     expect(saida).toContain('autoFocus');
     expect(saida).toContain('useState("")');
   });
@@ -146,11 +146,11 @@ describe('estados', () => {
   });
 
   it('o bloqueado é atributo do campo', () => {
-    expect(inputOtpDesabilitadoSource()).toMatch(/<InputOTP[\s\S]*?\n\s+disabled\n/);
+    expect(inputOtpDisabledSource()).toMatch(/<InputOTP[\s\S]*?\n\s+disabled\n/);
   });
 
   it('o erro liga a mensagem ao campo pelas duas pontas', () => {
-    const saida = inputOtpComErroSource();
+    const saida = inputOtpWithErrorSource();
     expect(saida).toContain('aria-invalid="true"');
     const alvo = saida.match(/aria-describedby="([a-z0-9-]+)"/)?.[1];
     expect(alvo).toBeDefined();
@@ -172,7 +172,7 @@ describe('composições', () => {
   it('o reenvio vem DEPOIS do campo na ordem do DOM', () => {
     // Quem termina de digitar encontra o reenvio no próximo Tab, sem voltar
     // pelo caminho.
-    const saida = inputOtpComReenvioSource();
+    const saida = inputOtpWithReenvioSource();
     expect(saida.indexOf('</InputOTP>')).toBeLessThan(saida.indexOf('<Button'));
     expect(saida).toContain('import { Button } from "@/components/ui/button";');
   });

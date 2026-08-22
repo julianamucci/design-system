@@ -6,7 +6,7 @@ import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
 import SelectDocs from '@/components/docs/SelectDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { medirAnelDeFoco, ESTADOS } from '@shared/testing/select-probe';
+import { focusMeasureRing, STATES } from '@shared/testing/select-probe';
 import { selectSource } from './select.source';
 
 const meta: Meta = {
@@ -83,14 +83,14 @@ export const Playground: Story = {
       placeholder: 'Selecione...',
       ariaLabel: 'Selecionar estado',
       variant: 'default',
-      options: [...ESTADOS],
+      options: [...STATES],
       onValueChange: args.onValueChange,
     },
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const trigger = canvas.getByRole('combobox', { name: /Selecionar estado/i });
-    const espiao = args.onValueChange as unknown as { mock: { calls: unknown[] } };
+    const spy = args.onValueChange as unknown as { mock: { calls: unknown[] } };
 
     // Cada passo estabelece a própria precondição: o painel Interactions
     // reexecuta a play no MESMO DOM, e um clique cego inverteria o resultado na
@@ -124,7 +124,7 @@ export const Playground: Story = {
       // `outline: 0` na folha é intencional — o anel é `box-shadow`. Medir a
       // MUDANÇA, e não `boxShadow !== 'none'`, é o que distingue anel de foco
       // de anel de erro, que já existe sem foco.
-      await expect(medirAnelDeFoco(trigger).mudou).toBe(true);
+      await expect(focusMeasureRing(trigger).mudou).toBe(true);
     });
 
     await step('Abrir mostra a lista, e a seta anda pelas opções', async () => {
@@ -139,7 +139,7 @@ export const Playground: Story = {
         .toBe('listbox');
       await expect(apontado).toBe(listbox);
       const opcoes = within(listbox).getAllByRole('option');
-      await expect(opcoes).toHaveLength(ESTADOS.length);
+      await expect(opcoes).toHaveLength(STATES.length);
       // Onde o teclado fica ao abrir varia por lib: umas movem o foco para
       // dentro do painel, outras o mantêm no campo e comandam a lista por
       // 'aria-activedescendant'. O que NÃO varia é a seta andar pela lista em
@@ -168,17 +168,17 @@ export const Playground: Story = {
       await abrir();
       await userEvent.keyboard('{Enter}');
       await waitForPortalGone('listbox');
-      await expect(espiao).toHaveBeenCalledWith('mg');
+      await expect(spy).toHaveBeenCalledWith('mg');
       await expect(trigger).toHaveTextContent(/Minas Gerais/);
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('Escape fecha sem trocar a escolha e devolve o foco', async () => {
       await abrir();
-      const chamadasAntes = espiao.mock.calls.length;
+      const callsBefore = spy.mock.calls.length;
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('listbox');
-      await expect(espiao.mock.calls.length).toBe(chamadasAntes);
+      await expect(spy.mock.calls.length).toBe(callsBefore);
       await expect(trigger).toHaveTextContent(/Minas Gerais/);
       await waitFor(async () => {
         await expect(trigger).toHaveFocus();

@@ -120,7 +120,7 @@ export const Playground: Story = {
     await step('O conteúdo rola dentro do viewport, sem mover a página', async () => {
       // functional.item1. A página é o alvo real: rolagem que escapa para o
       // documento é o defeito clássico deste componente.
-      const paginaAntes = document.scrollingElement?.scrollTop ?? 0;
+      const pageBefore = document.scrollingElement?.scrollTop ?? 0;
       const horizontal = args.orientation === 'horizontal';
       const eixo = horizontal ? 'scrollLeft' : 'scrollTop';
       const eixos = transbordo(viewport);
@@ -131,7 +131,7 @@ export const Playground: Story = {
       viewport[eixo] = 0;
       viewport[eixo] = 40;
       await expect(viewport[eixo]).toBe(40);
-      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(paginaAntes);
+      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(pageBefore);
     });
 
     await step('Nada do conteúdo é escondido de tecnologia assistiva', async () => {

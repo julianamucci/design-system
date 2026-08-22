@@ -4,7 +4,7 @@ import {
   chartBarSource,
   chartWithCardSource,
   chartWithDicaSource,
-  chartComLegendaSource,
+  chartWithCaptionSource,
   chartContrastSource,
   chartDuasSeriesSource,
   chartLineSource,
@@ -12,9 +12,9 @@ import {
   chartPieSource,
   chartSerieUnicaSource,
   chartSource,
-  chartTituloNoDesenhoSource,
-  themeSourceChartTokens,
-  chartVazioSource,
+  designChartTitleSource,
+  themeChartTokensSource,
+  chartEmptySource,
 } from './chart.source';
 
 describe('chartSource', () => {
@@ -112,7 +112,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o título no desenho dispensa o rótulo autoral — a ausência é o assunto', () => {
-    const saida = chartTituloNoDesenhoSource();
+    const saida = designChartTitleSource();
     expect(saida).toContain(`title: 'Vendas mensais'`);
     expect(saida).not.toContain('aria-label=');
     expect(saida).toContain('class="nds-max-w-lg"');
@@ -127,7 +127,7 @@ describe('transforms das stories de configuração', () => {
   });
 
   it('a legenda automática vem de três séries, e a multi-série leva título no option', () => {
-    expect(chartComLegendaSource()).toContain(`{ name: 'Tablet', data: [40, 90, 60, 100] },`);
+    expect(chartWithCaptionSource()).toContain(`{ name: 'Tablet', data: [40, 90, 60, 100] },`);
     expect(chartMultiSerieSource()).toContain(`title: 'Acessos por dispositivo'`);
     // O título mora dentro do option, não num elemento em volta.
     expect(chartMultiSerieSource()).not.toContain('<CardTitle>');
@@ -136,7 +136,7 @@ describe('transforms das stories de configuração', () => {
 
 describe('transforms das stories de estado', () => {
   it('o vazio não tem dado, não tem rótulo de imagem e traz a frase completa', () => {
-    const saida = chartVazioSource();
+    const saida = chartEmptySource();
     expect(saida).toContain(':option="buildBarOption({ data: [] })"');
     expect(saida).toContain('empty-label="Nenhum dado disponível para o período selecionado."');
     // Sem desenho não há imagem a nomear: o container larga o `role="img"`.
@@ -150,7 +150,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('os tokens de tema empilham dois containers, sem prop de tema a passar', () => {
-    const saida = themeSourceChartTokens();
+    const saida = themeChartTokensSource();
     expect(saida).toContain('<div class="nds-stack">');
     expect(saida.match(/<ChartContainer/g)).toHaveLength(2);
     expect(saida).toContain('buildBarOption({ xAxis: meses, series })');

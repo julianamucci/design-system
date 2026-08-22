@@ -1,26 +1,26 @@
 import { describe, expect, it } from 'vitest';
 import {
   dataTableWithEditSource,
-  columnSourceDataTableWithFilters,
-  lineSourceDataTableWithLabel,
+  columnDataTableWithFiltersSource,
+  lineDataTableWithLabelSource,
   dataTablePaginadaSource,
   dataTableRedimensionavelSource,
   dataTableReordenavelEFixavelSource,
-  dataTableSemResultadosSource,
+  dataTableNoResultsSource,
   dataTableSource,
   dataTableVirtualizadaSource,
 } from './data-table.source';
 
 const TODAS = [
   dataTableSource,
-  columnSourceDataTableWithFilters,
+  columnDataTableWithFiltersSource,
   dataTableRedimensionavelSource,
   dataTableReordenavelEFixavelSource,
   dataTableWithEditSource,
   dataTablePaginadaSource,
-  lineSourceDataTableWithLabel,
+  lineDataTableWithLabelSource,
   dataTableVirtualizadaSource,
-  dataTableSemResultadosSource,
+  dataTableNoResultsSource,
 ];
 
 describe('dataTableSource', () => {
@@ -36,9 +36,9 @@ describe('dataTableSource', () => {
     // dados e um erro de compilação.
     const saida = dataTableSource();
     expect(saida).toContain('const invoices = [');
-    const declaracao = saida.indexOf('const invoices');
-    expect(declaracao).toBeGreaterThan(-1);
-    expect(saida.indexOf('data={invoices}')).toBeGreaterThan(declaracao);
+    const declaration = saida.indexOf('const invoices');
+    expect(declaration).toBeGreaterThan(-1);
+    expect(saida.indexOf('data={invoices}')).toBeGreaterThan(declaration);
   });
 
   it('declara colunas e tipo antes de usá-los', () => {
@@ -113,9 +113,9 @@ describe('dataTableSource', () => {
   });
 
   it('não deixa espião de control virar código', () => {
-    const espiao = (() => 'CORPO_DO_MOCK') as never;
+    const spy = (() => 'CORPO_DO_MOCK') as never;
     const saida = dataTableSource(undefined, {
-      args: { caption: espiao, globalFilterPlaceholder: espiao, pageSize: espiao },
+      args: { caption: spy, globalFilterPlaceholder: spy, pageSize: spy },
     });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).toContain('caption="Faturas recentes"');
@@ -125,7 +125,7 @@ describe('dataTableSource', () => {
 
 describe('configurações por feature', () => {
   it('o filtro por coluna é declarado na COLUNA', () => {
-    const saida = columnSourceDataTableWithFilters();
+    const saida = columnDataTableWithFiltersSource();
     expect(saida).toContain('meta: { filter: { type: "text" } }');
     expect(saida).toContain('filter: { type: "select", options: ["Pago", "Pendente", "Cancelado"] }');
     expect(saida).toContain('enableColumnFilters');
@@ -157,7 +157,7 @@ describe('configurações por feature', () => {
   });
 
   it('rowLabel vence a primeira coluna como identificador da linha', () => {
-    const saida = lineSourceDataTableWithLabel();
+    const saida = lineDataTableWithLabelSource();
     expect(saida).toContain('rowLabel={(fatura) => fatura.customer}');
     expect(saida).toContain('rowKey={(fatura) => fatura.id}');
   });
@@ -174,7 +174,7 @@ describe('configurações por feature', () => {
   it('o estado vazio chega como recorte, e a grade continua de pé', () => {
     // O conjunto vazio é o `data`; as colunas permanecem, porque quem esvaziou
     // o recorte com um filtro precisa do campo para desfazer.
-    const saida = dataTableSemResultadosSource();
+    const saida = dataTableNoResultsSource();
     expect(saida).toContain('data={[]}');
     expect(saida).toContain('emptyMessage="Nenhuma fatura encontrada."');
     expect(saida).toContain('columns={columns}');

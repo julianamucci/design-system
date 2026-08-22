@@ -6,9 +6,9 @@ import { Info } from 'lucide-vue-next';
 import {
   alertCompletoSource,
   alertInsercaoDinamicaSource,
-  alertSemAnuncioSource,
-  alertSemIconeSource,
-  alertSemTituloSource,
+  alertNoAnnouncementSource,
+  alertNoIconSource,
+  alertNoTitleSource,
 } from './alert.source';
 
 const meta = {
@@ -57,7 +57,7 @@ export const WithoutTitle: Story = {
     covers: ['functional.item4', 'visual.item3'],
     // A ausência do título É o assunto, e com ela some também o import — a do
     // meta traz os dois.
-    docs: { source: { transform: alertSemTituloSource } },
+    docs: { source: { transform: alertNoTitleSource } },
   },
   render: () => ({
     components: { Alert, AlertDescription, Info },
@@ -87,7 +87,7 @@ export const WithoutTitle: Story = {
 export const WithoutIcon: Story = {
   parameters: {
     // A ausência do ícone É o assunto, e leva junto o import dele.
-    docs: { source: { transform: alertSemIconeSource } },
+    docs: { source: { transform: alertNoIconSource } },
   },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription },
@@ -123,7 +123,7 @@ export const WithoutAnnouncement: Story = {
   parameters: {
     // O assunto é o CONTRASTE entre dois alertas, um com papel explícito e
     // outro no padrão — a do meta mostra um só.
-    docs: { source: { transform: alertSemAnuncioSource } },
+    docs: { source: { transform: alertNoAnnouncementSource } },
   },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, Info },

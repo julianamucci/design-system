@@ -29,7 +29,7 @@ const EPSILON = 0.03;
 
 // ─── 1. Escala por estado ativo ──────────────────────────────────────────────
 
-export interface MedidaDeSlide {
+export interface SlideMeasurement {
   /** Posição no trilho, para a mensagem de falha dizer QUAL slide. */
   indice: number;
   /** `null` quando a stack não declarou o estado — e isso É o achado. */
@@ -42,7 +42,7 @@ export interface MedidaDeSlide {
   escala: number;
 }
 
-export interface FalhaDeCarrossel {
+export interface CarrosselFailure {
   onde: string;
   motivo: string;
 }
@@ -56,7 +56,7 @@ export interface FalhaDeCarrossel {
  * deixa a sonda provar as duas metades — que a pintura mudou e que a caixa do
  * slide não mudou.
  */
-function medirSlide(el: HTMLElement, indice: number): MedidaDeSlide {
+function measureSlide(el: HTMLElement, indice: number): SlideMeasurement {
   const conteudo = el.firstElementChild as HTMLElement | null;
   const alvo = conteudo ?? el;
   const rect = alvo.getBoundingClientRect();
@@ -77,10 +77,10 @@ function medirSlide(el: HTMLElement, indice: number): MedidaDeSlide {
  * marcador que as cinco stacks já emitem para o slide, e o único que sobrevive
  * a uma troca de vocabulário `.nds-*`.
  */
-export function medirSlides(raiz: HTMLElement): MedidaDeSlide[] {
+export function measureSlides(raiz: HTMLElement): SlideMeasurement[] {
   return Array.from(
     raiz.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'),
-  ).map(medirSlide);
+  ).map(measureSlide);
 }
 
 /**
@@ -91,34 +91,34 @@ export function medirSlides(raiz: HTMLElement): MedidaDeSlide[] {
  * ele, um componente que marcasse sempre o primeiro passaria.
  */
 export function reprovasDeEscala(
-  medidas: MedidaDeSlide[],
+  medidas: SlideMeasurement[],
   indiceEsperado: number,
-): FalhaDeCarrossel[] {
-  const falhas: FalhaDeCarrossel[] = [];
+): CarrosselFailure[] {
+  const failures: CarrosselFailure[] = [];
 
   if (medidas.length === 0) {
     return [{ onde: 'trilho', motivo: 'nenhum slide encontrado — a medição não chegou ao componente' }];
   }
 
-  const semEstado = medidas.filter((m) => m.estado === null);
-  if (semEstado.length > 0) {
-    falhas.push({
+  const noState = medidas.filter((m) => m.estado === null);
+  if (noState.length > 0) {
+    failures.push({
       onde: 'trilho',
-      motivo: `${semEstado.length} de ${medidas.length} slides sem estado ativo declarado — a escala não tem do que depender`,
+      motivo: `${noState.length} de ${medidas.length} slides sem estado ativo declarado — a escala não tem do que depender`,
     });
     // Sem estado não há o que comparar; as reprovas abaixo seriam ruído.
-    return falhas;
+    return failures;
   }
 
   const ativos = medidas.filter((m) => m.estado === 'true');
   if (ativos.length !== 1) {
-    falhas.push({
+    failures.push({
       onde: 'trilho',
       motivo: `${ativos.length} slides marcados como atual (esperado exatamente 1)`,
     });
   }
   if (ativos.length === 1 && ativos[0].indice !== indiceEsperado) {
-    falhas.push({
+    failures.push({
       onde: 'trilho',
       motivo: `o slide marcado como atual é o ${ativos[0].indice}, e o que está em foco é o ${indiceEsperado}`,
     });
@@ -126,30 +126,30 @@ export function reprovasDeEscala(
 
   for (const m of medidas) {
     if (m.larguraDeLayout === 0) {
-      falhas.push({ onde: `slide ${m.indice}`, motivo: 'caixa de layout com largura zero' });
+      failures.push({ onde: `slide ${m.indice}`, motivo: 'caixa de layout com largura zero' });
       continue;
     }
     if (m.estado === 'true' && Math.abs(m.escala - 1) > EPSILON) {
-      falhas.push({
+      failures.push({
         onde: `slide ${m.indice}`,
         motivo: `é o atual e deveria estar em tamanho cheio, mas está em ${m.escala.toFixed(3)}`,
       });
     }
     if (m.estado === 'false' && m.escala >= 1 - EPSILON) {
-      falhas.push({
+      failures.push({
         onde: `slide ${m.indice}`,
         motivo: `é vizinho e deveria estar recuado, mas está em ${m.escala.toFixed(3)}`,
       });
     }
     if (m.estado === 'false' && m.escala > 1) {
-      falhas.push({
+      failures.push({
         onde: `slide ${m.indice}`,
         motivo: `vizinho AUMENTADO (${m.escala.toFixed(3)}) — escala acima de 1 transborda o recorte`,
       });
     }
   }
 
-  return falhas;
+  return failures;
 }
 
 /**
@@ -161,7 +161,7 @@ export function reprovasDeEscala(
  * de encosto do `scroll-snap`. Se a escala tivesse encolhido a caixa de layout,
  * os passos ficariam desiguais e o carrossel pararia fora do slide.
  */
-export function pontoDeParadaIntacto(raiz: HTMLElement): FalhaDeCarrossel[] {
+export function pontoDeParadaIntacto(raiz: HTMLElement): CarrosselFailure[] {
   const slides = Array.from(
     raiz.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'),
   );
@@ -204,13 +204,13 @@ export function pontoDeParadaIntacto(raiz: HTMLElement): FalhaDeCarrossel[] {
 export async function escalaSobMovimentoReduzido(
   raiz: HTMLElement,
   aguardar: (verificacao: () => void) => Promise<unknown>,
-): Promise<FalhaDeCarrossel[]> {
+): Promise<CarrosselFailure[]> {
   const html = raiz.ownerDocument.documentElement;
   const anterior = html.getAttribute('data-reduced-motion');
   try {
     html.setAttribute('data-reduced-motion', 'true');
     await aguardar(() => {
-      const vizinhos = medirSlides(raiz).filter((m) => m.estado === 'false');
+      const vizinhos = measureSlides(raiz).filter((m) => m.estado === 'false');
       if (vizinhos.length === 0) throw new Error('nenhum vizinho para medir');
       for (const v of vizinhos) {
         if (Math.abs(v.escala - 1) > EPSILON) {
@@ -232,14 +232,14 @@ export async function escalaSobMovimentoReduzido(
 
 // ─── 2. O controle sob o ponteiro ────────────────────────────────────────────
 
-export interface MedidaDeControle {
+export interface ControlMeasurement {
   centroX: number;
   centroY: number;
   largura: number;
   altura: number;
 }
 
-export function medirControle(el: HTMLElement): MedidaDeControle {
+export function measureControl(el: HTMLElement): ControlMeasurement {
   const r = el.getBoundingClientRect();
   return {
     centroX: r.left + r.width / 2,
@@ -287,33 +287,33 @@ export function medirControle(el: HTMLElement): MedidaDeControle {
  * ainda é dezesseis vezes menor que o salto que isto reprova.
  */
 export function reprovasDeSaltoNoHover(
-  antes: MedidaDeControle,
-  depois: MedidaDeControle,
+  antes: ControlMeasurement,
+  depois: ControlMeasurement,
   fator: number,
   tolerancia = 1,
-): FalhaDeCarrossel[] {
-  const falhas: FalhaDeCarrossel[] = [];
+): CarrosselFailure[] {
+  const failures: CarrosselFailure[] = [];
 
   const crescimento = antes.largura > 0 ? depois.largura / antes.largura : 0;
   if (Math.abs(crescimento - fator) > 0.01) {
-    falhas.push({
+    failures.push({
       onde: 'controle',
       motivo: `o controle não cresceu na proporção escrita (${crescimento.toFixed(3)} contra ${fator}) — a medição não alcançou o estado de feedback, então nada foi verificado`,
     });
-    return falhas;
+    return failures;
   }
 
-  const deslocamentoX = Math.abs(depois.centroX - antes.centroX);
-  const deslocamentoY = Math.abs(depois.centroY - antes.centroY);
+  const offsetX = Math.abs(depois.centroX - antes.centroX);
+  const offsetY = Math.abs(depois.centroY - antes.centroY);
 
-  if (deslocamentoX > tolerancia || deslocamentoY > tolerancia) {
-    falhas.push({
+  if (offsetX > tolerancia || offsetY > tolerancia) {
+    failures.push({
       onde: 'controle',
-      motivo: `o centro saiu do lugar quando o feedback de ponteiro entrou: ${deslocamentoX.toFixed(2)}px em x e ${deslocamentoY.toFixed(2)}px em y (limite ${tolerancia}px)`,
+      motivo: `o centro saiu do lugar quando o feedback de ponteiro entrou: ${offsetX.toFixed(2)}px em x e ${offsetY.toFixed(2)}px em y (limite ${tolerancia}px)`,
     });
   }
 
-  return falhas;
+  return failures;
 }
 
 /**
@@ -331,27 +331,27 @@ export function reprovasDeSaltoNoHover(
  */
 export const FATOR_DE_FEEDBACK = 1.05;
 
-export async function reprovasDoFeedbackDePonteiro(
+export async function feedbackDePointerReprovas(
   el: HTMLElement,
   aguardar: (verificacao: () => void) => Promise<unknown>,
   fator = FATOR_DE_FEEDBACK,
-): Promise<FalhaDeCarrossel[]> {
-  const antes = medirControle(el);
-  const inlineAnterior = el.style.transform;
+): Promise<CarrosselFailure[]> {
+  const antes = measureControl(el);
+  const inlinePrevious = el.style.transform;
   try {
     el.style.transform = `scale(${fator})`;
     await aguardar(() => {
-      const agora = medirControle(el);
+      const agora = measureControl(el);
       const crescimento = antes.largura > 0 ? agora.largura / antes.largura : 0;
       if (Math.abs(crescimento - fator) > 0.01) {
         throw new Error(`ainda em ${crescimento.toFixed(3)}`);
       }
     });
-    return reprovasDeSaltoNoHover(antes, medirControle(el), fator);
+    return reprovasDeSaltoNoHover(antes, measureControl(el), fator);
   } catch {
-    return reprovasDeSaltoNoHover(antes, medirControle(el), fator);
+    return reprovasDeSaltoNoHover(antes, measureControl(el), fator);
   } finally {
-    el.style.transform = inlineAnterior;
+    el.style.transform = inlinePrevious;
   }
 }
 
@@ -373,8 +373,8 @@ export async function reprovasDoFeedbackDePonteiro(
  *    a pergunta simplesmente não pode ser feita. Quando não pode, ela é pulada
  *    em silêncio — a medida geométrica já respondeu.
  */
-export function alcanceDoControle(el: HTMLElement): FalhaDeCarrossel[] {
-  const falhas: FalhaDeCarrossel[] = [];
+export function controlReach(el: HTMLElement): CarrosselFailure[] {
+  const failures: CarrosselFailure[] = [];
   const doc = el.ownerDocument;
   const janela = doc.defaultView;
   const raiz = el.closest('.nds-carousel') ?? doc.body;
@@ -401,34 +401,34 @@ export function alcanceDoControle(el: HTMLElement): FalhaDeCarrossel[] {
     const sobrepoeX = direita > controle.left + 0.5 && esquerda < controle.right - 0.5;
     const sobrepoeY = base > controle.top + 0.5 && topo < controle.bottom - 0.5;
     if (sobrepoeX && sobrepoeY) {
-      falhas.push({
+      failures.push({
         onde: 'controle',
         motivo: `o slide ${i} invade a caixa do controle — a parte VISÍVEL dele passou por cima do alvo de toque`,
       });
     }
   }
 
-  const { centroX, centroY } = medirControle(el);
-  const naJanela =
+  const { centroX, centroY } = measureControl(el);
+  const inWindow =
     !!janela &&
     centroX >= 0 && centroY >= 0 &&
     centroX <= janela.innerWidth && centroY <= janela.innerHeight;
 
-  if (naJanela) {
+  if (inWindow) {
     const atingido = doc.elementFromPoint(centroX, centroY);
     if (!atingido || (atingido !== el && !el.contains(atingido))) {
-      falhas.push({
+      failures.push({
         onde: 'controle',
         motivo: `o centro do controle entrega o toque a <${atingido?.tagName.toLowerCase() ?? 'nada'}>, e não ao próprio controle`,
       });
     }
   }
 
-  return falhas;
+  return failures;
 }
 
 // ─── Relato ──────────────────────────────────────────────────────────────────
 
-export function descreverFalhas(falhas: FalhaDeCarrossel[]): string {
-  return falhas.map((f) => `  · ${f.onde} — ${f.motivo}`).join('\n');
+export function describeFailures(failures: CarrosselFailure[]): string {
+  return failures.map((f) => `  · ${f.onde} — ${f.motivo}`).join('\n');
 }

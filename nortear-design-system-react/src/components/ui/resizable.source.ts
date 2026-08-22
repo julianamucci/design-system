@@ -52,10 +52,10 @@ const IMPORT = `import {
  * Moldura do grupo. `nds-min-h-50` fica no PRÓPRIO grupo — ele é o contêiner
  * flex, e é a altura dele que vira espaço livre para os painéis dividirem.
  */
-const MOLDURA = 'nds-rounded-lg nds-border-default nds-max-w-lg nds-min-h-50';
+const FRAME = 'nds-rounded-lg nds-border-default nds-max-w-lg nds-min-h-50';
 
 /** Rótulos dos punhos. Cada um nomeia O QUE separa, e nunca só "divisor". */
-const ROTULO_PADRAO = 'Redimensionar painéis — use setas para ajustar';
+const LABEL_DEFAULT = 'Redimensionar painéis — use setas para ajustar';
 const LABEL_COLUMNS = 'Redimensionar as colunas — use setas para ajustar';
 const LABEL_FAIXAS = 'Redimensionar as faixas — use setas para ajustar';
 const LABEL_SIDEBAR = 'Redimensionar sidebar e conteúdo — use setas';
@@ -87,7 +87,7 @@ function punho(rotulo: string, comPegador = true): string {
 function grupo(direcao: string, filhos: string, extra = ''): string {
   return `<ResizablePanelGroup
   direction="${direcao}"${extra}
-  className="${MOLDURA}"
+  className="${FRAME}"
 >
 ${indentar(filhos)}
 </ResizablePanelGroup>`;
@@ -110,18 +110,18 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
       ? args.direction
       : 'horizontal';
   const inicial = typeof args.defaultSize === 'number' ? args.defaultSize : 30;
-  const minimo = typeof args.minSize === 'number' ? args.minSize : 20;
+  const minimum = typeof args.minSize === 'number' ? args.minSize : 20;
 
   const primeiro = attrs(
     propNumber('defaultSize', inicial),
-    propNumber('minSize', minimo),
+    propNumber('minSize', minimum),
     typeof args.maxSize === 'number' && args.maxSize !== 100
       ? propNumber('maxSize', args.maxSize)
       : undefined,
   );
   const segundo = attrs(
     propNumber('defaultSize', 100 - inicial),
-    propNumber('minSize', minimo),
+    propNumber('minSize', minimum),
   );
 
   return jsxSnippet(
@@ -135,7 +135,7 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
   <p className="nds-text-caption nds-text-muted-foreground">Navegação do projeto</p>
 </div>`,
       )}
-${punho(ROTULO_PADRAO, args.withHandle !== false)}
+${punho(LABEL_DEFAULT, args.withHandle !== false)}
 ${painel(
   segundo,
   `<div className="nds-stack nds-p-4" data-spacing="xs">
@@ -190,7 +190,7 @@ ${painel(' defaultSize={60} minSize={20}', centralizado('Rodapé', 'nds-bg-muted
  * a sidebar mexa na altura do console. O grupo de dentro não repete a moldura —
  * ele já herda o espaço do painel que o contém.
  */
-export function resizableAninhadoSource(): string {
+export function resizableNestedSource(): string {
   const interno = `<ResizablePanelGroup direction="vertical">
 ${indentar(
   `${painel(' defaultSize={60} minSize={20}', centralizado('Editor'))}
@@ -215,13 +215,13 @@ ${painel(' defaultSize={70} minSize={40}', interno)}`,
  * composição do nome acessível do punho — quem diz o que ali se ajusta continua
  * sendo o `aria-label`.
  */
-export function resizableComPegadorSource(): string {
+export function resizableWithGrabberSource(): string {
   return jsxSnippet(
     IMPORT,
     grupo(
       'horizontal',
       `${painel(' defaultSize={50} minSize={20}', centralizado('Antes'))}
-${punho(ROTULO_PADRAO)}
+${punho(LABEL_DEFAULT)}
 ${painel(' defaultSize={50} minSize={20}', centralizado('Depois', 'nds-bg-muted'))}`,
     ),
   );
@@ -243,7 +243,7 @@ ${indentar(
   grupo(
     'horizontal',
     `${painel(' defaultSize={50} minSize={10}', centralizado('Esquerda'))}
-${punho(ROTULO_PADRAO)}
+${punho(LABEL_DEFAULT)}
 ${painel(' defaultSize={50} minSize={10}', centralizado('Direita', 'nds-bg-muted'))}`,
     '\n  onLayout={setTamanhos}',
   ),
@@ -267,7 +267,7 @@ export function resizableLimitesSource(): string {
     grupo(
       'horizontal',
       `${painel(' defaultSize={50} minSize={30} maxSize={60}', centralizado('Limitado'))}
-${punho(ROTULO_PADRAO, false)}
+${punho(LABEL_DEFAULT, false)}
 ${painel(' defaultSize={50} minSize={30}', centralizado('Livre', 'nds-bg-muted'))}`,
     ),
   );
@@ -278,13 +278,13 @@ ${painel(' defaultSize={50} minSize={30}', centralizado('Livre', 'nds-bg-muted')
  * tabulação por ser um controle, e o painel também está, porque ele ROLA — uma
  * região rolável fora do Tab esconde conteúdo de quem não usa mouse.
  */
-export function resizableFocoSource(): string {
+export function resizableFocusSource(): string {
   return jsxSnippet(
     IMPORT,
     grupo(
       'horizontal',
       `${painel(' defaultSize={50} minSize={20}', centralizado('Um'))}
-${punho(ROTULO_PADRAO, false)}
+${punho(LABEL_DEFAULT, false)}
 ${painel(' defaultSize={50} minSize={20}', centralizado('Dois', 'nds-bg-muted'))}`,
     ),
   );
@@ -301,7 +301,7 @@ export function resizableTravadoSource(): string {
     grupo(
       'horizontal',
       `${painel(' defaultSize={50} minSize={20}', centralizado('Fixo'))}
-<ResizableHandle disabled withHandle aria-label="${ROTULO_PADRAO}" />
+<ResizableHandle disabled withHandle aria-label="${LABEL_DEFAULT}" />
 ${painel(' defaultSize={50} minSize={20}', centralizado('Fixo', 'nds-bg-muted'))}`,
     ),
   );
@@ -326,7 +326,7 @@ export function resizableEditorPreviewSource(): string {
   <span>{"}"}</span>
 </div>`,
       )}
-${punho(ROTULO_PADRAO)}
+${punho(LABEL_DEFAULT)}
 ${painel(' defaultSize={50} minSize={30}', centralizado('Resultado', 'nds-bg-muted'))}`,
     ),
   );
@@ -408,7 +408,7 @@ export function resizablePersistidoSource(): string {
     grupo(
       'horizontal',
       `${painel(' defaultSize={30} minSize={20} maxSize={50}', centralizado('Sidebar', 'nds-bg-muted'))}
-${punho(ROTULO_PADRAO)}
+${punho(LABEL_DEFAULT)}
 ${painel(' defaultSize={70} minSize={50}', centralizado('Conteúdo principal'))}`,
       '\n  autoSaveId="layout-do-editor"',
     ),

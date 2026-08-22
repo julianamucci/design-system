@@ -35,7 +35,7 @@ type Story = StoryObj;
  * mostra um só — e prova que a regra de CSS existe, em vez de afirmar que o
  * atributo está escrito. Restaura o estado, então sobrevive ao replay.
  */
-function medirNoOutroTamanho(
+function otherSizeMeasure(
   card: HTMLElement,
   outro: 'default' | 'sm',
   ler: () => number,
@@ -124,7 +124,7 @@ export const Small: Story = {
 
     await step('O tamanho sm reduz o padding de verdade', async () => {
       const padSm = Number.parseFloat(getComputedStyle(card).paddingTop);
-      const padDefault = medirNoOutroTamanho(card, 'default', () =>
+      const padDefault = otherSizeMeasure(card, 'default', () =>
         Number.parseFloat(getComputedStyle(card).paddingTop),
       );
       await expect(padSm).toBeLessThan(padDefault);
@@ -132,7 +132,7 @@ export const Small: Story = {
 
     await step('O tamanho sm reduz o título de verdade', async () => {
       const fonteSm = Number.parseFloat(getComputedStyle(title).fontSize);
-      const fonteDefault = medirNoOutroTamanho(card, 'default', () =>
+      const fonteDefault = otherSizeMeasure(card, 'default', () =>
         Number.parseFloat(getComputedStyle(title).fontSize),
       );
       await expect(fonteSm).toBeLessThan(fonteDefault);

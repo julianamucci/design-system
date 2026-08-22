@@ -14,8 +14,8 @@ import {
 import {
   breadcrumbWithEllipsisSource,
   breadcrumbLinkCustomizadoSource,
-  breadcrumbSeparadorCustomizadoSource,
-  breadcrumbSimplesSource,
+  breadcrumbSeparatorCustomizadoSource,
+  breadcrumbSimpleSource,
   breadcrumbSource,
 } from "./breadcrumb.source";
 
@@ -50,7 +50,7 @@ export const Simple: Story = {
     docs: {
       // Dois níveis é a forma mínima: a trilha de três do `meta` esconderia que
       // sobra UMA parada de teclado, porque a página atual não é navegável.
-      source: { transform: breadcrumbSimplesSource },
+      source: { transform: breadcrumbSimpleSource },
       description: {
         story: "Composição básica com 2 níveis — link inicial + BreadcrumbPage.",
       },
@@ -170,7 +170,7 @@ export const CustomSeparator: Story = {
     docs: {
       // A ausência de children é o que faz o chevron padrão aparecer: passar um
       // ícone é o oposto do que o snippet do `meta` mostra.
-      source: { transform: breadcrumbSeparadorCustomizadoSource },
+      source: { transform: breadcrumbSeparatorCustomizadoSource },
       description: {
         story:
           "Separador customizado via children de BreadcrumbSeparator — mantém aria-hidden automaticamente.",

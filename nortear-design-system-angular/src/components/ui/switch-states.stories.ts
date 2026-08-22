@@ -27,7 +27,7 @@ async function definir(sw: HTMLElement, ligado: boolean, alvo: HTMLElement = sw)
 }
 
 /** Primeira cor de fundo opaca subindo a árvore — o "ambiente" do controle. */
-function fundoDoAmbiente(el: HTMLElement): string {
+function environmentBackground(el: HTMLElement): string {
   let atual: HTMLElement | null = el.parentElement;
   while (atual) {
     const cor = getComputedStyle(atual).backgroundColor;
@@ -97,7 +97,7 @@ export const OnAndOff: Story = {
     await step('O trilho ligado tem pelo menos 3:1 contra o ambiente e contra o desligado', async () => {
       const colorLigado = getComputedStyle(ligado).backgroundColor;
       const colorDesligado = getComputedStyle(desligado).backgroundColor;
-      await expect(contraste(colorLigado, fundoDoAmbiente(ligado))).toBeGreaterThanOrEqual(3);
+      await expect(contraste(colorLigado, environmentBackground(ligado))).toBeGreaterThanOrEqual(3);
       await expect(contraste(colorLigado, colorDesligado)).toBeGreaterThanOrEqual(3);
     });
   },

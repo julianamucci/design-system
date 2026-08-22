@@ -3,7 +3,7 @@ import { within, expect } from 'storybook/test';
 import { RadioGroup, RadioGroupItem } from './index';
 import { Label } from '@/components/ui/label';
 import {
-  radioGroupComDescricaoSource,
+  radioGroupWithDescriptionSource,
   radioGroupHorizontalSource,
   radioGroupVerticalSource,
 } from './radio-group.source';
@@ -110,7 +110,7 @@ export const WithDescription: Story = {
   parameters: {
     // A descrição por item acrescenta um nível de marcação e o
     // `aria-describedby` — a linha simples do meta esconderia os dois.
-    docs: { source: { transform: radioGroupComDescricaoSource } },
+    docs: { source: { transform: radioGroupWithDescriptionSource } },
   },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label },

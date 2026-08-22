@@ -63,7 +63,7 @@ export function avatarTamanho2xlSource(): string {
 }
 
 /** Estado de carregamento: o atraso segura a troca do fallback pela foto. */
-export function avatarCarregandoSource(): string {
+export function avatarLoadingSource(): string {
   return svelteSnippet(
     IMPORT_IMAGE,
     `<Avatar delayMs={600}>
@@ -101,7 +101,7 @@ import User from "@lucide/svelte/icons/user";`,
 }
 
 /** Composição em grupo: a sobreposição e a borda vêm do AvatarGroup. */
-export function avatarGrupoSource(): string {
+export function avatarGroupSource(): string {
   return svelteSnippet(
     `import {
   Avatar,
@@ -129,7 +129,7 @@ export function avatarGrupoSource(): string {
 }
 
 /** Composição com indicador de status no canto inferior direito. */
-export function avatarComStatusSource(): string {
+export function avatarWithStatusSource(): string {
   return svelteSnippet(
     `import {
   Avatar,

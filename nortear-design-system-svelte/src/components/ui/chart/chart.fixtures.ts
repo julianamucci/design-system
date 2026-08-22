@@ -1,5 +1,5 @@
 import { expect, waitFor } from 'storybook/test';
-import { desenhoPintado } from '@shared/testing/chart-probe';
+import { designPintado } from '@shared/testing/chart-probe';
 
 /**
  * Andaime de espera do Chart — um helper, três arquivos de story.
@@ -19,5 +19,5 @@ import { desenhoPintado } from '@shared/testing/chart-probe';
  * o painel Interactions reexecuta a play no MESMO DOM.
  */
 export async function waitForDesign(raiz: HTMLElement): Promise<void> {
-  await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+  await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
 }

@@ -5,8 +5,8 @@ import { Collapsible } from './index';
 import CollapsibleComButtonStory from './CollapsibleComButtonStory.svelte';
 import CollapsibleComIconeStory from './CollapsibleComIconeStory.svelte';
 import {
-  collapsibleComBotaoSource,
-  collapsibleComChevronSource,
+  collapsibleWithButtonSource,
+  collapsibleWithChevronSource,
   collapsibleSource,
 } from './collapsible.source';
 
@@ -48,7 +48,7 @@ const fechar = async (t: HTMLElement) => {
 export const WithCustomButton: StoryObj<Record<string, never>> = {
   parameters: {
     covers: ['functional.item5'],
-    docs: { source: { transform: collapsibleComBotaoSource } },
+    docs: { source: { transform: collapsibleWithButtonSource } },
   },
   render: () => ({
     Component: CollapsibleComButtonStory,
@@ -83,7 +83,7 @@ export const WithCustomButton: StoryObj<Record<string, never>> = {
 export const WithRotatingChevron: StoryObj<Record<string, never>> = {
   parameters: {
     covers: ['accessibility.item4', 'visual.item4'],
-    docs: { source: { transform: collapsibleComChevronSource } },
+    docs: { source: { transform: collapsibleWithChevronSource } },
   },
   render: () => ({
     Component: CollapsibleComIconeStory,

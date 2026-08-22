@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import NavigationMenuStory from './NavigationMenuStory.svelte';
-import { esperarPainel, painelAberto } from './navigation-menu.fixtures';
+import { waitForPanel, panelOpen } from './navigation-menu.fixtures';
 import { navigationMenuSource } from './navigation-menu.source';
-import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
   title: 'UI/NavigationMenu/States',
@@ -52,7 +52,7 @@ export const Closed: Story = {
       // O miolo do painel é DESMONTADO ao fechar. Não é um bloco escondido:
       // quem navega com leitor de tela não o encontra, e nenhum destino dele
       // entra na ordem de tabulação.
-      await expect(painelAberto()).toBeNull();
+      await expect(panelOpen()).toBeNull();
       await expect(canvas.queryByRole('link', { name: 'Plano Inicial' })).toBeNull();
     });
 
@@ -75,7 +75,7 @@ export const Open: Story = {
   parameters: {
     covers: ['accessibility.item3', 'accessibility.item6', 'visual.item4'],
     // Esta story termina com o painel ABERTO; ver a nota da regra.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {
         story:
@@ -86,7 +86,7 @@ export const Open: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('button', { name: /Produtos/ });
-    const conteudo = await esperarPainel();
+    const conteudo = await waitForPanel();
     const painel = conteudo.closest<HTMLElement>('.nds-navigation-menu-viewport-panel');
 
     await step('O item nasce aberto e o gatilho reflete o estado', async () => {

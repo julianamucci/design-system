@@ -4,10 +4,10 @@ import DialogStory from './DialogStory.svelte';
 import { dialogSource } from './dialog.source';
 import {
   abrir,
-  botaoFecharDoCanto,
-  conferirNomeEDescricao,
-  esperarAberto,
-  esperarFechado,
+  cantoButtonClose,
+  checkNameEDescricao,
+  waitForOpen,
+  waitForClosed,
   gatilho,
   overlay,
   painel,
@@ -84,16 +84,16 @@ export const Open: Story = {
     cancelLabel: 'Cancelar',
   },
   play: async ({ step }) => {
-    // `esperarAberto` e não o helper idempotente: esta story tem que provar que
+    // `waitForOpen` e não o helper idempotente: esta story tem que provar que
     // o estado inicial MONTA aberto. Abrir por clique aqui passaria mesmo com a
     // prop sendo ignorada em silêncio.
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Monta já aberto, sem estado externo nenhum', async () => {
       await expect(p).toBeVisible();
       await expect(p).toHaveAttribute('aria-modal', 'true');
       await expect(overlay()).toBeVisible();
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step('E o foco já está dentro do painel', async () => {
@@ -124,17 +124,17 @@ export const WithCloseButtonHidden: Story = {
     cancelLabel: 'Cancelar',
   },
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Sem X no canto', async () => {
-      await expect(botaoFecharDoCanto(p)).toBeNull();
+      await expect(cantoButtonClose(p)).toBeNull();
     });
 
     await step('Escape continua fechando — nunca se tira toda saída', async () => {
       // Sem o X, Escape e o Cancelar do rodapé são as saídas que restam.
       // Retirar todas de uma vez deixaria o diálogo sem fechamento acessível.
       await userEvent.keyboard('{Escape}');
-      await esperarFechado();
+      await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final, e o que esta story existe
       // para mostrar é o painel SEM o X no canto.
       await expect(await abrir(canvasElement)).toBeVisible();
@@ -182,14 +182,14 @@ export const Controlled: Story = {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       const botoes = rodape.querySelectorAll<HTMLElement>('button');
       await userEvent.click(botoes[0]);
-      await esperarFechado();
+      await waitForClosed();
       await expect(spyCancelar).toHaveBeenCalled();
     });
 
     await step('Escape também fecha, e o estado externo acompanha', async () => {
       await abrir(canvasElement);
       await userEvent.keyboard('{Escape}');
-      await esperarFechado();
+      await waitForClosed();
       await expect(painel()).toBeNull();
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
     });

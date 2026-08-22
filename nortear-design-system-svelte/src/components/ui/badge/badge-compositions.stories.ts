@@ -5,9 +5,9 @@ import { within, expect } from 'storybook/test';
 import { Badge } from './index';
 import BadgeStory from './BadgeStory.svelte';
 import {
-  badgeComIconeSource,
-  badgeContadorSource,
-  buttonSourceBadge,
+  badgeWithIconSource,
+  badgeCounterSource,
+  buttonBadgeSource,
   badgeEmLinkSource,
   badgeSource,
 } from './badge.source';
@@ -39,7 +39,7 @@ type Story = StoryObj;
 export const WithIcon: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item2', 'visual.item3'],
-    docs: { source: { transform: badgeComIconeSource } },
+    docs: { source: { transform: badgeWithIconSource } },
   },
   render: () => ({
     Component: BadgeStory,
@@ -71,7 +71,7 @@ export const WithIcon: Story = {
 export const CountBadge: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { source: { transform: badgeContadorSource } },
+    docs: { source: { transform: badgeCounterSource } },
   },
   render: () => ({
     Component: BadgeStory,
@@ -130,7 +130,7 @@ export const AsLink: Story = {
 export const AsButton: Story = {
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
-    docs: { source: { transform: buttonSourceBadge } },
+    docs: { source: { transform: buttonBadgeSource } },
   },
   render: () => ({
     Component: BadgeStory,

@@ -12,25 +12,25 @@
 
 import { waitFor } from 'storybook/test';
 import {
-  SELETOR_PAINEL,
-  entrarNoPainel,
-  esperarFechado,
+  SELECTOR_PANEL,
+  panelEntrar,
+  waitForClosed,
   nomeAcessivel,
-  paineisAbertos,
-  painelAberto,
-  razaoDeContraste,
-  sairComPonteiro,
+  panelsAbertos,
+  panelOpen,
+  contrastRatio,
+  leaveWithPointer,
 } from '@shared/testing/hover-card-probe';
 
 export {
-  SELETOR_PAINEL,
-  entrarNoPainel,
-  esperarFechado,
+  SELECTOR_PANEL,
+  panelEntrar,
+  waitForClosed,
   nomeAcessivel,
-  paineisAbertos,
-  painelAberto,
-  razaoDeContraste,
-  sairComPonteiro,
+  panelsAbertos,
+  panelOpen,
+  contrastRatio,
+  leaveWithPointer,
 };
 
 /**
@@ -47,25 +47,25 @@ function posicionado(painel: HTMLElement | null): painel is HTMLElement {
   return !!painel && painel.hasAttribute('data-side');
 }
 
-export async function esperarAberto(): Promise<HTMLElement> {
+export async function waitForOpen(): Promise<HTMLElement> {
   await waitFor(
     () => {
-      if (!posicionado(painelAberto())) throw new Error('o cartão ainda não abriu e mediu');
+      if (!posicionado(panelOpen())) throw new Error('o cartão ainda não abriu e mediu');
     },
     { timeout: 3000 },
   );
-  return painelAberto()!;
+  return panelOpen()!;
 }
 
-export async function esperarQuantidade(quantos: number): Promise<HTMLElement[]> {
+export async function waitForQuantidade(quantos: number): Promise<HTMLElement[]> {
   await waitFor(
     () => {
-      const prontos = paineisAbertos().filter(posicionado).length;
+      const prontos = panelsAbertos().filter(posicionado).length;
       if (prontos !== quantos) throw new Error(`abertos ${prontos} cartões, esperado ${quantos}`);
     },
     { timeout: 3000 },
   );
-  return paineisAbertos();
+  return panelsAbertos();
 }
 
 // ─── Markup repetido ──────────────────────────────────────────────────────────

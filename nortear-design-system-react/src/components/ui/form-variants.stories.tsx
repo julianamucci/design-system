@@ -4,8 +4,8 @@ import { expect, within } from "storybook/test"
 import { FormField } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {
-  formComDescricaoSource,
-  formRotuloEControleSource,
+  formWithDescriptionSource,
+  formLabelEControleSource,
   formSource,
 } from "./form.source"
 
@@ -35,7 +35,7 @@ export const LabelAndControl: Story = {
     covers: ["visual.item1"],
     // A AUSÊNCIA da descrição é o assunto, e o arquivo desliga os controls: sem
     // override o painel imprimiria o campo com as três peças.
-    docs: { source: { transform: formRotuloEControleSource } },
+    docs: { source: { transform: formLabelEControleSource } },
   },
   render: () => (
     <FormField className="nds-max-w-sm" label="Nome completo">
@@ -65,7 +65,7 @@ export const WithDescription: Story = {
     covers: ["functional.item3", "visual.item2"],
     // Outro controle (senha, com `autoComplete`) e outro texto de apoio — nada
     // disso sai dos args, que estão desligados aqui.
-    docs: { source: { transform: formComDescricaoSource } },
+    docs: { source: { transform: formWithDescriptionSource } },
   },
   render: () => (
     <FormField

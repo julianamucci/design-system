@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { tooltipAbertoSource, tooltipControladoSource, tooltipSource } from './tooltip.source';
+import { tooltipOpenSource, tooltipControlledSource, tooltipSource } from './tooltip.source';
 
 describe('tooltipSource', () => {
   it('sem args, entrega o gatilho só de ícone com o balão complementar', () => {
@@ -90,13 +90,13 @@ describe('tooltipSource', () => {
 
 describe('transforms das stories de abertura', () => {
   it('o balão aberto por padrão usa o estado inicial, sem estado externo', () => {
-    const saida = tooltipAbertoSource();
+    const saida = tooltipOpenSource();
     expect(saida).toContain('<Tooltip defaultOpen>');
     expect(saida).not.toContain('$state');
   });
 
   it('o controlado liga a abertura a um estado local', () => {
-    const saida = tooltipControladoSource();
+    const saida = tooltipControlledSource();
     expect(saida).toContain('let aberto = $state(true);');
     expect(saida).toContain('<Tooltip bind:open={aberto}>');
   });

@@ -6,7 +6,7 @@
 // FORA: Icons — catálogo lucide completo estoura o axe/timeout do runner (>4min); excluída por decisão da dona em 2026-07-31
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, waitFor } from 'storybook/test';
-import { auditarPaginaDeDocs, descreverProblemas } from '@shared/testing/docs-page-contract';
+import { docsAuditarPage, describeProblemas } from '@shared/testing/docs-page-contract';
 
 import AboutDocs from './AboutDocs.svelte';
 import AccessibilityDocs from './AccessibilityDocs.svelte';
@@ -102,13 +102,13 @@ const mounted: Story['play'] = async ({ canvasElement, parameters }) => {
   // esquerda, bloco de código vazio, chave de tradução renderizada como texto.
   // Foi assim que a revisão do Calendar gastou dezesseis commits achando um
   // defeito por rodada, a olho, com a suíte verde.
-  const problemas = auditarPaginaDeDocs(canvasElement, {
+  const problemas = docsAuditarPage(canvasElement, {
     ignorar: (parameters as { contratoDocs?: { ignorar?: Record<string, string> } }).contratoDocs
       ?.ignorar,
   });
   await expect(
     problemas,
-    problemas.length ? `\n${descreverProblemas(problemas)}\n` : '',
+    problemas.length ? `\n${describeProblemas(problemas)}\n` : '',
   ).toEqual([]);
 
   // Idioma do documento QUE O LEITOR LÊ. Esta suíte roda dentro do iframe do

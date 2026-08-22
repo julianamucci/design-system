@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NdsChart, type ChartType } from './chart';
-import { MESES, SERIE_UNICA } from './chart.fixtures';
+import { MONTHS, SERIE_UNICA } from './chart.fixtures';
 import { NdsChartDocs } from '@/components/docs/ChartDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -102,7 +102,7 @@ export const Playground: Story = {
     ],
   },
   render: (args) => ({
-    props: { ...args, meses: MESES, series: SERIE_UNICA },
+    props: { ...args, meses: MONTHS, series: SERIE_UNICA },
     template: `
       <div ndsChart
         [type]="type"
@@ -139,8 +139,8 @@ export const Playground: Story = {
     await step('A alternativa textual traz os mesmos números', async () => {
       // O <svg> sozinho é conteúdo perdido: a tabela é o que leitor de tela lê.
       const linhas = [...chart.querySelectorAll<HTMLTableRowElement>('tbody tr')];
-      await expect(linhas).toHaveLength(MESES.length);
-      await expect(linhas[0].querySelector('th')?.textContent?.trim()).toBe(MESES[0]);
+      await expect(linhas).toHaveLength(MONTHS.length);
+      await expect(linhas[0].querySelector('th')?.textContent?.trim()).toBe(MONTHS[0]);
       await expect(linhas[0].querySelector('td')?.textContent?.trim())
         .toBe(String(SERIE_UNICA[0].data[0]));
       await expect(chart.querySelector('caption')?.textContent?.trim()).toBe(args.label);

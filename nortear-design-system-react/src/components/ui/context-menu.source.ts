@@ -16,7 +16,7 @@ export type ContextMenuArgs = {
   triggerLabel: string;
 };
 
-const ROTULO_PADRAO = 'Clique com o botão direito aqui';
+const LABEL_DEFAULT = 'Clique com o botão direito aqui';
 
 /**
  * A moldura tracejada da área de clique direito.
@@ -43,9 +43,9 @@ function area(rotulo: string): string {
   </ContextMenuTrigger>`;
 }
 
-function importDe(...pecas: string[]): string {
+function importDe(...parts: string[]): string {
   return `import {
-${pecas.map((peca) => `  ${peca},`).join('\n')}
+${parts.map((part) => `  ${part},`).join('\n')}
 } from "@/components/ui/context-menu";`;
 }
 
@@ -58,7 +58,7 @@ ${pecas.map((peca) => `  ${peca},`).join('\n')}
  * existe para quem enxerga.
  */
 export const contextMenuSource: SourceTransform<ContextMenuArgs> = (_gerado, ctx) => {
-  const rotulo = childText(ctx?.args?.triggerLabel, ROTULO_PADRAO);
+  const rotulo = childText(ctx?.args?.triggerLabel, LABEL_DEFAULT);
   return jsxSnippet(
     importDe(
       'ContextMenu',
@@ -94,7 +94,7 @@ ${area(rotulo)}
  * booleano, o payload da mudança é booleano, e não existe terceiro valor para
  * anunciar como misto. O estado vive fora do menu, que só avisa a troca.
  */
-export function contextMenuComMarcacaoSource(): string {
+export function contextMenuWithMarkupSource(): string {
   return jsxSnippet(
     `${importDe(
   'ContextMenu',
@@ -111,7 +111,7 @@ import { useState } from "react";`,
 
   return (
     <ContextMenu>
-${area(ROTULO_PADRAO).replace(/^/gm, '    ')}
+${area(LABEL_DEFAULT).replace(/^/gm, '    ')}
       <ContextMenuContent>
         <ContextMenuGroup>
           <ContextMenuLabel>Visualização</ContextMenuLabel>
@@ -140,7 +140,7 @@ ${area(ROTULO_PADRAO).replace(/^/gm, '    ')}
  * opção declara o seu `value`. É o papel do grupo que faz o leitor de tela
  * anunciar "opção 2 de 3" em vez de três marcações independentes.
  */
-export function contextMenuComEscolhaUnicaSource(): string {
+export function contextMenuWithChoiceUnicaSource(): string {
   return jsxSnippet(
     `${importDe(
   'ContextMenu',
@@ -157,7 +157,7 @@ import { useState } from "react";`,
 
   return (
     <ContextMenu>
-${area(ROTULO_PADRAO).replace(/^/gm, '    ')}
+${area(LABEL_DEFAULT).replace(/^/gm, '    ')}
       <ContextMenuContent>
         <ContextMenuGroup>
           <ContextMenuLabel>Zoom</ContextMenuLabel>
@@ -179,7 +179,7 @@ ${area(ROTULO_PADRAO).replace(/^/gm, '    ')}
  * é o item que abre e `SubContent` é o painel filho. O sub-gatilho já anuncia
  * `aria-haspopup="menu"` sozinho, e o painel nasce à direita do item.
  */
-export function contextMenuComSubmenuSource(): string {
+export function contextMenuWithSubmenuSource(): string {
   return jsxSnippet(
     importDe(
       'ContextMenu',
@@ -191,7 +191,7 @@ export function contextMenuComSubmenuSource(): string {
       'ContextMenuTrigger',
     ),
     `<ContextMenu>
-${area(ROTULO_PADRAO)}
+${area(LABEL_DEFAULT)}
   <ContextMenuContent>
     <ContextMenuItem>Editar</ContextMenuItem>
     <ContextMenuItem>Duplicar</ContextMenuItem>
@@ -214,7 +214,7 @@ ${area(ROTULO_PADRAO)}
  * estado é o markup — a folha também tira o item do alcance do ponteiro, então
  * não há caminho nenhum que o execute.
  */
-export function contextMenuItemDesabilitadoSource(): string {
+export function contextMenuItemDisabledSource(): string {
   return jsxSnippet(
     importDe(
       'ContextMenu',
@@ -226,7 +226,7 @@ export function contextMenuItemDesabilitadoSource(): string {
       'ContextMenuTrigger',
     ),
     `<ContextMenu>
-${area(ROTULO_PADRAO)}
+${area(LABEL_DEFAULT)}
   <ContextMenuContent>
     <ContextMenuGroup>
       <ContextMenuItem>
@@ -262,7 +262,7 @@ export function contextMenuItemRecuadoSource(): string {
       'ContextMenuTrigger',
     ),
     `<ContextMenu>
-${area(ROTULO_PADRAO)}
+${area(LABEL_DEFAULT)}
   <ContextMenuContent>
     <ContextMenuGroup>
       <ContextMenuLabel inset>Arquivo</ContextMenuLabel>
@@ -311,7 +311,7 @@ import { useState } from "react";`,
 
   return (
     <ContextMenu>
-${area(ROTULO_PADRAO).replace(/^/gm, '    ')}
+${area(LABEL_DEFAULT).replace(/^/gm, '    ')}
       <ContextMenuContent>
         <ContextMenuGroup>
           <ContextMenuLabel>Ações</ContextMenuLabel>

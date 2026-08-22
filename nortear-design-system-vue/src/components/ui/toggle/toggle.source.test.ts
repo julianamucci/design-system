@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import {
-  toggleAtivoSource,
-  toggleBarraDeFormatacaoSource,
-  toggleComRotuloSource,
+  toggleActiveSource,
+  formattingToggleBarSource,
+  toggleWithLabelSource,
   toggleContornoSource,
-  toggleControladoSource,
-  toggleDesabilitadoSource,
-  toggleFocoSource,
+  toggleControlledSource,
+  toggleDisabledSource,
+  toggleFocusSource,
   toggleIconSource,
   toggleInvalidoSource,
-  filtersSourceToggleList,
+  filtersToggleListSource,
   toggleSource,
-  toggleTamanhosSource,
+  toggleSizesSource,
 } from './toggle.source';
 
 describe('toggleSource', () => {
@@ -81,14 +81,14 @@ describe('transforms das stories de variante', () => {
   });
 
   it('com rótulo visível nenhum dos dois carrega aria-label', () => {
-    const saida = toggleComRotuloSource();
+    const saida = toggleWithLabelSource();
     expect(saida).not.toContain('aria-label=');
     expect(saida).toContain('  Mostrar ocultos\n');
     expect(saida).toContain('default-value');
   });
 
   it('na escada, só o degrau do meio fica sem `size`', () => {
-    const saida = toggleTamanhosSource();
+    const saida = toggleSizesSource();
     expect(saida).toContain('size="sm"');
     expect(saida).toContain('size="lg"');
     expect([...saida.matchAll(/size="/g)]).toHaveLength(2);
@@ -98,13 +98,13 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('o ligado parte de `default-value`, e não de `v-model`', () => {
-    const saida = toggleAtivoSource();
+    const saida = toggleActiveSource();
     expect(saida).toContain('<Toggle default-value aria-label="Negrito ativo">');
     expect(saida).not.toContain('v-model');
   });
 
   it('o foco não escreve prop nenhuma — o anel vem do CSS do componente', () => {
-    const saida = toggleFocoSource();
+    const saida = toggleFocusSource();
     expect(saida).not.toContain('focus');
     expect(saida).not.toContain('tabindex');
     // O par existe para comparar: a variante com borda já tem sombra em repouso.
@@ -112,7 +112,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o desabilitado usa o atributo nativo, nos dois estados', () => {
-    const saida = toggleDesabilitadoSource();
+    const saida = toggleDisabledSource();
     expect([...saida.matchAll(/ disabled/g)]).toHaveLength(2);
     // `aria-disabled` sozinho deixaria o foco entrar num controle inerte.
     expect(saida).not.toContain('aria-disabled');
@@ -128,7 +128,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('a barra é um grupo com nome próprio, e cada botão se nomeia sozinho', () => {
-    const saida = toggleBarraDeFormatacaoSource();
+    const saida = formattingToggleBarSource();
     expect(saida).toContain('role="group"');
     expect(saida).toContain('aria-label="Formatação de texto"');
     const nomes = [...saida.matchAll(/<Toggle aria-label="([^"]+)"/g)].map((m) => m[1]);
@@ -138,14 +138,14 @@ describe('transforms das stories de composição', () => {
   });
 
   it('os filtros não formam grupo: o texto visível já nomeia cada um', () => {
-    const saida = filtersSourceToggleList();
+    const saida = filtersToggleListSource();
     expect(saida).not.toContain('role="group"');
     expect(saida).not.toContain('aria-label=');
     expect(saida).toContain('<p class="nds-text-body nds-font-semibold">Filtros de exibição</p>');
   });
 
   it('o controlado leva o estado para a aplicação por v-model', () => {
-    const saida = toggleControladoSource();
+    const saida = toggleControlledSource();
     expect(saida).toContain('<Toggle v-model="negrito" aria-label="Negrito">');
     expect(saida).toContain(`import { ref } from 'vue'`);
     expect(saida).toContain('const negrito = ref(false)');

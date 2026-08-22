@@ -3,11 +3,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import SliderStory from './SliderStory.svelte';
 import SliderFormStory from './SliderFormStory.svelte';
-import { valorDaAlca } from '@shared/testing/slider-probe';
+import { handleValue } from '@shared/testing/slider-probe';
 import {
-  sliderEmFormularioSource,
+  formSliderSource,
   sliderEscalaCurtaSource,
-  precoSourceSliderRange,
+  precoSliderRangeSource,
   sliderSource,
 } from './slider.source';
 
@@ -62,7 +62,7 @@ export const VolumeWithValue: Story = {
       // BODY e a tecla não chegava no slider.
       const live = canvasElement.querySelector<HTMLElement>('[aria-live="polite"]')!;
       const alvo = canvas.getByRole('slider') as HTMLElement;
-      const antes = valorDaAlca(alvo);
+      const antes = handleValue(alvo);
       alvo.focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(live).toHaveTextContent(`${Math.min(100, antes + 1)}%`);
@@ -84,7 +84,7 @@ export const PriceRange: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: precoSourceSliderRange },
+      source: { transform: precoSliderRangeSource },
       description: {
         story:
           'Range slider para min/max — dois thumbs com valor textual no formato "R$ 100 — R$ 400".',
@@ -111,7 +111,7 @@ export const InForm: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: sliderEmFormularioSource },
+      source: { transform: formSliderSource },
       description: {
         story:
           'Múltiplos sliders dentro de um formulário (Brilho + Opacidade) com campo de texto e submit.',
@@ -134,8 +134,8 @@ export const InForm: Story = {
 
     await step('Submeter guarda o valor corrente dos dois', async () => {
       const thumbs = canvas.getAllByRole('slider');
-      const brilho = valorDaAlca(thumbs[0]);
-      const opacidade = valorDaAlca(thumbs[1]);
+      const brilho = handleValue(thumbs[0]);
+      const opacidade = handleValue(thumbs[1]);
       await userEvent.click(canvas.getByRole('button', { name: 'Salvar preset' }));
       await expect(
         canvas.getByText(`Brilho ${brilho}% · Opacidade ${opacidade}%`),
@@ -175,10 +175,10 @@ export const ThickStep: Story = {
 
     await step('ArrowRight anda um passo dentro da faixa curta', async () => {
       const alvo = canvas.getByRole('slider') as HTMLElement;
-      const antes = valorDaAlca(alvo);
+      const antes = handleValue(alvo);
       alvo.focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(5, antes + 1));
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(5, antes + 1));
     });
   },
 };

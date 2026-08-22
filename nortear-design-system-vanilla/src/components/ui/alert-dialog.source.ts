@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -57,10 +57,10 @@ export function alertDialogSnippet(o: AlertDialogSnippetOptions = {}): string {
 
   const imports = [
     o.showMedia
-      ? importar('alert-dialog', 'createAlertDialog', 'createAlertDialogMedia')
-      : importar('alert-dialog', 'createAlertDialog'),
-    ...(o.showMedia ? [importar('alert', 'createAlertIcon')] : []),
-    importar('button', 'createButton'),
+      ? importing('alert-dialog', 'createAlertDialog', 'createAlertDialogMedia')
+      : importing('alert-dialog', 'createAlertDialog'),
+    ...(o.showMedia ? [importing('alert', 'createAlertIcon')] : []),
+    importing('button', 'createButton'),
   ];
 
   const botoes = [

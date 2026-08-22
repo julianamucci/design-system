@@ -7,11 +7,11 @@
  * de lib nem por `data-slot`, que duas diretivas no mesmo host disputam.
  */
 
-export interface MedidaDeAnel {
+export interface RingMeasurement {
   /** Sombra e contorno computados com o elemento SEM foco. */
-  semFoco: string;
+  noFocus: string;
   /** Sombra e contorno computados com o elemento focado. */
-  comFoco: string;
+  withFocus: string;
   /** `true` quando focar muda o desenho e o resultado não é "nada". */
   mudou: boolean;
 }
@@ -21,18 +21,18 @@ export interface MedidaDeAnel {
  *
  * `boxShadow !== 'none'` sozinho não prova nada: no estado inválido a sombra já
  * existe sem foco, e foi assim que um anel de foco invisível sobreviveu meses
- * no `toggle`. O que reprova de verdade é a MUDANÇA — e `comFoco` diferente de
+ * no `toggle`. O que reprova de verdade é a MUDANÇA — e `withFocus` diferente de
  * "nada" descarta o caso em que focar apenas apaga o que havia.
  */
-export function medirAnelDeFoco(el: HTMLElement): MedidaDeAnel {
+export function focusMeasureRing(el: HTMLElement): RingMeasurement {
   const doc = el.ownerDocument;
   (doc.activeElement as HTMLElement | null)?.blur();
   const antes = getComputedStyle(el);
-  const semFoco = `${antes.boxShadow} | ${antes.outlineStyle} ${antes.outlineWidth}`;
+  const noFocus = `${antes.boxShadow} | ${antes.outlineStyle} ${antes.outlineWidth}`;
   el.focus();
   const depois = getComputedStyle(el);
-  const comFoco = `${depois.boxShadow} | ${depois.outlineStyle} ${depois.outlineWidth}`;
-  return { semFoco, comFoco, mudou: semFoco !== comFoco && comFoco !== 'none | none 0px' };
+  const withFocus = `${depois.boxShadow} | ${depois.outlineStyle} ${depois.outlineWidth}`;
+  return { noFocus, withFocus, mudou: noFocus !== withFocus && withFocus !== 'none | none 0px' };
 }
 
 /**
@@ -44,13 +44,13 @@ export function medirAnelDeFoco(el: HTMLElement): MedidaDeAnel {
  * o campo mostraria o valor cru. Cada lib oferece um caminho próprio para isso;
  * a story usa esta lista como fonte única para não repetir o mapa.
  */
-export const ESTADOS = [
+export const STATES = [
   { value: 'sp', label: 'São Paulo' },
   { value: 'rj', label: 'Rio de Janeiro' },
   { value: 'mg', label: 'Minas Gerais' },
 ] as const;
 
 /** Mapa `valor → rótulo` no formato que as libs de navegador aceitam. */
-export const ESTADOS_POR_VALOR: Record<string, string> = Object.fromEntries(
-  ESTADOS.map((e) => [e.value, e.label]),
+export const VALUE_STATES: Record<string, string> = Object.fromEntries(
+  STATES.map((e) => [e.value, e.label]),
 );

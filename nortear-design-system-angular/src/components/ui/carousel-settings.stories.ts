@@ -252,7 +252,7 @@ export const Autoplay: Story = {
       // verificação — que roda no mesmo quadro — compararia o valor consigo
       // mesmo, daria "assentou" e a espera sairia sem provar nada.
       //
-      // QUATRO leituras, não duas — o mesmo número que o `assentar` do gesto
+      // QUATRO leituras, não duas — o mesmo número que o `settle` do gesto
       // de arrastar usa algumas centenas de linhas abaixo, e pelo mesmo motivo
       // escrito lá: a rolagem suave desacelera até encostar, e no fim da curva
       // ela anda menos de meio pixel entre duas leituras enquanto ainda falta
@@ -332,7 +332,7 @@ export const DragGesture: Story = {
      * no fim da curva ela anda menos de meio pixel entre duas leituras
      * enquanto ainda falta caminho.
      */
-    const assentar = async () => {
+    const settle = async () => {
       let estaveis = 0;
       let ultimo = Number.NaN;
       await waitFor(async () => {
@@ -346,7 +346,7 @@ export const DragGesture: Story = {
 
     /** Espera a rolagem chegar a uma coordenada já conhecida. */
     /*
-     * O rótulo NÃO é enfeite. Esta story chama `emPosicao` de três lugares —
+     * O rótulo NÃO é enfeite. Esta story chama `inPosition` de três lugares —
      * volta pela seta, soltura do dedo, soltura do mouse — e a reprovação
      * intermitente só diz a linha do helper, que é a mesma para os três. Sem
      * saber QUAL passo, sobra a distância: 4,1px é resíduo de encaixe e 288px é
@@ -360,7 +360,7 @@ export const DragGesture: Story = {
      */
     const desligada = (el: Element) => el.matches('[disabled], [aria-disabled="true"]');
 
-    const emPosicao = async (alvo: number, onde: string) => {
+    const inPosition = async (alvo: number, onde: string) => {
       await waitFor(async () => {
         await expect(
           Math.abs(viewport.scrollLeft - alvo),
@@ -388,16 +388,16 @@ export const DragGesture: Story = {
         if (botao.disabled) break;
         await userEvent.click(botao);
       }
-      posZero = await assentar();
+      posZero = await settle();
       await expect(anterior()).toBeDisabled();
 
       await userEvent.click(proximo());
-      posUm = await assentar();
+      posUm = await settle();
       await expect(posUm).toBeGreaterThan(posZero);
 
       await userEvent.click(anterior());
-      await emPosicao(posZero, 'volta pela seta');
-      // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
+      await inPosition(posZero, 'volta pela seta');
+      // A POSIÇÃO chega antes do ESTADO. `inPosition` prova que a rolagem
       // encostou em zero, mas quem desabilita a seta é a reconciliação do
       // índice, e ela espera de propósito o silêncio de 120ms — sem isso um
       // gesto com inércia emitiria uma troca de slide por quadro atravessado.
@@ -451,7 +451,7 @@ export const DragGesture: Story = {
 
     await step('O arraste por MOUSE move o conteúdo junto com o ponteiro', async () => {
       await userEvent.click(anterior());
-      await emPosicao(posZero, 'início do arraste por mouse');
+      await inPosition(posZero, 'início do arraste por mouse');
 
       // Eventos de ponteiro despachados direto, e não por `userEvent.pointer`:
       // o arraste por mouse desta stack assina `pointerdown`/`pointermove`/
@@ -482,7 +482,7 @@ export const DragGesture: Story = {
 
       // Assentou EM UM SLIDE, e no MESMO ponto que a seta alcança — não onde o
       // cursor largou. Um carrossel de rolagem livre pararia no meio.
-      await emPosicao(posUm, 'soltura do mouse');
+      await inPosition(posUm, 'soltura do mouse');
       await waitFor(async () => {
         await expect(anterior()).toBeEnabled();
       }, { timeout: 4000 });
@@ -491,8 +491,8 @@ export const DragGesture: Story = {
     await step('E a story termina no primeiro slide', async () => {
       // O Chromatic fotografa o quadro final e o axe varre a partir dele.
       await userEvent.click(anterior());
-      await emPosicao(posZero, 'fim da story');
-      // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
+      await inPosition(posZero, 'fim da story');
+      // A POSIÇÃO chega antes do ESTADO. `inPosition` prova que a rolagem
       // encostou no alvo, mas quem desabilita a seta é a reconciliação do
       // índice, e ela espera de propósito o silêncio do motor — sem isso um
       // gesto com inércia emitiria uma troca de slide por quadro atravessado.

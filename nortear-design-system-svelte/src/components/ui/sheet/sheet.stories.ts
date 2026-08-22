@@ -90,7 +90,7 @@ export default meta;
 type Story = StoryObj;
 
 /** Espera o `body` voltar a aceitar ponteiro depois de um fechamento. */
-async function esperarPonteiroLiberado(): Promise<void> {
+async function waitForPointerLiberado(): Promise<void> {
   await waitFor(() => {
     if (getComputedStyle(document.body).pointerEvents === 'none') {
       throw new Error('o overlay ainda bloqueia o ponteiro');
@@ -108,7 +108,7 @@ async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
   // O ponteiro volta DEPOIS do nó sair: enquanto o painel é modal a lib deixa
   // `pointer-events: none` no `body` e só o devolve depois de remover o painel.
   // Sem esta espera o clique de reabertura falha no intervalo — medido.
-  await esperarPonteiroLiberado();
+  await waitForPointerLiberado();
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(trigger);
   }
@@ -127,7 +127,7 @@ async function fechar(): Promise<void> {
     await userEvent.keyboard('{Escape}');
   }
   await waitForPortalGone('dialog');
-  await esperarPonteiroLiberado();
+  await waitForPointerLiberado();
 }
 
 export const Playground: Story = {
@@ -209,8 +209,8 @@ export const Playground: Story = {
 
     await step('O botão do canto fecha o painel', async () => {
       const painel = await abrir(trigger);
-      const fecharBtn = within(painel).getByRole('button', { name: /fechar/i });
-      await userEvent.click(fecharBtn);
+      const closeBtn = within(painel).getByRole('button', { name: /fechar/i });
+      await userEvent.click(closeBtn);
       await waitForPortalGone('dialog');
     });
 

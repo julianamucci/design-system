@@ -35,7 +35,7 @@ type Story = StoryObj;
 
 // O `data-value` aparece na célula E no botão dentro dela: sem escopar pela
 // classe do botão, cada dia entra duas vezes na conta.
-const valoresCom = (el: HTMLElement, seletor: string): string[] =>
+const valuesWith = (el: HTMLElement, seletor: string): string[] =>
   Array.from(el.querySelectorAll(seletor)).map((n) => n.getAttribute('data-value') ?? '');
 
 export const Selected: Story = {
@@ -59,7 +59,7 @@ export const Selected: Story = {
     await step('Só a data escolhida está marcada', async () => {
       // accessibility.item3 — `existe alguma célula com data-selected` passaria
       // com o mês inteiro marcado.
-      await expect(valoresCom(canvasElement, '.nds-calendar-day-btn[data-value][data-selected]')).toEqual(['2026-04-12']);
+      await expect(valuesWith(canvasElement, '.nds-calendar-day-btn[data-value][data-selected]')).toEqual(['2026-04-12']);
     });
 
     await step('A célula anuncia a data por extenso', async () => {
@@ -86,7 +86,7 @@ export const Disabled: Story = {
     await step('A regra bloqueia exatamente o intervalo que ela descreve', async () => {
       // functional.item4 — contar "há algum bloqueado" passaria com um só, e
       // também com a regra invertida.
-      const bloqueadas = valoresCom(
+      const bloqueadas = valuesWith(
         canvasElement,
         '.nds-calendar-day-btn[data-value][data-disabled]:not([data-outside-month])',
       );
@@ -99,7 +99,7 @@ export const Disabled: Story = {
     await step('Clicar num dia bloqueado não muda a escolha', async () => {
       const bloqueada = canvasElement.querySelector<HTMLElement>('[data-value="2026-04-03"]')!;
       await userEvent.click(bloqueada, { pointerEventsCheck: 0 });
-      await expect(valoresCom(canvasElement, '.nds-calendar-day-btn[data-value][data-selected]')).toEqual(['2026-04-12']);
+      await expect(valuesWith(canvasElement, '.nds-calendar-day-btn[data-value][data-selected]')).toEqual(['2026-04-12']);
       // E o dia bloqueado continua bloqueado depois da tentativa: um componente
       // que liberasse a data ao primeiro clique passaria só com a asserção acima.
       await expect(bloqueada).toHaveAttribute('data-disabled');
@@ -139,7 +139,7 @@ export const Today: Story = {
       // regra é cair na data certa, e é isso que um erro de fuso quebraria.
       const hoje = new Date();
       const iso = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
-      await expect(valoresCom(canvasElement, '.nds-calendar-day-btn[data-value][data-today]')).toContain(iso);
+      await expect(valuesWith(canvasElement, '.nds-calendar-day-btn[data-value][data-today]')).toContain(iso);
     });
 
     await step('Destacar hoje não é escolhê-lo', async () => {
@@ -165,7 +165,7 @@ export const WithOutsideDays: Story = {
   play: async ({ canvasElement, step }) => {
     await step('As bordas do grid trazem dias de fora do mês', async () => {
       // Abril de 2026 começa numa quarta: as três primeiras casas vêm de março.
-      const fora = valoresCom(canvasElement, '.nds-calendar-day-btn[data-value][data-outside-month]');
+      const fora = valuesWith(canvasElement, '.nds-calendar-day-btn[data-value][data-outside-month]');
       await expect(fora).toContain('2026-03-30');
       await expect(fora.length).toBeGreaterThan(0);
     });
@@ -173,10 +173,10 @@ export const WithOutsideDays: Story = {
     await step('Dia de fora do mês não conta como do mês', async () => {
       // O contraste é o ponto da story: sem a marcação de externo, o mês
       // pareceria ter mais dias do que tem.
-      const doMes = canvasElement.querySelectorAll(
+      const ofMonth = canvasElement.querySelectorAll(
         '.nds-calendar-day-btn[data-value^="2026-04-"]:not([data-outside-month])',
       );
-      await expect(doMes.length).toBe(30);
+      await expect(ofMonth.length).toBe(30);
     });
   },
 };

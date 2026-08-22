@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  codeBlockPaletaSource,
+  codeBlockPaletteSource,
   codeBlockRemovivelSource,
   codeBlockSource,
 } from './code-block.source';
@@ -60,7 +60,7 @@ describe('codeBlockSource', () => {
 
 describe('transforms das stories de paleta e de remoção', () => {
   it('a paleta empilha um bloco por linguagem e um com linha em destaque', () => {
-    const saida = codeBlockPaletaSource();
+    const saida = codeBlockPaletteSource();
     expect(saida).toContain('{#each trechos as trecho (trecho.language)}');
     expect(saida).toContain('showLineNumbers={false}');
     expect(saida).toContain('highlightLines={[2]}');

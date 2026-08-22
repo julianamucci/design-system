@@ -50,7 +50,7 @@ const TIPO = `interface Invoice {
  * Doze, e não três: a paginação em fatias de cinco e as contagens que a tabela
  * anuncia só fazem sentido contra o conjunto inteiro.
  */
-const DADOS = `const invoices: Invoice[] = [
+const DATA = `const invoices: Invoice[] = [
   { id: 'INV-001', customer: 'Ana Souza',      status: 'Pago',      method: 'Cartão de crédito', amount: 250 },
   { id: 'INV-002', customer: 'Bruno Lima',     status: 'Pendente',  method: 'Boleto bancário',   amount: 150 },
   { id: 'INV-003', customer: 'Carla Mendes',   status: 'Cancelado', method: 'Pix',               amount: 350 },
@@ -92,7 +92,7 @@ const CELL_VALUE = `    cell: ({ row }) =>
  * Definidas UMA vez, em escopo estável: recriar o array a cada render zeraria
  * ordenação, filtros e seleção.
  */
-const COLUNAS = `const columns: DataTableColumn<Invoice>[] = [
+const COLUMNS = `const columns: DataTableColumn<Invoice>[] = [
   { accessorKey: 'id', header: 'Fatura', size: 110 },
   { accessorKey: 'customer', header: 'Cliente', size: 200 },
   {
@@ -120,7 +120,7 @@ function script(...partes: Array<string | false | null | undefined>): string {
  * formata um SFC. Separá-los por linha em branco sugeriria grupos que não
  * existem.
  */
-function importar(...partes: string[]): string {
+function importing(...partes: string[]): string {
   return partes.join('\n');
 }
 
@@ -157,15 +157,15 @@ export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) =>
 
   return vueSnippet(
     script(
-      importar(
+      importing(
         IMPORT_VUE,
         enableRowSelection ? IMPORT_TABLE_WITH_LABELS : IMPORT_TABLE,
         IMPORT_BADGE,
       ),
       TIPO,
-      DADOS,
+      DATA,
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
       enableRowSelection
         ? `// Só as chaves informadas mudam; o resto continua no padrão do componente.
 const rotulos: Partial<DataTableLabels> = {
@@ -204,14 +204,14 @@ const chaveDaFatura = (f: Invoice) => f.id`
  * largura toda —, porque quem esvaziou o resultado com um filtro precisa do
  * campo para desfazer.
  */
-export function dataTableSemResultadosSource(): string {
+export function dataTableNoResultsSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
+      importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
       '// O recorte não devolveu nada — a grade continua montada.\nconst invoices: Invoice[] = []',
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
     ),
     tag([
       ':columns="columns"',
@@ -232,11 +232,11 @@ export function dataTableSemResultadosSource(): string {
 export function dataTablePaginadaSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
+      importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
-      DADOS,
+      DATA,
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
     ),
     tag([
       ':columns="columns"',
@@ -255,14 +255,14 @@ export function dataTablePaginadaSource(): string {
  * Sem `rowLabel` o identificador sairia da primeira coluna ("INV-001"); aqui a
  * escolha é explícita e vence a primeira coluna.
  */
-export function dataTableRotuloDeLinhaSource(): string {
+export function lineDataTableLabelSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
+      importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
-      DADOS,
+      DATA,
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
       `const chaveDaFatura = (f: Invoice) => f.id
 const rotuloDaFatura = (f: Invoice) => f.customer`,
     ),
@@ -289,7 +289,7 @@ const rotuloDaFatura = (f: Invoice) => f.customer`,
 export function dataTableVirtualizadaSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
+      importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
       `// Mil linhas: é o volume em que montar tudo de uma vez trava a rolagem.
 const invoices: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
@@ -300,7 +300,7 @@ const invoices: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
   amount: (i * 37) % 2000,
 }))`,
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
     ),
     tag([
       ':columns="columns"',
@@ -319,12 +319,12 @@ const invoices: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
  * O tipo escolhe o controle e as opções da lista vêm de quem conhece o domínio.
  * A coluna sem filtro continua anunciando de qual coluna a célula vazia é.
  */
-export function dataTableFiltrosPorColunaSource(): string {
+export function columnDataTableFiltersSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
+      importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
-      DADOS,
+      DATA,
       APRESENTACAO,
       `const columns: DataTableColumn<Invoice>[] = [
   { accessorKey: 'id', header: 'Fatura', meta: { filter: { type: 'text' } } },
@@ -365,14 +365,14 @@ ${CELL_VALUE}
  * Composição ResizableColumns: a alça se anuncia como separador com o nome da
  * coluna, e arrastar muda a largura daquela coluna só.
  */
-export function dataTableColunasRedimensionaveisSource(): string {
+export function dataTableColumnsRedimensionaveisSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
+      importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
-      DADOS,
+      DATA,
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
     ),
     tag([':columns="columns"', ':data="invoices"', 'enable-column-resizing']),
   );
@@ -385,11 +385,11 @@ export function dataTableColunasRedimensionaveisSource(): string {
 export function dataTableReordenarEFixarSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
+      importing(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
-      DADOS,
+      DATA,
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
     ),
     tag([
       ':columns="columns"',
@@ -408,12 +408,12 @@ export function dataTableReordenarEFixarSource(): string {
  * estado, e é por isso que o evento existe. Cada coluna editável se declara na
  * própria coluna.
  */
-export function dataTableEdicaoInlineSource(): string {
+export function dataTableEditInlineSource(): string {
   return vueSnippet(
     script(
-      importar(`import { h, ref } from 'vue'`, IMPORT_TABLE, IMPORT_BADGE),
+      importing(`import { h, ref } from 'vue'`, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
-      DADOS,
+      DATA,
       APRESENTACAO,
       `const columns: DataTableColumn<Invoice>[] = [
   { accessorKey: 'id', header: 'Fatura' },

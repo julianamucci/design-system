@@ -4,7 +4,7 @@ import { within, expect, userEvent } from 'storybook/test';
 import { NdsTextarea } from './textarea';
 import { NdsLabel } from './label';
 import {
-  alturaMinimaPx,
+  heightMinimaPx,
   preencherAte,
   resizeComputado,
 } from '@shared/testing/textarea-probe';
@@ -52,7 +52,7 @@ export const Default: Story = {
     });
 
     await step('Altura mínima de 120px', async () => {
-      await expect(alturaMinimaPx(textarea)).toBe(120);
+      await expect(heightMinimaPx(textarea)).toBe(120);
     });
   },
 };

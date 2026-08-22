@@ -11,8 +11,8 @@ import {
 } from "./popover";
 import { Button } from "./button";
 import {
-  popoverAbertoSource,
-  popoverControladoSource,
+  popoverOpenSource,
+  popoverControlledSource,
   popoverModalSource,
   popoverSource,
 } from "./popover.source";
@@ -86,7 +86,7 @@ export const Open: Story = {
     docs: {
       // `defaultOpen` é o estado que a story afirma no `render`; o meta imprime
       // o painel fechado, que é o padrão do componente.
-      source: { transform: popoverAbertoSource },
+      source: { transform: popoverOpenSource },
       description: {
         story:
           "Popover aberto via defaultOpen — Content visível com role=dialog. Foco move ao primeiro elemento focável.",
@@ -136,7 +136,7 @@ export const Controlled: Story = {
     docs: {
       // Abertura controlada por `useState` de fora, com dois botões externos —
       // sub-composição que o snippet do meta não tem como mostrar.
-      source: { transform: popoverControladoSource },
+      source: { transform: popoverControlledSource },
       description: {
         story:
           "Estado controlado via open + onOpenChange. Botões externos abrem e fecham programaticamente.",

@@ -84,7 +84,7 @@ export function textareaSource(_gerado?: string, ctx?: { args?: Partial<Textarea
 }
 
 /** Variante padrão: campo simples, com o redimensionamento vertical da folha. */
-export function textareaPadraoSource(): string {
+export function textareaDefaultSource(): string {
   return svelteSnippet(
     script(),
     `<div class="nds-stack nds-max-w-md" data-spacing="sm">
@@ -95,7 +95,7 @@ export function textareaPadraoSource(): string {
 }
 
 /** Variante com contador: `maxlength` no campo e a contagem anunciada ao vivo. */
-export function textareaComContadorSource(): string {
+export function textareaWithCounterSource(): string {
   return svelteSnippet(
     script(),
     `<div class="nds-stack nds-max-w-md" data-spacing="sm">
@@ -117,7 +117,7 @@ export function textareaComContadorSource(): string {
 }
 
 /** Variante sem redimensionamento: a alça de arrastar sai pela classe. */
-export function textareaSemRedimensionarSource(): string {
+export function textareaNoRedimensionarSource(): string {
   return svelteSnippet(
     script(),
     `<div class="nds-stack nds-max-w-md" data-spacing="sm">
@@ -144,7 +144,7 @@ export function textareaPreenchidoSource(): string {
 }
 
 /** Estado desabilitado: sem foco, sem digitação e sem alça de redimensionar. */
-export function textareaDesabilitadoSource(): string {
+export function textareaDisabledSource(): string {
   return svelteSnippet(
     script(),
     `<div class="nds-stack nds-max-w-md" data-spacing="sm">
@@ -185,7 +185,7 @@ export function textareaSomenteLeituraSource(): string {
 }
 
 /** Composição com texto de apoio: o parágrafo abaixo do campo, sem erro. */
-export function textareaComApoioSource(): string {
+export function textareaWithHelperSource(): string {
   return svelteSnippet(
     script(),
     `<div class="nds-stack nds-max-w-md" data-spacing="sm">
@@ -199,7 +199,7 @@ export function textareaComApoioSource(): string {
 }
 
 /** Composição do contador acessível: `aria-live` e rótulo por extenso. */
-export function textareaContadorAcessivelSource(): string {
+export function textareaCounterAccessibleSource(): string {
   return svelteSnippet(
     script(),
     `<div class="nds-stack nds-max-w-md" data-spacing="sm">

@@ -8,7 +8,7 @@ import {
   NdsDataTableDemo,
   LABELS_DT,
 } from './data-table.fixtures';
-import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -76,10 +76,10 @@ export const WithColumnFilters: Story = {
       // Sem texto no `th`, a célula chega ao axe como cabeçalho vazio: o VALOR
       // de um input não entra no nome acessível do elemento que o contém, então
       // uma célula que só tem o campo é, para a árvore de acessibilidade, vazia.
-      const linhaDeFiltros = canvasElement.querySelector<HTMLElement>(
+      const filtersLine = canvasElement.querySelector<HTMLElement>(
         '.nds-data-table-filter-row',
       )!;
-      const celulas = [...linhaDeFiltros.querySelectorAll('th')];
+      const celulas = [...filtersLine.querySelectorAll('th')];
       await expect(celulas.length).toBe(COLUMNS_WITH_FILTER.length);
       for (const celula of celulas) {
         await expect(celula.querySelector('.nds-sr-only')!.textContent!.trim().length)
@@ -124,7 +124,7 @@ export const WithColumnFilters: Story = {
 
 export const WithColumnVisibility: Story = {
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {
         story:

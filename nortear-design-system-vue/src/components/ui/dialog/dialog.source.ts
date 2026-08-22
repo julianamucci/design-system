@@ -18,7 +18,7 @@ export type DialogArgs = {
 };
 
 /** Ordem canônica das peças no bloco de import — a mesma do `index.ts`. */
-const ORDEM = [
+const ORDER = [
   'Dialog',
   'DialogClose',
   'DialogContent',
@@ -34,11 +34,11 @@ const ORDEM = [
  * Bloco de import: as peças do diálogo, depois o Button, que é sempre o gatilho
  * e sempre a ação. Campos entram só quando a composição tem formulário.
  */
-function importar(pecas: string[], comCampos = false): string {
-  const usadas = ORDEM.filter((peca) => pecas.includes(peca));
+function importing(parts: string[], comCampos = false): string {
+  const usadas = ORDER.filter((part) => parts.includes(part));
   const linhas = [
     `import {`,
-    ...usadas.map((peca) => `  ${peca},`),
+    ...usadas.map((part) => `  ${part},`),
     `} from '@/components/ui/dialog'`,
     `import { Button } from '@/components/ui/button'`,
   ];
@@ -64,7 +64,7 @@ function descricao(frase: string): string {
       </DialogDescription>`;
 }
 
-type Moldura = {
+type Frame = {
   /** Props da raiz: `default-open`, `:modal="false"`. */
   raiz?: string;
   /** `DialogContent` (centrado) ou `DialogScrollContent` (rola no overlay). */
@@ -86,7 +86,7 @@ type Moldura = {
  * `as-child` no gatilho não é enfeite: sem ele o design system renderizaria um
  * botão DENTRO de outro botão.
  */
-function dialogo(m: Moldura): string {
+function dialogo(m: Frame): string {
   const { raiz = '', painel = 'DialogContent', painelProps = '', corpo = '', rodape = '' } = m;
   // Sem corpo e sem rodapé o painel é só cabeçalho: nada de linha em branco
   // sobrando entre o fim do cabeçalho e o fecho do painel.
@@ -112,7 +112,7 @@ ${descricao(m.descricao)}
  * A ordem do DOM é a de leitura e a de foco; quem inverte a pilha no estreito é
  * o CSS do rodapé.
  */
-function rodapePadrao(cancelar: string, acao: string, destrutiva = false): string {
+function footerDefault(cancelar: string, acao: string, destrutiva = false): string {
   return `    <DialogFooter>
       <DialogClose as-child>
         <Button variant="outline">${cancelar}</Button>
@@ -143,7 +143,7 @@ const PARTS_COMPLETAS = [
 export const dialogSource: SourceTransform<DialogArgs> = (_gerado, ctx) => {
   const { defaultOpen, modal } = ctx?.args ?? {};
   return vueSnippet(
-    importar(PARTS_COMPLETAS),
+    importing(PARTS_COMPLETAS),
     dialogo({
       // `.trim()` porque `dialogo` já reaplica o espaço da frente: sem ele a
       // tag sairia com dois espaços quando alguma prop entra.
@@ -154,7 +154,7 @@ export const dialogSource: SourceTransform<DialogArgs> = (_gerado, ctx) => {
       gatilho: 'Editar perfil',
       titulo: 'Editar perfil',
       descricao: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-      rodape: rodapePadrao('Cancelar', 'Salvar alterações'),
+      rodape: footerDefault('Cancelar', 'Salvar alterações'),
     }),
   );
 };
@@ -165,15 +165,15 @@ export const dialogSource: SourceTransform<DialogArgs> = (_gerado, ctx) => {
  * Aqui `default-open` É o assunto — nas outras stories ela é só o que deixa o
  * Chromatic fotografar o painel.
  */
-export function dialogAbertoSource(): string {
+export function dialogOpenSource(): string {
   return vueSnippet(
-    importar(PARTS_COMPLETAS),
+    importing(PARTS_COMPLETAS),
     dialogo({
       raiz: 'default-open',
       gatilho: 'Editar perfil',
       titulo: 'Editar perfil',
       descricao: 'Atualize suas informações pessoais. As mudanças são salvas ao confirmar.',
-      rodape: rodapePadrao('Cancelar', 'Salvar alterações'),
+      rodape: footerDefault('Cancelar', 'Salvar alterações'),
     }),
   );
 }
@@ -184,15 +184,15 @@ export function dialogAbertoSource(): string {
  * Escape e a saída do rodapé são o que resta — retirar todas de uma vez deixaria
  * o diálogo sem fechamento acessível.
  */
-export function dialogSemBotaoFecharSource(): string {
+export function dialogNoButtonCloseSource(): string {
   return vueSnippet(
-    importar(PARTS_COMPLETAS),
+    importing(PARTS_COMPLETAS),
     dialogo({
       painelProps: ':show-close-button="false"',
       gatilho: 'Ver atualização',
       titulo: 'Aceitar atualização',
       descricao: 'Uma nova versão está disponível. Clique em continuar para atualizar.',
-      rodape: rodapePadrao('Mais tarde', 'Atualizar agora'),
+      rodape: footerDefault('Mais tarde', 'Atualizar agora'),
     }),
   );
 }
@@ -204,9 +204,9 @@ export function dialogSemBotaoFecharSource(): string {
  * evento é obrigatório no par — sem ele o painel fecharia por conta própria e o
  * estado de quem consome passaria a mentir.
  */
-export function dialogControladoSource(): string {
+export function dialogControlledSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'Dialog',
       'DialogClose',
       'DialogContent',
@@ -246,9 +246,9 @@ const aberto = ref(false)`,
  * Cada campo mora num bloco com o próprio rótulo — é o `for`/`id` que liga os
  * dois, e sem ele o campo chega ao leitor sem nome.
  */
-export function dialogComFormularioSource(): string {
+export function dialogWithFormSource(): string {
   return vueSnippet(
-    importar(PARTS_COMPLETAS, true),
+    importing(PARTS_COMPLETAS, true),
     dialogo({
       gatilho: 'Editar perfil',
       titulo: 'Editar perfil',
@@ -280,9 +280,9 @@ export function dialogComFormularioSource(): string {
  * rola. O painel centralizado por posição fixa cortaria o que não coubesse, sem
  * barra de rolagem nenhuma. Cabeçalho e rodapé continuam dentro do painel.
  */
-export function dialogComRolagemSource(): string {
+export function dialogWithScrollSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'Dialog',
       'DialogClose',
       'DialogDescription',
@@ -307,7 +307,7 @@ const termos = [
       corpo: `    <div class="nds-stack nds-text-body nds-text-muted-foreground" data-spacing="sm">
       <p v-for="(clausula, i) in termos" :key="i">{{ clausula }}</p>
     </div>`,
-      rodape: rodapePadrao('Recusar', 'Aceitar termos'),
+      rodape: footerDefault('Recusar', 'Aceitar termos'),
     }),
   );
 }
@@ -318,9 +318,9 @@ const termos = [
  * Sem nada a confirmar, o rodapé some e o X do canto é a única saída visível —
  * por isso ele não pode ser escondido junto.
  */
-export function dialogSemRodapeSource(): string {
+export function dialogNoFooterSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       'Dialog',
       'DialogContent',
       'DialogDescription',
@@ -343,14 +343,14 @@ export function dialogSemRodapeSource(): string {
  * Vale quando a destrutividade é secundária ao fluxo — remover um item de uma
  * lista, não apagar o recurso. Confirmação irreversível é outro componente.
  */
-export function dialogAcaoDestrutivaSource(): string {
+export function dialogActionDestructiveSource(): string {
   return vueSnippet(
-    importar(PARTS_COMPLETAS),
+    importing(PARTS_COMPLETAS),
     dialogo({
       gatilho: 'Remover anexo',
       titulo: 'Remover anexo',
       descricao: 'O anexo será removido desta mensagem. Você pode adicioná-lo novamente depois.',
-      rodape: rodapePadrao('Cancelar', 'Remover anexo', true),
+      rodape: footerDefault('Cancelar', 'Remover anexo', true),
     }),
   );
 }
@@ -361,9 +361,9 @@ export function dialogAcaoDestrutivaSource(): string {
  * As duas props andam em par: esconder o X sem repor a saída no rodapé tiraria
  * do painel o único fechamento visível.
  */
-export function dialogFecharNoRodapeSource(): string {
+export function footerDialogCloseSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       'Dialog',
       'DialogContent',
       'DialogDescription',
@@ -387,7 +387,7 @@ export function dialogFecharNoRodapeSource(): string {
 /** Composição ConfirmEmail: confirmar a troca de e-mail, com um campo no corpo. */
 export function dialogConfirmarEmailSource(): string {
   return vueSnippet(
-    importar(PARTS_COMPLETAS, true),
+    importing(PARTS_COMPLETAS, true),
     dialogo({
       gatilho: 'Confirmar novo email',
       titulo: 'Confirmar novo email',
@@ -398,7 +398,7 @@ export function dialogConfirmarEmailSource(): string {
       <Input id="new-email" type="email" placeholder="voce@example.com" />
     </div>`,
       // A operação é reversível, então a ação primária é neutra.
-      rodape: rodapePadrao('Cancelar', 'Enviar confirmação'),
+      rodape: footerDefault('Cancelar', 'Enviar confirmação'),
     }),
   );
 }
@@ -406,7 +406,7 @@ export function dialogConfirmarEmailSource(): string {
 /** Composição ProfileEdit: formulário de perfil com três campos rotulados. */
 export function dialogEditarPerfilSource(): string {
   return vueSnippet(
-    importar(PARTS_COMPLETAS, true),
+    importing(PARTS_COMPLETAS, true),
     dialogo({
       gatilho: 'Editar perfil',
       titulo: 'Editar perfil',
@@ -443,7 +443,7 @@ export function dialogEditarPerfilSource(): string {
  */
 export function dialogPreviaDeMidiaSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       'Dialog',
       'DialogContent',
       'DialogDescription',

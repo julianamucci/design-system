@@ -5,7 +5,7 @@
 // rules em comentário; página que crasha fica FORA do arquivo, listada aqui.
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
-import { auditarPaginaDeDocs, descreverProblemas } from '@shared/testing/docs-page-contract';
+import { docsAuditarPage, describeProblemas } from '@shared/testing/docs-page-contract';
 
 import { AboutDocs } from './AboutDocs';
 import { AccessibilityDocs } from './AccessibilityDocs';
@@ -95,13 +95,13 @@ const mounted: Story['play'] = async ({ canvasElement, parameters }) => {
   // esquerda, bloco de código vazio, chave de tradução renderizada como texto.
   // Foi assim que a revisão do Calendar gastou dezesseis commits achando um
   // defeito por rodada, a olho, com a suíte verde.
-  const problemas = auditarPaginaDeDocs(canvasElement, {
+  const problemas = docsAuditarPage(canvasElement, {
     ignorar: (parameters as { contratoDocs?: { ignorar?: Record<string, string> } }).contratoDocs
       ?.ignorar,
   });
   await expect(
     problemas,
-    problemas.length ? `\n${descreverProblemas(problemas)}\n` : '',
+    problemas.length ? `\n${describeProblemas(problemas)}\n` : '',
   ).toEqual([]);
 
   // Idioma do documento QUE O LEITOR LÊ. Esta suíte roda dentro do iframe do

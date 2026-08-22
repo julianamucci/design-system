@@ -111,7 +111,7 @@ export const TEXTS = {
   comDescricao: 'Preferências atualizadas.',
   comDescricaoDetalhe:
     'Suas configurações foram salvas e entrarão em vigor na próxima sessão.',
-  comAcao: 'Item excluído.',
+  withAction: 'Item excluído.',
   comAcaoRotulo: 'Desfazer',
   promessaCarregando: 'Enviando arquivo...',
   promessaSucesso: 'Arquivo enviado com sucesso.',

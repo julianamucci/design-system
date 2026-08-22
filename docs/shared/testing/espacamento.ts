@@ -15,7 +15,7 @@
  * pixel. `getComputedStyle(el).getPropertyValue('--spacing-3')` devolve o TEXTO
  * declarado ("calc(var(--spacing-base) * 3)"), não o valor resolvido — e devolve
  * string vazia quando o token não existe, que é indistinguível de "existe e vale
- * zero". Por isso `resolverEmPx` mede uma sonda real: aplica a expressão em
+ * zero". Por isso `pxResolve` mede uma sonda real: aplica a expressão em
  * `width` de um elemento e lê o px de volta. É a mesma diferença entre
  * `cor.ts` medir cor pintada e alguém conferir nome de token.
  *
@@ -27,7 +27,7 @@
 export const DENSIDADES = ['condensado', 'default', 'confortavel'] as const;
 export type Densidade = (typeof DENSIDADES)[number];
 
-export interface AlvoDeEspaco {
+export interface EspacoTarget {
   /** Nome que aparece no relatório de falha. */
   nome: string;
   seletor: string;
@@ -46,7 +46,7 @@ export interface AlvoDeEspaco {
   alvoDeToque?: boolean;
 }
 
-export interface MedidaDeEspaco {
+export interface EspacoMeasurement {
   alvo: string;
   prop: string;
   densidade: Densidade;
@@ -88,7 +88,7 @@ const SENTINELA_PX = 3.7;
  * aí 0.0125px viram 1.2px e reprovam um degrau correto. Medir 512× e dividir
  * empurra o arredondamento para a sexta casa.
  */
-export function resolverEmPx(
+export function pxResolve(
   raiz: HTMLElement,
   expressao: string,
   fator = 1,
@@ -134,32 +134,32 @@ export const FATOR_DE_PRECISAO = 512;
  * diretamente.
  *
  * É por isso que `densities.css` documenta a classe como sendo do `<html>`, e é
- * a diferença para `porTema` em `cor.ts`, que pode trabalhar num contêiner
+ * a diferença para `byTheme` em `cor.ts`, que pode trabalhar num contêiner
  * porque os tokens de cor guardam valor literal (`0 0% 100%`), sem `var()`
  * dentro.
  *
  * A classe original volta no `finally`: densidade vazada envenena a story
  * seguinte, e a suíte compartilha o mesmo documento.
  */
-export function porDensidade<T>(
+export function byDensity<T>(
   raiz: HTMLElement,
   fn: (densidade: Densidade) => T,
 ): T[] {
   const html = raiz.ownerDocument.documentElement;
-  const classeOriginal = html.className;
-  const semDensidade = classeOriginal
+  const classNameOriginal = html.className;
+  const noDensity = classNameOriginal
     .split(/\s+/)
     .filter((c) => c && !c.startsWith('densidade-'))
     .join(' ');
   const saida: T[] = [];
   try {
     for (const densidade of DENSIDADES) {
-      html.className = `${semDensidade} densidade-${densidade}`.trim();
+      html.className = `${noDensity} densidade-${densidade}`.trim();
       void raiz.offsetHeight;
       saida.push(fn(densidade));
     }
   } finally {
-    html.className = classeOriginal;
+    html.className = classNameOriginal;
     void raiz.offsetHeight;
   }
   return saida;
@@ -167,7 +167,7 @@ export function porDensidade<T>(
 
 /** Base de spacing resolvida em px, na densidade aplicada agora em `raiz`. */
 export function baseEmPx(raiz: HTMLElement): number | null {
-  return resolverEmPx(raiz, 'var(--spacing-base)', FATOR_DE_PRECISAO);
+  return pxResolve(raiz, 'var(--spacing-base)', FATOR_DE_PRECISAO);
 }
 
 /**
@@ -178,7 +178,7 @@ export function baseEmPx(raiz: HTMLElement): number | null {
  * `0` e `px` ficam de fora — não são múltiplos da base.
  */
 export function degrausDeclarados(doc: Document): DegrauDaEscala[] {
-  const achados = new Map<string, number>();
+  const findings = new Map<string, number>();
 
   const visitar = (regras: CSSRuleList): void => {
     for (const regra of Array.from(regras)) {
@@ -189,7 +189,7 @@ export function degrausDeclarados(doc: Document): DegrauDaEscala[] {
           if (sufixo === 'base' || sufixo === 'px' || sufixo === '0') continue;
           const mult = Number(sufixo.replace('-', '.'));
           if (!Number.isFinite(mult) || mult <= 0) continue;
-          achados.set(prop, mult);
+          findings.set(prop, mult);
         }
       }
       const aninhadas = (regra as CSSGroupingRule).cssRules;
@@ -206,18 +206,18 @@ export function degrausDeclarados(doc: Document): DegrauDaEscala[] {
     }
   }
 
-  return [...achados].map(([token, multiplicador]) => ({ token, multiplicador }));
+  return [...findings].map(([token, multiplicador]) => ({ token, multiplicador }));
 }
 
 // ─── Medição de consumidores ──────────────────────────────────────────────────
 
 /** Mede cada alvo nas três densidades. Alvo ausente vira `presente: false`. */
-export function medirPorDensidade(
+export function densityMeasure(
   raiz: HTMLElement,
-  alvos: AlvoDeEspaco[],
-): MedidaDeEspaco[] {
-  return porDensidade(raiz, (densidade) =>
-    alvos.map((alvo): MedidaDeEspaco => {
+  targets: EspacoTarget[],
+): EspacoMeasurement[] {
+  return byDensity(raiz, (densidade) =>
+    targets.map((alvo): EspacoMeasurement => {
       const el = raiz.querySelector<HTMLElement>(alvo.seletor);
       if (!el) {
         return {
@@ -237,14 +237,14 @@ export function medirPorDensidade(
   ).flat();
 }
 
-export function descreverMedida(m: MedidaDeEspaco): string {
+export function describeMeasurement(m: EspacoMeasurement): string {
   if (!m.presente) return `${m.alvo} — seletor não casou (${m.prop}, ${m.densidade})`;
   return `${m.alvo} · ${m.prop} · ${m.densidade}: medido ${m.px}px, esperado ${m.esperado}px`;
 }
 
 /** Agrupa as três medidas de um mesmo alvo+prop, na ordem de `DENSIDADES`. */
-export function porAlvo(medidas: MedidaDeEspaco[]): Map<string, MedidaDeEspaco[]> {
-  const grupos = new Map<string, MedidaDeEspaco[]>();
+export function byTarget(medidas: EspacoMeasurement[]): Map<string, EspacoMeasurement[]> {
+  const grupos = new Map<string, EspacoMeasurement[]>();
   for (const m of medidas) {
     const chave = `${m.alvo} · ${m.prop}`;
     if (!grupos.has(chave)) grupos.set(chave, []);

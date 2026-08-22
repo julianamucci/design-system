@@ -253,8 +253,8 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
     // terminar.
     let lastWidth = -1;
     let lastHeight = -1;
-    const ro = new ResizeObserver((entradas) => {
-      const caixa = entradas[0]?.contentRect;
+    const ro = new ResizeObserver((entries) => {
+      const caixa = entries[0]?.contentRect;
       if (!caixa) return;
       const largura = Math.round(caixa.width);
       const altura = Math.round(caixa.height);

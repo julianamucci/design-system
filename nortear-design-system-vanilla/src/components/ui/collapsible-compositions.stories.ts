@@ -68,7 +68,7 @@ const fechar = async (t: HTMLElement) => {
   await waitFor(() => expect(t).toHaveAttribute('aria-expanded', 'false'));
 };
 
-const painelDe = (canvasElement: HTMLElement) =>
+const panelOf = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>('[data-slot="collapsible-content"]')!;
 
 // ─── Com Botão Customizado ────────────────────────────────────────────────────
@@ -117,7 +117,7 @@ export const WithCustomButton: Story = {
       await abrir(trigger);
       const id = trigger.getAttribute('aria-controls');
       await expect(id).toBeTruthy();
-      await expect(document.getElementById(id!)).toBe(painelDe(canvasElement));
+      await expect(document.getElementById(id!)).toBe(panelOf(canvasElement));
     });
   },
 };

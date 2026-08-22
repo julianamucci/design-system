@@ -12,9 +12,9 @@ import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
 import {
-  popoverAcimaSource,
+  popoverAboveSource,
   popoverEditarPerfilSource,
-  popoverFiltroSource,
+  popoverFilterSource,
   popoverPaletteSource,
   popoverPreferenciasSource,
   popoverSource,
@@ -116,7 +116,7 @@ export const TableFilter: Story = {
     docs: {
       // Sub-composição de escolha múltipla: as caixas de marcação e o par
       // Limpar / Aplicar são o assunto da story.
-      source: { transform: popoverFiltroSource },
+      source: { transform: popoverFilterSource },
       description: {
         story:
           "Filtros contextuais de uma listagem — status combináveis e o par Limpar / Aplicar ao final.",
@@ -306,7 +306,7 @@ export const SideTop: Story = {
     docs: {
       // `side="top"` e `sideOffset={12}` vêm do `render`, sem control neste
       // arquivo: é a ancoragem que a story documenta.
-      source: { transform: popoverAcimaSource },
+      source: { transform: popoverAboveSource },
       description: {
         story:
           "side=top — abre acima do trigger. Em caso de colisão com a viewport, o auto-flip reposiciona automaticamente.",

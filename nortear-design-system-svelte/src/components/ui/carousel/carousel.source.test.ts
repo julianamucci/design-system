@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
   carouselAutoplaySource,
-  carouselComDotsSource,
+  carouselWithDotsSource,
   carouselGaleriaSource,
   carouselSource,
-  carouselUltimoSlideSource,
-  carouselVariosItensSource,
+  carouselLastSlideSource,
+  carouselMultipleItemsSource,
   carouselVerticalSource,
 } from './carousel.source';
 
@@ -78,7 +78,7 @@ describe('transforms das stories de variante e estado', () => {
   });
 
   it('o último slide sai de uma opção do motor, não de navegação na play', () => {
-    const saida = carouselUltimoSlideSource();
+    const saida = carouselLastSlideSource();
     expect(saida).toContain('opts={{ startIndex: slides.length - 1 }}');
     // O estado das setas é calculado pelo componente: escrevê-lo à mão no
     // snippet ensinaria uma prop que não existe.
@@ -88,7 +88,7 @@ describe('transforms das stories de variante e estado', () => {
 
 describe('transforms das stories de configuração', () => {
   it('conjunto longo de slides: a base responsiva mora no ITEM', () => {
-    const saida = carouselVariosItensSource();
+    const saida = carouselMultipleItemsSource();
     expect(saida).toContain('class="nds-md-basis-half nds-lg-basis-third"');
     expect(saida).toContain('const slides = [1, 2, 3, 4, 5, 6];');
     // A base é do item; o trilho continua sem classe própria.
@@ -115,13 +115,13 @@ describe('transforms das stories de composição', () => {
   });
 
   it('os dots se montam sobre a instância que o componente expõe', () => {
-    const saida = carouselComDotsSource();
+    const saida = carouselWithDotsSource();
     expect(saida).toContain('setApi={registrarApi}');
     expect(saida).toContain('api?.scrollTo(i)');
   });
 
   it('o dot é botão comum, e só o atual carrega aria-current', () => {
-    const saida = carouselComDotsSource();
+    const saida = carouselWithDotsSource();
     expect(saida).toContain('type="button"');
     expect(saida).toContain('aria-current={atual === i ? "true" : null}');
     // Nem `tablist` nem `tab`: o controle não comanda painel nenhum.
@@ -131,7 +131,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o rótulo visível do dot é um pedaço do nome acessível (WCAG 2.5.3)', () => {
-    const saida = carouselComDotsSource();
+    const saida = carouselWithDotsSource();
     expect(saida).toContain('aria-label="Ir para o slide {numero} de {slides.length}"');
     expect(saida).toContain('<span class="nds-carousel-dot-label">Slide {numero}</span>');
   });

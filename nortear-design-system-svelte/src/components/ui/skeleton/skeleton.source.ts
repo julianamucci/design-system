@@ -60,7 +60,7 @@ export function skeletonCirculoSource(): string {
 }
 
 /** Variante TextLine: larguras diferentes entre linhas é o que sugere texto. */
-export function textSourceSkeletonLines(): string {
+export function textSkeletonLinesSource(): string {
   return svelteSnippet(
     IMPORT,
     `<div
@@ -146,7 +146,7 @@ export function skeletonListWithAvatarSource(): string {
 }
 
 /** Composição ImageInAspectRatio: quem estabelece a caixa é a proporção. */
-export function skeletonImagemEmProporcaoSource(): string {
+export function ratioSkeletonImageSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import { AspectRatio } from "@/components/ui/aspect-ratio";`,

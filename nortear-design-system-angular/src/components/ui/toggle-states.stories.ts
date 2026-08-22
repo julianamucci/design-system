@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import {
-  contrasteDoToggleNosDoisTemas,
-  descreverFalhasDeContraste,
-  medirAnelDeFoco,
+  toggleNosDoisThemesContrast,
+  contrastDescribeFailures,
+  focusMeasureRing,
 } from '@shared/testing/toggle-probe';
 import { NdsToggle, NdsToggleIcon } from './toggle';
 
@@ -77,9 +77,9 @@ export const On: Story = {
     });
 
     await step('O estado ativo tem fundo próprio, não só atributo', async () => {
-      const fundoOn = getComputedStyle(on).backgroundColor;
-      await expect(fundoOn).not.toBe(getComputedStyle(off).backgroundColor);
-      await expect(fundoOn).not.toMatch(/rgba\(0, 0, 0, 0\)|transparent/);
+      const backgroundOn = getComputedStyle(on).backgroundColor;
+      await expect(backgroundOn).not.toBe(getComputedStyle(off).backgroundColor);
+      await expect(backgroundOn).not.toMatch(/rgba\(0, 0, 0, 0\)|transparent/);
     });
 
     await step('O contraste do estado ATIVO passa de 4.5:1 nos DOIS temas', async () => {
@@ -88,8 +88,8 @@ export const On: Story = {
       // contrato ficava declarado e nunca verificado. Mede só o estado ativo —
       // é o único par de cores que o componente define; em repouso ele herda
       // as da página.
-      const falhas = contrasteDoToggleNosDoisTemas(canvasElement);
-      await expect(falhas.length === 0 ? '' : `\n${descreverFalhasDeContraste(falhas)}`).toBe('');
+      const failures = toggleNosDoisThemesContrast(canvasElement);
+      await expect(failures.length === 0 ? '' : `\n${contrastDescribeFailures(failures)}`).toBe('');
     });
   },
 };
@@ -126,7 +126,7 @@ export const FocusVisible: Story = {
       // tem sombra de ELEVAÇÃO o tempo todo, então ela passava com zero anel na
       // tela. O que prova o anel é a sombra MUDAR ao focar.
       for (const btn of [padrao, contorno]) {
-        await expect(medirAnelDeFoco(btn).mudou).toBe(true);
+        await expect(focusMeasureRing(btn).mudou).toBe(true);
       }
     });
   },
@@ -210,7 +210,7 @@ export const Invalid: Story = {
       // O anel destrutivo é declarado DEPOIS do `:focus-visible` e com a mesma
       // especificidade: sem a regra de restauração, focar um toggle inválido
       // não mudava nada na tela.
-      await expect(medirAnelDeFoco(btn).mudou).toBe(true);
+      await expect(focusMeasureRing(btn).mudou).toBe(true);
     });
   },
 };

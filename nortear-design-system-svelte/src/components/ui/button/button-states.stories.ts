@@ -4,11 +4,11 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect, fn } from 'storybook/test';
 import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
-import { falhasDeAnel } from '@shared/testing/button-probe';
+import { ringFailures } from '@shared/testing/button-probe';
 import {
-  buttonCarregandoSource,
-  buttonDesabilitadoSource,
-  buttonFocoVisivelSource,
+  buttonLoadingSource,
+  buttonDisabledSource,
+  buttonFocusVisibleSource,
   buttonInvalidoSource,
   buttonSource,
 } from './button.source';
@@ -48,7 +48,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item2', 'visual.item4'],
     docs: {
-      source: { transform: buttonDesabilitadoSource },
+      source: { transform: buttonDisabledSource },
       description: { story: 'Estado desabilitado. Previne cliques e reduz opacidade para 50%.' },
     },
   },
@@ -88,7 +88,7 @@ export const Loading: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: buttonCarregandoSource },
+      source: { transform: buttonLoadingSource },
       description: { story: 'Estado de carregamento. Use disabled + aria-busy e substitua o label por estado progressivo.' },
     },
   },
@@ -114,7 +114,7 @@ export const FocusVisible: Story = {
   parameters: {
     covers: ['accessibility.item3'],
     docs: {
-      source: { transform: buttonFocoVisivelSource },
+      source: { transform: buttonFocusVisibleSource },
       description: { story: 'Estado de foco por teclado. Navegue com Tab: o anel só aparece em :focus-visible, não no clique.' },
     },
   },
@@ -140,7 +140,7 @@ export const FocusVisible: Story = {
       // do app nos seis pares tema×modo — a meia opacidade de `--ring` comia
       // o indicador inteiro. WCAG 1.4.11 (Non-text Contrast, AA) pede 3:1.
       // `matches(:focus-visible)` sozinho passava com o anel invisível.
-      await expect(falhasDeAnel(canvasElement, 3)).toEqual([]);
+      await expect(ringFailures(canvasElement, 3)).toEqual([]);
     });
   },
 };

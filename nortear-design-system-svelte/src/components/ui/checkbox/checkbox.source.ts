@@ -21,7 +21,7 @@ export type CheckboxArgs = {
 /** Um id só para o par caixa+rótulo: é ele que sustenta o `for`/`id`. */
 const ID = 'opcao';
 
-const ROTULO_PADRAO = 'Aceito os termos e condições';
+const LABEL_DEFAULT = 'Aceito os termos e condições';
 const HELPER_DEFAULT = 'Ao marcar esta opção, você concorda com os termos de uso.';
 
 /**
@@ -30,8 +30,8 @@ const HELPER_DEFAULT = 'Ao marcar esta opção, você concorda com os termos de 
  */
 function tag(nome: string, partes: Array<string | false | ''>, recuo = ''): string {
   const lista = partes.filter((parte): parte is string => Boolean(parte));
-  const emLinha = `<${nome}${attrs(...lista)} />`;
-  if (recuo.length + emLinha.length <= 76) return emLinha;
+  const inLine = `<${nome}${attrs(...lista)} />`;
+  if (recuo.length + inLine.length <= 76) return inLine;
   return `<${nome}\n${lista.map((parte) => `${recuo}  ${parte}`).join('\n')}\n${recuo}/>`;
 }
 
@@ -48,7 +48,7 @@ export function checkboxSource(_gerado?: string, ctx?: { args?: Partial<Checkbox
     ariaInvalid = false,
     withLabel = true,
     withDescription = false,
-    labelText = ROTULO_PADRAO,
+    labelText = LABEL_DEFAULT,
     descriptionText = HELPER_DEFAULT,
   } = ctx?.args ?? {};
 
@@ -120,7 +120,7 @@ export function checkboxNoLabelSource(): string {
 }
 
 /** Variação `Checked`: a caixa sozinha já marcada. */
-export function checkboxMarcadoSource(): string {
+export function checkboxCheckedSource(): string {
   return checkboxSource('', { args: { checked: true, withLabel: false } });
 }
 
@@ -130,7 +130,7 @@ export function checkboxIndeterminadoSource(): string {
 }
 
 /** Composição `WithDescription`: rótulo com texto de apoio abaixo. */
-export function checkboxComDescricaoSource(): string {
+export function checkboxWithDescriptionSource(): string {
   return checkboxSource('', {
     args: {
       withLabel: false,
@@ -153,19 +153,19 @@ export function checkboxManterSessaoSource(): string {
 }
 
 /** Seleção parcial de um grupo — o rótulo diz o que a caixa comanda. */
-export function checkboxSelecionarTodosSource(): string {
+export function checkboxSelectAllSource(): string {
   return checkboxSource('', {
     args: { indeterminate: true, labelText: 'Selecionar todos os itens' },
   });
 }
 
 /** Estado `Disabled`: indisponível, e o rótulo apaga junto. */
-export function checkboxDesabilitadoSource(): string {
+export function checkboxDisabledSource(): string {
   return checkboxSource('', { args: { disabled: true } });
 }
 
 /** Estado `DisabledChecked`: indisponível não é o mesmo que vazio. */
-export function checkboxDesabilitadoMarcadoSource(): string {
+export function checkboxDisabledCheckedSource(): string {
   return checkboxSource('', { args: { checked: true, disabled: true } });
 }
 
@@ -180,7 +180,7 @@ export function checkboxWithErrorSource(): string {
  * `name` e `value` são o que faz o valor participar do envio — sem eles a
  * caixa marca na tela e não chega ao servidor.
  */
-export function checkboxEmFormularioSource(): string {
+export function formCheckboxSource(): string {
   return svelteSnippet(
     `import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";

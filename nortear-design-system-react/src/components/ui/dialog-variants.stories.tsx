@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, within } from "storybook/test";
 import {
   abrir,
-  botaoFecharDoCanto,
-  esperarAberto,
-  esperarFechado,
-  conferirNomeEDescricao,
+  cantoButtonClose,
+  waitForOpen,
+  waitForClosed,
+  checkNameEDescricao,
 } from "./dialog.fixtures";
 import {
   Dialog,
@@ -19,10 +19,10 @@ import {
 } from "./dialog";
 import {
   dialogWithActionDestructiveSource,
-  dialogComFormularioSource,
-  dialogComRolagemSource,
-  dialogFecharNoRodapeSource,
-  dialogSemRodapeSource,
+  dialogWithFormSource,
+  dialogWithScrollSource,
+  footerDialogCloseSource,
+  dialogNoFooterSource,
   dialogSource,
 } from "./dialog.source";
 import { Button } from "./button";
@@ -88,14 +88,14 @@ export const Default: Story = {
     );
   },
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("As quatro partes da composição padrão estão no painel", async () => {
       await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-title"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-description"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step("A ação primária é a última do rodapé", async () => {
@@ -116,7 +116,7 @@ export const WithForm: Story = {
     docs: {
       // O rodapé entra DENTRO do `<form>`: é a composição que a story mostra e
       // que o snippet do `meta`, sem formulário, não tem como ensinar.
-      source: { transform: dialogComFormularioSource },
+      source: { transform: dialogWithFormSource },
       description: {
         story:
           "Body com formulário inline (inputs e selects). Submissão dispara a ação primária do Footer.",
@@ -164,7 +164,7 @@ export const WithForm: Story = {
     );
   },
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("Os campos estão rotulados e trazem o valor inicial", async () => {
       // `toHaveAccessibleName` e não a presença do `<label>`: o que importa é o
@@ -197,7 +197,7 @@ export const WithScrollContent: Story = {
     docs: {
       // A região rolável tem `tabindex` e nome próprios — peça de corpo que o
       // snippet do `meta` não tem.
-      source: { transform: dialogComRolagemSource },
+      source: { transform: dialogWithScrollSource },
       description: {
         story:
           "Conteúdo longo com scroll interno. Header e Footer fixos; o body recebe `max-h-[60vh] overflow-y-auto`.",
@@ -247,7 +247,7 @@ export const WithScrollContent: Story = {
     );
   },
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("O corpo rola sozinho, com header e rodapé parados", async () => {
       // Comportamento e não nome de classe: o corpo precisa poder rolar E ter
@@ -276,7 +276,7 @@ export const NoFooter: Story = {
     docs: {
       // A AUSÊNCIA do rodapé é o assunto: o snippet do `meta` traz um, e
       // ensinaria o contrário do que a story mostra.
-      source: { transform: dialogSemRodapeSource },
+      source: { transform: dialogNoFooterSource },
       description: {
         story:
           "Apenas Title + Description, sem Footer. Para uso informativo ou pré-visualização passiva — fechamento via X, Escape ou clique no overlay.",
@@ -303,17 +303,17 @@ export const NoFooter: Story = {
     );
   },
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("Sem rodapé, o botão X é a única saída visível", async () => {
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeNull();
-      const x = botaoFecharDoCanto(p)!;
+      const x = cantoButtonClose(p)!;
       await expect(x).toHaveAccessibleName();
     });
 
     await step("E ele fecha de verdade — a story volta a abrir para a captura", async () => {
-      await userEvent.click(botaoFecharDoCanto(p)!);
-      await esperarFechado();
+      await userEvent.click(cantoButtonClose(p)!);
+      await waitForClosed();
       // O Chromatic fotografa o estado final: uma composição que termina
       // fechada capturaria só o gatilho.
       await expect(await abrir(canvasElement)).toBeVisible();
@@ -361,7 +361,7 @@ export const WithDestructiveAction: Story = {
     );
   },
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("A ação primária carrega a variante destrutiva", async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
@@ -384,7 +384,7 @@ export const CustomCloseInFooter: Story = {
     docs: {
       // `showCloseButton` existe no Content e no Footer e faz coisas
       // diferentes: só o snippet com os dois mostra o par.
-      source: { transform: dialogFecharNoRodapeSource },
+      source: { transform: footerDialogCloseSource },
       description: {
         story:
           "`showCloseButton={false}` no Content e `showCloseButton` no Footer — botão de fechar fica abaixo das ações.",
@@ -414,20 +414,20 @@ export const CustomCloseInFooter: Story = {
     );
   },
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step("Sem X no canto, o fechar mora no rodapé", async () => {
       // O X do canto some com `showCloseButton={false}` no Content; o que resta
       // é o botão de fechar que o Footer acrescenta.
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
-      await expect(botaoFecharDoCanto(p)).toBeNull();
+      await expect(cantoButtonClose(p)).toBeNull();
       await expect(within(rodape).getByRole("button", { name: /fechar/i })).toBeVisible();
     });
 
     await step("E o botão do rodapé fecha o diálogo", async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
       await userEvent.click(within(rodape).getByRole("button", { name: /fechar/i }));
-      await esperarFechado();
+      await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await abrir(canvasElement)).toBeVisible();
     });

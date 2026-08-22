@@ -46,29 +46,29 @@ function medida(el: HTMLElement | null) {
  * visível, o `aria-label` do fallback e o texto das iniciais na ordem em que
  * eles entram na árvore de acessibilidade.
  */
-export function medirAvatar(raiz: HTMLElement) {
+export function measureAvatar(raiz: HTMLElement) {
   const avatar = raiz.matches?.('.nds-avatar')
     ? raiz
     : raiz.querySelector<HTMLElement>('.nds-avatar');
-  if (!avatar) return { achado: false as const };
+  if (!avatar) return { finding: false as const };
 
   const img = avatar.querySelector<HTMLImageElement>('.nds-avatar-image');
   const fallback = avatar.querySelector<HTMLElement>('.nds-avatar-fallback');
   const badge = avatar.querySelector<HTMLElement>('.nds-avatar-badge');
   const icone = fallback?.querySelector<HTMLElement>('svg') ?? null;
 
-  const imgVisivel = visivel(img);
-  const fallbackVisivel = visivel(fallback);
+  const imgVisible = visivel(img);
+  const fallbackVisible = visivel(fallback);
 
   return {
-    achado: true as const,
+    finding: true as const,
     estrutura: {
       tagDaRaiz: avatar.tagName.toLowerCase(),
       tamanho: avatar.getAttribute('data-size'),
       temImagem: img ? 'sim' : 'não',
       temFallback: fallback ? 'sim' : 'não',
       /** Qual das duas peças está de fato na tela — é o coração do componente. */
-      naTela: imgVisivel ? 'imagem' : fallbackVisivel ? 'fallback' : 'nenhuma',
+      naTela: imgVisible ? 'imagem' : fallbackVisible ? 'fallback' : 'nenhuma',
     },
     semantica: {
       alt: img ? img.getAttribute('alt') : null,
@@ -76,7 +76,7 @@ export function medirAvatar(raiz: HTMLElement) {
        * Imagem escondida com `alt` não some da árvore de acessibilidade em todo
        * navegador; medir o par evita concluir cedo demais.
        */
-      imagemEscondida: img ? (imgVisivel ? 'não' : 'sim') : 'sem imagem',
+      imagemEscondida: img ? (imgVisible ? 'não' : 'sim') : 'sem imagem',
       papelDoFallback: fallback?.getAttribute('role') ?? null,
       rotuloDoFallback: fallback?.getAttribute('aria-label') ?? null,
       fallbackEscondido: fallback?.getAttribute('aria-hidden') ?? 'não',
@@ -90,8 +90,8 @@ export function medirAvatar(raiz: HTMLElement) {
        * anunciadas para a mesma pessoa.
        */
       vozes: [
-        imgVisivel && img?.getAttribute('alt') ? `img:${img.getAttribute('alt')}` : null,
-        fallbackVisivel && fallback?.getAttribute('aria-hidden') !== 'true'
+        imgVisible && img?.getAttribute('alt') ? `img:${img.getAttribute('alt')}` : null,
+        fallbackVisible && fallback?.getAttribute('aria-hidden') !== 'true'
           ? `fallback:${fallback?.getAttribute('aria-label') ?? texto(fallback)}`
           : null,
         badge && badge.getAttribute('aria-hidden') !== 'true'
@@ -122,16 +122,16 @@ export function medirAvatar(raiz: HTMLElement) {
 }
 
 /** Mede todos os avatares da tela, na ordem do DOM — usado pela story de tamanhos. */
-export function medirAvatares(raiz: HTMLElement) {
+export function measureAvatares(raiz: HTMLElement) {
   return Array.from(raiz.querySelectorAll<HTMLElement>('.nds-avatar')).map((a) => {
-    const m = medirAvatar(a);
-    return m.achado
+    const m = measureAvatar(a);
+    return m.finding
       ? { tamanho: m.estrutura.tamanho, geometria: m.geometria.raiz, naTela: m.estrutura.naTela }
       : null;
   });
 }
 
 /** Canal de saída: o console da play não chega ao terminal do vitest. */
-export function reportarAvatar(stack: string, cenario: string, dados: unknown): never {
+export function reportAvatar(stack: string, cenario: string, dados: unknown): never {
   throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
 }

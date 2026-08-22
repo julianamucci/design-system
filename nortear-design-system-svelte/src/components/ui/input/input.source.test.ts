@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import {
-  inputComErroSource,
+  inputWithErrorSource,
   inputWithPlaceholderSource,
-  helperSourceInputWithText,
-  inputDesabilitadoSource,
-  groupWithButtonSourceInput,
-  groupSourceInput,
-  inputPaletaEscuraSource,
+  helperInputWithTextSource,
+  inputDisabledSource,
+  groupWithButtonInputSource,
+  groupInputSource,
+  inputPaletteDarkSource,
   inputSenhaWithHelperSource,
   inputSource,
-  inputTipoArquivoSource,
-  inputTipoBuscaSource,
-  inputTipoEmailSource,
-  inputTipoNumeroSource,
-  inputTipoSenhaSource,
-  inputTipoTextoSource,
+  inputTypeFileSource,
+  inputTypeSearchSource,
+  inputTypeEmailSource,
+  inputTypeNumberSource,
+  inputTypeSenhaSource,
+  inputTypeTextSource,
 } from './input.source';
 
 describe('inputSource', () => {
@@ -62,39 +62,39 @@ describe('inputSource', () => {
 
 describe('transforms das stories de tipo', () => {
   it('cada tipo escreve o seu próprio atributo HTML', () => {
-    expect(inputTipoTextoSource()).toContain('type="text"');
-    expect(inputTipoEmailSource()).toContain('type="email"');
-    expect(inputTipoSenhaSource()).toContain('type="password"');
-    expect(inputTipoNumeroSource()).toContain('type="number"');
-    expect(inputTipoBuscaSource()).toContain('type="search"');
-    expect(inputTipoArquivoSource()).toContain('type="file"');
+    expect(inputTypeTextSource()).toContain('type="text"');
+    expect(inputTypeEmailSource()).toContain('type="email"');
+    expect(inputTypeSenhaSource()).toContain('type="password"');
+    expect(inputTypeNumberSource()).toContain('type="number"');
+    expect(inputTypeSearchSource()).toContain('type="search"');
+    expect(inputTypeFileSource()).toContain('type="file"');
   });
 
   it('o tipo arquivo não inventa placeholder, que o navegador ignoraria', () => {
-    expect(inputTipoArquivoSource()).not.toContain('placeholder');
+    expect(inputTypeFileSource()).not.toContain('placeholder');
   });
 
   it('o estado com placeholder reaproveita a marcação do tipo email', () => {
-    expect(inputWithPlaceholderSource()).toBe(inputTipoEmailSource());
+    expect(inputWithPlaceholderSource()).toBe(inputTypeEmailSource());
   });
 });
 
 describe('transforms das stories de estado e composição', () => {
   it('o desabilitado escreve o atributo e mantém o rótulo', () => {
-    const saida = inputDesabilitadoSource();
+    const saida = inputDisabledSource();
     expect(saida).toContain('disabled');
     expect(saida).toContain('<Label for="indisponivel">Campo desabilitado</Label>');
   });
 
   it('o erro liga a mensagem ao campo, e não confia só na cor', () => {
-    const saida = inputComErroSource();
+    const saida = inputWithErrorSource();
     expect(saida).toContain('aria-invalid="true"');
     expect(saida).toContain('aria-describedby="email-erro"');
     expect(saida).toContain('<p id="email-erro"');
   });
 
   it('o texto de apoio chega pelo mesmo caminho da descrição', () => {
-    const saida = helperSourceInputWithText();
+    const saida = helperInputWithTextSource();
     expect(saida).toContain('aria-describedby="email-apoio"');
     expect(saida).toContain('<p id="email-apoio"');
     expect(saida).not.toContain('aria-invalid');
@@ -107,14 +107,14 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('a paleta escura mostra os três estados na mesma marcação', () => {
-    const saida = inputPaletaEscuraSource();
+    const saida = inputPaletteDarkSource();
     expect(saida.match(/<Input\b/g)).toHaveLength(3);
     expect(saida).toContain('aria-invalid="true"');
     expect(saida).toContain('disabled');
   });
 
   it('o grupo traz os três alinhamentos do acessório', () => {
-    const saida = groupSourceInput();
+    const saida = groupInputSource();
     expect(saida).toContain('from "@/components/ui/input-group"');
     expect(saida).toContain('align="inline-start"');
     expect(saida).toContain('align="inline-end"');
@@ -122,7 +122,7 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('o grupo com ação traz o botão dentro do acessório final', () => {
-    const saida = groupWithButtonSourceInput();
+    const saida = groupWithButtonInputSource();
     expect(saida).toContain('<InputGroupButton type="button" size="icon-sm" aria-label="Limpar">');
     expect(saida).toContain('aria-hidden="true"');
   });

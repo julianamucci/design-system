@@ -54,7 +54,7 @@ function empilhado(attrsDaLinha: string): string {
  * vertical colapsa para zero e some da tela sem sumir do DOM, que é o defeito
  * que o snippet precisa evitar ensinar.
  */
-function emLinha(attrsDaLinha: string): string {
+function inLine(attrsDaLinha: string): string {
   return `<div className="nds-cluster nds-w-md" data-spacing="md">
   <span className="nds-text-body">Item A</span>
   <Separator${attrsDaLinha} />
@@ -71,7 +71,7 @@ function emLinha(attrsDaLinha: string): string {
 export const separatorSource: SourceTransform<SeparatorArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const linha = atributos(args);
-  return jsxSnippet(IMPORT, args.orientation === 'vertical' ? emLinha(linha) : empilhado(linha));
+  return jsxSnippet(IMPORT, args.orientation === 'vertical' ? inLine(linha) : empilhado(linha));
 };
 
 /**

@@ -2,17 +2,17 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, fireEvent, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './index';
 import {
-  desenhoEscreve, exigirRaiz, formasDeDado,
+  designEscreve, exigirRoot, datumFormas,
 } from '@shared/testing/chart-probe';
 import { waitForDesign } from './chart.fixtures';
 import {
   chartBarrasSource,
-  chartComLegendaSource,
-  chartComTituloSource,
+  chartWithCaptionSource,
+  chartWithTitleSource,
   chartSource,
 } from './chart.source';
 
-const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
+const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr'];
 const VALUES = [186, 305, 237, 73];
 const SERIE_UNICA = [{ name: 'Vendas', data: VALUES }];
 const SERIES_MULTI = [
@@ -47,7 +47,7 @@ type Story = StoryObj;
  */
 function categoriaCentros(raiz: HTMLElement): Array<{ x: number; y: number }> {
   const byCenter = new Map<number, { x: number; y: number }>();
-  for (const forma of formasDeDado(raiz)) {
+  for (const forma of datumFormas(raiz)) {
     const r = forma.getBoundingClientRect();
     const x = Math.round(r.x + r.width / 2);
     byCenter.set(x, { x, y: r.y + r.height / 2 });
@@ -64,17 +64,17 @@ export const WithTooltip: Story = {
     },
   },
   args: {
-    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
+    option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA }),
     height: 240,
     class: 'nds-w-full',
     'aria-label': 'Gráfico de barras: acessos mensais no desktop',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
     await waitForDesign(raiz);
     const svg = raiz.querySelector('svg')!;
     const centros = categoriaCentros(raiz);
-    await expect(centros).toHaveLength(MESES.length);
+    await expect(centros).toHaveLength(MONTHS.length);
 
     // `userEvent.hover` não serve aqui: ele não leva coordenada, e a lib faz o
     // teste de acerto por posição — o ponteiro cairia em (0,0), fora da área do
@@ -105,32 +105,32 @@ export const WithTooltip: Story = {
 export const WithCaption: Story = {
   parameters: {
     docs: {
-      source: { transform: chartComLegendaSource },
+      source: { transform: chartWithCaptionSource },
       description: { story: 'Legenda forçada: com uma série ela some por padrão, e a configuração traz de volta.' },
     },
   },
   args: {
-    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA, showLegend: true }),
+    option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA, showLegend: true }),
     height: 260,
     class: 'nds-w-full',
     'aria-label': 'Gráfico de barras com legenda: acessos mensais no desktop',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
     await waitForDesign(raiz);
 
     await step('Com a legenda ligada, o nome da série é escrito mesmo havendo uma só', async () => {
       // Sem a configuração, este mesmo desenho não escreve "Vendas" — é o que a
       // story SingleSeries mede do outro lado.
       await waitFor(
-        () => expect(desenhoEscreve(raiz, SERIE_UNICA[0].name)).toBe(true),
+        () => expect(designEscreve(raiz, SERIE_UNICA[0].name)).toBe(true),
         { timeout: 3000 },
       );
     });
 
     await step('E o desenho continua completo, com uma forma por categoria', async () => {
-      for (const mes of MESES) await expect(desenhoEscreve(raiz, mes)).toBe(true);
-      await expect(formasDeDado(raiz).length).toBeGreaterThanOrEqual(MESES.length);
+      for (const mes of MONTHS) await expect(designEscreve(raiz, mes)).toBe(true);
+      await expect(datumFormas(raiz).length).toBeGreaterThanOrEqual(MONTHS.length);
     });
   },
 };
@@ -138,13 +138,13 @@ export const WithCaption: Story = {
 export const MultipleSeries: Story = {
   parameters: {
     docs: {
-      source: { transform: chartComTituloSource },
+      source: { transform: chartWithTitleSource },
       description: { story: 'Multi-séries com título no próprio desenho — o painel típico de um relatório.' },
     },
   },
   args: {
     option: buildBarOption({
-      xAxis: MESES,
+      xAxis: MONTHS,
       series: SERIES_MULTI,
       title: 'Acessos por dispositivo',
     }),
@@ -153,19 +153,19 @@ export const MultipleSeries: Story = {
     'aria-label': 'Acessos por dispositivo: desktop, mobile e tablet, de janeiro a abril',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
     await waitForDesign(raiz);
 
     await step('O título do desenho aparece escrito', async () => {
       await waitFor(
-        () => expect(desenhoEscreve(raiz, 'Acessos por dispositivo')).toBe(true),
+        () => expect(designEscreve(raiz, 'Acessos por dispositivo')).toBe(true),
         { timeout: 3000 },
       );
     });
 
     await step('A legenda nomeia cada série', async () => {
       for (const serie of SERIES_MULTI) {
-        await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+        await expect(designEscreve(raiz, serie.name)).toBe(true);
       }
     });
   },

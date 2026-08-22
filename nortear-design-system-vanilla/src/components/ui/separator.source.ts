@@ -5,7 +5,7 @@
 // andaime, não o uso: o que se copia daqui é a chamada de `createSeparator`
 // entre os dois blocos que ela divide.
 
-import { importar, montar, opcoes, snippet, texto, type SourceTransform } from '@/lib/story-source';
+import { importing, montar, opcoes, snippet, texto, type SourceTransform } from '@/lib/story-source';
 import type { SeparatorEmphasis, SeparatorOrientation } from './separator';
 
 /** O que as stories usam da `SeparatorOptions`, mais os dois blocos vizinhos. */
@@ -28,7 +28,7 @@ export type SeparatorSnippetOptions = {
  * curtas — cabem.
  */
 function separatorCall(o: SeparatorSnippetOptions): string {
-  const pares = opcoes([
+  const pairs = opcoes([
     // Só o que difere do padrão entra: `horizontal`, `decorative: true` e
     // `emphasis: 'default'` são o que a fábrica já assume.
     ['orientation', o.orientation === 'vertical' ? texto('vertical') : undefined],
@@ -38,7 +38,7 @@ function separatorCall(o: SeparatorSnippetOptions): string {
   ])
     .map((linha) => linha.replace(/,$/, ''))
     .join(', ');
-  return pares ? `createSeparator({ ${pares} })` : 'createSeparator()';
+  return pairs ? `createSeparator({ ${pairs} })` : 'createSeparator()';
 }
 
 /** Um parágrafo de exemplo, que é o que a linha separa. */
@@ -71,7 +71,7 @@ secao.className = 'nds-stack nds-max-w-md';
 secao.dataset.spacing = 'md';`;
 
   return snippet(
-    importar('separator', 'createSeparator'),
+    importing('separator', 'createSeparator'),
     container,
     bloco(primeiro, o.antes ?? (vertical ? 'Item A' : 'Seção superior')),
     bloco(segundo, o.depois ?? (vertical ? 'Item B' : 'Seção inferior')),
@@ -90,8 +90,8 @@ secao.dataset.spacing = 'md';`;
 export function separatorEmCardSnippet(o: SeparatorSnippetOptions = {}): string {
   return snippet(
     [
-      importar('separator', 'createSeparator'),
-      importar(
+      importing('separator', 'createSeparator'),
+      importing(
         'card',
         'createCard',
         'createCardContent',

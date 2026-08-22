@@ -36,15 +36,15 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import {
-  ALFAS_DE_FUNDO_SUAVE,
-  falhasDePar,
-  falhasDeParSuave,
-  falhasDeSwatch,
-  medirPares,
-  medirParesSuaves,
-  medirSwatches,
-  paresDaPagina,
-  paresSemConsumidor,
+  BACKGROUND_SMOOTH_ALFAS,
+  pairFailures,
+  pairSmoothFailures,
+  swatchFailures,
+  measurePairs,
+  measurePairsSuaves,
+  measureSwatches,
+  pagePairs,
+  pairsNoConsumidor,
 } from '@shared/testing/theme-colors-probe';
 import { createThemeColorsDocs } from '@/components/docs/ThemeColorsDocs';
 
@@ -83,7 +83,7 @@ const BACKGROUND_SMOOTH_PAIRS = ['destructive', 'info', 'success', 'warning'] as
 export const TodoTokenDocumentadoExists: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
-    const medidas = await medirSwatches(canvasElement);
+    const medidas = await measureSwatches(canvasElement);
 
     // Sanidade da própria sonda: sem swatch na tela, a asserção seguinte
     // passaria com a lista vazia e o portão viraria enfeite.
@@ -94,14 +94,14 @@ export const TodoTokenDocumentadoExists: Story = {
     // chip, pintado por herança de `hsl(var(--token))`. Token inexistente
     // apaga os dois de formas diferentes — rótulo vazio, chip transparente — e
     // reatividade quebrada faz o rótulo congelar no tema anterior.
-    await expect(falhasDeSwatch(medidas)).toEqual([]);
+    await expect(swatchFailures(medidas)).toEqual([]);
   },
 };
 
 export const PairConsumidoAlcanca4a5: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
-    const todos = paresDaPagina(canvasElement);
+    const todos = pagePairs(canvasElement);
     const cobertos = todos.filter(
       (p) => !(BACKGROUND_SMOOTH_PAIRS as readonly string[]).includes(p),
     );
@@ -110,8 +110,8 @@ export const PairConsumidoAlcanca4a5: Story = {
     // engolir a paleta, esta linha reprova em vez de aprovar o vazio.
     await expect(cobertos.length).toBeGreaterThan(5);
 
-    const medidas = await medirPares(canvasElement, cobertos);
-    await expect(falhasDePar(medidas, TEXT_MINIMUM)).toEqual([]);
+    const medidas = await measurePairs(canvasElement, cobertos);
+    await expect(pairFailures(medidas, TEXT_MINIMUM)).toEqual([]);
   },
 };
 
@@ -128,19 +128,19 @@ export const PairConsumidoAlcanca4a5: Story = {
 export const TextCorridoSobreBackgroundSmooth: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
-    const inPage = paresDaPagina(canvasElement);
-    const pares = BACKGROUND_SMOOTH_PAIRS.filter((p) => inPage.includes(p));
+    const inPage = pagePairs(canvasElement);
+    const pairs = BACKGROUND_SMOOTH_PAIRS.filter((p) => inPage.includes(p));
 
     // Os quatro têm de estar na tabela da página. Se um sair da paleta, esta
     // linha reprova em vez de a story medir três e passar calada.
-    await expect(pares).toEqual([...BACKGROUND_SMOOTH_PAIRS]);
-    await expect(ALFAS_DE_FUNDO_SUAVE.length).toBeGreaterThan(0);
+    await expect(pairs).toEqual([...BACKGROUND_SMOOTH_PAIRS]);
+    await expect(BACKGROUND_SMOOTH_ALFAS.length).toBeGreaterThan(0);
 
-    const medidas = await medirParesSuaves(canvasElement, pares);
+    const medidas = await measurePairsSuaves(canvasElement, pairs);
     await expect(medidas.length).toBe(
-      pares.length * ALFAS_DE_FUNDO_SUAVE.length * 3 * 2, // 3 temas × 2 modos
+      pairs.length * BACKGROUND_SMOOTH_ALFAS.length * 3 * 2, // 3 temas × 2 modos
     );
-    await expect(falhasDeParSuave(medidas, TEXT_MINIMUM)).toEqual([]);
+    await expect(pairSmoothFailures(medidas, TEXT_MINIMUM)).toEqual([]);
   },
 };
 
@@ -155,7 +155,7 @@ export const TextCorridoSobreBackgroundSmooth: Story = {
 export const FeedbackHasConsumidorTodoPair: Story = {
   render: () => createThemeColorsDocs(),
   play: async ({ canvasElement }) => {
-    const orfaos = paresSemConsumidor(canvasElement.ownerDocument, [...BACKGROUND_SMOOTH_PAIRS]);
+    const orfaos = pairsNoConsumidor(canvasElement.ownerDocument, [...BACKGROUND_SMOOTH_PAIRS]);
     await expect(orfaos).toEqual([]);
   },
 };

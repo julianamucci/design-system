@@ -3,8 +3,8 @@ import {
   breadcrumbWithEllipsisSource,
   breadcrumbLinkCustomizadoSource,
   breadcrumbResponsivoSource,
-  breadcrumbSeparadorCustomizadoSource,
-  breadcrumbSimplesSource,
+  breadcrumbSeparatorCustomizadoSource,
+  breadcrumbSimpleSource,
   breadcrumbSource,
 } from './breadcrumb.source';
 
@@ -40,7 +40,7 @@ describe('breadcrumbSource', () => {
 
 describe('formas estruturais', () => {
   it('a trilha simples tem um único ponto focável', () => {
-    const saida = breadcrumbSimplesSource();
+    const saida = breadcrumbSimpleSource();
     expect(saida.match(/<BreadcrumbLink/g)).toHaveLength(1);
     expect(saida).toContain('<BreadcrumbPage>Componentes</BreadcrumbPage>');
   });
@@ -52,7 +52,7 @@ describe('formas estruturais', () => {
   });
 
   it('o separador customizado entra sem aria-hidden próprio', () => {
-    const saida = breadcrumbSeparadorCustomizadoSource();
+    const saida = breadcrumbSeparatorCustomizadoSource();
     expect(saida).toContain('import { Slash } from "lucide-react";');
     expect(saida).toContain('<BreadcrumbSeparator>');
     // O `role="presentation"` e o `aria-hidden` continuam vindo do componente:
@@ -91,9 +91,9 @@ describe('nenhum snippet ensina o andaime da story', () => {
   // Toda transform é chamável sem argumento — é o que a guarda transversal exige.
   const todos: Array<() => string> = [
     breadcrumbSource,
-    breadcrumbSimplesSource,
+    breadcrumbSimpleSource,
     breadcrumbWithEllipsisSource,
-    breadcrumbSeparadorCustomizadoSource,
+    breadcrumbSeparatorCustomizadoSource,
     breadcrumbLinkCustomizadoSource,
     breadcrumbResponsivoSource,
   ];

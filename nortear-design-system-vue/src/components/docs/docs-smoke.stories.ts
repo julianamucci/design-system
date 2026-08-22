@@ -2,7 +2,7 @@
 // Fumaça: prova que cada página monta (section[id] presente); axe roda após a play.
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor } from 'storybook/test';
-import { auditarPaginaDeDocs, descreverProblemas } from '@shared/testing/docs-page-contract';
+import { docsAuditarPage, describeProblemas } from '@shared/testing/docs-page-contract';
 
 import AboutDocs from '@/components/docs/AboutDocs.vue';
 import AccessibilityDocs from '@/components/docs/AccessibilityDocs.vue';
@@ -98,10 +98,10 @@ const smokePlay = async ({
   // esquerda, bloco de código vazio, chave de tradução renderizada como texto.
   // Foi assim que a revisão do Calendar gastou dezesseis commits achando um
   // defeito por rodada, a olho, com a suíte verde.
-  const problemas = auditarPaginaDeDocs(canvasElement, { ignorar: parameters.contratoDocs?.ignorar });
+  const problemas = docsAuditarPage(canvasElement, { ignorar: parameters.contratoDocs?.ignorar });
   await expect(
     problemas,
-    problemas.length ? `\n${descreverProblemas(problemas)}\n` : '',
+    problemas.length ? `\n${describeProblemas(problemas)}\n` : '',
   ).toEqual([]);
 
   // Idioma do documento QUE O LEITOR LÊ. Esta suíte roda dentro do iframe do

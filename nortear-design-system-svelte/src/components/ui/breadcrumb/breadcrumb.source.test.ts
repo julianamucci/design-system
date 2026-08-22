@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  breadcrumbComReticenciasSource,
+  breadcrumbWithEllipsisSource,
   breadcrumbLinkCustomizadoSource,
   breadcrumbResponsivoSource,
-  breadcrumbSeparadorCustomizadoSource,
-  breadcrumbSimplesSource,
+  breadcrumbSeparatorCustomizadoSource,
+  breadcrumbSimpleSource,
   breadcrumbSource,
 } from './breadcrumb.source';
 
@@ -52,19 +52,19 @@ describe('breadcrumbSource', () => {
 
 describe('transforms das stories estruturais', () => {
   it('a trilha simples para em dois níveis', () => {
-    const saida = breadcrumbSimplesSource();
+    const saida = breadcrumbSimpleSource();
     expect(saida.match(/<BreadcrumbLink /g)).toHaveLength(1);
     expect(saida).toContain('<BreadcrumbPage>Componentes</BreadcrumbPage>');
   });
 
   it('as reticências levam o rótulo que as faz serem anunciadas', () => {
-    const saida = breadcrumbComReticenciasSource();
+    const saida = breadcrumbWithEllipsisSource();
     expect(saida).toContain('<BreadcrumbEllipsis label="Mais páginas" />');
     expect(saida).toContain('BreadcrumbEllipsis,');
   });
 
   it('o separador customizado recebe o desenho por conteúdo', () => {
-    const saida = breadcrumbSeparadorCustomizadoSource();
+    const saida = breadcrumbSeparatorCustomizadoSource();
     expect(saida).toContain('@lucide/svelte/icons/slash');
     expect(saida.match(/<BreadcrumbSeparator><Slash \/><\/BreadcrumbSeparator>/g)).toHaveLength(2);
   });

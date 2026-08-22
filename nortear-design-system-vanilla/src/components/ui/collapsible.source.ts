@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -56,7 +56,7 @@ function optionsComuns(o: CollapsibleSnippetOptions, gatilho: string): string[] 
 /** A chamada real de `createCollapsible` com um gatilho de texto. */
 export function collapsibleSnippet(o: CollapsibleSnippetOptions = {}): string {
   return snippet(
-    importar('collapsible', 'createCollapsible'),
+    importing('collapsible', 'createCollapsible'),
     PAINEL,
     `const colapsavel = ${chamada(
       'createCollapsible',
@@ -89,7 +89,7 @@ export function collapsibleWithTriggerSnippet(
     : undefined;
 
   return snippet(
-    [importar('button', 'createButton'), importar('collapsible', 'createCollapsible')].join('\n'),
+    [importing('button', 'createButton'), importing('collapsible', 'createCollapsible')].join('\n'),
     `const gatilho = ${chamada('createButton', opcoes([
       ['variant', texto('outline')],
       ['label', texto(o.trigger ?? TRIGGER_DEFAULT)],
@@ -118,7 +118,7 @@ export function collapsibleControlledSnippet(o: CollapsibleSnippetOptions = {}):
   ]);
 
   return snippet(
-    importar('collapsible', 'createCollapsible'),
+    importing('collapsible', 'createCollapsible'),
     PAINEL,
     '// A fonte da verdade mora aqui, fora do componente.\nlet aberto = false;',
     `const colapsavel = ${chamada('createCollapsible', linhas)};`,
@@ -154,7 +154,7 @@ export function collapsibleWithTriggerSource(
 }
 
 /** Transform de story para o modo controlado. */
-export function collapsibleControladoSource(
+export function collapsibleControlledSource(
   fixas: CollapsibleSnippetOptions = {},
 ): SourceTransform<CollapsibleSnippetOptions> {
   return (_gerado, ctx) => collapsibleControlledSnippet({ ...ctx.args, ...fixas });

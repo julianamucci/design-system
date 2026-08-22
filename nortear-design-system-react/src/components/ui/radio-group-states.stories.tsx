@@ -3,10 +3,10 @@ import { userEvent, within, expect } from "storybook/test";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
 import { Label } from "./label";
 import {
-  radioGroupDesabilitadoSource,
+  radioGroupDisabledSource,
   radioGroupInvalidoSource,
-  radioGroupItemDesabilitadoSource,
-  radioGroupMarcadoSource,
+  radioGroupItemDisabledSource,
+  radioGroupCheckedSource,
   radioGroupSource,
 } from "./radio-group.source";
 
@@ -34,7 +34,7 @@ type Story = StoryObj<typeof meta>;
  * Razão de contraste da WCAG entre duas cores computadas opacas. Comparar nome
  * de token não responde a pergunta do critério — a razão responde.
  */
-function razaoContraste(a: string, b: string): number {
+function ratioContrast(a: string, b: string): number {
   const luminancia = (cor: string): number => {
     const [r, g, bl] = cor
       .match(/[\d.]+/g)!
@@ -84,15 +84,15 @@ export const Default: Story = {
     await step("Borda contra fundo e rótulo contra fundo passam na WCAG", async () => {
       // 3:1 é o piso de componente de interface (1.4.11); 4.5:1 é o de texto
       // normal (1.4.3) — o rótulo tem 14px, não é texto grande.
-      const estiloItem = getComputedStyle(radios[0]);
+      const styleItem = getComputedStyle(radios[0]);
       await expect(
-        razaoContraste(estiloItem.borderTopColor, estiloItem.backgroundColor),
+        ratioContrast(styleItem.borderTopColor, styleItem.backgroundColor),
       ).toBeGreaterThanOrEqual(3);
 
       const rotulo = canvas.getByText("Cartão de crédito");
-      const fundoPagina = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
+      const backgroundPage = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
       await expect(
-        razaoContraste(getComputedStyle(rotulo).color, fundoPagina),
+        ratioContrast(getComputedStyle(rotulo).color, backgroundPage),
       ).toBeGreaterThanOrEqual(4.5);
     });
   },
@@ -103,7 +103,7 @@ export const Checked: Story = {
     covers: ["visual.item2"],
     docs: {
       // `defaultValue` é a escolha inicial e vive só no `render`.
-      source: { transform: radioGroupMarcadoSource },
+      source: { transform: radioGroupCheckedSource },
       description: {
         story:
           "Item com defaultValue selecionado: aria-checked=\"true\" e bolinha interna --primary visível, com animação curta de entrada.",
@@ -140,7 +140,7 @@ export const Disabled: Story = {
     docs: {
       // O bloqueio está no `render`, na raiz e em cada item — este arquivo não
       // tem control de `disabled`.
-      source: { transform: radioGroupDesabilitadoSource },
+      source: { transform: radioGroupDisabledSource },
       description: {
         story:
           "Grupo inteiro desabilitado pela prop disabled na raiz e em cada item: item e rótulo a 50% de opacidade, cursor bloqueado, sem resposta a clique.",
@@ -180,7 +180,7 @@ export const ItemDisabled: Story = {
     docs: {
       // A ausência deliberada é o assunto: só UM item fora do ar, e o rótulo
       // dizendo isso.
-      source: { transform: radioGroupItemDesabilitadoSource },
+      source: { transform: radioGroupItemDisabledSource },
       description: {
         story:
           "Apenas um item desabilitado (ex.: opção indisponível). Os demais permanecem interativos e seguem a navegação por setas.",

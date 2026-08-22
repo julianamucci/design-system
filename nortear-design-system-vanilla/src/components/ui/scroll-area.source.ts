@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -91,7 +91,7 @@ for (let i = 1; i <= ${total}; i++) {
 
 function contentRow(total: number): Conteudo {
   return {
-    imports: [importar('card', 'createCard', 'createCardContent')],
+    imports: [importing('card', 'createCard', 'createCardContent')],
     variavel: 'fileira',
     // `nds-row` e não `nds-cluster`: o cluster quebra linha, e sem transbordo não
     // há barra horizontal nenhuma. Os cartões não encolhem, e é a soma deles que
@@ -157,7 +157,7 @@ navegacao.appendChild(lista);`,
 
 function contentBadges(total: number): Conteudo {
   return {
-    imports: [importar('badge', 'createBadge')],
+    imports: [importing('badge', 'createBadge')],
     variavel: 'versoes',
     bloco: `const versoes = document.createElement('div');
 versoes.className = 'nds-stack nds-p-2';
@@ -197,7 +197,7 @@ function contentOf(o: ScrollAreaSnippetOptions): Conteudo {
 export function scrollAreaSnippet(o: ScrollAreaSnippetOptions = {}): string {
   const conteudo = contentOf(o);
   return snippet(
-    [importar('scroll-area', 'createScrollArea'), ...conteudo.imports].join('\n'),
+    [importing('scroll-area', 'createScrollArea'), ...conteudo.imports].join('\n'),
     conteudo.bloco,
     `const area = ${chamada('createScrollArea', areaLines(o, conteudo.variavel))};`,
     montar('area'),
@@ -213,7 +213,7 @@ export function scrollAreaSnippet(o: ScrollAreaSnippetOptions = {}): string {
 export function scrollAreaNoLimitSnippet(o: ScrollAreaSnippetOptions = {}): string {
   const conteudo = contentOf(o);
   return snippet(
-    importar('scroll-area', 'createScrollArea'),
+    importing('scroll-area', 'createScrollArea'),
     conteudo.bloco,
     `// Sem degrau de altura o conteúdo expande e NÃO há rolagem: sem teto não há
 // transbordo. Sem nome também não há papel — região anônima não vira marco, e
@@ -237,8 +237,8 @@ export function scrollAreaEmCardSnippet(o: ScrollAreaSnippetOptions = {}): strin
   const conteudo = contentOf(o);
   return snippet(
     [
-      importar('scroll-area', 'createScrollArea'),
-      importar(
+      importing('scroll-area', 'createScrollArea'),
+      importing(
         'card',
         'createCard',
         'createCardContent',

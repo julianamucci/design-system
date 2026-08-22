@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { ref } from 'vue';
 import { userEvent, expect } from 'storybook/test';
-import { razao } from '@shared/testing/cor';
+import { ratio } from '@shared/testing/cor';
 import {
   InputOTP,
   InputOTPGroup,
@@ -10,10 +10,10 @@ import {
 import { campo } from './input-otp.fixtures';
 import {
   inputOtpCompletoSource,
-  inputOtpComErroSource,
-  inputOtpDesabilitadoSource,
+  inputOtpWithErrorSource,
+  inputOtpDisabledSource,
   inputOtpPreenchendoSource,
-  inputOtpVazioSource,
+  inputOtpEmptySource,
 } from './input-otp.source';
 
 const meta = {
@@ -25,7 +25,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: inputOtpVazioSource },
+      source: { transform: inputOtpEmptySource },
       description: {
         component:
           'Estados canônicos do InputOTP: Vazio, Preenchendo (3 de 6), Completo (6 de 6), Desabilitado e Erro.',
@@ -118,8 +118,8 @@ export const Filling: Story = {
       // palavra em volta para compensar pelo contexto. Conta WCAG do colhedor
       // compartilhado, não olhômetro nem nome de token.
       const cs = getComputedStyle(caixas(canvasElement)[0]);
-      const medida = razao(cs.color, cs.backgroundColor);
-      await expect(medida?.razao ?? 0).toBeGreaterThanOrEqual(4.5);
+      const medida = ratio(cs.color, cs.backgroundColor);
+      await expect(medida?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -164,7 +164,7 @@ export const Disabled: Story = {
     covers: ['functional.item6'],
     docs: {
       // O atributo que bloqueia o campo é a story inteira.
-      source: { transform: inputOtpDesabilitadoSource },
+      source: { transform: inputOtpDisabledSource },
       description: { story: 'Bloqueado: não aceita foco nem digitação, e o campo esmaece.' },
     },
   },
@@ -212,7 +212,7 @@ export const Error: Story = {
       // O par aria-invalid + mensagem conectada é o assunto. A SEGUNDA
       // instância que a story monta existe só para a play comparar bordas —
       // andaime de medição, fora do snippet.
-      source: { transform: inputOtpComErroSource },
+      source: { transform: inputOtpWithErrorSource },
       description: {
         story:
           'Erro: aria-invalid marca o campo, a borda troca para a cor de erro e a mensagem vem conectada por aria-describedby.',
@@ -274,9 +274,9 @@ export const Error: Story = {
     await step('A borda da caixa troca para a cor de erro', async () => {
       // Comparação contra uma SEGUNDA instância sem erro: mexer no atributo da
       // primeira deixaria a asserção medindo o mesmo estado dos dois lados.
-      const bordaComErro = getComputedStyle(caixas(comErro)[0]).borderTopColor;
-      const bordaSemErro = getComputedStyle(caixas(semErro)[0]).borderTopColor;
-      await expect(bordaComErro).not.toBe(bordaSemErro);
+      const borderWithError = getComputedStyle(caixas(comErro)[0]).borderTopColor;
+      const borderNoError = getComputedStyle(caixas(semErro)[0]).borderTopColor;
+      await expect(borderWithError).not.toBe(borderNoError);
     });
   },
 };

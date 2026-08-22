@@ -15,10 +15,10 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import {
-  alertDialogAbertoSource,
+  alertDialogOpenSource,
   alertDialogCanceladoSource,
   alertDialogConfirmadoSource,
-  alertDialogControladoSource,
+  alertDialogControlledSource,
   alertDialogClosedSource,
 } from './alert-dialog.source';
 
@@ -51,7 +51,7 @@ type Story = StoryObj<typeof meta>;
  * reexecuta a play no MESMO DOM: na segunda rodada o diálogo já foi fechado
  * pelos passos anteriores e o passo de abertura media o vazio.
  */
-async function garantirAberto(canvas: ReturnType<typeof within>) {
+async function ensureOpen(canvas: ReturnType<typeof within>) {
   const body = within(document.body);
   // querySelector e não queryByRole: numa rodada do arquivo inteiro sobra o
   // portal da story anterior por alguns quadros, e queryByRole estoura em
@@ -127,7 +127,7 @@ export const Open: Story = {
     covers: ['functional.item6', 'accessibility.item6', 'accessibility.item7'],
     docs: {
       // O painel nasce aberto: é o atributo na raiz que a do meta não tem.
-      source: { transform: alertDialogAbertoSource },
+      source: { transform: alertDialogOpenSource },
       description: {
         story: 'Diálogo aberto com `defaultOpen`. Captura visual no Chromatic.',
       },
@@ -271,7 +271,7 @@ export const Confirmed: Story = {
     const trigger = canvas.getByRole('button', { name: /Excluir item/i, hidden: true });
 
     await step('Diálogo começa aberto', async () => {
-      const dialog = await garantirAberto(canvas);
+      const dialog = await ensureOpen(canvas);
       // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
       // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
       await waitFor(() => expect(dialog).toBeVisible());
@@ -334,7 +334,7 @@ export const Cancelled: Story = {
     const body = within(document.body);
 
     await step('Diálogo começa aberto', async () => {
-      const dialog = await garantirAberto(canvas);
+      const dialog = await ensureOpen(canvas);
       // A entrada do painel é animada (opacidade 0 → 1). Sem waitFor a asserção
       // roda no primeiro quadro e reprova um elemento que ainda vai aparecer.
       await waitFor(() => expect(dialog).toBeVisible());
@@ -362,7 +362,7 @@ export const Controlled: Story = {
     docs: {
       // O gatilho sai de dentro do componente e vira botão do consumidor, com
       // o estado num `ref`: script e marcação que a do meta não tem.
-      source: { transform: alertDialogControladoSource },
+      source: { transform: alertDialogControlledSource },
       description: {
         story: 'Abertura controlada por estado externo via `open` + `onUpdate:open`.',
       },

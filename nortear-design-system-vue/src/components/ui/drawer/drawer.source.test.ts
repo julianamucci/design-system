@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
-  drawerAbertoSource,
+  drawerOpenSource,
   drawerBaixoSource,
-  drawerComConfirmacaoSource,
-  drawerComFormularioSource,
-  drawerComRolagemSource,
-  drawerControladoSource,
+  drawerWithConfirmSource,
+  drawerWithFormSource,
+  drawerWithScrollSource,
+  drawerControlledSource,
   drawerDireitaSource,
   drawerEsquerdaSource,
   drawerClosedSource,
-  drawerNaoDispensavelSource,
+  drawerNotDispensavelSource,
   drawerSource,
   drawerTopoSource,
 } from './drawer.source';
@@ -121,14 +121,14 @@ describe('transforms das stories de estado', () => {
   });
 
   it('só a story da montagem aberta escreve `default-open`, e ela dispensa o gatilho', () => {
-    const saida = drawerAbertoSource();
+    const saida = drawerOpenSource();
     expect(saida).toContain('<Drawer default-open>');
     // Não há o que clicar: o painel já está na tela quando a página monta.
     expect(saida).not.toContain('DrawerTrigger');
   });
 
   it('o controlado liga o par prop+evento e põe os botões do lado de fora', () => {
-    const saida = drawerControladoSource();
+    const saida = drawerControlledSource();
     expect(saida).toContain('const aberto = ref(false)');
     expect(saida).toContain('<Drawer :open="aberto" @update:open="aberto = $event">');
     expect(saida).toContain('<Button @click="aberto = true">Abrir via estado externo</Button>');
@@ -136,7 +136,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('sem dispensa por gesto, a saída explícita do rodapé continua no snippet', () => {
-    const saida = drawerNaoDispensavelSource();
+    const saida = drawerNotDispensavelSource();
     expect(saida).toContain('<Drawer :dismissible="false">');
     // Escape e clique no overlay deixam de fechar: tirar a saída do rodapé
     // junto deixaria o painel sem fechamento alcançável por teclado.
@@ -149,7 +149,7 @@ describe('transforms das stories de composição', () => {
   it('a ação primária do drawer vem PRIMEIRO no rodapé', () => {
     // É o inverso do Dialog, e de propósito: o rodapé empilha em coluna na tela
     // estreita, e a ação principal fica no alto da pilha.
-    const saida = drawerComFormularioSource();
+    const saida = drawerWithFormSource();
     const confirmar = saida.indexOf('Confirmar');
     const cancelar = saida.indexOf('Cancelar');
     expect(confirmar).toBeGreaterThan(-1);
@@ -157,14 +157,14 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o formulário liga rótulo e campo pelo par for/id', () => {
-    const saida = drawerComFormularioSource();
+    const saida = drawerWithFormSource();
     expect(saida).toContain('<Label for="drawer-email">E-mail</Label>');
     expect(saida).toContain('<Input id="drawer-email" type="email"');
     expect(saida).toContain(`import { Label } from '@/components/ui/label'`);
   });
 
   it('a confirmação marca a ação principal e dispensa o corpo', () => {
-    const saida = drawerComConfirmacaoSource();
+    const saida = drawerWithConfirmSource();
     expect(saida).toContain('<Button variant="destructive">Remover</Button>');
     expect(saida).not.toContain('DrawerBody');
     // A consequência está escrita, não subentendida.
@@ -172,7 +172,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a rolagem enche o CORPO, e não o painel', () => {
-    const saida = drawerComRolagemSource();
+    const saida = drawerWithScrollSource();
     expect(saida).toContain('const clausulas = [');
     expect(saida).toContain(
       '      <p v-for="(clausula, i) in clausulas" :key="i">{{ clausula }}</p>',

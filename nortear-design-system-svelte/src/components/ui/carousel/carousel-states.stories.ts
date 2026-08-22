@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Carousel } from './index';
 import CarouselStory from './CarouselStory.svelte';
-import { carouselSource, carouselUltimoSlideSource } from './carousel.source';
+import { carouselSource, carouselLastSlideSource } from './carousel.source';
 
 // Os dois extremos de um carrossel sem repetição. Sem `loop` a navegação tem
 // começo e fim, e é a seta desabilitada que conta isso a quem chegou lá: um
@@ -105,7 +105,7 @@ export const FirstSlide: Story = {
 export const LastSlide: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item4'],
-    docs: { source: { transform: carouselUltimoSlideSource } },
+    docs: { source: { transform: carouselLastSlideSource } },
   },
   render: () => ({
     Component: CarouselStory,

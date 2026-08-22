@@ -24,11 +24,11 @@ export type TextareaArgs = {
   rows: number;
 };
 
-const IMPORT_PAR = `import { Textarea } from '@/components/ui/textarea'
+const IMPORT_PAIR = `import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'`;
 
 /** Redimensiona só na vertical, com piso de altura — a moldura padrão do campo. */
-const MOLDURA = 'nds-resize-y nds-min-h-30';
+const FRAME = 'nds-resize-y nds-min-h-30';
 
 /**
  * Abre o campo em uma linha quando os atributos cabem, e quebra um por linha
@@ -38,8 +38,8 @@ const MOLDURA = 'nds-resize-y nds-min-h-30';
 function campo(atributos: Array<string | false | undefined>, recuo = 2): string {
   const p = ' '.repeat(recuo);
   const lista = atributos.filter((a): a is string => Boolean(a));
-  const emLinha = lista.join(' ');
-  if (emLinha.length <= 60) return `${p}<Textarea ${emLinha} />`;
+  const inLine = lista.join(' ');
+  if (inLine.length <= 60) return `${p}<Textarea ${inLine} />`;
   return `${p}<Textarea\n${lista.map((a) => `${p}  ${a}`).join('\n')}\n${p}/>`;
 }
 
@@ -88,7 +88,7 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
       attrNum('rows', args.rows, 2),
       attrBool('readonly', args.readonly, false),
       attrBool('disabled', args.disabled, false),
-      `class="${MOLDURA}"`,
+      `class="${FRAME}"`,
     ]),
     limite !== null && contador('Descreva o produto com clareza.'),
   ].filter((linha): linha is string => Boolean(linha));
@@ -98,7 +98,7 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
   ]
     .filter(Boolean)
     .join('\n');
-  return vueSnippet(`${IMPORT_PAR}\nimport { ref } from 'vue'\n\n${estado}`, grupo(...linhas));
+  return vueSnippet(`${IMPORT_PAIR}\nimport { ref } from 'vue'\n\n${estado}`, grupo(...linhas));
 };
 
 /**
@@ -107,21 +107,21 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
  */
 export function textareaWithLabelSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     grupo(
       rotulo('descricao', 'Descrição'),
-      campo(['id="descricao"', 'placeholder="ex: Descreva o produto..."', `class="${MOLDURA}"`]),
+      campo(['id="descricao"', 'placeholder="ex: Descreva o produto..."', `class="${FRAME}"`]),
     ),
   );
 }
 
 /** Variante padrão: a mesma moldura, num campo de texto livre e longo. */
-export function textareaPadraoSource(): string {
+export function textareaDefaultSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     grupo(
       rotulo('biografia', 'Biografia'),
-      campo(['id="biografia"', 'placeholder="Conte um pouco sobre você..."', `class="${MOLDURA}"`]),
+      campo(['id="biografia"', 'placeholder="Conte um pouco sobre você..."', `class="${FRAME}"`]),
     ),
   );
 }
@@ -130,9 +130,9 @@ export function textareaPadraoSource(): string {
  * Com contador: `maxlength` barra o excesso no próprio campo, e o contador conta
  * o que já foi escrito. Um sem o outro deixa o limite invisível até bater nele.
  */
-export function textareaComContadorSource(): string {
+export function textareaWithCounterSource(): string {
   return vueSnippet(
-    `${IMPORT_PAR}
+    `${IMPORT_PAIR}
 import { ref } from 'vue'
 
 const descricao = ref('')
@@ -144,7 +144,7 @@ const maximo = 500`,
         'v-model="descricao"',
         ':maxlength="maximo"',
         'placeholder="ex: Descreva o produto..."',
-        `class="${MOLDURA}"`,
+        `class="${FRAME}"`,
       ]),
       contador('Descreva com clareza.'),
     ),
@@ -155,9 +155,9 @@ const maximo = 500`,
  * Sem redimensionamento: cabe onde o layout em volta não sobrevive a um campo
  * que cresce. A troca é de classe, não de prop — a alça é decisão de uso.
  */
-export function textareaSemRedimensionarSource(): string {
+export function textareaNoRedimensionarSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     grupo(
       rotulo('feedback', 'Feedback'),
       campo([
@@ -175,25 +175,25 @@ export function textareaSemRedimensionarSource(): string {
  */
 export function textareaPreenchidoSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     grupo(
       rotulo('biografia', 'Biografia'),
       campo([
         'id="biografia"',
         'default-value="Designer e desenvolvedora apaixonada por design systems e acessibilidade."',
-        `class="${MOLDURA}"`,
+        `class="${FRAME}"`,
       ]),
     ),
   );
 }
 
 /** Desabilitado: o campo sai da ordem de tabulação e a alça trava junto. */
-export function textareaDesabilitadoSource(): string {
+export function textareaDisabledSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     grupo(
       rotulo('descricao', 'Descrição'),
-      campo(['id="descricao"', 'placeholder="Não disponível"', 'disabled', `class="${MOLDURA}"`]),
+      campo(['id="descricao"', 'placeholder="Não disponível"', 'disabled', `class="${FRAME}"`]),
     ),
   );
 }
@@ -204,14 +204,14 @@ export function textareaDesabilitadoSource(): string {
  */
 export function textareaSomenteLeituraSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     grupo(
       rotulo('observacoes', 'Observações'),
       campo([
         'id="observacoes"',
         'default-value="Pedido confirmado em 02/05/2026. Entrega prevista em até 5 dias úteis."',
         'readonly',
-        `class="${MOLDURA}"`,
+        `class="${FRAME}"`,
       ]),
     ),
   );
@@ -223,7 +223,7 @@ export function textareaSomenteLeituraSource(): string {
  */
 export function textareaInvalidoSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     grupo(
       rotulo('descricao', 'Descrição'),
       campo([
@@ -231,7 +231,7 @@ export function textareaInvalidoSource(): string {
         'default-value="curto"',
         'aria-invalid="true"',
         'aria-describedby="descricao-erro"',
-        `class="${MOLDURA}"`,
+        `class="${FRAME}"`,
       ]),
       '  <p id="descricao-erro" class="nds-text-caption nds-text-destructive">',
       '    A descrição precisa de pelo menos 20 caracteres.',
@@ -244,16 +244,16 @@ export function textareaInvalidoSource(): string {
  * Texto de apoio: a orientação vem antes do erro e vive no mesmo vínculo —
  * `aria-describedby`. Dentro do `Label`, ela viraria parte do nome do campo.
  */
-export function textareaComApoioSource(): string {
+export function textareaWithHelperSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     grupo(
       rotulo('biografia', 'Biografia'),
       campo([
         'id="biografia"',
         'placeholder="Conte um pouco sobre você..."',
         'aria-describedby="biografia-apoio"',
-        `class="${MOLDURA}"`,
+        `class="${FRAME}"`,
       ]),
       '  <p id="biografia-apoio" class="nds-text-body">Aparece no seu perfil público.</p>',
     ),
@@ -267,7 +267,7 @@ export function textareaComApoioSource(): string {
  */
 export function textareaObrigatorioSource(): string {
   return vueSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     grupo(
       `  <Label for="feedback">
     Feedback
@@ -277,7 +277,7 @@ export function textareaObrigatorioSource(): string {
         'id="feedback"',
         'placeholder="O que poderíamos melhorar?"',
         'aria-required="true"',
-        `class="${MOLDURA}"`,
+        `class="${FRAME}"`,
       ]),
       '  <p class="nds-text-caption nds-text-muted-foreground">Campos com * são obrigatórios.</p>',
     ),

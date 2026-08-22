@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -30,7 +30,7 @@ export type SkeletonSnippetOptions = SkeletonPart & {
 
 /** `createSkeleton(…)` em uma linha — a peça é sempre item de uma lista. */
 function partCall(p: SkeletonPart): string {
-  const pares = opcoes([
+  const pairs = opcoes([
     // A fábrica não assume forma nem largura: sem atributo, a folha aplica a
     // caixa base. Só entra o que a story declara.
     ['shape', p.shape ? texto(p.shape) : undefined],
@@ -40,7 +40,7 @@ function partCall(p: SkeletonPart): string {
   ])
     .map((linha) => linha.replace(/,$/, ''))
     .join(', ');
-  return pares ? `createSkeleton({ ${pares} })` : 'createSkeleton()';
+  return pairs ? `createSkeleton({ ${pairs} })` : 'createSkeleton()';
 }
 
 /**
@@ -64,9 +64,9 @@ export function skeletonSnippet(o: SkeletonSnippetOptions = {}): string {
   // `fill` preenche a caixa que o CONTAINER estabelece: sozinho ele nasce com
   // altura zero, e um snippet que o mostrasse solto ensinaria um esqueleto
   // invisível. Quem dá a caixa é a proporção.
-  if (!o.linhas && o.shape === 'fill') return ratioSnippetSkeleton(o);
+  if (!o.linhas && o.shape === 'fill') return ratioSkeletonSnippet(o);
 
-  const pecas = o.linhas ?? [
+  const parts = o.linhas ?? [
     {
       shape: o.shape,
       // A fração de largura só vale para as formas de texto — nas outras a caixa
@@ -76,14 +76,14 @@ export function skeletonSnippet(o: SkeletonSnippetOptions = {}): string {
       className: o.className,
     },
   ];
-  const empilhado = pecas.length > 1;
+  const empilhado = parts.length > 1;
 
   return snippet(
-    importar('skeleton', 'createSkeleton'),
+    importing('skeleton', 'createSkeleton'),
     regiao(o, empilhado ? 'nds-stack nds-w-sm' : undefined, empilhado ? 'sm' : undefined),
-    pecas.length === 1
-      ? `regiao.appendChild(${partCall(pecas[0])});`
-      : `regiao.append(\n${pecas.map((p) => `  ${partCall(p)},`).join('\n')}\n);`,
+    parts.length === 1
+      ? `regiao.appendChild(${partCall(parts[0])});`
+      : `regiao.append(\n${parts.map((p) => `  ${partCall(p)},`).join('\n')}\n);`,
     montar('regiao'),
   );
 }
@@ -97,7 +97,7 @@ export function skeletonSnippet(o: SkeletonSnippetOptions = {}): string {
  */
 export function skeletonPerfilSnippet(o: SkeletonSnippetOptions = {}): string {
   return snippet(
-    importar('skeleton', 'createSkeleton'),
+    importing('skeleton', 'createSkeleton'),
     regiao(
       { ...o, regionLabel: o.regionLabel ?? 'Carregando card de perfil' },
       'nds-cluster nds-p-4 nds-border-default nds-rounded-md nds-w-sm',
@@ -125,7 +125,7 @@ linhas.append(
 export function skeletonListSnippet(o: SkeletonSnippetOptions = {}): string {
   const total = o.linhas?.length ?? 5;
   return snippet(
-    importar('skeleton', 'createSkeleton'),
+    importing('skeleton', 'createSkeleton'),
     `const lista = document.createElement('ul');
 lista.className = 'nds-stack nds-list-none nds-p-0 nds-w-md';
 lista.dataset.spacing = 'md';
@@ -161,9 +161,9 @@ lista.setAttribute('aria-label', ${texto(o.regionLabel ?? 'Carregando lista de p
  * estabelece — sozinho ele nasce com altura zero. Quem dá a caixa aqui é o
  * AspectRatio, e é isso que a composição ensina.
  */
-export function ratioSnippetSkeleton(o: SkeletonSnippetOptions = {}): string {
+export function ratioSkeletonSnippet(o: SkeletonSnippetOptions = {}): string {
   return snippet(
-    [importar('skeleton', 'createSkeleton'), importar('aspect-ratio', 'createAspectRatio')].join('\n'),
+    [importing('skeleton', 'createSkeleton'), importing('aspect-ratio', 'createAspectRatio')].join('\n'),
     regiao({ ...o, regionLabel: o.regionLabel ?? 'Carregando imagem' }, 'nds-w-sm'),
     `regiao.appendChild(
   ${chamada('createAspectRatio', opcoes([
@@ -207,5 +207,5 @@ export function skeletonSourceList(
 export function ratioSkeletonSource(
   fixas: SkeletonSnippetOptions = {},
 ): SourceTransform<SkeletonSnippetOptions> {
-  return (_gerado, ctx) => ratioSnippetSkeleton({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => ratioSkeletonSnippet({ ...ctx.args, ...fixas });
 }

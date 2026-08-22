@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -52,7 +52,7 @@ function valorInicial(valor: AccordionSnippetOptions['defaultValue']): string | 
   return Array.isArray(valor) ? `[${valor.map((v) => texto(v)).join(', ')}]` : texto(valor);
 }
 
-function blocoDeItens(itens: readonly AccordionSnippetItem[]): string {
+function itemsBlock(itens: readonly AccordionSnippetItem[]): string {
   const linhas = itens.map(
     (item) =>
       `  { value: ${texto(item.value)}, trigger: ${texto(item.trigger)}, content: '…'` +
@@ -79,8 +79,8 @@ export function accordionSnippet(o: AccordionSnippetOptions = {}): string {
   const itens = o.items?.length ? o.items : ITEMS_DEFAULT;
 
   return snippet(
-    importar('accordion', 'createAccordion'),
-    blocoDeItens(itens),
+    importing('accordion', 'createAccordion'),
+    itemsBlock(itens),
     `const acordeao = ${chamada('createAccordion', callLines(o))};`,
     montar('acordeao'),
   );
@@ -127,10 +127,10 @@ export function accordionWithTriggerRichSnippet(
   const rotulo = o.rotulo ?? 'Novidades da versão 3.0';
   const itens = o.items?.length ? o.items : [{ value, trigger: rotulo }];
 
-  const imports = [importar('accordion', 'createAccordion')];
-  if (o.badge) imports.push(importar('badge', 'createBadge'));
+  const imports = [importing('accordion', 'createAccordion')];
+  if (o.badge) imports.push(importing('badge', 'createBadge'));
 
-  const composicao = [
+  const composition = [
     o.comIcone
       ? '// `icone` é um SVG do seu conjunto, decorativo: aria-hidden="true".'
       : '',
@@ -148,9 +148,9 @@ export function accordionWithTriggerRichSnippet(
 
   return snippet(
     imports.join('\n'),
-    blocoDeItens(itens),
+    itemsBlock(itens),
     `const acordeao = ${chamada('createAccordion', callLines({ ...o, items: itens }))};`,
-    composicao,
+    composition,
     `acordeao.querySelector('[data-value="${value}"] span')?.replaceWith(rotulo);`,
     montar('acordeao'),
   );
@@ -181,8 +181,8 @@ export function accordionWithContentRichSnippet(
   const itens = o.items?.length ? o.items : [{ value, trigger: 'Especificações técnicas' }];
 
   return snippet(
-    [importar('accordion', 'createAccordion'), "import DOMPurify from 'dompurify';"].join('\n'),
-    blocoDeItens(itens),
+    [importing('accordion', 'createAccordion'), "import DOMPurify from 'dompurify';"].join('\n'),
+    itemsBlock(itens),
     `const acordeao = ${chamada('createAccordion', callLines({ ...o, items: itens }))};`,
     `const corpo = acordeao.querySelector(
   '[data-content-for="${value}"] .nds-accordion-content-body',

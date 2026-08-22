@@ -211,21 +211,21 @@ export const CaptionDropdown: Story = {
     await step('Trocar o mês no seletor leva o grid junto', async () => {
       // Busca a cada vez: a legenda é reconstruída na troca, e uma referência
       // guardada agiria num nó fora da tela, sem erro e sem efeito.
-      const seletorDeMes = () => canvas.getByRole('combobox', { name: 'Selecionar mês' });
-      await userEvent.selectOptions(seletorDeMes(), '5');
+      const monthSelector = () => canvas.getByRole('combobox', { name: 'Selecionar mês' });
+      await userEvent.selectOptions(monthSelector(), '5');
       await expect(canvasElement.querySelector('[data-day="2026-06-01"]')).not.toBeNull();
 
       // Cada passo estabelece a própria precondição: volta para abril, porque o
       // painel reexecuta a play no mesmo DOM.
-      await userEvent.selectOptions(seletorDeMes(), '3');
+      await userEvent.selectOptions(monthSelector(), '3');
       await expect(canvasElement.querySelector('[data-day="2026-04-01"]')).not.toBeNull();
     });
 
     await step('Trocar o ano no seletor leva o grid junto', async () => {
-      const seletorDeAno = () => canvas.getByRole('combobox', { name: 'Selecionar ano' });
-      await userEvent.selectOptions(seletorDeAno(), '2028');
+      const yearSelector = () => canvas.getByRole('combobox', { name: 'Selecionar ano' });
+      await userEvent.selectOptions(yearSelector(), '2028');
       await expect(canvasElement.querySelector('[data-day^="2028-04-"]')).not.toBeNull();
-      await userEvent.selectOptions(seletorDeAno(), '2026');
+      await userEvent.selectOptions(yearSelector(), '2026');
       await expect(canvasElement.querySelector('[data-day="2026-04-01"]')).not.toBeNull();
     });
   },

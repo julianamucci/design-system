@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
-import { isoDoFoco } from '@shared/testing/calendar-probe';
+import { focusIso } from '@shared/testing/calendar-probe';
 import { createCalendar } from './calendar';
 import { calendarSource } from './calendar.source';
 import { createCalendarDocs } from '@/components/docs/CalendarDocs';
@@ -129,8 +129,8 @@ export const Playground: Story = {
       await expect(Math.round(respiro)).toBe(16);
 
       const vizinho = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn[data-outside-month]')!;
-      const doMes = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn:not([data-outside-month])')!;
-      await expect(getComputedStyle(vizinho).color).not.toBe(getComputedStyle(doMes).color);
+      const ofMonth = canvasElement.querySelector<HTMLElement>('.nds-calendar-day-btn:not([data-outside-month])')!;
+      await expect(getComputedStyle(vizinho).color).not.toBe(getComputedStyle(ofMonth).color);
     });
 
     await step('O clique nos botões de mês chega neles', async () => {
@@ -192,27 +192,27 @@ export const Playground: Story = {
         canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-day-btn'),
       ).find((d) => d.tabIndex >= 0)!;
       partida.focus();
-      await expect(isoDoFoco(doc)).not.toBeNull();
+      await expect(focusIso(doc)).not.toBeNull();
       const emUtc = (iso: string) => new Date(`${iso}T00:00:00Z`);
 
       await userEvent.keyboard('{Home}');
-      await waitFor(() => expect(emUtc(isoDoFoco(doc)!).getUTCDay()).toBe(0));
-      const domingo = isoDoFoco(doc)!;
+      await waitFor(() => expect(emUtc(focusIso(doc)!).getUTCDay()).toBe(0));
+      const domingo = focusIso(doc)!;
 
       await userEvent.keyboard('{End}');
-      await waitFor(() => expect(emUtc(isoDoFoco(doc)!).getUTCDay()).toBe(6));
+      await waitFor(() => expect(emUtc(focusIso(doc)!).getUTCDay()).toBe(6));
       await expect(
-        (emUtc(isoDoFoco(doc)!).getTime() - emUtc(domingo).getTime()) / 86_400_000,
+        (emUtc(focusIso(doc)!).getTime() - emUtc(domingo).getTime()) / 86_400_000,
       ).toBe(6);
-      const sabado = isoDoFoco(doc)!;
+      const sabado = focusIso(doc)!;
 
       await userEvent.keyboard('{PageDown}');
       await waitFor(() =>
-        expect(emUtc(isoDoFoco(doc)!).getUTCMonth()).toBe((emUtc(sabado).getUTCMonth() + 1) % 12),
+        expect(emUtc(focusIso(doc)!).getUTCMonth()).toBe((emUtc(sabado).getUTCMonth() + 1) % 12),
       );
 
       await userEvent.keyboard('{PageUp}');
-      await waitFor(() => expect(isoDoFoco(doc)).toBe(sabado));
+      await waitFor(() => expect(focusIso(doc)).toBe(sabado));
     });
   },
 };

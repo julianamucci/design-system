@@ -3,18 +3,18 @@ import {
   inputAddonWithButtonSource,
   inputAlinhamentosSource,
   inputWithHelperSource,
-  inputComErroSource,
+  inputWithErrorSource,
   inputWithLabelSource,
-  inputDesabilitadoSource,
+  inputDisabledSource,
   inputObrigatorioSource,
-  inputPaletaEscuraSource,
+  inputPaletteDarkSource,
   inputSource,
-  inputTipoArquivoSource,
-  inputTipoBuscaSource,
-  inputTipoEmailSource,
-  inputTipoNumeroSource,
-  inputTipoSenhaSource,
-  inputTipoTextoSource,
+  inputTypeFileSource,
+  inputTypeSearchSource,
+  inputTypeEmailSource,
+  inputTypeNumberSource,
+  inputTypeSenhaSource,
+  inputTypeTextSource,
 } from './input.source';
 
 describe('inputSource', () => {
@@ -68,26 +68,26 @@ import { Label } from '@/components/ui/label'
 
 describe('transforms das stories de tipo', () => {
   it('cada tipo sai escrito à vista, porque o atributo é o assunto', () => {
-    expect(inputTipoTextoSource()).toContain('type="text"');
-    expect(inputTipoEmailSource()).toContain('type="email"');
-    expect(inputTipoSenhaSource()).toContain('type="password"');
-    expect(inputTipoNumeroSource()).toContain('type="number"');
-    expect(inputTipoBuscaSource()).toContain('type="search"');
-    expect(inputTipoArquivoSource()).toContain('type="file"');
+    expect(inputTypeTextSource()).toContain('type="text"');
+    expect(inputTypeEmailSource()).toContain('type="email"');
+    expect(inputTypeSenhaSource()).toContain('type="password"');
+    expect(inputTypeNumberSource()).toContain('type="number"');
+    expect(inputTypeSearchSource()).toContain('type="search"');
+    expect(inputTypeFileSource()).toContain('type="file"');
   });
 
   it('o campo de arquivo não inventa marcador — quem desenha o miolo é o navegador', () => {
-    expect(inputTipoArquivoSource()).not.toContain('placeholder');
+    expect(inputTypeFileSource()).not.toContain('placeholder');
   });
 
   it('todo tipo chega rotulado — o campo não tem nome acessível próprio', () => {
     for (const fn of [
-      inputTipoTextoSource,
-      inputTipoEmailSource,
-      inputTipoSenhaSource,
-      inputTipoNumeroSource,
-      inputTipoBuscaSource,
-      inputTipoArquivoSource,
+      inputTypeTextSource,
+      inputTypeEmailSource,
+      inputTypeSenhaSource,
+      inputTypeNumberSource,
+      inputTypeSearchSource,
+      inputTypeFileSource,
     ]) {
       const saida = fn();
       expect(saida).toContain('<Label for=');
@@ -98,12 +98,12 @@ describe('transforms das stories de tipo', () => {
 
   it('cada tipo traz o rótulo do seu próprio domínio, não um genérico repetido', () => {
     const rotulos = [
-      inputTipoTextoSource,
-      inputTipoEmailSource,
-      inputTipoSenhaSource,
-      inputTipoNumeroSource,
-      inputTipoBuscaSource,
-      inputTipoArquivoSource,
+      inputTypeTextSource,
+      inputTypeEmailSource,
+      inputTypeSenhaSource,
+      inputTypeNumberSource,
+      inputTypeSearchSource,
+      inputTypeFileSource,
     ].map((fn) => /<Label for="[^"]+">([^<]+)<\/Label>/.exec(fn())?.[1]);
     expect(new Set(rotulos).size).toBe(rotulos.length);
   });
@@ -119,13 +119,13 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o desabilitado mantém o rótulo visível e associado', () => {
-    const saida = inputDesabilitadoSource();
+    const saida = inputDisabledSource();
     expect(saida).toContain('<Label for="campo-indisponivel">Campo desabilitado</Label>');
     expect(saida).toContain(' disabled />');
   });
 
   it('o erro liga o campo à mensagem, e a mensagem existe no snippet', () => {
-    const saida = inputComErroSource();
+    const saida = inputWithErrorSource();
     expect(saida).toContain('aria-invalid="true"');
     const alvo = /aria-describedby="([^"]+)"/.exec(saida)?.[1];
     expect(alvo).toBeTruthy();
@@ -135,7 +135,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a paleta escura mostra os três estados e não escreve tema na marcação', () => {
-    const saida = inputPaletaEscuraSource();
+    const saida = inputPaletteDarkSource();
     expect([...saida.matchAll(/<Input /g)]).toHaveLength(3);
     expect(saida).toContain('aria-invalid="true"');
     expect(saida).toContain(' disabled />');

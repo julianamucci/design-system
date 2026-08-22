@@ -35,15 +35,15 @@ function achar(raiz: ParentNode, slot: string): HTMLElement | null {
 }
 
 /** A raiz anunciada como barra de progresso. */
-export function raizDoProgresso(raiz: ParentNode): HTMLElement {
+export function progressoRoot(raiz: ParentNode): HTMLElement {
   const el = achar(raiz, 'progress');
   if (!el) throw new Error('SONDA::progress: nenhum [data-slot="progress"] no canvas');
   return el;
 }
 
 /** A caixa por onde o indicador corre — a trilha, ou a raiz quando ela acumula o papel. */
-export function trilhaDoProgresso(raiz: ParentNode): HTMLElement {
-  return achar(raiz, 'progress-track') ?? raizDoProgresso(raiz);
+export function progressoTrack(raiz: ParentNode): HTMLElement {
+  return achar(raiz, 'progress-track') ?? progressoRoot(raiz);
 }
 
 /** A barra preenchida. */
@@ -61,7 +61,7 @@ export function indicadorDoProgresso(raiz: ParentNode): HTMLElement {
  * do indicador contra a borda esquerda da trilha, e não a propriedade CSS.
  */
 export function percentualDesenhado(raiz: ParentNode): number {
-  const trilha = trilhaDoProgresso(raiz);
+  const trilha = progressoTrack(raiz);
   const indicador = indicadorDoProgresso(raiz);
   const caixa = trilha.getBoundingClientRect();
   if (caixa.width === 0) return 0;
@@ -85,7 +85,7 @@ function compor([r, g, b, a]: Rgba, fundo: Rgba): Rgba {
 }
 
 /** Primeira cor opaca subindo a árvore — o que de fato está atrás do elemento. */
-function fundoEfetivo(el: HTMLElement): Rgba {
+function backgroundEffective(el: HTMLElement): Rgba {
   let atual: HTMLElement | null = el.parentElement;
   while (atual) {
     const cor = parseRgba(getComputedStyle(atual).backgroundColor);
@@ -114,13 +114,13 @@ function contraste(a: Rgba, b: Rgba): number {
  * A barra só informa se der para ver onde ela termina — é objeto gráfico que
  * transmite informação, não decoração.
  */
-export function contrasteBarraTrilha(raiz: ParentNode): number {
-  const trilha = trilhaDoProgresso(raiz);
+export function contrastBarTrack(raiz: ParentNode): number {
+  const trilha = progressoTrack(raiz);
   const indicador = indicadorDoProgresso(raiz);
-  const atras = fundoEfetivo(trilha);
-  const corTrilha = compor(parseRgba(getComputedStyle(trilha).backgroundColor), atras);
-  const corIndicador = compor(parseRgba(getComputedStyle(indicador).backgroundColor), corTrilha);
-  return contraste(corIndicador, corTrilha);
+  const atras = backgroundEffective(trilha);
+  const colorTrack = compor(parseRgba(getComputedStyle(trilha).backgroundColor), atras);
+  const colorIndicador = compor(parseRgba(getComputedStyle(indicador).backgroundColor), colorTrack);
+  return contraste(colorIndicador, colorTrack);
 }
 
 /**
@@ -130,7 +130,7 @@ export function contrasteBarraTrilha(raiz: ParentNode): number {
  * traço está sempre em outro lugar. O que dá para afirmar sem sorte é que a
  * animação existe e é a do design system.
  */
-export function animacaoDoIndicador(raiz: ParentNode): string {
+export function indicadorAnimation(raiz: ParentNode): string {
   return getComputedStyle(indicadorDoProgresso(raiz)).animationName;
 }
 

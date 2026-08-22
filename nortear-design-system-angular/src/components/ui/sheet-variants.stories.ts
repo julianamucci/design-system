@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { NDS_SHEET, type SheetSide } from './sheet';
 import { NdsButton } from './button';
 import { waitForPortal } from '@/lib/wait-for-portal';
-import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
+import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 import { useTranslation } from '@/lib/i18n';
 import sheetTranslations from '@shared/content/sheet/translations.json';
 
@@ -87,12 +87,12 @@ export const Right: Story = {
   render: painel('right', 'rightLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado na borda direita', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-side', 'right');
-      await expect(painelEl).toHaveClass(/nds-sheet-content/);
-      await expect(painelEl).toHaveAccessibleName();
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-side', 'right');
+      await expect(panelEl).toHaveClass(/nds-sheet-content/);
+      await expect(panelEl).toHaveAccessibleName();
       // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
-      await esperarEncostarNaBorda(painelEl, 'right');
+      await borderWaitForEncostar(panelEl, 'right');
     });
   },
 };
@@ -111,12 +111,12 @@ export const Left: Story = {
   render: painel('left', 'leftLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado na borda esquerda', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-side', 'left');
-      await expect(painelEl).toHaveClass(/nds-sheet-content/);
-      await expect(painelEl).toHaveAccessibleName();
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-side', 'left');
+      await expect(panelEl).toHaveClass(/nds-sheet-content/);
+      await expect(panelEl).toHaveAccessibleName();
       // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
-      await esperarEncostarNaBorda(painelEl, 'left');
+      await borderWaitForEncostar(panelEl, 'left');
     });
   },
 };
@@ -134,12 +134,12 @@ export const Top: Story = {
   render: painel('top', 'topLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado no topo', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-side', 'top');
-      await expect(painelEl).toHaveClass(/nds-sheet-content/);
-      await expect(painelEl).toHaveAccessibleName();
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-side', 'top');
+      await expect(panelEl).toHaveClass(/nds-sheet-content/);
+      await expect(panelEl).toHaveAccessibleName();
       // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
-      await esperarEncostarNaBorda(painelEl, 'top');
+      await borderWaitForEncostar(panelEl, 'top');
     });
   },
 };
@@ -158,12 +158,12 @@ export const Bottom: Story = {
   render: painel('bottom', 'bottomLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado na base', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-side', 'bottom');
-      await expect(painelEl).toHaveClass(/nds-sheet-content/);
-      await expect(painelEl).toHaveAccessibleName();
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-side', 'bottom');
+      await expect(panelEl).toHaveClass(/nds-sheet-content/);
+      await expect(panelEl).toHaveAccessibleName();
       // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
-      await esperarEncostarNaBorda(painelEl, 'bottom');
+      await borderWaitForEncostar(panelEl, 'bottom');
     });
   },
 };

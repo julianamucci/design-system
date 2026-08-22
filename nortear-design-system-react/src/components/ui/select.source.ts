@@ -8,7 +8,7 @@
  * O que as stories montam em volta é ANDAIME e não entra no snippet: o
  * `<div style={{ contain: "layout", minHeight: 200, position: "relative" }}>`
  * existe porque a lista é portalizada e o Storybook precisa de um quadro contra
- * o que posicioná-la, e os mapas `ESTADOS` / `ESTADOS_POR_VALOR` vêm de um
+ * o que posicioná-la, e os mapas `STATES` / `VALUE_STATES` vêm de um
  * módulo de instrumentação de teste. O snippet declara os próprios dados.
  *
  * A prop `items` NÃO é andaime, e por isso aparece em quase todos os exemplos:
@@ -32,14 +32,14 @@ export type SelectArgs = {
 };
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importingSelect(...pecas: string[]): string {
-  const lista = [...pecas].sort();
+function importingSelect(...parts: string[]): string {
+  const lista = [...parts].sort();
   return `import {\n${lista
-    .map((peca) => `  ${peca},`)
+    .map((part) => `  ${part},`)
     .join('\n')}\n} from "@/components/ui/select";`;
 }
 
-const PECAS_BASE = ['Select', 'SelectContent', 'SelectItem', 'SelectTrigger', 'SelectValue'];
+const PARTS_BASE = ['Select', 'SelectContent', 'SelectItem', 'SelectTrigger', 'SelectValue'];
 
 /**
  * Mapa de valor para rótulo declarado UMA vez e usado duas: alimenta `items` e
@@ -83,7 +83,7 @@ function campo(raiz: string, gatilho = ' aria-label="Selecionar estado"'): strin
 export const selectSource: SourceTransform<SelectArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const raiz = attrs(propText('name', args.name), propBool('disabled', args.disabled));
-  return jsxSnippet(`${importingSelect(...PECAS_BASE)}\n\n${MAPA}`, campo(raiz));
+  return jsxSnippet(`${importingSelect(...PARTS_BASE)}\n\n${MAPA}`, campo(raiz));
 };
 
 /**
@@ -91,7 +91,7 @@ export const selectSource: SourceTransform<SelectArgs> = (_gerado, ctx) => {
  * leitor de tela é o grupo, nomeado pelo `SelectLabel`. Por isso os itens são
  * escritos um a um: cada grupo é uma decisão de conteúdo, não uma iteração.
  */
-export function selectComGruposSource(): string {
+export function selectWithGroupsSource(): string {
   return jsxSnippet(
     `${importingSelect(
       'Select',
@@ -140,9 +140,9 @@ const REGIOES = {
  * rótulo, sem eco do ícone, e o tamanho vem da folha do componente — dimensionar
  * o SVG na marcação tiraria o ícone da escala do tema.
  */
-export function selectComIconeSource(): string {
+export function selectWithIconSource(): string {
   return jsxSnippet(
-    `${importingSelect(...PECAS_BASE)}
+    `${importingSelect(...PARTS_BASE)}
 import { MailIcon, MessageCircleIcon, PhoneIcon } from "lucide-react";
 
 const CANAIS = {
@@ -174,9 +174,9 @@ const CANAIS = {
  * escolha é o componente. É aqui que o mapa `items` mais importa: a lista nunca
  * foi aberta, então o rótulo do campo fechado só pode vir dele.
  */
-export function selectSelecionadoSource(): string {
+export function selectSelectedSource(): string {
   return jsxSnippet(
-    `${importingSelect(...PECAS_BASE)}\n\n${MAPA}`,
+    `${importingSelect(...PARTS_BASE)}\n\n${MAPA}`,
     campo(' defaultValue="rj"'),
   );
 }
@@ -186,7 +186,7 @@ export function selectSelecionadoSource(): string {
  * impede a abertura da lista por teclado.
  */
 export function selectDisabledSource(): string {
-  return jsxSnippet(`${importingSelect(...PECAS_BASE)}\n\n${MAPA}`, campo(' disabled'));
+  return jsxSnippet(`${importingSelect(...PARTS_BASE)}\n\n${MAPA}`, campo(' disabled'));
 }
 
 /**
@@ -196,7 +196,7 @@ export function selectDisabledSource(): string {
  */
 export function selectInvalidoSource(): string {
   return jsxSnippet(
-    `${importingSelect(...PECAS_BASE)}\n\n${MAPA}`,
+    `${importingSelect(...PARTS_BASE)}\n\n${MAPA}`,
     `<div className="nds-stack" data-spacing="sm">
 ${indentar(campo('', ' aria-label="Selecionar estado" aria-invalid="true"'))}
   <p className="nds-text-body nds-text-destructive">
@@ -213,7 +213,7 @@ ${indentar(campo('', ' aria-label="Selecionar estado" aria-invalid="true"'))}
  */
 export function selectCompactoSource(): string {
   return jsxSnippet(
-    `${importingSelect(...PECAS_BASE)}\n\n${MAPA}`,
+    `${importingSelect(...PARTS_BASE)}\n\n${MAPA}`,
     campo('', ' size="sm" aria-label="Selecionar estado"'),
   );
 }
@@ -223,10 +223,10 @@ export function selectCompactoSource(): string {
  * limpa, e é por isso que o estado externo normaliza o valor antes de guardá-lo
  * — um `null` no `value` reabre o campo em modo placeholder sem aviso.
  */
-export function selectControladoSource(): string {
+export function selectControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
-${importingSelect(...PECAS_BASE)}
+${importingSelect(...PARTS_BASE)}
 
 ${MAPA}
 
@@ -260,10 +260,10 @@ const [estado, setEstado] = useState("");`,
  * primitivo mantém um campo escondido com esse nome, e a serialização nativa do
  * `<form>` enxerga só ele. Sem `name`, o envio sai sem o campo.
  */
-export function selectEmFormularioSource(): string {
+export function formSelectSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
-${importingSelect(...PECAS_BASE)}
+${importingSelect(...PARTS_BASE)}
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
@@ -308,9 +308,9 @@ const [estado, setEstado] = useState("");`,
  * efeito. O `aria-label` fica junto por redundância; com rótulo visível ele
  * pode ser dispensado, desde que os dois textos digam a mesma coisa.
  */
-export function selectComRotuloSource(): string {
+export function selectWithLabelSource(): string {
   return jsxSnippet(
-    `${importingSelect(...PECAS_BASE)}
+    `${importingSelect(...PARTS_BASE)}
 import { Label } from "@/components/ui/label";
 
 ${MAPA}`,

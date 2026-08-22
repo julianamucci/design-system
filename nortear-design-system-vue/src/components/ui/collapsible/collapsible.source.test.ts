@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  collapsibleAbertoPorPadraoSource,
-  collapsibleComBotaoSource,
-  collapsibleComChevronSource,
-  collapsibleComIconeSource,
-  collapsibleControladoSource,
-  collapsibleDesabilitadoSource,
+  defaultCollapsibleOpenSource,
+  collapsibleWithButtonSource,
+  collapsibleWithChevronSource,
+  collapsibleWithIconSource,
+  collapsibleControlledSource,
+  collapsibleDisabledSource,
   collapsibleNotControlledSource,
   collapsibleSource,
 } from './collapsible.source';
@@ -62,8 +62,8 @@ import {
   });
 
   it('ignora control que não é booleano — o espião de ação vira ruído no painel', () => {
-    const espiao = (() => {}) as never;
-    const saida = collapsibleSource('', { args: { defaultOpen: espiao, disabled: espiao } });
+    const spy = (() => {}) as never;
+    const saida = collapsibleSource('', { args: { defaultOpen: spy, disabled: spy } });
     expect(saida).toBe(collapsibleSource());
     expect(saida).not.toContain('function');
   });
@@ -86,14 +86,14 @@ describe('transforms das stories de estado', () => {
   });
 
   it('aberto por padrão troca o rótulo junto com o estado', () => {
-    const saida = collapsibleAbertoPorPadraoSource();
+    const saida = defaultCollapsibleOpenSource();
     expect(saida).toContain('<Collapsible default-open');
     // "Exibir" num painel já aberto descreveria o contrário do que se vê.
     expect(saida).toContain('<span>Ocultar filtros avançados</span>');
   });
 
   it('o controlado guarda o estado fora e o devolve pelo mesmo canal', () => {
-    const saida = collapsibleControladoSource();
+    const saida = collapsibleControlledSource();
     expect(saida).toContain(`import { ref } from 'vue'`);
     expect(saida).toContain('const aberto = ref(false)');
     expect(saida).toContain('<Collapsible v-model:open="aberto" class="nds-w-full">');
@@ -106,7 +106,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o desabilitado tira a rotação do chevron — não há estado que o faça girar', () => {
-    const saida = collapsibleDesabilitadoSource();
+    const saida = collapsibleDisabledSource();
     expect(saida).toContain('<Collapsible disabled');
     expect(saida).toContain('<ChevronDown aria-hidden="true" class="nds-icon nds-shrink-0" />');
     expect(saida).not.toContain('nds-chevron');
@@ -115,7 +115,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o gatilho É o botão do design system, sem repasse para um filho', () => {
-    const saida = collapsibleComBotaoSource();
+    const saida = collapsibleWithButtonSource();
     expect(saida).toContain('class="nds-button nds-button-outline nds-cluster nds-w-full nds-px-4"');
     // Nada de <Button> por dentro: o estado precisa morar no próprio gatilho.
     expect(saida).not.toContain('<Button');
@@ -123,14 +123,14 @@ describe('transforms das stories de composição', () => {
   });
 
   it('os dois ícones do gatilho ficam fora do nome acessível', () => {
-    const saida = collapsibleComIconeSource();
+    const saida = collapsibleWithIconSource();
     expect(saida).toContain(`import { ChevronDown, Filter } from 'lucide-vue-next'`);
     expect(saida.match(/aria-hidden="true"/g)).toHaveLength(2);
     expect(saida).toContain('<Filter aria-hidden="true"');
   });
 
   it('o chevron rotativo revela pares rótulo/valor', () => {
-    const saida = collapsibleComChevronSource();
+    const saida = collapsibleWithChevronSource();
     expect(saida).toContain('<span class="nds-font-medium">Modo estrito</span>');
     expect(saida).toContain('nds-chevron');
   });
@@ -138,9 +138,9 @@ describe('transforms das stories de composição', () => {
   it('nenhum snippet carrega valor de design em style inline', () => {
     for (const saida of [
       collapsibleSource(),
-      collapsibleControladoSource(),
-      collapsibleComIconeSource(),
-      collapsibleComChevronSource(),
+      collapsibleControlledSource(),
+      collapsibleWithIconSource(),
+      collapsibleWithChevronSource(),
     ]) {
       expect(saida).not.toContain('style="');
     }

@@ -1,18 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sheetAbertoSource,
-  sheetControladoSource,
+  sheetOpenSource,
+  sheetControlledSource,
   sheetEditPerfilSource,
   sheetClosedSource,
-  sheetFiltrosAvancadosSource,
+  sheetFiltersAvancadosSource,
   sheetFormLongSource,
   sheetSideDireitoSource,
-  sheetLadoEsquerdoSource,
-  sheetLadoInferiorSource,
-  sheetLadoSuperiorSource,
+  sheetSideEsquerdoSource,
+  sheetSideInferiorSource,
+  sheetSideSuperiorSource,
   sheetNavigationSecundariaSource,
   sheetPlaygroundSource,
-  sheetSemBotaoFecharSource,
+  sheetNoButtonCloseSource,
 } from './sheet.source';
 
 describe('sheetPlaygroundSource', () => {
@@ -104,17 +104,17 @@ describe('transforms das stories de direção', () => {
   });
 
   it('cada outra direção escreve o próprio lado, e no conteúdo', () => {
-    expect(sheetLadoEsquerdoSource()).toContain('<SheetContent side="left">');
-    expect(sheetLadoSuperiorSource()).toContain('<SheetContent side="top">');
-    expect(sheetLadoInferiorSource()).toContain('<SheetContent side="bottom">');
+    expect(sheetSideEsquerdoSource()).toContain('<SheetContent side="left">');
+    expect(sheetSideSuperiorSource()).toContain('<SheetContent side="top">');
+    expect(sheetSideInferiorSource()).toContain('<SheetContent side="bottom">');
   });
 
   it('as quatro nascem abertas — é o que explica a imagem ao lado do snippet', () => {
     for (const fn of [
       sheetSideDireitoSource,
-      sheetLadoEsquerdoSource,
-      sheetLadoSuperiorSource,
-      sheetLadoInferiorSource,
+      sheetSideEsquerdoSource,
+      sheetSideSuperiorSource,
+      sheetSideInferiorSource,
     ]) {
       expect(fn()).toContain('<Sheet default-open>');
     }
@@ -131,13 +131,13 @@ describe('transforms das stories de estado', () => {
   });
 
   it('aberto é a mesma composição com a prop ligada', () => {
-    const saida = sheetAbertoSource();
+    const saida = sheetOpenSource();
     expect(saida).toContain('<Sheet default-open>');
     expect(saida).toContain('<SheetTrigger as-child>');
   });
 
   it('sem o botão do canto, a saída passa a ser o rodapé', () => {
-    const saida = sheetSemBotaoFecharSource();
+    const saida = sheetNoButtonCloseSource();
     expect(saida).toContain('<SheetContent :show-close-button="false">');
     expect(saida).toContain('<Button variant="outline">Mais tarde</Button>');
     // Não há gatilho nesta composição: o painel monta aberto.
@@ -145,7 +145,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o controlado liga o valor de fora e devolve cada mudança', () => {
-    const saida = sheetControladoSource();
+    const saida = sheetControlledSource();
     expect(saida).toContain(`import { ref } from 'vue'`);
     expect(saida).toContain('const aberto = ref(false)');
     expect(saida).toContain('<Sheet :open="aberto" @update:open="(valor) => (aberto = valor)">');
@@ -156,7 +156,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o corpo rolável é SheetBody, e ele é o que segura o rodapé', () => {
-    const saida = sheetFiltrosAvancadosSource();
+    const saida = sheetFiltersAvancadosSource();
     expect(saida).toContain('<SheetBody>');
     expect(saida).toContain('  SheetBody,\n');
     expect(saida).toContain('<Input id="cat" default-value="Componentes" />');

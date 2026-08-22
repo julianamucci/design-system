@@ -4,7 +4,7 @@ import {
   skeletonCirculoSource,
   skeletonImageRatioSource,
   skeletonLineTextSource,
-  skeletonListaSource,
+  skeletonListSource,
   skeletonMovimentoReduzidoSource,
   skeletonParagrafoSource,
   skeletonPlaygroundSource,
@@ -20,7 +20,7 @@ const TODAS = [
   skeletonPulsandoSource,
   skeletonMovimentoReduzidoSource,
   skeletonCardPerfilSource,
-  skeletonListaSource,
+  skeletonListSource,
   skeletonImageRatioSource,
   skeletonParagrafoSource,
 ];
@@ -150,7 +150,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('na lista, a região ocupada é a própria ul', () => {
-    const saida = skeletonListaSource();
+    const saida = skeletonListSource();
     expect(saida).toContain('<ul\n    role="list"');
     expect(saida).toContain('<li v-for="i in 5" :key="i"');
     // O avatar menor sai de `data-size`, não de uma medida escrita à mão.

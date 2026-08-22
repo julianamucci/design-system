@@ -18,7 +18,7 @@ import { ChevronLeft, ChevronRight } from 'lucide';
 import { btnClass, type ButtonSize, type ButtonVariant } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { prefersReducedMotion } from '@/lib/motion';
-import { estadoDoSlide } from '@shared/primitives/carousel-active-slide';
+import { slideState } from '@shared/primitives/carousel-active-slide';
 
 // ─── Carousel ─────────────────────────────────────────────────────────────────
 //
@@ -82,7 +82,7 @@ export interface CarouselSlideChange {
 }
 
 /** Rótulo padrão dos slides: só números, para não cravar idioma no primitivo. */
-const ROTULO_PADRAO = '{index} / {total}';
+const LABEL_DEFAULT = '{index} / {total}';
 
 /**
  * Silêncio de rolagem que conta como "parou".
@@ -123,7 +123,7 @@ export class NdsCarouselStore {
 
   readonly orientation = signal<CarouselOrientation>('horizontal');
   readonly loop = signal(false);
-  readonly slideLabel = signal(ROTULO_PADRAO);
+  readonly slideLabel = signal(LABEL_DEFAULT);
 
   readonly canPrev = computed(() =>
     this.loop() ? this.total() > 1 : this._index() > 0,
@@ -156,17 +156,17 @@ export class NdsCarouselStore {
    * evita o slide nascer encolhido e pular no quadro seguinte.
    */
   estadoAtivo(el: HTMLElement): 'true' | 'false' | null {
-    const posicao = this._slides().indexOf(el);
-    if (posicao < 0) return null;
-    return estadoDoSlide(posicao, this._index());
+    const position = this._slides().indexOf(el);
+    if (position < 0) return null;
+    return slideState(position, this._index());
   }
 
   /** Rótulo acessível de um slide, já com posição e total resolvidos. */
   rotuloDoSlide(el: HTMLElement): string {
     const lista = this._slides();
-    const posicao = lista.indexOf(el) + 1;
+    const position = lista.indexOf(el) + 1;
     return this.slideLabel()
-      .replace('{index}', String(posicao || 1))
+      .replace('{index}', String(position || 1))
       .replace('{total}', String(lista.length || 1));
   }
 
@@ -240,13 +240,13 @@ export class NdsCarouselStore {
   indiceMaisProximo(): number | null {
     const vp = this.viewport;
     if (!vp) return null;
-    const posicao = this.orientation() === 'vertical' ? vp.scrollTop : vp.scrollLeft;
+    const position = this.orientation() === 'vertical' ? vp.scrollTop : vp.scrollLeft;
     let melhor: number | null = null;
     let menorDistancia = Number.POSITIVE_INFINITY;
     for (let i = 0; i < this.total(); i++) {
       const alvo = this.alvoDoSlide(i);
       if (alvo === null) continue;
-      const distancia = Math.abs(alvo - posicao);
+      const distancia = Math.abs(alvo - position);
       if (distancia < menorDistancia) {
         menorDistancia = distancia;
         melhor = i;
@@ -290,11 +290,11 @@ export class NdsCarouselStore {
   }
 
   /** Move o recorte sem animação — é o dedo (ou o mouse) que dá o tempo. */
-  rolarPara(posicao: number): void {
+  rolarPara(position: number): void {
     const vp = this.viewport;
     if (!vp) return;
-    if (this.orientation() === 'vertical') vp.scrollTop = posicao;
-    else vp.scrollLeft = posicao;
+    if (this.orientation() === 'vertical') vp.scrollTop = position;
+    else vp.scrollLeft = position;
   }
 
   soltarRelogios(): void {
@@ -431,7 +431,7 @@ export class NdsCarousel implements OnInit {
    * substituídos. O texto vem de quem usa porque é conteúdo traduzível — o
    * primitivo não carrega idioma.
    */
-  readonly slideLabel = input<string>(ROTULO_PADRAO);
+  readonly slideLabel = input<string>(LABEL_DEFAULT);
 
   /** Nome acessível da região. Sem ele vale o `aria-label` escrito no elemento. */
   readonly label = input<string | undefined>(undefined);
@@ -470,7 +470,7 @@ export class NdsCarousel implements OnInit {
       // Interação do usuário para o autoplay — é o `stopOnInteraction` que o
       // conteúdo compartilhado documenta e o mecanismo que a WCAG 2.2.2 exige
       // para movimento automático com mais de 5s de duração.
-      if (origem !== 'autoplay' && this._autoplayLigado()) this.pararAutoplay(index);
+      if (origem !== 'autoplay' && this._autoplayLigado()) this.stopAutoplay(index);
       this.slideChange.emit({ index, total: this.store.total(), trigger: origem });
     };
 
@@ -518,7 +518,7 @@ export class NdsCarousel implements OnInit {
 
   /** Liga/desliga o avanço automático — o controle que a WCAG 2.2.2 pede. */
   alternarAutoplay(): void {
-    if (this._autoplayLigado()) this.pararAutoplay(this.store.index());
+    if (this._autoplayLigado()) this.stopAutoplay(this.store.index());
     else this._autoplayLigado.set(true);
   }
 
@@ -545,7 +545,7 @@ export class NdsCarousel implements OnInit {
     this._suspenso.set(false);
   }
 
-  private pararAutoplay(index: number): void {
+  private stopAutoplay(index: number): void {
     this._autoplayLigado.set(false);
     this.autoplayPause.emit({ index });
   }

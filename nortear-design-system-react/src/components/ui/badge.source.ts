@@ -57,7 +57,7 @@ export function badgeSecundarioSource(): string {
 }
 
 /** Ênfase de alerta, reservada ao que exige reação. */
-export function badgeDestrutivoSource(): string {
+export function badgeDestructiveSource(): string {
   return badgeSnippet('destructive', 'Urgente');
 }
 
@@ -87,7 +87,7 @@ export function badgeSemanticasSource(): string {
  * quem nomeia é o texto. O respiro entre os dois é do contêiner — `data-icon`
  * encurta o padding daquele lado —, nunca uma margem no ícone.
  */
-export function badgeComIconeSource(): string {
+export function badgeWithIconSource(): string {
   return jsxSnippet(
     `${IMPORT}
 import { Check } from "lucide-react";`,
@@ -102,7 +102,7 @@ import { Check } from "lucide-react";`,
  * Contador: "12" sozinho não diz de quê. Quem carrega o significado é o rótulo
  * do contêiner, que também é quem se anuncia como região de status.
  */
-export function badgeContadorSource(): string {
+export function badgeCounterSource(): string {
   return jsxSnippet(
     `${IMPORT}
 import { Bell } from "lucide-react";`,
@@ -123,7 +123,7 @@ import { Bell } from "lucide-react";`,
  * nome acessível é a âncora; o badge fica decorativo dentro dela, sem
  * `tabindex` próprio para não competir pelo foco.
  */
-export function badgeComoLinkSource(): string {
+export function badgeAsLinkSource(): string {
   return jsxSnippet(
     IMPORT,
     `<a
@@ -137,7 +137,7 @@ export function badgeComoLinkSource(): string {
 }
 
 /** Mesma regra do link, com o botão no lugar da âncora. */
-export function badgeComoBotaoSource(): string {
+export function badgeAsButtonSource(): string {
   return jsxSnippet(
     IMPORT,
     `<button

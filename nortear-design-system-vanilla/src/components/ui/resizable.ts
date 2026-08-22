@@ -52,7 +52,7 @@ export type ResizablePanelOptions = {
 };
 
 /** Passo de cada seta, em pontos percentuais. Mesmo valor das outras stacks. */
-const PASSO_TECLADO = 2;
+const STEP_KEYBOARD = 2;
 
 function limitar(valor: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, valor));
@@ -74,20 +74,20 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
   root.className = cn('nds-resizable', options.class);
 
   /** Nome do divisor `i` — string única vale para todos; array indexa. */
-  const rotuloDe = (i: number): string | undefined => {
+  const labelOf = (i: number): string | undefined => {
     const rotulo = options['aria-label'];
     return Array.isArray(rotulo) ? rotulo[i] : rotulo;
   };
 
-  const minimoDe = (i: number) => panels[i]?.minSize ?? 10;
+  const minimumOf = (i: number) => panels[i]?.minSize ?? 10;
   const maximoDe = (i: number) => panels[i]?.maxSize ?? 100;
 
   // `defaultSize` declarado manda; quem não declarou divide a sobra por igual.
   const declarados = panels.map((p) => p.defaultSize);
-  const semDeclaracao = declarados.filter((d) => d === undefined).length;
-  const somaDeclarada = declarados.reduce<number>((acc, d) => acc + (d ?? 0), 0);
-  const fatia = semDeclaracao > 0 ? Math.max(0, 100 - somaDeclarada) / semDeclaracao : 0;
-  const bruto = declarados.map((d, i) => limitar(d ?? fatia, minimoDe(i), maximoDe(i)));
+  const noDeclaration = declarados.filter((d) => d === undefined).length;
+  const sumDeclarada = declarados.reduce<number>((acc, d) => acc + (d ?? 0), 0);
+  const fatia = noDeclaration > 0 ? Math.max(0, 100 - sumDeclarada) / noDeclaration : 0;
+  const bruto = declarados.map((d, i) => limitar(d ?? fatia, minimumOf(i), maximoDe(i)));
   const sumBruta = bruto.reduce((a, b) => a + b, 0);
   /** Sempre normalizado para somar 100 — é o que o `aria-valuenow` anuncia. */
   const sizes = sumBruta > 0 ? bruto.map((s) => (s / sumBruta) * 100) : bruto.map(() => 100 / count);
@@ -113,10 +113,10 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
     if (!h) return;
     const soma = (sizes[i] ?? 0) + (sizes[i + 1] ?? 0);
     h.setAttribute('aria-valuenow', String(Math.round(sizes[i])));
-    h.setAttribute('aria-valuemin', String(Math.round(minimoDe(i))));
+    h.setAttribute('aria-valuemin', String(Math.round(minimumOf(i))));
     // O teto não é o `maxSize` do painel: o vizinho também tem um mínimo, e é o
     // menor dos dois que o gesto respeita.
-    h.setAttribute('aria-valuemax', String(Math.round(Math.min(maximoDe(i), soma - minimoDe(i + 1)))));
+    h.setAttribute('aria-valuemax', String(Math.round(Math.min(maximoDe(i), soma - minimumOf(i + 1)))));
   }
 
   /**
@@ -126,8 +126,8 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
    */
   function aplicar(i: number, deltaPct: number, base: number[]): void {
     const soma = (base[i] ?? 0) + (base[i + 1] ?? 0);
-    const teto = Math.min(maximoDe(i), soma - minimoDe(i + 1));
-    const piso = Math.max(minimoDe(i), soma - maximoDe(i + 1));
+    const teto = Math.min(maximoDe(i), soma - minimumOf(i + 1));
+    const piso = Math.max(minimumOf(i), soma - maximoDe(i + 1));
     if (piso > teto) return;
 
     sizes[i] = limitar(base[i] + deltaPct, piso, teto);
@@ -163,7 +163,7 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
       handle.setAttribute('aria-orientation', isHorizontal ? 'vertical' : 'horizontal');
       handle.setAttribute('tabindex', '0');
       handle.className = 'nds-resizable-handle';
-      const rotulo = rotuloDe(i);
+      const rotulo = labelOf(i);
       if (rotulo) handle.setAttribute('aria-label', rotulo);
       if (disabled) {
         // `aria-disabled` em vez de sumir da ordem de tabulação: um controle que
@@ -246,12 +246,12 @@ export function createResizablePanel(options: ResizablePanelOptions): Destroyabl
         const soma = (sizes[i] ?? 0) + (sizes[i + 1] ?? 0);
         let delta = 0;
         switch (e.key) {
-          case 'ArrowRight': if (isHorizontal) delta = PASSO_TECLADO; break;
-          case 'ArrowLeft':  if (isHorizontal) delta = -PASSO_TECLADO; break;
-          case 'ArrowDown':  if (!isHorizontal) delta = PASSO_TECLADO; break;
-          case 'ArrowUp':    if (!isHorizontal) delta = -PASSO_TECLADO; break;
-          case 'Home': delta = minimoDe(i) - sizes[i]; break;
-          case 'End':  delta = Math.min(maximoDe(i), soma - minimoDe(i + 1)) - sizes[i]; break;
+          case 'ArrowRight': if (isHorizontal) delta = STEP_KEYBOARD; break;
+          case 'ArrowLeft':  if (isHorizontal) delta = -STEP_KEYBOARD; break;
+          case 'ArrowDown':  if (!isHorizontal) delta = STEP_KEYBOARD; break;
+          case 'ArrowUp':    if (!isHorizontal) delta = -STEP_KEYBOARD; break;
+          case 'Home': delta = minimumOf(i) - sizes[i]; break;
+          case 'End':  delta = Math.min(maximoDe(i), soma - minimumOf(i + 1)) - sizes[i]; break;
           case 'Enter': delta = (panels[i].defaultSize ?? sizes[i]) - sizes[i]; break;
           default: return;
         }

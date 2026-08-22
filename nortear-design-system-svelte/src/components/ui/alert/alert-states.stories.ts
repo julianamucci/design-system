@@ -7,9 +7,9 @@ import AlertStory from './AlertStory.svelte';
 import AlertSemAnuncioStory from './AlertSemAnuncioStory.svelte';
 import {
   alertInsercaoDinamicaSource,
-  alertSemAnuncioSource,
-  alertSemIconeSource,
-  alertSemTituloSource,
+  alertNoAnnouncementSource,
+  alertNoIconSource,
+  alertNoTitleSource,
   alertSource,
 } from './alert.source';
 
@@ -60,7 +60,7 @@ export const Complete: Story = {
 export const WithoutTitle: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
-    docs: { source: { transform: alertSemTituloSource } },
+    docs: { source: { transform: alertNoTitleSource } },
   },
   render: () => ({
     Component: AlertStory,
@@ -89,7 +89,7 @@ export const WithoutTitle: Story = {
 
 export const WithoutIcon: Story = {
   parameters: {
-    docs: { source: { transform: alertSemIconeSource } },
+    docs: { source: { transform: alertNoIconSource } },
   },
   render: () => ({
     Component: AlertStory,
@@ -120,7 +120,7 @@ export const WithoutIcon: Story = {
 // `role="note"` remove o anúncio sem mexer no visual — e o default segue `alert`.
 export const WithoutAnnouncement: Story = {
   parameters: {
-    docs: { source: { transform: alertSemAnuncioSource } },
+    docs: { source: { transform: alertNoAnnouncementSource } },
   },
   render: () => ({
     Component: AlertSemAnuncioStory,

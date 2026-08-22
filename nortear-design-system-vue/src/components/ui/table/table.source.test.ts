@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
   tableBasicaSource,
-  tableCarregandoSource,
-  tableComAcoesSource,
-  tableComRodapeSource,
+  tableLoadingSource,
+  tableWithActionsSource,
+  tableWithFooterSource,
   tableCaptionInvisivelSource,
-  tableLinhaSelecionadaSource,
-  tableRolagemHorizontalSource,
+  tableLineSelecionadaSource,
+  tableScrollHorizontalSource,
   tableSource,
   tableVaziaSource,
 } from './table.source';
@@ -113,7 +113,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o rodapé cobre as três colunas descritivas por atributo, não por binding', () => {
-    const saida = tableComRodapeSource();
+    const saida = tableWithFooterSource();
     expect(saida).toContain('<TableCell colspan="3">Total</TableCell>');
     // `:col-span` viraria o atributo `col-span`, que não existe em HTML: a
     // célula ficaria com uma coluna só, sem erro nenhum.
@@ -127,7 +127,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a coluna de ações tem cabeçalho, e cada botão nomeia o próprio registro', () => {
-    const saida = tableComAcoesSource();
+    const saida = tableWithActionsSource();
     expect(saida).toContain('<TableHead><span class="nds-sr-only">Ações</span></TableHead>');
     expect(saida).toContain(`:aria-label="'Ações para fatura ' + fatura.id"`);
     // O ghost é o que o conteúdo compartilhado documenta para ação por linha.
@@ -135,7 +135,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a tabela larga não configura rolagem: o contêiner do componente já rola', () => {
-    const saida = tableRolagemHorizontalSource();
+    const saida = tableScrollHorizontalSource();
     expect(saida).toContain('<TableHead v-for="mes in meses" :key="mes">');
     expect(saida).not.toContain('overflow');
     expect(saida).not.toContain('tabindex');
@@ -152,7 +152,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a seleção mora no `<tr>`, e some por null fora dela', () => {
-    const saida = tableLinhaSelecionadaSource();
+    const saida = tableLineSelecionadaSource();
     expect(saida).toContain(`:data-state="fatura.id === selecionada ? 'selected' : null"`);
     // A string "false" ainda casaria com um seletor de presença.
     expect(saida).not.toContain(`'false'`);
@@ -160,7 +160,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o carregando põe a tabela dentro da região que anuncia a espera', () => {
-    const saida = tableCarregandoSource();
+    const saida = tableLoadingSource();
     expect(saida).toContain(
       '<div role="status" aria-busy="true" aria-label="Carregando faturas">',
     );

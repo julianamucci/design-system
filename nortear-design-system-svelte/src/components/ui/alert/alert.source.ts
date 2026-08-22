@@ -44,7 +44,7 @@ ${IMPORT_INFO}`,
 }
 
 /** Variante destrutiva: falha que interrompeu o que a pessoa estava fazendo. */
-export function alertDestrutivoSource(): string {
+export function alertDestructiveSource(): string {
   return svelteSnippet(
     `${IMPORT_BASE}
 import AlertCircle from "@lucide/svelte/icons/circle-alert";`,
@@ -121,7 +121,7 @@ ${IMPORT_INFO}`,
  * As cinco variantes na mesma tela — é a composição que a medição de contraste
  * exige, porque medir uma por vez esconderia justamente a que reprova.
  */
-export function alertContrasteSource(): string {
+export function alertContrastSource(): string {
   return svelteSnippet(
     `${IMPORT_BASE}
 import type { AlertVariant } from "@/components/ui/alert";
@@ -145,7 +145,7 @@ const variantes: AlertVariant[] = [
 }
 
 /** Sem título: a mensagem cabe numa frase e o título seria repetição. */
-export function alertSemTituloSource(): string {
+export function alertNoTitleSource(): string {
   return svelteSnippet(
     `import { Alert, AlertDescription } from "@/components/ui/alert";
 ${IMPORT_INFO}`,
@@ -157,7 +157,7 @@ ${IMPORT_INFO}`,
 }
 
 /** Sem ícone: o alert mantém o layout de coluna única. */
-export function alertSemIconeSource(): string {
+export function alertNoIconSource(): string {
   return svelteSnippet(
     IMPORT_BASE,
     `<Alert>
@@ -171,7 +171,7 @@ export function alertSemIconeSource(): string {
  * Conteúdo estático × mensagem urgente: `role="note"` não é live region, e a
  * omissão da prop mantém o padrão `role="alert"`, que interrompe o leitor.
  */
-export function alertSemAnuncioSource(): string {
+export function alertNoAnnouncementSource(): string {
   return svelteSnippet(
     `${IMPORT_BASE}
 ${IMPORT_INFO}
@@ -213,7 +213,7 @@ import CheckCircle2 from "@lucide/svelte/icons/circle-check-big";`,
 }
 
 /** Composição com ação: o botão fica no canto superior direito. */
-export function alertComAcaoSource(): string {
+export function alertWithActionSource(): string {
   return svelteSnippet(
     `import {
   Alert,
@@ -238,7 +238,7 @@ ${IMPORT_INFO}`,
  * Extensibilidade: a classe do consumidor SOMA às do design system em cada
  * subcomponente — não substitui.
  */
-export function alertClasseAdicionalSource(): string {
+export function alertClassNameAdicionalSource(): string {
   return svelteSnippet(
     `import {
   Alert,

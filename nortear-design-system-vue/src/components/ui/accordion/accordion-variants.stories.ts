@@ -9,9 +9,9 @@ import {
   AccordionTrigger,
 } from './index';
 import {
-  defaultSourceAccordionOpen,
-  accordionControladoSource,
-  segundoClickSourceAccordionClose,
+  defaultAccordionOpenSource,
+  accordionControlledSource,
+  segundoClickAccordionCloseSource,
   accordionMultipleSource,
   accordionSingleSource,
 } from './accordion.source';
@@ -139,7 +139,7 @@ export const CloseOnSecondClick: Story = {
     docs: {
       // A ausência de configuração É o assunto: a raiz sai sem valor inicial e
       // sem chave nenhuma, o que a do meta esconderia.
-      source: { transform: segundoClickSourceAccordionClose },
+      source: { transform: segundoClickAccordionCloseSource },
       description: {
         story: 'Modo único sem nenhuma configuração extra: clicar de novo no item aberto o fecha.',
       },
@@ -258,7 +258,7 @@ export const Controlled: Story = {
     docs: {
       // O estado sai do componente e vira `ref` de quem consome, com indicador
       // em volta: é script e marcação que a do meta não tem.
-      source: { transform: accordionControladoSource },
+      source: { transform: accordionControlledSource },
       description: {
         story: 'Modo controlado. model-value e @update:model-value gerenciam o estado externamente. O indicador acima mostra o item ativo.',
       },
@@ -303,7 +303,7 @@ export const DefaultOpen: Story = {
     docs: {
       // O valor inicial é o assunto, e o par de itens contrasta aberto contra
       // fechado — outra composição que a do meta não mostra.
-      source: { transform: defaultSourceAccordionOpen },
+      source: { transform: defaultAccordionOpenSource },
       description: {
         story: 'Prop default-value abre um item na montagem sem modo controlado. Use em documentação e onboarding.',
       },

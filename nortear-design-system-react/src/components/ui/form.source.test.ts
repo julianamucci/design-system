@@ -1,24 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import {
-  formComDescricaoSource,
-  formComFieldsetSource,
-  formComVariosCamposSource,
-  formDesabilitadoSource,
+  formWithDescriptionSource,
+  formWithFieldsetSource,
+  formWithMultipleFieldsSource,
+  formDisabledSource,
   formEmDuasPaletasSource,
   formInvalidoSource,
-  formRotuloEControleSource,
+  formLabelEControleSource,
   formSource,
 } from './form.source';
 
 const TODAS = [
   formSource,
-  formRotuloEControleSource,
-  formComDescricaoSource,
+  formLabelEControleSource,
+  formWithDescriptionSource,
   formInvalidoSource,
-  formDesabilitadoSource,
+  formDisabledSource,
   formEmDuasPaletasSource,
-  formComFieldsetSource,
-  formComVariosCamposSource,
+  formWithFieldsetSource,
+  formWithMultipleFieldsSource,
 ];
 
 describe('formSource', () => {
@@ -68,9 +68,9 @@ describe('formSource', () => {
   });
 
   it('cai nos textos padrão quando o control entrega um espião no lugar da string', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
+    const spy = () => 'CORPO_DO_MOCK';
     const saida = formSource(undefined, {
-      args: { label: espiao as never, placeholder: espiao as never },
+      args: { label: spy as never, placeholder: spy as never },
     });
     expect(saida).toContain('label="Email"');
     expect(saida).toContain('placeholder="ex: joao@empresa.com"');
@@ -80,14 +80,14 @@ describe('formSource', () => {
 
 describe('variantes', () => {
   it('o par mínimo não leva descrição nem erro — a ausência é o assunto', () => {
-    const saida = formRotuloEControleSource();
+    const saida = formLabelEControleSource();
     expect(saida).toContain('<FormField label="Nome completo">');
     expect(saida).not.toContain('description=');
     expect(saida).not.toContain('error=');
   });
 
   it('a descrição é declarada no campo, e o campo a liga ao controle', () => {
-    const saida = formComDescricaoSource();
+    const saida = formWithDescriptionSource();
     expect(saida).toContain('description="Use pelo menos 8 caracteres, com letras e números."');
     expect(saida).toContain('<Input type="password" autoComplete="new-password" />');
   });
@@ -105,7 +105,7 @@ describe('estados', () => {
   });
 
   it('desabilitado mantém rótulo e descrição — some só a interação', () => {
-    const saida = formDesabilitadoSource();
+    const saida = formDisabledSource();
     expect(saida).toContain('label="CPF"');
     expect(saida).toContain('description="Preenchido pelo cadastro da empresa."');
     expect(saida).toContain('disabled />');
@@ -121,7 +121,7 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('o agrupamento usa a legenda do componente, não um título por cima', () => {
-    const saida = formComFieldsetSource();
+    const saida = formWithFieldsetSource();
     expect(saida).toContain('<Fieldset legend="Endereço de entrega">');
     // O par nativo fieldset/legend é o que anuncia o grupo; um <div> com <h3>
     // parece igual e não anuncia nada.
@@ -130,7 +130,7 @@ describe('composições', () => {
   });
 
   it('o formulário passa três controles diferentes pelo mesmo campo', () => {
-    const saida = formComVariosCamposSource();
+    const saida = formWithMultipleFieldsSource();
     expect(saida).toContain('import { Textarea } from "@/components/ui/textarea";');
     expect(saida).toContain('<Textarea name="bio" rows={3} />');
     expect(saida).toContain('<Button type="submit">Salvar</Button>');

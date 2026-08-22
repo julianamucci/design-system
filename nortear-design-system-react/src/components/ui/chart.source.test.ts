@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   chartAreaSource,
-  chartComTituloSource,
+  chartWithTitleSource,
   chartDoisDesenhosSource,
   chartEmCardSource,
   chartLineSource,
@@ -10,7 +10,7 @@ import {
   chartSerieUnicaSource,
   chartSource,
   chartTitleNoLabelSource,
-  chartVazioSource,
+  chartEmptySource,
 } from './chart.source';
 
 const TODAS = [
@@ -19,10 +19,10 @@ const TODAS = [
   chartAreaSource,
   chartPizzaSource,
   chartMultiSerieSource,
-  chartComTituloSource,
+  chartWithTitleSource,
   chartTitleNoLabelSource,
   chartSerieUnicaSource,
-  chartVazioSource,
+  chartEmptySource,
   chartEmCardSource,
   chartDoisDesenhosSource,
 ];
@@ -138,7 +138,7 @@ describe('tipos de desenho', () => {
 
 describe('rótulo e título', () => {
   it('título no desenho e rótulo autoral convivem — são textos de papéis distintos', () => {
-    const saida = chartComTituloSource();
+    const saida = chartWithTitleSource();
     expect(saida).toContain('title: "Acessos por dispositivo"');
     expect(saida).toContain('aria-label="Acessos por dispositivo, de janeiro a junho"');
   });
@@ -161,7 +161,7 @@ describe('rótulo e título', () => {
 
 describe('estados e composição', () => {
   it('o estado vazio traz a frase e NENHUMA altura — quem segura o bloco é o piso', () => {
-    const saida = chartVazioSource();
+    const saida = chartEmptySource();
     expect(saida).toContain('series: []');
     expect(saida).toContain('emptyLabel="Nenhum dado disponível para o período selecionado."');
     expect(saida).not.toContain('height=');

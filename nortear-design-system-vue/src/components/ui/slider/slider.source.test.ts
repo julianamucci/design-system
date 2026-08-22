@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sliderDesabilitadoSource,
-  sliderFaixaSource,
+  sliderDisabledSource,
+  sliderRangeSource,
   sliderFocusSource,
   sliderFormSource,
   sliderNoMaximoSource,
-  minimumSourceSlider,
+  minimumSliderSource,
   sliderDefaultSource,
   sliderStepGrossoSource,
   sliderPlaygroundSource,
@@ -18,12 +18,12 @@ import {
 const TODAS = [
   sliderPlaygroundSource,
   sliderUnicoSource,
-  sliderFaixaSource,
+  sliderRangeSource,
   sliderVerticalSource,
   sliderDefaultSource,
   sliderFocusSource,
-  sliderDesabilitadoSource,
-  minimumSourceSlider,
+  sliderDisabledSource,
+  minimumSliderSource,
   sliderNoMaximoSource,
   sliderVolumeSource,
   sliderPrecoSource,
@@ -121,7 +121,7 @@ describe('o que vale para todas as transforms do componente', () => {
 
 describe('transforms das stories de variante', () => {
   it('a faixa vem do tamanho do array, não de uma prop de modo', () => {
-    const saida = sliderFaixaSource();
+    const saida = sliderRangeSource();
     expect(saida).toContain('const faixa = ref([20, 80])');
     expect(saida).toContain('R$ {{ faixa[0] }} — R$ {{ faixa[1] }}');
     expect(saida).not.toContain('range');
@@ -146,13 +146,13 @@ describe('transforms das stories de estado', () => {
   });
 
   it('desabilitado liga a prop na raiz, que alcança todas as alças', () => {
-    expect(sliderDesabilitadoSource()).toContain(
+    expect(sliderDisabledSource()).toContain(
       '<Slider v-model="volume" disabled aria-label="Volume" />',
     );
   });
 
   it('os extremos moram no valor inicial, não em prop', () => {
-    expect(minimumSourceSlider()).toContain('const volume = ref([0])');
+    expect(minimumSliderSource()).toContain('const volume = ref([0])');
     expect(sliderNoMaximoSource()).toContain('const volume = ref([100])');
     // O limite é do componente: escrevê-lo aqui ensinaria uma prop de trava.
     expect(sliderNoMaximoSource()).not.toContain('readonly');

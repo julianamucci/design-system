@@ -6,15 +6,15 @@ import { Button } from './index';
 import ButtonStory from './ButtonStory.svelte';
 import ButtonPairStory from './ButtonPairStory.svelte';
 import {
-  buttonComIconeFinalSource,
-  buttonComIconeInicialSource,
-  buttonComoLinkSource,
+  buttonWithIconFinalSource,
+  buttonWithIconInitialSource,
+  buttonAsLinkSource,
   buttonTargetInseguroSource,
   buttonTargetMalformadoSource,
-  buttonDestrutivoComIconeSource,
+  buttonDestructiveWithIconSource,
   buttonLinkDisabledSource,
-  buttonParDeAcoesSource,
-  buttonSoIconeSource,
+  actionsButtonPairSource,
+  buttonSoIconSource,
   buttonSource,
 } from './button.source';
 
@@ -45,7 +45,7 @@ export const WithIconLeft: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
-      source: { transform: buttonComIconeInicialSource },
+      source: { transform: buttonWithIconInitialSource },
       description: { story: 'Ícone à esquerda do label. O SVG deve ter aria-hidden="true" para não poluir leitores de tela.' },
     },
   },
@@ -65,7 +65,7 @@ export const WithIconRight: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: buttonComIconeFinalSource },
+      source: { transform: buttonWithIconFinalSource },
       description: { story: 'Ícone à direita do label. Use em botões de navegação progressiva.' },
     },
   },
@@ -86,7 +86,7 @@ export const DestructiveIcon: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: buttonDestrutivoComIconeSource },
+      source: { transform: buttonDestructiveWithIconSource },
       description: { story: 'Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.' },
     },
   },
@@ -105,7 +105,7 @@ export const IconOnly: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: buttonSoIconeSource },
+      source: { transform: buttonSoIconSource },
       description: { story: 'Botão apenas com ícone. aria-label é obrigatório para acessibilidade.' },
     },
   },
@@ -126,7 +126,7 @@ export const ActionPair: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: buttonParDeAcoesSource },
+      source: { transform: actionsButtonPairSource },
       description: { story: 'Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.' },
     },
   },
@@ -150,7 +150,7 @@ export const AsLink: Story = {
   parameters: {
     covers: ['functional.item5'],
     docs: {
-      source: { transform: buttonComoLinkSource },
+      source: { transform: buttonAsLinkSource },
       description: { story: 'Button renderizado como <a> via prop href. Preserva semântica de link.' },
     },
   },

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
-import { embrulhar, esperarPainel, gatilhosDe } from './menubar.fixtures';
+import { embrulhar, waitForPanel, triggersOf } from './menubar.fixtures';
 import { menubarSource, menubarSourceWith } from './menubar.source';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
@@ -81,7 +81,7 @@ export const WithShortcuts: Story = {
       '300px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await esperarPainel(canvasElement);
+    const painel = await waitForPanel(canvasElement);
     const itens = within(painel).getAllByRole('menuitem');
 
     await step('Cada item leva o próprio atalho', async () => {
@@ -155,28 +155,28 @@ export const WithSubmenu: Story = {
       '340px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await esperarPainel(canvasElement);
-    const subGatilho = within(painel).getByRole('menuitem', { name: 'Exportar' });
+    const painel = await waitForPanel(canvasElement);
+    const subTrigger = within(painel).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre outro menu', async () => {
-      await expect(subGatilho.getAttribute('aria-haspopup')).toBe('menu');
-      await expect(subGatilho.getAttribute('data-slot')).toBe('menubar-sub-trigger');
+      await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
+      await expect(subTrigger.getAttribute('data-slot')).toBe('menubar-sub-trigger');
     });
 
     await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu', async () => {
       // Idempotente: só navega e abre quando ainda está fechado.
-      if (subGatilho.getAttribute('aria-expanded') !== 'true') {
+      if (subTrigger.getAttribute('aria-expanded') !== 'true') {
         const primeiro = within(painel).getAllByRole('menuitem')[0];
         primeiro.focus();
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(async () => {
-          await expect(document.activeElement).toBe(subGatilho);
+          await expect(document.activeElement).toBe(subTrigger);
         });
         await userEvent.keyboard('{ArrowRight}');
       }
 
       await waitFor(async () => {
-        await expect(subGatilho.getAttribute('aria-expanded')).toBe('true');
+        await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
         // Dois painéis abertos ao mesmo tempo: o pai continua no lugar, é o que
         // distingue submenu de troca de menu.
         await expect(within(canvasElement).getAllByRole('menu')).toHaveLength(2);
@@ -245,7 +245,7 @@ export const WithCheckboxItems: Story = {
       '300px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await esperarPainel(canvasElement);
+    const painel = await waitForPanel(canvasElement);
     const caixas = within(painel).getAllByRole('menuitemcheckbox');
 
     await step('Cada linha é uma caixa de seleção independente', async () => {
@@ -324,7 +324,7 @@ export const WithRadioGroup: Story = {
       '300px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await esperarPainel(canvasElement);
+    const painel = await waitForPanel(canvasElement);
     const opcoes = within(painel).getAllByRole('menuitemradio');
 
     await step('O grupo publica escolha única, e só uma opção está marcada', async () => {
@@ -428,7 +428,7 @@ export const EditorCompleto: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
-    const gatilhos = gatilhosDe(barra);
+    const gatilhos = triggersOf(barra);
 
     await step('As quatro categorias clássicas convivem na mesma barra', async () => {
       await expect(gatilhos).toHaveLength(MENUS_EDITOR.length);

@@ -2,17 +2,17 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor } from 'storybook/test';
 import { h } from 'vue';
 import {
-  desenhoEscreve,
-  desenhoPintado,
-  exigirRaiz,
-  formasDeDado,
+  designEscreve,
+  designPintado,
+  exigirRoot,
+  datumFormas,
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption } from './index';
 import ChartDocs from '@/components/docs/ChartDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { chartSource } from './chart.source';
 
-const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
 
 /**
@@ -104,13 +104,13 @@ export const Playground: Story = {
     ],
   },
   args: {
-    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
+    option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA }),
   },
   render: (args) => h(ChartContainer, { ...args, 'aria-label': ROTULO }),
   play: async ({ canvasElement, step }) => {
     // Procura pela classe compartilhada, não pelo data-slot: é o que o CSS das
     // cinco stacks define e o que não some se o wrapper mudar de forma.
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho é anunciado como imagem, com descrição', async () => {
       await expect(raiz).toHaveAttribute('role', 'img');
@@ -121,15 +121,15 @@ export const Playground: Story = {
     await step('O desenho sai, e não é casca vazia', async () => {
       // Gráfico tem dimensão calculada: esperar o desenho existir antes de medir
       // é o que separa asserção de contrato de teste intermitente.
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await expect(formasDeDado(raiz).length).toBeGreaterThan(0);
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
       await expect(raiz.querySelector('.nds-chart-empty')).toBeNull();
     });
 
     await step('O eixo escreve todas as categorias do dado', async () => {
       await waitFor(
         () => {
-          for (const mes of MESES) expect(desenhoEscreve(raiz, mes)).toBe(true);
+          for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
         },
         { timeout: 3000 },
       );

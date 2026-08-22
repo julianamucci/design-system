@@ -7,10 +7,10 @@ import {
   type NavigationMenuOrientation,
 } from './navigation-menu';
 import {
-  SELETOR_PAINEL,
-  esperarPainel,
-  esperarPainelSumir,
-  popupAberto,
+  SELECTOR_PANEL,
+  waitForPanel,
+  waitForPanelVanish,
+  popupOpen,
 } from './navigation-menu.fixtures';
 import { NdsNavigationMenuDocs } from '@/components/docs/NavigationMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -255,7 +255,7 @@ export const Playground: Story = {
 
     await step('Enter abre o painel e leva o foco para dentro dele', async () => {
       await userEvent.keyboard('{Enter}');
-      const painel = await esperarPainel();
+      const painel = await waitForPanel();
       await expect(produtos.getAttribute('aria-expanded')).toBe('true');
       await expect(args.onValueChange).toHaveBeenCalledWith('produtos');
 
@@ -268,7 +268,7 @@ export const Playground: Story = {
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
       await userEvent.keyboard('{Escape}');
-      await esperarPainelSumir();
+      await waitForPanelVanish();
       await expect(produtos.getAttribute('aria-expanded')).toBe('false');
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
@@ -279,19 +279,19 @@ export const Playground: Story = {
 
     await step('O ponteiro abre o painel sem clique', async () => {
       await userEvent.hover(produtos);
-      const painel = await esperarPainel();
+      const painel = await waitForPanel();
       await expect(painel.textContent).toContain('Plano Inicial');
     });
 
     await step('Passar de um gatilho ao outro troca o painel sem fechá-lo', async () => {
       await userEvent.hover(solucoes);
       await waitFor(async () => {
-        const painel = document.body.querySelector(SELETOR_PAINEL);
+        const painel = document.body.querySelector(SELECTOR_PANEL);
         await expect(painel?.textContent).toContain('Para Marketing');
       });
       // O popup é um só e nunca desmontou: é o que `skipDelayDuration` descreve
       // nas outras stacks — a troca é instantânea, sem reabrir a espera.
-      await expect(popupAberto()).not.toBeNull();
+      await expect(popupOpen()).not.toBeNull();
       await expect(solucoes.getAttribute('aria-expanded')).toBe('true');
     });
 
@@ -299,7 +299,7 @@ export const Playground: Story = {
       // A story termina fechada de propósito: o axe roda depois da play, e um
       // painel flutuante aberto mediria contraste sobre a página inteira.
       await userEvent.keyboard('{Escape}');
-      await esperarPainelSumir();
+      await waitForPanelVanish();
       await expect(solucoes.getAttribute('aria-expanded')).toBe('false');
     });
   },

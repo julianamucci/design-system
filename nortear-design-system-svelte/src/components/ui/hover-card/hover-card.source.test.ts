@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-  hoverCardClasseExtraSource,
+  hoverCardClassNameExtraSource,
   hoverCardDefinicaoSource,
-  hoverCardEsperaPadraoSource,
+  hoverCardWaitDefaultSource,
   hoverCardLadosSource,
   hoverCardMetricaSource,
   hoverCardPerfilSource,
@@ -98,12 +98,12 @@ describe('hoverCardSource', () => {
 describe('transforms das stories de variação e composição', () => {
   it('nenhum override abre o cartão na montagem — isso é andaime da captura', () => {
     for (const fn of [
-      hoverCardEsperaPadraoSource,
+      hoverCardWaitDefaultSource,
       hoverCardPerfilSource,
       hoverCardPreviaDeLinkSource,
       hoverCardDefinicaoSource,
       hoverCardMetricaSource,
-      hoverCardClasseExtraSource,
+      hoverCardClassNameExtraSource,
       hoverCardLadosSource,
     ]) {
       expect(fn(), fn.name).not.toContain('defaultOpen');
@@ -112,7 +112,7 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('a espera padrão não aparece como número em lugar nenhum do markup', () => {
-    const saida = hoverCardEsperaPadraoSource();
+    const saida = hoverCardWaitDefaultSource();
     expect(saida).not.toContain('openDelay');
     expect(saida).not.toContain('closeDelay');
   });
@@ -145,7 +145,7 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('a classe extra convive com a classe do componente, não a substitui', () => {
-    expect(hoverCardClasseExtraSource()).toContain(
+    expect(hoverCardClassNameExtraSource()).toContain(
       '<HoverCardContent class="nds-w-md nds-text-center">',
     );
   });

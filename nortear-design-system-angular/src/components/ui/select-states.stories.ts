@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_SELECT } from './select';
-import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
-const ESTADOS = [
+const STATES = [
   { value: 'sp', label: 'São Paulo' },
   { value: 'rj', label: 'Rio de Janeiro' },
   { value: 'mg', label: 'Minas Gerais' },
@@ -20,7 +20,7 @@ const ESTADOS = [
  * oferece para isso, e é o que a docs page recomenda.
  */
 const stateLabel = (valor: unknown): string =>
-  ESTADOS.find((e) => e.value === valor)?.label ?? String(valor ?? '');
+  STATES.find((e) => e.value === valor)?.label ?? String(valor ?? '');
 
 const meta: Meta = {
   title: 'UI/Select/States',
@@ -30,7 +30,7 @@ const meta: Meta = {
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {
         component:
@@ -57,7 +57,7 @@ export const Default: Story = {
     },
   },
   render: () => ({
-    props: { estados: ESTADOS },
+    props: { estados: STATES },
     template: `
       <nds-select>
         <button ndsSelectTrigger aria-label="Estado">
@@ -108,7 +108,7 @@ export const Selected: Story = {
     },
   },
   render: () => ({
-    props: { estados: ESTADOS, stateLabel },
+    props: { estados: STATES, stateLabel },
     template: `
       <nds-select defaultValue="rj" [itemToStringLabel]="stateLabel">
         <button ndsSelectTrigger aria-label="Estado">
@@ -174,7 +174,7 @@ export const Open: Story = {
     },
   },
   render: () => ({
-    props: { estados: ESTADOS },
+    props: { estados: STATES },
     template: `
       <nds-select [defaultOpen]="true" [modal]="false">
         <button ndsSelectTrigger aria-label="Estado">
@@ -253,7 +253,7 @@ export const Disabled: Story = {
     },
   },
   render: () => ({
-    props: { estados: ESTADOS, onValueChange: fn() },
+    props: { estados: STATES, onValueChange: fn() },
     template: `
       <nds-select disabled (valueChange)="onValueChange($event)">
         <button ndsSelectTrigger aria-label="Estado">
@@ -300,7 +300,7 @@ export const Invalid: Story = {
     },
   },
   render: () => ({
-    props: { estados: ESTADOS },
+    props: { estados: STATES },
     template: `
       <div class="nds-stack" data-spacing="sm">
         <nds-select invalid>

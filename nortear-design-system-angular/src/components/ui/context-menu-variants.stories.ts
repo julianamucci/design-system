@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
-import { abrirPorGesto } from './context-menu.fixtures';
-import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { gestoOpen } from './context-menu.fixtures';
+import { FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -16,7 +16,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
   },
 };
 
@@ -59,18 +59,18 @@ export const WithSubmenu: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const area = () => canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
-    const subGatilho = () => document.querySelector<HTMLElement>('[data-testid="sub"]')!;
+    const subTrigger = () => document.querySelector<HTMLElement>('[data-testid="sub"]')!;
 
     await step('O sub-gatilho diz que abre um menu', async () => {
-      await abrirPorGesto(area());
-      await expect(subGatilho().getAttribute('aria-haspopup')).toBe('menu');
-      await expect(subGatilho().getAttribute('aria-expanded')).toBe('false');
+      await gestoOpen(area());
+      await expect(subTrigger().getAttribute('aria-haspopup')).toBe('menu');
+      await expect(subTrigger().getAttribute('aria-expanded')).toBe('false');
     });
 
     await step('Seta direita abre o submenu, ao lado do item que o dispara', async () => {
-      subGatilho().focus();
+      subTrigger().focus();
       await userEvent.keyboard('{ArrowRight}');
-      await waitFor(() => expect(subGatilho().getAttribute('aria-expanded')).toBe('true'));
+      await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('true'));
 
       const submenu = document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]')!;
       const itens = submenu.querySelectorAll('[data-slot="context-menu-item"]');
@@ -84,7 +84,7 @@ export const WithSubmenu: Story = {
       // zero e o teste reprova por corrida, não por defeito.
       await waitFor(() =>
         expect(submenu.getBoundingClientRect().left).toBeGreaterThanOrEqual(
-          subGatilho().getBoundingClientRect().left,
+          subTrigger().getBoundingClientRect().left,
         ),
       );
     });
@@ -95,8 +95,8 @@ export const WithSubmenu: Story = {
       // ng-template registrada no DropdownMenu). Afirmar a seta seria afirmar o
       // que a story não produz; o Escape fecha e é caminho de teclado real.
       await userEvent.keyboard('{Escape}');
-      await waitFor(() => expect(subGatilho().getAttribute('aria-expanded')).toBe('false'));
-      await expect(document.activeElement).toBe(subGatilho());
+      await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('false'));
+      await expect(document.activeElement).toBe(subTrigger());
     });
 
     await step('A story termina com o submenu ABERTO', async () => {
@@ -151,7 +151,7 @@ export const WithSelection: Story = {
     const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
 
     await step('Os papéis dizem que tipo de escolha cada item é', async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo('check').getAttribute('role')).toBe('menuitemcheckbox');
       await expect(alvo('radio-email').getAttribute('role')).toBe('menuitemradio');
     });
@@ -228,7 +228,7 @@ export const WithDisabledItems: Story = {
     const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="${id}"]`)!;
 
     await step('O item desabilitado é anunciado como tal', async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo('off').getAttribute('aria-disabled')).toBe('true');
     });
 
@@ -304,7 +304,7 @@ export const DarkPalette: Story = {
       // Prova que a paleta trocou de verdade: com os tokens do claro esta
       // relação se inverte, e a asserção acusa.
       const area = canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
-      const menu = await abrirPorGesto(area);
+      const menu = await gestoOpen(area);
       const cs = getComputedStyle(menu);
       const brilho = (cor: string) => {
         const [r = 0, g = 0, b = 0] = cor.match(/[\d.]+/g)?.map(Number) ?? [];
@@ -320,7 +320,7 @@ export const DarkPalette: Story = {
 // Story SEM interação sobre os itens, de propósito. O que ela declara vale na
 // montagem, e o primeiro clique num item misto o resolve para marcado — uma play
 // que clicasse mediria outro estado no REPLAY do painel Interactions, que
-// reexecuta no mesmo DOM. Abrir o menu é idempotente: `abrirPorGesto` parte das
+// reexecuta no mesmo DOM. Abrir o menu é idempotente: `gestoOpen` parte das
 // coordenadas da área, não do estado anterior.
 
 export const CheckboxIndeterminate: Story = {
@@ -348,7 +348,7 @@ export const CheckboxIndeterminate: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const area = canvasElement.querySelector<HTMLElement>('[data-testid="area"]')!;
-    const menu = await abrirPorGesto(area);
+    const menu = await gestoOpen(area);
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
     const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });

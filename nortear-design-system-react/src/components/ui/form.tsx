@@ -52,10 +52,10 @@ const SELETORES_CONTROLE = [
   "select",
 ]
 
-function acharControle(raiz: HTMLElement): HTMLElement | null {
+function findControl(raiz: HTMLElement): HTMLElement | null {
   for (const seletor of SELETORES_CONTROLE) {
-    const achado = raiz.querySelector<HTMLElement>(seletor)
-    if (achado) return achado
+    const finding = raiz.querySelector<HTMLElement>(seletor)
+    if (finding) return finding
   }
   return null
 }
@@ -94,7 +94,7 @@ function FormField({
     const el = raiz.current
     if (!el) return
 
-    const controle = acharControle(el)
+    const controle = findControl(el)
     const rotulo = el.querySelector<HTMLLabelElement>("label")
 
     if (rotulo && controle) {

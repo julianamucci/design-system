@@ -77,8 +77,8 @@ function propLinhas(valor: unknown): string | undefined {
  */
 function tagCodeBlock(partes: Array<string | false | undefined>): string {
   const lista = ['code={source}', ...partes].filter((parte): parte is string => Boolean(parte));
-  const emLinha = lista.join(' ');
-  if (emLinha.length <= 56) return `<CodeBlock ${emLinha} />`;
+  const inLine = lista.join(' ');
+  if (inLine.length <= 56) return `<CodeBlock ${inLine} />`;
   return `<CodeBlock\n${lista.map((parte) => `  ${parte}`).join('\n')}\n/>`;
 }
 
@@ -123,7 +123,7 @@ render(registro, total);`),
  * — as duas stories de paleta mostram o MESMO código, e o que muda entre elas é
  * o tema do toolbar, não uma prop. Por isso as duas compartilham este snippet.
  */
-export function codeBlockPaletaSource(): string {
+export function codeBlockPaletteSource(): string {
   return jsxSnippet(
     cabecalhoCom(CODE_BASE),
     tagCodeBlock([propText('language', 'ts'), propLinhas([2])]),

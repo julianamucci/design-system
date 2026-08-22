@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
 import { DataTable } from './index';
 import { baseColumns } from './data-table.fixtures';
-import { dataTableSemResultadosSource } from './data-table.source';
+import { dataTableNoResultsSource } from './data-table.source';
 
 const meta: Meta<Record<string, unknown>> = {
   title: 'UI/DataTable/States',
@@ -11,7 +11,7 @@ const meta: Meta<Record<string, unknown>> = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: dataTableSemResultadosSource } },
+    docs: { source: { transform: dataTableNoResultsSource } },
   },
 };
 
@@ -65,10 +65,10 @@ export const NoResults: Story = {
     await step('Sem linha nenhuma, o cabeçalho de seleção não fica marcado', async () => {
       // "Todas selecionadas" com zero linhas seria verdade vazia — e o checkbox
       // nasceria marcado numa tabela sem nada para marcar.
-      const caixaDeTudo = canvas.getByRole('checkbox', {
+      const allBox = canvas.getByRole('checkbox', {
         name: 'Selecionar todas as linhas',
       });
-      await expect(caixaDeTudo).toHaveAttribute('aria-checked', 'false');
+      await expect(allBox).toHaveAttribute('aria-checked', 'false');
       await expect(canvasElement.querySelector("[role='status']")).toHaveTextContent(
         '0 de 0 linha(s) selecionada(s).',
       );

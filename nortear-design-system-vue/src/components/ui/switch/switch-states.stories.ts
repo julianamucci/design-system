@@ -3,7 +3,7 @@ import { within, userEvent, expect } from 'storybook/test';
 import { Switch } from './index';
 import { Label } from '@/components/ui/label';
 import {
-  switchDesabilitadoSource,
+  switchDisabledSource,
   switchDesligadoSource,
   switchInvalidoSource,
   switchLigadoSource,
@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>;
 // não olhômetro — e é o que o item de contraste do contrato exige.
 
 /** Primeira cor de fundo opaca subindo a árvore — o "ambiente" do controle. */
-function fundoDoAmbiente(el: HTMLElement): string {
+function environmentBackground(el: HTMLElement): string {
   let atual: HTMLElement | null = el.parentElement;
   while (atual) {
     const cor = getComputedStyle(atual).backgroundColor;
@@ -124,8 +124,8 @@ export const Checked: Story = {
     });
 
     await step('O trilho ligado tem pelo menos 3:1 contra o ambiente', async () => {
-      const corTrilho = getComputedStyle(sw).backgroundColor;
-      await expect(contraste(corTrilho, fundoDoAmbiente(sw))).toBeGreaterThanOrEqual(3);
+      const colorTrack = getComputedStyle(sw).backgroundColor;
+      await expect(contraste(colorTrack, environmentBackground(sw))).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -173,7 +173,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item3'],
     // `disabled` é prop, e é a única diferença que o leitor precisa copiar.
-    docs: { source: { transform: switchDesabilitadoSource } },
+    docs: { source: { transform: switchDisabledSource } },
   },
   render: () => ({
     components: { Switch, Label },

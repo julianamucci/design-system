@@ -80,17 +80,17 @@ ${painel('    <p>Filtro avançado 1 · Filtro avançado 2</p>')}
 }
 
 /** Estado OpenByDefault: `open` é ponto de partida, não trava. */
-export function collapsibleAbertoPorPadraoSource(): string {
+export function defaultCollapsibleOpenSource(): string {
   return collapsibleSource(undefined, { args: { defaultOpen: true } });
 }
 
 /** Estado Disabled: o gatilho recusa ponteiro e teclado. */
-export function collapsibleDesabilitadoSource(): string {
+export function collapsibleDisabledSource(): string {
   return collapsibleSource(undefined, { args: { disabled: true } });
 }
 
 /** Estado Controlled: quem manda é o estado de fora, e o gatilho o devolve. */
-export function collapsibleControladoSource(): string {
+export function collapsibleControlledSource(): string {
   return svelteSnippet(
     `import {
   Collapsible,
@@ -122,7 +122,7 @@ ${painel('    <p>Conteúdo colapsável controlado externamente.</p>')}
 }
 
 /** Composição WithCustomButton: o botão do design system É o gatilho. */
-export function collapsibleComBotaoSource(): string {
+export function collapsibleWithButtonSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Collapsible class="nds-w-sm">
@@ -140,7 +140,7 @@ ${painel(`    <p>Opção avançada 1</p>
  * `.nds-chevron` gira sozinha quando o ancestral está em
  * `[aria-expanded="true"]` — nenhum utilitário e nenhuma medida no markup.
  */
-export function collapsibleComChevronSource(): string {
+export function collapsibleWithChevronSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Collapsible class="nds-w-sm">

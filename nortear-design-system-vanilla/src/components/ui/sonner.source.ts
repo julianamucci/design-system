@@ -5,7 +5,7 @@
 // notificação para montar por item — o que se copia é a chamada da fila.
 
 import {
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -104,7 +104,7 @@ export function sonnerSnippet(o: SonnerSnippetOptions = {}): string {
   const type = o.type ?? 'success';
 
   return snippet(
-    importar('sonner', 'createSonnerToaster', 'toast'),
+    importing('sonner', 'createSonnerToaster', 'toast'),
     regionBlock(o),
     queueCall(type, o.title || DEFAULT_TITLE[type], notificationOptions(o)),
   );
@@ -121,7 +121,7 @@ export function sonnerNoRegionSnippet(o: SonnerSnippetOptions = {}): string {
   const type = o.type ?? 'success';
 
   return snippet(
-    importar('sonner', 'toast'),
+    importing('sonner', 'toast'),
     queueCall(type, o.title || DEFAULT_TITLE[type], notificationOptions(o)),
   );
 }
@@ -137,7 +137,7 @@ export function sonnerStackSnippet(
   });
 
   return snippet(
-    importar('sonner', 'createSonnerToaster', 'toast'),
+    importing('sonner', 'createSonnerToaster', 'toast'),
     regionBlock(o),
     calls.join('\n'),
   );
@@ -152,7 +152,7 @@ export function sonnerStackSnippet(
  */
 export function sonnerPromiseSnippet(o: SonnerSnippetOptions = {}): string {
   return snippet(
-    importar('sonner', 'createSonnerToaster', 'toast'),
+    importing('sonner', 'createSonnerToaster', 'toast'),
     regionBlock(o),
     `toast.promise(enviarArquivo(), {
   loading: 'Enviando arquivo...',

@@ -20,15 +20,15 @@ import {
 import { Button } from '@/components/ui/button';
 import {
   waitForPortal,
-  REGRA_GUARDA_DE_FOCO,
+  FOCUS_RULE_GUARDA,
   LIST_RULE_SCROLL,
 } from '@/lib/wait-for-portal';
 import {
-  dropdownMenuComAtalhosSource,
+  dropdownMenuWithShortcutsSource,
   dropdownMenuWithChoiceUnicaSource,
   dropdownMenuWithMarkupSource,
-  dropdownMenuComRotuloSource,
-  dropdownMenuComSubmenuSource,
+  dropdownMenuWithLabelSource,
+  dropdownMenuWithSubmenuSource,
 } from './dropdown-menu.source';
 
 const meta = {
@@ -39,9 +39,9 @@ const meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
-      source: { transform: dropdownMenuComRotuloSource },
+      source: { transform: dropdownMenuWithLabelSource },
       description: {
         component:
           'As composições canônicas: grupos com rótulo, alternadores, escolha única, submenu e ' +
@@ -251,7 +251,7 @@ export const WithSubmenu: Story = {
     covers: ['functional.item7', 'visual.item4'],
     // O segundo nível é a tríade Sub/SubTrigger/SubContent, que o snippet do
     // meta esconderia por inteiro.
-    docs: { source: { transform: dropdownMenuComSubmenuSource } },
+    docs: { source: { transform: dropdownMenuWithSubmenuSource } },
     // Com o submenu ABERTO — que é o estado que `visual.item4` documenta — o
     // primitivo recalcula a altura disponível do menu PAI e ele passa a rolar.
     // O axe então cobra foco na região rolável, e não tem como enxergar que num
@@ -260,7 +260,7 @@ export const WithSubmenu: Story = {
     // rola o item para dentro da vista. A exceção vale só aqui, e o passo
     // "o menu pai realmente rola" abaixo é o que impede que ela cubra, no
     // futuro, uma lista curta que passou a rolar sem motivo.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, LIST_RULE_SCROLL] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA, LIST_RULE_SCROLL] } },
   },
   render: () => ({
     components: componentes,
@@ -287,21 +287,21 @@ export const WithSubmenu: Story = {
   play: async ({ step }) => {
     const corpo = within(document.body);
     const menu = await waitForPortal('menu');
-    const subGatilho = within(menu).getByRole('menuitem', { name: 'Exportar' });
+    const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre um menu', async () => {
-      await expect(subGatilho).toHaveAttribute('aria-haspopup', 'menu');
-      await expect(subGatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(subTrigger).toHaveAttribute('aria-haspopup', 'menu');
+      await expect(subTrigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('A seta para a direita abre o submenu', async () => {
       // Idempotente: a seta só é enviada com o submenu fechado.
-      if (subGatilho.getAttribute('aria-expanded') !== 'true') {
-        subGatilho.focus();
+      if (subTrigger.getAttribute('aria-expanded') !== 'true') {
+        subTrigger.focus();
         await userEvent.keyboard('{ArrowRight}');
       }
       await waitFor(async () => {
-        await expect(subGatilho).toHaveAttribute('aria-expanded', 'true');
+        await expect(subTrigger).toHaveAttribute('aria-expanded', 'true');
         await expect(corpo.getAllByRole('menu')).toHaveLength(2);
       });
     });
@@ -333,7 +333,7 @@ export const WithShortcuts: Story = {
   parameters: {
     // O atalho é uma peça a mais DENTRO do item, e é ela que completa o nome
     // acessível — o snippet do meta não a mostra.
-    docs: { source: { transform: dropdownMenuComAtalhosSource } },
+    docs: { source: { transform: dropdownMenuWithShortcutsSource } },
   },
   render: () => ({
     components: componentes,
@@ -379,10 +379,10 @@ export const WithShortcuts: Story = {
       // já vem resolvido em pixels — o que dá para afirmar é o resultado.
       const item = canvas.getByRole('menuitem', { name: 'Colar Ctrl V' });
       const atalho = item.querySelector<HTMLElement>('[data-slot="dropdown-menu-shortcut"]')!;
-      const caixaDoItem = item.getBoundingClientRect();
-      const caixaDoAtalho = atalho.getBoundingClientRect();
-      await expect(caixaDoItem.right - caixaDoAtalho.right).toBeLessThan(
-        caixaDoAtalho.left - caixaDoItem.left,
+      const itemBox = item.getBoundingClientRect();
+      const shortcutBox = atalho.getBoundingClientRect();
+      await expect(itemBox.right - shortcutBox.right).toBeLessThan(
+        shortcutBox.left - itemBox.left,
       );
     });
   },

@@ -10,9 +10,9 @@ import {
   AccordionTrigger,
 } from "./accordion";
 import {
-  accordionComBadgeSource,
-  accordionComIconeSource,
-  accordionConteudoRicoSource,
+  accordionWithBadgeSource,
+  accordionWithIconSource,
+  accordionContentRichSource,
   accordionFaqSource,
   accordionSource,
 } from "./accordion.source";
@@ -81,7 +81,7 @@ export const WithIconInTrigger: Story = {
     covers: ['functional.item1', 'visual.item4'],
     docs: {
       // O ícone dentro do gatilho é composição: não cabe em nenhum arg da raiz.
-      source: { transform: accordionComIconeSource },
+      source: { transform: accordionWithIconSource },
       description: {
         story:
           "Ícones no trigger. Adicione aria-hidden=\"true\" no ícone — o texto do trigger já descreve o item para leitores de tela.",
@@ -137,7 +137,7 @@ export const WithBadgeInTrigger: Story = {
     covers: ['visual.item4'],
     docs: {
       // O Badge é outro componente dentro do gatilho — o meta não o importa.
-      source: { transform: accordionComBadgeSource },
+      source: { transform: accordionWithBadgeSource },
       description: {
         story:
           "Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.",
@@ -202,7 +202,7 @@ export const RichContent: Story = {
     covers: ['functional.item4', 'visual.item4'],
     docs: {
       // A tabela dentro do painel é o assunto; o meta imprimiria um parágrafo.
-      source: { transform: accordionConteudoRicoSource },
+      source: { transform: accordionContentRichSource },
       description: {
         story:
           "AccordionContent aceita qualquer conteúdo React. Use para tabelas de dados, parágrafos ou listas estruturadas.",

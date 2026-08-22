@@ -159,8 +159,8 @@ export const IDELayout: Story = {
     await step('Composição IDE com 2 grupos e 4 painéis', async () => {
       const grupos = canvasElement.querySelectorAll('[data-slot="resizable-pane-group"]');
       await expect(grupos).toHaveLength(2);
-      const paineis = canvasElement.querySelectorAll('[data-slot="resizable-panel"]');
-      await expect(paineis).toHaveLength(4);
+      const panels = canvasElement.querySelectorAll('[data-slot="resizable-panel"]');
+      await expect(panels).toHaveLength(4);
     });
 
     await step('Os dois divisores têm eixos distintos', async () => {

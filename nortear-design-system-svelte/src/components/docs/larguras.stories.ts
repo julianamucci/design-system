@@ -28,7 +28,7 @@ const meta: Meta = {
 };
 export default meta;
 
-export const SemRolagemHorizontal: StoryObj = {
+export const HorizontalNoScroll: StoryObj = {
   globals: { viewport: { value: 'mobile1' } },
   render: () => ({ Component: LargurasStory as never }),
   play: async ({ canvasElement, step }) => {

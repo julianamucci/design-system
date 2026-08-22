@@ -49,7 +49,7 @@ const IMPORT_WITH_FIELDS = `${IMPORT_WITH_BODY}
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`;
 
-type Moldura = {
+type Frame = {
   imports?: string;
   aberto?: boolean;
   direction?: DrawerArgs['direction'];
@@ -78,7 +78,7 @@ function painel({
   corpo = '',
   actionLabel,
   cancelLabel,
-}: Moldura): string {
+}: Frame): string {
   const rootProps = attrs(
     direction === 'bottom' ? '' : `direction="${direction}"`,
     dismissible ? '' : 'dismissible={false}',
@@ -140,7 +140,7 @@ export function drawerSource(_gerado?: string, ctx?: { args?: Partial<DrawerArgs
 }
 
 /** Composição com formulário curto no corpo, em painel lateral. */
-export function drawerComFormularioSource(): string {
+export function drawerWithFormSource(): string {
   return painel({
     imports: IMPORT_WITH_FIELDS,
     aberto: true,
@@ -166,7 +166,7 @@ export function drawerComFormularioSource(): string {
 }
 
 /** Composição de confirmação reversível: mensagem curta e par de ações. */
-export function drawerComConfirmacaoSource(): string {
+export function drawerWithConfirmSource(): string {
   return painel({
     imports: IMPORT_WITH_BODY,
     aberto: true,
@@ -187,7 +187,7 @@ export function drawerComConfirmacaoSource(): string {
  * Sem altura cravada: o corpo já rola dentro do teto de altura do painel, e é
  * ele quem cede altura — o rodapé com as ações continua visível.
  */
-export function drawerComRolagemSource(): string {
+export function drawerWithScrollSource(): string {
   return painel({
     imports: IMPORT_WITH_BODY,
     aberto: true,

@@ -3,7 +3,7 @@ import { within, expect } from "storybook/test";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
 import { Label } from "./label";
 import {
-  radioGroupComDescricaoSource,
+  radioGroupWithDescriptionSource,
   radioGroupHorizontalSource,
   radioGroupSource,
 } from "./radio-group.source";
@@ -122,7 +122,7 @@ export const WithDescription: Story = {
     docs: {
       // Sub-composição: o texto auxiliar e o alinhamento do item ao topo não
       // cabem no par item + rótulo que o meta imprime.
-      source: { transform: radioGroupComDescricaoSource },
+      source: { transform: radioGroupWithDescriptionSource },
       description: {
         story:
           "Cada item com Label + descrição auxiliar abaixo, ligada ao controle por aria-describedby. O .nds-cluster com data-align=\"start\" alinha o rádio à primeira linha do texto.",

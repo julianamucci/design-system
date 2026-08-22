@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { medirRolagem } from '@shared/testing/data-table-probe';
+import { measureScroll } from '@shared/testing/data-table-probe';
 import { NdsDataTable, type DataTableLabels } from './data-table';
 import { COLUMNS_INVOICES, INVOICES_DT, LABELS_DT, type InvoiceDT } from './data-table.fixtures';
 import { NdsDataTableDocs } from '@/components/docs/DataTableDocs';
@@ -225,18 +225,18 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-    const celulaDeIdentidade = (linha: HTMLElement) =>
+    const identidadeCell = (linha: HTMLElement) =>
       linha.querySelector<HTMLElement>('td:not(:has(button[role="checkbox"]))')!;
-    const primeiraCelula = () => celulaDeIdentidade(linhas()[0]);
+    const firstCell = () => identidadeCell(linhas()[0]);
 
     // Os alvos são funções, e não elementos guardados: ordenar reordena os nós
     // do corpo, e um elemento capturado antes viraria referência a outra linha.
-    const caixaDeTudo = () => canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
-    const caixaDaFatura = (id: string) =>
+    const allBox = () => canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
+    const invoiceBox = (id: string) =>
       canvas.getByRole('checkbox', { name: `Selecionar fatura ${id}` });
     const regiaoViva = () => canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-    const botaoDeOrdenar = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
-    const valueHeader = () => botaoDeOrdenar().closest('th')!;
+    const ordenarButton = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
+    const valueHeader = () => ordenarButton().closest('th')!;
 
     // Precondição em vez de clique cego: o painel Interactions reexecuta a play
     // no MESMO DOM, e um clique que inverte estado dá resultado oposto na
@@ -257,7 +257,7 @@ export const Playground: Story = {
     /** Mesma ideia para a ordenação, que é um ciclo de três estados. */
     const moveOrdenacao = async (estado: 'none' | 'ascending' | 'descending') => {
       for (let i = 0; i < 3 && valueHeader().getAttribute('aria-sort') !== estado; i += 1) {
-        await userEvent.click(botaoDeOrdenar());
+        await userEvent.click(ordenarButton());
       }
       await expect(valueHeader()).toHaveAttribute('aria-sort', estado);
     };
@@ -283,7 +283,7 @@ export const Playground: Story = {
       // neutralização que zerava o overflow do contêiner alcançável por teclado
       // e empurrava a rolagem para o de fora, que não recebe foco
       // (WCAG 2.1.1, regra `scrollable-region-focusable` do axe).
-      const r = medirRolagem(canvasElement);
+      const r = measureScroll(canvasElement);
       await expect(r.camadasRolaveis).toEqual(['nds-table-wrapper']);
       await expect(r.rolaveisForaDoTeclado).toEqual([]);
       await expect(r.interno.overflowX).toBe('auto');
@@ -331,17 +331,17 @@ export const Playground: Story = {
       // engano não tem como voltar à ordem original dos dados.
       await moveOrdenacao('none');
 
-      await userEvent.click(botaoDeOrdenar());
+      await userEvent.click(ordenarButton());
       await expect(valueHeader()).toHaveAttribute('aria-sort', 'ascending');
-      await expect(primeiraCelula()).toHaveTextContent('#INV-010');
+      await expect(firstCell()).toHaveTextContent('#INV-010');
 
-      await userEvent.click(botaoDeOrdenar());
+      await userEvent.click(ordenarButton());
       await expect(valueHeader()).toHaveAttribute('aria-sort', 'descending');
-      await expect(primeiraCelula()).toHaveTextContent('#INV-011');
+      await expect(firstCell()).toHaveTextContent('#INV-011');
 
-      await userEvent.click(botaoDeOrdenar());
+      await userEvent.click(ordenarButton());
       await expect(valueHeader()).toHaveAttribute('aria-sort', 'none');
-      await expect(primeiraCelula()).toHaveTextContent('#INV-001');
+      await expect(firstCell()).toHaveTextContent('#INV-001');
     });
 
     await step('Cada checkbox de linha tem um nome só dele', async () => {
@@ -367,20 +367,20 @@ export const Playground: Story = {
       // E distintos pelo motivo certo: cada nome carrega o identificador da
       // PRÓPRIA linha — o mesmo texto que quem enxerga lê na primeira célula.
       for (const [i, caixa] of caixas.entries()) {
-        const identificador = celulaDeIdentidade(linhas()[i]).textContent!.trim();
+        const identificador = identidadeCell(linhas()[i]).textContent!.trim();
         await expect(caixa.getAttribute('aria-label')).toContain(identificador);
       }
 
       // O do cabeçalho age sobre a página inteira: confundi-lo com o de uma
       // linha custaria doze marcações de uma vez.
-      await expect(nomes).not.toContain(caixaDeTudo().getAttribute('aria-label'));
+      await expect(nomes).not.toContain(allBox().getAttribute('aria-label'));
     });
 
     await step('Selecionar tudo marca a página e a contagem é anunciada', async () => {
       // functional.item4 — e visual.item1: a linha marcada muda de fundo. Uma
       // tabela que só muda de COR é muda para quem não vê, por isso a região
       // viva carrega o número.
-      await moveBox(caixaDeTudo, 'true');
+      await moveBox(allBox, 'true');
 
       for (const linha of linhas()) {
         await expect(linha).toHaveAttribute('data-state', 'selected');
@@ -393,12 +393,12 @@ export const Playground: Story = {
     await step('Desmarcar uma linha deixa o cabeçalho em estado misto', async () => {
       // A linha é escolhida pelo NOME: por índice, o passo continuaria passando
       // se a marcação tivesse trocado de linha.
-      await moveBox(caixaDeTudo, 'true');
-      await moveBox(() => caixaDaFatura('#INV-001'), 'false');
+      await moveBox(allBox, 'true');
+      await moveBox(() => invoiceBox('#INV-001'), 'false');
 
-      await expect(caixaDeTudo()).toHaveAttribute('aria-checked', 'mixed');
-      await expect(caixaDeTudo()).toHaveAttribute('data-state', 'indeterminate');
-      await expect(caixaDaFatura('#INV-001').closest('tr')!.hasAttribute('data-state')).toBe(false);
+      await expect(allBox()).toHaveAttribute('aria-checked', 'mixed');
+      await expect(allBox()).toHaveAttribute('data-state', 'indeterminate');
+      await expect(invoiceBox('#INV-001').closest('tr')!.hasAttribute('data-state')).toBe(false);
     });
 
     await step('Do estado misto, dois cliques marcam tudo e depois limpam', async () => {
@@ -406,9 +406,9 @@ export const Playground: Story = {
       // — estava documentado e NÃO verificado: a play só provava que o
       // cabeçalho MARCA. Partindo do misto, o primeiro clique completa a página
       // e o segundo esvazia.
-      await expect(caixaDeTudo()).toHaveAttribute('aria-checked', 'mixed');
-      await moveBox(caixaDeTudo, 'true');
-      await moveBox(caixaDeTudo, 'false');
+      await expect(allBox()).toHaveAttribute('aria-checked', 'mixed');
+      await moveBox(allBox, 'true');
+      await moveBox(allBox, 'false');
       await expect(canvasElement.querySelectorAll('tbody tr[data-state="selected"]').length)
         .toBe(0);
       await expect(regiaoViva()).toHaveTextContent('0 de 12 linha(s) selecionada(s).');
@@ -425,7 +425,7 @@ export const Playground: Story = {
       await userEvent.type(busca, 'Karina');
 
       await expect(linhas().length).toBe(1);
-      await expect(primeiraCelula()).toHaveTextContent('#INV-011');
+      await expect(firstCell()).toHaveTextContent('#INV-011');
       // O denominador acompanha o recorte: sem isto a contagem podia continuar
       // dizendo "de 12" com uma linha na tela.
       await expect(regiaoViva()).toHaveTextContent('de 1 linha(s) selecionada(s).');
@@ -439,37 +439,37 @@ export const Playground: Story = {
       // As duas faturas são escolhidas e conferidas pelo NOME: por índice, o
       // passo passaria mesmo se ordenar tivesse trocado quem está marcado.
       await moveOrdenacao('none');
-      await moveBox(caixaDeTudo, 'false');
-      await moveBox(() => caixaDaFatura('#INV-002'), 'true');
-      await moveBox(() => caixaDaFatura('#INV-005'), 'true');
-      const contagemAntes = regiaoViva().textContent;
+      await moveBox(allBox, 'false');
+      await moveBox(() => invoiceBox('#INV-002'), 'true');
+      await moveBox(() => invoiceBox('#INV-005'), 'true');
+      const contagemBefore = regiaoViva().textContent;
       await expect(regiaoViva()).toHaveTextContent('2 de 12 linha(s) selecionada(s).');
 
       await moveOrdenacao('ascending');
       // A ordem mudou de verdade — sem esta linha o passo provaria a
       // conservação de nada.
-      await expect(primeiraCelula()).toHaveTextContent('#INV-010');
+      await expect(firstCell()).toHaveTextContent('#INV-010');
 
-      await expect(caixaDaFatura('#INV-002')).toHaveAttribute('aria-checked', 'true');
-      await expect(caixaDaFatura('#INV-005')).toHaveAttribute('aria-checked', 'true');
-      await expect(caixaDaFatura('#INV-002').closest('tr')).toHaveAttribute(
+      await expect(invoiceBox('#INV-002')).toHaveAttribute('aria-checked', 'true');
+      await expect(invoiceBox('#INV-005')).toHaveAttribute('aria-checked', 'true');
+      await expect(invoiceBox('#INV-002').closest('tr')).toHaveAttribute(
         'data-state',
         'selected',
       );
-      await expect(regiaoViva().textContent).toBe(contagemAntes);
+      await expect(regiaoViva().textContent).toBe(contagemBefore);
 
       // Volta ao estado de entrada: ordem original e nada marcado.
       await moveOrdenacao('none');
-      await moveBox(caixaDeTudo, 'false');
+      await moveBox(allBox, 'false');
     });
 
     await step('A story termina com seleção parcial na tela', async () => {
       // visual.item1 — a captura do Chromatic guarda o ÚLTIMO estado, e o item
       // documentado é "estado padrão com seleção". Antes a play terminava com a
       // busca limpa e a seleção herdada do passo anterior, sem garantia.
-      await moveBox(caixaDeTudo, 'false');
-      await moveBox(() => caixaDaFatura('#INV-001'), 'true');
-      await moveBox(() => caixaDaFatura('#INV-003'), 'true');
+      await moveBox(allBox, 'false');
+      await moveBox(() => invoiceBox('#INV-001'), 'true');
+      await moveBox(() => invoiceBox('#INV-003'), 'true');
       await expect(regiaoViva()).toHaveTextContent('2 de 12 linha(s) selecionada(s).');
     });
   },

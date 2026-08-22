@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import { waitForPortal } from '@/lib/wait-for-portal';
-import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
+import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 import { createSheet, type SheetSide } from './sheet';
 import { makeFooter } from './sheet.fixtures';
 import { sheetSource, sheetSourceWith } from './sheet.source';
@@ -86,7 +86,7 @@ export const Right: Story = {
     await expect(painel).toHaveAttribute('aria-modal', 'true');
     await expect(painel).toHaveClass(/nds-sheet-content/);
     // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
-    await esperarEncostarNaBorda(painel, 'right');
+    await borderWaitForEncostar(painel, 'right');
   },
 };
 
@@ -117,7 +117,7 @@ export const Left: Story = {
     const painel = await waitForPortal('dialog');
     await expect(painel).toHaveAttribute('data-side', 'left');
     await expect(painel).toHaveClass(/nds-sheet-content/);
-    await esperarEncostarNaBorda(painel, 'left');
+    await borderWaitForEncostar(painel, 'left');
   },
 };
 
@@ -145,7 +145,7 @@ export const Top: Story = {
     const painel = await waitForPortal('dialog');
     await expect(painel).toHaveAttribute('data-side', 'top');
     await expect(painel).toHaveClass(/nds-sheet-content/);
-    await esperarEncostarNaBorda(painel, 'top');
+    await borderWaitForEncostar(painel, 'top');
   },
 };
 
@@ -174,6 +174,6 @@ export const Bottom: Story = {
     const painel = await waitForPortal('dialog');
     await expect(painel).toHaveAttribute('data-side', 'bottom');
     await expect(painel).toHaveClass(/nds-sheet-content/);
-    await esperarEncostarNaBorda(painel, 'bottom');
+    await borderWaitForEncostar(painel, 'bottom');
   },
 };

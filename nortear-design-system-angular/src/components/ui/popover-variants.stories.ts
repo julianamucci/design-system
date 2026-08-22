@@ -97,9 +97,9 @@ export const WithTitle: Story = {
     await step('O título nomeia o painel por aria-labelledby', async () => {
       await abrir(gatilho);
       const dialogo = screen.getByRole('dialog');
-      const idTitulo = dialogo.getAttribute('aria-labelledby');
-      await expect(idTitulo).toBeTruthy();
-      const titulo = document.getElementById(idTitulo!)!;
+      const idTitle = dialogo.getAttribute('aria-labelledby');
+      await expect(idTitle).toBeTruthy();
+      const titulo = document.getElementById(idTitle!)!;
       await expect(titulo).toHaveAttribute('data-slot', 'popover-title');
       await expect(titulo).toHaveClass(/nds-popover-title/);
       await expect(titulo.textContent?.trim()).toBe('Configurações de exibição');

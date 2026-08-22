@@ -35,7 +35,7 @@ export const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', curr
  * stories provarem que `labels` chega mesmo aos controles: com o texto padrão
  * em toda parte, uma prop de labels quebrada passaria despercebida.
  */
-export const rotulosFatura: Partial<DataTableLabels> = {
+export const labelsInvoice: Partial<DataTableLabels> = {
   selectAll: 'Selecionar todas as faturas',
   selectRow: (fatura) => `Selecionar fatura ${fatura}`,
   rowsSelected: (s, n) => `${s} de ${n} fatura(s) selecionada(s).`,

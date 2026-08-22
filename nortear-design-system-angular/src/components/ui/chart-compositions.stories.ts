@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NdsChart } from './chart';
-import { MESES, SERIES_TRIO, SERIE_UNICA } from './chart.fixtures';
+import { MONTHS, SERIES_TRIO, SERIE_UNICA } from './chart.fixtures';
 import {
   NdsCard,
   NdsCardContent,
@@ -35,7 +35,7 @@ type Story = StoryObj;
 
 export const WithCard: Story = {
   render: () => ({
-    props: { meses: MESES, series: SERIES_TRIO },
+    props: { meses: MONTHS, series: SERIES_TRIO },
     template: `
       <div ndsCard class="nds-w-lg">
         <div ndsCardHeader>
@@ -77,14 +77,14 @@ export const WithCard: Story = {
     await step('O desenho e a tabela sobrevivem à moldura', async () => {
       const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
       await expect(chart.querySelector('svg')).not.toBeNull();
-      await expect([...chart.querySelectorAll('tbody tr')]).toHaveLength(MESES.length);
+      await expect([...chart.querySelectorAll('tbody tr')]).toHaveLength(MONTHS.length);
     });
   },
 };
 
 export const InlineTitle: Story = {
   render: () => ({
-    props: { meses: MESES, series: SERIE_UNICA },
+    props: { meses: MONTHS, series: SERIE_UNICA },
     template: `
       <div ndsChart
         type="bar"

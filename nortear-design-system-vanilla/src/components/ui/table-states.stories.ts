@@ -11,12 +11,12 @@ import {
 } from './table';
 import { createSkeleton } from '@/components/ui/skeleton';
 import {
-  tableCarregandoSource,
+  tableLoadingSource,
   tableSource,
   tableSourceWith,
   tableVaziaSource,
 } from './table.source';
-import { COLUNAS, INVOICES } from './table.fixtures';
+import { COLUMNS, INVOICES } from './table.fixtures';
 
 const meta: Meta = {
   tags: ['tables'],
@@ -35,12 +35,12 @@ type Story = StoryObj;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const LINHAS = INVOICES.slice(0, 3);
+const LINES = INVOICES.slice(0, 3);
 
 function buildStandardHeader(table: HTMLTableElement): void {
   const thead = createTableHeader();
   const tr = createTableRow();
-  for (const col of COLUNAS) {
+  for (const col of COLUMNS) {
     tr.appendChild(createTableHead(col, col === 'Valor' ? 'nds-text-right' : undefined));
   }
   thead.appendChild(tr);
@@ -67,7 +67,7 @@ export const Empty: Story = {
     // altura, centraliza e apaga a cor. Antes eram `h-24 text-center`, classes
     // que não existem no CSS — a mensagem saía encostada à esquerda e sem caixa.
     const emptyCell = createTableCell('Nenhuma fatura encontrada.', 'nds-table-empty');
-    emptyCell.setAttribute('colspan', String(COLUNAS.length));
+    emptyCell.setAttribute('colspan', String(COLUMNS.length));
     emptyRow.appendChild(emptyCell);
     tbody.appendChild(emptyRow);
     table.appendChild(tbody);
@@ -81,7 +81,7 @@ export const Empty: Story = {
       // functional.item2 — sem o colspan a mensagem cairia sob a primeira
       // coluna e as outras três ficariam vazias, como se faltassem dados.
       const celula = canvasElement.querySelector<HTMLTableCellElement>('tbody td')!;
-      await expect(celula).toHaveAttribute('colspan', String(COLUNAS.length));
+      await expect(celula).toHaveAttribute('colspan', String(COLUMNS.length));
       await expect(celula).toHaveTextContent('Nenhuma fatura encontrada.');
       await expect(canvasElement.querySelectorAll('tbody tr').length).toBe(1);
     });
@@ -90,7 +90,7 @@ export const Empty: Story = {
       // Estado vazio não é motivo para desmontar a estrutura: quem usa leitor de
       // tela precisa saber que colunas voltarão a existir quando houver dados.
       await expect(canvas.getByRole('table', { name: /faturas recentes/ })).toBeTruthy();
-      await expect(canvasElement.querySelectorAll('th').length).toBe(COLUNAS.length);
+      await expect(canvasElement.querySelectorAll('th').length).toBe(COLUMNS.length);
     });
 
     await step('A mensagem é centralizada e reserva a altura da caixa', async () => {
@@ -108,7 +108,7 @@ export const Empty: Story = {
 export const SelectedRow: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item5'],
-    docs: { source: { transform: tableSourceWith({ linhaSelecionada: true }) } },
+    docs: { source: { transform: tableSourceWith({ lineSelecionada: true }) } },
   },
   render: () => {
     const { wrapper, table } = createTable();
@@ -116,12 +116,12 @@ export const SelectedRow: Story = {
     buildStandardHeader(table);
 
     const tbody = createTableBody();
-    for (const inv of LINHAS) {
+    for (const inv of LINES) {
       const tr = createTableRow();
       // Só o atributo: quem pinta é `.nds-table tbody tr[data-state="selected"]`.
       // A classe `nds-bg-muted` que estava aqui repetia a regra por fora e
       // deixava o teste passar mesmo se o seletor do componente sumisse.
-      if (inv.id === LINHAS[1].id) tr.setAttribute('data-state', 'selected');
+      if (inv.id === LINES[1].id) tr.setAttribute('data-state', 'selected');
       tr.appendChild(createTableCell(inv.id, 'nds-font-medium'));
       tr.appendChild(createTableCell(inv.status));
       tr.appendChild(createTableCell(inv.method));
@@ -137,7 +137,7 @@ export const SelectedRow: Story = {
       // functional.item4 — o estado é do `<tr>`, e é ele que o CSS compartilhado
       // pinta. Marcar a célula não pintaria a linha.
       const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(LINHAS.length);
+      await expect(linhas.length).toBe(LINES.length);
       await expect(linhas[1]).toHaveAttribute('data-state', 'selected');
       for (const i of [0, 2]) {
         await expect(linhas[i].hasAttribute('data-state')).toBe(false);
@@ -157,14 +157,14 @@ export const SelectedRow: Story = {
 
 // ─── Carregando ───────────────────────────────────────────────────────────────
 
-const LINHAS_ESQUELETO = [1, 2, 3];
+const LINES_SKELETON = [1, 2, 3];
 
 export const Loading: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item6'],
     // Forma própria de snippet: a região que anuncia o carregamento envolve a
     // tabela inteira, e é ela que entra na página no lugar do wrapper.
-    docs: { source: { transform: tableCarregandoSource() } },
+    docs: { source: { transform: tableLoadingSource() } },
   },
   render: () => {
     // aria-busy na REGIÃO, não na célula: o esqueleto é aria-hidden, e sem o
@@ -180,9 +180,9 @@ export const Loading: Story = {
     buildStandardHeader(table);
 
     const tbody = createTableBody();
-    for (const _linha of LINHAS_ESQUELETO) {
+    for (const _line of LINES_SKELETON) {
       const tr = createTableRow();
-      for (const _column of COLUNAS) {
+      for (const _column of COLUMNS) {
         const td = createTableCell('');
         // A factory do Skeleton, e não um `div` montado à mão com `style`: a
         // caixa vem de `data-shape`/`data-width`, e o `aria-hidden` sai de
@@ -203,13 +203,13 @@ export const Loading: Story = {
       // visual.item6 — o esqueleto mede a caixa que o dado vai ocupar; a grade
       // não pode encolher enquanto carrega, senão a tabela salta ao chegar.
       const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(LINHAS_ESQUELETO.length);
+      await expect(linhas.length).toBe(LINES_SKELETON.length);
       for (const linha of linhas) {
         await expect(linha.querySelectorAll('[data-slot="skeleton"]').length).toBe(
-          COLUNAS.length,
+          COLUMNS.length,
         );
       }
-      await expect(canvasElement.querySelectorAll('thead th').length).toBe(COLUNAS.length);
+      await expect(canvasElement.querySelectorAll('thead th').length).toBe(COLUMNS.length);
     });
 
     await step('O esqueleto some da árvore de acessibilidade; a região anuncia', async () => {

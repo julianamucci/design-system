@@ -12,13 +12,13 @@ import {
 import { Globe } from 'lucide-vue-next';
 import {
   waitForPortal,
-  REGRA_GUARDA_DE_FOCO,
+  FOCUS_RULE_GUARDA,
   LIST_RULE_SCROLL,
 } from '@/lib/wait-for-portal';
 import {
   selectAgrupadoSource,
-  selectComIconeSource,
-  selectListaPlanaSource,
+  selectWithIconSource,
+  selectListPlanaSource,
 } from './select.source';
 
 const REGIOES = {
@@ -48,9 +48,9 @@ const meta = {
     // lista aberta o primitivo marca o resto da página como escondido para o
     // leitor de tela, e o axe lê a combinação como armadilha de foco — o motivo
     // completo está em `wait-for-portal`.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
-      source: { transform: selectListaPlanaSource },
+      source: { transform: selectListPlanaSource },
       description: {
         component:
           'Variantes do Select: lista plana, lista agrupada por categoria e opção com ícone inline antes do texto.',
@@ -132,7 +132,7 @@ export const WithGroups: Story = {
   parameters: {
     // Sete opções mais dois cabeçalhos: esta lista transborda a caixa e ROLA.
     // O motivo de a regra sair está em `wait-for-portal`.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, LIST_RULE_SCROLL] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA, LIST_RULE_SCROLL] } },
     docs: {
       // Grupo e cabeçalho são dois componentes a mais na composição.
       source: { transform: selectAgrupadoSource },
@@ -201,7 +201,7 @@ export const WithIcon: Story = {
   parameters: {
     docs: {
       // O item deixa de ser só texto: ícone decorativo mais rótulo em <span>.
-      source: { transform: selectComIconeSource },
+      source: { transform: selectWithIconSource },
       description: {
         story: 'SelectItem com ícone inline antes do texto — composição via children diretos do item.',
       },

@@ -47,13 +47,13 @@ function distanciaAteAOposta(caixa: DOMRect, side: SheetSide): number {
  * inteira satisfaria a primeira metade em qualquer direção, e a asserção
  * deixaria de distinguir left de right.
  */
-export async function esperarEncostarNaBorda(
+export async function borderWaitForEncostar(
   painel: HTMLElement,
   side: SheetSide,
   timeout = 3000,
 ): Promise<DOMRect> {
   const limite = Date.now() + timeout;
-  let ultimaFalha = 'o painel não foi medido';
+  let lastFailure = 'o painel não foi medido';
 
   for (;;) {
     const caixa = painel.getBoundingClientRect();
@@ -62,11 +62,11 @@ export async function esperarEncostarNaBorda(
 
     if (encostou && sobrouEspaco) return caixa;
 
-    ultimaFalha = encostou
+    lastFailure = encostou
       ? `o painel encostou nas duas bordas do eixo de "${side}" — não dá para distinguir a direção`
       : `o painel parou a ${distanciaAteABorda(caixa, side).toFixed(1)}px da borda "${side}"`;
 
-    if (Date.now() > limite) throw new Error(ultimaFalha);
+    if (Date.now() > limite) throw new Error(lastFailure);
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
 }

@@ -6,8 +6,8 @@ import {
   ResizablePanelGroup,
 } from "./resizable";
 import {
-  resizableAninhadoSource,
-  resizableComPegadorSource,
+  resizableNestedSource,
+  resizableWithGrabberSource,
   resizableHorizontalSource,
   resizableSource,
   resizableVerticalSource,
@@ -49,14 +49,14 @@ const LABEL_CONSOLE = "Redimensionar editor e console — use setas";
 const LABEL_PANELS = "Redimensionar painéis — use setas";
 
 /** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
-function fracoes(paineis: HTMLElement[], horizontal: boolean): number[] {
+function fracoes(panels: HTMLElement[], horizontal: boolean): number[] {
   const medida = (p: HTMLElement) =>
     horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
-  const total = paineis.reduce((a, p) => a + medida(p), 0);
-  return paineis.map((p) => medida(p) / total);
+  const total = panels.reduce((a, p) => a + medida(p), 0);
+  return panels.map((p) => medida(p) / total);
 }
 
-function paineisDiretos(grupo: Element): HTMLElement[] {
+function panelsDiretos(grupo: Element): HTMLElement[] {
   return [...grupo.querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
 }
 
@@ -100,7 +100,7 @@ export const Horizontal: Story = {
 
     await step("Os painéis dividem a LARGURA na proporção declarada", async () => {
       const grupo = canvasElement.querySelector('[data-slot="resizable-panel-group"]')!;
-      await expect(fracoes(paineisDiretos(grupo), true)[0]).toBeCloseTo(0.3, 1);
+      await expect(fracoes(panelsDiretos(grupo), true)[0]).toBeCloseTo(0.3, 1);
     });
   },
 };
@@ -143,7 +143,7 @@ export const Vertical: Story = {
       // O eixo trocado é invisível numa foto quadrada: os dois painéis
       // apareceriam empilhados de qualquer jeito e só a proporção denunciaria.
       const grupo = canvasElement.querySelector('[data-slot="resizable-panel-group"]')!;
-      await expect(fracoes(paineisDiretos(grupo), false)[0]).toBeCloseTo(0.4, 1);
+      await expect(fracoes(panelsDiretos(grupo), false)[0]).toBeCloseTo(0.4, 1);
     });
   },
 };
@@ -153,7 +153,7 @@ export const Nested: Story = {
     covers: ["visual.item3"],
     docs: {
       // Sub-composição: grupo dentro de painel, que o meta não imprimiria.
-      source: { transform: resizableAninhadoSource },
+      source: { transform: resizableNestedSource },
     },
   },
   render: () => (
@@ -191,7 +191,7 @@ export const Nested: Story = {
       // conta do de fora, senão um ajuste move os dois layouts ao mesmo tempo.
       const grupos = [...canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]')];
       await expect(grupos).toHaveLength(2);
-      for (const g of grupos) await expect(paineisDiretos(g)).toHaveLength(2);
+      for (const g of grupos) await expect(panelsDiretos(g)).toHaveLength(2);
     });
 
     await step("O divisor de dentro tem o eixo do grupo de dentro", async () => {
@@ -205,8 +205,8 @@ export const Nested: Story = {
 
     await step("E as proporções de cada grupo são independentes", async () => {
       const grupos = [...canvasElement.querySelectorAll('[data-slot="resizable-panel-group"]')];
-      await expect(fracoes(paineisDiretos(grupos[0]), true)[0]).toBeCloseTo(0.3, 1);
-      await expect(fracoes(paineisDiretos(grupos[1]), false)[0]).toBeCloseTo(0.6, 1);
+      await expect(fracoes(panelsDiretos(grupos[0]), true)[0]).toBeCloseTo(0.3, 1);
+      await expect(fracoes(panelsDiretos(grupos[1]), false)[0]).toBeCloseTo(0.6, 1);
     });
   },
 };
@@ -216,7 +216,7 @@ export const WithHandle: Story = {
     covers: ["visual.item4"],
     docs: {
       // Divisão 50/50 com pegador, afirmada no `render`.
-      source: { transform: resizableComPegadorSource },
+      source: { transform: resizableWithGrabberSource },
     },
   },
   render: () => (

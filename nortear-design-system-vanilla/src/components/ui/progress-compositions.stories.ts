@@ -9,7 +9,7 @@ import {
 } from './progress.source';
 import {
   barrasDeProgresso,
-  contrasteBarraTrilha,
+  contrastBarTrack,
   indicadorDoProgresso,
   nomeAcessivel,
   percentualDesenhado,
@@ -124,7 +124,7 @@ export const FileUpload: Story = {
     await step('A barra herda a cor do cartão sem perder contraste', async () => {
       // A trilha é semitransparente: sobre o fundo do cartão ela compõe uma cor
       // diferente da que compõe sobre a página. O limite de 3:1 vale nos dois.
-      await expect(contrasteBarraTrilha(canvasElement)).toBeGreaterThanOrEqual(3);
+      await expect(contrastBarTrack(canvasElement)).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -316,7 +316,7 @@ export const CustomColor: Story = {
 
     await step('Nenhuma variante abre mão dos 3:1 contra a trilha', async () => {
       for (const raiz of canvas.getAllByRole('progressbar')) {
-        await expect(contrasteBarraTrilha(raiz)).toBeGreaterThanOrEqual(3);
+        await expect(contrastBarTrack(raiz)).toBeGreaterThanOrEqual(3);
       }
     });
 

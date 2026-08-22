@@ -14,7 +14,7 @@
  * Armadilhas já tropeçadas e evitadas aqui:
  *
  *   - `console.log` não chega ao terminal (o addon instrumenta o console dentro
- *     da play). O canal é a exceção — ver `reportarSonda`.
+ *     da play). O canal é a exceção — ver `reportProbe`.
  *   - atributo de presença casa valor `"false"`: use `[attr]:not([attr="false"])`.
  *   - divergência de NOME de classe entre stacks faz o seletor não casar e o
  *     campo vir `null`. Onde há duas formas conhecidas, as duas são aceitas e
@@ -23,7 +23,7 @@
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export interface CaixaMedida {
+export interface BoxMeasurement {
   largura: number;
   altura: number;
   fundo: string;
@@ -38,15 +38,15 @@ export interface CaixaMedida {
   raio: number;
 }
 
-export interface AlcanceDoClique {
-  achado: boolean;
-  clicavel: boolean;
+export interface ClickReach {
+  finding: boolean;
+  clickable: boolean;
   porCima: string | null;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-function caixa(el: Element | null | undefined): CaixaMedida | null {
+function caixa(el: Element | null | undefined): BoxMeasurement | null {
   if (!el) return null;
   const cs = getComputedStyle(el);
   const r = el.getBoundingClientRect();
@@ -72,13 +72,13 @@ function descreve(el: Element | null | undefined): string | null {
   return `${el.tagName.toLowerCase()}${classes.length ? '.' + classes.join('.') : ''}`;
 }
 
-function alcance(el: Element | null | undefined): AlcanceDoClique {
-  if (!el) return { achado: false, clicavel: false, porCima: null };
+function alcance(el: Element | null | undefined): ClickReach {
+  if (!el) return { finding: false, clickable: false, porCima: null };
   const r = el.getBoundingClientRect();
-  if (r.width === 0 || r.height === 0) return { achado: true, clicavel: false, porCima: 'sem-caixa' };
+  if (r.width === 0 || r.height === 0) return { finding: true, clickable: false, porCima: 'sem-caixa' };
   const noTopo = el.ownerDocument.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-  const clicavel = noTopo === el || el.contains(noTopo);
-  return { achado: true, clicavel, porCima: clicavel ? null : descreve(noTopo) };
+  const clickable = noTopo === el || el.contains(noTopo);
+  return { finding: true, clickable, porCima: clickable ? null : descreve(noTopo) };
 }
 
 /**
@@ -89,9 +89,9 @@ function alcance(el: Element | null | undefined): AlcanceDoClique {
  */
 function nomeAcessivel(el: Element | null | undefined): string | null {
   if (!el) return null;
-  const rotulado = el.getAttribute('aria-labelledby');
-  if (rotulado) {
-    const alvo = el.ownerDocument.getElementById(rotulado.split(/\s+/)[0]);
+  const labelled = el.getAttribute('aria-labelledby');
+  if (labelled) {
+    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
     if (alvo?.textContent?.trim()) return alvo.textContent.trim();
   }
   const rotulo = el.getAttribute('aria-label');
@@ -101,8 +101,8 @@ function nomeAcessivel(el: Element | null | undefined): string | null {
     const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
     if (label?.textContent?.trim()) return label.textContent.trim();
   }
-  const dentroDeLabel = el.closest('label');
-  if (dentroDeLabel?.textContent?.trim()) return dentroDeLabel.textContent.trim();
+  const labelInside = el.closest('label');
+  if (labelInside?.textContent?.trim()) return labelInside.textContent.trim();
   const titulo = el.getAttribute('title');
   if (titulo?.trim()) return titulo.trim();
   if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') return null;
@@ -110,13 +110,13 @@ function nomeAcessivel(el: Element | null | undefined): string | null {
 }
 
 /** Nome acessível de uma `<table>`: caption, aria-label ou aria-labelledby. */
-function nomeDaTabela(tabela: Element | null): string | null {
+function tableName(tabela: Element | null): string | null {
   if (!tabela) return null;
   const rotulo = tabela.getAttribute('aria-label');
   if (rotulo?.trim()) return rotulo.trim();
-  const rotulado = tabela.getAttribute('aria-labelledby');
-  if (rotulado) {
-    const alvo = tabela.ownerDocument.getElementById(rotulado.split(/\s+/)[0]);
+  const labelled = tabela.getAttribute('aria-labelledby');
+  if (labelled) {
+    const alvo = tabela.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
     if (alvo?.textContent?.trim()) return alvo.textContent.trim();
   }
   const legenda = tabela.querySelector('caption');
@@ -127,7 +127,7 @@ const texto = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
 /** Compõe uma cor sobre o ancestral opaco — `backgroundColor` com alfa mente. */
-function fundoEfetivo(el: Element | null): string | null {
+function backgroundEffective(el: Element | null): string | null {
   let atual: Element | null = el;
   while (atual) {
     const cor = getComputedStyle(atual).backgroundColor;
@@ -150,24 +150,24 @@ function luminancia(cor: string): number | null {
 }
 
 /** Razão WCAG entre o texto do elemento e o primeiro fundo opaco acima dele. */
-export function contraste(el: Element | null): { razao: number; frente: string; fundo: string } | null {
+export function contraste(el: Element | null): { ratio: number; frente: string; fundo: string } | null {
   if (!el) return null;
   const frente = getComputedStyle(el).color;
-  const fundo = fundoEfetivo(el);
+  const fundo = backgroundEffective(el);
   if (!fundo) return null;
   const a = luminancia(frente);
   const b = luminancia(fundo);
   if (a === null || b === null) return null;
-  const razao = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-  return { razao: Math.round(razao * 100) / 100, frente, fundo };
+  const ratio = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  return { ratio: Math.round(ratio * 100) / 100, frente, fundo };
 }
 
 // ─── Rolagem ──────────────────────────────────────────────────────────────────
 
-export interface CamadaDeRolagem {
+export interface ScrollCamada {
   /** Nome legível da camada, para a mensagem de falha dizer QUEM está errado. */
   nome: string;
-  achado: boolean;
+  finding: boolean;
   overflowX: string;
   /** `-1` quando o elemento não está na ordem de tabulação. */
   tabIndex: number;
@@ -175,9 +175,9 @@ export interface CamadaDeRolagem {
   transborda: boolean;
 }
 
-export interface MedidaDeRolagem {
-  externo: CamadaDeRolagem;
-  interno: CamadaDeRolagem;
+export interface ScrollMeasurement {
+  externo: ScrollCamada;
+  interno: ScrollCamada;
   /** Camadas com `overflow-x: auto|scroll` — tem de ser exatamente uma. */
   camadasRolaveis: string[];
   /** Camadas roláveis que NÃO estão na ordem de tabulação (WCAG 2.1.1). */
@@ -193,13 +193,13 @@ export interface MedidaDeRolagem {
  *
  * O contrato é: exatamente uma camada rola, e ela está na ordem de tabulação.
  */
-export function medirRolagem(raiz: HTMLElement): MedidaDeRolagem {
-  const camada = (nome: string, el: Element | null): CamadaDeRolagem => {
-    if (!el) return { nome, achado: false, overflowX: 'ausente', tabIndex: -1, transborda: false };
+export function measureScroll(raiz: HTMLElement): ScrollMeasurement {
+  const camada = (nome: string, el: Element | null): ScrollCamada => {
+    if (!el) return { nome, finding: false, overflowX: 'ausente', tabIndex: -1, transborda: false };
     const cs = getComputedStyle(el);
     return {
       nome,
-      achado: true,
+      finding: true,
       overflowX: cs.overflowX,
       tabIndex: (el as HTMLElement).tabIndex,
       transborda: el.scrollWidth > el.clientWidth,
@@ -213,13 +213,13 @@ export function medirRolagem(raiz: HTMLElement): MedidaDeRolagem {
     alvo.querySelector('[data-slot="table-container"]') ?? alvo.querySelector('.nds-table-wrapper'),
   );
 
-  const rolavel = (c: CamadaDeRolagem) => c.achado && (c.overflowX === 'auto' || c.overflowX === 'scroll');
+  const scrollable = (c: ScrollCamada) => c.finding && (c.overflowX === 'auto' || c.overflowX === 'scroll');
   const camadas = [externo, interno];
   return {
     externo,
     interno,
-    camadasRolaveis: camadas.filter(rolavel).map((c) => c.nome),
-    rolaveisForaDoTeclado: camadas.filter((c) => rolavel(c) && c.tabIndex < 0).map((c) => c.nome),
+    camadasRolaveis: camadas.filter(scrollable).map((c) => c.nome),
+    rolaveisForaDoTeclado: camadas.filter((c) => scrollable(c) && c.tabIndex < 0).map((c) => c.nome),
   };
 }
 
@@ -228,45 +228,45 @@ export function medirRolagem(raiz: HTMLElement): MedidaDeRolagem {
 /**
  * Mede UMA tabela. `raiz` é o `.nds-data-table` (ou o contêiner que o envolve).
  */
-export function medirTabela(raiz: HTMLElement) {
+export function measureTable(raiz: HTMLElement) {
   const um = (sel: string) => raiz.querySelector(sel);
   const todos = (sel: string) => Array.from(raiz.querySelectorAll(sel));
   const conta = (sel: string) => raiz.querySelectorAll(sel).length;
 
   const tabela = um('table');
   const busca = um('.nds-data-table-search-input') ?? um('input[type="search"]');
-  const botaoDeOrdenar = um('.nds-data-table-sort-btn');
-  const thOrdenavel = botaoDeOrdenar?.closest('th') ?? null;
+  const ordenarButton = um('.nds-data-table-sort-btn');
+  const thOrdenavel = ordenarButton?.closest('th') ?? null;
 
-  const caixasDeSelecao = todos('[role="checkbox"], input[type="checkbox"]');
-  const caixaDeTudo = raiz.querySelector('thead')?.querySelector('[role="checkbox"], input[type="checkbox"]') ?? null;
-  const caixasDeLinha = Array.from(
+  const selectionBoxes = todos('[role="checkbox"], input[type="checkbox"]');
+  const allBox = raiz.querySelector('thead')?.querySelector('[role="checkbox"], input[type="checkbox"]') ?? null;
+  const lineBoxes = Array.from(
     raiz.querySelector('tbody')?.querySelectorAll('[role="checkbox"], input[type="checkbox"]') ?? [],
   );
 
   const linhas = todos('tbody tr').filter((tr) => !tr.hasAttribute('aria-hidden'));
-  const linhaSelecionada = um('tbody tr[data-state="selected"]');
-  const linhaNormal = linhas.find((tr) => tr.getAttribute('data-state') !== 'selected') ?? null;
+  const lineSelecionada = um('tbody tr[data-state="selected"]');
+  const lineNormal = linhas.find((tr) => tr.getAttribute('data-state') !== 'selected') ?? null;
 
   const regiaoViva = um('[role="status"], [aria-live]');
 
-  const botoesDePagina = todos('.nds-data-table-pagination-nav button');
-  const seletorDeTamanho = um('.nds-data-table-page-size-select');
+  const pageButtons = todos('.nds-data-table-pagination-nav button');
+  const sizeSelector = um('.nds-data-table-page-size-select');
 
-  const filtroDeTexto = um('.nds-data-table-filter-input');
-  const filtroDeSelect = um('.nds-data-table-filter-select');
-  const linhaDeFiltros =
-    um('.nds-data-table-filter-row') ?? (filtroDeTexto?.closest('tr') ?? filtroDeSelect?.closest('tr') ?? null);
-  const thDeFiltro = filtroDeTexto?.closest('th') ?? filtroDeSelect?.closest('th') ?? null;
+  const textFilter = um('.nds-data-table-filter-input');
+  const selectFilter = um('.nds-data-table-filter-select');
+  const filtersLine =
+    um('.nds-data-table-filter-row') ?? (textFilter?.closest('tr') ?? selectFilter?.closest('tr') ?? null);
+  const filterTh = textFilter?.closest('th') ?? selectFilter?.closest('th') ?? null;
 
-  const botaoDeEdicao = um('.nds-data-table-edit-btn');
+  const editButton = um('.nds-data-table-edit-btn');
   const campoDeEdicao = um('.nds-data-table-edit-input');
 
   const vazio = um('.nds-data-table-empty');
 
   // Última célula da primeira linha: é a coluna de dinheiro nas cinco stacks.
-  const celulaNumerica = linhas[0]?.querySelector('td:last-child') ?? null;
-  const conteudoNumerico = (celulaNumerica?.firstElementChild as HTMLElement | null) ?? celulaNumerica;
+  const cellNumerica = linhas[0]?.querySelector('td:last-child') ?? null;
+  const contentNumerico = (cellNumerica?.firstElementChild as HTMLElement | null) ?? cellNumerica;
   const thNumerico = todos('thead tr:first-child th').slice(-1)[0] ?? null;
 
   return {
@@ -278,7 +278,7 @@ export function medirTabela(raiz: HTMLElement) {
       contagens: {
         toolbar: conta('.nds-data-table-toolbar'),
         busca: conta('.nds-data-table-search'),
-        campoDeBusca: conta('.nds-data-table-search-input'),
+        searchField: conta('.nds-data-table-search-input'),
         botaoDeColunas: conta('.nds-data-table-columns-btn'),
         scroll: conta('.nds-data-table-scroll'),
         wrapperDoPrimitivo: conta('.nds-table-wrapper'),
@@ -286,20 +286,20 @@ export function medirTabela(raiz: HTMLElement) {
         th: conta('.nds-data-table-th'),
         thInner: conta('.nds-data-table-th-inner'),
         thLabel: conta('.nds-data-table-th-label'),
-        botaoDeOrdenar: conta('.nds-data-table-sort-btn'),
-        linhaDeFiltros: conta('.nds-data-table-filter-row'),
-        filtroDeTexto: conta('.nds-data-table-filter-input'),
-        filtroDeSelect: conta('.nds-data-table-filter-select'),
+        ordenarButton: conta('.nds-data-table-sort-btn'),
+        filtersLine: conta('.nds-data-table-filter-row'),
+        textFilter: conta('.nds-data-table-filter-input'),
+        selectFilter: conta('.nds-data-table-filter-select'),
         tr: conta('.nds-data-table-tr'),
         td: conta('.nds-data-table-td'),
         vazio: conta('.nds-data-table-empty'),
         editavel: conta('.nds-data-table-editable'),
-        botaoDeEdicao: conta('.nds-data-table-edit-btn'),
+        editButton: conta('.nds-data-table-edit-btn'),
         campoDeEdicao: conta('.nds-data-table-edit-input'),
         paginacao: conta('.nds-data-table-pagination'),
         contagemDaPaginacao: conta('.nds-data-table-pagination-count'),
-        seletorDeTamanho: conta('.nds-data-table-page-size-select'),
-        navegacao: conta('.nds-data-table-pagination-nav'),
+        sizeSelector: conta('.nds-data-table-page-size-select'),
+        navigation: conta('.nds-data-table-pagination-nav'),
         alcaDeRedimensionar: conta('.nds-data-table-resize-handle'),
         somenteLeitor: conta('.nds-sr-only'),
         // Classes que só uma parte das stacks emite — a contagem denuncia quem.
@@ -312,27 +312,27 @@ export function medirTabela(raiz: HTMLElement) {
       colspanDoVazio: vazio?.getAttribute('colspan') ?? null,
     },
     semantica: {
-      nomeDaTabela: nomeDaTabela(tabela),
+      tableName: tableName(tabela),
       papelDaBusca: busca?.getAttribute('role') ?? (busca?.getAttribute('type') === 'search' ? 'searchbox' : null),
       tipoDaBusca: busca?.getAttribute('type') ?? null,
       nomeDaBusca: nomeAcessivel(busca),
       placeholderDaBusca: busca?.getAttribute('placeholder') ?? null,
       scopeDoTh: thOrdenavel?.getAttribute('scope') ?? null,
       ariaSortNaoOrdenada: thOrdenavel?.getAttribute('aria-sort') ?? null,
-      ariaSortNoBotao: botaoDeOrdenar?.getAttribute('aria-sort') ?? null,
-      nomeDoBotaoDeOrdenar: nomeAcessivel(botaoDeOrdenar),
+      ariaSortNoBotao: ordenarButton?.getAttribute('aria-sort') ?? null,
+      nomeDoBotaoDeOrdenar: nomeAcessivel(ordenarButton),
       // Coluna não ordenável: promete ordenação que não existe?
       ariaSortEmColunaFixa: (() => {
         const th = todos('thead tr:first-child th').find((c) => !c.querySelector('.nds-data-table-sort-btn'));
         return th ? (th.hasAttribute('aria-sort') ? th.getAttribute('aria-sort') : 'ausente') : null;
       })(),
-      tagDoCheckbox: caixasDeSelecao[0]?.tagName.toLowerCase() ?? null,
-      papelDoCheckbox: caixasDeSelecao[0]?.getAttribute('role') ?? null,
-      nomeDoCheckboxDeTudo: nomeAcessivel(caixaDeTudo),
-      estadoDoCheckboxDeTudo: caixaDeTudo?.getAttribute('aria-checked') ?? null,
-      nomesDasLinhas: caixasDeLinha.slice(0, 3).map((c) => nomeAcessivel(c)),
-      nomesDeLinhaDistintos: new Set(caixasDeLinha.map((c) => nomeAcessivel(c))).size,
-      totalDeCheckboxesDeLinha: caixasDeLinha.length,
+      tagDoCheckbox: selectionBoxes[0]?.tagName.toLowerCase() ?? null,
+      papelDoCheckbox: selectionBoxes[0]?.getAttribute('role') ?? null,
+      nomeDoCheckboxDeTudo: nomeAcessivel(allBox),
+      estadoDoCheckboxDeTudo: allBox?.getAttribute('aria-checked') ?? null,
+      nomesDasLinhas: lineBoxes.slice(0, 3).map((c) => nomeAcessivel(c)),
+      nomesDeLinhaDistintos: new Set(lineBoxes.map((c) => nomeAcessivel(c))).size,
+      totalDeCheckboxesDeLinha: lineBoxes.length,
       regiaoViva: regiaoViva
         ? {
             papel: regiaoViva.getAttribute('role'),
@@ -341,22 +341,22 @@ export function medirTabela(raiz: HTMLElement) {
             texto: texto(regiaoViva),
           }
         : null,
-      nomesDaPaginacao: botoesDePagina.map((b) => nomeAcessivel(b)),
-      estadoDaPaginacao: botoesDePagina.map((b) => (b as HTMLButtonElement).disabled),
+      nomesDaPaginacao: pageButtons.map((b) => nomeAcessivel(b)),
+      estadoDaPaginacao: pageButtons.map((b) => (b as HTMLButtonElement).disabled),
       textoDoIndicador: texto(todos('.nds-data-table-pagination-count').slice(-1)[0]),
       textoDaContagem: texto(todos('.nds-data-table-pagination-count')[0]),
-      nomeDoSeletorDeTamanho: nomeAcessivel(seletorDeTamanho),
-      nomeDoFiltroDeTexto: nomeAcessivel(filtroDeTexto),
-      nomeDoFiltroDeSelect: nomeAcessivel(filtroDeSelect),
+      nomeDoSeletorDeTamanho: nomeAcessivel(sizeSelector),
+      nomeDoFiltroDeTexto: nomeAcessivel(textFilter),
+      nomeDoFiltroDeSelect: nomeAcessivel(selectFilter),
       textoSemFiltro: (() => {
-        const th = linhaDeFiltros
-          ? Array.from(linhaDeFiltros.querySelectorAll('th')).find(
+        const th = filtersLine
+          ? Array.from(filtersLine.querySelectorAll('th')).find(
               (c) => !c.querySelector('input, select'),
             )
           : null;
         return th ? texto(th.querySelector('.nds-sr-only')) ?? th.getAttribute('aria-label') : null;
       })(),
-      nomeDoBotaoDeEdicao: nomeAcessivel(botaoDeEdicao),
+      nomeDoBotaoDeEdicao: nomeAcessivel(editButton),
       nomeDoCampoDeEdicao: nomeAcessivel(campoDeEdicao),
       textoDoVazio: texto(vazio),
       pinadoNoTh: um('thead th.nds-data-table-th-pinned') ? 'th-pinned' : um('thead th.nds-data-table-td-pinned') ? 'td-pinned' : null,
@@ -365,23 +365,23 @@ export function medirTabela(raiz: HTMLElement) {
     geometria: {
       larguraDaRaiz: Math.round(raiz.getBoundingClientRect().width),
       th: caixa(thOrdenavel),
-      thInner: caixa(um('.nds-data-table-th-inner') ?? botaoDeOrdenar?.parentElement),
+      thInner: caixa(um('.nds-data-table-th-inner') ?? ordenarButton?.parentElement),
       td: caixa(linhas[0]?.querySelector('td:nth-child(2)')),
-      thDeFiltro: caixa(thDeFiltro),
-      linhaDeFiltros: caixa(linhaDeFiltros),
-      botaoDeEdicao: caixa(botaoDeEdicao),
+      filterTh: caixa(filterTh),
+      filtersLine: caixa(filtersLine),
+      editButton: caixa(editButton),
       campoDeEdicao: caixa(campoDeEdicao),
       celulaVazia: caixa(vazio),
-      botaoDeOrdenar: caixa(botaoDeOrdenar),
+      ordenarButton: caixa(ordenarButton),
     },
     estados: {
-      linhaSelecionada: linhaSelecionada
-        ? { dataState: linhaSelecionada.getAttribute('data-state'), fundo: getComputedStyle(linhaSelecionada).backgroundColor }
+      lineSelecionada: lineSelecionada
+        ? { dataState: lineSelecionada.getAttribute('data-state'), fundo: getComputedStyle(lineSelecionada).backgroundColor }
         : null,
-      linhaNormal: linhaNormal ? { fundo: getComputedStyle(linhaNormal).backgroundColor } : null,
-      celulaNumerica: caixa(celulaNumerica),
-      conteudoNumerico: caixa(conteudoNumerico),
-      classeDoConteudoNumerico: conteudoNumerico?.getAttribute('class') ?? null,
+      lineNormal: lineNormal ? { fundo: getComputedStyle(lineNormal).backgroundColor } : null,
+      cellNumerica: caixa(cellNumerica),
+      contentNumerico: caixa(contentNumerico),
+      classeDoConteudoNumerico: contentNumerico?.getAttribute('class') ?? null,
       cabecalhoNumerico: caixa(thNumerico),
     },
     contraste: {
@@ -389,11 +389,11 @@ export function medirTabela(raiz: HTMLElement) {
       contagem: contraste(um('.nds-data-table-pagination-count')),
       cabecalho: contraste(thOrdenavel),
     },
-    alcanceDoClique: {
-      checkboxDeTudo: alcance(caixaDeTudo),
-      botaoDeOrdenar: alcance(botaoDeOrdenar),
-      primeiraPagina: alcance(botoesDePagina[0]),
-      botaoDeEdicao: alcance(botaoDeEdicao),
+    clickReach: {
+      checkboxDeTudo: alcance(allBox),
+      ordenarButton: alcance(ordenarButton),
+      primeiraPagina: alcance(pageButtons[0]),
+      editButton: alcance(editButton),
     },
   };
 }
@@ -402,11 +402,11 @@ export function medirTabela(raiz: HTMLElement) {
  * Mede todas as tabelas marcadas com `data-sonda="<cenario>"` dentro de `raiz`.
  * Cenário sem tabela vem `null` — é o achado de "a stack não monta este caso".
  */
-export function medirDataTable(raiz: HTMLElement, cenarios: string[]) {
+export function measureDataTable(raiz: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
     const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    registro[cenario] = alvo ? medirTabela(alvo) : null;
+    registro[cenario] = alvo ? measureTable(alvo) : null;
   }
   return registro;
 }
@@ -418,6 +418,6 @@ export function medirDataTable(raiz: HTMLElement, cenarios: string[]) {
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest. A
  * mensagem de erro chega — é o único canal de saída disponível daqui.
  */
-export function reportarSonda(stack: string, raiz: HTMLElement, cenarios: string[]) {
-  throw new Error(`SONDA::${stack}::${JSON.stringify(medirDataTable(raiz, cenarios))}`);
+export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
+  throw new Error(`SONDA::${stack}::${JSON.stringify(measureDataTable(raiz, cenarios))}`);
 }

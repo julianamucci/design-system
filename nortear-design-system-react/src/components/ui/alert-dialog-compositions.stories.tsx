@@ -17,10 +17,10 @@ import {
 import { Button } from "./button";
 import { TriangleAlert } from "lucide-react";
 import {
-  alertDialogClasseExtraSource,
-  alertDialogComIconeSource,
-  alertDialogNeutroSource,
-  alertDialogSemDescricaoSource,
+  alertDialogClassNameExtraSource,
+  alertDialogWithIconSource,
+  alertDialogNeutralSource,
+  alertDialogNoDescriptionSource,
   alertDialogSource,
 } from "./alert-dialog.source";
 
@@ -51,7 +51,7 @@ export const WithIcon: Story = {
     covers: ["visual.item6"],
     docs: {
       // O AlertDialogMedia é uma peça a mais no header, e o `meta` não a monta.
-      source: { transform: alertDialogComIconeSource },
+      source: { transform: alertDialogWithIconSource },
       description: {
         story:
           "Bloco de mídia no topo do header. O CSS centraliza header e texto quando ele existe.",
@@ -159,7 +159,7 @@ export const Neutral: Story = {
     docs: {
       // Variante neutra: o `tone` do `meta` é destrutivo e os controls estão
       // desligados neste arquivo, então nada a descreveria.
-      source: { transform: alertDialogNeutroSource },
+      source: { transform: alertDialogNeutralSource },
       description: {
         story:
           "Action com tokens padrão do Button. Use para confirmações que não são destrutivas (sair, publicar, arquivar).",
@@ -270,7 +270,7 @@ export const WithoutDescription: Story = {
     docs: {
       // A ausência da descrição É o assunto — encurtar o texto ensinaria o
       // contrário do que a story mede.
-      source: { transform: alertDialogSemDescricaoSource },
+      source: { transform: alertDialogNoDescriptionSource },
       description: {
         story:
           "Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.",
@@ -395,7 +395,7 @@ export const Responsive: Story = {
 export const ExtraClass: Story = {
   parameters: {
     // As classes extras no painel e no bloco de mídia são o assunto.
-    docs: { source: { transform: alertDialogClasseExtraSource }, description: { story: "Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout." } },
+    docs: { source: { transform: alertDialogClassNameExtraSource }, description: { story: "Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout." } },
   },
   render: () => (
     <AlertDialog defaultOpen>

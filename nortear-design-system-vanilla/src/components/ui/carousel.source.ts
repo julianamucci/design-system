@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -51,7 +51,7 @@ export function carouselSnippet(o: CarouselSnippetOptions = {}): string {
 
   return snippet(
     [
-      importar('carousel', 'createCarousel'),
+      importing('carousel', 'createCarousel'),
     ].join('\n'),
     `const slides = Array.from({ length: ${total} }, (_, i) => {
   const moldura = document.createElement('div');

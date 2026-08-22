@@ -5,9 +5,9 @@ import { NDS_HOVER_CARD } from './hover-card';
 import { NDS_AVATAR } from './avatar';
 import {
   CARTAO_PERFIL,
-  esperarAberto,
-  esperarQuantidade,
-  paineisAbertos,
+  waitForOpen,
+  waitForQuantidade,
+  panelsAbertos,
 } from './hover-card.fixtures';
 
 // Os padrões de conteúdo que o cartão hospeda. Todos seguem a mesma regra: o
@@ -68,7 +68,7 @@ export const UserProfile: Story = {
     const canvas = within(canvasElement);
 
     await step('O cartão traz avatar, nome e uma métrica curta', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       // O avatar é o componente do design system, não um círculo desenhado à
       // mão: é o que garante o mesmo diâmetro e o mesmo fallback das outras telas.
@@ -124,7 +124,7 @@ export const LinkPreview: Story = {
   }),
   play: async ({ step }) => {
     await step('O cartão mostra origem, título e descrição do destino', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(within(painel).getByText(/design-system\.dev\/overlays/)).toBeVisible();
       await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
@@ -183,7 +183,7 @@ export const TermDefinition: Story = {
     });
 
     await step('O nome acessível do painel vem do rótulo declarado', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       // Sem `label`, o nome cairia no texto do gatilho ("WCAG 2.2 AA"), que
       // repetiria a sigla sem dizer o que o cartão traz.
       await expect(painel).toHaveAttribute('aria-label', 'Definição de WCAG 2.2 AA');
@@ -231,7 +231,7 @@ export const ExplainedMetric: Story = {
   }),
   play: async ({ step }) => {
     await step('O número carrega a cor semântica; o texto corrido, não', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       const valor = within(painel).getByText('1.8s');
       await expect(valor).toHaveClass(/nds-text-success/);
       const descricao = within(painel).getByText(/Tempo até o maior elemento/);
@@ -315,10 +315,10 @@ export const Sides: Story = {
   }),
   play: async ({ step }) => {
     await step('Os quatro cartões abrem e cada um declara o lado que usou', async () => {
-      const paineis = await esperarQuantidade(4);
-      await expect(paineis).toHaveLength(4);
+      const panels = await waitForQuantidade(4);
+      await expect(panels).toHaveLength(4);
 
-      const lados = paineis.map((p) => p.getAttribute('data-side'));
+      const lados = panels.map((p) => p.getAttribute('data-side'));
       for (const lado of lados) {
         await expect(lado).toBeTruthy();
       }
@@ -377,21 +377,21 @@ export const ExtraPanelClass: Story = {
   }),
   play: async ({ step }) => {
     await step('A classe extra convive com a classe do componente', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       // As duas coexistem: a classe do design system não é substituída pela do
       // consumidor, é acrescida — é o mesmo contrato do resto do stack.
       await expect(painel).toHaveClass(/nds-hover-card-content/);
       await expect(painel).toHaveClass(/nds-w-md/);
       // E ela vale de verdade, não só no atributo.
       await expect(getComputedStyle(painel).textAlign).toBe('center');
-      await expect(paineisAbertos()).toHaveLength(1);
+      await expect(panelsAbertos()).toHaveLength(1);
     });
 
     await step('E a largura customizada vence a largura padrão do cartão', async () => {
       // 28rem da utilitária contra os 20rem que `.nds-hover-card-content`
       // define. É o que prova que a customização de largura funciona de fato,
       // e não só que a classe está no atributo.
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       const raiz = parseFloat(getComputedStyle(document.documentElement).fontSize);
       await expect(painel.getBoundingClientRect().width).toBeCloseTo(28 * raiz, 0);
     });

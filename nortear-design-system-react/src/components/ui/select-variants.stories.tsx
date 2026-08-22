@@ -13,8 +13,8 @@ import {
   SelectValue,
 } from "./select";
 import {
-  selectComGruposSource,
-  selectComIconeSource,
+  selectWithGroupsSource,
+  selectWithIconSource,
   selectSource,
 } from "./select.source";
 
@@ -111,7 +111,7 @@ export const WithGroups: Story = {
     docs: {
       // Sub-composição que o snippet do meta esconderia: SelectGroup,
       // SelectLabel e o separador decorativo entre os grupos.
-      source: { transform: selectComGruposSource },
+      source: { transform: selectWithGroupsSource },
       description: {
         story:
           "SelectGroup + SelectLabel agrupam opções por categoria. Use quando há ≥2 categorias claras com ≥2 itens cada.",
@@ -195,7 +195,7 @@ export const WithIcon: Story = {
   parameters: {
     docs: {
       // O ícone dentro da opção é o assunto, e nenhum control o descreve.
-      source: { transform: selectComIconeSource },
+      source: { transform: selectWithIconSource },
       description: {
         story:
           "SelectItem com ícone inline antes do texto. Ícone deve ter size-4 (padrão via SVG não-classed) e ficar à esquerda do label.",

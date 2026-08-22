@@ -3,9 +3,9 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createNavigationMenu, type NavigationMenuElement } from './navigation-menu';
 import {
   abrir,
-  esperarPainel,
-  esperarPainelSumir,
-  painelAberto,
+  waitForPanel,
+  waitForPanelVanish,
+  panelOpen,
   wrap,
 } from './navigation-menu.fixtures';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
@@ -59,7 +59,7 @@ export const Closed: Story = {
       // `hidden` tira o painel da árvore de acessibilidade E da ordem de
       // tabulação: fechado, ele não é um bloco escondido — não existe para
       // quem navega.
-      await expect(painelAberto(canvasElement)).toBeNull();
+      await expect(panelOpen(canvasElement)).toBeNull();
       await expect(canvas.queryByRole('link', { name: 'Plano Inicial' })).toBeNull();
     });
 
@@ -145,7 +145,7 @@ export const Open: Story = {
     });
 
     await step('A barra continua aberta ao final', async () => {
-      await expect(await esperarPainel(canvasElement)).toBeTruthy();
+      await expect(await waitForPanel(canvasElement)).toBeTruthy();
     });
   },
 };
@@ -271,12 +271,12 @@ export const ControlledValue: Story = {
       await userEvent.click(gatilho);
       await expect(registro.dataset.pedido).toBe('produtos');
       // Fora do modo controlado, este clique já teria aberto o painel.
-      await expect(painelAberto(canvasElement)).toBeNull();
+      await expect(panelOpen(canvasElement)).toBeNull();
     });
 
     await step('Quem controla manda, e aí o painel abre', async () => {
       barra.setValue('produtos');
-      const painel = await esperarPainel(canvasElement);
+      const painel = await waitForPanel(canvasElement);
       await expect(painel.dataset.value).toBe('produtos');
       await expect(barra.getValue()).toBe('produtos');
       await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
@@ -284,7 +284,7 @@ export const ControlledValue: Story = {
 
     await step('E fecha pela mesma porta', async () => {
       barra.setValue('');
-      await esperarPainelSumir(canvasElement);
+      await waitForPanelVanish(canvasElement);
       await expect(barra.getValue()).toBe('');
     });
   },

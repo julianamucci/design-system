@@ -89,7 +89,7 @@ export const Playground: Story = {
      * depende do alinhamento do Embla, nem do respiro de 16px entre slides,
      * nem da cauda da animação. E é literalmente o que a story afirma.
      */
-    const slideEmFoco = () => {
+    const focusSlide = () => {
       const v = viewport.getBoundingClientRect();
       let melhor = 0;
       let maior = -Infinity;
@@ -114,14 +114,14 @@ export const Playground: Story = {
      * carrossel que não chega lá continua reprovando.
      */
     const emSlide = async (i: number) =>
-      waitFor(async () => { await expect(slideEmFoco()).toBe(i); }, { timeout: 4000 });
+      waitFor(async () => { await expect(focusSlide()).toBe(i); }, { timeout: 4000 });
 
     /**
      * Volta ao primeiro slide clicando ENQUANTO a seta de voltar estiver viva.
      * Número fixo de cliques quebraria no replay do painel Interactions, que
      * roda no mesmo DOM: a segunda rodada partiria de onde a primeira parou.
      */
-    const voltarAoInicio = async () => {
+    const startVoltar = async () => {
       for (let volta = 0; volta < slides().length; volta++) {
         const botao = anterior();
         if (botao.disabled) break;
@@ -132,7 +132,7 @@ export const Playground: Story = {
 
     // Precondição do conjunto: no replay o carrossel chega aqui onde a rodada
     // anterior parou.
-    await voltarAoInicio();
+    await startVoltar();
 
     await step("A região se anuncia como carrossel e tem nome próprio", async () => {
       // Sem nome acessível a região não vira marco de navegação: o leitor de
@@ -152,7 +152,7 @@ export const Playground: Story = {
 
     await step("No primeiro slide só a seta de avanço leva a algum lugar", async () => {
       // A precondição já foi estabelecida ao medir `base`: no replay o
-      // carrossel pode chegar aqui no meio, e `voltarAoInicio` o traz de volta.
+      // carrossel pode chegar aqui no meio, e `startVoltar` o traz de volta.
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
       }, { timeout: 4000 });
@@ -182,7 +182,7 @@ export const Playground: Story = {
     await step("E a story termina no primeiro slide, como na captura", async () => {
       // `visual.item1` reivindica o estado INICIAL, e é o quadro final que o
       // Chromatic fotografa e o axe varre.
-      await voltarAoInicio();
+      await startVoltar();
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
       }, { timeout: 4000 });

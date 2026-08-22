@@ -7,7 +7,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { tooltipSource } from './tooltip.source';
 
 /** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
-function ladoDe(balao: HTMLElement | null): string | null {
+function sideOf(balao: HTMLElement | null): string | null {
   return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
 }
 
@@ -156,9 +156,9 @@ export const Playground: Story = {
       const oposto = { top: 'bottom', bottom: 'top', left: 'right', right: 'left' } as const;
       const lado = (args.side ?? 'top') as keyof typeof oposto;
       await waitFor(async () => {
-        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
       });
-      await expect([lado, oposto[lado]]).toContain(ladoDe(balaoDe(gatilho)));
+      await expect([lado, oposto[lado]]).toContain(sideOf(balaoDe(gatilho)));
     });
 
     await step('Escape fecha e o foco fica onde estava', async () => {

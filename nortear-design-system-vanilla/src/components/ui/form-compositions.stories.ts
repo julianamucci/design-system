@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { ordemDeTabulacao } from '@shared/testing/form-probe';
+import { tabulacaoOrder } from '@shared/testing/form-probe';
 import { createFieldset, createFormField } from './form';
 import {
-  formComFieldsetSource,
-  formComVariosCamposSource,
+  formWithFieldsetSource,
+  formWithMultipleFieldsSource,
   formSource,
 } from './form.source';
 import { createInput } from './input';
@@ -36,7 +36,7 @@ export const Fieldset: Story = {
     // exatamente o que esta composição existe para agrupar.
     docs: {
       source: {
-        transform: formComFieldsetSource({
+        transform: formWithFieldsetSource({
           legend: 'Endereço de entrega',
           campos: [
             { label: 'Rua', placeholder: 'ex: Av. Paulista, 1000' },
@@ -103,7 +103,7 @@ export const MultipleFields: Story = {
     // campo. Um campo avulso não mostraria nem uma coisa nem outra.
     docs: {
       source: {
-        transform: formComVariosCamposSource({
+        transform: formWithMultipleFieldsSource({
           campos: [
             {
               label: 'Nome completo',
@@ -183,7 +183,7 @@ export const MultipleFields: Story = {
     await step('Os controles focalizáveis estão na ordem do DOM', async () => {
       // Medido pela ordem que o teclado visita, e por NOME acessível: uma ordem
       // certa de campos anônimos não seria uma ordem útil.
-      await expect(ordemDeTabulacao(canvasElement).map((c) => c.nome)).toEqual([
+      await expect(tabulacaoOrder(canvasElement).map((c) => c.nome)).toEqual([
         'Nome completo',
         'Email',
         'Biografia',

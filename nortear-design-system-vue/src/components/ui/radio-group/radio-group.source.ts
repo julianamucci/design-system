@@ -29,7 +29,7 @@ export type RadioGroupArgs = {
 const IMPORT = `import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'`;
 
-type Opcao = {
+type Option = {
   valor: string;
   id: string;
   rotulo: string;
@@ -37,13 +37,13 @@ type Opcao = {
   descricao?: string;
 };
 
-const PAGAMENTO: Opcao[] = [
+const PAGAMENTO: Option[] = [
   { valor: 'cartao', id: 'pagamento-cartao', rotulo: 'Cartão de crédito' },
   { valor: 'pix', id: 'pagamento-pix', rotulo: 'Pix' },
   { valor: 'boleto', id: 'pagamento-boleto', rotulo: 'Boleto bancário' },
 ];
 
-const ENTREGA: Opcao[] = [
+const ENTREGA: Option[] = [
   { valor: 'standard', id: 'entrega-padrao', rotulo: 'Padrão (5 dias)' },
   { valor: 'express', id: 'entrega-expressa', rotulo: 'Expressa (1 dia)' },
   { valor: 'pickup', id: 'entrega-retirada', rotulo: 'Retirar na loja' },
@@ -56,7 +56,7 @@ const ENTREGA: Opcao[] = [
  * rádio e estende o alvo de clique ao texto — sem o par, o rádio fica anônimo e
  * só o círculo de 16px é clicável.
  */
-function linha(o: Opcao, recuo = 2): string {
+function linha(o: Option, recuo = 2): string {
   const p = ' '.repeat(recuo);
   return `${p}<div class="nds-cluster" data-spacing="sm">
 ${p}  <RadioGroupItem value="${o.valor}" id="${o.id}"${o.desabilitado ? ' disabled' : ''} />
@@ -66,7 +66,7 @@ ${p}</div>`;
 
 /** A raiz nomeada com as linhas dentro. */
 function grupo(
-  opcoes: Opcao[],
+  opcoes: Option[],
   partes: Array<string | false | null | undefined>,
   recuo = 2,
 ): string {
@@ -119,8 +119,8 @@ export function radioGroupHorizontalSource(): string {
  * por `aria-describedby`. Dentro do `<Label>` ela entraria no nome acessível e
  * o leitor de tela leria o parágrafo inteiro a cada seta.
  */
-export function radioGroupComDescricaoSource(): string {
-  const opcoes: Array<Opcao & { descricao: string }> = [
+export function radioGroupWithDescriptionSource(): string {
+  const opcoes: Array<Option & { descricao: string }> = [
     { ...PAGAMENTO[0], descricao: 'Aprovação imediata em até 12x.' },
     { ...PAGAMENTO[1], descricao: 'Pagamento instantâneo com 5% de desconto.' },
     { ...PAGAMENTO[2], descricao: 'Compensação em até 3 dias úteis.' },
@@ -152,7 +152,7 @@ ${corpo}
 }
 
 /** Estado de partida: nenhuma opção marcada, o grupo espera a escolha. */
-export function radioGroupPadraoSource(): string {
+export function radioGroupDefaultSource(): string {
   return vueSnippet(IMPORT, grupo(PAGAMENTO.slice(0, 2), [LABEL_PAGAMENTO]));
 }
 
@@ -160,7 +160,7 @@ export function radioGroupPadraoSource(): string {
  * Escolha inicial não-controlada: o valor casa com o `value` de um item, e é a
  * lib que marca o item na montagem — não há atributo de "marcado" no item.
  */
-export function radioGroupMarcadoSource(): string {
+export function radioGroupCheckedSource(): string {
   return vueSnippet(
     IMPORT,
     grupo(PAGAMENTO.slice(0, 2), ['default-value="pix"', LABEL_PAGAMENTO]),
@@ -168,7 +168,7 @@ export function radioGroupMarcadoSource(): string {
 }
 
 /** Grupo inteiro bloqueado: a prop mora na raiz e desce para todos os itens. */
-export function radioGroupDesabilitadoSource(): string {
+export function radioGroupDisabledSource(): string {
   return vueSnippet(
     IMPORT,
     grupo(PAGAMENTO.slice(0, 2), ['disabled', LABEL_PAGAMENTO]),
@@ -180,8 +180,8 @@ export function radioGroupDesabilitadoSource(): string {
  * tabulação. O motivo da indisponibilidade fica no rótulo — sem ele, a opção
  * apagada não explica nada a quem usa leitor de tela.
  */
-export function radioGroupItemDesabilitadoSource(): string {
-  const opcoes: Opcao[] = [
+export function radioGroupItemDisabledSource(): string {
+  const opcoes: Option[] = [
     PAGAMENTO[0],
     { ...PAGAMENTO[1], rotulo: 'Pix (indisponível)', desabilitado: true },
     PAGAMENTO[2],
@@ -249,7 +249,7 @@ ${grupo(ENTREGA, ['class="nds-stack"', 'data-spacing="sm"', LABEL_ENTREGA], 4)}
  * envio é interceptado no `@submit.prevent` — o exemplo não tem para onde
  * mandar os dados.
  */
-export function radioGroupEmFormularioSource(): string {
+export function formRadioGroupSource(): string {
   return vueSnippet(
     `import { Button } from '@/components/ui/button'
 ${IMPORT}`,

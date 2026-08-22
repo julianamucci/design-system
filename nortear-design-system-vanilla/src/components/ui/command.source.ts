@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -35,9 +35,9 @@ export type CommandSnippetOptions = {
 };
 
 /** Lista canônica: dois blocos nomeados, que é o arranjo mais comum da paleta. */
-function itemsDefault(comGrupos: boolean): CommandEntrySnippet[] {
-  const componentes = comGrupos ? 'Componentes' : undefined;
-  const utilitarios = comGrupos ? 'Utilitários' : undefined;
+function itemsDefault(withGroups: boolean): CommandEntrySnippet[] {
+  const componentes = withGroups ? 'Componentes' : undefined;
+  const utilitarios = withGroups ? 'Utilitários' : undefined;
   return [
     { value: 'button', label: 'Button', group: componentes },
     { value: 'input', label: 'Input', group: componentes },
@@ -81,7 +81,7 @@ function paletteOptions(o: CommandSnippetOptions): string[] {
 /** A chamada real de `createCommand` com os itens da story. */
 export function commandSnippet(o: CommandSnippetOptions = {}): string {
   return snippet(
-    importar('command', 'createCommand'),
+    importing('command', 'createCommand'),
     `const paleta = ${chamada('createCommand', paletteOptions(o))};`,
     montar('paleta'),
   );
@@ -103,9 +103,9 @@ export function commandEmPopoverSnippet(o: CommandSnippetOptions = {}): string {
 
   return snippet(
     [
-      importar('button', 'createButton'),
-      importar('command', 'createCommand'),
-      importar('popover', 'createPopover'),
+      importing('button', 'createButton'),
+      importing('command', 'createCommand'),
+      importing('popover', 'createPopover'),
     ].join('\n'),
     [
       "const valor = document.createElement('span');",
@@ -138,9 +138,9 @@ export function commandEmPopoverSnippet(o: CommandSnippetOptions = {}): string {
 export function commandEmDialogSnippet(o: CommandSnippetOptions = {}): string {
   return snippet(
     [
-      importar('button', 'createButton'),
-      importar('command', 'createCommand'),
-      importar('dialog', 'createDialog'),
+      importing('button', 'createButton'),
+      importing('command', 'createCommand'),
+      importing('dialog', 'createDialog'),
     ].join('\n'),
     "const gatilho = createButton({ variant: 'outline', label: 'Buscar' });",
     `const paleta = ${chamada('createCommand', paletteOptions(o))};`,

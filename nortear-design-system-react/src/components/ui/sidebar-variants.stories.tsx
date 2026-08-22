@@ -24,7 +24,7 @@ import {
   SidebarTrigger,
 } from "./sidebar";
 import {
-  sidebarLadoDireitoSource,
+  sidebarSideDireitoSource,
   sidebarSideEsquerdoSource,
   sidebarRecolhivelIconSource,
   sidebarRecolhivelOffcanvasSource,
@@ -142,7 +142,7 @@ type Story = StoryObj<typeof meta>;
 
 // ─── Stories ──────────────────────────────────────────────────────────────────
 
-const raizDe = (el: HTMLElement) => el.querySelector<HTMLElement>("[data-slot='sidebar']")!;
+const rootOf = (el: HTMLElement) => el.querySelector<HTMLElement>("[data-slot='sidebar']")!;
 
 export const VariantSidebar: Story = {
   parameters: {
@@ -155,7 +155,7 @@ export const VariantSidebar: Story = {
   render: () => <SidebarPreview variant="sidebar" />,
   play: async ({ canvasElement, step }) => {
     await step("A variante padrão não arredonda o painel interno", async () => {
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz).toHaveAttribute("data-variant", "sidebar");
       const interno = raiz.querySelector<HTMLElement>(".nds-sidebar-inner")!;
       await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBe(0);
@@ -178,7 +178,7 @@ export const VariantFloating: Story = {
       // Afirma o pixel, e não só o atributo: a regra é
       // `[data-variant="floating"] .nds-sidebar-inner`, e um atributo no lugar
       // errado passaria despercebido.
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz).toHaveAttribute("data-variant", "floating");
 
       const interno = raiz.querySelector<HTMLElement>(".nds-sidebar-inner")!;
@@ -202,7 +202,7 @@ export const VariantInset: Story = {
   render: () => <SidebarPreview variant="inset" />,
   play: async ({ canvasElement, step }) => {
     await step("inset marca a variante que arredonda o conteúdo adjacente", async () => {
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz).toHaveAttribute("data-variant", "inset");
       // A regra que arredonda o conteúdo é `[data-variant="inset"] ~ .nds-sidebar-inset`
       // — depende de a barra e o conteúdo serem irmãos, e é isso que se perde
@@ -224,7 +224,7 @@ export const CollapsibleOffcanvas: Story = {
     await step("Aberta, o modo de recolhimento ainda não marca nada", async () => {
       // `data-collapsible` só existe enquanto está recolhida — se fosse fixo,
       // a barra nasceria encolhida.
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz).toHaveAttribute("data-state", "expanded");
       await expect(raiz.getAttribute("data-collapsible")).toBe("");
     });
@@ -242,7 +242,7 @@ export const CollapsibleIcon: Story = {
   render: () => <SidebarPreview variant="sidebar" collapsible="icon" />,
   play: async ({ canvasElement, step }) => {
     await step("Aberta, o modo icon não estreita o painel", async () => {
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz).toHaveAttribute("data-state", "expanded");
       const painel = raiz.querySelector<HTMLElement>(".nds-sidebar-panel")!;
       const cheia = parseFloat(getComputedStyle(raiz).getPropertyValue("--sidebar-width"));
@@ -265,7 +265,7 @@ export const CollapsibleNone: Story = {
   render: () => <SidebarPreview variant="sidebar" collapsible="none" />,
   play: async ({ canvasElement, step }) => {
     await step("Sem recolhimento não há painel fixo nem vão reservado", async () => {
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz).toHaveClass("nds-sidebar-static");
       await expect(raiz).not.toHaveAttribute("data-state");
       await expect(canvasElement.querySelector(".nds-sidebar-gap-inner")).toBeNull();
@@ -284,7 +284,7 @@ export const SideLeft: Story = {
   render: () => <SidebarPreview variant="sidebar" side="left" />,
   play: async ({ canvasElement, step }) => {
     await step("O painel encosta na esquerda", async () => {
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz).toHaveAttribute("data-side", "left");
       const painel = raiz.querySelector<HTMLElement>(".nds-sidebar-panel")!;
       await expect(getComputedStyle(painel).left).toBe("0px");
@@ -298,7 +298,7 @@ export const SideRight: Story = {
     docs: {
       // `side="right"` vive só no `render`; é ele que vira painel e faixa de
       // arrasto ao mesmo tempo.
-      source: { transform: sidebarLadoDireitoSource },
+      source: { transform: sidebarSideDireitoSource },
     },
   },
   render: () => <SidebarPreview variant="sidebar" side="right" />,
@@ -306,7 +306,7 @@ export const SideRight: Story = {
     const canvas = within(canvasElement);
 
     await step("O painel encosta na direita", async () => {
-      const raiz = raizDe(canvasElement);
+      const raiz = rootOf(canvasElement);
       await expect(raiz).toHaveAttribute("data-side", "right");
       // Medida, não atributo: a regra que posiciona é
       // `[data-side="right"] .nds-sidebar-panel { right: 0 }`.

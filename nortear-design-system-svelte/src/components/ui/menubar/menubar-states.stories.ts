@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import MenubarStory from './MenubarStory.svelte';
 import { menubarSource } from './menubar.source';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
@@ -15,7 +15,7 @@ const ITENS_COM_BLOQUEIO = [
 
 // Espião de escopo de MÓDULO: criado dentro do `render` ele seria inalcançável
 // pelo `play`, e a aba Actions abriria vazia.
-const espiaoDeSelecao = fn();
+const selectionSpy = fn();
 
 const meta: Meta = {
   title: 'UI/Menubar/States',
@@ -77,7 +77,7 @@ export const Closed: Story = {
 export const Open: Story = {
   args: { defaultValue: 'file', demonstration: 'default' },
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['accessibility.item4'],
   },
   play: async ({ canvasElement, step }) => {
@@ -102,9 +102,9 @@ export const Open: Story = {
       await waitFor(async () => {
         // O posicionador mede DEPOIS de o painel entrar no DOM: no primeiro
         // quadro o retângulo ainda é (0,0), e ler daí é corrida.
-        const barraRect = barra.getBoundingClientRect();
+        const barRect = barra.getBoundingClientRect();
         const menuRect = menu.getBoundingClientRect();
-        await expect(menuRect.top).toBeGreaterThanOrEqual(barraRect.bottom - 1);
+        await expect(menuRect.top).toBeGreaterThanOrEqual(barRect.bottom - 1);
       });
     });
   },
@@ -116,10 +116,10 @@ export const ItemDisabled: Story = {
   args: {
     defaultValue: 'file',
     demonstration: 'itemDisabled',
-    onSelect: espiaoDeSelecao,
+    onSelect: selectionSpy,
   },
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
@@ -143,7 +143,7 @@ export const ItemDisabled: Story = {
 
     await step('Escolher o item bloqueado não executa nada', async () => {
       await userEvent.click(bloqueado, { pointerEventsCheck: 0 });
-      await expect(espiaoDeSelecao).not.toHaveBeenCalledWith(bloqueado.textContent?.trim());
+      await expect(selectionSpy).not.toHaveBeenCalledWith(bloqueado.textContent?.trim());
     });
   },
 };
@@ -153,7 +153,7 @@ export const ItemDisabled: Story = {
 export const CheckboxChecked: Story = {
   args: { defaultValue: 'view', demonstration: 'checkbox' },
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['functional.item7'],
   },
   play: async ({ step }) => {
@@ -197,7 +197,7 @@ export const CheckboxChecked: Story = {
 export const CheckboxIndeterminate: Story = {
   args: { defaultValue: 'view', demonstration: 'indeterminate' },
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['functional.item9'],
   },
   play: async ({ step }) => {

@@ -1,30 +1,30 @@
 import { describe, expect, it } from 'vitest';
 import {
-  buttonCarregandoSource,
-  buttonComIconeFinalSource,
-  buttonComIconeInicialSource,
-  buttonComoLinkSource,
-  buttonDesabilitadoSource,
-  buttonDestrutivoComIconeSource,
-  buttonDestrutivoSource,
-  buttonFocoVisivelSource,
+  buttonLoadingSource,
+  buttonWithIconFinalSource,
+  buttonWithIconInitialSource,
+  buttonAsLinkSource,
+  buttonDisabledSource,
+  buttonDestructiveWithIconSource,
+  buttonDestructiveSource,
+  buttonFocusVisibleSource,
   buttonGhostSource,
-  buttonIconeLgSource,
-  buttonIconeSmSource,
-  buttonIconeSource,
-  buttonIconeXsSource,
+  buttonIconLgSource,
+  buttonIconSmSource,
+  buttonIconSource,
+  buttonIconXsSource,
   buttonInvalidoSource,
   buttonLinkSource,
   buttonOutlineSource,
-  buttonPadraoSource,
-  buttonParDeAcoesSource,
+  buttonDefaultSource,
+  actionsButtonPairSource,
   buttonSecundarioSource,
-  buttonSoIconeSource,
+  buttonSoIconSource,
   buttonSource,
-  buttonTamanhoLgSource,
-  buttonTamanhoPadraoSource,
-  buttonTamanhoSmSource,
-  buttonTamanhoXsSource,
+  buttonSizeLgSource,
+  buttonSizeDefaultSource,
+  buttonSizeSmSource,
+  buttonSizeXsSource,
 } from './button.source';
 
 describe('buttonSource', () => {
@@ -68,8 +68,8 @@ import { Button } from '@/components/ui/button'
 
 describe('transforms das stories de variante', () => {
   it('cada variante traz o próprio rótulo, e a primária não escreve prop', () => {
-    expect(buttonPadraoSource()).toContain('<Button>Salvar</Button>');
-    expect(buttonDestrutivoSource()).toContain('<Button variant="destructive">Excluir conta</Button>');
+    expect(buttonDefaultSource()).toContain('<Button>Salvar</Button>');
+    expect(buttonDestructiveSource()).toContain('<Button variant="destructive">Excluir conta</Button>');
     expect(buttonOutlineSource()).toContain('<Button variant="outline">Cancelar</Button>');
     expect(buttonSecundarioSource()).toContain('<Button variant="secondary">Ver detalhes</Button>');
     expect(buttonGhostSource()).toContain('<Button variant="ghost">Fechar</Button>');
@@ -78,8 +78,8 @@ describe('transforms das stories de variante', () => {
 
   it('o rótulo diz o que a ação faz, e não qual é a variante', () => {
     const rotulos = [
-      buttonPadraoSource(),
-      buttonDestrutivoSource(),
+      buttonDefaultSource(),
+      buttonDestructiveSource(),
       buttonOutlineSource(),
       buttonSecundarioSource(),
       buttonGhostSource(),
@@ -91,17 +91,17 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de tamanho', () => {
   it('o tamanho padrão não escreve prop nenhuma', () => {
-    expect(buttonTamanhoPadraoSource()).toContain('<Button>Padrão</Button>');
+    expect(buttonSizeDefaultSource()).toContain('<Button>Padrão</Button>');
   });
 
   it('cada tamanho de texto escreve o próprio', () => {
-    expect(buttonTamanhoXsSource()).toContain('size="xs"');
-    expect(buttonTamanhoSmSource()).toContain('size="sm"');
-    expect(buttonTamanhoLgSource()).toContain('size="lg"');
+    expect(buttonSizeXsSource()).toContain('size="xs"');
+    expect(buttonSizeSmSource()).toContain('size="sm"');
+    expect(buttonSizeLgSource()).toContain('size="lg"');
   });
 
   it('o botão só de ícone importa o ícone e nomeia a ação', () => {
-    const saida = buttonIconeSource();
+    const saida = buttonIconSource();
     expect(saida).toBe(
       `<script setup lang="ts">
 import { Button } from '@/components/ui/button'
@@ -118,28 +118,28 @@ import { Plus } from 'lucide-vue-next'
 
   it('sem texto dentro, o rótulo acessível é o único nome que sobra', () => {
     for (const saida of [
-      buttonIconeSource(),
-      buttonIconeXsSource(),
-      buttonIconeSmSource(),
-      buttonIconeLgSource(),
+      buttonIconSource(),
+      buttonIconXsSource(),
+      buttonIconSmSource(),
+      buttonIconLgSource(),
     ]) {
       expect(saida).toContain('aria-label="Adicionar item"');
       // O SVG é decorativo: lido em voz alta duplicaria o rótulo.
       expect(saida).toContain('aria-hidden="true"');
     }
-    expect(buttonIconeXsSource()).toContain('size="icon-xs"');
-    expect(buttonIconeSmSource()).toContain('size="icon-sm"');
-    expect(buttonIconeLgSource()).toContain('size="icon-lg"');
+    expect(buttonIconXsSource()).toContain('size="icon-xs"');
+    expect(buttonIconSmSource()).toContain('size="icon-sm"');
+    expect(buttonIconLgSource()).toContain('size="icon-lg"');
   });
 });
 
 describe('transforms das stories de estado', () => {
   it('o desabilitado é atributo puro, não vinculado', () => {
-    expect(buttonDesabilitadoSource()).toContain('<Button disabled>Salvar</Button>');
+    expect(buttonDisabledSource()).toContain('<Button disabled>Salvar</Button>');
   });
 
   it('o carregamento junta desabilitado, ocupado e rótulo de progresso', () => {
-    const saida = buttonCarregandoSource();
+    const saida = buttonLoadingSource();
     expect(saida).toContain('<Button disabled aria-busy="true">');
     expect(saida).toContain('class="nds-button-icon-svg nds-spin"');
     // O rótulo troca junto: um "Salvar" parado durante o envio mente sobre o
@@ -148,7 +148,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o foco não tem prop — a ausência é o assunto da story', () => {
-    const saida = buttonFocoVisivelSource();
+    const saida = buttonFocusVisibleSource();
     expect(saida).toContain('<Button>Foco visível</Button>');
     expect(saida).not.toContain('focus');
   });
@@ -162,30 +162,30 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o ícone inicial vem antes do rótulo', () => {
-    const saida = buttonComIconeInicialSource();
+    const saida = buttonWithIconInitialSource();
     expect(saida.indexOf('<Plus')).toBeLessThan(saida.indexOf('Adicionar item'));
     expect(saida).toContain(`import { Plus } from 'lucide-vue-next'`);
   });
 
   it('o ícone final vem depois — é o que distingue as duas composições', () => {
-    const saida = buttonComIconeFinalSource();
+    const saida = buttonWithIconFinalSource();
     expect(saida.indexOf('Próximo')).toBeLessThan(saida.indexOf('<ChevronRight'));
   });
 
   it('a composição destrutiva troca ícone e variante juntos', () => {
-    const saida = buttonDestrutivoComIconeSource();
+    const saida = buttonDestructiveWithIconSource();
     expect(saida).toContain(`import { Trash2 } from 'lucide-vue-next'`);
     expect(saida).toContain('<Button variant="destructive">');
   });
 
   it('o botão só de ícone da composição nomeia a própria ação', () => {
-    const saida = buttonSoIconeSource();
+    const saida = buttonSoIconSource();
     expect(saida).toContain('aria-label="Baixar arquivo"');
     expect(saida).toContain('<Download aria-hidden="true" />');
   });
 
   it('o par de ações põe a primária à direita, com o respiro no container', () => {
-    const saida = buttonParDeAcoesSource();
+    const saida = actionsButtonPairSource();
     expect(saida).toContain('<div class="nds-cluster" data-spacing="sm">');
     expect(saida.indexOf('Cancelar')).toBeLessThan(saida.indexOf('Confirmar'));
     // O respiro é do container: margem no botão vazaria para toda composição
@@ -194,7 +194,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('como link, o botão veste o elemento do consumidor', () => {
-    const saida = buttonComoLinkSource();
+    const saida = buttonAsLinkSource();
     expect(saida).toContain('<Button as-child variant="link">');
     expect(saida).toContain('<a href="#docs">Ver documentação</a>');
   });

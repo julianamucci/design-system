@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import {
-  bordasPorEstado,
-  campoDe,
+  stateBorders,
+  fieldOf,
   contrastesNosDoisModos,
   corDoToken,
-  haloDeFoco,
+  focusHalo,
 } from '@shared/testing/input-probe';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
@@ -38,7 +38,7 @@ export const Default: Story = {
     await step('O fundo do campo é opaco, não transparente', async () => {
       // A documentação afirmou "fundo transparente" por meses. O campo pinta
       // --background: medir é o que separa a afirmação do que se vê.
-      const fundo = getComputedStyle(campoDe(canvasElement)!).backgroundColor;
+      const fundo = getComputedStyle(fieldOf(canvasElement)!).backgroundColor;
       await expect(fundo).not.toBe('rgba(0, 0, 0, 0)');
       await expect(fundo).not.toBe('transparent');
     });
@@ -63,7 +63,7 @@ export const Default: Story = {
  *
  * Ler o estilo logo após `focus()` devolveria o primeiro quadro da transição
  * (`rgba(0,0,0,0) 0px 0px 0px 0px`), e foi assim que "o campo não tem anel de
- * foco" virou diagnóstico falso nas cinco stacks. `haloDeFoco` congela a
+ * foco" virou diagnóstico falso nas cinco stacks. `focusHalo` congela a
  * transição antes de medir.
  */
 export const Focus: Story = {
@@ -77,17 +77,17 @@ export const Focus: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const input = campoDe(canvasElement)!;
+    const input = fieldOf(canvasElement)!;
 
     await step('O halo de foco tem 2px e 30% de opacidade', async () => {
-      const halo = haloDeFoco(input);
+      const halo = focusHalo(input);
       await expect(halo).not.toBeNull();
       await expect(halo!.espessura).toBe(2);
       await expect(halo!.alfa).toBeCloseTo(0.3, 2);
     });
 
     await step('A borda de foco difere da borda em repouso', async () => {
-      const bordas = bordasPorEstado(input);
+      const bordas = stateBorders(input);
       await expect(bordas.foco.cor).not.toBe(bordas.repouso.cor);
       await expect(bordas.foco.casaFocusVisible).toBe(true);
     });
@@ -96,7 +96,7 @@ export const Focus: Story = {
       // O hover translúcido de antes APAGAVA a borda depois que o repouso
       // escureceu para 3:1. A declaração da folha é lida porque evento
       // sintético não acende `:hover`.
-      const bordas = bordasPorEstado(input);
+      const bordas = stateBorders(input);
       await expect(bordas.hover.declarado).toBeTruthy();
       await expect(bordas.hover.declarado).not.toMatch(/\/\s*0?\.\d/);
     });
@@ -135,13 +135,13 @@ export const Disabled: Story = {
     await step('O apagamento é visível: opacidade e cursor de bloqueio', async () => {
       // A documentação afirmava `bg-input/50` — nome de utilitário morto. O que
       // existe é opacidade 0.5 e fundo em --muted; medir foi o que revelou.
-      const cs = getComputedStyle(campoDe(canvasElement)!);
+      const cs = getComputedStyle(fieldOf(canvasElement)!);
       await expect(Number(cs.opacity)).toBeLessThan(1);
       await expect(cs.cursor).toBe('not-allowed');
     });
 
     await step('Desabilitado não ganha halo de foco', async () => {
-      await expect(haloDeFoco(campoDe(canvasElement)!)).toBeNull();
+      await expect(focusHalo(fieldOf(canvasElement)!)).toBeNull();
     });
   },
 };
@@ -197,9 +197,9 @@ export const Invalid: Story = {
       // Afirmar o token resolvido, não um rgb literal: a paleta muda por tema
       // de marca e um literal reprovaria em warm e cold sem defeito nenhum.
       const destrutivo = corDoToken(canvasElement, '--destructive');
-      const bordas = bordasPorEstado(campoDe(canvasElement)!);
+      const bordas = stateBorders(fieldOf(canvasElement)!);
       await expect(bordas.repouso.cor).toBe(destrutivo);
-      await expect(haloDeFoco(campoDe(canvasElement)!)!.cor).toContain(
+      await expect(focusHalo(fieldOf(canvasElement)!)!.cor).toContain(
         destrutivo!.replace(/rgba?\(|\)/g, '').split(',').slice(0, 3).map((n) => n.trim()).join(', '),
       );
     });

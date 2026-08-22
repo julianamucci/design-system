@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, expect } from 'storybook/test';
-import { alturaResultante, campoDe, contrasteDaBorda } from '@shared/testing/input-probe';
+import { heightResultante, fieldOf, borderContrast } from '@shared/testing/input-probe';
 import { createInput } from './input';
 import { inputSource } from './input.source';
 import { createInputDocs } from '@/components/docs/InputDocs';
@@ -104,7 +104,7 @@ export const Playground: Story = {
     });
 
     await step('É um input com a marca do design system (functional.item1)', async () => {
-      const input = campoDe(canvasElement)!;
+      const input = fieldOf(canvasElement)!;
       await expect(input).toHaveAttribute('data-slot', 'input');
       await expect(input).toHaveClass(/nds-input/);
     });
@@ -112,14 +112,14 @@ export const Playground: Story = {
     await step('A borda em repouso alcança 3:1 contra o fundo (functional.item1)', async () => {
       // WCAG 1.4.11: o fundo do campo é igual ao da página, então a borda é a
       // única coisa que identifica o campo. Antes de b149f41f eram 1.25:1.
-      const contraste = contrasteDaBorda(campoDe(canvasElement)!);
-      await expect(contraste?.razao ?? 0).toBeGreaterThanOrEqual(3);
+      const contraste = borderContrast(fieldOf(canvasElement)!);
+      await expect(contraste?.ratio ?? 0).toBeGreaterThanOrEqual(3);
     });
 
     await step('A altura nasce do respiro, não de um valor cravado', async () => {
       // WCAG 1.4.4: `height` fixa impede o campo de crescer com a fonte do
       // navegador. A tabela de tokens já ensinou `--height-default` por engano.
-      const medida = alturaResultante(campoDe(canvasElement)!);
+      const medida = heightResultante(fieldOf(canvasElement)!);
       await expect(medida.alturaCravada).toBe(false);
       await expect(medida.heightCss).not.toBe('0px');
     });

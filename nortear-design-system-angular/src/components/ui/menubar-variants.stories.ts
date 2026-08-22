@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
-const ITENS_NEUTROS = ['Novo', 'Abrir', 'Salvar'] as const;
+const ITEMS_NEUTROS = ['Novo', 'Abrir', 'Salvar'] as const;
 const ITENS_COM_PERIGO = ['Salvar', 'Descartar alterações'] as const;
 
 const meta: Meta = {
@@ -17,7 +17,7 @@ const meta: Meta = {
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {
         component:
@@ -37,7 +37,7 @@ type Story = StoryObj;
 export const Default: Story = {
   parameters: { covers: ['accessibility.item7'] },
   render: () => ({
-    props: { itens: ITENS_NEUTROS },
+    props: { itens: ITEMS_NEUTROS },
     template: `
       <nds-menubar [modal]="false">
         <nds-menubar-menu [defaultOpen]="true">
@@ -67,7 +67,7 @@ export const Default: Story = {
       // Afirmar o atributo resultante é o que impede o defeito silencioso do
       // fallback JIT: sob JIT os `input()` não são vistos e o componente
       // renderiza com os valores padrão, sem erro nenhum na tela.
-      await expect(itens).toHaveLength(ITENS_NEUTROS.length);
+      await expect(itens).toHaveLength(ITEMS_NEUTROS.length);
       for (const item of itens) {
         await expect(item.getAttribute('data-variant')).toBe('default');
         await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
@@ -78,9 +78,9 @@ export const Default: Story = {
       // O item destacado (o primeiro, que recebe o foco ao abrir) troca de cor
       // de propósito — a comparação tem que ser com um item em repouso, senão
       // ela mede o realce e não a variante.
-      const emRepouso = itens.filter((i) => !i.hasAttribute('data-highlighted'));
-      await expect(emRepouso.length).toBeGreaterThan(0);
-      await expect(getComputedStyle(emRepouso[0]).color).toBe(getComputedStyle(menu).color);
+      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      await expect(inRest.length).toBeGreaterThan(0);
+      await expect(getComputedStyle(inRest[0]).color).toBe(getComputedStyle(menu).color);
     });
 
     await step('O popup é opaco', async () => {

@@ -5,7 +5,7 @@ import { Slider } from './index';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { valorDaAlca } from '@shared/testing/slider-probe';
+import { handleValue } from '@shared/testing/slider-probe';
 import {
   sliderFormSource,
   sliderStepGrossoSource,
@@ -57,7 +57,7 @@ export const VolumeWithValue: Story = {
     await step('O texto do valor acompanha a alça', async () => {
       const live = canvasElement.querySelector<HTMLElement>('[aria-live="polite"]')!;
       const alca = canvas.getByRole('slider');
-      const antes = valorDaAlca(alca);
+      const antes = handleValue(alca);
       (alca as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
       await expect(live).toHaveTextContent(`${Math.min(100, antes + 1)}%`);
@@ -171,8 +171,8 @@ export const InForm: Story = {
 
     await step('Submeter guarda o valor corrente dos dois', async () => {
       const thumbs = canvas.getAllByRole('slider');
-      const brilho = valorDaAlca(thumbs[0]);
-      const opacidade = valorDaAlca(thumbs[1]);
+      const brilho = handleValue(thumbs[0]);
+      const opacidade = handleValue(thumbs[1]);
       await userEvent.click(canvas.getByRole('button', { name: 'Salvar preset' }));
       await expect(
         canvas.getByText(`Brilho ${brilho}% · Opacidade ${opacidade}%`),
@@ -219,10 +219,10 @@ export const ThickStep: Story = {
 
     await step('ArrowRight anda um passo dentro da faixa curta', async () => {
       const alca = canvas.getByRole('slider');
-      const antes = valorDaAlca(alca);
+      const antes = handleValue(alca);
       (alca as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(5, antes + 1));
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(5, antes + 1));
     });
   },
 };

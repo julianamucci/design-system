@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -59,7 +59,7 @@ export function calendarSnippet(o: CalendarSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    importar('calendar', 'createCalendar'),
+    importing('calendar', 'createCalendar'),
     `const calendario = ${chamada('createCalendar', linhas)};`,
     montar('calendario'),
   );
@@ -98,9 +98,9 @@ export function calendarWithPopoverSnippet(o: CalendarWithPopoverSnippetOptions 
 
   return snippet(
     [
-      importar('button', 'createButton'),
-      importar('calendar', 'createCalendar'),
-      importar('popover', 'createPopover'),
+      importing('button', 'createButton'),
+      importing('calendar', 'createCalendar'),
+      importing('popover', 'createPopover'),
     ].join('\n'),
     `const formatador = new Intl.DateTimeFormat(${texto(locale)}, {
   day: '2-digit',

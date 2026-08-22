@@ -24,7 +24,7 @@
  * segunda cópia para divergir.
  */
 
-export interface RotulosDaSidebar {
+export interface SidebarLabels {
   /**
    * Nome acessível do gatilho e dica de ponteiro da faixa.
    *
@@ -39,7 +39,7 @@ export interface RotulosDaSidebar {
   descricaoMovel: string;
 }
 
-const ROTULOS: Record<string, RotulosDaSidebar> = {
+const LABELS: Record<string, SidebarLabels> = {
   'pt-BR': {
     alternar: 'Alternar barra lateral',
     tituloMovel: 'Barra lateral',
@@ -65,14 +65,14 @@ const ROTULOS: Record<string, RotulosDaSidebar> = {
  * é do design system, e a regra do projeto é que o que o usuário lê ou ouve sai
  * em português comum.
  */
-export const ROTULOS_SIDEBAR_PADRAO: RotulosDaSidebar = ROTULOS['pt-BR'];
+export const ROTULOS_SIDEBAR_PADRAO: SidebarLabels = LABELS['pt-BR'];
 
 /**
  * Aceita a tag BCP-47 inteira ("pt-BR", "es-ES") e cai na língua base quando a
  * região não tem entrada própria. Idioma desconhecido usa o padrão do design
  * system, que é o português.
  */
-export function rotulosDaSidebar(locale: string | undefined): RotulosDaSidebar {
+export function sidebarLabels(locale: string | undefined): SidebarLabels {
   if (!locale) return ROTULOS_SIDEBAR_PADRAO;
-  return ROTULOS[locale] ?? ROTULOS[locale.split('-')[0]] ?? ROTULOS_SIDEBAR_PADRAO;
+  return LABELS[locale] ?? LABELS[locale.split('-')[0]] ?? ROTULOS_SIDEBAR_PADRAO;
 }

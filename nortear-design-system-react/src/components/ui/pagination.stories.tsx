@@ -285,8 +285,8 @@ export const Playground: Story = {
       // mesmo DOM, e sem isso a segunda rodada partiria de outra página e
       // inverteria as asserções acima.
       const alvo = args.initialPage === 1 ? 2 : 1;
-      const espiao = args.onPageChange as unknown as { mockClear: () => void };
-      espiao.mockClear();
+      const spy = args.onPageChange as unknown as { mockClear: () => void };
+      spy.mockClear();
       await userEvent.click(canvas.getByRole("link", { name: `Ir para página ${alvo}` }));
       await expect(args.onPageChange).toHaveBeenLastCalledWith(alvo);
       await expect(

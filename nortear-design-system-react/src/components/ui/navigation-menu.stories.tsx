@@ -8,7 +8,7 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "./navigation-menu";
-import { esperarPainel, esperarPainelSumir, popupAberto } from "./navigation-menu.fixtures";
+import { waitForPanel, waitForPanelVanish, popupOpen } from "./navigation-menu.fixtures";
 import { navigationMenuSource } from "./navigation-menu.source";
 import { NavigationMenuDocs } from "@/components/docs/NavigationMenuDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
@@ -166,7 +166,7 @@ export const Playground: Story = {
 
     await step("Fechado, o gatilho anuncia apenas que está recolhido", async () => {
       await expect(produtos).toHaveAttribute("aria-expanded", "false");
-      await expect(popupAberto()).toBeNull();
+      await expect(popupOpen()).toBeNull();
     });
 
     await step("Setas movem o foco entre os itens da barra", async () => {
@@ -183,7 +183,7 @@ export const Playground: Story = {
 
     await step("Enter abre o painel e alcança os destinos pelo teclado", async () => {
       await userEvent.keyboard("{Enter}");
-      const painel = await esperarPainel();
+      const painel = await waitForPanel();
       await expect(produtos).toHaveAttribute("aria-expanded", "true");
       await expect(args.onValueChange).toHaveBeenCalledWith("produtos");
 
@@ -196,7 +196,7 @@ export const Playground: Story = {
 
     await step("Escape fecha e devolve o foco ao gatilho", async () => {
       await userEvent.keyboard("{Escape}");
-      await esperarPainelSumir();
+      await waitForPanelVanish();
       await expect(produtos).toHaveAttribute("aria-expanded", "false");
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
@@ -207,7 +207,7 @@ export const Playground: Story = {
 
     await step("O ponteiro abre o painel sem clique", async () => {
       await userEvent.hover(produtos);
-      const painel = await esperarPainel();
+      const painel = await waitForPanel();
       await expect(painel.textContent).toContain("Plano Inicial");
     });
 
@@ -223,7 +223,7 @@ export const Playground: Story = {
       });
       // O popup é um só e nunca desmontou: a troca é instantânea, sem reabrir
       // a espera de hover.
-      await expect(popupAberto()).not.toBeNull();
+      await expect(popupOpen()).not.toBeNull();
       await expect(solucoes).toHaveAttribute("aria-expanded", "true");
     });
 
@@ -231,7 +231,7 @@ export const Playground: Story = {
       // A story termina fechada de propósito: o axe roda depois da play, e um
       // painel flutuante aberto mediria contraste sobre a página inteira.
       await userEvent.keyboard("{Escape}");
-      await esperarPainelSumir();
+      await waitForPanelVanish();
       await expect(solucoes).toHaveAttribute("aria-expanded", "false");
     });
   },

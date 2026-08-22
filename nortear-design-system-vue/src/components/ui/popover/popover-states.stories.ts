@@ -13,9 +13,9 @@ import { Button } from '@/components/ui/button';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { painel } from './popover.fixtures';
 import {
-  popoverAbertoSource,
-  popoverAcimaSource,
-  popoverControladoSource,
+  popoverOpenSource,
+  popoverAboveSource,
+  popoverControlledSource,
   popoverClosedSource,
   popoverModalSource,
 } from './popover.source';
@@ -109,7 +109,7 @@ export const Open: Story = {
     docs: {
       // Aberto é PRESENÇA de `default-open`; a do meta é justamente a ausência
       // dele, e as duas se leem lado a lado.
-      source: { transform: popoverAbertoSource },
+      source: { transform: popoverOpenSource },
       description: {
         story: 'Popover aberto via defaultOpen — captura visual no Chromatic. Content com role=dialog.',
       },
@@ -153,7 +153,7 @@ export const SideTop: Story = {
     docs: {
       // O painel muda de lado e ganha folga própria: `side` e `side-offset` não
       // aparecem em nenhuma outra story do arquivo.
-      source: { transform: popoverAcimaSource },
+      source: { transform: popoverAboveSource },
       description: {
         story:
           'Posicionamento preferido side="top". Sem espaço acima, o painel faz auto-flip para baixo.',
@@ -211,7 +211,7 @@ export const Controlled: Story = {
     docs: {
       // `v-model:open` e os dois botões de fora são composição nova: o estado
       // sai do componente, e nenhuma outra story do arquivo o tem.
-      source: { transform: popoverControladoSource },
+      source: { transform: popoverControlledSource },
       description: {
         story: 'Abertura controlada por estado externo via open + @update:open.',
       },

@@ -14,12 +14,12 @@ import carouselTranslations from '@shared/content/carousel/translations.json';
  * — quem resolve o idioma de quem lê é a docs page, e uma play que dependesse
  * do seletor de idioma procuraria um nome diferente a cada rodada.
  */
-const CONTEUDO = carouselTranslations['pt-BR'].demonstration.labels;
+const CONTENT = carouselTranslations['pt-BR'].demonstration.labels;
 /** Nome acessível: posição E total. "Slide 2" sozinho não diz para onde leva. */
-const nomeAcessivel = (posicao: number, total: number) =>
-  `${CONTEUDO.goToSlide} ${posicao} ${CONTEUDO.of} ${total}`;
+const nomeAcessivel = (position: number, total: number) =>
+  `${CONTENT.goToSlide} ${position} ${CONTENT.of} ${total}`;
 /** Texto visível da pílula — um PEDAÇO do nome acessível (WCAG 2.5.3). */
-const rotuloVisivel = (posicao: number) => `${CONTEUDO.slide} ${posicao}`;
+const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -62,7 +62,7 @@ export const WithDots: Story = {
     },
   },
   render: () => ({
-    props: { slides: SLIDES, nomeAcessivel, rotuloVisivel },
+    props: { slides: SLIDES, nomeAcessivel, labelVisible },
     // `#comDots` é a referência de template: `index()`, `total()`,
     // `irPara()` e `alternarAutoplay()` são a API pública do carrossel, e os
     // controles abaixo não precisam de estado próprio para acompanhá-la.
@@ -116,7 +116,7 @@ export const WithDots: Story = {
               [attr.aria-current]="comDots.index() === i - 1 ? 'true' : null"
               [attr.aria-label]="nomeAcessivel(i, slides.length)"
               (click)="comDots.irPara(i - 1)"
-            ><span class="nds-carousel-dot-label">{{ rotuloVisivel(i) }}</span></button>
+            ><span class="nds-carousel-dot-label">{{ labelVisible(i) }}</span></button>
           }
         </div>
 
@@ -129,8 +129,8 @@ export const WithDots: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
-    const dot = (posicao: number) =>
-      canvas.getByRole('button', { name: nomeAcessivel(posicao, SLIDES.length) });
+    const dot = (position: number) =>
+      canvas.getByRole('button', { name: nomeAcessivel(position, SLIDES.length) });
     /**
      * O rótulo é o único filho do controle — a marca do ponto é `::before`, e
      * pseudo-elemento não entra em `firstElementChild`. Buscar por classe seria
@@ -166,9 +166,9 @@ export const WithDots: Story = {
       }, { timeout: 4000 });
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
-      await expect(rotulo(dot(2))).toHaveTextContent(rotuloVisivel(2));
+      await expect(rotulo(dot(2))).toHaveTextContent(labelVisible(2));
       await expect(nomeAcessivel(2, SLIDES.length).toLowerCase()).toContain(
-        rotuloVisivel(2).toLowerCase(),
+        labelVisible(2).toLowerCase(),
       );
 
       // A forma mudou, não só a cor: a pílula é mais larga que o ponto vizinho.
@@ -177,9 +177,9 @@ export const WithDots: Story = {
       // E os DEMAIS continuam pontos: nenhum outro rótulo à vista, e um único
       // `aria-current` na fileira inteira.
       const demais = SLIDES.filter((p) => p !== 2);
-      for (const posicao of demais) {
-        await expect(largura(rotulo(dot(posicao)))).toBeLessThan(1);
-        await expect(dot(posicao).hasAttribute('aria-current')).toBe(false);
+      for (const position of demais) {
+        await expect(largura(rotulo(dot(position)))).toBeLessThan(1);
+        await expect(dot(position).hasAttribute('aria-current')).toBe(false);
       }
     });
 
@@ -187,8 +187,8 @@ export const WithDots: Story = {
       // Medido na densidade padrão do preview. O ponto tem marca de 8px e a
       // pílula tem texto de 12px: sem o piso, os dois ficariam abaixo dos 24px
       // que a WCAG 2.5.8 cobra — foi o defeito que criou `.nds-carousel-dot`.
-      for (const posicao of SLIDES) {
-        const caixa = dot(posicao).getBoundingClientRect();
+      for (const position of SLIDES) {
+        const caixa = dot(position).getBoundingClientRect();
         await expect(caixa.width).toBeGreaterThanOrEqual(24);
         await expect(caixa.height).toBeGreaterThanOrEqual(24);
       }
@@ -216,9 +216,9 @@ export const WithDots: Story = {
     });
 
     await step('O comando de apresentação liga o avanço automático', async () => {
-      const iniciar = canvas.getByRole('button', { name: 'Iniciar apresentação' });
+      const start = canvas.getByRole('button', { name: 'Iniciar apresentação' });
       const antes = viewport.scrollLeft;
-      await userEvent.click(iniciar);
+      await userEvent.click(start);
       // O rótulo é o estado observável de fora; a rolagem é a prova de que o
       // relógio realmente andou.
       await expect(canvas.getByRole('button', { name: 'Pausar apresentação' })).toBeInTheDocument();

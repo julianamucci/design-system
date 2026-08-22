@@ -24,14 +24,14 @@ export type AvatarArgs = {
   className: string;
 };
 
-const TAMANHOS = ['sm', 'md', 'lg', 'xl', '2xl'] as const;
+const SIZES = ['sm', 'md', 'lg', 'xl', '2xl'] as const;
 
 const FOTO = '/fotos/maria-rodrigues.jpg';
 const ALT = 'Foto de perfil de Maria Rodrigues';
 
 /** Bloco de import com as peças que o exemplo realmente usa. */
-function importarPecas(pecas: readonly string[]): string {
-  return `import { ${[...pecas].join(', ')} } from "@/components/ui/avatar";`;
+function importingParts(parts: readonly string[]): string {
+  return `import { ${[...parts].join(', ')} } from "@/components/ui/avatar";`;
 }
 
 /**
@@ -43,12 +43,12 @@ function importarPecas(pecas: readonly string[]): string {
  */
 function avatarWithFoto(size: unknown, className: unknown, atraso = false): string {
   const raiz = attrs(
-    propOption('size', size, TAMANHOS, 'md'),
+    propOption('size', size, SIZES, 'md'),
     propText('className', className),
   );
   const fallback = atraso ? '<AvatarFallback delayMs={600}>' : '<AvatarFallback>';
   return jsxSnippet(
-    importarPecas(['Avatar', 'AvatarImage', 'AvatarFallback']),
+    importingParts(['Avatar', 'AvatarImage', 'AvatarFallback']),
     `<Avatar${raiz}>
   <AvatarImage src="${FOTO}" alt="${ALT}" />
   ${fallback}MR</AvatarFallback>
@@ -105,7 +105,7 @@ export function avatarWithDelaySource(): string {
  */
 export function avatarSoIniciaisSource(): string {
   return jsxSnippet(
-    importarPecas(['Avatar', 'AvatarFallback']),
+    importingParts(['Avatar', 'AvatarFallback']),
     `<Avatar>
   <AvatarFallback>JP</AvatarFallback>
 </Avatar>`,
@@ -117,9 +117,9 @@ export function avatarSoIniciaisSource(): string {
  * acessibilidade, então quem dá voz ao avatar é o `role="img"` com rótulo no
  * fallback. Sem isso o componente fica mudo — o ícone não fala.
  */
-export function avatarComIconeSource(): string {
+export function avatarWithIconSource(): string {
   return jsxSnippet(
-    `${importarPecas(['Avatar', 'AvatarFallback'])}
+    `${importingParts(['Avatar', 'AvatarFallback'])}
 import { User } from "lucide-react";`,
     `<Avatar>
   <AvatarFallback role="img" aria-label="Usuário genérico">
@@ -136,9 +136,9 @@ import { User } from "lucide-react";`,
  * interessa é "Participantes". O contador fecha a fila e é decorativo: o
  * número sem o grupo não diz de quê.
  */
-export function avatarEmGrupoSource(): string {
+export function groupAvatarSource(): string {
   return jsxSnippet(
-    importarPecas([
+    importingParts([
       'Avatar',
       'AvatarImage',
       'AvatarFallback',
@@ -169,9 +169,9 @@ export function avatarEmGrupoSource(): string {
  * colorido não se explica sozinho, então ele se anuncia como imagem com
  * rótulo: a cor é reforço, o nome é o que informa.
  */
-export function avatarComStatusSource(): string {
+export function avatarWithStatusSource(): string {
   return jsxSnippet(
-    importarPecas(['Avatar', 'AvatarImage', 'AvatarFallback', 'AvatarBadge']),
+    importingParts(['Avatar', 'AvatarImage', 'AvatarFallback', 'AvatarBadge']),
     `<Avatar>
   <AvatarImage src="${FOTO}" alt="${ALT}" />
   <AvatarFallback>MR</AvatarFallback>

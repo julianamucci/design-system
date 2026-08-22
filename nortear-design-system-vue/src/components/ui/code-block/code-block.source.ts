@@ -40,9 +40,9 @@ render(items, total);`;
  * crase. Nos dois casos o `</script` do conteúdo sai escapado: sem isso o
  * parser do SFC fecharia o bloco de script no meio da string, e o exemplo
  * deixaria de compilar no primeiro colar — a armadilha é exatamente a que
- * `FIM_SCRIPT` evita neste repositório.
+ * `END_SCRIPT` evita neste repositório.
  */
-function literalDeCodigo(code: string): string {
+function codeLiteral(code: string): string {
   const scriptNoEnd = (texto: string) => texto.replace(/<\/script/gi, '<\\/script');
   if (!code.includes('\n') && !code.includes("'") && !code.includes('\\')) {
     return `'${scriptNoEnd(code)}'`;
@@ -92,7 +92,7 @@ export const codeBlockSource: SourceTransform<CodeBlockArgs> = (_gerado, ctx) =>
   const args = ctx?.args ?? {};
   const code = typeof args.code === 'string' && args.code !== '' ? args.code : CODE_DEFAULT;
   return vueSnippet(
-    `${IMPORT}\n\nconst source = ${literalDeCodigo(code)}`,
+    `${IMPORT}\n\nconst source = ${codeLiteral(code)}`,
     bloco('source', [
       attr('language', args.language, 'text'),
       attr('title', args.title),
@@ -122,7 +122,7 @@ render(items, total);\`,
  * e é contra eles que as onze cores da paleta são medidas. Um trecho só acende
  * cinco delas, por isso a lista.
  */
-export function codeBlockPaletaSource(): string {
+export function codeBlockPaletteSource(): string {
   return vueSnippet(
     `${IMPORT}
 

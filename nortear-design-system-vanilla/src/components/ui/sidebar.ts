@@ -213,7 +213,7 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
   // compartilhada espera sob `.nds-sidebar-mobile`.
 
   const idGaveta = ++_sidebarCounter;
-  const idTitulo = `sidebar-mobile-title-${idGaveta}`;
+  const idTitle = `sidebar-mobile-title-${idGaveta}`;
   const idDescricao = `sidebar-mobile-desc-${idGaveta}`;
 
   const mql = window.matchMedia(mobileQuery);
@@ -221,7 +221,7 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
   let gavetaAberta = false;
   let overlayEl: HTMLElement | null = null;
   let gavetaEl: HTMLElement | null = null;
-  let focoAntesDaGaveta: HTMLElement | null = null;
+  let gavetaFocusBefore: HTMLElement | null = null;
 
   function mountGaveta(): void {
     overlayEl = document.createElement('div');
@@ -240,14 +240,14 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     // errado.
     gavetaEl.setAttribute('role', 'dialog');
     gavetaEl.setAttribute('aria-modal', 'true');
-    gavetaEl.setAttribute('aria-labelledby', idTitulo);
+    gavetaEl.setAttribute('aria-labelledby', idTitle);
     gavetaEl.setAttribute('aria-describedby', idDescricao);
 
     const cabecalho = document.createElement('div');
     cabecalho.className = 'nds-sheet-header nds-sr-only';
     cabecalho.dataset.slot = 'sheet-header';
     const titulo = document.createElement('h2');
-    titulo.id = idTitulo;
+    titulo.id = idTitle;
     titulo.className = 'nds-sheet-title';
     titulo.textContent = mobileTitle;
     const descricao = document.createElement('p');
@@ -268,7 +268,7 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
 
   function openGaveta(): void {
     if (gavetaAberta) return;
-    focoAntesDaGaveta = document.activeElement as HTMLElement | null;
+    gavetaFocusBefore = document.activeElement as HTMLElement | null;
     mountGaveta();
     gavetaAberta = true;
     // O foco entra no painel; sem isto o teclado continua na página por baixo,
@@ -293,8 +293,8 @@ export function createSidebar(options: SidebarOptions = {}): SidebarInstance {
     // Devolver o foco é trabalho de quem abriu. Sem isto o Escape fecha a
     // gaveta e o foco cai no <body>: quem navega por teclado volta ao começo
     // da página.
-    const alvo = focoAntesDaGaveta;
-    focoAntesDaGaveta = null;
+    const alvo = gavetaFocusBefore;
+    gavetaFocusBefore = null;
     if (devolverFocus && alvo?.isConnected) alvo.focus();
     onMobileOpenChange?.(false);
   }

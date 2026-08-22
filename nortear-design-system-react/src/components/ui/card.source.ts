@@ -24,7 +24,7 @@ export type CardArgs = {
   className: string;
 };
 
-const TAMANHOS = ['default', 'sm'] as const;
+const SIZES = ['default', 'sm'] as const;
 
 /**
  * Bloco de importação com as peças que o exemplo realmente usa.
@@ -32,9 +32,9 @@ const TAMANHOS = ['default', 'sm'] as const;
  * O Card é um conjunto de sub-componentes nomeados, e importar o conjunto
  * inteiro em todo exemplo ensinaria a copiar peça que não está na tela.
  */
-function importCard(...pecas: string[]): string {
-  const lista = ['Card', ...pecas].sort();
-  return `import {\n${lista.map((peca) => `  ${peca},`).join('\n')}\n} from "@/components/ui/card";`;
+function importCard(...parts: string[]): string {
+  const lista = ['Card', ...parts].sort();
+  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from "@/components/ui/card";`;
 }
 
 const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
@@ -44,21 +44,21 @@ const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
  * ele acompanha a coluna inteira em que estiver. Vem de classe utilitária,
  * nunca de `style`.
  */
-const LARGURA = 'nds-w-sm';
+const WIDTH = 'nds-w-sm';
 
 /**
  * Cabeçalho canônico: o título é um heading DE VERDADE por `as`, e não só um
  * texto com aparência de título — o CSS dá a aparência, quem dá a semântica é
  * o elemento.
  */
-const CABECALHO = `  <CardHeader>
+const HEADER = `  <CardHeader>
     <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
     <CardDescription>
       Estrutura ergonômica com ajuste de altura e apoio lombar.
     </CardDescription>
   </CardHeader>`;
 
-const CORPO = `  <CardContent>
+const BODY = `  <CardContent>
     <p className="nds-text-base nds-font-semibold">R$ 1.299,00</p>
   </CardContent>`;
 
@@ -67,7 +67,7 @@ const CORPO = `  <CardContent>
  * "Excluir" sozinho vira uma fileira de botões idênticos para quem navega por
  * leitor de tela.
  */
-const RODAPE = `  <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
+const FOOTER = `  <CardFooter className="nds-cluster" data-justify="end" data-spacing="sm">
     <Button variant="outline" aria-label="Editar produto Cadeira Gamer Pro">
       Editar
     </Button>
@@ -88,16 +88,16 @@ const RODAPE = `  <CardFooter className="nds-cluster" data-justify="end" data-sp
 export const cardSource: SourceTransform<CardArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const raiz = attrs(
-    propOption('size', args.size, TAMANHOS, 'default'),
-    propText('className', args.className) ?? `className="${LARGURA}"`,
+    propOption('size', args.size, SIZES, 'default'),
+    propText('className', args.className) ?? `className="${WIDTH}"`,
   );
 
   return jsxSnippet(
     `${IMPORT_BUTTON}\n${importCard('CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle')}`,
     `<Card${raiz}>
-${CABECALHO}
-${CORPO}
-${RODAPE}
+${HEADER}
+${BODY}
+${FOOTER}
 </Card>`,
   );
 };
@@ -109,9 +109,9 @@ ${RODAPE}
 export function cardNoFooterSource(): string {
   return jsxSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
-    `<Card className="${LARGURA}">
-${CABECALHO}
-${CORPO}
+    `<Card className="${WIDTH}">
+${HEADER}
+${BODY}
 </Card>`,
   );
 }
@@ -149,12 +149,12 @@ import { TrendingUp } from "lucide-react";`,
  * ação encosta à direita. A ordem do DOM continua título → descrição → ação,
  * então o leitor de tela lê na ordem lógica mesmo com a ação no canto oposto.
  */
-export function cardComAcaoSource(): string {
+export function cardWithActionSource(): string {
   return jsxSnippet(
     `${IMPORT_BUTTON}
 ${importCard('CardAction', 'CardContent', 'CardDescription', 'CardHeader', 'CardTitle')}
 import { MoreVertical } from "lucide-react";`,
-    `<Card className="${LARGURA}">
+    `<Card className="${WIDTH}">
   <CardHeader>
     <CardTitle as="h3">Cadeira Gamer Pro</CardTitle>
     <CardDescription>Em estoque</CardDescription>
@@ -168,7 +168,7 @@ import { MoreVertical } from "lucide-react";`,
       </Button>
     </CardAction>
   </CardHeader>
-${CORPO}
+${BODY}
 </Card>`,
   );
 }
@@ -179,18 +179,18 @@ ${CORPO}
  * para isso. `object-fit` é mecânica de recorte, não valor de design: não há
  * classe `.nds-*` para ele e nenhum tema o altera.
  */
-export function cardComImagemSource(): string {
+export function cardWithImageSource(): string {
   return jsxSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
-    `<Card className="${LARGURA}">
+    `<Card className="${WIDTH}">
   <img
     src="/produtos/cadeira-gamer-pro.jpg"
     alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
     className="nds-w-full nds-aspect-16-9"
     style={{ objectFit: "cover" }}
   />
-${CABECALHO}
-${CORPO}
+${HEADER}
+${BODY}
 </Card>`,
   );
 }
@@ -205,7 +205,7 @@ export function cardProductSource(): string {
     `import { Badge } from "@/components/ui/badge";
 ${IMPORT_BUTTON}
 ${importCard('CardAction', 'CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle')}`,
-    `<Card className="${LARGURA}">
+    `<Card className="${WIDTH}">
   <img
     src="/produtos/cadeira-gamer-pro.jpg"
     alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
@@ -221,8 +221,8 @@ ${importCard('CardAction', 'CardContent', 'CardDescription', 'CardFooter', 'Card
       <Badge variant="secondary">Em estoque</Badge>
     </CardAction>
   </CardHeader>
-${CORPO}
-${RODAPE}
+${BODY}
+${FOOTER}
 </Card>`,
   );
 }
@@ -240,7 +240,7 @@ export function cardPerfilSource(): string {
   AvatarImage,
 } from "@/components/ui/avatar";
 ${importCard('CardDescription', 'CardHeader', 'CardTitle')}`,
-    `<Card className="${LARGURA}">
+    `<Card className="${WIDTH}">
   <CardHeader className="nds-cluster" data-align="center" data-spacing="sm">
     <Avatar>
       <AvatarImage src="/pessoas/maria-rodrigues.jpg" alt="" />
@@ -260,7 +260,7 @@ ${importCard('CardDescription', 'CardHeader', 'CardTitle')}`,
  * volta — o Card raiz nunca ganha `onClick` nem `tabIndex`. Assim o Tab alcança
  * um destino só, e a ativação por teclado vem de graça do elemento nativo.
  */
-export function cardClicavelSource(): string {
+export function cardClickableSource(): string {
   return jsxSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
     `<a
@@ -269,8 +269,8 @@ export function cardClicavelSource(): string {
   className="nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
 >
   <Card>
-${indentar(CABECALHO)}
-${indentar(CORPO)}
+${indentar(HEADER)}
+${indentar(BODY)}
   </Card>
 </a>`,
   );

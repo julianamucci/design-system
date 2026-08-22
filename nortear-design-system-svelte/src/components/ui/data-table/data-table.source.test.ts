@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dataTableColunasRedimensionaveisSource,
-  dataTableEdicaoInlineSource,
-  dataTableFiltrosPorColunaSource,
+  dataTableColumnsRedimensionaveisSource,
+  dataTableEditInlineSource,
+  columnDataTableFiltersSource,
   dataTablePaginadaSource,
   dataTableReordenarEFixarSource,
-  dataTableRotuloDeLinhaSource,
-  dataTableSemResultadosSource,
+  lineDataTableLabelSource,
+  dataTableNoResultsSource,
   dataTableSource,
   dataTableVirtualizadaSource,
 } from './data-table.source';
@@ -113,20 +113,20 @@ describe('dataTableSource', () => {
 
 describe('transforms das stories de estado, composição e configuração', () => {
   it('o estado sem resultados mantém a grade montada e troca a mensagem', () => {
-    const saida = dataTableSemResultadosSource();
+    const saida = dataTableNoResultsSource();
     expect(saida).toContain('const invoices: Invoice[] = [];');
     expect(saida).toContain('emptyMessage="Nenhuma fatura encontrada."');
   });
 
   it('o filtro por coluna é declarado na própria coluna, por tipo', () => {
-    const saida = dataTableFiltrosPorColunaSource();
+    const saida = columnDataTableFiltersSource();
     expect(saida).toContain('enableColumnFilters');
     expect(saida).toContain("filter: { type: 'text' }");
     expect(saida).toContain("filter: { type: 'select', options: ['Pago', 'Pendente', 'Cancelado'] }");
   });
 
   it('as colunas redimensionáveis ligam só a própria chave', () => {
-    const saida = dataTableColunasRedimensionaveisSource();
+    const saida = dataTableColumnsRedimensionaveisSource();
     expect(saida).toContain('enableColumnResizing');
     expect(saida).not.toContain('enableColumnOrdering');
   });
@@ -138,7 +138,7 @@ describe('transforms das stories de estado, composição e configuração', () =
   });
 
   it('na edição inline quem guarda o dado é quem consome, pelo callback', () => {
-    const saida = dataTableEdicaoInlineSource();
+    const saida = dataTableEditInlineSource();
     expect(saida).toContain('meta: { editable: true }');
     expect(saida).toContain('let data = $state<Invoice[]>');
     expect(saida).toContain('onCellEdit={(rowIndex, columnId, value) => {');
@@ -151,7 +151,7 @@ describe('transforms das stories de estado, composição e configuração', () =
   });
 
   it('o rótulo de linha explícito convive com a chave da linha', () => {
-    const saida = dataTableRotuloDeLinhaSource();
+    const saida = lineDataTableLabelSource();
     expect(saida).toContain('rowLabel={rotuloDaFatura}');
     expect(saida).toContain('rowKey={chaveDaFatura}');
   });

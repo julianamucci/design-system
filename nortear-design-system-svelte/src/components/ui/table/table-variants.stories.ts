@@ -9,10 +9,10 @@ import TableVarianteComAcoes from './TableVarianteComAcoes.svelte';
 import TableVarianteRolagemHorizontal from './TableVarianteRolagemHorizontal.svelte';
 import {
   tableBasicaSource,
-  tableComAcoesSource,
-  tableComRodapeSource,
-  tableLegendaOcultaSource,
-  tableRolagemHorizontalSource,
+  tableWithActionsSource,
+  tableWithFooterSource,
+  tableCaptionOcultaSource,
+  tableScrollHorizontalSource,
   tableSource,
 } from './table.source';
 
@@ -77,8 +77,8 @@ export const Basic: Story = {
       const valueTh = ths[ths.length - 1];
       await expect(valueTh).toHaveTextContent('Valor');
       await expect(getComputedStyle(valueTh).textAlign).toBe('right');
-      const valorTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
-      await expect(getComputedStyle(valorTd).textAlign).toBe('right');
+      const valueTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
+      await expect(getComputedStyle(valueTd).textAlign).toBe('right');
       // A coluna descritiva continua à esquerda: o alinhamento é escolha por
       // coluna, não estilo da tabela.
       await expect(getComputedStyle(ths[0]).textAlign).toBe('left');
@@ -95,7 +95,7 @@ export const Basic: Story = {
 export const WithFooter: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item3'],
-    docs: { source: { transform: tableComRodapeSource } },
+    docs: { source: { transform: tableWithFooterSource } },
   },
   render: () => ({
     Component: TableVarianteComRodape,
@@ -108,8 +108,8 @@ export const WithFooter: Story = {
       const tabela = canvasElement.querySelector<HTMLElement>('table')!;
       const tfoot = tabela.querySelector<HTMLElement>('tfoot')!;
       await expect(tfoot).toHaveAttribute('data-slot', 'table-footer');
-      const posicao = tabela.querySelector('tbody')!.compareDocumentPosition(tfoot);
-      await expect(posicao & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      const position = tabela.querySelector('tbody')!.compareDocumentPosition(tfoot);
+      await expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
       await expect(tfoot.querySelector('td')).toHaveAttribute('colspan', '3');
       // O total é a soma das linhas do corpo — número escrito à mão que não
       // fecha é defeito que só a conta pega.
@@ -120,10 +120,10 @@ export const WithFooter: Story = {
     await step('O rodapé se distingue do corpo por fundo próprio', async () => {
       // visual.item3 — `.nds-table tfoot tr` pinta hsl(var(--muted) / 0.5). Sem
       // a distinção o sumário some no meio dos registros.
-      const linhaRodape = canvasElement.querySelector<HTMLElement>('tfoot tr')!;
-      const linhaCorpo = canvasElement.querySelector<HTMLElement>('tbody tr')!;
-      await expect(getComputedStyle(linhaRodape).backgroundColor).not.toBe(
-        getComputedStyle(linhaCorpo).backgroundColor,
+      const lineFooter = canvasElement.querySelector<HTMLElement>('tfoot tr')!;
+      const lineBody = canvasElement.querySelector<HTMLElement>('tbody tr')!;
+      await expect(getComputedStyle(lineFooter).backgroundColor).not.toBe(
+        getComputedStyle(lineBody).backgroundColor,
       );
     });
   },
@@ -132,7 +132,7 @@ export const WithFooter: Story = {
 export const CaptionSrOnly: Story = {
   parameters: {
     covers: ['functional.item6', 'accessibility.item2'],
-    docs: { source: { transform: tableLegendaOcultaSource } },
+    docs: { source: { transform: tableCaptionOcultaSource } },
   },
   render: () => ({
     Component: TableVarianteCaptionSrOnly,
@@ -164,7 +164,7 @@ export const CaptionSrOnly: Story = {
 export const WithRowActions: Story = {
   parameters: {
     covers: ['accessibility.item3', 'visual.item4'],
-    docs: { source: { transform: tableComAcoesSource } },
+    docs: { source: { transform: tableWithActionsSource } },
   },
   render: () => ({
     Component: TableVarianteComAcoes,
@@ -198,7 +198,7 @@ export const WithRowActions: Story = {
 export const HorizontalScroll: Story = {
   parameters: {
     covers: ['functional.item5'],
-    docs: { source: { transform: tableRolagemHorizontalSource } },
+    docs: { source: { transform: tableScrollHorizontalSource } },
   },
   render: () => ({
     Component: TableVarianteRolagemHorizontal,

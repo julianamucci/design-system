@@ -22,9 +22,9 @@
  * divide LARGURA, que é o arranjo de toda story que não oferece `direction`.
  * Com `false` a mesma conta roda sobre a altura.
  */
-export function fracaoDoPrimeiro(canvasElement: HTMLElement, horizontal = true): number {
-  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const medidas = paineis.map((p) =>
+export function firstFraction(canvasElement: HTMLElement, horizontal = true): number {
+  const panels = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
+  const medidas = panels.map((p) =>
     horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height,
   );
   return medidas[0] / medidas.reduce((a, b) => a + b, 0);

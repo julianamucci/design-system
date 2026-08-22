@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
   alertAvisoSource,
-  alertClasseAdicionalSource,
-  alertComAcaoSource,
-  alertContrasteSource,
-  alertDestrutivoSource,
+  alertClassNameAdicionalSource,
+  alertWithActionSource,
+  alertContrastSource,
+  alertDestructiveSource,
   alertDispensavelSource,
   alertInfoSource,
   alertInsercaoDinamicaSource,
-  alertSemAnuncioSource,
-  alertSemIconeSource,
-  alertSemTituloSource,
+  alertNoAnnouncementSource,
+  alertNoIconSource,
+  alertNoTitleSource,
   alertSource,
   alertSucessoSource,
 } from './alert.source';
@@ -58,9 +58,9 @@ describe('alertSource', () => {
   });
 
   it('o espião de control não vira código no painel', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
+    const spy = () => 'CORPO_DO_MOCK';
     const saida = alertSource(undefined, {
-      args: { variant: espiao as never, dismissible: espiao as never },
+      args: { variant: spy as never, dismissible: spy as never },
     });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).not.toContain('undefined');
@@ -69,7 +69,7 @@ describe('alertSource', () => {
 
 describe('variantes', () => {
   const casos = [
-    ['destructive', 'AlertCircle', alertDestrutivoSource],
+    ['destructive', 'AlertCircle', alertDestructiveSource],
     ['success', 'CheckCircle2', alertSucessoSource],
     ['warning', 'TriangleAlert', alertAvisoSource],
     ['info', 'Info', alertInfoSource],
@@ -95,7 +95,7 @@ describe('variantes', () => {
   });
 
   it('a comparação de contraste mostra as cinco, sem ícone', () => {
-    const saida = alertContrasteSource();
+    const saida = alertContrastSource();
     for (const nome of ['destructive', 'success', 'warning', 'info']) {
       expect(saida).toContain(`<Alert variant="${nome}">`);
     }
@@ -117,21 +117,21 @@ describe('dispensável', () => {
 
 describe('ausências e contêineres', () => {
   it('sem título: a descrição vira o conteúdo inteiro, e o import encolhe junto', () => {
-    const saida = alertSemTituloSource();
+    const saida = alertNoTitleSource();
     expect(saida).not.toContain('<AlertTitle>');
     expect(saida).toContain('import { Alert, AlertDescription } from "@/components/ui/alert";');
     expect(saida).toContain('<AlertDescription>');
   });
 
   it('sem ícone: nenhuma prop desliga nada, é a ausência que muda o layout', () => {
-    const saida = alertSemIconeSource();
+    const saida = alertNoIconSource();
     expect(saida).not.toContain('lucide-react');
     expect(saida).not.toContain('nds-icon');
     expect(saida).toContain('<AlertTitle>');
   });
 
   it('role=note ao lado do padrão: os dois juntos é que mostram a diferença', () => {
-    const saida = alertSemAnuncioSource();
+    const saida = alertNoAnnouncementSource();
     expect(saida).toContain('<Alert role="note">');
     expect(saida).toContain('  <Alert>');
   });
@@ -143,7 +143,7 @@ describe('ausências e contêineres', () => {
 
 describe('composições', () => {
   it('com ação: o AlertAction entra no import e o botão vem do design system', () => {
-    const saida = alertComAcaoSource();
+    const saida = alertWithActionSource();
     expect(saida).toContain('AlertAction');
     expect(saida).toContain('import { Button } from "@/components/ui/button";');
     expect(saida).toContain('<Button size="sm" variant="outline">');
@@ -152,7 +152,7 @@ describe('composições', () => {
   });
 
   it('classe adicional: o className aparece em cada subcomponente, não só na raiz', () => {
-    const saida = alertClasseAdicionalSource();
+    const saida = alertClassNameAdicionalSource();
     expect(saida).toContain('<Alert className="nds-w-full">');
     expect(saida).toContain('<AlertTitle className="nds-w-full">');
     expect(saida).toContain('<AlertDescription className="nds-w-full">');
@@ -162,18 +162,18 @@ describe('composições', () => {
   it('nenhum snippet ensina o andaime da story', () => {
     for (const fn of [
       alertSource,
-      alertDestrutivoSource,
+      alertDestructiveSource,
       alertSucessoSource,
       alertAvisoSource,
       alertInfoSource,
       alertDispensavelSource,
-      alertContrasteSource,
-      alertSemTituloSource,
-      alertSemIconeSource,
-      alertSemAnuncioSource,
+      alertContrastSource,
+      alertNoTitleSource,
+      alertNoIconSource,
+      alertNoAnnouncementSource,
       alertInsercaoDinamicaSource,
-      alertComAcaoSource,
-      alertClasseAdicionalSource,
+      alertWithActionSource,
+      alertClassNameAdicionalSource,
     ]) {
       const saida = fn();
       expect(saida).not.toContain('fixtures');

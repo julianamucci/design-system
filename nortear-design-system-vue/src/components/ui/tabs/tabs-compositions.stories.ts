@@ -7,9 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { Code2, Eye, Settings2, User, Shield } from 'lucide-vue-next';
 import {
   tabsWithCounterSource,
-  tabsComIconesSource,
+  tabsWithIconsSource,
   tabsConfigVerticaisSource,
-  tabsControladoSource,
+  tabsControlledSource,
   tabsModeManualSource,
 } from './tabs.source';
 
@@ -22,7 +22,7 @@ const meta: Meta<any> = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: tabsControladoSource },
+      source: { transform: tabsControlledSource },
       description: {
         component:
           'Composicoes reais de Tabs: controlado com analytics, com ícones, com contador, vertical para configurações e modo manual.',
@@ -134,7 +134,7 @@ export const WithIcons: Story = {
     docs: {
       // O gatilho deixa de ser uma linha de texto e passa a ter ícone dentro —
       // com ele, o import do conjunto de ícones e o `aria-hidden`.
-      source: { transform: tabsComIconesSource },
+      source: { transform: tabsWithIconsSource },
       description: {
         story: 'Abas com ícone à esquerda do rótulo. O ícone é decorativo — o texto do gatilho já descreve a aba para leitores de tela.',
       },

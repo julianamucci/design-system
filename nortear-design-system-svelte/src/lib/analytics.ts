@@ -9,7 +9,7 @@
  *     apareça como uma página distinta no GA4.
  */
 
-import { registrarAcao } from '@shared/primitives/faro';
+import { registrarAction } from '@shared/primitives/faro';
 
 // ─── Extensão do tipo Window ──────────────────────────────────────────────────
 
@@ -413,7 +413,7 @@ export function track<T extends keyof AnalyticsEvents>(
   // Faro primeiro, e fora do early-return do gtag: sem GA4 configurado a
   // funcao voltava sem fazer nada, e a observabilidade morreria junto por um
   // motivo que nao tem a ver com ela.
-  registrarAcao(event, params as Record<string, unknown>);
+  registrarAction(event, params as Record<string, unknown>);
 
   const gtag = getManagerGtag();
   if (typeof gtag !== 'function') return;

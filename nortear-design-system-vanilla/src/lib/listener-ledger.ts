@@ -67,7 +67,7 @@ function capturaDe(opts?: boolean | AddEventListenerOptions | EventListenerOptio
 }
 
 export function espiarOuvintes(): OuvintesSpy {
-  const entradas: Entrada[] = [];
+  const entries: Entrada[] = [];
   const restauradores: Array<() => void> = [];
 
   const instalar = (nome: Alvo, obj: EventTarget): void => {
@@ -75,11 +75,11 @@ export function espiarOuvintes(): OuvintesSpy {
     const removeOriginal = EventTarget.prototype.removeEventListener.bind(obj);
 
     const baixar = (type: string, fn: unknown, capture: boolean): Entrada | undefined => {
-      const i = entradas.findIndex(
+      const i = entries.findIndex(
         (e) => e.alvo === nome && e.type === type && e.fn === fn && e.capture === capture,
       );
       if (i < 0) return undefined;
-      return entradas.splice(i, 1)[0];
+      return entries.splice(i, 1)[0];
     };
 
     Object.defineProperty(obj, 'addEventListener', {
@@ -91,7 +91,7 @@ export function espiarOuvintes(): OuvintesSpy {
 
         const umaVez = typeof opts === 'object' && opts !== null && Boolean(opts.once);
         if (!umaVez) {
-          entradas.push({ alvo: nome, type, fn, capture, origem: callOrigem() });
+          entries.push({ alvo: nome, type, fn, capture, origem: callOrigem() });
           return addOriginal(type, fn as EventListener, opts);
         }
 
@@ -102,7 +102,7 @@ export function espiarOuvintes(): OuvintesSpy {
           baixar(type, fn, capture);
           (fn as EventListener).call(obj, evento);
         };
-        entradas.push({ alvo: nome, type, fn, capture, embrulho, origem: callOrigem() });
+        entries.push({ alvo: nome, type, fn, capture, embrulho, origem: callOrigem() });
         return addOriginal(type, embrulho, opts);
       },
     });
@@ -128,7 +128,7 @@ export function espiarOuvintes(): OuvintesSpy {
   instalar('window', window);
 
   return {
-    vivos: () => entradas.map(({ alvo, type, origem }) => ({ alvo, type, origem })),
+    vivos: () => entries.map(({ alvo, type, origem }) => ({ alvo, type, origem })),
     parar: () => restauradores.forEach((r) => r()),
   };
 }

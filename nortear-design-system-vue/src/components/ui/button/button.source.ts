@@ -31,7 +31,7 @@ function texto(rotulo: string, ...partes: Array<string | ''>): string {
  * tamanho pela cascata do componente, sem classe nenhuma. Sem o rótulo
  * acessível a ação fica sem nome, porque não sobrou texto para nomeá-la.
  */
-function soIcone(icone: string, size: string, rotulo: string): string {
+function soIcon(icone: string, size: string, rotulo: string): string {
   return vueSnippet(
     comIcone(icone),
     `<Button size="${size}" aria-label="${rotulo}">
@@ -60,12 +60,12 @@ export const buttonSource: SourceTransform<ButtonArgs> = (_gerado, ctx) => {
 /* ---------------------------------------------------------------- variantes */
 
 /** Variante primária: a ação principal da seção. */
-export function buttonPadraoSource(): string {
+export function buttonDefaultSource(): string {
   return texto('Salvar');
 }
 
 /** Variante destrutiva: ação irreversível. */
-export function buttonDestrutivoSource(): string {
+export function buttonDestructiveSource(): string {
   return texto('Excluir conta', 'variant="destructive"');
 }
 
@@ -92,49 +92,49 @@ export function buttonLinkSource(): string {
 /* ----------------------------------------------------------------- tamanhos */
 
 /** Tamanho padrão: nenhuma prop de tamanho é preciso escrever. */
-export function buttonTamanhoPadraoSource(): string {
+export function buttonSizeDefaultSource(): string {
   return texto('Padrão');
 }
 
 /** Tamanho mínimo: linha de tabela e chips de filtro. */
-export function buttonTamanhoXsSource(): string {
+export function buttonSizeXsSource(): string {
   return texto('Mínimo', 'size="xs"');
 }
 
 /** Tamanho pequeno: barras de ferramentas e áreas densas. */
-export function buttonTamanhoSmSource(): string {
+export function buttonSizeSmSource(): string {
   return texto('Pequeno', 'size="sm"');
 }
 
 /** Tamanho grande: chamadas de ação em destaque. */
-export function buttonTamanhoLgSource(): string {
+export function buttonSizeLgSource(): string {
   return texto('Grande', 'size="lg"');
 }
 
 /** Botão de ícone no tamanho padrão. */
-export function buttonIconeSource(): string {
-  return soIcone('Plus', 'icon', 'Adicionar item');
+export function buttonIconSource(): string {
+  return soIcon('Plus', 'icon', 'Adicionar item');
 }
 
 /** Botão de ícone mínimo. */
-export function buttonIconeXsSource(): string {
-  return soIcone('Plus', 'icon-xs', 'Adicionar item');
+export function buttonIconXsSource(): string {
+  return soIcon('Plus', 'icon-xs', 'Adicionar item');
 }
 
 /** Botão de ícone pequeno. */
-export function buttonIconeSmSource(): string {
-  return soIcone('Plus', 'icon-sm', 'Adicionar item');
+export function buttonIconSmSource(): string {
+  return soIcon('Plus', 'icon-sm', 'Adicionar item');
 }
 
 /** Botão de ícone grande. */
-export function buttonIconeLgSource(): string {
-  return soIcone('Plus', 'icon-lg', 'Adicionar item');
+export function buttonIconLgSource(): string {
+  return soIcon('Plus', 'icon-lg', 'Adicionar item');
 }
 
 /* ------------------------------------------------------------------ estados */
 
 /** Estado desabilitado: sem clique e fora da ordem de tabulação. */
-export function buttonDesabilitadoSource(): string {
+export function buttonDisabledSource(): string {
   return texto('Salvar', 'disabled');
 }
 
@@ -143,7 +143,7 @@ export function buttonDesabilitadoSource(): string {
  * trocado pelo progresso. O giro usa a classe do design system, que tem guarda
  * de movimento reduzido.
  */
-export function buttonCarregandoSource(): string {
+export function buttonLoadingSource(): string {
   return vueSnippet(
     comIcone('Loader2'),
     `<Button disabled aria-busy="true">
@@ -154,7 +154,7 @@ export function buttonCarregandoSource(): string {
 }
 
 /** Estado de foco por teclado: o anel é do componente, sem prop nenhuma. */
-export function buttonFocoVisivelSource(): string {
+export function buttonFocusVisibleSource(): string {
   return texto('Foco visível');
 }
 
@@ -166,7 +166,7 @@ export function buttonInvalidoSource(): string {
 /* -------------------------------------------------------------- composições */
 
 /** Composição com ícone antes do rótulo. */
-export function buttonComIconeInicialSource(): string {
+export function buttonWithIconInitialSource(): string {
   return vueSnippet(
     comIcone('Plus'),
     `<Button>
@@ -177,7 +177,7 @@ export function buttonComIconeInicialSource(): string {
 }
 
 /** Composição com ícone depois do rótulo: navegação progressiva. */
-export function buttonComIconeFinalSource(): string {
+export function buttonWithIconFinalSource(): string {
   return vueSnippet(
     comIcone('ChevronRight'),
     `<Button variant="outline">
@@ -188,7 +188,7 @@ export function buttonComIconeFinalSource(): string {
 }
 
 /** Composição de variante destrutiva com ícone. */
-export function buttonDestrutivoComIconeSource(): string {
+export function buttonDestructiveWithIconSource(): string {
   return vueSnippet(
     comIcone('Trash2'),
     `<Button variant="destructive">
@@ -199,12 +199,12 @@ export function buttonDestrutivoComIconeSource(): string {
 }
 
 /** Composição só com ícone: o rótulo acessível é obrigatório. */
-export function buttonSoIconeSource(): string {
-  return soIcone('Download', 'icon', 'Baixar arquivo');
+export function buttonSoIconSource(): string {
+  return soIcon('Download', 'icon', 'Baixar arquivo');
 }
 
 /** Par de ações: a primária fica à direita, e o respiro vem do container. */
-export function buttonParDeAcoesSource(): string {
+export function actionsButtonPairSource(): string {
   return vueSnippet(
     IMPORT,
     `<div class="nds-cluster" data-spacing="sm">
@@ -218,7 +218,7 @@ export function buttonParDeAcoesSource(): string {
  * Composição navegacional: com `as-child` o `<a>` do consumidor recebe os
  * estilos do botão e continua sendo link — o papel é dele, não do componente.
  */
-export function buttonComoLinkSource(): string {
+export function buttonAsLinkSource(): string {
   return vueSnippet(
     IMPORT,
     `<Button as-child variant="link">

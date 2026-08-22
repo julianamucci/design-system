@@ -5,9 +5,9 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
-  dropdownMenuControladoSource,
+  dropdownMenuControlledSource,
   dropdownMenuIndeterminadoSource,
-  dropdownMenuItemDesabilitadoSource,
+  dropdownMenuItemDisabledSource,
   dropdownMenuSource,
 } from './dropdown-menu.source';
 
@@ -103,7 +103,7 @@ export const Controlled: Story = {
   args: { open: false, variant: 'default', triggerLabel: 'Abrir via estado externo' },
   parameters: {
     docs: {
-      source: { transform: dropdownMenuControladoSource },
+      source: { transform: dropdownMenuControlledSource },
       description: { story: 'Abertura controlada via open + onOpenChange (bind:open).' },
     },
   },
@@ -134,7 +134,7 @@ export const Controlled: Story = {
 export const ItemDisabled: Story = {
   args: { defaultOpen: true, variant: 'itemDisabled', triggerLabel: 'Ações' },
   parameters: {
-    docs: { source: { transform: dropdownMenuItemDesabilitadoSource } },
+    docs: { source: { transform: dropdownMenuItemDisabledSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');

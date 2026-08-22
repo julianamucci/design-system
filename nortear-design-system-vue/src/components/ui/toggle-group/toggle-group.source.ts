@@ -53,7 +53,7 @@ const ALIGNMENT_WITH_JUSTIFICAR: Item[] = [
   { valor: 'justify', rotulo: 'Justificar', icone: 'AlignJustify' },
 ];
 
-const FORMATACAO: Item[] = [
+const FORMATTING: Item[] = [
   { valor: 'bold', rotulo: 'Negrito', icone: 'Bold' },
   { valor: 'italic', rotulo: 'Itálico', icone: 'Italic' },
   { valor: 'underline', rotulo: 'Sublinhado', icone: 'Underline' },
@@ -161,14 +161,14 @@ export function toggleGroupSingleSource(): string {
  */
 export function toggleGroupMultipleSource(): string {
   return vueSnippet(
-    script(FORMATACAO),
+    script(FORMATTING),
     grupo({
       raiz: [
         'type="multiple"',
         `:default-value="['bold', 'italic']"`,
         'aria-label="Formatação"',
       ],
-      itens: FORMATACAO,
+      itens: FORMATTING,
     }),
   );
 }
@@ -213,7 +213,7 @@ export function toggleGroupSelectedSource(): string {
 }
 
 /** Grupo inteiro desabilitado: a prop mora na raiz e desce para todos. */
-export function toggleGroupDesabilitadoSource(): string {
+export function toggleGroupDisabledSource(): string {
   return vueSnippet(
     script(ALINHAMENTO),
     grupo({
@@ -224,7 +224,7 @@ export function toggleGroupDesabilitadoSource(): string {
 }
 
 /** Um item só fora de alcance: aqui a prop mora no ITEM, e o grupo segue vivo. */
-export function toggleGroupItemDesabilitadoSource(): string {
+export function toggleGroupItemDisabledSource(): string {
   return vueSnippet(
     script(ALINHAMENTO),
     grupo({
@@ -255,10 +255,10 @@ export function toggleGroupBarAlignmentSource(): string {
 /** Barra de formatação: negrito, itálico e sublinhado convivem ligados. */
 export function toggleGroupBarFormattingSource(): string {
   return vueSnippet(
-    script(FORMATACAO),
+    script(FORMATTING),
     grupo({
       raiz: ['type="multiple"', `:default-value="['bold']"`, 'aria-label="Formatação"'],
-      itens: FORMATACAO,
+      itens: FORMATTING,
     }),
   );
 }
@@ -270,10 +270,10 @@ export function toggleGroupBarFormattingSource(): string {
  */
 export function toggleGroupWithSpacingSource(): string {
   return vueSnippet(
-    script(FORMATACAO),
+    script(FORMATTING),
     grupo({
       raiz: ['type="multiple"', ':spacing="1"', 'aria-label="Formatação"'],
-      itens: FORMATACAO.map((item) => ({ ...item, variante: 'outline' })),
+      itens: FORMATTING.map((item) => ({ ...item, variante: 'outline' })),
     }),
   );
 }

@@ -30,7 +30,7 @@ function importTable(markup: string): string {
  * Massa de exemplo. Sai do `script setup` como dado literal: quem consome tem os
  * próprios registros, e o que o exemplo ensina é a forma da tabela em volta.
  */
-const FATURAS = `const faturas = [
+const INVOICES = `const faturas = [
   { id: '#INV-001', status: 'Pago', metodo: 'Cartão de crédito', valor: 'R$ 250,00' },
   { id: '#INV-002', status: 'Pendente', metodo: 'Boleto bancário', valor: 'R$ 150,00' },
   { id: '#INV-003', status: 'Cancelado', metodo: 'Pix', valor: 'R$ 350,00' },
@@ -38,14 +38,14 @@ const FATURAS = `const faturas = [
   { id: '#INV-005', status: 'Pendente', metodo: 'Transferência', valor: 'R$ 200,00' },
 ]`;
 
-const COLUNAS = `const colunas = ['Fatura', 'Status', 'Método', 'Valor']`;
+const COLUMNS = `const colunas = ['Fatura', 'Status', 'Método', 'Valor']`;
 
 /**
  * O cabeçalho não recebe `scope`: ele nasce em `col` no próprio componente. A
  * coluna numérica leva `nds-text-right` junto com as células — número se lê pela
  * unidade, e o rótulo tem de acompanhar.
  */
-const CABECALHO = `<TableHeader>
+const HEADER = `<TableHeader>
   <TableRow>
     <TableHead>Fatura</TableHead>
     <TableHead>Status</TableHead>
@@ -61,7 +61,7 @@ const HEADER_ITERADO = `<TableHeader>
   </TableRow>
 </TableHeader>`;
 
-const CORPO = `<TableBody>
+const BODY = `<TableBody>
   <TableRow v-for="fatura in faturas" :key="fatura.id">
     <TableCell class="nds-font-medium">{{ fatura.id }}</TableCell>
     <TableCell>{{ fatura.status }}</TableCell>
@@ -76,7 +76,7 @@ const CORPO = `<TableBody>
  * como binding com hífen, porque `col-span` não existe em HTML e a célula
  * ficaria com uma coluna só, sem erro nenhum.
  */
-const RODAPE = `<TableFooter>
+const FOOTER = `<TableFooter>
   <TableRow>
     <TableCell colspan="3">Total</TableCell>
     <TableCell class="nds-text-right">{{ total }}</TableCell>
@@ -110,11 +110,11 @@ export const tableSource: SourceTransform<TableArgs> = (_gerado, ctx) => {
   const comRodape = args.comRodape !== false;
   const secoes = [
     legenda('Lista de faturas recentes', args.captionVisivel === true),
-    CABECALHO,
-    CORPO,
+    HEADER,
+    BODY,
   ];
-  if (comRodape) secoes.push(RODAPE);
-  return snippet(comRodape ? `${FATURAS}\n${TOTAL}` : FATURAS, tabela(...secoes));
+  if (comRodape) secoes.push(FOOTER);
+  return snippet(comRodape ? `${INVOICES}\n${TOTAL}` : INVOICES, tabela(...secoes));
 };
 
 /**
@@ -122,17 +122,17 @@ export const tableSource: SourceTransform<TableArgs> = (_gerado, ctx) => {
  * fazendo as vezes de título.
  */
 export function tableBasicaSource(): string {
-  return snippet(FATURAS, tabela(legenda('Lista de faturas recentes', true), CABECALHO, CORPO));
+  return snippet(INVOICES, tabela(legenda('Lista de faturas recentes', true), HEADER, BODY));
 }
 
 /**
  * Com rodapé: o total mora no `tfoot`. A mesma célula dentro do corpo entraria
  * na contagem de registros e viraria mais uma fatura.
  */
-export function tableComRodapeSource(): string {
+export function tableWithFooterSource(): string {
   return snippet(
-    `${FATURAS}\n${TOTAL}`,
-    tabela(legenda('Faturas recentes com total'), CABECALHO, CORPO, RODAPE),
+    `${INVOICES}\n${TOTAL}`,
+    tabela(legenda('Faturas recentes com total'), HEADER, BODY, FOOTER),
   );
 }
 
@@ -160,7 +160,7 @@ export function tableCaptionInvisivelSource(): string {
   <h2 class="nds-text-h3 nds-m-0">Faturas recentes</h2>
 ${indentar(tabela(legenda('Lista de faturas recentes'), cabecalho, corpo))}
 </div>`;
-  return snippet(FATURAS, markup);
+  return snippet(INVOICES, markup);
 }
 
 /**
@@ -169,7 +169,7 @@ ${indentar(tabela(legenda('Lista de faturas recentes'), cabecalho, corpo))}
  * cada botão diz a QUAL registro pertence: cinco botões "Ações" seriam cinco
  * controles indistinguíveis na lista do leitor de tela.
  */
-export function tableComAcoesSource(): string {
+export function tableWithActionsSource(): string {
   const cabecalho = `<TableHeader>
   <TableRow>
     <TableHead>Fatura</TableHead>
@@ -193,7 +193,7 @@ export function tableComAcoesSource(): string {
   </TableRow>
 </TableBody>`;
   return snippet(
-    FATURAS,
+    INVOICES,
     tabela(legenda('Faturas recentes com ações'), cabecalho, corpo),
     `import { Button } from '@/components/ui/button'`,
   );
@@ -204,7 +204,7 @@ export function tableComAcoesSource(): string {
  * e já aceita foco, então a tabela larga não empurra a página para o lado e a
  * rolagem também existe para quem navega sem mouse (WCAG 2.1.1).
  */
-export function tableRolagemHorizontalSource(): string {
+export function tableScrollHorizontalSource(): string {
   const cabecalho = `<TableHeader>
   <TableRow>
     <TableHead>Fatura</TableHead>
@@ -225,7 +225,7 @@ export function tableRolagemHorizontalSource(): string {
   ),
 )`;
   return snippet(
-    `${FATURAS}\n\n${meses}`,
+    `${INVOICES}\n\n${meses}`,
     tabela(legenda('Faturas por mês de competência'), cabecalho, corpo),
   );
 }
@@ -243,7 +243,7 @@ export function tableVaziaSource(): string {
   <TableEmpty :colspan="colunas.length">Nenhuma fatura encontrada.</TableEmpty>
 </TableBody>`;
   return snippet(
-    COLUNAS,
+    COLUMNS,
     tabela(legenda('Lista de faturas recentes'), HEADER_ITERADO, corpo),
   );
 }
@@ -253,7 +253,7 @@ export function tableVaziaSource(): string {
  * marcar a célula não pintaria a linha. Fora da seleção o atributo sai por
  * `null`; a string "false" ainda casaria com um seletor de presença.
  */
-export function tableLinhaSelecionadaSource(): string {
+export function tableLineSelecionadaSource(): string {
   const corpo = `<TableBody>
   <TableRow
     v-for="fatura in faturas"
@@ -267,8 +267,8 @@ export function tableLinhaSelecionadaSource(): string {
   </TableRow>
 </TableBody>`;
   return snippet(
-    `${FATURAS}\nconst selecionada = ref('#INV-002')`,
-    tabela(legenda('Lista de faturas recentes'), CABECALHO, corpo),
+    `${INVOICES}\nconst selecionada = ref('#INV-002')`,
+    tabela(legenda('Lista de faturas recentes'), HEADER, corpo),
     `import { ref } from 'vue'`,
   );
 }
@@ -282,7 +282,7 @@ export function tableLinhaSelecionadaSource(): string {
  * que a linha vai medir quando o texto chegar, e cresce junto com a fonte do
  * navegador (WCAG 1.4.4).
  */
-export function tableCarregandoSource(): string {
+export function tableLoadingSource(): string {
   const corpo = `<TableBody>
   <TableRow v-for="linha in 3" :key="linha">
     <TableCell v-for="coluna in colunas" :key="coluna">
@@ -293,5 +293,5 @@ export function tableCarregandoSource(): string {
   const markup = `<div role="status" aria-busy="true" aria-label="Carregando faturas">
 ${indentar(tabela(legenda('Lista de faturas recentes'), HEADER_ITERADO, corpo))}
 </div>`;
-  return snippet(COLUNAS, markup, `import { Skeleton } from '@/components/ui/skeleton'`);
+  return snippet(COLUMNS, markup, `import { Skeleton } from '@/components/ui/skeleton'`);
 }

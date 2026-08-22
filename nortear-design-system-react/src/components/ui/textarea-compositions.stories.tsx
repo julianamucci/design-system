@@ -6,9 +6,9 @@ import { Label } from "./label";
 import { Button } from "./button";
 import {
   textareaWithDescriptionSource,
-  textareaContadorAcessivelSource,
+  textareaCounterAccessibleSource,
   textareaControlledSource,
-  formSourceTextarea,
+  formTextareaSource,
   textareaSource,
 } from "./textarea.source";
 
@@ -109,7 +109,7 @@ export const WithAccessibleCounter: Story = {
     docs: {
       // Contagem com limite curto — composição controlada que o meta sem args
       // não imprime.
-      source: { transform: textareaContadorAcessivelSource },
+      source: { transform: textareaCounterAccessibleSource },
       description: {
         story:
           'maxLength=280 combinado com contador "X/Y" + aria-live="polite" + aria-label descritivo para leitores de tela.',
@@ -183,7 +183,7 @@ export const InForm: Story = {
   parameters: {
     docs: {
       // O campo dentro de <form>, com name, required e botão de envio.
-      source: { transform: formSourceTextarea },
+      source: { transform: formTextareaSource },
       description: {
         story:
           "Textarea integrado em <form> com name, required e Button submit. Estado controlado via useState.",

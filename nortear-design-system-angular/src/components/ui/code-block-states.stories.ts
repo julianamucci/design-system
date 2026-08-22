@@ -196,13 +196,13 @@ export const RemovedBeforeFeedback: Story = {
     // chamada. Passa-tudo — só registram.
     const setOriginal = window.setTimeout;
     const clearOriginal = window.clearTimeout;
-    let idDaConfirmacao: number | undefined;
+    let confirmId: number | undefined;
     const limpos: number[] = [];
 
     window.setTimeout = ((handler: TimerHandler, ms?: number, ...rest: unknown[]) => {
       const id = setOriginal(handler, ms, ...rest);
       // 2000ms é o intervalo do feedback de "copiado" (COPIED_RESET_MS).
-      if (ms === 2000) idDaConfirmacao = id;
+      if (ms === 2000) confirmId = id;
       return id;
     }) as typeof window.setTimeout;
     window.clearTimeout = ((id?: number) => {
@@ -220,7 +220,7 @@ export const RemovedBeforeFeedback: Story = {
             expect(canvas.getByRole('button', { name: /copiado/i })).toBeInTheDocument(),
           );
         });
-        await expect(idDaConfirmacao).toBeDefined();
+        await expect(confirmId).toBeDefined();
       });
 
       await step('Remover o bloco cancela o temporizador pendente', async () => {
@@ -230,7 +230,7 @@ export const RemovedBeforeFeedback: Story = {
         await waitFor(() =>
           expect(canvasElement.querySelector('[data-slot="code-block"]')).toBeNull(),
         );
-        await expect(limpos).toContain(idDaConfirmacao);
+        await expect(limpos).toContain(confirmId);
       });
     } finally {
       window.setTimeout = setOriginal;

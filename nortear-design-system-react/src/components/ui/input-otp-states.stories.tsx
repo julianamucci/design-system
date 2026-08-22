@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { userEvent, expect } from "storybook/test";
-import { razao } from "@shared/testing/cor";
+import { ratio } from "@shared/testing/cor";
 import {
   InputOTP,
   InputOTPGroup,
@@ -10,11 +10,11 @@ import {
 import { campo } from "./input-otp.fixtures";
 import {
   inputOtpCompletoSource,
-  inputOtpComErroSource,
-  inputOtpDesabilitadoSource,
+  inputOtpWithErrorSource,
+  inputOtpDisabledSource,
   inputOtpPreenchendoSource,
   inputOtpSource,
-  inputOtpVazioSource,
+  inputOtpEmptySource,
 } from "./input-otp.source";
 
 const meta = {
@@ -54,7 +54,7 @@ export const Empty: Story = {
     covers: ["visual.item1"],
     docs: {
       // O `autoFocus` é o que a story documenta, e ele não vem de arg aqui.
-      source: { transform: inputOtpVazioSource },
+      source: { transform: inputOtpEmptySource },
       description: { story: "Nenhuma caixa preenchida, com o campo já em foco." },
     },
   },
@@ -136,8 +136,8 @@ export const Filling: Story = {
       // palavra em volta para compensar pelo contexto. Conta WCAG do colhedor
       // compartilhado, não olhômetro nem comparação de nome de token.
       const cs = getComputedStyle(caixas(canvasElement)[0]);
-      const medida = razao(cs.color, cs.backgroundColor);
-      await expect(medida?.razao ?? 0).toBeGreaterThanOrEqual(4.5);
+      const medida = ratio(cs.color, cs.backgroundColor);
+      await expect(medida?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -191,7 +191,7 @@ export const Disabled: Story = {
     covers: ["functional.item6"],
     docs: {
       // O `disabled` é o assunto e não vem de arg: os controls estão desligados.
-      source: { transform: inputOtpDesabilitadoSource },
+      source: { transform: inputOtpDisabledSource },
       description: { story: "Bloqueado: não aceita foco nem digitação, e o campo esmaece." },
     },
   },
@@ -241,7 +241,7 @@ export const Error: Story = {
     docs: {
       // A story monta DOIS campos só para comparar bordas; o exemplo que se
       // copia é um só, com as marcas de ARIA e a mensagem ligada.
-      source: { transform: inputOtpComErroSource },
+      source: { transform: inputOtpWithErrorSource },
       description: {
         story:
           "Erro: aria-invalid marca o campo, a borda troca para a cor de erro e a mensagem vem conectada por aria-describedby.",
@@ -313,9 +313,9 @@ export const Error: Story = {
     await step("A borda da caixa troca para a cor de erro", async () => {
       // Comparação contra uma SEGUNDA instância sem erro: mexer no atributo da
       // primeira deixaria a asserção medindo o mesmo estado dos dois lados.
-      const bordaComErro = getComputedStyle(caixas(comErro)[0]).borderTopColor;
-      const bordaSemErro = getComputedStyle(caixas(semErro)[0]).borderTopColor;
-      await expect(bordaComErro).not.toBe(bordaSemErro);
+      const borderWithError = getComputedStyle(caixas(comErro)[0]).borderTopColor;
+      const borderNoError = getComputedStyle(caixas(semErro)[0]).borderTopColor;
+      await expect(borderWithError).not.toBe(borderNoError);
     });
   },
 };

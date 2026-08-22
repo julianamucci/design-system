@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent } from 'storybook/test';
-import { razao } from '@shared/testing/cor';
+import { ratio } from '@shared/testing/cor';
 import { NdsInputOtp } from './input-otp';
 
 const meta: Meta = {
@@ -69,8 +69,8 @@ export const Filling: Story = {
       // do colhedor compartilhado — a cópia local que morava aqui era o começo
       // de um segundo colhedor com as mesmas armadilhas para redescobrir.
       const cs = getComputedStyle(slotsDe(canvasElement)[0]);
-      const medida = razao(cs.color, cs.backgroundColor);
-      await expect(medida?.razao ?? 0).toBeGreaterThanOrEqual(4.5);
+      const medida = ratio(cs.color, cs.backgroundColor);
+      await expect(medida?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -186,11 +186,11 @@ export const Invalid: Story = {
       // componente Angular é desfeito na próxima detecção de mudanças, e a
       // comparação acabava lendo o mesmo estado dos dois lados — um teste que
       // não podia falhar.
-      const bordaComErro = getComputedStyle(slotsDe(comErro())[0]).borderTopColor;
-      const bordaSemErro = getComputedStyle(
+      const borderWithError = getComputedStyle(slotsDe(comErro())[0]).borderTopColor;
+      const borderNoError = getComputedStyle(
         slotsDe(canvasElement.querySelector<HTMLElement>('[data-testid="sem-erro"]')!)[0],
       ).borderTopColor;
-      await expect(bordaComErro).not.toBe(bordaSemErro);
+      await expect(borderWithError).not.toBe(borderNoError);
     });
   },
 };

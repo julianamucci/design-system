@@ -26,7 +26,7 @@ export type DropdownMenuArgs = {
 };
 
 /** Ordem canônica das peças no bloco de import — a mesma do `index.ts`. */
-const ORDEM = [
+const ORDER = [
   'DropdownMenu',
   'DropdownMenuCheckboxItem',
   'DropdownMenuContent',
@@ -44,11 +44,11 @@ const ORDEM = [
 ];
 
 /** Bloco de import: as peças do menu e o Button, que é sempre o gatilho. */
-function importar(pecas: string[]): string {
-  const usadas = ORDEM.filter((peca) => pecas.includes(peca));
+function importing(parts: string[]): string {
+  const usadas = ORDER.filter((part) => parts.includes(part));
   return [
     `import {`,
-    ...usadas.map((peca) => `  ${peca},`),
+    ...usadas.map((part) => `  ${part},`),
     `} from '@/components/ui/dropdown-menu'`,
     `import { Button } from '@/components/ui/button'`,
   ].join('\n');
@@ -88,7 +88,7 @@ ${conteudo}
 export const dropdownMenuSource: SourceTransform<DropdownMenuArgs> = (_gerado, ctx) => {
   const { defaultOpen, modal } = ctx?.args ?? {};
   return vueSnippet(
-    importar([
+    importing([
       ...BASE,
       'DropdownMenuGroup',
       'DropdownMenuItem',
@@ -118,9 +118,9 @@ export const dropdownMenuSource: SourceTransform<DropdownMenuArgs> = (_gerado, c
  * `variant` não aparece: `default` é o padrão do item, e escrevê-lo daria a
  * entender que existe uma escolha a fazer no caso comum.
  */
-export function dropdownMenuPadraoSource(): string {
+export function dropdownMenuDefaultSource(): string {
   return vueSnippet(
-    importar([...BASE, 'DropdownMenuItem']),
+    importing([...BASE, 'DropdownMenuItem']),
     menu({
       gatilho: 'Conta',
       conteudo: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
@@ -136,9 +136,9 @@ export function dropdownMenuPadraoSource(): string {
  * Ela existe para que "Excluir conta" não pareça "Editar perfil", e vem
  * separada das demais.
  */
-export function dropdownMenuDestrutivoSource(): string {
+export function dropdownMenuDestructiveSource(): string {
   return vueSnippet(
-    importar([...BASE, 'DropdownMenuItem', 'DropdownMenuSeparator']),
+    importing([...BASE, 'DropdownMenuItem', 'DropdownMenuSeparator']),
     menu({
       gatilho: 'Conta',
       conteudo: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
@@ -156,7 +156,7 @@ export function dropdownMenuDestrutivoSource(): string {
  */
 export function dropdownMenuClosedSource(): string {
   return vueSnippet(
-    importar([...BASE, 'DropdownMenuItem']),
+    importing([...BASE, 'DropdownMenuItem']),
     menu({
       gatilho: 'Abrir menu',
       conteudo: `    <DropdownMenuItem>Perfil</DropdownMenuItem>
@@ -173,7 +173,7 @@ export function dropdownMenuClosedSource(): string {
  */
 export function dropdownMenuOpenSource(): string {
   return vueSnippet(
-    importar([...BASE, 'DropdownMenuItem']),
+    importing([...BASE, 'DropdownMenuItem']),
     menu({
       raiz: 'default-open',
       gatilho: 'Abrir menu',
@@ -191,9 +191,9 @@ export function dropdownMenuOpenSource(): string {
  * ligado. Sem o evento de volta, fechar por dentro deixaria o valor externo em
  * `true` e o rótulo do botão de fora passaria a mentir.
  */
-export function dropdownMenuControladoSource(): string {
+export function dropdownMenuControlledSource(): string {
   return vueSnippet(
-    `${importar([...BASE, 'DropdownMenuItem'])}
+    `${importing([...BASE, 'DropdownMenuItem'])}
 import { ref } from 'vue'
 
 const aberto = ref(false)`,
@@ -220,9 +220,9 @@ const aberto = ref(false)`,
  * A seta salta por cima dele e o ponteiro não o alcança — as duas coisas vêm da
  * prop, não de cada consumidor.
  */
-export function dropdownMenuItemDesabilitadoSource(): string {
+export function dropdownMenuItemDisabledSource(): string {
   return vueSnippet(
-    importar([...BASE, 'DropdownMenuItem']),
+    importing([...BASE, 'DropdownMenuItem']),
     menu({
       gatilho: 'Ações',
       conteudo: `    <DropdownMenuItem>Editar</DropdownMenuItem>
@@ -244,7 +244,7 @@ export function dropdownMenuItemDesabilitadoSource(): string {
  */
 export function dropdownMenuMarkupMistaSource(): string {
   return vueSnippet(
-    importar([...BASE, 'DropdownMenuCheckboxItem']),
+    importing([...BASE, 'DropdownMenuCheckboxItem']),
     menu({
       gatilho: 'Colunas',
       conteudo: `    <DropdownMenuCheckboxItem model-value="indeterminate">Nome</DropdownMenuCheckboxItem>
@@ -261,9 +261,9 @@ export function dropdownMenuMarkupMistaSource(): string {
  * pessoa não sabe de qual bloco se trata. O rótulo não é item de menu — a seta
  * não pousa nele.
  */
-export function dropdownMenuComRotuloSource(): string {
+export function dropdownMenuWithLabelSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       ...BASE,
       'DropdownMenuGroup',
       'DropdownMenuItem',
@@ -295,7 +295,7 @@ export function dropdownMenuComRotuloSource(): string {
  */
 export function dropdownMenuWithMarkupSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       ...BASE,
       'DropdownMenuCheckboxItem',
       'DropdownMenuGroup',
@@ -324,7 +324,7 @@ const mostrarEmail = ref(false)`,
  */
 export function dropdownMenuWithChoiceUnicaSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       ...BASE,
       'DropdownMenuLabel',
       'DropdownMenuRadioGroup',
@@ -352,9 +352,9 @@ const tema = ref('light')`,
  * abre, `SubContent` é o painel filho. A seta para a direita entra e a da
  * esquerda volta — nada disso pede prop.
  */
-export function dropdownMenuComSubmenuSource(): string {
+export function dropdownMenuWithSubmenuSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       ...BASE,
       'DropdownMenuItem',
       'DropdownMenuSub',
@@ -382,9 +382,9 @@ export function dropdownMenuComSubmenuSource(): string {
  * acessível ("Copiar Ctrl C"). Escondido, a pessoa ouviria só "Copiar" e nunca
  * saberia que existe uma tecla.
  */
-export function dropdownMenuComAtalhosSource(): string {
+export function dropdownMenuWithShortcutsSource(): string {
   return vueSnippet(
-    importar([
+    importing([
       ...BASE,
       'DropdownMenuItem',
       'DropdownMenuSeparator',

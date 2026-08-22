@@ -2,33 +2,33 @@ import { describe, expect, it } from 'vitest';
 import {
   inputOtpAlfanumericoSource,
   inputOtpWithHelperSource,
-  inputOtpComErroSource,
-  inputOtpComReenvioSource,
+  inputOtpWithErrorSource,
+  inputOtpWithReenvioSource,
   inputOtpWithLabelSource,
-  inputOtpComSeparadorSource,
+  inputOtpWithSeparatorSource,
   inputOtpCompletoSource,
-  inputOtpDesabilitadoSource,
+  inputOtpDisabledSource,
   inputOtpPreenchendoSource,
   inputOtpQuatroDigitosSource,
   inputOtpSeisDigitosSource,
   inputOtpSource,
-  inputOtpVazioSource,
+  inputOtpEmptySource,
 } from './input-otp.source';
 
 const TODAS = [
   inputOtpSource,
   inputOtpSeisDigitosSource,
   inputOtpQuatroDigitosSource,
-  inputOtpComSeparadorSource,
+  inputOtpWithSeparatorSource,
   inputOtpAlfanumericoSource,
-  inputOtpVazioSource,
+  inputOtpEmptySource,
   inputOtpPreenchendoSource,
   inputOtpCompletoSource,
-  inputOtpDesabilitadoSource,
-  inputOtpComErroSource,
+  inputOtpDisabledSource,
+  inputOtpWithErrorSource,
   inputOtpWithLabelSource,
   inputOtpWithHelperSource,
-  inputOtpComReenvioSource,
+  inputOtpWithReenvioSource,
 ];
 
 describe('inputOtpSource', () => {
@@ -142,7 +142,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o separador quebra o miolo em dois grupos de três índices nomeados', () => {
-    const saida = inputOtpComSeparadorSource();
+    const saida = inputOtpWithSeparatorSource();
     expect([...saida.matchAll(/<InputOTPGroup>/g)]).toHaveLength(2);
     expect(saida).toContain('<InputOTPSeparator />');
     expect([...saida.matchAll(/<InputOTPSlot :index="\d" \/>/g)]).toHaveLength(6);
@@ -171,25 +171,25 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('o valor mora no estado, não num atributo do campo', () => {
-    expect(inputOtpVazioSource()).toContain(`const codigo = ref('')`);
+    expect(inputOtpEmptySource()).toContain(`const codigo = ref('')`);
     expect(inputOtpPreenchendoSource()).toContain(`const codigo = ref('123')`);
     expect(inputOtpCompletoSource()).toContain(`const codigo = ref('482913')`);
     expect(inputOtpCompletoSource()).not.toContain('value=');
   });
 
   it('só o estado vazio pede o foco inicial', () => {
-    expect(inputOtpVazioSource()).toContain('auto-focus');
+    expect(inputOtpEmptySource()).toContain('auto-focus');
     expect(inputOtpPreenchendoSource()).not.toContain('auto-focus');
   });
 
   it('o desabilitado bloqueia o campo e mantém o valor já digitado', () => {
-    const saida = inputOtpDesabilitadoSource();
+    const saida = inputOtpDisabledSource();
     expect(saida).toContain('disabled');
     expect(saida).toContain(`const codigo = ref('4829')`);
   });
 
   it('o erro liga o campo à mensagem, e a mensagem existe no snippet', () => {
-    const saida = inputOtpComErroSource();
+    const saida = inputOtpWithErrorSource();
     expect(saida).toContain('aria-invalid="true"');
     const alvo = /aria-describedby="([^"]+)"/.exec(saida)?.[1];
     expect(saida).toContain(`<p id="${alvo}"`);
@@ -208,7 +208,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o reenvio vem DEPOIS do campo, e é botão de verdade', () => {
-    const saida = inputOtpComReenvioSource();
+    const saida = inputOtpWithReenvioSource();
     expect(saida.indexOf('</InputOTP>')).toBeLessThan(saida.indexOf('Reenviar código'));
     expect(saida).toContain('<Button variant="link" size="sm" type="button">Reenviar código</Button>');
   });

@@ -212,7 +212,7 @@ function mountCartao(item: Registro): FoundationCartao {
 }
 
 /** Pares chave→valor de um objeto OU de um array (índice como chave). */
-function entradas(valor: unknown): Array<[string, unknown]> {
+function entries(valor: unknown): Array<[string, unknown]> {
   if (Array.isArray(valor)) return valor.map((v, i) => [String(i), v]);
   if (ehObjeto(valor)) return Object.entries(valor);
   return [];
@@ -223,16 +223,16 @@ function entradas(valor: unknown): Array<[string, unknown]> {
  * quando são só strings. É a mesma regra das outras quatro stacks — uma lista
  * de frases não vira grid de cartões de uma linha só.
  */
-function blocoDeItens(valor: unknown): FoundationBlock {
-  const pares = entradas(valor);
-  const hasCartoes = pares.some(([, v]) => ehObjeto(v));
+function itemsBlock(valor: unknown): FoundationBlock {
+  const pairs = entries(valor);
+  const hasCartoes = pairs.some(([, v]) => ehObjeto(v));
 
   if (!hasCartoes) {
-    return bloco('lista', { itens: pares.map(([, v]) => String(v)) });
+    return bloco('lista', { itens: pairs.map(([, v]) => String(v)) });
   }
 
   return bloco('cartoes', {
-    cartoes: pares.map(([, item]) =>
+    cartoes: pairs.map(([, item]) =>
       ehObjeto(item)
         ? mountCartao(item)
         : { titulo: '', corpo: String(item), extras: [] },
@@ -256,7 +256,7 @@ function tableBlock(cols: unknown, rows: unknown): FoundationBlock {
     ? cols.map((c) => String(c))
     : Object.values(ehObjeto(cols) ? cols : {}).map((c) => String(c));
 
-  const linhas = entradas(rows).map(([, linha]) => {
+  const linhas = entries(rows).map(([, linha]) => {
     if (Array.isArray(linha)) return linha.map((c) => String(c ?? ''));
     if (ehObjeto(linha)) return columnKeys.map((k) => String(linha[k] ?? ''));
     return [String(linha)];
@@ -275,8 +275,8 @@ const KEYS_RESERVADAS = [...TEXT_KEYS, 'cols', 'rows', 'items', 'keys', 'rules']
  * `testing.automated` / `testing.manual` na página de Acessibilidade.
  */
 function cartaoEhSheet(v: Registro): boolean {
-  const temRotulo = 'title' in v || 'name' in v || 'body' in v || 'description' in v;
-  return temRotulo && Object.values(v).every((x) => typeof x === 'string');
+  const hasLabel = 'title' in v || 'name' in v || 'body' in v || 'description' in v;
+  return hasLabel && Object.values(v).every((x) => typeof x === 'string');
 }
 
 function mountSubgrupo(valor: Registro): FoundationGroup {
@@ -287,9 +287,9 @@ function mountSubgrupo(valor: Registro): FoundationGroup {
 
   const blocos: FoundationBlock[] = [];
   if (hasTable) blocos.push(tableBlock(valor['cols'], valor['rows']));
-  if (itens !== undefined) blocos.push(blocoDeItens(itens));
+  if (itens !== undefined) blocos.push(itemsBlock(itens));
   // Mapa puro (sem título, sem itens, sem tabela): o próprio objeto é o conteúdo.
-  if (!titulo && itens === undefined && !hasTable) blocos.push(blocoDeItens(valor));
+  if (!titulo && itens === undefined && !hasTable) blocos.push(itemsBlock(valor));
 
   return { titulo, corpo, blocos };
 }
@@ -309,7 +309,7 @@ function mountSection(chave: string, dados: Registro): FoundationSection {
 
   const hasTable = dados['cols'] !== undefined && dados['rows'] !== undefined;
   if (hasTable) blocos.push(tableBlock(dados['cols'], dados['rows']));
-  if (dados['items'] !== undefined) blocos.push(blocoDeItens(dados['items']));
+  if (dados['items'] !== undefined) blocos.push(itemsBlock(dados['items']));
 
   // Sem `items`/`cols`/`rows`, as folhas de cartão soltas na seção viram o grid
   // que o `items` teria dado — é como `testing` (automated/manual) chega.
@@ -319,11 +319,11 @@ function mountSection(chave: string, dados: Registro): FoundationSection {
     const folhas = Object.entries(dados).filter(
       ([k, v]) => !KEYS_RESERVADAS.includes(k) && ehObjeto(v) && cartaoEhSheet(v),
     );
-    if (folhas.length > 0) blocos.push(blocoDeItens(Object.fromEntries(folhas)));
+    if (folhas.length > 0) blocos.push(itemsBlock(Object.fromEntries(folhas)));
   }
 
-  if (dados['keys'] !== undefined) blocos.push(blocoDeItens(dados['keys']));
-  if (dados['rules'] !== undefined) blocos.push(blocoDeItens(dados['rules']));
+  if (dados['keys'] !== undefined) blocos.push(itemsBlock(dados['keys']));
+  if (dados['rules'] !== undefined) blocos.push(itemsBlock(dados['rules']));
 
   const grupos = Object.entries(dados)
     .filter(([k, v]) => !KEYS_RESERVADAS.includes(k) && ehObjeto(v) && !cartaoEhSheet(v))
@@ -619,7 +619,7 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
       const seo = (ehObjeto(d['seo']) ? d['seo'] : {}) as Registro;
       const idioma = getLocale();
 
-      const limpar = applySeo({
+      const clear = applySeo({
         // `seo.title` NÃO leva "· Design System": o applySeo acrescenta.
         title: texto(seo['title']) || texto(d['title']),
         description: texto(seo['description']) || texto(d['description']),
@@ -637,7 +637,7 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
         page_title: `${texto(d['title'])} · Design System`,
       });
 
-      onCleanup(limpar);
+      onCleanup(clear);
     });
   }
 

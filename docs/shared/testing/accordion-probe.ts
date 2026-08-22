@@ -32,7 +32,7 @@ function caixa(el: HTMLElement | null) {
 }
 
 /** Fundo composto: o painel costuma ser transparente sobre o card. */
-function fundoEfetivo(el: HTMLElement): string {
+function backgroundEffective(el: HTMLElement): string {
   let atual: HTMLElement | null = el;
   while (atual) {
     const cor = getComputedStyle(atual).backgroundColor;
@@ -43,7 +43,7 @@ function fundoEfetivo(el: HTMLElement): string {
   return 'rgb(255, 255, 255)';
 }
 
-export function medirAccordion(raiz: HTMLElement) {
+export function measureAccordion(raiz: HTMLElement) {
   const gatilhos = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-trigger'));
   const primeiro = gatilhos[0] ?? null;
   const conteudos = Array.from(raiz.querySelectorAll<HTMLElement>('.nds-accordion-content'));
@@ -54,10 +54,10 @@ export function medirAccordion(raiz: HTMLElement) {
   // promessa, altura é entrega.
   const abertos = conteudos.filter((c) => c.getBoundingClientRect().height > 0).length;
 
-  const fundo = primeiro ? fundoEfetivo(primeiro) : 'rgb(255, 255, 255)';
+  const fundo = primeiro ? backgroundEffective(primeiro) : 'rgb(255, 255, 255)';
 
   return {
-    achado: gatilhos.length > 0,
+    finding: gatilhos.length > 0,
     estrutura: {
       raiz: raiz.querySelector('.nds-accordion') ? '.nds-accordion' : null,
       itens: itens.length,
@@ -130,6 +130,6 @@ export function medirAccordion(raiz: HTMLElement) {
 }
 
 /** Canal de saída: o console da play não chega ao terminal do vitest. */
-export function reportarAccordion(stack: string, cenario: string, raiz: HTMLElement) {
-  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(medirAccordion(raiz))}`);
+export function reportAccordion(stack: string, cenario: string, raiz: HTMLElement) {
+  throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(measureAccordion(raiz))}`);
 }

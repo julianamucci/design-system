@@ -23,7 +23,7 @@
  * o campo vem `null` — e isso É o achado.
  */
 
-export interface MedidaDeControle {
+export interface ControlMeasurement {
   /** Tag do elemento (`A`, `BUTTON`, `SPAN`). */
   tag: string | null;
   /** `data-slot` — o contrato de markup que as cinco stacks compartilham. */
@@ -50,7 +50,7 @@ export interface MedidaDeControle {
   alcancavel: boolean | null;
 }
 
-export interface MedidaDePaginacao {
+export interface PaginationMeasurement {
   /** Raiz: tag, classes e rótulo do landmark. */
   raiz: {
     tag: string | null;
@@ -61,16 +61,16 @@ export interface MedidaDePaginacao {
   /** Lista: tag e classes. */
   lista: { tag: string | null; classesNds: string[]; itens: number } | null;
   /** Controle anterior, o que fica desabilitado na primeira página. */
-  anterior: MedidaDeControle | null;
+  anterior: ControlMeasurement | null;
   /** Controle próximo. */
-  proxima: MedidaDeControle | null;
+  next: ControlMeasurement | null;
   /** Primeiro link numerado inativo encontrado. */
-  numeroInativo: MedidaDeControle | null;
+  numeroInativo: ControlMeasurement | null;
   /** Link numerado da página atual. */
-  numeroAtivo: MedidaDeControle | null;
+  numeroAtivo: ControlMeasurement | null;
   /** Reticências, quando a faixa as tem. */
   reticencias:
-    | (MedidaDeControle & { texto: string | null; ariaHidden: string | null })
+    | (ControlMeasurement & { texto: string | null; ariaHidden: string | null })
     | null;
   /** Quantidade de reticências na faixa. */
   totalReticencias: number;
@@ -107,7 +107,7 @@ function alcancavel(el: Element): boolean | null {
   return alvo === el || el.contains(alvo);
 }
 
-function medirControle(el: Element | null): MedidaDeControle | null {
+function measureControl(el: Element | null): ControlMeasurement | null {
   if (!el) return null;
   const estilo = getComputedStyle(el);
   const caixa = el.getBoundingClientRect();
@@ -138,7 +138,7 @@ function medirControle(el: Element | null): MedidaDeControle | null {
  * as duas formas evita que o campo venha `null` por falha do seletor em vez de
  * falha do componente.
  */
-export function medirPaginacao(raizBusca: HTMLElement): MedidaDePaginacao {
+export function measurePagination(raizBusca: HTMLElement): PaginationMeasurement {
   const nav = raizBusca.querySelector('[data-slot="pagination"]') ?? raizBusca.querySelector('nav');
   const lista =
     raizBusca.querySelector('[data-slot="pagination-content"]') ?? raizBusca.querySelector('ul');
@@ -148,20 +148,20 @@ export function medirPaginacao(raizBusca: HTMLElement): MedidaDePaginacao {
     raizBusca.querySelector('.nds-pagination-prev') ??
     raizBusca.querySelector('li:first-child > *');
 
-  const proxima =
+  const next =
     raizBusca.querySelector('[data-slot="pagination-next"]') ??
     raizBusca.querySelector('.nds-pagination-next') ??
     raizBusca.querySelector('li:last-child > *');
 
-  const numerados = Array.from(
+  const numbered = Array.from(
     raizBusca.querySelectorAll('[data-slot="pagination-link"], .nds-pagination-link'),
   ).filter((el) => /^\d+$/.test((el.textContent ?? '').trim()));
 
   const reticencias = Array.from(
     raizBusca.querySelectorAll('[data-slot="pagination-ellipsis"], .nds-pagination-ellipsis'),
   );
-  const primeiraReticencia = reticencias[0] ?? null;
-  const medidaReticencia = medirControle(primeiraReticencia);
+  const firstReticencia = reticencias[0] ?? null;
+  const measurementReticencia = measureControl(firstReticencia);
 
   return {
     raiz: nav
@@ -175,20 +175,20 @@ export function medirPaginacao(raizBusca: HTMLElement): MedidaDePaginacao {
     lista: lista
       ? { tag: lista.tagName, classesNds: classesNds(lista), itens: lista.children.length }
       : null,
-    anterior: medirControle(anterior),
-    proxima: medirControle(proxima),
-    numeroInativo: medirControle(
-      numerados.find((el) => el.getAttribute('aria-current') !== 'page') ?? null,
+    anterior: measureControl(anterior),
+    next: measureControl(next),
+    numeroInativo: measureControl(
+      numbered.find((el) => el.getAttribute('aria-current') !== 'page') ?? null,
     ),
-    numeroAtivo: medirControle(
-      numerados.find((el) => el.getAttribute('aria-current') === 'page') ?? null,
+    numeroAtivo: measureControl(
+      numbered.find((el) => el.getAttribute('aria-current') === 'page') ?? null,
     ),
     reticencias:
-      medidaReticencia && primeiraReticencia
+      measurementReticencia && firstReticencia
         ? {
-            ...medidaReticencia,
-            texto: (primeiraReticencia.textContent ?? '').trim() || null,
-            ariaHidden: primeiraReticencia.getAttribute('aria-hidden'),
+            ...measurementReticencia,
+            texto: (firstReticencia.textContent ?? '').trim() || null,
+            ariaHidden: firstReticencia.getAttribute('aria-hidden'),
           }
         : null,
     totalReticencias: reticencias.length,
@@ -201,7 +201,7 @@ export function medirPaginacao(raizBusca: HTMLElement): MedidaDePaginacao {
  * `console.log` não chega ao terminal — o addon do Storybook instrumenta o
  * console dentro da `play`. A exceção chega.
  */
-export function reportarSonda(stack: string, cenario: string, medida: unknown): never {
+export function reportProbe(stack: string, cenario: string, medida: unknown): never {
   throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(medida)}`);
 }
 
@@ -229,7 +229,7 @@ function luminancia([r, g, b]: [number, number, number]): number {
   return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
 }
 
-export function razaoDeContraste(
+export function contrastRatio(
   a: [number, number, number],
   b: [number, number, number],
 ): number {
@@ -243,7 +243,7 @@ export function razaoDeContraste(
  * O link ghost não pinta o próprio fundo, e um fundo com alfa devolve uma cor
  * que ninguém vê — medir contra ela daria um número que não existe na tela.
  */
-export function fundoEfetivo(elemento: Element): [number, number, number] {
+export function backgroundEffective(elemento: Element): [number, number, number] {
   let no: Element | null = elemento;
   while (no) {
     const cor = canais(getComputedStyle(no).backgroundColor);
@@ -253,9 +253,9 @@ export function fundoEfetivo(elemento: Element): [number, number, number] {
   return [255, 255, 255];
 }
 
-export interface MedidaDeContraste {
+export interface ContrastMeasurement {
   nome: string;
-  razao: number;
+  ratio: number;
 }
 
 /**
@@ -263,14 +263,14 @@ export interface MedidaDeContraste {
  * ele aparece. O limite é 4.5 — o texto da paginação é de 14px, tamanho normal
  * pela WCAG (grande é ≥24px, ou ≥18.66px em negrito).
  */
-export function contrastesDaFaixa(raizBusca: HTMLElement): MedidaDeContraste[] {
+export function rangeContrastes(raizBusca: HTMLElement): ContrastMeasurement[] {
   const controles = Array.from(
     raizBusca.querySelectorAll<HTMLElement>(
       '[data-slot="pagination-link"], [data-slot="pagination-previous"], [data-slot="pagination-next"], .nds-pagination-link',
     ),
   );
   const vistos = new Set<Element>();
-  const medidas: MedidaDeContraste[] = [];
+  const medidas: ContrastMeasurement[] = [];
   for (const controle of controles) {
     if (vistos.has(controle)) continue;
     vistos.add(controle);
@@ -278,7 +278,7 @@ export function contrastesDaFaixa(raizBusca: HTMLElement): MedidaDeContraste[] {
     if (!cor) continue;
     medidas.push({
       nome: nomeAcessivel(controle) ?? '(sem nome)',
-      razao: razaoDeContraste(cor, fundoEfetivo(controle)),
+      ratio: contrastRatio(cor, backgroundEffective(controle)),
     });
   }
   return medidas;
@@ -286,7 +286,7 @@ export function contrastesDaFaixa(raizBusca: HTMLElement): MedidaDeContraste[] {
 
 // ─── Alvo de toque ───────────────────────────────────────────────────────────
 
-export interface AlvoMedido {
+export interface TargetMedido {
   nome: string;
   largura: number;
   altura: number;
@@ -300,19 +300,19 @@ export interface AlvoMedido {
  * direcional de 32×16, encolhido porque o rótulo textual estava escondido por
  * uma classe morta e não sobrava nada para o padding crescer.
  */
-export function alvosAbaixoDoMinimo(raizBusca: HTMLElement, minimo = 24): AlvoMedido[] {
+export function minimumTargetsBelow(raizBusca: HTMLElement, minimum = 24): TargetMedido[] {
   const controles = Array.from(
     raizBusca.querySelectorAll<HTMLElement>(
       '[data-slot="pagination-link"], [data-slot="pagination-previous"], [data-slot="pagination-next"], .nds-pagination-link',
     ),
   );
   const vistos = new Set<Element>();
-  const faltantes: AlvoMedido[] = [];
+  const faltantes: TargetMedido[] = [];
   for (const controle of controles) {
     if (vistos.has(controle)) continue;
     vistos.add(controle);
     const caixa = controle.getBoundingClientRect();
-    if (caixa.width < minimo || caixa.height < minimo) {
+    if (caixa.width < minimum || caixa.height < minimum) {
       faltantes.push({
         nome: nomeAcessivel(controle) ?? '(sem nome)',
         largura: Math.round(caixa.width),

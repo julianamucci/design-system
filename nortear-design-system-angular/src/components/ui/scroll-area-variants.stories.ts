@@ -43,8 +43,8 @@ function transbordo(viewport: HTMLElement): { x: boolean; y: boolean } {
 
 const TAGS = Array.from({ length: 24 }, (_, i) => `Tag ${i + 1}`);
 const CARDS = Array.from({ length: 16 }, (_, i) => `Card ${i + 1}`);
-const LINHAS = Array.from({ length: 20 }, (_, i) => `L${i + 1}`);
-const COLUNAS = Array.from({ length: 12 }, (_, i) => `C${i + 1}`);
+const LINES = Array.from({ length: 20 }, (_, i) => `L${i + 1}`);
+const COLUMNS = Array.from({ length: 12 }, (_, i) => `C${i + 1}`);
 
 export const Vertical: Story = {
   parameters: { covers: ['visual.item1'] },
@@ -125,7 +125,7 @@ export const Horizontal: Story = {
 export const Bidirectional: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
-    props: { linhas: LINHAS, colunas: COLUNAS },
+    props: { linhas: LINES, colunas: COLUMNS },
     template: `
       <div ndsScrollArea size="lg" label="Matriz com rolagem nos dois eixos" class="${ROOT_LARGA}">
         <div class="nds-stack nds-p-4" data-spacing="sm">

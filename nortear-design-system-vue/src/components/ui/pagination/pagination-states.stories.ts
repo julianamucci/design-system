@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, fn, userEvent } from 'storybook/test';
-import { alvosAbaixoDoMinimo, contrastesDaFaixa } from '@shared/testing/pagination-probe';
+import { minimumTargetsBelow, rangeContrastes } from '@shared/testing/pagination-probe';
 import {
   Pagination,
   PaginationContent,
@@ -43,8 +43,8 @@ const sharedComponents = {
   PaginationPrevious,
 };
 
-const ROTULO_ANTERIOR = 'Ir para a página anterior';
-const ROTULO_PROXIMA = 'Ir para a próxima página';
+const LABEL_PREVIOUS = 'Ir para a página anterior';
+const LABEL_NEXT = 'Ir para a próxima página';
 
 /** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
 const onPageChange = fn();
@@ -171,7 +171,7 @@ export const Disabled: Story = {
   render: faixa('Paginação na primeira página', 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const anterior = canvas.getByRole('button', { name: ROTULO_ANTERIOR });
+    const anterior = canvas.getByRole('button', { name: LABEL_PREVIOUS });
 
     await step('Anterior está marcado como desabilitado', async () => {
       // visual.item4 — aqui o controle é um `<button>`, então o `disabled`
@@ -194,10 +194,10 @@ export const Disabled: Story = {
     });
 
     await step('Próxima continua ativo', async () => {
-      const proxima = canvas.getByRole('button', { name: ROTULO_PROXIMA });
-      await expect(proxima).not.toBeDisabled();
+      const next = canvas.getByRole('button', { name: LABEL_NEXT });
+      await expect(next).not.toBeDisabled();
       onPageChange.mockClear();
-      await userEvent.click(proxima);
+      await userEvent.click(next);
       await expect(onPageChange).toHaveBeenLastCalledWith(2);
     });
   },
@@ -253,14 +253,14 @@ export const Contrast: Story = {
     await step('Todo link passa dos 4.5:1 exigidos para texto', async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela
       // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
-      const medidas = contrastesDaFaixa(canvasElement);
+      const medidas = rangeContrastes(canvasElement);
       await expect(medidas.length).toBe(7);
-      await expect(JSON.stringify(medidas.filter((m) => m.razao < 4.5))).toBe('[]');
+      await expect(JSON.stringify(medidas.filter((m) => m.ratio < 4.5))).toBe('[]');
     });
 
     await step('Todo controle alcança o alvo de toque mínimo', async () => {
       // accessibility.item6
-      await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe('[]');
+      await expect(JSON.stringify(minimumTargetsBelow(canvasElement))).toBe('[]');
     });
   },
 };

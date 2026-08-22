@@ -15,14 +15,14 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import {
   waitForPortal,
-  REGRA_GUARDA_DE_FOCO,
+  FOCUS_RULE_GUARDA,
   LIST_RULE_SCROLL,
 } from '@/lib/wait-for-portal';
 import {
-  selectComRotuloSource,
+  selectWithLabelSource,
   selectWithSeparatorSource,
-  selectControladoSource,
-  selectEmFormularioSource,
+  selectControlledSource,
+  formSelectSource,
 } from './select.source';
 
 const meta = {
@@ -34,7 +34,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: selectComRotuloSource },
+      source: { transform: selectWithLabelSource },
       description: {
         component:
           'Composicoes reais: ComLabel (label externo associado), Controlado (modelValue + @update:modelValue), EmFormulario (Select dentro de form) e ComSeparator (grupos divididos por SelectSeparator).',
@@ -104,7 +104,7 @@ export const Controlled: Story = {
     docs: {
       // O estado sai do componente: entram o `ref`, a prop de entrada e o
       // evento de saída, nenhum deles no snippet do meta.
-      source: { transform: selectControladoSource },
+      source: { transform: selectControlledSource },
       description: { story: 'Seleção controlada por estado externo via modelValue + @update:modelValue.' },
     },
   },
@@ -158,7 +158,7 @@ export const InForm: Story = {
   parameters: {
     docs: {
       // O formulário em volta e o `name` que leva o valor no envio.
-      source: { transform: selectEmFormularioSource },
+      source: { transform: formSelectSource },
       description: { story: 'Select integrado em form HTML — prop name expõe o valor no submit.' },
     },
   },
@@ -225,7 +225,7 @@ export const WithSeparator: Story = {
     // Termina ABERTA: o separador só existe dentro da lista. Quatro opções,
     // dois cabeçalhos e um traço — a lista transborda a caixa e ROLA. Os
     // motivos das duas regras estão em `wait-for-portal`.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, LIST_RULE_SCROLL] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA, LIST_RULE_SCROLL] } },
     docs: {
       // Grupos, cabeçalhos e o traço entre eles — a lista inteira muda.
       source: { transform: selectWithSeparatorSource },

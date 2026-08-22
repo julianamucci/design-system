@@ -30,7 +30,7 @@ const IMPORT_WITH_LABELS = `import {
 } from '@/components/ui/data-table';`;
 
 /** Tipo da linha e o recorte de dados — vêm do produto, não do componente. */
-const DADOS = `interface Invoice {
+const DATA = `interface Invoice {
   id: string;
   customer: string;
   status: 'Pago' | 'Pendente' | 'Cancelado';
@@ -59,7 +59,7 @@ const varianteDoStatus = {
  * Definidas UMA vez, em escopo estável: recriar o array a cada render zeraria
  * ordenação, filtros e seleção.
  */
-const COLUNAS = `const columns: DataTableColumn<Invoice>[] = [
+const COLUMNS = `const columns: DataTableColumn<Invoice>[] = [
   { accessorKey: 'id', header: 'Fatura', size: 110 },
   { accessorKey: 'customer', header: 'Cliente', size: 200 },
   {
@@ -109,9 +109,9 @@ export function dataTableSource(
   return svelteSnippet(
     script(
       enableRowSelection ? IMPORT_WITH_LABELS : IMPORT,
-      DADOS,
+      DATA,
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
       enableRowSelection
         ? `// Só as chaves informadas mudam; o resto continua no padrão do componente.
 const rotulos: Partial<DataTableLabels> = {
@@ -148,7 +148,7 @@ const chaveDaFatura = (f: Invoice) => f.id;`
 }
 
 /** Estado sem resultados: a estrutura fica de pé e a mensagem ocupa a linha inteira. */
-export function dataTableSemResultadosSource(): string {
+export function dataTableNoResultsSource(): string {
   return svelteSnippet(
     script(
       IMPORT,
@@ -163,7 +163,7 @@ export function dataTableSemResultadosSource(): string {
 // O recorte não devolveu nada — a grade continua montada.
 const invoices: Invoice[] = [];`,
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
     ),
     tag([
       '{columns}',
@@ -175,11 +175,11 @@ const invoices: Invoice[] = [];`,
 }
 
 /** Filtro por coluna: campo de texto e lista de valores, declarados na coluna. */
-export function dataTableFiltrosPorColunaSource(): string {
+export function columnDataTableFiltersSource(): string {
   return svelteSnippet(
     script(
       IMPORT,
-      DADOS,
+      DATA,
       APRESENTACAO,
       `// O filtro de cada coluna é declarado na própria coluna: o tipo escolhe o
 // controle, e as opções da lista vêm de quem conhece o domínio.
@@ -225,9 +225,9 @@ const columns: DataTableColumn<Invoice>[] = [
 }
 
 /** Colunas redimensionáveis: a alça se anuncia como separador com o nome da coluna. */
-export function dataTableColunasRedimensionaveisSource(): string {
+export function dataTableColumnsRedimensionaveisSource(): string {
   return svelteSnippet(
-    script(IMPORT, DADOS, APRESENTACAO, COLUNAS),
+    script(IMPORT, DATA, APRESENTACAO, COLUMNS),
     tag(['{columns}', 'data={invoices}', 'enableColumnResizing']),
   );
 }
@@ -235,7 +235,7 @@ export function dataTableColunasRedimensionaveisSource(): string {
 /** Reordenar e fixar colunas: a ordem é arrastável e a fixação gruda na borda. */
 export function dataTableReordenarEFixarSource(): string {
   return svelteSnippet(
-    script(IMPORT, DADOS, APRESENTACAO, COLUNAS),
+    script(IMPORT, DATA, APRESENTACAO, COLUMNS),
     tag([
       '{columns}',
       'data={invoices}',
@@ -251,11 +251,11 @@ export function dataTableReordenarEFixarSource(): string {
  * O array de linhas é do consumidor de propósito — a tabela não é dona do
  * estado, e é por isso que `onCellEdit` existe.
  */
-export function dataTableEdicaoInlineSource(): string {
+export function dataTableEditInlineSource(): string {
   return svelteSnippet(
     script(
       IMPORT,
-      DADOS,
+      DATA,
       APRESENTACAO,
       `const columns: DataTableColumn<Invoice>[] = [
   { accessorKey: 'id', header: 'Fatura' },
@@ -296,7 +296,7 @@ let data = $state<Invoice[]>(invoices.map((f) => ({ ...f })));`,
 /** Paginação: fatia de cinco linhas, com o tamanho inicial presente nas opções. */
 export function dataTablePaginadaSource(): string {
   return svelteSnippet(
-    script(IMPORT, DADOS, APRESENTACAO, COLUNAS),
+    script(IMPORT, DATA, APRESENTACAO, COLUMNS),
     `${tag([
       '{columns}',
       'data={invoices}',
@@ -311,13 +311,13 @@ export function dataTablePaginadaSource(): string {
 }
 
 /** Rótulo de linha explícito: quem monta a tabela diz qual campo identifica a linha. */
-export function dataTableRotuloDeLinhaSource(): string {
+export function lineDataTableLabelSource(): string {
   return svelteSnippet(
     script(
       IMPORT,
-      DADOS,
+      DATA,
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
       `// Sem \`rowLabel\` o identificador sairia da primeira coluna ("INV-001").
 // Aqui a escolha é explícita, e vence a primeira coluna.
 const chaveDaFatura = (f: Invoice) => f.id;
@@ -357,7 +357,7 @@ const invoices: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
   amount: (i * 37) % 2000,
 }));`,
       APRESENTACAO,
-      COLUNAS,
+      COLUMNS,
     ),
     `${tag([
       '{columns}',

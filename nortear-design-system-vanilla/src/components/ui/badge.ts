@@ -30,7 +30,7 @@ export interface BadgeOptions {
  * obrigava a marcar `v8 ignore` na própria implementação. O mapa não tem ramo
  * nenhum, então não há o que cobrir nem o que ignorar.
  */
-const CLASSE_POR_VARIANTE: Record<BadgeVariant, string> = {
+const VARIANT_CLASSNAME: Record<BadgeVariant, string> = {
   default: '',
   secondary: 'nds-badge-secondary',
   destructive: 'nds-badge-destructive',
@@ -41,7 +41,7 @@ const CLASSE_POR_VARIANTE: Record<BadgeVariant, string> = {
 };
 
 function badgeClass(variant: BadgeVariant = 'default'): string {
-  return ['nds-badge', CLASSE_POR_VARIANTE[variant]].filter(Boolean).join(' ');
+  return ['nds-badge', VARIANT_CLASSNAME[variant]].filter(Boolean).join(' ');
 }
 
 export function createBadge(options: BadgeOptions = {}): HTMLElement {

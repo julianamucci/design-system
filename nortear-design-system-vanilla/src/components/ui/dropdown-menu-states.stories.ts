@@ -97,7 +97,7 @@ export const Open: Story = {
     const canvas = within(canvasElement);
     const body = within(document.body);
     const gatilho = canvas.getByRole('button', { name: /abrir menu/i });
-    const itensDoMenu = async () =>
+    const menuItems = async () =>
       within(await body.findByRole('menu')).getAllByRole('menuitem');
 
     await step('Clicar abre o menu e o foco entra no painel', async () => {
@@ -116,7 +116,7 @@ export const Open: Story = {
     });
 
     await step('As setas descem e sobem um item por vez', async () => {
-      const itens = await itensDoMenu();
+      const itens = await menuItems();
       itens[0].focus();
       await userEvent.keyboard('{ArrowDown}');
       await expect(document.activeElement).toBe(itens[1]);
@@ -125,7 +125,7 @@ export const Open: Story = {
     });
 
     await step('Home e End vão ao primeiro e ao último', async () => {
-      const itens = await itensDoMenu();
+      const itens = await menuItems();
       await userEvent.keyboard('{End}');
       await expect(document.activeElement).toBe(itens[2]);
       await userEvent.keyboard('{Home}');
@@ -136,7 +136,7 @@ export const Open: Story = {
       // Typeahead: numa lista de ações longa é o que evita percorrer item por
       // item. Sem ele a letra não faz nada e o foco fica onde estava — por isso
       // a asserção compara com OUTRO item, e não com "mudou de lugar".
-      const itens = await itensDoMenu();
+      const itens = await menuItems();
       await userEvent.keyboard('s');
       await expect(document.activeElement).toBe(itens[2]);
     });

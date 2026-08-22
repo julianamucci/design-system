@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, userEvent, waitFor } from "storybook/test";
 import {
-  anelDeFocoDeclarado,
-  contrasteDoPegador,
-  medirProporcao,
+  focusDeclaradoRing,
+  grabberContrast,
+  measureRatio,
   transbordo,
 } from "@shared/testing/scroll-area-probe";
 import { ScrollArea } from "./scroll-area";
 import {
-  scrollAreaConteudoFocavelSource,
+  scrollAreaContentFocavelSource,
   scrollAreaNoHeightSource,
   scrollAreaSource,
 } from "./scroll-area.source";
@@ -57,7 +57,7 @@ function List() {
  * exatamente 0, então uma asserção feita no meio do fade passa no vitest e
  * falha no painel Interactions — o gate é a opacidade computada.
  */
-async function esperarBarra(
+async function waitForBar(
   raiz: HTMLElement,
   orientation: "vertical" | "horizontal" = "vertical",
 ): Promise<HTMLElement> {
@@ -129,7 +129,7 @@ export const AlwaysVisible: Story = {
     const viewport = canvasElement.querySelector<HTMLElement>(
       '[data-slot="scroll-area-viewport"]'
     )!;
-    const trilha = await esperarBarra(canvasElement);
+    const trilha = await waitForBar(canvasElement);
     const pegador = trilha.querySelector<HTMLElement>('[data-slot="scroll-area-thumb"]')!;
 
     await step("O pegador indica quanto do conteúdo está visível", async () => {
@@ -137,7 +137,7 @@ export const AlwaysVisible: Story = {
       // trilha a mesma fração que o viewport ocupa do conteúdo.
       viewport.scrollTop = 0;
       const p = await waitFor(() => {
-        const medida = medirProporcao(trilha, pegador, viewport, "vertical");
+        const medida = measureRatio(trilha, pegador, viewport, "vertical");
         if (medida.deslocamentoMaximo <= 0) throw new Error("pegador ainda não medido");
         return medida;
       });
@@ -158,7 +158,7 @@ export const AlwaysVisible: Story = {
       // de como cada lib define o curso útil da trilha (uma desconta o padding,
       // outra reserva o canto no pé da barra).
       const maximo = viewport.scrollHeight - viewport.clientHeight;
-      const medir = () => medirProporcao(trilha, pegador, viewport, "vertical");
+      const medir = () => measureRatio(trilha, pegador, viewport, "vertical");
 
       viewport.scrollTop = 0;
       await waitFor(() => expect(medir().deslocamento).toBeLessThan(4));
@@ -185,7 +185,7 @@ export const AlwaysVisible: Story = {
       // Cada passo estabelece a própria precondição: no replay o viewport chega
       // rolado da rodada anterior e o arrasto partiria do fim da trilha.
       const maximo = viewport.scrollHeight - viewport.clientHeight;
-      const medir = () => medirProporcao(trilha, pegador, viewport, "vertical");
+      const medir = () => measureRatio(trilha, pegador, viewport, "vertical");
 
       // Voltar ao topo E ESPERAR O PEGADOR CHEGAR LÁ. Ele é reposicionado num
       // quadro posterior ao evento de rolagem: medido antes disso, devolve a
@@ -227,7 +227,7 @@ export const AlwaysVisible: Story = {
       // de interface, e vale aqui porque a barra desenhada é a nossa, não a do
       // sistema. Contraste é aritmética: o colhedor compõe o fundo real antes
       // de dividir, senão a razão sai de uma cor que ninguém vê.
-      await expect(contrasteDoPegador(pegador)).toBeGreaterThanOrEqual(3);
+      await expect(grabberContrast(pegador)).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -257,7 +257,7 @@ export const Hover: Story = {
       //
       // O estado de hover mora na BARRA, não na raiz: é a barra que muda de
       // aparência, e é nela que a lib publica o atributo de estado.
-      const trilha = await esperarBarra(canvasElement);
+      const trilha = await waitForBar(canvasElement);
       await userEvent.unhover(raiz);
       await waitFor(() => expect(trilha).not.toHaveAttribute("data-hovering"));
       await userEvent.hover(raiz);
@@ -302,7 +302,7 @@ export const Focus: Story = {
       // accessibility.item3. `:focus-visible` depende da modalidade de entrada
       // que o navegador registrou, e evento sintético não a atualiza — a
       // verificação vai à folha, que é onde o anel é prometido.
-      await expect(anelDeFocoDeclarado()).toBe(true);
+      await expect(focusDeclaradoRing()).toBe(true);
     });
   },
 };
@@ -313,7 +313,7 @@ export const FocusableContent: Story = {
     docs: {
       // Sub-composição: são os links dentro da área que fazem o assunto, e o
       // snippet do meta traz uma lista de texto sem nada focável.
-      source: { transform: scrollAreaConteudoFocavelSource },
+      source: { transform: scrollAreaContentFocavelSource },
       description: {
         story:
           "Conteúdo focável dentro da área rolável — o componente não reordena nem remove nada da ordem de tabulação, e o navegador traz para o campo visível o item focado.",

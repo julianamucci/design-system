@@ -11,13 +11,13 @@ import {
   SheetTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
-import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
+import { FOCUS_RULE_GUARDA, waitForPortal } from '@/lib/wait-for-portal';
+import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 import {
   sheetSideDireitoSource,
-  sheetLadoEsquerdoSource,
-  sheetLadoInferiorSource,
-  sheetLadoSuperiorSource,
+  sheetSideEsquerdoSource,
+  sheetSideInferiorSource,
+  sheetSideSuperiorSource,
 } from './sheet.source';
 
 // As quatro direções são a única variação visual do Sheet, e todas moram no
@@ -36,7 +36,7 @@ const meta = {
     // Painel modal aberto: as âncoras de foco da lib são `aria-hidden` E
     // focáveis, e o axe lê a combinação como armadilha de foco — que é o
     // contrário do que elas fazem. Ver o motivo completo em wait-for-portal.ts.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       source: { transform: sheetSideDireitoSource },
       description: {
@@ -117,7 +117,7 @@ export const Right: Story = {
     await expect(dialog).toHaveClass(/nds-sheet-content/);
     await expect(dialog).toHaveAccessibleName();
     // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
-    await esperarEncostarNaBorda(dialog, 'right');
+    await borderWaitForEncostar(dialog, 'right');
   },
 };
 
@@ -127,7 +127,7 @@ export const Left: Story = {
     docs: {
       // O lado é o assunto da story, e nenhum control o descreve: a transform
       // do meta mostraria o padrão, que é a direção oposta a esta.
-      source: { transform: sheetLadoEsquerdoSource },
+      source: { transform: sheetSideEsquerdoSource },
       description: {
         story:
           'Desliza da esquerda. Mesma medida do right, do outro lado — é a direção da ' +
@@ -141,7 +141,7 @@ export const Left: Story = {
     await expect(dialog).toHaveAttribute('data-side', 'left');
     await expect(dialog).toHaveClass(/nds-sheet-content/);
     await expect(dialog).toHaveAccessibleName();
-    await esperarEncostarNaBorda(dialog, 'left');
+    await borderWaitForEncostar(dialog, 'left');
   },
 };
 
@@ -149,7 +149,7 @@ export const Top: Story = {
   parameters: {
     docs: {
       // Idem: o `side` do conteúdo é a única diferença, e ele não vem de control.
-      source: { transform: sheetLadoSuperiorSource },
+      source: { transform: sheetSideSuperiorSource },
       description: {
         story:
           'Desliza do topo e ocupa a largura inteira, com altura definida pelo conteúdo. ' +
@@ -163,7 +163,7 @@ export const Top: Story = {
     await expect(dialog).toHaveAttribute('data-side', 'top');
     await expect(dialog).toHaveClass(/nds-sheet-content/);
     await expect(dialog).toHaveAccessibleName();
-    await esperarEncostarNaBorda(dialog, 'top');
+    await borderWaitForEncostar(dialog, 'top');
   },
 };
 
@@ -172,7 +172,7 @@ export const Bottom: Story = {
     covers: ['visual.item3'],
     docs: {
       // Idem: o `side` do conteúdo é a única diferença, e ele não vem de control.
-      source: { transform: sheetLadoInferiorSource },
+      source: { transform: sheetSideInferiorSource },
       description: {
         story:
           'Desliza de baixo — o mesmo desenho do Drawer, sem o gesto de arrastar. ' +
@@ -186,6 +186,6 @@ export const Bottom: Story = {
     await expect(dialog).toHaveAttribute('data-side', 'bottom');
     await expect(dialog).toHaveClass(/nds-sheet-content/);
     await expect(dialog).toHaveAccessibleName();
-    await esperarEncostarNaBorda(dialog, 'bottom');
+    await borderWaitForEncostar(dialog, 'bottom');
   },
 };

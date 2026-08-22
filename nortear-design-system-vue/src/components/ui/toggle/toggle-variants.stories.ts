@@ -3,10 +3,10 @@ import { within, expect } from 'storybook/test';
 import { Toggle } from './index';
 import { Bold, Italic, Eye, List } from 'lucide-vue-next';
 import {
-  toggleComRotuloSource,
+  toggleWithLabelSource,
   toggleContornoSource,
   toggleIconSource,
-  toggleTamanhosSource,
+  toggleSizesSource,
 } from './toggle.source';
 
 const meta = {
@@ -109,7 +109,7 @@ export const WithLabel: Story = {
     docs: {
       // Com texto visível o `aria-label` SAI de cena: a ausência dele é a lição,
       // e o snippet do meta mostra justamente o contrário.
-      source: { transform: toggleComRotuloSource },
+      source: { transform: toggleWithLabelSource },
     },
   },
   render: () => ({
@@ -155,7 +155,7 @@ export const Sizes: Story = {
   parameters: {
     docs: {
       // A escada só existe como conjunto; um degrau sozinho não mostra escada.
-      source: { transform: toggleTamanhosSource },
+      source: { transform: toggleSizesSource },
     },
   },
   render: () => ({

@@ -39,7 +39,7 @@ export const gatilho = (raiz: ParentNode): HTMLElement | null =>
  * passava assim mesmo, e a asserção "não há X no canto" reprovava por causa do
  * Cancelar. O que separa os dois é onde eles moram.
  */
-export const botaoFecharDoCanto = (p: HTMLElement): HTMLElement | null =>
+export const cantoButtonClose = (p: HTMLElement): HTMLElement | null =>
   [...p.querySelectorAll<HTMLElement>('[data-slot="dialog-close"]')].find(
     (el) => !el.closest('[data-slot="dialog-footer"]'),
   ) ?? null;
@@ -51,13 +51,13 @@ export const botaoFecharDoCanto = (p: HTMLElement): HTMLElement | null =>
  * animação, e uma asserção de visibilidade no primeiro quadro pega o painel
  * ainda em `opacity: 0` e culpa o componente.
  */
-export async function esperarAberto(): Promise<HTMLElement> {
+export async function waitForOpen(): Promise<HTMLElement> {
   await waitForPortal('dialog');
   return painel()!;
 }
 
 /** Espera o painel sair do DOM. */
-export async function esperarFechado(): Promise<void> {
+export async function waitForClosed(): Promise<void> {
   await waitForPortalGone('dialog');
 }
 
@@ -73,13 +73,13 @@ export async function abrir(raiz: ParentNode): Promise<HTMLElement> {
     const trigger = gatilho(raiz);
     if (trigger) await userEvent.click(trigger);
   }
-  return esperarAberto();
+  return waitForOpen();
 }
 
 /** O par idempotente de `abrir`. Escape porque existe em toda composição. */
 export async function fechar(): Promise<void> {
   if (painel()) await userEvent.keyboard('{Escape}');
-  await esperarFechado();
+  await waitForClosed();
 }
 
 /**
@@ -89,10 +89,10 @@ export async function fechar(): Promise<void> {
  * string e reprovaria no axe por `aria-valid-attr-value` — é exatamente o caso
  * que esta checagem existe para pegar.
  */
-export async function conferirNomeEDescricao(p: HTMLElement): Promise<void> {
-  const idTitulo = p.getAttribute('aria-labelledby');
-  await expect(idTitulo).toBeTruthy();
-  const titulo = document.getElementById(idTitulo!);
+export async function checkNameEDescricao(p: HTMLElement): Promise<void> {
+  const idTitle = p.getAttribute('aria-labelledby');
+  await expect(idTitle).toBeTruthy();
+  const titulo = document.getElementById(idTitle!);
   await expect(titulo).toHaveClass('nds-dialog-title');
 
   const idDescricao = p.getAttribute('aria-describedby');
@@ -112,7 +112,7 @@ export async function conferirNomeEDescricao(p: HTMLElement): Promise<void> {
  * depois da tecla. Se a armadilha estivesse quebrada o foco ficaria parado lá
  * fora e a espera estouraria — que é justamente o que se quer detectar.
  */
-export async function conferirFocusTrap(p: HTMLElement): Promise<void> {
+export async function checkFocusTrap(p: HTMLElement): Promise<void> {
   const focaveis = p.querySelectorAll<HTMLElement>(
     'button, [href], input, textarea, select, [tabindex]:not([tabindex="-1"])',
   );

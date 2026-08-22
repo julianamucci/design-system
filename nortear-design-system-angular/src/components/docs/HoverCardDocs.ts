@@ -104,7 +104,7 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-const CLASSES_GATILHO = 'nds-text-primary nds-font-medium nds-hover-underline';
+const CLASSES_TRIGGER = 'nds-text-primary nds-font-medium nds-hover-underline';
 // Botão sem moldura para gatilhos que não navegam (termo, métrica): as classes
 // zeram o cromo nativo do `<button>` sem uma linha de CSS inline.
 const CLASSES_GATILHO_BOTAO =
@@ -653,7 +653,7 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
   protected readonly importCode = IMPORT_CODE;
   protected readonly importCodeAvatar = IMPORT_CODE_AVATAR;
   protected readonly tokensCode = TOKENS_CODE;
-  protected readonly classesGatilho = CLASSES_GATILHO;
+  protected readonly classesGatilho = CLASSES_TRIGGER;
   protected readonly classesGatilhoBotao = CLASSES_GATILHO_BOTAO;
 
   /**
@@ -790,11 +790,11 @@ export class NdsHoverCardDocs implements AfterViewInit, OnDestroy {
 
   protected readonly doDontPairs = computed(() => {
     dict();
-    const pares: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
+    const pairs: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
       [this.tplDoDont1Do(), this.tplDoDont1Dont()],
       [this.tplDoDont2Do(), this.tplDoDont2Dont()],
     ];
-    return pares.map(([doTpl, dontTpl], i) => ({
+    return pairs.map(([doTpl, dontTpl], i) => ({
       doLabel: tNav('common.do'),
       dontLabel: tNav('common.dont'),
       doCaption: toPlainText(t(`doDont.pair${i + 1}.do`)),

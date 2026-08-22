@@ -19,11 +19,11 @@ export type LabelArgs = {
 };
 
 const IMPORT_LABEL = 'import { Label } from "@/components/ui/label";';
-const IMPORT_CAMPO = `import { Input } from "@/components/ui/input";
+const IMPORT_FIELD = `import { Input } from "@/components/ui/input";
 ${IMPORT_LABEL}`;
 
 /** A coluna que segura o par: respiro curto entre rótulo e controle. */
-const COLUNA = '<div className="nds-stack nds-w-xs" data-spacing="xs">';
+const COLUMN = '<div className="nds-stack nds-w-xs" data-spacing="xs">';
 
 /**
  * Transform do `meta` — vale para todas as stories dos três arquivos do Label.
@@ -37,8 +37,8 @@ export const labelSource: SourceTransform<LabelArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const texto = childText(args.children, 'Nome completo');
   return jsxSnippet(
-    IMPORT_CAMPO,
-    `${COLUNA}
+    IMPORT_FIELD,
+    `${COLUMN}
   <Label htmlFor="nome-completo"${attrs(propText('className', args.className))}>${texto}</Label>
   <Input id="nome-completo" placeholder="ex: João da Silva" />
 </div>`,
@@ -51,10 +51,10 @@ export const labelSource: SourceTransform<LabelArgs> = (_gerado, ctx) => {
  * rótulo continua em opacidade cheia ao lado de um campo bloqueado, que foi o
  * defeito real em três das cinco stacks.
  */
-export function labelDesabilitadoSource(): string {
+export function labelDisabledSource(): string {
   return jsxSnippet(
-    IMPORT_CAMPO,
-    `${COLUNA}
+    IMPORT_FIELD,
+    `${COLUMN}
   <Label htmlFor="cpf">CPF</Label>
   <Input id="cpf" className="nds-peer" placeholder="000.000.000-00" disabled />
 </div>`,
@@ -66,9 +66,9 @@ export function labelDesabilitadoSource(): string {
  * os rótulos descendentes de uma vez. É o caminho para um fieldset inteiro —
  * repetir `nds-peer` campo a campo dá o mesmo desenho e esquece um.
  */
-export function blockSourceLabelDisabled(): string {
+export function blockLabelDisabledSource(): string {
   return jsxSnippet(
-    IMPORT_CAMPO,
+    IMPORT_FIELD,
     `<div
   className="nds-stack nds-w-xs"
   data-spacing="xs"
@@ -89,8 +89,8 @@ export function blockSourceLabelDisabled(): string {
  */
 export function labelObrigatorioSource(): string {
   return jsxSnippet(
-    IMPORT_CAMPO,
-    `${COLUNA}
+    IMPORT_FIELD,
+    `${COLUMN}
   <Label htmlFor="email-profissional">
     Email profissional
     <span className="nds-text-destructive" aria-hidden="true">*</span>

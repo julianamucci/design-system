@@ -4,12 +4,12 @@ import { within, expect } from 'storybook/test';
 import { Card } from './index';
 import CardStory from './CardStory.svelte';
 import {
-  cardComAcaoSource,
-  cardComImagemSource,
-  cardComRodapeSource,
+  cardWithActionSource,
+  cardWithImageSource,
+  cardWithFooterSource,
   cardDeMetricaSource,
   cardDePerfilSource,
-  cardDeProdutoSource,
+  productCardSource,
   cardDefaultSource,
 } from './card.source';
 
@@ -39,7 +39,7 @@ type Story = StoryObj;
 export const WithFooter: Story = {
   parameters: {
     docs: {
-      source: { transform: cardComRodapeSource },
+      source: { transform: cardWithFooterSource },
       description: {
         story:
           'O CardFooter ganha borda superior e fundo soft; o Card zera o próprio padding inferior ao detectar o rodapé como filho direto, para a borda encostar na base.',
@@ -79,7 +79,7 @@ export const WithAction: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item5', 'visual.item3'],
     docs: {
-      source: { transform: cardComAcaoSource },
+      source: { transform: cardWithActionSource },
       description: {
         story:
           'Com CardAction o header vira grid de duas colunas e a ação encosta à direita. A ordem do DOM continua título → descrição → ação, então o leitor de tela lê na ordem lógica.',
@@ -115,7 +115,7 @@ export const WithImage: Story = {
   parameters: {
     covers: ['functional.item4', 'visual.item5'],
     docs: {
-      source: { transform: cardComImagemSource },
+      source: { transform: cardWithImageSource },
       description: {
         story:
           'Imagem como primeiro filho: o Card arredonda o topo dela e remove o próprio padding superior por CSS — não é preciso passar classe na imagem.',
@@ -152,7 +152,7 @@ export const WithImage: Story = {
 export const ProductCard: Story = {
   parameters: {
     docs: {
-      source: { transform: cardDeProdutoSource },
+      source: { transform: productCardSource },
       description: {
         story:
           'Exemplo real de catálogo: imagem + título + descrição + Badge de status na ação do header + rodapé com ações contextuais.',

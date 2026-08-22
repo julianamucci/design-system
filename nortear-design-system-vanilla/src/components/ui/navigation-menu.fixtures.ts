@@ -19,21 +19,21 @@ import { userEvent, waitFor } from 'storybook/test';
  * existiu no markup: o seletor casava sempre, inclusive com o painel fechado, e
  * toda espera por "o menu abriu" passava de imediato sem nada ter aberto.
  */
-export const SELETOR_PAINEL = '.nds-navigation-menu-content:not([hidden])';
+export const SELECTOR_PANEL = '.nds-navigation-menu-content:not([hidden])';
 
 /** O painel aberto dentro de um escopo, ou `null`. */
-export function painelAberto(escopo: ParentNode = document.body): HTMLElement | null {
-  return escopo.querySelector<HTMLElement>(SELETOR_PAINEL);
+export function panelOpen(escopo: ParentNode = document.body): HTMLElement | null {
+  return escopo.querySelector<HTMLElement>(SELECTOR_PANEL);
 }
 
 /** Espera o painel abrir e ficar com altura de verdade. */
-export async function esperarPainel(
+export async function waitForPanel(
   escopo: ParentNode = document.body,
   timeout = 4000,
 ): Promise<HTMLElement> {
   return await waitFor(
     () => {
-      const painel = painelAberto(escopo);
+      const painel = panelOpen(escopo);
       if (!painel) throw new Error('painel: ainda fechado');
       if (painel.getBoundingClientRect().height < 1) {
         throw new Error('painel: sem altura, ainda não pintou');
@@ -45,13 +45,13 @@ export async function esperarPainel(
 }
 
 /** Espera o painel sumir — prova Escape, clique fora e escolha de destino. */
-export async function esperarPainelSumir(
+export async function waitForPanelVanish(
   escopo: ParentNode = document.body,
   timeout = 3000,
 ): Promise<void> {
   await waitFor(
     () => {
-      if (painelAberto(escopo)) throw new Error('painel ainda aberto');
+      if (panelOpen(escopo)) throw new Error('painel ainda aberto');
     },
     { timeout, interval: 50 },
   );
@@ -66,12 +66,12 @@ export async function esperarPainelSumir(
  */
 export async function abrir(gatilho: HTMLElement, escopo?: ParentNode): Promise<HTMLElement> {
   if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-  return await esperarPainel(escopo);
+  return await waitForPanel(escopo);
 }
 
 export async function fechar(gatilho: HTMLElement, escopo?: ParentNode): Promise<void> {
   if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
-  await esperarPainelSumir(escopo);
+  await waitForPanelVanish(escopo);
 }
 
 // ─── Moldura das stories ──────────────────────────────────────────────────────

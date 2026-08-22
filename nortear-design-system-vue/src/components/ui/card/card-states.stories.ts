@@ -10,8 +10,8 @@ import {
 } from './index';
 import { Button } from '@/components/ui/button';
 import {
-  cardClicavelSource,
-  cardComRodapeSource,
+  cardClickableSource,
+  cardWithFooterSource,
   cardSimpleSource,
 } from './card.source';
 
@@ -87,7 +87,7 @@ export const Clickable: Story = {
     // Quem ativa é um elemento POR FORA do card: sem o invólucro, o snippet não
     // mostraria onde moram o destino, o nome acessível e o anel de foco.
     docs: {
-      source: { transform: cardClicavelSource },
+      source: { transform: cardClickableSource },
       description: {
         story:
           'Card envolvido em `<a>` com `aria-label` descritivo. Não use handler de clique no Card root — a semântica de ativação por teclado e o anel de foco vivem no wrapper, e o Tab alcança um destino só.',
@@ -159,7 +159,7 @@ export const WithFooter: Story = {
     covers: ['functional.item5'],
     // O rodapé é a peça que a do meta não tem, e é ele o assunto.
     docs: {
-      source: { transform: cardComRodapeSource },
+      source: { transform: cardWithFooterSource },
       description: {
         story:
           'Composição com CardFooter: o Card zera o próprio padding inferior quando detecta o rodapé como filho direto, e o rodapé ganha borda superior e fundo soft. Botões usam `aria-label` contextual para não virarem rótulos repetidos numa lista.',

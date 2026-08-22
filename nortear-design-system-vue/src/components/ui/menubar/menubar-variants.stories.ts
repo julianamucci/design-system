@@ -8,12 +8,12 @@ import {
   MenubarSeparator,
   MenubarTrigger,
 } from './index';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
-import { menubarItemDefaultSource, menubarItemDestrutivoSource } from './menubar.source';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
+import { menubarItemDefaultSource, menubarItemDestructiveSource } from './menubar.source';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
-const ITENS_NEUTROS = ['Novo', 'Abrir', 'Salvar'];
+const ITEMS_NEUTROS = ['Novo', 'Abrir', 'Salvar'];
 const ITENS_COM_PERIGO = ['Salvar', 'Descartar alterações'];
 
 const meta = {
@@ -25,7 +25,7 @@ const meta = {
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       source: { transform: menubarItemDefaultSource },
       description: {
@@ -39,15 +39,15 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const pecas = { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger };
+const parts = { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarTrigger };
 
 // ─── Default ──────────────────────────────────────────────────────────────────
 
 export const Default: Story = {
   parameters: { covers: ['accessibility.item7'] },
   render: () => ({
-    components: pecas,
-    setup: () => ({ itens: ITENS_NEUTROS }),
+    components: parts,
+    setup: () => ({ itens: ITEMS_NEUTROS }),
     template: `
       <div style="contain: layout; min-height: 260px;">
         <Menubar default-value="file">
@@ -72,7 +72,7 @@ export const Default: Story = {
     const itens = within(menu).getAllByRole('menuitem');
 
     await step('A variante default é escrita no markup', async () => {
-      await expect(itens).toHaveLength(ITENS_NEUTROS.length);
+      await expect(itens).toHaveLength(ITEMS_NEUTROS.length);
       for (const item of itens) {
         await expect(item.getAttribute('data-variant')).toBe('default');
         await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
@@ -82,9 +82,9 @@ export const Default: Story = {
     await step('O item neutro herda a cor do painel, sem cor semântica', async () => {
       // O item destacado troca de cor de propósito — a comparação tem que ser
       // com um item em repouso, senão ela mede o realce e não a variante.
-      const emRepouso = itens.filter((i) => !i.hasAttribute('data-highlighted'));
-      await expect(emRepouso.length).toBeGreaterThan(0);
-      await expect(getComputedStyle(emRepouso[0]).color).toBe(getComputedStyle(menu).color);
+      const inRest = itens.filter((i) => !i.hasAttribute('data-highlighted'));
+      await expect(inRest.length).toBeGreaterThan(0);
+      await expect(getComputedStyle(inRest[0]).color).toBe(getComputedStyle(menu).color);
     });
 
     await step('O painel é opaco', async () => {
@@ -106,11 +106,11 @@ export const Destructive: Story = {
     docs: {
       // A ênfase de perigo traz junto o separador que a afasta do item vizinho:
       // a do meta mostraria só a lista neutra, sem o par que é o assunto.
-      source: { transform: menubarItemDestrutivoSource },
+      source: { transform: menubarItemDestructiveSource },
     },
   },
   render: () => ({
-    components: pecas,
+    components: parts,
     setup: () => ({ perigo: ITENS_COM_PERIGO }),
     template: `
       <div style="contain: layout; min-height: 260px;">

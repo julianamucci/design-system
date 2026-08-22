@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   labelWithBoxSource,
-  labelComCampoSource,
+  labelWithFieldSource,
   labelDisabledSiblingSource,
-  blockSourceLabelDisabled,
+  blockLabelDisabledSource,
   labelObrigatorioSource,
   labelSource,
 } from './label.source';
@@ -60,13 +60,13 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('o desabilitado por bloco marca o ancestral, não o rótulo', () => {
-    const saida = blockSourceLabelDisabled();
+    const saida = blockLabelDisabledSource();
     expect(saida).toContain('data-disabled="true"');
     expect(saida).toContain('<Label for="documento">Documento</Label>');
   });
 
   it('a composição com campo usa o tipo semântico do dado', () => {
-    expect(labelComCampoSource()).toContain('type="tel"');
+    expect(labelWithFieldSource()).toContain('type="tel"');
   });
 
   it('a composição com caixa de seleção importa o controle certo', () => {

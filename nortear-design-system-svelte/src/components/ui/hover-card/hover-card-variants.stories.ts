@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import {
-  esperarAberto,
-  esperarFechado,
-  painelAberto,
+  waitForOpen,
+  waitForClosed,
+  panelOpen,
 } from '@shared/testing/hover-card-probe';
 import HoverCardStory from './HoverCardStory.svelte';
-import { hoverCardEsperaPadraoSource, hoverCardSource } from './hover-card.source';
+import { hoverCardWaitDefaultSource, hoverCardSource } from './hover-card.source';
 
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
 // varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
@@ -47,7 +47,7 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: hoverCardEsperaPadraoSource },
+      source: { transform: hoverCardWaitDefaultSource },
       description: {
         story:
           'Espera padrão: 600ms para abrir, 300ms para fechar. Nenhum atraso é escrito no markup — o cartão nasce aberto aqui só para a captura visual, e no uso real responde ao ponteiro e ao foco.',
@@ -58,7 +58,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     await step('Sem atraso escrito no markup, o cartão usa o padrão do componente', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(within(painel).getByText(/600ms/)).toBeVisible();
       await expect(canvas.getByRole('link')).toHaveAttribute('data-slot', 'hover-card-trigger');
@@ -90,13 +90,13 @@ export const WithShortDelay: Story = {
 
     // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
     await userEvent.keyboard('{Escape}');
-    await esperarFechado();
+    await waitForClosed();
 
     await step('O cartão abre depois da espera pedida na raiz', async () => {
-      await expect(painelAberto()).toBeNull();
+      await expect(panelOpen()).toBeNull();
       const inicio = performance.now();
       await userEvent.hover(gatilho);
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
 

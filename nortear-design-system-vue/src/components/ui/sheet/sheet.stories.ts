@@ -16,7 +16,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { sheetPlaygroundSource } from './sheet.source';
 
-const ROTULOS = {
+const LABELS = {
   trigger: 'Abrir filtros',
   title: 'Filtros avançados',
   description: 'Configure os filtros para refinar os resultados.',
@@ -80,7 +80,7 @@ const meta = {
     showCloseButton: true,
     modal: true,
     defaultOpen: false,
-    triggerLabel: ROTULOS.trigger,
+    triggerLabel: LABELS.trigger,
     onOpenChange: fn(),
   },
 } satisfies Meta<SheetArgs>;
@@ -89,7 +89,7 @@ export default meta;
 type Story = StoryObj<SheetArgs>;
 
 /** Espera o `body` voltar a aceitar ponteiro depois de um fechamento. */
-async function esperarPonteiroLiberado(): Promise<void> {
+async function waitForPointerLiberado(): Promise<void> {
   await waitFor(() => {
     if (getComputedStyle(document.body).pointerEvents === 'none') {
       throw new Error('o overlay ainda bloqueia o ponteiro');
@@ -107,7 +107,7 @@ async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
   // O ponteiro volta DEPOIS do nó sair: enquanto o painel é modal a lib deixa
   // `pointer-events: none` no `body` e só o devolve depois de remover o painel.
   // Sem esta espera o clique de reabertura falha no intervalo — medido.
-  await esperarPonteiroLiberado();
+  await waitForPointerLiberado();
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(trigger);
   }
@@ -126,7 +126,7 @@ async function fechar(): Promise<void> {
     await userEvent.keyboard('{Escape}');
   }
   await waitForPortalGone('dialog');
-  await esperarPonteiroLiberado();
+  await waitForPointerLiberado();
 }
 
 export const Playground: Story = {
@@ -149,7 +149,7 @@ export const Playground: Story = {
       Button,
     },
     setup() {
-      return { args, rotulos: ROTULOS };
+      return { args, rotulos: LABELS };
     },
     template: `
       <Sheet
@@ -183,21 +183,21 @@ export const Playground: Story = {
     await fechar();
 
     await step('Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
-      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
       const painel = await abrir(trigger);
 
       await expect(painel).toBeVisible();
       // O nome acessível vem do aria-labelledby ligado ao id REAL do SheetTitle
       // — painel modal anônimo é o defeito silencioso aqui.
-      await expect(painel).toHaveAccessibleName(ROTULOS.title);
-      await expect(painel).toHaveAccessibleDescription(ROTULOS.description);
+      await expect(painel).toHaveAccessibleName(LABELS.title);
+      await expect(painel).toHaveAccessibleDescription(LABELS.description);
       await expect(painel).toHaveAttribute('aria-modal', 'true');
       await expect(painel).toHaveAttribute('data-slot', 'sheet-content');
       await expect(painel).toHaveAttribute('data-side', args.side);
       await expect(painel).toHaveClass(/nds-sheet-content/);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
-      ).toBe(chamadasAntes + 1);
+      ).toBe(callsBefore + 1);
     });
 
     await step('O painel é portalizado para fora da story', async () => {
@@ -253,14 +253,14 @@ export const Playground: Story = {
 
     await step('O botão do canto fecha o painel', async () => {
       const painel = await abrir(trigger);
-      const fecharBtn = within(painel).getByRole('button', { name: /fechar/i });
-      await userEvent.click(fecharBtn);
+      const closeBtn = within(painel).getByRole('button', { name: /fechar/i });
+      await userEvent.click(closeBtn);
       await waitForPortalGone('dialog');
     });
 
     await step('Cancelar no rodapé também fecha', async () => {
       const painel = await abrir(trigger);
-      const cancelar = within(painel).getByRole('button', { name: ROTULOS.cancel });
+      const cancelar = within(painel).getByRole('button', { name: LABELS.cancel });
       await userEvent.click(cancelar);
       await waitForPortalGone('dialog');
     });

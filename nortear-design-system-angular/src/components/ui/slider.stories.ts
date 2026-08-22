@@ -4,7 +4,7 @@ import { expect, userEvent, within } from 'storybook/test';
 import { NdsSlider } from './slider';
 import { NdsSliderDocs } from '@/components/docs/SliderDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { contextoAlcaTrilho, contrasteAlcaTrilho } from '@shared/testing/slider-probe';
+import { contextoHandleTrack, contrastHandleTrack } from '@shared/testing/slider-probe';
 
 type SliderArgs = {
   value: number[];
@@ -139,8 +139,8 @@ export const Playground: Story = {
       // duas coisas — lia a borda no elemento errado e achatava o trilho contra
       // um branco fixo.
       await expect(
-        contrasteAlcaTrilho(canvasElement),
-        contextoAlcaTrilho(canvasElement),
+        contrastHandleTrack(canvasElement),
+        contextoHandleTrack(canvasElement),
       ).toBeGreaterThanOrEqual(3);
     });
 

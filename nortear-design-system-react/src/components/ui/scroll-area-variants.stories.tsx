@@ -5,7 +5,7 @@ import { ScrollArea, ScrollBar } from "./scroll-area";
 import {
   scrollAreaHorizontalSource,
   scrollAreaSource,
-  scrollAreaTabelaSource,
+  scrollAreaTableSource,
 } from "./scroll-area.source";
 
 const meta = {
@@ -141,7 +141,7 @@ export const Both: Story = {
     docs: {
       // Composição de dois eixos: tabela ampla e a segunda ScrollBar, que o
       // snippet do meta (lista vertical) esconderia.
-      source: { transform: scrollAreaTabelaSource },
+      source: { transform: scrollAreaTableSource },
       description: {
         story:
           "Scroll bidirecional — tabela ampla dentro de container fixo; renderiza a barra vertical (automática), a horizontal explícita e o canto.",

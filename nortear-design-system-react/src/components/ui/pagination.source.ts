@@ -38,14 +38,14 @@ export type PaginationArgs = {
 };
 
 /** Rótulos que o primitivo já traz: escrevê-los de novo só repetiria o padrão. */
-const TEXTO_ANTERIOR = 'Anterior';
-const TEXTO_PROXIMA = 'Próxima';
+const TEXT_PREVIOUS = 'Anterior';
+const TEXT_NEXT = 'Próxima';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importingPagination(...pecas: string[]): string {
-  const lista = [...pecas].sort();
+function importingPagination(...parts: string[]): string {
+  const lista = [...parts].sort();
   return `import {\n${lista
-    .map((peca) => `  ${peca},`)
+    .map((part) => `  ${part},`)
     .join('\n')}\n} from "@/components/ui/pagination";`;
 }
 
@@ -62,7 +62,7 @@ ${indentar(itens, '    ')}
  * Um link numerado estático. O rótulo tem contexto porque "3" sozinho não diz
  * nada em voz alta, e o nome acessível é o que o leitor de tela anuncia.
  */
-function linkNumerado(numero: number, ativo = false): string {
+function numberedLink(numero: number, ativo = false): string {
   return `<PaginationItem>
   <PaginationLink href="#"${ativo ? ' isActive' : ''} aria-label="Ir para página ${numero}">
     ${numero}
@@ -77,10 +77,10 @@ function linkNumerado(numero: number, ativo = false): string {
  * da ordem de tabulação. O primitivo completa o serviço barrando o clique que
  * chega por teclado ou por script — o CSS sozinho só barra o ponteiro.
  */
-function direcional(peca: 'PaginationPrevious' | 'PaginationNext', bloqueado = false): string {
-  if (!bloqueado) return `<PaginationItem>\n  <${peca} href="#" />\n</PaginationItem>`;
+function direcional(part: 'PaginationPrevious' | 'PaginationNext', bloqueado = false): string {
+  if (!bloqueado) return `<PaginationItem>\n  <${part} href="#" />\n</PaginationItem>`;
   return `<PaginationItem>
-  <${peca} href="#" aria-disabled tabIndex={-1} />
+  <${part} href="#" aria-disabled tabIndex={-1} />
 </PaginationItem>`;
 }
 
@@ -125,10 +125,10 @@ export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) 
     typeof args.initialPage === 'number' && args.initialPage >= 1 && args.initialPage <= total
       ? args.initialPage
       : 1;
-  const comReticencias = args.withEllipsis === true && total > 7;
+  const withEllipsis = args.withEllipsis === true && total > 7;
 
-  const rotuloAnterior = propText('text', texto(args.previousText) === TEXTO_ANTERIOR ? undefined : args.previousText);
-  const rotuloProxima = propText('text', texto(args.nextText) === TEXTO_PROXIMA ? undefined : args.nextText);
+  const rotuloAnterior = propText('text', texto(args.previousText) === TEXT_PREVIOUS ? undefined : args.previousText);
+  const rotuloProxima = propText('text', texto(args.nextText) === TEXT_NEXT ? undefined : args.nextText);
   const attrPrevious = rotuloAnterior ? `\n        ${rotuloAnterior}` : '';
   const attrNext = rotuloProxima ? `\n        ${rotuloProxima}` : '';
 
@@ -136,14 +136,14 @@ export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) 
 ${importingPagination(
   'Pagination',
   'PaginationContent',
-  ...(comReticencias ? ['PaginationEllipsis'] : []),
+  ...(withEllipsis ? ['PaginationEllipsis'] : []),
   'PaginationItem',
   'PaginationLink',
   'PaginationNext',
   'PaginationPrevious',
 )}`;
 
-  const estado = comReticencias
+  const estado = withEllipsis
     ? `const total = ${total};
 const [pagina, setPagina] = useState(${inicial});
 // Janela de páginas visíveis: a primeira, a última, a atual e as vizinhas.
@@ -154,7 +154,7 @@ const paginas: Array<number | "reticencias"> = ${windowLiteral(
 const [pagina, setPagina] = useState(${inicial});
 const paginas = Array.from({ length: total }, (_, indice) => indice + 1);`;
 
-  const numerados = comReticencias
+  const numbered = withEllipsis
     ? `    {paginas.map((trecho, indice) =>
       typeof trecho === "number" ? (
         <PaginationItem key={trecho}>
@@ -208,7 +208,7 @@ const paginas = Array.from({ length: total }, (_, indice) => indice + 1);`;
       />
     </PaginationItem>
 
-${numerados}
+${numbered}
 
     <PaginationItem>
       <PaginationNext
@@ -230,10 +230,10 @@ ${numerados}
  * Link inativo — a AUSÊNCIA de `isActive` é o assunto. Sem ele o link não recebe
  * `aria-current` nenhum e fica com o fundo transparente da ênfase fantasma.
  */
-export function paginationLinkInativoSource(): string {
+export function paginationLinkInactiveSource(): string {
   return jsxSnippet(
     importingPagination('Pagination', 'PaginationContent', 'PaginationItem', 'PaginationLink'),
-    faixa(linkNumerado(2)),
+    faixa(numberedLink(2)),
   );
 }
 
@@ -242,10 +242,10 @@ export function paginationLinkInativoSource(): string {
  * `aria-current="page"` para quem ouve e troca a ênfase do botão para quem vê —
  * a marcação nunca depende só da cor.
  */
-export function paginationLinkAtivoSource(): string {
+export function paginationLinkActiveSource(): string {
   return jsxSnippet(
     importingPagination('Pagination', 'PaginationContent', 'PaginationItem', 'PaginationLink'),
-    faixa([linkNumerado(1), linkNumerado(2, true)].join('\n')),
+    faixa([numberedLink(1), numberedLink(2, true)].join('\n')),
   );
 }
 
@@ -285,9 +285,9 @@ export function paginationDisabledSource(): string {
     faixa(
       [
         direcional('PaginationPrevious', true),
-        linkNumerado(1, true),
-        linkNumerado(2),
-        linkNumerado(3),
+        numberedLink(1, true),
+        numberedLink(2),
+        numberedLink(3),
         direcional('PaginationNext'),
       ].join('\n'),
     ),
@@ -341,7 +341,7 @@ ${indentar(direcional('PaginationNext'), '    ')}
  * Última página: o mesmo par de atributos do outro extremo, agora no controle de
  * avanço. A regra é de POSIÇÃO na lista, não de qual dos dois controles é.
  */
-export function paginationUltimaPaginaSource(): string {
+export function paginationLastPageSource(): string {
   return jsxSnippet(
     importingPagination(
       'Pagination',
@@ -354,9 +354,9 @@ export function paginationUltimaPaginaSource(): string {
     faixa(
       [
         direcional('PaginationPrevious'),
-        linkNumerado(8),
-        linkNumerado(9),
-        linkNumerado(10, true),
+        numberedLink(8),
+        numberedLink(9),
+        numberedLink(10, true),
         direcional('PaginationNext', true),
       ].join('\n'),
     ),
@@ -442,7 +442,7 @@ const [pagina, setPagina] = useState(1);`,
  * largura aperta. `data-align="end"` na faixa é o que a encosta na borda em vez
  * de deixá-la ocupar a linha inteira.
  */
-export function paginationRodapeDeTabelaSource(): string {
+export function tablePaginationFooterSource(): string {
   return jsxSnippet(
     importingPagination(
       'Pagination',
@@ -468,11 +468,11 @@ export function paginationRodapeDeTabelaSource(): string {
 ${indentar(
   [
     direcional('PaginationPrevious'),
-    linkNumerado(1),
-    linkNumerado(2, true),
-    linkNumerado(3),
+    numberedLink(1),
+    numberedLink(2, true),
+    numberedLink(3),
     '<PaginationItem>\n  <PaginationEllipsis />\n</PaginationItem>',
-    linkNumerado(12),
+    numberedLink(12),
     direcional('PaginationNext'),
   ].join('\n'),
   '      ',

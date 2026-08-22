@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import {
-  esperarAberto,
-  esperarFechado,
+  waitForOpen,
+  waitForClosed,
   nomeAcessivel,
-  painelAberto,
-  sairComPonteiro,
+  panelOpen,
+  leaveWithPointer,
 } from '@shared/testing/hover-card-probe';
 import HoverCardStory from './HoverCardStory.svelte';
 import HoverCardDocs from '@/components/docs/HoverCardDocs.svelte';
@@ -107,15 +107,15 @@ export const Playground: Story = {
     // play no mesmo DOM, e um passo que dependa do que a rodada anterior deixou
     // inverte de resultado na segunda vez.
     await userEvent.keyboard('{Escape}');
-    await esperarFechado('no reset inicial');
+    await waitForClosed('no reset inicial');
 
     await step('Fechado, não existe painel no documento', async () => {
-      await expect(painelAberto()).toBeNull();
+      await expect(panelOpen()).toBeNull();
     });
 
     await step('Passar o ponteiro abre o cartão', async () => {
       await userEvent.hover(gatilho);
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       // `role="dialog"` é contrato de markup das cinco stacks — o primitivo não
       // o emite, este componente sim.
@@ -127,9 +127,9 @@ export const Playground: Story = {
     });
 
     await step('Levar o ponteiro para longe fecha o cartão', async () => {
-      await sairComPonteiro(gatilho, painelAberto()!);
-      await esperarFechado('depois do ponteiro sair');
-      await expect(painelAberto()).toBeNull();
+      await leaveWithPointer(gatilho, panelOpen()!);
+      await waitForClosed('depois do ponteiro sair');
+      await expect(panelOpen()).toBeNull();
     });
 
     await step('Tab alcança o gatilho e abre o cartão sem ponteiro nenhum', async () => {
@@ -137,7 +137,7 @@ export const Playground: Story = {
       // conteúdo, pelo foco.
       await userEvent.tab();
       await expect(gatilho).toHaveFocus();
-      const painel = await esperarAberto('depois do foco');
+      const painel = await waitForOpen('depois do foco');
       await expect(painel).toBeVisible();
     });
 
@@ -145,8 +145,8 @@ export const Playground: Story = {
       // O foco está no gatilho, não dentro do painel: o listener é do
       // documento, e é isso que faz o atalho valer de qualquer lugar.
       await userEvent.keyboard('{Escape}');
-      await esperarFechado('depois do Escape');
-      await expect(painelAberto()).toBeNull();
+      await waitForClosed('depois do Escape');
+      await expect(panelOpen()).toBeNull();
     });
   },
 };

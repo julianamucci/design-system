@@ -41,8 +41,8 @@ const VALUE_DEFAULT = 'on';
 function tagCheckbox(partes: Array<string | false | undefined>, indent = '  '): string {
   const lista = partes.filter((parte): parte is string => Boolean(parte));
   if (!lista.length) return '<Checkbox />';
-  const emLinha = lista.join(' ');
-  if (emLinha.length <= 56) return `<Checkbox ${emLinha} />`;
+  const inLine = lista.join(' ');
+  if (inLine.length <= 56) return `<Checkbox ${inLine} />`;
   return `<Checkbox\n${lista.map((parte) => `${indent}  ${parte}`).join('\n')}\n${indent}/>`;
 }
 
@@ -88,7 +88,7 @@ export const checkboxSource: SourceTransform<CheckboxArgs> = (_gerado, ctx) => {
 };
 
 /** Marcada de saída sem controle externo: `defaultChecked` é ponto de partida. */
-export function checkboxMarcadoSource(): string {
+export function checkboxCheckedSource(): string {
   return jsxSnippet(IMPORT, pairLabelled('sessao', 'Manter sessão ativa', ['defaultChecked']));
 }
 
@@ -107,7 +107,7 @@ export function checkboxIndeterminadoSource(): string {
  * Desabilitada: o esmaecimento é do grupo (`data-disabled`), não uma cor na
  * caixa — o rótulo precisa apagar junto para o par ler como um bloco só.
  */
-export function checkboxDesabilitadoSource(): string {
+export function checkboxDisabledSource(): string {
   return jsxSnippet(
     IMPORT,
     pairLabelled('notificacoes', 'Receber notificações push', ['disabled'], ' data-disabled="true"'),
@@ -115,7 +115,7 @@ export function checkboxDesabilitadoSource(): string {
 }
 
 /** Desabilitada E marcada: mostrar a seleção sem permitir alterá-la. */
-export function checkboxDesabilitadoMarcadoSource(): string {
+export function checkboxDisabledCheckedSource(): string {
   return jsxSnippet(
     IMPORT,
     pairLabelled(
@@ -132,7 +132,7 @@ export function checkboxDesabilitadoMarcadoSource(): string {
  * dele. A mensagem é um irmão do par, fora do rótulo, para não entrar no nome
  * acessível da caixa.
  */
-export function checkboxErroSource(): string {
+export function checkboxErrorSource(): string {
   return jsxSnippet(
     IMPORT,
     `<div className="nds-stack" data-spacing="xs">
@@ -153,7 +153,7 @@ export function checkboxErroSource(): string {
  * Texto auxiliar: o alinhamento vai para `data-align="start"` e a caixa desce
  * meia linha, senão ela centraliza contra um bloco de duas alturas.
  */
-export function checkboxComDescricaoSource(): string {
+export function checkboxWithDescriptionSource(): string {
   return jsxSnippet(
     IMPORT,
     `<div className="nds-cluster" data-spacing="sm" data-align="start">
@@ -175,7 +175,7 @@ export function checkboxComDescricaoSource(): string {
  * mesmo conjunto (WCAG 1.3.1). Sem eles, cada rótulo chega isolado a quem lê a
  * tela e a pergunta do grupo some.
  */
-export function checkboxGrupoSource(): string {
+export function checkboxGroupSource(): string {
   return jsxSnippet(
     `${IMPORT}
 
@@ -206,7 +206,7 @@ const CONTATOS = [
  * alguns, todos. Marcação estática mostraria o desenho e esconderia a única
  * coisa que o padrão tem de particular.
  */
-export function checkboxSelecionarTodosSource(): string {
+export function checkboxSelectAllSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORT}
@@ -285,7 +285,7 @@ export function checkboxEmCardSource(): string {
  * da caixa, então o estado que vale é o do `FormData` — ler estado de React aqui
  * duplicaria a fonte da verdade.
  */
-export function checkboxEmFormularioSource(): string {
+export function formCheckboxSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORT}

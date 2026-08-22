@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
 import {
-  medirSlides,
+  measureSlides,
   reprovasDeEscala,
-  reprovasDoFeedbackDePonteiro,
+  feedbackDePointerReprovas,
   pontoDeParadaIntacto,
-  alcanceDoControle,
+  controlReach,
   escalaSobMovimentoReduzido,
-  descreverFalhas,
+  describeFailures,
 } from '@shared/testing/carousel-probe';
 import { carouselHorizontalSource, carouselVerticalSource } from './carousel.source';
 
@@ -86,7 +86,7 @@ export const Horizontal: Story = {
       // cheio e leva `--duration-base` para chegar, então o primeiro quadro
       // mede o ponto de partida e reprovaria por corrida.
       await waitFor(async () => {
-        await expect(descreverFalhas(reprovasDeEscala(medirSlides(canvasElement), 0))).toBe('');
+        await expect(describeFailures(reprovasDeEscala(measureSlides(canvasElement), 0))).toBe('');
       }, { timeout: 4000 });
     });
 
@@ -94,7 +94,7 @@ export const Horizontal: Story = {
       // `transform` é pintura, não layout — mas isso é promessa. Passos de
       // layout desiguais entre slides significariam que a escala vazou para o
       // layout, e o carrossel passaria a parar fora do slide.
-      await expect(descreverFalhas(pontoDeParadaIntacto(canvasElement))).toBe('');
+      await expect(describeFailures(pontoDeParadaIntacto(canvasElement))).toBe('');
     });
 
     await step('Com movimento reduzido a escala some por inteiro', async () => {
@@ -102,8 +102,8 @@ export const Horizontal: Story = {
       // preferência pede para não acontecer. A sonda liga a preferência pelo
       // mesmo canal do toolbar do Storybook e a desliga no `finally`, senão a
       // story seguinte e a foto dela sairiam envenenadas.
-      const falhas = await escalaSobMovimentoReduzido(canvasElement, waitFor);
-      await expect(descreverFalhas(falhas)).toBe('');
+      const failures = await escalaSobMovimentoReduzido(canvasElement, waitFor);
+      await expect(describeFailures(failures)).toBe('');
     });
 
     await step('A seta responde ao ponteiro sem sair do lugar', async () => {
@@ -114,11 +114,11 @@ export const Horizontal: Story = {
       // cursor de verdade — medido, dá razão 1.000 e não verifica nada. O que
       // importa aqui é a COLISÃO de duas regras na propriedade `transform`, e
       // escrevê-la à mão reproduz a colisão inteira.
-      const falhas = [
-        ...(await reprovasDoFeedbackDePonteiro(proximo, waitFor)),
-        ...alcanceDoControle(proximo),
+      const failures = [
+        ...(await feedbackDePointerReprovas(proximo, waitFor)),
+        ...controlReach(proximo),
       ];
-      await expect(descreverFalhas(falhas)).toBe('');
+      await expect(describeFailures(failures)).toBe('');
     });
   },
 };
@@ -193,8 +193,8 @@ export const Vertical: Story = {
       // apontar para o lado errado no mesmo quadro em que o botão despencava.
       // Escrita em `translate` + `rotate`, as duas convivem com o `scale`.
       const proximo = canvas.getByRole('button', { name: /próximo item/i });
-      const falhas = await reprovasDoFeedbackDePonteiro(proximo, waitFor);
-      await expect(descreverFalhas(falhas)).toBe('');
+      const failures = await feedbackDePointerReprovas(proximo, waitFor);
+      await expect(describeFailures(failures)).toBe('');
     });
   },
 };

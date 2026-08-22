@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -30,7 +30,7 @@ export type PaginationSnippetOptions = {
 };
 
 /** Nome que a fábrica assume quando `'aria-label'` não é passado. */
-const ROTULO_PADRAO = 'Paginação';
+const LABEL_DEFAULT = 'Paginação';
 
 /** Callback mostrado quando a story não exercita um específico. */
 const CALLBACK_DEFAULT = '(page) => irPara(page)';
@@ -56,7 +56,7 @@ function linesComuns(o: PaginationSnippetOptions, current: string): Array<[strin
     ['current', current],
     [
       'aria-label',
-      o['aria-label'] && o['aria-label'] !== ROTULO_PADRAO ? texto(o['aria-label']) : undefined,
+      o['aria-label'] && o['aria-label'] !== LABEL_DEFAULT ? texto(o['aria-label']) : undefined,
     ],
     ['align', o.align ? texto(o.align) : undefined],
     // `true` é o padrão da fábrica: só a supressão dos direcionais entra.
@@ -73,7 +73,7 @@ export function paginationSnippet(o: PaginationSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    importar('pagination', 'createPagination'),
+    importing('pagination', 'createPagination'),
     `const faixa = ${chamada('createPagination', linhas)};`,
     montar('faixa'),
   );
@@ -93,7 +93,7 @@ export function paginationWithStateSnippet(o: PaginationSnippetOptions = {}): st
   ]);
 
   return snippet(
-    importar('pagination', 'createPagination'),
+    importing('pagination', 'createPagination'),
     `// A fábrica não guarda estado: quem consome mantém o número da página e
 // remonta a faixa a cada mudança.
 const faixa = document.createElement('div');

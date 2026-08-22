@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
 import {
-  contrastePorTema,
+  themeContrast,
   cursorComputado,
-  opacidadeComputada,
+  opacityComputada,
 } from "@shared/testing/label-probe";
 import { Label } from "./label";
 import { Input } from "./input";
 import {
-  blockSourceLabelDisabled,
-  labelDesabilitadoSource,
+  blockLabelDisabledSource,
+  labelDisabledSource,
   labelObrigatorioSource,
   labelSource,
 } from "./label.source";
@@ -62,14 +62,14 @@ export const Default: Story = {
       // Efeito computado, não nome de classe: a asserção antiga afirmava a
       // AUSÊNCIA de `opacity-50`, uma classe que não existe no CSS do design
       // system — ela passaria mesmo com o rótulo apagado.
-      await expect(opacidadeComputada(label)).toBe(1);
+      await expect(opacityComputada(label)).toBe(1);
     });
 
     await step("O contraste do texto passa em AA nos dois temas", async () => {
       // O axe do test-runner só vê o tema claro. O escuro é metade do produto e
       // não era medido em lugar nenhum. 4.5 porque o rótulo é texto normal:
       // 14px em peso 500 não alcança o limite de texto grande.
-      const { claro, escuro } = contrastePorTema(label);
+      const { claro, escuro } = themeContrast(label);
       await expect(claro).toBeGreaterThanOrEqual(4.5);
       await expect(escuro).toBeGreaterThanOrEqual(4.5);
     });
@@ -81,7 +81,7 @@ export const Disabled: Story = {
     covers: ["functional.item2", "visual.item3"],
     docs: {
       // A marca `nds-peer` no controle é o assunto, e o par padrão não a tem.
-      source: { transform: labelDesabilitadoSource },
+      source: { transform: labelDisabledSource },
       description: {
         story:
           "Controle irmão desabilitado. A marca `nds-peer` vai no CONTROLE; o rótulo esmaece sozinho e troca o cursor.",
@@ -107,7 +107,7 @@ export const Disabled: Story = {
       // Este par ficou anos sem asserção: a story afirmava só que o input
       // estava desabilitado, e o rótulo continuava em opacidade cheia em três
       // das cinco stacks sem ninguém notar.
-      await expect(opacidadeComputada(label)).toBeLessThan(1);
+      await expect(opacityComputada(label)).toBeLessThan(1);
       await expect(cursorComputado(label)).toBe("not-allowed");
     });
   },
@@ -119,7 +119,7 @@ export const DisabledViaGroup: Story = {
     docs: {
       // O `data-disabled` mora no ANCESTRAL: quem copia o par padrão não vê
       // onde o atributo entra.
-      source: { transform: blockSourceLabelDisabled },
+      source: { transform: blockLabelDisabledSource },
       description: {
         story:
           "Bloco inteiro desabilitado por `data-disabled=\"true\"` no ancestral: todos os rótulos descendentes esmaecem e saem do alcance do ponteiro.",
@@ -142,7 +142,7 @@ export const DisabledViaGroup: Story = {
 
     await step("O rótulo herda o estado do bloco desabilitado", async () => {
       await expect(label.closest("[data-disabled='true']")).toBeInTheDocument();
-      await expect(opacidadeComputada(label)).toBeLessThan(1);
+      await expect(opacityComputada(label)).toBeLessThan(1);
       await expect(getComputedStyle(label).pointerEvents).toBe("none");
     });
   },

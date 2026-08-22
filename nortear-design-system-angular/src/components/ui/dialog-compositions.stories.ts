@@ -9,8 +9,8 @@ import {
   LABELS,
   abrir,
   painel,
-  esperarAberto,
-  esperarFechado,
+  waitForOpen,
+  waitForClosed,
   fechar,
 } from './dialog.fixtures';
 
@@ -69,7 +69,7 @@ export const MediaPreview: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('A mídia tem descrição textual', async () => {
       // A imagem carrega a informação do diálogo — `alt` vazio aqui apagaria o
@@ -94,7 +94,7 @@ export const MediaPreview: Story = {
       const x = painel()!.querySelector<HTMLElement>('[data-slot="dialog-close"]')!;
       await expect(x).toHaveAccessibleName(LABELS.close);
       await userEvent.click(x);
-      await esperarFechado();
+      await waitForClosed();
       // Sem o X, esta composição não tem rodapé nenhum: fechar por ali é a
       // única saída de ponteiro, e a devolução do foco é metade do item
       // 'functional.item4' que esta story declara.

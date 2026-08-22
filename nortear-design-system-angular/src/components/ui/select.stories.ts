@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_SELECT, type SelectSide, type SelectAlign, type SelectSize } from './select';
-import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { NdsSelectDocs } from '@/components/docs/SelectDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -11,7 +11,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // Uma lista só, exportada, para que as asserções derivem dela em vez de contar
 // itens à mão: acrescentar um estado à lista não deve fazer um teste mentir.
 
-export const ESTADOS = [
+export const STATES = [
   { value: 'sp', label: 'São Paulo' },
   { value: 'rj', label: 'Rio de Janeiro' },
   { value: 'mg', label: 'Minas Gerais' },
@@ -97,7 +97,7 @@ const meta: Meta<SelectArgs> = {
   decorators: [moduleMetadata({ imports: [...NDS_SELECT] })],
   parameters: {
     layout: 'centered',
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: { page: withAutoDocsTab(NdsSelectDocs) },
   },
   argTypes: {
@@ -165,7 +165,7 @@ export const Playground: Story = {
     ],
   },
   render: (args) => ({
-    props: { ...args, estados: ESTADOS },
+    props: { ...args, estados: STATES },
     template: `
       <nds-select
         [disabled]="disabled"
@@ -206,7 +206,7 @@ export const Playground: Story = {
       await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
 
       const opcoes = within(lista).getAllByRole('option');
-      await expect(opcoes).toHaveLength(ESTADOS.length);
+      await expect(opcoes).toHaveLength(STATES.length);
 
       // Num listbox o teclado é do POPUP: os itens não recebem foco um a um, o
       // destaque anda por `aria-activedescendant`. Afirmar `document.activeElement`
@@ -220,9 +220,9 @@ export const Playground: Story = {
       await userEvent.keyboard('{Enter}');
       await waitForPortalVanish('listbox');
 
-      await expect(args.onValueChange).toHaveBeenCalledWith(ESTADOS[0].value);
+      await expect(args.onValueChange).toHaveBeenCalledWith(STATES[0].value);
       // O gatilho passa a anunciar o rótulo escolhido, não mais o placeholder.
-      await expect(gatilho).toHaveTextContent(ESTADOS[0].label);
+      await expect(gatilho).toHaveTextContent(STATES[0].label);
       await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
@@ -235,7 +235,7 @@ export const Playground: Story = {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
       await waitForPortal('listbox', { name: 'Estado' });
 
-      const chamadasAntes = (args.onValueChange as unknown as { mock: { calls: unknown[] } }).mock
+      const callsBefore = (args.onValueChange as unknown as { mock: { calls: unknown[] } }).mock
         .calls.length;
 
       await userEvent.keyboard('{Escape}');
@@ -243,8 +243,8 @@ export const Playground: Story = {
 
       await expect(
         (args.onValueChange as unknown as { mock: { calls: unknown[] } }).mock.calls.length,
-      ).toBe(chamadasAntes);
-      await expect(gatilho).toHaveTextContent(ESTADOS[0].label);
+      ).toBe(callsBefore);
+      await expect(gatilho).toHaveTextContent(STATES[0].label);
       await waitFor(async () => {
         await expect(document.activeElement).toBe(gatilho);
       });

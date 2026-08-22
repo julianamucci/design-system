@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  hoverCardClasseExtraSource,
-  hoverCardControladoSource,
+  hoverCardClassNameExtraSource,
+  hoverCardControlledSource,
   hoverCardDefinicaoSource,
-  hoverCardEsperaCurtaSource,
-  hoverCardEsperaPadraoSource,
+  hoverCardWaitCurtaSource,
+  hoverCardWaitDefaultSource,
   hoverCardClosedSource,
   hoverCardLadosSource,
   hoverCardMetricaSource,
@@ -14,15 +14,15 @@ import {
 
 const TODAS = [
   hoverCardSource,
-  hoverCardEsperaPadraoSource,
-  hoverCardEsperaCurtaSource,
+  hoverCardWaitDefaultSource,
+  hoverCardWaitCurtaSource,
   hoverCardClosedSource,
-  hoverCardControladoSource,
+  hoverCardControlledSource,
   hoverCardPreviaDeLinkSource,
   hoverCardDefinicaoSource,
   hoverCardMetricaSource,
   hoverCardLadosSource,
-  hoverCardClasseExtraSource,
+  hoverCardClassNameExtraSource,
 ];
 
 describe('hoverCardSource', () => {
@@ -77,9 +77,9 @@ describe('hoverCardSource', () => {
   });
 
   it('cai no rótulo padrão quando o control entrega um espião no lugar da string', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
+    const spy = () => 'CORPO_DO_MOCK';
     const saida = hoverCardSource(undefined, {
-      args: { triggerLabel: espiao as never, onOpenChange: espiao as never } as never,
+      args: { triggerLabel: spy as never, onOpenChange: spy as never } as never,
     });
     expect(saida).toContain('@joana');
     expect(saida).not.toContain('CORPO_DO_MOCK');
@@ -88,7 +88,7 @@ describe('hoverCardSource', () => {
 
 describe('tempo', () => {
   it('a espera padrão não escreve atraso nenhum — a ausência é o assunto', () => {
-    const saida = hoverCardEsperaPadraoSource();
+    const saida = hoverCardWaitDefaultSource();
     expect(saida).toContain('<HoverCard>');
     expect(saida).not.toContain('openDelay');
     expect(saida).not.toContain('closeDelay');
@@ -97,7 +97,7 @@ describe('tempo', () => {
   });
 
   it('a espera curta declara os dois valores na raiz', () => {
-    expect(hoverCardEsperaCurtaSource()).toContain(
+    expect(hoverCardWaitCurtaSource()).toContain(
       '<HoverCard openDelay={150} closeDelay={100}>',
     );
   });
@@ -112,7 +112,7 @@ describe('estados', () => {
   });
 
   it('o modo controlado ensina o par open + onOpenChange com estado de verdade', () => {
-    const saida = hoverCardControladoSource();
+    const saida = hoverCardControlledSource();
     expect(saida).toContain('import { useState } from "react";');
     expect(saida).toContain('const [aberto, setAberto] = useState(false);');
     expect(saida).toContain('<HoverCard open={aberto} onOpenChange={setAberto}>');
@@ -150,7 +150,7 @@ describe('composições', () => {
   });
 
   it('a classe extra vai no painel, e não substitui a do componente', () => {
-    expect(hoverCardClasseExtraSource()).toContain(
+    expect(hoverCardClassNameExtraSource()).toContain(
       '<HoverCardContent className="nds-w-md nds-text-center">',
     );
   });
@@ -171,13 +171,13 @@ describe('guardas do painel', () => {
   it('o gatilho vive dentro de uma frase — é o que dispensa o alvo de 24px', () => {
     for (const fn of [
       hoverCardSource,
-      hoverCardEsperaPadraoSource,
-      hoverCardEsperaCurtaSource,
+      hoverCardWaitDefaultSource,
+      hoverCardWaitCurtaSource,
       hoverCardClosedSource,
       hoverCardPreviaDeLinkSource,
       hoverCardDefinicaoSource,
       hoverCardMetricaSource,
-      hoverCardClasseExtraSource,
+      hoverCardClassNameExtraSource,
     ]) {
       expect(fn()).toContain('<p className="nds-text-body">');
     }

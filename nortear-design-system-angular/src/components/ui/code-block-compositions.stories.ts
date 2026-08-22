@@ -31,13 +31,13 @@ export default meta;
 type Story = StoryObj;
 
 /** Números 1-based das linhas marcadas. */
-function linhasMarcadas(canvasElement: HTMLElement): number[] {
+function linesChecked(canvasElement: HTMLElement): number[] {
   return [...root(canvasElement).querySelectorAll('.nds-code-block-line')]
     .map((el, i) => (el.getAttribute('data-highlighted') === 'true' ? i + 1 : 0))
     .filter((n) => n > 0);
 }
 
-const RODAPE = 'A ação de copiar leva apenas o código.';
+const FOOTER = 'A ação de copiar leva apenas o código.';
 
 /**
  * Seis linhas, porque um intervalo precisa de espaço para existir.
@@ -117,7 +117,7 @@ export const WithHighlight: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Só a linha pedida fica marcada, contando a partir de 1', async () => {
-      await expect(linhasMarcadas(canvasElement)).toEqual([2]);
+      await expect(linesChecked(canvasElement)).toEqual([2]);
       const marcada = root(canvasElement).querySelector<HTMLElement>('[data-highlighted="true"]')!;
       await expect(marcada).toHaveTextContent('const total = items.length;');
     });
@@ -142,7 +142,7 @@ export const WithHighlightedRange: Story = {
       // exercitada em WithHighlight. `1, 4-5` traz de fato um intervalo — a
       // versão anterior passava `'1, 3'`, dois números avulsos, e afirmava no
       // nome e no comentário um intervalo que a entrada não continha.
-      await expect(linhasMarcadas(canvasElement)).toEqual([1, 4, 5]);
+      await expect(linesChecked(canvasElement)).toEqual([1, 4, 5]);
     });
 
     await step('As linhas de fora seguem sem marcação', async () => {
@@ -161,14 +161,14 @@ export const WithHighlightedRange: Story = {
 
 export const WithFooter: Story = {
   render: () => ({
-    props: { code: COMPOSITION_CODE, rodape: RODAPE },
+    props: { code: COMPOSITION_CODE, rodape: FOOTER },
     template: `<nds-code-block [code]="code" language="ts" [footer]="rodape" />`,
   }),
   play: async ({ canvasElement, step }) => {
     await step('O rodapé aparece abaixo do código', async () => {
       const rodape = root(canvasElement).querySelector<HTMLElement>('.nds-code-block-footer')!;
       await expect(rodape).toBeVisible();
-      await expect(rodape).toHaveTextContent(RODAPE);
+      await expect(rodape).toHaveTextContent(FOOTER);
     });
 
     await step('O rodapé fica fora da região que rola', async () => {

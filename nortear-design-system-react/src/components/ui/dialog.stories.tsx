@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, fn, waitFor } from "storybook/test";
 import {
   abrir,
-  botaoFecharDoCanto,
-  conferirFocusTrap,
-  conferirNomeEDescricao,
-  esperarFechado,
+  cantoButtonClose,
+  checkFocusTrap,
+  checkNameEDescricao,
+  waitForClosed,
   fechar,
   gatilho,
   overlay,
@@ -110,7 +110,7 @@ export const Playground: Story = {
     // resto da página fica inerte, e uma consulta por papel depende de como a
     // biblioteca de teste trata `inert`.
     const trigger = gatilho(canvasElement)!;
-    const espiao = args.onOpenChange as unknown as ReturnType<typeof fn>;
+    const spy = args.onOpenChange as unknown as ReturnType<typeof fn>;
 
     await step("O markup é o mesmo das outras stacks", async () => {
       const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="dialog"]');
@@ -143,7 +143,7 @@ export const Playground: Story = {
     await step("O painel se anuncia como diálogo, com nome e descrição", async () => {
       const p = painel()!;
       await expect(p).toHaveAttribute("role", "dialog");
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step("Aberto e modal, o resto do documento sai do alcance", async () => {
@@ -174,14 +174,14 @@ export const Playground: Story = {
     });
 
     await step("Tab não sai do painel", async () => {
-      await conferirFocusTrap(painel()!);
+      await checkFocusTrap(painel()!);
     });
 
     await step("Escape fecha, avisa o callback e devolve o foco ao gatilho", async () => {
-      const chamadasAntes = espiao.mock.calls.length;
+      const callsBefore = spy.mock.calls.length;
       await userEvent.keyboard("{Escape}");
-      await esperarFechado();
-      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 1);
+      await waitForClosed();
+      await expect(spy.mock.calls.length).toBe(callsBefore + 1);
       // Sem `waitFor` em volta do foco: a restauração é síncrona, e envolvê-la
       // mascararia um bug de foco real.
       await waitFor(async () => {
@@ -192,7 +192,7 @@ export const Playground: Story = {
     await step("Clique no overlay fecha e devolve o foco", async () => {
       await abrir(canvasElement);
       overlay()!.click();
-      await esperarFechado();
+      await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
@@ -200,10 +200,10 @@ export const Playground: Story = {
 
     await step("O botão X fecha, tem nome acessível e devolve o foco", async () => {
       const p = await abrir(canvasElement);
-      const x = botaoFecharDoCanto(p)!;
+      const x = cantoButtonClose(p)!;
       await expect(x).toHaveAccessibleName();
       await userEvent.click(x);
-      await esperarFechado();
+      await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });
@@ -218,7 +218,7 @@ export const Playground: Story = {
       // foco continua sendo esta.
       const cancelar = botoes[0];
       await userEvent.click(cancelar);
-      await esperarFechado();
+      await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });

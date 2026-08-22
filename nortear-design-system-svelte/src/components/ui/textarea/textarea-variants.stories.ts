@@ -3,14 +3,14 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import TextareaStory from './TextareaStory.svelte';
 import {
-  alturaMinimaPx,
+  heightMinimaPx,
   preencherAte,
   resizeComputado,
 } from '@shared/testing/textarea-probe';
 import {
-  textareaComContadorSource,
-  textareaPadraoSource,
-  textareaSemRedimensionarSource,
+  textareaWithCounterSource,
+  textareaDefaultSource,
+  textareaNoRedimensionarSource,
   textareaSource,
 } from './textarea.source';
 
@@ -39,7 +39,7 @@ type Story = StoryObj;
 
 export const Default: Story = {
   parameters: {
-    docs: { source: { transform: textareaPadraoSource } },
+    docs: { source: { transform: textareaDefaultSource } },
   },
   render: () => ({
     Component: TextareaStory,
@@ -61,7 +61,7 @@ export const Default: Story = {
     });
 
     await step('Altura mínima de 120px', async () => {
-      await expect(alturaMinimaPx(textarea)).toBe(120);
+      await expect(heightMinimaPx(textarea)).toBe(120);
     });
   },
 };
@@ -69,7 +69,7 @@ export const Default: Story = {
 export const WithCounter: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item4'],
-    docs: { source: { transform: textareaComContadorSource } },
+    docs: { source: { transform: textareaWithCounterSource } },
   },
   render: () => ({
     Component: TextareaStory,
@@ -109,7 +109,7 @@ export const WithCounter: Story = {
 
 export const NoResize: Story = {
   parameters: {
-    docs: { source: { transform: textareaSemRedimensionarSource } },
+    docs: { source: { transform: textareaNoRedimensionarSource } },
   },
   render: () => ({
     Component: TextareaStory,

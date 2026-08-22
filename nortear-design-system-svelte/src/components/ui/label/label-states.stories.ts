@@ -2,16 +2,16 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import {
-  contrastePorTema,
+  themeContrast,
   cursorComputado,
-  opacidadeComputada,
+  opacityComputada,
 } from '@shared/testing/label-probe';
 import LabelStory from './LabelStory.svelte';
 import LabelDisabledPeerStory from './LabelDisabledPeerStory.svelte';
 import LabelDisabledGroupStory from './LabelDisabledGroupStory.svelte';
 import {
   labelDisabledSiblingSource,
-  blockSourceLabelDisabled,
+  blockLabelDisabledSource,
   labelObrigatorioSource,
   labelSource,
 } from './label.source';
@@ -60,13 +60,13 @@ export const Default: Story = {
 
     await step('O rótulo está em opacidade cheia', async () => {
       // Efeito computado, não nome de classe.
-      await expect(opacidadeComputada(label)).toBe(1);
+      await expect(opacityComputada(label)).toBe(1);
     });
 
     await step('O contraste do texto passa em AA nos dois temas', async () => {
       // O axe do test-runner só vê o tema claro. 4.5 porque o rótulo é texto
       // normal: 14px em peso 500 não alcança o limite de texto grande.
-      const { claro, escuro } = contrastePorTema(label);
+      const { claro, escuro } = themeContrast(label);
       await expect(claro).toBeGreaterThanOrEqual(4.5);
       await expect(escuro).toBeGreaterThanOrEqual(4.5);
     });
@@ -89,7 +89,7 @@ export const Disabled: Story = {
     });
 
     await step('O rótulo esmaece junto e mostra o cursor de bloqueio', async () => {
-      await expect(opacidadeComputada(label)).toBeLessThan(1);
+      await expect(opacityComputada(label)).toBeLessThan(1);
       await expect(cursorComputado(label)).toBe('not-allowed');
     });
   },
@@ -98,7 +98,7 @@ export const Disabled: Story = {
 export const DisabledViaGroup: Story = {
   parameters: {
     covers: ['functional.item4'],
-    docs: { source: { transform: blockSourceLabelDisabled } },
+    docs: { source: { transform: blockLabelDisabledSource } },
   },
   render: () => ({ Component: LabelDisabledGroupStory, props: {} }),
   play: async ({ canvasElement, step }) => {
@@ -107,7 +107,7 @@ export const DisabledViaGroup: Story = {
 
     await step('O rótulo herda o estado do bloco desabilitado', async () => {
       await expect(label.closest('[data-disabled="true"]')).toBeInTheDocument();
-      await expect(opacidadeComputada(label)).toBeLessThan(1);
+      await expect(opacityComputada(label)).toBeLessThan(1);
       await expect(getComputedStyle(label).pointerEvents).toBe('none');
     });
   },

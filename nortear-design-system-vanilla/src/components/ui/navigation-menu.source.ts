@@ -6,7 +6,7 @@
 // montagem da chamada com lista posicional é local a este módulo.
 
 import {
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -133,7 +133,7 @@ barra.setAttribute('aria-label', ${texto(o.ariaLabel ?? NAME_DEFAULT)});`;
 /** A chamada real de `createNavigationMenu` com a estrutura e as opções da story. */
 export function navigationMenuSnippet(o: NavigationMenuSnippetOptions = {}): string {
   return snippet(
-    importar('navigation-menu', 'createNavigationMenu'),
+    importing('navigation-menu', 'createNavigationMenu'),
     barBlock(o, o.items ?? ITEMS_DEFAULT),
     montar('barra'),
     // A barra registra ouvinte no documento. Sair da página dispara a limpeza
@@ -151,7 +151,7 @@ export function navigationMenuSnippet(o: NavigationMenuSnippetOptions = {}): str
  */
 export function navigationMenuMegaSnippet(o: NavigationMenuSnippetOptions = {}): string {
   return snippet(
-    importar('navigation-menu', 'createNavigationMenu'),
+    importing('navigation-menu', 'createNavigationMenu'),
     barBlock(o, o.items ?? ITEMS_DEFAULT),
     `const painel = barra.querySelector<HTMLElement>('.nds-navigation-menu-content');
 if (painel) {
@@ -172,7 +172,7 @@ if (painel) {
  */
 export function navigationMenuHighlightSnippet(o: NavigationMenuSnippetOptions = {}): string {
   return snippet(
-    importar('navigation-menu', 'createNavigationMenu'),
+    importing('navigation-menu', 'createNavigationMenu'),
     barBlock(o, o.items ?? ITEMS_DEFAULT),
     `const painel = barra.querySelector<HTMLElement>('.nds-navigation-menu-content');
 if (painel) {
@@ -217,7 +217,7 @@ export function navigationMenuControlledSnippet(o: NavigationMenuSnippetOptions 
   ];
 
   return snippet(
-    importar('navigation-menu', 'createNavigationMenu'),
+    importing('navigation-menu', 'createNavigationMenu'),
     `const barra = createNavigationMenu(${serializarItems(itens)}, {
   // Definir \`value\` é o que troca o modo. Vazio quer dizer "nenhum aberto".
   value: '',

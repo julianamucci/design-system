@@ -30,7 +30,7 @@ const IMPORT = `import {
  * focável não tem nenhuma pista visual de que as setas o movem, e sem o nome o
  * leitor de tela anuncia "separador" e para por aí.
  */
-const ROTULO_PUNHO = 'Redimensionar painéis — use setas para ajustar';
+const LABEL_HANDLE = 'Redimensionar painéis — use setas para ajustar';
 
 type Painel = {
   tamanho: number;
@@ -120,7 +120,7 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
   <p class="nds-text-body nds-font-semibold">Sidebar</p>
   <p class="nds-text-caption nds-text-muted-foreground">Navegação do projeto</p>
 </div>`),
-        punho(ROTULO_PUNHO, { pegador: true }),
+        punho(LABEL_HANDLE, { pegador: true }),
         painel({
           tamanho: 70,
           min: 20,
@@ -172,7 +172,7 @@ export function resizableVerticalSource(): string {
  * Grupo dentro de painel: cada grupo governa só os próprios painéis, e o de
  * dentro tem eixo e proporções independentes do de fora.
  */
-export function resizableAninhadoSource(): string {
+export function resizableNestedSource(): string {
   return vueSnippet(
     IMPORT,
     moldura(
@@ -197,7 +197,7 @@ export function resizableAninhadoSource(): string {
  * anuncia que ali existe um controle. Ele é desenho — o nome acessível continua
  * saindo do `aria-label` do divisor, e nenhum texto entra no pegador.
  */
-export function resizableComPegadorSource(): string {
+export function resizableWithGrabberSource(): string {
   return vueSnippet(
     IMPORT,
     moldura(
@@ -217,7 +217,7 @@ export function resizableArrastandoSource(): string {
     moldura(
       grupo('horizontal', [
         painel({ tamanho: 50, min: 10, rotulo: 'Esquerda' }),
-        punho(ROTULO_PUNHO, { pegador: true }),
+        punho(LABEL_HANDLE, { pegador: true }),
         painel({ tamanho: 50, min: 10, rotulo: 'Direita', destaque: true }),
       ]),
     ),
@@ -234,7 +234,7 @@ export function resizableLimitesSource(): string {
     moldura(
       grupo('horizontal', [
         painel({ tamanho: 50, min: 30, max: 60, rotulo: 'Limitado' }),
-        punho(ROTULO_PUNHO),
+        punho(LABEL_HANDLE),
         painel({ tamanho: 50, min: 30, rotulo: 'Livre', destaque: true }),
       ]),
     ),
@@ -246,13 +246,13 @@ export function resizableLimitesSource(): string {
  * se escreve — o componente já põe o divisor na ordem de tabulação, e o anel
  * sai de `:focus-visible`, que só casa quando o foco chega por teclado.
  */
-export function resizableFocoSource(): string {
+export function resizableFocusSource(): string {
   return vueSnippet(
     IMPORT,
     moldura(
       grupo('horizontal', [
         painel({ tamanho: 50, min: 20, rotulo: 'Um' }),
-        punho(ROTULO_PUNHO),
+        punho(LABEL_HANDLE),
         painel({ tamanho: 50, min: 20, rotulo: 'Dois', destaque: true }),
       ]),
     ),
@@ -269,7 +269,7 @@ export function resizableTravadoSource(): string {
     moldura(
       grupo('horizontal', [
         painel({ tamanho: 50, min: 20, rotulo: 'Fixo' }),
-        punho(ROTULO_PUNHO, { pegador: true, travado: true }),
+        punho(LABEL_HANDLE, { pegador: true, travado: true }),
         painel({ tamanho: 50, min: 20, rotulo: 'Fixo', destaque: true }),
       ]),
     ),

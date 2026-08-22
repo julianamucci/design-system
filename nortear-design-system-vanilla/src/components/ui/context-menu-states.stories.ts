@@ -4,10 +4,10 @@ import { createContextMenu } from './context-menu';
 import { contextMenuSource, contextMenuSourceWith } from './context-menu.source';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import {
-  abrirPorGesto,
+  gestoOpen,
   brilho,
-  criarAreaDeClique,
-  menuAberto,
+  clickCreateArea,
+  menuOpen,
 } from '@shared/testing/context-menu-area';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
@@ -34,7 +34,7 @@ export default meta;
 type Story = StoryObj;
 
 const item = (valor: string) =>
-  menuAberto()!.querySelector<HTMLElement>(`[data-value="${valor}"]`)!;
+  menuOpen()!.querySelector<HTMLElement>(`[data-value="${valor}"]`)!;
 
 // ─── Item desabilitado ────────────────────────────────────────────────────────
 
@@ -57,7 +57,7 @@ export const ItemDisabled: Story = {
   },
   render: () =>
     createContextMenu({
-      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
       items: [
         { type: 'item', label: 'Editar', value: 'edit', onClick: fn() },
         { type: 'item', label: 'Duplicar', value: 'off', disabled: true },
@@ -70,7 +70,7 @@ export const ItemDisabled: Story = {
     const area = () => within(canvasElement).getByTestId('area');
 
     await step('O item desabilitado é anunciado como tal', async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(item('off').getAttribute('aria-disabled')).toBe('true');
       await expect(item('perigo-off').getAttribute('aria-disabled')).toBe('true');
     });
@@ -86,7 +86,7 @@ export const ItemDisabled: Story = {
       // preparo: ele não muda de estado em rodada nenhuma.
       item('off').focus();
       await userEvent.keyboard('{Enter}');
-      await expect(menuAberto()).not.toBeNull();
+      await expect(menuOpen()).not.toBeNull();
     });
 
     await step('O ponteiro também não o alcança', async () => {
@@ -120,7 +120,7 @@ export const ItemInset: Story = {
   },
   render: () =>
     createContextMenu({
-      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
       items: [
         { type: 'label', label: 'Arquivo', inset: true },
         { type: 'item', label: 'Editar', value: 'normal', onClick: fn() },
@@ -136,7 +136,7 @@ export const ItemInset: Story = {
       // O que o recuo entrega é o alinhamento com itens que têm indicador à
       // esquerda. Afirmar o nome da classe não protegeria isso: a classe pode
       // continuar aplicada com a regra vazia.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       const recuo = parseFloat(getComputedStyle(item('recuado')).paddingLeft);
       const normal = parseFloat(getComputedStyle(item('normal')).paddingLeft);
       await expect(recuo).toBeGreaterThan(normal);
@@ -160,7 +160,7 @@ export const ItemDestructive: Story = {
   },
   render: () =>
     createContextMenu({
-      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
       items: [
         { type: 'item', label: 'Editar', value: 'normal', shortcut: '⌘E', onClick: fn() },
         { type: 'item', label: 'Duplicar', value: 'duplicate', onClick: fn() },
@@ -181,7 +181,7 @@ export const ItemDestructive: Story = {
     await step('O item destrutivo se declara pelo atributo, não só pela cor', async () => {
       // `data-variant` é o que o CSS lê e o que a auditoria compara entre
       // stacks; a cor é consequência dele.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(item('perigo').getAttribute('data-variant')).toBe('destructive');
       await expect(item('normal').getAttribute('data-variant')).toBe('default');
     });
@@ -205,7 +205,7 @@ export const DarkPalette: Story = {
   },
   render: () =>
     createContextMenu({
-      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
       items: [
         { type: 'item', label: 'Editar', value: 'edit', onClick: fn() },
         { type: 'item', label: 'Duplicar', value: 'off', disabled: true },
@@ -225,7 +225,7 @@ export const DarkPalette: Story = {
     await step('O menu é mais escuro que o texto que ele recebe', async () => {
       // Prova que a paleta trocou de verdade: com os tokens do claro esta
       // relação se inverte, e a asserção acusa.
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       const cs = getComputedStyle(menu);
       await expect(brilho(cs.backgroundColor)).toBeLessThan(brilho(cs.color));
     });
@@ -260,7 +260,7 @@ export const CheckboxIndeterminate: Story = {
   },
   render: () =>
     createContextMenu({
-      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
       items: [
         { type: 'label', label: 'Mostrar na tela' },
         { type: 'checkbox', label: 'Colunas', value: 'colunas', indeterminate: true },
@@ -270,7 +270,7 @@ export const CheckboxIndeterminate: Story = {
     }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
-    const menu = await abrirPorGesto(area());
+    const menu = await gestoOpen(area());
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
     const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });

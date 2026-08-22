@@ -22,16 +22,16 @@ export type SidebarArgs = {
 /** Conteúdo da barra. Cada valor é uma composição inteira, não uma variação. */
 type Menu = 'navegacao' | 'grupos' | 'submenu' | 'esqueleto';
 
-type Opcoes = Partial<SidebarArgs> & {
+type Options = Partial<SidebarArgs> & {
   /** Estado inicial de quem não controla `open` de fora. */
   defaultOpen?: boolean;
   menu?: Menu;
   titulo?: string;
 };
 
-const CONSULTA_PADRAO = '(max-width: 767px)';
+const QUERY_DEFAULT = '(max-width: 767px)';
 
-const ICONES: Record<string, string> = {
+const ICONS: Record<string, string> = {
   Bell: 'bell',
   Box: 'box',
   ChevronDown: 'chevron-down',
@@ -45,7 +45,7 @@ const ICONES: Record<string, string> = {
 };
 
 /** Peças da barra que cada composição usa, em ordem alfabética. */
-function pecas(menu: Menu, comGatilho: boolean): string[] {
+function parts(menu: Menu, withTrigger: boolean): string[] {
   const base = [
     'Sidebar',
     'SidebarContent',
@@ -65,7 +65,7 @@ function pecas(menu: Menu, comGatilho: boolean): string[] {
   }
   if (menu === 'submenu') base.push('SidebarMenuSub', 'SidebarMenuSubButton', 'SidebarMenuSubItem');
   if (menu === 'esqueleto') base.push('SidebarMenuSkeleton');
-  if (comGatilho) base.push('SidebarRail', 'SidebarTrigger');
+  if (withTrigger) base.push('SidebarRail', 'SidebarTrigger');
   return [...new Set(base)].sort();
 }
 
@@ -302,22 +302,22 @@ ${itemButton(collapsible)}
 }
 
 /** Aplicação inteira: barra à esquerda do conteúdo, sob o mesmo provider. */
-function aplicacao(o: Opcoes = {}): string {
+function aplicacao(o: Options = {}): string {
   const {
     side = 'left',
     variant = 'sidebar',
     collapsible = 'offcanvas',
-    mobileQuery = CONSULTA_PADRAO,
+    mobileQuery = QUERY_DEFAULT,
     defaultOpen = true,
     menu = 'navegacao',
     titulo = 'Conteúdo principal',
   } = o;
 
   // Sem recolhimento não há o que alternar: o gatilho e a faixa saem junto.
-  const comGatilho = collapsible !== 'none';
+  const withTrigger = collapsible !== 'none';
 
   const iconImportes = icones(menu)
-    .map((nome) => `import ${nome} from "@lucide/svelte/icons/${ICONES[nome]}";`)
+    .map((nome) => `import ${nome} from "@lucide/svelte/icons/${ICONS[nome]}";`)
     .join('\n');
   const importeDeTransicao = menu === 'submenu' ? `\nimport { slide } from "svelte/transition";` : '';
 
@@ -332,7 +332,7 @@ function aplicacao(o: Opcoes = {}): string {
   const stateInitial = defaultOpen ? '' : '\nlet aberta = $state(false);';
 
   const script = `import {
-${pecas(menu, comGatilho).map((p) => `  ${p},`).join('\n')}
+${parts(menu, withTrigger).map((p) => `  ${p},`).join('\n')}
 } from "@/components/ui/sidebar";
 ${iconImportes}${importeDeTransicao}${stateInitial}${dados(menu)}`;
 
@@ -346,7 +346,7 @@ ${iconImportes}${importeDeTransicao}${stateInitial}${dados(menu)}`;
     script,
     `<SidebarProvider${attrs(
       defaultOpen ? '' : 'bind:open={aberta}',
-      mobileQuery === CONSULTA_PADRAO ? '' : `mobileQuery="${mobileQuery}"`,
+      mobileQuery === QUERY_DEFAULT ? '' : `mobileQuery="${mobileQuery}"`,
     )}>
   <Sidebar side="${side}" variant="${variant}" collapsible="${collapsible}">
 ${cabecalho(menu, collapsible)}
@@ -357,11 +357,11 @@ ${grupos(menu, collapsible)}
     </SidebarContent>
     <SidebarFooter class="nds-px-4 nds-py-2 nds-border-t">
       <span class="${footerClassName}">${rodape}</span>
-    </SidebarFooter>${comGatilho ? '\n    <SidebarRail />' : ''}
+    </SidebarFooter>${withTrigger ? '\n    <SidebarRail />' : ''}
   </Sidebar>
   <SidebarInset class="nds-stack nds-flex-1 nds-min-w-0">
     <header class="nds-cluster nds-border-b nds-px-4 nds-py-2" data-align="center" data-spacing="sm">
-${comGatilho ? '      <SidebarTrigger />\n' : ''}      <span class="nds-text-body nds-font-medium nds-text-muted-foreground">${titulo}</span>
+${withTrigger ? '      <SidebarTrigger />\n' : ''}      <span class="nds-text-body nds-font-medium nds-text-muted-foreground">${titulo}</span>
     </header>
     <main id="main-content" tabindex="-1" class="nds-flex-1 nds-p-6">
       <p class="nds-text-body">Área de conteúdo da aplicação.</p>
@@ -380,22 +380,22 @@ export function sidebarSource(_gerado?: string, ctx?: { args?: Partial<SidebarAr
 }
 
 /** Variante padrão: painel encostado, sem cantos nem sombra. */
-export function sidebarVarianteSidebarSource(): string {
+export function sidebarVariantSidebarSource(): string {
   return aplicacao({ variant: 'sidebar' });
 }
 
 /** Variante flutuante: o painel interno ganha borda, cantos e sombra. */
-export function sidebarVarianteFloatingSource(): string {
+export function sidebarVariantFloatingSource(): string {
   return aplicacao({ variant: 'floating' });
 }
 
 /** Variante embutida: é o conteúdo adjacente que arredonda, e ele é irmão da barra. */
-export function sidebarVarianteInsetSource(): string {
+export function sidebarVariantInsetSource(): string {
   return aplicacao({ variant: 'inset' });
 }
 
 /** A barra do outro lado — o conteúdo não muda de ordem no documento. */
-export function sidebarLadoDireitoSource(): string {
+export function sidebarSideDireitoSource(): string {
   return aplicacao({ side: 'right' });
 }
 
@@ -428,7 +428,7 @@ export function sidebarGavetaSource(): string {
 }
 
 /** Composição: dois grupos, busca no cabeçalho, contadores e ações nomeadas. */
-export function navigationSourceSidebarGroups(): string {
+export function navigationSidebarGroupsSource(): string {
   return aplicacao({ menu: 'grupos', titulo: 'Com grupos de navegação' });
 }
 

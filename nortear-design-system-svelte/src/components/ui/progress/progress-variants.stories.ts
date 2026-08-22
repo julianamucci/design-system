@@ -4,7 +4,7 @@ import { within, expect, waitFor } from 'storybook/test';
 import ProgressStory from './ProgressStory.svelte';
 import {
   barrasDeProgresso,
-  contrasteBarraTrilha,
+  contrastBarTrack,
   corDoToken,
   indicadorDoProgresso,
   nomeAcessivel,
@@ -60,7 +60,7 @@ export const Determinate: Story = {
 
     await step('Indicador e trilha se distinguem com pelo menos 3:1', async () => {
       // WCAG 1.4.11: a barra só informa se for possível ver onde ela termina.
-      await expect(contrasteBarraTrilha(canvasElement)).toBeGreaterThanOrEqual(3);
+      await expect(contrastBarTrack(canvasElement)).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -165,7 +165,7 @@ export const SemanticColor: Story = {
     });
 
     await step('A variante mantém 3:1 contra a trilha', async () => {
-      await expect(contrasteBarraTrilha(canvasElement)).toBeGreaterThanOrEqual(3);
+      await expect(contrastBarTrack(canvasElement)).toBeGreaterThanOrEqual(3);
     });
   },
 };

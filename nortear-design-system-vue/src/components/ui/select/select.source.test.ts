@@ -2,14 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   selectAgrupadoSource,
   selectBloqueadoSource,
-  selectComIconeSource,
-  selectComRotuloSource,
+  selectWithIconSource,
+  selectWithLabelSource,
   selectWithSeparatorSource,
   selectCompactoSource,
-  selectControladoSource,
-  selectEmFormularioSource,
+  selectControlledSource,
+  formSelectSource,
   selectInvalidoSource,
-  selectListaPlanaSource,
+  selectListPlanaSource,
   selectPreenchidoSource,
   selectSource,
   selectEmptySource,
@@ -17,17 +17,17 @@ import {
 
 const TODAS = [
   selectSource(),
-  selectListaPlanaSource(),
+  selectListPlanaSource(),
   selectAgrupadoSource(),
-  selectComIconeSource(),
+  selectWithIconSource(),
   selectEmptySource(),
   selectPreenchidoSource(),
   selectBloqueadoSource(),
   selectInvalidoSource(),
   selectCompactoSource(),
-  selectComRotuloSource(),
-  selectControladoSource(),
-  selectEmFormularioSource(),
+  selectWithLabelSource(),
+  selectControlledSource(),
+  formSelectSource(),
   selectWithSeparatorSource(),
 ];
 
@@ -128,7 +128,7 @@ const estados = [
 
 describe('transforms das stories de variante', () => {
   it('a lista plana não tem grupo nem cabeçalho', () => {
-    const saida = selectListaPlanaSource();
+    const saida = selectListPlanaSource();
     expect(saida).not.toContain('SelectGroup');
     expect(saida).not.toContain('SelectLabel');
     expect([...saida.matchAll(/<SelectItem /g)]).toHaveLength(4);
@@ -144,7 +144,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o ícone da opção é decorativo e não ecoa no nome acessível', () => {
-    const saida = selectComIconeSource();
+    const saida = selectWithIconSource();
     expect(saida).toContain(`import { Globe } from 'lucide-vue-next'`);
     expect(saida).toContain('<Globe class="nds-size-4" aria-hidden="true" />');
     expect(saida).toContain('<span>Português (BR)</span>');
@@ -184,14 +184,14 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o rótulo externo fecha o par nos dois sentidos', () => {
-    const saida = selectComRotuloSource();
+    const saida = selectWithLabelSource();
     expect(saida).toContain('<Label id="estado-rotulo" for="estado">Estado</Label>');
     expect(saida).toContain('id="estado"');
     expect(saida).toContain('aria-labelledby="estado-rotulo"');
   });
 
   it('o controlado declara a metade que entra e a que sai', () => {
-    const saida = selectControladoSource();
+    const saida = selectControlledSource();
     expect(saida).toContain(`import { ref } from 'vue'`);
     expect(saida).toContain(`const estado = ref('')`);
     expect(saida).toContain(':model-value="estado"');
@@ -199,7 +199,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('no formulário o nome mora na raiz — é ele que leva o valor no envio', () => {
-    const saida = selectEmFormularioSource();
+    const saida = formSelectSource();
     expect(saida).toContain('<Select name="estado">');
     expect(saida).toContain('@submit.prevent');
     expect(saida).toContain('<Button type="submit">Enviar</Button>');

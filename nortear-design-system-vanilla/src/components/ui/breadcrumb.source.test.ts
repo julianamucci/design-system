@@ -55,9 +55,9 @@ describe('breadcrumbSnippet', () => {
   });
 
   it('mostra as reticências e o separador próprio quando a story os usa', () => {
-    const comReticencias = breadcrumbSnippet({ ellipsis: true, ellipsisLabel: 'Mais páginas' });
-    expect(comReticencias).toContain("createBreadcrumbEllipsis({ 'aria-label': 'Mais páginas' })");
-    expect(comReticencias).toContain('createBreadcrumbEllipsis,');
+    const withEllipsis = breadcrumbSnippet({ ellipsis: true, ellipsisLabel: 'Mais páginas' });
+    expect(withEllipsis).toContain("createBreadcrumbEllipsis({ 'aria-label': 'Mais páginas' })");
+    expect(withEllipsis).toContain('createBreadcrumbEllipsis,');
 
     // Sem rótulo elas ficam decorativas, e a chamada sai vazia.
     expect(breadcrumbSnippet({ ellipsis: true })).toContain('createBreadcrumbEllipsis({})');
@@ -90,7 +90,7 @@ describe('breadcrumbSource', () => {
   it('acompanha os args em vez de congelar um snippet fixo', () => {
     const noArgs = breadcrumbSource('<nav data-slot="breadcrumb">', {});
     const withArgs = breadcrumbSource('<nav data-slot="breadcrumb">', {
-      args: { niveis: ['Início', 'Componentes', 'Navegação'], atual: 'Trilha' },
+      args: { levels: ['Início', 'Componentes', 'Navegação'], atual: 'Trilha' },
     });
     expect(noArgs).not.toBe(withArgs);
     expect(withArgs).toContain("nivel('Navegação', '/navegacao')");
@@ -106,8 +106,8 @@ describe('breadcrumbSource', () => {
 
 describe('breadcrumbSourceCom', () => {
   it('sobrepõe os args da story com as opções fixas', () => {
-    const transform = breadcrumbSourceWith({ niveis: ['Início'], atual: 'Componentes' });
-    const código = transform('', { args: { niveis: ['A', 'B', 'C'], atual: 'Z' } });
+    const transform = breadcrumbSourceWith({ levels: ['Início'], atual: 'Componentes' });
+    const código = transform('', { args: { levels: ['A', 'B', 'C'], atual: 'Z' } });
     expect(código).toContain("nivel('Início', '/')");
     expect(código).not.toContain("nivel('B'");
     expect(código).toContain("createBreadcrumbPage({ text: 'Componentes' })");

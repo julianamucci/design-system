@@ -13,7 +13,7 @@ import {
 import { tableSource } from './table.source';
 import { createTableDocs } from '@/components/docs/TableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { COLUNAS, INVOICES, TOTAL } from './table.fixtures';
+import { COLUMNS, INVOICES, TOTAL } from './table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -70,9 +70,9 @@ function buildPlaygroundTable(args: TableArgs): HTMLElement {
 
   const thead = createTableHeader();
   const headerRow = createTableRow();
-  for (const [i, label] of COLUNAS.entries()) {
+  for (const [i, label] of COLUMNS.entries()) {
     // A última coluna é numérica: rótulo alinhado com os próprios números.
-    headerRow.appendChild(createTableHead(label, i === COLUNAS.length - 1 ? 'nds-text-right' : undefined));
+    headerRow.appendChild(createTableHead(label, i === COLUMNS.length - 1 ? 'nds-text-right' : undefined));
   }
   thead.appendChild(headerRow);
   table.appendChild(thead);
@@ -145,7 +145,7 @@ export const Playground: Story = {
       // coluna vieram. Nenhuma chamada acima passa `scope`: o default vem da
       // factory, e é isso que esta asserção guarda.
       const cabecalhos = [...canvasElement.querySelectorAll<HTMLElement>('th')];
-      await expect(cabecalhos.length).toBe(COLUNAS.length);
+      await expect(cabecalhos.length).toBe(COLUMNS.length);
       for (const th of cabecalhos) {
         await expect(th).toHaveAttribute('scope', 'col');
         // Coluna sem ordenação não anuncia ordenação — aria-sort="none" diria
@@ -161,8 +161,8 @@ export const Playground: Story = {
       const ths = [...canvasElement.querySelectorAll<HTMLElement>('thead th')];
       await expect(getComputedStyle(ths[3]).textAlign).toBe('right');
       await expect(getComputedStyle(ths[0]).textAlign).toBe('left');
-      const valorTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
-      await expect(getComputedStyle(valorTd).textAlign).toBe('right');
+      const valueTd = canvasElement.querySelector<HTMLElement>('tbody tr td:last-child')!;
+      await expect(getComputedStyle(valueTd).textAlign).toBe('right');
     });
 
     await step('A legenda dá nome à tabela, visível ou não', async () => {

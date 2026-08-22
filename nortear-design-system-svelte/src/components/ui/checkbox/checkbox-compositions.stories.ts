@@ -5,10 +5,10 @@ import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 import CheckboxFormStory from './CheckboxFormStory.svelte';
 import {
-  checkboxComDescricaoSource,
-  checkboxEmFormularioSource,
+  checkboxWithDescriptionSource,
+  formCheckboxSource,
   checkboxManterSessaoSource,
-  checkboxSelecionarTodosSource,
+  checkboxSelectAllSource,
   checkboxNoLabelSource,
   checkboxSource,
 } from './checkbox.source';
@@ -106,7 +106,7 @@ export const WithLabel: Story = {
 
 export const WithDescription: Story = {
   parameters: {
-    docs: { source: { transform: checkboxComDescricaoSource } },
+    docs: { source: { transform: checkboxWithDescriptionSource } },
   },
   render: () => ({
     Component: CheckboxStory,
@@ -174,7 +174,7 @@ export const WithLabelChecked: Story = {
 
 export const Indeterminate: Story = {
   parameters: {
-    docs: { source: { transform: checkboxSelecionarTodosSource } },
+    docs: { source: { transform: checkboxSelectAllSource } },
   },
   render: () => ({
     Component: CheckboxStory,
@@ -207,7 +207,7 @@ export const InForm: Story = {
   parameters: {
     covers: ['functional.item5'],
     docs: {
-      source: { transform: checkboxEmFormularioSource },
+      source: { transform: formCheckboxSource },
       description: {
         story:
           'Checkbox marcado dentro de um formulário nativo. O bits-ui renderiza um input escondido quando há `name`, então o valor participa do FormData no submit.',

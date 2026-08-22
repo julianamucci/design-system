@@ -11,9 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-vue-next';
 import { balaoDe } from './tooltip.fixtures';
 import {
-  tooltipAbertoSource,
+  tooltipOpenSource,
   tooltipWithWaitSource,
-  tooltipControladoSource,
+  tooltipControlledSource,
   tooltipClosedSource,
   tooltipPersistenteSource,
 } from './tooltip.source';
@@ -24,7 +24,7 @@ import {
 // pode depender do mouse.
 
 /** Espera em ms que o hover do provider precisa vencer nas stories de delay. */
-const DELAY_LONGO = 600;
+const LONG_DELAY = 600;
 
 /** Pausa explícita — usada só onde a asserção é "continua assim depois de X". */
 function espera(ms: number): Promise<void> {
@@ -105,7 +105,7 @@ export const Open: Story = {
     docs: {
       // A abertura de saída é o assunto, e ela é uma prop na raiz — a do meta
       // nasce fechada, que é justamente o estado oposto.
-      source: { transform: tooltipAbertoSource },
+      source: { transform: tooltipOpenSource },
       description: {
         story: 'Tooltip aberto via defaultOpen. Captura visual no Chromatic — role=tooltip presente.',
       },
@@ -166,7 +166,7 @@ export const Hover: Story = {
   render: () => ({
     components: sharedComponents,
     setup() {
-      return { atraso: DELAY_LONGO };
+      return { atraso: LONG_DELAY };
     },
     // Provider próprio: o delay do decorator é 0, e sem espera não há o que medir.
     template: `
@@ -198,7 +198,7 @@ export const Hover: Story = {
         async () => {
           await expect(balaoDe(gatilho)).not.toBeNull();
         },
-        { timeout: DELAY_LONGO * 5 },
+        { timeout: LONG_DELAY * 5 },
       );
       await expect(balaoDe(gatilho)).toHaveAttribute('role', 'tooltip');
     });
@@ -220,7 +220,7 @@ export const WithFocus: Story = {
   render: () => ({
     components: sharedComponents,
     setup() {
-      return { atraso: DELAY_LONGO };
+      return { atraso: LONG_DELAY };
     },
     // Delay longo de propósito: quem chega por teclado não tem como "parar em
     // cima", então esperar aqui esconderia a informação de quem não usa mouse.
@@ -316,7 +316,7 @@ export const Controlled: Story = {
     docs: {
       // O modo controlado acrescenta estado no script e dois botões externos —
       // uma composição inteira que a do meta, não-controlada, não descreve.
-      source: { transform: tooltipControladoSource },
+      source: { transform: tooltipControlledSource },
       description: {
         story: 'Abertura controlada por estado externo, com botões dedicados para abrir e fechar.',
       },

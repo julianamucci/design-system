@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -17,7 +17,7 @@ import type { CardSize } from './card';
  */
 function multipleImporting(slug: string, nomes: string[]): string {
   return nomes.length <= 3
-    ? importar(slug, ...nomes)
+    ? importing(slug, ...nomes)
     : `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from '@/components/ui/${slug}';`;
 }
 
@@ -40,7 +40,7 @@ export type CardSnippetOptions = {
 };
 
 const TITLE_DEFAULT = 'Cadeira Gamer Pro';
-const DESCRICAO_PADRAO = 'Estrutura ergonômica com ajuste de altura e apoio lombar.';
+const DESCRIPTION_DEFAULT = 'Estrutura ergonômica com ajuste de altura e apoio lombar.';
 const PRECO_DEFAULT = 'R$ 1.299,00';
 const WIDTH_DEFAULT = 'nds-w-sm';
 
@@ -53,7 +53,7 @@ const WIDTH_DEFAULT = 'nds-w-sm';
  */
 function partesDoCard(o: CardSnippetOptions): { nomes: string[]; blocos: string[] } {
   const titulo = o.title ?? TITLE_DEFAULT;
-  const descricao = o.description ?? DESCRICAO_PADRAO;
+  const descricao = o.description ?? DESCRIPTION_DEFAULT;
   const preco = o.price ?? PRECO_DEFAULT;
 
   const nomes = [
@@ -164,7 +164,7 @@ export function cardSnippet(o: CardSnippetOptions = {}): string {
   return snippet(
     [
       multipleImporting('card', nomes),
-      usaButton ? importar('button', 'createButton') : undefined,
+      usaButton ? importing('button', 'createButton') : undefined,
     ]
       .filter(Boolean)
       .join('\n'),
@@ -202,7 +202,7 @@ export function cardClickableSnippet(o: CardSnippetOptions = {}): string {
   return snippet(
     [
       multipleImporting('card', nomes),
-      o.showFooter || o.action ? importar('button', 'createButton') : undefined,
+      o.showFooter || o.action ? importing('button', 'createButton') : undefined,
     ]
       .filter(Boolean)
       .join('\n'),

@@ -31,13 +31,13 @@ export type DataTableArgs = {
   caption: string;
 };
 
-const LEGENDA = 'Faturas recentes';
+const CAPTION = 'Faturas recentes';
 
 /**
  * Os dados vêm de fora — aqui um recorte, só para a tabela ter o que mostrar.
  * O que importa no exemplo é a FORMA do registro, que é o que as colunas leem.
  */
-const DADOS = `const invoices = [
+const DATA = `const invoices = [
   { id: "INV-001", customer: "Ana Souza", status: "Pago", method: "Cartão de crédito", amount: 250 },
   { id: "INV-002", customer: "Bruno Lima", status: "Pendente", method: "Boleto bancário", amount: 150 },
   { id: "INV-003", customer: "Carla Mendes", status: "Cancelado", method: "Pix", amount: 350 },
@@ -49,7 +49,7 @@ const DADOS = `const invoices = [
  * Uma fonte só para forma e conteúdo: mudar um campo do registro reprova as
  * colunas na hora, sem uma interface paralela para manter em dia.
  */
-const LINHA = '(typeof invoices)[number]';
+const LINE = '(typeof invoices)[number]';
 
 const FORMATOS = `const currency = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -69,7 +69,7 @@ const statusVariant: Record<string, "default" | "secondary" | "destructive"> = {
  * headless as remonta quando isso acontece — largura, ordem e fixação se perdem
  * no meio do arraste. Por isso a declaração mora fora do componente.
  */
-const COLUNAS = `const columns: DataTableColumn<${LINHA}>[] = [
+const COLUMNS = `const columns: DataTableColumn<${LINE}>[] = [
   { accessorKey: "id", header: "Fatura", size: 110 },
   { accessorKey: "customer", header: "Cliente", size: 200 },
   {
@@ -111,9 +111,9 @@ function tableSnippet(partes: {
 }): string {
   const blocos = [
     partes.imports ?? IMPORT_BASE,
-    DADOS,
+    DATA,
     FORMATOS,
-    partes.colunas ?? COLUNAS,
+    partes.colunas ?? COLUMNS,
     partes.extra ?? null,
     partes.markup,
   ].filter((bloco): bloco is string => Boolean(bloco));
@@ -131,7 +131,7 @@ function tableSnippet(partes: {
  * controles chamados "Selecionar linha" são indistinguíveis entre si para quem
  * usa leitor de tela (WCAG 4.1.2).
  */
-const ROTULOS = `const rotulos = {
+const LABELS = `const rotulos = {
   selectAll: "Selecionar todas as faturas",
   selectRow: (r: string) => \`Selecionar fatura \${r}\`,
   rowsSelected: (s: number, n: number) => \`\${s} de \${n} fatura(s) selecionada(s).\`,
@@ -147,7 +147,7 @@ const ROTULOS = `const rotulos = {
  */
 export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const selecao = args.enableRowSelection !== false;
+  const selection = args.enableRowSelection !== false;
 
   const props = attrsMultilinha(
     [
@@ -158,10 +158,10 @@ export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) =>
       propBool('enableColumnVisibility', args.enableColumnVisibility, true),
       propBool('enablePagination', args.enablePagination, true),
       propNumber('pageSize', args.pageSize === 10 ? null : args.pageSize),
-      propText('caption', texto(args.caption) ?? LEGENDA),
+      propText('caption', texto(args.caption) ?? CAPTION),
       propText('globalFilterPlaceholder', args.globalFilterPlaceholder),
       propText('emptyMessage', args.emptyMessage),
-      selecao ? 'labels={rotulos}' : null,
+      selection ? 'labels={rotulos}' : null,
       'rowKey={(fatura) => fatura.id}',
     ],
     '  ',
@@ -169,7 +169,7 @@ export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) =>
   );
 
   return tableSnippet({
-    extra: selecao ? ROTULOS : undefined,
+    extra: selection ? LABELS : undefined,
     markup: `<DataTable${props}/>`,
   });
 };
@@ -182,9 +182,9 @@ export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) =>
  * ocupa uma célula na linha, que por isso recebe o nome da coluna fora da tela:
  * célula de cabeçalho vazia é o que o axe reprova.
  */
-export function columnSourceDataTableWithFilters(): string {
+export function columnDataTableWithFiltersSource(): string {
   return tableSnippet({
-    colunas: `const columns: DataTableColumn<${LINHA}>[] = [
+    colunas: `const columns: DataTableColumn<${LINE}>[] = [
   { accessorKey: "id", header: "Fatura", meta: { filter: { type: "text" } } },
   { accessorKey: "customer", header: "Cliente", meta: { filter: { type: "text" } } },
   {
@@ -262,7 +262,7 @@ export function dataTableWithEditSource(): string {
   return tableSnippet({
     imports: `${IMPORT_BASE}
 import { useState } from "react";`,
-    colunas: `const columns: DataTableColumn<${LINHA}>[] = [
+    colunas: `const columns: DataTableColumn<${LINE}>[] = [
   { accessorKey: "id", header: "Fatura" },
   { accessorKey: "customer", header: "Cliente", meta: { editable: true } },
   {
@@ -334,7 +334,7 @@ export function dataTablePaginadaSource(): string {
  * controle de seleção sai da primeira coluna de dados — o mesmo texto que quem
  * enxerga usaria para apontar a linha.
  */
-export function lineSourceDataTableWithLabel(): string {
+export function lineDataTableWithLabelSource(): string {
   return tableSnippet({
     markup: `<DataTable
   columns={columns}
@@ -381,7 +381,7 @@ const muitasFaturas = Array.from({ length: 1000 }, (_, i) => ({
  * leitor de tela precisa saber que colunas voltarão. `emptyMessage` é o texto
  * que ocupa a largura inteira da tabela.
  */
-export function dataTableSemResultadosSource(): string {
+export function dataTableNoResultsSource(): string {
   return tableSnippet({
     markup: `// A tabela recebe o RECORTE já aplicado: quando ele volta vazio, a grade
 // continua de pé e é a mensagem que ocupa a largura inteira.

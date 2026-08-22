@@ -36,7 +36,7 @@ const VARIANTES = [
   'link',
 ] as const;
 
-const TAMANHOS = [
+const SIZES = [
   'default',
   'xs',
   'sm',
@@ -88,7 +88,7 @@ export const buttonSource: SourceTransform<ButtonArgs> = (_gerado, ctx) => {
   return botao(
     [
       propOption('variant', args.variant, VARIANTES, 'default'),
-      propOption('size', args.size, TAMANHOS, 'default'),
+      propOption('size', args.size, SIZES, 'default'),
       propBool('disabled', args.disabled),
     ],
     childText(args.children, 'Botão'),
@@ -107,7 +107,7 @@ export function buttonDefaultSource(): string {
 }
 
 /** Reservada ao irreversível: a cor é o aviso, o rótulo diz o que se perde. */
-export function buttonDestrutivoSource(): string {
+export function buttonDestructiveSource(): string {
   return botao(['variant="destructive"'], 'Excluir conta');
 }
 
@@ -138,22 +138,22 @@ export function buttonLinkSource(): string {
  */
 
 /** Referência da escala: formulários e diálogos. */
-export function buttonTamanhoPadraoSource(): string {
+export function buttonSizeDefaultSource(): string {
   return botao([], 'Padrão');
 }
 
 /** Densidade máxima: chip de filtro, ação dentro de linha de tabela. */
-export function buttonTamanhoXsSource(): string {
+export function buttonSizeXsSource(): string {
   return botao(['size="xs"'], 'Mínimo');
 }
 
 /** Barras de ferramentas e áreas densas. */
-export function buttonTamanhoSmSource(): string {
+export function buttonSizeSmSource(): string {
   return botao(['size="sm"'], 'Pequeno');
 }
 
 /** Chamada de destaque no topo de uma página. */
-export function buttonTamanhoLgSource(): string {
+export function buttonSizeLgSource(): string {
   return botao(['size="lg"'], 'Grande');
 }
 
@@ -171,22 +171,22 @@ function iconButton(tamanho: string): string {
 }
 
 /** Ícone no tamanho de referência. */
-export function buttonIconeSource(): string {
+export function buttonIconSource(): string {
   return iconButton('icon');
 }
 
 /** Ícone em linha de tabela e listas densas. */
-export function buttonIconeXsSource(): string {
+export function buttonIconXsSource(): string {
   return iconButton('icon-xs');
 }
 
 /** Ícone em barra de ferramentas compacta. */
-export function buttonIconeSmSource(): string {
+export function buttonIconSmSource(): string {
   return iconButton('icon-sm');
 }
 
 /** Ícone como ação flutuante ou chamada visual. */
-export function buttonIconeLgSource(): string {
+export function buttonIconLgSource(): string {
   return iconButton('icon-lg');
 }
 
@@ -200,7 +200,7 @@ export function buttonIconeLgSource(): string {
  * Desabilitado é o atributo nativo, não uma classe: é ele que tira o botão da
  * ordem de tabulação e impede o clique. Uma classe só o pintaria de cinza.
  */
-export function buttonDesabilitadoSource(): string {
+export function buttonDisabledSource(): string {
   return botao(['disabled'], 'Salvar');
 }
 
@@ -210,7 +210,7 @@ export function buttonDesabilitadoSource(): string {
  * estado em progresso — quem depende de leitor de tela ouve a mudança do texto.
  * A animação usa `.nds-spin`, que tem guarda de `prefers-reduced-motion`.
  */
-export function buttonCarregandoSource(): string {
+export function buttonLoadingSource(): string {
   return botao(
     ['disabled', 'aria-busy="true"'],
     `<Loader2 aria-hidden="true" className="nds-button-icon-svg nds-spin" />
@@ -247,7 +247,7 @@ export function buttonIconDireitaSource(): string {
 }
 
 /** Variante destrutiva com ícone: a cor avisa, o ícone reforça, o texto nomeia. */
-export function buttonDestrutivoComIconeSource(): string {
+export function buttonDestructiveWithIconSource(): string {
   return botao(
     ['variant="destructive"'],
     '<Trash2 aria-hidden="true" />\nExcluir',
@@ -268,7 +268,7 @@ export function buttonSomenteIconSource(): string {
  * Par de ações: a primária fica à DIREITA em leitura da esquerda para a direita,
  * e o respiro entre os dois vem do contêiner, nunca de margem em cada botão.
  */
-export function buttonParDeAcoesSource(): string {
+export function actionsButtonPairSource(): string {
   return jsxSnippet(
     IMPORT,
     `<div className="nds-cluster" data-spacing="sm">
@@ -284,7 +284,7 @@ export function buttonParDeAcoesSource(): string {
  * custaria a semântica de link: some o menu de contexto, some abrir em nova aba,
  * e o leitor de tela anuncia "botão" para algo que navega.
  */
-export function buttonComoLinkSource(): string {
+export function buttonAsLinkSource(): string {
   return jsxSnippet(
     'import { buttonVariants } from "@/components/ui/button";',
     `<a href="/docs" className={buttonVariants({ variant: "link" })}>

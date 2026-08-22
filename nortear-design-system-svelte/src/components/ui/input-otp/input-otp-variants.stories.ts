@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, userEvent, expect, waitFor } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 import { campo } from './input-otp.fixtures';
-import { inputOtpComSeparadorSource, inputOtpSource } from './input-otp.source';
+import { inputOtpWithSeparatorSource, inputOtpSource } from './input-otp.source';
 
 const meta: Meta = {
   title: 'UI/InputOTP/Variants',
@@ -88,7 +88,7 @@ export const WithSeparator: Story = {
   name: 'With separator (3+3)',
   parameters: {
     covers: ['accessibility.item4', 'visual.item5'],
-    docs: { source: { transform: inputOtpComSeparadorSource } },
+    docs: { source: { transform: inputOtpWithSeparatorSource } },
   },
   args: {
     maxLength: 6,

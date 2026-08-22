@@ -19,12 +19,12 @@
  * Campo `null` significa "não foi possível medir" e É o achado — não falha do
  * colhedor.
  *
- * As teclas e o clique entram por injeção (`Acoes`) porque `userEvent` mora no
+ * As teclas e o clique entram por injeção (`Actions`) porque `userEvent` mora no
  * pacote de teste de cada stack, e `docs/shared` não depende de nenhuma.
  */
 
 /** Torneira de interação — cada stack passa a sua, vinda de `storybook/test`. */
-export interface Acoes {
+export interface Actions {
   /** Envia uma tecla ao elemento em foco. Ex.: `'{ArrowRight}'`. */
   apertar: (tecla: string) => Promise<void>;
   /** Clica ignorando `pointer-events: none` (senão o clique nem é tentado). */
@@ -34,7 +34,7 @@ export interface Acoes {
 // ─── Leitura do DOM ───────────────────────────────────────────────────────────
 
 /** O que a aba emite, cru. É a assinatura do mecanismo escolhido pela stack. */
-export interface AtributosDaAba {
+export interface AbaAttrs {
   /** Atributo `disabled` nativo — o que tira o botão do alcance do foco. */
   disabledNativo: boolean;
   ariaDisabled: string | null;
@@ -46,7 +46,7 @@ export interface AtributosDaAba {
   nomeAcessivel: string;
 }
 
-export function lerAba(aba: HTMLElement): AtributosDaAba {
+export function lerAba(aba: HTMLElement): AbaAttrs {
   return {
     disabledNativo:
       aba.hasAttribute('disabled') || (aba as HTMLButtonElement).disabled === true,
@@ -68,7 +68,7 @@ export function lerAba(aba: HTMLElement): AtributosDaAba {
  * parte do anúncio, e não é um dado à parte. `aria-disabled="true"` é o que faz
  * o leitor dizer "indisponível" mantendo a aba no percurso das setas.
  */
-export interface AnuncioDaAba {
+export interface AbaAnnouncement {
   papel: string | null;
   nome: string;
   /** A aba pode receber foco? Botão nativo desabilitado não pode. */
@@ -78,7 +78,7 @@ export interface AnuncioDaAba {
   selecionada: boolean;
 }
 
-export function anuncioDaAba(aba: HTMLElement): AnuncioDaAba {
+export function abaAnnouncement(aba: HTMLElement): AbaAnnouncement {
   const a = lerAba(aba);
   return {
     papel: a.role,
@@ -94,24 +94,24 @@ export function anuncioDaAba(aba: HTMLElement): AnuncioDaAba {
 
 // ─── Medição completa da aba desabilitada ─────────────────────────────────────
 
-export interface MedidaDaAbaDesabilitada {
-  atributos: AtributosDaAba;
-  anuncio: AnuncioDaAba;
+export interface AbaDesabilitadaMeasurement {
+  atributos: AbaAttrs;
+  anuncio: AbaAnnouncement;
   /** Está esmaecida? (a WCAG isenta controle inativo, mas o desenho promete.) */
   opacidade: number;
   pointerEvents: string;
   /** A seta partindo da aba anterior pousou NELA? */
-  setaAlcanca: boolean;
+  arrowAlcanca: boolean;
   /** Onde a seta realmente pousou — o nome acessível, para o diff ficar legível. */
-  setaPousouEm: string | null;
+  arrowPousouIn: string | null;
   /** Clicar mudou o painel visível? */
-  cliqueAtivou: boolean;
+  clickAtivou: boolean;
   /** Enter com a aba em foco mudou o painel? `null` = não deu para focar. */
   enterAtivou: boolean | null;
   /** Espaço com a aba em foco mudou o painel? `null` = não deu para focar. */
   espacoAtivou: boolean | null;
   /** Só o foco (ativação automática) já mudou o painel? `null` = não focável. */
-  focoAtivou: boolean | null;
+  focusAtivou: boolean | null;
   /**
    * A seta CONTINUA a partir da aba desabilitada?
    *
@@ -120,13 +120,13 @@ export interface MedidaDaAbaDesabilitada {
    * mantém o índice do foco itinerante à parte do DOM, é aqui que a falha
    * aparece. `null` = não deu para focar a aba.
    */
-  setaSegueAdiante: boolean | null;
+  arrowSegueAdiante: boolean | null;
   /** Onde a seta seguinte pousou, para o diff ficar legível. */
-  seguiuPara: string | null;
+  seguiuTo: string | null;
 }
 
 /** Texto do painel visível — é o efeito que prova ativação, não o atributo. */
-function painelVisivel(raiz: HTMLElement): string {
+function panelVisible(raiz: HTMLElement): string {
   const painel = Array.from(
     raiz.querySelectorAll<HTMLElement>('[role="tabpanel"]'),
   ).find((p) => !p.hasAttribute('hidden'));
@@ -149,11 +149,11 @@ function abas(raiz: HTMLElement): HTMLElement[] {
  * @param nomeDesabilitada nome visível da aba desabilitada
  * @param acoes teclado e ponteiro da stack
  */
-export async function medirAbaDesabilitada(
+export async function measureAbaDesabilitada(
   raiz: HTMLElement,
   nomeDesabilitada: string,
-  acoes: Acoes,
-): Promise<MedidaDaAbaDesabilitada> {
+  acoes: Actions,
+): Promise<AbaDesabilitadaMeasurement> {
   const todas = abas(raiz);
   const idx = todas.findIndex(
     (a) => (a.getAttribute('aria-label') || a.textContent || '').trim() === nomeDesabilitada,
@@ -170,7 +170,7 @@ export async function medirAbaDesabilitada(
   const estilo = getComputedStyle(alvo);
   const doc = raiz.ownerDocument;
 
-  const painelDeOrigem = painelVisivel(raiz);
+  const origemPanel = panelVisible(raiz);
 
   // ── A seta alcança? ────────────────────────────────────────────────────────
   // Parte SEMPRE da aba anterior, focada por script: o que se mede aqui é o
@@ -178,26 +178,26 @@ export async function medirAbaDesabilitada(
   anterior.focus();
   await acoes.apertar('{ArrowRight}');
   const pousou = doc.activeElement as HTMLElement | null;
-  const setaAlcanca = pousou === alvo;
-  const setaPousouEm = pousou ? (pousou.getAttribute('aria-label') || pousou.textContent || '').trim() : null;
+  const arrowAlcanca = pousou === alvo;
+  const arrowPousouIn = pousou ? (pousou.getAttribute('aria-label') || pousou.textContent || '').trim() : null;
 
   // ── O foco sozinho ativa? (ativação automática) ────────────────────────────
-  const focoAtivou = setaAlcanca ? painelVisivel(raiz) !== painelDeOrigem : null;
+  const focusAtivou = arrowAlcanca ? panelVisible(raiz) !== origemPanel : null;
 
   // ── Restaura o painel de origem antes de medir o clique ────────────────────
-  const voltarAoInicio = async () => {
-    if (painelVisivel(raiz) === painelDeOrigem) return;
+  const startVoltar = async () => {
+    if (panelVisible(raiz) === origemPanel) return;
     anterior.focus();
     await acoes.apertar('{ArrowLeft}');
     // Se a seta não resolveu, o clique na aba anterior resolve.
-    if (painelVisivel(raiz) !== painelDeOrigem) await acoes.clicar(anterior);
+    if (panelVisible(raiz) !== origemPanel) await acoes.clicar(anterior);
   };
-  await voltarAoInicio();
+  await startVoltar();
 
   // ── O clique ativa? ────────────────────────────────────────────────────────
   await acoes.clicar(alvo);
-  const cliqueAtivou = painelVisivel(raiz) !== painelDeOrigem;
-  await voltarAoInicio();
+  const clickAtivou = panelVisible(raiz) !== origemPanel;
+  await startVoltar();
 
   // ── Enter e Espaço ativam? ─────────────────────────────────────────────────
   let enterAtivou: boolean | null = null;
@@ -205,27 +205,27 @@ export async function medirAbaDesabilitada(
   alvo.focus();
   if (doc.activeElement === alvo) {
     await acoes.apertar('{Enter}');
-    enterAtivou = painelVisivel(raiz) !== painelDeOrigem;
-    await voltarAoInicio();
+    enterAtivou = panelVisible(raiz) !== origemPanel;
+    await startVoltar();
 
     alvo.focus();
     await acoes.apertar(' ');
-    espacoAtivou = painelVisivel(raiz) !== painelDeOrigem;
-    await voltarAoInicio();
+    espacoAtivou = panelVisible(raiz) !== origemPanel;
+    await startVoltar();
   }
 
   // ── A seta continua a partir dela? ─────────────────────────────────────────
-  let setaSegueAdiante: boolean | null = null;
-  let seguiuPara: string | null = null;
+  let arrowSegueAdiante: boolean | null = null;
+  let seguiuTo: string | null = null;
   const seguinte = todas[idx + 1];
   if (seguinte) {
     alvo.focus();
     if (doc.activeElement === alvo) {
       await acoes.apertar('{ArrowRight}');
       const parou = doc.activeElement as HTMLElement | null;
-      setaSegueAdiante = parou === seguinte;
-      seguiuPara = parou ? (parou.getAttribute('aria-label') || parou.textContent || '').trim() : null;
-      await voltarAoInicio();
+      arrowSegueAdiante = parou === seguinte;
+      seguiuTo = parou ? (parou.getAttribute('aria-label') || parou.textContent || '').trim() : null;
+      await startVoltar();
     }
   }
 
@@ -233,17 +233,17 @@ export async function medirAbaDesabilitada(
 
   return {
     atributos: lerAba(alvo),
-    anuncio: anuncioDaAba(alvo),
+    anuncio: abaAnnouncement(alvo),
     opacidade: Number(estilo.opacity),
     pointerEvents: estilo.pointerEvents,
-    setaAlcanca,
-    setaPousouEm,
-    cliqueAtivou,
+    arrowAlcanca,
+    arrowPousouIn,
+    clickAtivou,
     enterAtivou,
     espacoAtivou,
-    focoAtivou,
-    setaSegueAdiante,
-    seguiuPara,
+    focusAtivou,
+    arrowSegueAdiante,
+    seguiuTo,
   };
 }
 
@@ -253,23 +253,23 @@ export async function medirAbaDesabilitada(
  * Devolve a lista de desvios; lista vazia é o resultado bom. Serve tanto para a
  * sonda (que relata) quanto para a asserção permanente (que reprova).
  */
-export function desviosDaAbaDesabilitada(m: MedidaDaAbaDesabilitada): string[] {
+export function desviosDaAbaDesabilitada(m: AbaDesabilitadaMeasurement): string[] {
   const desvios: string[] = [];
   if (m.atributos.disabledNativo)
     desvios.push('emite `disabled` nativo — a aba sai do alcance da seta e do leitor de tela');
   if (m.atributos.ariaDisabled !== 'true')
     desvios.push(`aria-disabled=${JSON.stringify(m.atributos.ariaDisabled)} (esperado "true")`);
-  if (!m.setaAlcanca)
-    desvios.push(`a seta não alcança a aba (pousou em ${JSON.stringify(m.setaPousouEm)})`);
+  if (!m.arrowAlcanca)
+    desvios.push(`a seta não alcança a aba (pousou em ${JSON.stringify(m.arrowPousouIn)})`);
   if (!m.anuncio.anunciadaComoDesabilitada)
     desvios.push('nada expõe o estado desabilitado à árvore de acessibilidade');
-  if (m.cliqueAtivou) desvios.push('o clique ATIVOU a aba');
+  if (m.clickAtivou) desvios.push('o clique ATIVOU a aba');
   if (m.enterAtivou) desvios.push('o Enter ATIVOU a aba');
   if (m.espacoAtivou) desvios.push('o Espaço ATIVOU a aba');
-  if (m.focoAtivou) desvios.push('o foco pela seta ATIVOU a aba (ativação automática não foi contida)');
+  if (m.focusAtivou) desvios.push('o foco pela seta ATIVOU a aba (ativação automática não foi contida)');
   if (m.anuncio.selecionada) desvios.push('a aba desabilitada está marcada como selecionada');
-  if (m.setaSegueAdiante === false)
-    desvios.push(`a seta não sai da aba desabilitada (pousou em ${JSON.stringify(m.seguiuPara)})`);
+  if (m.arrowSegueAdiante === false)
+    desvios.push(`a seta não sai da aba desabilitada (pousou em ${JSON.stringify(m.seguiuTo)})`);
   return desvios;
 }
 
@@ -288,9 +288,9 @@ export function desviosDaAbaDesabilitada(m: MedidaDaAbaDesabilitada): string[] {
 // permanente aplica, e é ele que fica vermelho se o `height` voltar.
 
 /** WCAG 2.5.8 (Target Size, Minimum) — piso absoluto, em CSS px. */
-export const ALVO_MINIMO_PX = 24;
+export const TARGET_MINIMUM_PX = 24;
 
-export interface CaixaDoTrilho {
+export interface TrackBox {
   /** Altura do `.nds-tabs-list`. */
   trilho: number;
   /** Altura do gatilho mais alto. */
@@ -304,7 +304,7 @@ export interface CaixaDoTrilho {
   folga: number;
 }
 
-function trilhoDe(raiz: HTMLElement): HTMLElement {
+function trackOf(raiz: HTMLElement): HTMLElement {
   const el = raiz.querySelector<HTMLElement>('.nds-tabs-list');
   if (!el) throw new Error('SONDA: nenhum .nds-tabs-list em cena');
   return el;
@@ -313,8 +313,8 @@ function trilhoDe(raiz: HTMLElement): HTMLElement {
 const arred = (n: number) => Math.round(n * 100) / 100;
 
 /** Lê a caixa do trilho e do gatilho mais alto, no estado atual do documento. */
-export function medirCaixaDoTrilho(raiz: HTMLElement): CaixaDoTrilho {
-  const lista = trilhoDe(raiz);
+export function trackMeasureBox(raiz: HTMLElement): TrackBox {
+  const lista = trackOf(raiz);
   const cs = getComputedStyle(lista);
   const respiro = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
   const gatilhos = Array.from(lista.querySelectorAll<HTMLElement>('[role="tab"]'));
@@ -328,15 +328,15 @@ export function medirCaixaDoTrilho(raiz: HTMLElement): CaixaDoTrilho {
   };
 }
 
-export interface CrescimentoDoTrilho {
+export interface TrackCrescimento {
   /** Caixa com a fonte da raiz no valor normal. */
-  normal: CaixaDoTrilho;
+  normal: TrackBox;
   /** Caixa com a fonte da raiz DOBRADA. */
-  dobrada: CaixaDoTrilho;
+  dobrada: TrackBox;
   /** `dobrada.trilho / normal.trilho`. 1.0 é altura presa; ~2.0 é altura que acompanha. */
   fator: number;
   /** Caixa com um gatilho forçado a ficar mais alto que o trilho de hoje. */
-  empurrado: CaixaDoTrilho;
+  empurrado: TrackBox;
   /** Quanto o trilho cresceu sob o empurrão. Zero é gaiola. */
   ganho: number;
 }
@@ -352,8 +352,8 @@ export interface CrescimentoDoTrilho {
  * 3. um gatilho empurrado para além da caixa atual — o estímulo que distingue
  *    respiro de altura cravada.
  */
-export function medirCrescimentoDoTrilho(raiz: HTMLElement): CrescimentoDoTrilho {
-  const lista = trilhoDe(raiz);
+export function trackMeasureCrescimento(raiz: HTMLElement): TrackCrescimento {
+  const lista = trackOf(raiz);
   const html = raiz.ownerDocument.documentElement;
   const fonteOriginal = html.style.fontSize;
   const gatilho = lista.querySelector<HTMLElement>('[role="tab"]')!;
@@ -361,12 +361,12 @@ export function medirCrescimentoDoTrilho(raiz: HTMLElement): CrescimentoDoTrilho
   const reflow = () => void raiz.offsetHeight;
 
   try {
-    const normal = medirCaixaDoTrilho(raiz);
+    const normal = trackMeasureBox(raiz);
 
     const emPx = parseFloat(getComputedStyle(html).fontSize) || 16;
     html.style.fontSize = `${emPx * 2}px`;
     reflow();
-    const dobrada = medirCaixaDoTrilho(raiz);
+    const dobrada = trackMeasureBox(raiz);
 
     if (fonteOriginal) html.style.fontSize = fonteOriginal;
     else html.style.removeProperty('font-size');
@@ -377,7 +377,7 @@ export function medirCrescimentoDoTrilho(raiz: HTMLElement): CrescimentoDoTrilho
     // ou família de fonte.
     gatilho.style.minHeight = `${normal.trilho + 8}px`;
     reflow();
-    const empurrado = medirCaixaDoTrilho(raiz);
+    const empurrado = trackMeasureBox(raiz);
 
     return {
       normal,
@@ -401,7 +401,7 @@ export function medirCrescimentoDoTrilho(raiz: HTMLElement): CrescimentoDoTrilho
  * Não afirma nada sobre nome de classe nem sobre qual propriedade foi escrita —
  * só sobre o efeito medido.
  */
-export function desviosDaCaixaDoTrilho(m: CrescimentoDoTrilho): string[] {
+export function boxDoTrackDesvios(m: TrackCrescimento): string[] {
   const d: string[] = [];
   if (m.fator < 1.9)
     d.push(
@@ -419,9 +419,9 @@ export function desviosDaCaixaDoTrilho(m: CrescimentoDoTrilho): string[] {
     );
   if (m.normal.folga < 0)
     d.push(`o gatilho já vaza para fora do trilho em repouso (folga ${m.normal.folga}px)`);
-  if (m.normal.gatilho < ALVO_MINIMO_PX)
+  if (m.normal.gatilho < TARGET_MINIMUM_PX)
     d.push(
-      `alvo de toque do gatilho em ${m.normal.gatilho}px, abaixo dos ${ALVO_MINIMO_PX}px da WCAG 2.5.8`,
+      `alvo de toque do gatilho em ${m.normal.gatilho}px, abaixo dos ${TARGET_MINIMUM_PX}px da WCAG 2.5.8`,
     );
   return d;
 }

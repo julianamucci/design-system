@@ -18,28 +18,28 @@
  * Armadilhas já pagas, herdadas dos colhedores anteriores:
  *
  *   - `console.log` não chega ao terminal (o addon instrumenta o console dentro
- *     da play). O canal é a exceção — ver `reportarSondaForm`.
+ *     da play). O canal é a exceção — ver `reportProbeForm`.
  *   - ler estilo logo após trocar de tema devolve o PRIMEIRO QUADRO da
- *     transição. Todo acesso a cor passa por `semTransicao`.
+ *     transição. Todo acesso a cor passa por `noTransicao`.
  *   - atributo de presença casa valor `"false"`: `[data-error]` casaria
  *     `data-error="false"`. Os seletores usam `:not([attr="false"])`.
  *   - contraste é aritmética, não olhômetro, e o fundo do container costuma ter
- *     alfa. `razao`/`fundoEfetivo` de `cor.ts` fazem a composição.
+ *     alfa. `ratio`/`backgroundEffective` de `cor.ts` fazem a composição.
  */
 
-import { fundoEfetivo, ligarTemaEscuro, razao, semTransicao, type Contraste } from './cor';
+import { backgroundEffective, darkLigarTheme, ratio, noTransicao, type Contraste } from './cor';
 
 export type { Contraste };
-export { ligarTemaEscuro, semTransicao };
+export { darkLigarTheme, noTransicao };
 
 // ─── Seletores do contrato ────────────────────────────────────────────────────
 
-export const SELETOR_CAMPO = '[data-slot="field"], .nds-form-field';
-export const SELETOR_ROTULO = '[data-slot="label"], .nds-form-label';
-export const SELETOR_DESCRICAO = '[data-slot="field-description"], .nds-form-description';
-export const SELETOR_ERRO = '[data-slot="field-error"], .nds-form-error';
-export const SELETOR_FIELDSET = '[data-slot="fieldset"], .nds-form-fieldset';
-export const SELETOR_LEGENDA = '[data-slot="fieldset-legend"], .nds-form-legend';
+export const SELECTOR_FIELD = '[data-slot="field"], .nds-form-field';
+export const SELECTOR_LABEL = '[data-slot="label"], .nds-form-label';
+export const SELECTOR_DESCRIPTION = '[data-slot="field-description"], .nds-form-description';
+export const SELECTOR_ERROR = '[data-slot="field-error"], .nds-form-error';
+export const SELECTOR_FIELDSET = '[data-slot="fieldset"], .nds-form-fieldset';
+export const SELECTOR_CAPTION = '[data-slot="fieldset-legend"], .nds-form-legend';
 
 /**
  * O controle do campo, na ordem que o próprio Form usa para achá-lo.
@@ -60,10 +60,10 @@ const SELETORES_CONTROLE = [
   'select',
 ];
 
-export function controleDe(campo: HTMLElement): HTMLElement | null {
+export function controlOf(campo: HTMLElement): HTMLElement | null {
   for (const seletor of SELETORES_CONTROLE) {
-    const achado = campo.querySelector<HTMLElement>(seletor);
-    if (achado) return achado;
+    const finding = campo.querySelector<HTMLElement>(seletor);
+    if (finding) return finding;
   }
   return null;
 }
@@ -88,9 +88,9 @@ const inertes = (el: Element | null | undefined): string[] =>
  */
 export function nomeAcessivel(el: Element | null | undefined): string | null {
   if (!el) return null;
-  const rotulado = el.getAttribute('aria-labelledby');
-  if (rotulado) {
-    const alvo = el.ownerDocument.getElementById(rotulado.split(/\s+/)[0]);
+  const labelled = el.getAttribute('aria-labelledby');
+  if (labelled) {
+    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
     if (alvo?.textContent?.trim()) return alvo.textContent.trim();
   }
   const rotulo = el.getAttribute('aria-label');
@@ -107,8 +107,8 @@ export function nomeAcessivel(el: Element | null | undefined): string | null {
   // nome — um falso achado, porque `<button>Salvar</button>` é nomeado.
   // `<input>` fica de fora de propósito: o valor digitado não é nome.
   if (el.matches('button, [role="button"], a[href], [role="link"], summary')) {
-    const proprio = el.textContent?.trim().replace(/\s+/g, ' ');
-    if (proprio) return proprio;
+    const own = el.textContent?.trim().replace(/\s+/g, ' ');
+    if (own) return own;
   }
   return null;
 }
@@ -119,7 +119,7 @@ export function nomeAcessivel(el: Element | null | undefined): string | null {
  * `presentes` é o que o leitor de tela realmente vai ler. `orfaos` é o defeito
  * que passa por qualquer asserção de atributo: id escrito, alvo inexistente.
  */
-export function descricaoResolvida(controle: HTMLElement | null) {
+export function descriptionResolvida(controle: HTMLElement | null) {
   const bruto = controle?.getAttribute('aria-describedby') ?? null;
   if (!controle || !bruto) {
     return { atributo: bruto, ids: [] as string[], presentes: [] as string[], orfaos: [] as string[] };
@@ -144,37 +144,37 @@ export function descricaoResolvida(controle: HTMLElement | null) {
  */
 export function regiaoViva(el: HTMLElement | null) {
   if (!el) return null;
-  const proprio = el.getAttribute('aria-live');
+  const own = el.getAttribute('aria-live');
   const papel = el.getAttribute('role');
   const ancestral = el.closest('[aria-live]');
-  const vivoPorPapel = papel === 'alert' || papel === 'status';
+  const roleVivo = papel === 'alert' || papel === 'status';
   return {
-    ariaLive: proprio,
+    ariaLive: own,
     papel,
     ariaLiveHerdado: ancestral && ancestral !== el ? ancestral.getAttribute('aria-live') : null,
     /** `false` é erro que aparece na tela e não chega a quem não olha. */
-    anunciada: Boolean(proprio) || vivoPorPapel || Boolean(ancestral),
+    anunciada: Boolean(own) || roleVivo || Boolean(ancestral),
   };
 }
 
 // ─── Medição de um campo ──────────────────────────────────────────────────────
 
-export function medirCampo(raiz: HTMLElement) {
-  const campo = raiz.matches(SELETOR_CAMPO)
+export function measureField(raiz: HTMLElement) {
+  const campo = raiz.matches(SELECTOR_FIELD)
     ? raiz
-    : raiz.querySelector<HTMLElement>(SELETOR_CAMPO);
+    : raiz.querySelector<HTMLElement>(SELECTOR_FIELD);
   if (!campo) return { presente: false } as const;
 
-  const rotulo = campo.querySelector<HTMLLabelElement>(SELETOR_ROTULO);
-  const controle = controleDe(campo);
-  const descricao = campo.querySelector<HTMLElement>(SELETOR_DESCRICAO);
-  const erro = campo.querySelector<HTMLElement>(SELETOR_ERRO);
+  const rotulo = campo.querySelector<HTMLLabelElement>(SELECTOR_LABEL);
+  const controle = controlOf(campo);
+  const descricao = campo.querySelector<HTMLElement>(SELECTOR_DESCRIPTION);
+  const erro = campo.querySelector<HTMLElement>(SELECTOR_ERROR);
 
   const cs = getComputedStyle(campo);
-  const fundo = fundoEfetivo(campo);
+  const fundo = backgroundEffective(campo);
 
-  const descrito = descricaoResolvida(controle);
-  const idsDescritos = new Set(descrito.ids);
+  const descrito = descriptionResolvida(controle);
+  const idsDescribed = new Set(descrito.ids);
 
   return {
     presente: true,
@@ -187,7 +187,7 @@ export function medirCampo(raiz: HTMLElement) {
       ordem: Array.from(campo.children).map(
         (c) => c.getAttribute('data-slot') ?? c.tagName.toLowerCase(),
       ),
-      temRotulo: Boolean(rotulo),
+      hasLabel: Boolean(rotulo),
       temControle: Boolean(controle),
       temDescricao: Boolean(descricao),
       temErro: Boolean(erro),
@@ -210,14 +210,14 @@ export function medirCampo(raiz: HTMLElement) {
       texto: texto(descricao),
       id: descricao?.id || null,
       /** Visível e mudo é o defeito: existe na tela, fora do describedby. */
-      noDescribedby: descricao ? idsDescritos.has(descricao.id) : null,
+      noDescribedby: descricao ? idsDescribed.has(descricao.id) : null,
       classesInertes: inertes(descricao),
       tag: descricao?.tagName.toLowerCase() ?? null,
     },
     erro: {
       texto: texto(erro),
       id: erro?.id || null,
-      noDescribedby: erro ? idsDescritos.has(erro.id) : null,
+      noDescribedby: erro ? idsDescribed.has(erro.id) : null,
       viva: regiaoViva(erro),
       classesInertes: inertes(erro),
       tag: erro?.tagName.toLowerCase() ?? null,
@@ -252,24 +252,24 @@ export function medirCampo(raiz: HTMLElement) {
       largura: Math.round(campo.getBoundingClientRect().width),
     },
     contraste: {
-      rotulo: rotulo && fundo ? razao(getComputedStyle(rotulo).color, fundo) : null,
-      apoio: descricao && fundo ? razao(getComputedStyle(descricao).color, fundo) : null,
-      erro: erro && fundo ? razao(getComputedStyle(erro).color, fundo) : null,
+      rotulo: rotulo && fundo ? ratio(getComputedStyle(rotulo).color, fundo) : null,
+      apoio: descricao && fundo ? ratio(getComputedStyle(descricao).color, fundo) : null,
+      erro: erro && fundo ? ratio(getComputedStyle(erro).color, fundo) : null,
     },
   };
 }
 
 // ─── Medição de um agrupamento ────────────────────────────────────────────────
 
-export function medirFieldset(raiz: HTMLElement) {
-  const grupo = raiz.matches(SELETOR_FIELDSET)
+export function measureFieldset(raiz: HTMLElement) {
+  const grupo = raiz.matches(SELECTOR_FIELDSET)
     ? raiz
-    : raiz.querySelector<HTMLElement>(SELETOR_FIELDSET);
+    : raiz.querySelector<HTMLElement>(SELECTOR_FIELDSET);
   if (!grupo) return { presente: false } as const;
 
-  const legenda = grupo.querySelector<HTMLElement>(SELETOR_LEGENDA);
+  const legenda = grupo.querySelector<HTMLElement>(SELECTOR_CAPTION);
   const cs = getComputedStyle(grupo);
-  const fundo = fundoEfetivo(grupo);
+  const fundo = backgroundEffective(grupo);
 
   return {
     presente: true,
@@ -284,7 +284,7 @@ export function medirFieldset(raiz: HTMLElement) {
       /** A legenda tem que ser o PRIMEIRO filho; senão não rotula o grupo. */
       legendaPrimeira: legenda ? grupo.firstElementChild === legenda : null,
       texto: texto(legenda),
-      campos: grupo.querySelectorAll(SELETOR_CAMPO).length,
+      campos: grupo.querySelectorAll(SELECTOR_FIELD).length,
     },
     semantica: {
       /** O que o leitor anuncia antes de cada campo do grupo. */
@@ -300,7 +300,7 @@ export function medirFieldset(raiz: HTMLElement) {
       margem: cs.marginTop,
     },
     contraste: {
-      legenda: legenda && fundo ? razao(getComputedStyle(legenda).color, fundo) : null,
+      legenda: legenda && fundo ? ratio(getComputedStyle(legenda).color, fundo) : null,
     },
   };
 }
@@ -314,7 +314,7 @@ export function medirFieldset(raiz: HTMLElement) {
  * que o contrato afirma. Devolve o nome ACESSÍVEL de cada um: uma ordem certa
  * de campos anônimos não é uma ordem útil.
  */
-export function ordemDeTabulacao(raiz: HTMLElement) {
+export function tabulacaoOrder(raiz: HTMLElement) {
   const focalizaveis = Array.from(
     raiz.querySelectorAll<HTMLElement>(
       'input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]), [tabindex]:not([tabindex="-1"])',
@@ -333,7 +333,7 @@ export function ordemDeTabulacao(raiz: HTMLElement) {
  * `null` quando não há nenhum, o que é o estado válido. A story compara o foco
  * DEPOIS do envio com o que esta função aponta ANTES.
  */
-export function primeiroInvalido(raiz: HTMLElement): HTMLElement | null {
+export function firstInvalido(raiz: HTMLElement): HTMLElement | null {
   return raiz.querySelector<HTMLElement>('[aria-invalid="true"], :invalid:not(form)');
 }
 
@@ -349,22 +349,22 @@ export function primeiroInvalido(raiz: HTMLElement): HTMLElement | null {
  */
 export function contrastesNosDoisModos(raiz: HTMLElement) {
   const medir = (modo: 'claro' | 'escuro') => {
-    const m = medirCampo(raiz);
+    const m = measureField(raiz);
     if (!m.presente) return null;
     return {
       modo,
-      rotulo: m.contraste.rotulo?.razao ?? null,
-      apoio: m.contraste.apoio?.razao ?? null,
-      erro: m.contraste.erro?.razao ?? null,
+      rotulo: m.contraste.rotulo?.ratio ?? null,
+      apoio: m.contraste.apoio?.ratio ?? null,
+      erro: m.contraste.erro?.ratio ?? null,
     };
   };
 
-  const campo = raiz.matches(SELETOR_CAMPO) ? raiz : raiz.querySelector<HTMLElement>(SELETOR_CAMPO);
+  const campo = raiz.matches(SELECTOR_FIELD) ? raiz : raiz.querySelector<HTMLElement>(SELECTOR_FIELD);
   const claro = medir('claro');
-  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(raiz.ownerDocument);
   let escuro: ReturnType<typeof medir> = null;
   try {
-    escuro = campo ? semTransicao(campo, () => medir('escuro')) : medir('escuro');
+    escuro = campo ? noTransicao(campo, () => medir('escuro')) : medir('escuro');
   } finally {
     desfazer();
   }
@@ -381,7 +381,7 @@ export function contrastesNosDoisModos(raiz: HTMLElement) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportarSondaForm(stack: string, cenario: string, dados: unknown): never {
+export function reportProbeForm(stack: string, cenario: string, dados: unknown): never {
   throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
 }
 
@@ -389,7 +389,7 @@ export function reportarSondaForm(stack: string, cenario: string, dados: unknown
  * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
  * Cenário ausente vem `null` — o achado de "esta stack não monta este caso".
  */
-export function medirCenarios(raiz: HTMLElement, cenarios: string[]) {
+export function measureCenarios(raiz: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
     const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
@@ -397,7 +397,7 @@ export function medirCenarios(raiz: HTMLElement, cenarios: string[]) {
       registro[cenario] = null;
       continue;
     }
-    registro[cenario] = alvo.matches(SELETOR_FIELDSET) ? medirFieldset(alvo) : medirCampo(alvo);
+    registro[cenario] = alvo.matches(SELECTOR_FIELDSET) ? measureFieldset(alvo) : measureField(alvo);
   }
   return registro;
 }

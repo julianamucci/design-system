@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -40,7 +40,7 @@ export type InputSnippetOptions = {
 };
 
 /** Nome acessível e id padrão do exemplo — o par canônico rótulo + campo. */
-const ROTULO_PADRAO = 'Nome completo';
+const LABEL_DEFAULT = 'Nome completo';
 const ID_DEFAULT = 'campo';
 
 /**
@@ -52,7 +52,7 @@ const ID_DEFAULT = 'campo';
  */
 export function inputSnippet(o: InputSnippetOptions = {}): string {
   const id = o.id ?? ID_DEFAULT;
-  const rotulo = o.label ?? ROTULO_PADRAO;
+  const rotulo = o.label ?? LABEL_DEFAULT;
 
   const descritores = [
     o.ajuda ? `${id}-ajuda` : undefined,
@@ -81,7 +81,7 @@ export function inputSnippet(o: InputSnippetOptions = {}): string {
   );
 
   return snippet(
-    [importar('input', 'createInput'), importar('label', 'createLabel')].join('\n'),
+    [importing('input', 'createInput'), importing('label', 'createLabel')].join('\n'),
     // A paleta escura é uma classe no documento: o campo é exatamente o mesmo
     // dos demais estados, e é isso que o snippet precisa deixar claro.
     o.temaEscuro ? `document.documentElement.classList.add('dark');` : undefined,
@@ -122,7 +122,7 @@ export function inputWithPrefixoSnippet(o: InputSnippetOptions & { prefixo?: str
   ]);
 
   return snippet(
-    [importar('input', 'createInput'), importar('label', 'createLabel')].join('\n'),
+    [importing('input', 'createInput'), importing('label', 'createLabel')].join('\n'),
     `const grupo = document.createElement('div');
 grupo.className = 'nds-input-group';
 grupo.setAttribute('role', 'group');`,

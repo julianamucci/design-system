@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { createResizablePanel } from './resizable';
-import { fracaoDoPrimeiro, frame, panelWithHelper } from './resizable.fixtures';
+import { firstFraction, frame, panelWithHelper } from './resizable.fixtures';
 import { resizableSourceWith } from './resizable.source';
 import { createResizableDocs } from '@/components/docs/ResizableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
-const ROTULO_PUNHO = 'Redimensionar painéis — use setas para ajustar';
+const LABEL_HANDLE = 'Redimensionar painéis — use setas para ajustar';
 
 type ResizableArgs = {
   direction: 'horizontal' | 'vertical';
@@ -27,7 +27,7 @@ const meta: Meta<ResizableArgs> = {
       page: withAutoDocsTab(createResizableDocs),
       // Os três números dos controls viram os dois painéis do exemplo; o nome
       // dos divisores não passa por control nenhum e vem fixo daqui.
-      source: { transform: resizableSourceWith({ 'aria-label': ROTULO_PUNHO }) },
+      source: { transform: resizableSourceWith({ 'aria-label': LABEL_HANDLE }) },
     },
   },
   argTypes: {
@@ -73,7 +73,7 @@ type Story = StoryObj<ResizableArgs>;
 // ─── Playground ───────────────────────────────────────────────────────────────
 //
 // Andaimes em `resizable.fixtures`: aqui o eixo segue o control `direction`, e
-// por isso `fracaoDoPrimeiro` e `frame` recebem os dois valores explicitamente.
+// por isso `firstFraction` e `frame` recebem os dois valores explicitamente.
 
 export const Playground: Story = {
   parameters: {
@@ -88,7 +88,7 @@ export const Playground: Story = {
     const root = createResizablePanel({
       direction: args.direction,
       withHandle: args.withHandle,
-      'aria-label': ROTULO_PUNHO,
+      'aria-label': LABEL_HANDLE,
       panels: [
         {
           defaultSize: args.defaultSize,
@@ -107,7 +107,7 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO_PUNHO });
+    const punho = canvas.getByRole('separator', { name: LABEL_HANDLE });
     const horizontal = args.direction === 'horizontal';
 
     await step('O divisor é um separator com nome e valor', async () => {
@@ -116,11 +116,11 @@ export const Playground: Story = {
       // fora; o que a busca por nome prova agora é que a OPÇÃO `aria-label` da
       // factory chega ao divisor. Aqui fica o VALOR, que é o que um separator
       // focável precisa ter para o leitor de tela anunciar o tamanho ao mover.
-      await expect(punho).toHaveAttribute('aria-label', ROTULO_PUNHO);
+      await expect(punho).toHaveAttribute('aria-label', LABEL_HANDLE);
       await expect(punho).toHaveAttribute('aria-orientation', horizontal ? 'vertical' : 'horizontal');
       await expect(punho).toHaveAttribute('aria-valuemin', String(args.minSize));
       await expect(Number(punho.getAttribute('aria-valuenow'))).toBe(
-        Math.round(fracaoDoPrimeiro(canvasElement, horizontal) * 100),
+        Math.round(firstFraction(canvasElement, horizontal) * 100),
       );
     });
 
@@ -129,7 +129,7 @@ export const Playground: Story = {
       // (`flex-grow`). Escrever largura inline não teria efeito nenhum, e era
       // exatamente o que a fábrica fazia — com a story afirmando o `style.width`
       // que ninguém aplicava.
-      await expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(args.defaultSize / 100, 1);
+      await expect(firstFraction(canvasElement, horizontal)).toBeCloseTo(args.defaultSize / 100, 1);
     });
 
     await step('As setas movem o divisor — o equivalente por teclado do arrasto', async () => {
@@ -148,7 +148,7 @@ export const Playground: Story = {
 
       await userEvent.keyboard(cresce);
       await waitFor(() => expect(Number(punho.getAttribute('aria-valuenow'))).toBeGreaterThan(antes));
-      await expect(fracaoDoPrimeiro(canvasElement, horizontal) * 100).toBeGreaterThan(antes);
+      await expect(firstFraction(canvasElement, horizontal) * 100).toBeGreaterThan(antes);
 
       await userEvent.keyboard(encolhe);
       await waitFor(() => expect(Number(punho.getAttribute('aria-valuenow'))).toBe(antes));

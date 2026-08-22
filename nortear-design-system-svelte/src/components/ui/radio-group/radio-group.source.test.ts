@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
-  radioGroupComDescricaoSource,
-  radioGroupDesabilitadoSource,
+  radioGroupWithDescriptionSource,
+  radioGroupDisabledSource,
   radioGroupEntregaWithDescriptionSource,
   radioGroupEntregaHorizontalSource,
   radioGroupFocusSource,
   radioGroupHorizontalSource,
   radioGroupInvalidoSource,
-  radioGroupItemDesabilitadoSource,
-  radioGroupPadraoSource,
+  radioGroupItemDisabledSource,
+  radioGroupDefaultSource,
   radioGroupSelectedSource,
   radioGroupSource,
   radioGroupVerticalSource,
@@ -77,7 +77,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a variante com descrição liga cada texto auxiliar ao seu item', () => {
-    const saida = radioGroupComDescricaoSource();
+    const saida = radioGroupWithDescriptionSource();
     expect(saida).toContain('aria-describedby="cartao-desc"');
     expect(saida).toContain('<p id="cartao-desc" class="nds-text-caption nds-text-muted-foreground">');
     // Alinha o rádio com a primeira linha do rótulo, não com o bloco inteiro.
@@ -85,8 +85,8 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o estado padrão nasce sem escolha, e o foco não muda a marcação', () => {
-    expect(radioGroupPadraoSource()).toContain('let forma = $state("");');
-    expect(radioGroupFocusSource()).toBe(radioGroupPadraoSource());
+    expect(radioGroupDefaultSource()).toContain('let forma = $state("");');
+    expect(radioGroupFocusSource()).toBe(radioGroupDefaultSource());
   });
 
   it('o estado escolhido parte da opção marcada', () => {
@@ -94,13 +94,13 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o grupo desabilitado leva a prop na raiz, não em cada item', () => {
-    const saida = radioGroupDesabilitadoSource();
+    const saida = radioGroupDisabledSource();
     expect(saida).toContain('<RadioGroup bind:value={forma} disabled aria-label=');
     expect(saida).not.toContain('<RadioGroupItem value="pix" id="pix" disabled />');
   });
 
   it('o item indisponível carrega a prop sozinho', () => {
-    const saida = radioGroupItemDesabilitadoSource();
+    const saida = radioGroupItemDisabledSource();
     expect(saida).toContain('<RadioGroupItem value="pix" id="pix" disabled />');
     expect(saida).toContain('Pix (indisponível)');
   });

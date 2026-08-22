@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect } from 'storybook/test';
 import { NdsButton, type ButtonVariant } from './button';
-import { falhasDeContrasteDeTexto } from '@shared/testing/button-probe';
+import { contrastDeTextFailures } from '@shared/testing/button-probe';
 
 const VARIANTES: { variant: ButtonVariant; label: string }[] = [
   { variant: 'default',     label: 'Default'     },
@@ -58,7 +58,7 @@ export const Variants: Story = {
       // tela está sempre no tema claro padrão — cinco sextos das combinações
       // nunca foram verificados. A sonda varre os três temas nos dois modos e
       // compõe o alfa do fundo antes de dividir.
-      await expect(falhasDeContrasteDeTexto(canvasElement, 4.5)).toEqual([]);
+      await expect(contrastDeTextFailures(canvasElement, 4.5)).toEqual([]);
     });
 
     await step('Classe do consumidor convive com a classe da variante', async () => {

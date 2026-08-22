@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, userEvent, waitFor, expect, fn } from "storybook/test"
-import { medirRolagem } from "@shared/testing/data-table-probe"
+import { measureScroll } from "@shared/testing/data-table-probe"
 import { DataTable } from "./data-table"
 import { dataTableSource } from "./data-table.source"
 import { DataTableDocs } from "@/components/docs/DataTableDocs"
@@ -8,12 +8,12 @@ import { withAutoDocsTab } from "@/lib/withAutoDocsTab"
 import {
   baseColumns,
   invoices,
-  rotulosFatura,
+  labelsInvoice,
   type Invoice,
 } from "./data-table.fixtures"
 
 /** Legenda da tabela — o nome que o leitor de tela anuncia ao entrar na grade. */
-const LEGENDA = "Faturas recentes"
+const CAPTION = "Faturas recentes"
 
 const meta: Meta<typeof DataTable<Invoice>> = {
   title: "UI/DataTable",
@@ -123,8 +123,8 @@ const meta: Meta<typeof DataTable<Invoice>> = {
     pageSize: 10,
     globalFilterPlaceholder: "Buscar fatura, cliente, método...",
     emptyMessage: "Sem resultados.",
-    caption: LEGENDA,
-    labels: rotulosFatura,
+    caption: CAPTION,
+    labels: labelsInvoice,
     rowKey: (f) => f.id,
     // Declarado e deixado em branco de propósito: é AQUI que o degrau do meio do
     // fallback é provado — sem `rowLabel`, o nome do controle de seleção sai da
@@ -159,17 +159,17 @@ export const Playground: Story = {
     const canvas = within(canvasElement)
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>("tbody tr")]
     /** A primeira coluna de DADOS: é ela que identifica a linha na leitura visual. */
-    const celulaIdentificadora = (linha: HTMLElement) =>
+    const cellIdentificadora = (linha: HTMLElement) =>
       linha.querySelector<HTMLElement>("td:not(:has([role='checkbox']))")!
-    const primeiraCelula = () => celulaIdentificadora(linhas()[0])
+    const firstCell = () => cellIdentificadora(linhas()[0])
     const identificador = (linha: HTMLElement) =>
-      celulaIdentificadora(linha).textContent!.trim()
-    const caixaDaLinha = (linha: HTMLElement) =>
+      cellIdentificadora(linha).textContent!.trim()
+    const lineBox = (linha: HTMLElement) =>
       linha.querySelector<HTMLElement>("[role='checkbox']")!
-    const linhaDe = (id: string) => linhas().find((l) => identificador(l) === id)!
+    const lineOf = (id: string) => linhas().find((l) => identificador(l) === id)!
     // O nome vem de `labels`, e não do padrão do componente: se a prop fosse
     // ignorada, este seletor não acharia nada e a play morreria aqui.
-    const caixaDeTudo = () =>
+    const allBox = () =>
       canvas.getByRole("checkbox", { name: "Selecionar todas as faturas" })
     const regiaoViva = () => canvasElement.querySelector<HTMLElement>("[role='status']")!
 
@@ -187,8 +187,8 @@ export const Playground: Story = {
       await waitFor(() => expect(caixa).toHaveAttribute("aria-checked", alvo))
     }
     /** Precondição de qualquer passo de seleção: nada marcado, venha de onde vier. */
-    const limparSelecao = async () => {
-      for (const linha of linhas()) await marcar(caixaDaLinha(linha), "false")
+    const clearSelection = async () => {
+      for (const linha of linhas()) await marcar(lineBox(linha), "false")
       await waitFor(() =>
         expect(
           canvasElement.querySelectorAll("tbody tr[data-state='selected']").length
@@ -218,7 +218,7 @@ export const Playground: Story = {
       // tabulação. Duas camadas declaradas roláveis é uma a mais: a de fora
       // captura o gesto e quem navega por teclado nunca chega às colunas
       // escondidas à direita.
-      const r = medirRolagem(canvasElement)
+      const r = measureScroll(canvasElement)
       await expect(r.camadasRolaveis).toEqual(["nds-table-wrapper"])
       await expect(r.rolaveisForaDoTeclado).toEqual([])
       await expect(r.interno.overflowX).toBe("auto")
@@ -240,12 +240,12 @@ export const Playground: Story = {
       // acha nada, o que sugere que a regra não existisse — ela está sob o nome
       // `isHTMLTableCaptionElement`. Uma busca por texto quase trocou a asserção
       // forte por uma indireta.
-      const tabela = canvas.getByRole("table", { name: LEGENDA })
+      const tabela = canvas.getByRole("table", { name: CAPTION })
       const legenda = tabela.querySelector("caption")!
       await expect(legenda.tagName).toBe("CAPTION")
       // Primeiro filho: fora dessa posição o parser expulsa a legenda da tabela.
       await expect(tabela.firstElementChild).toBe(legenda)
-      await expect(legenda).toHaveTextContent(LEGENDA)
+      await expect(legenda).toHaveTextContent(CAPTION)
       const estilo = getComputedStyle(legenda)
       const caixa = legenda.getBoundingClientRect()
       await expect(estilo.position).toBe("absolute")
@@ -276,15 +276,15 @@ export const Playground: Story = {
       await waitFor(() => expect(cabecalho).toHaveAttribute("aria-sort", "ascending"))
       // O menor valor é 60 (INV-009). Se a ordenação comparasse o TEXTO
       // formatado, "R$ 1.200,00" viria antes de "R$ 60,00".
-      await expect(primeiraCelula()).toHaveTextContent("INV-009")
+      await expect(firstCell()).toHaveTextContent("INV-009")
 
       await userEvent.click(botao)
       await waitFor(() => expect(cabecalho).toHaveAttribute("aria-sort", "descending"))
-      await expect(primeiraCelula()).toHaveTextContent("INV-008")
+      await expect(firstCell()).toHaveTextContent("INV-008")
 
       await userEvent.click(botao)
       await waitFor(() => expect(cabecalho).toHaveAttribute("aria-sort", "none"))
-      await expect(primeiraCelula()).toHaveTextContent("INV-001")
+      await expect(firstCell()).toHaveTextContent("INV-001")
     })
 
     await step("Cada caixa de seleção tem um nome só dela", async () => {
@@ -309,7 +309,7 @@ export const Playground: Story = {
       // Cada nome carrega o identificador da PRÓPRIA linha — o mesmo texto que
       // quem enxerga usaria para apontar a linha.
       for (const linha of linhas()) {
-        await expect(caixaDaLinha(linha)).toHaveAttribute(
+        await expect(lineBox(linha)).toHaveAttribute(
           "aria-label",
           `Selecionar fatura ${identificador(linha)}`
         )
@@ -317,12 +317,12 @@ export const Playground: Story = {
 
       // O do cabeçalho é colhido pela POSIÇÃO, e não pelo nome esperado: pedir
       // o nome de volta faria a asserção provar a si mesma.
-      const nomeDeTudo =
+      const allName =
         canvasElement
           .querySelector<HTMLElement>("thead [role='checkbox']")!
           .getAttribute("aria-label") ?? ""
-      await expect(nomeDeTudo).toBe("Selecionar todas as faturas")
-      await expect(nomes).not.toContain(nomeDeTudo)
+      await expect(allName).toBe("Selecionar todas as faturas")
+      await expect(nomes).not.toContain(allName)
     })
 
     await step("A busca livre recorta as linhas", async () => {
@@ -331,7 +331,7 @@ export const Playground: Story = {
       await userEvent.clear(busca)
       await userEvent.type(busca, "Karen")
       await waitFor(() => expect(linhas().length).toBe(1))
-      await expect(primeiraCelula()).toHaveTextContent("INV-011")
+      await expect(firstCell()).toHaveTextContent("INV-011")
       // A contagem acompanha o recorte, e não o total do dataset.
       await expect(regiaoViva()).toHaveTextContent("de 1 fatura(s) selecionada(s).")
 
@@ -343,7 +343,7 @@ export const Playground: Story = {
       // functional.item4 — e visual.item1: a linha marcada muda de fundo. Uma
       // tabela que só muda de COR é muda para quem não vê, por isso a região
       // viva carrega o número.
-      const tudo = caixaDeTudo()
+      const tudo = allBox()
       await marcar(tudo, "true")
 
       for (const linha of linhas()) {
@@ -362,7 +362,7 @@ export const Playground: Story = {
       const primeira = linhas()[0].querySelector<HTMLElement>("[role='checkbox']")!
       await marcar(primeira, "false")
       await waitFor(() =>
-        expect(caixaDeTudo()).toHaveAttribute("aria-checked", "mixed")
+        expect(allBox()).toHaveAttribute("aria-checked", "mixed")
       )
       await expect(linhas()[0].hasAttribute("data-state")).toBe(false)
     })
@@ -371,7 +371,7 @@ export const Playground: Story = {
       // O terceiro trecho de functional.item4: o cabeçalho precisa DESMARCAR,
       // não só marcar. Partindo do misto, o primeiro clique completa a página e
       // o segundo esvazia.
-      const tudo = caixaDeTudo()
+      const tudo = allBox()
       await marcar(tudo, "true")
       await marcar(tudo, "false")
       await expect(regiaoViva()).toHaveTextContent("0 de 12 fatura(s) selecionada(s).")
@@ -387,10 +387,10 @@ export const Playground: Story = {
        */
       const botao = canvas.getByRole("button", { name: "Ordenar por Valor" })
       await zerarOrdenacao(botao)
-      await limparSelecao()
+      await clearSelection()
 
-      const alvos = ["INV-002", "INV-005"]
-      for (const id of alvos) await marcar(caixaDaLinha(linhaDe(id)), "true")
+      const targets = ["INV-002", "INV-005"]
+      for (const id of targets) await marcar(lineBox(lineOf(id)), "true")
       await expect(regiaoViva()).toHaveTextContent("2 de 12 fatura(s) selecionada(s).")
 
       const cabecalho = botao.closest("th")!
@@ -398,25 +398,25 @@ export const Playground: Story = {
       await waitFor(() => expect(cabecalho).toHaveAttribute("aria-sort", "ascending"))
       // A ordem mudou de verdade: sem isto o passo provaria a persistência em
       // cima de uma tabela que não reordenou nada.
-      await expect(primeiraCelula()).toHaveTextContent("INV-009")
+      await expect(firstCell()).toHaveTextContent("INV-009")
 
       const marcadas = linhas()
-        .filter((l) => caixaDaLinha(l).getAttribute("aria-checked") === "true")
+        .filter((l) => lineBox(l).getAttribute("aria-checked") === "true")
         .map(identificador)
-      await expect([...marcadas].sort()).toEqual([...alvos].sort())
+      await expect([...marcadas].sort()).toEqual([...targets].sort())
       await expect(regiaoViva()).toHaveTextContent("2 de 12 fatura(s) selecionada(s).")
 
       // Devolve o estado que os passos seguintes esperam: sem ordem, sem marcação.
       await zerarOrdenacao(botao)
-      await limparSelecao()
+      await clearSelection()
     })
 
     await step("A story termina com seleção parcial na tela", async () => {
       // visual.item1 — a captura do Chromatic guarda o ÚLTIMO estado, e o item
       // documentado é "estado padrão com seleção".
-      await limparSelecao()
-      await marcar(caixaDaLinha(linhas()[0]), "true")
-      await marcar(caixaDaLinha(linhas()[2]), "true")
+      await clearSelection()
+      await marcar(lineBox(linhas()[0]), "true")
+      await marcar(lineBox(linhas()[2]), "true")
       await expect(regiaoViva()).toHaveTextContent("2 de 12 fatura(s) selecionada(s).")
     })
   },

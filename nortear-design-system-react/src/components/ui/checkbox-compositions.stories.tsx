@@ -3,11 +3,11 @@ import { fn, userEvent, waitFor, within, expect } from "storybook/test";
 import { Checkbox } from "./checkbox";
 import { Button } from "./button";
 import {
-  checkboxComDescricaoSource,
+  checkboxWithDescriptionSource,
   checkboxEmCardSource,
-  checkboxEmFormularioSource,
-  checkboxGrupoSource,
-  checkboxSelecionarTodosSource,
+  formCheckboxSource,
+  checkboxGroupSource,
+  checkboxSelectAllSource,
   checkboxSource,
 } from "./checkbox.source";
 
@@ -97,7 +97,7 @@ export const WithDescription: Story = {
   parameters: {
     docs: {
       // O texto auxiliar muda o alinhamento do par — não é o snippet do meta.
-      source: { transform: checkboxComDescricaoSource },
+      source: { transform: checkboxWithDescriptionSource },
       description: {
         story:
           "Checkbox + Label + texto auxiliar abaixo. Para contexto adicional sobre a opção selecionada.",
@@ -137,7 +137,7 @@ export const GroupWithFieldset: Story = {
   parameters: {
     docs: {
       // O fieldset + legend é o assunto: uma caixa sozinha não tem grupo.
-      source: { transform: checkboxGrupoSource },
+      source: { transform: checkboxGroupSource },
       description: {
         story:
           "Grupo de checkboxes em fieldset + legend. Obrigatório para WCAG 1.3.1 quando os itens pertencem ao mesmo conjunto.",
@@ -189,7 +189,7 @@ export const SelectAll: Story = {
     docs: {
       // A caixa do topo é controlada: o estado misto é uma conta sobre os filhos,
       // e marcação estática esconderia justamente isso.
-      source: { transform: checkboxSelecionarTodosSource },
+      source: { transform: checkboxSelectAllSource },
       description: {
         story:
           "Padrão de seleção em massa: checkbox pai + checkboxes filhos. O pai usa o estado indeterminate (propriedade dedicada) quando alguns itens estão selecionados — ver a story Indeterminate em States.",
@@ -269,7 +269,7 @@ export const InForm: Story = {
     docs: {
       // O <form> e a leitura por FormData são o assunto; o render da story monta
       // um componente local que não existe fora dela.
-      source: { transform: checkboxEmFormularioSource },
+      source: { transform: formCheckboxSource },
       description: {
         story:
           "Integração com <form>. O base-ui mantém um <input> oculto ao lado do Root, que carrega name/value no submit — leia o estado real via FormData, não via state de React.",

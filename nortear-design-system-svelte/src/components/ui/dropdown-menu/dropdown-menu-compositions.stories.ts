@@ -4,11 +4,11 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import DropdownMenuStory from './DropdownMenuStory.svelte';
 import {
-  dropdownMenuComAtalhosSource,
-  dropdownMenuComCheckboxSource,
-  dropdownMenuComRadioSource,
-  dropdownMenuComRotuloSource,
-  dropdownMenuComSubmenuSource,
+  dropdownMenuWithShortcutsSource,
+  dropdownMenuWithCheckboxSource,
+  dropdownMenuWithRadioSource,
+  dropdownMenuWithLabelSource,
+  dropdownMenuWithSubmenuSource,
   dropdownMenuSource,
 } from './dropdown-menu.source';
 
@@ -41,7 +41,7 @@ export const WithLabel: Story = {
   args: { defaultOpen: true, variant: 'withLabel', triggerLabel: 'Conta' },
   parameters: {
     covers: ['visual.item1'],
-    docs: { source: { transform: dropdownMenuComRotuloSource } },
+    docs: { source: { transform: dropdownMenuWithLabelSource } },
   },
   play: async () => {
     const menu = await waitForPortal('menu');
@@ -66,7 +66,7 @@ export const WithCheckboxItems: Story = {
   args: { defaultOpen: true, variant: 'withCheckbox', triggerLabel: 'Visualização' },
   parameters: {
     covers: ['functional.item5', 'accessibility.item4', 'visual.item2'],
-    docs: { source: { transform: dropdownMenuComCheckboxSource } },
+    docs: { source: { transform: dropdownMenuWithCheckboxSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
@@ -109,7 +109,7 @@ export const WithRadioGroup: Story = {
   args: { defaultOpen: true, variant: 'withRadio', triggerLabel: 'Posição' },
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
-    docs: { source: { transform: dropdownMenuComRadioSource } },
+    docs: { source: { transform: dropdownMenuWithRadioSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
@@ -139,26 +139,26 @@ export const WithSubmenu: Story = {
   args: { defaultOpen: true, variant: 'withSubmenu', triggerLabel: 'Arquivo' },
   parameters: {
     covers: ['functional.item7', 'visual.item4'],
-    docs: { source: { transform: dropdownMenuComSubmenuSource } },
+    docs: { source: { transform: dropdownMenuWithSubmenuSource } },
   },
   play: async ({ step }) => {
     const corpo = within(document.body);
     const menu = await waitForPortal('menu');
-    const subGatilho = within(menu).getByRole('menuitem', { name: 'Exportar como' });
+    const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar como' });
 
     await step('O sub-gatilho anuncia que abre um menu', async () => {
-      await expect(subGatilho).toHaveAttribute('aria-haspopup', 'menu');
-      await expect(subGatilho).toHaveAttribute('aria-expanded', 'false');
+      await expect(subTrigger).toHaveAttribute('aria-haspopup', 'menu');
+      await expect(subTrigger).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('A seta para a direita abre o submenu', async () => {
       // Idempotente: a seta só é enviada com o submenu fechado.
-      if (subGatilho.getAttribute('aria-expanded') !== 'true') {
-        subGatilho.focus();
+      if (subTrigger.getAttribute('aria-expanded') !== 'true') {
+        subTrigger.focus();
         await userEvent.keyboard('{ArrowRight}');
       }
       await waitFor(async () => {
-        await expect(subGatilho).toHaveAttribute('aria-expanded', 'true');
+        await expect(subTrigger).toHaveAttribute('aria-expanded', 'true');
         await expect(corpo.getAllByRole('menu')).toHaveLength(2);
       });
     });
@@ -181,7 +181,7 @@ export const WithSubmenu: Story = {
 export const WithShortcuts: Story = {
   args: { defaultOpen: true, variant: 'withShortcuts', triggerLabel: 'Editar' },
   parameters: {
-    docs: { source: { transform: dropdownMenuComAtalhosSource } },
+    docs: { source: { transform: dropdownMenuWithShortcutsSource } },
   },
   play: async ({ step }) => {
     const menu = await waitForPortal('menu');
@@ -201,10 +201,10 @@ export const WithShortcuts: Story = {
     await step('O atalho fica encostado na borda direita do item', async () => {
       const item = canvas.getByRole('menuitem', { name: 'Duplicar ⌘D' });
       const atalho = item.querySelector<HTMLElement>('[data-slot="dropdown-menu-shortcut"]')!;
-      const caixaDoItem = item.getBoundingClientRect();
-      const caixaDoAtalho = atalho.getBoundingClientRect();
-      await expect(caixaDoItem.right - caixaDoAtalho.right).toBeLessThan(
-        caixaDoAtalho.left - caixaDoItem.left,
+      const itemBox = item.getBoundingClientRect();
+      const shortcutBox = atalho.getBoundingClientRect();
+      await expect(itemBox.right - shortcutBox.right).toBeLessThan(
+        shortcutBox.left - itemBox.left,
       );
     });
   },

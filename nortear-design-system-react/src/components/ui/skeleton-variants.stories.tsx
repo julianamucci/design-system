@@ -3,7 +3,7 @@ import { expect } from "storybook/test";
 import { Skeleton } from "./skeleton";
 import {
   skeletonAvatarSource,
-  midiaSourceSkeletonBlock,
+  midiaSkeletonBlockSource,
   skeletonParagrafoSource,
   skeletonSource,
 } from "./skeleton.source";
@@ -35,7 +35,7 @@ export const Rectangle: Story = {
     docs: {
       // `fill` não tem medida própria: quem estabelece a caixa é a proporção
       // de mídia em volta, e sem ela o snippet ensinaria altura zero.
-      source: { transform: midiaSourceSkeletonBlock },
+      source: { transform: midiaSkeletonBlockSource },
       description: {
         story:
           "`data-shape=\"fill\"` preenche a caixa que o container estabelece — aqui, uma proporção de mídia 16/9.",

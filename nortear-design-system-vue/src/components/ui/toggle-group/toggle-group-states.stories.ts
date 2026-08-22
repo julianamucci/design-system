@@ -3,8 +3,8 @@ import { within, userEvent, expect } from 'storybook/test';
 import { ToggleGroup, ToggleGroupItem } from './index';
 import { AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next';
 import {
-  toggleGroupDesabilitadoSource,
-  toggleGroupItemDesabilitadoSource,
+  toggleGroupDisabledSource,
+  toggleGroupItemDisabledSource,
   toggleGroupDefaultSource,
   toggleGroupSelectedSource,
 } from './toggle-group.source';
@@ -158,7 +158,7 @@ export const Disabled: Story = {
   parameters: {
     // A prop desce do grupo para todos os itens — a do meta mostraria o grupo
     // vivo, que é o oposto do que a story documenta.
-    docs: { source: { transform: toggleGroupDesabilitadoSource } },
+    docs: { source: { transform: toggleGroupDisabledSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -189,7 +189,7 @@ export const ItemDisabled: Story = {
   parameters: {
     // Aqui a prop mora no ITEM, não na raiz: é a diferença que a story existe
     // para mostrar, e o snippet do meta a esconderia.
-    docs: { source: { transform: toggleGroupItemDesabilitadoSource } },
+    docs: { source: { transform: toggleGroupItemDisabledSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

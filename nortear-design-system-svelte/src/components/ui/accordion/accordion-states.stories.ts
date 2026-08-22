@@ -5,9 +5,9 @@ import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 import {
-  accordionAbertoSource,
-  accordionFechadoSource,
-  accordionItemDesabilitadoSource,
+  accordionOpenSource,
+  accordionClosedSource,
+  accordionItemDisabledSource,
   accordionSource,
 } from './accordion.source';
 
@@ -56,7 +56,7 @@ export const Closed: Story = {
   parameters: {
     covers: ['accessibility.item2', 'accessibility.item7', 'visual.item3'],
     docs: {
-      source: { transform: accordionFechadoSource },
+      source: { transform: accordionClosedSource },
       description: {
         story: 'Estado fechado. aria-expanded="false" no trigger. Chevron aponta para baixo.',
       },
@@ -104,7 +104,7 @@ export const Open: Story = {
   parameters: {
     covers: ['accessibility.item2', 'visual.item3'],
     docs: {
-      source: { transform: accordionAbertoSource },
+      source: { transform: accordionOpenSource },
       description: {
         story: 'Estado aberto. aria-expanded="true" no trigger. Conteúdo visível e acessível.',
       },
@@ -146,7 +146,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['functional.item5', 'accessibility.item5', 'visual.item5'],
     docs: {
-      source: { transform: accordionItemDesabilitadoSource },
+      source: { transform: accordionItemDisabledSource },
       description: {
         story: 'Estado disabled. Trigger não responde a cliques. Use para seções temporariamente indisponíveis.',
       },

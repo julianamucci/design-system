@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import {
-  entrarNoPainel,
-  esperarAberto,
-  esperarFechado,
+  panelEntrar,
+  waitForOpen,
+  waitForClosed,
   nomeAcessivel,
-  painelAberto,
-  razaoDeContraste,
+  panelOpen,
+  contrastRatio,
 } from '@shared/testing/hover-card-probe';
 import HoverCardStory from './HoverCardStory.svelte';
 import { hoverCardSource } from './hover-card.source';
@@ -59,9 +59,9 @@ export const Closed: Story = {
     const gatilho = canvas.getByRole('link', { name: /@joana/i });
 
     await step('Fechado, o portal está vazio', async () => {
-      await esperarFechado();
+      await waitForClosed();
       await expect(gatilho).toBeVisible();
-      await expect(painelAberto()).toBeNull();
+      await expect(panelOpen()).toBeNull();
     });
 
     await step('O gatilho não anuncia estado de expansão', async () => {
@@ -99,9 +99,9 @@ export const Open: Story = {
 
     // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
     await userEvent.keyboard('{Escape}');
-    await esperarFechado();
+    await waitForClosed();
     await userEvent.hover(gatilho);
-    const painel = await esperarAberto();
+    const painel = await waitForOpen();
 
     await step('O painel é um dialog não-modal', async () => {
       await expect(painel).toHaveAttribute('role', 'dialog');
@@ -117,11 +117,11 @@ export const Open: Story = {
     await step('Levar o cursor para dentro do painel mantém o cartão aberto', async () => {
       // O caminho completo: sai do gatilho (o que agenda o fechamento) e entra
       // no painel (o que o cancela). Só a entrada, sem a saída, provaria nada.
-      await entrarNoPainel(gatilho, painel);
+      await panelEntrar(gatilho, painel);
       // Espera deliberada, maior que o closeDelay de 80ms: o que se prova aqui
       // é a AUSÊNCIA de fechamento, e ausência não tem evento para aguardar.
       await new Promise((resolve) => setTimeout(resolve, 300));
-      await expect(painelAberto()).toBe(painel);
+      await expect(panelOpen()).toBe(painel);
       await expect(painel).toBeVisible();
     });
 
@@ -129,7 +129,7 @@ export const Open: Story = {
       // Medido do par que o design system promete (--popover-foreground sobre
       // --popover), e não deduzido do token: é o valor que o navegador aplicou.
       const estilo = getComputedStyle(painel);
-      await expect(razaoDeContraste(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
+      await expect(contrastRatio(estilo.color, estilo.backgroundColor)).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -152,15 +152,15 @@ export const Controlled: Story = {
   },
   play: async ({ step }) => {
     await step('O cartão obedece ao estado externo, sem ponteiro nenhum', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(painel).toHaveAttribute('data-state', 'open');
     });
 
     await step('E o Escape fecha o que o estado externo abriu', async () => {
       await userEvent.keyboard('{Escape}');
-      await esperarFechado('depois do Escape');
-      await expect(painelAberto()).toBeNull();
+      await waitForClosed('depois do Escape');
+      await expect(panelOpen()).toBeNull();
     });
   },
 };

@@ -3,9 +3,9 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NdsSkeleton } from './skeleton';
 import {
-  animacaoAtiva,
-  caixaDesenhada,
-  distincaoDoFundo,
+  animationAtiva,
+  boxDesenhada,
+  backgroundDistincao,
   ligarMovimentoReduzido,
 } from '@shared/testing/skeleton-probe';
 
@@ -32,7 +32,7 @@ export const Pulsing: Story = {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
     await step('A classe base entrega pulso e raio', async () => {
-      await expect(animacaoAtiva(sk)).toBe(true);
+      await expect(animationAtiva(sk)).toBe(true);
       await expect(getComputedStyle(sk).borderRadius).not.toBe('0px');
     });
 
@@ -40,8 +40,8 @@ export const Pulsing: Story = {
       // Não é critério de contraste — o esqueleto não transmite informação. O
       // piso pega o caso degenerado: token trocado ou opacidade zerada fazem o
       // placeholder sumir, e o carregamento deixa de ser visível.
-      const { razao } = distincaoDoFundo(sk);
-      await expect(razao).toBeGreaterThan(1.05);
+      const { ratio } = backgroundDistincao(sk);
+      await expect(ratio).toBeGreaterThan(1.05);
     });
   },
 };
@@ -63,13 +63,13 @@ export const CustomDimension: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+    const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step('O avatar é um quadrado com medida do tema', async () => {
       // A medida vem de `data-shape=avatar` -> escada --size-*, que responde à
       // densidade. Se o atributo sumir, o esqueleto colapsa para zero e só a
       // medição acusa.
-      const caixa = caixaDesenhada(pecas[0]);
+      const caixa = boxDesenhada(parts[0]);
       await expect(caixa.quadrado).toBe(true);
       // Sem número mágico: a medida vem da escada --size-*, que muda por
       // densidade. Afirmar '40px' amarraria o teste ao tema padrão.
@@ -77,14 +77,14 @@ export const CustomDimension: Story = {
     });
 
     await step('As duas linhas seguem a fração de largura declarada', async () => {
-      await expect(pecas[1].getBoundingClientRect().width).toBeGreaterThan(
-        pecas[2].getBoundingClientRect().width,
+      await expect(parts[1].getBoundingClientRect().width).toBeGreaterThan(
+        parts[2].getBoundingClientRect().width,
       );
     });
 
     await step('Todos os esqueletos ficam fora da árvore de acessibilidade', async () => {
-      await expect(pecas).toHaveLength(3);
-      for (const sk of pecas) await expect(sk).toHaveAttribute('aria-hidden', 'true');
+      await expect(parts).toHaveLength(3);
+      for (const sk of parts) await expect(sk).toHaveAttribute('aria-hidden', 'true');
     });
   },
 };
@@ -139,7 +139,7 @@ export const ReducedMotion: Story = {
         //
         // Asserção pelo PAR, não pelo nome da animação: o nome muda por stack e
         // por versão, e `animationName !== 'none'` passava com duração zerada.
-        await expect(animacaoAtiva(sk)).toBe(false);
+        await expect(animationAtiva(sk)).toBe(false);
       });
 
       await step('O placeholder continua visível e ocupando a caixa', async () => {
@@ -151,7 +151,7 @@ export const ReducedMotion: Story = {
     }
 
     await step('Sem a preferência, o pulso volta', async () => {
-      await expect(animacaoAtiva(sk)).toBe(true);
+      await expect(animationAtiva(sk)).toBe(true);
     });
   },
 };

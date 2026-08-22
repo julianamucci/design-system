@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  cardClicavelSource,
-  cardComAcaoSource,
-  cardComImagemSource,
-  cardComRodapeSource,
+  cardClickableSource,
+  cardWithActionSource,
+  cardWithImageSource,
+  cardWithFooterSource,
   cardDeMetricaSource,
   cardDePerfilSource,
-  cardDeProdutoSource,
+  productCardSource,
   cardDefaultSource,
   cardPequenoSource,
   cardSource,
@@ -72,7 +72,7 @@ describe('transforms das stories de tamanho, estado e composição', () => {
   });
 
   it('o card clicável ativa pelo link em volta, nunca pelo Card', () => {
-    const saida = cardClicavelSource();
+    const saida = cardClickableSource();
     expect(saida).toContain('aria-label="Abrir detalhes do produto Cadeira Gamer Pro"');
     expect(saida).toContain('nds-focus-ring');
     // Handler de clique no Card raiz é justamente o que a story desaconselha.
@@ -81,27 +81,27 @@ describe('transforms das stories de tamanho, estado e composição', () => {
   });
 
   it('o rodapé traz as duas ações nomeando o card em que agem', () => {
-    const saida = cardComRodapeSource();
+    const saida = cardWithFooterSource();
     expect(saida).toContain('<CardFooter class="nds-cluster" data-justify="end" data-spacing="sm">');
     expect(saida).toContain('aria-label="Cancelar edição de Cadeira Gamer Pro"');
     expect(saida).toContain('aria-label="Salvar alterações em Cadeira Gamer Pro"');
   });
 
   it('a ação mora DENTRO do header, depois da descrição', () => {
-    const saida = cardComAcaoSource();
+    const saida = cardWithActionSource();
     expect(saida).toContain('CardAction');
     expect(saida.indexOf('<CardAction>')).toBeGreaterThan(saida.indexOf('<CardDescription>'));
     expect(saida.indexOf('<CardAction>')).toBeLessThan(saida.indexOf('</CardHeader>'));
   });
 
   it('a imagem é o primeiro filho do card e tem alternativa textual', () => {
-    const saida = cardComImagemSource();
+    const saida = cardWithImageSource();
     expect(saida.indexOf('<img')).toBeLessThan(saida.indexOf('<CardHeader>'));
     expect(saida).toContain('alt="Cadeira Gamer Pro vista de frente, em fundo neutro"');
   });
 
   it('o card de produto junta imagem, status no header e ações no rodapé', () => {
-    const saida = cardDeProdutoSource();
+    const saida = productCardSource();
     expect(saida).toContain('from "@/components/ui/badge"');
     expect(saida).toContain('<Badge variant="secondary">Em estoque</Badge>');
     expect(saida.indexOf('<img')).toBeLessThan(saida.indexOf('<CardHeader>'));

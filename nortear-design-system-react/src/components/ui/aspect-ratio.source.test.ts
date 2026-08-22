@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-  aspectRatioComIframeSource,
-  aspectRatioComVideoSource,
-  aspectRatioEmGradeSource,
+  aspectRatioWithIframeSource,
+  aspectRatioWithVideoSource,
+  gridAspectRatioSource,
   aspectRatioImageDecorativaSource,
   aspectRatioPlaceholderSource,
   aspectRatioQuadradoSource,
@@ -82,13 +82,13 @@ describe('composições', () => {
   });
 
   it('o iframe carrega title — é o nome acessível do quadro embutido', () => {
-    const saida = aspectRatioComIframeSource();
+    const saida = aspectRatioWithIframeSource();
     expect(saida).toContain('<iframe');
     expect(saida).toContain('title="Mapa do escritório em São Paulo"');
   });
 
   it('o vídeo traz faixa de legendas e controles alcançáveis pelo teclado', () => {
-    const saida = aspectRatioComVideoSource();
+    const saida = aspectRatioWithVideoSource();
     expect(saida).toContain('<track');
     expect(saida).toContain('kind="captions"');
     expect(saida).toContain('controls');
@@ -103,7 +103,7 @@ describe('composições', () => {
   });
 
   it('na grade a proporção é a mesma em todas as células', () => {
-    const saida = aspectRatioEmGradeSource();
+    const saida = gridAspectRatioSource();
     expect(saida).toContain('nds-grid');
     expect(saida.match(/ratio=\{4 \/ 3\}/g)).toHaveLength(1);
     expect(saida).toContain('itens.map');
@@ -112,9 +112,9 @@ describe('composições', () => {
   it('nenhum snippet ensina o andaime da story', () => {
     for (const fn of [
       aspectRatioSource,
-      aspectRatioComIframeSource,
-      aspectRatioComVideoSource,
-      aspectRatioEmGradeSource,
+      aspectRatioWithIframeSource,
+      aspectRatioWithVideoSource,
+      gridAspectRatioSource,
       aspectRatioImageDecorativaSource,
       aspectRatioPlaceholderSource,
       aspectRatioQuadradoSource,

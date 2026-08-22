@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
-  alertDialogAbertoSource,
+  alertDialogOpenSource,
   alertDialogCanceladoSource,
-  alertDialogClasseExtraSource,
+  alertDialogClassNameExtraSource,
   alertDialogWithMidiaSource,
   alertDialogConfirmadoSource,
-  alertDialogControladoSource,
-  alertDialogDescricaoLongaSource,
-  alertDialogNeutroSource,
-  alertDialogSemDescricaoSource,
+  alertDialogControlledSource,
+  alertDialogDescriptionLongaSource,
+  alertDialogNeutralSource,
+  alertDialogNoDescriptionSource,
   alertDialogSource,
 } from './alert-dialog.source';
 
@@ -98,7 +98,7 @@ describe('alertDialogSource', () => {
 
 describe('transforms das stories de estado', () => {
   it('o estado aberto monta o painel já na montagem', () => {
-    const saida = alertDialogAbertoSource();
+    const saida = alertDialogOpenSource();
     expect(saida).toContain('let open = $state(true);');
     expect(saida).toContain('Excluir item permanentemente?');
   });
@@ -116,7 +116,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o modo controlado tira o gatilho de dentro do diálogo', () => {
-    const saida = alertDialogControladoSource();
+    const saida = alertDialogControlledSource();
     expect(saida).not.toContain('AlertDialogTrigger');
     expect(saida).toContain('onclick={() => (open = true)}');
     expect(saida).toContain('onOpenChange=');
@@ -131,26 +131,26 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a confirmação neutra não herda a severidade destrutiva', () => {
-    const saida = alertDialogNeutroSource();
+    const saida = alertDialogNeutralSource();
     expect(saida).toContain('variant="outline"');
     expect(saida).toContain('<AlertDialogAction>Sair</AlertDialogAction>');
     expect(saida).not.toContain('destructive');
   });
 
   it('a descrição longa continua num único subcomponente de descrição', () => {
-    const saida = alertDialogDescricaoLongaSource();
+    const saida = alertDialogDescriptionLongaSource();
     expect(saida).toContain('nenhuma cópia de segurança');
     expect(saida.match(/<AlertDialogDescription>/g)).toHaveLength(1);
   });
 
   it('sem descrição, nem o subcomponente nem o import sobram', () => {
-    const saida = alertDialogSemDescricaoSource();
+    const saida = alertDialogNoDescriptionSource();
     expect(saida).not.toContain('AlertDialogDescription');
     expect(saida).toContain('<AlertDialogTitle>Descartar rascunho</AlertDialogTitle>');
   });
 
   it('a classe extra chega ao painel e ao bloco de mídia', () => {
-    const saida = alertDialogClasseExtraSource();
+    const saida = alertDialogClassNameExtraSource();
     expect(saida).toContain('<AlertDialogContent class="nds-overflow-hidden">');
     expect(saida).toContain('<AlertDialogMedia class="nds-shrink-0">');
   });

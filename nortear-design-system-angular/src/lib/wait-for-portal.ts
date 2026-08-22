@@ -15,7 +15,7 @@ import { within, waitFor } from 'storybook/test';
  * correção é da lib e está reportada — desligar a regra é o que mantém as
  * outras 90 valendo enquanto isso.
  */
-export const REGRA_GUARDA_DE_FOCO = { id: 'aria-hidden-focus', enabled: false } as const;
+export const FOCUS_RULE_GUARDA = { id: 'aria-hidden-focus', enabled: false } as const;
 
 /**
  * Espera um elemento portalizado aparecer e assentar.

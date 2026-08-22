@@ -12,8 +12,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { INVOICES } from "./table.fixtures";
 import {
-  tableCarregandoSource,
-  tableLinhaSelecionadaSource,
+  tableLoadingSource,
+  tableLineSelecionadaSource,
   tableSource,
   tableVaziaSource,
 } from "./table.source";
@@ -35,7 +35,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const COLUNAS = ["Fatura", "Status", "Método", "Valor"];
+const COLUMNS = ["Fatura", "Status", "Método", "Valor"];
 
 // ─── Empty ───────────────────────────────────────────────────────────────────
 
@@ -52,7 +52,7 @@ export const Empty: Story = {
       <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
       <TableHeader>
         <TableRow>
-          {COLUNAS.map((coluna) => (
+          {COLUMNS.map((coluna) => (
             <TableHead key={coluna}>{coluna}</TableHead>
           ))}
         </TableRow>
@@ -62,7 +62,7 @@ export const Empty: Story = {
           {/* colspan derivado do cabeçalho: com um número escrito à mão,
               acrescentar uma coluna deixaria a mensagem torta e ninguém veria
               até a próxima captura visual. */}
-          <TableCell colSpan={COLUNAS.length} className="nds-table-empty">
+          <TableCell colSpan={COLUMNS.length} className="nds-table-empty">
             Nenhuma fatura encontrada.
           </TableCell>
         </TableRow>
@@ -76,7 +76,7 @@ export const Empty: Story = {
       // functional.item2 — sem o colspan a mensagem cairia sob a primeira
       // coluna e as outras três ficariam vazias, como se faltassem dados.
       const celula = canvasElement.querySelector<HTMLTableCellElement>("tbody td")!;
-      await expect(celula).toHaveAttribute("colspan", String(COLUNAS.length));
+      await expect(celula).toHaveAttribute("colspan", String(COLUMNS.length));
       await expect(celula).toHaveTextContent("Nenhuma fatura encontrada.");
       await expect(canvasElement.querySelectorAll("tbody tr").length).toBe(1);
     });
@@ -85,7 +85,7 @@ export const Empty: Story = {
       // Estado vazio não é motivo para desmontar a estrutura: quem usa leitor de
       // tela precisa saber que colunas voltarão a existir quando houver dados.
       await expect(canvas.getByRole("table", { name: /faturas recentes/ })).toBeTruthy();
-      await expect(canvasElement.querySelectorAll("th").length).toBe(COLUNAS.length);
+      await expect(canvasElement.querySelectorAll("th").length).toBe(COLUMNS.length);
     });
 
     await step("A mensagem é centralizada e reserva a altura da caixa", async () => {
@@ -106,7 +106,7 @@ export const SelectedRow: Story = {
     covers: ["functional.item4", "visual.item5"],
     docs: {
       // O `data-state="selected"` só existe no render desta story.
-      source: { transform: tableLinhaSelecionadaSource },
+      source: { transform: tableLineSelecionadaSource },
     },
   },
   render: () => (
@@ -157,14 +157,14 @@ export const SelectedRow: Story = {
 
 // ─── Carregando ──────────────────────────────────────────────────────────────
 
-const LINHAS_ESQUELETO = [1, 2, 3];
+const LINES_SKELETON = [1, 2, 3];
 
 export const Loading: Story = {
   parameters: {
     covers: ["functional.item7", "visual.item6"],
     docs: {
       // A região com aria-busy em volta e os esqueletos são do render.
-      source: { transform: tableCarregandoSource },
+      source: { transform: tableLoadingSource },
     },
   },
   render: () => (
@@ -176,15 +176,15 @@ export const Loading: Story = {
         <TableCaption className="nds-sr-only">Lista de faturas recentes</TableCaption>
         <TableHeader>
           <TableRow>
-            {COLUNAS.map((coluna) => (
+            {COLUMNS.map((coluna) => (
               <TableHead key={coluna}>{coluna}</TableHead>
             ))}
           </TableRow>
         </TableHeader>
         <TableBody>
-          {LINHAS_ESQUELETO.map((linha) => (
+          {LINES_SKELETON.map((linha) => (
             <TableRow key={linha}>
-              {COLUNAS.map((coluna) => (
+              {COLUMNS.map((coluna) => (
                 <TableCell key={coluna}>
                   {/* Forma por atributo, nunca altura cravada: o esqueleto de
                       uma linha mede o que a linha vai medir quando o texto
@@ -204,13 +204,13 @@ export const Loading: Story = {
       // visual.item6 — o esqueleto mede a caixa que o dado vai ocupar; a grade
       // não pode encolher enquanto carrega, senão a tabela salta ao chegar.
       const linhas = [...canvasElement.querySelectorAll<HTMLElement>("tbody tr")];
-      await expect(linhas.length).toBe(LINHAS_ESQUELETO.length);
+      await expect(linhas.length).toBe(LINES_SKELETON.length);
       for (const linha of linhas) {
         await expect(linha.querySelectorAll('[data-slot="skeleton"]').length).toBe(
-          COLUNAS.length,
+          COLUMNS.length,
         );
       }
-      await expect(canvasElement.querySelectorAll("thead th").length).toBe(COLUNAS.length);
+      await expect(canvasElement.querySelectorAll("thead th").length).toBe(COLUMNS.length);
     });
 
     await step("O esqueleto some da árvore de acessibilidade; a região anuncia", async () => {

@@ -10,7 +10,7 @@ import {
 } from "./card";
 import { Button } from "./button";
 import {
-  cardClicavelSource,
+  cardClickableSource,
   cardNoFooterSource,
   cardSource,
 } from "./card.source";
@@ -93,7 +93,7 @@ export const Clickable: Story = {
     docs: {
       // Quem recebe foco e nome acessível é a âncora EM VOLTA do Card, e essa
       // envoltória é justamente o que o snippet do meta não tem.
-      source: { transform: cardClicavelSource },
+      source: { transform: cardClickableSource },
       description: {
         story:
           "Card envolvido em `<a>` com `aria-label` descritivo. Não use `onClick` no Card root — a semântica de ativação por teclado e o anel de foco vivem no wrapper, e o Tab alcança um destino só.",

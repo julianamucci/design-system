@@ -4,7 +4,7 @@ import { createTextarea } from './textarea';
 import { textareaSource, textareaSourceWith } from './textarea.source';
 import { createLabel } from './label';
 import {
-  alturaMinimaPx,
+  heightMinimaPx,
   preencherAte,
   resizeComputado,
 } from '@shared/testing/textarea-probe';
@@ -104,7 +104,7 @@ export const Default: Story = {
     await step('Altura mínima de 120px', async () => {
       // A classe morta `min-h-[120px]` prometia isto e não aplicava nada; e o
       // `style.minHeight` que a substituía cravava a medida fora do tema.
-      await expect(alturaMinimaPx(textarea)).toBe(120);
+      await expect(heightMinimaPx(textarea)).toBe(120);
     });
   },
 };

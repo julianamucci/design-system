@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, userEvent, expect } from 'storybook/test';
-import { alturaResultante, campoDe } from '@shared/testing/input-probe';
-import { campoRotulado } from './input.fixtures';
+import { heightResultante, fieldOf } from '@shared/testing/input-probe';
+import { fieldLabelled } from './input.fixtures';
 import { inputSource, inputSourceWith } from './input.source';
 
 const meta: Meta = {
@@ -24,7 +24,7 @@ type Story = StoryObj;
 
 export const Text: Story = {
   render: () =>
-    campoRotulado({
+    fieldLabelled({
       id: 'tipo-text',
       rotulo: 'Nome completo',
       type: 'text',
@@ -55,7 +55,7 @@ export const Email: Story = {
     },
   },
   render: () =>
-    campoRotulado({
+    fieldLabelled({
       id: 'tipo-email',
       rotulo: 'Email',
       type: 'email',
@@ -84,7 +84,7 @@ export const Password: Story = {
     },
   },
   render: () =>
-    campoRotulado({
+    fieldLabelled({
       id: 'tipo-password',
       rotulo: 'Senha',
       type: 'password',
@@ -113,7 +113,7 @@ export const Number: Story = {
     },
   },
   render: () =>
-    campoRotulado({ id: 'tipo-number', rotulo: 'Quantidade', type: 'number', placeholder: '0' }),
+    fieldLabelled({ id: 'tipo-number', rotulo: 'Quantidade', type: 'number', placeholder: '0' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step('Input do tipo number renderizado', async () => {
@@ -142,7 +142,7 @@ export const Search: Story = {
     },
   },
   render: () =>
-    campoRotulado({
+    fieldLabelled({
       id: 'tipo-search',
       rotulo: 'Buscar',
       type: 'search',
@@ -177,7 +177,7 @@ export const File: Story = {
       },
     },
   },
-  render: () => campoRotulado({ id: 'tipo-file', rotulo: 'Arquivo', type: 'file' }),
+  render: () => fieldLabelled({ id: 'tipo-file', rotulo: 'Arquivo', type: 'file' }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
@@ -190,13 +190,13 @@ export const File: Story = {
       // `::file-selector-button` é a única parte do campo que o navegador
       // desenha sozinho; sem a regra do design system ele sai com o cinza do
       // sistema operacional e o exemplo mente sobre o resultado.
-      const botao = getComputedStyle(campoDe(canvasElement)!, '::file-selector-button');
+      const botao = getComputedStyle(fieldOf(canvasElement)!, '::file-selector-button');
       await expect(botao.backgroundColor).not.toBe('rgba(0, 0, 0, 0)');
       await expect(parseFloat(botao.borderTopLeftRadius)).toBeGreaterThan(0);
     });
 
     await step('A altura continua saindo do respiro, não de um valor cravado', async () => {
-      const medida = alturaResultante(campoDe(canvasElement)!);
+      const medida = heightResultante(fieldOf(canvasElement)!);
       await expect(medida.alturaCravada).toBe(false);
       await expect(parseFloat(medida.paddingBloco[0])).toBeGreaterThan(0);
     });

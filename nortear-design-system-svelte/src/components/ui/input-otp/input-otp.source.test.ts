@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  inputOtpComErroSource,
-  inputOtpComReenvioSource,
-  inputOtpComSeparadorSource,
-  helperSourceInputOtpWithText,
+  inputOtpWithErrorSource,
+  inputOtpWithReenvioSource,
+  inputOtpWithSeparatorSource,
+  helperInputOtpWithTextSource,
   inputOtpSource,
 } from './input-otp.source';
 
@@ -79,7 +79,7 @@ describe('inputOtpSource', () => {
 
 describe('transforms das stories de variação e composição', () => {
   it('o separador parte o código em dois blocos de três', () => {
-    const saida = inputOtpComSeparadorSource();
+    const saida = inputOtpWithSeparatorSource();
     expect(saida).toContain('InputOTPSeparator');
     expect(saida).toContain('cells.slice(0, 3)');
     expect(saida).toContain('cells.slice(3)');
@@ -87,14 +87,14 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('o texto de apoio é lido junto com o campo', () => {
-    const saida = helperSourceInputOtpWithText();
+    const saida = helperInputOtpWithTextSource();
     expect(saida).toContain('aria-describedby="codigo-apoio"');
     expect(saida).toContain('<p id="codigo-apoio"');
     expect(saida).not.toContain('aria-invalid');
   });
 
   it('o erro marca o campo e liga a mensagem pelo mesmo caminho', () => {
-    const saida = inputOtpComErroSource();
+    const saida = inputOtpWithErrorSource();
     expect(saida).toContain('aria-invalid="true"');
     expect(saida).toContain('aria-describedby="codigo-erro"');
     expect(saida).toContain('<p id="codigo-erro"');
@@ -103,7 +103,7 @@ describe('transforms das stories de variação e composição', () => {
   });
 
   it('o reenvio vem depois do campo na ordem do documento', () => {
-    const saida = inputOtpComReenvioSource();
+    const saida = inputOtpWithReenvioSource();
     expect(saida).toContain('from "@/components/ui/button"');
     expect(saida.indexOf('</InputOTP>')).toBeLessThan(saida.indexOf('Reenviar código'));
   });

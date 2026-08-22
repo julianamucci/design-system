@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, expect, fn, userEvent, waitFor } from "storybook/test"
 import {
   waitForPortal,
-  REGRA_GUARDA_DE_FOCO,
+  FOCUS_RULE_GUARDA,
   MENU_RULE_CHILDREN,
 } from "@/lib/wait-for-portal"
 import {
@@ -16,7 +16,7 @@ import {
   MenubarTrigger,
 } from "./menubar"
 import {
-  menubarAbertoSource,
+  menubarOpenSource,
   menubarItemBloqueadoSource,
   menubarItemCheckedSource,
   menubarSource,
@@ -27,14 +27,14 @@ import {
 // `wait-for-portal.ts`. A story que termina FECHADA não as desliga: é lá que
 // "sem violações no estado padrão" vale inteiro.
 const AXE_WITH_MENU_OPEN = {
-  config: { rules: [REGRA_GUARDA_DE_FOCO, MENU_RULE_CHILDREN] },
+  config: { rules: [FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN] },
 } as const
 
 const MENUS_FECHADOS = ["Arquivo", "Editar", "Exibir", "Ajuda"] as const
 
 // Espião de escopo de MÓDULO: criado dentro do `render` ele seria inalcançável
 // pelo `play`, e a aba Actions abriria vazia.
-const espiaoDeSelecao = fn()
+const selectionSpy = fn()
 
 const ITENS_COM_BLOQUEIO = [
   { label: "Novo", disabled: false },
@@ -125,7 +125,7 @@ export const Open: Story = {
     covers: ["accessibility.item4"],
     // `defaultOpen` mora no MENU, não na barra — é o assunto desta story, e
     // nenhum arg do meta o descreve.
-    docs: { source: { transform: menubarAbertoSource } },
+    docs: { source: { transform: menubarOpenSource } },
   },
   render: () => (
     <div style={wrapperStyle}>
@@ -167,9 +167,9 @@ export const Open: Story = {
       await waitFor(async () => {
         // O positioner mede DEPOIS de o painel entrar no DOM: no primeiro
         // quadro o retângulo ainda é (0,0), e ler daí é corrida.
-        const barraRect = barra.getBoundingClientRect()
+        const barRect = barra.getBoundingClientRect()
         const menuRect = menu.getBoundingClientRect()
-        await expect(menuRect.top).toBeGreaterThanOrEqual(barraRect.bottom - 1)
+        await expect(menuRect.top).toBeGreaterThanOrEqual(barRect.bottom - 1)
       })
     })
   },
@@ -194,7 +194,7 @@ export const ItemDisabled: Story = {
                 <MenubarItem
                   key={i.label}
                   disabled={i.disabled}
-                  onClick={() => espiaoDeSelecao(i.label)}
+                  onClick={() => selectionSpy(i.label)}
                 >
                   {i.label}
                 </MenubarItem>
@@ -226,7 +226,7 @@ export const ItemDisabled: Story = {
 
     await step("Escolher o item bloqueado não executa nada", async () => {
       await userEvent.click(bloqueado, { pointerEventsCheck: 0 })
-      await expect(espiaoDeSelecao).not.toHaveBeenCalledWith(
+      await expect(selectionSpy).not.toHaveBeenCalledWith(
         bloqueado.textContent?.trim()
       )
     })

@@ -13,8 +13,8 @@ import {
 import { Skeleton } from '@/components/ui/skeleton';
 import { INVOICES } from './table.fixtures';
 import {
-  tableCarregandoSource,
-  tableLinhaSelecionadaSource,
+  tableLoadingSource,
+  tableLineSelecionadaSource,
   tableVaziaSource,
 } from './table.source';
 
@@ -33,7 +33,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const COLUNAS = ['Fatura', 'Status', 'Método', 'Valor'];
+const COLUMNS = ['Fatura', 'Status', 'Método', 'Valor'];
 
 const COMPONENTES = {
   Table,
@@ -50,7 +50,7 @@ export const Empty: Story = {
   render: () => ({
     components: { ...COMPONENTES, TableEmpty },
     setup() {
-      return { colunas: COLUNAS };
+      return { colunas: COLUMNS };
     },
     template: `
       <Table>
@@ -77,7 +77,7 @@ export const Empty: Story = {
       // functional.item2 — sem o colspan a mensagem cairia sob a primeira
       // coluna e as outras três ficariam vazias, como se faltassem dados.
       const celula = canvasElement.querySelector<HTMLTableCellElement>('tbody td')!;
-      await expect(celula).toHaveAttribute('colspan', String(COLUNAS.length));
+      await expect(celula).toHaveAttribute('colspan', String(COLUMNS.length));
       await expect(celula).toHaveTextContent('Nenhuma fatura encontrada.');
       await expect(canvasElement.querySelectorAll('tbody tr').length).toBe(1);
     });
@@ -86,7 +86,7 @@ export const Empty: Story = {
       // Estado vazio não é motivo para desmontar a estrutura: quem usa leitor de
       // tela precisa saber que colunas voltarão a existir quando houver dados.
       await expect(canvas.getByRole('table', { name: /faturas recentes/ })).toBeTruthy();
-      await expect(canvasElement.querySelectorAll('th').length).toBe(COLUNAS.length);
+      await expect(canvasElement.querySelectorAll('th').length).toBe(COLUMNS.length);
     });
 
     await step('A mensagem é centralizada e reserva a altura da caixa', async () => {
@@ -106,7 +106,7 @@ export const SelectedRow: Story = {
     covers: ['functional.item4', 'visual.item5'],
     // Há registros e há estado de seleção por linha: o corpo volta a ser
     // iterado, o oposto do vazio que o meta mostra.
-    docs: { source: { transform: tableLinhaSelecionadaSource } },
+    docs: { source: { transform: tableLineSelecionadaSource } },
   },
   render: () => ({
     components: COMPONENTES,
@@ -162,19 +162,19 @@ export const SelectedRow: Story = {
   },
 };
 
-const LINHAS_ESQUELETO = [1, 2, 3];
+const LINES_SKELETON = [1, 2, 3];
 
 export const Loading: Story = {
   parameters: {
     covers: ['functional.item7', 'visual.item6'],
     // A tabela entra dentro de uma região com `aria-busy` e as células viram
     // esqueleto: o invólucro é metade da lição e o meta não o tem.
-    docs: { source: { transform: tableCarregandoSource } },
+    docs: { source: { transform: tableLoadingSource } },
   },
   render: () => ({
     components: { ...COMPONENTES, Skeleton },
     setup() {
-      return { colunas: COLUNAS, linhas: LINHAS_ESQUELETO };
+      return { colunas: COLUMNS, linhas: LINES_SKELETON };
     },
     template: `
       <!-- aria-busy na REGIÃO, não na célula: o esqueleto é aria-hidden, e sem
@@ -207,13 +207,13 @@ export const Loading: Story = {
       // visual.item6 — o esqueleto mede a caixa que o dado vai ocupar; a grade
       // não pode encolher enquanto carrega, senão a tabela salta ao chegar.
       const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(LINHAS_ESQUELETO.length);
+      await expect(linhas.length).toBe(LINES_SKELETON.length);
       for (const linha of linhas) {
         await expect(linha.querySelectorAll('[data-slot="skeleton"]').length).toBe(
-          COLUNAS.length,
+          COLUMNS.length,
         );
       }
-      await expect(canvasElement.querySelectorAll('thead th').length).toBe(COLUNAS.length);
+      await expect(canvasElement.querySelectorAll('thead th').length).toBe(COLUMNS.length);
     });
 
     await step('O esqueleto some da árvore de acessibilidade; a região anuncia', async () => {

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect } from "storybook/test";
-import { alturaResultante, campoDe } from "@shared/testing/input-probe";
+import { heightResultante, fieldOf } from "@shared/testing/input-probe";
 import { Input } from "./input";
 import {
   inputFileSource,
@@ -180,13 +180,13 @@ export const File: Story = {
       // `::file-selector-button` é a única parte do campo que o navegador
       // desenha sozinho; sem a regra do design system ele sai com o cinza do
       // sistema operacional e o exemplo mente sobre o resultado.
-      const botao = getComputedStyle(campoDe(canvasElement)!, "::file-selector-button");
+      const botao = getComputedStyle(fieldOf(canvasElement)!, "::file-selector-button");
       await expect(botao.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
       await expect(parseFloat(botao.borderTopLeftRadius)).toBeGreaterThan(0);
     });
 
     await step("A altura continua saindo do respiro, não de um valor cravado", async () => {
-      const medida = alturaResultante(campoDe(canvasElement)!);
+      const medida = heightResultante(fieldOf(canvasElement)!);
       await expect(medida.alturaCravada).toBe(false);
       await expect(parseFloat(medida.paddingBloco[0])).toBeGreaterThan(0);
     });

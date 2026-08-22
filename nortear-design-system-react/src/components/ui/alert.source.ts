@@ -99,7 +99,7 @@ export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
  * variante — cor sozinha não comunica, e o par ícone + palavra é o que sustenta
  * o significado sem depender de enxergar a cor.
  */
-export function alertDestrutivoSource(): string {
+export function alertDestructiveSource(): string {
   return variante(
     'destructive',
     'AlertCircle',
@@ -167,7 +167,7 @@ function aoFechar() {
  * entre elas, e um alerta sozinho esconderia justamente isso. Sem ícone de
  * propósito — o que se mede aqui é texto sobre o fundo que a variante pinta.
  */
-export function alertContrasteSource(): string {
+export function alertContrastSource(): string {
   const blocos = VARIANTES.map((nome) => {
     const atributos = nome === 'default' ? '' : ` variant="${nome}"`;
     return [
@@ -187,7 +187,7 @@ export function alertContrasteSource(): string {
  * Sem título: a descrição vira o conteúdo inteiro. A ausência É o assunto, e o
  * snippet do `meta` mostraria o título de volta.
  */
-export function alertSemTituloSource(): string {
+export function alertNoTitleSource(): string {
   return jsxSnippet(
     cabecalho(['Info'], 'import { Alert, AlertDescription } from "@/components/ui/alert";'),
     alerta('', corpo('Info', '', 'Suas alterações serão aplicadas na próxima sessão.')),
@@ -199,7 +199,7 @@ export function alertSemTituloSource(): string {
  * à presença do SVG filho direto. Compartilhado pelas duas stories que provam a
  * mesma ausência (estados e composições).
  */
-export function alertSemIconeSource(): string {
+export function alertNoIconSource(): string {
   return jsxSnippet(
     IMPORT,
     alerta('', corpo(null, 'Atenção', 'Alert sem ícone mantém layout de coluna única.')),
@@ -214,7 +214,7 @@ export function alertSemIconeSource(): string {
  * assertivo e fica no snippet sem prop nenhuma, provando que a escolha do papel
  * é uma decisão de conteúdo, não de estilo.
  */
-export function alertSemAnuncioSource(): string {
+export function alertNoAnnouncementSource(): string {
   const nota = [
     '  <Alert role="note">',
     corpo(
@@ -263,7 +263,7 @@ export function alertInsercaoDinamicaSource(): string {
  * O alerta em si não é focável — o Tab chega direto ao botão interno, que é o
  * único ponto de interação da composição.
  */
-export function alertComAcaoSource(): string {
+export function alertWithActionSource(): string {
   return jsxSnippet(
     `import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -287,7 +287,7 @@ import { Info } from "lucide-react";`,
  * os subcomponentes. O que a story prova é a composição de classes, e por isso o
  * snippet precisa mostrar o `className` em cada peça, e não só na raiz.
  */
-export function alertClasseAdicionalSource(): string {
+export function alertClassNameAdicionalSource(): string {
   return jsxSnippet(
     `import { Alert, AlertAction, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";

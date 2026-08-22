@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { fn, userEvent, within, expect } from "storybook/test";
-import { reprovasDoDesabilitado } from "@shared/testing/checkbox-probe";
+import { disabledReprovas } from "@shared/testing/checkbox-probe";
 import { Checkbox } from "./checkbox";
 import {
-  checkboxDesabilitadoMarcadoSource,
-  checkboxDesabilitadoSource,
-  checkboxErroSource,
+  checkboxDisabledCheckedSource,
+  checkboxDisabledSource,
+  checkboxErrorSource,
   checkboxIndeterminadoSource,
-  checkboxMarcadoSource,
+  checkboxCheckedSource,
   checkboxSource,
 } from "./checkbox.source";
 
@@ -91,7 +91,7 @@ export const Checked: Story = {
     covers: ["visual.item2", "functional.item6"],
     docs: {
       // O arquivo desliga os controls: sem args, só a story diz que nasce marcada.
-      source: { transform: checkboxMarcadoSource },
+      source: { transform: checkboxCheckedSource },
       description: {
         story:
           "Estado marcado. Fundo --primary, CheckIcon visível, aria-checked=\"true\".",
@@ -151,12 +151,12 @@ export const Indeterminate: Story = {
 // opcional pelo tipo do primitivo, e `mockClear()` nele não compila; além disso,
 // o espião próprio não depende de quando o Storybook reseta os args entre
 // reexecuções do painel Interactions.
-const espiaoDesabilitado = fn();
+const spyDisabled = fn();
 
 export const Disabled: Story = {
   render: () => (
     <div className="nds-cluster" data-spacing="sm" data-disabled="true">
-      <Checkbox id="disabled" disabled onCheckedChange={espiaoDesabilitado} />
+      <Checkbox id="disabled" disabled onCheckedChange={spyDisabled} />
       <label htmlFor="disabled" className="nds-label">
         Receber notificações push
       </label>
@@ -166,7 +166,7 @@ export const Disabled: Story = {
     covers: ["functional.item4", "accessibility.item6"],
     docs: {
       // O esmaecimento é do grupo (data-disabled), não uma cor na caixa.
-      source: { transform: checkboxDesabilitadoSource },
+      source: { transform: checkboxDisabledSource },
       description: {
         story:
           "Estado desabilitado. Opacidade reduzida, cursor bloqueado. Continua alcançável pelo Tab e é anunciado como indisponível, mas não alterna.",
@@ -184,13 +184,13 @@ export const Disabled: Story = {
         // saiu daqui: ele lê o atributo nativo e ignora `aria-disabled`, então
         // afirmaria o contrário da decisão (peça fora da tabulação) e a forma
         // negada nem poderia falhar.
-        espiaoDesabilitado.mockClear();
-        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+        spyDisabled.mockClear();
+        await expect(await disabledReprovas(checkbox, FERRAMENTAS)).toEqual([]);
       },
     );
 
     await step("O callback de mudança não disparou em nenhuma das tentativas", async () => {
-      await expect(espiaoDesabilitado).not.toHaveBeenCalled();
+      await expect(spyDisabled).not.toHaveBeenCalled();
     });
   },
 };
@@ -208,7 +208,7 @@ export const DisabledChecked: Story = {
     covers: ["visual.item4"],
     docs: {
       // A combinação das duas props é o assunto: desabilitado não é vazio.
-      source: { transform: checkboxDesabilitadoMarcadoSource },
+      source: { transform: checkboxDisabledCheckedSource },
       description: {
         story:
           "Estado desabilitado e marcado simultaneamente. Mostra o estado de seleção sem permitir alteração.",
@@ -222,7 +222,7 @@ export const DisabledChecked: Story = {
     await step(
       "Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam",
       async () => {
-        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+        await expect(await disabledReprovas(checkbox, FERRAMENTAS)).toEqual([]);
       },
     );
 
@@ -250,7 +250,7 @@ export const Error: Story = {
     covers: ["visual.item5"],
     docs: {
       // A mensagem abaixo do par faz parte do estado — a caixa sozinha não o explica.
-      source: { transform: checkboxErroSource },
+      source: { transform: checkboxErrorSource },
       description: {
         story:
           "Estado de erro via aria-invalid=\"true\". Borda e ring --destructive. Use FormMessage para exibir a mensagem.",

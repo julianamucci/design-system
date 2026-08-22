@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './index';
 import ChartCardStory from './ChartCardStory.svelte';
-import { desenhoEscreve, desenhoPintado, exigirRaiz } from '@shared/testing/chart-probe';
-import { chartEmCardSource, chartSource, chartTituloNoDesenhoSource } from './chart.source';
+import { designEscreve, designPintado, exigirRoot } from '@shared/testing/chart-probe';
+import { chartEmCardSource, chartSource, designChartTitleSource } from './chart.source';
 
-const MESES = ['Jan', 'Fev', 'Mar', 'Abr'];
+const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr'];
 const SERIE_UNICA = [{ name: 'Vendas', data: [186, 305, 237, 73] }];
 
-const TITULO_DO_CARD = 'Acessos mensais';
-const TITULO_NO_DESENHO = 'Vendas mensais';
+const CARD_TITLE = 'Acessos mensais';
+const DESIGN_TITLE = 'Vendas mensais';
 
 const meta: Meta = {
   // Sem argTypes: sem isto o painel Controls abre vazio.
@@ -39,8 +39,8 @@ export const WithCard: Story = {
   render: () => ({
     Component: ChartCardStory,
     props: {
-      option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
-      title: TITULO_DO_CARD,
+      option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA }),
+      title: CARD_TITLE,
       description: 'Janeiro a abril, acessos no desktop.',
       label: 'Gráfico de barras: acessos mensais no desktop, de janeiro a abril',
       height: 200,
@@ -51,13 +51,13 @@ export const WithCard: Story = {
       const card = canvasElement.querySelector('[data-slot="card"]');
       await expect(card).not.toBeNull();
       await expect(card!.querySelector('[data-slot="card-title"]')?.textContent?.trim())
-        .toBe(TITULO_DO_CARD);
+        .toBe(CARD_TITLE);
     });
 
     await step('E o gráfico está DENTRO do card, não ao lado', async () => {
       const dentro = canvasElement.querySelector<HTMLElement>('[data-slot="card"] [data-slot="chart"]');
       await expect(dentro).not.toBeNull();
-      await waitFor(() => expect(desenhoPintado(dentro!)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(dentro!)).toBe(true), { timeout: 3000 });
     });
   },
 };
@@ -65,21 +65,21 @@ export const WithCard: Story = {
 export const InlineTitle: Story = {
   parameters: {
     docs: {
-      source: { transform: chartTituloNoDesenhoSource },
+      source: { transform: designChartTitleSource },
       description: { story: 'Título no próprio desenho: para quando o gráfico é servido sozinho, sem card em volta.' },
     },
   },
   args: {
-    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA, title: TITULO_NO_DESENHO }),
+    option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA, title: DESIGN_TITLE }),
     height: 260,
     class: 'nds-w-full',
   },
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O título do objeto de configuração é escrito dentro do desenho', async () => {
       await waitFor(
-        () => expect(desenhoEscreve(raiz, TITULO_NO_DESENHO)).toBe(true),
+        () => expect(designEscreve(raiz, DESIGN_TITLE)).toBe(true),
         { timeout: 3000 },
       );
     });

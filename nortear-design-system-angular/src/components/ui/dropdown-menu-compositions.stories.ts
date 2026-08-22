@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_DROPDOWN_MENU } from './dropdown-menu';
 import { NdsButton } from './button';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
   title: 'UI/DropdownMenu/Compositions',
@@ -13,7 +13,7 @@ const meta: Meta = {
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {
         component:
@@ -221,22 +221,22 @@ export const WithSubmenu: Story = {
   play: async ({ step }) => {
     const corpo = within(document.body);
     const menu = await waitForPortal('menu');
-    const subGatilho = within(menu).getByRole('menuitem', { name: 'Exportar' });
+    const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre um menu', async () => {
-      await expect(subGatilho.getAttribute('aria-haspopup')).toBe('menu');
-      await expect(subGatilho.getAttribute('aria-expanded')).toBe('false');
+      await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
     });
 
     await step('A seta para a direita abre o submenu', async () => {
       // Idempotente: a seta só é enviada com o submenu fechado.
-      if (subGatilho.getAttribute('aria-expanded') !== 'true') {
-        subGatilho.focus();
+      if (subTrigger.getAttribute('aria-expanded') !== 'true') {
+        subTrigger.focus();
         await userEvent.keyboard('{ArrowRight}');
       }
 
       await waitFor(async () => {
-        await expect(subGatilho.getAttribute('aria-expanded')).toBe('true');
+        await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
         await expect(corpo.getAllByRole('menu')).toHaveLength(2);
       });
     });
@@ -297,10 +297,10 @@ export const WithShortcuts: Story = {
       // atalho encosta na direita e o rótulo fica na esquerda.
       const item = canvas.getByRole('menuitem', { name: 'Colar Ctrl V' });
       const atalho = item.querySelector<HTMLElement>('[data-slot="dropdown-menu-shortcut"]')!;
-      const caixaDoItem = item.getBoundingClientRect();
-      const caixaDoAtalho = atalho.getBoundingClientRect();
-      const folgaDireita = caixaDoItem.right - caixaDoAtalho.right;
-      const folgaEsquerda = caixaDoAtalho.left - caixaDoItem.left;
+      const itemBox = item.getBoundingClientRect();
+      const shortcutBox = atalho.getBoundingClientRect();
+      const folgaDireita = itemBox.right - shortcutBox.right;
+      const folgaEsquerda = shortcutBox.left - itemBox.left;
       await expect(folgaDireita).toBeLessThan(folgaEsquerda);
     });
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   radioGroupWithDescriptionSnippet,
-  formSnippetRadioGroup,
+  formRadioGroupSnippet,
   radioGroupInvalidoSnippet,
   radioGroupSnippet,
   radioGroupSource,
@@ -101,7 +101,7 @@ describe('radioGroupInvalidoSnippet', () => {
 
 describe('radioGroupEmFormularioSnippet', () => {
   it('recolhe a escolha pelo FormData do submit, não por um callback por clique', () => {
-    const código = formSnippetRadioGroup({ name: 'payment' });
+    const código = formRadioGroupSnippet({ name: 'payment' });
     expect(código).toContain('new FormData(formulario)');
     expect(código).toContain("get('payment')");
     expect(código).toContain("type: 'submit'");

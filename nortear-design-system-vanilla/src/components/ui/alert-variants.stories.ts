@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { createAlert, createAlertIcon, createAlertTitle, createAlertDescription } from './alert';
 import { alertSource, alertSourceWith } from './alert.source';
 import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
-import { contrastePorTema, reprovasPorTema } from '@shared/testing/alert-probe';
+import { themeContrast, themeReprovas } from '@shared/testing/alert-probe';
 
 const meta: Meta = {
   tags: ['feedback'],
@@ -398,7 +398,7 @@ export const Contrast: Story = {
     // raiz da story, porque quem pinta por baixo do alert translúcido é o
     // `body` — com a classe só na raiz ele ficava no claro e toda variante
     // acusava ~1:1 no escuro, defeito que não existe.
-    const reprovas = reprovasPorTema(contrastePorTema(canvasElement));
+    const reprovas = themeReprovas(themeContrast(canvasElement));
     await expect(reprovas, reprovas.length ? `\n${reprovas.join('\n')}\n` : '').toEqual([]);
   },
 };

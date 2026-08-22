@@ -1,13 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { resolverCor } from '@shared/testing/cor';
+import { resolveColor } from '@shared/testing/cor';
 import { contrastesNosDoisModos } from '@shared/testing/form-probe';
 import { Input } from '@/components/ui/input';
 import { Fieldset, FormField } from './index';
 import {
-  formDesabilitadoSource,
+  formDisabledSource,
   formInvalidoSource,
-  formPaletaEscuraSource,
+  formPaletteDarkSource,
 } from './form.source';
 
 const meta: Meta = {
@@ -68,7 +68,7 @@ export const Invalid: Story = {
       // o literal quebraria a cada ajuste de paleta e não valeria nos temas de
       // marca. É a metade do item de contrato que ninguém verificava.
       await expect(getComputedStyle(mensagem).color).toBe(
-        resolverCor(campo, 'hsl(var(--destructive))'),
+        resolveColor(campo, 'hsl(var(--destructive))'),
       );
     });
 
@@ -102,7 +102,7 @@ export const Disabled: Story = {
     docs: {
       // Quem desliga é o controle, não o campo, e não há mensagem de erro — a do
       // `meta` mostraria as duas coisas trocadas.
-      source: { transform: formDesabilitadoSource },
+      source: { transform: formDisabledSource },
     },
   },
   render: () => ({
@@ -155,7 +155,7 @@ export const DarkPalette: Story = {
     docs: {
       // Três campos e um grupo numa pilha: a composição não existe em nenhuma
       // outra story, e a paleta vem do tema do documento, não da marcação.
-      source: { transform: formPaletaEscuraSource },
+      source: { transform: formPaletteDarkSource },
     },
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.

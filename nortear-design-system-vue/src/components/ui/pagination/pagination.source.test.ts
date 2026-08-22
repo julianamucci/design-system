@@ -4,13 +4,13 @@ import {
   paginationControladaSource,
   paginationDirecionalSource,
   paginationRangeSource,
-  paginationLinkAtivoSource,
-  paginationLinkInativoSource,
+  paginationLinkActiveSource,
+  paginationLinkInactiveSource,
   paginationFirstPageSource,
-  paginationRodapeDeTabelaSource,
+  tablePaginationFooterSource,
   paginationSimpleSource,
   paginationSource,
-  paginationUltimaPaginaSource,
+  paginationLastPageSource,
 } from './pagination.source';
 
 describe('paginationSource', () => {
@@ -142,13 +142,13 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de variante', () => {
   it('o link inativo não escreve a própria ênfase', () => {
-    const saida = paginationLinkInativoSource();
+    const saida = paginationLinkInactiveSource();
     expect(saida).toContain('<PaginationLink href="#" aria-label="Ir para página 2" @click.prevent>2</PaginationLink>');
     expect(saida).not.toContain('is-active');
   });
 
   it('a página atual se marca com `is-active`, e só uma por faixa', () => {
-    const saida = paginationLinkAtivoSource();
+    const saida = paginationLinkActiveSource();
     expect(saida.match(/:is-active="true"/g)).toHaveLength(1);
     // `aria-current` é o que o componente DERIVA de `is-active`; escrevê-lo à
     // mão ensinaria a duplicar o que a prop já faz.
@@ -182,7 +182,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a última página é o extremo oposto, com o recorte final de páginas', () => {
-    const saida = paginationUltimaPaginaSource();
+    const saida = paginationLastPageSource();
     expect(saida).toContain('const paginas = [8, 9, 10]');
     expect(saida).toContain('<Pagination :total="100" :items-per-page="10" :page="10">');
   });
@@ -196,7 +196,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o rodapé de tabela usa cluster, e a faixa encosta pelo alinhamento', () => {
-    const saida = paginationRodapeDeTabelaSource();
+    const saida = tablePaginationFooterSource();
     // Só o cluster tem `data-align`/`data-justify`, e é ele que quebra a linha
     // sozinho quando a largura aperta.
     expect(saida).toContain('class="nds-cluster nds-w-prose nds-border-default nds-rounded-lg nds-p-4"');
@@ -213,14 +213,14 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     paginationSource,
     paginationRangeSource,
     paginationFirstPageSource,
-    paginationLinkInativoSource,
-    paginationLinkAtivoSource,
+    paginationLinkInactiveSource,
+    paginationLinkActiveSource,
     paginationDirecionalSource,
     paginationSimpleSource,
     paginationWithEllipsisSource,
-    paginationUltimaPaginaSource,
+    paginationLastPageSource,
     paginationControladaSource,
-    paginationRodapeDeTabelaSource,
+    tablePaginationFooterSource,
   ];
 
   it('nenhuma traz o espião de contagem nem o nome de story no landmark', () => {

@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -96,7 +96,7 @@ export function toggleGroupSnippet(o: ToggleGroupSnippetOptions = {}): string {
 
   return snippet(
     [
-      importar('toggle-group', 'createToggleGroup', 'type ToggleGroupItem'),
+      importing('toggle-group', 'createToggleGroup', 'type ToggleGroupItem'),
       comIcone ? `import { ${[...new Set(icones)].join(', ')}, createElement } from 'lucide';` : undefined,
     ]
       .filter(Boolean)

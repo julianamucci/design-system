@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect } from 'storybook/test';
 import { NDS_NAVIGATION_MENU } from './navigation-menu';
-import { esperarPainel, popupAberto } from './navigation-menu.fixtures';
+import { waitForPanel, popupOpen } from './navigation-menu.fixtures';
 
 const meta: Meta = {
   title: 'UI/NavigationMenu/States',
@@ -66,7 +66,7 @@ export const Closed: Story = {
       // O portal DESMONTA ao fechar. O painel não é um bloco escondido: quem
       // navega com leitor de tela não o encontra, e nenhum link dele entra na
       // ordem de tabulação.
-      await expect(popupAberto()).toBeNull();
+      await expect(popupOpen()).toBeNull();
       await expect(canvas.queryByRole('link', { name: 'Plano Inicial' })).toBeNull();
     });
 
@@ -125,12 +125,12 @@ export const Open: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const gatilho = canvas.getByRole('button', { name: 'Produtos' });
-    const painel = await esperarPainel();
+    const painel = await waitForPanel();
     const popup = painel.closest<HTMLElement>('.nds-navigation-menu-popup');
 
     await step('O item nasce aberto e o gatilho reflete o estado', async () => {
       // `defaultValue` é o único input em jogo aqui: se ele não chegasse, a
-      // barra nasceria fechada e o `esperarPainel` acima já teria estourado.
+      // barra nasceria fechada e o `waitForPanel` acima já teria estourado.
       await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
       await expect(gatilho.hasAttribute('data-popup-open')).toBe(true);
       await expect(within(painel).getAllByRole('link')).toHaveLength(3);

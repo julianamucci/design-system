@@ -8,14 +8,14 @@ import { AlertCircle, CheckCircle2, Info as InfoIcon, TriangleAlert } from "luci
 import { Alert, AlertTitle, AlertDescription } from "./alert";
 import {
   alertAvisoSource,
-  alertContrasteSource,
-  alertDestrutivoSource,
+  alertContrastSource,
+  alertDestructiveSource,
   alertDispensavelSource,
   alertInfoSource,
   alertSource,
   alertSucessoSource,
 } from "./alert.source";
-import { contrastePorTema, reprovasPorTema } from "@shared/testing/alert-probe";
+import { themeContrast, themeReprovas } from "@shared/testing/alert-probe";
 
 const meta = {
   title: "UI/Alert/Variants",
@@ -56,7 +56,7 @@ export const Destructive: Story = {
   parameters: {
     covers: ["functional.item2"],
     // Controls desligados no arquivo: sem args o meta imprimiria a default.
-    docs: { source: { transform: alertDestrutivoSource } },
+    docs: { source: { transform: alertDestructiveSource } },
   },
   render: () => (
     <Alert variant="destructive">
@@ -325,7 +325,7 @@ export const Contrast: Story = {
     covers: ["accessibility.item3"],
     docs: {
       // A comparação entre as cinco é o assunto; um alerta sozinho a esconderia.
-      source: { transform: alertContrasteSource },
+      source: { transform: alertContrastSource },
       description: {
         story:
           "Título e texto de cada variante medidos contra o fundo composto, nos três temas de marca e nos dois modos. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.",
@@ -363,7 +363,7 @@ export const Contrast: Story = {
     // raiz da story, porque quem pinta por baixo do alert translúcido é o
     // `body` — com a classe só na raiz ele ficava no claro e toda variante
     // acusava ~1:1 no escuro, defeito que não existe.
-    const reprovas = reprovasPorTema(contrastePorTema(canvasElement));
+    const reprovas = themeReprovas(themeContrast(canvasElement));
     await expect(reprovas, reprovas.length ? `\n${reprovas.join("\n")}\n` : "").toEqual([]);
   },
 };

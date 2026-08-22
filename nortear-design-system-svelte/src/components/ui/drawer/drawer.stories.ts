@@ -181,11 +181,11 @@ export const Playground: Story = {
 
     await step('5. O botão de fechar do rodapé fecha e devolve o foco ao gatilho', async () => {
       const painel = await abrir(trigger);
-      const espiao = args.onCancel as ReturnType<typeof fn>;
-      const chamadasAntes = espiao.mock.calls.length;
+      const spy = args.onCancel as ReturnType<typeof fn>;
+      const callsBefore = spy.mock.calls.length;
       await userEvent.click(within(painel).getByRole('button', { name: ROTULO.cancelar }));
       await waitForPortalGone('dialog');
-      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 1);
+      await expect(spy.mock.calls.length).toBe(callsBefore + 1);
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error('o foco não voltou ao gatilho');

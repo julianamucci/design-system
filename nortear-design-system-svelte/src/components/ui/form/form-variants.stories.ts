@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, within } from 'storybook/test';
 import FormFieldStory from './FormFieldStory.svelte';
 import {
-  formComDescricaoSource,
-  formRotuloEControleSource,
+  formWithDescriptionSource,
+  formLabelEControleSource,
   formSource,
 } from './form.source';
 
@@ -36,7 +36,7 @@ export const LabelAndControl: Story = {
   // peças, não duas.
   parameters: {
     covers: ['visual.item1'],
-    docs: { source: { transform: formRotuloEControleSource } },
+    docs: { source: { transform: formLabelEControleSource } },
   },
   render: () => ({
     Component: FormFieldStory,
@@ -63,7 +63,7 @@ export const LabelAndControl: Story = {
 export const WithDescription: Story = {
   parameters: {
     covers: ['functional.item3', 'visual.item2'],
-    docs: { source: { transform: formComDescricaoSource } },
+    docs: { source: { transform: formWithDescriptionSource } },
   },
   render: () => ({
     Component: FormFieldStory,

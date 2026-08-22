@@ -5,8 +5,8 @@ import { Alert, AlertAction, AlertTitle, AlertDescription } from './index';
 import { Button } from '@/components/ui/button';
 import { Info } from 'lucide-vue-next';
 import {
-  alertClasseAdicionalSource,
-  alertComAcaoSource,
+  alertClassNameAdicionalSource,
+  alertWithActionSource,
   alertWithIconSource,
   alertLayoutNoIconSource,
 } from './alert.source';
@@ -51,7 +51,7 @@ export const WithAction: Story = {
   parameters: {
     // Entra um subcomponente e um botão dentro dele: sub-composição que a do
     // meta esconderia.
-    docs: { source: { transform: alertComAcaoSource } },
+    docs: { source: { transform: alertWithActionSource } },
   },
   render: () => ({
     components: { Alert, AlertAction, AlertTitle, AlertDescription, Button, Info },
@@ -103,7 +103,7 @@ export const AdditionalClass: Story = {
   parameters: {
     // O assunto é a classe em CADA subcomponente — sem elas escritas, o
     // exemplo não mostra nada.
-    docs: { source: { transform: alertClasseAdicionalSource } },
+    docs: { source: { transform: alertClassNameAdicionalSource } },
   },
   render: () => ({
     components: { Alert, AlertAction, AlertTitle, AlertDescription, Button, Info },

@@ -869,11 +869,11 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly doDontPairs = computed(() => {
     dict();
-    const pares: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
+    const pairs: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
       [this.tplDoDont1Do(), this.tplDoDont1Dont()],
       [this.tplDoDont2Do(), this.tplDoDont2Dont()],
     ];
-    return pares.map(([doTpl, dontTpl], i) => ({
+    return pairs.map(([doTpl, dontTpl], i) => ({
       doLabel: tNav('common.do'),
       dontLabel: tNav('common.dont'),
       doCaption: toPlainText(t(`doDont.pair${i + 1}.do`)),
@@ -885,7 +885,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly variantItems = computed(() => {
     dict();
-    const porDirecao = [
+    const byDirection = [
       { key: 'bottom' as const, tpl: this.tplVarBottom() },
       { key: 'top' as const,    tpl: this.tplVarTop()    },
       { key: 'left' as const,   tpl: this.tplVarLeft()   },
@@ -903,7 +903,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
     // chave crua, porque `t()` de um caminho que aponta para objeto devolve a
     // própria chave.
     return [
-      ...porDirecao,
+      ...byDirection,
       {
         name: t('variants.items.withScroll.name'),
         description: stripHtml(t('variants.items.withScroll.description')),

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-  drawerComConfirmacaoSource,
-  drawerComFormularioSource,
-  drawerComRolagemSource,
+  drawerWithConfirmSource,
+  drawerWithFormSource,
+  drawerWithScrollSource,
   drawerSource,
 } from './drawer.source';
 
@@ -94,7 +94,7 @@ describe('drawerSource', () => {
 
 describe('transforms das stories de composição', () => {
   it('a composição com formulário abre à direita e rotula os dois campos', () => {
-    const saida = drawerComFormularioSource();
+    const saida = drawerWithFormSource();
     expect(saida).toContain('direction="right"');
     expect(saida).toContain('<Label for="drawer-nome">Nome</Label>');
     expect(saida).toContain('<Label for="drawer-email">E-mail</Label>');
@@ -102,13 +102,13 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a confirmação usa o corpo do painel para a mensagem curta', () => {
-    const saida = drawerComConfirmacaoSource();
+    const saida = drawerWithConfirmSource();
     expect(saida).toContain('<DrawerBody class="nds-text-body nds-text-muted-foreground">');
     expect(saida).toContain('<Button>Remover</Button>');
   });
 
   it('o corpo rolável não leva altura cravada — quem rola é o corpo', () => {
-    const saida = drawerComRolagemSource();
+    const saida = drawerWithScrollSource();
     expect(saida).toContain('<DrawerBody');
     expect(saida).not.toContain('height');
     expect(saida).not.toContain('style=');

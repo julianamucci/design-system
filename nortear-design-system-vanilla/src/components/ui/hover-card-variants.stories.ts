@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import {
-  esperarAberto,
-  esperarFechado,
-  painelAberto,
+  waitForOpen,
+  waitForClosed,
+  panelOpen,
 } from '@shared/testing/hover-card-probe';
 import { createHoverCard } from './hover-card';
 import { hoverCardSource, hoverCardSourceWith } from './hover-card.source';
@@ -60,7 +60,7 @@ export const Default: Story = {
     const canvas = within(canvasElement);
 
     await step('Sem atraso escrito na chamada, o cartão usa o padrão da factory', async () => {
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(within(painel).getByText(/600ms/)).toBeVisible();
       await expect(canvas.getByRole('link')).toBeVisible();
@@ -111,13 +111,13 @@ export const WithShortDelay: Story = {
 
     // Estado conhecido: a play reexecuta no mesmo DOM pelo painel Interactions.
     await userEvent.keyboard('{Escape}');
-    await esperarFechado();
+    await waitForClosed();
 
     await step('O cartão abre depois da espera pedida na chamada', async () => {
-      await expect(painelAberto()).toBeNull();
+      await expect(panelOpen()).toBeNull();
       const inicio = performance.now();
       await userEvent.hover(gatilho);
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       await expect(within(painel).getByText('Guia de overlays acessíveis')).toBeVisible();
 

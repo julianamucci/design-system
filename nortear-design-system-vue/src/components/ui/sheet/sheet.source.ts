@@ -32,12 +32,12 @@ const LABEL_TRIGGER = 'Abrir filtros';
  * `SheetOverlay` não entra em lista nenhuma: ele não é exportado do pacote — o
  * conteúdo monta a camada por dentro. Quem escrevesse o import não compilaria.
  */
-function importar(pecas: string[]): string {
-  const lista = [...new Set(['Sheet', ...pecas])].sort();
-  return `import {\n${lista.map((peca) => `  ${peca},`).join('\n')}\n} from '@/components/ui/sheet'`;
+function importing(parts: string[]): string {
+  const lista = [...new Set(['Sheet', ...parts])].sort();
+  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/sheet'`;
 }
 
-const BOTAO = `import { Button } from '@/components/ui/button'`;
+const BUTTON = `import { Button } from '@/components/ui/button'`;
 const CAMPO = `import { Input } from '@/components/ui/input'\nimport { Label } from '@/components/ui/label'`;
 
 /** Cabeçalho: o título é o nome acessível do painel, a descrição é a descrição. */
@@ -86,7 +86,7 @@ export const sheetPlaygroundSource: SourceTransform<SheetArgs> = (_gerado, ctx) 
     attrBool('show-close-button', args.showCloseButton, true),
   );
   return vueSnippet(
-    `${importar([
+    `${importing([
       'SheetClose',
       'SheetContent',
       'SheetDescription',
@@ -94,7 +94,7 @@ export const sheetPlaygroundSource: SourceTransform<SheetArgs> = (_gerado, ctx) 
       'SheetHeader',
       'SheetTitle',
       'SheetTrigger',
-    ])}\n${BOTAO}`,
+    ])}\n${BUTTON}`,
     `<Sheet${raiz}>
 ${GATILHO(texto(args.triggerLabel, LABEL_TRIGGER))}
   <SheetContent${conteudo}>
@@ -114,7 +114,7 @@ ${rodape('Cancelar', 'Aplicar filtros', 4)}
  */
 function lado(side: string, titulo: string): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'SheetClose',
       'SheetContent',
       'SheetDescription',
@@ -122,7 +122,7 @@ function lado(side: string, titulo: string): string {
       'SheetHeader',
       'SheetTitle',
       'SheetTrigger',
-    ])}\n${BOTAO}`,
+    ])}\n${BUTTON}`,
     `<Sheet default-open>
 ${GATILHO(LABEL_TRIGGER)}
   <SheetContent${attrs(attr('side', side, 'right'))}>
@@ -139,17 +139,17 @@ export function sheetSideDireitoSource(): string {
 }
 
 /** Esquerda: a direção da navegação secundária. */
-export function sheetLadoEsquerdoSource(): string {
+export function sheetSideEsquerdoSource(): string {
   return lado('left', 'Painel esquerdo');
 }
 
 /** Topo: largura inteira, altura pelo conteúdo. */
-export function sheetLadoSuperiorSource(): string {
+export function sheetSideSuperiorSource(): string {
   return lado('top', 'Painel superior');
 }
 
 /** Base: o mesmo desenho do Drawer, sem o gesto de arrastar. */
-export function sheetLadoInferiorSource(): string {
+export function sheetSideInferiorSource(): string {
   return lado('bottom', 'Painel inferior');
 }
 
@@ -159,13 +159,13 @@ export function sheetLadoInferiorSource(): string {
  */
 export function sheetClosedSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'SheetContent',
       'SheetDescription',
       'SheetHeader',
       'SheetTitle',
       'SheetTrigger',
-    ])}\n${BOTAO}`,
+    ])}\n${BUTTON}`,
     `<Sheet>
 ${GATILHO(LABEL_TRIGGER)}
   <SheetContent>
@@ -176,9 +176,9 @@ ${cabecalho('Filtros avançados', 'Configure os filtros para refinar os resultad
 }
 
 /** Aberto de saída, sem estado externo nenhum: `default-open` e mais nada. */
-export function sheetAbertoSource(): string {
+export function sheetOpenSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'SheetClose',
       'SheetContent',
       'SheetDescription',
@@ -186,7 +186,7 @@ export function sheetAbertoSource(): string {
       'SheetHeader',
       'SheetTitle',
       'SheetTrigger',
-    ])}\n${BOTAO}`,
+    ])}\n${BUTTON}`,
     `<Sheet default-open>
 ${GATILHO(LABEL_TRIGGER)}
   <SheetContent>
@@ -201,16 +201,16 @@ ${rodape('Cancelar', 'Aplicar filtros', 4)}
  * Sem o botão do canto. Só se sustenta porque o rodapé oferece a saída — a
  * lição é o par, não a prop sozinha.
  */
-export function sheetSemBotaoFecharSource(): string {
+export function sheetNoButtonCloseSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'SheetClose',
       'SheetContent',
       'SheetDescription',
       'SheetFooter',
       'SheetHeader',
       'SheetTitle',
-    ])}\n${BOTAO}`,
+    ])}\n${BUTTON}`,
     `<Sheet default-open>
   <SheetContent :show-close-button="false">
 ${cabecalho('Aceitar atualização', 'Uma nova versão está disponível. Continue para atualizar.', 4)}
@@ -225,10 +225,10 @@ ${rodape('Mais tarde', 'Atualizar agora', 4)}
  * mudança. Sem devolver, o painel fecharia na tela e o valor continuaria `true`
  * — e ele reabriria no render seguinte.
  */
-export function sheetControladoSource(): string {
+export function sheetControlledSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
-${importar([
+${importing([
   'SheetClose',
   'SheetContent',
   'SheetDescription',
@@ -236,7 +236,7 @@ ${importar([
   'SheetHeader',
   'SheetTitle',
 ])}
-${BOTAO}
+${BUTTON}
 
 const aberto = ref(false)`,
     `<div class="nds-stack" data-spacing="sm">
@@ -274,9 +274,9 @@ ${p}</div>`;
  * separa o corpo rolável do rodapé fixo — sem ele o rodapé rola junto e as
  * ações sobem para fora de alcance.
  */
-export function sheetFiltrosAvancadosSource(): string {
+export function sheetFiltersAvancadosSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'SheetBody',
       'SheetClose',
       'SheetContent',
@@ -285,7 +285,7 @@ export function sheetFiltrosAvancadosSource(): string {
       'SheetHeader',
       'SheetTitle',
     ])}
-${BOTAO}
+${BUTTON}
 ${CAMPO}`,
     `<Sheet default-open>
   <SheetContent>
@@ -309,7 +309,7 @@ ${rodape('Cancelar', 'Aplicar filtros', 4)}
  */
 export function sheetEditPerfilSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'SheetBody',
       'SheetClose',
       'SheetContent',
@@ -318,7 +318,7 @@ export function sheetEditPerfilSource(): string {
       'SheetHeader',
       'SheetTitle',
     ])}
-${BOTAO}
+${BUTTON}
 ${CAMPO}`,
     `<Sheet default-open>
   <SheetContent>
@@ -358,7 +358,7 @@ export function sheetNavigationSecundariaSource(): string {
     )
     .join('\n');
   return vueSnippet(
-    importar([
+    importing([
       'SheetBody',
       'SheetContent',
       'SheetDescription',
@@ -385,7 +385,7 @@ ${links}
  */
 export function sheetFormLongSource(): string {
   return vueSnippet(
-    `${importar([
+    `${importing([
       'SheetBody',
       'SheetClose',
       'SheetContent',
@@ -394,7 +394,7 @@ export function sheetFormLongSource(): string {
       'SheetHeader',
       'SheetTitle',
     ])}
-${BOTAO}
+${BUTTON}
 ${CAMPO}`,
     `<Sheet default-open>
   <SheetContent>

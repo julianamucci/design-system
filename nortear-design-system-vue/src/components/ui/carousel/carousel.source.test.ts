@@ -2,14 +2,14 @@ import { describe, expect, it } from 'vitest';
 import {
   carouselArrastarSource,
   carouselAutoplaySource,
-  carouselComDotsSource,
+  carouselWithDotsSource,
   carouselGaleriaSource,
   carouselHorizontalSource,
   carouselItemUnicoSource,
   carouselMultiResponsivoSource,
   carouselFirstSlideSource,
   carouselSource,
-  carouselUltimoSlideSource,
+  carouselLastSlideSource,
   carouselVerticalSource,
 } from './carousel.source';
 
@@ -89,12 +89,12 @@ describe('transforms das stories de variante e estado', () => {
 
   it('os extremos saem de uma opção do motor, não de navegação na play', () => {
     expect(carouselFirstSlideSource()).toContain('const opts = { startIndex: 0 }');
-    expect(carouselUltimoSlideSource()).toContain(
+    expect(carouselLastSlideSource()).toContain(
       'const opts = { startIndex: slides.length - 1 }',
     );
     // O estado das setas é calculado pelo componente: escrevê-lo à mão no
     // snippet ensinaria uma prop que não existe.
-    expect(carouselUltimoSlideSource()).not.toContain('disabled');
+    expect(carouselLastSlideSource()).not.toContain('disabled');
   });
 });
 
@@ -138,13 +138,13 @@ describe('transforms das stories de composição', () => {
   });
 
   it('os dots se montam sobre a instância que o componente entrega', () => {
-    const saida = carouselComDotsSource();
+    const saida = carouselWithDotsSource();
     expect(saida).toContain('@init-api="aoIniciar"');
     expect(saida).toContain('@click="api?.scrollTo(i)"');
   });
 
   it('o dot é botão comum, e só o atual carrega aria-current', () => {
-    const saida = carouselComDotsSource();
+    const saida = carouselWithDotsSource();
     expect(saida).toContain('type="button"');
     expect(saida).toContain(`:aria-current="atual === i ? 'true' : null"`);
     // Nem `tablist` nem `tab`: o controle não comanda painel nenhum.
@@ -154,7 +154,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o rótulo visível do dot é um pedaço do nome acessível (WCAG 2.5.3)', () => {
-    const saida = carouselComDotsSource();
+    const saida = carouselWithDotsSource();
     expect(saida).toContain('Ir para o slide ${i + 1} de ${slides.length}');
     expect(saida).toContain('<span class="nds-carousel-dot-label">Slide {{ i + 1 }}</span>');
   });

@@ -46,10 +46,10 @@
 import catalogoBruto from '../content/icons/lucide-icons.json';
 
 /** Um nó do desenho: `[tag, atributos]` — o mesmo formato do `IconNode`. */
-export type NoDeIcone = [string, Record<string, string>];
+export type IconNo = [string, Record<string, string>];
 
 /** Nome do ícone em PascalCase → lista de nós que compõem o desenho. */
-export const CATALOGO_LUCIDE = catalogoBruto as unknown as Record<string, NoDeIcone[]>;
+export const CATALOGO_LUCIDE = catalogoBruto as unknown as Record<string, IconNo[]>;
 
 /** Nomes em ordem alfabética — a ordem em que o JSON foi gerado. */
 export const NOMES_DE_ICONE: string[] = Object.keys(CATALOGO_LUCIDE);
@@ -58,7 +58,7 @@ export const NOMES_DE_ICONE: string[] = Object.keys(CATALOGO_LUCIDE);
  * Atributos do `<svg>` raiz de todo ícone lucide. Sem `width`/`height`: o
  * tamanho vem de classe (`nds-icon`, `nds-icon-lg`), nunca de atributo.
  */
-export const ATRIBUTOS_DO_SVG: Record<string, string> = {
+export const SVG_ATTRS: Record<string, string> = {
   xmlns: 'http://www.w3.org/2000/svg',
   viewBox: '0 0 24 24',
   fill: 'none',
@@ -87,7 +87,7 @@ function serializar(atributos: Record<string, string>): string {
  * entrada externa neste caminho, que é o caso que a guideline 09 chama de "SVG
  * inline hardcoded".
  */
-export function montarSvgDoIcone(nos: NoDeIcone[], classe: string): string {
+export function montarSvgDoIcone(nos: IconNo[], classe: string): string {
   const interior = nos.map(([tag, atributos]) => `<${tag} ${serializar(atributos)}/>`).join('');
-  return `<svg ${serializar(ATRIBUTOS_DO_SVG)} class="${classe}" aria-hidden="true">${interior}</svg>`;
+  return `<svg ${serializar(SVG_ATTRS)} class="${classe}" aria-hidden="true">${interior}</svg>`;
 }

@@ -1,21 +1,21 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
 import {
-  desenhoEscreve,
-  desenhoPintado,
-  exigirRaiz,
-  formasDeDado,
+  designEscreve,
+  designPintado,
+  exigirRoot,
+  datumFormas,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
 import { chartSource, chartSourceWith } from './chart.source';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
-const MESES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
 const ACESSOS = [186, 305, 237, 73, 209, 214];
 
-const chartData = MESES.map((label, i) => ({ label, value: ACESSOS[i] }));
+const chartData = MONTHS.map((label, i) => ({ label, value: ACESSOS[i] }));
 
 const SERIES_MULTI = [
   { name: 'Desktop', data: ACESSOS },
@@ -89,16 +89,16 @@ export const Bar: Story = {
     'aria-label': 'Gráfico de barras: acessos mensais no desktop, de janeiro a junho',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho sai, com uma forma por categoria', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('Toda categoria aparece escrita no eixo', async () => {
-      for (const mes of MESES) {
-        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      for (const mes of MONTHS) {
+        await expect(designEscreve(raiz, mes)).toBe(true);
       }
     });
 
@@ -126,7 +126,7 @@ export const Line: Story = {
     },
   },
   render: () => createChart({
-    xAxis: MESES,
+    xAxis: MONTHS,
     series: SERIES_MULTI,
     type: 'line',
     height: 240,
@@ -134,10 +134,10 @@ export const Line: Story = {
     'aria-label': 'Gráfico de linhas: acessos mensais por dispositivo, de janeiro a junho',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('Uma linha traçada por série', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
       await waitFor(
         () => expect(tracados(raiz).length).toBeGreaterThanOrEqual(SERIES_MULTI.length),
         { timeout: 3000 },
@@ -151,13 +151,13 @@ export const Line: Story = {
 
     await step('A legenda nomeia cada série por escrito', async () => {
       for (const serie of SERIES_MULTI) {
-        await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+        await expect(designEscreve(raiz, serie.name)).toBe(true);
       }
     });
 
     await step('Toda categoria aparece escrita no eixo', async () => {
-      for (const mes of MESES) {
-        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      for (const mes of MONTHS) {
+        await expect(designEscreve(raiz, mes)).toBe(true);
       }
     });
   },
@@ -182,7 +182,7 @@ export const Area: Story = {
     },
   },
   render: () => createChart({
-    xAxis: MESES,
+    xAxis: MONTHS,
     series: SERIES_MULTI,
     type: 'area',
     height: 240,
@@ -190,10 +190,10 @@ export const Area: Story = {
     'aria-label': 'Gráfico de área: volume mensal de acessos por dispositivo',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O traçado continua lá — a área é acréscimo, não troca', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
       await waitFor(
         () => expect(tracados(raiz).length).toBeGreaterThanOrEqual(SERIES_MULTI.length),
         { timeout: 3000 },
@@ -212,8 +212,8 @@ export const Area: Story = {
     });
 
     await step('Toda categoria aparece escrita no eixo', async () => {
-      for (const mes of MESES) {
-        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      for (const mes of MONTHS) {
+        await expect(designEscreve(raiz, mes)).toBe(true);
       }
     });
   },
@@ -248,12 +248,12 @@ export const Pie: Story = {
     'aria-label': 'Distribuição de acessos por dispositivo: desktop, mobile e tablet',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho sai com uma forma por fatia', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
       await waitFor(
-        () => expect(formasDeDado(raiz).length).toBeGreaterThanOrEqual(pieData.length),
+        () => expect(datumFormas(raiz).length).toBeGreaterThanOrEqual(pieData.length),
         { timeout: 3000 },
       );
     });
@@ -262,13 +262,13 @@ export const Pie: Story = {
       // Numa rosca a fatia não tem eixo que a nomeie: sem a legenda escrita, a
       // única pista da categoria seria a cor.
       for (const ponto of pieData) {
-        await expect(desenhoEscreve(raiz, ponto.label)).toBe(true);
+        await expect(designEscreve(raiz, ponto.label)).toBe(true);
       }
     });
 
     await step('Cada fatia usa um token de cor distinto', async () => {
       const cores = new Set(
-        formasDeDado(raiz)
+        datumFormas(raiz)
           .map((f) => getComputedStyle(f).fill)
           // A trama sobreposta entra como `url(#…)` e não é cor de série.
           .filter((cor) => !cor.startsWith('url')),

@@ -7,8 +7,8 @@ import {
   CollapsibleContent,
 } from "./collapsible";
 import {
-  collapsibleComBotaoSource,
-  collapsibleComIconeSource,
+  collapsibleWithButtonSource,
+  collapsibleWithIconSource,
   collapsibleEstruturadoSource,
   collapsibleSource,
 } from "./collapsible.source";
@@ -57,7 +57,7 @@ export const WithCustomButton: Story = {
   parameters: {
     covers: ["functional.item5"],
     // A variante de botão fica no gatilho, não na raiz: não há arg que a descreva.
-    docs: { source: { transform: collapsibleComBotaoSource } },
+    docs: { source: { transform: collapsibleWithButtonSource } },
   },
   render: () => (
     <Collapsible className="nds-w-sm">
@@ -107,7 +107,7 @@ export const WithIconInTrigger: Story = {
     covers: ["accessibility.item4", "visual.item4"],
     // Dois ícones no gatilho, os dois fora da árvore de acessibilidade — é a
     // sub-composição que o snippet do meta esconderia.
-    docs: { source: { transform: collapsibleComIconeSource } },
+    docs: { source: { transform: collapsibleWithIconSource } },
   },
   render: () => (
     <Collapsible className="nds-w-sm">

@@ -94,14 +94,14 @@ export const Bottom: Story = {
   render: painel('bottom'),
   play: async ({ step }) => {
     await step('O painel encosta na base e mostra a alça', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
-      await expect(painelEl).toHaveClass(/nds-drawer-content/);
-      await expect(painelEl).toHaveAccessibleName();
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
+      await expect(panelEl).toHaveClass(/nds-drawer-content/);
+      await expect(panelEl).toHaveAccessibleName();
 
       // A alça só é visível nesta direção — o CSS compartilhado a esconde nas
       // outras. Contraste e cor do painel são verificados pelo axe da story.
-      const alca = painelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      const alca = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(alca).display).toBe('block');
     });
   },
@@ -121,12 +121,12 @@ export const Top: Story = {
   render: painel('top'),
   play: async ({ step }) => {
     await step('O painel encosta no topo e esconde a alça', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'top');
-      await expect(painelEl).toHaveClass(/nds-drawer-content/);
-      await expect(painelEl).toHaveAccessibleName();
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'top');
+      await expect(panelEl).toHaveClass(/nds-drawer-content/);
+      await expect(panelEl).toHaveAccessibleName();
 
-      const alca = painelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      const alca = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(alca).display).toBe('none');
     });
   },
@@ -146,12 +146,12 @@ export const Left: Story = {
   render: painel('left'),
   play: async ({ step }) => {
     await step('O painel encosta na borda esquerda', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'left');
-      await expect(painelEl).toHaveClass(/nds-drawer-content/);
-      await expect(painelEl).toHaveAccessibleName();
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'left');
+      await expect(panelEl).toHaveClass(/nds-drawer-content/);
+      await expect(panelEl).toHaveAccessibleName();
       // Ocupa a altura inteira, ao contrário de bottom/top.
-      await expect(painelEl.getBoundingClientRect().left).toBeLessThan(1);
+      await expect(panelEl.getBoundingClientRect().left).toBeLessThan(1);
     });
   },
 };
@@ -170,11 +170,11 @@ export const Right: Story = {
   render: painel('right'),
   play: async ({ step }) => {
     await step('O painel encosta na borda direita', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'right');
-      await expect(painelEl).toHaveClass(/nds-drawer-content/);
-      await expect(painelEl).toHaveAccessibleName();
-      const caixa = painelEl.getBoundingClientRect();
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'right');
+      await expect(panelEl).toHaveClass(/nds-drawer-content/);
+      await expect(panelEl).toHaveAccessibleName();
+      const caixa = panelEl.getBoundingClientRect();
       await expect(Math.abs(caixa.right - window.innerWidth)).toBeLessThan(2);
     });
   },
@@ -225,16 +225,16 @@ export const WithScroll: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painelEl = await waitForPortal('dialog');
-    const corpo = painelEl.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
-    const rodape = painelEl.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
+    const panelEl = await waitForPortal('dialog');
+    const corpo = panelEl.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
+    const rodape = panelEl.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
 
     await step('O corpo é quem rola, não o painel', async () => {
       await expect(corpo).not.toBeNull();
       await expect(corpo.scrollHeight).toBeGreaterThan(corpo.clientHeight);
       // O painel em si não rola: o mínimo automático zero de um item com
       // overflow é o que faz o corpo ceder altura em vez de esticar a caixa.
-      await expect(painelEl.scrollHeight).toBeLessThanOrEqual(painelEl.clientHeight + 1);
+      await expect(panelEl.scrollHeight).toBeLessThanOrEqual(panelEl.clientHeight + 1);
     });
 
     await step('A região rolável é alcançável por teclado', async () => {
@@ -244,10 +244,10 @@ export const WithScroll: Story = {
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
-      const caixaRodape = rodape.getBoundingClientRect();
-      const caixaPainel = painelEl.getBoundingClientRect();
-      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
-      await expect(caixaRodape.height).toBeGreaterThan(0);
+      const boxFooter = rodape.getBoundingClientRect();
+      const boxPanel = panelEl.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

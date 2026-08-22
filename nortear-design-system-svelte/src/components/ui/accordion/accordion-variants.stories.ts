@@ -6,8 +6,8 @@ import { Accordion } from './index';
 import AccordionStory from './AccordionStory.svelte';
 import AccordionControlledStory from './AccordionControlledStory.svelte';
 import {
-  accordionControladoSource,
-  segundoClickSourceAccordionFecha,
+  accordionControlledSource,
+  segundoClickAccordionFechaSource,
   accordionMultiploSource,
   accordionSource,
 } from './accordion.source';
@@ -120,7 +120,7 @@ export const CloseOnSecondClick: Story = {
   parameters: {
     covers: ['functional.item2'],
     docs: {
-      source: { transform: segundoClickSourceAccordionFecha },
+      source: { transform: segundoClickAccordionFechaSource },
       description: {
         story: 'Modo único sem nenhuma configuração extra: clicar de novo no item aberto o fecha.',
       },
@@ -188,7 +188,7 @@ export const Controlled: StoryObj<Record<string, never>> = {
   parameters: {
     covers: ['functional.item6'],
     docs: {
-      source: { transform: accordionControladoSource },
+      source: { transform: accordionControlledSource },
       description: {
         story: 'Modo controlado. value e onValueChange gerenciam o estado externamente. O indicador acima mostra o item ativo.',
       },

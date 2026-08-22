@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  resizableAninhadoSource,
+  resizableNestedSource,
   resizableArrastandoSource,
-  resizableComPegadorSource,
+  resizableWithGrabberSource,
   resizableEditorSource,
   resizableFaixasSource,
-  resizableFocoSource,
+  resizableFocusSource,
   resizableHorizontalSource,
   resizableLimitesSource,
   resizableSidebarConsoleSource,
@@ -18,11 +18,11 @@ const TODAS = [
   resizableSource(),
   resizableHorizontalSource(),
   resizableVerticalSource(),
-  resizableAninhadoSource(),
-  resizableComPegadorSource(),
+  resizableNestedSource(),
+  resizableWithGrabberSource(),
   resizableArrastandoSource(),
   resizableLimitesSource(),
-  resizableFocoSource(),
+  resizableFocusSource(),
   resizableTravadoSource(),
   resizableEditorSource(),
   resizableFaixasSource(),
@@ -117,7 +117,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o aninhado tem dois grupos, e o de dentro tem eixo próprio', () => {
-    const saida = resizableAninhadoSource();
+    const saida = resizableNestedSource();
     expect([...saida.matchAll(/<ResizablePanelGroup/g)]).toHaveLength(2);
     expect(saida).toContain('<ResizablePanelGroup direction="vertical">');
     // O grupo de dentro entra COMO conteúdo de um painel do de fora.
@@ -125,7 +125,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o pegador é flag do divisor, e não muda o nome acessível', () => {
-    const saida = resizableComPegadorSource();
+    const saida = resizableWithGrabberSource();
     expect(saida).toContain('<ResizableHandle with-handle aria-label="Redimensionar painéis — use setas" />');
     // O pegador é desenho: nenhum texto entra nele, senão comporia o nome.
     expect(saida).not.toContain('nds-resizable-grip-bar');
@@ -144,7 +144,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a story de foco mostra a linha nua', () => {
-    const saida = resizableFocoSource();
+    const saida = resizableFocusSource();
     expect(saida).not.toContain('with-handle');
     // O componente já põe o divisor na ordem de tabulação; escrever tabindex
     // ensinaria um atributo que ninguém precisa passar.

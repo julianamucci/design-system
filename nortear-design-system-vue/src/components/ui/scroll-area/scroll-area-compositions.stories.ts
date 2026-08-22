@@ -5,7 +5,7 @@ import { ScrollArea, ScrollBar } from './index';
 import {
   scrollAreaGaleriaSource,
   scrollAreaSidebarSource,
-  scrollAreaTabelaSource,
+  scrollAreaTableSource,
 } from './scroll-area.source';
 
 const meta = {
@@ -197,7 +197,7 @@ export const WideTable: Story = {
   parameters: {
     docs: {
       // Tabela rolando nos dois eixos é outra composição inteira.
-      source: { transform: scrollAreaTabelaSource },
+      source: { transform: scrollAreaTableSource },
       description: {
         story:
           'Tabela ampla com scroll bidirecional — o cabeçalho acompanha o conteúdo, como no Vanilla; barra vertical e horizontal montadas.',

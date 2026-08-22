@@ -2,13 +2,13 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption, CHART_EMPTY_LABEL } from './index';
 import {
-  desenhoEscreve, desenhoPintado, exigirRaiz, formasDeDado,
+  designEscreve, designPintado, exigirRoot, datumFormas,
 } from '@shared/testing/chart-probe';
 import ChartDocs from '@/components/docs/ChartDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { chartSource } from './chart.source';
 
-const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const SERIE_UNICA = [{ name: 'Vendas', data: [186, 305, 237, 73, 209, 214] }];
 
 const ROTULO = 'Acessos mensais no desktop, de janeiro a junho';
@@ -72,7 +72,7 @@ const meta: Meta = {
     },
   },
   args: {
-    option: buildBarOption({ xAxis: MESES, series: SERIE_UNICA }),
+    option: buildBarOption({ xAxis: MONTHS, series: SERIE_UNICA }),
     renderer: 'svg' as const,
     height: 300,
     emptyLabel: CHART_EMPTY_LABEL,
@@ -97,7 +97,7 @@ export const Playground: Story = {
   play: async ({ canvasElement, args, step }) => {
     // Procura pela classe, não pelo data-slot: é o que o CSS compartilhado
     // define, e é o mesmo colhedor nas cinco stacks.
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho é anunciado como imagem, com a descrição da story', async () => {
       await expect(raiz).toHaveAttribute('role', 'img');
@@ -109,7 +109,7 @@ export const Playground: Story = {
     await step('O desenho sai', async () => {
       // Gráfico mede a si mesmo antes de desenhar: espera o desenho existir em
       // vez de medir no primeiro quadro.
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
     });
 
     // Os controls trocam o renderer, e canvas não tem texto nem forma no DOM.
@@ -118,13 +118,13 @@ export const Playground: Story = {
     if (args.renderer === 'svg') {
       await step('O eixo escreve todas as categorias dos dados', async () => {
         await waitFor(() => {
-          for (const mes of MESES) expect(desenhoEscreve(raiz, mes)).toBe(true);
+          for (const mes of MONTHS) expect(designEscreve(raiz, mes)).toBe(true);
         }, { timeout: 3000 });
       });
 
       await step('Cada mês vira forma desenhada — o SVG não é casca vazia', async () => {
         await waitFor(
-          () => expect(formasDeDado(raiz).length).toBeGreaterThanOrEqual(MESES.length),
+          () => expect(datumFormas(raiz).length).toBeGreaterThanOrEqual(MONTHS.length),
           { timeout: 3000 },
         );
       });

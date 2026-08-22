@@ -8,8 +8,8 @@ import {
   AccordionTrigger,
 } from "./accordion";
 import {
-  accordionFechadoSource,
-  accordionItemDesabilitadoSource,
+  accordionClosedSource,
+  accordionItemDisabledSource,
   accordionSource,
 } from "./accordion.source";
 
@@ -40,7 +40,7 @@ export const Closed: Story = {
     covers: ['accessibility.item2', 'accessibility.item7', 'visual.item3'],
     docs: {
       // Fechado é a ausência de defaultValue; o snippet do meta abre o item 1.
-      source: { transform: accordionFechadoSource },
+      source: { transform: accordionClosedSource },
       description: {
         story:
           "Estado fechado. aria-expanded=\"false\" no trigger. Chevron aponta para baixo.",
@@ -147,7 +147,7 @@ export const Disabled: Story = {
     covers: ['functional.item5', 'accessibility.item5', 'visual.item5'],
     docs: {
       // O disabled aqui é do ITEM ao lado de um habilitado, não da raiz.
-      source: { transform: accordionItemDesabilitadoSource },
+      source: { transform: accordionItemDisabledSource },
       description: {
         story:
           "Estado disabled. Trigger não responde a cliques. Use para seções temporariamente indisponíveis.",

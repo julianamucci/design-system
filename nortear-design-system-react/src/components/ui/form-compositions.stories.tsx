@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { expect, userEvent, within } from "storybook/test"
-import { ordemDeTabulacao } from "@shared/testing/form-probe"
+import { tabulacaoOrder } from "@shared/testing/form-probe"
 
 import { Fieldset as FieldsetRoot, FormField } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import {
-  formComFieldsetSource,
-  formComVariosCamposSource,
+  formWithFieldsetSource,
+  formWithMultipleFieldsSource,
   formSource,
 } from "./form.source"
 
@@ -34,7 +34,7 @@ export const Fieldset: Story = {
     covers: ["functional.item5", "accessibility.item4", "visual.item4"],
     // O agrupamento é a outra peça exportada pelo componente, e o snippet do
     // meta (um campo solto) não a mostra.
-    docs: { source: { transform: formComFieldsetSource } },
+    docs: { source: { transform: formWithFieldsetSource } },
   },
   render: () => (
     <FieldsetRoot className="nds-max-w-sm" legend="Endereço de entrega">
@@ -84,7 +84,7 @@ export const MultipleFields: Story = {
     covers: ["functional.item6", "functional.item8"],
     // Três controles diferentes pelo mesmo campo e a ordem de tabulação vindo
     // do DOM: só o formulário inteiro mostra isso.
-    docs: { source: { transform: formComVariosCamposSource } },
+    docs: { source: { transform: formWithMultipleFieldsSource } },
   },
   render: () => (
     <form className="nds-stack nds-max-w-sm" onSubmit={(e) => e.preventDefault()}>
@@ -124,7 +124,7 @@ export const MultipleFields: Story = {
     await step("Os controles focalizáveis estão na ordem do DOM", async () => {
       // Medido pela ordem que o teclado visita, e por NOME acessível: uma ordem
       // certa de campos anônimos não seria uma ordem útil.
-      await expect(ordemDeTabulacao(canvasElement).map((c) => c.nome)).toEqual([
+      await expect(tabulacaoOrder(canvasElement).map((c) => c.nome)).toEqual([
         "Nome completo",
         "Email",
         "Biografia",

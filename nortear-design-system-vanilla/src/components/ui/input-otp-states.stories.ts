@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, expect } from 'storybook/test';
-import { razao } from '@shared/testing/cor';
+import { ratio } from '@shared/testing/cor';
 import { createInputOTP } from './input-otp';
 import { wrap } from './input-otp.fixtures';
 import { inputOtpSource, inputOtpSourceWith, inputOtpSourceComposition } from './input-otp.source';
@@ -67,8 +67,8 @@ export const Filling: Story = {
       // pelo colhedor compartilhado, não por olhômetro nem por nome de token.
       const slot = slotsDe(canvasElement)[0];
       const cs = getComputedStyle(slot);
-      const medida = razao(cs.color, cs.backgroundColor);
-      await expect(medida?.razao ?? 0).toBeGreaterThanOrEqual(4.5);
+      const medida = ratio(cs.color, cs.backgroundColor);
+      await expect(medida?.ratio ?? 0).toBeGreaterThanOrEqual(4.5);
     });
   },
 };
@@ -176,11 +176,11 @@ export const Error: Story = {
       // Comparação contra uma SEGUNDA instância sem erro em vez de remover o
       // atributo da primeira: mexer no DOM renderizado deixaria a asserção
       // medindo o mesmo estado dos dois lados, e ela não poderia falhar.
-      const bordaComErro = getComputedStyle(slotsDe(comErro())[0]).borderTopColor;
-      const bordaSemErro = getComputedStyle(
+      const borderWithError = getComputedStyle(slotsDe(comErro())[0]).borderTopColor;
+      const borderNoError = getComputedStyle(
         slotsDe(canvasElement.querySelector<HTMLElement>('[data-testid="sem-erro"]')!)[0],
       ).borderTopColor;
-      await expect(bordaComErro).not.toBe(bordaSemErro);
+      await expect(borderWithError).not.toBe(borderNoError);
     });
   },
 };

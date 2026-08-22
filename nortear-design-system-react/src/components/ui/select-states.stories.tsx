@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { waitForPortal } from "@/lib/wait-for-portal";
-import { medirAnelDeFoco, ESTADOS_POR_VALOR } from "@shared/testing/select-probe";
+import { focusMeasureRing, VALUE_STATES } from "@shared/testing/select-probe";
 import {
   Select,
   SelectContent,
@@ -13,7 +13,7 @@ import {
   selectCompactoSource,
   selectDisabledSource,
   selectInvalidoSource,
-  selectSelecionadoSource,
+  selectSelectedSource,
   selectSource,
 } from "./select.source";
 
@@ -84,7 +84,7 @@ export const Selected: Story = {
     covers: ["visual.item2"],
     docs: {
       // O valor de partida vem do `render` e nenhum control o descreve.
-      source: { transform: selectSelecionadoSource },
+      source: { transform: selectSelectedSource },
       description: {
         story:
           "Estado com valor pré-escolhido. O rótulo da opção substitui o placeholder — e o rótulo vem do mapa `items`, porque a lista ainda não foi aberta nenhuma vez. (Pré-selecionar serve para ver o estado; em formulário real, evite.)",
@@ -93,7 +93,7 @@ export const Selected: Story = {
   },
   render: () => (
     <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
-      <Select defaultValue="rj" items={ESTADOS_POR_VALOR}>
+      <Select defaultValue="rj" items={VALUE_STATES}>
         <SelectTrigger aria-label="Selecionar estado">
           <SelectValue placeholder="Selecione..." />
         </SelectTrigger>
@@ -279,7 +279,7 @@ export const Invalid: Story = {
       // `:focus-visible` com a mesma especificidade: sem a regra de
       // aninhamento, focar um campo inválido não mudava nada na tela.
       // `boxShadow !== 'none'` passaria mesmo assim — só a MUDANÇA reprova.
-      await expect(medirAnelDeFoco(trigger).mudou).toBe(true);
+      await expect(focusMeasureRing(trigger).mudou).toBe(true);
     });
   },
 };

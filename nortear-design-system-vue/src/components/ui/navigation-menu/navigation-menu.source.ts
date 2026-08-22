@@ -28,12 +28,12 @@ export type NavigationMenuArgs = {
 };
 
 /** Espera padrão da lib antes de o ponteiro abrir o painel, em ms. */
-const ESPERA_PADRAO = 200;
+const WAIT_DEFAULT = 200;
 
 /** Import do design system, uma peça por linha e em ordem alfabética. */
-function importa(...pecas: string[]): string {
-  const lista = [...new Set(pecas)].sort();
-  return `import {\n${lista.map((peca) => `  ${peca},`).join('\n')}\n} from '@/components/ui/navigation-menu'`;
+function importa(...parts: string[]): string {
+  const lista = [...new Set(parts)].sort();
+  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/navigation-menu'`;
 }
 
 /**
@@ -55,7 +55,7 @@ ${p}</NavigationMenuChild>`;
 }
 
 /** Lista vertical de destinos dentro do painel, cada um em seu `<li>`. */
-function listaDoPainel(
+function panelList(
   itens: Array<{ href: string; titulo: string }>,
   recuo: number,
   largura = 'nds-w-xs',
@@ -91,7 +91,7 @@ function itemDireto(href: string, rotulo: string, ativo = false): string {
 export const navigationMenuSource: SourceTransform<NavigationMenuArgs> = (_gerado, ctx) => {
   const raiz = attrsMultilinha([
     attr('default-value', ctx?.args?.defaultValue),
-    attrNum('delay-duration', ctx?.args?.delayDuration, ESPERA_PADRAO),
+    attrNum('delay-duration', ctx?.args?.delayDuration, WAIT_DEFAULT),
     attr('orientation', ctx?.args?.orientation, 'horizontal'),
     'aria-label="Navegação principal"',
   ]);
@@ -112,7 +112,7 @@ ${itemDireto('#inicio', 'Início')}
     <NavigationMenuItem value="produtos">
       <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
       <NavigationMenuContent>
-${listaDoPainel(
+${panelList(
   [
     { href: '#inicial', titulo: 'Plano Inicial' },
     { href: '#profissional', titulo: 'Plano Profissional' },
@@ -125,7 +125,7 @@ ${listaDoPainel(
     <NavigationMenuItem value="solucoes">
       <NavigationMenuTrigger>Soluções</NavigationMenuTrigger>
       <NavigationMenuContent>
-${listaDoPainel(
+${panelList(
   [
     { href: '#marketing', titulo: 'Para Marketing' },
     { href: '#vendas', titulo: 'Para Vendas' },
@@ -163,7 +163,7 @@ ${itemDireto('#inicio', 'Início')}
     <NavigationMenuItem value="produtos">
       <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
       <NavigationMenuContent>
-${listaDoPainel(
+${panelList(
   [
     { href: '#inicial', titulo: 'Plano Inicial' },
     { href: '#profissional', titulo: 'Plano Profissional' },
@@ -176,7 +176,7 @@ ${listaDoPainel(
     <NavigationMenuItem value="recursos">
       <NavigationMenuTrigger>Recursos</NavigationMenuTrigger>
       <NavigationMenuContent>
-${listaDoPainel(
+${panelList(
   [
     { href: '#guias', titulo: 'Guias' },
     { href: '#api', titulo: 'Referência da API' },
@@ -238,7 +238,7 @@ ${itemDireto('#inicio', 'Início')}
     <NavigationMenuItem value="produtos">
       <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
       <NavigationMenuContent>
-${listaDoPainel([{ href: '#inicial', titulo: 'Plano Inicial' }], 8)}
+${panelList([{ href: '#inicial', titulo: 'Plano Inicial' }], 8)}
       </NavigationMenuContent>
     </NavigationMenuItem>
 ${itemDireto('#sobre', 'Sobre')}
@@ -252,7 +252,7 @@ ${itemDireto('#sobre', 'Sobre')}
  * item. A seta indicadora é peça à parte, irmã dos itens dentro da lista, e só
  * existe enquanto algum painel está aberto.
  */
-export function navigationMenuAbertoSource(): string {
+export function navigationMenuOpenSource(): string {
   return vueSnippet(
     importa(
       'NavigationMenu',
@@ -270,7 +270,7 @@ ${itemDireto('#inicio', 'Início')}
     <NavigationMenuItem value="produtos">
       <NavigationMenuTrigger>Produtos</NavigationMenuTrigger>
       <NavigationMenuContent>
-${listaDoPainel(
+${panelList(
   [
     { href: '#inicial', titulo: 'Plano Inicial' },
     { href: '#profissional', titulo: 'Plano Profissional' },
@@ -291,7 +291,7 @@ ${listaDoPainel(
  * `aria-current="page"` no markup. O leitor de tela anuncia "página atual" e o
  * fundo muda junto — cor sozinha não informa quem não a distingue.
  */
-export function navigationMenuAtivoSource(): string {
+export function navigationMenuActiveSource(): string {
   return vueSnippet(
     importa('NavigationMenu', 'NavigationMenuItem', 'NavigationMenuLink', 'NavigationMenuList'),
     `<NavigationMenu aria-label="Navegação principal">
@@ -345,7 +345,7 @@ ${itemDireto('#inicio', 'Início')}
     <NavigationMenuItem value="planos">
       <NavigationMenuTrigger>Planos</NavigationMenuTrigger>
       <NavigationMenuContent>
-${listaDoPainel(
+${panelList(
   [
     { href: '#inicial', titulo: 'Plano Inicial' },
     { href: '#profissional', titulo: 'Plano Profissional' },

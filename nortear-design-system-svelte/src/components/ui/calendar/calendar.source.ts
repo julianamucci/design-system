@@ -105,7 +105,7 @@ export function calendarWeeksFixasSource(): string {
 }
 
 /** Legenda em texto (padrão): mês e ano escritos, sem nada para operar. */
-export function calendarLegendaTextoSource(): string {
+export function calendarCaptionTextSource(): string {
   return svelteSnippet(
     `${IMPORT}\n\n${DATA_INITIAL}`,
     `<Calendar
@@ -118,7 +118,7 @@ export function calendarLegendaTextoSource(): string {
 }
 
 /** Legenda em seletores: mês e ano viram controles, para saltar de período. */
-export function calendarLegendaSeletoresSource(): string {
+export function calendarCaptionSelectorsSource(): string {
   return svelteSnippet(
     `${IMPORT}\n\n${DATA_INITIAL}`,
     `<Calendar
@@ -131,7 +131,7 @@ export function calendarLegendaSeletoresSource(): string {
 }
 
 /** Dois meses lado a lado, para escolher datas que atravessam a virada. */
-export function calendarDoisMesesSource(): string {
+export function calendarDoisMonthsSource(): string {
   return svelteSnippet(
     `${IMPORT}\n\n${DATA_INITIAL}`,
     `<Calendar

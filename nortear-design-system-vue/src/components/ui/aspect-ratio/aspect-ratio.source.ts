@@ -18,7 +18,7 @@ const IMPORT = `import { AspectRatio } from '@/components/ui/aspect-ratio'`;
  * Sem um teto no elemento de fora não há do que derivar, e é por isso que todo
  * exemplo tem um contêiner com largura da escala.
  */
-const LARGURA = 'nds-w-lg';
+const WIDTH = 'nds-w-lg';
 
 /**
  * As proporções escritas como fração, que é como se lê o pedido: `16 / 9`, e
@@ -36,7 +36,7 @@ const PROPORCOES: Array<[number, string]> = [
   [9 / 16, '9 / 16'],
 ];
 
-export function expressaoDeProporcao(valor: number): string {
+export function ratioExpression(valor: number): string {
   const conhecida = PROPORCOES.find(([n]) => Math.abs(n - valor) < 0.005);
   return conhecida ? conhecida[1] : String(Math.round(valor * 100) / 100);
 }
@@ -48,7 +48,7 @@ export function expressaoDeProporcao(valor: number): string {
 export function attrRatio(valor: unknown): string {
   if (typeof valor !== 'number' || Number.isNaN(valor)) return '';
   if (Math.abs(valor - 1) < 0.005) return '';
-  return `:ratio="${expressaoDeProporcao(valor)}"`;
+  return `:ratio="${ratioExpression(valor)}"`;
 }
 
 /**
@@ -58,7 +58,7 @@ export function attrRatio(valor: unknown): string {
  * já o estica para cobrir a caixa inteira. Escrever as duas no exemplo ensinaria
  * a repetir o que o componente faz.
  */
-function caixa(proporcao: string, filho: string, contexto = `class="${LARGURA}"`): string {
+function caixa(proporcao: string, filho: string, contexto = `class="${WIDTH}"`): string {
   return `<div ${contexto}>
   <AspectRatio${attrs(proporcao)}>
 ${indentar(filho, 4)}
@@ -158,7 +158,7 @@ export function aspectRatioWithImageSource(): string {
  * Mapa embutido: o quadro precisa de `title`, que é o nome acessível dele. Sem
  * o atributo o leitor de tela anuncia um quadro sem dizer de quê.
  */
-export function aspectRatioComIframeSource(): string {
+export function aspectRatioWithIframeSource(): string {
   return vueSnippet(
     IMPORT,
     caixa(
@@ -177,7 +177,7 @@ export function aspectRatioComIframeSource(): string {
  * Vídeo: `controls` é o que o torna alcançável pelo teclado, e a faixa de
  * legendas é o que o torna utilizável sem som.
  */
-export function aspectRatioComVideoSource(): string {
+export function aspectRatioWithVideoSource(): string {
   return vueSnippet(
     IMPORT,
     caixa(
@@ -200,7 +200,7 @@ export function aspectRatioComVideoSource(): string {
  * Em grade: a largura de cada célula muda com a tela, e a altura de cada caixa
  * é recalculada a partir dela. É o que separa proporção de altura cravada.
  */
-export function aspectRatioEmGradeSource(): string {
+export function gridAspectRatioSource(): string {
   const fotos = [
     [FOTO_QUADRADA, 'Miniatura 1'],
     [FOTO_PRODUCT, 'Miniatura 2'],

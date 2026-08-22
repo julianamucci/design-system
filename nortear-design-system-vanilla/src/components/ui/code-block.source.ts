@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -43,7 +43,7 @@ export type CodeBlockSnippetOptions = {
  * O trecho como template literal, para o snippet não achatar em uma linha só
  * um código que tem quebras. Escapa o que fecharia a crase antes da hora.
  */
-function literalDeCodigo(code: string): string {
+function codeLiteral(code: string): string {
   const corpo = code
     .replace(/\\/g, '\\\\')
     .replace(/`/g, '\\`')
@@ -79,8 +79,8 @@ export function codeBlockSnippet(o: CodeBlockSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    importar('code-block', 'createCodeBlock'),
-    `const source = ${literalDeCodigo(o.code ?? TRECHO_DEFAULT)};`,
+    importing('code-block', 'createCodeBlock'),
+    `const source = ${codeLiteral(o.code ?? TRECHO_DEFAULT)};`,
     `const bloco = ${chamada('createCodeBlock', linhas)};`,
     montar('bloco'),
   );

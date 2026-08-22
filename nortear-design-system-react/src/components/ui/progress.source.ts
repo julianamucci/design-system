@@ -50,7 +50,7 @@ const IMPORT_COMPOSTO = `import {
 
 /** Valor e rótulo do Playground — o padrão a que as stories sem args caem. */
 const VALUE_DEFAULT = 42;
-const ROTULO_PADRAO = 'Progresso do upload';
+const LABEL_DEFAULT = 'Progresso do upload';
 
 /**
  * Contêiner de largura. A trilha herda a largura de quem a contém, então sem
@@ -92,7 +92,7 @@ export const progressSource: SourceTransform<ProgressArgs> = (_gerado, ctx) => {
     `value={${valor}}`,
     typeof args.min === 'number' && args.min !== 0 ? propNumber('min', args.min) : undefined,
     typeof args.max === 'number' && args.max !== 100 ? propNumber('max', args.max) : undefined,
-    `aria-label="${texto(args['aria-label']) ?? ROTULO_PADRAO}"`,
+    `aria-label="${texto(args['aria-label']) ?? LABEL_DEFAULT}"`,
     propText('className', args.className),
   );
 
@@ -142,7 +142,7 @@ export function progressIndeterminadoSource(): string {
  * Quem declara a própria `ProgressTrack` precisa declarar o indicador junto: a
  * raiz para de montar o par sozinha assim que recebe filhos.
  */
-export function progressComRotuloSource(): string {
+export function progressWithLabelSource(): string {
   return jsxSnippet(
     IMPORT_COMPOSTO,
     inWidth(`<Progress value={42}>
@@ -160,7 +160,7 @@ export function progressComRotuloSource(): string {
  * `data-variant`, o que mantém a trilha neutra e o contraste de 3:1 igual em
  * qualquer variante. As duas juntas porque a cor só significa em comparação.
  */
-export function progressCorSemanticaSource(): string {
+export function progressColorSemanticaSource(): string {
   return jsxSnippet(
     IMPORT,
     empilhado(
@@ -176,7 +176,7 @@ export function progressZeroSource(): string {
 }
 
 /** Metade do caminho — o estado em que a barra passa a maior parte da vida. */
-export function progressCarregandoSource(): string {
+export function progressLoadingSource(): string {
   return jsxSnippet(IMPORT, inWidth('<Progress value={50} aria-label="Carregando dados" />'));
 }
 

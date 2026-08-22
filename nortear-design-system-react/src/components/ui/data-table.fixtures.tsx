@@ -33,7 +33,7 @@ export const invoices: Invoice[] = [
  * é também o texto que a interface deveria ter — quem lê a tela vê faturas, não
  * linhas de uma grade.
  */
-export const rotulosFatura: Partial<DataTableLabels> = {
+export const labelsInvoice: Partial<DataTableLabels> = {
   selectAll: "Selecionar todas as faturas",
   selectRow: (r) => `Selecionar fatura ${r}`,
   rowsSelected: (s, n) => `${s} de ${n} fatura(s) selecionada(s).`,

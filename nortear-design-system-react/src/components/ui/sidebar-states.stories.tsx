@@ -26,10 +26,10 @@ import {
   SidebarTrigger,
 } from "./sidebar";
 import {
-  sidebarCarregandoSource,
+  sidebarLoadingSource,
   sidebarExpandidaSource,
   sidebarMovelSource,
-  iconsSourceSidebarRecolhida,
+  iconsSidebarRecolhidaSource,
   sidebarRecolhidaOffcanvasSource,
   sidebarNoRecolhimentoSource,
   sidebarSource,
@@ -222,7 +222,7 @@ export const CollapsedIcon: Story = {
     docs: {
       // O par `defaultOpen={false}` + `collapsible="icon"` é o que faz a barra
       // nascer estreita em vez de fora da tela; nenhum control o descreve.
-      source: { transform: iconsSourceSidebarRecolhida },
+      source: { transform: iconsSidebarRecolhidaSource },
     },
   },
   render: () => <SidebarStatePreview defaultOpen={false} collapsible="icon" label="Sidebar icon mode (collapsible=icon, defaultOpen=false)" />,
@@ -347,7 +347,7 @@ export const Loading: Story = {
     docs: {
       // O placeholder toma o lugar do destino DENTRO do mesmo item de menu — é
       // uma peça diferente na mesma estrutura, e o meta não a imprimiria.
-      source: { transform: sidebarCarregandoSource },
+      source: { transform: sidebarLoadingSource },
     },
   },
   render: () => <SidebarLoadingPreview />,

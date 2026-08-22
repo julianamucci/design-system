@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  selectionSourceLabelWithBox,
-  labelComCampoSource,
+  selectionLabelWithBoxSource,
+  labelWithFieldSource,
   labelDisabledPeloGroupSource,
-  labelDesabilitadoSource,
+  labelDisabledSource,
   labelObrigatorioSource,
   labelDefaultSource,
   labelSource,
@@ -12,11 +12,11 @@ import {
 const TODAS = [
   labelSource,
   labelDefaultSource,
-  labelDesabilitadoSource,
+  labelDisabledSource,
   labelDisabledPeloGroupSource,
   labelObrigatorioSource,
-  labelComCampoSource,
-  selectionSourceLabelWithBox,
+  labelWithFieldSource,
+  selectionLabelWithBoxSource,
 ];
 
 describe('labelSource', () => {
@@ -84,7 +84,7 @@ describe('contrato comum a todo snippet de rótulo', () => {
 
 describe('transforms das stories de estado', () => {
   it('o desabilitado pelo irmão marca o CONTROLE, e o rótulo não recebe prop', () => {
-    const saida = labelDesabilitadoSource();
+    const saida = labelDisabledSource();
     // Sem `nds-peer` no controle a folha não alcança o rótulo: o campo apaga e
     // o rótulo fica aceso, prometendo interação que não existe.
     expect(saida).toContain('class="nds-peer"');
@@ -100,7 +100,7 @@ describe('transforms das stories de estado', () => {
 
   it('os dois caminhos de desabilitar não se misturam', () => {
     // Um snippet com os dois ensinaria que é preciso escrever ambos.
-    expect(labelDesabilitadoSource()).not.toContain('data-disabled');
+    expect(labelDisabledSource()).not.toContain('data-disabled');
   });
 
   it('o obrigatório traz o asterisco decorativo e o anúncio no controle', () => {
@@ -115,13 +115,13 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('com campo de texto, o rótulo vem ANTES do controle', () => {
-    const saida = labelComCampoSource();
+    const saida = labelWithFieldSource();
     expect(saida.indexOf('<Label')).toBeLessThan(saida.indexOf('<Input'));
     expect(saida).toContain('type="tel"');
   });
 
   it('com caixa de seleção, a ordem se inverte e o bloco deita', () => {
-    const saida = selectionSourceLabelWithBox();
+    const saida = selectionLabelWithBoxSource();
     expect(saida).toContain('<div class="nds-cluster" data-spacing="sm">');
     expect(saida.indexOf('<Checkbox')).toBeLessThan(saida.indexOf('<Label'));
     expect(saida).toContain(`import { Checkbox } from '@/components/ui/checkbox'`);

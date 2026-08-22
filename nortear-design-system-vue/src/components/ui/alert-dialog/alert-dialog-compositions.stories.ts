@@ -16,12 +16,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { TriangleAlert } from 'lucide-vue-next';
 import {
-  alertDialogClasseExtraSource,
-  alertDialogComIconeSource,
-  alertDialogDescricaoLongaSource,
+  alertDialogClassNameExtraSource,
+  alertDialogWithIconSource,
+  alertDialogDescriptionLongaSource,
   alertDialogDestructiveSource,
-  alertDialogNeutroSource,
-  alertDialogSemDescricaoSource,
+  alertDialogNeutralSource,
+  alertDialogNoDescriptionSource,
 } from './alert-dialog.source';
 
 const meta = {
@@ -34,7 +34,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: alertDialogComIconeSource },
+      source: { transform: alertDialogWithIconSource },
       description: {
         component:
           'Composicoes canônicas: confirmação destrutiva, confirmação neutra, descrição longa e layout responsivo.',
@@ -191,7 +191,7 @@ export const Neutral: Story = {
     docs: {
       // Nenhuma variante destrutiva em lugar nenhum: é o contraste com a
       // confirmação destrutiva que a story ensina.
-      source: { transform: alertDialogNeutroSource },
+      source: { transform: alertDialogNeutralSource },
       description: {
         story:
           'Action com tokens padrão do Button. Use para confirmações não destrutivas (publicar, enviar, arquivar).',
@@ -247,7 +247,7 @@ export const LongDescription: Story = {
     docs: {
       // O tamanho do texto É o assunto: um resumo de uma linha, como o da do
       // meta, não mostraria o painel crescendo.
-      source: { transform: alertDialogDescricaoLongaSource },
+      source: { transform: alertDialogDescriptionLongaSource },
       description: {
         story:
           'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
@@ -320,7 +320,7 @@ export const WithoutDescription: Story = {
     docs: {
       // A ausência deliberada da descrição É o assunto, e com ela some também
       // o subcomponente do import.
-      source: { transform: alertDialogSemDescricaoSource },
+      source: { transform: alertDialogNoDescriptionSource },
       description: {
         story:
           'Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.',
@@ -460,7 +460,7 @@ export const ExtraClass: Story = {
   parameters: {
     // As classes no painel e no bloco de mídia SÃO o assunto; sem elas escritas
     // o exemplo não mostra nada.
-    docs: { source: { transform: alertDialogClasseExtraSource }, description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' } },
+    docs: { source: { transform: alertDialogClassNameExtraSource }, description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' } },
   },
   render: () => ({
     components: sharedComponents,

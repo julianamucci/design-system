@@ -76,7 +76,7 @@ export const Playground: Story = {
     const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
     const campo = canvas.getByRole('combobox');
     const lista = canvas.getByRole('listbox');
-    const espiao = args.onItemSelect as unknown as ReturnType<typeof fn>;
+    const spy = args.onItemSelect as unknown as ReturnType<typeof fn>;
 
     // A play REEXECUTA no mesmo DOM: a busca parte sempre do zero.
     await userEvent.clear(campo);
@@ -167,10 +167,10 @@ export const Playground: Story = {
       // Nenhum comando sobra: a única "opção" restante É a mensagem, que carrega
       // `role="option"` porque um `<div>` de texto solto dentro de um listbox
       // reprova no axe (aria-required-children). Ver command-empty.svelte.
-      const restantes = canvas.getAllByRole('option');
-      await expect(restantes).toHaveLength(1);
-      await expect(restantes[0]).toBe(vazio);
-      await expect(restantes[0]).toHaveAttribute('aria-disabled', 'true');
+      const remaining = canvas.getAllByRole('option');
+      await expect(remaining).toHaveLength(1);
+      await expect(remaining[0]).toBe(vazio);
+      await expect(remaining[0]).toHaveAttribute('aria-disabled', 'true');
     });
 
     await step('Apagar a busca traz os comandos de volta', async () => {
@@ -215,27 +215,27 @@ export const Playground: Story = {
     });
 
     await step('Enter escolhe o comando em destaque', async () => {
-      const emDestaque = canvas.getAllByRole('option')[0];
-      const valueEsperado = emDestaque.getAttribute('data-value');
-      const antes = espiao.mock.calls.length;
+      const inHighlight = canvas.getAllByRole('option')[0];
+      const valueEsperado = inHighlight.getAttribute('data-value');
+      const antes = spy.mock.calls.length;
       await userEvent.keyboard('{Enter}');
 
       await waitFor(async () => {
-        await expect(espiao.mock.calls.length).toBe(antes + 1);
+        await expect(spy.mock.calls.length).toBe(antes + 1);
       });
-      await expect(espiao.mock.calls[antes][0]).toBe(valueEsperado);
+      await expect(spy.mock.calls[antes][0]).toBe(valueEsperado);
       // A lista continua aberta: a paleta inline não tem estado fechado.
       await expect(campo).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Clicar num comando também o escolhe', async () => {
-      const antes = espiao.mock.calls.length;
+      const antes = spy.mock.calls.length;
       await userEvent.click(canvas.getByRole('option', { name: 'cn()' }));
 
       await waitFor(async () => {
-        await expect(espiao.mock.calls.length).toBe(antes + 1);
+        await expect(spy.mock.calls.length).toBe(antes + 1);
       });
-      await expect(espiao.mock.calls[antes][0]).toBe('cn');
+      await expect(spy.mock.calls[antes][0]).toBe('cn');
     });
   },
 };

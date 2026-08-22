@@ -378,19 +378,19 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         wrapper.dataset.slot = 'menubar-sub';
 
         const subId = `${opcoes.id}-sub-${i}`;
-        const subGatilho = document.createElement('div');
-        subGatilho.className = 'nds-dropdown-menu-sub-trigger';
-        subGatilho.dataset.slot = 'menubar-sub-trigger';
-        subGatilho.setAttribute('role', 'menuitem');
-        subGatilho.setAttribute('aria-haspopup', 'menu');
-        subGatilho.setAttribute('aria-expanded', 'false');
-        subGatilho.setAttribute('aria-controls', subId);
-        subGatilho.dataset.state = 'closed';
-        applyComuns(subGatilho, item);
-        createLabelEAtalho(subGatilho, item);
+        const subTrigger = document.createElement('div');
+        subTrigger.className = 'nds-dropdown-menu-sub-trigger';
+        subTrigger.dataset.slot = 'menubar-sub-trigger';
+        subTrigger.setAttribute('role', 'menuitem');
+        subTrigger.setAttribute('aria-haspopup', 'menu');
+        subTrigger.setAttribute('aria-expanded', 'false');
+        subTrigger.setAttribute('aria-controls', subId);
+        subTrigger.dataset.state = 'closed';
+        applyComuns(subTrigger, item);
+        createLabelEAtalho(subTrigger, item);
         const chevron = ICON_SUBMENU();
         chevron.setAttribute('class', 'nds-dropdown-menu-sub-trigger-chevron');
-        subGatilho.appendChild(chevron);
+        subTrigger.appendChild(chevron);
 
         const { panel: subPanel, focaveis: subFocaveis } = createPanel(item.items ?? [], {
           id: subId,
@@ -400,22 +400,22 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         const openSub = (focar: boolean): void => {
           if (item.disabled) return;
           subPanel.hidden = false;
-          subGatilho.setAttribute('aria-expanded', 'true');
-          subGatilho.dataset.state = 'open';
+          subTrigger.setAttribute('aria-expanded', 'true');
+          subTrigger.dataset.state = 'open';
           if (focar) subFocaveis[0]?.focus();
         };
         const closeSub = (focarGatilho: boolean): void => {
           subPanel.hidden = true;
-          subGatilho.setAttribute('aria-expanded', 'false');
-          subGatilho.dataset.state = 'closed';
-          if (focarGatilho) subGatilho.focus();
+          subTrigger.setAttribute('aria-expanded', 'false');
+          subTrigger.dataset.state = 'closed';
+          if (focarGatilho) subTrigger.focus();
         };
 
-        subGatilho.addEventListener('click', () => {
-          if (subGatilho.getAttribute('aria-expanded') === 'true') closeSub(true);
+        subTrigger.addEventListener('click', () => {
+          if (subTrigger.getAttribute('aria-expanded') === 'true') closeSub(true);
           else openSub(true);
         });
-        subGatilho.addEventListener('keydown', (e) => {
+        subTrigger.addEventListener('keydown', (e) => {
           if (e.key === 'ArrowRight' || e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             e.stopPropagation();
@@ -430,8 +430,8 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
           }
         });
 
-        wrapper.append(subGatilho, subPanel);
-        focaveis.push(subGatilho);
+        wrapper.append(subTrigger, subPanel);
+        focaveis.push(subTrigger);
         panel.appendChild(wrapper);
         return;
       }
@@ -491,13 +491,13 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
         // move o foco para o item que começa com ela.
         const letra = e.key.toLowerCase();
         const ordenados = [...livres.slice(atual + 1), ...livres.slice(0, atual + 1)];
-        const achado = ordenados.find((el) =>
+        const finding = ordenados.find((el) =>
           (el.textContent ?? '').trim().toLowerCase().startsWith(letra),
         );
-        if (achado) {
+        if (finding) {
           e.preventDefault();
           e.stopPropagation();
-          achado.focus();
+          finding.focus();
         }
       }
     });

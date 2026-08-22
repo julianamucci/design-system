@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect } from "storybook/test";
-import { alvosAbaixoDoMinimo } from "@shared/testing/pagination-probe";
+import { minimumTargetsBelow } from "@shared/testing/pagination-probe";
 import {
   Pagination,
   PaginationContent,
@@ -11,8 +11,8 @@ import {
 } from "./pagination";
 import {
   paginationDirecionalSource,
-  paginationLinkAtivoSource,
-  paginationLinkInativoSource,
+  paginationLinkActiveSource,
+  paginationLinkInactiveSource,
   paginationSource,
 } from "./pagination.source";
 
@@ -42,7 +42,7 @@ export const Default: Story = {
     docs: {
       // A AUSÊNCIA de `isActive` é o assunto: um link só, sem estado nem faixa
       // em volta, é o que deixa a ausência visível.
-      source: { transform: paginationLinkInativoSource },
+      source: { transform: paginationLinkInactiveSource },
       description: {
         story:
           "Link inativo — fundo transparente. Padrão para toda página que não é a atual.",
@@ -79,7 +79,7 @@ export const Active: Story = {
     docs: {
       // `isActive` só se lê no par com o vizinho inativo, que não carrega
       // `aria-current` de jeito nenhum.
-      source: { transform: paginationLinkAtivoSource },
+      source: { transform: paginationLinkActiveSource },
       description: {
         story:
           "Página atual — destaque visual permanente e aria-current=\"page\" para o leitor de tela.",
@@ -153,18 +153,18 @@ export const Directional: Story = {
       // accessibility.item5 — "Anterior" some no breakpoint estreito; se o nome
       // acessível viesse do texto visível, o link ficaria mudo em tela pequena.
       const anterior = canvas.getByRole("link", { name: "Ir para a página anterior" });
-      const proxima = canvas.getByRole("link", { name: "Ir para a próxima página" });
+      const next = canvas.getByRole("link", { name: "Ir para a próxima página" });
       await expect(anterior.querySelector(".nds-pagination-label")).toHaveTextContent("Anterior");
-      await expect(proxima.querySelector(".nds-pagination-label")).toHaveTextContent("Próxima");
+      await expect(next.querySelector(".nds-pagination-label")).toHaveTextContent("Próxima");
       await expect(anterior).toHaveClass("nds-pagination-prev");
-      await expect(proxima).toHaveClass("nds-pagination-next");
+      await expect(next).toHaveClass("nds-pagination-next");
     });
 
     await step("Todo controle alcança o alvo de toque mínimo", async () => {
       // accessibility.item6 — WCAG 2.5.8 pede 24×24 CSS px. O direcional é o
       // controle mais apertado: quando o rótulo textual não aparece, sobra só o
       // ícone, e sem padding a caixa desaba para a altura dele.
-      const faltantes = alvosAbaixoDoMinimo(canvasElement);
+      const faltantes = minimumTargetsBelow(canvasElement);
       await expect(JSON.stringify(faltantes)).toBe("[]");
     });
   },

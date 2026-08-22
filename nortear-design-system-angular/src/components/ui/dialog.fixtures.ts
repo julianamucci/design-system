@@ -55,7 +55,7 @@ export const overlay = (): HTMLElement | null =>
  * final — foi assim que uma violação de contraste com razão ~1.0 já apareceu em
  * outro componente.
  */
-export async function esperarAberto(): Promise<HTMLElement> {
+export async function waitForOpen(): Promise<HTMLElement> {
   const p = await waitFor(() => {
     const el = painel();
     if (!el) throw new Error('painel do diálogo ainda não montou');
@@ -82,7 +82,7 @@ export async function esperarAberto(): Promise<HTMLElement> {
  * Fechar não desmonta na hora: o primitivo mantém a view montada até a animação
  * de saída terminar, senão o fechamento não teria o que animar.
  */
-export async function esperarFechado(): Promise<void> {
+export async function waitForClosed(): Promise<void> {
   await waitFor(() => {
     if (painel()) throw new Error('painel do diálogo ainda montado');
   });
@@ -105,7 +105,7 @@ export async function abrir(raiz: ParentNode): Promise<HTMLElement> {
     const trigger = raiz.querySelector<HTMLElement>('[data-slot="dialog-trigger"]');
     if (trigger) await userEvent.click(trigger);
   }
-  return esperarAberto();
+  return waitForOpen();
 }
 
 /**
@@ -116,7 +116,7 @@ export async function abrir(raiz: ParentNode): Promise<HTMLElement> {
  */
 export async function fechar(): Promise<void> {
   if (painel()) await userEvent.keyboard('{Escape}');
-  await esperarFechado();
+  await waitForClosed();
 }
 
 /**
@@ -126,10 +126,10 @@ export async function fechar(): Promise<void> {
  * string e reprovaria no axe por `aria-valid-attr-value` — é exatamente o caso
  * que esta checagem existe para pegar.
  */
-export async function conferirNomeEDescricao(p: HTMLElement): Promise<void> {
-  const idTitulo = p.getAttribute('aria-labelledby');
-  await expect(idTitulo).toBeTruthy();
-  await expect(document.getElementById(idTitulo!)).toHaveAttribute('data-slot', 'dialog-title');
+export async function checkNameEDescricao(p: HTMLElement): Promise<void> {
+  const idTitle = p.getAttribute('aria-labelledby');
+  await expect(idTitle).toBeTruthy();
+  await expect(document.getElementById(idTitle!)).toHaveAttribute('data-slot', 'dialog-title');
 
   const idDescricao = p.getAttribute('aria-describedby');
   await expect(idDescricao).toBeTruthy();

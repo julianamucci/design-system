@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
   alertAvisoSource,
-  alertClasseAdicionalSource,
-  alertComAcaoSource,
-  alertContrasteSource,
-  alertDestrutivoSource,
+  alertClassNameAdicionalSource,
+  alertWithActionSource,
+  alertContrastSource,
+  alertDestructiveSource,
   alertDismissivelSource,
   alertInformativoSource,
   alertInsercaoDinamicaSource,
-  alertSemAnuncioSource,
-  alertSemIconeSource,
-  alertSemTituloSource,
+  alertNoAnnouncementSource,
+  alertNoIconSource,
+  alertNoTitleSource,
   alertSource,
   alertSucessoSource,
 } from './alert.source';
@@ -51,8 +51,8 @@ describe('alertSource', () => {
 
 describe('transforms das stories de variante', () => {
   it('cada variante escreve a própria prop e importa o próprio ícone', () => {
-    expect(alertDestrutivoSource()).toContain('variant="destructive"');
-    expect(alertDestrutivoSource()).toContain('icons/circle-alert');
+    expect(alertDestructiveSource()).toContain('variant="destructive"');
+    expect(alertDestructiveSource()).toContain('icons/circle-alert');
     expect(alertSucessoSource()).toContain('variant="success"');
     expect(alertSucessoSource()).toContain('icons/circle-check-big');
     expect(alertAvisoSource()).toContain('variant="warning"');
@@ -66,7 +66,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a medição de contraste mostra as cinco variantes na mesma tela', () => {
-    const saida = alertContrasteSource();
+    const saida = alertContrastSource();
     expect(saida).toContain('const variantes: AlertVariant[]');
     expect(saida).toContain('<Alert variant={variante}>');
     for (const variante of ['default', 'destructive', 'success', 'warning', 'info']) {
@@ -77,19 +77,19 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('sem título, nem o subcomponente nem o import sobram', () => {
-    const saida = alertSemTituloSource();
+    const saida = alertNoTitleSource();
     expect(saida).not.toContain('AlertTitle');
     expect(saida).toContain('<AlertDescription>');
   });
 
   it('sem ícone, o snippet não importa ícone nenhum', () => {
-    const saida = alertSemIconeSource();
+    const saida = alertNoIconSource();
     expect(saida).not.toContain('@lucide/svelte');
     expect(saida).toContain('<AlertTitle>Sem ícone</AlertTitle>');
   });
 
   it('o par estático × urgente contrasta role="note" com a omissão da prop', () => {
-    const saida = alertSemAnuncioSource();
+    const saida = alertNoAnnouncementSource();
     expect(saida).toContain('<Alert role="note">');
     // O segundo alert NÃO declara role: é o padrão `alert` que se quer mostrar.
     expect(saida).toContain('<Alert variant="destructive">');
@@ -105,14 +105,14 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('a composição com ação aninha o Button dentro do AlertAction', () => {
-    const saida = alertComAcaoSource();
+    const saida = alertWithActionSource();
     expect(saida).toContain('from "@/components/ui/button"');
     expect(saida).toContain('<AlertAction>');
     expect(saida).toContain('<Button size="sm" variant="outline">Atualizar</Button>');
   });
 
   it('a classe adicional aparece na raiz e em cada subcomponente', () => {
-    const saida = alertClasseAdicionalSource();
+    const saida = alertClassNameAdicionalSource();
     expect(saida).toContain('<Alert class="nds-w-full">');
     expect(saida).toContain('<AlertTitle class="nds-w-full">');
     expect(saida).toContain('<AlertDescription class="nds-w-full">');

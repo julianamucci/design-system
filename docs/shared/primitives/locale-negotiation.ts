@@ -17,7 +17,7 @@ export type Locale = 'pt-BR' | 'en' | 'es';
 export const LOCALES: readonly Locale[] = ['pt-BR', 'en', 'es'];
 
 /** `pt-PT` e `pt-AO` também são português: casa pela raiz quando não há exato. */
-function porRaiz(tag: string, validos: readonly Locale[]): Locale | null {
+function byRoot(tag: string, validos: readonly Locale[]): Locale | null {
   const raiz = tag.split('-')[0]?.toLowerCase();
   if (!raiz) return null;
   return validos.find((l) => l.split('-')[0].toLowerCase() === raiz) ?? null;
@@ -49,7 +49,7 @@ export function localeDoNavegador(
     if (!tag) continue;
     const exato = validos.find((l) => l.toLowerCase() === tag.toLowerCase());
     if (exato) return exato;
-    const raiz = porRaiz(tag, validos);
+    const raiz = byRoot(tag, validos);
     if (raiz) return raiz;
   }
   return null;

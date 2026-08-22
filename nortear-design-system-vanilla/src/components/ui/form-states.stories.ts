@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, within } from 'storybook/test';
-import { resolverCor } from '@shared/testing/cor';
+import { resolveColor } from '@shared/testing/cor';
 import { contrastesNosDoisModos } from '@shared/testing/form-probe';
 import { createFormField, createFieldset } from './form';
 import { formSource, formSourceWith } from './form.source';
@@ -79,7 +79,7 @@ export const Invalid: Story = {
       // Comparar com o token RESOLVIDO pelo navegador, não com um rgb literal:
       // o literal quebraria a cada ajuste de paleta e não valeria nos temas de
       // marca. É a metade do item de contrato que ninguém verificava.
-      const destrutivo = resolverCor(campo, 'hsl(var(--destructive))');
+      const destrutivo = resolveColor(campo, 'hsl(var(--destructive))');
       await expect(getComputedStyle(mensagem).color).toBe(destrutivo);
     });
 
@@ -90,7 +90,7 @@ export const Invalid: Story = {
       await expect(controle.getAttribute('aria-describedby')).toContain(mensagem.id);
       await expect(document.getElementById(mensagem.id)).toBe(mensagem);
       await expect(rotulo).toHaveAttribute('data-error', 'true');
-      await expect(getComputedStyle(rotulo).color).toBe(resolverCor(campo, 'hsl(var(--destructive))'));
+      await expect(getComputedStyle(rotulo).color).toBe(resolveColor(campo, 'hsl(var(--destructive))'));
     });
 
     await step('Rótulo, apoio e erro passam de 4.5:1 no claro E no escuro', async () => {

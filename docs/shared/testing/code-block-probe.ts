@@ -14,24 +14,24 @@
  * Armadilhas já tropeçadas e evitadas aqui:
  *
  *   - `console.log` não chega ao terminal (o addon instrumenta o console dentro
- *     da play). O canal é a exceção — ver `reportarSonda`.
+ *     da play). O canal é a exceção — ver `reportProbe`.
  *   - atributo de presença casa valor `"false"`: `[data-highlighted]` casaria
  *     `data-highlighted="false"`. Todo seletor de estado aqui usa
  *     `[attr]:not([attr="false"])`.
  *   - fundo com alfa mente. `--code-block-highlight-bg` é `hsl(var(--primary) /
  *     0.12)` de propósito, então medir a linha destacada exige compor sobre o
- *     ancestral opaco — o que `razao`/`fundoEfetivo` de `cor.ts` já fazem.
+ *     ancestral opaco — o que `ratio`/`backgroundEffective` de `cor.ts` já fazem.
  *   - a classe `.dark` posta e não removida envenena a story seguinte e a foto
- *     do Chromatic. `porTema` restaura no `finally`.
+ *     do Chromatic. `byTheme` restaura no `finally`.
  *
  * Nenhuma função afirma nada: todas devolvem dado. A asserção é da story.
  */
 
-import { MODOS, TEMAS, fundoEfetivo, porTema, razao } from './cor';
+import { MODOS, TEMAS, backgroundEffective, byTheme, ratio } from './cor';
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export interface MedidaDeToken {
+export interface TokenMeasurement {
   /** Nome do `data-token` medido. */
   token: string;
   cor: string;
@@ -41,14 +41,14 @@ export interface MedidaDeToken {
   contraDestaque: number | null;
 }
 
-export interface MedidaDePaleta {
+export interface PaletteMeasurement {
   tema: string;
   modo: string;
-  fundoSuperficie: string | null;
-  fundoDestaque: string | null;
-  tokens: MedidaDeToken[];
+  backgroundSuperficie: string | null;
+  backgroundHighlight: string | null;
+  tokens: TokenMeasurement[];
   /** Menor razão da paleta inteira nesta combinação de tema e modo. */
-  pior: { token: string; razao: number; fundo: 'superficie' | 'destaque' } | null;
+  pior: { token: string; ratio: number; fundo: 'superficie' | 'destaque' } | null;
 }
 
 // ─── Dados fixos ──────────────────────────────────────────────────────────────
@@ -89,9 +89,9 @@ const classes = (el: Element | null | undefined): string[] =>
  */
 function nomeAcessivel(el: Element | null | undefined): string | null {
   if (!el) return null;
-  const rotulado = el.getAttribute('aria-labelledby');
-  if (rotulado) {
-    const alvo = el.ownerDocument.getElementById(rotulado.split(/\s+/)[0]);
+  const labelled = el.getAttribute('aria-labelledby');
+  if (labelled) {
+    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
     if (alvo?.textContent?.trim()) return alvo.textContent.trim();
   }
   const rotulo = el.getAttribute('aria-label');
@@ -112,8 +112,8 @@ function donosDeEixo(el: Element | null, limite: Element): Array<{
   let atual: Element | null = el;
   while (atual) {
     const cs = getComputedStyle(atual);
-    const rolavel = /(auto|scroll)/.test(cs.overflowX) || /(auto|scroll)/.test(cs.overflowY);
-    if (rolavel) {
+    const scrollable = /(auto|scroll)/.test(cs.overflowX) || /(auto|scroll)/.test(cs.overflowY);
+    if (scrollable) {
       const html = atual as HTMLElement;
       saida.push({
         seletor: `${atual.tagName.toLowerCase()}${classes(atual).map((c) => `.${c}`).join('')}`,
@@ -133,7 +133,7 @@ function donosDeEixo(el: Element | null, limite: Element): Array<{
 // ─── Medição de estrutura, semântica e comportamento ──────────────────────────
 
 /** Mede UM bloco. `raiz` é o wrapper do cenário. */
-export function medirCodeBlock(raiz: HTMLElement) {
+export function measureCodeBlock(raiz: HTMLElement) {
   const root = raiz.querySelector<HTMLElement>('[data-slot="code-block"]');
   if (!root) return { presente: false } as const;
 
@@ -151,14 +151,14 @@ export function medirCodeBlock(raiz: HTMLElement) {
 
   const csRoot = getComputedStyle(root);
   const csScroll = scroll ? getComputedStyle(scroll) : null;
-  const csTexto = textos[0] ? getComputedStyle(textos[0]) : null;
+  const csText = textos[0] ? getComputedStyle(textos[0]) : null;
   const csGutter = gutters[0] ? getComputedStyle(gutters[0]) : null;
 
   // `:not([data-token="plain"])` — `plain` não vira elemento, mas o seletor
   // defensivo também impede que um atributo de presença com valor falso conte.
   const tokens = [...root.querySelectorAll<HTMLElement>('[data-token]:not([data-token="plain"])')];
-  const nomesDeToken = [...new Set(tokens.map((t) => t.dataset.token!))].sort();
-  const coresDeToken = [...new Set(tokens.map((t) => getComputedStyle(t).color))];
+  const tokenNames = [...new Set(tokens.map((t) => t.dataset.token!))].sort();
+  const tokenColors = [...new Set(tokens.map((t) => getComputedStyle(t).color))];
 
   const destacadas = [...root.querySelectorAll<HTMLElement>(
     '.nds-code-block-line[data-highlighted]:not([data-highlighted="false"])',
@@ -205,7 +205,7 @@ export function medirCodeBlock(raiz: HTMLElement) {
       donos: scroll ? donosDeEixo(scroll, root) : [],
       tabIndexDoScroll: scroll?.hasAttribute('tabindex') ? scroll.tabIndex : null,
       /** Focável de fato, não só por atributo. */
-      aceitaFoco: (() => {
+      aceitaFocus: (() => {
         if (!scroll) return null;
         const anterior = scroll.ownerDocument.activeElement as HTMLElement | null;
         scroll.focus();
@@ -222,24 +222,24 @@ export function medirCodeBlock(raiz: HTMLElement) {
       alturaVisivel: scroll ? Math.round(scroll.clientHeight) : null,
       alturaTotal: scroll ? scroll.scrollHeight : null,
       /** `pre` não quebra linha: é o que preserva a indentação do trecho. */
-      quebraDeLinha: csTexto?.whiteSpace ?? null,
+      quebraDeLinha: csText?.whiteSpace ?? null,
       gutterSticky: csGutter?.position ?? null,
       gutterSelecionavel: csGutter ? csGutter.userSelect !== 'none' : null,
     },
     sintaxe: {
       tokensClassificados: tokens.length,
-      nomesDeToken,
+      tokenNames,
       /** Quantas cores DISTINTAS a paleta realmente pinta neste trecho. */
-      coresDistintas: coresDeToken.length,
-      cores: coresDeToken,
-      corDeCorpo: csRoot.color,
-      fundoDaSuperficie: fundoEfetivo(root),
+      coresDistintas: tokenColors.length,
+      cores: tokenColors,
+      bodyColor: csRoot.color,
+      fundoDaSuperficie: backgroundEffective(root),
       // Composto, não lido cru: `--code-block-highlight-bg` tem alfa de propósito
       // e `backgroundColor` devolveria uma cor que ninguém vê.
       fundoDoDestaque: destacadas[0]
-        ? razao(
+        ? ratio(
             getComputedStyle(destacadas[0]).backgroundColor,
-            fundoEfetivo(root) ?? 'rgb(255,255,255)',
+            backgroundEffective(root) ?? 'rgb(255,255,255)',
           )?.frente ?? null
         : null,
       /** Destaque não pode ser só cor: a barra de acento é o segundo indicador. */
@@ -257,60 +257,60 @@ export function medirCodeBlock(raiz: HTMLElement) {
  * O axe do test-runner mede só o que está na tela, e a tela está sempre no tema
  * claro — metade do produto nunca foi medida. E o fundo da linha em destaque é
  * semitransparente, então `backgroundColor` devolve uma cor que ninguém vê:
- * `razao` compõe sobre o ancestral opaco antes de dividir.
+ * `ratio` compõe sobre o ancestral opaco antes de dividir.
  *
- * `raiz` recebe as classes de tema; a original volta no `finally` de `porTema`.
+ * `raiz` recebe as classes de tema; a original volta no `finally` de `byTheme`.
  */
-export function medirPaletaPorTema(raiz: HTMLElement): MedidaDePaleta[] {
-  return porTema(raiz, (tema, modo): MedidaDePaleta => {
+export function themeMeasurePalette(raiz: HTMLElement): PaletteMeasurement[] {
+  return byTheme(raiz, (tema, modo): PaletteMeasurement => {
     // TODOS os blocos dentro da raiz, não só o primeiro: a paleta tem onze
     // tokens e nenhum trecho isolado os exercita. Medir um bloco só devolvia
     // cinco cores e deixava seis sem nunca terem sido medidas.
     const roots = [...raiz.querySelectorAll<HTMLElement>('[data-slot="code-block"]')];
     if (roots.length === 0) {
-      return { tema, modo, fundoSuperficie: null, fundoDestaque: null, tokens: [], pior: null };
+      return { tema, modo, backgroundSuperficie: null, backgroundHighlight: null, tokens: [], pior: null };
     }
 
-    const fundoSuperficie = fundoEfetivo(roots[0]);
+    const backgroundSuperficie = backgroundEffective(roots[0]);
     const destacada = raiz.querySelector<HTMLElement>(
       '.nds-code-block-line[data-highlighted]:not([data-highlighted="false"])',
     );
-    const fundoDestaque = destacada
-      ? razao(getComputedStyle(destacada).backgroundColor, fundoSuperficie ?? 'rgb(255,255,255)')
+    const backgroundHighlight = destacada
+      ? ratio(getComputedStyle(destacada).backgroundColor, backgroundSuperficie ?? 'rgb(255,255,255)')
           ?.frente ?? null
       : null;
 
     // Uma amostra por NOME de token: cores iguais em spans diferentes são a
     // mesma medida, e medir todos os spans transformaria o relatório em ruído.
-    const porNome = new Map<string, HTMLElement>();
+    const byName = new Map<string, HTMLElement>();
     for (const el of raiz.querySelectorAll<HTMLElement>(
       '[data-token]:not([data-token="plain"])',
     )) {
-      if (!porNome.has(el.dataset.token!)) porNome.set(el.dataset.token!, el);
+      if (!byName.has(el.dataset.token!)) byName.set(el.dataset.token!, el);
     }
 
-    const tokens: MedidaDeToken[] = [...porNome.entries()].map(([token, el]) => {
+    const tokens: TokenMeasurement[] = [...byName.entries()].map(([token, el]) => {
       const cor = getComputedStyle(el).color;
       return {
         token,
         cor,
-        contraSuperficie: fundoSuperficie ? razao(cor, fundoSuperficie)?.razao ?? null : null,
-        contraDestaque: fundoDestaque ? razao(cor, fundoDestaque)?.razao ?? null : null,
+        contraSuperficie: backgroundSuperficie ? ratio(cor, backgroundSuperficie)?.ratio ?? null : null,
+        contraDestaque: backgroundHighlight ? ratio(cor, backgroundHighlight)?.ratio ?? null : null,
       };
     });
 
-    let pior: MedidaDePaleta['pior'] = null;
+    let pior: PaletteMeasurement['pior'] = null;
     for (const t of tokens) {
       for (const [fundo, r] of [
         ['superficie', t.contraSuperficie],
         ['destaque', t.contraDestaque],
       ] as const) {
         if (r === null) continue;
-        if (!pior || r < pior.razao) pior = { token: t.token, razao: r, fundo };
+        if (!pior || r < pior.ratio) pior = { token: t.token, ratio: r, fundo };
       }
     }
 
-    return { tema, modo, fundoSuperficie, fundoDestaque, tokens, pior };
+    return { tema, modo, backgroundSuperficie, backgroundHighlight, tokens, pior };
   });
 }
 
@@ -320,24 +320,24 @@ export function medirPaletaPorTema(raiz: HTMLElement): MedidaDePaleta[] {
  * É o número que a story assere: um único valor que reprova assim que qualquer
  * cor de qualquer tema cair abaixo do mínimo de texto de corpo.
  */
-export function piorContrasteDaPaleta(
+export function palettePiorContrast(
   raiz: HTMLElement,
   /** `claro` ou `escuro` recorta a varredura; omitido mede os dois. */
   apenasModo?: (typeof MODOS)[number],
 ): {
-  razao: number;
+  ratio: number;
   token: string;
   tema: string;
   modo: string;
   fundo: string;
 } | null {
-  let pior: ReturnType<typeof piorContrasteDaPaleta> = null;
-  for (const medida of medirPaletaPorTema(raiz)) {
+  let pior: ReturnType<typeof palettePiorContrast> = null;
+  for (const medida of themeMeasurePalette(raiz)) {
     if (apenasModo && medida.modo !== apenasModo) continue;
     if (!medida.pior) continue;
-    if (!pior || medida.pior.razao < pior.razao) {
+    if (!pior || medida.pior.ratio < pior.ratio) {
       pior = {
-        razao: medida.pior.razao,
+        ratio: medida.pior.ratio,
         token: medida.pior.token,
         tema: medida.tema,
         modo: medida.modo,
@@ -355,7 +355,7 @@ export function piorContrasteDaPaleta(
  * limiar de 3:1 vale para texto grande (≥24px, ou ≥18.66px em negrito) e o bloco
  * roda a 13px — conferir isso é o que separa "reprova" de "passa".
  */
-export const MINIMO_DE_CONTRASTE = 4.5;
+export const CONTRAST_MINIMUM = 4.5;
 
 /**
  * Laudo de UMA linha, pronto para a asserção das cinco stacks.
@@ -365,23 +365,23 @@ export const MINIMO_DE_CONTRASTE = 4.5;
  * traz o tema, o token, o fundo e a razão — sem isso o vermelho diria apenas
  * "4.31 não é >= 4.5" e alguém teria de refazer a medição na mão.
  */
-export function laudoDeContraste(
+export function contrastLaudo(
   raiz: HTMLElement,
   modo?: (typeof MODOS)[number],
-  minimo: number = MINIMO_DE_CONTRASTE,
+  minimum: number = CONTRAST_MINIMUM,
 ): string {
-  const pior = piorContrasteDaPaleta(raiz, modo);
-  if (!pior) return `nenhum token classificado · abaixo de ${minimo}: true`;
+  const pior = palettePiorContrast(raiz, modo);
+  if (!pior) return `nenhum token classificado · abaixo de ${minimum}: true`;
   return (
-    `${pior.tema}/${pior.modo} · ${pior.token} sobre ${pior.fundo} = ${pior.razao}:1` +
-    ` · abaixo de ${minimo}: ${pior.razao < minimo}`
+    `${pior.tema}/${pior.modo} · ${pior.token} sobre ${pior.fundo} = ${pior.ratio}:1` +
+    ` · abaixo de ${minimum}: ${pior.ratio < minimum}`
   );
 }
 
 /** Linha legível de uma combinação — o que a falha da story precisa mostrar. */
-export function descreverPaleta(m: MedidaDePaleta): string {
+export function describePalette(m: PaletteMeasurement): string {
   if (!m.pior) return `${m.tema}/${m.modo}: nenhum token classificado`;
-  return `${m.tema}/${m.modo} · pior ${m.pior.token} sobre ${m.pior.fundo} = ${m.pior.razao}:1`;
+  return `${m.tema}/${m.modo} · pior ${m.pior.token} sobre ${m.pior.fundo} = ${m.pior.ratio}:1`;
 }
 
 // ─── Copiar ───────────────────────────────────────────────────────────────────
@@ -396,13 +396,13 @@ export function descreverPaleta(m: MedidaDePaleta): string {
  * componente. Nada aqui LÊ a área de transferência: o que se observa é o texto
  * que o componente ENTREGA à API, e o feedback que ele mostra depois.
  */
-export async function comClipboardEspiao<T>(
-  espiao: (texto: string) => Promise<unknown>,
+export async function withClipboardSpy<T>(
+  spy: (texto: string) => Promise<unknown>,
   run: () => Promise<T>,
 ): Promise<T> {
   const original = navigator.clipboard;
   Object.defineProperty(navigator, 'clipboard', {
-    value: { writeText: espiao },
+    value: { writeText: spy },
     configurable: true,
   });
   try {
@@ -413,7 +413,7 @@ export async function comClipboardEspiao<T>(
 }
 
 /** O que o bloco mostra e anuncia depois da cópia — medido, não presumido. */
-export function medirConfirmacao(raiz: HTMLElement) {
+export function measureConfirm(raiz: HTMLElement) {
   const root = raiz.querySelector<HTMLElement>('[data-slot="code-block"]');
   const botao = root?.querySelector<HTMLElement>('[data-slot="code-block-copy"]');
   const status = root?.querySelector<HTMLElement>('[role="status"]');
@@ -422,7 +422,7 @@ export function medirConfirmacao(raiz: HTMLElement) {
     nomeDoBotao: nomeAcessivel(botao),
     quantosIcones: botao ? botao.querySelectorAll('svg').length : null,
     anuncio: texto(status),
-    rotuloVisivel: rotulo && !rotulo.hidden ? texto(rotulo) : null,
+    labelVisible: rotulo && !rotulo.hidden ? texto(rotulo) : null,
   };
 }
 
@@ -434,7 +434,7 @@ export function medirConfirmacao(raiz: HTMLElement) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportarSonda(stack: string, cenario: string, dados: unknown): never {
+export function reportProbe(stack: string, cenario: string, dados: unknown): never {
   throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
 }
 

@@ -167,7 +167,7 @@ export const hoverCardSource: SourceTransform<HoverCardArgs> = (_gerado, ctx) =>
  * 600ms para abrir e 300ms para fechar vêm do componente, e escrevê-los aqui
  * faria o leitor pensar que precisa declará-los.
  */
-export function hoverCardEsperaPadraoSource(): string {
+export function hoverCardWaitDefaultSource(): string {
   return jsxSnippet(
     IMPORT,
     emFrase(
@@ -193,7 +193,7 @@ export function hoverCardEsperaPadraoSource(): string {
  * a diferença que a story cronometra, e o que o snippet precisa mostrar para
  * que quem copia não os escreva no lugar errado.
  */
-export function hoverCardEsperaCurtaSource(): string {
+export function hoverCardWaitCurtaSource(): string {
   return jsxSnippet(
     IMPORT,
     emFrase(
@@ -237,7 +237,7 @@ export function hoverCardClosedSource(): string {
  * em lugar nenhum que outra parte da tela consiga ler — que é justamente o caso
  * de uso (pausar um carrossel enquanto o cartão está aberto, por exemplo).
  */
-export function hoverCardControladoSource(): string {
+export function hoverCardControlledSource(): string {
   return jsxSnippet(
     IMPORT_WITH_STATE,
     `function Comentario() {
@@ -403,7 +403,7 @@ export function hoverCardLadosSource(): string {
  * último no CSS compartilhado, então vencem a largura padrão do cartão. A
  * classe do design system não é substituída, é acrescida.
  */
-export function hoverCardClasseExtraSource(): string {
+export function hoverCardClassNameExtraSource(): string {
   return jsxSnippet(
     IMPORT,
     emFrase(

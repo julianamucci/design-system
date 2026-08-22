@@ -2,16 +2,16 @@ import { describe, expect, it } from 'vitest';
 import {
   chartAreaSource,
   chartBarrasSource,
-  chartComLegendaSource,
-  chartComTituloSource,
+  chartWithCaptionSource,
+  chartWithTitleSource,
   chartDoisTypesSource,
   chartEmCardSource,
   chartLinesSource,
   chartMultiSerieSource,
   chartPizzaSource,
   chartSource,
-  chartTituloNoDesenhoSource,
-  chartVazioSource,
+  designChartTitleSource,
+  chartEmptySource,
 } from './chart.source';
 
 describe('chartSource', () => {
@@ -67,7 +67,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o estado vazio não escreve rótulo de imagem — a frase é o conteúdo', () => {
-    const saida = chartVazioSource();
+    const saida = chartEmptySource();
     expect(saida).toContain('option={buildBarOption({ data: [] })}');
     expect(saida).toContain('emptyLabel="Nenhum dado disponível para o período selecionado."');
     expect(saida).not.toContain('aria-label');
@@ -80,16 +80,16 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a legenda forçada aparece dentro do objeto de configuração', () => {
-    expect(chartComLegendaSource()).toContain('showLegend: true');
+    expect(chartWithCaptionSource()).toContain('showLegend: true');
   });
 
   it('os dois títulos ficam no objeto de configuração, não numa prop do container', () => {
-    expect(chartComTituloSource()).toContain("title: 'Acessos por dispositivo'");
-    expect(chartTituloNoDesenhoSource()).toContain("title: 'Vendas mensais'");
+    expect(chartWithTitleSource()).toContain("title: 'Acessos por dispositivo'");
+    expect(designChartTitleSource()).toContain("title: 'Vendas mensais'");
   });
 
   it('o título no desenho dispensa o rótulo autoral, e a story diz por quê', () => {
-    expect(chartTituloNoDesenhoSource()).not.toContain('aria-label');
+    expect(designChartTitleSource()).not.toContain('aria-label');
   });
 
   it('a composição em card importa o Card junto do container', () => {

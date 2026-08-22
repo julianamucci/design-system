@@ -39,13 +39,13 @@ export type NavigationMenuArgs = {
 const ORIENTACOES = ['horizontal', 'vertical'] as const;
 
 /** Espera padrão do primitivo, em ms, tanto para abrir quanto para fechar. */
-const ESPERA_PADRAO = 50;
+const WAIT_DEFAULT = 50;
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importingNav(...pecas: string[]): string {
-  const lista = [...pecas].sort();
+function importingNav(...parts: string[]): string {
+  const lista = [...parts].sort();
   return `import {\n${lista
-    .map((peca) => `  ${peca},`)
+    .map((part) => `  ${part},`)
     .join('\n')}\n} from "@/components/ui/navigation-menu";`;
 }
 
@@ -74,7 +74,7 @@ function destino(href: string, rotulo: string, atual = false): string {
  * valor inicial e o retorno de mudança se referem a ESTE painel, e não à ordem
  * em que ele aparece na barra.
  */
-function comPainel(valor: string, rotulo: string, conteudo: string): string {
+function withPanel(valor: string, rotulo: string, conteudo: string): string {
   return `<NavigationMenuItem value="${valor}">
   <NavigationMenuTrigger>${rotulo}</NavigationMenuTrigger>
   <NavigationMenuContent>
@@ -99,7 +99,7 @@ ${corpo}
 }
 
 /** Lista vertical de destinos dentro do painel. */
-function listaDoPainel(...itens: string[]): string {
+function panelList(...itens: string[]): string {
   return `<ul className="nds-stack nds-list-none nds-w-xs" data-spacing="xs">
 ${indentar(itens.join('\n'), '  ')}
 </ul>`;
@@ -141,10 +141,10 @@ export const navigationMenuSource: SourceTransform<NavigationMenuArgs> = (_gerad
   const atributos = attrsMultilinha([
     'aria-label="Navegação principal"',
     propText('defaultValue', args.defaultValue),
-    typeof args.delay === 'number' && args.delay !== ESPERA_PADRAO
+    typeof args.delay === 'number' && args.delay !== WAIT_DEFAULT
       ? propNumber('delay', args.delay)
       : undefined,
-    typeof args.closeDelay === 'number' && args.closeDelay !== ESPERA_PADRAO
+    typeof args.closeDelay === 'number' && args.closeDelay !== WAIT_DEFAULT
       ? propNumber('closeDelay', args.closeDelay)
       : undefined,
     propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
@@ -156,10 +156,10 @@ export const navigationMenuSource: SourceTransform<NavigationMenuArgs> = (_gerad
       atributos,
       [
         destino('#inicio', 'Início'),
-        comPainel(
+        withPanel(
           'produtos',
           'Produtos',
-          listaDoPainel(filho('#inicial', 'Plano Inicial'), filho('#profissional', 'Plano Profissional')),
+          panelList(filho('#inicial', 'Plano Inicial'), filho('#profissional', 'Plano Profissional')),
         ),
         destino('#sobre', 'Sobre'),
       ].join('\n'),
@@ -180,10 +180,10 @@ export function navigationMenuVerticalSource(): string {
 ${indentar(
   [
     destino('#painel', 'Painel'),
-    comPainel(
+    withPanel(
       'relatorios',
       'Relatórios',
-      listaDoPainel(filho('#vendas', 'Vendas'), filho('#assinaturas', 'Assinaturas')),
+      panelList(filho('#vendas', 'Vendas'), filho('#assinaturas', 'Assinaturas')),
     ),
     destino('#configuracoes', 'Configurações'),
   ].join('\n'),
@@ -200,7 +200,7 @@ ${indentar(
  * para o gatilho ativo. A seta nasce DESLIGADA porque é reforço redundante: o
  * gatilho já muda de fundo e o chevron já gira.
  */
-export function navigationMenuAbertoSource(): string {
+export function navigationMenuOpenSource(): string {
   return jsxSnippet(
     importingNav(...PARTS_WITH_PANEL),
     barra(
@@ -211,10 +211,10 @@ export function navigationMenuAbertoSource(): string {
       ]),
       [
         destino('#inicio', 'Início'),
-        comPainel(
+        withPanel(
           'produtos',
           'Produtos',
-          listaDoPainel(
+          panelList(
             filho('#inicial', 'Plano Inicial'),
             filho('#profissional', 'Plano Profissional'),
             filho('#empresarial', 'Plano Empresarial'),
@@ -232,7 +232,7 @@ export function navigationMenuAbertoSource(): string {
  * jeito nenhum: presente com valor negativo, ele faria `[aria-current]` casar
  * o item errado.
  */
-export function navigationMenuAtivoSource(): string {
+export function navigationMenuActiveSource(): string {
   return jsxSnippet(
     importingNav(...PARTS_SO_TARGETS),
     barra(
@@ -296,7 +296,7 @@ ${indentar(
     importingNav(...PARTS_WITH_PANEL),
     barra(
       ' aria-label="Navegação de soluções"',
-      [destino('#inicio', 'Início'), comPainel('solucoes', 'Soluções', grade)].join('\n'),
+      [destino('#inicio', 'Início'), withPanel('solucoes', 'Soluções', grade)].join('\n'),
     ),
   );
 }
@@ -331,7 +331,7 @@ ${indentar(
     importingNav(...PARTS_WITH_PANEL),
     barra(
       ' aria-label="Navegação de recursos"',
-      [destino('#inicio', 'Início'), comPainel('recursos', 'Recursos', conteudo)].join('\n'),
+      [destino('#inicio', 'Início'), withPanel('recursos', 'Recursos', conteudo)].join('\n'),
     ),
   );
 }

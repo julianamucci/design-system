@@ -5,7 +5,7 @@ import { Slider } from './index';
 import SliderStory from './SliderStory.svelte';
 import SliderDocs from '@/components/docs/SliderDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { limitesDaAlca, valorDaAlca } from '@shared/testing/slider-probe';
+import { handleLimites, handleValue } from '@shared/testing/slider-probe';
 import { sliderSource } from './slider.source';
 
 const meta: Meta = {
@@ -119,7 +119,7 @@ export const Playground: Story = {
     });
 
     await step('Os limites da faixa chegam à árvore de acessibilidade', async () => {
-      const { min, max } = limitesDaAlca(canvas.getByRole('slider'));
+      const { min, max } = handleLimites(canvas.getByRole('slider'));
       await expect(min).toBe(0);
       await expect(max).toBe(100);
     });
@@ -132,8 +132,8 @@ export const Playground: Story = {
 
       // Limpa antes de medir: no replay o espião chega com as chamadas da
       // rodada anterior e a asserção passaria sem nada ter se movido.
-      const espiaoCommit = args.onValueCommit as unknown as ReturnType<typeof fn>;
-      espiaoCommit.mockClear();
+      const spyCommit = args.onValueCommit as unknown as ReturnType<typeof fn>;
+      spyCommit.mockClear();
 
       // Pressionar, mover e SOLTAR na mesma chamada. A API direta do
       // `userEvent` cria uma instância nova a cada chamada, e com ela um estado
@@ -153,23 +153,23 @@ export const Playground: Story = {
       const centro = alca.getBoundingClientRect().left + alca.getBoundingClientRect().width / 2;
       await expect(centro).toBeGreaterThan(caixa.left + caixa.width * 0.5);
 
-      await expect(espiaoCommit).toHaveBeenCalled();
+      await expect(spyCommit).toHaveBeenCalled();
     });
 
     await step('ArrowRight incrementa em step', async () => {
       const alca = canvas.getByRole('slider');
-      const antes = valorDaAlca(alca);
+      const antes = handleValue(alca);
       (alca as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
     });
 
     await step('Home vai para o mínimo e End para o máximo', async () => {
       (canvas.getByRole('slider') as HTMLElement).focus();
       await userEvent.keyboard('{Home}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(0);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(0);
       await userEvent.keyboard('{End}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(100);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(100);
     });
   },
 };

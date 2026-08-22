@@ -24,26 +24,26 @@
  * Armadilhas já tropeçadas e evitadas aqui:
  *
  *   - `console.log` não chega ao terminal (o addon instrumenta o console dentro
- *     da play). O canal é a exceção — ver `reportarSonda`.
+ *     da play). O canal é a exceção — ver `reportProbe`.
  *   - `[data-active]` casa `data-active="false"`, que a lib emite em TODOS os
  *     slots. Os seletores usam `:not([data-active="false"])`.
  *   - `:hover` não acende com evento sintético do `userEvent`. A cor do hover é
  *     lida da DECLARAÇÃO da folha e resolvida pelo navegador — ver
- *     `corDeclaradaNoHover`.
+ *     `hoverColorDeclarada`.
  *   - medir logo após `focus()` devolve o primeiro quadro da transição de
- *     `border-color`. Toda leitura de estado passa por `semTransicao`.
+ *     `border-color`. Toda leitura de estado passa por `noTransicao`.
  */
 
-import { declaracaoDaRegra, fundoEfetivo, ligarTemaEscuro, razao, resolverCor, semTransicao } from './cor';
+import { ruleDeclaration, backgroundEffective, darkLigarTheme, ratio, resolveColor, noTransicao } from './cor';
 
 export type { Contraste } from './cor';
-export { ligarTemaEscuro };
+export { darkLigarTheme };
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
 export type FamiliaDeMarkup = 'nativa' | 'composta' | 'nenhuma';
 
-export interface MedidaDeSlot {
+export interface SlotMeasurement {
   indice: number;
   tag: string;
   /** O que a pessoa vê na caixa: `value` no input, texto no div. */
@@ -60,7 +60,7 @@ export interface MedidaDeSlot {
   largura: number;
   altura: number;
   raio: string;
-  larguraDaBorda: string;
+  borderWidth: string;
   corDaBorda: string;
   fundo: string;
   cor: string;
@@ -72,8 +72,8 @@ export interface MedidaDeSlot {
 
 const SEL_CONTAINER = '.nds-input-otp, .nds-input-otp-container';
 const SEL_SLOT = '.nds-input-otp-slot';
-const SEL_SEPARADOR = '.nds-input-otp-separator';
-const SEL_ATIVO = '[data-active]:not([data-active="false"])';
+const SEL_SEPARATOR = '.nds-input-otp-separator';
+const SEL_ACTIVE = '[data-active]:not([data-active="false"])';
 
 const texto = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
@@ -84,9 +84,9 @@ const classesDe = (el: Element | null | undefined): string[] =>
 /** Nome acessível pela ordem que o leitor usa. `null` é elemento sem nome. */
 export function nomeAcessivel(el: Element | null | undefined): string | null {
   if (!el) return null;
-  const rotulado = el.getAttribute('aria-labelledby');
-  if (rotulado) {
-    const partes = rotulado
+  const labelled = el.getAttribute('aria-labelledby');
+  if (labelled) {
+    const partes = labelled
       .split(/\s+/)
       .map((id) => el.ownerDocument.getElementById(id)?.textContent?.trim())
       .filter(Boolean);
@@ -126,7 +126,7 @@ export function familiaDe(raiz: HTMLElement): FamiliaDeMarkup {
  * nativa é o primeiro slot. Devolver o alvo certo é o que permite às cinco
  * stories digitarem com o mesmo código.
  */
-export function campoDeEntrada(raiz: HTMLElement): HTMLInputElement | null {
+export function entryField(raiz: HTMLElement): HTMLInputElement | null {
   const familia = familiaDe(raiz);
   if (familia === 'nativa') return slotsDe(raiz)[0] as HTMLInputElement | null;
   const container = containerDe(raiz);
@@ -146,12 +146,12 @@ export function caracteresVisiveis(raiz: HTMLElement): string[] {
 }
 
 /** Índice da caixa que mostra o cursor. `-1` é nenhuma — o cursor sumiu. */
-export function slotComCaret(raiz: HTMLElement): number {
+export function slotWithCaret(raiz: HTMLElement): number {
   const slots = slotsDe(raiz);
-  const porAtributo = slots.findIndex(
-    (s) => s.matches(SEL_ATIVO) || !!s.querySelector('.nds-input-otp-caret'),
+  const byAttr = slots.findIndex(
+    (s) => s.matches(SEL_ACTIVE) || !!s.querySelector('.nds-input-otp-caret'),
   );
-  if (porAtributo !== -1) return porAtributo;
+  if (byAttr !== -1) return byAttr;
   return slots.findIndex((s) => s === s.ownerDocument.activeElement);
 }
 
@@ -163,7 +163,7 @@ export function slotComCaret(raiz: HTMLElement): number {
  * nas cinco é o que torna a coluna comparável.
  */
 export function colar(raiz: HTMLElement, codigo: string): boolean {
-  const alvo = (raiz.ownerDocument.activeElement as HTMLElement | null) ?? campoDeEntrada(raiz);
+  const alvo = (raiz.ownerDocument.activeElement as HTMLElement | null) ?? entryField(raiz);
   if (!alvo) return false;
   const dados = new DataTransfer();
   dados.setData('text', codigo);
@@ -180,13 +180,13 @@ export function colar(raiz: HTMLElement, codigo: string): boolean {
  * mantém a medida sendo do navegador — e é assim que se prova que o hover
  * REFORÇA a borda em vez de apagá-la, comparando com a cor de repouso.
  */
-export function corDeclaradaNoHover(raiz: HTMLElement): string | null {
-  const declarada = declaracaoDaRegra(
+export function hoverColorDeclarada(raiz: HTMLElement): string | null {
+  const declarada = ruleDeclaration(
     raiz.ownerDocument,
     (seletor) => seletor.includes(':hover') && seletor.includes('nds-input-otp'),
     'border-color',
   );
-  return declarada ? resolverCor(raiz, declarada) : null;
+  return declarada ? resolveColor(raiz, declarada) : null;
 }
 
 // ─── Medição ──────────────────────────────────────────────────────────────────
@@ -205,7 +205,7 @@ export function folgaEntre(a: Element | null | undefined, b: Element | null | un
   return Math.round(cb.left - ca.right);
 }
 
-function medirSlot(el: HTMLElement, indice: number): MedidaDeSlot {
+function measureSlot(el: HTMLElement, indice: number): SlotMeasurement {
   const cs = getComputedStyle(el);
   const caixa = el.getBoundingClientRect();
   const ehInput = el.tagName.toLowerCase() === 'input';
@@ -215,7 +215,7 @@ function medirSlot(el: HTMLElement, indice: number): MedidaDeSlot {
     caractere: ehInput ? (el as HTMLInputElement).value : texto(el),
     focalizavel: ehInput ? !(el as HTMLInputElement).disabled : el.tabIndex >= 0,
     nomeAcessivel: nomeAcessivel(el),
-    ativo: el.matches(SEL_ATIVO),
+    ativo: el.matches(SEL_ACTIVE),
     temCaret: !!el.querySelector('.nds-input-otp-caret'),
     desabilitado: ehInput ? (el as HTMLInputElement).disabled : el.hasAttribute('data-disabled'),
     ariaInvalid: el.getAttribute('aria-invalid'),
@@ -224,7 +224,7 @@ function medirSlot(el: HTMLElement, indice: number): MedidaDeSlot {
     largura: Math.round(caixa.width),
     altura: Math.round(caixa.height),
     raio: `${cs.borderStartStartRadius} ${cs.borderStartEndRadius}`,
-    larguraDaBorda: `${cs.borderTopWidth} ${cs.borderInlineStartWidth} ${cs.borderInlineEndWidth}`,
+    borderWidth: `${cs.borderTopWidth} ${cs.borderInlineStartWidth} ${cs.borderInlineEndWidth}`,
     corDaBorda: cs.borderTopColor,
     fundo: cs.backgroundColor,
     cor: cs.color,
@@ -234,12 +234,12 @@ function medirSlot(el: HTMLElement, indice: number): MedidaDeSlot {
 }
 
 /** Mede UM InputOTP e o que o acompanha. `raiz` é o wrapper do cenário. */
-export function medirInputOtp(raiz: HTMLElement) {
+export function measureInputOtp(raiz: HTMLElement) {
   const container = containerDe(raiz);
   const slots = slotsDe(raiz);
-  const separadores = [...raiz.querySelectorAll<HTMLElement>(SEL_SEPARADOR)];
+  const separadores = [...raiz.querySelectorAll<HTMLElement>(SEL_SEPARATOR)];
   const grupos = [...raiz.querySelectorAll<HTMLElement>('.nds-input-otp-group')];
-  const campo = campoDeEntrada(raiz);
+  const campo = entryField(raiz);
   const familia = familiaDe(raiz);
 
   if (!container && !slots.length) {
@@ -248,12 +248,12 @@ export function medirInputOtp(raiz: HTMLElement) {
 
   const csContainer = container ? getComputedStyle(container) : null;
   const descrito = campo?.getAttribute('aria-describedby') ?? null;
-  const alvosDescritos = descrito
+  const targetsDescribed = descrito
     ? descrito.split(/\s+/).map((id) => raiz.ownerDocument.getElementById(id))
     : [];
 
-  const medidas = semTransicao(container ?? raiz, () => slots.map(medirSlot));
-  const fundo = fundoEfetivo(slots[0] ?? container);
+  const medidas = noTransicao(container ?? raiz, () => slots.map(measureSlot));
+  const fundo = backgroundEffective(slots[0] ?? container);
 
   return {
     presente: true,
@@ -291,7 +291,7 @@ export function medirInputOtp(raiz: HTMLElement) {
       ariaInvalidDoCampo: campo?.getAttribute('aria-invalid') ?? null,
       ariaInvalidPorSlot: medidas.map((m) => m.ariaInvalid),
       ariaDescribedby: descrito,
-      alvoDescribedbyExiste: descrito ? alvosDescritos.every(Boolean) : null,
+      alvoDescribedbyExiste: descrito ? targetsDescribed.every(Boolean) : null,
       maxlengthDoCampo: campo && campo.maxLength > 0 ? campo.maxLength : null,
       campoDesabilitado: campo?.disabled ?? null,
     },
@@ -300,13 +300,13 @@ export function medirInputOtp(raiz: HTMLElement) {
       displayDoContainer: csContainer?.display ?? null,
       gapDoContainer: csContainer?.gap ?? null,
       slot: medidas[0]
-        ? { largura: medidas[0].largura, altura: medidas[0].altura, borda: medidas[0].larguraDaBorda }
+        ? { largura: medidas[0].largura, altura: medidas[0].altura, borda: medidas[0].borderWidth }
         : null,
       raioPrimeiro: medidas[0]?.raio ?? null,
       raioUltimo: medidas.at(-1)?.raio ?? null,
       raioMiolo: medidas[1]?.raio ?? null,
       /** Slots colados: a borda esquerda do miolo é suprimida no desenho. */
-      bordaDoMiolo: medidas[1]?.larguraDaBorda ?? null,
+      bordaDoMiolo: medidas[1]?.borderWidth ?? null,
       /**
        * Distância REAL entre dois slots vizinhos, em pixels.
        *
@@ -320,12 +320,12 @@ export function medirInputOtp(raiz: HTMLElement) {
       folgaDepoisDoSeparador: folgaEntre(separadores[0], separadores[0]?.nextElementSibling),
     },
     estado: {
-      caretEm: slotComCaret(raiz),
+      caretEm: slotWithCaret(raiz),
       caracteres: medidas.map((m) => m.caractere),
       opacidadeDoContainer: csContainer?.opacity ?? null,
       opacidadeDoSlot: medidas[0]?.opacidade ?? null,
       corDaBordaEmRepouso: medidas[0]?.corDaBorda ?? null,
-      corDaBordaNoHover: corDeclaradaNoHover(raiz),
+      corDaBordaNoHover: hoverColorDeclarada(raiz),
       fundoDoSlot: medidas[0]?.fundo ?? null,
       corDoTexto: medidas[0]?.cor ?? null,
     },
@@ -341,11 +341,11 @@ export function medirInputOtp(raiz: HTMLElement) {
       const caret = raiz.querySelector<HTMLElement>('.nds-input-otp-caret');
       const csCaret = caret ? getComputedStyle(caret) : null;
       const csSep = separadores[0] ? getComputedStyle(separadores[0]) : null;
-      const csPrimeiro = slots[0] ? getComputedStyle(slots[0]) : null;
+      const csFirst = slots[0] ? getComputedStyle(slots[0]) : null;
       return {
-        slotSize: csPrimeiro ? `${csPrimeiro.width} × ${csPrimeiro.height}` : null,
-        slotFontSize: csPrimeiro?.fontSize ?? null,
-        border: csPrimeiro ? `${csPrimeiro.borderTopWidth} ${csPrimeiro.borderTopColor}` : null,
+        slotSize: csFirst ? `${csFirst.width} × ${csFirst.height}` : null,
+        slotFontSize: csFirst?.fontSize ?? null,
+        border: csFirst ? `${csFirst.borderTopWidth} ${csFirst.borderTopColor}` : null,
         rounded: medidas[0]?.raio ?? null,
         caretExiste: !!caret,
         caretCaixa: csCaret ? `${csCaret.width} × ${csCaret.height}` : null,
@@ -356,9 +356,9 @@ export function medirInputOtp(raiz: HTMLElement) {
       };
     })(),
     contraste: {
-      textoNoSlot: fundo && medidas[0] ? razao(medidas[0].cor, fundo) : null,
-      bordaNoFundo: fundo && medidas[0] ? razao(medidas[0].corDaBorda, fundo) : null,
-      hoverNoFundo: fundo && corDeclaradaNoHover(raiz) ? razao(corDeclaradaNoHover(raiz)!, fundo) : null,
+      textoNoSlot: fundo && medidas[0] ? ratio(medidas[0].cor, fundo) : null,
+      bordaNoFundo: fundo && medidas[0] ? ratio(medidas[0].corDaBorda, fundo) : null,
+      hoverNoFundo: fundo && hoverColorDeclarada(raiz) ? ratio(hoverColorDeclarada(raiz)!, fundo) : null,
     },
     slots: medidas,
   };
@@ -368,11 +368,11 @@ export function medirInputOtp(raiz: HTMLElement) {
  * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
  * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
  */
-export function medirVarios(raiz: HTMLElement, cenarios: string[]) {
+export function multipleMeasure(raiz: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
     const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    registro[cenario] = alvo ? medirInputOtp(alvo) : null;
+    registro[cenario] = alvo ? measureInputOtp(alvo) : null;
   }
   return registro;
 }
@@ -382,12 +382,12 @@ export function medirVarios(raiz: HTMLElement, cenarios: string[]) {
  * nunca vê, porque a tela está sempre no claro. A classe sai no `finally`:
  * deixá-la posta envenena a story seguinte e a foto do Chromatic.
  */
-export function medirNoEscuro(raiz: HTMLElement, cenario: string) {
+export function darkMeasure(raiz: HTMLElement, cenario: string) {
   const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
   if (!alvo) return null;
-  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(raiz.ownerDocument);
   try {
-    const medida = medirInputOtp(alvo);
+    const medida = measureInputOtp(alvo);
     if (!medida.presente) return null;
     return { estado: medida.estado, contraste: medida.contraste };
   } finally {
@@ -401,10 +401,10 @@ export function medirNoEscuro(raiz: HTMLElement, cenario: string) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportarSonda(stack: string, raiz: HTMLElement, cenarios: string[], extra?: unknown) {
+export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[], extra?: unknown) {
   const registro = {
-    claro: medirVarios(raiz, cenarios),
-    escuro: medirNoEscuro(raiz, cenarios[0]),
+    claro: multipleMeasure(raiz, cenarios),
+    escuro: darkMeasure(raiz, cenarios[0]),
     comportamento: extra ?? null,
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);

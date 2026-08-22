@@ -4,19 +4,19 @@ import { within, userEvent, expect } from 'storybook/test';
 import { Slider } from './index';
 import { Label } from '@/components/ui/label';
 import {
-  alcaDesabilitada,
+  handleDesabilitada,
   alcasDoSlider,
-  anelDeFocoAssentado,
-  anelEmRepouso,
-  contextoAlcaTrilho,
-  contrasteAlcaTrilho,
-  valorDaAlca,
+  focusAssentadoRing,
+  restRing,
+  contextoHandleTrack,
+  contrastHandleTrack,
+  handleValue,
 } from '@shared/testing/slider-probe';
 import {
-  sliderDesabilitadoSource,
+  sliderDisabledSource,
   sliderFocusSource,
   sliderNoMaximoSource,
-  minimumSourceSlider,
+  minimumSliderSource,
   sliderDefaultSource,
 } from './slider.source';
 
@@ -64,15 +64,15 @@ export const Default: Story = {
 
     // Story sem interação: é aqui que o valor de montagem pode ser afirmado.
     await step('Alça no valor inicial', async () => {
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(50);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(50);
     });
 
     await step('A borda da alça alcança 3:1 contra o trilho', async () => {
       // WCAG 1.4.11. O miolo da alça é da cor do fundo de propósito, então quem
       // a separa do trilho é a borda.
       await expect(
-        contrasteAlcaTrilho(canvasElement),
-        contextoAlcaTrilho(canvasElement),
+        contrastHandleTrack(canvasElement),
+        contextoHandleTrack(canvasElement),
       ).toBeGreaterThanOrEqual(3);
     });
   },
@@ -107,7 +107,7 @@ export const FocusVisible: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const alca = () => alcasDoSlider(canvasElement)[0];
-    const repouso = await anelEmRepouso(alca());
+    const repouso = await restRing(alca());
 
     await step('A alça recebe foco por teclado', async () => {
       await userEvent.tab();
@@ -116,15 +116,15 @@ export const FocusVisible: Story = {
 
     await step('A alça focada fica visivelmente diferente da alça em repouso', async () => {
       // Alça focada idêntica à alça parada é 2.4.7 reprovado com o teste verde.
-      const focada = await anelDeFocoAssentado(alca(), repouso);
+      const focada = await focusAssentadoRing(alca(), repouso);
       await expect(focada.sombra !== repouso.sombra || focada.borda !== repouso.borda).toBe(true);
       await expect(focada.sombra).not.toBe('none');
     });
 
     await step('PageUp anda mais que uma seta', async () => {
-      const antes = valorDaAlca(canvas.getByRole('slider'));
+      const antes = handleValue(canvas.getByRole('slider'));
       await userEvent.keyboard('{PageUp}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBeGreaterThan(antes + 1);
+      await expect(handleValue(canvas.getByRole('slider'))).toBeGreaterThan(antes + 1);
     });
   },
 };
@@ -134,7 +134,7 @@ export const Disabled: Story = {
     covers: ['visual.item4'],
     docs: {
       // A prop desligada é o assunto, e ela não vem de control nesta página.
-      source: { transform: sliderDesabilitadoSource },
+      source: { transform: sliderDisabledSource },
     },
   },
   render: () => ({
@@ -154,15 +154,15 @@ export const Disabled: Story = {
     const canvas = within(canvasElement);
 
     await step('A alça está marcada como desabilitada', async () => {
-      await expect(alcaDesabilitada(alcasDoSlider(canvasElement)[0])).toBe(true);
+      await expect(handleDesabilitada(alcasDoSlider(canvasElement)[0])).toBe(true);
     });
 
     await step('ArrowRight não altera o valor', async () => {
       const alca = canvas.getByRole('slider');
-      const antes = valorDaAlca(alca);
+      const antes = handleValue(alca);
       (alca as HTMLElement).focus();
       await userEvent.keyboard('{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(antes);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(antes);
     });
   },
 };
@@ -172,7 +172,7 @@ export const NoMin: Story = {
     docs: {
       // O extremo é o assunto, e ele mora no valor inicial do estado — não em
       // prop nenhuma do componente.
-      source: { transform: minimumSourceSlider },
+      source: { transform: minimumSliderSource },
     },
   },
   render: () => ({
@@ -198,7 +198,7 @@ export const NoMin: Story = {
       (alca as HTMLElement).focus();
       await userEvent.keyboard('{Home}');
       await userEvent.keyboard('{ArrowLeft}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(0);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(0);
     });
   },
 };
@@ -233,7 +233,7 @@ export const NoMax: Story = {
       (alca as HTMLElement).focus();
       await userEvent.keyboard('{End}');
       await userEvent.keyboard('{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(100);
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(100);
     });
   },
 };

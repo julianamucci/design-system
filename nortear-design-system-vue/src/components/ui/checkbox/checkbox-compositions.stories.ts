@@ -5,11 +5,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  checkboxComDescricaoSource,
+  checkboxWithDescriptionSource,
   checkboxWithLabelSource,
-  checkboxEmFormularioSource,
-  checkboxGrupoSource,
-  checkboxSelecionarTodosSource,
+  formCheckboxSource,
+  checkboxGroupSource,
+  checkboxSelectAllSource,
 } from './checkbox.source';
 
 const meta = {
@@ -78,7 +78,7 @@ export const WithLabel: Story = {
 export const WithDescription: Story = {
   // O texto auxiliar entra por `aria-describedby`, fora do rótulo, e o par muda
   // de alinhamento por causa dele — a do meta mostraria só a caixa e o rótulo.
-  parameters: { docs: { source: { transform: checkboxComDescricaoSource } } },
+  parameters: { docs: { source: { transform: checkboxWithDescriptionSource } } },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -119,7 +119,7 @@ export const WithDescription: Story = {
 export const FieldsetGroup: Story = {
   // O `fieldset` com `legend` é o que nomeia o conjunto: sem ele no snippet, a
   // lição do grupo se perde.
-  parameters: { docs: { source: { transform: checkboxGrupoSource } } },
+  parameters: { docs: { source: { transform: checkboxGroupSource } } },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -171,7 +171,7 @@ export const FieldsetGroup: Story = {
 export const SelectAll: Story = {
   // A caixa mestra separada dos itens por uma linha é a composição inteira —
   // ela não existe em nenhuma outra story.
-  parameters: { docs: { source: { transform: checkboxSelecionarTodosSource } } },
+  parameters: { docs: { source: { transform: checkboxSelectAllSource } } },
   render: () => ({
     components: { Checkbox },
     setup() { return {}; },
@@ -231,7 +231,7 @@ export const InForm: Story = {
     covers: ['functional.item5'],
     // O formulário inteiro é a composição: `name`/`value` no submit, `required`
     // e os outros componentes do design system em volta.
-    docs: { source: { transform: checkboxEmFormularioSource } },
+    docs: { source: { transform: formCheckboxSource } },
   },
   render: () => ({
     // Componentes reais do design system em vez de markup cru: reimplementar

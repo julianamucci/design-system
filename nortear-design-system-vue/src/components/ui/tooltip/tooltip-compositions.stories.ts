@@ -11,9 +11,9 @@ import { Kbd } from '@/components/ui/kbd';
 import { Save, Trash2, Share2, Copy, Pencil } from 'lucide-vue-next';
 import { balaoDe } from './tooltip.fixtures';
 import {
-  actionsSourceTooltipBar,
+  actionsTooltipBarSource,
   tooltipButtonIconSource,
-  tooltipComAtalhoSource,
+  tooltipWithShortcutSource,
   tooltipQuatroLadosSource,
 } from './tooltip.source';
 
@@ -22,7 +22,7 @@ import {
 // nunca é o único portador da informação.
 
 /** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
-function ladoDe(balao: HTMLElement | null): string | null {
+function sideOf(balao: HTMLElement | null): string | null {
   return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
 }
 
@@ -97,7 +97,7 @@ export const ActionBar: Story = {
     docs: {
       // São cinco unidades dentro de uma toolbar, servidas por um Provider só —
       // a do meta mostraria um botão solto.
-      source: { transform: actionsSourceTooltipBar },
+      source: { transform: actionsTooltipBarSource },
       description: {
         story:
           'Toolbar com múltiplos botões icon-only — cada um com seu aria-label e Tooltip de reforço.',
@@ -177,7 +177,7 @@ export const KeyboardShortcut: Story = {
     docs: {
       // O balão ganha estrutura própria: o rótulo mais as teclas em Kbd, que a
       // do meta esconderia numa linha de texto corrido.
-      source: { transform: tooltipComAtalhoSource },
+      source: { transform: tooltipWithShortcutSource },
       description: {
         story: 'Tooltip com atalho via Kbd — comunica a hotkey visualmente sem tirá-la do aria-label.',
       },
@@ -291,11 +291,11 @@ export const FourSides: Story = {
         // Esperar o `data-side`, e não só o elemento: o balão entra no DOM
         // antes de o posicionador medir, e nesse intervalo o atributo é nulo.
         await waitFor(async () => {
-          await expect(ladoDe(balao!)).toBeTruthy();
+          await expect(sideOf(balao!)).toBeTruthy();
         });
         // O auto-flip por colisão é comportamento documentado: perto da borda o
         // balão troca para o lado oposto em vez de sair da tela.
-        await expect([lado, oposto[lado]]).toContain(ladoDe(balao!));
+        await expect([lado, oposto[lado]]).toContain(sideOf(balao!));
       }
     });
   },

@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsButton } from './button';
-import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 // Os estados canônicos do AlertDialog: fechado, aberto, confirmado e cancelado.
 //
@@ -22,7 +22,7 @@ const meta: Meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
   },
 };
 
@@ -167,7 +167,7 @@ export const Confirmed: Story = {
 
     // Cada passo estabelece a própria precondição: o replay do painel
     // Interactions reexecuta no mesmo DOM, e lá o `defaultOpen` já passou.
-    const garantirAberto = async () => {
+    const ensureOpen = async () => {
       if (!document.querySelector('[role="alertdialog"]')) {
         await userEvent.click(canvas.getByRole('button', { name: /^Excluir$/i }));
       }
@@ -175,7 +175,7 @@ export const Confirmed: Story = {
     };
 
     await step('Confirmar dispara o callback de quem consome', async () => {
-      await garantirAberto();
+      await ensureOpen();
       await userEvent.click(within(document.body).getByTestId('confirmar'));
       await expect(aoConfirmar).toHaveBeenCalled();
     });
@@ -251,7 +251,7 @@ export const Cancelled: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 
-    const garantirAberto = async () => {
+    const ensureOpen = async () => {
       if (!document.querySelector('[role="alertdialog"]')) {
         await userEvent.click(canvas.getByRole('button', { name: /^Excluir$/i }));
       }
@@ -259,7 +259,7 @@ export const Cancelled: Story = {
     };
 
     await step('Cancelar fecha e NÃO executa a ação destrutiva', async () => {
-      await garantirAberto();
+      await ensureOpen();
       await userEvent.click(within(document.body).getByTestId('cancelar'));
       await expect(aoCancelar).toHaveBeenCalled();
       await waitForPortalVanish('alertdialog');

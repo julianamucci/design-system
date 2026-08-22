@@ -13,19 +13,19 @@ export type SelectArgs = {
   name?: string;
 };
 
-type Opcao = { value: string; label: string };
-type Grupo = { label: string; opcoes: Opcao[] };
+type Option = { value: string; label: string };
+type Grupo = { label: string; opcoes: Option[] };
 
-const ESTADOS: Opcao[] = [
+const STATES: Option[] = [
   { value: 'sp', label: 'São Paulo' },
   { value: 'rj', label: 'Rio de Janeiro' },
   { value: 'mg', label: 'Minas Gerais' },
 ];
 
-const STATES_WITH_ES: Opcao[] = [...ESTADOS, { value: 'es', label: 'Espírito Santo' }];
+const STATES_WITH_ES: Option[] = [...STATES, { value: 'es', label: 'Espírito Santo' }];
 
 const REGIOES: Grupo[] = [
-  { label: 'Sudeste', opcoes: ESTADOS },
+  { label: 'Sudeste', opcoes: STATES },
   {
     label: 'Sul',
     opcoes: [
@@ -39,13 +39,13 @@ const REGIOES: Grupo[] = [
 const PLACEHOLDER = 'Selecione...';
 
 /** Literal de opções indentado para dentro do bloco `<script>`. */
-function optionsLiteral(opcoes: Opcao[], recuo = '  '): string {
+function optionsLiteral(opcoes: Option[], recuo = '  '): string {
   return opcoes
     .map((o) => `${recuo}{ value: "${o.value}", label: "${o.label}" },`)
     .join('\n');
 }
 
-type Opcoes = {
+type Options = {
   valor?: string;
   disabled?: boolean;
   name?: string;
@@ -55,7 +55,7 @@ type Opcoes = {
 };
 
 /** Atributos da raiz. `type` é obrigatório; o resto só quando difere do padrão. */
-function rootProps(o: Opcoes): string {
+function rootProps(o: Options): string {
   return attrs(
     'type="single"',
     'bind:value',
@@ -65,7 +65,7 @@ function rootProps(o: Opcoes): string {
 }
 
 /** Atributos do gatilho, na ordem em que a composição real os escreve. */
-function triggerProps(o: Opcoes): string {
+function triggerProps(o: Options): string {
   return attrs(
     o.size ? `size="${o.size}"` : '',
     `aria-label="${o.rotuloAcessivel ?? 'Selecionar estado'}"`,
@@ -74,7 +74,7 @@ function triggerProps(o: Opcoes): string {
 }
 
 /** Gatilho: rótulo do valor escolhido, ou o texto de espera em tom apagado. */
-function gatilho(o: Opcoes): string {
+function gatilho(o: Options): string {
   return `  <SelectTrigger${triggerProps(o)}>
     {#if rotulo}
       <span>{rotulo}</span>
@@ -90,7 +90,7 @@ function gatilho(o: Opcoes): string {
  * O rótulo do campo fechado sai da lista que a composição já tem em mãos: a
  * lista é desmontada ao fechar, e não haveria de onde tirá-lo depois.
  */
-function listPlana(opcoes: Opcao[], o: Opcoes = {}): string {
+function listPlana(opcoes: Option[], o: Options = {}): string {
   return svelteSnippet(
     `import {
   Select,
@@ -118,7 +118,7 @@ ${gatilho(o)}
 }
 
 /** Lista agrupada por categoria, com divisão decorativa entre os grupos. */
-function listAgrupada(o: Opcoes = {}): string {
+function listAgrupada(o: Options = {}): string {
   const grupos = REGIOES.map(
     (g) => `  {
     label: "${g.label}",
@@ -168,7 +168,7 @@ ${gatilho(o)}
 }
 
 /** Lista com ícone decorativo antes do texto de cada opção. */
-function listWithIcon(o: Opcoes = {}): string {
+function listWithIcon(o: Options = {}): string {
   return svelteSnippet(
     `import {
   Select,
@@ -206,11 +206,11 @@ ${gatilho(o)}
  */
 export function selectSource(_gerado?: string, ctx?: { args?: Partial<SelectArgs> }): string {
   const { value = '', disabled = false, name } = ctx?.args ?? {};
-  return listPlana(ESTADOS, { valor: value, disabled, name });
+  return listPlana(STATES, { valor: value, disabled, name });
 }
 
 /** Variante de lista plana: só opções, sem cabeçalho nem divisão. */
-export function selectListaPlanaSource(): string {
+export function selectListPlanaSource(): string {
   return listPlana(STATES_WITH_ES);
 }
 
@@ -218,28 +218,28 @@ export function selectListaPlanaSource(): string {
  * Variante agrupada — também a seleção por região das composições: o cabeçalho
  * nomeia o grupo, e a linha entre grupos é só para o olho.
  */
-export function selectComGruposSource(): string {
+export function selectWithGroupsSource(): string {
   return listAgrupada({ rotuloAcessivel: 'Selecionar região' });
 }
 
 /** Variante com ícone inline antes do rótulo de cada opção. */
-export function selectComIconeSource(): string {
+export function selectWithIconSource(): string {
   return listWithIcon();
 }
 
 /** Estado preenchido: um valor já escolhido antes da primeira abertura. */
-export function selectSelecionadoSource(): string {
-  return listPlana(ESTADOS, { valor: 'rj' });
+export function selectSelectedSource(): string {
+  return listPlana(STATES, { valor: 'rj' });
 }
 
 /** Estado bloqueado: o campo não abre e sai do percurso do Tab. */
 export function selectBloqueadoSource(): string {
-  return listPlana(ESTADOS, { disabled: true });
+  return listPlana(STATES, { disabled: true });
 }
 
 /** Estado inválido: o campo reprovado se anuncia, e a borda de perigo reforça. */
 export function selectInvalidoSource(): string {
-  return listPlana(ESTADOS, { invalido: true });
+  return listPlana(STATES, { invalido: true });
 }
 
 /** Composição compacta: densidade menor pelo `padding-block`, sem altura cravada. */

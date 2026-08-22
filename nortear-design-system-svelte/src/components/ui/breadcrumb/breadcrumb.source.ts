@@ -42,7 +42,7 @@ export function breadcrumbSource(): string {
 }
 
 /** Trilha de dois níveis: o mínimo que ainda é um caminho. */
-export function breadcrumbSimplesSource(): string {
+export function breadcrumbSimpleSource(): string {
   return svelteSnippet(
     IMPORT,
     `<Breadcrumb>
@@ -63,7 +63,7 @@ export function breadcrumbSimplesSource(): string {
  * Trilha longa colapsada: com rótulo, as reticências são anunciadas; sem ele,
  * ficam decorativas.
  */
-export function breadcrumbComReticenciasSource(): string {
+export function breadcrumbWithEllipsisSource(): string {
   return svelteSnippet(
     `import {
   Breadcrumb,
@@ -100,7 +100,7 @@ export function breadcrumbComReticenciasSource(): string {
  * Separador customizado: o desenho vem do conteúdo passado, e o item continua
  * fora da árvore de acessibilidade.
  */
-export function breadcrumbSeparadorCustomizadoSource(): string {
+export function breadcrumbSeparatorCustomizadoSource(): string {
   return svelteSnippet(
     `${IMPORT}
 import Slash from "@lucide/svelte/icons/slash";`,

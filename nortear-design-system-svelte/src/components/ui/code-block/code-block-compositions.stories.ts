@@ -27,7 +27,7 @@ const rootOf = (canvasElement: HTMLElement) =>
   canvasElement.querySelector<HTMLElement>('[data-slot="code-block"]')!;
 
 /** Números 1-based das linhas marcadas. */
-const linhasMarcadas = (canvasElement: HTMLElement) =>
+const linesChecked = (canvasElement: HTMLElement) =>
   [...rootOf(canvasElement).querySelectorAll('.nds-code-block-line')]
     .map((el, i) => (el.getAttribute('data-highlighted') === 'true' ? i + 1 : 0))
     .filter((n) => n > 0);
@@ -101,7 +101,7 @@ export const WithHighlight: Story = {
       await expect(canvasElement.querySelectorAll('.nds-code-block-line')).toHaveLength(
         BASE_CODE.split('\n').length,
       );
-      await expect(linhasMarcadas(canvasElement)).toEqual([2]);
+      await expect(linesChecked(canvasElement)).toEqual([2]);
       const marcada = rootOf(canvasElement).querySelector<HTMLElement>(
         '[data-highlighted]:not([data-highlighted="false"])',
       )!;
@@ -125,7 +125,7 @@ export const WithHighlightedRange: Story = {
     await step('Número avulso e intervalo convivem na mesma entrada', async () => {
       // A forma string é a que o control do Playground usa; a forma array já é
       // exercitada em WithHighlight.
-      await expect(linhasMarcadas(canvasElement)).toEqual([1, 4, 5]);
+      await expect(linesChecked(canvasElement)).toEqual([1, 4, 5]);
     });
 
     await step('As linhas de fora seguem sem marcação', async () => {

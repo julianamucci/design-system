@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
 import {
-  assentarTema,
+  settleTheme,
   contraste,
   corDoToken,
-  desenhoEscreve,
-  desenhoPintado,
-  exigirRaiz,
-  formasDeDado,
-  fundoOpacoAtras,
-  textosDoDesenho,
+  designEscreve,
+  designPintado,
+  exigirRoot,
+  datumFormas,
+  backgroundOpacoAtras,
+  designTexts,
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
@@ -17,7 +17,7 @@ import { chartSource, chartSourceWith } from './chart.source';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
-const MESES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
 const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
 
@@ -65,14 +65,14 @@ export const Empty: Story = {
     },
   },
   render: () => createChart({
-    xAxis: MESES,
+    xAxis: MONTHS,
     series: [],
     type: 'bar',
     class: 'nds-max-w-md',
     emptyLabel: FRASE_VAZIA,
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('Sem dado não há desenho — há uma frase', async () => {
       const aviso = raiz.querySelector('.nds-chart-empty');
@@ -112,7 +112,7 @@ export const SingleSeries: Story = {
     },
   },
   render: () => createChart({
-    xAxis: MESES,
+    xAxis: MONTHS,
     series: SERIE_UNICA,
     type: 'bar',
     height: 240,
@@ -120,20 +120,20 @@ export const SingleSeries: Story = {
     'aria-label': 'Acessos mensais no desktop, de janeiro a junho',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho sai', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('A legenda some — o nome da série não é escrito em lugar nenhum', async () => {
-      await expect(textosDoDesenho(raiz)).not.toContain(SERIE_UNICA[0].name);
+      await expect(designTexts(raiz)).not.toContain(SERIE_UNICA[0].name);
     });
 
     await step('As categorias continuam escritas no eixo', async () => {
-      for (const mes of MESES) {
-        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      for (const mes of MONTHS) {
+        await expect(designEscreve(raiz, mes)).toBe(true);
       }
     });
   },
@@ -158,7 +158,7 @@ export const MultiSeries: Story = {
     },
   },
   render: () => createChart({
-    xAxis: MESES,
+    xAxis: MONTHS,
     series: SERIES_MULTI,
     type: 'bar',
     height: 240,
@@ -166,22 +166,22 @@ export const MultiSeries: Story = {
     'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho sai', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('A legenda escreve o nome de cada série', async () => {
       for (const serie of SERIES_MULTI) {
-        await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+        await expect(designEscreve(raiz, serie.name)).toBe(true);
       }
     });
 
     await step('Cada série usa um token de cor distinto', async () => {
       const cores = new Set(
-        formasDeDado(raiz)
+        datumFormas(raiz)
           .map((f) => getComputedStyle(f).fill)
           .filter((cor) => !cor.startsWith('url')),
       );
@@ -227,15 +227,15 @@ export const OnePoint: Story = {
     'aria-label': 'Acessos de janeiro',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho sai com uma forma de dado', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('A única categoria aparece escrita no eixo', async () => {
-      await expect(desenhoEscreve(raiz, 'Jan')).toBe(true);
+      await expect(designEscreve(raiz, 'Jan')).toBe(true);
     });
   },
 };
@@ -278,7 +278,7 @@ export const ThemeTokens: Story = {
     },
   },
   render: () => createChart({
-    xAxis: MESES,
+    xAxis: MONTHS,
     series: SERIES_MULTI,
     type: 'bar',
     height: 240,
@@ -286,11 +286,11 @@ export const ThemeTokens: Story = {
     'aria-label': 'Acessos mensais por dispositivo, no tema em vigor',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho sai', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(textosDoDesenho(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designTexts(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('A cor do texto do eixo é o token do tema, não um valor cravado', async () => {
@@ -304,7 +304,7 @@ export const ThemeTokens: Story = {
     });
 
     await step('E o desenho está inteiro', async () => {
-      await expect(formasDeDado(raiz).length).toBeGreaterThan(0);
+      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
       await expect(raiz.querySelector('.nds-chart-empty')).toBeNull();
     });
   },
@@ -337,7 +337,7 @@ export const GraphicContrast: Story = {
     },
   },
   render: () => createChart({
-    xAxis: MESES,
+    xAxis: MONTHS,
     series: SERIES_MULTI,
     type: 'bar',
     height: 240,
@@ -345,14 +345,14 @@ export const GraphicContrast: Story = {
     'aria-label': 'Acessos mensais por dispositivo: desktop e mobile',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
-    await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
-    // Precondição da medida: ver o comentário de `assentarTema`.
-    await assentarTema(document);
-    const fundo = fundoOpacoAtras(raiz);
+    const raiz = exigirRoot(canvasElement);
+    await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+    // Precondição da medida: ver o comentário de `settleTheme`.
+    await settleTheme(document);
+    const fundo = backgroundOpacoAtras(raiz);
 
     await step('Todo contorno de forma passa de 3:1 contra o fundo', async () => {
-      for (const forma of formasDeDado(raiz)) {
+      for (const forma of datumFormas(raiz)) {
         await expect(contraste(getComputedStyle(forma).stroke, fundo)).toBeGreaterThanOrEqual(3);
       }
     });

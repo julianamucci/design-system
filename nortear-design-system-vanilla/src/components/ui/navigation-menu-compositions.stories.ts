@@ -3,9 +3,9 @@ import { userEvent, within, expect } from 'storybook/test';
 import { createNavigationMenu } from './navigation-menu';
 import {
   abrir,
-  esperarPainel,
-  esperarPainelSumir,
-  painelAberto,
+  waitForPanel,
+  waitForPanelVanish,
+  panelOpen,
   wrap,
 } from './navigation-menu.fixtures';
 import {
@@ -155,14 +155,14 @@ export const WithDropdown: Story = {
     await step('Escolher um destino fecha o painel', async () => {
       // Navegar É sair da página: um painel que sobrevive ao clique fica
       // pendurado sobre a página seguinte.
-      const painel = await esperarPainel(canvasElement);
+      const painel = await waitForPanel(canvasElement);
       await userEvent.click(within(painel).getByRole('link', { name: 'Plano Profissional' }));
-      await esperarPainelSumir(canvasElement);
+      await waitForPanelVanish(canvasElement);
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
     });
 
     await step('O foco volta a ser alcançável na barra', async () => {
-      await expect(painelAberto(canvasElement)).toBeNull();
+      await expect(panelOpen(canvasElement)).toBeNull();
       await expect(canvas.getAllByRole('link')).toHaveLength(2);
     });
   },
@@ -248,7 +248,7 @@ export const MegaMenuGrid: Story = {
 
     await step('O gatilho continua sendo o dono do painel', async () => {
       await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
-      await expect(painelAberto(canvasElement)).not.toBeNull();
+      await expect(panelOpen(canvasElement)).not.toBeNull();
     });
   },
 };

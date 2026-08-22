@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, waitFor } from "storybook/test";
 import {
-  desviosDaCaixaDoTrilho,
-  medirCrescimentoDoTrilho,
+  boxDoTrackDesvios,
+  trackMeasureCrescimento,
 } from "@shared/testing/tabs-probe";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
-import { tabsLinhaSource, tabsSource, tabsVerticalSource } from "./tabs.source";
+import { tabsLineSource, tabsSource, tabsVerticalSource } from "./tabs.source";
 
 const meta: Meta = {
   title: "UI/Tabs/Variants",
@@ -105,8 +105,8 @@ export const Default: Story = {
       // separa gaiola de resultado é EMPURRAR o conteúdo para além da caixa:
       // com altura cravada o trilho fica parado e o gatilho vaza para fora do
       // fundo arredondado. O colhedor devolve a fonte e o gatilho ao original.
-      const m = medirCrescimentoDoTrilho(canvasElement);
-      await expect(desviosDaCaixaDoTrilho(m), JSON.stringify(m)).toEqual([]);
+      const m = trackMeasureCrescimento(canvasElement);
+      await expect(boxDoTrackDesvios(m), JSON.stringify(m)).toEqual([]);
     });
   },
 };
@@ -118,7 +118,7 @@ export const Line: Story = {
     covers: ["visual.item2"],
     docs: {
       // A variante mora na LISTA, e nenhum control deste arquivo a descreve.
-      source: { transform: tabsLinhaSource },
+      source: { transform: tabsLineSource },
       description: {
         story:
           "Variante de linha — sem trilho, apenas um traço sob a aba ativa. Útil para " +
@@ -223,8 +223,8 @@ export const Vertical: Story = {
 
     await step("O painel fica ao lado da lista, não abaixo", async () => {
       const boxList = lista(canvasElement).getBoundingClientRect();
-      const caixaPainel = canvas.getByRole("tabpanel").getBoundingClientRect();
-      await expect(caixaPainel.left).toBeGreaterThanOrEqual(boxList.right);
+      const boxPanel = canvas.getByRole("tabpanel").getBoundingClientRect();
+      await expect(boxPanel.left).toBeGreaterThanOrEqual(boxList.right);
     });
   },
 };

@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-  avatarCarregandoSource,
-  avatarComStatusSource,
-  avatarGrupoSource,
+  avatarLoadingSource,
+  avatarWithStatusSource,
+  avatarGroupSource,
   avatarIconSource,
   avatarIniciaisSource,
   avatarSource,
@@ -52,7 +52,7 @@ describe('transforms das stories de tamanho', () => {
 
 describe('transforms das stories de estado e composição', () => {
   it('o carregamento mostra o atraso da troca, que é o assunto da story', () => {
-    expect(avatarCarregandoSource()).toContain('<Avatar delayMs={600}>');
+    expect(avatarLoadingSource()).toContain('<Avatar delayMs={600}>');
   });
 
   it('a composição só com iniciais não importa nem renderiza imagem', () => {
@@ -69,7 +69,7 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('o grupo traz três avatares e o contador que fecha a fila', () => {
-    const saida = avatarGrupoSource();
+    const saida = avatarGroupSource();
     expect(saida.match(/<Avatar>/g)).toHaveLength(3);
     expect(saida).toContain('<AvatarGroup role="group" aria-label="Participantes">');
     expect(saida).toContain('<AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>');
@@ -78,6 +78,6 @@ describe('transforms das stories de estado e composição', () => {
   });
 
   it('o indicador de status é nomeado, e não fica mudo no canto', () => {
-    expect(avatarComStatusSource()).toContain('<AvatarBadge role="img" aria-label="Online" />');
+    expect(avatarWithStatusSource()).toContain('<AvatarBadge role="img" aria-label="Online" />');
   });
 });

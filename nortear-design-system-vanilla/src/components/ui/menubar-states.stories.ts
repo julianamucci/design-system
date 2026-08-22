@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
-import { embrulhar, gatilhosDe, painelAberto } from './menubar.fixtures';
+import { embrulhar, triggersOf, panelOpen } from './menubar.fixtures';
 import { menubarSource, menubarSourceWith } from './menubar.source';
 import { sondarOuvintes, probeHost, checkLimpeza, type ProbeResult } from './leak-probe';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
@@ -61,7 +61,7 @@ export const Closed: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
-    const gatilhos = gatilhosDe(barra);
+    const gatilhos = triggersOf(barra);
 
     await step('A barra publica o papel e a orientação', async () => {
       await expect(barra.getAttribute('data-slot')).toBe('menubar');
@@ -76,7 +76,7 @@ export const Closed: Story = {
       }
       // Painel oculto pelo atributo `hidden`: continua fora da árvore de
       // acessibilidade, então o leitor de tela não o lê nem a busca o acha.
-      await expect(painelAberto(canvasElement)).toBeNull();
+      await expect(panelOpen(canvasElement)).toBeNull();
       await expect(canvas.queryAllByRole('menu')).toHaveLength(0);
     });
   },
@@ -113,10 +113,10 @@ export const Open: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
-    const [arquivo, editar] = gatilhosDe(barra);
+    const [arquivo, editar] = triggersOf(barra);
 
     const painel = await waitFor(() => {
-      const p = painelAberto(canvasElement);
+      const p = panelOpen(canvasElement);
       if (!p) throw new Error('painel não abriu');
       return p;
     });
@@ -189,7 +189,7 @@ export const ItemDisabled: Story = {
     ),
   play: async ({ canvasElement, step, args }) => {
     const painel = await waitFor(() => {
-      const p = painelAberto(canvasElement);
+      const p = panelOpen(canvasElement);
       if (!p) throw new Error('painel não abriu');
       return p;
     });
@@ -266,7 +266,7 @@ export const CheckboxChecked: Story = {
     ),
   play: async ({ canvasElement, step }) => {
     const painel = await waitFor(() => {
-      const p = painelAberto(canvasElement);
+      const p = panelOpen(canvasElement);
       if (!p) throw new Error('painel não abriu');
       return p;
     });
@@ -294,7 +294,7 @@ export const CheckboxChecked: Story = {
       await waitFor(async () => {
         await expect(regua.getAttribute('aria-checked')).toBe('false');
       });
-      await expect(painelAberto(canvasElement)).not.toBeNull();
+      await expect(panelOpen(canvasElement)).not.toBeNull();
     });
   },
 };
@@ -349,7 +349,7 @@ export const CheckboxIndeterminate: Story = {
     ),
   play: async ({ canvasElement, step }) => {
     const painel = await waitFor(() => {
-      const p = painelAberto(canvasElement);
+      const p = panelOpen(canvasElement);
       if (!p) throw new Error('painel não abriu');
       return p;
     });

@@ -12,7 +12,7 @@ import {
 import {
   inputGroupAlinhamentosSource,
   inputGroupButtonInternoSource,
-  addonSourceInputGroupClick,
+  addonInputGroupClickSource,
   inputGroupWithErrorSource,
   inputGroupDisabledSource,
   inputGroupIconEndSource,
@@ -426,7 +426,7 @@ export const AddonClick: Story = {
     covers: ["functional.item8"],
     // O assunto é a exceção: o addon leva o foco ao campo, MENOS quando o alvo
     // é um botão. Sem o botão ao lado, o snippet esconderia metade da regra.
-    docs: { source: { transform: addonSourceInputGroupClick } },
+    docs: { source: { transform: addonInputGroupClickSource } },
   },
   render: () => (
     <div className="nds-stack nds-w-md" data-spacing="xs">

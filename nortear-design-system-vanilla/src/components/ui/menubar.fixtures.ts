@@ -6,8 +6,8 @@ import { waitFor } from 'storybook/test';
 // story: `export function embrulhar()` dentro de um `*.stories.ts` viraria uma
 // story "Embrulhar" que não renderiza nada.
 //
-// Havia quatro cópias de `embrulhar`, três de `gatilhosDe` e duas de
-// `painelAberto` — e o que variava entre elas era só a altura reservada para o
+// Havia quatro cópias de `embrulhar`, três de `triggersOf` e duas de
+// `panelOpen` — e o que variava entre elas era só a altura reservada para o
 // painel aberto, que é medida de cada story e não do helper. Por isso a altura
 // virou PARÂMETRO: cada arquivo continua reservando exatamente o que reservava.
 
@@ -15,7 +15,7 @@ import { waitFor } from 'storybook/test';
  * Só os gatilhos da barra: nesta stack o painel mora DENTRO da raiz, então
  * procurar por papel na barra devolveria também os itens do menu aberto.
  */
-export function gatilhosDe(barra: HTMLElement): HTMLElement[] {
+export function triggersOf(barra: HTMLElement): HTMLElement[] {
   return Array.from(barra.querySelectorAll<HTMLElement>('[data-slot="menubar-trigger"]'));
 }
 
@@ -40,7 +40,7 @@ export function embrulhar(filho: HTMLElement, alturaMinima = '260px'): HTMLEleme
 }
 
 /** O painel é ancorado por CSS, não portalizado: mora dentro do canvas. */
-export function painelAberto(canvasElement: HTMLElement): HTMLElement | null {
+export function panelOpen(canvasElement: HTMLElement): HTMLElement | null {
   return canvasElement.querySelector<HTMLElement>('[data-slot="menubar-content"]:not([hidden])');
 }
 
@@ -48,12 +48,12 @@ export function painelAberto(canvasElement: HTMLElement): HTMLElement | null {
  * Espera o painel do menu aberto aparecer dentro do canvas.
  *
  * Estava copiada nas composições e nas variantes, com o mesmo seletor e sem
- * timeout próprio — passa a ser o `waitFor` em cima de `painelAberto`, para
+ * timeout próprio — passa a ser o `waitFor` em cima de `panelOpen`, para
  * haver UM caminho até o painel e não dois livres para divergir.
  */
-export async function esperarPainel(canvasElement: HTMLElement): Promise<HTMLElement> {
+export async function waitForPanel(canvasElement: HTMLElement): Promise<HTMLElement> {
   return await waitFor(() => {
-    const p = painelAberto(canvasElement);
+    const p = panelOpen(canvasElement);
     if (!p) throw new Error('painel não abriu');
     return p;
   });

@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 import { userEvent, within, expect, waitFor } from 'storybook/test';
 import { Select } from './index';
 import SelectStory from './SelectStory.svelte';
-import { medirAnelDeFoco, ESTADOS } from '@shared/testing/select-probe';
+import { focusMeasureRing, STATES } from '@shared/testing/select-probe';
 import {
   selectBloqueadoSource,
   selectInvalidoSource,
-  selectSelecionadoSource,
+  selectSelectedSource,
   selectSource,
 } from './select.source';
 
@@ -38,7 +38,7 @@ type Story = StoryObj;
 const base = {
   placeholder: 'Selecione...',
   ariaLabel: 'Selecionar estado',
-  options: [...ESTADOS],
+  options: [...STATES],
 };
 
 export const Default: Story = {
@@ -71,7 +71,7 @@ export const Selected: Story = {
   parameters: {
     covers: ['visual.item2'],
     docs: {
-      source: { transform: selectSelecionadoSource },
+      source: { transform: selectSelectedSource },
       description: {
         story:
           'Valor pré-escolhido. O rótulo vem da lista de opções que a composição já tem em mãos — o primitivo desmonta a lista ao fechar e não teria de onde tirá-lo. (Pré-selecionar serve para ver o estado; em formulário real, evite.)',
@@ -108,7 +108,7 @@ export const Open: Story = {
     // A story TERMINA aberta — é o estado que ela documenta e o que a
     // regressão visual precisa fotografar. Ver o motivo do guarda de foco em
     // `wait-for-portal`.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {
         story: 'Lista aberta, em portal. As setas andam item a item e o destaque acompanha.',
@@ -130,7 +130,7 @@ export const Open: Story = {
       const listbox = await abrir();
       await expect(listbox).toBeVisible();
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
-      await expect(within(listbox).getAllByRole('option')).toHaveLength(ESTADOS.length);
+      await expect(within(listbox).getAllByRole('option')).toHaveLength(STATES.length);
     });
 
     await step('A seta para baixo anda um item por vez, e a de cima volta', async () => {
@@ -225,7 +225,7 @@ export const Invalid: Story = {
       // `:focus-visible` com a mesma especificidade: sem a regra de
       // aninhamento, focar um campo inválido não mudava nada na tela.
       // `boxShadow !== 'none'` passaria mesmo assim — só a MUDANÇA reprova.
-      await expect(medirAnelDeFoco(trigger).mudou).toBe(true);
+      await expect(focusMeasureRing(trigger).mudou).toBe(true);
     });
   },
 };

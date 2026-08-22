@@ -16,7 +16,7 @@ export type CollapsibleArgs = {
 };
 
 /** Import do design system mais os ícones que o gatilho usa. */
-function importar(icones = 'ChevronDown'): string {
+function importing(icones = 'ChevronDown'): string {
   return `import { ${icones} } from 'lucide-vue-next'
 import {
   Collapsible,
@@ -44,7 +44,7 @@ const CHEVRON = 'nds-icon nds-shrink-0 nds-transition-transform nds-chevron';
 /** Sem a rotação — o gatilho desabilitado não alterna, e girar mentiria. */
 const CHEVRON_PARADO = 'nds-icon nds-shrink-0';
 
-const FILTROS = `    <p>Filtro avançado 1</p>
+const FILTERS = `    <p>Filtro avançado 1</p>
     <p>Filtro avançado 2</p>`;
 
 /** A composição inteira: raiz, gatilho com rótulo e chevron, e painel. */
@@ -64,7 +64,7 @@ function colapsavel(opcoes: {
     classeGatilho = TRIGGER_GHOST,
     chevron = CHEVRON,
     rotulo,
-    corpo = FILTROS,
+    corpo = FILTERS,
   } = opcoes;
   const triggerAttrs = [gatilho, `class="${classeGatilho}"`, 'data-justify="between"']
     .filter(Boolean)
@@ -101,7 +101,7 @@ const simpleLabel = (texto: string) => `    <span>${texto}</span>`;
 export const collapsibleSource: SourceTransform<CollapsibleArgs> = (_gerado, ctx) => {
   const desabilitado = attrBool('disabled', ctx?.args?.disabled, false);
   return vueSnippet(
-    importar(),
+    importing(),
     colapsavel({
       raiz: attrs(attrBool('default-open', ctx?.args?.defaultOpen, false), desabilitado).trim(),
       gatilho: desabilitado,
@@ -116,7 +116,7 @@ export const collapsibleSource: SourceTransform<CollapsibleArgs> = (_gerado, ctx
  */
 export function collapsibleNotControlledSource(): string {
   return vueSnippet(
-    importar(),
+    importing(),
     colapsavel({ rotulo: simpleLabel('Exibir filtros avançados') }),
   );
 }
@@ -125,9 +125,9 @@ export function collapsibleNotControlledSource(): string {
  * Aberto de saída. `default-open` é ponto de partida, não trava: o gatilho
  * continua alternando depois da montagem.
  */
-export function collapsibleAbertoPorPadraoSource(): string {
+export function defaultCollapsibleOpenSource(): string {
   return vueSnippet(
-    importar(),
+    importing(),
     colapsavel({
       raiz: 'default-open',
       // O rótulo acompanha o estado inicial: "Exibir" num painel já aberto
@@ -147,7 +147,7 @@ export function collapsibleAbertoPorPadraoSource(): string {
  * Os botões externos têm nome próprio: dois controles com o mesmo nome
  * acessível ficam ambíguos na lista do leitor de tela.
  */
-export function collapsibleControladoSource(): string {
+export function collapsibleControlledSource(): string {
   const bloco = colapsavel({
     raiz: 'v-model:open="aberto"',
     classeRaiz: 'nds-w-full',
@@ -155,7 +155,7 @@ export function collapsibleControladoSource(): string {
   });
   return vueSnippet(
     `import { ref } from 'vue'
-${importar()}
+${importing()}
 
 const aberto = ref(false)`,
     `<div class="nds-stack nds-w-sm" data-spacing="sm">
@@ -180,9 +180,9 @@ ${indentar(bloco, 2)}
  * desabilitado de verdade, não só esmaecido. O chevron perde a rotação porque
  * não há estado que o faça girar.
  */
-export function collapsibleDesabilitadoSource(): string {
+export function collapsibleDisabledSource(): string {
   return vueSnippet(
-    importar(),
+    importing(),
     colapsavel({
       raiz: 'disabled',
       gatilho: 'disabled',
@@ -197,9 +197,9 @@ export function collapsibleDesabilitadoSource(): string {
  * elemento: as classes moram no próprio gatilho, e por isso ele carrega o
  * estado sem código de ligação nenhum.
  */
-export function collapsibleComBotaoSource(): string {
+export function collapsibleWithButtonSource(): string {
   return vueSnippet(
-    importar(),
+    importing(),
     colapsavel({
       classeGatilho: TRIGGER_OUTLINE,
       rotulo: simpleLabel('Exibir opções avançadas'),
@@ -214,9 +214,9 @@ export function collapsibleComBotaoSource(): string {
  * Ícone no gatilho. Os dois desenhos são `aria-hidden`: o nome acessível do
  * gatilho é só o texto, e um ícone dentro dele viraria ruído no anúncio.
  */
-export function collapsibleComIconeSource(): string {
+export function collapsibleWithIconSource(): string {
   return vueSnippet(
-    importar('ChevronDown, Filter'),
+    importing('ChevronDown, Filter'),
     colapsavel({
       rotulo: `    <span class="nds-cluster" data-spacing="sm">
       <Filter aria-hidden="true" class="nds-icon nds-shrink-0 nds-text-muted-foreground" />
@@ -232,9 +232,9 @@ export function collapsibleComIconeSource(): string {
  * Chevron rotativo. Não há classe de estado a escrever: `.nds-chevron` gira sob
  * `[aria-expanded="true"]`, que é atributo que o próprio gatilho mantém.
  */
-export function collapsibleComChevronSource(): string {
+export function collapsibleWithChevronSource(): string {
   return vueSnippet(
-    importar(),
+    importing(),
     colapsavel({
       classeGatilho: TRIGGER_OUTLINE,
       rotulo: simpleLabel('Configurações avançadas'),

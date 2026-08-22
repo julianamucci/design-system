@@ -8,8 +8,8 @@ import {
   painel,
   overlay,
   abrir,
-  esperarAberto,
-  esperarFechado,
+  waitForOpen,
+  waitForClosed,
 } from './dialog.fixtures';
 
 // As configurações que o conteúdo compartilhado descreve. Abrindo e Fechando
@@ -110,7 +110,7 @@ export const Open: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Monta já aberto, sem estado externo nenhum', async () => {
       // Esta é a asserção que prova o binding de input: sob JIT o componente
@@ -156,7 +156,7 @@ export const WithCloseButtonHidden: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Sem X no canto', async () => {
       await expect(p.querySelector('[data-slot="dialog-close"]')).toBeNull();
@@ -166,7 +166,7 @@ export const WithCloseButtonHidden: Story = {
       // Sem X e sem rodapé com Cancelar, Escape é a única saída de teclado.
       // Retirá-la junto com o X deixaria o diálogo sem fechamento acessível.
       await userEvent.keyboard('{Escape}');
-      await esperarFechado();
+      await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final e o axe roda depois da
       // play — esta story existe para mostrar o painel SEM o X no canto.
       await expect(await abrir(canvasElement)).toBeVisible();
@@ -177,12 +177,12 @@ export const WithCloseButtonHidden: Story = {
 // Espião do modo controlado. Vive fora do `render` para que a play alcance as
 // chamadas; `mockClear()` no início da play zera a contagem que a execução
 // anterior deixou — o painel Interactions reexecuta a play no mesmo DOM.
-const espiaoControlado = fn();
+const spyControlled = fn();
 
 export const Controlled: Story = {
   parameters: { covers: ['functional.item7'] },
   render: () => ({
-    props: { labels: LABELS, aberto: false, onOpenChange: espiaoControlado },
+    props: { labels: LABELS, aberto: false, onOpenChange: spyControlled },
     template: `
       <div ndsDialog [open]="aberto" (openChange)="aberto = $event; onOpenChange($event)">
         <button ndsDialogTrigger ndsButton variant="outline">{{ labels.trigger }}</button>
@@ -207,7 +207,7 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const trigger = canvasElement.querySelector<HTMLElement>('[data-slot="dialog-trigger"]')!;
-    espiaoControlado.mockClear();
+    spyControlled.mockClear();
 
     await step('Nasce fechado, porque o valor externo diz que sim', async () => {
       await expect(painel()).toBeNull();
@@ -215,14 +215,14 @@ export const Controlled: Story = {
 
     await step('Interagir avisa o dono do estado, e o painel segue o valor', async () => {
       await abrir(canvasElement);
-      await expect(espiaoControlado).toHaveBeenLastCalledWith(true);
+      await expect(spyControlled).toHaveBeenLastCalledWith(true);
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
 
     await step('Escape também passa pelo dono do estado', async () => {
       await userEvent.keyboard('{Escape}');
-      await esperarFechado();
-      await expect(espiaoControlado).toHaveBeenLastCalledWith(false);
+      await waitForClosed();
+      await expect(spyControlled).toHaveBeenLastCalledWith(false);
       await expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);

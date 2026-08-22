@@ -49,7 +49,7 @@ export const Dragging: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const punho = canvas.getByRole('separator', { name: ROTULO });
-    const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
+    const panels = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
     layoutsEmitidos.length = 0;
 
     await step('Arrastar o divisor ajusta os painéis em tempo real', async () => {
@@ -60,7 +60,7 @@ export const Dragging: Story = {
       const caixa = punho.getBoundingClientRect();
       const y = caixa.top + caixa.height / 2;
       const x = caixa.left + caixa.width / 2;
-      const antes = Number(paineis[0].style.getPropertyValue('--panel-size'));
+      const antes = Number(panels[0].style.getPropertyValue('--panel-size'));
 
       await userEvent.pointer([
         { keys: '[MouseLeft>]', target: punho, coords: { clientX: x, clientY: y } },
@@ -71,13 +71,13 @@ export const Dragging: Story = {
       // `waitFor`: esta stack roda sem zone, então a detecção de mudança que
       // reescreve a custom property é agendada, não síncrona ao pointerup.
       await waitFor(() =>
-        expect(Number(paineis[0].style.getPropertyValue('--panel-size'))).toBeGreaterThan(antes),
+        expect(Number(panels[0].style.getPropertyValue('--panel-size'))).toBeGreaterThan(antes),
       );
 
       // O vizinho devolve exatamente o que o outro ganhou: o arrasto de um
       // divisor move DOIS painéis, nunca empurra o layout inteiro.
-      const depois = Number(paineis[0].style.getPropertyValue('--panel-size'));
-      await expect(depois + Number(paineis[1].style.getPropertyValue('--panel-size'))).toBeCloseTo(
+      const depois = Number(panels[0].style.getPropertyValue('--panel-size'));
+      await expect(depois + Number(panels[1].style.getPropertyValue('--panel-size'))).toBeCloseTo(
         100,
         1,
       );
@@ -86,7 +86,7 @@ export const Dragging: Story = {
     await step('O tamanho anunciado acompanha o arrasto', async () => {
       await waitFor(() =>
         expect(Number(punho.getAttribute('aria-valuenow'))).toBe(
-          Math.round(Number(paineis[0].style.getPropertyValue('--panel-size'))),
+          Math.round(Number(panels[0].style.getPropertyValue('--panel-size'))),
         ),
       );
     });
@@ -120,12 +120,12 @@ export const Dragging: Story = {
         return 0.2126 * canal(r) + 0.7152 * canal(g) + 0.0722 * canal(b);
       };
 
-      const doPunho = luminancia(getComputedStyle(punho).backgroundColor);
-      const doFundo = luminancia(getComputedStyle(document.body).backgroundColor);
-      const [claro, escuro] = doPunho > doFundo ? [doPunho, doFundo] : [doFundo, doPunho];
-      const razao = (claro + 0.05) / (escuro + 0.05);
+      const ofHandle = luminancia(getComputedStyle(punho).backgroundColor);
+      const ofBackground = luminancia(getComputedStyle(document.body).backgroundColor);
+      const [claro, escuro] = ofHandle > ofBackground ? [ofHandle, ofBackground] : [ofBackground, ofHandle];
+      const ratio = (claro + 0.05) / (escuro + 0.05);
 
-      await expect(razao).toBeGreaterThanOrEqual(3);
+      await expect(ratio).toBeGreaterThanOrEqual(3);
     });
   },
 };

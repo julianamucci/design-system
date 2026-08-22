@@ -10,15 +10,15 @@
  * cada um pela classe de variante, então uma story só cobre a matriz inteira.
  */
 
-import { contraste, ligarTemaEscuro, superficieDoApp } from './alert-probe';
+import { contraste, darkLigarTheme, superficieDoApp } from './alert-probe';
 import {
-  porTema, razao, resolverCor, fundoEfetivo, declaracaoDaRegra, semTransicao,
+  byTheme, ratio, resolveColor, backgroundEffective, ruleDeclaration, noTransicao,
 } from './cor';
-import { porDensidade, type Densidade } from './espacamento';
+import { byDensity, type Densidade } from './espacamento';
 
 const VARIANTES = ['default', 'secondary', 'destructive', 'outline', 'ghost', 'link'] as const;
 
-const TAMANHOS = [
+const SIZES = [
   'xs', 'sm', 'lg', 'icon-xs', 'icon-sm', 'icon-lg', 'icon',
 ] as const;
 
@@ -27,10 +27,10 @@ const TAMANHOS = [
  * Não há terceira hipótese, e por isso aqui não precisa da composição em camadas
  * do alert — precisa saber qual dos dois casos é.
  */
-function fundoDoBotao(el: HTMLElement): string {
-  const propria = getComputedStyle(el).backgroundColor;
-  const alfa = Number((propria.match(/-?[\d.]+/g) ?? [])[3] ?? 1);
-  return propria !== 'rgba(0, 0, 0, 0)' && alfa >= 1 ? propria : superficieDoApp(el);
+function buttonBackground(el: HTMLElement): string {
+  const own = getComputedStyle(el).backgroundColor;
+  const alfa = Number((own.match(/-?[\d.]+/g) ?? [])[3] ?? 1);
+  return own !== 'rgba(0, 0, 0, 0)' && alfa >= 1 ? own : superficieDoApp(el);
 }
 
 function varianteDe(el: HTMLElement): string {
@@ -42,10 +42,10 @@ function varianteDe(el: HTMLElement): string {
   return 'default (sem classe)';
 }
 
-export function medirBotao(el: HTMLElement) {
+export function measureButton(el: HTMLElement) {
   const cs = getComputedStyle(el);
   const r = el.getBoundingClientRect();
-  const fundo = fundoDoBotao(el);
+  const fundo = buttonBackground(el);
   const icone = el.querySelector<HTMLElement>('svg');
 
   return {
@@ -61,7 +61,7 @@ export function medirBotao(el: HTMLElement) {
     altura: Math.round(r.height),
     padding: cs.padding,
     raio: Math.round(parseFloat(cs.borderTopLeftRadius) || 0),
-    larguraDaBorda: Math.round(parseFloat(cs.borderTopWidth) || 0),
+    borderWidth: Math.round(parseFloat(cs.borderTopWidth) || 0),
     gap: cs.gap,
     fonte: `${cs.fontSize}/${cs.fontWeight}`,
     fundo: cs.backgroundColor,
@@ -74,34 +74,34 @@ export function medirBotao(el: HTMLElement) {
 }
 
 /** Todos os botões da tela, chaveados por variante. */
-export function medirBotoes(raiz: HTMLElement) {
-  const porVariante: Record<string, ReturnType<typeof medirBotao>> = {};
+export function measureButtons(raiz: HTMLElement) {
+  const byVariant: Record<string, ReturnType<typeof measureButton>> = {};
   for (const el of raiz.querySelectorAll<HTMLElement>('.nds-button')) {
     const v = varianteDe(el);
-    if (!porVariante[v]) porVariante[v] = medirBotao(el);
+    if (!byVariant[v]) byVariant[v] = measureButton(el);
   }
-  return porVariante;
+  return byVariant;
 }
 
 /** Contraste de cada variante nos DOIS temas. O `.dark` sai no `finally`. */
-export function contrasteDosBotoes(raiz: HTMLElement) {
-  const razao = (m: Record<string, ReturnType<typeof medirBotao>>) =>
+export function buttonsContrast(raiz: HTMLElement) {
+  const ratio = (m: Record<string, ReturnType<typeof measureButton>>) =>
     Object.fromEntries(Object.entries(m).map(([v, d]) => [v, d.contraste]));
-  const claro = razao(medirBotoes(raiz));
-  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
+  const claro = ratio(measureButtons(raiz));
+  const desfazer = darkLigarTheme(raiz.ownerDocument);
   try {
-    return { claro, escuro: razao(medirBotoes(raiz)) };
+    return { claro, escuro: ratio(measureButtons(raiz)) };
   } finally {
     desfazer();
   }
 }
 
 /** Canal de saída: o console da play não chega ao terminal do vitest. */
-export function reportarBotoes(stack: string, raiz: HTMLElement) {
+export function reportButtons(stack: string, raiz: HTMLElement) {
   throw new Error(
     `SONDA::${stack}::matriz::${JSON.stringify({
-      variantes: medirBotoes(raiz),
-      contraste: contrasteDosBotoes(raiz),
+      variantes: measureButtons(raiz),
+      contraste: buttonsContrast(raiz),
     })}`,
   );
 }
@@ -112,8 +112,8 @@ export function reportarBotoes(stack: string, raiz: HTMLElement) {
  * Nome do tamanho a partir da classe. `default` não tem modificador — o
  * dimensionamento base mora em `.nds-button`, e essa ausência é o contrato.
  */
-export function tamanhoDe(el: HTMLElement): string {
-  for (const t of TAMANHOS) {
+export function sizeOf(el: HTMLElement): string {
+  for (const t of SIZES) {
     if (el.classList.contains(`nds-button-${t}`)) return t;
   }
   return 'default';
@@ -121,14 +121,14 @@ export function tamanhoDe(el: HTMLElement): string {
 
 /** `true` para os quatro quadrados sem texto — a única exceção à 1.4.4. */
 export function ehIconOnly(el: HTMLElement): boolean {
-  return tamanhoDe(el).startsWith('icon');
+  return sizeOf(el).startsWith('icon');
 }
 
 /** Todos os botões da tela, chaveados por TAMANHO (um por tamanho). */
-function porTamanho(raiz: HTMLElement): Map<string, HTMLElement> {
+function bySize(raiz: HTMLElement): Map<string, HTMLElement> {
   const mapa = new Map<string, HTMLElement>();
   for (const el of raiz.querySelectorAll<HTMLElement>('.nds-button')) {
-    const t = tamanhoDe(el);
+    const t = sizeOf(el);
     if (!mapa.has(t)) mapa.set(t, el);
   }
   return mapa;
@@ -136,7 +136,7 @@ function porTamanho(raiz: HTMLElement): Map<string, HTMLElement> {
 
 // ─── WCAG 1.4.4 — a altura tem de crescer com a fonte ─────────────────────────
 
-export interface MedidaDeCrescimento {
+export interface CrescimentoMeasurement {
   tamanho: string;
   iconOnly: boolean;
   /** Altura em px com a fonte da raiz no valor normal. */
@@ -160,14 +160,14 @@ export interface MedidaDeCrescimento {
  * configuração do navegador mexe. Volta no `finally`: fonte vazada envenena a
  * story seguinte e a foto do Chromatic.
  */
-export function medirCrescimentoComFonte(raiz: HTMLElement): MedidaDeCrescimento[] {
+export function measureCrescimentoWithFonte(raiz: HTMLElement): CrescimentoMeasurement[] {
   const html = raiz.ownerDocument.documentElement;
   const fonteOriginal = html.style.fontSize;
-  const alvos = porTamanho(raiz);
+  const targets = bySize(raiz);
 
   const alturas = (): Map<string, number> => {
     void raiz.offsetHeight;
-    return new Map([...alvos].map(([t, el]) => [t, el.getBoundingClientRect().height]));
+    return new Map([...targets].map(([t, el]) => [t, el.getBoundingClientRect().height]));
   };
 
   try {
@@ -175,7 +175,7 @@ export function medirCrescimentoComFonte(raiz: HTMLElement): MedidaDeCrescimento
     const emPx = parseFloat(getComputedStyle(html).fontSize) || 16;
     html.style.fontSize = `${emPx * 2}px`;
     const dobrada = alturas();
-    return [...alvos].map(([tamanho, el]) => {
+    return [...targets].map(([tamanho, el]) => {
       const b = base.get(tamanho)!;
       const d = dobrada.get(tamanho)!;
       return {
@@ -195,7 +195,7 @@ export function medirCrescimentoComFonte(raiz: HTMLElement): MedidaDeCrescimento
 
 // ─── WCAG 2.5.8 — alvo de toque nas três densidades ───────────────────────────
 
-export interface MedidaDeAlvo {
+export interface TargetMeasurement {
   tamanho: string;
   densidade: Densidade;
   largura: number;
@@ -207,14 +207,14 @@ export interface MedidaDeAlvo {
 /**
  * Caixa de cada tamanho de botão nas três densidades.
  *
- * A densidade entra no `<html>` (ver `porDensidade`): `--spacing-*` é resolvido
+ * A densidade entra no `<html>` (ver `byDensity`): `--spacing-*` é resolvido
  * em `:root`, então redeclarar a base num contêiner do meio da árvore não move
  * nada. O botão de ícone lê `--size-*`, que a densidade também redeclara.
  */
-export function medirAlvoDeToque(raiz: HTMLElement): MedidaDeAlvo[] {
-  const alvos = porTamanho(raiz);
-  return porDensidade(raiz, (densidade) =>
-    [...alvos].map(([tamanho, el]): MedidaDeAlvo => {
+export function touchMeasureTarget(raiz: HTMLElement): TargetMeasurement[] {
+  const targets = bySize(raiz);
+  return byDensity(raiz, (densidade) =>
+    [...targets].map(([tamanho, el]): TargetMeasurement => {
       const r = el.getBoundingClientRect();
       const largura = Math.round(r.width * 100) / 100;
       const altura = Math.round(r.height * 100) / 100;
@@ -225,7 +225,7 @@ export function medirAlvoDeToque(raiz: HTMLElement): MedidaDeAlvo[] {
 
 // ─── Contraste por tema, modo, variante — texto E borda ───────────────────────
 
-export interface MedidaDeVariante {
+export interface VariantMeasurement {
   tema: string;
   modo: 'claro' | 'escuro';
   variante: string;
@@ -246,26 +246,26 @@ export interface MedidaDeVariante {
  * o mesmo fundo do botão: é a superfície com que ela faz limite por dentro, e
  * nos três temas `--background` responde pelo lado de fora.
  */
-export function medirVariantesPorTema(raiz: HTMLElement): MedidaDeVariante[] {
-  const alvos = new Map<string, HTMLElement>();
+export function themeMeasureVariants(raiz: HTMLElement): VariantMeasurement[] {
+  const targets = new Map<string, HTMLElement>();
   for (const el of raiz.querySelectorAll<HTMLElement>('.nds-button')) {
     const v = varianteDe(el);
-    if (!alvos.has(v)) alvos.set(v, el);
+    if (!targets.has(v)) targets.set(v, el);
   }
 
   // As transições morrem ANTES da troca de tema: `background-color` e `color`
   // estão no lote de transição do botão, e medir logo após trocar a classe
   // devolveria a cor do tema anterior — o "contraste ~1.0" do CLAUDE.md.
-  const originais = [...alvos.values()].map((el) => el.style.transition);
-  alvos.forEach((el) => { el.style.transition = 'none'; });
-  const fundoOriginal = raiz.style.backgroundColor;
+  const originais = [...targets.values()].map((el) => el.style.transition);
+  targets.forEach((el) => { el.style.transition = 'none'; });
+  const backgroundOriginal = raiz.style.backgroundColor;
 
   try {
-    return porTema(raiz, (tema, modo) => {
+    return byTheme(raiz, (tema, modo) => {
       // A raiz da sonda PINTA a superfície do app antes de medir.
       //
       // Sem isto o escuro é medido contra o branco do `<body>`, que o harness do
-      // Storybook não repinta: `fundoEfetivo` sobe a árvore procurando o
+      // Storybook não repinta: `backgroundEffective` sobe a árvore procurando o
       // primeiro opaco, atravessa a raiz (transparente) e chega ao body claro.
       // Toda variante de fundo translúcido — outline, ghost, link, destructive —
       // acusava então ~1.05:1 no escuro, um defeito que não existe. É a mesma
@@ -275,36 +275,36 @@ export function medirVariantesPorTema(raiz: HTMLElement): MedidaDeVariante[] {
       void raiz.offsetHeight;
       const superficie = raiz.style.backgroundColor;
 
-      return [...VARIANTES].map((variante): MedidaDeVariante => {
-        const el = alvos.get(variante);
+      return [...VARIANTES].map((variante): VariantMeasurement => {
+        const el = targets.get(variante);
         if (!el) {
           return { tema, modo, variante, presente: false, texto: null, borda: null, fundo: null };
         }
         const cs = getComputedStyle(el);
-        const fundo = fundoEfetivo(el) ?? superficie;
-        const larguraDaBorda = parseFloat(cs.borderTopWidth) || 0;
+        const fundo = backgroundEffective(el) ?? superficie;
+        const borderWidth = parseFloat(cs.borderTopWidth) || 0;
         return {
           tema,
           modo,
           variante,
           presente: true,
-          texto: razao(cs.color, fundo)?.razao ?? null,
+          texto: ratio(cs.color, fundo)?.ratio ?? null,
           // A borda é vista contra a PÁGINA, não contra o interior do botão: é o
           // limite externo do controle, e é dele que a 1.4.11 fala.
           borda:
-            larguraDaBorda > 0
-              ? (razao(cs.borderTopColor, superficie)?.razao ?? null)
+            borderWidth > 0
+              ? (ratio(cs.borderTopColor, superficie)?.ratio ?? null)
               : null,
           fundo,
         };
       });
     }).flat();
   } finally {
-    [...alvos.values()].forEach((el, i) => {
+    [...targets.values()].forEach((el, i) => {
       if (originais[i]) el.style.transition = originais[i];
       else el.style.removeProperty('transition');
     });
-    if (fundoOriginal) raiz.style.backgroundColor = fundoOriginal;
+    if (backgroundOriginal) raiz.style.backgroundColor = backgroundOriginal;
     else raiz.style.removeProperty('background-color');
   }
 }
@@ -312,12 +312,12 @@ export function medirVariantesPorTema(raiz: HTMLElement): MedidaDeVariante[] {
 /**
  * Contraste do ANEL DE FOCO de cada variante, nos três temas e nos dois modos.
  *
- * Separado de `medirVariantesPorTema` porque a pergunta é outra: ali o limite é
+ * Separado de `themeMeasureVariants` porque a pergunta é outra: ali o limite é
  * 4.5:1 de texto, aqui é 3:1 de elemento não-textual (WCAG 1.4.11). E porque a
  * cor do anel não sai do elemento — sai da DECLARAÇÃO da folha, resolvida
  * dentro da árvore que carrega o tema.
  */
-export function medirAnelPorTema(raiz: HTMLElement) {
+export function themeMeasureRing(raiz: HTMLElement) {
   const regras: [string, string][] = [
     ['foco', '.nds-button:focus-visible'],
     ['foco-destructive', '.nds-button-destructive:focus-visible'],
@@ -326,10 +326,10 @@ export function medirAnelPorTema(raiz: HTMLElement) {
 
   const declaradas = regras.map(([nome, seletor]) => [
     nome,
-    declaracaoDaRegra(raiz.ownerDocument, (s) => s.includes(seletor), 'box-shadow') ?? '',
+    ruleDeclaration(raiz.ownerDocument, (s) => s.includes(seletor), 'box-shadow') ?? '',
   ] as const);
 
-  return porTema(raiz, (tema, modo) => {
+  return byTheme(raiz, (tema, modo) => {
     const superficie = superficieDoApp(raiz);
     const saida: Record<string, number | null> = {};
     for (const [nome, declarada] of declaradas) {
@@ -337,8 +337,8 @@ export function medirAnelPorTema(raiz: HTMLElement) {
       // anteriores são o vão em `--background` e a elevação.
       const cores = declarada.match(/hsl\(var\(--[a-z-]+\)(?:\s*\/\s*[\d.]+)?\s*\)/g) ?? [];
       const banda = cores.at(-1);
-      const bruta = banda ? resolverCor(raiz, banda) : null;
-      saida[nome] = bruta ? (razao(bruta, superficie)?.razao ?? null) : null;
+      const bruta = banda ? resolveColor(raiz, banda) : null;
+      saida[nome] = bruta ? (ratio(bruta, superficie)?.ratio ?? null) : null;
     }
     return { tema, modo, ...saida };
   });
@@ -346,7 +346,7 @@ export function medirAnelPorTema(raiz: HTMLElement) {
 
 // ─── Anel de foco ─────────────────────────────────────────────────────────────
 
-export interface MedidaDeAnel {
+export interface RingMeasurement {
   /** `box-shadow` computado sem foco. */
   repouso: string;
   /** `box-shadow` computado com `:focus-visible` casando. */
@@ -371,13 +371,13 @@ export interface MedidaDeAnel {
  *
  * `repouso` tem de ser colhido ANTES do foco — daí ser parâmetro.
  */
-export function medirAnelDeFoco(el: HTMLElement, repouso: string): MedidaDeAnel {
+export function focusMeasureRing(el: HTMLElement, repouso: string): RingMeasurement {
   // `box-shadow` está no lote de transição do botão. Lida logo após o Tab, a
   // sombra volta no PRIMEIRO QUADRO — camada externa com 0px de espalhamento e
   // alfa quase zero — e um anel perfeitamente pintado é relatado como
   // inexistente. Medido: `rgba(0,0,0,0) 0px 0px 0px 0px` no ghost e no link.
   // Desligar a transição faz o computado saltar para o valor final.
-  const foco = semTransicao(el, () => getComputedStyle(el).boxShadow);
+  const foco = noTransicao(el, () => getComputedStyle(el).boxShadow);
   const cs = getComputedStyle(el);
   const raiz = el.parentElement ?? el;
   const superficie = superficieDoApp(el);
@@ -386,43 +386,43 @@ export function medirAnelDeFoco(el: HTMLElement, repouso: string): MedidaDeAnel 
   // computado: o navegador devolve as camadas concatenadas, e separar a cor da
   // camada externa por regex quebra em `rgba(...)` com vírgulas. Resolvendo o
   // valor declarado o próprio navegador expande o `var` e compõe o alfa.
-  const declarado = declaracaoDaRegra(
+  const declarado = ruleDeclaration(
     el.ownerDocument,
     (s) => s.includes('.nds-button:focus-visible'),
     'box-shadow',
   );
-  const tokenDoAnel = declarado?.match(/hsl\(var\(--ring\)[^)]*\)\s*\)?/)?.[0] ?? 'hsl(var(--ring) / 0.5)';
-  const bruta = resolverCor(raiz, tokenDoAnel);
-  const composto = bruta ? razao(bruta, superficie) : null;
+  const ringToken = declarado?.match(/hsl\(var\(--ring\)[^)]*\)\s*\)?/)?.[0] ?? 'hsl(var(--ring) / 0.5)';
+  const bruta = resolveColor(raiz, ringToken);
+  const composto = bruta ? ratio(bruta, superficie) : null;
 
-  const bordaDeRepouso = parseFloat(cs.borderTopWidth) > 0 ? cs.borderTopColor : null;
+  const restBorder = parseFloat(cs.borderTopWidth) > 0 ? cs.borderTopColor : null;
 
   return {
     repouso,
     foco,
     focoVisivel: el.matches(':focus-visible'),
     corDoAnel: composto?.frente ?? bruta,
-    contra0Fundo: composto?.razao ?? null,
+    contra0Fundo: composto?.ratio ?? null,
     contraBordaDeRepouso:
-      bordaDeRepouso && composto ? (razao(composto.frente, bordaDeRepouso)?.razao ?? null) : null,
+      restBorder && composto ? (ratio(composto.frente, restBorder)?.ratio ?? null) : null,
   };
 }
 
 // ─── Desabilitado ─────────────────────────────────────────────────────────────
 
-export interface MedidaDeDesabilitado {
-  /** `nativo`, `aria`, `ambos` ou `nenhum` — `nenhum` é o achado. */
+export interface DisabledMeasurement {
+  /** `nativo`, `aria`, `both` ou `nenhum` — `nenhum` é o achado. */
   mecanismo: string;
   /** `none` impede o clique de ponteiro; qualquer outro valor o deixa passar. */
   ponteiro: string;
   /** Foco retido depois de `focus()`. Nativo bloqueia; `aria-disabled` não. */
-  retemFoco: boolean;
+  retemFocus: boolean;
   /** `true` quando `elementFromPoint` no centro devolve o próprio botão. */
   alcancavelPeloPonteiro: boolean;
   opacidade: number;
 }
 
-export function medirDesabilitado(el: HTMLElement): MedidaDeDesabilitado {
+export function measureDisabled(el: HTMLElement): DisabledMeasurement {
   const cs = getComputedStyle(el);
   const nativo = el.hasAttribute('disabled');
   const aria = el.getAttribute('aria-disabled') === 'true';
@@ -431,13 +431,13 @@ export function medirDesabilitado(el: HTMLElement): MedidaDeDesabilitado {
 
   const antes = el.ownerDocument.activeElement;
   el.focus();
-  const retemFoco = el.ownerDocument.activeElement === el;
-  if (!retemFoco && antes instanceof HTMLElement) antes.focus();
+  const retemFocus = el.ownerDocument.activeElement === el;
+  if (!retemFocus && antes instanceof HTMLElement) antes.focus();
 
   return {
     mecanismo: nativo && aria ? 'ambos' : nativo ? 'nativo' : aria ? 'aria' : 'nenhum',
     ponteiro: cs.pointerEvents,
-    retemFoco,
+    retemFocus,
     alcancavelPeloPonteiro: alvo === el || el.contains(alvo),
     opacidade: Number(cs.opacity),
   };
@@ -445,7 +445,7 @@ export function medirDesabilitado(el: HTMLElement): MedidaDeDesabilitado {
 
 // ─── Botão como link ──────────────────────────────────────────────────────────
 
-export interface MedidaDeLink {
+export interface LinkMeasurement {
   tag: string;
   /** `null` sem `href` — âncora sem destino não é link para o leitor de tela. */
   href: string | null;
@@ -458,7 +458,7 @@ export interface MedidaDeLink {
   temClasseDeBotao: boolean;
 }
 
-export function medirLink(el: HTMLElement): MedidaDeLink {
+export function measureLink(el: HTMLElement): LinkMeasurement {
   const antes = el.ownerDocument.activeElement;
   el.focus();
   const focavel = el.ownerDocument.activeElement === el;
@@ -477,7 +477,7 @@ export function medirLink(el: HTMLElement): MedidaDeLink {
 
 // ─── Ícone ────────────────────────────────────────────────────────────────────
 
-export interface MedidaDeIcone {
+export interface IconMeasurement {
   /** `null` quando o SVG não se esconde do leitor — o achado. */
   ariaHidden: string | null;
   /** `<title>` dentro do SVG entra no nome acessível e o polui. */
@@ -489,7 +489,7 @@ export interface MedidaDeIcone {
   nomeVemDoRotulo: boolean;
 }
 
-export function medirIcone(botao: HTMLElement): MedidaDeIcone | null {
+export function measureIcon(botao: HTMLElement): IconMeasurement | null {
   const svg = botao.querySelector<SVGSVGElement>('svg');
   if (!svg) return null;
   const rotulo = botao.getAttribute('aria-label');
@@ -505,7 +505,7 @@ export function medirIcone(botao: HTMLElement): MedidaDeIcone | null {
 // ─── Portões: o que as stories asseveram ──────────────────────────────────────
 
 /**
- * Variantes cujo TEXTO fica abaixo de `minimo` em algum tema ou modo.
+ * Variantes cujo TEXTO fica abaixo de `minimum` em algum tema ou modo.
  *
  * Devolve linha legível por falha, e `[]` quando tudo passa — de modo que a
  * story escreva `expect(falhas).toEqual([])` e a mensagem de erro já diga qual
@@ -516,21 +516,21 @@ export function medirIcone(botao: HTMLElement): MedidaDeIcone | null {
  * test-runner mede o que está na tela, e a tela está sempre no tema claro
  * padrão. Cinco sextos da matriz nunca foram olhados por ninguém.
  */
-export function falhasDeContrasteDeTexto(raiz: HTMLElement, minimo: number): string[] {
-  return medirVariantesPorTema(raiz)
-    .filter((m) => m.presente && m.texto !== null && m.texto < minimo)
-    .map((m) => `${m.tema}/${m.modo} · ${m.variante}: texto ${m.texto}:1 (mínimo ${minimo})`);
+export function contrastDeTextFailures(raiz: HTMLElement, minimum: number): string[] {
+  return themeMeasureVariants(raiz)
+    .filter((m) => m.presente && m.texto !== null && m.texto < minimum)
+    .map((m) => `${m.tema}/${m.modo} · ${m.variante}: texto ${m.texto}:1 (mínimo ${minimum})`);
 }
 
 /**
- * Temas/modos em que a banda colorida do anel fica abaixo de `minimo`.
+ * Temas/modos em que a banda colorida do anel fica abaixo de `minimum`.
  *
- * `minimo` é 3 — WCAG 1.4.11 trata o anel como informação não-textual. Cobre as
+ * `minimum` é 3 — WCAG 1.4.11 trata o anel como informação não-textual. Cobre as
  * três regras de anel do botão (foco, foco destrutivo e inválido permanente).
  */
-export function falhasDeAnel(raiz: HTMLElement, minimo: number): string[] {
+export function ringFailures(raiz: HTMLElement, minimum: number): string[] {
   const saida: string[] = [];
-  for (const linha of medirAnelPorTema(raiz)) {
+  for (const linha of themeMeasureRing(raiz)) {
     for (const [nome, valor] of Object.entries(linha)) {
       if (nome === 'tema' || nome === 'modo') continue;
       // `tema` e `modo` saíram no `continue` acima, então o que resta é razão
@@ -540,7 +540,7 @@ export function falhasDeAnel(raiz: HTMLElement, minimo: number): string[] {
       const r = typeof valor === 'number' ? valor : null;
       // `null` quer dizer que a REGRA sumiu da folha — achado, não aprovação.
       if (r === null) saida.push(`${linha.tema}/${linha.modo} · ${nome}: regra ausente na folha`);
-      else if (r < minimo) saida.push(`${linha.tema}/${linha.modo} · ${nome}: ${r}:1 (mínimo ${minimo})`);
+      else if (r < minimum) saida.push(`${linha.tema}/${linha.modo} · ${nome}: ${r}:1 (mínimo ${minimum})`);
     }
   }
   return saida;
@@ -561,7 +561,7 @@ export function falhasDeAnel(raiz: HTMLElement, minimo: number): string[] {
  * navegador, e `el.focus()` programático mede uma regra que a pessoa talvez
  * nunca veja.
  */
-export async function colherTudo(
+export async function colherAll(
   stack: string,
   raiz: HTMLElement,
   tab: () => Promise<void>,
@@ -570,18 +570,18 @@ export async function colherTudo(
   const botoes = [...raiz.querySelectorAll<HTMLElement>('.nds-button')];
   const repouso = new Map(botoes.map((b) => [b, getComputedStyle(b).boxShadow]));
 
-  const crescimento = medirCrescimentoComFonte(raiz);
-  const alvo = medirAlvoDeToque(raiz);
-  const temas = medirVariantesPorTema(raiz);
+  const crescimento = measureCrescimentoWithFonte(raiz);
+  const alvo = touchMeasureTarget(raiz);
+  const temas = themeMeasureVariants(raiz);
 
-  const focos: Record<string, MedidaDeAnel> = {};
+  const focos: Record<string, RingMeasurement> = {};
   (doc.activeElement as HTMLElement | null)?.blur();
   for (let i = 0; i < botoes.length + 4; i++) {
     await tab();
     const ativo = doc.activeElement as HTMLElement | null;
     if (!ativo?.classList?.contains('nds-button')) continue;
     const chave = varianteDe(ativo);
-    if (!focos[chave]) focos[chave] = medirAnelDeFoco(ativo, repouso.get(ativo) ?? '');
+    if (!focos[chave]) focos[chave] = focusMeasureRing(ativo, repouso.get(ativo) ?? '');
   }
 
   const achar = (sel: string) => raiz.querySelector<HTMLElement>(sel);
@@ -593,16 +593,16 @@ export async function colherTudo(
   throw new Error(
     `SONDA::${stack}::` +
       JSON.stringify({
-        matriz: medirBotoes(raiz),
+        matriz: measureButtons(raiz),
         crescimento,
         alvo,
         temas,
-        anelPorTema: medirAnelPorTema(raiz),
+        anelPorTema: themeMeasureRing(raiz),
         focos,
-        desabilitado: desab ? medirDesabilitado(desab) : null,
-        link: link ? medirLink(link) : null,
-        iconeComTexto: comIcone ? medirIcone(comIcone) : null,
-        iconeSozinho: iconOnly ? medirIcone(iconOnly) : null,
+        desabilitado: desab ? measureDisabled(desab) : null,
+        link: link ? measureLink(link) : null,
+        iconeComTexto: comIcone ? measureIcon(comIcone) : null,
+        iconeSozinho: iconOnly ? measureIcon(iconOnly) : null,
       }),
   );
 }

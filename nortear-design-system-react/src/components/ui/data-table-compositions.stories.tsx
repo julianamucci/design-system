@@ -4,13 +4,13 @@ import { within, userEvent, waitFor, fireEvent, expect, fn } from "storybook/tes
 import { DataTable, type DataTableColumn } from "./data-table"
 import {
   dataTableWithEditSource,
-  columnSourceDataTableWithFilters,
+  columnDataTableWithFiltersSource,
   dataTableRedimensionavelSource,
   dataTableReordenavelEFixavelSource,
   dataTableSource,
 } from "./data-table.source"
 import { Badge } from "@/components/ui/badge"
-import { waitForPortal, waitForPortalGone, REGRA_GUARDA_DE_FOCO } from "@/lib/wait-for-portal"
+import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from "@/lib/wait-for-portal"
 import {
   baseColumns,
   currency,
@@ -34,7 +34,7 @@ export default meta
 type Story = StoryObj<typeof DataTable<Invoice>>
 
 /** Linhas de dado — a mensagem de "sem resultados" também é um `tr` do tbody. */
-function linhasDeDado(raiz: HTMLElement): HTMLElement[] {
+function datumLines(raiz: HTMLElement): HTMLElement[] {
   return [...raiz.querySelectorAll<HTMLElement>("tbody tr")].filter(
     (tr) => !tr.querySelector(".nds-data-table-empty")
   )
@@ -83,20 +83,20 @@ export const WithColumnFilters: Story = {
     actions: { disable: true },
     // O recorte é declarado na COLUNA (`meta.filter`): outro conjunto de
     // colunas, que o snippet do `meta` não tem como mostrar.
-    docs: { source: { transform: columnSourceDataTableWithFilters } },
+    docs: { source: { transform: columnDataTableWithFiltersSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
-    const linhas = () => linhasDeDado(canvasElement)
+    const linhas = () => datumLines(canvasElement)
 
     await step("A linha de filtros existe e cada célula dela tem nome", async () => {
       // Sem texto no `th`, a célula chega ao axe como cabeçalho vazio: o VALOR
       // de um input não entra no nome acessível do elemento que o contém, então
       // uma célula que só tem o campo é, para a árvore de acessibilidade, vazia.
-      const linhaDeFiltros = canvasElement.querySelector<HTMLElement>(
+      const filtersLine = canvasElement.querySelector<HTMLElement>(
         ".nds-data-table-filter-row"
       )!
-      const celulas = [...linhaDeFiltros.querySelectorAll("th")]
+      const celulas = [...filtersLine.querySelectorAll("th")]
       await expect(celulas.length).toBe(filterableColumns.length)
       // A coluna Valor não tem filtro — e é justamente ela que precisa dizer
       // de qual coluna a célula vazia é.
@@ -170,7 +170,7 @@ export const ResizableColumns: Story = {
       const cabecalho = el.closest("th") as HTMLElement
       const vizinho = cabecalho.nextElementSibling as HTMLElement
       const antes = parseFloat(cabecalho.style.width)
-      const declaradaDoVizinho = vizinho.style.width
+      const neighbourDeclarada = vizinho.style.width
       const caixa = el.getBoundingClientRect()
 
       fireEvent.mouseDown(el, { clientX: caixa.left, clientY: caixa.top })
@@ -180,7 +180,7 @@ export const ResizableColumns: Story = {
       await waitFor(async () => {
         await expect(parseFloat(cabecalho.style.width)).toBeGreaterThan(antes + 40)
       })
-      await expect(vizinho.style.width).toBe(declaradaDoVizinho)
+      await expect(vizinho.style.width).toBe(neighbourDeclarada)
     })
   },
 }
@@ -195,7 +195,7 @@ export const ReorderableAndPinnable: Story = {
   },
   parameters: {
     covers: ["functional.item6", "visual.item3"],
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     controls: { disable: true },
     actions: { disable: true },
     // As duas flags andam juntas e nenhuma delas está nos args do `meta`.
@@ -211,7 +211,7 @@ export const ReorderableAndPinnable: Story = {
       // pode reordenar o topo e deixar os dados onde estavam. A prova é a
       // primeira célula da primeira linha passar a ser o outro dado.
       const antes = rotulos()
-      const primeiraCelulaAntes = canvasElement
+      const firstCellBefore = canvasElement
         .querySelector<HTMLElement>("tbody tr td")!
         .textContent!.trim()
 
@@ -229,7 +229,7 @@ export const ReorderableAndPinnable: Story = {
       await expect(rotulos()[1]).toBe(antes[0])
       await expect(
         canvasElement.querySelector<HTMLElement>("tbody tr td")!.textContent!.trim()
-      ).not.toBe(primeiraCelulaAntes)
+      ).not.toBe(firstCellBefore)
     })
 
     await step("Fixar uma coluna a gruda na borda durante o scroll horizontal", async () => {
@@ -357,7 +357,7 @@ export const WithInlineEditing: Story = {
       // atualiza o array é o consumidor, com os três campos do payload.
       aoEditar.mockClear()
       const botao = canvas.getAllByRole("button", { name: "Editar Cliente" })[0]
-      const valorAntigo = botao.textContent!.trim()
+      const legacyValue = botao.textContent!.trim()
       await userEvent.click(botao)
 
       const campo = await waitFor(() =>
@@ -374,7 +374,7 @@ export const WithInlineEditing: Story = {
         ).toHaveTextContent("Ana Prado Filha")
       })
       await expect(aoEditar).toHaveBeenCalledWith(0, "customer", "Ana Prado Filha")
-      await expect(valorAntigo).not.toBe("Ana Prado Filha")
+      await expect(legacyValue).not.toBe("Ana Prado Filha")
     })
 
     await step("Escape descarta o rascunho e não avisa ninguém", async () => {

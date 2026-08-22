@@ -10,10 +10,10 @@ import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save } from "lucide-react";
 import {
-  tooltipComAtalhoSource,
+  tooltipWithShortcutSource,
   tooltipCurtoSource,
   tooltipSource,
-  tooltipTextoLongoSource,
+  tooltipTextLongSource,
 } from "./tooltip.source";
 
 // As três variantes que o conteúdo compartilhado descreve — texto curto, texto
@@ -123,7 +123,7 @@ export const WithShortcut: Story = {
     covers: ["visual.item2"],
     docs: {
       // O par <kbd data-slot="kbd"> é a composição que os args não descrevem.
-      source: { transform: tooltipComAtalhoSource },
+      source: { transform: tooltipWithShortcutSource },
       description: {
         story:
           "Tooltip com atalho de teclado em <kbd> — útil para botões icon-only com hotkeys (ex.: Salvar Ctrl+S).",
@@ -178,7 +178,7 @@ export const LongText: Story = {
     covers: ["visual.item4"],
     docs: {
       // O comprimento do texto É a variante: o snippet do meta o esconderia.
-      source: { transform: tooltipTextoLongoSource },
+      source: { transform: tooltipTextLongSource },
       description: {
         story:
           "Texto longo — quebra dentro do limite de largura do balão. Use só se realmente couber em poucas linhas; passou disso, o caso é de Popover.",

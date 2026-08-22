@@ -12,8 +12,8 @@ import {
   NdsTableWrapper,
 } from './table';
 import { NdsSkeleton } from './skeleton';
-import { animacaoAtiva, distincaoDoFundo } from '@shared/testing/skeleton-probe';
-import { FATURAS } from './table.fixtures';
+import { animationAtiva, backgroundDistincao } from '@shared/testing/skeleton-probe';
+import { INVOICES } from './table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -52,7 +52,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const COLUNAS = ['Fatura', 'Status', 'Método', 'Valor'];
+const COLUMNS = ['Fatura', 'Status', 'Método', 'Valor'];
 
 // ─── Vazio ────────────────────────────────────────────────────────────────────
 
@@ -67,7 +67,7 @@ export const Empty: Story = {
     },
   },
   render: () => ({
-    props: { colunas: COLUNAS },
+    props: { colunas: COLUMNS },
     template: `
       <div ndsTableWrapper>
         <table ndsTable>
@@ -104,7 +104,7 @@ export const Empty: Story = {
       // functional.item2 — sem o colspan a mensagem cairia sob a primeira
       // coluna e as outras três ficariam vazias, como se faltassem dados.
       const celula = canvasElement.querySelector<HTMLTableCellElement>('tbody td')!;
-      await expect(celula).toHaveAttribute('colspan', String(COLUNAS.length));
+      await expect(celula).toHaveAttribute('colspan', String(COLUMNS.length));
       await expect(celula).toHaveTextContent('Nenhuma fatura encontrada.');
       await expect(canvasElement.querySelectorAll('tbody tr').length).toBe(1);
     });
@@ -113,7 +113,7 @@ export const Empty: Story = {
       // Estado vazio não é motivo para desmontar a estrutura: quem usa leitor de
       // tela precisa saber que colunas voltarão a existir quando houver dados.
       await expect(canvas.getByRole('table', { name: /faturas recentes/ })).toBeTruthy();
-      await expect(canvasElement.querySelectorAll('th').length).toBe(COLUNAS.length);
+      await expect(canvasElement.querySelectorAll('th').length).toBe(COLUMNS.length);
     });
 
     await step('A mensagem é discreta e centralizada', async () => {
@@ -139,7 +139,7 @@ export const SelectedRow: Story = {
     },
   },
   render: () => ({
-    props: { faturas: FATURAS },
+    props: { faturas: INVOICES },
     template: `
       <div ndsTableWrapper>
         <table ndsTable>
@@ -183,7 +183,7 @@ export const SelectedRow: Story = {
       // sob o fallback JIT o binding cai em silêncio e a linha nasceria sem
       // atributo nenhum (armadilha 1 do CLAUDE.md do stack).
       const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(FATURAS.length + 1);
+      await expect(linhas.length).toBe(INVOICES.length + 1);
       await expect(linhas[1]).toHaveAttribute('data-state', 'selected');
       await expect(linhas[linhas.length - 1]).toHaveAttribute('data-state', 'selected');
       for (const i of [0, 2, 3, 4]) {
@@ -207,7 +207,7 @@ export const SelectedRow: Story = {
 
 // ─── Carregando ───────────────────────────────────────────────────────────────
 
-const LINHAS_ESQUELETO = [1, 2, 3];
+const LINES_SKELETON = [1, 2, 3];
 
 export const Loading: Story = {
   parameters: {
@@ -220,7 +220,7 @@ export const Loading: Story = {
     },
   },
   render: () => ({
-    props: { linhas: LINHAS_ESQUELETO, colunas: COLUNAS },
+    props: { linhas: LINES_SKELETON, colunas: COLUMNS },
     template: `
       <!-- aria-busy na REGIÃO, não na célula: o esqueleto é aria-hidden, e sem o
            container quem usa leitor de tela ouve uma tabela vazia sem saber que
@@ -261,13 +261,13 @@ export const Loading: Story = {
       // visual.item6 — o esqueleto mede a caixa que o dado vai ocupar; a grade
       // não pode encolher enquanto carrega, senão a tabela salta ao chegar.
       const linhas = [...canvasElement.querySelectorAll<HTMLElement>('tbody tr')];
-      await expect(linhas.length).toBe(LINHAS_ESQUELETO.length);
+      await expect(linhas.length).toBe(LINES_SKELETON.length);
       for (const linha of linhas) {
         await expect(linha.querySelectorAll('[data-slot="skeleton"]').length).toBe(
-          COLUNAS.length,
+          COLUMNS.length,
         );
       }
-      await expect(canvasElement.querySelectorAll('thead th').length).toBe(COLUNAS.length);
+      await expect(canvasElement.querySelectorAll('thead th').length).toBe(COLUMNS.length);
     });
 
     await step('O esqueleto some da árvore de acessibilidade; a região anuncia', async () => {
@@ -292,8 +292,8 @@ export const Loading: Story = {
       // Mesmo piso e mesmo colhedor do skeleton-estados: dois números para a
       // mesma pergunta divergem na primeira correção.
       const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
-      await expect(distincaoDoFundo(sk).razao).toBeGreaterThan(1.05);
-      await expect(animacaoAtiva(sk)).toBe(true);
+      await expect(backgroundDistincao(sk).ratio).toBeGreaterThan(1.05);
+      await expect(animationAtiva(sk)).toBe(true);
     });
   },
 };

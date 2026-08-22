@@ -7,8 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 import {
   tabsAtivacaoManualSource,
   tabsWithBadgeSource,
-  tabsComIconesSource,
-  tabsControladoSource,
+  tabsWithIconsSource,
+  tabsControlledSource,
   tabsSource,
 } from "./tabs.source";
 
@@ -52,7 +52,7 @@ export const WithIcons: Story = {
     docs: {
       // O ícone dentro do gatilho é a sub-composição que o snippet do meta
       // esconderia.
-      source: { transform: tabsComIconesSource },
+      source: { transform: tabsWithIconsSource },
       description: {
         story:
           "Ícone à esquerda do rótulo. O ícone é decorativo e fica escondido do leitor de tela — " +
@@ -206,7 +206,7 @@ export const Controlled: Story = {
   parameters: {
     docs: {
       // O estado externo vive num `useState` que o meta não imprime.
-      source: { transform: tabsControladoSource },
+      source: { transform: tabsControlledSource },
       description: {
         story:
           "Modo controlado — o estado da aba ativa vive fora do componente, que passa a apenas " +

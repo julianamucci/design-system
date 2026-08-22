@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { createMenubar } from './menubar';
-import { embrulhar, esperarPainel } from './menubar.fixtures';
+import { embrulhar, waitForPanel } from './menubar.fixtures';
 import { menubarSource, menubarSourceWith } from './menubar.source';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
-const ITENS_NEUTROS = ['Novo', 'Abrir', 'Salvar'] as const;
+const ITEMS_NEUTROS = ['Novo', 'Abrir', 'Salvar'] as const;
 const ITENS_COM_PERIGO = ['Salvar', 'Descartar alterações'] as const;
 
 const meta: Meta = {
@@ -44,7 +44,7 @@ export const Default: Story = {
       source: {
         transform: menubarSourceWith({
           menus: [
-            { label: 'Arquivo', items: ITENS_NEUTROS.map((i) => ({ label: i })) },
+            { label: 'Arquivo', items: ITEMS_NEUTROS.map((i) => ({ label: i })) },
             { label: 'Editar', items: [{ label: 'Desfazer' }] },
           ],
           defaultOpen: 0,
@@ -56,7 +56,7 @@ export const Default: Story = {
     embrulhar(
       createMenubar(
         [
-          { label: 'Arquivo', items: ITENS_NEUTROS.map((i) => ({ label: i })) },
+          { label: 'Arquivo', items: ITEMS_NEUTROS.map((i) => ({ label: i })) },
           { label: 'Editar', items: [{ label: 'Desfazer' }] },
         ],
         { defaultOpen: 0 },
@@ -64,11 +64,11 @@ export const Default: Story = {
       '240px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await esperarPainel(canvasElement);
+    const painel = await waitForPanel(canvasElement);
     const itens = within(painel).getAllByRole('menuitem');
 
     await step('A variante default é escrita no markup', async () => {
-      await expect(itens).toHaveLength(ITENS_NEUTROS.length);
+      await expect(itens).toHaveLength(ITEMS_NEUTROS.length);
       for (const item of itens) {
         await expect(item.getAttribute('data-variant')).toBe('default');
         await expect(item.classList.contains('nds-dropdown-menu-item')).toBe(true);
@@ -133,7 +133,7 @@ export const Destructive: Story = {
       '240px',
     ),
   play: async ({ canvasElement, step }) => {
-    const painel = await esperarPainel(canvasElement);
+    const painel = await waitForPanel(canvasElement);
     const canvas = within(painel);
     const neutro = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[0] });
     const perigoso = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[1] });

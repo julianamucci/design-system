@@ -12,8 +12,8 @@ import { Button } from "./button";
 import { Input } from "./input";
 import { Label } from "./label";
 import {
-  popoverConteudoLivreSource,
-  popoverFormularioSource,
+  popoverContentLivreSource,
+  popoverFormSource,
   popoverSource,
 } from "./popover.source";
 
@@ -49,7 +49,7 @@ export const Default: Story = {
     docs: {
       // A AUSÊNCIA de título é o assunto: sem `PopoverTitle` o painel herda o
       // nome acessível do gatilho, e o meta imprime o cabeçalho completo.
-      source: { transform: popoverConteudoLivreSource },
+      source: { transform: popoverContentLivreSource },
       description: {
         story:
           "Conteúdo livre dentro do PopoverContent. Sem título, o painel herda o nome acessível do gatilho.",
@@ -125,9 +125,9 @@ export const WithTitle: Story = {
     await step("O título nomeia o painel por aria-labelledby", async () => {
       const dialog = await waitFor(() => screen.getByRole("dialog"));
       await expect(dialog).toBeVisible();
-      const idTitulo = dialog.getAttribute("aria-labelledby");
-      await expect(idTitulo).toBeTruthy();
-      const titulo = document.getElementById(idTitulo!)!;
+      const idTitle = dialog.getAttribute("aria-labelledby");
+      await expect(idTitle).toBeTruthy();
+      const titulo = document.getElementById(idTitle!)!;
       await expect(titulo).toHaveClass(/nds-popover-title/);
       await expect(titulo.textContent).toMatch(/Configuracoes de exibição/i);
     });
@@ -169,7 +169,7 @@ export const Form: Story = {
     docs: {
       // Sub-composição com formulário dentro do painel — campos, rótulos e
       // submit que o snippet do meta não carrega.
-      source: { transform: popoverFormularioSource },
+      source: { transform: popoverFormSource },
       description: {
         story:
           "Formulário inline — Inputs e botão dentro do PopoverContent. Caso de uso: edição rápida sem trocar de tela.",

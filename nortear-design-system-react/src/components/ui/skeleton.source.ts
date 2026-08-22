@@ -74,8 +74,8 @@ ${conteudo}
 }
 
 /** Linha de texto: a forma escolhe a altura, a fração escolhe a largura. */
-function linha(fracao: (typeof LARGURAS)[number], tipo: 'text' | 'heading' = 'text'): string {
-  return `  <Skeleton data-shape="${tipo}" data-width="${fracao}" />`;
+function linha(fraction: (typeof LARGURAS)[number], tipo: 'text' | 'heading' = 'text'): string {
+  return `  <Skeleton data-shape="${tipo}" data-width="${fraction}" />`;
 }
 
 /**
@@ -121,7 +121,7 @@ export const skeletonSource: SourceTransform<SkeletonArgs> = (_gerado, ctx) => {
  * `fill` ter o que preencher, e o motivo de o exemplo importar duas peças em
  * vez de uma.
  */
-export function midiaSourceSkeletonBlock(): string {
+export function midiaSkeletonBlockSource(): string {
   return jsxSnippet(
     `${IMPORT}\n${IMPORT_RATIO}`,
     regiao(
@@ -220,7 +220,7 @@ ${indentar(linha('1-2'))}
  * conjunto. `data-size="sm"` encolhe o avatar — item de lista não usa o mesmo
  * bloco do card de perfil.
  */
-export function skeletonListaSource(): string {
+export function skeletonListSource(): string {
   return jsxSnippet(
     IMPORT,
     `<ul
@@ -248,7 +248,7 @@ export function skeletonListaSource(): string {
  * assunto é a troca: o placeholder ocupa exatamente a caixa que a imagem vai
  * ocupar, então nada salta quando ela chega.
  */
-export function skeletonImagemEmProporcaoSource(): string {
+export function ratioSkeletonImageSource(): string {
   return jsxSnippet(
     `${IMPORT}\n${IMPORT_RATIO}`,
     regiao(

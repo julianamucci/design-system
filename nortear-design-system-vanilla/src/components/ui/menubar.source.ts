@@ -6,7 +6,7 @@
 // chamada com lista posicional é local a este módulo.
 
 import {
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -163,7 +163,7 @@ export function menubarSnippet(o: MenubarSnippetOptions = {}): string {
   const segundo = linhas.length ? `, ${objeto(linhas)}` : '';
 
   return snippet(
-    importar('menubar', 'createMenubar'),
+    importing('menubar', 'createMenubar'),
     `const barra = createMenubar(${serializarMenus(menus)}${segundo});`,
     montar('barra'),
     // A barra registra ouvinte no documento. Sair da página dispara a limpeza

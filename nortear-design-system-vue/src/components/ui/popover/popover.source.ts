@@ -40,9 +40,9 @@ function bool(nome: string, valor: unknown, padrao: boolean): string {
 }
 
 /** Import do design system, uma peça por linha e em ordem alfabética. */
-function importa(...pecas: string[]): string {
-  const lista = [...new Set(pecas)].sort();
-  return `import {\n${lista.map((peca) => `  ${peca},`).join('\n')}\n} from '@/components/ui/popover'`;
+function importa(...parts: string[]): string {
+  const lista = [...new Set(parts)].sort();
+  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from '@/components/ui/popover'`;
 }
 
 /** As peças de sempre, mais o botão que faz de gatilho. */
@@ -105,7 +105,7 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
     bool('default-open', ctx?.args?.defaultOpen, false),
     bool('modal', ctx?.args?.modal, false),
   );
-  const posicao = attrs(
+  const position = attrs(
     attr('side', ctx?.args?.side, SIDE_DEFAULT),
     attr('align', ctx?.args?.align, ALIGNMENT_DEFAULT),
   );
@@ -116,7 +116,7 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
   <PopoverTrigger as-child>
     <Button variant="outline">Abrir popover</Button>
   </PopoverTrigger>
-  <PopoverContent${posicao}>
+  <PopoverContent${position}>
     <PopoverHeader>
       <PopoverTitle>Configuracoes de exibição</PopoverTitle>
       <PopoverDescription>
@@ -137,7 +137,7 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
  * assunto, porque é ela que faz o painel herdar o nome acessível do gatilho.
  * Um painel de papel `dialog` sem nome nenhum reprovaria em `aria-dialog-name`.
  */
-export function popoverConteudoLivreSource(): string {
+export function popoverContentLivreSource(): string {
   return vueSnippet(
     `${importa('Popover', 'PopoverContent', 'PopoverTrigger')}
 import { Button } from '@/components/ui/button'`,
@@ -173,7 +173,7 @@ export function popoverWithTitleSource(): string {
  * Os campos vêm por `v-model`: um campo que exibe valor sem devolvê-lo aceita
  * digitação e perde o que foi digitado no próximo render.
  */
-export function popoverFormularioSource(): string {
+export function popoverFormSource(): string {
   return vueSnippet(
     `${importa('Popover', 'PopoverContent', 'PopoverHeader', 'PopoverTitle', 'PopoverTrigger')}
 import { Button } from '@/components/ui/button'
@@ -212,7 +212,7 @@ export function popoverClosedSource(): string {
 }
 
 /** Estado aberto na montagem: `default-open` é a forma não-controlada de abrir. */
-export function popoverAbertoSource(): string {
+export function popoverOpenSource(): string {
   return vueSnippet(
     IMPORT_BASE,
     popover({
@@ -229,7 +229,7 @@ export function popoverAbertoSource(): string {
  *
  * `side-offset` é a folga entre painel e gatilho, em px.
  */
-export function popoverAcimaSource(): string {
+export function popoverAboveSource(): string {
   return vueSnippet(
     IMPORT_BASE,
     popover({
@@ -252,7 +252,7 @@ export function popoverAcimaSource(): string {
  * dispensa por clique-fora antes do próprio clique, e o par fechar+abrir
  * reabriria o painel no mesmo gesto.
  */
-export function popoverControladoSource(): string {
+export function popoverControlledSource(): string {
   return vueSnippet(
     `${IMPORT_BASE}
 import { ref } from 'vue'
@@ -341,7 +341,7 @@ const email = ref('ana@nortear.com.br')`,
  * Cada linha é um `<label>` em volta do campo: o rótulo fica associado sem
  * precisar de `for`/`id` casados à mão.
  */
-export function popoverFiltroSource(): string {
+export function popoverFilterSource(): string {
   return vueSnippet(
     `${importa(
       'Popover',
@@ -391,7 +391,7 @@ const status = reactive<Record<string, boolean>>({
  * runtime: classe montada por expressão não é auditável, e o verificador de
  * classe morta leria a expressão como se fosse o nome da classe.
  */
-export function colorSourcePopoverSelector(): string {
+export function colorPopoverSelectorSource(): string {
   const amostras = [
     ['nds-bg-primary', 'Primária'],
     ['nds-bg-secondary', 'Secundária'],

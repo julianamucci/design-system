@@ -3,7 +3,7 @@ import { useState } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import {
   waitForPortal,
-  REGRA_GUARDA_DE_FOCO,
+  FOCUS_RULE_GUARDA,
   MENU_RULE_CHILDREN,
 } from "@/lib/wait-for-portal";
 import {
@@ -23,11 +23,11 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import {
-  dropdownMenuComAtalhosSource,
-  dropdownMenuComCheckboxSource,
-  dropdownMenuComRadioSource,
-  dropdownMenuComRotuloSource,
-  dropdownMenuComSubmenuSource,
+  dropdownMenuWithShortcutsSource,
+  dropdownMenuWithCheckboxSource,
+  dropdownMenuWithRadioSource,
+  dropdownMenuWithLabelSource,
+  dropdownMenuWithSubmenuSource,
   dropdownMenuSource,
 } from "./dropdown-menu.source";
 import { Button } from "./button";
@@ -43,7 +43,7 @@ const meta = {
     // Estas stories terminam com o menu ABERTO, de propósito: é o estado que o
     // Chromatic precisa fotografar. As duas regras do axe que isso acende são
     // da lib, e o motivo de cada uma está em `wait-for-portal.ts`.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, MENU_RULE_CHILDREN] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN] } },
     docs: {
       source: { transform: dropdownMenuSource },
       description: {
@@ -76,7 +76,7 @@ export const WithLabel: Story = {
     covers: ["visual.item1"],
     // Dois grupos rotulados separados por um divisor — o snippet do meta tem um
     // grupo só e esconderia a estrutura que a story afirma.
-    docs: { source: { transform: dropdownMenuComRotuloSource } },
+    docs: { source: { transform: dropdownMenuWithLabelSource } },
   },
   render: () => (
     <div style={wrapperStyle}>
@@ -127,7 +127,7 @@ export const WithCheckboxItems: Story = {
   parameters: {
     covers: ["functional.item5", "accessibility.item4", "visual.item2"],
     // Sub-composição inteira: item de marcação mais o estado que o alimenta.
-    docs: { source: { transform: dropdownMenuComCheckboxSource } },
+    docs: { source: { transform: dropdownMenuWithCheckboxSource } },
   },
   render: () => {
     const Demo = () => {
@@ -198,7 +198,7 @@ export const WithRadioGroup: Story = {
     covers: ["functional.item6", "accessibility.item4", "visual.item3"],
     // O valor mora no GRUPO, não em cada item — só a sub-composição inteira
     // mostra de onde vem a exclusividade da escolha.
-    docs: { source: { transform: dropdownMenuComRadioSource } },
+    docs: { source: { transform: dropdownMenuWithRadioSource } },
   },
   render: () => {
     const Demo = () => {
@@ -251,7 +251,7 @@ export const WithSubmenu: Story = {
   parameters: {
     covers: ["functional.item7", "visual.item4"],
     // O trio Sub/SubTrigger/SubContent não existe no snippet do meta.
-    docs: { source: { transform: dropdownMenuComSubmenuSource } },
+    docs: { source: { transform: dropdownMenuWithSubmenuSource } },
   },
   render: () => (
     <div style={wrapperStyle}>
@@ -275,21 +275,21 @@ export const WithSubmenu: Story = {
   play: async ({ step }) => {
     const corpo = within(document.body);
     const menu = await waitForPortal("menu");
-    const subGatilho = within(menu).getByRole("menuitem", { name: "Exportar" });
+    const subTrigger = within(menu).getByRole("menuitem", { name: "Exportar" });
 
     await step("O sub-gatilho anuncia que abre um menu", async () => {
-      await expect(subGatilho).toHaveAttribute("aria-haspopup", "menu");
-      await expect(subGatilho).toHaveAttribute("aria-expanded", "false");
+      await expect(subTrigger).toHaveAttribute("aria-haspopup", "menu");
+      await expect(subTrigger).toHaveAttribute("aria-expanded", "false");
     });
 
     await step("A seta para a direita abre o submenu", async () => {
       // Idempotente: a seta só é enviada com o submenu fechado.
-      if (subGatilho.getAttribute("aria-expanded") !== "true") {
-        subGatilho.focus();
+      if (subTrigger.getAttribute("aria-expanded") !== "true") {
+        subTrigger.focus();
         await userEvent.keyboard("{ArrowRight}");
       }
       await waitFor(async () => {
-        await expect(subGatilho).toHaveAttribute("aria-expanded", "true");
+        await expect(subTrigger).toHaveAttribute("aria-expanded", "true");
         await expect(corpo.getAllByRole("menu")).toHaveLength(2);
       });
     });
@@ -314,7 +314,7 @@ export const WithShortcuts: Story = {
   parameters: {
     // O atalho vive DENTRO do item e entra no nome acessível: é a posição no
     // markup que a story afirma, e ela some no snippet do meta.
-    docs: { source: { transform: dropdownMenuComAtalhosSource } },
+    docs: { source: { transform: dropdownMenuWithShortcutsSource } },
   },
   render: () => (
     <div style={wrapperStyle}>
@@ -360,10 +360,10 @@ export const WithShortcuts: Story = {
       // já vem resolvido em pixels — o que dá para afirmar é o resultado.
       const item = canvas.getByRole("menuitem", { name: "Colar Ctrl V" });
       const atalho = item.querySelector<HTMLElement>("[data-slot='dropdown-menu-shortcut']")!;
-      const caixaDoItem = item.getBoundingClientRect();
-      const caixaDoAtalho = atalho.getBoundingClientRect();
-      await expect(caixaDoItem.right - caixaDoAtalho.right).toBeLessThan(
-        caixaDoAtalho.left - caixaDoItem.left,
+      const itemBox = item.getBoundingClientRect();
+      const shortcutBox = atalho.getBoundingClientRect();
+      await expect(itemBox.right - shortcutBox.right).toBeLessThan(
+        shortcutBox.left - itemBox.left,
       );
     });
   },

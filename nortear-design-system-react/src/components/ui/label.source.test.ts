@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
   labelWithCheckboxSource,
-  blockSourceLabelDisabled,
-  labelDesabilitadoSource,
+  blockLabelDisabledSource,
+  labelDisabledSource,
   labelObrigatorioSource,
   labelSource,
 } from './label.source';
 
 const TODAS = [
   labelSource,
-  labelDesabilitadoSource,
-  blockSourceLabelDisabled,
+  labelDisabledSource,
+  blockLabelDisabledSource,
   labelObrigatorioSource,
   labelWithCheckboxSource,
 ];
@@ -27,8 +27,8 @@ describe('labelSource', () => {
   });
 
   it('cai no texto padrão quando o control entrega um espião no lugar da string', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = labelSource(undefined, { args: { children: espiao as never } });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = labelSource(undefined, { args: { children: spy as never } });
     expect(saida).toContain('>Nome completo</Label>');
     expect(saida).not.toContain('CORPO_DO_MOCK');
   });
@@ -69,14 +69,14 @@ describe('o par htmlFor ↔ id', () => {
 
 describe('estados', () => {
   it('o desabilitado põe a marca de irmão no CONTROLE, não no rótulo', () => {
-    const saida = labelDesabilitadoSource();
+    const saida = labelDisabledSource();
     expect(saida).toMatch(/<Input[^>]*className="nds-peer"/);
     expect(saida).toMatch(/<Input[^>]*disabled/);
     expect(saida).not.toMatch(/<Label[^>]*nds-peer/);
   });
 
   it('o bloco desabilitado marca o ancestral, e não cada rótulo', () => {
-    const saida = blockSourceLabelDisabled();
+    const saida = blockLabelDisabledSource();
     expect(saida).toContain('data-disabled="true"');
     expect(saida.indexOf('data-disabled="true"')).toBeLessThan(saida.indexOf('<Label'));
   });

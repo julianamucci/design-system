@@ -13,9 +13,9 @@ import {
 import {
   paginationControladaSource,
   paginationEllipsisSource,
-  paginationRodapeDeTabelaSource,
+  tablePaginationFooterSource,
   paginationSource,
-  paginationUltimaPaginaSource,
+  paginationLastPageSource,
 } from "./pagination.source";
 
 const meta = {
@@ -76,9 +76,9 @@ export const Simple: Story = {
 
     await step("A faixa mostra todos os números, sem reticências", async () => {
       // visual.item1 — é o estado que o Chromatic fotografa como "default".
-      const numerados = canvasElement.querySelectorAll('[data-slot="pagination-link"]');
-      await expect(numerados.length).toBe(5);
-      await expect([...numerados].map((l) => l.textContent?.trim())).toEqual([
+      const numbered = canvasElement.querySelectorAll('[data-slot="pagination-link"]');
+      await expect(numbered.length).toBe(5);
+      await expect([...numbered].map((l) => l.textContent?.trim())).toEqual([
         "1",
         "2",
         "3",
@@ -179,7 +179,7 @@ export const LastPage: Story = {
     docs: {
       // O extremo bloqueado é o de AVANÇO, e a faixa termina na última página —
       // composição que o snippet do meta, sempre na primeira, não alcança.
-      source: { transform: paginationUltimaPaginaSource },
+      source: { transform: paginationLastPageSource },
       description: {
         story:
           "Na última página o controle Próxima fica desabilitado, pelo mesmo par de atributos usado em Anterior.",
@@ -216,19 +216,19 @@ export const LastPage: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const proxima = canvas.getByRole("link", { name: "Ir para a próxima página" });
+    const next = canvas.getByRole("link", { name: "Ir para a próxima página" });
 
     await step("Próxima está marcado como desabilitado", async () => {
-      await expect(proxima).toHaveAttribute("aria-disabled", "true");
-      await expect(proxima).toHaveAttribute("tabindex", "-1");
-      await expect(getComputedStyle(proxima).pointerEvents).toBe("none");
+      await expect(next).toHaveAttribute("aria-disabled", "true");
+      await expect(next).toHaveAttribute("tabindex", "-1");
+      await expect(getComputedStyle(next).pointerEvents).toBe("none");
     });
 
     await step("Clicar em Próxima não navega", async () => {
       // functional.item3 — `fireEvent` porque o ponteiro já está barrado pelo
       // CSS; o que falta provar é que o evento por script também não passa.
       onPageChange.mockClear();
-      await fireEvent.click(proxima);
+      await fireEvent.click(next);
       await expect(onPageChange).not.toHaveBeenCalled();
     });
 
@@ -345,7 +345,7 @@ export const CompleteTable: Story = {
     docs: {
       // A faixa mora dentro de um rodapé de tabela: o contêiner `nds-cluster` e
       // o `data-align="end"` são o ponto, e o meta imprime a faixa solta.
-      source: { transform: paginationRodapeDeTabelaSource },
+      source: { transform: tablePaginationFooterSource },
       description: {
         story:
           "Cenário canônico: rodapé de tabela com o contador de resultados à esquerda e a faixa encostada à direita, via data-align=\"end\".",

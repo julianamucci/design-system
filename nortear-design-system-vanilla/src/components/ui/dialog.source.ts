@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -37,8 +37,8 @@ export type DialogSnippetOptions = {
 };
 
 const IMPORTS_BASE = [
-  importar('dialog', 'createDialog'),
-  importar('button', 'createButton'),
+  importing('dialog', 'createDialog'),
+  importing('button', 'createButton'),
 ].join('\n');
 
 /**
@@ -49,13 +49,13 @@ const IMPORTS_BASE = [
  * sempre um item de lista, nunca a chamada principal do snippet.
  */
 function botao(acao: DialogSnippetAction): string {
-  const pares = opcoes([
+  const pairs = opcoes([
     ['variant', acao.variant && acao.variant !== 'default' ? texto(acao.variant) : undefined],
     ['label', texto(acao.label)],
   ])
     .map((linha) => linha.replace(/,$/, ''))
     .join(', ');
-  return `createButton({ ${pares} })`;
+  return `createButton({ ${pairs} })`;
 }
 
 /** Rodapé como lista: as ações são filhas DIRETAS de `.nds-dialog-footer`. */
@@ -168,8 +168,8 @@ export function dialogWithFormSnippet(o: DialogWithFormSnippetOptions = {}): str
   return snippet(
     [
       IMPORTS_BASE,
-      importar('form', 'createFormField'),
-      importar('input', 'createInput'),
+      importing('form', 'createFormField'),
+      importing('input', 'createInput'),
     ].join('\n'),
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack';
@@ -183,7 +183,7 @@ ${campos.map(campo).join('\n')}
 }
 
 /** Transform de story para a forma com formulário. */
-export function dialogComFormularioSource(
+export function dialogWithFormSource(
   fixas: DialogWithFormSnippetOptions,
 ): SourceTransform<DialogWithFormSnippetOptions> {
   return (_gerado, ctx) => dialogWithFormSnippet({ ...ctx.args, ...fixas });

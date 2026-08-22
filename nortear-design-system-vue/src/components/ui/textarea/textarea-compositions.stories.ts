@@ -3,8 +3,8 @@ import { within, userEvent, expect } from 'storybook/test';
 import { Textarea } from './index';
 import { Label } from '@/components/ui/label';
 import {
-  textareaComApoioSource,
-  textareaComContadorSource,
+  textareaWithHelperSource,
+  textareaWithCounterSource,
   textareaWithLabelSource,
   textareaInvalidoSource,
   textareaObrigatorioSource,
@@ -62,7 +62,7 @@ export const WithSupportText: Story = {
     docs: {
       // O texto de apoio é um parágrafo a mais e o vínculo que o alcança: nada
       // disso existe no par mínimo do meta.
-      source: { transform: textareaComApoioSource },
+      source: { transform: textareaWithHelperSource },
     },
   },
   render: () => ({
@@ -99,7 +99,7 @@ export const WithCounter: Story = {
   parameters: {
     docs: {
       // O contador traz estado, limite e um bloco abaixo do campo.
-      source: { transform: textareaComContadorSource },
+      source: { transform: textareaWithCounterSource },
     },
   },
   render: () => ({

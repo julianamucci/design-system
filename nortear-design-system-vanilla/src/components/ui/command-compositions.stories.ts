@@ -10,7 +10,7 @@ import {
 import { createPopover } from './popover';
 import { createDialog } from './dialog';
 import { createButton } from './button';
-import { abrir as abrirDialog, esperarFechado, painel } from './dialog.fixtures';
+import { abrir as abrirDialog, waitForClosed, painel } from './dialog.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -254,10 +254,10 @@ export const WithShortcuts: Story = {
       await expect(atalho).toHaveTextContent('⌘S');
       await expect(atalho).toHaveClass(/nds-command-shortcut/);
 
-      const caixaItem = salvar.getBoundingClientRect();
-      const caixaAtalho = atalho.getBoundingClientRect();
-      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(
-        caixaAtalho.left - caixaItem.left,
+      const boxItem = salvar.getBoundingClientRect();
+      const boxShortcut = atalho.getBoundingClientRect();
+      await expect(boxItem.right - boxShortcut.right).toBeLessThan(
+        boxShortcut.left - boxItem.left,
       );
     });
 
@@ -342,17 +342,17 @@ export const WithDisabledItems: Story = {
     await step('As setas percorrem só os 3 habilitados, em sequência', async () => {
       await zerarSearch(campo);
       campo.focus();
-      const emDestaque = () =>
+      const inHighlight = () =>
         document.getElementById(campo.getAttribute('aria-activedescendant')!);
 
       for (const esperado of ['Button', 'Badge', 'cn()']) {
         await userEvent.keyboard('{ArrowDown}');
-        await expect(emDestaque()).toHaveTextContent(esperado);
+        await expect(inHighlight()).toHaveTextContent(esperado);
       }
       // Fim da lista: a seta não empurra o destaque para fora nem cai num
       // comando desabilitado.
       await userEvent.keyboard('{ArrowDown}');
-      await expect(emDestaque()).toHaveTextContent('cn()');
+      await expect(inHighlight()).toHaveTextContent('cn()');
     });
 
     await step('Clicar num desabilitado não executa nada', async () => {
@@ -683,10 +683,10 @@ export const CommandPalette: Story = {
 
     await step('O diálogo é nomeado por um título que só o leitor de tela vê', async () => {
       const p = await abrirDialog(canvasElement);
-      const idTitulo = p.getAttribute('aria-labelledby');
-      await expect(idTitulo).toBeTruthy();
+      const idTitle = p.getAttribute('aria-labelledby');
+      await expect(idTitle).toBeTruthy();
 
-      const titulo = document.getElementById(idTitulo!)!;
+      const titulo = document.getElementById(idTitle!)!;
       await expect(titulo).toHaveTextContent('Command Palette');
       await expect(titulo.closest('[data-slot="dialog-header"]')).toHaveClass(/nds-sr-only/);
       // Fora da tela, mas dentro da árvore de acessibilidade: `display: none`
@@ -706,7 +706,7 @@ export const CommandPalette: Story = {
     await step('Escape fecha o diálogo e devolve o foco ao gatilho', async () => {
       await abrirDialog(canvasElement);
       await userEvent.keyboard('{Escape}');
-      await esperarFechado();
+      await waitForClosed();
       // Sem `waitFor`: a factory devolve o foco de forma síncrona, e envolver a
       // asserção mascararia um bug de foco real.
       await expect(document.activeElement).toBe(gatilho);
@@ -726,10 +726,10 @@ export const CommandPalette: Story = {
       const atalho = comando(p, 'button')
         .querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
       await expect(atalho).toHaveTextContent('⌘B');
-      const caixaItem = comando(p, 'button').getBoundingClientRect();
-      const caixaAtalho = atalho.getBoundingClientRect();
-      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(
-        caixaAtalho.left - caixaItem.left,
+      const boxItem = comando(p, 'button').getBoundingClientRect();
+      const boxShortcut = atalho.getBoundingClientRect();
+      await expect(boxItem.right - boxShortcut.right).toBeLessThan(
+        boxShortcut.left - boxItem.left,
       );
     });
 
@@ -738,7 +738,7 @@ export const CommandPalette: Story = {
       const antes = aoExecutarComando.mock.calls.length;
       await userEvent.click(within(p).getByRole('option', { name: /Input/ }));
 
-      await esperarFechado();
+      await waitForClosed();
       await expect(aoExecutarComando.mock.calls.length).toBe(antes + 1);
       await expect(aoExecutarComando.mock.calls[antes][0]).toBe('input');
     });

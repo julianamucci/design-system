@@ -55,12 +55,12 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<TooltipArgs> })
 
   // Só o que difere do default entra no snippet — documentação que repete valor
   // padrão ensina ruído.
-  const posicao = [
+  const position = [
     side !== 'top' ? `side="${side}"` : '',
     align !== 'center' ? `align="${align}"` : '',
     sideOffset !== 4 ? `[sideOffset]="${sideOffset}"` : '',
   ].filter(Boolean).join(' ');
-  const conteudo = posicao ? `<ng-template ndsTooltipContent ${posicao}>` : '<ng-template ndsTooltipContent>';
+  const conteudo = position ? `<ng-template ndsTooltipContent ${position}>` : '<ng-template ndsTooltipContent>';
 
   return `import { NDS_TOOLTIP } from '@/components/ui/tooltip';
 import { NdsButton } from '@/components/ui/button';
@@ -204,7 +204,7 @@ export const Playground: Story = {
 
     await step('Focar pelo teclado abre na hora, sem esperar delay', async () => {
       const estavaClosed = balaoDe(gatilho) === null;
-      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
       gatilho.focus();
       await waitFor(async () => {
         await expect(balaoDe(gatilho)).not.toBeNull();
@@ -214,7 +214,7 @@ export const Playground: Story = {
       if (estavaClosed) {
         await expect(
           (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
-        ).toBeGreaterThan(chamadasAntes);
+        ).toBeGreaterThan(callsBefore);
       }
     });
 

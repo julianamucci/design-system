@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dialogAbertoSource,
-  dialogAcaoDestrutivaSource,
-  dialogComFormularioSource,
-  dialogComRolagemSource,
+  dialogOpenSource,
+  dialogActionDestructiveSource,
+  dialogWithFormSource,
+  dialogWithScrollSource,
   dialogConfirmarEmailSource,
-  dialogControladoSource,
+  dialogControlledSource,
   dialogEditarPerfilSource,
-  dialogFecharNoRodapeSource,
+  footerDialogCloseSource,
   dialogPreviaDeMidiaSource,
-  dialogSemBotaoFecharSource,
-  dialogSemRodapeSource,
+  dialogNoButtonCloseSource,
+  dialogNoFooterSource,
   dialogSource,
 } from './dialog.source';
 
@@ -93,16 +93,16 @@ import { Button } from '@/components/ui/button'
 
 describe('transforms das stories de estado', () => {
   it('só a story cujo assunto é a montagem aberta escreve `default-open`', () => {
-    expect(dialogAbertoSource()).toContain('<Dialog default-open>');
+    expect(dialogOpenSource()).toContain('<Dialog default-open>');
     // Nas demais a prop é andaime da foto do Chromatic, e ficaria ensinando um
     // diálogo que se abre sozinho ao carregar a página.
-    expect(dialogAcaoDestrutivaSource()).not.toContain('default-open');
-    expect(dialogSemRodapeSource()).not.toContain('default-open');
+    expect(dialogActionDestructiveSource()).not.toContain('default-open');
+    expect(dialogNoFooterSource()).not.toContain('default-open');
     expect(dialogConfirmarEmailSource()).not.toContain('default-open');
   });
 
   it('esconder o X do canto não tira a saída do rodapé', () => {
-    const saida = dialogSemBotaoFecharSource();
+    const saida = dialogNoButtonCloseSource();
     expect(saida).toContain('<DialogContent :show-close-button="false">');
     // Retirar todas as saídas de uma vez deixaria o diálogo sem fechamento
     // acessível.
@@ -111,7 +111,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o controlado troca o gatilho por um botão comum e liga o par prop+evento', () => {
-    const saida = dialogControladoSource();
+    const saida = dialogControlledSource();
     expect(saida).toContain(`const aberto = ref(false)`);
     expect(saida).toContain('<Dialog :open="aberto" @update:open="aberto = $event">');
     // Sem gatilho: quem abre é o botão de fora.
@@ -122,7 +122,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de variante', () => {
   it('o formulário traz os campos rotulados e a ação primária vira submit', () => {
-    const saida = dialogComFormularioSource();
+    const saida = dialogWithFormSource();
     expect(saida).toContain(`import { Label } from '@/components/ui/label'`);
     // `for`/`id` é o que liga rótulo e campo; sem ele o campo chega sem nome.
     expect(saida).toContain('<Label for="dialog-email">E-mail</Label>');
@@ -131,7 +131,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a rolagem troca o painel, e o conteúdo vem de uma lista de verdade', () => {
-    const saida = dialogComRolagemSource();
+    const saida = dialogWithScrollSource();
     expect(saida).toContain('<DialogScrollContent class="nds-max-w-lg">');
     expect(saida).not.toContain('<DialogContent');
     expect(saida).toContain('<p v-for="(clausula, i) in termos" :key="i">{{ clausula }}</p>');
@@ -141,13 +141,13 @@ describe('transforms das stories de variante', () => {
   });
 
   it('sem rodapé, as peças do rodapé saem também do import', () => {
-    const saida = dialogSemRodapeSource();
+    const saida = dialogNoFooterSource();
     expect(saida).not.toContain('DialogFooter');
     expect(saida).not.toContain('DialogClose');
   });
 
   it('a ação destrutiva se declara por variante, e só ela', () => {
-    const saida = dialogAcaoDestrutivaSource();
+    const saida = dialogActionDestructiveSource();
     expect(saida).toContain('<Button variant="destructive">Remover anexo</Button>');
     // O painel continua sendo um diálogo comum: confirmação irreversível é
     // outro componente.
@@ -155,7 +155,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o fechar no rodapé exige as DUAS props, uma apagando e outra repondo', () => {
-    const saida = dialogFecharNoRodapeSource();
+    const saida = footerDialogCloseSource();
     expect(saida).toContain('<DialogContent :show-close-button="false">');
     expect(saida).toContain('<DialogFooter show-close-button>');
   });

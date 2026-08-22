@@ -120,7 +120,7 @@ export const WithAction: Story = {
       // accessibility.item2 — o `<button>` é de verdade e está no fluxo de foco.
       // Sem isso, quem navega por teclado veria a ação e não teria como chegar
       // até ela antes de o prazo vencer (WCAG 2.1.1).
-      toast(TEXTS.comAcao, {
+      toast(TEXTS.withAction, {
         ...PERSISTENT,
         action: { label: TEXTS.comAcaoRotulo, onClick: () => undoSpy() },
       });

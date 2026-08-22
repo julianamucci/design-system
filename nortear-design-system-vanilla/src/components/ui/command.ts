@@ -278,16 +278,16 @@ export function createCommand(options: CommandOptions): HTMLElement {
       if (casa) filtrados.push({ item: entrada, bloco });
     }
 
-    const semResultado = filtrados.length === 0;
-    empty.textContent = semResultado ? emptyMessage : '';
+    const noResult = filtrados.length === 0;
+    empty.textContent = noResult ? emptyMessage : '';
     // Sem a classe o elemento continua no DOM e na árvore de acessibilidade,
     // com altura zero — o oposto de `display: none`, e é o que preserva o
     // anúncio da próxima busca vazia.
-    empty.className = semResultado ? 'nds-command-empty' : '';
-    if (semResultado) empty.setAttribute('data-empty', '');
+    empty.className = noResult ? 'nds-command-empty' : '';
+    if (noResult) empty.setAttribute('data-empty', '');
     else empty.removeAttribute('data-empty');
 
-    if (semResultado) return;
+    if (noResult) return;
 
     const grupos = agrupar(filtrados);
     let primeiro = true;

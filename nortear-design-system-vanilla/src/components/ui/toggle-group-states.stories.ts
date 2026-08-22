@@ -73,8 +73,8 @@ export const Default: Story = {
     await step('Mesmo sem seleção, um item entra na ordem de tabulação', async () => {
       // Roving tabindex não depende de haver item ativo: sem isto o grupo
       // inteiro sairia da navegação por Tab.
-      const naOrdem = canvas.getAllByRole('button').filter((b) => b.tabIndex === 0);
-      await expect(naOrdem).toHaveLength(1);
+      const inOrder = canvas.getAllByRole('button').filter((b) => b.tabIndex === 0);
+      await expect(inOrder).toHaveLength(1);
     });
   },
 };

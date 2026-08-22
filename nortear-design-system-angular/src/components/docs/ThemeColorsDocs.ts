@@ -458,7 +458,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   constructor() {
     effect((onCleanup) => {
       const idioma = getLocale();
-      const limpar = applySeo({
+      const clear = applySeo({
         // `seo.title` NÃO leva "· Design System": o applySeo acrescenta.
         title: `${t('title')} — ${t('category')}`,
         description: t('description'),
@@ -476,7 +476,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
         page_title: `${t('title')} · Design System`,
       });
 
-      onCleanup(limpar);
+      onCleanup(clear);
     });
   }
 

@@ -14,7 +14,7 @@
  * Armadilhas evitadas aqui:
  *
  *   - `console.log` não chega ao terminal (o addon instrumenta o console dentro
- *     da play). O canal é a exceção — ver `reportarSonda`.
+ *     da play). O canal é a exceção — ver `reportProbe`.
  *   - divergência de NOME de classe entre stacks faz o seletor não casar e o
  *     campo vir `null`. As duas formas conhecidas (`nds-resize-y` e `resize-y`)
  *     são aceitas e `familiaDeResize` registra qual casou — a divergência de
@@ -30,12 +30,12 @@
 // transição, ligar o escuro) saíram deste arquivo para `cor.ts` quando a rodada
 // de foundations precisou das mesmas quatro funções fora do textarea. Ficam
 // re-exportadas aqui porque as stories das cinco stacks já importam daqui.
-import { fundoEfetivo, ligarTemaEscuro, razao, semTransicao } from './cor';
+import { backgroundEffective, darkLigarTheme, ratio, noTransicao } from './cor';
 
 export type { Contraste } from './cor';
-export { ligarTemaEscuro };
+export { darkLigarTheme };
 
-export interface MedidaDeContador {
+export interface CounterMeasurement {
   existe: boolean;
   ariaLive: string | null;
   ariaLabel: string | null;
@@ -56,7 +56,7 @@ const CLASSES_DE_RESIZE = [
   'resize',
 ] as const;
 
-const CLASSES_DE_ALTURA = [
+const HEIGHT_CLASSES = [
   'nds-min-h-24',
   'nds-min-h-25',
   'nds-min-h-30',
@@ -72,9 +72,9 @@ const texto = (el: Element | null | undefined): string | null =>
 /** Nome acessível pela ordem que o leitor usa. `null` é campo sem nome. */
 function nomeAcessivel(el: Element | null | undefined): string | null {
   if (!el) return null;
-  const rotulado = el.getAttribute('aria-labelledby');
-  if (rotulado) {
-    const alvo = el.ownerDocument.getElementById(rotulado.split(/\s+/)[0]);
+  const labelled = el.getAttribute('aria-labelledby');
+  if (labelled) {
+    const alvo = el.ownerDocument.getElementById(labelled.split(/\s+/)[0]);
     if (alvo?.textContent?.trim()) return alvo.textContent.trim();
   }
   const rotulo = el.getAttribute('aria-label');
@@ -107,16 +107,16 @@ function crescimento(ta: HTMLTextAreaElement) {
   const antes = Math.round(ta.getBoundingClientRect().height);
   ta.value = Array.from({ length: 12 }, (_, i) => `linha ${i + 1} de conteúdo`).join('\n');
   const depois = Math.round(ta.getBoundingClientRect().height);
-  const transbordaSemCrescer = ta.scrollHeight > ta.clientHeight + 1;
+  const transbordaNoCrescer = ta.scrollHeight > ta.clientHeight + 1;
   ta.value = original;
-  return { antes, depois, cresceu: depois > antes + 1, transbordaSemCrescer };
+  return { antes, depois, cresceu: depois > antes + 1, transbordaNoCrescer };
 }
 
 /** Sombra e contorno com o campo focado — e o foco volta para quem o tinha. */
 function aoFocar(ta: HTMLTextAreaElement) {
   const doc = ta.ownerDocument;
   const anterior = doc.activeElement as HTMLElement | null;
-  return semTransicao(ta, () => {
+  return noTransicao(ta, () => {
     ta.focus();
     const cs = getComputedStyle(ta);
     const medida = {
@@ -144,7 +144,7 @@ export function resizeComputado(el: Element): string {
 }
 
 /** `min-height` de fato aplicado, em pixels. */
-export function alturaMinimaPx(el: Element): number {
+export function heightMinimaPx(el: Element): number {
   return Math.round(parseFloat(getComputedStyle(el).minHeight) || 0);
 }
 
@@ -153,10 +153,10 @@ export function alturaMinimaPx(el: Element): number {
  *
  * Lido logo após `focus()`, o computado devolve o primeiro quadro da transição:
  * `rgba(0, 0, 0, 0) 0px 0px 0px 0px`, que faz um anel perfeitamente pintado
- * parecer inexistente. Ver `semTransicao`.
+ * parecer inexistente. Ver `noTransicao`.
  */
-export function anelDeFocoAssentado(el: HTMLElement): { boxShadow: string; corDaBorda: string } {
-  return semTransicao(el, () => {
+export function focusAssentadoRing(el: HTMLElement): { boxShadow: string; corDaBorda: string } {
+  return noTransicao(el, () => {
     el.focus();
     const cs = getComputedStyle(el);
     return { boxShadow: cs.boxShadow, corDaBorda: cs.borderTopColor };
@@ -164,10 +164,10 @@ export function anelDeFocoAssentado(el: HTMLElement): { boxShadow: string; corDa
 }
 
 /** Razão WCAG entre o texto do campo e o primeiro fundo opaco acima dele. */
-export function contrasteTextoFundo(el: Element): number | null {
-  const fundo = fundoEfetivo(el);
+export function contrastTextBackground(el: Element): number | null {
+  const fundo = backgroundEffective(el);
   if (!fundo) return null;
-  return razao(getComputedStyle(el).color, fundo)?.razao ?? null;
+  return ratio(getComputedStyle(el).color, fundo)?.ratio ?? null;
 }
 
 /**
@@ -189,7 +189,7 @@ export function preencherAte(ta: HTMLTextAreaElement, n: number): void {
 }
 
 /** Mede UM textarea e o que o acompanha. `raiz` é o wrapper do cenário. */
-export function medirTextarea(raiz: HTMLElement) {
+export function measureTextarea(raiz: HTMLElement) {
   const ta =
     raiz.querySelector<HTMLTextAreaElement>('textarea[data-slot="textarea"]') ??
     raiz.querySelector<HTMLTextAreaElement>('textarea.nds-textarea') ??
@@ -205,24 +205,24 @@ export function medirTextarea(raiz: HTMLElement) {
   const caixa = ta.getBoundingClientRect();
 
   const describedby = ta.getAttribute('aria-describedby');
-  const alvoDescrito = describedby
+  const targetDescribed = describedby
     ? describedby
         .split(/\s+/)
         .map((id) => ta.ownerDocument.getElementById(id))
         .filter(Boolean)
     : [];
 
-  const contadorEl =
+  const counterEl =
     raiz.querySelector<HTMLElement>('[aria-live]') ?? raiz.querySelector<HTMLElement>('[role="status"]');
-  const contador: MedidaDeContador = {
-    existe: !!contadorEl,
-    ariaLive: contadorEl?.getAttribute('aria-live') ?? null,
-    ariaLabel: contadorEl?.getAttribute('aria-label') ?? null,
-    texto: texto(contadorEl),
-    ehRegiaoViva: contadorEl?.getAttribute('aria-live') === 'polite' || contadorEl?.getAttribute('role') === 'status',
+  const contador: CounterMeasurement = {
+    existe: !!counterEl,
+    ariaLive: counterEl?.getAttribute('aria-live') ?? null,
+    ariaLabel: counterEl?.getAttribute('aria-label') ?? null,
+    texto: texto(counterEl),
+    ehRegiaoViva: counterEl?.getAttribute('aria-live') === 'polite' || counterEl?.getAttribute('role') === 'status',
   };
 
-  const fundo = fundoEfetivo(ta);
+  const fundo = backgroundEffective(ta);
 
   return {
     presente: true,
@@ -233,7 +233,7 @@ export function medirTextarea(raiz: HTMLElement) {
       classes,
       /** Qual vocabulário de resize casou — `null` é campo sem nenhum. */
       familiaDeResize: CLASSES_DE_RESIZE.filter((c) => classes.includes(c)),
-      familiaDeAltura: CLASSES_DE_ALTURA.filter((c) => classes.includes(c)),
+      familiaDeAltura: HEIGHT_CLASSES.filter((c) => classes.includes(c)),
       /** Classe sem o prefixo do design system: inerte, não pinta nada. */
       classesInertes: classes.filter((c) => !c.startsWith('nds-')),
       estiloInline: ta.getAttribute('style'),
@@ -256,8 +256,8 @@ export function medirTextarea(raiz: HTMLElement) {
       somenteLeitura: ta.readOnly,
       nome: ta.name || null,
       ariaDescribedby: describedby,
-      alvoDescribedbyExiste: describedby ? alvoDescrito.length === describedby.split(/\s+/).length : null,
-      textoDescrito: alvoDescrito.map((el) => texto(el)),
+      alvoDescribedbyExiste: describedby ? targetDescribed.length === describedby.split(/\s+/).length : null,
+      textoDescrito: targetDescribed.map((el) => texto(el)),
       contador,
     },
     geometria: {
@@ -284,7 +284,7 @@ export function medirTextarea(raiz: HTMLElement) {
     },
     estado: {
       fundo: cs.backgroundColor,
-      fundoEfetivo: fundo,
+      backgroundEffective: fundo,
       cor: cs.color,
       corDaBorda: cs.borderTopColor,
       corDoPlaceholder: csPlaceholder.color || null,
@@ -292,11 +292,11 @@ export function medirTextarea(raiz: HTMLElement) {
       cursor: cs.cursor,
     },
     contraste: {
-      textoNoFundo: fundo ? razao(cs.color, fundo) : null,
-      placeholderNoFundo: fundo && csPlaceholder.color ? razao(csPlaceholder.color, fundo) : null,
-      bordaNoFundo: fundo ? razao(cs.borderTopColor, fundo) : null,
-      contadorNoFundo: contadorEl
-        ? razao(getComputedStyle(contadorEl).color, fundoEfetivo(contadorEl) ?? fundo ?? 'rgb(255,255,255)')
+      textoNoFundo: fundo ? ratio(cs.color, fundo) : null,
+      placeholderNoFundo: fundo && csPlaceholder.color ? ratio(csPlaceholder.color, fundo) : null,
+      bordaNoFundo: fundo ? ratio(cs.borderTopColor, fundo) : null,
+      contadorNoFundo: counterEl
+        ? ratio(getComputedStyle(counterEl).color, backgroundEffective(counterEl) ?? fundo ?? 'rgb(255,255,255)')
         : null,
     },
   };
@@ -306,11 +306,11 @@ export function medirTextarea(raiz: HTMLElement) {
  * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
  * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
  */
-export function medirTextareas(raiz: HTMLElement, cenarios: string[]) {
+export function measureTextareas(raiz: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
     const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    registro[cenario] = alvo ? medirTextarea(alvo) : null;
+    registro[cenario] = alvo ? measureTextarea(alvo) : null;
   }
   return registro;
 }
@@ -322,18 +322,18 @@ export function medirTextareas(raiz: HTMLElement, cenarios: string[]) {
  * A classe sai no `finally`: deixá-la posta envenena a story seguinte e a foto
  * do Chromatic.
  */
-export function medirNoEscuro(raiz: HTMLElement, cenario: string) {
+export function darkMeasure(raiz: HTMLElement, cenario: string) {
   const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
   const campo = alvo?.querySelector<HTMLTextAreaElement>('textarea');
   if (!alvo || !campo) return null;
 
-  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(raiz.ownerDocument);
   try {
     // Trocar o tema troca `border-color`, que é uma propriedade em transição:
     // sem desligá-la a sonda leria a cor do tema CLARO e relataria uma borda
-    // que não escurece. Ver `semTransicao`.
-    return semTransicao(campo, () => {
-      const medida = medirTextarea(alvo);
+    // que não escurece. Ver `noTransicao`.
+    return noTransicao(campo, () => {
+      const medida = measureTextarea(alvo);
       if (!medida.presente) return null;
       return { estado: medida.estado, contraste: medida.contraste };
     });
@@ -348,10 +348,10 @@ export function medirNoEscuro(raiz: HTMLElement, cenario: string) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportarSonda(stack: string, raiz: HTMLElement, cenarios: string[]) {
+export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
   const registro = {
-    claro: medirTextareas(raiz, cenarios),
-    escuro: medirNoEscuro(raiz, cenarios[0]),
+    claro: measureTextareas(raiz, cenarios),
+    escuro: darkMeasure(raiz, cenarios[0]),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);
 }

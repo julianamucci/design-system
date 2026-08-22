@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -65,7 +65,7 @@ export function labelSnippet(o: LabelSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    [importar('label', 'createLabel'), importar('input', 'createInput')].join('\n'),
+    [importing('label', 'createLabel'), importing('input', 'createInput')].join('\n'),
     `const rotulo = ${chamada('createLabel', labelLines(o, id, o.text ?? TEXT_DEFAULT))};`,
     `const campo = ${chamada('createInput', campo)};`,
     // Com o controle desabilitado, a ORDEM importa: a folha casa no irmão
@@ -86,7 +86,7 @@ export function labelObrigatorioSnippet(o: LabelSnippetOptions = {}): string {
   const conteudo = o.text ?? 'Email profissional';
 
   return snippet(
-    [importar('label', 'createLabel'), importar('input', 'createInput')].join('\n'),
+    [importing('label', 'createLabel'), importing('input', 'createInput')].join('\n'),
     `const rotulo = ${chamada('createLabel', labelLines(o, id))};
 
 const marcador = document.createElement('span');
@@ -117,7 +117,7 @@ export function labelBlockDisabledSnippet(o: LabelSnippetOptions = {}): string {
   const id = o.htmlFor ?? 'documento';
 
   return snippet(
-    [importar('label', 'createLabel'), importar('input', 'createInput')].join('\n'),
+    [importing('label', 'createLabel'), importing('input', 'createInput')].join('\n'),
     `const bloco = document.createElement('div');
 bloco.className = 'nds-stack';
 bloco.dataset.spacing = 'xs';
@@ -148,7 +148,7 @@ export function labelWithBoxSnippet(o: LabelSnippetOptions = {}): string {
   const id = o.htmlFor ?? 'termos';
 
   return snippet(
-    [importar('label', 'createLabel'), importar('checkbox', 'createCheckbox')].join('\n'),
+    [importing('label', 'createLabel'), importing('checkbox', 'createCheckbox')].join('\n'),
     `const caixa = ${chamada('createCheckbox', opcoes([['id', texto(id)]]))};`,
     `const rotulo = ${chamada(
       'createLabel',

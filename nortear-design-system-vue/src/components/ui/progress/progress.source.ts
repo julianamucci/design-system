@@ -115,7 +115,7 @@ export function progressIndeterminadoSource(): string {
 }
 
 /** Barra com rótulo visível e porcentagem — a forma que se usa numa tela real. */
-export function progressComRotuloSource(): string {
+export function progressWithLabelSource(): string {
   return vueSnippet(
     IMPORT,
     comRotulo({
@@ -133,7 +133,7 @@ export function progressComRotuloSource(): string {
  * A trilha continua neutra de propósito: o contraste de 3:1 entre barra e
  * trilha não pode depender de qual variante alguém escolheu (WCAG 1.4.11).
  */
-export function progressCorSemanticaSource(): string {
+export function progressColorSemanticaSource(): string {
   return vueSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="sm">
@@ -155,7 +155,7 @@ export function progressZeroSource(): string {
 }
 
 /** Meio do caminho: metade da trilha preenchida, com o número repetindo o valor. */
-export function progressCarregandoSource(): string {
+export function progressLoadingSource(): string {
   return vueSnippet(
     IMPORT,
     comRotulo({
@@ -270,7 +270,7 @@ const itens = [
  * Três medidas na mesma tela, cada uma com a cor que o seu significado pede —
  * e a do meio sem variante nenhuma, porque "em andamento" não é semântico.
  */
-export function listSourceProgressColors(): string {
+export function listProgressColorsSource(): string {
   return vueSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="sm">

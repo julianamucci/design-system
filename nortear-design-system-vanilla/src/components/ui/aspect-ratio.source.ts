@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -44,9 +44,9 @@ const FRACOES: ReadonlyArray<[number, string]> = [
   [9 / 16, '9 / 16'],
 ];
 
-export function expressaoDeProporcao(ratio: number): string {
-  const fracao = FRACOES.find(([valor]) => Math.abs(valor - ratio) < 1e-9);
-  return fracao ? fracao[1] : String(ratio);
+export function ratioExpressao(ratio: number): string {
+  const fraction = FRACOES.find(([valor]) => Math.abs(valor - ratio) < 1e-9);
+  return fraction ? fraction[1] : String(ratio);
 }
 
 const IMAGE_DEFAULT = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80';
@@ -113,13 +113,13 @@ export function aspectRatioSnippet(o: AspectRatioSnippetOptions = {}): string {
 
   const linhas = opcoes([
     // `1` é o padrão da fábrica (quadrado): só a proporção diferente entra.
-    ['ratio', ratio === 1 ? undefined : expressaoDeProporcao(ratio)],
+    ['ratio', ratio === 1 ? undefined : ratioExpressao(ratio)],
     ['content', conteudo?.nome],
     ['className', o.className ? texto(o.className) : undefined],
   ]);
 
   return snippet(
-    importar('aspect-ratio', 'createAspectRatio'),
+    importing('aspect-ratio', 'createAspectRatio'),
     conteudo?.codigo,
     `const caixa = ${chamada('createAspectRatio', linhas)};`,
     montar('caixa'),

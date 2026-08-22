@@ -1,17 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import {
-  tooltipAbertoSource,
-  actionsSourceTooltipBar,
+  tooltipOpenSource,
+  actionsTooltipBarSource,
   tooltipButtonIconSource,
-  tooltipComAtalhoSource,
+  tooltipWithShortcutSource,
   tooltipWithWaitSource,
-  tooltipControladoSource,
+  tooltipControlledSource,
   tooltipClosedSource,
   tooltipPersistenteSource,
   tooltipQuatroLadosSource,
   tooltipSource,
   tooltipTextCurtoSource,
-  tooltipTextoLongoSource,
+  tooltipTextLongSource,
 } from './tooltip.source';
 
 describe('tooltipSource', () => {
@@ -84,7 +84,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o atalho vai em Kbd, e o balão vira bloco para caber a estrutura', () => {
-    const saida = tooltipComAtalhoSource();
+    const saida = tooltipWithShortcutSource();
     expect(saida).toContain(`import { Kbd } from '@/components/ui/kbd'`);
     expect(saida).toContain(`        <span>Salvar</span>
         <Kbd>Ctrl</Kbd>
@@ -95,7 +95,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o texto longo troca o gatilho por um botão com rótulo visível', () => {
-    const saida = tooltipTextoLongoSource();
+    const saida = tooltipTextLongSource();
     expect(saida).toContain('<Button variant="outline">Compartilhar</Button>');
     // Sem ícone não há o que importar da biblioteca de ícones.
     expect(saida).not.toContain('lucide-vue-next');
@@ -113,7 +113,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a abertura de saída é uma prop da raiz', () => {
-    expect(tooltipAbertoSource()).toContain('<Tooltip default-open>');
+    expect(tooltipOpenSource()).toContain('<Tooltip default-open>');
   });
 
   it('a espera mora no Provider, não na raiz do balão', () => {
@@ -132,7 +132,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o modo controlado leva o estado ao script e devolve a mudança à raiz', () => {
-    const saida = tooltipControladoSource();
+    const saida = tooltipControlledSource();
     expect(saida).toContain(`import { ref } from 'vue'`);
     expect(saida).toContain('const aberto = ref(false)');
     expect(saida).toContain('<Tooltip :open="aberto" @update:open="(valor) => (aberto = valor)">');
@@ -150,7 +150,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a barra de ações serve cinco gatilhos com um Provider só', () => {
-    const saida = actionsSourceTooltipBar();
+    const saida = actionsTooltipBarSource();
     expect(saida.match(/<Tooltip>/g)).toHaveLength(5);
     expect(saida.match(/<TooltipProvider>/g)).toHaveLength(1);
     expect(saida).toContain('role="toolbar"');

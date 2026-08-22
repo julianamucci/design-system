@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
-  defaultSourceAccordionOpen,
-  accordionAbertoSource,
-  accordionComBadgeSource,
-  accordionComIconeSource,
-  accordionConteudoRicoSource,
-  accordionControladoSource,
+  defaultAccordionOpenSource,
+  accordionOpenSource,
+  accordionWithBadgeSource,
+  accordionWithIconSource,
+  accordionContentRichSource,
+  accordionControlledSource,
   accordionDisabledSource,
   accordionFaqSource,
-  segundoClickSourceAccordionClose,
-  accordionFechadoSource,
+  segundoClickAccordionCloseSource,
+  accordionClosedSource,
   accordionFocusVisibleSource,
   accordionMultipleSource,
   accordionSingleSource,
@@ -102,7 +102,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o fechar no segundo clique não tem chave a ligar', () => {
-    const saida = segundoClickSourceAccordionClose();
+    const saida = segundoClickAccordionCloseSource();
     expect(saida).toContain('<Accordion type="single" class="nds-max-w-lg">');
     // A prop existe na lib por baixo, mas está fora da API pública: escrevê-la
     // aqui ensinaria que o comportamento depende dela.
@@ -111,7 +111,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o controlado leva o estado para fora, com o par de vínculo aberto', () => {
-    const saida = accordionControladoSource();
+    const saida = accordionControlledSource();
     expect(saida).toContain(`import { ref } from 'vue'`);
     expect(saida).toContain(`const aberto = ref('item-1')`);
     expect(saida).toContain(':model-value="aberto"');
@@ -119,7 +119,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o valor inicial contrasta um item aberto com um fechado', () => {
-    const saida = defaultSourceAccordionOpen();
+    const saida = defaultAccordionOpenSource();
     expect(saida).toContain('default-value="item-1"');
     expect(saida).toContain('Item fechado por padrão');
   });
@@ -133,7 +133,7 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('o fechado é a ausência de valor inicial, não um atributo', () => {
-    const saida = accordionFechadoSource();
+    const saida = accordionClosedSource();
     expect(saida).toContain('<Accordion type="single" class="nds-max-w-lg">');
     expect(saida).not.toContain('default-value');
     // O painel fechado permanece no documento por decisão do componente; não
@@ -142,7 +142,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o aberto vem do valor inicial da raiz', () => {
-    expect(accordionAbertoSource()).toContain('default-value="item-1"');
+    expect(accordionOpenSource()).toContain('default-value="item-1"');
   });
 
   it('o desabilitado mora no ITEM, não na raiz', () => {
@@ -160,7 +160,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o ícone do gatilho sai da árvore de acessibilidade', () => {
-    const saida = accordionComIconeSource();
+    const saida = accordionWithIconSource();
     expect(saida).toContain(`import { AlertTriangle, CheckCircle, Info } from 'lucide-vue-next'`);
     const icones = [...saida.matchAll(/<(Info|AlertTriangle|CheckCircle) /g)];
     expect(icones).toHaveLength(3);
@@ -170,7 +170,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o selo entra depois do rótulo e omite a variante padrão', () => {
-    const saida = accordionComBadgeSource();
+    const saida = accordionWithBadgeSource();
     expect(saida).toContain(`import { Badge } from '@/components/ui/badge'`);
     expect(saida).toContain('<Badge>Novo</Badge>');
     expect(saida).toContain('<Badge variant="secondary">Beta</Badge>');
@@ -178,7 +178,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o conteúdo rico é tabela de verdade dentro do painel', () => {
-    const saida = accordionConteudoRicoSource();
+    const saida = accordionContentRichSource();
     // `.nds-grid[data-cols="2"]` pede 18rem por coluna e colapsa nesta largura.
     expect(saida).toContain('<table class="nds-w-full nds-text-body nds-border-collapse">');
     expect(saida).not.toContain('nds-grid');

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
 import {
-  desenhoEscreve,
-  desenhoPintado,
-  exigirRaiz,
-  formasDeDado,
+  designEscreve,
+  designPintado,
+  exigirRoot,
+  datumFormas,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
 import { cardSourceWithChart, chartSource, chartSourceWith } from './chart.source';
@@ -18,14 +18,14 @@ import {
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
-const MESES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
-const chartData = MESES.map((label, i) => ({
+const chartData = MONTHS.map((label, i) => ({
   label,
   value: [186, 305, 237, 73, 209, 214][i],
 }));
 
-const TITULO_DO_CARD = 'Acessos mensais';
+const CARD_TITLE = 'Acessos mensais';
 const TITLE_INLINE = 'Vendas mensais';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -54,7 +54,7 @@ export const WithCard: Story = {
         transform: cardSourceWithChart({
           height: 220,
           'aria-label': 'Acessos mensais de janeiro a junho de 2024',
-          cardTitle: TITULO_DO_CARD,
+          cardTitle: CARD_TITLE,
         }),
       },
       description: {
@@ -66,7 +66,7 @@ export const WithCard: Story = {
     const card = createCard({ className: 'nds-w-sm' });
 
     const header = createCardHeader();
-    header.appendChild(createCardTitle({ text: TITULO_DO_CARD, level: 3 }));
+    header.appendChild(createCardTitle({ text: CARD_TITLE, level: 3 }));
     header.appendChild(createCardDescription({ text: 'Janeiro — Junho de 2024' }));
 
     const content = createCardContent();
@@ -88,7 +88,7 @@ export const WithCard: Story = {
       const card = canvasElement.querySelector('[data-slot="card"]');
       await expect(card).not.toBeNull();
       const titulo = canvasElement.querySelector('[data-slot="card-title"]');
-      await expect(titulo?.textContent?.trim()).toBe(TITULO_DO_CARD);
+      await expect(titulo?.textContent?.trim()).toBe(CARD_TITLE);
     });
 
     await step('O gráfico está DENTRO do card, não ao lado', async () => {
@@ -97,9 +97,9 @@ export const WithCard: Story = {
     });
 
     await step('E o desenho sai dentro dele', async () => {
-      const raiz = exigirRaiz(canvasElement);
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      const raiz = exigirRoot(canvasElement);
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
     });
   },
 };
@@ -127,11 +127,11 @@ export const InlineTitle: Story = {
     class: 'nds-max-w-md',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O título aparece escrito dentro do desenho', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(desenhoEscreve(raiz, TITLE_INLINE)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(designEscreve(raiz, TITLE_INLINE)).toBe(true), { timeout: 3000 });
     });
 
     await step('Sem descrição própria, o título é quem descreve o desenho', async () => {
@@ -143,7 +143,7 @@ export const InlineTitle: Story = {
     });
 
     await step('E o dado continua desenhado', async () => {
-      await expect(formasDeDado(raiz).length).toBeGreaterThan(0);
+      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
     });
   },
 };

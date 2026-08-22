@@ -6,7 +6,7 @@ import SidebarSubMenuStory from './SidebarSubMenuStory.svelte';
 import SidebarSkeletonStory from './SidebarSkeletonStory.svelte';
 import {
   sidebarSkeletonSource,
-  navigationSourceSidebarGroups,
+  navigationSidebarGroupsSource,
   sidebarSource,
   sidebarSubmenuSource,
 } from './sidebar.source';
@@ -38,7 +38,7 @@ export const WithNavGroups: StoryObj<Record<string, never>> = {
   name: 'With nav groups',
   parameters: {
     covers: ['accessibility.item6'],
-    docs: { source: { transform: navigationSourceSidebarGroups } },
+    docs: { source: { transform: navigationSidebarGroupsSource } },
   },
   render: () => ({
     Component: SidebarNavGroupsStory,
@@ -120,7 +120,7 @@ export const WithSubmenu: StoryObj<Record<string, never>> = {
      * Igualdade exata, e não "maior que N": enquanto anima, a altura muda a cada
      * quadro e duas leituras não coincidem; ao terminar, ela para de mudar.
      *
-     * TRÊS leituras iguais, e não duas — o mesmo critério do `assentar` do
+     * TRÊS leituras iguais, e não duas — o mesmo critério do `settle` do
      * carrossel. Com duas, o axe ainda pegou o submenu a 9px de altura: sob
      * carga o navegador engasga entre quadros, duas leituras coincidem por
      * acaso e a espera devolve cedo. A terceira é o que separa "parou" de

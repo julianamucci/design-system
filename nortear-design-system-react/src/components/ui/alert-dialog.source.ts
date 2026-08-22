@@ -41,15 +41,15 @@ const TONS = ['destructive', 'default'] as const;
  * — justamente a peça cuja ausência ela ensina. Import que o exemplo não usa é
  * a primeira coisa que o compilador de quem cola reclama.
  */
-function importarPecas(pecas: readonly string[]): string {
-  const lista = [...pecas].sort();
+function importingParts(parts: readonly string[]): string {
+  const lista = [...parts].sort();
   return `import {
-${lista.map((peca) => `  ${peca},`).join('\n')}
+${lista.map((part) => `  ${part},`).join('\n')}
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";`;
 }
 
-type Confirmacao = {
+type Confirm = {
   tone?: AlertDialogArgs['tone'];
   defaultOpen?: boolean;
   midia?: boolean;
@@ -70,7 +70,7 @@ type Confirmacao = {
 };
 
 /** Peças sempre presentes numa confirmação com gatilho próprio. */
-const PECAS_BASE = [
+const PARTS_BASE = [
   'AlertDialog',
   'AlertDialogAction',
   'AlertDialogCancel',
@@ -101,7 +101,7 @@ function confirmacao({
   onAction,
   onCancel,
   preambulo,
-}: Confirmacao): string {
+}: Confirm): string {
   const variantButton = attrs(propOption('variant', tone, TONS, 'default'));
   const blockMidia = midia
     ? `<AlertDialogMedia${classeMidia ? ` className="${classeMidia}"` : ''}>
@@ -132,12 +132,12 @@ ${indentar(`${blockMidia}<AlertDialogTitle>${title}</AlertDialogTitle>${blockDes
   </AlertDialogContent>
 </AlertDialog>`;
 
-  const pecas: string[] = [...PECAS_BASE];
-  if (description !== null) pecas.push('AlertDialogDescription');
-  if (midia) pecas.push('AlertDialogMedia');
+  const parts: string[] = [...PARTS_BASE];
+  if (description !== null) parts.push('AlertDialogDescription');
+  if (midia) parts.push('AlertDialogMedia');
   const imports = midia
-    ? `${importarPecas(pecas)}\nimport { TriangleAlert } from "lucide-react";`
-    : importarPecas(pecas);
+    ? `${importingParts(parts)}\nimport { TriangleAlert } from "lucide-react";`
+    : importingParts(parts);
   const cabecalho = preambulo ? `${imports}\n\n${preambulo}` : imports;
 
   return jsxSnippet(cabecalho, markup);
@@ -176,7 +176,7 @@ export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx
  * `render` existe só para a captura e a `play` encontrarem o painel na tela —
  * andaime, não ensinamento: quem cola quer o diálogo comandado pelo gatilho.
  */
-export function alertDialogAbertoSource(): string {
+export function alertDialogOpenSource(): string {
   return confirmacao({
     tone: 'destructive',
     defaultOpen: true,
@@ -223,10 +223,10 @@ const excluirConta = () => remover(contaId);`,
  * PEDINDO a mudança (Escape, saída pelo Cancel), não a confirmação de que ela
  * ocorreu.
  */
-export function alertDialogControladoSource(): string {
+export function alertDialogControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
-${importarPecas([
+${importingParts([
   'AlertDialog',
   'AlertDialogAction',
   'AlertDialogCancel',
@@ -267,7 +267,7 @@ const [aberto, setAberto] = useState(false);`,
  * dependem o `:has()` que centraliza o painel e a leitura ícone → título →
  * descrição. O ícone sai da árvore de acessibilidade; quem nomeia é o título.
  */
-export function alertDialogComIconeSource(): string {
+export function alertDialogWithIconSource(): string {
   return confirmacao({ tone: 'destructive', midia: true });
 }
 
@@ -276,7 +276,7 @@ export function alertDialogComIconeSource(): string {
  * Button. O arquivo desliga os controls, então o `tone` do `meta` não chega
  * aqui — e o padrão dele é o destrutivo.
  */
-export function alertDialogNeutroSource(): string {
+export function alertDialogNeutralSource(): string {
   return confirmacao({
     tone: 'default',
     triggerLabel: 'Sair da conta',
@@ -291,7 +291,7 @@ export function alertDialogNeutroSource(): string {
  * `aria-describedby` em vez de apontar para um id inexistente. Uma transform
  * que apenas encurtasse o texto ensinaria o contrário.
  */
-export function alertDialogSemDescricaoSource(): string {
+export function alertDialogNoDescriptionSource(): string {
   return confirmacao({
     tone: 'destructive',
     triggerLabel: 'Descartar rascunho',
@@ -307,7 +307,7 @@ export function alertDialogSemDescricaoSource(): string {
  * é importado antes do CSS do componente, e classe de mesma especificidade
  * perde para a regra do painel.
  */
-export function alertDialogClasseExtraSource(): string {
+export function alertDialogClassNameExtraSource(): string {
   return confirmacao({
     tone: 'destructive',
     midia: true,

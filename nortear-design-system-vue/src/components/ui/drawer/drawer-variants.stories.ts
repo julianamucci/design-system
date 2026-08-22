@@ -102,13 +102,13 @@ export const Bottom: Story = {
   render: painel('bottom', 'Detalhes do pedido', 'Pedido #4287 confirmado em 15 de março.'),
   play: async ({ step }) => {
     await step('O painel encosta na base e mostra a alça', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
-      await expect(painelEl).toHaveClass(/nds-drawer-content/);
-      await expect(painelEl).toHaveAccessibleName('Detalhes do pedido');
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
+      await expect(panelEl).toHaveClass(/nds-drawer-content/);
+      await expect(panelEl).toHaveAccessibleName('Detalhes do pedido');
       // A alça só é visível nesta direção — o CSS compartilhado a esconde nas
       // outras. Contraste e cor do painel são verificados pelo axe da story.
-      const alca = painelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      const alca = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(alca).display).toBe('block');
     });
   },
@@ -130,11 +130,11 @@ export const Top: Story = {
   render: painel('top', 'Nova versão disponível', 'Atualize agora para acessar as novidades.'),
   play: async ({ step }) => {
     await step('O painel encosta no topo e esconde a alça', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'top');
-      await expect(painelEl).toHaveClass(/nds-drawer-content/);
-      await expect(painelEl).toHaveAccessibleName('Nova versão disponível');
-      const alca = painelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'top');
+      await expect(panelEl).toHaveClass(/nds-drawer-content/);
+      await expect(panelEl).toHaveAccessibleName('Nova versão disponível');
+      const alca = panelEl.querySelector<HTMLElement>('.nds-drawer-handle')!;
       await expect(window.getComputedStyle(alca).display).toBe('none');
     });
   },
@@ -155,10 +155,10 @@ export const Left: Story = {
   render: painel('left', 'Menu', 'Navegue pelas seções do app.'),
   play: async ({ step }) => {
     await step('O painel encosta na borda esquerda', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'left');
-      await expect(painelEl).toHaveClass(/nds-drawer-content/);
-      await expect(painelEl).toHaveAccessibleName('Menu');
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'left');
+      await expect(panelEl).toHaveClass(/nds-drawer-content/);
+      await expect(panelEl).toHaveAccessibleName('Menu');
       // Ocupa a altura inteira, encostada na borda — ao contrário de bottom/top.
       //
       // `Math.abs` e `waitFor`, os dois de propósito. O painel ENTRA deslocado
@@ -167,7 +167,7 @@ export const Left: Story = {
       // estado que ela deveria reprovar. O `waitForPortal` gateia na opacidade,
       // e o drawer se move por transform: quem espera a posição é esta espera.
       await waitFor(async () => {
-        await expect(Math.abs(painelEl.getBoundingClientRect().left)).toBeLessThan(2);
+        await expect(Math.abs(panelEl.getBoundingClientRect().left)).toBeLessThan(2);
       });
     });
   },
@@ -188,14 +188,14 @@ export const Right: Story = {
   render: painel('right', 'Filtros', 'Refine sua busca por categoria, preço e disponibilidade.'),
   play: async ({ step }) => {
     await step('O painel encosta na borda direita', async () => {
-      const painelEl = await waitForPortal('dialog');
-      await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'right');
-      await expect(painelEl).toHaveClass(/nds-drawer-content/);
-      await expect(painelEl).toHaveAccessibleName('Filtros');
+      const panelEl = await waitForPortal('dialog');
+      await expect(panelEl).toHaveAttribute('data-vaul-drawer-direction', 'right');
+      await expect(panelEl).toHaveClass(/nds-drawer-content/);
+      await expect(panelEl).toHaveAccessibleName('Filtros');
       // Espera o transform de entrada assentar: medido, o painel chega 384px
       // além da borda (a própria largura) e só depois desliza para dentro.
       await waitFor(async () => {
-        const caixa = painelEl.getBoundingClientRect();
+        const caixa = panelEl.getBoundingClientRect();
         await expect(Math.abs(caixa.right - window.innerWidth)).toBeLessThan(2);
       });
     });

@@ -382,7 +382,7 @@ const CUSTOMIZATION_CODE = `/* Largura e tema por contexto, sempre em token —
               [attr.aria-label]="t('demonstration.labels.search')"
             />
           </div>
-          <ng-container [ngTemplateOutlet]="tplMiolo" [ngTemplateOutletContext]="{ rotuloNav: t('demonstration.labels.mainNav') + ' — composicao-busca' }" />
+          <ng-container [ngTemplateOutlet]="tplMiolo" [ngTemplateOutletContext]="{ rotuloNav: t('demonstration.labels.mainNav') + ' — composition-busca' }" />
         </div>
         <div class="nds-sidebar-inset" data-slot="sidebar-inset"></div>
       </div>
@@ -408,7 +408,7 @@ const CUSTOMIZATION_CODE = `/* Largura e tema por contexto, sempre em token —
             <div ndsSidebar>
               <div ndsSidebarHeader>Acme</div>
               <div ndsSidebarContent>
-                <nav [attr.aria-label]="t('demonstration.labels.mainNav') + ' — composicao-grupos'">
+                <nav [attr.aria-label]="t('demonstration.labels.mainNav') + ' — composition-grupos'">
                   <div ndsSidebarGroup>
                     <div ndsSidebarGroupLabel>{{ t('demonstration.labels.components') }}</div>
                     <div ndsSidebarGroupContent>
@@ -627,11 +627,11 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
 
   protected readonly doDontPairs = computed(() => {
     dict();
-    const pares: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
+    const pairs: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
       [this.tplDoDont1Do(), this.tplDoDont1Dont()],
       [this.tplDoDont2Do(), this.tplDoDont2Dont()],
     ];
-    return pares.map(([doTpl, dontTpl], i) => ({
+    return pairs.map(([doTpl, dontTpl], i) => ({
       doLabel: tNav('common.do'),
       dontLabel: tNav('common.dont'),
       doCaption: toPlainText(t(`doDont.pair${i + 1}.do`)),

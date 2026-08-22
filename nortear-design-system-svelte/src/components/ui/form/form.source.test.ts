@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  formComDescricaoSource,
-  formDesabilitadoSource,
+  formWithDescriptionSource,
+  formDisabledSource,
   formFieldsetSource,
   formInvalidoSource,
-  formPaletaEscuraSource,
-  formRotuloEControleSource,
+  formPaletteDarkSource,
+  formLabelEControleSource,
   formSource,
   formMultipleFieldsSource,
 } from './form.source';
@@ -85,14 +85,14 @@ describe('formSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('a combinação mínima não traz nada abaixo do controle', () => {
-    const saida = formRotuloEControleSource();
+    const saida = formLabelEControleSource();
     expect(saida).toContain('<FormField label="Nome completo">');
     expect(saida).not.toContain('description=');
     expect(saida).not.toContain('error=');
   });
 
   it('a variação com apoio traz a descrição e o vocabulário de autocomplete', () => {
-    const saida = formComDescricaoSource();
+    const saida = formWithDescriptionSource();
     expect(saida).toContain('description="Use pelo menos 8 caracteres, com letras e números."');
     expect(saida).toContain('autocomplete="new-password"');
   });
@@ -104,14 +104,14 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o estado desabilitado mantém rótulo e apoio, e bloqueia só o controle', () => {
-    const saida = formDesabilitadoSource();
+    const saida = formDisabledSource();
     expect(saida).toContain('label="CPF"');
     expect(saida).toContain('description="Preenchido pelo cadastro da empresa."');
     expect(saida).toContain('disabled');
   });
 
   it('a paleta escura reúne campo simples, campo com erro e grupo', () => {
-    const saida = formPaletaEscuraSource();
+    const saida = formPaletteDarkSource();
     expect(saida).toContain('error="Endereço de email incompleto."');
     expect(saida).toContain('<Fieldset legend="Endereço de entrega">');
   });

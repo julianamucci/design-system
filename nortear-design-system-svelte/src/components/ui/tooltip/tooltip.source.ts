@@ -8,13 +8,13 @@
 import { attrs, svelteSnippet } from '@/lib/story-source';
 
 /** Nome do componente e caminho do módulo de cada ícone usado nas stories. */
-const ICONES = {
+const ICONS = {
   salvar: ['Save', 'save'],
   excluir: ['Trash2', 'trash-2'],
   compartilhar: ['Share2', 'share-2'],
 } as const;
 
-type IconKey = keyof typeof ICONES;
+type IconKey = keyof typeof ICONS;
 
 export type TooltipArgs = {
   side: 'top' | 'right' | 'bottom' | 'left';
@@ -69,7 +69,7 @@ function montar(opcoes: {
   corpo: string;
   estado?: string;
 }): string {
-  const [nome, caminho] = ICONES[opcoes.icone];
+  const [nome, caminho] = ICONS[opcoes.icone];
   const script = [
     `${IMPORT}\nimport ${nome} from "@lucide/svelte/icons/${caminho}";`,
     opcoes.estado ?? '',
@@ -131,7 +131,7 @@ export function tooltipSource(_gerado?: string, ctx?: { args?: Partial<TooltipAr
 }
 
 /** Open (States): o balão nasce aberto, sem interação e sem estado externo. */
-export function tooltipAbertoSource(): string {
+export function tooltipOpenSource(): string {
   return montar({
     icone: 'salvar',
     ariaLabel: 'Salvar',
@@ -143,7 +143,7 @@ export function tooltipAbertoSource(): string {
 }
 
 /** Controlled (States): a abertura vem de fora, e o Escape devolve o valor. */
-export function tooltipControladoSource(): string {
+export function tooltipControlledSource(): string {
   return montar({
     icone: 'salvar',
     ariaLabel: 'Salvar',

@@ -14,8 +14,8 @@ import { Button } from "./button";
 import { Badge } from "./badge";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import {
-  cardComAcaoSource,
-  cardComImagemSource,
+  cardWithActionSource,
+  cardWithImageSource,
   cardCompactoSource,
   cardPerfilSource,
   cardProductSource,
@@ -111,7 +111,7 @@ export const WithAction: Story = {
     docs: {
       // A ação vive DENTRO do header e o snippet do meta não a tem: é a peça
       // que faz o header virar grade de duas colunas.
-      source: { transform: cardComAcaoSource },
+      source: { transform: cardWithActionSource },
       description: {
         story:
           "Com CardAction o header vira grid de duas colunas e a ação encosta à direita. A ordem do DOM continua título → descrição → ação, então o leitor de tela lê na ordem lógica.",
@@ -169,7 +169,7 @@ export const WithImage: Story = {
     docs: {
       // A imagem como PRIMEIRO filho direto é o que dispara o sangramento por
       // CSS; a posição dela é a lição, e não cabe em nenhum arg.
-      source: { transform: cardComImagemSource },
+      source: { transform: cardWithImageSource },
       description: {
         story:
           "Imagem como primeiro filho: o Card arredonda o topo dela e remove o próprio padding superior por CSS — não é preciso passar classe na `<img>`.",

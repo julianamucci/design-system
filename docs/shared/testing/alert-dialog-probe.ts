@@ -19,7 +19,7 @@ function texto(el: Element | null): string {
 }
 
 /** Como o leitor identifica o elemento focado: slot, papel e nome. */
-function descreverFoco(doc: Document) {
+function describeFocus(doc: Document) {
   const el = doc.activeElement as HTMLElement | null;
   if (!el || el === doc.body) return { slot: null, tag: 'body', texto: '' };
   return {
@@ -42,7 +42,7 @@ function caixa(el: HTMLElement | null) {
   };
 }
 
-export function painelAberto(doc: Document): HTMLElement | null {
+export function panelOpen(doc: Document): HTMLElement | null {
   return doc.querySelector<HTMLElement>('.nds-alert-dialog-content');
 }
 
@@ -53,9 +53,9 @@ export function painelAberto(doc: Document): HTMLElement | null {
  * presença: apontar para um id que não existe é o defeito clássico dessa dupla,
  * e ele passa por qualquer verificação de "tem o atributo".
  */
-export function medirAlertDialog(doc: Document) {
-  const painel = painelAberto(doc);
-  if (!painel) return { achado: false as const };
+export function measureAlertDialog(doc: Document) {
+  const painel = panelOpen(doc);
+  if (!painel) return { finding: false as const };
 
   const overlay = doc.querySelector<HTMLElement>('.nds-alert-dialog-overlay');
   const titulo = painel.querySelector<HTMLElement>('.nds-alert-dialog-title');
@@ -65,24 +65,24 @@ export function medirAlertDialog(doc: Document) {
   const cancelar = painel.querySelector<HTMLElement>('[data-slot="alert-dialog-cancel"]');
   const acao = painel.querySelector<HTMLElement>('[data-slot="alert-dialog-action"]');
 
-  const rotulado = painel.getAttribute('aria-labelledby');
+  const labelled = painel.getAttribute('aria-labelledby');
   const descrito = painel.getAttribute('aria-describedby');
 
   /** Ordem no DOM dos botões do rodapé — é ela que o Tab e o leitor seguem. */
-  const ordemDoRodape = rodape
+  const footerOrder = rodape
     ? Array.from(rodape.querySelectorAll<HTMLElement>('[data-slot]'))
         .map((b) => b.getAttribute('data-slot'))
         .join(' > ')
     : null;
 
   return {
-    achado: true as const,
+    finding: true as const,
     semantica: {
       papel: painel.getAttribute('role'),
       modal: painel.getAttribute('aria-modal'),
       /** Resolve? `sim` só quando o id existe no documento. */
-      rotuladoPor: rotulado ? (doc.getElementById(rotulado) ? 'resolve' : 'quebrado') : 'ausente',
-      descritoPor: descrito ? (doc.getElementById(descrito) ? 'resolve' : 'quebrado') : 'ausente',
+      rotuladoPor: labelled ? (doc.getElementById(labelled) ? 'resolve' : 'quebrado') : 'ausente',
+      describedBy: descrito ? (doc.getElementById(descrito) ? 'resolve' : 'quebrado') : 'ausente',
       /**
        * Heading é PAPEL, não tag. O bits emite `<div role="heading" aria-level>`,
        * que o leitor anuncia igual a um `<h2>` — medir só a tag reportava
@@ -107,7 +107,7 @@ export function medirAlertDialog(doc: Document) {
         : 'sem overlay',
     },
     estrutura: {
-      ordemDoRodape,
+      footerOrder,
       textoDoCancelar: texto(cancelar),
       textoDaAcao: texto(acao),
       /** Rótulo acessível de qualquer botão de fechar sem texto. */
@@ -133,19 +133,19 @@ export function medirAlertDialog(doc: Document) {
           }
         : null,
     },
-    foco: descreverFoco(doc),
+    foco: describeFocus(doc),
   };
 }
 
 /** Instantâneo curto para os passos de comportamento (fora, Escape, fechar). */
-export function estadoDoDialogo(doc: Document) {
+export function dialogoState(doc: Document) {
   return {
-    aberto: painelAberto(doc) !== null,
-    foco: descreverFoco(doc),
+    aberto: panelOpen(doc) !== null,
+    foco: describeFocus(doc),
   };
 }
 
 /** Canal de saída: o console da play não chega ao terminal do vitest. */
-export function reportarAlertDialog(stack: string, cenario: string, dados: unknown): never {
+export function reportAlertDialog(stack: string, cenario: string, dados: unknown): never {
   throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
 }

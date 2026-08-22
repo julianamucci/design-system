@@ -34,7 +34,7 @@ function elemento(
 }
 
 /** Par rótulo + campo, que é a unidade mínima de uso do Input. */
-function campoRotulado(
+function fieldLabelled(
   rotulo: string,
   id: string,
   partes: Array<string | false | null | undefined>,
@@ -56,7 +56,7 @@ export function inputSource(_gerado?: string, ctx?: { args?: Partial<InputArgs> 
 
   return svelteSnippet(
     IMPORT,
-    campoRotulado('Nome completo', 'nome', [
+    fieldLabelled('Nome completo', 'nome', [
       `type="${type}"`,
       placeholder ? `placeholder="${placeholder}"` : '',
       disabled ? 'disabled' : '',
@@ -66,48 +66,48 @@ export function inputSource(_gerado?: string, ctx?: { args?: Partial<InputArgs> 
 }
 
 /** Tipo texto: o padrão, para nome, apelido e qualquer cadeia livre. */
-export function inputTipoTextoSource(): string {
+export function inputTypeTextSource(): string {
   return svelteSnippet(
     IMPORT,
-    campoRotulado('Nome completo', 'nome', ['type="text"', 'placeholder="ex: João da Silva"']),
+    fieldLabelled('Nome completo', 'nome', ['type="text"', 'placeholder="ex: João da Silva"']),
   );
 }
 
 /** Tipo email: teclado com arroba no celular e validação nativa do formato. */
-export function inputTipoEmailSource(): string {
+export function inputTypeEmailSource(): string {
   return svelteSnippet(
     IMPORT,
-    campoRotulado('Email', 'email', ['type="email"', 'placeholder="ex: joao@empresa.com"']),
+    fieldLabelled('Email', 'email', ['type="email"', 'placeholder="ex: joao@empresa.com"']),
   );
 }
 
 /** Tipo senha: o conteúdo digitado fica mascarado. */
-export function inputTipoSenhaSource(): string {
+export function inputTypeSenhaSource(): string {
   return svelteSnippet(
     IMPORT,
-    campoRotulado('Senha', 'senha', ['type="password"', 'placeholder="••••••••"']),
+    fieldLabelled('Senha', 'senha', ['type="password"', 'placeholder="••••••••"']),
   );
 }
 
 /** Tipo número: teclado numérico e controles de incremento do navegador. */
-export function inputTipoNumeroSource(): string {
+export function inputTypeNumberSource(): string {
   return svelteSnippet(
     IMPORT,
-    campoRotulado('Quantidade', 'quantidade', ['type="number"', 'placeholder="0"']),
+    fieldLabelled('Quantidade', 'quantidade', ['type="number"', 'placeholder="0"']),
   );
 }
 
 /** Tipo busca: muda o papel implícito para caixa de busca, e é isso que o leitor anuncia. */
-export function inputTipoBuscaSource(): string {
+export function inputTypeSearchSource(): string {
   return svelteSnippet(
     IMPORT,
-    campoRotulado('Buscar', 'busca', ['type="search"', 'placeholder="Buscar componentes..."']),
+    fieldLabelled('Buscar', 'busca', ['type="search"', 'placeholder="Buscar componentes..."']),
   );
 }
 
 /** Tipo arquivo: o botão nativo recebe estilo do design system, sem markup extra. */
-export function inputTipoArquivoSource(): string {
-  return svelteSnippet(IMPORT, campoRotulado('Arquivo', 'arquivo', ['type="file"']));
+export function inputTypeFileSource(): string {
+  return svelteSnippet(IMPORT, fieldLabelled('Arquivo', 'arquivo', ['type="file"']));
 }
 
 /**
@@ -115,14 +115,14 @@ export function inputTipoArquivoSource(): string {
  * o rótulo. A marcação é a mesma do tipo email — o assunto aqui é o atributo.
  */
 export function inputWithPlaceholderSource(): string {
-  return inputTipoEmailSource();
+  return inputTypeEmailSource();
 }
 
 /** Estado desabilitado: o campo esmaece e recusa foco e digitação. */
-export function inputDesabilitadoSource(): string {
+export function inputDisabledSource(): string {
   return svelteSnippet(
     IMPORT,
-    campoRotulado('Campo desabilitado', 'indisponivel', [
+    fieldLabelled('Campo desabilitado', 'indisponivel', [
       'type="text"',
       'placeholder="Não disponível"',
       'disabled',
@@ -131,7 +131,7 @@ export function inputDesabilitadoSource(): string {
 }
 
 /** Estado de erro: `aria-invalid` marca o campo e a mensagem chega por `aria-describedby`. */
-export function inputComErroSource(): string {
+export function inputWithErrorSource(): string {
   return svelteSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="xs">
@@ -151,7 +151,7 @@ export function inputComErroSource(): string {
 }
 
 /** Estado com texto de apoio: a instrução é lida junto com o campo, não só vista. */
-export function helperSourceInputWithText(): string {
+export function helperInputWithTextSource(): string {
   return svelteSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="xs">
@@ -187,7 +187,7 @@ export function inputSenhaWithHelperSource(): string {
 }
 
 /** Paleta escura: os três estados que dependem de token que troca de valor entre paletas. */
-export function inputPaletaEscuraSource(): string {
+export function inputPaletteDarkSource(): string {
   return svelteSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="md">
@@ -208,7 +208,7 @@ export function inputPaletaEscuraSource(): string {
   );
 }
 
-const IMPORT_GRUPO = `import { Label } from "@/components/ui/label";
+const IMPORT_GROUP = `import { Label } from "@/components/ui/label";
 import {
   InputGroup,
   InputGroupAddon,
@@ -217,9 +217,9 @@ import {
 } from "@/components/ui/input-group";`;
 
 /** Composição em grupo: os três alinhamentos do acessório em volta do mesmo campo. */
-export function groupSourceInput(): string {
+export function groupInputSource(): string {
   return svelteSnippet(
-    IMPORT_GRUPO,
+    IMPORT_GROUP,
     `<div class="nds-stack" data-spacing="lg">
   <div class="nds-stack" data-spacing="xs">
     <Label for="busca">Buscar</Label>
@@ -255,7 +255,7 @@ export function groupSourceInput(): string {
 }
 
 /** Composição em grupo com ação: o acessório leva o foco ao campo, o botão não. */
-export function groupWithButtonSourceInput(): string {
+export function groupWithButtonInputSource(): string {
   return svelteSnippet(
     `import X from "@lucide/svelte/icons/x";
 import { Label } from "@/components/ui/label";

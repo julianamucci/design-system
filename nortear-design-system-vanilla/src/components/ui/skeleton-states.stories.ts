@@ -3,8 +3,8 @@ import { expect } from 'storybook/test';
 import { createSkeleton } from './skeleton';
 import { skeletonSourceWith } from './skeleton.source';
 import {
-  animacaoAtiva,
-  distincaoDoFundo,
+  animationAtiva,
+  backgroundDistincao,
   ligarMovimentoReduzido,
 } from '@shared/testing/skeleton-probe';
 
@@ -66,7 +66,7 @@ export const Pulsing: Story = {
     const sk = canvasElement.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
 
     await step('A classe base entrega pulso e raio', async () => {
-      await expect(animacaoAtiva(sk)).toBe(true);
+      await expect(animationAtiva(sk)).toBe(true);
       await expect(getComputedStyle(sk).borderRadius).not.toBe('0px');
     });
 
@@ -74,8 +74,8 @@ export const Pulsing: Story = {
       // Não é critério de contraste — o esqueleto não transmite informação. O
       // piso pega o caso degenerado: token trocado ou opacidade zerada fazem o
       // placeholder sumir, e o carregamento deixa de ser visível.
-      const { razao } = distincaoDoFundo(sk);
-      await expect(razao).toBeGreaterThan(1.05);
+      const { ratio } = backgroundDistincao(sk);
+      await expect(ratio).toBeGreaterThan(1.05);
     });
   },
 };
@@ -100,7 +100,7 @@ export const ReducedMotion: Story = {
       await step('Com movimento reduzido, o pulso é desligado', async () => {
         // Asserção pelo PAR, não pelo nome da animação: o nome muda por stack e
         // por versão, e `animationName !== 'none'` passava com duração zerada.
-        await expect(animacaoAtiva(sk)).toBe(false);
+        await expect(animationAtiva(sk)).toBe(false);
       });
 
       await step('O placeholder continua visível e ocupando a caixa', async () => {
@@ -112,7 +112,7 @@ export const ReducedMotion: Story = {
     }
 
     await step('Sem a preferência, o pulso volta', async () => {
-      await expect(animacaoAtiva(sk)).toBe(true);
+      await expect(animationAtiva(sk)).toBe(true);
     });
   },
 };

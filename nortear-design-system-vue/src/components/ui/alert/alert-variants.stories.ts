@@ -6,12 +6,12 @@ import { Alert, AlertTitle, AlertDescription } from './index';
 // `Info as InfoIcon`: a story exportada se chama `Info` nas 4 stacks; sem o
 // alias o ícone e o export colidem no mesmo escopo de módulo.
 import { AlertCircle, CheckCircle2, Info as InfoIcon, TriangleAlert } from 'lucide-vue-next';
-import { contrastePorTema, reprovasPorTema } from '@shared/testing/alert-probe';
+import { themeContrast, themeReprovas } from '@shared/testing/alert-probe';
 import {
-  alertContrasteSource,
+  alertContrastSource,
   alertDefaultSource,
   alertDestructiveSource,
-  keyboardSourceAlertDismissivel,
+  keyboardAlertDismissivelSource,
   alertDismissivelSource,
   alertInfoSource,
   alertSuccessSource,
@@ -264,7 +264,7 @@ export const DismissibleByKeyboard: Story = {
   parameters: {
     // O teclado não tem nada a configurar, e é isso que o snippet precisa
     // mostrar: a mesma raiz fechável, sem handler de tecla nenhum.
-    docs: { source: { transform: keyboardSourceAlertDismissivel } },
+    docs: { source: { transform: keyboardAlertDismissivelSource } },
   },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, InfoIcon },
@@ -324,7 +324,7 @@ export const Contrast: Story = {
     docs: {
       // São as cinco variantes empilhadas, e sem ícone: outra composição
       // inteira, não uma raiz com atributo diferente.
-      source: { transform: alertContrasteSource },
+      source: { transform: alertContrastSource },
       description: {
         story:
           'Título e texto de cada variante medidos contra o fundo composto, nos três temas de marca e nos dois modos. O mínimo é 4.5:1 — o título tem 14px semibold, que pela WCAG não conta como texto grande.',
@@ -365,7 +365,7 @@ export const Contrast: Story = {
     // raiz da story, porque quem pinta por baixo do alert translúcido é o
     // `body` — com a classe só na raiz ele ficava no claro e toda variante
     // acusava ~1:1 no escuro, defeito que não existe.
-    const reprovas = reprovasPorTema(contrastePorTema(canvasElement));
+    const reprovas = themeReprovas(themeContrast(canvasElement));
     await expect(reprovas, reprovas.length ? `\n${reprovas.join('\n')}\n` : '').toEqual([]);
   },
 };

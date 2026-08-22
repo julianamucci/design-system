@@ -21,7 +21,7 @@ export interface ProblemaDeContrato {
   detalhe: string;
 }
 
-export interface OpcoesDoContrato {
+export interface ContratoOptions {
   /**
    * Regras já cobradas nesta página e ainda não resolvidas, com o motivo.
    *
@@ -33,7 +33,7 @@ export interface OpcoesDoContrato {
   ignorar?: Record<string, string>;
 }
 
-const RE_CHAVE_I18N = /^[a-z][a-zA-Z0-9]*(\.[a-zA-Z0-9_]+){1,}$/;
+const RE_KEY_I18N = /^[a-z][a-zA-Z0-9]*(\.[a-zA-Z0-9_]+){1,}$/;
 const LIXO = ['undefined', 'null', 'NaN', '[object Object]'];
 
 /**
@@ -45,7 +45,7 @@ const LIXO = ['undefined', 'null', 'NaN', '[object Object]'];
  * "palavra.palavra" pegava os três, e regra com falso positivo é regra que
  * alguém desliga.
  */
-const NAMESPACES_DE_CONTEUDO = new Set([
+const CONTENT_NAMESPACES = new Set([
   'title', 'description', 'category', 'type', 'seo', 'anatomy', 'usage', 'doDont',
   'import', 'variants', 'states', 'props', 'tokens', 'accessibility', 'related',
   'notes', 'analytics', 'testes', 'demonstration', 'nav', 'common',
@@ -82,7 +82,7 @@ function ondeEsta(el: Element): string {
  * estático pega as chaves que ele consegue casar no fonte; aqui pega qualquer
  * uma, inclusive as montadas em tempo de execução.
  */
-function chavesVazadas(raiz: HTMLElement): ProblemaDeContrato[] {
+function keysVazadas(raiz: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
   const alcance = raiz.querySelectorAll<HTMLElement>('p, h1, h2, h3, h4, li, td, th, span, dt, dd');
   for (const el of alcance) {
@@ -91,15 +91,15 @@ function chavesVazadas(raiz: HTMLElement): ProblemaDeContrato[] {
     // Dentro de código, caminho com ponto é o assunto da página, não um vazamento.
     if (el.closest('pre, code, kbd, samp')) continue;
     const t = texto(el);
-    if (!t || !RE_CHAVE_I18N.test(t)) continue;
-    if (!NAMESPACES_DE_CONTEUDO.has(t.split('.')[0])) continue;
+    if (!t || !RE_KEY_I18N.test(t)) continue;
+    if (!CONTENT_NAMESPACES.has(t.split('.')[0])) continue;
     problemas.push({ regra: 'chave_i18n_visivel', detalhe: `"${t}" como texto — ${ondeEsta(el)}` });
   }
   return problemas;
 }
 
 /** `undefined`, `NaN` e companhia impressos na página. */
-function lixoVisivel(raiz: HTMLElement): ProblemaDeContrato[] {
+function lixoVisible(raiz: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
   for (const el of raiz.querySelectorAll<HTMLElement>('p, h1, h2, h3, h4, li, td, th, dd')) {
     if (el.children.length > 0) continue;
@@ -118,7 +118,7 @@ function lixoVisivel(raiz: HTMLElement): ProblemaDeContrato[] {
  * que falta cai para `web` → `react`. Quando nem isso existe, a caixa de código
  * aparece vazia — a página promete um exemplo e entrega uma moldura.
  */
-function codigoVazio(raiz: HTMLElement): ProblemaDeContrato[] {
+function emptyCode(raiz: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
   raiz.querySelectorAll<HTMLElement>('pre').forEach((pre, i) => {
     if (!texto(pre)) {
@@ -157,13 +157,13 @@ function previews(raiz: HTMLElement): ProblemaDeContrato[] {
     // numa linha é `justify-content`, numa coluna é `align-items`. Checar só uma
     // delas aprovaria metade dos contêineres errados — e foi exatamente uma
     // coluna (`.nds-card`) que deixou o Do & Don't encostado à esquerda.
-    const emColuna = cs.flexDirection.startsWith('column');
-    const centralizador = emColuna ? cs.alignItems : cs.justifyContent;
+    const inColumn = cs.flexDirection.startsWith('column');
+    const centralizador = inColumn ? cs.alignItems : cs.justifyContent;
     if (centralizador !== 'center') {
       problemas.push({
         regra: 'preview_fora_do_centro',
-        detalhe: `contêiner "${qual}" em ${emColuna ? 'coluna' : 'linha'} com ${
-          emColuna ? 'align-items' : 'justify-content'
+        detalhe: `contêiner "${qual}" em ${inColumn ? 'coluna' : 'linha'} com ${
+          inColumn ? 'align-items' : 'justify-content'
         }: ${centralizador}`,
       });
     }
@@ -206,11 +206,11 @@ function hierarquiaDeTitulos(raiz: HTMLElement): ProblemaDeContrato[] {
  * estado vazio, o "não faça isso"). Foi o que a primeira versão desta regra
  * reportou na página do Table.
  */
-const SECOES_DE_CONTRATO = ['propriedades', 'tokens', 'testes', 'estados', 'analytics'];
+const CONTRATO_SECTIONS = ['propriedades', 'tokens', 'testes', 'estados', 'analytics'];
 
 function tabelasVazias(raiz: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
-  for (const id of SECOES_DE_CONTRATO) {
+  for (const id of CONTRATO_SECTIONS) {
     const secao = raiz.querySelector<HTMLElement>(`section#${id}`);
     if (!secao) continue;
     secao.querySelectorAll<HTMLTableElement>('table').forEach((tabela) => {
@@ -227,24 +227,24 @@ function tabelasVazias(raiz: HTMLElement): ProblemaDeContrato[] {
 }
 
 const VERIFICACOES = [
-  chavesVazadas,
-  lixoVisivel,
-  codigoVazio,
+  keysVazadas,
+  lixoVisible,
+  emptyCode,
   previews,
   hierarquiaDeTitulos,
   tabelasVazias,
 ];
 
 /** Roda o contrato inteiro e devolve os problemas que sobraram. */
-export function auditarPaginaDeDocs(
+export function docsAuditarPage(
   raiz: HTMLElement,
-  opcoes: OpcoesDoContrato = {},
+  opcoes: ContratoOptions = {},
 ): ProblemaDeContrato[] {
   const ignorar = opcoes.ignorar ?? {};
   return VERIFICACOES.flatMap((v) => v(raiz)).filter((p) => !(p.regra in ignorar));
 }
 
 /** Mensagem de falha legível: uma linha por problema, com o culpado. */
-export function descreverProblemas(problemas: ProblemaDeContrato[]): string {
+export function describeProblemas(problemas: ProblemaDeContrato[]): string {
   return problemas.map((p) => `  · [${p.regra}] ${p.detalhe}`).join('\n');
 }

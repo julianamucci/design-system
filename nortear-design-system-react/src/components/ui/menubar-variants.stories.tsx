@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, expect, userEvent, waitFor } from "storybook/test"
 import {
   waitForPortal,
-  REGRA_GUARDA_DE_FOCO,
+  FOCUS_RULE_GUARDA,
   MENU_RULE_CHILDREN,
 } from "@/lib/wait-for-portal"
 import {
@@ -14,7 +14,7 @@ import {
   MenubarTrigger,
 } from "./menubar"
 import {
-  menubarItemDestrutivoSource,
+  menubarItemDestructiveSource,
   menubarItemNeutralSource,
   menubarSource,
 } from "./menubar.source"
@@ -26,10 +26,10 @@ import {
 // `wait-for-portal.ts`. A story que termina FECHADA não as desliga: é lá que
 // "sem violações no estado padrão" vale inteiro.
 const AXE_WITH_MENU_OPEN = {
-  config: { rules: [REGRA_GUARDA_DE_FOCO, MENU_RULE_CHILDREN] },
+  config: { rules: [FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN] },
 } as const
 
-const ITENS_NEUTROS = ["Novo", "Abrir", "Salvar"] as const
+const ITEMS_NEUTROS = ["Novo", "Abrir", "Salvar"] as const
 const ITENS_COM_PERIGO = ["Salvar", "Descartar alterações"] as const
 
 const meta = {
@@ -76,7 +76,7 @@ export const Default: Story = {
         <MenubarMenu defaultOpen>
           <MenubarTrigger>Arquivo</MenubarTrigger>
           <MenubarContent>
-            {ITENS_NEUTROS.map((i) => (
+            {ITEMS_NEUTROS.map((i) => (
               <MenubarItem key={i}>{i}</MenubarItem>
             ))}
           </MenubarContent>
@@ -95,7 +95,7 @@ export const Default: Story = {
     const itens = within(menu).getAllByRole("menuitem")
 
     await step("A variante default é escrita no markup", async () => {
-      await expect(itens).toHaveLength(ITENS_NEUTROS.length)
+      await expect(itens).toHaveLength(ITEMS_NEUTROS.length)
       for (const item of itens) {
         await expect(item.getAttribute("data-variant")).toBe("default")
         await expect(item.classList.contains("nds-dropdown-menu-item")).toBe(true)
@@ -106,9 +106,9 @@ export const Default: Story = {
       // O item destacado (o primeiro, que recebe o foco ao abrir) troca de cor
       // de propósito — a comparação tem que ser com um item em repouso, senão
       // ela mede o realce e não a variante.
-      const emRepouso = itens.filter((i) => !i.hasAttribute("data-highlighted"))
-      await expect(emRepouso.length).toBeGreaterThan(0)
-      await expect(getComputedStyle(emRepouso[0]).color).toBe(
+      const inRest = itens.filter((i) => !i.hasAttribute("data-highlighted"))
+      await expect(inRest.length).toBeGreaterThan(0)
+      await expect(getComputedStyle(inRest[0]).color).toBe(
         getComputedStyle(menu).color
       )
     })
@@ -132,7 +132,7 @@ export const Destructive: Story = {
     covers: ["visual.item5"],
     // `variant="destructive"` e o separador que o afasta do item neutro — nada
     // disso é descrito por args, e o snippet do meta esconderia o par.
-    docs: { source: { transform: menubarItemDestrutivoSource } },
+    docs: { source: { transform: menubarItemDestructiveSource } },
   },
   render: () => (
     <div style={wrapperStyle}>

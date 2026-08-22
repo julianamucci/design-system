@@ -38,10 +38,10 @@ const RENDERIZADORES = ['svg', 'canvas'] as const;
  * OMITIR o atributo quando o control está no padrão — repetir o padrão no
  * snippet ensina ruído a quem copia.
  */
-const FRASE_VAZIA_PADRAO = 'Sem dados para exibir';
+const FRASE_VAZIA_DEFAULT = 'Sem dados para exibir';
 
 /** Rótulo do Playground, e o padrão de qualquer chamada sem args. */
-const ROTULO_PADRAO = 'Acessos mensais no desktop, de janeiro a junho';
+const LABEL_DEFAULT = 'Acessos mensais no desktop, de janeiro a junho';
 
 const DATA_MENSAIS = `const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];`;
 const SERIE_UNICA = `const series = [{ name: "Desktop", data: [186, 305, 237, 73, 209, 214] }];`;
@@ -73,9 +73,9 @@ export const chartSource: SourceTransform<ChartArgs> = (_gerado, ctx) => {
       'option={buildBarOption({ xAxis: meses, series })}',
       propNumber('height', args.height) ?? 'height={300}',
       propOption('renderer', args.renderer, RENDERIZADORES, 'svg'),
-      frase && frase !== FRASE_VAZIA_PADRAO ? `emptyLabel="${frase}"` : undefined,
+      frase && frase !== FRASE_VAZIA_DEFAULT ? `emptyLabel="${frase}"` : undefined,
       propText('className', args.className),
-      `aria-label="${texto(args['aria-label']) ?? ROTULO_PADRAO}"`,
+      `aria-label="${texto(args['aria-label']) ?? LABEL_DEFAULT}"`,
     ],
     '  ',
     0,
@@ -179,7 +179,7 @@ ${SERIES_MULTI}`,
  * O título é visual, escrito acima dos eixos; o rótulo é o que o leitor de tela
  * lê no lugar do desenho, e vence o título quando os dois existem.
  */
-export function chartComTituloSource(): string {
+export function chartWithTitleSource(): string {
   return jsxSnippet(
     `${importChart('buildBarOption')}
 
@@ -246,7 +246,7 @@ ${SERIE_UNICA}`,
  * que segura o bloco aqui é o piso de altura, e é ele que impede a página de
  * saltar quando o dado chega.
  */
-export function chartVazioSource(): string {
+export function chartEmptySource(): string {
   return jsxSnippet(
     `${importChart('buildBarOption')}
 

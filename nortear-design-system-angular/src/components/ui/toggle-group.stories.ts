@@ -22,7 +22,7 @@ type ToggleGroupArgs = {
   onValueChange?: (value: string | string[]) => void;
 };
 
-const ROTULOS = {
+const LABELS = {
   left: 'Alinhar à esquerda',
   center: 'Centralizar',
   right: 'Alinhar à direita',
@@ -60,7 +60,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleGroupArgs
   const itens = (['left', 'center', 'right'] as const)
     .map(
       (v) =>
-        `      <button ndsToggle${variantItem} value="${v}" aria-label="${ROTULOS[v]}">\n` +
+        `      <button ndsToggle${variantItem} value="${v}" aria-label="${LABELS[v]}">\n` +
         `        <svg ndsToggleGroupIcon kind="align-${v}"></svg>\n` +
         `      </button>`,
     )
@@ -152,7 +152,7 @@ export const Playground: Story = {
   render: (args) => ({
     props: {
       ...args,
-      rotulos: ROTULOS,
+      rotulos: LABELS,
       // A forma do valor inicial acompanha o modo: string no exclusivo, lista
       // no combinado. É a mesma regra que o componente aplica ao emitir.
       valorInicial: args.type === 'single' ? 'left' : ['left'],
@@ -184,9 +184,9 @@ export const Playground: Story = {
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
     const grupo = canvas.getByRole('toolbar');
-    const esquerda = canvas.getByRole('button', { name: ROTULOS.left });
-    const centro = canvas.getByRole('button', { name: ROTULOS.center });
-    const direita = canvas.getByRole('button', { name: ROTULOS.right });
+    const esquerda = canvas.getByRole('button', { name: LABELS.left });
+    const centro = canvas.getByRole('button', { name: LABELS.center });
+    const direita = canvas.getByRole('button', { name: LABELS.right });
 
     await step('O grupo é uma barra de ferramentas nomeada', async () => {
       await expect(grupo.tagName).toBe('DIV');
@@ -209,9 +209,9 @@ export const Playground: Story = {
 
     await step('Cada item tem nome próprio, e o ícone não é lido', async () => {
       for (const [botao, nome] of [
-        [esquerda, ROTULOS.left],
-        [centro, ROTULOS.center],
-        [direita, ROTULOS.right],
+        [esquerda, LABELS.left],
+        [centro, LABELS.center],
+        [direita, LABELS.right],
       ] as const) {
         await expect(botao).toHaveAttribute('aria-label', nome);
         await expect(botao.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
@@ -243,8 +243,8 @@ export const Playground: Story = {
     }
 
     await step('Um único item na ordem de tabulação (roving tabindex)', async () => {
-      const naOrdem = [esquerda, centro, direita].filter((b) => b.tabIndex === 0);
-      await expect(naOrdem).toHaveLength(1);
+      const inOrder = [esquerda, centro, direita].filter((b) => b.tabIndex === 0);
+      await expect(inOrder).toHaveLength(1);
     });
 
     await step('functional.item3 — a seta move o foco sem ativar nada', async () => {

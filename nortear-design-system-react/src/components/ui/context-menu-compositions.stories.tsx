@@ -3,10 +3,10 @@ import { userEvent, within, expect, waitFor } from "storybook/test";
 import { useState } from "react";
 import {
   MENU_RULE_CHILDREN,
-  REGRA_GUARDA_DE_FOCO,
+  FOCUS_RULE_GUARDA,
   waitForPortal,
 } from "@/lib/wait-for-portal";
-import { abrirPorGesto } from "@shared/testing/context-menu-area";
+import { gestoOpen } from "@shared/testing/context-menu-area";
 import { AreaTrigger } from "./context-menu.fixtures";
 import {
   ContextMenu,
@@ -25,9 +25,9 @@ import {
 } from "@/components/ui/context-menu";
 import {
   contextMenuCompletoSource,
-  contextMenuComEscolhaUnicaSource,
-  contextMenuComMarcacaoSource,
-  contextMenuComSubmenuSource,
+  contextMenuWithChoiceUnicaSource,
+  contextMenuWithMarkupSource,
+  contextMenuWithSubmenuSource,
   contextMenuSource,
 } from "./context-menu.source";
 
@@ -41,7 +41,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       source: { transform: contextMenuSource },
       description: {
@@ -84,7 +84,7 @@ export const WithShortcut: Story = {
     const area = () => within(canvasElement).getByTestId("area");
 
     await step("O atalho vive dentro do item e é lido junto dele", async () => {
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       const atalhos = menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-shortcut"]');
       await expect(atalhos.length).toBe(3);
       for (const atalho of atalhos) {
@@ -142,14 +142,14 @@ export const WithCheckbox: Story = {
     covers: ["functional.item7", "accessibility.item4"],
     // O item de marcação é controlado: quem guarda o valor é o call site, e o
     // snippet do `meta` não tem estado nenhum.
-    docs: { source: { transform: contextMenuComMarcacaoSource } },
+    docs: { source: { transform: contextMenuWithMarkupSource } },
   },
   render: () => <DemoCheckbox />,
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId("area");
 
     await step("O papel diz que tipo de escolha o item é", async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo("grade").getAttribute("role")).toBe("menuitemcheckbox");
       await expect(alvo("reguas").getAttribute("aria-checked")).toBe("true");
     });
@@ -157,7 +157,7 @@ export const WithCheckbox: Story = {
     await step("O indicador publica o data-slot do seu tipo de item", async () => {
       // `data-slot` é o endereço de markup que as cinco stacks compartilham, e
       // o do indicador é por TIPO de item. Aqui ele não existia.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       for (const id of ["grade", "reguas"]) {
         await expect(
           alvo(id).querySelector('[data-slot="context-menu-checkbox-item-indicator"]'),
@@ -180,7 +180,7 @@ export const WithCheckbox: Story = {
       await userEvent.click(alvo("grade"));
       // Algumas libs fecham o menu ao escolher; reabrir é o que torna o passo
       // igual nas cinco stacks.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await waitFor(() =>
         expect(alvo("grade").getAttribute("aria-checked")).toBe(esperado),
       );
@@ -223,14 +223,14 @@ export const WithRadio: Story = {
     covers: ["functional.item8", "accessibility.item5"],
     // Quem guarda o valor é o grupo de escolha única, peça que não existe no
     // snippet do `meta`.
-    docs: { source: { transform: contextMenuComEscolhaUnicaSource } },
+    docs: { source: { transform: contextMenuWithChoiceUnicaSource } },
   },
   render: () => <DemoRadio />,
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId("area");
 
     await step("O papel diz que a escolha é única", async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo("z100").getAttribute("role")).toBe("menuitemradio");
       await expect(alvo("z75").getAttribute("role")).toBe("menuitemradio");
     });
@@ -238,7 +238,7 @@ export const WithRadio: Story = {
     await step("O indicador publica o data-slot do seu tipo de item", async () => {
       // Endereço por TIPO de item: escolha única e marcação não compartilham
       // slot, como nas outras stacks.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       const opcoes = ["z75", "z100", "z150"].map(alvo);
       for (const opcao of opcoes) {
         await expect(
@@ -261,7 +261,7 @@ export const WithRadio: Story = {
       const clicar = partiuDe75 ? "z150" : "z75";
       const outro = partiuDe75 ? "z75" : "z150";
       await userEvent.click(alvo(clicar));
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await waitFor(() => expect(alvo(clicar).getAttribute("aria-checked")).toBe("true"));
       await expect(alvo(outro).getAttribute("aria-checked")).toBe("false");
     });
@@ -273,10 +273,10 @@ export const WithRadio: Story = {
 export const WithSubmenu: Story = {
   parameters: {
     covers: ["functional.item5", "functional.item6", "visual.item3"],
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, MENU_RULE_CHILDREN] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA, MENU_RULE_CHILDREN] } },
     // As três peças do submenu andam juntas e nenhuma aparece no snippet do
     // `meta`.
-    docs: { source: { transform: contextMenuComSubmenuSource } },
+    docs: { source: { transform: contextMenuWithSubmenuSource } },
   },
   render: () => (
     <ContextMenu>
@@ -300,7 +300,7 @@ export const WithSubmenu: Story = {
       document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]');
 
     await step("O sub-gatilho diz que abre um menu", async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo("sub").getAttribute("aria-haspopup")).toBe("menu");
       await expect(alvo("sub").getAttribute("aria-expanded")).toBe("false");
     });
@@ -408,7 +408,7 @@ export const CompleteComposition: Story = {
     await step("Marcação e escolha única convivem no mesmo menu", async () => {
       // `visual.item4` descreve exatamente esta convivência — é o que precisa
       // estar na tela quando o Chromatic fotografa.
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       await expect(alvo("grade").getAttribute("role")).toBe("menuitemcheckbox");
       await expect(alvo("z100").getAttribute("role")).toBe("menuitemradio");
       await expect(

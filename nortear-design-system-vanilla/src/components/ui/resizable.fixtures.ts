@@ -12,7 +12,7 @@
  *    montava um cluster centralizado com um rótulo só; a outra, uma pilha com
  *    título e linha de apoio. Vieram para cá separadas por PROPÓSITO —
  *    `panelLabelled` e `panelWithHelper`;
- *  · `fracaoDoPrimeiro` divergia COM MOTIVO: uma media só a largura, a outra
+ *  · `firstFraction` divergia COM MOTIVO: uma media só a largura, a outra
  *    recebia o eixo. Ficou o eixo em parâmetro, com o padrão horizontal.
  */
 
@@ -70,9 +70,9 @@ export function frame(child: HTMLElement, altura = '220px'): HTMLElement {
  * de estados são todas horizontais e nunca precisaram dizê-lo. Quem varia o
  * eixo — a story raiz, que segue o control `direction` — passa o valor.
  */
-export function fracaoDoPrimeiro(canvasElement: HTMLElement, horizontal = true): number {
-  const paineis = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
-  const medidas = paineis.map((p) =>
+export function firstFraction(canvasElement: HTMLElement, horizontal = true): number {
+  const panels = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable-panel"]')];
+  const medidas = panels.map((p) =>
     horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height,
   );
   return medidas[0] / medidas.reduce((a, b) => a + b, 0);

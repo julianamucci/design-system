@@ -4,12 +4,12 @@ import { userEvent, within, expect } from "storybook/test";
 import { Textarea } from "./textarea";
 import { Label } from "./label";
 import {
-  textareaComContadorSource,
-  textareaSemRedimensionarSource,
+  textareaWithCounterSource,
+  textareaNoRedimensionarSource,
   textareaSource,
 } from "./textarea.source";
 import {
-  alturaMinimaPx,
+  heightMinimaPx,
   preencherAte,
   resizeComputado,
 } from "@shared/testing/textarea-probe";
@@ -65,7 +65,7 @@ export const Default: Story = {
     await step("Altura mínima de 120px", async () => {
       // A classe morta `min-h-[120px]` prometia isto e não aplicava nada;
       // a asserção mede o valor computado, não o nome.
-      await expect(alturaMinimaPx(textarea)).toBe(120);
+      await expect(heightMinimaPx(textarea)).toBe(120);
     });
   },
 };
@@ -104,7 +104,7 @@ export const WithCounter: Story = {
     docs: {
       // A contagem exige o valor em estado — composição que o meta sem args
       // não imprime.
-      source: { transform: textareaComContadorSource },
+      source: { transform: textareaWithCounterSource },
       description: {
         story:
           'Com contador de caracteres — maxLength + span com aria-live="polite" e aria-label descritivo.',
@@ -150,7 +150,7 @@ export const NoResize: Story = {
   parameters: {
     docs: {
       // A classe que trava a alça É o assunto, e nenhum control a descreve.
-      source: { transform: textareaSemRedimensionarSource },
+      source: { transform: textareaNoRedimensionarSource },
       description: {
         story:
           "Sem redimensionamento — útil em modais ou layouts onde arrastar a alça quebra a UI.",

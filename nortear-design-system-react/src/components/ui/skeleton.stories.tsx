@@ -4,7 +4,7 @@ import { Skeleton } from "./skeleton";
 import { skeletonSource } from "./skeleton.source";
 import { SkeletonDocs } from "@/components/docs/SkeletonDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
-import { FRACAO_DE_LARGURA, caixaDesenhada } from "@shared/testing/skeleton-probe";
+import { WIDTH_FRACTION, boxDesenhada } from "@shared/testing/skeleton-probe";
 
 // A caixa do esqueleto vem de atributo, não de classe de dimensão nem de
 // altura cravada: `data-shape` escolhe a forma e `data-width` a fração da
@@ -105,11 +105,11 @@ export const Playground: Story = {
       // Mede o que foi DESENHADO, não a classe: foi exatamente assim que
       // `h-4 w-[250px]` sobreviveu como texto inerte, com o esqueleto do
       // Playground renderizando altura zero.
-      const caixa = caixaDesenhada(sk, regiao);
+      const caixa = boxDesenhada(sk, regiao);
       await expect(caixa.altura).toBeGreaterThan(0);
       if (args.shape === "text" || args.shape === "heading") {
         await expect(
-          Math.abs(caixa.fracaoDoContainer - FRACAO_DE_LARGURA[args.width]),
+          Math.abs(caixa.fracaoDoContainer - WIDTH_FRACTION[args.width]),
         ).toBeLessThan(0.02);
       }
     });

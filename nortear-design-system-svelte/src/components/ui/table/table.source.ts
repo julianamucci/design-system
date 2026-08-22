@@ -32,7 +32,7 @@ ${nomes.map((nome) => `  ${nome},`).join('\n')}
 } from "@/components/ui/table";`;
 }
 
-const PECAS_BASE = [
+const PARTS_BASE = [
   'Table',
   'TableBody',
   'TableCaption',
@@ -42,7 +42,7 @@ const PECAS_BASE = [
   'TableRow',
 ];
 
-const FATURAS = `const faturas = [
+const INVOICES = `const faturas = [
   { id: "#INV-001", status: "Pago",      metodo: "Cartão de crédito", valor: "R$ 250,00" },
   { id: "#INV-002", status: "Pendente",  metodo: "Boleto bancário",   valor: "R$ 150,00" },
   { id: "#INV-003", status: "Cancelado", metodo: "Pix",               valor: "R$ 350,00" },
@@ -57,7 +57,7 @@ const INVOICES_CURTAS = `const faturas = [
 ];`;
 
 /** Cabeçalho de quatro colunas, com o valor alinhado à direita. */
-const CABECALHO = `  <TableHeader>
+const HEADER = `  <TableHeader>
     <TableRow>
       <TableHead>Fatura</TableHead>
       <TableHead>Status</TableHead>
@@ -67,7 +67,7 @@ const CABECALHO = `  <TableHeader>
   </TableHeader>`;
 
 /** Uma linha por registro; o alinhamento da coluna acompanha o do cabeçalho. */
-const CORPO = `  <TableBody>
+const BODY = `  <TableBody>
     {#each faturas as fatura (fatura.id)}
       <TableRow>
         <TableCell class="nds-font-medium">{fatura.id}</TableCell>
@@ -79,7 +79,7 @@ const CORPO = `  <TableBody>
   </TableBody>`;
 
 /** Sumário no `tfoot`: o total é a soma das linhas, nunca mais um registro. */
-const RODAPE = `  <TableFooter>
+const FOOTER = `  <TableFooter>
     <TableRow>
       <TableCell colspan={3}>Total</TableCell>
       <TableCell class="nds-text-right">R$ 1.400,00</TableCell>
@@ -104,13 +104,13 @@ export function tableSource(_gerado?: string, ctx?: { args?: Partial<TableArgs> 
     showFooter = true,
   } = ctx?.args ?? {};
 
-  const partes = [legenda(caption, captionVisivel), CABECALHO, CORPO];
-  if (showFooter) partes.push(RODAPE);
+  const partes = [legenda(caption, captionVisivel), HEADER, BODY];
+  if (showFooter) partes.push(FOOTER);
 
   return svelteSnippet(
-    `${imports(showFooter ? [...PECAS_BASE, 'TableFooter'].sort() : PECAS_BASE)}
+    `${imports(showFooter ? [...PARTS_BASE, 'TableFooter'].sort() : PARTS_BASE)}
 
-${FATURAS}`,
+${INVOICES}`,
     `<Table>
 ${partes.join('\n')}
 </Table>`,
@@ -120,53 +120,53 @@ ${partes.join('\n')}
 /** Variante básica: a tabela mínima — legenda visível, sem rodapé. */
 export function tableBasicaSource(): string {
   return svelteSnippet(
-    `${imports(PECAS_BASE)}
+    `${imports(PARTS_BASE)}
 
-${FATURAS}`,
+${INVOICES}`,
     `<Table>
 ${legenda('Lista de faturas recentes', true)}
-${CABECALHO}
-${CORPO}
+${HEADER}
+${BODY}
 </Table>`,
   );
 }
 
 /** Variante com rodapé: o total ocupa três colunas e cai sob a coluna de valor. */
-export function tableComRodapeSource(): string {
+export function tableWithFooterSource(): string {
   return svelteSnippet(
-    `${imports([...PECAS_BASE, 'TableFooter'].sort())}
+    `${imports([...PARTS_BASE, 'TableFooter'].sort())}
 
-${FATURAS}`,
+${INVOICES}`,
     `<Table>
 ${legenda('Lista de faturas recentes', true)}
-${CABECALHO}
-${CORPO}
-${RODAPE}
+${HEADER}
+${BODY}
+${FOOTER}
 </Table>`,
   );
 }
 
 /** Variante de legenda oculta: o título já está na página, o nome fica no DOM. */
-export function tableLegendaOcultaSource(): string {
+export function tableCaptionOcultaSource(): string {
   return svelteSnippet(
-    `${imports(PECAS_BASE)}
+    `${imports(PARTS_BASE)}
 
 ${INVOICES_CURTAS}`,
     `<div>
   <h3 class="nds-text-body nds-font-medium nds-mb-2">Faturas recentes</h3>
 ${recuar(`<Table>
 ${legenda('Lista de faturas recentes', false)}
-${CABECALHO}
-${CORPO}
+${HEADER}
+${BODY}
 </Table>`)}
 </div>`,
   );
 }
 
 /** Variante com ações por linha: cada botão diz a qual registro pertence. */
-export function tableComAcoesSource(): string {
+export function tableWithActionsSource(): string {
   return svelteSnippet(
-    `${imports(PECAS_BASE)}
+    `${imports(PARTS_BASE)}
 import { Button } from "@/components/ui/button";
 
 ${INVOICES_CURTAS}`,
@@ -201,9 +201,9 @@ ${legenda('Lista de faturas recentes', true)}
 }
 
 /** Variante de rolagem horizontal: muitas colunas, a rolagem fica na tabela. */
-export function tableRolagemHorizontalSource(): string {
+export function tableScrollHorizontalSource(): string {
   return svelteSnippet(
-    `${imports(PECAS_BASE)}
+    `${imports(PARTS_BASE)}
 
 const meses = ["2025", "2026"].flatMap((ano) =>
   ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"].map(
@@ -243,12 +243,12 @@ const faturas = [
 /** Estado vazio: a mensagem ocupa a largura inteira, no lugar dos registros. */
 export function tableVaziaSource(): string {
   return svelteSnippet(
-    `${imports(PECAS_BASE)}
+    `${imports(PARTS_BASE)}
 
 const faturas: Array<{ id: string; status: string; metodo: string; valor: string }> = [];`,
     `<Table>
 ${legenda('Lista de faturas recentes', true)}
-${CABECALHO}
+${HEADER}
   <TableBody>
     {#each faturas as fatura (fatura.id)}
       <TableRow>
@@ -277,9 +277,9 @@ ${CABECALHO}
  * em Svelte, e `null` mantém o snippet legível para a guarda transversal, que
  * trata `undefined` no texto como sobra de template mal fechado.
  */
-export function tableLinhaSelecionadaSource(): string {
+export function tableLineSelecionadaSource(): string {
   return svelteSnippet(
-    `${imports(PECAS_BASE)}
+    `${imports(PARTS_BASE)}
 
 const faturas = [
   { id: "#INV-001", status: "Pago",      metodo: "Cartão de crédito", valor: "R$ 250,00", selecionada: false },
@@ -288,7 +288,7 @@ const faturas = [
 ];`,
     `<Table>
 ${legenda('Lista de faturas recentes', true)}
-${CABECALHO}
+${HEADER}
   <TableBody>
     {#each faturas as fatura (fatura.id)}
       <TableRow data-state={fatura.selecionada ? "selected" : null}>
@@ -307,16 +307,16 @@ ${CABECALHO}
  * Estado de carregamento: o esqueleto some da árvore de acessibilidade e quem
  * anuncia é a região em volta, com nome próprio e `aria-busy`.
  */
-export function tableCarregandoSource(): string {
+export function tableLoadingSource(): string {
   return svelteSnippet(
-    `${imports(PECAS_BASE)}
+    `${imports(PARTS_BASE)}
 import { Skeleton } from "@/components/ui/skeleton";
 
 const linhas = [1, 2, 3, 4, 5];`,
     `<div role="status" aria-busy="true" aria-label="Carregando faturas">
 ${recuar(`<Table>
 ${legenda('Lista de faturas recentes', true)}
-${CABECALHO}
+${HEADER}
   <TableBody>
     {#each linhas as linha (linha)}
       <TableRow>

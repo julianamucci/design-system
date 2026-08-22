@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
-  textareaComApoioSource,
-  textareaComContadorSource,
+  textareaWithHelperSource,
+  textareaWithCounterSource,
   textareaWithErrorSource,
-  textareaContadorAcessivelSource,
-  textareaDesabilitadoSource,
+  textareaCounterAccessibleSource,
+  textareaDisabledSource,
   textareaEmModalSource,
   textareaInvalidoSource,
-  textareaPadraoSource,
+  textareaDefaultSource,
   textareaPreenchidoSource,
-  textareaSemRedimensionarSource,
+  textareaNoRedimensionarSource,
   textareaSomenteLeituraSource,
   textareaSource,
 } from './textarea.source';
@@ -81,18 +81,18 @@ describe('textareaSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('a variante padrão não trava o redimensionamento', () => {
-    expect(textareaPadraoSource()).not.toContain('nds-resize-none');
-    expect(textareaPadraoSource()).toContain('<Label for="biografia">Biografia</Label>');
+    expect(textareaDefaultSource()).not.toContain('nds-resize-none');
+    expect(textareaDefaultSource()).toContain('<Label for="biografia">Biografia</Label>');
   });
 
   it('a variante com contador liga o limite à contagem anunciada', () => {
-    const saida = textareaComContadorSource();
+    const saida = textareaWithCounterSource();
     expect(saida).toContain('maxlength={500}');
     expect(saida).toContain('aria-label="{value.length} de 500 caracteres usados"');
   });
 
   it('a variante sem redimensionamento é a única que traz a classe', () => {
-    expect(textareaSemRedimensionarSource()).toContain('class="nds-resize-none"');
+    expect(textareaNoRedimensionarSource()).toContain('class="nds-resize-none"');
   });
 
   it('o estado preenchido nasce do $state, não de um atributo value', () => {
@@ -102,7 +102,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o estado desabilitado escreve a prop nua', () => {
-    expect(textareaDesabilitadoSource()).toContain('disabled />');
+    expect(textareaDisabledSource()).toContain('disabled />');
   });
 
   it('o estado inválido aponta para uma mensagem que existe no snippet', () => {
@@ -119,11 +119,11 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a composição com apoio traz o parágrafo em tom apagado', () => {
-    expect(textareaComApoioSource()).toContain('nds-text-muted-foreground');
+    expect(textareaWithHelperSource()).toContain('nds-text-muted-foreground');
   });
 
   it('a composição do contador acessível usa o limite de 200', () => {
-    const saida = textareaContadorAcessivelSource();
+    const saida = textareaCounterAccessibleSource();
     expect(saida).toContain('maxlength={200}');
     expect(saida).toContain('{value.length}/200');
   });

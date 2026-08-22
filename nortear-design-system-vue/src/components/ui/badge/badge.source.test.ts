@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  badgeComIconeSource,
-  badgeComoBotaoSource,
-  badgeComoLinkSource,
-  badgeContadorSource,
+  badgeWithIconSource,
+  badgeAsButtonSource,
+  badgeAsLinkSource,
+  badgeCounterSource,
   badgeDefaultSource,
   badgeDestructiveSource,
   badgeOutlineSource,
@@ -74,7 +74,7 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de composição', () => {
   it('o ícone é decorativo e declara de que lado está', () => {
-    const saida = badgeComIconeSource();
+    const saida = badgeWithIconSource();
     expect(saida).toContain(`import { Check } from 'lucide-vue-next'`);
     expect(saida).toContain('<Check aria-hidden="true" data-icon="inline-start" />');
     // O respiro é do próprio badge: margem à mão somaria ao gap e o dobraria.
@@ -83,27 +83,27 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o contador tira o significado do contêiner, não do número', () => {
-    const saida = badgeContadorSource();
+    const saida = badgeCounterSource();
     expect(saida).toContain('role="status"');
     expect(saida).toContain('aria-label="12 notificações não lidas"');
     expect(saida).toContain('<Badge variant="destructive">12</Badge>');
   });
 
   it('dentro de link e de botão, quem recebe o foco é o elemento de fora', () => {
-    for (const saida of [badgeComoLinkSource(), badgeComoBotaoSource()]) {
+    for (const saida of [badgeAsLinkSource(), badgeAsButtonSource()]) {
       expect(saida).toContain('nds-focus-ring-inset');
       // O badge não vira controle: sem tabulação própria e sem papel próprio.
       expect(saida).not.toContain('tabindex');
       expect(saida).not.toContain('<Badge role=');
     }
-    expect(badgeComoLinkSource()).toContain('href="#design"');
-    expect(badgeComoBotaoSource()).toContain('type="button"');
+    expect(badgeAsLinkSource()).toContain('href="#design"');
+    expect(badgeAsButtonSource()).toContain('type="button"');
   });
 
   it('o rótulo de exemplo do botão não cita o nome de outra stack', () => {
     // A story usa "React" como categoria de filtro; docs de cada stack são
     // consumidas isoladamente, e o nome vazaria no painel.
-    const saida = badgeComoBotaoSource();
+    const saida = badgeAsButtonSource();
     expect(saida).toContain('aria-label="Filtrar por acessibilidade"');
     expect(saida).toContain('<Badge variant="outline">Acessibilidade</Badge>');
   });

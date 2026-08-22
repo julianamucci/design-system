@@ -5,7 +5,7 @@ import { createSelect } from './select';
 import { selectSource } from './select.source';
 import { createSelectDocs } from '@/components/docs/SelectDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { medirAnelDeFoco, ESTADOS } from '@shared/testing/select-probe';
+import { focusMeasureRing, STATES } from '@shared/testing/select-probe';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -107,7 +107,7 @@ export const Playground: Story = {
       disabled: args.disabled,
       size: args.size,
       'aria-label': args.labelText,
-      items: [...ESTADOS],
+      items: [...STATES],
       onValueChange: (valor) => args.onValueChange?.(valor),
     });
 
@@ -172,7 +172,7 @@ export const Playground: Story = {
       // `outline: 0` na folha é intencional — o anel é `box-shadow`. Medir a
       // MUDANÇA, e não `boxShadow !== 'none'`, é o que distingue anel de foco de
       // anel de erro, que já existe sem foco.
-      await expect(medirAnelDeFoco(gatilho).mudou).toBe(true);
+      await expect(focusMeasureRing(gatilho).mudou).toBe(true);
     });
 
     await step('Abrir mostra a lista, e a seta anda pelas opções', async () => {
@@ -183,7 +183,7 @@ export const Playground: Story = {
       await expect(listbox).toHaveAttribute('role', 'listbox');
       await expect(gatilho).toHaveAttribute('aria-controls', listbox.id);
       const opcoes = within(listbox).getAllByRole('option');
-      await expect(opcoes).toHaveLength(ESTADOS.length);
+      await expect(opcoes).toHaveLength(STATES.length);
 
       // O índice de partida vem MEDIDO, não suposto: reabrir a lista depois de
       // uma escolha nasce destacando a opção escolhida. O que o item do contrato
@@ -252,7 +252,7 @@ export const Playground: Story = {
 
     await step('Escape fecha sem trocar a escolha e devolve o foco', async () => {
       await abrir();
-      const chamadasAntes = (args.onValueChange as unknown as { mock: { calls: unknown[] } })
+      const callsBefore = (args.onValueChange as unknown as { mock: { calls: unknown[] } })
         .mock.calls.length;
       // O texto vem MEDIDO antes, e não cravado: o que este passo promete é que
       // Escape não mexe na escolha, qualquer que ela seja — cravar o rótulo faria
@@ -262,7 +262,7 @@ export const Playground: Story = {
       await waitForPortalGone('listbox');
       await expect(
         (args.onValueChange as unknown as { mock: { calls: unknown[] } }).mock.calls.length,
-      ).toBe(chamadasAntes);
+      ).toBe(callsBefore);
       await expect(gatilho.textContent).toBe(textBefore);
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
       // Sem `waitFor`: a devolução do foco é síncrona, e envolvê-la mascararia

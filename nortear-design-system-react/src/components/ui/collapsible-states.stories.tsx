@@ -8,9 +8,9 @@ import {
   CollapsibleContent,
 } from "./collapsible";
 import {
-  collapsibleAbertoPorPadraoSource,
-  collapsibleControladoSource,
-  collapsibleDesabilitadoSource,
+  defaultCollapsibleOpenSource,
+  collapsibleControlledSource,
+  collapsibleDisabledSource,
   collapsibleSource,
 } from "./collapsible.source";
 import { Button, buttonVariants } from "./button";
@@ -104,7 +104,7 @@ export const OpenByDefault: Story = {
   parameters: {
     covers: ["functional.item3", "accessibility.item5", "visual.item2"],
     // O arquivo não tem args: só a story diz que o painel monta expandido.
-    docs: { source: { transform: collapsibleAbertoPorPadraoSource } },
+    docs: { source: { transform: defaultCollapsibleOpenSource } },
   },
   render: () => (
     <Collapsible defaultOpen className="nds-w-sm">
@@ -185,7 +185,7 @@ export const Controlled: Story = {
     covers: ["functional.item4", "visual.item3"],
     // O modo controlado é o par open + onOpenChange sobre um estado de fora —
     // é isso que o snippet precisa ensinar, não o componente local da story.
-    docs: { source: { transform: collapsibleControladoSource } },
+    docs: { source: { transform: collapsibleControlledSource } },
   },
   render: () => <ControlledExample />,
   play: async ({ canvasElement, step }) => {
@@ -229,7 +229,7 @@ export const Disabled: Story = {
     covers: ["functional.item6", "visual.item5"],
     // `disabled` vai no gatilho, e a seta perde a transição: sem estado para
     // alternar, girar 180° não significaria nada.
-    docs: { source: { transform: collapsibleDesabilitadoSource } },
+    docs: { source: { transform: collapsibleDisabledSource } },
   },
   render: () => (
     <Collapsible className="nds-w-sm">

@@ -61,7 +61,7 @@ function priorityLabel(raw: string): string {
  * `message-circle`). O envelope são dois traçados: reduzi-lo a um daria um
  * desenho diferente do que as outras stacks mostram.
  */
-const ICONES = {
+const ICONS = {
   email: [
     'm22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7',
     'M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
@@ -83,9 +83,9 @@ function canaisDeContato(): SelectItem[] {
   const locale = getLocale();
   const telefone = locale === 'en' ? 'Phone' : locale === 'es' ? 'Teléfono' : 'Telefone';
   return [
-    { value: 'email', label: 'E-mail', icon: ICONES.email },
-    { value: 'phone', label: telefone, icon: ICONES.telefone },
-    { value: 'chat', label: 'Chat', icon: ICONES.chat },
+    { value: 'email', label: 'E-mail', icon: ICONS.email },
+    { value: 'phone', label: telefone, icon: ICONS.telefone },
+    { value: 'chat', label: 'Chat', icon: ICONS.chat },
   ];
 }
 

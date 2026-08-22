@@ -4,7 +4,7 @@ import { createDropdownMenu } from './dropdown-menu';
 import { dropdownMenuSource, dropdownMenuSourceWith } from './dropdown-menu.source';
 import { createButton } from './button';
 import { endClose, montar } from './dropdown-menu.fixtures';
-import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
+import { itemContrast } from '@shared/testing/dropdown-menu-probe';
 
 const meta: Meta = {
   tags: ['overlay'],
@@ -53,9 +53,9 @@ export const Default: Story = {
     await step('O item neutro herda a cor do popup, sem cor semântica', async () => {
       // O item em foco troca de cor de propósito — a comparação tem que ser com
       // um item em repouso, senão mede o realce e não a variante.
-      const emRepouso = itens.filter((i) => i !== document.activeElement);
-      await expect(emRepouso.length).toBeGreaterThan(0);
-      await expect(getComputedStyle(emRepouso[0]).color).toBe(getComputedStyle(menu).color);
+      const inRest = itens.filter((i) => i !== document.activeElement);
+      await expect(inRest.length).toBeGreaterThan(0);
+      await expect(getComputedStyle(inRest[0]).color).toBe(getComputedStyle(menu).color);
     });
 
     await step('O texto do item atinge 4.5:1 sobre o fundo do popup', async () => {
@@ -63,10 +63,10 @@ export const Default: Story = {
       // ninguém rodava: o axe do test-runner mede o que está na tela, e comparar
       // nome de token não responde a pergunta. A razão é aritmética. 14px em
       // peso normal é texto normal pela WCAG: o limite é 4.5, não 3.
-      const emRepouso = itens.filter((i) => i !== document.activeElement);
-      const medida = contrasteDoItem(emRepouso[0]);
+      const inRest = itens.filter((i) => i !== document.activeElement);
+      const medida = itemContrast(inRest[0]);
       await expect(medida).not.toBeNull();
-      await expect(medida!.razao).toBeGreaterThanOrEqual(4.5);
+      await expect(medida!.ratio).toBeGreaterThanOrEqual(4.5);
     });
 
     await step('Limpa via ESC', async () => {

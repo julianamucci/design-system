@@ -12,7 +12,7 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
  * leitor de tela anuncia "separador" e nada mais. E ele diz o ATALHO, porque a
  * alternativa ao arrasto não tem nenhuma pista visual.
  */
-const ROTULO_PUNHO = 'Redimensionar painéis — use as setas para ajustar';
+const LABEL_HANDLE = 'Redimensionar painéis — use as setas para ajustar';
 
 type ResizableArgs = {
   direction: ResizableDirection;
@@ -46,7 +46,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ResizableArgs> 
 
       <div
         ndsResizableHandle
-        ${withHandle ? '[withHandle]="true"\n        ' : ''}aria-label="${ROTULO_PUNHO}"
+        ${withHandle ? '[withHandle]="true"\n        ' : ''}aria-label="${LABEL_HANDLE}"
       ></div>
 
       <div ndsResizablePanel [defaultSize]="${100 - defaultSize}" [minSize]="${minSize}">
@@ -107,7 +107,7 @@ export const Playground: Story = {
     ],
   },
   render: (args) => ({
-    props: { ...args, rotulo: ROTULO_PUNHO },
+    props: { ...args, rotulo: LABEL_HANDLE },
     template: `
       <div ndsResizable [direction]="direction" class="nds-min-h-50 nds-w-full">
         <div ndsResizablePanel [defaultSize]="defaultSize" [minSize]="minSize" [maxSize]="60">
@@ -132,8 +132,8 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO_PUNHO });
-    const paineis = [...canvasElement.querySelectorAll<HTMLElement>('.nds-resizable-panel')];
+    const punho = canvas.getByRole('separator', { name: LABEL_HANDLE });
+    const panels = [...canvasElement.querySelectorAll<HTMLElement>('.nds-resizable-panel')];
 
     await step('O divisor é um separator com nome e valor', async () => {
       // accessibility.item4 e item5 — `getByRole` acima já falharia sem papel ou
@@ -144,22 +144,22 @@ export const Playground: Story = {
       // Derivado do painel, e não do arg: `aria-valuenow` só serve se for o
       // tamanho REAL do painel anterior — anunciar o valor declarado seria
       // mentir assim que qualquer limite entrasse em ação.
-      await expect(paineis).toHaveLength(2);
-      const ofPanel = Number(paineis[0].style.getPropertyValue('--panel-size'));
+      await expect(panels).toHaveLength(2);
+      const ofPanel = Number(panels[0].style.getPropertyValue('--panel-size'));
       await expect(Number(punho.getAttribute('aria-valuenow'))).toBe(Math.round(ofPanel));
     });
 
     await step('O tamanho declarado chega ao painel pela custom property', async () => {
       // A porcentagem é consumida pelo CSS (`flex-grow: var(--panel-size)`).
       // Escrever largura inline aqui tiraria a medida do tema e da densidade.
-      await expect(Number(paineis[0].style.getPropertyValue('--panel-size'))).toBeCloseTo(
+      await expect(Number(panels[0].style.getPropertyValue('--panel-size'))).toBeCloseTo(
         args.defaultSize,
         1,
       );
       // E a medida resultante segue a proporção pedida — custom property certa
       // com o CSS ausente passaria na asserção acima e desenharia errado.
-      const a = paineis[0].getBoundingClientRect().width;
-      const b = paineis[1].getBoundingClientRect().width;
+      const a = panels[0].getBoundingClientRect().width;
+      const b = panels[1].getBoundingClientRect().width;
       await expect(a / (a + b)).toBeCloseTo(args.defaultSize / 100, 1);
     });
 

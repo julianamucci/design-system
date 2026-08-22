@@ -1,30 +1,30 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dialogAbertoSource,
+  dialogOpenSource,
   dialogWithActionDestructiveSource,
-  dialogComFormularioSource,
+  dialogWithFormSource,
   dialogWithMidiaSource,
-  dialogComRolagemSource,
-  dialogControladoSource,
-  dialogFecharNoRodapeSource,
+  dialogWithScrollSource,
+  dialogControlledSource,
+  footerDialogCloseSource,
   dialogPerfilSource,
-  dialogSemBotaoFecharSource,
-  dialogSemRodapeSource,
+  dialogNoButtonCloseSource,
+  dialogNoFooterSource,
   dialogSource,
 } from './dialog.source';
 
 const TODAS = [
   dialogSource,
-  dialogAbertoSource,
-  dialogSemBotaoFecharSource,
-  dialogFecharNoRodapeSource,
-  dialogSemRodapeSource,
-  dialogComFormularioSource,
+  dialogOpenSource,
+  dialogNoButtonCloseSource,
+  footerDialogCloseSource,
+  dialogNoFooterSource,
+  dialogWithFormSource,
   dialogPerfilSource,
-  dialogComRolagemSource,
+  dialogWithScrollSource,
   dialogWithActionDestructiveSource,
   dialogWithMidiaSource,
-  dialogControladoSource,
+  dialogControlledSource,
 ];
 
 describe('dialogSource', () => {
@@ -70,8 +70,8 @@ describe('dialogSource', () => {
   });
 
   it('não deixa o espião do onOpenChange virar código', () => {
-    const espiao = (() => 'CORPO_DO_MOCK') as never;
-    const saida = dialogSource(undefined, { args: { defaultOpen: espiao, modal: espiao } });
+    const spy = (() => 'CORPO_DO_MOCK') as never;
+    const saida = dialogSource(undefined, { args: { defaultOpen: spy, modal: spy } });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).toContain('<Dialog>');
   });
@@ -79,32 +79,32 @@ describe('dialogSource', () => {
 
 describe('composições estruturais', () => {
   it('aberto na montagem é o caminho NÃO controlado', () => {
-    const saida = dialogAbertoSource();
+    const saida = dialogOpenSource();
     expect(saida).toContain('<Dialog defaultOpen>');
     expect(saida).not.toContain('onOpenChange');
   });
 
   it('sem o X do canto, a prop mora no Content — e Escape continua fechando', () => {
-    const saida = dialogSemBotaoFecharSource();
+    const saida = dialogNoButtonCloseSource();
     expect(saida).toContain('<DialogContent showCloseButton={false}>');
     // O Cancelar do rodapé permanece: nunca se tira toda saída de uma vez.
     expect(saida).toContain('<DialogClose render={<Button variant="outline" />}>Cancelar</DialogClose>');
   });
 
   it('fechar no rodapé usa a prop dos DOIS lugares, com papéis diferentes', () => {
-    const saida = dialogFecharNoRodapeSource();
+    const saida = footerDialogCloseSource();
     expect(saida).toContain('<DialogContent showCloseButton={false}>');
     expect(saida).toContain('<DialogFooter showCloseButton>');
   });
 
   it('sem rodapé, o snippet não importa as peças que não usa', () => {
-    const saida = dialogSemRodapeSource();
+    const saida = dialogNoFooterSource();
     expect(saida).not.toContain('<DialogFooter');
     expect(saida).not.toContain('DialogClose');
   });
 
   it('no formulário o rodapé fica DENTRO do form, e o cancelar não submete', () => {
-    for (const fn of [dialogComFormularioSource, dialogPerfilSource]) {
+    for (const fn of [dialogWithFormSource, dialogPerfilSource]) {
       const saida = fn();
       const form = saida.indexOf('<form');
       const rodape = saida.indexOf('<DialogFooter>');
@@ -117,7 +117,7 @@ describe('composições estruturais', () => {
   });
 
   it('cada campo do formulário fecha o par htmlFor/id', () => {
-    const saida = dialogComFormularioSource();
+    const saida = dialogWithFormSource();
     expect(saida).toContain('<Label htmlFor="dialog-name">Nome</Label>');
     expect(saida).toContain('<Input id="dialog-name" defaultValue="Maria Silva" />');
     expect(saida).toContain('<Label htmlFor="dialog-email">E-mail</Label>');
@@ -133,7 +133,7 @@ describe('composições estruturais', () => {
   it('a região rolável entra na ordem de tabulação e tem nome', () => {
     // Sem `tabindex` quem navega só por teclado não consegue rolar a caixa; sem
     // nome, `role="region"` não é anunciada como região nenhuma.
-    const saida = dialogComRolagemSource();
+    const saida = dialogWithScrollSource();
     expect(saida).toContain('tabIndex={0}');
     expect(saida).toContain('role="region"');
     expect(saida).toContain('aria-label="Conteúdo rolável"');
@@ -158,7 +158,7 @@ describe('composições estruturais', () => {
   it('o controlado traz o par open/onOpenChange e dispensa o gatilho', () => {
     // Com `open` e sem o callback o diálogo abre e nunca mais fecha: Escape,
     // overlay e X passam todos pelo dono do estado.
-    const saida = dialogControladoSource();
+    const saida = dialogControlledSource();
     expect(saida).toContain('<Dialog open={aberto} onOpenChange={setAberto}>');
     expect(saida).not.toContain('DialogTrigger');
   });

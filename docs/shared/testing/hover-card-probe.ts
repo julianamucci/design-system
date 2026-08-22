@@ -14,7 +14,7 @@
  *  2. **a saída do ponteiro é difícil de simular certo.** Três libs montam um
  *     polígono de tolerância entre gatilho e painel; sair "para fora" com uma
  *     chamada só nunca escapa dele, e o teste passa a provar o contrário do que
- *     pretendia. `sairComPonteiro` encapsula a sequência correta.
+ *     pretendia. `leaveWithPointer` encapsula a sequência correta.
  */
 
 // @ts-expect-error -- resolvido pelo bundler de cada stack, não pelo tsconfig
@@ -23,16 +23,16 @@
 // algum dia resolver, ele passa a acusar sozinho.
 import { userEvent, waitFor } from 'storybook/test';
 
-export const SELETOR_PAINEL = '[data-slot="hover-card-content"]';
+export const SELECTOR_PANEL = '[data-slot="hover-card-content"]';
 
 /** Painel aberto, ou `null`. Consulta o documento inteiro, não o canvas. */
-export function painelAberto(): HTMLElement | null {
-  return document.body.querySelector<HTMLElement>(SELETOR_PAINEL);
+export function panelOpen(): HTMLElement | null {
+  return document.body.querySelector<HTMLElement>(SELECTOR_PANEL);
 }
 
 /** Todos os painéis abertos — para as stories que mostram vários cartões. */
-export function paineisAbertos(): HTMLElement[] {
-  return [...document.body.querySelectorAll<HTMLElement>(SELETOR_PAINEL)];
+export function panelsAbertos(): HTMLElement[] {
+  return [...document.body.querySelectorAll<HTMLElement>(SELECTOR_PANEL)];
 }
 
 /**
@@ -54,35 +54,35 @@ function assentado(painel: HTMLElement | null): painel is HTMLElement {
   return !(estilo.opacity !== '1' && opacidade < 0.9);
 }
 
-export async function esperarAberto(contexto = '', timeout = 3000): Promise<HTMLElement> {
+export async function waitForOpen(contexto = '', timeout = 3000): Promise<HTMLElement> {
   await waitFor(
     () => {
-      if (!assentado(painelAberto())) {
+      if (!assentado(panelOpen())) {
         throw new Error(`o cartão ainda não abriu e assentou ${contexto}`);
       }
     },
     { timeout, interval: 50 },
   );
-  return painelAberto()!;
+  return panelOpen()!;
 }
 
-export async function esperarQuantidade(quantos: number, timeout = 3000): Promise<HTMLElement[]> {
+export async function waitForQuantidade(quantos: number, timeout = 3000): Promise<HTMLElement[]> {
   await waitFor(
     () => {
-      const prontos = paineisAbertos().filter(assentado).length;
+      const prontos = panelsAbertos().filter(assentado).length;
       if (prontos !== quantos) throw new Error(`abertos ${prontos} cartões, esperado ${quantos}`);
     },
     { timeout, interval: 50 },
   );
-  return paineisAbertos();
+  return panelsAbertos();
 }
 
-export async function esperarFechado(contexto = '', timeout = 3000): Promise<void> {
+export async function waitForClosed(contexto = '', timeout = 3000): Promise<void> {
   // `waitFor` e não asserção seca: fechado, o painel continua no DOM enquanto a
   // transição de saída roda (`[data-ending-style]`); só depois o portal desmonta.
   await waitFor(
     () => {
-      if (painelAberto()) throw new Error(`o cartão ainda está aberto ${contexto}`);
+      if (panelOpen()) throw new Error(`o cartão ainda está aberto ${contexto}`);
     },
     { timeout, interval: 50 },
   );
@@ -109,7 +109,7 @@ function centro(el: HTMLElement): { clientX: number; clientY: number } {
  * As coordenadas são explícitas de propósito: sem `coords` o user-event dispara
  * tudo em (0,0) e o ponto nunca sai do polígono.
  */
-export async function sairComPonteiro(gatilho: HTMLElement, painel: HTMLElement): Promise<void> {
+export async function leaveWithPointer(gatilho: HTMLElement, painel: HTMLElement): Promise<void> {
   const r = painel.getBoundingClientRect();
   const y1 = Math.min(r.bottom + 40, window.innerHeight - 140);
   await userEvent.pointer([
@@ -126,7 +126,7 @@ export async function sairComPonteiro(gatilho: HTMLElement, painel: HTMLElement)
  * há fechamento agendado, e "continua aberto" passaria mesmo com o componente
  * quebrado.
  */
-export async function entrarNoPainel(gatilho: HTMLElement, painel: HTMLElement): Promise<void> {
+export async function panelEntrar(gatilho: HTMLElement, painel: HTMLElement): Promise<void> {
   await userEvent.pointer([
     { target: gatilho, coords: centro(gatilho) },
     { target: painel, coords: centro(painel) },
@@ -134,7 +134,7 @@ export async function entrarNoPainel(gatilho: HTMLElement, painel: HTMLElement):
 }
 
 /** Contraste WCAG entre duas cores computadas (`rgb(...)` / `rgba(...)`). */
-export function razaoDeContraste(corA: string, corB: string): number {
+export function contrastRatio(corA: string, corB: string): number {
   const luminancia = (cor: string): number => {
     const [r, g, b] = (cor.match(/[\d.]+/g) ?? ['0', '0', '0']).slice(0, 3).map(Number);
     const canal = (v: number): number => {
@@ -155,9 +155,9 @@ export function razaoDeContraste(corA: string, corB: string): number {
  * heading interno, texto do gatilho) e o contrato é o RESULTADO, não o caminho.
  */
 export function nomeAcessivel(painel: HTMLElement): string {
-  const rotulado = painel.getAttribute('aria-labelledby');
-  if (rotulado) {
-    const alvo = painel.ownerDocument.getElementById(rotulado);
+  const labelled = painel.getAttribute('aria-labelledby');
+  if (labelled) {
+    const alvo = painel.ownerDocument.getElementById(labelled);
     if (alvo) return alvo.textContent?.trim() ?? '';
   }
   return painel.getAttribute('aria-label')?.trim() ?? '';

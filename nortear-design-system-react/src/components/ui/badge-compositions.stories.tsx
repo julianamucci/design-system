@@ -4,10 +4,10 @@ import { within, expect } from "storybook/test";
 import { Check, Bell } from "lucide-react";
 import { Badge } from "./badge";
 import {
-  badgeComIconeSource,
-  badgeComoBotaoSource,
-  badgeComoLinkSource,
-  badgeContadorSource,
+  badgeWithIconSource,
+  badgeAsButtonSource,
+  badgeAsLinkSource,
+  badgeCounterSource,
   badgeSource,
 } from "./badge.source";
 
@@ -37,7 +37,7 @@ export const WithIcon: Story = {
   parameters: {
     covers: ["functional.item5", "accessibility.item2", "visual.item3"],
     // A composição é o assunto: o ícone dentro do badge não cabe nos args.
-    docs: { source: { transform: badgeComIconeSource } },
+    docs: { source: { transform: badgeWithIconSource } },
   },
   render: () => (
     <Badge>
@@ -72,7 +72,7 @@ export const CountBadge: Story = {
   parameters: {
     covers: ["visual.item3"],
     // O que se ensina aqui é o contêiner que dá significado ao número.
-    docs: { source: { transform: badgeContadorSource } },
+    docs: { source: { transform: badgeCounterSource } },
   },
   render: () => (
     <span
@@ -107,7 +107,7 @@ export const AsLink: Story = {
   parameters: {
     covers: ["functional.item6", "accessibility.item4", "visual.item4"],
     // O badge NÃO vira o elemento clicável — quem envolve é que recebe o foco.
-    docs: { source: { transform: badgeComoLinkSource } },
+    docs: { source: { transform: badgeAsLinkSource } },
   },
   render: () => (
     <a
@@ -135,7 +135,7 @@ export const AsButton: Story = {
   parameters: {
     covers: ["functional.item6", "accessibility.item4", "visual.item4"],
     // Mesma regra do link, com o botão no lugar da âncora.
-    docs: { source: { transform: badgeComoBotaoSource } },
+    docs: { source: { transform: badgeAsButtonSource } },
   },
   render: () => (
     <button

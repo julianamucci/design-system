@@ -3,8 +3,8 @@ import {
   toggleGroupBarAlignmentSource,
   toggleGroupBarFormattingSource,
   toggleGroupWithSpacingSource,
-  toggleGroupDesabilitadoSource,
-  toggleGroupItemDesabilitadoSource,
+  toggleGroupDisabledSource,
+  toggleGroupItemDisabledSource,
   toggleGroupMultipleSource,
   toggleGroupDefaultSource,
   toggleGroupSelectedSource,
@@ -15,7 +15,7 @@ import {
 } from './toggle-group.source';
 
 /** A linha da raiz — é nela que mora tudo que o grupo decide pelos itens. */
-function raizDe(saida: string): string {
+function rootOf(saida: string): string {
   return saida.split('\n').find((linha) => linha.includes('<ToggleGroup ')) ?? '';
 }
 
@@ -138,14 +138,14 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o grupo desabilitado leva a prop na raiz, e os itens seguem limpos', () => {
-    const saida = toggleGroupDesabilitadoSource();
-    expect(raizDe(saida)).toContain('disabled');
+    const saida = toggleGroupDisabledSource();
+    expect(rootOf(saida)).toContain('disabled');
     expect(saida).not.toContain('<ToggleGroupItem value="left" disabled');
   });
 
   it('o item desabilitado leva a prop nele, e só nele', () => {
-    const saida = toggleGroupItemDesabilitadoSource();
-    expect(raizDe(saida)).not.toContain('disabled');
+    const saida = toggleGroupItemDisabledSource();
+    expect(rootOf(saida)).not.toContain('disabled');
     expect(saida).toContain('<ToggleGroupItem value="center" disabled aria-label="Centralizar">');
     expect(saida).toContain('<ToggleGroupItem value="left" aria-label="Alinhar à esquerda">');
   });
@@ -167,8 +167,8 @@ describe('transforms das stories de composição', () => {
 
   it('com espaçamento o contorno muda de dono: sai da raiz e entra no item', () => {
     const saida = toggleGroupWithSpacingSource();
-    expect(raizDe(saida)).toContain(':spacing="1"');
-    expect(raizDe(saida)).not.toContain('variant=');
+    expect(rootOf(saida)).toContain(':spacing="1"');
+    expect(rootOf(saida)).not.toContain('variant=');
     expect(saida).toContain('<ToggleGroupItem variant="outline" value="bold" aria-label="Negrito">');
   });
 

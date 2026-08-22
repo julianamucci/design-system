@@ -3,11 +3,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { AspectRatio } from './index';
 import {
-  aspectRatioComIframeSource,
+  aspectRatioWithIframeSource,
   aspectRatioWithImageSource,
-  aspectRatioComVideoSource,
+  aspectRatioWithVideoSource,
   aspectRatioDecorativaSource,
-  aspectRatioEmGradeSource,
+  gridAspectRatioSource,
   aspectRatioPlaceholderSource,
 } from './aspect-ratio.source';
 
@@ -68,7 +68,7 @@ export const WithIframe: Story = {
     covers: ['accessibility.item3'],
     // Outro filho, com outro contrato de nome acessível: o quadro pede `title`,
     // e a imagem da do meta pede `alt`.
-    docs: { source: { transform: aspectRatioComIframeSource } },
+    docs: { source: { transform: aspectRatioWithIframeSource } },
   },
   render: () => ({
     components: { AspectRatio },
@@ -100,7 +100,7 @@ export const WithVideo: Story = {
     covers: ['accessibility.item4', 'accessibility.item5'],
     // O filho traz fonte, faixa de legendas e texto de reserva — sub-composição
     // inteira que a do meta esconderia.
-    docs: { source: { transform: aspectRatioComVideoSource } },
+    docs: { source: { transform: aspectRatioWithVideoSource } },
   },
   render: () => ({
     components: { AspectRatio },
@@ -146,7 +146,7 @@ export const InGrid: Story = {
     covers: ['functional.item4'],
     // São várias caixas dentro de uma grade, e é a grade que dá a largura de
     // cada uma: a do meta mostra uma caixa só.
-    docs: { source: { transform: aspectRatioEmGradeSource } },
+    docs: { source: { transform: gridAspectRatioSource } },
   },
   render: () => ({
     components: { AspectRatio },

@@ -7,8 +7,8 @@ import BreadcrumbStory from './BreadcrumbStory.svelte';
 import BreadcrumbDocs from '@/components/docs/BreadcrumbDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import {
-  descreverFalhasDeBreadcrumb,
-  medirBreadcrumb,
+  breadcrumbDescribeFailures,
+  measureBreadcrumb,
   reprovasDeBreadcrumb,
 } from '@shared/testing/breadcrumb-probe';
 import { breadcrumbSource } from './breadcrumb.source';
@@ -95,10 +95,10 @@ export const Playground: Story = {
       // classe digitado errado), <nav> nomeado, <ol> com a classe da folha,
       // aria-current="page" no ÚLTIMO item e sem href, separadores decorativos, e
       // a ordem de leitura sem nenhuma peça decorativa vazada.
-      const falhas = reprovasDeBreadcrumb(medirBreadcrumb(canvasElement));
+      const failures = reprovasDeBreadcrumb(measureBreadcrumb(canvasElement));
       await expect(
-        falhas,
-        falhas.length ? `\n${descreverFalhasDeBreadcrumb(falhas)}\n` : '',
+        failures,
+        failures.length ? `\n${breadcrumbDescribeFailures(failures)}\n` : '',
       ).toEqual([]);
     });
   },

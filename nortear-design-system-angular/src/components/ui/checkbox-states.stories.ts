@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
-import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
+import { disabledReprovas } from '@shared/testing/checkbox-probe';
 import { NdsCheckbox } from './checkbox';
 import { NdsLabel } from './label';
 
@@ -82,12 +82,12 @@ export const Keyboard: Story = {
 // (não é CSF com controls), então o espião é passado como prop direta, não
 // filtrado pela armadilha 5. `mockClear()` no início da play zera a contagem
 // que uma rodada anterior do painel Interactions deixou.
-const espiaoDesabilitado = fn();
+const spyDisabled = fn();
 
 export const Disabled: Story = {
   parameters: { covers: ['functional.item4', 'visual.item4', 'accessibility.item6'] },
   render: () => ({
-    props: { onCheckedChange: espiaoDesabilitado },
+    props: { onCheckedChange: spyDisabled },
     template: `
       <div class="nds-stack" data-spacing="md">
         <div class="nds-cluster" data-spacing="sm" data-disabled="true">
@@ -107,19 +107,19 @@ export const Disabled: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    espiaoDesabilitado.mockClear();
+    spyDisabled.mockClear();
 
     await step(
       'Desmarcada: alcançável pelo Tab, anunciada como desabilitada, sem alternar por clique ou Espaço',
       async () => {
         // Contrato compartilhado — a mesma lista nas cinco stacks.
         const cb = canvasElement.querySelector<HTMLElement>('#dis-off')!;
-        await expect(await reprovasDoDesabilitado(cb, FERRAMENTAS)).toEqual([]);
+        await expect(await disabledReprovas(cb, FERRAMENTAS)).toEqual([]);
       },
     );
 
     await step('O callback de mudança não disparou em nenhuma das tentativas', async () => {
-      await expect(espiaoDesabilitado).not.toHaveBeenCalled();
+      await expect(spyDisabled).not.toHaveBeenCalled();
     });
 
     await step(
@@ -128,7 +128,7 @@ export const Disabled: Story = {
         // Desabilitado não é o mesmo que vazio: quem lê a tela precisa saber que
         // a opção está marcada, ainda que não possa mudá-la.
         const cb = canvasElement.querySelector<HTMLElement>('#dis-on')!;
-        await expect(await reprovasDoDesabilitado(cb, FERRAMENTAS)).toEqual([]);
+        await expect(await disabledReprovas(cb, FERRAMENTAS)).toEqual([]);
         await expect(cb).toHaveAttribute('data-state', 'checked');
       },
     );

@@ -20,7 +20,7 @@ export type AlertDialogArgs = {
   actionLabel: string;
 };
 
-type Composicao = {
+type Composition = {
   open: boolean;
   tone: 'destructive' | 'default';
   showMedia: boolean;
@@ -41,7 +41,7 @@ type Composicao = {
   declaracoes?: string;
 };
 
-const PADRAO: Composicao = {
+const PADRAO: Composition = {
   open: false,
   tone: 'destructive',
   showMedia: false,
@@ -59,8 +59,8 @@ const PADRAO: Composicao = {
  * entram na lista de imports só quando aparecem na marcação — import sobrando
  * num snippet copiável é erro de lint na casa de quem copiou.
  */
-function dialogo(parcial: Partial<Composicao> = {}): string {
-  const c: Composicao = { ...PADRAO, ...parcial };
+function dialogo(parcial: Partial<Composition> = {}): string {
+  const c: Composition = { ...PADRAO, ...parcial };
 
   const nomes = [
     'AlertDialog',
@@ -152,7 +152,7 @@ export function alertDialogSource(
 }
 
 /** Estado aberto: o valor inicial de `open` já monta o painel na tela. */
-export function alertDialogAbertoSource(): string {
+export function alertDialogOpenSource(): string {
   return dialogo({
     open: true,
     triggerLabel: 'Excluir item',
@@ -198,7 +198,7 @@ function manterItem() {
  * direto. `onOpenChange` é o componente PEDINDO a mudança — por isso só chega na
  * saída (Escape ou Cancelar).
  */
-export function alertDialogControladoSource(): string {
+export function alertDialogControlledSource(): string {
   return svelteSnippet(
     `import {
   AlertDialog,
@@ -247,7 +247,7 @@ export function alertDialogWithMidiaSource(): string {
 }
 
 /** Confirmação neutra: a ação não herda a severidade destrutiva. */
-export function alertDialogNeutroSource(): string {
+export function alertDialogNeutralSource(): string {
   return dialogo({
     open: true,
     tone: 'default',
@@ -260,7 +260,7 @@ export function alertDialogNeutroSource(): string {
 }
 
 /** Descrição longa: o painel cresce em altura e continua sendo a fonte da descrição acessível. */
-export function alertDialogDescricaoLongaSource(): string {
+export function alertDialogDescriptionLongaSource(): string {
   return dialogo({
     open: true,
     description:
@@ -272,7 +272,7 @@ export function alertDialogDescricaoLongaSource(): string {
  * Sem descrição: o título sozinho já diz o que se perde. Omitir o subcomponente
  * desde a montagem é o que mantém o painel sem referência pendurada.
  */
-export function alertDialogSemDescricaoSource(): string {
+export function alertDialogNoDescriptionSource(): string {
   return dialogo({
     open: true,
     triggerLabel: 'Descartar rascunho',
@@ -287,7 +287,7 @@ export function alertDialogSemDescricaoSource(): string {
  * layout. Cor, largura máxima e espaçamento do painel não são extensíveis assim
  * — as utilitárias são importadas antes e perdem para a regra do componente.
  */
-export function alertDialogClasseExtraSource(): string {
+export function alertDialogClassNameExtraSource(): string {
   return dialogo({
     open: true,
     showMedia: true,

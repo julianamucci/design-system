@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { NDS_PROGRESS } from './progress';
 import {
-  animacaoDoIndicador,
+  indicadorAnimation,
   indicadorDoProgresso,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
@@ -184,7 +184,7 @@ export const Indeterminate: Story = {
       // import da folha. Medir POSIÇÃO no meio de uma animação infinita é racy
       // por construção; afirmar o nome do keyframes não é.
       await waitFor(async () => {
-        await expect(animacaoDoIndicador(canvasElement)).toBe('nds-progress-indeterminate');
+        await expect(indicadorAnimation(canvasElement)).toBe('nds-progress-indeterminate');
       });
     });
 

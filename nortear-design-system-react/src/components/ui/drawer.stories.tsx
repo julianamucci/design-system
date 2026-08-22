@@ -140,7 +140,7 @@ export const Playground: Story = {
     await fechar();
 
     await step("1. Clicar no gatilho abre o painel, com nome e descrição acessíveis", async () => {
-      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
       const painel = await abrir(trigger);
 
       await expect(painel).toBeVisible();
@@ -155,7 +155,7 @@ export const Playground: Story = {
       await expect(painel).toHaveClass(/nds-drawer-content/);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
-      ).toBe(chamadasAntes + 1);
+      ).toBe(callsBefore + 1);
     });
 
     await step("2. O painel é portalizado para fora da story", async () => {
@@ -188,8 +188,8 @@ export const Playground: Story = {
 
     await step("5. O botão de fechar do rodapé fecha e devolve o foco ao gatilho", async () => {
       const painel = await abrir(trigger);
-      const fecharBtn = within(painel).getByRole("button", { name: ROTULO.cancelar });
-      await userEvent.click(fecharBtn);
+      const closeBtn = within(painel).getByRole("button", { name: ROTULO.cancelar });
+      await userEvent.click(closeBtn);
       await waitForPortalGone("dialog");
       await waitFor(() => {
         if (document.activeElement !== trigger) {

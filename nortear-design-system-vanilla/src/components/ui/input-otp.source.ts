@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -78,7 +78,7 @@ function otpLines(o: InputOtpSnippetOptions): string[] {
 /** A chamada real de `createInputOTP` com as opções da story. */
 export function inputOtpSnippet(o: InputOtpSnippetOptions = {}): string {
   return snippet(
-    importar('input-otp', 'createInputOTP'),
+    importing('input-otp', 'createInputOTP'),
     `const codigo = ${chamada('createInputOTP', otpLines(o))};`,
     montar('codigo'),
   );
@@ -128,8 +128,8 @@ export function inputOtpCompositionSnippet(o: InputOtpCompositionOptions = {}): 
 
   return snippet(
     [
-      importar('input-otp', 'createInputOTP'),
-      o.reenvio ? importar('button', 'createButton') : undefined,
+      importing('input-otp', 'createInputOTP'),
+      o.reenvio ? importing('button', 'createButton') : undefined,
     ]
       .filter((l): l is string => typeof l === 'string')
       .join('\n'),

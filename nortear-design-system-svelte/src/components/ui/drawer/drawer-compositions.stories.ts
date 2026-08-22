@@ -4,9 +4,9 @@ import { waitForPortal } from '@/lib/wait-for-portal';
 import { within, expect } from 'storybook/test';
 import DrawerStory from './DrawerStory.svelte';
 import {
-  drawerComConfirmacaoSource,
-  drawerComFormularioSource,
-  drawerComRolagemSource,
+  drawerWithConfirmSource,
+  drawerWithFormSource,
+  drawerWithScrollSource,
   drawerSource,
 } from './drawer.source';
 
@@ -46,7 +46,7 @@ export const WithForm: Story = {
   parameters: {
     covers: ['visual.item5'],
     docs: {
-      source: { transform: drawerComFormularioSource },
+      source: { transform: drawerWithFormSource },
       description: {
         story:
           'Formulário curto no corpo e par de ações no rodapé. Título e descrição dizem o que está sendo editado — juntos formam o nome e a descrição acessíveis do painel.',
@@ -88,7 +88,7 @@ export const WithConfirmation: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: drawerComConfirmacaoSource },
+      source: { transform: drawerWithConfirmSource },
       description: {
         story:
           'Mensagem curta e par de ações. Vale para confirmação reversível; se a ação for realmente bloqueante, o componente é o AlertDialog.',
@@ -124,7 +124,7 @@ export const WithScroll: Story = {
   },
   parameters: {
     docs: {
-      source: { transform: drawerComRolagemSource },
+      source: { transform: drawerWithScrollSource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho dentro do teto de altura e o rodapé continua visível — é o que separa "conteúdo longo" de "ação fora de alcance".',
@@ -160,10 +160,10 @@ export const WithScroll: Story = {
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
-      const caixaRodape = rodape.getBoundingClientRect();
-      const caixaPainel = painel.getBoundingClientRect();
-      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
-      await expect(caixaRodape.height).toBeGreaterThan(0);
+      const boxFooter = rodape.getBoundingClientRect();
+      const boxPanel = painel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  ratioSnippetSkeleton,
+  ratioSkeletonSnippet,
   skeletonListSnippet,
   skeletonPerfilSnippet,
   skeletonSnippet,
@@ -117,7 +117,7 @@ describe('skeletonListaSnippet', () => {
 
 describe('skeletonEmProporcaoSnippet', () => {
   it('deixa a caixa por conta do container da proporção', () => {
-    const código = ratioSnippetSkeleton();
+    const código = ratioSkeletonSnippet();
     expect(código).toContain("import { createAspectRatio } from '@/components/ui/aspect-ratio';");
     expect(código).toContain('ratio: 16 / 9');
     expect(código).toContain("content: createSkeleton({ shape: 'fill' })");

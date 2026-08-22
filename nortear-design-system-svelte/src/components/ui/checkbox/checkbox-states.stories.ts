@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect, fn, waitFor } from 'storybook/test';
-import { reprovasDoDesabilitado } from '@shared/testing/checkbox-probe';
+import { disabledReprovas } from '@shared/testing/checkbox-probe';
 import { Checkbox } from './index';
 import CheckboxStory from './CheckboxStory.svelte';
 import {
   checkboxWithErrorSource,
-  checkboxDesabilitadoMarcadoSource,
-  checkboxDesabilitadoSource,
+  checkboxDisabledCheckedSource,
+  checkboxDisabledSource,
   checkboxCheckedWithLabelSource,
-  checkboxSelecionarTodosSource,
+  checkboxSelectAllSource,
   checkboxSource,
 } from './checkbox.source';
 
@@ -105,7 +105,7 @@ export const Checked: Story = {
 export const Indeterminate: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { source: { transform: checkboxSelecionarTodosSource } },
+    docs: { source: { transform: checkboxSelectAllSource } },
   },
   render: () => ({
     Component: CheckboxStory,
@@ -132,7 +132,7 @@ const disabledOnCheckedChange = fn();
 export const Disabled: Story = {
   parameters: {
     covers: ['functional.item4', 'accessibility.item6'],
-    docs: { source: { transform: checkboxDesabilitadoSource } },
+    docs: { source: { transform: checkboxDisabledSource } },
   },
   render: () => ({
     Component: CheckboxStory,
@@ -157,7 +157,7 @@ export const Disabled: Story = {
         // afirmaria o contrário da decisão (peça fora da tabulação) e a forma
         // negada nem poderia falhar.
         disabledOnCheckedChange.mockClear();
-        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+        await expect(await disabledReprovas(checkbox, FERRAMENTAS)).toEqual([]);
       },
     );
 
@@ -170,7 +170,7 @@ export const Disabled: Story = {
 export const DisabledChecked: Story = {
   parameters: {
     covers: ['visual.item4'],
-    docs: { source: { transform: checkboxDesabilitadoMarcadoSource } },
+    docs: { source: { transform: checkboxDisabledCheckedSource } },
   },
   render: () => ({
     Component: CheckboxStory,
@@ -189,7 +189,7 @@ export const DisabledChecked: Story = {
     await step(
       'Alcançável pelo Tab, anunciada como desabilitada, e nem clique nem Espaço alternam',
       async () => {
-        await expect(await reprovasDoDesabilitado(checkbox, FERRAMENTAS)).toEqual([]);
+        await expect(await disabledReprovas(checkbox, FERRAMENTAS)).toEqual([]);
       },
     );
 

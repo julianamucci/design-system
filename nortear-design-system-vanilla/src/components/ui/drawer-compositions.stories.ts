@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
 import { createDrawer } from './drawer';
-import { drawerComFormularioSource, drawerSource, drawerSourceWith } from './drawer.source';
+import { drawerWithFormSource, drawerSource, drawerSourceWith } from './drawer.source';
 import { createButton } from './button';
 import { openPeloTrigger } from './drawer.fixtures';
 
@@ -83,7 +83,7 @@ export const WithForm: Story = {
     // assunto, e o snippet do meta a esconderia.
     docs: {
       source: {
-        transform: drawerComFormularioSource({
+        transform: drawerWithFormSource({
           triggerLabel: 'Editar perfil',
           title: 'Editar perfil',
           description: 'Atualize seu nome e e-mail.',
@@ -259,10 +259,10 @@ export const WithScroll: Story = {
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
-      const caixaRodape = rodape.getBoundingClientRect();
-      const caixaPainel = painel.getBoundingClientRect();
-      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
-      await expect(caixaRodape.height).toBeGreaterThan(0);
+      const boxFooter = rodape.getBoundingClientRect();
+      const boxPanel = painel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };

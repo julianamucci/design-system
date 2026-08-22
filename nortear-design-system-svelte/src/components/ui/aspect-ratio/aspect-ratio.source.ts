@@ -127,7 +127,7 @@ export function aspectRatioSource(
  * Composição em grade: larguras diferentes, mesma proporção. É o que prova que
  * a altura é recalculada a partir da largura, e não fixada.
  */
-export function aspectRatioEmGradeSource(): string {
+export function gridAspectRatioSource(): string {
   return svelteSnippet(
     `${IMPORT}
 

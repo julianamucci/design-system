@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  navigationMenuAbertoSource,
-  navigationMenuAtivoSource,
+  navigationMenuOpenSource,
+  navigationMenuActiveSource,
   navigationMenuWithHighlightSource,
   navigationMenuWithPanelSource,
   navigationMenuClosedSource,
@@ -151,7 +151,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('aberto na montagem casa a raiz com o item, e traz a seta indicadora', () => {
-    const saida = navigationMenuAbertoSource();
+    const saida = navigationMenuOpenSource();
     expect(saida).toContain('default-value="produtos"');
     expect(saida).toContain('<NavigationMenuIndicator />');
     // A seta é irmã dos itens DENTRO da lista: fora dela não teria contra o que
@@ -160,7 +160,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a página atual se marca com `active` no destino, um só por barra', () => {
-    const saida = navigationMenuAtivoSource();
+    const saida = navigationMenuActiveSource();
     expect(saida).toContain('<NavigationMenuLink href="#inicio" :active="true">Início</NavigationMenuLink>');
     expect(saida.match(/:active="true"/g)).toHaveLength(1);
     // `aria-current` é o que o componente DERIVA de `active`; escrevê-lo à mão
@@ -213,8 +213,8 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     navigationMenuHorizontalSource,
     navigationMenuVerticalSource,
     navigationMenuClosedSource,
-    navigationMenuAbertoSource,
-    navigationMenuAtivoSource,
+    navigationMenuOpenSource,
+    navigationMenuActiveSource,
     navigationMenuSomenteLinksSource,
     navigationMenuWithPanelSource,
     navigationMenuMegaMenuSource,

@@ -48,7 +48,7 @@ function tag(nome: string, partes: Array<string | ''>): string {
 }
 
 /** Calendário de data única com os imports que todo exemplo dele repete. */
-function calendario(...partes: Array<string | ''>): string {
+function calendar(...partes: Array<string | ''>): string {
   return vueSnippet(
     `${IMPORT_REF}\n${IMPORT_DATA}\n${IMPORT_CALENDAR}\n\n${UMA_DATA}`,
     tag('Calendar', ['v-model="selecionada"', 'locale="pt-BR"', ...partes]),
@@ -158,12 +158,12 @@ export function calendarHojeSource(): string {
 
 /** Legenda operável: mês e ano viram seletores, para saltar de período. */
 export function calendarCaptionWithSelectorsSource(): string {
-  return calendario('layout="month-and-year"');
+  return calendar('layout="month-and-year"');
 }
 
 /** Dois meses lado a lado, para datas que atravessam a virada do mês. */
-export function calendarDoisMesesSource(): string {
-  return calendario(':number-of-months="2"');
+export function calendarDoisMonthsSource(): string {
+  return calendar(':number-of-months="2"');
 }
 
 /**
@@ -171,7 +171,7 @@ export function calendarDoisMesesSource(): string {
  * e nada abaixo dele salta.
  */
 export function calendarSeisWeeksSource(): string {
-  return calendario('fixed-weeks');
+  return calendar('fixed-weeks');
 }
 
 /* --------------------------------------------------------------- composição */
@@ -184,7 +184,7 @@ export function calendarSeisWeeksSource(): string {
  * escolha faz duas coisas — guarda a data e fecha o popover — e isso não cabe
  * na atribuição direta do atalho.
  */
-export function dataSourceCalendarSelector(): string {
+export function dataCalendarSelectorSource(): string {
   return vueSnippet(
     `import { computed, ref } from 'vue'
 import { CalendarDate, getLocalTimeZone, type DateValue } from '@internationalized/date'

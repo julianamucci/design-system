@@ -6,11 +6,11 @@ import { AlertDialog } from './index';
 import AlertDialogStory from './AlertDialogStory.svelte';
 import AlertDialogSemDescricaoStory from './AlertDialogSemDescricaoStory.svelte';
 import {
-  alertDialogClasseExtraSource,
+  alertDialogClassNameExtraSource,
   alertDialogWithMidiaSource,
-  alertDialogDescricaoLongaSource,
-  alertDialogNeutroSource,
-  alertDialogSemDescricaoSource,
+  alertDialogDescriptionLongaSource,
+  alertDialogNeutralSource,
+  alertDialogNoDescriptionSource,
   alertDialogSource,
 } from './alert-dialog.source';
 
@@ -126,7 +126,7 @@ export const Neutral: Story = {
   parameters: {
     covers: ['visual.item3'],
     docs: {
-      source: { transform: alertDialogNeutroSource },
+      source: { transform: alertDialogNeutralSource },
       description: {
         story:
           'Action com tokens padrão do Button. Use para confirmações não destrutivas (publicar, enviar, arquivar).',
@@ -165,7 +165,7 @@ export const LongDescription: Story = {
   parameters: {
     covers: ['visual.item4'],
     docs: {
-      source: { transform: alertDialogDescricaoLongaSource },
+      source: { transform: alertDialogDescriptionLongaSource },
       description: {
         story:
           'Descrição com duas frases completas. O painel cresce em altura e a descrição continua sendo a fonte do aria-describedby.',
@@ -221,7 +221,7 @@ export const WithoutDescription: Story = {
   parameters: {
     covers: ['accessibility.item8'],
     docs: {
-      source: { transform: alertDialogSemDescricaoSource },
+      source: { transform: alertDialogNoDescriptionSource },
       description: {
         story:
           'Confirmação sem descrição: o título sozinho já diz o que se perde. O painel mantém o nome acessível e fica sem descrição acessível — sem referência pendurada.',
@@ -330,7 +330,7 @@ export const Responsive: Story = {
 export const ExtraClass: Story = {
   parameters: {
     docs: {
-      source: { transform: alertDialogClasseExtraSource },
+      source: { transform: alertDialogClassNameExtraSource },
       description: { story: 'Extensibilidade por classe: o painel recorta o conteúdo no próprio raio e o bloco de mídia deixa de encolher. É o caminho descrito em props.extensibility — o design system não expõe classe utilitária de cor, mas painel e blocos aceitam classes de layout.' },
     },
   },

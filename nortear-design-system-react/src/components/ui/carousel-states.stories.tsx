@@ -8,7 +8,7 @@ import {
   CarouselNext,
 } from "./carousel";
 import { SlideCard, viewportVisible } from "./carousel.fixtures";
-import { carouselSource, carouselUltimoSlideSource } from "./carousel.source";
+import { carouselSource, carouselLastSlideSource } from "./carousel.source";
 
 const meta = {
   title: "UI/Carousel/States",
@@ -105,7 +105,7 @@ export const LastSlide: Story = {
     docs: {
       // Montar já no fim é uma opção do motor (`startIndex`), e é ela que cria
       // o estado — a seta desabilita sozinha, sem estado autoral nenhum.
-      source: { transform: carouselUltimoSlideSource },
+      source: { transform: carouselLastSlideSource },
       description: {
         story:
           "No fim do percurso sem repetição avançar deixa de ser possível e a seta seguinte fica desabilitada.",

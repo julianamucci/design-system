@@ -17,9 +17,9 @@ export type ChartArgs = {
 };
 
 /** Mesmo valor de `CHART_EMPTY_LABEL`; só difere do padrão entra no snippet. */
-const FRASE_VAZIA_PADRAO = 'Sem dados para exibir';
+const FRASE_VAZIA_DEFAULT = 'Sem dados para exibir';
 
-const ROTULO_PADRAO = 'Acessos mensais no desktop, de janeiro a junho';
+const LABEL_DEFAULT = 'Acessos mensais no desktop, de janeiro a junho';
 
 const DATA_SEMESTER = `const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const series = [{ name: 'Vendas', data: [186, 305, 237, 73, 209, 214] }];`;
@@ -67,10 +67,10 @@ export function chartSource(_gerado?: string, ctx?: { args?: Partial<ChartArgs> 
       a.height !== undefined ? `height={${a.height}}` : '',
       a.class ? `class="${a.class}"` : '',
       a.renderer && a.renderer !== 'svg' ? `renderer="${a.renderer}"` : '',
-      a.emptyLabel && a.emptyLabel !== FRASE_VAZIA_PADRAO ? `emptyLabel="${a.emptyLabel}"` : '',
+      a.emptyLabel && a.emptyLabel !== FRASE_VAZIA_DEFAULT ? `emptyLabel="${a.emptyLabel}"` : '',
       // O rótulo é o contrato de acessibilidade do componente: o snippet mostra
       // sempre, porque é ele que substitui o desenho para quem não o enxerga.
-      `aria-label="${a['aria-label'] ?? ROTULO_PADRAO}"`,
+      `aria-label="${a['aria-label'] ?? LABEL_DEFAULT}"`,
     ]),
   );
 }
@@ -143,7 +143,7 @@ export function chartPizzaSource(): string {
  * Sem `aria-label` de propósito — sem desenho não há papel de imagem, e a frase
  * é o conteúdo que o leitor de tela precisa alcançar.
  */
-export function chartVazioSource(): string {
+export function chartEmptySource(): string {
   return svelteSnippet(
     script(['buildBarOption']),
     grafico([
@@ -172,7 +172,7 @@ export function chartMultiSerieSource(): string {
 }
 
 /** Configuração `WithCaption`: a legenda forçada mesmo com uma série só. */
-export function chartComLegendaSource(): string {
+export function chartWithCaptionSource(): string {
   return svelteSnippet(
     script(['buildBarOption'], DATA_SERIE_UNICA),
     grafico([
@@ -185,7 +185,7 @@ export function chartComLegendaSource(): string {
 }
 
 /** Configuração `MultipleSeries`: várias séries com título no próprio desenho. */
-export function chartComTituloSource(): string {
+export function chartWithTitleSource(): string {
   return svelteSnippet(
     script(['buildBarOption'], DATA_TRES_APARELHOS),
     grafico([
@@ -201,7 +201,7 @@ export function chartComTituloSource(): string {
  * Composição `InlineTitle`: o título dentro do desenho, para quando o gráfico é
  * servido sozinho. Sem rótulo autoral, o container cai no padrão genérico.
  */
-export function chartTituloNoDesenhoSource(): string {
+export function designChartTitleSource(): string {
   return svelteSnippet(
     script(['buildBarOption'], DATA_SERIE_UNICA),
     grafico([

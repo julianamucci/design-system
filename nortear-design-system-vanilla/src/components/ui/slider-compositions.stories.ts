@@ -5,7 +5,7 @@ import { withLabel } from './slider.fixtures';
 import { sliderSource, sliderSourceWith } from './slider.source';
 import { createButton } from './button';
 import { createInput } from './input';
-import { apertarTecla, valorDaAlca } from '@shared/testing/slider-probe';
+import { apertarTecla, handleValue } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
   tags: ['form'],
@@ -50,7 +50,7 @@ export const Volume: Story = {
 
     await step('O texto do valor acompanha a alça', async () => {
       const live = canvasElement.querySelector<HTMLElement>('[aria-live="polite"]')!;
-      const antes = valorDaAlca(canvas.getByRole('slider'));
+      const antes = handleValue(canvas.getByRole('slider'));
       await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
       await expect(live).toHaveTextContent(`${Math.min(100, antes + 1)}%`);
     });
@@ -84,9 +84,9 @@ export const Glow: Story = {
     const canvas = within(canvasElement);
 
     await step('A seta anda um passo inteiro, não uma unidade', async () => {
-      const antes = valorDaAlca(canvas.getByRole('slider'));
+      const antes = handleValue(canvas.getByRole('slider'));
       await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 5));
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 5));
     });
   },
 };
@@ -248,12 +248,12 @@ export const InForm: Story = {
 
     await step('O commit registra o valor confirmado', async () => {
       await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
-      const valor = valorDaAlca(canvas.getByRole('slider'));
+      const valor = handleValue(canvas.getByRole('slider'));
       await expect(canvas.getByText(`Commitado: ${valor}%`)).toBeVisible();
     });
 
     await step('Submeter usa o último valor confirmado', async () => {
-      const valor = valorDaAlca(canvas.getByRole('slider'));
+      const valor = handleValue(canvas.getByRole('slider'));
       await userEvent.click(canvas.getByRole('button', { name: 'Salvar preset' }));
       await expect(canvas.getByText(`Enviado: volume=${valor}%`)).toBeVisible();
     });

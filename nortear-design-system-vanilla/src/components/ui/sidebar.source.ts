@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   opcoes,
   snippet,
   texto,
@@ -42,7 +42,7 @@ export type SidebarSnippetOptions = {
   /** Rótulo do item do rodapé. `false` monta a barra sem rodapé. */
   rodape?: string | false;
   /** `false` monta a página sem gatilho — a barra fica sempre visível. */
-  comGatilho?: boolean;
+  withTrigger?: boolean;
   /** Mostra o `destroy()` — quem tira a barra da página o chama. */
   mostrarDestroy?: boolean;
 };
@@ -73,7 +73,7 @@ function iconsOf(grupos: SidebarGroupSnippet[], extras: string[] = []): string[]
 }
 
 /** `import { House, createElement } from 'lucide';` — só quando há ícone. */
-function importarIcones(nomes: string[]): string | undefined {
+function importingIcons(nomes: string[]): string | undefined {
   if (nomes.length === 0) return undefined;
   return `import { ${[...nomes, 'createElement'].join(', ')} } from 'lucide';`;
 }
@@ -172,7 +172,7 @@ rodape.appendChild(menuDoRodape);`;
  */
 function pageBlock(o: SidebarSnippetOptions): string {
   const gatilho =
-    o.comGatilho === false
+    o.withTrigger === false
       ? `// Sem gatilho: a barra fica sempre visível, como num painel fixo.`
       : `principal.appendChild(createSidebarTrigger(barra.toggle));`;
 
@@ -221,13 +221,13 @@ export function sidebarSnippet(o: SidebarSnippetOptions = {}): string {
     ...(grupos.length > 1 ? ['createSidebarSeparator'] : []),
     ...(comRodape ? ['createSidebarFooter', 'createSidebarMenu', 'createSidebarMenuItem'] : []),
     ...(o.busca ? ['createSidebarInput'] : []),
-    ...(o.comGatilho === false ? [] : ['createSidebarTrigger']),
+    ...(o.withTrigger === false ? [] : ['createSidebarTrigger']),
   ].sort();
 
   return snippet(
     [
-      importar('sidebar', ...nomes),
-      importarIcones(iconsOf(grupos, comRodape ? ['User'] : [])),
+      importing('sidebar', ...nomes),
+      importingIcons(iconsOf(grupos, comRodape ? ['User'] : [])),
     ]
       .filter(Boolean)
       .join('\n'),
@@ -268,8 +268,8 @@ export function sidebarWithActionsSnippet(o: SidebarSnippetOptions = {}): string
 
   return snippet(
     [
-      importar('sidebar', ...nomes),
-      importarIcones(['Ellipsis', 'LayoutGrid', 'Plus']),
+      importing('sidebar', ...nomes),
+      importingIcons(['Ellipsis', 'LayoutGrid', 'Plus']),
     ].join('\n'),
     barBlock(o),
     headerBlock({}),
@@ -349,7 +349,7 @@ export function sidebarWithSubmenuSnippet(o: SidebarSnippetOptions = {}): string
   ].sort();
 
   return snippet(
-    [importar('sidebar', ...nomes), importarIcones(['House', 'LayoutGrid'])].join('\n'),
+    [importing('sidebar', ...nomes), importingIcons(['House', 'LayoutGrid'])].join('\n'),
     barBlock(o),
     headerBlock({}),
     `const menu = createSidebarMenu({ 'aria-labelledby': 'grupo-componentes' });
@@ -424,7 +424,7 @@ export function sidebarWithSkeletonSnippet(o: SidebarSnippetOptions = {}): strin
   ].sort();
 
   return snippet(
-    importar('sidebar', ...nomes),
+    importing('sidebar', ...nomes),
     barBlock(o),
     headerBlock({}),
     `const menu = createSidebarMenu({ 'aria-labelledby': 'grupo-carregando' });

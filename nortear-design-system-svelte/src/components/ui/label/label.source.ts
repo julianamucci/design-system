@@ -99,7 +99,7 @@ export function labelDisabledSiblingSource(): string {
 }
 
 /** Desabilitado pelo bloco: um ancestral marcado esmaece rótulo e campo juntos. */
-export function blockSourceLabelDisabled(): string {
+export function blockLabelDisabledSource(): string {
   return svelteSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="xs" data-disabled="true">
@@ -110,7 +110,7 @@ export function blockSourceLabelDisabled(): string {
 }
 
 /** Composição com campo de texto: clicar no rótulo leva o foco ao campo. */
-export function labelComCampoSource(): string {
+export function labelWithFieldSource(): string {
   return svelteSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="xs">

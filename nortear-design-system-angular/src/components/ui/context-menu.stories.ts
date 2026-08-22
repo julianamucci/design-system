@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_CONTEXT_MENU } from './context-menu';
-import { abrirPorGesto } from './context-menu.fixtures';
+import { gestoOpen } from './context-menu.fixtures';
 import { NdsContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 
 type ContextMenuArgs = {
@@ -53,7 +53,7 @@ const meta: Meta<ContextMenuArgs> = {
   parameters: {
     layout: 'centered',
     docs: { page: withAutoDocsTab(NdsContextMenuDocs) },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
   },
   argTypes: {
     triggerLabel: { control: 'text', description: 'Texto da área que responde ao gesto.' },
@@ -127,12 +127,12 @@ export const Playground: Story = {
     await step('O botão direito abre o menu ONDE o ponteiro estava', async () => {
       // O popup não é ancorado no gatilho: ele nasce no ponto do gesto. É a
       // única diferença real em relação ao DropdownMenu.
-      const menu = await abrirPorGesto(area());
-      const caixaArea = area().getBoundingClientRect();
-      const caixaMenu = menu.getBoundingClientRect();
-      const centro = { x: caixaArea.left + caixaArea.width / 2, y: caixaArea.top + caixaArea.height / 2 };
-      await expect(Math.abs(caixaMenu.left - centro.x)).toBeLessThan(24);
-      await expect(Math.abs(caixaMenu.top - centro.y)).toBeLessThan(24);
+      const menu = await gestoOpen(area());
+      const boxArea = area().getBoundingClientRect();
+      const boxMenu = menu.getBoundingClientRect();
+      const centro = { x: boxArea.left + boxArea.width / 2, y: boxArea.top + boxArea.height / 2 };
+      await expect(Math.abs(boxMenu.left - centro.x)).toBeLessThan(24);
+      await expect(Math.abs(boxMenu.top - centro.y)).toBeLessThan(24);
     });
 
     await step('Os itens são itens de menu de verdade', async () => {
@@ -166,13 +166,13 @@ export const Playground: Story = {
     });
 
     await step('Clique fora fecha', async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await userEvent.click(document.body);
       await waitForPortalVanish('menu');
     });
 
     await step('Escolher um item avisa quem escuta', async () => {
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       await userEvent.click(
         within(menu).getByText('Duplicar').closest('[data-slot="context-menu-item"]')!,
       );
@@ -185,7 +185,7 @@ export const Playground: Story = {
       // descreve o menu ABERTO, com itens, divisória e atalho. Até esta passada
       // a play terminava escolhendo um item, ou seja, com o menu fechado: a
       // declaração de cobertura visual apontava para uma foto da área vazia.
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       await expect(menu).toBeVisible();
     });
   },

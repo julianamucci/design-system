@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import {
   radioGroupCartoesSource,
-  radioGroupEmFormularioSource,
+  formRadioGroupSource,
   radioGroupFieldsetSource,
   radioGroupPagamentoSource,
 } from './radio-group.source';
@@ -127,7 +127,7 @@ export const WithFieldsetLegend: Story = {
 export const InForm: Story = {
   parameters: {
     // O assunto é o grupo convivendo com outros campos e com o envio.
-    docs: { source: { transform: radioGroupEmFormularioSource } },
+    docs: { source: { transform: formRadioGroupSource } },
   },
   render: () => ({
     components: { RadioGroup, RadioGroupItem, Label, Button },

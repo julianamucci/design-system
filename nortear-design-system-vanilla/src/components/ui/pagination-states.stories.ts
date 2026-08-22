@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fireEvent, fn, userEvent, within, expect } from 'storybook/test';
-import { alvosAbaixoDoMinimo, contrastesDaFaixa } from '@shared/testing/pagination-probe';
+import { minimumTargetsBelow, rangeContrastes } from '@shared/testing/pagination-probe';
 import { createPagination } from './pagination';
 import { wrap } from './pagination.fixtures';
 import { paginationSource, paginationSourceWith } from './pagination.source';
 
-const ROTULO_ANTERIOR = 'Ir para a página anterior';
-const ROTULO_PROXIMA = 'Ir para a próxima página';
+const LABEL_PREVIOUS = 'Ir para a página anterior';
+const LABEL_NEXT = 'Ir para a próxima página';
 
 /** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
 const onPageChange = fn();
@@ -72,11 +72,11 @@ export const Hover: Story = {
       // elemento devolvido no centro da caixa.
       await expect(getComputedStyle(alvo).cursor).toBe('pointer');
       const caixa = alvo.getBoundingClientRect();
-      const noCentro = document.elementFromPoint(
+      const inCenter = document.elementFromPoint(
         caixa.left + caixa.width / 2,
         caixa.top + caixa.height / 2,
       );
-      await expect(alvo.contains(noCentro)).toBe(true);
+      await expect(alvo.contains(inCenter)).toBe(true);
     });
   },
 };
@@ -108,7 +108,7 @@ export const DisabledFirst: Story = {
   render: faixa('Paginação na primeira página', 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const anterior = canvas.getByRole('link', { name: ROTULO_ANTERIOR });
+    const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
 
     await step('Anterior está marcado como desabilitado', async () => {
       // visual.item4 — em `<a>` não existe `disabled`; o par correto é
@@ -129,10 +129,10 @@ export const DisabledFirst: Story = {
     });
 
     await step('Próxima continua ativo', async () => {
-      const proxima = canvas.getByRole('link', { name: ROTULO_PROXIMA });
-      await expect(proxima).not.toHaveAttribute('aria-disabled');
+      const next = canvas.getByRole('link', { name: LABEL_NEXT });
+      await expect(next).not.toHaveAttribute('aria-disabled');
       onPageChange.mockClear();
-      await userEvent.click(proxima);
+      await userEvent.click(next);
       await expect(onPageChange).toHaveBeenLastCalledWith(2);
     });
   },
@@ -149,23 +149,23 @@ export const DisabledLast: Story = {
   render: faixa('Paginação na última página', 5),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const proxima = canvas.getByRole('link', { name: ROTULO_PROXIMA });
+    const next = canvas.getByRole('link', { name: LABEL_NEXT });
 
     await step('Próxima está marcado como desabilitado', async () => {
-      await expect(proxima).toHaveAttribute('aria-disabled', 'true');
-      await expect(proxima).toHaveAttribute('tabindex', '-1');
-      await expect(getComputedStyle(proxima).pointerEvents).toBe('none');
+      await expect(next).toHaveAttribute('aria-disabled', 'true');
+      await expect(next).toHaveAttribute('tabindex', '-1');
+      await expect(getComputedStyle(next).pointerEvents).toBe('none');
     });
 
     await step('Clicar em Próxima não navega', async () => {
       // functional.item3
       onPageChange.mockClear();
-      await fireEvent.click(proxima);
+      await fireEvent.click(next);
       await expect(onPageChange).not.toHaveBeenCalled();
     });
 
     await step('Anterior continua ativo', async () => {
-      await expect(canvas.getByRole('link', { name: ROTULO_ANTERIOR })).not.toHaveAttribute(
+      await expect(canvas.getByRole('link', { name: LABEL_PREVIOUS })).not.toHaveAttribute(
         'aria-disabled',
       );
     });
@@ -182,7 +182,7 @@ export const Focus: Story = {
     await step('Tab percorre os controles na ordem visual', async () => {
       // functional.item4 — a ordem de foco é a do DOM: anterior, 1..5, próxima.
       const esperados = [
-        canvas.getByRole('link', { name: ROTULO_ANTERIOR }),
+        canvas.getByRole('link', { name: LABEL_PREVIOUS }),
         canvas.getByRole('link', { name: 'Ir para página 1' }),
         canvas.getByRole('link', { name: 'Ir para página 2' }),
       ].filter((el) => el.getAttribute('tabindex') !== '-1');
@@ -214,14 +214,14 @@ export const Contrast: Story = {
     await step('Todo link passa dos 4.5:1 exigidos para texto', async () => {
       // accessibility.item2 — o texto da faixa tem 14px, tamanho normal pela
       // WCAG (grande é >=24px, ou >=18.66px em negrito), então o limite é 4.5.
-      const medidas = contrastesDaFaixa(canvasElement);
+      const medidas = rangeContrastes(canvasElement);
       await expect(medidas.length).toBe(7);
-      await expect(JSON.stringify(medidas.filter((m) => m.razao < 4.5))).toBe('[]');
+      await expect(JSON.stringify(medidas.filter((m) => m.ratio < 4.5))).toBe('[]');
     });
 
     await step('Todo controle alcança o alvo de toque mínimo', async () => {
       // accessibility.item6
-      await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe('[]');
+      await expect(JSON.stringify(minimumTargetsBelow(canvasElement))).toBe('[]');
     });
   },
 };

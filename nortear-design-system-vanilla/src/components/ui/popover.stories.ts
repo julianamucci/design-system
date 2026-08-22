@@ -176,7 +176,7 @@ export const Playground: Story = {
 
     await step('Clicar no gatilho abre o painel com role=dialog', async () => {
       await fechar(gatilho);
-      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
       const p = await abrir(gatilho);
       await expect(p).toHaveAttribute('role', 'dialog');
       await expect(p).toHaveClass(/nds-popover-content/);
@@ -184,7 +184,7 @@ export const Playground: Story = {
       await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
-      ).toBe(chamadasAntes + 1);
+      ).toBe(callsBefore + 1);
     });
 
     await step('Aberto, aria-controls aponta para o id real do painel', async () => {

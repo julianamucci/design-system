@@ -172,7 +172,7 @@ export const DisabledTab: Story = {
 
     // Precondição de CADA passo, e não herança do anterior: o painel Interactions
     // reexecuta a play no mesmo DOM.
-    const voltarAoInicio = async () => {
+    const startVoltar = async () => {
       if (primeira.getAttribute('aria-selected') !== 'true') await userEvent.click(primeira);
       await waitFor(() => expect(primeira.getAttribute('aria-selected')).toBe('true'));
     };
@@ -192,7 +192,7 @@ export const DisabledTab: Story = {
     });
 
     await step('A seta ALCANÇA a aba desabilitada, e não a ativa', async () => {
-      await voltarAoInicio();
+      await startVoltar();
       primeira.focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(desabilitada).toHaveFocus());
@@ -203,7 +203,7 @@ export const DisabledTab: Story = {
     });
 
     await step('Enter e Espaço com ela em foco não trocam o painel', async () => {
-      await voltarAoInicio();
+      await startVoltar();
       desabilitada.focus();
       await userEvent.keyboard('{Enter}');
       await userEvent.keyboard(' ');
@@ -212,7 +212,7 @@ export const DisabledTab: Story = {
     });
 
     await step('O clique também não', async () => {
-      await voltarAoInicio();
+      await startVoltar();
       // `pointerEventsCheck: 0` porque o alvo tem `pointer-events: none`: sem
       // isso o userEvent recusa o clique e o teste passaria sem exercitar nada.
       await userEvent.click(desabilitada, { pointerEventsCheck: 0 });
@@ -226,7 +226,7 @@ export const DisabledTab: Story = {
       desabilitada.focus();
       await userEvent.keyboard('{ArrowRight}');
       await waitFor(() => expect(ultima).toHaveFocus());
-      await voltarAoInicio();
+      await startVoltar();
     });
   },
 };

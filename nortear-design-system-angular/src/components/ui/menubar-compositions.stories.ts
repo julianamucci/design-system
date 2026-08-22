@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -32,7 +32,7 @@ const meta: Meta = {
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {
         component:
@@ -126,25 +126,25 @@ export const WithSubmenu: Story = {
   play: async ({ step }) => {
     const corpo = within(document.body);
     const menu = await waitForPortal('menu');
-    const subGatilho = within(menu).getByRole('menuitem', { name: 'Exportar' });
+    const subTrigger = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre outro menu', async () => {
-      await expect(subGatilho.getAttribute('aria-haspopup')).toBe('menu');
-      await expect(subGatilho.getAttribute('aria-expanded')).toBe('false');
+      await expect(subTrigger.getAttribute('aria-haspopup')).toBe('menu');
+      await expect(subTrigger.getAttribute('aria-expanded')).toBe('false');
     });
 
     await step('Seta Baixo alcança o sub-gatilho; Seta Direita abre o submenu', async () => {
       // Idempotente: só navega e abre quando ainda está fechado.
-      if (subGatilho.getAttribute('aria-expanded') !== 'true') {
+      if (subTrigger.getAttribute('aria-expanded') !== 'true') {
         await userEvent.keyboard('{ArrowDown}');
         await waitFor(async () => {
-          await expect(document.activeElement).toBe(subGatilho);
+          await expect(document.activeElement).toBe(subTrigger);
         });
         await userEvent.keyboard('{ArrowRight}');
       }
 
       await waitFor(async () => {
-        await expect(subGatilho.getAttribute('aria-expanded')).toBe('true');
+        await expect(subTrigger.getAttribute('aria-expanded')).toBe('true');
         // Dois painéis abertos ao mesmo tempo: o pai continua no lugar, é o que
         // distingue submenu de troca de menu.
         await expect(corpo.getAllByRole('menu')).toHaveLength(2);

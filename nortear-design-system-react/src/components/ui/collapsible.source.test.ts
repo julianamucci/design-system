@@ -1,21 +1,21 @@
 import { describe, expect, it } from 'vitest';
 import {
-  collapsibleAbertoPorPadraoSource,
-  collapsibleComBotaoSource,
-  collapsibleComIconeSource,
-  collapsibleControladoSource,
-  collapsibleDesabilitadoSource,
+  defaultCollapsibleOpenSource,
+  collapsibleWithButtonSource,
+  collapsibleWithIconSource,
+  collapsibleControlledSource,
+  collapsibleDisabledSource,
   collapsibleEstruturadoSource,
   collapsibleSource,
 } from './collapsible.source';
 
 const TODAS = [
   collapsibleSource,
-  collapsibleAbertoPorPadraoSource,
-  collapsibleControladoSource,
-  collapsibleDesabilitadoSource,
-  collapsibleComBotaoSource,
-  collapsibleComIconeSource,
+  defaultCollapsibleOpenSource,
+  collapsibleControlledSource,
+  collapsibleDisabledSource,
+  collapsibleWithButtonSource,
+  collapsibleWithIconSource,
   collapsibleEstruturadoSource,
 ];
 
@@ -23,8 +23,8 @@ describe('collapsibleSource', () => {
   it('importa as três peças do design system, e não a lib headless', () => {
     const saida = collapsibleSource();
     expect(saida).toContain('} from "@/components/ui/collapsible";');
-    for (const peca of ['Collapsible,', 'CollapsibleTrigger,', 'CollapsibleContent,']) {
-      expect(saida).toContain(peca);
+    for (const part of ['Collapsible,', 'CollapsibleTrigger,', 'CollapsibleContent,']) {
+      expect(saida).toContain(part);
     }
   });
 
@@ -57,9 +57,9 @@ describe('collapsibleSource', () => {
   });
 
   it('não deixa o espião do control virar atributo', () => {
-    const espiao = (() => 'CORPO_DO_MOCK') as never;
+    const spy = (() => 'CORPO_DO_MOCK') as never;
     const saida = collapsibleSource(undefined, {
-      args: { defaultOpen: espiao, disabled: espiao },
+      args: { defaultOpen: spy, disabled: spy },
     });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).not.toContain('defaultOpen');
@@ -68,11 +68,11 @@ describe('collapsibleSource', () => {
 
 describe('estados', () => {
   it('defaultOpen é ponto de partida declarado na montagem', () => {
-    expect(collapsibleAbertoPorPadraoSource()).toContain('<Collapsible defaultOpen');
+    expect(defaultCollapsibleOpenSource()).toContain('<Collapsible defaultOpen');
   });
 
   it('o modo controlado ensina o par open + onOpenChange sobre estado de fora', () => {
-    const saida = collapsibleControladoSource();
+    const saida = collapsibleControlledSource();
     expect(saida).toContain('import { useState } from "react";');
     // Um import por módulo: `Button` e `buttonVariants` vêm na mesma cláusula.
     expect(saida.match(/from "@\/components\/ui\/button"/g)).toHaveLength(1);
@@ -84,7 +84,7 @@ describe('estados', () => {
   });
 
   it('desabilitado tira a rotação da seta, porque não há estado para animar', () => {
-    const saida = collapsibleDesabilitadoSource();
+    const saida = collapsibleDisabledSource();
     expect(saida).toContain('disabled');
     expect(saida).toContain('className="nds-icon nds-shrink-0"');
     expect(saida).not.toContain('nds-chevron"');
@@ -93,13 +93,13 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('a variante de contorno é do gatilho', () => {
-    const saida = collapsibleComBotaoSource();
+    const saida = collapsibleWithButtonSource();
     expect(saida).toContain('buttonVariants({ variant: "outline" })');
     expect(saida).toContain('Opção avançada 3');
   });
 
   it('os dois ícones do gatilho ficam fora do nome acessível', () => {
-    const saida = collapsibleComIconeSource();
+    const saida = collapsibleWithIconSource();
     expect(saida).toContain('import { ChevronDown, SlidersHorizontal } from "lucide-react";');
     expect(saida.match(/aria-hidden="true"/g)).toHaveLength(2);
     expect(saida).toContain('Filtros avançados');

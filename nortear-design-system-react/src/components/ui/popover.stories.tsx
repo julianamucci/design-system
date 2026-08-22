@@ -164,9 +164,9 @@ export const Playground: Story = {
 
     await step("O painel é nomeado pelo título e descrito pela descrição", async () => {
       const dialogo = screen.getByRole("dialog");
-      const idTitulo = dialogo.getAttribute("aria-labelledby");
-      await expect(idTitulo).toBeTruthy();
-      await expect(document.getElementById(idTitulo!)).toHaveAttribute(
+      const idTitle = dialogo.getAttribute("aria-labelledby");
+      await expect(idTitle).toBeTruthy();
+      await expect(document.getElementById(idTitle!)).toHaveAttribute(
         "data-slot", "popover-title",
       );
       const idDescricao = dialogo.getAttribute("aria-describedby");

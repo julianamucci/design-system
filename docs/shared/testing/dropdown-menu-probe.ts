@@ -7,14 +7,14 @@
 //
 // Três armadilhas já tropeçadas e evitadas aqui:
 //  - `console.log` não chega ao terminal (o addon instrumenta o console dentro
-//    da `play`); o canal é a exceção — ver `lancarSonda`.
+//    da `play`); o canal é a exceção — ver `lancarProbe`.
 //  - atributo de presença casa valor "false": todo seletor de presença usa
 //    `[attr]:not([attr="false"])`.
 //  - divergência de nome de classe entre stacks faz o seletor não casar e o
 //    campo vir `null`; os seletores aceitam as formas conhecidas e o retrato
 //    registra QUAL casou (`classes`).
 
-import { razao, fundoEfetivo, type Contraste } from './cor';
+import { ratio, backgroundEffective, type Contraste } from './cor';
 
 export type RetratoDeElemento = {
   texto: string;
@@ -33,7 +33,7 @@ export type RetratoDeElemento = {
   outrosData: string[];
 };
 
-export type RetratoDoPainel = {
+export type PanelRetrato = {
   tag: string;
   role: string | null;
   classes: string;
@@ -47,24 +47,24 @@ export type RetratoDoPainel = {
   ancoradoNoBody: boolean;
 } | null;
 
-export type RetratoDoTeclado = {
+export type KeyboardRetrato = {
   /** Quem recebe o foco assim que o painel abre. */
-  focoAoAbrir: string | null;
+  openFocus: string | null;
   /** Quantos itens estão no percurso do Tab (roving tabindex exige 1). */
-  itensTabulaveis: number;
-  depoisDeSetaBaixo: string | null;
-  depoisDeSetaCima: string | null;
-  depoisDeEnd: string | null;
-  depoisDeHome: string | null;
+  itemsTabulaveis: number;
+  arrowBaixoAfter: string | null;
+  arrowCimaAfter: string | null;
+  endAfter: string | null;
+  homeAfter: string | null;
   /** Typeahead: para onde o foco vai ao digitar uma letra. */
-  depoisDeDigitar: string | null;
+  digitarAfter: string | null;
   /** A seta pousa no item desabilitado? WAI-ARIA permite; nem toda lib faz. */
-  setaAlcancaDesabilitado: boolean | null;
+  arrowAlcancaDisabled: boolean | null;
 };
 
 export type RetratoDoDropdown = {
   gatilho: RetratoDeElemento | null;
-  painel: RetratoDoPainel;
+  painel: PanelRetrato;
   /** `role="group"` dentro do menu e o nome acessível de cada um. */
   grupos: Array<{ nomeAcessivel: string | null; slot: string | null }>;
   rotulos: RetratoDeElemento[];
@@ -74,18 +74,18 @@ export type RetratoDoDropdown = {
   /** Indicador visual do item marcado — `display` computado por estado. */
   indicadores: Array<{ pai: string; display: string; classes: string }>;
   atalhos: Array<{ texto: string; classes: string; ariaHidden: string | null; encostaNaDireita: boolean }>;
-  teclado: RetratoDoTeclado | null;
+  teclado: KeyboardRetrato | null;
   submenu: {
-    subGatilho: RetratoDeElemento | null;
-    abriuPorSeta: boolean | null;
+    subTrigger: RetratoDeElemento | null;
+    arrowAbriu: boolean | null;
     /** O submenu nasce ao lado (não por cima) do menu pai? */
-    aoLado: boolean | null;
+    onSide: boolean | null;
     /** O submenu cobre os irmãos do item que o abriu? */
     sobrepoe: boolean | null;
-    fechouPorEscape: boolean | null;
+    escapeFechou: boolean | null;
   } | null;
   /** Para onde o foco volta depois de Escape. */
-  focoAoFechar: string | null;
+  closeFocus: string | null;
 };
 
 const DATA_IGNORADOS = new Set(['data-slot', 'data-testid']);
@@ -121,7 +121,7 @@ function retratar(el: HTMLElement): RetratoDeElemento {
   };
 }
 
-function retratarPainel(painel: HTMLElement | null): RetratoDoPainel {
+function retratarPanel(painel: HTMLElement | null): PanelRetrato {
   if (!painel) return null;
   const s = getComputedStyle(painel);
   return {
@@ -139,7 +139,7 @@ function retratarPainel(painel: HTMLElement | null): RetratoDoPainel {
 }
 
 /** O painel aberto: o primeiro `role="menu"` do documento. */
-export function acharPainel(): HTMLElement | null {
+export function findPanel(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[role="menu"]');
 }
 
@@ -153,7 +153,7 @@ async function ate(cond: () => boolean, limite = 1200): Promise<boolean> {
   return cond();
 }
 
-export type OpcoesDaSonda = {
+export type ProbeOptions = {
   /** O botão que abre o menu; `null` onde a story não tem gatilho. */
   gatilho?: HTMLElement | null;
   /** `userEvent` de `storybook/test` — injetado para o colhedor não importar nada. */
@@ -162,7 +162,7 @@ export type OpcoesDaSonda = {
     click: (el: Element) => Promise<void>;
   };
   /** Mede navegação por setas/Home/End/typeahead. Exige menu já aberto. */
-  medirTeclado?: boolean;
+  measureKeyboard?: boolean;
   /** Letra usada no typeahead — deve ser a inicial do ÚLTIMO item. */
   letraDeBusca?: string;
   /** Mede abertura do submenu por seta e fechamento por Escape. */
@@ -177,10 +177,10 @@ export type OpcoesDaSonda = {
  * último, porque cada um muda o estado que o próximo lê.
  */
 export async function radiografarDropdown(
-  opts: OpcoesDaSonda,
+  opts: ProbeOptions,
 ): Promise<RetratoDoDropdown> {
   const { gatilho = null, teclado } = opts;
-  const painel = acharPainel();
+  const painel = findPanel();
 
   const dentro = <T extends HTMLElement>(sel: string): T[] =>
     painel ? Array.from(painel.querySelectorAll<T>(sel)) : [];
@@ -207,7 +207,7 @@ export async function radiografarDropdown(
         : null),
     slot: g.getAttribute('data-slot'),
   }));
-  const painelRetrato = retratarPainel(painel);
+  const panelRetrato = retratarPanel(painel);
 
   const indicadores = dentro<HTMLElement>(
     '.nds-dropdown-menu-item-indicator, [data-slot$="item-indicator"]',
@@ -232,59 +232,59 @@ export async function radiografarDropdown(
   });
 
   // ── Teclado ────────────────────────────────────────────────────────────────
-  let tecladoRetrato: RetratoDoTeclado | null = null;
-  if (opts.medirTeclado && painel) {
+  let keyboardRetrato: KeyboardRetrato | null = null;
+  if (opts.measureKeyboard && painel) {
     const navegaveis = [
       ...painel.querySelectorAll<HTMLElement>(
         '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
       ),
     ];
-    const focoAoAbrir = descrever(document.activeElement);
-    const itensTabulaveis = navegaveis.filter((i) => i.tabIndex === 0).length;
+    const openFocus = descrever(document.activeElement);
+    const itemsTabulaveis = navegaveis.filter((i) => i.tabIndex === 0).length;
 
     // A medição parte do primeiro item, e não de onde a abertura deixou o foco:
     // sem isso o resultado depende do estado inicial de cada lib.
     navegaveis[0]?.focus();
     await teclado.keyboard('{ArrowDown}');
-    const depoisDeSetaBaixo = descrever(document.activeElement);
+    const arrowBaixoAfter = descrever(document.activeElement);
     await teclado.keyboard('{ArrowUp}');
-    const depoisDeSetaCima = descrever(document.activeElement);
+    const arrowCimaAfter = descrever(document.activeElement);
     await teclado.keyboard('{End}');
-    const depoisDeEnd = descrever(document.activeElement);
+    const endAfter = descrever(document.activeElement);
     await teclado.keyboard('{Home}');
-    const depoisDeHome = descrever(document.activeElement);
+    const homeAfter = descrever(document.activeElement);
 
-    let depoisDeDigitar: string | null = null;
+    let digitarAfter: string | null = null;
     if (opts.letraDeBusca) {
       await teclado.keyboard(opts.letraDeBusca);
-      depoisDeDigitar = descrever(document.activeElement);
+      digitarAfter = descrever(document.activeElement);
     }
 
     const desabilitado = painel.querySelector<HTMLElement>(
       `${PRESENTE('data-disabled')}, [aria-disabled="true"]`,
     );
-    let setaAlcancaDesabilitado: boolean | null = null;
+    let arrowAlcancaDisabled: boolean | null = null;
     if (desabilitado) {
       navegaveis[0]?.focus();
-      setaAlcancaDesabilitado = false;
+      arrowAlcancaDisabled = false;
       for (let i = 0; i < navegaveis.length + 1; i++) {
         await teclado.keyboard('{ArrowDown}');
         if (document.activeElement === desabilitado) {
-          setaAlcancaDesabilitado = true;
+          arrowAlcancaDisabled = true;
           break;
         }
       }
     }
 
-    tecladoRetrato = {
-      focoAoAbrir,
-      itensTabulaveis,
-      depoisDeSetaBaixo,
-      depoisDeSetaCima,
-      depoisDeEnd,
-      depoisDeHome,
-      depoisDeDigitar,
-      setaAlcancaDesabilitado,
+    keyboardRetrato = {
+      openFocus,
+      itemsTabulaveis,
+      arrowBaixoAfter,
+      arrowCimaAfter,
+      endAfter,
+      homeAfter,
+      digitarAfter,
+      arrowAlcancaDisabled,
     };
   }
 
@@ -296,19 +296,19 @@ export async function radiografarDropdown(
     );
     if (!alvo) {
       submenu = {
-        subGatilho: null,
-        abriuPorSeta: null,
-        aoLado: null,
+        subTrigger: null,
+        arrowAbriu: null,
+        onSide: null,
         sobrepoe: null,
-        fechouPorEscape: null,
+        escapeFechou: null,
       };
     } else {
       alvo.focus();
       await teclado.keyboard('{ArrowRight}');
       await ate(() => document.querySelectorAll('[role="menu"]').length > 1);
-      const paineis = Array.from(document.querySelectorAll<HTMLElement>('[role="menu"]'));
-      const filho = paineis.find((p) => p !== painel) ?? null;
-      const abriuPorSeta = filho !== null;
+      const panels = Array.from(document.querySelectorAll<HTMLElement>('[role="menu"]'));
+      const filho = panels.find((p) => p !== painel) ?? null;
+      const arrowAbriu = filho !== null;
       // O posicionador (floating-ui) coloca o popup em passo assíncrono: medir a
       // caixa no tick da abertura lê a posição de partida, não a final. Espera a
       // esquerda parar de mudar antes de comparar com o menu pai.
@@ -321,24 +321,24 @@ export async function radiografarDropdown(
           return estavel;
         }, 1500);
       }
-      const aoLado = filho
+      const onSide = filho
         ? filho.getBoundingClientRect().left >= painel.getBoundingClientRect().right - 8
         : null;
-      // Sobreposição real com o menu pai: `aoLado` responde "nasce à direita?",
+      // Sobreposição real com o menu pai: `onSide` responde "nasce à direita?",
       // isto responde "cobre os irmãos do item que o abriu?".
       const sobrepoe = filho
         ? filho.getBoundingClientRect().left < painel.getBoundingClientRect().right - 8
         : null;
       await teclado.keyboard('{Escape}');
-      const fechouPorEscape = await ate(
-        () => document.querySelectorAll('[role="menu"]').length < paineis.length,
+      const escapeFechou = await ate(
+        () => document.querySelectorAll('[role="menu"]').length < panels.length,
       );
-      submenu = { subGatilho: retratar(alvo), abriuPorSeta, aoLado, sobrepoe, fechouPorEscape };
+      submenu = { subTrigger: retratar(alvo), arrowAbriu, onSide, sobrepoe, escapeFechou };
     }
   }
 
   // ── Foco ao fechar ─────────────────────────────────────────────────────────
-  let focoAoFechar: string | null = null;
+  let closeFocus: string | null = null;
   if (opts.medirFocoAoFechar) {
     await teclado.keyboard('{Escape}');
     // A devolução do foco é assíncrona em toda lib headless: ler o
@@ -346,13 +346,13 @@ export async function radiografarDropdown(
     // acusaria uma falha de foco que não existe.
     await ate(() => document.querySelector('[role="menu"]') === null);
     await ate(() => document.activeElement === gatilho);
-    focoAoFechar =
+    closeFocus =
       document.activeElement === gatilho ? 'gatilho' : descrever(document.activeElement);
   }
 
   return {
     gatilho: gatilho ? retratar(gatilho) : null,
-    painel: painelRetrato,
+    painel: panelRetrato,
     grupos,
     rotulos,
     separadores,
@@ -360,14 +360,14 @@ export async function radiografarDropdown(
     marcacoes,
     indicadores,
     atalhos,
-    teclado: tecladoRetrato,
+    teclado: keyboardRetrato,
     submenu,
-    focoAoFechar,
+    closeFocus,
   };
 }
 
 /** Único canal que atravessa o instrumentador do Storybook até o terminal. */
-export function lancarSonda(stack: string, cenario: string, dados: unknown): never {
+export function lancarProbe(stack: string, cenario: string, dados: unknown): never {
   throw new Error(`SONDA::${stack}::${cenario}::${JSON.stringify(dados)}`);
 }
 
@@ -380,7 +380,7 @@ export function lancarSonda(stack: string, cenario: string, dados: unknown): nev
  * pergunta. A razão WCAG responde.
  *
  * Duas armadilhas já pagas e resolvidas aqui: o fundo do painel pode ter alfa,
- * e aí `backgroundColor` devolve uma cor que ninguém vê — `fundoEfetivo` sobe
+ * e aí `backgroundColor` devolve uma cor que ninguém vê — `backgroundEffective` sobe
  * até o primeiro ancestral opaco; e o item em REALCE tem outro fundo, então
  * medir o item destacado mede o realce, não o repouso. Passe um item em
  * repouso.
@@ -389,9 +389,9 @@ export function lancarSonda(stack: string, cenario: string, dados: unknown): nev
  * texto normal pela WCAG — 3:1 só valeria a partir de 24px, ou 18.66px em
  * negrito.
  */
-export function contrasteDoItem(item: HTMLElement): Contraste | null {
+export function itemContrast(item: HTMLElement): Contraste | null {
   const frente = getComputedStyle(item).color;
-  const fundo = fundoEfetivo(item);
+  const fundo = backgroundEffective(item);
   if (!fundo) return null;
-  return razao(frente, fundo);
+  return ratio(frente, fundo);
 }

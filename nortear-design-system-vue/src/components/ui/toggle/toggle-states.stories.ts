@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect } from 'storybook/test';
 import {
-  contrasteDoToggleNosDoisTemas,
-  descreverFalhasDeContraste,
-  medirAnelDeFoco,
+  toggleNosDoisThemesContrast,
+  contrastDescribeFailures,
+  focusMeasureRing,
 } from '@shared/testing/toggle-probe';
 import { Toggle } from './index';
 import { Bold, Italic } from 'lucide-vue-next';
 import {
-  toggleAtivoSource,
-  toggleDesabilitadoSource,
-  toggleFocoSource,
+  toggleActiveSource,
+  toggleDisabledSource,
+  toggleFocusSource,
   toggleIconSource,
   toggleInvalidoSource,
 } from './toggle.source';
@@ -69,7 +69,7 @@ export const On: Story = {
     covers: ['visual.item2', 'accessibility.item2'],
     // O estado de partida é prop escrita à mão, e só se lê contra o desligado
     // ao lado — o meta mostra apenas o desligado.
-    docs: { source: { transform: toggleAtivoSource } },
+    docs: { source: { transform: toggleActiveSource } },
   },
   render: () => ({
     components: { Toggle, Bold },
@@ -96,9 +96,9 @@ export const On: Story = {
     });
 
     await step('O estado ativo tem fundo próprio, não só atributo', async () => {
-      const fundoOn = getComputedStyle(on).backgroundColor;
-      await expect(fundoOn).not.toBe(getComputedStyle(off).backgroundColor);
-      await expect(fundoOn).not.toMatch(/rgba\(0, 0, 0, 0\)|transparent/);
+      const backgroundOn = getComputedStyle(on).backgroundColor;
+      await expect(backgroundOn).not.toBe(getComputedStyle(off).backgroundColor);
+      await expect(backgroundOn).not.toMatch(/rgba\(0, 0, 0, 0\)|transparent/);
     });
 
     await step('O contraste do estado ATIVO passa de 4.5:1 nos DOIS temas', async () => {
@@ -107,8 +107,8 @@ export const On: Story = {
       // contrato ficava declarado e nunca verificado. Mede só o estado ativo —
       // é o único par de cores que o componente define; em repouso ele herda
       // as da página.
-      const falhas = contrasteDoToggleNosDoisTemas(canvasElement);
-      await expect(falhas.length === 0 ? '' : `\n${descreverFalhasDeContraste(falhas)}`).toBe('');
+      const failures = toggleNosDoisThemesContrast(canvasElement);
+      await expect(failures.length === 0 ? '' : `\n${contrastDescribeFailures(failures)}`).toBe('');
     });
   },
 };
@@ -118,7 +118,7 @@ export const FocusVisible: Story = {
     covers: ['accessibility.item3'],
     // O anel precisa ser visto nas DUAS variantes: a com borda já tem sombra em
     // repouso, e é o par que mostra isso.
-    docs: { source: { transform: toggleFocoSource } },
+    docs: { source: { transform: toggleFocusSource } },
   },
   render: () => ({
     components: { Toggle, Bold, Italic },
@@ -151,7 +151,7 @@ export const FocusVisible: Story = {
       // outline tem sombra de elevação o tempo todo, e a asserção passava com
       // zero anel. O que prova o anel é a sombra MUDAR ao focar.
       for (const btn of [padrao, contorno]) {
-        await expect(medirAnelDeFoco(btn).mudou).toBe(true);
+        await expect(focusMeasureRing(btn).mudou).toBe(true);
       }
     });
   },
@@ -161,7 +161,7 @@ export const Disabled: Story = {
   parameters: {
     covers: ['visual.item4', 'functional.item4'],
     // Desabilitado ligado e desligado desenham diferente: os dois entram.
-    docs: { source: { transform: toggleDesabilitadoSource } },
+    docs: { source: { transform: toggleDisabledSource } },
   },
   render: () => ({
     components: { Toggle, Bold, Italic },
@@ -244,7 +244,7 @@ export const Invalid: Story = {
     });
 
     await step('Focar o inválido continua mostrando o foco', async () => {
-      await expect(medirAnelDeFoco(toggle).mudou).toBe(true);
+      await expect(focusMeasureRing(toggle).mudou).toBe(true);
     });
   },
 };

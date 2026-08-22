@@ -56,7 +56,7 @@ export const DatePicker: Story = {
   render: () => {
     const gatilho = createButton({ variant: 'outline', label: 'Escolher data' });
 
-    const calendario = createCalendar({
+    const calendar = createCalendar({
       locale: 'pt-BR',
       value: new Date(2026, 3, 12),
       onSelect: (valor) => {
@@ -69,7 +69,7 @@ export const DatePicker: Story = {
       },
     });
 
-    return createPopover({ trigger: gatilho, content: calendario });
+    return createPopover({ trigger: gatilho, content: calendar });
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

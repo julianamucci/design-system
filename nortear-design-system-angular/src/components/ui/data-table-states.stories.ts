@@ -82,8 +82,8 @@ export const NoResults: Story = {
     await step('Sem linha nenhuma, o cabeçalho de seleção não fica marcado', async () => {
       // "Todas selecionadas" com zero linhas seria verdade vazia — e o checkbox
       // nasceria marcado numa tabela sem nada para marcar.
-      const caixaDeTudo = canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
-      await expect(caixaDeTudo).toHaveAttribute('aria-checked', 'false');
+      const allBox = canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
+      await expect(allBox).toHaveAttribute('aria-checked', 'false');
     });
   },
 };
@@ -194,8 +194,8 @@ export const SelectedRows: Story = {
     });
 
     await step('O cabeçalho fica em estado misto enquanto a página não está inteira', async () => {
-      const caixaDeTudo = canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
-      await expect(caixaDeTudo).toHaveAttribute('aria-checked', 'mixed');
+      const allBox = canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
+      await expect(allBox).toHaveAttribute('aria-checked', 'mixed');
     });
   },
 };

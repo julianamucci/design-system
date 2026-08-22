@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { userEvent, within, expect } from 'storybook/test';
 import {
-  ESTADOS_COM_TEXTO_LEGIVEL,
-  descreverContraste,
-  medirContrasteDoCalendario,
+  STATES_WITH_TEXT_LEGIVEL,
+  describeContrast,
+  calendarMeasureContrast,
 } from '@shared/testing/calendar-probe';
 import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
@@ -175,11 +175,11 @@ export const Range: Story = {
       // "axe-core / Lighthouse", que só enxerga o tema claro da marca default: um
       // sexto do produto. Medido no escuro, as pontas do intervalo de uma stack
       // marcavam 1.18:1 e o número do dia sumia. Aritmética, não olhômetro.
-      const medidas = medirContrasteDoCalendario(canvasElement).filter(
-        (m) => m.presente && (ESTADOS_COM_TEXTO_LEGIVEL as readonly string[]).includes(m.estado),
+      const medidas = calendarMeasureContrast(canvasElement).filter(
+        (m) => m.presente && (STATES_WITH_TEXT_LEGIVEL as readonly string[]).includes(m.estado),
       );
       await expect(medidas.length).toBeGreaterThan(0);
-      const reprovadas = medidas.filter((m) => (m.razao ?? 0) < 4.5).map(descreverContraste);
+      const reprovadas = medidas.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
       await expect(reprovadas).toEqual([]);
     });
 

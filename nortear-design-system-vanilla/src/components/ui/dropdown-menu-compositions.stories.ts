@@ -280,10 +280,10 @@ export const WithShortcuts: Story = {
       // já vem resolvido em pixels — o que dá para afirmar é o resultado.
       const item = canvas.getByRole('menuitem', { name: 'Colar Ctrl V' });
       const atalho = item.querySelector<HTMLElement>('[data-slot="dropdown-menu-shortcut"]')!;
-      const caixaDoItem = item.getBoundingClientRect();
-      const caixaDoAtalho = atalho.getBoundingClientRect();
-      await expect(caixaDoItem.right - caixaDoAtalho.right).toBeLessThan(
-        caixaDoAtalho.left - caixaDoItem.left,
+      const itemBox = item.getBoundingClientRect();
+      const shortcutBox = atalho.getBoundingClientRect();
+      await expect(itemBox.right - shortcutBox.right).toBeLessThan(
+        shortcutBox.left - itemBox.left,
       );
     });
 

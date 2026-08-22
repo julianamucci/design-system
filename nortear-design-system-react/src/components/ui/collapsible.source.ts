@@ -18,17 +18,17 @@ export type CollapsibleArgs = {
 };
 
 /**
- * Cabeçalho parametrizado: `doBotao` cresce quando a composição também usa o
+ * Cabeçalho parametrizado: `ofButton` cresce quando a composição também usa o
  * `<Button>`, e `icones` quando o gatilho leva mais de um ícone. Duas linhas de
  * import do mesmo módulo compilam, mas ninguém escreve assim.
  */
-function importes(doBotao = 'buttonVariants', icones = 'ChevronDown'): string {
+function importes(ofButton = 'buttonVariants', icones = 'ChevronDown'): string {
   return `import {
   Collapsible,
   CollapsibleTrigger,
   CollapsibleContent,
 } from "@/components/ui/collapsible";
-import { ${doBotao} } from "@/components/ui/button";
+import { ${ofButton} } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ${icones} } from "lucide-react";`;
 }
@@ -98,7 +98,7 @@ ${corpo(
  * Começa expandido. `defaultOpen` é prop de MONTAGEM: define o ponto de partida
  * e não trava o painel — o gatilho continua alternando depois disso.
  */
-export function collapsibleAbertoPorPadraoSource(): string {
+export function defaultCollapsibleOpenSource(): string {
   return jsxSnippet(
     IMPORTS,
     `<Collapsible defaultOpen className="${ROOT_CLASSES}">
@@ -112,7 +112,7 @@ ${corpo('Ocultar filtros avançados', 'ghost')}
  * volta pelo callback. O par `open` + `onOpenChange` é indivisível — só `open`
  * congela o painel, porque o clique no gatilho não tem para onde escrever.
  */
-export function collapsibleControladoSource(): string {
+export function collapsibleControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${importes('Button, buttonVariants')}`,
@@ -159,7 +159,7 @@ ${importes('Button, buttonVariants')}`,
  * para animar, e o gatilho continua alcançável pelo teclado — ele é anunciado
  * como indisponível em vez de sumir da navegação.
  */
-export function collapsibleDesabilitadoSource(): string {
+export function collapsibleDisabledSource(): string {
   return jsxSnippet(
     IMPORTS,
     `<Collapsible className="${ROOT_CLASSES}">
@@ -186,7 +186,7 @@ export function collapsibleDesabilitadoSource(): string {
  * Gatilho com a aparência de botão de contorno. A variante é o assunto da story
  * e não cabe nos args da raiz — quem a recebe é o gatilho.
  */
-export function collapsibleComBotaoSource(): string {
+export function collapsibleWithButtonSource(): string {
   return jsxSnippet(
     IMPORTS,
     `<Collapsible className="${ROOT_CLASSES}">
@@ -203,7 +203,7 @@ ${corpo('Exibir opções avançadas', 'outline', '', [
  * Ícone à esquerda do rótulo: os DOIS ícones saem da árvore de acessibilidade,
  * senão o nome do gatilho ganharia ruído — quem nomeia é o texto.
  */
-export function collapsibleComIconeSource(): string {
+export function collapsibleWithIconSource(): string {
   return jsxSnippet(
     importes('buttonVariants', 'ChevronDown, SlidersHorizontal'),
     `<Collapsible className="${ROOT_CLASSES}">

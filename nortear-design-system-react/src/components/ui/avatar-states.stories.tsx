@@ -5,7 +5,7 @@ import { User } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import {
   avatarWithDelaySource,
-  avatarComIconeSource,
+  avatarWithIconSource,
   avatarSource,
 } from "./avatar.source";
 
@@ -138,7 +138,7 @@ export const NoImage: Story = {
   // ao fallback — sem isso o avatar fica mudo.
   parameters: {
     covers: ["functional.item3"],
-    docs: { source: { transform: avatarComIconeSource } },
+    docs: { source: { transform: avatarWithIconSource } },
   },
   render: () => (
     <Avatar>

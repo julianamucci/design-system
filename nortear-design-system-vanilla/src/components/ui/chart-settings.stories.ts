@@ -1,22 +1,22 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, waitFor } from 'storybook/test';
 import {
-  desenhoEscreve,
-  desenhoPintado,
-  desenhoRenderizado,
-  exigirRaiz,
-  formasDeDado,
+  designEscreve,
+  designPintado,
+  designRenderizado,
+  exigirRoot,
+  datumFormas,
 } from '@shared/testing/chart-probe';
 import { createChart } from './chart';
 import { chartSource, chartSourceWith } from './chart.source';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
-const MESES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
 
 const ACESSOS = [186, 305, 237, 73, 209, 214];
 
-const chartData = MESES.map((label, i) => ({ label, value: ACESSOS[i] }));
+const chartData = MONTHS.map((label, i) => ({ label, value: ACESSOS[i] }));
 
 /** Cor autoral da série. Fora da paleta `--chart-*`, para não se confundir com ela. */
 const ROXO = '#7c3aed';
@@ -59,7 +59,7 @@ export const SeriesColor: Story = {
     },
   },
   render: () => createChart({
-    xAxis: MESES,
+    xAxis: MONTHS,
     series: [{ name: 'Desktop', data: ACESSOS, color: ROXO }],
     type: 'bar',
     height: 240,
@@ -67,25 +67,25 @@ export const SeriesColor: Story = {
     'aria-label': 'Acessos mensais no desktop, em cor autoral',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O desenho sai', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      await waitFor(() => expect(formasDeDado(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      await waitFor(() => expect(datumFormas(raiz).length).toBeGreaterThan(0), { timeout: 3000 });
     });
 
     await step('As formas da série saem na cor pedida', async () => {
       // A trama sobreposta entra como `url(#…)` e não carrega cor — por isso a
       // procura é entre os preenchimentos que são cor de verdade.
-      const cores = formasDeDado(raiz)
+      const cores = datumFormas(raiz)
         .map((f) => getComputedStyle(f).fill)
         .filter((cor) => !cor.startsWith('url'));
       await expect(cores).toContain(ROXO_RGB);
     });
 
     await step('Toda categoria continua escrita no eixo', async () => {
-      for (const mes of MESES) {
-        await expect(desenhoEscreve(raiz, mes)).toBe(true);
+      for (const mes of MONTHS) {
+        await expect(designEscreve(raiz, mes)).toBe(true);
       }
     });
   },
@@ -116,7 +116,7 @@ export const CustomHeight: Story = {
     'aria-label': 'Acessos mensais, em bloco mais alto',
   }),
   play: async ({ canvasElement, step }) => {
-    const raiz = exigirRaiz(canvasElement);
+    const raiz = exigirRoot(canvasElement);
 
     await step('O container fica com a altura pedida', async () => {
       // Tolerância de 1px: o retângulo do layout é fracionário, e comparar
@@ -125,8 +125,8 @@ export const CustomHeight: Story = {
     });
 
     await step('E o desenho ocupa o bloco todo, não uma faixa do topo', async () => {
-      await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
-      const desenho = desenhoRenderizado(raiz) as SVGElement;
+      await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
+      const desenho = designRenderizado(raiz) as SVGElement;
       await waitFor(
         () => expect(desenho.getBoundingClientRect().height).toBeGreaterThan(ALTURA * 0.9),
         { timeout: 3000 },
@@ -134,7 +134,7 @@ export const CustomHeight: Story = {
     });
 
     await step('E o dado continua desenhado', async () => {
-      await expect(formasDeDado(raiz).length).toBeGreaterThan(0);
+      await expect(datumFormas(raiz).length).toBeGreaterThan(0);
     });
   },
 };

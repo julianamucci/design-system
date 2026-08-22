@@ -19,7 +19,7 @@ export type ScrollAreaArgs = {
 };
 
 const IMPORT_AREA = `import { ScrollArea } from '@/components/ui/scroll-area'`;
-const IMPORT_COM_BARRA = `import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'`;
+const IMPORT_WITH_BAR = `import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'`;
 
 const TAGS = 'const tags = Array.from({ length: 40 }, (_, i) => `Tag ${i + 1}`)';
 
@@ -112,7 +112,7 @@ export function scrollAreaVerticalSource(): string {
  */
 export function scrollAreaHorizontalSource(): string {
   return vueSnippet(
-    `${IMPORT_COM_BARRA}
+    `${IMPORT_WITH_BAR}
 
 const cards = Array.from({ length: 12 }, (_, i) => \`Card \${i + 1}\`)`,
     moldura(
@@ -141,7 +141,7 @@ const cards = Array.from({ length: 12 }, (_, i) => \`Card \${i + 1}\`)`,
  */
 export function scrollAreaBidirecionalSource(): string {
   return vueSnippet(
-    `${IMPORT_COM_BARRA}
+    `${IMPORT_WITH_BAR}
 
 const colunas = Array.from({ length: 12 }, (_, i) => \`C\${i + 1}\`)
 const linhas = Array.from({ length: 16 }, (_, i) => \`R\${i + 1}\`)`,
@@ -234,7 +234,7 @@ export function scrollAreaAoRolarSource(): string {
  * ordem de tabulação. A navegação leva nome próprio — dentro de uma área
  * rolável ela vira um marco a mais na lista do leitor de tela.
  */
-export function scrollAreaConteudoFocavelSource(): string {
+export function scrollAreaContentFocavelSource(): string {
   return vueSnippet(
     `${IMPORT_AREA}
 
@@ -330,7 +330,7 @@ ${indentar(
  */
 export function scrollAreaGaleriaSource(): string {
   return vueSnippet(
-    `${IMPORT_COM_BARRA}
+    `${IMPORT_WITH_BAR}
 
 const imagens = Array.from({ length: 14 }, (_, i) => \`Imagem \${i + 1}\`)`,
     moldura(
@@ -358,9 +358,9 @@ const imagens = Array.from({ length: 14 }, (_, i) => \`Imagem \${i + 1}\`)`,
  * cabeçalho acompanha o conteúdo — colar o cabeçalho no topo é outra decisão,
  * e não é a que este exemplo toma.
  */
-export function scrollAreaTabelaSource(): string {
+export function scrollAreaTableSource(): string {
   return vueSnippet(
-    `${IMPORT_COM_BARRA}
+    `${IMPORT_WITH_BAR}
 
 const colunas = ['Nome', 'Email', 'Função', 'Departamento', 'Localização', 'Início', 'Status']
 

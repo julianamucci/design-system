@@ -5,7 +5,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from './index';
-import { fracaoDoPrimeiro } from './resizable.fixtures';
+import { firstFraction } from './resizable.fixtures';
 import ResizableDocs from '@/components/docs/ResizableDocs.vue';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import { resizableSource } from './resizable.source';
@@ -17,7 +17,7 @@ import { resizableSource } from './resizable.source';
  * leitor de tela anuncia "separador" e nada mais. E ele diz o ATALHO, porque a
  * alternativa ao arrasto não tem nenhuma pista visual.
  */
-const ROTULO_PUNHO = 'Redimensionar painéis — use setas para ajustar';
+const LABEL_HANDLE = 'Redimensionar painéis — use setas para ajustar';
 
 const meta = {
   title: 'UI/Resizable',
@@ -62,7 +62,7 @@ export const Playground: Story = {
   render: (args) => ({
     components: { ResizablePanelGroup, ResizablePanel, ResizableHandle },
     setup() {
-      return { args, rotulo: ROTULO_PUNHO };
+      return { args, rotulo: LABEL_HANDLE };
     },
     template: `
       <div class="nds-rounded-md nds-border-default nds-overflow-hidden" style="width: 480px; height: 240px">
@@ -88,7 +88,7 @@ export const Playground: Story = {
   }),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole('separator', { name: ROTULO_PUNHO });
+    const punho = canvas.getByRole('separator', { name: LABEL_HANDLE });
     const horizontal = args.direction === 'horizontal';
 
     await step('O divisor é um separator com nome e valor', async () => {
@@ -103,13 +103,13 @@ export const Playground: Story = {
       );
       await expect(punho).toHaveAttribute('aria-valuemin', '20');
       await expect(Number(punho.getAttribute('aria-valuenow'))).toBeCloseTo(
-        fracaoDoPrimeiro(canvasElement, horizontal) * 100,
+        firstFraction(canvasElement, horizontal) * 100,
         0,
       );
     });
 
     await step('O tamanho declarado chega à tela na proporção pedida', async () => {
-      await expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(0.3, 1);
+      await expect(firstFraction(canvasElement, horizontal)).toBeCloseTo(0.3, 1);
     });
 
     await step('As setas movem o divisor — o equivalente por teclado do arrasto', async () => {
@@ -119,7 +119,7 @@ export const Playground: Story = {
       // O par cresce/encolhe é de saldo ZERO: o painel Interactions reexecuta a
       // play no mesmo DOM, e um passo que só cresce iria encostando no limite
       // até a asserção inverter de sentido numa rodada qualquer.
-      const antes = fracaoDoPrimeiro(canvasElement, horizontal);
+      const antes = firstFraction(canvasElement, horizontal);
       punho.focus();
       await expect(punho).toHaveFocus();
 
@@ -128,21 +128,21 @@ export const Playground: Story = {
 
       await userEvent.keyboard(cresce);
       await waitFor(() =>
-        expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeGreaterThan(antes + 0.01),
+        expect(firstFraction(canvasElement, horizontal)).toBeGreaterThan(antes + 0.01),
       );
 
       await userEvent.keyboard(encolhe);
       await waitFor(() =>
-        expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(antes, 2),
+        expect(firstFraction(canvasElement, horizontal)).toBeCloseTo(antes, 2),
       );
     });
 
     await step('A seta do outro eixo não é sequestrada', async () => {
       // Um separator vertical que consumisse ArrowUp roubaria a rolagem de quem
       // só está de passagem pelo foco.
-      const antes = fracaoDoPrimeiro(canvasElement, horizontal);
+      const antes = firstFraction(canvasElement, horizontal);
       await userEvent.keyboard(horizontal ? '{ArrowUp}' : '{ArrowLeft}');
-      await expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(antes, 2);
+      await expect(firstFraction(canvasElement, horizontal)).toBeCloseTo(antes, 2);
     });
   },
 };

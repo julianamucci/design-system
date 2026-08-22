@@ -4,9 +4,9 @@ import { within, userEvent, expect } from 'storybook/test';
 import InputOTPStory from './InputOTPStory.svelte';
 import { campo } from './input-otp.fixtures';
 import {
-  inputOtpComErroSource,
-  inputOtpComReenvioSource,
-  helperSourceInputOtpWithText,
+  inputOtpWithErrorSource,
+  inputOtpWithReenvioSource,
+  helperInputOtpWithTextSource,
   inputOtpSource,
 } from './input-otp.source';
 
@@ -51,7 +51,7 @@ export const WithLabel: Story = {
 };
 
 export const WithHelpText: Story = {
-  parameters: { docs: { source: { transform: helperSourceInputOtpWithText } } },
+  parameters: { docs: { source: { transform: helperInputOtpWithTextSource } } },
   args: {
     maxLength: 6,
     label: 'Código de verificação',
@@ -68,7 +68,7 @@ export const WithHelpText: Story = {
 };
 
 export const WithErrorMessage: Story = {
-  parameters: { docs: { source: { transform: inputOtpComErroSource } } },
+  parameters: { docs: { source: { transform: inputOtpWithErrorSource } } },
   args: {
     maxLength: 6,
     hasError: true,
@@ -90,7 +90,7 @@ export const WithErrorMessage: Story = {
 };
 
 export const WithResendButton: Story = {
-  parameters: { docs: { source: { transform: inputOtpComReenvioSource } } },
+  parameters: { docs: { source: { transform: inputOtpWithReenvioSource } } },
   args: {
     maxLength: 6,
     label: 'Código de verificação',

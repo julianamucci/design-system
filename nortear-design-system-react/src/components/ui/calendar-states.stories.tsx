@@ -5,7 +5,7 @@ import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
 import {
   calendarBloqueadoSource,
-  outsideSourceCalendarDays,
+  outsideCalendarDaysSource,
   calendarHojeSource,
   calendarIntervaloWithMioloSource,
   calendarSource,
@@ -38,7 +38,7 @@ type Story = StoryObj<typeof meta>;
 const ABRIL = () => new Date(2026, 3, 1);
 
 /** O <td> carrega a data em ISO, que é comparável; o <button> traz a formatada. */
-const diasCom = (canvasElement: HTMLElement, seletor: string): string[] =>
+const daysWith = (canvasElement: HTMLElement, seletor: string): string[] =>
   Array.from(canvasElement.querySelectorAll(`[role=gridcell]${seletor}`)).map(
     (el) => el.getAttribute("data-day") ?? "",
   );
@@ -70,7 +70,7 @@ export const Selected: Story = {
     await step("Só a data escolhida está marcada", async () => {
       // accessibility.item3 — "existe alguma célula marcada" passaria com o mês
       // inteiro marcado.
-      await expect(diasCom(canvasElement, "[data-selected]")).toEqual(["2026-04-12"]);
+      await expect(daysWith(canvasElement, "[data-selected]")).toEqual(["2026-04-12"]);
     });
 
     await step("A célula anuncia a data por extenso", async () => {
@@ -122,7 +122,7 @@ export const Disabled: Story = {
     await step("A regra bloqueia exatamente o intervalo que ela descreve", async () => {
       // functional.item4 — contar "há algum bloqueado" passaria com um só, e
       // também com a regra invertida.
-      const bloqueados = diasCom(canvasElement, "[data-disabled]").filter((d) =>
+      const bloqueados = daysWith(canvasElement, "[data-disabled]").filter((d) =>
         d.startsWith("2026-04-"),
       );
       await expect(bloqueados).toEqual([
@@ -138,7 +138,7 @@ export const Disabled: Story = {
       onSelect.mockClear();
       await userEvent.click(bloqueado, { pointerEventsCheck: 0 });
       await expect(onSelect).not.toHaveBeenCalled();
-      await expect(diasCom(canvasElement, "[data-selected]")).toEqual(["2026-04-15"]);
+      await expect(daysWith(canvasElement, "[data-selected]")).toEqual(["2026-04-15"]);
     });
 
     await step("Um dia livre continua escolhível", async () => {
@@ -181,11 +181,11 @@ export const Today: Story = {
       // regra é cair na data certa, e é isso que um erro de fuso quebraria.
       const hoje = new Date();
       const iso = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
-      await expect(diasCom(canvasElement, "[data-today]")).toContain(iso);
+      await expect(daysWith(canvasElement, "[data-today]")).toContain(iso);
     });
 
     await step("Destacar hoje não é escolhê-lo", async () => {
-      await expect(diasCom(canvasElement, "[data-selected]").length).toBe(0);
+      await expect(daysWith(canvasElement, "[data-selected]").length).toBe(0);
     });
   },
 };
@@ -208,7 +208,7 @@ export const WithOutsideDays: Story = {
     docs: {
       // A story existe para NOMEAR a prop; o `meta` a omite por ser o padrão, e
       // omiti-la aqui deixaria o leitor sem saber como desligar as bordas.
-      source: { transform: outsideSourceCalendarDays },
+      source: { transform: outsideCalendarDaysSource },
       description: {
         story:
           "Dias do mês anterior e do próximo completam a primeira e a última semana, apagados para não competirem com o mês em foco.",
@@ -218,7 +218,7 @@ export const WithOutsideDays: Story = {
   play: async ({ canvasElement, step }) => {
     await step("As bordas do grid trazem dias de fora do mês", async () => {
       // Abril de 2026 começa numa quarta: as três primeiras casas vêm de março.
-      const fora = diasCom(canvasElement, "[data-outside]");
+      const fora = daysWith(canvasElement, "[data-outside]");
       await expect(fora).toContain("2026-03-30");
       await expect(fora.length).toBeGreaterThan(0);
     });
@@ -226,10 +226,10 @@ export const WithOutsideDays: Story = {
     await step("Dia de fora do mês não conta como do mês", async () => {
       // O contraste é o ponto da story: sem a marcação de externo, o mês
       // pareceria ter mais dias do que tem.
-      const doMes = Array.from(
+      const ofMonth = Array.from(
         canvasElement.querySelectorAll('[role=gridcell][data-day^="2026-04-"]:not([data-outside])'),
       );
-      await expect(doMes.length).toBe(30);
+      await expect(ofMonth.length).toBe(30);
     });
   },
 };
@@ -264,7 +264,7 @@ export const RangeWithMiddle: Story = {
     await step("O intervalo é contínuo do início ao fim", async () => {
       // Verificar só os extremos passaria com o meio vazio, que é exatamente o
       // que esta story existe para mostrar.
-      await expect(diasCom(canvasElement, "[data-selected]")).toEqual([
+      await expect(daysWith(canvasElement, "[data-selected]")).toEqual([
         "2026-04-10", "2026-04-11", "2026-04-12", "2026-04-13", "2026-04-14",
         "2026-04-15", "2026-04-16", "2026-04-17", "2026-04-18",
       ]);

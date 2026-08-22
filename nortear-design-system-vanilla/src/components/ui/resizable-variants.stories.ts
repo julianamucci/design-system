@@ -39,14 +39,14 @@ type Story = StoryObj;
  * desenhados 50/50 — a asserção guardava o defeito em vez de pegá-lo.
  *
  * Só aqui: as stories deste arquivo comparam grupos ANINHADOS, e cada um traz
- * a própria lista de painéis. O `fracaoDoPrimeiro` do fixture mede o canvas
+ * a própria lista de painéis. O `firstFraction` do fixture mede o canvas
  * inteiro, que juntaria os dois grupos numa conta só.
  */
-function fracao(paineis: HTMLElement[], horizontal: boolean): number[] {
+function fraction(panels: HTMLElement[], horizontal: boolean): number[] {
   const medida = (p: HTMLElement) =>
     horizontal ? p.getBoundingClientRect().width : p.getBoundingClientRect().height;
-  const total = paineis.reduce((acc, p) => acc + medida(p), 0);
-  return paineis.map((p) => medida(p) / total);
+  const total = panels.reduce((acc, p) => acc + medida(p), 0);
+  return panels.map((p) => medida(p) / total);
 }
 
 function panelsOf(raiz: ParentNode, seletorGrupo = '[data-slot="resizable"]'): HTMLElement[] {
@@ -84,7 +84,7 @@ export const Horizontal: Story = {
     });
 
     await step('Os painéis dividem a LARGURA na proporção declarada', async () => {
-      const [a] = fracao(panelsOf(canvasElement), true);
+      const [a] = fraction(panelsOf(canvasElement), true);
       await expect(a).toBeCloseTo(0.3, 1);
     });
   },
@@ -131,7 +131,7 @@ export const Vertical: Story = {
     await step('Os painéis dividem a ALTURA, e não a largura', async () => {
       // O eixo trocado é invisível numa foto quadrada: os dois painéis
       // apareceriam empilhados de qualquer jeito e só a proporção denunciaria.
-      const [a] = fracao(panelsOf(canvasElement), false);
+      const [a] = fraction(panelsOf(canvasElement), false);
       await expect(a).toBeCloseTo(0.4, 1);
     });
   },
@@ -215,8 +215,8 @@ export const Nested: Story = {
       const grupos = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="resizable"]')];
       const externo = [...grupos[0].querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
       const interno = [...grupos[1].querySelectorAll<HTMLElement>(':scope > [data-slot="resizable-panel"]')];
-      await expect(fracao(externo, true)[0]).toBeCloseTo(0.3, 1);
-      await expect(fracao(interno, false)[0]).toBeCloseTo(0.6, 1);
+      await expect(fraction(externo, true)[0]).toBeCloseTo(0.3, 1);
+      await expect(fraction(interno, false)[0]).toBeCloseTo(0.6, 1);
     });
   },
 };

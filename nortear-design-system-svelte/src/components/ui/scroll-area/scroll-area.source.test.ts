@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   scrollAreaBothSource,
-  scrollAreaConteudoFocavelSource,
+  scrollAreaContentFocavelSource,
   scrollAreaDuranteScrollSource,
   scrollAreaHorizontalSource,
-  sidebarSourceScrollAreaList,
+  sidebarScrollAreaListSource,
   scrollAreaOciosoSource,
   scrollAreaNoTetoSource,
   scrollAreaSempreVisibleSource,
@@ -82,7 +82,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o conteúdo focável mora numa navegação com nome acessível', () => {
-    const saida = scrollAreaConteudoFocavelSource();
+    const saida = scrollAreaContentFocavelSource();
     expect(saida).toContain('aria-label="Ações"');
     expect(saida).toContain('<a href="#secao-{n}"');
   });
@@ -92,7 +92,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a lista em barra lateral nomeia a navegação da documentação', () => {
-    const saida = sidebarSourceScrollAreaList();
+    const saida = sidebarScrollAreaListSource();
     expect(saida).toContain('aria-label="Seções da documentação"');
     expect(saida).toContain('size="xl"');
   });

@@ -55,7 +55,7 @@ export function ratioExpr(valor: unknown): string {
  * preenche esse espaço — é a guideline item2 pedindo `cover` para não distorcer,
  * e a item3 pedindo o raio na mídia visível, nunca no contêiner.
  */
-function comImagem(ratio: string, src: string, alt: string): string {
+function withImage(ratio: string, src: string, alt: string): string {
   return jsxSnippet(
     IMPORT,
     `<AspectRatio ratio={${ratio}}>
@@ -80,27 +80,27 @@ function comImagem(ratio: string, src: string, alt: string): string {
  */
 export const aspectRatioSource: SourceTransform<AspectRatioArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  return comImagem(ratioExpr(args.ratio), '/midia/paisagem-entardecer.jpg', 'Paisagem ao entardecer');
+  return withImage(ratioExpr(args.ratio), '/midia/paisagem-entardecer.jpg', 'Paisagem ao entardecer');
 };
 
 /** 4/3 — proporção de foto de produto. */
 export function aspectRatioQuatroTercosSource(): string {
-  return comImagem('4 / 3', '/midia/tenis-de-corrida.jpg', 'Tênis de corrida');
+  return withImage('4 / 3', '/midia/tenis-de-corrida.jpg', 'Tênis de corrida');
 }
 
 /** 1/1 — quadrado, para miniatura e foto de pessoa. */
 export function aspectRatioQuadradoSource(): string {
-  return comImagem('1', '/midia/retrato-maria-silva.jpg', 'Retrato de Maria Silva');
+  return withImage('1', '/midia/retrato-maria-silva.jpg', 'Retrato de Maria Silva');
 }
 
 /** 3/4 — retrato vertical, para capa e pôster. */
 export function aspectRatioTresQuartosSource(): string {
-  return comImagem('3 / 4', '/midia/capa-vertical.jpg', 'Capa de retrato vertical');
+  return withImage('3 / 4', '/midia/capa-vertical.jpg', 'Capa de retrato vertical');
 }
 
 /** 21/9 — panorâmica, para faixa de topo e cinematográfico. */
 export function aspectRatioUltraWideSource(): string {
-  return comImagem('21 / 9', '/midia/cordilheira.jpg', 'Panorâmica da cordilheira');
+  return withImage('21 / 9', '/midia/cordilheira.jpg', 'Panorâmica da cordilheira');
 }
 
 /**
@@ -109,7 +109,7 @@ export function aspectRatioUltraWideSource(): string {
  * anunciar o nome do arquivo, que é o oposto do pretendido.
  */
 export function aspectRatioImageDecorativaSource(): string {
-  return comImagem('16 / 9', '/midia/textura-de-fundo.jpg', '');
+  return withImage('16 / 9', '/midia/textura-de-fundo.jpg', '');
 }
 
 /**
@@ -117,7 +117,7 @@ export function aspectRatioImageDecorativaSource(): string {
  * ele o leitor de tela anuncia só "quadro". `border: 0` some a moldura padrão
  * do navegador — mecânica, não decisão de tema.
  */
-export function aspectRatioComIframeSource(): string {
+export function aspectRatioWithIframeSource(): string {
   return jsxSnippet(
     IMPORT,
     `<AspectRatio ratio={16 / 9}>
@@ -137,7 +137,7 @@ export function aspectRatioComIframeSource(): string {
  * torna a mídia alcançável pelo teclado. O texto solto no fim é a mensagem
  * para navegador sem suporte à tag.
  */
-export function aspectRatioComVideoSource(): string {
+export function aspectRatioWithVideoSource(): string {
   return jsxSnippet(
     IMPORT,
     `<AspectRatio ratio={16 / 9}>
@@ -191,7 +191,7 @@ export function aspectRatioPlaceholderSource(): string {
  * largura, e não fixada. Sem o AspectRatio, imagens de dimensões variáveis
  * deixam a listagem com alturas desiguais.
  */
-export function aspectRatioEmGradeSource(): string {
+export function gridAspectRatioSource(): string {
   return jsxSnippet(
     `${IMPORT}
 

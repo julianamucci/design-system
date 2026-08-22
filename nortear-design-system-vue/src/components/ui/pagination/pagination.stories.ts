@@ -83,8 +83,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<PlaygroundArgs>;
 
-const ROTULO_ANTERIOR = 'Ir para a página anterior';
-const ROTULO_PROXIMA = 'Ir para a próxima página';
+const LABEL_PREVIOUS = 'Ir para a página anterior';
+const LABEL_NEXT = 'Ir para a próxima página';
 
 export const Playground: Story = {
   parameters: {
@@ -167,11 +167,11 @@ export const Playground: Story = {
         const link = canvas.getByRole('link', { name: `Ir para página ${n}` });
         await expect(link).toHaveAttribute('data-slot', 'pagination-link');
       }
-      await expect(canvas.getByRole('button', { name: ROTULO_ANTERIOR })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toHaveAttribute(
         'data-slot',
         'pagination-previous',
       );
-      await expect(canvas.getByRole('button', { name: ROTULO_PROXIMA })).toHaveAttribute(
+      await expect(canvas.getByRole('button', { name: LABEL_NEXT })).toHaveAttribute(
         'data-slot',
         'pagination-next',
       );
@@ -182,7 +182,7 @@ export const Playground: Story = {
       const ativo = canvas.getByRole('link', { name: `Ir para página ${args.defaultPage}` });
       await expect(ativo).toHaveAttribute('aria-current', 'page');
       await expect(ativo).toHaveAttribute('data-active', 'true');
-      await expect(canvas.getByRole('button', { name: ROTULO_ANTERIOR })).toBeDisabled();
+      await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toBeDisabled();
     });
 
     await step('Clicar numa página avisa quem controla o estado', async () => {
@@ -210,7 +210,7 @@ export const Playground: Story = {
       // desabilitado sai da tabulação, e uma lista escrita à mão só valeria
       // com os controls no valor padrão.
       const esperados = [
-        canvas.getByRole('button', { name: ROTULO_ANTERIOR }),
+        canvas.getByRole('button', { name: LABEL_PREVIOUS }),
         canvas.getByRole('link', { name: 'Ir para página 1' }),
         canvas.getByRole('link', { name: 'Ir para página 2' }),
       ].filter((el) => !(el as HTMLButtonElement).disabled);

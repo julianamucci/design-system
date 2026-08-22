@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -49,12 +49,12 @@ const ITEMS_DEFAULT: RadioGroupSnippetItem[] = [
 /** `items: [ … ]`, um item por linha, já recuado para dentro da chamada. */
 function blockItems(itens: RadioGroupSnippetItem[]): string {
   const linhas = itens.map((item) => {
-    const pares = opcoes([
+    const pairs = opcoes([
       ['value', texto(item.value)],
       ['label', texto(item.label)],
       ['disabled', item.disabled ? 'true' : undefined],
     ]);
-    return `    { ${pares.map((p) => p.replace(/,$/, '')).join(', ')} },`;
+    return `    { ${pairs.map((p) => p.replace(/,$/, '')).join(', ')} },`;
   });
   return `[\n${linhas.join('\n')}\n  ]`;
 }
@@ -89,7 +89,7 @@ function groupLines(o: RadioGroupSnippetOptions): string[] {
 /** A chamada real de `createRadioGroup` com as opções da story. */
 export function radioGroupSnippet(o: RadioGroupSnippetOptions = {}): string {
   return snippet(
-    importar('radio-group', 'createRadioGroup'),
+    importing('radio-group', 'createRadioGroup'),
     `const grupo = ${chamada('createRadioGroup', groupLines(o))};`,
     montar('grupo'),
   );
@@ -131,7 +131,7 @@ export function radioGroupWithDescriptionSnippet(
     .join('\n');
 
   return snippet(
-    importar('radio-group', 'createRadioGroup'),
+    importing('radio-group', 'createRadioGroup'),
     `const escolhas = [
 ${dados}
 ];`,
@@ -186,7 +186,7 @@ export function radioGroupInvalidoSnippet(o: RadioGroupSnippetOptions = {}): str
   const nome = o.name ?? 'pagamento';
 
   return snippet(
-    importar('radio-group', 'createRadioGroup'),
+    importing('radio-group', 'createRadioGroup'),
     `const grupo = ${chamada('createRadioGroup', groupLines({ ...o, name: nome }))};
 
 grupo.setAttribute('aria-invalid', 'true');
@@ -217,7 +217,7 @@ export function radioGroupSourceInvalido(
  * Cada item leva um `<input type="radio">` nativo com o `name` do grupo: é ele
  * que faz a escolha aparecer no `FormData` do submit, sem código de leitura.
  */
-export function formSnippetRadioGroup(o: RadioGroupSnippetOptions = {}): string {
+export function formRadioGroupSnippet(o: RadioGroupSnippetOptions = {}): string {
   const nome = o.name ?? 'payment';
   // Dentro do formulário quem recolhe a escolha é o submit, não um callback por
   // clique — a linha do `onValueChange` sairia sobrando no snippet.
@@ -227,7 +227,7 @@ export function formSnippetRadioGroup(o: RadioGroupSnippetOptions = {}): string 
     .join('\n');
 
   return snippet(
-    [importar('radio-group', 'createRadioGroup'), importar('button', 'createButton')].join('\n'),
+    [importing('radio-group', 'createRadioGroup'), importing('button', 'createButton')].join('\n'),
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack nds-p-4 nds-border-default nds-rounded-lg';
 formulario.dataset.spacing = 'md';
@@ -250,5 +250,5 @@ formulario.addEventListener('submit', (e) => {
 export function radioGroupSourceForm(
   fixas: RadioGroupSnippetOptions = {},
 ): SourceTransform<RadioGroupArgsDaStory> {
-  return () => formSnippetRadioGroup(fixas);
+  return () => formRadioGroupSnippet(fixas);
 }

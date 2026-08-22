@@ -859,11 +859,11 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
 
   protected readonly doDontPairs = computed(() => {
     dict();
-    const pares: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
+    const pairs: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
       [this.tplDoDont1Do(), this.tplDoDont1Dont()],
       [this.tplDoDont2Do(), this.tplDoDont2Dont()],
     ];
-    return pares.map(([doTpl, dontTpl], i) => ({
+    return pairs.map(([doTpl, dontTpl], i) => ({
       doLabel: tNav('common.do'),
       dontLabel: tNav('common.dont'),
       doCaption: toPlainText(t(`doDont.pair${i + 1}.do`)),
@@ -1197,14 +1197,14 @@ export class NdsTooltipDocs implements AfterViewInit, OnDestroy {
     // o formato varia entre componentes. O nível e a ferramenta são fixos
     // porque são identificadores (número de critério WCAG, nome do verificador),
     // e identificador não se traduz.
-    const niveis = ['AA', '1.4.3', '4.1.2', '4.1.2', '1.1.1'];
+    const levels = ['AA', '1.4.3', '4.1.2', '4.1.2', '1.1.1'];
     return {
       title: t('testes.accessibility.title'),
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
       items: stringsFromDict(d, 'testes.accessibility').map((criterion, i) => ({
         criterion: toPlainText(criterion),
-        level: niveis[i] ?? 'AA',
+        level: levels[i] ?? 'AA',
         how: 'axe-core',
       })),
     };

@@ -196,7 +196,7 @@ export const Playground: Story = {
     await fechar();
 
     await step('Clicar no gatilho abre o painel, com nome e descrição acessíveis', async () => {
-      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
       const painel = await abrir(trigger);
 
       await expect(painel).toBeVisible();
@@ -213,7 +213,7 @@ export const Playground: Story = {
       await expect(painel).toHaveClass(/nds-drawer-content/);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
-      ).toBe(chamadasAntes + 1);
+      ).toBe(callsBefore + 1);
     });
 
     await step('O painel é portalizado para fora da story', async () => {
@@ -274,8 +274,8 @@ export const Playground: Story = {
       // Procura pelo NOME, não pelo `data-slot`: o botão é também um ndsButton,
       // e duas diretivas ligando o mesmo atributo não têm vencedor definido
       // (armadilha 11) — por isso o NdsDrawerClose não liga `data-slot`.
-      const fecharBtn = within(painel).getByRole('button', { name: ROTULO.fechar() });
-      await userEvent.click(fecharBtn);
+      const closeBtn = within(painel).getByRole('button', { name: ROTULO.fechar() });
+      await userEvent.click(closeBtn);
       await waitForPortalVanish('dialog');
       await waitFor(() => {
         if (document.activeElement !== trigger) {

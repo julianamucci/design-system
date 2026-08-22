@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { userEvent, within, expect } from 'storybook/test';
 import ToggleGroupStory from './ToggleGroupStory.svelte';
 import {
-  toggleGroupItemDesabilitadoSource,
+  toggleGroupItemDisabledSource,
   toggleGroupSelectionMultiplaSource,
   toggleGroupSource,
 } from './toggle-group.source';
@@ -50,8 +50,8 @@ export const Default: Story = {
     await step('Mesmo sem seleção, um item entra na ordem de tabulação', async () => {
       // Roving tabindex não depende de haver item ativo: sem isto o grupo
       // inteiro sairia da navegação por Tab.
-      const naOrdem = items.filter((b) => (b as HTMLElement).tabIndex === 0);
-      await expect(naOrdem).toHaveLength(1);
+      const inOrder = items.filter((b) => (b as HTMLElement).tabIndex === 0);
+      await expect(inOrder).toHaveLength(1);
     });
   },
 };
@@ -101,8 +101,8 @@ export const FocusVisible: Story = {
     const items = canvas.getAllByRole('radio');
 
     await step('Roving tabindex — apenas 1 item na ordem de tabulação', async () => {
-      const naOrdem = items.filter((b) => (b as HTMLElement).tabIndex === 0);
-      await expect(naOrdem).toHaveLength(1);
+      const inOrder = items.filter((b) => (b as HTMLElement).tabIndex === 0);
+      await expect(inOrder).toHaveLength(1);
     });
 
     await step('accessibility.item3 — o anel de foco aparece na navegação por teclado', async () => {
@@ -185,7 +185,7 @@ export const DisabledItem: Story = {
     ],
   },
   parameters: {
-    docs: { source: { transform: toggleGroupItemDesabilitadoSource } },
+    docs: { source: { transform: toggleGroupItemDisabledSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

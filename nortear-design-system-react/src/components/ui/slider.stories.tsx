@@ -5,7 +5,7 @@ import { Slider } from "./slider";
 import { sliderSource } from "./slider.source";
 import { SliderDocs } from "@/components/docs/SliderDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
-import { limitesDaAlca, valorDaAlca } from "@shared/testing/slider-probe";
+import { handleLimites, handleValue } from "@shared/testing/slider-probe";
 
 const meta = {
   title: "UI/Slider",
@@ -142,7 +142,7 @@ export const Playground: Story = {
       // Lê `aria-valuemin`/`aria-valuemax` OU `min`/`max` do input nativo: as
       // duas anatomias expõem o mesmo limite por superfícies diferentes, e
       // exigir uma delas reprova a outra sem nada quebrado.
-      const { min, max } = limitesDaAlca(canvas.getByRole("slider"));
+      const { min, max } = handleLimites(canvas.getByRole("slider"));
       await expect(min).toBe(0);
       await expect(max).toBe(100);
     });
@@ -156,10 +156,10 @@ export const Playground: Story = {
       // Limpa antes de medir: no replay o espião chega com as chamadas da
       // rodada anterior, e `toHaveBeenCalled` passaria mesmo se o arrasto desta
       // rodada não tivesse movido nada.
-      const espiaoMudanca = args.onValueChange as unknown as ReturnType<typeof fn>;
-      const espiaoCommit = args.onValueCommitted as unknown as ReturnType<typeof fn>;
-      espiaoMudanca.mockClear();
-      espiaoCommit.mockClear();
+      const spyChange = args.onValueChange as unknown as ReturnType<typeof fn>;
+      const spyCommit = args.onValueCommitted as unknown as ReturnType<typeof fn>;
+      spyChange.mockClear();
+      spyCommit.mockClear();
 
       // userEvent.pointer, e não PointerEvent à mão: o primitivo chama
       // setPointerCapture no pointerdown, e captura só existe para ponteiro que
@@ -191,10 +191,10 @@ export const Playground: Story = {
 
     await step("ArrowRight incrementa em step", async () => {
       const alca = canvas.getByRole("slider");
-      const antes = valorDaAlca(alca);
+      const antes = handleValue(alca);
       alca.focus();
       await userEvent.keyboard("{ArrowRight}");
-      await expect(valorDaAlca(canvas.getByRole("slider"))).toBe(
+      await expect(handleValue(canvas.getByRole("slider"))).toBe(
         Math.min(args.max ?? 100, antes + (args.step ?? 1)),
       );
     });
@@ -203,9 +203,9 @@ export const Playground: Story = {
       const alca = canvas.getByRole("slider");
       alca.focus();
       await userEvent.keyboard("{Home}");
-      await expect(valorDaAlca(canvas.getByRole("slider"))).toBe(0);
+      await expect(handleValue(canvas.getByRole("slider"))).toBe(0);
       await userEvent.keyboard("{End}");
-      await expect(valorDaAlca(canvas.getByRole("slider"))).toBe(100);
+      await expect(handleValue(canvas.getByRole("slider"))).toBe(100);
     });
   },
 };

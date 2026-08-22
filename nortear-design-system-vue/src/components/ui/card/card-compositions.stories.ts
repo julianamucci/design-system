@@ -13,12 +13,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
-  headerSourceCardWithAction,
-  cardComImagemSource,
-  cardComRodapeSource,
+  headerCardWithActionSource,
+  cardWithImageSource,
+  cardWithFooterSource,
   cardDeMetricaSource,
   cardDePerfilSource,
-  cardDeProdutoSource,
+  productCardSource,
 } from './card.source';
 
 /**
@@ -37,7 +37,7 @@ const meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
-      source: { transform: cardComRodapeSource },
+      source: { transform: cardWithFooterSource },
       description: {
         component:
           'Composições canônicas do Card: com footer, com action, com imagem e exemplos reais (ProductCard, MetricCard, ProfileCard) para catálogo, dashboard e listas de perfil.',
@@ -107,7 +107,7 @@ export const WithAction: Story = {
     // A ação entra DENTRO do cabeçalho e traz uma peça a mais no import: a do
     // meta mostraria o rodapé, que é outro lugar do card.
     docs: {
-      source: { transform: headerSourceCardWithAction },
+      source: { transform: headerCardWithActionSource },
       description: {
         story:
           'Com CardAction o header vira grid de duas colunas e a ação encosta à direita. A ordem do DOM continua título → descrição → ação, então o leitor de tela lê na ordem lógica.',
@@ -158,7 +158,7 @@ export const WithImage: Story = {
     // A imagem como primeiro filho é a composição inteira, e ela não aparece em
     // nenhuma outra story deste arquivo com a mesma posição.
     docs: {
-      source: { transform: cardComImagemSource },
+      source: { transform: cardWithImageSource },
       description: {
         story:
           'Imagem como primeiro filho: o Card arredonda o topo dela e remove o próprio padding superior por CSS — não é preciso passar classe na imagem.',
@@ -216,7 +216,7 @@ export const ProductCard: Story = {
     // Todas as sete peças de uma vez, mais o selo de status: nenhuma outra
     // story deste arquivo monta a unidade completa.
     docs: {
-      source: { transform: cardDeProdutoSource },
+      source: { transform: productCardSource },
       description: {
         story:
           'Exemplo real de catálogo: imagem + título + descrição + Badge de status na ação do header + rodapé com ações contextuais.',

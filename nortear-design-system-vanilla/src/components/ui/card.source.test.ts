@@ -49,13 +49,13 @@ describe('cardSnippet', () => {
   });
 
   it('a ação vive dentro do cabeçalho, e a imagem é o primeiro filho', () => {
-    const comAcao = cardSnippet({ action: true });
-    expect(comAcao).toContain('createCardAction()');
-    expect(comAcao).toContain('cabecalho.appendChild(acao);');
+    const withAction = cardSnippet({ action: true });
+    expect(withAction).toContain('createCardAction()');
+    expect(withAction).toContain('cabecalho.appendChild(acao);');
 
-    const comImagem = cardSnippet({ image: true });
-    expect(comImagem).toContain('card.append(\n  foto,\n  cabecalho,\n  conteudo,\n);');
-    expect(comImagem).toContain('foto.alt =');
+    const withImage = cardSnippet({ image: true });
+    expect(withImage).toContain('card.append(\n  foto,\n  cabecalho,\n  conteudo,\n);');
+    expect(withImage).toContain('foto.alt =');
   });
 
   it('não vaza helper de story', () => {

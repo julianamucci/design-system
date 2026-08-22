@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
-  checkboxComDescricaoSource,
+  checkboxWithDescriptionSource,
   checkboxWithErrorSource,
-  checkboxDesabilitadoMarcadoSource,
-  checkboxDesabilitadoSource,
-  checkboxEmFormularioSource,
+  checkboxDisabledCheckedSource,
+  checkboxDisabledSource,
+  formCheckboxSource,
   checkboxIndeterminadoSource,
   checkboxManterSessaoSource,
   checkboxCheckedWithLabelSource,
-  checkboxMarcadoSource,
-  checkboxSelecionarTodosSource,
+  checkboxCheckedSource,
+  checkboxSelectAllSource,
   checkboxNoLabelSource,
   checkboxSource,
 } from './checkbox.source';
@@ -72,7 +72,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a caixa sozinha marcada parte de true', () => {
-    expect(checkboxMarcadoSource()).toContain('$state(true)');
+    expect(checkboxCheckedSource()).toContain('$state(true)');
   });
 
   it('a caixa sozinha indeterminada liga o segundo estado', () => {
@@ -80,7 +80,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a descrição traz o rótulo e o apoio da story', () => {
-    const saida = checkboxComDescricaoSource();
+    const saida = checkboxWithDescriptionSource();
     expect(saida).toContain('Receber novidades por email');
     expect(saida).toContain('você concorda em receber comunicações de marketing');
   });
@@ -91,12 +91,12 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a seleção parcial de grupo é rotulada pelo que ela comanda', () => {
-    expect(checkboxSelecionarTodosSource()).toContain('Selecionar todos os itens');
+    expect(checkboxSelectAllSource()).toContain('Selecionar todos os itens');
   });
 
   it('os dois desabilitados apagam a linha, e um deles continua marcado', () => {
-    expect(checkboxDesabilitadoSource()).toContain('data-disabled="true"');
-    expect(checkboxDesabilitadoMarcadoSource()).toContain('$state(true)');
+    expect(checkboxDisabledSource()).toContain('data-disabled="true"');
+    expect(checkboxDisabledCheckedSource()).toContain('$state(true)');
   });
 
   it('o erro aparece pelo canal ARIA, sem desabilitar a caixa', () => {
@@ -106,7 +106,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('o formulário leva name e value, que é o que chega ao envio', () => {
-    const saida = checkboxEmFormularioSource();
+    const saida = formCheckboxSource();
     expect(saida).toContain('<form class="nds-stack" data-spacing="md">');
     expect(saida).toContain('name="termos"');
     expect(saida).toContain('value="aceito"');

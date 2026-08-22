@@ -16,7 +16,7 @@
  * Armadilhas evitadas aqui:
  *
  *   - `console.log` não chega ao terminal (o addon do Storybook instrumenta o
- *     console dentro da play). O canal é a exceção — ver `reportarSonda`.
+ *     console dentro da play). O canal é a exceção — ver `reportProbe`.
  *   - **Geometria computada, nunca a folha lida a olho.** A tabela de tokens
  *     dizia `h-px w-full` / `w-px h-full`, e a folha aplica `height: 1px` +
  *     `width: 100%` num eixo e `width: 1px` + `align-self: stretch` no outro.
@@ -30,15 +30,15 @@
  *   - O foco muda o estado medido; a sonda devolve o foco a quem o tinha.
  */
 
-import { fundoEfetivo, ligarTemaEscuro, razao, resolverCor, semTransicao } from './cor';
+import { backgroundEffective, darkLigarTheme, ratio, resolveColor, noTransicao } from './cor';
 import type { Contraste } from './cor';
 
 export type { Contraste } from './cor';
-export { ligarTemaEscuro };
+export { darkLigarTheme };
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
-export interface MedidaDeSeparador {
+export interface SeparatorMeasurement {
   /** `false` é a stack não montar o cenário, ou não vestir a classe do contrato. */
   presente: boolean;
   tag: string | null;
@@ -59,7 +59,7 @@ export interface MedidaDeSeparador {
   orientacaoAnunciadaEmDecorativo: boolean;
   tabindex: string | null;
   /** Separador não é interativo: `focus()` programático não pode fixá-lo. */
-  recebeFoco: boolean;
+  recebeFocus: boolean;
 
   // ── Geometria ──────────────────────────────────────────────────────────────
   larguraPx: number;
@@ -91,9 +91,9 @@ export interface MedidaDeSeparador {
   elementoNoCentro: string | null;
 }
 
-export interface MedidaDeCenario {
+export interface CenarioMeasurement {
   /** `null` quando a stack não monta este cenário. */
-  separadores: MedidaDeSeparador[] | null;
+  separadores: SeparatorMeasurement[] | null;
   /** Quantos `.nds-separator` o cenário tem — divergência de contagem é achado. */
   quantidade: number;
 }
@@ -105,7 +105,7 @@ export interface MedidaDeCenario {
  * porque a divergência de vocabulário entre stacks é, ela própria, o achado:
  * medir só pela classe esconderia uma stack que veste `data-slot` e não a classe.
  */
-const SEL_SEPARADOR = '.nds-separator, [data-slot="separator"]';
+const SEL_SEPARATOR = '.nds-separator, [data-slot="separator"]';
 
 const num = (v: number): number => Math.round(v * 100) / 100;
 
@@ -142,7 +142,7 @@ function identificarToken(raiz: HTMLElement, cor: string): string {
   const alvo = normalizar(cor);
   if (!alvo) return 'desconhecido';
   const casados = CANDIDATOS.filter(([, valor]) => {
-    const resolvido = resolverCor(raiz, valor);
+    const resolvido = resolveColor(raiz, valor);
     return resolvido !== null && normalizar(resolvido) === alvo;
   }).map(([nome]) => nome);
   return casados.length ? casados.join(' | ') : 'desconhecido';
@@ -156,12 +156,12 @@ function descrever(el: Element | null): string | null {
 
 // ─── Medição de um separador ──────────────────────────────────────────────────
 
-function medirSeparador(sep: HTMLElement, raiz: HTMLElement): MedidaDeSeparador {
+function measureSeparator(sep: HTMLElement, raiz: HTMLElement): SeparatorMeasurement {
   const cs = getComputedStyle(sep);
   const r = sep.getBoundingClientRect();
   const pai = sep.parentElement;
-  const csPai = pai ? getComputedStyle(pai) : null;
-  const rPai = pai?.getBoundingClientRect();
+  const csParent = pai ? getComputedStyle(pai) : null;
+  const rParent = pai?.getBoundingClientRect();
 
   const role = sep.getAttribute('role');
   const ariaHidden = sep.getAttribute('aria-hidden');
@@ -170,14 +170,14 @@ function medirSeparador(sep: HTMLElement, raiz: HTMLElement): MedidaDeSeparador 
 
   const vertical = sep.getAttribute('data-orientation') === 'vertical';
   const fundo = cs.backgroundColor;
-  const atras = fundoEfetivo(pai);
+  const atras = backgroundEffective(pai);
 
   // O foco é medido e desfeito: separador focável é defeito, mas deixar o foco
   // posto envenena a medição seguinte e a foto do Chromatic.
   const anterior = sep.ownerDocument.activeElement as HTMLElement | null;
   sep.focus?.();
-  const recebeFoco = sep.ownerDocument.activeElement === sep;
-  if (recebeFoco) anterior?.focus?.();
+  const recebeFocus = sep.ownerDocument.activeElement === sep;
+  if (recebeFocus) anterior?.focus?.();
 
   const centro = r.width > 0 && r.height > 0
     ? sep.ownerDocument.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)
@@ -200,7 +200,7 @@ function medirSeparador(sep: HTMLElement, raiz: HTMLElement): MedidaDeSeparador 
     ariaOrientation,
     orientacaoAnunciadaEmDecorativo: decorativo && ariaOrientation !== null,
     tabindex: sep.getAttribute('tabindex'),
-    recebeFoco,
+    recebeFocus,
 
     larguraPx: num(r.width),
     alturaPx: num(r.height),
@@ -211,12 +211,12 @@ function medirSeparador(sep: HTMLElement, raiz: HTMLElement): MedidaDeSeparador 
     cssHeight: cs.height,
     alignSelf: cs.alignSelf,
     flexShrink: cs.flexShrink,
-    displayDoPai: csPai?.display ?? '',
-    comprimentoDoPaiPx: rPai ? num(vertical ? rPai.height : rPai.width) : 0,
+    displayDoPai: csParent?.display ?? '',
+    comprimentoDoPaiPx: rParent ? num(vertical ? rParent.height : rParent.width) : 0,
 
     fundo,
     fundoAtras: atras,
-    contraste: atras ? razao(fundo, atras) : null,
+    contraste: atras ? ratio(fundo, atras) : null,
     tokenDeOrigem: identificarToken(raiz, fundo),
 
     elementoNoCentro: descrever(centro),
@@ -226,11 +226,11 @@ function medirSeparador(sep: HTMLElement, raiz: HTMLElement): MedidaDeSeparador 
 // ─── API pública ──────────────────────────────────────────────────────────────
 
 /** Mede todos os separadores dentro de `alvo`. */
-export function medirCenario(alvo: HTMLElement | null, raiz: HTMLElement): MedidaDeCenario {
+export function measureCenario(alvo: HTMLElement | null, raiz: HTMLElement): CenarioMeasurement {
   if (!alvo) return { separadores: null, quantidade: 0 };
-  const seps = [...alvo.querySelectorAll<HTMLElement>(SEL_SEPARADOR)];
+  const seps = [...alvo.querySelectorAll<HTMLElement>(SEL_SEPARATOR)];
   return {
-    separadores: seps.map((s) => semTransicao(s, () => medirSeparador(s, raiz))),
+    separadores: seps.map((s) => noTransicao(s, () => measureSeparator(s, raiz))),
     quantidade: seps.length,
   };
 }
@@ -240,10 +240,10 @@ export function medirCenario(alvo: HTMLElement | null, raiz: HTMLElement): Medid
  * Cenário ausente vem `separadores: null` — é o achado de "a stack não monta
  * este caso", e não uma falha da medição.
  */
-export function medirCenarios(raiz: HTMLElement, cenarios: string[]): Record<string, MedidaDeCenario> {
-  const registro: Record<string, MedidaDeCenario> = {};
+export function measureCenarios(raiz: HTMLElement, cenarios: string[]): Record<string, CenarioMeasurement> {
+  const registro: Record<string, CenarioMeasurement> = {};
   for (const cenario of cenarios) {
-    registro[cenario] = medirCenario(raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`), raiz);
+    registro[cenario] = measureCenario(raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`), raiz);
   }
   return registro;
 }
@@ -256,7 +256,7 @@ export function medirCenarios(raiz: HTMLElement, cenarios: string[]): Record<str
  * que deixou isso passar; aqui a fonte é `getComputedStyle` mais os candidatos
  * resolvidos na própria árvore.
  */
-export function medirTokens(raiz: HTMLElement) {
+export function measureTokens(raiz: HTMLElement) {
   const cs = getComputedStyle(raiz);
   const ler = (nome: string) => cs.getPropertyValue(nome).trim();
   return {
@@ -267,7 +267,7 @@ export function medirTokens(raiz: HTMLElement) {
     background: ler('--background'),
     /** As cores já resolvidas, que é o que a comparação de token usa. */
     resolvidos: Object.fromEntries(
-      CANDIDATOS.map(([nome, valor]) => [nome, resolverCor(raiz, valor)]),
+      CANDIDATOS.map(([nome, valor]) => [nome, resolveColor(raiz, valor)]),
     ),
   };
 }
@@ -277,12 +277,12 @@ export function medirTokens(raiz: HTMLElement) {
  * vê, porque a tela está sempre no claro. A classe sai no `finally`: deixá-la
  * posta envenena a story seguinte e a foto do Chromatic.
  */
-export function medirNoEscuro(raiz: HTMLElement, cenarios: string[]) {
-  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
+export function darkMeasure(raiz: HTMLElement, cenarios: string[]) {
+  const desfazer = darkLigarTheme(raiz.ownerDocument);
   try {
     return {
-      tokens: medirTokens(raiz),
-      cenarios: medirCenarios(raiz, cenarios),
+      tokens: measureTokens(raiz),
+      cenarios: measureCenarios(raiz, cenarios),
     };
   } finally {
     desfazer();
@@ -295,11 +295,11 @@ export function medirNoEscuro(raiz: HTMLElement, cenarios: string[]) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportarSonda(stack: string, raiz: HTMLElement, cenarios: string[]): never {
+export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]): never {
   const registro = {
-    tokens: medirTokens(raiz),
-    claro: medirCenarios(raiz, cenarios),
-    escuro: medirNoEscuro(raiz, cenarios),
+    tokens: measureTokens(raiz),
+    claro: measureCenarios(raiz, cenarios),
+    escuro: darkMeasure(raiz, cenarios),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);
 }

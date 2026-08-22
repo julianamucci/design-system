@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { waitForPortal } from '@/lib/wait-for-portal';
-import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
+import { borderWaitForEncostar } from '@shared/testing/sheet-geometry';
 
 import { expect } from 'storybook/test';
 import SheetStory from './SheetStory.svelte';
@@ -68,7 +68,7 @@ export const Right: Story = {
     // O atributo prova que a prop chegou; a caixa prova que o CSS a obedeceu.
     // O painel ENTRA deslocado pela própria largura, e o helper espera o
     // transform assentar antes de medir.
-    await esperarEncostarNaBorda(painel, 'right');
+    await borderWaitForEncostar(painel, 'right');
   },
 };
 
@@ -97,7 +97,7 @@ export const Left: Story = {
     await expect(painel).toHaveAttribute('data-side', 'left');
     await expect(painel).toHaveClass(/nds-sheet-content/);
     await expect(painel).toHaveAccessibleName();
-    await esperarEncostarNaBorda(painel, 'left');
+    await borderWaitForEncostar(painel, 'left');
   },
 };
 
@@ -125,7 +125,7 @@ export const Top: Story = {
     await expect(painel).toHaveAttribute('data-side', 'top');
     await expect(painel).toHaveClass(/nds-sheet-content/);
     await expect(painel).toHaveAccessibleName();
-    await esperarEncostarNaBorda(painel, 'top');
+    await borderWaitForEncostar(painel, 'top');
   },
 };
 
@@ -154,6 +154,6 @@ export const Bottom: Story = {
     await expect(painel).toHaveAttribute('data-side', 'bottom');
     await expect(painel).toHaveClass(/nds-sheet-content/);
     await expect(painel).toHaveAccessibleName();
-    await esperarEncostarNaBorda(painel, 'bottom');
+    await borderWaitForEncostar(painel, 'bottom');
   },
 };

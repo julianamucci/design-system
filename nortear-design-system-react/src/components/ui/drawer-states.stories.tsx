@@ -13,9 +13,9 @@ import {
   DrawerTrigger,
 } from "./drawer";
 import {
-  drawerAbertoSource,
-  drawerControladoSource,
-  drawerNaoDispensavelSource,
+  drawerOpenSource,
+  drawerControlledSource,
+  drawerNotDispensavelSource,
   drawerSource,
 } from "./drawer.source";
 import { Button } from "./button";
@@ -103,7 +103,7 @@ export const Open: Story = {
     docs: {
       // Aqui abrir na montagem É o assunto — nas demais stories o `defaultOpen`
       // só serve à captura visual, e por isso não entra naqueles snippets.
-      source: { transform: drawerAbertoSource },
+      source: { transform: drawerOpenSource },
       description: {
         story:
           "Aberto ao montar, sem estado externo. Overlay ativo, foco dentro do painel e contrato de markup completo.",
@@ -159,7 +159,7 @@ export const Controlled: Story = {
     docs: {
       // Composição diferente: estado de fora, sem `DrawerTrigger` — quem abre é
       // o botão da página.
-      source: { transform: drawerControladoSource },
+      source: { transform: drawerControlledSource },
       description: {
         story:
           "Estado do lado de fora: o componente não decide nada sozinho — abre quando o valor ligado diz que sim e avisa a cada mudança para que o dono do estado acompanhe.",
@@ -197,19 +197,19 @@ export const Controlled: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const abrirBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
-    const fecharBtn = canvas.getByRole("button", { name: /Fechar externamente/i });
+    const openBtn = canvas.getByRole("button", { name: /Abrir externamente/i });
+    const closeBtn = canvas.getByRole("button", { name: /Fechar externamente/i });
 
     await step("Sem gatilho interno, o painel nasce fechado", async () => {
       if (within(document.body).queryAllByRole("dialog").length > 0) {
-        await userEvent.click(fecharBtn);
+        await userEvent.click(closeBtn);
         await waitForPortalGone("dialog");
       }
       await expect(within(document.body).queryAllByRole("dialog")).toHaveLength(0);
     });
 
     await step("O estado externo abre o painel", async () => {
-      await userEvent.click(abrirBtn);
+      await userEvent.click(openBtn);
       const painel = await waitForPortal("dialog");
       await expect(painel).toBeVisible();
       await expect(painel).toHaveAccessibleName("Editar perfil");
@@ -231,7 +231,7 @@ export const NotDismissible: Story = {
     docs: {
       // `dismissible={false}` só faz sentido junto da saída explícita do rodapé
       // — o snippet precisa mostrar os dois na mesma composição.
-      source: { transform: drawerNaoDispensavelSource },
+      source: { transform: drawerNotDispensavelSource },
       description: {
         story:
           "Sem dispensa por gesto: Escape e clique no overlay não fecham. A saída existe e é explícita — o botão do rodapé, alcançável por teclado.",

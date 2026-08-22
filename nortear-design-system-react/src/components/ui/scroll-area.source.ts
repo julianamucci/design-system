@@ -28,7 +28,7 @@ export type ScrollAreaArgs = {
 };
 
 const SIMPLE_IMPORT = 'import { ScrollArea } from "@/components/ui/scroll-area";';
-const IMPORT_COM_BARRA =
+const IMPORT_WITH_BAR =
   'import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";';
 
 /** Quantidade de itens do exemplo, e só quando o control entrega um número. */
@@ -43,7 +43,7 @@ function quantidade(valor: unknown, padrao: number): number {
  * de uma utilitária: as duas medidas moram no componente, não num quadro em
  * volta dele.
  */
-function listaVertical(itens: number): string {
+function verticalList(itens: number): string {
   return `const tags = Array.from({ length: ${itens} }, (_, i) => \`Tag \${i + 1}\`);
 
 <ScrollArea size="lg" className="nds-w-sm nds-rounded-md nds-border-default">
@@ -63,7 +63,7 @@ function listaVertical(itens: number): string {
  * cartões não encolhem (`nds-shrink-0`) — sem isso o flex os espremeria para
  * caber e o transbordo, que é o assunto, deixaria de existir.
  */
-function faixaHorizontal(itens: number): string {
+function horizontalRange(itens: number): string {
   return `const cartoes = Array.from({ length: ${itens} }, (_, i) => \`Card \${i + 1}\`);
 
 <ScrollArea
@@ -124,17 +124,17 @@ const colunas = Array.from({ length: 12 }, (_, i) => i + 1);
 export const scrollAreaSource: SourceTransform<ScrollAreaArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   if (args.orientation === 'horizontal') {
-    return jsxSnippet(IMPORT_COM_BARRA, faixaHorizontal(quantidade(args.itemCount, 12)));
+    return jsxSnippet(IMPORT_WITH_BAR, horizontalRange(quantidade(args.itemCount, 12)));
   }
   if (args.orientation === 'both') {
-    return jsxSnippet(IMPORT_COM_BARRA, tableAmpla(quantidade(args.itemCount, 12)));
+    return jsxSnippet(IMPORT_WITH_BAR, tableAmpla(quantidade(args.itemCount, 12)));
   }
-  return jsxSnippet(SIMPLE_IMPORT, listaVertical(quantidade(args.itemCount, 24)));
+  return jsxSnippet(SIMPLE_IMPORT, verticalList(quantidade(args.itemCount, 24)));
 };
 
 /** Horizontal: a direção é o assunto, e nenhum control a descreve neste arquivo. */
 export function scrollAreaHorizontalSource(): string {
-  return jsxSnippet(IMPORT_COM_BARRA, faixaHorizontal(12));
+  return jsxSnippet(IMPORT_WITH_BAR, horizontalRange(12));
 }
 
 /**
@@ -142,8 +142,8 @@ export function scrollAreaHorizontalSource(): string {
  * matriz de dados — duplicá-la em duas funções faria as duas envelhecerem
  * separadas.
  */
-export function scrollAreaTabelaSource(): string {
-  return jsxSnippet(IMPORT_COM_BARRA, tableAmpla(15));
+export function scrollAreaTableSource(): string {
+  return jsxSnippet(IMPORT_WITH_BAR, tableAmpla(15));
 }
 
 /**
@@ -152,7 +152,7 @@ export function scrollAreaTabelaSource(): string {
  * continua abaixo do que se vê, que é exatamente a leitura errada num conteúdo
  * que rola.
  */
-export function tagsSourceScrollAreaList(): string {
+export function tagsScrollAreaListSource(): string {
   return jsxSnippet(
     `${SIMPLE_IMPORT}
 import { Separator } from "@/components/ui/separator";`,
@@ -179,7 +179,7 @@ import { Separator } from "@/components/ui/separator";`,
  */
 export function scrollAreaCarrosselSource(): string {
   return jsxSnippet(
-    IMPORT_COM_BARRA,
+    IMPORT_WITH_BAR,
     `const fotos = Array.from({ length: 12 }, (_, i) => i + 1);
 
 <ScrollArea
@@ -247,7 +247,7 @@ export function scrollAreaMenuLateralSource(): string {
  * os links continuam na ordem do documento, e o navegador traz para o campo
  * visível o que recebe foco. É por isso que a rolagem é a nativa.
  */
-export function scrollAreaConteudoFocavelSource(): string {
+export function scrollAreaContentFocavelSource(): string {
   return jsxSnippet(
     SIMPLE_IMPORT,
     `const acoes = Array.from({ length: 20 }, (_, i) => i + 1);

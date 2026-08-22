@@ -143,11 +143,11 @@ export const Controlled: Story = {
 
     await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
       const painel = await waitForPortal('dialog');
-      const espiao = args.onCancel as ReturnType<typeof fn>;
-      const chamadasAntes = espiao.mock.calls.length;
+      const spy = args.onCancel as ReturnType<typeof fn>;
+      const callsBefore = spy.mock.calls.length;
       await userEvent.click(within(painel).getByRole('button', { name: /Cancelar/i }));
       await waitForPortalGone('dialog');
-      await expect(espiao.mock.calls.length).toBe(chamadasAntes + 1);
+      await expect(spy.mock.calls.length).toBe(callsBefore + 1);
       // Se o valor não tivesse voltado ao pai, o painel reabriria no próximo
       // ciclo de renderização.
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);

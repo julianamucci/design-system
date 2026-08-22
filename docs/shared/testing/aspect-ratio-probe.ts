@@ -15,7 +15,7 @@
 
 export type Mecanismo = 'aspect-ratio' | 'padding-bottom' | 'altura-cravada' | 'nenhum';
 
-export interface MedidaDeCaixa {
+export interface BoxMeasurement {
   /** `null` quando o seletor não casou — isso É o achado, não falha da medição. */
   presente: boolean;
   tag: string | null;
@@ -28,37 +28,37 @@ export interface MedidaDeCaixa {
   aspectRatioComputado: string | null;
   paddingBottomComputado: string | null;
   /** Altura declarada no `style` inline: qualquer valor aqui é altura cravada. */
-  alturaInline: string | null;
-  posicao: string | null;
+  heightInline: string | null;
+  position: string | null;
   overflow: string | null;
   largura: number | null;
   altura: number | null;
   /** largura / altura, com duas casas. */
-  razao: number | null;
+  ratio: number | null;
   mecanismo: Mecanismo;
 }
 
-export interface MedidaDeFilho {
+export interface ChildMeasurement {
   presente: boolean;
   tag: string | null;
-  posicao: string | null;
+  position: string | null;
   objectFit: string | null;
   /** Diferença entre a caixa do filho e a do container, em px. */
   transbordoLargura: number | null;
   transbordoAltura: number | null;
 }
 
-export interface MedidaDeProporcao {
+export interface RatioMeasurement {
   cenario: string;
   larguraDoPai: number;
   /** A caixa que o contrato `.nds-*` promete. */
-  contrato: MedidaDeCaixa;
+  contrato: BoxMeasurement;
   /** A caixa que o `data-slot` aponta — pode não ser a mesma. */
-  slot: MedidaDeCaixa;
-  filho: MedidaDeFilho;
+  slot: BoxMeasurement;
+  filho: ChildMeasurement;
 }
 
-const NENHUMA: MedidaDeCaixa = {
+const NENHUMA: BoxMeasurement = {
   presente: false,
   tag: null,
   classesNds: '',
@@ -66,12 +66,12 @@ const NENHUMA: MedidaDeCaixa = {
   ratioInline: null,
   aspectRatioComputado: null,
   paddingBottomComputado: null,
-  alturaInline: null,
-  posicao: null,
+  heightInline: null,
+  position: null,
   overflow: null,
   largura: null,
   altura: null,
-  razao: null,
+  ratio: null,
   mecanismo: 'nenhum',
 };
 
@@ -92,22 +92,22 @@ function profundidadeAte(raiz: Element, el: Element): number {
  * declaração, e o truque do padding só conta quando é PERCENTUAL — um
  * `padding-bottom: 8px` de espaçamento comum não sustenta proporção nenhuma.
  */
-function mecanismoDe(cs: CSSStyleDeclaration, alturaInline: string | null): Mecanismo {
+function mecanismoDe(cs: CSSStyleDeclaration, heightInline: string | null): Mecanismo {
   if (cs.aspectRatio && cs.aspectRatio !== 'auto') return 'aspect-ratio';
   if (cs.paddingBottom && cs.paddingBottom !== '0px') {
     // O computado já vem resolvido em px; a porcentagem só aparece na
     // declaração inline, que é onde as libs headless a escrevem.
     return 'padding-bottom';
   }
-  if (alturaInline) return 'altura-cravada';
+  if (heightInline) return 'altura-cravada';
   return 'nenhum';
 }
 
-function medirCaixa(raiz: Element, el: HTMLElement | null): MedidaDeCaixa {
+function measureBox(raiz: Element, el: HTMLElement | null): BoxMeasurement {
   if (!el) return { ...NENHUMA };
   const cs = getComputedStyle(el);
   const rect = el.getBoundingClientRect();
-  const alturaInline = el.style.height || null;
+  const heightInline = el.style.height || null;
   return {
     presente: true,
     tag: el.tagName.toLowerCase(),
@@ -121,29 +121,29 @@ function medirCaixa(raiz: Element, el: HTMLElement | null): MedidaDeCaixa {
     // O computado devolve px; a declaração inline preserva a porcentagem, que é
     // o que distingue o truque antigo de um padding qualquer.
     paddingBottomComputado: el.style.paddingBottom || cs.paddingBottom || null,
-    alturaInline,
-    posicao: cs.position,
+    heightInline,
+    position: cs.position,
     overflow: cs.overflow,
     largura: Math.round(rect.width * 100) / 100,
     altura: Math.round(rect.height * 100) / 100,
-    razao: rect.height > 0 ? Math.round((rect.width / rect.height) * 100) / 100 : null,
-    mecanismo: mecanismoDe(cs, alturaInline),
+    ratio: rect.height > 0 ? Math.round((rect.width / rect.height) * 100) / 100 : null,
+    mecanismo: mecanismoDe(cs, heightInline),
   };
 }
 
-function medirFilho(caixa: HTMLElement | null): MedidaDeFilho {
+function measureChild(caixa: HTMLElement | null): ChildMeasurement {
   // `:scope > *` e não um seletor descendente: a regra que interessa é
   // `.nds-aspect-ratio > *`, que só alcança filho DIRETO. Buscar em profundidade
   // devolveria um neto e mediria uma promessa que a folha não faz.
   const filho = caixa?.querySelector<HTMLElement>(':scope > *');
-  if (!caixa || !filho) return { presente: false, tag: null, posicao: null, objectFit: null, transbordoLargura: null, transbordoAltura: null };
+  if (!caixa || !filho) return { presente: false, tag: null, position: null, objectFit: null, transbordoLargura: null, transbordoAltura: null };
   const rc = caixa.getBoundingClientRect();
   const rf = filho.getBoundingClientRect();
   const cs = getComputedStyle(filho);
   return {
     presente: true,
     tag: filho.tagName.toLowerCase(),
-    posicao: cs.position,
+    position: cs.position,
     objectFit: cs.objectFit,
     transbordoLargura: Math.round((rf.width - rc.width) * 100) / 100,
     transbordoAltura: Math.round((rf.height - rc.height) * 100) / 100,
@@ -158,27 +158,27 @@ function medirFilho(caixa: HTMLElement | null): MedidaDeFilho {
  * marcador de composição. Onde os dois não caem no mesmo elemento, ou onde o
  * primeiro vem `null`, a stack está sustentando a proporção por fora da folha.
  */
-export function medirProporcao(pai: HTMLElement, cenario: string): MedidaDeProporcao {
-  const porContrato = pai.querySelector<HTMLElement>('.nds-aspect-ratio');
-  const porSlot = pai.querySelector<HTMLElement>('[data-slot="aspect-ratio"]');
+export function measureRatio(pai: HTMLElement, cenario: string): RatioMeasurement {
+  const byContrato = pai.querySelector<HTMLElement>('.nds-aspect-ratio');
+  const bySlot = pai.querySelector<HTMLElement>('[data-slot="aspect-ratio"]');
   return {
     cenario,
     larguraDoPai: Math.round(pai.getBoundingClientRect().width * 100) / 100,
-    contrato: medirCaixa(pai, porContrato),
-    slot: medirCaixa(pai, porSlot),
-    filho: medirFilho(porSlot ?? porContrato),
+    contrato: measureBox(pai, byContrato),
+    slot: measureBox(pai, bySlot),
+    filho: measureChild(bySlot ?? byContrato),
   };
 }
 
 /** Mede todos os cenários marcados com `data-cenario` dentro da raiz. */
-export function medirCenarios(raiz: HTMLElement): MedidaDeProporcao[] {
+export function measureCenarios(raiz: HTMLElement): RatioMeasurement[] {
   return Array.from(raiz.querySelectorAll<HTMLElement>('[data-cenario]')).map((pai) =>
-    medirProporcao(pai, pai.dataset.cenario ?? '?'),
+    measureRatio(pai, pai.dataset.cenario ?? '?'),
   );
 }
 
 /** Uma linha por cenário — a tabela para o diff campo a campo entre stacks. */
-export function resumirProporcoes(medidas: MedidaDeProporcao[]): string[] {
+export function resumirProporcoes(medidas: RatioMeasurement[]): string[] {
   return medidas.map((m) => {
     const c = m.contrato;
     const s = m.slot;
@@ -190,15 +190,15 @@ export function resumirProporcoes(medidas: MedidaDeProporcao[]): string[] {
       `ratioInline=${s.ratioInline ?? c.ratioInline ?? 'null'}`,
       `mecanismo=${s.mecanismo}`,
       `caixa=${s.largura}x${s.altura}`,
-      `razao=${s.razao}`,
-      `alturaInline=${s.alturaInline ?? 'null'}`,
-      `filho=${m.filho.tag}/${m.filho.posicao}/${m.filho.objectFit}`,
+      `razao=${s.ratio}`,
+      `alturaInline=${s.heightInline ?? 'null'}`,
+      `filho=${m.filho.tag}/${m.filho.position}/${m.filho.objectFit}`,
       `transbordo=${m.filho.transbordoLargura}x${m.filho.transbordoAltura}`,
     ].join('|');
   });
 }
 
-export interface FalhaDeProporcao {
+export interface RatioFailure {
   cenario: string;
   motivo: string;
 }
@@ -209,47 +209,47 @@ export interface FalhaDeProporcao {
  * `tolerancia` em razão, não em pixels: a caixa é subpixel e comparar altura
  * exata reprova por arredondamento do layout.
  */
-export function reprovasDeProporcao(
-  medidas: MedidaDeProporcao[],
+export function ratioReprovas(
+  medidas: RatioMeasurement[],
   razaoEsperada: number,
   tolerancia = 0.02,
-): FalhaDeProporcao[] {
-  const falhas: FalhaDeProporcao[] = [];
+): RatioFailure[] {
+  const failures: RatioFailure[] = [];
   for (const m of medidas) {
     if (!m.contrato.presente) {
-      falhas.push({ cenario: m.cenario, motivo: '.nds-aspect-ratio não existe — a folha compartilhada não governa esta caixa' });
+      failures.push({ cenario: m.cenario, motivo: '.nds-aspect-ratio não existe — a folha compartilhada não governa esta caixa' });
       continue;
     }
     if (m.contrato.mecanismo !== 'aspect-ratio') {
-      falhas.push({ cenario: m.cenario, motivo: `proporção sustentada por ${m.contrato.mecanismo}, e não pelo aspect-ratio nativo da folha` });
+      failures.push({ cenario: m.cenario, motivo: `proporção sustentada por ${m.contrato.mecanismo}, e não pelo aspect-ratio nativo da folha` });
     }
-    if (m.contrato.alturaInline) {
-      falhas.push({ cenario: m.cenario, motivo: `altura cravada no style inline: ${m.contrato.alturaInline}` });
+    if (m.contrato.heightInline) {
+      failures.push({ cenario: m.cenario, motivo: `altura cravada no style inline: ${m.contrato.heightInline}` });
     }
-    if (m.contrato.razao === null) {
-      falhas.push({ cenario: m.cenario, motivo: 'altura zero — a caixa não reservou espaço' });
+    if (m.contrato.ratio === null) {
+      failures.push({ cenario: m.cenario, motivo: 'altura zero — a caixa não reservou espaço' });
       continue;
     }
-    if (Math.abs(m.contrato.razao - razaoEsperada) > tolerancia) {
-      falhas.push({
+    if (Math.abs(m.contrato.ratio - razaoEsperada) > tolerancia) {
+      failures.push({
         cenario: m.cenario,
-        motivo: `razão medida ${m.contrato.razao} contra ${Math.round(razaoEsperada * 100) / 100} pedida (caixa ${m.contrato.largura}x${m.contrato.altura})`,
+        motivo: `razão medida ${m.contrato.ratio} contra ${Math.round(razaoEsperada * 100) / 100} pedida (caixa ${m.contrato.largura}x${m.contrato.altura})`,
       });
     }
     // A folha promete que o filho DIRETO cobre a caixa
     // (`.nds-aspect-ratio > * { position: absolute; inset: 0 }`). Sem a regra, um
     // filho sem altura própria fica menor que o container e a promessa é falsa —
     // sem que a proporção da caixa acuse nada.
-    if (m.filho.presente && m.filho.posicao !== 'absolute') {
-      falhas.push({
+    if (m.filho.presente && m.filho.position !== 'absolute') {
+      failures.push({
         cenario: m.cenario,
-        motivo: `filho <${m.filho.tag}> em position: ${m.filho.posicao} — a folha não o está esticando para cobrir a caixa`,
+        motivo: `filho <${m.filho.tag}> em position: ${m.filho.position} — a folha não o está esticando para cobrir a caixa`,
       });
     }
   }
-  return falhas;
+  return failures;
 }
 
-export function descreverFalhasDeProporcao(fs: FalhaDeProporcao[]): string {
+export function ratioDescribeFailures(fs: RatioFailure[]): string {
   return fs.map((f) => `  · ${f.cenario} — ${f.motivo}`).join('\n');
 }

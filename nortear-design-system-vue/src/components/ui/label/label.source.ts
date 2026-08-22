@@ -21,10 +21,10 @@ const IMPORTS = `import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'`;
 
 /** Moldura do exemplo e o respiro entre o rótulo e o controle. */
-const MOLDURA = 'nds-stack nds-w-xs';
+const FRAME = 'nds-stack nds-w-xs';
 
 /** Bloco vertical: rótulo em cima, controle embaixo. */
-function bloco(filhos: string[], moldura = MOLDURA, extra = ''): string {
+function bloco(filhos: string[], moldura = FRAME, extra = ''): string {
   return `<div class="${moldura}"${attrs('data-spacing="xs"', extra)}>
 ${indentar(filhos.join('\n'))}
 </div>`;
@@ -77,7 +77,7 @@ export function labelDefaultSource(): string {
  * classe no controle o campo apaga e o rótulo fica aceso, prometendo uma
  * interação que não existe.
  */
-export function labelDesabilitadoSource(): string {
+export function labelDisabledSource(): string {
   return vueSnippet(
     IMPORTS,
     bloco([
@@ -100,7 +100,7 @@ export function labelDisabledPeloGroupSource(): string {
         '<Label for="documento">Documento</Label>',
         '<Input id="documento" type="text" placeholder="ex: 000.000.000-00" disabled />',
       ],
-      MOLDURA,
+      FRAME,
       'data-disabled="true"',
     ),
   );
@@ -124,7 +124,7 @@ export function labelObrigatorioSource(): string {
 }
 
 /** O par com um campo de texto — a composição mais comum do rótulo. */
-export function labelComCampoSource(): string {
+export function labelWithFieldSource(): string {
   return vueSnippet(
     IMPORTS,
     bloco([
@@ -142,7 +142,7 @@ export function labelComCampoSource(): string {
  * foco a ela. Vale só para controle rotulável; um `<div role="checkbox">` não
  * receberia nem o foco nem a marcação por esse caminho.
  */
-export function selectionSourceLabelWithBox(): string {
+export function selectionLabelWithBoxSource(): string {
   return vueSnippet(
     `import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'`,

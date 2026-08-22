@@ -4,9 +4,9 @@ import { userEvent, within, expect } from 'storybook/test';
 import { Calendar } from './index';
 import CalendarStory from './CalendarStory.svelte';
 import {
-  calendarDoisMesesSource,
-  calendarLegendaSeletoresSource,
-  calendarLegendaTextoSource,
+  calendarDoisMonthsSource,
+  calendarCaptionSelectorsSource,
+  calendarCaptionTextSource,
   calendarSource,
 } from './calendar.source';
 
@@ -40,7 +40,7 @@ export const CaptionLabel: Story = {
   parameters: {
     covers: ['functional.item6', 'visual.item3'],
     docs: {
-      source: { transform: calendarLegendaTextoSource },
+      source: { transform: calendarCaptionTextSource },
       description: { story: 'Legenda em texto com mês e ano no idioma configurado.' },
     },
   },
@@ -73,7 +73,7 @@ export const CaptionDropdown: Story = {
   parameters: {
     covers: ['functional.item7'],
     docs: {
-      source: { transform: calendarLegendaSeletoresSource },
+      source: { transform: calendarCaptionSelectorsSource },
       description: {
         story: 'Mês e ano viram seletores, para saltar de período sem passar mês a mês.',
       },
@@ -124,16 +124,16 @@ export const CaptionDropdown: Story = {
       // O bloco do mês é recriado a cada troca, então o <select> anterior vira
       // nó destacado: guardar a referência faria o segundo comando agir num
       // elemento fora da tela, sem erro nenhum e sem efeito. Uma busca por vez.
-      const seletorDeMes = () => canvas.getAllByRole('combobox')[0];
+      const monthSelector = () => canvas.getAllByRole('combobox')[0];
 
-      await userEvent.selectOptions(seletorDeMes(), '6');
+      await userEvent.selectOptions(monthSelector(), '6');
       await expect(
         canvasElement.querySelector('.nds-calendar-day-btn[data-value^="2026-06-"]'),
       ).not.toBeNull();
 
       // Cada passo estabelece a própria precondição: volta para abril, porque o
       // painel reexecuta a play no mesmo DOM.
-      await userEvent.selectOptions(seletorDeMes(), '4');
+      await userEvent.selectOptions(monthSelector(), '4');
       await expect(
         canvasElement.querySelector('.nds-calendar-day-btn[data-value^="2026-04-"]'),
       ).not.toBeNull();
@@ -145,12 +145,12 @@ export const CaptionDropdown: Story = {
     await step('Trocar o ano no seletor leva o grid junto', async () => {
       // Este passo existe por um defeito real: o seletor de ano não tinha
       // handler nenhum: abria a lista, aceitava a escolha e não movia o grid.
-      const seletorDeAno = () => canvas.getAllByRole('combobox')[1];
-      await userEvent.selectOptions(seletorDeAno(), '2028');
+      const yearSelector = () => canvas.getAllByRole('combobox')[1];
+      await userEvent.selectOptions(yearSelector(), '2028');
       await expect(
         canvasElement.querySelector('.nds-calendar-day-btn[data-value^="2028-04-"]'),
       ).not.toBeNull();
-      await userEvent.selectOptions(seletorDeAno(), '2026');
+      await userEvent.selectOptions(yearSelector(), '2026');
       await expect(
         canvasElement.querySelector('.nds-calendar-day-btn[data-value^="2026-04-"]'),
       ).not.toBeNull();
@@ -175,7 +175,7 @@ export const TwoMonths: Story = {
   }),
   parameters: {
     docs: {
-      source: { transform: calendarDoisMesesSource },
+      source: { transform: calendarDoisMonthsSource },
       description: {
         story: 'Dois meses lado a lado, para escolher datas que atravessam a virada.',
       },

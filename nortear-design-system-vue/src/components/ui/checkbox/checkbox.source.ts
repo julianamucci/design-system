@@ -85,7 +85,7 @@ export function checkboxDesmarcadoSource(): string {
 }
 
 /** Marcado de saída — estado inicial, sem controle externo. */
-export function checkboxMarcadoSource(): string {
+export function checkboxCheckedSource(): string {
   return vueSnippet(
     IMPORT,
     par({ id: 'termos', rotulo: LABEL_TERMOS, caixa: [attrChecked(true)] }),
@@ -113,7 +113,7 @@ export function checkboxMistoSource(): string {
  * a raiz da caixa não é um `<input>`, então nenhum seletor de irmão desabilitado
  * alcança o texto.
  */
-export function checkboxDesabilitadoSource(): string {
+export function checkboxDisabledSource(): string {
   return vueSnippet(
     IMPORT,
     par({
@@ -126,7 +126,7 @@ export function checkboxDesabilitadoSource(): string {
 }
 
 /** Desabilitado e marcado — desabilitado não é o mesmo que vazio. */
-export function checkboxDesabilitadoMarcadoSource(): string {
+export function checkboxDisabledCheckedSource(): string {
   return vueSnippet(
     IMPORT,
     par({
@@ -143,7 +143,7 @@ export function checkboxDesabilitadoMarcadoSource(): string {
  * o erro chega ao nome acessível por `aria-describedby`. Cor sozinha não
  * comunica erro a quem não a distingue.
  */
-export function checkboxErroSource(): string {
+export function checkboxErrorSource(): string {
   return vueSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="xs">
@@ -181,7 +181,7 @@ export function checkboxWithLabelSource(): string {
  * O alinhamento passa a ser pelo topo, e a caixa ganha um recuo de dois pixels
  * para pousar na primeira linha do texto.
  */
-export function checkboxComDescricaoSource(): string {
+export function checkboxWithDescriptionSource(): string {
   return vueSnippet(
     IMPORT,
     `<div class="nds-cluster" data-align="start" data-spacing="sm">
@@ -206,7 +206,7 @@ const PREFERENCIAS = `const preferencias = [
  * Grupo em `fieldset`. A `legend` é o nome do conjunto — sem ela, cada caixa é
  * anunciada solta e a pergunta que as reúne se perde.
  */
-export function checkboxGrupoSource(): string {
+export function checkboxGroupSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${PREFERENCIAS}`,
     `<fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm">
@@ -229,7 +229,7 @@ export function checkboxGrupoSource(): string {
  * dos itens que ela comanda. É ela que assume o estado misto quando só parte da
  * lista está marcada.
  */
-export function checkboxSelecionarTodosSource(): string {
+export function checkboxSelectAllSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${PREFERENCIAS}`,
     `<fieldset class="nds-border-default nds-rounded-lg nds-p-4 nds-stack" data-spacing="sm">
@@ -259,7 +259,7 @@ export function checkboxSelecionarTodosSource(): string {
  * um `<button>` escrito à mão perde a altura que cresce com a fonte (WCAG 1.4.4)
  * e as classes que o tema alcança.
  */
-export function checkboxEmFormularioSource(): string {
+export function formCheckboxSource(): string {
   return vueSnippet(
     `import { Button } from '@/components/ui/button'
 ${IMPORT}

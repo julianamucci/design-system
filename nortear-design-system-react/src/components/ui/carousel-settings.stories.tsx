@@ -14,7 +14,7 @@ import {
   carouselAutoplaySource,
   carouselItemUnicoSource,
   carouselSource,
-  carouselVariosItensSource,
+  carouselMultipleItemsSource,
 } from "./carousel.source";
 
 const meta = {
@@ -178,7 +178,7 @@ export const MultiResponsive: Story = {
     docs: {
       // A responsividade é um par de classes de base no item; o snippet do meta
       // esconderia justamente o que muda por breakpoint.
-      source: { transform: carouselVariosItensSource },
+      source: { transform: carouselMultipleItemsSource },
       description: {
         story:
           "A base do slide muda por breakpoint: um item em telas estreitas, dois em médias, três em largas.",
@@ -207,18 +207,18 @@ export const MultiResponsive: Story = {
     const janela = canvasElement.ownerDocument.defaultView!;
     const grande = janela.matchMedia("(min-width: 1024px)").matches;
     const medio = janela.matchMedia("(min-width: 768px)").matches;
-    const porTela = grande ? 3 : medio ? 2 : 1;
+    const byScreen = grande ? 3 : medio ? 2 : 1;
 
     await step("A base do slide acompanha o breakpoint em vigor", async () => {
       const slide = canvas.getAllByRole("group")[0];
-      await expect(baseDoSlide(canvasElement, slide)).toBeCloseTo(1 / porTela, 2);
+      await expect(baseDoSlide(canvasElement, slide)).toBeCloseTo(1 / byScreen, 2);
     });
 
     await step("Vários slides ficam enquadrados ao mesmo tempo", async () => {
       const slides = canvas.getAllByRole("group");
       await expect(slides.length).toBe(6);
       const visiveis = slides.filter((s) => viewportVisible(s, viewport)).length;
-      await expect(visiveis).toBe(porTela);
+      await expect(visiveis).toBe(byScreen);
     });
 
     await step("Todos os slides continuam anunciáveis", async () => {
@@ -278,7 +278,7 @@ export const Autoplay: Story = {
     // O `!` é intencional: enquanto o Embla não tiver montado, a chamada lança
     // e o `waitFor` do passo de precondição repete até a instância existir.
     const relogio = () => autoplayApi!.plugins().autoplay;
-    const posicao = () => {
+    const position = () => {
       const slide = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-item"]')!;
       return slide.getBoundingClientRect().left - viewport.getBoundingClientRect().left;
     };
@@ -309,9 +309,9 @@ export const Autoplay: Story = {
     });
 
     await step("O carrossel avança sozinho, sem ninguém tocar nele", async () => {
-      const antes = posicao();
+      const antes = position();
       // Geometria, não `scrollLeft`: o Embla desloca o trilho por `transform`.
-      await waitFor(() => expect(posicao()).not.toBe(antes), { timeout: 4000 });
+      await waitFor(() => expect(position()).not.toBe(antes), { timeout: 4000 });
     });
 
     await step("Interagir com o carrossel entrega o controle a quem interagiu", async () => {
@@ -406,7 +406,7 @@ export const DragGesture: Story = {
      * motor reescreve a posição a cada quadro e duas leituras nunca coincidem; ao
      * terminar, ele escreve o valor final e para de escrever.
      */
-    const assentar = async () => {
+    const settle = async () => {
       let estaveis = 0;
       let ultimo = Number.NaN;
       await waitFor(async () => {
@@ -420,7 +420,7 @@ export const DragGesture: Story = {
 
     /** Espera a posição chegar a uma coordenada já conhecida. */
     /*
-     * O rótulo NÃO é enfeite. Esta story chama `emPosicao` de três lugares —
+     * O rótulo NÃO é enfeite. Esta story chama `inPosition` de três lugares —
      * volta pela seta, soltura do dedo, soltura do mouse — e a reprovação
      * intermitente só diz a linha do helper, que é a mesma para os três. Sem
      * saber QUAL passo, sobra a distância: 4,1px é resíduo de encaixe e 288px é
@@ -434,7 +434,7 @@ export const DragGesture: Story = {
      */
     const desligada = (el: Element) => el.matches('[disabled], [aria-disabled="true"]');
 
-    const emPosicao = async (alvo: number, onde: string) => {
+    const inPosition = async (alvo: number, onde: string) => {
       await waitFor(async () => {
         await expect(
           Math.abs(deslocamento() - alvo),
@@ -467,16 +467,16 @@ export const DragGesture: Story = {
         if (botao.disabled) break;
         await userEvent.click(botao);
       }
-      posZero = await assentar();
+      posZero = await settle();
       await expect(anterior()).toBeDisabled();
 
       await userEvent.click(proximo());
-      posUm = await assentar();
+      posUm = await settle();
       await expect(posUm).toBeGreaterThan(posZero);
 
       await userEvent.click(anterior());
-      await emPosicao(posZero, 'volta pela seta');
-      // A POSIÇÃO chega antes do ESTADO. `emPosicao` prova que a rolagem
+      await inPosition(posZero, 'volta pela seta');
+      // A POSIÇÃO chega antes do ESTADO. `inPosition` prova que a rolagem
       // encostou no alvo, mas quem desabilita a seta é a reconciliação do
       // índice, e ela espera de propósito o silêncio do motor — sem isso um
       // gesto com inércia emitiria uma troca de slide por quadro atravessado.
@@ -512,7 +512,7 @@ export const DragGesture: Story = {
       // Assentou EM UM SLIDE, e no MESMO ponto que a seta alcança — não onde o
       // dedo largou. Um carrossel de rolagem livre pararia no meio, e é isto
       // que este passo reprova.
-      await emPosicao(posUm, 'soltura do dedo');
+      await inPosition(posUm, 'soltura do dedo');
       await waitFor(async () => {
         await expect(anterior()).toBeEnabled();
       }, { timeout: 4000 });
@@ -538,7 +538,7 @@ export const DragGesture: Story = {
       mouse(viewport, "mousemove", direita, y);
       mouse(viewport, "mouseup", direita, y);
 
-      await emPosicao(posZero, 'soltura do mouse');
+      await inPosition(posZero, 'soltura do mouse');
       await waitFor(async () => {
         await expect(anterior()).toBeDisabled();
       }, { timeout: 4000 });

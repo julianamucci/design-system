@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
-  hoverCardClasseExtraSource,
-  hoverCardControladoSource,
+  hoverCardClassNameExtraSource,
+  hoverCardControlledSource,
   hoverCardDefinicaoSource,
-  hoverCardEsperaCurtaSource,
+  hoverCardWaitCurtaSource,
   hoverCardLadosSource,
   hoverCardMetricaSource,
   hoverCardDefaultSource,
@@ -93,7 +93,7 @@ describe('transforms das stories de tempo', () => {
   });
 
   it('a espera curta escreve as duas, e é o que a distingue', () => {
-    expect(hoverCardEsperaCurtaSource()).toContain(
+    expect(hoverCardWaitCurtaSource()).toContain(
       '<HoverCard :open-delay="150" :close-delay="100">',
     );
   });
@@ -111,14 +111,14 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o controlado liga o estado externo nos dois sentidos', () => {
-    const saida = hoverCardControladoSource();
+    const saida = hoverCardControlledSource();
     expect(saida).toContain('const aberto = ref(false)');
     expect(saida).toContain('<HoverCard v-model:open="aberto">');
     expect(saida).toContain('@click="aberto = true"');
   });
 
   it('os botões do controlado têm nomes próprios, e não os do gatilho', () => {
-    const saida = hoverCardControladoSource();
+    const saida = hoverCardControlledSource();
     // Dois controles com o mesmo nome acessível são ambíguos em leitor de tela.
     expect(saida).toContain('>Abrir pelo estado externo</Button>');
     expect(saida).toContain('>Fechar pelo estado externo</Button>');
@@ -170,7 +170,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a classe extra convive com a do componente e troca a largura', () => {
-    expect(hoverCardClasseExtraSource()).toContain(
+    expect(hoverCardClassNameExtraSource()).toContain(
       '<HoverCardContent class="nds-w-md nds-text-center">',
     );
   });
@@ -183,7 +183,7 @@ describe('transforms das stories de composição', () => {
       hoverCardPreviaDeLinkSource,
       hoverCardDefinicaoSource,
       hoverCardMetricaSource,
-      hoverCardClasseExtraSource,
+      hoverCardClassNameExtraSource,
     ]) {
       expect(fn()).not.toContain('style=');
       expect(fn()).not.toContain('min-height');

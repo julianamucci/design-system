@@ -21,7 +21,7 @@ import type { Locale } from './locale-negotiation';
 type Traducao = Partial<Record<Locale, string>>;
 
 /** Seções e subseções: o caminho que a pessoa percorre até a story. */
-const ESTRUTURA: Record<string, Traducao> = {
+const STRUCTURE: Record<string, Traducao> = {
   // Nível 1
   UI: { 'pt-BR': 'UI', es: 'UI' },
   Foundations: { 'pt-BR': 'Fundamentos', es: 'Fundamentos' },
@@ -43,7 +43,7 @@ const ESTRUTURA: Record<string, Traducao> = {
 };
 
 /** Páginas de fundamento: título próprio, não nome de componente. */
-const FUNDAMENTOS: Record<string, Traducao> = {
+const FOUNDATIONS: Record<string, Traducao> = {
   Overview: { 'pt-BR': 'Visão geral', es: 'Visión general' },
   Accessibility: { 'pt-BR': 'Acessibilidade', es: 'Accesibilidad' },
   Analytics: { 'pt-BR': 'Analytics', es: 'Analytics' },
@@ -68,7 +68,7 @@ const FUNDAMENTOS: Record<string, Traducao> = {
   },
 };
 
-const DICIONARIO: Record<string, Traducao> = { ...ESTRUTURA, ...FUNDAMENTOS };
+const DICIONARIO: Record<string, Traducao> = { ...STRUCTURE, ...FOUNDATIONS };
 
 /**
  * Segmentos de estrutura que NÃO recebem tradução, com o motivo registrado.
@@ -78,7 +78,7 @@ const DICIONARIO: Record<string, Traducao> = { ...ESTRUTURA, ...FUNDAMENTOS };
  * que ninguém quer traduzir. Decisão declarada vale mais que decisão inferida —
  * quem acrescentar uma seção nova escolhe entre traduzir ou justificar aqui.
  */
-export const SEM_TRADUCAO: Record<string, string> = {
+export const NO_TRADUCAO: Record<string, string> = {
   QA: 'sigla, e a seção é de teste interno — não é superfície de leitura',
   _internal: 'o underscore já marca privado; não aparece para quem consome',
   'Input Group': 'nome de padrão do design system, como Button e Badge',
@@ -90,10 +90,10 @@ export const SEM_TRADUCAO: Record<string, string> = {
  * Nome de componente (Button, Badge) e de story (WithIcon) caem no fallback de
  * propósito: são vocabulário do design system, não prosa.
  */
-export function rotuloDaSidebar(nome: string, locale: Locale): string {
+export function sidebarLabel(nome: string, locale: Locale): string {
   if (locale === 'en') return nome;
   return DICIONARIO[nome]?.[locale] ?? nome;
 }
 
 /** Só para teste e para o auditor: o que o dicionário cobre. */
-export const ROTULOS_TRADUZIDOS = Object.keys(DICIONARIO);
+export const LABELS_TRADUZIDOS = Object.keys(DICIONARIO);

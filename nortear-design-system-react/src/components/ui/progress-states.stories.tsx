@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { within, expect, waitFor } from "storybook/test";
 import { Progress } from "./progress";
 import {
-  animacaoDoIndicador,
+  indicadorAnimation,
   indicadorDoProgresso,
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
 import {
-  progressCarregandoSource,
+  progressLoadingSource,
   progressConcluidoSource,
   progressIndeterminadoSource,
   progressSource,
@@ -76,7 +76,7 @@ export const Loading: Story = {
     covers: ["functional.item2", "visual.item2"],
     docs: {
       // Valor afirmado no `render`, sem control que o descreva.
-      source: { transform: progressCarregandoSource },
+      source: { transform: progressLoadingSource },
     },
   },
   render: () => (
@@ -175,7 +175,7 @@ export const Indeterminate: Story = {
       // pelo nome do keyframes do design system, é o que dá para provar sem
       // sorte. Foi assim que se descobriu que não havia animação nenhuma.
       await waitFor(async () => {
-        await expect(animacaoDoIndicador(canvasElement)).toBe(
+        await expect(indicadorAnimation(canvasElement)).toBe(
           "nds-progress-indeterminate",
         );
       });

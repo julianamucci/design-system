@@ -13,9 +13,9 @@ import {
 import {
   paginationWithEllipsisSource,
   paginationControladaSource,
-  paginationRodapeDeTabelaSource,
+  tablePaginationFooterSource,
   paginationSimpleSource,
-  paginationUltimaPaginaSource,
+  paginationLastPageSource,
 } from './pagination.source';
 
 const meta = {
@@ -49,8 +49,8 @@ const sharedComponents = {
   PaginationPrevious,
 };
 
-const ROTULO_ANTERIOR = 'Ir para a página anterior';
-const ROTULO_PROXIMA = 'Ir para a próxima página';
+const LABEL_PREVIOUS = 'Ir para a página anterior';
+const LABEL_NEXT = 'Ir para a próxima página';
 
 /** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
 const onPageChange = fn();
@@ -87,9 +87,9 @@ export const Simple: Story = {
 
     await step('A faixa mostra todos os números, sem reticências', async () => {
       // visual.item1 — é o estado que o Chromatic fotografa como "default".
-      const numerados = canvasElement.querySelectorAll('[data-slot="pagination-link"]');
-      await expect(numerados.length).toBe(5);
-      await expect([...numerados].map((l) => l.textContent?.trim())).toEqual([
+      const numbered = canvasElement.querySelectorAll('[data-slot="pagination-link"]');
+      await expect(numbered.length).toBe(5);
+      await expect([...numbered].map((l) => l.textContent?.trim())).toEqual([
         '1', '2', '3', '4', '5',
       ]);
       await expect(
@@ -102,7 +102,7 @@ export const Simple: Story = {
         'aria-current',
         'page',
       );
-      await expect(canvas.getByRole('button', { name: ROTULO_ANTERIOR })).toBeDisabled();
+      await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toBeDisabled();
     });
   },
 };
@@ -176,7 +176,7 @@ export const LastPage: Story = {
     docs: {
       // A faixa está parada no OUTRO extremo, e mostra um recorte final de
       // páginas: nem o `:page` nem a lista são os do meta.
-      source: { transform: paginationUltimaPaginaSource },
+      source: { transform: paginationLastPageSource },
       description: {
         story:
           'Na última página o controle Próxima fica desabilitado, pelo mesmo par de atributos usado em Anterior.',
@@ -204,11 +204,11 @@ export const LastPage: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const proxima = canvas.getByRole('button', { name: ROTULO_PROXIMA });
+    const next = canvas.getByRole('button', { name: LABEL_NEXT });
 
     await step('Próxima está marcado como desabilitado', async () => {
-      await expect(proxima).toBeDisabled();
-      await expect(getComputedStyle(proxima).pointerEvents).toBe('none');
+      await expect(next).toBeDisabled();
+      await expect(getComputedStyle(next).pointerEvents).toBe('none');
     });
 
     await step('Clicar em Próxima não navega', async () => {
@@ -218,7 +218,7 @@ export const LastPage: Story = {
       // despacharia o evento à força e mediria uma rota que não existe fora do
       // teste.
       onPageChange.mockClear();
-      proxima.click();
+      next.click();
       await expect(onPageChange).not.toHaveBeenCalled();
     });
 
@@ -320,7 +320,7 @@ export const CompleteTable: Story = {
     docs: {
       // A faixa entra dentro de um rodapé: o invólucro de cluster e o
       // `data-align` da faixa são o assunto, e não existem no meta.
-      source: { transform: paginationRodapeDeTabelaSource },
+      source: { transform: tablePaginationFooterSource },
       description: {
         story:
           'Cenário canônico: rodapé de tabela com o contador de resultados à esquerda e a faixa encostada à direita, via data-align="end".',

@@ -18,7 +18,7 @@ export type BadgeVariant =
 
 // Tabela em vez de cadeia de ternários — mesma decisão do Vanilla: com sete
 // variantes o último ramo é inalcançável e vira ruído de cobertura.
-const CLASSE_POR_VARIANTE: Record<BadgeVariant, string> = {
+const VARIANT_CLASSNAME: Record<BadgeVariant, string> = {
   default: '',
   secondary: 'nds-badge-secondary',
   destructive: 'nds-badge-destructive',
@@ -54,6 +54,6 @@ export class NdsBadge {
   // `[class]` porque a variante é dinâmica; o `class` que o consumidor
   // escreve no elemento é mesclado pelo Angular, sem input dedicado.
   protected readonly hostClass = computed(() =>
-    cn('nds-badge', CLASSE_POR_VARIANTE[this.variant()]),
+    cn('nds-badge', VARIANT_CLASSNAME[this.variant()]),
   );
 }

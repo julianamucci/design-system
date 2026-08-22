@@ -1,57 +1,57 @@
 import { describe, expect, it } from 'vitest';
 import {
-  buttonCarregandoSource,
-  buttonComoLinkSource,
+  buttonLoadingSource,
+  buttonAsLinkSource,
   buttonDefaultSource,
-  buttonDesabilitadoSource,
-  buttonDestrutivoComIconeSource,
-  buttonDestrutivoSource,
+  buttonDisabledSource,
+  buttonDestructiveWithIconSource,
+  buttonDestructiveSource,
   buttonGhostSource,
   buttonIconDireitaSource,
   buttonIconEsquerdaSource,
-  buttonIconeLgSource,
-  buttonIconeSmSource,
-  buttonIconeSource,
-  buttonIconeXsSource,
+  buttonIconLgSource,
+  buttonIconSmSource,
+  buttonIconSource,
+  buttonIconXsSource,
   buttonInvalidoSource,
   buttonLinkSource,
   buttonOutlineSource,
-  buttonParDeAcoesSource,
+  actionsButtonPairSource,
   buttonSecundarioSource,
   buttonSomenteIconSource,
   buttonSource,
-  buttonTamanhoLgSource,
-  buttonTamanhoPadraoSource,
-  buttonTamanhoSmSource,
-  buttonTamanhoXsSource,
+  buttonSizeLgSource,
+  buttonSizeDefaultSource,
+  buttonSizeSmSource,
+  buttonSizeXsSource,
 } from './button.source';
 
 /** Toda transform é chamável sem argumento — é o que a guarda transversal exige. */
 const TODOS: Array<() => string> = [
   buttonSource,
   buttonDefaultSource,
-  buttonDestrutivoSource,
+  buttonDestructiveSource,
   buttonOutlineSource,
   buttonSecundarioSource,
   buttonGhostSource,
   buttonLinkSource,
-  buttonTamanhoPadraoSource,
-  buttonTamanhoXsSource,
-  buttonTamanhoSmSource,
-  buttonTamanhoLgSource,
-  buttonIconeSource,
-  buttonIconeXsSource,
-  buttonIconeSmSource,
-  buttonIconeLgSource,
-  buttonDesabilitadoSource,
-  buttonCarregandoSource,
+  buttonSizeDefaultSource,
+  buttonSizeXsSource,
+  buttonSizeSmSource,
+  buttonSizeLgSource,
+  buttonIconSource,
+  buttonIconXsSource,
+  buttonIconSmSource,
+  buttonIconLgSource,
+  buttonDisabledSource,
+  buttonLoadingSource,
   buttonInvalidoSource,
   buttonIconEsquerdaSource,
   buttonIconDireitaSource,
-  buttonDestrutivoComIconeSource,
+  buttonDestructiveWithIconSource,
   buttonSomenteIconSource,
-  buttonParDeAcoesSource,
-  buttonComoLinkSource,
+  actionsButtonPairSource,
+  buttonAsLinkSource,
 ];
 
 describe('buttonSource', () => {
@@ -85,8 +85,8 @@ describe('buttonSource', () => {
   it('cai no texto padrão quando o control entrega um espião no lugar da string', () => {
     // O Storybook cria espião para os args de callback; interpolado, o corpo do
     // mock apareceria no painel como se fosse código do design system.
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = buttonSource(undefined, { args: { children: espiao as never } });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = buttonSource(undefined, { args: { children: spy as never } });
     expect(saida).toContain('<Button>Botão</Button>');
     expect(saida).not.toContain('CORPO_DO_MOCK');
   });
@@ -100,7 +100,7 @@ describe('buttonSource', () => {
 describe('variantes', () => {
   it('cada uma diz a sua, porque o arquivo desliga os controls', () => {
     expect(buttonDefaultSource()).toContain('<Button>Salvar</Button>');
-    expect(buttonDestrutivoSource()).toContain('<Button variant="destructive">Excluir conta</Button>');
+    expect(buttonDestructiveSource()).toContain('<Button variant="destructive">Excluir conta</Button>');
     expect(buttonOutlineSource()).toContain('<Button variant="outline">Cancelar</Button>');
     expect(buttonSecundarioSource()).toContain('<Button variant="secondary">Ver detalhes</Button>');
     expect(buttonGhostSource()).toContain('<Button variant="ghost">Fechar</Button>');
@@ -110,20 +110,20 @@ describe('variantes', () => {
 
 describe('tamanhos', () => {
   it('o padrão não escreve size; os demais escrevem o seu', () => {
-    expect(buttonTamanhoPadraoSource()).toContain('<Button>Padrão</Button>');
-    expect(buttonTamanhoXsSource()).toContain('size="xs"');
-    expect(buttonTamanhoSmSource()).toContain('size="sm"');
-    expect(buttonTamanhoLgSource()).toContain('size="lg"');
+    expect(buttonSizeDefaultSource()).toContain('<Button>Padrão</Button>');
+    expect(buttonSizeXsSource()).toContain('size="xs"');
+    expect(buttonSizeSmSource()).toContain('size="sm"');
+    expect(buttonSizeLgSource()).toContain('size="lg"');
   });
 
   it('os quatro botões de ícone repetem a mesma lição de nome acessível', () => {
-    const porTamanho = {
-      'icon': buttonIconeSource(),
-      'icon-xs': buttonIconeXsSource(),
-      'icon-sm': buttonIconeSmSource(),
-      'icon-lg': buttonIconeLgSource(),
+    const bySize = {
+      'icon': buttonIconSource(),
+      'icon-xs': buttonIconXsSource(),
+      'icon-sm': buttonIconSmSource(),
+      'icon-lg': buttonIconLgSource(),
     };
-    for (const [tamanho, saida] of Object.entries(porTamanho)) {
+    for (const [tamanho, saida] of Object.entries(bySize)) {
       expect(saida).toContain(`size="${tamanho}"`);
       // Sem texto dentro, quem nomeia é o aria-label e o ícone sai da árvore de
       // acessibilidade — as duas coisas juntas, ou o botão fica sem nome.
@@ -136,13 +136,13 @@ describe('tamanhos', () => {
 
 describe('estados', () => {
   it('desabilitado é o atributo nativo, não uma classe', () => {
-    const saida = buttonDesabilitadoSource();
+    const saida = buttonDisabledSource();
     expect(saida).toContain('<Button disabled>Salvar</Button>');
     expect(saida).not.toContain('nds-button-disabled');
   });
 
   it('carregando soma desabilitado, aria-busy e rótulo em progresso', () => {
-    const saida = buttonCarregandoSource();
+    const saida = buttonLoadingSource();
     expect(saida).toContain('disabled');
     expect(saida).toContain('aria-busy="true"');
     expect(saida).toContain('Salvando…');
@@ -169,7 +169,7 @@ describe('composições', () => {
     for (const saida of [
       buttonIconEsquerdaSource(),
       buttonIconDireitaSource(),
-      buttonDestrutivoComIconeSource(),
+      buttonDestructiveWithIconSource(),
       buttonSomenteIconSource(),
     ]) {
       expect(saida).toContain('aria-hidden="true"');
@@ -183,7 +183,7 @@ describe('composições', () => {
   });
 
   it('o par de ações deixa a primária à direita, e o respiro é do contêiner', () => {
-    const saida = buttonParDeAcoesSource();
+    const saida = actionsButtonPairSource();
     expect(saida).toContain('className="nds-cluster" data-spacing="sm"');
     expect(saida.indexOf('Cancelar')).toBeLessThan(saida.indexOf('Confirmar'));
     expect(saida).toContain('<Button variant="outline">Cancelar</Button>');
@@ -191,7 +191,7 @@ describe('composições', () => {
   });
 
   it('link com aparência de botão é um <a> de verdade, não o componente', () => {
-    const saida = buttonComoLinkSource();
+    const saida = buttonAsLinkSource();
     expect(saida).toContain('import { buttonVariants } from "@/components/ui/button";');
     expect(saida).toContain('className={buttonVariants({ variant: "link" })}');
     // Um `<Button>` aqui ensinaria o oposto: a semântica de link se perderia.

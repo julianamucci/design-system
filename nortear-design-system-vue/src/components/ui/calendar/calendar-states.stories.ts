@@ -35,7 +35,7 @@ type Story = StoryObj<typeof meta>;
 // Datas fixas para determinismo Chromatic — instanciadas dentro de setup()
 // para evitar criar CalendarDate no import do módulo.
 
-const valoresCom = (canvasElement: HTMLElement, seletor: string): string[] =>
+const valuesWith = (canvasElement: HTMLElement, seletor: string): string[] =>
   Array.from(canvasElement.querySelectorAll(seletor)).map((el) => el.getAttribute('data-value') ?? '');
 
 // Selected — célula escolhida.
@@ -63,7 +63,7 @@ export const Selected: Story = {
   play: async ({ canvasElement, step }) => {
     await step('Só a data escolhida está marcada', async () => {
       // accessibility.item3
-      await expect(valoresCom(canvasElement, '[data-selected]')).toEqual(['2026-04-12']);
+      await expect(valuesWith(canvasElement, '[data-selected]')).toEqual(['2026-04-12']);
     });
 
     await step('A célula anuncia a data por extenso', async () => {
@@ -117,7 +117,7 @@ export const Disabled: Story = {
       // `[data-value]` no seletor não é enfeite: `data-disabled` também aparece
       // nos invólucros de célula, e sem ele a lista vinha com uma dúzia de
       // strings vazias na frente.
-      const bloqueadas = valoresCom(canvasElement, '[data-value][data-disabled]:not([data-outside-view])');
+      const bloqueadas = valuesWith(canvasElement, '[data-value][data-disabled]:not([data-outside-view])');
       await expect(bloqueadas).toEqual([
         '2026-04-01', '2026-04-02', '2026-04-03', '2026-04-04',
         '2026-04-05', '2026-04-06', '2026-04-07', '2026-04-08', '2026-04-09',
@@ -128,13 +128,13 @@ export const Disabled: Story = {
       const bloqueada = canvasElement.querySelector<HTMLElement>('[data-disabled][data-value="2026-04-03"]')!;
       await expect(bloqueada).toHaveAttribute('aria-disabled', 'true');
       await userEvent.click(bloqueada, { pointerEventsCheck: 0 });
-      await expect(valoresCom(canvasElement, '[data-selected]')).toEqual(['2026-04-12']);
+      await expect(valuesWith(canvasElement, '[data-selected]')).toEqual(['2026-04-12']);
     });
 
     await step('Um dia livre continua escolhível', async () => {
       // Sem este passo, a story passaria com o mês inteiro bloqueado.
       await userEvent.click(canvas.getByRole('button', { name: /14 de abril de 2026/i }));
-      await expect(valoresCom(canvasElement, '[data-selected]')).toEqual(['2026-04-14']);
+      await expect(valuesWith(canvasElement, '[data-selected]')).toEqual(['2026-04-14']);
     });
 
     await step('Dia bloqueado fica fora da tabulação', async () => {
@@ -175,7 +175,7 @@ export const Today: Story = {
       // regra é cair na data certa, e é isso que um erro de fuso quebraria.
       const hoje = new Date();
       const iso = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, '0')}-${String(hoje.getDate()).padStart(2, '0')}`;
-      await expect(valoresCom(canvasElement, '[data-today]')).toContain(iso);
+      await expect(valuesWith(canvasElement, '[data-today]')).toContain(iso);
     });
 
     await step('Destacar hoje não é escolhê-lo', async () => {
@@ -213,7 +213,7 @@ export const WithOutsideDays: Story = {
   play: async ({ canvasElement, step }) => {
     await step('As bordas do grid trazem dias de fora do mês', async () => {
       // Abril de 2026 começa numa quarta: as três primeiras casas vêm de março.
-      const fora = valoresCom(canvasElement, '[data-outside-view]');
+      const fora = valuesWith(canvasElement, '[data-outside-view]');
       await expect(fora).toContain('2026-03-30');
       await expect(fora.length).toBeGreaterThan(0);
     });
@@ -221,8 +221,8 @@ export const WithOutsideDays: Story = {
     await step('Dia de fora do mês não conta como do mês', async () => {
       // O contraste é o ponto da story: se ele não estivesse marcado como
       // externo, o mês pareceria ter mais dias do que tem.
-      const doMes = canvasElement.querySelectorAll('[data-value^="2026-04-"]:not([data-outside-view])');
-      await expect(doMes.length).toBe(30);
+      const ofMonth = canvasElement.querySelectorAll('[data-value^="2026-04-"]:not([data-outside-view])');
+      await expect(ofMonth.length).toBe(30);
     });
   },
 };
@@ -262,7 +262,7 @@ export const RangeWithMiddle: Story = {
     await step('O intervalo é contínuo do início ao fim', async () => {
       // functional.item3 — verificar só os extremos passaria com o meio vazio,
       // que é exatamente o que esta story existe para mostrar.
-      const dias = valoresCom(canvasElement, '[data-selected]');
+      const dias = valuesWith(canvasElement, '[data-selected]');
       await expect(dias).toEqual([
         '2026-04-10', '2026-04-11', '2026-04-12', '2026-04-13', '2026-04-14',
         '2026-04-15', '2026-04-16', '2026-04-17', '2026-04-18',

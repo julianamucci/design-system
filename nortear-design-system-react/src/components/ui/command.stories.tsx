@@ -116,7 +116,7 @@ export const Playground: Story = {
     const raiz = canvasElement.querySelector<HTMLElement>('[data-slot="command"]')!;
     const campo = canvas.getByRole("combobox");
     const lista = canvas.getByRole("listbox");
-    const espiao = args.onItemSelect as ReturnType<typeof fn>;
+    const spy = args.onItemSelect as ReturnType<typeof fn>;
     // O destaque é resolvido por `aria-selected`, não por
     // `aria-activedescendant`. Medido na fonte da lib (`cmdk/dist/index.mjs`):
     // o `aria-activedescendant` sai de `selectedItemId`, que é escrito num
@@ -124,7 +124,7 @@ export const Playground: Story = {
     // selecionado, o `setState` sai cedo e o id nunca é reescrito. Resolver o
     // elemento por ele torna a asserção dependente de um efeito que pode não
     // ocorrer; `aria-selected` a lib sempre escreve.
-    const emDestaque = () =>
+    const inHighlight = () =>
       canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]');
 
     // A play REEXECUTA no mesmo DOM: a busca parte sempre do zero, senão a
@@ -222,17 +222,17 @@ export const Playground: Story = {
       // replay não partir de onde a rodada anterior parou.
       await userEvent.keyboard("{Home}");
       await waitFor(async () => {
-        await expect(emDestaque()).toHaveTextContent("Button");
+        await expect(inHighlight()).toHaveTextContent("Button");
       });
       // O foco NÃO se move: é o que permite continuar digitando enquanto se
       // navega, e é por isso que o destaque viaja por `aria-activedescendant`.
       await expect(campo).toHaveFocus();
-      await expect(emDestaque()).toHaveAttribute("role", "option");
-      await expect(emDestaque()).toHaveAttribute("aria-selected", "true");
+      await expect(inHighlight()).toHaveAttribute("role", "option");
+      await expect(inHighlight()).toHaveAttribute("aria-selected", "true");
 
       await userEvent.keyboard("{ArrowDown}");
       await waitFor(async () => {
-        await expect(emDestaque()).toHaveTextContent("Input");
+        await expect(inHighlight()).toHaveTextContent("Input");
       });
       await expect(campo).toHaveFocus();
       // Aqui o valor MUDOU, então o `aria-activedescendant` foi reescrito — é o
@@ -240,36 +240,36 @@ export const Playground: Story = {
       // efeito que pode não disparar.
       await expect(campo).toHaveAttribute(
         "aria-activedescendant",
-        emDestaque()!.id,
+        inHighlight()!.id,
       );
 
       await userEvent.keyboard("{ArrowUp}");
       await waitFor(async () => {
-        await expect(emDestaque()).toHaveTextContent("Button");
+        await expect(inHighlight()).toHaveTextContent("Button");
       });
-      await expect(emDestaque()).toHaveAttribute("aria-selected", "true");
+      await expect(inHighlight()).toHaveAttribute("aria-selected", "true");
     });
 
     await step("Enter escolhe o comando em destaque, com o value dele", async () => {
-      const antes = espiao.mock.calls.length;
+      const antes = spy.mock.calls.length;
       await userEvent.keyboard("{Enter}");
 
       await waitFor(async () => {
-        await expect(espiao.mock.calls.length).toBe(antes + 1);
+        await expect(spy.mock.calls.length).toBe(antes + 1);
       });
-      await expect(espiao.mock.calls[antes][0]).toBe("button");
+      await expect(spy.mock.calls[antes][0]).toBe("button");
       // A paleta não tem estado fechado: continua aberta depois de executar.
       await expect(campo).toHaveAttribute("aria-expanded", "true");
     });
 
     await step("Clicar num comando também o escolhe", async () => {
-      const antes = espiao.mock.calls.length;
+      const antes = spy.mock.calls.length;
       await userEvent.click(canvas.getByRole("option", { name: "cn()" }));
 
       await waitFor(async () => {
-        await expect(espiao.mock.calls.length).toBe(antes + 1);
+        await expect(spy.mock.calls.length).toBe(antes + 1);
       });
-      await expect(espiao.mock.calls[antes][0]).toBe("cn");
+      await expect(spy.mock.calls[antes][0]).toBe("cn");
     });
   },
 };

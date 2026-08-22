@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -48,7 +48,7 @@ export type FormSnippetOptions = {
 function fieldControl(c: FormField | FormSnippetOptions): string {
   const ehTextarea = 'controle' in c && c.controle === 'textarea';
   const tipo = 'type' in c ? c.type : (c as FormSnippetOptions).inputType;
-  const pares = opcoes([
+  const pairs = opcoes([
     // A área de texto não tem `type`: o elemento já é o que é.
     ['type', !ehTextarea && tipo && tipo !== 'text' ? texto(tipo) : undefined],
     ['name', 'name' in c && c.name !== undefined ? texto(c.name) : undefined],
@@ -60,7 +60,7 @@ function fieldControl(c: FormField | FormSnippetOptions): string {
     .map((linha) => linha.replace(/,$/, ''))
     .join(', ');
   const fabrica = ehTextarea ? 'createTextarea' : 'createInput';
-  return pares.length > 0 ? `${fabrica}({ ${pares} })` : `${fabrica}()`;
+  return pairs.length > 0 ? `${fabrica}({ ${pairs} })` : `${fabrica}()`;
 }
 
 /** Um `createFormField({ … })` recuado para entrar numa lista de filhos. */
@@ -92,7 +92,7 @@ export function formSnippet(o: FormSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    [importar('form', 'createFormField'), importar('input', 'createInput')].join('\n'),
+    [importing('form', 'createFormField'), importing('input', 'createInput')].join('\n'),
     precisaDeVariavel
       ? `// \`aria-invalid\` é de quem compõe: o campo não tem fonte de verdade sobre
 // validade, e escrevê-lo na fábrica apagaria o que o formulário já disse.
@@ -145,8 +145,8 @@ export function formWithFieldsetSnippet(o: FormWithFieldsetSnippetOptions = {}):
 
   return snippet(
     [
-      importar('form', 'createFieldset', 'createFormField'),
-      importar('input', 'createInput'),
+      importing('form', 'createFieldset', 'createFormField'),
+      importing('input', 'createInput'),
     ].join('\n'),
     `const grupo = ${chamada('createFieldset', linhas)};`,
     montar('grupo'),
@@ -154,7 +154,7 @@ export function formWithFieldsetSnippet(o: FormWithFieldsetSnippetOptions = {}):
 }
 
 /** Transform de story para a forma com grupo. */
-export function formComFieldsetSource(
+export function formWithFieldsetSource(
   fixas: FormWithFieldsetSnippetOptions,
 ): SourceTransform<FormWithFieldsetSnippetOptions> {
   return (_gerado, ctx) => formWithFieldsetSnippet({ ...ctx.args, ...fixas });
@@ -190,10 +190,10 @@ export function formWithMultipleFieldsSnippet(o: FormWithMultipleFieldsSnippetOp
 
   return snippet(
     [
-      importar('form', 'createFormField'),
-      importar('input', 'createInput'),
-      hasTextarea ? importar('textarea', 'createTextarea') : undefined,
-      submitLabel ? importar('button', 'createButton') : undefined,
+      importing('form', 'createFormField'),
+      importing('input', 'createInput'),
+      hasTextarea ? importing('textarea', 'createTextarea') : undefined,
+      submitLabel ? importing('button', 'createButton') : undefined,
     ]
       .filter(Boolean)
       .join('\n'),
@@ -207,7 +207,7 @@ ${filhos.join('\n')}
 }
 
 /** Transform de story para a forma com vários campos. */
-export function formComVariosCamposSource(
+export function formWithMultipleFieldsSource(
   fixas: FormWithMultipleFieldsSnippetOptions,
 ): SourceTransform<FormWithMultipleFieldsSnippetOptions> {
   return (_gerado, ctx) => formWithMultipleFieldsSnippet({ ...ctx.args, ...fixas });

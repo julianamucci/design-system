@@ -14,13 +14,13 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor } from 'storybook/test';
 import {
-  auditarAlturaDoCampo,
-  auditarEstruturaDaGaleria,
+  fieldAuditarHeight,
+  galeriaAuditarStructure,
   auditarTile,
-  digitarNaBusca,
-  estadoVazioVisivel,
-  gradeEscondida,
-  itensVisiveis,
+  searchDigitar,
+  stateEmptyVisible,
+  gridEscondida,
+  itemsVisiveis,
   textoDaContagem,
 } from '@shared/testing/icons-gallery-contract';
 import { NOMES_DE_ICONE } from '@shared/primitives/lucide-catalog';
@@ -58,11 +58,11 @@ export const Gallery: Story = {
   play: async ({ canvasElement, step }) => {
     // Cada passo estabelece a própria precondição: a busca começa limpa,
     // independentemente do que um replay deixou no campo.
-    digitarNaBusca(canvasElement, '');
-    await waitFor(() => expect(itensVisiveis(canvasElement)).toHaveLength(NOMES_DE_ICONE.length));
+    searchDigitar(canvasElement, '');
+    await waitFor(() => expect(itemsVisiveis(canvasElement)).toHaveLength(NOMES_DE_ICONE.length));
 
     await step('A grade nasce inteira, com nome acessível e estado vazio no DOM', async () => {
-      const problemas = auditarEstruturaDaGaleria(canvasElement, NOMES_DE_ICONE.length);
+      const problemas = galeriaAuditarStructure(canvasElement, NOMES_DE_ICONE.length);
       await expect(problemas, problemas.join('\n')).toEqual([]);
     });
 
@@ -75,7 +75,7 @@ export const Gallery: Story = {
     });
 
     await step('O campo de busca cresce com a fonte (WCAG 1.4.4)', async () => {
-      const problemas = auditarAlturaDoCampo(canvasElement);
+      const problemas = fieldAuditarHeight(canvasElement);
       await expect(problemas, problemas.join('\n')).toEqual([]);
     });
   },
@@ -86,9 +86,9 @@ export const Search: Story = {
   parameters: { a11y: { disable: true } },
   play: async ({ canvasElement, step }) => {
     await step('Consulta reduz o visível e mantém o catálogo montado', async () => {
-      digitarNaBusca(canvasElement, 'chevron');
+      searchDigitar(canvasElement, 'chevron');
       await waitFor(() => {
-        const visiveis = itensVisiveis(canvasElement);
+        const visiveis = itemsVisiveis(canvasElement);
         expect(visiveis.length).toBeGreaterThan(0);
         expect(visiveis.length).toBeLessThan(NOMES_DE_ICONE.length);
       });
@@ -98,17 +98,17 @@ export const Search: Story = {
         NOMES_DE_ICONE.length
       );
 
-      const visiveis = itensVisiveis(canvasElement);
+      const visiveis = itemsVisiveis(canvasElement);
       for (const item of visiveis) {
         await expect(item.dataset.iconName?.toLowerCase()).toContain('chevron');
       }
       await expect(textoDaContagem(canvasElement)).toContain(String(visiveis.length));
-      await expect(estadoVazioVisivel(canvasElement)).toBe(false);
+      await expect(stateEmptyVisible(canvasElement)).toBe(false);
     });
 
     await step('Campo limpo devolve o catálogo inteiro', async () => {
-      digitarNaBusca(canvasElement, '');
-      await waitFor(() => expect(itensVisiveis(canvasElement)).toHaveLength(NOMES_DE_ICONE.length));
+      searchDigitar(canvasElement, '');
+      await waitFor(() => expect(itemsVisiveis(canvasElement)).toHaveLength(NOMES_DE_ICONE.length));
     });
   },
 };
@@ -122,10 +122,10 @@ export const Search: Story = {
 export const EmptyState: Story = {
   play: async ({ canvasElement, step }) => {
     await step('Consulta sem resultado mostra o estado vazio', async () => {
-      digitarNaBusca(canvasElement, 'zzzznaoexiste');
-      await waitFor(() => expect(estadoVazioVisivel(canvasElement)).toBe(true));
-      await expect(gradeEscondida(canvasElement)).toBe(true);
-      await expect(itensVisiveis(canvasElement)).toHaveLength(0);
+      searchDigitar(canvasElement, 'zzzznaoexiste');
+      await waitFor(() => expect(stateEmptyVisible(canvasElement)).toBe(true));
+      await expect(gridEscondida(canvasElement)).toBe(true);
+      await expect(itemsVisiveis(canvasElement)).toHaveLength(0);
       await expect(textoDaContagem(canvasElement)).toContain('0');
     });
   },
@@ -146,7 +146,7 @@ export const CopyOnClick: Story = {
 
     try {
       await step('Clicar no tile marca "copiado" naquele tile', async () => {
-        digitarNaBusca(canvasElement, 'package');
+        searchDigitar(canvasElement, 'package');
         const tile = await waitFor(() => {
           const alvo = canvasElement.querySelector<HTMLButtonElement>(
             '.nds-icon-grid-item[data-icon-name="Package"] button.nds-icon-tile'

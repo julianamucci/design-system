@@ -75,7 +75,7 @@ type Story = StoryObj<ToggleGroupArgs>;
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
-const ROTULOS = ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita'];
+const LABELS = ['Alinhar à esquerda', 'Centralizar', 'Alinhar à direita'];
 
 export const Playground: Story = {
   parameters: {
@@ -92,9 +92,9 @@ export const Playground: Story = {
     // construir: casar rótulo com índice quebrava calado a cada item inserido
     // no meio da lista.
     const items: ToggleGroupItem[] = [
-      { value: 'left',   children: '', 'aria-label': ROTULOS[0] },
-      { value: 'center', children: '', 'aria-label': ROTULOS[1] },
-      { value: 'right',  children: '', 'aria-label': ROTULOS[2] },
+      { value: 'left',   children: '', 'aria-label': LABELS[0] },
+      { value: 'center', children: '', 'aria-label': LABELS[1] },
+      { value: 'right',  children: '', 'aria-label': LABELS[2] },
     ];
 
     const group = createToggleGroup({
@@ -117,7 +117,7 @@ export const Playground: Story = {
   },
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const [esquerda, centro, direita] = ROTULOS.map((nome) =>
+    const [esquerda, centro, direita] = LABELS.map((nome) =>
       canvas.getByRole('button', { name: nome }),
     );
 
@@ -130,7 +130,7 @@ export const Playground: Story = {
       // As duas asserções já existiam e passavam — com a story escrevendo os
       // atributos por fora. O que provam agora é que as OPÇÕES da factory
       // (grupo e item) produzem os nomes.
-      await expect(btns.map((b) => b.getAttribute('aria-label'))).toEqual(ROTULOS);
+      await expect(btns.map((b) => b.getAttribute('aria-label'))).toEqual(LABELS);
     });
 
     await step('Orientação e espaçamento chegam ao markup', async () => {

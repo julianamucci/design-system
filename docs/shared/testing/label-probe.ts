@@ -13,7 +13,7 @@
  * Armadilhas evitadas aqui:
  *
  *   - `console.log` não chega ao terminal (o addon instrumenta o console dentro
- *     da play). O canal é a exceção — ver `reportarSonda`.
+ *     da play). O canal é a exceção — ver `reportProbe`.
  *   - `label.click()` é o teste real da associação: conferir só o atributo `for`
  *     passa com um id que não aponta para lugar nenhum. A sonda clica, lê o
  *     `activeElement` e DESFAZ o efeito (o toggle do checkbox volta ao estado
@@ -26,10 +26,10 @@
  *     são registradas em `familiaDePeer`.
  */
 
-import { fundoEfetivo, ligarTemaEscuro, razao, semTransicao } from './cor';
+import { backgroundEffective, darkLigarTheme, ratio, noTransicao } from './cor';
 
 export type { Contraste } from './cor';
-export { ligarTemaEscuro };
+export { darkLigarTheme };
 
 // ─── Vocabulário ──────────────────────────────────────────────────────────────
 
@@ -43,7 +43,7 @@ const CLASSES_DE_PEER_LABEL = [
   'peer-disabled:cursor-not-allowed',
 ] as const;
 
-const SELETOR_CONTROLE =
+const SELECTOR_CONTROL =
   'input, select, textarea, button, [role="checkbox"], [role="radio"], [role="switch"], [role="textbox"]';
 
 const texto = (el: Element | null | undefined): string | null =>
@@ -53,7 +53,7 @@ const classesDe = (el: Element | null | undefined): string[] =>
   (el?.getAttribute('class') || '').split(/\s+/).filter(Boolean);
 
 /** `true` quando o controle está desabilitado por atributo OU por ARIA. */
-function estaDesabilitado(el: Element | null): boolean | null {
+function estaDisabled(el: Element | null): boolean | null {
   if (!el) return null;
   if ('disabled' in el && typeof (el as HTMLInputElement).disabled === 'boolean') {
     if ((el as HTMLInputElement).disabled) return true;
@@ -86,10 +86,10 @@ function marcado(el: Element | null): boolean | null {
  * Tudo é restaurado: o marcável volta ao estado anterior e o foco volta a quem
  * o tinha. Sem isso a sonda mudaria o resultado da story seguinte.
  */
-function aoClicarNoRotulo(rotulo: HTMLElement, controle: Element | null) {
+function labelAoClick(rotulo: HTMLElement, controle: Element | null) {
   const doc = rotulo.ownerDocument;
-  const focoAnterior = doc.activeElement as HTMLElement | null;
-  const marcadoAntes = marcado(controle);
+  const focusPrevious = doc.activeElement as HTMLElement | null;
+  const checkedBefore = marcado(controle);
 
   let focou: boolean | null = null;
   let ativou: boolean | null = null;
@@ -99,24 +99,24 @@ function aoClicarNoRotulo(rotulo: HTMLElement, controle: Element | null) {
     rotulo.click();
     const focado = doc.activeElement;
     focou = !!controle && (focado === controle || !!controle.contains(focado));
-    const marcadoDepois = marcado(controle);
-    ativou = marcadoAntes === null ? null : marcadoDepois !== marcadoAntes;
+    const checkedAfter = marcado(controle);
+    ativou = checkedBefore === null ? null : checkedAfter !== checkedBefore;
   } catch (e) {
     erro = e instanceof Error ? e.message : String(e);
   }
 
   // Desfaz: devolve o marcável ao estado original e o foco a quem o tinha.
-  if (marcadoAntes !== null && marcado(controle) !== marcadoAntes) {
+  if (checkedBefore !== null && marcado(controle) !== checkedBefore) {
     (controle as HTMLElement).click();
   }
-  if (focoAnterior && focoAnterior !== doc.body) focoAnterior.focus();
+  if (focusPrevious && focusPrevious !== doc.body) focusPrevious.focus();
   else (doc.activeElement as HTMLElement | null)?.blur?.();
 
   return { focouOControle: focou, ativouOControle: ativou, erro };
 }
 
 /** Quem recebe o clique no centro do rótulo — pega rótulo coberto por overlay. */
-function alcanceDoClique(rotulo: HTMLElement): { ehORotulo: boolean; quemRecebe: string | null } {
+function clickReach(rotulo: HTMLElement): { ehORotulo: boolean; quemRecebe: string | null } {
   const caixa = rotulo.getBoundingClientRect();
   if (caixa.width === 0 || caixa.height === 0) return { ehORotulo: false, quemRecebe: null };
   const alvo = rotulo.ownerDocument.elementFromPoint(
@@ -136,7 +136,7 @@ function alcanceDoClique(rotulo: HTMLElement): { ehORotulo: boolean; quemRecebe:
 // classe sem prefixo, inerte, que não esmaecia nada.
 
 /** Opacidade de fato aplicada ao rótulo. */
-export function opacidadeComputada(el: Element): number {
+export function opacityComputada(el: Element): number {
   return Number(getComputedStyle(el).opacity);
 }
 
@@ -149,15 +149,15 @@ export function cursorComputado(el: Element): string {
  * Clica no rótulo e devolve se o controle recebeu foco — sem deixar rastro.
  * É a asserção que faltava nas cinco stacks.
  */
-export function cliqueFocaOControle(rotulo: HTMLElement, controle: Element | null): boolean | null {
-  return aoClicarNoRotulo(rotulo, controle).focouOControle;
+export function clickFocaOControle(rotulo: HTMLElement, controle: Element | null): boolean | null {
+  return labelAoClick(rotulo, controle).focouOControle;
 }
 
 /** Razão WCAG entre o texto do rótulo e o primeiro fundo opaco acima dele. */
-export function contrasteDoRotulo(el: Element): number | null {
-  const fundo = fundoEfetivo(el);
+export function labelContrast(el: Element): number | null {
+  const fundo = backgroundEffective(el);
   if (!fundo) return null;
-  return razao(getComputedStyle(el).color, fundo)?.razao ?? null;
+  return ratio(getComputedStyle(el).color, fundo)?.ratio ?? null;
 }
 
 /**
@@ -168,13 +168,13 @@ export function contrasteDoRotulo(el: Element): number | null {
  * A classe do escuro sai no `finally`: deixá-la posta envenena a story seguinte
  * e a foto do Chromatic.
  */
-export function contrastePorTema(el: HTMLElement): { claro: number | null; escuro: number | null } {
-  const claro = contrasteDoRotulo(el);
-  const desfazer = ligarTemaEscuro(el.ownerDocument);
+export function themeContrast(el: HTMLElement): { claro: number | null; escuro: number | null } {
+  const claro = labelContrast(el);
+  const desfazer = darkLigarTheme(el.ownerDocument);
   try {
     // `color` está em transição na troca de tema: sem desligá-la a leitura
     // devolveria a cor do tema claro e o número não diria nada.
-    const escuro = semTransicao(el, () => contrasteDoRotulo(el));
+    const escuro = noTransicao(el, () => labelContrast(el));
     return { claro, escuro };
   } finally {
     desfazer();
@@ -184,7 +184,7 @@ export function contrastePorTema(el: HTMLElement): { claro: number | null; escur
 // ─── Medição ──────────────────────────────────────────────────────────────────
 
 /** Mede UM rótulo e o controle que ele rotula. `raiz` é o wrapper do cenário. */
-export function medirRotulo(raiz: HTMLElement) {
+export function measureLabel(raiz: HTMLElement) {
   const rotulo =
     raiz.querySelector<HTMLElement>('[data-slot="label"]') ??
     raiz.querySelector<HTMLElement>('label.nds-label') ??
@@ -199,19 +199,19 @@ export function medirRotulo(raiz: HTMLElement) {
 
   // ── Associação ──────────────────────────────────────────────────────────────
   const htmlFor = rotulo.getAttribute('for');
-  const alvoDoFor = htmlFor ? doc.getElementById(htmlFor) : null;
-  const aninhado = rotulo.querySelector(SELETOR_CONTROLE);
-  const controle = alvoDoFor ?? aninhado ?? raiz.querySelector(SELETOR_CONTROLE);
-  const forma = alvoDoFor ? 'for' : aninhado ? 'aninhado' : null;
+  const forTarget = htmlFor ? doc.getElementById(htmlFor) : null;
+  const aninhado = rotulo.querySelector(SELECTOR_CONTROL);
+  const controle = forTarget ?? aninhado ?? raiz.querySelector(SELECTOR_CONTROL);
+  const forma = forTarget ? 'for' : aninhado ? 'aninhado' : null;
 
   // ── Marcador de obrigatório ─────────────────────────────────────────────────
   const marcador =
     rotulo.querySelector<HTMLElement>('[aria-hidden="true"]') ??
     rotulo.querySelector<HTMLElement>('.nds-text-destructive');
   const csMarcador = marcador ? getComputedStyle(marcador) : null;
-  const fundoDoMarcador = marcador ? fundoEfetivo(marcador) : null;
+  const marcadorBackground = marcador ? backgroundEffective(marcador) : null;
 
-  const fundo = fundoEfetivo(rotulo);
+  const fundo = backgroundEffective(rotulo);
 
   // ── Irmão desabilitado: qual vocabulário cada stack usa ─────────────────────
   const irmaos = [...(rotulo.parentElement?.children ?? [])].filter((el) => el !== rotulo);
@@ -240,11 +240,11 @@ export function medirRotulo(raiz: HTMLElement) {
     associacao: {
       forma,
       htmlFor,
-      alvoDoForExiste: htmlFor ? !!alvoDoFor : null,
+      alvoDoForExiste: htmlFor ? !!forTarget : null,
       controleTag: controle?.tagName.toLowerCase() ?? null,
       controleTipo: controle?.getAttribute('type') ?? controle?.getAttribute('role') ?? null,
       controleId: controle?.getAttribute('id') ?? null,
-      controleDesabilitado: estaDesabilitado(controle),
+      controleDesabilitado: estaDisabled(controle),
       controleAriaRequired: controle?.getAttribute('aria-required') ?? null,
       /** Nome acessível do controle: é o que o leitor de tela anuncia. */
       nomeDoControle: controle
@@ -274,7 +274,7 @@ export function medirRotulo(raiz: HTMLElement) {
     },
     estado: {
       cor: cs.color,
-      fundoEfetivo: fundo,
+      backgroundEffective: fundo,
       opacidade: Number(cs.opacity),
       cursor: cs.cursor,
       ponteiro: cs.pointerEvents,
@@ -290,14 +290,14 @@ export function medirRotulo(raiz: HTMLElement) {
         (controle as HTMLInputElement | null)?.required === true
           ? 'aria-required'
           : null,
-      contraste: csMarcador && fundoDoMarcador ? razao(csMarcador.color, fundoDoMarcador) : null,
+      contraste: csMarcador && marcadorBackground ? ratio(csMarcador.color, marcadorBackground) : null,
     },
     clique: {
-      ...aoClicarNoRotulo(rotulo, controle),
-      alcance: alcanceDoClique(rotulo),
+      ...labelAoClick(rotulo, controle),
+      alcance: clickReach(rotulo),
     },
     contraste: {
-      textoNoFundo: fundo ? razao(cs.color, fundo) : null,
+      textoNoFundo: fundo ? ratio(cs.color, fundo) : null,
     },
   };
 }
@@ -306,11 +306,11 @@ export function medirRotulo(raiz: HTMLElement) {
  * Mede os cenários marcados com `data-sonda="<nome>"` dentro de `raiz`.
  * Cenário ausente vem `null` — é o achado de "a stack não monta este caso".
  */
-export function medirRotulos(raiz: HTMLElement, cenarios: string[]) {
+export function measureLabels(raiz: HTMLElement, cenarios: string[]) {
   const registro: Record<string, unknown> = {};
   for (const cenario of cenarios) {
     const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
-    registro[cenario] = alvo ? medirRotulo(alvo) : null;
+    registro[cenario] = alvo ? measureLabel(alvo) : null;
   }
   return registro;
 }
@@ -322,17 +322,17 @@ export function medirRotulos(raiz: HTMLElement, cenarios: string[]) {
  * A classe sai no `finally`: deixá-la posta envenena a story seguinte e a foto
  * do Chromatic.
  */
-export function medirNoEscuro(raiz: HTMLElement, cenario: string) {
+export function darkMeasure(raiz: HTMLElement, cenario: string) {
   const alvo = raiz.querySelector<HTMLElement>(`[data-sonda="${cenario}"]`);
   const rotulo = alvo?.querySelector<HTMLElement>('label');
   if (!alvo || !rotulo) return null;
 
-  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
+  const desfazer = darkLigarTheme(raiz.ownerDocument);
   try {
     // Trocar o tema troca `color`, que é propriedade em transição: sem desligá-la
     // a sonda leria a cor do tema CLARO e relataria um contraste que não existe.
-    return semTransicao(rotulo, () => {
-      const medida = medirRotulo(alvo);
+    return noTransicao(rotulo, () => {
+      const medida = measureLabel(alvo);
       if (!medida.presente) return null;
       return { estado: medida.estado, contraste: medida.contraste, obrigatorio: medida.obrigatorio };
     });
@@ -347,10 +347,10 @@ export function medirNoEscuro(raiz: HTMLElement, cenario: string) {
  * Via exceção, e não `console.log`: o addon do Storybook instrumenta o console
  * dentro da play e nada do que se escreve ali chega ao terminal do vitest.
  */
-export function reportarSonda(stack: string, raiz: HTMLElement, cenarios: string[]) {
+export function reportProbe(stack: string, raiz: HTMLElement, cenarios: string[]) {
   const registro = {
-    claro: medirRotulos(raiz, cenarios),
-    escuro: medirNoEscuro(raiz, cenarios[0]),
+    claro: measureLabels(raiz, cenarios),
+    escuro: darkMeasure(raiz, cenarios[0]),
   };
   throw new Error(`SONDA::${stack}::${JSON.stringify(registro)}`);
 }

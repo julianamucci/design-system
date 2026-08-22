@@ -10,9 +10,9 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Info, AlertTriangle, CheckCircle } from 'lucide-vue-next';
 import {
-  accordionComBadgeSource,
-  accordionComIconeSource,
-  accordionConteudoRicoSource,
+  accordionWithBadgeSource,
+  accordionWithIconSource,
+  accordionContentRichSource,
   accordionFaqSource,
 } from './accordion.source';
 
@@ -23,7 +23,7 @@ const meta = {
     design: figmaDesign('accordionTrigger'),
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: accordionComIconeSource } },
+    docs: { source: { transform: accordionWithIconSource } },
   },
 } satisfies Meta;
 
@@ -140,7 +140,7 @@ export const WithBadgeInTrigger: Story = {
     docs: {
       // Outra sub-composição no gatilho, com outro import: o selo entra depois
       // do rótulo, e não um ícone antes.
-      source: { transform: accordionComBadgeSource },
+      source: { transform: accordionWithBadgeSource },
       description: {
         story: 'Badge no trigger para sinalizar status (Novo, Beta). O badge é decorativo — o texto do trigger deve ser autoexplicativo.',
       },
@@ -208,7 +208,7 @@ export const RichContent: Story = {
     docs: {
       // O assunto está DENTRO do painel — tabela e lista —, e não no gatilho
       // que a do meta compõe.
-      source: { transform: accordionConteudoRicoSource },
+      source: { transform: accordionContentRichSource },
       description: {
         story: 'AccordionContent aceita qualquer conteúdo Vue. Use para tabelas de dados, parágrafos ou listas estruturadas.',
       },

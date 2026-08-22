@@ -42,7 +42,7 @@ import {
 export type ResizableDirection = 'horizontal' | 'vertical';
 
 /** Passo de cada seta, em pontos percentuais. Mesmo valor do Vanilla. */
-const PASSO_TECLADO = 2;
+const STEP_KEYBOARD = 2;
 
 /** Ordem de documento — a de registro depende da ordem de construção das views. */
 function documentOrdenar<T extends { readonly el: HTMLElement }>(itens: T[]): T[] {
@@ -72,7 +72,7 @@ export class NdsResizableStore {
   private readonly _sizes = signal<number[]>([]);
   readonly sizes = this._sizes.asReadonly();
 
-  private paineis: NdsResizablePanel[] = [];
+  private panels: NdsResizablePanel[] = [];
   private punhos: NdsResizableHandle[] = [];
   private grupo: HTMLElement | undefined;
   /** Tamanhos no instante do pointerdown — o arrasto é sempre relativo a eles. */
@@ -86,7 +86,7 @@ export class NdsResizableStore {
   }
 
   registrarPainel(p: NdsResizablePanel): void {
-    this.paineis.push(p);
+    this.panels.push(p);
   }
 
   registrarPunho(h: NdsResizableHandle): void {
@@ -98,14 +98,14 @@ export class NdsResizableStore {
    * envelhece em silêncio no dia em que um painel nascer dentro de um `@if`.
    */
   private indiceDoPainel(p: NdsResizablePanel): number {
-    return this.paineis.indexOf(p);
+    return this.panels.indexOf(p);
   }
 
   private indiceDoPunho(h: NdsResizableHandle): number {
     return this.punhos.indexOf(h);
   }
 
-  tamanhoDe(p: NdsResizablePanel): number | undefined {
+  sizeOf(p: NdsResizablePanel): number | undefined {
     const i = this.indiceDoPainel(p);
     return i < 0 ? undefined : this._sizes()[i];
   }
@@ -113,8 +113,8 @@ export class NdsResizableStore {
   /** Painéis à esquerda e à direita de um punho — o punho i separa i de i+1. */
   private vizinhos(h: NdsResizableHandle): [NdsResizablePanel, NdsResizablePanel] | undefined {
     const i = this.indiceDoPunho(h);
-    if (i < 0 || i + 1 >= this.paineis.length) return undefined;
-    return [this.paineis[i], this.paineis[i + 1]];
+    if (i < 0 || i + 1 >= this.panels.length) return undefined;
+    return [this.panels[i], this.panels[i + 1]];
   }
 
   /** Tamanho do painel ANTERIOR ao punho — é o que o `aria-valuenow` anuncia. */
@@ -125,7 +125,7 @@ export class NdsResizableStore {
   }
 
   /** Mínimo alcançável pelo painel anterior: o próprio `minSize`. */
-  minimoDe(h: NdsResizableHandle): number | undefined {
+  minimumOf(h: NdsResizableHandle): number | undefined {
     return this.vizinhos(h)?.[0].minSize();
   }
 
@@ -150,10 +150,10 @@ export class NdsResizableStore {
    * e os inputs deles já foram aplicados — no construtor, `input()` ainda
    * devolveria o default declarado.
    */
-  iniciar(restaurado?: number[]): void {
-    this.paineis = documentOrdenar(this.paineis);
+  start(restaurado?: number[]): void {
+    this.panels = documentOrdenar(this.panels);
     this.punhos = documentOrdenar(this.punhos);
-    const n = this.paineis.length;
+    const n = this.panels.length;
     if (!n) return;
 
     const bruto =
@@ -163,18 +163,18 @@ export class NdsResizableStore {
 
   /** `defaultSize` declarado manda; quem não declarou divide a sobra por igual. */
   private distribuir(): number[] {
-    const declarados = this.paineis.map((p) => p.defaultSize());
-    const semDeclaracao = declarados.filter((d) => d === undefined).length;
-    const somaDeclarada = declarados.reduce<number>((acc, d) => acc + (d ?? 0), 0);
-    const sobra = Math.max(0, 100 - somaDeclarada);
-    const fatia = semDeclaracao > 0 ? sobra / semDeclaracao : 0;
+    const declarados = this.panels.map((p) => p.defaultSize());
+    const noDeclaration = declarados.filter((d) => d === undefined).length;
+    const sumDeclarada = declarados.reduce<number>((acc, d) => acc + (d ?? 0), 0);
+    const sobra = Math.max(0, 100 - sumDeclarada);
+    const fatia = noDeclaration > 0 ? sobra / noDeclaration : 0;
     return declarados.map((d) => d ?? fatia);
   }
 
   /** Respeita min/max de cada painel e devolve uma soma de 100. */
   private normalizar(valores: number[]): number[] {
     const limitados = valores.map((s, i) =>
-      limitar(s, this.paineis[i].minSize(), this.paineis[i].maxSize()),
+      limitar(s, this.panels[i].minSize(), this.panels[i].maxSize()),
     );
     const soma = limitados.reduce((a, b) => a + b, 0);
     return soma > 0 ? limitados.map((s) => (s / soma) * 100) : limitados;
@@ -213,7 +213,7 @@ export class NdsResizableStore {
     const atual = this._sizes()[i] ?? 0;
     const destino =
       alvo === 'min'
-        ? (this.minimoDe(h) ?? atual)
+        ? (this.minimumOf(h) ?? atual)
         : alvo === 'max'
           ? (this.maximoDe(h) ?? atual)
           : (a.defaultSize() ?? atual);
@@ -290,7 +290,7 @@ export class NdsResizable implements AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    this.store.iniciar(this.restaurar());
+    this.store.start(this.restaurar());
   }
 
   private chave(): string {
@@ -366,7 +366,7 @@ export class NdsResizablePanel {
    * ocupam 1px cada, saem da conta em vez de estourarem os 100%.
    */
   protected readonly tamanhoCss = computed(() => {
-    const s = this.store.tamanhoDe(this);
+    const s = this.store.sizeOf(this);
     return s === undefined ? '' : String(Math.round(s * 1e4) / 1e4);
   });
 }
@@ -446,7 +446,7 @@ export class NdsResizableHandle {
   // Arredondados: `aria-valuenow` é lido em voz alta, e "37.428571" não informa
   // nada além do que "37" já informa.
   protected readonly valorAgora = computed(() => arredondar(this.store.valorDe(this)));
-  protected readonly valorMinimo = computed(() => arredondar(this.store.minimoDe(this)));
+  protected readonly valorMinimo = computed(() => arredondar(this.store.minimumOf(this)));
   protected readonly valorMaximo = computed(() => arredondar(this.store.maximoDe(this)));
 
   protected aoPressionar(e: PointerEvent): void {
@@ -495,10 +495,10 @@ export class NdsResizableHandle {
     let extremo: 'min' | 'max' | 'default' | undefined;
 
     switch (e.key) {
-      case 'ArrowRight': if (horizontal) delta = PASSO_TECLADO; break;
-      case 'ArrowLeft':  if (horizontal) delta = -PASSO_TECLADO; break;
-      case 'ArrowDown':  if (!horizontal) delta = PASSO_TECLADO; break;
-      case 'ArrowUp':    if (!horizontal) delta = -PASSO_TECLADO; break;
+      case 'ArrowRight': if (horizontal) delta = STEP_KEYBOARD; break;
+      case 'ArrowLeft':  if (horizontal) delta = -STEP_KEYBOARD; break;
+      case 'ArrowDown':  if (!horizontal) delta = STEP_KEYBOARD; break;
+      case 'ArrowUp':    if (!horizontal) delta = -STEP_KEYBOARD; break;
       case 'Home':  extremo = 'min'; break;
       case 'End':   extremo = 'max'; break;
       case 'Enter': extremo = 'default'; break;

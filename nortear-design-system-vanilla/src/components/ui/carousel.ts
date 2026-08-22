@@ -243,7 +243,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
   // que andou — o Embla não carrega essa informação no evento.
   let origemPendente: CarouselNavSource = 'button';
 
-  function aoSelecionar(): void {
+  function onSelect(): void {
     if (!embla) return;
     currentIndex = embla.selectedScrollSnap();
     sincronizarArrows();
@@ -293,7 +293,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
       // de ter transição de CSS justamente porque ela atrapalhava o gesto.
       duration: prefersReducedMotion() ? 0 : 25,
     });
-    embla.on('select', aoSelecionar);
+    embla.on('select', onSelect);
     embla.on('reInit', sincronizarArrows);
     embla.on('pointerDown', () => {
       veioDeGesto = true;
@@ -337,19 +337,19 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     autoplayTimer = setInterval(() => mover('next', 'autoplay'), autoplayInterval);
   }
 
-  function pararAutoplay(): void {
+  function stopAutoplay(): void {
     autoplayLigado = false;
     suspenderAutoplay();
   }
 
   prevBtn.addEventListener('click', () => {
     mover('prev', 'button');
-    pararAutoplay();
+    stopAutoplay();
   });
 
   nextBtn.addEventListener('click', () => {
     mover('next', 'button');
-    pararAutoplay();
+    stopAutoplay();
   });
 
   // Keyboard navigation — o par de teclas acompanha o eixo: quem lê uma pilha
@@ -361,7 +361,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     if (e.key !== teclaVoltar && e.key !== teclaAvancar) return;
     e.preventDefault();
     mover(e.key === teclaAvancar ? 'next' : 'prev', 'keyboard');
-    pararAutoplay();
+    stopAutoplay();
   });
 
   if (autoplay) {
@@ -369,7 +369,7 @@ export function createCarousel(options: CarouselOptions): DestroyableElement {
     // `stopOnInteraction` que o conteúdo compartilhado documenta, e é o mesmo
     // gesto que as outras stacks reconhecem: o plugin delas assina o
     // `pointerDown` da área dos slides, não o clique das setas.
-    root.addEventListener('pointerdown', pararAutoplay);
+    root.addEventListener('pointerdown', stopAutoplay);
     root.addEventListener('mouseenter', suspenderAutoplay);
     root.addEventListener('mouseleave', startAutoplay);
     startAutoplay();

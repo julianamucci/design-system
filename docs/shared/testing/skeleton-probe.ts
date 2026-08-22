@@ -23,9 +23,9 @@
  * mesma conta divergem na primeira correção.
  */
 
-import { contraste, fundoEfetivo, ligarTemaEscuro } from './alert-probe';
+import { contraste, backgroundEffective, darkLigarTheme } from './alert-probe';
 
-export { contraste, fundoEfetivo, ligarTemaEscuro };
+export { contraste, backgroundEffective, darkLigarTheme };
 
 // ─── Movimento reduzido ───────────────────────────────────────────────────────
 
@@ -56,7 +56,7 @@ export function ligarMovimentoReduzido(doc: Document): () => void {
  * `animation-duration: 0ms` tem nome e não anima nada, e é exatamente assim que
  * o override de movimento reduzido a desliga.
  */
-export function animacaoAtiva(el: HTMLElement): boolean {
+export function animationAtiva(el: HTMLElement): boolean {
   const estilo = getComputedStyle(el);
   if (estilo.animationName === 'none' || estilo.animationName === '') return false;
   return Number.parseFloat(estilo.animationDuration) > 0;
@@ -65,7 +65,7 @@ export function animacaoAtiva(el: HTMLElement): boolean {
 // ─── Caixa desenhada ──────────────────────────────────────────────────────────
 
 /** Fração da largura do container que cada valor de `data-width` promete. */
-export const FRACAO_DE_LARGURA: Record<string, number> = {
+export const WIDTH_FRACTION: Record<string, number> = {
   full: 1,
   '3-4': 0.75,
   '2-3': 2 / 3,
@@ -73,7 +73,7 @@ export const FRACAO_DE_LARGURA: Record<string, number> = {
   '1-3': 1 / 3,
 };
 
-export interface CaixaDesenhada {
+export interface BoxDesenhada {
   largura: number;
   altura: number;
   /** Largura do placeholder dividida pela largura do container que o mede. */
@@ -84,7 +84,7 @@ export interface CaixaDesenhada {
   circular: boolean;
 }
 
-export function caixaDesenhada(el: HTMLElement, container?: HTMLElement | null): CaixaDesenhada {
+export function boxDesenhada(el: HTMLElement, container?: HTMLElement | null): BoxDesenhada {
   const caixa = el.getBoundingClientRect();
   const refer = (container ?? el.parentElement)?.getBoundingClientRect();
   const raio = Number.parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
@@ -99,13 +99,13 @@ export function caixaDesenhada(el: HTMLElement, container?: HTMLElement | null):
 
 // ─── Distinção do fundo ───────────────────────────────────────────────────────
 
-export interface DistincaoDoFundo {
+export interface BackgroundDistincao {
   /** Cor do placeholder já composta com o que está atrás dele. */
   placeholder: string;
   /** Cor do container, também composta. */
   container: string;
   /** Razão de luminância entre as duas. 1.0 significa placeholder invisível. */
-  razao: number;
+  ratio: number;
 }
 
 /**
@@ -117,8 +117,8 @@ export interface DistincaoDoFundo {
  * primária coincide com a superfície — em que o esqueleto some e o carregamento
  * deixa de ser visível.
  */
-export function distincaoDoFundo(el: HTMLElement): DistincaoDoFundo {
-  const placeholder = fundoEfetivo(el);
-  const container = el.parentElement ? fundoEfetivo(el.parentElement) : placeholder;
-  return { placeholder, container, razao: contraste(placeholder, container) };
+export function backgroundDistincao(el: HTMLElement): BackgroundDistincao {
+  const placeholder = backgroundEffective(el);
+  const container = el.parentElement ? backgroundEffective(el.parentElement) : placeholder;
+  return { placeholder, container, ratio: contraste(placeholder, container) };
 }

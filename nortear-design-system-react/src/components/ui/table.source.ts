@@ -25,12 +25,12 @@ export type TableArgs = {
   comRodape: boolean;
 };
 
-const LEGENDA = 'Lista de faturas recentes';
+const CAPTION = 'Lista de faturas recentes';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importingTable(...pecas: string[]): string {
-  const lista = [...pecas].sort();
-  return `import {\n${lista.map((peca) => `  ${peca},`).join('\n')}\n} from "@/components/ui/table";`;
+function importingTable(...parts: string[]): string {
+  const lista = [...parts].sort();
+  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from "@/components/ui/table";`;
 }
 
 /**
@@ -38,7 +38,7 @@ function importingTable(...pecas: string[]): string {
  * O valor é string formatada de propósito: o snippet ensina a montagem da
  * tabela, e uma conversão de moeda no meio dela roubaria a atenção do assunto.
  */
-const DADOS = `const invoices = [
+const DATA = `const invoices = [
   { id: "#INV-001", status: "Pago", method: "Cartão de crédito", amount: "R$ 250,00" },
   { id: "#INV-002", status: "Pendente", method: "Boleto bancário", amount: "R$ 150,00" },
   { id: "#INV-003", status: "Cancelado", method: "Pix", amount: "R$ 350,00" },
@@ -48,7 +48,7 @@ const DADOS = `const invoices = [
 const TOTAL = 'R$ 750,00';
 
 /** Cabeçalho de quatro colunas, com a numérica alinhada à direita. */
-const CABECALHO = `  <TableHeader>
+const HEADER = `  <TableHeader>
     <TableRow>
       <TableHead>Fatura</TableHead>
       <TableHead>Status</TableHead>
@@ -63,7 +63,7 @@ const CABECALHO = `  <TableHeader>
  * A `key` é o identificador do registro, e não o índice: reordenar a lista com
  * `key={i}` faz o React reaproveitar a linha errada.
  */
-const CORPO = `  <TableBody>
+const BODY = `  <TableBody>
     {invoices.map((invoice) => (
       <TableRow key={invoice.id}>
         <TableCell className="nds-font-medium">{invoice.id}</TableCell>
@@ -78,7 +78,7 @@ const CORPO = `  <TableBody>
  * Rodapé de sumário. O `colSpan` é o que faz o rótulo ocupar as colunas
  * descritivas e o valor cair exatamente sob a coluna que ele soma.
  */
-const RODAPE = `  <TableFooter>
+const FOOTER = `  <TableFooter>
     <TableRow>
       <TableCell colSpan={3}>Total</TableCell>
       <TableCell className="nds-text-right">${TOTAL}</TableCell>
@@ -90,7 +90,7 @@ const RODAPE = `  <TableFooter>
  * O que muda é ficar ou não visível, e `nds-sr-only` recorta a caixa sem tirar
  * da árvore de acessibilidade — `display: none` tiraria das duas.
  */
-function legenda(visivel: boolean, texto = LEGENDA): string {
+function legenda(visivel: boolean, texto = CAPTION): string {
   const classe = visivel ? '' : ' className="nds-sr-only"';
   return `  <TableCaption${classe}>${texto}</TableCaption>`;
 }
@@ -112,7 +112,7 @@ const IMPORT_COMPLETO = importingTable(
   'TableRow',
 );
 
-const IMPORT_SEM_RODAPE = importingTable(
+const IMPORT_NO_FOOTER = importingTable(
   'Table',
   'TableBody',
   'TableCaption',
@@ -135,11 +135,11 @@ const IMPORT_SEM_RODAPE = importingTable(
 export const tableSource: SourceTransform<TableArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const comRodape = args.comRodape !== false;
-  return `${comRodape ? IMPORT_COMPLETO : IMPORT_SEM_RODAPE}
+  return `${comRodape ? IMPORT_COMPLETO : IMPORT_NO_FOOTER}
 
-${DADOS}
+${DATA}
 
-${tabela(legenda(args.captionVisivel === true), CABECALHO, CORPO, comRodape && RODAPE)}`;
+${tabela(legenda(args.captionVisivel === true), HEADER, BODY, comRodape && FOOTER)}`;
 };
 
 /**
@@ -148,11 +148,11 @@ ${tabela(legenda(args.captionVisivel === true), CABECALHO, CORPO, comRodape && R
  * e "tabela, 4 colunas" não diz de quê.
  */
 export function tableBasicaSource(): string {
-  return `${IMPORT_SEM_RODAPE}
+  return `${IMPORT_NO_FOOTER}
 
-${DADOS}
+${DATA}
 
-${tabela(legenda(true), CABECALHO, CORPO)}`;
+${tabela(legenda(true), HEADER, BODY)}`;
 }
 
 /**
@@ -162,21 +162,21 @@ ${tabela(legenda(true), CABECALHO, CORPO)}`;
  * legenda nomeia a TABELA para quem ouve. Sem o título por perto, esconder a
  * legenda é só esconder informação.
  */
-export function tableLegendaOcultaSource(): string {
+export function tableCaptionOcultaSource(): string {
   const dados = `const invoices = [
   { id: "#INV-001", status: "Pago", amount: "R$ 250,00" },
   { id: "#INV-002", status: "Pendente", amount: "R$ 150,00" },
   { id: "#INV-003", status: "Cancelado", amount: "R$ 350,00" },
 ];`;
 
-  return `${IMPORT_SEM_RODAPE}
+  return `${IMPORT_NO_FOOTER}
 
 ${dados}
 
 <div className="nds-stack" data-spacing="sm">
   <h2 className="nds-text-h3 nds-m-0">Faturas recentes</h2>
   <Table>
-    <TableCaption className="nds-sr-only">${LEGENDA}</TableCaption>
+    <TableCaption className="nds-sr-only">${CAPTION}</TableCaption>
     <TableHeader>
       <TableRow>
         <TableHead>Fatura</TableHead>
@@ -206,12 +206,12 @@ ${dados}
  * cinco controles indistinguíveis na lista do leitor de tela, e o ícone não
  * nomeia nada: ele é `aria-hidden`.
  */
-export function lineSourceTableActions(): string {
-  return `${IMPORT_SEM_RODAPE}
+export function lineTableActionsSource(): string {
+  return `${IMPORT_NO_FOOTER}
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
 
-${DADOS}
+${DATA}
 
 <Table>
   <TableCaption className="nds-sr-only">Faturas recentes com ações</TableCaption>
@@ -254,10 +254,10 @@ ${DADOS}
  * exista também para quem navega sem mouse (WCAG 2.1.1). O que o snippet mostra
  * é o que PROVOCA a rolagem — muitas colunas —, e não um ajuste a fazer.
  */
-export function tableRolagemHorizontalSource(): string {
-  return `${IMPORT_SEM_RODAPE}
+export function tableScrollHorizontalSource(): string {
+  return `${IMPORT_NO_FOOTER}
 
-${DADOS}
+${DATA}
 
 const meses = ["2025", "2026"].flatMap((ano) =>
   ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"].map(
@@ -299,12 +299,12 @@ const meses = ["2025", "2026"].flatMap((ano) =>
  * deixaria a mensagem torta na próxima coluna acrescentada.
  */
 export function tableVaziaSource(): string {
-  return `${IMPORT_SEM_RODAPE}
+  return `${IMPORT_NO_FOOTER}
 
 const colunas = ["Fatura", "Status", "Método", "Valor"];
 
 <Table>
-  <TableCaption className="nds-sr-only">${LEGENDA}</TableCaption>
+  <TableCaption className="nds-sr-only">${CAPTION}</TableCaption>
   <TableHeader>
     <TableRow>
       {colunas.map((coluna) => (
@@ -328,16 +328,16 @@ const colunas = ["Fatura", "Status", "Método", "Valor"];
  * verdade: `null` apaga o atributo no React, e escrever `data-state="none"`
  * faria o seletor `[data-state]` casar a linha errada.
  */
-export function tableLinhaSelecionadaSource(): string {
-  return `${IMPORT_SEM_RODAPE}
+export function tableLineSelecionadaSource(): string {
+  return `${IMPORT_NO_FOOTER}
 
-${DADOS}
+${DATA}
 
 const selecionada = "#INV-002";
 
 <Table>
-  <TableCaption className="nds-sr-only">${LEGENDA}</TableCaption>
-${CABECALHO}
+  <TableCaption className="nds-sr-only">${CAPTION}</TableCaption>
+${HEADER}
   <TableBody>
     {invoices.map((invoice) => (
       <TableRow
@@ -365,8 +365,8 @@ ${CABECALHO}
  * linha mede o que vai medir quando o texto chegar, e cresce junto com a fonte
  * do navegador (WCAG 1.4.4).
  */
-export function tableCarregandoSource(): string {
-  return `${IMPORT_SEM_RODAPE}
+export function tableLoadingSource(): string {
+  return `${IMPORT_NO_FOOTER}
 import { Skeleton } from "@/components/ui/skeleton";
 
 const colunas = ["Fatura", "Status", "Método", "Valor"];
@@ -374,7 +374,7 @@ const linhas = [1, 2, 3];
 
 <div role="status" aria-busy="true" aria-label="Carregando faturas">
   <Table>
-    <TableCaption className="nds-sr-only">${LEGENDA}</TableCaption>
+    <TableCaption className="nds-sr-only">${CAPTION}</TableCaption>
     <TableHeader>
       <TableRow>
         {colunas.map((coluna) => (

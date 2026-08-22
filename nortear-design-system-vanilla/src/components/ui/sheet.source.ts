@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -77,7 +77,7 @@ for (let i = 1; i <= ${total}; i++) {
 
 function bodyActions(): Corpo {
   return {
-    imports: [importar('button', 'createButton')],
+    imports: [importing('button', 'createButton')],
     bloco: `const corpo = document.createElement('div');
 corpo.className = 'nds-cluster';
 corpo.dataset.spacing = 'sm';
@@ -108,7 +108,7 @@ for (const rotulo of ['Dashboard', 'Projetos', 'Equipe', 'Configurações']) {
 
 function bodyForm(): Corpo {
   return {
-    imports: [importar('form', 'createFormField'), importar('input', 'createInput')],
+    imports: [importing('form', 'createFormField'), importing('input', 'createInput')],
     // `createFormField` é quem fecha o par rótulo ↔ controle e gera o id que
     // falta. Um `<label>` cru com um `<input>` cru pareceria igual e não faria
     // nenhuma das duas coisas.
@@ -199,7 +199,7 @@ export function sheetSnippet(o: SheetSnippetOptions = {}): string {
   const gatilho = `createButton({ variant: 'outline', label: ${texto(o.triggerLabel ?? 'Abrir filtros')} })`;
 
   return snippet(
-    [importar('sheet', 'createSheet'), importar('button', 'createButton'), ...corpo.imports]
+    [importing('sheet', 'createSheet'), importing('button', 'createButton'), ...corpo.imports]
       .filter((linha, i, todas) => todas.indexOf(linha) === i)
       .join('\n'),
     corpo.bloco,
@@ -226,7 +226,7 @@ export function sheetControlledSnippet(o: SheetSnippetOptions = {}): string {
   const corpo = bodyOf(o);
 
   return snippet(
-    [importar('sheet', 'createSheet'), importar('button', 'createButton'), ...corpo.imports]
+    [importing('sheet', 'createSheet'), importing('button', 'createButton'), ...corpo.imports]
       .filter((linha, i, todas) => todas.indexOf(linha) === i)
       .join('\n'),
     corpo.bloco,

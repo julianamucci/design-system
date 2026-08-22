@@ -4,7 +4,7 @@ import { userEvent, within, expect } from "storybook/test";
 import { Slider } from "./slider";
 import {
   sliderWithLabelSource,
-  sliderEmFormularioSource,
+  formSliderSource,
   sliderStepSource,
   sliderPrecoSource,
   sliderSource,
@@ -12,7 +12,7 @@ import {
 import { Label } from "./label";
 import { Button } from "./button";
 import { Input } from "./input";
-import { valorDaAlca } from "@shared/testing/slider-probe";
+import { handleValue } from "@shared/testing/slider-probe";
 
 const meta = {
   title: "UI/Slider/Compositions",
@@ -75,7 +75,7 @@ export const WithLabelAndValue: Story = {
     });
     await step("O texto do valor acompanha a alça", async () => {
       const live = canvasElement.querySelector<HTMLElement>('[aria-live="polite"]')!;
-      const antes = valorDaAlca(canvas.getByRole("slider"));
+      const antes = handleValue(canvas.getByRole("slider"));
       canvas.getByRole("slider").focus();
       await userEvent.keyboard("{ArrowRight}");
       const depois = Math.min(100, antes + 1);
@@ -159,10 +159,10 @@ export const CustomStep: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("A seta anda um passo inteiro, não uma unidade", async () => {
-      const antes = valorDaAlca(canvas.getByRole("slider"));
+      const antes = handleValue(canvas.getByRole("slider"));
       canvas.getByRole("slider").focus();
       await userEvent.keyboard("{ArrowRight}");
-      await expect(valorDaAlca(canvas.getByRole("slider"))).toBe(Math.min(100, antes + 10));
+      await expect(handleValue(canvas.getByRole("slider"))).toBe(Math.min(100, antes + 10));
     });
   },
 };
@@ -172,7 +172,7 @@ export const InForm: Story = {
     docs: {
       // Sub-composição dentro de formulário: dois controles, cada um com nome
       // acessível PRÓPRIO, e um botão de envio.
-      source: { transform: sliderEmFormularioSource },
+      source: { transform: formSliderSource },
     },
   },
   render: function InFormRender() {
@@ -250,8 +250,8 @@ export const InForm: Story = {
 
     await step("Submeter guarda o valor corrente dos dois", async () => {
       const thumbs = canvas.getAllByRole("slider");
-      const volume = valorDaAlca(thumbs[0]);
-      const brilho = valorDaAlca(thumbs[1]);
+      const volume = handleValue(thumbs[0]);
+      const brilho = handleValue(thumbs[1]);
       await userEvent.click(canvas.getByRole("button", { name: "Salvar preset" }));
       await expect(
         canvas.getByText(`Volume ${volume}% · Brilho ${brilho}%`),

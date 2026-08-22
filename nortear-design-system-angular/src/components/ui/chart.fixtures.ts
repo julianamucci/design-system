@@ -11,7 +11,7 @@ import type { ChartDataPoint, ChartSeries } from './chart';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
-export const MESES: string[] = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
+export const MONTHS: string[] = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 
 export const SERIE_UNICA: ChartSeries[] = [
   { name: 'Desktop', data: [186, 305, 237, 73, 209, 214] },
@@ -27,7 +27,7 @@ export const SERIES_TRIO: ChartSeries[] = [
   { name: 'Tablet', data: [40, 60, 55, 48, 70, 66] },
 ];
 
-export const DADOS_DISPOSITIVO: ChartDataPoint[] = [
+export const DATA_DISPOSITIVO: ChartDataPoint[] = [
   { label: 'Desktop', value: 1224 },
   { label: 'Mobile', value: 860 },
   { label: 'Tablet', value: 320 },
@@ -55,7 +55,7 @@ function luminancia([r, g, b]: RGB): number {
 }
 
 /** Razão de contraste WCAG entre duas cores já em RGB 0..1. */
-export function razaoDeContraste(a: RGB, b: RGB): number {
+export function contrastRatio(a: RGB, b: RGB): number {
   const la = luminancia(a);
   const lb = luminancia(b);
   return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
@@ -68,8 +68,8 @@ export function razaoDeContraste(a: RGB, b: RGB): number {
  * o CSS possa compor `hsl(var(--x) / 0.5)`. Lê o valor bruto e converte — sem
  * criar elemento de sonda, que exigiria escrever estilo inline.
  */
-export function rgbToken(token: string, dentroDe: Element = document.documentElement): RGB | null {
-  const bruto = getComputedStyle(dentroDe).getPropertyValue(token).trim();
+export function rgbToken(token: string, insideOf: Element = document.documentElement): RGB | null {
+  const bruto = getComputedStyle(insideOf).getPropertyValue(token).trim();
   const nums = bruto.match(/-?[\d.]+/g);
   if (!nums || nums.length < 3) return null;
   return rgbHsl(Number(nums[0]), Number(nums[1]), Number(nums[2]));

@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   avatar2xlSource,
   avatarWithDelaySource,
-  avatarComIconeSource,
-  avatarComStatusSource,
-  avatarEmGrupoSource,
+  avatarWithIconSource,
+  avatarWithStatusSource,
+  groupAvatarSource,
   avatarLgSource,
   avatarSmSource,
   avatarSoIniciaisSource,
@@ -57,8 +57,8 @@ describe('avatarSource', () => {
   });
 
   it('cai no padrão quando o control entrega um espião no lugar da string', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = avatarSource(undefined, { args: { className: espiao as never } });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = avatarSource(undefined, { args: { className: spy as never } });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).toContain('<Avatar>');
   });
@@ -86,27 +86,27 @@ describe('composições', () => {
   });
 
   it('com ícone, quem nomeia é o rótulo do fallback — o svg é decorativo', () => {
-    const saida = avatarComIconeSource();
+    const saida = avatarWithIconSource();
     expect(saida).toContain('import { User } from "lucide-react";');
     expect(saida).toContain('<AvatarFallback role="img" aria-label="Usuário genérico">');
     expect(saida).toContain('<User aria-hidden="true" className="nds-icon-lg" />');
   });
 
   it('no grupo o rótulo é do contêiner e cada foto fica com alt vazio', () => {
-    const saida = avatarEmGrupoSource();
+    const saida = groupAvatarSource();
     expect(saida).toContain('<AvatarGroup role="group" aria-label="Participantes">');
     expect(saida.match(/alt=""/g)).toHaveLength(3);
     expect(saida).toContain('<AvatarGroupCount aria-hidden="true">+3</AvatarGroupCount>');
   });
 
   it('o grupo não empurra avatar com margem: o recuo é do contêiner', () => {
-    const saida = avatarEmGrupoSource();
+    const saida = groupAvatarSource();
     expect(saida).not.toContain('style=');
     expect(saida).not.toContain('margin');
   });
 
   it('o indicador de status é irmão da imagem e se anuncia por rótulo', () => {
-    const saida = avatarComStatusSource();
+    const saida = avatarWithStatusSource();
     expect(saida).toContain('<AvatarBadge role="img" aria-label="Online" />');
     expect(saida.indexOf('<AvatarFallback>')).toBeLessThan(saida.indexOf('<AvatarBadge'));
   });
@@ -116,9 +116,9 @@ describe('composições', () => {
       avatarSource,
       avatar2xlSource,
       avatarWithDelaySource,
-      avatarComIconeSource,
-      avatarComStatusSource,
-      avatarEmGrupoSource,
+      avatarWithIconSource,
+      avatarWithStatusSource,
+      groupAvatarSource,
       avatarLgSource,
       avatarSmSource,
       avatarSoIniciaisSource,

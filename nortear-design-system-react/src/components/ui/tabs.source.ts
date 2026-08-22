@@ -36,7 +36,7 @@ const IMPORT_TABS =
  */
 type Aba = [valor: string, rotulo: string, conteudo: string, extra?: string];
 
-const SECOES: Aba[] = [
+const SECTIONS: Aba[] = [
   ['overview', 'Visão geral', 'Conteúdo da visão geral.'],
   ['properties', 'Propriedades', 'Lista de propriedades.'],
   ['examples', 'Exemplos', 'Exemplos de uso.'],
@@ -61,7 +61,7 @@ function abas(
       return `    ${abertura}${rotulo}</TabsTrigger>`;
     })
     .join('\n');
-  const paineis = itens
+  const panels = itens
     .map(([valor, , conteudo]) => `  <TabsContent value="${valor}">${conteudo}</TabsContent>`)
     .join('\n');
 
@@ -69,7 +69,7 @@ function abas(
   <TabsList aria-label="${rotuloDaLista}"${lista}>
 ${gatilhos}
   </TabsList>
-${paineis}
+${panels}
 </Tabs>`;
 }
 
@@ -86,17 +86,17 @@ export const tabsSource: SourceTransform<TabsArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const raiz = attrs(
     propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
-    `defaultValue="${texto(args.defaultValue) ?? SECOES[0][0]}"`,
+    `defaultValue="${texto(args.defaultValue) ?? SECTIONS[0][0]}"`,
   );
-  return jsxSnippet(IMPORT_TABS, abas(raiz, '', SECOES));
+  return jsxSnippet(IMPORT_TABS, abas(raiz, '', SECTIONS));
 };
 
 /**
  * Variante de linha. O estilo mora na LISTA, não na raiz: é a fileira que troca
  * o trilho com fundo por um traço sob a aba ativa, e os painéis não mudam nada.
  */
-export function tabsLinhaSource(): string {
-  return jsxSnippet(IMPORT_TABS, abas(' defaultValue="overview"', ' variant="line"', SECOES));
+export function tabsLineSource(): string {
+  return jsxSnippet(IMPORT_TABS, abas(' defaultValue="overview"', ' variant="line"', SECTIONS));
 }
 
 /**
@@ -107,7 +107,7 @@ export function tabsLinhaSource(): string {
 export function tabsVerticalSource(): string {
   return jsxSnippet(
     IMPORT_TABS,
-    abas(' orientation="vertical" defaultValue="overview"', '', SECOES),
+    abas(' orientation="vertical" defaultValue="overview"', '', SECTIONS),
   );
 }
 
@@ -120,9 +120,9 @@ export function tabsAbaDesabilitadaSource(): string {
   return jsxSnippet(
     IMPORT_TABS,
     abas(' defaultValue="overview"', '', [
-      SECOES[0],
+      SECTIONS[0],
       ['properties', 'Propriedades', 'Lista de propriedades.', 'disabled'],
-      SECOES[2],
+      SECTIONS[2],
     ]),
   );
 }
@@ -131,7 +131,7 @@ export function tabsAbaDesabilitadaSource(): string {
  * Ícone antes do rótulo. O texto continua nomeando a aba e o desenho fica
  * escondido do leitor de tela: anunciar os dois diria a mesma coisa duas vezes.
  */
-export function tabsComIconesSource(): string {
+export function tabsWithIconsSource(): string {
   const conta: Array<[string, string, string, string]> = [
     ['profile', 'Perfil', 'Dados do perfil.', 'User'],
     ['account', 'Conta', 'Configurações da conta.', 'Settings'],
@@ -145,7 +145,7 @@ export function tabsComIconesSource(): string {
     </TabsTrigger>`,
     )
     .join('\n');
-  const paineis = conta
+  const panels = conta
     .map(([valor, , conteudo]) => `  <TabsContent value="${valor}">${conteudo}</TabsContent>`)
     .join('\n');
 
@@ -156,7 +156,7 @@ import { Settings, Shield, User } from "lucide-react";`,
   <TabsList aria-label="Configurações da conta">
 ${gatilhos}
   </TabsList>
-${paineis}
+${panels}
 </Tabs>`,
   );
 }
@@ -192,13 +192,13 @@ import { Badge } from "@/components/ui/badge";`,
  * `value` + callback substitui `defaultValue`: os dois juntos brigariam pelo
  * mesmo estado.
  */
-export function tabsControladoSource(): string {
+export function tabsControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORT_TABS}`,
     `const [secao, setSecao] = useState("overview");
 
-${abas(' value={secao} onValueChange={setSecao}', '', SECOES)}`,
+${abas(' value={secao} onValueChange={setSecao}', '', SECTIONS)}`,
   );
 }
 
@@ -210,6 +210,6 @@ ${abas(' value={secao} onValueChange={setSecao}', '', SECOES)}`,
 export function tabsAtivacaoManualSource(): string {
   return jsxSnippet(
     IMPORT_TABS,
-    abas(' defaultValue="overview"', ' activationMode="manual"', SECOES),
+    abas(' defaultValue="overview"', ' activationMode="manual"', SECTIONS),
   );
 }

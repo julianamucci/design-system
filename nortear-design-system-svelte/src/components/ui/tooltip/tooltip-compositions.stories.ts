@@ -9,7 +9,7 @@ import { tooltipSource } from './tooltip.source';
 // se explica sozinho — nunca é o único portador da informação.
 
 /** De que lado o balão nasceu — o gancho `data-side` que o CSS lê. */
-function ladoDe(balao: HTMLElement | null): string | null {
+function sideOf(balao: HTMLElement | null): string | null {
   return balao?.closest('[data-side]')?.getAttribute('data-side') ?? null;
 }
 
@@ -93,9 +93,9 @@ export const SideTop: Story = {
 
     await step('O balão nasce acima do gatilho', async () => {
       await waitFor(async () => {
-        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
       });
-      await expect(ladoDe(balaoDe(gatilho))).toBe('top');
+      await expect(sideOf(balaoDe(gatilho))).toBe('top');
       await expect(balaoDe(gatilho)!.textContent).toContain('Tooltip no topo');
     });
   },
@@ -116,9 +116,9 @@ export const SideBottom: Story = {
 
     await step('O balão nasce abaixo do gatilho', async () => {
       await waitFor(async () => {
-        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
       });
-      await expect(ladoDe(balaoDe(gatilho))).toBe('bottom');
+      await expect(sideOf(balaoDe(gatilho))).toBe('bottom');
       await expect(balaoDe(gatilho)!.textContent).toContain('Excluir item');
     });
   },
@@ -139,9 +139,9 @@ export const SideLeft: Story = {
 
     await step('O balão nasce à esquerda do gatilho', async () => {
       await waitFor(async () => {
-        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
       });
-      await expect(ladoDe(balaoDe(gatilho))).toBe('left');
+      await expect(sideOf(balaoDe(gatilho))).toBe('left');
       await expect(balaoDe(gatilho)!.textContent).toContain('À esquerda');
     });
   },
@@ -162,9 +162,9 @@ export const SideRight: Story = {
 
     await step('O balão nasce à direita do gatilho', async () => {
       await waitFor(async () => {
-        await expect(ladoDe(balaoDe(gatilho))).toBeTruthy();
+        await expect(sideOf(balaoDe(gatilho))).toBeTruthy();
       });
-      await expect(ladoDe(balaoDe(gatilho))).toBe('right');
+      await expect(sideOf(balaoDe(gatilho))).toBe('right');
       await expect(balaoDe(gatilho)!.textContent).toContain('À direita');
     });
   },

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  codeBlockPaletaSource,
+  codeBlockPaletteSource,
   codeBlockRemovidoSource,
   codeBlockRolagemSource,
   codeBlockSource,
@@ -11,7 +11,7 @@ import {
  * não são exportadas — a guarda transversal chama TODA função exportada como se
  * fosse uma transform —, então elas são medidas pela saída.
  */
-const declaracao = (saida: string) => saida.split('\n').find((l) => l.startsWith('const source ='));
+const declaration = (saida: string) => saida.split('\n').find((l) => l.startsWith('const source ='));
 
 /** O `</script>` que não veio escapado — o do próprio SFC deve ser o único. */
 const fechamentosDeScript = (saida: string) => saida.match(/(^|[^\\])<\/script>/g) ?? [];
@@ -81,15 +81,15 @@ const x = 1
   });
 
   it('ignora control que não é do tipo esperado — o espião de ação vira ruído no painel', () => {
-    const espiao = (() => {}) as never;
+    const spy = (() => {}) as never;
     const saida = codeBlockSource('', {
       args: {
-        code: espiao,
-        language: espiao,
-        title: espiao,
-        showLineNumbers: espiao,
-        highlightLines: espiao,
-        footer: espiao,
+        code: spy,
+        language: spy,
+        title: spy,
+        showLineNumbers: spy,
+        highlightLines: spy,
+        footer: spy,
       },
     });
     // Sem código utilizável, o snippet cai no trecho de partida em vez de
@@ -101,13 +101,13 @@ const x = 1
 
 describe('o código no script setup', () => {
   it('uma linha simples cabe numa string comum', () => {
-    expect(declaracao(codeBlockSource('', { args: { code: 'npm run build' } }))).toBe(
+    expect(declaration(codeBlockSource('', { args: { code: 'npm run build' } }))).toBe(
       `const source = 'npm run build'`,
     );
   });
 
   it('aspas simples no conteúdo pedem literal de crase', () => {
-    expect(declaracao(codeBlockSource('', { args: { code: "const a = 'x'" } }))).toBe(
+    expect(declaration(codeBlockSource('', { args: { code: "const a = 'x'" } }))).toBe(
       'const source = `' + "const a = 'x'" + '`',
     );
   });
@@ -117,7 +117,7 @@ describe('o código no script setup', () => {
     const saida = codeBlockSource('', { args: { code: 'const a = `${b}`\nconst c = 2' } });
     expect(saida).toContain('const source = `const a = \\`\\${b}\\`\nconst c = 2`');
     // Numa string comum a crase é caractere inerte: escapá-la ali só sujaria.
-    expect(declaracao(codeBlockSource('', { args: { code: 'const a = `${b}`' } }))).toBe(
+    expect(declaration(codeBlockSource('', { args: { code: 'const a = `${b}`' } }))).toBe(
       "const source = 'const a = `${b}`'",
     );
   });
@@ -146,7 +146,7 @@ describe('as linhas destacadas', () => {
 
 describe('transforms das stories de composição própria', () => {
   it('a paleta empilha um bloco por linguagem mais um com destaque', () => {
-    const saida = codeBlockPaletaSource();
+    const saida = codeBlockPaletteSource();
     expect(saida).toContain('v-for="trecho in trechos"');
     expect(saida).toContain(':language="trecho.language"');
     // Os dois fundos possíveis do componente: a superfície e a linha marcada.
@@ -176,7 +176,7 @@ describe('transforms das stories de composição própria', () => {
   it('nenhum snippet carrega valor de design em style inline', () => {
     for (const saida of [
       codeBlockSource(),
-      codeBlockPaletaSource(),
+      codeBlockPaletteSource(),
       codeBlockRolagemSource(),
       codeBlockRemovidoSource(),
     ]) {

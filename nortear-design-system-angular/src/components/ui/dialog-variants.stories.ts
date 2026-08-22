@@ -10,9 +10,9 @@ import {
   painel,
   overlay,
   abrir,
-  esperarAberto,
-  esperarFechado,
-  conferirNomeEDescricao,
+  waitForOpen,
+  waitForClosed,
+  checkNameEDescricao,
 } from './dialog.fixtures';
 
 // Dialog não tem prop `variant` nem `size` — o conteúdo compartilhado diz isso
@@ -73,14 +73,14 @@ export const Default: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('As quatro partes da composição padrão estão no painel', async () => {
       await expect(p.querySelector('[data-slot="dialog-header"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-title"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-description"]')).toBeInTheDocument();
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeInTheDocument();
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step('A ação primária é a última do rodapé', async () => {
@@ -132,7 +132,7 @@ export const WithForm: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Os campos estão rotulados', async () => {
       const nome = p.querySelector<HTMLInputElement>('#dlg-nome')!;
@@ -188,7 +188,7 @@ export const WithScrollContent: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('O painel sai do centro fixo e entra no fluxo do overlay', async () => {
       // Conteúdo mais alto que a janela precisa de alguém para rolar. Quem rola
@@ -239,7 +239,7 @@ export const NoFooter: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Sem rodapé, o botão X é a única saída visível', async () => {
       await expect(p.querySelector('[data-slot="dialog-footer"]')).toBeNull();
@@ -249,7 +249,7 @@ export const NoFooter: Story = {
 
     await step('E ele fecha de verdade — e a story volta a abrir para a captura', async () => {
       await userEvent.click(p.querySelector<HTMLElement>('[data-slot="dialog-close"]')!);
-      await esperarFechado();
+      await waitForClosed();
       // O Chromatic fotografa o estado final e o axe roda depois da play: uma
       // story de composição que termina fechada capturaria só o gatilho.
       await expect(await abrir(canvasElement)).toBeVisible();
@@ -286,7 +286,7 @@ export const WithDestructiveAction: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('A ação primária carrega a variante destrutiva', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
@@ -332,7 +332,7 @@ export const CustomCloseInFooter: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Sem X no canto, o fechar mora no rodapé', async () => {
       await expect(p.querySelector('[data-slot="dialog-close"]')).toBeNull();
@@ -344,7 +344,7 @@ export const CustomCloseInFooter: Story = {
 
     await step('E o botão do rodapé fecha o diálogo', async () => {
       await userEvent.click(within(p).getByRole('button', { name: LABELS.close }));
-      await esperarFechado();
+      await waitForClosed();
       await expect(painel()).toBeNull();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await abrir(canvasElement)).toBeVisible();
@@ -381,7 +381,7 @@ export const ConfirmEmail: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('A operação é reversível, então a ação primária é neutra', async () => {
       const rodape = p.querySelector<HTMLElement>('[data-slot="dialog-footer"]')!;
@@ -391,7 +391,7 @@ export const ConfirmEmail: Story = {
 
     await step('Cancelar sai sem consequência', async () => {
       await userEvent.click(within(p).getByRole('button', { name: LABELS.cancel }));
-      await esperarFechado();
+      await waitForClosed();
       // Reabre: o Chromatic fotografa o estado final da play.
       await expect(await abrir(canvasElement)).toBeVisible();
     });

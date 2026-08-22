@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import {
-  desviosDaCaixaDoTrilho,
-  medirCrescimentoDoTrilho,
+  boxDoTrackDesvios,
+  trackMeasureCrescimento,
 } from '@shared/testing/tabs-probe';
 import { createTabs, type TabsItemDef } from './tabs';
 import { makePanel } from './tabs.fixtures';
@@ -82,8 +82,8 @@ export const Default: Story = {
       // separa gaiola de resultado é EMPURRAR o conteúdo para além da caixa:
       // com altura cravada o trilho fica parado e o gatilho vaza para fora do
       // fundo arredondado. O colhedor devolve a fonte e o gatilho ao original.
-      const m = medirCrescimentoDoTrilho(canvasElement);
-      await expect(desviosDaCaixaDoTrilho(m), JSON.stringify(m)).toEqual([]);
+      const m = trackMeasureCrescimento(canvasElement);
+      await expect(boxDoTrackDesvios(m), JSON.stringify(m)).toEqual([]);
     });
   },
 };

@@ -620,7 +620,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
 
   protected readonly variantItems = computed(() => {
     dict();
-    const porVariante: Record<ChaveDeVariante, { tpl: TemplateRef<unknown>; code: string }> = {
+    const byVariant: Record<ChaveDeVariante, { tpl: TemplateRef<unknown>; code: string }> = {
       default:     { tpl: this.tplVarDefault(),     code: CODE_DEFAULT     },
       destructive: { tpl: this.tplVarDestructive(), code: CODE_DESTRUCTIVE },
       success:     { tpl: this.tplVarSuccess(),     code: CODE_SUCCESS     },
@@ -628,12 +628,12 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
       info:        { tpl: this.tplVarInfo(),        code: CODE_INFO        },
     };
 
-    const base = (Object.keys(porVariante) as ChaveDeVariante[]).map((v) => ({
+    const base = (Object.keys(byVariant) as ChaveDeVariante[]).map((v) => ({
       name: v,
       description: stripHtml(t(`variants.items.${v}`)),
-      code: porVariante[v].code,
+      code: byVariant[v].code,
       trackId: v,
-      preview: porVariante[v].tpl,
+      preview: byVariant[v].tpl,
     }));
 
     return [

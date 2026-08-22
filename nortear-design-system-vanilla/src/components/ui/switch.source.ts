@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -32,7 +32,7 @@ export type SwitchSnippetOptions = {
 const CALLBACK_DEFAULT = '(ligado) => salvarPreferencia(ligado)';
 
 const ID_DEFAULT = 'notificacoes-email';
-const ROTULO_PADRAO = 'Receber notificações por email';
+const LABEL_DEFAULT = 'Receber notificações por email';
 
 function expressao(valor: unknown): string | undefined {
   if (!valor) return undefined;
@@ -62,21 +62,21 @@ function controlLines(o: SwitchSnippetOptions, id: string, comRotulo: boolean): 
  * dentro do arquivo de story.
  */
 export function switchSnippet(o: SwitchSnippetOptions = {}): string {
-  const rotulo = o.label === undefined ? ROTULO_PADRAO : o.label;
+  const rotulo = o.label === undefined ? LABEL_DEFAULT : o.label;
   const comRotulo = Boolean(rotulo);
   const id = o.id ?? ID_DEFAULT;
   const linhas = controlLines(o, id, comRotulo);
 
   if (!comRotulo) {
     return snippet(
-      importar('switch', 'createSwitch'),
+      importing('switch', 'createSwitch'),
       `const controle = ${chamada('createSwitch', linhas)};`,
       montar('controle'),
     );
   }
 
   return snippet(
-    [importar('switch', 'createSwitch'), importar('label', 'createLabel')].join('\n'),
+    [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
     `const controle = ${chamada('createSwitch', linhas)};
 const rotulo = createLabel({ htmlFor: ${texto(id)}, text: ${texto(rotulo)} });`,
     `const linha = document.createElement('div');
@@ -142,7 +142,7 @@ preferencias.forEach(({ id, label, description, checked }) => {
 });`;
 
   return snippet(
-    [importar('switch', 'createSwitch'), importar('label', 'createLabel')].join('\n'),
+    [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
     corpo,
     montar(itens.length === 1 ? 'painel' : 'lista'),
   );
@@ -188,9 +188,9 @@ export function switchFormSnippet(
 
   return snippet(
     [
-      importar('switch', 'createSwitch'),
-      importar('label', 'createLabel'),
-      importar('button', 'createButton'),
+      importing('switch', 'createSwitch'),
+      importing('label', 'createLabel'),
+      importing('button', 'createButton'),
     ].join('\n'),
     `const formulario = document.createElement('form');
 formulario.className = 'nds-stack';
@@ -239,7 +239,7 @@ export function switchInvalidoSnippet(
   const mensagem = o.mensagem ?? 'Você precisa ativar esta opção para continuar.';
 
   return snippet(
-    [importar('switch', 'createSwitch'), importar('label', 'createLabel')].join('\n'),
+    [importing('switch', 'createSwitch'), importing('label', 'createLabel')].join('\n'),
     `const controle = createSwitch({ id: ${texto(id)} });
 controle.setAttribute('aria-invalid', 'true');
 controle.setAttribute('aria-describedby', ${texto(`${id}-msg`)});`,

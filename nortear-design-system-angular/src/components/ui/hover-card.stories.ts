@@ -5,10 +5,10 @@ import { NDS_HOVER_CARD } from './hover-card';
 import { NDS_AVATAR } from './avatar';
 import {
   CARTAO_PERFIL,
-  esperarAberto,
-  esperarFechado,
-  painelAberto,
-  sairComPonteiro,
+  waitForOpen,
+  waitForClosed,
+  panelOpen,
+  leaveWithPointer,
 } from './hover-card.fixtures';
 import { NdsHoverCardDocs } from '@/components/docs/HoverCardDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
@@ -42,7 +42,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<HoverCardArgs> 
     openDelay !== 600 ? `[openDelay]="${openDelay}"` : '',
     closeDelay !== 300 ? `[closeDelay]="${closeDelay}"` : '',
   ].filter(Boolean).join(' ');
-  const posicao = [
+  const position = [
     side !== 'bottom' ? `side="${side}"` : '',
     align !== 'center' ? `align="${align}"` : '',
   ].filter(Boolean).join(' ');
@@ -62,7 +62,7 @@ import { NDS_AVATAR } from '@/components/ui/avatar';
           class="nds-text-primary nds-font-medium"${atrasos ? `\n          ${atrasos}` : ''}
         >${triggerLabel}</a>
 
-        <ng-template ndsHoverCardContent${posicao ? ` ${posicao}` : ''}>${CARTAO_PERFIL}
+        <ng-template ndsHoverCardContent${position ? ` ${position}` : ''}>${CARTAO_PERFIL}
         </ng-template>
       </span>
       há 2 horas.
@@ -183,16 +183,16 @@ export const Playground: Story = {
     // play no mesmo DOM, e um passo que dependa do que a rodada anterior deixou
     // inverte de resultado na segunda vez.
     await userEvent.keyboard('{Escape}');
-    await esperarFechado('no reset inicial');
+    await waitForClosed('no reset inicial');
 
     await step('Fechado, não existe painel no documento', async () => {
-      await expect(painelAberto()).toBeNull();
+      await expect(panelOpen()).toBeNull();
     });
 
     await step('Passar o ponteiro abre o cartão', async () => {
-      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
       await userEvent.hover(gatilho);
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
       // `role="dialog"` é contrato de markup das cinco stacks — o primitivo não
       // o emite, este componente sim.
@@ -203,13 +203,13 @@ export const Playground: Story = {
       await expect(painel).toHaveAttribute('aria-label', args.triggerLabel);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
-      ).toBeGreaterThan(chamadasAntes);
+      ).toBeGreaterThan(callsBefore);
     });
 
     await step('Levar o ponteiro para longe fecha o cartão', async () => {
-      await sairComPonteiro(gatilho, painelAberto()!);
-      await esperarFechado('depois do ponteiro sair');
-      await expect(painelAberto()).toBeNull();
+      await leaveWithPointer(gatilho, panelOpen()!);
+      await waitForClosed('depois do ponteiro sair');
+      await expect(panelOpen()).toBeNull();
     });
 
     await step('Tab alcança o gatilho e abre o cartão sem ponteiro nenhum', async () => {
@@ -217,7 +217,7 @@ export const Playground: Story = {
       // conteúdo, pelo foco.
       await userEvent.tab();
       await expect(gatilho).toHaveFocus();
-      const painel = await esperarAberto();
+      const painel = await waitForOpen();
       await expect(painel).toBeVisible();
     });
 
@@ -225,8 +225,8 @@ export const Playground: Story = {
       // O foco está no gatilho, não dentro do painel: o listener é do
       // documento, e é isso que faz o atalho valer de qualquer lugar.
       await userEvent.keyboard('{Escape}');
-      await esperarFechado('depois do Escape');
-      await expect(painelAberto()).toBeNull();
+      await waitForClosed('depois do Escape');
+      await expect(panelOpen()).toBeNull();
     });
   },
 };

@@ -3,8 +3,8 @@ import type { ComponentProps } from 'svelte';
 import { expect } from 'storybook/test';
 import { CodeBlock } from './index';
 import CodeBlockPaletaStory from './CodeBlockPaletaStory.svelte';
-import { MINIMO_DE_CONTRASTE, laudoDeContraste } from '@shared/testing/code-block-probe';
-import { codeBlockPaletaSource, codeBlockSource } from './code-block.source';
+import { CONTRAST_MINIMUM, contrastLaudo } from '@shared/testing/code-block-probe';
+import { codeBlockPaletteSource, codeBlockSource } from './code-block.source';
 
 /**
  * "Variantes" aqui são as linguagens suportadas — o componente não tem variantes
@@ -18,7 +18,7 @@ const LANG_SHELL = `npm run build -- --mode production`;
 const LANG_TEXT = `Sem classificação: monoespaçado e sem cor.`;
 
 /** Trecho base do destaque nas stories de paleta. */
-const PALETA_CODE = `const items = await load();
+const PALETTE_CODE = `const items = await load();
 const total = items.length;
 render(items, total);`;
 
@@ -138,18 +138,18 @@ export const Text: Story = {
 export const LightPalette: StoryObj<ComponentProps<typeof CodeBlockPaletaStory>> = {
   parameters: {
     covers: ['accessibility.item4'],
-    docs: { source: { transform: codeBlockPaletaSource } },
+    docs: { source: { transform: codeBlockPaletteSource } },
   },
   render: (args) => ({ Component: CodeBlockPaletaStory, props: args }),
-  args: { code: PALETA_CODE },
+  args: { code: PALETTE_CODE },
   play: async ({ canvasElement, step }) => {
     await step('No claro, nenhuma cor da paleta fica abaixo de 4.5:1', async () => {
       // A varredura roda nos três temas de marca e devolve a PIOR razão; o fundo
       // do destaque é semitransparente e é composto antes da conta, senão a
       // medida mentiria para o alfa. Comparar nome de token não responde a
       // pergunta — a razão WCAG responde.
-      await expect(laudoDeContraste(canvasElement, 'claro')).toContain(
-        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
+      await expect(contrastLaudo(canvasElement, 'claro')).toContain(
+        `abaixo de ${CONTRAST_MINIMUM}: false`,
       );
     });
 
@@ -171,10 +171,10 @@ export const DarkPalette: StoryObj<ComponentProps<typeof CodeBlockPaletaStory>> 
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },
-    docs: { source: { transform: codeBlockPaletaSource } },
+    docs: { source: { transform: codeBlockPaletteSource } },
   },
   render: (args) => ({ Component: CodeBlockPaletaStory, props: args }),
-  args: { code: PALETA_CODE },
+  args: { code: PALETTE_CODE },
   play: async ({ canvasElement, step }) => {
     await step('O tema escuro está aplicado no documento', async () => {
       await expect(document.documentElement.classList.contains('dark')).toBe(true);
@@ -184,8 +184,8 @@ export const DarkPalette: StoryObj<ComponentProps<typeof CodeBlockPaletaStory>> 
       // O escuro é metade do produto e o axe do test-runner nunca o vê: a tela
       // do runner está sempre no claro. A varredura restaura o className da raiz
       // no finally — deixá-lo posto envenenaria a story seguinte e o Chromatic.
-      await expect(laudoDeContraste(canvasElement, 'escuro')).toContain(
-        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
+      await expect(contrastLaudo(canvasElement, 'escuro')).toContain(
+        `abaixo de ${CONTRAST_MINIMUM}: false`,
       );
     });
   },

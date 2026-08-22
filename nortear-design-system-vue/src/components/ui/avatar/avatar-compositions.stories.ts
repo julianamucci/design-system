@@ -3,11 +3,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarBadge } from './index';
 import {
-  avatarComIconeSource,
+  avatarWithIconSource,
   avatarWithImageSource,
   avatarWithIniciaisSource,
-  avatarComStatusSource,
-  avatarGrupoSource,
+  avatarWithStatusSource,
+  avatarGroupSource,
 } from './avatar.source';
 
 const IMG_MARIA =
@@ -71,12 +71,12 @@ export const WithImage: Story = {
     // nas stacks cujo fallback tem delayMs — ainda nem existia no DOM.
     await waitFor(async () => {
       const fallback = canvasElement.querySelector<HTMLElement>('[data-slot="avatar-fallback"]');
-      const foraDaArvore =
+      const arvoreOutside =
         !fallback ||
         getComputedStyle(fallback).display === 'none' ||
         getComputedStyle(fallback).visibility === 'hidden' ||
         fallback.getBoundingClientRect().height === 0;
-      await expect(foraDaArvore).toBe(true);
+      await expect(arvoreOutside).toBe(true);
     }, { timeout: 5000 });
   },
 };
@@ -109,7 +109,7 @@ export const WithIcon: Story = {
     covers: ['visual.item2'],
     // O conteúdo de reserva deixa de ser texto e passa a carregar papel e
     // rótulo próprios, com o ícone decorativo dentro.
-    docs: { source: { transform: avatarComIconeSource } },
+    docs: { source: { transform: avatarWithIconSource } },
   },
   render: () => ({
     components: { Avatar, AvatarFallback },
@@ -142,7 +142,7 @@ export const Group: Story = {
     covers: ['functional.item5', 'visual.item4'],
     // Três avatares dentro de um agrupador, com texto alternativo vazio e um
     // contador ao fim: composição inteira que a do meta não mostra.
-    docs: { source: { transform: avatarGrupoSource } },
+    docs: { source: { transform: avatarGroupSource } },
   },
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount },
@@ -192,7 +192,7 @@ export const WithStatus: Story = {
     covers: ['visual.item4'],
     // Entra um terceiro filho, com papel e rótulo próprios — sub-composição
     // que a do meta esconderia.
-    docs: { source: { transform: avatarComStatusSource } },
+    docs: { source: { transform: avatarWithStatusSource } },
   },
   render: () => ({
     components: { Avatar, AvatarImage, AvatarFallback, AvatarBadge },

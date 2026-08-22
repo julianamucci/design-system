@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fireEvent, waitFor } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './chart';
 import {
-  desenhoEscreve,
-  formasDeDado,
-  textosDoDesenho,
+  designEscreve,
+  datumFormas,
+  designTexts,
 } from '@shared/testing/chart-probe';
 import { designPronto } from './chart.fixtures';
-import { chartComTituloSource, chartMultiSerieSource, chartSource } from './chart.source';
+import { chartWithTitleSource, chartMultiSerieSource, chartSource } from './chart.source';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const serieUnica = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
@@ -51,11 +51,11 @@ export const WithTooltip: Story = {
       // Precondição da medida seguinte: se o número já aparecesse numa marca de
       // eixo, encontrá-lo depois não provaria que a dica abriu. Os dados foram
       // escolhidos para isso — 186 não cai em nenhuma marca.
-      await expect(textosDoDesenho(raiz)).not.toContain(valor);
+      await expect(designTexts(raiz)).not.toContain(valor);
     });
 
     await step('Com o ponteiro sobre a barra, a dica escreve categoria e valor', async () => {
-      const forma = formasDeDado(raiz)[0];
+      const forma = datumFormas(raiz)[0];
       await expect(forma).toBeDefined();
       const caixa = forma.getBoundingClientRect();
       const svg = raiz.querySelector('svg')!;
@@ -101,13 +101,13 @@ export const WithCaption: Story = {
     const raiz = await designPronto(canvasElement);
 
     await step('A legenda nomeia cada série por escrito', async () => {
-      for (const serie of seriesMulti) await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+      for (const serie of seriesMulti) await expect(designEscreve(raiz, serie.name)).toBe(true);
     });
 
     await step('E há uma forma desenhada por categoria em cada série', async () => {
       // Piso, não igualdade: além das barras o desenho carrega a camada de
       // trama e o ícone da legenda, que também são formas preenchidas.
-      const formas = formasDeDado(raiz);
+      const formas = datumFormas(raiz);
       await expect(formas.length).toBeGreaterThanOrEqual(meses.length * seriesMulti.length);
     });
   },
@@ -118,7 +118,7 @@ export const MultipleSeries: Story = {
     docs: {
       // Título dentro da configuração E rótulo autoral: dois textos com papéis
       // diferentes, e o snippet precisa mostrar os dois convivendo.
-      source: { transform: chartComTituloSource },
+      source: { transform: chartWithTitleSource },
       description: { story: 'Multi-série com título dentro do desenho — o caso típico de painel analítico.' },
     },
   },
@@ -138,7 +138,7 @@ export const MultipleSeries: Story = {
     const raiz = await designPronto(canvasElement);
 
     await step('O título passado na configuração é escrito acima dos eixos', async () => {
-      await expect(desenhoEscreve(raiz, 'Acessos por dispositivo')).toBe(true);
+      await expect(designEscreve(raiz, 'Acessos por dispositivo')).toBe(true);
     });
 
     await step('O rótulo autoral vence o título — é ele que o leitor de tela lê', async () => {
@@ -149,7 +149,7 @@ export const MultipleSeries: Story = {
     });
 
     await step('A legenda nomeia cada série por escrito', async () => {
-      for (const serie of seriesMulti) await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
+      for (const serie of seriesMulti) await expect(designEscreve(raiz, serie.name)).toBe(true);
     });
   },
 };

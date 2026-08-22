@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { attrs, attrsMultilinha, FIM_SCRIPT, svelteSnippet } from './story-source';
+import { attrs, attrsMultilinha, END_SCRIPT, svelteSnippet } from './story-source';
 
 describe('attrs', () => {
   it('devolve string vazia quando nada difere do padrão', () => {
@@ -24,7 +24,7 @@ describe('attrsMultilinha', () => {
 
 describe('svelteSnippet', () => {
   it('fecha o bloco de script sem escapar a barra', () => {
-    expect(FIM_SCRIPT).toBe('</script>');
+    expect(END_SCRIPT).toBe('</script>');
     const saida = svelteSnippet('import { X } from "@/components/ui/x";', '<X />');
     expect(saida).toBe(
       '<script lang="ts">\n  import { X } from "@/components/ui/x";\n</script>\n\n<X />',

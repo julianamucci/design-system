@@ -82,7 +82,7 @@ describe('sidebarSnippet', () => {
   });
 
   it('monta a página sem gatilho quando a barra é fixa', () => {
-    const código = sidebarSnippet({ comGatilho: false });
+    const código = sidebarSnippet({ withTrigger: false });
     expect(código).not.toContain('createSidebarTrigger');
     expect(código).toContain('// Sem gatilho');
   });

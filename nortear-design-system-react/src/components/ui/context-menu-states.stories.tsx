@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
-import { REGRA_GUARDA_DE_FOCO, waitForPortal } from "@/lib/wait-for-portal";
-import { abrirPorGesto, brilho } from "@shared/testing/context-menu-area";
+import { FOCUS_RULE_GUARDA, waitForPortal } from "@/lib/wait-for-portal";
+import { gestoOpen, brilho } from "@shared/testing/context-menu-area";
 import { AreaTrigger } from "./context-menu.fixtures";
 import {
   ContextMenu,
@@ -13,7 +13,7 @@ import {
   ContextMenuShortcut,
 } from "@/components/ui/context-menu";
 import {
-  contextMenuItemDesabilitadoSource,
+  contextMenuItemDisabledSource,
   contextMenuItemRecuadoSource,
   contextMenuSource,
 } from "./context-menu.source";
@@ -28,7 +28,7 @@ const meta = {
     layout: "centered",
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       source: { transform: contextMenuSource },
       description: {
@@ -51,7 +51,7 @@ export const ItemDisabled: Story = {
     covers: ["functional.item9", "accessibility.item6", "visual.item5"],
     // `disabled` é prop do ITEM: sem o override o snippet não mostraria onde a
     // prop entra, que é o assunto da story.
-    docs: { source: { transform: contextMenuItemDesabilitadoSource } },
+    docs: { source: { transform: contextMenuItemDisabledSource } },
     // Medido na tipagem do primitivo: o item de marcação do menu é de DOIS
     // estados. `checked` é booleano, o payload da mudança é booleano, o estado
     // exposto ao indicador é booleano e os únicos atributos de dado são
@@ -87,7 +87,7 @@ export const ItemDisabled: Story = {
     const area = () => within(canvasElement).getByTestId("area");
 
     await step("O item desabilitado é anunciado como tal", async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo("off").getAttribute("aria-disabled")).toBe("true");
       await expect(alvo("perigo-off").getAttribute("aria-disabled")).toBe("true");
     });
@@ -148,7 +148,7 @@ export const ItemInset: Story = {
       // O que o recuo entrega é o alinhamento com itens que têm indicador à
       // esquerda. Afirmar o nome da classe não protegeria isso: a classe pode
       // continuar aplicada com a regra vazia.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       const recuo = parseFloat(getComputedStyle(alvo("recuado")).paddingLeft);
       const normal = parseFloat(getComputedStyle(alvo("normal")).paddingLeft);
       await expect(recuo).toBeGreaterThan(normal);
@@ -195,7 +195,7 @@ export const ItemDestructive: Story = {
     await step("O item destrutivo se declara pelo atributo, não só pela cor", async () => {
       // `data-variant` é o que o CSS lê e o que a auditoria compara entre
       // stacks; a cor é consequência dele.
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(alvo("perigo").getAttribute("data-variant")).toBe("destructive");
       await expect(alvo("normal").getAttribute("data-variant")).toBe("default");
     });
@@ -240,7 +240,7 @@ export const DarkPalette: Story = {
     await step("O menu é mais escuro que o texto que ele recebe", async () => {
       // Prova que a paleta trocou de verdade: com os tokens do claro esta
       // relação se inverte, e a asserção acusa.
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       const cs = getComputedStyle(menu);
       await expect(brilho(cs.backgroundColor)).toBeLessThan(brilho(cs.color));
     });

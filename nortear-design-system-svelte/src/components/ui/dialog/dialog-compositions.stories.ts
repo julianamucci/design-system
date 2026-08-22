@@ -11,10 +11,10 @@ import {
 } from './dialog.source';
 import {
   abrir,
-  botaoFecharDoCanto,
-  conferirNomeEDescricao,
-  esperarAberto,
-  esperarFechado,
+  cantoButtonClose,
+  checkNameEDescricao,
+  waitForOpen,
+  waitForClosed,
   fechar,
   gatilho,
   painel,
@@ -60,10 +60,10 @@ export const ConfirmEmail: Story = {
     props: { open: true },
   }),
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('O diálogo se anuncia com o nome e a descrição do fluxo', async () => {
-      await conferirNomeEDescricao(p);
+      await checkNameEDescricao(p);
     });
 
     await step('O campo do fluxo está rotulado', async () => {
@@ -95,7 +95,7 @@ export const ProfileEdit: Story = {
     props: { open: true },
   }),
   play: async ({ step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('Os campos estão rotulados e trazem o valor inicial', async () => {
       // O valor entra na asserção junto com o rótulo: era exatamente aqui que
@@ -136,7 +136,7 @@ export const MediaPreview: Story = {
     props: { open: true },
   }),
   play: async ({ canvasElement, step }) => {
-    const p = await esperarAberto();
+    const p = await waitForOpen();
 
     await step('A mídia tem descrição textual', async () => {
       // O bloco carrega a informação do diálogo — sem nome acessível o conteúdo
@@ -157,10 +157,10 @@ export const MediaPreview: Story = {
       // provar.
       await fechar();
       await abrir(canvasElement);
-      const x = botaoFecharDoCanto(painel()!)!;
+      const x = cantoButtonClose(painel()!)!;
       await expect(x).toHaveAccessibleName();
       await userEvent.click(x);
-      await esperarFechado();
+      await waitForClosed();
       await waitFor(async () => {
         await expect(document.activeElement).toBe(trigger);
       });

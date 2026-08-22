@@ -530,8 +530,8 @@ export class NdsChart {
     const { y, h } = this.plot();
     const { topo } = this.escala();
     return Array.from({ length: DIVISOES_Y + 1 }, (_, i) => {
-      const fracao = i / DIVISOES_Y;
-      return { y: y + h - fracao * h, rotulo: formatarValue(topo * fracao) };
+      const fraction = i / DIVISOES_Y;
+      return { y: y + h - fraction * h, rotulo: formatarValue(topo * fraction) };
     });
   });
 
@@ -657,9 +657,9 @@ export class NdsChart {
     const raio = (Math.min(w, h) / 2) * 0.92;
     let angulo = 0;
     return pontos.map((ponto, i) => {
-      const fracao = Math.max(0, ponto.value) / total;
+      const fraction = Math.max(0, ponto.value) / total;
       const de = angulo;
-      angulo += fracao * Math.PI * 2;
+      angulo += fraction * Math.PI * 2;
       return {
         d: caminhoFatia(cx, cy, raio, raio * 0.55, de, angulo),
         cor: serieColor(i, undefined),

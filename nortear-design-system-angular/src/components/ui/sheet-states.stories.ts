@@ -34,7 +34,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const ROTULOS = {
+const LABELS = {
   gatilho: () => t('demonstration.labels.trigger'),
   titulo: () => t('demonstration.labels.title'),
   descricao: () => t('demonstration.labels.description'),
@@ -58,9 +58,9 @@ export const Closed: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: ROTULOS.gatilho(),
-      tituloPainel: ROTULOS.titulo(),
-      descricaoPainel: ROTULOS.descricao(),
+      rotuloGatilho: LABELS.gatilho(),
+      tituloPainel: LABELS.titulo(),
+      descricaoPainel: LABELS.descricao(),
     },
     template: `
       <nds-sheet>
@@ -77,7 +77,7 @@ export const Closed: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const trigger = canvas.getByRole('button', { name: ROTULOS.gatilho() });
+    const trigger = canvas.getByRole('button', { name: LABELS.gatilho() });
 
     await step('Fechado, o painel não existe no DOM', async () => {
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
@@ -105,11 +105,11 @@ export const Open: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: ROTULOS.gatilho(),
-      tituloPainel: ROTULOS.titulo(),
-      descricaoPainel: ROTULOS.descricao(),
-      rotuloCancelar: ROTULOS.cancelar(),
-      rotuloAplicar: ROTULOS.aplicar(),
+      rotuloGatilho: LABELS.gatilho(),
+      tituloPainel: LABELS.titulo(),
+      descricaoPainel: LABELS.descricao(),
+      rotuloCancelar: LABELS.cancelar(),
+      rotuloAplicar: LABELS.aplicar(),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
@@ -136,7 +136,7 @@ export const Open: Story = {
       await expect(painel).toBeVisible();
       await expect(painel).toHaveAttribute('data-state', 'open');
       await expect(painel).toHaveAttribute('aria-modal', 'true');
-      await expect(painel).toHaveAccessibleName(ROTULOS.titulo());
+      await expect(painel).toHaveAccessibleName(LABELS.titulo());
       await expect(
         document.querySelector('[data-slot="sheet-overlay"]'),
       ).not.toBeNull();
@@ -165,14 +165,14 @@ export const LongScrollBody: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: ROTULOS.gatilho(),
-      tituloPainel: ROTULOS.titulo(),
-      descricaoPainel: ROTULOS.descricao(),
-      rotuloCancelar: ROTULOS.cancelar(),
-      rotuloAplicar: ROTULOS.aplicar(),
+      rotuloGatilho: LABELS.gatilho(),
+      tituloPainel: LABELS.titulo(),
+      descricaoPainel: LABELS.descricao(),
+      rotuloCancelar: LABELS.cancelar(),
+      rotuloAplicar: LABELS.aplicar(),
       paragrafos: Array.from({ length: 24 }, (_, i) => ({
         id: `p-${i}`,
-        texto: `${t('demonstration.labels.section')} ${i + 1} — ${ROTULOS.descricao()}`,
+        texto: `${t('demonstration.labels.section')} ${i + 1} — ${LABELS.descricao()}`,
       })),
     },
     template: `
@@ -231,10 +231,10 @@ export const LongScrollBody: Story = {
     });
 
     await step('O rodapé continua visível com o corpo cheio', async () => {
-      const caixaRodape = rodape.getBoundingClientRect();
-      const caixaPainel = painel.getBoundingClientRect();
-      await expect(caixaRodape.bottom).toBeLessThanOrEqual(caixaPainel.bottom + 1);
-      await expect(caixaRodape.height).toBeGreaterThan(0);
+      const boxFooter = rodape.getBoundingClientRect();
+      const boxPanel = painel.getBoundingClientRect();
+      await expect(boxFooter.bottom).toBeLessThanOrEqual(boxPanel.bottom + 1);
+      await expect(boxFooter.height).toBeGreaterThan(0);
     });
   },
 };
@@ -251,10 +251,10 @@ export const WithoutCloseButton: Story = {
   },
   render: () => ({
     props: {
-      rotuloGatilho: ROTULOS.gatilho(),
-      tituloPainel: ROTULOS.titulo(),
-      descricaoPainel: ROTULOS.descricao(),
-      rotuloCancelar: ROTULOS.cancelar(),
+      rotuloGatilho: LABELS.gatilho(),
+      tituloPainel: LABELS.titulo(),
+      descricaoPainel: LABELS.descricao(),
+      rotuloCancelar: LABELS.cancelar(),
     },
     template: `
       <nds-sheet [defaultOpen]="true">
@@ -284,7 +284,7 @@ export const WithoutCloseButton: Story = {
 
     await step('E ainda assim existe uma saída — o rodapé', async () => {
       await expect(
-        within(painel).getByRole('button', { name: ROTULOS.cancelar() }),
+        within(painel).getByRole('button', { name: LABELS.cancelar() }),
       ).toBeInTheDocument();
     });
   },
@@ -304,9 +304,9 @@ export const Controlled: Story = {
     props: {
       aberto: false,
       rotuloExterno: 'Abrir pelo estado externo',
-      tituloPainel: ROTULOS.titulo(),
-      descricaoPainel: ROTULOS.descricao(),
-      rotuloCancelar: ROTULOS.cancelar(),
+      tituloPainel: LABELS.titulo(),
+      descricaoPainel: LABELS.descricao(),
+      rotuloCancelar: LABELS.cancelar(),
     },
     template: `
       <div class="nds-stack" data-spacing="sm">
@@ -347,7 +347,7 @@ export const Controlled: Story = {
 
     await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
       const painel = await waitForPortal('dialog');
-      await userEvent.click(within(painel).getByRole('button', { name: ROTULOS.cancelar() }));
+      await userEvent.click(within(painel).getByRole('button', { name: LABELS.cancelar() }));
       await waitForPortalVanish('dialog');
       // Se o output não tivesse chegado, `aberto` continuaria true e o painel
       // reabriria no próximo ciclo de detecção.

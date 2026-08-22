@@ -51,7 +51,7 @@ const MOUNT_MS_GRACA = 600;
 
 type Registro = {
   raiz: HTMLElement;
-  limpar: () => void;
+  clear: () => void;
   /** Se a raiz já foi vista dentro do documento alguma vez. */
   jaConectou: boolean;
   /** Quando a instância foi criada, para medir a graça de montagem. */
@@ -76,7 +76,7 @@ function varrer(): void {
     // erro morreria dentro do callback do MutationObserver, sem teste nenhum
     // ficando vermelho. O preço de compartilhar o observador é isolar a falha.
     try {
-      registro.limpar();
+      registro.clear();
     } catch (erro) {
       // Relançar viraria erro global não tratado e derrubaria a story que por
       // acaso estivesse rodando — que não é a culpada. O console basta para o
@@ -117,7 +117,7 @@ function ensureObservador(): void {
 export function tornarDestruivel<T extends object>(
   raiz: HTMLElement,
   alvo: T,
-  limpar: () => void,
+  clear: () => void,
 ): T & Destroyable {
   let destruido = false;
 
@@ -125,10 +125,10 @@ export function tornarDestruivel<T extends object>(
     raiz,
     jaConectou: false,
     nascidoEm: Date.now(),
-    limpar: () => {
+    clear: () => {
       if (destruido) return;
       destruido = true;
-      limpar();
+      clear();
     },
   };
 
@@ -144,11 +144,11 @@ export function tornarDestruivel<T extends object>(
 
   Object.defineProperty(alvo, 'destroy', {
     value: (): void => {
-      // Sai do registro ANTES de limpar: se `limpar` mexer no DOM — e mexe,
+      // Sai do registro ANTES de limpar: se `clear` mexer no DOM — e mexe,
       // remove painel portalado —, a varredura disparada por essa mutação não
       // pode reentrar neste mesmo registro.
       registros.delete(registro);
-      registro.limpar();
+      registro.clear();
     },
     writable: true,
     configurable: true,

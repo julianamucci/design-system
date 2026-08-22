@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
   calendarBloqueadoSource,
-  calendarDoisMesesSource,
+  calendarDoisMonthsSource,
   calendarEmPopoverSource,
   calendarHojeSource,
   calendarIntervaloSource,
-  calendarLegendaSeletoresSource,
-  calendarLegendaTextoSource,
+  calendarCaptionSelectorsSource,
+  calendarCaptionTextSource,
   calendarMultiploSource,
   calendarWeeksFixasSource,
   calendarSource,
@@ -76,12 +76,12 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de layout', () => {
   it('a legenda de texto e a de seletores escrevem layouts opostos', () => {
-    expect(calendarLegendaTextoSource()).toContain('captionLayout="label"');
-    expect(calendarLegendaSeletoresSource()).toContain('captionLayout="dropdown"');
+    expect(calendarCaptionTextSource()).toContain('captionLayout="label"');
+    expect(calendarCaptionSelectorsSource()).toContain('captionLayout="dropdown"');
   });
 
   it('dois meses lado a lado vêm de uma quantidade, não de duas instâncias', () => {
-    const saida = calendarDoisMesesSource();
+    const saida = calendarDoisMonthsSource();
     expect(saida).toContain('numberOfMonths={2}');
     expect(saida.match(/<Calendar\b/g)).toHaveLength(1);
   });

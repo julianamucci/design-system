@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, fn, userEvent } from 'storybook/test';
 import { Card } from './index';
 import CardStory from './CardStory.svelte';
-import { cardClicavelSource, cardComRodapeSource, cardDefaultSource } from './card.source';
+import { cardClickableSource, cardWithFooterSource, cardDefaultSource } from './card.source';
 
 /**
  * Espiões em escopo de MÓDULO: criados dentro do `render` seriam inalcançáveis
@@ -70,7 +70,7 @@ export const Clickable: Story = {
   parameters: {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item4'],
     docs: {
-      source: { transform: cardClicavelSource },
+      source: { transform: cardClickableSource },
       description: {
         story:
           'Card envolvido em `<a>` com `aria-label` descritivo. Não use handler de clique no Card root — a semântica de ativação por teclado e o anel de foco vivem no wrapper, e o Tab alcança um destino só.',
@@ -121,7 +121,7 @@ export const WithFooter: Story = {
   parameters: {
     covers: ['functional.item5'],
     docs: {
-      source: { transform: cardComRodapeSource },
+      source: { transform: cardWithFooterSource },
       description: {
         story:
           'Composição com CardFooter: o Card zera o próprio padding inferior quando detecta o rodapé como filho direto, e o rodapé ganha borda superior e fundo soft. Botões usam `aria-label` contextual para não virarem rótulos repetidos numa lista.',

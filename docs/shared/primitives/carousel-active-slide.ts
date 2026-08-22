@@ -17,10 +17,10 @@
  */
 
 /** O atributo é único e escrito num lugar só, para não divergir de vocabulário. */
-export const ATRIBUTO_SLIDE_ATIVO = 'data-active';
+export const ATTR_SLIDE_ACTIVE = 'data-active';
 
 /** O valor que o slide `indice` deve carregar quando o atual é `atual`. */
-export function estadoDoSlide(indice: number, atual: number): 'true' | 'false' {
+export function slideState(indice: number, atual: number): 'true' | 'false' {
   return indice === atual ? 'true' : 'false';
 }
 
@@ -32,6 +32,6 @@ export function estadoDoSlide(indice: number, atual: number): 'true' | 'false' {
  */
 export function marcarSlideAtual(slides: readonly HTMLElement[], atual: number): void {
   slides.forEach((slide, indice) => {
-    slide.setAttribute(ATRIBUTO_SLIDE_ATIVO, estadoDoSlide(indice, atual));
+    slide.setAttribute(ATTR_SLIDE_ACTIVE, slideState(indice, atual));
   });
 }

@@ -36,7 +36,7 @@ const PERGUNTA = 'Forma de pagamento';
  * Razão de contraste da WCAG entre duas cores computadas opacas. Comparar nome
  * de token não responde a pergunta do critério — a razão responde.
  */
-function razaoContraste(a: string, b: string): number {
+function ratioContrast(a: string, b: string): number {
   const luminancia = (cor: string): number => {
     const [r, g, bl] = cor
       .match(/[\d.]+/g)!
@@ -84,15 +84,15 @@ export const Default: Story = {
       // 3:1 é o piso de componente de interface (1.4.11); 4.5:1 é o de texto
       // normal (1.4.3) — o rótulo tem 14px, não é texto grande.
       const item = canvas.getAllByRole('radio')[0] as HTMLElement;
-      const estiloItem = getComputedStyle(item);
+      const styleItem = getComputedStyle(item);
       await expect(
-        razaoContraste(estiloItem.borderTopColor, estiloItem.backgroundColor),
+        ratioContrast(styleItem.borderTopColor, styleItem.backgroundColor),
       ).toBeGreaterThanOrEqual(3);
 
       const rotulo = canvasElement.querySelector<HTMLElement>('.nds-radio-label')!;
-      const fundoPagina = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
+      const backgroundPage = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
       await expect(
-        razaoContraste(getComputedStyle(rotulo).color, fundoPagina),
+        ratioContrast(getComputedStyle(rotulo).color, backgroundPage),
       ).toBeGreaterThanOrEqual(4.5);
     });
   },

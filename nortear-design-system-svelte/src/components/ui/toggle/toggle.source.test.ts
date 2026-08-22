@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
-  toggleAtivoSource,
-  toggleBarraDeFormatacaoSource,
-  toggleComRotuloSource,
-  toggleControladoSource,
-  toggleDesabilitadoSource,
-  toggleFiltrosSource,
+  toggleActiveSource,
+  formattingToggleBarSource,
+  toggleWithLabelSource,
+  toggleControlledSource,
+  toggleDisabledSource,
+  toggleFiltersSource,
   toggleInvalidoSource,
-  variantsSourceTogglePair,
+  variantsTogglePairSource,
   toggleSource,
-  toggleTamanhosSource,
+  toggleSizesSource,
 } from './toggle.source';
 
 describe('toggleSource', () => {
@@ -65,34 +65,34 @@ describe('toggleSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('o par de variantes mostra a padrão ao lado da outline', () => {
-    const saida = variantsSourceTogglePair();
+    const saida = variantsTogglePairSource();
     expect(saida).toContain('<Toggle aria-label="Negrito">');
     expect(saida).toContain('variant="outline"');
     expect(saida).toContain('nds-cluster');
   });
 
   it('a escada de tamanhos deixa o degrau padrão sem atributo', () => {
-    const saida = toggleTamanhosSource();
+    const saida = toggleSizesSource();
     expect(saida).toContain('size="sm"');
     expect(saida).toContain('size="lg"');
     expect(saida).toContain('<Toggle variant="outline" aria-label="Negrito padrão">');
   });
 
   it('a variação com rótulo tem texto visível e nenhum aria-label', () => {
-    const saida = toggleComRotuloSource();
+    const saida = toggleWithLabelSource();
     expect(saida).not.toContain('aria-label');
     expect(saida).toContain('Mostrar ocultos');
     expect(saida).toContain('bind:pressed={compacta}');
   });
 
   it('o estado ativo nasce de um estado local, não de um literal', () => {
-    const saida = toggleAtivoSource();
+    const saida = toggleActiveSource();
     expect(saida).toContain('let ativo = $state(true);');
     expect(saida).toContain('bind:pressed={ativo}');
   });
 
   it('o desabilitado aparece nas duas pontas, ligado e desligado', () => {
-    const saida = toggleDesabilitadoSource();
+    const saida = toggleDisabledSource();
     expect(saida.match(/disabled/g)).toHaveLength(2);
     expect(saida).toContain('aria-label="Itálico ativo e desabilitado"');
   });
@@ -105,20 +105,20 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a barra de formatação é um grupo nomeado com quatro toggles', () => {
-    const saida = toggleBarraDeFormatacaoSource();
+    const saida = formattingToggleBarSource();
     expect(saida).toContain('role="group"');
     expect(saida).toContain('aria-label="Formatação de texto"');
     expect(saida.match(/<Toggle /g)).toHaveLength(4);
   });
 
   it('a lista de filtros usa a variante outline e rótulo visível', () => {
-    const saida = toggleFiltrosSource();
+    const saida = toggleFiltersSource();
     expect(saida).toContain('Filtros de exibição');
     expect(saida.match(/variant="outline"/g)).toHaveLength(2);
   });
 
   it('o controlado mostra o valor externo acompanhando o toggle', () => {
-    const saida = toggleControladoSource();
+    const saida = toggleControlledSource();
     expect(saida).toContain('let ativo = $state(false);');
     expect(saida).toContain('{String(ativo)}');
   });

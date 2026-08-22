@@ -48,13 +48,13 @@ const TIPOS = [
   'file',
 ] as const;
 
-const IMPORT_CAMPO = 'import { Input } from "@/components/ui/input";';
+const IMPORT_FIELD = 'import { Input } from "@/components/ui/input";';
 const IMPORT_LABEL = 'import { Label } from "@/components/ui/label";';
-const IMPORT_PAR = `${IMPORT_CAMPO}
+const IMPORT_PAIR = `${IMPORT_FIELD}
 ${IMPORT_LABEL}`;
 
 /** A coluna que segura rótulo e campo, com o respiro curto entre os dois. */
-const COLUNA = '<div className="nds-stack nds-w-xs" data-spacing="xs">';
+const COLUMN = '<div className="nds-stack nds-w-xs" data-spacing="xs">';
 
 /**
  * Rótulo + campo: a unidade mínima que se copia de uma vez.
@@ -63,7 +63,7 @@ const COLUNA = '<div className="nds-stack nds-w-xs" data-spacing="xs">';
  * fila longa demais some na barra de rolagem do painel, e o que some é
  * justamente a parte que difere do exemplo anterior.
  */
-function campoRotulado(
+function fieldLabelled(
   id: string,
   rotulo: string,
   atributos: Array<string | false | undefined>,
@@ -71,14 +71,14 @@ function campoRotulado(
   const lista = [`id="${id}"`, ...atributos].filter(
     (parte): parte is string => Boolean(parte),
   );
-  const emLinha = lista.join(' ');
+  const inLine = lista.join(' ');
   const campo =
-    emLinha.length <= 60
+    inLine.length <= 60
       ? `  <Input${attrs(...lista)} />`
       : `  <Input${attrsMultilinha(lista, '    ', 0)}  />`;
   return jsxSnippet(
-    IMPORT_PAR,
-    `${COLUNA}
+    IMPORT_PAIR,
+    `${COLUMN}
   <Label htmlFor="${id}">${rotulo}</Label>
 ${campo}
 </div>`,
@@ -97,8 +97,8 @@ ${campo}
  */
 export const inputSource: SourceTransform<InputArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  if (args['aria-invalid'] === true) return inputComErroSource();
-  return campoRotulado('nome-completo', 'Nome completo', [
+  if (args['aria-invalid'] === true) return inputWithErrorSource();
+  return fieldLabelled('nome-completo', 'Nome completo', [
     propOption('type', args.type, TIPOS, 'text'),
     propText('placeholder', texto(args.placeholder) ?? 'ex: João da Silva'),
     propBool('disabled', args.disabled),
@@ -109,7 +109,7 @@ export const inputSource: SourceTransform<InputArgs> = (_gerado, ctx) => {
 
 /** Endereço de email: o teclado do celular muda e o navegador valida o formato. */
 export function inputEmailSource(): string {
-  return campoRotulado('email', 'Email', [
+  return fieldLabelled('email', 'Email', [
     'type="email"',
     'placeholder="ex: joao@empresa.com"',
   ]);
@@ -120,12 +120,12 @@ export function inputEmailSource(): string {
  * placeholder aqui é só desenho — quem nomeia continua sendo o rótulo.
  */
 export function inputSenhaSource(): string {
-  return campoRotulado('senha', 'Senha', ['type="password"', 'placeholder="••••••••"']);
+  return fieldLabelled('senha', 'Senha', ['type="password"', 'placeholder="••••••••"']);
 }
 
 /** Numérico: o papel implícito vira spinbutton, e é assim que é anunciado. */
 export function inputNumberSource(): string {
-  return campoRotulado('quantidade', 'Quantidade', ['type="number"', 'placeholder="0"']);
+  return fieldLabelled('quantidade', 'Quantidade', ['type="number"', 'placeholder="0"']);
 }
 
 /**
@@ -133,7 +133,7 @@ export function inputNumberSource(): string {
  * visual denuncia se o tipo estiver errado — é só o leitor de tela que perde.
  */
 export function inputSearchSource(): string {
-  return campoRotulado('busca', 'Buscar', [
+  return fieldLabelled('busca', 'Buscar', [
     'type="search"',
     'placeholder="Buscar componentes..."',
   ]);
@@ -145,14 +145,14 @@ export function inputSearchSource(): string {
  * de exemplo aqui não apareceria em lugar nenhum.
  */
 export function inputFileSource(): string {
-  return campoRotulado('arquivo', 'Arquivo', ['type="file"']);
+  return fieldLabelled('arquivo', 'Arquivo', ['type="file"']);
 }
 
 /* ----------------------------------------------------------------- estados -- */
 
 /** Bloqueado: `disabled` apaga o campo e troca o cursor pelo de bloqueio. */
-export function inputDesabilitadoSource(): string {
-  return campoRotulado('campo-bloqueado', 'Campo desabilitado', [
+export function inputDisabledSource(): string {
+  return fieldLabelled('campo-bloqueado', 'Campo desabilitado', [
     'placeholder="Não disponível"',
     'disabled',
   ]);
@@ -164,10 +164,10 @@ export function inputDesabilitadoSource(): string {
  * ao campo — sem ele o texto vermelho existe só para quem enxerga. A cor da
  * borda vem sozinha de `[aria-invalid="true"]` no CSS.
  */
-export function inputComErroSource(): string {
+export function inputWithErrorSource(): string {
   return jsxSnippet(
-    IMPORT_PAR,
-    `${COLUNA}
+    IMPORT_PAIR,
+    `${COLUMN}
   <Label htmlFor="email-erro">Email</Label>
   <Input
     id="email-erro"
@@ -189,9 +189,9 @@ export function inputComErroSource(): string {
  * comparação entre eles; um campo sozinho não mostraria que padrão, erro e
  * bloqueado continuam distinguíveis no escuro.
  */
-export function inputPaletaEscuraSource(): string {
+export function inputPaletteDarkSource(): string {
   return jsxSnippet(
-    IMPORT_PAR,
+    IMPORT_PAIR,
     `<div className="dark nds-stack nds-w-xs" data-spacing="md">
   <div className="nds-stack" data-spacing="xs">
     <Label htmlFor="dk-padrao">Padrão</Label>
@@ -245,7 +245,7 @@ function groupLabelled(
 ): string {
   return jsxSnippet(
     [doGrupo, IMPORT_LABEL, deIcone].filter(Boolean).join('\n'),
-    `${COLUNA}
+    `${COLUMN}
   <Label htmlFor="${id}">${rotulo}</Label>
   <InputGroup>
 ${miolo}
@@ -356,7 +356,7 @@ ${IMPORT_LABEL}
 import { Eye, EyeOff } from "lucide-react";`,
     `const [visivel, setVisivel] = useState(false);
 
-${COLUNA}
+${COLUMN}
   <Label htmlFor="senha">Senha</Label>
   <InputGroup>
     <InputGroupInput
@@ -405,7 +405,7 @@ export function inputGroupWithErrorSource(): string {
     `${importGroup('InputGroup', 'InputGroupAddon', 'InputGroupInput')}
 ${IMPORT_LABEL}
 import { Mail } from "lucide-react";`,
-    `${COLUNA}
+    `${COLUMN}
   <Label htmlFor="email-grupo">Email</Label>
   <InputGroup>
     <InputGroupAddon align="inline-start">
@@ -477,7 +477,7 @@ import { Search } from "lucide-react";`,
  * quem mira o "@" espera começar a digitar. O botão ao lado é o que prova a
  * exceção: apertá-lo NÃO devolve o foco ao campo.
  */
-export function addonSourceInputGroupClick(): string {
+export function addonInputGroupClickSource(): string {
   return groupLabelled(
     'ig-clique',
     'Usuário',

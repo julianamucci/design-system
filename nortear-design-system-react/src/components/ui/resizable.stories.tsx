@@ -5,7 +5,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "./resizable";
-import { fracaoDoPrimeiro } from "./resizable.fixtures";
+import { firstFraction } from "./resizable.fixtures";
 import { ResizableDocs } from "@/components/docs/ResizableDocs";
 import { withAutoDocsTab } from "@/lib/withAutoDocsTab";
 import { resizableSource } from "./resizable.source";
@@ -17,7 +17,7 @@ import { resizableSource } from "./resizable.source";
  * leitor de tela anuncia "separador" e nada mais. E ele diz o ATALHO, porque a
  * alternativa ao arrasto não tem nenhuma pista visual.
  */
-const ROTULO_PUNHO = "Redimensionar painéis — use setas para ajustar";
+const LABEL_HANDLE = "Redimensionar painéis — use setas para ajustar";
 
 type PlaygroundArgs = {
   direction: "horizontal" | "vertical";
@@ -101,7 +101,7 @@ export const Playground: Story = {
             <p className="nds-text-caption nds-text-muted-foreground">Navegação do projeto</p>
           </div>
         </ResizablePanel>
-        <ResizableHandle withHandle={withHandle} aria-label={ROTULO_PUNHO} />
+        <ResizableHandle withHandle={withHandle} aria-label={LABEL_HANDLE} />
         <ResizablePanel defaultSize={100 - defaultSize} minSize={minSize}>
           <div className="nds-stack nds-p-4" data-spacing="xs">
             <p className="nds-text-body nds-font-semibold">Conteúdo principal</p>
@@ -115,7 +115,7 @@ export const Playground: Story = {
   ),
   play: async ({ canvasElement, step, args }) => {
     const canvas = within(canvasElement);
-    const punho = canvas.getByRole("separator", { name: ROTULO_PUNHO });
+    const punho = canvas.getByRole("separator", { name: LABEL_HANDLE });
     const horizontal = args.direction === "horizontal";
 
     await step("O divisor é um separator com nome e valor", async () => {
@@ -128,7 +128,7 @@ export const Playground: Story = {
       );
       await expect(Number(punho.getAttribute("aria-valuemin"))).toBeCloseTo(args.minSize, 0);
       await expect(Number(punho.getAttribute("aria-valuenow"))).toBeCloseTo(
-        fracaoDoPrimeiro(canvasElement, horizontal) * 100,
+        firstFraction(canvasElement, horizontal) * 100,
         0,
       );
     });
@@ -138,7 +138,7 @@ export const Playground: Story = {
       // layout aparecia 13%/87% em vez de 30%/70%. O componente converte para
       // porcentagem; esta asserção é o que impede a regressão, porque nenhuma
       // das anteriores olhava a geometria.
-      await expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(
+      await expect(firstFraction(canvasElement, horizontal)).toBeCloseTo(
         args.defaultSize / 100,
         1,
       );
@@ -151,7 +151,7 @@ export const Playground: Story = {
       // O par cresce/encolhe é de saldo ZERO: o painel Interactions reexecuta a
       // play no mesmo DOM, e um passo que só cresce iria encostando no limite
       // até a asserção inverter de sentido numa rodada qualquer.
-      const antes = fracaoDoPrimeiro(canvasElement, horizontal);
+      const antes = firstFraction(canvasElement, horizontal);
       punho.focus();
       await expect(punho).toHaveFocus();
 
@@ -160,21 +160,21 @@ export const Playground: Story = {
 
       await userEvent.keyboard(cresce);
       await waitFor(() =>
-        expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeGreaterThan(antes + 0.01),
+        expect(firstFraction(canvasElement, horizontal)).toBeGreaterThan(antes + 0.01),
       );
 
       await userEvent.keyboard(encolhe);
       await waitFor(() =>
-        expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(antes, 2),
+        expect(firstFraction(canvasElement, horizontal)).toBeCloseTo(antes, 2),
       );
     });
 
     await step("A seta do outro eixo não é sequestrada", async () => {
       // Um separator vertical que consumisse ArrowUp roubaria a rolagem de quem
       // só está de passagem pelo foco.
-      const antes = fracaoDoPrimeiro(canvasElement, horizontal);
+      const antes = firstFraction(canvasElement, horizontal);
       await userEvent.keyboard(horizontal ? "{ArrowUp}" : "{ArrowLeft}");
-      await expect(fracaoDoPrimeiro(canvasElement, horizontal)).toBeCloseTo(antes, 2);
+      await expect(firstFraction(canvasElement, horizontal)).toBeCloseTo(antes, 2);
     });
   },
 };

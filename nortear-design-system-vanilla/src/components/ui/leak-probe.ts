@@ -147,7 +147,7 @@ export async function sondarOuvintes(opts: {
   document.body.style.overflow = '';
   await esperar(20);
 
-  const espiao = espiarOuvintes();
+  const spy = espiarOuvintes();
   try {
     const no = montar();
     host.appendChild(no);
@@ -161,7 +161,7 @@ export async function sondarOuvintes(opts: {
     // virar espera cega longa.
     await esperar(200);
 
-    const vivosAposOutput = espiao.vivos();
+    const vivosAposOutput = spy.vivos();
     const orfaosAposOutput = await countOrfaos(seletorDePortal);
 
     // A referência do teste de comportamento é o estado JÁ LIMPO, não o estado
@@ -193,7 +193,7 @@ export async function sondarOuvintes(opts: {
 
     for (const fazer of BATERIA) document.dispatchEvent(fazer());
     await esperar(80);
-    const vivosAposReprise = espiao.vivos();
+    const vivosAposReprise = spy.vivos();
 
     return {
       vivosAposOutput,
@@ -209,6 +209,6 @@ export async function sondarOuvintes(opts: {
         ` orfaos=${orfaosAposOutput}/${orfaosAposDestroy}`,
     };
   } finally {
-    espiao.parar();
+    spy.parar();
   }
 }

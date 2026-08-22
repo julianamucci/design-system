@@ -4,7 +4,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import { createSelect, type SelectItem } from './select';
 import { abridor, comRotulo } from './select.fixtures';
 import { selectSource, selectSourceWith } from './select.source';
-import { medirAnelDeFoco } from '@shared/testing/select-probe';
+import { focusMeasureRing } from '@shared/testing/select-probe';
 
 const meta: Meta = {
   tags: ['form'],
@@ -451,7 +451,7 @@ export const Invalid: Story = {
       // `:focus-visible` com a mesma especificidade: sem a regra de aninhamento,
       // focar um campo inválido não mudava nada na tela. `boxShadow !== 'none'`
       // passaria mesmo assim — só a MUDANÇA reprova.
-      await expect(medirAnelDeFoco(gatilho).mudou).toBe(true);
+      await expect(focusMeasureRing(gatilho).mudou).toBe(true);
     });
   },
 };
@@ -481,7 +481,7 @@ export const FocusVisible: Story = {
     });
 
     await step('E o foco é visível, não só existente', async () => {
-      await expect(medirAnelDeFoco(gatilho).mudou).toBe(true);
+      await expect(focusMeasureRing(gatilho).mudou).toBe(true);
     });
   },
 };

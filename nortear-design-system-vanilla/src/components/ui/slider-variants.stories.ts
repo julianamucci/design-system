@@ -3,7 +3,7 @@ import { within, expect } from 'storybook/test';
 import { createSlider } from './slider';
 import { withLabel } from './slider.fixtures';
 import { sliderSource, sliderSourceWith } from './slider.source';
-import { apertarTecla, trilhoDoSlider, valorDaAlca } from '@shared/testing/slider-probe';
+import { apertarTecla, sliderTrack, handleValue } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
   tags: ['form'],
@@ -53,9 +53,9 @@ export const Single: Story = {
     });
 
     await step('ArrowRight anda um passo', async () => {
-      const antes = valorDaAlca(canvas.getByRole('slider'));
+      const antes = handleValue(canvas.getByRole('slider'));
       await apertarTecla(canvas.getByRole('slider'), '{ArrowRight}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
     });
   },
 };
@@ -150,8 +150,8 @@ export const Range: Story = {
 
     await step('O mínimo não passa do máximo', async () => {
       await apertarTecla(canvas.getAllByRole('slider')[0], '{End}');
-      await expect(valorDaAlca(canvas.getAllByRole('slider')[0])).toBeLessThanOrEqual(
-        valorDaAlca(canvas.getAllByRole('slider')[1]),
+      await expect(handleValue(canvas.getAllByRole('slider')[0])).toBeLessThanOrEqual(
+        handleValue(canvas.getAllByRole('slider')[1]),
       );
     });
   },
@@ -193,14 +193,14 @@ export const Vertical: Story = {
     await step('O trilho fica em pé', async () => {
       // A orientação não pode ser só um atributo: a geometria vira junto, senão
       // o controle continua deitado dizendo que está de pé.
-      const caixa = trilhoDoSlider(canvasElement).getBoundingClientRect();
+      const caixa = sliderTrack(canvasElement).getBoundingClientRect();
       await expect(caixa.height).toBeGreaterThan(caixa.width);
     });
 
     await step('ArrowUp incrementa no eixo vertical', async () => {
-      const antes = valorDaAlca(canvas.getByRole('slider'));
+      const antes = handleValue(canvas.getByRole('slider'));
       await apertarTecla(canvas.getByRole('slider'), '{ArrowUp}');
-      await expect(valorDaAlca(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
+      await expect(handleValue(canvas.getByRole('slider'))).toBe(Math.min(100, antes + 1));
     });
   },
 };

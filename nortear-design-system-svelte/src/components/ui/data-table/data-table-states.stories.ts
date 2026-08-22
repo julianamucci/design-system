@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect } from 'storybook/test';
 import DataTable from './data-table.svelte';
-import { dataTableSemResultadosSource, dataTableSource } from './data-table.source';
+import { dataTableNoResultsSource, dataTableSource } from './data-table.source';
 import { baseColumns } from './data-table.fixtures';
 
 const meta: Meta = {
@@ -27,7 +27,7 @@ export const NoResults: Story = {
   },
   parameters: {
     covers: ['visual.item6'],
-    docs: { source: { transform: dataTableSemResultadosSource } },
+    docs: { source: { transform: dataTableNoResultsSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -58,10 +58,10 @@ export const NoResults: Story = {
     await step('Sem linha nenhuma, o cabeçalho de seleção não fica marcado', async () => {
       // "Todas selecionadas" com zero linhas seria verdade vazia — e o checkbox
       // nasceria marcado numa tabela sem nada para marcar.
-      const caixaDeTudo = canvas.getByRole('checkbox', {
+      const allBox = canvas.getByRole('checkbox', {
         name: 'Selecionar todas as linhas',
       });
-      await expect(caixaDeTudo).toHaveAttribute('aria-checked', 'false');
+      await expect(allBox).toHaveAttribute('aria-checked', 'false');
       await expect(canvasElement.querySelector("[role='status']")).toHaveTextContent(
         '0 de 0 linha(s) selecionada(s).',
       );

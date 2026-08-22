@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect } from 'storybook/test';
-import { alvosAbaixoDoMinimo } from '@shared/testing/pagination-probe';
+import { minimumTargetsBelow } from '@shared/testing/pagination-probe';
 import {
   Pagination,
   PaginationContent,
@@ -11,8 +11,8 @@ import {
 } from './index';
 import {
   paginationDirecionalSource,
-  paginationLinkAtivoSource,
-  paginationLinkInativoSource,
+  paginationLinkActiveSource,
+  paginationLinkInactiveSource,
 } from './pagination.source';
 
 const meta = {
@@ -24,7 +24,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: paginationLinkInativoSource },
+      source: { transform: paginationLinkInactiveSource },
       description: {
         component:
           'Variantes do PaginationLink: Default (link inativo), Active (página atual, com aria-current=page) e Directional (Previous/Next com ícone e rótulo).',
@@ -45,8 +45,8 @@ const sharedComponents = {
   PaginationPrevious,
 };
 
-const ROTULO_ANTERIOR = 'Ir para a página anterior';
-const ROTULO_PROXIMA = 'Ir para a próxima página';
+const LABEL_PREVIOUS = 'Ir para a página anterior';
+const LABEL_NEXT = 'Ir para a próxima página';
 
 export const Default: Story = {
   parameters: {
@@ -81,7 +81,7 @@ export const Active: Story = {
     docs: {
       // A marcação só se vê CONTRA um vizinho inativo: um link sozinho, como o
       // do meta, não mostra o que `is-active` separa.
-      source: { transform: paginationLinkAtivoSource },
+      source: { transform: paginationLinkActiveSource },
       description: { story: 'Página atual — destaque visual permanente e aria-current="page" para o leitor de tela.' },
     },
   },
@@ -153,19 +153,19 @@ export const Directional: Story = {
       // accessibility.item5 — "Anterior" some no breakpoint estreito; se o nome
       // acessível viesse do texto visível, o controle ficaria mudo em tela
       // pequena. Antes daqui o rótulo vinha do primitivo, em inglês.
-      const anterior = canvas.getByRole('button', { name: ROTULO_ANTERIOR });
-      const proxima = canvas.getByRole('button', { name: ROTULO_PROXIMA });
+      const anterior = canvas.getByRole('button', { name: LABEL_PREVIOUS });
+      const next = canvas.getByRole('button', { name: LABEL_NEXT });
       await expect(anterior.querySelector('.nds-pagination-label')).toHaveTextContent('Anterior');
-      await expect(proxima.querySelector('.nds-pagination-label')).toHaveTextContent('Próxima');
+      await expect(next.querySelector('.nds-pagination-label')).toHaveTextContent('Próxima');
       await expect(anterior).toHaveClass('nds-pagination-prev');
-      await expect(proxima).toHaveClass('nds-pagination-next');
+      await expect(next).toHaveClass('nds-pagination-next');
     });
 
     await step('Todo controle alcança o alvo de toque mínimo', async () => {
       // accessibility.item6 — WCAG 2.5.8 pede 24×24 CSS px. O direcional media
       // 32×16 enquanto o rótulo estava escondido por uma classe morta: sem
       // texto, não sobrava nada para o padding crescer.
-      await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe('[]');
+      await expect(JSON.stringify(minimumTargetsBelow(canvasElement))).toBe('[]');
     });
   },
 };

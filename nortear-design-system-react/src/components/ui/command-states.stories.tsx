@@ -10,8 +10,8 @@ import {
   CommandShortcut,
 } from "./command";
 import {
-  commandItemDesabilitadoSource,
-  commandItemMarcadoSource,
+  commandItemDisabledSource,
+  commandItemCheckedSource,
   commandSource,
 } from "./command.source";
 
@@ -115,7 +115,7 @@ export const ItemDisabled: Story = {
     covers: ["functional.item4", "accessibility.item4", "visual.item5"],
     // `disabled` é prop do comando, e não da paleta: sem o override o snippet
     // não ensinaria onde a prop entra.
-    docs: { source: { transform: commandItemDesabilitadoSource } },
+    docs: { source: { transform: commandItemDisabledSource } },
   },
   render: () => (
     <div className="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
@@ -140,7 +140,7 @@ export const ItemDisabled: Story = {
     // Resolvido por `aria-selected`, e não por `aria-activedescendant`: medido
     // na fonte do `cmdk`, o id só é reescrito quando o valor muda de fato, e
     // `{Home}` sobre a lista já no primeiro item é no-op.
-    const emDestaque = () =>
+    const inHighlight = () =>
       canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]');
 
     await userEvent.clear(campo);
@@ -173,14 +173,14 @@ export const ItemDisabled: Story = {
       // Home estabelece a precondição do passo: destaque no primeiro comando.
       await userEvent.keyboard("{Home}");
       await waitFor(async () => {
-        await expect(emDestaque()).toHaveTextContent("Novo");
+        await expect(inHighlight()).toHaveTextContent("Novo");
       });
 
       await userEvent.keyboard("{ArrowDown}");
       await waitFor(async () => {
         // "Arquivar" não é destino de navegação — quem usa teclado nunca para
         // num comando que não pode executar.
-        await expect(emDestaque()).toHaveTextContent("Renomear");
+        await expect(inHighlight()).toHaveTextContent("Renomear");
       });
       await expect(arquivar).toHaveAttribute("aria-selected", "false");
     });
@@ -204,7 +204,7 @@ export const CheckedItem: Story = {
     covers: ["functional.item5", "visual.item5"],
     // `checked` é prop do comando: o snippet do `meta` não declara estado de
     // escolha nenhum, que é justamente o assunto aqui.
-    docs: { source: { transform: commandItemMarcadoSource } },
+    docs: { source: { transform: commandItemCheckedSource } },
   },
   render: () => (
     <div className="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">

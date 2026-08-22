@@ -4,7 +4,7 @@ import { within, expect } from "storybook/test";
 import { Badge } from "./badge";
 import {
   badgeDefaultSource,
-  badgeDestrutivoSource,
+  badgeDestructiveSource,
   badgeOutlineSource,
   badgeSecundarioSource,
   badgeSemanticasSource,
@@ -88,16 +88,16 @@ export const Secondary: Story = {
     const referencia = document.createElement("span");
     referencia.className = "nds-badge nds-badge-default";
     canvasElement.appendChild(referencia);
-    const fundoDefault = getComputedStyle(referencia).backgroundColor;
+    const backgroundDefault = getComputedStyle(referencia).backgroundColor;
     referencia.remove();
-    await expect(fundo).not.toBe(fundoDefault);
+    await expect(fundo).not.toBe(backgroundDefault);
   },
 };
 
 export const Destructive: Story = {
   parameters: {
     covers: ["functional.item3", "accessibility.item3", "visual.item2"],
-    docs: { source: { transform: badgeDestrutivoSource } },
+    docs: { source: { transform: badgeDestructiveSource } },
   },
   render: () => <Badge variant="destructive">Urgente</Badge>,
   play: async ({ canvasElement }) => {
@@ -114,9 +114,9 @@ export const Destructive: Story = {
     const referencia = document.createElement("span");
     referencia.className = "nds-badge nds-badge-outline";
     canvasElement.appendChild(referencia);
-    const textoNeutro = getComputedStyle(referencia).color;
+    const neutralText = getComputedStyle(referencia).color;
     referencia.remove();
-    await expect(texto).toBe(textoNeutro);
+    await expect(texto).toBe(neutralText);
   },
 };
 
@@ -176,7 +176,7 @@ export const Semantics: Story = {
     const referencia = document.createElement("span");
     referencia.className = "nds-badge nds-badge-outline";
     canvasElement.appendChild(referencia);
-    const textoNeutro = getComputedStyle(referencia).color;
+    const neutralText = getComputedStyle(referencia).color;
     referencia.remove();
 
     const fundos: string[] = [];
@@ -187,7 +187,7 @@ export const Semantics: Story = {
       // que é o que sustenta 4.5:1 sem depender da variante escolhida.
       await expect(transparente(fundo)).toBe(false);
       await expect(transparente(borda)).toBe(false);
-      await expect(texto).toBe(textoNeutro);
+      await expect(texto).toBe(neutralText);
       fundos.push(fundo);
     }
 

@@ -19,15 +19,15 @@
  * porque duas cópias da mesma conta divergem na primeira correção.
  */
 
-import { contraste, fundoEfetivo, ligarTemaEscuro } from './alert-probe';
+import { contraste, backgroundEffective, darkLigarTheme } from './alert-probe';
 
-export { contraste, fundoEfetivo, ligarTemaEscuro };
+export { contraste, backgroundEffective, darkLigarTheme };
 
 // ─── Anel de foco ─────────────────────────────────────────────────────────────
 
-export interface MedidaDeAnel {
-  semFoco: string;
-  comFoco: string;
+export interface RingMeasurement {
+  noFocus: string;
+  withFocus: string;
   /** O foco por teclado mudou alguma sombra ou contorno? É isto que prova o anel. */
   mudou: boolean;
 }
@@ -41,38 +41,38 @@ export interface MedidaDeAnel {
  * Tab de verdade). Em navegador, focar por script depois de uma interação de
  * teclado satisfaz `:focus-visible`.
  */
-export function medirAnelDeFoco(btn: HTMLElement): MedidaDeAnel {
+export function focusMeasureRing(btn: HTMLElement): RingMeasurement {
   const doc = btn.ownerDocument;
   (doc.activeElement as HTMLElement | null)?.blur();
   const antes = getComputedStyle(btn);
-  const semFoco = `${antes.boxShadow} | ${antes.outlineStyle} ${antes.outlineWidth}`;
+  const noFocus = `${antes.boxShadow} | ${antes.outlineStyle} ${antes.outlineWidth}`;
   btn.focus();
   const depois = getComputedStyle(btn);
-  const comFoco = `${depois.boxShadow} | ${depois.outlineStyle} ${depois.outlineWidth}`;
-  return { semFoco, comFoco, mudou: semFoco !== comFoco && comFoco !== 'none | none 0px' };
+  const withFocus = `${depois.boxShadow} | ${depois.outlineStyle} ${depois.outlineWidth}`;
+  return { noFocus, withFocus, mudou: noFocus !== withFocus && withFocus !== 'none | none 0px' };
 }
 
 /** Toggles da tela cujo anel de foco NÃO aparece — a lista vazia é o resultado bom. */
-export function togglesSemAnelDeFoco(raiz: HTMLElement): string[] {
-  const falhas: string[] = [];
+export function focusTogglesNoRing(raiz: HTMLElement): string[] {
+  const failures: string[] = [];
   for (const btn of raiz.querySelectorAll<HTMLElement>('.nds-toggle')) {
     if (btn.hasAttribute('disabled')) continue;
-    if (!medirAnelDeFoco(btn).mudou) falhas.push(descreverToggle(btn));
+    if (!focusMeasureRing(btn).mudou) failures.push(describeToggle(btn));
   }
   (raiz.ownerDocument.activeElement as HTMLElement | null)?.blur();
-  return falhas;
+  return failures;
 }
 
 // ─── Contraste ────────────────────────────────────────────────────────────────
 
-export interface FalhaDeContrasteToggle {
+export interface ContrastToggleFailure {
   toggle: string;
   tema: string;
   contraste: number;
 }
 
 /** Identificação legível: variante, tamanho e o nome acessível. */
-export function descreverToggle(btn: HTMLElement): string {
+export function describeToggle(btn: HTMLElement): string {
   const variante = btn.getAttribute('data-variant') ?? 'default';
   const tamanho = btn.getAttribute('data-size') ?? 'default';
   const nome = btn.getAttribute('aria-label') || btn.textContent?.trim() || '(sem nome)';
@@ -83,8 +83,8 @@ export function descreverToggle(btn: HTMLElement): string {
  * Contraste entre o conteúdo do toggle (texto e ícone herdam `color`) e o fundo
  * que a pessoa realmente vê.
  */
-export function contrasteDoToggle(btn: HTMLElement): number {
-  return contraste(getComputedStyle(btn).color, fundoEfetivo(btn));
+export function toggleContrast(btn: HTMLElement): number {
+  return contraste(getComputedStyle(btn).color, backgroundEffective(btn));
 }
 
 /**
@@ -97,12 +97,12 @@ const ATIVO =
   '.nds-toggle[data-state="on"], .nds-toggle[aria-pressed="true"], ' +
   '.nds-toggle[data-pressed]:not([data-pressed="false"])';
 
-function falhasDeContraste(
+function contrastFailures(
   raiz: HTMLElement,
-  minimo: number,
+  minimum: number,
   tema: string,
-): FalhaDeContrasteToggle[] {
-  const encontradas: FalhaDeContrasteToggle[] = [];
+): ContrastToggleFailure[] {
+  const encontradas: ContrastToggleFailure[] = [];
   // Só o estado ATIVO. É o que o contrato documenta ("texto/ícone contra o
   // fundo ativo") e é o único par de cores que o componente REALMENTE define:
   // em repouso ele declara `background: transparent` e `color: inherit`, então
@@ -114,8 +114,8 @@ function falhasDeContraste(
     // O desabilitado tem opacidade reduzida por contrato — a WCAG isenta
     // controle inativo (1.4.3), e medi-lo produziria falha que não é defeito.
     if (btn.hasAttribute('disabled')) continue;
-    const razao = contrasteDoToggle(btn);
-    if (razao < minimo) encontradas.push({ toggle: descreverToggle(btn), tema, contraste: razao });
+    const ratio = toggleContrast(btn);
+    if (ratio < minimum) encontradas.push({ toggle: describeToggle(btn), tema, contraste: ratio });
   }
   return encontradas;
 }
@@ -128,20 +128,20 @@ function falhasDeContraste(
  * mesmo se a medição falhar: deixá-la posta envenenaria a story seguinte e a
  * foto do Chromatic.
  */
-export function contrasteDoToggleNosDoisTemas(
+export function toggleNosDoisThemesContrast(
   raiz: HTMLElement,
-  minimo = 4.5,
-): FalhaDeContrasteToggle[] {
-  const claro = falhasDeContraste(raiz, minimo, 'claro');
-  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
+  minimum = 4.5,
+): ContrastToggleFailure[] {
+  const claro = contrastFailures(raiz, minimum, 'claro');
+  const desfazer = darkLigarTheme(raiz.ownerDocument);
   try {
-    return [...claro, ...falhasDeContraste(raiz, minimo, 'escuro')];
+    return [...claro, ...contrastFailures(raiz, minimum, 'escuro')];
   } finally {
     desfazer();
   }
 }
 
 /** Mensagem de falha legível, com o número medido. */
-export function descreverFalhasDeContraste(fs: FalhaDeContrasteToggle[]): string {
+export function contrastDescribeFailures(fs: ContrastToggleFailure[]): string {
   return fs.map((f) => `  · ${f.toggle} (${f.tema}) — ${f.contraste}:1`).join('\n');
 }

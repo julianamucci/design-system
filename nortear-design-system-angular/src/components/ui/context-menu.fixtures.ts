@@ -23,7 +23,7 @@ import { waitForPortal } from '@/lib/wait-for-portal';
  * à mão não carrega as coordenadas do ponteiro, e é justamente delas que o
  * primitivo tira a posição do popup.
  */
-export async function abrirPorGesto(area: HTMLElement): Promise<HTMLElement> {
+export async function gestoOpen(area: HTMLElement): Promise<HTMLElement> {
   const caixa = area.getBoundingClientRect();
   const coords = { clientX: caixa.left + caixa.width / 2, clientY: caixa.top + caixa.height / 2 };
   await userEvent.pointer({ keys: '[MouseRight]', target: area, coords });

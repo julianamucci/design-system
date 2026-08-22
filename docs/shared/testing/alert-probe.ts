@@ -12,7 +12,7 @@
  * então a sonda calcula a razão em vez de comparar nomes de token.
  */
 
-export interface MedidaDeTexto {
+export interface TextMeasurement {
   cor: string;
   contraste: number;
 }
@@ -57,9 +57,9 @@ export function contraste(frente: string, fundo: string): number {
  *
  * Por isso a classe entra também em quem carrega `tema-*`.
  */
-export function ligarTemaEscuro(doc: Document): () => void {
-  const alvos = [doc.documentElement, ...doc.querySelectorAll<HTMLElement>('[class*="tema-"]')];
-  const postos = alvos.filter((el) => !el.classList.contains('dark'));
+export function darkLigarTheme(doc: Document): () => void {
+  const targets = [doc.documentElement, ...doc.querySelectorAll<HTMLElement>('[class*="tema-"]')];
+  const postos = targets.filter((el) => !el.classList.contains('dark'));
   postos.forEach((el) => el.classList.add('dark'));
   return () => postos.forEach((el) => el.classList.remove('dark'));
 }
@@ -102,7 +102,7 @@ export function superficieDoApp(perto: HTMLElement): string {
  * não a composta. Sem compor com o ancestral opaco, o contraste medido é o de
  * uma cor que ninguém vê.
  */
-export function fundoEfetivo(el: HTMLElement): string {
+export function backgroundEffective(el: HTMLElement): string {
   let atual: HTMLElement | null = el;
   const camadas: string[] = [];
   while (atual) {
@@ -126,22 +126,22 @@ export function fundoEfetivo(el: HTMLElement): string {
   });
 }
 
-function medirTexto(el: Element | null, fundo: string): MedidaDeTexto | null {
+function measureText(el: Element | null, fundo: string): TextMeasurement | null {
   if (!el) return null;
   const cor = getComputedStyle(el as HTMLElement).color;
   return { cor, contraste: contraste(cor, fundo) };
 }
 
-export function medirAlert(raiz: HTMLElement) {
+export function measureAlert(raiz: HTMLElement) {
   const alerta = raiz.querySelector<HTMLElement>('.nds-alert');
-  if (!alerta) return { achado: false };
-  return medirAlertEm(alerta);
+  if (!alerta) return { finding: false };
+  return measureAlertIn(alerta);
 }
 
 /** Mede UM alert já localizado — é o que a story usa quando há vários na tela. */
-export function medirAlertEm(alerta: HTMLElement) {
+export function measureAlertIn(alerta: HTMLElement) {
 
-  const fundo = fundoEfetivo(alerta);
+  const fundo = backgroundEffective(alerta);
   const cs = getComputedStyle(alerta);
   const titulo = alerta.querySelector('.nds-alert-title, h1, h2, h3, h4, h5, h6, [data-title], strong');
   const descricao = alerta.querySelector('.nds-alert-description, section');
@@ -149,15 +149,15 @@ export function medirAlertEm(alerta: HTMLElement) {
   const fechar = alerta.querySelector<HTMLElement>('.nds-alert-dismiss');
 
   return {
-    achado: true,
+    finding: true,
     classes: alerta.className.split(/\s+/).filter((c) => c.startsWith('nds-alert')).sort().join(' '),
     papel: alerta.getAttribute('role'),
     aoVivo: alerta.getAttribute('aria-live'),
     fundo,
     borda: cs.borderTopColor,
-    larguraDaBorda: Math.round(parseFloat(cs.borderTopWidth) || 0),
-    titulo: medirTexto(titulo, fundo),
-    descricao: medirTexto(descricao, fundo),
+    borderWidth: Math.round(parseFloat(cs.borderTopWidth) || 0),
+    titulo: measureText(titulo, fundo),
+    descricao: measureText(descricao, fundo),
     icone: icone ? getComputedStyle(icone).color : null,
     fechar: fechar
       ? { rotulo: fechar.getAttribute('aria-label'), tag: fechar.tagName.toLowerCase() }
@@ -169,7 +169,7 @@ export function medirAlertEm(alerta: HTMLElement) {
   };
 }
 
-export interface FalhaDeContraste {
+export interface ContrastFailure {
   variante: string;
   parte: 'título' | 'texto';
   contraste: number;
@@ -181,15 +181,15 @@ function varianteDe(alerta: HTMLElement): string {
   return m ? m[1] : 'default';
 }
 
-function falhas(raiz: HTMLElement, minimo: number, tema: string): FalhaDeContraste[] {
-  const encontradas: FalhaDeContraste[] = [];
+function failures(raiz: HTMLElement, minimum: number, tema: string): ContrastFailure[] {
+  const encontradas: ContrastFailure[] = [];
   for (const alerta of raiz.querySelectorAll<HTMLElement>('.nds-alert')) {
-    const m = medirAlertEm(alerta);
+    const m = measureAlertIn(alerta);
     const variante = `${varianteDe(alerta)} (${tema})`;
-    if (m.titulo && m.titulo.contraste < minimo) {
+    if (m.titulo && m.titulo.contraste < minimum) {
       encontradas.push({ variante, parte: 'título', contraste: m.titulo.contraste });
     }
-    if (m.descricao && m.descricao.contraste < minimo) {
+    if (m.descricao && m.descricao.contraste < minimum) {
       encontradas.push({ variante, parte: 'texto', contraste: m.descricao.contraste });
     }
   }
@@ -207,30 +207,30 @@ function falhas(raiz: HTMLElement, minimo: number, tema: string): FalhaDeContras
  * A classe `.dark` é removida no fim mesmo se a medição falhar: deixá-la posta
  * envenenaria a story seguinte e a foto do Chromatic.
  */
-export function contrasteNosDoisTemas(raiz: HTMLElement, minimo = 4.5): FalhaDeContraste[] {
-  const claro = falhas(raiz, minimo, 'claro');
-  const desfazer = ligarTemaEscuro(raiz.ownerDocument);
+export function contrastNosDoisThemes(raiz: HTMLElement, minimum = 4.5): ContrastFailure[] {
+  const claro = failures(raiz, minimum, 'claro');
+  const desfazer = darkLigarTheme(raiz.ownerDocument);
   try {
-    return [...claro, ...falhas(raiz, minimo, 'escuro')];
+    return [...claro, ...failures(raiz, minimum, 'escuro')];
   } finally {
     desfazer();
   }
 }
 
 /** Mensagem de falha legível, com o número medido. */
-export function descreverFalhas(fs: FalhaDeContraste[]): string {
+export function describeFailures(fs: ContrastFailure[]): string {
   return fs.map((f) => `  · ${f.variante} — ${f.parte} em ${f.contraste}:1`).join('\n');
 }
 
 // ─── Sonda: os três temas de marca, não só claro × escuro ────────────────────
 //
-// `contrasteNosDoisTemas` mede o tema VIGENTE em claro e escuro — e o vigente é
+// `contrastNosDoisThemes` mede o tema VIGENTE em claro e escuro — e o vigente é
 // sempre o `default`, porque é o que a toolbar entrega ao test-runner. Warm e
 // Cold re-declaram `--destructive`, `--success`, `--warning` e `--info` com
 // outros matizes, então cada um é um par de cores diferente sobre um fundo
 // diferente. Seis combinações, não duas.
 //
-// A varredura por tema vem de `cor.ts` (`porTema`) para não existir um segundo
+// A varredura por tema vem de `cor.ts` (`byTheme`) para não existir um segundo
 // colhedor de tema neste repositório: é ele que sabe que `.dark.tema-x` exige as
 // duas classes NO MESMO elemento.
 
@@ -240,7 +240,7 @@ import { TEMAS, MODOS } from './cor';
  * Roda `fn` uma vez por tema de marca e modo, trocando a classe NO
  * `documentElement`.
  *
- * O `porTema` do `cor.ts` estampa a classe na raiz da story, e para medir a
+ * O `byTheme` do `cor.ts` estampa a classe na raiz da story, e para medir a
  * BORDA de um campo isso basta. Aqui não basta, e a primeira versão desta sonda
  * caiu no buraco: o fundo do alert tem alfa, então a cor que se enxerga depende
  * de quem pinta por baixo — e quem pinta é o `body`, com
@@ -253,7 +253,7 @@ import { TEMAS, MODOS } from './cor';
  * preservadas; a original volta no `finally`, senão a story seguinte e a foto
  * do Chromatic herdam o tema da última iteração.
  */
-export function porTemaNoDocumento<T>(
+export function documentByTheme<T>(
   doc: Document,
   fn: (tema: (typeof TEMAS)[number], modo: (typeof MODOS)[number]) => T,
 ): T[] {
@@ -285,7 +285,7 @@ export function porTemaNoDocumento<T>(
  * Serve para responder "contra o que este texto está sendo medido?" — pergunta
  * que decide se um contraste baixo é defeito de paleta ou artefato de harness.
  */
-export function camadasDeFundo(el: HTMLElement): string[] {
+export function backgroundCamadas(el: HTMLElement): string[] {
   const camadas: string[] = [];
   let atual: HTMLElement | null = el;
   while (atual) {
@@ -304,15 +304,15 @@ export function camadasDeFundo(el: HTMLElement): string[] {
   return camadas;
 }
 
-export interface MedidaDeVariante {
+export interface VariantMeasurement {
   tema: string;
   modo: 'claro' | 'escuro';
   variante: string;
   fundo: string;
   /** `null` quando o elemento não existe — isso É o achado, não falha da sonda. */
-  titulo: MedidaDeTexto | null;
-  descricao: MedidaDeTexto | null;
-  icone: MedidaDeTexto | null;
+  titulo: TextMeasurement | null;
+  descricao: TextMeasurement | null;
+  icone: TextMeasurement | null;
 }
 
 /**
@@ -322,10 +322,10 @@ export interface MedidaDeVariante {
  * resultado, e a linha que passa com folga é o que prova que a regra do
  * contêiner colorido está sendo cumprida.
  */
-export function contrastePorTema(raiz: HTMLElement): MedidaDeVariante[] {
-  return porTemaNoDocumento(raiz.ownerDocument, (tema, modo) =>
-    Array.from(raiz.querySelectorAll<HTMLElement>('.nds-alert')).map((alerta): MedidaDeVariante => {
-      const fundo = fundoEfetivo(alerta);
+export function themeContrast(raiz: HTMLElement): VariantMeasurement[] {
+  return documentByTheme(raiz.ownerDocument, (tema, modo) =>
+    Array.from(raiz.querySelectorAll<HTMLElement>('.nds-alert')).map((alerta): VariantMeasurement => {
+      const fundo = backgroundEffective(alerta);
       const icone = alerta.querySelector<HTMLElement>(':scope > svg:not(.nds-icon)')
         ?? alerta.querySelector<HTMLElement>(':scope > svg');
       return {
@@ -333,17 +333,17 @@ export function contrastePorTema(raiz: HTMLElement): MedidaDeVariante[] {
         modo,
         variante: varianteDe(alerta),
         fundo,
-        titulo: medirTexto(alerta.querySelector('.nds-alert-title'), fundo),
-        descricao: medirTexto(alerta.querySelector('.nds-alert-description'), fundo),
-        icone: medirTexto(icone, fundo),
+        titulo: measureText(alerta.querySelector('.nds-alert-title'), fundo),
+        descricao: measureText(alerta.querySelector('.nds-alert-description'), fundo),
+        icone: measureText(icone, fundo),
       };
     }),
   ).flat();
 }
 
 /** Uma linha por medida — a tabela inteira, para o diff campo a campo. */
-export function resumirPorTema(medidas: MedidaDeVariante[]): string[] {
-  const n = (m: MedidaDeTexto | null) => (m ? String(m.contraste) : 'null');
+export function themeResumir(medidas: VariantMeasurement[]): string[] {
+  const n = (m: TextMeasurement | null) => (m ? String(m.contraste) : 'null');
   return medidas.map(
     (m) =>
       `${m.variante}|${m.tema}/${m.modo}|fundo=${m.fundo}|titulo=${n(m.titulo)}|texto=${n(m.descricao)}|icone=${n(m.icone)}`,
@@ -351,14 +351,14 @@ export function resumirPorTema(medidas: MedidaDeVariante[]): string[] {
 }
 
 /** Só as linhas que reprovam o mínimo, já legíveis. */
-export function reprovasPorTema(medidas: MedidaDeVariante[], minimo = 4.5): string[] {
+export function themeReprovas(medidas: VariantMeasurement[], minimum = 4.5): string[] {
   const saida: string[] = [];
   for (const m of medidas) {
     const rotulo = `${m.variante} · ${m.tema}/${m.modo}`;
-    if (m.titulo && m.titulo.contraste < minimo) {
+    if (m.titulo && m.titulo.contraste < minimum) {
       saida.push(`${rotulo} — título ${m.titulo.contraste}:1 (${m.titulo.cor} sobre ${m.fundo})`);
     }
-    if (m.descricao && m.descricao.contraste < minimo) {
+    if (m.descricao && m.descricao.contraste < minimum) {
       saida.push(`${rotulo} — texto ${m.descricao.contraste}:1 (${m.descricao.cor} sobre ${m.fundo})`);
     }
     if (!m.titulo) saida.push(`${rotulo} — título AUSENTE (.nds-alert-title não casou)`);
@@ -382,7 +382,7 @@ export interface SemanticaDoAlert {
   tituloTag: string | null;
   descricaoTag: string | null;
   /** O que o leitor de tela percorre, na ordem do DOM. */
-  ordemDeLeitura: string[];
+  leituraOrder: string[];
   dismiss: { tag: string; rotulo: string | null; ehUltimoFilho: boolean; tabIndex: number } | null;
 }
 
@@ -393,7 +393,7 @@ export interface SemanticaDoAlert {
  * lista — é assim que se vê se o ícone está mudo e se o botão de fechar é
  * anunciado antes ou depois da mensagem.
  */
-function ordemDeLeitura(alerta: HTMLElement): string[] {
+function leituraOrder(alerta: HTMLElement): string[] {
   return Array.from(alerta.children)
     .filter((f) => f.getAttribute('aria-hidden') !== 'true')
     .map((f) => {
@@ -404,7 +404,7 @@ function ordemDeLeitura(alerta: HTMLElement): string[] {
     .filter((t) => t.length > 0);
 }
 
-export function medirSemantica(raiz: HTMLElement): SemanticaDoAlert[] {
+export function measureSemantica(raiz: HTMLElement): SemanticaDoAlert[] {
   return Array.from(raiz.querySelectorAll<HTMLElement>('.nds-alert')).map((alerta) => {
     const svg = alerta.querySelector<SVGElement>(':scope > svg');
     const fechar = alerta.querySelector<HTMLElement>('[data-slot="alert-dismiss"]');
@@ -423,7 +423,7 @@ export function medirSemantica(raiz: HTMLElement): SemanticaDoAlert[] {
         : null,
       tituloTag: alerta.querySelector('.nds-alert-title')?.tagName.toLowerCase() ?? null,
       descricaoTag: alerta.querySelector('.nds-alert-description')?.tagName.toLowerCase() ?? null,
-      ordemDeLeitura: ordemDeLeitura(alerta),
+      leituraOrder: leituraOrder(alerta),
       dismiss: fechar
         ? {
             tag: fechar.tagName.toLowerCase(),

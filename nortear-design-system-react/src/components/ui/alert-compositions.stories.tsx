@@ -4,9 +4,9 @@ import { within, expect, userEvent } from "storybook/test";
 import { Info } from "lucide-react";
 import { Alert, AlertAction, AlertTitle, AlertDescription } from "./alert";
 import {
-  alertClasseAdicionalSource,
-  alertComAcaoSource,
-  alertSemIconeSource,
+  alertClassNameAdicionalSource,
+  alertWithActionSource,
+  alertNoIconSource,
   alertSource,
 } from "./alert.source";
 import { Button } from "./button";
@@ -45,7 +45,7 @@ export const WithIcon: Story = {
 
 export const WithAction: Story = {
   // AlertAction + Button são peças que o snippet do meta nem importa.
-  parameters: { docs: { source: { transform: alertComAcaoSource } } },
+  parameters: { docs: { source: { transform: alertWithActionSource } } },
   render: () => (
     <Alert>
       <Info aria-hidden="true" className="nds-icon" />
@@ -92,7 +92,7 @@ export const WithAction: Story = {
  */
 export const AdditionalClass: Story = {
   // O className em CADA subcomponente é o que a story prova; o meta só tem raiz.
-  parameters: { docs: { source: { transform: alertClasseAdicionalSource } } },
+  parameters: { docs: { source: { transform: alertClassNameAdicionalSource } } },
   render: () => (
     <Alert className="nds-w-full">
       <Info aria-hidden="true" className="nds-icon" />
@@ -130,7 +130,7 @@ export const WithoutIcon: Story = {
   parameters: {
     covers: ["visual.item4"],
     // Mesma ausência que a story de estados prova: o meta traz o ícone.
-    docs: { source: { transform: alertSemIconeSource } },
+    docs: { source: { transform: alertNoIconSource } },
   },
   render: () => (
     <Alert>

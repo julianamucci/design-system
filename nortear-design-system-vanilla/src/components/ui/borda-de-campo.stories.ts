@@ -26,13 +26,13 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { expect } from 'storybook/test';
 import {
-  declaracaoDaRegra,
-  descreverMedida,
-  medirCorPorTema,
-  porTema,
-  razao,
-  resolverCor,
-  type AlvoDeCor,
+  ruleDeclaration,
+  describeMeasurement,
+  themeMeasureColor,
+  byTheme,
+  ratio,
+  resolveColor,
+  type ColorTarget,
 } from '@shared/testing/cor';
 import { createInput } from './input';
 import { createTextarea } from './textarea';
@@ -110,7 +110,7 @@ function cenario(): HTMLElement {
   return raiz;
 }
 
-const TARGETS: AlvoDeCor[] = [
+const TARGETS: ColorTarget[] = [
   { nome: 'input', seletor: 'input.nds-input:not(.nds-input-group-control)' },
   { nome: 'textarea', seletor: '.nds-textarea' },
   { nome: 'select (gatilho)', seletor: '.nds-select-trigger' },
@@ -131,15 +131,15 @@ export const RestAlcanca3a1: Story = {
   render: cenario,
   play: async ({ canvasElement }) => {
     const raiz = canvasElement.querySelector<HTMLElement>('.nds-bg-background')!;
-    const medidas = medirCorPorTema(raiz, TARGETS);
+    const medidas = themeMeasureColor(raiz, TARGETS);
 
     await expect(medidas).toHaveLength(TARGETS.length * 6);
 
-    const ausentes = medidas.filter((m) => !m.presente || m.razao === null);
-    await expect(ausentes.map(descreverMedida)).toEqual([]);
+    const ausentes = medidas.filter((m) => !m.presente || m.ratio === null);
+    await expect(ausentes.map(describeMeasurement)).toEqual([]);
 
-    const fracas = medidas.filter((m) => (m.razao ?? 0) < MINIMO);
-    await expect(fracas.map(descreverMedida)).toEqual([]);
+    const fracas = medidas.filter((m) => (m.ratio ?? 0) < MINIMO);
+    await expect(fracas.map(describeMeasurement)).toEqual([]);
   },
 };
 
@@ -159,12 +159,12 @@ export const RestHoverEFocoNotFicamBelow: Story = {
     const campo = raiz.querySelector<HTMLElement>('input.nds-input:not(.nds-input-group-control)')!;
     const doc = canvasElement.ownerDocument;
 
-    const hoverColor = declaracaoDaRegra(
+    const hoverColor = ruleDeclaration(
       doc,
       (sel) => sel.startsWith('.nds-input:hover'),
       'border-color',
     );
-    const focusColor = declaracaoDaRegra(
+    const focusColor = ruleDeclaration(
       doc,
       (sel) => sel.startsWith('.nds-input:focus-visible'),
       'border-color',
@@ -173,11 +173,11 @@ export const RestHoverEFocoNotFicamBelow: Story = {
     await expect(focusColor, 'regra de foco do .nds-input sumiu da folha').not.toBeNull();
 
     campo.style.transition = 'none';
-    const problemas = porTema(raiz, (tema, modo) => {
+    const problemas = byTheme(raiz, (tema, modo) => {
       const fundo = getComputedStyle(campo).backgroundColor;
-      const repouso = razao(getComputedStyle(campo).borderTopColor, fundo)?.razao ?? 0;
-      const hover = razao(resolverCor(raiz, hoverColor!) ?? fundo, fundo)?.razao ?? 0;
-      const foco = razao(resolverCor(raiz, focusColor!) ?? fundo, fundo)?.razao ?? 0;
+      const repouso = ratio(getComputedStyle(campo).borderTopColor, fundo)?.ratio ?? 0;
+      const hover = ratio(resolveColor(raiz, hoverColor!) ?? fundo, fundo)?.ratio ?? 0;
+      const foco = ratio(resolveColor(raiz, focusColor!) ?? fundo, fundo)?.ratio ?? 0;
 
       const linha = `${tema}/${modo} repouso ${repouso}:1 · hover ${hover}:1 · foco ${foco}:1`;
       if (hover < repouso) return `hover ABAIXO do repouso — ${linha}`;

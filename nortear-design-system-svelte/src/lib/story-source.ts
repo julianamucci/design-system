@@ -16,7 +16,7 @@
  * de string dentro de HTML; aqui o arquivo é um módulo TS e o escape vira
  * `no-useless-escape` no lint.
  */
-export const FIM_SCRIPT = '</' + 'script>';
+export const END_SCRIPT = '</' + 'script>';
 
 /** Indenta cada linha não vazia com dois espaços (corpo do bloco `<script>`). */
 function indentar(texto: string): string {
@@ -37,7 +37,7 @@ export function svelteSnippet(script: string, markup: string): string {
   const corpo = script.trim();
   const marcacao = markup.trim();
   if (!corpo) return marcacao;
-  return `<script lang="ts">\n${indentar(corpo)}\n${FIM_SCRIPT}\n\n${marcacao}`;
+  return `<script lang="ts">\n${indentar(corpo)}\n${END_SCRIPT}\n\n${marcacao}`;
 }
 
 /**
@@ -65,7 +65,7 @@ export function attrsMultilinha(
 ): string {
   const lista = partes.filter((parte): parte is string => Boolean(parte) && parte !== '');
   if (!lista.length) return '';
-  const emLinha = lista.join(' ');
-  if (emLinha.length <= limite) return ` ${emLinha}`;
+  const inLine = lista.join(' ');
+  if (inLine.length <= limite) return ` ${inLine}`;
   return `\n${lista.map((parte) => `${indentacao}${parte}`).join('\n')}\n`;
 }

@@ -2,10 +2,10 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 
 import { within, expect } from 'storybook/test';
 import ResizableStory from './ResizableStory.svelte';
-import { SEL_GRUPO, fracoes, paineisDiretos } from './resizable.fixtures';
+import { SEL_GROUP, fracoes, panelsDiretos } from './resizable.fixtures';
 import {
-  resizableAninhadoSource,
-  resizableComPegadorSource,
+  resizableNestedSource,
+  resizableWithGrabberSource,
   resizableHorizontalSource,
   resizableSource,
   resizableVerticalSource,
@@ -57,7 +57,7 @@ export const Horizontal: Story = {
       // O CSS decide espessura e cursor pelo eixo do punho. Um grupo horizontal
       // é dividido por uma linha VERTICAL — a inversão é a fonte clássica de
       // erro aqui.
-      const grupo = canvasElement.querySelector<HTMLElement>(SEL_GRUPO)!;
+      const grupo = canvasElement.querySelector<HTMLElement>(SEL_GROUP)!;
       const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
       await expect(punho).toHaveAttribute('aria-orientation', 'vertical');
       await expect(getComputedStyle(grupo).flexDirection).toBe('row');
@@ -65,8 +65,8 @@ export const Horizontal: Story = {
     });
 
     await step('Os painéis dividem a LARGURA na proporção declarada', async () => {
-      const grupo = canvasElement.querySelector(SEL_GRUPO)!;
-      await expect(fracoes(paineisDiretos(grupo))[0]).toBeCloseTo(0.3, 1);
+      const grupo = canvasElement.querySelector(SEL_GROUP)!;
+      await expect(fracoes(panelsDiretos(grupo))[0]).toBeCloseTo(0.3, 1);
     });
   },
 };
@@ -91,7 +91,7 @@ export const Vertical: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Split empilhado: o divisor é uma linha deitada', async () => {
-      const grupo = canvasElement.querySelector<HTMLElement>(SEL_GRUPO)!;
+      const grupo = canvasElement.querySelector<HTMLElement>(SEL_GROUP)!;
       const punho = canvasElement.querySelector<HTMLElement>('[data-slot="resizable-handle"]')!;
       await expect(punho).toHaveAttribute('aria-orientation', 'horizontal');
       await expect(getComputedStyle(grupo).flexDirection).toBe('column');
@@ -101,8 +101,8 @@ export const Vertical: Story = {
     await step('Os painéis dividem a ALTURA, e não a largura', async () => {
       // O eixo trocado é invisível numa foto quadrada: os dois painéis
       // apareceriam empilhados de qualquer jeito e só a proporção denunciaria.
-      const grupo = canvasElement.querySelector(SEL_GRUPO)!;
-      await expect(fracoes(paineisDiretos(grupo), 'vertical')[0]).toBeCloseTo(0.4, 1);
+      const grupo = canvasElement.querySelector(SEL_GROUP)!;
+      await expect(fracoes(panelsDiretos(grupo), 'vertical')[0]).toBeCloseTo(0.4, 1);
     });
   },
 };
@@ -110,7 +110,7 @@ export const Vertical: Story = {
 export const Nested: Story = {
   parameters: {
     covers: ['visual.item3'],
-    docs: { source: { transform: resizableAninhadoSource } },
+    docs: { source: { transform: resizableNestedSource } },
   },
   render: () => ({
     Component: ResizableStory,
@@ -133,9 +133,9 @@ export const Nested: Story = {
     await step('Cada grupo governa só os próprios painéis', async () => {
       // O grupo de dentro é outro grupo: os painéis dele não podem entrar na
       // conta do de fora, senão um ajuste move os dois layouts ao mesmo tempo.
-      const grupos = [...canvasElement.querySelectorAll(SEL_GRUPO)];
+      const grupos = [...canvasElement.querySelectorAll(SEL_GROUP)];
       await expect(grupos).toHaveLength(2);
-      for (const g of grupos) await expect(paineisDiretos(g)).toHaveLength(2);
+      for (const g of grupos) await expect(panelsDiretos(g)).toHaveLength(2);
     });
 
     await step('O divisor de dentro tem o eixo do grupo de dentro', async () => {
@@ -148,9 +148,9 @@ export const Nested: Story = {
     });
 
     await step('E as proporções de cada grupo são independentes', async () => {
-      const grupos = [...canvasElement.querySelectorAll(SEL_GRUPO)];
-      await expect(fracoes(paineisDiretos(grupos[0]))[0]).toBeCloseTo(0.3, 1);
-      await expect(fracoes(paineisDiretos(grupos[1]), 'vertical')[0]).toBeCloseTo(0.6, 1);
+      const grupos = [...canvasElement.querySelectorAll(SEL_GROUP)];
+      await expect(fracoes(panelsDiretos(grupos[0]))[0]).toBeCloseTo(0.3, 1);
+      await expect(fracoes(panelsDiretos(grupos[1]), 'vertical')[0]).toBeCloseTo(0.6, 1);
     });
   },
 };
@@ -158,7 +158,7 @@ export const Nested: Story = {
 export const WithHandle: Story = {
   parameters: {
     covers: ['visual.item4'],
-    docs: { source: { transform: resizableComPegadorSource } },
+    docs: { source: { transform: resizableWithGrabberSource } },
   },
   render: () => ({
     Component: ResizableStory,

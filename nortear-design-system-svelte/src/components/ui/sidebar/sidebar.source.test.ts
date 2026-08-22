@@ -4,15 +4,15 @@ import {
   sidebarExpandidaSource,
   sidebarFixaSource,
   sidebarGavetaSource,
-  navigationSourceSidebarGroups,
-  sidebarLadoDireitoSource,
+  navigationSidebarGroupsSource,
+  sidebarSideDireitoSource,
   sidebarModeIconSource,
   sidebarOffcanvasFechadaSource,
   sidebarSource,
   sidebarSubmenuSource,
-  sidebarVarianteFloatingSource,
-  sidebarVarianteInsetSource,
-  sidebarVarianteSidebarSource,
+  sidebarVariantFloatingSource,
+  sidebarVariantInsetSource,
+  sidebarVariantSidebarSource,
 } from './sidebar.source';
 
 describe('sidebarSource', () => {
@@ -129,10 +129,10 @@ describe('sidebarSource', () => {
 
 describe('transforms das stories de variação, estado e composição', () => {
   it('cada variante visual declara a sua', () => {
-    expect(sidebarVarianteSidebarSource()).toContain('variant="sidebar"');
-    expect(sidebarVarianteFloatingSource()).toContain('variant="floating"');
-    expect(sidebarVarianteInsetSource()).toContain('variant="inset"');
-    expect(sidebarLadoDireitoSource()).toContain('side="right"');
+    expect(sidebarVariantSidebarSource()).toContain('variant="sidebar"');
+    expect(sidebarVariantFloatingSource()).toContain('variant="floating"');
+    expect(sidebarVariantInsetSource()).toContain('variant="inset"');
+    expect(sidebarSideDireitoSource()).toContain('side="right"');
   });
 
   it('a expandida é o padrão do provider, e a fechada usa o estado bindável', () => {
@@ -160,7 +160,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a composição de grupos traz busca, separador, contador e ações nomeadas', () => {
-    const saida = navigationSourceSidebarGroups();
+    const saida = navigationSidebarGroupsSource();
     expect(saida).toContain('<SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />');
     expect(saida).toContain('<SidebarSeparator />');
     expect(saida).toContain('<SidebarMenuBadge>{item.badge}</SidebarMenuBadge>');

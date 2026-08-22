@@ -3,9 +3,9 @@ import { useState } from "react";
 import { userEvent, within, expect, fn } from "storybook/test";
 import { ptBR } from "react-day-picker/locale";
 import {
-  ESTADOS_COM_TEXTO_LEGIVEL,
-  descreverContraste,
-  medirContrasteDoCalendario,
+  STATES_WITH_TEXT_LEGIVEL,
+  describeContrast,
+  calendarMeasureContrast,
 } from "@shared/testing/calendar-probe";
 import { Calendar } from "./calendar";
 import {
@@ -222,11 +222,11 @@ export const Range: Story = {
       // sexto do produto. Medido no escuro, as pontas do intervalo de uma stack
       // marcavam 1.18:1, porque uma regra de botão mais específica vencia o fundo
       // `--primary` — o número do dia sumia. Aritmética, não olhômetro.
-      const medidas = medirContrasteDoCalendario(canvasElement).filter(
-        (m) => m.presente && ESTADOS_COM_TEXTO_LEGIVEL.includes(m.estado as never),
+      const medidas = calendarMeasureContrast(canvasElement).filter(
+        (m) => m.presente && STATES_WITH_TEXT_LEGIVEL.includes(m.estado as never),
       );
       await expect(medidas.length).toBeGreaterThan(0);
-      const reprovadas = medidas.filter((m) => (m.razao ?? 0) < 4.5).map(descreverContraste);
+      const reprovadas = medidas.filter((m) => (m.ratio ?? 0) < 4.5).map(describeContrast);
       await expect(reprovadas).toEqual([]);
     });
   },

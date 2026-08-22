@@ -853,12 +853,12 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
     return `${t('demonstration.labels.slide')} {index} ${t('demonstration.labels.of')} {total}`;
   });
 
-  protected rotuloDoSlide(posicao: number): string {
-    return `${t('demonstration.labels.slide')} ${posicao}`;
+  protected rotuloDoSlide(position: number): string {
+    return `${t('demonstration.labels.slide')} ${position}`;
   }
 
-  protected rotuloDoDot(posicao: number, total: number): string {
-    return `${t('demonstration.labels.goToSlide')} ${posicao} ${t('demonstration.labels.of')} ${total}`;
+  protected rotuloDoDot(position: number, total: number): string {
+    return `${t('demonstration.labels.goToSlide')} ${position} ${t('demonstration.labels.of')} ${total}`;
   }
 
   /**
@@ -869,8 +869,8 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
    * tecnologia assistiva, então nada é lido duas vezes, e a contenção é o que a
    * WCAG 2.5.3 (Label in Name, A) cobra de quem comanda por voz.
    */
-  protected rotuloVisivelDoDot(posicao: number): string {
-    return `${t('demonstration.labels.slide')} ${posicao}`;
+  protected rotuloVisivelDoDot(position: number): string {
+    return `${t('demonstration.labels.slide')} ${position}`;
   }
 
   /**
@@ -972,11 +972,11 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
 
   protected readonly doDontPairs = computed(() => {
     dict();
-    const pares: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
+    const pairs: [TemplateRef<unknown>, TemplateRef<unknown>][] = [
       [this.tplDoDont1Do(), this.tplDoDont1Dont()],
       [this.tplDoDont2Do(), this.tplDoDont2Dont()],
     ];
-    return pares.map(([doTpl, dontTpl], i) => ({
+    return pairs.map(([doTpl, dontTpl], i) => ({
       doLabel: tNav('common.do'),
       dontLabel: tNav('common.dont'),
       doCaption: toPlainText(t(`doDont.pair${i + 1}.do`)),

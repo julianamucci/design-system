@@ -36,9 +36,9 @@ export type RadioGroupArgs = {
 };
 
 const IMPORT_LABEL = 'import { Label } from "@/components/ui/label";';
-const IMPORT_GRUPO =
+const IMPORT_GROUP =
   'import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";';
-const IMPORTS = `${IMPORT_LABEL}\n${IMPORT_GRUPO}`;
+const IMPORTS = `${IMPORT_LABEL}\n${IMPORT_GROUP}`;
 
 /**
  * Uma opção: item e rótulo lado a lado, ligados pelo `id`. O prefixo do `id`
@@ -112,7 +112,7 @@ ${opcao('entrega', 'retirar', 'Retirar')}`,
  * duas linhas e deixaria de encostar na linha do rótulo, que é onde a pessoa
  * espera encontrá-lo.
  */
-export function radioGroupComDescricaoSource(): string {
+export function radioGroupWithDescriptionSource(): string {
   const item = (valor: string, titulo: string, descricao: string) =>
     `<div className="nds-cluster" data-align="start" data-spacing="sm">
   <RadioGroupItem value="${valor}" id="descricao-${valor}" className="nds-mt-0-5" />
@@ -138,7 +138,7 @@ ${item('retirar', 'Retirar na loja', 'Disponível em 2 horas após confirmação
  * `defaultChecked` no item: é o grupo que conhece a exclusão mútua, e marcar
  * dois itens de dentro deixaria o estado inicial ambíguo.
  */
-export function radioGroupMarcadoSource(): string {
+export function radioGroupCheckedSource(): string {
   return jsxSnippet(
     IMPORTS,
     grupo(
@@ -154,7 +154,7 @@ ${opcao('marcado', 'pix', 'Pix')}`,
  * que a pessoa ouve tem que valer opção por opção — a raiz sozinha descreve o
  * conjunto, não o botão em que o foco parou.
  */
-export function radioGroupDesabilitadoSource(): string {
+export function radioGroupDisabledSource(): string {
   return jsxSnippet(
     IMPORTS,
     grupo(
@@ -170,7 +170,7 @@ ${opcao('bloqueado', 'pix', 'Pix', ' disabled')}`,
  * 50% é a única pista de quem enxerga, e não chega a quem ouve nem a quem não
  * distingue o contraste.
  */
-export function radioGroupItemDesabilitadoSource(): string {
+export function radioGroupItemDisabledSource(): string {
   return jsxSnippet(
     IMPORTS,
     grupo(
@@ -236,7 +236,7 @@ ${indentar(
  * espera uma escolha porque um rádio não tem estado "nenhum" depois do primeiro
  * clique — deixá-lo enviar vazio seria a única forma de errar aqui.
  */
-export function radioGroupEmFormularioSource(): string {
+export function formRadioGroupSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 import { Button } from "@/components/ui/button";

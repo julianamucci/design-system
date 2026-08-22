@@ -4,8 +4,8 @@ import { Skeleton } from "./skeleton";
 import { AspectRatio } from "./aspect-ratio";
 import {
   skeletonCardDePerfilSource,
-  skeletonImagemEmProporcaoSource,
-  skeletonListaSource,
+  ratioSkeletonImageSource,
+  skeletonListSource,
   skeletonParagrafoSource,
   skeletonSource,
 } from "./skeleton.source";
@@ -61,7 +61,7 @@ export const ProfileCard: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const regiao = canvasElement.querySelector<HTMLElement>('[role="status"]')!;
-    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+    const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step("A região tem papel, estado e nome", async () => {
       await expect(regiao).toHaveAttribute("aria-busy", "true");
@@ -69,15 +69,15 @@ export const ProfileCard: Story = {
     });
 
     await step("Avatar + duas linhas, todos fora da árvore de acessibilidade", async () => {
-      await expect(pecas).toHaveLength(3);
-      for (const p of pecas) await expect(p).toHaveAttribute("aria-hidden", "true");
+      await expect(parts).toHaveLength(3);
+      for (const p of parts) await expect(p).toHaveAttribute("aria-hidden", "true");
     });
 
     await step("O avatar é circular e as linhas têm larguras diferentes", async () => {
-      const avatar = pecas[0].getBoundingClientRect();
+      const avatar = parts[0].getBoundingClientRect();
       await expect(Math.round(avatar.width)).toBe(Math.round(avatar.height));
-      await expect(pecas[1].getBoundingClientRect().width).toBeGreaterThan(
-        pecas[2].getBoundingClientRect().width,
+      await expect(parts[1].getBoundingClientRect().width).toBeGreaterThan(
+        parts[2].getBoundingClientRect().width,
       );
     });
   },
@@ -89,7 +89,7 @@ export const ListWithAvatar: Story = {
     docs: {
       // Cinco itens numa lista, com a região ocupada na lista inteira — um aviso
       // de carregamento por item seria ruído para quem ouve.
-      source: { transform: skeletonListaSource },
+      source: { transform: skeletonListSource },
       description: {
         story: "Cinco itens com avatar pequeno e duas linhas — padrão de carregamento de lista.",
       },
@@ -116,7 +116,7 @@ export const ListWithAvatar: Story = {
   ),
   play: async ({ canvasElement, step }) => {
     const lista = canvasElement.querySelector<HTMLElement>("ul")!;
-    const pecas = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
+    const parts = [...canvasElement.querySelectorAll<HTMLElement>('[data-slot="skeleton"]')];
 
     await step("A lista inteira é uma região ocupada, com nome", async () => {
       await expect(lista).toHaveAttribute("aria-busy", "true");
@@ -125,14 +125,14 @@ export const ListWithAvatar: Story = {
     });
 
     await step("Cinco itens de três peças, todas ocultas ao leitor", async () => {
-      await expect(pecas).toHaveLength(15);
-      for (const p of pecas) await expect(p).toHaveAttribute("aria-hidden", "true");
+      await expect(parts).toHaveLength(15);
+      for (const p of parts) await expect(p).toHaveAttribute("aria-hidden", "true");
     });
 
     await step("O avatar pequeno é menor que o avatar padrão", async () => {
       // `data-size="sm"` só entrega se a folha responder: sem isso o item da
       // lista sai com o mesmo bloco do card de perfil.
-      const avatar = pecas[0].getBoundingClientRect();
+      const avatar = parts[0].getBoundingClientRect();
       await expect(Math.round(avatar.width)).toBe(Math.round(avatar.height));
       await expect(avatar.width).toBeGreaterThan(0);
     });
@@ -145,7 +145,7 @@ export const ImageInAspectRatio: Story = {
     docs: {
       // Quem estabelece a caixa é a proporção: o placeholder ocupa exatamente o
       // espaço da imagem que vai chegar.
-      source: { transform: skeletonImagemEmProporcaoSource },
+      source: { transform: ratioSkeletonImageSource },
       description: {
         story: "Placeholder de imagem dentro de uma proporção 16/9 — quem define a caixa é o container.",
       },

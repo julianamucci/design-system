@@ -88,8 +88,8 @@ function listBlock(title: string, items: string[]): HTMLElement {
  * mesmo texto são dois controles indistinguíveis na lista do leitor de tela, e
  * era isso que a numeração "(1/2)" tapava.
  */
-function rotulos(...pares: string[]): string[] {
-  return pares.map((par) => `Redimensionar ${par} — use setas para ajustar`);
+function rotulos(...pairs: string[]): string[] {
+  return pairs.map((par) => `Redimensionar ${par} — use setas para ajustar`);
 }
 
 // ─── Stories ──────────────────────────────────────────────────────────────────

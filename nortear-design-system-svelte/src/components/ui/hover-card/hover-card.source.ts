@@ -207,7 +207,7 @@ ${indentar(MIOLOS[variant] ?? MIOLOS.default, 6)}
 // transform sem o estado de abertura.
 
 /** Variants/Default — a espera padrão, que não se escreve no markup. */
-export function hoverCardEsperaPadraoSource(): string {
+export function hoverCardWaitDefaultSource(): string {
   return hoverCardSource('', { args: { variant: 'default' } });
 }
 
@@ -250,7 +250,7 @@ export function hoverCardMetricaSource(): string {
 }
 
 /** Compositions/ExtraPanelClass — a largura de uma instância só, pela classe extra. */
-export function hoverCardClasseExtraSource(): string {
+export function hoverCardClassNameExtraSource(): string {
   return hoverCardSource('', { args: { variant: 'extraClass' } });
 }
 

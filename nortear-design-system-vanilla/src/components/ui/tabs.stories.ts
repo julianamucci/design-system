@@ -41,7 +41,7 @@ type Story = StoryObj<TabsArgs>;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const ROTULOS: Record<string, string> = {
+const LABELS: Record<string, string> = {
   overview: 'Visão geral',
   properties: 'Propriedades',
   examples: 'Exemplos',
@@ -49,9 +49,9 @@ const ROTULOS: Record<string, string> = {
 
 function buildItems(): TabsItemDef[] {
   return [
-    { value: 'overview',   label: ROTULOS.overview,   content: makePanel('Conteúdo da visão geral.') },
-    { value: 'properties', label: ROTULOS.properties, content: makePanel('Lista de propriedades.') },
-    { value: 'examples',   label: ROTULOS.examples,   content: makePanel('Exemplos de uso.') },
+    { value: 'overview',   label: LABELS.overview,   content: makePanel('Conteúdo da visão geral.') },
+    { value: 'properties', label: LABELS.properties, content: makePanel('Lista de propriedades.') },
+    { value: 'examples',   label: LABELS.examples,   content: makePanel('Exemplos de uso.') },
   ];
 }
 
@@ -83,10 +83,10 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const lista = canvas.getByRole('tablist');
     const abas = canvas.getAllByRole('tab');
-    const inicial = canvas.getByRole('tab', { name: ROTULOS[args.defaultValue] });
-    const propriedades = canvas.getByRole('tab', { name: ROTULOS.properties });
-    const exemplos = canvas.getByRole('tab', { name: ROTULOS.examples });
-    const primeira = canvas.getByRole('tab', { name: ROTULOS.overview });
+    const inicial = canvas.getByRole('tab', { name: LABELS[args.defaultValue] });
+    const propriedades = canvas.getByRole('tab', { name: LABELS.properties });
+    const exemplos = canvas.getByRole('tab', { name: LABELS.examples });
+    const primeira = canvas.getByRole('tab', { name: LABELS.overview });
 
     await step('Os três papéis do padrão tabs estão no DOM', async () => {
       // A asserção já existia e passava — com a story escrevendo o atributo por

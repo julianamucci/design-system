@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect } from 'storybook/test';
-import { alvosAbaixoDoMinimo } from '@shared/testing/pagination-probe';
+import { minimumTargetsBelow } from '@shared/testing/pagination-probe';
 import { createPagination } from './pagination';
 import { wrap } from './pagination.fixtures';
 import { paginationSource, paginationSourceWith } from './pagination.source';
 
-const ROTULO_ANTERIOR = 'Ir para a página anterior';
-const ROTULO_PROXIMA = 'Ir para a próxima página';
+const LABEL_PREVIOUS = 'Ir para a página anterior';
+const LABEL_NEXT = 'Ir para a próxima página';
 
 const meta: Meta = {
   tags: ['navigation'],
@@ -134,12 +134,12 @@ export const Directional: Story = {
     await step('Os controles de direção têm rótulo em português', async () => {
       // accessibility.item5 — o ícone não tem texto: sem o rótulo, o controle
       // fica mudo. Antes daqui ele saía como "Go to previous page".
-      const anterior = canvas.getByRole('link', { name: ROTULO_ANTERIOR });
-      const proxima = canvas.getByRole('link', { name: ROTULO_PROXIMA });
+      const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+      const next = canvas.getByRole('link', { name: LABEL_NEXT });
       await expect(anterior).toHaveClass('nds-pagination-icon');
-      await expect(proxima).toHaveClass('nds-pagination-icon');
+      await expect(next).toHaveClass('nds-pagination-icon');
       await expect(anterior.querySelector('svg')).not.toBeNull();
-      await expect(proxima.querySelector('svg')).not.toBeNull();
+      await expect(next.querySelector('svg')).not.toBeNull();
     });
 
     await step('O ícone é decoração, não conteúdo', async () => {
@@ -150,7 +150,7 @@ export const Directional: Story = {
 
     await step('Todo controle alcança o alvo de toque mínimo', async () => {
       // accessibility.item6 — WCAG 2.5.8 pede 24×24 CSS px.
-      await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe('[]');
+      await expect(JSON.stringify(minimumTargetsBelow(canvasElement))).toBe('[]');
     });
   },
 };

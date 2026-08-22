@@ -8,7 +8,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -45,7 +45,7 @@ export type ChartSnippetOptions = {
   emptyLabel?: string;
 };
 
-const MESES = "const meses = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];";
+const MONTHS = "const meses = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];";
 
 /** Uso canônico: uma série simples, descrita, num bloco de altura definida. */
 const PADRAO: ChartSnippetOptions = {
@@ -58,7 +58,7 @@ const PADRAO: ChartSnippetOptions = {
 /** O bloco de dado e as opções que o entregam à fábrica. */
 function snippetData(o: ChartSnippetOptions): {
   bloco?: string;
-  pares: Array<[string, string | undefined]>;
+  pairs: Array<[string, string | undefined]>;
 } {
   const serie = (nome: string, valores: string, cor?: string) =>
     `  { name: ${texto(nome)}, data: ${valores}${cor ? `, color: ${texto(cor)}` : ''} },`;
@@ -67,17 +67,17 @@ function snippetData(o: ChartSnippetOptions): {
     case 'umPonto':
       return {
         bloco: "const acessos = [{ label: 'Jan', value: 186 }];",
-        pares: [['data', 'acessos']],
+        pairs: [['data', 'acessos']],
       };
 
     case 'serieUnica':
       return {
-        bloco: `${MESES}
+        bloco: `${MONTHS}
 
 const acessos = [
 ${serie('Desktop', '[186, 305, 237, 73, 209, 214]', o.color)}
 ];`,
-        pares: [
+        pairs: [
           ['xAxis', 'meses'],
           ['series', 'acessos'],
         ],
@@ -85,13 +85,13 @@ ${serie('Desktop', '[186, 305, 237, 73, 209, 214]', o.color)}
 
     case 'multi':
       return {
-        bloco: `${MESES}
+        bloco: `${MONTHS}
 
 const acessosPorDispositivo = [
 ${serie('Desktop', '[186, 305, 237, 73, 209, 214]', o.color)}
 ${serie('Mobile', '[120, 190, 165, 98, 174, 158]')}
 ];`,
-        pares: [
+        pairs: [
           ['xAxis', 'meses'],
           ['series', 'acessosPorDispositivo'],
         ],
@@ -104,13 +104,13 @@ ${serie('Mobile', '[120, 190, 165, 98, 174, 158]')}
   { label: 'Mobile', value: 420 },
   { label: 'Tablet', value: 180 },
 ];`,
-        pares: [['data', 'acessosPorDispositivo']],
+        pairs: [['data', 'acessosPorDispositivo']],
       };
 
     case 'vazio':
       // Sem série com dado o bloco troca o desenho pela frase — e não se
       // anuncia como imagem, porque não há imagem para narrar.
-      return { bloco: MESES, pares: [['xAxis', 'meses'], ['series', '[]']] };
+      return { bloco: MONTHS, pairs: [['xAxis', 'meses'], ['series', '[]']] };
 
     default:
       return {
@@ -122,17 +122,17 @@ ${serie('Mobile', '[120, 190, 165, 98, 174, 158]')}
   { label: 'May', value: 209 },
   { label: 'Jun', value: 214 },
 ];`,
-        pares: [['data', 'acessosMensais']],
+        pairs: [['data', 'acessosMensais']],
       };
   }
 }
 
 /** A chamada real de `createChart` com as opções da story. */
 export function chartSnippet(o: ChartSnippetOptions = {}): string {
-  const { bloco, pares } = snippetData(o);
+  const { bloco, pairs } = snippetData(o);
 
   const linhas = opcoes([
-    ...pares,
+    ...pairs,
     ['type', o.type && o.type !== 'bar' ? texto(o.type) : undefined],
     ['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined],
     ['title', o.title ? texto(o.title) : undefined],
@@ -144,7 +144,7 @@ export function chartSnippet(o: ChartSnippetOptions = {}): string {
   ]);
 
   return snippet(
-    importar('chart', 'createChart'),
+    importing('chart', 'createChart'),
     bloco,
     `const grafico = ${chamada('createChart', linhas)};`,
     montar('grafico'),
@@ -182,10 +182,10 @@ export type ChartEmCardSnippetOptions = ChartSnippetOptions & {
  * continua sendo o `aria-label`.
  */
 export function chartEmCardSnippet(o: ChartEmCardSnippetOptions = {}): string {
-  const { bloco, pares } = snippetData(o);
+  const { bloco, pairs } = snippetData(o);
 
   const linhas = opcoes([
-    ...pares,
+    ...pairs,
     ['type', o.type && o.type !== 'bar' ? texto(o.type) : undefined],
     ['height', o.height ? String(o.height) : undefined],
     ['aria-label', o['aria-label'] ? texto(o['aria-label']) : undefined],
@@ -194,7 +194,7 @@ export function chartEmCardSnippet(o: ChartEmCardSnippetOptions = {}): string {
   return snippet(
     [
       `import {\n  createCard,\n  createCardContent,\n  createCardDescription,\n  createCardHeader,\n  createCardTitle,\n} from '@/components/ui/card';`,
-      importar('chart', 'createChart'),
+      importing('chart', 'createChart'),
     ].join('\n'),
     bloco,
     `const card = createCard({ class: 'nds-w-sm' });

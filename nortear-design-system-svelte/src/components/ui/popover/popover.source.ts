@@ -31,7 +31,7 @@ function importDoPopover(nomes: string[]): string {
   return `import {\n${nomes.map((n) => `  ${n},`).join('\n')}\n} from "@/components/ui/popover";`;
 }
 
-const CABECALHO = ['PopoverHeader', 'PopoverTitle', 'PopoverDescription'];
+const HEADER = ['PopoverHeader', 'PopoverTitle', 'PopoverDescription'];
 
 function cabecalho(title: string, description: string): string {
   return `    <PopoverHeader>
@@ -49,7 +49,7 @@ ${indentacao}  {/snippet}
 ${indentacao}</PopoverClose>`;
 }
 
-type Peca = {
+type Part = {
   /** Nomes vindos de `@/components/ui/popover`, além dos três da base. */
   nomes: string[];
   /** Linhas de import de outros componentes do design system. */
@@ -60,7 +60,7 @@ type Peca = {
   markup: string;
 };
 
-function peca(a: PopoverArgs): Peca {
+function part(a: PopoverArgs): Part {
   const head = cabecalho(a.title, a.description);
 
   if (a.variant === 'default') {
@@ -74,7 +74,7 @@ function peca(a: PopoverArgs): Peca {
 
   if (a.variant === 'form') {
     return {
-      nomes: [...CABECALHO, 'PopoverClose'],
+      nomes: [...HEADER, 'PopoverClose'],
       externos: [
         `import { Button } from "@/components/ui/button";`,
         `import { Input } from "@/components/ui/input";`,
@@ -106,7 +106,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
 
   if (a.variant === 'tableFilter') {
     return {
-      nomes: CABECALHO,
+      nomes: HEADER,
       externos: [`import { Button } from "@/components/ui/button";`],
       estado: '',
       markup: `${head}
@@ -135,7 +135,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
     // Cada amostra escrita por extenso, com nome acessível próprio: a cor não é
     // o nome, e sem `aria-label` o botão fica sem nome nenhum.
     return {
-      nomes: CABECALHO,
+      nomes: HEADER,
       externos: [],
       estado: '',
       markup: `${head}
@@ -152,7 +152,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
 
   if (a.variant === 'quickSettings') {
     return {
-      nomes: CABECALHO,
+      nomes: HEADER,
       externos: [],
       estado: '',
       markup: `${head}
@@ -174,7 +174,7 @@ ${fechar(a.cancelLabel, 'ghost', '        ')}
   }
 
   return {
-    nomes: [...CABECALHO, 'PopoverClose'],
+    nomes: [...HEADER, 'PopoverClose'],
     externos: [`import { Button } from "@/components/ui/button";`],
     estado: '',
     markup: `${head}
@@ -208,7 +208,7 @@ export function popoverSource(_gerado?: string, ctx?: { args?: Partial<PopoverAr
     ...ctx?.args,
   };
 
-  const { nomes, externos, estado, markup } = peca(a);
+  const { nomes, externos, estado, markup } = part(a);
   const aberto = Boolean(a.open || a.defaultOpen);
 
   const script = [

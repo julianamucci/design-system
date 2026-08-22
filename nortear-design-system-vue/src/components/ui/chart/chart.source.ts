@@ -36,7 +36,7 @@ export const HEIGHT_PLAYGROUND = 300;
 const LABEL_PLAYGROUND = 'Acessos mensais no desktop, de janeiro a junho';
 
 /** Import do design system, com os builders que cada exemplo usa. */
-function importar(...builders: string[]): string {
+function importing(...builders: string[]): string {
   return `import { ChartContainer, ${builders.join(', ')} } from '@/components/ui/chart'`;
 }
 
@@ -104,7 +104,7 @@ function container(opcoes: {
  */
 export const chartSource: SourceTransform<ChartArgs> = (_gerado, ctx) =>
   vueSnippet(
-    `${importar('buildBarOption')}\n\n${MONTHS_SEMESTER}\n${SERIE_SEMESTER}`,
+    `${importing('buildBarOption')}\n\n${MONTHS_SEMESTER}\n${SERIE_SEMESTER}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
       altura: typeof ctx?.args?.height === 'number' ? ctx.args.height : HEIGHT_PLAYGROUND,
@@ -117,7 +117,7 @@ export const chartSource: SourceTransform<ChartArgs> = (_gerado, ctx) =>
 /** Barras: comparação entre categorias discretas, uma série. */
 export function chartBarSource(): string {
   return vueSnippet(
-    `${importar('buildBarOption')}\n\n${MONTHS_SEMESTER}\n${SERIE_SEMESTER}`,
+    `${importing('buildBarOption')}\n\n${MONTHS_SEMESTER}\n${SERIE_SEMESTER}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
       altura: 240,
@@ -129,7 +129,7 @@ export function chartBarSource(): string {
 /** Linhas: tendência contínua, e com duas séries a legenda entra sozinha. */
 export function chartLineSource(): string {
   return vueSnippet(
-    `${importar('buildLineOption')}\n\n${MONTHS_SEMESTER}\n${SERIES_SEMESTER}`,
+    `${importing('buildLineOption')}\n\n${MONTHS_SEMESTER}\n${SERIES_SEMESTER}`,
     container({
       option: 'buildLineOption({ xAxis: meses, series })',
       altura: 260,
@@ -141,7 +141,7 @@ export function chartLineSource(): string {
 /** Área: a mesma linha com a região sob ela preenchida, para dar volume. */
 export function chartAreaSource(): string {
   return vueSnippet(
-    `${importar('buildAreaOption')}\n\n${MONTHS_SEMESTER}\n${SERIES_SEMESTER}`,
+    `${importing('buildAreaOption')}\n\n${MONTHS_SEMESTER}\n${SERIES_SEMESTER}`,
     container({
       option: 'buildAreaOption({ xAxis: meses, series })',
       altura: 260,
@@ -156,7 +156,7 @@ export function chartAreaSource(): string {
  */
 export function chartPieSource(): string {
   return vueSnippet(
-    `${importar('buildPieOption')}\n\n${DISPOSITIVOS}`,
+    `${importing('buildPieOption')}\n\n${DISPOSITIVOS}`,
     container({
       option: 'buildPieOption({ data: dispositivos })',
       altura: 280,
@@ -179,7 +179,7 @@ export function chartWithCardSource(): string {
     rotulo: 'Acessos mensais no desktop, de janeiro a junho',
   });
   return vueSnippet(
-    `${importar('buildBarOption')}
+    `${importing('buildBarOption')}
 import {
   Card,
   CardContent,
@@ -209,9 +209,9 @@ ${indentar(grafico, 4)}
  * título do option e palavra genérica, e aqui é o degrau do meio que nomeia o
  * desenho.
  */
-export function chartTituloNoDesenhoSource(): string {
+export function designChartTitleSource(): string {
   return vueSnippet(
-    `${importar('buildBarOption')}\n\n${MONTHS_SEMESTER}\n${SERIE_SEMESTER}`,
+    `${importing('buildBarOption')}\n\n${MONTHS_SEMESTER}\n${SERIE_SEMESTER}`,
     container({
       option: "buildBarOption({ xAxis: meses, series, title: 'Vendas mensais' })",
       altura: 260,
@@ -226,7 +226,7 @@ export function chartTituloNoDesenhoSource(): string {
  */
 export function chartWithDicaSource(): string {
   return vueSnippet(
-    `${importar('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
+    `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
       altura: 240,
@@ -236,9 +236,9 @@ export function chartWithDicaSource(): string {
 }
 
 /** Três séries: a legenda entra sozinha assim que há mais de uma. */
-export function chartComLegendaSource(): string {
+export function chartWithCaptionSource(): string {
   return vueSnippet(
-    `${importar('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_3}`,
+    `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_3}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
       altura: 280,
@@ -250,7 +250,7 @@ export function chartComLegendaSource(): string {
 /** Multi-série com título no próprio option — o caso típico de painel. */
 export function chartMultiSerieSource(): string {
   return vueSnippet(
-    `${importar('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_3}`,
+    `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_3}`,
     container({
       option: "buildBarOption({ xAxis: meses, series, title: 'Acessos por dispositivo' })",
       altura: 300,
@@ -265,9 +265,9 @@ export function chartMultiSerieSource(): string {
  * Sem rótulo de propósito — sem desenho não há imagem a nomear, e o container
  * larga o `role="img"` para que a frase seja lida como conteúdo.
  */
-export function chartVazioSource(): string {
+export function chartEmptySource(): string {
   return vueSnippet(
-    importar('buildBarOption'),
+    importing('buildBarOption'),
     container({
       option: 'buildBarOption({ data: [] })',
       altura: 200,
@@ -279,7 +279,7 @@ export function chartVazioSource(): string {
 /** Uma série só: a legenda não aparece, porque não há o que comparar. */
 export function chartSerieUnicaSource(): string {
   return vueSnippet(
-    `${importar('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
+    `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
       altura: 240,
@@ -291,7 +291,7 @@ export function chartSerieUnicaSource(): string {
 /** Duas séries: legenda automática e trama por série (WCAG 1.4.1). */
 export function chartDuasSeriesSource(): string {
   return vueSnippet(
-    `${importar('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_2}`,
+    `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_2}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
       altura: 280,
@@ -305,7 +305,7 @@ export function chartDuasSeriesSource(): string {
  * o container repinta sozinho quando a classe do documento muda. Não há prop de
  * tema a passar — o que o exemplo ensina é que não é preciso passar nenhuma.
  */
-export function themeSourceChartTokens(): string {
+export function themeChartTokensSource(): string {
   const barras = container({
     option: 'buildBarOption({ xAxis: meses, series })',
     altura: 260,
@@ -317,7 +317,7 @@ export function themeSourceChartTokens(): string {
     rotulo: 'Acessos mensais por dispositivo, em linhas',
   });
   return vueSnippet(
-    `${importar('buildBarOption', 'buildLineOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_2}`,
+    `${importing('buildBarOption', 'buildLineOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIES_QUADRIMESTRE_2}`,
     `<div class="nds-stack">
 ${indentar(barras, 2)}
 ${indentar(linhas, 2)}
@@ -332,7 +332,7 @@ ${indentar(linhas, 2)}
  */
 export function chartContrastSource(): string {
   return vueSnippet(
-    `${importar('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
+    `${importing('buildBarOption')}\n\n${MONTHS_QUADRIMESTRE}\n${SERIE_QUADRIMESTRE}`,
     container({
       option: 'buildBarOption({ xAxis: meses, series })',
       altura: 260,

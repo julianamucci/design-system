@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect, waitFor, within } from 'storybook/test';
 import { Progress } from './index';
 import {
-  animacaoDoIndicador,
+  indicadorAnimation,
   indicadorDoProgresso,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
 import {
-  progressCarregandoSource,
+  progressLoadingSource,
   progressConcluidoSource,
   progressProcessandoSource,
   progressZeroSource,
@@ -68,7 +68,7 @@ export const Loading: Story = {
     docs: {
       // O meio do caminho traz o par rótulo + porcentagem viva, que a barra nua
       // do meta não tem — e é ele que repete o valor para quem enxerga a tela.
-      source: { transform: progressCarregandoSource },
+      source: { transform: progressLoadingSource },
     },
   },
   render: () => ({
@@ -175,7 +175,7 @@ export const Indeterminate: Story = {
       // pelo nome do keyframes do design system, é o que dá para provar sem
       // sorte. Foi assim que se descobriu que não havia animação nenhuma.
       await waitFor(async () => {
-        await expect(animacaoDoIndicador(canvasElement)).toBe('nds-progress-indeterminate');
+        await expect(indicadorAnimation(canvasElement)).toBe('nds-progress-indeterminate');
       });
     });
 

@@ -2,7 +2,7 @@
 
 import {
   chamada,
-  importar,
+  importing,
   montar,
   opcoes,
   snippet,
@@ -83,7 +83,7 @@ conteudo.textContent = ${texto(o.childrenElement)};`
 rotulo.textContent = ${texto(o.label!)};`
     : undefined;
 
-  const composicao = withTextEIcone
+  const composition = withTextEIcone
     ? o.iconSide === 'right'
       ? `botao.append(rotulo, ${icone});`
       : `botao.append(${icone}, rotulo);`
@@ -92,14 +92,14 @@ rotulo.textContent = ${texto(o.label!)};`
       : undefined;
 
   return snippet(
-    importar('button', ...nomes),
+    importing('button', ...nomes),
     o.children
       ? '// Conteúdo em HTML é sanitizado antes de chegar ao DOM: a marcação\n// segura sobrevive e o vetor de execução é removido.'
       : undefined,
     contentBlock,
     labelBlock,
     `const botao = ${chamada('createButton', linhas)};`,
-    composicao,
+    composition,
     montar('botao'),
   );
 }
@@ -165,9 +165,9 @@ export type ActionsSnippetOptionsButtonPair = {
  * A ordem é o assunto — a primária fica à DIREITA em contexto ocidental —, e
  * por isso o snippet mostra o contêiner que as alinha, não dois botões soltos.
  */
-export function actionsSnippetButtonPair(o: ActionsSnippetOptionsButtonPair = {}): string {
+export function actionsButtonPairSnippet(o: ActionsSnippetOptionsButtonPair = {}): string {
   return snippet(
-    importar('button', 'createButton'),
+    importing('button', 'createButton'),
     `const acoes = document.createElement('div');
 acoes.className = 'nds-cluster';
 acoes.dataset.spacing = 'sm';
@@ -185,7 +185,7 @@ acoes.append(
 export function actionsSourceWithButtonPair(
   fixas: ActionsSnippetOptionsButtonPair = {},
 ): SourceTransform<ActionsSnippetOptionsButtonPair> {
-  return (_gerado, ctx) => actionsSnippetButtonPair({ ...ctx.args, ...fixas });
+  return (_gerado, ctx) => actionsButtonPairSnippet({ ...ctx.args, ...fixas });
 }
 
 // ─── Link com aparência de botão ──────────────────────────────────────────────
@@ -210,7 +210,7 @@ export function buttonAsLinkSnippet(o: ButtonAsLinkSnippetOptions = {}): string 
   if (o.size && o.size !== 'default') argumentos.push(texto(o.size));
 
   return snippet(
-    importar('button', 'btnClass'),
+    importing('button', 'btnClass'),
     `const link = document.createElement('a');
 link.href = ${texto(o.href ?? '/documentacao')};
 link.className = btnClass(${argumentos.join(', ')});

@@ -9,13 +9,13 @@ import {
   DropdownMenuTrigger,
 } from './index';
 import { Button } from '@/components/ui/button';
-import { waitForPortal, waitForPortalGone, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalGone, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
   dropdownMenuOpenSource,
-  dropdownMenuControladoSource,
+  dropdownMenuControlledSource,
   dropdownMenuClosedSource,
-  dropdownMenuItemDesabilitadoSource,
+  dropdownMenuItemDisabledSource,
   dropdownMenuMarkupMistaSource,
 } from './dropdown-menu.source';
 
@@ -27,7 +27,7 @@ const meta = {
     layout: 'centered',
     controls: { disable: true },
     actions: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       source: { transform: dropdownMenuClosedSource },
       description: {
@@ -157,7 +157,7 @@ export const Controlled: Story = {
   parameters: {
     // Entram o par prop+evento e o botão de fora que lê o mesmo estado — nada
     // disso está no snippet do meta.
-    docs: { source: { transform: dropdownMenuControladoSource } },
+    docs: { source: { transform: dropdownMenuControlledSource } },
   },
   render: () => ({
     components: componentes,
@@ -211,7 +211,7 @@ export const Controlled: Story = {
 export const ItemDisabled: Story = {
   parameters: {
     // A prop que tira o item da navegação não aparece no snippet do meta.
-    docs: { source: { transform: dropdownMenuItemDesabilitadoSource } },
+    docs: { source: { transform: dropdownMenuItemDisabledSource } },
   },
   render: () => ({
     components: componentes,

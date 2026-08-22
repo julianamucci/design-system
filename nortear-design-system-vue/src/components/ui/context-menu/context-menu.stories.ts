@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, userEvent, expect, waitFor, fn } from 'storybook/test';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 import ContextMenuDocs from '@/components/docs/ContextMenuDocs.vue';
-import { REGRA_GUARDA_DE_FOCO, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
+import { FOCUS_RULE_GUARDA, waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import {
   AREA_CLICK_DIREITO,
-  abrirPorGesto,
-  clicarFora,
-  fecharMenu,
+  gestoOpen,
+  clickOutside,
+  closeMenu,
 } from '@shared/testing/context-menu-area';
 import {
   ContextMenu,
@@ -32,7 +32,7 @@ const meta: Meta<ContextMenuArgs> = {
   tags: ['autodocs', 'overlay'],
   parameters: {
     layout: 'centered',
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: { page: withAutoDocsTab(ContextMenuDocs), source: { transform: contextMenuSource } },
   },
   argTypes: {
@@ -112,7 +112,7 @@ export const Playground: Story = {
     await step('O menu do navegador não aparece por cima do nosso', async () => {
       // `defaultPrevented` é a única prova possível aqui: o menu nativo não
       // existe no DOM. Sem esta chamada barrada, os dois menus se sobrepõem.
-      await fecharMenu();
+      await closeMenu();
       const evento = new MouseEvent('contextmenu', { bubbles: true, cancelable: true });
       area().dispatchEvent(evento);
       await waitFor(() => expect(evento.defaultPrevented).toBe(true));
@@ -121,14 +121,14 @@ export const Playground: Story = {
     await step('O botão direito abre o menu ONDE o ponteiro estava', async () => {
       // O popup não é ancorado no gatilho: ele nasce no ponto do gesto. É a
       // única diferença real em relação ao DropdownMenu.
-      const menu = await abrirPorGesto(area());
-      const caixaArea = area().getBoundingClientRect();
-      const caixaMenu = menu.getBoundingClientRect();
+      const menu = await gestoOpen(area());
+      const boxArea = area().getBoundingClientRect();
+      const boxMenu = menu.getBoundingClientRect();
       await expect(
-        Math.abs(caixaMenu.left - (caixaArea.left + caixaArea.width / 2)),
+        Math.abs(boxMenu.left - (boxArea.left + boxArea.width / 2)),
       ).toBeLessThan(24);
       await expect(
-        Math.abs(caixaMenu.top - (caixaArea.top + caixaArea.height / 2)),
+        Math.abs(boxMenu.top - (boxArea.top + boxArea.height / 2)),
       ).toBeLessThan(24);
       await expect(args.onOpenChange).toHaveBeenCalled();
     });
@@ -165,22 +165,22 @@ export const Playground: Story = {
     });
 
     await step('Escape fecha e devolve o foco à área', async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await userEvent.keyboard('{Escape}');
       await waitForPortalGone('menu');
       await waitFor(() => expect(document.activeElement).toBe(area()));
     });
 
     await step('Clique fora fecha', async () => {
-      await abrirPorGesto(area());
-      await clicarFora();
+      await gestoOpen(area());
+      await clickOutside();
       await waitForPortalGone('menu');
     });
 
     await step('A story termina com o menu ABERTO', async () => {
       // É o estado que o Chromatic fotografa e o axe varre — `visual.item1`
       // descreve o menu aberto, não a área vazia.
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       await expect(menu).toBeVisible();
     });
   },

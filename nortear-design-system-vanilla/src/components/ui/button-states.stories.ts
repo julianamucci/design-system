@@ -3,11 +3,11 @@ import type { Meta, StoryObj } from '@storybook/html-vite';
 import { fn, userEvent, within, expect } from 'storybook/test';
 import { createButton, createButtonIcon } from './button';
 import { buttonSource, buttonSourceWith } from './button.source';
-import { falhasDeAnel } from '@shared/testing/button-probe';
+import { ringFailures } from '@shared/testing/button-probe';
 
-type EstadosArgs = { onClick: (e: MouseEvent) => void };
+type StatesArgs = { onClick: (e: MouseEvent) => void };
 
-const meta: Meta<EstadosArgs> = {
+const meta: Meta<StatesArgs> = {
   tags: ['form'],
   parameters: {
     design: figmaDesign('button'),
@@ -26,7 +26,7 @@ const meta: Meta<EstadosArgs> = {
 };
 
 export default meta;
-type Story = StoryObj<EstadosArgs>;
+type Story = StoryObj<StatesArgs>;
 
 export const Disabled: Story = {
   render: (args) =>
@@ -126,7 +126,7 @@ export const FocusVisible: Story = {
       // do app nos seis pares tema×modo — a meia opacidade de `--ring` comia
       // o indicador inteiro. WCAG 1.4.11 (Non-text Contrast, AA) pede 3:1.
       // `matches(:focus-visible)` sozinho passava com o anel invisível.
-      await expect(falhasDeAnel(canvasElement, 3)).toEqual([]);
+      await expect(ringFailures(canvasElement, 3)).toEqual([]);
     });
   },
 };

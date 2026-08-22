@@ -4,9 +4,9 @@ import {
   toggleGroupContornoEspacadoSource,
   toggleGroupControlledCombinadoSource,
   toggleGroupControlledExclusivoSource,
-  toggleGroupDesabilitadoSource,
+  toggleGroupDisabledSource,
   toggleGroupExclusivoSource,
-  toggleGroupItemDesabilitadoSource,
+  toggleGroupItemDisabledSource,
   toggleGroupSource,
   toggleGroupEmptySource,
   toggleGroupVerticalSource,
@@ -18,8 +18,8 @@ const TODAS = [
   toggleGroupCombinadoSource,
   toggleGroupVerticalSource,
   toggleGroupEmptySource,
-  toggleGroupDesabilitadoSource,
-  toggleGroupItemDesabilitadoSource,
+  toggleGroupDisabledSource,
+  toggleGroupItemDisabledSource,
   toggleGroupControlledExclusivoSource,
   toggleGroupControlledCombinadoSource,
   toggleGroupContornoEspacadoSource,
@@ -71,8 +71,8 @@ describe('toggleGroupSource', () => {
   });
 
   it('o espião de onValueChange nunca vira código no painel', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = toggleGroupSource(undefined, { args: { onValueChange: espiao } as never });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = toggleGroupSource(undefined, { args: { onValueChange: spy } as never });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).not.toContain('onValueChange');
   });
@@ -81,8 +81,8 @@ describe('toggleGroupSource', () => {
     expect(toggleGroupSource(undefined, { args: { 'aria-label': 'Formatação' } })).toContain(
       'aria-label="Formatação"',
     );
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = toggleGroupSource(undefined, { args: { 'aria-label': espiao } as never });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = toggleGroupSource(undefined, { args: { 'aria-label': spy } as never });
     expect(saida).toContain('aria-label="Alinhamento do texto"');
     expect(saida).not.toContain('CORPO_DO_MOCK');
   });
@@ -124,11 +124,11 @@ describe('estados', () => {
   });
 
   it('desabilitar o grupo é uma prop no grupo', () => {
-    expect(toggleGroupDesabilitadoSource()).toMatch(/<ToggleGroup[\s\S]*?\n\s*disabled\n/);
+    expect(toggleGroupDisabledSource()).toMatch(/<ToggleGroup[\s\S]*?\n\s*disabled\n/);
   });
 
   it('desabilitar um item é uma prop no item, e os vizinhos seguem vivos', () => {
-    const saida = toggleGroupItemDesabilitadoSource();
+    const saida = toggleGroupItemDisabledSource();
     expect(saida).toContain('<ToggleGroupItem disabled value="center"');
     expect(saida).toContain('<ToggleGroupItem value="left"');
     expect(saida).toContain('<ToggleGroupItem value="right"');

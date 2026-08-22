@@ -5,9 +5,9 @@ import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angula
 import { NDS_SELECT } from './select';
 import { NdsButton } from './button';
 import { NdsLabel } from './label';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 
-const ESTADOS = [
+const STATES = [
   { value: 'sp', label: 'São Paulo' },
   { value: 'rj', label: 'Rio de Janeiro' },
   { value: 'mg', label: 'Minas Gerais' },
@@ -39,7 +39,7 @@ const meta: Meta = {
     layout: 'centered',
     // Sem `argTypes` nesta meta: sem isto o painel Controls abre vazio.
     controls: { disable: true },
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     docs: {
       description: {
         component:
@@ -82,7 +82,7 @@ export const InForm: Story = {
     const onSubmit = fn();
     return {
       props: {
-        estados: ESTADOS,
+        estados: STATES,
         onSubmit,
         aoEnviar: (evento: Event) => {
           evento.preventDefault();
@@ -172,7 +172,7 @@ export const WithReactiveForms: Story = {
       estado: new FormControl<string | null>(null, Validators.required),
     });
     return {
-      props: { estados: ESTADOS, form, onSubmit: fn() },
+      props: { estados: STATES, form, onSubmit: fn() },
       template: `
         <form class="nds-stack" data-spacing="sm" [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
           <label ndsLabel id="rotulo-estado-reativo">Estado</label>

@@ -3,9 +3,9 @@ import { within, expect, fn, userEvent, waitFor } from 'storybook/test';
 import { createContextMenu } from './context-menu';
 import { contextMenuSource, contextMenuSourceWith } from './context-menu.source';
 import {
-  abrirPorGesto,
-  criarAreaDeClique,
-  menuAberto,
+  gestoOpen,
+  clickCreateArea,
+  menuOpen,
 } from '@shared/testing/context-menu-area';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
@@ -38,7 +38,7 @@ const item = (valor: string) =>
 export const WithShortcut: Story = {
   render: () =>
     createContextMenu({
-      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
       items: [
         { type: 'item', label: 'Editar', value: 'editar', shortcut: '⌘E', onClick: fn() },
         { type: 'item', label: 'Desfazer', value: 'undo', shortcut: '⌘Z', onClick: fn() },
@@ -50,7 +50,7 @@ export const WithShortcut: Story = {
     const area = () => within(canvasElement).getByTestId('area');
 
     await step('O atalho vive dentro do item e é lido junto dele', async () => {
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       const atalhos = menu.querySelectorAll<HTMLElement>('[data-slot="context-menu-shortcut"]');
       await expect(atalhos.length).toBe(3);
       for (const atalho of atalhos) {
@@ -62,11 +62,11 @@ export const WithShortcut: Story = {
     await step('O atalho fica encostado à direita do rótulo', async () => {
       // É o alinhamento que faz a coluna de atalhos existir; sem ele o texto
       // sai colado no rótulo e a leitura visual se perde.
-      const caixaItem = item('editar').getBoundingClientRect();
-      const caixaAtalho = item('editar')
+      const boxItem = item('editar').getBoundingClientRect();
+      const boxShortcut = item('editar')
         .querySelector<HTMLElement>('[data-slot="context-menu-shortcut"]')!
         .getBoundingClientRect();
-      await expect(caixaItem.right - caixaAtalho.right).toBeLessThan(16);
+      await expect(boxItem.right - boxShortcut.right).toBeLessThan(16);
     });
   },
 };
@@ -90,7 +90,7 @@ export const WithCheckbox: Story = {
   },
   render: () =>
     createContextMenu({
-      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
       items: [
         { type: 'label', label: 'Visualização' },
         { type: 'checkbox', label: 'Mostrar grade', value: 'grade', checked: false },
@@ -101,7 +101,7 @@ export const WithCheckbox: Story = {
     const area = () => within(canvasElement).getByTestId('area');
 
     await step('O papel diz que tipo de escolha o item é', async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(item('grade').getAttribute('role')).toBe('menuitemcheckbox');
       await expect(item('reguas').getAttribute('aria-checked')).toBe('true');
     });
@@ -141,7 +141,7 @@ export const WithRadio: Story = {
   },
   render: () =>
     createContextMenu({
-      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
       radioValue: 'grid',
       items: [
         { type: 'label', label: 'Layout' },
@@ -154,7 +154,7 @@ export const WithRadio: Story = {
     const area = () => within(canvasElement).getByTestId('area');
 
     await step('O papel diz que a escolha é única', async () => {
-      await abrirPorGesto(area());
+      await gestoOpen(area());
       await expect(item('grid').getAttribute('role')).toBe('menuitemradio');
       await expect(item('list').getAttribute('role')).toBe('menuitemradio');
     });
@@ -199,7 +199,7 @@ export const WithSubmenu: Story = {
   },
   render: () =>
     createContextMenu({
-      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
       items: [
         { type: 'item', label: 'Editar', value: 'edit', onClick: fn() },
         { type: 'item', label: 'Duplicar', value: 'duplicate', onClick: fn() },
@@ -216,21 +216,21 @@ export const WithSubmenu: Story = {
     }),
   play: async ({ canvasElement, step }) => {
     const area = () => within(canvasElement).getByTestId('area');
-    const subGatilho = () =>
+    const subTrigger = () =>
       document.querySelector<HTMLElement>('[data-slot="context-menu-sub-trigger"]')!;
     const submenu = () =>
       document.querySelector<HTMLElement>('[data-slot="context-menu-sub-content"]');
 
     await step('O sub-gatilho diz que abre um menu', async () => {
-      await abrirPorGesto(area());
-      await expect(subGatilho().getAttribute('aria-haspopup')).toBe('menu');
-      await expect(subGatilho().getAttribute('aria-expanded')).toBe('false');
+      await gestoOpen(area());
+      await expect(subTrigger().getAttribute('aria-haspopup')).toBe('menu');
+      await expect(subTrigger().getAttribute('aria-expanded')).toBe('false');
     });
 
     await step('Seta direita abre o submenu ao lado do item que o dispara', async () => {
-      subGatilho().focus();
+      subTrigger().focus();
       await userEvent.keyboard('{ArrowRight}');
-      await waitFor(() => expect(subGatilho().getAttribute('aria-expanded')).toBe('true'));
+      await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('true'));
       await expect(
         submenu()!.querySelectorAll('[data-slot="context-menu-item"]').length,
       ).toBe(2);
@@ -239,15 +239,15 @@ export const WithSubmenu: Story = {
       // uma posição errada quebraria sem nenhum aviso.
       await waitFor(() =>
         expect(submenu()!.getBoundingClientRect().left).toBeGreaterThanOrEqual(
-          subGatilho().getBoundingClientRect().left,
+          subTrigger().getBoundingClientRect().left,
         ),
       );
     });
 
     await step('Seta esquerda fecha o submenu e devolve o foco ao sub-gatilho', async () => {
       await userEvent.keyboard('{ArrowLeft}');
-      await waitFor(() => expect(subGatilho().getAttribute('aria-expanded')).toBe('false'));
-      await expect(document.activeElement).toBe(subGatilho());
+      await waitFor(() => expect(subTrigger().getAttribute('aria-expanded')).toBe('false'));
+      await expect(document.activeElement).toBe(subTrigger());
     });
 
     await step('A story termina com o submenu ABERTO', async () => {
@@ -296,7 +296,7 @@ export const CompleteComposition: Story = {
   },
   render: () =>
     createContextMenu({
-      trigger: criarAreaDeClique('Clique com o botão direito aqui'),
+      trigger: clickCreateArea('Clique com o botão direito aqui'),
       radioValue: 'grid',
       items: [
         { type: 'label', label: 'Ações' },
@@ -327,7 +327,7 @@ export const CompleteComposition: Story = {
     await step('Marcação e escolha única convivem no mesmo menu', async () => {
       // `visual.item4` descreve exatamente esta convivência — é o que precisa
       // estar na tela quando o Chromatic fotografa.
-      const menu = await abrirPorGesto(area());
+      const menu = await gestoOpen(area());
       await expect(item('grade').getAttribute('role')).toBe('menuitemcheckbox');
       await expect(item('grid').getAttribute('role')).toBe('menuitemradio');
       await expect(
@@ -336,7 +336,7 @@ export const CompleteComposition: Story = {
     });
 
     await step('Os rótulos de grupo não são itens escolhíveis', async () => {
-      const rotulos = menuAberto()!.querySelectorAll<HTMLElement>(
+      const rotulos = menuOpen()!.querySelectorAll<HTMLElement>(
         '[data-slot="context-menu-label"]',
       );
       await expect(rotulos.length).toBe(3);

@@ -4,11 +4,11 @@ import { userEvent, within, expect } from "storybook/test";
 import { Plus, Trash2, ChevronRight, Download } from "lucide-react";
 import { Button, buttonVariants } from "./button";
 import {
-  buttonComoLinkSource,
-  buttonDestrutivoComIconeSource,
+  buttonAsLinkSource,
+  buttonDestructiveWithIconSource,
   buttonIconDireitaSource,
   buttonIconEsquerdaSource,
-  buttonParDeAcoesSource,
+  actionsButtonPairSource,
   buttonSomenteIconSource,
   buttonSource,
 } from "./button.source";
@@ -93,7 +93,7 @@ export const DestructiveIcon: Story = {
     docs: {
       // A combinação variante + ícone é o assunto; o `meta` teria a variante e
       // perderia o ícone.
-      source: { transform: buttonDestrutivoComIconeSource },
+      source: { transform: buttonDestructiveWithIconSource },
       description: {
         story: "Combinação de variante destrutiva com ícone. Use para ações irreversíveis como excluir.",
       },
@@ -143,7 +143,7 @@ export const ActionPair: Story = {
     docs: {
       // São DOIS botões e o contêiner que os espaça: um botão sozinho esconderia
       // a regra de ordem que a story existe para afirmar.
-      source: { transform: buttonParDeAcoesSource },
+      source: { transform: actionsButtonPairSource },
       description: {
         story: "Par de ações canônico: outline (cancelar) + default (confirmar). Primária sempre à direita em contexto ocidental.",
       },
@@ -176,7 +176,7 @@ export const AsLink: Story = {
     docs: {
       // Aqui não há componente Button: o que se ensina é o <a> real levando as
       // classes da variante, e um `<Button>` no painel diria o contrário.
-      source: { transform: buttonComoLinkSource },
+      source: { transform: buttonAsLinkSource },
       description: {
         story: "Link estilizado como botão. Aplique as classes do botão em um <a> real para preservar a semântica de link.",
       },

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
-import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, FOCUS_RULE_GUARDA } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
@@ -85,7 +85,7 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     // Sem `functional.item3` aqui: este item do contrato fala de ABRIR por
     // teclado, e esta story nasce aberta por `defaultOpen`, sem interação
     // nenhuma. A declaração era honesta na intenção e vazia no efeito.
@@ -133,9 +133,9 @@ export const Open: Story = {
       await waitFor(async () => {
         // O positioner mede DEPOIS de o painel entrar no DOM: no primeiro
         // quadro o retângulo ainda é (0,0), e ler daí é corrida.
-        const barraRect = barra.getBoundingClientRect();
+        const barRect = barra.getBoundingClientRect();
         const menuRect = menu.getBoundingClientRect();
-        await expect(menuRect.top).toBeGreaterThanOrEqual(barraRect.bottom - 1);
+        await expect(menuRect.top).toBeGreaterThanOrEqual(barRect.bottom - 1);
       });
     });
   },
@@ -145,7 +145,7 @@ export const Open: Story = {
 
 export const ItemDisabled: Story = {
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
   },
   argTypes: {
     // Função em `args` sem entrada aqui NÃO chega ao template no renderer
@@ -201,7 +201,7 @@ export const ItemDisabled: Story = {
 
 export const CheckboxChecked: Story = {
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['functional.item7'],
   },
   render: () => ({
@@ -270,7 +270,7 @@ export const CheckboxChecked: Story = {
 
 export const CheckboxIndeterminate: Story = {
   parameters: {
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
+    a11y: { config: { rules: [FOCUS_RULE_GUARDA] } },
     covers: ['functional.item9'],
   },
   render: () => ({

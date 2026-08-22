@@ -3,8 +3,8 @@ import {
   skeletonCardDePerfilSource,
   skeletonCirculoSource,
   skeletonStateSource,
-  skeletonImagemEmProporcaoSource,
-  textSourceSkeletonLines,
+  ratioSkeletonImageSource,
+  textSkeletonLinesSource,
   skeletonListWithAvatarSource,
   skeletonParagrafoSource,
   skeletonRetanguloSource,
@@ -63,7 +63,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('as linhas de texto decrescem — é o que faz o bloco parecer parágrafo', () => {
-    const saida = textSourceSkeletonLines();
+    const saida = textSkeletonLinesSource();
     expect(saida).toContain('data-width="full"');
     expect(saida).toContain('data-width="3-4"');
     expect(saida).toContain('data-width="1-2"');
@@ -90,7 +90,7 @@ describe('transforms das stories de variação, estado e composição', () => {
   });
 
   it('a imagem em proporção importa o AspectRatio junto do Skeleton', () => {
-    const saida = skeletonImagemEmProporcaoSource();
+    const saida = ratioSkeletonImageSource();
     expect(saida).toContain('from "@/components/ui/aspect-ratio"');
     expect(saida).toContain('<AspectRatio ratio={16 / 9}>');
     expect(saida).toContain('data-shape="fill"');

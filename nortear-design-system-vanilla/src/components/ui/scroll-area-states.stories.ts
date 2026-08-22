@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
-import { anelDeFocoDeclarado, transbordo } from '@shared/testing/scroll-area-probe';
+import { focusDeclaradoRing, transbordo } from '@shared/testing/scroll-area-probe';
 import { createScrollArea } from './scroll-area';
 import { buildList } from './scroll-area.fixtures';
 import {
@@ -112,9 +112,9 @@ export const Scrolling: Story = {
     )!;
 
     await step('O viewport chega deslocado e a página não se moveu', async () => {
-      const paginaAntes = document.scrollingElement?.scrollTop ?? 0;
+      const pageBefore = document.scrollingElement?.scrollTop ?? 0;
       await waitFor(() => expect(viewport.scrollTop).toBeGreaterThan(0));
-      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(paginaAntes);
+      await expect(document.scrollingElement?.scrollTop ?? 0).toBe(pageBefore);
     });
   },
 };
@@ -196,7 +196,7 @@ export const Focus: Story = {
       // accessibility.item3. `:focus-visible` depende da modalidade de entrada
       // que o navegador registrou, e evento sintético não a atualiza — a
       // verificação vai à folha, que é onde o anel é prometido.
-      await expect(anelDeFocoDeclarado()).toBe(true);
+      await expect(focusDeclaradoRing()).toBe(true);
     });
   },
 };

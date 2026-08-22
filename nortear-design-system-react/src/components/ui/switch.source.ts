@@ -33,7 +33,7 @@ export type SwitchArgs = {
   size: 'default' | 'sm';
 };
 
-const TAMANHOS = ['default', 'sm'] as const;
+const SIZES = ['default', 'sm'] as const;
 
 const IMPORTS = `import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";`;
@@ -69,7 +69,7 @@ export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
     propBool('defaultChecked', args.defaultChecked),
     propBool('disabled', args.disabled),
     propText('name', args.name),
-    propOption('size', args.size, TAMANHOS, 'default'),
+    propOption('size', args.size, SIZES, 'default'),
   );
   return jsxSnippet(
     IMPORTS,
@@ -84,7 +84,7 @@ export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
  * acessível, e quem usa leitor de tela ouviria a frase inteira toda vez que
  * passasse pelo controle. O nome é o rótulo; a frase é contexto para quem vê.
  */
-export function switchComDescricaoSource(): string {
+export function switchWithDescriptionSource(): string {
   return jsxSnippet(
     IMPORTS,
     `<div
@@ -124,7 +124,7 @@ export function switchLigadoSource(): string {
  * descreva neste arquivo. O rótulo continua ali: desabilitar o controle não é
  * motivo para esconder o que ele significa.
  */
-export function switchDesabilitadoSource(): string {
+export function switchDisabledSource(): string {
   return jsxSnippet(
     IMPORTS,
     pairLabelled('notificacoes-bloqueadas', 'Receber notificações por email', ' disabled'),

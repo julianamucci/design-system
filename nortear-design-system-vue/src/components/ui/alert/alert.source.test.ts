@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import {
-  alertClasseAdicionalSource,
-  alertComAcaoSource,
+  alertClassNameAdicionalSource,
+  alertWithActionSource,
   alertWithIconSource,
   alertCompletoSource,
-  alertContrasteSource,
+  alertContrastSource,
   alertDefaultSource,
   alertDestructiveSource,
-  keyboardSourceAlertDismissivel,
+  keyboardAlertDismissivelSource,
   alertDismissivelSource,
   alertInfoSource,
   alertInsercaoDinamicaSource,
   alertLayoutNoIconSource,
-  alertSemAnuncioSource,
-  alertSemIconeSource,
-  alertSemTituloSource,
+  alertNoAnnouncementSource,
+  alertNoIconSource,
+  alertNoTitleSource,
   alertSource,
   alertSuccessSource,
   alertWarningSource,
@@ -95,7 +95,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('fechar pelo teclado não tem nada a configurar', () => {
-    const saida = keyboardSourceAlertDismissivel();
+    const saida = keyboardAlertDismissivelSource();
     expect(saida).toContain('<Alert dismissible dismiss-label="Fechar alerta">');
     // O controle já é botão de verdade: um handler de tecla aqui ensinaria um
     // remendo que o componente não precisa.
@@ -104,7 +104,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o contraste empilha as cinco variantes sem ícone e sem cor no texto', () => {
-    const saida = alertContrasteSource();
+    const saida = alertContrastSource();
     expect(saida.match(/<Alert[ >]/g)).toHaveLength(5);
     expect(saida).toContain('<Alert>');
     expect(saida).toContain('<Alert variant="info">');
@@ -118,7 +118,7 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('sem título, o subcomponente some do import junto com a marcação', () => {
-    const saida = alertSemTituloSource();
+    const saida = alertNoTitleSource();
     expect(saida).not.toContain('AlertTitle');
     expect(saida).toContain(
       `import { Alert, AlertDescription } from '@/components/ui/alert'`,
@@ -126,7 +126,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('sem ícone, o import do ícone some junto', () => {
-    const saida = alertSemIconeSource();
+    const saida = alertNoIconSource();
     expect(saida).not.toContain('nds-icon');
     expect(saida).not.toContain('lucide-vue-next');
     expect(saida).toContain('<AlertTitle>Atenção</AlertTitle>');
@@ -140,7 +140,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o papel de nota contrasta com o padrão no mesmo exemplo', () => {
-    const saida = alertSemAnuncioSource();
+    const saida = alertNoAnnouncementSource();
     expect(saida).toContain('<Alert role="note">');
     // O segundo alerta fica SEM papel escrito: é ele que mostra o padrão.
     expect(saida).toContain('<Alert>');
@@ -158,7 +158,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('a ação mora no subcomponente próprio, com botão secundário', () => {
-    const saida = alertComAcaoSource();
+    const saida = alertWithActionSource();
     expect(saida).toContain(`import { Button } from '@/components/ui/button'`);
     expect(saida).toContain(
       `    <AlertAction>
@@ -168,7 +168,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a classe adicional aparece em cada subcomponente', () => {
-    const saida = alertClasseAdicionalSource();
+    const saida = alertClassNameAdicionalSource();
     expect(saida).toContain('<Alert class="nds-w-full">');
     expect(saida).toContain('<AlertTitle class="nds-w-full">');
     expect(saida).toContain('<AlertDescription class="nds-w-full">');

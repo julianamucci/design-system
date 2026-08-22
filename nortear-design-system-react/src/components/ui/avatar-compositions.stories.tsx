@@ -12,9 +12,9 @@ import {
 } from "./avatar";
 import {
   avatarWithDelaySource,
-  avatarComIconeSource,
-  avatarComStatusSource,
-  avatarEmGrupoSource,
+  avatarWithIconSource,
+  avatarWithStatusSource,
+  groupAvatarSource,
   avatarSoIniciaisSource,
   avatarSource,
 } from "./avatar.source";
@@ -83,12 +83,12 @@ export const WithImage: Story = {
     // nas stacks cujo fallback tem delayMs — ainda nem existia no DOM.
     await waitFor(async () => {
       const fallback = canvasElement.querySelector<HTMLElement>('[data-slot="avatar-fallback"]');
-      const foraDaArvore =
+      const arvoreOutside =
         !fallback ||
         getComputedStyle(fallback).display === "none" ||
         getComputedStyle(fallback).visibility === "hidden" ||
         fallback.getBoundingClientRect().height === 0;
-      await expect(foraDaArvore).toBe(true);
+      await expect(arvoreOutside).toBe(true);
     }, { timeout: 5000 });
   },
 };
@@ -117,7 +117,7 @@ export const WithIcon: Story = {
   // Ícone no lugar das iniciais: o rótulo no fallback é quem nomeia o avatar.
   parameters: {
     covers: ["visual.item2"],
-    docs: { source: { transform: avatarComIconeSource } },
+    docs: { source: { transform: avatarWithIconSource } },
   },
   render: () => (
     <Avatar>
@@ -142,7 +142,7 @@ export const Group: Story = {
   // mostraria a sobreposição, que é o que a story promete.
   parameters: {
     covers: ["functional.item5", "visual.item4"],
-    docs: { source: { transform: avatarEmGrupoSource } },
+    docs: { source: { transform: groupAvatarSource } },
   },
   render: () => (
     <AvatarGroup role="group" aria-label="Participantes">
@@ -190,7 +190,7 @@ export const WithStatus: Story = {
   // que o snippet do `meta` esconderia.
   parameters: {
     covers: ["visual.item4"],
-    docs: { source: { transform: avatarComStatusSource } },
+    docs: { source: { transform: avatarWithStatusSource } },
   },
   render: () => (
     <Avatar>

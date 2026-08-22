@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, fn } from 'storybook/test';
 import { NdsSlider } from './slider';
-import { anelDeFocoAssentado, anelEmRepouso } from '@shared/testing/slider-probe';
+import { focusAssentadoRing, restRing } from '@shared/testing/slider-probe';
 
 const meta: Meta = {
   title: 'UI/Slider/States',
@@ -69,8 +69,8 @@ export const FocusVisible: Story = {
     template: `<div ndsSlider [value]="[50]" aria-label="Volume"></div>`,
   }),
   play: async ({ canvasElement, step }) => {
-    const alcaDe = () => canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
-    const repouso = await anelEmRepouso(alcaDe());
+    const handleOf = () => canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
+    const repouso = await restRing(handleOf());
 
     await step('O foco por teclado pousa no input da alça', async () => {
       // O anel de foco sai de `.nds-slider-thumb:has(input:focus-visible)`: quem
@@ -104,7 +104,7 @@ export const FocusVisible: Story = {
       // A alça transiciona o anel em ~120ms: lido no instante seguinte ao Tab,
       // `getComputedStyle` devolve o valor de PARTIDA, igual ao repouso, e a
       // asserção reprovava um anel que existe. Espera assentar antes de ler.
-      const focada = await anelDeFocoAssentado(alcaDe(), repouso);
+      const focada = await focusAssentadoRing(handleOf(), repouso);
       await expect(focada.sombra !== repouso.sombra || focada.borda !== repouso.borda).toBe(true);
       await expect(focada.sombra).not.toBe('none');
     });
@@ -137,8 +137,8 @@ export const Drag: Story = {
     const trilho = control.querySelector<HTMLElement>('[data-slot="slider-track"]')!;
     const caixa = trilho.getBoundingClientRect();
     const y = caixa.top + caixa.height / 2;
-    const espiaoMudanca = args.onValueChange as unknown as ReturnType<typeof fn>;
-    const espiaoCommit = args.onValueCommitted as unknown as ReturnType<typeof fn>;
+    const spyChange = args.onValueChange as unknown as ReturnType<typeof fn>;
+    const spyCommit = args.onValueCommitted as unknown as ReturnType<typeof fn>;
 
     await step('Arrastar sobre o trilho move o valor e avisa a cada movimento', async () => {
       const input = canvasElement.querySelector<HTMLInputElement>(
@@ -147,8 +147,8 @@ export const Drag: Story = {
 
       // Limpa antes de medir: no replay o espião chega com as chamadas da
       // rodada anterior, e a asserção passaria sem o arrasto ter movido nada.
-      espiaoMudanca.mockClear();
-      espiaoCommit.mockClear();
+      spyChange.mockClear();
+      spyCommit.mockClear();
 
       // userEvent.pointer, e não PointerEvent construído à mão: o primitivo
       // chama `setPointerCapture` no pointerdown, e captura só existe para um
@@ -168,7 +168,7 @@ export const Drag: Story = {
       await expect(Number(input.value)).toBeGreaterThan(50);
       // O item de contrato fala do CALLBACK contínuo, não só do valor: sem esta
       // asserção o espião existia na story e ninguém o consultava.
-      await expect(espiaoMudanca).toHaveBeenCalled();
+      await expect(spyChange).toHaveBeenCalled();
     });
 
     await step('O commit é um por interação, não um por movimento', async () => {
@@ -179,9 +179,9 @@ export const Drag: Story = {
       // Contar as duas é o que separa commit de movimento: o arrasto acima
       // avisou várias vezes e só pode ter confirmado UMA. Afirmar apenas
       // "commit foi chamado" passaria com um commit disparado a cada pixel.
-      await expect(espiaoCommit).toHaveBeenCalledTimes(1);
-      await expect(espiaoMudanca.mock.calls.length).toBeGreaterThan(
-        espiaoCommit.mock.calls.length,
+      await expect(spyCommit).toHaveBeenCalledTimes(1);
+      await expect(spyChange.mock.calls.length).toBeGreaterThan(
+        spyCommit.mock.calls.length,
       );
     });
   },

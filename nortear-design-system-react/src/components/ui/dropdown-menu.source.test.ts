@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dropdownMenuComAtalhosSource,
-  dropdownMenuComCheckboxSource,
-  dropdownMenuComRadioSource,
-  dropdownMenuComRotuloSource,
-  dropdownMenuComSubmenuSource,
-  dropdownMenuControladoSource,
-  dropdownMenuItemDesabilitadoSource,
+  dropdownMenuWithShortcutsSource,
+  dropdownMenuWithCheckboxSource,
+  dropdownMenuWithRadioSource,
+  dropdownMenuWithLabelSource,
+  dropdownMenuWithSubmenuSource,
+  dropdownMenuControlledSource,
+  dropdownMenuItemDisabledSource,
   dropdownMenuItemDestructiveSource,
   dropdownMenuItemDefaultSource,
   dropdownMenuSource,
@@ -16,13 +16,13 @@ const TODAS = [
   dropdownMenuSource,
   dropdownMenuItemDefaultSource,
   dropdownMenuItemDestructiveSource,
-  dropdownMenuItemDesabilitadoSource,
-  dropdownMenuControladoSource,
-  dropdownMenuComRotuloSource,
-  dropdownMenuComCheckboxSource,
-  dropdownMenuComRadioSource,
-  dropdownMenuComSubmenuSource,
-  dropdownMenuComAtalhosSource,
+  dropdownMenuItemDisabledSource,
+  dropdownMenuControlledSource,
+  dropdownMenuWithLabelSource,
+  dropdownMenuWithCheckboxSource,
+  dropdownMenuWithRadioSource,
+  dropdownMenuWithSubmenuSource,
+  dropdownMenuWithShortcutsSource,
 ];
 
 /** Todo rótulo tem que estar dentro de um grupo — ver a regra do primitivo. */
@@ -68,8 +68,8 @@ describe('dropdownMenuSource', () => {
   });
 
   it('não deixa o espião de onOpenChange virar código', () => {
-    const espiao = () => 'CORPO_DO_MOCK';
-    const saida = dropdownMenuSource(undefined, { args: { onOpenChange: espiao } as never });
+    const spy = () => 'CORPO_DO_MOCK';
+    const saida = dropdownMenuSource(undefined, { args: { onOpenChange: spy } as never });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).not.toContain('onOpenChange');
   });
@@ -91,7 +91,7 @@ describe('variantes do item', () => {
   });
 
   it('o item desabilitado leva disabled, e só ele', () => {
-    const saida = dropdownMenuItemDesabilitadoSource();
+    const saida = dropdownMenuItemDisabledSource();
     expect(saida).toContain('<DropdownMenuItem disabled>Arquivar</DropdownMenuItem>');
     expect(saida).toContain('<DropdownMenuItem>Editar</DropdownMenuItem>');
     // O bloqueio é do componente: nada de `aria-disabled` escrito à mão.
@@ -101,7 +101,7 @@ describe('variantes do item', () => {
 
 describe('estados', () => {
   it('o modo controlado ensina o par open + onOpenChange com estado de verdade', () => {
-    const saida = dropdownMenuControladoSource();
+    const saida = dropdownMenuControlledSource();
     expect(saida).toContain('import { useState } from "react";');
     expect(saida).toContain('const [aberto, setAberto] = useState(false);');
     expect(saida).toContain('<DropdownMenu open={aberto} onOpenChange={setAberto}>');
@@ -116,28 +116,28 @@ describe('composições', () => {
   });
 
   it('dois grupos rotulados, separados por um divisor', () => {
-    const saida = dropdownMenuComRotuloSource();
+    const saida = dropdownMenuWithLabelSource();
     expect(saida.match(/<DropdownMenuGroup>/g)).toHaveLength(2);
     expect(saida).toContain('<DropdownMenuSeparator />');
     expect(saida).toContain('<DropdownMenuLabel>Suporte</DropdownMenuLabel>');
   });
 
   it('os alternadores são independentes: cada um com o seu estado', () => {
-    const saida = dropdownMenuComCheckboxSource();
+    const saida = dropdownMenuWithCheckboxSource();
     expect(saida).toContain('<DropdownMenuCheckboxItem checked={nome} onCheckedChange={setNome}>');
     expect(saida).toContain('<DropdownMenuCheckboxItem checked={email} onCheckedChange={setEmail}>');
     expect(saida).toContain('const [nome, setNome] = useState(true);');
   });
 
   it('na escolha única o valor mora no GRUPO, não em cada item', () => {
-    const saida = dropdownMenuComRadioSource();
+    const saida = dropdownMenuWithRadioSource();
     expect(saida).toContain('<DropdownMenuRadioGroup value={tema} onValueChange={setTema}>');
     expect(saida).toContain('<DropdownMenuRadioItem value="light">Claro</DropdownMenuRadioItem>');
     expect(saida).not.toContain('checked=');
   });
 
   it('o submenu é o trio Sub / SubTrigger / SubContent', () => {
-    const saida = dropdownMenuComSubmenuSource();
+    const saida = dropdownMenuWithSubmenuSource();
     expect(saida).toContain('<DropdownMenuSub>');
     expect(saida).toContain('<DropdownMenuSubTrigger>Exportar</DropdownMenuSubTrigger>');
     expect(saida).toContain('<DropdownMenuSubContent>');
@@ -146,7 +146,7 @@ describe('composições', () => {
   });
 
   it('o atalho fica dentro do item e não some para o leitor de tela', () => {
-    const saida = dropdownMenuComAtalhosSource();
+    const saida = dropdownMenuWithShortcutsSource();
     expect(saida).toContain('<DropdownMenuShortcut>Ctrl C</DropdownMenuShortcut>');
     const item = saida.slice(saida.indexOf('Copiar'));
     expect(item.indexOf('<DropdownMenuShortcut>')).toBeLessThan(

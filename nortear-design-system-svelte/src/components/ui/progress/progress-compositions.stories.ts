@@ -3,9 +3,9 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import ProgressStory from './ProgressStory.svelte';
 import {
-  animacaoDoIndicador,
+  indicadorAnimation,
   barrasDeProgresso,
-  contrasteBarraTrilha,
+  contrastBarTrack,
   corDoToken,
   indicadorDoProgresso,
   nomeAcessivel,
@@ -139,7 +139,7 @@ export const SuccessCompletion: Story = {
     });
 
     await step('A variante mantém 3:1 contra a trilha', async () => {
-      await expect(contrasteBarraTrilha(canvasElement)).toBeGreaterThanOrEqual(3);
+      await expect(contrastBarTrack(canvasElement)).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -176,7 +176,7 @@ export const ProcessingIndeterminate: Story = {
 
     await step('O traço corre de verdade', async () => {
       await waitFor(async () => {
-        await expect(animacaoDoIndicador(canvasElement)).toBe('nds-progress-indeterminate');
+        await expect(indicadorAnimation(canvasElement)).toBe('nds-progress-indeterminate');
       });
     });
   },

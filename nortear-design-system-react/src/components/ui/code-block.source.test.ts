@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  codeBlockPaletaSource,
+  codeBlockPaletteSource,
   codeBlockRemovivelSource,
   codeBlockRolagemSource,
   codeBlockSource,
@@ -9,7 +9,7 @@ import {
 const TODAS = [
   codeBlockSource,
   codeBlockRolagemSource,
-  codeBlockPaletaSource,
+  codeBlockPaletteSource,
   codeBlockRemovivelSource,
 ];
 
@@ -47,8 +47,8 @@ describe('codeBlockSource', () => {
   it('aceita as duas formas de highlightLines, como a API', () => {
     const emArray = codeBlockSource(undefined, { args: { highlightLines: [3, '5-7'] } });
     expect(emArray).toContain('highlightLines={[3, "5-7"]}');
-    const emTexto = codeBlockSource(undefined, { args: { highlightLines: '3, 5-7' } });
-    expect(emTexto).toContain('highlightLines="3, 5-7"');
+    const inText = codeBlockSource(undefined, { args: { highlightLines: '3, 5-7' } });
+    expect(inText).toContain('highlightLines="3, 5-7"');
   });
 
   it('a numeração só aparece quando é desligada, porque o padrão é ligada', () => {
@@ -68,8 +68,8 @@ describe('codeBlockSource', () => {
   });
 
   it('não deixa o espião do control virar código', () => {
-    const espiao = (() => 'CORPO_DO_MOCK') as never;
-    const saida = codeBlockSource(undefined, { args: { code: espiao, language: espiao } });
+    const spy = (() => 'CORPO_DO_MOCK') as never;
+    const saida = codeBlockSource(undefined, { args: { code: spy, language: spy } });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).toContain('<CodeBlock code={source} />');
   });
@@ -87,7 +87,7 @@ describe('overrides de story', () => {
   });
 
   it('a paleta é a mesma nos dois temas: o snippet não carrega tema nenhum', () => {
-    const saida = codeBlockPaletaSource();
+    const saida = codeBlockPaletteSource();
     expect(saida).toContain('highlightLines={[2]}');
     expect(saida).not.toContain('dark');
     expect(saida).not.toContain('theme');

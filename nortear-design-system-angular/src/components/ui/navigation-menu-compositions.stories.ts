@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import { NDS_NAVIGATION_MENU } from './navigation-menu';
-import { abrir, esperarPainel, esperarPainelSumir, popupAberto } from './navigation-menu.fixtures';
+import { abrir, waitForPanel, waitForPanelVanish, popupOpen } from './navigation-menu.fixtures';
 
 const meta: Meta = {
   title: 'UI/NavigationMenu/Compositions',
@@ -134,14 +134,14 @@ export const WithDropdown: Story = {
     await step('Escolher um destino fecha o painel', async () => {
       // Navegar É sair da página: um painel que sobrevive ao clique fica
       // pendurado sobre a página seguinte.
-      const painel = await esperarPainel();
+      const painel = await waitForPanel();
       await userEvent.click(within(painel).getByRole('link', { name: 'Plano Profissional' }));
-      await esperarPainelSumir();
+      await waitForPanelVanish();
       await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
     });
 
     await step('O foco volta a ser alcançável na barra', async () => {
-      await expect(popupAberto()).toBeNull();
+      await expect(popupOpen()).toBeNull();
       await expect(canvas.getAllByRole('link')).toHaveLength(2);
     });
   },
@@ -211,7 +211,7 @@ export const MegaMenuGrid: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const painel = await esperarPainel();
+    const painel = await waitForPanel();
 
     await step('Quatro destinos em duas colunas', async () => {
       const destinos = [...painel.querySelectorAll<HTMLElement>('a')];
@@ -236,7 +236,7 @@ export const MegaMenuGrid: Story = {
       await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
       // Esta story termina ABERTA de propósito: é o estado que a regressão
       // visual precisa capturar.
-      await expect(popupAberto()).not.toBeNull();
+      await expect(popupOpen()).not.toBeNull();
     });
   },
 };

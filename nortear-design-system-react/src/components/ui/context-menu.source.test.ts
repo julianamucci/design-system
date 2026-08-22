@@ -1,20 +1,20 @@
 import { describe, expect, it } from 'vitest';
 import {
   contextMenuCompletoSource,
-  contextMenuComEscolhaUnicaSource,
-  contextMenuComMarcacaoSource,
-  contextMenuComSubmenuSource,
-  contextMenuItemDesabilitadoSource,
+  contextMenuWithChoiceUnicaSource,
+  contextMenuWithMarkupSource,
+  contextMenuWithSubmenuSource,
+  contextMenuItemDisabledSource,
   contextMenuItemRecuadoSource,
   contextMenuSource,
 } from './context-menu.source';
 
 const TODAS = [
   contextMenuSource,
-  contextMenuComMarcacaoSource,
-  contextMenuComEscolhaUnicaSource,
-  contextMenuComSubmenuSource,
-  contextMenuItemDesabilitadoSource,
+  contextMenuWithMarkupSource,
+  contextMenuWithChoiceUnicaSource,
+  contextMenuWithSubmenuSource,
+  contextMenuItemDisabledSource,
   contextMenuItemRecuadoSource,
   contextMenuCompletoSource,
 ];
@@ -56,8 +56,8 @@ describe('contextMenuSource', () => {
   });
 
   it('cai no rótulo padrão quando o control entrega um espião', () => {
-    const espiao = (() => 'CORPO_DO_MOCK') as never;
-    const saida = contextMenuSource(undefined, { args: { triggerLabel: espiao } });
+    const spy = (() => 'CORPO_DO_MOCK') as never;
+    const saida = contextMenuSource(undefined, { args: { triggerLabel: spy } });
     expect(saida).not.toContain('CORPO_DO_MOCK');
     expect(saida).toContain('Clique com o botão direito aqui');
   });
@@ -76,7 +76,7 @@ describe('contextMenuSource', () => {
 
 describe('composições', () => {
   it('a marcação é controlada de fora, e é de dois estados', () => {
-    const saida = contextMenuComMarcacaoSource();
+    const saida = contextMenuWithMarkupSource();
     expect(saida).toContain('checked={grade}');
     expect(saida).toContain('onCheckedChange={(valor) => setGrade(valor)}');
     // Não existe terceiro valor neste primitivo — nada de estado misto.
@@ -84,15 +84,15 @@ describe('composições', () => {
   });
 
   it('a escolha única guarda o valor no grupo, e cada opção declara o seu', () => {
-    const saida = contextMenuComEscolhaUnicaSource();
+    const saida = contextMenuWithChoiceUnicaSource();
     expect(saida).toContain('<ContextMenuRadioGroup value={zoom} onValueChange={(valor) => setZoom(valor)}>');
     expect(saida).toContain('<ContextMenuRadioItem value="100">100%</ContextMenuRadioItem>');
   });
 
   it('o submenu traz as três peças juntas', () => {
-    const saida = contextMenuComSubmenuSource();
-    for (const peca of ['<ContextMenuSub>', '<ContextMenuSubTrigger>', '<ContextMenuSubContent>']) {
-      expect(saida).toContain(peca);
+    const saida = contextMenuWithSubmenuSource();
+    for (const part of ['<ContextMenuSub>', '<ContextMenuSubTrigger>', '<ContextMenuSubContent>']) {
+      expect(saida).toContain(part);
     }
   });
 
@@ -107,7 +107,7 @@ describe('composições', () => {
 
 describe('estados do item', () => {
   it('desabilitado é prop do ITEM, e vale também para o destrutivo', () => {
-    const saida = contextMenuItemDesabilitadoSource();
+    const saida = contextMenuItemDisabledSource();
     expect(saida).toContain('<ContextMenuItem disabled>Duplicar</ContextMenuItem>');
     expect(saida).toContain('<ContextMenuItem variant="destructive" disabled>');
   });

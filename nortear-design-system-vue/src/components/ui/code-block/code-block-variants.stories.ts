@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
 import { CodeBlock } from './index';
 import {
-  MINIMO_DE_CONTRASTE,
+  CONTRAST_MINIMUM,
   TRECHOS_DA_PALETA,
-  laudoDeContraste,
+  contrastLaudo,
 } from '@shared/testing/code-block-probe';
-import { codeBlockPaletaSource, codeBlockSource } from './code-block.source';
+import { codeBlockPaletteSource, codeBlockSource } from './code-block.source';
 
 /**
  * Uma story por linguagem classificada, com os mesmos literais da seção
@@ -38,7 +38,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 /** Trecho base do destaque nas stories de paleta. */
-const PALETA_CODE = `const items = await load();
+const PALETTE_CODE = `const items = await load();
 const total = items.length;
 render(items, total);`;
 
@@ -132,10 +132,10 @@ export const Text: Story = {
 // sobre dados idênticos. Medir um trecho isolado alcançava cinco cores — as
 // outras seis nunca tinham sido medidas contra fundo nenhum.
 
-const renderPaleta = () => ({
+const renderPalette = () => ({
   components: { CodeBlock },
   setup() {
-    return { trechos: TRECHOS_DA_PALETA, destacado: PALETA_CODE, destaque: [2] };
+    return { trechos: TRECHOS_DA_PALETA, destacado: PALETTE_CODE, destaque: [2] };
   },
   template: `
     <div class="nds-stack" data-spacing="md">
@@ -156,18 +156,18 @@ export const LightPalette: Story = {
     covers: ['accessibility.item4'],
     // São vários blocos empilhados, um por linguagem, mais um com linha em
     // destaque: a do meta mostraria um bloco só.
-    docs: { source: { transform: codeBlockPaletaSource } },
+    docs: { source: { transform: codeBlockPaletteSource } },
   },
-  args: { code: PALETA_CODE },
-  render: renderPaleta,
+  args: { code: PALETTE_CODE },
+  render: renderPalette,
   play: async ({ canvasElement, step }) => {
     await step('No claro, nenhuma cor da paleta fica abaixo de 4.5:1', async () => {
       // A varredura roda nos três temas de marca e devolve a PIOR razão; o fundo
       // do destaque é semitransparente e é composto antes da conta, senão a
       // medida mentiria para o alfa. Comparar nome de token não responde a
       // pergunta — a razão WCAG responde.
-      await expect(laudoDeContraste(canvasElement, 'claro')).toContain(
-        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
+      await expect(contrastLaudo(canvasElement, 'claro')).toContain(
+        `abaixo de ${CONTRAST_MINIMUM}: false`,
       );
     });
 
@@ -188,13 +188,13 @@ export const DarkPalette: Story = {
     covers: ['accessibility.item4'],
     // Mesma composição da paleta clara — o tema é do documento, e não algo que
     // o snippet escreva.
-    docs: { source: { transform: codeBlockPaletaSource } },
+    docs: { source: { transform: codeBlockPaletteSource } },
     // themeOverride é o canal do addon-themes: a classe volta sozinha na story
     // seguinte, porque o efeito do decorator depende dele.
     themes: { themeOverride: 'dark' },
   },
-  args: { code: PALETA_CODE },
-  render: renderPaleta,
+  args: { code: PALETTE_CODE },
+  render: renderPalette,
   play: async ({ canvasElement, step }) => {
     await step('O tema escuro está aplicado no documento', async () => {
       await expect(document.documentElement.classList.contains('dark')).toBe(true);
@@ -204,8 +204,8 @@ export const DarkPalette: Story = {
       // O escuro é metade do produto e o axe do test-runner nunca o vê: a tela
       // do runner está sempre no claro. A varredura restaura o className da raiz
       // no finally — deixá-lo posto envenenaria a story seguinte e o Chromatic.
-      await expect(laudoDeContraste(canvasElement, 'escuro')).toContain(
-        `abaixo de ${MINIMO_DE_CONTRASTE}: false`,
+      await expect(contrastLaudo(canvasElement, 'escuro')).toContain(
+        `abaixo de ${CONTRAST_MINIMUM}: false`,
       );
     });
   },

@@ -194,7 +194,7 @@ export const Playground: Story = {
 
     await step('Clicar no gatilho abre o painel com role=dialog', async () => {
       await fechar(gatilho);
-      const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
+      const callsBefore = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
       await abrir(gatilho);
 
       const dialogo = screen.getByRole('dialog');
@@ -204,7 +204,7 @@ export const Playground: Story = {
       await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
-      ).toBe(chamadasAntes + 1);
+      ).toBe(callsBefore + 1);
     });
 
     await step('side e align do template chegam ao posicionamento', async () => {
@@ -219,10 +219,10 @@ export const Playground: Story = {
 
     await step('O painel é nomeado pelo título e descrito pela descrição', async () => {
       const dialogo = screen.getByRole('dialog');
-      const idTitulo = dialogo.getAttribute('aria-labelledby');
+      const idTitle = dialogo.getAttribute('aria-labelledby');
       const idDescricao = dialogo.getAttribute('aria-describedby');
-      await expect(idTitulo).toBeTruthy();
-      await expect(document.getElementById(idTitulo!)).toHaveAttribute(
+      await expect(idTitle).toBeTruthy();
+      await expect(document.getElementById(idTitle!)).toHaveAttribute(
         'data-slot', 'popover-title',
       );
       await expect(idDescricao).toBeTruthy();

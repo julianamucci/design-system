@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite"
 import { expect, userEvent, within } from "storybook/test"
-import { resolverCor } from "@shared/testing/cor"
+import { resolveColor } from "@shared/testing/cor"
 import { contrastesNosDoisModos } from "@shared/testing/form-probe"
 
 import { Fieldset, FormField } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import {
-  formDesabilitadoSource,
+  formDisabledSource,
   formEmDuasPaletasSource,
   formInvalidoSource,
   formSource,
@@ -70,7 +70,7 @@ export const Invalid: Story = {
       // o literal quebraria a cada ajuste de paleta e não valeria nos temas de
       // marca. É a metade do item de contrato que ninguém verificava.
       await expect(getComputedStyle(mensagem).color).toBe(
-        resolverCor(campo, "hsl(var(--destructive))"),
+        resolveColor(campo, "hsl(var(--destructive))"),
       )
     })
 
@@ -103,7 +103,7 @@ export const Disabled: Story = {
     covers: ["functional.item7"],
     // `disabled` é do CONTROLE, não do campo — o snippet precisa mostrar onde
     // ele fica para que o rótulo continue visível e associado.
-    docs: { source: { transform: formDesabilitadoSource } },
+    docs: { source: { transform: formDisabledSource } },
   },
   render: () => (
     <FormField

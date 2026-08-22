@@ -1,35 +1,35 @@
 import { describe, expect, it } from 'vitest';
 import {
-  sidebarBuscaSource,
-  sidebarCarregandoSource,
+  sidebarSearchSource,
+  sidebarLoadingSource,
   sidebarExpandidaSource,
   sidebarFixaSource,
   sidebarGavetaMovelSource,
-  sidebarGruposSource,
-  sidebarLadoDireitoSource,
+  sidebarGroupsSource,
+  sidebarSideDireitoSource,
   sidebarPlaygroundSource,
   sidebarRecolhidaIconSource,
   sidebarSubmenuSource,
-  sidebarVarianteFloatingSource,
-  sidebarVarianteInsetSource,
-  sidebarVarianteSidebarSource,
+  sidebarVariantFloatingSource,
+  sidebarVariantInsetSource,
+  sidebarVariantSidebarSource,
 } from './sidebar.source';
 
 /** Todas as transforms deste componente, para as regras que valem para o conjunto. */
 const TODAS = [
   sidebarPlaygroundSource,
-  sidebarVarianteSidebarSource,
-  sidebarVarianteFloatingSource,
-  sidebarVarianteInsetSource,
-  sidebarLadoDireitoSource,
+  sidebarVariantSidebarSource,
+  sidebarVariantFloatingSource,
+  sidebarVariantInsetSource,
+  sidebarSideDireitoSource,
   sidebarExpandidaSource,
   sidebarRecolhidaIconSource,
   sidebarFixaSource,
-  sidebarCarregandoSource,
+  sidebarLoadingSource,
   sidebarGavetaMovelSource,
-  sidebarGruposSource,
+  sidebarGroupsSource,
   sidebarSubmenuSource,
-  sidebarBuscaSource,
+  sidebarSearchSource,
 ];
 
 describe('sidebarPlaygroundSource', () => {
@@ -199,13 +199,13 @@ describe('a divisão de props entre provider e barra', () => {
 
 describe('transforms das stories de variante', () => {
   it('a padrão não escreve a variante; as outras duas escrevem a sua', () => {
-    expect(sidebarVarianteSidebarSource()).not.toContain('variant=');
-    expect(sidebarVarianteFloatingSource()).toContain('<Sidebar variant="floating">');
-    expect(sidebarVarianteInsetSource()).toContain('<Sidebar variant="inset">');
+    expect(sidebarVariantSidebarSource()).not.toContain('variant=');
+    expect(sidebarVariantFloatingSource()).toContain('<Sidebar variant="floating">');
+    expect(sidebarVariantInsetSource()).toContain('<Sidebar variant="inset">');
   });
 
   it('à direita, o conteúdo vem antes da navegação', () => {
-    const saida = sidebarLadoDireitoSource();
+    const saida = sidebarSideDireitoSource();
     expect(saida).toContain('<Sidebar side="right">');
     // A ordem é o segundo assunto da story: `side` posiciona na tela, mas quem
     // decide a ordem de leitura e de tabulação é a ordem no documento.
@@ -236,7 +236,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('carregando troca o item de menu pelo placeholder', () => {
-    const saida = sidebarCarregandoSource();
+    const saida = sidebarLoadingSource();
     expect(saida).toContain('<SidebarMenuItem v-for="i in 5" :key="i">');
     expect(saida).toContain('<SidebarMenuSkeleton show-icon />');
     expect(saida).not.toContain('SidebarMenuButton');
@@ -255,7 +255,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o contador fica FORA do botão, e a ação leva nome próprio', () => {
-    const saida = sidebarGruposSource();
+    const saida = sidebarGroupsSource();
     expect(saida).toContain('</SidebarMenuButton>\n                  <SidebarMenuBadge>3</SidebarMenuBadge>');
     expect(saida).toContain('<SidebarGroupAction title="Adicionar item">');
     expect(saida).toContain('<span class="nds-sr-only">Adicionar item</span>');
@@ -273,7 +273,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o campo de busca leva nome porque o placeholder some ao digitar', () => {
-    const saida = sidebarBuscaSource();
+    const saida = sidebarSearchSource();
     expect(saida).toContain(
       '<SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />',
     );

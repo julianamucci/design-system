@@ -23,9 +23,9 @@ export type MenubarArgs = {
 };
 
 /** Bloco de import do menubar, sempre em ordem alfabética das peças usadas. */
-function importingMenubar(...pecas: string[]): string {
-  const lista = [...pecas].sort();
-  return `import {\n${lista.map((peca) => `  ${peca},`).join('\n')}\n} from "@/components/ui/menubar";`;
+function importingMenubar(...parts: string[]): string {
+  const lista = [...parts].sort();
+  return `import {\n${lista.map((part) => `  ${part},`).join('\n')}\n} from "@/components/ui/menubar";`;
 }
 
 /**
@@ -123,7 +123,7 @@ ${menu(
  * "Salvar". O separador acima dele não é enfeite — é a distância que evita o
  * clique errado por vizinhança.
  */
-export function menubarItemDestrutivoSource(): string {
+export function menubarItemDestructiveSource(): string {
   return jsxSnippet(
     importingMenubar(
       'Menubar',
@@ -149,7 +149,7 @@ ${menu(
  * de gatilho e painel governa a própria abertura, e é o que permite abrir um
  * sem que os vizinhos saibam.
  */
-export function menubarAbertoSource(): string {
+export function menubarOpenSource(): string {
   return jsxSnippet(
     importingMenubar(
       'Menubar',
@@ -264,7 +264,7 @@ ${menu(
  * Alternadores independentes: cada linha vale por si, e marcar uma não fecha o
  * menu — quem marca uma quer marcar a próxima.
  */
-export function selectionSourceMenubarBoxes(): string {
+export function selectionMenubarBoxesSource(): string {
   return jsxSnippet(
     importingMenubar(
       'Menubar',

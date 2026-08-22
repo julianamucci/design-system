@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
   carouselAutoplaySource,
-  carouselComDotsSource,
+  carouselWithDotsSource,
   carouselGaleriaSource,
   carouselItemUnicoSource,
   carouselSource,
-  carouselUltimoSlideSource,
-  carouselVariosItensSource,
+  carouselLastSlideSource,
+  carouselMultipleItemsSource,
   carouselVerticalSource,
 } from './carousel.source';
 
@@ -14,25 +14,25 @@ const TODAS = [
   carouselSource,
   carouselVerticalSource,
   carouselItemUnicoSource,
-  carouselVariosItensSource,
+  carouselMultipleItemsSource,
   carouselAutoplaySource,
-  carouselUltimoSlideSource,
+  carouselLastSlideSource,
   carouselGaleriaSource,
-  carouselComDotsSource,
+  carouselWithDotsSource,
 ];
 
 describe('carouselSource', () => {
   it('ensina a importação do design system, com as cinco peças do conjunto', () => {
     const saida = carouselSource();
     expect(saida).toContain('} from "@/components/ui/carousel";');
-    for (const peca of [
+    for (const part of [
       'Carousel',
       'CarouselContent',
       'CarouselItem',
       'CarouselNext',
       'CarouselPrevious',
     ]) {
-      expect(saida).toContain(`  ${peca},`);
+      expect(saida).toContain(`  ${part},`);
     }
   });
 
@@ -94,7 +94,7 @@ describe('configurações', () => {
   });
 
   it('vários itens: a base é responsiva, sem media query autoral', () => {
-    const saida = carouselVariosItensSource();
+    const saida = carouselMultipleItemsSource();
     expect(saida).toContain('nds-md-basis-half nds-lg-basis-third');
     expect(saida).toContain('const slides = [1, 2, 3, 4, 5, 6];');
   });
@@ -109,7 +109,7 @@ describe('configurações', () => {
   });
 
   it('o último slide é escolha do motor, e o extremo é calculado pelo componente', () => {
-    const saida = carouselUltimoSlideSource();
+    const saida = carouselLastSlideSource();
     expect(saida).toContain('opts={{ startIndex: slides.length - 1 }}');
     // Nenhum estado autoral desabilita a seta: quem calcula os extremos é o
     // componente.
@@ -129,7 +129,7 @@ describe('composições', () => {
   });
 
   it('a paginação se monta sobre a instância entregue em setApi', () => {
-    const saida = carouselComDotsSource();
+    const saida = carouselWithDotsSource();
     expect(saida).toContain('import { useEffect, useState } from "react";');
     expect(saida).toContain('type CarouselApi,');
     expect(saida).toContain('<Carousel setApi={setApi}');
@@ -138,7 +138,7 @@ describe('composições', () => {
   });
 
   it('o ponto é botão comum, com posição e total no nome', () => {
-    const saida = carouselComDotsSource();
+    const saida = carouselWithDotsSource();
     expect(saida).toContain('type="button"');
     expect(saida).toContain('className="nds-carousel-dot"');
     // "2" sozinho não diz para onde leva.
@@ -150,7 +150,7 @@ describe('composições', () => {
   });
 
   it('o ponto inativo NÃO carrega aria-current — a string "false" casaria com presença', () => {
-    const saida = carouselComDotsSource();
+    const saida = carouselWithDotsSource();
     expect(saida).toContain('{...(i === atual ? { "aria-current": "true" as const } : {})}');
     expect(saida).not.toContain('aria-current="false"');
     expect(saida).not.toContain('aria-current={false}');
