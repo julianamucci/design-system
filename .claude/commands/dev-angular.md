@@ -62,7 +62,7 @@ O JIT compila o decorator — `host` bindings funcionam, o componente renderiza 
 
 Consequência para quem escreve story: **uma story que só exercita o valor default passa e esconde o defeito**. Por isso:
 
-> **Toda story de variação DEVE afirmar a classe resultante de cada variante**, não só renderizar. Ver `button-variantes.stories.ts`.
+> **Toda story de variação DEVE afirmar a classe resultante de cada variante**, não só renderizar. Ver `button-variants.stories.ts`.
 
 Sinal no log: `"… contains Angular decorators but is not in the TypeScript program"`.
 

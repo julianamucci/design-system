@@ -236,7 +236,7 @@ render: () => <div style={{ height: 32 }} className="nds-p-4 nds-rounded-lg nds-
 render: () => <div style={{ blockSize: 'var(--height-default)' }} className="nds-p-4 nds-rounded-lg nds-border-default">demo</div>
 ```
 
-**Exceção**: stories cujo propósito é ilustrar um tamanho específico (ex: `AsAvatar24px` num `-tamanhos.stories`) podem usar o valor literal.
+**Exceção**: stories cujo propósito é ilustrar um tamanho específico (ex: `AsAvatar24px` num `-sizes.stories`) podem usar o valor literal.
 
 ### Docs pages (`src/components/docs/<Comp>Docs.*`)
 

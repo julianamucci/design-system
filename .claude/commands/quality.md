@@ -491,8 +491,8 @@ Cada `action` listada na tabela funcional da docs page DEVE ter um `step()` corr
 | Tipo de ação documentada | Story onde implementar |
 |---|---|
 | "Clicar em X fechado/aberto" | Playground |
-| "Modo X (default)" — comportamento padrão | Sub-story do modo (ex: `<slug>-modos`) |
-| "Estado disabled/loading" — não responde | Sub-story de estado (ex: `<slug>-estados`) |
+| "Modo X (default)" — comportamento padrão | Sub-story do modo (ex: `<slug>-modes`) |
+| "Estado disabled/loading" — não responde | Sub-story de estado (ex: `<slug>-states`) |
 | "Modo controlado" — atualiza estado externo | Sub-story Controlled |
 | "Valor inicial via defaultValue/defaultOpen" | Playground ou DefaultOpen |
 | "Composição com ícone/badge" | Sub-story de composição |
@@ -595,8 +595,8 @@ Preencha cada célula com `✅` correto, `❌` ausente/bug, `⚠️` parcial. **
 | Arquivo | React | Vue | Svelte | Vanilla |
 |---|---|---|---|---|
 | <slug>.stories | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
-| <slug>-estados | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
-| <slug>-composicoes | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| <slug>-states | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
+| <slug>-compositions | ✅/❌ | ✅/❌ | ✅/❌ | ✅/❌ |
 
 ### Play Functions
 | Story | React | Vue | Svelte | Vanilla |

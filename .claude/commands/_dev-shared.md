@@ -30,7 +30,7 @@ Para padrão de docs page, consulte `AlertDocs.<ext>` da mesma stack **só se pr
 - Apenas `<slug>.stories.<ext>` (story principal) carrega `tags: ['autodocs']`. Sub-stories nunca.
 - Docs page injetada via `parameters: { docs: { page: withAutoDocsTab(<Slug>Docs) } }` apenas no arquivo principal.
 - Sub-stories têm apenas `title`, `component`, `parameters.layout`, `parameters.docs.description.component`, `parameters.controls: { disable: true }`.
-- Categorias de sub-story dependem da categoria do componente — overlays de confirmação não têm `-variantes` nem `-tamanhos`.
+- Categorias de sub-story dependem da categoria do componente — overlays de confirmação não têm `-variants` nem `-sizes`.
 
 ---
 
@@ -84,10 +84,10 @@ Padrões de foundation pages (header, seções, items): `docs/shared/guidelines/
 | Arquivo | Conteúdo |
 |---------|----------|
 | `<slug>.stories.<ext>` | Playground + `tags: ['autodocs']` + `withAutoDocsTab` + play functions |
-| `<slug>-variantes.stories.<ext>` | Uma story por variante (sem play functions complexas) |
-| `<slug>-tamanhos.stories.<ext>` | Uma story por tamanho (se aplicável) |
-| `<slug>-estados.stories.<ext>` | Disabled, Loading, Error — com play functions |
-| `<slug>-composicoes.stories.<ext>` | Com ícone, asChild, em formulário etc. |
+| `<slug>-variants.stories.<ext>` | Uma story por variante (sem play functions complexas) |
+| `<slug>-sizes.stories.<ext>` | Uma story por tamanho (se aplicável) |
+| `<slug>-states.stories.<ext>` | Disabled, Loading, Error — com play functions |
+| `<slug>-compositions.stories.<ext>` | Com ícone, asChild, em formulário etc. |
 | `<Slug>Docs.<ext>` | Docs page completa com todas as 16 seções |
 
 ---

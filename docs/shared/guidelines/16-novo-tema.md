@@ -226,7 +226,7 @@ arquivos que `grep -rn "tema-warm"`.
 cd nortear-design-system-vanilla && npx vitest run paleta-de-tema
 
 # 2. As seis stories que iteram TEMAS (contraste por tema e modo)
-cd nortear-design-system-<stack> && npx vitest run form-estados input-otp-estados
+cd nortear-design-system-<stack> && npx vitest run form-states input-otp-states
 
 # 3. Token documentado que não existe, e token órfão
 node scripts/audit.mjs --all --json

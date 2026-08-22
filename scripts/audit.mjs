@@ -690,8 +690,8 @@ const ALLOWED_CLASS_RX = /^(nds-|sb-|storybook|dark$|light$)/;
 
 /** Sufixos de arquivo de story que denotam VARIAÇÃO do mesmo componente. */
 const STORY_VARIANT_SUFFIXES = [
-  'variantes', 'estados', 'composicoes', 'modos', 'tamanhos',
-  'layouts', 'configuracoes', 'tipos',
+  'variants', 'states', 'compositions', 'modes', 'sizes',
+  'layouts', 'settings', 'types',
 ];
 
 /** Divide o arquivo por `export const <Nome>` e devolve [nome, corpo]. */
@@ -914,7 +914,7 @@ function auditStoryQuality(slug) {
 
   for (const stack of STACKS) {
     // Casa o slug EXATO seguido só de um sufixo de VARIAÇÃO conhecido. Um
-    // `startsWith` (ou `-[a-z]+` genérico) atribuiria alert-dialog-estados ao
+    // `startsWith` (ou `-[a-z]+` genérico) atribuiria alert-dialog-states ao
     // slug `alert`, reportando o mesmo arquivo sob dois componentes.
     const storyRx = new RegExp(
       `^${slug.toLowerCase()}(-(${STORY_VARIANT_SUFFIXES.join('|')}))?\\.stories\\.(ts|tsx)$`,

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { within, expect, userEvent } from 'storybook/test';
 import SonnerPlaygroundStory from './SonnerPlaygroundStory.svelte';
-import { REGION_LABEL } from './rotulos';
+import { REGION_LABEL } from './labels';
 import { waitForToast, clearToasts, TEXTS } from './sonner.fixtures';
 import SonnerDocs from '@/components/docs/SonnerDocs.svelte';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';

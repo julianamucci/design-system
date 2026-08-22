@@ -6,7 +6,7 @@
 	import OctagonXIcon from '@lucide/svelte/icons/octagon-x';
 	import InfoIcon from '@lucide/svelte/icons/info';
 	import TriangleAlertIcon from '@lucide/svelte/icons/triangle-alert';
-	import { CLOSE_LABEL, REGION_LABEL } from './rotulos';
+	import { CLOSE_LABEL, REGION_LABEL } from './labels';
 
 	let { containerAriaLabel, toastOptions: toastOptionsProp, ...restProps }: SonnerProps = $props();
 

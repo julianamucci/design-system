@@ -54,7 +54,7 @@ Dispare 4 `Glob` em paralelo no mesmo turno:
 - `nortear-design-system-svelte/src/components/ui/*/index.ts`
 - `nortear-design-system-vanilla/src/components/ui/*.ts`
 
-Extraia basename, filtre `*.stories.*` e sufixos de variação (`-variantes`, `-tamanhos`, `-estados`, `-composicoes`, `-modos`, `-layouts`), intersecte com os demais.
+Extraia basename, filtre `*.stories.*` e sufixos de variação (`-variants`, `-sizes`, `-states`, `-compositions`, `-modes`, `-layouts`), intersecte com os demais.
 
 **Slugs a ignorar**: `index`, `utils`, `cn`, `icons`
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/svelte-vite';
 import { expect, fn, userEvent } from 'storybook/test';
 import { toast } from 'svelte-sonner';
 import SonnerFrameStory from './SonnerFrameStory.svelte';
-import { CLOSE_LABEL } from './rotulos';
+import { CLOSE_LABEL } from './labels';
 import {
   waitForNoToasts,
   waitForToast,

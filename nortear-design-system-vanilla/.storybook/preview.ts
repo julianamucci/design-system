@@ -214,7 +214,7 @@ const preview: Preview = {
           '.nds-context-menu-content',
           // Ultimate fallback: any orphan element with overlay role anywhere
           // outside #storybook-root. Stories that build custom menus (e.g.
-          // dropdown-menu-composicoes uses Tailwind raw classes) won't match
+          // dropdown-menu-compositions uses Tailwind raw classes) won't match
           // data-slot or .nds-* selectors.
           '[role="menu"]',
           '[role="dialog"]',
