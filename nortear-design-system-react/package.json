@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . --cache --cache-location node_modules/.cache/eslint/",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://react.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",

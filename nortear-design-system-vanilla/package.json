@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . --cache --cache-location node_modules/.cache/eslint/",
     "preview": "vite preview",
     "pretest": "node ../scripts/limpar-orfaos.mjs",
     "test": "vitest run",
