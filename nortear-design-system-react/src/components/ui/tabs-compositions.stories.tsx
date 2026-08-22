@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./tabs";
 import {
   tabsAtivacaoManualSource,
-  tabsComBadgeSource,
+  tabsWithBadgeSource,
   tabsComIconesSource,
   tabsControladoSource,
   tabsSource,
@@ -128,7 +128,7 @@ export const WithBadge: Story = {
     covers: ["functional.item1"],
     docs: {
       // O Badge dentro do gatilho é sub-composição, e vem de outro componente.
-      source: { transform: tabsComBadgeSource },
+      source: { transform: tabsWithBadgeSource },
       description: {
         story:
           "Badge no trigger para indicar contagem. A contagem faz parte do que a aba significa " +

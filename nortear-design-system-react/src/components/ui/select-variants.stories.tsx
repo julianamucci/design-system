@@ -32,7 +32,7 @@ const REGIOES = {
   ],
 } as const;
 
-const REGIOES_POR_VALOR = Object.fromEntries(
+const VALUE_REGIOES = Object.fromEntries(
   Object.values(REGIOES).flatMap((itens) => itens.map((i) => [i.value, i.label])),
 );
 
@@ -120,7 +120,7 @@ export const WithGroups: Story = {
   },
   render: () => (
     <div style={{ contain: "layout", minHeight: 60, position: "relative" }}>
-      <Select items={REGIOES_POR_VALOR}>
+      <Select items={VALUE_REGIOES}>
         <SelectTrigger aria-label="Selecionar região">
           <SelectValue placeholder="Selecione..." />
         </SelectTrigger>

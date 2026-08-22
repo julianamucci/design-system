@@ -14,7 +14,7 @@ import {
   attrsMultilinha,
   jsxSnippet,
   propBool,
-  propOpcao,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -80,8 +80,8 @@ function variante(
 export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const atributos = attrsMultilinha([
-    propOpcao('variant', args.variant, VARIANTES, 'default'),
-    propOpcao('role', args.role, PAPEIS, 'alert'),
+    propOption('variant', args.variant, VARIANTES, 'default'),
+    propOption('role', args.role, PAPEIS, 'alert'),
     propBool('dismissible', args.dismissible),
   ]);
   return jsxSnippet(

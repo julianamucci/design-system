@@ -4,23 +4,23 @@ import {
   chartComTituloSource,
   chartDoisDesenhosSource,
   chartEmCardSource,
-  chartLinhaSource,
+  chartLineSource,
   chartMultiSerieSource,
   chartPizzaSource,
   chartSerieUnicaSource,
   chartSource,
-  chartTituloSemRotuloSource,
+  chartTitleNoLabelSource,
   chartVazioSource,
 } from './chart.source';
 
 const TODAS = [
   chartSource,
-  chartLinhaSource,
+  chartLineSource,
   chartAreaSource,
   chartPizzaSource,
   chartMultiSerieSource,
   chartComTituloSource,
-  chartTituloSemRotuloSource,
+  chartTitleNoLabelSource,
   chartSerieUnicaSource,
   chartVazioSource,
   chartEmCardSource,
@@ -107,9 +107,9 @@ describe('chartSource', () => {
 
 describe('tipos de desenho', () => {
   it('cada tipo chama o seu construtor, e só importa o que chama', () => {
-    expect(chartLinhaSource()).toContain('option={buildLineOption({ xAxis: meses, series })}');
+    expect(chartLineSource()).toContain('option={buildLineOption({ xAxis: meses, series })}');
     expect(chartAreaSource()).toContain('option={buildAreaOption({ xAxis: meses, series })}');
-    expect(chartLinhaSource()).not.toContain('buildBarOption');
+    expect(chartLineSource()).not.toContain('buildBarOption');
     expect(chartAreaSource()).not.toContain('buildBarOption');
   });
 
@@ -144,7 +144,7 @@ describe('rótulo e título', () => {
   });
 
   it('sem rótulo autoral, a ausência é o assunto — o container cai no título', () => {
-    const saida = chartTituloSemRotuloSource();
+    const saida = chartTitleNoLabelSource();
     expect(saida).toContain('title: "Vendas mensais"');
     expect(saida).not.toContain('aria-label');
   });

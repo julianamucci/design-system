@@ -12,7 +12,7 @@ import { Button } from "./button";
 import { Save } from "lucide-react";
 import {
   tooltipAbertoSource,
-  tooltipComAtrasoSource,
+  tooltipWithDelaySource,
   tooltipControladoSource,
   tooltipPersistenteSource,
   tooltipSource,
@@ -164,7 +164,7 @@ export const Hover: Story = {
           "Hover no trigger com delay longo — o balão só abre depois da espera do Provider. É o delay que separa passar o mouse de parar sobre o elemento.",
       },
       // O atraso é a lição, e ele mora no provider — fora da raiz do Tooltip.
-      source: { transform: tooltipComAtrasoSource },
+      source: { transform: tooltipWithDelaySource },
     },
   },
   render: () => (
@@ -215,7 +215,7 @@ export const Focused: Story = {
           "Foco via teclado — WCAG 1.4.13. O foco abre o tooltip sem hover e sem esperar o delay; sair do trigger fecha.",
       },
       // Mesma montagem do atraso: o que a story afirma é que o foco a ignora.
-      source: { transform: tooltipComAtrasoSource },
+      source: { transform: tooltipWithDelaySource },
     },
   },
   render: () => (

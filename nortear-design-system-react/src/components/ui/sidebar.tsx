@@ -524,7 +524,7 @@ const sidebarMenuButtonVariants = cva("nds-sidebar-menu-button", {
  * O mapeamento devolve o valor textual e omite o atributo quando inativo, igual
  * às outras: presença do atributo é o próprio estado.
  */
-const estadoAtivoComoTexto = {
+const stateActiveAsText = {
   active: (ativo: boolean) => (ativo ? { "data-active": "true" } : null),
 }
 
@@ -557,7 +557,7 @@ function SidebarMenuButton({
       size,
       active: isActive,
     },
-    stateAttributesMapping: estadoAtivoComoTexto,
+    stateAttributesMapping: stateActiveAsText,
   })
 
   if (!tooltip) {
@@ -721,7 +721,7 @@ function SidebarMenuSubButton({
       size,
       active: isActive,
     },
-    stateAttributesMapping: estadoAtivoComoTexto,
+    stateAttributesMapping: stateActiveAsText,
   })
 }
 

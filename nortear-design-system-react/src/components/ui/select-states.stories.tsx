@@ -11,7 +11,7 @@ import {
 } from "./select";
 import {
   selectCompactoSource,
-  selectDesabilitadoSource,
+  selectDisabledSource,
   selectInvalidoSource,
   selectSelecionadoSource,
   selectSource,
@@ -195,7 +195,7 @@ export const Disabled: Story = {
     covers: ["visual.item4"],
     docs: {
       // Estado que só existe no `render`: este arquivo não tem controls.
-      source: { transform: selectDesabilitadoSource },
+      source: { transform: selectDisabledSource },
       description: {
         story:
           "Trigger desabilitado via prop disabled. opacity-50, cursor-not-allowed; cliques são ignorados e dropdown não abre.",

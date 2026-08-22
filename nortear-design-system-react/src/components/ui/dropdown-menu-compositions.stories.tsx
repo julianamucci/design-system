@@ -4,7 +4,7 @@ import { expect, userEvent, waitFor, within } from "storybook/test";
 import {
   waitForPortal,
   REGRA_GUARDA_DE_FOCO,
-  REGRA_FILHOS_DE_MENU,
+  MENU_RULE_CHILDREN,
 } from "@/lib/wait-for-portal";
 import {
   DropdownMenu,
@@ -43,7 +43,7 @@ const meta = {
     // Estas stories terminam com o menu ABERTO, de propósito: é o estado que o
     // Chromatic precisa fotografar. As duas regras do axe que isso acende são
     // da lib, e o motivo de cada uma está em `wait-for-portal.ts`.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_FILHOS_DE_MENU] } },
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, MENU_RULE_CHILDREN] } },
     docs: {
       source: { transform: dropdownMenuSource },
       description: {

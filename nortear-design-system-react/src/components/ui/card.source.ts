@@ -14,8 +14,8 @@ import {
   attrs,
   indentar,
   jsxSnippet,
-  propOpcao,
-  propTexto,
+  propOption,
+  propText,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -88,8 +88,8 @@ const RODAPE = `  <CardFooter className="nds-cluster" data-justify="end" data-sp
 export const cardSource: SourceTransform<CardArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const raiz = attrs(
-    propOpcao('size', args.size, TAMANHOS, 'default'),
-    propTexto('className', args.className) ?? `className="${LARGURA}"`,
+    propOption('size', args.size, TAMANHOS, 'default'),
+    propText('className', args.className) ?? `className="${LARGURA}"`,
   );
 
   return jsxSnippet(
@@ -106,7 +106,7 @@ ${RODAPE}
  * Card sem rodapé: a unidade mínima do componente, e o estado em que ele é um
  * contêiner PASSIVO — nenhum papel ARIA, nenhuma entrada na ordem de foco.
  */
-export function cardSemRodapeSource(): string {
+export function cardNoFooterSource(): string {
   return jsxSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
     `<Card className="${LARGURA}">
@@ -200,7 +200,7 @@ ${CORPO}
  * ação, corpo e rodapé. O status é a AÇÃO do cabeçalho e não texto solto no
  * corpo, que é o que o mantém alinhado ao título em qualquer largura.
  */
-export function cardProdutoSource(): string {
+export function cardProductSource(): string {
   return jsxSnippet(
     `import { Badge } from "@/components/ui/badge";
 ${IMPORT_BUTTON}

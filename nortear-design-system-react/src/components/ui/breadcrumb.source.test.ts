@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
-  breadcrumbComEllipsisSource,
+  breadcrumbWithEllipsisSource,
   breadcrumbLinkCustomizadoSource,
   breadcrumbResponsivoSource,
   breadcrumbSeparadorCustomizadoSource,
@@ -46,7 +46,7 @@ describe('formas estruturais', () => {
   });
 
   it('as reticências que informam sozinhas precisam de nome', () => {
-    const saida = breadcrumbComEllipsisSource();
+    const saida = breadcrumbWithEllipsisSource();
     expect(saida).toContain('<BreadcrumbEllipsis label="Mais páginas" />');
     expect(saida).toContain('BreadcrumbEllipsis,');
   });
@@ -92,7 +92,7 @@ describe('nenhum snippet ensina o andaime da story', () => {
   const todos: Array<() => string> = [
     breadcrumbSource,
     breadcrumbSimplesSource,
-    breadcrumbComEllipsisSource,
+    breadcrumbWithEllipsisSource,
     breadcrumbSeparadorCustomizadoSource,
     breadcrumbLinkCustomizadoSource,
     breadcrumbResponsivoSource,

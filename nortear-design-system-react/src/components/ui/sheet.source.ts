@@ -21,10 +21,10 @@
  */
 import {
   attrs,
-  filhoTexto,
+  childText,
   jsxSnippet,
   propBool,
-  propOpcao,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -38,10 +38,10 @@ export type SheetArgs = {
 
 const LADOS = ['top', 'right', 'bottom', 'left'] as const;
 
-const IMPORT_BOTAO = 'import { Button } from "@/components/ui/button";';
+const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importarSheet(...pecas: string[]): string {
+function importingSheet(...pecas: string[]): string {
   const lista = [...pecas].sort();
   return `import {\n${lista
     .map((peca) => `  ${peca},`)
@@ -116,16 +116,16 @@ export const sheetSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
     propBool('modal', args.modal, true),
   );
   const painel = attrs(
-    propOpcao('side', args.side, LADOS, 'right'),
+    propOption('side', args.side, LADOS, 'right'),
     propBool('showCloseButton', args.showCloseButton, true),
   );
   return jsxSnippet(
-    `${importarSheet(...PECAS_BASE)}\n${IMPORT_BOTAO}`,
+    `${importingSheet(...PECAS_BASE)}\n${IMPORT_BUTTON}`,
     sheet(
       raiz,
       painel,
       `${cabecalho()}\n${rodape()}`,
-      filhoTexto(args.triggerLabel, 'Abrir filtros'),
+      childText(args.triggerLabel, 'Abrir filtros'),
     ),
   );
 };
@@ -137,9 +137,9 @@ export const sheetSource: SourceTransform<SheetArgs> = (_gerado, ctx) => {
  * uma para a outra é só a borda de onde o painel desliza, e trocar o conteúdo
  * junto faria parecer que a direção pede outra composição.
  */
-function porLado(lado: string, titulo: string): string {
+function bySide(lado: string, titulo: string): string {
   return jsxSnippet(
-    `${importarSheet(...PECAS_BASE)}\n${IMPORT_BOTAO}`,
+    `${importingSheet(...PECAS_BASE)}\n${IMPORT_BUTTON}`,
     sheet('', ` side="${lado}"`, `${cabecalho(titulo)}\n${rodape()}`, 'Abrir filtros'),
   );
 }
@@ -149,7 +149,7 @@ function porLado(lado: string, titulo: string): string {
  * o lado da navegação secundária — onde a pessoa espera encontrar o menu.
  */
 export function sheetLadoEsquerdoSource(): string {
-  return porLado('left', 'Painel esquerdo');
+  return bySide('left', 'Painel esquerdo');
 }
 
 /**
@@ -157,7 +157,7 @@ export function sheetLadoEsquerdoSource(): string {
  * horizontais e avisos ricos demais para caber num Alert.
  */
 export function sheetLadoSuperiorSource(): string {
-  return porLado('top', 'Painel superior');
+  return bySide('top', 'Painel superior');
 }
 
 /**
@@ -165,7 +165,7 @@ export function sheetLadoSuperiorSource(): string {
  * importa, o componente é o Drawer.
  */
 export function sheetLadoInferiorSource(): string {
-  return porLado('bottom', 'Painel inferior');
+  return bySide('bottom', 'Painel inferior');
 }
 
 /**
@@ -174,7 +174,7 @@ export function sheetLadoInferiorSource(): string {
  */
 export function sheetAbertoSource(): string {
   return jsxSnippet(
-    `${importarSheet(...PECAS_BASE)}\n${IMPORT_BOTAO}`,
+    `${importingSheet(...PECAS_BASE)}\n${IMPORT_BUTTON}`,
     sheet(' defaultOpen', '', `${cabecalho()}\n${rodape()}`, 'Abrir filtros'),
   );
 }
@@ -186,7 +186,7 @@ export function sheetAbertoSource(): string {
  */
 export function sheetSemBotaoFecharSource(): string {
   return jsxSnippet(
-    `${importarSheet(...PECAS_BASE)}\n${IMPORT_BOTAO}`,
+    `${importingSheet(...PECAS_BASE)}\n${IMPORT_BUTTON}`,
     sheet(
       '',
       ' showCloseButton={false}',
@@ -208,7 +208,7 @@ export function sheetSemBotaoFecharSource(): string {
 export function sheetControladoSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
-${importarSheet(
+${importingSheet(
   'Sheet',
   'SheetClose',
   'SheetContent',
@@ -217,7 +217,7 @@ ${importarSheet(
   'SheetHeader',
   'SheetTitle',
 )}
-${IMPORT_BOTAO}
+${IMPORT_BUTTON}
 
 const [aberto, setAberto] = useState(false);`,
     `<div className="nds-stack" data-spacing="sm">
@@ -247,10 +247,10 @@ const [aberto, setAberto] = useState(false);`,
  * e rodapé ficam parados, e é isso que mantém "Aplicar" ao alcance mesmo com a
  * lista de campos crescendo.
  */
-export function sheetFiltrosSource(): string {
+export function sheetFiltersSource(): string {
   return jsxSnippet(
-    `${importarSheet(...PECAS_BASE, 'SheetBody')}
-${IMPORT_BOTAO}
+    `${importingSheet(...PECAS_BASE, 'SheetBody')}
+${IMPORT_BUTTON}
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`,
     sheet(
@@ -288,9 +288,9 @@ ${rodape()}`,
  * tem rodapé: aqui não há decisão a confirmar — escolher um destino já fecha o
  * painel por si.
  */
-export function sheetNavegacaoSource(): string {
+export function sheetNavigationSource(): string {
   return jsxSnippet(
-    `${importarSheet(
+    `${importingSheet(
       'Sheet',
       'SheetBody',
       'SheetContent',
@@ -299,7 +299,7 @@ export function sheetNavegacaoSource(): string {
       'SheetTitle',
       'SheetTrigger',
     )}
-${IMPORT_BOTAO}
+${IMPORT_BUTTON}
 
 const SECOES = ["Dashboard", "Projetos", "Equipe", "Configurações"];`,
     `<Sheet>
@@ -332,10 +332,10 @@ const SECOES = ["Dashboard", "Projetos", "Equipe", "Configurações"];`,
  * variante que a anuncia — três botões destrutivos lado a lado tirariam o peso
  * justamente do que precisa de peso.
  */
-export function sheetPainelInferiorSource(): string {
+export function sheetPanelInferiorSource(): string {
   return jsxSnippet(
-    `${importarSheet(...PECAS_BASE, 'SheetBody')}
-${IMPORT_BOTAO}`,
+    `${importingSheet(...PECAS_BASE, 'SheetBody')}
+${IMPORT_BUTTON}`,
     sheet(
       '',
       ' side="bottom"',
@@ -360,10 +360,10 @@ ${IMPORT_BOTAO}`,
  * região que rola precisa ser alcançável por teclado (WCAG 2.1.1) —, e é o
  * `flex` da folha que segura o rodapé no lugar enquanto o texto corre.
  */
-export function sheetConteudoLongoSource(): string {
+export function sheetContentLongSource(): string {
   return jsxSnippet(
-    `${importarSheet(...PECAS_BASE, 'SheetBody')}
-${IMPORT_BOTAO}
+    `${importingSheet(...PECAS_BASE, 'SheetBody')}
+${IMPORT_BUTTON}
 
 const PARAGRAFOS = Array.from({ length: 24 }, (_, i) => i + 1);`,
     sheet(

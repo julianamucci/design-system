@@ -27,11 +27,11 @@
  * mock apareceria como se fosse código do design system.
  */
 import {
-  filhoTexto,
+  childText,
   jsxSnippet,
   propBool,
-  propNumero,
-  propOpcao,
+  propNumber,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -47,17 +47,17 @@ export type SliderArgs = {
 const ORIENTACOES = ['horizontal', 'vertical'] as const;
 
 /** Faixa e passo padrão do primitivo — o que já é padrão não entra no snippet. */
-const MINIMO_PADRAO = 0;
-const MAXIMO_PADRAO = 100;
-const PASSO_PADRAO = 1;
+const MINIMUM_DEFAULT = 0;
+const MAXIMO_DEFAULT = 100;
+const STEP_DEFAULT = 1;
 
-const IMPORT_ESTADO = 'import { useState } from "react";';
+const IMPORT_STATE = 'import { useState } from "react";';
 const IMPORT = 'import { Slider } from "@/components/ui/slider";';
-const IMPORT_ROTULO = 'import { Label } from "@/components/ui/label";';
+const IMPORT_LABEL = 'import { Label } from "@/components/ui/label";';
 
 /** Cabeçalho com o estado da(s) alça(s) declarado, que é o uso controlado. */
 function estado(nome: string, setter: string, valorInicial: string, extras = ''): string {
-  return `${IMPORT_ESTADO}
+  return `${IMPORT_STATE}
 ${IMPORT}${extras ? `\n${extras}` : ''}
 
 const [${nome}, ${setter}] = useState(${valorInicial});`;
@@ -69,14 +69,14 @@ const [${nome}, ${setter}] = useState(${valorInicial});`;
  */
 function faixa(args: Partial<SliderArgs>): Array<string | undefined> {
   return [
-    typeof args.min === 'number' && args.min !== MINIMO_PADRAO
-      ? propNumero('min', args.min)
+    typeof args.min === 'number' && args.min !== MINIMUM_DEFAULT
+      ? propNumber('min', args.min)
       : undefined,
-    typeof args.max === 'number' && args.max !== MAXIMO_PADRAO
-      ? propNumero('max', args.max)
+    typeof args.max === 'number' && args.max !== MAXIMO_DEFAULT
+      ? propNumber('max', args.max)
       : undefined,
-    typeof args.step === 'number' && args.step !== PASSO_PADRAO
-      ? propNumero('step', args.step)
+    typeof args.step === 'number' && args.step !== STEP_DEFAULT
+      ? propNumber('step', args.step)
       : undefined,
   ];
 }
@@ -86,7 +86,7 @@ function faixa(args: Partial<SliderArgs>): Array<string | undefined> {
  * entrega a mudança a quem não vê a alça andar: sem ele o valor muda em
  * silêncio, e a alça anuncia só o próprio `aria-valuenow` quando tem foco.
  */
-function linhaDeValor(rotulo: string, valor: string, comLabel = false): string {
+function valueLine(rotulo: string, valor: string, comLabel = false): string {
   const nome = comLabel
     ? `    <Label>${rotulo}</Label>`
     : `    <span className="nds-text-body nds-text-muted-foreground">${rotulo}</span>`;
@@ -132,14 +132,14 @@ ${conteudo}
  */
 export const sliderSource: SourceTransform<SliderArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const rotulo = filhoTexto(args['aria-label'], 'Volume');
+  const rotulo = childText(args['aria-label'], 'Volume');
   const emPeAgora = args.orientation === 'vertical';
 
   const controle = tag([
     'value={volume}',
     'onValueChange={setVolume}',
     ...faixa(args),
-    propOpcao('orientation', args.orientation, ORIENTACOES, 'horizontal'),
+    propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
     propBool('disabled', args.disabled),
     `aria-label="${rotulo}"`,
   ]);
@@ -151,7 +151,7 @@ export const sliderSource: SourceTransform<SliderArgs> = (_gerado, ctx) => {
   </span>
 ${controle}`,
       )
-    : deitado(`${linhaDeValor(rotulo, '{volume[0]}')}\n${controle}`);
+    : deitado(`${valueLine(rotulo, '{volume[0]}')}\n${controle}`);
 
   return jsxSnippet(estado('volume', 'setVolume', '[50]'), corpo);
 };
@@ -166,7 +166,7 @@ export function sliderFaixaSource(): string {
   return jsxSnippet(
     estado('faixaDePreco', 'setFaixaDePreco', '[20, 80]'),
     deitado(
-      `${linhaDeValor('Faixa de preço', '{`R$ ${faixaDePreco[0]} — R$ ${faixaDePreco[1]}`}')}
+      `${valueLine('Faixa de preço', '{`R$ ${faixaDePreco[0]} — R$ ${faixaDePreco[1]}`}')}
   <Slider
     value={faixaDePreco}
     onValueChange={setFaixaDePreco}
@@ -203,7 +203,7 @@ export function sliderVerticalSource(): string {
  * componente — sem estado, sem re-render a cada pixel do arrasto. É a forma
  * mais curta que existe do controle, e a que as stories de aparência usam.
  */
-export function sliderNaoControladoSource(): string {
+export function sliderNotControlledSource(): string {
   return jsxSnippet(
     IMPORT,
     `<div className="nds-w-sm">
@@ -231,11 +231,11 @@ export function sliderDesabilitadoSource(): string {
  * recebe `role="slider"` é a alça, lá dentro, e `htmlFor` não a alcança. Tirar
  * um dos dois deixa alguém sem nome — ou quem vê, ou quem ouve.
  */
-export function sliderComRotuloSource(): string {
+export function sliderWithLabelSource(): string {
   return jsxSnippet(
-    estado('volume', 'setVolume', '[75]', IMPORT_ROTULO),
+    estado('volume', 'setVolume', '[75]', IMPORT_LABEL),
     deitado(
-      `${linhaDeValor('Volume', '{`${volume[0]}%`}', true)}
+      `${valueLine('Volume', '{`${volume[0]}%`}', true)}
   <Slider value={volume} onValueChange={setVolume} aria-label="Volume" />`,
     ),
   );
@@ -248,9 +248,9 @@ export function sliderComRotuloSource(): string {
  */
 export function sliderPrecoSource(): string {
   return jsxSnippet(
-    estado('preco', 'setPreco', '[100, 400]', IMPORT_ROTULO),
+    estado('preco', 'setPreco', '[100, 400]', IMPORT_LABEL),
     deitado(
-      `${linhaDeValor('Faixa de preço', '{`R$ ${preco[0]} — R$ ${preco[1]}`}', true)}
+      `${valueLine('Faixa de preço', '{`R$ ${preco[0]} — R$ ${preco[1]}`}', true)}
   <Slider
     value={preco}
     onValueChange={setPreco}
@@ -267,11 +267,11 @@ export function sliderPrecoSource(): string {
  * granularidade do arrasto — é o que garante que o valor alcançável pelo mouse
  * também seja alcançável sem ele.
  */
-export function sliderPassoSource(): string {
+export function sliderStepSource(): string {
   return jsxSnippet(
-    estado('nivel', 'setNivel', '[50]', IMPORT_ROTULO),
+    estado('nivel', 'setNivel', '[50]', IMPORT_LABEL),
     deitado(
-      `${linhaDeValor('Nível', '{nivel[0]}', true)}
+      `${valueLine('Nível', '{nivel[0]}', true)}
   <Slider value={nivel} onValueChange={setNivel} step={10} aria-label="Nível" />`,
     ),
   );
@@ -284,9 +284,9 @@ export function sliderPassoSource(): string {
  */
 export function sliderEmFormularioSource(): string {
   return jsxSnippet(
-    `${IMPORT_ESTADO}
+    `${IMPORT_STATE}
 ${IMPORT}
-${IMPORT_ROTULO}
+${IMPORT_LABEL}
 import { Button } from "@/components/ui/button";
 
 const [volume, setVolume] = useState([60]);

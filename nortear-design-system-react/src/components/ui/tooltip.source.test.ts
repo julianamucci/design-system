@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   tooltipAbertoSource,
-  tooltipAtalhoEmBarraSource,
-  tooltipBarraDeIconesSource,
+  barSourceTooltipShortcut,
+  iconsSourceTooltipBar,
   tooltipComAtalhoSource,
-  tooltipComAtrasoSource,
+  tooltipWithDelaySource,
   tooltipControladoSource,
   tooltipCurtoSource,
   tooltipLadosSource,
@@ -19,11 +19,11 @@ const TODAS = [
   tooltipComAtalhoSource,
   tooltipTextoLongoSource,
   tooltipAbertoSource,
-  tooltipComAtrasoSource,
+  tooltipWithDelaySource,
   tooltipPersistenteSource,
   tooltipControladoSource,
-  tooltipBarraDeIconesSource,
-  tooltipAtalhoEmBarraSource,
+  iconsSourceTooltipBar,
+  barSourceTooltipShortcut,
   tooltipLadosSource,
 ];
 
@@ -84,7 +84,7 @@ describe('o gatilho é o botão de verdade', () => {
   });
 
   it('o botão só-ícone carrega o próprio nome — o balão não é o único portador', () => {
-    for (const fn of [tooltipSource, tooltipCurtoSource, tooltipAbertoSource, tooltipComAtrasoSource]) {
+    for (const fn of [tooltipSource, tooltipCurtoSource, tooltipAbertoSource, tooltipWithDelaySource]) {
       const saida = fn();
       expect(saida).toContain('aria-label="Salvar"');
       expect(saida).toContain('<Save aria-hidden="true" />');
@@ -94,7 +94,7 @@ describe('o gatilho é o botão de verdade', () => {
 
 describe('variantes', () => {
   it('a de atalho traz o gancho que encurta o respiro do balão', () => {
-    for (const saida of [tooltipComAtalhoSource(), tooltipAtalhoEmBarraSource()]) {
+    for (const saida of [tooltipComAtalhoSource(), barSourceTooltipShortcut()]) {
       expect(saida).toContain('<kbd className="nds-kbd" data-slot="kbd">Ctrl</kbd>');
       expect(saida).toContain('<kbd className="nds-kbd" data-slot="kbd">S</kbd>');
     }
@@ -109,7 +109,7 @@ describe('variantes', () => {
 
 describe('estados', () => {
   it('o atraso mora no provider e o gatilho pode ajustar o seu', () => {
-    const saida = tooltipComAtrasoSource();
+    const saida = tooltipWithDelaySource();
     expect(saida).toContain('<TooltipProvider delay={600}>');
     expect(saida).toContain('delay={600}');
   });
@@ -137,7 +137,7 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('a barra repete o par rótulo do botão + texto do balão em cada ação', () => {
-    const saida = tooltipBarraDeIconesSource();
+    const saida = iconsSourceTooltipBar();
     for (const rotulo of ['Salvar', 'Compartilhar', 'Excluir']) {
       expect(saida).toContain(`aria-label="${rotulo}"`);
       expect(saida).toContain(`<TooltipContent>${rotulo}</TooltipContent>`);

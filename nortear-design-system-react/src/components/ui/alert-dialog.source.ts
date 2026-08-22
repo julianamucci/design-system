@@ -12,11 +12,11 @@
  */
 import {
   attrs,
-  filhoTexto,
+  childText,
   indentar,
   jsxSnippet,
   propBool,
-  propOpcao,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -102,14 +102,14 @@ function confirmacao({
   onCancel,
   preambulo,
 }: Confirmacao): string {
-  const varianteBotao = attrs(propOpcao('variant', tone, TONS, 'default'));
-  const blocoMidia = midia
+  const variantButton = attrs(propOption('variant', tone, TONS, 'default'));
+  const blockMidia = midia
     ? `<AlertDialogMedia${classeMidia ? ` className="${classeMidia}"` : ''}>
   <TriangleAlert aria-hidden="true" />
 </AlertDialogMedia>
 `
     : '';
-  const blocoDescricao =
+  const blockDescription =
     description === null
       ? ''
       : `
@@ -118,16 +118,16 @@ function confirmacao({
 </AlertDialogDescription>`;
 
   const markup = `<AlertDialog${attrs(propBool('defaultOpen', defaultOpen))}>
-  <AlertDialogTrigger render={<Button${varianteBotao} />}>
+  <AlertDialogTrigger render={<Button${variantButton} />}>
     ${triggerLabel}
   </AlertDialogTrigger>
   <AlertDialogContent${classeContent ? ` className="${classeContent}"` : ''}>
     <AlertDialogHeader>
-${indentar(`${blocoMidia}<AlertDialogTitle>${title}</AlertDialogTitle>${blocoDescricao}`, '      ')}
+${indentar(`${blockMidia}<AlertDialogTitle>${title}</AlertDialogTitle>${blockDescription}`, '      ')}
     </AlertDialogHeader>
     <AlertDialogFooter>
       <AlertDialogCancel${onCancel ? ` onClick={${onCancel}}` : ''}>${cancelLabel}</AlertDialogCancel>
-      <AlertDialogAction${varianteBotao}${onAction ? ` onClick={${onAction}}` : ''}>${actionLabel}</AlertDialogAction>
+      <AlertDialogAction${variantButton}${onAction ? ` onClick={${onAction}}` : ''}>${actionLabel}</AlertDialogAction>
     </AlertDialogFooter>
   </AlertDialogContent>
 </AlertDialog>`;
@@ -157,14 +157,14 @@ export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx
     tone: typeof args.tone === 'string' ? (args.tone as AlertDialogArgs['tone']) : 'destructive',
     defaultOpen: typeof args.defaultOpen === 'boolean' ? args.defaultOpen : undefined,
     midia: args.showMedia === true,
-    triggerLabel: filhoTexto(args.triggerLabel, 'Excluir conta'),
-    title: filhoTexto(args.title, 'Excluir conta'),
-    description: filhoTexto(
+    triggerLabel: childText(args.triggerLabel, 'Excluir conta'),
+    title: childText(args.title, 'Excluir conta'),
+    description: childText(
       args.description,
       'Todos os seus dados serão removidos permanentemente. Esta ação não pode ser desfeita.',
     ),
-    cancelLabel: filhoTexto(args.cancelLabel, 'Cancelar'),
-    actionLabel: filhoTexto(args.actionLabel, 'Excluir'),
+    cancelLabel: childText(args.cancelLabel, 'Cancelar'),
+    actionLabel: childText(args.actionLabel, 'Excluir'),
   });
 };
 

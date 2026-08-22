@@ -14,8 +14,8 @@
 import {
   attrsMultilinha,
   propBool,
-  propNumero,
-  propTexto,
+  propNumber,
+  propText,
   texto,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -103,7 +103,7 @@ import { Badge } from "@/components/ui/badge";`;
  * Os dados entram SEMPRE, mesmo no exemplo do conjunto vazio: é deles que o
  * tipo da linha sai, e sem eles as colunas não teriam o que tipar.
  */
-function tabelaSnippet(partes: {
+function tableSnippet(partes: {
   imports?: string;
   colunas?: string;
   extra?: string;
@@ -157,10 +157,10 @@ export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) =>
       propBool('enableGlobalFilter', args.enableGlobalFilter, true),
       propBool('enableColumnVisibility', args.enableColumnVisibility, true),
       propBool('enablePagination', args.enablePagination, true),
-      propNumero('pageSize', args.pageSize === 10 ? null : args.pageSize),
-      propTexto('caption', texto(args.caption) ?? LEGENDA),
-      propTexto('globalFilterPlaceholder', args.globalFilterPlaceholder),
-      propTexto('emptyMessage', args.emptyMessage),
+      propNumber('pageSize', args.pageSize === 10 ? null : args.pageSize),
+      propText('caption', texto(args.caption) ?? LEGENDA),
+      propText('globalFilterPlaceholder', args.globalFilterPlaceholder),
+      propText('emptyMessage', args.emptyMessage),
       selecao ? 'labels={rotulos}' : null,
       'rowKey={(fatura) => fatura.id}',
     ],
@@ -168,7 +168,7 @@ export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) =>
     0,
   );
 
-  return tabelaSnippet({
+  return tableSnippet({
     extra: selecao ? ROTULOS : undefined,
     markup: `<DataTable${props}/>`,
   });
@@ -182,8 +182,8 @@ export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) =>
  * ocupa uma célula na linha, que por isso recebe o nome da coluna fora da tela:
  * célula de cabeçalho vazia é o que o axe reprova.
  */
-export function dataTableComFiltrosDeColunaSource(): string {
-  return tabelaSnippet({
+export function columnSourceDataTableWithFilters(): string {
+  return tableSnippet({
     colunas: `const columns: DataTableColumn<${LINHA}>[] = [
   { accessorKey: "id", header: "Fatura", meta: { filter: { type: "text" } } },
   { accessorKey: "customer", header: "Cliente", meta: { filter: { type: "text" } } },
@@ -226,7 +226,7 @@ export function dataTableComFiltrosDeColunaSource(): string {
  * declarada da vizinha.
  */
 export function dataTableRedimensionavelSource(): string {
-  return tabelaSnippet({
+  return tableSnippet({
     markup: `<DataTable columns={columns} data={invoices} enableColumnResizing />`,
   });
 }
@@ -240,7 +240,7 @@ export function dataTableRedimensionavelSource(): string {
  * ligado.
  */
 export function dataTableReordenavelEFixavelSource(): string {
-  return tabelaSnippet({
+  return tableSnippet({
     markup: `<DataTable
   columns={columns}
   data={invoices}
@@ -258,8 +258,8 @@ export function dataTableReordenavelEFixavelSource(): string {
  * o exemplo tem dono de estado: sem ele a célula volta ao valor antigo assim
  * que perde o foco.
  */
-export function dataTableComEdicaoSource(): string {
-  return tabelaSnippet({
+export function dataTableWithEditSource(): string {
+  return tableSnippet({
     imports: `${IMPORT_BASE}
 import { useState } from "react";`,
     colunas: `const columns: DataTableColumn<${LINHA}>[] = [
@@ -316,7 +316,7 @@ import { useState } from "react";`,
  * mostra cinco.
  */
 export function dataTablePaginadaSource(): string {
-  return tabelaSnippet({
+  return tableSnippet({
     markup: `<DataTable
   columns={columns}
   data={invoices}
@@ -334,8 +334,8 @@ export function dataTablePaginadaSource(): string {
  * controle de seleção sai da primeira coluna de dados — o mesmo texto que quem
  * enxerga usaria para apontar a linha.
  */
-export function dataTableComRotuloDeLinhaSource(): string {
-  return tabelaSnippet({
+export function lineSourceDataTableWithLabel(): string {
+  return tableSnippet({
     markup: `<DataTable
   columns={columns}
   data={invoices}
@@ -356,7 +356,7 @@ export function dataTableComRotuloDeLinhaSource(): string {
  * recortam o mesmo conjunto e brigariam pelo mesmo rodapé.
  */
 export function dataTableVirtualizadaSource(): string {
-  return tabelaSnippet({
+  return tableSnippet({
     extra: `// Mil registros num array só: quem recorta o que vai ao DOM é a
 // virtualização, não quem chama.
 const muitasFaturas = Array.from({ length: 1000 }, (_, i) => ({
@@ -382,7 +382,7 @@ const muitasFaturas = Array.from({ length: 1000 }, (_, i) => ({
  * que ocupa a largura inteira da tabela.
  */
 export function dataTableSemResultadosSource(): string {
-  return tabelaSnippet({
+  return tableSnippet({
     markup: `// A tabela recebe o RECORTE já aplicado: quando ele volta vazio, a grade
 // continua de pé e é a mensagem que ocupa a largura inteira.
 <DataTable

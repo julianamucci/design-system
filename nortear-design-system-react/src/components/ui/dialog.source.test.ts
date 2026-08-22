@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   dialogAbertoSource,
-  dialogComAcaoDestrutivaSource,
+  dialogWithActionDestructiveSource,
   dialogComFormularioSource,
-  dialogComMidiaSource,
+  dialogWithMidiaSource,
   dialogComRolagemSource,
   dialogControladoSource,
   dialogFecharNoRodapeSource,
@@ -22,8 +22,8 @@ const TODAS = [
   dialogComFormularioSource,
   dialogPerfilSource,
   dialogComRolagemSource,
-  dialogComAcaoDestrutivaSource,
-  dialogComMidiaSource,
+  dialogWithActionDestructiveSource,
+  dialogWithMidiaSource,
   dialogControladoSource,
 ];
 
@@ -108,9 +108,9 @@ describe('composições estruturais', () => {
       const saida = fn();
       const form = saida.indexOf('<form');
       const rodape = saida.indexOf('<DialogFooter>');
-      const fimForm = saida.indexOf('</form>');
+      const endForm = saida.indexOf('</form>');
       expect(rodape).toBeGreaterThan(form);
-      expect(rodape).toBeLessThan(fimForm);
+      expect(rodape).toBeLessThan(endForm);
       expect(saida).toContain('<Button type="button" variant="outline" />');
       expect(saida).toContain('<Button type="submit">');
     }
@@ -141,13 +141,13 @@ describe('composições estruturais', () => {
   });
 
   it('a ação destrutiva usa a variante do botão, e o painel segue sendo dialog', () => {
-    const saida = dialogComAcaoDestrutivaSource();
+    const saida = dialogWithActionDestructiveSource();
     expect(saida).toContain('<Button variant="destructive">Remover item</Button>');
     expect(saida).not.toContain('alertdialog');
   });
 
   it('a mídia carrega nome acessível e classes reais do sistema', () => {
-    const saida = dialogComMidiaSource();
+    const saida = dialogWithMidiaSource();
     expect(saida).toContain('role="img"');
     expect(saida).toContain('aria-label="Imagem ilustrativa de pôr-do-sol"');
     expect(saida).toContain('nds-bg-muted');

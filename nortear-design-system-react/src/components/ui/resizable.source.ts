@@ -28,7 +28,7 @@ import {
   attrs,
   indentar,
   jsxSnippet,
-  propNumero,
+  propNumber,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -56,10 +56,10 @@ const MOLDURA = 'nds-rounded-lg nds-border-default nds-max-w-lg nds-min-h-50';
 
 /** Rótulos dos punhos. Cada um nomeia O QUE separa, e nunca só "divisor". */
 const ROTULO_PADRAO = 'Redimensionar painéis — use setas para ajustar';
-const ROTULO_COLUNAS = 'Redimensionar as colunas — use setas para ajustar';
-const ROTULO_FAIXAS = 'Redimensionar as faixas — use setas para ajustar';
-const ROTULO_SIDEBAR = 'Redimensionar sidebar e conteúdo — use setas';
-const ROTULO_CONSOLE = 'Redimensionar editor e console — use setas';
+const LABEL_COLUMNS = 'Redimensionar as colunas — use setas para ajustar';
+const LABEL_FAIXAS = 'Redimensionar as faixas — use setas para ajustar';
+const LABEL_SIDEBAR = 'Redimensionar sidebar e conteúdo — use setas';
+const LABEL_CONSOLE = 'Redimensionar editor e console — use setas';
 
 /** Conteúdo centralizado de um painel — o painel é a caixa, não o texto. */
 function centralizado(texto: string, fundo = ''): string {
@@ -113,15 +113,15 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
   const minimo = typeof args.minSize === 'number' ? args.minSize : 20;
 
   const primeiro = attrs(
-    propNumero('defaultSize', inicial),
-    propNumero('minSize', minimo),
+    propNumber('defaultSize', inicial),
+    propNumber('minSize', minimo),
     typeof args.maxSize === 'number' && args.maxSize !== 100
-      ? propNumero('maxSize', args.maxSize)
+      ? propNumber('maxSize', args.maxSize)
       : undefined,
   );
   const segundo = attrs(
-    propNumero('defaultSize', 100 - inicial),
-    propNumero('minSize', minimo),
+    propNumber('defaultSize', 100 - inicial),
+    propNumber('minSize', minimo),
   );
 
   return jsxSnippet(
@@ -160,7 +160,7 @@ export function resizableHorizontalSource(): string {
     grupo(
       'horizontal',
       `${painel(' defaultSize={30} minSize={20} maxSize={50}', centralizado('Sidebar', 'nds-bg-muted'))}
-${punho(ROTULO_COLUNAS, false)}
+${punho(LABEL_COLUMNS, false)}
 ${painel(' defaultSize={70} minSize={50}', centralizado('Conteúdo principal'))}`,
     ),
   );
@@ -178,7 +178,7 @@ export function resizableVerticalSource(): string {
     grupo(
       'vertical',
       `${painel(' defaultSize={40} minSize={20}', centralizado('Topo'))}
-${punho(ROTULO_FAIXAS, false)}
+${punho(LABEL_FAIXAS, false)}
 ${painel(' defaultSize={60} minSize={20}', centralizado('Rodapé', 'nds-bg-muted'))}`,
     ),
   );
@@ -194,7 +194,7 @@ export function resizableAninhadoSource(): string {
   const interno = `<ResizablePanelGroup direction="vertical">
 ${indentar(
   `${painel(' defaultSize={60} minSize={20}', centralizado('Editor'))}
-${punho(ROTULO_CONSOLE, false)}
+${punho(LABEL_CONSOLE, false)}
 ${painel(' defaultSize={40} minSize={20}', centralizado('Console', 'nds-bg-muted-60'))}`,
 )}
 </ResizablePanelGroup>`;
@@ -204,7 +204,7 @@ ${painel(' defaultSize={40} minSize={20}', centralizado('Console', 'nds-bg-muted
     grupo(
       'horizontal',
       `${painel(' defaultSize={30} minSize={20}', centralizado('Sidebar', 'nds-bg-muted'))}
-${punho(ROTULO_SIDEBAR, false)}
+${punho(LABEL_SIDEBAR, false)}
 ${painel(' defaultSize={70} minSize={40}', interno)}`,
     ),
   );
@@ -346,7 +346,7 @@ ${indentar(
   <span className="nds-text-muted-foreground">App.tsx (1:1)</span>
 </div>`,
   )}
-${punho(ROTULO_CONSOLE)}
+${punho(LABEL_CONSOLE)}
 ${painel(
   ' defaultSize={30} minSize={15}',
   `<div className="nds-cluster nds-bg-muted-60 nds-p-4 nds-text-caption nds-font-mono nds-h-full" data-align="center" data-spacing="sm">
@@ -370,7 +370,7 @@ ${painel(
   <span className="nds-pl-4">main.tsx</span>
 </div>`,
       )}
-${punho(ROTULO_SIDEBAR)}
+${punho(LABEL_SIDEBAR)}
 ${painel(' defaultSize={80} minSize={50}', direita)}`,
     ),
   );

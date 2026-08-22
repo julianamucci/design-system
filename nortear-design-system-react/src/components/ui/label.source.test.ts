@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  labelComCheckboxSource,
-  labelDesabilitadoPorBlocoSource,
+  labelWithCheckboxSource,
+  blockSourceLabelDisabled,
   labelDesabilitadoSource,
   labelObrigatorioSource,
   labelSource,
@@ -10,9 +10,9 @@ import {
 const TODAS = [
   labelSource,
   labelDesabilitadoSource,
-  labelDesabilitadoPorBlocoSource,
+  blockSourceLabelDisabled,
   labelObrigatorioSource,
-  labelComCheckboxSource,
+  labelWithCheckboxSource,
 ];
 
 describe('labelSource', () => {
@@ -76,7 +76,7 @@ describe('estados', () => {
   });
 
   it('o bloco desabilitado marca o ancestral, e não cada rótulo', () => {
-    const saida = labelDesabilitadoPorBlocoSource();
+    const saida = blockSourceLabelDisabled();
     expect(saida).toContain('data-disabled="true"');
     expect(saida.indexOf('data-disabled="true"')).toBeLessThan(saida.indexOf('<Label'));
   });
@@ -93,7 +93,7 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('a caixa de seleção continua ligada pelo mesmo par for/id', () => {
-    const saida = labelComCheckboxSource();
+    const saida = labelWithCheckboxSource();
     expect(saida).toContain('import { Checkbox } from "@/components/ui/checkbox";');
     expect(saida).toContain('<Checkbox id="termos" />');
     expect(saida).toContain('<Label htmlFor="termos">');

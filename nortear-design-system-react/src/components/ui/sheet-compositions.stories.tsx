@@ -13,10 +13,10 @@ import {
   SheetTrigger,
 } from "./sheet";
 import {
-  sheetConteudoLongoSource,
-  sheetFiltrosSource,
-  sheetNavegacaoSource,
-  sheetPainelInferiorSource,
+  sheetContentLongSource,
+  sheetFiltersSource,
+  sheetNavigationSource,
+  sheetPanelInferiorSource,
   sheetSource,
 } from "./sheet.source";
 import { Button } from "./button";
@@ -57,7 +57,7 @@ export const FiltersPanel: Story = {
     docs: {
       // Formulário dentro do SheetBody — sub-composição que o snippet do meta,
       // só com cabeçalho e rodapé, esconderia.
-      source: { transform: sheetFiltrosSource },
+      source: { transform: sheetFiltersSource },
       description: {
         story:
           "Sheet à direita com filtros avançados em formulário. O título nomeia a ação, a " +
@@ -119,7 +119,7 @@ export const SecondaryNavigation: Story = {
     docs: {
       // Painel à esquerda, com nav no corpo e SEM rodapé: a ausência de
       // confirmação faz parte do que a story ensina.
-      source: { transform: sheetNavegacaoSource },
+      source: { transform: sheetNavigationSource },
       description: {
         story:
           "Sheet à esquerda como menu de navegação secundária — itens clicáveis dentro do " +
@@ -160,7 +160,7 @@ export const BottomPanel: Story = {
     docs: {
       // Direção inferior mais a fileira de ações no corpo — nenhum control
       // descreve isso neste arquivo.
-      source: { transform: sheetPainelInferiorSource },
+      source: { transform: sheetPanelInferiorSource },
       description: {
         story:
           "Sheet inferior — o mesmo desenho do Drawer mobile, sem o gesto de arrastar. " +
@@ -203,7 +203,7 @@ export const WithLongScrollContent: Story = {
     covers: ["visual.item4"],
     docs: {
       // O corpo que rola é o assunto, e ele só aparece com o SheetBody cheio.
-      source: { transform: sheetConteudoLongoSource },
+      source: { transform: sheetContentLongSource },
       description: {
         story:
           "Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — " +

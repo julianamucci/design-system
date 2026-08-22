@@ -9,9 +9,9 @@ import {
   attrsMultilinha,
   jsxSnippet,
   propBool,
-  propNumero,
-  propOpcao,
-  propTexto,
+  propNumber,
+  propOption,
+  propText,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -63,9 +63,9 @@ const VISUALIZACAO: Array<[string, string, string]> = [
   ['list', 'Lista', 'List'],
 ];
 
-const ICONES_ALINHAMENTO = 'import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";';
-const ICONES_FORMATACAO = 'import { Bold, Italic, Underline } from "lucide-react";';
-const ICONES_VISUALIZACAO = 'import { LayoutGrid, List } from "lucide-react";';
+const ICONS_ALIGNMENT = 'import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";';
+const ICONS_FORMATTING = 'import { Bold, Italic, Underline } from "lucide-react";';
+const ICONS_VISUALIZACAO = 'import { LayoutGrid, List } from "lucide-react";';
 
 /** Monta o grupo com os atributos que diferem do padrão e os itens dados. */
 function grupo(atributos: Array<string | undefined>, corpo: string): string {
@@ -84,21 +84,21 @@ function grupo(atributos: Array<string | undefined>, corpo: string): string {
 export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const multiplo = args.type === 'multiple';
-  const rotulo = propTexto('aria-label', args['aria-label']) ?? 'aria-label="Alinhamento do texto"';
+  const rotulo = propText('aria-label', args['aria-label']) ?? 'aria-label="Alinhamento do texto"';
 
   return jsxSnippet(
-    `${IMPORT_GRUPO}\n${ICONES_ALINHAMENTO}`,
+    `${IMPORT_GRUPO}\n${ICONS_ALIGNMENT}`,
     grupo(
       [
-        propOpcao('type', args.type, MODOS, 'single'),
+        propOption('type', args.type, MODOS, 'single'),
         // A forma do valor acompanha o modo: exclusivo entrega string,
         // combinado entrega lista. É a diferença que o `type` governa.
         multiplo ? 'defaultValue={["left"]}' : 'defaultValue="left"',
-        propOpcao('orientation', args.orientation, ORIENTACOES, 'horizontal'),
-        propOpcao('variant', args.variant, VARIANTES, 'default'),
-        propOpcao('size', args.size, TAMANHOS, 'default'),
+        propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
+        propOption('variant', args.variant, VARIANTES, 'default'),
+        propOption('size', args.size, TAMANHOS, 'default'),
         typeof args.spacing === 'number' && args.spacing !== 0
-          ? propNumero('spacing', args.spacing)
+          ? propNumber('spacing', args.spacing)
           : undefined,
         propBool('disabled', args.disabled),
         rotulo,
@@ -114,7 +114,7 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
  */
 export function toggleGroupExclusivoSource(): string {
   return jsxSnippet(
-    `${IMPORT_GRUPO}\n${ICONES_ALINHAMENTO}`,
+    `${IMPORT_GRUPO}\n${ICONS_ALIGNMENT}`,
     grupo(['defaultValue="center"', 'aria-label="Alinhamento do texto"'], itens(ALINHAMENTO)),
   );
 }
@@ -125,7 +125,7 @@ export function toggleGroupExclusivoSource(): string {
  */
 export function toggleGroupCombinadoSource(): string {
   return jsxSnippet(
-    `${IMPORT_GRUPO}\n${ICONES_FORMATACAO}`,
+    `${IMPORT_GRUPO}\n${ICONS_FORMATTING}`,
     grupo(
       ['type="multiple"', 'defaultValue={["bold", "italic"]}', 'aria-label="Formatação"'],
       itens(FORMATACAO),
@@ -140,7 +140,7 @@ export function toggleGroupCombinadoSource(): string {
  */
 export function toggleGroupVerticalSource(): string {
   return jsxSnippet(
-    `${IMPORT_GRUPO}\n${ICONES_VISUALIZACAO}`,
+    `${IMPORT_GRUPO}\n${ICONS_VISUALIZACAO}`,
     grupo(
       ['orientation="vertical"', 'defaultValue="grid"', 'aria-label="Modo de visualização"'],
       itens(VISUALIZACAO),
@@ -149,9 +149,9 @@ export function toggleGroupVerticalSource(): string {
 }
 
 /** Nada selecionado: a ausência de `defaultValue` É o estado que a story mostra. */
-export function toggleGroupVazioSource(): string {
+export function toggleGroupEmptySource(): string {
   return jsxSnippet(
-    `${IMPORT_GRUPO}\n${ICONES_ALINHAMENTO}`,
+    `${IMPORT_GRUPO}\n${ICONS_ALIGNMENT}`,
     grupo(['aria-label="Alinhamento do texto"'], itens(ALINHAMENTO)),
   );
 }
@@ -159,7 +159,7 @@ export function toggleGroupVazioSource(): string {
 /** Grupo inteiro desabilitado — a prop mora no grupo, e os itens a herdam. */
 export function toggleGroupDesabilitadoSource(): string {
   return jsxSnippet(
-    `${IMPORT_GRUPO}\n${ICONES_ALINHAMENTO}`,
+    `${IMPORT_GRUPO}\n${ICONS_ALIGNMENT}`,
     grupo(
       ['disabled', 'defaultValue="center"', 'aria-label="Alinhamento do texto"'],
       itens(ALINHAMENTO),
@@ -173,7 +173,7 @@ export function toggleGroupDesabilitadoSource(): string {
  */
 export function toggleGroupItemDesabilitadoSource(): string {
   return jsxSnippet(
-    `${IMPORT_GRUPO}\n${ICONES_ALINHAMENTO}`,
+    `${IMPORT_GRUPO}\n${ICONS_ALIGNMENT}`,
     grupo(
       ['aria-label="Alinhamento do texto"'],
       itens([
@@ -190,7 +190,7 @@ export function toggleGroupItemDesabilitadoSource(): string {
  * string —, e é ela que chega ao callback; desembrulhar lista na mão esconderia
  * justamente essa diferença entre os dois modos.
  */
-export function toggleGroupControladoExclusivoSource(): string {
+export function toggleGroupControlledExclusivoSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORT_GRUPO}
@@ -226,11 +226,11 @@ ${itens([
  * Controlado no modo combinado. Aqui o callback recebe a lista inteira, e não
  * o item que mudou — o estado é a seleção completa a cada troca.
  */
-export function toggleGroupControladoCombinadoSource(): string {
+export function toggleGroupControlledCombinadoSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORT_GRUPO}
-${ICONES_FORMATACAO}`,
+${ICONS_FORMATTING}`,
     `const [formatos, setFormatos] = useState(["bold"]);
 
 <div className="nds-stack" data-align="start" data-spacing="sm">
@@ -260,7 +260,7 @@ ${itens(FORMATACAO)
  */
 export function toggleGroupContornoEspacadoSource(): string {
   return jsxSnippet(
-    `${IMPORT_GRUPO}\n${ICONES_ALINHAMENTO}`,
+    `${IMPORT_GRUPO}\n${ICONS_ALIGNMENT}`,
     grupo(
       ['spacing={1}', 'defaultValue="center"', 'aria-label="Alinhamento do texto"'],
       itens([

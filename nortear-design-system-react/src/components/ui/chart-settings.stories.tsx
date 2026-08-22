@@ -6,7 +6,7 @@ import {
   formasDeDado,
   textosDoDesenho,
 } from '@shared/testing/chart-probe';
-import { desenhoPronto } from './chart.fixtures';
+import { designPronto } from './chart.fixtures';
 import { chartComTituloSource, chartMultiSerieSource, chartSource } from './chart.source';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
@@ -44,7 +44,7 @@ export const WithTooltip: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
     const valor = String(serieUnica[0].data[0]);
 
     await step('O valor do ponto não está escrito no desenho', async () => {
@@ -98,7 +98,7 @@ export const WithCaption: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
 
     await step('A legenda nomeia cada série por escrito', async () => {
       for (const serie of seriesMulti) await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
@@ -135,7 +135,7 @@ export const MultipleSeries: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
 
     await step('O título passado na configuração é escrito acima dos eixos', async () => {
       await expect(desenhoEscreve(raiz, 'Acessos por dispositivo')).toBe(true);

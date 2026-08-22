@@ -8,7 +8,7 @@ import {
 import { Label } from "./label";
 import { Input } from "./input";
 import {
-  labelDesabilitadoPorBlocoSource,
+  blockSourceLabelDisabled,
   labelDesabilitadoSource,
   labelObrigatorioSource,
   labelSource,
@@ -119,7 +119,7 @@ export const DisabledViaGroup: Story = {
     docs: {
       // O `data-disabled` mora no ANCESTRAL: quem copia o par padrão não vê
       // onde o atributo entra.
-      source: { transform: labelDesabilitadoPorBlocoSource },
+      source: { transform: blockSourceLabelDisabled },
       description: {
         story:
           "Bloco inteiro desabilitado por `data-disabled=\"true\"` no ancestral: todos os rótulos descendentes esmaecem e saem do alcance do ponteiro.",

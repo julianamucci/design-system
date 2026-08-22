@@ -8,7 +8,7 @@ import {
   accordionFechadoSource,
   accordionItemDesabilitadoSource,
   accordionMultiploSource,
-  accordionSemConfiguracaoSource,
+  accordionNoConfigSource,
   accordionSource,
 } from './accordion.source';
 
@@ -61,7 +61,7 @@ describe('accordionSource', () => {
 
 describe('modos', () => {
   it('sem configuração nenhuma: é a AUSÊNCIA de defaultValue que a story prova', () => {
-    const saida = accordionSemConfiguracaoSource();
+    const saida = accordionNoConfigSource();
     expect(saida).toContain('<Accordion>');
     expect(saida).not.toContain('defaultValue');
     expect(saida).not.toContain('multiple');
@@ -126,7 +126,7 @@ describe('composições', () => {
   it('nenhum snippet ensina o andaime da story', () => {
     for (const fn of [
       accordionSource,
-      accordionSemConfiguracaoSource,
+      accordionNoConfigSource,
       accordionMultiploSource,
       accordionControladoSource,
       accordionFechadoSource,

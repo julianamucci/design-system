@@ -19,8 +19,8 @@
 import {
   jsxSnippet,
   propBool,
-  propNumero,
-  propTexto,
+  propNumber,
+  propText,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -39,7 +39,7 @@ const IMPORTS =
 const CLASSES = 'className="nds-resize-y nds-min-h-30"';
 
 /** Linhas visíveis que o elemento nativo já assume sem `rows`. */
-const LINHAS_PADRAO = 2;
+const LINES_DEFAULT = 2;
 
 /** Um atributo por linha — a fila de props do campo passa de qualquer limite. */
 function campo(partes: Array<string | false | null | undefined>, recuo = '  '): string {
@@ -74,20 +74,20 @@ function contador(dica: string, limite: number): string {
   </div>`;
 }
 
-const IMPORT_ESTADO = 'import { useState } from "react";';
+const IMPORT_STATE = 'import { useState } from "react";';
 
 /** Estado que o contador exige: é o `value` que a contagem lê. */
-const ESTADO_VAZIO = 'const [valor, setValor] = useState("");';
+const EMPTY_STATE = 'const [valor, setValor] = useState("");';
 
 /**
  * Cabeçalho de import com o estado controlado. Os imports vêm todos antes da
  * declaração — intercalar os dois deixa o snippet impossível de colar.
  */
-function cabecalhoControlado(...extras: string[]): string {
-  return `${[IMPORT_ESTADO, IMPORTS, ...extras].join('\n')}\n\n${ESTADO_VAZIO}`;
+function headerControlled(...extras: string[]): string {
+  return `${[IMPORT_STATE, IMPORTS, ...extras].join('\n')}\n\n${EMPTY_STATE}`;
 }
 
-const IMPORTS_CONTROLADO = cabecalhoControlado();
+const IMPORTS_CONTROLLED = headerControlled();
 
 /**
  * Transform do `meta` — vale para todas as stories do arquivo. Lê os controls
@@ -104,13 +104,13 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const limite = typeof args.maxLength === 'number' && args.maxLength > 0 ? args.maxLength : undefined;
   const comuns = [
-    propTexto('placeholder', args.placeholder) ??
+    propText('placeholder', args.placeholder) ??
       'placeholder="ex: Descreva o produto em até 500 caracteres..."',
     propBool('disabled', args.disabled),
     propBool('readOnly', args.readOnly),
-    limite === undefined ? undefined : propNumero('maxLength', limite),
-    typeof args.rows === 'number' && args.rows !== LINHAS_PADRAO
-      ? propNumero('rows', args.rows)
+    limite === undefined ? undefined : propNumber('maxLength', limite),
+    typeof args.rows === 'number' && args.rows !== LINES_DEFAULT
+      ? propNumber('rows', args.rows)
       : undefined,
     CLASSES,
   ];
@@ -120,7 +120,7 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
   }
 
   return jsxSnippet(
-    IMPORTS_CONTROLADO,
+    IMPORTS_CONTROLLED,
     bloco(
       'Descrição',
       'descricao',
@@ -161,7 +161,7 @@ export function textareaSemRedimensionarSource(): string {
  */
 export function textareaComContadorSource(): string {
   return jsxSnippet(
-    IMPORTS_CONTROLADO,
+    IMPORTS_CONTROLLED,
     bloco(
       'Descrição',
       'descricao',
@@ -263,7 +263,7 @@ export function textareaSomenteLeituraSource(): string {
  * segundo rótulo: o nome do campo continua sendo um só, e a orientação é lida
  * depois dele em vez de disputar o mesmo lugar.
  */
-export function textareaComDescricaoSource(): string {
+export function textareaWithDescriptionSource(): string {
   return jsxSnippet(
     IMPORTS,
     bloco(
@@ -289,7 +289,7 @@ export function textareaComDescricaoSource(): string {
  */
 export function textareaContadorAcessivelSource(): string {
   return jsxSnippet(
-    IMPORTS_CONTROLADO,
+    IMPORTS_CONTROLLED,
     bloco(
       'Mensagem',
       'mensagem',
@@ -311,9 +311,9 @@ ${contador('Limite: 280 caracteres.', 280)}`,
  * o que a validação nativa lê — sem eles o campo aparece no formulário sem
  * participar dele.
  */
-export function textareaEmFormularioSource(): string {
+export function formSourceTextarea(): string {
   return jsxSnippet(
-    cabecalhoControlado('import { Button } from "@/components/ui/button";'),
+    headerControlled('import { Button } from "@/components/ui/button";'),
     `<form
   className="nds-stack nds-w-md"
   data-spacing="md"
@@ -349,7 +349,7 @@ ${contador('Aparece no seu perfil público.', 500)
  * — é o que permite validar, formatar ou espelhar o texto em outro lugar da
  * tela. `value` sem o callback congelaria o campo.
  */
-export function textareaControladoSource(): string {
+export function textareaControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORTS}

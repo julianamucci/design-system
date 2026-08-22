@@ -1,33 +1,33 @@
 import { describe, expect, it } from 'vitest';
 import {
-  inputArquivoSource,
-  inputBuscaSource,
+  inputFileSource,
+  inputSearchSource,
   inputComErroSource,
   inputDesabilitadoSource,
   inputEmailSource,
   inputGroupAlinhamentosSource,
-  inputGroupBotaoInternoSource,
-  inputGroupCliqueNoAddonSource,
-  inputGroupComErroSource,
-  inputGroupDesabilitadoSource,
-  inputGroupIconeFimSource,
+  inputGroupButtonInternoSource,
+  addonSourceInputGroupClick,
+  inputGroupWithErrorSource,
+  inputGroupDisabledSource,
+  inputGroupIconEndSource,
   inputGroupPrefixoESufixoSource,
-  inputGroupPrefixoTextoSource,
+  inputGroupPrefixoTextSource,
   inputGroupSenhaSource,
   inputGroupSource,
-  inputNumeroSource,
+  inputNumberSource,
   inputPaletaEscuraSource,
   inputSenhaSource,
   inputSource,
 } from './input.source';
 
-const CAMPO_SIMPLES = [
+const SIMPLE_FIELD = [
   inputSource,
   inputEmailSource,
   inputSenhaSource,
-  inputNumeroSource,
-  inputBuscaSource,
-  inputArquivoSource,
+  inputNumberSource,
+  inputSearchSource,
+  inputFileSource,
   inputDesabilitadoSource,
   inputComErroSource,
   inputPaletaEscuraSource,
@@ -35,18 +35,18 @@ const CAMPO_SIMPLES = [
 
 const GRUPO = [
   inputGroupSource,
-  inputGroupIconeFimSource,
-  inputGroupPrefixoTextoSource,
+  inputGroupIconEndSource,
+  inputGroupPrefixoTextSource,
   inputGroupPrefixoESufixoSource,
-  inputGroupBotaoInternoSource,
+  inputGroupButtonInternoSource,
   inputGroupSenhaSource,
-  inputGroupDesabilitadoSource,
-  inputGroupComErroSource,
+  inputGroupDisabledSource,
+  inputGroupWithErrorSource,
   inputGroupAlinhamentosSource,
-  inputGroupCliqueNoAddonSource,
+  addonSourceInputGroupClick,
 ];
 
-const TODAS = [...CAMPO_SIMPLES, ...GRUPO];
+const TODAS = [...SIMPLE_FIELD, ...GRUPO];
 
 describe('inputSource', () => {
   it('ensina a importação do design system, não a da lib headless', () => {
@@ -101,17 +101,17 @@ describe('tipos', () => {
   it('cada um escreve o seu, porque o arquivo desliga os controls', () => {
     expect(inputEmailSource()).toContain('type="email"');
     expect(inputSenhaSource()).toContain('type="password"');
-    expect(inputNumeroSource()).toContain('type="number"');
+    expect(inputNumberSource()).toContain('type="number"');
     // É o `type` que troca o papel implícito para searchbox; nada no visual
     // denuncia se estiver errado.
-    expect(inputBuscaSource()).toContain('type="search"');
-    expect(inputArquivoSource()).toContain('type="file"');
+    expect(inputSearchSource()).toContain('type="search"');
+    expect(inputFileSource()).toContain('type="file"');
   });
 
   it('o campo de arquivo não finge ter placeholder', () => {
     // Quem desenha o miolo é o navegador: um texto de exemplo aqui não
     // apareceria em lugar nenhum.
-    expect(inputArquivoSource()).not.toContain('placeholder=');
+    expect(inputFileSource()).not.toContain('placeholder=');
   });
 });
 
@@ -162,7 +162,7 @@ describe('InputGroup', () => {
 
   it('o addon muda de lado por align, e os três alinhamentos aparecem juntos', () => {
     expect(inputGroupSource()).toContain('align="inline-start"');
-    expect(inputGroupIconeFimSource()).toContain('align="inline-end"');
+    expect(inputGroupIconEndSource()).toContain('align="inline-end"');
     const tres = inputGroupAlinhamentosSource();
     for (const align of ['inline-start', 'inline-end', 'block-start']) {
       expect(tres).toContain(`align="${align}"`);
@@ -170,14 +170,14 @@ describe('InputGroup', () => {
   });
 
   it('o texto do addon usa a peça própria, não um span solto', () => {
-    for (const fn of [inputGroupPrefixoTextoSource, inputGroupPrefixoESufixoSource]) {
+    for (const fn of [inputGroupPrefixoTextSource, inputGroupPrefixoESufixoSource]) {
       expect(fn()).toContain('<InputGroupText>');
     }
     expect(inputGroupPrefixoESufixoSource()).toContain('BRL');
   });
 
   it('o botão só de ícone ganha nome acessível', () => {
-    for (const fn of [inputGroupBotaoInternoSource, inputGroupCliqueNoAddonSource]) {
+    for (const fn of [inputGroupButtonInternoSource, addonSourceInputGroupClick]) {
       expect(fn()).toMatch(/<InputGroupButton[\s\S]*?aria-label="/);
     }
   });
@@ -192,7 +192,7 @@ describe('InputGroup', () => {
   });
 
   it('o erro do grupo marca o CONTROLE, não o contêiner', () => {
-    const saida = inputGroupComErroSource();
+    const saida = inputGroupWithErrorSource();
     expect(saida).toMatch(/<InputGroupInput[\s\S]*?aria-invalid="true"/);
     // O contêiner não carrega ARIA de validação: quem é inválido é o campo.
     expect(saida).not.toMatch(/<InputGroup\s+[^>]*aria-invalid/);
@@ -200,7 +200,7 @@ describe('InputGroup', () => {
   });
 
   it('o disabled do grupo também mora no controle', () => {
-    expect(inputGroupDesabilitadoSource()).toMatch(/<InputGroupInput[^>]*disabled/);
+    expect(inputGroupDisabledSource()).toMatch(/<InputGroupInput[^>]*disabled/);
   });
 });
 

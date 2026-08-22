@@ -11,7 +11,7 @@ import {
   AvatarBadge,
 } from "./avatar";
 import {
-  avatarComAtrasoSource,
+  avatarWithDelaySource,
   avatarComIconeSource,
   avatarComStatusSource,
   avatarEmGrupoSource,
@@ -53,7 +53,7 @@ export const WithImage: Story = {
     covers: ["functional.item1", "accessibility.item1"],
     // O `delayMs` no fallback é o que evita o pisca-pisca das iniciais aqui, e
     // o `meta` não o traz.
-    docs: { source: { transform: avatarComAtrasoSource } },
+    docs: { source: { transform: avatarWithDelaySource } },
   },
   render: () => (
     <Avatar>

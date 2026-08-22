@@ -12,7 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "./breadcrumb";
 import {
-  breadcrumbComEllipsisSource,
+  breadcrumbWithEllipsisSource,
   breadcrumbLinkCustomizadoSource,
   breadcrumbSeparadorCustomizadoSource,
   breadcrumbSimplesSource,
@@ -111,7 +111,7 @@ export const WithEllipsis: Story = {
     docs: {
       // O indicador de níveis ocultos é uma peça a mais na trilha, e o `label`
       // é o que decide se ele é anunciado — nada disso cabe na trilha do `meta`.
-      source: { transform: breadcrumbComEllipsisSource },
+      source: { transform: breadcrumbWithEllipsisSource },
       description: {
         story:
           "Ellipsis colapsando níveis intermediários. Com rótulo, o indicador é anunciado; sem ele, fica decorativo.",

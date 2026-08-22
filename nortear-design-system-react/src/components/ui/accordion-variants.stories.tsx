@@ -11,7 +11,7 @@ import {
 import {
   accordionControladoSource,
   accordionMultiploSource,
-  accordionSemConfiguracaoSource,
+  accordionNoConfigSource,
   accordionSource,
 } from "./accordion.source";
 
@@ -133,7 +133,7 @@ export const CloseOnSecondClick: Story = {
     docs: {
       // A ausência de configuração é o assunto: o snippet do meta traz
       // defaultValue e esconderia justamente o que a story prova.
-      source: { transform: accordionSemConfiguracaoSource },
+      source: { transform: accordionNoConfigSource },
       description: {
         story:
           "Modo único sem nenhuma configuração extra: clicar de novo no item aberto o fecha.",

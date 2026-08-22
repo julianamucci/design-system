@@ -168,7 +168,7 @@ export const UnknownLanguage: Story = {
  * DOM, e um botão que só sabe remover deixa a segunda rodada sem bloco nenhum
  * para copiar.
  */
-function BlocoRemovivel({ code }: { code: string }) {
+function BlockRemovivel({ code }: { code: string }) {
   const [visivel, setVisivel] = React.useState(true);
   return (
     <div className="nds-stack" data-spacing="md">
@@ -188,7 +188,7 @@ export const RemovedBeforeFeedback: Story = {
     docs: { source: { transform: codeBlockRemovivelSource } },
   },
   args: { code: BASE_CODE },
-  render: (args) => <BlocoRemovivel code={args.code} />,
+  render: (args) => <BlockRemovivel code={args.code} />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
 

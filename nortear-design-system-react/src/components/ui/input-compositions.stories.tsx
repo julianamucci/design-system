@@ -11,13 +11,13 @@ import {
 } from "./input-group";
 import {
   inputGroupAlinhamentosSource,
-  inputGroupBotaoInternoSource,
-  inputGroupCliqueNoAddonSource,
-  inputGroupComErroSource,
-  inputGroupDesabilitadoSource,
-  inputGroupIconeFimSource,
+  inputGroupButtonInternoSource,
+  addonSourceInputGroupClick,
+  inputGroupWithErrorSource,
+  inputGroupDisabledSource,
+  inputGroupIconEndSource,
   inputGroupPrefixoESufixoSource,
-  inputGroupPrefixoTextoSource,
+  inputGroupPrefixoTextSource,
   inputGroupSenhaSource,
   inputGroupSource,
 } from "./input.source";
@@ -82,7 +82,7 @@ export const AddonIconLeft: Story = {
 
 export const AddonIconRight: Story = {
   // O lado do addon é o assunto: muda o `align` E a ordem das peças no JSX.
-  parameters: { docs: { source: { transform: inputGroupIconeFimSource } } },
+  parameters: { docs: { source: { transform: inputGroupIconEndSource } } },
   render: () => (
     <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-icon-right" className="nds-text-body nds-font-medium">
@@ -112,7 +112,7 @@ export const AddonIconRight: Story = {
 
 export const AddonTextLeft: Story = {
   // `InputGroupText` é a peça que o snippet do ícone nu não mostra.
-  parameters: { docs: { source: { transform: inputGroupPrefixoTextoSource } } },
+  parameters: { docs: { source: { transform: inputGroupPrefixoTextSource } } },
   render: () => (
     <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-text-left" className="nds-text-body nds-font-medium">
@@ -173,7 +173,7 @@ export const AddonTextRight: Story = {
 export const InnerButton: Story = {
   // `InputGroupButton` dentro do addon, com nome acessível próprio — um botão
   // só de ícone é mudo sem o `aria-label`.
-  parameters: { docs: { source: { transform: inputGroupBotaoInternoSource } } },
+  parameters: { docs: { source: { transform: inputGroupButtonInternoSource } } },
   render: () => (
     <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-btn-search" className="nds-text-body nds-font-medium">
@@ -214,7 +214,7 @@ export const PasswordWithToggle: Story = {
   // Única composição com estado: o `useState` e a troca dupla (tipo do campo e
   // nome do botão) não existem em nenhum snippet estático.
   parameters: { docs: { source: { transform: inputGroupSenhaSource } } },
-  render: function SenhaComToggleRender() {
+  render: function SenhaWithToggleRender() {
     const [show, setShow] = useState(false);
     return (
       <div className="nds-stack nds-w-2xs" data-spacing="xs">
@@ -266,7 +266,7 @@ export const PasswordWithToggle: Story = {
 
 export const Disabled: Story = {
   // O `disabled` vai no CONTROLE, não no contêiner: é a lição da story.
-  parameters: { docs: { source: { transform: inputGroupDesabilitadoSource } } },
+  parameters: { docs: { source: { transform: inputGroupDisabledSource } } },
   render: () => (
     <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-disabled" className="nds-text-body nds-font-medium">
@@ -298,7 +298,7 @@ export const Disabled: Story = {
 export const WithError: Story = {
   // As marcas de ARIA ficam no controle interno, e a mensagem é peça a mais que
   // o snippet do grupo padrão não tem.
-  parameters: { docs: { source: { transform: inputGroupComErroSource } } },
+  parameters: { docs: { source: { transform: inputGroupWithErrorSource } } },
   render: () => (
     <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="comp-error" className="nds-text-body nds-font-medium">
@@ -426,7 +426,7 @@ export const AddonClick: Story = {
     covers: ["functional.item8"],
     // O assunto é a exceção: o addon leva o foco ao campo, MENOS quando o alvo
     // é um botão. Sem o botão ao lado, o snippet esconderia metade da regra.
-    docs: { source: { transform: inputGroupCliqueNoAddonSource } },
+    docs: { source: { transform: addonSourceInputGroupClick } },
   },
   render: () => (
     <div className="nds-stack nds-w-md" data-spacing="xs">

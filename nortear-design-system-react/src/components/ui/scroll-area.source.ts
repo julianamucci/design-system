@@ -27,7 +27,7 @@ export type ScrollAreaArgs = {
   itemCount: number;
 };
 
-const IMPORT_SIMPLES = 'import { ScrollArea } from "@/components/ui/scroll-area";';
+const SIMPLE_IMPORT = 'import { ScrollArea } from "@/components/ui/scroll-area";';
 const IMPORT_COM_BARRA =
   'import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";';
 
@@ -89,7 +89,7 @@ function faixaHorizontal(itens: number): string {
  * faz a tabela passar da caixa: largura de tabela nasce do conteúdo, então não
  * há medida a cravar em lugar nenhum.
  */
-function tabelaAmpla(linhas: number): string {
+function tableAmpla(linhas: number): string {
   return `const linhas = Array.from({ length: ${linhas} }, (_, i) => i + 1);
 const colunas = Array.from({ length: 12 }, (_, i) => i + 1);
 
@@ -127,9 +127,9 @@ export const scrollAreaSource: SourceTransform<ScrollAreaArgs> = (_gerado, ctx) 
     return jsxSnippet(IMPORT_COM_BARRA, faixaHorizontal(quantidade(args.itemCount, 12)));
   }
   if (args.orientation === 'both') {
-    return jsxSnippet(IMPORT_COM_BARRA, tabelaAmpla(quantidade(args.itemCount, 12)));
+    return jsxSnippet(IMPORT_COM_BARRA, tableAmpla(quantidade(args.itemCount, 12)));
   }
-  return jsxSnippet(IMPORT_SIMPLES, listaVertical(quantidade(args.itemCount, 24)));
+  return jsxSnippet(SIMPLE_IMPORT, listaVertical(quantidade(args.itemCount, 24)));
 };
 
 /** Horizontal: a direção é o assunto, e nenhum control a descreve neste arquivo. */
@@ -143,7 +143,7 @@ export function scrollAreaHorizontalSource(): string {
  * separadas.
  */
 export function scrollAreaTabelaSource(): string {
-  return jsxSnippet(IMPORT_COM_BARRA, tabelaAmpla(15));
+  return jsxSnippet(IMPORT_COM_BARRA, tableAmpla(15));
 }
 
 /**
@@ -152,9 +152,9 @@ export function scrollAreaTabelaSource(): string {
  * continua abaixo do que se vê, que é exatamente a leitura errada num conteúdo
  * que rola.
  */
-export function scrollAreaListaDeTagsSource(): string {
+export function tagsSourceScrollAreaList(): string {
   return jsxSnippet(
-    `${IMPORT_SIMPLES}
+    `${SIMPLE_IMPORT}
 import { Separator } from "@/components/ui/separator";`,
     `const versoes = Array.from({ length: 30 }, (_, i) => \`v1.0.\${i}\`);
 
@@ -208,7 +208,7 @@ export function scrollAreaCarrosselSource(): string {
  */
 export function scrollAreaMenuLateralSource(): string {
   return jsxSnippet(
-    IMPORT_SIMPLES,
+    SIMPLE_IMPORT,
     `const secoes = [
   { nome: "Componentes", itens: ["Button", "Input", "Select", "Checkbox"] },
   { nome: "Layout", itens: ["Card", "ScrollArea", "Separator"] },
@@ -249,7 +249,7 @@ export function scrollAreaMenuLateralSource(): string {
  */
 export function scrollAreaConteudoFocavelSource(): string {
   return jsxSnippet(
-    IMPORT_SIMPLES,
+    SIMPLE_IMPORT,
     `const acoes = Array.from({ length: 20 }, (_, i) => i + 1);
 
 <ScrollArea size="lg" className="nds-w-sm nds-rounded-md nds-border-default">
@@ -276,9 +276,9 @@ export function scrollAreaConteudoFocavelSource(): string {
  * lado a lado, porque sozinho o exemplo sem limite parece um componente com
  * defeito em vez de um componente ao qual ninguém disse até onde ir.
  */
-export function scrollAreaSemAlturaSource(): string {
+export function scrollAreaNoHeightSource(): string {
   return jsxSnippet(
-    IMPORT_SIMPLES,
+    SIMPLE_IMPORT,
     `const itens = Array.from({ length: 24 }, (_, i) => \`Item \${i + 1}\`);
 
 <div className="nds-stack nds-w-sm" data-spacing="lg">

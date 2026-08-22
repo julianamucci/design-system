@@ -15,11 +15,11 @@ import {
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
 import {
-  progressComAriaLiveSource,
-  progressCoresSource,
-  progressRotuloEValorSource,
+  progressWithAriaLiveSource,
+  progressColorsSource,
+  progressLabelEValorSource,
   progressSource,
-  progressVariosNiveisSource,
+  progressMultipleLevelsSource,
 } from "./progress.source";
 
 const meta = {
@@ -47,7 +47,7 @@ export const MultipleLevels: Story = {
   parameters: {
     docs: {
       // Três barras irmãs, cada uma com o próprio nome — o meta imprime uma.
-      source: { transform: progressVariosNiveisSource },
+      source: { transform: progressMultipleLevelsSource },
     },
   },
   render: () => (
@@ -90,7 +90,7 @@ export const CustomColor: Story = {
   parameters: {
     docs: {
       // A lista com `data-variant` não sai de control nenhum neste arquivo.
-      source: { transform: progressCoresSource },
+      source: { transform: progressColorsSource },
     },
   },
   render: () => (
@@ -148,10 +148,10 @@ export const WithLabelAndValue: Story = {
   parameters: {
     docs: {
       // Composição de quatro peças mais o valor vivo, que só existe no `render`.
-      source: { transform: progressRotuloEValorSource },
+      source: { transform: progressLabelEValorSource },
     },
   },
-  render: function ComLabelEValorRender() {
+  render: function WithLabelEValorRender() {
     const [value, setValue] = useState<number>(0);
 
     useEffect(() => {
@@ -202,10 +202,10 @@ export const WithAriaLive: Story = {
   parameters: {
     docs: {
       // A região `aria-live` ao lado da barra é a composição que a story ensina.
-      source: { transform: progressComAriaLiveSource },
+      source: { transform: progressWithAriaLiveSource },
     },
   },
-  render: function ComAriaLiveRender() {
+  render: function WithAriaLiveRender() {
     const [value, setValue] = useState<number>(0);
 
     useEffect(() => {
@@ -237,8 +237,8 @@ export const WithAriaLive: Story = {
     await step("O texto anunciado acompanha o valor da barra", async () => {
       const bar = canvas.getByRole("progressbar");
       const live = canvasElement.querySelector("[aria-live='polite']")!;
-      const doTexto = Number(live.textContent?.match(/\d+/)?.[0]);
-      await expect(String(doTexto)).toBe(bar.getAttribute("aria-valuenow"));
+      const ofText = Number(live.textContent?.match(/\d+/)?.[0]);
+      await expect(String(ofText)).toBe(bar.getAttribute("aria-valuenow"));
     });
 
     await step("A barra continua com nome próprio", async () => {

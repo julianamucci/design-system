@@ -163,8 +163,8 @@ export const WithDescription: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await step("Cada Label tem htmlFor associado ao id do item", async () => {
-      const padraoLabel = canvas.getByText("Padrão");
-      await expect(padraoLabel).toHaveAttribute("for", "desc-padrao");
+      const defaultLabel = canvas.getByText("Padrão");
+      await expect(defaultLabel).toHaveAttribute("for", "desc-padrao");
     });
     await step("Descrições auxiliares estão presentes", async () => {
       await expect(

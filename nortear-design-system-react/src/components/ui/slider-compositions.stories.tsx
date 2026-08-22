@@ -3,9 +3,9 @@ import { useState } from "react";
 import { userEvent, within, expect } from "storybook/test";
 import { Slider } from "./slider";
 import {
-  sliderComRotuloSource,
+  sliderWithLabelSource,
   sliderEmFormularioSource,
-  sliderPassoSource,
+  sliderStepSource,
   sliderPrecoSource,
   sliderSource,
 } from "./slider.source";
@@ -40,10 +40,10 @@ export const WithLabelAndValue: Story = {
     docs: {
       // Sub-composição com `<Label>`: o rótulo visível e o `aria-label` convivem,
       // porque `htmlFor` não alcança a alça que a lib desenha por dentro.
-      source: { transform: sliderComRotuloSource },
+      source: { transform: sliderWithLabelSource },
     },
   },
-  render: function ComLabelEValorRender() {
+  render: function WithLabelEValorRender() {
     const [value, setValue] = useState<number[]>([75]);
     return (
       <div className="nds-stack nds-w-sm" data-spacing="sm">
@@ -92,7 +92,7 @@ export const PriceRange: Story = {
       source: { transform: sliderPrecoSource },
     },
   },
-  render: function FaixaDePrecoRender() {
+  render: function PrecoRenderRange() {
     const [value, setValue] = useState<number[]>([100, 400]);
     return (
       <div className="nds-stack nds-w-sm" data-spacing="sm">
@@ -132,7 +132,7 @@ export const CustomStep: Story = {
   parameters: {
     docs: {
       // O passo é o assunto da story e vive só no `render`.
-      source: { transform: sliderPassoSource },
+      source: { transform: sliderStepSource },
     },
   },
   render: function StepCustomizadoRender() {
@@ -175,7 +175,7 @@ export const InForm: Story = {
       source: { transform: sliderEmFormularioSource },
     },
   },
-  render: function EmFormularioRender() {
+  render: function InFormRender() {
     const [volume, setVolume] = useState<number[]>([60]);
     const [brilho, setBrilho] = useState<number[]>([80]);
     const [salvo, setSalvo] = useState<string>("");

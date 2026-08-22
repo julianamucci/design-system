@@ -22,7 +22,7 @@ import {
   attrsMultilinha,
   jsxSnippet,
   propBool,
-  propTexto,
+  propText,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -51,14 +51,14 @@ export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
   const temErro = typeof args.error === 'string' && args.error.trim() !== '';
 
   const campo = attrsMultilinha([
-    propTexto('label', args.label) ?? 'label="Email"',
-    propTexto('description', args.description),
-    propTexto('error', args.error),
+    propText('label', args.label) ?? 'label="Email"',
+    propText('description', args.description),
+    propText('error', args.error),
   ]);
 
   const controle = attrs(
     'type="email"',
-    propTexto('placeholder', args.placeholder) ?? 'placeholder="ex: joao@empresa.com"',
+    propText('placeholder', args.placeholder) ?? 'placeholder="ex: joao@empresa.com"',
     propBool('disabled', args.disabled),
     // `aria-invalid` acompanha a mensagem: cor no rótulo sozinha não alcança
     // quem não enxerga cor, e é o atributo que o leitor de tela anuncia.

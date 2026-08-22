@@ -5,7 +5,7 @@
  * apaga. É o que deixa as funções rodarem no projeto `unit` do vitest, a única
  * guarda que elas têm: a saída do painel não chega ao DOM durante a `play`.
  */
-import { attrs, filhoTexto, jsxSnippet, propOpcao, type SourceTransform } from '@/lib/story-source';
+import { attrs, childText, jsxSnippet, propOption, type SourceTransform } from '@/lib/story-source';
 
 export type BadgeArgs = {
   variant: 'default' | 'secondary' | 'destructive' | 'warning' | 'success' | 'info' | 'outline';
@@ -28,7 +28,7 @@ const IMPORT = 'import { Badge } from "@/components/ui/badge";';
 function badgeSnippet(variante: BadgeArgs['variant'] | undefined, conteudo: string): string {
   return jsxSnippet(
     IMPORT,
-    `<Badge${attrs(propOpcao('variant', variante, VARIANTES, 'default'))}>${conteudo}</Badge>`,
+    `<Badge${attrs(propOption('variant', variante, VARIANTES, 'default'))}>${conteudo}</Badge>`,
   );
 }
 
@@ -42,7 +42,7 @@ export const badgeSource: SourceTransform<BadgeArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return badgeSnippet(
     typeof args.variant === 'string' ? (args.variant as BadgeArgs['variant']) : undefined,
-    filhoTexto(args.children, 'Novo'),
+    childText(args.children, 'Novo'),
   );
 };
 

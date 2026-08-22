@@ -5,7 +5,7 @@ import {
   hoverCardDefinicaoSource,
   hoverCardEsperaCurtaSource,
   hoverCardEsperaPadraoSource,
-  hoverCardFechadoSource,
+  hoverCardClosedSource,
   hoverCardLadosSource,
   hoverCardMetricaSource,
   hoverCardPreviaDeLinkSource,
@@ -16,7 +16,7 @@ const TODAS = [
   hoverCardSource,
   hoverCardEsperaPadraoSource,
   hoverCardEsperaCurtaSource,
-  hoverCardFechadoSource,
+  hoverCardClosedSource,
   hoverCardControladoSource,
   hoverCardPreviaDeLinkSource,
   hoverCardDefinicaoSource,
@@ -105,7 +105,7 @@ describe('tempo', () => {
 
 describe('estados', () => {
   it('fechado não anuncia expansão: o cartão não é um menu', () => {
-    const saida = hoverCardFechadoSource();
+    const saida = hoverCardClosedSource();
     expect(saida).not.toContain('aria-expanded');
     expect(saida).not.toContain('aria-haspopup');
     expect(saida).not.toContain('defaultOpen');
@@ -173,7 +173,7 @@ describe('guardas do painel', () => {
       hoverCardSource,
       hoverCardEsperaPadraoSource,
       hoverCardEsperaCurtaSource,
-      hoverCardFechadoSource,
+      hoverCardClosedSource,
       hoverCardPreviaDeLinkSource,
       hoverCardDefinicaoSource,
       hoverCardMetricaSource,

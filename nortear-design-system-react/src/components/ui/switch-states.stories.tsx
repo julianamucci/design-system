@@ -3,7 +3,7 @@ import { userEvent, within, expect } from "storybook/test";
 import { Switch } from "./switch";
 import { Label } from "./label";
 import {
-  switchDesabilitadoLigadoSource,
+  switchDisabledLigadoSource,
   switchDesabilitadoSource,
   switchInvalidoSource,
   switchLigadoSource,
@@ -217,7 +217,7 @@ export const DisabledChecked: Story = {
   parameters: {
     docs: {
       // O par `disabled` + `defaultChecked` é afirmado no render.
-      source: { transform: switchDesabilitadoLigadoSource },
+      source: { transform: switchDisabledLigadoSource },
       description: {
         story:
           "Switch desabilitado e ativado ao mesmo tempo — mostra o estado sem permitir alteração.",

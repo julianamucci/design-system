@@ -13,8 +13,8 @@
 import {
   attrs,
   jsxSnippet,
-  propOpcao,
-  propTexto,
+  propOption,
+  propText,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -41,10 +41,10 @@ function importarPecas(pecas: readonly string[]): string {
  * `data-size`, e o CSS deriva dele o círculo, a tipografia das iniciais e o
  * tamanho do indicador de status.
  */
-function avatarComFoto(size: unknown, className: unknown, atraso = false): string {
+function avatarWithFoto(size: unknown, className: unknown, atraso = false): string {
   const raiz = attrs(
-    propOpcao('size', size, TAMANHOS, 'md'),
-    propTexto('className', className),
+    propOption('size', size, TAMANHOS, 'md'),
+    propText('className', className),
   );
   const fallback = atraso ? '<AvatarFallback delayMs={600}>' : '<AvatarFallback>';
   return jsxSnippet(
@@ -65,27 +65,27 @@ function avatarComFoto(size: unknown, className: unknown, atraso = false): strin
  */
 export const avatarSource: SourceTransform<AvatarArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  return avatarComFoto(args.size, args.className);
+  return avatarWithFoto(args.size, args.className);
 };
 
 /** 24px — o menor preset, para linha de tabela e lista densa. */
 export function avatarSmSource(): string {
-  return avatarComFoto('sm', undefined);
+  return avatarWithFoto('sm', undefined);
 }
 
 /** 40px — cabeçalho de card e item de lista com duas linhas de texto. */
 export function avatarLgSource(): string {
-  return avatarComFoto('lg', undefined);
+  return avatarWithFoto('lg', undefined);
 }
 
 /** 48px — barra de topo e cabeçalho de conversa. */
 export function avatarXlSource(): string {
-  return avatarComFoto('xl', undefined);
+  return avatarWithFoto('xl', undefined);
 }
 
 /** 64px — o maior preset, para cabeçalho de perfil. */
 export function avatar2xlSource(): string {
-  return avatarComFoto('2xl', undefined);
+  return avatarWithFoto('2xl', undefined);
 }
 
 /**
@@ -94,8 +94,8 @@ export function avatar2xlSource(): string {
  * aparecem e somem num quadro. O atraso é o assunto das duas stories que
  * apontam para cá, e não cabe nos args.
  */
-export function avatarComAtrasoSource(): string {
-  return avatarComFoto(undefined, undefined, true);
+export function avatarWithDelaySource(): string {
+  return avatarWithFoto(undefined, undefined, true);
 }
 
 /**

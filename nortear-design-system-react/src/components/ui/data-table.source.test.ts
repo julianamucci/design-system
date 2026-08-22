@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dataTableComEdicaoSource,
-  dataTableComFiltrosDeColunaSource,
-  dataTableComRotuloDeLinhaSource,
+  dataTableWithEditSource,
+  columnSourceDataTableWithFilters,
+  lineSourceDataTableWithLabel,
   dataTablePaginadaSource,
   dataTableRedimensionavelSource,
   dataTableReordenavelEFixavelSource,
@@ -13,12 +13,12 @@ import {
 
 const TODAS = [
   dataTableSource,
-  dataTableComFiltrosDeColunaSource,
+  columnSourceDataTableWithFilters,
   dataTableRedimensionavelSource,
   dataTableReordenavelEFixavelSource,
-  dataTableComEdicaoSource,
+  dataTableWithEditSource,
   dataTablePaginadaSource,
-  dataTableComRotuloDeLinhaSource,
+  lineSourceDataTableWithLabel,
   dataTableVirtualizadaSource,
   dataTableSemResultadosSource,
 ];
@@ -125,7 +125,7 @@ describe('dataTableSource', () => {
 
 describe('configurações por feature', () => {
   it('o filtro por coluna é declarado na COLUNA', () => {
-    const saida = dataTableComFiltrosDeColunaSource();
+    const saida = columnSourceDataTableWithFilters();
     expect(saida).toContain('meta: { filter: { type: "text" } }');
     expect(saida).toContain('filter: { type: "select", options: ["Pago", "Pendente", "Cancelado"] }');
     expect(saida).toContain('enableColumnFilters');
@@ -142,7 +142,7 @@ describe('configurações por feature', () => {
   });
 
   it('a edição inline exige dono de estado: a tabela não guarda os dados', () => {
-    const saida = dataTableComEdicaoSource();
+    const saida = dataTableWithEditSource();
     expect(saida).toContain('meta: { editable: true }');
     expect(saida).toContain('const [dados, setDados] = useState(invoices);');
     expect(saida).toContain('onCellEdit={(rowIndex, columnId, value) =>');
@@ -157,7 +157,7 @@ describe('configurações por feature', () => {
   });
 
   it('rowLabel vence a primeira coluna como identificador da linha', () => {
-    const saida = dataTableComRotuloDeLinhaSource();
+    const saida = lineSourceDataTableWithLabel();
     expect(saida).toContain('rowLabel={(fatura) => fatura.customer}');
     expect(saida).toContain('rowKey={(fatura) => fatura.id}');
   });

@@ -10,7 +10,7 @@ import {
   type CarouselApi,
 } from "./carousel";
 import { Card, CardContent } from "./card";
-import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
+import { SlideCard, viewportVisible } from "./carousel.fixtures";
 import {
   carouselComDotsSource,
   carouselGaleriaSource,
@@ -55,7 +55,7 @@ type Story = StoryObj<typeof meta>;
 
 const TOTAL_SLIDES = 5;
 
-function ComDotsCarousel() {
+function WithDotsCarousel() {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -132,7 +132,7 @@ export const WithDots: Story = {
       },
     },
   },
-  render: () => <ComDotsCarousel />,
+  render: () => <WithDotsCarousel />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
@@ -220,9 +220,9 @@ export const WithDots: Story = {
       await irPara(3);
       // Salto, não passo: a prova é o slide alvo entrar no enquadramento.
       await waitFor(async () => {
-        await expect(visivelNoViewport(slides[2], viewport)).toBe(true);
+        await expect(viewportVisible(slides[2], viewport)).toBe(true);
       }, { timeout: 4000 });
-      await expect(visivelNoViewport(slides[0], viewport)).toBe(false);
+      await expect(viewportVisible(slides[0], viewport)).toBe(false);
       await expect(dot(1).hasAttribute("aria-current")).toBe(false);
     });
 
@@ -230,7 +230,7 @@ export const WithDots: Story = {
       const slides = canvas.getAllByRole("group");
       await irPara(1);
       await waitFor(async () => {
-        await expect(visivelNoViewport(slides[0], viewport)).toBe(true);
+        await expect(viewportVisible(slides[0], viewport)).toBe(true);
       }, { timeout: 4000 });
       // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
       // muda o controle é a reconciliação do índice, adiada até o motor silenciar.

@@ -8,13 +8,13 @@ import { describe, expect, it } from 'vitest';
 import {
   attrs,
   attrsMultilinha,
-  filhoTexto,
+  childText,
   indentar,
   jsxSnippet,
   propBool,
-  propNumero,
-  propOpcao,
-  propTexto,
+  propNumber,
+  propOption,
+  propText,
   texto,
 } from './story-source';
 
@@ -71,7 +71,7 @@ describe('texto', () => {
     expect(texto(espiao)).toBeUndefined();
     // E o corpo do mock, que é o que apareceria no painel, não sobra em lugar
     // nenhum da montagem.
-    expect(attrs(propTexto('onClick', espiao))).toBe('');
+    expect(attrs(propText('onClick', espiao))).toBe('');
   });
 
   it('recusa string vazia, número, objeto e nulo', () => {
@@ -83,23 +83,23 @@ describe('texto', () => {
 
 describe('propTexto', () => {
   it('monta o atributo quando há conteúdo', () => {
-    expect(propTexto('aria-label', 'Galeria')).toBe('aria-label="Galeria"');
+    expect(propText('aria-label', 'Galeria')).toBe('aria-label="Galeria"');
   });
 
   it('some quando o arg não é string', () => {
-    expect(propTexto('aria-label', espiao)).toBeUndefined();
+    expect(propText('aria-label', espiao)).toBeUndefined();
   });
 });
 
 describe('propNumero', () => {
   it('usa chaves, como JSX exige', () => {
-    expect(propNumero('max', 100)).toBe('max={100}');
+    expect(propNumber('max', 100)).toBe('max={100}');
   });
 
   it('recusa NaN, Infinity e não-números', () => {
-    expect(propNumero('max', Number.NaN)).toBeUndefined();
-    expect(propNumero('max', Number.POSITIVE_INFINITY)).toBeUndefined();
-    expect(propNumero('max', '100')).toBeUndefined();
+    expect(propNumber('max', Number.NaN)).toBeUndefined();
+    expect(propNumber('max', Number.POSITIVE_INFINITY)).toBeUndefined();
+    expect(propNumber('max', '100')).toBeUndefined();
   });
 });
 
@@ -126,13 +126,13 @@ describe('propOpcao', () => {
   const variantes = ['default', 'outline', 'destructive'] as const;
 
   it('entra só quando difere do padrão', () => {
-    expect(propOpcao('variant', 'outline', variantes, 'default')).toBe('variant="outline"');
-    expect(propOpcao('variant', 'default', variantes, 'default')).toBeUndefined();
+    expect(propOption('variant', 'outline', variantes, 'default')).toBe('variant="outline"');
+    expect(propOption('variant', 'default', variantes, 'default')).toBeUndefined();
   });
 
   it('não inventa atributo com valor fora da união', () => {
-    expect(propOpcao('variant', 'roxo', variantes, 'default')).toBeUndefined();
-    expect(propOpcao('variant', espiao, variantes, 'default')).toBeUndefined();
+    expect(propOption('variant', 'roxo', variantes, 'default')).toBeUndefined();
+    expect(propOption('variant', espiao, variantes, 'default')).toBeUndefined();
   });
 });
 
@@ -144,7 +144,7 @@ describe('indentar', () => {
 
 describe('filhoTexto', () => {
   it('cai no padrão quando o control entrega um espião', () => {
-    expect(filhoTexto(espiao, 'Salvar')).toBe('Salvar');
-    expect(filhoTexto('Enviar', 'Salvar')).toBe('Enviar');
+    expect(childText(espiao, 'Salvar')).toBe('Salvar');
+    expect(childText('Enviar', 'Salvar')).toBe('Enviar');
   });
 });

@@ -302,8 +302,8 @@ export const Playground: Story = {
 
       // functional.item1: o primeiro controle alcançado é o Cancel — a saída
       // segura precede a destrutiva na ordem de tabulação.
-      const primeiroControle = ordem.find((el) => el === cancel || el === action);
-      await expect(primeiroControle).toBe(cancel);
+      const firstControl = ordem.find((el) => el === cancel || el === action);
+      await expect(firstControl).toBe(cancel);
 
       await userEvent.tab({ shift: true });
       await waitFor(() => {

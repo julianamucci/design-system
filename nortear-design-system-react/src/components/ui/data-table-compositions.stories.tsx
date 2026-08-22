@@ -3,8 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, userEvent, waitFor, fireEvent, expect, fn } from "storybook/test"
 import { DataTable, type DataTableColumn } from "./data-table"
 import {
-  dataTableComEdicaoSource,
-  dataTableComFiltrosDeColunaSource,
+  dataTableWithEditSource,
+  columnSourceDataTableWithFilters,
   dataTableRedimensionavelSource,
   dataTableReordenavelEFixavelSource,
   dataTableSource,
@@ -83,7 +83,7 @@ export const WithColumnFilters: Story = {
     actions: { disable: true },
     // O recorte é declarado na COLUNA (`meta.filter`): outro conjunto de
     // colunas, que o snippet do `meta` não tem como mostrar.
-    docs: { source: { transform: dataTableComFiltrosDeColunaSource } },
+    docs: { source: { transform: columnSourceDataTableWithFilters } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)
@@ -100,8 +100,8 @@ export const WithColumnFilters: Story = {
       await expect(celulas.length).toBe(filterableColumns.length)
       // A coluna Valor não tem filtro — e é justamente ela que precisa dizer
       // de qual coluna a célula vazia é.
-      const semFiltro = celulas[celulas.length - 1]
-      await expect(semFiltro).toHaveTextContent("Sem filtro para Valor")
+      const noFilter = celulas[celulas.length - 1]
+      await expect(noFilter).toHaveTextContent("Sem filtro para Valor")
     })
 
     await step("O select por coluna recorta pelo valor exato", async () => {
@@ -340,7 +340,7 @@ export const WithInlineEditing: Story = {
     actions: { disable: true },
     // A tabela não guarda os dados: sem o dono de estado que `onCellEdit`
     // exige, o snippet ensinaria uma edição que volta atrás sozinha.
-    docs: { source: { transform: dataTableComEdicaoSource } },
+    docs: { source: { transform: dataTableWithEditSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement)

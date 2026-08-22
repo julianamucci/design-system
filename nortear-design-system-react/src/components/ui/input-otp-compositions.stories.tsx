@@ -11,7 +11,7 @@ import { Button } from "./button";
 import {
   inputOtpComErroSource,
   inputOtpComReenvioSource,
-  inputOtpComTextoAuxiliarSource,
+  inputOtpWithTextAuxiliarSource,
   inputOtpSource,
 } from "./input-otp.source";
 
@@ -96,7 +96,7 @@ export const WithHelpText: Story = {
     docs: {
       // O parágrafo auxiliar e o `aria-describedby` que o liga são peças a mais
       // que o exemplo canônico não tem.
-      source: { transform: inputOtpComTextoAuxiliarSource },
+      source: { transform: inputOtpWithTextAuxiliarSource },
       description: {
         story:
           "Texto auxiliar conectado via aria-describedby (origem + tempo de validade).",

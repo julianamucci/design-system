@@ -22,7 +22,7 @@ import {
   indentar,
   jsxSnippet,
   propBool,
-  propTexto,
+  propText,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -32,7 +32,7 @@ export type SelectArgs = {
 };
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importarSelect(...pecas: string[]): string {
+function importingSelect(...pecas: string[]): string {
   const lista = [...pecas].sort();
   return `import {\n${lista
     .map((peca) => `  ${peca},`)
@@ -82,8 +82,8 @@ function campo(raiz: string, gatilho = ' aria-label="Selecionar estado"'): strin
  */
 export const selectSource: SourceTransform<SelectArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const raiz = attrs(propTexto('name', args.name), propBool('disabled', args.disabled));
-  return jsxSnippet(`${importarSelect(...PECAS_BASE)}\n\n${MAPA}`, campo(raiz));
+  const raiz = attrs(propText('name', args.name), propBool('disabled', args.disabled));
+  return jsxSnippet(`${importingSelect(...PECAS_BASE)}\n\n${MAPA}`, campo(raiz));
 };
 
 /**
@@ -93,7 +93,7 @@ export const selectSource: SourceTransform<SelectArgs> = (_gerado, ctx) => {
  */
 export function selectComGruposSource(): string {
   return jsxSnippet(
-    `${importarSelect(
+    `${importingSelect(
       'Select',
       'SelectContent',
       'SelectGroup',
@@ -142,7 +142,7 @@ const REGIOES = {
  */
 export function selectComIconeSource(): string {
   return jsxSnippet(
-    `${importarSelect(...PECAS_BASE)}
+    `${importingSelect(...PECAS_BASE)}
 import { MailIcon, MessageCircleIcon, PhoneIcon } from "lucide-react";
 
 const CANAIS = {
@@ -176,7 +176,7 @@ const CANAIS = {
  */
 export function selectSelecionadoSource(): string {
   return jsxSnippet(
-    `${importarSelect(...PECAS_BASE)}\n\n${MAPA}`,
+    `${importingSelect(...PECAS_BASE)}\n\n${MAPA}`,
     campo(' defaultValue="rj"'),
   );
 }
@@ -185,8 +185,8 @@ export function selectSelecionadoSource(): string {
  * Bloqueado. `disabled` na RAIZ, e não só no gatilho: é a raiz que também
  * impede a abertura da lista por teclado.
  */
-export function selectDesabilitadoSource(): string {
-  return jsxSnippet(`${importarSelect(...PECAS_BASE)}\n\n${MAPA}`, campo(' disabled'));
+export function selectDisabledSource(): string {
+  return jsxSnippet(`${importingSelect(...PECAS_BASE)}\n\n${MAPA}`, campo(' disabled'));
 }
 
 /**
@@ -196,7 +196,7 @@ export function selectDesabilitadoSource(): string {
  */
 export function selectInvalidoSource(): string {
   return jsxSnippet(
-    `${importarSelect(...PECAS_BASE)}\n\n${MAPA}`,
+    `${importingSelect(...PECAS_BASE)}\n\n${MAPA}`,
     `<div className="nds-stack" data-spacing="sm">
 ${indentar(campo('', ' aria-label="Selecionar estado" aria-invalid="true"'))}
   <p className="nds-text-body nds-text-destructive">
@@ -213,7 +213,7 @@ ${indentar(campo('', ' aria-label="Selecionar estado" aria-invalid="true"'))}
  */
 export function selectCompactoSource(): string {
   return jsxSnippet(
-    `${importarSelect(...PECAS_BASE)}\n\n${MAPA}`,
+    `${importingSelect(...PECAS_BASE)}\n\n${MAPA}`,
     campo('', ' size="sm" aria-label="Selecionar estado"'),
   );
 }
@@ -226,7 +226,7 @@ export function selectCompactoSource(): string {
 export function selectControladoSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
-${importarSelect(...PECAS_BASE)}
+${importingSelect(...PECAS_BASE)}
 
 ${MAPA}
 
@@ -263,7 +263,7 @@ const [estado, setEstado] = useState("");`,
 export function selectEmFormularioSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
-${importarSelect(...PECAS_BASE)}
+${importingSelect(...PECAS_BASE)}
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
@@ -310,7 +310,7 @@ const [estado, setEstado] = useState("");`,
  */
 export function selectComRotuloSource(): string {
   return jsxSnippet(
-    `${importarSelect(...PECAS_BASE)}
+    `${importingSelect(...PECAS_BASE)}
 import { Label } from "@/components/ui/label";
 
 ${MAPA}`,

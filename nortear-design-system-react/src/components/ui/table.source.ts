@@ -28,7 +28,7 @@ export type TableArgs = {
 const LEGENDA = 'Lista de faturas recentes';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importarTable(...pecas: string[]): string {
+function importingTable(...pecas: string[]): string {
   const lista = [...pecas].sort();
   return `import {\n${lista.map((peca) => `  ${peca},`).join('\n')}\n} from "@/components/ui/table";`;
 }
@@ -101,7 +101,7 @@ function tabela(...secoes: Array<string | false | null | undefined>): string {
   return `<Table>\n${corpo}\n</Table>`;
 }
 
-const IMPORT_COMPLETO = importarTable(
+const IMPORT_COMPLETO = importingTable(
   'Table',
   'TableBody',
   'TableCaption',
@@ -112,7 +112,7 @@ const IMPORT_COMPLETO = importarTable(
   'TableRow',
 );
 
-const IMPORT_SEM_RODAPE = importarTable(
+const IMPORT_SEM_RODAPE = importingTable(
   'Table',
   'TableBody',
   'TableCaption',
@@ -206,7 +206,7 @@ ${dados}
  * cinco controles indistinguíveis na lista do leitor de tela, e o ícone não
  * nomeia nada: ele é `aria-hidden`.
  */
-export function tableAcoesPorLinhaSource(): string {
+export function lineSourceTableActions(): string {
   return `${IMPORT_SEM_RODAPE}
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";

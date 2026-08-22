@@ -12,7 +12,7 @@ import { Slider as SliderPrimitive } from "@base-ui/react/slider"
  * SEGUNDA alça no meio da interação, as duas no mesmo valor. Escalar é uma
  * alça; o par só vale quando não há valor nenhum de onde tirar a contagem.
  */
-function alcasDoValor(
+function valueAlcas(
   value: unknown,
   defaultValue: unknown,
   min: number,
@@ -38,13 +38,13 @@ function Slider({
   "aria-label"?: string
   "aria-labelledby"?: string
 }) {
-  const _values = alcasDoValor(value, defaultValue, min, max)
+  const _values = valueAlcas(value, defaultValue, min, max)
 
   // O valor sai SEMPRE como array, seja qual for a forma que o primitivo usa
   // por dentro — é o contrato que a tabela de props documenta e o que as outras
   // stacks entregam. Só o valor é repassado: o `eventDetails` do primitivo
   // carrega o evento nativo, e a aba Actions estoura ao serializar `event.view`.
-  const emParaFora = (
+  const adaptOutward = (
     callback: ((valor: number[]) => void) | undefined,
   ) =>
     callback
@@ -66,8 +66,8 @@ function Slider({
       value={value}
       min={min}
       max={max}
-      onValueChange={emParaFora(onValueChange as ((v: number[]) => void) | undefined)}
-      onValueCommitted={emParaFora(onValueCommitted as ((v: number[]) => void) | undefined)}
+      onValueChange={adaptOutward(onValueChange as ((v: number[]) => void) | undefined)}
+      onValueCommitted={adaptOutward(onValueCommitted as ((v: number[]) => void) | undefined)}
       {...(rootProps as SliderPrimitive.Root.Props)}
     >
       <SliderPrimitive.Control className="nds-slider">

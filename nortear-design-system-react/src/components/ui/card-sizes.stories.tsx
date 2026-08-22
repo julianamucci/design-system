@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./card";
-import { cardCompactoSource, cardSemRodapeSource, cardSource } from "./card.source";
+import { cardCompactoSource, cardNoFooterSource, cardSource } from "./card.source";
 
 const meta = {
   title: "UI/Card/Sizes",
@@ -54,7 +54,7 @@ export const Default: Story = {
     covers: ["visual.item2"],
     // O padrão não se escreve — o que se compara com o `sm` é esta mesma
     // composição de duas peças, sem o rodapé que o snippet do meta traz.
-    docs: { source: { transform: cardSemRodapeSource } },
+    docs: { source: { transform: cardNoFooterSource } },
   },
   render: () => (
     <Card className="nds-w-sm">

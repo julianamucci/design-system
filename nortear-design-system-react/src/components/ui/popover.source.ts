@@ -21,8 +21,8 @@ import {
   attrsMultilinha,
   jsxSnippet,
   propBool,
-  propNumero,
-  propOpcao,
+  propNumber,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -38,12 +38,12 @@ const LADOS = ['top', 'right', 'bottom', 'left'] as const;
 const ALINHAMENTOS = ['start', 'center', 'end'] as const;
 
 /** Distância padrão entre gatilho e painel, em px. */
-const DISTANCIA_PADRAO = 4;
+const DISTANCIA_DEFAULT = 4;
 
-const IMPORT_BOTAO = 'import { Button } from "@/components/ui/button";';
+const IMPORT_BUTTON = 'import { Button } from "@/components/ui/button";';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importarPopover(...pecas: string[]): string {
+function importingPopover(...pecas: string[]): string {
   const lista = [...pecas].sort();
   return `import {\n${lista
     .map((peca) => `  ${peca},`)
@@ -62,11 +62,11 @@ function gatilho(rotulo: string): string {
  * sozinha — e `role="dialog"` sem nome reprova na regra `aria-dialog-name`.
  */
 function cabecalho(titulo: string, descricao?: string): string {
-  const linhaDescricao = descricao
+  const lineDescription = descricao
     ? `\n      <PopoverDescription>\n        ${descricao}\n      </PopoverDescription>`
     : '';
   return `    <PopoverHeader>
-      <PopoverTitle>${titulo}</PopoverTitle>${linhaDescricao}
+      <PopoverTitle>${titulo}</PopoverTitle>${lineDescription}
     </PopoverHeader>`;
 }
 
@@ -81,7 +81,7 @@ ${conteudo}
 }
 
 /** Par de ações do rodapé do painel, encostado à direita. */
-const ACOES_PADRAO = `    <div className="nds-cluster" data-justify="end" data-spacing="sm">
+const ACTIONS_DEFAULT = `    <div className="nds-cluster" data-justify="end" data-spacing="sm">
       <Button variant="ghost" size="sm">Cancelar</Button>
       <Button size="sm">Salvar</Button>
     </div>`;
@@ -98,15 +98,15 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const raiz = attrs(propBool('defaultOpen', args.defaultOpen), propBool('modal', args.modal));
   const painel = attrsMultilinha([
-    propOpcao('side', args.side, LADOS, 'bottom'),
-    propOpcao('align', args.align, ALINHAMENTOS, 'center'),
-    typeof args.sideOffset === 'number' && args.sideOffset !== DISTANCIA_PADRAO
-      ? propNumero('sideOffset', args.sideOffset)
+    propOption('side', args.side, LADOS, 'bottom'),
+    propOption('align', args.align, ALINHAMENTOS, 'center'),
+    typeof args.sideOffset === 'number' && args.sideOffset !== DISTANCIA_DEFAULT
+      ? propNumber('sideOffset', args.sideOffset)
       : undefined,
   ]);
 
   return jsxSnippet(
-    `${importarPopover(
+    `${importingPopover(
       'Popover',
       'PopoverContent',
       'PopoverDescription',
@@ -114,13 +114,13 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
       'PopoverTitle',
       'PopoverTrigger',
     )}
-${IMPORT_BOTAO}`,
+${IMPORT_BUTTON}`,
     popover(
       raiz,
       'Abrir popover',
       painel,
       `${cabecalho('Configurações de exibição', 'Ajuste a aparência do conteúdo da página.')}
-${ACOES_PADRAO}`,
+${ACTIONS_DEFAULT}`,
     ),
   );
 };
@@ -132,8 +132,8 @@ ${ACOES_PADRAO}`,
  */
 export function popoverConteudoLivreSource(): string {
   return jsxSnippet(
-    `${importarPopover('Popover', 'PopoverContent', 'PopoverTrigger')}
-${IMPORT_BOTAO}`,
+    `${importingPopover('Popover', 'PopoverContent', 'PopoverTrigger')}
+${IMPORT_BUTTON}`,
     popover(
       '',
       'Ver atalhos',
@@ -152,14 +152,14 @@ ${IMPORT_BOTAO}`,
  */
 export function popoverFormularioSource(): string {
   return jsxSnippet(
-    `${importarPopover(
+    `${importingPopover(
       'Popover',
       'PopoverContent',
       'PopoverHeader',
       'PopoverTitle',
       'PopoverTrigger',
     )}
-${IMPORT_BOTAO}
+${IMPORT_BUTTON}
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`,
     popover(
@@ -185,7 +185,7 @@ import { Label } from "@/components/ui/label";`,
  */
 export function popoverAbertoSource(): string {
   return jsxSnippet(
-    `${importarPopover(
+    `${importingPopover(
       'Popover',
       'PopoverContent',
       'PopoverDescription',
@@ -193,7 +193,7 @@ export function popoverAbertoSource(): string {
       'PopoverTitle',
       'PopoverTrigger',
     )}
-${IMPORT_BOTAO}`,
+${IMPORT_BUTTON}`,
     popover(
       ' defaultOpen',
       'Abrir popover',
@@ -211,7 +211,7 @@ ${IMPORT_BOTAO}`,
 export function popoverControladoSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
-${importarPopover(
+${importingPopover(
   'Popover',
   'PopoverContent',
   'PopoverDescription',
@@ -219,7 +219,7 @@ ${importarPopover(
   'PopoverTitle',
   'PopoverTrigger',
 )}
-${IMPORT_BOTAO}
+${IMPORT_BUTTON}
 
 const [aberto, setAberto] = useState(false);`,
     `<div className="nds-stack" data-spacing="sm">
@@ -254,7 +254,7 @@ const [aberto, setAberto] = useState(false);`,
  */
 export function popoverModalSource(): string {
   return jsxSnippet(
-    `${importarPopover(
+    `${importingPopover(
       'Popover',
       'PopoverContent',
       'PopoverDescription',
@@ -262,7 +262,7 @@ export function popoverModalSource(): string {
       'PopoverTitle',
       'PopoverTrigger',
     )}
-${IMPORT_BOTAO}`,
+${IMPORT_BUTTON}`,
     popover(
       ' defaultOpen modal',
       'Abrir modal',
@@ -282,7 +282,7 @@ ${IMPORT_BOTAO}`,
  */
 export function popoverEditarPerfilSource(): string {
   return jsxSnippet(
-    `${importarPopover(
+    `${importingPopover(
       'Popover',
       'PopoverContent',
       'PopoverDescription',
@@ -290,7 +290,7 @@ export function popoverEditarPerfilSource(): string {
       'PopoverTitle',
       'PopoverTrigger',
     )}
-${IMPORT_BOTAO}
+${IMPORT_BUTTON}
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`,
     popover(
@@ -324,7 +324,7 @@ export function popoverFiltroSource(): string {
       </label>`;
 
   return jsxSnippet(
-    `${importarPopover(
+    `${importingPopover(
       'Popover',
       'PopoverContent',
       'PopoverDescription',
@@ -332,7 +332,7 @@ export function popoverFiltroSource(): string {
       'PopoverTitle',
       'PopoverTrigger',
     )}
-${IMPORT_BOTAO}`,
+${IMPORT_BUTTON}`,
     popover(
       '',
       'Filtros',
@@ -356,12 +356,12 @@ ${opcao('Arquivado')}
  * `aria-label`, porque quem não distingue a cor precisa do rótulo — e um botão
  * sem texto nenhum reprova no axe por `button-name`.
  */
-export function popoverPaletaSource(): string {
+export function popoverPaletteSource(): string {
   const amostra = (token: string, rotulo: string) =>
     `      <button type="button" className={\`\${AMOSTRA} nds-bg-${token}\`} aria-label="${rotulo}" />`;
 
   return jsxSnippet(
-    `${importarPopover(
+    `${importingPopover(
       'Popover',
       'PopoverContent',
       'PopoverDescription',
@@ -369,7 +369,7 @@ export function popoverPaletaSource(): string {
       'PopoverTitle',
       'PopoverTrigger',
     )}
-${IMPORT_BOTAO}
+${IMPORT_BUTTON}
 
 const AMOSTRA = "nds-size-8 nds-rounded-full nds-border-soft nds-focus-ring";`,
     popover(
@@ -405,7 +405,7 @@ export function popoverPreferenciasSource(): string {
       </label>`;
 
   return jsxSnippet(
-    `${importarPopover(
+    `${importingPopover(
       'Popover',
       'PopoverContent',
       'PopoverDescription',
@@ -413,7 +413,7 @@ export function popoverPreferenciasSource(): string {
       'PopoverTitle',
       'PopoverTrigger',
     )}
-${IMPORT_BOTAO}`,
+${IMPORT_BUTTON}`,
     popover(
       '',
       'Configurações rápidas',
@@ -435,7 +435,7 @@ ${preferencia('Modo compacto')}
  */
 export function popoverAcimaSource(): string {
   return jsxSnippet(
-    `${importarPopover(
+    `${importingPopover(
       'Popover',
       'PopoverContent',
       'PopoverDescription',
@@ -443,7 +443,7 @@ export function popoverAcimaSource(): string {
       'PopoverTitle',
       'PopoverTrigger',
     )}
-${IMPORT_BOTAO}`,
+${IMPORT_BUTTON}`,
     popover(
       '',
       'Abrir acima',

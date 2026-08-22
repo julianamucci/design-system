@@ -26,11 +26,11 @@
  */
 import {
   attrs,
-  filhoTexto,
+  childText,
   jsxSnippet,
   propBool,
-  propNumero,
-  propOpcao,
+  propNumber,
+  propOption,
   texto,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -124,11 +124,11 @@ export const sonnerSource: SourceTransform<SonnerArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
 
   const regionAttrs = attrs(
-    propOpcao('position', args.position, POSITIONS, DEFAULT_POSITION),
+    propOption('position', args.position, POSITIONS, DEFAULT_POSITION),
     propBool('richColors', args.richColors),
     propBool('closeButton', args.closeButton),
     typeof args.duration === 'number' && args.duration !== DEFAULT_DURATION
-      ? propNumero('duration', args.duration)
+      ? propNumber('duration', args.duration)
       : undefined,
   );
 
@@ -136,7 +136,7 @@ export const sonnerSource: SourceTransform<SonnerArgs> = (_gerado, ctx) => {
     typeof args.type === 'string' && (TYPES as readonly string[]).includes(args.type)
       ? args.type
       : 'success';
-  const title = filhoTexto(args.title, 'Alterações salvas.');
+  const title = childText(args.title, 'Alterações salvas.');
 
   const options: string[] = [];
   const description = texto(args.description);

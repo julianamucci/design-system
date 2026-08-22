@@ -221,12 +221,12 @@ export const WithShortcuts: Story = {
       const atalho = raiz.querySelector<HTMLElement>(
         '[data-value="button"] [data-slot="command-shortcut"]',
       )!;
-      const caixaComando = atalho
+      const boxComando = atalho
         .closest<HTMLElement>('[data-slot="command-item"]')!
         .getBoundingClientRect();
       const caixaAtalho = atalho.getBoundingClientRect();
-      await expect(caixaComando.right - caixaAtalho.right).toBeLessThan(
-        caixaAtalho.left - caixaComando.left,
+      await expect(boxComando.right - caixaAtalho.right).toBeLessThan(
+        caixaAtalho.left - boxComando.left,
       );
     });
   },

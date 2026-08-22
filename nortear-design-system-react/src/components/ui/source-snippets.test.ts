@@ -44,7 +44,7 @@ const storiesRaw = Object.fromEntries(
 );
 
 /** Nomes exportados por `src/components/ui/<slug>.tsx`, por slug. */
-const exportadosPorSlug = new Map<string, Set<string>>();
+const slugExportados = new Map<string, Set<string>>();
 for (const [caminho, fonte] of Object.entries(fontes)) {
   if (caminho.endsWith('.stories.tsx') || caminho.endsWith('.fixtures.tsx')) continue;
   const slug = caminho.replace(/^\.\//, '').replace(/\.tsx$/, '');
@@ -59,7 +59,7 @@ for (const [caminho, fonte] of Object.entries(fontes)) {
       if (nome) nomes.add(nome.replace(/^type\s+/, ''));
     }
   }
-  exportadosPorSlug.set(slug, nomes);
+  slugExportados.set(slug, nomes);
 }
 
 /** Pacotes que um snippet pode citar: só o que o projeto realmente instala. */
@@ -69,14 +69,14 @@ const dependencias = new Set(Object.keys(pkg.dependencies ?? {}));
 const OUTRA_STACK = /\b(Vue|Svelte|Angular|Vanilla|reka-ui|bits-ui|@radix-ng|radix-vue)\b/i;
 
 /** Andaime de story por forma do nome — pega o que ainda não foi escrito. */
-const ANDAIME_POR_FORMA =
+const FORMA_SCAFFOLD =
   /\b(?:[A-Z][A-Za-z0-9]*(?:Story|Stories|Demo|Render|Preview|Fixture|Wrapper)|Demo[A-Z][A-Za-z0-9]*|Controlled[A-Z][A-Za-z0-9]*)\b/;
 
 /** Tags nativas e pseudo-elementos que nunca precisam de origem. */
 const TAGS_LIVRES = new Set(['Fragment', 'React', 'Suspense', 'StrictMode']);
 
 /** Marcador plantado no corpo do espião: se aparecer na saída, vazou. */
-const MARCA_ESPIAO = 'ESPIAO_DE_CONTROL_VAZOU';
+const MARCA_SPY = 'ESPIAO_DE_CONTROL_VAZOU';
 
 /**
  * Args com espião em toda prop de callback, como o Storybook os entrega.
@@ -85,7 +85,7 @@ const MARCA_ESPIAO = 'ESPIAO_DE_CONTROL_VAZOU';
  * runtime, e transformar TODO arg em função inventaria uma falha que o painel
  * não produz.
  */
-function argsComEspioes(): Record<string, unknown> {
+function argsWithSpies(): Record<string, unknown> {
   const eCallback = (chave: string | symbol) =>
     typeof chave === 'string' && /^(on|set)[A-Z]/.test(chave);
   return new Proxy({} as Record<string, unknown>, {
@@ -133,19 +133,19 @@ describe('transforms do painel Code', () => {
   });
 
   it('todo arquivo de story importa a transform do seu componente', () => {
-    const semFiacao = Object.entries(storiesRaw)
+    const noFiacao = Object.entries(storiesRaw)
       .filter(([, fonte]) => !/from\s+["']\.\/[a-z0-9-]+\.source["']/.test(fonte))
       .map(([caminho]) => caminho)
       .sort();
-    expect(semFiacao, 'story sem transform declarada no meta').toEqual([]);
+    expect(noFiacao, 'story sem transform declarada no meta').toEqual([]);
   });
 
   it('todo arquivo de story declara a transform em source.transform', () => {
-    const semTransform = Object.entries(storiesRaw)
+    const noTransform = Object.entries(storiesRaw)
       .filter(([, fonte]) => !/source:\s*\{[\s\S]{0,200}?transform:/.test(fonte))
       .map(([caminho]) => caminho)
       .sort();
-    expect(semTransform, 'meta sem parameters.docs.source.transform').toEqual([]);
+    expect(noTransform, 'meta sem parameters.docs.source.transform').toEqual([]);
   });
 
   for (const caminho of caminhos) {
@@ -172,7 +172,7 @@ describe('transforms do painel Code', () => {
           // design system, nunca dela.
           expect(texto).not.toContain('@base-ui');
           // Andaime de story, por forma do nome.
-          expect(texto).not.toMatch(ANDAIME_POR_FORMA);
+          expect(texto).not.toMatch(FORMA_SCAFFOLD);
           // Módulo que só existe para as stories montarem.
           expect(texto).not.toContain('fixtures');
           // O `{...args}` da story não é composição que alguém escreva.
@@ -207,8 +207,8 @@ describe('transforms do painel Code', () => {
           );
           for (const tag of tags) {
             if (TAGS_LIVRES.has(tag)) continue;
-            const temOrigem = nomes.has(tag) || locais.has(tag);
-            expect(temOrigem, `${nome}: <${tag}> não é importado nem declarado no snippet`).toBe(true);
+            const hasOrigem = nomes.has(tag) || locais.has(tag);
+            expect(hasOrigem, `${nome}: <${tag}> não é importado nem declarado no snippet`).toBe(true);
           }
         });
 
@@ -220,7 +220,7 @@ describe('transforms do painel Code', () => {
           // como um nome só e reprovava um snippet correto.
           const re = /import\s+(?:type\s+)?\{([^{}]*)\}\s+from\s+["']@\/components\/ui\/([a-z0-9-]+)["']/g;
           for (const [, clausula, slug] of texto.matchAll(re)) {
-            const disponiveis = exportadosPorSlug.get(slug);
+            const disponiveis = slugExportados.get(slug);
             expect(disponiveis, `${nome}: não existe src/components/ui/${slug}.tsx`).toBeDefined();
             for (const parte of clausula.split(',')) {
               const importado = parte.trim().split(/\s+as\s+/)[0].replace(/^type\s+/, '').trim();
@@ -234,14 +234,14 @@ describe('transforms do painel Code', () => {
         });
 
         it(`${nome} não deixa espião de control virar código`, () => {
-          const comEspioes = fn(undefined as never, { args: argsComEspioes() } as never);
-          expect(typeof comEspioes).toBe('string');
+          const withSpies = fn(undefined as never, { args: argsWithSpies() } as never);
+          expect(typeof withSpies).toBe('string');
           // A arrow function EM SI é legítima num snippet — `onClick={() =>
           // setAberto(true)}` é a composição real. O que não pode aparecer é o
           // corpo do mock, e é o marcador que separa um caso do outro.
-          expect(comEspioes as string).not.toContain(MARCA_ESPIAO);
-          expect(comEspioes as string).not.toContain('undefined');
-          expect(comEspioes as string).not.toContain('[object Object]');
+          expect(withSpies as string).not.toContain(MARCA_SPY);
+          expect(withSpies as string).not.toContain('undefined');
+          expect(withSpies as string).not.toContain('[object Object]');
         });
       }
     });

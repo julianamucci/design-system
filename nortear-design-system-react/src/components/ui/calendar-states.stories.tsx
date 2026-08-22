@@ -5,9 +5,9 @@ import { ptBR } from "react-day-picker/locale";
 import { Calendar } from "./calendar";
 import {
   calendarBloqueadoSource,
-  calendarDiasDeForaSource,
+  outsideSourceCalendarDays,
   calendarHojeSource,
-  calendarIntervaloComMioloSource,
+  calendarIntervaloWithMioloSource,
   calendarSource,
 } from "./calendar.source";
 
@@ -208,7 +208,7 @@ export const WithOutsideDays: Story = {
     docs: {
       // A story existe para NOMEAR a prop; o `meta` a omite por ser o padrão, e
       // omiti-la aqui deixaria o leitor sem saber como desligar as bordas.
-      source: { transform: calendarDiasDeForaSource },
+      source: { transform: outsideSourceCalendarDays },
       description: {
         story:
           "Dias do mês anterior e do próximo completam a primeira e a última semana, apagados para não competirem com o mês em foco.",
@@ -254,7 +254,7 @@ export const RangeWithMiddle: Story = {
     docs: {
       // Modo de intervalo num mês só: outro formato de estado, e o `meta` deste
       // arquivo cai em data única.
-      source: { transform: calendarIntervaloComMioloSource },
+      source: { transform: calendarIntervaloWithMioloSource },
       description: {
         story: "Intervalo com miolo: os dias entre início e fim também ficam marcados.",
       },

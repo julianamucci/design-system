@@ -25,14 +25,14 @@ import {
 } from "./sidebar";
 import {
   sidebarLadoDireitoSource,
-  sidebarLadoEsquerdoSource,
-  sidebarRecolhivelIconeSource,
+  sidebarSideEsquerdoSource,
+  sidebarRecolhivelIconSource,
   sidebarRecolhivelOffcanvasSource,
-  sidebarSemRecolhimentoSource,
+  sidebarNoRecolhimentoSource,
   sidebarSource,
-  sidebarVarianteEncaixadaSource,
-  sidebarVarianteFlutuanteSource,
-  sidebarVariantePadraoSource,
+  sidebarVariantEncaixadaSource,
+  sidebarVariantFlutuanteSource,
+  sidebarVariantDefaultSource,
 } from "./sidebar.source";
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
@@ -149,7 +149,7 @@ export const VariantSidebar: Story = {
     docs: {
       // A variante é afirmada no `render`, sem control. Numa galeria, o
       // snippet que não a nomeia deixa quem lê sem saber qual das três vê.
-      source: { transform: sidebarVariantePadraoSource },
+      source: { transform: sidebarVariantDefaultSource },
     },
   },
   render: () => <SidebarPreview variant="sidebar" />,
@@ -169,7 +169,7 @@ export const VariantFloating: Story = {
     docs: {
       // `variant="floating"` vive só no `render` — nenhum control o descreve
       // neste arquivo.
-      source: { transform: sidebarVarianteFlutuanteSource },
+      source: { transform: sidebarVariantFlutuanteSource },
     },
   },
   render: () => <SidebarPreview variant="floating" />,
@@ -196,7 +196,7 @@ export const VariantInset: Story = {
     docs: {
       // A variante encaixada depende de a barra e o conteúdo serem IRMÃOS, e
       // o snippet precisa mostrar os dois lado a lado.
-      source: { transform: sidebarVarianteEncaixadaSource },
+      source: { transform: sidebarVariantEncaixadaSource },
     },
   },
   render: () => <SidebarPreview variant="inset" />,
@@ -236,7 +236,7 @@ export const CollapsibleIcon: Story = {
     docs: {
       // `collapsible="icon"` vem do `render`, e é ele que torna o `tooltip` de
       // cada destino obrigatório em vez de enfeite.
-      source: { transform: sidebarRecolhivelIconeSource },
+      source: { transform: sidebarRecolhivelIconSource },
     },
   },
   render: () => <SidebarPreview variant="sidebar" collapsible="icon" />,
@@ -246,9 +246,9 @@ export const CollapsibleIcon: Story = {
       await expect(raiz).toHaveAttribute("data-state", "expanded");
       const painel = raiz.querySelector<HTMLElement>(".nds-sidebar-panel")!;
       const cheia = parseFloat(getComputedStyle(raiz).getPropertyValue("--sidebar-width"));
-      const raizFonte = parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const rootFonte = parseFloat(getComputedStyle(document.documentElement).fontSize);
       await expect(Math.round(parseFloat(getComputedStyle(painel).width))).toBe(
-        Math.round(cheia * raizFonte),
+        Math.round(cheia * rootFonte),
       );
     });
   },
@@ -259,7 +259,7 @@ export const CollapsibleNone: Story = {
     docs: {
       // A AUSÊNCIA do gatilho é parte do caso: sem recolhimento não há o que
       // alternar, e o botão prometeria uma ação inexistente.
-      source: { transform: sidebarSemRecolhimentoSource },
+      source: { transform: sidebarNoRecolhimentoSource },
     },
   },
   render: () => <SidebarPreview variant="sidebar" collapsible="none" />,
@@ -278,7 +278,7 @@ export const SideLeft: Story = {
     docs: {
       // O lado é afirmado no `render`, e numa galeria de lados o snippet tem
       // de nomeá-lo mesmo quando é o padrão.
-      source: { transform: sidebarLadoEsquerdoSource },
+      source: { transform: sidebarSideEsquerdoSource },
     },
   },
   render: () => <SidebarPreview variant="sidebar" side="left" />,

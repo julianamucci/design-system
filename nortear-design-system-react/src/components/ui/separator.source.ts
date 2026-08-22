@@ -10,7 +10,7 @@
  * horizontal — mesmo com o control em vertical — e lia `ctx.args` sem guardar
  * `ctx`, então quebrava na chamada sem argumento.
  */
-import { attrs, jsxSnippet, propBool, propOpcao, type SourceTransform } from '@/lib/story-source';
+import { attrs, jsxSnippet, propBool, propOption, type SourceTransform } from '@/lib/story-source';
 
 export type SeparatorArgs = {
   orientation: 'horizontal' | 'vertical';
@@ -29,9 +29,9 @@ const IMPORT = 'import { Separator } from "@/components/ui/separator";';
  */
 function atributos(args: Partial<SeparatorArgs>): string {
   return attrs(
-    propOpcao('orientation', args.orientation, ORIENTACOES, 'horizontal'),
+    propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
     propBool('decorative', args.decorative, true),
-    propOpcao('emphasis', args.emphasis, ENFASES, 'default'),
+    propOption('emphasis', args.emphasis, ENFASES, 'default'),
   );
 }
 

@@ -10,7 +10,7 @@
  * `ContextMenuTrigger` com o vocabulário de classe da área de clique direito, e
  * é isso que os snippets escrevem por extenso.
  */
-import { filhoTexto, jsxSnippet, type SourceTransform } from '@/lib/story-source';
+import { childText, jsxSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type ContextMenuArgs = {
   triggerLabel: string;
@@ -58,7 +58,7 @@ ${pecas.map((peca) => `  ${peca},`).join('\n')}
  * existe para quem enxerga.
  */
 export const contextMenuSource: SourceTransform<ContextMenuArgs> = (_gerado, ctx) => {
-  const rotulo = filhoTexto(ctx?.args?.triggerLabel, ROTULO_PADRAO);
+  const rotulo = childText(ctx?.args?.triggerLabel, ROTULO_PADRAO);
   return jsxSnippet(
     importDe(
       'ContextMenu',

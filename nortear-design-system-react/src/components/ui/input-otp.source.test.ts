@@ -4,7 +4,7 @@ import {
   inputOtpComErroSource,
   inputOtpComReenvioSource,
   inputOtpComSeparadorSource,
-  inputOtpComTextoAuxiliarSource,
+  inputOtpWithTextAuxiliarSource,
   inputOtpCompletoSource,
   inputOtpDesabilitadoSource,
   inputOtpPreenchendoSource,
@@ -23,7 +23,7 @@ const TODAS = [
   inputOtpCompletoSource,
   inputOtpDesabilitadoSource,
   inputOtpComErroSource,
-  inputOtpComTextoAuxiliarSource,
+  inputOtpWithTextAuxiliarSource,
   inputOtpComReenvioSource,
 ];
 
@@ -164,7 +164,7 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('o texto auxiliar é ligado, e não só posto ao lado', () => {
-    const saida = inputOtpComTextoAuxiliarSource();
+    const saida = inputOtpWithTextAuxiliarSource();
     expect(saida).toContain('aria-describedby="codigo-ajuda-texto"');
     expect(saida).toContain('<p id="codigo-ajuda-texto"');
   });

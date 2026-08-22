@@ -30,7 +30,7 @@ import {
   indentar,
   jsxSnippet,
   propBool,
-  propOpcao,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -87,8 +87,8 @@ export const dropdownMenuSource: SourceTransform<DropdownMenuArgs> = (_gerado, c
     propBool('modal', args.modal, true),
   ]);
   const conteudo = attrs(
-    propOpcao('side', args.side, LADOS, 'bottom'),
-    propOpcao('align', args.align, ALINHAMENTOS, 'start'),
+    propOption('side', args.side, LADOS, 'bottom'),
+    propOption('align', args.align, ALINHAMENTOS, 'start'),
   );
 
   return jsxSnippet(
@@ -120,7 +120,7 @@ export const dropdownMenuSource: SourceTransform<DropdownMenuArgs> = (_gerado, c
  * ações. O `variant` fica de fora justamente porque `default` é o padrão —
  * escrevê-lo ensinaria ruído.
  */
-export function dropdownMenuItemPadraoSource(): string {
+export function dropdownMenuItemDefaultSource(): string {
   return jsxSnippet(
     importDe('DropdownMenuContent', 'DropdownMenuItem', 'DropdownMenuTrigger'),
     menu(
@@ -139,7 +139,7 @@ export function dropdownMenuItemPadraoSource(): string {
  * "Editar perfil": ela troca a cor do texto E, ao ser destacado, a cor do
  * fundo — quem não distingue matiz precisa do segundo sinal.
  */
-export function dropdownMenuItemDestrutivoSource(): string {
+export function dropdownMenuItemDestructiveSource(): string {
   return jsxSnippet(
     importDe(
       'DropdownMenuContent',

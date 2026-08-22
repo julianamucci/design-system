@@ -11,7 +11,7 @@ import {
 import { Button } from "./button";
 import {
   cardClicavelSource,
-  cardSemRodapeSource,
+  cardNoFooterSource,
   cardSource,
 } from "./card.source";
 
@@ -49,7 +49,7 @@ export const Default: Story = {
     covers: ["accessibility.item2"],
     // O assunto é o Card PASSIVO: sem rodapé, sem papel e fora da ordem de
     // foco. O snippet do meta traz ações, que é o oposto do que se mostra aqui.
-    docs: { source: { transform: cardSemRodapeSource } },
+    docs: { source: { transform: cardNoFooterSource } },
   },
   render: () => (
     <Card className="nds-w-sm">

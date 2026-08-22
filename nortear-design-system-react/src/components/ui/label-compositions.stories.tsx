@@ -4,7 +4,7 @@ import { Label } from "./label";
 import { Input } from "./input";
 import { Checkbox } from "./checkbox";
 import {
-  labelComCheckboxSource,
+  labelWithCheckboxSource,
   labelObrigatorioSource,
   labelSource,
 } from "./label.source";
@@ -71,7 +71,7 @@ export const WithCheckbox: Story = {
     docs: {
       // Outro controle e outro eixo: o par vira linha, e o snippet do campo de
       // texto esconderia as duas trocas.
-      source: { transform: labelComCheckboxSource },
+      source: { transform: labelWithCheckboxSource },
       description: {
         story:
           "Rótulo associado a uma caixa de seleção. Clicar no texto alterna a caixa — é o alcance de clique que a associação entrega.",

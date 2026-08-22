@@ -7,7 +7,7 @@ import {
   toggleGroupExclusivoSource,
   toggleGroupItemDesabilitadoSource,
   toggleGroupSource,
-  toggleGroupVazioSource,
+  toggleGroupEmptySource,
 } from "./toggle-group.source";
 
 const meta = {
@@ -51,7 +51,7 @@ export const Default: Story = {
           'Estado padrão — nenhum item selecionado. Todos com aria-pressed="false", fundo transparente.',
       },
       // A AUSÊNCIA de defaultValue é o assunto: o grupo nasce sem seleção.
-      source: { transform: toggleGroupVazioSource },
+      source: { transform: toggleGroupEmptySource },
     },
   },
   play: async ({ canvasElement, step }) => {

@@ -23,7 +23,7 @@ import { desenhoPintado, exigirRaiz } from '@shared/testing/chart-probe';
  * não pelo `data-slot`: é o que o design system define, e o mesmo seletor serve
  * nas cinco stacks.
  */
-export async function desenhoPronto(canvasElement: HTMLElement): Promise<HTMLElement> {
+export async function designPronto(canvasElement: HTMLElement): Promise<HTMLElement> {
   const raiz = exigirRaiz(canvasElement);
   await waitFor(() => expect(desenhoPintado(raiz)).toBe(true), { timeout: 3000 });
   return raiz;

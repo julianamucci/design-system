@@ -7,7 +7,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "./carousel";
-import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
+import { SlideCard, viewportVisible } from "./carousel.fixtures";
 import { carouselSource, carouselUltimoSlideSource } from "./carousel.source";
 
 const meta = {
@@ -93,8 +93,8 @@ export const FirstSlide: Story = {
       // o primeiro slide está enquadrado e o último ficou fora.
       const slides = canvas.getAllByRole("group");
       await expect(slides.length).toBe(SLIDES.length);
-      await expect(visivelNoViewport(slides[0], viewport)).toBe(true);
-      await expect(visivelNoViewport(slides[slides.length - 1], viewport)).toBe(false);
+      await expect(viewportVisible(slides[0], viewport)).toBe(true);
+      await expect(viewportVisible(slides[slides.length - 1], viewport)).toBe(false);
     });
   },
 };
@@ -161,9 +161,9 @@ export const LastSlide: Story = {
       const slides = canvas.getAllByRole("group");
       await expect(slides.length).toBe(SLIDES.length);
       await waitFor(async () => {
-        await expect(visivelNoViewport(slides[slides.length - 1], viewport)).toBe(true);
+        await expect(viewportVisible(slides[slides.length - 1], viewport)).toBe(true);
       }, { timeout: 4000 });
-      await expect(visivelNoViewport(slides[0], viewport)).toBe(false);
+      await expect(viewportVisible(slides[0], viewport)).toBe(false);
     });
   },
 };

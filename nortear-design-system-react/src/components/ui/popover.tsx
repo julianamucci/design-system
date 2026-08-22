@@ -45,7 +45,7 @@ function PopoverTrigger({ asChild, children, ...props }: PopoverTriggerProps) {
  * título, o painel herda o texto acessível do gatilho. Nomear à mão sempre
  * vence: a função só age quando não há nome nenhum.
  */
-function nomearPainel(el: HTMLElement | null): void {
+function nomearPanel(el: HTMLElement | null): void {
   if (!el) return
   if (el.getAttribute("aria-label") || el.getAttribute("aria-labelledby")) return
 
@@ -89,7 +89,7 @@ function PopoverContent({
           // portal, e o ref roda no nó certo em cada montagem. A leitura do
           // título acontece depois de o conteúdo estar dentro, que é o que um
           // efeito de montagem do PRÓPRIO Popup não garantiria.
-          ref={nomearPainel}
+          ref={nomearPanel}
           className={cn(
             "nds-popover-content",
             className

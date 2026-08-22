@@ -13,7 +13,7 @@
 import {
   jsxSnippet,
   propBool,
-  propTexto,
+  propText,
   texto,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -31,7 +31,7 @@ export type CheckboxArgs = {
 const IMPORT = 'import { Checkbox } from "@/components/ui/checkbox";';
 
 /** Padrão documentado de `value`: repetir o padrão ensina ruído a quem copia. */
-const VALUE_PADRAO = 'on';
+const VALUE_DEFAULT = 'on';
 
 /**
  * `<Checkbox … />` em uma linha enquanto a fila couber, e um atributo por linha
@@ -50,7 +50,7 @@ function tagCheckbox(partes: Array<string | false | undefined>, indent = '  '): 
  * O par completo. `htmlFor` aponta para o `id` da caixa: é daí que sai o nome
  * acessível, e é o que faz o clique no texto mover o foco e alternar o estado.
  */
-function parRotulado(
+function pairLabelled(
   id: string,
   rotulo: string,
   partes: Array<string | false | undefined> = [],
@@ -75,9 +75,9 @@ export const checkboxSource: SourceTransform<CheckboxArgs> = (_gerado, ctx) => {
   const valor = texto(args.value);
   return jsxSnippet(
     IMPORT,
-    parRotulado('termos', 'Aceito os termos e condições', [
-      propTexto('name', args.name),
-      valor && valor !== VALUE_PADRAO ? `value="${valor}"` : undefined,
+    pairLabelled('termos', 'Aceito os termos e condições', [
+      propText('name', args.name),
+      valor && valor !== VALUE_DEFAULT ? `value="${valor}"` : undefined,
       propBool('defaultChecked', args.defaultChecked),
       propBool('indeterminate', args.indeterminate),
       propBool('disabled', args.disabled),
@@ -89,7 +89,7 @@ export const checkboxSource: SourceTransform<CheckboxArgs> = (_gerado, ctx) => {
 
 /** Marcada de saída sem controle externo: `defaultChecked` é ponto de partida. */
 export function checkboxMarcadoSource(): string {
-  return jsxSnippet(IMPORT, parRotulado('sessao', 'Manter sessão ativa', ['defaultChecked']));
+  return jsxSnippet(IMPORT, pairLabelled('sessao', 'Manter sessão ativa', ['defaultChecked']));
 }
 
 /**
@@ -99,7 +99,7 @@ export function checkboxMarcadoSource(): string {
 export function checkboxIndeterminadoSource(): string {
   return jsxSnippet(
     IMPORT,
-    parRotulado('itens', 'Selecionar todos os itens', ['indeterminate']),
+    pairLabelled('itens', 'Selecionar todos os itens', ['indeterminate']),
   );
 }
 
@@ -110,7 +110,7 @@ export function checkboxIndeterminadoSource(): string {
 export function checkboxDesabilitadoSource(): string {
   return jsxSnippet(
     IMPORT,
-    parRotulado('notificacoes', 'Receber notificações push', ['disabled'], ' data-disabled="true"'),
+    pairLabelled('notificacoes', 'Receber notificações push', ['disabled'], ' data-disabled="true"'),
   );
 }
 
@@ -118,7 +118,7 @@ export function checkboxDesabilitadoSource(): string {
 export function checkboxDesabilitadoMarcadoSource(): string {
   return jsxSnippet(
     IMPORT,
-    parRotulado(
+    pairLabelled(
       'itens-bloqueados',
       'Selecionar todos os itens',
       ['disabled', 'defaultChecked'],

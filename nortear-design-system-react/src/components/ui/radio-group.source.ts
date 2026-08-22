@@ -26,7 +26,7 @@ import {
   indentar,
   jsxSnippet,
   propBool,
-  propTexto,
+  propText,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -35,10 +35,10 @@ export type RadioGroupArgs = {
   name: string;
 };
 
-const IMPORT_ROTULO = 'import { Label } from "@/components/ui/label";';
+const IMPORT_LABEL = 'import { Label } from "@/components/ui/label";';
 const IMPORT_GRUPO =
   'import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";';
-const IMPORTS = `${IMPORT_ROTULO}\n${IMPORT_GRUPO}`;
+const IMPORTS = `${IMPORT_LABEL}\n${IMPORT_GRUPO}`;
 
 /**
  * Uma opção: item e rótulo lado a lado, ligados pelo `id`. O prefixo do `id`
@@ -79,7 +79,7 @@ function grupo(raiz: string, opcoes: string): string {
 export const radioGroupSource: SourceTransform<RadioGroupArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const raiz = attrs(
-    propTexto('name', args.name),
+    propText('name', args.name),
     propBool('disabled', args.disabled),
     'aria-label="Forma de pagamento"',
   );
@@ -210,7 +210,7 @@ ${opcao('invalido', 'pix', 'Pix', ' aria-invalid="true"')}`,
  * validar, persistir ou reagir à seleção antes de ela virar tela — e é a única
  * forma de o valor sobreviver a uma remontagem do grupo.
  */
-export function radioGroupControladoSource(): string {
+export function radioGroupControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORTS}

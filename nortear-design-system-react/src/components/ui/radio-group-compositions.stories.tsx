@@ -6,7 +6,7 @@ import { Label } from "./label";
 import { Button } from "./button";
 import {
   radioGroupCartoesSource,
-  radioGroupControladoSource,
+  radioGroupControlledSource,
   radioGroupEmFormularioSource,
   radioGroupSource,
 } from "./radio-group.source";
@@ -36,7 +36,7 @@ export const Controlled: Story = {
   parameters: {
     docs: {
       // Sub-composição com `useState`: o par value + onValueChange é o assunto.
-      source: { transform: radioGroupControladoSource },
+      source: { transform: radioGroupControlledSource },
       description: {
         story:
           "Versão controlada via useState. value + onValueChange refletem a seleção do usuário e podem ser persistidos ou validados externamente.",

@@ -10,8 +10,8 @@ import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 import { definir } from "./toggle-group.fixtures";
 import {
   toggleGroupContornoEspacadoSource,
-  toggleGroupControladoCombinadoSource,
-  toggleGroupControladoExclusivoSource,
+  toggleGroupControlledCombinadoSource,
+  toggleGroupControlledExclusivoSource,
   toggleGroupSource,
   toggleGroupVerticalSource,
 } from "./toggle-group.source";
@@ -37,7 +37,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const SingleAlignment: Story = {
-  render: function AlinhamentoSingleRender() {
+  render: function AlignmentSingleRender() {
     const [alignment, setAlignment] = useState<string>("left");
     return (
       <div className="nds-stack nds-w-2xs" data-align="start" data-spacing="sm">
@@ -76,7 +76,7 @@ export const SingleAlignment: Story = {
           "Barra de alinhamento com seleção única controlada — o modo exclusivo garante que apenas um item esteja ativo por vez.",
       },
       // O painel imprimia `<AlinhamentoSingleRender />`, que não existe fora daqui.
-      source: { transform: toggleGroupControladoExclusivoSource },
+      source: { transform: toggleGroupControlledExclusivoSource },
     },
   },
   play: async ({ canvasElement, step }) => {
@@ -110,7 +110,7 @@ export const SingleAlignment: Story = {
 };
 
 export const MultipleFormatting: Story = {
-  render: function FormatacaoMultipleRender() {
+  render: function FormattingMultipleRender() {
     const [formats, setFormats] = useState<string[]>(["bold"]);
     return (
       <div className="nds-stack nds-w-2xs" data-align="start" data-spacing="sm">
@@ -143,7 +143,7 @@ export const MultipleFormatting: Story = {
           "Barra de formatação Bold/Italic/Underline com seleção múltipla — o modo combinado permite ativar items independentemente.",
       },
       // Controlado no modo combinado: o callback recebe a lista inteira.
-      source: { transform: toggleGroupControladoCombinadoSource },
+      source: { transform: toggleGroupControlledCombinadoSource },
     },
   },
   play: async ({ canvasElement, step }) => {

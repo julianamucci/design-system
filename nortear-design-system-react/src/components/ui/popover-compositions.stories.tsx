@@ -15,7 +15,7 @@ import {
   popoverAcimaSource,
   popoverEditarPerfilSource,
   popoverFiltroSource,
-  popoverPaletaSource,
+  popoverPaletteSource,
   popoverPreferenciasSource,
   popoverSource,
 } from "./popover.source";
@@ -181,7 +181,7 @@ export const ColorPicker: Story = {
     docs: {
       // Sub-composição de paleta: cada amostra carrega o próprio `aria-label`,
       // que é o que o meta não teria como ensinar.
-      source: { transform: popoverPaletaSource },
+      source: { transform: popoverPaletteSource },
       description: {
         story: "Paleta restrita em grid — cada amostra tem nome acessível próprio.",
       },

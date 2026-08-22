@@ -11,7 +11,7 @@
  * `code="const items = await load();\nconst total = …"` numa linha só é a forma
  * mais rápida de quem lê perder as quebras de linha.
  */
-import { jsxSnippet, propBool, propTexto, texto, type SourceTransform } from '@/lib/story-source';
+import { jsxSnippet, propBool, propText, texto, type SourceTransform } from '@/lib/story-source';
 
 export type CodeBlockArgs = {
   code: string;
@@ -25,7 +25,7 @@ export type CodeBlockArgs = {
 const IMPORT = 'import { CodeBlock } from "@/components/ui/code-block";';
 
 /** Trecho base das stories: curto, real e com uma chamada por linha. */
-const CODIGO_BASE = `const items = await load();
+const CODE_BASE = `const items = await load();
 const total = items.length;
 render(items, total);`;
 
@@ -92,13 +92,13 @@ function tagCodeBlock(partes: Array<string | false | undefined>): string {
 export const codeBlockSource: SourceTransform<CodeBlockArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return jsxSnippet(
-    cabecalhoCom(texto(args.code) ?? CODIGO_BASE),
+    cabecalhoCom(texto(args.code) ?? CODE_BASE),
     tagCodeBlock([
-      propTexto('language', args.language),
-      propTexto('title', args.title),
+      propText('language', args.language),
+      propText('title', args.title),
       propBool('showLineNumbers', args.showLineNumbers, true),
       propLinhas(args.highlightLines),
-      propTexto('footer', args.footer),
+      propText('footer', args.footer),
     ]),
   );
 };
@@ -114,7 +114,7 @@ export function codeBlockRolagemSource(): string {
     cabecalhoCom(`const registro = { id: 1, nome: "linha propositalmente longa para forçar o scroll horizontal do bloco", ativo: true };
 const total = 40;
 render(registro, total);`),
-    tagCodeBlock([propTexto('language', 'ts')]),
+    tagCodeBlock([propText('language', 'ts')]),
   );
 }
 
@@ -125,8 +125,8 @@ render(registro, total);`),
  */
 export function codeBlockPaletaSource(): string {
   return jsxSnippet(
-    cabecalhoCom(CODIGO_BASE),
-    tagCodeBlock([propTexto('language', 'ts'), propLinhas([2])]),
+    cabecalhoCom(CODE_BASE),
+    tagCodeBlock([propText('language', 'ts'), propLinhas([2])]),
   );
 }
 
@@ -141,7 +141,7 @@ export function codeBlockRemovivelSource(): string {
 ${IMPORT}
 import { Button } from "@/components/ui/button";
 
-const source = \`${literalDeTemplate(CODIGO_BASE)}\`;`,
+const source = \`${literalDeTemplate(CODE_BASE)}\`;`,
     `function TrechoOpcional() {
   const [visivel, setVisivel] = useState(true);
 

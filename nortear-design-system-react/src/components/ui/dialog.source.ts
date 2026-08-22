@@ -194,7 +194,7 @@ ${blocos}
     </form>`;
 }
 
-const IMPORT_FORMULARIO = `${IMPORT_BASE}
+const IMPORT_FORM = `${IMPORT_BASE}
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";`;
 
@@ -208,7 +208,7 @@ import { Label } from "@/components/ui/label";`;
  */
 export function dialogComFormularioSource(): string {
   return jsxSnippet(
-    IMPORT_FORMULARIO,
+    IMPORT_FORM,
     `<Dialog defaultOpen>
 ${GATILHO}
   <DialogContent>
@@ -230,7 +230,7 @@ ${formulario([
  */
 export function dialogPerfilSource(): string {
   return jsxSnippet(
-    IMPORT_FORMULARIO,
+    IMPORT_FORM,
     `<Dialog defaultOpen>
 ${GATILHO}
   <DialogContent className="nds-sm-max-w-md">
@@ -291,7 +291,7 @@ export function dialogComRolagemSource(): string {
  * apagar o recurso. Confirmação irreversível pede `role="alertdialog"`, foco
  * inicial no Cancelar e Cancelar obrigatório: é outro componente.
  */
-export function dialogComAcaoDestrutivaSource(): string {
+export function dialogWithActionDestructiveSource(): string {
   return jsxSnippet(
     IMPORT_BASE,
     `<Dialog defaultOpen>
@@ -320,7 +320,7 @@ export function dialogComAcaoDestrutivaSource(): string {
  * As classes de moldura são as do sistema — o gradiente que morava aqui era
  * resíduo de outra era e renderizava transparente.
  */
-export function dialogComMidiaSource(): string {
+export function dialogWithMidiaSource(): string {
   return jsxSnippet(
     IMPORT_BASE.replace('  DialogClose,\n', '').replace('  DialogFooter,\n', ''),
     `<Dialog defaultOpen>

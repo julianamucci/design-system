@@ -5,9 +5,9 @@ import { Switch } from "./switch";
 import { definir } from "./switch.fixtures";
 import { Label } from "./label";
 import {
-  switchControladoSource,
-  switchListaCompactaSource,
-  switchPainelSource,
+  switchControlledSource,
+  switchListCompactaSource,
+  switchPanelSource,
   switchPreferenciasSource,
   switchSource,
 } from "./switch.source";
@@ -84,7 +84,7 @@ export const SettingsPanel: Story = {
   parameters: {
     docs: {
       // Painel inteiro no render, com o controle já ligado.
-      source: { transform: switchPainelSource },
+      source: { transform: switchPanelSource },
       description: {
         story:
           "Painel com Label + descrição auxiliar à esquerda e Switch à direita.",
@@ -154,7 +154,7 @@ export const PreferenceList: Story = {
 };
 
 export const Controlled: Story = {
-  render: function ControladoRender() {
+  render: function ControlledRender() {
     const [enabled, setEnabled] = useState(false);
     return (
       <div className="nds-stack nds-w-sm" data-align="start" data-spacing="sm">
@@ -171,7 +171,7 @@ export const Controlled: Story = {
   parameters: {
     docs: {
       // O estado externo vive num `useState` do render.
-      source: { transform: switchControladoSource },
+      source: { transform: switchControlledSource },
       description: {
         story:
           "Switch controlado — o componente pai mantém o estado e o atualiza pelo callback de mudança.",
@@ -216,7 +216,7 @@ export const CompactSize: Story = {
   parameters: {
     docs: {
       // Lista e `size="sm"` são afirmados no render, sem control.
-      source: { transform: switchListaCompactaSource },
+      source: { transform: switchListCompactaSource },
       description: {
         story:
           "Lista densa de toggles no degrau compacto — adequado para barras de configurações e menus.",

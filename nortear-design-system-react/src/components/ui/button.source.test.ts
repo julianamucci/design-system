@@ -7,8 +7,8 @@ import {
   buttonDestrutivoComIconeSource,
   buttonDestrutivoSource,
   buttonGhostSource,
-  buttonIconeDireitaSource,
-  buttonIconeEsquerdaSource,
+  buttonIconDireitaSource,
+  buttonIconEsquerdaSource,
   buttonIconeLgSource,
   buttonIconeSmSource,
   buttonIconeSource,
@@ -18,7 +18,7 @@ import {
   buttonOutlineSource,
   buttonParDeAcoesSource,
   buttonSecundarioSource,
-  buttonSomenteIconeSource,
+  buttonSomenteIconSource,
   buttonSource,
   buttonTamanhoLgSource,
   buttonTamanhoPadraoSource,
@@ -46,10 +46,10 @@ const TODOS: Array<() => string> = [
   buttonDesabilitadoSource,
   buttonCarregandoSource,
   buttonInvalidoSource,
-  buttonIconeEsquerdaSource,
-  buttonIconeDireitaSource,
+  buttonIconEsquerdaSource,
+  buttonIconDireitaSource,
   buttonDestrutivoComIconeSource,
-  buttonSomenteIconeSource,
+  buttonSomenteIconSource,
   buttonParDeAcoesSource,
   buttonComoLinkSource,
 ];
@@ -159,25 +159,25 @@ describe('estados', () => {
 
 describe('composições', () => {
   it('a ordem entre ícone e rótulo é o que separa as duas primeiras', () => {
-    const esquerda = buttonIconeEsquerdaSource();
-    const direita = buttonIconeDireitaSource();
+    const esquerda = buttonIconEsquerdaSource();
+    const direita = buttonIconDireitaSource();
     expect(esquerda.indexOf('<Plus')).toBeLessThan(esquerda.indexOf('Adicionar item'));
     expect(direita.indexOf('Próximo')).toBeLessThan(direita.indexOf('<ChevronRight'));
   });
 
   it('todo ícone dentro de botão com texto sai da árvore de acessibilidade', () => {
     for (const saida of [
-      buttonIconeEsquerdaSource(),
-      buttonIconeDireitaSource(),
+      buttonIconEsquerdaSource(),
+      buttonIconDireitaSource(),
       buttonDestrutivoComIconeSource(),
-      buttonSomenteIconeSource(),
+      buttonSomenteIconSource(),
     ]) {
       expect(saida).toContain('aria-hidden="true"');
     }
   });
 
   it('sem texto dentro, o aria-label é o único nome que sobra', () => {
-    const saida = buttonSomenteIconeSource();
+    const saida = buttonSomenteIconSource();
     expect(saida).toContain('aria-label="Baixar arquivo"');
     expect(saida).toContain('size="icon"');
   });

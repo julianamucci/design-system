@@ -4,7 +4,7 @@ import { userEvent, within, expect } from "storybook/test";
 import { Slider } from "./slider";
 import {
   sliderDesabilitadoSource,
-  sliderNaoControladoSource,
+  sliderNotControlledSource,
   sliderSource,
 } from "./slider.source";
 import {
@@ -44,7 +44,7 @@ export const Default: Story = {
     docs: {
       // A AUSÊNCIA de estado é o assunto: `defaultValue` é o caso em que o valor
       // não precisa sair do componente, e o meta imprime o par controlado.
-      source: { transform: sliderNaoControladoSource },
+      source: { transform: sliderNotControlledSource },
     },
   },
   render: () => (
@@ -77,7 +77,7 @@ export const Focus: Story = {
     docs: {
       // Mesmo controle não controlado da story anterior: o anel de foco é da
       // folha, e nenhuma prop o liga — não há o que acrescentar ao snippet.
-      source: { transform: sliderNaoControladoSource },
+      source: { transform: sliderNotControlledSource },
     },
   },
   render: () => (

@@ -19,7 +19,7 @@ function importDe(...pecas: string[]): string {
   return `import {\n${pecas.map((peca) => `  ${peca},`).join('\n')}\n} from "@/components/ui/breadcrumb";`;
 }
 
-const TRILHA_COMPLETA = importDe(
+const TRACK_COMPLETA = importDe(
   'Breadcrumb',
   'BreadcrumbItem',
   'BreadcrumbLink',
@@ -38,7 +38,7 @@ const TRILHA_COMPLETA = importDe(
  */
 export const breadcrumbSource: SourceTransform<BreadcrumbArgs> = () =>
   jsxSnippet(
-    TRILHA_COMPLETA,
+    TRACK_COMPLETA,
     `<Breadcrumb>
   <BreadcrumbList>
     <BreadcrumbItem>
@@ -95,7 +95,7 @@ export function breadcrumbSimplesSource(): string {
  * Aqui elas informam sozinhas quantos níveis sumiram, então precisam de nome —
  * sem ele o leitor de tela pula um pedaço do caminho sem avisar.
  */
-export function breadcrumbComEllipsisSource(): string {
+export function breadcrumbWithEllipsisSource(): string {
   return jsxSnippet(
     importDe(
       'Breadcrumb',

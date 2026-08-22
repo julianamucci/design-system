@@ -165,8 +165,8 @@ export function ScrollAreaDocs() {
   const activeId = useActiveSection(allIds, handleSectionChange);
 
   // ─── Labels ──────────────────────────────────────────────────────────────
-  const lblVertical = tContent("demonstration.labels.verticalTitle");
-  const lblHorizontal = tContent("demonstration.labels.horizontalTitle");
+  const verticalLbl = tContent("demonstration.labels.verticalTitle");
+  const horizontalLbl = tContent("demonstration.labels.horizontalTitle");
   const lblBoth = tContent("demonstration.labels.bothTitle");
   const lblTag = tContent("demonstration.labels.tag");
 
@@ -240,7 +240,7 @@ interface ScrollBarProps {
           {/* Demo 1: Vertical */}
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {lblVertical}
+              {verticalLbl}
             </p>
             <div className="nds-w-full" style={{ maxWidth: "360px" }}>
               <ScrollArea size="xl" className="nds-w-full nds-rounded-md nds-border-default">
@@ -260,7 +260,7 @@ interface ScrollBarProps {
           {/* Demo 2: Horizontal */}
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {lblHorizontal}
+              {horizontalLbl}
             </p>
             <div className="nds-w-full" style={{ maxWidth: "500px" }}>
               <ScrollArea size="md" className="nds-w-full nds-whitespace-nowrap nds-rounded-md nds-border-default">

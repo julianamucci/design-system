@@ -3,8 +3,8 @@ import { expect } from 'storybook/test';
 import { ChartContainer, buildBarOption } from './chart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
 import { desenhoEscreve } from '@shared/testing/chart-probe';
-import { desenhoPronto } from './chart.fixtures';
-import { chartEmCardSource, chartSource, chartTituloSemRotuloSource } from './chart.source';
+import { designPronto } from './chart.fixtures';
+import { chartEmCardSource, chartSource, chartTitleNoLabelSource } from './chart.source';
 
 const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const seriesMulti = [
@@ -55,7 +55,7 @@ export const WithCard: Story = {
     </Card>
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
 
     await step('O card é o componente do design system, não um card desenhado à mão', async () => {
       const card = canvasElement.querySelector('[data-slot="card"]');
@@ -81,7 +81,7 @@ export const InlineTitle: Story = {
     docs: {
       // A AUSÊNCIA do rótulo autoral é o assunto: sem ele o container cai no
       // título do desenho, e escrever um aqui esconderia a rede de segurança.
-      source: { transform: chartTituloSemRotuloSource },
+      source: { transform: chartTitleNoLabelSource },
       description: {
         story: 'Título dentro da própria configuração — útil quando o gráfico não tem card em volta.',
       },
@@ -95,7 +95,7 @@ export const InlineTitle: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
 
     await step('O título da configuração é escrito acima dos eixos', async () => {
       await expect(desenhoEscreve(raiz, TITULO_NO_DESENHO)).toBe(true);

@@ -18,7 +18,7 @@
  * pelo `value` com o gatilho — é esse par que a lib usa para escrever
  * `aria-controls` e `aria-labelledby`.
  */
-import { attrs, jsxSnippet, propOpcao, texto, type SourceTransform } from '@/lib/story-source';
+import { attrs, jsxSnippet, propOption, texto, type SourceTransform } from '@/lib/story-source';
 
 export type TabsArgs = {
   orientation: 'horizontal' | 'vertical';
@@ -85,7 +85,7 @@ ${paineis}
 export const tabsSource: SourceTransform<TabsArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const raiz = attrs(
-    propOpcao('orientation', args.orientation, ORIENTACOES, 'horizontal'),
+    propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
     `defaultValue="${texto(args.defaultValue) ?? SECOES[0][0]}"`,
   );
   return jsxSnippet(IMPORT_TABS, abas(raiz, '', SECOES));
@@ -166,7 +166,7 @@ ${paineis}
  * faz parte do que a aba significa ("Inbox, 12") e é lida junto com o rótulo.
  * Fora dele viraria um segundo alvo de foco entre duas abas.
  */
-export function tabsComBadgeSource(): string {
+export function tabsWithBadgeSource(): string {
   return jsxSnippet(
     `${IMPORT_TABS}
 import { Badge } from "@/components/ui/badge";`,

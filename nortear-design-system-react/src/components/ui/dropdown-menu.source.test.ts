@@ -7,15 +7,15 @@ import {
   dropdownMenuComSubmenuSource,
   dropdownMenuControladoSource,
   dropdownMenuItemDesabilitadoSource,
-  dropdownMenuItemDestrutivoSource,
-  dropdownMenuItemPadraoSource,
+  dropdownMenuItemDestructiveSource,
+  dropdownMenuItemDefaultSource,
   dropdownMenuSource,
 } from './dropdown-menu.source';
 
 const TODAS = [
   dropdownMenuSource,
-  dropdownMenuItemPadraoSource,
-  dropdownMenuItemDestrutivoSource,
+  dropdownMenuItemDefaultSource,
+  dropdownMenuItemDestructiveSource,
   dropdownMenuItemDesabilitadoSource,
   dropdownMenuControladoSource,
   dropdownMenuComRotuloSource,
@@ -26,7 +26,7 @@ const TODAS = [
 ];
 
 /** Todo rótulo tem que estar dentro de um grupo — ver a regra do primitivo. */
-function rotuloDentroDeGrupo(saida: string): boolean {
+function groupLabelInside(saida: string): boolean {
   if (!saida.includes('<DropdownMenuLabel>')) return true;
   const abertura = Math.max(
     saida.indexOf('<DropdownMenuGroup>'),
@@ -77,7 +77,7 @@ describe('dropdownMenuSource', () => {
 
 describe('variantes do item', () => {
   it('a forma mínima não repete o variant padrão', () => {
-    const saida = dropdownMenuItemPadraoSource();
+    const saida = dropdownMenuItemDefaultSource();
     expect(saida).toContain('<DropdownMenuItem>Perfil</DropdownMenuItem>');
     expect(saida).not.toContain('variant="default"');
     // Nem grupo nem rótulo: é a forma mínima que a story mostra.
@@ -85,7 +85,7 @@ describe('variantes do item', () => {
   });
 
   it('a destrutiva marca a ação irreversível ao lado de uma neutra', () => {
-    const saida = dropdownMenuItemDestrutivoSource();
+    const saida = dropdownMenuItemDestructiveSource();
     expect(saida).toContain('<DropdownMenuItem variant="destructive">Excluir conta</DropdownMenuItem>');
     expect(saida).toContain('<DropdownMenuItem>Perfil</DropdownMenuItem>');
   });
@@ -111,7 +111,7 @@ describe('estados', () => {
 describe('composições', () => {
   it('o rótulo mora dentro do grupo em todos os snippets', () => {
     for (const fn of TODAS) {
-      expect(rotuloDentroDeGrupo(fn()), `${fn.name}: rótulo fora do grupo`).toBe(true);
+      expect(groupLabelInside(fn()), `${fn.name}: rótulo fora do grupo`).toBe(true);
     }
   });
 

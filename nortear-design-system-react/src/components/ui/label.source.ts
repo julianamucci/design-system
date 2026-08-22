@@ -11,7 +11,7 @@
  * associação que faz o clique no texto focar o controle e que dá nome acessível
  * ao campo. Um exemplo com o rótulo isolado ensinaria a metade que não importa.
  */
-import { attrs, filhoTexto, jsxSnippet, propTexto, type SourceTransform } from '@/lib/story-source';
+import { attrs, childText, jsxSnippet, propText, type SourceTransform } from '@/lib/story-source';
 
 export type LabelArgs = {
   children: string;
@@ -35,11 +35,11 @@ const COLUNA = '<div className="nds-stack nds-w-xs" data-spacing="xs">';
  */
 export const labelSource: SourceTransform<LabelArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const texto = filhoTexto(args.children, 'Nome completo');
+  const texto = childText(args.children, 'Nome completo');
   return jsxSnippet(
     IMPORT_CAMPO,
     `${COLUNA}
-  <Label htmlFor="nome-completo"${attrs(propTexto('className', args.className))}>${texto}</Label>
+  <Label htmlFor="nome-completo"${attrs(propText('className', args.className))}>${texto}</Label>
   <Input id="nome-completo" placeholder="ex: João da Silva" />
 </div>`,
   );
@@ -66,7 +66,7 @@ export function labelDesabilitadoSource(): string {
  * os rótulos descendentes de uma vez. É o caminho para um fieldset inteiro —
  * repetir `nds-peer` campo a campo dá o mesmo desenho e esquece um.
  */
-export function labelDesabilitadoPorBlocoSource(): string {
+export function blockSourceLabelDisabled(): string {
   return jsxSnippet(
     IMPORT_CAMPO,
     `<div
@@ -110,7 +110,7 @@ export function labelObrigatorioSource(): string {
  * tamanho do texto. `htmlFor` continua sendo o que entrega o alcance de clique
  * — sem ele, só o quadradinho recebe o toque.
  */
-export function labelComCheckboxSource(): string {
+export function labelWithCheckboxSource(): string {
   return jsxSnippet(
     `import { Checkbox } from "@/components/ui/checkbox";
 ${IMPORT_LABEL}`,

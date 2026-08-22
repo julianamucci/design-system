@@ -12,11 +12,11 @@
  */
 import {
   attrs,
-  filhoTexto,
+  childText,
   indentar,
   jsxSnippet,
   propBool,
-  propOpcao,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -62,8 +62,8 @@ function botao(
   const abertura = `<Button${attrs(...atributos)}>`;
   // Bloco quando há mais de uma linha ou quando o filho é um elemento: ícone
   // espremido na mesma linha do botão é justamente o que some na rolagem.
-  const emBloco = conteudo.includes('\n') || conteudo.startsWith('<');
-  const corpo = emBloco
+  const inBlock = conteudo.includes('\n') || conteudo.startsWith('<');
+  const corpo = inBlock
     ? `${abertura}\n${indentar(conteudo)}\n</Button>`
     : `${abertura}${conteudo}</Button>`;
   return jsxSnippet(cabecalho, corpo);
@@ -87,11 +87,11 @@ export const buttonSource: SourceTransform<ButtonArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return botao(
     [
-      propOpcao('variant', args.variant, VARIANTES, 'default'),
-      propOpcao('size', args.size, TAMANHOS, 'default'),
+      propOption('variant', args.variant, VARIANTES, 'default'),
+      propOption('size', args.size, TAMANHOS, 'default'),
       propBool('disabled', args.disabled),
     ],
-    filhoTexto(args.children, 'Botão'),
+    childText(args.children, 'Botão'),
   );
 };
 
@@ -162,7 +162,7 @@ export function buttonTamanhoLgSource(): string {
  * nomeia o botão é o `aria-label`, e o ícone sai da árvore de acessibilidade
  * para não ser lido no lugar dele.
  */
-function botaoDeIcone(tamanho: string): string {
+function iconButton(tamanho: string): string {
   return botao(
     [`size="${tamanho}"`, 'aria-label="Adicionar item"'],
     '<Plus aria-hidden="true" />',
@@ -172,22 +172,22 @@ function botaoDeIcone(tamanho: string): string {
 
 /** Ícone no tamanho de referência. */
 export function buttonIconeSource(): string {
-  return botaoDeIcone('icon');
+  return iconButton('icon');
 }
 
 /** Ícone em linha de tabela e listas densas. */
 export function buttonIconeXsSource(): string {
-  return botaoDeIcone('icon-xs');
+  return iconButton('icon-xs');
 }
 
 /** Ícone em barra de ferramentas compacta. */
 export function buttonIconeSmSource(): string {
-  return botaoDeIcone('icon-sm');
+  return iconButton('icon-sm');
 }
 
 /** Ícone como ação flutuante ou chamada visual. */
 export function buttonIconeLgSource(): string {
-  return botaoDeIcone('icon-lg');
+  return iconButton('icon-lg');
 }
 
 /* --------------------------------------------------------------------- estados
@@ -233,12 +233,12 @@ export function buttonInvalidoSource(): string {
  */
 
 /** Ícone antes do rótulo: o gap é do botão, então o ícone não leva margem. */
-export function buttonIconeEsquerdaSource(): string {
+export function buttonIconEsquerdaSource(): string {
   return botao([], '<Plus aria-hidden="true" />\nAdicionar item', comIcone('Plus'));
 }
 
 /** Ícone depois do rótulo — a ordem é o que separa esta composição da anterior. */
-export function buttonIconeDireitaSource(): string {
+export function buttonIconDireitaSource(): string {
   return botao(
     ['variant="outline"'],
     'Próximo\n<ChevronRight aria-hidden="true" />',
@@ -256,7 +256,7 @@ export function buttonDestrutivoComIconeSource(): string {
 }
 
 /** Sem texto dentro, o `aria-label` é obrigatório: é o único nome que sobra. */
-export function buttonSomenteIconeSource(): string {
+export function buttonSomenteIconSource(): string {
   return botao(
     ['size="icon"', 'aria-label="Baixar arquivo"'],
     '<Download aria-hidden="true" />',

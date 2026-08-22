@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   avatar2xlSource,
-  avatarComAtrasoSource,
+  avatarWithDelaySource,
   avatarComIconeSource,
   avatarComStatusSource,
   avatarEmGrupoSource,
@@ -75,7 +75,7 @@ describe('presets de tamanho', () => {
 
 describe('composições', () => {
   it('o atraso do fallback é declarado com o nome desta stack', () => {
-    expect(avatarComAtrasoSource()).toContain('<AvatarFallback delayMs={600}>');
+    expect(avatarWithDelaySource()).toContain('<AvatarFallback delayMs={600}>');
   });
 
   it('só iniciais: sem AvatarImage, e sem importar a peça', () => {
@@ -115,7 +115,7 @@ describe('composições', () => {
     for (const fn of [
       avatarSource,
       avatar2xlSource,
-      avatarComAtrasoSource,
+      avatarWithDelaySource,
       avatarComIconeSource,
       avatarComStatusSource,
       avatarEmGrupoSource,

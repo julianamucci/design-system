@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite"
 import { within, userEvent, waitFor, expect } from "storybook/test"
 import { DataTable } from "./data-table"
 import {
-  dataTableComRotuloDeLinhaSource,
+  lineSourceDataTableWithLabel,
   dataTablePaginadaSource,
   dataTableSource,
   dataTableVirtualizadaSource,
@@ -165,7 +165,7 @@ export const ExplicitRowLabel: Story = {
     actions: { disable: true },
     // `rowLabel` é justamente a prop que o snippet do `meta` deixa de fora, por
     // ser lá que o degrau do meio do fallback é provado.
-    docs: { source: { transform: dataTableComRotuloDeLinhaSource } },
+    docs: { source: { transform: lineSourceDataTableWithLabel } },
   },
   play: async ({ canvasElement, step }) => {
     const linhas = () => [...canvasElement.querySelectorAll<HTMLElement>("tbody tr")]

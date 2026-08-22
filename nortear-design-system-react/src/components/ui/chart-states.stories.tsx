@@ -13,7 +13,7 @@ import {
   textosDoDesenho,
   tramasAplicadas,
 } from '@shared/testing/chart-probe';
-import { desenhoPronto } from './chart.fixtures';
+import { designPronto } from './chart.fixtures';
 import {
   chartDoisDesenhosSource,
   chartMultiSerieSource,
@@ -109,7 +109,7 @@ export const SingleSeries: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
 
     await step('A linha da série é traçada', async () => {
       const tracados = [...raiz.querySelectorAll<SVGPathElement>('svg path')].filter((p) => {
@@ -145,7 +145,7 @@ export const MultiSeries: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
 
     await step('A legenda escreve o nome de cada série', async () => {
       for (const serie of seriesMulti) await expect(desenhoEscreve(raiz, serie.name)).toBe(true);
@@ -276,7 +276,7 @@ export const GraphicContrast: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
     // Precondição da medida: ver o comentário de `assentarTema`.
     await assentarTema(document);
     const fundo = fundoOpacoAtras(raiz);

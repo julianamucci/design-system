@@ -108,7 +108,7 @@ export function aspectRatioUltraWideSource(): string {
  * string vazia é o assunto da story — OMITIR o atributo faz o leitor de tela
  * anunciar o nome do arquivo, que é o oposto do pretendido.
  */
-export function aspectRatioImagemDecorativaSource(): string {
+export function aspectRatioImageDecorativaSource(): string {
   return comImagem('16 / 9', '/midia/textura-de-fundo.jpg', '');
 }
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { REGRA_GUARDA_DE_FOCO, waitForPortal } from "@/lib/wait-for-portal";
 import { abrirPorGesto, brilho } from "@shared/testing/context-menu-area";
-import { AreaGatilho } from "./context-menu.fixtures";
+import { AreaTrigger } from "./context-menu.fixtures";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -64,7 +64,7 @@ export const ItemDisabled: Story = {
   },
   render: () => (
     <ContextMenu>
-      <AreaGatilho>Clique com o botão direito aqui</AreaGatilho>
+      <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
           <ContextMenuItem data-testid="primeiro">
@@ -125,7 +125,7 @@ export const ItemInset: Story = {
   },
   render: () => (
     <ContextMenu>
-      <AreaGatilho>Clique com o botão direito aqui</AreaGatilho>
+      <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
           <ContextMenuLabel inset>Arquivo</ContextMenuLabel>
@@ -172,7 +172,7 @@ export const ItemDestructive: Story = {
   },
   render: () => (
     <ContextMenu>
-      <AreaGatilho>Clique com o botão direito aqui</AreaGatilho>
+      <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
           <ContextMenuItem data-testid="normal">
@@ -219,7 +219,7 @@ export const DarkPalette: Story = {
   },
   render: () => (
     <ContextMenu>
-      <AreaGatilho>Clique com o botão direito aqui</AreaGatilho>
+      <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
         <ContextMenuItem>Editar</ContextMenuItem>
         <ContextMenuItem disabled>Duplicar</ContextMenuItem>

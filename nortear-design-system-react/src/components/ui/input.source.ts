@@ -22,8 +22,8 @@ import {
   attrsMultilinha,
   jsxSnippet,
   propBool,
-  propOpcao,
-  propTexto,
+  propOption,
+  propText,
   texto,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -99,8 +99,8 @@ export const inputSource: SourceTransform<InputArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   if (args['aria-invalid'] === true) return inputComErroSource();
   return campoRotulado('nome-completo', 'Nome completo', [
-    propOpcao('type', args.type, TIPOS, 'text'),
-    propTexto('placeholder', texto(args.placeholder) ?? 'ex: João da Silva'),
+    propOption('type', args.type, TIPOS, 'text'),
+    propText('placeholder', texto(args.placeholder) ?? 'ex: João da Silva'),
     propBool('disabled', args.disabled),
   ]);
 };
@@ -124,7 +124,7 @@ export function inputSenhaSource(): string {
 }
 
 /** Numérico: o papel implícito vira spinbutton, e é assim que é anunciado. */
-export function inputNumeroSource(): string {
+export function inputNumberSource(): string {
   return campoRotulado('quantidade', 'Quantidade', ['type="number"', 'placeholder="0"']);
 }
 
@@ -132,7 +132,7 @@ export function inputNumeroSource(): string {
  * Busca: `type="search"` troca o papel implícito para searchbox, e nada no
  * visual denuncia se o tipo estiver errado — é só o leitor de tela que perde.
  */
-export function inputBuscaSource(): string {
+export function inputSearchSource(): string {
   return campoRotulado('busca', 'Buscar', [
     'type="search"',
     'placeholder="Buscar componentes..."',
@@ -144,7 +144,7 @@ export function inputBuscaSource(): string {
  * (`::file-selector-button`), e o design system já pinta esse botão. Um texto
  * de exemplo aqui não apareceria em lugar nenhum.
  */
-export function inputArquivoSource(): string {
+export function inputFileSource(): string {
   return campoRotulado('arquivo', 'Arquivo', ['type="file"']);
 }
 
@@ -223,7 +223,7 @@ export function inputPaletaEscuraSource(): string {
  * Bloco de import do grupo com só as peças que o exemplo usa. Importar a lista
  * inteira ensinaria uma dependência que aquele snippet não tem.
  */
-function importGrupo(...nomes: string[]): string {
+function importGroup(...nomes: string[]): string {
   const lista = [...nomes].sort();
   if (lista.length === 1) return `import { ${lista[0]} } from "@/components/ui/input-group";`;
   return `import {
@@ -236,7 +236,7 @@ ${lista.map((nome) => `  ${nome},`).join('\n')}
  * desenha a moldura é o GRUPO, e o campo interno fica sem borda própria para
  * não aparecer uma linha dupla no meio.
  */
-function grupoRotulado(
+function groupLabelled(
   id: string,
   rotulo: string,
   miolo: string,
@@ -261,27 +261,27 @@ ${miolo}
  * decorativo (`aria-hidden`), porque quem nomeia o campo é o rótulo.
  */
 export const inputGroupSource: SourceTransform<InputArgs> = () =>
-  grupoRotulado(
+  groupLabelled(
     'busca',
     'Buscar',
     `    <InputGroupAddon align="inline-start">
       <Search aria-hidden="true" />
     </InputGroupAddon>
     <InputGroupInput id="busca" type="search" placeholder="Buscar componentes..." />`,
-    importGrupo('InputGroup', 'InputGroupAddon', 'InputGroupInput'),
+    importGroup('InputGroup', 'InputGroupAddon', 'InputGroupInput'),
     'import { Search } from "lucide-react";',
   );
 
 /** Ícone no fim: o addon muda de lado por `align`, e a ordem no JSX acompanha. */
-export function inputGroupIconeFimSource(): string {
-  return grupoRotulado(
+export function inputGroupIconEndSource(): string {
+  return groupLabelled(
     'email',
     'Email',
     `    <InputGroupInput id="email" type="email" placeholder="ex: joao@empresa.com" />
     <InputGroupAddon align="inline-end">
       <Mail aria-hidden="true" />
     </InputGroupAddon>`,
-    importGrupo('InputGroup', 'InputGroupAddon', 'InputGroupInput'),
+    importGroup('InputGroup', 'InputGroupAddon', 'InputGroupInput'),
     'import { Mail } from "lucide-react";',
   );
 }
@@ -290,15 +290,15 @@ export function inputGroupIconeFimSource(): string {
  * Prefixo em texto: `InputGroupText` é a peça para conteúdo textual dentro do
  * addon — ela carrega a cor esmaecida e o respiro que um ícone nu não tem.
  */
-export function inputGroupPrefixoTextoSource(): string {
-  return grupoRotulado(
+export function inputGroupPrefixoTextSource(): string {
+  return groupLabelled(
     'usuario',
     'Usuário',
     `    <InputGroupAddon align="inline-start">
       <InputGroupText>@</InputGroupText>
     </InputGroupAddon>
     <InputGroupInput id="usuario" placeholder="nome.usuario" />`,
-    importGrupo('InputGroup', 'InputGroupAddon', 'InputGroupInput', 'InputGroupText'),
+    importGroup('InputGroup', 'InputGroupAddon', 'InputGroupInput', 'InputGroupText'),
   );
 }
 
@@ -308,7 +308,7 @@ export function inputGroupPrefixoTextoSource(): string {
  * placeholder some ao primeiro caractere digitado.
  */
 export function inputGroupPrefixoESufixoSource(): string {
-  return grupoRotulado(
+  return groupLabelled(
     'preco',
     'Preço',
     `    <InputGroupAddon align="inline-start">
@@ -318,7 +318,7 @@ export function inputGroupPrefixoESufixoSource(): string {
     <InputGroupAddon align="inline-end">
       <InputGroupText>BRL</InputGroupText>
     </InputGroupAddon>`,
-    importGrupo('InputGroup', 'InputGroupAddon', 'InputGroupInput', 'InputGroupText'),
+    importGroup('InputGroup', 'InputGroupAddon', 'InputGroupInput', 'InputGroupText'),
   );
 }
 
@@ -327,8 +327,8 @@ export function inputGroupPrefixoESufixoSource(): string {
  * miolo. O nome acessível vem de `aria-label`, porque o conteúdo é só um ícone
  * — e o ícone sai da árvore de acessibilidade para não duplicar o anúncio.
  */
-export function inputGroupBotaoInternoSource(): string {
-  return grupoRotulado(
+export function inputGroupButtonInternoSource(): string {
+  return groupLabelled(
     'busca-submit',
     'Buscar',
     `    <InputGroupInput id="busca-submit" type="search" placeholder="Buscar componentes..." />
@@ -337,7 +337,7 @@ export function inputGroupBotaoInternoSource(): string {
         <Search aria-hidden="true" />
       </InputGroupButton>
     </InputGroupAddon>`,
-    importGrupo('InputGroup', 'InputGroupAddon', 'InputGroupButton', 'InputGroupInput'),
+    importGroup('InputGroup', 'InputGroupAddon', 'InputGroupButton', 'InputGroupInput'),
     'import { Search } from "lucide-react";',
   );
 }
@@ -351,7 +351,7 @@ export function inputGroupBotaoInternoSource(): string {
 export function inputGroupSenhaSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
-${importGrupo('InputGroup', 'InputGroupAddon', 'InputGroupButton', 'InputGroupInput')}
+${importGroup('InputGroup', 'InputGroupAddon', 'InputGroupButton', 'InputGroupInput')}
 ${IMPORT_LABEL}
 import { Eye, EyeOff } from "lucide-react";`,
     `const [visivel, setVisivel] = useState(false);
@@ -382,15 +382,15 @@ ${COLUNA}
  * Bloqueado: o `disabled` vai no CONTROLE, e o grupo inteiro esmaece pela
  * cascata. Marcar o contêiner apagaria o desenho sem impedir a digitação.
  */
-export function inputGroupDesabilitadoSource(): string {
-  return grupoRotulado(
+export function inputGroupDisabledSource(): string {
+  return groupLabelled(
     'grupo-bloqueado',
     'Campo desabilitado',
     `    <InputGroupAddon align="inline-start">
       <Search aria-hidden="true" />
     </InputGroupAddon>
     <InputGroupInput id="grupo-bloqueado" placeholder="Não disponível" disabled />`,
-    importGrupo('InputGroup', 'InputGroupAddon', 'InputGroupInput'),
+    importGroup('InputGroup', 'InputGroupAddon', 'InputGroupInput'),
     'import { Search } from "lucide-react";',
   );
 }
@@ -400,9 +400,9 @@ export function inputGroupDesabilitadoSource(): string {
  * contêiner — é o campo que é inválido, e é ele que precisa apontar para a
  * mensagem. A borda de erro aparece na moldura por cascata.
  */
-export function inputGroupComErroSource(): string {
+export function inputGroupWithErrorSource(): string {
   return jsxSnippet(
-    `${importGrupo('InputGroup', 'InputGroupAddon', 'InputGroupInput')}
+    `${importGroup('InputGroup', 'InputGroupAddon', 'InputGroupInput')}
 ${IMPORT_LABEL}
 import { Mail } from "lucide-react";`,
     `${COLUNA}
@@ -434,7 +434,7 @@ import { Mail } from "lucide-react";`,
  */
 export function inputGroupAlinhamentosSource(): string {
   return jsxSnippet(
-    `${importGrupo('InputGroup', 'InputGroupAddon', 'InputGroupInput', 'InputGroupText')}
+    `${importGroup('InputGroup', 'InputGroupAddon', 'InputGroupInput', 'InputGroupText')}
 ${IMPORT_LABEL}
 import { Search } from "lucide-react";`,
     `<div className="nds-stack nds-w-md" data-spacing="lg">
@@ -477,8 +477,8 @@ import { Search } from "lucide-react";`,
  * quem mira o "@" espera começar a digitar. O botão ao lado é o que prova a
  * exceção: apertá-lo NÃO devolve o foco ao campo.
  */
-export function inputGroupCliqueNoAddonSource(): string {
-  return grupoRotulado(
+export function addonSourceInputGroupClick(): string {
+  return groupLabelled(
     'ig-clique',
     'Usuário',
     `    <InputGroupAddon align="inline-start">
@@ -490,7 +490,7 @@ export function inputGroupCliqueNoAddonSource(): string {
         <X aria-hidden="true" />
       </InputGroupButton>
     </InputGroupAddon>`,
-    importGrupo(
+    importGroup(
       'InputGroup',
       'InputGroupAddon',
       'InputGroupButton',

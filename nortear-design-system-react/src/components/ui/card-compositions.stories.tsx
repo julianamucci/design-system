@@ -18,7 +18,7 @@ import {
   cardComImagemSource,
   cardCompactoSource,
   cardPerfilSource,
-  cardProdutoSource,
+  cardProductSource,
   cardSource,
 } from "./card.source";
 
@@ -223,7 +223,7 @@ export const ProductCard: Story = {
     docs: {
       // Unidade completa: imagem, status na ação e rodapé de uma vez só — o
       // meta mostra a forma canônica, esta story mostra o caso montado.
-      source: { transform: cardProdutoSource },
+      source: { transform: cardProductSource },
       description: {
         story:
           'Exemplo real de catálogo: imagem + título + descrição + Badge de status na ação do header + rodapé com ações contextuais ("Editar produto Cadeira Gamer Pro", "Excluir produto Cadeira Gamer Pro").',

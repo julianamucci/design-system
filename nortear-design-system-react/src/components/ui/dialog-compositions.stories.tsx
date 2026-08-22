@@ -21,7 +21,7 @@ import {
   DialogTrigger,
 } from "./dialog";
 import {
-  dialogComMidiaSource,
+  dialogWithMidiaSource,
   dialogPerfilSource,
   dialogSource,
 } from "./dialog.source";
@@ -189,7 +189,7 @@ export const MediaPreview: Story = {
     docs: {
       // Corpo de mídia com nome acessível e sem rodapé: duas diferenças
       // estruturais que o snippet do `meta` não carrega.
-      source: { transform: dialogComMidiaSource },
+      source: { transform: dialogWithMidiaSource },
       description: {
         story:
           "Pré-visualização de mídia (imagem) em destaque, sem Footer. Fechamento via X, Escape ou clique no overlay.",

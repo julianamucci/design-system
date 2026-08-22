@@ -4,7 +4,7 @@ import { within, expect, waitFor } from "storybook/test";
 import { User } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import {
-  avatarComAtrasoSource,
+  avatarWithDelaySource,
   avatarComIconeSource,
   avatarSource,
 } from "./avatar.source";
@@ -74,7 +74,7 @@ export const Loading: Story = {
   // O `delayMs` no fallback É o assunto, e não é arg de lugar nenhum.
   parameters: {
     covers: ["functional.item4"],
-    docs: { source: { transform: avatarComAtrasoSource } },
+    docs: { source: { transform: avatarWithDelaySource } },
   },
   render: () => (
     <Avatar>

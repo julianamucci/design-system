@@ -23,7 +23,7 @@ export type MenubarArgs = {
 };
 
 /** Bloco de import do menubar, sempre em ordem alfabética das peças usadas. */
-function importarMenubar(...pecas: string[]): string {
+function importingMenubar(...pecas: string[]): string {
   const lista = [...pecas].sort();
   return `import {\n${lista.map((peca) => `  ${peca},`).join('\n')}\n} from "@/components/ui/menubar";`;
 }
@@ -62,7 +62,7 @@ export const menubarSource: SourceTransform<MenubarArgs> = (_gerado, ctx) => {
   );
 
   return jsxSnippet(
-    importarMenubar(
+    importingMenubar(
       'Menubar',
       'MenubarContent',
       'MenubarItem',
@@ -98,9 +98,9 @@ ${menu(
  * `variant` é o assunto da story — é o que faz o item herdar a cor do painel em
  * vez de carregar cor semântica.
  */
-export function menubarItemNeutroSource(): string {
+export function menubarItemNeutralSource(): string {
   return jsxSnippet(
-    importarMenubar(
+    importingMenubar(
       'Menubar',
       'MenubarContent',
       'MenubarItem',
@@ -125,7 +125,7 @@ ${menu(
  */
 export function menubarItemDestrutivoSource(): string {
   return jsxSnippet(
-    importarMenubar(
+    importingMenubar(
       'Menubar',
       'MenubarContent',
       'MenubarItem',
@@ -151,7 +151,7 @@ ${menu(
  */
 export function menubarAbertoSource(): string {
   return jsxSnippet(
-    importarMenubar(
+    importingMenubar(
       'Menubar',
       'MenubarContent',
       'MenubarItem',
@@ -177,7 +177,7 @@ ${menu('Editar', `      <MenubarItem>Desfazer</MenubarItem>`)}
  */
 export function menubarItemBloqueadoSource(): string {
   return jsxSnippet(
-    importarMenubar(
+    importingMenubar(
       'Menubar',
       'MenubarContent',
       'MenubarItem',
@@ -203,9 +203,9 @@ ${menu(
  * é quem vira o `aria-labelledby` do grupo, e sem o grupo ancestral ele lança em
  * tempo de render.
  */
-export function menubarItemMarcadoSource(): string {
+export function menubarItemCheckedSource(): string {
   return jsxSnippet(
-    importarMenubar(
+    importingMenubar(
       'Menubar',
       'MenubarCheckboxItem',
       'MenubarContent',
@@ -233,7 +233,7 @@ ${menu(
  */
 export function menubarSubmenuSource(): string {
   return jsxSnippet(
-    importarMenubar(
+    importingMenubar(
       'Menubar',
       'MenubarContent',
       'MenubarItem',
@@ -264,9 +264,9 @@ ${menu(
  * Alternadores independentes: cada linha vale por si, e marcar uma não fecha o
  * menu — quem marca uma quer marcar a próxima.
  */
-export function menubarCaixasDeSelecaoSource(): string {
+export function selectionSourceMenubarBoxes(): string {
   return jsxSnippet(
-    importarMenubar(
+    importingMenubar(
       'Menubar',
       'MenubarCheckboxItem',
       'MenubarContent',
@@ -293,9 +293,9 @@ ${menu(
  * Escolha única. O grupo é quem guarda o valor — os itens só declaram o seu —, e
  * por isso a marcação se transfere sozinha de um para o outro.
  */
-export function menubarEscolhaUnicaSource(): string {
+export function menubarChoiceUnicaSource(): string {
   return jsxSnippet(
-    importarMenubar(
+    importingMenubar(
       'Menubar',
       'MenubarContent',
       'MenubarLabel',
@@ -326,7 +326,7 @@ ${menu(
  */
 export function menubarEditorSource(): string {
   return jsxSnippet(
-    importarMenubar(
+    importingMenubar(
       'Menubar',
       'MenubarCheckboxItem',
       'MenubarContent',

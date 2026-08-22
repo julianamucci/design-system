@@ -37,7 +37,7 @@ const FORMAS = ['text', 'heading', 'avatar', 'fill'] as const;
 const LARGURAS = ['full', '3-4', '2-3', '1-2', '1-3'] as const;
 
 const IMPORT = 'import { Skeleton } from "@/components/ui/skeleton";';
-const IMPORT_PROPORCAO = 'import { AspectRatio } from "@/components/ui/aspect-ratio";';
+const IMPORT_RATIO = 'import { AspectRatio } from "@/components/ui/aspect-ratio";';
 
 /**
  * Forma vinda do control, e só uma das quatro que a folha conhece. Control
@@ -63,11 +63,11 @@ function largura(valor: unknown): (typeof LARGURAS)[number] {
  * dizer "carregando conteúdo".
  */
 function regiao(rotulo: string, conteudo: string, classe = 'nds-w-sm', ocupada = true): string {
-  const linhaClasse = classe ? `\n  className="${classe}"` : '';
+  const lineClassName = classe ? `\n  className="${classe}"` : '';
   return `<div
   role="status"
   aria-busy="${ocupada}"
-  aria-label="${rotulo}"${linhaClasse}
+  aria-label="${rotulo}"${lineClassName}
 >
 ${conteudo}
 </div>`;
@@ -91,7 +91,7 @@ export const skeletonSource: SourceTransform<SkeletonArgs> = (_gerado, ctx) => {
 
   if (caixa === 'fill') {
     return jsxSnippet(
-      `${IMPORT}\n${IMPORT_PROPORCAO}`,
+      `${IMPORT}\n${IMPORT_RATIO}`,
       regiao(
         'Carregando conteúdo',
         `  <AspectRatio ratio={16 / 9}>
@@ -121,9 +121,9 @@ export const skeletonSource: SourceTransform<SkeletonArgs> = (_gerado, ctx) => {
  * `fill` ter o que preencher, e o motivo de o exemplo importar duas peças em
  * vez de uma.
  */
-export function skeletonBlocoDeMidiaSource(): string {
+export function midiaSourceSkeletonBlock(): string {
   return jsxSnippet(
-    `${IMPORT}\n${IMPORT_PROPORCAO}`,
+    `${IMPORT}\n${IMPORT_RATIO}`,
     regiao(
       'Carregando bloco',
       `  <AspectRatio ratio={16 / 9}>
@@ -250,7 +250,7 @@ export function skeletonListaSource(): string {
  */
 export function skeletonImagemEmProporcaoSource(): string {
   return jsxSnippet(
-    `${IMPORT}\n${IMPORT_PROPORCAO}`,
+    `${IMPORT}\n${IMPORT_RATIO}`,
     regiao(
       'Carregando imagem',
       `  <AspectRatio ratio={16 / 9}>

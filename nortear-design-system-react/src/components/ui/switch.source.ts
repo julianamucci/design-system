@@ -21,8 +21,8 @@ import {
   attrs,
   jsxSnippet,
   propBool,
-  propOpcao,
-  propTexto,
+  propOption,
+  propText,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -45,7 +45,7 @@ import { Switch } from "@/components/ui/switch";`;
  * essa ligação que nomeia o controle para o leitor de tela e que faz o clique
  * no texto alternar o interruptor.
  */
-function parRotulado(id: string, rotulo: string, atributos = ''): string {
+function pairLabelled(id: string, rotulo: string, atributos = ''): string {
   return `<div className="nds-cluster" data-spacing="sm">
   <Switch id="${id}"${atributos} />
   <Label htmlFor="${id}">${rotulo}</Label>
@@ -68,12 +68,12 @@ export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
   const atributos = attrs(
     propBool('defaultChecked', args.defaultChecked),
     propBool('disabled', args.disabled),
-    propTexto('name', args.name),
-    propOpcao('size', args.size, TAMANHOS, 'default'),
+    propText('name', args.name),
+    propOption('size', args.size, TAMANHOS, 'default'),
   );
   return jsxSnippet(
     IMPORTS,
-    parRotulado('notificacoes-email', 'Receber notificações por email', atributos),
+    pairLabelled('notificacoes-email', 'Receber notificações por email', atributos),
   );
 };
 
@@ -107,7 +107,7 @@ export function switchComDescricaoSource(): string {
  * a story desenha ao lado é vitrine de comparação, não composição a copiar.
  */
 export function switchCompactoSource(): string {
-  return jsxSnippet(IMPORTS, parRotulado('modo-compacto', 'Modo compacto', ' size="sm"'));
+  return jsxSnippet(IMPORTS, pairLabelled('modo-compacto', 'Modo compacto', ' size="sm"'));
 }
 
 /**
@@ -116,7 +116,7 @@ export function switchCompactoSource(): string {
  * aqui congelaria o interruptor no valor escrito.
  */
 export function switchLigadoSource(): string {
-  return jsxSnippet(IMPORTS, parRotulado('modo-escuro', 'Modo escuro', ' defaultChecked'));
+  return jsxSnippet(IMPORTS, pairLabelled('modo-escuro', 'Modo escuro', ' defaultChecked'));
 }
 
 /**
@@ -127,7 +127,7 @@ export function switchLigadoSource(): string {
 export function switchDesabilitadoSource(): string {
   return jsxSnippet(
     IMPORTS,
-    parRotulado('notificacoes-bloqueadas', 'Receber notificações por email', ' disabled'),
+    pairLabelled('notificacoes-bloqueadas', 'Receber notificações por email', ' disabled'),
   );
 }
 
@@ -136,8 +136,8 @@ export function switchDesabilitadoSource(): string {
  * precisa saber que a opção está ATIVA ainda que não possa mudá-la — desligado
  * e bloqueado são fatos diferentes, e o desenho sozinho não os separa.
  */
-export function switchDesabilitadoLigadoSource(): string {
-  return jsxSnippet(IMPORTS, parRotulado('modo-escuro-fixo', 'Modo escuro', ' disabled defaultChecked'));
+export function switchDisabledLigadoSource(): string {
+  return jsxSnippet(IMPORTS, pairLabelled('modo-escuro-fixo', 'Modo escuro', ' disabled defaultChecked'));
 }
 
 /**
@@ -169,7 +169,7 @@ export function switchInvalidoSource(): string {
  * com descrição, e a diferença é deliberada: aqui a preferência nasce ativa,
  * que é o caso comum de uma opção que o produto já entrega ligada.
  */
-export function switchPainelSource(): string {
+export function switchPanelSource(): string {
   return jsxSnippet(
     IMPORTS,
     `<div
@@ -222,7 +222,7 @@ ${linha('pref-sms', 'SMS de segurança', 'Códigos de verificação por SMS.')}
  * e o callback de mudança o devolve. Passar só `checked` deixa o interruptor
  * inerte — ele deixa de ser dono do próprio estado e ninguém assume o lugar.
  */
-export function switchControladoSource(): string {
+export function switchControlledSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
 ${IMPORTS}
@@ -246,7 +246,7 @@ const [ativo, setAtivo] = useState(false);`,
  * coluna de interruptores alinhada que deixa o estado de todas legível de uma
  * olhada só.
  */
-export function switchListaCompactaSource(): string {
+export function switchListCompactaSource(): string {
   const linha = (id: string, rotulo: string) => `  <div className="nds-cluster" data-align="center" data-justify="between">
     <Label htmlFor="${id}" className="nds-text-body">${rotulo}</Label>
     <Switch id="${id}" size="sm" />

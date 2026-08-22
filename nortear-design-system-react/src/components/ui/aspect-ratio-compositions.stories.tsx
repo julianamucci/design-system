@@ -7,7 +7,7 @@ import {
   aspectRatioComIframeSource,
   aspectRatioComVideoSource,
   aspectRatioEmGradeSource,
-  aspectRatioImagemDecorativaSource,
+  aspectRatioImageDecorativaSource,
   aspectRatioPlaceholderSource,
   aspectRatioSource,
 } from "./aspect-ratio.source";
@@ -258,7 +258,7 @@ export const WithDecorativeImage: Story = {
     covers: ["accessibility.item2"],
     docs: {
       // O `alt` vazio é o assunto — e um alt descritivo é o padrão do `meta`.
-      source: { transform: aspectRatioImagemDecorativaSource },
+      source: { transform: aspectRatioImageDecorativaSource },
       description: {
         story:
           'Imagem decorativa usa `alt=""` (string vazia) para ser ignorada por leitores de tela — nunca omita o atributo.',

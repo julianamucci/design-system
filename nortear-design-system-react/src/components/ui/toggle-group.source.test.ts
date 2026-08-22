@@ -2,13 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   toggleGroupCombinadoSource,
   toggleGroupContornoEspacadoSource,
-  toggleGroupControladoCombinadoSource,
-  toggleGroupControladoExclusivoSource,
+  toggleGroupControlledCombinadoSource,
+  toggleGroupControlledExclusivoSource,
   toggleGroupDesabilitadoSource,
   toggleGroupExclusivoSource,
   toggleGroupItemDesabilitadoSource,
   toggleGroupSource,
-  toggleGroupVazioSource,
+  toggleGroupEmptySource,
   toggleGroupVerticalSource,
 } from './toggle-group.source';
 
@@ -17,11 +17,11 @@ const TODAS = [
   toggleGroupExclusivoSource,
   toggleGroupCombinadoSource,
   toggleGroupVerticalSource,
-  toggleGroupVazioSource,
+  toggleGroupEmptySource,
   toggleGroupDesabilitadoSource,
   toggleGroupItemDesabilitadoSource,
-  toggleGroupControladoExclusivoSource,
-  toggleGroupControladoCombinadoSource,
+  toggleGroupControlledExclusivoSource,
+  toggleGroupControlledCombinadoSource,
   toggleGroupContornoEspacadoSource,
 ];
 
@@ -120,7 +120,7 @@ describe('modos', () => {
 
 describe('estados', () => {
   it('sem seleção o grupo simplesmente não tem defaultValue', () => {
-    expect(toggleGroupVazioSource()).not.toContain('defaultValue');
+    expect(toggleGroupEmptySource()).not.toContain('defaultValue');
   });
 
   it('desabilitar o grupo é uma prop no grupo', () => {
@@ -137,7 +137,7 @@ describe('estados', () => {
 
 describe('controlado', () => {
   it('o exclusivo recebe string, e é a forma pública documentada do valor', () => {
-    const saida = toggleGroupControladoExclusivoSource();
+    const saida = toggleGroupControlledExclusivoSource();
     expect(saida).toContain('import { useState } from "react";');
     expect(saida).toContain('const [alinhamento, setAlinhamento] = useState("left");');
     expect(saida).toContain('value={alinhamento}');
@@ -145,15 +145,15 @@ describe('controlado', () => {
   });
 
   it('o combinado recebe a seleção inteira a cada troca', () => {
-    const saida = toggleGroupControladoCombinadoSource();
+    const saida = toggleGroupControlledCombinadoSource();
     expect(saida).toContain('const [formatos, setFormatos] = useState(["bold"]);');
     expect(saida).toContain('type="multiple"');
     expect(saida).toContain('value={formatos}');
   });
 
   it('nenhum dos dois ensina o invólucro que a story usa para montar', () => {
-    expect(toggleGroupControladoExclusivoSource()).not.toContain('Render');
-    expect(toggleGroupControladoCombinadoSource()).not.toContain('Render');
+    expect(toggleGroupControlledExclusivoSource()).not.toContain('Render');
+    expect(toggleGroupControlledCombinadoSource()).not.toContain('Render');
   });
 });
 

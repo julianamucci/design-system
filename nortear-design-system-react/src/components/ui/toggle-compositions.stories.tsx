@@ -4,7 +4,7 @@ import { userEvent, within, expect } from "storybook/test";
 import { Bold, Italic, Underline, List, Eye } from "lucide-react";
 import { Toggle } from "./toggle";
 import {
-  toggleBarraFormatacaoSource,
+  toggleBarFormattingSource,
   toggleControladoSource,
   toggleFiltrosSource,
   toggleSource,
@@ -46,7 +46,7 @@ export const FormattingToolbar: Story = {
   parameters: {
     docs: {
       // O grupo nomeado em volta dos quatro toggles é a composição inteira.
-      source: { transform: toggleBarraFormatacaoSource },
+      source: { transform: toggleBarFormattingSource },
     },
   },
   render: () => (
@@ -160,7 +160,7 @@ export const Controlled: Story = {
       source: { transform: toggleControladoSource },
     },
   },
-  render: function ControladoRender() {
+  render: function ControlledRender() {
     const [isBold, setIsBold] = useState(false);
     return (
       <div className="nds-stack" data-spacing="sm">

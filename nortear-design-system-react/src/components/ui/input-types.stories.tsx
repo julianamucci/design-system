@@ -3,10 +3,10 @@ import { userEvent, within, expect } from "storybook/test";
 import { alturaResultante, campoDe } from "@shared/testing/input-probe";
 import { Input } from "./input";
 import {
-  inputArquivoSource,
-  inputBuscaSource,
+  inputFileSource,
+  inputSearchSource,
   inputEmailSource,
-  inputNumeroSource,
+  inputNumberSource,
   inputSenhaSource,
   inputSource,
 } from "./input.source";
@@ -96,7 +96,7 @@ export const Password: Story = {
 
 export const Number: Story = {
   // Idem: o `type="number"` troca o papel implícito para spinbutton.
-  parameters: { docs: { source: { transform: inputNumeroSource } } },
+  parameters: { docs: { source: { transform: inputNumberSource } } },
   render: () => (
     <div className="nds-stack nds-w-2xs" data-spacing="xs">
       <label htmlFor="tipo-number" className="nds-text-body nds-font-medium">
@@ -123,7 +123,7 @@ export const Search: Story = {
     covers: ["visual.item3"],
     // `type="search"` é o que troca o papel para searchbox — nada no visual
     // denuncia se o snippet ensinar `text`.
-    docs: { source: { transform: inputBuscaSource } },
+    docs: { source: { transform: inputSearchSource } },
   },
   render: () => (
     <div className="nds-stack nds-w-xs" data-spacing="xs">
@@ -158,7 +158,7 @@ export const File: Story = {
     covers: ["functional.item5"],
     // A ausência do `placeholder` é deliberada e faz parte da lição: quem
     // desenha o miolo do campo de arquivo é o navegador.
-    docs: { source: { transform: inputArquivoSource } },
+    docs: { source: { transform: inputFileSource } },
   },
   render: () => (
     <div className="nds-stack nds-w-xs" data-spacing="xs">

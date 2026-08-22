@@ -22,7 +22,7 @@ export type CommandArgs = {
   shouldFilter: boolean;
 };
 
-const IMPORT_PALETA = `import {
+const IMPORT_PALETTE = `import {
   Command,
   CommandEmpty,
   CommandGroup,
@@ -46,7 +46,7 @@ const MOLDURA = 'nds-w-sm nds-border-default nds-rounded-md nds-shadow-md';
  * O que o comando faz é decisão do call site: a paleta só entrega o `value` do
  * comando escolhido, por clique ou por Enter.
  */
-const AO_ESCOLHER = `function aoEscolher(valor: string) {
+const ON_CHOOSE = `function aoEscolher(valor: string) {
   window.location.hash = valor;
 }`;
 
@@ -66,9 +66,9 @@ export const commandSource: SourceTransform<CommandArgs> = (_gerado, ctx) => {
   );
 
   return jsxSnippet(
-    `${IMPORT_PALETA}
+    `${IMPORT_PALETTE}
 
-${AO_ESCOLHER}`,
+${ON_CHOOSE}`,
     `<div className="${MOLDURA}">
   <Command${props}>
     <CommandInput placeholder="Buscar componente..." />

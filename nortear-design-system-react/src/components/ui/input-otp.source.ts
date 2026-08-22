@@ -20,7 +20,7 @@
  * - O `<input>` real fica recortado atrás das caixas, então quem dá nome
  *   acessível é o `Label` ligado pelo `htmlFor` ↔ `id`.
  */
-import { jsxSnippet, propNumero, type SourceTransform } from '@/lib/story-source';
+import { jsxSnippet, propNumber, type SourceTransform } from '@/lib/story-source';
 
 export type InputOtpArgs = {
   maxLength: number;
@@ -108,7 +108,7 @@ export const inputOtpSource: SourceTransform<InputOtpArgs> = (_gerado, ctx) => {
     rotulo: 'Código de verificação',
     caixas,
     atributos: [
-      propNumero('maxLength', caixas) ?? `maxLength={${PADRAO}}`,
+      propNumber('maxLength', caixas) ?? `maxLength={${PADRAO}}`,
       ...(args.disabled === true ? ['disabled'] : []),
       ...(args.autoFocus === true ? ['autoFocus'] : []),
       'onComplete={(valor) => verificarCodigo(valor)}',
@@ -297,7 +297,7 @@ export function inputOtpComErroSource(): string {
  * `aria-describedby` — a informação é útil antes de digitar, e sem a ligação
  * ela só existe para quem enxerga a tela.
  */
-export function inputOtpComTextoAuxiliarSource(): string {
+export function inputOtpWithTextAuxiliarSource(): string {
   return otpSnippet({
     id: 'codigo-ajuda',
     rotulo: 'Código de verificação',

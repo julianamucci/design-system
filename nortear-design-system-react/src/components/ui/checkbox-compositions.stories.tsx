@@ -161,7 +161,7 @@ export const GroupWithFieldset: Story = {
 };
 
 export const SelectAll: Story = {
-  render: function SelecionarTodosRender() {
+  render: function SelectAllRender() {
     return (
       <div className="nds-stack" data-spacing="sm">
         <div className="nds-cluster nds-border-b nds-pb-2" data-align="center" data-spacing="sm">

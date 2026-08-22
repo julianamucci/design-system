@@ -2,15 +2,15 @@ import { describe, expect, it } from 'vitest';
 import {
   calendarBloqueadoSource,
   calendarComPopoverSource,
-  calendarDiasDeForaSource,
+  outsideSourceCalendarDays,
   calendarDoisMesesSource,
   calendarHojeSource,
-  calendarIntervaloComMioloSource,
+  calendarIntervaloWithMioloSource,
   calendarIntervaloSource,
   calendarLegendaSeletoresSource,
   calendarLegendaTextoSource,
   calendarMultiplasSource,
-  calendarNumeroDaSemanaSource,
+  calendarNumberWeekSource,
   calendarSource,
   type CalendarArgs,
 } from './calendar.source';
@@ -22,12 +22,12 @@ const TODOS: Array<() => string> = [
   calendarIntervaloSource,
   calendarBloqueadoSource,
   calendarHojeSource,
-  calendarDiasDeForaSource,
-  calendarIntervaloComMioloSource,
+  outsideSourceCalendarDays,
+  calendarIntervaloWithMioloSource,
   calendarLegendaTextoSource,
   calendarLegendaSeletoresSource,
   calendarDoisMesesSource,
-  calendarNumeroDaSemanaSource,
+  calendarNumberWeekSource,
   calendarComPopoverSource,
 ];
 
@@ -145,11 +145,11 @@ describe('estados', () => {
   });
 
   it('a prop de dias de fora aparece porque é o assunto da story', () => {
-    expect(calendarDiasDeForaSource()).toContain('showOutsideDays');
+    expect(outsideSourceCalendarDays()).toContain('showOutsideDays');
   });
 
   it('o intervalo com miolo cabe num mês só', () => {
-    const saida = calendarIntervaloComMioloSource();
+    const saida = calendarIntervaloWithMioloSource();
     expect(saida).toContain('mode="range"');
     expect(saida).not.toContain('numberOfMonths');
   });
@@ -168,7 +168,7 @@ describe('layouts', () => {
   });
 
   it('a coluna de semana precisa ser pedida — vem desligada', () => {
-    expect(calendarNumeroDaSemanaSource()).toContain('showWeekNumber');
+    expect(calendarNumberWeekSource()).toContain('showWeekNumber');
   });
 });
 

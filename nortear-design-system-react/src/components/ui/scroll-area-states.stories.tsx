@@ -9,7 +9,7 @@ import {
 import { ScrollArea } from "./scroll-area";
 import {
   scrollAreaConteudoFocavelSource,
-  scrollAreaSemAlturaSource,
+  scrollAreaNoHeightSource,
   scrollAreaSource,
 } from "./scroll-area.source";
 
@@ -374,7 +374,7 @@ export const NoLimit: Story = {
     docs: {
       // A AUSÊNCIA de teto de altura é o assunto, e ela só se lê no par com a
       // versão que tem `size`.
-      source: { transform: scrollAreaSemAlturaSource },
+      source: { transform: scrollAreaNoHeightSource },
       description: {
         story:
           "Pai sem altura definida — o conteúdo expande e não há rolagem. É o erro de uso mais comum: o componente aparenta estar quebrado quando ninguém disse até onde ele pode ir.",

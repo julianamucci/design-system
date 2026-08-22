@@ -25,11 +25,11 @@ describe('commandSource', () => {
     // Fora dela sobra uma área em branco onde a lista estava — é o espaço da
     // lista que a mensagem preenche.
     const saida = commandSource();
-    const inicioLista = saida.indexOf('<CommandList>');
-    const fimLista = saida.indexOf('</CommandList>');
+    const startList = saida.indexOf('<CommandList>');
+    const endList = saida.indexOf('</CommandList>');
     const vazio = saida.indexOf('<CommandEmpty>');
-    expect(vazio).toBeGreaterThan(inicioLista);
-    expect(vazio).toBeLessThan(fimLista);
+    expect(vazio).toBeGreaterThan(startList);
+    expect(vazio).toBeLessThan(endList);
   });
 
   it('nomeia cada grupo pelo cabeçalho, e separa os dois blocos', () => {

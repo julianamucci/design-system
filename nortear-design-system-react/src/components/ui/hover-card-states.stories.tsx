@@ -12,7 +12,7 @@ import {
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
 import {
   hoverCardControladoSource,
-  hoverCardFechadoSource,
+  hoverCardClosedSource,
   hoverCardSource,
 } from "./hover-card.source";
 import { Button } from "./button";
@@ -73,7 +73,7 @@ export const Closed: Story = {
     docs: {
       // O que a story afirma é uma AUSÊNCIA — nem `aria-expanded` nem
       // `aria-haspopup` no gatilho —, e ausência não sai dos args.
-      source: { transform: hoverCardFechadoSource },
+      source: { transform: hoverCardClosedSource },
       description: {
         story:
           "Estado inicial. Nada além do gatilho existe no documento, e o gatilho não anuncia nenhum estado expandido: um cartão de preview não é um menu.",

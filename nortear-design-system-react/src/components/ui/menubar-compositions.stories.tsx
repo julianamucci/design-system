@@ -3,7 +3,7 @@ import { within, expect, userEvent, waitFor } from "storybook/test"
 import {
   waitForPortal,
   REGRA_GUARDA_DE_FOCO,
-  REGRA_FILHOS_DE_MENU,
+  MENU_RULE_CHILDREN,
 } from "@/lib/wait-for-portal"
 import {
   Menubar,
@@ -23,9 +23,9 @@ import {
   MenubarTrigger,
 } from "./menubar"
 import {
-  menubarCaixasDeSelecaoSource,
+  selectionSourceMenubarBoxes,
   menubarEditorSource,
-  menubarEscolhaUnicaSource,
+  menubarChoiceUnicaSource,
   menubarSource,
   menubarSubmenuSource,
 } from "./menubar.source"
@@ -36,8 +36,8 @@ import {
 // duas descrevem defeitos da lib, não do design system — ver os comentários em
 // `wait-for-portal.ts`. A story que termina FECHADA não as desliga: é lá que
 // "sem violações no estado padrão" vale inteiro.
-const AXE_COM_MENU_ABERTO = {
-  config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_FILHOS_DE_MENU] },
+const AXE_WITH_MENU_OPEN = {
+  config: { rules: [REGRA_GUARDA_DE_FOCO, MENU_RULE_CHILDREN] },
 } as const
 
 const ATALHOS = [
@@ -95,7 +95,7 @@ const wrapperStyle: React.CSSProperties = {
 // ─── WithShortcuts ────────────────────────────────────────────────────────────
 
 export const WithShortcuts: Story = {
-  parameters: { a11y: AXE_COM_MENU_ABERTO, covers: ["visual.item2"] },
+  parameters: { a11y: AXE_WITH_MENU_OPEN, covers: ["visual.item2"] },
   render: () => (
     <div style={wrapperStyle}>
       <Menubar modal={false}>
@@ -151,7 +151,7 @@ export const WithShortcuts: Story = {
 
 export const WithSubmenu: Story = {
   parameters: {
-    a11y: AXE_COM_MENU_ABERTO,
+    a11y: AXE_WITH_MENU_OPEN,
     covers: ["functional.item5", "visual.item4"],
     // O submenu é outro par de gatilho e painel DENTRO do painel: uma
     // sub-composição que o snippet do meta esconderia por inteiro.
@@ -231,11 +231,11 @@ export const WithSubmenu: Story = {
 
 export const WithCheckboxItems: Story = {
   parameters: {
-    a11y: AXE_COM_MENU_ABERTO,
+    a11y: AXE_WITH_MENU_OPEN,
     covers: ["functional.item7", "visual.item3"],
     // Alternadores dentro de grupo rotulado — peças que o meta não usa, e a
     // independência entre as linhas só aparece com três delas juntas.
-    docs: { source: { transform: menubarCaixasDeSelecaoSource } },
+    docs: { source: { transform: selectionSourceMenubarBoxes } },
   },
   render: () => (
     <div style={wrapperStyle}>
@@ -313,11 +313,11 @@ export const WithCheckboxItems: Story = {
 
 export const WithRadioGroup: Story = {
   parameters: {
-    a11y: AXE_COM_MENU_ABERTO,
+    a11y: AXE_WITH_MENU_OPEN,
     covers: ["accessibility.item5"],
     // Escolha única: quem guarda o valor é o GRUPO, e é essa relação — não o
     // item isolado — que o snippet precisa mostrar.
-    docs: { source: { transform: menubarEscolhaUnicaSource } },
+    docs: { source: { transform: menubarChoiceUnicaSource } },
   },
   render: () => (
     <div style={wrapperStyle}>

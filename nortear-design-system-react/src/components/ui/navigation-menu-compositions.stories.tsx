@@ -16,9 +16,9 @@ import {
   popupAberto,
 } from "./navigation-menu.fixtures";
 import {
-  navigationMenuDestaqueSource,
+  navigationMenuHighlightSource,
   navigationMenuMegaMenuSource,
-  navigationMenuSomenteDestinosSource,
+  navigationMenuSomenteTargetsSource,
   navigationMenuSource,
 } from "./navigation-menu.source";
 import { REGRA_GUARDA_DE_FOCO } from "@/lib/wait-for-portal";
@@ -69,7 +69,7 @@ export const SimpleLink: Story = {
     docs: {
       // A ausência de painel É o assunto: sem hierarquia não há gatilho nenhum
       // na barra, e o snippet do meta traz justamente um.
-      source: { transform: navigationMenuSomenteDestinosSource },
+      source: { transform: navigationMenuSomenteTargetsSource },
       description: {
         story:
           "Apenas destinos diretos, sem painel — ideal para três a cinco categorias planas.",
@@ -298,7 +298,7 @@ export const WithHighlightedCard: Story = {
     docs: {
       // Destino em destaque ao lado de uma lista de apoio: a hierarquia vem do
       // tamanho do bloco, e some se o snippet mostrar só a lista.
-      source: { transform: navigationMenuDestaqueSource },
+      source: { transform: navigationMenuHighlightSource },
       description: {
         story:
           "Um destino em destaque ao lado dos complementares — a hierarquia aparece pelo tamanho do bloco, não por cor.",

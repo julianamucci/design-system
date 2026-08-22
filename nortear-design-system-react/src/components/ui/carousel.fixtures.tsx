@@ -2,7 +2,7 @@
  * Fixtures do Carousel — um slide e um medidor, seis consumidores.
  *
  * `SlideCard` existia em SEIS cópias (as cinco stories e a página de
- * documentação) e `visivelNoViewport` em quatro. Todas montavam a mesma coisa,
+ * documentação) e `viewportVisible` em quatro. Todas montavam a mesma coisa,
  * e é por isso que corrigir uma deixava as outras erradas: a moldura do slide
  * mudou numa cópia e as demais ficaram para trás sem ninguém notar.
  *
@@ -52,7 +52,7 @@ export function SlideCard({
 // são a MESMA fixture, e separá-los em dois módulos traria de volta a chance de
 // um andar sem o outro, que é exatamente o defeito que este arquivo remove.
 // eslint-disable-next-line react-refresh/only-export-components
-export function visivelNoViewport(slide: Element, viewport: Element): boolean {
+export function viewportVisible(slide: Element, viewport: Element): boolean {
   const s = slide.getBoundingClientRect();
   const v = viewport.getBoundingClientRect();
   return s.right > v.left + 1 && s.left < v.right - 1 && s.bottom > v.top + 1 && s.top < v.bottom - 1;

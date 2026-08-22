@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { INVOICES, TOTAL } from "./table.fixtures";
 import {
-  tableAcoesPorLinhaSource,
+  lineSourceTableActions,
   tableBasicaSource,
   tableLegendaOcultaSource,
   tableRolagemHorizontalSource,
@@ -240,7 +240,7 @@ export const WithRowActions: Story = {
     covers: ["accessibility.item3", "visual.item4"],
     docs: {
       // A coluna de ações é composição do render, com Button e ícone mudo.
-      source: { transform: tableAcoesPorLinhaSource },
+      source: { transform: lineSourceTableActions },
     },
   },
   render: () => (

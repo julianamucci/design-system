@@ -118,9 +118,9 @@ export const Playground: Story = {
       // escrever uma classe que saiu do projeto e não tinha efeito nenhum. Aqui
       // se prova que a nova entrada tem: com tolerância de 1px, porque
       // arredondamento de layout não é defeito.
-      const alturaPedida = args.height ?? 0;
-      await expect(alturaPedida).toBeGreaterThan(0);
-      await expect(Math.abs(raiz.getBoundingClientRect().height - alturaPedida)).toBeLessThanOrEqual(1);
+      const heightPedida = args.height ?? 0;
+      await expect(heightPedida).toBeGreaterThan(0);
+      await expect(Math.abs(raiz.getBoundingClientRect().height - heightPedida)).toBeLessThanOrEqual(1);
     });
   },
 };

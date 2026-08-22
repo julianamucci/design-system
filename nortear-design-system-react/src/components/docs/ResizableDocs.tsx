@@ -142,8 +142,8 @@ export function ResizableDocs() {
   const lblContent = tContent("demonstration.labels.content");
   const lblTop = tContent("demonstration.labels.top");
   const lblBottom = tContent("demonstration.labels.bottom");
-  const lblHorizontal = tContent("demonstration.labels.horizontal");
-  const lblVertical = tContent("demonstration.labels.vertical");
+  const horizontalLbl = tContent("demonstration.labels.horizontal");
+  const verticalLbl = tContent("demonstration.labels.vertical");
   const lblNested = tContent("demonstration.labels.nested");
 
   const ariaResize =
@@ -263,7 +263,7 @@ interface PanelResizeHandleProps {
           {/* Demo 1: Horizontal */}
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {lblHorizontal}
+              {horizontalLbl}
             </p>
             <div
               className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"
@@ -300,7 +300,7 @@ interface PanelResizeHandleProps {
           {/* Demo 2: Vertical */}
           <div className="nds-stack" data-spacing="sm">
             <p className="nds-text-caption nds-font-medium nds-text-muted-foreground">
-              {lblVertical}
+              {verticalLbl}
             </p>
             <div
               className="nds-w-full nds-demo-box nds-border-default nds-rounded-md nds-overflow-hidden nds-bg-background"

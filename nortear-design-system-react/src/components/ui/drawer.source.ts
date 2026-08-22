@@ -25,7 +25,7 @@ import {
   indentar,
   jsxSnippet,
   propBool,
-  propOpcao,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -52,7 +52,7 @@ const IMPORT = `import {
 import { Button } from "@/components/ui/button";`;
 
 /** Sem corpo rolável: confirmação e formulários curtos não precisam dele. */
-const IMPORT_SEM_CORPO = `import {
+const IMPORT_NO_BODY = `import {
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -105,7 +105,7 @@ ${indentar(partes)}
 export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const raiz = attrsMultilinha([
-    propOpcao('direction', args.direction, DIRECOES, 'bottom'),
+    propOption('direction', args.direction, DIRECOES, 'bottom'),
     propBool('defaultOpen', args.defaultOpen),
     propBool('dismissible', args.dismissible, true),
     propBool('modal', args.modal, true),
@@ -128,7 +128,7 @@ export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
 };
 
 /** Mesmo painel das quatro direções — o que muda é `direction` e o texto. */
-function painelDeDirecao(
+function directionPanel(
   direction: DrawerArgs['direction'],
   titulo: string,
   descricao: string,
@@ -147,7 +147,7 @@ function painelDeDirecao(
 
   return jsxSnippet(
     IMPORT,
-    painel(attrs(propOpcao('direction', direction, DIRECOES, 'bottom')), miolo, gatilho('Abrir')),
+    painel(attrs(propOption('direction', direction, DIRECOES, 'bottom')), miolo, gatilho('Abrir')),
   );
 }
 
@@ -156,17 +156,17 @@ function painelDeDirecao(
  * rápido. A alça não aparece nesta direção: o CSS compartilhado a esconde.
  */
 export function drawerTopoSource(): string {
-  return painelDeDirecao('top', 'Nova versão disponível', 'Atualize agora para acessar as novidades.');
+  return directionPanel('top', 'Nova versão disponível', 'Atualize agora para acessar as novidades.');
 }
 
 /** Painel lateral à esquerda — onde a pessoa espera encontrar o menu. */
 export function drawerEsquerdaSource(): string {
-  return painelDeDirecao('left', 'Menu', 'Navegue pelas seções do app.');
+  return directionPanel('left', 'Menu', 'Navegue pelas seções do app.');
 }
 
 /** Painel lateral à direita — a alternativa de desktop para edição e filtros. */
 export function drawerDireitaSource(): string {
-  return painelDeDirecao('right', 'Filtros', 'Refine sua busca por categoria, preço e disponibilidade.');
+  return directionPanel('right', 'Filtros', 'Refine sua busca por categoria, preço e disponibilidade.');
 }
 
 /**
@@ -183,7 +183,7 @@ export function drawerAbertoSource(): string {
 </DrawerFooter>`,
   ].join('\n');
 
-  return jsxSnippet(IMPORT_SEM_CORPO, painel(' defaultOpen', miolo, gatilho('Abrir')));
+  return jsxSnippet(IMPORT_NO_BODY, painel(' defaultOpen', miolo, gatilho('Abrir')));
 }
 
 /**
@@ -253,7 +253,7 @@ export function drawerNaoDispensavelSource(): string {
 </DrawerFooter>`,
   ].join('\n');
 
-  return jsxSnippet(IMPORT_SEM_CORPO, painel(' dismissible={false}', miolo, gatilho('Abrir')));
+  return jsxSnippet(IMPORT_NO_BODY, painel(' dismissible={false}', miolo, gatilho('Abrir')));
 }
 
 /**
@@ -311,7 +311,7 @@ export function drawerComConfirmacaoSource(): string {
 </DrawerFooter>`,
   ].join('\n');
 
-  return jsxSnippet(IMPORT_SEM_CORPO, painel('', miolo, gatilho('Remover anexo')));
+  return jsxSnippet(IMPORT_NO_BODY, painel('', miolo, gatilho('Remover anexo')));
 }
 
 /**

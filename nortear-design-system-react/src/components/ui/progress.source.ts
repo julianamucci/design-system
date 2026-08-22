@@ -23,8 +23,8 @@ import {
   attrs,
   indentar,
   jsxSnippet,
-  propNumero,
-  propTexto,
+  propNumber,
+  propText,
   texto,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -49,14 +49,14 @@ const IMPORT_COMPOSTO = `import {
 } from "@/components/ui/progress";`;
 
 /** Valor e rótulo do Playground — o padrão a que as stories sem args caem. */
-const VALOR_PADRAO = 42;
+const VALUE_DEFAULT = 42;
 const ROTULO_PADRAO = 'Progresso do upload';
 
 /**
  * Contêiner de largura. A trilha herda a largura de quem a contém, então sem
  * este bloco o snippet ensinaria uma barra da largura da página.
  */
-function emLargura(conteudo: string): string {
+function inWidth(conteudo: string): string {
   return `<div className="nds-w-sm">\n${indentar(conteudo)}\n</div>`;
 }
 
@@ -87,16 +87,16 @@ function barra(valor: string, rotulo: string, variante?: string): string {
 export const progressSource: SourceTransform<ProgressArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const valor =
-    args.value === null ? 'null' : String(typeof args.value === 'number' ? args.value : VALOR_PADRAO);
+    args.value === null ? 'null' : String(typeof args.value === 'number' ? args.value : VALUE_DEFAULT);
   const linha = attrs(
     `value={${valor}}`,
-    typeof args.min === 'number' && args.min !== 0 ? propNumero('min', args.min) : undefined,
-    typeof args.max === 'number' && args.max !== 100 ? propNumero('max', args.max) : undefined,
+    typeof args.min === 'number' && args.min !== 0 ? propNumber('min', args.min) : undefined,
+    typeof args.max === 'number' && args.max !== 100 ? propNumber('max', args.max) : undefined,
     `aria-label="${texto(args['aria-label']) ?? ROTULO_PADRAO}"`,
-    propTexto('className', args.className),
+    propText('className', args.className),
   );
 
-  return jsxSnippet(IMPORT, emLargura(`<Progress${linha} />`));
+  return jsxSnippet(IMPORT, inWidth(`<Progress${linha} />`));
 };
 
 /**
@@ -118,7 +118,7 @@ useEffect(() => {
   }, 400);
   return () => clearInterval(id);
 }, []);`,
-    emLargura('<Progress value={valor} aria-label="Carregando dados" />'),
+    inWidth('<Progress value={valor} aria-label="Carregando dados" />'),
   );
 }
 
@@ -130,7 +130,7 @@ useEffect(() => {
 export function progressIndeterminadoSource(): string {
   return jsxSnippet(
     IMPORT,
-    emLargura('<Progress value={null} aria-label="Processando dados" />'),
+    inWidth('<Progress value={null} aria-label="Processando dados" />'),
   );
 }
 
@@ -145,7 +145,7 @@ export function progressIndeterminadoSource(): string {
 export function progressComRotuloSource(): string {
   return jsxSnippet(
     IMPORT_COMPOSTO,
-    emLargura(`<Progress value={42}>
+    inWidth(`<Progress value={42}>
   <ProgressLabel>Enviando arquivo</ProgressLabel>
   <ProgressValue />
   <ProgressTrack>
@@ -172,12 +172,12 @@ ${barra('92', 'Espaço de armazenamento quase esgotado', 'destructive')}`,
 
 /** Ponto de partida: zero é um valor conhecido, e é anunciado como tal. */
 export function progressZeroSource(): string {
-  return jsxSnippet(IMPORT, emLargura('<Progress value={0} aria-label="Progresso inicial" />'));
+  return jsxSnippet(IMPORT, inWidth('<Progress value={0} aria-label="Progresso inicial" />'));
 }
 
 /** Metade do caminho — o estado em que a barra passa a maior parte da vida. */
 export function progressCarregandoSource(): string {
-  return jsxSnippet(IMPORT, emLargura('<Progress value={50} aria-label="Carregando dados" />'));
+  return jsxSnippet(IMPORT, inWidth('<Progress value={50} aria-label="Carregando dados" />'));
 }
 
 /**
@@ -186,14 +186,14 @@ export function progressCarregandoSource(): string {
  * números na mão.
  */
 export function progressConcluidoSource(): string {
-  return jsxSnippet(IMPORT, emLargura('<Progress value={100} aria-label="Concluído" />'));
+  return jsxSnippet(IMPORT, inWidth('<Progress value={100} aria-label="Concluído" />'));
 }
 
 /**
  * Várias operações em paralelo. Cada barra carrega o PRÓPRIO nome acessível —
  * três barras chamadas "progresso" seriam indistinguíveis para quem ouve.
  */
-export function progressVariosNiveisSource(): string {
+export function progressMultipleLevelsSource(): string {
   return jsxSnippet(
     IMPORT,
     empilhado(`<Progress value={0} aria-label="Etapa 1" />
@@ -207,7 +207,7 @@ export function progressVariosNiveisSource(): string {
  * `data-variant` de propósito: é o padrão neutro, e ele precisa aparecer ao
  * lado dos outros dois para que a escolha da cor se leia como escolha.
  */
-export function progressCoresSource(): string {
+export function progressColorsSource(): string {
   return jsxSnippet(
     IMPORT,
     empilhado(
@@ -223,7 +223,7 @@ ${barra('92', 'Espaço de armazenamento quase esgotado', 'destructive')}`,
  * número sozinho a partir da escala — escrever `{valor}%` ao lado abriria a
  * chance de o texto e a barra discordarem.
  */
-export function progressRotuloEValorSource(): string {
+export function progressLabelEValorSource(): string {
   return jsxSnippet(
     `import { useEffect, useState } from "react";
 ${IMPORT_COMPOSTO}
@@ -236,7 +236,7 @@ useEffect(() => {
   }, 350);
   return () => clearInterval(id);
 }, []);`,
-    emLargura(`<Progress value={valor}>
+    inWidth(`<Progress value={valor}>
   <ProgressLabel>Enviando arquivo</ProgressLabel>
   <ProgressValue />
   <ProgressTrack>
@@ -251,7 +251,7 @@ useEffect(() => {
  * assertivo o leitor de tela é interrompido a cada ponto percentual e a pessoa
  * não consegue ouvir mais nada da página enquanto o upload não acaba.
  */
-export function progressComAriaLiveSource(): string {
+export function progressWithAriaLiveSource(): string {
   return jsxSnippet(
     `import { useEffect, useState } from "react";
 ${IMPORT}

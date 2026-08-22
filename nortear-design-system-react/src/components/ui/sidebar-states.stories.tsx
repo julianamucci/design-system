@@ -29,9 +29,9 @@ import {
   sidebarCarregandoSource,
   sidebarExpandidaSource,
   sidebarMovelSource,
-  sidebarRecolhidaEmIconesSource,
+  iconsSourceSidebarRecolhida,
   sidebarRecolhidaOffcanvasSource,
-  sidebarSemRecolhimentoSource,
+  sidebarNoRecolhimentoSource,
   sidebarSource,
 } from "./sidebar.source";
 
@@ -222,7 +222,7 @@ export const CollapsedIcon: Story = {
     docs: {
       // O par `defaultOpen={false}` + `collapsible="icon"` é o que faz a barra
       // nascer estreita em vez de fora da tela; nenhum control o descreve.
-      source: { transform: sidebarRecolhidaEmIconesSource },
+      source: { transform: iconsSourceSidebarRecolhida },
     },
   },
   render: () => <SidebarStatePreview defaultOpen={false} collapsible="icon" label="Sidebar icon mode (collapsible=icon, defaultOpen=false)" />,
@@ -318,7 +318,7 @@ export const Fixed: Story = {
     docs: {
       // Sem recolhimento não há gatilho no snippet: a AUSÊNCIA dele é parte do
       // caso, e é a mesma composição da variante sem recolhimento.
-      source: { transform: sidebarSemRecolhimentoSource },
+      source: { transform: sidebarNoRecolhimentoSource },
     },
   },
   render: () => <SidebarStatePreview defaultOpen={true} collapsible="none" label="Sidebar fixa (collapsible=none)" />,

@@ -26,7 +26,7 @@ import {
   attrs,
   jsxSnippet,
   propBool,
-  propOpcao,
+  propOption,
   texto,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -88,8 +88,8 @@ export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
   const icone = soIcone ? 'Bold' : 'Eye';
 
   const atributos = attrs(
-    propOpcao('variant', args.variant, VARIANTES, 'default'),
-    propOpcao('size', args.size, TAMANHOS, 'default'),
+    propOption('variant', args.variant, VARIANTES, 'default'),
+    propOption('size', args.size, TAMANHOS, 'default'),
     propBool('defaultPressed', args.defaultPressed),
     propBool('disabled', args.disabled),
     // Sem texto visível não há nome acessível nenhum sem isto.
@@ -152,7 +152,7 @@ ${dentroDe(toggle(' variant="outline" size="lg" aria-label="Negrito grande"', 'B
  * independente — ligar um não desliga o vizinho, que é o que separa esta
  * composição de um grupo de escolha única.
  */
-export function toggleBarraFormatacaoSource(): string {
+export function toggleBarFormattingSource(): string {
   const botoes = ['Bold', 'Italic', 'Underline', 'List'];
   const rotulos = ['Negrito', 'Itálico', 'Sublinhado', 'Lista'];
 

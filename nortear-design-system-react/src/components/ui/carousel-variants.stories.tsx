@@ -16,7 +16,7 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "./carousel";
-import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
+import { SlideCard, viewportVisible } from "./carousel.fixtures";
 import { carouselSource, carouselVerticalSource } from "./carousel.source";
 
 const meta = {
@@ -190,8 +190,8 @@ export const Vertical: Story = {
         viewport.clientHeight,
       );
       // E o recorte é real: o segundo slide já está fora do enquadramento.
-      await expect(visivelNoViewport(slides[0], viewport)).toBe(true);
-      await expect(visivelNoViewport(slides[1], viewport)).toBe(false);
+      await expect(viewportVisible(slides[0], viewport)).toBe(true);
+      await expect(viewportVisible(slides[1], viewport)).toBe(false);
     });
 
     await step("As setas ficam acima e abaixo do viewport", async () => {

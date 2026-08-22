@@ -29,7 +29,7 @@ const ANOS_PARA_CADA_LADO = 100
 // select invisível por cima. O truque existia porque não dava para estilizar o
 // nativo — hoje dá, e o contrato das quatro stacks é o <select> ser o próprio
 // controle.
-function SelectDaLegenda({
+function CaptionSelect({
   options,
   className,
   ...selectProps
@@ -67,20 +67,20 @@ function Calendar({
   // dava para escolher nada do ano que vem, e dava para escolher 1926. As
   // outras três stacks navegam para os dois lados; o limite aqui é simétrico e
   // largo o bastante para não aparecer, e existe só porque a lib precisa de um.
-  const temSeletorDeAno = captionLayout === "dropdown" || captionLayout === "dropdown-years"
+  const yearHasSelector = captionLayout === "dropdown" || captionLayout === "dropdown-years"
   const hoje = new Date()
-  const inicioPadrao =
-    startMonth ?? (temSeletorDeAno ? new Date(hoje.getFullYear() - ANOS_PARA_CADA_LADO, 0, 1) : undefined)
-  const fimPadrao =
-    endMonth ?? (temSeletorDeAno ? new Date(hoje.getFullYear() + ANOS_PARA_CADA_LADO, 11, 31) : undefined)
+  const startDefault =
+    startMonth ?? (yearHasSelector ? new Date(hoje.getFullYear() - ANOS_PARA_CADA_LADO, 0, 1) : undefined)
+  const endDefault =
+    endMonth ?? (yearHasSelector ? new Date(hoje.getFullYear() + ANOS_PARA_CADA_LADO, 11, 31) : undefined)
 
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn("nds-calendar-root", className)}
       captionLayout={captionLayout}
-      startMonth={inicioPadrao}
-      endMonth={fimPadrao}
+      startMonth={startDefault}
+      endMonth={endDefault}
       locale={locale}
       formatters={{
         // Mês por EXTENSO no seletor, como no Vanilla, que é a referência: a
@@ -160,7 +160,7 @@ function Calendar({
         // `aria-hidden` com chevron, deixando o select invisível por cima. O
         // truque existia porque não dava para estilizar o nativo — hoje dá, e o
         // contrato das quatro stacks é o <select> ser o próprio controle.
-        Dropdown: SelectDaLegenda,
+        Dropdown: CaptionSelect,
         Root: ({ className, rootRef, ...props }) => {
           return (
             <div

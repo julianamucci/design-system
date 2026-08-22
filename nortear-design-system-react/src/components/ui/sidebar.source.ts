@@ -44,7 +44,7 @@
  * de itens não é o assunto de nenhuma story, e cada item repetido afasta da
  * tela a peça que a story ensina.
  */
-import { attrs, jsxSnippet, propBool, propOpcao, texto, type SourceTransform } from '@/lib/story-source';
+import { attrs, jsxSnippet, propBool, propOption, texto, type SourceTransform } from '@/lib/story-source';
 
 export type SidebarArgs = {
   side: 'left' | 'right';
@@ -86,7 +86,7 @@ function nivel(conteudo: string, n: number): string {
 }
 
 /** Bloco de import do componente, em ordem alfabética e sem repetição. */
-function importarSidebar(pecas: string[]): string {
+function importingSidebar(pecas: string[]): string {
   const lista = [...new Set(pecas)].sort();
   return `import {
 ${lista.map((peca) => `  ${peca},`).join('\n')}
@@ -125,9 +125,9 @@ function destino(
 
 /** Grupo nomeado. O rótulo nomeia o menu; a ação do grupo é opcional. */
 function grupo(rotulo: string, itens: string[], acao?: string): string {
-  const linhaAcao = acao ? `\n${nivel(acao, 1)}` : '';
+  const lineAction = acao ? `\n${nivel(acao, 1)}` : '';
   return `<SidebarGroup>
-  <SidebarGroupLabel>${rotulo}</SidebarGroupLabel>${linhaAcao}
+  <SidebarGroupLabel>${rotulo}</SidebarGroupLabel>${lineAction}
   <SidebarGroupContent>
     <SidebarMenu>
 ${nivel(itens.join('\n'), 3)}
@@ -137,7 +137,7 @@ ${nivel(itens.join('\n'), 3)}
 }
 
 /** Os três destinos que servem de menu em quase todo snippet. */
-function menuPadrao(): string[] {
+function menuDefault(): string[] {
   return [
     destino('LayoutDashboard', 'Dashboard', { ativo: true }),
     destino('Blocks', 'Componentes'),
@@ -152,7 +152,7 @@ ${nivel(destino('User', 'Perfil'), 2)}
   </SidebarMenu>
 </SidebarFooter>`;
 
-const CABECALHO_DA_BARRA = `<SidebarHeader className="nds-p-2">
+const BAR_HEADER = `<SidebarHeader className="nds-p-2">
   <span className="nds-font-semibold nds-text-body nds-text-muted-foreground">
     Design System
   </span>
@@ -193,16 +193,16 @@ function pagina(c: Composicao): string {
     ...(comGatilho ? ['SidebarTrigger'] : []),
   ];
 
-  const cabecalhoDoImport = [
+  const importHeader = [
     c.estado ? 'import { useState } from "react";' : '',
-    importarSidebar(pecas),
+    importingSidebar(pecas),
     importarIcones(c.icones ?? ['LayoutDashboard', 'Blocks', 'Coins', 'User']),
   ]
     .filter(Boolean)
     .join('\n');
 
-  const corpoDaBarra = [
-    c.cabecalho ?? CABECALHO_DA_BARRA,
+  const barBody = [
+    c.cabecalho ?? BAR_HEADER,
     `<SidebarContent>
 ${nivel(c.grupos.join('\n'), 1)}
 </SidebarContent>`,
@@ -222,11 +222,11 @@ ${nivel(c.grupos.join('\n'), 1)}
     : '<SidebarInset />';
 
   return jsxSnippet(
-    c.estado ? `${cabecalhoDoImport}\n\n${c.estado}` : cabecalhoDoImport,
+    c.estado ? `${importHeader}\n\n${c.estado}` : importHeader,
     `<SidebarProvider${c.provider ?? ''}>
   <nav aria-label="Navegação principal">
     <Sidebar${c.barra ?? ''}>
-${nivel(corpoDaBarra, 3)}
+${nivel(barBody, 3)}
     </Sidebar>
   </nav>
   ${conteudo}
@@ -235,11 +235,11 @@ ${nivel(corpoDaBarra, 3)}
 }
 
 /** Composição de referência: um menu, um rodapé, e nada além disso. */
-function barraCom(provider: string, barra: string, extras: Partial<Composicao> = {}): string {
+function barWith(provider: string, barra: string, extras: Partial<Composicao> = {}): string {
   return pagina({
     provider,
     barra,
-    grupos: [grupo('Menu', menuPadrao())],
+    grupos: [grupo('Menu', menuDefault())],
     ...extras,
   });
 }
@@ -264,12 +264,12 @@ export const sidebarSource: SourceTransform<SidebarArgs> = (_gerado, ctx) => {
       consulta && consulta !== CONSULTA_PADRAO ? `mobileQuery="${consulta}"` : undefined,
     ),
     barra: attrs(
-      propOpcao('side', args.side, LADOS, 'left'),
-      propOpcao('variant', args.variant, VARIANTES, 'sidebar'),
-      propOpcao('collapsible', args.collapsible, RECOLHIMENTOS, 'offcanvas'),
+      propOption('side', args.side, LADOS, 'left'),
+      propOption('variant', args.variant, VARIANTES, 'sidebar'),
+      propOption('collapsible', args.collapsible, RECOLHIMENTOS, 'offcanvas'),
     ),
     grupos: [
-      grupo('Aplicação', menuPadrao()),
+      grupo('Aplicação', menuDefault()),
       '<SidebarSeparator />',
       grupo('Sistema', [destino('Bell', 'Notificações'), destino('Settings', 'Configurações')]),
     ],
@@ -284,8 +284,8 @@ export const sidebarSource: SourceTransform<SidebarArgs> = (_gerado, ctx) => {
  * assim vai escrito: numa galeria de variantes, o snippet que não nomeia a
  * variante deixa quem lê sem saber qual das três está vendo.
  */
-export function sidebarVariantePadraoSource(): string {
-  return barraCom('', ' variant="sidebar"');
+export function sidebarVariantDefaultSource(): string {
+  return barWith('', ' variant="sidebar"');
 }
 
 /**
@@ -293,8 +293,8 @@ export function sidebarVariantePadraoSource(): string {
  * do painel, não nele —, o que é o motivo de a variante ser um atributo na raiz
  * e não uma classe no elemento que muda de aparência.
  */
-export function sidebarVarianteFlutuanteSource(): string {
-  return barraCom('', ' variant="floating"');
+export function sidebarVariantFlutuanteSource(): string {
+  return barWith('', ' variant="floating"');
 }
 
 /**
@@ -303,8 +303,8 @@ export function sidebarVarianteFlutuanteSource(): string {
  * conteúdo serem irmãos diretos. Envolver um dos dois desliga o arredondamento
  * sem erro nenhum na tela.
  */
-export function sidebarVarianteEncaixadaSource(): string {
-  return barraCom('', ' variant="inset"');
+export function sidebarVariantEncaixadaSource(): string {
+  return barWith('', ' variant="inset"');
 }
 
 /**
@@ -312,7 +312,7 @@ export function sidebarVarianteEncaixadaSource(): string {
  * ela ocupava no fluxo zera — o conteúdo ganha a largura toda.
  */
 export function sidebarRecolhivelOffcanvasSource(): string {
-  return barraCom('', ' collapsible="offcanvas"');
+  return barWith('', ' collapsible="offcanvas"');
 }
 
 /**
@@ -320,8 +320,8 @@ export function sidebarRecolhivelOffcanvasSource(): string {
  * rótulo visível, `tooltip` é o que resta para quem usa ponteiro, e é por isso
  * que todo destino já nasce com ele.
  */
-export function sidebarRecolhivelIconeSource(): string {
-  return barraCom('', ' collapsible="icon"');
+export function sidebarRecolhivelIconSource(): string {
+  return barWith('', ' collapsible="icon"');
 }
 
 /**
@@ -330,13 +330,13 @@ export function sidebarRecolhivelIconeSource(): string {
  * uma ação inexistente. A barra também deixa de reservar vão no fluxo — ela É a
  * coluna.
  */
-export function sidebarSemRecolhimentoSource(): string {
-  return barraCom('', ' collapsible="none"', { comGatilho: false });
+export function sidebarNoRecolhimentoSource(): string {
+  return barWith('', ' collapsible="none"', { comGatilho: false });
 }
 
 /** Barra à esquerda — o lado padrão, escrito para a galeria poder compará-lo. */
-export function sidebarLadoEsquerdoSource(): string {
-  return barraCom('', ' side="left"');
+export function sidebarSideEsquerdoSource(): string {
+  return barWith('', ' side="left"');
 }
 
 /**
@@ -345,7 +345,7 @@ export function sidebarLadoEsquerdoSource(): string {
  * se resolve com uma classe de alinhamento por fora.
  */
 export function sidebarLadoDireitoSource(): string {
-  return barraCom('', ' side="right"');
+  return barWith('', ' side="right"');
 }
 
 /**
@@ -354,7 +354,7 @@ export function sidebarLadoDireitoSource(): string {
  * volta no cookie na próxima visita.
  */
 export function sidebarExpandidaSource(): string {
-  return barraCom(' defaultOpen', '');
+  return barWith(' defaultOpen', '');
 }
 
 /**
@@ -362,8 +362,8 @@ export function sidebarExpandidaSource(): string {
  * é o que estreita o painel para a largura de um ícone em vez de tirá-lo da
  * tela — recolhida ela continua navegável.
  */
-export function sidebarRecolhidaEmIconesSource(): string {
-  return barraCom(' defaultOpen={false}', ' collapsible="icon"');
+export function iconsSourceSidebarRecolhida(): string {
+  return barWith(' defaultOpen={false}', ' collapsible="icon"');
 }
 
 /**
@@ -372,7 +372,7 @@ export function sidebarRecolhidaEmIconesSource(): string {
  * no conteúdo e não na barra.
  */
 export function sidebarRecolhidaOffcanvasSource(): string {
-  return barraCom(' defaultOpen={false}', ' collapsible="offcanvas"');
+  return barWith(' defaultOpen={false}', ' collapsible="offcanvas"');
 }
 
 /**
@@ -413,7 +413,7 @@ ${nivel(item, 4)}
  * larga vira mais cedo, e é para isso que a consulta é prop em vez de constante.
  */
 export function sidebarMovelSource(): string {
-  return barraCom(' defaultOpen={false} mobileQuery="(max-width: 1024px)"', '');
+  return barWith(' defaultOpen={false} mobileQuery="(max-width: 1024px)"', '');
 }
 
 /**

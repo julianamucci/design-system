@@ -301,8 +301,8 @@ export const FocusVisible: Story = {
       await expect(checkbox).toHaveFocus();
 
       const style = getComputedStyle(checkbox);
-      const temAnelVisivel = style.outlineStyle !== "none" || style.boxShadow !== "none";
-      await expect(temAnelVisivel).toBe(true);
+      const hasRingVisible = style.outlineStyle !== "none" || style.boxShadow !== "none";
+      await expect(hasRingVisible).toBe(true);
     });
   },
 };

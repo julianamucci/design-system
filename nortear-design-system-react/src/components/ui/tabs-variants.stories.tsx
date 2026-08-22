@@ -222,9 +222,9 @@ export const Vertical: Story = {
     });
 
     await step("O painel fica ao lado da lista, não abaixo", async () => {
-      const caixaLista = lista(canvasElement).getBoundingClientRect();
+      const boxList = lista(canvasElement).getBoundingClientRect();
       const caixaPainel = canvas.getByRole("tabpanel").getBoundingClientRect();
-      await expect(caixaPainel.left).toBeGreaterThanOrEqual(caixaLista.right);
+      await expect(caixaPainel.left).toBeGreaterThanOrEqual(boxList.right);
     });
   },
 };

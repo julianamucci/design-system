@@ -36,7 +36,7 @@ export const REGRA_GUARDA_DE_FOCO = { id: "aria-hidden-focus", enabled: false } 
  * submenu ABERTO. A correção é da lib — desligar a regra é o que mantém as
  * outras valendo enquanto isso.
  */
-export const REGRA_FILHOS_DE_MENU = {
+export const MENU_RULE_CHILDREN = {
   id: "aria-required-children",
   enabled: false,
 } as const;

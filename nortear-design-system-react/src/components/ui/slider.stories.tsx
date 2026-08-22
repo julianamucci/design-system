@@ -96,13 +96,13 @@ export const Playground: Story = {
   },
   render: function PlaygroundRender(args) {
     const [value, setValue] = useState<number[]>([50]);
-    const isVertical = args.orientation === "vertical";
+    const verticalIs = args.orientation === "vertical";
 
     return (
       <div
-        className={isVertical ? "nds-stack" : "nds-stack nds-w-sm"}
+        className={verticalIs ? "nds-stack" : "nds-stack nds-w-sm"}
         data-spacing="sm"
-        style={isVertical ? { height: "10rem", width: "8rem", alignItems: "center" } : undefined}
+        style={verticalIs ? { height: "10rem", width: "8rem", alignItems: "center" } : undefined}
       >
         <div className="nds-cluster nds-w-full" data-align="center" data-justify="between">
           <span className="nds-text-body nds-text-muted-foreground">
@@ -179,8 +179,8 @@ export const Playground: Story = {
       // Gateado na geometria da própria alça, não no valor que acabamos de
       // escrever: a alça tem de ter andado para depois do meio do trilho.
       const alca = canvasElement.querySelector<HTMLElement>('[data-slot="slider-thumb"]')!;
-      const centroDaAlca = alca.getBoundingClientRect().left + alca.getBoundingClientRect().width / 2;
-      await expect(centroDaAlca).toBeGreaterThan(caixa.left + caixa.width * 0.5);
+      const handleCenter = alca.getBoundingClientRect().left + alca.getBoundingClientRect().width / 2;
+      await expect(handleCenter).toBeGreaterThan(caixa.left + caixa.width * 0.5);
     });
 
     await step("Soltar dispara o callback de commit", async () => {

@@ -14,7 +14,7 @@ import {
   attrsMultilinha,
   indentar,
   jsxSnippet,
-  propOpcao,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -78,7 +78,7 @@ const SETAS = `  <CarouselPrevious aria-label="Item anterior" />
 export const carouselSource: SourceTransform<CarouselArgs> = (_gerado, ctx) => {
   const vertical = ctx?.args?.orientation === 'vertical';
   const raiz = attrsMultilinha([
-    propOpcao('orientation', ctx?.args?.orientation, ORIENTACOES, 'horizontal'),
+    propOption('orientation', ctx?.args?.orientation, ORIENTACOES, 'horizontal'),
     `className="${vertical ? 'nds-w-xs' : LARGURA_MD}"`,
     'aria-label="Galeria de exemplos"',
   ]);

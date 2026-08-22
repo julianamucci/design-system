@@ -5,18 +5,18 @@ import {
   cardComImagemSource,
   cardCompactoSource,
   cardPerfilSource,
-  cardProdutoSource,
-  cardSemRodapeSource,
+  cardProductSource,
+  cardNoFooterSource,
   cardSource,
 } from './card.source';
 
 const TODAS = [
   cardSource,
-  cardSemRodapeSource,
+  cardNoFooterSource,
   cardCompactoSource,
   cardComAcaoSource,
   cardComImagemSource,
-  cardProdutoSource,
+  cardProductSource,
   cardPerfilSource,
   cardClicavelSource,
 ];
@@ -73,7 +73,7 @@ describe('cardSource', () => {
 
 describe('composições', () => {
   it('sem rodapé o card termina no corpo — é a unidade mínima', () => {
-    const saida = cardSemRodapeSource();
+    const saida = cardNoFooterSource();
     expect(saida).not.toContain('CardFooter');
     expect(saida).not.toContain('Button');
   });
@@ -92,10 +92,10 @@ describe('composições', () => {
     const saida = cardComAcaoSource();
     const header = saida.indexOf('<CardHeader>');
     const acao = saida.indexOf('<CardAction>');
-    const fimHeader = saida.indexOf('</CardHeader>');
+    const endHeader = saida.indexOf('</CardHeader>');
     expect(header).toBeGreaterThan(-1);
     expect(acao).toBeGreaterThan(header);
-    expect(acao).toBeLessThan(fimHeader);
+    expect(acao).toBeLessThan(endHeader);
     // Ordem do DOM: título → descrição → ação, para o leitor de tela ler na
     // ordem lógica mesmo com a ação no canto oposto.
     expect(saida.indexOf('<CardTitle')).toBeLessThan(saida.indexOf('<CardDescription>'));
@@ -112,7 +112,7 @@ describe('composições', () => {
   });
 
   it('o card de catálogo monta a unidade inteira, com o status na ação', () => {
-    const saida = cardProdutoSource();
+    const saida = cardProductSource();
     expect(saida).toContain('import { Badge } from "@/components/ui/badge";');
     const acao = saida.indexOf('<CardAction>');
     expect(saida.indexOf('<Badge variant="secondary">')).toBeGreaterThan(acao);

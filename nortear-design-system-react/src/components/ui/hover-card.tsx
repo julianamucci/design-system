@@ -50,9 +50,9 @@ type HoverCardContextValue = {
   openDelay: number
   closeDelay: number
   /** Guarda o gatilho deste cartão — é dele que sai o nome acessível do painel. */
-  registrarGatilho: (el: HTMLElement | null) => void
+  registrarTrigger: (el: HTMLElement | null) => void
   /** Texto do gatilho no momento da leitura, ou `null` se ainda não montou. */
-  textoDoGatilho: () => string | null
+  triggerText: () => string | null
 }
 
 const HoverCardContext = React.createContext<HoverCardContextValue | null>(null)
@@ -74,16 +74,16 @@ function HoverCard({
   ...props
 }: HoverCardProps) {
   const triggerRef = React.useRef<HTMLElement | null>(null)
-  const registrarGatilho = React.useCallback((el: HTMLElement | null) => {
+  const registrarTrigger = React.useCallback((el: HTMLElement | null) => {
     triggerRef.current = el
   }, [])
-  const textoDoGatilho = React.useCallback(
+  const triggerText = React.useCallback(
     () => triggerRef.current?.textContent?.trim() || null,
     []
   )
   const contexto = React.useMemo(
-    () => ({ openDelay, closeDelay, registrarGatilho, textoDoGatilho }),
-    [openDelay, closeDelay, registrarGatilho, textoDoGatilho]
+    () => ({ openDelay, closeDelay, registrarTrigger, triggerText }),
+    [openDelay, closeDelay, registrarTrigger, triggerText]
   )
 
   return (
@@ -106,7 +106,7 @@ function HoverCardTrigger({ asChild, children, ...props }: HoverCardTriggerProps
 
   const registrar = React.useCallback(
     (el: HTMLElement | null) => {
-      contexto?.registrarGatilho(el)
+      contexto?.registrarTrigger(el)
     },
     [contexto]
   )
@@ -165,7 +165,7 @@ function HoverCardContent({
     (el: HTMLDivElement | null) => {
       if (!el) return
       if (el.getAttribute("aria-label") || el.getAttribute("aria-labelledby")) return
-      el.setAttribute("aria-label", contexto?.textoDoGatilho() || "Prévia")
+      el.setAttribute("aria-label", contexto?.triggerText() || "Prévia")
     },
     [contexto]
   )

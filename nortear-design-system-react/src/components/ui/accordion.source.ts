@@ -13,7 +13,7 @@ import {
   attrsMultilinha,
   jsxSnippet,
   propBool,
-  propOpcao,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -91,7 +91,7 @@ export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) =>
   const atributos = attrsMultilinha([
     propBool('multiple', args.multiple),
     propBool('disabled', args.disabled),
-    propOpcao('orientation', args.orientation, ORIENTACOES, 'vertical'),
+    propOption('orientation', args.orientation, ORIENTACOES, 'vertical'),
     'defaultValue={["item-1"]}',
     'className="nds-max-w-lg"',
   ]);
@@ -105,7 +105,7 @@ export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) =>
  * story mede: o comportamento não depende de nenhuma chave que quem consome
  * precise lembrar de ligar. Um snippet com props escondia o que a story prova.
  */
-export function accordionSemConfiguracaoSource(): string {
+export function accordionNoConfigSource(): string {
   return jsxSnippet(IMPORT, raiz('', FAQ.slice(0, 2).map((p) => item(p)).join('\n')));
 }
 

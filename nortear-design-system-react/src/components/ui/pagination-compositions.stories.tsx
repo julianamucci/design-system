@@ -12,7 +12,7 @@ import {
 } from "./pagination";
 import {
   paginationControladaSource,
-  paginationReticenciasSource,
+  paginationEllipsisSource,
   paginationRodapeDeTabelaSource,
   paginationSource,
   paginationUltimaPaginaSource,
@@ -107,7 +107,7 @@ export const WithEllipsis: Story = {
     docs: {
       // A janela de páginas visíveis é o assunto: o snippet do meta enfileira
       // todos os números e nunca chegaria às reticências.
-      source: { transform: paginationReticenciasSource },
+      source: { transform: paginationEllipsisSource },
       description: {
         story:
           "Lista longa: primeira, última, atual e vizinhas ficam visíveis; o resto vira reticências decorativas.",

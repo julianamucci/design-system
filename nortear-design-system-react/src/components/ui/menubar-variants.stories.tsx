@@ -3,7 +3,7 @@ import { within, expect, userEvent, waitFor } from "storybook/test"
 import {
   waitForPortal,
   REGRA_GUARDA_DE_FOCO,
-  REGRA_FILHOS_DE_MENU,
+  MENU_RULE_CHILDREN,
 } from "@/lib/wait-for-portal"
 import {
   Menubar,
@@ -15,7 +15,7 @@ import {
 } from "./menubar"
 import {
   menubarItemDestrutivoSource,
-  menubarItemNeutroSource,
+  menubarItemNeutralSource,
   menubarSource,
 } from "./menubar.source"
 
@@ -25,8 +25,8 @@ import {
 // duas descrevem defeitos da lib, não do design system — ver os comentários em
 // `wait-for-portal.ts`. A story que termina FECHADA não as desliga: é lá que
 // "sem violações no estado padrão" vale inteiro.
-const AXE_COM_MENU_ABERTO = {
-  config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_FILHOS_DE_MENU] },
+const AXE_WITH_MENU_OPEN = {
+  config: { rules: [REGRA_GUARDA_DE_FOCO, MENU_RULE_CHILDREN] },
 } as const
 
 const ITENS_NEUTROS = ["Novo", "Abrir", "Salvar"] as const
@@ -64,11 +64,11 @@ const wrapperStyle: React.CSSProperties = {
 
 export const Default: Story = {
   parameters: {
-    a11y: AXE_COM_MENU_ABERTO,
+    a11y: AXE_WITH_MENU_OPEN,
     covers: ["accessibility.item7"],
     // A ausência de `variant` é o assunto: o snippet do meta traz atalhos, que
     // aqui só disputariam atenção com o item neutro.
-    docs: { source: { transform: menubarItemNeutroSource } },
+    docs: { source: { transform: menubarItemNeutralSource } },
   },
   render: () => (
     <div style={wrapperStyle}>
@@ -128,7 +128,7 @@ export const Default: Story = {
 
 export const Destructive: Story = {
   parameters: {
-    a11y: AXE_COM_MENU_ABERTO,
+    a11y: AXE_WITH_MENU_OPEN,
     covers: ["visual.item5"],
     // `variant="destructive"` e o separador que o afasta do item neutro — nada
     // disso é descrito por args, e o snippet do meta esconderia o par.

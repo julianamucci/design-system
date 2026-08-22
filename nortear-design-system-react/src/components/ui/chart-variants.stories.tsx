@@ -11,10 +11,10 @@ import {
   desenhoEscreve,
   formasDeDado,
 } from '@shared/testing/chart-probe';
-import { desenhoPronto } from './chart.fixtures';
+import { designPronto } from './chart.fixtures';
 import {
   chartAreaSource,
-  chartLinhaSource,
+  chartLineSource,
   chartPizzaSource,
   chartSource,
 } from './chart.source';
@@ -83,7 +83,7 @@ export const Bar: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
 
     await step('Toda categoria do dado aparece escrita no eixo', async () => {
       for (const mes of meses) await expect(desenhoEscreve(raiz, mes)).toBe(true);
@@ -105,7 +105,7 @@ export const Line: Story = {
     docs: {
       // Outro construtor e mais de uma série: o snippet do meta ensina barras
       // com série única e esconderia as duas diferenças.
-      source: { transform: chartLinhaSource },
+      source: { transform: chartLineSource },
       description: { story: 'Tendência contínua ao longo do tempo.' },
     },
   },
@@ -118,7 +118,7 @@ export const Line: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
 
     await step('Uma linha traçada por série, com comprimento real', async () => {
       const tracados = tracadosDeSerie(raiz);
@@ -157,7 +157,7 @@ export const Area: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
 
     await step('O traçado continua lá — a área é a linha com região abaixo', async () => {
       const tracados = tracadosDeSerie(raiz);
@@ -169,8 +169,8 @@ export const Area: Story = {
       // Metade da largura do desenho: o símbolo de ponto tem 6px, a região sob
       // a linha atravessa o gráfico. A comparação é relativa porque o desenho é
       // responsivo e o número absoluto muda com a largura do container.
-      const meiaLargura = svg.getBoundingClientRect().width / 2;
-      const areas = areasPreenchidas(raiz, meiaLargura);
+      const meiaWidth = svg.getBoundingClientRect().width / 2;
+      const areas = areasPreenchidas(raiz, meiaWidth);
       await expect(areas.length).toBeGreaterThanOrEqual(seriesMulti.length);
     });
 
@@ -199,7 +199,7 @@ export const Pie: Story = {
     />
   ),
   play: async ({ canvasElement, step }) => {
-    const raiz = await desenhoPronto(canvasElement);
+    const raiz = await designPronto(canvasElement);
 
     await step('A legenda escreve o nome de cada fatia', async () => {
       for (const ponto of dadosDispositivo) {

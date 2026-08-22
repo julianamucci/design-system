@@ -16,12 +16,12 @@
 import {
   attrs,
   attrsMultilinha,
-  filhoTexto,
+  childText,
   indentar,
   jsxSnippet,
   propBool,
-  propNumero,
-  propOpcao,
+  propNumber,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -38,8 +38,8 @@ const LADOS = ['top', 'bottom', 'left', 'right'] as const;
 const ALINHAMENTOS = ['start', 'center', 'end'] as const;
 
 /** Padrões do próprio componente — abaixo deles nada precisa ser escrito. */
-const ESPERA_ABRIR = 600;
-const ESPERA_FECHAR = 300;
+const WAIT_OPEN = 600;
+const WAIT_CLOSE = 300;
 
 const IMPORT = `import {
   HoverCard,
@@ -47,7 +47,7 @@ const IMPORT = `import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";`;
 
-const IMPORT_COM_ESTADO = `import { useState } from "react";
+const IMPORT_WITH_STATE = `import { useState } from "react";
 ${IMPORT}`;
 
 /**
@@ -60,9 +60,9 @@ const CLASSES_GATILHO_BOTAO =
   'nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
 /** Espera só entra no snippet quando difere do padrão do componente. */
-function propEspera(nome: string, valor: unknown, padrao: number): string | undefined {
+function propWait(nome: string, valor: unknown, padrao: number): string | undefined {
   if (typeof valor !== 'number' || !Number.isFinite(valor) || valor === padrao) return undefined;
-  return propNumero(nome, valor);
+  return propNumber(nome, valor);
 }
 
 /**
@@ -70,7 +70,7 @@ function propEspera(nome: string, valor: unknown, padrao: number): string | unde
  * cartão é ENRIQUECIMENTO, e no toque não existe hover — o clique no link
  * precisa continuar levando ao mesmo lugar.
  */
-function gatilhoLink(rotulo: string, href: string): string {
+function triggerLink(rotulo: string, href: string): string {
   return `<HoverCardTrigger asChild>
   <a href="${href}" className="nds-text-primary nds-font-medium nds-hover-underline">
     ${rotulo}
@@ -79,7 +79,7 @@ function gatilhoLink(rotulo: string, href: string): string {
 }
 
 /** Sem `type="button"` o mesmo gatilho dentro de um `<form>` enviaria o form. */
-function gatilhoBotao(rotulo: string): string {
+function triggerButton(rotulo: string): string {
   return `<HoverCardTrigger asChild>
   <button type="button" className="${CLASSES_GATILHO_BOTAO}">
     ${rotulo}
@@ -139,12 +139,12 @@ export const hoverCardSource: SourceTransform<HoverCardArgs> = (_gerado, ctx) =>
   const args = ctx?.args ?? {};
   const raiz = attrsMultilinha([
     propBool('defaultOpen', args.defaultOpen),
-    propEspera('openDelay', args.openDelay, ESPERA_ABRIR),
-    propEspera('closeDelay', args.closeDelay, ESPERA_FECHAR),
+    propWait('openDelay', args.openDelay, WAIT_OPEN),
+    propWait('closeDelay', args.closeDelay, WAIT_CLOSE),
   ]);
   const conteudo = attrs(
-    propOpcao('side', args.side, LADOS, 'bottom'),
-    propOpcao('align', args.align, ALINHAMENTOS, 'center'),
+    propOption('side', args.side, LADOS, 'bottom'),
+    propOption('align', args.align, ALINHAMENTOS, 'center'),
   );
 
   return jsxSnippet(
@@ -153,7 +153,7 @@ export const hoverCardSource: SourceTransform<HoverCardArgs> = (_gerado, ctx) =>
       'Comentário de',
       cartao(
         raiz,
-        gatilhoLink(filhoTexto(args.triggerLabel, '@joana'), '/users/joana'),
+        triggerLink(childText(args.triggerLabel, '@joana'), '/users/joana'),
         conteudo,
         PERFIL,
       ),
@@ -174,7 +174,7 @@ export function hoverCardEsperaPadraoSource(): string {
       'Comentário de',
       cartao(
         '',
-        gatilhoLink('@joana', '/users/joana'),
+        triggerLink('@joana', '/users/joana'),
         '',
         `<div className="nds-stack" data-spacing="xs">
   <p className="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>
@@ -200,7 +200,7 @@ export function hoverCardEsperaCurtaSource(): string {
       'Documentação em',
       cartao(
         ' openDelay={150} closeDelay={100}',
-        gatilhoLink('design-system.dev', 'https://design-system.dev'),
+        triggerLink('design-system.dev', 'https://design-system.dev'),
         '',
         `<div className="nds-stack" data-spacing="xs">
   <p className="nds-text-body nds-font-medium nds-leading-none">
@@ -221,12 +221,12 @@ export function hoverCardEsperaCurtaSource(): string {
  * `aria-expanded` nem `aria-haspopup`. A ausência é o assunto — anunciados,
  * descreveriam o cartão como um menu que a pessoa comanda.
  */
-export function hoverCardFechadoSource(): string {
+export function hoverCardClosedSource(): string {
   return jsxSnippet(
     IMPORT,
     emFrase(
       'Comentário de',
-      cartao('', gatilhoLink('@joana', '/users/joana'), '', PERFIL),
+      cartao('', triggerLink('@joana', '/users/joana'), '', PERFIL),
       'há 2 horas.',
     ),
   );
@@ -239,7 +239,7 @@ export function hoverCardFechadoSource(): string {
  */
 export function hoverCardControladoSource(): string {
   return jsxSnippet(
-    IMPORT_COM_ESTADO,
+    IMPORT_WITH_STATE,
     `function Comentario() {
   const [aberto, setAberto] = useState(false);
 
@@ -275,7 +275,7 @@ export function hoverCardPreviaDeLinkSource(): string {
       'O guia completo está em',
       cartao(
         '',
-        gatilhoLink('design-system.dev', 'https://design-system.dev'),
+        triggerLink('design-system.dev', 'https://design-system.dev'),
         '',
         `<div className="nds-stack" data-spacing="sm">
   <div className="nds-cluster nds-text-caption nds-text-muted-foreground" data-spacing="xs">
@@ -310,7 +310,7 @@ export function hoverCardDefinicaoSource(): string {
       'Todo componente do sistema atende',
       cartao(
         '',
-        gatilhoBotao('WCAG 2.2 AA'),
+        triggerButton('WCAG 2.2 AA'),
         ' aria-label="Definição de WCAG 2.2 AA"',
         `<div className="nds-stack" data-spacing="xs">
   <p className="nds-text-body nds-font-medium nds-leading-none">WCAG 2.2 nível AA</p>
@@ -338,7 +338,7 @@ export function hoverCardMetricaSource(): string {
       'A página inicial fechou o mês em',
       cartao(
         '',
-        gatilhoBotao('LCP 1.8s'),
+        triggerButton('LCP 1.8s'),
         ' aria-label="Explicação da métrica LCP"',
         `<div className="nds-stack" data-spacing="xs">
   <div
@@ -410,7 +410,7 @@ export function hoverCardClasseExtraSource(): string {
       'Resumo da entrega de',
       cartao(
         '',
-        gatilhoLink('@joana', '/users/joana'),
+        triggerLink('@joana', '/users/joana'),
         ' className="nds-w-md nds-text-center"',
         `<div className="nds-stack" data-spacing="xs">
   <p className="nds-text-body nds-font-medium nds-leading-none">Joana Silva</p>

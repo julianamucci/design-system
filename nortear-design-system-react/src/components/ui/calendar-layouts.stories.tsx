@@ -7,7 +7,7 @@ import {
   calendarDoisMesesSource,
   calendarLegendaSeletoresSource,
   calendarLegendaTextoSource,
-  calendarNumeroDaSemanaSource,
+  calendarNumberWeekSource,
   calendarSource,
 } from "./calendar.source";
 
@@ -35,11 +35,11 @@ type Story = StoryObj<typeof meta>;
 // Mês fixo, e não a data de hoje: o Chromatic fotografa estas stories, e um
 // calendário ancorado no relógio gera diferença visual todo dia.
 const ABRIL = () => new Date(2026, 3, 1);
-const DIA_12 = () => new Date(2026, 3, 12);
+const DAY_12 = () => new Date(2026, 3, 12);
 
 export const CaptionLabel: Story = {
   render: () => {
-    const [date, setDate] = useState<Date | undefined>(DIA_12());
+    const [date, setDate] = useState<Date | undefined>(DAY_12());
     return (
       <Calendar
         mode="single"
@@ -93,7 +93,7 @@ export const CaptionLabel: Story = {
 
 export const CaptionDropdown: Story = {
   render: () => {
-    const [date, setDate] = useState<Date | undefined>(DIA_12());
+    const [date, setDate] = useState<Date | undefined>(DAY_12());
     return (
       <Calendar
         mode="single"
@@ -186,13 +186,13 @@ export const CaptionDropdown: Story = {
       // intervalo de anos do período navegável, então cravar 2028 amarraria o
       // teste a uma janela que o componente pode mudar.
       const seletorDeAno = () => canvas.getAllByRole("combobox")[1] as HTMLSelectElement;
-      const outroAno = Array.from(seletorDeAno().options)
+      const otherYear = Array.from(seletorDeAno().options)
         .map((o) => o.value)
         .find((v) => v !== "2026")!;
-      await expect(outroAno).toBeDefined();
+      await expect(otherYear).toBeDefined();
 
-      await userEvent.selectOptions(seletorDeAno(), outroAno);
-      await expect(canvasElement.querySelector(`[data-day^="${outroAno}-04-"]`)).not.toBeNull();
+      await userEvent.selectOptions(seletorDeAno(), otherYear);
+      await expect(canvasElement.querySelector(`[data-day^="${otherYear}-04-"]`)).not.toBeNull();
       await userEvent.selectOptions(seletorDeAno(), "2026");
       await expect(canvasElement.querySelector('[data-day="2026-04-01"]')).not.toBeNull();
     });
@@ -242,7 +242,7 @@ export const TwoMonths: Story = {
 
 export const WithWeekNumber: Story = {
   render: () => {
-    const [date, setDate] = useState<Date | undefined>(DIA_12());
+    const [date, setDate] = useState<Date | undefined>(DAY_12());
     return (
       <Calendar
         mode="single"
@@ -258,7 +258,7 @@ export const WithWeekNumber: Story = {
     docs: {
       // A coluna vem desligada por padrão: sem a prop escrita, o snippet
       // mostraria um grid de sete colunas para uma story de oito.
-      source: { transform: calendarNumeroDaSemanaSource },
+      source: { transform: calendarNumberWeekSource },
       description: {
         story:
           "Coluna com o número da semana à esquerda do grid, para quem organiza o trabalho por semana.",

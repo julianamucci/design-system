@@ -44,9 +44,9 @@ const boxStyle: React.CSSProperties = { width: 520, height: 280 };
  * batiza a story na sidebar do Storybook, e vira alarme de menu não traduzido.
  * A constante separa as duas coisas de vez.
  */
-const ROTULO_SIDEBAR = "Redimensionar sidebar e conteúdo — use setas";
-const ROTULO_CONSOLE = "Redimensionar editor e console — use setas";
-const ROTULO_PAINEIS = "Redimensionar painéis — use setas";
+const LABEL_SIDEBAR = "Redimensionar sidebar e conteúdo — use setas";
+const LABEL_CONSOLE = "Redimensionar editor e console — use setas";
+const LABEL_PANELS = "Redimensionar painéis — use setas";
 
 /** Geometria real; `style.width` não decide nada num item de `flex-basis: 0`. */
 function fracoes(paineis: HTMLElement[], horizontal: boolean): number[] {
@@ -164,7 +164,7 @@ export const Nested: Story = {
             Sidebar
           </div>
         </ResizablePanel>
-        <ResizableHandle aria-label={ROTULO_SIDEBAR} />
+        <ResizableHandle aria-label={LABEL_SIDEBAR} />
         <ResizablePanel defaultSize={70} minSize={40}>
           <ResizablePanelGroup direction="vertical">
             <ResizablePanel defaultSize={60} minSize={20}>
@@ -172,7 +172,7 @@ export const Nested: Story = {
                 Editor
               </div>
             </ResizablePanel>
-            <ResizableHandle aria-label={ROTULO_CONSOLE} />
+            <ResizableHandle aria-label={LABEL_CONSOLE} />
             <ResizablePanel defaultSize={40} minSize={20}>
               <div className="nds-cluster nds-bg-muted-60 nds-p-4 nds-text-body" data-justify="center">
                 Console
@@ -196,10 +196,10 @@ export const Nested: Story = {
 
     await step("O divisor de dentro tem o eixo do grupo de dentro", async () => {
       await expect(
-        canvas.getByRole("separator", { name: ROTULO_SIDEBAR }),
+        canvas.getByRole("separator", { name: LABEL_SIDEBAR }),
       ).toHaveAttribute("aria-orientation", "vertical");
       await expect(
-        canvas.getByRole("separator", { name: ROTULO_CONSOLE }),
+        canvas.getByRole("separator", { name: LABEL_CONSOLE }),
       ).toHaveAttribute("aria-orientation", "horizontal");
     });
 
@@ -227,7 +227,7 @@ export const WithHandle: Story = {
             Antes
           </div>
         </ResizablePanel>
-        <ResizableHandle withHandle aria-label={ROTULO_PAINEIS} />
+        <ResizableHandle withHandle aria-label={LABEL_PANELS} />
         <ResizablePanel defaultSize={50} minSize={20}>
           <div className="nds-cluster nds-bg-muted nds-p-4 nds-text-body" data-justify="center">
             Depois
@@ -249,7 +249,7 @@ export const WithHandle: Story = {
     await step("O pegador não rouba o nome acessível do divisor", async () => {
       // Quem carrega o significado é o `aria-label` do separator; o pegador é
       // desenho. Um elemento com texto ali dentro passaria a compor o nome.
-      const punho = within(canvasElement).getByRole("separator", { name: ROTULO_PAINEIS });
+      const punho = within(canvasElement).getByRole("separator", { name: LABEL_PANELS });
       await expect(punho.querySelector(".nds-resizable-grip-bar")?.textContent).toBe("");
     });
   },

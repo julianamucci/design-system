@@ -3,7 +3,7 @@ import {
   aspectRatioComIframeSource,
   aspectRatioComVideoSource,
   aspectRatioEmGradeSource,
-  aspectRatioImagemDecorativaSource,
+  aspectRatioImageDecorativaSource,
   aspectRatioPlaceholderSource,
   aspectRatioQuadradoSource,
   aspectRatioQuatroTercosSource,
@@ -77,7 +77,7 @@ describe('proporções canônicas', () => {
 
 describe('composições', () => {
   it('a imagem decorativa usa alt vazio, e não omite o atributo', () => {
-    const saida = aspectRatioImagemDecorativaSource();
+    const saida = aspectRatioImageDecorativaSource();
     expect(saida).toContain('alt=""');
   });
 
@@ -115,7 +115,7 @@ describe('composições', () => {
       aspectRatioComIframeSource,
       aspectRatioComVideoSource,
       aspectRatioEmGradeSource,
-      aspectRatioImagemDecorativaSource,
+      aspectRatioImageDecorativaSource,
       aspectRatioPlaceholderSource,
       aspectRatioQuadradoSource,
       aspectRatioQuatroTercosSource,

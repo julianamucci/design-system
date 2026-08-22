@@ -36,7 +36,7 @@ import { ${icones} } from "lucide-react";`;
 const IMPORTS = importes();
 
 /** Markup alinhado ao Vanilla, a referência cross-stack deste design system. */
-const RAIZ_CLASSES = 'nds-w-sm';
+const ROOT_CLASSES = 'nds-w-sm';
 const TRIGGER_CLASSES = 'nds-cluster nds-w-full nds-px-4';
 const PAINEL_CLASSES =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
@@ -84,7 +84,7 @@ export const collapsibleSource: SourceTransform<CollapsibleArgs> = (_gerado, ctx
   const aberto = args.defaultOpen === true;
   return jsxSnippet(
     IMPORTS,
-    `<Collapsible${attrs(propBool('defaultOpen', args.defaultOpen))} className="${RAIZ_CLASSES}">
+    `<Collapsible${attrs(propBool('defaultOpen', args.defaultOpen))} className="${ROOT_CLASSES}">
 ${corpo(
   aberto ? 'Ocultar filtros avançados' : 'Exibir filtros avançados',
   'ghost',
@@ -101,7 +101,7 @@ ${corpo(
 export function collapsibleAbertoPorPadraoSource(): string {
   return jsxSnippet(
     IMPORTS,
-    `<Collapsible defaultOpen className="${RAIZ_CLASSES}">
+    `<Collapsible defaultOpen className="${ROOT_CLASSES}">
 ${corpo('Ocultar filtros avançados', 'ghost')}
 </Collapsible>`,
   );
@@ -120,7 +120,7 @@ ${importes('Button, buttonVariants')}`,
   const [aberto, setAberto] = useState(false);
 
   return (
-    <div className="nds-stack ${RAIZ_CLASSES}" data-spacing="sm">
+    <div className="nds-stack ${ROOT_CLASSES}" data-spacing="sm">
       <div className="nds-cluster" data-spacing="sm">
         <Button size="sm" variant="outline" onClick={() => setAberto(true)}>
           Abrir pelo estado externo
@@ -162,7 +162,7 @@ ${importes('Button, buttonVariants')}`,
 export function collapsibleDesabilitadoSource(): string {
   return jsxSnippet(
     IMPORTS,
-    `<Collapsible className="${RAIZ_CLASSES}">
+    `<Collapsible className="${ROOT_CLASSES}">
   <CollapsibleTrigger
     className={cn(buttonVariants({ variant: "ghost" }), "${TRIGGER_CLASSES}")}
     data-justify="between"
@@ -189,7 +189,7 @@ export function collapsibleDesabilitadoSource(): string {
 export function collapsibleComBotaoSource(): string {
   return jsxSnippet(
     IMPORTS,
-    `<Collapsible className="${RAIZ_CLASSES}">
+    `<Collapsible className="${ROOT_CLASSES}">
 ${corpo('Exibir opções avançadas', 'outline', '', [
   'Opção avançada 1',
   'Opção avançada 2',
@@ -206,7 +206,7 @@ ${corpo('Exibir opções avançadas', 'outline', '', [
 export function collapsibleComIconeSource(): string {
   return jsxSnippet(
     importes('buttonVariants', 'ChevronDown, SlidersHorizontal'),
-    `<Collapsible className="${RAIZ_CLASSES}">
+    `<Collapsible className="${ROOT_CLASSES}">
   <CollapsibleTrigger
     className={cn(buttonVariants({ variant: "ghost" }), "${TRIGGER_CLASSES}")}
     data-justify="between"
@@ -242,7 +242,7 @@ export function collapsibleComIconeSource(): string {
 export function collapsibleEstruturadoSource(): string {
   return jsxSnippet(
     IMPORTS,
-    `<Collapsible className="nds-stack ${RAIZ_CLASSES}" data-spacing="sm">
+    `<Collapsible className="nds-stack ${ROOT_CLASSES}" data-spacing="sm">
   <div
     className="nds-cluster nds-rounded-md nds-border-default nds-bg-card nds-px-4 nds-py-2"
     data-align="center"

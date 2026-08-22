@@ -15,9 +15,9 @@
 import {
   attrsMultilinha,
   jsxSnippet,
-  propNumero,
-  propOpcao,
-  propTexto,
+  propNumber,
+  propOption,
+  propText,
   texto,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -43,7 +43,7 @@ const FRASE_VAZIA_PADRAO = 'Sem dados para exibir';
 /** Rótulo do Playground, e o padrão de qualquer chamada sem args. */
 const ROTULO_PADRAO = 'Acessos mensais no desktop, de janeiro a junho';
 
-const DADOS_MENSAIS = `const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];`;
+const DATA_MENSAIS = `const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun"];`;
 const SERIE_UNICA = `const series = [{ name: "Desktop", data: [186, 305, 237, 73, 209, 214] }];`;
 const SERIES_MULTI = `const series = [
   { name: "Desktop", data: [186, 305, 237, 73, 209, 214] },
@@ -71,10 +71,10 @@ export const chartSource: SourceTransform<ChartArgs> = (_gerado, ctx) => {
   const atributos = attrsMultilinha(
     [
       'option={buildBarOption({ xAxis: meses, series })}',
-      propNumero('height', args.height) ?? 'height={300}',
-      propOpcao('renderer', args.renderer, RENDERIZADORES, 'svg'),
+      propNumber('height', args.height) ?? 'height={300}',
+      propOption('renderer', args.renderer, RENDERIZADORES, 'svg'),
       frase && frase !== FRASE_VAZIA_PADRAO ? `emptyLabel="${frase}"` : undefined,
-      propTexto('className', args.className),
+      propText('className', args.className),
       `aria-label="${texto(args['aria-label']) ?? ROTULO_PADRAO}"`,
     ],
     '  ',
@@ -84,7 +84,7 @@ export const chartSource: SourceTransform<ChartArgs> = (_gerado, ctx) => {
   return jsxSnippet(
     `${importChart('buildBarOption')}
 
-${DADOS_MENSAIS}
+${DATA_MENSAIS}
 ${SERIE_UNICA}`,
     `<ChartContainer${atributos}/>`,
   );
@@ -94,11 +94,11 @@ ${SERIE_UNICA}`,
  * Linhas: tendência contínua no tempo. A partir da segunda série a legenda
  * aparece sozinha — não há bandeira para ligá-la.
  */
-export function chartLinhaSource(): string {
+export function chartLineSource(): string {
   return jsxSnippet(
     `${importChart('buildLineOption')}
 
-${DADOS_MENSAIS}
+${DATA_MENSAIS}
 const series = [
   { name: "Desktop", data: [186, 305, 237, 73, 209, 214] },
   { name: "Mobile", data: [80, 200, 120, 190, 130, 140] },
@@ -117,7 +117,7 @@ export function chartAreaSource(): string {
   return jsxSnippet(
     `${importChart('buildAreaOption')}
 
-${DADOS_MENSAIS}
+${DATA_MENSAIS}
 const series = [
   { name: "Desktop", data: [186, 305, 237, 73, 209, 214] },
   { name: "Mobile", data: [80, 200, 120, 190, 130, 140] },
@@ -163,7 +163,7 @@ export function chartMultiSerieSource(): string {
   return jsxSnippet(
     `${importChart('buildBarOption')}
 
-${DADOS_MENSAIS}
+${DATA_MENSAIS}
 ${SERIES_MULTI}`,
     `<ChartContainer
   option={buildBarOption({ xAxis: meses, series })}
@@ -183,7 +183,7 @@ export function chartComTituloSource(): string {
   return jsxSnippet(
     `${importChart('buildBarOption')}
 
-${DADOS_MENSAIS}
+${DATA_MENSAIS}
 ${SERIES_MULTI}`,
     `<ChartContainer
   option={buildBarOption({
@@ -203,11 +203,11 @@ ${SERIES_MULTI}`,
  * `aria-label` não fica mudo, o container cai no título que já está na tela.
  * Escrever o rótulo aqui esconderia justamente a rede de segurança.
  */
-export function chartTituloSemRotuloSource(): string {
+export function chartTitleNoLabelSource(): string {
   return jsxSnippet(
     `${importChart('buildBarOption')}
 
-${DADOS_MENSAIS}
+${DATA_MENSAIS}
 const series = [
   { name: "Desktop", data: [186, 305, 237, 73, 209, 214] },
   { name: "Mobile", data: [80, 200, 120, 190, 130, 140] },
@@ -228,7 +228,7 @@ export function chartSerieUnicaSource(): string {
   return jsxSnippet(
     `${importChart('buildLineOption')}
 
-${DADOS_MENSAIS}
+${DATA_MENSAIS}
 ${SERIE_UNICA}`,
     `<ChartContainer
   option={buildLineOption({ xAxis: meses, series })}
@@ -250,7 +250,7 @@ export function chartVazioSource(): string {
   return jsxSnippet(
     `${importChart('buildBarOption')}
 
-${DADOS_MENSAIS}`,
+${DATA_MENSAIS}`,
     `<ChartContainer
   option={buildBarOption({ xAxis: meses, series: [] })}
   className="nds-max-w-lg"
@@ -274,7 +274,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-${DADOS_MENSAIS}
+${DATA_MENSAIS}
 const series = [
   { name: "Desktop", data: [186, 305, 237, 73, 209, 214] },
   { name: "Mobile", data: [80, 200, 120, 190, 130, 140] },
@@ -305,7 +305,7 @@ export function chartDoisDesenhosSource(): string {
   return jsxSnippet(
     `${importChart('buildBarOption', 'buildLineOption')}
 
-${DADOS_MENSAIS}
+${DATA_MENSAIS}
 ${SERIES_MULTI}`,
     `<div className="nds-stack">
   <ChartContainer

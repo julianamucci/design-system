@@ -23,9 +23,9 @@ import {
   attrsMultilinha,
   indentar,
   jsxSnippet,
-  propNumero,
-  propOpcao,
-  propTexto,
+  propNumber,
+  propOption,
+  propText,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -42,7 +42,7 @@ const ORIENTACOES = ['horizontal', 'vertical'] as const;
 const ESPERA_PADRAO = 50;
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importarNav(...pecas: string[]): string {
+function importingNav(...pecas: string[]): string {
   const lista = [...pecas].sort();
   return `import {\n${lista
     .map((peca) => `  ${peca},`)
@@ -106,7 +106,7 @@ ${indentar(itens.join('\n'), '  ')}
 }
 
 /** As peças que uma barra com painel sempre usa. */
-const PECAS_COM_PAINEL = [
+const PARTS_WITH_PANEL = [
   'NavigationMenu',
   'NavigationMenuChild',
   'NavigationMenuContent',
@@ -117,7 +117,7 @@ const PECAS_COM_PAINEL = [
 ] as const;
 
 /** As peças de uma barra plana: sem gatilho, sem painel, sem filho. */
-const PECAS_SO_DESTINOS = [
+const PARTS_SO_TARGETS = [
   'NavigationMenu',
   'NavigationMenuItem',
   'NavigationMenuLink',
@@ -140,18 +140,18 @@ export const navigationMenuSource: SourceTransform<NavigationMenuArgs> = (_gerad
   const args = ctx?.args ?? {};
   const atributos = attrsMultilinha([
     'aria-label="Navegação principal"',
-    propTexto('defaultValue', args.defaultValue),
+    propText('defaultValue', args.defaultValue),
     typeof args.delay === 'number' && args.delay !== ESPERA_PADRAO
-      ? propNumero('delay', args.delay)
+      ? propNumber('delay', args.delay)
       : undefined,
     typeof args.closeDelay === 'number' && args.closeDelay !== ESPERA_PADRAO
-      ? propNumero('closeDelay', args.closeDelay)
+      ? propNumber('closeDelay', args.closeDelay)
       : undefined,
-    propOpcao('orientation', args.orientation, ORIENTACOES, 'horizontal'),
+    propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
   ]);
 
   return jsxSnippet(
-    importarNav(...PECAS_COM_PAINEL),
+    importingNav(...PARTS_WITH_PANEL),
     barra(
       atributos,
       [
@@ -174,7 +174,7 @@ export const navigationMenuSource: SourceTransform<NavigationMenuArgs> = (_gerad
  */
 export function navigationMenuVerticalSource(): string {
   return jsxSnippet(
-    importarNav(...PECAS_COM_PAINEL),
+    importingNav(...PARTS_WITH_PANEL),
     `<NavigationMenu aria-label="Navegação da conta" orientation="vertical">
   <NavigationMenuList className="nds-stack nds-w-sm" data-spacing="xs">
 ${indentar(
@@ -202,7 +202,7 @@ ${indentar(
  */
 export function navigationMenuAbertoSource(): string {
   return jsxSnippet(
-    importarNav(...PECAS_COM_PAINEL),
+    importingNav(...PARTS_WITH_PANEL),
     barra(
       attrsMultilinha([
         'aria-label="Navegação principal"',
@@ -234,7 +234,7 @@ export function navigationMenuAbertoSource(): string {
  */
 export function navigationMenuAtivoSource(): string {
   return jsxSnippet(
-    importarNav(...PECAS_SO_DESTINOS),
+    importingNav(...PARTS_SO_TARGETS),
     barra(
       ' aria-label="Navegação principal"',
       [
@@ -251,9 +251,9 @@ export function navigationMenuAtivoSource(): string {
  * gatilho nenhum na barra, e o componente vira uma lista de links percorrida
  * pelas setas. É a forma certa para três a cinco categorias planas.
  */
-export function navigationMenuSomenteDestinosSource(): string {
+export function navigationMenuSomenteTargetsSource(): string {
   return jsxSnippet(
-    importarNav(...PECAS_SO_DESTINOS),
+    importingNav(...PARTS_SO_TARGETS),
     barra(
       ' aria-label="Navegação institucional"',
       [
@@ -293,7 +293,7 @@ ${indentar(
 </ul>`;
 
   return jsxSnippet(
-    importarNav(...PECAS_COM_PAINEL),
+    importingNav(...PARTS_WITH_PANEL),
     barra(
       ' aria-label="Navegação de soluções"',
       [destino('#inicio', 'Início'), comPainel('solucoes', 'Soluções', grade)].join('\n'),
@@ -306,7 +306,7 @@ ${indentar(
  * TAMANHO do bloco — o destaque ocupa a coluna inteira com `nds-h-full` —, e não
  * por cor: é o que mantém a distinção legível para quem não a percebe.
  */
-export function navigationMenuDestaqueSource(): string {
+export function navigationMenuHighlightSource(): string {
   const conteudo = `<div className="nds-grid nds-w-lg" data-fixed data-cols="2" data-spacing="sm">
   <NavigationMenuChild href="#comece" className="nds-h-full">
     <div className="nds-navigation-menu-child-label">Comece agora</div>
@@ -328,7 +328,7 @@ ${indentar(
 </div>`;
 
   return jsxSnippet(
-    importarNav(...PECAS_COM_PAINEL),
+    importingNav(...PARTS_WITH_PANEL),
     barra(
       ' aria-label="Navegação de recursos"',
       [destino('#inicio', 'Início'), comPainel('recursos', 'Recursos', conteudo)].join('\n'),

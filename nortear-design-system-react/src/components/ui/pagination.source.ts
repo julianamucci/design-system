@@ -24,7 +24,7 @@
 import {
   indentar,
   jsxSnippet,
-  propTexto,
+  propText,
   texto,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -42,7 +42,7 @@ const TEXTO_ANTERIOR = 'Anterior';
 const TEXTO_PROXIMA = 'Próxima';
 
 /** Bloco de import do componente, em ordem alfabética das peças usadas. */
-function importarPaginacao(...pecas: string[]): string {
+function importingPagination(...pecas: string[]): string {
   const lista = [...pecas].sort();
   return `import {\n${lista
     .map((peca) => `  ${peca},`)
@@ -88,7 +88,7 @@ function direcional(peca: 'PaginationPrevious' | 'PaginationNext', bloqueado = f
  * A janela de páginas visíveis quando a lista é longa: primeira, última, a
  * atual e as vizinhas. O resto colapsa em reticências.
  */
-function janelaComReticencias(total: number, atual: number): Array<number | 'reticencias'> {
+function windowWithEllipsis(total: number, atual: number): Array<number | 'reticencias'> {
   const trechos: Array<number | 'reticencias'> = [1];
   const inicio = Math.max(2, atual - 1);
   const fim = Math.min(total - 1, atual + 1);
@@ -100,7 +100,7 @@ function janelaComReticencias(total: number, atual: number): Array<number | 'ret
 }
 
 /** Literal do array de trechos, como quem escreve a janela à mão. */
-function literalDaJanela(trechos: Array<number | 'reticencias'>): string {
+function windowLiteral(trechos: Array<number | 'reticencias'>): string {
   return `[${trechos.map((t) => (typeof t === 'number' ? String(t) : '"reticencias"')).join(', ')}]`;
 }
 
@@ -127,13 +127,13 @@ export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) 
       : 1;
   const comReticencias = args.withEllipsis === true && total > 7;
 
-  const rotuloAnterior = propTexto('text', texto(args.previousText) === TEXTO_ANTERIOR ? undefined : args.previousText);
-  const rotuloProxima = propTexto('text', texto(args.nextText) === TEXTO_PROXIMA ? undefined : args.nextText);
-  const atributoAnterior = rotuloAnterior ? `\n        ${rotuloAnterior}` : '';
-  const atributoProxima = rotuloProxima ? `\n        ${rotuloProxima}` : '';
+  const rotuloAnterior = propText('text', texto(args.previousText) === TEXTO_ANTERIOR ? undefined : args.previousText);
+  const rotuloProxima = propText('text', texto(args.nextText) === TEXTO_PROXIMA ? undefined : args.nextText);
+  const attrPrevious = rotuloAnterior ? `\n        ${rotuloAnterior}` : '';
+  const attrNext = rotuloProxima ? `\n        ${rotuloProxima}` : '';
 
   const cabecalho = `import { useState } from "react";
-${importarPaginacao(
+${importingPagination(
   'Pagination',
   'PaginationContent',
   ...(comReticencias ? ['PaginationEllipsis'] : []),
@@ -147,8 +147,8 @@ ${importarPaginacao(
     ? `const total = ${total};
 const [pagina, setPagina] = useState(${inicial});
 // Janela de páginas visíveis: a primeira, a última, a atual e as vizinhas.
-const paginas: Array<number | "reticencias"> = ${literalDaJanela(
-        janelaComReticencias(total, inicial),
+const paginas: Array<number | "reticencias"> = ${windowLiteral(
+        windowWithEllipsis(total, inicial),
       )};`
     : `const total = ${total};
 const [pagina, setPagina] = useState(${inicial});
@@ -198,7 +198,7 @@ const paginas = Array.from({ length: total }, (_, indice) => indice + 1);`;
   <PaginationContent>
     <PaginationItem>
       <PaginationPrevious
-        href="#"${atributoAnterior}
+        href="#"${attrPrevious}
         aria-disabled={pagina === 1}
         tabIndex={pagina === 1 ? -1 : 0}
         onClick={(evento) => {
@@ -212,7 +212,7 @@ ${numerados}
 
     <PaginationItem>
       <PaginationNext
-        href="#"${atributoProxima}
+        href="#"${attrNext}
         aria-disabled={pagina === total}
         tabIndex={pagina === total ? -1 : 0}
         onClick={(evento) => {
@@ -232,7 +232,7 @@ ${numerados}
  */
 export function paginationLinkInativoSource(): string {
   return jsxSnippet(
-    importarPaginacao('Pagination', 'PaginationContent', 'PaginationItem', 'PaginationLink'),
+    importingPagination('Pagination', 'PaginationContent', 'PaginationItem', 'PaginationLink'),
     faixa(linkNumerado(2)),
   );
 }
@@ -244,7 +244,7 @@ export function paginationLinkInativoSource(): string {
  */
 export function paginationLinkAtivoSource(): string {
   return jsxSnippet(
-    importarPaginacao('Pagination', 'PaginationContent', 'PaginationItem', 'PaginationLink'),
+    importingPagination('Pagination', 'PaginationContent', 'PaginationItem', 'PaginationLink'),
     faixa([linkNumerado(1), linkNumerado(2, true)].join('\n')),
   );
 }
@@ -256,7 +256,7 @@ export function paginationLinkAtivoSource(): string {
  */
 export function paginationDirecionalSource(): string {
   return jsxSnippet(
-    importarPaginacao(
+    importingPagination(
       'Pagination',
       'PaginationContent',
       'PaginationItem',
@@ -272,9 +272,9 @@ export function paginationDirecionalSource(): string {
  * `disabled` que um `<a>` não tem: o controle continua visível e anunciado como
  * indisponível, mas sai da tabulação e não navega.
  */
-export function paginationDesabilitadoSource(): string {
+export function paginationDisabledSource(): string {
   return jsxSnippet(
-    importarPaginacao(
+    importingPagination(
       'Pagination',
       'PaginationContent',
       'PaginationItem',
@@ -299,10 +299,10 @@ export function paginationDesabilitadoSource(): string {
  * está nos vizinhos —, e por isso o primitivo as tira da árvore de
  * acessibilidade e da tabulação sozinho.
  */
-export function paginationReticenciasSource(): string {
-  const trechos = janelaComReticencias(12, 6);
+export function paginationEllipsisSource(): string {
+  const trechos = windowWithEllipsis(12, 6);
   return jsxSnippet(
-    `${importarPaginacao(
+    `${importingPagination(
       'Pagination',
       'PaginationContent',
       'PaginationEllipsis',
@@ -312,7 +312,7 @@ export function paginationReticenciasSource(): string {
       'PaginationPrevious',
     )}
 
-const paginas: Array<number | "reticencias"> = ${literalDaJanela(trechos)};`,
+const paginas: Array<number | "reticencias"> = ${windowLiteral(trechos)};`,
     `<Pagination>
   <PaginationContent>
 ${indentar(direcional('PaginationPrevious'), '    ')}
@@ -343,7 +343,7 @@ ${indentar(direcional('PaginationNext'), '    ')}
  */
 export function paginationUltimaPaginaSource(): string {
   return jsxSnippet(
-    importarPaginacao(
+    importingPagination(
       'Pagination',
       'PaginationContent',
       'PaginationItem',
@@ -371,7 +371,7 @@ export function paginationUltimaPaginaSource(): string {
 export function paginationControladaSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
-${importarPaginacao(
+${importingPagination(
   'Pagination',
   'PaginationContent',
   'PaginationItem',
@@ -444,7 +444,7 @@ const [pagina, setPagina] = useState(1);`,
  */
 export function paginationRodapeDeTabelaSource(): string {
   return jsxSnippet(
-    importarPaginacao(
+    importingPagination(
       'Pagination',
       'PaginationContent',
       'PaginationEllipsis',

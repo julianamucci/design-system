@@ -6,10 +6,10 @@ import { Button, buttonVariants } from "./button";
 import {
   buttonComoLinkSource,
   buttonDestrutivoComIconeSource,
-  buttonIconeDireitaSource,
-  buttonIconeEsquerdaSource,
+  buttonIconDireitaSource,
+  buttonIconEsquerdaSource,
   buttonParDeAcoesSource,
-  buttonSomenteIconeSource,
+  buttonSomenteIconSource,
   buttonSource,
 } from "./button.source";
 
@@ -42,7 +42,7 @@ export const WithIconLeft: Story = {
     docs: {
       // O ícone dentro do botão é composição, não arg: o `meta` imprimiria só o
       // rótulo e o `aria-hidden` que tira o ícone da leitura sumiria junto.
-      source: { transform: buttonIconeEsquerdaSource },
+      source: { transform: buttonIconEsquerdaSource },
       description: {
         story: "Ícone à esquerda do label. O SVG deve ter aria-hidden=\"true\" para não poluir leitores de tela.",
       },
@@ -67,7 +67,7 @@ export const WithIconRight: Story = {
     docs: {
       // A ORDEM entre ícone e rótulo é o que separa esta story da anterior, e
       // ordem de filhos não existe em arg nenhum.
-      source: { transform: buttonIconeDireitaSource },
+      source: { transform: buttonIconDireitaSource },
       description: {
         story: "Ícone à direita do label. Use em botões de navegação progressiva.",
       },
@@ -116,7 +116,7 @@ export const IconOnly: Story = {
     docs: {
       // A AUSÊNCIA de texto é o assunto: sem ela o `aria-label` obrigatório
       // pareceria opcional no snippet.
-      source: { transform: buttonSomenteIconeSource },
+      source: { transform: buttonSomenteIconSource },
       description: {
         story: "Botão apenas com ícone. aria-label é obrigatório para acessibilidade.",
       },

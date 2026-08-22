@@ -14,7 +14,7 @@ import { ContextMenuTrigger } from "./context-menu";
 // arquivo apontando para um alvo que não existe mais.
 
 /** A área de clique direito das demonstrações, com o gancho que as plays usam. */
-export function AreaGatilho({ children }: { children: ReactNode }) {
+export function AreaTrigger({ children }: { children: ReactNode }) {
   return (
     <ContextMenuTrigger
       className={AREA_CLICK_DIREITO}

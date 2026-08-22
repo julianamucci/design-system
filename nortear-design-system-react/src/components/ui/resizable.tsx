@@ -27,11 +27,11 @@ function emPorcentagem(v: number | string | undefined): string | undefined {
  * documenta. As chaves são ids gerados (`:r1:`), nunca inteiros, então a ordem
  * de inserção do objeto — que é a ordem dos painéis no grupo — é preservada.
  */
-function comoLista(layout: ResizablePrimitive.Layout): number[] {
+function asList(layout: ResizablePrimitive.Layout): number[] {
   return Object.values(layout).map((v) => Math.round(v * 10) / 10)
 }
 
-type GrupoProps = Omit<ResizablePrimitive.GroupProps, "orientation"> & {
+type GroupProps = Omit<ResizablePrimitive.GroupProps, "orientation"> & {
   direction?: "horizontal" | "vertical"
   orientation?: "horizontal" | "vertical"
   /** Tamanhos finais, em porcentagem, ao fim de cada gesto. */
@@ -53,11 +53,11 @@ type GrupoProps = Omit<ResizablePrimitive.GroupProps, "orientation"> & {
  * ela caía no `<div>`, o React reclamava no console e nada era gravado. Uma
  * story inteira — PersistedLayout — demonstrava um recurso que não existia.
  */
-function GrupoPersistido({
+function GroupPersistido({
   autoSaveId,
   onLayout,
   ...props
-}: GrupoProps & { autoSaveId: string }) {
+}: GroupProps & { autoSaveId: string }) {
   const { defaultLayout, onLayoutChanged } = ResizablePrimitive.useDefaultLayout({
     id: autoSaveId,
     storage: typeof window === "undefined" ? undefined : window.localStorage,
@@ -70,7 +70,7 @@ function GrupoPersistido({
       defaultLayout={defaultLayout}
       onLayoutChanged={(layout, meta) => {
         onLayoutChanged(layout, meta)
-        onLayout?.(comoLista(layout))
+        onLayout?.(asList(layout))
       }}
       {...props}
     />
@@ -84,7 +84,7 @@ function ResizablePanelGroup({
   onLayout,
   autoSaveId,
   ...props
-}: GrupoProps) {
+}: GroupProps) {
   const comuns = {
     "data-slot": "resizable-panel-group",
     orientation: orientation ?? direction,
@@ -93,14 +93,14 @@ function ResizablePanelGroup({
   }
 
   if (autoSaveId) {
-    return <GrupoPersistido autoSaveId={autoSaveId} onLayout={onLayout} {...comuns} />
+    return <GroupPersistido autoSaveId={autoSaveId} onLayout={onLayout} {...comuns} />
   }
 
   return (
     <ResizablePrimitive.Group
       // `onLayoutChanged`, e não `onLayoutChange`: dispara uma vez por gesto
       // concluído, e não a cada pixel do arrasto.
-      onLayoutChanged={onLayout ? (layout) => onLayout(comoLista(layout)) : undefined}
+      onLayoutChanged={onLayout ? (layout) => onLayout(asList(layout)) : undefined}
       {...comuns}
     />
   )

@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { userEvent, within, expect, waitFor } from "storybook/test";
 import { useState } from "react";
 import {
-  REGRA_FILHOS_DE_MENU,
+  MENU_RULE_CHILDREN,
   REGRA_GUARDA_DE_FOCO,
   waitForPortal,
 } from "@/lib/wait-for-portal";
 import { abrirPorGesto } from "@shared/testing/context-menu-area";
-import { AreaGatilho } from "./context-menu.fixtures";
+import { AreaTrigger } from "./context-menu.fixtures";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -62,7 +62,7 @@ const alvo = (id: string) => document.querySelector<HTMLElement>(`[data-testid="
 export const WithShortcut: Story = {
   render: () => (
     <ContextMenu>
-      <AreaGatilho>Clique com o botão direito aqui</AreaGatilho>
+      <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
         <ContextMenuItem data-testid="editar">
           Editar
@@ -113,7 +113,7 @@ function DemoCheckbox() {
 
   return (
     <ContextMenu>
-      <AreaGatilho>Clique com o botão direito aqui</AreaGatilho>
+      <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
           <ContextMenuLabel>Visualização</ContextMenuLabel>
@@ -196,7 +196,7 @@ function DemoRadio() {
 
   return (
     <ContextMenu>
-      <AreaGatilho>Clique com o botão direito aqui</AreaGatilho>
+      <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
           <ContextMenuLabel>Zoom</ContextMenuLabel>
@@ -273,14 +273,14 @@ export const WithRadio: Story = {
 export const WithSubmenu: Story = {
   parameters: {
     covers: ["functional.item5", "functional.item6", "visual.item3"],
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_FILHOS_DE_MENU] } },
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, MENU_RULE_CHILDREN] } },
     // As três peças do submenu andam juntas e nenhuma aparece no snippet do
     // `meta`.
     docs: { source: { transform: contextMenuComSubmenuSource } },
   },
   render: () => (
     <ContextMenu>
-      <AreaGatilho>Clique com o botão direito aqui</AreaGatilho>
+      <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
         <ContextMenuItem>Editar</ContextMenuItem>
         <ContextMenuItem>Duplicar</ContextMenuItem>
@@ -347,7 +347,7 @@ function DemoCompleta() {
 
   return (
     <ContextMenu>
-      <AreaGatilho>Clique com o botão direito aqui</AreaGatilho>
+      <AreaTrigger>Clique com o botão direito aqui</AreaTrigger>
       <ContextMenuContent>
         <ContextMenuGroup>
           <ContextMenuLabel>Ações</ContextMenuLabel>

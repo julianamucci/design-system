@@ -14,8 +14,8 @@ import {
   attrs,
   jsxSnippet,
   propBool,
-  propNumero,
-  propOpcao,
+  propNumber,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -37,7 +37,7 @@ const IMPORT_TOOLTIP = `import {
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";`;
 
-const IMPORT_PADRAO = `${IMPORT_TOOLTIP}
+const IMPORT_DEFAULT = `${IMPORT_TOOLTIP}
 import { Save } from "lucide-react";`;
 
 /**
@@ -73,16 +73,16 @@ function comProvider(miolo: string, delay?: number): string {
 export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const posicao = attrs(
-    propOpcao('side', args.side, LADOS, 'top'),
-    propOpcao('align', args.align, ALINHAMENTOS, 'center'),
+    propOption('side', args.side, LADOS, 'top'),
+    propOption('align', args.align, ALINHAMENTOS, 'center'),
     typeof args.sideOffset === 'number' && args.sideOffset !== 4
-      ? propNumero('sideOffset', args.sideOffset)
+      ? propNumber('sideOffset', args.sideOffset)
       : undefined,
   );
   const raiz = attrs(propBool('defaultOpen', args.defaultOpen));
 
   return jsxSnippet(
-    IMPORT_PADRAO,
+    IMPORT_DEFAULT,
     comProvider(
       `  <Tooltip${raiz}>
 ${gatilhoIcone()}
@@ -98,7 +98,7 @@ ${gatilhoIcone()}
  */
 export function tooltipCurtoSource(): string {
   return jsxSnippet(
-    IMPORT_PADRAO,
+    IMPORT_DEFAULT,
     comProvider(
       `  <Tooltip defaultOpen>
 ${gatilhoIcone()}
@@ -115,7 +115,7 @@ ${gatilhoIcone()}
  */
 export function tooltipComAtalhoSource(): string {
   return jsxSnippet(
-    IMPORT_PADRAO,
+    IMPORT_DEFAULT,
     comProvider(
       `  <Tooltip defaultOpen>
 ${gatilhoIcone()}
@@ -135,7 +135,7 @@ ${gatilhoIcone()}
  */
 export function tooltipTextoLongoSource(): string {
   return jsxSnippet(
-    IMPORT_PADRAO,
+    IMPORT_DEFAULT,
     comProvider(
       `  <Tooltip defaultOpen>
 ${gatilhoIcone()}
@@ -154,7 +154,7 @@ ${gatilhoIcone()}
  */
 export function tooltipAbertoSource(): string {
   return jsxSnippet(
-    IMPORT_PADRAO,
+    IMPORT_DEFAULT,
     comProvider(
       `  <Tooltip defaultOpen>
 ${gatilhoIcone()}
@@ -170,9 +170,9 @@ ${gatilhoIcone()}
  * Quem chega pelo teclado não é afetado — o foco abre na hora, porque não há
  * como "parar em cima" sem mouse.
  */
-export function tooltipComAtrasoSource(): string {
+export function tooltipWithDelaySource(): string {
   return jsxSnippet(
-    IMPORT_PADRAO,
+    IMPORT_DEFAULT,
     comProvider(
       `  <Tooltip>
     <TooltipTrigger
@@ -220,7 +220,7 @@ export function tooltipPersistenteSource(): string {
 export function tooltipControladoSource(): string {
   return jsxSnippet(
     `import { useState } from "react";
-${IMPORT_PADRAO}`,
+${IMPORT_DEFAULT}`,
     `const [aberto, setAberto] = useState(false);
 
 <TooltipProvider>
@@ -246,7 +246,7 @@ ${gatilhoIcone()}
  * repete a mesma palavra. Quem usa toque nunca vê o balão, e é o rótulo do
  * botão que sustenta o nome acessível sozinho.
  */
-export function tooltipBarraDeIconesSource(): string {
+export function iconsSourceTooltipBar(): string {
   const acao = (rotulo: string, icone: string) => `    <Tooltip>
       <TooltipTrigger
         render={(props) => (
@@ -281,9 +281,9 @@ ${acao('Excluir', 'Trash2')}
  * Atalho ao lado de uma barra de ferramentas: o nome acessível continua sendo o
  * do botão, e a tecla é conveniência — nunca a informação que faltava.
  */
-export function tooltipAtalhoEmBarraSource(): string {
+export function barSourceTooltipShortcut(): string {
   return jsxSnippet(
-    IMPORT_PADRAO,
+    IMPORT_DEFAULT,
     comProvider(
       `  <div className="nds-cluster" data-align="center" data-spacing="xs">
     <Tooltip>

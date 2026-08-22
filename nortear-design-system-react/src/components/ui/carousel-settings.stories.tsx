@@ -9,7 +9,7 @@ import {
   CarouselNext,
   type CarouselApi,
 } from "./carousel";
-import { SlideCard, visivelNoViewport } from "./carousel.fixtures";
+import { SlideCard, viewportVisible } from "./carousel.fixtures";
 import {
   carouselAutoplaySource,
   carouselItemUnicoSource,
@@ -164,7 +164,7 @@ export const Single: Story = {
     await step("Só um slide cabe de cada vez, e ainda há para onde ir", async () => {
       const slides = canvas.getAllByRole("group");
       await expect(slides.length).toBeGreaterThan(1);
-      await expect(visivelNoViewport(slides[1], viewport)).toBe(false);
+      await expect(viewportVisible(slides[1], viewport)).toBe(false);
       await waitFor(async () => {
         await expect(canvas.getByRole("button", { name: /próximo item/i })).toBeEnabled();
       }, { timeout: 4000 });
@@ -217,7 +217,7 @@ export const MultiResponsive: Story = {
     await step("Vários slides ficam enquadrados ao mesmo tempo", async () => {
       const slides = canvas.getAllByRole("group");
       await expect(slides.length).toBe(6);
-      const visiveis = slides.filter((s) => visivelNoViewport(s, viewport)).length;
+      const visiveis = slides.filter((s) => viewportVisible(s, viewport)).length;
       await expect(visiveis).toBe(porTela);
     });
 

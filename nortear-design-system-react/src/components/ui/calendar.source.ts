@@ -18,7 +18,7 @@
 import {
   jsxSnippet,
   propBool,
-  propOpcao,
+  propOption,
   type SourceTransform,
 } from '@/lib/story-source';
 
@@ -72,7 +72,7 @@ const IMPORT_CALENDAR = 'import { Calendar } from "@/components/ui/calendar";';
 const IMPORT_LOCALE = 'import { ptBR } from "react-day-picker/locale";';
 
 /** `<Calendar />` com uma prop por linha — fila longa some na rolagem do painel. */
-function calendarioComProps(props: Array<string | false | null | undefined>): string {
+function calendarWithProps(props: Array<string | false | null | undefined>): string {
   const lista = props.filter((prop): prop is string => Boolean(prop));
   if (lista.length <= 2) return `<Calendar ${lista.join(' ')} />`;
   return `<Calendar\n${lista.map((prop) => `  ${prop}`).join('\n')}\n/>`;
@@ -83,7 +83,7 @@ function calendarioComProps(props: Array<string | false | null | undefined>): st
  * acrescenta. É a forma que quem copia vai escrever — sem ela o painel mostrava
  * o andaime do arquivo de story, que não existe fora dele.
  */
-function calendarioControlado(
+function calendarControlled(
   modo: Modo,
   extras: Array<string | false | null | undefined> = [],
 ): string {
@@ -104,7 +104,7 @@ function calendarioControlado(
 
   return jsxSnippet(
     cabecalho,
-    calendarioComProps([
+    calendarWithProps([
       `mode="${modo}"`,
       ...extras,
       `selected={${estado.valor}}`,
@@ -135,8 +135,8 @@ export const calendarSource: SourceTransform<CalendarArgs> = (_gerado, ctx) => {
       ? `numberOfMonths={${args.numberOfMonths}}`
       : undefined;
 
-  return calendarioControlado(modo, [
-    propOpcao('captionLayout', args.captionLayout, LEGENDAS, 'label'),
+  return calendarControlled(modo, [
+    propOption('captionLayout', args.captionLayout, LEGENDAS, 'label'),
     meses,
     propBool('showOutsideDays', args.showOutsideDays, true),
     propBool('showWeekNumber', args.showWeekNumber),
@@ -153,7 +153,7 @@ export const calendarSource: SourceTransform<CalendarArgs> = (_gerado, ctx) => {
  * snippet de data única esconderia. Escolher soma à lista; escolher de novo tira.
  */
 export function calendarMultiplasSource(): string {
-  return calendarioControlado('multiple');
+  return calendarControlled('multiple');
 }
 
 /**
@@ -163,7 +163,7 @@ export function calendarMultiplasSource(): string {
  * escolha.
  */
 export function calendarIntervaloSource(): string {
-  return calendarioControlado('range', ['numberOfMonths={2}']);
+  return calendarControlled('range', ['numberOfMonths={2}']);
 }
 
 /* --------------------------------------------------------------------- estados
@@ -177,7 +177,7 @@ export function calendarIntervaloSource(): string {
  * A prop não cabe em nenhum control, então o `meta` nunca a mostraria.
  */
 export function calendarBloqueadoSource(): string {
-  return calendarioControlado('single', ['disabled={{ before: new Date() }}']);
+  return calendarControlled('single', ['disabled={{ before: new Date() }}']);
 }
 
 /**
@@ -188,7 +188,7 @@ export function calendarBloqueadoSource(): string {
 export function calendarHojeSource(): string {
   return jsxSnippet(
     `${IMPORT_CALENDAR}\n${IMPORT_LOCALE}`,
-    calendarioComProps(['mode="single"', 'locale={ptBR}']),
+    calendarWithProps(['mode="single"', 'locale={ptBR}']),
   );
 }
 
@@ -197,13 +197,13 @@ export function calendarHojeSource(): string {
  * para nomear a prop, e um snippet que a omitisse deixaria o leitor sem saber
  * como desligar as bordas do mês (`showOutsideDays={false}`).
  */
-export function calendarDiasDeForaSource(): string {
-  return calendarioControlado('single', ['showOutsideDays']);
+export function outsideSourceCalendarDays(): string {
+  return calendarControlled('single', ['showOutsideDays']);
 }
 
 /** Intervalo num mês só — o miolo entre os extremos é o que a story mostra. */
-export function calendarIntervaloComMioloSource(): string {
-  return calendarioControlado('range');
+export function calendarIntervaloWithMioloSource(): string {
+  return calendarControlled('range');
 }
 
 /* --------------------------------------------------------------------- layouts
@@ -215,7 +215,7 @@ export function calendarIntervaloComMioloSource(): string {
  * e o par com a story de seletores é o que dá sentido aos dois.
  */
 export function calendarLegendaTextoSource(): string {
-  return calendarioControlado('single', ['captionLayout="label"']);
+  return calendarControlled('single', ['captionLayout="label"']);
 }
 
 /**
@@ -224,7 +224,7 @@ export function calendarLegendaTextoSource(): string {
  * rótulo desenhado por cima dele.
  */
 export function calendarLegendaSeletoresSource(): string {
-  return calendarioControlado('single', ['captionLayout="dropdown"']);
+  return calendarControlled('single', ['captionLayout="dropdown"']);
 }
 
 /**
@@ -233,15 +233,15 @@ export function calendarLegendaSeletoresSource(): string {
  * painéis deixam de ser enfeite.
  */
 export function calendarDoisMesesSource(): string {
-  return calendarioControlado('range', ['numberOfMonths={2}']);
+  return calendarControlled('range', ['numberOfMonths={2}']);
 }
 
 /**
  * Coluna com o número da semana ISO à esquerda do grid, para quem organiza o
  * trabalho por semana. Vem desligada por padrão, então a prop precisa aparecer.
  */
-export function calendarNumeroDaSemanaSource(): string {
-  return calendarioControlado('single', ['showWeekNumber']);
+export function calendarNumberWeekSource(): string {
+  return calendarControlled('single', ['showWeekNumber']);
 }
 
 /* ----------------------------------------------------------------- composições

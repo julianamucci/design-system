@@ -10,8 +10,8 @@ import { balaoDe } from "./tooltip.fixtures";
 import { Button } from "./button";
 import { Save, Trash2, Share2 } from "lucide-react";
 import {
-  tooltipAtalhoEmBarraSource,
-  tooltipBarraDeIconesSource,
+  barSourceTooltipShortcut,
+  iconsSourceTooltipBar,
   tooltipLadosSource,
   tooltipSource,
 } from "./tooltip.source";
@@ -73,7 +73,7 @@ export const IconBarToolbar: Story = {
           "Toolbar de ações icon-only — cada Button tem aria-label próprio (mobile sem hover) e Tooltip complementar com a mesma label.",
       },
       // Três gatilhos numa barra: a repetição é a lição, não o balão sozinho.
-      source: { transform: tooltipBarraDeIconesSource },
+      source: { transform: iconsSourceTooltipBar },
     },
   },
   render: () => (
@@ -136,7 +136,7 @@ export const WithKeyboardShortcut: Story = {
           "Botão de ação rápida com hotkey — o aria-label sozinho já diz o que o botão faz; o Tooltip acrescenta a tecla, que é conveniência.",
       },
       // O par de <kbd> dentro do balão é composição, não argumento.
-      source: { transform: tooltipAtalhoEmBarraSource },
+      source: { transform: barSourceTooltipShortcut },
     },
   },
   render: () => (

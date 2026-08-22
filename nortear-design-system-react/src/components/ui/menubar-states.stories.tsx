@@ -3,7 +3,7 @@ import { within, expect, fn, userEvent, waitFor } from "storybook/test"
 import {
   waitForPortal,
   REGRA_GUARDA_DE_FOCO,
-  REGRA_FILHOS_DE_MENU,
+  MENU_RULE_CHILDREN,
 } from "@/lib/wait-for-portal"
 import {
   Menubar,
@@ -18,7 +18,7 @@ import {
 import {
   menubarAbertoSource,
   menubarItemBloqueadoSource,
-  menubarItemMarcadoSource,
+  menubarItemCheckedSource,
   menubarSource,
 } from "./menubar.source"
 
@@ -26,8 +26,8 @@ import {
 // duas descrevem defeitos da lib, não do design system — ver os comentários em
 // `wait-for-portal.ts`. A story que termina FECHADA não as desliga: é lá que
 // "sem violações no estado padrão" vale inteiro.
-const AXE_COM_MENU_ABERTO = {
-  config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_FILHOS_DE_MENU] },
+const AXE_WITH_MENU_OPEN = {
+  config: { rules: [REGRA_GUARDA_DE_FOCO, MENU_RULE_CHILDREN] },
 } as const
 
 const MENUS_FECHADOS = ["Arquivo", "Editar", "Exibir", "Ajuda"] as const
@@ -121,7 +121,7 @@ export const Closed: Story = {
 
 export const Open: Story = {
   parameters: {
-    a11y: AXE_COM_MENU_ABERTO,
+    a11y: AXE_WITH_MENU_OPEN,
     covers: ["accessibility.item4"],
     // `defaultOpen` mora no MENU, não na barra — é o assunto desta story, e
     // nenhum arg do meta o descreve.
@@ -179,7 +179,7 @@ export const Open: Story = {
 
 export const ItemDisabled: Story = {
   parameters: {
-    a11y: AXE_COM_MENU_ABERTO,
+    a11y: AXE_WITH_MENU_OPEN,
     // O `disabled` de um item só existe nesta composição; o snippet do meta
     // mostraria três itens todos disponíveis.
     docs: { source: { transform: menubarItemBloqueadoSource } },
@@ -237,11 +237,11 @@ export const ItemDisabled: Story = {
 
 export const CheckboxChecked: Story = {
   parameters: {
-    a11y: AXE_COM_MENU_ABERTO,
+    a11y: AXE_WITH_MENU_OPEN,
     covers: ["functional.item7"],
     // Item de marcação dentro de grupo rotulado: três peças que o snippet do
     // meta não tem, e o par marcado/desmarcado é justamente o que se ensina.
-    docs: { source: { transform: menubarItemMarcadoSource } },
+    docs: { source: { transform: menubarItemCheckedSource } },
     // Medido na tipagem do primitivo: o item de marcação do menu é de DOIS
     // estados. `checked` é booleano, o payload da mudança é booleano, o estado
     // exposto ao indicador é booleano e os únicos atributos de dado são

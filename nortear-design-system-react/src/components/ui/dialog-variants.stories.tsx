@@ -18,7 +18,7 @@ import {
   DialogTrigger,
 } from "./dialog";
 import {
-  dialogComAcaoDestrutivaSource,
+  dialogWithActionDestructiveSource,
   dialogComFormularioSource,
   dialogComRolagemSource,
   dialogFecharNoRodapeSource,
@@ -327,7 +327,7 @@ export const WithDestructiveAction: Story = {
     docs: {
       // A variante destrutiva na ação primária muda o que o rodapé ensina, e
       // não vem de arg nenhum.
-      source: { transform: dialogComAcaoDestrutivaSource },
+      source: { transform: dialogWithActionDestructiveSource },
       description: {
         story:
           "Footer com ação primária `destructive`. Use só quando a destrutividade é secundária ao fluxo (ex: remover item de lista). Para confirmação destrutiva canônica, use AlertDialog.",

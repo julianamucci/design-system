@@ -4,7 +4,7 @@ import { transbordo } from "@shared/testing/scroll-area-probe";
 import { ScrollArea, ScrollBar } from "./scroll-area";
 import {
   scrollAreaCarrosselSource,
-  scrollAreaListaDeTagsSource,
+  tagsSourceScrollAreaList,
   scrollAreaMenuLateralSource,
   scrollAreaSource,
   scrollAreaTabelaSource,
@@ -39,7 +39,7 @@ export const TagList: Story = {
     docs: {
       // Sub-composição com Separator entre os itens — o snippet do meta traz a
       // lista sem divisor.
-      source: { transform: scrollAreaListaDeTagsSource },
+      source: { transform: tagsSourceScrollAreaList },
       description: {
         story:
           "Lista vertical com Separator entre itens — padrão clássico para tags, versões ou changelog.",

@@ -80,13 +80,13 @@ export function texto(valor: unknown): string | undefined {
 }
 
 /** `nome="valor"` quando o arg é string não vazia; nada em qualquer outro caso. */
-export function propTexto(nome: string, valor: unknown): string | undefined {
+export function propText(nome: string, valor: unknown): string | undefined {
   const conteudo = texto(valor);
   return conteudo === undefined ? undefined : `${nome}="${conteudo}"`;
 }
 
 /** `nome={42}` quando o arg é número finito. */
-export function propNumero(nome: string, valor: unknown): string | undefined {
+export function propNumber(nome: string, valor: unknown): string | undefined {
   if (typeof valor !== 'number' || !Number.isFinite(valor)) return undefined;
   return `${nome}={${valor}}`;
 }
@@ -105,7 +105,7 @@ export function propBool(nome: string, valor: unknown, padrao = false): string |
  * quando o valor está entre os aceitos — control adulterado não vira atributo
  * inventado.
  */
-export function propOpcao<T extends string>(
+export function propOption<T extends string>(
   nome: string,
   valor: unknown,
   aceitos: readonly T[],
@@ -129,6 +129,6 @@ export function indentar(conteudo: string, prefixo = '  '): string {
  * Filho de texto do componente, quando o control o alimenta. Mesmo cuidado de
  * `texto`: espião de action vira `undefined`, e o chamador cai no seu padrão.
  */
-export function filhoTexto(valor: unknown, padrao: string): string {
+export function childText(valor: unknown, padrao: string): string {
   return texto(valor) ?? padrao;
 }

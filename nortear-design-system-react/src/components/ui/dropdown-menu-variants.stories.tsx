@@ -10,8 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "./dropdown-menu";
 import {
-  dropdownMenuItemDestrutivoSource,
-  dropdownMenuItemPadraoSource,
+  dropdownMenuItemDestructiveSource,
+  dropdownMenuItemDefaultSource,
   dropdownMenuSource,
 } from "./dropdown-menu.source";
 import { Button } from "./button";
@@ -51,7 +51,7 @@ export const Default: Story = {
     covers: ["accessibility.item4", "accessibility.item6"],
     // A forma mínima do menu — lista de ações sem grupo nem rótulo. O snippet
     // do meta traz o grupo, e esconderia justamente o que esta story mostra.
-    docs: { source: { transform: dropdownMenuItemPadraoSource } },
+    docs: { source: { transform: dropdownMenuItemDefaultSource } },
   },
   render: () => (
     <div style={wrapperStyle}>
@@ -105,7 +105,7 @@ export const Destructive: Story = {
     covers: ["visual.item5"],
     // A variante é do ITEM, não da raiz: nenhum control do arquivo a descreve,
     // e o par neutro/destrutivo lado a lado é o que a story afirma.
-    docs: { source: { transform: dropdownMenuItemDestrutivoSource } },
+    docs: { source: { transform: dropdownMenuItemDestructiveSource } },
   },
   render: () => (
     <div style={wrapperStyle}>
