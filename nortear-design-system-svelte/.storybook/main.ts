@@ -45,6 +45,27 @@ const config: StorybookConfig = {
    * que ela já toma no painel Interactions.
    */
   viteFinal: async (viteConfig) => {
+    /*
+     * O MESMO especificador precisa sair do caminho do DEV, e por outro motivo.
+     *
+     * Abaixo ele é marcado externo para o `storybook build` não reprovar. Em
+     * desenvolvimento o problema é outro e pior: o pré-empacotamento de
+     * dependências do Vite tenta resolvê-lo, não consegue e ABORTA a rodada
+     * inteira — "The following dependencies are imported but could not be
+     * resolved: vitest/browser". Sem pré-empacotamento, cada dependência de
+     * `node_modules` passa a ser servida como arquivo solto, e abrir uma página
+     * vira centenas de requisições.
+     *
+     * `exclude` diz ao otimizador para não tentar. O import continua falhando
+     * em runtime, que é o desenho: `slider-probe.ts` tem `catch` e cai no
+     * caminho do DOM fora do modo browser.
+     */
+    viteConfig.optimizeDeps = viteConfig.optimizeDeps ?? {};
+    viteConfig.optimizeDeps.exclude = [
+      ...(viteConfig.optimizeDeps.exclude ?? []),
+      'vitest/browser',
+    ];
+
     viteConfig.build = viteConfig.build ?? {};
     const rollup = (viteConfig.build.rollupOptions = viteConfig.build.rollupOptions ?? {});
     const anterior = rollup.external;
