@@ -8,6 +8,7 @@
     "build": "vue-tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "pretest": "node ../scripts/limpar-orfaos.mjs",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "postinstall": "patch-package",

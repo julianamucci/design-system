@@ -6,6 +6,7 @@
   "scripts": {
     "build": "ngc --noEmit -p .storybook/tsconfig.json",
     "lint": "eslint .",
+    "pretest": "node ../scripts/limpar-orfaos.mjs",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "storybook": "storybook dev -p 6010",

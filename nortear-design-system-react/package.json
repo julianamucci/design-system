@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build && node ../scripts/generate-seo-files.mjs --base https://react.norteardesign.com.br --out storybook-static && node ../scripts/minify-html.mjs --out storybook-static",
+    "pretest": "node ../scripts/limpar-orfaos.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
