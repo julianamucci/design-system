@@ -120,7 +120,7 @@ export class NdsPaginationIcon {
     class: 'nds-pagination',
     role: 'navigation',
     '[attr.data-slot]': '"pagination"',
-    '[attr.aria-label]': 'nomeAcessivel()',
+    '[attr.aria-label]': 'accessibleName()',
   },
 })
 export class NdsPagination {
@@ -131,7 +131,7 @@ export class NdsPagination {
     ElementRef,
   ).nativeElement.getAttribute('aria-label');
 
-  protected readonly nomeAcessivel = computed(
+  protected readonly accessibleName = computed(
     () => this.label() ?? this.rotuloEscrito ?? 'Paginação',
   );
 }
@@ -270,7 +270,7 @@ function barrarClickQuandoDisabled(controle: { disabled: () => boolean }): void 
   host: {
     '[class]': 'hostClass()',
     '[attr.data-slot]': '"pagination-previous"',
-    '[attr.aria-label]': 'nomeAcessivel()',
+    '[attr.aria-label]': 'accessibleName()',
     '[attr.aria-disabled]': 'disabled() ? "true" : null',
     '[attr.tabindex]': 'disabled() ? "-1" : null',
   },
@@ -285,7 +285,7 @@ export class NdsPaginationPrevious {
   /** Desabilita o controle — o caso da primeira página. */
   readonly disabled = input<boolean>(false);
 
-  protected readonly nomeAcessivel = computed(() => this.label() ?? this.text());
+  protected readonly accessibleName = computed(() => this.label() ?? this.text());
 
   protected readonly hostClass = computed(() =>
     cn(btnClass('ghost', 'default'), 'nds-pagination-prev'),
@@ -310,7 +310,7 @@ export class NdsPaginationPrevious {
   host: {
     '[class]': 'hostClass()',
     '[attr.data-slot]': '"pagination-next"',
-    '[attr.aria-label]': 'nomeAcessivel()',
+    '[attr.aria-label]': 'accessibleName()',
     '[attr.aria-disabled]': 'disabled() ? "true" : null',
     '[attr.tabindex]': 'disabled() ? "-1" : null',
   },
@@ -325,7 +325,7 @@ export class NdsPaginationNext {
   /** Desabilita o controle — o caso da última página. */
   readonly disabled = input<boolean>(false);
 
-  protected readonly nomeAcessivel = computed(() => this.label() ?? this.text());
+  protected readonly accessibleName = computed(() => this.label() ?? this.text());
 
   protected readonly hostClass = computed(() =>
     cn(btnClass('ghost', 'default'), 'nds-pagination-next'),

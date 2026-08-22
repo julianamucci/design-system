@@ -121,8 +121,8 @@ export const Playground: Story = {
       // botões apareciam nos cantos superiores da tela, longe do calendário.
       // Conferir que existem não pega isso; conferir ONDE estão, sim.
       const raiz = canvasElement.querySelector('[data-slot="calendar"]')!;
-      const anterior = canvas.getByRole('button', { name: /previous|anterior/i });
-      await expect(raiz.contains(anterior)).toBe(true);
+      const previous = canvas.getByRole('button', { name: /previous|anterior/i });
+      await expect(raiz.contains(previous)).toBe(true);
 
       // O `offsetParent` que importa é o do OVERLAY, não o do botão: o botão
       // está dentro do overlay, que é absoluto, então ele mesmo é o
@@ -130,7 +130,7 @@ export const Playground: Story = {
       // posicionado é o overlay — e é aí que a âncora aparece ou falta.
       // Comparar coordenadas também não serve: numa story isolada o ancestral
       // escapado calha de ficar perto, e a asserção passa com o defeito.
-      const overlay = anterior.closest<HTMLElement>('.nds-calendar-nav-overlay')!;
+      const overlay = previous.closest<HTMLElement>('.nds-calendar-nav-overlay')!;
       await expect(overlay.offsetParent).not.toBeNull();
       await expect(raiz.contains(overlay.offsetParent as Element)).toBe(true);
     });
@@ -156,8 +156,8 @@ export const Playground: Story = {
       // diferentes. Emoldurado, ele competia com o dia escolhido, que é o único
       // elemento do calendário que deveria ter peso. Medida computada, porque
       // classe presente não é borda ausente.
-      const anterior = canvas.getByRole('button', { name: /previous|anterior/i });
-      const cs = getComputedStyle(anterior);
+      const previous = canvas.getByRole('button', { name: /previous|anterior/i });
+      const cs = getComputedStyle(previous);
       await expect(parseFloat(cs.borderTopWidth)).toBe(0);
       await expect(['transparent', 'rgba(0, 0, 0, 0)']).toContain(cs.backgroundColor);
     });

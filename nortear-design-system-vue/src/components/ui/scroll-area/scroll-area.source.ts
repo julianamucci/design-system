@@ -31,7 +31,7 @@ const TAGS = 'const tags = Array.from({ length: 40 }, (_, i) => `Tag ${i + 1}`)'
  * A largura sai de `max-width`, que é a utilitária que existe — não há
  * utilitária para uma largura cravada em pixels.
  */
-function moldura(interno: string, largura = 'nds-w-xs'): string {
+function frame(interno: string, largura = 'nds-w-xs'): string {
   return `<div class="${largura} nds-rounded-md nds-border-default nds-overflow-hidden">
 ${indentar(interno)}
 </div>`;
@@ -77,7 +77,7 @@ export const scrollAreaSource: SourceTransform<ScrollAreaArgs> = (_gerado, ctx) 
   const args = ctx?.args ?? {};
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS}`,
-    moldura(
+    frame(
       area(
         [
           attr('type', args.type, 'hover'),
@@ -101,7 +101,7 @@ export const scrollAreaSource: SourceTransform<ScrollAreaArgs> = (_gerado, ctx) 
 export function scrollAreaVerticalSource(): string {
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS}`,
-    moldura(area(['type="always"', 'size="xl"', 'class="nds-w-full"'], CONTENT_TAGS)),
+    frame(area(['type="always"', 'size="xl"', 'class="nds-w-full"'], CONTENT_TAGS)),
   );
 }
 
@@ -115,7 +115,7 @@ export function scrollAreaHorizontalSource(): string {
     `${IMPORT_WITH_BAR}
 
 const cards = Array.from({ length: 12 }, (_, i) => \`Card \${i + 1}\`)`,
-    moldura(
+    frame(
       area(
         ['type="always"', 'size="md"', 'class="nds-w-full nds-whitespace-nowrap"'],
         `<div class="nds-row nds-p-4" data-spacing="md">
@@ -145,7 +145,7 @@ export function scrollAreaBidirecionalSource(): string {
 
 const colunas = Array.from({ length: 12 }, (_, i) => \`C\${i + 1}\`)
 const linhas = Array.from({ length: 16 }, (_, i) => \`R\${i + 1}\`)`,
-    moldura(
+    frame(
       area(
         ['type="always"', 'size="xl"', 'class="nds-w-full"'],
         `<table class="nds-border-collapse nds-text-body">
@@ -202,7 +202,7 @@ const SIMPLE_LIST = `<div class="nds-stack nds-p-4" data-spacing="sm">
 export function scrollAreaOciosoSource(): string {
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS_30}`,
-    moldura(area(['size="lg"', 'class="nds-w-full"'], SIMPLE_LIST)),
+    frame(area(['size="lg"', 'class="nds-w-full"'], SIMPLE_LIST)),
   );
 }
 
@@ -213,7 +213,7 @@ export function scrollAreaOciosoSource(): string {
 export function scrollAreaSempreSource(): string {
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS_30}`,
-    moldura(area(['type="always"', 'size="lg"', 'class="nds-w-full"'], SIMPLE_LIST)),
+    frame(area(['type="always"', 'size="lg"', 'class="nds-w-full"'], SIMPLE_LIST)),
   );
 }
 
@@ -225,7 +225,7 @@ export function scrollAreaSempreSource(): string {
 export function scrollAreaAoRolarSource(): string {
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS_30}`,
-    moldura(area(['type="scroll"', 'size="lg"', 'class="nds-w-full"'], SIMPLE_LIST)),
+    frame(area(['type="scroll"', 'size="lg"', 'class="nds-w-full"'], SIMPLE_LIST)),
   );
 }
 
@@ -239,7 +239,7 @@ export function scrollAreaContentFocavelSource(): string {
     `${IMPORT_AREA}
 
 const acoes = Array.from({ length: 20 }, (_, i) => \`Ação \${i + 1}\`)`,
-    moldura(
+    frame(
       area(
         ['size="lg"', 'class="nds-w-full"'],
         `<nav aria-label="Ações" class="nds-p-4">
@@ -333,7 +333,7 @@ export function scrollAreaGaleriaSource(): string {
     `${IMPORT_WITH_BAR}
 
 const imagens = Array.from({ length: 14 }, (_, i) => \`Imagem \${i + 1}\`)`,
-    moldura(
+    frame(
       area(
         ['type="always"', 'size="md"', 'class="nds-w-full nds-whitespace-nowrap"'],
         `<div class="nds-row nds-p-4" data-spacing="sm">
@@ -373,7 +373,7 @@ const pessoas = Array.from({ length: 18 }, (_, i) => [
   \`0\${(i % 9) + 1}/2024\`,
   i % 4 === 0 ? 'Férias' : 'Ativo',
 ])`,
-    moldura(
+    frame(
       area(
         ['type="always"', 'size="xl"', 'class="nds-w-full"'],
         `<table class="nds-border-collapse nds-text-body">

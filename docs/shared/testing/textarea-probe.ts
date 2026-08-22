@@ -70,7 +70,7 @@ const texto = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
 /** Nome acessível pela ordem que o leitor usa. `null` é campo sem nome. */
-function nomeAcessivel(el: Element | null | undefined): string | null {
+function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
@@ -84,8 +84,8 @@ function nomeAcessivel(el: Element | null | undefined): string | null {
     const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
     if (label?.textContent?.trim()) return label.textContent.trim();
   }
-  const dentro = el.closest('label');
-  if (dentro?.textContent?.trim()) return dentro.textContent.trim();
+  const inside = el.closest('label');
+  if (inside?.textContent?.trim()) return inside.textContent.trim();
   return null;
 }
 
@@ -115,7 +115,7 @@ function crescimento(ta: HTMLTextAreaElement) {
 /** Sombra e contorno com o campo focado — e o foco volta para quem o tinha. */
 function aoFocar(ta: HTMLTextAreaElement) {
   const doc = ta.ownerDocument;
-  const anterior = doc.activeElement as HTMLElement | null;
+  const previous = doc.activeElement as HTMLElement | null;
   return noTransicao(ta, () => {
     ta.focus();
     const cs = getComputedStyle(ta);
@@ -127,7 +127,7 @@ function aoFocar(ta: HTMLTextAreaElement) {
       casaFocusVisible: ta.matches(':focus-visible'),
     };
     ta.blur();
-    if (anterior && anterior !== doc.body) anterior.focus();
+    if (previous && previous !== doc.body) previous.focus();
     return measurement;
   });
 }
@@ -244,7 +244,7 @@ export function measureTextarea(raiz: HTMLElement) {
       },
     },
     semantica: {
-      nomeAcessivel: nomeAcessivel(ta),
+      accessibleName: accessibleName(ta),
       papel: ta.getAttribute('role'),
       placeholder: ta.getAttribute('placeholder'),
       rowsAtributo: ta.getAttribute('rows'),

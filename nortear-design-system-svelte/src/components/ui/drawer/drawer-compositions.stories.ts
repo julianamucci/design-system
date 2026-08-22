@@ -55,15 +55,15 @@ export const WithForm: Story = {
   },
   play: async ({ step }) => {
     const painel = await waitForPortal('dialog');
-    const dentro = within(painel);
+    const inside = within(painel);
 
     await step('O painel carrega nome, descrição e os campos do formulário', async () => {
       await expect(painel).toHaveAccessibleName('Editar dados pessoais');
       await expect(painel).toHaveAccessibleDescription('Atualize seu nome e e-mail.');
       // Os campos são achados pelo RÓTULO: se `for`/`id` não casassem, o input
       // ficaria sem nome acessível e a busca falharia.
-      await expect(dentro.getByLabelText(/Nome/i)).toBeInTheDocument();
-      await expect(dentro.getByLabelText(/E-mail/i)).toBeInTheDocument();
+      await expect(inside.getByLabelText(/Nome/i)).toBeInTheDocument();
+      await expect(inside.getByLabelText(/E-mail/i)).toBeInTheDocument();
     });
 
     await step('O rodapé oferece confirmar e cancelar', async () => {
@@ -97,7 +97,7 @@ export const WithConfirmation: Story = {
   },
   play: async ({ step }) => {
     const painel = await waitForPortal('dialog');
-    const dentro = within(painel);
+    const inside = within(painel);
 
     await step('A consequência está escrita, não subentendida', async () => {
       await expect(painel).toHaveAccessibleName('Remover anexo?');
@@ -105,9 +105,9 @@ export const WithConfirmation: Story = {
     });
 
     await step('Cancelar continua sendo a saída de menor risco', async () => {
-      const cancelar = dentro.getByRole('button', { name: /Cancelar/i });
+      const cancelar = inside.getByRole('button', { name: /Cancelar/i });
       await expect(cancelar).toHaveClass('nds-button-outline');
-      await expect(dentro.getByRole('button', { name: /^Remover$/i })).toBeVisible();
+      await expect(inside.getByRole('button', { name: /^Remover$/i })).toBeVisible();
     });
   },
 };

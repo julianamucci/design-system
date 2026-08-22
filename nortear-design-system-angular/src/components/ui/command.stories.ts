@@ -238,9 +238,9 @@ export const Playground: Story = {
       // O item do contrato diz "percorre todos os comandos habilitados em
       // sequência": descer dois e subir um deixaria a travessia entre os dois
       // grupos — que é onde a sequência quebraria — sem verificação nenhuma.
-      const ordem = ['Button', 'Input', 'Separator', 'cn()', 'clsx()'];
+      const order = ['Button', 'Input', 'Separator', 'cn()', 'clsx()'];
 
-      for (const texto of ordem) {
+      for (const texto of order) {
         await userEvent.keyboard('{ArrowDown}');
         await inHighlight(texto);
       }

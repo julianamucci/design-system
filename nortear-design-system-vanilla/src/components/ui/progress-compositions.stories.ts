@@ -11,7 +11,7 @@ import {
   barrasDeProgresso,
   contrastBarTrack,
   indicadorDoProgresso,
-  nomeAcessivel,
+  accessibleName,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
 
@@ -175,7 +175,7 @@ export const WizardSteps: Story = {
 
     await step('O nome acessível conta a etapa, que o número sozinho não conta', async () => {
       const bar = canvas.getByRole('progressbar');
-      await expect(nomeAcessivel(bar)).toBe('Progresso do cadastro: etapa 3 de 5');
+      await expect(accessibleName(bar)).toBe('Progresso do cadastro: etapa 3 de 5');
     });
 
     await step('Etapa 3 de 5 desenha 60% da trilha', async () => {
@@ -248,7 +248,7 @@ export const MultipleUploads: Story = {
     });
 
     await step('Nomes acessíveis distintos — a lista não confunde os arquivos', async () => {
-      const names = barrasDeProgresso(canvasElement).map(nomeAcessivel);
+      const names = barrasDeProgresso(canvasElement).map(accessibleName);
       await expect(names.every((n) => n !== '')).toBe(true);
       await expect(new Set(names).size).toBe(4);
     });
@@ -308,10 +308,10 @@ export const CustomColor: Story = {
     });
 
     await step('As três cores são realmente distintas', async () => {
-      const cores = canvas
+      const colors = canvas
         .getAllByRole('progressbar')
         .map((raiz) => getComputedStyle(indicadorDoProgresso(raiz)).backgroundColor);
-      await expect(new Set(cores).size).toBe(3);
+      await expect(new Set(colors).size).toBe(3);
     });
 
     await step('Nenhuma variante abre mão dos 3:1 contra a trilha', async () => {
@@ -322,7 +322,7 @@ export const CustomColor: Story = {
 
     await step('Toda barra da lista tem nome acessível', async () => {
       for (const bar of barrasDeProgresso(canvasElement)) {
-        await expect(nomeAcessivel(bar)).not.toBe('');
+        await expect(accessibleName(bar)).not.toBe('');
       }
     });
   },

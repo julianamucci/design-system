@@ -61,7 +61,7 @@ export const Playground: Story = {
     // O eixo vem do DOM, não do arg: é o trilho renderizado que decide para
     // onde o carrossel anda, e é ele que a medição precisa acompanhar.
     const eixo = track.dataset.orientation === 'vertical' ? 'y' : 'x';
-    const anterior = () => canvas.getByRole('button', { name: /item anterior/i }) as HTMLButtonElement;
+    const previous = () => canvas.getByRole('button', { name: /item anterior/i }) as HTMLButtonElement;
     const proximo = () => canvas.getByRole('button', { name: /próximo item/i }) as HTMLButtonElement;
 
     const emSlide = async (i: number) =>
@@ -71,7 +71,7 @@ export const Playground: Story = {
     const startVoltar = async () => {
       const total = canvas.getAllByRole('group').length;
       for (let passo = 0; passo < total; passo++) {
-        const button = anterior();
+        const button = previous();
         // `.nds-button:disabled` declara `pointer-events: none`, e o userEvent
         // recusa clicar num alvo assim: nunca clicar sem checar antes.
         if (button.disabled) break;
@@ -108,13 +108,13 @@ export const Playground: Story = {
       // `init` — que ele agenda com `setTimeout(…, 0)`. Ler no primeiro quadro
       // pegaria o valor de partida, não o estado do componente montado.
       await waitFor(() => expect(proximo()).toBeEnabled(), { timeout: 4000 });
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
     });
 
     await step('Clicar em avançar leva ao segundo slide e acorda a seta de voltar', async () => {
       await userEvent.click(proximo());
       await emSlide(1);
-      await expect(anterior()).toBeEnabled();
+      await expect(previous()).toBeEnabled();
     });
 
     await step('A seta do teclado avança com o foco na região', async () => {
@@ -130,7 +130,7 @@ export const Playground: Story = {
       // O Chromatic fotografa o último quadro e o axe varre o que sobrou na
       // tela: a story precisa terminar no estado que `visual.item1` promete.
       await startVoltar();
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
     });
   },
 };

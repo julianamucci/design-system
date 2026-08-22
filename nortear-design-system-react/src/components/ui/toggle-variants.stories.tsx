@@ -132,8 +132,8 @@ export const WithLabel: Story = {
     });
 
     await step("defaultPressed já nasce refletido em aria-pressed", async () => {
-      const ativo = canvas.getByRole("button", { name: "Visão compacta" });
-      await expect(ativo).toHaveAttribute("aria-pressed", "true");
+      const active = canvas.getByRole("button", { name: "Visão compacta" });
+      await expect(active).toHaveAttribute("aria-pressed", "true");
     });
 
     await step("O toggle com rótulo é mais largo que alto", async () => {

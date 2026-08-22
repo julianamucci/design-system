@@ -73,7 +73,7 @@ ${indentar(filho, 4)}
  * não tem `.nds-object-cover`. É valor mecânico, não valor de design: não há
  * quantidade, tema nem densidade envolvidos.
  */
-function imagem(src: string, alt: string): string {
+function image(src: string, alt: string): string {
   return `<img
   src="${src}"
   alt="${alt}"
@@ -103,20 +103,20 @@ const FOTO_PANORAMICA =
 export const aspectRatioSource: SourceTransform<AspectRatioArgs> = (_gerado, ctx) =>
   vueSnippet(
     IMPORT,
-    caixa(attrRatio(ctx?.args?.ratio ?? 16 / 9), imagem(FOTO_PAISAGEM, 'Paisagem ao amanhecer')),
+    caixa(attrRatio(ctx?.args?.ratio ?? 16 / 9), image(FOTO_PAISAGEM, 'Paisagem ao amanhecer')),
   );
 
 /** Paisagem: a proporção de foto e de vídeo, e a mais comum em cabeçalho. */
 export function aspectRatioDezesseisNoveSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(attrRatio(16 / 9), imagem(FOTO_PAISAGEM, 'Paisagem 16:9')),
+    caixa(attrRatio(16 / 9), image(FOTO_PAISAGEM, 'Paisagem 16:9')),
   );
 }
 
 /** Produto: mais alta que a paisagem, para a foto de catálogo. */
 export function aspectRatioQuatroTresSource(): string {
-  return vueSnippet(IMPORT, caixa(attrRatio(4 / 3), imagem(FOTO_PRODUCT, 'Produto 4:3')));
+  return vueSnippet(IMPORT, caixa(attrRatio(4 / 3), image(FOTO_PRODUCT, 'Produto 4:3')));
 }
 
 /**
@@ -124,14 +124,14 @@ export function aspectRatioQuatroTresSource(): string {
  * proporção nenhuma. Escrevê-la ensinaria que ela é obrigatória.
  */
 export function aspectRatioQuadradoSource(): string {
-  return vueSnippet(IMPORT, caixa('', imagem(FOTO_QUADRADA, 'Avatar quadrado')));
+  return vueSnippet(IMPORT, caixa('', image(FOTO_QUADRADA, 'Avatar quadrado')));
 }
 
 /** Retrato: a proporção invertida, para capa e pôster. */
 export function aspectRatioTresQuatroSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(attrRatio(3 / 4), imagem(VERTICAL_FOTO, 'Capa vertical 3:4')),
+    caixa(attrRatio(3 / 4), image(VERTICAL_FOTO, 'Capa vertical 3:4')),
   );
 }
 
@@ -139,7 +139,7 @@ export function aspectRatioTresQuatroSource(): string {
 export function aspectRatioUltraWideSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(attrRatio(21 / 9), imagem(FOTO_PANORAMICA, 'Cabeçalho panorâmico 21:9')),
+    caixa(attrRatio(21 / 9), image(FOTO_PANORAMICA, 'Cabeçalho panorâmico 21:9')),
   );
 }
 
@@ -149,7 +149,7 @@ export function aspectRatioWithImageSource(): string {
     IMPORT,
     caixa(
       attrRatio(16 / 9),
-      imagem(FOTO_PAISAGEM, 'Paisagem ao amanhecer com montanhas e céu laranja'),
+      image(FOTO_PAISAGEM, 'Paisagem ao amanhecer com montanhas e céu laranja'),
     ),
   );
 }
@@ -210,7 +210,7 @@ export function gridAspectRatioSource(): string {
     [FOTO_PRODUCT, 'Miniatura 6'],
   ];
   const celulas = fotos
-    .map(([src, alt]) => `<AspectRatio>\n${indentar(imagem(src, alt))}\n</AspectRatio>`)
+    .map(([src, alt]) => `<AspectRatio>\n${indentar(image(src, alt))}\n</AspectRatio>`)
     .join('\n');
   return vueSnippet(
     IMPORT,
@@ -247,5 +247,5 @@ export function aspectRatioPlaceholderSource(): string {
  * atributo o leitor de tela cai no nome do arquivo.
  */
 export function aspectRatioDecorativaSource(): string {
-  return vueSnippet(IMPORT, caixa(attrRatio(16 / 9), imagem(FOTO_PAISAGEM, '')));
+  return vueSnippet(IMPORT, caixa(attrRatio(16 / 9), image(FOTO_PAISAGEM, '')));
 }

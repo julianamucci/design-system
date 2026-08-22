@@ -97,7 +97,7 @@ describe('badgeEmGatilhoSnippet', () => {
       href: '#design',
       variant: 'secondary',
       label: 'Design',
-      nomeAcessivel: 'Ver todos os itens da categoria Design',
+      accessibleName: 'Ver todos os itens da categoria Design',
     });
     expect(código).toContain("document.createElement('a')");
     expect(código).toContain("alvo.href = '#design';");

@@ -220,7 +220,7 @@ export function createCommand(options: CommandOptions): HTMLElement {
    */
   function agrupar(filtrados: ItemFiltrado[]): GroupRenderizado[] {
     const byBlock = new Map<number, Map<string, GroupRenderizado>>();
-    const ordem: GroupRenderizado[] = [];
+    const order: GroupRenderizado[] = [];
 
     for (const { item, bloco } of filtrados) {
       let ofBlock = byBlock.get(bloco);
@@ -233,12 +233,12 @@ export function createCommand(options: CommandOptions): HTMLElement {
       if (!grupo) {
         grupo = { titulo, itens: [] };
         ofBlock.set(titulo, grupo);
-        ordem.push(grupo);
+        order.push(grupo);
       }
       grupo.itens.push(item);
     }
 
-    return ordem;
+    return order;
   }
 
   /**

@@ -344,8 +344,8 @@ export const AsCombobox: Story = {
       const painel = await abrir();
       await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
 
-      const dentro = within(painel);
-      const lista = dentro.getByRole('listbox');
+      const inside = within(painel);
+      const lista = inside.getByRole('listbox');
       await expect(lista).toBeVisible();
       await expect(lista).toHaveClass(/nds-command-list/);
       const search = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
@@ -362,22 +362,22 @@ export const AsCombobox: Story = {
       await userEvent.clear(search);
       await waitFor(async () => {
         // Com o campo vazio, os seis componentes aparecem.
-        await expect(dentro.getAllByRole('option')).toHaveLength(6);
+        await expect(inside.getAllByRole('option')).toHaveLength(6);
       });
     });
 
     await step('A busca filtra dentro do popover', async () => {
       const painel = await abrir();
-      const dentro = within(painel);
+      const inside = within(painel);
       const search = painel.querySelector<HTMLInputElement>('[data-slot="command-input"]')!;
 
       await userEvent.clear(search);
       await userEvent.type(search, 'text');
       // Buscando "text": só "Textarea" sobra.
       await waitFor(async () => {
-        await expect(dentro.getAllByRole('option')).toHaveLength(1);
+        await expect(inside.getAllByRole('option')).toHaveLength(1);
       });
-      await expect(dentro.getByRole('option', { name: 'Textarea' })).toBeVisible();
+      await expect(inside.getByRole('option', { name: 'Textarea' })).toBeVisible();
 
       await userEvent.clear(search);
       await userEvent.type(search, 'zzz');
@@ -389,7 +389,7 @@ export const AsCombobox: Story = {
 
       await userEvent.clear(search);
       await waitFor(async () => {
-        await expect(dentro.getAllByRole('option')).toHaveLength(6);
+        await expect(inside.getAllByRole('option')).toHaveLength(6);
       });
     });
 
@@ -425,14 +425,14 @@ export const CommandPalette: Story = {
       // O Cmd+K não é nativo de componente nenhum — é um listener de janela, e é
       // o consumidor que o registra. `onUnmounted` remove: sem isso o atalho de
       // uma story vaza para a seguinte.
-      function aoTeclar(evento: KeyboardEvent) {
+      function onKeyDown(evento: KeyboardEvent) {
         if (evento.key.toLowerCase() !== 'k' || !(evento.metaKey || evento.ctrlKey)) return;
         // Sem isto o navegador leva o Cmd+K para a barra de endereço.
         evento.preventDefault();
         open.value = true;
       }
-      onMounted(() => window.addEventListener('keydown', aoTeclar));
-      onUnmounted(() => window.removeEventListener('keydown', aoTeclar));
+      onMounted(() => window.addEventListener('keydown', onKeyDown));
+      onUnmounted(() => window.removeEventListener('keydown', onKeyDown));
 
       function executar(value: string) {
         last.value = value;

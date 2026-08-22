@@ -267,13 +267,13 @@ export const Pie: Story = {
     });
 
     await step('Cada fatia usa um token de cor distinto', async () => {
-      const cores = new Set(
+      const colors = new Set(
         datumFormas(raiz)
           .map((f) => getComputedStyle(f).fill)
           // A trama sobreposta entra como `url(#…)` e não é cor de série.
           .filter((cor) => !cor.startsWith('url')),
       );
-      await expect(cores.size).toBeGreaterThanOrEqual(pieData.length);
+      await expect(colors.size).toBeGreaterThanOrEqual(pieData.length);
     });
   },
 };

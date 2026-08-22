@@ -167,11 +167,11 @@ export const WithImage: Story = {
   },
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardContent },
-    setup() { return { imagem: DEMO_IMAGE_PRODUCT }; },
+    setup() { return { image: DEMO_IMAGE_PRODUCT }; },
     template: `
       <Card class="nds-w-sm">
         <img
-          :src="imagem"
+          :src="image"
           alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
           class="nds-w-full nds-aspect-16-9"
           style="object-fit: cover"
@@ -225,11 +225,11 @@ export const ProductCard: Story = {
   },
   render: () => ({
     components: { Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter, Button, Badge },
-    setup() { return { imagem: DEMO_IMAGE_PRODUCT }; },
+    setup() { return { image: DEMO_IMAGE_PRODUCT }; },
     template: `
       <Card class="nds-w-sm">
         <img
-          :src="imagem"
+          :src="image"
           alt="Cadeira Gamer Pro vista de frente, em fundo neutro"
           class="nds-w-full nds-aspect-16-9"
           style="object-fit: cover"

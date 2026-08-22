@@ -24,7 +24,7 @@ export type AlertArgs = {
   dismissible: boolean;
 };
 
-const VARIANTES = ['default', 'destructive', 'success', 'warning', 'info'] as const;
+const VARIANTS = ['default', 'destructive', 'success', 'warning', 'info'] as const;
 const PAPEIS = ['alert', 'status', 'note'] as const;
 
 const IMPORT = 'import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";';
@@ -58,7 +58,7 @@ function alerta(atributos: string, interior: string): string {
 
 /** Uma variante inteira: raiz, ícone próprio e o par título/descrição. */
 function variante(
-  nome: (typeof VARIANTES)[number],
+  nome: (typeof VARIANTS)[number],
   icone: string,
   titulo: string,
   descricao: string,
@@ -80,7 +80,7 @@ function variante(
 export const alertSource: SourceTransform<AlertArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   const atributos = attrsMultilinha([
-    propOption('variant', args.variant, VARIANTES, 'default'),
+    propOption('variant', args.variant, VARIANTS, 'default'),
     propOption('role', args.role, PAPEIS, 'alert'),
     propBool('dismissible', args.dismissible),
   ]);
@@ -168,7 +168,7 @@ function aoFechar() {
  * propósito — o que se mede aqui é texto sobre o fundo que a variante pinta.
  */
 export function alertContrastSource(): string {
-  const blocks = VARIANTES.map((nome) => {
+  const blocks = VARIANTS.map((nome) => {
     const atributos = nome === 'default' ? '' : ` variant="${nome}"`;
     return [
       `  <Alert${atributos}>`,

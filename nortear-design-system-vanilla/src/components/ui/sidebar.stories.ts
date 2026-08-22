@@ -210,10 +210,10 @@ export const Playground: Story = {
 
     await step('O item ativo é anunciado como página atual', async () => {
       // `data-active` é para o CSS; quem não vê a cor precisa do aria-current.
-      const ativo = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
-      await expect(ativo).not.toBeNull();
-      await expect(ativo.getAttribute('aria-current')).toBe('page');
-      await expect(ativo.getAttribute('aria-label')).toBe('Dashboard');
+      const active = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
+      await expect(active).not.toBeNull();
+      await expect(active.getAttribute('aria-current')).toBe('page');
+      await expect(active.getAttribute('aria-label')).toBe('Dashboard');
     });
 
     await step('O ícone do cabeçalho não é lido pelo leitor de tela', async () => {

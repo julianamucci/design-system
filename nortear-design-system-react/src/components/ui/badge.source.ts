@@ -12,7 +12,7 @@ export type BadgeArgs = {
   children: string;
 };
 
-const VARIANTES = [
+const VARIANTS = [
   'default',
   'secondary',
   'destructive',
@@ -28,7 +28,7 @@ const IMPORT = 'import { Badge } from "@/components/ui/badge";';
 function badgeSnippet(variante: BadgeArgs['variant'] | undefined, conteudo: string): string {
   return jsxSnippet(
     IMPORT,
-    `<Badge${attrs(propOption('variant', variante, VARIANTES, 'default'))}>${conteudo}</Badge>`,
+    `<Badge${attrs(propOption('variant', variante, VARIANTS, 'default'))}>${conteudo}</Badge>`,
   );
 }
 

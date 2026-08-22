@@ -78,8 +78,8 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const regiao = canvas.getByRole('region');
     const track = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-track"]')!;
-    const recorte = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
-    const anterior = () =>
+    const clip = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
+    const previous = () =>
       canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
     const proximo = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
@@ -95,9 +95,9 @@ export const Playground: Story = {
     // para o primeiro slide encostar na borda como nas outras quatro), então a
     // distância entre recorte e track NUNCA é zero em repouso. Medir em absoluto
     // dava 16.7 onde a conta esperava 0.
-    const rest = recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
+    const rest = clip.getBoundingClientRect().left - track.getBoundingClientRect().left;
     const deslocamento = () =>
-      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left - rest;
+      clip.getBoundingClientRect().left - track.getBoundingClientRect().left - rest;
 
     // Coordenada de LAYOUT: `offsetLeft` não é afetado pelo `transform`
     // corrente, então o passo esperado não muda enquanto o deslize corre.
@@ -127,8 +127,8 @@ export const Playground: Story = {
     });
 
     await step('No primeiro slide só a seta de avanço está ativa', async () => {
-      await expect(anterior()).toBeDisabled();
-      await expect(anterior()).toHaveAttribute('aria-disabled', 'true');
+      await expect(previous()).toBeDisabled();
+      await expect(previous()).toHaveAttribute('aria-disabled', 'true');
       await expect(proximo()).toBeEnabled();
       await expect(proximo()).toHaveAttribute('aria-disabled', 'false');
     });
@@ -136,7 +136,7 @@ export const Playground: Story = {
     await step('Clicar em avançar leva ao segundo slide e libera a seta de voltar', async () => {
       await userEvent.click(proximo());
       await emSlide(1);
-      await expect(anterior()).toBeEnabled();
+      await expect(previous()).toBeEnabled();
     });
 
     await step('A seta do teclado avança com o foco na região', async () => {
@@ -154,12 +154,12 @@ export const Playground: Story = {
       // slide — e o replay do painel Interactions começaria de lá, invertendo o
       // passo "no primeiro slide só a seta de avanço está ativa".
       for (let volta = 0; volta < slides().length; volta++) {
-        const button = anterior();
+        const button = previous();
         if (button.disabled) break;
         await userEvent.click(button);
       }
       await emSlide(0);
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
     });
   },
 };

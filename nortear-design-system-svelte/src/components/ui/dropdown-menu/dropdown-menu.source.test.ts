@@ -60,9 +60,9 @@ describe('dropdownMenuSource', () => {
   });
 
   it('abre pelo estado ligado, porque a raiz não tem defaultOpen', () => {
-    const fechado = dropdownMenuSource('', { args: { defaultOpen: false } });
-    expect(fechado).toContain('<DropdownMenu>');
-    expect(fechado).not.toContain('$state');
+    const closed = dropdownMenuSource('', { args: { defaultOpen: false } });
+    expect(closed).toContain('<DropdownMenu>');
+    expect(closed).not.toContain('$state');
 
     const aberto = dropdownMenuSource('', { args: { defaultOpen: true } });
     expect(aberto).toContain('let aberto = $state(true);');

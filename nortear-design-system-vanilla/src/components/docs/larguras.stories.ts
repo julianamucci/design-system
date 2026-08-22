@@ -34,9 +34,9 @@ export default meta;
 export const HorizontalNoScroll: StoryObj = {
   globals: { viewport: { value: 'mobile1' } },
   render: () => {
-    const moldura = document.createElement('div');
-    moldura.dataset['moldura'] = '';
-    moldura.className = 'nds-p-4 nds-border-default nds-rounded-lg';
+    const frame = document.createElement('div');
+    frame.dataset['moldura'] = '';
+    frame.className = 'nds-p-4 nds-border-default nds-rounded-lg';
     const stack = document.createElement('div');
     stack.className = 'nds-stack';
     stack.dataset['spacing'] = 'sm';
@@ -46,19 +46,19 @@ export const HorizontalNoScroll: StoryObj = {
       caixa.textContent = classe;
       stack.appendChild(caixa);
     }
-    moldura.appendChild(stack);
-    return moldura;
+    frame.appendChild(stack);
+    return frame;
   },
   play: async ({ canvasElement, step }) => {
     await step('Nenhuma largura transborda o container', async () => {
-      const moldura = canvasElement.querySelector('[data-moldura]') as HTMLElement;
+      const frame = canvasElement.querySelector('[data-moldura]') as HTMLElement;
       // `scrollWidth` maior que `clientWidth` É a barra horizontal — medir o
       // sintoma, e não a largura de cada caixa, é o que faz este teste valer
       // para a próxima classe que alguém acrescentar à família.
       await expect(
-        moldura.scrollWidth,
-        `sobra=${moldura.scrollWidth - moldura.clientWidth}px além dos ${moldura.clientWidth}px do container`,
-      ).toBeLessThanOrEqual(moldura.clientWidth);
+        frame.scrollWidth,
+        `sobra=${frame.scrollWidth - frame.clientWidth}px além dos ${frame.clientWidth}px do container`,
+      ).toBeLessThanOrEqual(frame.clientWidth);
     });
   },
 };

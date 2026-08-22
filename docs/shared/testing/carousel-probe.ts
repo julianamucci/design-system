@@ -206,7 +206,7 @@ export async function escalaSobMovimentoReduzido(
   aguardar: (verificacao: () => void) => Promise<unknown>,
 ): Promise<CarrosselFailure[]> {
   const html = raiz.ownerDocument.documentElement;
-  const anterior = html.getAttribute('data-reduced-motion');
+  const previous = html.getAttribute('data-reduced-motion');
   try {
     html.setAttribute('data-reduced-motion', 'true');
     await aguardar(() => {
@@ -225,8 +225,8 @@ export async function escalaSobMovimentoReduzido(
       motivo: `com a preferência ligada, a escala deveria sumir por inteiro e não sumiu: ${(erro as Error).message}`,
     }];
   } finally {
-    if (anterior === null) html.removeAttribute('data-reduced-motion');
-    else html.setAttribute('data-reduced-motion', anterior);
+    if (previous === null) html.removeAttribute('data-reduced-motion');
+    else html.setAttribute('data-reduced-motion', previous);
   }
 }
 
@@ -385,8 +385,8 @@ export function controlReach(el: HTMLElement): CarrosselFailure[] {
   // de um trilho começa muito à direita da área visível e o retângulo dele
   // atravessa a seta de avanço no papel — mas nada daquilo é pintado, porque o
   // recorte corta. O que pode encostar no controle é só o que está à vista.
-  const recorte = raiz.querySelector<HTMLElement>('[data-slot="carousel-content"]');
-  const limit = (recorte ?? (raiz as HTMLElement)).getBoundingClientRect();
+  const clip = raiz.querySelector<HTMLElement>('[data-slot="carousel-content"]');
+  const limit = (clip ?? (raiz as HTMLElement)).getBoundingClientRect();
 
   const slides = Array.from(raiz.querySelectorAll<HTMLElement>('[data-slot="carousel-item"]'));
   for (const [i, slide] of slides.entries()) {

@@ -27,7 +27,7 @@ export type ToggleGroupArgs = {
 
 const MODOS = ['single', 'multiple'] as const;
 const ORIENTACOES = ['horizontal', 'vertical'] as const;
-const VARIANTES = ['default', 'outline'] as const;
+const VARIANTS = ['default', 'outline'] as const;
 const SIZES = ['sm', 'default', 'lg'] as const;
 
 const IMPORT_GROUP = 'import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";';
@@ -95,7 +95,7 @@ export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx
         // combinado entrega lista. É a diferença que o `type` governa.
         multiplo ? 'defaultValue={["left"]}' : 'defaultValue="left"',
         propOption('orientation', args.orientation, ORIENTACOES, 'horizontal'),
-        propOption('variant', args.variant, VARIANTES, 'default'),
+        propOption('variant', args.variant, VARIANTS, 'default'),
         propOption('size', args.size, SIZES, 'default'),
         typeof args.spacing === 'number' && args.spacing !== 0
           ? propNumber('spacing', args.spacing)

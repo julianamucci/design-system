@@ -171,15 +171,15 @@ export const Disabled: Story = {
   render: faixa('Paginação na primeira página', 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const anterior = canvas.getByRole('button', { name: LABEL_PREVIOUS });
+    const previous = canvas.getByRole('button', { name: LABEL_PREVIOUS });
 
     await step('Anterior está marcado como desabilitado', async () => {
       // visual.item4 — aqui o controle é um `<button>`, então o `disabled`
       // nativo já tira da tabulação; a opacidade e o bloqueio do ponteiro vêm
       // de `.nds-button:disabled`, no CSS compartilhado.
-      await expect(anterior).toBeDisabled();
-      await expect(getComputedStyle(anterior).pointerEvents).toBe('none');
-      await expect(Number(getComputedStyle(anterior).opacity)).toBeLessThan(1);
+      await expect(previous).toBeDisabled();
+      await expect(getComputedStyle(previous).pointerEvents).toBe('none');
+      await expect(Number(getComputedStyle(previous).opacity)).toBeLessThan(1);
     });
 
     await step('Clicar em Anterior não navega', async () => {
@@ -189,7 +189,7 @@ export const Disabled: Story = {
       // despacharia o evento à força e mediria uma rota que não existe fora do
       // teste.
       onPageChange.mockClear();
-      anterior.click();
+      previous.click();
       await expect(onPageChange).not.toHaveBeenCalled();
     });
 
@@ -229,11 +229,11 @@ export const Focus: Story = {
     });
 
     await step('A página atual também é focável', async () => {
-      const ativo = canvas.getByRole('link', { name: 'Ir para página 3' });
-      ativo.blur();
-      ativo.focus();
-      await expect(ativo).toHaveFocus();
-      await expect(getComputedStyle(ativo).boxShadow).not.toBe('none');
+      const active = canvas.getByRole('link', { name: 'Ir para página 3' });
+      active.blur();
+      active.focus();
+      await expect(active).toHaveFocus();
+      await expect(getComputedStyle(active).boxShadow).not.toBe('none');
     });
   },
 };

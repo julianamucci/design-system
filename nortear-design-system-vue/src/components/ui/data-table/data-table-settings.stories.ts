@@ -57,7 +57,7 @@ export const Paginated: Story = {
     const firstInvoice = () => linhas()[0].textContent!.trim();
 
     const primeira = () => canvas.getByRole('button', { name: 'Primeira página' }) as HTMLButtonElement;
-    const anterior = () => canvas.getByRole('button', { name: 'Página anterior' }) as HTMLButtonElement;
+    const previous = () => canvas.getByRole('button', { name: 'Página anterior' }) as HTMLButtonElement;
     const next = () => canvas.getByRole('button', { name: 'Próxima página' }) as HTMLButtonElement;
     const last = () => canvas.getByRole('button', { name: 'Última página' }) as HTMLButtonElement;
 
@@ -74,7 +74,7 @@ export const Paginated: Story = {
       await expect(canvas.getByText(`Página 1 de ${TOTAL_PAGES}`)).toBeInTheDocument();
 
       await expect(primeira()).toBeDisabled();
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
       await expect(next()).toBeEnabled();
       await expect(last()).toBeEnabled();
     });
@@ -89,7 +89,7 @@ export const Paginated: Story = {
       });
       await expect(canvas.getByText(`Página 2 de ${TOTAL_PAGES}`)).toBeInTheDocument();
       await expect(primeira()).toBeEnabled();
-      await expect(anterior()).toBeEnabled();
+      await expect(previous()).toBeEnabled();
       await expect(last()).toBeEnabled();
     });
 
@@ -107,11 +107,11 @@ export const Paginated: Story = {
 
       await expect(next()).toBeDisabled();
       await expect(last()).toBeDisabled();
-      await expect(anterior()).toBeEnabled();
+      await expect(previous()).toBeEnabled();
     });
 
     await step('Retroceder uma página é o caminho inverso do avanço', async () => {
-      await userEvent.click(anterior());
+      await userEvent.click(previous());
       await waitFor(async () => {
         await expect(firstInvoice()).toContain('INV-006');
       });
@@ -119,8 +119,8 @@ export const Paginated: Story = {
     });
 
     await step('O seletor de tamanho remonta a fatia', async () => {
-      const seletor = canvas.getByRole('combobox', { name: 'Linhas por página' });
-      await userEvent.selectOptions(seletor, '10');
+      const selector = canvas.getByRole('combobox', { name: 'Linhas por página' });
+      await userEvent.selectOptions(selector, '10');
       await waitFor(async () => {
         await expect(linhas().length).toBe(10);
       });
@@ -130,7 +130,7 @@ export const Paginated: Story = {
 
       // Fecha o ciclo: a rodada seguinte — e a captura de regressão visual —
       // partem da fatia de cinco, na página 1.
-      await userEvent.selectOptions(seletor, String(PAGE_SIZE));
+      await userEvent.selectOptions(selector, String(PAGE_SIZE));
       await waitFor(async () => {
         await expect(linhas().length).toBe(PAGE_SIZE);
       });

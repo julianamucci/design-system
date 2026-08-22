@@ -61,7 +61,7 @@ export interface PaginationMeasurement {
   /** Lista: tag e classes. */
   lista: { tag: string | null; classesNds: string[]; itens: number } | null;
   /** Controle anterior, o que fica desabilitado na primeira página. */
-  anterior: ControlMeasurement | null;
+  previous: ControlMeasurement | null;
   /** Controle próximo. */
   next: ControlMeasurement | null;
   /** Primeiro link numerado inativo encontrado. */
@@ -82,7 +82,7 @@ function classesNds(el: Element): string[] {
     .sort();
 }
 
-function nomeAcessivel(el: Element): string | null {
+function accessibleName(el: Element): string | null {
   const rotulo = el.getAttribute('aria-label');
   if (rotulo) return rotulo;
   const texto = (el.textContent ?? '').trim();
@@ -114,7 +114,7 @@ function measureControl(el: Element | null): ControlMeasurement | null {
   return {
     tag: el.tagName,
     slot: el.getAttribute('data-slot'),
-    nome: nomeAcessivel(el),
+    nome: accessibleName(el),
     classesNds: classesNds(el),
     caixa:
       caixa.width || caixa.height
@@ -143,7 +143,7 @@ export function measurePagination(raizBusca: HTMLElement): PaginationMeasurement
   const lista =
     raizBusca.querySelector('[data-slot="pagination-content"]') ?? raizBusca.querySelector('ul');
 
-  const anterior =
+  const previous =
     raizBusca.querySelector('[data-slot="pagination-previous"]') ??
     raizBusca.querySelector('.nds-pagination-prev') ??
     raizBusca.querySelector('li:first-child > *');
@@ -175,7 +175,7 @@ export function measurePagination(raizBusca: HTMLElement): PaginationMeasurement
     lista: lista
       ? { tag: lista.tagName, classesNds: classesNds(lista), itens: lista.children.length }
       : null,
-    anterior: measureControl(anterior),
+    previous: measureControl(previous),
     next: measureControl(next),
     numeroInativo: measureControl(
       numbered.find((el) => el.getAttribute('aria-current') !== 'page') ?? null,
@@ -277,7 +277,7 @@ export function rangeContrastes(raizBusca: HTMLElement): ContrastMeasurement[] {
     const cor = canais(getComputedStyle(controle).color);
     if (!cor) continue;
     measurements.push({
-      nome: nomeAcessivel(controle) ?? '(sem nome)',
+      nome: accessibleName(controle) ?? '(sem nome)',
       ratio: contrastRatio(cor, backgroundEffective(controle)),
     });
   }
@@ -314,7 +314,7 @@ export function minimumTargetsBelow(raizBusca: HTMLElement, minimum = 24): Targe
     const caixa = controle.getBoundingClientRect();
     if (caixa.width < minimum || caixa.height < minimum) {
       faltantes.push({
-        nome: nomeAcessivel(controle) ?? '(sem nome)',
+        nome: accessibleName(controle) ?? '(sem nome)',
         largura: Math.round(caixa.width),
         altura: Math.round(caixa.height),
       });

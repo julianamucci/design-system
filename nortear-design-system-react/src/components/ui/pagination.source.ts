@@ -62,9 +62,9 @@ ${indentar(itens, '    ')}
  * Um link numerado estático. O rótulo tem contexto porque "3" sozinho não diz
  * nada em voz alta, e o nome acessível é o que o leitor de tela anuncia.
  */
-function numberedLink(numero: number, ativo = false): string {
+function numberedLink(numero: number, active = false): string {
   return `<PaginationItem>
-  <PaginationLink href="#"${ativo ? ' isActive' : ''} aria-label="Ir para página ${numero}">
+  <PaginationLink href="#"${active ? ' isActive' : ''} aria-label="Ir para página ${numero}">
     ${numero}
   </PaginationLink>
 </PaginationItem>`;

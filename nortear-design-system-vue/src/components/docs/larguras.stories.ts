@@ -49,14 +49,14 @@ export const HorizontalNoScroll: StoryObj = {
   }),
   play: async ({ canvasElement, step }) => {
     await step('Nenhuma largura transborda o container', async () => {
-      const moldura = canvasElement.querySelector('[data-moldura]') as HTMLElement;
+      const frame = canvasElement.querySelector('[data-moldura]') as HTMLElement;
       // `scrollWidth` maior que `clientWidth` É a barra horizontal — medir o
       // sintoma, e não a largura de cada caixa, é o que faz este teste valer
       // para a próxima classe que alguém acrescentar à família.
       await expect(
-        moldura.scrollWidth,
-        `sobra=${moldura.scrollWidth - moldura.clientWidth}px além dos ${moldura.clientWidth}px do container`,
-      ).toBeLessThanOrEqual(moldura.clientWidth);
+        frame.scrollWidth,
+        `sobra=${frame.scrollWidth - frame.clientWidth}px além dos ${frame.clientWidth}px do container`,
+      ).toBeLessThanOrEqual(frame.clientWidth);
     });
   },
 };

@@ -111,12 +111,12 @@ function cenario(): HTMLElement {
 }
 
 const TARGETS: ColorTarget[] = [
-  { nome: 'input', seletor: 'input.nds-input:not(.nds-input-group-control)' },
-  { nome: 'textarea', seletor: '.nds-textarea' },
-  { nome: 'select (gatilho)', seletor: '.nds-select-trigger' },
-  { nome: 'checkbox', seletor: '.nds-checkbox' },
-  { nome: 'input-group', seletor: '.nds-input-group' },
-  { nome: 'switch (trilho desligado)', seletor: '.nds-switch', lado: 'preenchimento' },
+  { nome: 'input', selector: 'input.nds-input:not(.nds-input-group-control)' },
+  { nome: 'textarea', selector: '.nds-textarea' },
+  { nome: 'select (gatilho)', selector: '.nds-select-trigger' },
+  { nome: 'checkbox', selector: '.nds-checkbox' },
+  { nome: 'input-group', selector: '.nds-input-group' },
+  { nome: 'switch (trilho desligado)', selector: '.nds-switch', lado: 'preenchimento' },
 ];
 
 /**

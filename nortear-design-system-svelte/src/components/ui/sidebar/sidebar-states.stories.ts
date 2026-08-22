@@ -62,9 +62,9 @@ export const Expanded: Story = {
     });
 
     await step('Os rótulos estão visíveis em largura total', async () => {
-      const ativo = canvas.getByRole('button', { current: 'page' });
-      await expect(ativo).toBeVisible();
-      await expect(ativo).toHaveTextContent('Dashboard');
+      const active = canvas.getByRole('button', { current: 'page' });
+      await expect(active).toBeVisible();
+      await expect(active).toHaveTextContent('Dashboard');
     });
   },
 };
@@ -105,15 +105,15 @@ export const IconMode: StoryObj<Record<string, never>> = {
     await step('O rótulo textual some, mas o nome acessível fica', async () => {
       // Sem rótulo visível, o item precisaria depender do tooltip — que some
       // no teclado. O `aria-label` é o que garante o nome em qualquer entrada.
-      const ativo = canvas.getByRole('button', { current: 'page' });
-      await expect(ativo).toHaveAccessibleName('Dashboard');
+      const active = canvas.getByRole('button', { current: 'page' });
+      await expect(active).toHaveAccessibleName('Dashboard');
     });
 
     await step('O ponteiro sobre o item abre o balão com o nome da seção', async () => {
       // O timeout maior é pelo atraso de abertura do tooltip, que é do
       // componente e não do teste.
-      const ativo = canvas.getByRole('button', { current: 'page' });
-      await userEvent.hover(ativo);
+      const active = canvas.getByRole('button', { current: 'page' });
+      await userEvent.hover(active);
       await waitFor(
         async () => {
           const balao = document.querySelector<HTMLElement>('[data-slot="tooltip-content"]');
@@ -123,7 +123,7 @@ export const IconMode: StoryObj<Record<string, never>> = {
         { timeout: 3000 },
       );
       // Devolve o DOM ao estado de entrada para o replay.
-      await userEvent.unhover(ativo);
+      await userEvent.unhover(active);
       await waitFor(
         () => expect(document.querySelector('[data-slot="tooltip-content"]')).toBeNull(),
         { timeout: 3000 },
@@ -256,12 +256,12 @@ export const Mobile: Story = {
     });
 
     await step('A navegação inteira mudou de lugar junto com a gaveta', async () => {
-      const dentro = within(gaveta()!);
+      const inside = within(gaveta()!);
       await expect(
-        dentro.getByRole('navigation', { name: /navegação principal/i }),
+        inside.getByRole('navigation', { name: /navegação principal/i }),
       ).toBeInTheDocument();
       await expect(gaveta()!.querySelectorAll('[data-slot="sidebar-menu-item"]').length).toBe(5);
-      await expect(dentro.getByRole('button', { current: 'page' })).toHaveTextContent('Dashboard');
+      await expect(inside.getByRole('button', { current: 'page' })).toHaveTextContent('Dashboard');
       // E não sobrou um marco de navegação vazio na página: um `nav` sem itens
       // é uma promessa que o leitor de tela cobra e ninguém cumpre.
       await expect(canvas.queryByRole('navigation', { name: /navegação principal/i })).toBeNull();

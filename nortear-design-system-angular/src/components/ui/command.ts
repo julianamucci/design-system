@@ -548,13 +548,13 @@ export class NdsCommandItem implements OnDestroy {
     // ela já foi consumida quando a limpeza roda, e um clique num item
     // desabilitado (que não chega a selecionar nada) não deixa resíduo.
     const host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
-    const aoClicar = (): void => {
+    const onClick = (): void => {
       this.comando.marcarAlvoDoClique(this.ref);
       queueMicrotask(() => this.comando.limparAlvoDoClique(this.ref));
     };
-    host.addEventListener('click', aoClicar, { capture: true });
+    host.addEventListener('click', onClick, { capture: true });
     inject(DestroyRef).onDestroy(() =>
-      host.removeEventListener('click', aoClicar, { capture: true }),
+      host.removeEventListener('click', onClick, { capture: true }),
     );
   }
 

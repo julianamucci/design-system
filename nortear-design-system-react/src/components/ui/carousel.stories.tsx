@@ -66,7 +66,7 @@ export const Playground: Story = {
     const canvas = within(canvasElement);
     const regiao = canvas.getByRole("region");
     const eixo = args.orientation === "vertical" ? "top" : "left";
-    const anterior = () =>
+    const previous = () =>
       canvas.getByRole("button", { name: /item anterior/i }) as HTMLButtonElement;
     const proximo = () =>
       canvas.getByRole("button", { name: /próximo item/i }) as HTMLButtonElement;
@@ -123,7 +123,7 @@ export const Playground: Story = {
      */
     const startVoltar = async () => {
       for (let volta = 0; volta < slides().length; volta++) {
-        const button = anterior();
+        const button = previous();
         if (button.disabled) break;
         await userEvent.click(button);
       }
@@ -154,7 +154,7 @@ export const Playground: Story = {
       // A precondição já foi estabelecida ao medir `base`: no replay o
       // carrossel pode chegar aqui no meio, e `startVoltar` o traz de volta.
       await waitFor(async () => {
-        await expect(anterior()).toBeDisabled();
+        await expect(previous()).toBeDisabled();
       }, { timeout: 4000 });
       // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
       // muda o controle é a reconciliação do índice, adiada até o motor silenciar.
@@ -166,7 +166,7 @@ export const Playground: Story = {
     await step("Clicar em avançar leva ao segundo slide e acorda a seta de voltar", async () => {
       await userEvent.click(proximo());
       await emSlide(1);
-      await expect(anterior()).toBeEnabled();
+      await expect(previous()).toBeEnabled();
     });
 
     await step("A seta do teclado avança com o foco dentro do carrossel", async () => {
@@ -184,7 +184,7 @@ export const Playground: Story = {
       // Chromatic fotografa e o axe varre.
       await startVoltar();
       await waitFor(async () => {
-        await expect(anterior()).toBeDisabled();
+        await expect(previous()).toBeDisabled();
       }, { timeout: 4000 });
     });
   },

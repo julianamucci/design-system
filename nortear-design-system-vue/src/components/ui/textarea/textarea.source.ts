@@ -58,9 +58,9 @@ function rotulo(id: string, texto: string): string {
  * Bloco de contador. Ele é `aria-live="polite"` e carrega um `aria-label` por
  * extenso: lido cru, "123/500" vira "cento e vinte e três barra quinhentos".
  */
-function contador(apoio: string): string {
+function contador(helper: string): string {
   return `  <div class="nds-cluster nds-text-caption nds-text-muted-foreground" data-justify="between">
-    <span>${apoio}</span>
+    <span>${helper}</span>
     <span
       aria-live="polite"
       :aria-label="\`\${descricao.length} de \${maximo} caracteres usados\`"

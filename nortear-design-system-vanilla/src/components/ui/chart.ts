@@ -233,15 +233,15 @@ export function createChart(opts: ChartOptions = {}): HTMLElement {
   // recortada pelo bloco. Nas outras stacks o wrapper já cria um elemento
   // interno, e por isso só aqui a dica não aparecia. O bloco continua sendo o
   // que carrega classe, papel e rótulo.
-  const desenho = document.createElement('div');
-  desenho.dataset.slot = 'chart-canvas';
-  desenho.style.width = '100%';
-  desenho.style.height = '100%';
-  el.appendChild(desenho);
+  const design = document.createElement('div');
+  design.dataset.slot = 'chart-canvas';
+  design.style.width = '100%';
+  design.style.height = '100%';
+  el.appendChild(design);
 
   mountWhenReady(() => {
     registerNortearTheme();
-    const chart = echarts.init(desenho, THEME_NAME, { renderer: opts.renderer ?? 'svg' });
+    const chart = echarts.init(design, THEME_NAME, { renderer: opts.renderer ?? 'svg' });
     chart.setOption(buildChartOption(opts));
 
     // Só redimensiona quando a caixa MUDA de tamanho.

@@ -370,9 +370,9 @@ export class NdsToastIcon {
     '[attr.data-position]': 'position()',
     '[attr.data-rich-colors]': 'richColors()',
     '[attr.data-expand]': 'expand()',
-    '(mouseenter)': 'pausar()',
+    '(mouseenter)': 'pause()',
     '(mouseleave)': 'retomar()',
-    '(focusin)': 'pausar()',
+    '(focusin)': 'pause()',
     '(focusout)': 'retomar()',
     '(keydown.escape)': 'aoEscape($event)',
   },
@@ -458,7 +458,7 @@ export class NdsToaster implements OnDestroy {
     });
   }
 
-  protected pausar(): void {
+  protected pause(): void {
     pauseTimers();
   }
 

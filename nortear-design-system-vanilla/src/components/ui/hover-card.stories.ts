@@ -3,7 +3,7 @@ import { userEvent, within, expect, fn } from 'storybook/test';
 import {
   waitForOpen,
   waitForClosed,
-  nomeAcessivel,
+  accessibleName,
   panelOpen,
   leaveWithPointer,
 } from '@shared/testing/hover-card-probe';
@@ -142,7 +142,7 @@ export const Playground: Story = {
       await expect(painel).toHaveClass('nds-hover-card-content');
       // Nome acessível: sem ele o axe reprova por `aria-dialog-name`. Sai do
       // texto do gatilho quando quem compõe não informa outro.
-      await expect(nomeAcessivel(painel)).toBe(args.triggerLabel);
+      await expect(accessibleName(painel)).toBe(args.triggerLabel);
       await expect(
         (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
       ).toBeGreaterThan(callsBefore);

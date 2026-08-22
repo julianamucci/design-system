@@ -424,13 +424,13 @@ export class NdsNavigationMenuLink {}
   host: {
     class: 'nds-navigation-menu-child',
     '[attr.data-slot]': '"navigation-menu-child"',
-    '(click)': 'aoClicar($event)',
+    '(click)': 'onClick($event)',
   },
 })
 export class NdsNavigationMenuChild {
   private readonly contexto = injectNavigationMenuRootContext();
 
-  protected aoClicar(event: MouseEvent): void {
+  protected onClick(event: MouseEvent): void {
     this.contexto.close('link-press', event);
   }
 }

@@ -843,9 +843,9 @@ interface InputGroupTextareaProps extends React.ComponentProps<"textarea"> {}`;
           value: tContent("tokens.table.class"),
           description: tContent("tokens.table.part"),
         }}
-        items={FIELD_TOKENS.map(([token, seletor, chave]) => ({
+        items={FIELD_TOKENS.map(([token, selector, chave]) => ({
           token,
-          value: seletor,
+          value: selector,
           description: tContent(`tokens.table.${chave}`),
         }))}
         customizationTitle={tContent("tokens.customizationTitle")}

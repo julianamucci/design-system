@@ -102,7 +102,7 @@ class DemoCommandCombobox {
   encapsulation: ViewEncapsulation.None,
   imports: [...NDS_COMMAND, ...NDS_DIALOG, NdsButton],
   host: {
-    '(window:keydown)': 'aoTeclar($event)',
+    '(window:keydown)': 'onKeyDown($event)',
   },
   template: `
     <div ndsDialog [open]="aberto()" (openChange)="aberto.set($event)">
@@ -151,7 +151,7 @@ class DemoCommandPalette {
   protected readonly aberto = signal(false);
   protected readonly last = signal('');
 
-  protected aoTeclar(evento: KeyboardEvent): void {
+  protected onKeyDown(evento: KeyboardEvent): void {
     if (evento.key.toLowerCase() !== 'k' || !(evento.metaKey || evento.ctrlKey)) return;
     // Sem isto o navegador leva o Cmd+K para a barra de endereço.
     evento.preventDefault();
@@ -226,8 +226,8 @@ export const AsCombobox: Story = {
       const painel = await abrir();
       await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
 
-      const dentro = within(painel);
-      await expect(dentro.getByRole('listbox')).toBeVisible();
+      const inside = within(painel);
+      await expect(inside.getByRole('listbox')).toBeVisible();
       const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       // O foco entra no campo de busca: um combobox que abre e deixa o foco no
       // gatilho obriga a pessoa a caçar o campo com Tab.

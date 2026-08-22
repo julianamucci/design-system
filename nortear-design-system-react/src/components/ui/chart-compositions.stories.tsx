@@ -66,8 +66,8 @@ export const WithCard: Story = {
     });
 
     await step('E o gráfico está DENTRO do card, não ao lado dele', async () => {
-      const dentro = canvasElement.querySelector('[data-slot="card"] [data-slot="chart"]');
-      await expect(dentro).toBe(raiz);
+      const inside = canvasElement.querySelector('[data-slot="card"] [data-slot="chart"]');
+      await expect(inside).toBe(raiz);
     });
 
     await step('O desenho traz o dado das duas séries', async () => {

@@ -121,15 +121,15 @@ export const WithForm: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const painel = await openPeloTrigger(canvasElement, /editar perfil/i);
-    const dentro = within(painel);
+    const inside = within(painel);
 
     await step('O painel carrega nome, descrição e os campos do formulário', async () => {
       await expect(painel).toHaveAccessibleName('Editar perfil');
       await expect(painel).toHaveAccessibleDescription('Atualize seu nome e e-mail.');
       // Os campos são achados pelo RÓTULO: se `for`/`id` não casassem, o input
       // ficaria sem nome acessível e a busca falharia.
-      await expect(dentro.getByLabelText(/Nome/i)).toBeInTheDocument();
-      await expect(dentro.getByLabelText(/E-mail/i)).toBeInTheDocument();
+      await expect(inside.getByLabelText(/Nome/i)).toBeInTheDocument();
+      await expect(inside.getByLabelText(/E-mail/i)).toBeInTheDocument();
     });
 
     await step('O rodapé oferece confirmar e cancelar', async () => {
@@ -184,7 +184,7 @@ export const WithConfirmation: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const painel = await openPeloTrigger(canvasElement, /remover anexo/i);
-    const dentro = within(painel);
+    const inside = within(painel);
 
     await step('A consequência está escrita, não subentendida', async () => {
       await expect(painel).toHaveAccessibleName('Remover anexo?');
@@ -192,9 +192,9 @@ export const WithConfirmation: Story = {
     });
 
     await step('A ação principal carrega a variante destrutiva', async () => {
-      const destrutivo = dentro.getByRole('button', { name: /^Remover$/i });
+      const destrutivo = inside.getByRole('button', { name: /^Remover$/i });
       await expect(destrutivo).toHaveClass('nds-button-destructive');
-      const cancelar = dentro.getByRole('button', { name: /Cancelar/i });
+      const cancelar = inside.getByRole('button', { name: /Cancelar/i });
       await expect(cancelar).toHaveClass('nds-button-outline');
     });
   },

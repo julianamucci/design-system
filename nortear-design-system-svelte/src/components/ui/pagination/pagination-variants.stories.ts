@@ -88,9 +88,9 @@ export const Active: Story = {
     });
 
     await step('O destaque acompanha a marcação', async () => {
-      const ativo = canvas.getByRole('button', { name: 'Ir para página 3' });
-      await expect(ativo).toHaveAttribute('data-active', 'true');
-      await expect(ativo).toHaveClass('nds-button-outline');
+      const active = canvas.getByRole('button', { name: 'Ir para página 3' });
+      await expect(active).toHaveAttribute('data-active', 'true');
+      await expect(active).toHaveClass('nds-button-outline');
       await expect(canvas.getByRole('button', { name: 'Ir para página 2' })).toHaveClass(
         'nds-button-ghost',
       );
@@ -122,11 +122,11 @@ export const Directional: Story = {
       // accessibility.item5 — "Anterior" some no breakpoint estreito; se o nome
       // acessível viesse do texto visível, o controle ficaria mudo em tela
       // pequena. Antes daqui o rótulo saía em inglês.
-      const anterior = canvas.getByRole('button', { name: LABEL_PREVIOUS });
+      const previous = canvas.getByRole('button', { name: LABEL_PREVIOUS });
       const next = canvas.getByRole('button', { name: LABEL_NEXT });
-      await expect(anterior.querySelector('.nds-pagination-label')).toHaveTextContent('Anterior');
+      await expect(previous.querySelector('.nds-pagination-label')).toHaveTextContent('Anterior');
       await expect(next.querySelector('.nds-pagination-label')).toHaveTextContent('Próxima');
-      await expect(anterior).toHaveClass('nds-pagination-prev');
+      await expect(previous).toHaveClass('nds-pagination-prev');
       await expect(next).toHaveClass('nds-pagination-next');
     });
 

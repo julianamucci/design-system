@@ -5,9 +5,9 @@ import ProgressStory from './ProgressStory.svelte';
 import {
   barrasDeProgresso,
   contrastBarTrack,
-  corDoToken,
+  tokenColor,
   indicadorDoProgresso,
-  nomeAcessivel,
+  accessibleName,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
 import { progressSource } from './progress.source';
@@ -126,7 +126,7 @@ export const WithLabel: Story = {
 
     await step('Toda barra da tela tem nome acessível', async () => {
       for (const bar of barrasDeProgresso(canvasElement)) {
-        await expect(nomeAcessivel(bar)).not.toBe('');
+        await expect(accessibleName(bar)).not.toBe('');
       }
     });
   },
@@ -160,8 +160,8 @@ export const SemanticColor: Story = {
       // Sem esta comparação, um `data-variant` que o CSS ignorasse passaria: a
       // barra continuaria primária e o atributo estaria lá do mesmo jeito.
       const cor = getComputedStyle(indicadorDoProgresso(canvasElement)).backgroundColor;
-      await expect(cor).toBe(corDoToken(canvasElement, '--success'));
-      await expect(cor).not.toBe(corDoToken(canvasElement, '--primary'));
+      await expect(cor).toBe(tokenColor(canvasElement, '--success'));
+      await expect(cor).not.toBe(tokenColor(canvasElement, '--primary'));
     });
 
     await step('A variante mantém 3:1 contra a trilha', async () => {

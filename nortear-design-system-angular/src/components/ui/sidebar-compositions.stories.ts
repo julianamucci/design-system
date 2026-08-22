@@ -113,11 +113,11 @@ export const WithGroupsAndSearch: Story = {
       const alcancados: string[] = [];
       for (let i = 0; i < 6; i++) {
         await userEvent.tab();
-        const ativo = document.activeElement as HTMLElement | null;
-        if (!ativo) continue;
+        const active = document.activeElement as HTMLElement | null;
+        if (!active) continue;
         // `aria-label` ANTES do texto: é ele que vence no cálculo do nome
         // acessível, e o botão de ação do grupo mostra só um "+".
-        alcancados.push(ativo.getAttribute('aria-label') ?? ativo.textContent?.trim() ?? '');
+        alcancados.push(active.getAttribute('aria-label') ?? active.textContent?.trim() ?? '');
       }
       await expect(alcancados).toContain('Painel');
       await expect(alcancados).toContain('Adicionar conta');

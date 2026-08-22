@@ -94,9 +94,9 @@ export const Active: Story = {
     });
 
     await step('A página atual não navega para si mesma', async () => {
-      const ativo = canvasElement.querySelector<HTMLAnchorElement>('[aria-current="page"]')!;
+      const active = canvasElement.querySelector<HTMLAnchorElement>('[aria-current="page"]')!;
       onPageChange.mockClear();
-      await fireEvent.click(ativo);
+      await fireEvent.click(active);
       await expect(onPageChange).not.toHaveBeenCalled();
     });
   },
@@ -108,15 +108,15 @@ export const DisabledFirst: Story = {
   render: faixa('Paginação na primeira página', 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+    const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
 
     await step('Anterior está marcado como desabilitado', async () => {
       // visual.item4 — em `<a>` não existe `disabled`; o par correto é
       // aria-disabled + a supressão do clique e da tabulação.
-      await expect(anterior).toHaveAttribute('aria-disabled', 'true');
-      await expect(anterior).toHaveAttribute('tabindex', '-1');
-      await expect(getComputedStyle(anterior).pointerEvents).toBe('none');
-      await expect(Number(getComputedStyle(anterior).opacity)).toBeLessThan(1);
+      await expect(previous).toHaveAttribute('aria-disabled', 'true');
+      await expect(previous).toHaveAttribute('tabindex', '-1');
+      await expect(getComputedStyle(previous).pointerEvents).toBe('none');
+      await expect(Number(getComputedStyle(previous).opacity)).toBeLessThan(1);
     });
 
     await step('Clicar em Anterior não navega', async () => {
@@ -124,7 +124,7 @@ export const DisabledFirst: Story = {
       // ponteiro, e o que falta provar é o outro caminho, o evento que chega
       // por script ou por teclado.
       onPageChange.mockClear();
-      await fireEvent.click(anterior);
+      await fireEvent.click(previous);
       await expect(onPageChange).not.toHaveBeenCalled();
     });
 

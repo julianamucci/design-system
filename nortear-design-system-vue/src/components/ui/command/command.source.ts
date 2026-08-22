@@ -31,7 +31,7 @@ const PARTS_BASICAS = ['Command', 'CommandEmpty', 'CommandGroup', 'CommandInput'
  * A moldura da paleta inline: largura, borda e sombra são do call site, não do
  * componente — a raiz não desenha caixa nenhuma sozinha.
  */
-function moldura(interior: string): string {
+function frame(interior: string): string {
   return `<div class="nds-w-sm nds-border-default nds-rounded-md nds-shadow-md">
 ${indentar(interior, 2)}
 </div>`;
@@ -87,7 +87,7 @@ export const commandSource: SourceTransform<CommandArgs> = (_gerado, ctx) => {
 function executar(valor: string) {
   // roda o comando escolhido e devolve o foco para onde ele age
 }`,
-    moldura(
+    frame(
       palette({
         raiz: attrBool('highlight-on-hover', args.highlightOnHover, false),
         placeholder,
@@ -120,7 +120,7 @@ function executar(valor: string) {
 export function commandEmptySource(): string {
   return vueSnippet(
     importing(...PARTS_BASICAS),
-    moldura(
+    frame(
       palette({
         placeholder: 'Buscar componente...',
         lista: `<CommandGroup heading="Componentes">
@@ -145,7 +145,7 @@ ${importing(...PARTS_BASICAS)}
 const ultimo = ref('')`,
     `<div class="nds-stack" data-spacing="sm">
 ${indentar(
-  moldura(
+  frame(
     palette({
       placeholder: 'Buscar comando...',
       lista: `<CommandGroup heading="Arquivo">
@@ -174,7 +174,7 @@ ${indentar(
 export function commandItemCheckedSource(): string {
   return vueSnippet(
     importing(...PARTS_BASICAS, 'CommandShortcut'),
-    moldura(
+    frame(
       palette({
         placeholder: 'Buscar tema...',
         lista: `<CommandGroup heading="Aparência">
@@ -198,7 +198,7 @@ export function commandItemCheckedSource(): string {
 export function commandWithGroupsSource(): string {
   return vueSnippet(
     importing(...PARTS_BASICAS, 'CommandSeparator'),
-    moldura(
+    frame(
       palette({
         placeholder: 'Buscar componente...',
         lista: `<CommandGroup heading="Componentes">
@@ -226,7 +226,7 @@ export function commandWithGroupsSource(): string {
 export function commandWithShortcutsSource(): string {
   return vueSnippet(
     importing(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut'),
-    moldura(
+    frame(
       palette({
         placeholder: 'Buscar ação...',
         lista: `<CommandGroup heading="Ações">

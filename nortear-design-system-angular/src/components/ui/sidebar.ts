@@ -96,13 +96,13 @@ export class NdsSidebarStore {
 
     // Ctrl/Cmd+B. No `document` e não no elemento: o atalho vale de qualquer
     // lugar da página, inclusive com o foco no conteúdo principal.
-    const aoTeclar = (e: KeyboardEvent) => {
+    const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === SHORTCUT && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         this.alternar();
       }
     };
-    document.addEventListener('keydown', aoTeclar);
+    document.addEventListener('keydown', onKeyDown);
 
     const consulta = window.matchMedia(inject(NDS_SIDEBAR_MOBILE_QUERY));
     const onChangeWidth = () => this._isMobile.set(consulta.matches);
@@ -110,7 +110,7 @@ export class NdsSidebarStore {
     consulta.addEventListener('change', onChangeWidth);
 
     destroyRef.onDestroy(() => {
-      document.removeEventListener('keydown', aoTeclar);
+      document.removeEventListener('keydown', onKeyDown);
       consulta.removeEventListener('change', onChangeWidth);
     });
   }

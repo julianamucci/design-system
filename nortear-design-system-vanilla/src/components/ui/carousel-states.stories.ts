@@ -48,14 +48,14 @@ export const FirstSlide: Story = {
   render: () => montar(4, 'Slides no primeiro item'),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const anterior = canvas.getByRole('button', { name: 'Item anterior' });
+    const previous = canvas.getByRole('button', { name: 'Item anterior' });
     const proximo = canvas.getByRole('button', { name: 'Próximo item' });
 
     await step('No começo só a seta de avanço leva a algum lugar', async () => {
-      await expect(anterior).toBeDisabled();
+      await expect(previous).toBeDisabled();
       // `aria-disabled` acompanha o `disabled` nativo porque o leitor de tela
       // anuncia o primeiro; o segundo é o que tira o botão da ordem de foco.
-      await expect(anterior).toHaveAttribute('aria-disabled', 'true');
+      await expect(previous).toHaveAttribute('aria-disabled', 'true');
       await expect(proximo).toBeEnabled();
       await expect(proximo).toHaveAttribute('aria-disabled', 'false');
     });
@@ -69,7 +69,7 @@ export const FirstSlide: Story = {
       // último slide: a diferença é real. Neste ponto o botão NASCEU
       // desabilitado, e transição não anima valor inicial — não há nada em
       // curso para esperar.
-      const apagada = Number(getComputedStyle(anterior).opacity);
+      const apagada = Number(getComputedStyle(previous).opacity);
       const viva = Number(getComputedStyle(proximo).opacity);
       await expect(apagada).toBeLessThan(viva);
     });
@@ -85,7 +85,7 @@ export const LastSlide: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-track"]')!;
-    const recorte = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
+    const clip = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
     const proximo = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
 
@@ -93,7 +93,7 @@ export const LastSlide: Story = {
     // antes" resolve no primeiro quadro da transição, e a medida seguinte
     // partiria de um número ainda em movimento.
     const deslocamento = () =>
-      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
+      clip.getBoundingClientRect().left - track.getBoundingClientRect().left;
     const slides = () => canvas.getAllByRole('group') as HTMLElement[];
 
     await step('Avançar até onde o carrossel deixa', async () => {
@@ -120,9 +120,9 @@ export const LastSlide: Story = {
       await expect(proximo()).toBeDisabled();
       await expect(proximo()).toHaveAttribute('aria-disabled', 'true');
 
-      const anterior = canvas.getByRole('button', { name: 'Item anterior' });
-      await expect(anterior).toBeEnabled();
-      await expect(anterior).toHaveAttribute('aria-disabled', 'false');
+      const previous = canvas.getByRole('button', { name: 'Item anterior' });
+      await expect(previous).toBeEnabled();
+      await expect(previous).toHaveAttribute('aria-disabled', 'false');
 
       // Espelho da comparação do primeiro slide: agora a apagada é a outra.
       // O `waitFor` não é folga — o controle declara
@@ -131,7 +131,7 @@ export const LastSlide: Story = {
       // PARTIDA (1 contra 1) e o teste reprova por corrida, não por defeito.
       await waitFor(async () => {
         const apagada = Number(getComputedStyle(proximo()).opacity);
-        const viva = Number(getComputedStyle(anterior).opacity);
+        const viva = Number(getComputedStyle(previous).opacity);
         await expect(apagada).toBeLessThan(viva);
       }, { timeout: 4000 });
     });

@@ -87,7 +87,7 @@ function reach(el: Element | null | undefined): ClickReach {
  * Existe porque `aria-label` ausente não é o único jeito de um campo ficar sem
  * nome — e porque "tem aria-label" é uma pergunta diferente de "tem nome".
  */
-function nomeAcessivel(el: Element | null | undefined): string | null {
+function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
@@ -315,12 +315,12 @@ export function measureTable(raiz: HTMLElement) {
       tableName: tableName(tabela),
       papelDaBusca: search?.getAttribute('role') ?? (search?.getAttribute('type') === 'search' ? 'searchbox' : null),
       tipoDaBusca: search?.getAttribute('type') ?? null,
-      nomeDaBusca: nomeAcessivel(search),
+      nomeDaBusca: accessibleName(search),
       placeholderDaBusca: search?.getAttribute('placeholder') ?? null,
       scopeDoTh: thOrdenavel?.getAttribute('scope') ?? null,
       ariaSortNaoOrdenada: thOrdenavel?.getAttribute('aria-sort') ?? null,
       ariaSortNoBotao: ordenarButton?.getAttribute('aria-sort') ?? null,
-      nomeDoBotaoDeOrdenar: nomeAcessivel(ordenarButton),
+      nomeDoBotaoDeOrdenar: accessibleName(ordenarButton),
       // Coluna não ordenável: promete ordenação que não existe?
       ariaSortEmColunaFixa: (() => {
         const th = todos('thead tr:first-child th').find((c) => !c.querySelector('.nds-data-table-sort-btn'));
@@ -328,10 +328,10 @@ export function measureTable(raiz: HTMLElement) {
       })(),
       tagDoCheckbox: selectionBoxes[0]?.tagName.toLowerCase() ?? null,
       papelDoCheckbox: selectionBoxes[0]?.getAttribute('role') ?? null,
-      nomeDoCheckboxDeTudo: nomeAcessivel(allBox),
+      nomeDoCheckboxDeTudo: accessibleName(allBox),
       estadoDoCheckboxDeTudo: allBox?.getAttribute('aria-checked') ?? null,
-      nomesDasLinhas: lineBoxes.slice(0, 3).map((c) => nomeAcessivel(c)),
-      nomesDeLinhaDistintos: new Set(lineBoxes.map((c) => nomeAcessivel(c))).size,
+      nomesDasLinhas: lineBoxes.slice(0, 3).map((c) => accessibleName(c)),
+      nomesDeLinhaDistintos: new Set(lineBoxes.map((c) => accessibleName(c))).size,
       totalDeCheckboxesDeLinha: lineBoxes.length,
       regiaoViva: regiaoViva
         ? {
@@ -341,13 +341,13 @@ export function measureTable(raiz: HTMLElement) {
             texto: texto(regiaoViva),
           }
         : null,
-      nomesDaPaginacao: pageButtons.map((b) => nomeAcessivel(b)),
+      nomesDaPaginacao: pageButtons.map((b) => accessibleName(b)),
       estadoDaPaginacao: pageButtons.map((b) => (b as HTMLButtonElement).disabled),
       textoDoIndicador: texto(todos('.nds-data-table-pagination-count').slice(-1)[0]),
       contagemText: texto(todos('.nds-data-table-pagination-count')[0]),
-      nomeDoSeletorDeTamanho: nomeAcessivel(sizeSelector),
-      nomeDoFiltroDeTexto: nomeAcessivel(textFilter),
-      nomeDoFiltroDeSelect: nomeAcessivel(selectFilter),
+      nomeDoSeletorDeTamanho: accessibleName(sizeSelector),
+      nomeDoFiltroDeTexto: accessibleName(textFilter),
+      nomeDoFiltroDeSelect: accessibleName(selectFilter),
       textoSemFiltro: (() => {
         const th = filtersLine
           ? Array.from(filtersLine.querySelectorAll('th')).find(
@@ -356,8 +356,8 @@ export function measureTable(raiz: HTMLElement) {
           : null;
         return th ? texto(th.querySelector('.nds-sr-only')) ?? th.getAttribute('aria-label') : null;
       })(),
-      nomeDoBotaoDeEdicao: nomeAcessivel(editButton),
-      nomeDoCampoDeEdicao: nomeAcessivel(editField),
+      nomeDoBotaoDeEdicao: accessibleName(editButton),
+      nomeDoCampoDeEdicao: accessibleName(editField),
       textoDoVazio: texto(vazio),
       pinadoNoTh: um('thead th.nds-data-table-th-pinned') ? 'th-pinned' : um('thead th.nds-data-table-td-pinned') ? 'td-pinned' : null,
       pinadoNoTd: um('tbody td.nds-data-table-td-pinned') ? 'td-pinned' : um('tbody td.nds-data-table-th-pinned') ? 'th-pinned' : null,

@@ -30,7 +30,7 @@ export type Density = (typeof DENSIDADES)[number];
 export interface EspacoTarget {
   /** Nome que aparece no relatório de falha. */
   nome: string;
-  seletor: string;
+  selector: string;
   /** Propriedade longhand — `padding-inline-start`, não `padding-inline`. */
   prop: string;
   /**
@@ -218,7 +218,7 @@ export function densityMeasure(
 ): EspacoMeasurement[] {
   return byDensity(raiz, (densidade) =>
     targets.map((alvo): EspacoMeasurement => {
-      const el = raiz.querySelector<HTMLElement>(alvo.seletor);
+      const el = raiz.querySelector<HTMLElement>(alvo.selector);
       if (!el) {
         return {
           alvo: alvo.nome, prop: alvo.prop, densidade,

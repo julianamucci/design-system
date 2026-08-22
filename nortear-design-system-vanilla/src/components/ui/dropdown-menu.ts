@@ -366,10 +366,10 @@ export function createDropdownMenu(options: DropdownMenuOptions): DropdownMenuEl
     const atual = menuItems.indexOf(document.activeElement as HTMLElement);
     // A busca recomeça DEPOIS do item atual para que repetir a mesma letra
     // percorra os homônimos em vez de travar no primeiro.
-    const ordem = menuItems
+    const order = menuItems
       .slice(atual + 1)
       .concat(menuItems.slice(0, Math.max(atual + 1, 0)));
-    const alvo = ordem.find((el) =>
+    const alvo = order.find((el) =>
       (el.textContent ?? '').trim().toLowerCase().startsWith(searchTypeahead),
     );
     alvo?.focus();

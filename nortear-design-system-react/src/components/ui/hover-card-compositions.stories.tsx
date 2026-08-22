@@ -3,7 +3,7 @@ import { within, expect } from "storybook/test";
 import {
   waitForOpen,
   waitForQuantidade,
-  nomeAcessivel,
+  accessibleName,
   panelsAbertos,
 } from "@shared/testing/hover-card-probe";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
@@ -218,7 +218,7 @@ export const TermDefinition: Story = {
       const painel = await waitForOpen();
       // Sem `aria-label`, o nome cairia no texto do gatilho ("WCAG 2.2 AA"),
       // que repetiria a sigla sem dizer o que o cartão traz.
-      await expect(nomeAcessivel(painel)).toBe("Definição de WCAG 2.2 AA");
+      await expect(accessibleName(painel)).toBe("Definição de WCAG 2.2 AA");
       await expect(within(painel).getByText("WCAG 2.2 nível AA")).toBeVisible();
     });
   },
@@ -257,7 +257,7 @@ export const ExplainedMetric: Story = {
               <span className="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
             </div>
             <p className="nds-text-caption nds-text-muted-foreground">
-              Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.
+              Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim above de 4s.
             </p>
           </div>
         </HoverCardContent>
@@ -330,8 +330,8 @@ export const Sides: Story = {
       // resulta em "abaixo", e isso é comportamento correto de fuga de colisão.
       // Afirmar o lado literal transformaria o tamanho da janela do teste em
       // parte do contrato.
-      const [acima, abaixo, esquerda, direita] = lados;
-      await expect(["top", "bottom"]).toContain(acima);
+      const [above, abaixo, esquerda, direita] = lados;
+      await expect(["top", "bottom"]).toContain(above);
       await expect(["top", "bottom"]).toContain(abaixo);
       await expect(["left", "right"]).toContain(esquerda);
       await expect(["left", "right"]).toContain(direita);

@@ -64,9 +64,9 @@ describe('sheetSource', () => {
     expect(aberto).toContain('let open = $state(true);');
     expect(aberto).toContain('<Sheet bind:open>');
 
-    const fechado = sheetSource('', { args: { open: false } });
-    expect(fechado).toContain('let open = $state(false);');
-    expect(fechado).toContain('<Sheet bind:open>');
+    const closed = sheetSource('', { args: { open: false } });
+    expect(closed).toContain('let open = $state(false);');
+    expect(closed).toContain('<Sheet bind:open>');
   });
 
   it('os textos dos controls chegam ao gatilho, ao título e ao rodapé', () => {

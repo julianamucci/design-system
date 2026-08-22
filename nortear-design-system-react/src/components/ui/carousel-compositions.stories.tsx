@@ -27,7 +27,7 @@ import carouselTranslations from "@shared/content/carousel/translations.json";
  */
 const CONTENT = carouselTranslations["pt-BR"].demonstration.labels;
 /** Nome acessível: posição E total. "Slide 2" sozinho não diz para onde leva. */
-const nomeAcessivel = (position: number, total: number) =>
+const accessibleName = (position: number, total: number) =>
   `${CONTENT.goToSlide} ${position} ${CONTENT.of} ${total}`;
 /** Texto visível da pílula — um PEDAÇO do nome acessível (WCAG 2.5.3). */
 const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
@@ -108,7 +108,7 @@ function WithDotsCarousel() {
             type="button"
             className="nds-carousel-dot"
             aria-current={i === current ? "true" : undefined}
-            aria-label={nomeAcessivel(i + 1, count)}
+            aria-label={accessibleName(i + 1, count)}
             onClick={() => api?.scrollTo(i)}
           >
             <span className="nds-carousel-dot-label">{labelVisible(i + 1)}</span>
@@ -137,7 +137,7 @@ export const WithDots: Story = {
     const canvas = within(canvasElement);
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
     const dot = (position: number) =>
-      canvas.getByRole("button", { name: nomeAcessivel(position, TOTAL_SLIDES) });
+      canvas.getByRole("button", { name: accessibleName(position, TOTAL_SLIDES) });
     /**
      * O rótulo é o único filho do controle — a marca do ponto é `::before`, e
      * pseudo-elemento não entra em `firstElementChild`. Buscar por classe seria
@@ -188,7 +188,7 @@ export const WithDots: Story = {
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
       await expect(rotulo(dot(2))).toHaveTextContent(labelVisible(2));
-      await expect(nomeAcessivel(2, TOTAL_SLIDES).toLowerCase()).toContain(
+      await expect(accessibleName(2, TOTAL_SLIDES).toLowerCase()).toContain(
         labelVisible(2).toLowerCase(),
       );
 

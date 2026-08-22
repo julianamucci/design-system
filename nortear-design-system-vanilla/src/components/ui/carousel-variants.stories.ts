@@ -84,15 +84,15 @@ export const Horizontal: Story = {
       // É o que as regras de posição do controle fazem; se o eixo não chegasse
       // a elas, os dois botões empilhariam no mesmo canto sem nenhum erro
       // visível no console.
-      const anterior = canvas
+      const previous = canvas
         .getByRole('button', { name: 'Item anterior' })
         .getBoundingClientRect();
       const proximo = canvas
         .getByRole('button', { name: 'Próximo item' })
         .getBoundingClientRect();
-      await expect(anterior.left).toBeLessThan(proximo.left);
+      await expect(previous.left).toBeLessThan(proximo.left);
       // Mesma faixa vertical: em horizontal elas se alinham pelo meio.
-      await expect(Math.abs(anterior.top - proximo.top)).toBeLessThan(2);
+      await expect(Math.abs(previous.top - proximo.top)).toBeLessThan(2);
     });
 
     await step('O slide atual fica em tamanho cheio e os vizinhos recuam', async () => {
@@ -177,7 +177,7 @@ export const Vertical: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-track"]')!;
-    const recorte = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
+    const clip = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
     const regiao = canvas.getByRole('region');
     const position = () => track.getBoundingClientRect().top;
 
@@ -192,22 +192,22 @@ export const Vertical: Story = {
       // não é visível — num track de overflow visível o conteúdo empurra a
       // caixa e a proporção vira sugestão. Foi assim que a pilha inteira
       // apareceu de uma vez, com os quatro slides somando a altura do track.
-      await expect(recorte.clientHeight).toBeGreaterThan(0);
+      await expect(clip.clientHeight).toBeGreaterThan(0);
       const slide = canvas.getAllByRole('group')[0];
       const altura = slide.getBoundingClientRect().height;
-      await expect(Math.abs(altura - recorte.clientHeight)).toBeLessThan(2);
+      await expect(Math.abs(altura - clip.clientHeight)).toBeLessThan(2);
     });
 
     await step('As setas ficam acima e abaixo, não nas laterais', async () => {
-      const anterior = canvas
+      const previous = canvas
         .getByRole('button', { name: 'Item anterior' })
         .getBoundingClientRect();
       const proximo = canvas
         .getByRole('button', { name: 'Próximo item' })
         .getBoundingClientRect();
-      await expect(anterior.top).toBeLessThan(proximo.top);
+      await expect(previous.top).toBeLessThan(proximo.top);
       // Mesma coluna: em vertical elas se alinham pelo centro horizontal.
-      await expect(Math.abs(anterior.left - proximo.left)).toBeLessThan(2);
+      await expect(Math.abs(previous.left - proximo.left)).toBeLessThan(2);
     });
 
     await step('A seta para baixo avança, e a pilha volta ao topo', async () => {

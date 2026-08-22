@@ -11,7 +11,7 @@ import {
 import {
   barrasDeProgresso,
   contrastBarTrack,
-  nomeAcessivel,
+  accessibleName,
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
 import {
@@ -119,7 +119,7 @@ export const CustomColor: Story = {
     });
 
     await step("As três cores são realmente distintas", async () => {
-      const cores = canvas
+      const colors = canvas
         .getAllByRole("progressbar")
         .map(
           (raiz) =>
@@ -127,7 +127,7 @@ export const CustomColor: Story = {
               raiz.querySelector<HTMLElement>("[data-slot='progress-indicator']")!,
             ).backgroundColor,
         );
-      await expect(new Set(cores).size).toBe(3);
+      await expect(new Set(colors).size).toBe(3);
     });
 
     await step("Nenhuma variante abre mão dos 3:1 contra a trilha", async () => {
@@ -138,7 +138,7 @@ export const CustomColor: Story = {
 
     await step("Toda barra da lista tem nome acessível", async () => {
       for (const bar of barrasDeProgresso(canvasElement)) {
-        await expect(nomeAcessivel(bar)).not.toBe("");
+        await expect(accessibleName(bar)).not.toBe("");
       }
     });
   },

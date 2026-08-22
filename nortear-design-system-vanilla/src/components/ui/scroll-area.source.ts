@@ -38,7 +38,7 @@ export type ScrollAreaSnippetOptions = {
 
 const CLASSNAME_DEFAULT = 'nds-w-full nds-rounded-md nds-border-default';
 
-function nomeAcessivel(o: ScrollAreaSnippetOptions): string | undefined {
+function accessibleName(o: ScrollAreaSnippetOptions): string | undefined {
   const nome = o['aria-label'] ?? o.label;
   return nome ? texto(nome) : undefined;
 }
@@ -59,7 +59,7 @@ function areaLines(o: ScrollAreaSnippetOptions, filho: string): string[] {
   return opcoes([
     ['size', degrau ? texto(degrau) : undefined],
     ['width', o.width ? texto(o.width) : undefined],
-    ['aria-label', nomeAcessivel(o)],
+    ['aria-label', accessibleName(o)],
     ['class', texto(classe(o))],
     ['children', filho],
   ]);

@@ -178,7 +178,7 @@ export const Controlled: Story = {
     const body = within(document.body);
     const gatilho = canvas.getByRole('button', { name: /Abrir via estado externo/i });
 
-    const fechado = async () => {
+    const closed = async () => {
       await waitFor(
         () => {
           const d = body.queryByRole('dialog');
@@ -200,7 +200,7 @@ export const Controlled: Story = {
 
     await step('Escape fecha mesmo em modo controlado', async () => {
       await userEvent.keyboard('{Escape}');
-      await fechado();
+      await closed();
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
     });
 

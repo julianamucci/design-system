@@ -67,7 +67,7 @@ function destination(rotulo: string, indice: number): string {
 }
 
 /** A linha do separador, com ou sem desenho próprio. */
-function separador(o: BreadcrumbSnippetOptions): string {
+function separator(o: BreadcrumbSnippetOptions): string {
   return o.separator
     ? `createBreadcrumbSeparator({ content: ${texto(o.separator)} })`
     : 'createBreadcrumbSeparator()';
@@ -119,10 +119,10 @@ export function breadcrumbSnippet(o: BreadcrumbSnippetOptions = {}): string {
   const parts: string[] = [];
   levels.forEach((rotulo, i) => {
     parts.push(`  nivel(${texto(rotulo)}, ${texto(destination(rotulo, i))}),`);
-    parts.push(`  ${separador(o)},`);
+    parts.push(`  ${separator(o)},`);
     if (o.ellipsis && i === 0) {
       parts.push('  oculto,');
-      parts.push(`  ${separador(o)},`);
+      parts.push(`  ${separator(o)},`);
     }
   });
   parts.push('  atual,');

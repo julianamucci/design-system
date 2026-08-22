@@ -186,7 +186,7 @@ export const Playground: Story = {
       // slide, e o passo "No primeiro slide só a seta de avanço está ativa"
       // encontraria a seta de voltar habilitada. A suíte não pegava porque o
       // vitest remonta a cada teste.
-      const anterior = () =>
+      const previous = () =>
         canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
 
       // Volta ENQUANTO der, nunca um número fixo de cliques: quantos passos
@@ -199,12 +199,12 @@ export const Playground: Story = {
       // chegada é absoluto e não tem esse ruído: o começo do trilho é zero.
       const total = canvas.getAllByRole('group').length;
       for (let passo = 0; passo < total; passo++) {
-        const button = anterior();
+        const button = previous();
         if (button.disabled) break;
         await userEvent.click(button);
       }
 
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
       await waitFor(() => expect(viewport[eixo]).toBe(0), { timeout: 4000 });
     });
   },

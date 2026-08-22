@@ -135,10 +135,10 @@ export const WithGroups: Story = {
   }),
   play: async ({ step }) => {
     const lista = await waitForPortal('listbox', { name: 'Estado' });
-    const dentro = within(lista);
+    const inside = within(lista);
 
     await step('Cada categoria vira um grupo nomeado pelo seu cabeçalho', async () => {
-      const grupos = dentro.getAllByRole('group');
+      const grupos = inside.getAllByRole('group');
       await expect(grupos).toHaveLength(GROUPS.length);
       // O nome do grupo depende de o `aria-labelledby` apontar para um id que
       // EXISTE — o primitivo gera o id no grupo e não o escreve em lugar nenhum;
@@ -151,7 +151,7 @@ export const WithGroups: Story = {
 
     await step('As opções continuam todas na mesma lista', async () => {
       const total = GROUPS.reduce((sum, g) => sum + g.itens.length, 0);
-      await expect(dentro.getAllByRole('option')).toHaveLength(total);
+      await expect(inside.getAllByRole('option')).toHaveLength(total);
     });
 
     await step('A divisão entre grupos é decorativa', async () => {

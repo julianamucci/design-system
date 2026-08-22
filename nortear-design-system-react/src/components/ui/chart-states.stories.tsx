@@ -4,7 +4,7 @@ import { ChartContainer, buildBarOption, buildLineOption } from './chart';
 import {
   settleTheme,
   contraste,
-  corDoToken,
+  tokenColor,
   designEscreve,
   designPintado,
   exigirRoot,
@@ -240,7 +240,7 @@ export const ThemeTokens: Story = {
           () => {
             const rotulo = g.querySelector<SVGTextElement>('svg text');
             expect(rotulo).toBeTruthy();
-            expect(getComputedStyle(rotulo!).fill).toBe(corDoToken('muted-foreground', g));
+            expect(getComputedStyle(rotulo!).fill).toBe(tokenColor('muted-foreground', g));
           },
           { timeout: 3000, interval: 200 },
         );

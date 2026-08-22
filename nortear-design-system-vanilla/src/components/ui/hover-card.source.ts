@@ -62,7 +62,7 @@ const CLASSES_BUTTON =
  */
 function triggerBlock(o: HoverCardSnippetOptions): string {
   const rotulo = texto(o.triggerLabel ?? '@joana');
-  const rotuloAcessivel =
+  const accessibleLabel =
     o.triggerAriaLabel !== undefined
       ? `\ngatilho.setAttribute('aria-label', ${texto(o.triggerAriaLabel)});`
       : '';
@@ -73,7 +73,7 @@ function triggerBlock(o: HoverCardSnippetOptions): string {
 const gatilho = document.createElement('button');
 gatilho.type = 'button';
 gatilho.className = '${CLASSES_BUTTON}';
-gatilho.textContent = ${rotulo};${rotuloAcessivel}`;
+gatilho.textContent = ${rotulo};${accessibleLabel}`;
   }
 
   return `// O cartão é ENRIQUECIMENTO: quem está no toque, ou num leitor de tela, chega
@@ -81,7 +81,7 @@ gatilho.textContent = ${rotulo};${rotuloAcessivel}`;
 const gatilho = document.createElement('a');
 gatilho.href = '${o.triggerHref ?? '/users/joana'}';
 gatilho.className = '${CLASSES_LINK}';
-gatilho.textContent = ${rotulo};${rotuloAcessivel}`;
+gatilho.textContent = ${rotulo};${accessibleLabel}`;
 }
 
 /** Conteúdo do painel: uma linha em destaque e uma de apoio. */

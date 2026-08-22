@@ -100,7 +100,7 @@ export class NdsBadge {
 
 // class e o rótulo são nativos do <span>.`;
 
-const VARIANTES: BadgeVariant[] = [
+const VARIANTS: BadgeVariant[] = [
   'default', 'secondary', 'destructive', 'warning', 'success', 'info', 'outline',
 ];
 
@@ -294,7 +294,7 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
-  protected readonly variantes = VARIANTES;
+  protected readonly variantes = VARIANTS;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -414,7 +414,7 @@ export class NdsBadgeDocs implements AfterViewInit, OnDestroy {
       info: this.tplVarInfo(),
       outline: this.tplVarOutline(),
     };
-    return VARIANTES.map((v) => ({
+    return VARIANTS.map((v) => ({
       name: t(`variants.items.${v}`),
       description: t(`variants.items.${v}`),
       trackId: v,

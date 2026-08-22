@@ -4,7 +4,7 @@ import { within, expect } from 'storybook/test';
 import { NdsButton, type ButtonVariant } from './button';
 import { contrastDeTextFailures } from '@shared/testing/button-probe';
 
-const VARIANTES: { variant: ButtonVariant; label: string }[] = [
+const VARIANTS: { variant: ButtonVariant; label: string }[] = [
   { variant: 'default',     label: 'Default'     },
   { variant: 'secondary',   label: 'Secondary'   },
   { variant: 'outline',     label: 'Outline'     },
@@ -28,7 +28,7 @@ type Story = StoryObj;
 export const Variants: Story = {
   parameters: { covers: ['visual.item2'] },
   render: () => ({
-    props: { variantes: VARIANTES },
+    props: { variantes: VARIANTS },
     template: `
       <div class="nds-cluster" data-spacing="sm">
         @for (v of variantes; track v.variant) {
@@ -45,7 +45,7 @@ export const Variants: Story = {
       // Esta é a asserção que prova o binding de input: se `[variant]` não
       // chegasse ao componente, todos cairiam em `nds-button-default` e só a
       // primeira linha passaria.
-      for (const { variant, label } of VARIANTES) {
+      for (const { variant, label } of VARIANTS) {
         const btn = canvas.getByRole('button', { name: label });
         await expect(btn).toHaveClass(`nds-button nds-button-${variant}`);
       }

@@ -223,7 +223,7 @@ export const WithLongScrollContent: Story = {
           {Array.from({ length: 24 }, (_, i) => (
             <p key={i} className="nds-text-body">
               Parágrafo {i + 1}: termos longos o bastante para o corpo precisar rolar
-              dentro do painel, sem empurrar o rodapé para fora da tela.
+              inside do painel, sem empurrar o rodapé para outside da tela.
             </p>
           ))}
         </SheetBody>

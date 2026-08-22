@@ -355,8 +355,8 @@ export const WithHighlightedCard: Story = {
       // O destaque ocupa a coluna inteira: é mais alto que qualquer um dos
       // complementares, que é como a hierarquia aparece sem depender de cor.
       const highlight = targets[0].getBoundingClientRect();
-      const apoio = targets[1].getBoundingClientRect();
-      await expect(highlight.height).toBeGreaterThan(apoio.height);
+      const helper = targets[1].getBoundingClientRect();
+      await expect(highlight.height).toBeGreaterThan(helper.height);
     });
 
     await step('Tab alcança todo o painel', async () => {

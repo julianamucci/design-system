@@ -87,8 +87,8 @@
 		if (!el) return;
 
 		let controle: HTMLElement | null = null;
-		for (const seletor of SELECTORS_CONTROL) {
-			controle = el.querySelector<HTMLElement>(seletor);
+		for (const selector of SELECTORS_CONTROL) {
+			controle = el.querySelector<HTMLElement>(selector);
 			if (controle) break;
 		}
 

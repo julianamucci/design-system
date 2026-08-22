@@ -77,10 +77,10 @@ export const SeriesColor: Story = {
     await step('As formas da série saem na cor pedida', async () => {
       // A trama sobreposta entra como `url(#…)` e não carrega cor — por isso a
       // procura é entre os preenchimentos que são cor de verdade.
-      const cores = datumFormas(raiz)
+      const colors = datumFormas(raiz)
         .map((f) => getComputedStyle(f).fill)
         .filter((cor) => !cor.startsWith('url'));
-      await expect(cores).toContain(ROXO_RGB);
+      await expect(colors).toContain(ROXO_RGB);
     });
 
     await step('Toda categoria continua escrita no eixo', async () => {
@@ -126,9 +126,9 @@ export const CustomHeight: Story = {
 
     await step('E o desenho ocupa o bloco todo, não uma faixa do topo', async () => {
       await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });
-      const desenho = designRenderizado(raiz) as SVGElement;
+      const design = designRenderizado(raiz) as SVGElement;
       await waitFor(
-        () => expect(desenho.getBoundingClientRect().height).toBeGreaterThan(HEIGHT * 0.9),
+        () => expect(design.getBoundingClientRect().height).toBeGreaterThan(HEIGHT * 0.9),
         { timeout: 3000 },
       );
     });

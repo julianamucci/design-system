@@ -59,11 +59,11 @@ export const FirstSlide: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
-    const anterior = canvas.getByRole("button", { name: /item anterior/i });
+    const previous = canvas.getByRole("button", { name: /item anterior/i });
     const proximo = canvas.getByRole("button", { name: /próximo item/i });
 
     await step("No começo só a seta de avanço leva a algum lugar", async () => {
-      await expect(anterior).toBeDisabled();
+      await expect(previous).toBeDisabled();
       // `canScrollNext` nasce falso e só é sincronizado com o Embla numa
       // microtask: a seta de avanço ACABA de sair do disabled quando o play
       // começa, daí a espera.
@@ -82,7 +82,7 @@ export const FirstSlide: Story = {
       // de mudar de estado no passo anterior. Ler no primeiro quadro pegaria o
       // valor de PARTIDA — 0.5 contra 0.5 — e o teste reprovaria por corrida.
       await waitFor(async () => {
-        const apagada = Number(getComputedStyle(anterior).opacity);
+        const apagada = Number(getComputedStyle(previous).opacity);
         const viva = Number(getComputedStyle(proximo).opacity);
         await expect(apagada).toBeLessThan(viva);
       }, { timeout: 4000 });
@@ -132,7 +132,7 @@ export const LastSlide: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
-    const anterior = canvas.getByRole("button", { name: /item anterior/i });
+    const previous = canvas.getByRole("button", { name: /item anterior/i });
     const proximo = canvas.getByRole("button", { name: /próximo item/i });
 
     await step("No fim a seta de avanço desabilita e a de voltar acorda", async () => {
@@ -144,7 +144,7 @@ export const LastSlide: Story = {
       // A POSIÇÃO chega antes do ESTADO: a rolagem encostou no alvo, mas quem
       // muda o controle é a reconciliação do índice, adiada até o motor silenciar.
       await waitFor(async () => {
-        await expect(anterior).toBeEnabled();
+        await expect(previous).toBeEnabled();
       }, { timeout: 4000 });
     });
 
@@ -152,7 +152,7 @@ export const LastSlide: Story = {
       // Espelho da comparação do primeiro slide: agora a apagada é a outra.
       await waitFor(async () => {
         const apagada = Number(getComputedStyle(proximo).opacity);
-        const viva = Number(getComputedStyle(anterior).opacity);
+        const viva = Number(getComputedStyle(previous).opacity);
         await expect(apagada).toBeLessThan(viva);
       }, { timeout: 4000 });
     });

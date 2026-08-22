@@ -196,16 +196,16 @@ export const ItemDisabled: Story = {
       // Home fixa a precondição do passo: destaque no primeiro comando.
       await userEvent.keyboard('{Home}');
       await waitFor(async () => {
-        const ativo = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
-        return expect(ativo).toHaveTextContent('Novo');
+        const active = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
+        return expect(active).toHaveTextContent('Novo');
       });
 
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        const ativo = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
+        const active = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
         // "Arquivar" não é destino de navegação — quem usa teclado nunca para
         // num comando que não pode executar.
-        return expect(ativo).toHaveTextContent('Renomear');
+        return expect(active).toHaveTextContent('Renomear');
       });
       await waitFor(async () => {
         await expect(arquivar).toHaveAttribute('aria-selected', 'false');

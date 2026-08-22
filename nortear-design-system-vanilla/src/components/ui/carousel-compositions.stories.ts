@@ -15,7 +15,7 @@ import carouselTranslations from '@shared/content/carousel/translations.json';
  */
 const CONTENT = carouselTranslations['pt-BR'].demonstration.labels;
 /** Nome acessível: posição E total. "Slide 2" sozinho não diz para onde leva. */
-const nomeAcessivel = (position: number, total: number) =>
+const accessibleName = (position: number, total: number) =>
   `${CONTENT.goToSlide} ${position} ${CONTENT.of} ${total}`;
 /** Texto visível da pílula — um PEDAÇO do nome acessível (WCAG 2.5.3). */
 const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
@@ -82,8 +82,8 @@ export const WithDots: Story = {
     //
     // O estado atual é só `aria-current`: é o atributo que o leitor de tela
     // anuncia E o que a folha usa para desenhar, então os dois nunca divergem.
-    const pintar = (dot: HTMLElement, ativo: boolean) => {
-      if (ativo) dot.setAttribute('aria-current', 'true');
+    const pintar = (dot: HTMLElement, active: boolean) => {
+      if (active) dot.setAttribute('aria-current', 'true');
       else dot.removeAttribute('aria-current');
     };
 
@@ -93,7 +93,7 @@ export const WithDots: Story = {
       dot.type = 'button';
       dot.className = 'nds-carousel-dot';
       // Posição E total no nome: "2" sozinho não diz para onde leva.
-      dot.setAttribute('aria-label', nomeAcessivel(i + 1, TOTAL_DOTS));
+      dot.setAttribute('aria-label', accessibleName(i + 1, TOTAL_DOTS));
       // O rótulo mora em TODOS os controles, não só no atual: é o que deixa a
       // pílula abrir e fechar por recorte em vez de o texto piscar.
       const rotulo = document.createElement('span');
@@ -120,13 +120,13 @@ export const WithDots: Story = {
     // sobrevive a uma troca de vocabulário `.nds-*` — que é exatamente o que
     // acabou de acontecer aqui, quando as duas famílias de classe do controle
     // viraram uma só.
-    const seta = (direcao: 'previous' | 'next') =>
+    const arrow = (direcao: 'previous' | 'next') =>
       carousel.querySelector<HTMLButtonElement>(`[data-slot="carousel-${direcao}"]`)!;
 
     dots.forEach((dot, alvo) => {
       dot.addEventListener('click', () => {
         const atual = dots.findIndex((d) => d.getAttribute('aria-current') === 'true');
-        const button = seta(alvo > atual ? 'next' : 'previous');
+        const button = arrow(alvo > atual ? 'next' : 'previous');
         for (let passo = 0; passo < Math.abs(alvo - atual); passo++) button.click();
       });
     });
@@ -137,8 +137,8 @@ export const WithDots: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-track"]')!;
-    const recorte = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
-    const dot = (n: number) => canvas.getByRole('button', { name: nomeAcessivel(n, TOTAL_DOTS) });
+    const clip = canvasElement.querySelector<HTMLElement>('.nds-carousel-overflow')!;
+    const dot = (n: number) => canvas.getByRole('button', { name: accessibleName(n, TOTAL_DOTS) });
     /**
      * O rótulo é o único filho do controle — a marca do ponto é `::before`, e
      * pseudo-elemento não entra em `firstElementChild`. Buscar por classe seria
@@ -155,9 +155,9 @@ export const WithDots: Story = {
     // para o primeiro slide encostar na borda como nas outras quatro), então a
     // distância entre recorte e track NUNCA é zero em repouso. Medir em absoluto
     // dava 16.7 onde a conta esperava 0.
-    const rest = recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
+    const rest = clip.getBoundingClientRect().left - track.getBoundingClientRect().left;
     const deslocamento = () =>
-      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left - rest;
+      clip.getBoundingClientRect().left - track.getBoundingClientRect().left - rest;
 
     // Par idempotente: só clica quando o dot ainda não é o atual. O painel
     // Interactions reexecuta a play no MESMO DOM, e um clique cego partiria do
@@ -191,7 +191,7 @@ export const WithDots: Story = {
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
       await expect(rotulo(dot(2))).toHaveTextContent(labelVisible(2));
-      await expect(nomeAcessivel(2, TOTAL_DOTS).toLowerCase()).toContain(
+      await expect(accessibleName(2, TOTAL_DOTS).toLowerCase()).toContain(
         labelVisible(2).toLowerCase(),
       );
 

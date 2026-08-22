@@ -242,7 +242,7 @@ export function createNavigationMenu(
    * seria justamente o gesto que o leitor de tela ensina a usar.
    */
   function navegarPelaBar(e: KeyboardEvent): boolean {
-    const anterior = vertical ? 'ArrowUp' : 'ArrowLeft';
+    const previous = vertical ? 'ArrowUp' : 'ArrowLeft';
     const proximo = vertical ? 'ArrowDown' : 'ArrowRight';
     const itens = barItems();
     const atual = itens.indexOf(document.activeElement as HTMLElement);
@@ -250,7 +250,7 @@ export function createNavigationMenu(
 
     let destination = -1;
     if (e.key === proximo) destination = (atual + 1) % itens.length;
-    else if (e.key === anterior) destination = (atual - 1 + itens.length) % itens.length;
+    else if (e.key === previous) destination = (atual - 1 + itens.length) % itens.length;
     else if (e.key === 'Home') destination = 0;
     else if (e.key === 'End') destination = itens.length - 1;
     if (destination === -1) return false;

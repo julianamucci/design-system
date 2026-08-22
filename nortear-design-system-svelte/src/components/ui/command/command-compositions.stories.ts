@@ -262,8 +262,8 @@ export const AsCombobox: Story = {
       const painel = await abrir();
       await expect(gatilho).toHaveAttribute('aria-expanded', 'true');
 
-      const dentro = within(painel);
-      await expect(dentro.getByRole('listbox')).toBeVisible();
+      const inside = within(painel);
+      await expect(inside.getByRole('listbox')).toBeVisible();
       const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       // Um combobox que abre e deixa o foco no gatilho obriga a pessoa a caçar
       // o campo com Tab.

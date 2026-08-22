@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect } from 'storybook/test';
 import { NdsBadge, type BadgeVariant } from './badge';
 
-const VARIANTES: { variant: BadgeVariant; label: string }[] = [
+const VARIANTS: { variant: BadgeVariant; label: string }[] = [
   { variant: 'default',     label: 'Default'     },
   { variant: 'secondary',   label: 'Secondary'   },
   { variant: 'destructive', label: 'Destructive' },
@@ -33,7 +33,7 @@ export const Variants: Story = {
     ],
   },
   render: () => ({
-    props: { variantes: VARIANTES },
+    props: { variantes: VARIANTS },
     template: `
       <div class="nds-cluster" data-spacing="sm">
         @for (v of variantes; track v.variant) {
@@ -48,7 +48,7 @@ export const Variants: Story = {
     await step('Cada variante recebe a própria classe', async () => {
       // Sem AOT o binding cai em silêncio no default e as sete ficariam
       // iguais — esta é a asserção que impede o NG0303 de voltar despercebido.
-      for (const { variant, label } of VARIANTES) {
+      for (const { variant, label } of VARIANTS) {
         const badge = canvas.getByText(label);
         await expect(badge).toHaveAttribute('data-variant', variant);
         if (variant !== 'default') {
@@ -60,12 +60,12 @@ export const Variants: Story = {
     await step('As variantes semânticas não repetem a mesma cor', async () => {
       // O que separa warning de success de destructive é a cor. Se um token
       // sumir do CSS, as classes continuam certas e só a medição acusa.
-      const cores = new Set(
+      const colors = new Set(
         ['Destructive', 'Warning', 'Success', 'Info'].map((l) =>
           getComputedStyle(canvas.getByText(l)).backgroundColor,
         ),
       );
-      await expect(cores.size).toBe(4);
+      await expect(colors.size).toBe(4);
     });
   },
 };

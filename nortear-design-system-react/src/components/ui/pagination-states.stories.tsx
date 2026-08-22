@@ -152,8 +152,8 @@ export const ActivePage: Story = {
       await expect(marcados[0]).toHaveTextContent("3");
     });
     await step("O destaque é visual e não depende da posição", async () => {
-      const ativo = canvas.getByRole("link", { name: "Ir para página 3" });
-      await expect(ativo).toHaveClass("nds-button-outline");
+      const active = canvas.getByRole("link", { name: "Ir para página 3" });
+      await expect(active).toHaveClass("nds-button-outline");
       await expect(canvas.getByRole("link", { name: "Ir para página 2" })).toHaveClass(
         "nds-button-ghost"
       );
@@ -177,17 +177,17 @@ export const Disabled: Story = {
   render: () => faixa("Paginação na primeira página", 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const anterior = canvas.getByRole("link", { name: "Ir para a página anterior" });
+    const previous = canvas.getByRole("link", { name: "Ir para a página anterior" });
 
     await step("Anterior está marcado como desabilitado", async () => {
       // visual.item4 — em `<a>` não existe `disabled`; o par correto é
       // aria-disabled + a supressão do clique e da tabulação. A classe morta
       // `pointer-events-none` que morava aqui não fazia nada: quem barra é
       // `.nds-button[aria-disabled="true"]`, e é isso que esta asserção mede.
-      await expect(anterior).toHaveAttribute("aria-disabled", "true");
-      await expect(anterior).toHaveAttribute("tabindex", "-1");
-      await expect(getComputedStyle(anterior).pointerEvents).toBe("none");
-      await expect(Number(getComputedStyle(anterior).opacity)).toBeLessThan(1);
+      await expect(previous).toHaveAttribute("aria-disabled", "true");
+      await expect(previous).toHaveAttribute("tabindex", "-1");
+      await expect(getComputedStyle(previous).pointerEvents).toBe("none");
+      await expect(Number(getComputedStyle(previous).opacity)).toBeLessThan(1);
     });
 
     await step("Clicar em Anterior não navega", async () => {
@@ -195,7 +195,7 @@ export const Disabled: Story = {
       // ponteiro, e o que falta provar é o outro caminho, o evento que chega
       // por script ou por teclado.
       onPageChange.mockClear();
-      await fireEvent.click(anterior);
+      await fireEvent.click(previous);
       await expect(onPageChange).not.toHaveBeenCalled();
     });
 
@@ -235,11 +235,11 @@ export const Focus: Story = {
     });
 
     await step("A página atual também é focável", async () => {
-      const ativo = canvas.getByRole("link", { name: "Ir para página 3" });
-      ativo.blur();
-      ativo.focus();
-      await expect(ativo).toHaveFocus();
-      await expect(getComputedStyle(ativo).boxShadow).not.toBe("none");
+      const active = canvas.getByRole("link", { name: "Ir para página 3" });
+      active.blur();
+      active.focus();
+      await expect(active).toHaveFocus();
+      await expect(getComputedStyle(active).boxShadow).not.toBe("none");
     });
   },
 };

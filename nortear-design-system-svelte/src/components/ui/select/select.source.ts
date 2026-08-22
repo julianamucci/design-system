@@ -51,7 +51,7 @@ type Options = {
   name?: string;
   size?: 'sm';
   invalido?: boolean;
-  rotuloAcessivel?: string;
+  accessibleLabel?: string;
 };
 
 /** Atributos da raiz. `type` é obrigatório; o resto só quando difere do padrão. */
@@ -68,7 +68,7 @@ function rootProps(o: Options): string {
 function triggerProps(o: Options): string {
   return attrs(
     o.size ? `size="${o.size}"` : '',
-    `aria-label="${o.rotuloAcessivel ?? 'Selecionar estado'}"`,
+    `aria-label="${o.accessibleLabel ?? 'Selecionar estado'}"`,
     o.invalido ? 'aria-invalid="true"' : '',
   );
 }
@@ -219,7 +219,7 @@ export function selectListPlanaSource(): string {
  * nomeia o grupo, e a linha entre grupos é só para o olho.
  */
 export function selectWithGroupsSource(): string {
-  return listAgrupada({ rotuloAcessivel: 'Selecionar região' });
+  return listAgrupada({ accessibleLabel: 'Selecionar região' });
 }
 
 /** Variante com ícone inline antes do rótulo de cada opção. */

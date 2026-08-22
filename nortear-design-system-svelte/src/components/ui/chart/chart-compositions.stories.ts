@@ -55,9 +55,9 @@ export const WithCard: Story = {
     });
 
     await step('E o gráfico está DENTRO do card, não ao lado', async () => {
-      const dentro = canvasElement.querySelector<HTMLElement>('[data-slot="card"] [data-slot="chart"]');
-      await expect(dentro).not.toBeNull();
-      await waitFor(() => expect(designPintado(dentro!)).toBe(true), { timeout: 3000 });
+      const inside = canvasElement.querySelector<HTMLElement>('[data-slot="card"] [data-slot="chart"]');
+      await expect(inside).not.toBeNull();
+      await waitFor(() => expect(designPintado(inside!)).toBe(true), { timeout: 3000 });
     });
   },
 };

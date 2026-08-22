@@ -65,7 +65,7 @@ export const Playground: Story = {
     // `scrollLeft` fica em zero o tempo todo. Medir a posição pela geometria do
     // track contra a do viewport é o que sobra — e é o que enxerga o movimento
     // nos dois eixos sem depender do eixo escolhido no control.
-    const anterior = () =>
+    const previous = () =>
       canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
     const proximo = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
@@ -125,10 +125,10 @@ export const Playground: Story = {
     });
 
     await step('No primeiro slide só a seta de avanço leva a algum lugar', async () => {
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
       // `aria-disabled` acompanha o `disabled` nativo: o leitor de tela anuncia
       // o primeiro, o segundo é o que tira o botão da ordem de foco.
-      await expect(anterior()).toHaveAttribute('aria-disabled', 'true');
+      await expect(previous()).toHaveAttribute('aria-disabled', 'true');
       await expect(proximo()).toBeEnabled();
       await expect(proximo()).not.toHaveAttribute('aria-disabled', 'true');
     });
@@ -136,7 +136,7 @@ export const Playground: Story = {
     await step('Clicar em avançar leva ao segundo slide e acorda a seta de voltar', async () => {
       await userEvent.click(proximo());
       await emSlide(1);
-      await expect(anterior()).toBeEnabled();
+      await expect(previous()).toBeEnabled();
     });
 
     await step('A seta do teclado avança com o foco dentro do carrossel', async () => {
@@ -158,13 +158,13 @@ export const Playground: Story = {
       //
       // Volta ENQUANTO der, nunca um número fixo de cliques.
       for (let passo = 0; passo < TOTAL; passo++) {
-        const button = anterior();
+        const button = previous();
         if (button.disabled) break;
         await userEvent.click(button);
       }
 
       await emSlide(0);
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
     });
   },
 };

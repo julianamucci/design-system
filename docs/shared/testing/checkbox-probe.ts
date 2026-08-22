@@ -94,8 +94,8 @@ export function estaDesabilitada(el: Element | null): boolean | null {
 /** `true` quando o foco do documento está na caixa (ou dentro dela). */
 export function focusEstaIn(el: Element | null): boolean {
   if (!el) return false;
-  const ativo = el.ownerDocument.activeElement;
-  return ativo === el || el.contains(ativo);
+  const active = el.ownerDocument.activeElement;
+  return active === el || el.contains(active);
 }
 
 // ─── Nome acessível ───────────────────────────────────────────────────────────
@@ -107,7 +107,7 @@ export function focusEstaIn(el: Element | null): boolean {
  * uma pelo `aria-labelledby` que a própria story escreveu à mão e outra pela
  * associação nativa do `<label for>`. A primeira é andaime; a segunda é produto.
  */
-function nomeAcessivel(caixa: Element | null) {
+function accessibleName(caixa: Element | null) {
   if (!caixa) return { valor: null, origem: null } as const;
   const doc = caixa.ownerDocument;
 
@@ -157,7 +157,7 @@ function nomeAcessivel(caixa: Element | null) {
 function leituraOrder(caixa: Element | null): string[] {
   if (!caixa) return [];
   const partes: string[] = [];
-  const nome = nomeAcessivel(caixa).valor;
+  const nome = accessibleName(caixa).valor;
   if (nome) partes.push(`nome:${nome}`);
   partes.push(`papel:${caixa.getAttribute('role') ?? caixa.tagName.toLowerCase()}`);
   const marcado = stateChecked(caixa);
@@ -340,7 +340,7 @@ export function measureBox(raiz: HTMLElement) {
       ariaDescribedby: caixa.getAttribute('aria-describedby'),
     },
 
-    nome: nomeAcessivel(caixa),
+    nome: accessibleName(caixa),
     leitura: leituraOrder(caixa),
 
     // ── Rótulo e a associação ────────────────────────────────────────────────
@@ -374,7 +374,7 @@ export function measureBox(raiz: HTMLElement) {
     // ── Indicador: traço (misto) × marca de seleção ──────────────────────────
     indicador: {
       existe: !!indicador,
-      desenho: indicador?.querySelector('line')
+      design: indicador?.querySelector('line')
         ? 'traço'
         : indicador?.querySelector('polyline, path')
           ? 'marca'
@@ -440,21 +440,21 @@ export async function usuarioMeasureClick(
     }
     const doc = rotulo.ownerDocument;
     const antes = stateChecked(caixa);
-    let resultado: Record<string, unknown>;
+    let result: Record<string, unknown>;
     try {
       await click(rotulo);
-      resultado = {
+      result = {
         focou: focusEstaIn(caixa),
         focusFoiTo: describeIn(doc.activeElement),
         alternou: antes === null ? null : stateChecked(caixa) !== antes,
       };
     } catch (e) {
-      resultado = { erro: e instanceof Error ? e.message : String(e) };
+      result = { erro: e instanceof Error ? e.message : String(e) };
     }
     // Desfaz, para não envenenar o cenário seguinte nem a foto do Chromatic.
     if (antes !== null && stateChecked(caixa) !== antes) caixa?.click();
     (doc.activeElement as HTMLElement | null)?.blur?.();
-    registro[cenario] = resultado;
+    registro[cenario] = result;
   }
   return registro;
 }

@@ -16,7 +16,7 @@ import {
 } from './cor';
 import { byDensity, type Density } from './espacamento';
 
-const VARIANTES = ['default', 'secondary', 'destructive', 'outline', 'ghost', 'link'] as const;
+const VARIANTS = ['default', 'secondary', 'destructive', 'outline', 'ghost', 'link'] as const;
 
 const SIZES = [
   'xs', 'sm', 'lg', 'icon-xs', 'icon-sm', 'icon-lg', 'icon',
@@ -34,7 +34,7 @@ function buttonBackground(el: HTMLElement): string {
 }
 
 function variantOf(el: HTMLElement): string {
-  for (const v of VARIANTES) {
+  for (const v of VARIANTS) {
     if (el.classList.contains(`nds-button-${v}`)) return v;
   }
   // Sem classe de variante o botão é o default — três stacks omitem a classe
@@ -275,7 +275,7 @@ export function themeMeasureVariants(raiz: HTMLElement): VariantMeasurement[] {
       void raiz.offsetHeight;
       const superficie = raiz.style.backgroundColor;
 
-      return [...VARIANTES].map((variante): VariantMeasurement => {
+      return [...VARIANTS].map((variante): VariantMeasurement => {
         const el = targets.get(variante);
         if (!el) {
           return { tema, modo, variante, presente: false, texto: null, border: null, background: null };
@@ -324,9 +324,9 @@ export function themeMeasureRing(raiz: HTMLElement) {
     ['invalido', '.nds-button[aria-invalid="true"]'],
   ];
 
-  const declaradas = regras.map(([nome, seletor]) => [
+  const declaradas = regras.map(([nome, selector]) => [
     nome,
-    ruleDeclaration(raiz.ownerDocument, (s) => s.includes(seletor), 'box-shadow') ?? '',
+    ruleDeclaration(raiz.ownerDocument, (s) => s.includes(selector), 'box-shadow') ?? '',
   ] as const);
 
   return byTheme(raiz, (tema, modo) => {
@@ -335,8 +335,8 @@ export function themeMeasureRing(raiz: HTMLElement) {
     for (const [nome, declarada] of declaradas) {
       // Última camada de cor da sombra: é a banda visível do anel — as
       // anteriores são o vão em `--background` e a elevação.
-      const cores = declarada.match(/hsl\(var\(--[a-z-]+\)(?:\s*\/\s*[\d.]+)?\s*\)/g) ?? [];
-      const banda = cores.at(-1);
+      const colors = declarada.match(/hsl\(var\(--[a-z-]+\)(?:\s*\/\s*[\d.]+)?\s*\)/g) ?? [];
+      const banda = colors.at(-1);
       const bruta = banda ? resolveColor(raiz, banda) : null;
       saida[nome] = bruta ? (ratio(bruta, superficie)?.ratio ?? null) : null;
     }
@@ -454,7 +454,7 @@ export interface LinkMeasurement {
   /** Índice de tabulação efetivo. `<a href>` é focável sem declarar nada. */
   tabIndex: number;
   focavel: boolean;
-  nomeAcessivel: string;
+  accessibleName: string;
   temClasseDeBotao: boolean;
 }
 
@@ -470,7 +470,7 @@ export function measureLink(el: HTMLElement): LinkMeasurement {
     papel: el.getAttribute('role'),
     tabIndex: el.tabIndex,
     focavel,
-    nomeAcessivel: (el.getAttribute('aria-label') ?? el.textContent ?? '').trim(),
+    accessibleName: (el.getAttribute('aria-label') ?? el.textContent ?? '').trim(),
     temClasseDeBotao: el.classList.contains('nds-button'),
   };
 }
@@ -484,7 +484,7 @@ export interface IconMeasurement {
   temTitulo: boolean;
   lado: number;
   /** Texto que o leitor de tela anuncia para o botão inteiro. */
-  nomeAcessivel: string;
+  accessibleName: string;
   /** `true` quando o nome vem do `aria-label` (obrigatório em icon-only). */
   nomeVemDoRotulo: boolean;
 }
@@ -497,7 +497,7 @@ export function measureIcon(button: HTMLElement): IconMeasurement | null {
     ariaHidden: svg.getAttribute('aria-hidden'),
     temTitulo: !!svg.querySelector('title'),
     lado: Math.round(svg.getBoundingClientRect().width),
-    nomeAcessivel: (rotulo ?? button.textContent ?? '').trim(),
+    accessibleName: (rotulo ?? button.textContent ?? '').trim(),
     nomeVemDoRotulo: !!rotulo,
   };
 }
@@ -578,10 +578,10 @@ export async function colherAll(
   (doc.activeElement as HTMLElement | null)?.blur();
   for (let i = 0; i < buttons.length + 4; i++) {
     await tab();
-    const ativo = doc.activeElement as HTMLElement | null;
-    if (!ativo?.classList?.contains('nds-button')) continue;
-    const chave = variantOf(ativo);
-    if (!focos[chave]) focos[chave] = focusMeasureRing(ativo, rest.get(ativo) ?? '');
+    const active = doc.activeElement as HTMLElement | null;
+    if (!active?.classList?.contains('nds-button')) continue;
+    const chave = variantOf(active);
+    if (!focos[chave]) focos[chave] = focusMeasureRing(active, rest.get(active) ?? '');
   }
 
   const find = (sel: string) => raiz.querySelector<HTMLElement>(sel);

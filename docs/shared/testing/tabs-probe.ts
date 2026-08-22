@@ -43,7 +43,7 @@ export interface AbaAttrs {
   dataState: string | null;
   tabindex: string | null;
   role: string | null;
-  nomeAcessivel: string;
+  accessibleName: string;
 }
 
 export function lerAba(aba: HTMLElement): AbaAttrs {
@@ -56,7 +56,7 @@ export function lerAba(aba: HTMLElement): AbaAttrs {
     dataState: aba.getAttribute('data-state'),
     tabindex: aba.getAttribute('tabindex'),
     role: aba.getAttribute('role'),
-    nomeAcessivel: aba.getAttribute('aria-label') || (aba.textContent ?? '').trim(),
+    accessibleName: aba.getAttribute('aria-label') || (aba.textContent ?? '').trim(),
   };
 }
 
@@ -82,7 +82,7 @@ export function abaAnnouncement(aba: HTMLElement): AbaAnnouncement {
   const a = lerAba(aba);
   return {
     papel: a.role,
-    nome: a.nomeAcessivel,
+    nome: a.accessibleName,
     // `disabled` nativo vence tudo: o elemento não é focável nem por script.
     alcancavel: !a.disabledNativo,
     // O `disabled` nativo TAMBÉM é anunciado — quando alcançado. O ponto é que
@@ -166,7 +166,7 @@ export async function measureAbaDesabilitada(
     );
   }
   const alvo = todas[idx];
-  const anterior = todas[idx - 1];
+  const previous = todas[idx - 1];
   const estilo = getComputedStyle(alvo);
   const doc = raiz.ownerDocument;
 
@@ -175,7 +175,7 @@ export async function measureAbaDesabilitada(
   // ── A seta alcança? ────────────────────────────────────────────────────────
   // Parte SEMPRE da aba anterior, focada por script: o que se mede aqui é o
   // alcance da seta, não a ordem de tabulação (essa é medida à parte).
-  anterior.focus();
+  previous.focus();
   await actions.apertar('{ArrowRight}');
   const pousou = doc.activeElement as HTMLElement | null;
   const arrowAlcanca = pousou === alvo;
@@ -187,10 +187,10 @@ export async function measureAbaDesabilitada(
   // ── Restaura o painel de origem antes de medir o clique ────────────────────
   const startVoltar = async () => {
     if (panelVisible(raiz) === origemPanel) return;
-    anterior.focus();
+    previous.focus();
     await actions.apertar('{ArrowLeft}');
     // Se a seta não resolveu, o clique na aba anterior resolve.
-    if (panelVisible(raiz) !== origemPanel) await actions.click(anterior);
+    if (panelVisible(raiz) !== origemPanel) await actions.click(previous);
   };
   await startVoltar();
 

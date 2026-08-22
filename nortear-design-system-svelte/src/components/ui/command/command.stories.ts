@@ -202,9 +202,9 @@ export const Playground: Story = {
       await expect(campo).toHaveFocus();
       // E o leitor de tela sabe onde está o destaque — sem este apontamento a
       // seta não anuncia nada.
-      const ativo = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
-      await expect(ativo).toBe(segundo);
-      await expect(ativo).toHaveAttribute('role', 'option');
+      const active = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
+      await expect(active).toBe(segundo);
+      await expect(active).toHaveAttribute('role', 'option');
       // Um destaque por vez.
       await expect(primeiro).toHaveAttribute('aria-selected', 'false');
 

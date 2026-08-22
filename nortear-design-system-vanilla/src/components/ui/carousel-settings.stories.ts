@@ -47,8 +47,8 @@ type Story = StoryObj;
  * 0,005.
  */
 function baseDoSlide(canvasElement: HTMLElement, slide: HTMLElement): number {
-  const trilha = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
-  return slide.getBoundingClientRect().width / trilha.getBoundingClientRect().width;
+  const trail = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
+  return slide.getBoundingClientRect().width / trail.getBoundingClientRect().width;
 }
 
 // ─── Um item por vez ──────────────────────────────────────────────────────────
@@ -82,9 +82,9 @@ export const Single: Story = {
 // ─── Conjunto longo ───────────────────────────────────────────────────────────
 
 /** Ver a nota em carousel-estados: o motor move o trilho, não o `scrollLeft`. */
-function clipVisible(slide: Element, recorte: Element): boolean {
+function clipVisible(slide: Element, clip: Element): boolean {
   const s = slide.getBoundingClientRect();
-  const v = recorte.getBoundingClientRect();
+  const v = clip.getBoundingClientRect();
   return s.right > v.left + 1 && s.left < v.right - 1 && s.bottom > v.top + 1 && s.top < v.bottom - 1;
 }
 
@@ -194,7 +194,7 @@ export const MultiResponsive: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const recorte = clipOf(canvasElement);
+    const clip = clipOf(canvasElement);
     // A classe é responsiva por definição: afirmar "um terço" sem consultar a
     // media query amarraria o teste à largura do runner, que nenhum
     // `parameters.viewport` controla aqui.
@@ -211,7 +211,7 @@ export const MultiResponsive: Story = {
     await step('Vários slides ficam enquadrados ao mesmo tempo', async () => {
       const slides = canvas.getAllByRole('group');
       await expect(slides.length).toBe(6);
-      const visiveis = slides.filter((s) => clipVisible(s, recorte)).length;
+      const visiveis = slides.filter((s) => clipVisible(s, clip)).length;
       await expect(visiveis).toBe(byScreen);
     });
 
@@ -278,7 +278,7 @@ export const Autoplay: Story = {
     return wrap;
   },
   play: async ({ canvasElement, step }) => {
-    const recorte = clipOf(canvasElement);
+    const clip = clipOf(canvasElement);
 
     await step('O carrossel avança sozinho', async () => {
       await waitFor(
@@ -299,7 +299,7 @@ export const Autoplay: Story = {
       // o teste falha por corrida, não por defeito. É também o gesto que as
       // outras stacks reconhecem, onde o motor assina o começo do arraste na
       // área dos slides e nunca vê o clique das setas.
-      await userEvent.click(recorte);
+      await userEvent.click(clip);
 
       // Zera DEPOIS do preparo: o que está sendo medido é o que acontece a
       // partir daqui, e a contagem anterior é do avanço que já foi provado.
@@ -344,15 +344,15 @@ export const DragGesture: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const recorte = clipOf(canvasElement);
+    const clip = clipOf(canvasElement);
     const track = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
-    const anterior = () => canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
+    const previous = () => canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
     const proximo = () => canvas.getByRole('button', { name: 'Próximo item' });
 
     // Quanto o trilho já saiu do recorte. O motor move o trilho por
     // `transform`, então `scrollLeft` fica em zero o tempo todo.
     const deslocamento = () =>
-      recorte.getBoundingClientRect().left - track.getBoundingClientRect().left;
+      clip.getBoundingClientRect().left - track.getBoundingClientRect().left;
     const slides = () => canvas.getAllByRole('group') as HTMLElement[];
 
     /**
@@ -402,7 +402,7 @@ export const DragGesture: Story = {
       await waitFor(async () => {
         await expect(
           Math.abs(deslocamento() - alvo),
-          `${onde}: posição=${deslocamento()} alvo=${alvo} setas=[ant:${desligada(anterior())} prox:${desligada(proximo())}]`,
+          `${onde}: posição=${deslocamento()} alvo=${alvo} setas=[ant:${desligada(previous())} prox:${desligada(proximo())}]`,
         ).toBeLessThan(2);
       }, { timeout: 4000 });
     };
@@ -427,18 +427,18 @@ export const DragGesture: Story = {
       // ao primeiro slide é o que faz a segunda rodada valer tanto quanto a
       // primeira.
       for (let volta = 0; volta < slides().length; volta++) {
-        const button = anterior();
+        const button = previous();
         if (button.disabled) break;
         await userEvent.click(button);
       }
       posZero = await settle();
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
 
       await userEvent.click(proximo());
       posUm = await settle();
       await expect(posUm).toBeGreaterThan(posZero);
 
-      await userEvent.click(anterior());
+      await userEvent.click(previous());
       await inPosition(posZero, 'volta pela seta');
       // A POSIÇÃO chega antes do ESTADO. `inPosition` prova que a rolagem
       // encostou no alvo, mas quem desabilita a seta é a reconciliação do
@@ -448,11 +448,11 @@ export const DragGesture: Story = {
       // ainda nem foi avisado de que parou: passa na máquina ociosa e reprova
       // sob carga, que foi como esta reprovou no Angular e no Vanilla.
       await waitFor(async () => {
-        await expect(anterior()).toBeDisabled();
+        await expect(previous()).toBeDisabled();
       }, { timeout: 4000 });
     });
 
-    const caixa = recorte.getBoundingClientRect();
+    const caixa = clip.getBoundingClientRect();
     const y = caixa.top + caixa.height / 2;
     const direita = caixa.left + caixa.width * 0.85;
     const esquerda = caixa.left + caixa.width * 0.15;
@@ -460,25 +460,25 @@ export const DragGesture: Story = {
     await step('O conteúdo acompanha o DEDO durante o gesto', async () => {
       // Pressiona e anda um pedaço, sem soltar. A medida acontece com o gesto
       // ainda em curso — é isto que separa "arrastou" de "mudou de slide".
-      toque(recorte, 'touchstart', direita, y);
-      toque(recorte, 'touchmove', direita - 30, y);
-      toque(recorte, 'touchmove', direita - 60, y);
-      toque(recorte, 'touchmove', direita - 90, y);
+      toque(clip, 'touchstart', direita, y);
+      toque(clip, 'touchmove', direita - 30, y);
+      toque(clip, 'touchmove', direita - 60, y);
+      toque(clip, 'touchmove', direita - 90, y);
       await waitFor(async () => {
         await expect(deslocamento()).toBeGreaterThan(posZero + 4);
       }, { timeout: 4000 });
     });
 
     await step('Ao soltar, para onde a seta pararia', async () => {
-      toque(recorte, 'touchmove', esquerda, y);
-      toque(recorte, 'touchend', esquerda, y);
+      toque(clip, 'touchmove', esquerda, y);
+      toque(clip, 'touchend', esquerda, y);
 
       // Assentou EM UM SLIDE, e no MESMO ponto que a seta alcança — não onde o
       // dedo largou. Um carrossel de rolagem livre pararia no meio, e é isto
       // que este passo reprova.
       await inPosition(posUm, 'soltura do dedo');
       await waitFor(async () => {
-        await expect(anterior()).toBeEnabled();
+        await expect(previous()).toBeEnabled();
       }, { timeout: 4000 });
     });
 
@@ -491,20 +491,20 @@ export const DragGesture: Story = {
       // O arraste é para a DIREITA, então volta um slide: a story termina no
       // estado inicial, que é o que o Chromatic fotografa e o replay do painel
       // Interactions reencontra.
-      mouse(recorte, 'mousedown', esquerda, y);
-      mouse(recorte, 'mousemove', esquerda + 40, y);
-      mouse(recorte, 'mousemove', esquerda + 80, y);
+      mouse(clip, 'mousedown', esquerda, y);
+      mouse(clip, 'mousemove', esquerda + 40, y);
+      mouse(clip, 'mousemove', esquerda + 80, y);
       // Já andou de volta junto com o cursor, antes de soltar.
       await waitFor(async () => {
         await expect(deslocamento()).toBeLessThan(posUm - 4);
       }, { timeout: 4000 });
 
-      mouse(recorte, 'mousemove', direita, y);
-      mouse(recorte, 'mouseup', direita, y);
+      mouse(clip, 'mousemove', direita, y);
+      mouse(clip, 'mouseup', direita, y);
 
       await inPosition(posZero, 'soltura do mouse');
       await waitFor(async () => {
-        await expect(anterior()).toBeDisabled();
+        await expect(previous()).toBeDisabled();
       }, { timeout: 4000 });
     });
   },

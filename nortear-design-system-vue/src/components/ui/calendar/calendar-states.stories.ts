@@ -35,8 +35,8 @@ type Story = StoryObj<typeof meta>;
 // Datas fixas para determinismo Chromatic — instanciadas dentro de setup()
 // para evitar criar CalendarDate no import do módulo.
 
-const valuesWith = (canvasElement: HTMLElement, seletor: string): string[] =>
-  Array.from(canvasElement.querySelectorAll(seletor)).map((el) => el.getAttribute('data-value') ?? '');
+const valuesWith = (canvasElement: HTMLElement, selector: string): string[] =>
+  Array.from(canvasElement.querySelectorAll(selector)).map((el) => el.getAttribute('data-value') ?? '');
 
 // Selected — célula escolhida.
 export const Selected: Story = {
@@ -213,9 +213,9 @@ export const WithOutsideDays: Story = {
   play: async ({ canvasElement, step }) => {
     await step('As bordas do grid trazem dias de fora do mês', async () => {
       // Abril de 2026 começa numa quarta: as três primeiras casas vêm de março.
-      const fora = valuesWith(canvasElement, '[data-outside-view]');
-      await expect(fora).toContain('2026-03-30');
-      await expect(fora.length).toBeGreaterThan(0);
+      const outside = valuesWith(canvasElement, '[data-outside-view]');
+      await expect(outside).toContain('2026-03-30');
+      await expect(outside.length).toBeGreaterThan(0);
     });
 
     await step('Dia de fora do mês não conta como do mês', async () => {

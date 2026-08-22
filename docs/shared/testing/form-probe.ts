@@ -61,8 +61,8 @@ const SELECTORS_CONTROL = [
 ];
 
 export function controlOf(campo: HTMLElement): HTMLElement | null {
-  for (const seletor of SELECTORS_CONTROL) {
-    const finding = campo.querySelector<HTMLElement>(seletor);
+  for (const selector of SELECTORS_CONTROL) {
+    const finding = campo.querySelector<HTMLElement>(selector);
     if (finding) return finding;
   }
   return null;
@@ -86,7 +86,7 @@ const inertes = (el: Element | null | undefined): string[] =>
  * `null` é campo sem nome — o defeito que a associação rótulo↔controle existe
  * para impedir, e o que separa "tem um `for`" de "o leitor lê o rótulo".
  */
-export function nomeAcessivel(el: Element | null | undefined): string | null {
+export function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
@@ -100,8 +100,8 @@ export function nomeAcessivel(el: Element | null | undefined): string | null {
     const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
     if (label?.textContent?.trim()) return label.textContent.trim();
   }
-  const dentro = el.closest('label');
-  if (dentro?.textContent?.trim()) return dentro.textContent.trim();
+  const inside = el.closest('label');
+  if (inside?.textContent?.trim()) return inside.textContent.trim();
   // Último degrau: os elementos cujo NOME é o próprio conteúdo. Sem ele o botão
   // de envio de um formulário saía `null` numa lista em que todo campo tinha
   // nome — um falso achado, porque `<button>Salvar</button>` é nomeado.
@@ -184,7 +184,7 @@ export function measureField(raiz: HTMLElement) {
       temClasseBase: classes(campo).includes('nds-form-field'),
       classesInertes: inertes(campo),
       /** Ordem visual das peças: rótulo, controle, apoio, erro. */
-      ordem: Array.from(campo.children).map(
+      order: Array.from(campo.children).map(
         (c) => c.getAttribute('data-slot') ?? c.tagName.toLowerCase(),
       ),
       hasLabel: Boolean(rotulo),
@@ -202,11 +202,11 @@ export function measureField(raiz: HTMLElement) {
       /** O rótulo ENVOLVE o controle — a outra forma válida de associar. */
       rotuloEnvolve: rotulo && controle ? rotulo.contains(controle) : null,
       /** O que o leitor de tela realmente anuncia como nome do campo. */
-      nomeAcessivel: nomeAcessivel(controle),
+      accessibleName: accessibleName(controle),
       idGerado: Boolean(controle?.id && !controle.getAttribute('data-id-escrito')),
       textoDoRotulo: texto(rotulo),
     },
-    apoio: {
+    helper: {
       texto: texto(descricao),
       id: descricao?.id || null,
       /** Visível e mudo é o defeito: existe na tela, fora do describedby. */
@@ -253,7 +253,7 @@ export function measureField(raiz: HTMLElement) {
     },
     contraste: {
       rotulo: rotulo && background ? ratio(getComputedStyle(rotulo).color, background) : null,
-      apoio: descricao && background ? ratio(getComputedStyle(descricao).color, background) : null,
+      helper: descricao && background ? ratio(getComputedStyle(descricao).color, background) : null,
       erro: erro && background ? ratio(getComputedStyle(erro).color, background) : null,
     },
   };
@@ -288,7 +288,7 @@ export function measureFieldset(raiz: HTMLElement) {
     },
     semantica: {
       /** O que o leitor anuncia antes de cada campo do grupo. */
-      nomeDoGrupo: nomeAcessivel(grupo) ?? texto(legenda),
+      nomeDoGrupo: accessibleName(grupo) ?? texto(legenda),
       papel: grupo.getAttribute('role'),
     },
     geometria: {
@@ -321,7 +321,7 @@ export function tabulacaoOrder(raiz: HTMLElement) {
     ),
   );
   return focalizaveis.map((el) => ({
-    nome: nomeAcessivel(el),
+    nome: accessibleName(el),
     tag: el.tagName.toLowerCase(),
     tabindex: el.getAttribute('tabindex'),
   }));
@@ -354,7 +354,7 @@ export function contrastesNosDoisModos(raiz: HTMLElement) {
     return {
       modo,
       rotulo: m.contraste.rotulo?.ratio ?? null,
-      apoio: m.contraste.apoio?.ratio ?? null,
+      helper: m.contraste.helper?.ratio ?? null,
       erro: m.contraste.erro?.ratio ?? null,
     };
   };
@@ -369,7 +369,7 @@ export function contrastesNosDoisModos(raiz: HTMLElement) {
     desfazer();
   }
   return [light, escuro].filter(Boolean) as {
-    modo: string; rotulo: number | null; apoio: number | null; erro: number | null;
+    modo: string; rotulo: number | null; helper: number | null; erro: number | null;
   }[];
 }
 

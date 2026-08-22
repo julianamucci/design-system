@@ -87,7 +87,7 @@ const classes = (el: Element | null | undefined): string[] =>
  * O botão de copiar é um ícone: se `aria-label` sumir, ele passa a ser anunciado
  * como "botão" e nada mais — e nenhuma asserção de classe pegaria isso.
  */
-function nomeAcessivel(el: Element | null | undefined): string | null {
+function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
@@ -101,7 +101,7 @@ function nomeAcessivel(el: Element | null | undefined): string | null {
 
 /** Ancestrais de `el` (inclusive) até `limit` que rolam de fato. */
 function donosDeEixo(el: Element | null, limit: Element): Array<{
-  seletor: string;
+  selector: string;
   overflowX: string;
   overflowY: string;
   rolaHorizontal: boolean;
@@ -116,7 +116,7 @@ function donosDeEixo(el: Element | null, limit: Element): Array<{
     if (scrollable) {
       const html = atual as HTMLElement;
       saida.push({
-        seletor: `${atual.tagName.toLowerCase()}${classes(atual).map((c) => `.${c}`).join('')}`,
+        selector: `${atual.tagName.toLowerCase()}${classes(atual).map((c) => `.${c}`).join('')}`,
         overflowX: cs.overflowX,
         overflowY: cs.overflowY,
         rolaHorizontal: atual.scrollWidth > atual.clientWidth + 1,
@@ -188,7 +188,7 @@ export function measureCodeBlock(raiz: HTMLElement) {
       /** `lang` no trecho: sem ele a voz em pt-BR pronuncia código como português. */
       langDoPre: pre?.getAttribute('lang') ?? null,
       langDoDocumento: root.ownerDocument.documentElement.getAttribute('lang'),
-      nomeDoBotaoCopiar: nomeAcessivel(button),
+      nomeDoBotaoCopiar: accessibleName(button),
       tipoDoBotaoCopiar: button?.getAttribute('type') ?? null,
       iconesOcultos: button
         ? [...button.querySelectorAll('svg')].map((s) => s.getAttribute('aria-hidden'))
@@ -207,11 +207,11 @@ export function measureCodeBlock(raiz: HTMLElement) {
       /** Focável de fato, não só por atributo. */
       aceitaFocus: (() => {
         if (!scroll) return null;
-        const anterior = scroll.ownerDocument.activeElement as HTMLElement | null;
+        const previous = scroll.ownerDocument.activeElement as HTMLElement | null;
         scroll.focus();
         const ok = scroll.ownerDocument.activeElement === scroll;
         scroll.blur();
-        if (anterior && anterior !== scroll.ownerDocument.body) anterior.focus();
+        if (previous && previous !== scroll.ownerDocument.body) previous.focus();
         return ok;
       })(),
       overflowX: csScroll?.overflowX ?? null,
@@ -231,7 +231,7 @@ export function measureCodeBlock(raiz: HTMLElement) {
       tokenNames,
       /** Quantas cores DISTINTAS a paleta realmente pinta neste trecho. */
       coresDistintas: tokenColors.length,
-      cores: tokenColors,
+      colors: tokenColors,
       bodyColor: csRoot.color,
       fundoDaSuperficie: backgroundEffective(root),
       // Composto, não lido cru: `--code-block-highlight-bg` tem alfa de propósito
@@ -419,7 +419,7 @@ export function measureConfirm(raiz: HTMLElement) {
   const status = root?.querySelector<HTMLElement>('[role="status"]');
   const rotulo = root?.querySelector<HTMLElement>('.nds-code-block-copy-label');
   return {
-    nomeDoBotao: nomeAcessivel(button),
+    nomeDoBotao: accessibleName(button),
     quantosIcones: button ? button.querySelectorAll('svg').length : null,
     anuncio: texto(status),
     labelVisible: rotulo && !rotulo.hidden ? texto(rotulo) : null,

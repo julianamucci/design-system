@@ -32,9 +32,9 @@
 
 /** Acha a peça pelo `data-slot`, considerando o próprio nó recebido. */
 function find(raiz: ParentNode, slot: string): HTMLElement | null {
-  const seletor = `[data-slot="${slot}"]`;
-  if (raiz instanceof Element && raiz.matches(seletor)) return raiz as HTMLElement;
-  return raiz.querySelector<HTMLElement>(seletor);
+  const selector = `[data-slot="${slot}"]`;
+  if (raiz instanceof Element && raiz.matches(selector)) return raiz as HTMLElement;
+  return raiz.querySelector<HTMLElement>(selector);
 }
 
 /** O trilho — a caixa por onde o preenchimento corre. */
@@ -68,8 +68,8 @@ export function alcasDoSlider(raiz: ParentNode): HTMLElement[] {
  * `Object.is` — a asserção existia e não podia reprovar.
  */
 export function handleControl(thumb: HTMLElement): HTMLElement {
-  const dentro = thumb.querySelector<HTMLInputElement>('input[type="range"]');
-  if (dentro) return dentro;
+  const inside = thumb.querySelector<HTMLInputElement>('input[type="range"]');
+  if (inside) return inside;
   if (thumb instanceof HTMLInputElement && thumb.type === 'range') return thumb;
   const raiz = thumb.closest<HTMLElement>('[data-slot="slider"], .nds-slider');
   return raiz?.querySelector<HTMLInputElement>('input[type="range"]') ?? thumb;
@@ -246,14 +246,14 @@ export async function restRing(
 ): Promise<{ sombra: string; border: string }> {
   (thumb.ownerDocument.activeElement as HTMLElement | null)?.blur();
   const limit = Date.now() + tempoMax;
-  let anterior = focusAneis(thumb);
+  let previous = focusAneis(thumb);
   while (Date.now() < limit) {
     await new Promise((r) => setTimeout(r, 32));
     const agora = focusAneis(thumb);
-    if (agora.sombra === anterior.sombra && agora.border === anterior.border) return agora;
-    anterior = agora;
+    if (agora.sombra === previous.sombra && agora.border === previous.border) return agora;
+    previous = agora;
   }
-  return anterior;
+  return previous;
 }
 
 /**

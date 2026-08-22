@@ -182,7 +182,7 @@ export class NdsCarouselStore {
     this.aoNavegar?.(destination, origem);
   }
 
-  anterior(origem: CarouselNavSource): void {
+  previous(origem: CarouselNavSource): void {
     this.navegar(this._index() - 1, origem);
   }
 
@@ -405,8 +405,8 @@ export class NdsCarouselIcon {
     'aria-roledescription': 'carousel',
     '[attr.data-slot]': '"carousel"',
     '[attr.data-orientation]': 'orientation()',
-    '[attr.aria-label]': 'nomeAcessivel()',
-    '(keydown)': 'aoTeclar($event)',
+    '[attr.aria-label]': 'accessibleName()',
+    '(keydown)': 'onKeyDown($event)',
     '(pointerenter)': 'suspender(true)',
     '(pointerleave)': 'suspender(false)',
     '(focusin)': 'suspender(true)',
@@ -457,7 +457,7 @@ export class NdsCarousel implements OnInit {
   /** Se o avanço automático está rodando neste momento. */
   readonly autoplayAtivo = computed(() => this._autoplayLigado());
 
-  protected readonly nomeAcessivel = computed(
+  protected readonly accessibleName = computed(
     () => this.label() ?? this.rotuloEscrito ?? undefined,
   );
 
@@ -502,8 +502,8 @@ export class NdsCarousel implements OnInit {
   }
 
   /** Slide anterior. Público para dots, contadores e controles próprios. */
-  anterior(origem: CarouselNavSource = 'api'): void {
-    this.store.anterior(origem);
+  previous(origem: CarouselNavSource = 'api'): void {
+    this.store.previous(origem);
   }
 
   /** Próximo slide. */
@@ -522,20 +522,20 @@ export class NdsCarousel implements OnInit {
     else this._autoplayLigado.set(true);
   }
 
-  protected aoTeclar(evento: KeyboardEvent): void {
+  protected onKeyDown(evento: KeyboardEvent): void {
     const vertical = this.orientation() === 'vertical';
     const voltar = vertical ? 'ArrowUp' : 'ArrowLeft';
     const avancar = vertical ? 'ArrowDown' : 'ArrowRight';
     if (evento.key !== voltar && evento.key !== avancar) return;
     // Sem `preventDefault` a seta rola a página junto com o carrossel.
     evento.preventDefault();
-    if (evento.key === voltar) this.store.anterior('keyboard');
+    if (evento.key === voltar) this.store.previous('keyboard');
     else this.store.proximo('keyboard');
   }
 
   /** Suspende o avanço enquanto o ponteiro ou o foco estiverem dentro. */
-  protected suspender(dentro: boolean): void {
-    this._suspenso.set(dentro);
+  protected suspender(inside: boolean): void {
+    this._suspenso.set(inside);
   }
 
   protected aoPerderFoco(evento: FocusEvent): void {
@@ -703,8 +703,8 @@ export class NdsCarouselContent implements OnDestroy {
     'aria-roledescription': 'slide',
     '[attr.data-slot]': '"carousel-item"',
     '[attr.data-orientation]': 'store.orientation()',
-    '[attr.data-active]': 'ativo()',
-    '[attr.aria-label]': 'nomeAcessivel()',
+    '[attr.data-active]': 'active()',
+    '[attr.aria-label]': 'accessibleName()',
   },
 })
 export class NdsCarouselItem {
@@ -716,7 +716,7 @@ export class NdsCarouselItem {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
   private readonly rotuloEscrito = this.host.getAttribute('aria-label');
 
-  protected readonly nomeAcessivel = computed(
+  protected readonly accessibleName = computed(
     () => this.label() ?? this.rotuloEscrito ?? this.store.rotuloDoSlide(this.host),
   );
 
@@ -727,7 +727,7 @@ export class NdsCarouselItem {
    * atributo, os valores e a semântica do terceiro estado (a ausência) são os
    * mesmos das outras quatro — o que muda é só por onde a informação anda.
    */
-  protected readonly ativo = computed(() => this.store.estadoAtivo(this.host));
+  protected readonly active = computed(() => this.store.estadoAtivo(this.host));
 
   constructor() {
     this.store.registrarSlide(this.host);
@@ -758,8 +758,8 @@ export class NdsCarouselItem {
     '[attr.data-orientation]': 'store.orientation()',
     '[disabled]': '!store.canPrev()',
     '[attr.aria-disabled]': 'store.canPrev() ? null : "true"',
-    '[attr.aria-label]': 'nomeAcessivel()',
-    '(click)': 'store.anterior("button")',
+    '[attr.aria-label]': 'accessibleName()',
+    '(click)': 'store.previous("button")',
   },
 })
 export class NdsCarouselPrevious {
@@ -778,7 +778,7 @@ export class NdsCarouselPrevious {
     ElementRef,
   ).nativeElement.getAttribute('aria-label');
 
-  protected readonly nomeAcessivel = computed(
+  protected readonly accessibleName = computed(
     () => this.label() ?? this.rotuloEscrito ?? 'Previous slide',
   );
 
@@ -802,7 +802,7 @@ export class NdsCarouselPrevious {
     '[attr.data-orientation]': 'store.orientation()',
     '[disabled]': '!store.canNext()',
     '[attr.aria-disabled]': 'store.canNext() ? null : "true"',
-    '[attr.aria-label]': 'nomeAcessivel()',
+    '[attr.aria-label]': 'accessibleName()',
     '(click)': 'store.proximo("button")',
   },
 })
@@ -822,7 +822,7 @@ export class NdsCarouselNext {
     ElementRef,
   ).nativeElement.getAttribute('aria-label');
 
-  protected readonly nomeAcessivel = computed(
+  protected readonly accessibleName = computed(
     () => this.label() ?? this.rotuloEscrito ?? 'Next slide',
   );
 

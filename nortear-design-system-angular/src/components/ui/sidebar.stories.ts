@@ -218,8 +218,8 @@ export const Playground: Story = {
 
     await step('O item ativo é anunciado como página atual', async () => {
       // `data-active` é para o CSS; quem não vê a cor precisa do aria-current.
-      const ativo = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
-      await expect(ativo.getAttribute('aria-current')).toBe('page');
+      const active = canvasElement.querySelector<HTMLElement>('[data-active="true"]')!;
+      await expect(active.getAttribute('aria-current')).toBe('page');
     });
 
     await step('O gatilho tem nome acessível, e em português', async () => {

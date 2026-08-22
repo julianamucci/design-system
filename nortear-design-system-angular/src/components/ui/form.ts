@@ -320,8 +320,8 @@ export class NdsFormField implements AfterContentInit {
 
   private findControl(): HTMLElement | null {
     const raiz = this.hostRef.nativeElement;
-    for (const seletor of SELECTORS_CONTROL) {
-      const encontrado = raiz.querySelector<HTMLElement>(seletor);
+    for (const selector of SELECTORS_CONTROL) {
+      const encontrado = raiz.querySelector<HTMLElement>(selector);
       if (encontrado) return encontrado;
     }
     return null;

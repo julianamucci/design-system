@@ -60,14 +60,14 @@ export const FirstSlide: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const anterior = canvas.getByRole('button', { name: /item anterior/i });
+    const previous = canvas.getByRole('button', { name: /item anterior/i });
     const proximo = canvas.getByRole('button', { name: /próximo item/i });
 
     await step('No começo só a seta de avanço leva a algum lugar', async () => {
       // `canScrollNext` nasce falso e só vira verdadeiro no `init` do embla,
       // agendado com `setTimeout(…, 0)` — daí a espera na seta viva.
       await waitFor(() => expect(proximo).toBeEnabled(), { timeout: 4000 });
-      await expect(anterior).toBeDisabled();
+      await expect(previous).toBeDisabled();
     });
 
     await step('O extremo é visível, não só programático', async () => {
@@ -81,7 +81,7 @@ export const FirstSlide: Story = {
       // pegaria o valor de partida — 0.5 contra 0.5 — e o teste reprovaria por
       // corrida, não por defeito.
       await waitFor(async () => {
-        const apagada = Number(getComputedStyle(anterior).opacity);
+        const apagada = Number(getComputedStyle(previous).opacity);
         const viva = Number(getComputedStyle(proximo).opacity);
         await expect(apagada).toBeLessThan(viva);
       }, { timeout: 4000 });
@@ -127,13 +127,13 @@ export const LastSlide: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const anterior = canvas.getByRole('button', { name: /item anterior/i });
+    const previous = canvas.getByRole('button', { name: /item anterior/i });
     const proximo = canvas.getByRole('button', { name: /próximo item/i });
 
     await step('No fim a seta de avanço desabilita e a de voltar acorda', async () => {
       // O par importa: só "próximo desabilitado" também seria verdade num
       // carrossel de um slide só, onde nada nunca avançou.
-      await waitFor(() => expect(anterior).toBeEnabled(), { timeout: 4000 });
+      await waitFor(() => expect(previous).toBeEnabled(), { timeout: 4000 });
       await expect(proximo).toBeDisabled();
     });
 
@@ -141,7 +141,7 @@ export const LastSlide: Story = {
       // Espelho da comparação do primeiro slide: agora a apagada é a outra.
       await waitFor(async () => {
         const apagada = Number(getComputedStyle(proximo).opacity);
-        const viva = Number(getComputedStyle(anterior).opacity);
+        const viva = Number(getComputedStyle(previous).opacity);
         await expect(apagada).toBeLessThan(viva);
       }, { timeout: 4000 });
     });

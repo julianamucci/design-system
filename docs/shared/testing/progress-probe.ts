@@ -29,9 +29,9 @@ export type Rgba = [number, number, number, number];
  * cheia quando o canvas inteiro era passado.
  */
 function find(raiz: ParentNode, slot: string): HTMLElement | null {
-  const seletor = `[data-slot="${slot}"]`;
-  if (raiz instanceof Element && raiz.matches(seletor)) return raiz as HTMLElement;
-  return raiz.querySelector<HTMLElement>(seletor);
+  const selector = `[data-slot="${slot}"]`;
+  if (raiz instanceof Element && raiz.matches(selector)) return raiz as HTMLElement;
+  return raiz.querySelector<HTMLElement>(selector);
 }
 
 /** A raiz anunciada como barra de progresso. */
@@ -61,9 +61,9 @@ export function indicadorDoProgresso(raiz: ParentNode): HTMLElement {
  * do indicador contra a borda esquerda da trilha, e não a propriedade CSS.
  */
 export function percentualDesenhado(raiz: ParentNode): number {
-  const trilha = progressoTrack(raiz);
+  const trail = progressoTrack(raiz);
   const indicador = indicadorDoProgresso(raiz);
-  const caixa = trilha.getBoundingClientRect();
+  const caixa = trail.getBoundingClientRect();
   if (caixa.width === 0) return 0;
   const preenchido = indicador.getBoundingClientRect().right - caixa.left;
   return Math.min(Math.max((preenchido / caixa.width) * 100, 0), 100);
@@ -115,10 +115,10 @@ function contraste(a: Rgba, b: Rgba): number {
  * transmite informação, não decoração.
  */
 export function contrastBarTrack(raiz: ParentNode): number {
-  const trilha = progressoTrack(raiz);
+  const trail = progressoTrack(raiz);
   const indicador = indicadorDoProgresso(raiz);
-  const atras = backgroundEffective(trilha);
-  const colorTrack = compor(parseRgba(getComputedStyle(trilha).backgroundColor), atras);
+  const atras = backgroundEffective(trail);
+  const colorTrack = compor(parseRgba(getComputedStyle(trail).backgroundColor), atras);
   const colorIndicador = compor(parseRgba(getComputedStyle(indicador).backgroundColor), colorTrack);
   return contraste(colorIndicador, colorTrack);
 }
@@ -142,7 +142,7 @@ export function indicadorAnimation(raiz: ParentNode): string {
  * navegador faz a conversão — um elemento efêmero, dentro do mesmo contexto de
  * herança, recebe a cor e devolve o valor computado.
  */
-export function corDoToken(contexto: HTMLElement, token: string): string {
+export function tokenColor(contexto: HTMLElement, token: string): string {
   const probe = contexto.ownerDocument.createElement('div');
   probe.style.backgroundColor = `hsl(var(${token}))`;
   contexto.appendChild(probe);
@@ -162,7 +162,7 @@ export function barrasDeProgresso(raiz: ParentNode): HTMLElement[] {
  *
  * Devolve string vazia quando não há nome — e é isso que a asserção reprova.
  */
-export function nomeAcessivel(el: HTMLElement): string {
+export function accessibleName(el: HTMLElement): string {
   const labelledby = el.getAttribute('aria-labelledby');
   if (labelledby) {
     const texts = labelledby

@@ -128,9 +128,9 @@ export const WithLabel: Story = {
       // É o caso que expõe a diferença entre `pressed` (o model, ainda
       // indefinido antes do primeiro clique) e o estado real do primitivo:
       // lendo o model, este toggle sairia com data-state="off".
-      const ativo = canvas.getByRole('button', { name: 'Visão compacta' });
-      await expect(ativo.getAttribute('aria-pressed')).toBe('true');
-      await expect(ativo).toHaveAttribute('data-state', 'on');
+      const active = canvas.getByRole('button', { name: 'Visão compacta' });
+      await expect(active.getAttribute('aria-pressed')).toBe('true');
+      await expect(active).toHaveAttribute('data-state', 'on');
     });
 
     await step('O toggle com rótulo é mais largo que alto', async () => {

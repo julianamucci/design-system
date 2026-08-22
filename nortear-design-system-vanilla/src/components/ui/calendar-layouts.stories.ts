@@ -76,8 +76,8 @@ export const CaptionLabel: Story = {
       // O mês é um contador de 0 a 11: sem a virada, voltar de janeiro daria
       // um mês inexistente e o ano ficaria parado. É o caminho que nenhuma
       // navegação de um mês só alcança.
-      const anterior = canvas.getByRole('button', { name: 'Ir para o mês anterior' });
-      for (let i = 0; i < 4; i += 1) await userEvent.click(anterior);
+      const previous = canvas.getByRole('button', { name: 'Ir para o mês anterior' });
+      for (let i = 0; i < 4; i += 1) await userEvent.click(previous);
       await expect(legenda()).toHaveTextContent(/dezembro 2025/i);
 
       // Cada passo estabelece a própria precondição: volta para abril de 2026.
@@ -183,10 +183,10 @@ export const CaptionDropdown: Story = {
       // legenda inteira; `elementFromPoint` devolve QUEM está no topo do ponto,
       // e é a única coisa aqui que enxerga isso.
       const doc = canvasElement.ownerDocument;
-      for (const seletor of canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-select')) {
-        const r = seletor.getBoundingClientRect();
+      for (const selector of canvasElement.querySelectorAll<HTMLElement>('.nds-calendar-select')) {
+        const r = selector.getBoundingClientRect();
         const noTopo = doc.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-        await expect(seletor === noTopo || seletor.contains(noTopo)).toBe(true);
+        await expect(selector === noTopo || selector.contains(noTopo)).toBe(true);
       }
     });
 

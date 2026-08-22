@@ -5,7 +5,7 @@ import {
   barrasDeProgresso,
   contrastBarTrack,
   indicadorDoProgresso,
-  nomeAcessivel,
+  accessibleName,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
 import {
@@ -132,7 +132,7 @@ export const WithLabel: Story = {
 
     await step('Toda barra da tela tem nome acessível', async () => {
       for (const bar of barrasDeProgresso(canvasElement)) {
-        await expect(nomeAcessivel(bar)).not.toBe('');
+        await expect(accessibleName(bar)).not.toBe('');
       }
     });
   },

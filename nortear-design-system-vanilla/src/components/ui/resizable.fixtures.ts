@@ -29,7 +29,7 @@ export function panelLabelled(label: string, extraClass = ''): HTMLElement {
 }
 
 /** Conteúdo de painel com título e uma linha de apoio abaixo dele. */
-export function panelWithHelper(titulo: string, apoio: string): HTMLElement {
+export function panelWithHelper(titulo: string, helper: string): HTMLElement {
   const el = document.createElement('div');
   el.className = 'nds-stack nds-p-4';
   el.dataset.spacing = 'xs';
@@ -38,7 +38,7 @@ export function panelWithHelper(titulo: string, apoio: string): HTMLElement {
   h.textContent = titulo;
   const p = document.createElement('p');
   p.className = 'nds-text-caption nds-text-muted-foreground';
-  p.textContent = apoio;
+  p.textContent = helper;
   el.append(h, p);
   return el;
 }

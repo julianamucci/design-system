@@ -96,7 +96,7 @@ export function tramasAplicadas(raiz: HTMLElement): Set<string> {
  * Esperar o desenho chegar a este valor é determinístico — bem melhor que
  * esperar um tempo fixo e torcer.
  */
-export function corDoToken(token: string, perto: HTMLElement): string {
+export function tokenColor(token: string, perto: HTMLElement): string {
   const doc = perto.ownerDocument;
   const canais = getComputedStyle(doc.documentElement).getPropertyValue(`--${token}`).trim();
   const probe = doc.createElement('span');

@@ -33,10 +33,10 @@ const IMPORT_WITH_ELLIPSIS = `import {
  * O separador é irmão dos itens dentro da `<ol>`, e não filho de um deles: é
  * assim que ele fica fora da leitura sem levar o nível junto.
  */
-function trilha(itens: string[], separador = '<BreadcrumbSeparator />'): string {
+function trail(itens: string[], separator = '<BreadcrumbSeparator />'): string {
   const corpo = itens
     .map((item) => `    <BreadcrumbItem>\n${indentar(item, 6)}\n    </BreadcrumbItem>`)
-    .join(`\n    ${separador}\n`);
+    .join(`\n    ${separator}\n`);
   return `<Breadcrumb>
   <BreadcrumbList>
 ${corpo}
@@ -64,7 +64,7 @@ function pagina(rotulo: string): string {
 export function breadcrumbSource(): string {
   return vueSnippet(
     IMPORT,
-    trilha([
+    trail([
       link('Início', '/'),
       link('Componentes', '/componentes'),
       pagina('Breadcrumb'),
@@ -74,7 +74,7 @@ export function breadcrumbSource(): string {
 
 /** Trilha de dois níveis: o mínimo que ainda é um caminho. */
 export function breadcrumbSimpleSource(): string {
-  return vueSnippet(IMPORT, trilha([link('Início', '/'), pagina('Componentes')]));
+  return vueSnippet(IMPORT, trail([link('Início', '/'), pagina('Componentes')]));
 }
 
 /**
@@ -85,7 +85,7 @@ export function breadcrumbSimpleSource(): string {
 export function breadcrumbWithEllipsisSource(): string {
   return vueSnippet(
     IMPORT_WITH_ELLIPSIS,
-    trilha([
+    trail([
       link('Início', '/'),
       '<BreadcrumbEllipsis label="Mais páginas" />',
       link('Componentes', '/componentes'),
@@ -103,7 +103,7 @@ export function breadcrumbSeparatorCustomizadoSource(): string {
   return vueSnippet(
     `${IMPORT}
 import { Slash } from 'lucide-vue-next'`,
-    trilha(
+    trail(
       [link('Início', '/'), link('Componentes', '/componentes'), pagina('Breadcrumb')],
       '<BreadcrumbSeparator><Slash /></BreadcrumbSeparator>',
     ),
@@ -119,7 +119,7 @@ export function breadcrumbLinkCustomizadoSource(): string {
   return vueSnippet(
     `${IMPORT}
 import { RouterLink } from 'vue-router'`,
-    trilha([
+    trail([
       `<BreadcrumbLink as-child>
   <RouterLink to="/">Início</RouterLink>
 </BreadcrumbLink>`,
@@ -145,7 +145,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'`,
-    trilha([
+    trail([
       link('Início', '/'),
       `<DropdownMenu>
   <DropdownMenuTrigger class="nds-cluster" data-spacing="xs" aria-label="Expandir níveis ocultos">

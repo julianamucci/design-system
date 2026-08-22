@@ -151,29 +151,29 @@ function measureChild(caixa: HTMLElement | null): ChildMeasurement {
 }
 
 /**
- * Mede UM cenário: o container `pai` já dimensionado pela story.
+ * Mede UM cenário: o container `parent` já dimensionado pela story.
  *
  * Duas buscas, de propósito. `.nds-aspect-ratio` é o CONTRATO do design system —
  * a classe que a folha compartilhada estiliza. `[data-slot="aspect-ratio"]` é o
  * marcador de composição. Onde os dois não caem no mesmo elemento, ou onde o
  * primeiro vem `null`, a stack está sustentando a proporção por fora da folha.
  */
-export function measureRatio(pai: HTMLElement, cenario: string): RatioMeasurement {
-  const byContrato = pai.querySelector<HTMLElement>('.nds-aspect-ratio');
-  const bySlot = pai.querySelector<HTMLElement>('[data-slot="aspect-ratio"]');
+export function measureRatio(parent: HTMLElement, cenario: string): RatioMeasurement {
+  const byContrato = parent.querySelector<HTMLElement>('.nds-aspect-ratio');
+  const bySlot = parent.querySelector<HTMLElement>('[data-slot="aspect-ratio"]');
   return {
     cenario,
-    larguraDoPai: Math.round(pai.getBoundingClientRect().width * 100) / 100,
-    contrato: measureBox(pai, byContrato),
-    slot: measureBox(pai, bySlot),
+    larguraDoPai: Math.round(parent.getBoundingClientRect().width * 100) / 100,
+    contrato: measureBox(parent, byContrato),
+    slot: measureBox(parent, bySlot),
     filho: measureChild(bySlot ?? byContrato),
   };
 }
 
 /** Mede todos os cenários marcados com `data-cenario` dentro da raiz. */
 export function measureCenarios(raiz: HTMLElement): RatioMeasurement[] {
-  return Array.from(raiz.querySelectorAll<HTMLElement>('[data-cenario]')).map((pai) =>
-    measureRatio(pai, pai.dataset.cenario ?? '?'),
+  return Array.from(raiz.querySelectorAll<HTMLElement>('[data-cenario]')).map((parent) =>
+    measureRatio(parent, parent.dataset.cenario ?? '?'),
   );
 }
 

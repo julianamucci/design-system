@@ -145,9 +145,9 @@ export const Playground: Story = {
       // Ativação automática é o contrato do sistema: a seta troca a aba, não
       // só o foco. A tecla acompanha a orientação — horizontal navega no eixo
       // inline, vertical no eixo block.
-      const seta = args.orientation === "vertical" ? "{ArrowDown}" : "{ArrowRight}";
+      const arrow = args.orientation === "vertical" ? "{ArrowDown}" : "{ArrowRight}";
       abas()[0].focus();
-      await userEvent.keyboard(seta);
+      await userEvent.keyboard(arrow);
       await waitFor(() =>
         expect(abas()[1]).toHaveAttribute("aria-selected", "true")
       );

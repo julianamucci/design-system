@@ -83,7 +83,7 @@ export function construirCartaoPerfil(): HTMLElement {
 }
 
 /** Bloco de duas linhas — título em destaque e uma frase de apoio. */
-export function construirDuasLines(titulo: string, apoio: string): HTMLElement {
+export function construirDuasLines(titulo: string, helper: string): HTMLElement {
   const raiz = document.createElement('div');
   raiz.className = 'nds-stack';
   raiz.dataset.spacing = 'xs';
@@ -94,7 +94,7 @@ export function construirDuasLines(titulo: string, apoio: string): HTMLElement {
 
   const a = document.createElement('p');
   a.className = 'nds-text-caption nds-text-muted-foreground';
-  a.textContent = apoio;
+  a.textContent = helper;
 
   raiz.append(t, a);
   return raiz;

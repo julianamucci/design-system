@@ -97,18 +97,18 @@ export const WithForm: Story = {
   }),
   play: async ({ step }) => {
     const painel = await waitForPortal('dialog');
-    const dentro = within(painel);
+    const inside = within(painel);
 
     await step('O painel carrega nome, descrição e o campo do formulário', async () => {
       await expect(painel).toHaveAccessibleName(LABEL.titulo());
       await expect(painel).toHaveAccessibleDescription(LABEL.descricao());
       // O campo é achado pelo RÓTULO: se o `for`/`id` não casassem, o input
       // ficaria sem nome acessível e esta busca falharia.
-      await expect(dentro.getByLabelText(LABEL.campo())).toBeInTheDocument();
+      await expect(inside.getByLabelText(LABEL.campo())).toBeInTheDocument();
     });
 
     await step('O rodapé oferece cancelar e confirmar, nessa ordem de leitura', async () => {
-      const buttons = dentro.getAllByRole('button');
+      const buttons = inside.getAllByRole('button');
       const names = buttons.map((b) => b.textContent?.trim());
       await expect(names).toContain(LABEL.fechar());
       await expect(names).toContain(LABEL.confirmar());
@@ -160,7 +160,7 @@ export const WithConfirmation: Story = {
   }),
   play: async ({ step }) => {
     const painel = await waitForPortal('dialog');
-    const dentro = within(painel);
+    const inside = within(painel);
 
     await step('A consequência está escrita, não subentendida', async () => {
       await expect(painel).toHaveAccessibleDescription(LABEL.aviso());
@@ -169,12 +169,12 @@ export const WithConfirmation: Story = {
     await step('A ação principal carrega a variante destrutiva', async () => {
       // Afirma a CLASSE resultante: sob JIT o input `variant` seria ignorado e o
       // botão sairia com a variante default, sem erro nenhum (armadilha 1).
-      const destrutivo = dentro.getByRole('button', { name: LABEL.destruir() });
+      const destrutivo = inside.getByRole('button', { name: LABEL.destruir() });
       await expect(destrutivo).toHaveClass(/nds-button-destructive/);
     });
 
     await step('Cancelar continua sendo a saída de menor risco', async () => {
-      const cancelar = dentro.getByRole('button', { name: LABEL.fechar() });
+      const cancelar = inside.getByRole('button', { name: LABEL.fechar() });
       await expect(cancelar).toHaveClass(/nds-button-outline/);
     });
   },

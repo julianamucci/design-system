@@ -538,9 +538,9 @@ export const AsCombobox: Story = {
       await expect(document.getElementById(gatilho.getAttribute('aria-controls')!))
         .toBe(panelPop);
 
-      const dentro = within(panelPop);
-      await expect(dentro.getByRole('listbox')).toBeVisible();
-      await expect(dentro.getAllByRole('option')).toHaveLength(3);
+      const inside = within(panelPop);
+      await expect(inside.getByRole('listbox')).toBeVisible();
+      await expect(inside.getAllByRole('option')).toHaveLength(3);
       await expect(searchOf(panelPop)).toHaveFocus();
     });
 
@@ -647,19 +647,19 @@ export const CommandPalette: Story = {
       if (aberto) document.querySelector<HTMLElement>('[data-slot="dialog-overlay"]')?.click();
     }
 
-    const aoTeclar = (e: KeyboardEvent): void => {
+    const onKeyDown = (e: KeyboardEvent): void => {
       if (e.key.toLowerCase() !== 'k' || !(e.metaKey || e.ctrlKey)) return;
       // Sem isto o navegador leva o Cmd+K para a barra de endereço.
       e.preventDefault();
       if (!aberto) trigger.click();
     };
-    window.addEventListener('keydown', aoTeclar);
+    window.addEventListener('keydown', onKeyDown);
 
     // O listener sai junto com a story: o Storybook não remonta nada ao trocar
     // de exemplo, e um atalho global órfão dispararia na story seguinte.
     const observador = new MutationObserver(() => {
       if (!outer.isConnected) {
-        window.removeEventListener('keydown', aoTeclar);
+        window.removeEventListener('keydown', onKeyDown);
         observador.disconnect();
       }
     });

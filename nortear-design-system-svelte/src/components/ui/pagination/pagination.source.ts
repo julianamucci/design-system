@@ -61,15 +61,15 @@ function rootProps(
  * A fila de números com as reticências no lugar dos saltos — o miolo que as
  * três composições numeradas repetem, com a indentação de cada uma.
  */
-function fila(indentacao: string, ativo: string, aoClicar = ''): string {
+function fila(indentacao: string, active: string, onClick = ''): string {
   const i = indentacao;
-  const abertura = aoClicar
+  const abertura = onClick
     ? `${i}      <PaginationLink
 ${i}        page={p}
-${i}        isActive={${ativo} === p.value}
-${i}        ${aoClicar}
+${i}        isActive={${active} === p.value}
+${i}        ${onClick}
 ${i}      >`
-    : `${i}      <PaginationLink page={p} isActive={${ativo} === p.value}>`;
+    : `${i}      <PaginationLink page={p} isActive={${active} === p.value}>`;
 
   return `${i}{#each pages as p (p.key)}
 ${i}  <PaginationItem>

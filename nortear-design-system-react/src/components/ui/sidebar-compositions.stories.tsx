@@ -366,11 +366,11 @@ export const WithNavGroups: Story = {
       const alcancados: string[] = [];
       for (let i = 0; i < 5; i++) {
         await userEvent.tab();
-        const ativo = document.activeElement as HTMLElement | null;
-        if (!ativo) continue;
+        const active = document.activeElement as HTMLElement | null;
+        if (!active) continue;
         // `aria-label` ANTES do texto: onde ele existe, é ele que vence no
         // cálculo do nome acessível.
-        alcancados.push(ativo.getAttribute("aria-label") ?? ativo.textContent?.trim() ?? "");
+        alcancados.push(active.getAttribute("aria-label") ?? active.textContent?.trim() ?? "");
       }
       await expect(alcancados).toContain("Adicionar notificação");
       await expect(alcancados).not.toContain("");
@@ -392,14 +392,14 @@ export const WithSubmenu: Story = {
   render: () => <SidebarWithSubMenu />,
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const pai = () => canvas.getByRole("button", { name: /componentes/i });
+    const parent = () => canvas.getByRole("button", { name: /componentes/i });
 
     // Par idempotente: só clica quando o estado atual não é o desejado, então o
     // replay do painel Interactions (que roda no MESMO DOM) chega ao mesmo fim.
     const definir = async (aberto: boolean) => {
-      const alvo = pai();
+      const alvo = parent();
       if (alvo.getAttribute("aria-expanded") !== String(aberto)) await userEvent.click(alvo);
-      await waitFor(() => expect(pai()).toHaveAttribute("aria-expanded", String(aberto)));
+      await waitFor(() => expect(parent()).toHaveAttribute("aria-expanded", String(aberto)));
     };
 
     await step("O submenu é uma lista aninhada de verdade", async () => {

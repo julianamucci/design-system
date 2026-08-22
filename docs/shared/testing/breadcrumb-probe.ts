@@ -102,7 +102,7 @@ function texto(el: Element | null): string {
  * aproximação aplicada às cinco revela divergência sem precisar de um
  * computador de accname completo.
  */
-function nomeAcessivel(el: Element | null): string | null {
+function accessibleName(el: Element | null): string | null {
   if (!el) return null;
   return el.getAttribute('aria-label') || texto(el) || null;
 }
@@ -121,15 +121,15 @@ export function leituraOrder(raiz: Element): string[] {
     if (el.getAttribute('aria-hidden') === 'true') return;
     const tag = el.tagName.toLowerCase();
     if (tag === 'a' && el.hasAttribute('href')) {
-      saida.push(`link:${nomeAcessivel(el)}`);
+      saida.push(`link:${accessibleName(el)}`);
       return;
     }
     if (el.getAttribute('aria-current') === 'page') {
-      saida.push(`atual:${nomeAcessivel(el)}`);
+      saida.push(`atual:${accessibleName(el)}`);
       return;
     }
     if (tag === 'button') {
-      saida.push(`botao:${nomeAcessivel(el)}`);
+      saida.push(`botao:${accessibleName(el)}`);
       return;
     }
     if (el.getAttribute('role') === 'img') {
@@ -209,7 +209,7 @@ export function measureBreadcrumb(raiz: HTMLElement, cenario = 'padrao'): Breadc
           ariaLabel: reticencias.getAttribute('aria-label'),
           ariaHidden: reticencias.getAttribute('aria-hidden'),
           gatilho: gatilho ? gatilho.tagName.toLowerCase() : null,
-          nomeDoGatilho: nomeAcessivel(gatilho),
+          nomeDoGatilho: accessibleName(gatilho),
         }
       : { ...NO_ELLIPSIS },
     leituraOrder: leituraOrder(escopo),

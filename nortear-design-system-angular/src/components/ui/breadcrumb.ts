@@ -121,7 +121,7 @@ export class NdsBreadcrumbIcon {
   host: {
     class: 'nds-breadcrumb',
     '[attr.data-slot]': '"breadcrumb"',
-    '[attr.aria-label]': 'nomeAcessivel()',
+    '[attr.aria-label]': 'accessibleName()',
   },
 })
 export class NdsBreadcrumb {
@@ -132,7 +132,7 @@ export class NdsBreadcrumb {
     ElementRef,
   ).nativeElement.getAttribute('aria-label');
 
-  protected readonly nomeAcessivel = computed(
+  protected readonly accessibleName = computed(
     () => this.label() ?? this.rotuloEscrito ?? 'breadcrumb',
   );
 }

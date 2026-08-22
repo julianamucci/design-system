@@ -73,7 +73,7 @@ function frase(opcoes: {
   gatilho: string;
   painel?: string;
   conteudo: string;
-  moldura?: string;
+  frame?: string;
 }): string {
   const {
     antes,
@@ -82,9 +82,9 @@ function frase(opcoes: {
     gatilho,
     painel = '',
     conteudo,
-    moldura = 'nds-text-body nds-max-w-sm',
+    frame = 'nds-text-body nds-max-w-sm',
   } = opcoes;
-  return `<p class="${moldura}">
+  return `<p class="${frame}">
   ${antes}
   <HoverCard${attrs(raiz)}>
     <HoverCardTrigger as-child>

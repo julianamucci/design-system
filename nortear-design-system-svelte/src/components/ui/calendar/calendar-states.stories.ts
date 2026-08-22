@@ -35,8 +35,8 @@ type Story = StoryObj;
 
 // O `data-value` aparece na célula E no botão dentro dela: sem escopar pela
 // classe do botão, cada dia entra duas vezes na conta.
-const valuesWith = (el: HTMLElement, seletor: string): string[] =>
-  Array.from(el.querySelectorAll(seletor)).map((n) => n.getAttribute('data-value') ?? '');
+const valuesWith = (el: HTMLElement, selector: string): string[] =>
+  Array.from(el.querySelectorAll(selector)).map((n) => n.getAttribute('data-value') ?? '');
 
 export const Selected: Story = {
   render: () => ({
@@ -165,9 +165,9 @@ export const WithOutsideDays: Story = {
   play: async ({ canvasElement, step }) => {
     await step('As bordas do grid trazem dias de fora do mês', async () => {
       // Abril de 2026 começa numa quarta: as três primeiras casas vêm de março.
-      const fora = valuesWith(canvasElement, '.nds-calendar-day-btn[data-value][data-outside-month]');
-      await expect(fora).toContain('2026-03-30');
-      await expect(fora.length).toBeGreaterThan(0);
+      const outside = valuesWith(canvasElement, '.nds-calendar-day-btn[data-value][data-outside-month]');
+      await expect(outside).toContain('2026-03-30');
+      await expect(outside.length).toBeGreaterThan(0);
     });
 
     await step('Dia de fora do mês não conta como do mês', async () => {

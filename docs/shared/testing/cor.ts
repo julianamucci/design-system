@@ -24,7 +24,7 @@ export type Side = 'borda' | 'preenchimento';
 export interface ColorTarget {
   /** Nome que aparece no relatório de falha. */
   nome: string;
-  seletor: string;
+  selector: string;
   /** `border` lê border-top-color; `preenchimento` lê background-color. */
   lado?: Side;
 }
@@ -195,7 +195,7 @@ export function byTheme<T>(
 }
 
 export function themeMeasureColor(raiz: HTMLElement, targets: ColorTarget[]): ColorMeasurement[] {
-  const elementos = targets.map((a) => ({ alvo: a, el: raiz.querySelector<HTMLElement>(a.seletor) }));
+  const elementos = targets.map((a) => ({ alvo: a, el: raiz.querySelector<HTMLElement>(a.selector) }));
 
   const transicoesOriginais = elementos.map(({ el }) => el?.style.transition ?? null);
   elementos.forEach(({ el }) => {
@@ -265,7 +265,7 @@ export function resolveColor(raiz: HTMLElement, valor: string): string | null {
  */
 export function ruleDeclaration(
   doc: Document,
-  filtro: (seletor: string) => boolean,
+  filtro: (selector: string) => boolean,
   prop: string,
 ): string | null {
   const visitar = (regras: CSSRuleList): string | null => {

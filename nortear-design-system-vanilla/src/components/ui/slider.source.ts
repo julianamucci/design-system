@@ -41,7 +41,7 @@ const CHANGE_DEFAULT = '(valor) => mostrarValor(valor)';
 const COMMIT_DEFAULT = '(valor) => registrarAjuste(valor)';
 
 /** `role="slider"` sem nome é controle que o leitor de tela não sabe ler. */
-function nomeAcessivel(o: SliderSnippetOptions, intervalo: boolean): string {
+function accessibleName(o: SliderSnippetOptions, intervalo: boolean): string {
   const bruto =
     o['aria-label'] ??
     (intervalo ? ['Faixa de preço — mínimo', 'Faixa de preço — máximo'] : 'Volume');
@@ -67,7 +67,7 @@ export function sliderSnippet(o: SliderSnippetOptions = {}): string {
     ['max', o.max !== undefined && o.max !== 100 ? String(o.max) : undefined],
     ['step', o.step !== undefined && o.step !== 1 ? String(o.step) : undefined],
     ['value', valueLiteral(o.value)],
-    ['aria-label', nomeAcessivel(o, intervalo)],
+    ['aria-label', accessibleName(o, intervalo)],
     ['orientation', o.orientation === 'vertical' ? texto('vertical') : undefined],
     ['disabled', o.disabled ? 'true' : undefined],
     ['class', o.class ? texto(o.class) : undefined],

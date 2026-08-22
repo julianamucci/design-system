@@ -70,8 +70,8 @@ ${p}</ul>`;
 }
 
 /** Item da barra que só navega: um destino direto, sem painel. */
-function itemDireto(href: string, rotulo: string, ativo = false): string {
-  const marca = ativo ? ' :active="true"' : '';
+function itemDireto(href: string, rotulo: string, active = false): string {
+  const marca = active ? ' :active="true"' : '';
   return `    <NavigationMenuItem>
       <NavigationMenuLink href="${href}"${marca}>${rotulo}</NavigationMenuLink>
     </NavigationMenuItem>`;
@@ -410,7 +410,7 @@ ${cartoes}
  * `nds-h-full` — e os de apoio empilham na coluna ao lado.
  */
 export function navigationMenuWithHighlightSource(): string {
-  const apoio = [
+  const helper = [
     { href: '#guias', titulo: 'Guias' },
     { href: '#api', titulo: 'Referência da API' },
     { href: '#changelog', titulo: 'Novidades' },
@@ -444,7 +444,7 @@ ${itemDireto('#inicio', 'Início')}
           </NavigationMenuChild>
 
           <ul class="nds-stack nds-list-none" data-spacing="xs">
-${apoio}
+${helper}
           </ul>
         </div>
       </NavigationMenuContent>

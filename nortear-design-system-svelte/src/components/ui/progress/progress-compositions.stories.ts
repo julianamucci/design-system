@@ -6,9 +6,9 @@ import {
   indicadorAnimation,
   barrasDeProgresso,
   contrastBarTrack,
-  corDoToken,
+  tokenColor,
   indicadorDoProgresso,
-  nomeAcessivel,
+  accessibleName,
   percentualDesenhado,
 } from '@shared/testing/progress-probe';
 import { progressSource } from './progress.source';
@@ -97,7 +97,7 @@ export const SimpleLoading: Story = {
 
     await step('Barra nomeada pela operação, não pelo componente', async () => {
       const bar = canvas.getByRole('progressbar', { name: 'Carregando dados' });
-      await expect(nomeAcessivel(bar)).toBe('Carregando dados');
+      await expect(accessibleName(bar)).toBe('Carregando dados');
     });
 
     await step('Sem rótulo visível, o desenho ainda corresponde ao valor', async () => {
@@ -135,7 +135,7 @@ export const SuccessCompletion: Story = {
 
     await step('A barra é pintada com o token de sucesso', async () => {
       const cor = getComputedStyle(indicadorDoProgresso(canvasElement)).backgroundColor;
-      await expect(cor).toBe(corDoToken(canvasElement, '--success'));
+      await expect(cor).toBe(tokenColor(canvasElement, '--success'));
     });
 
     await step('A variante mantém 3:1 contra a trilha', async () => {
@@ -170,7 +170,7 @@ export const ProcessingIndeterminate: Story = {
 
     await step('Toda barra da tela tem nome acessível', async () => {
       for (const bar of barrasDeProgresso(canvasElement)) {
-        await expect(nomeAcessivel(bar)).not.toBe('');
+        await expect(accessibleName(bar)).not.toBe('');
       }
     });
 

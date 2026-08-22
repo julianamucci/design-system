@@ -241,11 +241,11 @@ export const Directional: Story = {
       // accessibility.item5 — "Anterior" some no breakpoint estreito; se o nome
       // acessível viesse do texto visível, o link ficaria mudo justamente em
       // tela pequena.
-      const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+      const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
       const next = canvas.getByRole('link', { name: LABEL_NEXT });
-      await expect(anterior.querySelector('.nds-pagination-label')).toHaveTextContent('Anterior');
+      await expect(previous.querySelector('.nds-pagination-label')).toHaveTextContent('Anterior');
       await expect(next.querySelector('.nds-pagination-label')).toHaveTextContent('Próxima');
-      await expect(anterior).toHaveClass('nds-pagination-prev');
+      await expect(previous).toHaveClass('nds-pagination-prev');
       await expect(next).toHaveClass('nds-pagination-next');
     });
 
@@ -336,9 +336,9 @@ export const Interactive: Story = {
 
     await step('O destaque acompanha o estado externo', async () => {
       // visual.item3 — a página 3 nasce ativa porque é o valor do signal.
-      const ativo = canvas.getByRole('link', { name: `${LABEL_PAGE} 3` });
-      await expect(ativo).toHaveAttribute('aria-current', 'page');
-      await expect(ativo).toHaveClass('nds-button-outline');
+      const active = canvas.getByRole('link', { name: `${LABEL_PAGE} 3` });
+      await expect(active).toHaveAttribute('aria-current', 'page');
+      await expect(active).toHaveClass('nds-button-outline');
     });
 
     await step('Clicar numa página move o destaque', async () => {

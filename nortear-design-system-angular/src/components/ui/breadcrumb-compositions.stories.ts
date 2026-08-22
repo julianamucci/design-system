@@ -251,8 +251,8 @@ export const Collapsed: Story = {
     const menu = () => document.querySelector<HTMLElement>('[data-slot="dropdown-menu-content"]');
 
     await step('A trilha visível fica curta, e o resto vai para o gatilho', async () => {
-      const trilha = canvasElement.querySelector<HTMLElement>('[data-slot="breadcrumb-list"]')!;
-      await expect(trilha.querySelectorAll('[data-slot="breadcrumb-item"]').length).toBe(4);
+      const trail = canvasElement.querySelector<HTMLElement>('[data-slot="breadcrumb-list"]')!;
+      await expect(trail.querySelectorAll('[data-slot="breadcrumb-item"]').length).toBe(4);
       await expect(canvas.getByText('Fones de ouvido')).toBeVisible();
     });
 

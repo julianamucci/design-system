@@ -525,7 +525,7 @@ const sidebarMenuButtonVariants = cva("nds-sidebar-menu-button", {
  * às outras: presença do atributo é o próprio estado.
  */
 const stateActiveAsText = {
-  active: (ativo: boolean) => (ativo ? { "data-active": "true" } : null),
+  active: (active: boolean) => (active ? { "data-active": "true" } : null),
 }
 
 function SidebarMenuButton({

@@ -91,7 +91,7 @@ const SELECTOR_TRIGGERS =
     // devtools e o painel Code veriam exatamente o mesmo HTML. Mesmo atributo
     // nas cinco stacks.
     '[attr.data-type]': 'modo()',
-    '(keydown)': 'aoTeclar($event)',
+    '(keydown)': 'onKeyDown($event)',
   },
 })
 export class NdsAccordion {
@@ -106,7 +106,7 @@ export class NdsAccordion {
    * Só age quando o foco está NUM gatilho: tecla apertada dentro do conteúdo
    * (link, campo, tabela rolável) segue o comportamento nativo.
    */
-  protected aoTeclar(event: KeyboardEvent): void {
+  protected onKeyDown(event: KeyboardEvent): void {
     if (event.defaultPrevented) return;
     if (!NAV_KEYS.includes(event.key as NavKey)) return;
 

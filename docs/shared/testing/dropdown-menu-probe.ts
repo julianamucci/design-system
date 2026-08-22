@@ -66,13 +66,13 @@ export type RetratoDoDropdown = {
   gatilho: RetratoDeElemento | null;
   painel: PanelRetrato;
   /** `role="group"` dentro do menu e o nome acessível de cada um. */
-  grupos: Array<{ nomeAcessivel: string | null; slot: string | null }>;
+  grupos: Array<{ accessibleName: string | null; slot: string | null }>;
   rotulos: RetratoDeElemento[];
   separadores: RetratoDeElemento[];
   itens: RetratoDeElemento[];
   marcacoes: RetratoDeElemento[];
   /** Indicador visual do item marcado — `display` computado por estado. */
-  indicadores: Array<{ pai: string; display: string; classes: string }>;
+  indicadores: Array<{ parent: string; display: string; classes: string }>;
   shortcuts: Array<{ texto: string; classes: string; ariaHidden: string | null; encostaNaDireita: boolean }>;
   teclado: KeyboardRetrato | null;
   submenu: {
@@ -182,25 +182,25 @@ export async function radiografarDropdown(
   const { gatilho = null, teclado } = opts;
   const painel = findPanel();
 
-  const dentro = <T extends HTMLElement>(sel: string): T[] =>
+  const inside = <T extends HTMLElement>(sel: string): T[] =>
     painel ? Array.from(painel.querySelectorAll<T>(sel)) : [];
 
   // Os retratos são materializados AGORA, não no `return`: o painel do Vanilla
   // sai do DOM no mesmo tick do Escape, e `getComputedStyle` de nó desanexado
   // devolve string vazia em todo campo — o que se leria como "sem estilo" é a
   // medição chegando tarde.
-  const itens = dentro<HTMLElement>('[role="menuitem"]').map(retratar);
-  const marcacoes = dentro<HTMLElement>(
+  const itens = inside<HTMLElement>('[role="menuitem"]').map(retratar);
+  const marcacoes = inside<HTMLElement>(
     '[role="menuitemcheckbox"], [role="menuitemradio"]',
   ).map(retratar);
-  const rotulos = dentro<HTMLElement>(
+  const rotulos = inside<HTMLElement>(
     '.nds-dropdown-menu-label, [data-slot="dropdown-menu-label"], [data-slot="dropdown-menu-group-heading"]',
   ).map(retratar);
-  const separadores = dentro<HTMLElement>(
+  const separadores = inside<HTMLElement>(
     '[role="separator"], .nds-dropdown-menu-separator, [data-slot="dropdown-menu-separator"]',
   ).map(retratar);
-  const grupos = dentro<HTMLElement>('[role="group"]').map((g) => ({
-    nomeAcessivel:
+  const grupos = inside<HTMLElement>('[role="group"]').map((g) => ({
+    accessibleName:
       g.getAttribute('aria-label') ??
       (g.getAttribute('aria-labelledby')
         ? (document.getElementById(g.getAttribute('aria-labelledby')!)?.textContent ?? '').trim()
@@ -209,15 +209,15 @@ export async function radiografarDropdown(
   }));
   const panelRetrato = retratarPanel(painel);
 
-  const indicadores = dentro<HTMLElement>(
+  const indicadores = inside<HTMLElement>(
     '.nds-dropdown-menu-item-indicator, [data-slot$="item-indicator"]',
   ).map((ind) => ({
-    pai: descrever(ind.closest('[role^="menuitem"]')) ?? '—',
+    parent: descrever(ind.closest('[role^="menuitem"]')) ?? '—',
     display: getComputedStyle(ind).display,
     classes: ind.getAttribute('class') ?? '',
   }));
 
-  const shortcuts = dentro<HTMLElement>(
+  const shortcuts = inside<HTMLElement>(
     '.nds-dropdown-menu-shortcut, [data-slot="dropdown-menu-shortcut"]',
   ).map((a) => {
     const item = a.closest<HTMLElement>('[role^="menuitem"]');
@@ -313,11 +313,11 @@ export async function radiografarDropdown(
       // caixa no tick da abertura lê a posição de partida, não a final. Espera a
       // esquerda parar de mudar antes de comparar com o menu pai.
       if (filho) {
-        let anterior = NaN;
+        let previous = NaN;
         await ate(() => {
           const atual = filho.getBoundingClientRect().left;
-          const estavel = atual === anterior;
-          anterior = atual;
+          const estavel = atual === previous;
+          previous = atual;
           return estavel;
         }, 1500);
       }

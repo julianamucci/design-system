@@ -109,7 +109,7 @@ export const Playground: Story = {
 
     // A tecla de navegação segue o eixo escolhido no control, senão trocar a
     // orientação no painel deixaria a própria play vermelha.
-    const seta = args.orientation === 'vertical' ? '{ArrowDown}' : '{ArrowRight}';
+    const arrow = args.orientation === 'vertical' ? '{ArrowDown}' : '{ArrowRight}';
     // No modo manual a seta só move o foco — quem troca a aba é o Enter.
     const confirmar = async () => {
       if (args.activationMode === 'manual') await userEvent.keyboard('{Enter}');
@@ -150,7 +150,7 @@ export const Playground: Story = {
 
     await step('A seta move o foco para a próxima aba', async () => {
       propriedades.focus();
-      await userEvent.keyboard(seta);
+      await userEvent.keyboard(arrow);
       await expect(exemplos).toHaveFocus();
       await confirmar();
       await waitFor(() => expect(exemplos).toHaveAttribute('aria-selected', 'true'));

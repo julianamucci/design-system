@@ -276,16 +276,16 @@ export const WithOutsideDays: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const daysWith = (seletor: string) =>
-      Array.from(canvasElement.querySelectorAll<HTMLElement>(`.nds-calendar-day-btn${seletor}`)).map(
+    const daysWith = (selector: string) =>
+      Array.from(canvasElement.querySelectorAll<HTMLElement>(`.nds-calendar-day-btn${selector}`)).map(
         (el) => el.dataset.day ?? '',
       );
 
     await step('As bordas do grid trazem dias de fora do mês', async () => {
       // Abril de 2026 começa numa quarta: as três primeiras casas vêm de março.
-      const fora = daysWith('[data-outside-month]');
-      await expect(fora).toContain('2026-03-30');
-      await expect(fora.length).toBeGreaterThan(0);
+      const outside = daysWith('[data-outside-month]');
+      await expect(outside).toContain('2026-03-30');
+      await expect(outside.length).toBeGreaterThan(0);
     });
 
     await step('Dia de fora do mês não conta como do mês', async () => {

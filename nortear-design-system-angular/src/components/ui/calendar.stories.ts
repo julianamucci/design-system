@@ -280,8 +280,8 @@ export const Playground: Story = {
       // Emoldurado, o botão de mês competiria com o dia escolhido, que é o único
       // elemento do calendário que deveria ter peso. Medida computada, porque
       // classe presente não é borda ausente.
-      const anterior = canvas.getByRole('button', { name: 'Ir para o mês anterior' });
-      const cs = getComputedStyle(anterior);
+      const previous = canvas.getByRole('button', { name: 'Ir para o mês anterior' });
+      const cs = getComputedStyle(previous);
       await expect(parseFloat(cs.borderTopWidth)).toBe(0);
       await expect(['transparent', 'rgba(0, 0, 0, 0)']).toContain(cs.backgroundColor);
     });

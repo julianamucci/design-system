@@ -56,7 +56,7 @@ export const WithTooltip: Story = {
       await expect(forma).toBeDefined();
 
       const caixa = forma.getBoundingClientRect();
-      const desenho = raiz.querySelector('svg')!;
+      const design = raiz.querySelector('svg')!;
       // `userEvent.hover` não serve aqui: ele não carrega coordenada, e a lib
       // faz o acerto do alvo por coordenada — o ponteiro cairia em (0,0), fora
       // do desenho, e a dica nunca abriria. Daí o evento cru, com posição.
@@ -67,8 +67,8 @@ export const WithTooltip: Story = {
         clientY: caixa.top + caixa.height / 2,
         bubbles: true,
       };
-      fireEvent.pointerMove(desenho, position);
-      fireEvent.mouseMove(desenho, position);
+      fireEvent.pointerMove(design, position);
+      fireEvent.mouseMove(design, position);
 
       await waitFor(
         () => {
@@ -145,12 +145,12 @@ export const MultipleSeries: Story = {
     await step('Cada série usa um token de cor distinto', async () => {
       // A trama entra como preenchimento `url(#…)`; tirando essas, o que sobra
       // são as cores de série de verdade.
-      const cores = new Set(
+      const colors = new Set(
         datumFormas(raiz)
           .map((forma) => getComputedStyle(forma).fill)
           .filter((cor) => !cor.startsWith('url')),
       );
-      await expect(cores.size).toBeGreaterThanOrEqual(SERIES_MULTI.length);
+      await expect(colors.size).toBeGreaterThanOrEqual(SERIES_MULTI.length);
     });
   },
 };

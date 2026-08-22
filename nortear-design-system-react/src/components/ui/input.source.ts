@@ -36,7 +36,7 @@ export type InputArgs = {
 };
 
 /** Os tipos que os controls oferecem — control adulterado não vira atributo. */
-const TIPOS = [
+const TYPES = [
   'text',
   'email',
   'password',
@@ -99,7 +99,7 @@ export const inputSource: SourceTransform<InputArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   if (args['aria-invalid'] === true) return inputWithErrorSource();
   return fieldLabelled('nome-completo', 'Nome completo', [
-    propOption('type', args.type, TIPOS, 'text'),
+    propOption('type', args.type, TYPES, 'text'),
     propText('placeholder', texto(args.placeholder) ?? 'ex: João da Silva'),
     propBool('disabled', args.disabled),
   ]);

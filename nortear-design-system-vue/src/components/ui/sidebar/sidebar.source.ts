@@ -90,13 +90,13 @@ const MARCA = `<SidebarHeader class="nds-p-4 nds-font-semibold nds-text-muted-fo
 type Item = {
   icone?: string;
   rotulo: string;
-  ativo?: boolean;
+  active?: boolean;
   /** O balão só aparece com a barra recolhida — é o rótulo que sobrou. */
   tooltip?: boolean;
   badge?: string;
   acao?: string;
   expandido?: boolean;
-  sub?: Array<{ rotulo: string; ativo?: boolean }>;
+  sub?: Array<{ rotulo: string; active?: boolean }>;
 };
 
 /** Lista de itens do menu, em coluna zero. */
@@ -104,10 +104,10 @@ function menu(itens: Item[]): string {
   const corpo = itens
     .map((item) => {
       const button = attrs(
-        item.ativo ? 'is-active' : '',
+        item.active ? 'is-active' : '',
         item.tooltip === false ? '' : `tooltip="${item.rotulo}"`,
         item.expandido ? 'aria-expanded="true"' : '',
-        item.ativo ? 'aria-current="page"' : '',
+        item.active ? 'aria-current="page"' : '',
       );
       const icone = item.icone ? `      <${item.icone} aria-hidden="true" />\n` : '';
       // A chevron gira sozinha sob `[aria-expanded="true"]`: o estado no DOM é
@@ -127,7 +127,7 @@ function menu(itens: Item[]): string {
         const filhos = item.sub
           .map(
             (filho) => `      <SidebarMenuSubItem>
-        <SidebarMenuSubButton${attrs(filho.ativo ? 'is-active' : '')}>
+        <SidebarMenuSubButton${attrs(filho.active ? 'is-active' : '')}>
           <span>${filho.rotulo}</span>
         </SidebarMenuSubButton>
       </SidebarMenuSubItem>`,
@@ -170,7 +170,7 @@ function grupo(opcoes: { rotulo?: string; acao?: string; miolo: string }): strin
  * conteúdo na variante `inset` é um seletor de irmão, e envolver um dos dois é
  * o primeiro jeito de perdê-la.
  */
-function moldura(opcoes: {
+function frame(opcoes: {
   provider?: string;
   barra?: string;
   header?: string;
@@ -208,7 +208,7 @@ function moldura(opcoes: {
 }
 
 const APLICACAO: Item[] = [
-  { icone: 'LayoutDashboard', rotulo: 'Dashboard', ativo: true },
+  { icone: 'LayoutDashboard', rotulo: 'Dashboard', active: true },
   { icone: 'Blocks', rotulo: 'Componentes' },
   { icone: 'Palette', rotulo: 'Tokens' },
 ];
@@ -221,7 +221,7 @@ const APLICACAO: Item[] = [
 export const sidebarPlaygroundSource: SourceTransform<SidebarArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return montar(
-    moldura({
+    frame({
       provider: attrs(attr('mobile-query', args.mobileQuery, QUERY_DEFAULT)),
       barra: attrs(
         attr('side', args.side, 'left'),
@@ -252,7 +252,7 @@ export const sidebarPlaygroundSource: SourceTransform<SidebarArgs> = (_gerado, c
  */
 function variante(variant: 'sidebar' | 'floating' | 'inset'): string {
   return montar(
-    moldura({
+    frame({
       barra: attrs(attr('variant', variant, 'sidebar')),
       header: MARCA,
       conteudo: grupo({
@@ -325,7 +325,7 @@ ${indentar(
  */
 export function sidebarExpandidaSource(): string {
   return montar(
-    moldura({
+    frame({
       provider: ' default-open',
       header: MARCA,
       conteudo: grupo({ rotulo: 'Aplicação', miolo: menu(APLICACAO) }),
@@ -342,7 +342,7 @@ export function sidebarExpandidaSource(): string {
  */
 export function sidebarRecolhidaIconSource(): string {
   return montar(
-    moldura({
+    frame({
       provider: ' :default-open="false"',
       barra: ' collapsible="icon"',
       header: `<SidebarHeader class="nds-p-2 nds-font-semibold nds-text-muted-foreground nds-overflow-hidden">
@@ -364,7 +364,7 @@ export function sidebarRecolhidaIconSource(): string {
  */
 export function sidebarFixaSource(): string {
   return montar(
-    moldura({
+    frame({
       barra: ' collapsible="none"',
       header: MARCA,
       conteudo: grupo({
@@ -385,7 +385,7 @@ export function sidebarFixaSource(): string {
  */
 export function sidebarLoadingSource(): string {
   return montar(
-    moldura({
+    frame({
       header: MARCA,
       conteudo: grupo({
         rotulo: 'Carregando',
@@ -413,7 +413,7 @@ export function sidebarLoadingSource(): string {
  */
 export function sidebarGavetaMovelSource(): string {
   return montar(
-    moldura({
+    frame({
       provider: ' mobile-query="(min-width: 0px)"',
       header: MARCA,
       conteudo: grupo({
@@ -437,14 +437,14 @@ export function sidebarGavetaMovelSource(): string {
  */
 export function sidebarGroupsSource(): string {
   return montar(
-    moldura({
+    frame({
       header: MARCA,
       conteudo: [
         grupo({
           rotulo: 'Aplicação',
           acao: 'Adicionar item',
           miolo: menu([
-            { icone: 'LayoutDashboard', rotulo: 'Dashboard', ativo: true, badge: '3' },
+            { icone: 'LayoutDashboard', rotulo: 'Dashboard', active: true, badge: '3' },
             { icone: 'Blocks', rotulo: 'Componentes' },
             { icone: 'Palette', rotulo: 'Tokens' },
           ]),
@@ -475,12 +475,12 @@ ${indentar(menu([{ icone: 'User', rotulo: 'Perfil do Usuário' }]), 2)}
  */
 export function sidebarSubmenuSource(): string {
   return montar(
-    moldura({
+    frame({
       header: MARCA,
       conteudo: grupo({
         rotulo: 'Documentação',
         miolo: menu([
-          { icone: 'LayoutDashboard', rotulo: 'Dashboard', ativo: true },
+          { icone: 'LayoutDashboard', rotulo: 'Dashboard', active: true },
           {
             icone: 'Blocks',
             rotulo: 'Componentes',
@@ -488,7 +488,7 @@ export function sidebarSubmenuSource(): string {
             sub: [
               { rotulo: 'Alert' },
               { rotulo: 'Button' },
-              { rotulo: 'Barra lateral', ativo: true },
+              { rotulo: 'Barra lateral', active: true },
               { rotulo: 'Card' },
             ],
           },
@@ -513,7 +513,7 @@ export function sidebarSubmenuSource(): string {
  */
 export function sidebarSearchSource(): string {
   return montar(
-    moldura({
+    frame({
       header: `<SidebarHeader class="nds-p-2" data-spacing="sm">
   <span class="nds-px-2 nds-font-semibold nds-text-muted-foreground nds-sidebar-hide-collapsed">Design System</span>
   <SidebarInput placeholder="Buscar..." aria-label="Buscar na navegação" />

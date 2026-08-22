@@ -101,13 +101,13 @@ function esperar(ms: number): Promise<void> {
  * a limpeza. Se nunca zerar, devolve o que sobrou — a espera dá prazo, não
  * perdão.
  */
-async function countOrfaos(seletor: string | undefined, limit = 1200): Promise<number> {
-  if (!seletor) return 0;
+async function countOrfaos(selector: string | undefined, limit = 1200): Promise<number> {
+  if (!selector) return 0;
   const end = Date.now() + limit;
-  let n = document.querySelectorAll(seletor).length;
+  let n = document.querySelectorAll(selector).length;
   while (n > 0 && Date.now() < end) {
     await esperar(30);
-    n = document.querySelectorAll(seletor).length;
+    n = document.querySelectorAll(selector).length;
   }
   return n;
 }

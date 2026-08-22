@@ -186,11 +186,11 @@ export class NdsToggleGroup {
     // enquanto o foco está FORA do grupo: com o foco dentro, quem manda é a
     // navegação por setas, e reposicionar aqui roubaria o foco dela.
     effect(() => {
-      const ativo = this.indiceAtivo();
-      if (ativo === -1 || this.indicesDesabilitados().includes(ativo)) return;
+      const active = this.indiceAtivo();
+      if (active === -1 || this.indicesDesabilitados().includes(active)) return;
       const focado = this.hostRef.nativeElement.ownerDocument.activeElement;
       if (focado && this.hostRef.nativeElement.contains(focado)) return;
-      this.composite.setHighlightedIndex(ativo);
+      this.composite.setHighlightedIndex(active);
     });
   }
 

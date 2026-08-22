@@ -151,10 +151,10 @@ export const Playground: Story = {
       // Asserção sobre o CONJUNTO, não só sobre o ativo: exatamente um item na
       // ordem de tabulação, e é o escolhido. Sem isso o Tab percorreria opção
       // por opção em vez de sair do grupo.
-      const ordem = radios.map((r) => r.tabIndex);
-      await expect(ordem.filter((t) => t === 0)).toHaveLength(1);
+      const order = radios.map((r) => r.tabIndex);
+      await expect(order.filter((t) => t === 0)).toHaveLength(1);
       const marcado = radios.findIndex((r) => r.getAttribute("aria-checked") === "true");
-      await expect(ordem[marcado]).toBe(0);
+      await expect(order[marcado]).toBe(0);
     });
   },
 };

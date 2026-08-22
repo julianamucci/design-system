@@ -825,15 +825,15 @@ export class NdsDataTable<TData> implements OnInit {
   });
 
   private readonly linhasOrdenadas = computed(() => {
-    const ordem = this.ordenacao();
+    const order = this.ordenacao();
     const linhas = this.linhasFiltradas();
-    if (!ordem) return linhas;
+    if (!order) return linhas;
 
-    const coluna = this.columns().find((c) => c.id === ordem.id);
+    const coluna = this.columns().find((c) => c.id === order.id);
     if (!coluna) return linhas;
 
     const dados = this.data();
-    const sinal = ordem.dir === 'asc' ? 1 : -1;
+    const sinal = order.dir === 'asc' ? 1 : -1;
     return [...linhas].sort((a, b) => {
       const va = coluna.accessor(dados[a.indice]);
       const vb = coluna.accessor(dados[b.indice]);
@@ -871,22 +871,22 @@ export class NdsDataTable<TData> implements OnInit {
     // Coluna que não ordena não anuncia ordenação: `aria-sort="none"` prometeria
     // uma capacidade que ela não tem.
     if (!coluna.sortable) return undefined;
-    const ordem = this.ordenacao();
-    if (ordem?.id !== coluna.id) return 'none';
-    return ordem.dir === 'asc' ? 'ascending' : 'descending';
+    const order = this.ordenacao();
+    if (order?.id !== coluna.id) return 'none';
+    return order.dir === 'asc' ? 'ascending' : 'descending';
   }
 
   protected iconeDaOrdem(id: string): DataTableIconKind {
-    const ordem = this.ordenacao();
-    if (ordem?.id !== id) return 'arrow-up-down';
-    return ordem.dir === 'asc' ? 'arrow-up' : 'arrow-down';
+    const order = this.ordenacao();
+    if (order?.id !== id) return 'arrow-up-down';
+    return order.dir === 'asc' ? 'arrow-up' : 'arrow-down';
   }
 
   /** Três estados, como nas outras stacks: ascendente → descendente → nenhum. */
   protected alternarOrdenacao(id: string): void {
-    const ordem = this.ordenacao();
-    if (ordem?.id !== id) this.ordenacao.set({ id, dir: 'asc' });
-    else if (ordem.dir === 'asc') this.ordenacao.set({ id, dir: 'desc' });
+    const order = this.ordenacao();
+    if (order?.id !== id) this.ordenacao.set({ id, dir: 'asc' });
+    else if (order.dir === 'asc') this.ordenacao.set({ id, dir: 'desc' });
     else this.ordenacao.set(null);
   }
 
@@ -1014,11 +1014,11 @@ export class NdsDataTable<TData> implements OnInit {
     this.emEdicao.set(null);
 
     const coluna = this.columns().find((c) => c.id === celula.colunaId);
-    const anterior = coluna?.accessor(this.data()[linha.indice]);
+    const previous = coluna?.accessor(this.data()[linha.indice]);
     const bruto = this.rascunho();
     // O tipo do valor anterior manda: uma coluna numérica que voltasse como
     // string reordenaria por texto na próxima ordenação, sem erro nenhum.
-    const valor = typeof anterior === 'number' ? Number(bruto) : bruto;
+    const valor = typeof previous === 'number' ? Number(bruto) : bruto;
 
     this.cellEdit.emit({ rowIndex: linha.indice, columnId: celula.colunaId, value: valor });
   }

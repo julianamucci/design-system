@@ -65,14 +65,14 @@ export const FirstSlide: Story = {
   render: () => ({ props: { slides: SLIDES }, template: TEMPLATE }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const anterior = canvas.getByRole('button', { name: 'Item anterior' });
+    const previous = canvas.getByRole('button', { name: 'Item anterior' });
     const proximo = canvas.getByRole('button', { name: 'Próximo item' });
 
     await step('No começo só a seta de avanço leva a algum lugar', async () => {
-      await expect(anterior).toBeDisabled();
+      await expect(previous).toBeDisabled();
       // `aria-disabled` acompanha o `disabled` nativo porque o leitor de tela
       // anuncia o primeiro; o segundo é o que tira o botão da ordem de foco.
-      await expect(anterior).toHaveAttribute('aria-disabled', 'true');
+      await expect(previous).toHaveAttribute('aria-disabled', 'true');
       await expect(proximo).toBeEnabled();
       await expect(proximo.hasAttribute('aria-disabled')).toBe(false);
     });
@@ -86,7 +86,7 @@ export const FirstSlide: Story = {
       // envolvida por `waitFor` — a diferença é real, não descuido. Neste ponto
       // o botão nasceu desabilitado, e transição não anima valor inicial: não há
       // nada em curso para esperar. Lá, ele ACABOU de mudar de estado.
-      const apagada = Number(getComputedStyle(anterior).opacity);
+      const apagada = Number(getComputedStyle(previous).opacity);
       const viva = Number(getComputedStyle(proximo).opacity);
       await expect(apagada).toBeLessThan(viva);
     });
@@ -141,9 +141,9 @@ export const LastSlide: Story = {
       await expect(proximo()).toBeDisabled();
       await expect(proximo()).toHaveAttribute('aria-disabled', 'true');
 
-      const anterior = canvas.getByRole('button', { name: 'Item anterior' });
-      await expect(anterior).toBeEnabled();
-      await expect(anterior.hasAttribute('aria-disabled')).toBe(false);
+      const previous = canvas.getByRole('button', { name: 'Item anterior' });
+      await expect(previous).toBeEnabled();
+      await expect(previous.hasAttribute('aria-disabled')).toBe(false);
 
       // Espelho da comparação do primeiro slide: agora a apagada é a outra.
       //
@@ -155,7 +155,7 @@ export const LastSlide: Story = {
       // elemento a meio do fade.
       await waitFor(async () => {
         const apagada = Number(getComputedStyle(proximo()).opacity);
-        const viva = Number(getComputedStyle(anterior).opacity);
+        const viva = Number(getComputedStyle(previous).opacity);
         await expect(apagada).toBeLessThan(viva);
       }, { timeout: 4000 });
     });
@@ -164,8 +164,8 @@ export const LastSlide: Story = {
       // A prova de que o fim é real e não só um sinalizador do componente: não
       // sobrou conteúdo à direita para rolar.
       await waitFor(async () => {
-        const sobra = viewport.scrollWidth - viewport.clientWidth - viewport.scrollLeft;
-        await expect(sobra).toBeLessThan(2);
+        const leftover = viewport.scrollWidth - viewport.clientWidth - viewport.scrollLeft;
+        await expect(leftover).toBeLessThan(2);
       }, { timeout: 4000 });
     });
   },

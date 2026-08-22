@@ -71,11 +71,11 @@ export function measureAccordion(raiz: HTMLElement) {
        * onde a semântica é a mesma. Aconteceu nesta sonda.
        */
       papelDoEnvoltorio: (() => {
-        const pai = primeiro?.parentElement;
-        if (!pai) return null;
-        const tag = pai.tagName.toLowerCase();
+        const parent = primeiro?.parentElement;
+        if (!parent) return null;
+        const tag = parent.tagName.toLowerCase();
         if (/^h[1-6]$/.test(tag)) return 'heading ' + tag[1];
-        if (pai.getAttribute('role') === 'heading') return 'heading ' + (pai.getAttribute('aria-level') ?? '?');
+        if (parent.getAttribute('role') === 'heading') return 'heading ' + (parent.getAttribute('aria-level') ?? '?');
         return tag;
       })(),
       tagDoGatilho: primeiro?.tagName.toLowerCase() ?? null,

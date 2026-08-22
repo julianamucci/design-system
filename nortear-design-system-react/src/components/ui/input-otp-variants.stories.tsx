@@ -215,14 +215,14 @@ export const WithSeparator: Story = {
     await step("O separador afasta os dois blocos, e só eles", async () => {
       // Efeito computado, não nome de classe: o respiro é margem do separador.
       const todas = boxes(canvasElement);
-      const separador = canvasElement.querySelector<HTMLElement>(
+      const separator = canvasElement.querySelector<HTMLElement>(
         '[data-slot="input-otp-separator"]'
       )!;
       const folga = (a: Element, b: Element) =>
         Math.round(b.getBoundingClientRect().left - a.getBoundingClientRect().right);
       await expect(folga(todas[0], todas[1])).toBe(0);
-      await expect(folga(todas[2], separador)).toBeGreaterThan(0);
-      await expect(folga(separador, todas[3])).toBeGreaterThan(0);
+      await expect(folga(todas[2], separator)).toBeGreaterThan(0);
+      await expect(folga(separator, todas[3])).toBeGreaterThan(0);
     });
 
     await step("Os seis dígitos se distribuem entre os dois blocos", async () => {

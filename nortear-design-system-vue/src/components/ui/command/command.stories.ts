@@ -264,8 +264,8 @@ export const Playground: Story = {
 
       await userEvent.keyboard('{ArrowUp}');
       await waitFor(async () => {
-        const anterior = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
-        return expect(anterior).toHaveTextContent('Button');
+        const previous = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
+        return expect(previous).toHaveTextContent('Button');
       });
       // Um destaque por vez: o que saiu deixou de estar em destaque.
       await waitFor(async () => {

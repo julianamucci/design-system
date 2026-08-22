@@ -142,12 +142,12 @@ function reach(el: HTMLElement | null): ClickReach {
 function firstQueCasar(
   raiz: HTMLElement,
   seletores: string[],
-): { el: HTMLElement | null; seletor: string | null } {
-  for (const seletor of seletores) {
-    const el = raiz.querySelector<HTMLElement>(seletor);
-    if (el) return { el, seletor };
+): { el: HTMLElement | null; selector: string | null } {
+  for (const selector of seletores) {
+    const el = raiz.querySelector<HTMLElement>(selector);
+    if (el) return { el, selector };
   }
-  return { el: null, seletor: null };
+  return { el: null, selector: null };
 }
 
 /**
@@ -169,13 +169,13 @@ export function dayIso(el: Element | null): string | null {
 
 /** ISO do dia que está com o foco AGORA — o que a navegação por teclado move. */
 export function focusIso(doc: Document): string | null {
-  const ativo = doc.activeElement as HTMLElement | null;
-  if (!ativo) return null;
-  return dayIso(ativo);
+  const active = doc.activeElement as HTMLElement | null;
+  if (!active) return null;
+  return dayIso(active);
 }
 
 function dayState(raiz: HTMLElement, seletores: string[]): DayState {
-  const { el, seletor } = firstQueCasar(raiz, seletores);
+  const { el, selector } = firstQueCasar(raiz, seletores);
   if (!el) {
     return {
       existe: false,
@@ -199,7 +199,7 @@ function dayState(raiz: HTMLElement, seletores: string[]): DayState {
   const celula = el.closest('td, [role=gridcell]');
   return {
     existe: true,
-    seletorQueCasou: seletor,
+    seletorQueCasou: selector,
     texto: el.textContent?.trim() ?? null,
     ariaLabel: el.getAttribute('aria-label'),
     ariaDisabled: el.getAttribute('aria-disabled'),
@@ -289,7 +289,7 @@ export function measureCalendar(raiz: HTMLElement) {
   const tabela = um('table');
 
   const buttonPrevious =
-    todos('button').find((b) => /previous|anterior|mês anterior/i.test(b.getAttribute('aria-label') ?? '')) ?? null;
+    todos('button').find((b) => /previous|previous|mês previous/i.test(b.getAttribute('aria-label') ?? '')) ?? null;
   const buttonNext =
     todos('button').find((b) => /next|próximo|proximo|siguiente/i.test(b.getAttribute('aria-label') ?? '')) ?? null;
 
@@ -365,7 +365,7 @@ export function measureCalendar(raiz: HTMLElement) {
       respiroLegendaSemana: respiro,
       dia: caixa(dayButton),
       navAnterior: caixa(buttonPrevious),
-      seletor: caixa(seletores[0] ?? null),
+      selector: caixa(seletores[0] ?? null),
     },
     states,
     miolo: meio
@@ -398,7 +398,7 @@ export interface KeyboardStep {
   /** Onde o foco parou. `null` = saiu da grade (o defeito clássico). */
   iso: string | null;
   /** Descrição do elemento em foco — mostra quando o foco caiu no contêiner. */
-  ativo: string | null;
+  active: string | null;
   /** A legenda depois da tecla: é ela que prova que o mês virou. */
   legenda: string | null;
 }
@@ -425,7 +425,7 @@ export async function measureKeyboard(
   const instantaneo = (tecla: string): KeyboardStep => ({
     tecla,
     iso: focusIso(doc),
-    ativo: descreve(doc.activeElement),
+    active: descreve(doc.activeElement),
     legenda: legenda(),
   });
 

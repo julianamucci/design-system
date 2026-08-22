@@ -27,7 +27,7 @@ export type ButtonArgs = {
   children: string;
 };
 
-const VARIANTES = [
+const VARIANTS = [
   'default',
   'destructive',
   'outline',
@@ -87,7 +87,7 @@ export const buttonSource: SourceTransform<ButtonArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return button(
     [
-      propOption('variant', args.variant, VARIANTES, 'default'),
+      propOption('variant', args.variant, VARIANTS, 'default'),
       propOption('size', args.size, SIZES, 'default'),
       propBool('disabled', args.disabled),
     ],

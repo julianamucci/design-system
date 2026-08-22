@@ -39,7 +39,7 @@ function colorReferencia(token: string): string {
   template: `
     <span
       class="nds-miniswatch-chip"
-      [style.--swatch-color]="corDoToken()"
+      [style.--swatch-color]="tokenColor()"
       aria-hidden="true"
     ></span>
     <span class="nds-miniswatch-name">{{ token() }}</span>
@@ -49,7 +49,7 @@ export class NdsMiniSwatch {
   /** Nome do token CSS sem o prefixo `--`. */
   readonly token = input.required<string>();
 
-  protected readonly corDoToken = computed(() => colorReferencia(this.token()));
+  protected readonly tokenColor = computed(() => colorReferencia(this.token()));
 }
 
 @Component({
@@ -60,11 +60,11 @@ export class NdsMiniSwatch {
   host: {
     class: 'nds-swatch',
     type: 'button',
-    '[attr.aria-label]': 'rotuloAcessivel()',
+    '[attr.aria-label]': 'accessibleLabel()',
     '(click)': 'copiar()',
   },
   template: `
-    <span class="nds-swatch-color" [style.--swatch-color]="corDoToken()" aria-hidden="true"></span>
+    <span class="nds-swatch-color" [style.--swatch-color]="tokenColor()" aria-hidden="true"></span>
     <div class="nds-swatch-meta">
       <span class="nds-swatch-token">--{{ token() }}</span>
       <span class="nds-swatch-value">{{ valor() || '—' }}</span>
@@ -85,8 +85,8 @@ export class NdsSwatch implements OnDestroy {
   readonly rotuloCopiado = input('');
 
   protected readonly copiado = signal(false);
-  protected readonly corDoToken = computed(() => colorReferencia(this.token()));
-  protected readonly rotuloAcessivel = computed(
+  protected readonly tokenColor = computed(() => colorReferencia(this.token()));
+  protected readonly accessibleLabel = computed(
     () => `${this.rotuloDeCopia()} --${this.token()}`,
   );
 

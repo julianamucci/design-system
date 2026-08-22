@@ -99,9 +99,9 @@ export const WithLabel: Story = {
     });
 
     await step('O estado inicial já nasce refletido nos dois atributos', async () => {
-      const ativo = canvas.getByRole('button', { name: 'Visão compacta' });
-      await expect(ativo).toHaveAttribute('aria-pressed', 'true');
-      await expect(ativo).toHaveAttribute('data-state', 'on');
+      const active = canvas.getByRole('button', { name: 'Visão compacta' });
+      await expect(active).toHaveAttribute('aria-pressed', 'true');
+      await expect(active).toHaveAttribute('data-state', 'on');
     });
 
     await step('O toggle com rótulo é mais largo que alto', async () => {

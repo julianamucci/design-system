@@ -163,16 +163,16 @@ export const ItemDisabled: Story = {
     await step('As setas pulam o comando desabilitado', async () => {
       campo.focus();
       await waitFor(async () => {
-        const ativo = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
-        await expect(ativo).toHaveTextContent('Novo');
+        const active = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
+        await expect(active).toHaveTextContent('Novo');
       });
 
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        const ativo = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
+        const active = canvasElement.querySelector<HTMLElement>('[role="option"][aria-selected="true"]')!;
         // "Arquivar" não é destino de navegação — quem usa teclado nunca para
         // num comando que não pode executar.
-        await expect(ativo).toHaveTextContent('Renomear');
+        await expect(active).toHaveTextContent('Renomear');
       });
       await expect(arquivar).toHaveAttribute('aria-selected', 'false');
     });

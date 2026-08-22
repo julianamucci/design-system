@@ -224,7 +224,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   let posicionador: HTMLElement | null = null;
   let conteudo: HTMLElement | null = null;
   let opcoes: Option[] = [];
-  let ativo = -1;
+  let active = -1;
 
   let timerClickOutside: ReturnType<typeof setTimeout> | null = null;
   let timerSearch: ReturnType<typeof setTimeout> | null = null;
@@ -341,7 +341,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
   // ── Lista ──────────────────────────────────────────────────────────────────
 
-  function mountOption(def: SelectOption, dentro: HTMLElement): void {
+  function mountOption(def: SelectOption, inside: HTMLElement): void {
     const indice = opcoes.length;
     const { value, label } = def;
 
@@ -374,7 +374,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     });
     el.addEventListener('click', () => choose(indice));
 
-    dentro.appendChild(el);
+    inside.appendChild(el);
     opcoes.push({ el, value, label, disabled: def.disabled ?? false });
   }
 
@@ -462,12 +462,12 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     const espacoAbove = r.top - folga;
     // Vira para cima só quando não cabe embaixo E cabe melhor em cima: virar por
     // pouco faria o painel pular de lado a cada rolagem.
-    const acima = espacoBelow < panelHeight && espacoAbove > espacoBelow;
+    const above = espacoBelow < panelHeight && espacoAbove > espacoBelow;
 
-    posicionador.dataset.side = acima ? 'top' : 'bottom';
-    conteudo.dataset.side = acima ? 'top' : 'bottom';
+    posicionador.dataset.side = above ? 'top' : 'bottom';
+    conteudo.dataset.side = above ? 'top' : 'bottom';
     posicionador.style.left = `${r.left + window.scrollX}px`;
-    posicionador.style.top = acima
+    posicionador.style.top = above
       ? `${r.top + window.scrollY - panelHeight - folga}px`
       : `${r.bottom + window.scrollY + folga}px`;
 
@@ -478,7 +478,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     posicionador.style.setProperty('--anchor-width', `${r.width}px`);
     posicionador.style.setProperty(
       '--available-height',
-      `${Math.max(acima ? espacoAbove : espacoBelow, HEIGHT_MINIMA_PX)}px`,
+      `${Math.max(above ? espacoAbove : espacoBelow, HEIGHT_MINIMA_PX)}px`,
     );
   }
 
@@ -489,7 +489,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   }
 
   function destacar(indice: number): void {
-    ativo = indice;
+    active = indice;
     opcoes.forEach((o, i) => {
       if (i === indice) o.el.dataset.highlighted = '';
       else delete o.el.dataset.highlighted;
@@ -517,7 +517,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
   function mover(passo: number): void {
     const lista = habilitadas();
     if (lista.length === 0) return;
-    const atual = lista.indexOf(ativo);
+    const atual = lista.indexOf(active);
     /* v8 ignore next 4 -- o destaque nunca pousa fora da lista de habilitadas:
        `highlightInitial` só devolve índice habilitado (ou -1, e aí `lista` está
        vazia e a guarda acima já saiu), e nada torna uma opção indisponível depois
@@ -551,9 +551,9 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     timerSearch = setTimeout(clearSearch, SEARCH_MS_WINDOW);
 
     const lista = habilitadas();
-    const partida = lista.indexOf(ativo);
-    const ordem = lista.slice(partida + 1).concat(lista.slice(0, Math.max(partida + 1, 0)));
-    return ordem.find((i) => opcoes[i].label.toLowerCase().startsWith(search)) ?? -1;
+    const partida = lista.indexOf(active);
+    const order = lista.slice(partida + 1).concat(lista.slice(0, Math.max(partida + 1, 0)));
+    return order.find((i) => opcoes[i].label.toLowerCase().startsWith(search)) ?? -1;
   }
 
   /** Busca com a lista FECHADA: sem painel para destacar, ela escolhe direto. */
@@ -564,10 +564,10 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
 
     const candidatos = [...rotulos.entries()];
     const partida = candidatos.findIndex(([v]) => v === valor);
-    const ordem = candidatos
+    const order = candidatos
       .slice(partida + 1)
       .concat(candidatos.slice(0, Math.max(partida + 1, 0)));
-    const finding = ordem.find(([, rotulo]) => rotulo.toLowerCase().startsWith(search));
+    const finding = order.find(([, rotulo]) => rotulo.toLowerCase().startsWith(search));
     if (finding && finding[0] !== valor) definirValue(finding[0]);
   }
 
@@ -645,7 +645,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
     conteudo = null;
     posicionador = null;
     opcoes = [];
-    ativo = -1;
+    active = -1;
 
     gatilho.setAttribute('aria-expanded', 'false');
     gatilho.removeAttribute('aria-controls');
@@ -754,7 +754,7 @@ export function createSelect(options: SelectOptions): DestroyableElement<HTMLDiv
       case 'Enter':
       case ' ':
         e.preventDefault();
-        choose(ativo);
+        choose(active);
         return;
       case 'ArrowDown':
         e.preventDefault();

@@ -11,7 +11,7 @@ import {
   barrasDeProgresso,
   contrastBarTrack,
   indicadorDoProgresso,
-  nomeAcessivel,
+  accessibleName,
   percentualDesenhado,
 } from "@shared/testing/progress-probe";
 import {
@@ -93,10 +93,10 @@ export const Indeterminate: Story = {
     });
 
     await step("O estado chega à trilha, que é quem o CSS consulta", async () => {
-      const trilha = canvasElement.querySelector(
+      const trail = canvasElement.querySelector(
         "[data-slot='progress-track']",
       );
-      await expect(trilha).toHaveAttribute("data-indeterminate", "");
+      await expect(trail).toHaveAttribute("data-indeterminate", "");
     });
   },
 };
@@ -136,7 +136,7 @@ export const WithLabel: Story = {
 
     await step("Toda barra da tela tem nome acessível", async () => {
       for (const bar of barrasDeProgresso(canvasElement)) {
-        await expect(nomeAcessivel(bar)).not.toBe("");
+        await expect(accessibleName(bar)).not.toBe("");
       }
     });
 

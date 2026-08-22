@@ -125,7 +125,7 @@ export class NdsInput {}
 // O estado de formulário vem de Reactive Forms:
 // <input ndsInput formControlName="email" type="email" />`;
 
-const TIPOS = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'date', 'file'] as const;
+const TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 'date', 'file'] as const;
 
 @Component({
   selector: 'nds-input-docs',
@@ -447,7 +447,7 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
     // conteúdo compartilhado descreve um a um. Sem preview por tipo: o que
     // muda é o teclado do dispositivo e a validação do browser, não o visual —
     // nove caixas idênticas na tela ensinariam o contrário.
-    return TIPOS.map((tipo) => ({
+    return TYPES.map((tipo) => ({
       name: tipo,
       description: t(`variants.items.types.${tipo}`),
       trackId: tipo,
@@ -574,9 +574,9 @@ export class NdsInputDocs implements AfterViewInit, OnDestroy {
 
   protected readonly tokenItems = computed(() => {
     dict();
-    return FIELD_TOKENS.map(([token, seletor, chave]) => ({
+    return FIELD_TOKENS.map(([token, selector, chave]) => ({
       token,
-      value: seletor,
+      value: selector,
       description: toPlainText(t(`tokens.table.${chave}`)),
     }));
   });

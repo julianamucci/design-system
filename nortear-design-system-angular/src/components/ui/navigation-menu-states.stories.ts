@@ -145,10 +145,10 @@ export const Open: Story = {
     await step('A seta indicadora existe enquanto o painel está aberto', async () => {
       // `indicator` é um input booleano: sem ele a seta não é renderizada. A
       // asserção prova que o input chegou (e não que o default mudou).
-      const seta = popup?.querySelector('[data-slot="navigation-menu-indicator"]');
-      await expect(seta).toBeTruthy();
+      const arrow = popup?.querySelector('[data-slot="navigation-menu-indicator"]');
+      await expect(arrow).toBeTruthy();
       // Decorativa: quem lê a tela já tem `aria-expanded` no gatilho.
-      await expect(seta?.getAttribute('aria-hidden')).toBe('true');
+      await expect(arrow?.getAttribute('aria-hidden')).toBe('true');
     });
 
     await step('O fundo do painel é opaco', async () => {

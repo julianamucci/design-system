@@ -3,7 +3,7 @@ import { expect, waitFor } from 'storybook/test';
 import {
   settleTheme,
   contraste,
-  corDoToken,
+  tokenColor,
   designEscreve,
   designPintado,
   exigirRoot,
@@ -180,12 +180,12 @@ export const MultiSeries: Story = {
     });
 
     await step('Cada série usa um token de cor distinto', async () => {
-      const cores = new Set(
+      const colors = new Set(
         datumFormas(raiz)
           .map((f) => getComputedStyle(f).fill)
           .filter((cor) => !cor.startsWith('url')),
       );
-      await expect(cores.size).toBeGreaterThanOrEqual(SERIES_MULTI.length);
+      await expect(colors.size).toBeGreaterThanOrEqual(SERIES_MULTI.length);
     });
 
     await step('E a cor não é o único sinal: existe trama sobreposta', async () => {
@@ -300,7 +300,7 @@ export const ThemeTokens: Story = {
       // não muda em tema nenhum.
       const rotulo = raiz.querySelector<SVGTextElement>('svg text')!;
       await expect(getComputedStyle(rotulo).fill)
-        .toBe(corDoToken('muted-foreground', raiz));
+        .toBe(tokenColor('muted-foreground', raiz));
     });
 
     await step('E o desenho está inteiro', async () => {

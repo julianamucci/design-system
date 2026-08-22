@@ -20,11 +20,11 @@ export type SheetArgs = {
 };
 
 /** Corpo entre cabeçalho e rodapé. `nenhum` é o painel só de decisão. */
-type Corpo = 'nenhum' | 'formulario' | 'rolagem';
+type Body = 'nenhum' | 'formulario' | 'rolagem';
 
-type Options = Partial<SheetArgs> & { corpo?: Corpo };
+type Options = Partial<SheetArgs> & { corpo?: Body };
 
-const DEFAULT: SheetArgs & { corpo: Corpo } = {
+const DEFAULT: SheetArgs & { corpo: Body } = {
   side: 'right',
   showCloseButton: true,
   triggerLabel: 'Abrir filtros',
@@ -36,7 +36,7 @@ const DEFAULT: SheetArgs & { corpo: Corpo } = {
 };
 
 /** Peças do design system que a composição usa, na ordem em que se lê o painel. */
-function imports(corpo: Corpo): string {
+function imports(corpo: Body): string {
   const parts = [
     'Sheet',
     corpo !== 'nenhum' ? 'SheetBody' : '',
@@ -62,7 +62,7 @@ ${extras.join('\n')}`;
 }
 
 /** Corpo rolável ou formulário, indentado para dentro do conteúdo. */
-function panelBody(corpo: Corpo): string {
+function panelBody(corpo: Body): string {
   if (corpo === 'formulario') {
     return `
     <SheetBody>

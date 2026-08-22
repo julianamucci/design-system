@@ -63,7 +63,7 @@ export function createButton(options: ButtonOptions): HTMLButtonElement {
 
   // Nome do atributo como nome da opção — `ariaLabel`/`ariaBusy`/`ariaInvalid`
   // continuam aceitos como apelido, e o canônico vence quando vêm os dois.
-  const nomeAcessivel = options['aria-label'] ?? options.ariaLabel;
+  const accessibleName = options['aria-label'] ?? options.ariaLabel;
   const ocupado = options['aria-busy'] ?? options.ariaBusy;
   const invalido = options['aria-invalid'] ?? options.ariaInvalid;
 
@@ -72,7 +72,7 @@ export function createButton(options: ButtonOptions): HTMLButtonElement {
   el.className = cn(btnClass(variant, size), options.class);
 
   if (label) el.textContent = label;
-  if (nomeAcessivel) el.setAttribute('aria-label', nomeAcessivel);
+  if (accessibleName) el.setAttribute('aria-label', accessibleName);
   if (ocupado) el.setAttribute('aria-busy', 'true');
   if (invalido) el.setAttribute('aria-invalid', 'true');
   if (disabled) el.disabled = true;

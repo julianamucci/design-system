@@ -24,8 +24,8 @@ import { Input } from '@/components/ui/input'`;
 const FRAME = 'nds-stack nds-w-xs';
 
 /** Bloco vertical: rótulo em cima, controle embaixo. */
-function bloco(filhos: string[], moldura = FRAME, extra = ''): string {
-  return `<div class="${moldura}"${attrs('data-spacing="xs"', extra)}>
+function bloco(filhos: string[], frame = FRAME, extra = ''): string {
+  return `<div class="${frame}"${attrs('data-spacing="xs"', extra)}>
 ${indentar(filhos.join('\n'))}
 </div>`;
 }

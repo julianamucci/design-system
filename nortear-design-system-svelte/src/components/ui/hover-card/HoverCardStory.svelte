@@ -111,7 +111,7 @@
               <span class="nds-text-caption nds-font-medium nds-text-success">1.8s</span>
             </div>
             <p class="nds-text-caption nds-text-muted-foreground">
-              Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim acima de 4s.
+              Tempo até o maior elemento visível aparecer. Bom até 2,5s; ruim above de 4s.
             </p>
           </div>
         {:else if variant === 'withDelay'}

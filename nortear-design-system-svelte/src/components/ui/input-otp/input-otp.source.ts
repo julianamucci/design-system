@@ -37,14 +37,14 @@ const GROUP_UNICO = `      <InputOTPGroup>
 
 /**
  * Monta o campo inteiro: rótulo, raiz com os atributos e o snippet das caixas.
- * `apoio` é a marcação que vem depois do campo (ajuda, erro, reenvio), já
+ * `helper` é a marcação que vem depois do campo (ajuda, erro, reenvio), já
  * indentada na coluna do bloco.
  */
 function fieldOtp(opcoes: {
   label: string;
   atributos: Array<string | false | null | undefined>;
   celulas?: string;
-  apoio?: string;
+  helper?: string;
 }): string {
   const props = attrsMultilinha(opcoes.atributos, '    ', 40);
   const abertura = props.startsWith('\n') ? `<InputOTP${props}  >` : `<InputOTP${props}>`;
@@ -55,7 +55,7 @@ function fieldOtp(opcoes: {
     {#snippet children({ cells })}
 ${opcoes.celulas ?? GROUP_UNICO}
     {/snippet}
-  </InputOTP>${opcoes.apoio ? `\n${opcoes.apoio}` : ''}
+  </InputOTP>${opcoes.helper ? `\n${opcoes.helper}` : ''}
 </div>`;
 }
 
@@ -154,7 +154,7 @@ export function helperInputOtpWithTextSource(): string {
         'autocomplete="one-time-code"',
         'aria-describedby="codigo-apoio"',
       ],
-      apoio: `  <p id="codigo-apoio" class="nds-text-caption nds-text-muted-foreground">
+      helper: `  <p id="codigo-apoio" class="nds-text-caption nds-text-muted-foreground">
     Enviamos por SMS, expira em 5 min.
   </p>`,
     }),
@@ -182,7 +182,7 @@ export function inputOtpWithErrorSource(): string {
       // Sem `role="alert"`: a mensagem já está no DOM quando a página carrega,
       // e uma região viva em conteúdo estático faz o leitor anunciar o erro sem
       // que nada tenha acontecido.
-      apoio: `  <p id="codigo-erro" class="nds-text-caption nds-text-destructive">
+      helper: `  <p id="codigo-erro" class="nds-text-caption nds-text-destructive">
     Código incorreto. Verifique e tente novamente.
   </p>`,
     }),
@@ -203,7 +203,7 @@ import { Button } from "@/components/ui/button";${estado()}`,
         'inputmode="numeric"',
         'autocomplete="one-time-code"',
       ],
-      apoio: `  <div class="nds-cluster" data-align="center" data-spacing="xs">
+      helper: `  <div class="nds-cluster" data-align="center" data-spacing="xs">
     <span class="nds-text-caption nds-text-muted-foreground">Não recebeu?</span>
     <Button variant="link" size="sm" type="button">Reenviar código</Button>
   </div>`,

@@ -27,9 +27,9 @@ import { contraste, backgroundEffective } from './alert-probe';
  * A composição começa no PAI: iniciada no próprio pegador, a primeira camada
  * opaca encontrada seria a cor dele mesmo e a razão daria 1.
  */
-export function grabberContrast(pegador: HTMLElement): number {
-  const frente = getComputedStyle(pegador).backgroundColor;
-  const background = backgroundEffective(pegador.parentElement ?? pegador);
+export function grabberContrast(grabber: HTMLElement): number {
+  const frente = getComputedStyle(grabber).backgroundColor;
+  const background = backgroundEffective(grabber.parentElement ?? grabber);
   return contraste(frente, background);
 }
 
@@ -52,14 +52,14 @@ export interface BarRatio {
  * o atributo divergisse do desenho.
  */
 export function measureRatio(
-  trilha: HTMLElement,
-  pegador: HTMLElement,
+  trail: HTMLElement,
+  grabber: HTMLElement,
   viewport: HTMLElement,
   eixo: 'vertical' | 'horizontal',
 ): BarRatio {
   const vertical = eixo === 'vertical';
-  const boxTrack = trilha.getBoundingClientRect();
-  const boxGrabber = pegador.getBoundingClientRect();
+  const boxTrack = trail.getBoundingClientRect();
+  const boxGrabber = grabber.getBoundingClientRect();
 
   const sizeTrack = vertical ? boxTrack.height : boxTrack.width;
   const sizeGrabber = vertical ? boxGrabber.height : boxGrabber.width;

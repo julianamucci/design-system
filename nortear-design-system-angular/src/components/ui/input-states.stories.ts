@@ -5,7 +5,7 @@ import {
   stateBorders,
   fieldOf,
   contrastesNosDoisModos,
-  corDoToken,
+  tokenColor,
   focusHalo,
 } from '@shared/testing/input-probe';
 import { NdsInput } from './input';
@@ -196,7 +196,7 @@ export const Invalid: Story = {
     await step('A borda é a cor destrutiva, e o halo de foco também', async () => {
       // Afirmar o token resolvido, não um rgb literal: a paleta muda por tema
       // de marca e um literal reprovaria em warm e cold sem defeito nenhum.
-      const destrutivo = corDoToken(canvasElement, '--destructive');
+      const destrutivo = tokenColor(canvasElement, '--destructive');
       const borders = stateBorders(fieldOf(canvasElement)!);
       await expect(borders.rest.cor).toBe(destrutivo);
       await expect(focusHalo(fieldOf(canvasElement)!)!.cor).toContain(

@@ -142,14 +142,14 @@ export const Playground: Story = {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
       return await waitForPortal('dialog', { timeout: 2000 });
     };
-    const fechado = async () => {
+    const closed = async () => {
       await waitFor(() => {
         if (painel()) throw new Error('popover ainda aberto');
       }, { timeout: 2000 });
     };
     const fechar = async () => {
       if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
-      await fechado();
+      await closed();
     };
 
     await step('O gatilho anuncia que abre um diálogo', async () => {
@@ -195,7 +195,7 @@ export const Playground: Story = {
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
       await abrir();
       await userEvent.keyboard('{Escape}');
-      await fechado();
+      await closed();
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
       await waitFor(() => expect(gatilho).toHaveFocus());
     });
@@ -203,7 +203,7 @@ export const Playground: Story = {
     await step('Clicar fora fecha o painel', async () => {
       await abrir();
       await userEvent.click(canvas.getByTestId('area-externa'));
-      await fechado();
+      await closed();
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
     });
 

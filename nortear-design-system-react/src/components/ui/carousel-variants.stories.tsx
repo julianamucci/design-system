@@ -84,13 +84,13 @@ export const Horizontal: Story = {
       // sem erro nenhum no console — e o contraste que o axe mede deixaria de
       // ser contra o fundo da página para ser contra a arte do slide.
       const area = regiao.getBoundingClientRect();
-      const anterior = canvas
+      const previous = canvas
         .getByRole("button", { name: /item anterior/i })
         .getBoundingClientRect();
       const proximo = canvas
         .getByRole("button", { name: /próximo item/i })
         .getBoundingClientRect();
-      await expect(anterior.left).toBeLessThan(area.left);
+      await expect(previous.left).toBeLessThan(area.left);
       await expect(proximo.right).toBeGreaterThan(area.right);
     });
 
@@ -196,13 +196,13 @@ export const Vertical: Story = {
 
     await step("As setas ficam acima e abaixo do viewport", async () => {
       const area = regiao.getBoundingClientRect();
-      const anterior = canvas
+      const previous = canvas
         .getByRole("button", { name: /item anterior/i })
         .getBoundingClientRect();
       const proximo = canvas
         .getByRole("button", { name: /próximo item/i })
         .getBoundingClientRect();
-      await expect(anterior.top).toBeLessThan(area.top);
+      await expect(previous.top).toBeLessThan(area.top);
       await expect(proximo.bottom).toBeGreaterThan(area.bottom);
     });
 

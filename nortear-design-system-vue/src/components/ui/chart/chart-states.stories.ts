@@ -4,7 +4,7 @@ import { h } from 'vue';
 import {
   settleTheme,
   contraste,
-  corDoToken,
+  tokenColor,
   designPintado,
   exigirRoot,
   datumFormas,
@@ -138,12 +138,12 @@ export const MultiSeries: Story = {
     await step('Cada série usa um token de cor distinto', async () => {
       // A trama entra como preenchimento `url(#…)`; tirando essas, o que sobra
       // são as cores de série de verdade.
-      const cores = new Set(
+      const colors = new Set(
         datumFormas(raiz)
           .map((forma) => getComputedStyle(forma).fill)
           .filter((cor) => !cor.startsWith('url')),
       );
-      await expect(cores.size).toBeGreaterThanOrEqual(SERIES_MULTI.length);
+      await expect(colors.size).toBeGreaterThanOrEqual(SERIES_MULTI.length);
     });
 
     await step('E a trama sobrevive à cor', async () => {
@@ -219,7 +219,7 @@ export const ThemeTokens: Story = {
           () => {
             const rotulo = g.querySelector<SVGTextElement>('svg text');
             expect(rotulo).toBeTruthy();
-            expect(getComputedStyle(rotulo!).fill).toBe(corDoToken('muted-foreground', g));
+            expect(getComputedStyle(rotulo!).fill).toBe(tokenColor('muted-foreground', g));
           },
           { timeout: 3000, interval: 200 },
         );

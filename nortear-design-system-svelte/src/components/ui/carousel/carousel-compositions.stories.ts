@@ -19,7 +19,7 @@ import {
  */
 const CONTENT = carouselTranslations['pt-BR'].demonstration.labels;
 /** Nome acessível: posição E total. "Slide 2" sozinho não diz para onde leva. */
-const nomeAcessivel = (position: number, total: number) =>
+const accessibleName = (position: number, total: number) =>
   `${CONTENT.goToSlide} ${position} ${CONTENT.of} ${total}`;
 /** Texto visível da pílula — um PEDAÇO do nome acessível (WCAG 2.5.3). */
 const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
@@ -98,7 +98,7 @@ export const WithDots: Story = {
       waitFor(async () => { await expect(focusSlide()).toBe(i); }, { timeout: 4000 });
 
     // Posição E total no nome: "2" sozinho não diz para onde leva.
-    const dot = (n: number) => canvas.getByRole('button', { name: nomeAcessivel(n, TOTAL_DOTS) });
+    const dot = (n: number) => canvas.getByRole('button', { name: accessibleName(n, TOTAL_DOTS) });
     /**
      * O rótulo é o único filho do controle — a marca do ponto é `::before`, e
      * pseudo-elemento não entra em `firstElementChild`. Buscar por classe seria
@@ -148,7 +148,7 @@ export const WithDots: Story = {
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
       await expect(rotulo(dot(2))).toHaveTextContent(labelVisible(2));
-      await expect(nomeAcessivel(2, TOTAL_DOTS).toLowerCase()).toContain(
+      await expect(accessibleName(2, TOTAL_DOTS).toLowerCase()).toContain(
         labelVisible(2).toLowerCase(),
       );
 

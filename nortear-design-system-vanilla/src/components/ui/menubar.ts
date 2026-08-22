@@ -353,12 +353,12 @@ export function createMenubar(menus: MenubarMenu[], options?: MenubarOptions): D
             if (opcao.disabled || escolhido === opcao.value) return;
             escolhido = opcao.value;
             for (const outro of elementos) {
-              const ativo = outro.valor === escolhido;
-              outro.el.setAttribute('aria-checked', String(ativo));
-              if (ativo) outro.el.dataset.checked = '';
+              const active = outro.valor === escolhido;
+              outro.el.setAttribute('aria-checked', String(active));
+              if (active) outro.el.dataset.checked = '';
               else delete outro.el.dataset.checked;
               outro.indicador.replaceChildren();
-              if (ativo) outro.indicador.appendChild(ICON_MARCA());
+              if (active) outro.indicador.appendChild(ICON_MARCA());
             }
             item.onValueChange?.(escolhido);
           });

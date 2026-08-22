@@ -154,7 +154,7 @@ export function contrastRatio(corA: string, corB: string): number {
  * As cinco stacks resolvem o nome de formas diferentes (rótulo declarado,
  * heading interno, texto do gatilho) e o contrato é o RESULTADO, não o caminho.
  */
-export function nomeAcessivel(painel: HTMLElement): string {
+export function accessibleName(painel: HTMLElement): string {
   const labelled = painel.getAttribute('aria-labelledby');
   if (labelled) {
     const alvo = painel.ownerDocument.getElementById(labelled);

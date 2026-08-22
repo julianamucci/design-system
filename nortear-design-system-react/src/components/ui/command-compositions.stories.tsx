@@ -351,9 +351,9 @@ export const AsCombobox: Story = {
     await step("Abrir revela a paleta dentro do popover", async () => {
       const lista = await abrir();
       const painel = lista.closest<HTMLElement>('[data-slot="popover-content"]')!;
-      const dentro = within(painel);
+      const inside = within(painel);
 
-      await expect(dentro.getAllByRole("option")).toHaveLength(5);
+      await expect(inside.getAllByRole("option")).toHaveLength(5);
       const search = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       // Um combobox que abre e deixa o foco no gatilho obriga a pessoa a caçar
       // o campo com Tab.
@@ -400,15 +400,15 @@ function CommandPaletteDemo() {
   // consumidor que o registra. O cleanup não é detalhe: sem ele o listener
   // sobrevive à troca de story e passa a abrir uma paleta que já saiu da tela.
   useEffect(() => {
-    const aoTeclar = (evento: KeyboardEvent) => {
+    const onKeyDown = (evento: KeyboardEvent) => {
       if (evento.key.toLowerCase() !== "k") return;
       if (!evento.metaKey && !evento.ctrlKey) return;
       // Sem isto o navegador leva o Cmd+K para a barra de endereço.
       evento.preventDefault();
       setOpen(true);
     };
-    window.addEventListener("keydown", aoTeclar);
-    return () => window.removeEventListener("keydown", aoTeclar);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
   return (

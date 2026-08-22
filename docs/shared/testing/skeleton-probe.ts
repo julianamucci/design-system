@@ -43,11 +43,11 @@ export { contraste, backgroundEffective, darkLigarTheme };
  */
 export function ligarMovimentoReduzido(doc: Document): () => void {
   const html = doc.documentElement;
-  const anterior = html.getAttribute('data-reduced-motion');
+  const previous = html.getAttribute('data-reduced-motion');
   html.setAttribute('data-reduced-motion', 'true');
   return () => {
-    if (anterior === null) html.removeAttribute('data-reduced-motion');
-    else html.setAttribute('data-reduced-motion', anterior);
+    if (previous === null) html.removeAttribute('data-reduced-motion');
+    else html.setAttribute('data-reduced-motion', previous);
   };
 }
 

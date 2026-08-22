@@ -72,41 +72,41 @@ export const Playground: Story = {
     )
   },
   play: async ({ canvasElement, args, step }) => {
-    const separador = canvasElement.querySelector<HTMLElement>(".nds-separator");
+    const separator = canvasElement.querySelector<HTMLElement>(".nds-separator");
 
     await step("A linha existe e reflete a orientação escolhida", async () => {
-      await expect(separador).toBeInTheDocument();
-      await expect(separador).toHaveAttribute("data-orientation", args.orientation);
+      await expect(separator).toBeInTheDocument();
+      await expect(separator).toHaveAttribute("data-orientation", args.orientation);
     });
 
     await step("Espessura de 1px no eixo da orientação", async () => {
       // Medida computada, não nome de classe: é a espessura que a pessoa vê, e
       // é o que uma troca de folha quebraria sem mudar atributo nenhum.
-      const caixa = separador!.getBoundingClientRect();
+      const caixa = separator!.getBoundingClientRect();
       await expect(Math.min(caixa.width, caixa.height)).toBeCloseTo(1, 1);
       await expect(Math.max(caixa.width, caixa.height)).toBeGreaterThan(8);
     });
 
     await step("Semântica conforme o modo escolhido", async () => {
       if (args.decorative) {
-        await expect(separador).toHaveAttribute("role", "none");
-        await expect(separador).toHaveAttribute("aria-hidden", "true");
+        await expect(separator).toHaveAttribute("role", "none");
+        await expect(separator).toHaveAttribute("aria-hidden", "true");
         // O atributo não é permitido em role="none" e nada informaria fora da
         // árvore de acessibilidade.
-        await expect(separador).not.toHaveAttribute("aria-orientation");
+        await expect(separator).not.toHaveAttribute("aria-orientation");
       } else {
-        await expect(separador).toHaveAttribute("role", "separator");
-        await expect(separador).toHaveAttribute("aria-orientation", args.orientation);
-        await expect(separador).not.toHaveAttribute("aria-hidden");
+        await expect(separator).toHaveAttribute("role", "separator");
+        await expect(separator).toHaveAttribute("aria-orientation", args.orientation);
+        await expect(separator).not.toHaveAttribute("aria-hidden");
       }
     });
 
     await step("Fora da ordem de tabulação e sem aceitar foco", async () => {
-      await expect(separador).not.toHaveAttribute("tabindex");
+      await expect(separator).not.toHaveAttribute("tabindex");
       // `focus()` num elemento não focável não muda o `activeElement` — a
       // asserção é idempotente e sobrevive ao replay do painel Interactions.
-      separador!.focus?.();
-      await expect(canvasElement.ownerDocument.activeElement).not.toBe(separador);
+      separator!.focus?.();
+      await expect(canvasElement.ownerDocument.activeElement).not.toBe(separator);
     });
   },
 };

@@ -152,7 +152,7 @@ function mountTooltip(options: TooltipOptions, grupo: GroupState): DestroyableEl
     else scheduleFechamento();
   }
 
-  function aoTeclar(event: KeyboardEvent): void {
+  function onKeyDown(event: KeyboardEvent): void {
     // Escape fecha sem tirar o foco do gatilho — WCAG 1.4.13 (Dismissible).
     // O foco não é tocado aqui de propósito: `blur` é que fecha por saída, e
     // mexer nele faria o Escape parecer um Tab.
@@ -182,7 +182,7 @@ function mountTooltip(options: TooltipOptions, grupo: GroupState): DestroyableEl
     trigger.setAttribute('aria-describedby', tooltipId);
 
     document.addEventListener('mousemove', aoMover);
-    document.addEventListener('keydown', aoTeclar);
+    document.addEventListener('keydown', onKeyDown);
 
     // PATCH: api — callback de exibição real para analytics (ver PATCHES.md#vanilla-tooltip-onshow)
     options.onShow?.();
@@ -192,7 +192,7 @@ function mountTooltip(options: TooltipOptions, grupo: GroupState): DestroyableEl
     if (showTimer) { clearTimeout(showTimer); showTimer = null; }
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     document.removeEventListener('mousemove', aoMover);
-    document.removeEventListener('keydown', aoTeclar);
+    document.removeEventListener('keydown', onKeyDown);
     // O grupo só é avisado quando havia mesmo um balão na tela: `hide()` também
     // é chamado por caminhos que nunca chegaram a exibir nada, e anotar ali
     // daria ao balão seguinte uma abertura instantânea que ninguém mereceu.

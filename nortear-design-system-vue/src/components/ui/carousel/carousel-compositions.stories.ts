@@ -16,7 +16,7 @@ import { carouselWithDotsSource, carouselGaleriaSource } from './carousel.source
  */
 const CONTENT = carouselTranslations['pt-BR'].demonstration.labels;
 /** Nome acessível: posição E total. "Slide 2" sozinho não diz para onde leva. */
-const nomeAcessivel = (position: number, total: number) =>
+const accessibleName = (position: number, total: number) =>
   `${CONTENT.goToSlide} ${position} ${CONTENT.of} ${total}`;
 /** Texto visível da pílula — um PEDAÇO do nome acessível (WCAG 2.5.3). */
 const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
@@ -113,7 +113,7 @@ const CarouselWithDots = defineComponent({
               // `aria-current` some no controle inativo em vez de virar
               // "false": seletor de presença `[aria-current]` casa com "false".
               'aria-current': this.selectedIndex === i ? 'true' : null,
-              'aria-label': nomeAcessivel(i + 1, this.slides.length),
+              'aria-label': accessibleName(i + 1, this.slides.length),
               onClick: () => this.scrollTo(i),
             },
             [h('span', { class: 'nds-carousel-dot-label' }, labelVisible(i + 1))],
@@ -146,7 +146,7 @@ export const WithDots: Story = {
     // batendo depois de alguém tirar um slide do array.
     const total = canvas.getAllByRole('group').length;
     const dot = (position: number) =>
-      canvas.getByRole('button', { name: nomeAcessivel(position, total) });
+      canvas.getByRole('button', { name: accessibleName(position, total) });
     /**
      * O rótulo é o único filho do controle — a marca do ponto é `::before`, e
      * pseudo-elemento não entra em `firstElementChild`. Buscar por classe seria
@@ -187,7 +187,7 @@ export const WithDots: Story = {
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
       await expect(rotulo(dot(2))).toHaveTextContent(labelVisible(2));
-      await expect(nomeAcessivel(2, total).toLowerCase()).toContain(labelVisible(2).toLowerCase());
+      await expect(accessibleName(2, total).toLowerCase()).toContain(labelVisible(2).toLowerCase());
 
       // A forma mudou, não só a cor: a pílula é mais larga que o ponto vizinho.
       await expect(largura(dot(2))).toBeGreaterThan(largura(dot(3)));

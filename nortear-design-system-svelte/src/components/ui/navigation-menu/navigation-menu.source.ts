@@ -28,8 +28,8 @@ ${parts.map((part) => `  ${part},`).join('\n')}
 }
 
 /** Destino direto da barra: um `<a href>` de verdade, não um botão. */
-function destination(valor: string, href: string, rotulo: string, ativo: boolean): string {
-  const props = attrs(`href="${href}"`, ativo ? 'active' : '');
+function destination(valor: string, href: string, rotulo: string, active: boolean): string {
+  const props = attrs(`href="${href}"`, active ? 'active' : '');
   return `    <NavigationMenuItem value="${valor}">
       <NavigationMenuLink${props}>${rotulo}</NavigationMenuLink>
     </NavigationMenuItem>`;
@@ -127,27 +127,27 @@ const HIGHLIGHT_PANEL = `        <div class="nds-grid nds-w-lg" data-fixed data-
 
 /** Os itens da barra, na composição escolhida pela story. */
 function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: string): string {
-  const ativo = (href: string) => activeHref === href;
+  const active = (href: string) => activeHref === href;
 
   if (demonstration === 'simpleLink') {
     return [
-      destination('inicio', '#inicio', 'Início', ativo('#inicio')),
-      destination('precos', '#precos', 'Preços', ativo('#precos')),
-      destination('contato', '#contato', 'Contato', ativo('#contato')),
+      destination('inicio', '#inicio', 'Início', active('#inicio')),
+      destination('precos', '#precos', 'Preços', active('#precos')),
+      destination('contato', '#contato', 'Contato', active('#contato')),
     ].join('\n');
   }
 
   if (demonstration === 'withDropdown') {
     return [
-      destination('inicio', '#inicio', 'Início', ativo('#inicio')),
+      destination('inicio', '#inicio', 'Início', active('#inicio')),
       withPanel('planos', 'Planos', targetsList(PLANOS)),
-      destination('contato', '#contato', 'Contato', ativo('#contato')),
+      destination('contato', '#contato', 'Contato', active('#contato')),
     ].join('\n');
   }
 
   if (demonstration === 'megaMenuGrid') {
     return [
-      destination('inicio', '#inicio', 'Início', ativo('#inicio')),
+      destination('inicio', '#inicio', 'Início', active('#inicio')),
       withPanel(
         'solucoes',
         'Soluções',
@@ -163,26 +163,26 @@ function itens(demonstration: NavigationMenuArgs['demonstration'], activeHref?: 
 
   if (demonstration === 'withFeatured') {
     return [
-      destination('inicio', '#inicio', 'Início', ativo('#inicio')),
+      destination('inicio', '#inicio', 'Início', active('#inicio')),
       withPanel('recursos', 'Recursos', HIGHLIGHT_PANEL),
     ].join('\n');
   }
 
   if (demonstration === 'bar') {
     return [
-      destination('inicio', '#inicio', 'Início', ativo('#inicio')),
+      destination('inicio', '#inicio', 'Início', active('#inicio')),
       withPanel('produtos', 'Produtos', targetsList(PLANOS.slice(0, 2))),
       withPanel('recursos', 'Recursos', targetsList(RECURSOS)),
-      destination('precos', '#precos', 'Preços', ativo('#precos')),
-      destination('sobre', '#sobre', 'Sobre', ativo('#sobre')),
+      destination('precos', '#precos', 'Preços', active('#precos')),
+      destination('sobre', '#sobre', 'Sobre', active('#sobre')),
     ].join('\n');
   }
 
   return [
-    destination('inicio', '#inicio', 'Início', ativo('#inicio')),
+    destination('inicio', '#inicio', 'Início', active('#inicio')),
     withPanel('produtos', 'Produtos', targetsList(PLANOS)),
     withPanel('solucoes', 'Soluções', targetsList(SOLUCOES)),
-    destination('sobre', '#sobre', 'Sobre', ativo('#sobre')),
+    destination('sobre', '#sobre', 'Sobre', active('#sobre')),
   ].join('\n');
 }
 
@@ -231,7 +231,7 @@ export function navigationMenuSource(
   const listProps =
     orientation === 'vertical' ? ' class="nds-stack nds-w-sm" data-spacing="xs"' : '';
 
-  const seta = indicator ? '\n    <NavigationMenuIndicator />' : '';
+  const arrow = indicator ? '\n    <NavigationMenuIndicator />' : '';
 
   return svelteSnippet(
     defaultValue
@@ -241,7 +241,7 @@ let aberto = $state("${defaultValue}");`
       : importing(parts),
     `<NavigationMenuRoot${props}>
   <NavigationMenuList${listProps}>
-${itens(demonstration, activeHref)}${seta}
+${itens(demonstration, activeHref)}${arrow}
   </NavigationMenuList>
 </NavigationMenuRoot>`,
   );

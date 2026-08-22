@@ -309,9 +309,9 @@ const inputPropItems = computed(() => [
 ]);
 
 const tokenRows = computed(() =>
-  FIELD_TOKENS.map(([token, seletor, chave]) => ({
+  FIELD_TOKENS.map(([token, selector, chave]) => ({
     token,
-    value: seletor,
+    value: selector,
     description: tContent(`tokens.table.${chave}`),
   })),
 );

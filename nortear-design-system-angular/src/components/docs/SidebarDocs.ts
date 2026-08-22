@@ -382,7 +382,7 @@ const CUSTOMIZATION_CODE = `/* Largura e tema por contexto, sempre em token —
               [attr.aria-label]="t('demonstration.labels.search')"
             />
           </div>
-          <ng-container [ngTemplateOutlet]="tplMiolo" [ngTemplateOutletContext]="{ rotuloNav: t('demonstration.labels.mainNav') + ' — composition-busca' }" />
+          <ng-container [ngTemplateOutlet]="tplMiolo" [ngTemplateOutletContext]="{ rotuloNav: t('demonstration.labels.mainNav') + ' — composicao-busca' }" />
         </div>
         <div class="nds-sidebar-inset" data-slot="sidebar-inset"></div>
       </div>
@@ -408,7 +408,7 @@ const CUSTOMIZATION_CODE = `/* Largura e tema por contexto, sempre em token —
             <div ndsSidebar>
               <div ndsSidebarHeader>Acme</div>
               <div ndsSidebarContent>
-                <nav [attr.aria-label]="t('demonstration.labels.mainNav') + ' — composition-grupos'">
+                <nav [attr.aria-label]="t('demonstration.labels.mainNav') + ' — composicao-grupos'">
                   <div ndsSidebarGroup>
                     <div ndsSidebarGroupLabel>{{ t('demonstration.labels.components') }}</div>
                     <div ndsSidebarGroupContent>

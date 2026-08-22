@@ -166,10 +166,10 @@ export const Open: Story = {
     });
 
     await step("A seta indicadora existe enquanto o painel está aberto", async () => {
-      const seta = document.body.querySelector('[data-slot="navigation-menu-indicator"]');
-      await expect(seta).toBeTruthy();
+      const arrow = document.body.querySelector('[data-slot="navigation-menu-indicator"]');
+      await expect(arrow).toBeTruthy();
       // Decorativa: quem lê a tela já tem `aria-expanded` no gatilho.
-      await expect(seta?.getAttribute("aria-hidden")).toBe("true");
+      await expect(arrow?.getAttribute("aria-hidden")).toBe("true");
     });
 
     await step("O fundo do painel é opaco", async () => {

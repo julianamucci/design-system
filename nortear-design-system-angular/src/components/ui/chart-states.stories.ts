@@ -117,8 +117,8 @@ export const MultiSeries: Story = {
     await step('Cada série usa um token de cor distinto', async () => {
       const barras = [...chart.querySelectorAll<SVGRectElement>('rect[data-series]')];
       await expect(barras).toHaveLength(MONTHS.length * SERIES_MULTI.length);
-      const cores = new Set(barras.map((b) => getComputedStyle(b).fill));
-      await expect(cores.size).toBe(SERIES_MULTI.length);
+      const colors = new Set(barras.map((b) => getComputedStyle(b).fill));
+      await expect(colors.size).toBe(SERIES_MULTI.length);
     });
 
     await step('E também uma trama distinta — a cor não é o único sinal', async () => {

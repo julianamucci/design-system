@@ -46,7 +46,7 @@ export type InputOtpMode = 'numeric' | 'alphanumeric';
 interface CellOtp {
   /** Chave estável para o `track` do @for — separador e slot nunca colidem. */
   chave: string;
-  separador: boolean;
+  separator: boolean;
   /** Índice do slot no código; -1 num separador. */
   indice: number;
   caractere: string;
@@ -65,7 +65,7 @@ interface CellOtp {
   },
   template: `
     @for (celula of celulas(); track celula.chave) {
-      @if (celula.separador) {
+      @if (celula.separator) {
         <!-- role="separator" e não aria-hidden: o conteúdo compartilhado cobra
              o papel (testes.accessibility.item4) porque é ele que informa ao
              leitor que o código vem em dois blocos — 3+3 dito de uma vez é
@@ -90,7 +90,7 @@ interface CellOtp {
           [attr.aria-describedby]="describedBy() || null"
           (focus)="aoFocar($event)"
           (input)="aoDigitar(celula.indice, $event)"
-          (keydown)="aoTeclar(celula.indice, $event)"
+          (keydown)="onKeyDown(celula.indice, $event)"
           (paste)="aoColar(celula.indice, $event)"
         />
       }
@@ -168,9 +168,9 @@ export class NdsInputOtp implements AfterViewInit {
     const out: CellOtp[] = [];
     for (let i = 0; i < total; i++) {
       if (antes.has(i)) {
-        out.push({ chave: `sep-${i}`, separador: true, indice: -1, caractere: '' });
+        out.push({ chave: `sep-${i}`, separator: true, indice: -1, caractere: '' });
       }
-      out.push({ chave: `slot-${i}`, separador: false, indice: i, caractere: atuais[i] ?? '' });
+      out.push({ chave: `slot-${i}`, separator: false, indice: i, caractere: atuais[i] ?? '' });
     }
     return out;
   });
@@ -224,7 +224,7 @@ export class NdsInputOtp implements AfterViewInit {
     if (caractere) this.focar(indice + 1);
   }
 
-  protected aoTeclar(indice: number, evento: KeyboardEvent): void {
+  protected onKeyDown(indice: number, evento: KeyboardEvent): void {
     const proximas = [...this.chars()];
 
     switch (evento.key) {

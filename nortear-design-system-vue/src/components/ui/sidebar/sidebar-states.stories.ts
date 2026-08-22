@@ -531,10 +531,10 @@ export const MobileOverlay: Story = {
       // Nome em português por padrão: era "Sidebar", cravado no componente.
       const painel = await corpo.findByRole('dialog', { name: /barra lateral/i });
       await expect(painel).toHaveAttribute('aria-modal', 'true');
-      const dentro = within(painel);
-      await expect(dentro.getByRole('button', { name: /dashboard/i })).toBeInTheDocument();
-      await expect(dentro.getByRole('button', { name: /componentes/i })).toBeInTheDocument();
-      await expect(dentro.getByRole('button', { name: /tokens/i })).toBeInTheDocument();
+      const inside = within(painel);
+      await expect(inside.getByRole('button', { name: /dashboard/i })).toBeInTheDocument();
+      await expect(inside.getByRole('button', { name: /componentes/i })).toBeInTheDocument();
+      await expect(inside.getByRole('button', { name: /tokens/i })).toBeInTheDocument();
       // Um item, uma vez. Se os dois ramos montassem ao mesmo tempo, o leitor
       // de tela anunciaria a navegação inteira em dobro — e a consulta por
       // papel no documento todo é justamente o que enxerga isso.

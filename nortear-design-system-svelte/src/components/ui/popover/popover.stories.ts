@@ -123,7 +123,7 @@ export const Playground: Story = {
     const body = within(document.body);
     const gatilho = canvas.getByRole('button', { name: /Abrir popover/i });
 
-    const fechado = async () => {
+    const closed = async () => {
       await waitFor(
         () => {
           const dialog = body.queryByRole('dialog');
@@ -142,7 +142,7 @@ export const Playground: Story = {
 
     const fechar = async () => {
       if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.click(gatilho);
-      await fechado();
+      await closed();
     };
 
     await step('1. O gatilho anuncia que abre um diálogo', async () => {
@@ -176,7 +176,7 @@ export const Playground: Story = {
     await step('5. Escape fecha o popover e retorna foco ao trigger', async () => {
       await abrir();
       await userEvent.keyboard('{Escape}');
-      await fechado();
+      await closed();
       await waitFor(() => {
         if (document.activeElement !== gatilho) {
           throw new Error('focus did not return to trigger');
@@ -208,7 +208,7 @@ export const Playground: Story = {
       const cancelar = body.getByRole('button', { name: args.cancelLabel as string });
       await expect(cancelar).toHaveAttribute('data-slot', 'popover-close');
       await userEvent.click(cancelar);
-      await fechado();
+      await closed();
       await expect(args.onCancel).toHaveBeenCalled();
     });
 

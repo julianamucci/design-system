@@ -389,10 +389,10 @@ export const MobileOverlay: Story = {
       await expect(painel.getAttribute('aria-modal')).toBe('true');
       await expect(painel.dataset.mobile).toBe('true');
       // A navegação inteira mudou de lugar: é a MESMA barra, não uma cópia.
-      const ativo = painel.querySelector<HTMLElement>('[data-active="true"]')!;
-      await expect(ativo).not.toBeNull();
-      await expect(ativo.getAttribute('aria-current')).toBe('page');
-      await expect(ativo.textContent).toContain('Dashboard');
+      const active = painel.querySelector<HTMLElement>('[data-active="true"]')!;
+      await expect(active).not.toBeNull();
+      await expect(active.getAttribute('aria-current')).toBe('page');
+      await expect(active.textContent).toContain('Dashboard');
     });
 
     await step('O foco entra no painel', async () => {

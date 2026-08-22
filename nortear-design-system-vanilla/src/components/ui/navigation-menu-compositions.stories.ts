@@ -299,13 +299,13 @@ export const WithHighlightedCard: Story = {
       painel.dataset.spacing = 'sm';
 
       const targets = [...painel.querySelectorAll<HTMLElement>('.nds-navigation-menu-child')];
-      const [highlight, ...apoio] = targets;
+      const [highlight, ...helper] = targets;
       // O destaque ocupa a coluna inteira; os complementares empilham na outra.
       highlight.classList.add('nds-h-full');
       const coluna = document.createElement('div');
       coluna.className = 'nds-stack';
       coluna.dataset.spacing = 'xs';
-      for (const link of apoio) coluna.appendChild(link);
+      for (const link of helper) coluna.appendChild(link);
       painel.appendChild(coluna);
     }
     return wrap(nav, 340);
@@ -321,8 +321,8 @@ export const WithHighlightedCard: Story = {
       // O destaque ocupa a coluna inteira: é mais alto que qualquer um dos
       // complementares, que é como a hierarquia aparece sem depender de cor.
       const highlight = targets[0].getBoundingClientRect();
-      const apoio = targets[1].getBoundingClientRect();
-      await expect(highlight.height).toBeGreaterThan(apoio.height);
+      const helper = targets[1].getBoundingClientRect();
+      await expect(highlight.height).toBeGreaterThan(helper.height);
     });
 
     await step('Tab alcança todo o painel', async () => {

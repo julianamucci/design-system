@@ -38,8 +38,8 @@ type Story = StoryObj<typeof meta>;
 const ABRIL = () => new Date(2026, 3, 1);
 
 /** O <td> carrega a data em ISO, que é comparável; o <button> traz a formatada. */
-const daysWith = (canvasElement: HTMLElement, seletor: string): string[] =>
-  Array.from(canvasElement.querySelectorAll(`[role=gridcell]${seletor}`)).map(
+const daysWith = (canvasElement: HTMLElement, selector: string): string[] =>
+  Array.from(canvasElement.querySelectorAll(`[role=gridcell]${selector}`)).map(
     (el) => el.getAttribute("data-day") ?? "",
   );
 
@@ -218,9 +218,9 @@ export const WithOutsideDays: Story = {
   play: async ({ canvasElement, step }) => {
     await step("As bordas do grid trazem dias de fora do mês", async () => {
       // Abril de 2026 começa numa quarta: as três primeiras casas vêm de março.
-      const fora = daysWith(canvasElement, "[data-outside]");
-      await expect(fora).toContain("2026-03-30");
-      await expect(fora.length).toBeGreaterThan(0);
+      const outside = daysWith(canvasElement, "[data-outside]");
+      await expect(outside).toContain("2026-03-30");
+      await expect(outside.length).toBeGreaterThan(0);
     });
 
     await step("Dia de fora do mês não conta como do mês", async () => {

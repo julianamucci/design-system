@@ -51,7 +51,7 @@ export class NdsInputGroup {}
     class: 'nds-input-group-addon',
     '[attr.data-slot]': '"input-group-addon"',
     '[attr.data-align]': 'align()',
-    '(click)': 'aoClicar($event)',
+    '(click)': 'onClick($event)',
   },
 })
 export class NdsInputGroupAddon {
@@ -63,7 +63,7 @@ export class NdsInputGroupAddon {
 
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  protected aoClicar(evento: Event): void {
+  protected onClick(evento: Event): void {
     const alvo = evento.target as HTMLElement | null;
     // Clique em botão é do botão. Sem esta guarda, apertar "limpar" também
     // devolveria o foco ao campo — e o botão perderia o próprio foco no meio

@@ -108,9 +108,9 @@ export const Active: Story = {
     });
 
     await step('A página atual continua rotulada e destacada', async () => {
-      const ativo = canvas.getByRole('link', { name: 'Ir para página 4' });
-      await expect(ativo).toHaveAttribute('aria-current', 'page');
-      await expect(ativo).toHaveAttribute('data-active', 'true');
+      const active = canvas.getByRole('link', { name: 'Ir para página 4' });
+      await expect(active).toHaveAttribute('aria-current', 'page');
+      await expect(active).toHaveAttribute('data-active', 'true');
     });
   },
 };
@@ -134,11 +134,11 @@ export const Directional: Story = {
     await step('Os controles de direção têm rótulo em português', async () => {
       // accessibility.item5 — o ícone não tem texto: sem o rótulo, o controle
       // fica mudo. Antes daqui ele saía como "Go to previous page".
-      const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+      const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
       const next = canvas.getByRole('link', { name: LABEL_NEXT });
-      await expect(anterior).toHaveClass('nds-pagination-icon');
+      await expect(previous).toHaveClass('nds-pagination-icon');
       await expect(next).toHaveClass('nds-pagination-icon');
-      await expect(anterior.querySelector('svg')).not.toBeNull();
+      await expect(previous.querySelector('svg')).not.toBeNull();
       await expect(next.querySelector('svg')).not.toBeNull();
     });
 

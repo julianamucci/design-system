@@ -48,9 +48,9 @@ function expressao(valor: unknown, padrao: string): string | undefined {
 // escrito com fábricas do design system ou com DOM curto, nunca com o
 // `buildPlayground`/`makeBody` que só existe dentro do arquivo de story.
 
-type Corpo = { imports: string[]; bloco: string };
+type Body = { imports: string[]; bloco: string };
 
-function bodyText(): Corpo {
+function bodyText(): Body {
   return {
     imports: [],
     bloco: `const corpo = document.createElement('div');
@@ -59,7 +59,7 @@ corpo.textContent = 'Conteúdo do painel (formulário, lista, mensagem).';`,
   };
 }
 
-function bodyParagrafos(total: number): Corpo {
+function bodyParagrafos(total: number): Body {
   return {
     imports: [],
     // O corpo é quem rola: `.nds-sheet-body` já tem o teto de altura e o
@@ -75,7 +75,7 @@ for (let i = 1; i <= ${total}; i++) {
   };
 }
 
-function bodyActions(): Corpo {
+function bodyActions(): Body {
   return {
     imports: [importing('button', 'createButton')],
     bloco: `const corpo = document.createElement('div');
@@ -87,7 +87,7 @@ for (const rotulo of ['Compartilhar', 'Copiar link', 'Editar', 'Arquivar']) {
   };
 }
 
-function bodyNavigation(): Corpo {
+function bodyNavigation(): Body {
   return {
     imports: [],
     // A lista de links é um marco: sem nome, o leitor de tela anuncia
@@ -106,7 +106,7 @@ for (const rotulo of ['Dashboard', 'Projetos', 'Equipe', 'Configurações']) {
   };
 }
 
-function bodyForm(): Corpo {
+function bodyForm(): Body {
   return {
     imports: [importing('form', 'createFormField'), importing('input', 'createInput')],
     // `createFormField` é quem fecha o par rótulo ↔ controle e gera o id que
@@ -123,7 +123,7 @@ corpo.append(
   };
 }
 
-function bodyOf(o: SheetSnippetOptions): Corpo {
+function bodyOf(o: SheetSnippetOptions): Body {
   switch (o.corpo) {
     case 'paragrafos':
       return bodyParagrafos(o.paragrafos ?? 24);

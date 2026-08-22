@@ -219,9 +219,9 @@ export const Playground: Story = {
 
     await step('O item ativo é anunciado como página atual', async () => {
       // `data-active` é para o CSS; quem não vê a cor precisa do aria-current.
-      const ativo = canvas.getByRole('button', { name: /dashboard/i });
-      await expect(ativo).toHaveAttribute('aria-current', 'page');
-      await expect(ativo).toHaveAttribute('data-active', 'true');
+      const active = canvas.getByRole('button', { name: /dashboard/i });
+      await expect(active).toHaveAttribute('aria-current', 'page');
+      await expect(active).toHaveAttribute('data-active', 'true');
     });
 
     await step('O ícone do item não é lido pelo leitor de tela', async () => {

@@ -53,8 +53,8 @@ const SELECTORS_CONTROL = [
 ]
 
 function findControl(raiz: HTMLElement): HTMLElement | null {
-  for (const seletor of SELECTORS_CONTROL) {
-    const finding = raiz.querySelector<HTMLElement>(seletor)
+  for (const selector of SELECTORS_CONTROL) {
+    const finding = raiz.querySelector<HTMLElement>(selector)
     if (finding) return finding
   }
   return null

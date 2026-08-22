@@ -6,7 +6,7 @@ import {
   barrasDeProgresso,
   contrastBarTrack,
   indicadorDoProgresso,
-  nomeAcessivel,
+  accessibleName,
   percentualDesenhado,
   progressoTrack,
 } from '@shared/testing/progress-probe';
@@ -127,7 +127,7 @@ export const ProgressList: Story = {
     });
 
     await step('Cada um com nome acessível próprio', async () => {
-      const names = barrasDeProgresso(canvasElement).map(nomeAcessivel);
+      const names = barrasDeProgresso(canvasElement).map(accessibleName);
       await expect(names.every((n) => n !== '')).toBe(true);
       await expect(new Set(names).size).toBe(3);
     });
@@ -194,10 +194,10 @@ export const CustomColor: Story = {
     });
 
     await step('As três cores são realmente distintas', async () => {
-      const cores = canvas
+      const colors = canvas
         .getAllByRole('progressbar')
         .map((raiz) => getComputedStyle(indicadorDoProgresso(raiz)).backgroundColor);
-      await expect(new Set(cores).size).toBe(3);
+      await expect(new Set(colors).size).toBe(3);
     });
 
     await step('Nenhuma variante abre mão dos 3:1 contra a trilha', async () => {
@@ -208,7 +208,7 @@ export const CustomColor: Story = {
 
     await step('Toda barra da lista tem nome acessível', async () => {
       for (const bar of barrasDeProgresso(canvasElement)) {
-        await expect(nomeAcessivel(bar)).not.toBe('');
+        await expect(accessibleName(bar)).not.toBe('');
       }
     });
   },
@@ -250,10 +250,10 @@ export const IndeterminateProcessing: Story = {
       // dizer. A largura de 40% vem do CSS compartilhado. Mede-se a LARGURA, e
       // não a posição: com a animação em curso o traço está sempre em outro
       // lugar, e uma asserção de posição seria racy por construção.
-      const trilha = progressoTrack(canvasElement);
+      const trail = progressoTrack(canvasElement);
       const indicador = indicadorDoProgresso(canvasElement);
       const proporcao =
-        indicador.getBoundingClientRect().width / trilha.getBoundingClientRect().width;
+        indicador.getBoundingClientRect().width / trail.getBoundingClientRect().width;
       await expect(Math.abs(proporcao - 0.4)).toBeLessThan(0.05);
     });
   },

@@ -32,8 +32,8 @@ type Story = StoryObj;
  * 0,005.
  */
 function baseDoSlide(canvasElement: HTMLElement, slide: HTMLElement): number {
-  const trilha = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
-  return slide.getBoundingClientRect().width / trilha.getBoundingClientRect().width;
+  const trail = canvasElement.querySelector<HTMLElement>('.nds-carousel-track')!;
+  return slide.getBoundingClientRect().width / trail.getBoundingClientRect().width;
 }
 
 /**
@@ -259,14 +259,14 @@ export const Autoplay: Story = {
       // caminho. Este ponto era o único do arquivo com duas, e reprovava sob
       // carga afirmando que a posição mudara 37px depois de "parada".
       let estaveis = 0;
-      let anterior = NaN;
+      let previous = NaN;
       await waitFor(async () => {
         const agora = viewport.scrollLeft;
-        estaveis = agora === anterior ? estaveis + 1 : 0;
-        anterior = agora;
+        estaveis = agora === previous ? estaveis + 1 : 0;
+        previous = agora;
         await expect(estaveis).toBeGreaterThanOrEqual(3);
       }, { timeout: 3000 });
-      const parado = anterior;
+      const parado = previous;
 
       await new Promise((resolve) => setTimeout(resolve, 900));
       await expect(viewport.scrollLeft).toBe(parado);
@@ -320,7 +320,7 @@ export const DragGesture: Story = {
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
-    const anterior = () =>
+    const previous = () =>
       canvas.getByRole('button', { name: 'Item anterior' }) as HTMLButtonElement;
     const proximo = () =>
       canvas.getByRole('button', { name: 'Próximo item' }) as HTMLButtonElement;
@@ -364,7 +364,7 @@ export const DragGesture: Story = {
       await waitFor(async () => {
         await expect(
           Math.abs(viewport.scrollLeft - alvo),
-          `${onde}: posição=${viewport.scrollLeft} alvo=${alvo} setas=[ant:${desligada(anterior())} prox:${desligada(proximo())}]`,
+          `${onde}: posição=${viewport.scrollLeft} alvo=${alvo} setas=[ant:${desligada(previous())} prox:${desligada(proximo())}]`,
         ).toBeLessThan(2);
       }, { timeout: 4000 });
     };
@@ -384,18 +384,18 @@ export const DragGesture: Story = {
       // ao primeiro slide é o que faz a segunda rodada valer tanto quanto a
       // primeira.
       for (let volta = 0; volta < slides().length; volta++) {
-        const button = anterior();
+        const button = previous();
         if (button.disabled) break;
         await userEvent.click(button);
       }
       posZero = await settle();
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
 
       await userEvent.click(proximo());
       posUm = await settle();
       await expect(posUm).toBeGreaterThan(posZero);
 
-      await userEvent.click(anterior());
+      await userEvent.click(previous());
       await inPosition(posZero, 'volta pela seta');
       // A POSIÇÃO chega antes do ESTADO. `inPosition` prova que a rolagem
       // encostou em zero, mas quem desabilita a seta é a reconciliação do
@@ -404,7 +404,7 @@ export const DragGesture: Story = {
       // Afirmar o botão no mesmo instante mede uma janela onde o componente
       // ainda nem foi avisado de que parou.
       await waitFor(async () => {
-        await expect(anterior()).toBeDisabled();
+        await expect(previous()).toBeDisabled();
       }, { timeout: 4000 });
     });
 
@@ -441,7 +441,7 @@ export const DragGesture: Story = {
       // a detecção de mudança e o novo render, o padrão de 1s da testing-library
       // fica no limite: passa na máquina ociosa e reprova sob carga, que foi
       // como esta reprovou uma vez em três rodadas.
-      await waitFor(() => expect(anterior()).toBeEnabled(), { timeout: 4000 });
+      await waitFor(() => expect(previous()).toBeEnabled(), { timeout: 4000 });
     });
 
     const caixa = viewport.getBoundingClientRect();
@@ -450,7 +450,7 @@ export const DragGesture: Story = {
     const esquerda = caixa.left + caixa.width * 0.15;
 
     await step('O arraste por MOUSE move o conteúdo junto com o ponteiro', async () => {
-      await userEvent.click(anterior());
+      await userEvent.click(previous());
       await inPosition(posZero, 'início do arraste por mouse');
 
       // Eventos de ponteiro despachados direto, e não por `userEvent.pointer`:
@@ -484,13 +484,13 @@ export const DragGesture: Story = {
       // cursor largou. Um carrossel de rolagem livre pararia no meio.
       await inPosition(posUm, 'soltura do mouse');
       await waitFor(async () => {
-        await expect(anterior()).toBeEnabled();
+        await expect(previous()).toBeEnabled();
       }, { timeout: 4000 });
     });
 
     await step('E a story termina no primeiro slide', async () => {
       // O Chromatic fotografa o quadro final e o axe varre a partir dele.
-      await userEvent.click(anterior());
+      await userEvent.click(previous());
       await inPosition(posZero, 'fim da story');
       // A POSIÇÃO chega antes do ESTADO. `inPosition` prova que a rolagem
       // encostou no alvo, mas quem desabilita a seta é a reconciliação do
@@ -500,7 +500,7 @@ export const DragGesture: Story = {
       // ainda nem foi avisado de que parou: passa na máquina ociosa e reprova
       // sob carga, que foi como esta reprovou no Angular e no Vanilla.
       await waitFor(async () => {
-        await expect(anterior()).toBeDisabled();
+        await expect(previous()).toBeDisabled();
       }, { timeout: 4000 });
     });
   },

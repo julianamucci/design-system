@@ -281,7 +281,7 @@ export const Playground: Story = {
       // Parte do estado que este passo garante, e não do que o anterior deixou:
       // o replay do painel Interactions reexecuta no mesmo DOM.
       cancel.focus();
-      const ordem: Element[] = [document.activeElement!];
+      const order: Element[] = [document.activeElement!];
 
       // 4 tabulações: com focus trap ativo o foco só pode alternar entre os
       // dois botões (ou o próprio popup, que tem tabindex -1).
@@ -295,14 +295,14 @@ export const Playground: Story = {
           }
         });
         focused.add(document.activeElement!);
-        ordem.push(document.activeElement!);
+        order.push(document.activeElement!);
       }
       await expect(focused.has(cancel)).toBe(true);
       await expect(focused.has(action)).toBe(true);
 
       // functional.item1: o primeiro controle alcançado é o Cancel — a saída
       // segura precede a destrutiva na ordem de tabulação.
-      const firstControl = ordem.find((el) => el === cancel || el === action);
+      const firstControl = order.find((el) => el === cancel || el === action);
       await expect(firstControl).toBe(cancel);
 
       await userEvent.tab({ shift: true });

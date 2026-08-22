@@ -43,10 +43,10 @@ function par(opcoes: {
   id: string;
   rotulo: string;
   caixa?: Array<string | false>;
-  moldura?: string;
+  frame?: string;
 }): string {
-  const { id, rotulo, caixa = [], moldura = '' } = opcoes;
-  return `<div class="nds-cluster"${attrs('data-spacing="sm"', moldura)}>
+  const { id, rotulo, caixa = [], frame = '' } = opcoes;
+  return `<div class="nds-cluster"${attrs('data-spacing="sm"', frame)}>
   <Checkbox id="${id}"${attrs(...caixa)} />
   <label for="${id}" class="nds-label">${rotulo}</label>
 </div>`;
@@ -119,7 +119,7 @@ export function checkboxDisabledSource(): string {
     par({
       id: 'sessao',
       rotulo: 'Manter sessão ativa',
-      moldura: 'data-disabled="true"',
+      frame: 'data-disabled="true"',
       caixa: [attrBool('disabled', true, false)],
     }),
   );
@@ -132,7 +132,7 @@ export function checkboxDisabledCheckedSource(): string {
     par({
       id: 'notificacoes',
       rotulo: 'Receber notificações push',
-      moldura: 'data-disabled="true"',
+      frame: 'data-disabled="true"',
       caixa: [attrBool('disabled', true, false), attrChecked(true)],
     }),
   );

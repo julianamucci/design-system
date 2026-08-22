@@ -101,7 +101,7 @@ export const Invalid: Story = {
       await expect(measurements).toHaveLength(2);
       for (const m of measurements) {
         await expect(m.rotulo).toBeGreaterThanOrEqual(4.5);
-        await expect(m.apoio).toBeGreaterThanOrEqual(4.5);
+        await expect(m.helper).toBeGreaterThanOrEqual(4.5);
         await expect(m.erro).toBeGreaterThanOrEqual(4.5);
       }
     });

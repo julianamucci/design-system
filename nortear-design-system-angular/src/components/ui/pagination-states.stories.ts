@@ -133,14 +133,14 @@ export const FirstPage: Story = {
   render: () => faixa('Paginação na primeira página', 1),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+    const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
 
     await step('Anterior está marcado como desabilitado', async () => {
       // visual.item4 — em `<a>` não existe `disabled`; o par correto é
       // aria-disabled + a supressão do clique e da tabulação.
-      await expect(anterior).toHaveAttribute('aria-disabled', 'true');
-      await expect(anterior).toHaveAttribute('tabindex', '-1');
-      const estilo = getComputedStyle(anterior);
+      await expect(previous).toHaveAttribute('aria-disabled', 'true');
+      await expect(previous).toHaveAttribute('tabindex', '-1');
+      const estilo = getComputedStyle(previous);
       await expect(estilo.pointerEvents).toBe('none');
       await expect(Number(estilo.opacity)).toBeLessThan(1);
     });
@@ -150,7 +150,7 @@ export const FirstPage: Story = {
       // ponteiro, e o que esta asserção precisa provar é o outro caminho — o
       // evento que chega por script ou por teclado também não passa.
       onPageChange.mockClear();
-      await fireEvent.click(anterior);
+      await fireEvent.click(previous);
       await expect(onPageChange).not.toHaveBeenCalled();
     });
 
@@ -195,9 +195,9 @@ export const LastPage: Story = {
     });
 
     await step('A página atual é a última da faixa', async () => {
-      const ativo = canvas.getByRole('link', { name: `${LABEL_PAGE} 5` });
-      await expect(ativo).toHaveAttribute('aria-current', 'page');
-      await expect(ativo).toHaveClass('nds-button-outline');
+      const active = canvas.getByRole('link', { name: `${LABEL_PAGE} 5` });
+      await expect(active).toHaveAttribute('aria-current', 'page');
+      await expect(active).toHaveClass('nds-button-outline');
     });
   },
 };
@@ -233,11 +233,11 @@ export const FocusVisible: Story = {
     await step('A página atual também é focável', async () => {
       // Ela não navega para lugar nenhum, mas continua alcançável pelo teclado:
       // tirar do fluxo de foco quebraria a leitura sequencial da faixa.
-      const ativo = canvas.getByRole('link', { name: `${LABEL_PAGE} 3` });
-      ativo.blur();
-      ativo.focus();
-      await expect(ativo).toHaveFocus();
-      await expect(getComputedStyle(ativo).boxShadow).not.toBe('none');
+      const active = canvas.getByRole('link', { name: `${LABEL_PAGE} 3` });
+      active.blur();
+      active.focus();
+      await expect(active).toHaveFocus();
+      await expect(getComputedStyle(active).boxShadow).not.toBe('none');
     });
   },
 };

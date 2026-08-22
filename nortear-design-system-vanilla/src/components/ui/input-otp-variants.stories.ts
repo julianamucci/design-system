@@ -133,14 +133,14 @@ export const WithSeparator: Story = {
       // Enquanto era `gap` do contêiner, ele caía também entre cada par de
       // slots e abria as caixas do meio, que não têm borda esquerda.
       const slots = slotsDe(canvasElement);
-      const separador = canvasElement.querySelector<HTMLElement>(
+      const separator = canvasElement.querySelector<HTMLElement>(
         '[data-slot="input-otp-separator"]',
       )!;
       const folga = (a: Element, b: Element) =>
         Math.round(b.getBoundingClientRect().left - a.getBoundingClientRect().right);
       await expect(folga(slots[0], slots[1])).toBe(0);
-      await expect(folga(slots[2], separador)).toBeGreaterThan(0);
-      await expect(folga(separador, slots[3])).toBeGreaterThan(0);
+      await expect(folga(slots[2], separator)).toBeGreaterThan(0);
+      await expect(folga(separator, slots[3])).toBeGreaterThan(0);
     });
   },
 };

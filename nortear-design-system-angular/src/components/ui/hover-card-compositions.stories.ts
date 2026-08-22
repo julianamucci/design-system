@@ -327,8 +327,8 @@ export const Sides: Story = {
       // resulta em "abaixo", e isso é comportamento correto de fuga de colisão.
       // Afirmar o lado literal transformaria o tamanho da janela do teste em
       // parte do contrato.
-      const [acima, abaixo, esquerda, direita] = lados;
-      await expect(['top', 'bottom']).toContain(acima);
+      const [above, abaixo, esquerda, direita] = lados;
+      await expect(['top', 'bottom']).toContain(above);
       await expect(['top', 'bottom']).toContain(abaixo);
       await expect(['left', 'right']).toContain(esquerda);
       await expect(['left', 'right']).toContain(direita);

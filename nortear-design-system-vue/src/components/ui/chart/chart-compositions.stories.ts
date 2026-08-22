@@ -62,10 +62,10 @@ export const WithCard: Story = {
     await step('E o gráfico mora dentro dele', async () => {
       // O aninhamento é a composição: gráfico ao lado do card, e não dentro,
       // passaria em qualquer asserção que só procurasse os dois na tela.
-      const dentro = canvasElement.querySelector<HTMLElement>(
+      const inside = canvasElement.querySelector<HTMLElement>(
         '[data-slot="card"] [data-slot="chart"]',
       );
-      await expect(dentro).not.toBeNull();
+      await expect(inside).not.toBeNull();
 
       const raiz = exigirRoot(canvasElement);
       await waitFor(() => expect(designPintado(raiz)).toBe(true), { timeout: 3000 });

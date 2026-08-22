@@ -222,11 +222,11 @@ export const WithGroups: Story = {
       const alcancados: string[] = [];
       for (let i = 0; i < 5; i++) {
         await userEvent.tab();
-        const ativo = document.activeElement as HTMLElement | null;
-        if (!ativo) continue;
+        const active = document.activeElement as HTMLElement | null;
+        if (!active) continue;
         // `aria-label` ANTES do texto: é ele que vence no cálculo do nome
         // acessível, e a fábrica sempre o define no item de menu.
-        alcancados.push(ativo.getAttribute('aria-label') ?? ativo.textContent?.trim() ?? '');
+        alcancados.push(active.getAttribute('aria-label') ?? active.textContent?.trim() ?? '');
       }
       await expect(alcancados).toContain('Componentes');
       await expect(alcancados).toContain('Configuracoes');
@@ -393,9 +393,9 @@ export const WithGroupActions: Story = {
     });
 
     await step('O item ativo é anunciado como página atual', async () => {
-      const ativo = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-button"][data-active="true"]')!;
-      await expect(ativo.getAttribute('aria-current')).toBe('page');
-      await expect(ativo.tagName).toBe('A');
+      const active = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-button"][data-active="true"]')!;
+      await expect(active.getAttribute('aria-current')).toBe('page');
+      await expect(active.tagName).toBe('A');
     });
 
     await step('A ação do item tem nome próprio e mora no mesmo item', async () => {
@@ -550,15 +550,15 @@ export const WithSubmenu: Story = {
     },
   },
   play: async ({ canvasElement, step }) => {
-    const pai = () => canvasElement.querySelector<HTMLButtonElement>('[aria-expanded]')!;
+    const parent = () => canvasElement.querySelector<HTMLButtonElement>('[aria-expanded]')!;
     const sub = () => canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-sub"]')!;
 
     // Par idempotente: só clica quando o estado atual não é o desejado, então o
     // replay do painel Interactions (que roda no MESMO DOM) chega ao mesmo fim.
     const definir = async (aberto: boolean) => {
-      const alvo = pai();
+      const alvo = parent();
       if (alvo.getAttribute('aria-expanded') !== String(aberto)) await userEvent.click(alvo);
-      await expect(pai().getAttribute('aria-expanded')).toBe(String(aberto));
+      await expect(parent().getAttribute('aria-expanded')).toBe(String(aberto));
     };
 
     await step('O submenu nasce fechado, e o botão pai diz isso', async () => {
@@ -584,9 +584,9 @@ export const WithSubmenu: Story = {
     });
 
     await step('O subitem ativo é anunciado como página atual', async () => {
-      const ativo = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-sub-button"][data-active="true"]')!;
-      await expect(ativo.getAttribute('aria-current')).toBe('page');
-      await expect(ativo.getAttribute('data-size')).toBe('sm');
+      const active = canvasElement.querySelector<HTMLElement>('[data-sidebar="menu-sub-button"][data-active="true"]')!;
+      await expect(active.getAttribute('aria-current')).toBe('page');
+      await expect(active.getAttribute('data-size')).toBe('sm');
     });
 
     await step('O subitem desabilitado não navega nem se anuncia clicável', async () => {

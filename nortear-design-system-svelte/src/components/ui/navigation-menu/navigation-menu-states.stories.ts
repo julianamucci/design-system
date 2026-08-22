@@ -101,9 +101,9 @@ export const Open: Story = {
     });
 
     await step('A seta indicadora existe enquanto o painel está aberto', async () => {
-      const seta = document.body.querySelector('[data-slot="navigation-menu-indicator"]');
-      await expect(seta).toBeTruthy();
-      await expect(seta?.querySelector('.nds-navigation-menu-indicator-arrow')).toBeTruthy();
+      const arrow = document.body.querySelector('[data-slot="navigation-menu-indicator"]');
+      await expect(arrow).toBeTruthy();
+      await expect(arrow?.querySelector('.nds-navigation-menu-indicator-arrow')).toBeTruthy();
     });
 
     await step('O fundo do painel é opaco', async () => {

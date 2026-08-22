@@ -69,9 +69,9 @@ export const Horizontal: Story = {
       // O que o horizontal promete é linha cheia e fina. Medir os dois evita
       // que uma troca de folha passe com o atributo certo e o visual errado.
       const caixa = sep!.getBoundingClientRect();
-      const pai = wrap.getBoundingClientRect();
+      const parent = wrap.getBoundingClientRect();
       await expect(caixa.height).toBeCloseTo(1, 1);
-      await expect(caixa.width).toBeCloseTo(pai.width, 0);
+      await expect(caixa.width).toBeCloseTo(parent.width, 0);
     });
   },
 };

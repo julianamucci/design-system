@@ -40,7 +40,7 @@ export type ToggleArgs = {
   iconOnly: boolean;
 };
 
-const VARIANTES = ['default', 'outline'] as const;
+const VARIANTS = ['default', 'outline'] as const;
 const SIZES = ['sm', 'default', 'lg'] as const;
 
 const IMPORT_TOGGLE = 'import { Toggle } from "@/components/ui/toggle";';
@@ -88,7 +88,7 @@ export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
   const icone = soIcon ? 'Bold' : 'Eye';
 
   const atributos = attrs(
-    propOption('variant', args.variant, VARIANTES, 'default'),
+    propOption('variant', args.variant, VARIANTS, 'default'),
     propOption('size', args.size, SIZES, 'default'),
     propBool('defaultPressed', args.defaultPressed),
     propBool('disabled', args.disabled),

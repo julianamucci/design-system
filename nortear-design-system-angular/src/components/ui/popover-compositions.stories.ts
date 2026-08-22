@@ -154,9 +154,9 @@ export const TableFilter: Story = {
     await step('E marcar um deles não fecha o painel', async () => {
       // Filtro é escolha múltipla: fechar no primeiro clique obrigaria a
       // reabrir para cada critério.
-      const ativo = screen.getByRole('checkbox', { name: 'Ativo' });
-      await marcar(ativo);
-      await expect(ativo).toHaveAttribute('aria-checked', 'true');
+      const active = screen.getByRole('checkbox', { name: 'Ativo' });
+      await marcar(active);
+      await expect(active).toHaveAttribute('aria-checked', 'true');
       await expect(painel()).toBeInTheDocument();
     });
   },

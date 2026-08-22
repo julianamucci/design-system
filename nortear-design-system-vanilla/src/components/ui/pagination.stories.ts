@@ -131,13 +131,13 @@ export const Playground: Story = {
 
     await step('A página atual é marcada e o extremo é desabilitado', async () => {
       // accessibility.item4
-      const ativo = canvas.getByRole('link', { name: `Ir para página ${args.current}` });
-      await expect(ativo).toHaveAttribute('aria-current', 'page');
-      await expect(ativo).toHaveAttribute('data-active', 'true');
+      const active = canvas.getByRole('link', { name: `Ir para página ${args.current}` });
+      await expect(active).toHaveAttribute('aria-current', 'page');
+      await expect(active).toHaveAttribute('data-active', 'true');
 
-      const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
-      await expect(anterior).toHaveAttribute('aria-disabled', 'true');
-      await expect(anterior).toHaveAttribute('tabindex', '-1');
+      const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+      await expect(previous).toHaveAttribute('aria-disabled', 'true');
+      await expect(previous).toHaveAttribute('tabindex', '-1');
     });
 
     await step('Clicar numa página avisa quem controla o estado', async () => {

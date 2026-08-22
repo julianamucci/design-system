@@ -50,8 +50,8 @@ export interface SlotMeasurement {
   caractere: string | null;
   focalizavel: boolean;
   /** `null` é caixa anônima — o leitor não diz em qual dígito a pessoa está. */
-  nomeAcessivel: string | null;
-  ativo: boolean;
+  accessibleName: string | null;
+  active: boolean;
   temCaret: boolean;
   desabilitado: boolean;
   ariaInvalid: string | null;
@@ -82,7 +82,7 @@ const classesDe = (el: Element | null | undefined): string[] =>
   (el?.getAttribute('class') || '').split(/\s+/).filter(Boolean);
 
 /** Nome acessível pela ordem que o leitor usa. `null` é elemento sem nome. */
-export function nomeAcessivel(el: Element | null | undefined): string | null {
+export function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
@@ -99,8 +99,8 @@ export function nomeAcessivel(el: Element | null | undefined): string | null {
     const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
     if (label?.textContent?.trim()) return label.textContent.trim();
   }
-  const dentro = el.closest('label');
-  if (dentro?.textContent?.trim()) return dentro.textContent.trim();
+  const inside = el.closest('label');
+  if (inside?.textContent?.trim()) return inside.textContent.trim();
   return null;
 }
 
@@ -183,7 +183,7 @@ export function colar(raiz: HTMLElement, codigo: string): boolean {
 export function hoverColorDeclarada(raiz: HTMLElement): string | null {
   const declarada = ruleDeclaration(
     raiz.ownerDocument,
-    (seletor) => seletor.includes(':hover') && seletor.includes('nds-input-otp'),
+    (selector) => selector.includes(':hover') && selector.includes('nds-input-otp'),
     'border-color',
   );
   return declarada ? resolveColor(raiz, declarada) : null;
@@ -214,8 +214,8 @@ function measureSlot(el: HTMLElement, indice: number): SlotMeasurement {
     tag: el.tagName.toLowerCase(),
     caractere: ehInput ? (el as HTMLInputElement).value : texto(el),
     focalizavel: ehInput ? !(el as HTMLInputElement).disabled : el.tabIndex >= 0,
-    nomeAcessivel: nomeAcessivel(el),
-    ativo: el.matches(SEL_ACTIVE),
+    accessibleName: accessibleName(el),
+    active: el.matches(SEL_ACTIVE),
     temCaret: !!el.querySelector('.nds-input-otp-caret'),
     desabilitado: ehInput ? (el as HTMLInputElement).disabled : el.hasAttribute('data-disabled'),
     ariaInvalid: el.getAttribute('aria-invalid'),
@@ -276,12 +276,12 @@ export function measureInputOtp(raiz: HTMLElement) {
     },
     semantica: {
       papelDoConjunto: container?.getAttribute('role') ?? null,
-      nomeDoConjunto: nomeAcessivel(container),
-      nomeDoCampo: nomeAcessivel(campo),
+      nomeDoConjunto: accessibleName(container),
+      nomeDoCampo: accessibleName(campo),
       /** Quantas caixas o leitor consegue nomear. `0` na família composta. */
-      slotsComNome: measurements.filter((m) => m.nomeAcessivel).length,
+      slotsComNome: measurements.filter((m) => m.accessibleName).length,
       slotsFocalizaveis: measurements.filter((m) => m.focalizavel).length,
-      nomesDosSlots: measurements.map((m) => m.nomeAcessivel),
+      nomesDosSlots: measurements.map((m) => m.accessibleName),
       autocompleteDoCampo: campo?.getAttribute('autocomplete') ?? null,
       inputmodeDoCampo: campo?.getAttribute('inputmode') ?? null,
       autocompletePorSlot: measurements.map((m) => m.autocomplete),

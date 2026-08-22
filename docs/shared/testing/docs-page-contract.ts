@@ -55,7 +55,7 @@ function texto(el: Element): string {
   return (el.textContent ?? '').trim().replace(/\s+/g, ' ');
 }
 
-function recorte(s: string, n = 60): string {
+function clip(s: string, n = 60): string {
   return s.length > n ? `${s.slice(0, n)}…` : s;
 }
 
@@ -70,7 +70,7 @@ function ondeEsta(el: Element): string {
   const secao = el.closest('section');
   const id = secao?.id ? `#${secao.id}` : secao ? 'section sem id' : 'fora de seção';
   const linha = el.closest('tr');
-  const neighbour = linha ? recorte(texto(linha), 50) : recorte(texto(el.parentElement ?? el), 50);
+  const neighbour = linha ? clip(texto(linha), 50) : clip(texto(el.parentElement ?? el), 50);
   return neighbour ? `${id}, perto de "${neighbour}"` : id;
 }
 
@@ -180,16 +180,16 @@ function previews(raiz: HTMLElement): ProblemaDeContrato[] {
 function hierarquiaDeTitulos(raiz: HTMLElement): ProblemaDeContrato[] {
   const problemas: ProblemaDeContrato[] = [];
   const titulos = Array.from(raiz.querySelectorAll<HTMLElement>('h1, h2, h3, h4, h5, h6'));
-  let anterior = 0;
+  let previous = 0;
   for (const t of titulos) {
     const level = Number(t.tagName[1]);
-    if (anterior && level > anterior + 1) {
+    if (previous && level > previous + 1) {
       problemas.push({
         regra: 'titulo_pulado',
-        detalhe: `h${anterior} → h${level} em "${recorte(texto(t), 40)}"`,
+        detalhe: `h${previous} → h${level} em "${clip(texto(t), 40)}"`,
       });
     }
-    anterior = level;
+    previous = level;
   }
   return problemas;
 }
@@ -219,7 +219,7 @@ function tabelasVazias(raiz: HTMLElement): ProblemaDeContrato[] {
       const titulo = secao.querySelector('h2, h3');
       problemas.push({
         regra: 'tabela_sem_linhas',
-        detalhe: `tabela vazia em "${recorte(texto(titulo ?? tabela), 40)}"`,
+        detalhe: `tabela vazia em "${clip(texto(titulo ?? tabela), 40)}"`,
       });
     });
   }

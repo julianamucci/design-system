@@ -51,11 +51,11 @@ describe('transforms do painel Code', () => {
       // declaração e em todo uso, então nenhum dos três portões reclama: quem
       // cobra a forma do nome é este check.
       it('todo export é construtor de snippet ou helper declarado', () => {
-        const fora = Object.keys(modulo).filter(
+        const outside = Object.keys(modulo).filter(
           (nome) => !/(?:Source|Snippet)$/.test(nome) && !HELPERS.has(nome),
         );
         expect(
-          fora,
+          outside,
           `${caminho}: export fora da convenção — termine em Source/Snippet, ou declare em HELPERS se não constrói snippet`,
         ).toEqual([]);
       });

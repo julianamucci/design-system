@@ -69,7 +69,7 @@ export const Paginated: Story = {
     const firstInvoice = () => linhas()[0].textContent!.trim();
 
     const primeira = () => canvas.getByRole('button', { name: 'Primeira página' }) as HTMLButtonElement;
-    const anterior = () => canvas.getByRole('button', { name: 'Página anterior' }) as HTMLButtonElement;
+    const previous = () => canvas.getByRole('button', { name: 'Página anterior' }) as HTMLButtonElement;
     const next = () => canvas.getByRole('button', { name: 'Próxima página' }) as HTMLButtonElement;
     const last = () => canvas.getByRole('button', { name: 'Última página' }) as HTMLButtonElement;
 
@@ -82,7 +82,7 @@ export const Paginated: Story = {
       await expect(canvas.getByText(`Página 1 de ${TOTAL_PAGES}`)).toBeInTheDocument();
 
       await expect(primeira()).toBeDisabled();
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
       await expect(next()).toBeEnabled();
       await expect(last()).toBeEnabled();
     });
@@ -100,7 +100,7 @@ export const Paginated: Story = {
       await expect(canvas.getByText(`Página 2 de ${TOTAL_PAGES}`)).toBeInTheDocument();
       // No meio do caminho os quatro estão vivos: há para onde ir dos dois lados.
       await expect(primeira()).toBeEnabled();
-      await expect(anterior()).toBeEnabled();
+      await expect(previous()).toBeEnabled();
       await expect(last()).toBeEnabled();
     });
 
@@ -119,11 +119,11 @@ export const Paginated: Story = {
 
       await expect(next()).toBeDisabled();
       await expect(last()).toBeDisabled();
-      await expect(anterior()).toBeEnabled();
+      await expect(previous()).toBeEnabled();
     });
 
     await step('Retroceder uma página é o caminho inverso do avanço', async () => {
-      const button = anterior();
+      const button = previous();
       await userEvent.click(button);
 
       await waitFor(async () => {
@@ -142,7 +142,7 @@ export const Paginated: Story = {
         await expect(firstInvoice()).toContain('#INV-001');
       });
       await expect(primeira()).toBeDisabled();
-      await expect(anterior()).toBeDisabled();
+      await expect(previous()).toBeDisabled();
     });
   },
 };

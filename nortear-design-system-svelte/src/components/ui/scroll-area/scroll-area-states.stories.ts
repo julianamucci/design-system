@@ -117,15 +117,15 @@ export const Always: Story = {
     const viewport = canvasElement.querySelector<HTMLElement>(
       '[data-slot="scroll-area-viewport"]',
     )!;
-    const trilha = await waitForBar(canvasElement);
-    const pegador = trilha.querySelector<HTMLElement>('[data-slot="scroll-area-thumb"]')!;
+    const trail = await waitForBar(canvasElement);
+    const grabber = trail.querySelector<HTMLElement>('[data-slot="scroll-area-thumb"]')!;
 
     await step('O pegador indica quanto do conteúdo está visível', async () => {
       // Pegador do tamanho da trilha não indica nada: ele tem de ocupar da
       // trilha a mesma fração que o viewport ocupa do conteúdo.
       viewport.scrollTop = 0;
       const p = await waitFor(() => {
-        const measurement = measureRatio(trilha, pegador, viewport, 'vertical');
+        const measurement = measureRatio(trail, grabber, viewport, 'vertical');
         if (measurement.deslocamentoMaximo <= 0) throw new Error('pegador ainda não medido');
         return measurement;
       });
@@ -146,7 +146,7 @@ export const Always: Story = {
       // de como cada lib define o curso útil da trilha (uma desconta o padding,
       // outra reserva o canto no pé da barra).
       const maximo = viewport.scrollHeight - viewport.clientHeight;
-      const measure = () => measureRatio(trilha, pegador, viewport, 'vertical');
+      const measure = () => measureRatio(trail, grabber, viewport, 'vertical');
 
       viewport.scrollTop = 0;
       await waitFor(() => expect(measure().deslocamento).toBeLessThan(4));
@@ -173,7 +173,7 @@ export const Always: Story = {
       // Cada passo estabelece a própria precondição: no replay o viewport chega
       // rolado da rodada anterior e o arrasto partiria do fim da trilha.
       const maximo = viewport.scrollHeight - viewport.clientHeight;
-      const measure = () => measureRatio(trilha, pegador, viewport, 'vertical');
+      const measure = () => measureRatio(trail, grabber, viewport, 'vertical');
 
       // Voltar ao topo E ESPERAR O PEGADOR CHEGAR LÁ. Ele é reposicionado num
       // quadro posterior ao evento de rolagem: medido antes disso, devolve a
@@ -186,12 +186,12 @@ export const Always: Story = {
         expect(measure().deslocamento).toBeLessThan(4);
       });
 
-      const caixa = pegador.getBoundingClientRect();
+      const caixa = grabber.getBoundingClientRect();
       const x = caixa.left + caixa.width / 2;
       const y = caixa.top + caixa.height / 2;
       await userEvent.pointer([
-        { keys: '[MouseLeft>]', target: pegador, coords: { clientX: x, clientY: y } },
-        { target: pegador, coords: { clientX: x, clientY: y + 60 } },
+        { keys: '[MouseLeft>]', target: grabber, coords: { clientX: x, clientY: y } },
+        { target: grabber, coords: { clientX: x, clientY: y + 60 } },
         { keys: '[/MouseLeft]' },
       ]);
 
@@ -215,7 +215,7 @@ export const Always: Story = {
       // de interface, e vale aqui porque a barra desenhada é a nossa, não a do
       // sistema. Contraste é aritmética: o colhedor compõe o fundo real antes
       // de dividir, senão a razão sai de uma cor que ninguém vê.
-      await expect(grabberContrast(pegador)).toBeGreaterThanOrEqual(3);
+      await expect(grabberContrast(grabber)).toBeGreaterThanOrEqual(3);
     });
   },
 };
@@ -252,8 +252,8 @@ export const ScrollOnly: Story = {
       // Mudar `scrollTop` emite o evento `scroll` de verdade — é o mesmo sinal
       // que a lib escuta para acender a barra, sem evento fabricado à mão.
       viewport.scrollTop = 80;
-      const trilha = await waitForBar(canvasElement);
-      await expect(trilha).toBeInTheDocument();
+      const trail = await waitForBar(canvasElement);
+      await expect(trail).toBeInTheDocument();
     });
   },
 };

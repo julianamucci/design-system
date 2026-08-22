@@ -51,8 +51,8 @@ function conteudo(rotulo: string, highlight = false): string {
 }
 
 /** Um painel com o tamanho inicial e os limites que ele aceita. */
-function painel(p: Panel, dentro?: string): string {
-  const corpo = dentro ?? conteudo(p.rotulo ?? '', p.highlight);
+function painel(p: Panel, inside?: string): string {
+  const corpo = inside ?? conteudo(p.rotulo ?? '', p.highlight);
   return `<ResizablePanel${attrs(
     `:default-size="${p.tamanho}"`,
     p.min !== undefined && `:min-size="${p.min}"`,
@@ -65,11 +65,11 @@ ${indentar(corpo)}
 /** O divisor entre dois painéis. */
 function punho(
   rotulo: string,
-  opcoes: { pegador?: boolean; travado?: boolean } = {},
+  opcoes: { grabber?: boolean; travado?: boolean } = {},
 ): string {
   return `<ResizableHandle${attrs(
     opcoes.travado && 'disabled',
-    opcoes.pegador && 'with-handle',
+    opcoes.grabber && 'with-handle',
     `aria-label="${rotulo}"`,
   )} />`;
 }
@@ -92,7 +92,7 @@ ${indentar(filhos.join('\n'))}
  * utilitárias que existem, e a proporção sobrevive à tela estreita, onde uma
  * altura fixa estouraria.
  */
-function moldura(
+function frame(
   interno: string,
   opcoes: { largura?: string; proporcao?: string } = {},
 ): string {
@@ -110,7 +110,7 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
   const direcao = asCode(ctx?.args?.direction) === 'vertical' ? 'vertical' : 'horizontal';
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo(direcao, [
         painel({
           tamanho: 30,
@@ -120,7 +120,7 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
   <p class="nds-text-body nds-font-semibold">Sidebar</p>
   <p class="nds-text-caption nds-text-muted-foreground">Navegação do projeto</p>
 </div>`),
-        punho(LABEL_HANDLE, { pegador: true }),
+        punho(LABEL_HANDLE, { grabber: true }),
         painel({
           tamanho: 70,
           min: 20,
@@ -143,7 +143,7 @@ export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) =>
 export function resizableHorizontalSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('horizontal', [
         painel({ tamanho: 30, min: 20, max: 50, rotulo: 'Esquerda', highlight: true }),
         punho('Redimensionar as colunas — use setas para ajustar'),
@@ -157,7 +157,7 @@ export function resizableHorizontalSource(): string {
 export function resizableVerticalSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('vertical', [
         painel({ tamanho: 40, min: 20, rotulo: 'Topo' }),
         punho('Redimensionar as faixas — use setas para ajustar'),
@@ -175,7 +175,7 @@ export function resizableVerticalSource(): string {
 export function resizableNestedSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('horizontal', [
         painel({ tamanho: 30, min: 20, max: 50, rotulo: 'Sidebar', highlight: true }),
         punho('Redimensionar sidebar e conteúdo — use setas'),
@@ -200,10 +200,10 @@ export function resizableNestedSource(): string {
 export function resizableWithGrabberSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('horizontal', [
         painel({ tamanho: 50, min: 20, rotulo: 'Antes' }),
-        punho('Redimensionar painéis — use setas', { pegador: true }),
+        punho('Redimensionar painéis — use setas', { grabber: true }),
         painel({ tamanho: 50, min: 20, rotulo: 'Depois', highlight: true }),
       ]),
     ),
@@ -214,10 +214,10 @@ export function resizableWithGrabberSource(): string {
 export function resizableArrastandoSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('horizontal', [
         painel({ tamanho: 50, min: 10, rotulo: 'Esquerda' }),
-        punho(LABEL_HANDLE, { pegador: true }),
+        punho(LABEL_HANDLE, { grabber: true }),
         painel({ tamanho: 50, min: 10, rotulo: 'Direita', highlight: true }),
       ]),
     ),
@@ -231,7 +231,7 @@ export function resizableArrastandoSource(): string {
 export function resizableLimitesSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('horizontal', [
         painel({ tamanho: 50, min: 30, max: 60, rotulo: 'Limitado' }),
         punho(LABEL_HANDLE),
@@ -249,7 +249,7 @@ export function resizableLimitesSource(): string {
 export function resizableFocusSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('horizontal', [
         painel({ tamanho: 50, min: 20, rotulo: 'Um' }),
         punho(LABEL_HANDLE),
@@ -266,10 +266,10 @@ export function resizableFocusSource(): string {
 export function resizableTravadoSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('horizontal', [
         painel({ tamanho: 50, min: 20, rotulo: 'Fixo' }),
-        punho(LABEL_HANDLE, { pegador: true, travado: true }),
+        punho(LABEL_HANDLE, { grabber: true, travado: true }),
         painel({ tamanho: 50, min: 20, rotulo: 'Fixo', highlight: true }),
       ]),
     ),
@@ -284,12 +284,12 @@ export function resizableTravadoSource(): string {
 export function resizableEditorSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('horizontal', [
         painel({ tamanho: 25, min: 15, max: 40, rotulo: 'Arquivos', highlight: true }),
-        punho('Redimensionar lista de arquivos — use setas para ajustar', { pegador: true }),
+        punho('Redimensionar lista de arquivos — use setas para ajustar', { grabber: true }),
         painel({ tamanho: 50, min: 30, rotulo: 'Editor' }),
-        punho('Redimensionar editor e preview — use setas para ajustar', { pegador: true }),
+        punho('Redimensionar editor e preview — use setas para ajustar', { grabber: true }),
         painel({ tamanho: 25, min: 15, max: 40, rotulo: 'Preview', highlight: true }),
       ]),
     ),
@@ -300,12 +300,12 @@ export function resizableEditorSource(): string {
 export function resizableFaixasSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('vertical', [
         painel({ tamanho: 20, min: 10, max: 40, rotulo: 'Cabeçalho', highlight: true }),
-        punho('Redimensionar cabeçalho — use setas para ajustar', { pegador: true }),
+        punho('Redimensionar cabeçalho — use setas para ajustar', { grabber: true }),
         painel({ tamanho: 60, min: 30, rotulo: 'Conteúdo' }),
-        punho('Redimensionar rodapé — use setas para ajustar', { pegador: true }),
+        punho('Redimensionar rodapé — use setas para ajustar', { grabber: true }),
         painel({ tamanho: 20, min: 10, max: 40, rotulo: 'Rodapé', highlight: true }),
       ]),
       { largura: 'nds-w-xs', proporcao: 'nds-aspect-square' },
@@ -317,15 +317,15 @@ export function resizableFaixasSource(): string {
 export function resizableSidebarConsoleSource(): string {
   return vueSnippet(
     IMPORT,
-    moldura(
+    frame(
       grupo('horizontal', [
         painel({ tamanho: 30, min: 20, max: 50, rotulo: 'Sidebar', highlight: true }),
-        punho('Redimensionar sidebar e área principal — use setas', { pegador: true }),
+        punho('Redimensionar sidebar e área principal — use setas', { grabber: true }),
         painel(
           { tamanho: 70, min: 50 },
           grupo('vertical', [
             painel({ tamanho: 65, min: 30, rotulo: 'Workspace' }),
-            punho('Redimensionar workspace e console — use setas', { pegador: true }),
+            punho('Redimensionar workspace e console — use setas', { grabber: true }),
             painel({ tamanho: 35, min: 15, max: 60, rotulo: 'Console', highlight: true }),
           ]),
         ),

@@ -163,13 +163,13 @@ export const DisabledDates: Story = {
       // accessibility.item2 — o primitivo devolvia tabindex NENHUM para os dois
       // casos, e `<button>` sem tabindex é tabulável: medido, esta grade tinha
       // quinze paradas de tabulação em vez de uma.
-      const fora = Array.from(
+      const outside = Array.from(
         raiz.querySelectorAll<HTMLElement>(
           '.nds-calendar-day-btn[data-disabled], .nds-calendar-day-btn[data-outside-view]',
         ),
       );
-      await expect(fora.length).toBeGreaterThan(0);
-      await expect(fora.filter((b) => b.tabIndex >= 0)).toEqual([]);
+      await expect(outside.length).toBeGreaterThan(0);
+      await expect(outside.filter((b) => b.tabIndex >= 0)).toEqual([]);
     });
   },
 };
@@ -232,16 +232,16 @@ export const KeyboardNavigation: Story = {
     await step('Os botões de navegação também recebem anel', async () => {
       // Mesma comparação, agora entre os dois botões de mês: o que tem foco
       // contra o que não tem.
-      const [anterior, proximo] = Array.from(
+      const [previous, proximo] = Array.from(
         raiz.querySelectorAll<HTMLElement>('.nds-calendar-nav-btn'),
       );
       // Chega ao botão por teclado, não por `.focus()`: `:focus-visible` depende
       // da modalidade de entrada, e foco programático nem sempre a satisfaz.
       await userEvent.tab({ shift: true });
       await waitFor(() => expect(document.activeElement).not.toBe(dia(raiz, '2026-04-23')));
-      anterior!.focus();
+      previous!.focus();
 
-      await expect(getComputedStyle(anterior!).boxShadow).not.toBe(
+      await expect(getComputedStyle(previous!).boxShadow).not.toBe(
         getComputedStyle(proximo!).boxShadow,
       );
     });

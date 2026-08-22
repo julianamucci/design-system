@@ -34,7 +34,7 @@
 	/** Evento de dispensa do conteúdo, o mesmo que a própria lib despacha. */
 	const DISMISS = "bitsRootContentDismiss";
 
-	function aoClicar(event: MouseEvent & { currentTarget: EventTarget & HTMLAnchorElement }): void {
+	function onClick(event: MouseEvent & { currentTarget: EventTarget & HTMLAnchorElement }): void {
 		onclick?.(event);
 		event.currentTarget.dispatchEvent(
 			new CustomEvent(DISMISS, { bubbles: true, cancelable: true }),
@@ -46,6 +46,6 @@
 	bind:ref
 	data-slot="navigation-menu-child"
 	class={cn("nds-navigation-menu-child", className)}
-	onclick={aoClicar}
+	onclick={onClick}
 	{...restProps}
 />

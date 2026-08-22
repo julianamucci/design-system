@@ -43,7 +43,7 @@
 
   // Cada estado inicial mora num `$state` próprio e desce por `bind:` — com um
   // literal, o toggle mutaria uma prop que ninguém observa.
-  let ativo = $state(true);
+  let active = $state(true);
   let compacta = $state(true);
   let compactaFilter = $state(true);
   let disabledActive = $state(true);
@@ -81,7 +81,7 @@
 {:else if cenario === 'on'}
   <div class="nds-cluster" data-spacing="sm">
     <Toggle aria-label="Negrito inativo"><Bold aria-hidden="true" /></Toggle>
-    <Toggle bind:pressed={ativo} aria-label="Negrito ativo"><Bold aria-hidden="true" /></Toggle>
+    <Toggle bind:pressed={active} aria-label="Negrito ativo"><Bold aria-hidden="true" /></Toggle>
   </div>
 {:else if cenario === 'disabled'}
   <div class="nds-cluster" data-spacing="sm">

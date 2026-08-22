@@ -111,9 +111,9 @@ export const Playground: Story = {
 
     await step('A página atual é marcada e o extremo é desabilitado', async () => {
       // accessibility.item4
-      const ativo = canvas.getByRole('button', { name: 'Ir para página 1' });
-      await expect(ativo).toHaveAttribute('aria-current', 'page');
-      await expect(ativo).toHaveAttribute('data-active', 'true');
+      const active = canvas.getByRole('button', { name: 'Ir para página 1' });
+      await expect(active).toHaveAttribute('aria-current', 'page');
+      await expect(active).toHaveAttribute('data-active', 'true');
       await expect(canvas.getByRole('button', { name: LABEL_PREVIOUS })).toBeDisabled();
     });
 

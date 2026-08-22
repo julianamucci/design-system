@@ -183,16 +183,16 @@ export const ItemDisabled: Story = {
       campo.focus();
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        const ativo = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
-        await expect(ativo).toHaveTextContent('Novo');
+        const active = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
+        await expect(active).toHaveTextContent('Novo');
       });
 
       await userEvent.keyboard('{ArrowDown}');
       await waitFor(async () => {
-        const ativo = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
+        const active = document.getElementById(campo.getAttribute('aria-activedescendant')!)!;
         // "Arquivar" não é destino de navegação — quem usa teclado nunca para
         // num comando que não pode executar.
-        await expect(ativo).toHaveTextContent('Renomear');
+        await expect(active).toHaveTextContent('Renomear');
       });
       await expect(arquivar).toHaveAttribute('aria-selected', 'false');
     });

@@ -166,8 +166,8 @@ export class NdsResizableStore {
     const declarados = this.panels.map((p) => p.defaultSize());
     const noDeclaration = declarados.filter((d) => d === undefined).length;
     const sumDeclarada = declarados.reduce<number>((acc, d) => acc + (d ?? 0), 0);
-    const sobra = Math.max(0, 100 - sumDeclarada);
-    const fatia = noDeclaration > 0 ? sobra / noDeclaration : 0;
+    const leftover = Math.max(0, 100 - sumDeclarada);
+    const fatia = noDeclaration > 0 ? leftover / noDeclaration : 0;
     return declarados.map((d) => d ?? fatia);
   }
 
@@ -412,7 +412,7 @@ export class NdsResizablePanel {
     '[attr.aria-disabled]': 'disabled() ? "true" : null',
     '[attr.data-disabled]': 'disabled() ? "" : null',
     '[attr.data-dragging]': 'arrastando() ? "" : null',
-    '(keydown)': 'aoTeclar($event)',
+    '(keydown)': 'onKeyDown($event)',
     '(pointerdown)': 'aoPressionar($event)',
     '(pointermove)': 'aoMover($event)',
     '(pointerup)': 'aoSoltar($event)',
@@ -488,7 +488,7 @@ export class NdsResizableHandle {
    * As setas do eixo do grupo movem um passo; as do outro eixo são ignoradas
    * de propósito, para não roubar a navegação de quem só está passando.
    */
-  protected aoTeclar(e: KeyboardEvent): void {
+  protected onKeyDown(e: KeyboardEvent): void {
     if (this.disabled()) return;
     const horizontal = this.store.horizontal();
     let delta = 0;

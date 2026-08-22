@@ -99,11 +99,11 @@ export const WithNavGroups: Story = {
       const alcancados: string[] = [];
       for (let i = 0; i < 5; i++) {
         await userEvent.tab();
-        const ativo = document.activeElement as HTMLElement | null;
-        if (!ativo) continue;
+        const active = document.activeElement as HTMLElement | null;
+        if (!active) continue;
         // `aria-label` ANTES do texto: onde ele existe, é ele que vence no
         // cálculo do nome acessível.
-        alcancados.push(ativo.getAttribute('aria-label') ?? ativo.textContent?.trim() ?? '');
+        alcancados.push(active.getAttribute('aria-label') ?? active.textContent?.trim() ?? '');
       }
       await expect(alcancados).toContain('Dashboard');
       await expect(alcancados).not.toContain('');

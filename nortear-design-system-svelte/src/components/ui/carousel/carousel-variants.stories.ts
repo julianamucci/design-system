@@ -67,13 +67,13 @@ export const Horizontal: Story = {
       // se o atributo não chegasse ao botão, as setas empilhariam sobre o
       // primeiro slide sem nenhum erro visível no console.
       const area = region.getBoundingClientRect();
-      const anterior = canvas
+      const previous = canvas
         .getByRole('button', { name: 'Item anterior' })
         .getBoundingClientRect();
       const proximo = canvas
         .getByRole('button', { name: 'Próximo item' })
         .getBoundingClientRect();
-      await expect(anterior.left).toBeLessThan(area.left);
+      await expect(previous.left).toBeLessThan(area.left);
       await expect(proximo.right).toBeGreaterThan(area.right);
     });
 
@@ -182,13 +182,13 @@ export const Vertical: Story = {
 
     await step('As setas ficam acima e abaixo do viewport', async () => {
       const area = region.getBoundingClientRect();
-      const anterior = canvas
+      const previous = canvas
         .getByRole('button', { name: 'Item anterior' })
         .getBoundingClientRect();
       const proximo = canvas
         .getByRole('button', { name: 'Próximo item' })
         .getBoundingClientRect();
-      await expect(anterior.top).toBeLessThan(area.top);
+      await expect(previous.top).toBeLessThan(area.top);
       await expect(proximo.bottom).toBeGreaterThan(area.bottom);
     });
 

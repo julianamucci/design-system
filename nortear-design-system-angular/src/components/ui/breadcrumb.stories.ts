@@ -23,7 +23,7 @@ import {
 
 type BreadcrumbArgs = {
   paginaAtual: string;
-  separador: 'chevron' | 'slash';
+  separator: 'chevron' | 'slash';
 };
 
 /**
@@ -34,11 +34,11 @@ type BreadcrumbArgs = {
  * `separator.stories.ts`.
  */
 function playgroundSource(_gerado: string, ctx: { args?: Partial<BreadcrumbArgs> }): string {
-  const { paginaAtual = 'Breadcrumb', separador = 'chevron' } = ctx.args ?? {};
+  const { paginaAtual = 'Breadcrumb', separator = 'chevron' } = ctx.args ?? {};
   // O chevron é o desenho padrão: no snippet o `<li>` fica vazio, porque é isso
   // que a pessoa escreve. Só o separador customizado carrega conteúdo.
   const sep =
-    separador === 'chevron'
+    separator === 'chevron'
       ? '<li ndsBreadcrumbSeparator></li>'
       : '<li ndsBreadcrumbSeparator><svg ndsBreadcrumbIcon kind="slash"></svg></li>';
 
@@ -99,13 +99,13 @@ const meta: Meta<BreadcrumbArgs> = {
       control: 'text',
       description: 'Rótulo do último item — espelha o <h1> da página.',
     },
-    separador: {
+    separator: {
       control: { type: 'inline-radio' },
       options: ['chevron', 'slash'],
       description: 'Desenho do separador. O chevron é o padrão do componente.',
     },
   },
-  args: { paginaAtual: 'Breadcrumb', separador: 'chevron' },
+  args: { paginaAtual: 'Breadcrumb', separator: 'chevron' },
 };
 
 export default meta;
@@ -128,7 +128,7 @@ export const Playground: Story = {
     docs: { source: { transform: playgroundSource } },
   },
   render: (args) => ({
-    props: { ...args, ehChevron: args.separador === 'chevron' },
+    props: { ...args, ehChevron: args.separator === 'chevron' },
     template: `
       <nav ndsBreadcrumb>
         <ol ndsBreadcrumbList>

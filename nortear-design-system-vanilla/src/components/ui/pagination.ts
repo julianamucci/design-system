@@ -43,7 +43,7 @@ export type PaginationOptions = {
 /** Rótulos em português — o idioma da documentação que cerca o componente. */
 const LABELS = {
   navigation: 'Paginação',
-  anterior: 'Ir para a página anterior',
+  previous: 'Ir para a página anterior',
   next: 'Ir para a próxima página',
   pagina: (n: number) => `Ir para página ${n}`,
 } as const;
@@ -155,7 +155,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     slot: string,
     desabilitado: boolean,
     destination: number,
-    aoClicar: () => void,
+    onClick: () => void,
   ): HTMLAnchorElement {
     const a = document.createElement('a');
     // Nos extremos o controle não leva a lugar nenhum: `#` ali é honesto, e um
@@ -171,7 +171,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
     a.appendChild(createChevronSvg(direcao));
     a.addEventListener('click', (e) => {
       if (!hrefForPage || desabilitado) e.preventDefault();
-      if (!desabilitado) aoClicar();
+      if (!desabilitado) onClick();
     });
     return a;
   }
@@ -179,7 +179,7 @@ export function createPagination(options: PaginationOptions): HTMLElement {
   // Prev
   if (showPrevNext) {
     addItem(
-      makeDirecional('left', LABELS.anterior, 'pagination-previous', current <= 1, current - 1, () =>
+      makeDirecional('left', LABELS.previous, 'pagination-previous', current <= 1, current - 1, () =>
         onPageChange?.(current - 1),
       ),
     );

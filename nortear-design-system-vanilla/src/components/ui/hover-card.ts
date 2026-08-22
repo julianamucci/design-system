@@ -140,7 +140,7 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
   // foco fica no gatilho — nunca dentro do painel — e só vive enquanto o cartão
   // está aberto: um listener por instância, permanente, vazaria em toda página
   // com muitas menções.
-  function aoTeclar(evento: KeyboardEvent): void {
+  function onKeyDown(evento: KeyboardEvent): void {
     if (evento.key === 'Escape') hide();
   }
 
@@ -172,7 +172,7 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
       if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     });
     panelEl.addEventListener('mouseleave', scheduleHide);
-    document.addEventListener('keydown', aoTeclar);
+    document.addEventListener('keydown', onKeyDown);
 
     onOpenChange?.(true);
   }
@@ -181,7 +181,7 @@ export function createHoverCard(options: HoverCardOptions): HoverCardElement {
     if (showTimer) { clearTimeout(showTimer); showTimer = null; }
     if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
     if (!panelEl) return;
-    document.removeEventListener('keydown', aoTeclar);
+    document.removeEventListener('keydown', onKeyDown);
     panelEl.remove();
     panelEl = null;
     onOpenChange?.(false);

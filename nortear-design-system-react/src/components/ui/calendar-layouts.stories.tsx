@@ -131,8 +131,8 @@ export const CaptionDropdown: Story = {
       // não é moldura desenhada — a asserção é sobre a borda computada.
       const molduras = canvasElement.querySelectorAll<HTMLElement>(".nds-calendar-select");
       await expect(molduras.length).toBe(2);
-      for (const moldura of molduras) {
-        await expect(parseFloat(getComputedStyle(moldura).borderTopWidth)).toBeGreaterThan(0);
+      for (const frame of molduras) {
+        await expect(parseFloat(getComputedStyle(frame).borderTopWidth)).toBeGreaterThan(0);
       }
     });
 
@@ -143,10 +143,10 @@ export const CaptionDropdown: Story = {
       // legenda inteira; `elementFromPoint` devolve QUEM está no topo do ponto,
       // e é a única coisa aqui que enxerga isso.
       const doc = canvasElement.ownerDocument;
-      for (const seletor of canvasElement.querySelectorAll<HTMLElement>(".nds-calendar-select")) {
-        const r = seletor.getBoundingClientRect();
+      for (const selector of canvasElement.querySelectorAll<HTMLElement>(".nds-calendar-select")) {
+        const r = selector.getBoundingClientRect();
         const noTopo = doc.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
-        await expect(seletor === noTopo || seletor.contains(noTopo)).toBe(true);
+        await expect(selector === noTopo || selector.contains(noTopo)).toBe(true);
       }
     });
 

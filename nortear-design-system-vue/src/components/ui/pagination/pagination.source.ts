@@ -49,14 +49,14 @@ function numero(valor: unknown, padrao: number): number {
  * O `aria-label` com o número por extenso também não é enfeite: "3" sozinho não
  * diz nada em voz alta.
  */
-function numberedLink(opcoes: { ativo: string; recuo: number; aoClicar?: string; valor?: string }): string {
-  const { ativo, recuo, aoClicar = '@click.prevent', valor = 'n' } = opcoes;
+function numberedLink(opcoes: { active: string; recuo: number; onClick?: string; valor?: string }): string {
+  const { active, recuo, onClick = '@click.prevent', valor = 'n' } = opcoes;
   const p = ' '.repeat(recuo);
   return `${p}<PaginationLink
 ${p}  href="#"
-${p}  :is-active="${ativo}"
+${p}  :is-active="${active}"
 ${p}  :aria-label="\`Ir para página \${${valor}}\`"
-${p}  ${aoClicar}
+${p}  ${onClick}
 ${p}>
 ${p}  {{ ${valor} }}
 ${p}</PaginationLink>`;
@@ -73,7 +73,7 @@ export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) 
   const total = numero(ctx?.args?.total, 50);
   const byPage = numero(ctx?.args?.itemsPerPage, 10);
   const inicial = numero(ctx?.args?.defaultPage, 1);
-  const anterior = attrs(attr('text', ctx?.args?.textoAnterior, TEXT_PREVIOUS));
+  const previous = attrs(attr('text', ctx?.args?.textoAnterior, TEXT_PREVIOUS));
   const next = attrs(attr('text', ctx?.args?.textoProxima, TEXT_NEXT));
 
   return vueSnippet(
@@ -102,10 +102,10 @@ function irPara(n: number) {
     `<Pagination :total="total" :items-per-page="itensPorPagina" :page="atual">
   <PaginationContent>
     <PaginationItem>
-      <PaginationPrevious${anterior} @click="irPara(atual - 1)" />
+      <PaginationPrevious${previous} @click="irPara(atual - 1)" />
     </PaginationItem>
     <PaginationItem v-for="n in paginas" :key="n">
-${numberedLink({ ativo: 'atual === n', recuo: 6, aoClicar: '@click.prevent="irPara(n)"' })}
+${numberedLink({ active: 'atual === n', recuo: 6, onClick: '@click.prevent="irPara(n)"' })}
     </PaginationItem>
     <PaginationItem>
       <PaginationNext${next} @click="irPara(atual + 1)" />
@@ -136,7 +136,7 @@ const paginas = [1, 2, 3, 4, 5]`,
   <PaginationContent>
     <PaginationItem><PaginationPrevious /></PaginationItem>
     <PaginationItem v-for="n in paginas" :key="n">
-${numberedLink({ ativo: `n === ${atual}`, recuo: 6 })}
+${numberedLink({ active: `n === ${atual}`, recuo: 6 })}
     </PaginationItem>
     <PaginationItem><PaginationNext /></PaginationItem>
   </PaginationContent>
@@ -228,7 +228,7 @@ const paginas = [1, 2, 3, 4, 5]`,
   <PaginationContent>
     <PaginationItem><PaginationPrevious /></PaginationItem>
     <PaginationItem v-for="n in paginas" :key="n">
-${numberedLink({ ativo: 'n === 1', recuo: 6 })}
+${numberedLink({ active: 'n === 1', recuo: 6 })}
     </PaginationItem>
     <PaginationItem><PaginationNext /></PaginationItem>
   </PaginationContent>
@@ -301,7 +301,7 @@ const paginas = [8, 9, 10]`,
   <PaginationContent>
     <PaginationItem><PaginationPrevious /></PaginationItem>
     <PaginationItem v-for="n in paginas" :key="n">
-${numberedLink({ ativo: 'n === 10', recuo: 6 })}
+${numberedLink({ active: 'n === 10', recuo: 6 })}
     </PaginationItem>
     <PaginationItem><PaginationNext /></PaginationItem>
   </PaginationContent>
@@ -342,7 +342,7 @@ function irPara(n: number) {
         <PaginationPrevious @click="irPara(atual - 1)" />
       </PaginationItem>
       <PaginationItem v-for="n in paginas" :key="n">
-${numberedLink({ ativo: 'atual === n', recuo: 8, aoClicar: '@click.prevent="irPara(n)"' })}
+${numberedLink({ active: 'atual === n', recuo: 8, onClick: '@click.prevent="irPara(n)"' })}
       </PaginationItem>
       <PaginationItem>
         <PaginationNext @click="irPara(atual + 1)" />

@@ -114,25 +114,25 @@ function cenario(): HTMLElement {
  */
 const TARGETS: EspacoTarget[] = [
   // ── Controle: degrau que já existia e já seguia a densidade ──────────────
-  { nome: 'input · degrau 2 (controle)', seletor: '.nds-input', prop: 'padding-block-start',
+  { nome: 'input · degrau 2 (controle)', selector: '.nds-input', prop: 'padding-block-start',
     esperado: { condensado: 6.4, default: 8, confortavel: 10 } },
 
   // ── Degraus completados nesta rodada ─────────────────────────────────────
-  { nome: 'input · degrau 3', seletor: '.nds-input', prop: 'padding-inline-start',
+  { nome: 'input · degrau 3', selector: '.nds-input', prop: 'padding-inline-start',
     esperado: { condensado: 9.6, default: 12, confortavel: 15 } },
-  { nome: 'item · degrau 3', seletor: '.nds-item', prop: 'padding-inline-start',
+  { nome: 'item · degrau 3', selector: '.nds-item', prop: 'padding-inline-start',
     esperado: { condensado: 9.6, default: 12, confortavel: 15 } },
-  { nome: 'item · degrau 2-5', seletor: '.nds-item', prop: 'padding-block-start',
+  { nome: 'item · degrau 2-5', selector: '.nds-item', prop: 'padding-block-start',
     esperado: { condensado: 8, default: 10, confortavel: 12.5 } },
-  { nome: 'kbd · degrau 1-5', seletor: '.nds-kbd', prop: 'padding-inline-start',
+  { nome: 'kbd · degrau 1-5', selector: '.nds-kbd', prop: 'padding-inline-start',
     esperado: { condensado: 4.8, default: 6, confortavel: 7.5 } },
-  { nome: 'tooltip · degrau 1-5', seletor: '.nds-tooltip-content', prop: 'padding-block-start',
+  { nome: 'tooltip · degrau 1-5', selector: '.nds-tooltip-content', prop: 'padding-block-start',
     esperado: { condensado: 4.8, default: 6, confortavel: 7.5 } },
-  { nome: 'breadcrumb ellipsis · degrau 5', seletor: '.nds-breadcrumb-ellipsis', prop: 'width',
+  { nome: 'breadcrumb ellipsis · degrau 5', selector: '.nds-breadcrumb-ellipsis', prop: 'width',
     esperado: { condensado: 16, default: 20, confortavel: 25 } },
-  { nome: 'dropdown item recuado · degrau 7', seletor: '.nds-dropdown-menu-item[data-inset]', prop: 'padding-left',
+  { nome: 'dropdown item recuado · degrau 7', selector: '.nds-dropdown-menu-item[data-inset]', prop: 'padding-left',
     esperado: { condensado: 22.4, default: 28, confortavel: 35 } },
-  { nome: 'alert com ação · degrau 18', seletor: '.nds-alert', prop: 'padding-inline-end',
+  { nome: 'alert com ação · degrau 18', selector: '.nds-alert', prop: 'padding-inline-end',
     esperado: { condensado: 57.6, default: 72, confortavel: 90 } },
 
   // ── Literal PURO, que a varredura de fallbacks não alcançava ─────────────
@@ -140,13 +140,13 @@ const TARGETS: EspacoTarget[] = [
   // token em volta, e valia exatamente os 2px da densidade padrão — por isso
   // atravessou a rodada inteira sem ninguém ver. Efeito medido: o `xs` era o
   // único tamanho de botão parado em 19px de altura nas TRÊS densidades.
-  { nome: 'button xs · degrau 0-5', seletor: '.nds-button-xs', prop: 'padding-block-start',
+  { nome: 'button xs · degrau 0-5', selector: '.nds-button-xs', prop: 'padding-block-start',
     esperado: { condensado: 1.6, default: 2, confortavel: 2.5 } },
 
   // ── Controle: caixa de controle migrada de --spacing-9 para --size-lg ────
-  { nome: 'pagination link · --size-lg', seletor: '.nds-pagination-link', prop: 'min-height',
+  { nome: 'pagination link · --size-lg', selector: '.nds-pagination-link', prop: 'min-height',
     esperado: { condensado: 32, default: 36, confortavel: 44 }, alvoDeToque: true },
-  { nome: 'input-otp slot · --size-lg', seletor: '.nds-input-otp-slot', prop: 'width',
+  { nome: 'input-otp slot · --size-lg', selector: '.nds-input-otp-slot', prop: 'width',
     esperado: { condensado: 32, default: 36, confortavel: 44 }, alvoDeToque: true },
 ];
 

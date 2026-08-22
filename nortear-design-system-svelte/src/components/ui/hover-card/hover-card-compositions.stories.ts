@@ -3,7 +3,7 @@ import { within, expect } from 'storybook/test';
 import {
   waitForOpen,
   waitForQuantidade,
-  nomeAcessivel,
+  accessibleName,
   panelsAbertos,
 } from '@shared/testing/hover-card-probe';
 import HoverCardStory from './HoverCardStory.svelte';
@@ -145,7 +145,7 @@ export const TermDefinition: Story = {
       const painel = await waitForOpen();
       // Sem rótulo, o nome cairia no texto do gatilho ("WCAG 2.2 AA"), que
       // repetiria a sigla sem dizer o que o cartão traz.
-      await expect(nomeAcessivel(painel)).toBe('Definição de WCAG 2.2 AA');
+      await expect(accessibleName(painel)).toBe('Definição de WCAG 2.2 AA');
       await expect(within(painel).getByText('WCAG 2.2 nível AA')).toBeVisible();
     });
   },
@@ -204,8 +204,8 @@ export const Sides: Story = {
       // resulta em "abaixo", e isso é comportamento correto de fuga de colisão.
       // Afirmar o lado literal transformaria o tamanho da janela do teste em
       // parte do contrato.
-      const [acima, abaixo, esquerda, direita] = lados;
-      await expect(['top', 'bottom']).toContain(acima);
+      const [above, abaixo, esquerda, direita] = lados;
+      await expect(['top', 'bottom']).toContain(above);
       await expect(['top', 'bottom']).toContain(abaixo);
       await expect(['left', 'right']).toContain(esquerda);
       await expect(['left', 'right']).toContain(direita);

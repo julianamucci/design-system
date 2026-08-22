@@ -55,7 +55,7 @@ export type SidebarArgs = {
 };
 
 const LADOS = ['left', 'right'] as const;
-const VARIANTES = ['sidebar', 'floating', 'inset'] as const;
+const VARIANTS = ['sidebar', 'floating', 'inset'] as const;
 const RECOLHIMENTOS = ['offcanvas', 'icon', 'none'] as const;
 
 /** Ponto de virada padrão do Provider — igual ao padrão não entra no snippet. */
@@ -107,12 +107,12 @@ function importingIcons(icons: string[]): string {
 function destination(
   icone: string,
   rotulo: string,
-  opcoes: { ativo?: boolean; depois?: string } = {},
+  opcoes: { active?: boolean; depois?: string } = {},
 ): string {
   const props = attrs(
-    opcoes.ativo ? 'isActive' : undefined,
+    opcoes.active ? 'isActive' : undefined,
     `tooltip="${rotulo}"`,
-    opcoes.ativo ? 'aria-current="page"' : undefined,
+    opcoes.active ? 'aria-current="page"' : undefined,
   );
   const extra = opcoes.depois ? `\n${level(opcoes.depois, 1)}` : '';
   return `<SidebarMenuItem>
@@ -139,7 +139,7 @@ ${level(itens.join('\n'), 3)}
 /** Os três destinos que servem de menu em quase todo snippet. */
 function menuDefault(): string[] {
   return [
-    destination('LayoutDashboard', 'Dashboard', { ativo: true }),
+    destination('LayoutDashboard', 'Dashboard', { active: true }),
     destination('Blocks', 'Componentes'),
     destination('Coins', 'Tokens'),
   ];
@@ -265,7 +265,7 @@ export const sidebarSource: SourceTransform<SidebarArgs> = (_gerado, ctx) => {
     ),
     barra: attrs(
       propOption('side', args.side, LADOS, 'left'),
-      propOption('variant', args.variant, VARIANTES, 'sidebar'),
+      propOption('variant', args.variant, VARIANTS, 'sidebar'),
       propOption('collapsible', args.collapsible, RECOLHIMENTOS, 'offcanvas'),
     ),
     grupos: [
@@ -429,7 +429,7 @@ export function sidebarGroupsSource(): string {
   return pagina({
     grupos: [
       grupo('Aplicação', [
-        destination('LayoutDashboard', 'Dashboard', { ativo: true }),
+        destination('LayoutDashboard', 'Dashboard', { active: true }),
         destination('Blocks', 'Componentes', { depois: '<SidebarMenuBadge>12</SidebarMenuBadge>' }),
         destination('Coins', 'Tokens'),
       ]),
@@ -459,13 +459,13 @@ export function sidebarGroupsSource(): string {
  * `[aria-expanded="true"]` —, não de classe condicional em JavaScript.
  */
 export function sidebarSubmenuSource(): string {
-  const subitem = (rotulo: string, ativo = false) => `<SidebarMenuSubItem>
-  <SidebarMenuSubButton${ativo ? ' isActive' : ''}>
+  const subitem = (rotulo: string, active = false) => `<SidebarMenuSubItem>
+  <SidebarMenuSubButton${active ? ' isActive' : ''}>
     <span>${rotulo}</span>
   </SidebarMenuSubButton>
 </SidebarMenuSubItem>`;
 
-  const pai = `<SidebarMenuItem>
+  const parent = `<SidebarMenuItem>
   <SidebarMenuButton
     tooltip="Componentes"
     aria-expanded={componentesAbertos}
@@ -491,7 +491,7 @@ ${level([subitem('Button', true), subitem('Input'), subitem('Select')].join('\n'
   return pagina({
     barra: ' collapsible="icon"',
     grupos: [
-      grupo('Menu', [destination('LayoutDashboard', 'Dashboard', { ativo: true }), pai, withAction]),
+      grupo('Menu', [destination('LayoutDashboard', 'Dashboard', { active: true }), parent, withAction]),
     ],
     parts: [
       'SidebarMenuAction',

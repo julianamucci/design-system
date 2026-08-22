@@ -132,7 +132,7 @@ function animationCorrerEnd(
     // O componente não pode remover o próprio host (isso é do consumidor, com
     // um `@if` sobre o `(dismiss)`), então "sair da tela" é o atributo `hidden`:
     // é HTML, não CSS inline, e tira o alert também da árvore de acessibilidade.
-    '[attr.hidden]': 'fechado() ? "" : null',
+    '[attr.hidden]': 'closed() ? "" : null',
   },
 })
 export class NdsAlert implements OnDestroy {
@@ -171,7 +171,7 @@ export class NdsAlert implements OnDestroy {
     read: ElementRef<HTMLButtonElement>,
   });
 
-  protected readonly fechado = signal(false);
+  protected readonly closed = signal(false);
   private readonly saindo = signal(false);
   // Só o dismissible entra animado: é o único que aparece em tempo de execução.
   // A classe é TRANSITÓRIA — fica no DOM enquanto a animação roda e sai em
@@ -194,7 +194,7 @@ export class NdsAlert implements OnDestroy {
 
   constructor() {
     effect(() => {
-      if (!this.dismissible() || this.fechado()) return;
+      if (!this.dismissible() || this.closed()) return;
       this.entrando.set(true);
       this.cancelarEntrada?.();
       this.cancelarEntrada = animationCorrerEnd(
@@ -218,13 +218,13 @@ export class NdsAlert implements OnDestroy {
   protected fechar(): void {
     // Guarda de reentrada: enquanto a saída corre o botão continua clicável, e
     // sem isto `dismiss` sairia uma vez por clique.
-    if (this.saindo() || this.fechado()) return;
+    if (this.saindo() || this.closed()) return;
     this.saindo.set(true);
     this.cancelarSaida = animationCorrerEnd(
       this.hostRef.nativeElement,
       EXIT_FALLBACK_MS,
       () => {
-        this.fechado.set(true);
+        this.closed.set(true);
         this.dismiss.emit();
       },
     );

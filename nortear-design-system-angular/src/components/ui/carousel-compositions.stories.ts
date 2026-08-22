@@ -16,7 +16,7 @@ import carouselTranslations from '@shared/content/carousel/translations.json';
  */
 const CONTENT = carouselTranslations['pt-BR'].demonstration.labels;
 /** Nome acessível: posição E total. "Slide 2" sozinho não diz para onde leva. */
-const nomeAcessivel = (position: number, total: number) =>
+const accessibleName = (position: number, total: number) =>
   `${CONTENT.goToSlide} ${position} ${CONTENT.of} ${total}`;
 /** Texto visível da pílula — um PEDAÇO do nome acessível (WCAG 2.5.3). */
 const labelVisible = (position: number) => `${CONTENT.slide} ${position}`;
@@ -62,7 +62,7 @@ export const WithDots: Story = {
     },
   },
   render: () => ({
-    props: { slides: SLIDES, nomeAcessivel, labelVisible },
+    props: { slides: SLIDES, accessibleName, labelVisible },
     // `#comDots` é a referência de template: `index()`, `total()`,
     // `irPara()` e `alternarAutoplay()` são a API pública do carrossel, e os
     // controles abaixo não precisam de estado próprio para acompanhá-la.
@@ -114,7 +114,7 @@ export const WithDots: Story = {
               type="button"
               class="nds-carousel-dot"
               [attr.aria-current]="comDots.index() === i - 1 ? 'true' : null"
-              [attr.aria-label]="nomeAcessivel(i, slides.length)"
+              [attr.aria-label]="accessibleName(i, slides.length)"
               (click)="comDots.irTo(i - 1)"
             ><span class="nds-carousel-dot-label">{{ labelVisible(i) }}</span></button>
           }
@@ -130,7 +130,7 @@ export const WithDots: Story = {
     const canvas = within(canvasElement);
     const viewport = canvasElement.querySelector<HTMLElement>('[data-slot="carousel-content"]')!;
     const dot = (position: number) =>
-      canvas.getByRole('button', { name: nomeAcessivel(position, SLIDES.length) });
+      canvas.getByRole('button', { name: accessibleName(position, SLIDES.length) });
     /**
      * O rótulo é o único filho do controle — a marca do ponto é `::before`, e
      * pseudo-elemento não entra em `firstElementChild`. Buscar por classe seria
@@ -167,7 +167,7 @@ export const WithDots: Story = {
 
       // Rótulo visível certo, e é um pedaço do nome acessível (WCAG 2.5.3).
       await expect(rotulo(dot(2))).toHaveTextContent(labelVisible(2));
-      await expect(nomeAcessivel(2, SLIDES.length).toLowerCase()).toContain(
+      await expect(accessibleName(2, SLIDES.length).toLowerCase()).toContain(
         labelVisible(2).toLowerCase(),
       );
 
@@ -228,8 +228,8 @@ export const WithDots: Story = {
     await step('E a story termina parada e no começo', async () => {
       // Estado limpo para a próxima rodada e para a captura: nem o relógio
       // rodando, nem o carrossel num slide qualquer.
-      const pausar = canvas.getByRole('button', { name: 'Pausar apresentação' });
-      await userEvent.click(pausar);
+      const pause = canvas.getByRole('button', { name: 'Pausar apresentação' });
+      await userEvent.click(pause);
       await expect(canvas.getByRole('button', { name: 'Iniciar apresentação' })).toBeInTheDocument();
 
       const primeiro = dot(1);

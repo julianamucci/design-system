@@ -4,7 +4,7 @@ import {
   panelEntrar,
   waitForOpen,
   waitForClosed,
-  nomeAcessivel,
+  accessibleName,
   panelOpen,
   contrastRatio,
 } from '@shared/testing/hover-card-probe';
@@ -111,7 +111,7 @@ export const Open: Story = {
       await expect(painel).not.toHaveAttribute('aria-modal');
       // Não-modal de verdade: o resto da página continua alcançável.
       await expect(gatilho).toBeVisible();
-      await expect(nomeAcessivel(painel)).toBe('@joana');
+      await expect(accessibleName(painel)).toBe('@joana');
     });
 
     await step('Levar o cursor para dentro do painel mantém o cartão aberto', async () => {

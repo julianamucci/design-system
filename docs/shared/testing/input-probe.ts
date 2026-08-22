@@ -46,7 +46,7 @@ const texto = (el: Element | null | undefined): string | null =>
   el?.textContent?.trim().replace(/\s+/g, ' ') || null;
 
 /** Nome acessível pela ordem que o leitor usa. `null` é campo sem nome. */
-export function nomeAcessivel(el: Element | null | undefined): string | null {
+export function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
@@ -60,8 +60,8 @@ export function nomeAcessivel(el: Element | null | undefined): string | null {
     const label = el.ownerDocument.querySelector(`label[for="${CSS.escape(id)}"]`);
     if (label?.textContent?.trim()) return label.textContent.trim();
   }
-  const dentro = el.closest('label');
-  if (dentro?.textContent?.trim()) return dentro.textContent.trim();
+  const inside = el.closest('label');
+  if (inside?.textContent?.trim()) return inside.textContent.trim();
   return null;
 }
 
@@ -112,7 +112,7 @@ export function heightResultante(el: HTMLElement) {
  */
 export function stateBorders(el: HTMLInputElement) {
   const doc = el.ownerDocument;
-  const anterior = doc.activeElement as HTMLElement | null;
+  const previous = doc.activeElement as HTMLElement | null;
 
   return noTransicao(el, () => {
     const rest = getComputedStyle(el);
@@ -132,7 +132,7 @@ export function stateBorders(el: HTMLInputElement) {
       casaFocusVisible: el.matches(':focus-visible'),
     };
     el.blur();
-    if (anterior && anterior !== doc.body) anterior.focus();
+    if (previous && previous !== doc.body) previous.focus();
 
     const declaradoHover = ruleDeclaration(
       doc,
@@ -225,7 +225,7 @@ export function contrastesNosDoisModos(raiz: HTMLElement) {
  * marca. `raiz` precisa ser um elemento que RENDERIZE — `<input>` é vazio e um
  * filho apendado nele nunca entra no layout.
  */
-export function corDoToken(raiz: HTMLElement, token: string): string | null {
+export function tokenColor(raiz: HTMLElement, token: string): string | null {
   const host = raiz.tagName === 'INPUT' ? raiz.parentElement ?? raiz : raiz;
   return resolveColor(host as HTMLElement, `hsl(var(${token}))`);
 }
@@ -275,7 +275,7 @@ export function measureInput(raiz: HTMLElement) {
       },
     },
     semantica: {
-      nomeAcessivel: nomeAcessivel(campo),
+      accessibleName: accessibleName(campo),
       /** `type` do atributo e da propriedade: divergem quando a stack não repassa. */
       typeAtributo: campo.getAttribute('type'),
       typePropriedade: campo.type,

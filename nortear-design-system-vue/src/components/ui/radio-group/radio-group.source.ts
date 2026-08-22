@@ -276,9 +276,9 @@ ${grupo(PAGAMENTO, ['required', 'class="nds-stack"', 'data-spacing="sm"', LABEL_
  */
 export function radioGroupCartoesSource(): string {
   const planos = [
-    { valor: 'basico', id: 'plano-basico', titulo: 'Básico — R$ 19/mês', apoio: 'Para uso pessoal e projetos pequenos.' },
-    { valor: 'pro', id: 'plano-pro', titulo: 'Pro — R$ 49/mês', apoio: 'Para times com até 5 pessoas.' },
-    { valor: 'enterprise', id: 'plano-enterprise', titulo: 'Enterprise — Sob consulta', apoio: 'Suporte dedicado e SLA personalizado.' },
+    { valor: 'basico', id: 'plano-basico', titulo: 'Básico — R$ 19/mês', helper: 'Para uso pessoal e projetos pequenos.' },
+    { valor: 'pro', id: 'plano-pro', titulo: 'Pro — R$ 49/mês', helper: 'Para times com até 5 pessoas.' },
+    { valor: 'enterprise', id: 'plano-enterprise', titulo: 'Enterprise — Sob consulta', helper: 'Suporte dedicado e SLA personalizado.' },
   ];
   const cartoes = planos
     .map(
@@ -286,7 +286,7 @@ export function radioGroupCartoesSource(): string {
     <RadioGroupItem value="${p.valor}" id="${p.id}" class="nds-mt-1" />
     <div class="nds-stack" data-spacing="xs">
       <span class="nds-block nds-text-body nds-font-medium">${p.titulo}</span>
-      <span class="nds-block nds-text-caption nds-text-muted-foreground">${p.apoio}</span>
+      <span class="nds-block nds-text-caption nds-text-muted-foreground">${p.helper}</span>
     </div>
   </label>`,
     )

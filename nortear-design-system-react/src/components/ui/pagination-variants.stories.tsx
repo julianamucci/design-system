@@ -112,10 +112,10 @@ export const Active: Story = {
       await expect(marcados[0]).toHaveTextContent("2");
     });
     await step("O destaque acompanha a marcação", async () => {
-      const ativo = canvas.getByRole("link", { name: "Ir para página 2" });
+      const active = canvas.getByRole("link", { name: "Ir para página 2" });
       const inactive = canvas.getByRole("link", { name: "Ir para página 1" });
-      await expect(ativo).toHaveAttribute("data-active", "true");
-      await expect(ativo).toHaveClass("nds-button-outline");
+      await expect(active).toHaveAttribute("data-active", "true");
+      await expect(active).toHaveClass("nds-button-outline");
       await expect(inactive).toHaveClass("nds-button-ghost");
     });
   },
@@ -152,11 +152,11 @@ export const Directional: Story = {
     await step("O nome acessível não depende do rótulo visível", async () => {
       // accessibility.item5 — "Anterior" some no breakpoint estreito; se o nome
       // acessível viesse do texto visível, o link ficaria mudo em tela pequena.
-      const anterior = canvas.getByRole("link", { name: "Ir para a página anterior" });
+      const previous = canvas.getByRole("link", { name: "Ir para a página anterior" });
       const next = canvas.getByRole("link", { name: "Ir para a próxima página" });
-      await expect(anterior.querySelector(".nds-pagination-label")).toHaveTextContent("Anterior");
+      await expect(previous.querySelector(".nds-pagination-label")).toHaveTextContent("Anterior");
       await expect(next.querySelector(".nds-pagination-label")).toHaveTextContent("Próxima");
-      await expect(anterior).toHaveClass("nds-pagination-prev");
+      await expect(previous).toHaveClass("nds-pagination-prev");
       await expect(next).toHaveClass("nds-pagination-next");
     });
 

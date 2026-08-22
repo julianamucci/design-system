@@ -266,10 +266,10 @@ export const Playground: Story = {
       // accessibility.item4 — e prova que os inputs chegaram ao template: sem
       // AOT o binding cai em silêncio e TODOS os links ficariam ghost
       // (armadilha 1 do CLAUDE.md deste stack).
-      const ativo = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.atual}` });
-      await expect(ativo).toHaveAttribute('aria-current', 'page');
-      await expect(ativo).toHaveAttribute('data-active', 'true');
-      await expect(ativo).toHaveClass('nds-button-outline');
+      const active = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.atual}` });
+      await expect(active).toHaveAttribute('aria-current', 'page');
+      await expect(active).toHaveAttribute('data-active', 'true');
+      await expect(active).toHaveClass('nds-button-outline');
 
       const inactive = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.atual + 1}` });
       await expect(inactive.hasAttribute('aria-current')).toBe(false);
@@ -277,9 +277,9 @@ export const Playground: Story = {
     });
 
     await step('O rótulo visível de Previous e Next vem do input', async () => {
-      const anterior = canvas.getByRole('link', { name: LABEL_PREVIOUS });
+      const previous = canvas.getByRole('link', { name: LABEL_PREVIOUS });
       const next = canvas.getByRole('link', { name: LABEL_NEXT });
-      await expect(anterior.querySelector('.nds-pagination-label')).toHaveTextContent(
+      await expect(previous.querySelector('.nds-pagination-label')).toHaveTextContent(
         args.textoAnterior,
       );
       await expect(next.querySelector('.nds-pagination-label')).toHaveTextContent(
@@ -287,7 +287,7 @@ export const Playground: Story = {
       );
       // O ícone direcional continua no DOM mesmo quando o rótulo some no
       // breakpoint estreito — é o que sobra para orientar.
-      await expect(anterior.querySelector('svg')).not.toBeNull();
+      await expect(previous.querySelector('svg')).not.toBeNull();
       await expect(next.querySelector('svg')).not.toBeNull();
     });
 

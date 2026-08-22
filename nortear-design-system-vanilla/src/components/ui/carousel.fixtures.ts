@@ -36,8 +36,8 @@ const BACKGROUND: Record<TomDoSlide, string> = {
 export function slideDeExemplo(rotulo: string, o: SlideDeExemploOptions = {}): HTMLElement {
   const { measurement = 'nds-aspect-16-9', tom = 'muted' } = o;
 
-  const moldura = document.createElement('div');
-  moldura.className = measurement;
+  const frame = document.createElement('div');
+  frame.className = measurement;
 
   const caixa = document.createElement('div');
   caixa.className = `nds-cluster nds-h-full nds-rounded-lg ${BACKGROUND[tom]}`;
@@ -49,8 +49,8 @@ export function slideDeExemplo(rotulo: string, o: SlideDeExemploOptions = {}): H
   labelEl.textContent = rotulo;
 
   caixa.appendChild(labelEl);
-  moldura.appendChild(caixa);
-  return moldura;
+  frame.appendChild(caixa);
+  return frame;
 }
 
 /** `count` slides numerados, na ordem. */

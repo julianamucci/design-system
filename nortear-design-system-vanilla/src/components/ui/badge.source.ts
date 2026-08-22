@@ -106,7 +106,7 @@ export type BadgeEmGatilhoSnippetOptions = BadgeSnippetOptions & {
   como?: 'link' | 'botao';
   href?: string;
   /** Nome acessível do alvo — o texto da etiqueta é curto demais para servir. */
-  nomeAcessivel?: string;
+  accessibleName?: string;
 };
 
 /**
@@ -118,7 +118,7 @@ export function badgeEmGatilhoSnippet(o: BadgeEmGatilhoSnippetOptions = {}): str
   const button = o.como === 'botao';
   const label = o.label ?? (button ? 'React' : 'Design');
   const variant = o.variant ?? (button ? 'outline' : 'secondary');
-  const nome = o.nomeAcessivel ?? (button ? 'Filtrar por React' : 'Ver todos os itens da categoria Design');
+  const nome = o.accessibleName ?? (button ? 'Filtrar por React' : 'Ver todos os itens da categoria Design');
 
   const alvo = button
     ? `const alvo = document.createElement('button');

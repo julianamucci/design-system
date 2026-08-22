@@ -124,8 +124,8 @@ export const Complete: Story = {
     await step('O valor é limitado pela escala, não pelo desenho', async () => {
       // A factory faz clamp em `max`: um `value` acima do máximo anunciaria um
       // número que a barra não desenha.
-      const acima = createProgress({ value: 140 });
-      await expect(acima.getAttribute('aria-valuenow')).toBe('100');
+      const above = createProgress({ value: 140 });
+      await expect(above.getAttribute('aria-valuenow')).toBe('100');
     });
   },
 };

@@ -177,7 +177,7 @@ export class NdsHoverCardContent {
           class="nds-hover-card-content"
           [class]="c.contentClass()"
           role="dialog"
-          [attr.aria-label]="nomeAcessivel()"
+          [attr.aria-label]="accessibleName()"
           [attr.data-slot]="'hover-card-content'"
         >
           <ng-container [ngTemplateOutlet]="c.templateRef" />
@@ -206,7 +206,7 @@ export class NdsHoverCard {
    * `textContent` não reage a mudanças de texto — como no Vanilla, o valor é
    * resolvido quando o painel monta, que é quando ele importa.
    */
-  protected readonly nomeAcessivel = computed(() => {
+  protected readonly accessibleName = computed(() => {
     const explicito = this.conteudo()?.label();
     if (explicito) return explicito;
     return this.raiz.trigger()?.textContent?.trim() || undefined;

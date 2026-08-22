@@ -58,7 +58,7 @@ export interface PanelMeasurement {
 
 export interface HandleMeasurement {
   role: string | null;
-  nomeAcessivel: string | null;
+  accessibleName: string | null;
   ariaOrientation: string | null;
   /** Os outros vocabulários de eixo, para o diff entre stacks. */
   dataOrientation: string | null;
@@ -123,7 +123,7 @@ const SEL_HANDLE = '[data-slot="resizable-handle"], .nds-resizable-handle';
 const num = (v: number): number => Math.round(v * 100) / 100;
 
 /** Nome acessível pela ordem que o leitor usa. `null` é controle sem nome. */
-function nomeAcessivel(el: Element | null | undefined): string | null {
+function accessibleName(el: Element | null | undefined): string | null {
   if (!el) return null;
   const labelled = el.getAttribute('aria-labelledby');
   if (labelled) {
@@ -136,8 +136,8 @@ function nomeAcessivel(el: Element | null | undefined): string | null {
 }
 
 /** Filhos DIRETOS: num layout aninhado, o grupo de dentro não é do de fora. */
-function childrenDiretos(grupo: HTMLElement, seletor: string): HTMLElement[] {
-  return [...grupo.children].filter((c): c is HTMLElement => c instanceof HTMLElement && c.matches(seletor));
+function childrenDiretos(grupo: HTMLElement, selector: string): HTMLElement[] {
+  return [...grupo.children].filter((c): c is HTMLElement => c instanceof HTMLElement && c.matches(selector));
 }
 
 function horizontalEh(grupo: HTMLElement): boolean {
@@ -178,7 +178,7 @@ function measureHandle(h: HTMLElement): HandleMeasurement {
   const grip = h.querySelector('.nds-resizable-grip');
   return {
     role: h.getAttribute('role'),
-    nomeAcessivel: nomeAcessivel(h),
+    accessibleName: accessibleName(h),
     ariaOrientation: h.getAttribute('aria-orientation'),
     dataOrientation: h.getAttribute('data-orientation'),
     dataPanelGroupDirection: h.getAttribute('data-panel-group-direction'),
@@ -244,7 +244,7 @@ async function measureKeyboard(
   const encolhe = horizontal ? 'ArrowLeft' : 'ArrowUp';
   const otherEixo = horizontal ? 'ArrowDown' : 'ArrowRight';
 
-  const anterior = grupo.ownerDocument.activeElement as HTMLElement | null;
+  const previous = grupo.ownerDocument.activeElement as HTMLElement | null;
   punho.focus();
 
   try {
@@ -295,7 +295,7 @@ async function measureKeyboard(
       respondeEnter,
     };
   } finally {
-    anterior?.focus?.();
+    previous?.focus?.();
   }
 }
 
@@ -382,10 +382,10 @@ export function measureTokens(raiz: HTMLElement) {
   const grip = punho.querySelector<HTMLElement>('.nds-resizable-grip');
   const bar = punho.querySelector<HTMLElement>('.nds-resizable-grip-bar');
   const cs = getComputedStyle(punho);
-  const anterior = raiz.ownerDocument.activeElement as HTMLElement | null;
+  const previous = raiz.ownerDocument.activeElement as HTMLElement | null;
   punho.focus();
   const withFocus = getComputedStyle(punho).boxShadow;
-  anterior?.focus?.();
+  previous?.focus?.();
   const lineAfter = getComputedStyle(punho, '::after');
 
   return {

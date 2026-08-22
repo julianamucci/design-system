@@ -159,9 +159,9 @@ function descrever(el: Element | null): string | null {
 function measureSeparator(sep: HTMLElement, raiz: HTMLElement): SeparatorMeasurement {
   const cs = getComputedStyle(sep);
   const r = sep.getBoundingClientRect();
-  const pai = sep.parentElement;
-  const csParent = pai ? getComputedStyle(pai) : null;
-  const rParent = pai?.getBoundingClientRect();
+  const parent = sep.parentElement;
+  const csParent = parent ? getComputedStyle(parent) : null;
+  const rParent = parent?.getBoundingClientRect();
 
   const role = sep.getAttribute('role');
   const ariaHidden = sep.getAttribute('aria-hidden');
@@ -170,14 +170,14 @@ function measureSeparator(sep: HTMLElement, raiz: HTMLElement): SeparatorMeasure
 
   const vertical = sep.getAttribute('data-orientation') === 'vertical';
   const background = cs.backgroundColor;
-  const atras = backgroundEffective(pai);
+  const atras = backgroundEffective(parent);
 
   // O foco é medido e desfeito: separador focável é defeito, mas deixar o foco
   // posto envenena a medição seguinte e a foto do Chromatic.
-  const anterior = sep.ownerDocument.activeElement as HTMLElement | null;
+  const previous = sep.ownerDocument.activeElement as HTMLElement | null;
   sep.focus?.();
   const recebeFocus = sep.ownerDocument.activeElement === sep;
-  if (recebeFocus) anterior?.focus?.();
+  if (recebeFocus) previous?.focus?.();
 
   const center = r.width > 0 && r.height > 0
     ? sep.ownerDocument.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)

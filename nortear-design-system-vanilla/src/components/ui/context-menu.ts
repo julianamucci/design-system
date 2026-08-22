@@ -450,10 +450,10 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       return;
     }
 
-    const ativo = document.activeElement as HTMLElement | null;
+    const active = document.activeElement as HTMLElement | null;
 
     if (e.key === 'ArrowRight') {
-      const gatilho = ativo?.closest<HTMLElement>('[data-slot="context-menu-sub-trigger"]');
+      const gatilho = active?.closest<HTMLElement>('[data-slot="context-menu-sub-trigger"]');
       const def = gatilho ? subTriggerDef.get(gatilho) : undefined;
       if (gatilho && def) {
         e.preventDefault();
@@ -463,7 +463,7 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       }
     }
 
-    if (e.key === 'ArrowLeft' && subPanelEl?.contains(ativo)) {
+    if (e.key === 'ArrowLeft' && subPanelEl?.contains(active)) {
       e.preventDefault();
       const gatilho = subTriggerEl;
       closeSubmenu();
@@ -471,9 +471,9 @@ export function createContextMenu(options: ContextMenuOptions): DestroyableEleme
       return;
     }
 
-    const escopo = subPanelEl?.contains(ativo) ? subPanelEl : panelEl;
+    const escopo = subPanelEl?.contains(active) ? subPanelEl : panelEl;
     const menuItems = getMenuItems(escopo);
-    const currentIdx = menuItems.indexOf(ativo as HTMLElement);
+    const currentIdx = menuItems.indexOf(active as HTMLElement);
 
     if (e.key === 'ArrowDown') {
       e.preventDefault();
