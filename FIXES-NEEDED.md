@@ -2560,6 +2560,28 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       motor em algumas execuções, deixando o trilho onde o último `touchmove` o
       largou.
 
+      **Atualização — a RÉGUA é que está errada, não a aterrissagem.** Quatro
+      retratos, dois motores:
+
+      | stack | posição | alvo |
+      |---|---|---|
+      | React | 480 | 448,97 |
+      | React | 480 | 360,65 |
+      | Vanilla | 480 | 452,64 |
+      | Vanilla | 480,01 | **28,62** |
+
+      A posição de pouso é sempre ~480. O que varia é o ALVO — e 28,62px não é
+      largura de slide nenhuma. O alvo sai de `posUm`, colhido por `assentar()`
+      depois de UM clique de seta: quando ele volta 28px, o `assentar` declarou
+      assentada uma animação que mal tinha começado. Três leituras idênticas
+      seguidas acontecem se o motor engasga entre quadros — o mesmo defeito que
+      o submenu da sidebar teve, e que lá foi resolvido subindo o critério.
+
+      Ou seja: o gesto provavelmente está certo, e o teste é que mede errado. A
+      correção a tentar é exigir do `assentar` mais do que estabilidade — que a
+      seta anterior já tenha reconciliado, por exemplo —, e só então capturar a
+      régua.
+
       Atenção ao investigar: o React roda `embla-carousel-react` e o Vanilla tem
       motor próprio. "A mesma falha nas duas" pode ser duas causas diferentes com
       o mesmo sintoma — medir cada uma na sua stack.
@@ -2650,3 +2672,28 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       Vale um passo de higiene antes de suíte longa: conferir se sobrou
       `node`/`chrome-headless-shell` de rodada anterior. O sintoma barato de
       reconhecer é `Port 63315 is in use, trying another one...` na abertura.
+
+- [ ] **`isolate: false` vale 39% do relógio e NÃO pode ser ligado ainda.**
+      Medido sozinho na máquina, projeto storybook do Vanilla:
+
+      | | resultado | tempo |
+      |---|---|---|
+      | com isolamento | 733 passaram | 173,6s |
+      | sem isolamento | **3 reprovaram** | 105,7s |
+
+      As três são `drawer-estados` (`Open`, `Controlled`, `Not Dismissible`), e
+      o axe não reclama do drawer: reclama de **quatro toasts** com contraste
+      1,61–1,77, sobra de uma story de Sonner ainda montada quando a varredura
+      roda. É vazamento de DOM entre ARQUIVOS, que é exatamente o que o modo
+      compartilhado habilita.
+
+      Cheguei a ligar nas cinco stacks e revertí. O ganho é real e o caminho
+      para retomá-lo é conhecido: um decorator que varra portal e região de
+      notificação deixados por outro arquivo, no espírito do
+      `scrollLockCleanupDecorator` que o React já tem, e depois medir de novo.
+      Sem isso, 39% compram uma suíte que reprova sem defeito — e o resto do dia
+      investigando falha que não existe.
+
+      O par `drawer-estados` + `sonner` isolado NÃO reproduz: são só dois
+      arquivos, e o vazamento precisa da suíte inteira dividindo a página. Medir
+      com a suíte completa, uma stack por vez.
