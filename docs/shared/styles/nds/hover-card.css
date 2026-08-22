@@ -70,6 +70,33 @@
   z-index: var(--z-popover);
 }
 
+/*
+ * Neste painel, TETO PERCENTUAL não vale — e não é preferência.
+ *
+ * A família `nds-w-*` carrega `max-width: 100%` para não transbordar o pai.
+ * Aqui o pai é o invólucro de posicionamento, e ele tem largura ZERO: o painel
+ * é posicionado fora do fluxo, então não há conteúdo em fluxo que lhe dê
+ * largura. Medido: `pai=nds-hover-card-positioner:0`. Uma porcentagem de zero é
+ * zero, e um `nds-w-md` no painel o derrubava de 448px para 34px — o mínimo do
+ * texto.
+ *
+ * A classe REPETIDA é o que vence a utilitária: `utilities.css` é importado
+ * depois desta folha, então com especificidade igual (0,1,0) ela ganharia por
+ * ordem. Repetir leva a (0,2,0) sem depender de `!important`.
+ *
+ * E sem seletor de ancestral, que foi a primeira tentativa e cobria só duas das
+ * cinco stacks: `.nds-hover-card-positioner` só existe na marcação do React e
+ * do Angular — Vue, Svelte e Vanilla montam o painel sem esse invólucro
+ * nomeado, e continuavam colapsando. Regra que depende de ancestral é regra que
+ * vale onde o ancestral existe.
+ *
+ * Quem limita este painel é a lib de posicionamento, que já o mantém dentro do
+ * espaço disponível na tela. O popover não precisa disto: o posicionador dele
+ * tem largura de verdade, e ali a porcentagem resolve.
+ */
+.nds-hover-card-content.nds-hover-card-content {
+  max-width: none;
+}
 /* Entrada aparece direto; saída animada (evita corrida com toBeVisible). */
 .nds-hover-card-content[data-ending-style] {
   opacity: 0;

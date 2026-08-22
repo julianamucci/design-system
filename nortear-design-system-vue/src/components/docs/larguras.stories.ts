@@ -1,14 +1,17 @@
 /**
- * A família `nds-w-*` sob uma tela ESTREITA.
+ * A família `nds-w-*` dentro de um container ESTREITO.
  *
- * Ela declara `width` fixa — é o propósito dela. O que faltava era o teto: numa
- * viewport de 320px, um `nds-w-md` de 28rem empurrava 128px para fora e a
- * página ganhava rolagem horizontal. Foi visto primeiro no carrossel, mas o
- * carrossel era só quem estava usando a classe: o defeito é da utilitária, e
- * atinge qualquer componente que a vista.
+ * Ela declara `width` fixa — é o propósito dela. O que faltava era o teto: um
+ * `nds-w-md` de 28rem dentro de um container de 288px empurrava 160px para fora
+ * e aparecia barra de rolagem horizontal. Foi visto primeiro no carrossel em
+ * breakpoint de celular, mas o carrossel era só quem estava vestindo a classe:
+ * o defeito é da utilitária, e atinge qualquer componente que a vista.
  *
- * Por isso o guarda mora aqui e não no carrossel — uma story cobre a família
- * inteira, e é onde a próxima largura acrescentada será cobrada.
+ * A MOLDURA não é enfeite. A primeira versão deste guarda media o `<html>`, que
+ * não transborda porque quem rola é o container da story — e por isso ela
+ * passou verde enquanto a tela mostrava a barra. O teto que interessa é
+ * relativo ao PAI, então é contra um pai com respiro que ele precisa ser
+ * medido.
  */
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { expect } from 'storybook/test';
@@ -33,25 +36,27 @@ export const SemRolagemHorizontal: StoryObj = {
   render: () => ({
     setup: () => ({ larguras: LARGURAS }),
     template: `
-      <div class="nds-stack" data-spacing="sm">
-        <div
-          v-for="classe in larguras"
-          :key="classe"
-          :class="[classe, 'nds-p-2', 'nds-bg-muted', 'nds-text-caption']"
-        >{{ classe }}</div>
+      <div data-moldura class="nds-p-4 nds-border-default nds-rounded-lg">
+        <div class="nds-stack" data-spacing="sm">
+          <div
+            v-for="classe in larguras"
+            :key="classe"
+            :class="[classe, 'nds-p-2', 'nds-bg-muted', 'nds-text-caption']"
+          >{{ classe }}</div>
+        </div>
       </div>
     `,
   }),
-  play: async ({ step }) => {
-    await step('Nenhuma largura empurra a página para fora da tela', async () => {
-      const html = document.documentElement;
+  play: async ({ canvasElement, step }) => {
+    await step('Nenhuma largura transborda o container', async () => {
+      const moldura = canvasElement.querySelector('[data-moldura]') as HTMLElement;
       // `scrollWidth` maior que `clientWidth` É a barra horizontal — medir o
       // sintoma, e não a largura de cada caixa, é o que faz este teste valer
       // para a próxima classe que alguém acrescentar à família.
       await expect(
-        html.scrollWidth,
-        `sobra=${html.scrollWidth - html.clientWidth}px além dos ${html.clientWidth}px da tela`,
-      ).toBeLessThanOrEqual(html.clientWidth);
+        moldura.scrollWidth,
+        `sobra=${moldura.scrollWidth - moldura.clientWidth}px além dos ${moldura.clientWidth}px do container`,
+      ).toBeLessThanOrEqual(moldura.clientWidth);
     });
   },
 };

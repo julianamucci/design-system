@@ -81,40 +81,44 @@
 .nds-w-full   { width: 100%; }
 .nds-w-auto   { width: auto; }
 /*
- * O TETO é `100dvw`, e não `100%`, e a diferença tem história.
+ * O TETO é relativo ao PAI, e chegar nele custou duas tentativas erradas.
  *
- * A família declara `width` fixa de propósito. Sem teto nenhum, uma tela de
- * 320px recebia um `nds-w-md` de 28rem e ganhava 128px de rolagem horizontal —
- * relatado no carrossel, mas o carrossel era só quem estava vestindo a classe.
+ * A família declara `width` fixa de propósito. Sem teto, um `nds-w-md` de 28rem
+ * dentro de um container de 288px empurra 160px para fora e a tela ganha barra
+ * de rolagem horizontal — relatado no carrossel em breakpoint de celular, mas o
+ * carrossel era só quem estava vestindo a classe.
  *
- * `max-width: 100%` seria o CSS óbvio, e foi tentado: colapsa o painel do
- * hover-card. Ali a porcentagem resolve contra o invólucro do popper — que é
- * posicionado e encolhe para caber no conteúdo —, e não contra a tela. O painel
- * ia de 448px para 34px, e a story `Extra Panel Class` reprova nas duas stacks
- * que a têm.
+ * Primeira tentativa: `max-width: 100dvw`. Passou nos testes e ESTAVA ERRADA —
+ * `dvw` mede a janela, não o pai, então a caixa capada a 320px continuava
+ * transbordando um container de 288px. O teste também estava errado: media o
+ * `<html>`, que não transborda porque quem rola é o container da story. Verde
+ * com a barra na tela.
  *
- * `100dvw` resolve contra a JANELA, que é o que se quer nos dois casos: em
- * fluxo normal ele só entra em ação quando a tela é mais estreita que a largura
- * fixa; dentro do popper, 448px cabem numa janela de desktop e o teto não morde.
+ * Segunda: `max-width: 100%`, que é o CSS certo, mas colapsa o painel do
+ * hover-card. Ali o pai é o posicionador, e ele tem largura ZERO — o painel é
+ * posicionado fora do fluxo, então não há conteúdo em fluxo que lhe dê largura.
+ * Medido: `pai=nds-hover-card-positioner:0`. Uma porcentagem de zero é zero, e
+ * o painel caía de 448px para 34px.
  *
- * A ressalva honesta: `dvw` inclui a barra de rolagem clássica, então numa
- * janela de desktop estreita o teto pode sobrar a largura da barra. Na prática
- * ele só é alcançado quando a tela é menor que a largura fixa — território de
- * toque, onde a barra é sobreposta e não ocupa espaço.
+ * A saída não foi enfraquecer o teto, foi deixar o painel abrir mão dele:
+ * `.nds-hover-card-positioner .nds-hover-card-content { max-width: none }`, em
+ * hover-card.css, com o porquê escrito lá. Quem limita aquele painel é a lib de
+ * posicionamento. O popover não precisa: o posicionador dele tem largura de
+ * verdade, e ali a porcentagem resolve.
  *
- * Portão: `QA/Larguras > SemRolagemHorizontal`, nas cinco stacks. Sem este
- * teto ela acusa `sobra=832px` — o `nds-w-docs` de 72rem contra 320px.
+ * Portão: `QA/Larguras > SemRolagemHorizontal`, nas cinco stacks, medindo
+ * contra uma MOLDURA com respiro — sem o teto ela acusa `sobra=850px`.
  */
-.nds-w-3xs     { width: 14rem; max-width: 100dvw; }                       /* 224px */
-.nds-w-2xs     { width: 18rem; max-width: 100dvw; }                       /* 288px */
-.nds-w-xs      { width: 20rem; max-width: 100dvw; }                       /* 320px */
-.nds-w-sm      { width: 24rem; max-width: 100dvw; }                       /* 384px — formulários */
-.nds-w-md      { width: 28rem; max-width: 100dvw; }                       /* 448px */
-.nds-w-lg      { width: 32rem; max-width: 100dvw; }                       /* 512px */
-.nds-w-xl      { width: 40rem; max-width: 100dvw; }                       /* 640px */
-.nds-w-prose   { width: 48rem; max-width: 100dvw; }                       /* leitura confortável */
-.nds-w-content { width: 64rem; max-width: 100dvw; }                       /* 1024px */
-.nds-w-docs    { width: 72rem; max-width: 100dvw; }                       /* 1152px — shell de docs */
+.nds-w-3xs     { width: 14rem; max-width: 100%; }                       /* 224px */
+.nds-w-2xs     { width: 18rem; max-width: 100%; }                       /* 288px */
+.nds-w-xs      { width: 20rem; max-width: 100%; }                       /* 320px */
+.nds-w-sm      { width: 24rem; max-width: 100%; }                       /* 384px — formulários */
+.nds-w-md      { width: 28rem; max-width: 100%; }                       /* 448px */
+.nds-w-lg      { width: 32rem; max-width: 100%; }                       /* 512px */
+.nds-w-xl      { width: 40rem; max-width: 100%; }                       /* 640px */
+.nds-w-prose   { width: 48rem; max-width: 100%; }                       /* leitura confortável */
+.nds-w-content { width: 64rem; max-width: 100%; }                       /* 1024px */
+.nds-w-docs    { width: 72rem; max-width: 100%; }                       /* 1152px — shell de docs */
 
 /* Square sizing (grid 8) — para elementos que precisam de width+height iguais */
 .nds-size-2   { width: 0.5rem;   height: 0.5rem;  }    /* 8px — marcador/bullet */
