@@ -32,7 +32,7 @@ const FOTO_ANA =
  * Ícone genérico de pessoa, decorativo: quem nomeia o avatar é o rótulo do
  * próprio fallback, e um ícone anunciado repetiria a mesma informação.
  */
-const ICONE_USUARIO = `<svg
+const ICON_USUARIO = `<svg
   aria-hidden="true"
   viewBox="0 0 24 24"
   fill="none"
@@ -80,7 +80,7 @@ export const avatarSource: SourceTransform<AvatarArgs> = (_gerado, ctx) => {
 };
 
 /** Cada preset de diâmetro, com a mesma composição por baixo. */
-function comPreset(size?: string): string {
+function withPreset(size?: string): string {
   return vueSnippet(
     IMPORT,
     avatar([attr('size', size, 'md')], [
@@ -92,7 +92,7 @@ function comPreset(size?: string): string {
 
 /** Preset mínimo: para lista densa, ao lado de uma linha de texto. */
 export function avatarSmSource(): string {
-  return comPreset('sm');
+  return withPreset('sm');
 }
 
 /**
@@ -100,22 +100,22 @@ export function avatarSmSource(): string {
  * ninguém pede outro, e repeti-lo ensinaria que a prop é obrigatória.
  */
 export function avatarMdSource(): string {
-  return comPreset('md');
+  return withPreset('md');
 }
 
 /** Preset de lista e de cabeçalho de card. */
 export function avatarLgSource(): string {
-  return comPreset('lg');
+  return withPreset('lg');
 }
 
 /** Preset de destaque: cabeçalho de perfil e menu de conta. */
 export function avatarXlSource(): string {
-  return comPreset('xl');
+  return withPreset('xl');
 }
 
 /** Preset máximo: a página de perfil, onde o avatar é o assunto. */
 export function avatarTwoXlSource(): string {
-  return comPreset('2xl');
+  return withPreset('2xl');
 }
 
 /**
@@ -156,19 +156,19 @@ export function avatarCarregandoSource(): string {
  * Sendo ele o único conteúdo, é ele que nomeia o avatar — daí o papel e o
  * rótulo. Escondê-lo da árvore de acessibilidade deixaria o avatar mudo.
  */
-export function avatarSemImagemSource(): string {
+export function avatarNoImageSource(): string {
   return vueSnippet(
     `import { Avatar, AvatarFallback } from '@/components/ui/avatar'`,
     avatar([], [
       `<AvatarFallback role="img" aria-label="Usuário genérico">
-${indentar(ICONE_USUARIO)}
+${indentar(ICON_USUARIO)}
 </AvatarFallback>`,
     ]),
   );
 }
 
 /** Foto com iniciais de reserva, o par mais comum. */
-export function avatarComImagemSource(): string {
+export function avatarWithImageSource(): string {
   return vueSnippet(
     IMPORT,
     avatar([], [
@@ -182,7 +182,7 @@ export function avatarComImagemSource(): string {
  * Só iniciais: sem imagem, não há import de imagem nem espera. Duas letras
  * bastam — três já não cabem no preset menor.
  */
-export function avatarComIniciaisSource(): string {
+export function avatarWithIniciaisSource(): string {
   return vueSnippet(
     `import { Avatar, AvatarFallback } from '@/components/ui/avatar'`,
     avatar([], ['<AvatarFallback>JP</AvatarFallback>']),
@@ -191,7 +191,7 @@ export function avatarComIniciaisSource(): string {
 
 /** Ícone no lugar das iniciais, para quem ainda não tem nome nem foto. */
 export function avatarComIconeSource(): string {
-  return avatarSemImagemSource();
+  return avatarNoImageSource();
 }
 
 /**

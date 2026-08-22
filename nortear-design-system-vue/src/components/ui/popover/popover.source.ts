@@ -22,8 +22,8 @@ export type PopoverArgs = {
 };
 
 /** Lado e alinhamento que o painel assume quando ninguém pede outro. */
-const LADO_PADRAO = 'bottom';
-const ALINHAMENTO_PADRAO = 'center';
+const SIDE_DEFAULT = 'bottom';
+const ALIGNMENT_DEFAULT = 'center';
 
 /**
  * Booleano escrito por LIGAÇÃO explícita — `:nome="true"`, nunca o atributo
@@ -63,7 +63,7 @@ import { Button } from '@/components/ui/button'`;
  * Sem título, o painel herda o texto do gatilho; com título, o nome do diálogo
  * é o título.
  */
-function painelDeConfiguracoes(recuo = 2): string {
+function configPanel(recuo = 2): string {
   const p = ' '.repeat(recuo);
   return `${p}<PopoverContent align="start">
 ${p}  <PopoverHeader>
@@ -106,8 +106,8 @@ export const popoverSource: SourceTransform<PopoverArgs> = (_gerado, ctx) => {
     bool('modal', ctx?.args?.modal, false),
   );
   const posicao = attrs(
-    attr('side', ctx?.args?.side, LADO_PADRAO),
-    attr('align', ctx?.args?.align, ALINHAMENTO_PADRAO),
+    attr('side', ctx?.args?.side, SIDE_DEFAULT),
+    attr('align', ctx?.args?.align, ALIGNMENT_DEFAULT),
   );
 
   return vueSnippet(
@@ -155,13 +155,13 @@ import { Button } from '@/components/ui/button'`,
  * Cabeçalho completo: título, descrição e o par de ações. Com título, é ele
  * que nomeia o painel — e não o texto do gatilho.
  */
-export function popoverComTituloSource(): string {
+export function popoverWithTitleSource(): string {
   return vueSnippet(
     IMPORT_BASE,
     popover({
       raiz: ':default-open="true"',
       rotulo: 'Configuracoes',
-      painel: painelDeConfiguracoes(),
+      painel: configPanel(),
     }),
   );
 }
@@ -207,8 +207,8 @@ const email = ref('ana@nortear.com.br')`,
  * escondido, então leitor de tela e busca do navegador não encontram conteúdo
  * que não está lá.
  */
-export function popoverFechadoSource(): string {
-  return vueSnippet(IMPORT_BASE, popover({ rotulo: 'Abrir popover', painel: painelDeConfiguracoes() }));
+export function popoverClosedSource(): string {
+  return vueSnippet(IMPORT_BASE, popover({ rotulo: 'Abrir popover', painel: configPanel() }));
 }
 
 /** Estado aberto na montagem: `default-open` é a forma não-controlada de abrir. */
@@ -218,7 +218,7 @@ export function popoverAbertoSource(): string {
     popover({
       raiz: ':default-open="true"',
       rotulo: 'Abrir popover',
-      painel: painelDeConfiguracoes(),
+      painel: configPanel(),
     }),
   );
 }
@@ -267,7 +267,7 @@ const aberto = ref(false)`,
     <PopoverTrigger as-child>
       <Button variant="outline">Trigger</Button>
     </PopoverTrigger>
-${painelDeConfiguracoes(4)}
+${configPanel(4)}
   </Popover>
 </div>`,
   );
@@ -285,7 +285,7 @@ export function popoverModalSource(): string {
     popover({
       raiz: ':default-open="true" :modal="true"',
       rotulo: 'Abrir modal',
-      painel: painelDeConfiguracoes(),
+      painel: configPanel(),
     }),
   );
 }
@@ -391,7 +391,7 @@ const status = reactive<Record<string, boolean>>({
  * runtime: classe montada por expressão não é auditável, e o verificador de
  * classe morta leria a expressão como se fosse o nome da classe.
  */
-export function popoverSeletorDeCorSource(): string {
+export function colorSourcePopoverSelector(): string {
   const amostras = [
     ['nds-bg-primary', 'Primária'],
     ['nds-bg-secondary', 'Secundária'],

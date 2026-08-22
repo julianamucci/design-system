@@ -12,7 +12,7 @@ import { Save } from 'lucide-vue-next';
 import { balaoDe } from './tooltip.fixtures';
 import {
   tooltipComAtalhoSource,
-  tooltipTextoCurtoSource,
+  tooltipTextCurtoSource,
   tooltipTextoLongoSource,
 } from './tooltip.source';
 
@@ -50,7 +50,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: tooltipTextoCurtoSource },
+      source: { transform: tooltipTextCurtoSource },
       description: {
         component:
           'Default é texto curto. Com atalho acrescenta a tecla em Kbd, que a folha compartilhada reconhece e usa para encurtar o respiro à direita. Texto longo quebra dentro do limite de largura do balão — passou disso, o caso é de Popover.',

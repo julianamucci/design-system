@@ -4,7 +4,7 @@ import { expect } from 'storybook/test';
 import { AspectRatio } from './index';
 import {
   aspectRatioComIframeSource,
-  aspectRatioComImagemSource,
+  aspectRatioWithImageSource,
   aspectRatioComVideoSource,
   aspectRatioDecorativaSource,
   aspectRatioEmGradeSource,
@@ -21,7 +21,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: aspectRatioComImagemSource },
+      source: { transform: aspectRatioWithImageSource },
       description: {
         component:
           'Composicoes típicas do AspectRatio com diferentes conteúdos filhos: imagens, iframes (mapas), vídeos e uso em grids responsivos.',

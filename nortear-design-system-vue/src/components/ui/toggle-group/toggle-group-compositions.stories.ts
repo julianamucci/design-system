@@ -8,10 +8,10 @@ import {
   LayoutGrid, List,
 } from 'lucide-vue-next';
 import {
-  toggleGroupBarraAlinhamentoSource,
-  toggleGroupBarraFormatacaoSource,
-  toggleGroupComEspacamentoSource,
-  toggleGroupTamanhosSource,
+  toggleGroupBarAlignmentSource,
+  toggleGroupBarFormattingSource,
+  toggleGroupWithSpacingSource,
+  toggleGroupSizesSource,
   toggleGroupVerticalSource,
 } from './toggle-group.source';
 
@@ -24,7 +24,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: toggleGroupBarraAlinhamentoSource },
+      source: { transform: toggleGroupBarAlignmentSource },
       description: {
         component:
           'Padrões de composição do ToggleGroup: barra de alinhamento (single), barra de formatação (multiple), modo de visualização vertical e variantes outline com spacing.',
@@ -80,7 +80,7 @@ export const FormattingBar: Story = {
   parameters: {
     // Modo combinado: o valor é lista e nenhum contorno emenda os itens — a do
     // meta mostraria a barra exclusiva com contorno no grupo.
-    docs: { source: { transform: toggleGroupBarraFormatacaoSource } },
+    docs: { source: { transform: toggleGroupBarFormattingSource } },
   },
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, Bold, Italic, Underline },
@@ -156,7 +156,7 @@ export const WithSpacing: Story = {
     covers: ['visual.item5'],
     // Com espaçamento o contorno muda de dono: sai da raiz e vai para cada item.
     // A do meta ensinaria justamente o contrário.
-    docs: { source: { transform: toggleGroupComEspacamentoSource } },
+    docs: { source: { transform: toggleGroupWithSpacingSource } },
   },
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, Bold, Italic, Underline },
@@ -196,7 +196,7 @@ export const SizesCompared: Story = {
   parameters: {
     // São TRÊS grupos empilhados, e não um: a comparação é a composição, e o
     // snippet do meta mostraria só um deles.
-    docs: { source: { transform: toggleGroupTamanhosSource } },
+    docs: { source: { transform: toggleGroupSizesSource } },
   },
   render: () => ({
     components: { ToggleGroup, ToggleGroupItem, AlignLeft, AlignCenter, AlignRight },

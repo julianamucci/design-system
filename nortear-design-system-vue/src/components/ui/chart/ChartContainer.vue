@@ -114,7 +114,7 @@ function buildTheme() {
  * critério de objeto gráfico por acidente de ordem, não por escolha de cor.
  * Tema por instância não tem esse acidente.
  */
-const temaDaMontagem = buildTheme();
+const mountTheme = buildTheme();
 
 // Recolore quando o tema do <html> muda (marca / escuro / densidade / fonte).
 //
@@ -191,7 +191,7 @@ const containerStyle = computed(() =>
     <VChart
       v-else
       :option="option"
-      :theme="temaDaMontagem"
+      :theme="mountTheme"
       :init-options="{ renderer: rendererName }"
       autoresize
       style="width: 100%; height: 100%;"

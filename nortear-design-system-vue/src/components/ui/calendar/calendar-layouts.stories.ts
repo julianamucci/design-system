@@ -5,8 +5,8 @@ import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
 import {
   calendarDoisMesesSource,
-  calendarLegendaComSeletoresSource,
-  calendarSeisSemanasSource,
+  calendarCaptionWithSelectorsSource,
+  calendarSeisWeeksSource,
   calendarSource,
 } from './calendar.source';
 
@@ -104,7 +104,7 @@ export const CaptionDropdown: Story = {
     // A legenda deixa de ser texto e vira controle — é a prop `layout` que faz
     // isso, e ela não está nos args deste arquivo.
     docs: {
-      source: { transform: calendarLegendaComSeletoresSource },
+      source: { transform: calendarCaptionWithSelectorsSource },
       description: {
         story: 'Mês e ano viram seletores, para saltar de período sem passar mês a mês.',
       },
@@ -226,7 +226,7 @@ export const WithFixedWeeks: Story = {
     // A altura estável vem de uma prop, e sem ela o snippet não distinguiria
     // esta story do layout padrão.
     docs: {
-      source: { transform: calendarSeisSemanasSource },
+      source: { transform: calendarSeisWeeksSource },
       description: {
         story:
           'Seis linhas de semana sempre: a altura do bloco não muda ao virar o mês, então nada abaixo dele salta.',

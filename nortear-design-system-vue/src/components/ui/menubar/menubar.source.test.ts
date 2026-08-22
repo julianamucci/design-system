@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
   menubarAbertoSource,
-  menubarCheckboxMarcadoSource,
+  menubarCheckboxCheckedSource,
   menubarCheckboxMistoSource,
-  menubarComAtalhosSource,
-  menubarComCheckboxSource,
-  menubarComRadioSource,
-  menubarComSubmenuSource,
+  menubarWithShortcutsSource,
+  menubarWithCheckboxSource,
+  menubarWithRadioSource,
+  menubarWithSubmenuSource,
   menubarEditorCompletoSource,
-  menubarFechadoSource,
+  menubarClosedSource,
   menubarItemBloqueadoSource,
   menubarItemDefaultSource,
   menubarItemDestrutivoSource,
@@ -130,7 +130,7 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('fechado é ausência: nenhuma prop declara o estado', () => {
-    const saida = menubarFechadoSource();
+    const saida = menubarClosedSource();
     expect(saida).toContain('<Menubar>');
     expect(saida).not.toContain('default-value=');
     expect(saida).not.toContain('open');
@@ -150,7 +150,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a marcação usa `checked`/`@update:checked` sobre estado reativo', () => {
-    const saida = menubarCheckboxMarcadoSource();
+    const saida = menubarCheckboxCheckedSource();
     // A lib por baixo ignora prop desconhecida em silêncio: é `checked` que a
     // API do design system expõe, e é ele que o snippet tem que ensinar.
     expect(saida).toContain(':checked="marcado"');
@@ -171,7 +171,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o atalho é filho do item, e não se esconde do leitor', () => {
-    const saida = menubarComAtalhosSource();
+    const saida = menubarWithShortcutsSource();
     expect(saida).toContain('<MenubarShortcut>{{ a.atalho }}</MenubarShortcut>');
     // "Desfazer ⌘Z" é o nome acessível inteiro; escondê-lo devolveria só o
     // rótulo e o atalho não serviria para quem não enxerga a tela.
@@ -179,7 +179,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o submenu embrulha o par gatilho/painel dentro do painel do pai', () => {
-    const saida = menubarComSubmenuSource();
+    const saida = menubarWithSubmenuSource();
     expect(saida).toContain('<MenubarSub>');
     expect(saida).toContain('<MenubarSubTrigger>Exportar</MenubarSubTrigger>');
     expect(saida).toContain('<MenubarSubContent>');
@@ -187,14 +187,14 @@ describe('transforms das stories de composição', () => {
   });
 
   it('os alternadores vivem em grupo rotulado, cada um com o próprio estado', () => {
-    const saida = menubarComCheckboxSource();
+    const saida = menubarWithCheckboxSource();
     expect(saida).toContain('<MenubarGroup>');
     expect(saida).toContain('<MenubarLabel>Mostrar na tela</MenubarLabel>');
     expect(saida).toContain('@update:checked="estado[e] = $event"');
   });
 
   it('na escolha única o valor mora no GRUPO, e a opção só declara o seu', () => {
-    const saida = menubarComRadioSource();
+    const saida = menubarWithRadioSource();
     expect(saida).toContain('<MenubarRadioGroup v-model="tema">');
     expect(saida).toContain(':value="t.valor"');
     // Um `v-model` por item transformaria escolha única em três alternadores.
@@ -219,15 +219,15 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     menubarSource,
     menubarItemDefaultSource,
     menubarItemDestrutivoSource,
-    menubarFechadoSource,
+    menubarClosedSource,
     menubarAbertoSource,
     menubarItemBloqueadoSource,
-    menubarCheckboxMarcadoSource,
+    menubarCheckboxCheckedSource,
     menubarCheckboxMistoSource,
-    menubarComAtalhosSource,
-    menubarComSubmenuSource,
-    menubarComCheckboxSource,
-    menubarComRadioSource,
+    menubarWithShortcutsSource,
+    menubarWithSubmenuSource,
+    menubarWithCheckboxSource,
+    menubarWithRadioSource,
     menubarEditorCompletoSource,
   ];
 

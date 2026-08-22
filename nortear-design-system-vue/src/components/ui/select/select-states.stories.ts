@@ -14,7 +14,7 @@ import {
   selectCompactoSource,
   selectInvalidoSource,
   selectPreenchidoSource,
-  selectVazioSource,
+  selectEmptySource,
 } from './select.source';
 
 const meta = {
@@ -26,7 +26,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: selectVazioSource },
+      source: { transform: selectEmptySource },
       description: {
         component:
           'Vazio, preenchido, aberto, bloqueado, inválido e compacto. Teclado, foco e posicionamento vêm do primitivo — o que estas stories provam é que a composição não desfaz nada disso.',

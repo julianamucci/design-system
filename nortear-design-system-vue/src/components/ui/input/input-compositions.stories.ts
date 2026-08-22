@@ -11,11 +11,11 @@ import {
   InputGroupText,
 } from '@/components/ui/input-group';
 import {
-  inputAddonComBotaoSource,
+  inputAddonWithButtonSource,
   inputAlinhamentosSource,
-  inputComApoioSource,
+  inputWithHelperSource,
   inputComErroSource,
-  inputComRotuloSource,
+  inputWithLabelSource,
   inputObrigatorioSource,
 } from './input.source';
 
@@ -28,7 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: inputComRotuloSource },
+      source: { transform: inputWithLabelSource },
       description: {
         component:
           'O Input deve ser sempre acompanhado de um rótulo acessível. Composicoes comuns: com Label, com texto de apoio, com mensagem de erro e dentro de um InputGroup, que envolve o campo com prefixos, sufixos e botões internos.',
@@ -80,7 +80,7 @@ export const WithLabel: Story = {
 export const WithSupportText: Story = {
   // O apoio visível não basta: o `aria-describedby` que o liga ao campo é a
   // lição, e ele não existe na marcação do `meta`.
-  parameters: { docs: { source: { transform: inputComApoioSource } } },
+  parameters: { docs: { source: { transform: inputWithHelperSource } } },
   render: () => ({
     components: { Input, Label },
     template: `
@@ -274,7 +274,7 @@ export const AddonClick: Story = {
   parameters: {
     covers: ['functional.item8'],
     // O botão dentro do acessório, com ícone e nome próprio, é a peça nova.
-    docs: { source: { transform: inputAddonComBotaoSource } },
+    docs: { source: { transform: inputAddonWithButtonSource } },
   },
   render: () => ({
     components: { Label, InputGroup, InputGroupAddon, InputGroupInput, InputGroupButton, InputGroupText, XIcon },

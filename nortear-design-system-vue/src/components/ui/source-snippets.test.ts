@@ -45,12 +45,12 @@ const PROPS_DE_DESIGN = new Set([
   'color', 'background', 'background-color', 'border-color', 'fill', 'stroke',
   'border', 'border-width', 'border-radius', 'box-shadow', 'opacity',
 ]);
-const VALOR_MECANICO =
+const VALUE_MECANICO =
   /^(0|0px|0rem|auto|none|inherit|initial|unset|revert|100%|fit-content|max-content|min-content|currentcolor|transparent)$/i;
 const QUANTIDADE = /(^|[\s(])-?\d*\.?\d+(px|rem|em|ch|vh|vw|%)|^#[0-9a-f]{3,8}$|^(rgb|hsl)a?\(/i;
 
 /** Declarações de design cravadas em `style="…"` dentro do snippet. */
-function estilosDeDesign(snippet: string): string[] {
+function designStyles(snippet: string): string[] {
   const achados: string[] = [];
   for (const m of snippet.matchAll(/(?<!:)style="([^"]*)"/g)) {
     for (const decl of m[1].split(';')) {
@@ -59,7 +59,7 @@ function estilosDeDesign(snippet: string): string[] {
       const nome = prop.trim().toLowerCase();
       const valor = resto.join(':').trim();
       if (!PROPS_DE_DESIGN.has(nome)) continue;
-      if (VALOR_MECANICO.test(valor)) continue;
+      if (VALUE_MECANICO.test(valor)) continue;
       if (valor.includes('var(')) continue; // token, não valor cravado
       if (!QUANTIDADE.test(valor)) continue;
       achados.push(`${nome}: ${valor}`);
@@ -86,7 +86,7 @@ describe('transforms do painel Code', () => {
 
       // Só os CONSTRUTORES de snippet — `*Source` (transform de meta ou de story)
       // e `*Snippet` (forma reutilizável). A primeira versão media todo export e
-      // reprovava helper de atributo (`attrProporcao`, `attrChecked`,
+      // reprovava helper de atributo (`attrRatio`, `attrChecked`,
       // `attrLinhas`), que devolve um pedaço de atributo e não um snippet. Não é
       // buraco: o que o painel mostra é a saída dos construtores, e ela já
       // carrega o que qualquer helper produziu.
@@ -120,7 +120,7 @@ describe('transforms do painel Code', () => {
           expect(texto).not.toContain('=> void 0');
           // Inline vence a folha: a declaração sai do tema, da densidade e da
           // escala tipográfica — e é o markup que o leitor copia.
-          expect(estilosDeDesign(texto), `${nome}: use classe .nds-* ou token`).toEqual([]);
+          expect(designStyles(texto), `${nome}: use classe .nds-* ou token`).toEqual([]);
         });
       }
     });

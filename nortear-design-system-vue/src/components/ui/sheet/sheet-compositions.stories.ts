@@ -16,10 +16,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
 import {
-  sheetEdicaoPerfilSource,
+  sheetEditPerfilSource,
   sheetFiltrosAvancadosSource,
-  sheetFormularioLongoSource,
-  sheetNavegacaoSecundariaSource,
+  sheetFormLongSource,
+  sheetNavigationSecundariaSource,
 } from './sheet.source';
 
 const meta = {
@@ -120,7 +120,7 @@ export const ProfileEdit: Story = {
     docs: {
       // O corpo é um `form` e a confirmação é o `submit` dele — o meta mostra
       // filtros soltos, sem formulário em volta.
-      source: { transform: sheetEdicaoPerfilSource },
+      source: { transform: sheetEditPerfilSource },
       description: { story: 'Edição de perfil com múltiplos campos no painel direito.' },
     },
   },
@@ -172,7 +172,7 @@ export const SecondaryNavigation: Story = {
     docs: {
       // Painel esquerdo e SEM rodapé: a ausência do rodapé é deliberada, porque
       // a lista de links já é a ação. O snippet do meta o traria de volta.
-      source: { transform: sheetNavegacaoSecundariaSource },
+      source: { transform: sheetNavigationSecundariaSource },
       description: { story: 'Menu de navegação secundária no painel esquerdo.' },
     },
   },
@@ -212,7 +212,7 @@ export const LongFormScroll: Story = {
     docs: {
       // O corpo mais alto que o painel é o assunto: sem os campos repetidos não
       // há rolagem para o leitor ver de onde vem a separação corpo/rodapé.
-      source: { transform: sheetFormularioLongoSource },
+      source: { transform: sheetFormLongSource },
       description: {
         story:
           'Corpo mais alto que o painel. O corpo rola sozinho e o rodapé continua visível — ' +

@@ -11,7 +11,7 @@ import {
   toggleAtivoSource,
   toggleDesabilitadoSource,
   toggleFocoSource,
-  toggleIconeSource,
+  toggleIconSource,
   toggleInvalidoSource,
 } from './toggle.source';
 
@@ -25,7 +25,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: toggleIconeSource },
+      source: { transform: toggleIconSource },
       description: {
         component:
           'Estados do Toggle: off, on, foco por teclado, desabilitado e inválido (aria-invalid).',

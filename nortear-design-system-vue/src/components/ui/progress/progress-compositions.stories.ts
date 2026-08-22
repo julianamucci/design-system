@@ -11,8 +11,8 @@ import {
   trilhaDoProgresso,
 } from '@shared/testing/progress-probe';
 import {
-  progressCoresNaListaSource,
-  progressListaSource,
+  listSourceProgressColors,
+  progressListSource,
   progressProcessandoServidorSource,
   progressUploadAnimadoSource,
 } from './progress.source';
@@ -94,7 +94,7 @@ export const ProgressList: Story = {
     docs: {
       // Várias barras num laço: o nome acessível passa a sair do DADO, porque
       // repetir o mesmo rótulo nas três equivale a não nomear nenhuma.
-      source: { transform: progressListaSource },
+      source: { transform: progressListSource },
     },
   },
   render: () => ({
@@ -155,7 +155,7 @@ export const CustomColor: Story = {
     docs: {
       // Três medidas com significados diferentes, e a do meio SEM variante:
       // "em andamento" não é semântico, e é isso que a composição mostra.
-      source: { transform: progressCoresNaListaSource },
+      source: { transform: listSourceProgressColors },
     },
   },
   render: () => ({

@@ -12,9 +12,9 @@ import { Save } from 'lucide-vue-next';
 import { balaoDe } from './tooltip.fixtures';
 import {
   tooltipAbertoSource,
-  tooltipComEsperaSource,
+  tooltipWithWaitSource,
   tooltipControladoSource,
-  tooltipFechadoSource,
+  tooltipClosedSource,
   tooltipPersistenteSource,
 } from './tooltip.source';
 
@@ -46,7 +46,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: tooltipFechadoSource },
+      source: { transform: tooltipClosedSource },
       description: {
         component:
           'Fechado é o padrão e o balão nem existe no DOM. Aberto pode vir do estado externo, do hover (depois do delay) ou do foco (imediato). Levar o mouse do gatilho até o balão não fecha nada — é a persistência que a WCAG 1.4.13 exige.',
@@ -156,7 +156,7 @@ export const Hover: Story = {
     docs: {
       // A espera é o assunto, e ela mora no Provider — a do meta usa a espera
       // padrão, em que não há o que medir.
-      source: { transform: tooltipComEsperaSource },
+      source: { transform: tooltipWithWaitSource },
       description: {
         story:
           'Hover no trigger com delay longo — o balão só abre depois da espera do Provider. É o delay que separa passar o mouse de parar sobre o elemento.',
@@ -211,7 +211,7 @@ export const WithFocus: Story = {
     docs: {
       // Mesma espera longa no Provider: aqui ela é o contraste — quem chega pelo
       // teclado abre na hora, e a do meta não teria espera para contrastar.
-      source: { transform: tooltipComEsperaSource },
+      source: { transform: tooltipWithWaitSource },
       description: {
         story: 'Foco pelo teclado abre o Tooltip imediatamente, sem esperar o delay — WCAG 1.4.13.',
       },

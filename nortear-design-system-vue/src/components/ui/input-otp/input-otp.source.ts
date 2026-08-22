@@ -308,7 +308,7 @@ export function inputOtpComErroSource(): string {
 }
 
 /** Rótulo visível associado ao campo — WCAG 3.3.2, instruções antes do controle. */
-export function inputOtpComRotuloSource(): string {
+export function inputOtpWithLabelSource(): string {
   return vueSnippet(
     script(`const codigo = ref('')`),
     campoOtp({
@@ -323,7 +323,7 @@ export function inputOtpComRotuloSource(): string {
  * Texto auxiliar: de onde veio o código e quanto tempo ele dura. Visível não
  * basta — é o `aria-describedby` que o leva a quem usa leitor de tela.
  */
-export function inputOtpComApoioSource(): string {
+export function inputOtpWithHelperSource(): string {
   return vueSnippet(
     script(`const codigo = ref('')`),
     campoOtp({

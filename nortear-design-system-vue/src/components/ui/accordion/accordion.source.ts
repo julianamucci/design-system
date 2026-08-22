@@ -9,7 +9,7 @@ import {
   attr,
   attrBool,
   attrs,
-  comoCodigo,
+  asCode,
   indentar,
   vueSnippet,
   type SourceTransform,
@@ -91,7 +91,7 @@ export const accordionSource: SourceTransform<AccordionArgs> = (_gerado, ctx) =>
     IMPORT,
     acordeao(
       [
-        attr('type', comoCodigo(args.type) ?? 'single'),
+        attr('type', asCode(args.type) ?? 'single'),
         attr('orientation', args.orientation, 'vertical'),
         attrBool('disabled', args.disabled, false),
         attrBool('unmount-on-hide', args.unmountOnHide, false),
@@ -139,7 +139,7 @@ export function accordionSingleSource(): string {
  * A ausência é o assunto: não há chave a ligar. Escrever uma prop aqui ensinaria
  * que o comportamento depende dela, e é justamente o contrário.
  */
-export function accordionFecharNoSegundoCliqueSource(): string {
+export function segundoClickSourceAccordionClose(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
@@ -221,7 +221,7 @@ const aberto = ref('item-1')`,
  * Valor inicial sem modo controlado: `default-value` só vale na montagem, e
  * daí em diante o estado é do próprio componente.
  */
-export function accordionAbertoPorPadraoSource(): string {
+export function defaultSourceAccordionOpen(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
@@ -277,7 +277,7 @@ export function accordionAbertoSource(): string {
  * Desabilitado item a item: a prop mora no ITEM, não na raiz. Na raiz ela
  * desliga o acordeão inteiro de uma vez, que é outra decisão.
  */
-export function accordionDesabilitadoSource(): string {
+export function accordionDisabledSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(
@@ -294,7 +294,7 @@ export function accordionDesabilitadoSource(): string {
  * Foco de teclado: nada a configurar. O anel é do próprio gatilho, e a ordem de
  * tabulação sai da ordem dos itens.
  */
-export function accordionFocoVisivelSource(): string {
+export function accordionFocusVisibleSource(): string {
   return vueSnippet(
     IMPORT,
     acordeao(

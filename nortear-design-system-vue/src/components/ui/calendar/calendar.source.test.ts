@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  calendarDiasBloqueadosSource,
+  calendarDaysBloqueadosSource,
   calendarDoisMesesSource,
   calendarHojeSource,
   calendarIntervaloSource,
-  calendarLegendaComSeletoresSource,
-  calendarSeisSemanasSource,
-  calendarSeletorDeDataSource,
+  calendarCaptionWithSelectorsSource,
+  calendarSeisWeeksSource,
+  dataSourceCalendarSelector,
   calendarSource,
   calendarVariasDatasSource,
 } from './calendar.source';
@@ -94,7 +94,7 @@ describe('transforms das stories de modo', () => {
 
 describe('transforms das stories de estado', () => {
   it('o bloqueio é uma função por data, e não uma lista de datas', () => {
-    const saida = calendarDiasBloqueadosSource();
+    const saida = calendarDaysBloqueadosSource();
     expect(saida).toContain('function bloquear(data: DateValue) {');
     expect(saida).toContain('return data.compare(minima) < 0');
     expect(saida).toContain(':is-date-disabled="bloquear"');
@@ -116,18 +116,18 @@ import { Calendar } from '@/components/ui/calendar'
 
 describe('transforms das stories de layout', () => {
   it('cada layout escreve só a prop que o distingue do padrão', () => {
-    expect(calendarLegendaComSeletoresSource()).toContain('layout="month-and-year"');
+    expect(calendarCaptionWithSelectorsSource()).toContain('layout="month-and-year"');
     expect(calendarDoisMesesSource()).toContain(':number-of-months="2"');
-    expect(calendarSeisSemanasSource()).toContain('fixed-weeks');
+    expect(calendarSeisWeeksSource()).toContain('fixed-weeks');
     // Nenhum deles arrasta a prop do vizinho.
     expect(calendarDoisMesesSource()).not.toContain('layout=');
-    expect(calendarSeisSemanasSource()).not.toContain('number-of-months');
+    expect(calendarSeisWeeksSource()).not.toContain('number-of-months');
   });
 });
 
 describe('transform da composição', () => {
   it('o calendário mora dentro do popover, atrás do botão que mostra a data', () => {
-    const saida = calendarSeletorDeDataSource();
+    const saida = dataSourceCalendarSelector();
     expect(saida).toContain('<Popover v-model:open="aberto">');
     expect(saida).toContain('<PopoverTrigger as-child>');
     expect(saida).toContain('<Button variant="outline">{{ rotulo }}</Button>');
@@ -135,7 +135,7 @@ describe('transform da composição', () => {
   });
 
   it('a escolha faz duas coisas, e por isso não usa o atalho de v-model', () => {
-    const saida = calendarSeletorDeDataSource();
+    const saida = dataSourceCalendarSelector();
     expect(saida).toContain(':model-value="selecionada"');
     expect(saida).toContain('@update:model-value="escolher"');
     expect(saida).toContain('aberto.value = false');
@@ -143,7 +143,7 @@ describe('transform da composição', () => {
   });
 
   it('o rótulo é formatado no fuso local', () => {
-    const saida = calendarSeletorDeDataSource();
+    const saida = dataSourceCalendarSelector();
     // Converter em UTC devolveria o dia anterior a oeste de Greenwich.
     expect(saida).toContain('selecionada.value.toDate(getLocalTimeZone())');
   });

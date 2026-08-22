@@ -20,10 +20,10 @@ import {
 } from './index';
 import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import {
-  menubarComAtalhosSource,
-  menubarComCheckboxSource,
-  menubarComRadioSource,
-  menubarComSubmenuSource,
+  menubarWithShortcutsSource,
+  menubarWithCheckboxSource,
+  menubarWithRadioSource,
+  menubarWithSubmenuSource,
   menubarEditorCompletoSource,
 } from './menubar.source';
 
@@ -58,7 +58,7 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
-      source: { transform: menubarComAtalhosSource },
+      source: { transform: menubarWithShortcutsSource },
       description: {
         component:
           'As composições canônicas de um menu da barra: atalhos visíveis, submenu, alternadores independentes, escolha única e a barra completa de um editor.',
@@ -145,7 +145,7 @@ export const WithSubmenu: Story = {
     docs: {
       // Sub-composição inteira dentro do painel: o trio Sub/SubTrigger/SubContent
       // não aparece em nenhuma outra story do arquivo.
-      source: { transform: menubarComSubmenuSource },
+      source: { transform: menubarWithSubmenuSource },
     },
   },
   render: () => ({
@@ -225,7 +225,7 @@ export const WithCheckboxItems: Story = {
     docs: {
       // Outro tipo de item, com estado próprio: `checked`/`@update:checked` sobre
       // um objeto reativo, dentro de grupo rotulado.
-      source: { transform: menubarComCheckboxSource },
+      source: { transform: menubarWithCheckboxSource },
     },
   },
   render: () => ({
@@ -317,7 +317,7 @@ export const WithRadioGroup: Story = {
     docs: {
       // O valor mora no GRUPO, não no item: `v-model` no RadioGroup é a diferença
       // estrutural entre escolha única e alternador.
-      source: { transform: menubarComRadioSource },
+      source: { transform: menubarWithRadioSource },
     },
   },
   render: () => ({

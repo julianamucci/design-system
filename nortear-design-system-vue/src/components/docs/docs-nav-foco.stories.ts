@@ -129,7 +129,7 @@ export const NavClickReportsTarget: Story = {
     // iframe — é lá que o espião precisa ficar.
     const alvo: Window = (window.self !== window.top && window.top) ? window.top : window;
     const eventos: Array<Record<string, unknown>> = [];
-    const gtagAnterior = alvo.gtag;
+    const gtagPrevious = alvo.gtag;
     alvo.gtag = (command: string, ...args: unknown[]) => {
       if (command === 'event' && args[0] === 'docs_nav_click') {
         eventos.push(args[1] as Record<string, unknown>);
@@ -148,7 +148,7 @@ export const NavClickReportsTarget: Story = {
       await expect(eventos[0].section_id).toBe('anatomia');
       await expect(eventos[0].component).toBe('sidebar');
     } finally {
-      alvo.gtag = gtagAnterior;
+      alvo.gtag = gtagPrevious;
     }
   },
 };

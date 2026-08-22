@@ -5,7 +5,7 @@ import {
   attrNum,
   attrs,
   attrsMultilinha,
-  comoCodigo,
+  asCode,
   indentar,
   texto,
   vueSnippet,
@@ -60,20 +60,20 @@ describe('attrsMultilinha', () => {
 
 describe('comoCodigo', () => {
   it('deixa passar string útil', () => {
-    expect(comoCodigo('contar()')).toBe('contar()');
+    expect(asCode('contar()')).toBe('contar()');
   });
 
   it('barra o espião de ação — control de handler chega como FUNÇÃO', () => {
     // Sem esta guarda o corpo do mock do Storybook aparece no painel como se
     // fosse o exemplo que o leitor deve copiar.
     const espiao = Object.assign(() => {}, { isAction: true });
-    expect(comoCodigo(espiao)).toBeUndefined();
+    expect(asCode(espiao)).toBeUndefined();
   });
 
   it('barra objeto, número e string em branco', () => {
-    expect(comoCodigo({ a: 1 })).toBeUndefined();
-    expect(comoCodigo(3)).toBeUndefined();
-    expect(comoCodigo('   ')).toBeUndefined();
+    expect(asCode({ a: 1 })).toBeUndefined();
+    expect(asCode(3)).toBeUndefined();
+    expect(asCode('   ')).toBeUndefined();
   });
 });
 

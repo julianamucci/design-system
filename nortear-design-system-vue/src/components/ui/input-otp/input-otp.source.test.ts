@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   inputOtpAlfanumericoSource,
-  inputOtpComApoioSource,
+  inputOtpWithHelperSource,
   inputOtpComErroSource,
   inputOtpComReenvioSource,
-  inputOtpComRotuloSource,
+  inputOtpWithLabelSource,
   inputOtpComSeparadorSource,
   inputOtpCompletoSource,
   inputOtpDesabilitadoSource,
@@ -26,8 +26,8 @@ const TODAS = [
   inputOtpCompletoSource,
   inputOtpDesabilitadoSource,
   inputOtpComErroSource,
-  inputOtpComRotuloSource,
-  inputOtpComApoioSource,
+  inputOtpWithLabelSource,
+  inputOtpWithHelperSource,
   inputOtpComReenvioSource,
 ];
 
@@ -201,7 +201,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o apoio é apontado pelo campo, e não é erro', () => {
-    const saida = inputOtpComApoioSource();
+    const saida = inputOtpWithHelperSource();
     expect(saida).toContain('aria-describedby="codigo-sms-apoio"');
     expect(saida).toContain('<p id="codigo-sms-apoio"');
     expect(saida).not.toContain('aria-invalid');
@@ -214,7 +214,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a composição com rótulo não inventa estado nem erro', () => {
-    const saida = inputOtpComRotuloSource();
+    const saida = inputOtpWithLabelSource();
     expect(saida).not.toContain('aria-invalid');
     expect(saida).not.toContain('aria-describedby');
     expect(saida).not.toContain('auto-focus');

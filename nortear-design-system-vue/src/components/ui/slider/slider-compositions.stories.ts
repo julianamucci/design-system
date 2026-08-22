@@ -7,8 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { valorDaAlca } from '@shared/testing/slider-probe';
 import {
-  sliderFormularioSource,
-  sliderPassoGrossoSource,
+  sliderFormSource,
+  sliderStepGrossoSource,
   sliderPrecoSource,
   sliderVolumeSource,
 } from './slider.source';
@@ -113,7 +113,7 @@ export const InForm: Story = {
     docs: {
       // Dois controles no mesmo formulário, cada um com o próprio nome — é a
       // repetição que ensina a regra, e o meta mostra um controle só.
-      source: { transform: sliderFormularioSource },
+      source: { transform: sliderFormSource },
     },
   },
   render: () => ({
@@ -186,7 +186,7 @@ export const ThickStep: Story = {
     docs: {
       // Faixa curta com escala visível: os limites saem do padrão e a escala
       // não existe na composição do meta.
-      source: { transform: sliderPassoGrossoSource },
+      source: { transform: sliderStepGrossoSource },
     },
   },
   render: () => ({

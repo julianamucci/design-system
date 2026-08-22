@@ -43,7 +43,7 @@ export const REGRA_GUARDA_DE_FOCO = { id: 'aria-hidden-focus', enabled: false } 
  * Use SÓ em story cuja lista realmente transborda. Lista curta que passar a
  * rolar tem de falhar, para alguém olhar.
  */
-export const REGRA_ROLAGEM_DA_LISTA = {
+export const LIST_RULE_SCROLL = {
   id: 'scrollable-region-focusable',
   enabled: false,
 } as const;

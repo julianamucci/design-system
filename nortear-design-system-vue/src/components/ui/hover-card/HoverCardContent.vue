@@ -9,7 +9,7 @@ import {
   useForwardProps,
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
-import { CHAVE_HOVER_CARD } from './context'
+import { KEY_HOVER_CARD } from './context'
 
 defineOptions({
   inheritAttrs: false,
@@ -37,7 +37,7 @@ const forwardedProps = useForwardProps(delegatedProps)
 // story Sides), o primeiro `[data-slot="hover-card-trigger"]` daria o mesmo
 // nome a todos os painéis.
 const atributos = useAttrs()
-const contexto = inject(CHAVE_HOVER_CARD, null)
+const contexto = inject(KEY_HOVER_CARD, null)
 
 const nomeAutomatico = computed(() => {
   if (atributos['aria-label'] || atributos['aria-labelledby']) return undefined

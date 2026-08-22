@@ -121,7 +121,7 @@ function rodapePadrao(cancelar: string, acao: string, destrutiva = false): strin
     </DialogFooter>`;
 }
 
-const PECAS_COMPLETAS = [
+const PARTS_COMPLETAS = [
   'Dialog',
   'DialogClose',
   'DialogContent',
@@ -143,7 +143,7 @@ const PECAS_COMPLETAS = [
 export const dialogSource: SourceTransform<DialogArgs> = (_gerado, ctx) => {
   const { defaultOpen, modal } = ctx?.args ?? {};
   return vueSnippet(
-    importar(PECAS_COMPLETAS),
+    importar(PARTS_COMPLETAS),
     dialogo({
       // `.trim()` porque `dialogo` já reaplica o espaço da frente: sem ele a
       // tag sairia com dois espaços quando alguma prop entra.
@@ -167,7 +167,7 @@ export const dialogSource: SourceTransform<DialogArgs> = (_gerado, ctx) => {
  */
 export function dialogAbertoSource(): string {
   return vueSnippet(
-    importar(PECAS_COMPLETAS),
+    importar(PARTS_COMPLETAS),
     dialogo({
       raiz: 'default-open',
       gatilho: 'Editar perfil',
@@ -186,7 +186,7 @@ export function dialogAbertoSource(): string {
  */
 export function dialogSemBotaoFecharSource(): string {
   return vueSnippet(
-    importar(PECAS_COMPLETAS),
+    importar(PARTS_COMPLETAS),
     dialogo({
       painelProps: ':show-close-button="false"',
       gatilho: 'Ver atualização',
@@ -248,7 +248,7 @@ const aberto = ref(false)`,
  */
 export function dialogComFormularioSource(): string {
   return vueSnippet(
-    importar(PECAS_COMPLETAS, true),
+    importar(PARTS_COMPLETAS, true),
     dialogo({
       gatilho: 'Editar perfil',
       titulo: 'Editar perfil',
@@ -345,7 +345,7 @@ export function dialogSemRodapeSource(): string {
  */
 export function dialogAcaoDestrutivaSource(): string {
   return vueSnippet(
-    importar(PECAS_COMPLETAS),
+    importar(PARTS_COMPLETAS),
     dialogo({
       gatilho: 'Remover anexo',
       titulo: 'Remover anexo',
@@ -387,7 +387,7 @@ export function dialogFecharNoRodapeSource(): string {
 /** Composição ConfirmEmail: confirmar a troca de e-mail, com um campo no corpo. */
 export function dialogConfirmarEmailSource(): string {
   return vueSnippet(
-    importar(PECAS_COMPLETAS, true),
+    importar(PARTS_COMPLETAS, true),
     dialogo({
       gatilho: 'Confirmar novo email',
       titulo: 'Confirmar novo email',
@@ -406,7 +406,7 @@ export function dialogConfirmarEmailSource(): string {
 /** Composição ProfileEdit: formulário de perfil com três campos rotulados. */
 export function dialogEditarPerfilSource(): string {
   return vueSnippet(
-    importar(PECAS_COMPLETAS, true),
+    importar(PARTS_COMPLETAS, true),
     dialogo({
       gatilho: 'Editar perfil',
       titulo: 'Editar perfil',

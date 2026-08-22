@@ -14,7 +14,7 @@ export type BadgeArgs = {
 const IMPORT = `import { Badge } from '@/components/ui/badge'`;
 
 /** Import do ícone. Ele é reforço visual; quem nomeia o badge é o texto. */
-function importIcone(...nomes: string[]): string {
+function importIcon(...nomes: string[]): string {
   return `import { ${nomes.join(', ')} } from 'lucide-vue-next'`;
 }
 
@@ -82,7 +82,7 @@ ${indentar(etiquetas.join('\n'))}
  */
 export function badgeComIconeSource(): string {
   return vueSnippet(
-    `${IMPORT}\n${importIcone('Check')}`,
+    `${IMPORT}\n${importIcon('Check')}`,
     `<Badge>
   <Check aria-hidden="true" data-icon="inline-start" />
   Ativo
@@ -97,7 +97,7 @@ export function badgeComIconeSource(): string {
  */
 export function badgeContadorSource(): string {
   return vueSnippet(
-    `${IMPORT}\n${importIcone('Bell')}`,
+    `${IMPORT}\n${importIcon('Bell')}`,
     `<span
   class="nds-cluster"
   data-spacing="sm"

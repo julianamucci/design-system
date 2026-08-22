@@ -11,7 +11,7 @@ import {
   alertContrasteSource,
   alertDefaultSource,
   alertDestructiveSource,
-  alertDismissivelPorTecladoSource,
+  keyboardSourceAlertDismissivel,
   alertDismissivelSource,
   alertInfoSource,
   alertSuccessSource,
@@ -264,7 +264,7 @@ export const DismissibleByKeyboard: Story = {
   parameters: {
     // O teclado não tem nada a configurar, e é isso que o snippet precisa
     // mostrar: a mesma raiz fechável, sem handler de tecla nenhum.
-    docs: { source: { transform: alertDismissivelPorTecladoSource } },
+    docs: { source: { transform: keyboardSourceAlertDismissivel } },
   },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription, InfoIcon },

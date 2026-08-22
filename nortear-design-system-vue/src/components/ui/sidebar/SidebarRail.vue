@@ -8,7 +8,7 @@ const props = defineProps<{
   class?: HTMLAttributes['class']
 }>()
 
-const tituloPadrao = ROTULOS_SIDEBAR_PADRAO.alternar
+const titleDefault = ROTULOS_SIDEBAR_PADRAO.alternar
 
 const { toggleSidebar } = useSidebar()
 </script>
@@ -31,7 +31,7 @@ const { toggleSidebar } = useSidebar()
     data-slot="sidebar-rail"
     aria-hidden="true"
     :tabindex="-1"
-    :title="tituloPadrao"
+    :title="titleDefault"
     :class="cn('nds-sidebar-rail', props.class)"
     @click="toggleSidebar"
   >

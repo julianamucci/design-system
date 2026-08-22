@@ -9,7 +9,7 @@
  * a região de "nenhum resultado" FORA da lista. A tag da raiz sozinha não
  * ensinaria nenhuma dessas posições.
  */
-import { attrBool, comoCodigo, indentar, texto, vueSnippet, type SourceTransform } from '@/lib/story-source';
+import { attrBool, asCode, indentar, texto, vueSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type CommandArgs = {
   placeholder: string;
@@ -25,7 +25,7 @@ ${nomes.map((nome) => `  ${nome},`).join('\n')}
 } from '@/components/ui/command'`;
 }
 
-const PECAS_BASICAS = ['Command', 'CommandEmpty', 'CommandGroup', 'CommandInput', 'CommandItem', 'CommandList'];
+const PARTS_BASICAS = ['Command', 'CommandEmpty', 'CommandGroup', 'CommandInput', 'CommandItem', 'CommandList'];
 
 /**
  * A moldura da paleta inline: largura, borda e sombra são do call site, não do
@@ -66,7 +66,7 @@ ${indentar(lista, 4)}
 /**
  * Playground: o campo, dois grupos separados por um divisor e cinco comandos.
  *
- * Os controls de texto passam por `comoCodigo`/`texto`, que descartam o que não
+ * Os controls de texto passam por `asCode`/`texto`, que descartam o que não
  * for string — o Storybook troca arg de ação por um espião, e o corpo do mock
  * interpolado apareceria no painel como se fosse o exemplo.
  *
@@ -76,13 +76,13 @@ ${indentar(lista, 4)}
  */
 export const commandSource: SourceTransform<CommandArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const placeholder = texto(comoCodigo(args.placeholder), 'Buscar componente...');
-  const vazio = comoCodigo(args.emptyMessage) ?? 'Nenhum resultado encontrado.';
+  const placeholder = texto(asCode(args.placeholder), 'Buscar componente...');
+  const vazio = asCode(args.emptyMessage) ?? 'Nenhum resultado encontrado.';
   const comGrupos = args.showGroups !== false;
   const titulo = (nome: string) => (comGrupos ? ` heading="${nome}"` : '');
 
   return vueSnippet(
-    `${importar(...PECAS_BASICAS, 'CommandSeparator', 'CommandShortcut')}
+    `${importar(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut')}
 
 function executar(valor: string) {
   // roda o comando escolhido e devolve o foco para onde ele age
@@ -117,9 +117,9 @@ function executar(valor: string) {
  * decide sozinho quando a região viva ganha conteúdo. O que o exemplo mostra é
  * a POSIÇÃO dela, fora da lista.
  */
-export function commandVazioSource(): string {
+export function commandEmptySource(): string {
   return vueSnippet(
-    importar(...PECAS_BASICAS),
+    importar(...PARTS_BASICAS),
     moldura(
       paleta({
         placeholder: 'Buscar componente...',
@@ -140,7 +140,7 @@ export function commandVazioSource(): string {
 export function commandItemDesabilitadoSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
-${importar(...PECAS_BASICAS)}
+${importar(...PARTS_BASICAS)}
 
 const ultimo = ref('')`,
     `<div class="nds-stack" data-spacing="sm">
@@ -173,7 +173,7 @@ ${indentar(
  */
 export function commandItemMarcadoSource(): string {
   return vueSnippet(
-    importar(...PECAS_BASICAS, 'CommandShortcut'),
+    importar(...PARTS_BASICAS, 'CommandShortcut'),
     moldura(
       paleta({
         placeholder: 'Buscar tema...',
@@ -197,7 +197,7 @@ export function commandItemMarcadoSource(): string {
  */
 export function commandComGruposSource(): string {
   return vueSnippet(
-    importar(...PECAS_BASICAS, 'CommandSeparator'),
+    importar(...PARTS_BASICAS, 'CommandSeparator'),
     moldura(
       paleta({
         placeholder: 'Buscar componente...',
@@ -225,7 +225,7 @@ export function commandComGruposSource(): string {
  */
 export function commandComAtalhosSource(): string {
   return vueSnippet(
-    importar(...PECAS_BASICAS, 'CommandSeparator', 'CommandShortcut'),
+    importar(...PARTS_BASICAS, 'CommandSeparator', 'CommandShortcut'),
     moldura(
       paleta({
         placeholder: 'Buscar ação...',
@@ -276,7 +276,7 @@ export function commandComoComboboxSource(): string {
   return vueSnippet(
     `import { ref } from 'vue'
 import { Button } from '@/components/ui/button'
-${importar(...PECAS_BASICAS)}
+${importar(...PARTS_BASICAS)}
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 const aberto = ref(false)

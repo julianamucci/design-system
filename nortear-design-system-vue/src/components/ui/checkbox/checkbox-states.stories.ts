@@ -7,7 +7,7 @@ import {
   checkboxDesabilitadoSource,
   checkboxDesmarcadoSource,
   checkboxErroSource,
-  checkboxFocoSource,
+  checkboxFocusSource,
   checkboxMarcadoSource,
   checkboxMistoSource,
 } from './checkbox.source';
@@ -281,7 +281,7 @@ export const FocusVisible: Story = {
     // Mesma forma do meta, com o rótulo próprio da story — copiar o texto de
     // outra caixa ensinaria um par que ninguém escreveu.
     docs: {
-      source: { transform: checkboxFocoSource },
+      source: { transform: checkboxFocusSource },
       description: {
         story:
           'Estado de foco via teclado. Use Tab para navegar e verificar o ring de foco --ring.',
@@ -312,8 +312,8 @@ export const FocusVisible: Story = {
 
     await step('Anel de foco visível após navegação por teclado', async () => {
       const style = getComputedStyle(checkbox);
-      const anelVisivel = style.outlineStyle !== 'none' || style.boxShadow !== 'none';
-      await expect(anelVisivel).toBe(true);
+      const ringVisible = style.outlineStyle !== 'none' || style.boxShadow !== 'none';
+      await expect(ringVisible).toBe(true);
     });
   },
 };

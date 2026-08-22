@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import {
   cardClicavelSource,
   cardComRodapeSource,
-  cardSimplesSource,
+  cardSimpleSource,
 } from './card.source';
 
 /**
@@ -32,7 +32,7 @@ const meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
-      source: { transform: cardSimplesSource },
+      source: { transform: cardSimpleSource },
       description: {
         component:
           'Configurações do Card: padrão (container passivo), clicável (envolvido em <a> com aria-label descritivo) e com footer de ações. O Card raiz nunca recebe foco — a semântica de ativação vive no wrapper ou nos controles internos.',

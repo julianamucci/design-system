@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<Props>(), {
  * Só quando `as` é button: com `as="a"` ou `as-child`, o atributo não se aplica
  * e o navegador o ignoraria — mas emitir lixo no DOM é como classe morta nasce.
  */
-const tipoNativo = computed(() => (props.as === 'button' ? 'button' : undefined))
+const typeNativo = computed(() => (props.as === 'button' ? 'button' : undefined))
 </script>
 
 <template>
@@ -37,7 +37,7 @@ const tipoNativo = computed(() => (props.as === 'button' ? 'button' : undefined)
     data-slot="button"
     :data-variant="variant"
     :data-size="size"
-    :type="tipoNativo"
+    :type="typeNativo"
     :as="as"
     :as-child="asChild"
     :class="cn(buttonVariants({ variant, size }), props.class)"

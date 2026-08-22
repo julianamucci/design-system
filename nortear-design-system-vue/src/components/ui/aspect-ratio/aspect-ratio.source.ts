@@ -45,7 +45,7 @@ export function expressaoDeProporcao(valor: number): string {
  * Atributo da proporção — omitido no quadrado, que é o padrão do componente, e
  * omitido também quando o control não trouxe número.
  */
-export function attrProporcao(valor: unknown): string {
+export function attrRatio(valor: unknown): string {
   if (typeof valor !== 'number' || Number.isNaN(valor)) return '';
   if (Math.abs(valor - 1) < 0.005) return '';
   return `:ratio="${expressaoDeProporcao(valor)}"`;
@@ -86,11 +86,11 @@ function imagem(src: string, alt: string): string {
 
 const FOTO_PAISAGEM =
   'https://images.unsplash.com/photo-1535025183041-0991a977e25b?w=800&auto=format';
-const FOTO_PRODUTO =
+const FOTO_PRODUCT =
   'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&auto=format';
 const FOTO_QUADRADA =
   'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&auto=format';
-const FOTO_VERTICAL =
+const VERTICAL_FOTO =
   'https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&auto=format';
 const FOTO_PANORAMICA =
   'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&auto=format';
@@ -103,20 +103,20 @@ const FOTO_PANORAMICA =
 export const aspectRatioSource: SourceTransform<AspectRatioArgs> = (_gerado, ctx) =>
   vueSnippet(
     IMPORT,
-    caixa(attrProporcao(ctx?.args?.ratio ?? 16 / 9), imagem(FOTO_PAISAGEM, 'Paisagem ao amanhecer')),
+    caixa(attrRatio(ctx?.args?.ratio ?? 16 / 9), imagem(FOTO_PAISAGEM, 'Paisagem ao amanhecer')),
   );
 
 /** Paisagem: a proporção de foto e de vídeo, e a mais comum em cabeçalho. */
 export function aspectRatioDezesseisNoveSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(attrProporcao(16 / 9), imagem(FOTO_PAISAGEM, 'Paisagem 16:9')),
+    caixa(attrRatio(16 / 9), imagem(FOTO_PAISAGEM, 'Paisagem 16:9')),
   );
 }
 
 /** Produto: mais alta que a paisagem, para a foto de catálogo. */
 export function aspectRatioQuatroTresSource(): string {
-  return vueSnippet(IMPORT, caixa(attrProporcao(4 / 3), imagem(FOTO_PRODUTO, 'Produto 4:3')));
+  return vueSnippet(IMPORT, caixa(attrRatio(4 / 3), imagem(FOTO_PRODUCT, 'Produto 4:3')));
 }
 
 /**
@@ -131,7 +131,7 @@ export function aspectRatioQuadradoSource(): string {
 export function aspectRatioTresQuatroSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(attrProporcao(3 / 4), imagem(FOTO_VERTICAL, 'Capa vertical 3:4')),
+    caixa(attrRatio(3 / 4), imagem(VERTICAL_FOTO, 'Capa vertical 3:4')),
   );
 }
 
@@ -139,16 +139,16 @@ export function aspectRatioTresQuatroSource(): string {
 export function aspectRatioUltraWideSource(): string {
   return vueSnippet(
     IMPORT,
-    caixa(attrProporcao(21 / 9), imagem(FOTO_PANORAMICA, 'Cabeçalho panorâmico 21:9')),
+    caixa(attrRatio(21 / 9), imagem(FOTO_PANORAMICA, 'Cabeçalho panorâmico 21:9')),
   );
 }
 
 /** Imagem informativa: o texto alternativo descreve o que a foto mostra. */
-export function aspectRatioComImagemSource(): string {
+export function aspectRatioWithImageSource(): string {
   return vueSnippet(
     IMPORT,
     caixa(
-      attrProporcao(16 / 9),
+      attrRatio(16 / 9),
       imagem(FOTO_PAISAGEM, 'Paisagem ao amanhecer com montanhas e céu laranja'),
     ),
   );
@@ -162,7 +162,7 @@ export function aspectRatioComIframeSource(): string {
   return vueSnippet(
     IMPORT,
     caixa(
-      attrProporcao(16 / 9),
+      attrRatio(16 / 9),
       `<iframe
   src="https://www.openstreetmap.org/export/embed.html?bbox=-46.66%2C-23.56%2C-46.63%2C-23.54&layer=mapnik"
   title="Mapa do escritório em São Paulo"
@@ -181,7 +181,7 @@ export function aspectRatioComVideoSource(): string {
   return vueSnippet(
     IMPORT,
     caixa(
-      attrProporcao(16 / 9),
+      attrRatio(16 / 9),
       `<video
   controls
   class="nds-rounded-md"
@@ -203,11 +203,11 @@ export function aspectRatioComVideoSource(): string {
 export function aspectRatioEmGradeSource(): string {
   const fotos = [
     [FOTO_QUADRADA, 'Miniatura 1'],
-    [FOTO_PRODUTO, 'Miniatura 2'],
-    [FOTO_VERTICAL, 'Miniatura 3'],
+    [FOTO_PRODUCT, 'Miniatura 2'],
+    [VERTICAL_FOTO, 'Miniatura 3'],
     [FOTO_PANORAMICA, 'Miniatura 4'],
     [FOTO_PAISAGEM, 'Miniatura 5'],
-    [FOTO_PRODUTO, 'Miniatura 6'],
+    [FOTO_PRODUCT, 'Miniatura 6'],
   ];
   const celulas = fotos
     .map(([src, alt]) => `<AspectRatio>\n${indentar(imagem(src, alt))}\n</AspectRatio>`)
@@ -228,7 +228,7 @@ export function aspectRatioPlaceholderSource(): string {
   return vueSnippet(
     IMPORT,
     caixa(
-      attrProporcao(16 / 9),
+      attrRatio(16 / 9),
       `<div
   class="nds-cluster nds-bg-muted nds-rounded-md nds-text-body nds-text-muted-foreground"
   data-align="center"
@@ -247,5 +247,5 @@ export function aspectRatioPlaceholderSource(): string {
  * atributo o leitor de tela cai no nome do arquivo.
  */
 export function aspectRatioDecorativaSource(): string {
-  return vueSnippet(IMPORT, caixa(attrProporcao(16 / 9), imagem(FOTO_PAISAGEM, '')));
+  return vueSnippet(IMPORT, caixa(attrRatio(16 / 9), imagem(FOTO_PAISAGEM, '')));
 }

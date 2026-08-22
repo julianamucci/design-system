@@ -8,7 +8,7 @@ import {
   resizeComputado,
 } from '@shared/testing/textarea-probe';
 import {
-  textareaComRotuloSource,
+  textareaWithLabelSource,
   textareaDesabilitadoSource,
   textareaInvalidoSource,
   textareaPreenchidoSource,
@@ -26,7 +26,7 @@ const meta = {
     docs: {
       // Foco não se escreve: o par mínimo serve para as stories cujo assunto é
       // um estado que o navegador produz.
-      source: { transform: textareaComRotuloSource },
+      source: { transform: textareaWithLabelSource },
       description: {
         component:
           'O Textarea possui 6 estados visuais: default, focus, filled, disabled, invalid (aria-invalid) e read-only. Os estilos de cada estado são controlados por tokens de tema.',

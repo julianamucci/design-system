@@ -29,7 +29,7 @@ export type CodeBlockArgs = {
 const IMPORT = `import { CodeBlock } from '@/components/ui/code-block'`;
 
 /** Trecho de partida quando o control não trouxer código utilizável. */
-const CODIGO_PADRAO = `const items = await load();
+const CODE_DEFAULT = `const items = await load();
 const total = items.length;
 render(items, total);`;
 
@@ -43,15 +43,15 @@ render(items, total);`;
  * `FIM_SCRIPT` evita neste repositório.
  */
 function literalDeCodigo(code: string): string {
-  const semFimDeScript = (texto: string) => texto.replace(/<\/script/gi, '<\\/script');
+  const scriptNoEnd = (texto: string) => texto.replace(/<\/script/gi, '<\\/script');
   if (!code.includes('\n') && !code.includes("'") && !code.includes('\\')) {
-    return `'${semFimDeScript(code)}'`;
+    return `'${scriptNoEnd(code)}'`;
   }
   const escapado = code
     .replace(/\\/g, '\\\\')
     .replace(/`/g, '\\`')
     .replace(/\$\{/g, '\\${');
-  return `\`${semFimDeScript(escapado)}\``;
+  return `\`${scriptNoEnd(escapado)}\``;
 }
 
 /**
@@ -90,7 +90,7 @@ function bloco(codigo: string, partes: Array<string | false>): string {
  */
 export const codeBlockSource: SourceTransform<CodeBlockArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const code = typeof args.code === 'string' && args.code !== '' ? args.code : CODIGO_PADRAO;
+  const code = typeof args.code === 'string' && args.code !== '' ? args.code : CODE_DEFAULT;
   return vueSnippet(
     `${IMPORT}\n\nconst source = ${literalDeCodigo(code)}`,
     bloco('source', [
@@ -179,7 +179,7 @@ import { Button } from '@/components/ui/button'
 ${IMPORT}
 
 const visivel = ref(true)
-const source = \`${CODIGO_PADRAO}\``,
+const source = \`${CODE_DEFAULT}\``,
     `<div class="nds-stack" data-spacing="md">
   <CodeBlock v-if="visivel" :code="source" language="ts" />
   <Button variant="outline" @click="visivel = !visivel">

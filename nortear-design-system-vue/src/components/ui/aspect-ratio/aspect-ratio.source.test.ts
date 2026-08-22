@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   aspectRatioComIframeSource,
-  aspectRatioComImagemSource,
+  aspectRatioWithImageSource,
   aspectRatioComVideoSource,
   aspectRatioDecorativaSource,
   aspectRatioDezesseisNoveSource,
@@ -12,7 +12,7 @@ import {
   aspectRatioSource,
   aspectRatioTresQuatroSource,
   aspectRatioUltraWideSource,
-  attrProporcao,
+  attrRatio,
   expressaoDeProporcao,
 } from './aspect-ratio.source';
 
@@ -50,13 +50,13 @@ import { AspectRatio } from '@/components/ui/aspect-ratio'
   });
 
   it('o quadrado é o padrão do componente e não é escrito', () => {
-    expect(attrProporcao(1)).toBe('');
+    expect(attrRatio(1)).toBe('');
     expect(aspectRatioSource('', { args: { ratio: 1 } })).not.toContain(':ratio=');
   });
 
   it('ignora control que não é número — o espião de ação vira ruído no painel', () => {
-    expect(attrProporcao((() => {}) as never)).toBe('');
-    expect(attrProporcao(Number.NaN)).toBe('');
+    expect(attrRatio((() => {}) as never)).toBe('');
+    expect(attrRatio(Number.NaN)).toBe('');
     const saida = aspectRatioSource('', { args: { ratio: (() => {}) as never } });
     expect(saida).not.toContain('function');
     expect(saida).not.toContain(':ratio=');
@@ -94,7 +94,7 @@ describe('transforms das stories de proporção', () => {
 
 describe('transforms das stories de composição', () => {
   it('a imagem informativa descreve o que se vê', () => {
-    expect(aspectRatioComImagemSource()).toContain(
+    expect(aspectRatioWithImageSource()).toContain(
       'alt="Paisagem ao amanhecer com montanhas e céu laranja"',
     );
   });

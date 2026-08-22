@@ -6,7 +6,7 @@ import {
   hoverCardEsperaCurtaSource,
   hoverCardLadosSource,
   hoverCardMetricaSource,
-  hoverCardPadraoSource,
+  hoverCardDefaultSource,
   hoverCardPerfilSource,
   hoverCardPreviaDeLinkSource,
   hoverCardSource,
@@ -86,7 +86,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 
 describe('transforms das stories de tempo', () => {
   it('a espera padrão não escreve atraso nenhum no markup', () => {
-    const saida = hoverCardPadraoSource();
+    const saida = hoverCardDefaultSource();
     expect(saida).toContain('<HoverCard>');
     expect(saida).not.toContain('open-delay');
     expect(saida).not.toContain('close-delay');

@@ -160,7 +160,7 @@ export function menubarItemDestrutivoSource(): string {
  * Estado fechado: é AUSÊNCIA. Nenhuma prop declara "fechado" — a barra nasce
  * assim, e o painel de cada menu só existe no DOM enquanto está aberto.
  */
-export function menubarFechadoSource(): string {
+export function menubarClosedSource(): string {
   return vueSnippet(
     `${importa('Menubar', 'MenubarContent', 'MenubarItem', 'MenubarMenu', 'MenubarTrigger')}
 
@@ -237,7 +237,7 @@ const itens = [
  * ser REATIVO. Com um objeto solto o clique emitiria a mudança e nada
  * re-renderizaria — o item ficaria preso no estado inicial.
  */
-export function menubarCheckboxMarcadoSource(): string {
+export function menubarCheckboxCheckedSource(): string {
   return vueSnippet(
     `${importa(
       'Menubar',
@@ -301,7 +301,7 @@ export function menubarCheckboxMistoSource(): string {
  * "Desfazer ⌘Z" é o nome acessível inteiro, e é ele que dá serventia ao atalho
  * para quem não enxerga a tela.
  */
-export function menubarComAtalhosSource(): string {
+export function menubarWithShortcutsSource(): string {
   return vueSnippet(
     `${importa(
       'Menubar',
@@ -336,7 +336,7 @@ const atalhos = [
  * pai. O pai continua aberto quando o filho abre — é o que separa submenu de
  * troca de menu.
  */
-export function menubarComSubmenuSource(): string {
+export function menubarWithSubmenuSource(): string {
   return vueSnippet(
     `${importa(
       'Menubar',
@@ -372,7 +372,7 @@ const exportacoes = ['PDF', 'CSV', 'PNG']`,
  * rótulo do grupo diz do que se trata. Marcar NÃO fecha o menu — quem marca
  * uma quer marcar a próxima.
  */
-export function menubarComCheckboxSource(): string {
+export function menubarWithCheckboxSource(): string {
   return vueSnippet(
     `${importa(
       'Menubar',
@@ -414,7 +414,7 @@ const estado = reactive<Record<string, boolean>>({
  * Escolha única: o grupo é o dono do valor, e `v-model` nele basta — a opção
  * só declara o próprio `value`. Escolher outra transfere a marcação sozinha.
  */
-export function menubarComRadioSource(): string {
+export function menubarWithRadioSource(): string {
   return vueSnippet(
     `${importa(
       'Menubar',

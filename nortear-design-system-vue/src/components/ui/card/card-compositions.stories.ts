@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
-  cardComAcaoNoHeaderSource,
+  headerSourceCardWithAction,
   cardComImagemSource,
   cardComRodapeSource,
   cardDeMetricaSource,
@@ -107,7 +107,7 @@ export const WithAction: Story = {
     // A ação entra DENTRO do cabeçalho e traz uma peça a mais no import: a do
     // meta mostraria o rodapé, que é outro lugar do card.
     docs: {
-      source: { transform: cardComAcaoNoHeaderSource },
+      source: { transform: headerSourceCardWithAction },
       description: {
         story:
           'Com CardAction o header vira grid de duas colunas e a ação encosta à direita. A ordem do DOM continua título → descrição → ação, então o leitor de tela lê na ordem lógica.',

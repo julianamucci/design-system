@@ -6,11 +6,11 @@ import { ativar } from './tabs.fixtures';
 import { Badge } from '@/components/ui/badge';
 import { Code2, Eye, Settings2, User, Shield } from 'lucide-vue-next';
 import {
-  tabsComContadorSource,
+  tabsWithCounterSource,
   tabsComIconesSource,
-  tabsConfiguracoesVerticaisSource,
+  tabsConfigVerticaisSource,
   tabsControladoSource,
-  tabsModoManualSource,
+  tabsModeManualSource,
 } from './tabs.source';
 
 const meta: Meta<any> = {
@@ -200,7 +200,7 @@ export const WithBadge: Story = {
     docs: {
       // O contador entra DENTRO do gatilho e vira parte do nome acessível: é a
       // posição no markup que ensina isso, e o meta não a tem.
-      source: { transform: tabsComContadorSource },
+      source: { transform: tabsWithCounterSource },
       description: {
         story: 'Aba com contador — o número entra no nome acessível do gatilho e não vira um segundo alvo de foco. Use para caixas de mensagem e listas com pendências.',
       },
@@ -268,7 +268,7 @@ export const VerticalSettings: Story = {
     docs: {
       // Eixo vertical e painel com título próprio: a cor atenuada desce do
       // painel para o parágrafo, e o respiro passa a ser lateral.
-      source: { transform: tabsConfiguracoesVerticaisSource },
+      source: { transform: tabsConfigVerticaisSource },
       description: {
         story: 'Padrão clássico de tela de configurações — orientation="vertical" com lista lateral + conteúdo extenso à direita. ↑↓ navegam entre abas.',
       },
@@ -326,7 +326,7 @@ export const ManualMode: Story = {
     docs: {
       // `activation-mode` é prop da raiz e não aparece na composição controlada
       // que o meta mostra.
-      source: { transform: tabsModoManualSource },
+      source: { transform: tabsModeManualSource },
       description: {
         story: 'Modo manual — setas movem apenas o foco; Enter/Space ativa a aba focada. Use quando trocar de painel tem custo (fetch, render pesado).',
       },

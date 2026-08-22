@@ -33,8 +33,8 @@ import {
  */
 const PAINEL =
   'nds-rounded-md nds-border-default nds-bg-muted-soft nds-p-4 nds-text-body nds-stack nds-mt-2';
-const GATILHO_GHOST = 'nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4';
-const GATILHO_OUTLINE = 'nds-button nds-button-outline nds-cluster nds-w-full nds-px-4';
+const TRIGGER_GHOST = 'nds-button nds-button-ghost nds-cluster nds-w-full nds-px-4';
+const TRIGGER_OUTLINE = 'nds-button nds-button-outline nds-cluster nds-w-full nds-px-4';
 
 /**
  * O chevron gira sozinho: `.nds-chevron` responde a `[aria-expanded="true"]` no
@@ -61,18 +61,18 @@ function colapsavel(opcoes: {
     raiz = '',
     classeRaiz = 'nds-w-sm',
     gatilho = '',
-    classeGatilho = GATILHO_GHOST,
+    classeGatilho = TRIGGER_GHOST,
     chevron = CHEVRON,
     rotulo,
     corpo = FILTROS,
   } = opcoes;
-  const atributosDoGatilho = [gatilho, `class="${classeGatilho}"`, 'data-justify="between"']
+  const triggerAttrs = [gatilho, `class="${classeGatilho}"`, 'data-justify="between"']
     .filter(Boolean)
     .map((atributo) => `    ${atributo}`)
     .join('\n');
   return `<Collapsible${attrs(raiz, `class="${classeRaiz}"`)}>
   <CollapsibleTrigger
-${atributosDoGatilho}
+${triggerAttrs}
   >
 ${rotulo}
     <ChevronDown aria-hidden="true" class="${chevron}" />
@@ -87,7 +87,7 @@ ${corpo}
 }
 
 /** Rótulo simples do gatilho, já indentado para dentro dele. */
-const rotuloSimples = (texto: string) => `    <span>${texto}</span>`;
+const simpleLabel = (texto: string) => `    <span>${texto}</span>`;
 
 /**
  * Playground: estado inicial e desabilitado saem dos controls.
@@ -105,7 +105,7 @@ export const collapsibleSource: SourceTransform<CollapsibleArgs> = (_gerado, ctx
     colapsavel({
       raiz: attrs(attrBool('default-open', ctx?.args?.defaultOpen, false), desabilitado).trim(),
       gatilho: desabilitado,
-      rotulo: rotuloSimples('Exibir filtros avançados'),
+      rotulo: simpleLabel('Exibir filtros avançados'),
     }),
   );
 };
@@ -114,10 +114,10 @@ export const collapsibleSource: SourceTransform<CollapsibleArgs> = (_gerado, ctx
  * Não controlado: ninguém de fora escreve `open`. O estado nasce e vive dentro
  * do componente, e a composição é a mínima possível.
  */
-export function collapsibleNaoControladoSource(): string {
+export function collapsibleNotControlledSource(): string {
   return vueSnippet(
     importar(),
-    colapsavel({ rotulo: rotuloSimples('Exibir filtros avançados') }),
+    colapsavel({ rotulo: simpleLabel('Exibir filtros avançados') }),
   );
 }
 
@@ -132,7 +132,7 @@ export function collapsibleAbertoPorPadraoSource(): string {
       raiz: 'default-open',
       // O rótulo acompanha o estado inicial: "Exibir" num painel já aberto
       // descreveria o contrário do que a pessoa vê.
-      rotulo: rotuloSimples('Ocultar filtros avançados'),
+      rotulo: simpleLabel('Ocultar filtros avançados'),
     }),
   );
 }
@@ -187,7 +187,7 @@ export function collapsibleDesabilitadoSource(): string {
       raiz: 'disabled',
       gatilho: 'disabled',
       chevron: CHEVRON_PARADO,
-      rotulo: rotuloSimples('Filtros avançados (desabilitado)'),
+      rotulo: simpleLabel('Filtros avançados (desabilitado)'),
     }),
   );
 }
@@ -201,8 +201,8 @@ export function collapsibleComBotaoSource(): string {
   return vueSnippet(
     importar(),
     colapsavel({
-      classeGatilho: GATILHO_OUTLINE,
-      rotulo: rotuloSimples('Exibir opções avançadas'),
+      classeGatilho: TRIGGER_OUTLINE,
+      rotulo: simpleLabel('Exibir opções avançadas'),
       corpo: `    <p>Opção avançada 1</p>
     <p>Opção avançada 2</p>
     <p>Opção avançada 3</p>`,
@@ -236,8 +236,8 @@ export function collapsibleComChevronSource(): string {
   return vueSnippet(
     importar(),
     colapsavel({
-      classeGatilho: GATILHO_OUTLINE,
-      rotulo: rotuloSimples('Configurações avançadas'),
+      classeGatilho: TRIGGER_OUTLINE,
+      rotulo: simpleLabel('Configurações avançadas'),
       corpo: `    <div class="nds-cluster" data-justify="between">
       <span class="nds-text-muted-foreground">Notificações</span>
       <span class="nds-font-medium">Ativadas</span>

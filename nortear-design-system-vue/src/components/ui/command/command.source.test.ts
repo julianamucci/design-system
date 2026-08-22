@@ -7,7 +7,7 @@ import {
   commandItemMarcadoSource,
   commandPaletteSource,
   commandSource,
-  commandVazioSource,
+  commandEmptySource,
 } from './command.source';
 
 describe('commandSource', () => {
@@ -62,9 +62,9 @@ function executar(valor: string) {
 
   it('a região viva fica FORA da lista — status dentro de listbox é filho ilegal', () => {
     const saida = commandSource();
-    const fimDaLista = saida.indexOf('</CommandList>');
-    expect(fimDaLista).toBeGreaterThan(0);
-    expect(saida.indexOf('<CommandEmpty>')).toBeGreaterThan(fimDaLista);
+    const listEnd = saida.indexOf('</CommandList>');
+    expect(listEnd).toBeGreaterThan(0);
+    expect(saida.indexOf('<CommandEmpty>')).toBeGreaterThan(listEnd);
   });
 
   it('os controls de texto trocam o campo e a frase de vazio', () => {
@@ -103,7 +103,7 @@ function executar(valor: string) {
 
 describe('transforms das stories de estado', () => {
   it('o estado vazio não escreve nada de especial — quem decide é o componente', () => {
-    const saida = commandVazioSource();
+    const saida = commandEmptySource();
     expect(saida).toContain('<CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>');
     expect(saida).not.toContain('data-empty');
     expect(saida).not.toContain('role="status"');

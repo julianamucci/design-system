@@ -154,7 +154,7 @@ export function dropdownMenuDestrutivoSource(): string {
  * Fechado não é "escondido": o portal desmonta o painel, e um popup só oculto
  * continuaria no percurso do leitor de tela.
  */
-export function dropdownMenuFechadoSource(): string {
+export function dropdownMenuClosedSource(): string {
   return vueSnippet(
     importar([...BASE, 'DropdownMenuItem']),
     menu({
@@ -171,7 +171,7 @@ export function dropdownMenuFechadoSource(): string {
  * Setas, Home, End e o salto por letra vêm do primitivo — não há prop nenhuma a
  * ligar, e escrever uma ensinaria API que não existe.
  */
-export function dropdownMenuAbertoSource(): string {
+export function dropdownMenuOpenSource(): string {
   return vueSnippet(
     importar([...BASE, 'DropdownMenuItem']),
     menu({
@@ -242,7 +242,7 @@ export function dropdownMenuItemDesabilitadoSource(): string {
  * O valor entra por `model-value` porque aqui ele é fixo, e não ligado: um
  * `v-model` pediria um estado que a story não tem.
  */
-export function dropdownMenuMarcacaoMistaSource(): string {
+export function dropdownMenuMarkupMistaSource(): string {
   return vueSnippet(
     importar([...BASE, 'DropdownMenuCheckboxItem']),
     menu({
@@ -293,7 +293,7 @@ export function dropdownMenuComRotuloSource(): string {
  * Cada item guarda a própria marcação, e alternar não fecha o menu — quem marca
  * uma coluna costuma marcar a próxima.
  */
-export function dropdownMenuComMarcacaoSource(): string {
+export function dropdownMenuWithMarkupSource(): string {
   return vueSnippet(
     `${importar([
       ...BASE,
@@ -322,7 +322,7 @@ const mostrarEmail = ref(false)`,
  * É o que separa a escolha única da marcação: escolher um item desmarca o
  * anterior sem que ninguém escreva essa regra.
  */
-export function dropdownMenuComEscolhaUnicaSource(): string {
+export function dropdownMenuWithChoiceUnicaSource(): string {
   return vueSnippet(
     `${importar([
       ...BASE,

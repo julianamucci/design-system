@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
-  accordionAbertoPorPadraoSource,
+  defaultSourceAccordionOpen,
   accordionAbertoSource,
   accordionComBadgeSource,
   accordionComIconeSource,
   accordionConteudoRicoSource,
   accordionControladoSource,
-  accordionDesabilitadoSource,
+  accordionDisabledSource,
   accordionFaqSource,
-  accordionFecharNoSegundoCliqueSource,
+  segundoClickSourceAccordionClose,
   accordionFechadoSource,
-  accordionFocoVisivelSource,
+  accordionFocusVisibleSource,
   accordionMultipleSource,
   accordionSingleSource,
   accordionSource,
@@ -102,7 +102,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o fechar no segundo clique não tem chave a ligar', () => {
-    const saida = accordionFecharNoSegundoCliqueSource();
+    const saida = segundoClickSourceAccordionClose();
     expect(saida).toContain('<Accordion type="single" class="nds-max-w-lg">');
     // A prop existe na lib por baixo, mas está fora da API pública: escrevê-la
     // aqui ensinaria que o comportamento depende dela.
@@ -119,7 +119,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o valor inicial contrasta um item aberto com um fechado', () => {
-    const saida = accordionAbertoPorPadraoSource();
+    const saida = defaultSourceAccordionOpen();
     expect(saida).toContain('default-value="item-1"');
     expect(saida).toContain('Item fechado por padrão');
   });
@@ -146,13 +146,13 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o desabilitado mora no ITEM, não na raiz', () => {
-    const saida = accordionDesabilitadoSource();
+    const saida = accordionDisabledSource();
     expect(saida).toContain('<AccordionItem value="item-2" disabled>');
     expect(saida).toContain('<Accordion type="single" class="nds-max-w-lg">');
   });
 
   it('o foco não tem nada a configurar: são dois itens e mais nada', () => {
-    const saida = accordionFocoVisivelSource();
+    const saida = accordionFocusVisibleSource();
     expect(saida.match(/<AccordionItem /g)).toHaveLength(2);
     expect(saida).not.toContain('tabindex');
   });

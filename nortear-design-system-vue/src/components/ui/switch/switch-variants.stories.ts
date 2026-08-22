@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import {
   switchComDescricaoSource,
   switchCompactoSource,
-  switchPadraoSource,
+  switchDefaultSource,
 } from './switch.source';
 
 const meta = {
@@ -17,7 +17,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: switchPadraoSource },
+      source: { transform: switchDefaultSource },
       description: {
         component:
           'Variantes do Switch: default (Label à direita), withDescription (painel com o texto à esquerda) e sm (compacto).',

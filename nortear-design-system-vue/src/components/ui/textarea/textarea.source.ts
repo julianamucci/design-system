@@ -105,7 +105,7 @@ export const textareaSource: SourceTransform<TextareaArgs> = (_gerado, ctx) => {
  * O par mínimo honesto: rótulo associado pelo `id` e campo com texto de exemplo.
  * É também a composição de partida de quase toda story deste componente.
  */
-export function textareaComRotuloSource(): string {
+export function textareaWithLabelSource(): string {
   return vueSnippet(
     IMPORT_PAR,
     grupo(

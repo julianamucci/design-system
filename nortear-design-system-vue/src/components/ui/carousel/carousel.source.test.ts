@@ -7,7 +7,7 @@ import {
   carouselHorizontalSource,
   carouselItemUnicoSource,
   carouselMultiResponsivoSource,
-  carouselPrimeiroSlideSource,
+  carouselFirstSlideSource,
   carouselSource,
   carouselUltimoSlideSource,
   carouselVerticalSource,
@@ -88,7 +88,7 @@ describe('transforms das stories de variante e estado', () => {
   });
 
   it('os extremos saem de uma opção do motor, não de navegação na play', () => {
-    expect(carouselPrimeiroSlideSource()).toContain('const opts = { startIndex: 0 }');
+    expect(carouselFirstSlideSource()).toContain('const opts = { startIndex: 0 }');
     expect(carouselUltimoSlideSource()).toContain(
       'const opts = { startIndex: slides.length - 1 }',
     );

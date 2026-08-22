@@ -16,7 +16,7 @@ import {
   tableBasicaSource,
   tableComAcoesSource,
   tableComRodapeSource,
-  tableLegendaInvisivelSource,
+  tableCaptionInvisivelSource,
   tableRolagemHorizontalSource,
 } from './table.source';
 
@@ -191,7 +191,7 @@ export const CaptionSrOnly: Story = {
     covers: ['functional.item6', 'accessibility.item2'],
     // A tabela entra sob um título visível, e é essa vizinhança que justifica a
     // legenda invisível — sem ela no snippet, a classe pareceria gratuita.
-    docs: { source: { transform: tableLegendaInvisivelSource } },
+    docs: { source: { transform: tableCaptionInvisivelSource } },
   },
   render: () => ({
     components: COMPONENTES,

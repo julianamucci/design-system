@@ -5,8 +5,8 @@ import { AlignLeft, AlignCenter, AlignRight } from 'lucide-vue-next';
 import {
   toggleGroupDesabilitadoSource,
   toggleGroupItemDesabilitadoSource,
-  toggleGroupPadraoSource,
-  toggleGroupSelecionadoSource,
+  toggleGroupDefaultSource,
+  toggleGroupSelectedSource,
 } from './toggle-group.source';
 
 const meta = {
@@ -18,7 +18,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: toggleGroupPadraoSource },
+      source: { transform: toggleGroupDefaultSource },
       description: {
         component:
           'Estados do ToggleGroup: default, selected (aria-pressed=true), hover, focus (roving tabindex) e disabled.',
@@ -68,7 +68,7 @@ export const Selected: Story = {
     covers: ['accessibility.item2'],
     // A seleção inicial é o assunto, e ela vem de `default-value` na raiz — a do
     // meta nasce sem item nenhum ligado.
-    docs: { source: { transform: toggleGroupSelecionadoSource } },
+    docs: { source: { transform: toggleGroupSelectedSource } },
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
@@ -119,8 +119,8 @@ export const FocusVisible: Story = {
       // para o item ativo. Contar só os itens daria zero e acusaria um defeito
       // que não existe — o que o contrato exige é uma parada, não onde ela mora.
       const grupo = canvasElement.querySelector('[data-slot="toggle-group"]') as HTMLElement;
-      const itensNaOrdem = canvas.getAllByRole('button').filter((b) => b.tabIndex === 0);
-      const paradas = itensNaOrdem.length + (grupo.tabIndex === 0 ? 1 : 0);
+      const orderItems = canvas.getAllByRole('button').filter((b) => b.tabIndex === 0);
+      const paradas = orderItems.length + (grupo.tabIndex === 0 ? 1 : 0);
       await expect(paradas).toBe(1);
     });
 

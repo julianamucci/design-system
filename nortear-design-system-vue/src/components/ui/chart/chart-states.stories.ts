@@ -14,10 +14,10 @@ import {
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption, buildLineOption } from './index';
 import {
-  chartContrasteSource,
+  chartContrastSource,
   chartDuasSeriesSource,
   chartSerieUnicaSource,
-  chartTokensDeTemaSource,
+  themeSourceChartTokens,
   chartVazioSource,
 } from './chart.source';
 
@@ -178,7 +178,7 @@ export const ThemeTokens: Story = {
     // São DOIS containers empilhados, barras e linhas: a do meta esconderia a
     // metade que o item de regressão visual também cobra.
     docs: {
-      source: { transform: chartTokensDeTemaSource },
+      source: { transform: themeSourceChartTokens },
       description: { story: 'Cor e tipografia do desenho saem dos tokens do tema em vigor, não de valores cravados.' },
     },
   },
@@ -245,7 +245,7 @@ export const GraphicContrast: Story = {
     // Série única de propósito, para que tudo na tela seja forma de dado — a do
     // meta mostra o vazio, onde não há forma nenhuma a medir.
     docs: {
-      source: { transform: chartContrasteSource },
+      source: { transform: chartContrastSource },
       description: { story: 'Contorno e texto de eixo medidos contra o fundo real da tela.' },
     },
   },

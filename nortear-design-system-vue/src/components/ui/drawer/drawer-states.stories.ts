@@ -16,7 +16,7 @@ import { waitForPortal, waitForPortalGone } from '@/lib/wait-for-portal';
 import {
   drawerAbertoSource,
   drawerControladoSource,
-  drawerFechadoSource,
+  drawerClosedSource,
   drawerNaoDispensavelSource,
 } from './drawer.source';
 
@@ -29,7 +29,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: drawerFechadoSource },
+      source: { transform: drawerClosedSource },
       description: {
         component:
           'Estados canônicos do Drawer: fechado (padrão), aberto, controlado por estado externo e não dispensável.',

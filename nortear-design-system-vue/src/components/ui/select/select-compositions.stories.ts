@@ -16,11 +16,11 @@ import { Button } from '@/components/ui/button';
 import {
   waitForPortal,
   REGRA_GUARDA_DE_FOCO,
-  REGRA_ROLAGEM_DA_LISTA,
+  LIST_RULE_SCROLL,
 } from '@/lib/wait-for-portal';
 import {
   selectComRotuloSource,
-  selectComSeparadorSource,
+  selectWithSeparatorSource,
   selectControladoSource,
   selectEmFormularioSource,
 } from './select.source';
@@ -225,10 +225,10 @@ export const WithSeparator: Story = {
     // Termina ABERTA: o separador só existe dentro da lista. Quatro opções,
     // dois cabeçalhos e um traço — a lista transborda a caixa e ROLA. Os
     // motivos das duas regras estão em `wait-for-portal`.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_ROLAGEM_DA_LISTA] } },
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, LIST_RULE_SCROLL] } },
     docs: {
       // Grupos, cabeçalhos e o traço entre eles — a lista inteira muda.
-      source: { transform: selectComSeparadorSource },
+      source: { transform: selectWithSeparatorSource },
       description: { story: 'SelectSeparator entre grupos para divisão visual explícita — útil quando há muitas categorias.' },
     },
   },

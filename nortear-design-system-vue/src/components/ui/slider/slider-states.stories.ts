@@ -14,10 +14,10 @@ import {
 } from '@shared/testing/slider-probe';
 import {
   sliderDesabilitadoSource,
-  sliderFocoSource,
+  sliderFocusSource,
   sliderNoMaximoSource,
-  sliderNoMinimoSource,
-  sliderPadraoSource,
+  minimumSourceSlider,
+  sliderDefaultSource,
 } from './slider.source';
 
 const meta = {
@@ -29,7 +29,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: sliderPadraoSource },
+      source: { transform: sliderDefaultSource },
       description: {
         component:
           'Estados do Slider: default, focus, active (durante arrasto), disabled, no min e no max.',
@@ -84,7 +84,7 @@ export const FocusVisible: Story = {
     docs: {
       // Sem a linha de valor: a story é sobre o desenho do foco, e a leitura
       // ao lado disputaria a atenção com ele.
-      source: { transform: sliderFocoSource },
+      source: { transform: sliderFocusSource },
       description: {
         story:
           'Foco via teclado: Tab leva ao thumb e setas/Home/End/PgUp/PgDn alteram o valor.',
@@ -172,7 +172,7 @@ export const NoMin: Story = {
     docs: {
       // O extremo é o assunto, e ele mora no valor inicial do estado — não em
       // prop nenhuma do componente.
-      source: { transform: sliderNoMinimoSource },
+      source: { transform: minimumSourceSlider },
     },
   },
   render: () => ({

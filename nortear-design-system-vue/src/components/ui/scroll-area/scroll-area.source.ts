@@ -51,7 +51,7 @@ ${indentar(interno)}
  * não tem utilitária na escada, e crayonar a medida em `style` é justamente o
  * que o snippet não pode ensinar.
  */
-const PILHA_DE_TAGS = `<div class="nds-stack" data-spacing="sm">
+const TAGS_STACK = `<div class="nds-stack" data-spacing="sm">
   <div
     v-for="tag in tags"
     :key="tag"
@@ -61,9 +61,9 @@ const PILHA_DE_TAGS = `<div class="nds-stack" data-spacing="sm">
   </div>
 </div>`;
 
-const CONTEUDO_TAGS = `<div class="nds-p-4">
+const CONTENT_TAGS = `<div class="nds-p-4">
   <h4 class="nds-mb-2 nds-text-body nds-font-medium nds-leading-none">Tags</h4>
-${indentar(PILHA_DE_TAGS)}
+${indentar(TAGS_STACK)}
 </div>`;
 
 /**
@@ -85,7 +85,7 @@ export const scrollAreaSource: SourceTransform<ScrollAreaArgs> = (_gerado, ctx) 
           'size="xl"',
           'class="nds-w-full"',
         ],
-        CONTEUDO_TAGS,
+        CONTENT_TAGS,
       ),
     ),
   );
@@ -101,7 +101,7 @@ export const scrollAreaSource: SourceTransform<ScrollAreaArgs> = (_gerado, ctx) 
 export function scrollAreaVerticalSource(): string {
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS}`,
-    moldura(area(['type="always"', 'size="xl"', 'class="nds-w-full"'], CONTEUDO_TAGS)),
+    moldura(area(['type="always"', 'size="xl"', 'class="nds-w-full"'], CONTENT_TAGS)),
   );
 }
 
@@ -185,7 +185,7 @@ const linhas = Array.from({ length: 16 }, (_, i) => \`R\${i + 1}\`)`,
 
 const TAGS_30 = 'const tags = Array.from({ length: 30 }, (_, i) => `Tag ${i + 1}`)';
 
-const LISTA_SIMPLES = `<div class="nds-stack nds-p-4" data-spacing="sm">
+const SIMPLE_LIST = `<div class="nds-stack nds-p-4" data-spacing="sm">
   <div
     v-for="tag in tags"
     :key="tag"
@@ -202,7 +202,7 @@ const LISTA_SIMPLES = `<div class="nds-stack nds-p-4" data-spacing="sm">
 export function scrollAreaOciosoSource(): string {
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS_30}`,
-    moldura(area(['size="lg"', 'class="nds-w-full"'], LISTA_SIMPLES)),
+    moldura(area(['size="lg"', 'class="nds-w-full"'], SIMPLE_LIST)),
   );
 }
 
@@ -213,7 +213,7 @@ export function scrollAreaOciosoSource(): string {
 export function scrollAreaSempreSource(): string {
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS_30}`,
-    moldura(area(['type="always"', 'size="lg"', 'class="nds-w-full"'], LISTA_SIMPLES)),
+    moldura(area(['type="always"', 'size="lg"', 'class="nds-w-full"'], SIMPLE_LIST)),
   );
 }
 
@@ -225,7 +225,7 @@ export function scrollAreaSempreSource(): string {
 export function scrollAreaAoRolarSource(): string {
   return vueSnippet(
     `${IMPORT_AREA}\n\n${TAGS_30}`,
-    moldura(area(['type="scroll"', 'size="lg"', 'class="nds-w-full"'], LISTA_SIMPLES)),
+    moldura(area(['type="scroll"', 'size="lg"', 'class="nds-w-full"'], SIMPLE_LIST)),
   );
 }
 
@@ -264,7 +264,7 @@ const acoes = Array.from({ length: 20 }, (_, i) => \`Ação \${i + 1}\`)`,
  * expande e a área não rola — ela aparenta estar quebrada quando ninguém disse
  * até onde ela pode ir. `size` é o que dá o limite.
  */
-export function scrollAreaSemLimiteSource(): string {
+export function scrollAreaNoLimitSource(): string {
   const lista = `<div class="nds-stack nds-p-4" data-spacing="sm">
   <div v-for="tag in tags" :key="tag" class="nds-text-body">{{ tag }}</div>
 </div>`;

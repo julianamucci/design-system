@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   textareaComApoioSource,
   textareaComContadorSource,
-  textareaComRotuloSource,
+  textareaWithLabelSource,
   textareaDesabilitadoSource,
   textareaInvalidoSource,
   textareaObrigatorioSource,
@@ -14,7 +14,7 @@ import {
 } from './textarea.source';
 
 /** Os mesmos args que o `meta` declara — é a saída que o painel realmente mostra. */
-const ARGS_DO_PAINEL = {
+const PANEL_ARGS = {
   placeholder: 'ex: Descreva o produto...',
   disabled: false,
   readonly: false,
@@ -24,7 +24,7 @@ const ARGS_DO_PAINEL = {
 
 describe('textareaSource', () => {
   it('com os args do painel, entrega rótulo, campo e contador', () => {
-    expect(textareaSource('', { args: ARGS_DO_PAINEL })).toBe(
+    expect(textareaSource('', { args: PANEL_ARGS })).toBe(
       `<script setup lang="ts">
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
@@ -60,31 +60,31 @@ const maximo = 500
   });
 
   it('sem limite, o contador some junto — contar sem teto não informa nada', () => {
-    const saida = textareaSource('', { args: { ...ARGS_DO_PAINEL, maxlength: 0 } });
+    const saida = textareaSource('', { args: { ...PANEL_ARGS, maxlength: 0 } });
     expect(saida).not.toContain('aria-live');
     expect(saida).not.toContain('maxlength');
     expect(saida).not.toContain('const maximo');
   });
 
   it('os bloqueios só aparecem quando ligados', () => {
-    const soltos = textareaSource('', { args: ARGS_DO_PAINEL });
+    const soltos = textareaSource('', { args: PANEL_ARGS });
     expect(soltos).not.toContain('disabled');
     expect(soltos).not.toContain('readonly');
 
     const travados = textareaSource('', {
-      args: { ...ARGS_DO_PAINEL, disabled: true, readonly: true },
+      args: { ...PANEL_ARGS, disabled: true, readonly: true },
     });
     expect(travados).toContain('  readonly\n');
     expect(travados).toContain('  disabled\n');
   });
 
   it('não escreve o número de linhas padrão do elemento', () => {
-    expect(textareaSource('', { args: { ...ARGS_DO_PAINEL, rows: 2 } })).not.toContain('rows');
+    expect(textareaSource('', { args: { ...PANEL_ARGS, rows: 2 } })).not.toContain('rows');
   });
 
   it('ignora control que não é string — o espião de ação vira ruído no painel', () => {
     const saida = textareaSource('', {
-      args: { ...ARGS_DO_PAINEL, placeholder: (() => {}) as never },
+      args: { ...PANEL_ARGS, placeholder: (() => {}) as never },
     });
     expect(saida).not.toContain('function');
     expect(saida).not.toContain('placeholder');
@@ -93,7 +93,7 @@ const maximo = 500
 
 describe('o par mínimo', () => {
   it('vincula rótulo e campo pelo mesmo id, e traz a moldura no class', () => {
-    const saida = textareaComRotuloSource();
+    const saida = textareaWithLabelSource();
     expect(saida).toContain('<Label for="descricao">Descrição</Label>');
     expect(saida).toContain('id="descricao"');
     // A moldura é escolha de uso, e por isso mora no `class`, não no componente.

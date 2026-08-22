@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardContent,
 } from './index';
-import { cardCompactoSource, cardSimplesSource } from './card.source';
+import { cardCompactoSource, cardSimpleSource } from './card.source';
 
 const meta = {
   title: 'UI/Card/Sizes',
@@ -18,7 +18,7 @@ const meta = {
     actions: { disable: true },
     layout: 'padded',
     docs: {
-      source: { transform: cardSimplesSource },
+      source: { transform: cardSimpleSource },
       description: {
         component:
           'Tamanhos do Card: "default" para uso geral e "sm" para listas densas e dashboards. O tamanho propaga via data-size e ajusta padding e tamanho do título das partes internas.',

@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { REGRA_GUARDA_DE_FOCO, waitForPortal } from '@/lib/wait-for-portal';
 import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
 import {
-  sheetLadoDireitoSource,
+  sheetSideDireitoSource,
   sheetLadoEsquerdoSource,
   sheetLadoInferiorSource,
   sheetLadoSuperiorSource,
@@ -38,7 +38,7 @@ const meta = {
     // contrário do que elas fazem. Ver o motivo completo em wait-for-portal.ts.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
-      source: { transform: sheetLadoDireitoSource },
+      source: { transform: sheetSideDireitoSource },
       description: {
         component:
           'Direção do painel pela prop side do conteúdo. Right é o padrão de desktop; ' +

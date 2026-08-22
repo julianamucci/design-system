@@ -2,16 +2,16 @@ import { describe, expect, it } from 'vitest';
 import {
   popoverAbertoSource,
   popoverAcimaSource,
-  popoverComTituloSource,
+  popoverWithTitleSource,
   popoverConteudoLivreSource,
   popoverControladoSource,
   popoverEditarPerfilSource,
-  popoverFechadoSource,
+  popoverClosedSource,
   popoverFiltroSource,
   popoverFormularioSource,
   popoverModalSource,
   popoverPreferenciasSource,
-  popoverSeletorDeCorSource,
+  colorSourcePopoverSelector,
   popoverSource,
 } from './popover.source';
 
@@ -111,7 +111,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('o cabeçalho completo traz título e descrição no lugar do texto solto', () => {
-    const saida = popoverComTituloSource();
+    const saida = popoverWithTitleSource();
     expect(saida).toContain('<PopoverTitle>Configuracoes de exibição</PopoverTitle>');
     expect(saida).toContain('<PopoverDescription>');
     // `aria-labelledby` é DERIVADO do título pelo componente; escrevê-lo à mão
@@ -132,7 +132,7 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('fechado é ausência: nenhuma prop declara o estado', () => {
-    const saida = popoverFechadoSource();
+    const saida = popoverClosedSource();
     expect(saida).toContain('<Popover>');
     expect(saida).not.toContain('default-open');
     expect(saida).not.toContain('open=');
@@ -185,7 +185,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('cada amostra de cor tem nome próprio, escrita uma a uma', () => {
-    const saida = popoverSeletorDeCorSource();
+    const saida = colorSourcePopoverSelector();
     const nomes = [...saida.matchAll(/aria-label="([^"]+)"/g)].map((m) => m[1]);
     expect(nomes).toHaveLength(6);
     // A cor não é o nome: repetir o mesmo rótulo equivale a não ter nenhum.
@@ -209,16 +209,16 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
   const todas = [
     popoverSource,
     popoverConteudoLivreSource,
-    popoverComTituloSource,
+    popoverWithTitleSource,
     popoverFormularioSource,
-    popoverFechadoSource,
+    popoverClosedSource,
     popoverAbertoSource,
     popoverAcimaSource,
     popoverControladoSource,
     popoverModalSource,
     popoverEditarPerfilSource,
     popoverFiltroSource,
-    popoverSeletorDeCorSource,
+    colorSourcePopoverSelector,
     popoverPreferenciasSource,
   ];
 

@@ -11,7 +11,7 @@ import {
   scrollAreaAoRolarSource,
   scrollAreaConteudoFocavelSource,
   scrollAreaOciosoSource,
-  scrollAreaSemLimiteSource,
+  scrollAreaNoLimitSource,
   scrollAreaSempreSource,
 } from './scroll-area.source';
 
@@ -389,7 +389,7 @@ export const NoLimit: Story = {
     docs: {
       // A story é o par errado/certo lado a lado — a AUSÊNCIA da altura é o
       // assunto, e um snippet com altura esconderia justamente isso.
-      source: { transform: scrollAreaSemLimiteSource },
+      source: { transform: scrollAreaNoLimitSource },
       description: {
         story:
           'Pai sem altura definida — o conteúdo expande e não há rolagem. É o erro de uso mais comum: o componente aparenta estar quebrado quando ninguém disse até onde ele pode ir.',

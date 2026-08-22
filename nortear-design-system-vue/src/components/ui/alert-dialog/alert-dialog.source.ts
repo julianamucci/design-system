@@ -9,7 +9,7 @@ import {
   attr,
   attrBool,
   attrs,
-  comoCodigo,
+  asCode,
   indentar,
   vueSnippet,
   type SourceTransform,
@@ -137,18 +137,18 @@ const DESCRICAO_PADRAO =
  */
 export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const tom = comoCodigo(args.tone) ?? 'destructive';
+  const tom = asCode(args.tone) ?? 'destructive';
   return snippet({
     raiz: [
       attrBool('default-open', args.defaultOpen, false),
       attrBool('unmount-on-hide', args.unmountOnHide, true),
     ],
-    gatilho: { rotulo: comoCodigo(args.triggerLabel) ?? 'Excluir conta', variante: tom },
+    gatilho: { rotulo: asCode(args.triggerLabel) ?? 'Excluir conta', variante: tom },
     midia: args.showMedia === true ? {} : undefined,
-    titulo: comoCodigo(args.title) ?? 'Excluir conta',
-    descricao: comoCodigo(args.description) ?? DESCRICAO_PADRAO,
-    cancelar: { rotulo: comoCodigo(args.cancelLabel) ?? 'Cancelar' },
-    acao: { rotulo: comoCodigo(args.actionLabel) ?? 'Excluir', variante: tom },
+    titulo: asCode(args.title) ?? 'Excluir conta',
+    descricao: asCode(args.description) ?? DESCRICAO_PADRAO,
+    cancelar: { rotulo: asCode(args.cancelLabel) ?? 'Cancelar' },
+    acao: { rotulo: asCode(args.actionLabel) ?? 'Excluir', variante: tom },
   });
 };
 
@@ -156,7 +156,7 @@ export const alertDialogSource: SourceTransform<AlertDialogArgs> = (_gerado, ctx
  * Estado fechado, que é o de partida: nenhum atributo de abertura na raiz. Só o
  * gatilho está na tela, e o painel só existe depois do clique.
  */
-export function alertDialogFechadoSource(): string {
+export function alertDialogClosedSource(): string {
   return snippet({
     gatilho: { rotulo: 'Excluir item', variante: 'destructive' },
     titulo: 'Confirmar exclusão',
@@ -275,7 +275,7 @@ export function alertDialogComIconeSource(): string {
  * neutra fica no contorno. Duas ações em pé de igualdade tirariam o peso da
  * decisão.
  */
-export function alertDialogDestrutivoSource(): string {
+export function alertDialogDestructiveSource(): string {
   return snippet({
     raiz: ['default-open'],
     gatilho: { rotulo: 'Excluir conta', variante: 'destructive' },

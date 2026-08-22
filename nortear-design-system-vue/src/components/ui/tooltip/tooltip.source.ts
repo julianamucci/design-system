@@ -37,7 +37,7 @@ const IMPORT_BUTTON = `import { Button } from '@/components/ui/button'`;
 const IMPORT_KBD = `import { Kbd } from '@/components/ui/kbd'`;
 
 /** Importa da biblioteca de ícones só o que a composição usa, sem repetir. */
-function importIcones(...nomes: string[]): string {
+function importIcons(...nomes: string[]): string {
   return `import { ${[...new Set(nomes)].join(', ')} } from 'lucide-vue-next'`;
 }
 
@@ -47,7 +47,7 @@ function script(opcoes: { kbd?: boolean; icones?: string[]; estado?: string } = 
     IMPORT_BUTTON,
     opcoes.kbd ? IMPORT_KBD : '',
     IMPORT_TOOLTIP,
-    opcoes.icones?.length ? importIcones(...opcoes.icones) : '',
+    opcoes.icones?.length ? importIcons(...opcoes.icones) : '',
     opcoes.estado ? `import { ref } from 'vue'` : '',
   ]
     .filter(Boolean)
@@ -70,7 +70,7 @@ function gatilhoIcone(opcoes: { rotulo: string; icone: string; variante?: string
 }
 
 /** Gatilho com rótulo visível: o texto do botão já é o nome acessível. */
-function gatilhoTexto(rotulo: string, extra = ''): string {
+function triggerText(rotulo: string, extra = ''): string {
   return `<TooltipTrigger as-child>
   <Button${attrs('variant="outline"', extra)}>${rotulo}</Button>
 </TooltipTrigger>`;
@@ -89,10 +89,10 @@ function balao(opcoes: {
   content?: Array<string | false | null | undefined>;
 }): string {
   const raiz = attrs(...(opcoes.raiz ?? []));
-  const atributosBalao = attrs(...(opcoes.content ?? []));
+  const attrsBalao = attrs(...(opcoes.content ?? []));
   const conteudo = opcoes.conteudo.includes('\n')
-    ? `<TooltipContent${atributosBalao}>\n${indentar(opcoes.conteudo)}\n</TooltipContent>`
-    : `<TooltipContent${atributosBalao}>${opcoes.conteudo}</TooltipContent>`;
+    ? `<TooltipContent${attrsBalao}>\n${indentar(opcoes.conteudo)}\n</TooltipContent>`
+    : `<TooltipContent${attrsBalao}>${opcoes.conteudo}</TooltipContent>`;
   return `<Tooltip${raiz}>
 ${indentar(opcoes.gatilho)}
 ${indentar(conteudo)}
@@ -111,7 +111,7 @@ function comProvider(miolo: string, ...atributos: Array<string | false>): string
 }
 
 /** Contêiner de composição, com a fila de atributos quebrada quando fica longa. */
-function blocoCom(tag: string, atributos: string[], miolo: string): string {
+function blockWith(tag: string, atributos: string[], miolo: string): string {
   return `<${tag}${attrsMultilinha(atributos)}>\n${indentar(miolo)}\n</${tag}>`;
 }
 
@@ -139,7 +139,7 @@ export const tooltipSource: SourceTransform<TooltipArgs> = (_gerado, ctx) => {
 };
 
 /** Texto curto: uma explicação de uma linha, que é o caso de uso do balão. */
-export function tooltipTextoCurtoSource(): string {
+export function tooltipTextCurtoSource(): string {
   return vueSnippet(
     script({ icones: ['Save'] }),
     comProvider(
@@ -183,7 +183,7 @@ export function tooltipTextoLongoSource(): string {
     comProvider(
       balao({
         raiz: ['default-open'],
-        gatilho: gatilhoTexto('Compartilhar'),
+        gatilho: triggerText('Compartilhar'),
         content: ['side="bottom"'],
         conteudo: 'Cria um link público de leitura — qualquer pessoa com o link vê o conteúdo',
       }),
@@ -192,7 +192,7 @@ export function tooltipTextoLongoSource(): string {
 }
 
 /** Estado de partida: o balão nem existe no DOM até o gatilho pedir. */
-export function tooltipFechadoSource(): string {
+export function tooltipClosedSource(): string {
   return vueSnippet(
     script({ icones: ['Save'] }),
     comProvider(
@@ -226,7 +226,7 @@ export function tooltipAbertoSource(): string {
  * Quem chega pelo teclado não tem como "parar em cima": o foco abre na hora,
  * sem esperar — é a mesma composição vista pelos dois caminhos de entrada.
  */
-export function tooltipComEsperaSource(): string {
+export function tooltipWithWaitSource(): string {
   return vueSnippet(
     script({ icones: ['Save'] }),
     comProvider(
@@ -249,7 +249,7 @@ export function tooltipPersistenteSource(): string {
     script(),
     comProvider(
       balao({
-        gatilho: gatilhoTexto('Compartilhar'),
+        gatilho: triggerText('Compartilhar'),
         content: ['side="bottom"'],
         conteudo: 'Cria um link público de leitura',
       }),
@@ -268,7 +268,7 @@ export function tooltipControladoSource(): string {
   return vueSnippet(
     script({ icones: ['Save'], estado: 'const aberto = ref(false)' }),
     comProvider(
-      blocoCom(
+      blockWith(
         'div',
         ['class="nds-stack"', 'data-align="center"', 'data-spacing="sm"'],
         `<div class="nds-cluster" data-spacing="sm">
@@ -292,15 +292,15 @@ ${balao({
  * curto — aqui o assunto não é o conteúdo do balão, e sim de quem é o nome
  * acessível: do botão, sempre, com o balão só reforçando.
  */
-export function tooltipBotaoIconeSource(): string {
-  return tooltipTextoCurtoSource();
+export function tooltipButtonIconSource(): string {
+  return tooltipTextCurtoSource();
 }
 
 /**
  * Barra de ações: vários botões icon-only, cada um com nome próprio e balão de
  * reforço. Um Provider só serve a todos — a espera é compartilhada.
  */
-export function tooltipBarraDeAcoesSource(): string {
+export function actionsSourceTooltipBar(): string {
   const acoes: Array<{ rotulo: string; icone: string }> = [
     { rotulo: 'Salvar', icone: 'Save' },
     { rotulo: 'Copiar', icone: 'Copy' },
@@ -311,7 +311,7 @@ export function tooltipBarraDeAcoesSource(): string {
   return vueSnippet(
     script({ icones: acoes.map((acao) => acao.icone) }),
     comProvider(
-      blocoCom(
+      blockWith(
         'div',
         [
           'role="toolbar"',
@@ -346,14 +346,14 @@ export function tooltipQuatroLadosSource(): string {
   return vueSnippet(
     script(),
     comProvider(
-      blocoCom(
+      blockWith(
         'div',
         ['class="nds-grid nds-p-8"', 'data-spacing="xl"', 'data-cols="2"'],
         lados
           .map((lado) =>
             balao({
               raiz: ['default-open'],
-              gatilho: gatilhoTexto(lado, 'size="sm"'),
+              gatilho: triggerText(lado, 'size="sm"'),
               content: [attr('side', lado, 'top')],
               conteudo: `Tooltip ${lado}`,
             }),

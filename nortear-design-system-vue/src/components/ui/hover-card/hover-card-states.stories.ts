@@ -57,7 +57,7 @@ const CARTAO_PERFIL = `
     </div>
   </div>`;
 
-const ESTILO_PARAGRAFO = 'contain: layout; min-height: 250px; max-width: 24rem;';
+const STYLE_PARAGRAFO = 'contain: layout; min-height: 250px; max-width: 24rem;';
 
 export const Closed: Story = {
   parameters: {
@@ -71,7 +71,7 @@ export const Closed: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
         Comentário de
         <HoverCard>
           <HoverCardTrigger as-child>
@@ -116,7 +116,7 @@ export const Open: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
         Comentário de
         <HoverCard :open-delay="100" :close-delay="80">
           <HoverCardTrigger as-child>
@@ -189,7 +189,7 @@ export const Controlled: Story = {
       return { aberto };
     },
     template: `
-      <div class="nds-stack" data-spacing="md" style="${ESTILO_PARAGRAFO}">
+      <div class="nds-stack" data-spacing="md" style="${STYLE_PARAGRAFO}">
         <div class="nds-cluster" data-spacing="xs">
           <!-- Nomes próprios, e não os mesmos do gatilho: dois controles com o
                mesmo nome acessível são ambíguos em leitor de tela. -->

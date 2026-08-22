@@ -14,10 +14,10 @@ import type { InjectionKey } from 'vue'
  * Quem sabe se há descrição é a descrição. Ela se registra aqui na montagem, e o
  * painel só omite o atributo enquanto o contador está em zero.
  */
-export interface AlertDialogDescricaoRegistro {
+export interface AlertDialogDescriptionRegistro {
   /** Chamado no `setup` da descrição; desfaz-se sozinho quando ela sai do escopo. */
   registrar: () => void
 }
 
-export const ALERT_DIALOG_DESCRICAO: InjectionKey<AlertDialogDescricaoRegistro> =
+export const ALERT_DIALOG_DESCRIPTION: InjectionKey<AlertDialogDescriptionRegistro> =
   Symbol('nds-alert-dialog-descricao')

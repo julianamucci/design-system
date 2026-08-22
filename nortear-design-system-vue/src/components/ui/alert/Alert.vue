@@ -61,34 +61,34 @@ const root = ref<HTMLElement | null>(null)
 // avança a animação (headless) manteria o alert preso em opacity: 0, invisível.
 const animationClass = ref<string | null>(props.dismissible ? 'nds-animate-in' : null)
 
-let entradaTimer = 0
-let saidaTimer = 0
+let entryTimer = 0
+let outputTimer = 0
 let dismissed = false
-let saidaFinalizada = false
+let outputFinalizada = false
 
 // `animationend` borbulha: a animação de qualquer descendente (o botão de
 // fechar, um ícone) chegaria aqui e encerraria entrada ou saída antes da hora.
 // Só o próprio elemento conta. Chamada direta (sem evento) sempre passa.
-function ehDoProprioElemento(event?: Event) {
+function ownElementoEh(event?: Event) {
   return !event || event.target === root.value
 }
 
 function limparEntrada(event?: Event) {
-  if (!ehDoProprioElemento(event)) return
-  window.clearTimeout(entradaTimer)
+  if (!ownElementoEh(event)) return
+  window.clearTimeout(entryTimer)
   root.value?.removeEventListener('animationend', limparEntrada)
   if (animationClass.value === 'nds-animate-in') animationClass.value = null
 }
 
-function finalizarSaida(event?: Event) {
-  if (!ehDoProprioElemento(event)) return
+function finalizarOutput(event?: Event) {
+  if (!ownElementoEh(event)) return
   /* v8 ignore next -- guarda de dupla finalização: os dois caminhos que chamam
      (animationend e timeout) removem listener e timer antes de sair, então não
      há ordem de eventos que a alcance. Fica como rede se um deles mudar. */
-  if (saidaFinalizada) return
-  saidaFinalizada = true
-  window.clearTimeout(saidaTimer)
-  root.value?.removeEventListener('animationend', finalizarSaida)
+  if (outputFinalizada) return
+  outputFinalizada = true
+  window.clearTimeout(outputTimer)
+  root.value?.removeEventListener('animationend', finalizarOutput)
   visible.value = false
   emit('dismiss')
 }
@@ -96,12 +96,12 @@ function finalizarSaida(event?: Event) {
 onMounted(() => {
   if (!props.dismissible || !root.value) return
   root.value.addEventListener('animationend', limparEntrada)
-  entradaTimer = window.setTimeout(limparEntrada, ENTER_FALLBACK_MS)
+  entryTimer = window.setTimeout(limparEntrada, ENTER_FALLBACK_MS)
 })
 
 onBeforeUnmount(() => {
-  window.clearTimeout(entradaTimer)
-  window.clearTimeout(saidaTimer)
+  window.clearTimeout(entryTimer)
+  window.clearTimeout(outputTimer)
 })
 
 function handleDismiss() {
@@ -116,13 +116,13 @@ function handleDismiss() {
   /* v8 ignore next 4 -- o handler só existe dentro do `v-if="visible"`, onde a
      ref já está preenchida; o ramo existe porque o tipo da ref é nullable. */
   if (!el) {
-    finalizarSaida()
+    finalizarOutput()
     return
   }
   // Corrida entre `animationend` e o timeout — quem vencer remove o nó e
   // emite `dismiss` (uma única vez, depois da remoção).
-  el.addEventListener('animationend', finalizarSaida)
-  saidaTimer = window.setTimeout(finalizarSaida, EXIT_FALLBACK_MS)
+  el.addEventListener('animationend', finalizarOutput)
+  outputTimer = window.setTimeout(finalizarOutput, EXIT_FALLBACK_MS)
 }
 </script>
 

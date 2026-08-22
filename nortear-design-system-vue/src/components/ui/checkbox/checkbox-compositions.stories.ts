@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
   checkboxComDescricaoSource,
-  checkboxComRotuloSource,
+  checkboxWithLabelSource,
   checkboxEmFormularioSource,
   checkboxGrupoSource,
   checkboxSelecionarTodosSource,
@@ -21,7 +21,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: checkboxComRotuloSource },
+      source: { transform: checkboxWithLabelSource },
       description: {
         component:
           'Padrões de composição do Checkbox: com label, com descrição auxiliar, grupo em fieldset e integração em formulário.',

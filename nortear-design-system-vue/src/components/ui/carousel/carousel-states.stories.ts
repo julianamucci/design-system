@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/vue3-vite';
 import { within, expect, waitFor } from 'storybook/test';
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from './index';
-import { carouselPrimeiroSlideSource, carouselUltimoSlideSource } from './carousel.source';
+import { carouselFirstSlideSource, carouselUltimoSlideSource } from './carousel.source';
 
 const meta = {
   title: 'UI/Carousel/States',
@@ -12,7 +12,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: carouselPrimeiroSlideSource },
+      source: { transform: carouselFirstSlideSource },
       description: {
         component: 'Estados de extremo do Carousel — sem loop, o botão anterior ou próximo fica automaticamente desabilitado.',
       },

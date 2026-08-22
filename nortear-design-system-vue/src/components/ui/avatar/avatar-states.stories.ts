@@ -5,7 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from './index';
 import {
   avatarCarregadoSource,
   avatarCarregandoSource,
-  avatarSemImagemSource,
+  avatarNoImageSource,
 } from './avatar.source';
 
 const IMG_MARIA =
@@ -141,7 +141,7 @@ export const NoImage: Story = {
     covers: ['functional.item3'],
     // Não há imagem: some o subcomponente, some o import, e o conteúdo de
     // reserva passa a carregar o papel e o rótulo do avatar.
-    docs: { source: { transform: avatarSemImagemSource } },
+    docs: { source: { transform: avatarNoImageSource } },
   },
   render: () => ({
     components: { Avatar, AvatarFallback },

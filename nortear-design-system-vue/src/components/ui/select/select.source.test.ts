@@ -4,7 +4,7 @@ import {
   selectBloqueadoSource,
   selectComIconeSource,
   selectComRotuloSource,
-  selectComSeparadorSource,
+  selectWithSeparatorSource,
   selectCompactoSource,
   selectControladoSource,
   selectEmFormularioSource,
@@ -12,7 +12,7 @@ import {
   selectListaPlanaSource,
   selectPreenchidoSource,
   selectSource,
-  selectVazioSource,
+  selectEmptySource,
 } from './select.source';
 
 const TODAS = [
@@ -20,7 +20,7 @@ const TODAS = [
   selectListaPlanaSource(),
   selectAgrupadoSource(),
   selectComIconeSource(),
-  selectVazioSource(),
+  selectEmptySource(),
   selectPreenchidoSource(),
   selectBloqueadoSource(),
   selectInvalidoSource(),
@@ -28,7 +28,7 @@ const TODAS = [
   selectComRotuloSource(),
   selectControladoSource(),
   selectEmFormularioSource(),
-  selectComSeparadorSource(),
+  selectWithSeparatorSource(),
 ];
 
 describe('selectSource', () => {
@@ -153,7 +153,7 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('o vazio não declara valor nenhum', () => {
-    expect(selectVazioSource()).toContain('<Select>');
+    expect(selectEmptySource()).toContain('<Select>');
   });
 
   it('o preenchido resolve o rótulo antes da primeira abertura', () => {
@@ -206,7 +206,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o separador entra entre grupos, e não dentro de um', () => {
-    const saida = selectComSeparadorSource();
+    const saida = selectWithSeparatorSource();
     expect(saida).toContain('</SelectGroup>\n      <SelectSeparator />\n      <SelectGroup>');
     expect(saida).toContain('  SelectSeparator,');
   });

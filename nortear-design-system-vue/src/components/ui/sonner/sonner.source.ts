@@ -22,7 +22,7 @@ import {
   attrBool,
   attrNum,
   attrs,
-  comoCodigo,
+  asCode,
   indentar,
   vueSnippet,
   type SourceTransform,
@@ -53,7 +53,7 @@ export type SonnerArgs = {
  * no painel. A aspa simples é escapada porque o literal é escrito com ela.
  */
 function literal(valor: unknown, padrao = ''): string {
-  const raw = comoCodigo(valor) ?? padrao;
+  const raw = asCode(valor) ?? padrao;
   return raw.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
@@ -111,7 +111,7 @@ function page(options: {
  */
 export const sonnerPlaygroundSource: SourceTransform<SonnerArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const type = comoCodigo(args.type) ?? 'success';
+  const type = asCode(args.type) ?? 'success';
   const description = literal(args.description);
   const actionLabel = literal(args.actionLabel);
   const options = [

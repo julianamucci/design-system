@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
-  paginationComReticenciasSource,
+  paginationWithEllipsisSource,
   paginationControladaSource,
   paginationDirecionalSource,
-  paginationFaixaSource,
+  paginationRangeSource,
   paginationLinkAtivoSource,
   paginationLinkInativoSource,
-  paginationPrimeiraPaginaSource,
+  paginationFirstPageSource,
   paginationRodapeDeTabelaSource,
-  paginationSimplesSource,
+  paginationSimpleSource,
   paginationSource,
   paginationUltimaPaginaSource,
 } from './pagination.source';
@@ -124,7 +124,7 @@ function irPara(n: number) {
 
 describe('transforms das stories de estado', () => {
   it('a faixa parada no meio marca a página atual e deixa os dois extremos vivos', () => {
-    const saida = paginationFaixaSource();
+    const saida = paginationRangeSource();
     expect(saida).toContain('<Pagination :total="50" :items-per-page="10" :page="3">');
     expect(saida).toContain(':is-active="n === 3"');
     // O bloqueio dos direcionais é calculado pelo componente: escrevê-lo à mão
@@ -133,7 +133,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a primeira página é a MESMA faixa parada no extremo', () => {
-    const saida = paginationPrimeiraPaginaSource();
+    const saida = paginationFirstPageSource();
     expect(saida).toContain(':page="1"');
     expect(saida).toContain(':is-active="n === 1"');
     expect(saida).not.toContain('disabled');
@@ -166,13 +166,13 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de composição', () => {
   it('a faixa simples mostra todos os números, sem reticências', () => {
-    const saida = paginationSimplesSource();
+    const saida = paginationSimpleSource();
     expect(saida).toContain('const paginas = [1, 2, 3, 4, 5]');
     expect(saida).not.toContain('PaginationEllipsis');
   });
 
   it('a lista longa intercala marcador e número, e por isso precisa do tipo', () => {
-    const saida = paginationComReticenciasSource();
+    const saida = paginationWithEllipsisSource();
     expect(saida).toContain(`type Trecho = number | 'ellipsis'`);
     expect(saida).toContain(`const trechos: Trecho[] = [1, 'ellipsis', 5, 6, 7, 'ellipsis', 12]`);
     expect(saida).toContain(`<PaginationEllipsis v-if="trecho === 'ellipsis'" />`);
@@ -211,13 +211,13 @@ describe('transforms das stories de composição', () => {
 describe('o snippet ensina o design system, não o andaime da story', () => {
   const todas = [
     paginationSource,
-    paginationFaixaSource,
-    paginationPrimeiraPaginaSource,
+    paginationRangeSource,
+    paginationFirstPageSource,
     paginationLinkInativoSource,
     paginationLinkAtivoSource,
     paginationDirecionalSource,
-    paginationSimplesSource,
-    paginationComReticenciasSource,
+    paginationSimpleSource,
+    paginationWithEllipsisSource,
     paginationUltimaPaginaSource,
     paginationControladaSource,
     paginationRodapeDeTabelaSource,

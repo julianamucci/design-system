@@ -4,10 +4,10 @@ import {
   progressComRotuloSource,
   progressConcluidoSource,
   progressCorSemanticaSource,
-  progressCoresNaListaSource,
+  listSourceProgressColors,
   progressDeterminadoSource,
   progressIndeterminadoSource,
-  progressListaSource,
+  progressListSource,
   progressProcessandoServidorSource,
   progressProcessandoSource,
   progressSource,
@@ -146,7 +146,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('na lista o nome acessível sai do DADO, um por arquivo', () => {
-    const saida = progressListaSource();
+    const saida = progressListSource();
     expect(saida).toContain(':aria-label="`Progresso do upload de ${item.nome}`"');
     // Repetir o mesmo rótulo nas três equivale a não nomear nenhuma: quem ouve
     // não saberia qual arquivo está a 92%.
@@ -155,7 +155,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('das três medidas, só as semânticas levam variante', () => {
-    const saida = progressCoresNaListaSource();
+    const saida = listSourceProgressColors();
     expect(saida.match(/data-variant=/g)).toHaveLength(2);
     // "Em andamento" não é semântico: a barra do meio fica sem variante.
     expect(saida).toContain('<Progress :model-value="72" aria-label="Progresso do backup" />');
@@ -181,8 +181,8 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     progressConcluidoSource,
     progressProcessandoSource,
     progressUploadAnimadoSource,
-    progressListaSource,
-    progressCoresNaListaSource,
+    progressListSource,
+    listSourceProgressColors,
     progressProcessandoServidorSource,
   ];
 

@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { waitForPortal } from '@/lib/wait-for-portal';
 import { painel } from './popover.fixtures';
 import {
-  popoverComTituloSource,
+  popoverWithTitleSource,
   popoverConteudoLivreSource,
   popoverFormularioSource,
 } from './popover.source';
@@ -99,7 +99,7 @@ export const WithTitle: Story = {
     docs: {
       // Entram três peças que o meta não tem — Header, Title e Description —, e
       // é o título que passa a nomear o painel.
-      source: { transform: popoverComTituloSource },
+      source: { transform: popoverWithTitleSource },
       description: {
         story: 'Header completo — PopoverHeader com Title + Description e botões de ação (Cancelar / Salvar).',
       },

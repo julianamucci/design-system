@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
-  dropdownMenuAbertoSource,
+  dropdownMenuOpenSource,
   dropdownMenuComAtalhosSource,
-  dropdownMenuComEscolhaUnicaSource,
-  dropdownMenuComMarcacaoSource,
+  dropdownMenuWithChoiceUnicaSource,
+  dropdownMenuWithMarkupSource,
   dropdownMenuComRotuloSource,
   dropdownMenuComSubmenuSource,
   dropdownMenuControladoSource,
   dropdownMenuDestrutivoSource,
-  dropdownMenuFechadoSource,
+  dropdownMenuClosedSource,
   dropdownMenuItemDesabilitadoSource,
-  dropdownMenuMarcacaoMistaSource,
+  dropdownMenuMarkupMistaSource,
   dropdownMenuPadraoSource,
   dropdownMenuSource,
 } from './dropdown-menu.source';
@@ -104,9 +104,9 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('só a story da montagem aberta escreve `default-open`', () => {
-    expect(dropdownMenuAbertoSource()).toContain('<DropdownMenu default-open>');
+    expect(dropdownMenuOpenSource()).toContain('<DropdownMenu default-open>');
     // Nas demais a prop é andaime da foto do Chromatic.
-    expect(dropdownMenuFechadoSource()).not.toContain('default-open');
+    expect(dropdownMenuClosedSource()).not.toContain('default-open');
     expect(dropdownMenuItemDesabilitadoSource()).not.toContain('default-open');
     expect(dropdownMenuComRotuloSource()).not.toContain('default-open');
   });
@@ -131,7 +131,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('os três estados da marcação aparecem lado a lado, por valor fixo', () => {
-    const saida = dropdownMenuMarcacaoMistaSource();
+    const saida = dropdownMenuMarkupMistaSource();
     expect(saida).toContain('<DropdownMenuCheckboxItem model-value="indeterminate">Nome');
     expect(saida).toContain('<DropdownMenuCheckboxItem :model-value="true">E-mail');
     expect(saida).toContain('<DropdownMenuCheckboxItem :model-value="false">Telefone');
@@ -151,7 +151,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('na marcação cada item guarda o seu próprio estado', () => {
-    const saida = dropdownMenuComMarcacaoSource();
+    const saida = dropdownMenuWithMarkupSource();
     expect(saida).toContain('const mostrarNome = ref(true)');
     expect(saida).toContain('const mostrarEmail = ref(false)');
     // Um `ref` por item — é o que separa marcação de escolha única.
@@ -160,7 +160,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('na escolha única o valor vive no grupo, e cada item traz o seu `value`', () => {
-    const saida = dropdownMenuComEscolhaUnicaSource();
+    const saida = dropdownMenuWithChoiceUnicaSource();
     expect(saida).toContain(`const tema = ref('light')`);
     expect(saida).toContain('<DropdownMenuRadioGroup v-model="tema">');
     expect(saida).toContain('<DropdownMenuRadioItem value="system">Sistema</DropdownMenuRadioItem>');

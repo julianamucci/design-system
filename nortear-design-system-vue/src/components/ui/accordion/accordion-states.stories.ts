@@ -9,9 +9,9 @@ import {
 } from './index';
 import {
   accordionAbertoSource,
-  accordionDesabilitadoSource,
+  accordionDisabledSource,
   accordionFechadoSource,
-  accordionFocoVisivelSource,
+  accordionFocusVisibleSource,
 } from './accordion.source';
 
 const meta = {
@@ -156,7 +156,7 @@ export const Disabled: Story = {
     docs: {
       // A prop mora no ITEM e o exemplo precisa do par habilitado/desabilitado
       // lado a lado — um item só não mostra o contraste.
-      source: { transform: accordionDesabilitadoSource },
+      source: { transform: accordionDisabledSource },
       description: {
         story: 'Estado disabled. Trigger não responde a cliques. Use para seções temporariamente indisponíveis.',
       },
@@ -198,7 +198,7 @@ export const FocusVisible: Story = {
     docs: {
       // O foco só se demonstra havendo para onde ir: são dois itens, e o
       // primeiro já aberto — a do meta tem um só.
-      source: { transform: accordionFocoVisivelSource },
+      source: { transform: accordionFocusVisibleSource },
       description: {
         story: 'Navegação por teclado. Tab move entre triggers. Enter e Space abrem/fecham. Focus ring ring-[3px] visível.',
       },

@@ -24,7 +24,7 @@ import {
   sidebarExpandidaSource,
   sidebarFixaSource,
   sidebarGavetaMovelSource,
-  sidebarRecolhidaIconeSource,
+  sidebarRecolhidaIconSource,
 } from './sidebar.source';
 
 const meta = {
@@ -137,7 +137,7 @@ export const CollapsedIcon: Story = {
     docs: {
       // O par é `collapsible="icon"` na barra com `:default-open="false"` no
       // provider — o meta mostra a barra aberta e sem modo de ícone.
-      source: { transform: sidebarRecolhidaIconeSource },
+      source: { transform: sidebarRecolhidaIconSource },
       description: { story: 'collapsible="icon": sidebar reduz para 3rem. Apenas ícones visíveis; tooltips ao hover. data-state="collapsed"' },
     },
   },

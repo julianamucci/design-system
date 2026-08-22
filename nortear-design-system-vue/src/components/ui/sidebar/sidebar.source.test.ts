@@ -8,7 +8,7 @@ import {
   sidebarGruposSource,
   sidebarLadoDireitoSource,
   sidebarPlaygroundSource,
-  sidebarRecolhidaIconeSource,
+  sidebarRecolhidaIconSource,
   sidebarSubmenuSource,
   sidebarVarianteFloatingSource,
   sidebarVarianteInsetSource,
@@ -23,7 +23,7 @@ const TODAS = [
   sidebarVarianteInsetSource,
   sidebarLadoDireitoSource,
   sidebarExpandidaSource,
-  sidebarRecolhidaIconeSource,
+  sidebarRecolhidaIconSource,
   sidebarFixaSource,
   sidebarCarregandoSource,
   sidebarGavetaMovelSource,
@@ -170,11 +170,11 @@ describe('a divisão de props entre provider e barra', () => {
   // atributo solto no elemento. Escrever `default-open` na barra abriria a barra
   // do mesmo jeito — pelo padrão do provider — e ninguém veria o engano.
   const abreProvider = /<SidebarProvider(?:\s[^>]*)?>/;
-  const abreBarra = /<Sidebar(?:\s[^>]*)?>/;
+  const abreBar = /<Sidebar(?:\s[^>]*)?>/;
 
   it('default-open, open e mobile-query só aparecem no provider', () => {
     for (const fn of TODAS) {
-      const barra = fn().match(abreBarra)?.[0] ?? '';
+      const barra = fn().match(abreBar)?.[0] ?? '';
       expect(barra).not.toContain('default-open');
       expect(barra).not.toContain(':open');
       expect(barra).not.toContain('mobile-query');
@@ -219,7 +219,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o modo ícone é um par: prop na barra e estado inicial no provider', () => {
-    const saida = sidebarRecolhidaIconeSource();
+    const saida = sidebarRecolhidaIconSource();
     expect(saida).toContain('<SidebarProvider :default-open="false">');
     expect(saida).toContain('<Sidebar collapsible="icon">');
     // Sem rótulo visível, o balão é o nome que sobra para quem usa ponteiro.

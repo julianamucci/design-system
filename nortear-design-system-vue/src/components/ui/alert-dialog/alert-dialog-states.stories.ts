@@ -19,7 +19,7 @@ import {
   alertDialogCanceladoSource,
   alertDialogConfirmadoSource,
   alertDialogControladoSource,
-  alertDialogFechadoSource,
+  alertDialogClosedSource,
 } from './alert-dialog.source';
 
 const meta = {
@@ -32,7 +32,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: alertDialogFechadoSource },
+      source: { transform: alertDialogClosedSource },
       description: {
         component:
           'Cada estado canônico do AlertDialog: closed, open, confirmed, cancelled e controlled.',

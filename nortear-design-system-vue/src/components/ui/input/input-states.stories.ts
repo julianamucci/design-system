@@ -10,7 +10,7 @@ import {
 import { Input } from './index';
 import {
   inputComErroSource,
-  inputComRotuloSource,
+  inputWithLabelSource,
   inputDesabilitadoSource,
   inputPaletaEscuraSource,
 } from './input.source';
@@ -26,7 +26,7 @@ const meta = {
     docs: {
       // Serve também a Focus e a WithPlaceholder: focar é interação, não
       // atributo, e o marcador já está nesta marcação.
-      source: { transform: inputComRotuloSource },
+      source: { transform: inputWithLabelSource },
       description: {
         component:
           'Estados do Input: padrão, foco, desabilitado e erro (aria-invalid). Cada asserção afere a cor computada, nunca o nome da classe.',

@@ -42,7 +42,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Componente auxiliar para dots — captura CarouselApi e sincroniza índice
-const CarouselComDots = defineComponent({
+const CarouselWithDots = defineComponent({
   components: { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext },
   setup() {
     const api = ref<CarouselApi | null>(null);
@@ -137,8 +137,8 @@ export const WithDots: Story = {
     },
   },
   render: () => ({
-    components: { CarouselComDots },
-    template: '<CarouselComDots />',
+    components: { CarouselWithDots },
+    template: '<CarouselWithDots />',
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);

@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
   cardClicavelSource,
-  cardComAcaoNoHeaderSource,
+  headerSourceCardWithAction,
   cardComImagemSource,
   cardComRodapeSource,
   cardCompactoSource,
   cardDeMetricaSource,
   cardDePerfilSource,
   cardDeProdutoSource,
-  cardSimplesSource,
+  cardSimpleSource,
   cardSource,
 } from './card.source';
 
@@ -73,7 +73,7 @@ import { Button } from '@/components/ui/button'
 
 describe('transforms das stories de tamanho e de estado', () => {
   it('a unidade mínima é cabeçalho e corpo, e não importa o que não usa', () => {
-    const saida = cardSimplesSource();
+    const saida = cardSimpleSource();
     expect(saida).not.toContain('CardFooter');
     expect(saida).not.toContain('CardAction');
     expect(saida).not.toContain('@/components/ui/button');
@@ -111,7 +111,7 @@ describe('transforms das stories de tamanho e de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('a ação vive dentro do cabeçalho, depois do título e da descrição', () => {
-    const saida = cardComAcaoNoHeaderSource();
+    const saida = headerSourceCardWithAction();
     expect(saida).toContain('  CardAction,');
     const cabecalho = saida.slice(saida.indexOf('<CardHeader>'), saida.indexOf('</CardHeader>'));
     expect(cabecalho.indexOf('<CardTitle')).toBeLessThan(cabecalho.indexOf('<CardDescription'));

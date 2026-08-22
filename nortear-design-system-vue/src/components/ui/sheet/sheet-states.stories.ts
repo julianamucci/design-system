@@ -16,7 +16,7 @@ import { REGRA_GUARDA_DE_FOCO, waitForPortal, waitForPortalGone } from '@/lib/wa
 import {
   sheetAbertoSource,
   sheetControladoSource,
-  sheetFechadoSource,
+  sheetClosedSource,
   sheetSemBotaoFecharSource,
 } from './sheet.source';
 
@@ -34,7 +34,7 @@ const meta = {
     // Painel modal aberto: ver o motivo em wait-for-portal.ts.
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
-      source: { transform: sheetFechadoSource },
+      source: { transform: sheetClosedSource },
       description: {
         component:
           'Estados canônicos do Sheet: Closed (inicial), Open (defaultOpen), ' +

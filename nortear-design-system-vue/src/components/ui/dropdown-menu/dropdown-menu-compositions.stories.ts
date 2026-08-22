@@ -21,12 +21,12 @@ import { Button } from '@/components/ui/button';
 import {
   waitForPortal,
   REGRA_GUARDA_DE_FOCO,
-  REGRA_ROLAGEM_DA_LISTA,
+  LIST_RULE_SCROLL,
 } from '@/lib/wait-for-portal';
 import {
   dropdownMenuComAtalhosSource,
-  dropdownMenuComEscolhaUnicaSource,
-  dropdownMenuComMarcacaoSource,
+  dropdownMenuWithChoiceUnicaSource,
+  dropdownMenuWithMarkupSource,
   dropdownMenuComRotuloSource,
   dropdownMenuComSubmenuSource,
 } from './dropdown-menu.source';
@@ -128,7 +128,7 @@ export const WithCheckboxItems: Story = {
     covers: ['functional.item5', 'accessibility.item4', 'visual.item2'],
     // A marcação exige estado ligado por `v-model` — dois `ref` no script, que
     // o snippet do meta (só itens de ação) não tem.
-    docs: { source: { transform: dropdownMenuComMarcacaoSource } },
+    docs: { source: { transform: dropdownMenuWithMarkupSource } },
   },
   render: () => ({
     components: componentes,
@@ -196,7 +196,7 @@ export const WithRadioGroup: Story = {
     covers: ['functional.item6', 'accessibility.item4', 'visual.item3'],
     // Na escolha única o valor vive no GRUPO, não em cada item: outra peça e
     // outro estado.
-    docs: { source: { transform: dropdownMenuComEscolhaUnicaSource } },
+    docs: { source: { transform: dropdownMenuWithChoiceUnicaSource } },
   },
   render: () => ({
     components: componentes,
@@ -260,7 +260,7 @@ export const WithSubmenu: Story = {
     // rola o item para dentro da vista. A exceção vale só aqui, e o passo
     // "o menu pai realmente rola" abaixo é o que impede que ela cubra, no
     // futuro, uma lista curta que passou a rolar sem motivo.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_ROLAGEM_DA_LISTA] } },
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, LIST_RULE_SCROLL] } },
   },
   render: () => ({
     components: componentes,

@@ -13,7 +13,7 @@ import { Globe } from 'lucide-vue-next';
 import {
   waitForPortal,
   REGRA_GUARDA_DE_FOCO,
-  REGRA_ROLAGEM_DA_LISTA,
+  LIST_RULE_SCROLL,
 } from '@/lib/wait-for-portal';
 import {
   selectAgrupadoSource,
@@ -132,7 +132,7 @@ export const WithGroups: Story = {
   parameters: {
     // Sete opções mais dois cabeçalhos: esta lista transborda a caixa e ROLA.
     // O motivo de a regra sair está em `wait-for-portal`.
-    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, REGRA_ROLAGEM_DA_LISTA] } },
+    a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO, LIST_RULE_SCROLL] } },
     docs: {
       // Grupo e cabeçalho são dois componentes a mais na composição.
       source: { transform: selectAgrupadoSource },

@@ -5,7 +5,7 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { caixaDesenhada } from '@shared/testing/skeleton-probe';
 import {
   skeletonCardPerfilSource,
-  skeletonImagemProporcaoSource,
+  skeletonImageRatioSource,
   skeletonListaSource,
   skeletonParagrafoSource,
 } from './skeleton.source';
@@ -145,7 +145,7 @@ export const ImageInAspectRatio: Story = {
     docs: {
       // Entra outro componente do design system para dar a caixa ao `fill`; o
       // snippet do meta não teria de onde tirar o import.
-      source: { transform: skeletonImagemProporcaoSource },
+      source: { transform: skeletonImageRatioSource },
       description: {
         story:
           'Placeholder de imagem dentro de uma proporção 16/9 — quem define a caixa é o container.',

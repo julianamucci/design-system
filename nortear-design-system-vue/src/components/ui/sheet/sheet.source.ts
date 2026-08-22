@@ -9,7 +9,7 @@ import {
   attr,
   attrBool,
   attrs,
-  comoCodigo,
+  asCode,
   texto,
   vueSnippet,
   type SourceTransform,
@@ -24,7 +24,7 @@ export type SheetArgs = {
   onOpenChange: (open: boolean) => void;
 };
 
-const ROTULO_GATILHO = 'Abrir filtros';
+const LABEL_TRIGGER = 'Abrir filtros';
 
 /**
  * Import do design system com as peças que a composição usa.
@@ -79,7 +79,7 @@ export const sheetPlaygroundSource: SourceTransform<SheetArgs> = (_gerado, ctx) 
   const raiz = attrs(
     attrBool('default-open', args.defaultOpen, false),
     attrBool('modal', args.modal, true),
-    comoCodigo(args.onOpenChange) && `@update:open="${texto(args.onOpenChange)}"`,
+    asCode(args.onOpenChange) && `@update:open="${texto(args.onOpenChange)}"`,
   );
   const conteudo = attrs(
     attr('side', args.side, 'right'),
@@ -96,7 +96,7 @@ export const sheetPlaygroundSource: SourceTransform<SheetArgs> = (_gerado, ctx) 
       'SheetTrigger',
     ])}\n${BOTAO}`,
     `<Sheet${raiz}>
-${GATILHO(texto(args.triggerLabel, ROTULO_GATILHO))}
+${GATILHO(texto(args.triggerLabel, LABEL_TRIGGER))}
   <SheetContent${conteudo}>
 ${cabecalho('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
 ${rodape('Cancelar', 'Aplicar filtros', 4)}
@@ -124,7 +124,7 @@ function lado(side: string, titulo: string): string {
       'SheetTrigger',
     ])}\n${BOTAO}`,
     `<Sheet default-open>
-${GATILHO(ROTULO_GATILHO)}
+${GATILHO(LABEL_TRIGGER)}
   <SheetContent${attrs(attr('side', side, 'right'))}>
 ${cabecalho(titulo, 'Configure os filtros para refinar os resultados.', 4)}
 ${rodape('Cancelar', 'Aplicar filtros', 4)}
@@ -134,7 +134,7 @@ ${rodape('Cancelar', 'Aplicar filtros', 4)}
 }
 
 /** Direita: o padrão de desktop, e por ser padrão a prop não aparece. */
-export function sheetLadoDireitoSource(): string {
+export function sheetSideDireitoSource(): string {
   return lado('right', 'Painel direito');
 }
 
@@ -157,7 +157,7 @@ export function sheetLadoInferiorSource(): string {
  * Estado inicial: sem `default-open` o painel nem chega ao DOM, e o gatilho é a
  * única coisa que existe. É a ausência que é o assunto.
  */
-export function sheetFechadoSource(): string {
+export function sheetClosedSource(): string {
   return vueSnippet(
     `${importar([
       'SheetContent',
@@ -167,7 +167,7 @@ export function sheetFechadoSource(): string {
       'SheetTrigger',
     ])}\n${BOTAO}`,
     `<Sheet>
-${GATILHO(ROTULO_GATILHO)}
+${GATILHO(LABEL_TRIGGER)}
   <SheetContent>
 ${cabecalho('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
   </SheetContent>
@@ -188,7 +188,7 @@ export function sheetAbertoSource(): string {
       'SheetTrigger',
     ])}\n${BOTAO}`,
     `<Sheet default-open>
-${GATILHO(ROTULO_GATILHO)}
+${GATILHO(LABEL_TRIGGER)}
   <SheetContent>
 ${cabecalho('Filtros avançados', 'Configure os filtros para refinar os resultados.', 4)}
 ${rodape('Cancelar', 'Aplicar filtros', 4)}
@@ -307,7 +307,7 @@ ${rodape('Cancelar', 'Aplicar filtros', 4)}
  * Edição de perfil: o corpo é um `form`, e a confirmação é o `submit` dele —
  * o rodapé fica dentro do painel, mas a ação pertence ao formulário.
  */
-export function sheetEdicaoPerfilSource(): string {
+export function sheetEditPerfilSource(): string {
   return vueSnippet(
     `${importar([
       'SheetBody',
@@ -349,7 +349,7 @@ ${campo('profile-bio', 'Bio', 'Designer de sistemas em São Paulo', 8)}
  * Navegação secundária: painel esquerdo, sem rodapé — a lista de links É a
  * ação. O `nav` leva nome próprio porque a página tem outra navegação.
  */
-export function sheetNavegacaoSecundariaSource(): string {
+export function sheetNavigationSecundariaSource(): string {
   const secoes = ['Dashboard', 'Componentes', 'Tokens', 'Documentação', 'Configurações'];
   const links = secoes
     .map(
@@ -383,7 +383,7 @@ ${links}
  * `SheetBody` também leva `tabindex="0"` por dentro, para que a região rolável
  * seja alcançável por teclado (WCAG 2.1.1).
  */
-export function sheetFormularioLongoSource(): string {
+export function sheetFormLongSource(): string {
   return vueSnippet(
     `${importar([
       'SheetBody',

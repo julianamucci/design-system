@@ -2,16 +2,16 @@ import { describe, expect, it } from 'vitest';
 import {
   alertClasseAdicionalSource,
   alertComAcaoSource,
-  alertComIconeSource,
+  alertWithIconSource,
   alertCompletoSource,
   alertContrasteSource,
   alertDefaultSource,
   alertDestructiveSource,
-  alertDismissivelPorTecladoSource,
+  keyboardSourceAlertDismissivel,
   alertDismissivelSource,
   alertInfoSource,
   alertInsercaoDinamicaSource,
-  alertLayoutSemIconeSource,
+  alertLayoutNoIconSource,
   alertSemAnuncioSource,
   alertSemIconeSource,
   alertSemTituloSource,
@@ -95,7 +95,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('fechar pelo teclado não tem nada a configurar', () => {
-    const saida = alertDismissivelPorTecladoSource();
+    const saida = keyboardSourceAlertDismissivel();
     expect(saida).toContain('<Alert dismissible dismiss-label="Fechar alerta">');
     // O controle já é botão de verdade: um handler de tecla aqui ensinaria um
     // remendo que o componente não precisa.
@@ -176,13 +176,13 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o ícone da composição é filho comum, sem prop que o posicione', () => {
-    const saida = alertComIconeSource();
+    const saida = alertWithIconSource();
     expect(saida).toContain('<Info class="nds-icon" aria-hidden="true" />');
     expect(saida).not.toContain('icon=');
   });
 
   it('a coluna única é a ausência do ícone, não uma prop de layout', () => {
-    const saida = alertLayoutSemIconeSource();
+    const saida = alertLayoutNoIconSource();
     expect(saida).not.toContain('nds-icon');
     expect(saida).toContain('<AlertTitle>Sem ícone</AlertTitle>');
   });

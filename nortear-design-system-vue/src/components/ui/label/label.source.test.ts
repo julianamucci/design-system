@@ -1,22 +1,22 @@
 import { describe, expect, it } from 'vitest';
 import {
-  labelComCaixaDeSelecaoSource,
+  selectionSourceLabelWithBox,
   labelComCampoSource,
-  labelDesabilitadoPeloGrupoSource,
+  labelDisabledPeloGroupSource,
   labelDesabilitadoSource,
   labelObrigatorioSource,
-  labelPadraoSource,
+  labelDefaultSource,
   labelSource,
 } from './label.source';
 
 const TODAS = [
   labelSource,
-  labelPadraoSource,
+  labelDefaultSource,
   labelDesabilitadoSource,
-  labelDesabilitadoPeloGrupoSource,
+  labelDisabledPeloGroupSource,
   labelObrigatorioSource,
   labelComCampoSource,
-  labelComCaixaDeSelecaoSource,
+  selectionSourceLabelWithBox,
 ];
 
 describe('labelSource', () => {
@@ -93,7 +93,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o desabilitado pelo grupo age do contêiner, sem tocar o controle irmão', () => {
-    const saida = labelDesabilitadoPeloGrupoSource();
+    const saida = labelDisabledPeloGroupSource();
     expect(saida).toContain('data-disabled="true"');
     expect(saida).not.toContain('nds-peer');
   });
@@ -121,7 +121,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('com caixa de seleção, a ordem se inverte e o bloco deita', () => {
-    const saida = labelComCaixaDeSelecaoSource();
+    const saida = selectionSourceLabelWithBox();
     expect(saida).toContain('<div class="nds-cluster" data-spacing="sm">');
     expect(saida.indexOf('<Checkbox')).toBeLessThan(saida.indexOf('<Label'));
     expect(saida).toContain(`import { Checkbox } from '@/components/ui/checkbox'`);

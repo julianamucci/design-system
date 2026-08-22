@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  inputAddonComBotaoSource,
+  inputAddonWithButtonSource,
   inputAlinhamentosSource,
-  inputComApoioSource,
+  inputWithHelperSource,
   inputComErroSource,
-  inputComRotuloSource,
+  inputWithLabelSource,
   inputDesabilitadoSource,
   inputObrigatorioSource,
   inputPaletaEscuraSource,
@@ -111,7 +111,7 @@ describe('transforms das stories de tipo', () => {
 
 describe('transforms das stories de estado', () => {
   it('o estado de repouso não escreve foco nem valor', () => {
-    const saida = inputComRotuloSource();
+    const saida = inputWithLabelSource();
     // Focar é interação: não há atributo a escrever, e inventar um ensinaria
     // uma prop que não existe.
     expect(saida).not.toContain('autofocus');
@@ -146,7 +146,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o texto de apoio é apontado pelo campo, não só exibido', () => {
-    const saida = inputComApoioSource();
+    const saida = inputWithHelperSource();
     expect(saida).toContain('aria-describedby="email-apoio"');
     expect(saida).toContain('<p id="email-apoio"');
     // Apoio não é erro: nada de aria-invalid nesta composição.
@@ -173,11 +173,11 @@ describe('transforms das stories de composição', () => {
   it('os data-testid da story não vazam para o snippet', () => {
     // São ganchos da play, não parte da composição.
     expect(inputAlinhamentosSource()).not.toContain('data-testid');
-    expect(inputAddonComBotaoSource()).not.toContain('data-testid');
+    expect(inputAddonWithButtonSource()).not.toContain('data-testid');
   });
 
   it('o botão do acessório tem nome próprio e o ícone sai da leitura', () => {
-    const saida = inputAddonComBotaoSource();
+    const saida = inputAddonWithButtonSource();
     expect(saida).toContain('<InputGroupButton type="button" size="icon-sm" aria-label="Limpar">');
     expect(saida).toContain('<XIcon aria-hidden="true" />');
     // Sem `type="button"` o mesmo gatilho dentro de um formulário o enviaria.

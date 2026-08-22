@@ -5,7 +5,7 @@ import { Bold, Italic, Eye, List } from 'lucide-vue-next';
 import {
   toggleComRotuloSource,
   toggleContornoSource,
-  toggleIconeSource,
+  toggleIconSource,
   toggleTamanhosSource,
 } from './toggle.source';
 
@@ -19,7 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: toggleIconeSource },
+      source: { transform: toggleIconSource },
       description: {
         component:
           'Variantes visuais do Toggle: default (sem borda), outline (com borda), rótulo visível e a escada de tamanhos.',

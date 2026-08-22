@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
 import {
   tabsAbaAtivaSource,
   tabsAbaDesabilitadaSource,
-  tabsPadraoSource,
+  tabsDefaultSource,
 } from './tabs.source';
 
 const meta: Meta<any> = {
@@ -18,7 +18,7 @@ const meta: Meta<any> = {
     docs: {
       // Foco e hover não se escrevem: o conjunto canônico serve para as stories
       // cujo assunto é um estado que o navegador produz.
-      source: { transform: tabsPadraoSource },
+      source: { transform: tabsDefaultSource },
       description: {
         component:
           'Estados visuais e interativos do Tabs: Default, Active, Hover, Focus e Disabled.',

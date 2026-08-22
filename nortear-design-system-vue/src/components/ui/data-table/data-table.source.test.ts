@@ -206,9 +206,9 @@ describe('transforms das stories de composição', () => {
 
   it('redimensionar e reordenar são flags distintas, e a fixação anda em par com a ordem', () => {
     expect(dataTableColunasRedimensionaveisSource()).toContain('enable-column-resizing');
-    const parDeColunas = dataTableReordenarEFixarSource();
-    expect(parDeColunas).toContain('enable-column-ordering');
-    expect(parDeColunas).toContain('enable-column-pinning');
+    const columnsPair = dataTableReordenarEFixarSource();
+    expect(columnsPair).toContain('enable-column-ordering');
+    expect(columnsPair).toContain('enable-column-pinning');
   });
 
   it('na edição inline o array é do consumidor, e o evento é quem avisa', () => {

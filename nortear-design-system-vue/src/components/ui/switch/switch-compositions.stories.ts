@@ -6,10 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
-  switchEmFormularioSource,
+  formSourceSwitch,
   switchItemDeMenuSource,
-  switchListaDePreferenciasSource,
-  switchPainelDeConfiguracoesSource,
+  preferenciasSourceSwitchList,
+  configSourceSwitchPanel,
 } from './switch.source';
 
 const meta = {
@@ -21,7 +21,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: switchPainelDeConfiguracoesSource },
+      source: { transform: configSourceSwitchPanel },
       description: {
         component:
           'Padrões de composição do Switch: painel de configurações, lista de preferências, em formulário e item de menu compacto.',
@@ -92,7 +92,7 @@ export const PreferenceList: Story = {
     docs: {
       // Três preferências relacionadas são uma lista de verdade: `ul`/`li` em
       // vez das `div` empilhadas do painel, e sem texto de apoio.
-      source: { transform: switchListaDePreferenciasSource },
+      source: { transform: preferenciasSourceSwitchList },
     },
   },
   render: () => ({
@@ -129,9 +129,9 @@ export const PreferenceList: Story = {
 
     await step('Clicar no rótulo alterna só o controle daquela linha', async () => {
       const push = canvas.getByRole('switch', { name: /Notificações push/i });
-      const antesPush = push.getAttribute('aria-checked');
+      const beforePush = push.getAttribute('aria-checked');
       await definir(email, true, rotulo);
-      await expect(push.getAttribute('aria-checked')).toBe(antesPush);
+      await expect(push.getAttribute('aria-checked')).toBe(beforePush);
       await definir(email, false, rotulo);
     });
   },
@@ -142,7 +142,7 @@ export const InForm: Story = {
     docs: {
       // O `form` traz outros dois componentes e o `name`, que é o que faz o
       // switch entrar no envio nativo — nada disso está no painel do meta.
-      source: { transform: switchEmFormularioSource },
+      source: { transform: formSourceSwitch },
     },
   },
   render: () => ({

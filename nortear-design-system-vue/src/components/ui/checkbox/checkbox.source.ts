@@ -52,7 +52,7 @@ function par(opcoes: {
 </div>`;
 }
 
-const ROTULO_TERMOS = 'Aceito os termos e condições';
+const LABEL_TERMOS = 'Aceito os termos e condições';
 
 /**
  * Playground: o par canônico, com estado inicial, desabilitado, obrigatório,
@@ -67,7 +67,7 @@ export const checkboxSource: SourceTransform<CheckboxArgs> = (_gerado, ctx) =>
     IMPORT,
     par({
       id: 'termos',
-      rotulo: ROTULO_TERMOS,
+      rotulo: LABEL_TERMOS,
       caixa: [
         attrChecked(ctx?.args?.checked),
         attrBool('disabled', ctx?.args?.disabled, false),
@@ -81,14 +81,14 @@ export const checkboxSource: SourceTransform<CheckboxArgs> = (_gerado, ctx) =>
 
 /** Estado de partida: a caixa nasce desmarcada, sem prop nenhuma. */
 export function checkboxDesmarcadoSource(): string {
-  return vueSnippet(IMPORT, par({ id: 'termos', rotulo: ROTULO_TERMOS }));
+  return vueSnippet(IMPORT, par({ id: 'termos', rotulo: LABEL_TERMOS }));
 }
 
 /** Marcado de saída — estado inicial, sem controle externo. */
 export function checkboxMarcadoSource(): string {
   return vueSnippet(
     IMPORT,
-    par({ id: 'termos', rotulo: ROTULO_TERMOS, caixa: [attrChecked(true)] }),
+    par({ id: 'termos', rotulo: LABEL_TERMOS, caixa: [attrChecked(true)] }),
   );
 }
 
@@ -149,7 +149,7 @@ export function checkboxErroSource(): string {
     `<div class="nds-stack" data-spacing="xs">
   <div class="nds-cluster" data-spacing="sm">
     <Checkbox id="termos" aria-invalid="true" aria-describedby="termos-erro" />
-    <label for="termos" class="nds-label">${ROTULO_TERMOS}</label>
+    <label for="termos" class="nds-label">${LABEL_TERMOS}</label>
   </div>
   <p id="termos-erro" class="nds-text-body nds-text-destructive nds-pl-6">
     Você precisa aceitar os termos para continuar.
@@ -162,7 +162,7 @@ export function checkboxErroSource(): string {
  * Foco visível: não há prop a ligar — o anel sai do próprio componente quando o
  * foco vem do teclado. O que o exemplo mostra é a forma canônica.
  */
-export function checkboxFocoSource(): string {
+export function checkboxFocusSource(): string {
   return vueSnippet(
     IMPORT,
     par({ id: 'foco', rotulo: 'Foco visível via teclado' }),
@@ -170,8 +170,8 @@ export function checkboxFocoSource(): string {
 }
 
 /** Composição mínima: a caixa e o rótulo que a nomeia. */
-export function checkboxComRotuloSource(): string {
-  return vueSnippet(IMPORT, par({ id: 'termos', rotulo: ROTULO_TERMOS }));
+export function checkboxWithLabelSource(): string {
+  return vueSnippet(IMPORT, par({ id: 'termos', rotulo: LABEL_TERMOS }));
 }
 
 /**
@@ -277,7 +277,7 @@ import { Label } from '@/components/ui/label'`,
   <div class="nds-cluster" data-align="start" data-spacing="sm">
     <Checkbox id="termos" name="terms" value="accepted" required class="nds-mt-0-5" />
     <div class="nds-stack" data-spacing="xs">
-      <Label for="termos">${ROTULO_TERMOS}</Label>
+      <Label for="termos">${LABEL_TERMOS}</Label>
       <p class="nds-text-caption nds-text-muted-foreground">
         Campo obrigatório para criar a conta.
       </p>

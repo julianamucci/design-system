@@ -12,8 +12,8 @@ import {
 import { abrir, esperarPainel, esperarPainelSumir, painelAberto } from './navigation-menu.fixtures';
 import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import {
-  navigationMenuComDestaqueSource,
-  navigationMenuComPainelSource,
+  navigationMenuWithHighlightSource,
+  navigationMenuWithPanelSource,
   navigationMenuMegaMenuSource,
   navigationMenuSomenteLinksSource,
 } from './navigation-menu.source';
@@ -110,7 +110,7 @@ export const WithDropdown: Story = {
     docs: {
       // Entra o par gatilho/painel, que a barra plana do meta não tem: é a
       // diferença que decide se o componente vale a pena.
-      source: { transform: navigationMenuComPainelSource },
+      source: { transform: navigationMenuWithPanelSource },
       description: { story: 'Um gatilho com lista vertical de destinos — padrão comum para três a oito páginas relacionadas.' },
     },
   },
@@ -291,7 +291,7 @@ export const WithHighlightedCard: Story = {
     docs: {
       // O destaque é um destino SOLTO na grade, irmão da lista de apoio — não
       // há `<li>` em volta dele, e é isso que o deixa ocupar a coluna inteira.
-      source: { transform: navigationMenuComDestaqueSource },
+      source: { transform: navigationMenuWithHighlightSource },
       description: {
         story:
           'Um destino em destaque ao lado dos complementares — a hierarquia aparece pelo tamanho do bloco, não por cor.',

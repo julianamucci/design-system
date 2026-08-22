@@ -73,7 +73,7 @@ const modal = useDrawerModal()
  */
 const painel = ref<{ $el?: unknown } | null>(null)
 
-async function levarFocoParaODentro(instancia: { $el?: unknown }) {
+async function moveFocusInside(instancia: { $el?: unknown }) {
   // Acompanha alguns quadros em vez de agir num instante só, porque a abertura
   // não acontece toda de uma vez: o elemento aparece num quadro, o
   // `data-state` vira `open` em outro, e o fechamento anterior ainda pode
@@ -122,7 +122,7 @@ watch(
   async (instancia) => {
     if (!instancia) return
     await nextTick()
-    void levarFocoParaODentro(instancia)
+    void moveFocusInside(instancia)
   },
   { flush: 'post' },
 )

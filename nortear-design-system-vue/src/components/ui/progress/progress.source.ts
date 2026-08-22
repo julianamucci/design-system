@@ -19,7 +19,7 @@ export type ProgressArgs = {
 };
 
 /** Escala que a barra assume quando ninguém pede outra. */
-const MAX_PADRAO = 100;
+const MAX_DEFAULT = 100;
 
 /**
  * O valor da barra é a API inteira do componente — ele nunca é ruído, nem
@@ -41,7 +41,7 @@ function valor(bruto: unknown): string {
 
 /** Escala máxima: essa sim some quando é a de fábrica. */
 function escala(bruto: unknown): string {
-  if (typeof bruto !== 'number' || Number.isNaN(bruto) || bruto === MAX_PADRAO) return '';
+  if (typeof bruto !== 'number' || Number.isNaN(bruto) || bruto === MAX_DEFAULT) return '';
   return `:max="${bruto}"`;
 }
 
@@ -242,7 +242,7 @@ onUnmounted(() => {
  * ouve não saberia qual arquivo está a 92%. Por isso o rótulo carrega o nome do
  * arquivo, e mora no dado, não no markup.
  */
-export function progressListaSource(): string {
+export function progressListSource(): string {
   return vueSnippet(
     `${IMPORT}
 
@@ -270,7 +270,7 @@ const itens = [
  * Três medidas na mesma tela, cada uma com a cor que o seu significado pede —
  * e a do meio sem variante nenhuma, porque "em andamento" não é semântico.
  */
-export function progressCoresNaListaSource(): string {
+export function listSourceProgressColors(): string {
   return vueSnippet(
     IMPORT,
     `<div class="nds-stack" data-spacing="sm">

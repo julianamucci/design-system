@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import {
   textareaComApoioSource,
   textareaComContadorSource,
-  textareaComRotuloSource,
+  textareaWithLabelSource,
   textareaInvalidoSource,
   textareaObrigatorioSource,
 } from './textarea.source';
@@ -19,7 +19,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: textareaComRotuloSource },
+      source: { transform: textareaWithLabelSource },
       description: {
         component:
           'O Textarea deve sempre ser acompanhado de um Label acessível. Composicoes comuns: com Label, com texto de apoio, com contador de caracteres e com mensagem de erro.',

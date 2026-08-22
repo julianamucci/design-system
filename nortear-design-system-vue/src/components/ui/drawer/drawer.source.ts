@@ -107,7 +107,7 @@ function rodape(acao: string, saida: string, destrutiva = false): string {
 }
 
 /** Rodapé de saída única: não há o que confirmar, só o que fechar. */
-function rodapeDeSaida(saida: string): string {
+function outputFooter(saida: string): string {
   return `    <DrawerFooter>
       <DrawerClose as-child>
         <Button variant="outline">${saida}</Button>
@@ -115,7 +115,7 @@ function rodapeDeSaida(saida: string): string {
     </DrawerFooter>`;
 }
 
-const PECAS_COMPLETAS = [
+const PARTS_COMPLETAS = [
   'Drawer',
   'DrawerBody',
   'DrawerClose',
@@ -127,7 +127,7 @@ const PECAS_COMPLETAS = [
   'DrawerTrigger',
 ];
 
-const PECAS_SEM_CORPO = PECAS_COMPLETAS.filter((peca) => peca !== 'DrawerBody');
+const PARTS_NO_BODY = PARTS_COMPLETAS.filter((peca) => peca !== 'DrawerBody');
 
 /**
  * Forma canônica: gatilho, cabeçalho, corpo rolável e o par de ações.
@@ -138,7 +138,7 @@ const PECAS_SEM_CORPO = PECAS_COMPLETAS.filter((peca) => peca !== 'DrawerBody');
 export const drawerSource: SourceTransform<DrawerArgs> = (_gerado, ctx) => {
   const { direction, defaultOpen, dismissible, modal } = ctx?.args ?? {};
   return vueSnippet(
-    importar(PECAS_COMPLETAS),
+    importar(PARTS_COMPLETAS),
     drawer({
       raiz: attrs(
         attr('direction', direction, 'bottom'),
@@ -165,7 +165,7 @@ function porDirecao(
   gatilho: string,
 ): string {
   return vueSnippet(
-    importar(PECAS_COMPLETAS),
+    importar(PARTS_COMPLETAS),
     drawer({
       raiz: attr('direction', direction, 'bottom'),
       gatilho,
@@ -174,7 +174,7 @@ function porDirecao(
       corpo: `    <DrawerBody class="nds-text-body nds-text-muted-foreground">
       Conteúdo do painel.
     </DrawerBody>`,
-      rodape: rodapeDeSaida('Fechar'),
+      rodape: outputFooter('Fechar'),
     }),
   );
 }
@@ -223,14 +223,14 @@ export function drawerDireitaSource(): string {
  * Fechado, o painel não existe no DOM — e o gatilho é o único caminho de
  * entrada.
  */
-export function drawerFechadoSource(): string {
+export function drawerClosedSource(): string {
   return vueSnippet(
-    importar(PECAS_SEM_CORPO),
+    importar(PARTS_NO_BODY),
     drawer({
       gatilho: 'Abrir drawer',
       titulo: 'Editar perfil',
       descricao: 'Atualize seus dados.',
-      rodape: rodapeDeSaida('Cancelar'),
+      rodape: outputFooter('Cancelar'),
     }),
   );
 }
@@ -243,7 +243,7 @@ export function drawerFechadoSource(): string {
  */
 export function drawerAbertoSource(): string {
   return vueSnippet(
-    importar(PECAS_SEM_CORPO.filter((peca) => peca !== 'DrawerTrigger')),
+    importar(PARTS_NO_BODY.filter((peca) => peca !== 'DrawerTrigger')),
     drawer({
       raiz: 'default-open',
       titulo: 'Editar perfil',
@@ -262,7 +262,7 @@ export function drawerAbertoSource(): string {
  */
 export function drawerControladoSource(): string {
   return vueSnippet(
-    `${importar(PECAS_SEM_CORPO.filter((peca) => peca !== 'DrawerTrigger'))}
+    `${importar(PARTS_NO_BODY.filter((peca) => peca !== 'DrawerTrigger'))}
 import { ref } from 'vue'
 
 const aberto = ref(false)`,
@@ -297,7 +297,7 @@ const aberto = ref(false)`,
  */
 export function drawerNaoDispensavelSource(): string {
   return vueSnippet(
-    importar(PECAS_SEM_CORPO.filter((peca) => peca !== 'DrawerTrigger')),
+    importar(PARTS_NO_BODY.filter((peca) => peca !== 'DrawerTrigger')),
     drawer({
       raiz: ':dismissible="false"',
       titulo: 'Aceitar termos',
@@ -315,7 +315,7 @@ export function drawerNaoDispensavelSource(): string {
  */
 export function drawerComFormularioSource(): string {
   return vueSnippet(
-    importar(PECAS_COMPLETAS, true),
+    importar(PARTS_COMPLETAS, true),
     drawer({
       gatilho: 'Editar perfil',
       titulo: 'Editar perfil',
@@ -350,7 +350,7 @@ export function drawerComFormularioSource(): string {
  */
 export function drawerComConfirmacaoSource(): string {
   return vueSnippet(
-    importar(PECAS_SEM_CORPO),
+    importar(PARTS_NO_BODY),
     drawer({
       gatilho: 'Remover anexo',
       titulo: 'Remover anexo?',
@@ -369,7 +369,7 @@ export function drawerComConfirmacaoSource(): string {
  */
 export function drawerComRolagemSource(): string {
   return vueSnippet(
-    `${importar(PECAS_COMPLETAS)}
+    `${importar(PARTS_COMPLETAS)}
 
 const clausulas = [
   'Do objeto: os serviços são fornecidos no estado em que se encontram, e esta cláusula descreve o alcance de cada um deles.',

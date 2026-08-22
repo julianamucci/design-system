@@ -4,8 +4,8 @@ import { within, expect, waitFor } from 'storybook/test';
 import { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarBadge } from './index';
 import {
   avatarComIconeSource,
-  avatarComImagemSource,
-  avatarComIniciaisSource,
+  avatarWithImageSource,
+  avatarWithIniciaisSource,
   avatarComStatusSource,
   avatarGrupoSource,
 } from './avatar.source';
@@ -27,7 +27,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: avatarComImagemSource },
+      source: { transform: avatarWithImageSource },
       description: {
         component:
           'Composicoes canônicas do Avatar: com imagem, com iniciais, com ícone, agrupamento e com indicador de status.',
@@ -85,7 +85,7 @@ export const WithInitials: Story = {
   parameters: {
     covers: ['functional.item3', 'accessibility.item3', 'visual.item2'],
     // Sem imagem: some o subcomponente e some o import — a do meta traz os dois.
-    docs: { source: { transform: avatarComIniciaisSource } },
+    docs: { source: { transform: avatarWithIniciaisSource } },
   },
   render: () => ({
     components: { Avatar, AvatarFallback },

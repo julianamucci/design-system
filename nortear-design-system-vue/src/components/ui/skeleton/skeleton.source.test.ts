@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import {
   skeletonCardPerfilSource,
   skeletonCirculoSource,
-  skeletonImagemProporcaoSource,
-  skeletonLinhaTextoSource,
+  skeletonImageRatioSource,
+  skeletonLineTextSource,
   skeletonListaSource,
   skeletonMovimentoReduzidoSource,
   skeletonParagrafoSource,
@@ -16,12 +16,12 @@ const TODAS = [
   skeletonPlaygroundSource,
   skeletonRetanguloSource,
   skeletonCirculoSource,
-  skeletonLinhaTextoSource,
+  skeletonLineTextSource,
   skeletonPulsandoSource,
   skeletonMovimentoReduzidoSource,
   skeletonCardPerfilSource,
   skeletonListaSource,
-  skeletonImagemProporcaoSource,
+  skeletonImageRatioSource,
   skeletonParagrafoSource,
 ];
 
@@ -117,7 +117,7 @@ describe('transforms das stories de forma', () => {
   });
 
   it('as linhas variam de largura — é isso que as faz parecer parágrafo', () => {
-    const saida = skeletonLinhaTextoSource();
+    const saida = skeletonLineTextSource();
     const larguras = [...saida.matchAll(/data-width="([^"]+)"/g)].map((m) => m[1]);
     expect(larguras).toEqual(['full', '3-4', '1-2']);
   });
@@ -158,7 +158,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a imagem toma a caixa do AspectRatio', () => {
-    const saida = skeletonImagemProporcaoSource();
+    const saida = skeletonImageRatioSource();
     expect(saida).toContain(`import { AspectRatio } from '@/components/ui/aspect-ratio'`);
     expect(saida).toContain('<AspectRatio :ratio="16 / 9">');
     // Dentro de um container que já dá a caixa, a classe de proporção sobraria.

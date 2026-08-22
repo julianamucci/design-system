@@ -4,13 +4,13 @@ import {
   switchCompactoSource,
   switchDesabilitadoSource,
   switchDesligadoSource,
-  switchEmFormularioSource,
+  formSourceSwitch,
   switchInvalidoSource,
   switchItemDeMenuSource,
   switchLigadoSource,
-  switchListaDePreferenciasSource,
-  switchPadraoSource,
-  switchPainelDeConfiguracoesSource,
+  preferenciasSourceSwitchList,
+  switchDefaultSource,
+  configSourceSwitchPanel,
   switchSource,
 } from './switch.source';
 
@@ -65,8 +65,8 @@ import { Label } from '@/components/ui/label'
 
 describe('transforms das stories de variante', () => {
   it('a padrão é o par mínimo, sem nem o nome de campo', () => {
-    expect(switchPadraoSource()).toContain('<Switch id="notificacoes" />');
-    expect(switchPadraoSource()).not.toContain('name=');
+    expect(switchDefaultSource()).toContain('<Switch id="notificacoes" />');
+    expect(switchDefaultSource()).not.toContain('name=');
   });
 
   it('com descrição, o parágrafo fica FORA do rótulo', () => {
@@ -115,7 +115,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('o painel dá a cada linha um id próprio — ids repetidos quebram o vínculo', () => {
-    const saida = switchPainelDeConfiguracoesSource();
+    const saida = configSourceSwitchPanel();
     const ids = [...saida.matchAll(/<Switch id="([^"]+)"/g)].map((m) => m[1]);
     expect(ids).toHaveLength(3);
     expect(new Set(ids).size).toBe(ids.length);
@@ -124,7 +124,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a lista de preferências é lista de verdade, e só as linhas seguintes têm régua', () => {
-    const saida = switchListaDePreferenciasSource();
+    const saida = preferenciasSourceSwitchList();
     expect(saida).toContain('<ul class="nds-w-sm nds-rounded-lg nds-border-default">');
     expect([...saida.matchAll(/<li /g)]).toHaveLength(3);
     // A régua separa; acima da primeira linha não há o que separar.
@@ -133,7 +133,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('no formulário é o `name` que faz o campo ser enviado', () => {
-    const saida = switchEmFormularioSource();
+    const saida = formSourceSwitch();
     expect(saida).toContain('name="perfil-publico"');
     expect(saida).toContain(`import { Input } from '@/components/ui/input'`);
     expect(saida).toContain(`import { Button } from '@/components/ui/button'`);

@@ -8,10 +8,10 @@ import {
 import { Label } from './index';
 import { Input } from '@/components/ui/input';
 import {
-  labelDesabilitadoPeloGrupoSource,
+  labelDisabledPeloGroupSource,
   labelDesabilitadoSource,
   labelObrigatorioSource,
-  labelPadraoSource,
+  labelDefaultSource,
 } from './label.source';
 
 const meta = {
@@ -23,7 +23,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: labelPadraoSource },
+      source: { transform: labelDefaultSource },
       description: {
         component:
           'Estados do rótulo: padrão, desabilitado pelo controle irmão, desabilitado pelo bloco e obrigatório.',
@@ -104,7 +104,7 @@ export const DisabledViaGroup: Story = {
     covers: ['functional.item4'],
     // Aqui quem desliga é o `data-disabled` do CONTÊINER: outro caminho, outra
     // marcação.
-    docs: { source: { transform: labelDesabilitadoPeloGrupoSource } },
+    docs: { source: { transform: labelDisabledPeloGroupSource } },
   },
   render: () => ({
     components: { Label, Input },

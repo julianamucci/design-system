@@ -21,7 +21,7 @@ export type TableArgs = {
  * que importa peça que não usa ensina a copiar import morto, e a lista escrita à
  * mão desencontra da marcação na primeira edição.
  */
-function importTabela(markup: string): string {
+function importTable(markup: string): string {
   const usados = [...new Set([...markup.matchAll(/<(Table[A-Za-z]*)\b/g)].map((m) => m[1]))].sort();
   return `import {\n${usados.map((nome) => `  ${nome},`).join('\n')}\n} from '@/components/ui/table'`;
 }
@@ -55,7 +55,7 @@ const CABECALHO = `<TableHeader>
 </TableHeader>`;
 
 /** Cabeçalho derivado da lista de colunas, para as stories que iteram. */
-const CABECALHO_ITERADO = `<TableHeader>
+const HEADER_ITERADO = `<TableHeader>
   <TableRow>
     <TableHead v-for="coluna in colunas" :key="coluna">{{ coluna }}</TableHead>
   </TableRow>
@@ -97,7 +97,7 @@ function tabela(...secoes: string[]): string {
 
 /** Monta o SFC já com o import derivado da marcação. */
 function snippet(estado: string, markup: string, importsExtra = ''): string {
-  const imports = [importTabela(markup), importsExtra].filter(Boolean).join('\n');
+  const imports = [importTable(markup), importsExtra].filter(Boolean).join('\n');
   return vueSnippet(estado ? `${imports}\n\n${estado}` : imports, markup);
 }
 
@@ -141,7 +141,7 @@ export function tableComRodapeSource(): string {
  * legenda visível duplicaria. `nds-sr-only` tira da tela sem tirar do DOM —
  * `display: none` tiraria também da árvore de acessibilidade.
  */
-export function tableLegendaInvisivelSource(): string {
+export function tableCaptionInvisivelSource(): string {
   const cabecalho = `<TableHeader>
   <TableRow>
     <TableHead>Fatura</TableHead>
@@ -244,7 +244,7 @@ export function tableVaziaSource(): string {
 </TableBody>`;
   return snippet(
     COLUNAS,
-    tabela(legenda('Lista de faturas recentes'), CABECALHO_ITERADO, corpo),
+    tabela(legenda('Lista de faturas recentes'), HEADER_ITERADO, corpo),
   );
 }
 
@@ -291,7 +291,7 @@ export function tableCarregandoSource(): string {
   </TableRow>
 </TableBody>`;
   const markup = `<div role="status" aria-busy="true" aria-label="Carregando faturas">
-${indentar(tabela(legenda('Lista de faturas recentes'), CABECALHO_ITERADO, corpo))}
+${indentar(tabela(legenda('Lista de faturas recentes'), HEADER_ITERADO, corpo))}
 </div>`;
   return snippet(COLUNAS, markup, `import { Skeleton } from '@/components/ui/skeleton'`);
 }

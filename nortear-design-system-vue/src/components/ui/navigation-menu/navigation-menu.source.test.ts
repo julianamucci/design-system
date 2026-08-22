@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   navigationMenuAbertoSource,
   navigationMenuAtivoSource,
-  navigationMenuComDestaqueSource,
-  navigationMenuComPainelSource,
-  navigationMenuFechadoSource,
+  navigationMenuWithHighlightSource,
+  navigationMenuWithPanelSource,
+  navigationMenuClosedSource,
   navigationMenuHorizontalSource,
   navigationMenuMegaMenuSource,
   navigationMenuSomenteLinksSource,
@@ -145,7 +145,7 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('fechado é ausência: nenhuma prop declara o estado', () => {
-    const saida = navigationMenuFechadoSource();
+    const saida = navigationMenuClosedSource();
     expect(saida).toContain('<NavigationMenu aria-label="Navegação principal">');
     expect(saida).not.toContain('default-value');
   });
@@ -178,7 +178,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o painel simples é uma lista vertical de destinos sob um gatilho', () => {
-    const saida = navigationMenuComPainelSource();
+    const saida = navigationMenuWithPanelSource();
     expect(saida).toContain('<NavigationMenuItem value="planos">');
     expect(saida).toContain('<NavigationMenuTrigger>Planos</NavigationMenuTrigger>');
     expect(saida.match(/<NavigationMenuChild /g)).toHaveLength(3);
@@ -197,7 +197,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('no painel com destaque o destino grande é irmão da lista, sem `<li>`', () => {
-    const saida = navigationMenuComDestaqueSource();
+    const saida = navigationMenuWithHighlightSource();
     expect(saida).toContain('<NavigationMenuChild href="#comece" class="nds-h-full">');
     // A hierarquia vem do tamanho do bloco, e o bloco só ocupa a coluna inteira
     // por estar solto na grade — dentro de um `<li>` ele voltaria à altura do
@@ -212,13 +212,13 @@ describe('o snippet ensina o design system, não o andaime da story', () => {
     navigationMenuSource,
     navigationMenuHorizontalSource,
     navigationMenuVerticalSource,
-    navigationMenuFechadoSource,
+    navigationMenuClosedSource,
     navigationMenuAbertoSource,
     navigationMenuAtivoSource,
     navigationMenuSomenteLinksSource,
-    navigationMenuComPainelSource,
+    navigationMenuWithPanelSource,
     navigationMenuMegaMenuSource,
-    navigationMenuComDestaqueSource,
+    navigationMenuWithHighlightSource,
   ];
 
   it('nenhuma traz a moldura de contenção nem o barrador de navegação', () => {

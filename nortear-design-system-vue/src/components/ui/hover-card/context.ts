@@ -12,4 +12,4 @@ export type HoverCardContext = {
   gatilho: Ref<HTMLElement | null>
 }
 
-export const CHAVE_HOVER_CARD: InjectionKey<HoverCardContext> = Symbol('nds-hover-card')
+export const KEY_HOVER_CARD: InjectionKey<HoverCardContext> = Symbol('nds-hover-card')

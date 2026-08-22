@@ -14,7 +14,7 @@ import {
   attrBool,
   attrNum,
   attrs,
-  comoCodigo,
+  asCode,
   indentar,
   texto,
   vueSnippet,
@@ -34,8 +34,8 @@ export type HoverCardArgs = {
 const IMPORT = `import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'`;
 
 /** Espera padrão do design system, igual nas cinco stacks. */
-const ABRIR_PADRAO = 600;
-const FECHAR_PADRAO = 300;
+const OPEN_DEFAULT = 600;
+const CLOSE_DEFAULT = 300;
 
 /** Aparência do gatilho quando ele é um link de verdade. */
 const GATILHO_LINK = 'nds-text-primary nds-font-medium nds-hover-underline';
@@ -114,12 +114,12 @@ export const hoverCardSource: SourceTransform<HoverCardArgs> = (_gerado, ctx) =>
       depois: 'há 2 horas.',
       raiz: attrs(
         attrBool('default-open', args.defaultOpen, false),
-        attrNum('open-delay', args.openDelay, ABRIR_PADRAO),
-        attrNum('close-delay', args.closeDelay, FECHAR_PADRAO),
+        attrNum('open-delay', args.openDelay, OPEN_DEFAULT),
+        attrNum('close-delay', args.closeDelay, CLOSE_DEFAULT),
       ).trim(),
       // O gatilho é um link de verdade: no toque não existe hover, e é pelo
       // clique que a mesma informação continua alcançável.
-      gatilho: link('/users/joana', texto(comoCodigo(args.triggerLabel), '@joana')),
+      gatilho: link('/users/joana', texto(asCode(args.triggerLabel), '@joana')),
       painel: attrs(attr('side', args.side, 'bottom'), attr('align', args.align, 'center')).trim(),
       conteudo: CARTAO_PERFIL,
     }),
@@ -130,7 +130,7 @@ export const hoverCardSource: SourceTransform<HoverCardArgs> = (_gerado, ctx) =>
  * Espera padrão: nenhum atraso escrito no markup. O cartão usa os 600ms para
  * abrir e 300ms para fechar que o componente já traz.
  */
-export function hoverCardPadraoSource(): string {
+export function hoverCardDefaultSource(): string {
   return vueSnippet(
     IMPORT,
     frase({

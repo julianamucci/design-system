@@ -22,7 +22,7 @@ export type SkeletonArgs = {
 const IMPORT = `import { Skeleton } from '@/components/ui/skeleton'`;
 
 /** Formas que respondem a `data-width`; nas outras o atributo não faz nada. */
-const TEM_LARGURA = new Set(['text', 'heading']);
+const HAS_WIDTH = new Set(['text', 'heading']);
 
 /**
  * A região que anuncia o carregamento.
@@ -56,7 +56,7 @@ function regiao(opcoes: {
 function peca(shape: string, width?: string, classe?: string): string {
   const partes = [
     `data-shape="${shape}"`,
-    width && TEM_LARGURA.has(shape) ? `data-width="${width}"` : '',
+    width && HAS_WIDTH.has(shape) ? `data-width="${width}"` : '',
     classe ? `class="${classe}"` : '',
   ].filter(Boolean);
   return `<Skeleton ${partes.join(' ')} />`;
@@ -121,7 +121,7 @@ export function skeletonCirculoSource(): string {
  * fração do container. Variar a fração entre as linhas é o que faz o bloco
  * parecer parágrafo em vez de tabela.
  */
-export function skeletonLinhaTextoSource(): string {
+export function skeletonLineTextSource(): string {
   return vueSnippet(
     IMPORT,
     regiao({
@@ -209,7 +209,7 @@ ${indentar(linhas(['2-3', '1-3']), 4)}
  * Aqui o container é o `AspectRatio`, que é a forma do design system de reservar
  * o lugar da mídia sem cravar altura.
  */
-export function skeletonImagemProporcaoSource(): string {
+export function skeletonImageRatioSource(): string {
   return vueSnippet(
     `${IMPORT}\nimport { AspectRatio } from '@/components/ui/aspect-ratio'`,
     regiao({

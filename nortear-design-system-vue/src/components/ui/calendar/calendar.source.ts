@@ -130,7 +130,7 @@ const periodo = ref({
  * Um limite inferior é a regra mais comum, e o componente aplica o resultado
  * dela à célula — sem clique, e fora da ordem de tabulação.
  */
-export function calendarDiasBloqueadosSource(): string {
+export function calendarDaysBloqueadosSource(): string {
   return vueSnippet(
     `${IMPORT_REF}
 import { CalendarDate, type DateValue } from '@internationalized/date'
@@ -157,7 +157,7 @@ export function calendarHojeSource(): string {
 /* ------------------------------------------------------------------ layouts */
 
 /** Legenda operável: mês e ano viram seletores, para saltar de período. */
-export function calendarLegendaComSeletoresSource(): string {
+export function calendarCaptionWithSelectorsSource(): string {
   return calendario('layout="month-and-year"');
 }
 
@@ -170,7 +170,7 @@ export function calendarDoisMesesSource(): string {
  * Seis linhas de semana sempre: a altura do bloco para de mudar ao virar o mês,
  * e nada abaixo dele salta.
  */
-export function calendarSeisSemanasSource(): string {
+export function calendarSeisWeeksSource(): string {
   return calendario('fixed-weeks');
 }
 
@@ -184,7 +184,7 @@ export function calendarSeisSemanasSource(): string {
  * escolha faz duas coisas — guarda a data e fecha o popover — e isso não cabe
  * na atribuição direta do atalho.
  */
-export function calendarSeletorDeDataSource(): string {
+export function dataSourceCalendarSelector(): string {
   return vueSnippet(
     `import { computed, ref } from 'vue'
 import { CalendarDate, getLocalTimeZone, type DateValue } from '@internationalized/date'

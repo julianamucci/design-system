@@ -15,7 +15,7 @@ import { REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import {
   navigationMenuAbertoSource,
   navigationMenuAtivoSource,
-  navigationMenuFechadoSource,
+  navigationMenuClosedSource,
 } from './navigation-menu.source';
 
 const meta = {
@@ -28,7 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: navigationMenuFechadoSource },
+      source: { transform: navigationMenuClosedSource },
       description: {
         component:
           'Os três estados canônicos: Fechado (só a barra), Aberto (painel do item ativo) e Ativo (o destino da página atual).',

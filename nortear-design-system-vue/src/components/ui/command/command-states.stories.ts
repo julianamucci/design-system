@@ -13,7 +13,7 @@ import {
 import {
   commandItemDesabilitadoSource,
   commandItemMarcadoSource,
-  commandVazioSource,
+  commandEmptySource,
 } from './command.source';
 
 const meta = {
@@ -26,7 +26,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: commandVazioSource },
+      source: { transform: commandEmptySource },
       description: {
         component:
           'Os estados que a paleta assume sozinha (sem resultados) e os que cada comando '

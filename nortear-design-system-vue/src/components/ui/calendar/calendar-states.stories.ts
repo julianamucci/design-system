@@ -5,7 +5,7 @@ import { CalendarDate } from '@internationalized/date';
 import { Calendar } from './index';
 import { RangeCalendar } from '@/components/ui/range-calendar';
 import {
-  calendarDiasBloqueadosSource,
+  calendarDaysBloqueadosSource,
   calendarHojeSource,
   calendarIntervaloSource,
   calendarSource,
@@ -104,7 +104,7 @@ export const Disabled: Story = {
     // Quem bloqueia é uma função por data, e ela precisa aparecer inteira: a do
     // meta mostraria um calendário sem regra nenhuma.
     docs: {
-      source: { transform: calendarDiasBloqueadosSource },
+      source: { transform: calendarDaysBloqueadosSource },
       description: { story: 'Datas anteriores a um limite ficam bloqueadas e não podem ser escolhidas.' },
     },
   },

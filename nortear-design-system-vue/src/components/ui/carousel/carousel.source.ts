@@ -25,7 +25,7 @@ const SLIDES = `const slides = [1, 2, 3, 4, 5]`;
  * A largura máxima faz parte da lição: o carrossel recorta o que passa do
  * contêiner, e sem largura definida não há o que recortar.
  */
-const LARGURA_SM = 'nds-w-sm';
+const WIDTH_SM = 'nds-w-sm';
 
 /**
  * Miolo demonstrativo de um slide, já indentado para dentro do `CarouselItem`.
@@ -57,7 +57,7 @@ function carrossel(opcoes: {
     rotulo,
     laco = 'v-for="n in slides" :key="n"',
   } = opcoes;
-  const largura = vertical ? 'nds-w-xs' : LARGURA_SM;
+  const largura = vertical ? 'nds-w-xs' : WIDTH_SM;
   return `<Carousel${attrs(raiz, `class="${largura}"`, `aria-label="${rotulo}"`)}>
   <CarouselContent${attrs(trilho)}>
     <CarouselItem ${attrs(laco, item).trim()}>
@@ -115,7 +115,7 @@ export function carouselVerticalSource(): string {
  * Estado de entrada: o índice inicial é opção do motor, e a seta de voltar
  * desabilita sozinha — o componente calcula os extremos.
  */
-export function carouselPrimeiroSlideSource(): string {
+export function carouselFirstSlideSource(): string {
   return vueSnippet(
     `${IMPORT}\n\n${SLIDES}\nconst opts = { startIndex: 0 }`,
     carrossel({ raiz: ':opts="opts"', rotulo: 'Slides no primeiro item' }),
@@ -198,7 +198,7 @@ const slides = [
   'Lago entre montanhas',
   'Campo ao entardecer',
 ]`,
-    `<Carousel class="${LARGURA_SM}" aria-label="Galeria de fotos do produto">
+    `<Carousel class="${WIDTH_SM}" aria-label="Galeria de fotos do produto">
   <CarouselContent>
     <CarouselItem v-for="(rotulo, i) in slides" :key="i">
       <div class="nds-cluster nds-aspect-16-9 nds-p-4 nds-bg-muted-soft nds-rounded-lg" data-align="end" data-justify="start">
@@ -237,7 +237,7 @@ function aoIniciar(payload: CarouselApi) {
   payload.on('select', () => { atual.value = payload.selectedScrollSnap() })
 }`,
     `<div class="nds-stack" data-spacing="md">
-  <Carousel class="${LARGURA_SM}" aria-label="Galeria com dots" @init-api="aoIniciar">
+  <Carousel class="${WIDTH_SM}" aria-label="Galeria com dots" @init-api="aoIniciar">
     <CarouselContent>
       <CarouselItem v-for="n in slides" :key="n">
 ${miolo(false, 8)}

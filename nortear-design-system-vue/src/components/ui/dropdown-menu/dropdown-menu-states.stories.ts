@@ -12,11 +12,11 @@ import { Button } from '@/components/ui/button';
 import { waitForPortal, waitForPortalGone, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
-  dropdownMenuAbertoSource,
+  dropdownMenuOpenSource,
   dropdownMenuControladoSource,
-  dropdownMenuFechadoSource,
+  dropdownMenuClosedSource,
   dropdownMenuItemDesabilitadoSource,
-  dropdownMenuMarcacaoMistaSource,
+  dropdownMenuMarkupMistaSource,
 } from './dropdown-menu.source';
 
 const meta = {
@@ -29,7 +29,7 @@ const meta = {
     actions: { disable: true },
     a11y: { config: { rules: [REGRA_GUARDA_DE_FOCO] } },
     docs: {
-      source: { transform: dropdownMenuFechadoSource },
+      source: { transform: dropdownMenuClosedSource },
       description: {
         component:
           'Fechado, aberto, controlado por fora e item desabilitado. Teclado, foco e bloqueio ' +
@@ -90,7 +90,7 @@ export const Open: Story = {
     covers: ['functional.item2', 'accessibility.item3', 'accessibility.item4'],
     // Aqui a montagem já aberta É o assunto — nas outras stories a prop é só
     // andaime da foto do Chromatic.
-    docs: { source: { transform: dropdownMenuAbertoSource } },
+    docs: { source: { transform: dropdownMenuOpenSource } },
   },
   render: () => ({
     components: componentes,
@@ -267,7 +267,7 @@ export const CheckboxIndeterminate: Story = {
     covers: ['functional.item8'],
     // Itens de MARCAÇÃO nos três estados, e não itens de ação: outra peça e
     // outra prop.
-    docs: { source: { transform: dropdownMenuMarcacaoMistaSource } },
+    docs: { source: { transform: dropdownMenuMarkupMistaSource } },
   },
   render: () => ({
     components: componentes,

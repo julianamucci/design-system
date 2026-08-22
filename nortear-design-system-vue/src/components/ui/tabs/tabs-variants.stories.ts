@@ -5,7 +5,7 @@ import {
   medirCrescimentoDoTrilho,
 } from '@shared/testing/tabs-probe';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './index';
-import { tabsLinhaSource, tabsPadraoSource, tabsVerticalSource } from './tabs.source';
+import { tabsLinhaSource, tabsDefaultSource, tabsVerticalSource } from './tabs.source';
 
 const TRANSPARENTE = 'rgba(0, 0, 0, 0)';
 
@@ -18,7 +18,7 @@ const meta: Meta<any> = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: tabsPadraoSource },
+      source: { transform: tabsDefaultSource },
       description: {
         component:
           'Variantes visuais do Tabs: Default (trilho com fundo próprio), Line (indicador em linha, sem trilho) e Vertical (lista em coluna à esquerda do painel).',
@@ -79,10 +79,10 @@ export const Default: Story = {
     });
 
     await step('A aba ativa se distingue por fundo, não só por cor de texto', async () => {
-      const fundoAtiva = getComputedStyle(abas[0]).backgroundColor;
-      const fundoInativa = getComputedStyle(abas[1]).backgroundColor;
-      await expect(fundoAtiva).not.toBe(fundoInativa);
-      await expect(fundoAtiva).not.toBe(TRANSPARENTE);
+      const backgroundAtiva = getComputedStyle(abas[0]).backgroundColor;
+      const backgroundInativa = getComputedStyle(abas[1]).backgroundColor;
+      await expect(backgroundAtiva).not.toBe(backgroundInativa);
+      await expect(backgroundAtiva).not.toBe(TRANSPARENTE);
     });
 
     await step('A caixa do trilho é resultado do respiro, não medida cravada', async () => {

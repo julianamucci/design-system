@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
   tooltipAbertoSource,
-  tooltipBarraDeAcoesSource,
-  tooltipBotaoIconeSource,
+  actionsSourceTooltipBar,
+  tooltipButtonIconSource,
   tooltipComAtalhoSource,
-  tooltipComEsperaSource,
+  tooltipWithWaitSource,
   tooltipControladoSource,
-  tooltipFechadoSource,
+  tooltipClosedSource,
   tooltipPersistenteSource,
   tooltipQuatroLadosSource,
   tooltipSource,
-  tooltipTextoCurtoSource,
+  tooltipTextCurtoSource,
   tooltipTextoLongoSource,
 } from './tooltip.source';
 
@@ -80,7 +80,7 @@ import { Save } from 'lucide-vue-next'
 
 describe('transforms das stories de variante', () => {
   it('o texto curto cabe em linha, dentro do próprio balão', () => {
-    expect(tooltipTextoCurtoSource()).toContain('<TooltipContent side="bottom">Salvar</TooltipContent>');
+    expect(tooltipTextCurtoSource()).toContain('<TooltipContent side="bottom">Salvar</TooltipContent>');
   });
 
   it('o atalho vai em Kbd, e o balão vira bloco para caber a estrutura', () => {
@@ -106,7 +106,7 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('o estado de partida não pede abertura nem lado', () => {
-    const saida = tooltipFechadoSource();
+    const saida = tooltipClosedSource();
     expect(saida).not.toContain('default-open');
     expect(saida).not.toContain('side=');
     expect(saida).toContain('<TooltipContent>Salvar</TooltipContent>');
@@ -117,7 +117,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('a espera mora no Provider, não na raiz do balão', () => {
-    const saida = tooltipComEsperaSource();
+    const saida = tooltipWithWaitSource();
     expect(saida).toContain('<TooltipProvider :delay-duration="600">');
     // Com espera declarada, abrir de saída apagaria justamente o que a story
     // mede: o intervalo entre chegar e abrir.
@@ -146,11 +146,11 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('a composição de referência é a mesma do texto curto', () => {
-    expect(tooltipBotaoIconeSource()).toBe(tooltipTextoCurtoSource());
+    expect(tooltipButtonIconSource()).toBe(tooltipTextCurtoSource());
   });
 
   it('a barra de ações serve cinco gatilhos com um Provider só', () => {
-    const saida = tooltipBarraDeAcoesSource();
+    const saida = actionsSourceTooltipBar();
     expect(saida.match(/<Tooltip>/g)).toHaveLength(5);
     expect(saida.match(/<TooltipProvider>/g)).toHaveLength(1);
     expect(saida).toContain('role="toolbar"');

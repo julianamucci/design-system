@@ -10,7 +10,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from './index';
-import { hoverCardEsperaCurtaSource, hoverCardPadraoSource } from './hover-card.source';
+import { hoverCardEsperaCurtaSource, hoverCardDefaultSource } from './hover-card.source';
 
 // O HoverCard não tem variante de cor nem de tamanho: o painel é um só. O que
 // varia é o TEMPO — quanto o cartão espera antes de aparecer e antes de sumir —
@@ -28,7 +28,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: hoverCardPadraoSource },
+      source: { transform: hoverCardDefaultSource },
       description: {
         component:
           'As duas configurações de tempo. Padrão usa a espera do próprio componente; a segunda encurta a espera, o que só se justifica quando o cartão traz informação que o leitor está procurando ativamente.',
@@ -41,7 +41,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger };
-const ESTILO_PARAGRAFO = 'contain: layout; min-height: 250px; max-width: 24rem;';
+const STYLE_PARAGRAFO = 'contain: layout; min-height: 250px; max-width: 24rem;';
 
 export const Default: Story = {
   parameters: {
@@ -55,7 +55,7 @@ export const Default: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
         Comentário de
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
@@ -102,7 +102,7 @@ export const WithShortDelay: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
         Documentação em
         <HoverCard :open-delay="150" :close-delay="100">
           <HoverCardTrigger as-child>

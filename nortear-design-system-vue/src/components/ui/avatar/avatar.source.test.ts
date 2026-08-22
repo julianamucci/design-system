@@ -3,13 +3,13 @@ import {
   avatarCarregadoSource,
   avatarCarregandoSource,
   avatarComIconeSource,
-  avatarComImagemSource,
-  avatarComIniciaisSource,
+  avatarWithImageSource,
+  avatarWithIniciaisSource,
   avatarComStatusSource,
   avatarGrupoSource,
   avatarLgSource,
   avatarMdSource,
-  avatarSemImagemSource,
+  avatarNoImageSource,
   avatarSmSource,
   avatarSource,
   avatarTwoXlSource,
@@ -97,7 +97,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('sem imagem, a reserva assume o papel e o rótulo do avatar', () => {
-    const saida = avatarSemImagemSource();
+    const saida = avatarNoImageSource();
     expect(saida).toContain(`import { Avatar, AvatarFallback } from '@/components/ui/avatar'`);
     expect(saida).not.toContain('AvatarImage');
     expect(saida).toContain('<AvatarFallback role="img" aria-label="Usuário genérico">');
@@ -109,18 +109,18 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('a composição com foto segura as iniciais pelo prazo', () => {
-    expect(avatarComImagemSource()).toContain('<AvatarFallback :delay-ms="600">MR</AvatarFallback>');
+    expect(avatarWithImageSource()).toContain('<AvatarFallback :delay-ms="600">MR</AvatarFallback>');
   });
 
   it('só iniciais dispensa imagem, import e espera', () => {
-    const saida = avatarComIniciaisSource();
+    const saida = avatarWithIniciaisSource();
     expect(saida).not.toContain('AvatarImage');
     expect(saida).not.toContain('delay-ms');
     expect(saida).toContain('<AvatarFallback>JP</AvatarFallback>');
   });
 
   it('o ícone é o mesmo caso de sem-imagem, e sai idêntico', () => {
-    expect(avatarComIconeSource()).toBe(avatarSemImagemSource());
+    expect(avatarComIconeSource()).toBe(avatarNoImageSource());
   });
 
   it('no grupo, quem nomeia é o conjunto — cada foto vai com alt vazio', () => {

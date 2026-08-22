@@ -152,7 +152,7 @@ export function sliderVerticalSource(): string {
 }
 
 /** Estado de repouso: nada ligado além do valor e do nome. */
-export function sliderPadraoSource(): string {
+export function sliderDefaultSource(): string {
   return sliderUnicoSource();
 }
 
@@ -163,7 +163,7 @@ export function sliderPadraoSource(): string {
  * mostra é o desenho do foco, não uma prop — e por isso o exemplo é o mínimo,
  * sem a linha de valor que distrairia do assunto.
  */
-export function sliderFocoSource(): string {
+export function sliderFocusSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst volume = ref([50])`,
     bloco({
@@ -193,7 +193,7 @@ export function sliderDesabilitadoSource(): string {
  * No mínimo: o limite é do componente, não do exemplo. A seta para trás não
  * passa do piso — não há nada a escrever para que isso aconteça.
  */
-export function sliderNoMinimoSource(): string {
+export function minimumSourceSlider(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst volume = ref([0])`,
     bloco({
@@ -248,7 +248,7 @@ export function sliderPrecoSource(): string {
  * Dentro de um formulário: cada controle leva o próprio nome acessível, porque
  * "Brilho" e "Opacidade" são duas alças idênticas para quem não vê a tela.
  */
-export function sliderFormularioSource(): string {
+export function sliderFormSource(): string {
   return vueSnippet(
     `${IMPORTS}
 import { Input } from '@/components/ui/input'
@@ -302,7 +302,7 @@ ${indentar(
  * Faixa curta: cinco posições, uma por passo. A escala embaixo é decorativa —
  * o que o leitor de tela recebe são os limites da própria alça.
  */
-export function sliderPassoGrossoSource(): string {
+export function sliderStepGrossoSource(): string {
   return vueSnippet(
     `${IMPORTS}\n\nconst avaliacao = ref([3])`,
     bloco({

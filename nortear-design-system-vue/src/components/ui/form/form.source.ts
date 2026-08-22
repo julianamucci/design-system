@@ -46,7 +46,7 @@ const LARGURA = 'class="nds-max-w-sm"';
  * qualquer outra coisa — o espião de ação, um control de objeto — também cai no
  * padrão, porque interpolada apareceria como código no painel.
  */
-function comPadrao(valor: unknown, padrao: string): string {
+function withDefault(valor: unknown, padrao: string): string {
   if (typeof valor !== 'string') return padrao;
   return valor.trim() === '' ? '' : valor;
 }
@@ -63,7 +63,7 @@ function campo(atributos: Array<string | false | null | undefined>, filho: strin
  */
 export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const erro = comPadrao(args.error, '');
+  const erro = withDefault(args.error, '');
   // A mensagem de erro sozinha não alcança quem não enxerga cor: o controle
   // precisa sair inválido junto com ela.
   const invalido = args.ariaInvalid === true || erro !== '';
@@ -72,13 +72,13 @@ export const formSource: SourceTransform<FormArgs> = (_gerado, ctx) => {
     campo(
       [
         LARGURA,
-        attr('label', comPadrao(args.label, 'Email')),
-        attr('description', comPadrao(args.description, 'Usaremos apenas para contato.')),
+        attr('label', withDefault(args.label, 'Email')),
+        attr('description', withDefault(args.description, 'Usaremos apenas para contato.')),
         attr('error', erro),
       ],
       `<Input${attrs(
         'type="email"',
-        attr('placeholder', comPadrao(args.placeholder, 'ex: joao@empresa.com')),
+        attr('placeholder', withDefault(args.placeholder, 'ex: joao@empresa.com')),
         invalido && 'aria-invalid="true"',
         attrBool('disabled', args.disabled, false),
       )} />`,
@@ -203,7 +203,7 @@ import { Input } from '@/components/ui/input'`,
  * Formulário inteiro: controles de tipos diferentes passam pelo mesmo campo, e
  * a ordem de tabulação é a ordem do DOM — nenhum `tabindex` a escrever.
  */
-export function formMultiplosCamposSource(): string {
+export function formMultiplosFieldsSource(): string {
   return vueSnippet(
     `import { FormField } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'

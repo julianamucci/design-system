@@ -11,8 +11,8 @@ import { Kbd } from '@/components/ui/kbd';
 import { Save, Trash2, Share2, Copy, Pencil } from 'lucide-vue-next';
 import { balaoDe } from './tooltip.fixtures';
 import {
-  tooltipBarraDeAcoesSource,
-  tooltipBotaoIconeSource,
+  actionsSourceTooltipBar,
+  tooltipButtonIconSource,
   tooltipComAtalhoSource,
   tooltipQuatroLadosSource,
 } from './tooltip.source';
@@ -41,7 +41,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: tooltipBotaoIconeSource },
+      source: { transform: tooltipButtonIconSource },
       description: {
         component:
           'Botão icon-only com aria-label próprio e Tooltip de reforço, barra de ações com vários deles, atalho de teclado em Kbd e os quatro lados de posicionamento.',
@@ -97,7 +97,7 @@ export const ActionBar: Story = {
     docs: {
       // São cinco unidades dentro de uma toolbar, servidas por um Provider só —
       // a do meta mostraria um botão solto.
-      source: { transform: tooltipBarraDeAcoesSource },
+      source: { transform: actionsSourceTooltipBar },
       description: {
         story:
           'Toolbar com múltiplos botões icon-only — cada um com seu aria-label e Tooltip de reforço.',

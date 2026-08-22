@@ -7,9 +7,9 @@ import {
   toggleControladoSource,
   toggleDesabilitadoSource,
   toggleFocoSource,
-  toggleIconeSource,
+  toggleIconSource,
   toggleInvalidoSource,
-  toggleListaDeFiltrosSource,
+  filtersSourceToggleList,
   toggleSource,
   toggleTamanhosSource,
 } from './toggle.source';
@@ -138,7 +138,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('os filtros não formam grupo: o texto visível já nomeia cada um', () => {
-    const saida = toggleListaDeFiltrosSource();
+    const saida = filtersSourceToggleList();
     expect(saida).not.toContain('role="group"');
     expect(saida).not.toContain('aria-label=');
     expect(saida).toContain('<p class="nds-text-body nds-font-semibold">Filtros de exibição</p>');
@@ -156,7 +156,7 @@ describe('transforms das stories de composição', () => {
   it('o toggle de ícone é a mesma forma mínima nos dois metas que o usam', () => {
     // Um único export serve à variante padrão e ao estado desligado: os dois
     // renderizam a mesma composição, e duplicá-la abriria espaço para divergir.
-    expect(toggleIconeSource()).toContain('<Toggle aria-label="Negrito">');
-    expect(toggleIconeSource()).not.toContain('variant=');
+    expect(toggleIconSource()).toContain('<Toggle aria-label="Negrito">');
+    expect(toggleIconSource()).not.toContain('variant=');
   });
 });

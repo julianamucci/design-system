@@ -45,9 +45,9 @@ const ESTADOS = `const estados = [
  * nasce com `width: fit-content`, então o campo encolheria e cresceria a cada
  * troca de escolha se ninguém desse a ele uma largura própria.
  */
-const LARGURA_CAMPO = 'class="nds-w-xs"';
+const WIDTH_FIELD = 'class="nds-w-xs"';
 
-const ITENS_POR_LACO = `<SelectItem v-for="estado in estados" :key="estado.value" :value="estado.value">
+const LACO_ITEMS = `<SelectItem v-for="estado in estados" :key="estado.value" :value="estado.value">
   {{ estado.label }}
 </SelectItem>`;
 
@@ -94,13 +94,13 @@ export const selectSource: SourceTransform<SelectArgs> = (_gerado, ctx) => {
       ],
       // O bloqueio vale para os dois: a raiz impede a abertura, e o gatilho é
       // o que sai do percurso do Tab — `disabled` nativo, não só `aria-`.
-      gatilho: ['aria-label="Selecionar estado"', LARGURA_CAMPO, bloqueado && 'disabled'],
-      itens: ITENS_POR_LACO,
+      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD, bloqueado && 'disabled'],
+      itens: LACO_ITEMS,
     }),
   );
 };
 
-const QUATRO_ESTADOS = `<SelectItem value="sp">São Paulo</SelectItem>
+const QUATRO_STATES = `<SelectItem value="sp">São Paulo</SelectItem>
 <SelectItem value="rj">Rio de Janeiro</SelectItem>
 <SelectItem value="mg">Minas Gerais</SelectItem>
 <SelectItem value="es">Espírito Santo</SelectItem>`;
@@ -110,8 +110,8 @@ export function selectListaPlanaSource(): string {
   return vueSnippet(
     IMPORT_BASE,
     campo({
-      gatilho: ['aria-label="Selecionar estado"', LARGURA_CAMPO],
-      itens: QUATRO_ESTADOS,
+      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
+      itens: QUATRO_STATES,
     }),
   );
 }
@@ -132,7 +132,7 @@ export function selectAgrupadoSource(): string {
       'SelectValue',
     ),
     campo({
-      gatilho: ['aria-label="Selecionar estado por região"', LARGURA_CAMPO],
+      gatilho: ['aria-label="Selecionar estado por região"', WIDTH_FIELD],
       itens: `<SelectGroup>
   <SelectLabel>Sudeste</SelectLabel>
   <SelectItem value="sp">São Paulo</SelectItem>
@@ -159,7 +159,7 @@ export function selectComIconeSource(): string {
     `import { Globe } from 'lucide-vue-next'
 ${IMPORT_BASE}`,
     campo({
-      gatilho: ['aria-label="Selecionar idioma"', LARGURA_CAMPO],
+      gatilho: ['aria-label="Selecionar idioma"', WIDTH_FIELD],
       itens: `<SelectItem value="pt-BR">
   <Globe class="nds-size-4" aria-hidden="true" />
   <span>Português (BR)</span>
@@ -177,12 +177,12 @@ ${IMPORT_BASE}`,
 }
 
 /** Estado vazio: o campo mostra o placeholder, e a lista nem existe no DOM. */
-export function selectVazioSource(): string {
+export function selectEmptySource(): string {
   return vueSnippet(
     `${IMPORT_BASE}\n\n${ESTADOS}`,
     campo({
-      gatilho: ['aria-label="Selecionar estado"', LARGURA_CAMPO],
-      itens: ITENS_POR_LACO,
+      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
+      itens: LACO_ITEMS,
     }),
   );
 }
@@ -202,13 +202,13 @@ ${ESTADOS}
 const rotulos = Object.fromEntries(estados.map((estado) => [estado.value, estado.label]))`,
     campo({
       raiz: ['default-value="rj"'],
-      gatilho: ['aria-label="Selecionar estado"', LARGURA_CAMPO],
+      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
       valor: `<SelectValue placeholder="Selecione...">
   <template #default="{ modelValue }">
     {{ rotulos[modelValue] ?? 'Selecione...' }}
   </template>
 </SelectValue>`,
-      itens: ITENS_POR_LACO,
+      itens: LACO_ITEMS,
     }),
   );
 }
@@ -223,8 +223,8 @@ export function selectBloqueadoSource(): string {
     `${IMPORT_BASE}\n\n${ESTADOS}`,
     campo({
       raiz: ['disabled'],
-      gatilho: ['aria-label="Selecionar estado"', LARGURA_CAMPO, 'disabled'],
-      itens: ITENS_POR_LACO,
+      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD, 'disabled'],
+      itens: LACO_ITEMS,
     }),
   );
 }
@@ -239,8 +239,8 @@ export function selectInvalidoSource(): string {
     `<div class="nds-stack" data-spacing="sm">
 ${indentar(
   campo({
-    gatilho: ['aria-label="Selecionar estado"', 'aria-invalid="true"', LARGURA_CAMPO],
-    itens: ITENS_POR_LACO,
+    gatilho: ['aria-label="Selecionar estado"', 'aria-invalid="true"', WIDTH_FIELD],
+    itens: LACO_ITEMS,
   }),
 )}
   <p class="nds-text-body nds-text-destructive">Selecione um estado para continuar.</p>
@@ -259,14 +259,14 @@ export function selectCompactoSource(): string {
     `<div class="nds-stack" data-spacing="sm">
 ${indentar(
   campo({
-    gatilho: ['aria-label="Selecionar estado"', LARGURA_CAMPO],
-    itens: ITENS_POR_LACO,
+    gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
+    itens: LACO_ITEMS,
   }),
 )}
 
 ${indentar(
   campo({
-    gatilho: ['aria-label="Selecionar cidade"', 'size="sm"', LARGURA_CAMPO],
+    gatilho: ['aria-label="Selecionar cidade"', 'size="sm"', WIDTH_FIELD],
     itens: '<SelectItem value="campinas">Campinas</SelectItem>',
   }),
 )}
@@ -361,7 +361,7 @@ ${indentar(
  * Divisão entre grupos: o separador é linha para o olho e silêncio para o
  * leitor de tela — quem separa semanticamente continua sendo o grupo.
  */
-export function selectComSeparadorSource(): string {
+export function selectWithSeparatorSource(): string {
   return vueSnippet(
     importar(
       'Select',
@@ -374,7 +374,7 @@ export function selectComSeparadorSource(): string {
       'SelectValue',
     ),
     campo({
-      gatilho: ['aria-label="Selecionar estado"', LARGURA_CAMPO],
+      gatilho: ['aria-label="Selecionar estado"', WIDTH_FIELD],
       itens: `<SelectGroup>
   <SelectLabel>Sudeste</SelectLabel>
   <SelectItem value="sp">São Paulo</SelectItem>

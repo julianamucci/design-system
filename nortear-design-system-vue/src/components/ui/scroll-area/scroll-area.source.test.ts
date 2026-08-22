@@ -6,7 +6,7 @@ import {
   scrollAreaGaleriaSource,
   scrollAreaHorizontalSource,
   scrollAreaOciosoSource,
-  scrollAreaSemLimiteSource,
+  scrollAreaNoLimitSource,
   scrollAreaSempreSource,
   scrollAreaSidebarSource,
   scrollAreaSource,
@@ -23,7 +23,7 @@ const TODAS = [
   scrollAreaSempreSource(),
   scrollAreaAoRolarSource(),
   scrollAreaConteudoFocavelSource(),
-  scrollAreaSemLimiteSource(),
+  scrollAreaNoLimitSource(),
   scrollAreaSidebarSource(),
   scrollAreaGaleriaSource(),
   scrollAreaTabelaSource(),
@@ -92,8 +92,8 @@ const tags = Array.from({ length: 40 }, (_, i) => \`Tag \${i + 1}\`)
 describe('a altura é a lição do componente', () => {
   it('toda transform que promete rolagem declara o tamanho da janela', () => {
     // Sem limite não há transbordo, e sem transbordo não há rolagem.
-    const comRolagem = TODAS.filter((s) => s !== scrollAreaSemLimiteSource());
-    for (const saida of comRolagem) expect(saida).toMatch(/<ScrollArea[^>]*size="/);
+    const withScroll = TODAS.filter((s) => s !== scrollAreaNoLimitSource());
+    for (const saida of withScroll) expect(saida).toMatch(/<ScrollArea[^>]*size="/);
   });
 
   it('nenhuma transform crava medida em style inline', () => {
@@ -101,7 +101,7 @@ describe('a altura é a lição do componente', () => {
   });
 
   it('a story do erro de uso mostra as duas áreas, uma sem tamanho', () => {
-    const saida = scrollAreaSemLimiteSource();
+    const saida = scrollAreaNoLimitSource();
     expect(saida).toContain('<ScrollArea class="nds-w-full">');
     expect(saida).toContain('<ScrollArea size="sm" class="nds-w-full">');
   });

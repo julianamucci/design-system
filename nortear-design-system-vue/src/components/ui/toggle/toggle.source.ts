@@ -14,7 +14,7 @@ import {
   attr,
   attrBool,
   attrs,
-  comoCodigo,
+  asCode,
   indentar,
   texto,
   vueSnippet,
@@ -37,7 +37,7 @@ const IMPORT_TOGGLE = `import { Toggle } from '@/components/ui/toggle'`;
  * A lista de ícones sai da MARCAÇÃO: escrita à mão, ela desencontra do exemplo
  * na primeira edição, e um ícone importado sem uso ensina import morto.
  */
-function importIcones(markup: string): string {
+function importIcons(markup: string): string {
   const nomes = [
     ...new Set([...markup.matchAll(/<([A-Z][A-Za-z0-9]*) aria-hidden/g)].map((m) => m[1])),
   ].sort();
@@ -45,7 +45,7 @@ function importIcones(markup: string): string {
 }
 
 function snippet(markup: string, estado = '', extra = ''): string {
-  const imports = [IMPORT_TOGGLE, extra, importIcones(markup)].filter(Boolean).join('\n');
+  const imports = [IMPORT_TOGGLE, extra, importIcons(markup)].filter(Boolean).join('\n');
   return vueSnippet(estado ? `${imports}\n\n${estado}` : imports, markup);
 }
 
@@ -80,14 +80,14 @@ ${itens.map((item) => indentar(item)).join('\n')}
 /**
  * Forma canônica do painel: um toggle com os valores atuais dos controles.
  *
- * O `label` é lido por `comoCodigo`/`texto`: o control é de texto, mas qualquer
+ * O `label` é lido por `asCode`/`texto`: o control é de texto, mas qualquer
  * leitura de `ctx.args` que possa cair num espião de ação precisa da guarda — e
  * as aspas do texto precisam escapar antes de entrar num atributo.
  */
 export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const rotulo = texto(comoCodigo(args.label) ?? 'Alternar');
-  const semTexto = args.iconOnly !== false;
+  const rotulo = texto(asCode(args.label) ?? 'Alternar');
+  const noText = args.iconOnly !== false;
   const atributos = attrs(
     attr('variant', args.variant, 'default'),
     attr('size', args.size, 'default'),
@@ -96,7 +96,7 @@ export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
     attrBool('default-value', args.defaultValue, false),
     attrBool('disabled', args.disabled, false),
   ).trim();
-  const markup = semTexto
+  const markup = noText
     ? iconOnly('Bold', rotulo, atributos)
     : comRotulo('Eye', rotulo, atributos);
   return snippet(markup);
@@ -107,7 +107,7 @@ export const toggleSource: SourceTransform<ToggleArgs> = (_gerado, ctx) => {
  * escritos — no componente eles são a AUSÊNCIA do atributo, não o valor
  * "default".
  */
-export function toggleIconeSource(): string {
+export function toggleIconSource(): string {
   return snippet(iconOnly('Bold', 'Negrito'));
 }
 
@@ -229,7 +229,7 @@ ${botoes.map(([icone, rotulo]) => indentar(iconOnly(icone, rotulo, '', true))).j
  * entre si. O título da seção não é o nome dos controles — cada um se nomeia
  * pelo próprio texto visível.
  */
-export function toggleListaDeFiltrosSource(): string {
+export function filtersSourceToggleList(): string {
   return snippet(
     `<div class="nds-stack" data-spacing="sm">
   <p class="nds-text-body nds-font-semibold">Filtros de exibição</p>

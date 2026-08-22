@@ -7,8 +7,8 @@ import {
   alertDialogConfirmadoSource,
   alertDialogControladoSource,
   alertDialogDescricaoLongaSource,
-  alertDialogDestrutivoSource,
-  alertDialogFechadoSource,
+  alertDialogDestructiveSource,
+  alertDialogClosedSource,
   alertDialogNeutroSource,
   alertDialogSemDescricaoSource,
   alertDialogSource,
@@ -118,7 +118,7 @@ import { Button } from '@/components/ui/button'
 
 describe('transforms das stories de estado', () => {
   it('o fechado não declara abertura nenhuma: só o gatilho está na tela', () => {
-    const saida = alertDialogFechadoSource();
+    const saida = alertDialogClosedSource();
     expect(saida).toContain('<AlertDialog>');
     expect(saida).not.toContain('default-open');
     expect(saida).toContain('<AlertDialogTrigger as-child>');
@@ -161,7 +161,7 @@ describe('transforms das stories de composição', () => {
   it('a ordem do rodapé é Cancelar antes da ação em toda composição', () => {
     const funcoes = [
       alertDialogComIconeSource,
-      alertDialogDestrutivoSource,
+      alertDialogDestructiveSource,
       alertDialogNeutroSource,
       alertDialogSemDescricaoSource,
       alertDialogClasseExtraSource,
@@ -176,7 +176,7 @@ describe('transforms das stories de composição', () => {
 
   it('o gatilho veste o botão em vez de embrulhá-lo', () => {
     // Botão dentro de botão não é marcação válida, e o foco iria para o de fora.
-    expect(alertDialogDestrutivoSource()).toContain(
+    expect(alertDialogDestructiveSource()).toContain(
       `    <AlertDialogTrigger as-child>
       <Button variant="destructive">Excluir conta</Button>
     </AlertDialogTrigger>`,

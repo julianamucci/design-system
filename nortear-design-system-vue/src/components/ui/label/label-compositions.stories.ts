@@ -4,7 +4,7 @@ import { Label } from './index';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
-  labelComCaixaDeSelecaoSource,
+  selectionSourceLabelWithBox,
   labelComCampoSource,
   labelObrigatorioSource,
 } from './label.source';
@@ -62,7 +62,7 @@ export const WithInput: Story = {
 export const WithCheckbox: Story = {
   // A ordem se inverte e o bloco deita: o controle vem antes do texto, que é a
   // forma que a caixa pede. A do `meta` empilha rótulo em cima do campo.
-  parameters: { docs: { source: { transform: labelComCaixaDeSelecaoSource } } },
+  parameters: { docs: { source: { transform: selectionSourceLabelWithBox } } },
   render: () => ({
     components: { Label, Checkbox },
     template: `

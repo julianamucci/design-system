@@ -4,7 +4,7 @@ import { Skeleton } from './index';
 import { caixaDesenhada } from '@shared/testing/skeleton-probe';
 import {
   skeletonCirculoSource,
-  skeletonLinhaTextoSource,
+  skeletonLineTextSource,
   skeletonRetanguloSource,
 } from './skeleton.source';
 
@@ -106,7 +106,7 @@ export const TextLine: Story = {
     docs: {
       // São três peças com larguras diferentes: a lição é a variação entre as
       // linhas, e uma peça só não a mostra.
-      source: { transform: skeletonLinhaTextoSource },
+      source: { transform: skeletonLineTextSource },
       description: {
         story:
           'Altura derivada da escada de texto e largura em fração do container. Variar a largura entre linhas é o que faz o bloco parecer parágrafo.',

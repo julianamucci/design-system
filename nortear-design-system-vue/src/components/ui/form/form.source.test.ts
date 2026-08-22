@@ -4,7 +4,7 @@ import {
   formDesabilitadoSource,
   formFieldsetSource,
   formInvalidoSource,
-  formMultiplosCamposSource,
+  formMultiplosFieldsSource,
   formPaletaEscuraSource,
   formRotuloEControleSource,
   formSource,
@@ -134,18 +134,18 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o formulário inteiro passa três tipos de controle pelo mesmo campo', () => {
-    const saida = formMultiplosCamposSource();
+    const saida = formMultiplosFieldsSource();
     expect(saida).toContain('<Input type="text" name="nome"');
     expect(saida).toContain('<Textarea name="bio" :rows="3" />');
     expect(saida).toContain('<Button type="submit">Salvar</Button>');
   });
 
   it('a ordem de tabulação é a do DOM — nenhum tabindex a escrever', () => {
-    expect(formMultiplosCamposSource()).not.toContain('tabindex');
+    expect(formMultiplosFieldsSource()).not.toContain('tabindex');
   });
 
   it('o envio é barrado pelo modificador, não por um handler de story', () => {
-    const saida = formMultiplosCamposSource();
+    const saida = formMultiplosFieldsSource();
     expect(saida).toContain('@submit.prevent="salvar"');
     expect(saida).not.toContain('preventDefault');
   });

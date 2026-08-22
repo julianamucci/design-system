@@ -2,15 +2,15 @@ import { describe, expect, it } from 'vitest';
 import {
   sheetAbertoSource,
   sheetControladoSource,
-  sheetEdicaoPerfilSource,
-  sheetFechadoSource,
+  sheetEditPerfilSource,
+  sheetClosedSource,
   sheetFiltrosAvancadosSource,
-  sheetFormularioLongoSource,
-  sheetLadoDireitoSource,
+  sheetFormLongSource,
+  sheetSideDireitoSource,
   sheetLadoEsquerdoSource,
   sheetLadoInferiorSource,
   sheetLadoSuperiorSource,
-  sheetNavegacaoSecundariaSource,
+  sheetNavigationSecundariaSource,
   sheetPlaygroundSource,
   sheetSemBotaoFecharSource,
 } from './sheet.source';
@@ -97,7 +97,7 @@ import { Button } from '@/components/ui/button'
 
 describe('transforms das stories de direção', () => {
   it('a direita é o padrão, e por ser padrão a prop não aparece', () => {
-    const saida = sheetLadoDireitoSource();
+    const saida = sheetSideDireitoSource();
     expect(saida).toContain('<SheetContent>');
     expect(saida).not.toContain('side=');
     expect(saida).toContain('<SheetTitle>Painel direito</SheetTitle>');
@@ -111,7 +111,7 @@ describe('transforms das stories de direção', () => {
 
   it('as quatro nascem abertas — é o que explica a imagem ao lado do snippet', () => {
     for (const fn of [
-      sheetLadoDireitoSource,
+      sheetSideDireitoSource,
       sheetLadoEsquerdoSource,
       sheetLadoSuperiorSource,
       sheetLadoInferiorSource,
@@ -123,7 +123,7 @@ describe('transforms das stories de direção', () => {
 
 describe('transforms das stories de estado', () => {
   it('fechado é a ausência de default-open, e sobra só o gatilho', () => {
-    const saida = sheetFechadoSource();
+    const saida = sheetClosedSource();
     expect(saida).toContain('<Sheet>');
     expect(saida).not.toContain('default-open');
     // Fechado o painel nem chega ao DOM: não há rodapé a mostrar.
@@ -165,13 +165,13 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a edição de perfil embrulha os campos num form e confirma por submit', () => {
-    const saida = sheetEdicaoPerfilSource();
+    const saida = sheetEditPerfilSource();
     expect(saida).toContain('<form class="nds-grid" data-spacing="sm">');
     expect(saida).toContain('<Button type="submit">Salvar alterações</Button>');
   });
 
   it('a navegação secundária abre à esquerda e não tem rodapé', () => {
-    const saida = sheetNavegacaoSecundariaSource();
+    const saida = sheetNavigationSecundariaSource();
     expect(saida).toContain('<SheetContent side="left">');
     expect(saida).toContain('<nav class="nds-stack" data-spacing="xs" aria-label="Seções">');
     expect(saida).not.toContain('SheetFooter');
@@ -180,7 +180,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o formulário longo repete campos para que haja o que rolar', () => {
-    const saida = sheetFormularioLongoSource();
+    const saida = sheetFormLongSource();
     expect(saida).toContain('<div v-for="i in 12" :key="i"');
     expect(saida).toContain('<Label :for="`notif-${i}`">Categoria {{ i }}</Label>');
     expect(saida).toContain('<SheetBody>');

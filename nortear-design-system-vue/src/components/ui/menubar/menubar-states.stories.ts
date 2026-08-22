@@ -14,9 +14,9 @@ import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 import {
   menubarAbertoSource,
-  menubarCheckboxMarcadoSource,
+  menubarCheckboxCheckedSource,
   menubarCheckboxMistoSource,
-  menubarFechadoSource,
+  menubarClosedSource,
   menubarItemBloqueadoSource,
 } from './menubar.source';
 
@@ -42,7 +42,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: menubarFechadoSource },
+      source: { transform: menubarClosedSource },
       description: {
         component:
           'Os quatro estados que o conteúdo compartilhado descreve: barra fechada, menu aberto, item bloqueado e item marcado.',
@@ -243,7 +243,7 @@ export const CheckboxChecked: Story = {
     docs: {
       // Outro tipo de item e outra API: `checked`/`@update:checked` sobre estado
       // reativo, que a composição de itens simples do meta não mostra.
-      source: { transform: menubarCheckboxMarcadoSource },
+      source: { transform: menubarCheckboxCheckedSource },
     },
   },
   render: () => ({

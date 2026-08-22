@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Fieldset as FieldsetRoot, FormField } from './index';
-import { formFieldsetSource, formMultiplosCamposSource } from './form.source';
+import { formFieldsetSource, formMultiplosFieldsSource } from './form.source';
 
 const meta: Meta = {
   title: 'UI/Form/Compositions',
@@ -80,7 +80,7 @@ export const MultipleFields: Story = {
     docs: {
       // O `<form>` em volta, três controles de tipos diferentes e o envio: a do
       // `meta` mostra um grupo isolado, sem formulário nem submissão.
-      source: { transform: formMultiplosCamposSource },
+      source: { transform: formMultiplosFieldsSource },
     },
   },
   render: () => ({

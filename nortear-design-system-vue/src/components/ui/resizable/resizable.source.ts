@@ -13,7 +13,7 @@
  * que o design system tem. Não existe utilitária de altura fixa para onde mover
  * um `height: 240px`.
  */
-import { attrs, comoCodigo, indentar, vueSnippet, type SourceTransform } from '@/lib/story-source';
+import { attrs, asCode, indentar, vueSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type ResizableArgs = {
   direction: 'horizontal' | 'vertical';
@@ -107,7 +107,7 @@ ${indentar(interno)}
  * um divisor com pegador entre eles.
  */
 export const resizableSource: SourceTransform<ResizableArgs> = (_gerado, ctx) => {
-  const direcao = comoCodigo(ctx?.args?.direction) === 'vertical' ? 'vertical' : 'horizontal';
+  const direcao = asCode(ctx?.args?.direction) === 'vertical' ? 'vertical' : 'horizontal';
   return vueSnippet(
     IMPORT,
     moldura(

@@ -251,11 +251,11 @@ export const Autoplay: Story = {
       // `delay` curto para o teste não ficar preso esperando o relógio; sem
       // `loop`, para que voltar ao começo no fim da story seja determinístico.
       const plugins = [AutoplayPlugin({ delay: 400, stopOnInteraction: true })];
-      const aoIniciar = (api: CarouselApi) => { apiAutoplay = api; };
-      return { plugins, slides: [1, 2, 3, 4, 5], aoIniciar };
+      const onStart = (api: CarouselApi) => { apiAutoplay = api; };
+      return { plugins, slides: [1, 2, 3, 4, 5], onStart };
     },
     template: `
-      <Carousel :plugins="plugins" @init-api="aoIniciar" class="nds-w-sm" aria-label="Destaques">
+      <Carousel :plugins="plugins" @init-api="onStart" class="nds-w-sm" aria-label="Destaques">
         <CarouselContent>
           <CarouselItem v-for="n in slides" :key="n">
             <div class="nds-cluster nds-aspect-16-9 nds-bg-muted-soft nds-rounded-lg" data-justify="center">

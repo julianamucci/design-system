@@ -71,7 +71,7 @@ ${p}</PaginationLink>`;
  */
 export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) => {
   const total = numero(ctx?.args?.total, 50);
-  const porPagina = numero(ctx?.args?.itemsPerPage, 10);
+  const byPage = numero(ctx?.args?.itemsPerPage, 10);
   const inicial = numero(ctx?.args?.defaultPage, 1);
   const anterior = attrs(attr('text', ctx?.args?.textoAnterior, TEXTO_ANTERIOR));
   const proxima = attrs(attr('text', ctx?.args?.textoProxima, TEXTO_PROXIMA));
@@ -88,7 +88,7 @@ export const paginationSource: SourceTransform<PaginationArgs> = (_gerado, ctx) 
 import { computed, ref } from 'vue'
 
 const total = ${total}
-const itensPorPagina = ${porPagina}
+const itensPorPagina = ${byPage}
 const atual = ref(${inicial})
 
 const paginas = computed(() =>
@@ -120,7 +120,7 @@ ${linkNumerado({ ativo: 'atual === n', recuo: 6, aoClicar: '@click.prevent="irPa
  * O que muda entre elas é a página em que a faixa está parada — e é `:page`
  * que decide, junto, qual direcional o componente desabilita.
  */
-function faixaFixa(atual: number): string {
+function rangeFixa(atual: number): string {
   return vueSnippet(
     `${importa(
       'Pagination',
@@ -148,16 +148,16 @@ ${linkNumerado({ ativo: `n === ${atual}`, recuo: 6 })}
  * Faixa parada no meio: os dois direcionais ficam ativos, e o destaque da
  * página atual não depende da posição em que ela caiu.
  */
-export function paginationFaixaSource(): string {
-  return faixaFixa(3);
+export function paginationRangeSource(): string {
+  return rangeFixa(3);
 }
 
 /**
  * Primeira página: o "Anterior" desabilitado NÃO é uma prop — o componente
  * chega ao extremo lendo `:page` contra `:total` e `:items-per-page`.
  */
-export function paginationPrimeiraPaginaSource(): string {
-  return faixaFixa(1);
+export function paginationFirstPageSource(): string {
+  return rangeFixa(1);
 }
 
 /** Link inativo: a ênfase padrão de toda página que não é a atual. */
@@ -212,7 +212,7 @@ export function paginationDirecionalSource(): string {
 }
 
 /** Total pequeno: todos os números em sequência, sem reticências. */
-export function paginationSimplesSource(): string {
+export function paginationSimpleSource(): string {
   return vueSnippet(
     `${importa(
       'Pagination',
@@ -244,7 +244,7 @@ ${linkNumerado({ ativo: 'n === 1', recuo: 6 })}
  * A lista mistura número e marcador, então ela precisa do tipo: é ele que faz
  * `trecho === 'ellipsis'` compilar.
  */
-export function paginationComReticenciasSource(): string {
+export function paginationWithEllipsisSource(): string {
   return vueSnippet(
     `${importa(
       'Pagination',

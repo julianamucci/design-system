@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import {
-  toggleGroupBarraAlinhamentoSource,
-  toggleGroupBarraFormatacaoSource,
-  toggleGroupComEspacamentoSource,
+  toggleGroupBarAlignmentSource,
+  toggleGroupBarFormattingSource,
+  toggleGroupWithSpacingSource,
   toggleGroupDesabilitadoSource,
   toggleGroupItemDesabilitadoSource,
   toggleGroupMultipleSource,
-  toggleGroupPadraoSource,
-  toggleGroupSelecionadoSource,
+  toggleGroupDefaultSource,
+  toggleGroupSelectedSource,
   toggleGroupSingleSource,
   toggleGroupSource,
-  toggleGroupTamanhosSource,
+  toggleGroupSizesSource,
   toggleGroupVerticalSource,
 } from './toggle-group.source';
 
@@ -127,11 +127,11 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('o estado de partida não liga item nenhum', () => {
-    expect(toggleGroupPadraoSource()).not.toContain('default-value');
+    expect(toggleGroupDefaultSource()).not.toContain('default-value');
   });
 
   it('a seleção inicial é do grupo, nunca um atributo no item', () => {
-    const saida = toggleGroupSelecionadoSource();
+    const saida = toggleGroupSelectedSource();
     expect(saida).toContain('default-value="center"');
     expect(saida).not.toContain('<ToggleGroupItem value="center" selected');
     expect(saida).not.toContain('aria-pressed');
@@ -153,27 +153,27 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('a barra de alinhamento traz a quarta opção e o contorno no grupo', () => {
-    const saida = toggleGroupBarraAlinhamentoSource();
+    const saida = toggleGroupBarAlignmentSource();
     expect(saida).toContain('value="justify"');
     expect(saida).toContain('<AlignJustify aria-hidden="true" />');
     expect(saida).toContain('  variant="outline"');
   });
 
   it('a barra de formatação abre com um valor só, ainda em lista', () => {
-    const saida = toggleGroupBarraFormatacaoSource();
+    const saida = toggleGroupBarFormattingSource();
     expect(saida).toContain(`:default-value="['bold']"`);
     expect(saida).not.toContain('variant=');
   });
 
   it('com espaçamento o contorno muda de dono: sai da raiz e entra no item', () => {
-    const saida = toggleGroupComEspacamentoSource();
+    const saida = toggleGroupWithSpacingSource();
     expect(raizDe(saida)).toContain(':spacing="1"');
     expect(raizDe(saida)).not.toContain('variant=');
     expect(saida).toContain('<ToggleGroupItem variant="outline" value="bold" aria-label="Negrito">');
   });
 
   it('a comparação de tamanhos empilha três grupos, e o do meio sai sem size', () => {
-    const saida = toggleGroupTamanhosSource();
+    const saida = toggleGroupSizesSource();
     expect(saida.match(/<ToggleGroup\n/g)).toHaveLength(3);
     expect(saida).toContain('size="sm"');
     expect(saida).toContain('size="lg"');

@@ -23,8 +23,8 @@ const IMPORT_BUTTON = `import { Button } from '@/components/ui/button'`;
  * O card não tem largura própria: ele preenche o que o contexto der. Numa story
  * isolada isso significa a página inteira, então a moldura entra pela classe.
  */
-const LARGURA_SM = 'class="nds-w-sm"';
-const LARGURA_XS = 'class="nds-w-xs"';
+const WIDTH_SM = 'class="nds-w-sm"';
+const WIDTH_XS = 'class="nds-w-xs"';
 
 /** Raiz do card com os filhos já indentados. */
 function card(partes: Array<string | ''>, ...filhos: string[]): string {
@@ -53,7 +53,7 @@ function cabecalho(titulo: string, descricao: string, acao = ''): string {
 }
 
 const PRODUTO = 'Cadeira Gamer Pro';
-const DESCRICAO_PRODUTO = 'Estrutura ergonômica com ajuste de altura e apoio lombar.';
+const DESCRIPTION_PRODUCT = 'Estrutura ergonômica com ajuste de altura e apoio lombar.';
 
 const PRECO = `<CardContent>
   <p class="nds-text-h4">R$ 1.299,00</p>
@@ -79,8 +79,8 @@ export const cardSource: SourceTransform<CardArgs> = (_gerado, ctx) => {
     `${importCard('CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle')}
 ${IMPORT_BUTTON}`,
     card(
-      [attr('size', ctx?.args?.size, 'default'), LARGURA_SM],
-      cabecalho(PRODUTO, DESCRICAO_PRODUTO),
+      [attr('size', ctx?.args?.size, 'default'), WIDTH_SM],
+      cabecalho(PRODUTO, DESCRIPTION_PRODUCT),
       PRECO,
       rodape(
         `<Button variant="outline" aria-label="Editar produto ${PRODUTO}">Editar</Button>`,
@@ -94,10 +94,10 @@ ${IMPORT_BUTTON}`,
  * A unidade mínima: cabeçalho e corpo. O card é container passivo — não recebe
  * foco, não tem papel ARIA e não carrega handler próprio.
  */
-export function cardSimplesSource(): string {
+export function cardSimpleSource(): string {
   return vueSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
-    card([LARGURA_SM], cabecalho(PRODUTO, DESCRICAO_PRODUTO), PRECO),
+    card([WIDTH_SM], cabecalho(PRODUTO, DESCRIPTION_PRODUCT), PRECO),
   );
 }
 
@@ -110,7 +110,7 @@ export function cardCompactoSource(): string {
   return vueSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
     card(
-      ['size="sm"', LARGURA_XS],
+      ['size="sm"', WIDTH_XS],
       cabecalho('Assinantes ativos', '+12% no mês'),
       `<CardContent>
   <p class="nds-text-h4 nds-tabular-nums">8.742</p>
@@ -132,7 +132,7 @@ export function cardClicavelSource(): string {
   aria-label="Abrir detalhes do produto ${PRODUTO}"
   class="nds-block nds-w-sm nds-text-left nds-focus-ring nds-rounded-xl"
 >
-${indentar(card([], cabecalho(PRODUTO, DESCRICAO_PRODUTO), PRECO), 2)}
+${indentar(card([], cabecalho(PRODUTO, DESCRIPTION_PRODUCT), PRECO), 2)}
 </a>`,
   );
 }
@@ -147,7 +147,7 @@ export function cardComRodapeSource(): string {
     `${importCard('CardContent', 'CardDescription', 'CardFooter', 'CardHeader', 'CardTitle')}
 ${IMPORT_BUTTON}`,
     card(
-      [LARGURA_SM],
+      [WIDTH_SM],
       cabecalho(PRODUTO, 'Produto atualizado em 12/04.'),
       PRECO,
       rodape(
@@ -162,12 +162,12 @@ ${IMPORT_BUTTON}`,
  * Ação no cabeçalho: com ela o cabeçalho vira grade de duas colunas e a ação
  * encosta à direita. A ordem do DOM continua título, descrição e ação.
  */
-export function cardComAcaoNoHeaderSource(): string {
+export function headerSourceCardWithAction(): string {
   return vueSnippet(
     `${importCard('CardAction', 'CardContent', 'CardDescription', 'CardHeader', 'CardTitle')}
 ${IMPORT_BUTTON}`,
     card(
-      [LARGURA_SM],
+      [WIDTH_SM],
       cabecalho(
         PRODUTO,
         'Em estoque',
@@ -189,14 +189,14 @@ export function cardComImagemSource(): string {
   return vueSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
     card(
-      [LARGURA_SM],
+      [WIDTH_SM],
       `<img
   src="/produtos/cadeira-gamer-pro.jpg"
   alt="${PRODUTO} vista de frente, em fundo neutro"
   class="nds-w-full nds-aspect-16-9"
   style="object-fit: cover"
 />`,
-      cabecalho(PRODUTO, DESCRICAO_PRODUTO),
+      cabecalho(PRODUTO, DESCRIPTION_PRODUCT),
       PRECO,
     ),
   );
@@ -212,14 +212,14 @@ export function cardDeProdutoSource(): string {
 ${IMPORT_BUTTON}
 import { Badge } from '@/components/ui/badge'`,
     card(
-      [LARGURA_SM],
+      [WIDTH_SM],
       `<img
   src="/produtos/cadeira-gamer-pro.jpg"
   alt="${PRODUTO} vista de frente, em fundo neutro"
   class="nds-w-full nds-aspect-16-9"
   style="object-fit: cover"
 />`,
-      cabecalho(PRODUTO, DESCRICAO_PRODUTO, `<Badge variant="secondary">Em estoque</Badge>`),
+      cabecalho(PRODUTO, DESCRIPTION_PRODUCT, `<Badge variant="secondary">Em estoque</Badge>`),
       PRECO,
       rodape(
         `<Button variant="outline" size="sm" aria-label="Editar produto ${PRODUTO}">Editar</Button>`,
@@ -238,7 +238,7 @@ export function cardDeMetricaSource(): string {
   return vueSnippet(
     importCard('CardContent', 'CardDescription', 'CardHeader', 'CardTitle'),
     card(
-      ['size="sm"', LARGURA_XS],
+      ['size="sm"', WIDTH_XS],
       cabecalho('Assinantes ativos', 'Últimos 30 dias'),
       `<CardContent>
   <p class="nds-text-h4 nds-tabular-nums">8.742</p>
@@ -258,7 +258,7 @@ export function cardDePerfilSource(): string {
     `${importCard('CardDescription', 'CardHeader', 'CardTitle')}
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'`,
     card(
-      [LARGURA_SM],
+      [WIDTH_SM],
       `<CardHeader class="nds-cluster" data-align="center" data-spacing="sm">
   <Avatar>
     <AvatarFallback>MR</AvatarFallback>

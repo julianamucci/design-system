@@ -18,7 +18,7 @@ import {
   popoverEditarPerfilSource,
   popoverFiltroSource,
   popoverPreferenciasSource,
-  popoverSeletorDeCorSource,
+  colorSourcePopoverSelector,
 } from './popover.source';
 
 // As quatro composições que o conteúdo compartilhado descreve — editar perfil,
@@ -176,7 +176,7 @@ export const ColorPicker: Story = {
     docs: {
       // O miolo vira uma fila de amostras sem texto visível: o nome acessível
       // passa a vir de `aria-label`, o que nenhuma outra story do arquivo faz.
-      source: { transform: popoverSeletorDeCorSource },
+      source: { transform: colorSourcePopoverSelector },
       description: {
         story: 'Paleta restrita em grid — cada amostra tem nome acessível próprio.',
       },

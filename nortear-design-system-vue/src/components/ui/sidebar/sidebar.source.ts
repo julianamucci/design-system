@@ -340,7 +340,7 @@ export function sidebarExpandidaSource(): string {
  * `:default-open="false"` no provider. Sem rótulo visível, o `tooltip` de cada
  * item passa a ser o único nome que quem usa ponteiro recebe.
  */
-export function sidebarRecolhidaIconeSource(): string {
+export function sidebarRecolhidaIconSource(): string {
   return montar(
     moldura({
       provider: ' :default-open="false"',

@@ -15,7 +15,7 @@ import {
   attrBool,
   attrs,
   attrsMultilinha,
-  comoCodigo,
+  asCode,
   indentar,
   texto,
   vueSnippet,
@@ -79,7 +79,7 @@ export const inputSource: SourceTransform<InputArgs> = (_gerado, ctx) => {
       input: input(
         'nome-completo',
         attr('type', args.type, 'text'),
-        attr('placeholder', texto(comoCodigo(args.placeholder), 'ex: João da Silva')),
+        attr('placeholder', texto(asCode(args.placeholder), 'ex: João da Silva')),
         attrBool('disabled', args.disabled, false),
       ),
     }),
@@ -138,7 +138,7 @@ export function inputTipoArquivoSource(): string {
  * Campo em repouso, rotulado. É também a marcação do foco e a do exemplo com
  * marcador: focar é INTERAÇÃO, e o marcador já está aqui.
  */
-export function inputComRotuloSource(): string {
+export function inputWithLabelSource(): string {
   return vueSnippet(
     IMPORTS,
     campo({
@@ -172,7 +172,7 @@ export function inputDesabilitadoSource(): string {
  */
 export function inputComErroSource(): string {
   const id = 'email';
-  const idMensagem = 'email-erro';
+  const idMessage = 'email-erro';
   return vueSnippet(
     IMPORTS,
     campo({
@@ -184,12 +184,12 @@ export function inputComErroSource(): string {
           'type="email"',
           'placeholder="ex: joao@empresa.com"',
           'aria-invalid="true"',
-          `aria-describedby="${idMensagem}"`,
+          `aria-describedby="${idMessage}"`,
         ],
         '  ',
       )}/>`,
       depois: [
-        `<p id="${idMensagem}" class="nds-text-body nds-text-destructive">
+        `<p id="${idMessage}" class="nds-text-body nds-text-destructive">
   Email inválido. Use o formato nome@dominio.com
 </p>`,
       ],
@@ -201,9 +201,9 @@ export function inputComErroSource(): string {
  * Texto de apoio. Visível não basta: sem `aria-describedby` a instrução não
  * chega a quem usa leitor de tela.
  */
-export function inputComApoioSource(): string {
+export function inputWithHelperSource(): string {
   const id = 'email';
-  const idApoio = 'email-apoio';
+  const idHelper = 'email-apoio';
   return vueSnippet(
     IMPORTS,
     campo({
@@ -213,10 +213,10 @@ export function inputComApoioSource(): string {
         id,
         'type="email"',
         'placeholder="ex: joao@empresa.com"',
-        `aria-describedby="${idApoio}"`,
+        `aria-describedby="${idHelper}"`,
       ),
       depois: [
-        `<p id="${idApoio}" class="nds-text-caption nds-text-muted-foreground">Usaremos este endereço para notificações.</p>`,
+        `<p id="${idHelper}" class="nds-text-caption nds-text-muted-foreground">Usaremos este endereço para notificações.</p>`,
       ],
     }),
   );
@@ -343,7 +343,7 @@ export function inputAlinhamentosSource(): string {
  * botão que o dimensiona. O nome do botão vem do rótulo declarado, porque o
  * ícone sai da leitura.
  */
-export function inputAddonComBotaoSource(): string {
+export function inputAddonWithButtonSource(): string {
   return vueSnippet(
     `import { XIcon } from 'lucide-vue-next'
 import { Label } from '@/components/ui/label'

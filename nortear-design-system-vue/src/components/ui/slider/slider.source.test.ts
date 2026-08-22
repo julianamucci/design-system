@@ -2,12 +2,12 @@ import { describe, expect, it } from 'vitest';
 import {
   sliderDesabilitadoSource,
   sliderFaixaSource,
-  sliderFocoSource,
-  sliderFormularioSource,
+  sliderFocusSource,
+  sliderFormSource,
   sliderNoMaximoSource,
-  sliderNoMinimoSource,
-  sliderPadraoSource,
-  sliderPassoGrossoSource,
+  minimumSourceSlider,
+  sliderDefaultSource,
+  sliderStepGrossoSource,
   sliderPlaygroundSource,
   sliderPrecoSource,
   sliderUnicoSource,
@@ -20,15 +20,15 @@ const TODAS = [
   sliderUnicoSource,
   sliderFaixaSource,
   sliderVerticalSource,
-  sliderPadraoSource,
-  sliderFocoSource,
+  sliderDefaultSource,
+  sliderFocusSource,
   sliderDesabilitadoSource,
-  sliderNoMinimoSource,
+  minimumSourceSlider,
   sliderNoMaximoSource,
   sliderVolumeSource,
   sliderPrecoSource,
-  sliderFormularioSource,
-  sliderPassoGrossoSource,
+  sliderFormSource,
+  sliderStepGrossoSource,
 ];
 
 describe('sliderPlaygroundSource', () => {
@@ -138,7 +138,7 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de estado', () => {
   it('o foco não tem o que escrever — nem prop, nem classe', () => {
-    const saida = sliderFocoSource();
+    const saida = sliderFocusSource();
     expect(saida).not.toContain('focus');
     expect(saida).not.toContain('tabindex');
     // Sem a linha de valor, que disputaria a atenção com o desenho do foco.
@@ -152,7 +152,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('os extremos moram no valor inicial, não em prop', () => {
-    expect(sliderNoMinimoSource()).toContain('const volume = ref([0])');
+    expect(minimumSourceSlider()).toContain('const volume = ref([0])');
     expect(sliderNoMaximoSource()).toContain('const volume = ref([100])');
     // O limite é do componente: escrevê-lo aqui ensinaria uma prop de trava.
     expect(sliderNoMaximoSource()).not.toContain('readonly');
@@ -169,7 +169,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('no formulário, cada controle leva o próprio nome acessível', () => {
-    const saida = sliderFormularioSource();
+    const saida = sliderFormSource();
     expect(saida).toContain('aria-label="Brilho"');
     expect(saida).toContain('aria-label="Opacidade"');
     expect(saida).toContain('@submit.prevent="salvar"');
@@ -179,7 +179,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('a faixa curta escreve só os limites que diferem do padrão', () => {
-    const saida = sliderPassoGrossoSource();
+    const saida = sliderStepGrossoSource();
     expect(saida).toContain('<Slider v-model="avaliacao" :min="1" :max="5" aria-label="Avaliação" />');
     // Passo 1 é o padrão do componente.
     expect(saida).not.toContain(':step');

@@ -26,10 +26,10 @@ export type TabsArgs = {
 const IMPORT = `import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'`;
 
 /** Painel de texto corrido: corpo atenuado, como toda leitura secundária. */
-const CLASSE_PAINEL = 'nds-text-body nds-text-muted-foreground';
+const CLASSNAME_PANEL = 'nds-text-body nds-text-muted-foreground';
 
 /** No eixo vertical o respiro que falta é lateral, entre a lista e o painel. */
-const CLASSE_PAINEL_VERTICAL = `${CLASSE_PAINEL} nds-pl-4`;
+const VERTICAL_CLASSNAME_PANEL = `${CLASSNAME_PANEL} nds-pl-4`;
 
 type Aba = {
   valor: string;
@@ -54,7 +54,7 @@ function tabs(opcoes: {
   abas: Aba[];
   classePainel?: string;
 }): string {
-  const { raiz = '', lista = '', rotuloLista, abas, classePainel = CLASSE_PAINEL } = opcoes;
+  const { raiz = '', lista = '', rotuloLista, abas, classePainel = CLASSNAME_PANEL } = opcoes;
   const gatilhos = abas
     .map((aba) =>
       bloco(
@@ -109,7 +109,7 @@ export const tabsSource: SourceTransform<TabsArgs> = (_gerado, ctx) => {
       ).trim(),
       rotuloLista: 'Seções do componente',
       abas: SECOES,
-      classePainel: vertical ? CLASSE_PAINEL_VERTICAL : CLASSE_PAINEL,
+      classePainel: vertical ? VERTICAL_CLASSNAME_PANEL : CLASSNAME_PANEL,
     }),
   );
 };
@@ -118,7 +118,7 @@ export const tabsSource: SourceTransform<TabsArgs> = (_gerado, ctx) => {
  * Variante padrão: trilho com fundo próprio e aba ativa destacada por fundo, não
  * só por cor de texto. A lista não escreve `variant` — `default` é o que ela já é.
  */
-export function tabsPadraoSource(): string {
+export function tabsDefaultSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({
@@ -152,7 +152,7 @@ export function tabsVerticalSource(): string {
     tabs({
       raiz: 'default-value="profile" orientation="vertical" class="nds-w-lg"',
       rotuloLista: 'Configurações da conta',
-      classePainel: CLASSE_PAINEL_VERTICAL,
+      classePainel: VERTICAL_CLASSNAME_PANEL,
       abas: [
         {
           valor: 'profile',
@@ -292,7 +292,7 @@ import { Code2, Eye, Settings2 } from 'lucide-vue-next'`,
  * nome acessível ("Caixa de entrada 12"). `as="span"` é o que impede o contador
  * de virar um segundo alvo de foco dentro de um controle que já é focável.
  */
-export function tabsComContadorSource(): string {
+export function tabsWithCounterSource(): string {
   return vueSnippet(
     `${IMPORT}
 import { Badge } from '@/components/ui/badge'`,
@@ -321,7 +321,7 @@ import { Badge } from '@/components/ui/badge'`,
  * direita. Aqui o painel deixa de ser uma linha de texto e ganha título próprio,
  * então a cor atenuada desce para o parágrafo — título em `--foreground`.
  */
-export function tabsConfiguracoesVerticaisSource(): string {
+export function tabsConfigVerticaisSource(): string {
   const icone = (nome: string) => `<${nome} class="nds-size-4" aria-hidden="true" />`;
   const painel = (titulo: string, texto: string) =>
     `<h3 class="nds-font-medium nds-text-foreground">${titulo}</h3>\n<p class="nds-mt-1 nds-text-muted-foreground">${texto}</p>`;
@@ -358,7 +358,7 @@ import { Settings2, Shield, User } from 'lucide-vue-next'`,
  * painel custa caro — busca de dados, render pesado —, porque no modo automático
  * atravessar a lista com a seta dispararia uma troca por aba percorrida.
  */
-export function tabsModoManualSource(): string {
+export function tabsModeManualSource(): string {
   return vueSnippet(
     IMPORT,
     tabs({

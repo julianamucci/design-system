@@ -50,7 +50,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const sharedComponents = { HoverCard, HoverCardContent, HoverCardTrigger };
-const ESTILO_PARAGRAFO = 'contain: layout; min-height: 280px; max-width: 24rem;';
+const STYLE_PARAGRAFO = 'contain: layout; min-height: 280px; max-width: 24rem;';
 const CLASSES_GATILHO_BOTAO =
   'nds-text-primary nds-text-body nds-font-medium nds-underline-dotted nds-cursor-help nds-bg-transparent nds-border-none nds-p-0';
 
@@ -67,7 +67,7 @@ export const UserProfile: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
         Comentário de
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
@@ -118,7 +118,7 @@ export const LinkPreview: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
         O guia completo está em
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
@@ -170,7 +170,7 @@ export const TermDefinition: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
         Todo componente do sistema atende
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
@@ -225,7 +225,7 @@ export const ExplainedMetric: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
         A página inicial fechou o mês em
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>
@@ -338,7 +338,7 @@ export const ExtraPanelClass: Story = {
   render: () => ({
     components: sharedComponents,
     template: `
-      <p class="nds-text-body" style="${ESTILO_PARAGRAFO}">
+      <p class="nds-text-body" style="${STYLE_PARAGRAFO}">
         Resumo da entrega de
         <HoverCard :default-open="true">
           <HoverCardTrigger as-child>

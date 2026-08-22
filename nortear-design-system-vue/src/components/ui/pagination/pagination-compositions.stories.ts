@@ -11,10 +11,10 @@ import {
   PaginationPrevious,
 } from './index';
 import {
-  paginationComReticenciasSource,
+  paginationWithEllipsisSource,
   paginationControladaSource,
   paginationRodapeDeTabelaSource,
-  paginationSimplesSource,
+  paginationSimpleSource,
   paginationUltimaPaginaSource,
 } from './pagination.source';
 
@@ -27,7 +27,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: paginationSimplesSource },
+      source: { transform: paginationSimpleSource },
       description: {
         component:
           'Composições típicas: Simple (5 páginas), WithEllipsis (12 páginas), LastPage (Próxima desabilitado), Controlled (estado externo) e CompleteTable (rodapé de tabela).',
@@ -113,7 +113,7 @@ export const WithEllipsis: Story = {
     docs: {
       // Entra uma peça nova e um laço de tipo misto: a faixa deixa de ser uma
       // lista de números e passa a intercalar marcadores.
-      source: { transform: paginationComReticenciasSource },
+      source: { transform: paginationWithEllipsisSource },
       description: {
         story:
           'Lista longa: primeira, última, atual e vizinhas ficam visíveis; o resto vira reticências decorativas.',

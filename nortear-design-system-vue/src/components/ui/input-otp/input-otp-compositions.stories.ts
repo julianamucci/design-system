@@ -9,10 +9,10 @@ import {
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import {
-  inputOtpComApoioSource,
+  inputOtpWithHelperSource,
   inputOtpComErroSource,
   inputOtpComReenvioSource,
-  inputOtpComRotuloSource,
+  inputOtpWithLabelSource,
 } from './input-otp.source';
 
 const meta = {
@@ -24,7 +24,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: inputOtpComRotuloSource },
+      source: { transform: inputOtpWithLabelSource },
       description: {
         component:
           'Composicoes reais de InputOTP: ComLabel (Label associada via for/id), ComHelpText (texto auxiliar via aria-describedby), ComErrorMessage (mensagem de erro com aria-invalid) e ComResendButton (botão para reenviar código).',
@@ -86,7 +86,7 @@ export const WithHelpText: Story = {
     docs: {
       // O `aria-describedby` e o parágrafo que ele aponta são a lição, e não
       // existem na marcação do `meta`.
-      source: { transform: inputOtpComApoioSource },
+      source: { transform: inputOtpWithHelperSource },
       description: {
         story: 'Texto auxiliar conectado via aria-describedby — origem do código + tempo de validade.',
       },

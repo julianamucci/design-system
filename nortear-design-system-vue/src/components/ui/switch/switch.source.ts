@@ -26,7 +26,7 @@ import { Label } from '@/components/ui/label'`;
  * Par em linha: o controle e, à direita, o rótulo que o nomeia. O `for` do
  * rótulo casa com o `id` do controle — é o que dá nome acessível ao switch.
  */
-function parEmLinha(id: string, rotulo: string, atributos = ''): string {
+function linePair(id: string, rotulo: string, atributos = ''): string {
   return `<div class="nds-cluster" data-spacing="sm">
   <Switch id="${id}"${attrs(atributos)} />
   <Label for="${id}">${rotulo}</Label>
@@ -38,7 +38,7 @@ function parEmLinha(id: string, rotulo: string, atributos = ''): string {
  * controle à direita. A descrição fica FORA do rótulo — se entrasse nele, o
  * leitor de tela anunciaria o parágrafo inteiro como nome do controle.
  */
-function linhaDePainel(opcoes: {
+function panelLine(opcoes: {
   id: string;
   rotulo: string;
   descricao: string;
@@ -70,7 +70,7 @@ export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
   return vueSnippet(
     IMPORT_PAR,
-    parEmLinha(
+    linePair(
       'notificacoes',
       'Receber notificações por email',
       attrs(
@@ -85,8 +85,8 @@ export const switchSource: SourceTransform<SwitchArgs> = (_gerado, ctx) => {
 };
 
 /** Variante padrão: o par mínimo, sem nenhum atributo além do vínculo do id. */
-export function switchPadraoSource(): string {
-  return vueSnippet(IMPORT_PAR, parEmLinha('notificacoes', 'Receber notificações por email'));
+export function switchDefaultSource(): string {
+  return vueSnippet(IMPORT_PAR, linePair('notificacoes', 'Receber notificações por email'));
 }
 
 /**
@@ -96,7 +96,7 @@ export function switchPadraoSource(): string {
 export function switchComDescricaoSource(): string {
   return vueSnippet(
     IMPORT_PAR,
-    linhaDePainel({
+    panelLine({
       id: 'marketing',
       rotulo: 'Emails de marketing',
       descricao: 'Receba novidades e promoções da plataforma.',
@@ -118,7 +118,7 @@ export function switchCompactoSource(): string {
   return vueSnippet(
     IMPORT_PAR,
     `<div class="nds-stack" data-spacing="sm">
-${indentar(parEmLinha('tamanho-padrao', 'Tamanho padrão'))}
+${indentar(linePair('tamanho-padrao', 'Tamanho padrão'))}
 ${indentar(compacto)}
 </div>`,
   );
@@ -129,20 +129,20 @@ ${indentar(compacto)}
  * `:default-value="false"` ensinaria uma prop que não faz nada.
  */
 export function switchDesligadoSource(): string {
-  return vueSnippet(IMPORT_PAR, parEmLinha('notificacoes', 'Receber notificações'));
+  return vueSnippet(IMPORT_PAR, linePair('notificacoes', 'Receber notificações'));
 }
 
 /** Estado ligado na montagem: `default-value` é a prop de partida, não o estado. */
 export function switchLigadoSource(): string {
   return vueSnippet(
     IMPORT_PAR,
-    parEmLinha('notificacoes', 'Receber notificações', 'default-value'),
+    linePair('notificacoes', 'Receber notificações', 'default-value'),
   );
 }
 
 /** Desabilitado: o controle sai da ordem de tabulação e não responde ao clique. */
 export function switchDesabilitadoSource(): string {
-  return vueSnippet(IMPORT_PAR, parEmLinha('notificacoes', 'Receber notificações', 'disabled'));
+  return vueSnippet(IMPORT_PAR, linePair('notificacoes', 'Receber notificações', 'disabled'));
 }
 
 /**
@@ -154,7 +154,7 @@ export function switchInvalidoSource(): string {
     IMPORT_PAR,
     `<div class="nds-stack nds-w-sm" data-spacing="sm">
 ${indentar(
-  linhaDePainel({
+  panelLine({
     id: 'aceitar-termos',
     rotulo: 'Aceitar termos',
     descricao: 'Você precisa aceitar para continuar.',
@@ -171,7 +171,7 @@ ${indentar(
  * Painel de configurações: uma linha por preferência, cada controle com o seu
  * próprio estado de partida e o seu próprio rótulo.
  */
-export function switchPainelDeConfiguracoesSource(): string {
+export function configSourceSwitchPanel(): string {
   const linhas = [
     {
       id: 'marketing',
@@ -194,7 +194,7 @@ export function switchPainelDeConfiguracoesSource(): string {
   return vueSnippet(
     IMPORT_PAR,
     `<div class="nds-stack nds-w-md" data-spacing="sm">
-${linhas.map((linha) => indentar(linhaDePainel(linha))).join('\n\n')}
+${linhas.map((linha) => indentar(panelLine(linha))).join('\n\n')}
 </div>`,
   );
 }
@@ -203,7 +203,7 @@ ${linhas.map((linha) => indentar(linhaDePainel(linha))).join('\n\n')}
  * Lista de preferências: a mesma ideia sem o texto de apoio, e a estrutura vira
  * lista de verdade — três itens relacionados são uma `ul`, não três `div`.
  */
-export function switchListaDePreferenciasSource(): string {
+export function preferenciasSourceSwitchList(): string {
   const itens = [
     { id: 'push', rotulo: 'Notificações push', atributos: 'default-value' },
     { id: 'email', rotulo: 'Notificações por email', atributos: '' },
@@ -230,7 +230,7 @@ ${linhas}
  * Em formulário: o `name` é o que faz o switch entrar no envio nativo — sem ele
  * o campo simplesmente não é enviado, e nada no visual denuncia.
  */
-export function switchEmFormularioSource(): string {
+export function formSourceSwitch(): string {
   return vueSnippet(
     `${IMPORT_PAR}
 import { Input } from '@/components/ui/input'
@@ -242,7 +242,7 @@ import { Button } from '@/components/ui/button'`,
   </div>
 
 ${indentar(
-  linhaDePainel({
+  panelLine({
     id: 'perfil-publico',
     rotulo: 'Perfil público',
     descricao: 'Qualquer pessoa pode visualizar seu perfil.',

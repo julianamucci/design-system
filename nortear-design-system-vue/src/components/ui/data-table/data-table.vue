@@ -533,12 +533,12 @@ function flexHeaderLabel(header: unknown): string | undefined {
 }
 
 /** Rótulo da coluna como a pessoa lê no cabeçalho — nunca o id de dados. */
-function nomeDaColuna(column: Column<DataTableFeatures, TData, unknown>): string {
+function columnName(column: Column<DataTableFeatures, TData, unknown>): string {
   return flexHeaderLabel(column.columnDef.header) ?? column.id;
 }
 
 function pinLabel(column: Column<DataTableFeatures, TData, unknown>): string {
-  const label = nomeDaColuna(column);
+  const label = columnName(column);
   return column.getIsPinned() === 'start'
     ? rotulos.value.unpin(label)
     : rotulos.value.pinLeft(label);
@@ -835,7 +835,7 @@ watch(
                     v-if="header.column.getCanSort()"
                     type="button"
                     class="nds-data-table-sort-btn"
-                    :aria-label="rotulos.sortBy(nomeDaColuna(header.column))"
+                    :aria-label="rotulos.sortBy(columnName(header.column))"
                     @click="header.column.getToggleSortingHandler()?.($event)"
                   >
                     <FlexRender
@@ -873,7 +873,7 @@ watch(
                 v-if="enableColumnResizing && header.column.getCanResize()"
                 role="separator"
                 aria-orientation="vertical"
-                :aria-label="rotulos.resize(nomeDaColuna(header.column))"
+                :aria-label="rotulos.resize(columnName(header.column))"
                 :class="cn( 'nds-data-table-resize-handle', header.column.getIsResizing() && 'is-resizing', )"
                 @mousedown="header.getResizeHandler()?.($event)"
                 @touchstart="header.getResizeHandler()?.($event)"
@@ -901,7 +901,7 @@ watch(
                 <select
                   v-if="header.column.columnDef.meta.filter.type === 'select'"
                   :value="(header.column.getFilterValue() ?? '') as string"
-                  :aria-label="rotulos.filter(nomeDaColuna(header.column))"
+                  :aria-label="rotulos.filter(columnName(header.column))"
                   class="nds-data-table-filter-select"
                   @change="(e) => header.column.setFilterValue((e.target as HTMLSelectElement).value || undefined)"
                 >
@@ -920,7 +920,7 @@ watch(
                   v-else
                   :model-value="(header.column.getFilterValue() ?? '') as string"
                   :placeholder="header.column.columnDef.meta.filter.placeholder ?? 'Filtrar...'"
-                  :aria-label="rotulos.filter(nomeDaColuna(header.column))"
+                  :aria-label="rotulos.filter(columnName(header.column))"
                   class="nds-data-table-filter-input"
                   @update:model-value="(v) => header.column.setFilterValue(v)"
                 />
@@ -934,7 +934,7 @@ watch(
               <span
                 v-else
                 class="nds-sr-only"
-              >{{ rotulos.noFilter(nomeDaColuna(header.column)) }}</span>
+              >{{ rotulos.noFilter(columnName(header.column)) }}</span>
             </TableHead>
           </TableRow>
         </TableHeader>

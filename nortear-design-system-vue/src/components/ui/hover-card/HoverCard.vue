@@ -2,7 +2,7 @@
 import type { HoverCardRootEmits, HoverCardRootProps } from 'reka-ui'
 import { HoverCardRoot, useForwardPropsEmits } from 'reka-ui'
 import { provide, ref } from 'vue'
-import { CHAVE_HOVER_CARD } from './context'
+import { KEY_HOVER_CARD } from './context'
 
 // Espera padrão do design system: 600ms para abrir, 300ms para fechar. A reka
 // traz 700/300; o valor é fixado aqui para as cinco stacks abrirem no mesmo
@@ -19,7 +19,7 @@ const forwarded = useForwardPropsEmits(props, emits)
 // tira dele o nome acessível do painel. Buscar o gatilho no documento daria o
 // mesmo nome a todos os cartões de uma tela com vários (ver a story Sides).
 const gatilho = ref<HTMLElement | null>(null)
-provide(CHAVE_HOVER_CARD, { gatilho })
+provide(KEY_HOVER_CARD, { gatilho })
 </script>
 
 <template>

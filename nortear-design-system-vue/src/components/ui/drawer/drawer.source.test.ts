@@ -8,7 +8,7 @@ import {
   drawerControladoSource,
   drawerDireitaSource,
   drawerEsquerdaSource,
-  drawerFechadoSource,
+  drawerClosedSource,
   drawerNaoDispensavelSource,
   drawerSource,
   drawerTopoSource,
@@ -114,7 +114,7 @@ describe('transforms das stories de direção', () => {
 
 describe('transforms das stories de estado', () => {
   it('o fechado é a forma canônica sem corpo, e o gatilho é a única entrada', () => {
-    const saida = drawerFechadoSource();
+    const saida = drawerClosedSource();
     expect(saida).toContain('<DrawerTrigger as-child>');
     expect(saida).not.toContain('DrawerBody');
     expect(saida).not.toContain('default-open');

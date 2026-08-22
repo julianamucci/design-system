@@ -6,7 +6,7 @@ import {
   collapsibleComIconeSource,
   collapsibleControladoSource,
   collapsibleDesabilitadoSource,
-  collapsibleNaoControladoSource,
+  collapsibleNotControlledSource,
   collapsibleSource,
 } from './collapsible.source';
 
@@ -81,8 +81,8 @@ import {
 
 describe('transforms das stories de estado', () => {
   it('o não controlado é a forma mínima, sem prop de estado nenhuma', () => {
-    expect(collapsibleNaoControladoSource()).toBe(collapsibleSource());
-    expect(collapsibleNaoControladoSource()).not.toContain(':open');
+    expect(collapsibleNotControlledSource()).toBe(collapsibleSource());
+    expect(collapsibleNotControlledSource()).not.toContain(':open');
   });
 
   it('aberto por padrão troca o rótulo junto com o estado', () => {

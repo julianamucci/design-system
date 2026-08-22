@@ -76,8 +76,8 @@ ${opcoes.map((o) => linha(o, recuo)).join('\n')}
 ${p}</RadioGroup>`;
 }
 
-const ROTULO_PAGAMENTO = 'aria-label="Forma de pagamento"';
-const ROTULO_ENTREGA = 'aria-label="Forma de entrega"';
+const LABEL_PAGAMENTO = 'aria-label="Forma de pagamento"';
+const LABEL_ENTREGA = 'aria-label="Forma de entrega"';
 
 /**
  * Forma canônica: um grupo nomeado, uma linha por opção, rótulo amarrado ao
@@ -92,14 +92,14 @@ export const radioGroupSource: SourceTransform<RadioGroupArgs> = (_gerado, ctx) 
       attrBool('disabled', args.disabled, false),
       attr('orientation', args.orientation, 'vertical'),
       attr('name', args.name),
-      ROTULO_PAGAMENTO,
+      LABEL_PAGAMENTO,
     ]),
   );
 };
 
 /** Eixo padrão: as opções empilham, e a navegação por setas desce a lista. */
 export function radioGroupVerticalSource(): string {
-  return vueSnippet(IMPORT, grupo(PAGAMENTO, [ROTULO_PAGAMENTO]));
+  return vueSnippet(IMPORT, grupo(PAGAMENTO, [LABEL_PAGAMENTO]));
 }
 
 /**
@@ -110,7 +110,7 @@ export function radioGroupVerticalSource(): string {
 export function radioGroupHorizontalSource(): string {
   return vueSnippet(
     IMPORT,
-    grupo(ENTREGA, ['orientation="horizontal"', ROTULO_ENTREGA]),
+    grupo(ENTREGA, ['orientation="horizontal"', LABEL_ENTREGA]),
   );
 }
 
@@ -145,7 +145,7 @@ export function radioGroupComDescricaoSource(): string {
     .join('\n');
   return vueSnippet(
     IMPORT,
-    `<RadioGroup ${ROTULO_PAGAMENTO}>
+    `<RadioGroup ${LABEL_PAGAMENTO}>
 ${corpo}
 </RadioGroup>`,
   );
@@ -153,7 +153,7 @@ ${corpo}
 
 /** Estado de partida: nenhuma opção marcada, o grupo espera a escolha. */
 export function radioGroupPadraoSource(): string {
-  return vueSnippet(IMPORT, grupo(PAGAMENTO.slice(0, 2), [ROTULO_PAGAMENTO]));
+  return vueSnippet(IMPORT, grupo(PAGAMENTO.slice(0, 2), [LABEL_PAGAMENTO]));
 }
 
 /**
@@ -163,7 +163,7 @@ export function radioGroupPadraoSource(): string {
 export function radioGroupMarcadoSource(): string {
   return vueSnippet(
     IMPORT,
-    grupo(PAGAMENTO.slice(0, 2), ['default-value="pix"', ROTULO_PAGAMENTO]),
+    grupo(PAGAMENTO.slice(0, 2), ['default-value="pix"', LABEL_PAGAMENTO]),
   );
 }
 
@@ -171,7 +171,7 @@ export function radioGroupMarcadoSource(): string {
 export function radioGroupDesabilitadoSource(): string {
   return vueSnippet(
     IMPORT,
-    grupo(PAGAMENTO.slice(0, 2), ['disabled', ROTULO_PAGAMENTO]),
+    grupo(PAGAMENTO.slice(0, 2), ['disabled', LABEL_PAGAMENTO]),
   );
 }
 
@@ -186,7 +186,7 @@ export function radioGroupItemDesabilitadoSource(): string {
     { ...PAGAMENTO[1], rotulo: 'Pix (indisponível)', desabilitado: true },
     PAGAMENTO[2],
   ];
-  return vueSnippet(IMPORT, grupo(opcoes, [ROTULO_PAGAMENTO]));
+  return vueSnippet(IMPORT, grupo(opcoes, [LABEL_PAGAMENTO]));
 }
 
 /**
@@ -225,7 +225,7 @@ export function radioGroupInvalidoSource(): string {
 
 /** Padrão de escolha exclusiva: uma pergunta, uma resposta entre poucas. */
 export function radioGroupPagamentoSource(): string {
-  return vueSnippet(IMPORT, grupo(PAGAMENTO, [ROTULO_PAGAMENTO]));
+  return vueSnippet(IMPORT, grupo(PAGAMENTO, [LABEL_PAGAMENTO]));
 }
 
 /**
@@ -238,7 +238,7 @@ export function radioGroupFieldsetSource(): string {
     IMPORT,
     `<fieldset class="nds-border-default nds-rounded-lg nds-p-4">
   <legend class="nds-text-body nds-font-semibold nds-px-1">Forma de entrega</legend>
-${grupo(ENTREGA, ['class="nds-stack"', 'data-spacing="sm"', ROTULO_ENTREGA], 4)}
+${grupo(ENTREGA, ['class="nds-stack"', 'data-spacing="sm"', LABEL_ENTREGA], 4)}
 </fieldset>`,
   );
 }
@@ -261,7 +261,7 @@ ${IMPORT}`,
 
   <fieldset class="nds-stack" data-spacing="sm">
     <legend class="nds-text-body nds-font-medium nds-mb-1">Forma de pagamento</legend>
-${grupo(PAGAMENTO, ['required', 'class="nds-stack"', 'data-spacing="sm"', ROTULO_PAGAMENTO], 6)}
+${grupo(PAGAMENTO, ['required', 'class="nds-stack"', 'data-spacing="sm"', LABEL_PAGAMENTO], 6)}
   </fieldset>
 
   <Button type="submit" class="nds-w-full">Finalizar pedido</Button>

@@ -16,7 +16,7 @@ import {
   popoverAbertoSource,
   popoverAcimaSource,
   popoverControladoSource,
-  popoverFechadoSource,
+  popoverClosedSource,
   popoverModalSource,
 } from './popover.source';
 
@@ -29,7 +29,7 @@ const meta = {
     controls: { disable: true },
     actions: { disable: true },
     docs: {
-      source: { transform: popoverFechadoSource },
+      source: { transform: popoverClosedSource },
       description: {
         component:
           'Estados canônicos do Popover: Fechado (painel fora do DOM), Aberto, ancorado acima, Controlado por fora e Modal (focus trap + scroll lock).',

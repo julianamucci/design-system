@@ -10,7 +10,7 @@ import {
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption } from './index';
 import {
-  chartComDicaSource,
+  chartWithDicaSource,
   chartComLegendaSource,
   chartMultiSerieSource,
 } from './chart.source';
@@ -29,7 +29,7 @@ const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: chartComDicaSource } },
+    docs: { source: { transform: chartWithDicaSource } },
   },
   title: 'UI/Chart/Settings',
   tags: ['display'],

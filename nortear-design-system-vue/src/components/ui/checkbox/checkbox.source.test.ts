@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
   checkboxComDescricaoSource,
-  checkboxComRotuloSource,
+  checkboxWithLabelSource,
   checkboxDesabilitadoMarcadoSource,
   checkboxDesabilitadoSource,
   checkboxDesmarcadoSource,
   checkboxEmFormularioSource,
   checkboxErroSource,
-  checkboxFocoSource,
+  checkboxFocusSource,
   checkboxGrupoSource,
   checkboxMarcadoSource,
   checkboxMistoSource,
@@ -112,7 +112,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o foco não tem prop a ligar — o anel sai do próprio componente', () => {
-    const saida = checkboxFocoSource();
+    const saida = checkboxFocusSource();
     expect(saida).toContain('Foco visível via teclado');
     expect(saida).not.toContain('focus');
   });
@@ -120,7 +120,7 @@ describe('transforms das stories de estado', () => {
 
 describe('transforms das stories de composição', () => {
   it('a composição mínima é o par, igual à do estado de partida', () => {
-    expect(checkboxComRotuloSource()).toBe(checkboxDesmarcadoSource());
+    expect(checkboxWithLabelSource()).toBe(checkboxDesmarcadoSource());
   });
 
   it('a descrição fica fora do rótulo e chega pelo aria-describedby', () => {

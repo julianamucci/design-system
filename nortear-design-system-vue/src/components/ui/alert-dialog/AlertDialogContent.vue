@@ -10,7 +10,7 @@ import {
   useForwardPropsEmits,
 } from 'reka-ui'
 import { cn } from '@/lib/utils'
-import { ALERT_DIALOG_DESCRICAO } from './alert-dialog.context'
+import { ALERT_DIALOG_DESCRIPTION } from './alert-dialog.context'
 
 defineOptions({
   inheritAttrs: false,
@@ -42,13 +42,13 @@ const fallbackLabel = computed(() => (attrs['aria-labelledby'] ? undefined : 'Al
 // atributo como indefinido aqui é o que o apaga. Com descrição registrada a chave
 // nem entra no objeto, e a ligação da lib segue valendo.
 const descricoes = ref(0)
-provide(ALERT_DIALOG_DESCRICAO, {
+provide(ALERT_DIALOG_DESCRIPTION, {
   registrar() {
     descricoes.value += 1
     onScopeDispose(() => { descricoes.value -= 1 })
   },
 })
-const semDescricao = computed(() =>
+const noDescription = computed(() =>
   descricoes.value === 0 ? { 'aria-describedby': undefined } : {},
 )
 </script>
@@ -68,7 +68,7 @@ const semDescricao = computed(() =>
     />
     <AlertDialogContent
       data-slot="alert-dialog-content"
-      v-bind="{ 'aria-modal': 'true', 'aria-label': fallbackLabel, ...semDescricao, ...$attrs, ...forwarded }"
+      v-bind="{ 'aria-modal': 'true', 'aria-label': fallbackLabel, ...noDescription, ...$attrs, ...forwarded }"
       :class="cn( 'nds-alert-dialog-content', props.class, )"
     >
       <slot />

@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest';
 import {
   chartAreaSource,
   chartBarSource,
-  chartComCardSource,
-  chartComDicaSource,
+  chartWithCardSource,
+  chartWithDicaSource,
   chartComLegendaSource,
-  chartContrasteSource,
+  chartContrastSource,
   chartDuasSeriesSource,
   chartLineSource,
   chartMultiSerieSource,
@@ -13,7 +13,7 @@ import {
   chartSerieUnicaSource,
   chartSource,
   chartTituloNoDesenhoSource,
-  chartTokensDeTemaSource,
+  themeSourceChartTokens,
   chartVazioSource,
 } from './chart.source';
 
@@ -102,7 +102,7 @@ describe('transforms das stories de variante', () => {
 
 describe('transforms das stories de composição', () => {
   it('o card é o componente da biblioteca, e o gráfico mora dentro dele', () => {
-    const saida = chartComCardSource();
+    const saida = chartWithCardSource();
     expect(saida).toContain(`} from '@/components/ui/card'`);
     expect(saida).toContain('<Card class="nds-w-sm">');
     // O aninhamento é a lição: o gráfico entra recuado dentro do conteúdo do
@@ -121,7 +121,7 @@ describe('transforms das stories de composição', () => {
 
 describe('transforms das stories de configuração', () => {
   it('a dica não tem prop a ligar — o builder já declara o tooltip', () => {
-    const saida = chartComDicaSource();
+    const saida = chartWithDicaSource();
     expect(saida).toContain(`const meses = ['Jan', 'Fev', 'Mar', 'Abr']`);
     expect(saida).not.toContain('tooltip');
   });
@@ -150,7 +150,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('os tokens de tema empilham dois containers, sem prop de tema a passar', () => {
-    const saida = chartTokensDeTemaSource();
+    const saida = themeSourceChartTokens();
     expect(saida).toContain('<div class="nds-stack">');
     expect(saida.match(/<ChartContainer/g)).toHaveLength(2);
     expect(saida).toContain('buildBarOption({ xAxis: meses, series })');
@@ -159,7 +159,7 @@ describe('transforms das stories de estado', () => {
   });
 
   it('o contraste mede forma de dado, então a série é única', () => {
-    const saida = chartContrasteSource();
+    const saida = chartContrastSource();
     expect(saida).not.toContain('Mobile');
     expect(saida).toContain(':height="260"');
   });

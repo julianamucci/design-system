@@ -10,7 +10,7 @@
  * esmaecimento junto do controle — só existe COM o controle ao lado. Um snippet
  * com o `<Label>` isolado mostraria a única forma em que ele não faz nada.
  */
-import { attr, attrs, comoCodigo, indentar, vueSnippet, type SourceTransform } from '@/lib/story-source';
+import { attr, attrs, asCode, indentar, vueSnippet, type SourceTransform } from '@/lib/story-source';
 
 export type LabelArgs = {
   for: string;
@@ -48,7 +48,7 @@ const ASTERISCO = '<span class="nds-text-destructive" aria-hidden="true">*</span
  */
 export const labelSource: SourceTransform<LabelArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const alvo = comoCodigo(args.for) ?? 'nome-completo';
+  const alvo = asCode(args.for) ?? 'nome-completo';
   return vueSnippet(
     IMPORTS,
     bloco([
@@ -59,7 +59,7 @@ export const labelSource: SourceTransform<LabelArgs> = (_gerado, ctx) => {
 };
 
 /** Estado de repouso: opacidade cheia e contraste de texto normal. */
-export function labelPadraoSource(): string {
+export function labelDefaultSource(): string {
   return vueSnippet(
     IMPORTS,
     bloco([
@@ -92,7 +92,7 @@ export function labelDesabilitadoSource(): string {
  * os rótulos de dentro de uma vez — é o caminho para um grupo de campos que
  * some junto, sem marcar controle por controle.
  */
-export function labelDesabilitadoPeloGrupoSource(): string {
+export function labelDisabledPeloGroupSource(): string {
   return vueSnippet(
     IMPORTS,
     bloco(
@@ -142,7 +142,7 @@ export function labelComCampoSource(): string {
  * foco a ela. Vale só para controle rotulável; um `<div role="checkbox">` não
  * receberia nem o foco nem a marcação por esse caminho.
  */
-export function labelComCaixaDeSelecaoSource(): string {
+export function selectionSourceLabelWithBox(): string {
   return vueSnippet(
     `import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'`,

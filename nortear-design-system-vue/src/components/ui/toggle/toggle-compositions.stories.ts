@@ -6,7 +6,7 @@ import { Bold, Italic, Underline, List, Eye } from 'lucide-vue-next';
 import {
   toggleBarraDeFormatacaoSource,
   toggleControladoSource,
-  toggleListaDeFiltrosSource,
+  filtersSourceToggleList,
 } from './toggle.source';
 
 const meta = {
@@ -94,7 +94,7 @@ export const FilterList: Story = {
     docs: {
       // Aqui os toggles têm texto visível e nenhum `role="group"`: cada filtro se
       // nomeia sozinho, ao contrário da barra de ícones do meta.
-      source: { transform: toggleListaDeFiltrosSource },
+      source: { transform: filtersSourceToggleList },
     },
   },
   render: () => ({

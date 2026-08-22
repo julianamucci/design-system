@@ -7,8 +7,8 @@ import { Info } from 'lucide-vue-next';
 import {
   alertClasseAdicionalSource,
   alertComAcaoSource,
-  alertComIconeSource,
-  alertLayoutSemIconeSource,
+  alertWithIconSource,
+  alertLayoutNoIconSource,
 } from './alert.source';
 
 const meta = {
@@ -19,7 +19,7 @@ const meta = {
     design: figmaDesign('alert'),
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: alertComIconeSource } },
+    docs: { source: { transform: alertWithIconSource } },
   },
 } satisfies Meta<typeof Alert>;
 
@@ -142,7 +142,7 @@ export const WithoutIcon: Story = {
   parameters: {
     covers: ['visual.item4'],
     // A ausência do ícone É o assunto: a do meta compõe justamente com ele.
-    docs: { source: { transform: alertLayoutSemIconeSource } },
+    docs: { source: { transform: alertLayoutNoIconSource } },
   },
   render: () => ({
     components: { Alert, AlertTitle, AlertDescription },

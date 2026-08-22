@@ -19,7 +19,7 @@ import {
   alertDialogClasseExtraSource,
   alertDialogComIconeSource,
   alertDialogDescricaoLongaSource,
-  alertDialogDestrutivoSource,
+  alertDialogDestructiveSource,
   alertDialogNeutroSource,
   alertDialogSemDescricaoSource,
 } from './alert-dialog.source';
@@ -118,7 +118,7 @@ export const Destructive: Story = {
     docs: {
       // A ausência do bloco de mídia É o assunto aqui: a severidade vem só das
       // variantes do gatilho e da ação, e a do meta traz o ícone.
-      source: { transform: alertDialogDestrutivoSource },
+      source: { transform: alertDialogDestructiveSource },
       description: {
         story:
           'Action e trigger usam a variante destructive do Button. Use para ações irreversíveis.',
@@ -392,7 +392,7 @@ export const Responsive: Story = {
     docs: {
       // A marcação é a mesma da confirmação destrutiva — o que muda é a largura
       // da tela, que não se escreve no snippet; a do meta traria o ícone a mais.
-      source: { transform: alertDialogDestrutivoSource },
+      source: { transform: alertDialogDestructiveSource },
       description: {
         story:
           'Abaixo de 40rem o footer empilha os botões em column-reverse e o header centraliza. Acima disso os botões ficam lado a lado, alinhados à direita.',

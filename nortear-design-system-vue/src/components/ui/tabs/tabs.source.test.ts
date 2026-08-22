@@ -2,13 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   tabsAbaAtivaSource,
   tabsAbaDesabilitadaSource,
-  tabsComContadorSource,
+  tabsWithCounterSource,
   tabsComIconesSource,
-  tabsConfiguracoesVerticaisSource,
+  tabsConfigVerticaisSource,
   tabsControladoSource,
   tabsLinhaSource,
-  tabsModoManualSource,
-  tabsPadraoSource,
+  tabsModeManualSource,
+  tabsDefaultSource,
   tabsSource,
   tabsVerticalSource,
 } from './tabs.source';
@@ -71,8 +71,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 describe('transforms das stories de variante', () => {
   it('a padrão não escreve a variante da lista — default é o que ela já é', () => {
-    expect(tabsPadraoSource()).toContain('<TabsList aria-label="Seções do componente">');
-    expect(tabsPadraoSource()).not.toContain('variant=');
+    expect(tabsDefaultSource()).toContain('<TabsList aria-label="Seções do componente">');
+    expect(tabsDefaultSource()).not.toContain('variant=');
   });
 
   it('a variante line mora na LISTA, não na raiz', () => {
@@ -125,7 +125,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o contador entra dentro do gatilho e não vira segundo alvo de foco', () => {
-    const saida = tabsComContadorSource();
+    const saida = tabsWithCounterSource();
     expect(saida).toContain(`<TabsTrigger value="inbox">
         Caixa de entrada
         <Badge as="span">12</Badge>
@@ -137,7 +137,7 @@ describe('transforms das stories de composição', () => {
   });
 
   it('nas configurações o título fica em contraste cheio e só o parágrafo atenua', () => {
-    const saida = tabsConfiguracoesVerticaisSource();
+    const saida = tabsConfigVerticaisSource();
     expect(saida).toContain('<h3 class="nds-font-medium nds-text-foreground">Perfil público</h3>');
     expect(saida).toContain('class="nds-text-body nds-pl-4"');
     // A cor atenuada desceu para o parágrafo: o painel inteiro não a carrega mais.
@@ -145,6 +145,6 @@ describe('transforms das stories de composição', () => {
   });
 
   it('o modo manual é prop da raiz', () => {
-    expect(tabsModoManualSource()).toContain('activation-mode="manual"');
+    expect(tabsModeManualSource()).toContain('activation-mode="manual"');
   });
 });

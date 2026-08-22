@@ -88,13 +88,13 @@ export function attrsMultilinha(
  *
  * Toda leitura de `ctx.args` que possa cair num handler passa por aqui.
  */
-export function comoCodigo(valor: unknown): string | undefined {
+export function asCode(valor: unknown): string | undefined {
   return typeof valor === 'string' && valor.trim() !== '' ? valor : undefined;
 }
 
 /**
  * Texto de atributo, já entre aspas duplas, com padrão para quando o control
- * não trouxer string. Fecha a mesma porta que `comoCodigo`, do lado do texto
+ * não trouxer string. Fecha a mesma porta que `asCode`, do lado do texto
  * que o leitor vê renderizado.
  */
 export function texto(valor: unknown, padrao = ''): string {
@@ -107,7 +107,7 @@ export function texto(valor: unknown, padrao = ''): string {
  * igual ao padrão do componente.
  */
 export function attr(nome: string, valor: unknown, padrao?: string): string {
-  const bruto = comoCodigo(valor);
+  const bruto = asCode(valor);
   if (bruto === undefined) return '';
   if (padrao !== undefined && bruto === padrao) return '';
   return `${nome}="${texto(bruto)}"`;

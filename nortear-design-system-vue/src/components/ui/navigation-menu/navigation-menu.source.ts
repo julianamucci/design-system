@@ -221,7 +221,7 @@ ${itemDireto('#configuracoes', 'Configurações')}
  * no DOM — não é um bloco escondido, e por isso nenhum destino dele entra na
  * ordem de tabulação de quem navega por teclado.
  */
-export function navigationMenuFechadoSource(): string {
+export function navigationMenuClosedSource(): string {
   return vueSnippet(
     importa(
       'NavigationMenu',
@@ -327,7 +327,7 @@ ${itemDireto('#contato', 'Contato')}
  * sair da página, e um painel que sobrevivesse ao clique ficaria pendurado
  * sobre a página seguinte.
  */
-export function navigationMenuComPainelSource(): string {
+export function navigationMenuWithPanelSource(): string {
   return vueSnippet(
     importa(
       'NavigationMenu',
@@ -409,7 +409,7 @@ ${cartoes}
  * TAMANHO do bloco, não por cor. O destaque ocupa a coluna inteira — daí o
  * `nds-h-full` — e os de apoio empilham na coluna ao lado.
  */
-export function navigationMenuComDestaqueSource(): string {
+export function navigationMenuWithHighlightSource(): string {
   const apoio = [
     { href: '#guias', titulo: 'Guias' },
     { href: '#api', titulo: 'Referência da API' },

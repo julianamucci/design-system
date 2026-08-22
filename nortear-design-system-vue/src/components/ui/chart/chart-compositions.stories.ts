@@ -8,7 +8,7 @@ import {
 } from '@shared/testing/chart-probe';
 import { ChartContainer, buildBarOption } from './index';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { chartComCardSource, chartTituloNoDesenhoSource } from './chart.source';
+import { chartWithCardSource, chartTituloNoDesenhoSource } from './chart.source';
 
 const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'];
 const SERIE_UNICA = [{ name: 'Desktop', data: [186, 305, 237, 73, 209, 214] }];
@@ -21,7 +21,7 @@ const meta: Meta = {
   parameters: {
     controls: { disable: true },
     actions: { disable: true },
-    docs: { source: { transform: chartComCardSource } },
+    docs: { source: { transform: chartWithCardSource } },
   },
   title: 'UI/Chart/Compositions',
   tags: ['display'],

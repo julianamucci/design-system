@@ -11,7 +11,7 @@ import {
   attrNum,
   attrs,
   attrsMultilinha,
-  comoCodigo,
+  asCode,
   vueSnippet,
   type SourceTransform,
 } from '@/lib/story-source';
@@ -48,7 +48,7 @@ const ALINHAMENTO: Item[] = [
   { valor: 'right', rotulo: 'Alinhar à direita', icone: 'AlignRight' },
 ];
 
-const ALINHAMENTO_COM_JUSTIFICAR: Item[] = [
+const ALIGNMENT_WITH_JUSTIFICAR: Item[] = [
   ...ALINHAMENTO,
   { valor: 'justify', rotulo: 'Justificar', icone: 'AlignJustify' },
 ];
@@ -65,7 +65,7 @@ const VISUALIZACAO: Item[] = [
 ];
 
 /** Os mesmos três alinhamentos, com o nome do tamanho no rótulo de cada um. */
-function alinhamentoPorTamanho(sufixo: string): Item[] {
+function sizeAlignment(sufixo: string): Item[] {
   return [
     { valor: 'left', rotulo: `Esquerda ${sufixo}`, icone: 'AlignLeft' },
     { valor: 'center', rotulo: `Centro ${sufixo}`, icone: 'AlignCenter' },
@@ -74,14 +74,14 @@ function alinhamentoPorTamanho(sufixo: string): Item[] {
 }
 
 /** Importa da biblioteca de ícones só o que a composição usa, sem repetir. */
-function importIcones(...listas: Item[][]): string {
+function importIcons(...listas: Item[][]): string {
   const nomes = [...new Set(listas.flat().map((item) => item.icone))];
   return `import { ${nomes.join(', ')} } from 'lucide-vue-next'`;
 }
 
 /** Bloco `<script setup>` completo: o componente e os ícones da composição. */
 function script(...listas: Item[][]): string {
-  return `${IMPORT}\n${importIcones(...listas)}`;
+  return `${IMPORT}\n${importIcons(...listas)}`;
 }
 
 /**
@@ -122,11 +122,11 @@ ${p}</ToggleGroup>`;
  *
  * O modo de seleção nunca é omitido — ele é a decisão que muda o formato do
  * valor (um texto em `single`, uma lista em `multiple`), e sai do control por
- * `comoCodigo` porque o Storybook entrega arg de ação como função.
+ * `asCode` porque o Storybook entrega arg de ação como função.
  */
 export const toggleGroupSource: SourceTransform<ToggleGroupArgs> = (_gerado, ctx) => {
   const args = ctx?.args ?? {};
-  const modo = comoCodigo(args.type) === 'multiple' ? 'multiple' : 'single';
+  const modo = asCode(args.type) === 'multiple' ? 'multiple' : 'single';
   return vueSnippet(
     script(ALINHAMENTO),
     grupo({
@@ -194,7 +194,7 @@ export function toggleGroupVerticalSource(): string {
 }
 
 /** Estado de partida: nenhum item selecionado, nenhum valor inicial. */
-export function toggleGroupPadraoSource(): string {
+export function toggleGroupDefaultSource(): string {
   return vueSnippet(
     script(ALINHAMENTO),
     grupo({
@@ -208,7 +208,7 @@ export function toggleGroupPadraoSource(): string {
  * Item selecionado: quem liga o estado inicial é `default-value`, não um
  * atributo no item — o grupo é o dono da seleção.
  */
-export function toggleGroupSelecionadoSource(): string {
+export function toggleGroupSelectedSource(): string {
   return toggleGroupSingleSource();
 }
 
@@ -237,9 +237,9 @@ export function toggleGroupItemDesabilitadoSource(): string {
 }
 
 /** Barra de alinhamento: quatro opções emendadas pelo contorno do grupo. */
-export function toggleGroupBarraAlinhamentoSource(): string {
+export function toggleGroupBarAlignmentSource(): string {
   return vueSnippet(
-    script(ALINHAMENTO_COM_JUSTIFICAR),
+    script(ALIGNMENT_WITH_JUSTIFICAR),
     grupo({
       raiz: [
         'type="single"',
@@ -247,13 +247,13 @@ export function toggleGroupBarraAlinhamentoSource(): string {
         'default-value="left"',
         'aria-label="Alinhamento do texto"',
       ],
-      itens: ALINHAMENTO_COM_JUSTIFICAR,
+      itens: ALIGNMENT_WITH_JUSTIFICAR,
     }),
   );
 }
 
 /** Barra de formatação: negrito, itálico e sublinhado convivem ligados. */
-export function toggleGroupBarraFormatacaoSource(): string {
+export function toggleGroupBarFormattingSource(): string {
   return vueSnippet(
     script(FORMATACAO),
     grupo({
@@ -268,7 +268,7 @@ export function toggleGroupBarraFormatacaoSource(): string {
  * o contorno passa para o ITEM — `variant="outline"` na raiz zeraria a borda de
  * cada um para desenhar um contêiner só, o oposto do que a composição mostra.
  */
-export function toggleGroupComEspacamentoSource(): string {
+export function toggleGroupWithSpacingSource(): string {
   return vueSnippet(
     script(FORMATACAO),
     grupo({
@@ -282,7 +282,7 @@ export function toggleGroupComEspacamentoSource(): string {
  * Os três tamanhos lado a lado. O grupo do meio sai SEM `size`: é o padrão, e
  * escrevê-lo ensinaria que o tamanho precisa ser declarado sempre.
  */
-export function toggleGroupTamanhosSource(): string {
+export function toggleGroupSizesSource(): string {
   const escalas: Array<{ size?: string; sufixo: string; rotulo: string }> = [
     { size: 'sm', sufixo: 'sm', rotulo: 'Alinhamento pequeno' },
     { sufixo: 'default', rotulo: 'Alinhamento padrão' },
@@ -297,7 +297,7 @@ export function toggleGroupTamanhosSource(): string {
           'default-value="left"',
           `aria-label="${escala.rotulo}"`,
         ],
-        itens: alinhamentoPorTamanho(escala.sufixo),
+        itens: sizeAlignment(escala.sufixo),
         recuo: 2,
       }),
     )

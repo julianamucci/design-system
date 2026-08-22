@@ -147,14 +147,14 @@ export const Playground: Story = {
     const primeiraCelula = () =>
       linhas()[0].querySelector<HTMLElement>("td:not(:has([role='checkbox']))")!;
     /** Identificador da linha como a pessoa vidente o lê: a primeira coluna. */
-    const idDaLinha = (tr: HTMLElement) =>
+    const lineId = (tr: HTMLElement) =>
       tr.querySelector<HTMLElement>("td:not(:has([role='checkbox']))")!.textContent!.trim();
     const caixaDaLinha = (tr: HTMLElement) => tr.querySelector<HTMLElement>("[role='checkbox']")!;
     // O nome vem de `labels.selectAll` — a story passa `rotulosFatura`, então
     // procurar por "Selecionar todas as linhas" aqui só acharia o padrão de
     // volta, isto é, `labels` ignorado.
     const caixaDeTudo = () => canvas.getByRole('checkbox', { name: 'Selecionar todas as faturas' });
-    const porFatura = (id: string) =>
+    const byInvoice = (id: string) =>
       canvas.getByRole('checkbox', { name: `Selecionar fatura ${id}` });
     const regiaoViva = () => canvasElement.querySelector<HTMLElement>("[role='status']")!;
 
@@ -271,12 +271,12 @@ export const Playground: Story = {
       // passa `rowLabel`, esse identificador só pode ter vindo da primeira
       // coluna — é o fallback sendo exercido, e não a prop.
       for (const [i, tr] of linhas().entries()) {
-        await expect(nomes[i]).toContain(idDaLinha(tr));
+        await expect(nomes[i]).toContain(lineId(tr));
       }
 
-      const nomeDoCabecalho = caixaDeTudo().getAttribute('aria-label');
-      await expect(nomeDoCabecalho).toBe('Selecionar todas as faturas');
-      await expect(nomes).not.toContain(nomeDoCabecalho);
+      const headerName = caixaDeTudo().getAttribute('aria-label');
+      await expect(headerName).toBe('Selecionar todas as faturas');
+      await expect(nomes).not.toContain(headerName);
     });
 
     await step('A busca livre recorta as linhas', async () => {
@@ -339,17 +339,17 @@ export const Playground: Story = {
       await zerarOrdenacao(botao);
       // Reconsulta a cada volta: a linha é reescrita entre um clique e o outro,
       // e uma referência colhida antes pode não ser mais a que está na tela.
-      const limparMarcacao = async () => {
+      const clearMarkup = async () => {
         for (let i = 0; i < linhas().length; i++) {
           await marcar(caixaDaLinha(linhas()[i]), 'false');
         }
       };
-      await limparMarcacao();
+      await clearMarkup();
 
       // Marcadas por NOME: por posição, o passo não distinguiria "a mesma
       // linha" de "a mesma linha da tela".
-      await marcar(porFatura('INV-002'), 'true');
-      await marcar(porFatura('INV-009'), 'true');
+      await marcar(byInvoice('INV-002'), 'true');
+      await marcar(byInvoice('INV-009'), 'true');
       const contagemAntes = regiaoViva().textContent!.trim();
       await expect(contagemAntes).toBe('2 de 12 linha(s) selecionada(s).');
 
@@ -362,7 +362,7 @@ export const Playground: Story = {
 
       const marcadas = linhas()
         .filter((tr) => tr.getAttribute('data-state') === 'selected')
-        .map(idDaLinha)
+        .map(lineId)
         .sort();
       await expect(marcadas).toEqual(['INV-002', 'INV-009']);
       await expect(regiaoViva().textContent!.trim()).toBe(contagemAntes);
@@ -370,7 +370,7 @@ export const Playground: Story = {
       // Devolve a tabela ao estado em que o passo a encontrou: o painel
       // Interactions reexecuta a play no MESMO DOM.
       await zerarOrdenacao(botao);
-      await limparMarcacao();
+      await clearMarkup();
     });
 
     await step('A story termina com seleção parcial na tela', async () => {

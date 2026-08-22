@@ -25,9 +25,9 @@ export type DataTableArgs = {
 
 const IMPORT_VUE = `import { h } from 'vue'`;
 
-const IMPORT_TABELA = `import { DataTable, type DataTableColumn } from '@/components/ui/data-table'`;
+const IMPORT_TABLE = `import { DataTable, type DataTableColumn } from '@/components/ui/data-table'`;
 
-const IMPORT_TABELA_COM_ROTULOS = `import {
+const IMPORT_TABLE_WITH_LABELS = `import {
   DataTable,
   type DataTableColumn,
   type DataTableLabels,
@@ -75,11 +75,11 @@ const varianteDoStatus = {
 } as const`;
 
 /** A célula de status: o dado cru vira selo com a cor do seu significado. */
-const CELULA_STATUS = `    cell: ({ row }) =>
+const CELL_STATUS = `    cell: ({ row }) =>
       h(Badge, { variant: varianteDoStatus[row.original.status] }, () => row.original.status),`;
 
 /** A célula de valor: moeda formatada, em algarismos de largura fixa. */
-const CELULA_VALOR = `    cell: ({ row }) =>
+const CELL_VALUE = `    cell: ({ row }) =>
       h(
         'span',
         { class: 'nds-font-medium nds-tabular-nums' },
@@ -99,14 +99,14 @@ const COLUNAS = `const columns: DataTableColumn<Invoice>[] = [
     accessorKey: 'status',
     header: 'Status',
     size: 140,
-${CELULA_STATUS}
+${CELL_STATUS}
   },
   { accessorKey: 'method', header: 'Método', size: 200 },
   {
     accessorKey: 'amount',
     header: 'Valor',
     size: 130,
-${CELULA_VALOR}
+${CELL_VALUE}
   },
 ]`;
 
@@ -159,7 +159,7 @@ export const dataTableSource: SourceTransform<DataTableArgs> = (_gerado, ctx) =>
     script(
       importar(
         IMPORT_VUE,
-        enableRowSelection ? IMPORT_TABELA_COM_ROTULOS : IMPORT_TABELA,
+        enableRowSelection ? IMPORT_TABLE_WITH_LABELS : IMPORT_TABLE,
         IMPORT_BADGE,
       ),
       TIPO,
@@ -207,7 +207,7 @@ const chaveDaFatura = (f: Invoice) => f.id`
 export function dataTableSemResultadosSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABELA, IMPORT_BADGE),
+      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
       '// O recorte não devolveu nada — a grade continua montada.\nconst invoices: Invoice[] = []',
       APRESENTACAO,
@@ -232,7 +232,7 @@ export function dataTableSemResultadosSource(): string {
 export function dataTablePaginadaSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABELA, IMPORT_BADGE),
+      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
       DADOS,
       APRESENTACAO,
@@ -258,7 +258,7 @@ export function dataTablePaginadaSource(): string {
 export function dataTableRotuloDeLinhaSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABELA, IMPORT_BADGE),
+      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
       DADOS,
       APRESENTACAO,
@@ -289,7 +289,7 @@ const rotuloDaFatura = (f: Invoice) => f.customer`,
 export function dataTableVirtualizadaSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABELA, IMPORT_BADGE),
+      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
       `// Mil linhas: é o volume em que montar tudo de uma vez trava a rolagem.
 const invoices: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
@@ -322,7 +322,7 @@ const invoices: Invoice[] = Array.from({ length: 1000 }, (_, i) => ({
 export function dataTableFiltrosPorColunaSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABELA, IMPORT_BADGE),
+      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
       DADOS,
       APRESENTACAO,
@@ -333,7 +333,7 @@ export function dataTableFiltrosPorColunaSource(): string {
     accessorKey: 'status',
     header: 'Status',
     meta: { filter: { type: 'select', options: ['Pago', 'Pendente', 'Cancelado'] } },
-${CELULA_STATUS}
+${CELL_STATUS}
   },
   {
     accessorKey: 'method',
@@ -348,7 +348,7 @@ ${CELULA_STATUS}
   {
     accessorKey: 'amount',
     header: 'Valor',
-${CELULA_VALOR}
+${CELL_VALUE}
   },
 ]`,
     ),
@@ -368,7 +368,7 @@ ${CELULA_VALOR}
 export function dataTableColunasRedimensionaveisSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABELA, IMPORT_BADGE),
+      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
       DADOS,
       APRESENTACAO,
@@ -385,7 +385,7 @@ export function dataTableColunasRedimensionaveisSource(): string {
 export function dataTableReordenarEFixarSource(): string {
   return vueSnippet(
     script(
-      importar(IMPORT_VUE, IMPORT_TABELA, IMPORT_BADGE),
+      importar(IMPORT_VUE, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
       DADOS,
       APRESENTACAO,
@@ -411,7 +411,7 @@ export function dataTableReordenarEFixarSource(): string {
 export function dataTableEdicaoInlineSource(): string {
   return vueSnippet(
     script(
-      importar(`import { h, ref } from 'vue'`, IMPORT_TABELA, IMPORT_BADGE),
+      importar(`import { h, ref } from 'vue'`, IMPORT_TABLE, IMPORT_BADGE),
       TIPO,
       DADOS,
       APRESENTACAO,
@@ -421,14 +421,14 @@ export function dataTableEdicaoInlineSource(): string {
   {
     accessorKey: 'status',
     header: 'Status',
-${CELULA_STATUS}
+${CELL_STATUS}
   },
   { accessorKey: 'method', header: 'Método', meta: { editable: true } },
   {
     accessorKey: 'amount',
     header: 'Valor',
     meta: { editable: true },
-${CELULA_VALOR}
+${CELL_VALUE}
   },
 ]`,
       `// A tabela não guarda os dados: ela avisa, e quem consome atualiza o array.

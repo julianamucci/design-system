@@ -7,7 +7,7 @@ import {
   collapsibleAbertoPorPadraoSource,
   collapsibleControladoSource,
   collapsibleDesabilitadoSource,
-  collapsibleNaoControladoSource,
+  collapsibleNotControlledSource,
 } from './collapsible.source';
 
 // Mesmo markup do Playground e do Vanilla (referência cross-stack).
@@ -26,7 +26,7 @@ const meta = {
     actions: { disable: true },
     layout: 'centered',
     docs: {
-      source: { transform: collapsibleNaoControladoSource },
+      source: { transform: collapsibleNotControlledSource },
       description: {
         component: 'Estados do Collapsible: não-controlado, aberto por padrão, controlado com estado externo e trigger desabilitado.',
       },

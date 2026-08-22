@@ -4,7 +4,7 @@ import {
   tableCarregandoSource,
   tableComAcoesSource,
   tableComRodapeSource,
-  tableLegendaInvisivelSource,
+  tableCaptionInvisivelSource,
   tableLinhaSelecionadaSource,
   tableRolagemHorizontalSource,
   tableSource,
@@ -121,7 +121,7 @@ describe('transforms das stories de variante', () => {
   });
 
   it('a legenda invisível vem acompanhada do título visível que a justifica', () => {
-    const saida = tableLegendaInvisivelSource();
+    const saida = tableCaptionInvisivelSource();
     expect(saida).toContain('<h2 class="nds-text-h3 nds-m-0">Faturas recentes</h2>');
     expect(saida).toContain('<TableCaption class="nds-sr-only">');
   });
