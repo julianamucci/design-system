@@ -2719,3 +2719,29 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       O par `drawer-estados` + `sonner` isolado NÃO reproduz: são só dois
       arquivos, e o vazamento precisa da suíte inteira dividindo a página. Medir
       com a suíte completa, uma stack por vez.
+
+- [ ] **Tradução de identificadores — 155 nomes adiados, cada um por decisão de
+      quem é dona do código.** A campanha aplicou 2295 nomes em seis lotes; o
+      que sobrou não é resto mecânico, é o que uma varredura não pode decidir:
+
+      **149 colidem** — o nome em inglês JÁ existe no mesmo arquivo, com outro
+      sentido. `texto -> text` esbarra num `text` que já está lá em seis
+      arquivos; `regras -> rules` e `linhas -> lines` no `code-highlight.ts`. A
+      saída não é escolher outro sinônimo por fora: é olhar o arquivo e decidir
+      qual dos dois conceitos fica com o nome curto.
+
+      **6 colidem com prop ou variável de framework** — `estilo -> style`
+      (prop do Svelte), `densidade -> density`, `canal -> channel`,
+      `seletores -> selectors` (todos no `preview.ts`), `meses -> months` e
+      `anos -> years` (no `calendar.svelte`).
+
+      **2 não têm alvo único:**
+      · `novo` é polissêmico — "elemento recém-montado" nas stories, e no
+        `AccordionDocs` é a chave de rótulo que significa *Novo* (Novidades).
+        `new` é palavra-chave, então não serve de qualquer forma;
+      · `com` não é identificador: aparece em comentário e dentro de
+        `figma.com`. Provavelmente é para sair do mapa de vez.
+
+      Ferramenta no scratchpad da sessão (`renomeia.mjs`, `colisao.mjs`,
+      `dessincronia.mjs`, `diff-textos.mjs`, `diff-kebab.mjs`), com as nove
+      correções de máscara que os seis lotes custaram.
