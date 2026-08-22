@@ -80,16 +80,41 @@
  * de simetria. */
 .nds-w-full   { width: 100%; }
 .nds-w-auto   { width: auto; }
-.nds-w-3xs     { width: 14rem; }                       /* 224px */
-.nds-w-2xs     { width: 18rem; }                       /* 288px */
-.nds-w-xs      { width: 20rem; }                       /* 320px */
-.nds-w-sm      { width: 24rem; }                       /* 384px — formulários */
-.nds-w-md      { width: 28rem; }                       /* 448px */
-.nds-w-lg      { width: 32rem; }                       /* 512px */
-.nds-w-xl      { width: 40rem; }                       /* 640px */
-.nds-w-prose   { width: 48rem; }                       /* leitura confortável */
-.nds-w-content { width: 64rem; }                       /* 1024px */
-.nds-w-docs    { width: 72rem; }                       /* 1152px — shell de docs */
+/*
+ * O TETO é `100dvw`, e não `100%`, e a diferença tem história.
+ *
+ * A família declara `width` fixa de propósito. Sem teto nenhum, uma tela de
+ * 320px recebia um `nds-w-md` de 28rem e ganhava 128px de rolagem horizontal —
+ * relatado no carrossel, mas o carrossel era só quem estava vestindo a classe.
+ *
+ * `max-width: 100%` seria o CSS óbvio, e foi tentado: colapsa o painel do
+ * hover-card. Ali a porcentagem resolve contra o invólucro do popper — que é
+ * posicionado e encolhe para caber no conteúdo —, e não contra a tela. O painel
+ * ia de 448px para 34px, e a story `Extra Panel Class` reprova nas duas stacks
+ * que a têm.
+ *
+ * `100dvw` resolve contra a JANELA, que é o que se quer nos dois casos: em
+ * fluxo normal ele só entra em ação quando a tela é mais estreita que a largura
+ * fixa; dentro do popper, 448px cabem numa janela de desktop e o teto não morde.
+ *
+ * A ressalva honesta: `dvw` inclui a barra de rolagem clássica, então numa
+ * janela de desktop estreita o teto pode sobrar a largura da barra. Na prática
+ * ele só é alcançado quando a tela é menor que a largura fixa — território de
+ * toque, onde a barra é sobreposta e não ocupa espaço.
+ *
+ * Portão: `QA/Larguras > SemRolagemHorizontal`, nas cinco stacks. Sem este
+ * teto ela acusa `sobra=832px` — o `nds-w-docs` de 72rem contra 320px.
+ */
+.nds-w-3xs     { width: 14rem; max-width: 100dvw; }                       /* 224px */
+.nds-w-2xs     { width: 18rem; max-width: 100dvw; }                       /* 288px */
+.nds-w-xs      { width: 20rem; max-width: 100dvw; }                       /* 320px */
+.nds-w-sm      { width: 24rem; max-width: 100dvw; }                       /* 384px — formulários */
+.nds-w-md      { width: 28rem; max-width: 100dvw; }                       /* 448px */
+.nds-w-lg      { width: 32rem; max-width: 100dvw; }                       /* 512px */
+.nds-w-xl      { width: 40rem; max-width: 100dvw; }                       /* 640px */
+.nds-w-prose   { width: 48rem; max-width: 100dvw; }                       /* leitura confortável */
+.nds-w-content { width: 64rem; max-width: 100dvw; }                       /* 1024px */
+.nds-w-docs    { width: 72rem; max-width: 100dvw; }                       /* 1152px — shell de docs */
 
 /* Square sizing (grid 8) — para elementos que precisam de width+height iguais */
 .nds-size-2   { width: 0.5rem;   height: 0.5rem;  }    /* 8px — marcador/bullet */
