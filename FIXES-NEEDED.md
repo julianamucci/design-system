@@ -2589,6 +2589,28 @@ e testáveis — hoje são ~3.500 testes unitários somando as três stacks fech
       Taxa medida no React sob `--no-isolate`: 2 reprovações em 9 rodadas da
       suíte cheia. Não fechar como "não reproduz".
 
+      **Confirmação, 2026-08-22 — a régua chega a ler ZERO.** O Angular
+      reprovou na PRECONDIÇÃO, antes de qualquer gesto:
+
+          Precondição: a régua sai das próprias setas
+          expected 0 to be greater than 0        (carousel-settings.stories.ts:396)
+
+      É `expect(posUm).toBeGreaterThan(posZero)` com os dois em 0: o clique em
+      `proximo()` foi dado e `assentar()` devolveu a mesma posição zero. Isso
+      fecha a dúvida que o retrato de 28,62px deixava aberta — não é "assentou
+      cedo demais e pegou o meio da animação", é `assentar()` devolvendo leitura
+      de um trilho que o motor ainda **não mediu**. Zero não é um ponto
+      intermediário da animação: é o valor antes de existir medida.
+
+      Consequência para a correção: subir o critério de estabilidade não basta,
+      porque três leituras de zero são perfeitamente estáveis. O `assentar` tem
+      de exigir que a medida EXISTA — trilho com largura não-nula, ou a seta
+      anterior já reconciliada — antes de aceitar qualquer valor como régua.
+
+      Na mesma rodada o Vanilla reprovou no passo da soltura (posição=480,
+      alvo=49,40), e ambas passaram na repetição imediata da mesma suíte, na
+      mesma máquina.
+
 - [ ] **Falha de infra do dev server sob carga**, no Vanilla e no Vue:
       `Failed to fetch dynamically imported module: …/@storybook/addon-vitest/…/
       setup-file-with-project-annotations.js`. Chega a derrubar 7 arquivos de
