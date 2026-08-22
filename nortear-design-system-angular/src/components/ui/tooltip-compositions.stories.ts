@@ -12,7 +12,7 @@ import { NdsCard, NdsCardContent, NdsCardHeader, NdsCardTitle } from './card';
 // mesma regra: o Tooltip acrescenta contexto a um elemento que JÁ se explica
 // sozinho — nunca é o único portador da informação.
 
-const ICONE_SALVAR = `<svg
+const ICON_SALVAR = `<svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -28,7 +28,7 @@ const ICONE_SALVAR = `<svg
           <path d="M7 3v4a1 1 0 0 0 1 1h7" />
         </svg>`;
 
-const ICONE_AJUDA = `<svg
+const ICON_AJUDA = `<svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -44,7 +44,7 @@ const ICONE_AJUDA = `<svg
           <path d="M12 17h.01" />
         </svg>`;
 
-const ICONE_INFO = `<svg
+const ICON_INFO = `<svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -95,7 +95,7 @@ export const IconButtonWithShortcut: Story = {
       <div ndsTooltipProvider [delay]="0" class="nds-cluster nds-p-8" data-spacing="sm">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICONE_SALVAR}
+            ${ICON_SALVAR}
           </button>
           <ng-template ndsTooltipContent
             ><span>Salvar</span
@@ -136,7 +136,7 @@ export const HelpInFormField: Story = {
               size="icon-sm"
               aria-label="Onde encontrar o token da API"
             >
-              ${ICONE_AJUDA}
+              ${ICON_AJUDA}
             </button>
             <ng-template ndsTooltipContent side="right"
               >Gere em Configurações › Acesso › Tokens</ng-template
@@ -186,7 +186,7 @@ export const MetricDescription: Story = {
                   size="icon-sm"
                   aria-label="O que é LCP"
                 >
-                  ${ICONE_INFO}
+                  ${ICON_INFO}
                 </button>
                 <ng-template ndsTooltipContent
                   >LCP — Largest Contentful Paint</ng-template

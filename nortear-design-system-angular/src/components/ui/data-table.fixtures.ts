@@ -27,7 +27,7 @@ import {
 // linhas os botões de paginação nasceriam todos desabilitados e não haveria o
 // que testar.
 
-export interface FaturaDT {
+export interface InvoiceDT {
   id: string;
   cliente: string;
   status: string;
@@ -35,7 +35,7 @@ export interface FaturaDT {
   valor: number;
 }
 
-export const FATURAS_DT: FaturaDT[] = [
+export const INVOICES_DT: InvoiceDT[] = [
   { id: '#INV-001', cliente: 'Ana Prado',      status: 'Pago',      metodo: 'Cartão de crédito',      valor: 250 },
   { id: '#INV-002', cliente: 'Bruno Lima',     status: 'Pendente',  metodo: 'Transferência bancária', valor: 150 },
   { id: '#INV-003', cliente: 'Carla Souza',    status: 'Cancelado', metodo: 'Pix',                    valor: 350 },
@@ -53,7 +53,7 @@ export const FATURAS_DT: FaturaDT[] = [
 export const STATUS_DT = ['Pago', 'Pendente', 'Cancelado'];
 
 /** Rótulos em português para as stories — o componente nasce com os mesmos. */
-export const ROTULOS_DT: Partial<DataTableLabels> = {
+export const LABELS_DT: Partial<DataTableLabels> = {
   columns: 'Colunas',
   showColumns: 'Exibir colunas',
   selectAll: 'Selecionar todas as faturas',
@@ -74,7 +74,7 @@ function formatarBRL(valor: unknown): string {
 }
 
 /** Colunas básicas: fatura, cliente, status, método e valor. */
-export const COLUNAS_FATURAS: DataTableColumn<FaturaDT>[] = [
+export const COLUMNS_INVOICES: DataTableColumn<InvoiceDT>[] = [
   { id: 'id',      header: 'Fatura',  accessor: (f) => f.id,      sortable: true, hideable: false },
   { id: 'cliente', header: 'Cliente', accessor: (f) => f.cliente, sortable: true },
   { id: 'status',  header: 'Status',  accessor: (f) => f.status },
@@ -93,7 +93,7 @@ export const COLUNAS_FATURAS: DataTableColumn<FaturaDT>[] = [
 ];
 
 /** As mesmas colunas, com filtro por coluna: texto em cliente, select em status. */
-export const COLUNAS_COM_FILTRO: DataTableColumn<FaturaDT>[] = COLUNAS_FATURAS.map((coluna) => {
+export const COLUMNS_WITH_FILTER: DataTableColumn<InvoiceDT>[] = COLUMNS_INVOICES.map((coluna) => {
   if (coluna.id === 'cliente') {
     return { ...coluna, filter: { type: 'text' as const, placeholder: 'Filtrar cliente' } };
   }
@@ -104,7 +104,7 @@ export const COLUNAS_COM_FILTRO: DataTableColumn<FaturaDT>[] = COLUNAS_FATURAS.m
 });
 
 /** Cliente e valor editáveis inline — o resto é leitura. */
-export const COLUNAS_EDITAVEIS: DataTableColumn<FaturaDT>[] = COLUNAS_FATURAS.map((coluna) =>
+export const COLUMNS_EDITAVEIS: DataTableColumn<InvoiceDT>[] = COLUMNS_INVOICES.map((coluna) =>
   coluna.id === 'cliente' || coluna.id === 'valor' ? { ...coluna, editable: true } : coluna,
 );
 
@@ -145,10 +145,10 @@ export const COLUNAS_EDITAVEIS: DataTableColumn<FaturaDT>[] = COLUNAS_FATURAS.ma
   `,
 })
 export class NdsDataTableDemo {
-  readonly colunas = COLUNAS_EDITAVEIS;
-  readonly rotulos = ROTULOS_DT;
-  readonly chaveDaFatura = (fatura: FaturaDT) => fatura.id;
-  readonly rotuloDaFatura = (fatura: FaturaDT) => fatura.id;
+  readonly colunas = COLUMNS_EDITAVEIS;
+  readonly rotulos = LABELS_DT;
+  readonly chaveDaFatura = (fatura: InvoiceDT) => fatura.id;
+  readonly rotuloDaFatura = (fatura: InvoiceDT) => fatura.id;
 
   readonly enableRowSelection = input(false, { transform: booleanAttribute });
   readonly enablePagination = input(true, { transform: booleanAttribute });
@@ -157,8 +157,8 @@ export class NdsDataTableDemo {
   readonly mostrarLote = input(false, { transform: booleanAttribute });
   readonly pageSize = input(5, { transform: numberAttribute });
 
-  readonly faturas = signal<FaturaDT[]>(FATURAS_DT.map((f) => ({ ...f })));
-  readonly selecionadas = signal<readonly FaturaDT[]>([]);
+  readonly faturas = signal<InvoiceDT[]>(INVOICES_DT.map((f) => ({ ...f })));
+  readonly selecionadas = signal<readonly InvoiceDT[]>([]);
 
   readonly resumoDoLote = computed(() =>
     this.selecionadas().length === 0

@@ -28,7 +28,7 @@
  *   rules      → idem items
  *   <chave>Title → h3        (string solta)
  *   <chave>Code  → bloco de código (string solta; variante por stack já
- *                  resolvida — ver `resolverVariantesDeCodigo`)
+ *                  resolvida — ver `codeResolveVariants`)
  *   outra string → parágrafo
  *   sub-objeto  → subgrupo (h3 + corpo + tabela/itens próprios), a menos que
  *                 seja uma "folha de cartão" (só strings + title/name/body/
@@ -104,13 +104,13 @@ type Registro = Record<string, unknown>;
 const STACK: Stack = 'angular';
 
 /** Cartão do grid de `items` — título, corpo e campos extras (metadados). */
-export interface CartaoDeFundamento {
+export interface FoundationCartao {
   titulo: string;
   corpo: string;
   extras: string[];
 }
 
-export type TipoDeBloco =
+export type BlockType =
   | 'paragrafo'
   | 'subtitulo'
   | 'codigo'
@@ -124,30 +124,30 @@ export type TipoDeBloco =
  * Todos os campos vêm preenchidos (vazios quando não se aplicam) para o
  * template não depender de estreitamento de união — ver decisão 2 no topo.
  */
-export interface BlocoDeFundamento {
-  tipo: TipoDeBloco;
+export interface FoundationBlock {
+  tipo: BlockType;
   html: string;
   colunas: string[];
   linhas: string[][];
   itens: string[];
-  cartoes: CartaoDeFundamento[];
+  cartoes: FoundationCartao[];
 }
 
 /** Sub-objeto de uma seção: ganha h3 próprio e conteúdo próprio. */
-export interface GrupoDeFundamento {
+export interface FoundationGroup {
   titulo: string;
   corpo: string;
-  blocos: BlocoDeFundamento[];
+  blocos: FoundationBlock[];
 }
 
-export interface SecaoDeFundamento {
+export interface FoundationSection {
   chave: string;
   titulo: string;
   subtitulo: string;
   corpo: string;
   audiencia: string;
-  blocos: BlocoDeFundamento[];
-  grupos: GrupoDeFundamento[];
+  blocos: FoundationBlock[];
+  grupos: FoundationGroup[];
   nota: string;
 }
 
@@ -161,7 +161,7 @@ function texto(v: unknown): string {
   return typeof v === 'string' ? v : '';
 }
 
-function bloco(tipo: TipoDeBloco, parcial: Partial<BlocoDeFundamento> = {}): BlocoDeFundamento {
+function bloco(tipo: BlockType, parcial: Partial<FoundationBlock> = {}): FoundationBlock {
   return {
     tipo,
     html: '',
@@ -182,31 +182,31 @@ function bloco(tipo: TipoDeBloco, parcial: Partial<BlocoDeFundamento> = {}): Blo
  * variantes seria lido como sub-objeto e a página mostraria "react", "vue" e
  * "angular" como se fossem itens de conteúdo.
  */
-function resolverVariantesDeCodigo(no: unknown): unknown {
-  if (Array.isArray(no)) return no.map(resolverVariantesDeCodigo);
+function codeResolveVariants(no: unknown): unknown {
+  if (Array.isArray(no)) return no.map(codeResolveVariants);
   if (!ehObjeto(no)) return no;
   const saida: Registro = {};
   for (const [chave, valor] of Object.entries(no)) {
     saida[chave] = isCodeVariantNode(chave, valor)
       ? (resolveCodeVariant(valor, STACK) ?? '')
-      : resolverVariantesDeCodigo(valor);
+      : codeResolveVariants(valor);
   }
   return saida;
 }
 
 // Chaves candidatas a título e a corpo de um cartão, na ordem de preferência.
-const CHAVES_DE_TITULO = ['title', 'name', 'label'] as const;
-const CHAVES_DE_CORPO = ['body', 'description', 'usage', 'use', 'text'] as const;
+const TITLE_KEYS = ['title', 'name', 'label'] as const;
+const BODY_KEYS = ['body', 'description', 'usage', 'use', 'text'] as const;
 
-function montarCartao(item: Registro): CartaoDeFundamento {
-  const chaveTitulo = CHAVES_DE_TITULO.find((k) => typeof item[k] === 'string');
-  const chaveCorpo = CHAVES_DE_CORPO.find((k) => typeof item[k] === 'string');
+function mountCartao(item: Registro): FoundationCartao {
+  const keyTitle = TITLE_KEYS.find((k) => typeof item[k] === 'string');
+  const keyBody = BODY_KEYS.find((k) => typeof item[k] === 'string');
   const extras = Object.entries(item)
-    .filter(([k, v]) => typeof v === 'string' && k !== chaveTitulo && k !== chaveCorpo)
+    .filter(([k, v]) => typeof v === 'string' && k !== keyTitle && k !== keyBody)
     .map(([, v]) => String(v));
   return {
-    titulo: chaveTitulo ? texto(item[chaveTitulo]) : '',
-    corpo: chaveCorpo ? texto(item[chaveCorpo]) : '',
+    titulo: keyTitle ? texto(item[keyTitle]) : '',
+    corpo: keyBody ? texto(item[keyBody]) : '',
     extras,
   };
 }
@@ -223,18 +223,18 @@ function entradas(valor: unknown): Array<[string, unknown]> {
  * quando são só strings. É a mesma regra das outras quatro stacks — uma lista
  * de frases não vira grid de cartões de uma linha só.
  */
-function blocoDeItens(valor: unknown): BlocoDeFundamento {
+function blocoDeItens(valor: unknown): FoundationBlock {
   const pares = entradas(valor);
-  const temCartoes = pares.some(([, v]) => ehObjeto(v));
+  const hasCartoes = pares.some(([, v]) => ehObjeto(v));
 
-  if (!temCartoes) {
+  if (!hasCartoes) {
     return bloco('lista', { itens: pares.map(([, v]) => String(v)) });
   }
 
   return bloco('cartoes', {
     cartoes: pares.map(([, item]) =>
       ehObjeto(item)
-        ? montarCartao(item)
+        ? mountCartao(item)
         : { titulo: '', corpo: String(item), extras: [] },
     ),
   });
@@ -248,8 +248,8 @@ function blocoDeItens(valor: unknown): BlocoDeFundamento {
  * existem hoje no conteúdo compartilhado, e é o `cols` que define a ORDEM das
  * células quando a linha é objeto.
  */
-function blocoDeTabela(cols: unknown, rows: unknown): BlocoDeFundamento {
-  const chavesDeColuna = Array.isArray(cols)
+function tableBlock(cols: unknown, rows: unknown): FoundationBlock {
+  const columnKeys = Array.isArray(cols)
     ? cols.map((_, i) => String(i))
     : Object.keys(ehObjeto(cols) ? cols : {});
   const rotulos = Array.isArray(cols)
@@ -258,7 +258,7 @@ function blocoDeTabela(cols: unknown, rows: unknown): BlocoDeFundamento {
 
   const linhas = entradas(rows).map(([, linha]) => {
     if (Array.isArray(linha)) return linha.map((c) => String(c ?? ''));
-    if (ehObjeto(linha)) return chavesDeColuna.map((k) => String(linha[k] ?? ''));
+    if (ehObjeto(linha)) return columnKeys.map((k) => String(linha[k] ?? ''));
     return [String(linha)];
   });
 
@@ -266,58 +266,58 @@ function blocoDeTabela(cols: unknown, rows: unknown): BlocoDeFundamento {
 }
 
 // Chaves com tratamento próprio dentro de uma seção — o resto é deduzido.
-const CHAVES_DE_TEXTO = ['title', 'subtitle', 'body', 'audience', 'note'];
-const CHAVES_RESERVADAS = [...CHAVES_DE_TEXTO, 'cols', 'rows', 'items', 'keys', 'rules'];
+const TEXT_KEYS = ['title', 'subtitle', 'body', 'audience', 'note'];
+const KEYS_RESERVADAS = [...TEXT_KEYS, 'cols', 'rows', 'items', 'keys', 'rules'];
 
 /**
  * Sub-objeto que é "folha de cartão": traz título/corpo e só strings dentro.
  * Vira cartão junto dos irmãos em vez de subgrupo com h3 próprio — é o caso de
  * `testing.automated` / `testing.manual` na página de Acessibilidade.
  */
-function ehFolhaDeCartao(v: Registro): boolean {
+function cartaoEhSheet(v: Registro): boolean {
   const temRotulo = 'title' in v || 'name' in v || 'body' in v || 'description' in v;
   return temRotulo && Object.values(v).every((x) => typeof x === 'string');
 }
 
-function montarSubgrupo(valor: Registro): GrupoDeFundamento {
+function mountSubgrupo(valor: Registro): FoundationGroup {
   const titulo = texto(valor['title']);
   const corpo = texto(valor['subtitle']) || texto(valor['body']);
   const itens = valor['items'] ?? valor['rules'];
-  const temTabela = valor['cols'] !== undefined && valor['rows'] !== undefined;
+  const hasTable = valor['cols'] !== undefined && valor['rows'] !== undefined;
 
-  const blocos: BlocoDeFundamento[] = [];
-  if (temTabela) blocos.push(blocoDeTabela(valor['cols'], valor['rows']));
+  const blocos: FoundationBlock[] = [];
+  if (hasTable) blocos.push(tableBlock(valor['cols'], valor['rows']));
   if (itens !== undefined) blocos.push(blocoDeItens(itens));
   // Mapa puro (sem título, sem itens, sem tabela): o próprio objeto é o conteúdo.
-  if (!titulo && itens === undefined && !temTabela) blocos.push(blocoDeItens(valor));
+  if (!titulo && itens === undefined && !hasTable) blocos.push(blocoDeItens(valor));
 
   return { titulo, corpo, blocos };
 }
 
-function montarSecao(chave: string, dados: Registro): SecaoDeFundamento {
-  const blocos: BlocoDeFundamento[] = [];
+function mountSection(chave: string, dados: Registro): FoundationSection {
+  const blocos: FoundationBlock[] = [];
 
   // Strings soltas primeiro, na ordem em que aparecem no JSON: são os passos de
   // um roteiro (`cloneTitle` → `cloneCode` → `installNote`), e a ordem é o
   // conteúdo.
   for (const [k, v] of Object.entries(dados)) {
-    if (typeof v !== 'string' || CHAVES_DE_TEXTO.includes(k)) continue;
+    if (typeof v !== 'string' || TEXT_KEYS.includes(k)) continue;
     if (k.endsWith('Title')) blocos.push(bloco('subtitulo', { html: v }));
     else if (k.endsWith('Code')) blocos.push(bloco('codigo', { html: v }));
     else blocos.push(bloco('paragrafo', { html: v }));
   }
 
-  const temTabela = dados['cols'] !== undefined && dados['rows'] !== undefined;
-  if (temTabela) blocos.push(blocoDeTabela(dados['cols'], dados['rows']));
+  const hasTable = dados['cols'] !== undefined && dados['rows'] !== undefined;
+  if (hasTable) blocos.push(tableBlock(dados['cols'], dados['rows']));
   if (dados['items'] !== undefined) blocos.push(blocoDeItens(dados['items']));
 
   // Sem `items`/`cols`/`rows`, as folhas de cartão soltas na seção viram o grid
   // que o `items` teria dado — é como `testing` (automated/manual) chega.
-  const semEstruturaPropria =
+  const noStructureOwn =
     dados['items'] === undefined && dados['rows'] === undefined && dados['cols'] === undefined;
-  if (semEstruturaPropria) {
+  if (noStructureOwn) {
     const folhas = Object.entries(dados).filter(
-      ([k, v]) => !CHAVES_RESERVADAS.includes(k) && ehObjeto(v) && ehFolhaDeCartao(v),
+      ([k, v]) => !KEYS_RESERVADAS.includes(k) && ehObjeto(v) && cartaoEhSheet(v),
     );
     if (folhas.length > 0) blocos.push(blocoDeItens(Object.fromEntries(folhas)));
   }
@@ -326,8 +326,8 @@ function montarSecao(chave: string, dados: Registro): SecaoDeFundamento {
   if (dados['rules'] !== undefined) blocos.push(blocoDeItens(dados['rules']));
 
   const grupos = Object.entries(dados)
-    .filter(([k, v]) => !CHAVES_RESERVADAS.includes(k) && ehObjeto(v) && !ehFolhaDeCartao(v))
-    .map(([, v]) => montarSubgrupo(v as Registro));
+    .filter(([k, v]) => !KEYS_RESERVADAS.includes(k) && ehObjeto(v) && !cartaoEhSheet(v))
+    .map(([, v]) => mountSubgrupo(v as Registro));
 
   return {
     chave,
@@ -347,7 +347,7 @@ function montarSecao(chave: string, dados: Registro): SecaoDeFundamento {
  * `specimens` está aqui porque é desenho próprio da página (tipografia,
  * espaçamento, elevação, motion) e entra por projeção de conteúdo.
  */
-const CHAVES_DE_METADADO = new Set([
+const METADADO_KEYS = new Set([
   'title',
   'category',
   'type',
@@ -594,7 +594,7 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
   private readonly dicionario = computed<Registro>(() => {
     const todos = this.translations();
     const bruto = (todos[localeSignal()] ?? todos['pt-BR'] ?? {}) as Registro;
-    return resolverVariantesDeCodigo(bruto) as Registro;
+    return codeResolveVariants(bruto) as Registro;
   });
 
   protected readonly titulo = computed(() => texto(this.dicionario()['title']));
@@ -602,11 +602,11 @@ export class NdsFoundationPage implements OnInit, OnDestroy {
   protected readonly categoria = computed(() => texto(this.dicionario()['category']));
   protected readonly tipo = computed(() => texto(this.dicionario()['type']));
 
-  protected readonly secoes = computed<SecaoDeFundamento[]>(() => {
+  protected readonly secoes = computed<FoundationSection[]>(() => {
     const d = this.dicionario();
     return Object.keys(d)
-      .filter((k) => !CHAVES_DE_METADADO.has(k) && ehObjeto(d[k]))
-      .map((k) => montarSecao(k, d[k] as Registro));
+      .filter((k) => !METADADO_KEYS.has(k) && ehObjeto(d[k]))
+      .map((k) => mountSection(k, d[k] as Registro));
   });
 
   constructor() {

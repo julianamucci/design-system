@@ -77,15 +77,15 @@ export const Alignments: Story = {
       // Afirma o pixel, não o atributo: quem posiciona é a propriedade `order`
       // no CSS, e um data-align no elemento errado passaria despercebido.
       const inicio = canvasElement.querySelector<HTMLElement>('[data-testid="addon-inicio"]')!;
-      const campoInicio = canvasElement.querySelector<HTMLElement>('#ig-inicio')!;
+      const fieldStart = canvasElement.querySelector<HTMLElement>('#ig-inicio')!;
       await expect(inicio.getBoundingClientRect().left).toBeLessThan(
-        campoInicio.getBoundingClientRect().left,
+        fieldStart.getBoundingClientRect().left,
       );
 
       const fim = canvasElement.querySelector<HTMLElement>('[data-testid="addon-fim"]')!;
-      const campoFim = canvasElement.querySelector<HTMLElement>('#ig-fim')!;
+      const fieldEnd = canvasElement.querySelector<HTMLElement>('#ig-fim')!;
       await expect(fim.getBoundingClientRect().left).toBeGreaterThan(
-        campoFim.getBoundingClientRect().left,
+        fieldEnd.getBoundingClientRect().left,
       );
     });
 

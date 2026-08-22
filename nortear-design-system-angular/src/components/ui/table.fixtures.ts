@@ -28,7 +28,7 @@ export const FATURAS: Fatura[] = [
 export const TOTAL = 'R$ 1.250,00';
 
 /** Variante do badge por status — a mesma tabela de mapeamento do Vanilla. */
-export const VARIANTE_POR_STATUS: Record<string, 'success' | 'warning' | 'destructive'> = {
+export const STATUS_VARIANT: Record<string, 'success' | 'warning' | 'destructive'> = {
   Pago: 'success',
   Pendente: 'warning',
   Cancelado: 'destructive',

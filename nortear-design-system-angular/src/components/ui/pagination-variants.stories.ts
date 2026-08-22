@@ -50,7 +50,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const ROTULO_PAGINA = 'Ir para página';
+const LABEL_PAGE = 'Ir para página';
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
 const ROTULO_PROXIMA = 'Ir para a próxima página';
 
@@ -71,7 +71,7 @@ export const Simple: Story = {
       atual: 1,
       // Derivado, não literal: a faixa e as asserções leem a mesma fonte.
       paginas: [1, 2, 3, 4, 5],
-      rotuloPagina: ROTULO_PAGINA,
+      rotuloPagina: LABEL_PAGE,
       rotuloAnterior: ROTULO_ANTERIOR,
       rotuloProxima: ROTULO_PROXIMA,
       semNavegar: (evento: Event) => evento.preventDefault(),
@@ -118,7 +118,7 @@ export const Simple: Story = {
       // accessibility.item6 — o link numerado usa o tamanho `icon`: quadrado,
       // sem padding lateral. WCAG 2.5.8 pede 24×24 CSS px, e o colhedor
       // compartilhado mede TODO controle da faixa, não só o primeiro.
-      const primeiro = canvas.getByRole('link', { name: `${ROTULO_PAGINA} 1` });
+      const primeiro = canvas.getByRole('link', { name: `${LABEL_PAGE} 1` });
       await expect(primeiro).toHaveClass('nds-button-icon');
       await expect(JSON.stringify(alvosAbaixoDoMinimo(canvasElement))).toBe('[]');
     });
@@ -142,7 +142,7 @@ export const WithEllipsis: Story = {
       // A faixa recortada de um total de 12: 1 … 5 6 7 … 12.
       trechos: [1, 'ellipsis', 5, 6, 7, 'ellipsis', 12] as (number | string)[],
       atual: 6,
-      rotuloPagina: ROTULO_PAGINA,
+      rotuloPagina: LABEL_PAGE,
       rotuloAnterior: ROTULO_ANTERIOR,
       rotuloProxima: ROTULO_PROXIMA,
       semNavegar: (evento: Event) => evento.preventDefault(),
@@ -281,7 +281,7 @@ export const Interactive: Story = {
         atual,
         total,
         paginas: Array.from({ length: total }, (_, i) => i + 1),
-        rotuloPagina: ROTULO_PAGINA,
+        rotuloPagina: LABEL_PAGE,
         rotuloAnterior: ROTULO_ANTERIOR,
         rotuloProxima: ROTULO_PROXIMA,
         irPara: (evento: Event, pagina: number) => {
@@ -336,7 +336,7 @@ export const Interactive: Story = {
 
     await step('O destaque acompanha o estado externo', async () => {
       // visual.item3 — a página 3 nasce ativa porque é o valor do signal.
-      const ativo = canvas.getByRole('link', { name: `${ROTULO_PAGINA} 3` });
+      const ativo = canvas.getByRole('link', { name: `${LABEL_PAGE} 3` });
       await expect(ativo).toHaveAttribute('aria-current', 'page');
       await expect(ativo).toHaveClass('nds-button-outline');
     });
@@ -344,10 +344,10 @@ export const Interactive: Story = {
     await step('Clicar numa página move o destaque', async () => {
       // functional.item1 — clicar em 6 muda o estado, e o destaque migra: é a
       // prova de que o `isActive` é reativo e não um atributo carimbado uma vez.
-      await userEvent.click(canvas.getByRole('link', { name: `${ROTULO_PAGINA} 6` }));
-      const novo = canvas.getByRole('link', { name: `${ROTULO_PAGINA} 6` });
+      await userEvent.click(canvas.getByRole('link', { name: `${LABEL_PAGE} 6` }));
+      const novo = canvas.getByRole('link', { name: `${LABEL_PAGE} 6` });
       await expect(novo).toHaveAttribute('aria-current', 'page');
-      await expect(canvas.getByRole('link', { name: `${ROTULO_PAGINA} 3` })).not.toHaveAttribute(
+      await expect(canvas.getByRole('link', { name: `${LABEL_PAGE} 3` })).not.toHaveAttribute(
         'aria-current',
       );
       await expect(

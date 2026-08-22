@@ -854,13 +854,13 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
    */
   protected readonly rotuloGenerico = computed(() => {
     dict();
-    return primeiroExemplo(t('usage.uxWriting.table.title.bad'));
+    return firstExemplo(t('usage.uxWriting.table.title.bad'));
   });
 
   /** Descrição vaga do mesmo "don't", pela mesma via. */
   protected readonly descricaoVaga = computed(() => {
     dict();
-    return primeiroExemplo(t('usage.uxWriting.table.description.bad'));
+    return firstExemplo(t('usage.uxWriting.table.description.bad'));
   });
 
   /** Os dois campos do formulário de exemplo. */
@@ -936,12 +936,12 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
 
   protected readonly anatomyItems = computed(() => {
     const d = dict();
-    return listaDeItens(d, 'anatomy');
+    return itemsList(d, 'anatomy');
   });
 
   protected readonly guidelines = computed(() => {
     const d = dict();
-    return { title: t('usage.guidelines.title'), items: listaDeItens(d, 'usage.guidelines') };
+    return { title: t('usage.guidelines.title'), items: itemsList(d, 'usage.guidelines') };
   });
 
   protected readonly scenarios = computed(() => {
@@ -983,12 +983,12 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     const d = dict();
-    return { title: t('usage.do.title'), items: listaDeItens(d, 'usage.do') };
+    return { title: t('usage.do.title'), items: itemsList(d, 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     const d = dict();
-    return { title: t('usage.dont.title'), items: listaDeItens(d, 'usage.dont') };
+    return { title: t('usage.dont.title'), items: itemsList(d, 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -1245,7 +1245,7 @@ export class NdsDialogDocs implements AfterViewInit, OnDestroy {
     // Os itens narrativos primeiro, depois as quatro linhas de `aria`, que o
     // conteúdo guarda num bloco à parte e nenhuma outra seção consome.
     return [
-      ...listaDeItens(d, 'accessibility'),
+      ...itemsList(d, 'accessibility'),
       ...['role', 'modal', 'labelledby', 'describedby'].map((k) => t(`aria.${k}`)),
     ];
   });
@@ -1421,7 +1421,7 @@ function priorityLabel(raw: string): string {
  * O conteúdo guarda os exemplos de UX writing assim, e o "don't" da página
  * precisa de UM deles. Derivar mantém a página trilíngue sem literal aqui.
  */
-function primeiroExemplo(bruto: string): string {
+function firstExemplo(bruto: string): string {
   const limpo = toPlainText(bruto);
   const entreAspas = limpo.match(/"([^"]+)"/);
   return entreAspas ? entreAspas[1] : limpo;
@@ -1433,7 +1433,7 @@ function primeiroExemplo(bruto: string): string {
  * Contar à mão é o que faz um item novo no conteúdo compartilhado nunca
  * aparecer na página — e ninguém percebe, porque nada quebra.
  */
-function listaDeItens(d: Record<string, string>, base: string): string[] {
+function itemsList(d: Record<string, string>, base: string): string[] {
   const itens: string[] = [];
   for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
   return itens;

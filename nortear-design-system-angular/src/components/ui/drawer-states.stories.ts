@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_DRAWER } from './drawer';
 import { NdsButton } from './button';
-import { esperarPortal, esperarPortalSumir } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import drawerTranslations from '@shared/content/drawer/translations.json';
 
@@ -42,7 +42,7 @@ const ROTULO = {
 };
 
 /** Rótulo do botão externo da story controlada — não é rótulo de produto. */
-const GATILHO_EXTERNO = 'Abrir pelo estado externo';
+const TRIGGER_EXTERNO = 'Abrir pelo estado externo';
 
 export const Closed: Story = {
   parameters: {
@@ -127,7 +127,7 @@ export const Open: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await esperarPortal('dialog');
+    const painel = await waitForPortal('dialog');
 
     await step('Monta já aberto, com o contrato de markup completo', async () => {
       await expect(painel).toBeVisible();
@@ -162,7 +162,7 @@ export const Controlled: Story = {
   render: () => ({
     props: {
       aberto: false,
-      rotuloExterno: GATILHO_EXTERNO,
+      rotuloExterno: TRIGGER_EXTERNO,
       tituloPainel: ROTULO.titulo(),
       descricaoPainel: ROTULO.descricao(),
       rotuloFechar: ROTULO.fechar(),
@@ -188,26 +188,26 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const externo = canvas.getByRole('button', { name: GATILHO_EXTERNO });
+    const externo = canvas.getByRole('button', { name: TRIGGER_EXTERNO });
 
     await step('Sem gatilho interno, o painel nasce fechado', async () => {
       if (within(document.body).queryAllByRole('dialog').length > 0) {
         await userEvent.keyboard('{Escape}');
-        await esperarPortalSumir('dialog');
+        await waitForPortalVanish('dialog');
       }
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
 
     await step('O estado externo abre o painel', async () => {
       await userEvent.click(externo);
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       await expect(painel).toHaveAttribute('data-state', 'open');
     });
 
     await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       await userEvent.click(within(painel).getByRole('button', { name: ROTULO.fechar() }));
-      await esperarPortalSumir('dialog');
+      await waitForPortalVanish('dialog');
       // Se o output não tivesse chegado, `aberto` continuaria true e o painel
       // reabriria no próximo ciclo de detecção.
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
@@ -251,7 +251,7 @@ export const NotDismissible: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await esperarPortal('dialog');
+    const painel = await waitForPortal('dialog');
 
     await step('Clique no overlay não fecha', async () => {
       const overlay = document.querySelector<HTMLElement>('[data-slot="drawer-overlay"]');

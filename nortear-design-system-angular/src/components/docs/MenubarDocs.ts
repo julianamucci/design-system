@@ -360,9 +360,9 @@ const CODE_EDITOR = `<nds-menubar>
 </nds-menubar>`;
 
 /** Itens do menu Arquivo da demonstração — base estável, sem número cravado. */
-const ITENS_ARQUIVO = ['Novo', 'Abrir', 'Salvar'] as const;
+const ITEMS_FILE = ['Novo', 'Abrir', 'Salvar'] as const;
 const EXPORTACOES = ['PDF', 'CSV'] as const;
-const ATALHOS_EDICAO = [
+const SHORTCUTS_EDIT = [
   { label: 'Desfazer', atalho: 'Ctrl Z' },
   { label: 'Refazer', atalho: 'Ctrl Y' },
 ] as const;
@@ -737,9 +737,9 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
 
   // Expostos ao template porque expressão de template Angular não enxerga o
   // escopo do módulo — nem `String(...)`, nem uma const de arquivo.
-  protected readonly itensArquivo = ITENS_ARQUIVO;
+  protected readonly itensArquivo = ITEMS_FILE;
   protected readonly exportacoes = EXPORTACOES;
-  protected readonly atalhosEdicao = ATALHOS_EDICAO;
+  protected readonly atalhosEdicao = SHORTCUTS_EDIT;
   protected readonly temas = TEMAS;
   protected readonly exibicoes = EXIBICOES;
 
@@ -911,7 +911,7 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
     const sim = tNav('common.yes');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
-    const doConteudo = (nome: string, chave: string, tipo?: string, padrao?: string) => ({
+    const ofContent = (nome: string, chave: string, tipo?: string, padrao?: string) => ({
       name: nome,
       type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
       defaultValue: padrao ?? toPlainText(t(`props.table.${chave}.default`)),
@@ -936,7 +936,7 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
         cols,
         items: [
           // `loop` do conteúdo compartilhado: mesmo conceito, nome do primitivo.
-          doConteudo('loopFocus', 'loop'),
+          ofContent('loopFocus', 'loop'),
           local('modal', 'boolean', 'true', 'modal'),
           local('disabled', 'boolean', 'false', 'barDisabled'),
           classe,
@@ -956,8 +956,8 @@ export class NdsMenubarDocs implements AfterViewInit, OnDestroy {
         title: 'NdsMenubarContent',
         cols,
         items: [
-          doConteudo('side', 'side'),
-          doConteudo('align', 'align'),
+          ofContent('side', 'side'),
+          ofContent('align', 'align'),
           local('sideOffset', 'number', '8', 'sideOffset'),
           local('alignOffset', 'number', '-4', 'alignOffset'),
         ],

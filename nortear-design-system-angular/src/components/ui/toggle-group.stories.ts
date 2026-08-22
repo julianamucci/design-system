@@ -56,11 +56,11 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<ToggleGroupArgs
     `aria-label="${ariaLabel}"`,
   ].filter(Boolean);
 
-  const varianteItem = variant === 'default' ? '' : ` variant="${variant}"`;
+  const variantItem = variant === 'default' ? '' : ` variant="${variant}"`;
   const itens = (['left', 'center', 'right'] as const)
     .map(
       (v) =>
-        `      <button ndsToggle${varianteItem} value="${v}" aria-label="${ROTULOS[v]}">\n` +
+        `      <button ndsToggle${variantItem} value="${v}" aria-label="${ROTULOS[v]}">\n` +
         `        <svg ndsToggleGroupIcon kind="align-${v}"></svg>\n` +
         `      </button>`,
     )

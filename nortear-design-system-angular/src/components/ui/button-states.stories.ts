@@ -4,7 +4,7 @@ import { within, expect, userEvent, fn } from 'storybook/test';
 import { NdsButton, NdsButtonIcon } from './button';
 import { falhasDeAnel } from '@shared/testing/button-probe';
 
-const meta: Meta<ButtonEstadosArgs> = {
+const meta: Meta<ButtonStatesArgs> = {
   title: 'UI/Button/States',
   decorators: [moduleMetadata({ imports: [NdsButton, NdsButtonIcon] })],
   parameters: { layout: 'padded', controls: { disable: true } },
@@ -17,8 +17,8 @@ const meta: Meta<ButtonEstadosArgs> = {
 };
 
 export default meta;
-type ButtonEstadosArgs = { onClick: (e: MouseEvent) => void };
-type Story = StoryObj<ButtonEstadosArgs>;
+type ButtonStatesArgs = { onClick: (e: MouseEvent) => void };
+type Story = StoryObj<ButtonStatesArgs>;
 
 export const Disabled: Story = {
   parameters: { covers: ['functional.item2', 'visual.item4'] },

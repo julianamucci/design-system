@@ -67,7 +67,7 @@ type Story = StoryObj;
 
 /** "R$ 250,00" → 250. A ordenação é numérica; comparar as strings colocaria
  * "R$ 50,00" depois de "R$ 450,00". */
-function valorNumerico(fatura: Fatura): number {
+function valueNumerico(fatura: Fatura): number {
   return Number(fatura.valor.replace(/[^\d,]/g, '').replace(',', '.'));
 }
 
@@ -192,7 +192,7 @@ export const SortableHeaders: Story = {
     const direcao = signal<TableSortDirection>('ascending');
     const ordenadas = computed(() => {
       const sinal = direcao() === 'ascending' ? 1 : -1;
-      return [...FATURAS].sort((a, b) => (valorNumerico(a) - valorNumerico(b)) * sinal);
+      return [...FATURAS].sort((a, b) => (valueNumerico(a) - valueNumerico(b)) * sinal);
     });
 
     return {
@@ -236,7 +236,7 @@ export const SortableHeaders: Story = {
   },
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const colunaValor = () =>
+    const columnValue = () =>
       [...canvasElement.querySelectorAll<HTMLElement>('th')].find((th) =>
         th.hasAttribute('aria-sort'),
       )!;
@@ -244,21 +244,21 @@ export const SortableHeaders: Story = {
     await step('Só a coluna ordenável anuncia ordenação', async () => {
       // Prova também que o input chegou ao template: sob o fallback JIT o
       // binding cai em silêncio e nenhum th teria aria-sort (armadilha 1).
-      const comSort = [...canvasElement.querySelectorAll('th')].filter((th) =>
+      const withSort = [...canvasElement.querySelectorAll('th')].filter((th) =>
         th.hasAttribute('aria-sort'),
       );
-      await expect(comSort.length).toBe(1);
-      await expect(colunaValor()).toHaveAttribute('aria-sort', 'ascending');
+      await expect(withSort.length).toBe(1);
+      await expect(columnValue()).toHaveAttribute('aria-sort', 'ascending');
     });
 
     await step('O clique inverte a ordem e o anúncio junto', async () => {
-      const primeiroAntes = canvasElement.querySelector<HTMLElement>('tbody tr td')!.textContent;
+      const firstBefore = canvasElement.querySelector<HTMLElement>('tbody tr td')!.textContent;
       await userEvent.click(canvas.getByRole('button', { name: /Valor/ }));
-      await expect(colunaValor()).toHaveAttribute('aria-sort', 'descending');
-      const primeiroDepois = canvasElement.querySelector<HTMLElement>('tbody tr td')!.textContent;
-      await expect(primeiroDepois).not.toBe(primeiroAntes);
+      await expect(columnValue()).toHaveAttribute('aria-sort', 'descending');
+      const firstAfter = canvasElement.querySelector<HTMLElement>('tbody tr td')!.textContent;
+      await expect(firstAfter).not.toBe(firstBefore);
       // Ascendente começa pelo menor valor; descendente, pelo maior.
-      await expect(primeiroDepois?.trim()).toBe('#INV-004');
+      await expect(firstAfter?.trim()).toBe('#INV-004');
     });
   },
 };

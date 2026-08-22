@@ -190,7 +190,7 @@ const CODE_BASICA = `<div ndsTableWrapper>
   </table>
 </div>`;
 
-const CODE_COM_RODAPE = `<tfoot ndsTableFooter>
+const CODE_WITH_FOOTER = `<tfoot ndsTableFooter>
   <tr ndsTableRow>
     <td ndsTableCell colspan="2">Total</td>
     <td ndsTableCell class="nds-text-right">R$ 1.250,00</td>
@@ -208,7 +208,7 @@ const CODE_CAPTION_SR_ONLY = `<h2>Faturas recentes</h2>
   </table>
 </div>`;
 
-const CODE_ACOES = `<td ndsTableCell class="nds-text-right">
+const CODE_ACTIONS = `<td ndsTableCell class="nds-text-right">
   <button
     ndsButton
     variant="ghost"
@@ -219,7 +219,7 @@ const CODE_ACOES = `<td ndsTableCell class="nds-text-right">
   </button>
 </td>`;
 
-const CODE_VAZIO = `<tbody ndsTableBody>
+const EMPTY_CODE = `<tbody ndsTableBody>
   @for (fatura of faturas(); track fatura.id) {
     <tr ndsTableRow>...</tr>
   } @empty {
@@ -253,7 +253,7 @@ const CODE_COMP_ORDENACAO = `<!-- aria-sort na CÉLULA de cabeçalho, não no bo
   </button>
 </th>`;
 
-const CODE_COMP_PAGINACAO = `<div class="nds-stack" data-spacing="md">
+const CODE_COMP_PAGINATION = `<div class="nds-stack" data-spacing="md">
   <div ndsTableWrapper>
     <table ndsTable><!-- ... --></table>
   </div>
@@ -277,7 +277,7 @@ const CODE_COMP_PAGINACAO = `<div class="nds-stack" data-spacing="md">
   </nav>
 </div>`;
 
-const CODE_COMP_SELECAO = `<tr ndsTableRow [selected]="selecionadas().has(fatura.id)">
+const CODE_COMP_SELECTION = `<tr ndsTableRow [selected]="selecionadas().has(fatura.id)">
   <td ndsTableCell>
     <button
       ndsCheckbox
@@ -957,7 +957,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
   protected readonly linhasOrdenadas = computed(() => {
     const sinal = this.direcao() === 'ascending' ? 1 : -1;
     return [...this.linhasCurtas()].sort(
-      (a, b) => (valorNumerico(a.valor) - valorNumerico(b.valor)) * sinal,
+      (a, b) => (valueNumerico(a.valor) - valueNumerico(b.valor)) * sinal,
     );
   });
 
@@ -1079,10 +1079,10 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
     dict();
     return [
       { key: 'basic',              code: CODE_BASICA,          tpl: this.tplVarBasica()          },
-      { key: 'withFooter',         code: CODE_COM_RODAPE,      tpl: this.tplVarRodape()          },
+      { key: 'withFooter',         code: CODE_WITH_FOOTER,      tpl: this.tplVarRodape()          },
       { key: 'withSrOnlyCaption',  code: CODE_CAPTION_SR_ONLY, tpl: this.tplVarCaptionSrOnly()   },
-      { key: 'withInlineActions',  code: CODE_ACOES,           tpl: this.tplVarAcoes()           },
-      { key: 'withEmptyState',     code: CODE_VAZIO,           tpl: this.tplVarVazio()           },
+      { key: 'withInlineActions',  code: CODE_ACTIONS,           tpl: this.tplVarAcoes()           },
+      { key: 'withEmptyState',     code: EMPTY_CODE,           tpl: this.tplVarVazio()           },
     ].map(({ key, code, tpl }) => ({
       name: t(`variants.items.${key}.label`),
       description: t(`variants.items.${key}.description`),
@@ -1097,11 +1097,11 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
     return [
       { key: 'filterableToolbar', code: CODE_COMP_TOOLBAR,   tpl: this.tplCompToolbar()   },
       { key: 'sortableHeaders',   code: CODE_COMP_ORDENACAO, tpl: this.tplCompOrdenacao() },
-      { key: 'selectableRows',    code: CODE_COMP_SELECAO,   tpl: this.tplCompSelecao()   },
-      { key: 'withPagination',    code: CODE_COMP_PAGINACAO, tpl: this.tplCompPaginacao() },
+      { key: 'selectableRows',    code: CODE_COMP_SELECTION,   tpl: this.tplCompSelecao()   },
+      { key: 'withPagination',    code: CODE_COMP_PAGINATION, tpl: this.tplCompPaginacao() },
     ].map(({ key, code, tpl }) => ({
       name: t(`variants.compositions.${key}.name`),
-      description: comQuandoUsar(
+      description: withQuandoUsar(
         t(`variants.compositions.${key}.description`),
         t(`variants.compositions.${key}.use`),
       ),
@@ -1392,7 +1392,7 @@ export class NdsTableDocs implements AfterViewInit, OnDestroy {
 }
 
 /** "R$ 250,00" → 250. Ordenar as strings colocaria "R$ 50,00" depois de "R$ 450,00". */
-function valorNumerico(valor: string): number {
+function valueNumerico(valor: string): number {
   return Number(valor.replace(/[^\d,]/g, '').replace(',', '.'));
 }
 
@@ -1402,7 +1402,7 @@ function valorNumerico(valor: string): number {
  * O `NdsDocsCompositions` faria isto sozinho, mas ele não repassa `language`
  * para o `NdsDocsVariants` — e os snippets aqui são template Angular, não TS.
  */
-function comQuandoUsar(descricao: string, quandoUsar: string): string {
+function withQuandoUsar(descricao: string, quandoUsar: string): string {
   return `${descricao}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
 }
 

@@ -9,8 +9,8 @@ import { NdsScrollArea } from './scroll-area';
 // mesmo componente — e é isso que cada story abaixo prova, medindo qual eixo
 // rola de verdade em vez de afirmar uma classe que não existiria.
 
-const RAIZ_VERTICAL = 'nds-w-sm nds-rounded-md nds-border-default';
-const RAIZ_LARGA = 'nds-max-w-md nds-rounded-md nds-border-default';
+const VERTICAL_ROOT = 'nds-w-sm nds-rounded-md nds-border-default';
+const ROOT_LARGA = 'nds-max-w-md nds-rounded-md nds-border-default';
 
 const meta: Meta = {
   title: 'UI/ScrollArea/Variants',
@@ -51,7 +51,7 @@ export const Vertical: Story = {
   render: () => ({
     props: { tags: TAGS },
     template: `
-      <div ndsScrollArea size="lg" label="Lista vertical de tags" class="${RAIZ_VERTICAL}">
+      <div ndsScrollArea size="lg" label="Lista vertical de tags" class="${VERTICAL_ROOT}">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (tag of tags; track tag) {
             <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -87,7 +87,7 @@ export const Horizontal: Story = {
   render: () => ({
     props: { cards: CARDS },
     template: `
-      <div ndsScrollArea label="Fila horizontal de cards" class="${RAIZ_LARGA}">
+      <div ndsScrollArea label="Fila horizontal de cards" class="${ROOT_LARGA}">
         <div class="nds-row nds-p-4 nds-whitespace-nowrap" data-spacing="md">
           @for (card of cards; track card) {
             <div class="nds-shrink-0 nds-w-xs nds-p-4 nds-rounded-md nds-bg-muted nds-text-body">
@@ -127,7 +127,7 @@ export const Bidirectional: Story = {
   render: () => ({
     props: { linhas: LINHAS, colunas: COLUNAS },
     template: `
-      <div ndsScrollArea size="lg" label="Matriz com rolagem nos dois eixos" class="${RAIZ_LARGA}">
+      <div ndsScrollArea size="lg" label="Matriz com rolagem nos dois eixos" class="${ROOT_LARGA}">
         <div class="nds-stack nds-p-4" data-spacing="sm">
           @for (linha of linhas; track linha) {
             <div class="nds-row nds-whitespace-nowrap" data-spacing="md">

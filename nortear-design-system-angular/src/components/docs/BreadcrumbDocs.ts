@@ -171,7 +171,7 @@ const IMPORT_COM_RETICENCIAS = `import {
   NdsBreadcrumbIcon,
 } from '@/components/ui/breadcrumb';`;
 
-const CODE_PADRAO = `<nav ndsBreadcrumb>
+const CODE_DEFAULT = `<nav ndsBreadcrumb>
   <ol ndsBreadcrumbList>
     <li ndsBreadcrumbItem>
       <a ndsBreadcrumbLink href="/">Início</a>
@@ -187,7 +187,7 @@ const CODE_PADRAO = `<nav ndsBreadcrumb>
   </ol>
 </nav>`;
 
-const CODE_COM_RETICENCIAS = `<nav ndsBreadcrumb>
+const CODE_WITH_ELLIPSIS = `<nav ndsBreadcrumb>
   <ol ndsBreadcrumbList>
     <li ndsBreadcrumbItem>
       <a ndsBreadcrumbLink href="/">Início</a>
@@ -207,7 +207,7 @@ const CODE_COM_RETICENCIAS = `<nav ndsBreadcrumb>
   </ol>
 </nav>`;
 
-const CODE_SEPARADOR_CUSTOMIZADO = `<nav ndsBreadcrumb>
+const CODE_SEPARATOR_CUSTOMIZADO = `<nav ndsBreadcrumb>
   <ol ndsBreadcrumbList>
     <li ndsBreadcrumbItem>
       <a ndsBreadcrumbLink href="/">Início</a>
@@ -737,21 +737,21 @@ export class NdsBreadcrumbDocs implements AfterViewInit, OnDestroy {
       {
         name: 'default',
         description: stripHtml(t('variants.items.default')),
-        code: CODE_PADRAO,
+        code: CODE_DEFAULT,
         trackId: 'default',
         preview: this.tplVarPadrao(),
       },
       {
         name: 'withEllipsis',
         description: stripHtml(t('variants.items.withEllipsis')),
-        code: CODE_COM_RETICENCIAS,
+        code: CODE_WITH_ELLIPSIS,
         trackId: 'withEllipsis',
         preview: this.tplVarReticencias(),
       },
       {
         name: 'customSeparator',
         description: stripHtml(t('variants.items.customSeparator')),
-        code: CODE_SEPARADOR_CUSTOMIZADO,
+        code: CODE_SEPARATOR_CUSTOMIZADO,
         trackId: 'customSeparator',
         preview: this.tplVarSeparador(),
       },

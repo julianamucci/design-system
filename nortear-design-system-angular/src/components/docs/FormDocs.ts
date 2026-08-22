@@ -493,8 +493,8 @@ export class NdsFormDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: rotuloDeNav(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: rotuloDeNav(s.labelKey) })),
+      label: navLabel(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
     }));
   });
 
@@ -831,7 +831,7 @@ const priorityKeyMap: Record<string, string> = {
  * quando ela não existe, então sem esta ponte o menu de quem não traz o bloco
  * mostrava "nav.overview" escrito na tela, sem erro nenhum.
  */
-function rotuloDeNav(chave: string): string {
+function navLabel(chave: string): string {
   const doComponente = t(chave);
   return doComponente === chave ? tNav(chave) : doComponente;
 }

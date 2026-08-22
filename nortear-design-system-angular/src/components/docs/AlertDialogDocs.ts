@@ -456,8 +456,8 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: rotuloDeNav(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: rotuloDeNav(s.labelKey) })),
+      label: navLabel(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
     }));
   });
 
@@ -474,7 +474,7 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
     const d = dict();
     return {
       title: d['usage.guidelines.title'] ?? '',
-      items: itensNumerados(d, 'usage.guidelines'),
+      items: numberedItems(d, 'usage.guidelines'),
     };
   });
 
@@ -514,12 +514,12 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     const d = dict();
-    return { title: t('usage.do.title'), items: itensNumerados(d, 'usage.do') };
+    return { title: t('usage.do.title'), items: numberedItems(d, 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     const d = dict();
-    return { title: t('usage.dont.title'), items: itensNumerados(d, 'usage.dont') };
+    return { title: t('usage.dont.title'), items: numberedItems(d, 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -665,7 +665,7 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
 
   protected readonly a11yItems = computed(() => {
     const d = dict();
-    return itensNumerados(d, 'accessibility');
+    return numberedItems(d, 'accessibility');
   });
 
   protected readonly keyboardItems = computed(() => {
@@ -822,13 +822,13 @@ export class NdsAlertDialogDocs implements AfterViewInit, OnDestroy {
 }
 
 /** Rótulo de navegação, com queda para o ui.json quando o slug não o declara. */
-function rotuloDeNav(chave: string): string {
+function navLabel(chave: string): string {
   const doComponente = t(chave);
   return doComponente === chave ? tNav(chave) : doComponente;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
-function itensNumerados(d: Record<string, string>, base: string): string[] {
+function numberedItems(d: Record<string, string>, base: string): string[] {
   const itens: string[] = [];
   for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
   return itens;

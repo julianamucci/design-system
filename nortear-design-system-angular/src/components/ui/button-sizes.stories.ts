@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect } from 'storybook/test';
 import { NdsButton, NdsButtonIcon, type ButtonSize } from './button';
 
-const TEXTOS: { size: ButtonSize; label: string }[] = [
+const TEXTS: { size: ButtonSize; label: string }[] = [
   { size: 'xs',      label: 'Extra pequeno' },
   { size: 'sm',      label: 'Pequeno'       },
   { size: 'default', label: 'Padrão'        },
@@ -29,7 +29,7 @@ type Story = StoryObj;
 export const Sizes: Story = {
   parameters: { covers: ['visual.item3'] },
   render: () => ({
-    props: { textos: TEXTOS, icones: ICONES },
+    props: { textos: TEXTS, icones: ICONES },
     template: `
       <div class="nds-stack" data-spacing="lg">
         <div class="nds-cluster" data-spacing="sm">
@@ -51,7 +51,7 @@ export const Sizes: Story = {
     const canvas = within(canvasElement);
 
     await step('Cada tamanho recebe a classe correspondente', async () => {
-      for (const { size, label } of TEXTOS) {
+      for (const { size, label } of TEXTS) {
         const btn = canvas.getByRole('button', { name: label });
         if (size === 'default') {
           // O tamanho padrão não tem classe própria: o dimensionamento base
@@ -67,7 +67,7 @@ export const Sizes: Story = {
     await step('Os tamanhos crescem na ordem declarada', async () => {
       // Classe certa com token errado passaria despercebido; a ordem das
       // alturas é o que a pessoa realmente vê.
-      const alturas = TEXTOS.map(
+      const alturas = TEXTS.map(
         ({ label }) => canvas.getByRole('button', { name: label }).getBoundingClientRect().height,
       );
       for (let i = 1; i < alturas.length; i++) {

@@ -45,7 +45,7 @@ export type ResizableDirection = 'horizontal' | 'vertical';
 const PASSO_TECLADO = 2;
 
 /** Ordem de documento — a de registro depende da ordem de construção das views. */
-function ordenarPorDocumento<T extends { readonly el: HTMLElement }>(itens: T[]): T[] {
+function documentOrdenar<T extends { readonly el: HTMLElement }>(itens: T[]): T[] {
   return [...itens].sort((a, b) =>
     a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
   );
@@ -151,8 +151,8 @@ export class NdsResizableStore {
    * devolveria o default declarado.
    */
   iniciar(restaurado?: number[]): void {
-    this.paineis = ordenarPorDocumento(this.paineis);
-    this.punhos = ordenarPorDocumento(this.punhos);
+    this.paineis = documentOrdenar(this.paineis);
+    this.punhos = documentOrdenar(this.punhos);
     const n = this.paineis.length;
     if (!n) return;
 
@@ -236,10 +236,10 @@ export class NdsResizableStore {
     const pisoA = Math.max(a.minSize(), soma - b.maxSize());
     if (pisoA > tetoA) return;
 
-    const novoA = limitar(base[i] + deltaPct, pisoA, tetoA);
+    const newA = limitar(base[i] + deltaPct, pisoA, tetoA);
     const atualizados = [...this._sizes()];
-    atualizados[i] = novoA;
-    atualizados[i + 1] = soma - novoA;
+    atualizados[i] = newA;
+    atualizados[i + 1] = soma - newA;
     this._sizes.set(atualizados);
   }
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_SELECT } from './select';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 const ESTADOS = [
   { value: 'sp', label: 'São Paulo' },
@@ -19,7 +19,7 @@ const ESTADOS = [
  * gatilho mostraria o valor cru. Esta função é o caminho que o primitivo
  * oferece para isso, e é o que a docs page recomenda.
  */
-const rotuloDoEstado = (valor: unknown): string =>
+const stateLabel = (valor: unknown): string =>
   ESTADOS.find((e) => e.value === valor)?.label ?? String(valor ?? '');
 
 const meta: Meta = {
@@ -108,9 +108,9 @@ export const Selected: Story = {
     },
   },
   render: () => ({
-    props: { estados: ESTADOS, rotuloDoEstado },
+    props: { estados: ESTADOS, stateLabel },
     template: `
-      <nds-select defaultValue="rj" [itemToStringLabel]="rotuloDoEstado">
+      <nds-select defaultValue="rj" [itemToStringLabel]="stateLabel">
         <button ndsSelectTrigger aria-label="Estado">
           <span ndsSelectValue placeholder="Selecione..."></span>
         </button>
@@ -137,7 +137,7 @@ export const Selected: Story = {
 
     await step('Ao abrir, a opção escolhida é a que nasce marcada e destacada', async () => {
       await userEvent.click(gatilho);
-      const lista = await esperarPortal('listbox', { name: 'Estado' });
+      const lista = await waitForPortal('listbox', { name: 'Estado' });
       const escolhida = within(lista).getByRole('option', { name: 'Rio de Janeiro' });
 
       await expect(escolhida.getAttribute('aria-selected')).toBe('true');
@@ -146,7 +146,7 @@ export const Selected: Story = {
       });
 
       await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('listbox');
+      await waitForPortalVanish('listbox');
     });
   },
 };
@@ -191,7 +191,7 @@ export const Open: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const gatilho = within(canvasElement).getByRole('combobox', { name: 'Estado' });
-    const lista = await esperarPortal('listbox', { name: 'Estado' });
+    const lista = await waitForPortal('listbox', { name: 'Estado' });
     const opcoes = within(lista).getAllByRole('option');
 
     await step('O gatilho e a lista concordam sobre estar aberta', async () => {
@@ -377,7 +377,7 @@ export const OptionDisabled: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const lista = await esperarPortal('listbox', { name: 'Estado' });
+    const lista = await waitForPortal('listbox', { name: 'Estado' });
     const indisponivel = within(lista).getByRole('option', { name: 'Rio de Janeiro' });
 
     await step('A opção se anuncia indisponível', async () => {

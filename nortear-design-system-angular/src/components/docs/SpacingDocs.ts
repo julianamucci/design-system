@@ -20,13 +20,13 @@ import translations from '@shared/content/foundations/espacamento/translations.j
 const { t } = useTranslation(translations as Record<string, unknown>);
 
 /** Um degrau da escada. `token` é o sufixo lido pelo `data-token` do CSS. */
-interface DegrauDeEspacamento {
+interface SpacingDegrau {
   nome: string;
   token: string;
   px: string;
 }
 
-const DEGRAUS: DegrauDeEspacamento[] = [
+const DEGRAUS: SpacingDegrau[] = [
   { nome: 'spacing-px', token: 'px', px: '1px' },
   { nome: 'spacing-0-5', token: '0-5', px: '2px' },
   { nome: 'spacing-1', token: '1', px: '4px' },

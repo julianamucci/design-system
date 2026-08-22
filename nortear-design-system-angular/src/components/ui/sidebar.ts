@@ -47,7 +47,7 @@ const ATALHO = 'b';
 const COOKIE = 'sidebar_state';
 const COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // uma semana
 /** Abaixo disto a sidebar vira gaveta sobreposta em vez de coluna. */
-const LARGURA_MOVEL = '(max-width: 767px)';
+const WIDTH_MOVEL = '(max-width: 767px)';
 
 /**
  * A media query que decide se a barra é coluna ou gaveta.
@@ -58,7 +58,7 @@ const LARGURA_MOVEL = '(max-width: 767px)';
  */
 export const NDS_SIDEBAR_MOBILE_QUERY = new InjectionToken<string>(
   'nds-sidebar-mobile-query',
-  { providedIn: 'root', factory: () => LARGURA_MOVEL },
+  { providedIn: 'root', factory: () => WIDTH_MOVEL },
 );
 
 export type SidebarState = 'expanded' | 'collapsed';
@@ -105,13 +105,13 @@ export class NdsSidebarStore {
     document.addEventListener('keydown', aoTeclar);
 
     const consulta = window.matchMedia(inject(NDS_SIDEBAR_MOBILE_QUERY));
-    const aoMudarLargura = () => this._isMobile.set(consulta.matches);
-    aoMudarLargura();
-    consulta.addEventListener('change', aoMudarLargura);
+    const onChangeWidth = () => this._isMobile.set(consulta.matches);
+    onChangeWidth();
+    consulta.addEventListener('change', onChangeWidth);
 
     destroyRef.onDestroy(() => {
       document.removeEventListener('keydown', aoTeclar);
-      consulta.removeEventListener('change', aoMudarLargura);
+      consulta.removeEventListener('change', onChangeWidth);
     });
   }
 
@@ -178,10 +178,10 @@ export class NdsSidebarProvider implements OnInit {
 
   constructor() {
     effect(() => {
-      const deFora = this.open();
+      const ofOutside = this.open();
       // A leitura de comparação vai em `untracked`: como dependência, ela
       // faria o effect acordar da própria escrita do `aoMudar` acima.
-      if (deFora !== undefined && deFora !== untracked(this.store.open)) this.store.definir(deFora);
+      if (ofOutside !== undefined && ofOutside !== untracked(this.store.open)) this.store.definir(ofOutside);
     });
   }
 }

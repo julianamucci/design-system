@@ -49,7 +49,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const ROTULO_PAGINA = 'Ir para página';
+const LABEL_PAGE = 'Ir para página';
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
 const ROTULO_PROXIMA = 'Ir para a próxima página';
 
@@ -73,7 +73,7 @@ function faixa(rotulo: string, atual: number): Record<string, unknown> {
       // Derivado do total: uma lista literal deixaria de acompanhar a faixa.
       paginas: Array.from({ length: 5 }, (_, i) => i + 1),
       rotulo,
-      rotuloPagina: ROTULO_PAGINA,
+      rotuloPagina: LABEL_PAGE,
       rotuloAnterior: ROTULO_ANTERIOR,
       rotuloProxima: ROTULO_PROXIMA,
       aoNavegar,
@@ -195,7 +195,7 @@ export const LastPage: Story = {
     });
 
     await step('A página atual é a última da faixa', async () => {
-      const ativo = canvas.getByRole('link', { name: `${ROTULO_PAGINA} 5` });
+      const ativo = canvas.getByRole('link', { name: `${LABEL_PAGE} 5` });
       await expect(ativo).toHaveAttribute('aria-current', 'page');
       await expect(ativo).toHaveClass('nds-button-outline');
     });
@@ -222,7 +222,7 @@ export const FocusVisible: Story = {
       // accessibility.item3 — `:focus-visible` é o que separa o anel do clique
       // de mouse; medir a sombra computada é o que prova que a regra do CSS
       // compartilhado chegou ao elemento, e não só que o foco chegou.
-      const link = canvas.getByRole('link', { name: `${ROTULO_PAGINA} 2` });
+      const link = canvas.getByRole('link', { name: `${LABEL_PAGE} 2` });
       link.blur();
       link.focus();
       await expect(link).toHaveFocus();
@@ -233,7 +233,7 @@ export const FocusVisible: Story = {
     await step('A página atual também é focável', async () => {
       // Ela não navega para lugar nenhum, mas continua alcançável pelo teclado:
       // tirar do fluxo de foco quebraria a leitura sequencial da faixa.
-      const ativo = canvas.getByRole('link', { name: `${ROTULO_PAGINA} 3` });
+      const ativo = canvas.getByRole('link', { name: `${LABEL_PAGE} 3` });
       ativo.blur();
       ativo.focus();
       await expect(ativo).toHaveFocus();

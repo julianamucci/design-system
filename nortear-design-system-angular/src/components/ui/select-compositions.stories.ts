@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angula
 import { NDS_SELECT } from './select';
 import { NdsButton } from './button';
 import { NdsLabel } from './label';
-import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 const ESTADOS = [
   { value: 'sp', label: 'São Paulo' },
@@ -23,10 +23,10 @@ const ESTADOS = [
  * justamente esse intervalo para distinguir "apertei o gatilho e arrastei até a
  * opção" de "cliquei duas vezes".
  */
-async function abrirComTeclado(gatilho: HTMLElement, nome: string): Promise<HTMLElement> {
+async function openWithKeyboard(gatilho: HTMLElement, nome: string): Promise<HTMLElement> {
   gatilho.focus();
   await userEvent.keyboard('{Enter}');
-  return await esperarPortal('listbox', { name: nome });
+  return await waitForPortal('listbox', { name: nome });
 }
 
 const meta: Meta = {
@@ -123,7 +123,7 @@ export const InForm: Story = {
     });
 
     await step('Escolher uma opção preenche o campo escondido do formulário', async () => {
-      const lista = await abrirComTeclado(gatilho, 'Estado');
+      const lista = await openWithKeyboard(gatilho, 'Estado');
 
       await userEvent.click(within(lista).getByRole('option', { name: 'Minas Gerais' }));
 
@@ -205,7 +205,7 @@ export const WithReactiveForms: Story = {
     });
 
     await step('Escolher uma opção escreve no FormControl', async () => {
-      const lista = await abrirComTeclado(gatilho, 'Estado');
+      const lista = await openWithKeyboard(gatilho, 'Estado');
 
       await userEvent.click(within(lista).getByRole('option', { name: 'São Paulo' }));
 

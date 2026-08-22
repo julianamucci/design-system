@@ -26,7 +26,7 @@ export const REGRA_GUARDA_DE_FOCO = { id: 'aria-hidden-focus', enabled: false } 
  * intermediária, e é assim que nasce a violação de contraste ~1.0 do axe
  * (elemento em transição, não paleta ruim).
  */
-export async function esperarPortal(
+export async function waitForPortal(
   role: 'menu' | 'menuitem' | 'dialog' | 'alertdialog' | 'listbox' | 'tooltip',
   options: { name?: string | RegExp; timeout?: number } = {},
 ): Promise<HTMLElement> {
@@ -53,7 +53,7 @@ export async function esperarPortal(
 }
 
 /** Espera o portal sumir — para provar Escape, clique fora e seleção de item. */
-export async function esperarPortalSumir(
+export async function waitForPortalVanish(
   role: 'menu' | 'dialog' | 'alertdialog' | 'listbox' | 'tooltip',
   timeout = 2000,
 ): Promise<void> {

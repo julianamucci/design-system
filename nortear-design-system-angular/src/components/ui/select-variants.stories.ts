@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect } from 'storybook/test';
 import { NDS_SELECT } from './select';
-import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 // ─── Dados ────────────────────────────────────────────────────────────────────
 //
@@ -80,7 +80,7 @@ export const Default: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const lista = await esperarPortal('listbox', { name: 'Estado' });
+    const lista = await waitForPortal('listbox', { name: 'Estado' });
 
     await step('A lista é um listbox nomeado, com uma opção por estado', async () => {
       const opcoes = within(lista).getAllByRole('option');
@@ -134,7 +134,7 @@ export const WithGroups: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const lista = await esperarPortal('listbox', { name: 'Estado' });
+    const lista = await waitForPortal('listbox', { name: 'Estado' });
     const dentro = within(lista);
 
     await step('Cada categoria vira um grupo nomeado pelo seu cabeçalho', async () => {
@@ -208,7 +208,7 @@ export const WithIcon: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const lista = await esperarPortal('listbox', { name: 'Estado' });
+    const lista = await waitForPortal('listbox', { name: 'Estado' });
     const opcoes = within(lista).getAllByRole('option');
 
     await step('O ícone entra na opção e fica fora do nome acessível', async () => {

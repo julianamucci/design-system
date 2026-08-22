@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { medirRolagem } from '@shared/testing/data-table-probe';
 import { NdsDataTable, type DataTableLabels } from './data-table';
-import { COLUNAS_FATURAS, FATURAS_DT, ROTULOS_DT, type FaturaDT } from './data-table.fixtures';
+import { COLUMNS_INVOICES, INVOICES_DT, LABELS_DT, type InvoiceDT } from './data-table.fixtures';
 import { NdsDataTableDocs } from '@/components/docs/DataTableDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -14,12 +14,12 @@ type DataTableArgs = {
   enablePagination: boolean;
   pageSize: number;
   labels: Partial<DataTableLabels>;
-  rowKey: (row: FaturaDT, index: number) => string;
-  rowLabel: (row: FaturaDT) => string;
+  rowKey: (row: InvoiceDT, index: number) => string;
+  rowLabel: (row: InvoiceDT) => string;
 };
 
 /** Identidade da linha: a fatura, não a posição dela na página. */
-const CHAVE_DA_FATURA = (fatura: FaturaDT) => fatura.id;
+const INVOICE_KEY = (fatura: InvoiceDT) => fatura.id;
 
 /**
  * O painel Code imprime o `template` da story como está escrito — com todos os
@@ -172,8 +172,8 @@ const meta: Meta<DataTableArgs> = {
     enableGlobalFilter: true,
     enablePagination: true,
     pageSize: 5,
-    labels: ROTULOS_DT,
-    rowKey: CHAVE_DA_FATURA,
+    labels: LABELS_DT,
+    rowKey: INVOICE_KEY,
     // Declarado e deixado em branco de propósito: é AQUI que o degrau do meio do
     // fallback é provado — sem `rowLabel`, o nome do controle de seleção sai da
     // primeira coluna ("Fatura"). O caminho explícito, em que o rótulo vem de
@@ -205,7 +205,7 @@ export const Playground: Story = {
     docs: { source: { transform: playgroundSource } },
   },
   render: (args) => ({
-    props: { ...args, colunas: COLUNAS_FATURAS, faturas: FATURAS_DT },
+    props: { ...args, colunas: COLUMNS_INVOICES, faturas: INVOICES_DT },
     template: `
       <div
         ndsDataTable
@@ -236,7 +236,7 @@ export const Playground: Story = {
       canvas.getByRole('checkbox', { name: `Selecionar fatura ${id}` });
     const regiaoViva = () => canvasElement.querySelector<HTMLElement>('[role="status"]')!;
     const botaoDeOrdenar = () => canvas.getByRole('button', { name: 'Ordenar por Valor' });
-    const cabecalhoDeValor = () => botaoDeOrdenar().closest('th')!;
+    const valueHeader = () => botaoDeOrdenar().closest('th')!;
 
     // Precondição em vez de clique cego: o painel Interactions reexecuta a play
     // no MESMO DOM, e um clique que inverte estado dá resultado oposto na
@@ -247,7 +247,7 @@ export const Playground: Story = {
     // distingue clique condicional de clique cego, para quem lê e para a regra
     // `play_nao_idempotente` do audit — que só enxerga a condição quando ela
     // está na própria linha do `userEvent.click`.
-    const levarCaixa = async (caixa: () => HTMLElement, estado: 'true' | 'false') => {
+    const moveBox = async (caixa: () => HTMLElement, estado: 'true' | 'false') => {
       if (caixa().getAttribute('aria-checked') !== estado) await userEvent.click(caixa());
       // Segundo clique: partindo do misto, o primeiro só completa a página.
       if (caixa().getAttribute('aria-checked') !== estado) await userEvent.click(caixa());
@@ -255,11 +255,11 @@ export const Playground: Story = {
     };
 
     /** Mesma ideia para a ordenação, que é um ciclo de três estados. */
-    const levarOrdenacao = async (estado: 'none' | 'ascending' | 'descending') => {
-      for (let i = 0; i < 3 && cabecalhoDeValor().getAttribute('aria-sort') !== estado; i += 1) {
+    const moveOrdenacao = async (estado: 'none' | 'ascending' | 'descending') => {
+      for (let i = 0; i < 3 && valueHeader().getAttribute('aria-sort') !== estado; i += 1) {
         await userEvent.click(botaoDeOrdenar());
       }
-      await expect(cabecalhoDeValor()).toHaveAttribute('aria-sort', estado);
+      await expect(valueHeader()).toHaveAttribute('aria-sort', estado);
     };
 
     await step('É uma tabela de verdade, com nome e seções semânticas', async () => {
@@ -316,31 +316,31 @@ export const Playground: Story = {
       // `getByRole` com o nome exato é o que prova isso — ele falha se o rótulo
       // perder a coluna. O aria-sort mora no `th`, que é quem tem a relação
       // com a coluna.
-      await expect(cabecalhoDeValor()).toHaveAttribute('scope', 'col');
+      await expect(valueHeader()).toHaveAttribute('scope', 'col');
       // Sem ordem aplicada, o th diz "none" — e dizer algo é o que anuncia que
       // a coluna ordena.
-      await levarOrdenacao('none');
+      await moveOrdenacao('none');
 
       // Coluna sem ordenação não promete ordenação nenhuma.
-      const semOrdem = canvas.getByText('Método').closest('th')!;
-      await expect(semOrdem.hasAttribute('aria-sort')).toBe(false);
+      const noOrder = canvas.getByText('Método').closest('th')!;
+      await expect(noOrder.hasAttribute('aria-sort')).toBe(false);
     });
 
     await step('Ordenar percorre ascendente, descendente e nenhum', async () => {
       // functional.item3 — três estados. Sem o terceiro, quem ordenou por
       // engano não tem como voltar à ordem original dos dados.
-      await levarOrdenacao('none');
+      await moveOrdenacao('none');
 
       await userEvent.click(botaoDeOrdenar());
-      await expect(cabecalhoDeValor()).toHaveAttribute('aria-sort', 'ascending');
+      await expect(valueHeader()).toHaveAttribute('aria-sort', 'ascending');
       await expect(primeiraCelula()).toHaveTextContent('#INV-010');
 
       await userEvent.click(botaoDeOrdenar());
-      await expect(cabecalhoDeValor()).toHaveAttribute('aria-sort', 'descending');
+      await expect(valueHeader()).toHaveAttribute('aria-sort', 'descending');
       await expect(primeiraCelula()).toHaveTextContent('#INV-011');
 
       await userEvent.click(botaoDeOrdenar());
-      await expect(cabecalhoDeValor()).toHaveAttribute('aria-sort', 'none');
+      await expect(valueHeader()).toHaveAttribute('aria-sort', 'none');
       await expect(primeiraCelula()).toHaveTextContent('#INV-001');
     });
 
@@ -380,7 +380,7 @@ export const Playground: Story = {
       // functional.item4 — e visual.item1: a linha marcada muda de fundo. Uma
       // tabela que só muda de COR é muda para quem não vê, por isso a região
       // viva carrega o número.
-      await levarCaixa(caixaDeTudo, 'true');
+      await moveBox(caixaDeTudo, 'true');
 
       for (const linha of linhas()) {
         await expect(linha).toHaveAttribute('data-state', 'selected');
@@ -393,8 +393,8 @@ export const Playground: Story = {
     await step('Desmarcar uma linha deixa o cabeçalho em estado misto', async () => {
       // A linha é escolhida pelo NOME: por índice, o passo continuaria passando
       // se a marcação tivesse trocado de linha.
-      await levarCaixa(caixaDeTudo, 'true');
-      await levarCaixa(() => caixaDaFatura('#INV-001'), 'false');
+      await moveBox(caixaDeTudo, 'true');
+      await moveBox(() => caixaDaFatura('#INV-001'), 'false');
 
       await expect(caixaDeTudo()).toHaveAttribute('aria-checked', 'mixed');
       await expect(caixaDeTudo()).toHaveAttribute('data-state', 'indeterminate');
@@ -407,8 +407,8 @@ export const Playground: Story = {
       // cabeçalho MARCA. Partindo do misto, o primeiro clique completa a página
       // e o segundo esvazia.
       await expect(caixaDeTudo()).toHaveAttribute('aria-checked', 'mixed');
-      await levarCaixa(caixaDeTudo, 'true');
-      await levarCaixa(caixaDeTudo, 'false');
+      await moveBox(caixaDeTudo, 'true');
+      await moveBox(caixaDeTudo, 'false');
       await expect(canvasElement.querySelectorAll('tbody tr[data-state="selected"]').length)
         .toBe(0);
       await expect(regiaoViva()).toHaveTextContent('0 de 12 linha(s) selecionada(s).');
@@ -438,14 +438,14 @@ export const Playground: Story = {
       // functional.item9 — a marcação pertence à LINHA, não à posição da tela.
       // As duas faturas são escolhidas e conferidas pelo NOME: por índice, o
       // passo passaria mesmo se ordenar tivesse trocado quem está marcado.
-      await levarOrdenacao('none');
-      await levarCaixa(caixaDeTudo, 'false');
-      await levarCaixa(() => caixaDaFatura('#INV-002'), 'true');
-      await levarCaixa(() => caixaDaFatura('#INV-005'), 'true');
+      await moveOrdenacao('none');
+      await moveBox(caixaDeTudo, 'false');
+      await moveBox(() => caixaDaFatura('#INV-002'), 'true');
+      await moveBox(() => caixaDaFatura('#INV-005'), 'true');
       const contagemAntes = regiaoViva().textContent;
       await expect(regiaoViva()).toHaveTextContent('2 de 12 linha(s) selecionada(s).');
 
-      await levarOrdenacao('ascending');
+      await moveOrdenacao('ascending');
       // A ordem mudou de verdade — sem esta linha o passo provaria a
       // conservação de nada.
       await expect(primeiraCelula()).toHaveTextContent('#INV-010');
@@ -459,17 +459,17 @@ export const Playground: Story = {
       await expect(regiaoViva().textContent).toBe(contagemAntes);
 
       // Volta ao estado de entrada: ordem original e nada marcado.
-      await levarOrdenacao('none');
-      await levarCaixa(caixaDeTudo, 'false');
+      await moveOrdenacao('none');
+      await moveBox(caixaDeTudo, 'false');
     });
 
     await step('A story termina com seleção parcial na tela', async () => {
       // visual.item1 — a captura do Chromatic guarda o ÚLTIMO estado, e o item
       // documentado é "estado padrão com seleção". Antes a play terminava com a
       // busca limpa e a seleção herdada do passo anterior, sem garantia.
-      await levarCaixa(caixaDeTudo, 'false');
-      await levarCaixa(() => caixaDaFatura('#INV-001'), 'true');
-      await levarCaixa(() => caixaDaFatura('#INV-003'), 'true');
+      await moveBox(caixaDeTudo, 'false');
+      await moveBox(() => caixaDaFatura('#INV-001'), 'true');
+      await moveBox(() => caixaDaFatura('#INV-003'), 'true');
       await expect(regiaoViva()).toHaveTextContent('2 de 12 linha(s) selecionada(s).');
     });
   },

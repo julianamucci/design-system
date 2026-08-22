@@ -3,12 +3,12 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NdsDataTable } from './data-table';
 import {
-  COLUNAS_COM_FILTRO,
-  FATURAS_DT,
+  COLUMNS_WITH_FILTER,
+  INVOICES_DT,
   NdsDataTableDemo,
-  ROTULOS_DT,
+  LABELS_DT,
 } from './data-table.fixtures';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -50,7 +50,7 @@ export const WithColumnFilters: Story = {
     },
   },
   render: () => ({
-    props: { colunas: COLUNAS_COM_FILTRO, faturas: FATURAS_DT, rotulos: ROTULOS_DT },
+    props: { colunas: COLUMNS_WITH_FILTER, faturas: INVOICES_DT, rotulos: LABELS_DT },
     template: `
       <div
         ndsDataTable
@@ -80,7 +80,7 @@ export const WithColumnFilters: Story = {
         '.nds-data-table-filter-row',
       )!;
       const celulas = [...linhaDeFiltros.querySelectorAll('th')];
-      await expect(celulas.length).toBe(COLUNAS_COM_FILTRO.length);
+      await expect(celulas.length).toBe(COLUMNS_WITH_FILTER.length);
       for (const celula of celulas) {
         await expect(celula.querySelector('.nds-sr-only')!.textContent!.trim().length)
           .toBeGreaterThan(0);
@@ -133,7 +133,7 @@ export const WithColumnVisibility: Story = {
     },
   },
   render: () => ({
-    props: { colunas: COLUNAS_COM_FILTRO, faturas: FATURAS_DT, rotulos: ROTULOS_DT },
+    props: { colunas: COLUMNS_WITH_FILTER, faturas: INVOICES_DT, rotulos: LABELS_DT },
     template: `
       <div
         ndsDataTable
@@ -158,13 +158,13 @@ export const WithColumnVisibility: Story = {
       const gatilho = canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
       await expect(gatilho.tagName).toBe('BUTTON');
       await expect(gatilho).toHaveAttribute('aria-haspopup', 'menu');
-      await expect(cabecalhos().length).toBe(COLUNAS_COM_FILTRO.length);
+      await expect(cabecalhos().length).toBe(COLUMNS_WITH_FILTER.length);
     });
 
     await step('Desmarcar uma coluna a tira da grade inteira', async () => {
       const gatilho = canvasElement.querySelector<HTMLElement>('.nds-data-table-columns-btn')!;
       await userEvent.click(gatilho);
-      await esperarPortal('menu');
+      await waitForPortal('menu');
 
       const menu = within(document.body);
       const item = menu.getByRole('menuitemcheckbox', { name: 'Método' });
@@ -172,7 +172,7 @@ export const WithColumnVisibility: Story = {
       await userEvent.click(item);
 
       await waitFor(async () => {
-        await expect(cabecalhos().length).toBe(COLUNAS_COM_FILTRO.length - 1);
+        await expect(cabecalhos().length).toBe(COLUMNS_WITH_FILTER.length - 1);
       });
       await expect(canvas.queryByText('Método')).toBeNull();
     });
@@ -181,7 +181,7 @@ export const WithColumnVisibility: Story = {
       // Esconder é decisão de LEITURA. Se o filtro global deixasse de olhar a
       // coluna, esconder mudaria o resultado da busca — e ninguém veria por quê.
       await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('menu');
+      await waitForPortalVanish('menu');
 
       const busca = canvas.getByRole('searchbox');
       await userEvent.type(busca, 'Transferência');

@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_DROPDOWN_MENU } from './dropdown-menu';
 import { NdsButton } from './button';
-import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { contrasteDoItem } from '@shared/testing/dropdown-menu-probe';
 
 const meta: Meta = {
@@ -47,7 +47,7 @@ export const Default: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const itens = within(menu).getAllByRole('menuitem');
 
     await step('A variante default é escrita no markup', async () => {
@@ -103,7 +103,7 @@ export const Destructive: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const neutro = canvas.getByRole('menuitem', { name: 'Perfil' });
     const perigoso = canvas.getByRole('menuitem', { name: 'Excluir conta' });

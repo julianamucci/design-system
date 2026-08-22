@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsButton } from './button';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 // Os estados canônicos do AlertDialog: fechado, aberto, confirmado e cancelado.
 //
@@ -32,7 +32,7 @@ type Story = StoryObj;
 /** Espiões de módulo: a play precisa inspecionar o mesmo mock que o render usa. */
 const aoConfirmar = fn();
 const aoCancelar = fn();
-const acaoDestrutiva = fn();
+const actionDestructive = fn();
 
 export const Closed: Story = {
   parameters: {
@@ -109,7 +109,7 @@ export const Open: Story = {
   }),
   play: async ({ step }) => {
     await step('Nasce aberto, com backdrop', async () => {
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       await expect(painel).toBeVisible();
       await expect(
         document.querySelector('[data-slot="alert-dialog-overlay"]'),
@@ -117,7 +117,7 @@ export const Open: Story = {
     });
 
     await step('Nome e descrição acessíveis saem do título e da descrição', async () => {
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       await expect(painel).toHaveAccessibleName(/Excluir item/i);
       await expect(painel).toHaveAccessibleDescription(/removido de forma definitiva/i);
     });
@@ -171,7 +171,7 @@ export const Confirmed: Story = {
       if (!document.querySelector('[role="alertdialog"]')) {
         await userEvent.click(canvas.getByRole('button', { name: /^Excluir$/i }));
       }
-      return esperarPortal('alertdialog');
+      return waitForPortal('alertdialog');
     };
 
     await step('Confirmar dispara o callback de quem consome', async () => {
@@ -181,20 +181,20 @@ export const Confirmed: Story = {
     });
 
     await step('Confirmar também fecha o painel', async () => {
-      await esperarPortalSumir('alertdialog');
+      await waitForPortalVanish('alertdialog');
     });
 
     await step('Enter com a ação focada confirma, e o foco volta ao gatilho', async () => {
       const gatilho = canvas.getByRole('button', { name: /^Excluir$/i });
       const antes = aoConfirmar.mock.calls.length;
       await userEvent.click(gatilho);
-      await esperarPortal('alertdialog');
+      await waitForPortal('alertdialog');
       const acao = within(document.body).getByTestId('confirmar');
       acao.focus();
       await expect(acao).toHaveFocus();
       await userEvent.keyboard('{Enter}');
       await expect(aoConfirmar.mock.calls.length).toBeGreaterThan(antes);
-      await esperarPortalSumir('alertdialog');
+      await waitForPortalVanish('alertdialog');
       // Fecha o ciclo: sem o retorno de foco o teclado volta ao topo do
       // documento e a pessoa perde o lugar. O waitFor não é decoração: nesta
       // stack o foco só volta quando o portal destrói as diretivas, o que cai
@@ -216,10 +216,10 @@ export const Cancelled: Story = {
   },
   beforeEach: () => {
     aoCancelar.mockClear();
-    acaoDestrutiva.mockClear();
+    actionDestructive.mockClear();
   },
   render: () => ({
-    props: { aoCancelar, acaoDestrutiva },
+    props: { aoCancelar, actionDestructive },
     template: `
       <nds-alert-dialog [defaultOpen]="true">
         <button ndsAlertDialogTrigger ndsButton variant="destructive">Excluir</button>
@@ -241,7 +241,7 @@ export const Cancelled: Story = {
               ndsAlertDialogAction
               ndsButton
               variant="destructive"
-              (click)="acaoDestrutiva()"
+              (click)="actionDestructive()"
             >Excluir</button>
           </div>
         </ng-template>
@@ -255,30 +255,30 @@ export const Cancelled: Story = {
       if (!document.querySelector('[role="alertdialog"]')) {
         await userEvent.click(canvas.getByRole('button', { name: /^Excluir$/i }));
       }
-      return esperarPortal('alertdialog');
+      return waitForPortal('alertdialog');
     };
 
     await step('Cancelar fecha e NÃO executa a ação destrutiva', async () => {
       await garantirAberto();
       await userEvent.click(within(document.body).getByTestId('cancelar'));
       await expect(aoCancelar).toHaveBeenCalled();
-      await esperarPortalSumir('alertdialog');
+      await waitForPortalVanish('alertdialog');
       // O ponto do cancelamento: é isto que não pode acontecer.
-      await expect(acaoDestrutiva).not.toHaveBeenCalled();
+      await expect(actionDestructive).not.toHaveBeenCalled();
     });
 
     await step('Space com o Cancel focado cancela, e o foco volta ao gatilho', async () => {
       const gatilho = canvas.getByRole('button', { name: /^Excluir$/i });
       const antes = aoCancelar.mock.calls.length;
       await userEvent.click(gatilho);
-      await esperarPortal('alertdialog');
+      await waitForPortal('alertdialog');
       const cancelar = within(document.body).getByTestId('cancelar');
       cancelar.focus();
       await expect(cancelar).toHaveFocus();
       await userEvent.keyboard(' ');
       await expect(aoCancelar.mock.calls.length).toBeGreaterThan(antes);
-      await esperarPortalSumir('alertdialog');
-      await expect(acaoDestrutiva).not.toHaveBeenCalled();
+      await waitForPortalVanish('alertdialog');
+      await expect(actionDestructive).not.toHaveBeenCalled();
       // Ver a nota do Confirmed: o retorno de foco vem com a destruição do
       // portal, um ciclo de detecção depois do desmonte.
       await waitFor(() => expect(gatilho).toHaveFocus());

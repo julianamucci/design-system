@@ -5,7 +5,7 @@ import { NDS_CONTEXT_MENU } from './context-menu';
 import { abrirPorGesto } from './context-menu.fixtures';
 import { NdsContextMenuDocs } from '@/components/docs/ContextMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { AREA_CLICK_DIREITO } from '@shared/testing/context-menu-area';
 
 type ContextMenuArgs = {
@@ -121,7 +121,7 @@ export const Playground: Story = {
       area().dispatchEvent(evento);
       await waitFor(() => expect(evento.defaultPrevented).toBe(true));
       await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('menu');
+      await waitForPortalVanish('menu');
     });
 
     await step('O botão direito abre o menu ONDE o ponteiro estava', async () => {
@@ -136,7 +136,7 @@ export const Playground: Story = {
     });
 
     await step('Os itens são itens de menu de verdade', async () => {
-      const menu = await esperarPortal('menu');
+      const menu = await waitForPortal('menu');
       const itens = [...menu.querySelectorAll('[data-slot="context-menu-item"]')];
       await expect(itens.length).toBe(3);
       for (const item of itens) await expect(item.getAttribute('role')).toBe('menuitem');
@@ -146,7 +146,7 @@ export const Playground: Story = {
     await step('O atalho é lido junto do item, não escondido', async () => {
       // "Excluir, Del" é o nome útil. Com `aria-hidden` no atalho a pessoa
       // ouviria só "Excluir" e o atalho não serviria para nada.
-      const menu = await esperarPortal('menu');
+      const menu = await waitForPortal('menu');
       const atalho = menu.querySelector<HTMLElement>('[data-slot="context-menu-shortcut"]')!;
       await expect(atalho.hasAttribute('aria-hidden')).toBe(false);
       await expect(atalho.closest('[data-slot="context-menu-item"]')).not.toBeNull();
@@ -161,14 +161,14 @@ export const Playground: Story = {
 
     await step('Escape fecha e devolve o foco à área', async () => {
       await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('menu');
+      await waitForPortalVanish('menu');
       await waitFor(() => expect(document.activeElement).toBe(area()));
     });
 
     await step('Clique fora fecha', async () => {
       await abrirPorGesto(area());
       await userEvent.click(document.body);
-      await esperarPortalSumir('menu');
+      await waitForPortalVanish('menu');
     });
 
     await step('Escolher um item avisa quem escuta', async () => {
@@ -176,7 +176,7 @@ export const Playground: Story = {
       await userEvent.click(
         within(menu).getByText('Duplicar').closest('[data-slot="context-menu-item"]')!,
       );
-      await esperarPortalSumir('menu');
+      await waitForPortalVanish('menu');
       await expect(args.onSelect).toHaveBeenCalledWith('duplicar');
     });
 

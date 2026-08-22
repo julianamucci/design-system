@@ -25,7 +25,7 @@ type PaginationArgs = {
 /** Rótulos acessíveis fixos — não são controls, então ficam fora dos `args`. */
 const ROTULO_ANTERIOR = 'Ir para a página anterior';
 const ROTULO_PROXIMA = 'Ir para a próxima página';
-const ROTULO_PAGINA = 'Ir para página';
+const LABEL_PAGE = 'Ir para página';
 
 /**
  * O painel Code imprime o `template` da story literalmente — com o `@for` que
@@ -71,7 +71,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<PaginationArgs>
               ndsPaginationLink
               href="#"
               [isActive]="n === atual()"
-              [attr.aria-label]="'${ROTULO_PAGINA} ' + n"
+              [attr.aria-label]="'${LABEL_PAGE} ' + n"
               (click)="irPara($event, n)"
             >{{ n }}</a>
           </li>
@@ -179,7 +179,7 @@ export const Playground: Story = {
       paginas: Array.from({ length: args.total }, (_, i) => i + 1),
       rotuloAnterior: ROTULO_ANTERIOR,
       rotuloProxima: ROTULO_PROXIMA,
-      rotuloPagina: ROTULO_PAGINA,
+      rotuloPagina: LABEL_PAGE,
       irPara: (evento: Event, pagina: number) => {
         evento.preventDefault();
         onPageChange(pagina);
@@ -246,7 +246,7 @@ export const Playground: Story = {
       // accessibility.item5 — "3" sozinho não diz nada em voz alta; o número
       // vira nome acessível de verdade com o prefixo.
       for (let n = 1; n <= args.total; n++) {
-        const link = canvas.getByRole('link', { name: `${ROTULO_PAGINA} ${n}` });
+        const link = canvas.getByRole('link', { name: `${LABEL_PAGE} ${n}` });
         await expect(link).toHaveAttribute('data-slot', 'pagination-link');
         await expect(link).toHaveTextContent(String(n));
       }
@@ -266,12 +266,12 @@ export const Playground: Story = {
       // accessibility.item4 — e prova que os inputs chegaram ao template: sem
       // AOT o binding cai em silêncio e TODOS os links ficariam ghost
       // (armadilha 1 do CLAUDE.md deste stack).
-      const ativo = canvas.getByRole('link', { name: `${ROTULO_PAGINA} ${args.atual}` });
+      const ativo = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.atual}` });
       await expect(ativo).toHaveAttribute('aria-current', 'page');
       await expect(ativo).toHaveAttribute('data-active', 'true');
       await expect(ativo).toHaveClass('nds-button-outline');
 
-      const inativo = canvas.getByRole('link', { name: `${ROTULO_PAGINA} ${args.atual + 1}` });
+      const inativo = canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.atual + 1}` });
       await expect(inativo.hasAttribute('aria-current')).toBe(false);
       await expect(inativo).toHaveClass('nds-button-ghost');
     });
@@ -296,7 +296,7 @@ export const Playground: Story = {
       // espião aqui é o que faz a contagem valer nesta rodada, inclusive no
       // replay do painel Interactions, que roda no mesmo DOM.
       onPageChange.mockClear();
-      await userEvent.click(canvas.getByRole('link', { name: `${ROTULO_PAGINA} ${args.total}` }));
+      await userEvent.click(canvas.getByRole('link', { name: `${LABEL_PAGE} ${args.total}` }));
       await expect(onPageChange).toHaveBeenCalledTimes(1);
       await expect(onPageChange).toHaveBeenLastCalledWith(args.total);
     });
@@ -307,7 +307,7 @@ export const Playground: Story = {
       const esperados = [
         canvas.getByRole('link', { name: ROTULO_ANTERIOR }),
         ...Array.from({ length: args.total }, (_, i) =>
-          canvas.getByRole('link', { name: `${ROTULO_PAGINA} ${i + 1}` }),
+          canvas.getByRole('link', { name: `${LABEL_PAGE} ${i + 1}` }),
         ),
         canvas.getByRole('link', { name: ROTULO_PROXIMA }),
       ];

@@ -81,9 +81,9 @@ export const Selected: Story = {
       // O contraste de 4.5:1 é medido pelo axe; aqui a garantia é mais rasa e
       // complementar: sem a regra de CSS, ativo e inativo pintariam igual e o
       // estado só existiria para quem lê o DOM.
-      const fundoAtivo = getComputedStyle(centro).backgroundColor;
-      const fundoInativo = getComputedStyle(esquerda).backgroundColor;
-      await expect(fundoAtivo).not.toBe(fundoInativo);
+      const backgroundActive = getComputedStyle(centro).backgroundColor;
+      const backgroundInactive = getComputedStyle(esquerda).backgroundColor;
+      await expect(backgroundActive).not.toBe(backgroundInactive);
     });
   },
 };

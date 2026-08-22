@@ -61,7 +61,7 @@ const NAV_KEYS = ['ArrowDown', 'ArrowUp', 'Home', 'End'] as const;
 type NavKey = (typeof NAV_KEYS)[number];
 
 /** Gatilhos operáveis, na ordem do documento. Desabilitado não recebe foco. */
-const SELETOR_GATILHOS =
+const SELECTOR_TRIGGERS =
   '[data-slot="accordion-trigger"]:not([disabled]):not([aria-disabled="true"])';
 
 // ─── NdsAccordion (raiz) ──────────────────────────────────────────────────────
@@ -115,7 +115,7 @@ export class NdsAccordion {
     if (!focado) return;
 
     const gatilhos = Array.from(
-      this.hostRef.nativeElement.querySelectorAll<HTMLButtonElement>(SELETOR_GATILHOS),
+      this.hostRef.nativeElement.querySelectorAll<HTMLButtonElement>(SELECTOR_TRIGGERS),
     );
     const indice = gatilhos.indexOf(focado);
     if (indice < 0) return;

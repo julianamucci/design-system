@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
-import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const MENUS_FECHADOS = ['Arquivo', 'Editar', 'Exibir', 'Ajuda'] as const;
@@ -116,7 +116,7 @@ export const Open: Story = {
     const canvas = within(canvasElement);
     const barra = canvas.getByRole('menubar');
     const [arquivo, editar] = within(barra).getAllByRole('menuitem');
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
 
     await step('O gatilho aberto se distingue dos vizinhos', async () => {
       await expect(arquivo.getAttribute('data-state')).toBe('open');
@@ -171,7 +171,7 @@ export const ItemDisabled: Story = {
     `,
   }),
   play: async ({ step, args }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const itens = within(menu).getAllByRole('menuitem');
     const bloqueado = itens[ITENS_COM_BLOQUEIO.findIndex((i) => i.disabled)];
 
@@ -228,7 +228,7 @@ export const CheckboxChecked: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const regua = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });
     const grade = canvas.getByRole('menuitemcheckbox', { name: 'Grade' });
@@ -289,7 +289,7 @@ export const CheckboxIndeterminate: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Colunas' });
     const marcado = canvas.getByRole('menuitemcheckbox', { name: 'Régua' });

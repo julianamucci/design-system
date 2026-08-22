@@ -4,7 +4,7 @@
 // story: `export function esperarPainel()` dentro de um `*.stories.ts` viraria
 // uma story "EsperarPainel" que não renderiza nada.
 //
-// Não reaproveita `esperarPortal` de `@/lib/wait-for-portal`: aquele helper
+// Não reaproveita `waitForPortal` de `@/lib/wait-for-portal`: aquele helper
 // procura por PAPEL (`menu`, `dialog`, `listbox`), e o painel daqui não tem
 // papel nenhum — é navegação, uma lista de links. Procurar por `role="menu"`
 // aqui só encontraria algo se o componente estivesse errado.

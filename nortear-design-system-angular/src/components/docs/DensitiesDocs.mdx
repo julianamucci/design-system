@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { mountAngularInReact } from '../../lib/mountAngularInReact';
 import { NdsDensitiesDocs } from './DensitiesDocs';
 
 <Meta
@@ -14,6 +14,6 @@ import { NdsDensitiesDocs } from './DensitiesDocs';
   }}
 />
 
-export const DensitiesDocsPage = montarAngularEmReact(NdsDensitiesDocs);
+export const DensitiesDocsPage = mountAngularInReact(NdsDensitiesDocs);
 
 <DensitiesDocsPage />

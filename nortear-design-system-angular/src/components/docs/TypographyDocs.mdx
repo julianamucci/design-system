@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { mountAngularInReact } from '../../lib/mountAngularInReact';
 import { NdsTypographyDocs } from './TypographyDocs';
 
 <Meta
@@ -14,6 +14,6 @@ import { NdsTypographyDocs } from './TypographyDocs';
   }}
 />
 
-export const TypographyDocsPage = montarAngularEmReact(NdsTypographyDocs);
+export const TypographyDocsPage = mountAngularInReact(NdsTypographyDocs);
 
 <TypographyDocsPage />

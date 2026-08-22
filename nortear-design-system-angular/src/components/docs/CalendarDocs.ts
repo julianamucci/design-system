@@ -369,19 +369,19 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: rotuloDeNav(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: rotuloDeNav(s.labelKey) })),
+      label: navLabel(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
     }));
   });
 
   protected readonly anatomyItems = computed(() => {
     const d = dict();
-    return itensNumerados(d, 'anatomy');
+    return numberedItems(d, 'anatomy');
   });
 
   protected readonly guidelines = computed(() => {
     const d = dict();
-    return { title: d['usage.guidelines.title'] ?? '', items: itensNumerados(d, 'usage.guidelines') };
+    return { title: d['usage.guidelines.title'] ?? '', items: numberedItems(d, 'usage.guidelines') };
   });
 
   protected readonly scenarios = computed(() => {
@@ -423,12 +423,12 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     const d = dict();
-    return { title: t('usage.do.title'), items: itensNumerados(d, 'usage.do') };
+    return { title: t('usage.do.title'), items: numberedItems(d, 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     const d = dict();
-    return { title: t('usage.dont.title'), items: itensNumerados(d, 'usage.dont') };
+    return { title: t('usage.dont.title'), items: numberedItems(d, 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -455,8 +455,8 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
       { key: 'captionDropdown', tpl: this.tplVarDropdown()  },
       { key: 'numberOfMonths',  tpl: this.tplVarDoisMeses() },
     ].map(({ key, tpl }) => ({
-      name: valorOuCampo(`variants.items.${key}`, 'name') || key,
-      description: valorOuCampo(`variants.items.${key}`, 'description'),
+      name: valueOuField(`variants.items.${key}`, 'name') || key,
+      description: valueOuField(`variants.items.${key}`, 'description'),
       trackId: key,
       preview: tpl,
     }));
@@ -501,7 +501,7 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
       type: tipo,
       defaultValue: padrao,
       required: nao,
-      description: toPlainText(valorOuCampo(`props.table.${chave}`, 'description')),
+      description: toPlainText(valueOuField(`props.table.${chave}`, 'description')),
     });
 
     return [
@@ -557,7 +557,7 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
 
   protected readonly a11yItems = computed(() => {
     const d = dict();
-    return itensNumerados(d, 'accessibility');
+    return numberedItems(d, 'accessibility');
   });
 
   protected readonly keyboardItems = computed(() => {
@@ -645,7 +645,7 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
           level: r.level,
           how: toPlainText(r.how),
         }))
-      : itensNumerados(d, 'testes.accessibility').map((texto) => ({
+      : numberedItems(d, 'testes.accessibility').map((texto) => ({
           criterion: toPlainText(texto),
           level: '',
           how: '',
@@ -717,12 +717,12 @@ export class NdsCalendarDocs implements AfterViewInit, OnDestroy {
  * `t()` devolve a própria chave quando ela aponta para um objeto — e é assim
  * que a chave crua acaba escrita na tela, sem erro nenhum.
  */
-function valorOuCampo(base: string, campo: string): string {
+function valueOuField(base: string, campo: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
   const chave = `${base}.${campo}`;
-  const doCampo = t(chave);
-  return doCampo === chave ? '' : doCampo;
+  const ofField = t(chave);
+  return ofField === chave ? '' : ofField;
 }
 
 /**
@@ -733,13 +733,13 @@ function valorOuCampo(base: string, campo: string): string {
  * quando ela não existe, então sem esta ponte o menu de quem não traz o bloco
  * mostrava "nav.overview" escrito na tela, sem erro nenhum.
  */
-function rotuloDeNav(chave: string): string {
+function navLabel(chave: string): string {
   const doComponente = t(chave);
   return doComponente === chave ? tNav(chave) : doComponente;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
-function itensNumerados(d: Record<string, string>, base: string): string[] {
+function numberedItems(d: Record<string, string>, base: string): string[] {
   const itens: string[] = [];
   for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
   return itens;

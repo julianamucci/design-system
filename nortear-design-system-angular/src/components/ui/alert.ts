@@ -72,7 +72,7 @@ const ENTER_FALLBACK_MS = 450; // --duration-spring (400ms) + folga
  * Corre `animationend` do próprio elemento contra um timeout e chama `feito`
  * uma vez só, seja quem for o vencedor. Devolve o cancelamento.
  */
-function correrFimDaAnimacao(
+function animationCorrerEnd(
   el: HTMLElement,
   limiteMs: number,
   feito: () => void,
@@ -197,7 +197,7 @@ export class NdsAlert implements OnDestroy {
       if (!this.dismissible() || this.fechado()) return;
       this.entrando.set(true);
       this.cancelarEntrada?.();
-      this.cancelarEntrada = correrFimDaAnimacao(
+      this.cancelarEntrada = animationCorrerEnd(
         this.hostRef.nativeElement,
         ENTER_FALLBACK_MS,
         () => this.entrando.set(false),
@@ -220,7 +220,7 @@ export class NdsAlert implements OnDestroy {
     // sem isto `dismiss` sairia uma vez por clique.
     if (this.saindo() || this.fechado()) return;
     this.saindo.set(true);
-    this.cancelarSaida = correrFimDaAnimacao(
+    this.cancelarSaida = animationCorrerEnd(
       this.hostRef.nativeElement,
       EXIT_FALLBACK_MS,
       () => {

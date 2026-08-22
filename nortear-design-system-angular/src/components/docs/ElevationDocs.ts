@@ -35,13 +35,13 @@ const CARTAO_DE_RAIO =
   'nds-bg-primary-soft nds-border-primary-soft nds-p-6 nds-text-caption nds-text-muted-foreground nds-text-center';
 
 /** Degrau da escada de elevação. */
-interface DegrauDeElevacao {
+interface ElevationDegrau {
   rotulo: string;
   token: string;
   classes: string;
 }
 
-const ELEVACOES: DegrauDeElevacao[] = [
+const ELEVACOES: ElevationDegrau[] = [
   { rotulo: '0 — Plano', token: '—', classes: `${CARTAO_DE_SOMBRA} nds-shadow-none` },
   { rotulo: '1 — Card', token: '--elevation-sm', classes: `${CARTAO_DE_SOMBRA} nds-shadow-sm` },
   { rotulo: '2 — Dropdown', token: '--elevation-md', classes: `${CARTAO_DE_SOMBRA} nds-shadow-md` },
@@ -66,14 +66,14 @@ const RAIOS: DegrauDeRadius[] = [
 ];
 
 /** Um par de caixas aninhadas, com a legenda que explica o resultado. */
-interface AninhamentoDeRaio {
+interface RaioNesting {
   externo: string;
   meio: string;
   interno: string;
   legenda: string;
 }
 
-const ANINHAMENTOS: AninhamentoDeRaio[] = [
+const ANINHAMENTOS: RaioNesting[] = [
   // Certo: 14 → 10 → 6, um inset de 4px (nds-p-1) por nível.
   {
     externo: 'nds-bg-primary-soft nds-p-1 nds-rounded-xl',

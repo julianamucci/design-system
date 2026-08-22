@@ -6,7 +6,7 @@ import { NDS_COMMAND, type CommandSelectDetails } from './command';
 import { NDS_POPOVER } from './popover';
 import { NDS_DIALOG } from './dialog';
 import { NdsButton } from './button';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 // ─── Combobox ─────────────────────────────────────────────────────────────────
 
@@ -203,11 +203,11 @@ export const AsCombobox: Story = {
     // ser clique cego — na segunda rodada ele inverteria o resultado.
     const abrir = async (): Promise<HTMLElement> => {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-      return await esperarPortal('dialog');
+      return await waitForPortal('dialog');
     };
     const fechar = async (): Promise<void> => {
       if (gatilho.getAttribute('aria-expanded') === 'true') await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('dialog');
+      await waitForPortalVanish('dialog');
     };
 
     await step('Fechado, o gatilho anuncia que abre uma lista para escolher', async () => {
@@ -240,7 +240,7 @@ export const AsCombobox: Story = {
       const painel = await abrir();
       await userEvent.click(within(painel).getByRole('option', { name: 'Input' }));
 
-      await esperarPortalSumir('dialog');
+      await waitForPortalVanish('dialog');
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
       await expect(gatilho).toHaveTextContent('Input');
     });
@@ -283,7 +283,7 @@ export const CommandPalette: Story = {
 
     const abrirPorBotao = async (): Promise<HTMLElement> => {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-      return await esperarPortal('dialog');
+      return await waitForPortal('dialog');
     };
 
     await step('A dica do atalho fica visível no gatilho', async () => {
@@ -320,7 +320,7 @@ export const CommandPalette: Story = {
       await abrirPorBotao();
       await userEvent.keyboard('{Escape}');
 
-      await esperarPortalSumir('dialog');
+      await waitForPortalVanish('dialog');
       await expect(gatilho).toHaveAttribute('aria-expanded', 'false');
       await waitFor(async () => {
         await expect(gatilho).toHaveFocus();
@@ -330,7 +330,7 @@ export const CommandPalette: Story = {
     await step('Cmd+K abre a paleta de qualquer lugar da página', async () => {
       await userEvent.keyboard('{Meta>}k{/Meta}');
 
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       const busca = painel.querySelector<HTMLElement>('[data-slot="command-input"]')!;
       await waitFor(async () => {
         await expect(busca).toHaveFocus();
@@ -349,16 +349,16 @@ export const CommandPalette: Story = {
     });
 
     await step('Escolher um comando executa e fecha', async () => {
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       await userEvent.click(within(painel).getByRole('option', { name: 'Input ⌘I' }));
 
-      await esperarPortalSumir('dialog');
+      await waitForPortalVanish('dialog');
       await expect(canvas.getByTestId('executado')).toHaveTextContent('input');
 
       // A story termina com a paleta ABERTA: é o quadro que o Chromatic
       // captura, e é o estado que a documentação descreve.
       await userEvent.keyboard('{Meta>}k{/Meta}');
-      const reaberto = await esperarPortal('dialog');
+      const reaberto = await waitForPortal('dialog');
       await waitFor(async () => {
         await expect(
           reaberto.querySelector<HTMLElement>('[data-slot="command-input"]'),

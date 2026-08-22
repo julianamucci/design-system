@@ -211,7 +211,7 @@ export class NdsPaginationLink {
   );
 
   constructor() {
-    barrarCliqueQuandoDesabilitado(this);
+    barrarClickQuandoDisabled(this);
   }
 }
 
@@ -233,7 +233,7 @@ export class NdsPaginationLink {
  * — Enter num `<a>` que alguém tenha tornado focável, clique disparado por
  * script, e o `click()` de um teste.
  */
-function barrarCliqueQuandoDesabilitado(controle: { disabled: () => boolean }): void {
+function barrarClickQuandoDisabled(controle: { disabled: () => boolean }): void {
   const host = inject<ElementRef<HTMLAnchorElement>>(ElementRef).nativeElement;
   host.addEventListener(
     'click',
@@ -292,7 +292,7 @@ export class NdsPaginationPrevious {
   );
 
   constructor() {
-    barrarCliqueQuandoDesabilitado(this);
+    barrarClickQuandoDisabled(this);
   }
 }
 
@@ -332,7 +332,7 @@ export class NdsPaginationNext {
   );
 
   constructor() {
-    barrarCliqueQuandoDesabilitado(this);
+    barrarClickQuandoDisabled(this);
   }
 }
 

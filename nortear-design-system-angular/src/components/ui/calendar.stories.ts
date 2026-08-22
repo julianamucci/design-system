@@ -11,8 +11,8 @@ import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 // grade toda virada de mês, e a foto do Chromatic passa a divergir sozinha.
 // `parseDate` em vez de `new CalendarDate(...)` também mantém a data fora do
 // escopo de módulo executável que o auditor cobra.
-const DIA_ESCOLHIDO = parseDate('2026-04-12');
-const DIAS_ESCOLHIDOS = [parseDate('2026-04-08'), parseDate('2026-04-12'), parseDate('2026-04-16')];
+const DAY_ESCOLHIDO = parseDate('2026-04-12');
+const DAYS_ESCOLHIDOS = [parseDate('2026-04-08'), parseDate('2026-04-12'), parseDate('2026-04-16')];
 
 type CalendarArgs = {
   mode: CalendarMode;
@@ -128,7 +128,7 @@ export const Playground: Story = {
   render: (args) => ({
     props: {
       ...args,
-      valor: args.mode === 'multiple' ? DIAS_ESCOLHIDOS : DIA_ESCOLHIDO,
+      valor: args.mode === 'multiple' ? DAYS_ESCOLHIDOS : DAY_ESCOLHIDO,
     },
     template: `
       <div

@@ -146,13 +146,13 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
   ]},
 ];
 
-const ESTRUTURA_CODE = `<div ndsScrollArea size="lg" label="Lista de tags" class="nds-w-sm nds-rounded-md nds-border-default">
+const STRUCTURE_CODE = `<div ndsScrollArea size="lg" label="Lista de tags" class="nds-w-sm nds-rounded-md nds-border-default">
   <div class="nds-stack nds-p-4" data-spacing="sm">
     <!-- Conteúdo longo -->
   </div>
 </div>`;
 
-const CODE_VERTICAL = `<div ndsScrollArea size="md" label="Lista vertical de tags" class="nds-w-sm">
+const VERTICAL_CODE = `<div ndsScrollArea size="md" label="Lista vertical de tags" class="nds-w-sm">
   <div class="nds-stack nds-p-4" data-spacing="sm">
     @for (tag of tags; track tag) {
       <p class="nds-text-body nds-m-0">{{ tag }}</p>
@@ -160,7 +160,7 @@ const CODE_VERTICAL = `<div ndsScrollArea size="md" label="Lista vertical de tag
   </div>
 </div>`;
 
-const CODE_HORIZONTAL = `<div ndsScrollArea label="Fila horizontal de cards" class="nds-max-w-md">
+const HORIZONTAL_CODE = `<div ndsScrollArea label="Fila horizontal de cards" class="nds-max-w-md">
   <!-- .nds-row não quebra linha; .nds-shrink-0 impede o card de encolher -->
   <div class="nds-row nds-p-4 nds-whitespace-nowrap" data-spacing="md">
     @for (card of cards; track card) {
@@ -505,7 +505,7 @@ const CAMINHOS: Record<string, string> = {
 export class NdsScrollAreaDocs implements AfterViewInit, OnDestroy {
   protected readonly t = t;
   protected readonly tNav = tNav;
-  protected readonly estruturaCode = ESTRUTURA_CODE;
+  protected readonly estruturaCode = STRUCTURE_CODE;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilidadeCode = EXTENSIBILIDADE_CODE;
   protected readonly customizacaoCode = CUSTOMIZACAO_CODE;
@@ -636,8 +636,8 @@ export class NdsScrollAreaDocs implements AfterViewInit, OnDestroy {
       both: this.tplVarBoth(),
     };
     const codigos: Record<string, string> = {
-      vertical: CODE_VERTICAL,
-      horizontal: CODE_HORIZONTAL,
+      vertical: VERTICAL_CODE,
+      horizontal: HORIZONTAL_CODE,
       both: CODE_BOTH,
     };
     return namedFromDict(d, 'variants.items')

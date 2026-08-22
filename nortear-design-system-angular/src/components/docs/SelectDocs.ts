@@ -923,7 +923,7 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
     const sim = tNav('common.yes');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
-    const doConteudo = (nome: string, chave: string, tipo?: string) => ({
+    const ofContent = (nome: string, chave: string, tipo?: string) => ({
       name: nome,
       type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
       defaultValue: toPlainText(t(`props.table.${chave}.default`)),
@@ -947,17 +947,17 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
         title: 'NdsSelect',
         cols,
         items: [
-          doConteudo('value', 'value', 'model<T>'),
-          doConteudo('valueChange', 'onValueChange', 'output<T>'),
-          doConteudo('defaultValue', 'defaultValue'),
+          ofContent('value', 'value', 'model<T>'),
+          ofContent('valueChange', 'onValueChange', 'output<T>'),
+          ofContent('defaultValue', 'defaultValue'),
           local('open', 'model<boolean>', 'false', 'open'),
           local('openChange', 'output<boolean>', '—', 'openChange'),
           local('defaultOpen', 'boolean', 'false', 'defaultOpen'),
-          doConteudo('disabled', 'disabled'),
+          ofContent('disabled', 'disabled'),
           local('readOnly', 'boolean', 'false', 'readOnly'),
           local('required', 'boolean', 'false', 'required'),
           local('invalid', 'boolean', 'false', 'invalid'),
-          doConteudo('name', 'name'),
+          ofContent('name', 'name'),
           local('form', 'string', '—', 'form'),
           local('modal', 'boolean', 'true', 'modal'),
           local('itemToStringLabel', '(value: T) => string', '—', 'itemToStringLabel'),
@@ -968,8 +968,8 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
         title: 'NdsSelectTrigger',
         cols,
         items: [
-          doConteudo('size', 'size'),
-          doConteudo('disabled', 'disabled'),
+          ofContent('size', 'size'),
+          ofContent('disabled', 'disabled'),
           local('id', 'string', 'gerado', 'triggerId'),
           classe,
         ],
@@ -977,7 +977,7 @@ export class NdsSelectDocs implements AfterViewInit, OnDestroy {
       {
         title: 'NdsSelectValue',
         cols,
-        items: [doConteudo('placeholder', 'placeholder'), classe],
+        items: [ofContent('placeholder', 'placeholder'), classe],
       },
       {
         title: 'NdsSelectContent',

@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NDS_SHEET, type SheetSide } from './sheet';
 import { NdsButton } from './button';
-import { esperarPortal } from '@/lib/wait-for-portal';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { esperarEncostarNaBorda } from '@shared/testing/sheet-geometry';
 import { useTranslation } from '@/lib/i18n';
 import sheetTranslations from '@shared/content/sheet/translations.json';
@@ -87,7 +87,7 @@ export const Right: Story = {
   render: painel('right', 'rightLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado na borda direita', async () => {
-      const painelEl = await esperarPortal('dialog');
+      const painelEl = await waitForPortal('dialog');
       await expect(painelEl).toHaveAttribute('data-side', 'right');
       await expect(painelEl).toHaveClass(/nds-sheet-content/);
       await expect(painelEl).toHaveAccessibleName();
@@ -111,7 +111,7 @@ export const Left: Story = {
   render: painel('left', 'leftLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado na borda esquerda', async () => {
-      const painelEl = await esperarPortal('dialog');
+      const painelEl = await waitForPortal('dialog');
       await expect(painelEl).toHaveAttribute('data-side', 'left');
       await expect(painelEl).toHaveClass(/nds-sheet-content/);
       await expect(painelEl).toHaveAccessibleName();
@@ -134,7 +134,7 @@ export const Top: Story = {
   render: painel('top', 'topLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado no topo', async () => {
-      const painelEl = await esperarPortal('dialog');
+      const painelEl = await waitForPortal('dialog');
       await expect(painelEl).toHaveAttribute('data-side', 'top');
       await expect(painelEl).toHaveClass(/nds-sheet-content/);
       await expect(painelEl).toHaveAccessibleName();
@@ -158,7 +158,7 @@ export const Bottom: Story = {
   render: painel('bottom', 'bottomLabel'),
   play: async ({ step }) => {
     await step('O painel abre encostado na base', async () => {
-      const painelEl = await esperarPortal('dialog');
+      const painelEl = await waitForPortal('dialog');
       await expect(painelEl).toHaveAttribute('data-side', 'bottom');
       await expect(painelEl).toHaveClass(/nds-sheet-content/);
       await expect(painelEl).toHaveAccessibleName();

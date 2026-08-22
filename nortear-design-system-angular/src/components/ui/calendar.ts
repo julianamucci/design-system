@@ -98,7 +98,7 @@ export type CalendarDateMatcher = (date: DateValue) => boolean;
  * mudar de forma na troca de idioma, e a coluna do fim de semana deixaria de
  * ser sempre a primeira e a última.
  */
-const SEMANA_COMECA_EM = 0;
+const WEEK_STARTS_ON = 0;
 
 /** Anos oferecidos para cada lado do ano em vista, no seletor da legenda. */
 const ANOS_PARA_CADA_LADO = 100;
@@ -431,7 +431,7 @@ export class NdsCalendar implements OnInit {
    */
   readonly initialFocus = input(false, { transform: booleanAttribute });
 
-  protected readonly semanaComecaEm = SEMANA_COMECA_EM;
+  protected readonly semanaComecaEm = WEEK_STARTS_ON;
 
   private readonly elemento = inject<ElementRef<HTMLElement>>(ElementRef);
 
@@ -461,7 +461,7 @@ export class NdsCalendar implements OnInit {
   protected readonly meses = computed<Month<DateValue>[]>(() =>
     createMonths({
       dateObj: this.vista(),
-      weekStartsOn: SEMANA_COMECA_EM,
+      weekStartsOn: WEEK_STARTS_ON,
       locale: this.locale(),
       fixedWeeks: false,
       numberOfMonths: this.numberOfMonths(),
@@ -543,7 +543,7 @@ export class NdsCalendar implements OnInit {
    * default (armadilha 9), e o mês pedido seria ignorado em silêncio.
    */
   ngOnInit(): void {
-    const inicial = this.defaultMonth() ?? primeiraData(this.value());
+    const inicial = this.defaultMonth() ?? firstData(this.value());
     if (inicial) this.vista.set(inicial);
   }
 
@@ -619,7 +619,7 @@ export class NdsCalendar implements OnInit {
 }
 
 /** A data que ancora o mês exibido, seja qual for o modo. */
-function primeiraData(valor: CalendarValue): DateValue | undefined {
+function firstData(valor: CalendarValue): DateValue | undefined {
   if (!valor) return undefined;
   return Array.isArray(valor) ? valor[0] : valor;
 }

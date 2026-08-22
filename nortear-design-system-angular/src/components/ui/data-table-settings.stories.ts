@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NdsDataTable } from './data-table';
-import { COLUNAS_FATURAS, FATURAS_DT, ROTULOS_DT, type FaturaDT } from './data-table.fixtures';
+import { COLUMNS_INVOICES, INVOICES_DT, LABELS_DT, type InvoiceDT } from './data-table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -29,7 +29,7 @@ type Story = StoryObj;
 
 /** Doze faturas em páginas de cinco: três páginas, a última incompleta. */
 const TAMANHO_DE_PAGINA = 5;
-const TOTAL_DE_PAGINAS = Math.ceil(FATURAS_DT.length / TAMANHO_DE_PAGINA);
+const TOTAL_DE_PAGINAS = Math.ceil(INVOICES_DT.length / TAMANHO_DE_PAGINA);
 
 // ─── Paginação ────────────────────────────────────────────────────────────────
 
@@ -45,9 +45,9 @@ export const Paginated: Story = {
   },
   render: () => ({
     props: {
-      colunas: COLUNAS_FATURAS,
-      faturas: FATURAS_DT,
-      rotulos: ROTULOS_DT,
+      colunas: COLUMNS_INVOICES,
+      faturas: INVOICES_DT,
+      rotulos: LABELS_DT,
       tamanho: TAMANHO_DE_PAGINA,
     },
     template: `
@@ -113,7 +113,7 @@ export const Paginated: Story = {
       });
       // Doze faturas em páginas de cinco deixam duas na última — número
       // derivado da fixture, nunca escrito à mão.
-      await expect(linhas().length).toBe(FATURAS_DT.length % TAMANHO_DE_PAGINA);
+      await expect(linhas().length).toBe(INVOICES_DT.length % TAMANHO_DE_PAGINA);
       await expect(canvas.getByText(`Página ${TOTAL_DE_PAGINAS} de ${TOTAL_DE_PAGINAS}`))
         .toBeInTheDocument();
 
@@ -165,11 +165,11 @@ export const ExplicitRowLabel: Story = {
   },
   render: () => ({
     props: {
-      colunas: COLUNAS_FATURAS,
-      faturas: FATURAS_DT,
-      rotulos: ROTULOS_DT,
-      chaveDaFatura: (f: FaturaDT) => f.id,
-      rotuloDaFatura: (f: FaturaDT) => f.cliente,
+      colunas: COLUMNS_INVOICES,
+      faturas: INVOICES_DT,
+      rotulos: LABELS_DT,
+      chaveDaFatura: (f: InvoiceDT) => f.id,
+      rotuloDaFatura: (f: InvoiceDT) => f.cliente,
     },
     template: `
       <div
@@ -208,7 +208,7 @@ export const ExplicitRowLabel: Story = {
 
     await step('Nenhuma linha repete o nome de outra', async () => {
       const nomes = linhas().map((l) => caixaDaLinha(l).getAttribute('aria-label') ?? '');
-      await expect(nomes.length).toBe(FATURAS_DT.length);
+      await expect(nomes.length).toBe(INVOICES_DT.length);
       await expect(new Set(nomes).size).toBe(nomes.length);
     });
   },

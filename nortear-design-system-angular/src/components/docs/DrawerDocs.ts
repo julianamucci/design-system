@@ -56,7 +56,7 @@ import {
  * tabela de textos divergiria da primeira na revisão de conteúdo seguinte.
  * Registrado no relatório como lacuna do conteúdo compartilhado.
  */
-export const ROTULOS_DRAWER: TranslationOverrides = {
+export const LABELS_DRAWER: TranslationOverrides = {
   'pt-BR': {
     'demonstration.labels.confirm': 'Salvar alterações',
     'demonstration.labels.destroy': 'Excluir',
@@ -145,9 +145,9 @@ const AJUSTES_ANGULAR: TranslationOverrides = {
 };
 
 const OVERRIDES: TranslationOverrides = {
-  'pt-BR': { ...ROTULOS_DRAWER['pt-BR'], ...AJUSTES_ANGULAR['pt-BR'] },
-  en: { ...ROTULOS_DRAWER.en, ...AJUSTES_ANGULAR.en },
-  es: { ...ROTULOS_DRAWER.es, ...AJUSTES_ANGULAR.es },
+  'pt-BR': { ...LABELS_DRAWER['pt-BR'], ...AJUSTES_ANGULAR['pt-BR'] },
+  en: { ...LABELS_DRAWER.en, ...AJUSTES_ANGULAR.en },
+  es: { ...LABELS_DRAWER.es, ...AJUSTES_ANGULAR.es },
 };
 
 const { t: tNav } = useTranslation(uiTranslations as Record<string, unknown>);
@@ -1166,7 +1166,7 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
    */
   protected readonly testesAccessibility = computed(() => {
     const d = dict();
-    const NIVEL: Record<number, { level: string; how: string }> = {
+    const LEVEL: Record<number, { level: string; how: string }> = {
       1: { level: '—',     how: 'axe-core (addon-a11y)' },
       2: { level: '4.1.2', how: 'Storybook Test' },
       3: { level: '4.1.2', how: 'Storybook Test' },
@@ -1181,8 +1181,8 @@ export class NdsDrawerDocs implements AfterViewInit, OnDestroy {
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
       items: frases.map((frase, i) => ({
         criterion: toPlainText(frase),
-        level: NIVEL[i + 1]?.level ?? '—',
-        how: NIVEL[i + 1]?.how ?? 'Storybook Test',
+        level: LEVEL[i + 1]?.level ?? '—',
+        how: LEVEL[i + 1]?.how ?? 'Storybook Test',
       })),
     };
   });

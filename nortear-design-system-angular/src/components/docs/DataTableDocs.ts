@@ -21,7 +21,7 @@ import {
   type DataTableColumn,
   type DataTableLabels,
 } from '@/components/ui/data-table';
-import { FATURAS_DT, type FaturaDT } from '@/components/ui/data-table.fixtures';
+import { INVOICES_DT, type InvoiceDT } from '@/components/ui/data-table.fixtures';
 import uiTranslations from '@/i18n/ui.json';
 import dataTableTranslations from '@shared/content/data-table/translations.json';
 
@@ -257,7 +257,7 @@ const ANATOMY_CODE = `<div
   (selectionChange)="selecionadas.set($event)"
 ></div>`;
 
-const CODE_BUSCA = `<!-- Ligada por padrão. A busca casa em TODA coluna, inclusive nas escondidas
+const CODE_SEARCH = `<!-- Ligada por padrão. A busca casa em TODA coluna, inclusive nas escondidas
      pelo menu: esconder é decisão de leitura, não de escopo. -->
 <div
   ndsDataTable
@@ -266,7 +266,7 @@ const CODE_BUSCA = `<!-- Ligada por padrão. A busca casa em TODA coluna, inclus
   globalFilterPlaceholder="Buscar fatura, cliente, método..."
 ></div>`;
 
-const CODE_FILTROS = `<!-- Segunda linha no cabeçalho, com input ou select conforme o tipo
+const CODE_FILTERS = `<!-- Segunda linha no cabeçalho, com input ou select conforme o tipo
      declarado na coluna. Os filtros se somam entre si e à busca livre. -->
 <div
   ndsDataTable
@@ -275,7 +275,7 @@ const CODE_FILTROS = `<!-- Segunda linha no cabeçalho, com input ou select conf
   [enableColumnFilters]="true"
 ></div>`;
 
-const CODE_SELECAO = `<div
+const CODE_SELECTION = `<div
   ndsDataTable
   [columns]="colunas"
   [data]="faturas"
@@ -289,7 +289,7 @@ const CODE_VISIBILIDADE = `<!-- Ligado por padrão; desligue com [enableColumnVi
      Coluna com hideable: false não entra no menu. -->
 <div ndsDataTable [columns]="colunas" [data]="faturas"></div>`;
 
-const CODE_PAGINACAO = `<div
+const CODE_PAGINATION = `<div
   ndsDataTable
   [columns]="colunas"
   [data]="faturas"
@@ -297,7 +297,7 @@ const CODE_PAGINACAO = `<div
   [pageSizeOptions]="[5, 10, 20]"
 ></div>`;
 
-const CODE_EDICAO = `<!-- O componente NÃO guarda os dados: avisa a edição e quem consome
+const CODE_EDIT = `<!-- O componente NÃO guarda os dados: avisa a edição e quem consome
      atualiza o array. Enter confirma, Esc cancela. -->
 <div
   ndsDataTable
@@ -732,12 +732,12 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   // As mesmas faturas das stories: a regressão visual compara a mesma tabela na
   // docs page e na story, e um dado diferente aqui viraria diferença de pixel
   // sem causa. Cópia rasa porque a edição em célula reescreve a linha.
-  protected readonly faturas = signal<FaturaDT[]>(FATURAS_DT.map((f) => ({ ...f })));
-  protected readonly faturasCurtas = FATURAS_DT.slice(0, 4).map((f) => ({ ...f }));
-  protected readonly selecionadas = signal<readonly FaturaDT[]>([]);
+  protected readonly faturas = signal<InvoiceDT[]>(INVOICES_DT.map((f) => ({ ...f })));
+  protected readonly faturasCurtas = INVOICES_DT.slice(0, 4).map((f) => ({ ...f }));
+  protected readonly selecionadas = signal<readonly InvoiceDT[]>([]);
 
-  protected readonly chaveDaFatura = (fatura: FaturaDT): string => fatura.id;
-  protected readonly rotuloDaFatura = (fatura: FaturaDT): string => fatura.id;
+  protected readonly chaveDaFatura = (fatura: InvoiceDT): string => fatura.id;
+  protected readonly rotuloDaFatura = (fatura: InvoiceDT): string => fatura.id;
 
   /** Status do dado (em português) → texto na língua da página. */
   private readonly statusTraduzido = computed<Record<string, string>>(() => {
@@ -749,7 +749,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
     };
   });
 
-  protected readonly colunas = computed<DataTableColumn<FaturaDT>[]>(() => {
+  protected readonly colunas = computed<DataTableColumn<InvoiceDT>[]>(() => {
     dict();
     const status = this.statusTraduzido();
     const opcoes = Object.values(status);
@@ -794,7 +794,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   });
 
   /** Cliente e valor editáveis; o resto é leitura. */
-  protected readonly colunasEditaveis = computed<DataTableColumn<FaturaDT>[]>(() =>
+  protected readonly colunasEditaveis = computed<DataTableColumn<InvoiceDT>[]>(() =>
     this.colunas().map((coluna) =>
       coluna.id === 'cliente' || coluna.id === 'valor' ? { ...coluna, editable: true } : coluna,
     ),
@@ -870,16 +870,16 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: rotuloDeNav(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: rotuloDeNav(s.labelKey) })),
+      label: navLabel(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
     }));
   });
 
-  protected readonly anatomyItems = computed(() => itensNumerados(dict(), 'anatomy'));
+  protected readonly anatomyItems = computed(() => numberedItems(dict(), 'anatomy'));
 
   protected readonly guidelines = computed(() => {
     const d = dict();
-    return { title: t('usage.guidelines.title'), items: itensNumerados(d, 'usage.guidelines') };
+    return { title: t('usage.guidelines.title'), items: numberedItems(d, 'usage.guidelines') };
   });
 
   protected readonly scenarios = computed(() => {
@@ -918,12 +918,12 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     const d = dict();
-    return { title: t('usage.do.title'), items: itensNumerados(d, 'usage.do') };
+    return { title: t('usage.do.title'), items: numberedItems(d, 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     const d = dict();
-    return { title: t('usage.dont.title'), items: itensNumerados(d, 'usage.dont') };
+    return { title: t('usage.dont.title'), items: numberedItems(d, 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -956,18 +956,18 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
     // Só os recursos que existem nesta stack ganham card: um card com preview de
     // recurso ausente seria documentação de algo que não compila.
     return [
-      { key: 'globalFilter',  code: CODE_BUSCA,        tpl: this.tplVarBusca()        },
-      { key: 'columnFilters', code: CODE_FILTROS,      tpl: this.tplVarFiltros()      },
-      { key: 'selection',     code: CODE_SELECAO,      tpl: this.tplVarSelecao()      },
+      { key: 'globalFilter',  code: CODE_SEARCH,        tpl: this.tplVarBusca()        },
+      { key: 'columnFilters', code: CODE_FILTERS,      tpl: this.tplVarFiltros()      },
+      { key: 'selection',     code: CODE_SELECTION,      tpl: this.tplVarSelecao()      },
       { key: 'visibility',    code: CODE_VISIBILIDADE, tpl: this.tplVarVisibilidade() },
-      { key: 'pagination',    code: CODE_PAGINACAO,    tpl: this.tplVarPaginacao()    },
-      { key: 'editableSheet', code: CODE_EDICAO,       tpl: this.tplVarPlanilha()     },
+      { key: 'pagination',    code: CODE_PAGINATION,    tpl: this.tplVarPaginacao()    },
+      { key: 'editableSheet', code: CODE_EDIT,       tpl: this.tplVarPlanilha()     },
     ].map(({ key, code, tpl }) => ({
       // `.name` existe no conteúdo só para `editableSheet`; para os cinco
       // primeiros vem do override. Lido sempre pelo mesmo caminho, o card nunca
       // cai no caso em que o título repete a descrição inteira.
       name: t(`variants.items.${key}.name`),
-      description: valorOuCampo(`variants.items.${key}`, 'description'),
+      description: valueOuField(`variants.items.${key}`, 'description'),
       code,
       trackId: key,
       preview: tpl,
@@ -979,7 +979,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
     return [{ key: 'selectionWithActions', code: CODE_LOTE, tpl: this.tplCompLote() }].map(
       ({ key, code, tpl }) => ({
         name: t(`variants.compositions.${key}.name`),
-        description: comQuandoUsar(
+        description: withQuandoUsar(
           t(`variants.compositions.${key}.description`),
           t(`variants.compositions.${key}.use`),
         ),
@@ -1108,7 +1108,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
     }));
   });
 
-  protected readonly a11yItems = computed(() => itensNumerados(dict(), 'accessibility'));
+  protected readonly a11yItems = computed(() => numberedItems(dict(), 'accessibility'));
 
   protected readonly keyboardItems = computed(() => {
     dict();
@@ -1145,7 +1145,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
   });
 
   protected readonly noteItems = computed(() =>
-    itensNumerados(dict(), 'notes', 'tip').map((content) => ({ title: '', content })),
+    numberedItems(dict(), 'notes', 'tip').map((content) => ({ title: '', content })),
   );
 
   protected readonly analyticsCols = computed(() => {
@@ -1206,7 +1206,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
           level: r.level,
           how: toPlainText(r.how),
         }))
-      : itensNumerados(d, 'testes.accessibility').map((texto) => ({
+      : numberedItems(d, 'testes.accessibility').map((texto) => ({
           criterion: toPlainText(texto),
           level: '',
           how: '',
@@ -1275,7 +1275,7 @@ export class NdsDataTableDocs implements AfterViewInit, OnDestroy {
 // ─── Helpers de cauda ─────────────────────────────────────────────────────────
 
 /** Rótulo de navegação, com queda para o ui.json quando o slug não o declara. */
-function rotuloDeNav(chave: string): string {
+function navLabel(chave: string): string {
   const doComponente = t(chave);
   return doComponente === chave ? tNav(chave) : doComponente;
 }
@@ -1286,12 +1286,12 @@ function rotuloDeNav(chave: string): string {
  * `t()` devolve a PRÓPRIA CHAVE quando ela aponta para um objeto — e é assim
  * que "variants.items.editableSheet" acaba escrito na tela, sem erro nenhum.
  */
-function valorOuCampo(base: string, campo: string): string {
+function valueOuField(base: string, campo: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
   const chave = `${base}.${campo}`;
-  const doCampo = t(chave);
-  return doCampo === chave ? '' : doCampo;
+  const ofField = t(chave);
+  return ofField === chave ? '' : ofField;
 }
 
 /**
@@ -1300,7 +1300,7 @@ function valorOuCampo(base: string, campo: string): string {
  * `NdsDocsCompositions` faria isto sozinho, mas não repassa `language` para o
  * `NdsDocsVariants` — e os snippets aqui são template Angular, não TS.
  */
-function comQuandoUsar(descricao: string, quandoUsar: string): string {
+function withQuandoUsar(descricao: string, quandoUsar: string): string {
   return `${descricao}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
 }
 
@@ -1310,7 +1310,7 @@ function comQuandoUsar(descricao: string, quandoUsar: string): string {
  * Contar à mão é o defeito que aparece na tela: com um item a menos, a chave
  * crua sai escrita no lugar do texto; com um a mais, o item some da página.
  */
-function itensNumerados(
+function numberedItems(
   d: Record<string, string>,
   base: string,
   prefixo = 'item',

@@ -91,7 +91,7 @@ const ROTULO_PADRAO = '{index} / {total}';
  * e longo o bastante para não cortar o `smooth` de `scrollTo()` no meio — que
  * dispararia uma segunda troca de slide para um destino intermediário.
  */
-const ESPERA_DE_ASSENTAMENTO_MS = 120;
+const ASSENTAMENTO_MS_WAIT = 120;
 
 // Movimento reduzido vem de `@/lib/motion`, que responde pelas duas vias que
 // este projeto reconhece: o toolbar "Motion" do Storybook escreve
@@ -101,7 +101,7 @@ const ESPERA_DE_ASSENTAMENTO_MS = 120;
 // involuntário que a WCAG 2.3.3 pede para desligar.
 
 /** Ordem de documento — a de registro depende da ordem de construção das views. */
-function ordenarPorDocumento(elementos: HTMLElement[]): HTMLElement[] {
+function documentOrdenar(elementos: HTMLElement[]): HTMLElement[] {
   return [...elementos].sort((a, b) =>
     a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1,
   );
@@ -142,7 +142,7 @@ export class NdsCarouselStore {
   }
 
   registrarSlide(el: HTMLElement): void {
-    this._slides.update((lista) => ordenarPorDocumento([...lista, el]));
+    this._slides.update((lista) => documentOrdenar([...lista, el]));
   }
 
   removerSlide(el: HTMLElement): void {
@@ -272,7 +272,7 @@ export class NdsCarouselStore {
       if (destino === null || destino === this._index()) return;
       this._index.set(destino);
       this.aoNavegar?.(destino, 'swipe');
-    }, ESPERA_DE_ASSENTAMENTO_MS);
+    }, ASSENTAMENTO_MS_WAIT);
   }
 
   /** Encosta no ponto de parada mais próximo — o fecho do arraste por mouse. */

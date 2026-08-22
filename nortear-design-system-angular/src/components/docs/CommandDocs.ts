@@ -569,7 +569,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
 
   protected readonly anatomyItems = computed(() => {
     const d = dict();
-    return itensNumerados(d, 'anatomy');
+    return numberedItems(d, 'anatomy');
   });
 
   protected readonly guidelines = computed(() => {
@@ -578,7 +578,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       title: d['usage.guidelines.title'] ?? '',
       // `t` porque a guideline 6 é sobrescrita no call site; `dict` devolve o
       // texto cru do conteúdo compartilhado.
-      items: itensNumerados(d, 'usage.guidelines').map((_v, i) =>
+      items: numberedItems(d, 'usage.guidelines').map((_v, i) =>
         t(`usage.guidelines.item${i + 1}`),
       ),
     };
@@ -599,12 +599,12 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     const d = dict();
-    return { title: t('usage.do.title'), items: itensNumerados(d, 'usage.do') };
+    return { title: t('usage.do.title'), items: numberedItems(d, 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     const d = dict();
-    return { title: t('usage.dont.title'), items: itensNumerados(d, 'usage.dont') };
+    return { title: t('usage.dont.title'), items: numberedItems(d, 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -635,8 +635,8 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       // `combobox` e `palette` são string solta; `withGroups` é objeto com
       // `name`/`description`. Tentar a string primeiro e cair no objeto evita
       // a chave crua aparecendo escrita na tela.
-      name: valorOuCampo(`variants.items.${key}`, 'name') || nomeDoPadrao(key),
-      description: valorOuCampo(`variants.items.${key}`, 'description'),
+      name: valueOuField(`variants.items.${key}`, 'name') || defaultName(key),
+      description: valueOuField(`variants.items.${key}`, 'description'),
       trackId: key,
       preview: tpl,
     }));
@@ -896,7 +896,7 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
       // Aqui os itens são string solta, não a trinca criterion/level/how.
-      items: itensNumerados(d, 'testes.accessibility').map((texto) => ({
+      items: numberedItems(d, 'testes.accessibility').map((texto) => ({
         criterion: toPlainText(texto),
         level: '',
         how: '',
@@ -976,14 +976,14 @@ export class NdsCommandDocs implements AfterViewInit, OnDestroy {
 }
 
 /** Nome de exibição dos três padrões, que o conteúdo compartilhado não nomeia. */
-const NOMES_DE_PADRAO: Record<string, string> = {
+const DEFAULT_NAMES: Record<string, string> = {
   inline: 'Inline',
   combobox: 'Combobox',
   palette: 'Command Palette',
 };
 
-function nomeDoPadrao(key: string): string {
-  return NOMES_DE_PADRAO[key] ?? key;
+function defaultName(key: string): string {
+  return DEFAULT_NAMES[key] ?? key;
 }
 
 /**
@@ -992,16 +992,16 @@ function nomeDoPadrao(key: string): string {
  * `t()` devolve a própria chave quando ela aponta para um objeto — e é assim
  * que a chave crua acaba escrita na tela, sem erro nenhum.
  */
-function valorOuCampo(base: string, campo: string): string {
+function valueOuField(base: string, campo: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
   const chave = `${base}.${campo}`;
-  const doCampo = t(chave);
-  return doCampo === chave ? '' : doCampo;
+  const ofField = t(chave);
+  return ofField === chave ? '' : ofField;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
-function itensNumerados(d: Record<string, string>, base: string): string[] {
+function numberedItems(d: Record<string, string>, base: string): string[] {
   const itens: string[] = [];
   for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
   return itens;

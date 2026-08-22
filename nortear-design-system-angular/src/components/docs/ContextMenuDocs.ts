@@ -483,7 +483,7 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
 
   protected readonly guidelines = computed(() => {
     const d = dict();
-    return { title: d['usage.guidelines.title'] ?? '', items: itensNumerados(d, 'usage.guidelines') };
+    return { title: d['usage.guidelines.title'] ?? '', items: numberedItems(d, 'usage.guidelines') };
   });
 
   protected readonly scenarios = computed(() => {
@@ -501,12 +501,12 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     const d = dict();
-    return { title: t('usage.do.title'), items: itensNumerados(d, 'usage.do') };
+    return { title: t('usage.do.title'), items: numberedItems(d, 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     const d = dict();
-    return { title: t('usage.dont.title'), items: itensNumerados(d, 'usage.dont') };
+    return { title: t('usage.dont.title'), items: numberedItems(d, 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -537,8 +537,8 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
       // As chaves de `variants.items` não têm forma única: umas são string solta,
       // outras são objeto com `name`/`description`. Tentar a string primeiro e
       // cair no objeto evita a chave crua aparecendo escrita na tela.
-      name: valorOuCampo(`variants.items.${key}`, 'name') || key,
-      description: valorOuCampo(`variants.items.${key}`, 'description'),
+      name: valueOuField(`variants.items.${key}`, 'name') || key,
+      description: valueOuField(`variants.items.${key}`, 'description'),
       trackId: key,
       preview: tpl,
     }));
@@ -772,7 +772,7 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
       description: t('testes.accessibility.description'),
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
       // Aqui os itens são string solta, não a trinca criterion/level/how.
-      items: itensNumerados(d, 'testes.accessibility').map((texto) => ({
+      items: numberedItems(d, 'testes.accessibility').map((texto) => ({
         criterion: toPlainText(texto),
         level: '',
         how: '',
@@ -844,16 +844,16 @@ export class NdsContextMenuDocs implements AfterViewInit, OnDestroy {
  *  devolve a própria chave quando ela aponta para um objeto — e é assim
  * que a chave crua acaba escrita na tela, sem erro nenhum.
  */
-function valorOuCampo(base: string, campo: string): string {
+function valueOuField(base: string, campo: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
   const chave = `${base}.${campo}`;
-  const doCampo = t(chave);
-  return doCampo === chave ? '' : doCampo;
+  const ofField = t(chave);
+  return ofField === chave ? '' : ofField;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
-function itensNumerados(d: Record<string, string>, base: string): string[] {
+function numberedItems(d: Record<string, string>, base: string): string[] {
   const itens: string[] = [];
   for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
   return itens;

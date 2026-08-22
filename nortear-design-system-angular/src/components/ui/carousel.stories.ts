@@ -26,7 +26,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CarouselArgs> }
   // `flex: 0 0 100%` do slide não tem contra o que resolver e o carrossel
   // empilha em vez de recortar. A altura vem de uma classe de proporção, nunca
   // de `style`.
-  const classeConteudo = vertical ? ' class="nds-aspect-4-3"' : '';
+  const classNameContent = vertical ? ' class="nds-aspect-4-3"' : '';
 
   return `import { NDS_CAROUSEL } from '@/components/ui/carousel';
 
@@ -38,7 +38,7 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<CarouselArgs> }
       label="Galeria de exemplos"
       slideLabel="Slide {index} de {total}"${attrs ? `\n      ${attrs}` : ''}
     >
-      <div ndsCarouselContent${classeConteudo}>
+      <div ndsCarouselContent${classNameContent}>
         @for (slide of slides; track slide.id) {
           <div ndsCarouselItem>{{ slide.titulo }}</div>
         }

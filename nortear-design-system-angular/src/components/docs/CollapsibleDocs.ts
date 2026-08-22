@@ -862,14 +862,14 @@ export class NdsCollapsibleDocs implements AfterViewInit, OnDestroy {
         // O conteúdo compartilhado guarda os dois modos como frase única
         // ("Modo controlado: estado externo…"). O nome é o trecho antes dos dois
         // pontos — trilíngue de graça, sem literal em português aqui.
-        name: primeiroSegmento(t('variants.items.uncontrolled')),
+        name: firstSegment(t('variants.items.uncontrolled')),
         description: stripHtml(t('variants.items.uncontrolled')),
         code: VARIANT_CODE.uncontrolled,
         trackId: 'uncontrolled',
         preview: this.tplVarUncontrolled(),
       },
       {
-        name: primeiroSegmento(t('variants.items.controlled')),
+        name: firstSegment(t('variants.items.controlled')),
         description: stripHtml(t('variants.items.controlled')),
         code: VARIANT_CODE.controlled,
         trackId: 'controlled',
@@ -1190,7 +1190,7 @@ function priorityLabel(raw: string): string {
 }
 
 /** Trecho antes dos dois pontos — "Modo controlado: estado externo…" → "Modo controlado". */
-function primeiroSegmento(frase: string): string {
+function firstSegment(frase: string): string {
   const limpo = stripHtml(frase);
   const corte = limpo.indexOf(':');
   return corte > 0 ? limpo.slice(0, corte).trim() : limpo;

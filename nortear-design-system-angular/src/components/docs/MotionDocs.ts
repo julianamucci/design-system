@@ -49,12 +49,12 @@ import translations from '@shared/content/foundations/motion/translations.json';
 const { t } = useTranslation(translations as Record<string, unknown>);
 
 /** Um degrau da escada de durações. `token` alimenta o `data-duration` do CSS. */
-interface DegrauDeDuracao {
+interface DurationDegrau {
   token: string;
   rotulo: string;
 }
 
-const ESCADA: DegrauDeDuracao[] = [
+const ESCADA: DurationDegrau[] = [
   { token: 'instant', rotulo: 'instant — 0ms' },
   { token: 'fast', rotulo: 'fast — 120ms' },
   { token: 'base', rotulo: 'base — 200ms' },
@@ -69,7 +69,7 @@ interface ItemDaCascata {
   atraso: string;
 }
 
-const ITENS_DA_CASCATA: ItemDaCascata[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'].map(
+const CASCATA_ITEMS: ItemDaCascata[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'].map(
   (rotulo, i) => ({ rotulo, atraso: `${i * 60}ms` }),
 );
 
@@ -80,12 +80,12 @@ const ITENS_DA_CASCATA: ItemDaCascata[] = ['Item 1', 'Item 2', 'Item 3', 'Item 4
 const RIGIDEZ = 400;
 const AMORTECIMENTO = 40;
 /** Abaixo disto (px e px/s) o olho não vê diferença — o laço para. */
-const REPOUSO_POSICAO = 0.5;
-const REPOUSO_VELOCIDADE = 5;
+const REST_POSITION = 0.5;
+const REST_SPEED = 5;
 /** Teto do passo de integração: uma aba em segundo plano devolve dt gigante. */
-const PASSO_MAXIMO = 1 / 30;
+const STEP_MAXIMO = 1 / 30;
 
-const CODIGO_MOLA = `// zero dependência: integrador de mola em requestAnimationFrame.
+const CODE_MOLA = `// zero dependência: integrador de mola em requestAnimationFrame.
 // damping 40 = amortecimento crítico para stiffness 400 (2·raiz(400)) com
 // massa 1 — o elemento volta ao centro sem passar do ponto.
 const aceleracao = -400 * x - 40 * v;
@@ -269,8 +269,8 @@ export class NdsMotionDocs implements OnDestroy {
   protected readonly translations = translations as Record<string, unknown>;
   protected readonly t = t;
   protected readonly escada = ESCADA;
-  protected readonly itensDaCascata = ITENS_DA_CASCATA;
-  protected readonly codigoDaMola = CODIGO_MOLA;
+  protected readonly itensDaCascata = CASCATA_ITEMS;
+  protected readonly codigoDaMola = CODE_MOLA;
   protected readonly codigoDaCascata = CODIGO_CASCATA;
   protected readonly codigoDaPresenca = CODIGO_PRESENCE;
 
@@ -389,7 +389,7 @@ export class NdsMotionDocs implements OnDestroy {
    * Arrow function porque o `requestAnimationFrame` chama sem `this`.
    */
   private readonly passoDaMola = (agora: number): void => {
-    const dt = Math.min((agora - this.instanteAnterior) / 1000, PASSO_MAXIMO);
+    const dt = Math.min((agora - this.instanteAnterior) / 1000, STEP_MAXIMO);
     this.instanteAnterior = agora;
 
     const x = this.deslocamentoX();
@@ -397,22 +397,22 @@ export class NdsMotionDocs implements OnDestroy {
     // Massa 1: a aceleração é a própria força.
     this.velocidadeX += (-RIGIDEZ * x - AMORTECIMENTO * this.velocidadeX) * dt;
     this.velocidadeY += (-RIGIDEZ * y - AMORTECIMENTO * this.velocidadeY) * dt;
-    const proximoX = x + this.velocidadeX * dt;
-    const proximoY = y + this.velocidadeY * dt;
+    const nextX = x + this.velocidadeX * dt;
+    const nextY = y + this.velocidadeY * dt;
 
     const parado =
-      Math.abs(proximoX) < REPOUSO_POSICAO &&
-      Math.abs(proximoY) < REPOUSO_POSICAO &&
-      Math.abs(this.velocidadeX) < REPOUSO_VELOCIDADE &&
-      Math.abs(this.velocidadeY) < REPOUSO_VELOCIDADE;
+      Math.abs(nextX) < REST_POSITION &&
+      Math.abs(nextY) < REST_POSITION &&
+      Math.abs(this.velocidadeX) < REST_SPEED &&
+      Math.abs(this.velocidadeY) < REST_SPEED;
 
     if (parado) {
       this.repousar();
       return;
     }
 
-    this.deslocamentoX.set(proximoX);
-    this.deslocamentoY.set(proximoY);
+    this.deslocamentoX.set(nextX);
+    this.deslocamentoY.set(nextY);
     this.quadro = requestAnimationFrame(this.passoDaMola);
   };
 

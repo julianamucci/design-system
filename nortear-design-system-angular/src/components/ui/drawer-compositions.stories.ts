@@ -5,16 +5,16 @@ import { NDS_DRAWER } from './drawer';
 import { NdsButton } from './button';
 import { NdsInput } from './input';
 import { NdsLabel } from './label';
-import { esperarPortal } from '@/lib/wait-for-portal';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import { stripHtml } from '@/lib/strip-html';
 import drawerTranslations from '@shared/content/drawer/translations.json';
-import { ROTULOS_DRAWER } from '@/components/docs/DrawerDocs';
+import { LABELS_DRAWER } from '@/components/docs/DrawerDocs';
 
 // Os rótulos de ação vêm do mesmo lugar que a docs page usa — ver o comentário
-// sobre `ROTULOS_DRAWER` em DrawerDocs.ts. Duplicar a tabela aqui faria os dois
+// sobre `LABELS_DRAWER` em DrawerDocs.ts. Duplicar a tabela aqui faria os dois
 // textos divergirem na primeira revisão de conteúdo.
-const { t } = useTranslation(drawerTranslations as Record<string, unknown>, ROTULOS_DRAWER);
+const { t } = useTranslation(drawerTranslations as Record<string, unknown>, LABELS_DRAWER);
 
 // As duas composições que o conteúdo compartilhado documenta. Ambas nascem
 // ABERTAS: é o rodapé de ações que elas existem para mostrar, e ele só existe
@@ -96,7 +96,7 @@ export const WithForm: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await esperarPortal('dialog');
+    const painel = await waitForPortal('dialog');
     const dentro = within(painel);
 
     await step('O painel carrega nome, descrição e o campo do formulário', async () => {
@@ -159,7 +159,7 @@ export const WithConfirmation: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await esperarPortal('dialog');
+    const painel = await waitForPortal('dialog');
     const dentro = within(painel);
 
     await step('A consequência está escrita, não subentendida', async () => {

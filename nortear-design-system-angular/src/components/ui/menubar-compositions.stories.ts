@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
-import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 // Listas primeiro: toda contagem do play sai daqui, nunca de um número escrito
 // à mão que a próxima edição do markup deixa mentindo.
@@ -70,7 +70,7 @@ export const WithShortcuts: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const itens = within(menu).getAllByRole('menuitem');
 
     await step('Cada item leva o próprio atalho', async () => {
@@ -125,7 +125,7 @@ export const WithSubmenu: Story = {
   }),
   play: async ({ step }) => {
     const corpo = within(document.body);
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const subGatilho = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre outro menu', async () => {
@@ -190,7 +190,7 @@ export const WithCheckboxItems: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const caixas = canvas.getAllByRole('menuitemcheckbox');
 
@@ -247,7 +247,7 @@ export const WithRadioGroup: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const opcoes = within(menu).getAllByRole('menuitemradio');
 
     await step('O grupo publica escolha única, e só uma opção está marcada', async () => {

@@ -90,8 +90,8 @@ export interface ChartSeries {
 const VB_L = 640;
 const VB_A = 320;
 const MARGEM = { esq: 72, dir: 24, topo: 24, base: 44 };
-const ALT_TITULO = 26;
-const ALT_LEGENDA = 34;
+const ALT_TITLE = 26;
+const ALT_CAPTION = 34;
 const DIVISOES_Y = 4;
 const RAIO_SIMBOLO = 5;
 
@@ -111,19 +111,19 @@ const TRACOS: readonly string[] = ['0', '10 5', '2 4', '12 4 2 4', '6 3 2 3'];
 type FormaSimbolo = 'circulo' | 'quadrado' | 'triangulo' | 'losango' | 'cruz';
 const FORMAS: readonly FormaSimbolo[] = ['circulo', 'quadrado', 'triangulo', 'losango', 'cruz'];
 
-export interface GradeY { y: number; rotulo: string }
+export interface GridY { y: number; rotulo: string }
 export interface MarcaX { x: number; rotulo: string }
-export interface FormaDado {
+export interface FormaDatum {
   /** `d` de path ou geometria de rect, conforme o consumidor. */
   x: number; y: number; w: number; h: number;
   cor: string; trama: string; serie: number; titulo: string;
 }
-export interface TracadoLinha { d: string; cor: string; traco: string; serie: number }
+export interface TracadoLine { d: string; cor: string; traco: string; serie: number }
 export interface AreaPreenchida { d: string; cor: string; trama: string; serie: number }
 export interface SimboloPonto { d: string; cor: string; serie: number; titulo: string }
 export interface FatiaPizza { d: string; cor: string; trama: string; serie: number; titulo: string }
-export interface RotuloValor { x: number; y: number; texto: string }
-export interface ItemLegenda {
+export interface LabelValue { x: number; y: number; texto: string }
+export interface ItemCaption {
   x: number; y: number; cor: string; trama: string; traco: string;
   simbolo: string; texto: string;
 }
@@ -142,13 +142,13 @@ function escalaY(maximo: number): { topo: number; passo: number } {
 }
 
 /** Número curto o bastante para caber no eixo, sem depender de locale. */
-export function formatarValor(valor: number): string {
+export function formatarValue(valor: number): string {
   if (Number.isInteger(valor)) return String(valor);
   return String(Math.round(valor * 100) / 100);
 }
 
 /** Cor da série: a explícita, ou o token da posição (ciclo de 5). */
-function corDaSerie(indice: number, explicita?: string): string {
+function serieColor(indice: number, explicita?: string): string {
   return explicita ?? `hsl(var(--chart-${(indice % 5) + 1}))`;
 }
 
@@ -512,8 +512,8 @@ export class NdsChart {
     // No modo compacto não há eixo para rotular: a margem some e o traçado
     // ocupa a caixa inteira.
     if (this.compact()) return { x: 6, y: 6, w: VB_L - 12, h: this.vbA() - 12 };
-    const y = MARGEM.topo + (this.chartTitle() ? ALT_TITULO : 0);
-    const base = this.vbA() - MARGEM.base - (this.legendaVisivel() ? ALT_LEGENDA : 0);
+    const y = MARGEM.topo + (this.chartTitle() ? ALT_TITLE : 0);
+    const base = this.vbA() - MARGEM.base - (this.legendaVisivel() ? ALT_CAPTION : 0);
     return { x: MARGEM.esq, y, w: VB_L - MARGEM.esq - MARGEM.dir, h: Math.max(1, base - y) };
   });
 
@@ -525,13 +525,13 @@ export class NdsChart {
     return escalaY(maximo);
   });
 
-  protected readonly gradeY = computed<GradeY[]>(() => {
+  protected readonly gradeY = computed<GridY[]>(() => {
     if (!this.cartesiano() || this.compact()) return [];
     const { y, h } = this.plot();
     const { topo } = this.escala();
     return Array.from({ length: DIVISOES_Y + 1 }, (_, i) => {
       const fracao = i / DIVISOES_Y;
-      return { y: y + h - fracao * h, rotulo: formatarValor(topo * fracao) };
+      return { y: y + h - fracao * h, rotulo: formatarValue(topo * fracao) };
     });
   });
 
@@ -554,28 +554,28 @@ export class NdsChart {
     return y + h - (Math.max(0, valor) / topo) * h;
   }
 
-  protected readonly barras = computed<FormaDado[]>(() => {
+  protected readonly barras = computed<FormaDatum[]>(() => {
     if (this.type() !== 'bar') return [];
     const series = this.serieNorm();
     const banda = this.banda();
     const { x, y, h } = this.plot();
     const grupo = banda * 0.68;
     const largura = grupo / Math.max(1, series.length);
-    const saida: FormaDado[] = [];
+    const saida: FormaDatum[] = [];
     this.categorias().forEach((categoria, iCat) => {
       series.forEach((serie, iSerie) => {
         const valor = serie.data[iCat];
         if (valor === undefined) return;
-        const topoBarra = this.posY(valor);
+        const topoBar = this.posY(valor);
         saida.push({
           x: x + iCat * banda + (banda - grupo) / 2 + iSerie * largura,
-          y: topoBarra,
+          y: topoBar,
           w: largura,
-          h: Math.max(0, y + h - topoBarra),
-          cor: corDaSerie(iSerie, serie.color),
+          h: Math.max(0, y + h - topoBar),
+          cor: serieColor(iSerie, serie.color),
           trama: `${this.uid}-trama-${iSerie % TRAMAS.length}`,
           serie: iSerie,
-          titulo: `${serie.name}, ${categoria}: ${formatarValor(valor)}`,
+          titulo: `${serie.name}, ${categoria}: ${formatarValue(valor)}`,
         });
       });
     });
@@ -588,7 +588,7 @@ export class NdsChart {
     const { x } = this.plot();
     return this.serieNorm().map((serie, iSerie) => ({
       serie: iSerie,
-      cor: corDaSerie(iSerie, serie.color),
+      cor: serieColor(iSerie, serie.color),
       nome: serie.name,
       coords: this.categorias().flatMap((categoria, iCat) => {
         const valor = serie.data[iCat];
@@ -596,13 +596,13 @@ export class NdsChart {
         return [{
           cx: x + (iCat + 0.5) * banda,
           cy: this.posY(valor),
-          titulo: `${serie.name}, ${categoria}: ${formatarValor(valor)}`,
+          titulo: `${serie.name}, ${categoria}: ${formatarValue(valor)}`,
         }];
       }),
     }));
   });
 
-  protected readonly linhas = computed<TracadoLinha[]>(() =>
+  protected readonly linhas = computed<TracadoLine[]>(() =>
     this.pontos()
       .filter((s) => s.coords.length > 0)
       .map((s) => ({
@@ -662,15 +662,15 @@ export class NdsChart {
       angulo += fracao * Math.PI * 2;
       return {
         d: caminhoFatia(cx, cy, raio, raio * 0.55, de, angulo),
-        cor: corDaSerie(i, undefined),
+        cor: serieColor(i, undefined),
         trama: `${this.uid}-trama-${i % TRAMAS.length}`,
         serie: i,
-        titulo: `${ponto.label}: ${formatarValor(ponto.value)} (${this.percentual(ponto.value)})`,
+        titulo: `${ponto.label}: ${formatarValue(ponto.value)} (${this.percentual(ponto.value)})`,
       };
     });
   });
 
-  protected readonly rotulosValor = computed<RotuloValor[]>(() => {
+  protected readonly rotulosValor = computed<LabelValue[]>(() => {
     // Só na série única: com duas séries os números se sobrepõem e a tabela
     // já entrega o valor exato.
     const series = this.serieNorm();
@@ -680,7 +680,7 @@ export class NdsChart {
       return this.barras().map((barra, i) => ({
         x: barra.x + barra.w / 2,
         y: barra.y - 6,
-        texto: formatarValor(valores[i] ?? 0),
+        texto: formatarValue(valores[i] ?? 0),
       }));
     }
     const banda = this.banda();
@@ -691,24 +691,24 @@ export class NdsChart {
       return [{
         x: x + (i + 0.5) * banda,
         y: this.posY(valor) - RAIO_SIMBOLO - 6,
-        texto: formatarValor(valor),
+        texto: formatarValue(valor),
       }];
     });
   });
 
-  protected readonly legenda = computed<ItemLegenda[]>(() => {
+  protected readonly legenda = computed<ItemCaption[]>(() => {
     if (!this.legendaVisivel()) return [];
     const nomes = this.cartesiano()
-      ? this.serieNorm().map((s, i) => ({ texto: s.name, cor: corDaSerie(i, s.color), i }))
+      ? this.serieNorm().map((s, i) => ({ texto: s.name, cor: serieColor(i, s.color), i }))
       : this.fatiasDados().map((p, i) => ({
-        texto: `${p.label} — ${formatarValor(p.value)} (${this.percentual(p.value)})`,
-        cor: corDaSerie(i, undefined),
+        texto: `${p.label} — ${formatarValue(p.value)} (${this.percentual(p.value)})`,
+        cor: serieColor(i, undefined),
         i,
       }));
     if (nomes.length === 0) return [];
     const vaga = Math.min(220, VB_L / nomes.length);
     const inicio = (VB_L - vaga * nomes.length) / 2;
-    const y = this.vbA() - ALT_LEGENDA + 8;
+    const y = this.vbA() - ALT_CAPTION + 8;
     return nomes.map((n) => {
       const x = inicio + n.i * vaga;
       return {
@@ -729,7 +729,7 @@ export class NdsChart {
         cabecalho: [this.categoryLabel(), this.valueLabel(), this.shareLabel()],
         linhas: this.fatiasDados().map((p) => [
           p.label,
-          formatarValor(p.value),
+          formatarValue(p.value),
           this.percentual(p.value),
         ]),
       };
@@ -739,7 +739,7 @@ export class NdsChart {
       cabecalho: [this.categoryLabel(), ...series.map((s) => s.name)],
       linhas: this.categorias().map((categoria, iCat) => [
         categoria,
-        ...series.map((s) => (s.data[iCat] === undefined ? '—' : formatarValor(s.data[iCat]))),
+        ...series.map((s) => (s.data[iCat] === undefined ? '—' : formatarValue(s.data[iCat]))),
       ]),
     };
   });

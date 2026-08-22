@@ -11,7 +11,7 @@ import {
   NdsBreadcrumbPage,
   NdsBreadcrumbSeparator,
 } from './breadcrumb';
-import { navegacaoEspionada } from './breadcrumb.fixtures';
+import { navigationEspionada } from './breadcrumb.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 //
@@ -51,7 +51,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const { onNavigate, aoNavegar } = navegacaoEspionada();
+const { onNavigate, aoNavegar } = navigationEspionada();
 
 // ─── Simples ──────────────────────────────────────────────────────────────────
 

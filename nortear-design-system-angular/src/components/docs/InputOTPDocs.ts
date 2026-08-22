@@ -446,18 +446,18 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: rotuloDeNav(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: rotuloDeNav(s.labelKey) })),
+      label: navLabel(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
     }));
   });
 
-  protected readonly anatomyItems = computed(() => itensNumerados(dict(), 'anatomy'));
+  protected readonly anatomyItems = computed(() => numberedItems(dict(), 'anatomy'));
 
   protected readonly guidelines = computed(() => {
     const d = dict();
     return {
       title: t('usage.guidelines.title'),
-      items: itensNumerados(d, 'usage.guidelines'),
+      items: numberedItems(d, 'usage.guidelines'),
     };
   });
 
@@ -484,7 +484,7 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
         do: t('usage.uxWriting.table.correct'),
         dont: t('usage.uxWriting.table.avoid'),
       },
-      items: chavesCom(d, 'usage.uxWriting.table', 'name').map((k) => ({
+      items: keysWith(d, 'usage.uxWriting.table', 'name').map((k) => ({
         element: t(`usage.uxWriting.table.${k}.name`),
         rules: toPlainText(t(`usage.uxWriting.table.${k}.format`)),
         do: toPlainText(t(`usage.uxWriting.table.${k}.good`)),
@@ -495,12 +495,12 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     const d = dict();
-    return { title: t('usage.do.title'), items: itensNumerados(d, 'usage.do') };
+    return { title: t('usage.do.title'), items: numberedItems(d, 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     const d = dict();
-    return { title: t('usage.dont.title'), items: itensNumerados(d, 'usage.dont') };
+    return { title: t('usage.dont.title'), items: numberedItems(d, 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -529,7 +529,7 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
     };
     // A ordem e o conjunto vêm do dicionário: variante nova no conteúdo
     // compartilhado aparece aqui sem editar a página.
-    return chavesFolha(d, 'variants.items')
+    return keysSheet(d, 'variants.items')
       .filter((k) => previews[k])
       .map((k) => ({
         name: t(`variants.items.${k}`),
@@ -547,7 +547,7 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
       withErrorMessage: this.tplCompErro(),
       withResendButton: this.tplCompReenvio(),
     };
-    return chavesCom(d, 'variants.compositions', 'name')
+    return keysWith(d, 'variants.compositions', 'name')
       .filter((k) => previews[k])
       .map((k) => ({
         name: t(`variants.compositions.${k}.name`),
@@ -569,7 +569,7 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
 
   protected readonly stateItems = computed(() => {
     const d = dict();
-    return chavesCom(d, 'states', 'label').map((k) => ({
+    return keysWith(d, 'states', 'label').map((k) => ({
       label: t(`states.${k}.label`),
       trigger: toPlainText(t(`states.${k}.trigger`)),
       behavior: toPlainText(t(`states.${k}.behavior`)),
@@ -616,7 +616,7 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
     }));
   });
 
-  protected readonly a11yItems = computed(() => itensNumerados(dict(), 'accessibility.items'));
+  protected readonly a11yItems = computed(() => numberedItems(dict(), 'accessibility.items'));
 
   protected readonly keyboardItems = computed(() => {
     dict();
@@ -642,7 +642,7 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
       label:  '?path=/docs/ui-label--docs',
       button: '?path=/docs/ui-button--docs',
     };
-    return chavesCom(d, 'related.items', 'name')
+    return keysWith(d, 'related.items', 'name')
       .filter((k) => caminhos[k])
       .map((k) => ({
         name: t(`related.items.${k}.name`),
@@ -652,7 +652,7 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
   });
 
   protected readonly noteItems = computed(() =>
-    itensNumerados(dict(), 'notes').map((content) => ({ title: '', content })),
+    numberedItems(dict(), 'notes').map((content) => ({ title: '', content })),
   );
 
   protected readonly analyticsCols = computed(() => {
@@ -703,7 +703,7 @@ export class NdsInputOTPDocs implements AfterViewInit, OnDestroy {
       cols: { criterion: tNav('common.criterion'), level: 'WCAG', how: tNav('common.howToVerify') },
       // Aqui os itens são string solta (sem criterion/level/how): o critério é
       // o texto, e o nível vem dentro dele quando existe.
-      items: itensNumerados(d, 'testes.accessibility').map((texto) => ({
+      items: numberedItems(d, 'testes.accessibility').map((texto) => ({
         criterion: toPlainText(texto),
         level: 'AA',
         how: 'axe + play',
@@ -784,7 +784,7 @@ const priorityKeyMap: Record<string, string> = {
  * quando ela não existe, então sem esta ponte o menu de quem não traz o bloco
  * mostrava "nav.overview" escrito na tela, sem erro nenhum.
  */
-function rotuloDeNav(chave: string): string {
+function navLabel(chave: string): string {
   const doComponente = t(chave);
   return doComponente === chave ? tNav(chave) : doComponente;
 }
@@ -794,14 +794,14 @@ function priorityLabel(raw: string): string {
 }
 
 /** `base.item1`, `base.item2`, … até faltar. */
-function itensNumerados(d: Record<string, string>, base: string): string[] {
+function numberedItems(d: Record<string, string>, base: string): string[] {
   const out: string[] = [];
   for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) out.push(d[`${base}.item${i}`]);
   return out;
 }
 
 /** Sub-chaves de `base` que têm o campo `campo` — descarta cabeçalhos da seção. */
-function chavesCom(d: Record<string, string>, base: string, campo: string): string[] {
+function keysWith(d: Record<string, string>, base: string, campo: string): string[] {
   const prefixo = `${base}.`;
   const out: string[] = [];
   for (const chave of Object.keys(d)) {
@@ -815,7 +815,7 @@ function chavesCom(d: Record<string, string>, base: string, campo: string): stri
 }
 
 /** Sub-chaves de `base` que são folha (string direta, sem campos dentro). */
-function chavesFolha(d: Record<string, string>, base: string): string[] {
+function keysSheet(d: Record<string, string>, base: string): string[] {
   const prefixo = `${base}.`;
   const out: string[] = [];
   for (const chave of Object.keys(d)) {

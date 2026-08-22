@@ -125,7 +125,7 @@ const IMPORT_BASICO = `import {
   NdsAlert, NdsAlertTitle, NdsAlertDescription,
 } from '@/components/ui/alert';`;
 
-const IMPORT_COM_ICONE = `import {
+const IMPORT_WITH_ICON = `import {
   NdsAlert, NdsAlertTitle, NdsAlertDescription, NdsAlertIcon,
 } from '@/components/ui/alert';`;
 
@@ -177,14 +177,14 @@ const CODE_DISMISSIBLE = `<div ndsAlert dismissible (dismiss)="aoFechar()">
   </section>
 </div>`;
 
-const CODE_SEM_TITULO = `<div ndsAlert>
+const CODE_NO_TITLE = `<div ndsAlert>
   <svg ndsAlertIcon kind="info"></svg>
   <section ndsAlertDescription>
     Suas alterações serão aplicadas na próxima sessão.
   </section>
 </div>`;
 
-const CODE_COM_ICONE = `<div ndsAlert>
+const CODE_WITH_ICON = `<div ndsAlert>
   <svg ndsAlertIcon kind="info"></svg>
   <h5 ndsAlertTitle>Informação</h5>
   <section ndsAlertDescription>
@@ -192,7 +192,7 @@ const CODE_COM_ICONE = `<div ndsAlert>
   </section>
 </div>`;
 
-const CODE_COM_ACAO = `<div ndsAlert>
+const CODE_WITH_ACTION = `<div ndsAlert>
   <svg ndsAlertIcon kind="info"></svg>
   <h5 ndsAlertTitle>Sessão expira em 5 minutos</h5>
   <section ndsAlertDescription>
@@ -513,7 +513,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   protected readonly tNav = tNav;
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly importBasico = IMPORT_BASICO;
-  protected readonly importComIcone = IMPORT_COM_ICONE;
+  protected readonly importComIcone = IMPORT_WITH_ICON;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
 
@@ -640,7 +640,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
       ...base,
       {
         name: t('variants.items.dismissible.name'),
-        description: comQuandoUsar(
+        description: withQuandoUsar(
           t('variants.items.dismissible.description'),
           t('variants.items.dismissible.use'),
         ),
@@ -651,7 +651,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
       {
         name: t('states.withoutTitle.label'),
         description: stripHtml(t('states.withoutTitle.behavior')),
-        code: CODE_SEM_TITULO,
+        code: CODE_NO_TITLE,
         trackId: 'without-title',
         preview: this.tplVarSemTitulo(),
       },
@@ -661,11 +661,11 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
   protected readonly compositionItems = computed(() => {
     dict();
     return [
-      { key: 'withIcon',   code: CODE_COM_ICONE, tpl: this.tplCompIcone() },
-      { key: 'withAction', code: CODE_COM_ACAO,  tpl: this.tplCompAcao()  },
+      { key: 'withIcon',   code: CODE_WITH_ICON, tpl: this.tplCompIcone() },
+      { key: 'withAction', code: CODE_WITH_ACTION,  tpl: this.tplCompAcao()  },
     ].map(({ key, code, tpl }) => ({
       name: t(`variants.compositions.${key}.name`),
-      description: comQuandoUsar(
+      description: withQuandoUsar(
         t(`variants.compositions.${key}.description`),
         t(`variants.compositions.${key}.use`),
       ),
@@ -924,7 +924,7 @@ export class NdsAlertDocs implements AfterViewInit, OnDestroy {
  * O `NdsDocsCompositions` faria isto sozinho, mas ele não repassa `language`
  * para o `NdsDocsVariants` — e os snippets aqui são template Angular, não TS.
  */
-function comQuandoUsar(descricao: string, quandoUsar: string): string {
+function withQuandoUsar(descricao: string, quandoUsar: string): string {
   return `${descricao}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
 }
 

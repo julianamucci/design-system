@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, userEvent } from 'storybook/test';
 import { NDS_DROPDOWN_MENU } from './dropdown-menu';
 import { NdsButton } from './button';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { formaDoIndicador, ehTraco, ehTique } from '@shared/testing/menu-checkbox-indicator';
 
 const meta: Meta = {
@@ -77,7 +77,7 @@ export const Open: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const itens = within(menu).getAllByRole('menuitem');
 
     await step('Só o item destacado está no percurso do Tab', async () => {
@@ -154,13 +154,13 @@ export const Controlled: Story = {
       if (gatilho.getAttribute('aria-expanded') !== 'true') {
         await userEvent.click(canvas.getByRole('button', { name: 'Abrir pelo estado' }));
       }
-      await esperarPortal('menu');
+      await waitForPortal('menu');
       await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
     });
 
     await step('Escape fecha e o estado de fora acompanha', async () => {
       await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('menu');
+      await waitForPortalVanish('menu');
       // O rótulo do botão externo é lido do mesmo estado: se o `openChange` não
       // tivesse voltado, ele continuaria dizendo "Fechar pelo estado".
       await expect(canvas.getByRole('button', { name: 'Abrir pelo estado' })).toBeTruthy();
@@ -185,7 +185,7 @@ export const ItemDisabled: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const desabilitado = within(menu).getByRole('menuitem', { name: 'Arquivar' });
 
     await step('O item se anuncia desabilitado', async () => {
@@ -231,7 +231,7 @@ export const CheckboxIndeterminate: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const misto = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
     const marcado = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });

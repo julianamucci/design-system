@@ -14,7 +14,7 @@ import {
 } from './table';
 import { NdsBadge } from './badge';
 import { NdsButton, NdsButtonIcon } from './button';
-import { FATURAS, TOTAL, VARIANTE_POR_STATUS } from './table.fixtures';
+import { FATURAS, TOTAL, STATUS_VARIANT } from './table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -292,7 +292,7 @@ export const WithRowActions: Story = {
     },
   },
   render: () => ({
-    props: { faturas: FATURAS, varianteDe: VARIANTE_POR_STATUS },
+    props: { faturas: FATURAS, varianteDe: STATUS_VARIANT },
     template: `
       <div ndsTableWrapper>
         <table ndsTable>

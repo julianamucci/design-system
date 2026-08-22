@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { NdsDataTable } from './data-table';
-import { COLUNAS_FATURAS, FATURAS_DT, ROTULOS_DT } from './data-table.fixtures';
+import { COLUMNS_INVOICES, INVOICES_DT, LABELS_DT } from './data-table.fixtures';
 
 // ─── Meta ─────────────────────────────────────────────────────────────────────
 
@@ -27,7 +27,7 @@ const meta: Meta = {
 export default meta;
 type Story = StoryObj;
 
-const SEM_FATURAS: typeof FATURAS_DT = [];
+const NO_INVOICES: typeof INVOICES_DT = [];
 
 // ─── Vazio ────────────────────────────────────────────────────────────────────
 
@@ -42,7 +42,7 @@ export const NoResults: Story = {
     },
   },
   render: () => ({
-    props: { colunas: COLUNAS_FATURAS, faturas: SEM_FATURAS, rotulos: ROTULOS_DT },
+    props: { colunas: COLUMNS_INVOICES, faturas: NO_INVOICES, rotulos: LABELS_DT },
     template: `
       <div
         ndsDataTable
@@ -63,7 +63,7 @@ export const NoResults: Story = {
       // as outras cinco ficariam vazias, como se faltassem dados.
       const celula = canvasElement.querySelector<HTMLTableCellElement>('.nds-data-table-empty')!;
       // Seis: as cinco colunas mais a de seleção. Derivado, nunca escrito à mão.
-      await expect(celula).toHaveAttribute('colspan', String(COLUNAS_FATURAS.length + 1));
+      await expect(celula).toHaveAttribute('colspan', String(COLUMNS_INVOICES.length + 1));
       await expect(celula).toHaveTextContent('Nenhuma fatura encontrada.');
       await expect(canvasElement.querySelectorAll('tbody tr').length).toBe(1);
     });
@@ -74,7 +74,7 @@ export const NoResults: Story = {
       // esvaziou o resultado com um filtro precisa do campo para desfazer.
       await expect(canvas.getByRole('table', { name: /faturas recentes/i })).toBeTruthy();
       await expect(canvasElement.querySelectorAll('thead tr:first-child th').length).toBe(
-        COLUNAS_FATURAS.length + 1,
+        COLUMNS_INVOICES.length + 1,
       );
       await expect(canvas.getByRole('searchbox')).toBeTruthy();
     });
@@ -100,7 +100,7 @@ export const Sorted: Story = {
     },
   },
   render: () => ({
-    props: { colunas: COLUNAS_FATURAS, faturas: FATURAS_DT, rotulos: ROTULOS_DT },
+    props: { colunas: COLUMNS_INVOICES, faturas: INVOICES_DT, rotulos: LABELS_DT },
     template: `
       <div
         ndsDataTable
@@ -156,7 +156,7 @@ export const SelectedRows: Story = {
     },
   },
   render: () => ({
-    props: { colunas: COLUNAS_FATURAS, faturas: FATURAS_DT, rotulos: ROTULOS_DT },
+    props: { colunas: COLUMNS_INVOICES, faturas: INVOICES_DT, rotulos: LABELS_DT },
     template: `
       <div
         ndsDataTable

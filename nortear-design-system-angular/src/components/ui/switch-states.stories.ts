@@ -95,10 +95,10 @@ export const OnAndOff: Story = {
     });
 
     await step('O trilho ligado tem pelo menos 3:1 contra o ambiente e contra o desligado', async () => {
-      const corLigado = getComputedStyle(ligado).backgroundColor;
-      const corDesligado = getComputedStyle(desligado).backgroundColor;
-      await expect(contraste(corLigado, fundoDoAmbiente(ligado))).toBeGreaterThanOrEqual(3);
-      await expect(contraste(corLigado, corDesligado)).toBeGreaterThanOrEqual(3);
+      const colorLigado = getComputedStyle(ligado).backgroundColor;
+      const colorDesligado = getComputedStyle(desligado).backgroundColor;
+      await expect(contraste(colorLigado, fundoDoAmbiente(ligado))).toBeGreaterThanOrEqual(3);
+      await expect(contraste(colorLigado, colorDesligado)).toBeGreaterThanOrEqual(3);
     });
   },
 };

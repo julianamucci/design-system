@@ -145,8 +145,8 @@ export const Playground: Story = {
       // tamanho REAL do painel anterior — anunciar o valor declarado seria
       // mentir assim que qualquer limite entrasse em ação.
       await expect(paineis).toHaveLength(2);
-      const doPainel = Number(paineis[0].style.getPropertyValue('--panel-size'));
-      await expect(Number(punho.getAttribute('aria-valuenow'))).toBe(Math.round(doPainel));
+      const ofPanel = Number(paineis[0].style.getPropertyValue('--panel-size'));
+      await expect(Number(punho.getAttribute('aria-valuenow'))).toBe(Math.round(ofPanel));
     });
 
     await step('O tamanho declarado chega ao painel pela custom property', async () => {

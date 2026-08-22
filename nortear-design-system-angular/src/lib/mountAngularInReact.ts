@@ -35,12 +35,12 @@ const h = React.createElement;
  *
  * @example
  * // AccessibilityDocs.mdx
- * export const AccessibilityDocsPage = montarAngularEmReact(NdsAccessibilityDocs);
+ * export const AccessibilityDocsPage = mountAngularInReact(NdsAccessibilityDocs);
  *
  * <AccessibilityDocsPage />
  */
-export function montarAngularEmReact(Componente: Type<unknown>) {
-  return function PaginaAngular() {
+export function mountAngularInReact(Componente: Type<unknown>) {
+  return function PageAngular() {
     const hostRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {

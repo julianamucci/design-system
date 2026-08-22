@@ -8,7 +8,7 @@ import translations from '@shared/content/foundations/comece-por-aqui/translatio
  * A seção de instalação é um roteiro numerado: as chaves soltas (`cloneTitle`,
  * `cloneCode`, `installTitle`, `installNote`, `installCode`) são renderizadas na
  * ordem em que aparecem no JSON, porque aqui a ordem É o conteúdo. As chaves
- * `*Code` passam antes por `resolverVariantesDeCodigo` no renderer, então um
+ * `*Code` passam antes por `codeResolveVariants` no renderer, então um
  * snippet que ganhe variante por stack continua chegando como bloco de código —
  * e não como uma lista com "react"/"vue"/"angular" de itens.
  */

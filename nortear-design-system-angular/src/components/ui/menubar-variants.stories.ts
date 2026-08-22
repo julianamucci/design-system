@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR } from './menubar';
-import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 // Itens de cada ficha em lista: as asserções contam a partir daqui, nunca de um
 // número escrito à mão no play.
@@ -60,7 +60,7 @@ export const Default: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const itens = within(menu).getAllByRole('menuitem');
 
     await step('A variante default é escrita no markup', async () => {
@@ -115,7 +115,7 @@ export const Destructive: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const neutro = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[0] });
     const perigoso = canvas.getByRole('menuitem', { name: ITENS_COM_PERIGO[1] });

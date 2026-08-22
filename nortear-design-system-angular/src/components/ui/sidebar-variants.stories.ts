@@ -76,8 +76,8 @@ export const Variants: Story = {
       await expect(parseFloat(getComputedStyle(interno).borderTopLeftRadius)).toBeGreaterThan(0);
 
       const simples = canvasElement.querySelector<HTMLElement>('[data-testid="var-sidebar"]')!;
-      const internoSimples = simples.querySelector<HTMLElement>('.nds-sidebar-inner')!;
-      await expect(parseFloat(getComputedStyle(internoSimples).borderTopLeftRadius)).toBe(0);
+      const simpleInterno = simples.querySelector<HTMLElement>('.nds-sidebar-inner')!;
+      await expect(parseFloat(getComputedStyle(simpleInterno).borderTopLeftRadius)).toBe(0);
     });
   },
 };
@@ -122,11 +122,11 @@ export const Collapse: Story = {
     await step('No modo icon o painel estreita para a largura de ícone', async () => {
       const icone = canvasElement.querySelector<HTMLElement>('[data-testid="col-icon"]')!;
       const painel = icone.querySelector<HTMLElement>('.nds-sidebar-panel')!;
-      const larguraIcone = parseFloat(
+      const widthIcon = parseFloat(
         getComputedStyle(icone).getPropertyValue('--sidebar-width-icon'),
       );
       // A custom property vem em rem; comparar em px exige a raiz.
-      const px = larguraIcone * parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const px = widthIcon * parseFloat(getComputedStyle(document.documentElement).fontSize);
       await expect(Math.round(painel.getBoundingClientRect().width)).toBe(Math.round(px));
     });
   },

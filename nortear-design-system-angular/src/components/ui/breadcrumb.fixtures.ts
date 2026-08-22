@@ -14,7 +14,7 @@ import { fn } from 'storybook/test';
  * fábrica: cada arquivo chama uma vez e fica com o seu par.
  */
 
-export interface NavegacaoEspionada {
+export interface NavigationEspionada {
   /** Espião de escopo de módulo: dentro do `render`, a play não o alcançaria. */
   onNavigate: ReturnType<typeof fn>;
   /** Impede a navegação de verdade e registra o clique, como um handler real faria. */
@@ -22,7 +22,7 @@ export interface NavegacaoEspionada {
 }
 
 /** Um par espião ↔ handler, novo a cada chamada. */
-export function navegacaoEspionada(): NavegacaoEspionada {
+export function navigationEspionada(): NavigationEspionada {
   const onNavigate = fn();
   return {
     onNavigate,

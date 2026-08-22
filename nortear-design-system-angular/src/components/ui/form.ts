@@ -54,7 +54,7 @@ import { NgControl } from '@angular/forms';
  */
 let sequencia = 0;
 
-function proximoId(prefixo: string): string {
+function nextId(prefixo: string): string {
   sequencia += 1;
   return `nds-${prefixo}-${sequencia}`;
 }
@@ -104,7 +104,7 @@ export class NdsFormDescription {
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
   /** Lido no construtor: atributo estático do template já está no elemento. */
-  readonly id: string = this.hostRef.nativeElement.id || proximoId('form-description');
+  readonly id: string = this.hostRef.nativeElement.id || nextId('form-description');
 }
 
 /**
@@ -128,7 +128,7 @@ export class NdsFormDescription {
 export class NdsFormMessage {
   private readonly hostRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-  readonly id: string = this.hostRef.nativeElement.id || proximoId('form-message');
+  readonly id: string = this.hostRef.nativeElement.id || nextId('form-message');
 }
 
 /**
@@ -202,7 +202,7 @@ const SELETORES_CONTROLE = [
   'select',
 ];
 
-interface EstadoControle {
+interface StateControl {
   invalid: boolean;
   touched: boolean;
   dirty: boolean;
@@ -250,7 +250,7 @@ export class NdsFormField implements AfterContentInit {
    * `events` do controle emite em toda mudança de valor, e só três bits dele
    * interessam.
    */
-  private readonly estado = signal<EstadoControle | null>(null, {
+  private readonly estado = signal<StateControl | null>(null, {
     equal: (a, b) =>
       a === b ||
       (!!a && !!b && a.invalid === b.invalid && a.touched === b.touched && a.dirty === b.dirty),
@@ -280,7 +280,7 @@ export class NdsFormField implements AfterContentInit {
   /** Ids que quem compõe já tinha escrito no controle — preservados na junção. */
   private describedByEscrito: string[] | null = null;
 
-  private readonly idBase = proximoId('form-field');
+  private readonly idBase = nextId('form-field');
 
   constructor() {
     // Assinatura do FormControl. `events` cobre valor, status, touched e

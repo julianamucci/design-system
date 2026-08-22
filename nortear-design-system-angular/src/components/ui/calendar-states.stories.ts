@@ -223,10 +223,10 @@ export const KeyboardNavigation: Story = {
       const vizinho = dia(raiz, '2026-04-24');
       await expect(document.activeElement).toBe(emFoco);
 
-      const anelEmFoco = getComputedStyle(emFoco).boxShadow;
-      const anelDoVizinho = getComputedStyle(vizinho).boxShadow;
-      await expect(anelEmFoco).not.toBe('none');
-      await expect(anelEmFoco).not.toBe(anelDoVizinho);
+      const focusRing = getComputedStyle(emFoco).boxShadow;
+      const neighbourRing = getComputedStyle(vizinho).boxShadow;
+      await expect(focusRing).not.toBe('none');
+      await expect(focusRing).not.toBe(neighbourRing);
     });
 
     await step('Os botões de navegação também recebem anel', async () => {

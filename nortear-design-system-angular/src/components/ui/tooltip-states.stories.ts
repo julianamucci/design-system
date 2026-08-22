@@ -10,7 +10,7 @@ import { NdsButton } from './button';
 // A diferença entre os dois últimos é o que a WCAG 1.4.13 cobra: o tooltip não
 // pode depender do mouse.
 
-const ICONE_SALVAR = `<svg
+const ICON_SALVAR = `<svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -62,7 +62,7 @@ export const Closed: Story = {
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICONE_SALVAR}
+            ${ICON_SALVAR}
           </button>
           <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>
         </span>
@@ -91,7 +91,7 @@ export const Open: Story = {
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
         <span ndsTooltip [open]="aberto" (openChange)="aberto = $event">
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICONE_SALVAR}
+            ${ICON_SALVAR}
           </button>
           <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>
         </span>
@@ -129,7 +129,7 @@ export const Hover: Story = {
       <div ndsTooltipProvider [delay]="atraso" class="nds-p-8">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICONE_SALVAR}
+            ${ICON_SALVAR}
           </button>
           <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>
         </span>
@@ -164,7 +164,7 @@ export const Focus: Story = {
       <div ndsTooltipProvider [delay]="atraso" class="nds-p-8">
         <span ndsTooltip>
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICONE_SALVAR}
+            ${ICON_SALVAR}
           </button>
           <ng-template ndsTooltipContent>Salvar (Ctrl+S)</ng-template>
         </span>

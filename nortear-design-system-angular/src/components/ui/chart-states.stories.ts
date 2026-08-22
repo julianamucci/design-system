@@ -6,9 +6,9 @@ import {
   MESES,
   SERIE_UNICA,
   SERIES_MULTI,
-  corParaRgb,
+  rgbColor,
   razaoDeContraste,
-  tokenParaRgb,
+  rgbToken,
 } from './chart.fixtures';
 
 const meta: Meta = {
@@ -228,7 +228,7 @@ export const GraphicContrast: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const chart = canvasElement.querySelector<HTMLElement>('.nds-chart')!;
-    const fundo = tokenParaRgb('--background')!;
+    const fundo = rgbToken('--background')!;
 
     await step('Toda forma de dado tem contorno', async () => {
       const contornos = [...chart.querySelectorAll<SVGRectElement>('svg > rect')]
@@ -243,13 +243,13 @@ export const GraphicContrast: Story = {
     await step('O contorno passa de 3:1 contra o fundo', async () => {
       const contorno = [...chart.querySelectorAll<SVGRectElement>('svg > rect')]
         .find((r) => r.getAttribute('fill')?.startsWith('url('))!;
-      const cor = corParaRgb(getComputedStyle(contorno).stroke)!;
+      const cor = rgbColor(getComputedStyle(contorno).stroke)!;
       await expect(razaoDeContraste(cor, fundo)).toBeGreaterThanOrEqual(3);
     });
 
     await step('O texto dos eixos passa de 4.5:1', async () => {
       const rotulo = chart.querySelector<SVGTextElement>('svg text')!;
-      const cor = corParaRgb(getComputedStyle(rotulo).fill)!;
+      const cor = rgbColor(getComputedStyle(rotulo).fill)!;
       await expect(razaoDeContraste(cor, fundo)).toBeGreaterThanOrEqual(4.5);
     });
   },

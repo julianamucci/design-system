@@ -245,9 +245,9 @@ export const Playground: Story = {
     await step('Gatilho aponta para o painel por aria-controls', async () => {
       const gatilho = canvas.getAllByRole('button')[0];
       await abrir(gatilho);
-      const idPainel = gatilho.getAttribute('aria-controls');
-      await expect(idPainel).toBeTruthy();
-      await expect(canvasElement.querySelector(`#${CSS.escape(idPainel!)}`)).not.toBeNull();
+      const idPanel = gatilho.getAttribute('aria-controls');
+      await expect(idPanel).toBeTruthy();
+      await expect(canvasElement.querySelector(`#${CSS.escape(idPanel!)}`)).not.toBeNull();
       await expect(gatilho.id).toBeTruthy();
     });
 

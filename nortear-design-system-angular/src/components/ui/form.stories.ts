@@ -30,8 +30,8 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<FormArgs> }): s
     disabled = false,
   } = ctx.args ?? {};
 
-  const atributosDoCampo = invalid || error ? ' [invalid]="true"' : '';
-  const atributosDoInput = [
+  const fieldAttrs = invalid || error ? ' [invalid]="true"' : '';
+  const inputAttrs = [
     'ndsInput',
     'type="email"',
     'formControlName="email"',
@@ -42,9 +42,9 @@ function playgroundSource(_gerado: string, ctx: { args?: Partial<FormArgs> }): s
     .join(' ');
 
   const campo = [
-    `<div ndsFormField${atributosDoCampo}>`,
+    `<div ndsFormField${fieldAttrs}>`,
     `  <label ndsFormLabel>${label}</label>`,
-    `  <input ${atributosDoInput} />`,
+    `  <input ${inputAttrs} />`,
     description ? `  <p ndsFormDescription>${description}</p>` : '',
     error ? `  <p ndsFormMessage>${error}</p>` : '',
     '</div>',

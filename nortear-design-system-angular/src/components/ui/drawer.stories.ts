@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import { NDS_DRAWER, type DrawerDirection } from './drawer';
 import { NdsButton } from './button';
-import { esperarPortal, esperarPortalSumir } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import drawerTranslations from '@shared/content/drawer/translations.json';
 import { NdsDrawerDocs } from '@/components/docs/DrawerDocs';
@@ -138,7 +138,7 @@ async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(trigger);
   }
-  return await esperarPortal('dialog');
+  return await waitForPortal('dialog');
 }
 
 /** Fecha só se estiver aberto. */
@@ -146,7 +146,7 @@ async function fechar(): Promise<void> {
   if (within(document.body).queryAllByRole('dialog').length > 0) {
     await userEvent.keyboard('{Escape}');
   }
-  await esperarPortalSumir('dialog');
+  await waitForPortalVanish('dialog');
 }
 
 export const Playground: Story = {
@@ -219,13 +219,13 @@ export const Playground: Story = {
     await step('O painel é portalizado para fora da story', async () => {
       // É o que faz `position: fixed` valer contra a viewport, e não contra
       // qualquer ancestral com transform.
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       await expect(canvasElement.contains(painel)).toBe(false);
       await expect(document.body.contains(painel)).toBe(true);
     });
 
     await step('A alça é decorativa, não um caminho de interação', async () => {
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       const alca = painel.querySelector<HTMLElement>('.nds-drawer-handle');
       await expect(alca).not.toBeNull();
       // Sem gesto atrás dela, anunciar a alça só somaria ruído ao leitor de
@@ -235,7 +235,7 @@ export const Playground: Story = {
     });
 
     await step('O foco entra no painel ao abrir', async () => {
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       await waitFor(() => {
         if (!painel.contains(document.activeElement)) {
           throw new Error('o foco não entrou no painel');
@@ -244,7 +244,7 @@ export const Playground: Story = {
     });
 
     await step('Tab mantém o foco preso dentro do painel', async () => {
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       // Volta suficiente para dar a volta completa em qualquer direção.
       for (let i = 0; i < 6; i++) await userEvent.tab();
       await expect(painel.contains(document.activeElement)).toBe(true);
@@ -265,7 +265,7 @@ export const Playground: Story = {
         const overlay = document.querySelector<HTMLElement>('[data-slot="drawer-overlay"]');
         await expect(overlay).not.toBeNull();
         await userEvent.click(overlay!);
-        await esperarPortalSumir('dialog');
+        await waitForPortalVanish('dialog');
       });
     }
 
@@ -276,7 +276,7 @@ export const Playground: Story = {
       // (armadilha 11) — por isso o NdsDrawerClose não liga `data-slot`.
       const fecharBtn = within(painel).getByRole('button', { name: ROTULO.fechar() });
       await userEvent.click(fecharBtn);
-      await esperarPortalSumir('dialog');
+      await waitForPortalVanish('dialog');
       await waitFor(() => {
         if (document.activeElement !== trigger) {
           throw new Error('o foco não voltou ao gatilho');

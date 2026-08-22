@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_SELECT, type SelectSide, type SelectAlign, type SelectSize } from './select';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { NdsSelectDocs } from '@/components/docs/SelectDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -202,7 +202,7 @@ export const Playground: Story = {
       // painel Interactions parte do mesmo estado da primeira rodada.
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
 
-      const lista = await esperarPortal('listbox', { name: 'Estado' });
+      const lista = await waitForPortal('listbox', { name: 'Estado' });
       await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
 
       const opcoes = within(lista).getAllByRole('option');
@@ -218,7 +218,7 @@ export const Playground: Story = {
 
     await step('Enter escolhe a opção destacada, fecha e devolve o foco', async () => {
       await userEvent.keyboard('{Enter}');
-      await esperarPortalSumir('listbox');
+      await waitForPortalVanish('listbox');
 
       await expect(args.onValueChange).toHaveBeenCalledWith(ESTADOS[0].value);
       // O gatilho passa a anunciar o rótulo escolhido, não mais o placeholder.
@@ -233,13 +233,13 @@ export const Playground: Story = {
 
     await step('Escape fecha sem trocar a escolha e devolve o foco', async () => {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-      await esperarPortal('listbox', { name: 'Estado' });
+      await waitForPortal('listbox', { name: 'Estado' });
 
       const chamadasAntes = (args.onValueChange as unknown as { mock: { calls: unknown[] } }).mock
         .calls.length;
 
       await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('listbox');
+      await waitForPortalVanish('listbox');
 
       await expect(
         (args.onValueChange as unknown as { mock: { calls: unknown[] } }).mock.calls.length,

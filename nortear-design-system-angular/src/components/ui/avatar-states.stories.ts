@@ -90,14 +90,14 @@ export const AwaitingDelay: Story = {
     `,
   }),
   play: async ({ canvasElement, step }) => {
-    const semAtraso = canvasElement
+    const noDelay = canvasElement
       .querySelector<HTMLElement>('[data-testid="sem-atraso"] [data-slot="avatar-fallback"]')!;
-    const comAtraso = canvasElement
+    const withDelay = canvasElement
       .querySelector<HTMLElement>('[data-testid="com-atraso"] [data-slot="avatar-fallback"]')!;
 
     await step('Sem atraso, as iniciais entram de imediato', async () => {
       await waitFor(async () => {
-        await expect(semAtraso.style.display).toBe('');
+        await expect(noDelay.style.display).toBe('');
       }, { timeout: 3000 });
     });
 
@@ -105,12 +105,12 @@ export const AwaitingDelay: Story = {
       // A asserção é relativa, no mesmo instante: se `[delayMs]` não chegasse ao
       // componente — o defeito silencioso do JIT — os dois estariam visíveis
       // aqui e esta linha cairia.
-      await expect(comAtraso.style.display).toBe('none');
+      await expect(withDelay.style.display).toBe('none');
     });
 
     await step('Vencido o prazo, elas entram', async () => {
       await waitFor(async () => {
-        await expect(comAtraso.style.display).toBe('');
+        await expect(withDelay.style.display).toBe('');
       }, { timeout: 5000 });
     });
   },

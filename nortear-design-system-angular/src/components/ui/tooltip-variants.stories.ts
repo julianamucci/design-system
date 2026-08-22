@@ -10,7 +10,7 @@ import { NdsButton } from './button';
 // nascem abertas: é o único jeito de a regressão visual capturar o balão, que
 // só existe no DOM enquanto está aberto.
 
-const ICONE_SALVAR = `<svg
+const ICON_SALVAR = `<svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -70,7 +70,7 @@ export const Default: Story = {
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
         <span ndsTooltip [defaultOpen]="true">
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICONE_SALVAR}
+            ${ICON_SALVAR}
           </button>
           <ng-template ndsTooltipContent>Salvar</ng-template>
         </span>
@@ -107,7 +107,7 @@ export const WithShortcut: Story = {
       <div ndsTooltipProvider [delay]="0" class="nds-p-8">
         <span ndsTooltip [defaultOpen]="true">
           <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-            ${ICONE_SALVAR}
+            ${ICON_SALVAR}
           </button>
           <ng-template ndsTooltipContent
             ><span>Salvar</span

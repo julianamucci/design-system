@@ -63,7 +63,7 @@ const { t, dict } = useTranslation(sidebarTranslations as Record<string, unknown
  * slider não tem nav.compositions. Sem a queda, o que aparece na barra
  * lateral é a chave crua.
  */
-function rotuloDeNav(chave: string): string {
+function navLabel(chave: string): string {
   const doComponente = t(chave);
   return doComponente === chave ? tNav(chave) : doComponente;
 }
@@ -576,8 +576,8 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: rotuloDeNav(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: rotuloDeNav(s.labelKey) })),
+      label: navLabel(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
     }));
   });
 
@@ -617,12 +617,12 @@ export class NdsSidebarDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     dict();
-    return { title: t('usage.do.title'), items: itensNumerados(dict(), 'usage.do') };
+    return { title: t('usage.do.title'), items: numberedItems(dict(), 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     dict();
-    return { title: t('usage.dont.title'), items: itensNumerados(dict(), 'usage.dont') };
+    return { title: t('usage.dont.title'), items: numberedItems(dict(), 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -977,7 +977,7 @@ function priorityLabel(raw: string): string {
  * conteúdo tem um item a menos. Foi o que aconteceu aqui: `usage.dont` tem 3, e
  * "usage.dont.item4" apareceu escrito na página.
  */
-function itensNumerados(d: Record<string, string>, base: string): string[] {
+function numberedItems(d: Record<string, string>, base: string): string[] {
   const itens: string[] = [];
   for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
   return itens;

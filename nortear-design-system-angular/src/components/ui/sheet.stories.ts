@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor, fn } from 'storybook/test';
 import { NDS_SHEET, type SheetSide } from './sheet';
 import { NdsButton } from './button';
-import { esperarPortal, esperarPortalSumir } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import sheetTranslations from '@shared/content/sheet/translations.json';
 import { NdsSheetDocs } from '@/components/docs/SheetDocs';
@@ -143,7 +143,7 @@ async function abrir(trigger: HTMLElement): Promise<HTMLElement> {
   if (within(document.body).queryAllByRole('dialog').length === 0) {
     await userEvent.click(trigger);
   }
-  return await esperarPortal('dialog');
+  return await waitForPortal('dialog');
 }
 
 /** Fecha só se estiver aberto. */
@@ -151,7 +151,7 @@ async function fechar(): Promise<void> {
   if (within(document.body).queryAllByRole('dialog').length > 0) {
     await userEvent.keyboard('{Escape}');
   }
-  await esperarPortalSumir('dialog');
+  await waitForPortalVanish('dialog');
 }
 
 export const Playground: Story = {
@@ -223,13 +223,13 @@ export const Playground: Story = {
     await step('O painel é portalizado para fora da story', async () => {
       // É o que faz `position: fixed` valer contra a viewport, e não contra
       // qualquer ancestral com transform.
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       await expect(canvasElement.contains(painel)).toBe(false);
       await expect(document.body.contains(painel)).toBe(true);
     });
 
     await step('O foco entra no painel ao abrir', async () => {
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       await waitFor(() => {
         if (!painel.contains(document.activeElement)) {
           throw new Error('o foco não entrou no painel');
@@ -238,7 +238,7 @@ export const Playground: Story = {
     });
 
     await step('Tab mantém o foco preso dentro do painel', async () => {
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       // Volta suficiente para dar a volta completa em qualquer um dos lados.
       for (let i = 0; i < 6; i++) await userEvent.tab();
       // A espera é o mecanismo, não folga: quem dá a volta é uma âncora de foco
@@ -269,7 +269,7 @@ export const Playground: Story = {
         const overlay = document.querySelector<HTMLElement>('[data-slot="sheet-overlay"]');
         await expect(overlay).not.toBeNull();
         await userEvent.click(overlay!);
-        await esperarPortalSumir('dialog');
+        await waitForPortalVanish('dialog');
       });
     }
 
@@ -278,7 +278,7 @@ export const Playground: Story = {
         const painel = await abrir(trigger);
         const fecharBtn = within(painel).getByRole('button', { name: /fechar/i });
         await userEvent.click(fecharBtn);
-        await esperarPortalSumir('dialog');
+        await waitForPortalVanish('dialog');
       });
     }
 
@@ -288,7 +288,7 @@ export const Playground: Story = {
         name: t('demonstration.labels.cancel'),
       });
       await userEvent.click(cancelar);
-      await esperarPortalSumir('dialog');
+      await waitForPortalVanish('dialog');
     });
 
     // Termina fechado: a próxima rodada da play (painel Interactions) precisa

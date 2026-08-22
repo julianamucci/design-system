@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_DROPDOWN_MENU, type DropdownMenuSide, type DropdownMenuAlign } from './dropdown-menu';
 import { NdsButton } from './button';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { NdsDropdownMenuDocs } from '@/components/docs/DropdownMenuDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -101,7 +101,7 @@ export default meta;
 type Story = StoryObj<DropdownMenuArgs>;
 
 /** Spy de escopo de módulo — dentro do `render` a `play` não o alcançaria. */
-const escolhaDeItem = fn();
+const itemChoice = fn();
 
 // ─── Playground ───────────────────────────────────────────────────────────────
 
@@ -121,7 +121,7 @@ export const Playground: Story = {
   render: (args) => ({
     // O spy do item é de escopo de módulo: criado aqui dentro, seria inalcançável
     // pela `play` e a aba Actions ficaria vazia.
-    props: { ...args, onSelect: escolhaDeItem },
+    props: { ...args, onSelect: itemChoice },
     template: `
       <nds-dropdown-menu
         [modal]="modal"
@@ -156,7 +156,7 @@ export const Playground: Story = {
       // painel Interactions parte do mesmo estado da primeira rodada.
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
 
-      const menu = await esperarPortal('menu');
+      const menu = await waitForPortal('menu');
       await expect(gatilho.getAttribute('aria-expanded')).toBe('true');
       await expect(args.onOpenChange).toHaveBeenCalledWith(true);
 
@@ -170,10 +170,10 @@ export const Playground: Story = {
     await step('Enter escolhe o item, fecha o menu e devolve o foco ao gatilho', async () => {
       // "Item é ativado" era a metade não verificada deste item de contrato: o
       // menu fechar não prova que a ação disparou — o Escape também fecha.
-      escolhaDeItem.mockClear();
+      itemChoice.mockClear();
       await userEvent.keyboard('{Enter}');
-      await expect(escolhaDeItem).toHaveBeenCalledTimes(1);
-      await esperarPortalSumir('menu');
+      await expect(itemChoice).toHaveBeenCalledTimes(1);
+      await waitForPortalVanish('menu');
       await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
@@ -184,10 +184,10 @@ export const Playground: Story = {
 
     await step('Escape fecha e devolve o foco ao gatilho', async () => {
       if (gatilho.getAttribute('aria-expanded') !== 'true') await userEvent.click(gatilho);
-      await esperarPortal('menu');
+      await waitForPortal('menu');
 
       await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('menu');
+      await waitForPortalVanish('menu');
       await expect(gatilho.getAttribute('aria-expanded')).toBe('false');
       await waitFor(async () => {
         await expect(document.activeElement).toBe(gatilho);

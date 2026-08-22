@@ -238,7 +238,7 @@ const ANATOMY_CODE = `<nds-carousel
   <button ndsCarouselNext label="Próximo item"></button>
 </nds-carousel>`;
 
-const CODE_HORIZONTAL = `<nds-carousel class="nds-w-full nds-max-w-md" label="Slides na horizontal">
+const HORIZONTAL_CODE = `<nds-carousel class="nds-w-full nds-max-w-md" label="Slides na horizontal">
   <div ndsCarouselContent>
     <div ndsCarouselItem>...</div>
   </div>
@@ -246,7 +246,7 @@ const CODE_HORIZONTAL = `<nds-carousel class="nds-w-full nds-max-w-md" label="Sl
   <button ndsCarouselNext label="Próximo item"></button>
 </nds-carousel>`;
 
-const CODE_VERTICAL = `<!-- Em vertical o viewport precisa de altura DEFINIDA: a base
+const VERTICAL_CODE = `<!-- Em vertical o viewport precisa de altura DEFINIDA: a base
      flex: 0 0 100% do slide só resolve contra altura conhecida. A altura vem de
      uma classe de proporção, nunca de style. -->
 <nds-carousel orientation="vertical" class="nds-w-full nds-max-w-xs" label="Slides na vertical">
@@ -914,16 +914,16 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: rotuloDeNav(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: rotuloDeNav(s.labelKey) })),
+      label: navLabel(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
     }));
   });
 
-  protected readonly anatomyItems = computed(() => itensNumerados(dict(), 'anatomy'));
+  protected readonly anatomyItems = computed(() => numberedItems(dict(), 'anatomy'));
 
   protected readonly guidelines = computed(() => {
     const d = dict();
-    return { title: t('usage.guidelines.title'), items: itensNumerados(d, 'usage.guidelines') };
+    return { title: t('usage.guidelines.title'), items: numberedItems(d, 'usage.guidelines') };
   });
 
   protected readonly scenarios = computed(() => {
@@ -962,12 +962,12 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     const d = dict();
-    return { title: t('usage.do.title'), items: itensNumerados(d, 'usage.do') };
+    return { title: t('usage.do.title'), items: numberedItems(d, 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     const d = dict();
-    return { title: t('usage.dont.title'), items: itensNumerados(d, 'usage.dont') };
+    return { title: t('usage.dont.title'), items: numberedItems(d, 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -999,8 +999,8 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
   protected readonly variantItems = computed(() => {
     dict();
     return [
-      { key: 'horizontal', code: CODE_HORIZONTAL, tpl: this.tplVarHorizontal() },
-      { key: 'vertical',   code: CODE_VERTICAL,   tpl: this.tplVarVertical()   },
+      { key: 'horizontal', code: HORIZONTAL_CODE, tpl: this.tplVarHorizontal() },
+      { key: 'vertical',   code: VERTICAL_CODE,   tpl: this.tplVarVertical()   },
       { key: 'single',     code: CODE_SINGLE,     tpl: this.tplVarSingle()     },
       { key: 'multi',      code: CODE_MULTI,      tpl: this.tplVarMulti()      },
       { key: 'autoplay',   code: CODE_AUTOPLAY,   tpl: this.tplVarAutoplay()   },
@@ -1009,7 +1009,7 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
       // do override. Lido sempre pelo mesmo caminho, o card nunca cai no caso em
       // que o título repete a descrição inteira.
       name: t(`variants.items.${key}.name`),
-      description: valorOuCampo(`variants.items.${key}`, 'description'),
+      description: valueOuField(`variants.items.${key}`, 'description'),
       code,
       trackId: key,
       preview: tpl,
@@ -1023,7 +1023,7 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
       { key: 'gallery',  code: CODE_GALERIA, tpl: this.tplCompGaleria() },
     ].map(({ key, code, tpl }) => ({
       name: t(`variants.compositions.${key}.name`),
-      description: comQuandoUsar(
+      description: withQuandoUsar(
         t(`variants.compositions.${key}.description`),
         t(`variants.compositions.${key}.use`),
       ),
@@ -1137,7 +1137,7 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
     }));
   });
 
-  protected readonly a11yItems = computed(() => itensNumerados(dict(), 'accessibility'));
+  protected readonly a11yItems = computed(() => numberedItems(dict(), 'accessibility'));
 
   protected readonly keyboardItems = computed(() => {
     dict();
@@ -1172,7 +1172,7 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
   });
 
   protected readonly noteItems = computed(() =>
-    itensNumerados(dict(), 'notes', 'tip').map((content) => ({ title: '', content })),
+    numberedItems(dict(), 'notes', 'tip').map((content) => ({ title: '', content })),
   );
 
   protected readonly analyticsCols = computed(() => {
@@ -1227,7 +1227,7 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
           level: r.level,
           how: toPlainText(r.how),
         }))
-      : itensNumerados(d, 'testes.accessibility').map((texto) => ({
+      : numberedItems(d, 'testes.accessibility').map((texto) => ({
           criterion: toPlainText(texto),
           level: '',
           how: '',
@@ -1296,7 +1296,7 @@ export class NdsCarouselDocs implements AfterViewInit, OnDestroy {
 // ─── Helpers de cauda ─────────────────────────────────────────────────────────
 
 /** Rótulo de navegação, com queda para o ui.json quando o slug não o declara. */
-function rotuloDeNav(chave: string): string {
+function navLabel(chave: string): string {
   const doComponente = t(chave);
   return doComponente === chave ? tNav(chave) : doComponente;
 }
@@ -1307,12 +1307,12 @@ function rotuloDeNav(chave: string): string {
  * `t()` devolve a PRÓPRIA CHAVE quando ela aponta para um objeto — e é assim
  * que "variants.items.autoplay" acaba escrito na tela, sem erro nenhum.
  */
-function valorOuCampo(base: string, campo: string): string {
+function valueOuField(base: string, campo: string): string {
   const direto = t(base);
   if (direto !== base) return direto;
   const chave = `${base}.${campo}`;
-  const doCampo = t(chave);
-  return doCampo === chave ? '' : doCampo;
+  const ofField = t(chave);
+  return ofField === chave ? '' : ofField;
 }
 
 /**
@@ -1321,7 +1321,7 @@ function valorOuCampo(base: string, campo: string): string {
  * `NdsDocsCompositions` faria isto sozinho, mas não repassa `language` para o
  * `NdsDocsVariants` — e os snippets aqui são template Angular, não TS.
  */
-function comQuandoUsar(descricao: string, quandoUsar: string): string {
+function withQuandoUsar(descricao: string, quandoUsar: string): string {
   return `${descricao}<br><br><strong>${tNav('common.useWhen')}</strong> ${quandoUsar}`;
 }
 
@@ -1331,7 +1331,7 @@ function comQuandoUsar(descricao: string, quandoUsar: string): string {
  * Contar à mão é o defeito que aparece na tela: com um item a menos, a chave
  * crua sai escrita no lugar do texto; com um a mais, o item some da página.
  */
-function itensNumerados(
+function numberedItems(
   d: Record<string, string>,
   base: string,
   prefixo = 'item',

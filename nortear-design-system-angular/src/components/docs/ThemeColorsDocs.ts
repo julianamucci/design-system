@@ -63,13 +63,13 @@ const { t } = useTranslation(themeColorsTranslations as Record<string, unknown>)
 // solto, chave que não existe, e cobra `unresolved_i18n_key`.
 
 /** Grupos da paleta semântica e seus tokens (sem o prefixo `--`). */
-interface GrupoDaPaleta {
+interface PaletteGroup {
   chave: string;
   rotulo: string;
   tokens: string[];
 }
 
-const GRUPOS_DA_PALETA: GrupoDaPaleta[] = [
+const PALETTE_GROUPS: PaletteGroup[] = [
   {
     chave: 'surface',
     rotulo: 'palette.groups.surface',
@@ -116,7 +116,7 @@ const TOKENS_DA_AMOSTRA = [
   'primary', 'secondary', 'accent', 'muted', 'destructive', 'success',
 ];
 
-const TODOS_OS_TOKENS = GRUPOS_DA_PALETA.flatMap((g) => g.tokens);
+const ALL_OS_TOKENS = PALETTE_GROUPS.flatMap((g) => g.tokens);
 
 interface ItemDeEixo {
   chave: string;
@@ -124,7 +124,7 @@ interface ItemDeEixo {
   classe: string;
 }
 
-const TEMAS_DE_MARCA: ItemDeEixo[] = [
+const MARCA_THEMES: ItemDeEixo[] = [
   { chave: 'default', rotulo: 'brand.themes.default', classe: 'tema-default' },
   { chave: 'warm', rotulo: 'brand.themes.warm', classe: 'tema-warm' },
   { chave: 'cold', rotulo: 'brand.themes.cold', classe: 'tema-cold' },
@@ -161,7 +161,7 @@ const FONTES: ItemDeEixo[] = [
 ];
 
 /** Recorte tipado do conteúdo compartilhado — `t()` devolveria a chave. */
-interface TabelaDeDensidade {
+interface DensityTable {
   tableCols: string[];
   tableRows: string[][];
 }
@@ -374,9 +374,9 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   protected readonly t = t;
   protected readonly idDoTitulo = DOCS_PAGE_TITLE_ID;
 
-  protected readonly gruposDaPaleta = GRUPOS_DA_PALETA;
+  protected readonly gruposDaPaleta = PALETTE_GROUPS;
   protected readonly tokensDaAmostra = TOKENS_DA_AMOSTRA;
-  protected readonly temasDeMarca = TEMAS_DE_MARCA;
+  protected readonly temasDeMarca = MARCA_THEMES;
   protected readonly modos = MODOS;
   protected readonly densidades = DENSIDADES;
   protected readonly fontes = FONTES;
@@ -414,7 +414,7 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   protected readonly escopoDaMarca = computed<Record<string, string>>(() => {
     const sufixo = this.paginaEscura() ? ' dark' : '';
     return Object.fromEntries(
-      TEMAS_DE_MARCA.map((tema) => [
+      MARCA_THEMES.map((tema) => [
         tema.chave,
         `nds-theme-card-scope ${tema.classe}${sufixo}`,
       ]),
@@ -445,10 +445,10 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
    * Lida do JSON cru, e não por `t()`: `tableCols` e `tableRows` são arrays, e
    * o `t()` devolve a PRÓPRIA CHAVE quando ela não aponta para uma string.
    */
-  protected readonly tabelaDeDensidade = computed<TabelaDeDensidade>(() => {
+  protected readonly tabelaDeDensidade = computed<DensityTable>(() => {
     const todos = themeColorsTranslations as Record<string, unknown>;
     const dicionario = (todos[localeSignal()] ?? todos['pt-BR']) as {
-      axes: { density: TabelaDeDensidade };
+      axes: { density: DensityTable };
     };
     return dicionario.axes.density;
   });
@@ -502,13 +502,13 @@ export class NdsThemeColorsDocs implements OnInit, OnDestroy {
   /** Lê marca, modo e valores HSL resolvidos no `<html>`. */
   private lerTema(): void {
     const classes = document.documentElement.classList;
-    const marca = TEMAS_DE_MARCA.find((tema) => classes.contains(tema.classe));
+    const marca = MARCA_THEMES.find((tema) => classes.contains(tema.classe));
     this.marcaAtiva.set(marca ? marca.classe : 'tema-default');
     this.paginaEscura.set(classes.contains('dark'));
 
     const estilo = getComputedStyle(document.documentElement);
     const valores: Record<string, string> = {};
-    for (const token of TODOS_OS_TOKENS) {
+    for (const token of ALL_OS_TOKENS) {
       valores[token] = estilo.getPropertyValue(`--${token}`).trim();
     }
     this.valoresDosTokens.set(valores);

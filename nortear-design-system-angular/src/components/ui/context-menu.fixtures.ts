@@ -1,5 +1,5 @@
 import { userEvent } from 'storybook/test';
-import { esperarPortal } from '@/lib/wait-for-portal';
+import { waitForPortal } from '@/lib/wait-for-portal';
 
 /**
  * Andaime de abertura do ContextMenu — um helper, dois arquivos de story.
@@ -27,5 +27,5 @@ export async function abrirPorGesto(area: HTMLElement): Promise<HTMLElement> {
   const caixa = area.getBoundingClientRect();
   const coords = { clientX: caixa.left + caixa.width / 2, clientY: caixa.top + caixa.height / 2 };
   await userEvent.pointer({ keys: '[MouseRight]', target: area, coords });
-  return await esperarPortal('menu');
+  return await waitForPortal('menu');
 }

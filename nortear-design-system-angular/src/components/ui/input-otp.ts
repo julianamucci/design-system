@@ -43,7 +43,7 @@ import {
 /** Conjunto de caracteres aceitos. Decide também o teclado do dispositivo. */
 export type InputOtpMode = 'numeric' | 'alphanumeric';
 
-interface CelulaOtp {
+interface CellOtp {
   /** Chave estável para o `track` do @for — separador e slot nunca colidem. */
   chave: string;
   separador: boolean;
@@ -161,11 +161,11 @@ export class NdsInputOtp implements AfterViewInit {
     this.mode() === 'alphanumeric' ? /^[a-zA-Z0-9]$/ : /^[0-9]$/,
   );
 
-  protected readonly celulas = computed<CelulaOtp[]>(() => {
+  protected readonly celulas = computed<CellOtp[]>(() => {
     const total = this.maxLength();
     const antes = new Set(this.separatorAt());
     const atuais = this.chars();
-    const out: CelulaOtp[] = [];
+    const out: CellOtp[] = [];
     for (let i = 0; i < total; i++) {
       if (antes.has(i)) {
         out.push({ chave: `sep-${i}`, separador: true, indice: -1, caractere: '' });
@@ -286,8 +286,8 @@ export class NdsInputOtp implements AfterViewInit {
     }
     this.aplicar(proximas);
 
-    const primeiroVazio = proximas.findIndex((c) => !c);
-    this.focar(primeiroVazio === -1 ? total - 1 : primeiroVazio);
+    const emptyFirst = proximas.findIndex((c) => !c);
+    this.focar(emptyFirst === -1 ? total - 1 : emptyFirst);
   }
 
   // ─── Estado ────────────────────────────────────────────────────────────────

@@ -110,8 +110,8 @@ export const Playground: Story = {
       // Pelo PAPEL, e não pelo `type` do input: o item de contrato fala de
       // `role="slider"`, e é o papel — implícito num range nativo — que o
       // leitor de tela anuncia.
-      const porPapel = within(canvasElement).getAllByRole('slider');
-      await expect(porPapel.length).toBe(args.value.length);
+      const byRole = within(canvasElement).getAllByRole('slider');
+      await expect(byRole.length).toBe(args.value.length);
     });
 
     await step('O aria-label fica na alça, não na raiz', async () => {

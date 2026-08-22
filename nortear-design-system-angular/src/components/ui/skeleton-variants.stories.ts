@@ -104,9 +104,9 @@ export const Shapes: Story = {
       // ficaria vazia mesmo com a proporção certa.
       const caixa = canvasElement.querySelector<HTMLElement>('[data-slot="aspect-ratio"]')!;
       const sk = caixa.querySelector<HTMLElement>('[data-slot="skeleton"]')!;
-      const caixaBox = caixa.getBoundingClientRect();
+      const boxBox = caixa.getBoundingClientRect();
       const skBox = sk.getBoundingClientRect();
-      await expect(Math.abs(skBox.height - caixaBox.height)).toBeLessThan(2);
+      await expect(Math.abs(skBox.height - boxBox.height)).toBeLessThan(2);
     });
   },
 };

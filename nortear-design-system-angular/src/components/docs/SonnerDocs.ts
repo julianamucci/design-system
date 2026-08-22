@@ -151,7 +151,7 @@ const CUSTOMIZATION_CODE = `/* A notificação lê os tokens do tema — persona
 }`;
 
 /** Snippet de cada tipo, na ordem em que a seção Tipos os apresenta. */
-const CODIGO_POR_TIPO: Record<string, string> = {
+const TYPE_CODE: Record<string, string> = {
   default: `toast('Código copiado.');`,
   success: `toast.success('Alterações salvas.');`,
   error: `toast.error('Não foi possível salvar. Tente novamente.');`,
@@ -457,8 +457,8 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
 
   protected dispararPromessa(): void {
     track('toast_demo_triggered', { toast_type: 'promise', locale: getLocale() });
-    const operacao = new Promise<void>((resolve) => setTimeout(resolve, 1800));
-    toast.promise(operacao, {
+    const operation = new Promise<void>((resolve) => setTimeout(resolve, 1800));
+    toast.promise(operation, {
       loading: t('demonstration.labels.promiseLoading'),
       success: t('demonstration.labels.promise'),
       error: t('demonstration.labels.promiseError'),
@@ -490,19 +490,19 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
   protected readonly navGroups = computed(() => {
     dict();
     return NAV_GROUPS.map((g) => ({
-      label: rotuloDeNav(g.labelKey),
-      sections: g.sections.map((s) => ({ id: s.id, label: rotuloDeNav(s.labelKey) })),
+      label: navLabel(g.labelKey),
+      sections: g.sections.map((s) => ({ id: s.id, label: navLabel(s.labelKey) })),
     }));
   });
 
   protected readonly anatomyItems = computed(() => {
     const d = dict();
-    return itensNumerados(d, 'anatomy');
+    return numberedItems(d, 'anatomy');
   });
 
   protected readonly guidelines = computed(() => {
     const d = dict();
-    return { title: d['usage.guidelines.title'] ?? '', items: itensNumerados(d, 'usage.guidelines') };
+    return { title: d['usage.guidelines.title'] ?? '', items: numberedItems(d, 'usage.guidelines') };
   });
 
   protected readonly scenarios = computed(() => {
@@ -544,12 +544,12 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly usageDo = computed(() => {
     const d = dict();
-    return { title: t('usage.do.title'), items: itensNumerados(d, 'usage.do') };
+    return { title: t('usage.do.title'), items: numberedItems(d, 'usage.do') };
   });
 
   protected readonly usageDont = computed(() => {
     const d = dict();
-    return { title: t('usage.dont.title'), items: itensNumerados(d, 'usage.dont') };
+    return { title: t('usage.dont.title'), items: numberedItems(d, 'usage.dont') };
   });
 
   protected readonly doDontPairs = computed(() => {
@@ -587,7 +587,7 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
         name: chave,
         description: t(`variants.items.${chave}`),
         trackId: chave,
-        code: CODIGO_POR_TIPO[chave] ?? '',
+        code: TYPE_CODE[chave] ?? '',
         preview: previews[chave],
       }));
   });
@@ -686,7 +686,7 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly a11yItems = computed(() => {
     const d = dict();
-    return itensNumerados(d, 'accessibility');
+    return numberedItems(d, 'accessibility');
   });
 
   protected readonly keyboardItems = computed(() => {
@@ -725,7 +725,7 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
 
   protected readonly noteItems = computed(() => {
     const d = dict();
-    return itensNumerados(d, 'notes').map((conteudo) => ({ title: '', content: conteudo }));
+    return numberedItems(d, 'notes').map((conteudo) => ({ title: '', content: conteudo }));
   });
 
   protected readonly analyticsCols = computed(() => {
@@ -780,7 +780,7 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
           level: r.level,
           how: toPlainText(r.how),
         }))
-      : itensNumerados(d, 'testes.accessibility').map((texto) => ({
+      : numberedItems(d, 'testes.accessibility').map((texto) => ({
           criterion: toPlainText(texto),
           level: '',
           how: '',
@@ -854,13 +854,13 @@ export class NdsSonnerDocs implements AfterViewInit, OnDestroy {
  * quando ela não existe, então sem esta ponte o menu de quem não traz o bloco
  * mostrava "nav.overview" escrito na tela, sem erro nenhum.
  */
-function rotuloDeNav(chave: string): string {
+function navLabel(chave: string): string {
   const doComponente = t(chave);
   return doComponente === chave ? tNav(chave) : doComponente;
 }
 
 /** Itens `base.itemN` na ordem numérica, quantos existirem. */
-function itensNumerados(d: Record<string, string>, base: string): string[] {
+function numberedItems(d: Record<string, string>, base: string): string[] {
   const itens: string[] = [];
   for (let i = 1; d[`${base}.item${i}`] !== undefined; i++) itens.push(d[`${base}.item${i}`]);
   return itens;

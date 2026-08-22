@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, within } from 'storybook/test';
 import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsButton } from './button';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 // Variantes e formas do painel. Sem argTypes, então o painel Controls é
 // desligado — do contrário apareceria vazio.
@@ -48,7 +48,7 @@ export const Neutral: Story = {
   }),
   play: async ({ step }) => {
     await step('O painel abre com o nome acessível da confirmação neutra', async () => {
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       await expect(painel).toBeVisible();
       await expect(painel).toHaveAccessibleName(/Sair da conta/i);
     });
@@ -96,7 +96,7 @@ export const LongDescription: Story = {
   }),
   play: async ({ step }) => {
     await step('A descrição longa quebra em várias linhas dentro do painel', async () => {
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       const descricao = document.querySelector<HTMLElement>('[data-testid="descricao"]')!;
       const linhas =
         descricao.getBoundingClientRect().height /
@@ -138,7 +138,7 @@ export const WithoutDescription: Story = {
   }),
   play: async ({ step }) => {
     await step('O painel abre sem descrição e mantém o nome acessível', async () => {
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       await expect(painel).toBeVisible();
       await expect(
         painel.querySelector('[data-slot="alert-dialog-description"]'),
@@ -147,13 +147,13 @@ export const WithoutDescription: Story = {
     });
 
     await step('Nenhum aria-describedby pendurado', async () => {
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       await expect(painel).not.toHaveAttribute('aria-describedby');
       await expect(painel).toHaveAccessibleDescription('');
     });
 
     await step('As duas saídas continuam presentes e alcançáveis', async () => {
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       const escopo = within(painel);
       await expect(escopo.getByRole('button', { name: /^Cancelar$/i })).toBeInTheDocument();
       await expect(escopo.getByRole('button', { name: /^Descartar$/i })).toBeInTheDocument();
@@ -201,7 +201,7 @@ export const WithMedia: Story = {
     await step('O ícone fica acima do título e não é anunciado', async () => {
       // Num alertdialog o título é lido de imediato; um ícone anunciado ali
       // seria a terceira voz na mesma frase.
-      await esperarPortal('alertdialog');
+      await waitForPortal('alertdialog');
       const midia = document.querySelector<HTMLElement>('[data-testid="midia"]')!;
       const titulo = document.querySelector<HTMLElement>('[data-slot="alert-dialog-title"]')!;
       await expect(midia.getAttribute('aria-hidden')).toBe('true');
@@ -246,7 +246,7 @@ export const StackedFooter: Story = {
       // afirmar o que a story não produz. O que dá para provar é que a regra
       // responde à largura — e é isso que o Chromatic exercita no viewport
       // móvel, onde o parâmetro vale.
-      await esperarPortal('alertdialog');
+      await waitForPortal('alertdialog');
       const rodape = document.querySelector<HTMLElement>('[data-testid="rodape"]')!;
       const largo = window.matchMedia('(min-width: 40rem)').matches;
 
@@ -305,7 +305,7 @@ export const Controlled: Story = {
       // Abrir por um botão que não é o gatilho prova que `open` manda.
       await expect(document.querySelector('[data-slot="alert-dialog-content"]')).toBeNull();
       await userEvent.click(canvas.getByTestId('abrir'));
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       await expect(painel).toBeVisible();
       await expect(painel).toHaveAccessibleName(/Excluir conta/i);
     });
@@ -315,7 +315,7 @@ export const Controlled: Story = {
       // se `openChange` não propagasse, o painel continuaria na tela com o pai
       // achando que está fechado.
       await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('alertdialog');
+      await waitForPortalVanish('alertdialog');
       await expect(document.querySelector('[data-slot="alert-dialog-content"]')).toBeNull();
     });
 
@@ -324,7 +324,7 @@ export const Controlled: Story = {
       // desse estado que este parte — o replay do painel Interactions reexecuta
       // no mesmo DOM.
       await userEvent.click(canvas.getByRole('button', { name: 'Excluir conta' }));
-      await expect(await esperarPortal('alertdialog')).toBeVisible();
+      await expect(await waitForPortal('alertdialog')).toBeVisible();
     });
   },
 };

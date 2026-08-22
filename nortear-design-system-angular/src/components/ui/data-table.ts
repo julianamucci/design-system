@@ -203,7 +203,7 @@ export const DATA_TABLE_LABELS_PADRAO: DataTableLabels = {
 };
 
 /** Vazio tipográfico: o que uma célula sem valor mostra nas cinco stacks. */
-const CELULA_VAZIA = '—';
+const CELL_VAZIA = '—';
 
 function preencher(modelo: string, valores: Record<string, string | number>): string {
   let saida = modelo;
@@ -290,7 +290,7 @@ export class NdsDataTableIcon {
 
 // ─── Linha renderizada ────────────────────────────────────────────────────────
 
-interface CelulaRenderizada {
+interface CellRenderizada {
   colunaId: string;
   header: string;
   texto: string;
@@ -303,13 +303,13 @@ interface CelulaRenderizada {
   chave: string;
 }
 
-interface LinhaRenderizada {
+interface LineRenderizada {
   chave: string;
   indice: number;
   rotulo: string;
   rotuloSelecao: string;
   busca: string;
-  celulas: CelulaRenderizada[];
+  celulas: CellRenderizada[];
 }
 
 // ─── NdsDataTable ─────────────────────────────────────────────────────────────
@@ -751,19 +751,19 @@ export class NdsDataTable<TData> implements OnInit {
     if (coluna.format) return coluna.format(valor, row);
     // Nunca a string "undefined" numa célula: travessão é o vazio tipográfico,
     // e é o que as outras stacks mostram.
-    return valor === null || valor === undefined || valor === '' ? CELULA_VAZIA : String(valor);
+    return valor === null || valor === undefined || valor === '' ? CELL_VAZIA : String(valor);
   }
 
-  private readonly linhasBrutas = computed<LinhaRenderizada[]>(() => {
+  private readonly linhasBrutas = computed<LineRenderizada[]>(() => {
     const colunas = this.colunasVisiveis();
     const todas = this.columns();
-    const chaveDe = this.rowKey();
+    const keyOf = this.rowKey();
     const rotuloDe = this.rowLabel();
-    const modeloSelecao = this.rotulos().selectRow;
-    const modeloEdicao = this.rotulos().edit;
+    const modeloSelection = this.rotulos().selectRow;
+    const modeloEdit = this.rotulos().edit;
 
     return this.data().map((row, indice) => {
-      const chave = chaveDe(row, indice);
+      const chave = keyOf(row, indice);
       // Cadeia do rótulo da linha, a mesma nas cinco stacks:
       //  1. `rowLabel`, quando quem usa souber qual campo identifica a linha;
       //  2. o valor da PRIMEIRA coluna — é ela que identifica a linha na leitura
@@ -771,14 +771,14 @@ export class NdsDataTable<TData> implements OnInit {
       //  3. a chave da linha, quando a primeira coluna vem vazia.
       // Nunca cai em "Selecionar linha" puro: nome repetido em doze controles é o
       // mesmo que nome nenhum (WCAG 4.1.2).
-      const daPrimeiraColuna = todas.length > 0 ? this.texto(todas[0], row) : CELULA_VAZIA;
+      const ofFirstColumn = todas.length > 0 ? this.texto(todas[0], row) : CELL_VAZIA;
       const rotulo =
-        rotuloDe?.(row) || (daPrimeiraColuna === CELULA_VAZIA ? chave : daPrimeiraColuna);
+        rotuloDe?.(row) || (ofFirstColumn === CELL_VAZIA ? chave : ofFirstColumn);
       return {
         chave,
         indice,
         rotulo,
-        rotuloSelecao: preencher(modeloSelecao, { row: rotulo }),
+        rotuloSelecao: preencher(modeloSelection, { row: rotulo }),
         // A busca livre casa em TODA coluna, inclusive nas escondidas pelo
         // menu: esconder uma coluna é decisão de leitura, não de escopo.
         busca: todas.map((c) => this.texto(c, row)).join(' ').toLowerCase(),
@@ -795,7 +795,7 @@ export class NdsDataTable<TData> implements OnInit {
           })(),
           numeric: !!c.numeric,
           editable: !!c.editable,
-          rotuloEdicao: preencher(modeloEdicao, { col: c.header }),
+          rotuloEdicao: preencher(modeloEdit, { col: c.header }),
           chave: `${chave}:${c.id}`,
         })),
       };
@@ -804,13 +804,13 @@ export class NdsDataTable<TData> implements OnInit {
 
   private readonly linhasFiltradas = computed(() => {
     const busca = this.filtroGlobal().trim().toLowerCase();
-    const porColuna = this.filtrosPorColuna();
+    const byColumn = this.filtrosPorColuna();
     const colunas = this.columns();
     const dados = this.data();
 
     return this.linhasBrutas().filter((linha) => {
       if (busca && !linha.busca.includes(busca)) return false;
-      for (const [colunaId, valor] of porColuna) {
+      for (const [colunaId, valor] of byColumn) {
         if (!valor) continue;
         const coluna = colunas.find((c) => c.id === colunaId);
         if (!coluna) continue;
@@ -1000,7 +1000,7 @@ export class NdsDataTable<TData> implements OnInit {
 
   // ─── Edição inline ──────────────────────────────────────────────────────────
 
-  protected abrirEdicao(celula: CelulaRenderizada): void {
+  protected abrirEdicao(celula: CellRenderizada): void {
     this.rascunho.set(celula.bruto);
     this.emEdicao.set(celula.chave);
   }
@@ -1009,7 +1009,7 @@ export class NdsDataTable<TData> implements OnInit {
     this.rascunho.set((evento.target as HTMLInputElement).value);
   }
 
-  protected confirmarEdicao(linha: LinhaRenderizada, celula: CelulaRenderizada): void {
+  protected confirmarEdicao(linha: LineRenderizada, celula: CellRenderizada): void {
     if (this.emEdicao() !== celula.chave) return;
     this.emEdicao.set(null);
 
@@ -1025,8 +1025,8 @@ export class NdsDataTable<TData> implements OnInit {
 
   protected aoTeclarNaEdicao(
     evento: KeyboardEvent,
-    linha: LinhaRenderizada,
-    celula: CelulaRenderizada,
+    linha: LineRenderizada,
+    celula: CellRenderizada,
   ): void {
     if (evento.key === 'Enter') {
       evento.preventDefault();

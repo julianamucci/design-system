@@ -50,12 +50,12 @@ import { CATALOGO_LUCIDE, NOMES_DE_ICONE } from '@shared/primitives/lucide-catal
 const { t } = useTranslation(iconsTranslations as Record<string, unknown>);
 
 /** Nome + geometria de cada ícone, na ordem em que o pacote os expõe. */
-interface IconeDoCatalogo {
+interface CatalogoIcon {
   nome: string;
   no: IconNode;
 }
 
-const CATALOGO: IconeDoCatalogo[] = NOMES_DE_ICONE.map((nome) => ({
+const CATALOGO: CatalogoIcon[] = NOMES_DE_ICONE.map((nome) => ({
   nome,
   // O JSON guarda `[tag, atributos][]`, a mesma forma do IconNode; o cast só
   // reaperta a tag de `string` para o union de tags SVG que o tipo declara.
@@ -74,7 +74,7 @@ const EXEMPLO_IMPORTACAO = `import { Search, Settings, User } from 'lucide';
 
 <svg [ndsLucideGlyph]="Search" class="nds-icon"></svg>`;
 
-const EXEMPLO_TAMANHOS = `nds-icon-sm   // 14px — badges, captions
+const EXEMPLO_SIZES = `nds-icon-sm   // 14px — badges, captions
 nds-icon      // 16px — padrão em texto e botões
 nds-icon-lg   // 20px — destaque em headers`;
 
@@ -290,7 +290,7 @@ export class NdsIconsDocs implements OnInit, OnDestroy {
   protected readonly glifoDaBusca = Search;
   protected readonly glifoDoPacote = Package;
   protected readonly exemploDeImportacao = EXEMPLO_IMPORTACAO;
-  protected readonly exemploDeTamanhos = EXEMPLO_TAMANHOS;
+  protected readonly exemploDeTamanhos = EXEMPLO_SIZES;
   protected readonly exemploDecorativo = EXEMPLO_DECORATIVO;
   protected readonly exemploFuncional = EXEMPLO_FUNCIONAL;
 

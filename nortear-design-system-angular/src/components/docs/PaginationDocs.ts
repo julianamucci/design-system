@@ -137,14 +137,14 @@ const NAV_GROUPS: { labelKey: string; sections: { id: string; labelKey: string }
 // Constantes, e não literais espalhados: a faixa exibida e a contagem que as
 // asserções e o payload de analytics usam saem do mesmo lugar.
 
-const TOTAL_SIMPLES = 5;
+const SIMPLE_TOTAL = 5;
 const TOTAL_INTERATIVO = 8;
-const TOTAL_LONGO = 12;
+const LONG_TOTAL = 12;
 
-const PAGINAS_SIMPLES = Array.from({ length: TOTAL_SIMPLES }, (_, i) => i + 1);
-const PAGINAS_INTERATIVO = Array.from({ length: TOTAL_INTERATIVO }, (_, i) => i + 1);
+const SIMPLE_PAGES = Array.from({ length: SIMPLE_TOTAL }, (_, i) => i + 1);
+const PAGES_INTERATIVO = Array.from({ length: TOTAL_INTERATIVO }, (_, i) => i + 1);
 /** Recorte de um total de 12: primeira, vizinhas da atual e última. */
-const TRECHOS_LONGOS: (number | 'ellipsis')[] = [1, 'ellipsis', 5, 6, 7, 'ellipsis', TOTAL_LONGO];
+const TRECHOS_LONGOS: (number | 'ellipsis')[] = [1, 'ellipsis', 5, 6, 7, 'ellipsis', LONG_TOTAL];
 
 // ─── Snippets ─────────────────────────────────────────────────────────────────
 
@@ -179,7 +179,7 @@ const CODE_DIRECIONAL = `<li ndsPaginationItem>
   ></a>
 </li>`;
 
-const CODE_SIMPLES = `<nav ndsPagination>
+const SIMPLE_CODE = `<nav ndsPagination>
   <ul ndsPaginationContent>
     <li ndsPaginationItem>
       <a ndsPaginationPrevious href="#" text="Anterior" [disabled]="true"></a>
@@ -200,7 +200,7 @@ const CODE_SIMPLES = `<nav ndsPagination>
   </ul>
 </nav>`;
 
-const CODE_RETICENCIAS = `<nav ndsPagination>
+const CODE_ELLIPSIS = `<nav ndsPagination>
   <ul ndsPaginationContent>
     <li ndsPaginationItem>
       <a ndsPaginationPrevious href="#" text="Anterior"></a>
@@ -815,12 +815,12 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly importBasico = IMPORT_BASICO;
 
-  protected readonly totalSimples = TOTAL_SIMPLES;
+  protected readonly totalSimples = SIMPLE_TOTAL;
   protected readonly totalInterativo = TOTAL_INTERATIVO;
-  protected readonly totalLongo = TOTAL_LONGO;
-  protected readonly paginasSimples = PAGINAS_SIMPLES;
-  protected readonly paginasInterativo = PAGINAS_INTERATIVO;
-  protected readonly paginasLongas = Array.from({ length: TOTAL_LONGO }, (_, i) => i + 1);
+  protected readonly totalLongo = LONG_TOTAL;
+  protected readonly paginasSimples = SIMPLE_PAGES;
+  protected readonly paginasInterativo = PAGES_INTERATIVO;
+  protected readonly paginasLongas = Array.from({ length: LONG_TOTAL }, (_, i) => i + 1);
   protected readonly trechosLongos = TRECHOS_LONGOS;
 
   protected readonly activeSection = signal<string | undefined>(undefined);
@@ -871,7 +871,7 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
   /** A demonstração da seção guarda estado; as outras só emitem o evento. */
   protected irParaDemo(evento: Event, pagina: number): void {
     this.paginaDemo.set(pagina);
-    this.irPara(evento, pagina, TOTAL_SIMPLES);
+    this.irPara(evento, pagina, SIMPLE_TOTAL);
   }
 
   protected readonly navGroups = computed(() => {
@@ -985,7 +985,7 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
         name: t('variants.items.simple.name'),
         description: stripHtml(t('variants.items.simple.description')),
         useWhen: stripHtml(t('variants.items.simple.use')),
-        code: CODE_SIMPLES,
+        code: SIMPLE_CODE,
         trackId: 'simple',
         preview: this.tplVarSimples(),
       },
@@ -993,7 +993,7 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
         name: t('variants.items.withEllipsis.name'),
         description: stripHtml(t('variants.items.withEllipsis.description')),
         useWhen: stripHtml(t('variants.items.withEllipsis.use')),
-        code: CODE_RETICENCIAS,
+        code: CODE_ELLIPSIS,
         trackId: 'withEllipsis',
         preview: this.tplVarReticencias(),
       },
@@ -1037,7 +1037,7 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
     };
     const nao = tNav('common.no');
 
-    const daChave = (chave: string, nome: string) => ({
+    const ofKey = (chave: string, nome: string) => ({
       name: nome,
       type: toPlainText(t(`props.table.${chave}.type`)),
       defaultValue: toPlainText(t(`props.table.${chave}.default`)),
@@ -1049,9 +1049,9 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
       {
         cols,
         items: [
-          daChave('isActive', 'isActive'),
-          daChave('size', 'size'),
-          daChave('text', 'text'),
+          ofKey('isActive', 'isActive'),
+          ofKey('size', 'size'),
+          ofKey('text', 'text'),
           // `disabled` e `label` não existem no conteúdo compartilhado: são o
           // par que substitui, em Angular, o `aria-disabled`/`tabIndex` que as
           // outras stacks escrevem à mão no elemento.
@@ -1069,8 +1069,8 @@ export class NdsPaginationDocs implements AfterViewInit, OnDestroy {
             required: nao,
             description: toPlainText(t('props.table.label.description')),
           },
-          daChave('className', 'class'),
-          daChave('children', '(conteúdo)'),
+          ofKey('className', 'class'),
+          ofKey('children', '(conteúdo)'),
         ],
       },
     ];

@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, userEvent, waitFor } from 'storybook/test';
 import { NDS_SHEET } from './sheet';
 import { NdsButton } from './button';
-import { esperarPortal, esperarPortalSumir } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import sheetTranslations from '@shared/content/sheet/translations.json';
 
@@ -130,7 +130,7 @@ export const Open: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await esperarPortal('dialog');
+    const painel = await waitForPortal('dialog');
 
     await step('Monta já aberto, com o contrato de markup completo', async () => {
       await expect(painel).toBeVisible();
@@ -200,7 +200,7 @@ export const LongScrollBody: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await esperarPortal('dialog');
+    const painel = await waitForPortal('dialog');
     const corpo = painel.querySelector<HTMLElement>('[data-slot="sheet-body"]')!;
     const rodape = painel.querySelector<HTMLElement>('[data-slot="sheet-footer"]')!;
 
@@ -274,7 +274,7 @@ export const WithoutCloseButton: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painel = await esperarPortal('dialog');
+    const painel = await waitForPortal('dialog');
 
     await step('O X do canto não é renderizado', async () => {
       // Prova do binding de input: sob JIT o componente cairia no default
@@ -334,21 +334,21 @@ export const Controlled: Story = {
     await step('Sem gatilho interno, o painel nasce fechado', async () => {
       if (within(document.body).queryAllByRole('dialog').length > 0) {
         await userEvent.keyboard('{Escape}');
-        await esperarPortalSumir('dialog');
+        await waitForPortalVanish('dialog');
       }
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);
     });
 
     await step('O estado externo abre o painel', async () => {
       await userEvent.click(externo);
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       await expect(painel).toHaveAttribute('data-state', 'open');
     });
 
     await step('Fechar por dentro devolve o valor a quem é dono dele', async () => {
-      const painel = await esperarPortal('dialog');
+      const painel = await waitForPortal('dialog');
       await userEvent.click(within(painel).getByRole('button', { name: ROTULOS.cancelar() }));
-      await esperarPortalSumir('dialog');
+      await waitForPortalVanish('dialog');
       // Se o output não tivesse chegado, `aberto` continuaria true e o painel
       // reabriria no próximo ciclo de detecção.
       await expect(within(document.body).queryAllByRole('dialog')).toHaveLength(0);

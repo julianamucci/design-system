@@ -5,7 +5,7 @@ import { NDS_ALERT_DIALOG } from './alert-dialog';
 import { NdsButton } from './button';
 import { NdsAlertDialogDocs } from '@/components/docs/AlertDialogDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 type AlertDialogArgs = {
   triggerLabel: string;
@@ -138,12 +138,12 @@ export const Playground: Story = {
       // `role="alertdialog"` não é enfeite: é ele que faz o leitor de tela ler a
       // descrição junto do título, em vez de esperar a pessoa navegar até ela.
       await userEvent.click(gatilho());
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       await expect(painel.getAttribute('aria-modal')).toBe('true');
     });
 
     await step('Título e descrição são o nome e a explicação do painel', async () => {
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       const rotuladoPor = painel.getAttribute('aria-labelledby');
       const descritoPor = painel.getAttribute('aria-describedby');
       await expect(document.getElementById(rotuladoPor!)?.textContent?.trim()).toBe(args.title);
@@ -160,7 +160,7 @@ export const Playground: Story = {
     });
 
     await step('O Tab não sai do painel', async () => {
-      const painel = await esperarPortal('alertdialog');
+      const painel = await waitForPortal('alertdialog');
       for (let i = 0; i < 4; i++) {
         await userEvent.tab();
         await expect(painel.contains(document.activeElement)).toBe(true);
@@ -178,25 +178,25 @@ export const Playground: Story = {
 
     await step('Escape fecha, equivale a cancelar, e devolve o foco', async () => {
       await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('alertdialog');
+      await waitForPortalVanish('alertdialog');
       await waitFor(() => expect(document.activeElement).toBe(gatilho()));
       await expect(args.onConfirm).not.toHaveBeenCalled();
     });
 
     await step('Cancelar fecha sem executar a ação', async () => {
       await userEvent.click(gatilho());
-      await esperarPortal('alertdialog');
+      await waitForPortal('alertdialog');
       await userEvent.click(within(document.body).getByRole('button', { name: args.cancel }));
-      await esperarPortalSumir('alertdialog');
+      await waitForPortalVanish('alertdialog');
       await expect(args.onConfirm).not.toHaveBeenCalled();
       await waitFor(() => expect(document.activeElement).toBe(gatilho()));
     });
 
     await step('Confirmar executa a ação, fecha, e devolve o foco', async () => {
       await userEvent.click(gatilho());
-      await esperarPortal('alertdialog');
+      await waitForPortal('alertdialog');
       await userEvent.click(within(document.body).getByRole('button', { name: args.action }));
-      await esperarPortalSumir('alertdialog');
+      await waitForPortalVanish('alertdialog');
       await expect(args.onConfirm).toHaveBeenCalledTimes(1);
       await waitFor(() => expect(document.activeElement).toBe(gatilho()));
     });

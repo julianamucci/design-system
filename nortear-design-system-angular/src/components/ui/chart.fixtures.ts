@@ -43,7 +43,7 @@ export const TENDENCIA: ChartSeries[] = [
 type RGB = [number, number, number];
 
 /** `rgb(r, g, b)` / `rgba(...)` como o navegador devolve em computed style. */
-export function corParaRgb(css: string): RGB | null {
+export function rgbColor(css: string): RGB | null {
   const nums = css.match(/[\d.]+/g);
   if (!nums || nums.length < 3) return null;
   return [Number(nums[0]) / 255, Number(nums[1]) / 255, Number(nums[2]) / 255];
@@ -68,14 +68,14 @@ export function razaoDeContraste(a: RGB, b: RGB): number {
  * o CSS possa compor `hsl(var(--x) / 0.5)`. Lê o valor bruto e converte — sem
  * criar elemento de sonda, que exigiria escrever estilo inline.
  */
-export function tokenParaRgb(token: string, dentroDe: Element = document.documentElement): RGB | null {
+export function rgbToken(token: string, dentroDe: Element = document.documentElement): RGB | null {
   const bruto = getComputedStyle(dentroDe).getPropertyValue(token).trim();
   const nums = bruto.match(/-?[\d.]+/g);
   if (!nums || nums.length < 3) return null;
-  return hslParaRgb(Number(nums[0]), Number(nums[1]), Number(nums[2]));
+  return rgbHsl(Number(nums[0]), Number(nums[1]), Number(nums[2]));
 }
 
-function hslParaRgb(h: number, s: number, l: number): RGB {
+function rgbHsl(h: number, s: number, l: number): RGB {
   const sat = s / 100;
   const luz = l / 100;
   const a = sat * Math.min(luz, 1 - luz);

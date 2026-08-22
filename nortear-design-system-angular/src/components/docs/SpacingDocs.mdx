@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/addon-docs/blocks';
-import { montarAngularEmReact } from '../../lib/montarAngularEmReact';
+import { mountAngularInReact } from '../../lib/mountAngularInReact';
 import { NdsSpacingDocs } from './SpacingDocs';
 
 <Meta
@@ -14,6 +14,6 @@ import { NdsSpacingDocs } from './SpacingDocs';
   }}
 />
 
-export const SpacingDocsPage = montarAngularEmReact(NdsSpacingDocs);
+export const SpacingDocsPage = mountAngularInReact(NdsSpacingDocs);
 
 <SpacingDocsPage />

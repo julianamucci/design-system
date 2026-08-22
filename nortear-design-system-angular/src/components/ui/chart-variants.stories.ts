@@ -7,8 +7,8 @@ import {
   SERIE_UNICA,
   SERIES_MULTI,
   DADOS_DISPOSITIVO,
-  corParaRgb,
-  tokenParaRgb,
+  rgbColor,
+  rgbToken,
 } from './chart.fixtures';
 
 const meta: Meta = {
@@ -46,9 +46,9 @@ export const Bar: Story = {
       const valores = SERIE_UNICA[0].data;
       // Maior valor → maior barra. Compara ordem, não pixel: o desenho é
       // responsivo e o número absoluto muda com a largura do container.
-      const maiorAltura = alturas.indexOf(Math.max(...alturas));
+      const maiorHeight = alturas.indexOf(Math.max(...alturas));
       const maiorValor = valores.indexOf(Math.max(...valores));
-      await expect(maiorAltura).toBe(maiorValor);
+      await expect(maiorHeight).toBe(maiorValor);
     });
 
     await step('Cada forma carrega categoria e valor em texto', async () => {
@@ -108,8 +108,8 @@ export const Line: Story = {
       // "hsl(var(--chart-1))", é o que prova que a cascata chegou ao desenho.
       const primeiro = [...chart.querySelectorAll<SVGPathElement>('path[data-series="0"]')]
         .find((p) => p.getAttribute('fill') === 'none')!;
-      const desenhada = corParaRgb(getComputedStyle(primeiro).stroke)!;
-      const esperada = tokenParaRgb('--chart-1')!;
+      const desenhada = rgbColor(getComputedStyle(primeiro).stroke)!;
+      const esperada = rgbToken('--chart-1')!;
       for (const canal of [0, 1, 2]) {
         await expect(Math.abs(desenhada[canal] - esperada[canal])).toBeLessThan(0.01);
       }

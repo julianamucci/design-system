@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
-import { esperarPortal } from '@/lib/wait-for-portal';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { NDS_SIDEBAR, NDS_SIDEBAR_MOBILE_QUERY } from './sidebar';
 import { NdsSeparator } from './separator';
 import { NDS_TOOLTIP } from './tooltip';
@@ -283,9 +283,9 @@ export const Mobile: Story = {
       // fechada e o Escape a fechou de novo, então o clique daqui acontece
       // NESTA rodada. Este passo prova só o estado final.
       await userEvent.click(gatilho());
-      // `esperarPortal` gateia na opacidade computada: afirmar no primeiro
+      // `waitForPortal` gateia na opacidade computada: afirmar no primeiro
       // quadro leria a gaveta no meio do fade de entrada.
-      const dialogo = await esperarPortal('dialog', { name: /barra lateral/i });
+      const dialogo = await waitForPortal('dialog', { name: /barra lateral/i });
       await expect(dialogo).toBeVisible();
       await expect(dialogo).toBe(painel());
     });

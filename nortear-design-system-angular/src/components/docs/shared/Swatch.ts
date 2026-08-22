@@ -26,7 +26,7 @@ import {
  */
 
 /** `var(--token)` — o valor que o CSS resolve no escopo onde o chip está. */
-function referenciaDeCor(token: string): string {
+function colorReferencia(token: string): string {
   return `var(--${token})`;
 }
 
@@ -49,7 +49,7 @@ export class NdsMiniSwatch {
   /** Nome do token CSS sem o prefixo `--`. */
   readonly token = input.required<string>();
 
-  protected readonly corDoToken = computed(() => referenciaDeCor(this.token()));
+  protected readonly corDoToken = computed(() => colorReferencia(this.token()));
 }
 
 @Component({
@@ -85,7 +85,7 @@ export class NdsSwatch implements OnDestroy {
   readonly rotuloCopiado = input('');
 
   protected readonly copiado = signal(false);
-  protected readonly corDoToken = computed(() => referenciaDeCor(this.token()));
+  protected readonly corDoToken = computed(() => colorReferencia(this.token()));
   protected readonly rotuloAcessivel = computed(
     () => `${this.rotuloDeCopia()} --${this.token()}`,
   );

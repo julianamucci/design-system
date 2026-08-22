@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, waitFor, userEvent } from 'storybook/test';
 import { NDS_DROPDOWN_MENU } from './dropdown-menu';
 import { NdsButton } from './button';
-import { esperarPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 
 const meta: Meta = {
   title: 'UI/DropdownMenu/Compositions',
@@ -56,7 +56,7 @@ export const WithLabel: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const canvas = within(menu);
 
     await step('Cada grupo é nomeado pelo próprio rótulo', async () => {
@@ -111,7 +111,7 @@ export const WithCheckboxItems: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const nome = canvas.getByRole('menuitemcheckbox', { name: 'Nome' });
     const email = canvas.getByRole('menuitemcheckbox', { name: 'E-mail' });
@@ -171,7 +171,7 @@ export const WithRadioGroup: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const canvas = within(menu);
     const claro = canvas.getByRole('menuitemradio', { name: 'Claro' });
     const escuro = canvas.getByRole('menuitemradio', { name: 'Escuro' });
@@ -220,7 +220,7 @@ export const WithSubmenu: Story = {
   }),
   play: async ({ step }) => {
     const corpo = within(document.body);
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const subGatilho = within(menu).getByRole('menuitem', { name: 'Exportar' });
 
     await step('O sub-gatilho anuncia que abre um menu', async () => {
@@ -282,7 +282,7 @@ export const WithShortcuts: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const menu = await esperarPortal('menu');
+    const menu = await waitForPortal('menu');
     const canvas = within(menu);
 
     await step('O atalho faz parte do nome do item', async () => {

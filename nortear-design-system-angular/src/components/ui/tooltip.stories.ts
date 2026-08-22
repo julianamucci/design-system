@@ -23,7 +23,7 @@ type TooltipArgs = {
  * O mapa do `NdsButtonIcon` não tem `save`, e aqui o ícone é decorativo — quem
  * nomeia o botão é o `aria-label`, que o Tooltip complementa e nunca substitui.
  */
-const ICONE_SALVAR = `<svg
+const ICON_SALVAR = `<svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
           fill="none"
@@ -72,7 +72,7 @@ import { NdsButton } from '@/components/ui/button';
     <div ndsTooltipProvider [delay]="${delay}">
       <span ndsTooltip>
         <button ndsTooltipTrigger ndsButton variant="ghost" size="icon" aria-label="Salvar">
-          ${ICONE_SALVAR.replace(/\n/g, '\n  ')}
+          ${ICON_SALVAR.replace(/\n/g, '\n  ')}
         </button>
 
         ${conteudo}${label}</ng-template>
@@ -162,7 +162,7 @@ export const Playground: Story = {
             size="icon"
             aria-label="Salvar"
           >
-            ${ICONE_SALVAR}
+            ${ICON_SALVAR}
           </button>
 
           <ng-template
@@ -203,7 +203,7 @@ export const Playground: Story = {
     });
 
     await step('Focar pelo teclado abre na hora, sem esperar delay', async () => {
-      const estavaFechado = balaoDe(gatilho) === null;
+      const estavaClosed = balaoDe(gatilho) === null;
       const chamadasAntes = (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length;
       gatilho.focus();
       await waitFor(async () => {
@@ -211,7 +211,7 @@ export const Playground: Story = {
       });
       // O output só avisa quem consome quando o estado MUDA — se o control já
       // trouxe o balão aberto, não há transição para contar.
-      if (estavaFechado) {
+      if (estavaClosed) {
         await expect(
           (args.onOpenChange as ReturnType<typeof fn>).mock.calls.length,
         ).toBeGreaterThan(chamadasAntes);

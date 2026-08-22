@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/angular-vite';
 import { moduleMetadata } from '@storybook/angular-vite';
 import { within, expect, fn, waitFor, userEvent } from 'storybook/test';
 import { NDS_MENUBAR, type MenubarSide, type MenubarAlign, type MenubarItemVariant } from './menubar';
-import { esperarPortal, esperarPortalSumir, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
+import { waitForPortal, waitForPortalVanish, REGRA_GUARDA_DE_FOCO } from '@/lib/wait-for-portal';
 import { NdsMenubarDocs } from '@/components/docs/MenubarDocs';
 import { withAutoDocsTab } from '@/lib/withAutoDocsTab';
 
@@ -231,7 +231,7 @@ export const Playground: Story = {
         await userEvent.keyboard('{Enter}');
       }
 
-      const menu = await esperarPortal('menu');
+      const menu = await waitForPortal('menu');
       await expect(arquivo.getAttribute('aria-expanded')).toBe('true');
       await expect(args.onOpenChange).toHaveBeenCalledWith(true);
 
@@ -243,7 +243,7 @@ export const Playground: Story = {
     });
 
     await step('Dentro do menu, a seta vertical anda entre os itens', async () => {
-      const menu = await esperarPortal('menu');
+      const menu = await waitForPortal('menu');
       const itens = within(menu).getAllByRole('menuitem');
 
       await userEvent.keyboard('{ArrowDown}');
@@ -277,7 +277,7 @@ export const Playground: Story = {
 
     await step('Escape fecha o menu e devolve o foco ao gatilho', async () => {
       await userEvent.keyboard('{Escape}');
-      await esperarPortalSumir('menu');
+      await waitForPortalVanish('menu');
       await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
       // O foco não pode cair no corpo do documento: quem navega por teclado
       // teria de percorrer a página inteira de novo para voltar ao ponto.
@@ -288,10 +288,10 @@ export const Playground: Story = {
 
     await step('Clicar no gatilho de um menu aberto fecha o menu', async () => {
       if (arquivo.getAttribute('aria-expanded') !== 'true') await userEvent.click(arquivo);
-      await esperarPortal('menu');
+      await waitForPortal('menu');
 
       await userEvent.click(arquivo);
-      await esperarPortalSumir('menu');
+      await waitForPortalVanish('menu');
       await expect(arquivo.getAttribute('aria-expanded')).toBe('false');
     });
   },

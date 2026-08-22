@@ -3,7 +3,7 @@ import { moduleMetadata } from '@storybook/angular-vite';
 import { expect } from 'storybook/test';
 import { NDS_DRAWER, type DrawerDirection } from './drawer';
 import { NdsButton } from './button';
-import { esperarPortal } from '@/lib/wait-for-portal';
+import { waitForPortal } from '@/lib/wait-for-portal';
 import { useTranslation } from '@/lib/i18n';
 import { stripHtml } from '@/lib/strip-html';
 import drawerTranslations from '@shared/content/drawer/translations.json';
@@ -94,7 +94,7 @@ export const Bottom: Story = {
   render: painel('bottom'),
   play: async ({ step }) => {
     await step('O painel encosta na base e mostra a alça', async () => {
-      const painelEl = await esperarPortal('dialog');
+      const painelEl = await waitForPortal('dialog');
       await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'bottom');
       await expect(painelEl).toHaveClass(/nds-drawer-content/);
       await expect(painelEl).toHaveAccessibleName();
@@ -121,7 +121,7 @@ export const Top: Story = {
   render: painel('top'),
   play: async ({ step }) => {
     await step('O painel encosta no topo e esconde a alça', async () => {
-      const painelEl = await esperarPortal('dialog');
+      const painelEl = await waitForPortal('dialog');
       await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'top');
       await expect(painelEl).toHaveClass(/nds-drawer-content/);
       await expect(painelEl).toHaveAccessibleName();
@@ -146,7 +146,7 @@ export const Left: Story = {
   render: painel('left'),
   play: async ({ step }) => {
     await step('O painel encosta na borda esquerda', async () => {
-      const painelEl = await esperarPortal('dialog');
+      const painelEl = await waitForPortal('dialog');
       await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'left');
       await expect(painelEl).toHaveClass(/nds-drawer-content/);
       await expect(painelEl).toHaveAccessibleName();
@@ -170,7 +170,7 @@ export const Right: Story = {
   render: painel('right'),
   play: async ({ step }) => {
     await step('O painel encosta na borda direita', async () => {
-      const painelEl = await esperarPortal('dialog');
+      const painelEl = await waitForPortal('dialog');
       await expect(painelEl).toHaveAttribute('data-vaul-drawer-direction', 'right');
       await expect(painelEl).toHaveClass(/nds-drawer-content/);
       await expect(painelEl).toHaveAccessibleName();
@@ -225,7 +225,7 @@ export const WithScroll: Story = {
     `,
   }),
   play: async ({ step }) => {
-    const painelEl = await esperarPortal('dialog');
+    const painelEl = await waitForPortal('dialog');
     const corpo = painelEl.querySelector<HTMLElement>('[data-slot="drawer-body"]')!;
     const rodape = painelEl.querySelector<HTMLElement>('[data-slot="drawer-footer"]')!;
 

@@ -127,7 +127,7 @@ export const Controlled: Story = {
   }),
   play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
-    const abrirExterno = canvas.getByRole('button', { name: 'Abrir pelo estado externo' });
+    const openExterno = canvas.getByRole('button', { name: 'Abrir pelo estado externo' });
     const trigger = canvasElement.querySelector<HTMLButtonElement>(
       '[data-slot="collapsible-trigger"]',
     )!;
@@ -137,7 +137,7 @@ export const Controlled: Story = {
     await step('O painel obedece ao estado externo', async () => {
       // Nenhum clique no trigger: quem manda é a prop, e é isso que distingue o
       // modo controlado.
-      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(abrirExterno);
+      if (trigger.getAttribute('aria-expanded') !== 'true') await userEvent.click(openExterno);
       await expect(trigger).toHaveAttribute('aria-expanded', 'true');
       await expect(painel()).toBeInTheDocument();
     });

@@ -64,16 +64,16 @@ export const Types: Story = {
       // O atributo sozinho não prova nada: a medida vive no CSS compartilhado,
       // e uma regra ausente deixaria os dois do mesmo tamanho com o data-size
       // certo em ambos.
-      const larguraPadrao = padrao.getBoundingClientRect().width;
-      const larguraCompacta = compacto.getBoundingClientRect().width;
-      await expect(larguraCompacta).toBeLessThan(larguraPadrao);
+      const widthDefault = padrao.getBoundingClientRect().width;
+      const widthCompacta = compacto.getBoundingClientRect().width;
+      await expect(widthCompacta).toBeLessThan(widthDefault);
     });
 
     await step('O knob acompanha o degrau do trilho', async () => {
-      const knobPadrao = padrao.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
+      const knobDefault = padrao.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       const knobCompacto = compacto.querySelector<HTMLElement>('[data-slot="switch-thumb"]')!;
       await expect(knobCompacto.getBoundingClientRect().width).toBeLessThan(
-        knobPadrao.getBoundingClientRect().width,
+        knobDefault.getBoundingClientRect().width,
       );
     });
 

@@ -344,11 +344,11 @@ const IMPORT_CODE = `import { NDS_NAVIGATION_MENU } from '@/components/ui/naviga
 
 // Snippets das seis fichas da seção Variantes. Ficam aqui, e não no conteúdo
 // compartilhado, porque descrevem a composição DESTE stack.
-const CODE_HORIZONTAL = `<nav ndsNavigationMenu aria-label="Navegação principal">
+const HORIZONTAL_CODE = `<nav ndsNavigationMenu aria-label="Navegação principal">
   <ul ndsNavigationMenuList>…</ul>
 </nav>`;
 
-const CODE_VERTICAL = `<nav ndsNavigationMenu aria-label="Navegação da conta" orientation="vertical">
+const VERTICAL_CODE = `<nav ndsNavigationMenu aria-label="Navegação da conta" orientation="vertical">
   <ul ndsNavigationMenuList>…</ul>
 </nav>`;
 
@@ -410,7 +410,7 @@ const CODE_FEATURED = `<ng-template ndsNavigationMenuContent>
 </ng-template>`;
 
 /** Destinos da demonstração — base estável do payload de analytics. */
-const DESTINOS_DEMO = [
+const TARGETS_DEMO = [
   { id: 'inicial',      href: '#inicial'      },
   { id: 'profissional', href: '#profissional' },
   { id: 'empresarial',  href: '#empresarial'  },
@@ -933,7 +933,7 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;
-  protected readonly destinosDemo = DESTINOS_DEMO;
+  protected readonly destinosDemo = TARGETS_DEMO;
   protected readonly dozeDestinos = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
   protected readonly activeSection = signal<string | undefined>(undefined);
@@ -1072,14 +1072,14 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
         name: t('variants.items.horizontal'),
         description: stripHtml(t('variants.styles.horizontal')),
         trackId: 'horizontal',
-        code: CODE_HORIZONTAL,
+        code: HORIZONTAL_CODE,
         preview: this.tplVarHorizontal(),
       },
       {
         name: t('variants.items.vertical'),
         description: stripHtml(t('variants.styles.vertical')),
         trackId: 'vertical',
-        code: CODE_VERTICAL,
+        code: VERTICAL_CODE,
         preview: this.tplVarVertical(),
       },
       ...[
@@ -1128,7 +1128,7 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
     const nao = tNav('common.no');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
-    const doConteudo = (nome: string, chave: string, tipo?: string) => ({
+    const ofContent = (nome: string, chave: string, tipo?: string) => ({
       name: nome,
       type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
       defaultValue: toPlainText(t(`props.table.${chave}.default`)),
@@ -1152,10 +1152,10 @@ export class NdsNavigationMenuDocs implements AfterViewInit, OnDestroy {
         title: 'NdsNavigationMenu',
         cols,
         items: [
-          doConteudo('value', 'value', 'model<string | null>'),
-          doConteudo('valueChange', 'onValueChange', 'output<string | null>'),
-          doConteudo('defaultValue', 'defaultValue', 'string | null'),
-          doConteudo('orientation', 'orientation'),
+          ofContent('value', 'value', 'model<string | null>'),
+          ofContent('valueChange', 'onValueChange', 'output<string | null>'),
+          ofContent('defaultValue', 'defaultValue', 'string | null'),
+          ofContent('orientation', 'orientation'),
           // `delay` e `closeDelay` são os nomes do primitivo deste stack; o
           // conteúdo compartilhado descreve as mesmas esperas como
           // `delayDuration` e `skipDelayDuration`, com outros padrões.

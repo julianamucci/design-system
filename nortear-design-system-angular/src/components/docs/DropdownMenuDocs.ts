@@ -325,7 +325,7 @@ const CODE_WITH_SHORTCUTS = `<ng-template ndsDropdownMenuContent>
 </ng-template>`;
 
 /** Itens da demonstração — base estável do payload de analytics. */
-const ITENS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
+const ITEMS_DEMO = ['perfil', 'configuracoes', 'sair'] as const;
 
 @Component({
   selector: 'nds-dropdown-menu-docs',
@@ -684,7 +684,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
   protected readonly interfaceCode = INTERFACE_CODE;
   protected readonly extensibilityCode = EXTENSIBILITY_CODE;
   protected readonly importCode = IMPORT_CODE;
-  protected readonly itensDemo = ITENS_DEMO;
+  protected readonly itensDemo = ITEMS_DEMO;
   protected readonly dezItens = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   /** Estado dos exemplos vivos — alternadores e escolha única. */
@@ -875,7 +875,7 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
     const sim = tNav('common.yes');
 
     /** Linha cujo tipo/padrão/descrição vêm da tabela do conteúdo compartilhado. */
-    const doConteudo = (nome: string, chave: string, tipo?: string) => ({
+    const ofContent = (nome: string, chave: string, tipo?: string) => ({
       name: nome,
       type: tipo ?? toPlainText(t(`props.table.${chave}.type`)),
       defaultValue: toPlainText(t(`props.table.${chave}.default`)),
@@ -899,10 +899,10 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
         title: 'NdsDropdownMenu',
         cols,
         items: [
-          doConteudo('open', 'open', 'model<boolean>'),
-          doConteudo('openChange', 'onOpenChange', 'output<boolean>'),
-          doConteudo('defaultOpen', 'defaultOpen'),
-          doConteudo('modal', 'modal'),
+          ofContent('open', 'open', 'model<boolean>'),
+          ofContent('openChange', 'onOpenChange', 'output<boolean>'),
+          ofContent('defaultOpen', 'defaultOpen'),
+          ofContent('modal', 'modal'),
           local('disabled', 'boolean', 'false', 'disabled'),
           local('loopFocus', 'boolean', 'true', 'loopFocus'),
           classe,
@@ -912,8 +912,8 @@ export class NdsDropdownMenuDocs implements AfterViewInit, OnDestroy {
         title: 'NdsDropdownMenuContent',
         cols,
         items: [
-          doConteudo('side', 'side'),
-          doConteudo('align', 'align'),
+          ofContent('side', 'side'),
+          ofContent('align', 'align'),
           local('sideOffset', 'number', '4', 'sideOffset'),
           local('alignOffset', 'number', '0', 'alignOffset'),
           classe,
