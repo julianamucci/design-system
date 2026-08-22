@@ -119,15 +119,22 @@ export const WithSubmenu: StoryObj<Record<string, never>> = {
      *
      * Igualdade exata, e não "maior que N": enquanto anima, a altura muda a cada
      * quadro e duas leituras não coincidem; ao terminar, ela para de mudar.
+     *
+     * TRÊS leituras iguais, e não duas — o mesmo critério do `assentar` do
+     * carrossel. Com duas, o axe ainda pegou o submenu a 9px de altura: sob
+     * carga o navegador engasga entre quadros, duas leituras coincidem por
+     * acaso e a espera devolve cedo. A terceira é o que separa "parou" de
+     * "gaguejou".
      */
     const waitForSubmenuToSettle = async () => {
       let previous = Number.NaN;
+      let stable = 0;
       await waitFor(
         () => {
           const current = sub()?.getBoundingClientRect().height ?? 0;
-          const settled = current > 0 && current === previous;
+          stable = current > 0 && current === previous ? stable + 1 : 0;
           previous = current;
-          expect(settled).toBe(true);
+          expect(stable).toBeGreaterThanOrEqual(3);
         },
         { timeout: 4000 },
       );
